@@ -1,0 +1,13 @@
+<?xml version="1.0" standalone="no" ?>
+<!-- Our to do list data -->
+<Global>
+	<parameter id="0" name="input">cam</parameter><!-- cam   ../input/PETS2001set2test2.mov.avi -->
+	<parameter id="1" name="mode">benchmarkAA</parameter>
+</Global>
+
+<ModuleObjectTracker>
+	<parameter id="3" name="input_blur_size">3</parameter>
+	<parameter id="1" name="background_alpha">0.02</parameter><!-- -->
+	<parameter id="2" name="foreground_thres">0.2</parameter>
+	<parameter id="3" name="foreground_filter_size">3</parameter>
+</ModuleObjectTracker>
