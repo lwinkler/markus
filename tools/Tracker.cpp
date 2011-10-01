@@ -22,16 +22,13 @@ using namespace std;
 
 #define POW2(x) (x) * (x)
 
-int Tracker::m_maxMatchingDistance = 100;
-int Tracker::m_maxNbFramesDisappearance = 10;
-
 int Template::m_counter = 0;
-//int Region::m_counter = 0;
+//int TrackedRegion::m_counter = 0;
 
 vector <string> Feature::m_names;
 
-int Tracker::colorArraySize=54;
-CvScalar Tracker::colorArray[] =
+int Tracker::m_colorArraySize=54;
+CvScalar Tracker::m_colorArray[] =
 {
 	CV_RGB(128,128,128), // gray//CV_RGB(255,255,255), // white
 	CV_RGB(255,0,0), // red
@@ -116,13 +113,13 @@ Feature&  Feature::operator = (const Feature& f)
 
 Feature::~Feature(){}
 
-Region::Region(int x_num)
+TrackedRegion::TrackedRegion(int x_num)
 {
 	m_num = x_num;//m_counter;
 	//m_counter++;
 };
 
-Region::Region(const Region& r)
+TrackedRegion::TrackedRegion(const TrackedRegion& r)
 {
 	m_num = r.GetNum();
 	m_feats = r.GetFeatures();
@@ -130,7 +127,7 @@ Region::Region(const Region& r)
 	m_posY = r.m_posY;
 }
 
-Region& Region::operator = (const Region& r)
+TrackedRegion& TrackedRegion::operator = (const TrackedRegion& r)
 {
 	m_num = r.GetNum();
 	m_feats = r.GetFeatures();
@@ -140,9 +137,9 @@ Region& Region::operator = (const Region& r)
 	return *this;
 }
 
-Region::~Region(){};
+TrackedRegion::~TrackedRegion(){};
 
-int Region::Match(const std::list<Template>& x_temp)
+int TrackedRegion::Match(const std::list<Template>& x_temp, double x_maxMatchingDistance)
 {
 
 	double bestDist = 1e99;
@@ -152,7 +149,7 @@ int Region::Match(const std::list<Template>& x_temp)
 	
 	for(list<Template>::const_iterator it1 = x_temp.begin() ; it1 != x_temp.end(); it1++ )
 	{
-		double dist = it1->CompareWithRegion(*this);
+		double dist = it1->CompareWithTrackedRegion(*this);
 		//cout<<"dist ="<<dist;
 		if(dist < bestDist)
 		{
@@ -160,7 +157,7 @@ int Region::Match(const std::list<Template>& x_temp)
 			bestTemp = &(*it1);
 		}
 	}
-	if(bestTemp != NULL && bestDist < Tracker::m_maxMatchingDistance)
+	if(bestTemp != NULL && bestDist < x_maxMatchingDistance)
 		return bestTemp->GetNum();
 	else 
 		return 0;
@@ -168,60 +165,66 @@ int Region::Match(const std::list<Template>& x_temp)
 }
 
 
-Tracker::Tracker(int width, int height, int depth, int channels)
+Tracker::Tracker(const TrackerParameter& x_param, int width, int height, int depth, int channels) :
+	m_param(x_param)
 {
 
 	m_blobsImg = cvCreateImage(cvSize(width, height), depth, channels);
 	
 }
 
-Template::Template()
+void Tracker::Reset()
+{
+	
+}
+
+Template::Template(int x_maxNbFramesDisappearance)
 {
 	m_num = m_counter;
-	m_bestMatchingRegion = -1;
-	m_counterClean = Tracker::m_maxNbFramesDisappearance;
+	m_bestMatchingTrackedRegion = -1;
+	m_counterClean = x_maxNbFramesDisappearance;
 	m_posX = 0;
 	m_posY = 0;
 
 	m_counter++;
 }
 
-Template::Template(const Template& t)
+Template::Template(const Template& t, int x_maxNbFramesDisappearance)
 {
 	m_num = t.GetNum();
-	m_matchingRegions = t.GetMatchingRegions();
+	m_matchingTrackedRegions = t.GetMatchingTrackedRegions();
 	m_feats = t.GetFeatures();
 	m_posX = t.m_posX;
 	m_posY = t.m_posY;
 
-	m_bestMatchingRegion = -1;
-	m_counterClean = Tracker::m_maxNbFramesDisappearance;
+	m_bestMatchingTrackedRegion = -1;
+	m_counterClean = x_maxNbFramesDisappearance;
 
 }
 
-Template::Template(const Region& x_reg)
+Template::Template(const TrackedRegion& x_reg, int x_maxNbFramesDisappearance)
 {
 	m_num = m_counter;
 	m_counter++;
 	m_feats = x_reg.GetFeatures();
 	m_posX = x_reg.m_posX;
 	m_posY = x_reg.m_posY;
-	m_bestMatchingRegion = -1;
-	m_counterClean = Tracker::m_maxNbFramesDisappearance;
+	m_bestMatchingTrackedRegion = -1;
+	m_counterClean = x_maxNbFramesDisappearance;
 
-	//cout<<"Region "<<x_reg.GetNum()<<" is used to create template "<<m_num<<" with "<<x_reg.GetFeatures().size()<<" features"<<endl;
+	//cout<<"TrackedRegion "<<x_reg.GetNum()<<" is used to create template "<<m_num<<" with "<<x_reg.GetFeatures().size()<<" features"<<endl;
 }
 
 Template& Template::operator = (const Template& t)
 {
 	m_num = t.GetNum();
-	m_matchingRegions = t.GetMatchingRegions();
+	m_matchingTrackedRegions = t.GetMatchingTrackedRegions();
 	m_feats = t.GetFeatures();
 	m_posX = t.m_posX;
 	m_posY = t.m_posY;
 	
-	m_bestMatchingRegion = -1;
-	m_counterClean = Tracker::m_maxNbFramesDisappearance;
+	m_bestMatchingTrackedRegion = -1;
+	m_counterClean = t.m_counterClean;// ::m_maxNbFramesDisappearance;
 
 	return *this;
 }
@@ -253,7 +256,7 @@ double Feature::GetFeatureValue(const std::vector<Feature>& x_vect, const char* 
 /* Compare a candidate region with the template */
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-double Template::CompareWithRegion(const Region& x_reg) const
+double Template::CompareWithTrackedRegion(const TrackedRegion& x_reg) const
 {
 	double sum = 0;
 	//cout<<"m_feats.size() ="<<m_feats.size()<<endl;
@@ -276,34 +279,34 @@ double Template::CompareWithRegion(const Region& x_reg) const
 /* Match the template with a region (blob)*/
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-int Template::Match(const std::list<Template>& x_temp, vector<Region>& x_regs, IplImage* x_blobsImg)
+int Template::Match(const std::list<Template>& x_temp, vector<TrackedRegion>& x_regs, IplImage* x_blobsImg, double x_maxMatchingDistance)
 {
 
 	double bestDist = 1e99;
-	int bestRegion = -1;
+	int bestTrackedRegion = -1;
 
 	//cout<<"Comparing template "<<m_num<<" with "<<x_regs.size()<<" regions"<<endl;
 	
 	for(unsigned int i = 0 ; i< x_regs.size() ; i++)
 	{
-		double dist = CompareWithRegion(x_regs[i]);
+		double dist = CompareWithTrackedRegion(x_regs[i]);
 		//cout<<"dist ="<<dist;
 		if(dist < bestDist)
 		{
 			bestDist = dist;
-			bestRegion = i;
+			bestTrackedRegion = i;
 		}
 	}
-	if(bestRegion != -1 && bestDist < Tracker::m_maxMatchingDistance
-		&& (m_num == x_regs[bestRegion].Match(x_temp))) // Symetric match
+	if(bestTrackedRegion != -1 && bestDist < x_maxMatchingDistance
+		&& (m_num == x_regs[bestTrackedRegion].Match(x_temp, x_maxMatchingDistance))) // Symetric match
 	{
-		m_bestMatchingRegion = bestRegion;
-		//cout<<"Template "<<GetNum()<<" matched with region "<<bestRegion<<" dist="<<bestDist<<" pos:("<<m_posX<<","<<m_posY<<")"<<endl;
-		m_matchingRegions.push_back(x_regs[bestRegion]);
-		x_regs[bestRegion].m_isMatched = 1;
-		CvPoint p = {x_regs[bestRegion].m_posX, x_regs[bestRegion].m_posY};
+		m_bestMatchingTrackedRegion = bestTrackedRegion;
+		//cout<<"Template "<<GetNum()<<" matched with region "<<bestTrackedRegion<<" dist="<<bestDist<<" pos:("<<m_posX<<","<<m_posY<<")"<<endl;
+		m_matchingTrackedRegions.push_back(x_regs[bestTrackedRegion]);
+		x_regs[bestTrackedRegion].m_isMatched = 1;
+		CvPoint p = {x_regs[bestTrackedRegion].m_posX, x_regs[bestTrackedRegion].m_posY};
 		
-		cvCircle(x_blobsImg, p, 10, Tracker::colorArray[m_num % Tracker::colorArraySize]);
+		cvCircle(x_blobsImg, p, 10, Tracker::m_colorArray[m_num % Tracker::m_colorArraySize]);
 		
 		return 1;
 	}
@@ -320,16 +323,16 @@ void Template::UpdateFeatures()
 	{
 		double mean=0;
 		double sqstdev=0;
-		int size = m_matchingRegions.size();
+		int size = m_matchingTrackedRegions.size();
 		if (size <= 0) return;
 		
-		//cout<<"Updating template "<<m_num<<" with "<<m_matchingRegions.size()<<" matching regions."<<endl;
+		//cout<<"Updating template "<<m_num<<" with "<<m_matchingTrackedRegions.size()<<" matching regions."<<endl;
 		
-		for ( list<Region>::iterator it1= m_matchingRegions.begin() ; it1 != m_matchingRegions.end(); it1++ )
+		for ( list<TrackedRegion>::iterator it1= m_matchingTrackedRegions.begin() ; it1 != m_matchingTrackedRegions.end(); it1++ )
 			mean += it1->GetFeatures().at(i).GetValue();
 		mean /= size;
 		
-		for ( list<Region>::iterator it1= m_matchingRegions.begin() ; it1 != m_matchingRegions.end(); it1++ )
+		for ( list<TrackedRegion>::iterator it1= m_matchingTrackedRegions.begin() ; it1 != m_matchingTrackedRegions.end(); it1++ )
 			sqstdev += (it1->GetFeatures().at(i).GetValue() - mean) * (it1->GetFeatures().at(i).GetValue() - mean);
 		sqstdev /= size;
 
@@ -341,28 +344,7 @@ void Template::UpdateFeatures()
 	
 }
 
-void trackerBarCallback1(int pos) 
-{
-	Tracker::SetMaxMatchingDistance( pos);
-	cout<<"Max matching distance set to "<<Tracker::GetMaxMatchingDistance()<<endl;
-}
 
-void trackerBarCallback2(int pos) 
-{
-	Tracker::SetMaxNbFramesDisappearance( pos);
-	cout<<"Max frames before object disappearance set to "<<Tracker::GetMaxNbFramesDisappearance()<<endl;
-}
-
-void Tracker::CreateParamWindow()
-{
-	cvNamedWindow("Parameters", CV_WINDOW_AUTOSIZE); 
-	cvMoveWindow("Parameters", 0, 0);
-
-	cvCreateTrackbar( "Max matching distance ", "Parameters", &m_maxMatchingDistance, 100, trackerBarCallback1 );
-	cvCreateTrackbar( "Frames before disappearance ", "Parameters", &m_maxNbFramesDisappearance, 100, trackerBarCallback2 );
-//	cvCreateTrackbar( "Foreground filter size ", "Parameters", &m_foregroundFilterSize, 7, trackbarCallback3 );
-
-}
 
 Tracker::~Tracker(void)
 {
@@ -399,9 +381,9 @@ void Tracker::ExtractBlobs(IplImage* x_img)
 			double posy = currentBlob->SumY();
 		if(currentBlob->Parent() && !currentBlob->Exterior() && posx > 0 && posx < m_blobsImg->width && posy > 0 && posy < m_blobsImg->height) // TODO : fix this for real
 		{
-			currentBlob->FillBlob( m_blobsImg, colorArray[i % colorArraySize]);
+			currentBlob->FillBlob( m_blobsImg, m_colorArray[i % m_colorArraySize]);
 			
-			Region reg(i);
+			TrackedRegion reg(i);
 			reg.m_posX = currentBlob->SumX();
 			reg.m_posY = currentBlob->SumY();
 			
@@ -447,7 +429,7 @@ double Tracker::GetSTLResult( CBlob* blob, funcio_calculBlob *evaluador ) const
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 void Tracker::MatchTemplates()
 {
-	for(vector<Region>::iterator it2 = m_regions.begin() ; it2 != m_regions.end(); it2++ )
+	for(vector<TrackedRegion>::iterator it2 = m_regions.begin() ; it2 != m_regions.end(); it2++ )
 	{
 		it2->m_isMatched = 0;
 	}
@@ -455,10 +437,9 @@ void Tracker::MatchTemplates()
 	// Try to match each region with a template
 	for(list<Template>::iterator it1 = m_templates.begin() ; it1 != m_templates.end(); it1++ )
 	{
-		it1->m_bestMatchingRegion = -1;
+		it1->m_bestMatchingTrackedRegion = -1;
 		//int isMatched = 
-		it1->Match(m_templates, m_regions, m_blobsImg);
-		
+		it1->Match(m_templates, m_regions, m_blobsImg, m_param.maxMatchingDistance);
 	}
 #ifdef VERBOSE
 	cout<<"MatchTemplates : "<<m_templates.size()<<" templates and "<<m_regions.size()<<" regions."<<endl;
@@ -485,8 +466,8 @@ void Tracker::CleanTemplates()
 	for(list<Template>::iterator it1 = m_templates.begin() ; it1 != m_templates.end(); it1++ )
 	{
 		//cout<<"it1->m_isMatched"<<it1->m_isMatched<<endl;
-		//cout<<"it1->m_counterClean"<<it1->m_counterClean<<endl;
-		if(it1->m_bestMatchingRegion == -1)
+		cout<<"it1->m_counterClean"<<it1->m_counterClean<<endl;
+		if(it1->m_bestMatchingTrackedRegion == -1)
 		{
 			it1->m_counterClean--;
 			if(it1->m_counterClean <= 0)
@@ -495,7 +476,7 @@ void Tracker::CleanTemplates()
 				cptCleaned++;
 			}
 		}
-		else it1->m_counterClean = Tracker::m_maxNbFramesDisappearance;
+		else it1->m_counterClean = m_param.maxNbFramesDisappearance;
 		cptTotal++;
 	}
 #ifdef VERBOSE
@@ -510,11 +491,11 @@ void Tracker::DetectNewTemplates()
 {
 	// If region not matched, add a template
 	int cpt = 0;
-	for(vector<Region>::iterator it2 = m_regions.begin() ; it2 != m_regions.end(); it2++ )
+	for(vector<TrackedRegion>::iterator it2 = m_regions.begin() ; it2 != m_regions.end(); it2++ )
 	{
 		if(!it2->m_isMatched && m_templates.size() < 100)
 		{
-			Template t(*it2);
+			Template t(*it2, m_param.maxNbFramesDisappearance);
 			m_templates.push_back(t);
 			//cout<<"Added template "<<t.GetNum()<<endl;
 			cpt++;
@@ -526,15 +507,15 @@ void Tracker::DetectNewTemplates()
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-/* PrintRegions */
+/* PrintTrackedRegions */
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-void Tracker::PrintRegions() const
+void Tracker::PrintTrackedRegions() const
 {
 	//cout<<"print region name="<<m_regions.at(0).GetFeatures().at(0).m_name<<endl;
-	for ( vector<Region>::const_iterator it1= m_regions.begin() ; it1 < m_regions.end(); it1++ )
+	for ( vector<TrackedRegion>::const_iterator it1= m_regions.begin() ; it1 < m_regions.end(); it1++ )
 	{
 		int cpt=0;
-		cout<<"Region "<<(int)it1->GetNum()<<" : ";
+		cout<<"TrackedRegion "<<(int)it1->GetNum()<<" : ";
 		for ( vector<Feature>::const_iterator it2=it1->GetFeatures().begin() ; it2 < it1->GetFeatures().end(); it2++ )
 		{
 			cout<<" "<<it2->m_names.at(cpt)<<"="<<it2->GetValue()<<"|";

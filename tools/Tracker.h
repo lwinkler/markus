@@ -24,8 +24,20 @@ using namespace std;
 
 class Feature;
 class Template;
-class Region;
+class TrackedRegion;
 class Tracker;
+
+class TrackerParameter
+{
+public:
+	TrackerParameter()
+	{
+		maxMatchingDistance = 100;
+		maxNbFramesDisappearance = 10;
+	};
+	double maxMatchingDistance;
+	int maxNbFramesDisappearance;
+};
 
 /*! \class Feature
  *  \brief Class representing a feature of a template/region
@@ -60,14 +72,14 @@ class Feature
  *
  *  These regions are the area that are obtained after background subtraction and segmentation
  */
-class Region
+class TrackedRegion
 {
 	public:
-		Region(int x_num);
-		Region(const Region&);
-		Region& operator = (const Region&);
-		~Region();
-		int Match(const std::list<Template>&);
+		TrackedRegion(int x_num);
+		TrackedRegion(const TrackedRegion&);
+		TrackedRegion& operator = (const TrackedRegion&);
+		~TrackedRegion();
+		int Match(const std::list<Template>&, double x_maxMaxingDistance);
 		
 		inline void AddFeature(/*const char* name, */double value)
 		{
@@ -95,14 +107,14 @@ class Region
 class Template
 {
 	public:
-		Template();
-		Template(const Region&);
-		Template(const Template&);
+		Template(int x_maxNbFramesDisappearance);
+		Template(const TrackedRegion&, int x_maxNbFramesDisappearance);
+		Template(const Template&, int x_maxNbFramesDisappearance);
 		Template& operator = (const Template&);
 		~Template();
 		
-		double CompareWithRegion(const Region& x_reg) const;
-		int Match(const std::list<Template>& x_temp, std::vector<Region>& x_reg, IplImage* x_blobsImg);
+		double CompareWithTrackedRegion(const TrackedRegion& x_reg) const;
+		int Match(const std::list<Template>& x_temp, std::vector<TrackedRegion>& x_reg, IplImage* x_blobsImg, double x_maxMatchingDistance);
 		void UpdateFeatures();
 		
 		
@@ -112,13 +124,13 @@ class Template
 			m_feats.push_back(f);
 		};
 		inline const std::vector <Feature>& GetFeatures() const{ return m_feats;};
-		inline const std::list <Region>& GetMatchingRegions() const{ return m_matchingRegions;};
+		inline const std::list <TrackedRegion>& GetMatchingTrackedRegions() const{ return m_matchingTrackedRegions;};
 		inline int GetNum() const {return m_num;};
 		
 		//int m_isMatched;
-		int m_bestMatchingRegion;
+		int m_bestMatchingTrackedRegion;
 		int m_counterClean;
-		std::list <Region> m_matchingRegions;
+		std::list <TrackedRegion> m_matchingTrackedRegions;
 		double m_posX;
 		double m_posY;
 
@@ -137,41 +149,36 @@ class Template
 class Tracker
 {
 	public:
-		Tracker(int width, int height, int depth, int channels);
+		Tracker(const TrackerParameter& x_param, int width, int height, int depth, int channels);
 		~Tracker(void);
-		
-		void CreateParamWindow();
-		
-		
+		void Reset();
+				
 		void ExtractBlobs(IplImage* x_img);
 		void MatchTemplates();
 		void CleanTemplates();
 		void DetectNewTemplates();
 		void UpdateTemplates();
-		void PrintRegions() const;
+		void PrintTrackedRegions() const;
 		
 		inline IplImage* GetBlobsImg(){ return m_blobsImg;};
 		
+		static int m_colorArraySize;
+		static CvScalar m_colorArray[];
 		
-		static CvScalar colorArray[];
-		static int colorArraySize;
-		static int m_maxMatchingDistance;
-		static int m_maxNbFramesDisappearance;
-		
-		static int GetMaxNbFramesDisappearance(){return m_maxNbFramesDisappearance;};
+		/*static int GetMaxNbFramesDisappearance(){return m_maxNbFramesDisappearance;};
 		static void SetMaxNbFramesDisappearance(int a){ m_maxNbFramesDisappearance = a;};
 
 		static int GetMaxMatchingDistance(){return m_maxMatchingDistance;};
-		static void SetMaxMatchingDistance(int a){ m_maxMatchingDistance = a;};
+		static void SetMaxMatchingDistance(int a){ m_maxMatchingDistance = a;};*/
 		
 	private:
 		double GetSTLResult( CBlob* blob, funcio_calculBlob *evaluador ) const;
 		// Background subtraction
 		IplImage* m_blobsImg;
 		std::list <Template> m_templates;
-		std::vector <Region> m_regions;		
+		std::vector <TrackedRegion> m_regions;		
 		
-
+		const TrackerParameter& m_param;
 };
 
 #endif

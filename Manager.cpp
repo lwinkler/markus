@@ -1,6 +1,6 @@
 #include "Manager.h"
+#include "Module.h"
 
-#include "Manager.h"
 #include "util.h"
 
 #include <stdlib.h>
@@ -36,16 +36,7 @@ Manager::Manager(ConfigReader& x_configReader) :
 	
 	m_configReader.ReadConfig(this);
 
-	cout<<"Work image ("<<m_workWidth<<"x"<<m_workHeight<<" depth="<<m_workDepth<<" channels="<<m_workChannels<<")"<<endl;
-	
-	//string inputFileName = "";
-
-	// Create modules
-	/*Detector detect(m_workWidth, m_workHeight, m_workDepth, m_workChannels);
-	Tracker track(m_workWidth, m_workHeight, m_workDepth, m_workChannels);
-	SlitCam slitcam(m_workWidth, m_workHeight, m_workDepth, m_workChannels);
-*/
-	
+	cout<<"Create Manager : Work image ("<<m_workWidth<<"x"<<m_workHeight<<" depth="<<m_workDepth<<" channels="<<m_workChannels<<")"<<endl;
 	m_capture = NULL;
 	
 	cout<<"Input "<< m_input<<endl;
@@ -129,7 +120,6 @@ void Manager::CaptureInput()
 void Manager::Process()
 {
 	IplImage *img = cvCreateImage( cvSize(m_workWidth, m_workHeight), m_workDepth, m_workChannels);	
-	IplImage* img_blur = cvCreateImage( cvSize(m_workWidth, m_workHeight), IPL_DEPTH_8U, m_workChannels);
 	int frame=0;
 	
 	try
@@ -154,29 +144,11 @@ void Manager::Process()
 			m_timerConv.stop();
 			timerProc.start();
 			
-			// Main part of the program
-			/*detect.BlurInput(img, img_blur);
-			detect.UpdateBackground(img_blur);
-			//detect.UpdateBackgroundMask(img, detect.GetForegroundRff());
-			detect.ExtractForeground(img_blur);
-			//detect.ExtractForegroundMax(img);
-			//detect.RemoveFalseForegroundNeigh();
-			detect.RemoveFalseForegroundMorph();
-			detect.TemporalDiff(img_blur);
-			
-			track.ExtractBlobs(detect.GetForegroundRff());
-			//track.PrintRegions();
-			track.MatchTemplates();
-			track.CleanTemplates();
-			track.DetectNewTemplates();
-			track.UpdateTemplates();
-			*/
 			for(list<Module*>::iterator it = m_modules.begin(); it != m_modules.end(); it++)
 			{
 				(*it)->ProcessFrame(img);
 			}
-			// ---- end of main part
-	
+			
 			timerProc.stop();
 			m_timerConv.start();
 			
@@ -197,19 +169,7 @@ void Manager::Process()
 				static IplImage* tmp2_c1 = NULL;
 				static IplImage* tmp1_c3 = NULL;
 				static IplImage* tmp2_c3 = NULL;
-				/*
-				adjust(detect.GetBackground(), output, tmp1_c3, tmp2_c3);
-				cvShowImage("background", output);
-				//adjust(detect.GetTemporalDiff(), output, tmp1_c1, tmp2_c1);
-				//cvShowImage("temporaldiff", output);
-				adjust(detect.GetForeground(), output, tmp1_c1, tmp2_c1);
-				cvShowImage("foreground", output);
-				adjust(detect.GetForegroundRff(), output, tmp1_c1, tmp2_c1);
-				cvShowImage("foreground_rff", output);
-				//cout<<"m_key "<<m_key<<"  q="<<(int)'q'<<endl;
-				adjust(track.GetBlobsImg(), output, tmp1_c3, tmp2_c3);
-				cvShowImage("blobs", output);
-				*/
+				
 				for(list<Module*>::iterator it = m_modules.begin(); it != m_modules.end(); it++)
 				{
 					adjust((*it)->GetOutput(), output, tmp1_c3, tmp2_c3);

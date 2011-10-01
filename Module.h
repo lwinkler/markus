@@ -22,6 +22,10 @@ private:
 protected:
 	double m_timeInterval;
 	IplImage * m_output;
+	const int m_width;
+	const int m_height;
+	const int m_depth;
+	const int m_channels;
 };
 
 #endif

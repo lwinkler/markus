@@ -1,5 +1,5 @@
 // +--------------------------------------------------------------------------+
-// | File      : SlitCam.h                                                    |
+// | File      : SlitCam.cpp                                                  |
 // | Utility   : One-Slit camera module                                       |
 // | Author    : Laurent Winkler                                              |
 // | Date      : Sept 2010                                                    |
@@ -49,22 +49,24 @@ void SlitCam::Init()
 	Module::Init();
 	m_time_interval = 0;
 	m_position = 0;
+	m_aperture = 1;
 }
 
 void SlitCam::ProcessFrame(const IplImage * img)
 {
 	int widthStep = img->widthStep;
-	char * pDst = m_output->imageData + m_position * m_output->depth;
-	char * pSrc = img->imageData + img->widthStep / 2;
-	for(int i = 0 ; i < img->height ; i++)
+	char * pDst = m_output->imageData + m_position * m_output->nChannels * m_aperture;// * img->nChannels;
+	char * pSrc = img->imageData + img->widthStep * img->nChannels / 2;
+	int size = m_output->depth * m_aperture;
+	assert(m_output->imageSize == img->imageSize);
+	
+	for(int negCount = img->height ; negCount ; negCount--)
 	{
-		memcpy(pDst, pSrc, m_output->depth * sizeof(char));
-		
+		memcpy(pDst, pSrc, size);// * img->nChannels);
 		//memset(pDst, *pSrc, m_image->depth);
-		pSrc += img->widthStep;
-		pDst += m_output->widthStep;
+		pSrc += widthStep;
+		pDst += widthStep;
 	}
-	m_position = m_position == img->width ? 0 : m_position + 1;
-	//cout<<"m_pos "<< m_position<<endl;
+	m_position = m_position == img->width - 1 ? 0 : m_position + 1;
 }
 

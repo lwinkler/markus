@@ -21,6 +21,7 @@ class SlitCam : public Module
 private:
 	//IplImage * m_image;
 	int m_position;
+	int m_aperture;
 	static const char * m_name;
 public:
 	SlitCam(ConfigReader& x_configReader, int width, int height, int depth, int channels);
@@ -28,8 +29,8 @@ public:
 	void CreateParamWindow();
 	virtual const char* GetName() {return m_name;}
 	
-	void Init();
-	void ProcessFrame(const IplImage * img);
+	virtual void Init();
+	virtual void ProcessFrame(const IplImage * img);
 	
 	inline static float GetTimeInterval(){ return m_time_interval;};
 	inline static void SetTimeInterval(int x)

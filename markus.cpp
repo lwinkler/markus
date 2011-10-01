@@ -6,6 +6,8 @@
 #include <QtGui/QAction>
 
 #include "Manager.h"
+#include "ObjectTracker.h"
+#include "SlitCam.h"
 
 using namespace std;
 
@@ -20,11 +22,10 @@ markus::markus()
     menuBar()->addMenu( "File" )->addAction( a );*/
     	ConfigReader conf("../config.xml");
 	Manager manager(conf);
-	//Detector detect(conf, 640, 480, IPL_DEPTH_8U, 3);
+	ObjectTracker detect(conf, 640, 480, IPL_DEPTH_8U, 3);
 	//Tracker track(conf, 640, 480, IPL_DEPTH_8U, 3);
 	SlitCam slitcam(conf, 640, 480, IPL_DEPTH_8U, 3);
-	//manager.AddModule((Module&)detect);
-	//manager.AddModule((Module&)track);
+	manager.AddModule((Module&)detect);
 	manager.AddModule((Module&)slitcam);
 	manager.Process();
 

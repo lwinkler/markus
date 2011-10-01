@@ -10,15 +10,15 @@ class Manager;
 class ConfigReader
 {
 public:
-	ConfigReader(std::string x_fileName)
+	ConfigReader(const char * x_fileName)
 	{
 		m_fileName = x_fileName;
 	};
 	~ConfigReader(){};
 	void ReadConfig(Manager * x_module);
 	void ReadConfig(Module * x_module);
+	static const char * m_fileName;
 private:
-	std::string m_fileName;
 };
 
 #endif

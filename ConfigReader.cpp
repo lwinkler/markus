@@ -1,20 +1,23 @@
 #include "ConfigReader.h"
 #include "Module.h"
 #include "Manager.h"
-#include "Detector.h"
+
+#include "ObjectTracker.h"
+#include "SlitCam.h"
 
 using namespace std;
 
 /* Reads the configuration file with tinyxml */
+const char * ConfigReader::m_fileName = "safd";
 
 void ConfigReader::ReadConfig(Manager * x_manager)
 {
-	TiXmlDocument doc( "../config.xml" );
+	TiXmlDocument doc( m_fileName );
 	bool loadOkay = doc.LoadFile();
 
 	if ( !loadOkay )
 	{
-		printf( "Could not load test file '%s'. Error='%s'. Exiting.\n", m_fileName.c_str(), doc.ErrorDesc() );
+		printf( "Could not load test file '%s'. Error='%s'. Exiting.\n", m_fileName, doc.ErrorDesc() );
 		exit( 1 );
 	}
 
@@ -54,12 +57,13 @@ void ConfigReader::ReadConfig(Manager * x_manager)
 
 void ConfigReader::ReadConfig(Module * x_module)
 {
+	cout<<"Opening configuration file "<<m_fileName<<endl;
 	TiXmlDocument doc( m_fileName );
 	bool loadOkay = doc.LoadFile();
 
 	if ( !loadOkay )
 	{
-		printf( "Could not load test file '%s'. Error='%s'. Exiting.\n", m_fileName.c_str(), doc.ErrorDesc() );
+		printf( "Could not load test file '%s'. Error='%s'. Exiting.\n", m_fileName, doc.ErrorDesc() );
 		exit( 1 );
 	}
 
@@ -74,7 +78,7 @@ void ConfigReader::ReadConfig(Module * x_module)
 	}
 	else if(x_module->GetName() == "ObjectTracker")
 	{
-		Detector * detect = dynamic_cast<Detector*>(x_module);
+		ObjectTracker * detect = dynamic_cast<ObjectTracker*>(x_module);
 		node = doc.FirstChild( "ObjectTracker");
 		assert( node );
 		moduleElement = node->ToElement();
@@ -97,10 +101,10 @@ void ConfigReader::ReadConfig(Module * x_module)
 			assert(name);
 			//cout<<"name"<<name<<" value "<<value<<endl;
 			
-			if(!strcmp(name, "background_alpha"))detect->SetBackgroundAlpha((float) atof(value));
+			/*if(!strcmp(name, "background_alpha"))detect->SetBackgroundAlpha((float) atof(value));
 			if(!strcmp(name, "foreground_thres"))detect->SetForegroundThres((float) atof(value));
 			if(!strcmp(name, "foreground_filter_size"))detect->SetForegroundFilterSize(atoi(value));
-			if(!strcmp(name, "input_blur_size"))detect->SetInputBlurSize(atoi(value));
+			if(!strcmp(name, "input_blur_size"))detect->SetInputBlurSize(atoi(value));*/
 		}
 	}
 }

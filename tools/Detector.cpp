@@ -14,72 +14,19 @@
 
 using namespace std;
 
-float Detector::m_background_alpha = 0;
-const float Detector::m_background_alpha_r = 100 / 0.1;  // RESOLUTION / MAX
-int Detector::m_background_alpha_d = 0;
-
-float Detector::m_foreground_thres = 0;
-const float Detector::m_foreground_thres_r = 100 / 1.0;
-int Detector::m_foreground_thres_d = 0;
-
-int Detector::m_inputBlurSize = 0;
-int Detector::m_foregroundFilterSize = 0;
-
-
-Detector::Detector(int width, int height, int depth, int channels)
+Detector::Detector(const DetectorParameter& x_param, int x_width, int x_height, int x_depth, int x_channels) :
+	m_param(x_param)
 {
-	m_background_alpha = 0;
-	m_background_alpha_d = 0;
-	m_foreground_thres = 0;
-	m_foreground_thres_d = 0;
-	m_foregroundFilterSize = 0;
-
-	m_foreground = cvCreateImage(cvSize(width, height), depth, 1);
-	m_foreground_rff = cvCreateImage(cvSize(width, height), depth, 1);
-	m_background = cvCreateImage(cvSize(width, height), depth, channels);
-	m_lastImg = cvCreateImage(cvSize(width, height), depth, channels);
-	m_temporalDiff = cvCreateImage(cvSize(width, height), depth, 1);
-	m_blobsImg = cvCreateImage(cvSize(width, height), depth, channels);
+	m_foreground = cvCreateImage(cvSize(x_width, x_height), x_depth, 1);
+	m_foreground_rff = cvCreateImage(cvSize(x_width, x_height), x_depth, 1);
+	m_background = cvCreateImage(cvSize(x_width, x_height), x_depth, x_channels);
+	m_lastImg = cvCreateImage(cvSize(x_width, x_height), x_depth, x_channels);
+	m_temporalDiff = cvCreateImage(cvSize(x_width, x_height), x_depth, 1);
+	m_blobsImg = cvCreateImage(cvSize(x_width, x_height), x_depth, x_channels);
+	
 	Reset();
-	
-	
 }
 
-void detectorBarCallback0(int pos) 
-{
-	Detector::SetInputBlurSize( pos);
-	cout<<"Input blur filter size set to "<<Detector::GetInputBlurSize()<<endl;
-}
-
-void detectorBarCallback1(int pos) 
-{
-	Detector::SetBackgroundAlpha( pos / Detector::m_background_alpha_r);
-	cout<<"Background alpha set to "<<Detector::GetBackgroundAlpha()<<endl;
-}
-
-void detectorBarCallback2(int pos) 
-{
-	Detector::SetForegroundThres( pos / Detector::m_foreground_thres_r);	
-	cout<<"Foreground threshold set to "<<Detector::GetForegroundThres()<<endl;
-}
-
-void detectorBarCallback3(int pos) 
-{
-	Detector::SetForegroundFilterSize(pos);	
-	cout<<"Foreground filter size set to "<<Detector::GetForegroundFilterSize()<<endl;
-}
-
-void Detector::CreateParamWindow()
-{
-	cvNamedWindow("Parameters", CV_WINDOW_AUTOSIZE); 
-	cvMoveWindow("Parameters", 0, 0);
-	
-	cvCreateTrackbar( "Input blur filter size ", "Parameters", &m_inputBlurSize, 7, detectorBarCallback0 );
-	cvCreateTrackbar( "Background alpha     (0.1%) ", "Parameters", &m_background_alpha_d, 100, detectorBarCallback1 );
-	cvCreateTrackbar( "Foreground threshold (1%) ", "Parameters", &m_foreground_thres_d, 100, detectorBarCallback2 );
-	cvCreateTrackbar( "Foreground morph filter size ", "Parameters", &m_foregroundFilterSize, 7, detectorBarCallback3 );
-
-}
 
 Detector::~Detector(void)
 {
@@ -92,8 +39,8 @@ Detector::~Detector(void)
 
 void Detector::Reset()
 {
-	m_emptyTemporalDiff = true;
-	m_emptyBackgroundSubtraction = true;
+	m_emptyTemporalDiff = false;
+	m_emptyBackgroundSubtraction = false;
 }
 
 
@@ -101,12 +48,15 @@ void Detector::Reset()
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 /* Background update  */
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-void Detector::BlurInput(IplImage* x_img, IplImage* x_output)
+void Detector::BlurInput(const IplImage* x_img, IplImage* x_output)
 {
-	if(m_inputBlurSize % 2 == 0) m_inputBlurSize++; //odd numbers only !
-	if(m_inputBlurSize > 1)
+	int blurSize = 0;
+	if(m_param.inputBlurSize % 2 == 0) 
+		blurSize = m_param.inputBlurSize + 1; //odd numbers only !
+	else blurSize = m_param.inputBlurSize;
+	if(blurSize > 1)
 	{
-		cvSmooth(x_img, x_output, CV_GAUSSIAN, m_inputBlurSize);
+		cvSmooth(x_img, x_output, CV_GAUSSIAN, blurSize);
 	}
 	else cvCopy(x_img, x_output);
 }
@@ -132,7 +82,7 @@ void Detector::UpdateBackground(IplImage* x_img)
 		
 		if(m_background->depth == IPL_DEPTH_32F)
 		{
-			cvRunningAvg(x_img, m_background, m_background_alpha);
+			cvRunningAvg(x_img, m_background, m_param.background_alpha);
 		}
 		else
 		{
@@ -143,7 +93,7 @@ void Detector::UpdateBackground(IplImage* x_img)
 			
 			while (cpt)
 			{
-				*p_runner2 = (uchar) ((*p_runner2) * (1 - m_background_alpha) + (*p_runner1) * m_background_alpha);
+				*p_runner2 = (uchar) ((*p_runner2) * (1 - m_param.background_alpha) + (*p_runner1) * m_param.background_alpha);
 				p_runner1++;
 				p_runner2++;
 				cpt--;
@@ -179,7 +129,7 @@ void Detector::UpdateBackgroundMask(IplImage* x_img, IplImage* x_mask)
 		
 		if(m_background->depth == IPL_DEPTH_32F)
 		{
-			cvRunningAvg(x_img, m_background, m_background_alpha, x_mask);
+			cvRunningAvg(x_img, m_background, m_param.background_alpha, x_mask);
 		}
 		else
 		{
@@ -192,7 +142,7 @@ void Detector::UpdateBackgroundMask(IplImage* x_img, IplImage* x_mask)
 			while (cpt)
 			{
 				if(*p_runner3)
-					*p_runner2 = (uchar) ((*p_runner2) * (1 - m_background_alpha) + (*p_runner1) * m_background_alpha);
+					*p_runner2 = (uchar) ((*p_runner2) * (1 - m_param.background_alpha) + (*p_runner1) * m_param.background_alpha);
 				p_runner1++;
 				p_runner2++;
 				if(cpt % x_img->nChannels == 0)p_runner3++;
@@ -218,7 +168,7 @@ void Detector::ExtractForeground(IplImage* x_img)
 	
 	cvAbsDiff(x_img, m_background, tmp);
 	cvCvtColor(tmp, m_foreground, CV_RGB2GRAY);
-	cvThreshold(m_foreground, m_foreground, m_foreground_thres* 255, 255, CV_THRESH_BINARY);
+	cvThreshold(m_foreground, m_foreground, m_param.foreground_thres* 255, 255, CV_THRESH_BINARY);
 	//cvAdaptiveThreshold(m_foreground, m_foreground, 255, 0, 1);//, int adaptiveMethod, int thresholdType, int blockSize, double C)
 	/*assert(x_img->depth == m_background->depth);
 	assert(x_img->width == m_background->width);
@@ -302,7 +252,7 @@ void Detector::ExtractForegroundMax(IplImage* x_img)
 		{
 			if(*(p_tmp2) > max) max = *(p_tmp2);
 		}
-		if(max >= m_foreground_thres * 255)
+		if(max >= m_param.foreground_thres * 255)
 			*p_fore = (uchar) 255;
 		else 
 			*p_fore= (uchar) 0;
@@ -353,16 +303,17 @@ void Detector::RemoveFalseForegroundNeigh()
 
 void Detector::RemoveFalseForegroundMorph()
 {
-	if(m_foregroundFilterSize == 0) m_foregroundFilterSize=1;
-	if(m_foregroundFilterSize > 1)
+	int filterSize = m_param.foregroundFilterSize;
+	if(filterSize == 0) filterSize=1;
+	if(filterSize > 1)
 	{
 		static IplConvKernel* element = cvCreateStructuringElementEx(3, 3, 0, 0, CV_SHAPE_ELLIPSE); // CV_SHAPE_RECT
-		static int size = m_foregroundFilterSize;
+		static int size = filterSize;
 		
-		if(element->nCols != m_foregroundFilterSize)
+		if(element->nCols != filterSize)
 		{
 			cvReleaseStructuringElement(&element);
-			element = cvCreateStructuringElementEx(m_foregroundFilterSize, m_foregroundFilterSize, 0, 0, CV_SHAPE_ELLIPSE); // CV_SHAPE_RECT
+			element = cvCreateStructuringElementEx(filterSize, filterSize, 0, 0, CV_SHAPE_ELLIPSE); // CV_SHAPE_RECT
 		}
 		
 		cvMorphologyEx(m_foreground, m_foreground_rff, NULL, element, CV_MOP_OPEN, 1);
@@ -377,11 +328,13 @@ void Detector::RemoveFalseForegroundMorph()
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 void Detector::TemporalDiff(IplImage* x_img)
 {
-	if(m_emptyTemporalDiff) {
+	if(m_emptyTemporalDiff) 
+	{
 		cvCopy(x_img, m_lastImg);
 		m_emptyTemporalDiff = false;
 	}
-	else {
+	else 
+	{
 		static IplImage* tmp = cvCreateImage(cvSize(x_img->width, x_img->height), x_img->depth, x_img->nChannels);
 	
 		cvSub(x_img, m_lastImg, tmp);

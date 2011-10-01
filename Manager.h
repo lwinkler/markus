@@ -8,9 +8,6 @@
 #include <highgui.h>
 #include "timer.h"
 
-#include "SlitCam.h"
-#include "Detector.h"
-
 #include "ConfigReader.h"
 
 class Manager
@@ -18,7 +15,6 @@ class Manager
 	public:
 	Manager(ConfigReader & m_configReader);
 	~Manager();
-	void ReadConfig(const char *, Detector& detect);
 	void CaptureInput();
 	void Process();
 	void AddModule(Module & x_mod);

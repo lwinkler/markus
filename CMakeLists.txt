@@ -5,7 +5,9 @@ FIND_PACKAGE( OpenCV REQUIRED )
 
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR}
 modules/SlitCam
+modules/ObjectTracker
 tools
+tools/cvblobs
 )
 
 
@@ -22,6 +24,7 @@ tools/cvblobs/Blob.cpp
 tools/Detector.cpp
 ConfigReader.cpp
 modules/SlitCam/SlitCam.cpp
+modules/ObjectTracker/ObjectTracker.cpp
 )
 
 qt4_automoc(${markus_SRCS})
