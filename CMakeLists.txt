@@ -16,6 +16,7 @@ markus.cpp
 main.cpp 
 Module.cpp
 Manager.cpp
+Parameter.cpp
 util.cpp
 tools/Tracker.cpp
 tools/cvblobs/BlobExtraction.cpp
