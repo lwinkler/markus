@@ -65,7 +65,7 @@ void Detector::BlurInput(const IplImage* x_img, IplImage* x_output)
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 void Detector::UpdateBackground(IplImage* x_img)
 {
-	
+	float backgroundAlpha = m_param.backgroundAlpha;
 	//cout<<" img depth"<<x_img->depth<<" backgr"<<m_background->depth<<endl;
 	if(m_emptyBackgroundSubtraction) {
 		cvCopy(x_img, m_background);
@@ -82,7 +82,7 @@ void Detector::UpdateBackground(IplImage* x_img)
 		
 		if(m_background->depth == IPL_DEPTH_32F)
 		{
-			cvRunningAvg(x_img, m_background, m_param.background_alpha);
+			cvRunningAvg(x_img, m_background, backgroundAlpha);
 		}
 		else
 		{
@@ -93,7 +93,7 @@ void Detector::UpdateBackground(IplImage* x_img)
 			
 			while (cpt)
 			{
-				*p_runner2 = (uchar) ((*p_runner2) * (1 - m_param.background_alpha) + (*p_runner1) * m_param.background_alpha);
+				*p_runner2 = (uchar) ((*p_runner2) * (1 - backgroundAlpha) + (*p_runner1) * backgroundAlpha);
 				p_runner1++;
 				p_runner2++;
 				cpt--;
@@ -112,7 +112,7 @@ void Detector::UpdateBackground(IplImage* x_img)
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 void Detector::UpdateBackgroundMask(IplImage* x_img, IplImage* x_mask)
 {
-	
+	float backgroundAlpha = m_param.backgroundAlpha;
 	//cout<<" img depth"<<x_img->depth<<" backgr"<<m_background->depth<<endl;
 	if(m_emptyBackgroundSubtraction) {
 		cvCopy(x_img, m_background);
@@ -129,7 +129,7 @@ void Detector::UpdateBackgroundMask(IplImage* x_img, IplImage* x_mask)
 		
 		if(m_background->depth == IPL_DEPTH_32F)
 		{
-			cvRunningAvg(x_img, m_background, m_param.background_alpha, x_mask);
+			cvRunningAvg(x_img, m_background, backgroundAlpha, x_mask);
 		}
 		else
 		{
@@ -142,7 +142,7 @@ void Detector::UpdateBackgroundMask(IplImage* x_img, IplImage* x_mask)
 			while (cpt)
 			{
 				if(*p_runner3)
-					*p_runner2 = (uchar) ((*p_runner2) * (1 - m_param.background_alpha) + (*p_runner1) * m_param.background_alpha);
+					*p_runner2 = (uchar) ((*p_runner2) * (1 - backgroundAlpha) + (*p_runner1) * backgroundAlpha);
 				p_runner1++;
 				p_runner2++;
 				if(cpt % x_img->nChannels == 0)p_runner3++;
@@ -168,7 +168,7 @@ void Detector::ExtractForeground(IplImage* x_img)
 	
 	cvAbsDiff(x_img, m_background, tmp);
 	cvCvtColor(tmp, m_foreground, CV_RGB2GRAY);
-	cvThreshold(m_foreground, m_foreground, m_param.foreground_thres* 255, 255, CV_THRESH_BINARY);
+	cvThreshold(m_foreground, m_foreground, m_param.foregroundThres* 255, 255, CV_THRESH_BINARY);
 	//cvAdaptiveThreshold(m_foreground, m_foreground, 255, 0, 1);//, int adaptiveMethod, int thresholdType, int blockSize, double C)
 	/*assert(x_img->depth == m_background->depth);
 	assert(x_img->width == m_background->width);
@@ -236,7 +236,7 @@ void Detector::ExtractForeground(IplImage* x_img)
 
 void Detector::ExtractForegroundMax(IplImage* x_img)
 {
-	
+	float foregroundThres = m_param.foregroundThres;
 	static IplImage* tmp = cvCreateImage(cvSize(x_img->width, x_img->height), x_img->depth, x_img->nChannels);
 	
 	cvAbsDiff(x_img, m_background, tmp);
@@ -252,7 +252,7 @@ void Detector::ExtractForegroundMax(IplImage* x_img)
 		{
 			if(*(p_tmp2) > max) max = *(p_tmp2);
 		}
-		if(max >= m_param.foreground_thres * 255)
+		if(max >= foregroundThres * 255)
 			*p_fore = (uchar) 255;
 		else 
 			*p_fore= (uchar) 0;

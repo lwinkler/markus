@@ -20,16 +20,25 @@ markus::markus()
     a->setText( "Quit" );
     connect(a, SIGNAL(triggered()), SLOT(close()) );
     menuBar()->addMenu( "File" )->addAction( a );*/
-    	ConfigReader conf("../config.xml");
+    try
+    {
+    	ConfigReader conf("config.xml");
 	Manager manager(conf);
-	ObjectTracker detect(conf, 640, 480, IPL_DEPTH_8U, 3);
+	ObjectTracker objtrack(conf, 640, 480, IPL_DEPTH_8U, 3);
 	//Tracker track(conf, 640, 480, IPL_DEPTH_8U, 3);
 	SlitCam slitcam(conf, 640, 480, IPL_DEPTH_8U, 3);
-	manager.AddModule((Module&)detect);
+	manager.AddModule((Module&)objtrack);
 	manager.AddModule((Module&)slitcam);
 	manager.Process();
-
-    
+	}
+	catch(const char* str)
+	{
+		cout << "Exception raised : " << str <<endl;
+	}
+	catch(...)
+	{
+		cout << "Unknown exception raised: "<<endl;
+	}
 }
 
 markus::~markus()

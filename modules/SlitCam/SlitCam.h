@@ -10,23 +10,41 @@
 
 #include <cv.h>
 #include "Module.h"
+#include "Parameter.h"
+
 
 /*! \class SlitCam
  *  \brief Class containing methods/attributes of a slit camera
  *
  */
 
+
+class SlitCamParameter : public ParameterStructure
+{
+	
+public:
+	SlitCamParameter()
+	{
+		m_list.push_back(Parameter(0, "aperture", 1, PARAM_INT, 1, 10, &aperture));
+	};
+	void Init()
+	{
+	}
+	
+	int aperture;
+};
+
 class SlitCam : public Module
 {
 private:
+	SlitCamParameter m_param;
 	//IplImage * m_image;
 	int m_position;
-	int m_aperture;
 	static const char * m_name;
 public:
 	SlitCam(ConfigReader& x_configReader, int width, int height, int depth, int channels);
 	~SlitCam(void);
-	void CreateParamWindow();
+	//void CreateParamWindow();
 	virtual const char* GetName() {return m_name;}
 	
 	virtual void Init();
@@ -40,6 +58,8 @@ public:
 	
 	
 	static float m_time_interval;
+protected:
+	virtual ParameterStructure& GetRefParameter(){ return m_param;};
 };
 
 #endif

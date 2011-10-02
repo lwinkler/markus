@@ -1,6 +1,10 @@
 #include "Module.h"
 #include "ConfigReader.h"
 
+#include <list>
+
+using namespace std;
+
 Module::Module(ConfigReader& x_configReader, int width, int height, int depth, int channels) :
 	m_configReader(x_configReader),
 	m_width(width),
@@ -14,12 +18,16 @@ Module::Module(ConfigReader& x_configReader, int width, int height, int depth, i
 
 void Module::Init()
 {
-	m_configReader.ReadConfig(this);
+	ReadParametersFromConfig();
 }
-
-
 
 Module::~Module()
 {
 	cvReleaseImage(&m_output);
 };
+
+void Module::ReadParametersFromConfig()
+{
+	m_configReader.ReadConfig(GetName());
+	GetRefParameter().SetFromConfig(m_configReader.m_parameterList);
+}

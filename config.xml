@@ -5,9 +5,12 @@
 	<parameter id="1" name="mode">benchmarkAA</parameter>
 </Global>
 
-<ModuleObjectTracker>
+<ObjectTracker>
 	<parameter id="3" name="input_blur_size">3</parameter>
 	<parameter id="1" name="background_alpha">0.02</parameter><!-- -->
 	<parameter id="2" name="foreground_thres">0.2</parameter>
 	<parameter id="3" name="foreground_filter_size">3</parameter>
-</ModuleObjectTracker>
+</ObjectTracker>
+<SlitCamera>
+	<parameter id="1" name="aperture">1</parameter>
+</SlitCamera>

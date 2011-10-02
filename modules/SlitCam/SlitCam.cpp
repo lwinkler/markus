@@ -25,20 +25,20 @@ SlitCam::SlitCam(ConfigReader& x_configReader, int width, int height, int depth,
 	Init();
 }
 
-void detectorBarCallback4(int pos) 
+/*void detectorBarCallback4(int pos) 
 {
 	SlitCam::SetTimeInterval(pos);	
 	cout<<"Time interval "<<SlitCam::GetTimeInterval()<<endl;
-}
+}*/
 
-void SlitCam::CreateParamWindow()
+/*void SlitCam::CreateParamWindow()
 {
-	cvNamedWindow("Parameters", CV_WINDOW_AUTOSIZE); 
-	cvMoveWindow("Parameters", 0, 0);
+	//cvNamedWindow("Parameters", CV_WINDOW_AUTOSIZE); 
+	//cvMoveWindow("Parameters", 0, 0);
 	
 	//cvCreateTrackbar( "Time interval ", "Parameters", &m_time_interval, 7, detectorBarCallback4 );
 
-}
+}*/
 
 SlitCam::~SlitCam(void)
 {
@@ -49,15 +49,15 @@ void SlitCam::Init()
 	Module::Init();
 	m_time_interval = 0;
 	m_position = 0;
-	m_aperture = 1;
 }
 
 void SlitCam::ProcessFrame(const IplImage * img)
 {
 	int widthStep = img->widthStep;
-	char * pDst = m_output->imageData + m_position * m_output->nChannels * m_aperture;// * img->nChannels;
+	int aperture = m_param.aperture;
+	char * pDst = m_output->imageData + m_position * m_output->nChannels * aperture;// * img->nChannels;
 	char * pSrc = img->imageData + img->widthStep * img->nChannels / 2;
-	int size = m_output->depth * m_aperture;
+	int size = m_output->depth * aperture;
 	assert(m_output->imageSize == img->imageSize);
 	
 	for(int negCount = img->height ; negCount ; negCount--)

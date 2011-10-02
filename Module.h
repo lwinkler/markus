@@ -3,6 +3,7 @@
 
 #include "cv.h"
 #include "ConfigReader.h"
+#include "Parameter.h"
 
 class Module
 {
@@ -11,13 +12,14 @@ public:
 	~Module();
 	
 	virtual void Init() = 0;
-	
+	void ReadParametersFromConfig();
 	virtual void ProcessFrame(const IplImage * m_input) = 0;
 	virtual const char* GetName() = 0;
 	const IplImage * GetOutput(){return m_output;}
 	
 private:
 	ConfigReader& m_configReader;
+	virtual ParameterStructure & GetRefParameter() = 0;
 	
 protected:
 	double m_timeInterval;

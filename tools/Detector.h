@@ -21,17 +21,15 @@ class DetectorParameter
 public:
 	DetectorParameter()
 	{
-		background_alpha = 0.02;
-		foreground_thres = 0.2;
+		backgroundAlpha = 0.02;
+		foregroundThres = 0.2;
 		inputBlurSize = 3;
 		foregroundFilterSize = 3;
 	};
-	float background_alpha;
-	float foreground_thres;
+	float backgroundAlpha;
+	float foregroundThres;
 	int inputBlurSize;
 	int foregroundFilterSize;
-	bool emptyBackgroundSubtraction;
-	bool emptyTemporalDiff;
 };
 
 class Detector

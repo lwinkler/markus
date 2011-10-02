@@ -2,7 +2,8 @@
 #define CONFIGREADER_H
 
 #include <tinyxml.h>
-#include <cstring>
+#include <string>
+#include "Parameter.h"
 
 class Module;
 class Manager;
@@ -13,12 +14,14 @@ public:
 	ConfigReader(const char * x_fileName)
 	{
 		m_fileName = x_fileName;
+		m_parameterList.clear();
 	};
 	~ConfigReader(){};
-	void ReadConfig(Manager * x_module);
-	void ReadConfig(Module * x_module);
-	static const char * m_fileName;
+	void ReadConfig(const std::string& x_moduleName);
+	//void SetParameterValues(ParameterStructure& x_param);
+	std::list<ParameterValue> m_parameterList;
 private:
+	std::string m_fileName;
 };
 
 #endif

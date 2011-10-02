@@ -26,7 +26,7 @@ using namespace std;
 
 
 Manager::Manager(ConfigReader& x_configReader) : 
-	m_configReader(m_configReader)
+	m_configReader(x_configReader)
 {
 	m_workWidth = 640;//384;//640;
 	m_workHeight = 480;//288;//320;
@@ -34,7 +34,8 @@ Manager::Manager(ConfigReader& x_configReader) :
 	m_workChannels = 3;
 	m_workIsColor = (m_workChannels==3);
 	
-	m_configReader.ReadConfig(this);
+	m_configReader.ReadConfig("Global");
+	m_input = "cam"; // HACK
 
 	cout<<"Create Manager : Work image ("<<m_workWidth<<"x"<<m_workHeight<<" depth="<<m_workDepth<<" channels="<<m_workChannels<<")"<<endl;
 	m_capture = NULL;
@@ -205,7 +206,7 @@ void Manager::Process()
 	}
 	catch(...)
 	{
-		cout << "Unknown exception raised: "<<endl;
+		cout << "Unknown exception raised"<<endl;
 	}
 
 }
