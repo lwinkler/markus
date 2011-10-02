@@ -1,5 +1,6 @@
 #include "Parameter.h"
 #include <cstring>
+#include <iostream>
 
 using namespace std;
 
@@ -17,14 +18,14 @@ void ParameterStructure::SetValueByName(const char * x_name, double x_value)
 	{
 		if(it->m_name.compare(x_name) == 0)//(!strcmp(it->m_name, x_name))
 		{
-			if(x_value < it->m_min || x_value > it->m_max)
-				throw("Parameter " + std::string(x_name) + " out of range");
+			//if(x_value < it->m_min || x_value > it->m_max)
+			//	throw("Parameter " + std::string(x_name) + " out of range");
 			it->SetValue(x_value);
 			return;
 		}
 	}
 	
-	throw("Parameter not found in list (by name) : " + std::string(x_name));
+	cout<<("Parameter not found in list (by name) : " + std::string(x_name))<<endl;
 }
 
 void Parameter::SetValue(double x_value)
@@ -62,16 +63,6 @@ void ParameterStructure::SetDefault()
 	}
 }
 
-void ParameterStructure::CheckRange() const
-{
-	for(list<Parameter>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
-	{
-		double value = it->GetValue();
-		if(value < it->m_min || value > it->m_max)
-			throw("Parameter " + std::string(it->m_name) + " out of range");
-	}
-}
-
 double Parameter::GetValue() const
 {
 	double value = -1;
@@ -99,4 +90,23 @@ double Parameter::GetValue() const
 			throw(std::string("Error in Parameter::SetValue"));
 	}
 	return value;
+}
+
+void ParameterStructure::CheckRange() const
+{
+	for(list<Parameter>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
+	{
+		double value = it->GetValue();
+		if(value < it->m_min || value > it->m_max)
+			throw("Parameter " + std::string(it->m_name) + " out of range");
+	}
+}
+
+void ParameterStructure::PrintParameters() const
+{
+	for(list<Parameter>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
+	{
+		cout<<it->m_name<<" = "<<it->GetValue()<<" ["<<it->m_min<<":"<<it->m_max<<"]; ";
+	}
+	cout<<endl;
 }

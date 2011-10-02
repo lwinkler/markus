@@ -28,33 +28,29 @@ using namespace std;
 Manager::Manager(ConfigReader& x_configReader) : 
 	m_configReader(x_configReader)
 {
-	m_workWidth = 640;//384;//640;
-	m_workHeight = 480;//288;//320;
-	m_workDepth = IPL_DEPTH_8U;//IPL_DEPTH_8U IPL_DEPTH_32F;
-	m_workChannels = 3;
-	m_workIsColor = (m_workChannels==3);
-	
-	m_configReader.ReadConfig("Global");
-	m_input = "cam"; // HACK
+	Init();
+	//m_workIsColor = (m_workChannels==3);	
 
-	cout<<"Create Manager : Work image ("<<m_workWidth<<"x"<<m_workHeight<<" depth="<<m_workDepth<<" channels="<<m_workChannels<<")"<<endl;
+	m_param.input = "cam"; // HACK
+
+	//cout<<"Create Manager : Work image ("<<m_workWidth<<"x"<<m_workHeight<<" depth="<<m_workDepth<<" channels="<<m_workChannels<<")"<<endl;
 	m_capture = NULL;
 	
-	cout<<"Input "<< m_input<<endl;
+	cout<<"Input "<< m_param.input<<endl;
 
-	if(m_input == "cam")
+	if(m_param.input == "cam")
 	{
 		cout<<"Capture from Cam"<<endl;
 		m_capture = cvCaptureFromCAM( CV_CAP_ANY );
 	}
 	else
 	{
-		m_capture = cvCaptureFromFile(m_input.c_str());
+		m_capture = cvCaptureFromFile(m_param.input.c_str());
 	}
 	
 	if(m_capture == NULL)
 	{
-		cout<<"Error : Input or input file not found ! : "<<m_input<<endl;
+		cout<<"Error : Input or input file not found ! : "<<m_param.input<<endl;
 		exit(-1);
 	}
 	assert(m_capture != NULL);
@@ -71,9 +67,9 @@ Manager::Manager(ConfigReader& x_configReader) :
 	
 	int fps     = fpsc;  // or 30
 	
-	if(m_mode == "benchmark")
+	if(m_param.mode == "benchmark")
 	{
-		m_writer = cvCreateVideoWriter("out.avi", CV_FOURCC('D','I','V','3'), fps, cvSize(m_workWidth, m_workHeight), m_workIsColor);
+		m_writer = cvCreateVideoWriter("out.avi", CV_FOURCC('D','I','V','3'), fps, cvSize(m_param.width, m_param.height), m_param.channels == 3);
 		assert(m_writer != NULL);
 		//not working writer=cvCreateVideoWriter("out.mpg",CV_FOURCC('D', 'I', 'V', '3'), fps,cvSize(frameW,frameH),m_workIsColor);
 	}
@@ -113,6 +109,17 @@ Manager::~Manager()
 	// TODO release images ...
 }
 
+void Manager::Init()
+{
+	// Read parameters from config
+	m_param.SetDefault();
+	m_configReader.ReadConfig("Global");
+	m_param.SetFromConfig(m_configReader.m_parameterList);
+	m_param.CheckRange();
+	cout<<"Manager "<<" initialized."<<endl;
+	m_param.PrintParameters();
+}
+
 void Manager::CaptureInput()
 {
 	
@@ -120,7 +127,7 @@ void Manager::CaptureInput()
 }
 void Manager::Process()
 {
-	IplImage *img = cvCreateImage( cvSize(m_workWidth, m_workHeight), m_workDepth, m_workChannels);	
+	IplImage *img = cvCreateImage( cvSize(m_param.width, m_param.height), m_param.depth, m_param.channels);	
 	int frame=0;
 	
 	// Main loop
@@ -151,9 +158,9 @@ void Manager::Process()
 		timerProc.stop();
 		m_timerConv.start();
 		
-		if(m_mode == "benchmark")
+		if(m_param.mode == "benchmark")
 		{
-			static IplImage* output = cvCreateImage( cvSize(m_workWidth, m_workHeight), IPL_DEPTH_8U, m_workChannels);
+			static IplImage* output = cvCreateImage( cvSize(m_param.width, m_param.height), IPL_DEPTH_8U, m_param.channels);
 			static IplImage* tmp1 = NULL;
 			static IplImage* tmp2 = NULL;
 			
@@ -163,7 +170,7 @@ void Manager::Process()
 		else
 		{
 			// Write output to screen
-			static IplImage *output = cvCreateImage( cvSize(m_workWidth, m_workHeight), IPL_DEPTH_8U, m_workChannels);
+			static IplImage *output = cvCreateImage( cvSize(m_param.width, m_param.height), IPL_DEPTH_8U, m_param.channels);
 			static IplImage* tmp1_c1 = NULL;
 			static IplImage* tmp2_c1 = NULL;
 			static IplImage* tmp1_c3 = NULL;
@@ -203,4 +210,5 @@ void Manager::AddModule(Module& x_mod)
 {
 	m_modules.push_back(&x_mod);
 }
+
 

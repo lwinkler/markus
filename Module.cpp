@@ -18,7 +18,11 @@ Module::Module(ConfigReader& x_configReader, int width, int height, int depth, i
 
 void Module::Init()
 {
+	GetRefParameter().SetDefault();
 	ReadParametersFromConfig();
+	GetRefParameter().CheckRange();
+	cout<<"Module "<<GetName()<<" initialized."<<endl;
+	GetRefParameter().PrintParameters();
 }
 
 Module::~Module()

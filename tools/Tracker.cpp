@@ -466,7 +466,7 @@ void Tracker::CleanTemplates()
 	for(list<Template>::iterator it1 = m_templates.begin() ; it1 != m_templates.end(); it1++ )
 	{
 		//cout<<"it1->m_isMatched"<<it1->m_isMatched<<endl;
-		cout<<"it1->m_counterClean"<<it1->m_counterClean<<endl;
+		//cout<<"it1->m_counterClean"<<it1->m_counterClean<<endl;
 		if(it1->m_bestMatchingTrackedRegion == -1)
 		{
 			it1->m_counterClean--;

@@ -8,7 +8,8 @@ enum ParameterType
 {
 	PARAM_INT,
 	PARAM_FLOAT,
-	PARAM_DOUBLE
+	PARAM_DOUBLE,
+	PARAM_STR
 };
 
 class ParameterValue
@@ -55,6 +56,7 @@ public:
 	virtual void SetFromConfig(const std::list<ParameterValue>& x_params);
 	void SetDefault();
 	void CheckRange() const;
+	void PrintParameters() const;
 	void SetValueByName(const char * x_name, double x_value);
 	
 protected:
