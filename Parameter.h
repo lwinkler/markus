@@ -33,6 +33,7 @@ public:
 		m_max(x_max),
 		mp_value(xp_value){};
 	void SetValue(double x_value);
+	double GetValue() const;
 	const int m_id;
 	std::string m_name;
 	const double m_default;
@@ -52,6 +53,8 @@ public:
 	};
 	virtual void Init() = 0;
 	virtual void SetFromConfig(const std::list<ParameterValue>& x_params);
+	void SetDefault();
+	void CheckRange() const;
 	void SetValueByName(const char * x_name, double x_value);
 	
 protected:

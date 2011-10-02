@@ -25,15 +25,22 @@ markus::markus()
     	ConfigReader conf("config.xml");
 	Manager manager(conf);
 	ObjectTracker objtrack(conf, 640, 480, IPL_DEPTH_8U, 3);
-	//Tracker track(conf, 640, 480, IPL_DEPTH_8U, 3);
 	SlitCam slitcam(conf, 640, 480, IPL_DEPTH_8U, 3);
 	manager.AddModule((Module&)objtrack);
 	manager.AddModule((Module&)slitcam);
 	manager.Process();
 	}
+	catch(std::exception e)
+	{
+		cout << "Exception raised (std::exception) : " << e.what() <<endl;
+	}
+	catch(std::string str)
+	{
+		cout << "Exception raised (string) : " << str <<endl;
+	}
 	catch(const char* str)
 	{
-		cout << "Exception raised : " << str <<endl;
+		cout << "Exception raised (const char*) : " << str <<endl;
 	}
 	catch(...)
 	{

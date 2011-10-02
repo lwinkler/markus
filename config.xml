@@ -6,7 +6,7 @@
 </Global>
 
 <ObjectTracker>
-	<parameter id="3" name="input_blur_size">3</parameter>
+	<parameter id="3" name="input_blur_size">-3</parameter>
 	<parameter id="1" name="background_alpha">0.02</parameter><!-- -->
 	<parameter id="2" name="foreground_thres">0.2</parameter>
 	<parameter id="3" name="foreground_filter_size">3</parameter>

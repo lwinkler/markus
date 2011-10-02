@@ -123,92 +123,80 @@ void Manager::Process()
 	IplImage *img = cvCreateImage( cvSize(m_workWidth, m_workHeight), m_workDepth, m_workChannels);	
 	int frame=0;
 	
-	try
+	// Main loop
+	while(cvGrabFrame(m_capture) && m_key != 27)
 	{
-		// Main loop
-		while(cvGrabFrame(m_capture) && m_key != 27)
+		IplImage* source=cvRetrieveFrame(m_capture);           // retrieve the captured frame
+		
+		static IplImage* tmp1=NULL;
+		static IplImage* tmp2=NULL;
+		adjust(source, img, tmp1, tmp2);
+		
+		//Get frame information:
+		static double posMsec   =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_MSEC);
+		static int posFrames    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_FRAMES);
+		static double posRatio  =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_AVI_RATIO);
+		
+		//printf("Processing frame %d (%dx%d) with %d channels\n", frame, width, height, channels); 
+		// declare a destination IplImage object with correct size, depth and channels			
+		
+		m_timerConv.stop();
+		timerProc.start();
+		
+		for(list<Module*>::iterator it = m_modules.begin(); it != m_modules.end(); it++)
 		{
-			IplImage* source=cvRetrieveFrame(m_capture);           // retrieve the captured frame
+			(*it)->ProcessFrame(img);
+		}
+		
+		timerProc.stop();
+		m_timerConv.start();
+		
+		if(m_mode == "benchmark")
+		{
+			static IplImage* output = cvCreateImage( cvSize(m_workWidth, m_workHeight), IPL_DEPTH_8U, m_workChannels);
+			static IplImage* tmp1 = NULL;
+			static IplImage* tmp2 = NULL;
 			
-			static IplImage* tmp1=NULL;
-			static IplImage* tmp2=NULL;
-			adjust(source, img, tmp1, tmp2);
-			
-			//Get frame information:
-			static double posMsec   =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_MSEC);
-			static int posFrames    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_FRAMES);
-			static double posRatio  =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_AVI_RATIO);
-			
-			//printf("Processing frame %d (%dx%d) with %d channels\n", frame, width, height, channels); 
-			// declare a destination IplImage object with correct size, depth and channels			
-			
-			m_timerConv.stop();
-			timerProc.start();
+			//adjust(detect.GetBackground(), output, tmp1, tmp2);
+			//if(m_workIsColor) cvWriteFrame(m_writer,output); // proble for B&W
+		}
+		else
+		{
+			// Write output to screen
+			static IplImage *output = cvCreateImage( cvSize(m_workWidth, m_workHeight), IPL_DEPTH_8U, m_workChannels);
+			static IplImage* tmp1_c1 = NULL;
+			static IplImage* tmp2_c1 = NULL;
+			static IplImage* tmp1_c3 = NULL;
+			static IplImage* tmp2_c3 = NULL;
 			
 			for(list<Module*>::iterator it = m_modules.begin(); it != m_modules.end(); it++)
 			{
-				(*it)->ProcessFrame(img);
+				adjust((*it)->GetOutput(), output, tmp1_c3, tmp2_c3);
+				cvShowImage((*it)->GetName(), output);
 			}
-			
-			timerProc.stop();
-			m_timerConv.start();
-			
-			if(m_mode == "benchmark")
-			{
-				static IplImage* output = cvCreateImage( cvSize(m_workWidth, m_workHeight), IPL_DEPTH_8U, m_workChannels);
-				static IplImage* tmp1 = NULL;
-				static IplImage* tmp2 = NULL;
-				
-				//adjust(detect.GetBackground(), output, tmp1, tmp2);
-				//if(m_workIsColor) cvWriteFrame(m_writer,output); // proble for B&W
-			}
-			else
-			{
-				// Write output to screen
-				static IplImage *output = cvCreateImage( cvSize(m_workWidth, m_workHeight), IPL_DEPTH_8U, m_workChannels);
-				static IplImage* tmp1_c1 = NULL;
-				static IplImage* tmp2_c1 = NULL;
-				static IplImage* tmp1_c3 = NULL;
-				static IplImage* tmp2_c3 = NULL;
-				
-				for(list<Module*>::iterator it = m_modules.begin(); it != m_modules.end(); it++)
-				{
-					adjust((*it)->GetOutput(), output, tmp1_c3, tmp2_c3);
-					cvShowImage((*it)->GetName(), output);
-				}
-			
-				
-				m_key= (char) cvWaitKey(5);           // wait 20 ms
-			}
-
-			frame++;
-			if(frame % 100 == 0)
-			{
-				m_timerConv.stop();
-				cout<<frame<<" frames processed in "<<timerProc.value<<" s "<<frame/timerProc.value<<" frames/s"<<endl;
-				cout<<"Time for Input/Output conversion "<<m_timerConv.value<<" s "<<frame/m_timerConv.value<<" frames/s"<<endl;
-				cout<<"Total time "<<timerProc.value + m_timerConv.value<<" s"<<endl;
-				m_timerConv.start();
-			}
-
-		}// end main loop
 		
-		m_timerConv.stop();
-		cout<<"--------- end of execution -------------"<<endl;
-		cout<<frame<<" frames processed in "<<timerProc.value<<" s "<<frame/timerProc.value<<" frames/s"<<endl;
-		cout<<"Time for Input/Output conversion "<<m_timerConv.value<<" s "<<frame/m_timerConv.value<<" frames/s"<<endl;
-		cout<<"Total time "<<timerProc.value + m_timerConv.value<<" s"<<endl;
-		m_timerConv.start();
-	}
-	catch(const char* str)
-	{
-		cout << "Exception raised : " << str <<endl;
-	}
-	catch(...)
-	{
-		cout << "Unknown exception raised"<<endl;
-	}
+			
+			m_key= (char) cvWaitKey(5);           // wait 20 ms
+		}
 
+		frame++;
+		if(frame % 100 == 0)
+		{
+			m_timerConv.stop();
+			cout<<frame<<" frames processed in "<<timerProc.value<<" s "<<frame/timerProc.value<<" frames/s"<<endl;
+			cout<<"Time for Input/Output conversion "<<m_timerConv.value<<" s "<<frame/m_timerConv.value<<" frames/s"<<endl;
+			cout<<"Total time "<<timerProc.value + m_timerConv.value<<" s"<<endl;
+			m_timerConv.start();
+		}
+
+	}// end main loop
+	
+	m_timerConv.stop();
+	cout<<"--------- end of execution -------------"<<endl;
+	cout<<frame<<" frames processed in "<<timerProc.value<<" s "<<frame/timerProc.value<<" frames/s"<<endl;
+	cout<<"Time for Input/Output conversion "<<m_timerConv.value<<" s "<<frame/m_timerConv.value<<" frames/s"<<endl;
+	cout<<"Total time "<<timerProc.value + m_timerConv.value<<" s"<<endl;
+	m_timerConv.start();
 }
 
 void Manager::AddModule(Module& x_mod)
