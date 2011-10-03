@@ -30,9 +30,6 @@ Manager::Manager(ConfigReader& x_configReader) :
 {
 	Init();
 	//m_workIsColor = (m_workChannels==3);	
-
-	m_param.input = "cam"; // HACK
-
 	//cout<<"Create Manager : Work image ("<<m_workWidth<<"x"<<m_workHeight<<" depth="<<m_workDepth<<" channels="<<m_workChannels<<")"<<endl;
 	m_capture = NULL;
 	

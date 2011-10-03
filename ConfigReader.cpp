@@ -52,9 +52,17 @@ void ConfigReader::ReadConfig(const std::string& x_moduleName)
 		assert(name);
 		//cout<<"name"<<name<<" value "<<value<<endl;
 		
-		m_parameterList.push_back(ParameterValue(atoi(id), std::string(name), atof(value)));
+		m_parameterList.push_back(ParameterValue(atoi(id), std::string(name), value));
 	}
 }
 
 
 
+string ConfigReader::GetParameterValue(const std::string& x_name) const
+{
+	for(list<ParameterValue>::const_iterator it = m_parameterList.begin(); it != m_parameterList.end(); it++)
+	{
+		if(x_name.compare(it->m_name) == 0)
+			return it->m_value;
+	}
+}
