@@ -3,14 +3,26 @@
 <Global>
 	<parameter id="0" name="input">cam</parameter><!-- cam   ../input/PETS2001set2test2.mov.avi -->
 	<parameter id="1" name="mode">benchmarkAA</parameter>
+        <parameter id="2" name="width">320</parameter>
+	<parameter id="3" name="height">240</parameter>
+        <parameter id="4" name="depth">8</parameter>
+        <parameter id="5" name="channels">3</parameter>
 </Global>
 
 <ObjectTracker>
+        <parameter id="2" name="width">320</parameter>
+        <parameter id="3" name="height">240</parameter>
+        <parameter id="4" name="depth">8</parameter>
+        <parameter id="5" name="channels">3</parameter>
 	<parameter id="3" name="input_blur_size">3</parameter>
 	<parameter id="1" name="background_alpha">0.01</parameter><!-- -->
 	<parameter id="2" name="foreground_thres">0.2</parameter>
 	<parameter id="3" name="foreground_filter_size">3</parameter>
 </ObjectTracker>
 <SlitCamera>
+        <parameter id="2" name="width">320</parameter>
+        <parameter id="3" name="height">240</parameter>
+        <parameter id="4" name="depth">8</parameter>
+        <parameter id="5" name="channels">3</parameter>
 	<parameter id="1" name="aperture">1</parameter>
 </SlitCamera>

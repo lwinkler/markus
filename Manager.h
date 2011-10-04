@@ -13,14 +13,17 @@
 class ManagerParameter : public ParameterStructure
 {
 public:
-	ManagerParameter()
+	ManagerParameter(ConfigReader& x_confReader, const std::string& x_moduleName) : ParameterStructure(x_confReader, x_moduleName)
 	{
-	    m_list.push_back(Parameter(0, "mode",	"", 	PARAM_STR,		&mode));
-	    m_list.push_back(Parameter(1, "input",	"cam", 	PARAM_STR,		&input));
-	    m_list.push_back(Parameter(2, "width", 	640, 	PARAM_INT, 0, 4000,	&width));
-	    m_list.push_back(Parameter(3, "height", 	480, 	PARAM_INT, 0, 3000,	&height));
-	    m_list.push_back(Parameter(4, "depth", IPL_DEPTH_8U, PARAM_INT, 0, 32,	&depth));
-	    m_list.push_back(Parameter(5, "channels", 	3, 	PARAM_INT, 1, 3,	&channels));
+		m_list.push_back(Parameter(0, "mode",	"", 	PARAM_STR,		&mode));
+		m_list.push_back(Parameter(1, "input",	"cam", 	PARAM_STR,		&input));
+		m_list.push_back(Parameter(2, "width", 	640, 	PARAM_INT, 0, 4000,	&width));
+		m_list.push_back(Parameter(3, "height", 	480, 	PARAM_INT, 0, 3000,	&height));
+		m_list.push_back(Parameter(4, "depth", IPL_DEPTH_8U, PARAM_INT, 0, 32,	&depth));
+		m_list.push_back(Parameter(5, "channels", 	3, 	PARAM_INT, 1, 3,	&channels));
+	    
+		ParameterStructure::Init();
+
 	};
 	std::string mode;
 	std::string input;
@@ -30,14 +33,14 @@ public:
 	int channels;
 //	bool workIsColor;
 	
-	void Init(){};
+	//void Init(){};
 };
 
 
 class Manager
 {
 public:
-	Manager(ConfigReader & m_configReader);
+	Manager(ConfigReader & x_configReader);
 	~Manager();
 	void CaptureInput();
 	void Process();

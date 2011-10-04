@@ -31,7 +31,7 @@ void ConfigReader::ReadConfig(const std::string& x_moduleName)
 	
 	node = doc.FirstChild(x_moduleName);
 	if(node == NULL)
-		throw("Impossible to find module in config file.");
+		throw("Impossible to find module in config file." + x_moduleName);
 	moduleElement = node->ToElement();
 	assert( moduleElement  );
 	

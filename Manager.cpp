@@ -26,7 +26,8 @@ using namespace std;
 
 
 Manager::Manager(ConfigReader& x_configReader) : 
-	m_configReader(x_configReader)
+	m_configReader(x_configReader),
+	m_param(m_configReader, "Global")
 {
 	Init();
 	//m_workIsColor = (m_workChannels==3);	
@@ -47,10 +48,10 @@ Manager::Manager(ConfigReader& x_configReader) :
 	
 	if(m_capture == NULL)
 	{
-		cout<<"Error : Input or input file not found ! : "<<m_param.input<<endl;
-		exit(-1);
+		throw("Error : Input or input file not found ! : " + m_param.input);
 	}
 	assert(m_capture != NULL);
+	
 	// Get capture device information
 	cvQueryFrame(m_capture); // this call is necessary to get correct capture properties
 	int frameHc    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT);
@@ -109,12 +110,12 @@ Manager::~Manager()
 void Manager::Init()
 {
 	// Read parameters from config
-	m_param.SetDefault();
+/*	m_param.SetDefault();
 	m_configReader.ReadConfig("Global");
 	m_param.SetFromConfig(m_configReader.m_parameterList);
 	m_param.CheckRange();
 	cout<<"Manager "<<" initialized."<<endl;
-	m_param.PrintParameters();
+	m_param.PrintParameters();*/
 }
 
 void Manager::CaptureInput()

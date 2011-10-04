@@ -19,16 +19,20 @@
  */
 
 
-class SlitCamParameter : public ParameterStructure
+class SlitCamParameter : public ModuleParameterStructure
 {
 	
 public:
-	SlitCamParameter()
+	SlitCamParameter(ConfigReader& x_confReader, const std::string& x_moduleName) : 
+		ModuleParameterStructure(x_confReader, x_moduleName)
 	{
 		m_list.push_back(Parameter(0, "aperture", 1, PARAM_INT, 1, 10, &aperture));
+		
+		Init();
 	};
 	void Init()
 	{
+		ParameterStructure::Init();
 	}
 	
 	int aperture;
@@ -42,7 +46,7 @@ private:
 	int m_position;
 	static const char * m_name;
 public:
-	SlitCam(ConfigReader& x_configReader, int width, int height, int depth, int channels);
+	SlitCam(ConfigReader& x_configReader);
 	~SlitCam(void);
 	//void CreateParamWindow();
 	virtual const char* GetName() {return m_name;}
@@ -59,7 +63,7 @@ public:
 	
 	static float m_time_interval;
 protected:
-	virtual ParameterStructure& GetRefParameter(){ return m_param;};
+	virtual ModuleParameterStructure& GetRefParameter(){ return m_param;};
 };
 
 #endif
