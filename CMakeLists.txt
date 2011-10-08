@@ -17,6 +17,7 @@ main.cpp
 Module.cpp
 Manager.cpp
 Parameter.cpp
+OutputStream.cpp
 util.cpp
 tools/Tracker.cpp
 tools/cvblobs/BlobExtraction.cpp

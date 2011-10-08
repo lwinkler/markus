@@ -9,6 +9,9 @@
 #include <iostream>
 #include <assert.h>
 
+#include "ObjectTracker.h"
+#include "SlitCam.h"
+
 #include "timer.h"
 
 	#include <sstream>
@@ -77,6 +80,7 @@ Manager::Manager(ConfigReader& x_configReader) :
 	// Create timers
 	m_timerConv.start();
 	
+	/*
 	cvNamedWindow("background", CV_WINDOW_AUTOSIZE); 
 	cvMoveWindow("background", 0, 000);
 	cvNamedWindow("foreground", CV_WINDOW_AUTOSIZE); 
@@ -87,14 +91,10 @@ Manager::Manager(ConfigReader& x_configReader) :
 	//cvMoveWindow("temporaldiff", 650, 650);
 	cvNamedWindow("blobs", CV_WINDOW_AUTOSIZE); 
 	cvMoveWindow("blobs", 650, 650);
-	
-	cvNamedWindow("slit", CV_WINDOW_AUTOSIZE); 
-	
-	for(list<Module*>::iterator it = m_modules.begin(); it != m_modules.end(); it++)
-	{
-		//it->CreateParamWindow();
-	}
-	
+	*/
+	// Add modules
+	//cvNamedWindow("slit", CV_WINDOW_AUTOSIZE); 
+		
 	m_modules.clear();
 }
 
@@ -176,8 +176,19 @@ void Manager::Process()
 			
 			for(list<Module*>::iterator it = m_modules.begin(); it != m_modules.end(); it++)
 			{
-				adjust((*it)->GetOutput(), output, tmp1_c3, tmp2_c3);
-				cvShowImage((*it)->GetName(), output);
+				const std::list<OutputStream> streamList((*it)->GetOutputStreamList());
+				for(list<OutputStream>::const_iterator it2 = streamList.begin(); it2 != streamList.end(); it2++)
+				{
+					if((*it2).GetImageRef()->nChannels == 3)
+						adjust((*it2).GetImageRef(), output, tmp1_c3, tmp2_c3);
+					else
+						adjust((*it2).GetImageRef(), output, tmp1_c1, tmp2_c1);
+
+					cvShowImage((*it2).GetName().c_str(), output);
+				}
+
+				//adjust((*it)->GetOutput(), output, tmp1_c3, tmp2_c3);
+				//cvShowImage((*it)->GetName(), output);
 			}
 		
 			
@@ -206,7 +217,16 @@ void Manager::Process()
 
 void Manager::AddModule(Module& x_mod)
 {
+	int cpt = 0;
 	m_modules.push_back(&x_mod);
+	const std::list<OutputStream> streamList(x_mod.GetOutputStreamList());
+	for(list<OutputStream>::const_iterator it2 = streamList.begin(); it2 != streamList.end(); it2++)
+	{
+		cvNamedWindow(it2->GetName().c_str(), CV_WINDOW_AUTOSIZE);
+		cvMoveWindow(it2->GetName().c_str(), 100 * cpt, 30 * cpt);
+		cpt++;
+	}
+
 }
 
 

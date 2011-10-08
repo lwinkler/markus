@@ -23,6 +23,7 @@ SlitCam::SlitCam(ConfigReader& x_configReader)
 	 : m_param(x_configReader, "SlitCamera"), Module(x_configReader)
 {
 	Init();
+	m_outputStreams.push_back(OutputStream("myslit", STREAM_OUTPUT, m_output));
 }
 
 /*void detectorBarCallback4(int pos) 

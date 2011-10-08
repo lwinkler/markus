@@ -24,11 +24,11 @@ markus::markus()
     {
     	ConfigReader conf("config.xml");
 	Manager manager(conf);
-	
 	ObjectTracker objtrack(conf);
 	SlitCam slitcam(conf);
 	manager.AddModule((Module&)objtrack);
 	manager.AddModule((Module&)slitcam);
+
 	manager.Process();
 	}
 	catch(cv::Exception& e)

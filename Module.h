@@ -4,6 +4,7 @@
 #include "cv.h"
 #include "ConfigReader.h"
 #include "Parameter.h"
+#include "OutputStream.h"
 
 class ModuleParameterStructure : public ParameterStructure
 {
@@ -20,7 +21,8 @@ public:
 	int depth;
 	int channels;
 	void Init()
-	{};
+	{
+	};
 };
 
 class Module
@@ -34,6 +36,8 @@ public:
 	virtual void ProcessFrame(const IplImage * m_input) = 0;
 	virtual const char* GetName() = 0;
 	const IplImage * GetOutput(){return m_output;}
+	void AddStream(const std::string& x_name, StreamType x_type, IplImage* m_image);
+	const std::list<OutputStream>& GetOutputStreamList(){return m_outputStreams;};
 	
 private:
 	ConfigReader& m_configReader;
@@ -46,6 +50,7 @@ protected:
 	int m_height;
 	int m_depth;
 	int m_channels;*/
+	std::list<OutputStream> m_outputStreams;
 };
 
 #endif
