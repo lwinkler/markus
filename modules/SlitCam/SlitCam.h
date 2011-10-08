@@ -42,7 +42,6 @@ class SlitCam : public Module
 {
 private:
 	SlitCamParameter m_param;
-	//IplImage * m_image;
 	int m_position;
 	static const char * m_name;
 public:
@@ -51,7 +50,6 @@ public:
 	//void CreateParamWindow();
 	virtual const char* GetName() {return m_name;}
 	
-	virtual void Init();
 	virtual void ProcessFrame(const IplImage * img);
 	
 	inline static float GetTimeInterval(){ return m_time_interval;};

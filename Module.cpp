@@ -10,17 +10,9 @@ Module::Module(ConfigReader& x_configReader) :
 {
 };
 
-void Module::Init()
-{
-	
-	// Init images
-	m_output = cvCreateImage(cvSize(GetRefParameter().width, GetRefParameter().height),
-				 GetRefParameter().depth, GetRefParameter().channels);
-}
 
 Module::~Module()
 {
-	cvReleaseImage(&m_output);
 };
 
 void Module::AddStream(const std::string& x_name, StreamType x_type, IplImage* x_image)

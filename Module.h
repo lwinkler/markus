@@ -31,7 +31,6 @@ public:
 	Module(ConfigReader& x_confReader);
 	~Module();
 	
-	virtual void Init();
 	void ReadParametersFromConfig();
 	virtual void ProcessFrame(const IplImage * m_input) = 0;
 	virtual const char* GetName() = 0;

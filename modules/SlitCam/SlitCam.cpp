@@ -22,34 +22,20 @@ const char * SlitCam::m_name = "SlitCamera";
 SlitCam::SlitCam(ConfigReader& x_configReader) 
 	 : m_param(x_configReader, "SlitCamera"), Module(x_configReader)
 {
-	Init();
+	m_time_interval = 0;
+	m_position = 0;
+	
+	// Init images
+	m_output = cvCreateImage(cvSize(m_param.width, m_param.height),
+				 m_param.depth, m_param.channels);
+
+	// Init output images
 	m_outputStreams.push_back(OutputStream("myslit", STREAM_OUTPUT, m_output));
 }
 
-/*void detectorBarCallback4(int pos) 
-{
-	SlitCam::SetTimeInterval(pos);	
-	cout<<"Time interval "<<SlitCam::GetTimeInterval()<<endl;
-}*/
-
-/*void SlitCam::CreateParamWindow()
-{
-	//cvNamedWindow("Parameters", CV_WINDOW_AUTOSIZE); 
-	//cvMoveWindow("Parameters", 0, 0);
-	
-	//cvCreateTrackbar( "Time interval ", "Parameters", &m_time_interval, 7, detectorBarCallback4 );
-
-}*/
-
 SlitCam::~SlitCam(void)
 {
-}
-
-void SlitCam::Init()
-{
-	Module::Init();
-	m_time_interval = 0;
-	m_position = 0;
+	cvReleaseImage(&m_output);
 }
 
 void SlitCam::ProcessFrame(const IplImage * img)
