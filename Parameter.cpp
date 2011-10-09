@@ -24,7 +24,7 @@ void ParameterStructure::Init()
 
 void ParameterStructure::ReadParametersFromConfig()
 {
-	m_configReader.ReadConfig(m_moduleName);
+	m_configReader.ReadConfigModule(m_moduleName);
 	SetFromConfig(m_configReader.m_parameterList);
 }
 

@@ -84,7 +84,7 @@ public:
 	};
 	void Init();
 	void ReadParametersFromConfig();
-	virtual void SetFromConfig(const std::list<ParameterValue>& x_params);
+	void SetFromConfig(const std::list<ParameterValue>& x_params);
 	void SetDefault();
 	void CheckRange() const;
 	void PrintParameters() const;

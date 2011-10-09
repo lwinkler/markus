@@ -44,8 +44,7 @@ public:
 	~Manager();
 	void CaptureInput();
 	void Process();
-	void AddModule(Module & x_mod);
-	void Init();
+	void AddModule(Module * x_mod);
 	
 private:
 	ConfigReader& m_configReader;

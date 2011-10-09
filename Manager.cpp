@@ -30,9 +30,8 @@ using namespace std;
 
 Manager::Manager(ConfigReader& x_configReader) : 
 	m_configReader(x_configReader),
-	m_param(m_configReader, "Global")
+	m_param(m_configReader, "Manager")
 {
-	Init();
 	//m_workIsColor = (m_workChannels==3);	
 	//cout<<"Create Manager : Work image ("<<m_workWidth<<"x"<<m_workHeight<<" depth="<<m_workDepth<<" channels="<<m_workChannels<<")"<<endl;
 	m_capture = NULL;
@@ -57,11 +56,12 @@ Manager::Manager(ConfigReader& x_configReader) :
 	
 	// Get capture device information
 	cvQueryFrame(m_capture); // this call is necessary to get correct capture properties
-	int frameHc    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT);
-	int frameWc    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH);
+	//int frameHc    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT);
+	//int frameWc    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH);
 	int fpsc       = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FPS);
-	int numFramesc = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_COUNT);
-
+	//int numFramesc = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_COUNT);
+	
+	
 	//Initializing a video writer:
 
 	m_writer = NULL;
@@ -79,23 +79,23 @@ Manager::Manager(ConfigReader& x_configReader) :
 	
 	// Create timers
 	m_timerConv.start();
-	
-	/*
-	cvNamedWindow("background", CV_WINDOW_AUTOSIZE); 
-	cvMoveWindow("background", 0, 000);
-	cvNamedWindow("foreground", CV_WINDOW_AUTOSIZE); 
-	cvMoveWindow("foreground", 650, 000);
-	cvNamedWindow("foreground_rff", CV_WINDOW_AUTOSIZE); 
-	cvMoveWindow("foreground_rff", 0, 650);
-	//cvNamedWindow("temporaldiff", CV_WINDOW_AUTOSIZE); 
-	//cvMoveWindow("temporaldiff", 650, 650);
-	cvNamedWindow("blobs", CV_WINDOW_AUTOSIZE); 
-	cvMoveWindow("blobs", 650, 650);
-	*/
-	// Add modules
-	//cvNamedWindow("slit", CV_WINDOW_AUTOSIZE); 
-		
+			
 	m_modules.clear();
+	
+	m_configReader.ReadConfigModules();
+	std::list<ParameterValue> moduleList =  m_configReader.m_parameterList;
+	for(std::list<ParameterValue>::const_iterator it = moduleList.begin() ; it != moduleList.end() ; it++)
+	{
+		if(it->m_name.compare("SlitCamera") == 0)
+		{
+			AddModule(new SlitCam(it->m_value, m_configReader));
+		}
+		else if(it->m_name.compare("ObjectTracker") == 0)
+		{
+			AddModule(new ObjectTracker(it->m_value, m_configReader));
+		}
+		else throw("Module type unknown : " + it->m_name);
+	}
 }
 
 Manager::~Manager()
@@ -104,18 +104,10 @@ Manager::~Manager()
 	// Releasing the video writer:
 	if(m_writer != NULL) cvReleaseVideoWriter(&m_writer);
 
-	// TODO release images ...
-}
-
-void Manager::Init()
-{
-	// Read parameters from config
-/*	m_param.SetDefault();
-	m_configReader.ReadConfig("Global");
-	m_param.SetFromConfig(m_configReader.m_parameterList);
-	m_param.CheckRange();
-	cout<<"Manager "<<" initialized."<<endl;
-	m_param.PrintParameters();*/
+	for(list<Module*>::iterator it = m_modules.begin(); it != m_modules.end(); it++)
+	{
+		delete(*it);
+	}
 }
 
 void Manager::CaptureInput()
@@ -215,11 +207,11 @@ void Manager::Process()
 	m_timerConv.start();
 }
 
-void Manager::AddModule(Module& x_mod)
+void Manager::AddModule(Module * x_mod)
 {
 	int cpt = 0;
-	m_modules.push_back(&x_mod);
-	const std::list<OutputStream> streamList(x_mod.GetOutputStreamList());
+	m_modules.push_back(x_mod);
+	const std::list<OutputStream> streamList(x_mod->GetOutputStreamList());
 	for(list<OutputStream>::const_iterator it2 = streamList.begin(); it2 != streamList.end(); it2++)
 	{
 		cvNamedWindow(it2->GetName().c_str(), CV_WINDOW_AUTOSIZE);

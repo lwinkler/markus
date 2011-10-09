@@ -28,12 +28,8 @@ public:
 	{
 		m_list.push_back(Parameter(0, "aperture", 1, PARAM_INT, 1, 10, &aperture));
 		
-		Init();
-	};
-	void Init()
-	{
 		ParameterStructure::Init();
-	}
+	};
 	
 	int aperture;
 };
@@ -45,7 +41,7 @@ private:
 	int m_position;
 	static const char * m_name;
 public:
-	SlitCam(ConfigReader& x_configReader);
+	SlitCam(const std::string& x_name, ConfigReader& x_configReader);
 	~SlitCam(void);
 	//void CreateParamWindow();
 	virtual const char* GetName() {return m_name;}

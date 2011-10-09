@@ -17,7 +17,8 @@ public:
 		m_parameterList.clear();
 	};
 	~ConfigReader(){};
-	void ReadConfig(const std::string& x_moduleName);
+	void ReadConfigModule(const std::string& x_moduleName);
+	void ReadConfigModules();
 	std::string GetParameterValue(const std::string& x_name) const;
 	//void SetParameterValues(ParameterStructure& x_param);
 	std::list<ParameterValue> m_parameterList;

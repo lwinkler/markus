@@ -19,8 +19,8 @@ float SlitCam::m_time_interval = 0;
 const char * SlitCam::m_name = "SlitCamera";
 
 
-SlitCam::SlitCam(ConfigReader& x_configReader) 
-	 : m_param(x_configReader, "SlitCamera"), Module(x_configReader)
+SlitCam::SlitCam(const std::string& x_name, ConfigReader& x_configReader) 
+	 : m_param(x_configReader, x_name), Module(x_name, x_configReader)
 {
 	m_time_interval = 0;
 	m_position = 0;

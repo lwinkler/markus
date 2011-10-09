@@ -10,20 +10,14 @@ using namespace std;
 /* Reads the configuration file with tinyxml */
 //const char * ConfigReader::m_fileName = "config.xml";
 
-void ConfigReader::ReadConfig(const std::string& x_moduleName)
+void ConfigReader::ReadConfigModule(const std::string& x_moduleName)
 {
 	m_parameterList.clear();
-	const char * fileName = m_fileName.c_str();
-	TiXmlDocument doc( fileName );
+	TiXmlDocument doc( m_fileName );
 	bool loadOkay = doc.LoadFile();
 
 	if ( !loadOkay )
-	{
-		cout<<"Could not load test file '"<<fileName<<"'. Error='"<<doc.ErrorDesc()<<"'. Exiting."<<endl;
-		exit( 1 );
-	}
-
-	//doc.Print( stdout );
+		throw("Could not load test file '" + m_fileName + "'. Error='" + doc.ErrorDesc() + "'. Exiting.");
 
 	TiXmlNode* node = 0;
 	TiXmlElement* moduleElement = 0;
@@ -31,7 +25,7 @@ void ConfigReader::ReadConfig(const std::string& x_moduleName)
 	
 	node = doc.FirstChild(x_moduleName);
 	if(node == NULL)
-		throw("Impossible to find module in config file." + x_moduleName);
+		throw("Impossible to find module in config file : " + x_moduleName);
 	moduleElement = node->ToElement();
 	assert( moduleElement  );
 	
@@ -49,13 +43,56 @@ void ConfigReader::ReadConfig(const std::string& x_moduleName)
 		const char* id = paramElement->Attribute( "id");
 		const char* name = paramElement->Attribute( "name");
 		const char* value = paramElement->GetText();
+		if(id == NULL) id = "-1";
 		assert(name);
+		assert(value);
 		//cout<<"name"<<name<<" value "<<value<<endl;
 		
 		m_parameterList.push_back(ParameterValue(atoi(id), std::string(name), value));
 	}
 }
 
+void ConfigReader::ReadConfigModules()
+{
+	m_parameterList.clear();
+	TiXmlDocument doc( m_fileName );
+	bool loadOkay = doc.LoadFile();
+
+	if ( !loadOkay )
+		throw("Could not load test file '" + m_fileName + "'. Error='" + doc.ErrorDesc() + "'. Exiting.");
+
+	TiXmlNode* node = 0;
+	TiXmlElement* moduleElement = 0;
+	TiXmlElement* paramElement = 0;
+	
+	node = doc.FirstChild("Modules");
+	if(node == NULL)
+		throw("Impossible to find <Modules> in config file.");
+	moduleElement = node->ToElement();
+	assert( moduleElement  );
+	
+	/*node = moduleElement->FirstChildElement();	// This skips the "PDA" comment.
+	assert( node );
+	paramElement = node->ToElement();
+	assert( paramElement  );*/
+	
+	for( node = moduleElement->FirstChild( "module" );
+		node;
+		node = node->NextSibling( "module" ) )
+	{
+		paramElement = node->ToElement();
+		
+		const char* id = paramElement->Attribute( "id");
+		const char* type = paramElement->Attribute( "type");
+		const char* name = paramElement->GetText();
+		if(id == NULL) id = "-1";
+		assert(name);
+		assert(type);
+		//cout<<"name"<<name<<" value "<<value<<endl;
+		
+		m_parameterList.push_back(ParameterValue(atoi(id), type, name));
+	}
+}
 
 
 string ConfigReader::GetParameterValue(const std::string& x_name) const

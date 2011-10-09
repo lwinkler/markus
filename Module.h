@@ -28,12 +28,12 @@ public:
 class Module
 {
 public:
-	Module(ConfigReader& x_confReader);
+	Module(const std::string& x_name, ConfigReader& x_confReader);
 	~Module();
 	
 	void ReadParametersFromConfig();
 	virtual void ProcessFrame(const IplImage * m_input) = 0;
-	virtual const char* GetName() = 0;
+	const std::string& GetName(){return m_name;};
 	const IplImage * GetOutput(){return m_output;}
 	void AddStream(const std::string& x_name, StreamType x_type, IplImage* m_image);
 	const std::list<OutputStream>& GetOutputStreamList(){return m_outputStreams;};
@@ -45,10 +45,7 @@ private:
 protected:
 	double m_timeInterval;
 	IplImage * m_output;
-	/*int m_width;
-	int m_height;
-	int m_depth;
-	int m_channels;*/
+	const std::string m_name;
 	std::list<OutputStream> m_outputStreams;
 };
 
