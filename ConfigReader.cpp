@@ -2,9 +2,6 @@
 #include "Module.h"
 #include "Manager.h"
 
-#include "ObjectTracker.h"
-#include "SlitCam.h"
-
 using namespace std;
 
 /* Reads the configuration file with tinyxml */

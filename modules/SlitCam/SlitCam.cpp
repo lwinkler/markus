@@ -15,14 +15,12 @@
 using namespace std;
 
 
-float SlitCam::m_time_interval = 0;
-const char * SlitCam::m_name = "SlitCamera";
+const char * SlitCam::m_type = "SlitCamera";
 
 
 SlitCam::SlitCam(const std::string& x_name, ConfigReader& x_configReader) 
 	 : m_param(x_configReader, x_name), Module(x_name, x_configReader)
 {
-	m_time_interval = 0;
 	m_position = 0;
 	
 	// Init images
@@ -30,7 +28,7 @@ SlitCam::SlitCam(const std::string& x_name, ConfigReader& x_configReader)
 				 m_param.depth, m_param.channels);
 
 	// Init output images
-	m_outputStreams.push_back(OutputStream("myslit", STREAM_OUTPUT, m_output));
+	m_outputStreams.push_back(OutputStream("slit", STREAM_OUTPUT, m_output));
 }
 
 SlitCam::~SlitCam(void)
