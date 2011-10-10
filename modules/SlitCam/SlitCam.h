@@ -26,7 +26,7 @@ public:
 	SlitCamParameter(ConfigReader& x_confReader, const std::string& x_moduleName) : 
 		ModuleParameterStructure(x_confReader, x_moduleName)
 	{
-		m_list.push_back(Parameter(0, "aperture", 1, PARAM_INT, 1, 10, &aperture));
+		m_list.push_back(new ParameterT<int>(0, "aperture", 1, PARAM_INT, 1, 10, &aperture));
 		
 		ParameterStructure::Init();
 	};

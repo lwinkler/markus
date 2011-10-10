@@ -11,10 +11,10 @@ class ModuleParameterStructure : public ParameterStructure
 public:
 	ModuleParameterStructure(ConfigReader& x_confReader, const std::string& x_moduleName) : ParameterStructure(x_confReader, x_moduleName)
 	{
-		m_list.push_back(Parameter(0, "width", 		640, 	PARAM_INT, 	0, 	4000,	&width));
-		m_list.push_back(Parameter(0, "height", 	480, 	PARAM_INT, 	0, 	3000,	&height));
-		m_list.push_back(Parameter(0, "depth", 	IPL_DEPTH_8U, PARAM_INT, 	0, 	32,	&depth));
-		m_list.push_back(Parameter(0, "channels", 	3, 	PARAM_INT, 	1, 	3,	&channels));
+		m_list.push_back(new ParameterT<int>(0, "width", 		640, 	PARAM_INT, 	0, 	4000,	&width));
+		m_list.push_back(new ParameterT<int>(0, "height", 	480, 	PARAM_INT, 	0, 	3000,	&height));
+		m_list.push_back(new ParameterT<int>(0, "depth", 	IPL_DEPTH_8U, PARAM_INT, 	0, 	32,	&depth));
+		m_list.push_back(new ParameterT<int>(0, "channels", 	3, 	PARAM_INT, 	1, 	3,	&channels));
 	};
 	int width;
 	int height;
