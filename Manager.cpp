@@ -29,8 +29,8 @@ using namespace std;
 
 
 Manager::Manager(ConfigReader& x_configReader) : 
-	m_configReader(x_configReader),
-	m_param(m_configReader, "Manager")
+	m_param(m_configReader, "Manager"),
+	Configurable(x_configReader)
 {
 	//m_workIsColor = (m_workChannels==3);	
 	//cout<<"Create Manager : Work image ("<<m_workWidth<<"x"<<m_workHeight<<" depth="<<m_workDepth<<" channels="<<m_workChannels<<")"<<endl;
@@ -178,12 +178,7 @@ void Manager::Process()
 
 					cvShowImage((*it2).GetName().c_str(), output);
 				}
-
-				//adjust((*it)->GetOutput(), output, tmp1_c3, tmp2_c3);
-				//cvShowImage((*it)->GetName(), output);
 			}
-		
-			
 			m_key= (char) cvWaitKey(5);           // wait 20 ms
 		}
 
@@ -214,11 +209,11 @@ void Manager::AddModule(Module * x_mod)
 	const std::list<OutputStream> streamList(x_mod->GetOutputStreamList());
 	for(list<OutputStream>::const_iterator it2 = streamList.begin(); it2 != streamList.end(); it2++)
 	{
+		// Create windows for output streams
 		cvNamedWindow(it2->GetName().c_str(), CV_WINDOW_AUTOSIZE);
 		cvMoveWindow(it2->GetName().c_str(), 100 * cpt, 30 * cpt);
 		cpt++;
 	}
-
 }
 
 

@@ -26,4 +26,15 @@ private:
 	std::string m_fileName;
 };
 
+class Configurable
+{
+public:
+	Configurable(ConfigReader& x_confReader) : m_configReader(x_confReader){};
+	~Configurable(){};
+protected:
+	void ReadParametersFromConfig();
+	ConfigReader& m_configReader;
+	virtual const ParameterStructure & GetRefParameter() = 0;
+};
+
 #endif

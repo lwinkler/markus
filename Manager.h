@@ -27,17 +27,14 @@ public:
 	};
 	std::string mode;
 	std::string input;
-	int width;//384;//640;
-	int height;//288;//320;
-	int depth;//IPL_DEPTH_8U IPL_DEPTH_32F;
+	int width;
+	int height;
+	int depth;
 	int channels;
-//	bool workIsColor;
-	
-	//void Init(){};
 };
 
 
-class Manager
+class Manager : public Configurable
 {
 public:
 	Manager(ConfigReader & x_configReader);
@@ -45,9 +42,7 @@ public:
 	void CaptureInput();
 	void Process();
 	void AddModule(Module * x_mod);
-	
 private:
-	ConfigReader& m_configReader;
 	ManagerParameter m_param;
 	CvCapture * m_capture;
 	CvVideoWriter * m_writer;
@@ -56,5 +51,7 @@ private:
 	flann::StartStopTimer timerProc;
 	
 	std::list<Module *> m_modules;
+protected:
+	virtual const ParameterStructure& GetRefParameter(){return m_param;};
 };
 #endif

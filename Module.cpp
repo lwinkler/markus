@@ -6,7 +6,7 @@
 using namespace std;
 
 Module::Module(const std::string& x_name, ConfigReader& x_configReader) :
-	m_configReader(x_configReader),
+	Configurable(x_configReader),
 	m_name(x_name)
 {
 };
