@@ -121,7 +121,8 @@ void Manager::Process()
 	int frame=0;
 	
 	// Main loop
-	while(cvGrabFrame(m_capture) && m_key != 27)
+	cvGrabFrame(m_capture);
+	//while(cvGrabFrame(m_capture) && m_key != 27)
 	{
 		IplImage* source=cvRetrieveFrame(m_capture);           // retrieve the captured frame
 		

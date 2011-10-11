@@ -12,7 +12,8 @@ tools/cvblobs
 
 
 set(markus_SRCS 
-markus.cpp 
+markus.cpp
+QOpenCVWidget.cpp 
 main.cpp 
 Module.cpp
 Manager.cpp
