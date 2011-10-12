@@ -9,6 +9,7 @@
 #include <QTimer>
 #include <QGroupBox>
 #include <QMessageBox>
+#include <QComboBox>
 
 #include "Manager.h"
 #include "Module.h"
@@ -36,9 +37,6 @@ markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 	// from hlfe
 		
 	//QTimer *timer = new QTimer(this);
-	
-	//QPushButton *quit = new QPushButton(tr("&Quit"));
-	
 	QWidget* mainWidget = new QWidget;
 	QGridLayout* mainLayout = new QGridLayout;
 	
@@ -46,7 +44,7 @@ markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 	
 	for (int i = 0; i < nbViewer; ++i) {
 		scroll[i] = new QScrollArea;
-		moduleViewer[i] = new QOpenCVWidget;
+		moduleViewer[i] = new QOpenCVWidget(&m_manager);
 		scroll[i]->setWidget(moduleViewer[i]);
 		//imageViewer[i]->setGeometry(i * width()/2, 0, (i + 1) * width()/2, height()/2);
 		//scroll[i]->setBaseSize(width()/2, width()/2);
@@ -79,6 +77,21 @@ markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 		groupBox->setFlat(true);
 		QGridLayout *vbox = new QGridLayout;
 		//vbox->addStretch(1);
+		
+		QLabel* lab1 = new QLabel(tr("Module"));
+		vbox->addWidget(lab1,0,0);
+		QComboBox * combo1 = new QComboBox();
+		for(std::list<Module*>::const_iterator it = m_manager.GetModuleList().begin(); it != m_manager.GetModuleList().end(); it++)
+			combo1->addItem(QString((*it)->GetName().c_str()), 1);
+		vbox->addWidget(combo1,0,1);
+		
+		QLabel* lab2 = new QLabel(tr("Out stream"));
+		vbox->addWidget(lab2,1,0);
+		QComboBox * combo2 = new QComboBox();
+		//for(std::list<OutputStream>::const_iterator it = m_currentModule.begin(); it != m_manager.GetModuleList().end(); it++)
+		//	combo1->addItem(QString((*it)->GetName().c_str()), 1);
+		vbox->addWidget(combo1,0,1);
+		
 		groupBox->setLayout(vbox);
 		
 		mainLayout->addWidget(groupBox, 2, i);
@@ -133,7 +146,7 @@ void markus::timerEvent(QTimerEvent*)
 		cout << "Unknown exception raised: "<<endl;
 	}
 	for(int i = 0 ; i < nbViewer ; i++)
-		moduleViewer[i]->putImage(m_manager.GetModule()->GetOutputStreamList().begin()->GetImageRef());
+		moduleViewer[i]->putImage();
 }
 
 markus::~markus()
@@ -152,18 +165,10 @@ QLabel *markus::createLabel(const QString &text)
 void markus::about()
 {
 	QMessageBox::about(this, tr("About Image Viewer"),
-				    tr("<p>The <b>Image Viewer</b> example shows how to combine QLabel "
-				    "and QScrollArea to display an image. QLabel is typically used "
-				    "for displaying a text, but it can also display an image. "
-				    "QScrollArea provides a scrolling view around another widget. "
-				    "If the child widget exceeds the size of the frame, QScrollArea "
-				    "automatically provides scroll bars. </p><p>The example "
-				    "demonstrates how QLabel's ability to scale its contents "
-				    "(QLabel::scaledContents), and QScrollArea's ability to "
-				    "automatically resize its contents "
-				    "(QScrollArea::widgetResizable), can be used to implement "
-				    "zooming and scaling features. </p><p>In addition the example "
-				    "shows how to use QPainter to print an image.</p>"));
+				    tr("<p>The <b>Markus</b> image processing environment lets "
+				    "the user experiment with the different elements of computer "
+				    "vision.</p> "
+				    "<p><b>Author : Laurent Winkler</b></p>"));
 }
 
 void markus::createActions()

@@ -42,7 +42,7 @@ public:
 	void CaptureInput();
 	void Process();
 	void AddModule(Module * x_mod);
-	const Module* GetModule() const {return *(m_modules.begin()); };
+	const std::list<Module*>& GetModuleList() const {return m_modules; };
 private:
 	ManagerParameter m_param;
 	CvCapture * m_capture;

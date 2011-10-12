@@ -161,7 +161,7 @@ void Manager::Process()
 		else
 		{
 			// Write output to screen
-			static IplImage *output = cvCreateImage( cvSize(m_param.width, m_param.height), IPL_DEPTH_8U, m_param.channels);
+			/*static IplImage *output = cvCreateImage( cvSize(m_param.width, m_param.height), IPL_DEPTH_8U, m_param.channels);
 			static IplImage* tmp1_c1 = NULL;
 			static IplImage* tmp2_c1 = NULL;
 			static IplImage* tmp1_c3 = NULL;
@@ -179,7 +179,7 @@ void Manager::Process()
 
 					cvShowImage((*it2).GetName().c_str(), output);
 				}
-			}
+			}*/
 			//m_key= (char) cvWaitKey(5);           // wait 20 ms
 		}
 
@@ -207,14 +207,14 @@ void Manager::AddModule(Module * x_mod)
 {
 	int cpt = 0;
 	m_modules.push_back(x_mod);
-	const std::list<OutputStream> streamList(x_mod->GetOutputStreamList());
+	/*const std::list<OutputStream> streamList(x_mod->GetOutputStreamList());
 	for(list<OutputStream>::const_iterator it2 = streamList.begin(); it2 != streamList.end(); it2++)
 	{
 		// Create windows for output streams
 		cvNamedWindow(it2->GetName().c_str(), CV_WINDOW_AUTOSIZE);
 		cvMoveWindow(it2->GetName().c_str(), 100 * cpt, 30 * cpt);
 		cpt++;
-	}
+	}*/
 }
 
 
