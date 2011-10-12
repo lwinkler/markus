@@ -34,7 +34,7 @@ public:
 	const std::string& GetName(){return m_name;};
 	const IplImage * GetOutput(){return m_output;}
 	void AddStream(const std::string& x_name, StreamType x_type, IplImage* m_image);
-	const std::list<OutputStream>& GetOutputStreamList(){return m_outputStreams;};
+	const std::list<OutputStream>& GetOutputStreamList() const {return m_outputStreams;};
 		
 protected:
 	IplImage * m_output;

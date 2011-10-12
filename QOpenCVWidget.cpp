@@ -3,27 +3,31 @@
 #include "cstdio"
 
 // Constructor
-QOpenCVWidget::QOpenCVWidget(QWidget *parent) : QWidget(parent) {
-    layout = new QVBoxLayout;
-    imagelabel = new QLabel;
-    QImage dummy(100,100,QImage::Format_RGB32);
-    image = dummy;
-    layout->addWidget(imagelabel);
-    for (int x = 0; x < 100; x ++) {
-        for (int y =0; y < 100; y++) {
-            image.setPixel(x,y,qRgb(x, y, y));
-        }
-    }
-    imagelabel->setPixmap(QPixmap::fromImage(image));
+QOpenCVWidget::QOpenCVWidget(QWidget *parent) : QWidget(parent) 
+{
+	layout = new QVBoxLayout;
+	imagelabel = new QLabel;
+	QImage dummy(200,100,QImage::Format_RGB32);
+	image = dummy;
+	layout->addWidget(imagelabel);
 
-    setLayout(layout);
+	for (int x = 0; x < 200; x ++) 
+	{
+		for (int y =0; y < 100; y++) 
+		{
+			image.setPixel(x,y,qRgb(x, y, y));
+		}
+	}
+	imagelabel->setPixmap(QPixmap::fromImage(image));
+
+	setLayout(layout);
 }
 
 QOpenCVWidget::~QOpenCVWidget(void) {
     
 }
 
-void QOpenCVWidget::putImage(IplImage *cvimage) {
+void QOpenCVWidget::putImage(const IplImage *cvimage) {
     int cvIndex, cvLineStart;
     // switch between bit depths
     switch (cvimage->depth) {

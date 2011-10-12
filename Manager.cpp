@@ -35,6 +35,7 @@ Manager::Manager(ConfigReader& x_configReader) :
 	//m_workIsColor = (m_workChannels==3);	
 	//cout<<"Create Manager : Work image ("<<m_workWidth<<"x"<<m_workHeight<<" depth="<<m_workDepth<<" channels="<<m_workChannels<<")"<<endl;
 	m_capture = NULL;
+	m_frameCount = 0;
 	
 	cout<<"Input "<< m_param.input<<endl;
 
@@ -118,7 +119,6 @@ void Manager::CaptureInput()
 void Manager::Process()
 {
 	IplImage *img = cvCreateImage( cvSize(m_param.width, m_param.height), m_param.depth, m_param.channels);	
-	int frame=0;
 	
 	// Main loop
 	cvGrabFrame(m_capture);
@@ -180,27 +180,27 @@ void Manager::Process()
 					cvShowImage((*it2).GetName().c_str(), output);
 				}
 			}
-			m_key= (char) cvWaitKey(5);           // wait 20 ms
+			//m_key= (char) cvWaitKey(5);           // wait 20 ms
 		}
 
-		frame++;
-		if(frame % 100 == 0)
+		m_frameCount++;
+		if(m_frameCount % 100 == 0)
 		{
 			m_timerConv.stop();
-			cout<<frame<<" frames processed in "<<timerProc.value<<" s "<<frame/timerProc.value<<" frames/s"<<endl;
-			cout<<"Time for Input/Output conversion "<<m_timerConv.value<<" s "<<frame/m_timerConv.value<<" frames/s"<<endl;
+			cout<<m_frameCount<<" frames processed in "<<timerProc.value<<" s "<<m_frameCount/timerProc.value<<" frames/s"<<endl;
+			cout<<"Time for Input/Output conversion "<<m_timerConv.value<<" s "<<m_frameCount/m_timerConv.value<<" frames/s"<<endl;
 			cout<<"Total time "<<timerProc.value + m_timerConv.value<<" s"<<endl;
 			m_timerConv.start();
 		}
 
 	}// end main loop
 	
-	m_timerConv.stop();
+	/*m_timerConv.stop();
 	cout<<"--------- end of execution -------------"<<endl;
 	cout<<frame<<" frames processed in "<<timerProc.value<<" s "<<frame/timerProc.value<<" frames/s"<<endl;
 	cout<<"Time for Input/Output conversion "<<m_timerConv.value<<" s "<<frame/m_timerConv.value<<" frames/s"<<endl;
 	cout<<"Total time "<<timerProc.value + m_timerConv.value<<" s"<<endl;
-	m_timerConv.start();
+	m_timerConv.start();*/
 }
 
 void Manager::AddModule(Module * x_mod)

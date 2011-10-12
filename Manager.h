@@ -42,6 +42,7 @@ public:
 	void CaptureInput();
 	void Process();
 	void AddModule(Module * x_mod);
+	const Module* GetModule() const {return *(m_modules.begin()); };
 private:
 	ManagerParameter m_param;
 	CvCapture * m_capture;
@@ -51,6 +52,7 @@ private:
 	flann::StartStopTimer timerProc;
 	
 	std::list<Module *> m_modules;
+	long long m_frameCount;
 protected:
 	virtual const ParameterStructure& GetRefParameter(){return m_param;};
 };

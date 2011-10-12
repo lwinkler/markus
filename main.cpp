@@ -11,6 +11,8 @@ int main(int argc, char** argv)
 	Manager manager(conf);
 
 	markus gui(conf, manager);
+	
+	gui.setWindowTitle("OpenCV --> QtImage");
 	gui.show();
 	return app.exec();
 }

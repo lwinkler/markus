@@ -19,7 +19,7 @@ class QOpenCVWidget : public QWidget {
     public:
         QOpenCVWidget(QWidget *parent = 0);
         ~QOpenCVWidget(void);
-        void putImage(IplImage *);
+        void putImage(const IplImage *);
 }; 
 
 #endif
