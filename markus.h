@@ -5,6 +5,7 @@
 #include "QOpenCVWidget.h"
 #include <QScrollArea>
 
+#include <vector>
 
 class Manager;
 class ConfigReader;
@@ -22,16 +23,18 @@ private:
 	Manager& m_manager;
 	void timerEvent(QTimerEvent*);
 	
-	static const int nbViewer = 2;
+	int nbCols;
+	int nbLines;
 	
 	void createActions();
 	void createMenus();
-	void updateActions();
+	//void updateActions();
+	void updateModuleViewers();
 	
 	QLabel *createLabel(const QString &text);
 	
-	QOpenCVWidget *moduleViewer[nbViewer];
-	QScrollArea   *scroll[nbViewer];
+	std::vector<QOpenCVWidget *> m_moduleViewer;
+	std::vector<QScrollArea   *> m_scroll;
 	
 	QAction *exitAct;
 	QAction *view1x1Act;

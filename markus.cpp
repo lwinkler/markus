@@ -19,89 +19,25 @@ using namespace std;
 markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 	: m_manager(rx_manager), m_configReader(rx_configReader)
 {
-	//QLabel* l = new QLabel( this );
-	//l->setText( "Hello World!" );
-	//setCentralWidget( l );
-
-	//QVBoxLayout *layout = new QVBoxLayout;
-	//layout->addWidget(&cvwidget);
-	//layout->addWidget(l);
-//	setCentralWidget(&cvwidget);
-	
-//	setCentralWidget( cvwidget );
-//	resize(500, 400);
+	nbLines = 2;
+	nbCols = 2;
 
 	startTimer(10);  // 100 -> 0.1-second timer
 
-	
-	// from hlfe
-		
 	//QTimer *timer = new QTimer(this);
-	QWidget* mainWidget = new QWidget;
-	QGridLayout* mainLayout = new QGridLayout;
+	//QWidget* mainWidget = new QWidget;
+	//QGridLayout* mainLayout = new QGridLayout;
 	
 	setWindowState(Qt::WindowMaximized);
 	
-	for (int i = 0; i < nbViewer; ++i) {
-		scroll[i] = new QScrollArea;
-		moduleViewer[i] = new QOpenCVWidget(&m_manager);
-		scroll[i]->setWidget(moduleViewer[i]);
-		//imageViewer[i]->setGeometry(i * width()/2, 0, (i + 1) * width()/2, height()/2);
-		//scroll[i]->setBaseSize(width()/2, width()/2);
-		scroll[i]->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-		//moduleViewer[i]->resize(1000, 1000);
-		
-		//imageViewer[i]->setBaseSize(100, 100);
-		//scroll[i]->setBaseSize(200, 400);
-		moduleViewer[i]->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-		mainLayout->addWidget(scroll[i], 1, i);
-		
-		//imageViewer[i]->setAntialiased(j != 0);
-		//imageViewer[i]->setFloatBased(i != 0);
-		
-		//QCheckBox* cbDispImage=new QCheckBox(tr("Display image"));
-		//connect(cbDispImage, SIGNAL(toggled(bool)),imageViewer[i], SLOT(setDispImage(bool)));
-		//cbDispImage->setChecked(true);
-		//mainLayout->addWidget(cbDispImage, 2, i);
-		//connect(imageViewer[i], SIGNAL(dispImageSetted(bool)),cbDispImage, SLOT(setChecked(bool)));
-		
-		//QCheckBox* cbDispKP=new QCheckBox(tr("Display key points"));
-		//connect(cbDispKP, SIGNAL(toggled(bool)),imageViewer[i], SLOT(setDispKP(bool)));
-		//cbDispKP->setChecked(true);
+	m_scroll.clear();
+	m_moduleViewer.clear();
+	updateModuleViewers();
+	
+	//mainWidget->setLayout(mainLayout);
 
-		//QCheckBox* cbDispMatch=new QCheckBox(tr("Display matches"));
-		//connect(cbDispMatch, SIGNAL(toggled(bool)),imageViewer[i], SLOT(setDispMatch(bool)));
-		//cbDispMatch->setChecked(true);
-
-		QGroupBox *groupBox = new QGroupBox(tr("Display options"));
-		groupBox->setFlat(true);
-		QGridLayout *vbox = new QGridLayout;
-		//vbox->addStretch(1);
-		
-		QLabel* lab1 = new QLabel(tr("Module"));
-		vbox->addWidget(lab1,0,0);
-		QComboBox * combo1 = moduleViewer[i]->comboModules;
-		combo1->clear();
-		for(std::list<Module*>::const_iterator it = m_manager.GetModuleList().begin(); it != m_manager.GetModuleList().end(); it++)
-			combo1->addItem(QString((*it)->GetName().c_str()), 1);
-		vbox->addWidget(combo1,0,1);
-		
-		QLabel* lab2 = new QLabel(tr("Out stream"));
-		vbox->addWidget(lab2,1,0);
-		QComboBox * combo2 = moduleViewer[i]->comboOutputStreams;
-		moduleViewer[i]->updateModule(*m_manager.GetModuleList().begin());
-		vbox->addWidget(combo2,1,1);
-		
-		groupBox->setLayout(vbox);
-		
-		mainLayout->addWidget(groupBox, 2, i);
-		//connect(timer, SIGNAL(timeout()),imageViewer[i], SLOT(update()));
-		//QPushButton *quit = new QPushButton(tr("&Quit"));
-		//mainLayout->addWidget(quit, 1, i);
-	}
-	mainWidget->setLayout(mainLayout);
-
-	setCentralWidget(mainWidget);
+	//setCentralWidget(mainWidget);
+	
 	//layout()->addWidget(quit);
 	//	layout->addWidget(quit);//, 0 , 1 );
 	//timer->start(100);
@@ -145,8 +81,8 @@ void markus::timerEvent(QTimerEvent*)
 	{
 		cout << "Unknown exception raised: "<<endl;
 	}
-	for(int i = 0 ; i < nbViewer ; i++)
-		moduleViewer[i]->putImage();
+	for(int i = 0 ; i < nbCols * nbLines ; i++)
+		m_moduleViewer[i]->putImage();
 }
 
 markus::~markus()
@@ -215,5 +151,102 @@ void markus::createMenus()
 	zoomOutAct->setEnabled(!fitToWindowAct->isChecked());
 	normalSizeAct->setEnabled(!fitToWindowAct->isChecked());
 }*/
+
+void markus::view1x1()
+{
+	nbLines = 1;
+	nbCols = 1;
+	updateModuleViewers();
+}
+
+void markus::view1x2()
+{
+	nbLines = 1;
+	nbCols = 2;
+	updateModuleViewers();
+}
+
+void markus::view2x2()
+{
+	nbLines = 2;
+	nbCols = 2;
+	updateModuleViewers();
+}
+
+void markus::updateModuleViewers()
+{
+	QWidget* mainWidget = new QWidget; // TODO : Not sure if this creates a leak
+	QGridLayout* mainLayout = new QGridLayout;
+		
+	for(int ind = m_moduleViewer.size() ; ind < nbLines * nbCols ; ind++)
+	{
+		m_scroll.push_back(new QScrollArea);
+		m_moduleViewer.push_back(new QOpenCVWidget(&m_manager));
+	}
+	
+	for (int ii = 0; ii < nbLines; ++ii) 
+	{
+		for (int jj = 0; jj < nbCols; ++jj) 
+		{
+			int ind = ii * nbCols + jj;
+			m_scroll[ind]->setWidget(m_moduleViewer[ind]);
+			//imageViewer[i]->setGeometry(i * width()/2, 0, (i + 1) * width()/2, height()/2);
+			//m_scroll[i]->setBaseSize(width()/2, width()/2);
+			m_scroll[ind]->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+			//m_moduleViewer[i]->resize(1000, 1000);
+			
+			//imageViewer[i]->setBaseSize(100, 100);
+			//m_scroll[i]->setBaseSize(200, 400);
+			m_moduleViewer[ind]->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+			mainLayout->addWidget(m_scroll[ind], ii, jj);
+			
+			//imageViewer[i]->setAntialiased(j != 0);
+			//imageViewer[i]->setFloatBased(i != 0);
+			
+			//QCheckBox* cbDispImage=new QCheckBox(tr("Display image"));
+			//connect(cbDispImage, SIGNAL(toggled(bool)),imageViewer[i], SLOT(setDispImage(bool)));
+			//cbDispImage->setChecked(true);
+			//mainLayout->addWidget(cbDispImage, 2, i);
+			//connect(imageViewer[i], SIGNAL(dispImageSetted(bool)),cbDispImage, SLOT(setChecked(bool)));
+			
+			//QCheckBox* cbDispKP=new QCheckBox(tr("Display key points"));
+			//connect(cbDispKP, SIGNAL(toggled(bool)),imageViewer[i], SLOT(setDispKP(bool)));
+			//cbDispKP->setChecked(true);
+
+			//QCheckBox* cbDispMatch=new QCheckBox(tr("Display matches"));
+			//connect(cbDispMatch, SIGNAL(toggled(bool)),imageViewer[i], SLOT(setDispMatch(bool)));
+			//cbDispMatch->setChecked(true);
+
+			QGroupBox *groupBox = new QGroupBox(tr("Display options"));
+			groupBox->setFlat(true);
+			QGridLayout *vbox = new QGridLayout;
+			//vbox->addStretch(1);
+			
+			QLabel* lab1 = new QLabel(tr("Module"));
+			vbox->addWidget(lab1,0,0);
+			QComboBox * combo1 = m_moduleViewer[ind]->comboModules;
+			combo1->clear();
+			for(std::list<Module*>::const_iterator it = m_manager.GetModuleList().begin(); it != m_manager.GetModuleList().end(); it++)
+				combo1->addItem(QString((*it)->GetName().c_str()), 1);
+			vbox->addWidget(combo1,0,1);
+			
+			QLabel* lab2 = new QLabel(tr("Out stream"));
+			vbox->addWidget(lab2,1,0);
+			QComboBox * combo2 = m_moduleViewer[ind]->comboOutputStreams;
+			m_moduleViewer[ind]->updateModule(*m_manager.GetModuleList().begin());
+			vbox->addWidget(combo2,1,1);
+			
+			groupBox->setLayout(vbox);
+			
+			mainLayout->addWidget(groupBox, 2, ind);
+			//connect(timer, SIGNAL(timeout()),imageViewer[i], SLOT(update()));
+			//QPushButton *quit = new QPushButton(tr("&Quit"));
+			//mainLayout->addWidget(quit, 1, i);
+		}
+	}
+	mainWidget->setLayout(mainLayout);
+	setCentralWidget(mainWidget);
+}
+
 
 #include "markus.moc"
