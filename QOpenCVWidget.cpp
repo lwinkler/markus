@@ -3,6 +3,8 @@
 #include <cstdio>
 
 #include <QComboBox>
+#include <QGroupBox>
+#include <QGridLayout>
 
 #include "Manager.h"
 #include "Module.h"
@@ -20,6 +22,8 @@ QOpenCVWidget::QOpenCVWidget(const Manager* x_manager, QWidget *parent) : QWidge
 	m_outputWidth  = 640;
 	m_outputHeight = 480;
 	
+	comboModules 		= new QComboBox();
+	comboOutputStreams 	= new QComboBox();
 	layout = new QVBoxLayout;
 	imagelabel = new QLabel;
 	QImage dummy(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
@@ -35,10 +39,27 @@ QOpenCVWidget::QOpenCVWidget(const Manager* x_manager, QWidget *parent) : QWidge
 	}
 	
 	imagelabel->setPixmap(QPixmap::fromImage(image));
-	setLayout(layout);
 	
-	comboModules 		= new QComboBox();
-	comboOutputStreams 	= new QComboBox();
+	QGroupBox *gbSettings = new QGroupBox(tr("Display options"));
+	gbSettings->setFlat(true);
+	QGridLayout * vbox = new QGridLayout;
+	//vbox->addStretch(1);
+	
+	QLabel* lab1 = new QLabel(tr("Module"));
+	vbox->addWidget(lab1,0,0);
+	comboModules->clear();
+	for(std::list<Module*>::const_iterator it = x_manager->GetModuleList().begin(); it != x_manager->GetModuleList().end(); it++)
+		comboModules->addItem(QString((*it)->GetName().c_str()), 1);
+	vbox->addWidget(comboModules,0,1);
+	
+	QLabel* lab2 = new QLabel(tr("Out stream"));
+	vbox->addWidget(lab2,1,0);
+	this->updateModule(*x_manager->GetModuleList().begin());
+	vbox->addWidget(comboOutputStreams,1,1);
+	
+	gbSettings->setLayout(vbox);
+	layout->addWidget(gbSettings);
+	setLayout(layout);
 }
 
 QOpenCVWidget::~QOpenCVWidget(void) {

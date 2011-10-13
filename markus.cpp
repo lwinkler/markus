@@ -1,15 +1,16 @@
 #include "markus.h"
 
-#include <QtGui/QLabel>
-#include <QtGui/QMenu>
-#include <QtGui/QMenuBar>
-#include <QtGui/QAction>
+#include <QLabel>
+#include <QMenu>
+#include <QMenuBar>
+#include <QAction>
 
-#include <QtGui/QVBoxLayout>
+//#include <QVBoxLayout>
+//#include <QGridLayout>
 #include <QTimer>
-#include <QGroupBox>
+//#include <QGroupBox>
 #include <QMessageBox>
-#include <QComboBox>
+//#include <QComboBox>
 
 #include "Manager.h"
 #include "Module.h"
@@ -19,8 +20,8 @@ using namespace std;
 markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 	: m_manager(rx_manager), m_configReader(rx_configReader)
 {
-	nbLines = 2;
-	nbCols = 2;
+	nbLines = 1;
+	nbCols = 1;
 
 	startTimer(10);  // 100 -> 0.1-second timer
 
@@ -33,6 +34,9 @@ markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 	m_scroll.clear();
 	m_moduleViewer.clear();
 	updateModuleViewers();
+	m_mainWidget.setLayout(&m_mainLayout);
+	setCentralWidget(&m_mainWidget);
+
 	
 	//mainWidget->setLayout(mainLayout);
 
@@ -122,6 +126,8 @@ void markus::createActions()
 	connect(view1x2Act, SIGNAL(triggered()), this, SLOT(view1x2()));
 	view2x2Act = new QAction(tr("View 2x2"), this);
 	connect(view2x2Act, SIGNAL(triggered()), this, SLOT(view2x2()));
+	view2x3Act = new QAction(tr("View 2x3"), this);
+	connect(view2x3Act, SIGNAL(triggered()), this, SLOT(view2x3()));
 }
 
 void markus::createMenus()
@@ -136,6 +142,7 @@ void markus::createMenus()
 	viewMenu->addAction(view1x1Act);
 	viewMenu->addAction(view1x2Act);
 	viewMenu->addAction(view2x2Act);
+	viewMenu->addAction(view2x3Act);
 	
 	helpMenu = new QMenu(tr("&Help"), this);
 	helpMenu->addAction(aboutAct);
@@ -173,23 +180,46 @@ void markus::view2x2()
 	updateModuleViewers();
 }
 
+void markus::view2x3()
+{
+	nbLines = 2;
+	nbCols = 3;
+	updateModuleViewers();
+}
+
 void markus::updateModuleViewers()
 {
-	QWidget* mainWidget = new QWidget; // TODO : Not sure if this creates a leak
-	QGridLayout* mainLayout = new QGridLayout;
-		
-	for(int ind = m_moduleViewer.size() ; ind < nbLines * nbCols ; ind++)
+	int size = m_moduleViewer.size();
+	for(int ind = 0 ; ind < size; ind++)
+	{
+		m_mainLayout.removeWidget(m_moduleViewer[ind]);
+		m_mainLayout.removeWidget(m_moduleViewer[ind]);
+	}
+	
+	for(int ind = size ; ind < nbLines * nbCols ; ind++)
 	{
 		m_scroll.push_back(new QScrollArea);
 		m_moduleViewer.push_back(new QOpenCVWidget(&m_manager));
+		
+		m_scroll[ind]->setWidget(m_moduleViewer[ind]);
+		//imageViewer[i]->setGeometry(i * width()/2, 0, (i + 1) * width()/2, height()/2);
+		//m_scroll[i]->setBaseSize(width()/2, width()/2);
+		m_scroll[ind]->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+		//m_moduleViewer[i]->resize(1000, 1000);
+		
+		//imageViewer[i]->setBaseSize(100, 100);
+		//m_scroll[i]->setBaseSize(200, 400);
+		m_moduleViewer[ind]->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 	}
+	//m_mainLayout.deleteAllItems();
+	//.deleteAllItems();
 	
 	for (int ii = 0; ii < nbLines; ++ii) 
 	{
 		for (int jj = 0; jj < nbCols; ++jj) 
 		{
 			int ind = ii * nbCols + jj;
-			m_scroll[ind]->setWidget(m_moduleViewer[ind]);
+			/*m_scroll[ind]->setWidget(m_moduleViewer[ind]);
 			//imageViewer[i]->setGeometry(i * width()/2, 0, (i + 1) * width()/2, height()/2);
 			//m_scroll[i]->setBaseSize(width()/2, width()/2);
 			m_scroll[ind]->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -197,8 +227,8 @@ void markus::updateModuleViewers()
 			
 			//imageViewer[i]->setBaseSize(100, 100);
 			//m_scroll[i]->setBaseSize(200, 400);
-			m_moduleViewer[ind]->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-			mainLayout->addWidget(m_scroll[ind], ii, jj);
+			m_moduleViewer[ind]->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);*/
+			m_mainLayout.addWidget(m_scroll[ind], ii, jj);
 			
 			//imageViewer[i]->setAntialiased(j != 0);
 			//imageViewer[i]->setFloatBased(i != 0);
@@ -216,36 +246,14 @@ void markus::updateModuleViewers()
 			//QCheckBox* cbDispMatch=new QCheckBox(tr("Display matches"));
 			//connect(cbDispMatch, SIGNAL(toggled(bool)),imageViewer[i], SLOT(setDispMatch(bool)));
 			//cbDispMatch->setChecked(true);
-
-			QGroupBox *groupBox = new QGroupBox(tr("Display options"));
-			groupBox->setFlat(true);
-			QGridLayout *vbox = new QGridLayout;
-			//vbox->addStretch(1);
 			
-			QLabel* lab1 = new QLabel(tr("Module"));
-			vbox->addWidget(lab1,0,0);
-			QComboBox * combo1 = m_moduleViewer[ind]->comboModules;
-			combo1->clear();
-			for(std::list<Module*>::const_iterator it = m_manager.GetModuleList().begin(); it != m_manager.GetModuleList().end(); it++)
-				combo1->addItem(QString((*it)->GetName().c_str()), 1);
-			vbox->addWidget(combo1,0,1);
+			//m_mainLayout.addWidget(gbSettings, 2 * ii + 1, jj);
 			
-			QLabel* lab2 = new QLabel(tr("Out stream"));
-			vbox->addWidget(lab2,1,0);
-			QComboBox * combo2 = m_moduleViewer[ind]->comboOutputStreams;
-			m_moduleViewer[ind]->updateModule(*m_manager.GetModuleList().begin());
-			vbox->addWidget(combo2,1,1);
-			
-			groupBox->setLayout(vbox);
-			
-			mainLayout->addWidget(groupBox, 2, ind);
 			//connect(timer, SIGNAL(timeout()),imageViewer[i], SLOT(update()));
 			//QPushButton *quit = new QPushButton(tr("&Quit"));
 			//mainLayout->addWidget(quit, 1, i);
 		}
 	}
-	mainWidget->setLayout(mainLayout);
-	setCentralWidget(mainWidget);
 }
 
 

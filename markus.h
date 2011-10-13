@@ -1,8 +1,9 @@
 #ifndef markus_H
 #define markus_H
 
-#include <QtGui/QMainWindow>
 #include "QOpenCVWidget.h"
+
+#include <QMainWindow>
 #include <QScrollArea>
 
 #include <vector>
@@ -33,13 +34,17 @@ private:
 	
 	QLabel *createLabel(const QString &text);
 	
+	QWidget m_mainWidget;
+	QGridLayout m_mainLayout;
 	std::vector<QOpenCVWidget *> m_moduleViewer;
 	std::vector<QScrollArea   *> m_scroll;
+	//std::vector<QWidget   *> m_scroll;
 	
 	QAction *exitAct;
 	QAction *view1x1Act;
 	QAction *view1x2Act;
 	QAction *view2x2Act;
+	QAction *view2x3Act;
 	QAction *aboutAct;
 	QAction *aboutQtAct;
 	
@@ -51,6 +56,7 @@ private slots:
 	void view1x1();
 	void view1x2();
 	void view2x2();
+	void view2x3();
 };
 
 #endif // markus_H
