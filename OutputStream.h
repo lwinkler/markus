@@ -13,7 +13,7 @@ class OutputStream
 public:
 	OutputStream(const std::string& x_name, StreamType x_type, IplImage* x_image);
 	~OutputStream();
-	const std::string GetName() const {return m_name;};
+	const std::string& GetName() const {return m_name;};
 	const IplImage* GetImageRef() const {return m_image;};
 protected:
 	const std::string m_name;

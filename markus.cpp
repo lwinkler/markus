@@ -80,17 +80,17 @@ markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 		
 		QLabel* lab1 = new QLabel(tr("Module"));
 		vbox->addWidget(lab1,0,0);
-		QComboBox * combo1 = new QComboBox();
+		QComboBox * combo1 = moduleViewer[i]->comboModules;
+		combo1->clear();
 		for(std::list<Module*>::const_iterator it = m_manager.GetModuleList().begin(); it != m_manager.GetModuleList().end(); it++)
 			combo1->addItem(QString((*it)->GetName().c_str()), 1);
 		vbox->addWidget(combo1,0,1);
 		
 		QLabel* lab2 = new QLabel(tr("Out stream"));
 		vbox->addWidget(lab2,1,0);
-		QComboBox * combo2 = new QComboBox();
-		//for(std::list<OutputStream>::const_iterator it = m_currentModule.begin(); it != m_manager.GetModuleList().end(); it++)
-		//	combo1->addItem(QString((*it)->GetName().c_str()), 1);
-		vbox->addWidget(combo1,0,1);
+		QComboBox * combo2 = moduleViewer[i]->comboOutputStreams;
+		moduleViewer[i]->updateModule(*m_manager.GetModuleList().begin());
+		vbox->addWidget(combo2,1,1);
 		
 		groupBox->setLayout(vbox);
 		
