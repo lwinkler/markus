@@ -53,10 +53,10 @@ private:
 	QMenu *helpMenu;
 private slots:
 	void about();
+	void view2x3();
 	void view1x1();
 	void view1x2();
 	void view2x2();
-	void view2x3();
 };
 
 #endif // markus_H

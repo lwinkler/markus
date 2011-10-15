@@ -48,8 +48,9 @@ QOpenCVWidget::QOpenCVWidget(const Manager* x_manager, QWidget *parent) : QWidge
 	QLabel* lab1 = new QLabel(tr("Module"));
 	vbox->addWidget(lab1,0,0);
 	comboModules->clear();
+	int ind = 0;
 	for(std::list<Module*>::const_iterator it = x_manager->GetModuleList().begin(); it != x_manager->GetModuleList().end(); it++)
-		comboModules->addItem(QString((*it)->GetName().c_str()), 1);
+		comboModules->addItem(QString((*it)->GetName().c_str()), ind++);
 	vbox->addWidget(comboModules,0,1);
 	
 	QLabel* lab2 = new QLabel(tr("Out stream"));
@@ -60,6 +61,9 @@ QOpenCVWidget::QOpenCVWidget(const Manager* x_manager, QWidget *parent) : QWidge
 	gbSettings->setLayout(vbox);
 	layout->addWidget(gbSettings);
 	setLayout(layout);
+	int index = 0;
+	
+	connect(comboModules, SIGNAL(activated(int)), this, SLOT(QOpenCVWidget::updateModule()));
 }
 
 QOpenCVWidget::~QOpenCVWidget(void) {
@@ -134,4 +138,25 @@ void QOpenCVWidget::updateOutputStream(const OutputStream * x_outputStream)
 {
 	m_currentOutputStream = x_outputStream;
 }
+
+void QOpenCVWidget::updateModule(int x_index)
+{
+	std::list<Module*>::const_iterator it = m_manager->GetModuleList().begin();
+	
+	while(x_index-- > 0)// && it != m_manager->GetModuleList().end())
+		it++;
+	
+	updateModule(*it);
+}
+
+void QOpenCVWidget::updateOutputStream(int x_index)
+{
+	//updateModule(m_currentModule->GetOutputStreamList()[x_index]);
+}
+
+void QOpenCVWidget::updateModule()
+{
+
+}
+
 

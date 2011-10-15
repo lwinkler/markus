@@ -40,6 +40,9 @@ public:
 public slots:
 	void updateModule(const Module * x_module);
 	void updateOutputStream(const OutputStream * x_outputStream);
+	void updateModule(int x_index);
+	void updateModule();
+	void updateOutputStream(int x_index);
 }; 
 
 #endif
