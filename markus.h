@@ -23,6 +23,7 @@ private:
 	ConfigReader& m_configReader;
 	Manager& m_manager;
 	void timerEvent(QTimerEvent*);
+	void resizeEvent(QResizeEvent*);
 	
 	int nbCols;
 	int nbLines;
@@ -30,14 +31,14 @@ private:
 	void createActions();
 	void createMenus();
 	//void updateActions();
-	void updateModuleViewers();
+	//void updateModuleViewers();
 	
 	QLabel *createLabel(const QString &text);
 	
 	QWidget m_mainWidget;
 	QGridLayout m_mainLayout;
 	std::vector<QOpenCVWidget *> m_moduleViewer;
-	std::vector<QScrollArea   *> m_scroll;
+	//std::vector<QScrollArea   *> m_scroll;
 	//std::vector<QWidget   *> m_scroll;
 	
 	QAction *exitAct;

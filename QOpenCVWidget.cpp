@@ -5,6 +5,9 @@
 #include <QComboBox>
 #include <QGroupBox>
 #include <QGridLayout>
+#include <qevent.h>
+
+#include <QPixmap>
 
 #include "Manager.h"
 #include "Module.h"
@@ -13,24 +16,29 @@
 // Constructor
 QOpenCVWidget::QOpenCVWidget(const Manager* x_manager, QWidget *parent) : QWidget(parent) 
 {
+	//Resize(320, 240);
+	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	m_outputWidth  = QOpenCVWidget::width();
+	m_outputHeight = QOpenCVWidget::height()/2;
+	
+
 	// Handlers for modules
 	assert(x_manager != NULL);
 	m_manager 		= x_manager;
 	m_currentModule 	= *x_manager->GetModuleList().begin();
 	m_currentOutputStream 	= &(*m_currentModule->GetOutputStreamList().begin());
-	
-	m_outputWidth  = 640;
-	m_outputHeight = 480;
-	
+		
 	comboModules 		= new QComboBox();
 	comboOutputStreams 	= new QComboBox();
 	layout = new QVBoxLayout;
 	imagelabel = new QLabel;
+	imagelabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	QImage dummy(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
-	image = dummy;
+	m_image = dummy;
+	
 	layout->addWidget(imagelabel);
 	
-	for (int x = 0; x < m_outputWidth; x ++) 
+	/*for (int x = 0; x < m_outputWidth; x ++) 
 	{
 		for (int y =0; y < m_outputHeight; y++) 
 		{
@@ -39,7 +47,7 @@ QOpenCVWidget::QOpenCVWidget(const Manager* x_manager, QWidget *parent) : QWidge
 	}
 	
 	imagelabel->setPixmap(QPixmap::fromImage(image));
-	
+	*/
 	QGroupBox *gbSettings = new QGroupBox(tr("Display options"));
 	gbSettings->setFlat(true);
 	QGridLayout * vbox = new QGridLayout;
@@ -63,17 +71,57 @@ QOpenCVWidget::QOpenCVWidget(const Manager* x_manager, QWidget *parent) : QWidge
 	setLayout(layout);
 	int index = 0;
 	
-	connect(comboModules, SIGNAL(activated(int)), this, SLOT(QOpenCVWidget::updateModule()));
+	//m_image = QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
+	
+	//imagelabel->setPixmap(QPixmap::fromImage(m_image));
+	
+	
+//	connect(comboModules, SIGNAL(activated(int)), this, SLOT(QOpenCVWidget::updateModule() ));
 }
 
 QOpenCVWidget::~QOpenCVWidget(void) {
 	
 }
 
+/*void QOpenCVWidget::Resize(int x_width, int x_height)
+{
+	QResizeEvent* e = new QResizeEvent(QSize(x_width, x_height), size());
+	resizeEvent(e);
+	delete(e);
+}*/
+
+/*void QOpenCVWidget::resizeEvent(QResizeEvent * e)
+{
+	m_outputWidth  = width();//e->size().width() * 4;
+	m_outputHeight = height() / 2; //e->size().height() * 2;
+	//QImage dummy(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
+	//image = dummy;
+	m_outputWidth = imagelabel->width();
+	m_outputHeight = imagelabel->height();
+	
+	m_image =  QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
+
+}*/
+
+
 void QOpenCVWidget::putImage() 
 {
 	int cvIndex, cvLineStart;
 	const IplImage * cvimage = m_currentOutputStream->GetImageRef();
+	
+	//m_outputWidth  = QOpenCVWidget::width();
+	//m_outputHeight = QOpenCVWidget::height()/2;
+	m_outputWidth  = imagelabel->width();
+	m_outputHeight = imagelabel->height();
+	
+	m_image =  QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
+	imagelabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+	//m_outputWidth = this->width();
+	//m_outputHeight = (this->width() * cvimage->height) /  cvimage->width;
+	
+	//delete mp_image;
+	//mp_image = new QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
 	
 	// Write output to screen
 	static IplImage *cvoutput = cvCreateImage( cvSize(m_outputWidth, m_outputHeight), cvimage->depth, cvimage->nChannels);
@@ -92,9 +140,9 @@ void QOpenCVWidget::putImage()
 		case IPL_DEPTH_8U:
 			switch (cvoutput->nChannels) {
 				case 3:
-					if ( (cvoutput->width != image.width()) || (cvoutput->height != image.height()) ) {
+					if ( (cvoutput->width != m_image.width()) || (cvoutput->height != m_image.height()) ) {
 						QImage temp(cvoutput->width, cvoutput->height, QImage::Format_RGB32);
-						image = temp;
+						m_image = temp;
 					}
 					cvIndex = 0; cvLineStart = 0;
 					for (int y = 0; y < cvoutput->height; y++) {
@@ -106,7 +154,7 @@ void QOpenCVWidget::putImage()
 							green = cvoutput->imageData[cvIndex+1];
 							blue = cvoutput->imageData[cvIndex+0];
 							
-							image.setPixel(x,y,qRgb(red, green, blue));
+							m_image.setPixel(x,y,qRgb(red, green, blue));
 							cvIndex += 3;
 						}
 						cvLineStart += cvoutput->widthStep;                        
@@ -121,7 +169,7 @@ void QOpenCVWidget::putImage()
 					printf("This type of IplImage is not implemented in QOpenCVWidget\n");
 					break;
 	}
-	imagelabel->setPixmap(QPixmap::fromImage(image));    
+	imagelabel->setPixmap(QPixmap::fromImage(m_image));    
 }
 
 void QOpenCVWidget::updateModule(const Module * x_module)

@@ -11,9 +11,11 @@
 //#include <QGroupBox>
 #include <QMessageBox>
 //#include <QComboBox>
+#include <qevent.h>
 
 #include "Manager.h"
 #include "Module.h"
+
 
 using namespace std;
 
@@ -31,9 +33,9 @@ markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 	
 	setWindowState(Qt::WindowMaximized);
 	
-	m_scroll.clear();
+	//m_scroll.clear();
 	m_moduleViewer.clear();
-	updateModuleViewers();
+	//resizeEvent()();
 	m_mainWidget.setLayout(&m_mainLayout);
 	setCentralWidget(&m_mainWidget);
 
@@ -163,53 +165,55 @@ void markus::view1x1()
 {
 	nbLines = 1;
 	nbCols = 1;
-	updateModuleViewers();
+	resizeEvent(NULL);
 }
 
 void markus::view1x2()
 {
 	nbLines = 1;
 	nbCols = 2;
-	updateModuleViewers();
+	resizeEvent(NULL);
 }
 
 void markus::view2x2()
 {
 	nbLines = 2;
 	nbCols = 2;
-	updateModuleViewers();
+	resizeEvent(NULL);
 }
 
 void markus::view2x3()
 {
 	nbLines = 2;
 	nbCols = 3;
-	updateModuleViewers();
+	resizeEvent(NULL);
 }
 
-void markus::updateModuleViewers()
+
+void markus::resizeEvent(QResizeEvent* event)
 {
 	int size = m_moduleViewer.size();
 	for(int ind = 0 ; ind < size; ind++)
 	{
 		m_mainLayout.removeWidget(m_moduleViewer[ind]);
 		m_mainLayout.removeWidget(m_moduleViewer[ind]);
+		m_moduleViewer[ind]->hide();
 	}
 	
 	for(int ind = size ; ind < nbLines * nbCols ; ind++)
 	{
-		m_scroll.push_back(new QScrollArea);
+		//m_scroll.push_back(new QScrollArea);
 		m_moduleViewer.push_back(new QOpenCVWidget(&m_manager));
 		
-		m_scroll[ind]->setWidget(m_moduleViewer[ind]);
-		//imageViewer[i]->setGeometry(i * width()/2, 0, (i + 1) * width()/2, height()/2);
+		//m_scroll[ind]->setWidget(m_moduleViewer[ind]);
+		//m_moduleViewer[ind]->setGeometry(0, 0, width(), height());
 		//m_scroll[i]->setBaseSize(width()/2, width()/2);
-		m_scroll[ind]->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-		//m_moduleViewer[i]->resize(1000, 1000);
+		//m_scroll[ind]->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+		//m_moduleViewer[ind]->resize(1000, 1000);
 		
 		//imageViewer[i]->setBaseSize(100, 100);
 		//m_scroll[i]->setBaseSize(200, 400);
-		m_moduleViewer[ind]->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+		m_moduleViewer[ind]->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	}
 	//m_mainLayout.deleteAllItems();
 	//.deleteAllItems();
@@ -228,7 +232,8 @@ void markus::updateModuleViewers()
 			//imageViewer[i]->setBaseSize(100, 100);
 			//m_scroll[i]->setBaseSize(200, 400);
 			m_moduleViewer[ind]->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);*/
-			m_mainLayout.addWidget(m_scroll[ind], ii, jj);
+			m_mainLayout.addWidget(m_moduleViewer[ind], ii, jj);
+			m_moduleViewer[ind]->show();
 			
 			//imageViewer[i]->setAntialiased(j != 0);
 			//imageViewer[i]->setFloatBased(i != 0);
@@ -254,6 +259,15 @@ void markus::updateModuleViewers()
 			//mainLayout->addWidget(quit, 1, i);
 		}
 	}
+	
+	// Resize all widgets
+	/*QResizeEvent e(QSize(width() / nbLines, height() / nbCols), QSize());
+	for(int ind = 0 ; ind < size; ind++)
+	{
+		//m_moduleViewer[ind]->width = width() / nbLines;
+		m_moduleViewer[ind]->resizeEvent(&e);// Resize(width() / nbLines, height() / nbCols);
+	}*/
+
 }
 
 
