@@ -8,20 +8,23 @@
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QImage>
-#include <QIcon>
+//#include <QIcon>
+#include <QPainter>
 
 class Manager;
 class Module;
 class OutputStream;
 class QComboBox;
+class QPainter;
 
 class QOpenCVWidget : public QWidget 
 {
 private:
-	QLabel *imagelabel;
+	//QLabel *imagelabel;
 	QVBoxLayout *layout;
 	
 	QImage m_image;
+	//QPainter m_painter;
 	const Module * 		m_currentModule;
 	const OutputStream * 	m_currentOutputStream;
 	const Manager* 		m_manager;
@@ -31,11 +34,11 @@ private:
 	
 	//QSize size;
 	//QIcon icon;
-	
+	void paintEvent(QPaintEvent *event);
 public:
 	QOpenCVWidget(const Manager * x_manager, QWidget *parent = 0);
 	~QOpenCVWidget(void);
-	void putImage();
+	//void putImage();
 	
 	QComboBox * comboModules;
 	QComboBox * comboOutputStreams;

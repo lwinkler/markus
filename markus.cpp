@@ -88,7 +88,9 @@ void markus::timerEvent(QTimerEvent*)
 		cout << "Unknown exception raised: "<<endl;
 	}
 	for(int i = 0 ; i < nbCols * nbLines ; i++)
-		m_moduleViewer[i]->putImage();
+		m_moduleViewer[i]->update();
+	
+	//update();
 }
 
 markus::~markus()
