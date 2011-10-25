@@ -2,8 +2,9 @@
 <!-- Our to do list data -->
 
 <Modules>
-	<module type="SlitCamera" >SlitCamera1</module>
         <module type="ObjectTracker" >ObjectTracker1</module>
+	<module type="SlitCamera" >SlitCamera1</module>
+        <module type="SlitCamera" >SlitCamera2</module>
 </Modules>
 
 <Manager>
@@ -32,3 +33,11 @@
         <parameter id="5" name="channels">3</parameter>
 	<parameter id="1" name="aperture">1</parameter>
 </SlitCamera1>
+<SlitCamera2>
+        <parameter id="2" name="width">320</parameter>
+        <parameter id="3" name="height">240</parameter>
+        <parameter id="4" name="depth">8</parameter>
+        <parameter id="5" name="channels">3</parameter>
+        <parameter id="1" name="aperture">1</parameter>
+</SlitCamera2>
+

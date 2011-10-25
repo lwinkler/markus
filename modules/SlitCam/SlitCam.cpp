@@ -36,22 +36,22 @@ SlitCam::~SlitCam(void)
 	cvReleaseImage(&m_output);
 }
 
-void SlitCam::ProcessFrame(const IplImage * img)
+void SlitCam::ProcessFrame(const IplImage * x_img)
 {
-	int widthStep = img->widthStep;
+	int widthStep = x_img->widthStep;
 	int aperture = m_param.aperture;
-	char * pDst = m_output->imageData + m_position * m_output->nChannels * aperture;// * img->nChannels;
-	char * pSrc = img->imageData + img->widthStep * img->nChannels / 2;
+	char * pDst = m_output->imageData + m_position * m_output->nChannels * aperture;// * x_img->nChannels;
+	char * pSrc = x_img->imageData + x_img->widthStep * x_img->nChannels / 2;
 	int size = m_output->depth * aperture;
-	assert(m_output->imageSize == img->imageSize);
+	assert(m_output->imageSize == x_img->imageSize);
 	
-	for(int negCount = img->height ; negCount ; negCount--)
+	for(int negCount = x_img->height ; negCount ; negCount--)
 	{
-		memcpy(pDst, pSrc, size);// * img->nChannels);
+		memcpy(pDst, pSrc, size);// * x_img->nChannels);
 		//memset(pDst, *pSrc, m_image->depth);
 		pSrc += widthStep;
 		pDst += widthStep;
 	}
-	m_position = m_position == img->width - 1 ? 0 : m_position + 1;
+	m_position = m_position == x_img->width - 1 ? 0 : m_position + 1;
 }
 

@@ -19,6 +19,10 @@ class QPainter;
 
 class QOpenCVWidget : public QWidget 
 {
+	Q_OBJECT
+public:
+	QOpenCVWidget(const Manager * x_manager, QWidget *parent = 0);
+	virtual ~QOpenCVWidget();
 private:
 	//QLabel *imagelabel;
 	QVBoxLayout *layout;
@@ -35,9 +39,6 @@ private:
 	//QSize size;
 	//QIcon icon;
 	void paintEvent(QPaintEvent *event);
-public:
-	QOpenCVWidget(const Manager * x_manager, QWidget *parent = 0);
-	~QOpenCVWidget(void);
 	//void putImage();
 	
 	QComboBox * comboModules;
@@ -49,7 +50,6 @@ public slots:
 	void updateModule(const Module * x_module);
 	void updateOutputStream(const OutputStream * x_outputStream);
 	void updateModule(int x_index);
-	void updateModule();
 	void updateOutputStream(int x_index);
 }; 
 

@@ -10,7 +10,7 @@
 #include <QTimer>
 //#include <QGroupBox>
 #include <QMessageBox>
-//#include <QComboBox>
+#include <QComboBox>
 #include <qevent.h>
 
 #include "Manager.h"
@@ -59,13 +59,7 @@ void markus::timerEvent(QTimerEvent*)
 
 	try
 	{
-	//ConfigReader conf("config.xml");
-	//Manager manager(conf);
-	//ObjectTracker objtrack(conf);
-	//SlitCam slitcam(conf);
-	//manager.AddModule((Module&)objtrack);
-	//manager.AddModule((Module&)slitcam);
-	m_manager.Process();
+		m_manager.Process();
 	}
 	catch(cv::Exception& e)
 	{
@@ -237,8 +231,8 @@ void markus::resizeEvent(QResizeEvent* event)
 			m_mainLayout.addWidget(m_moduleViewer[ind], ii, jj);
 			m_moduleViewer[ind]->show();
 			
-			//imageViewer[i]->setAntialiased(j != 0);
-			//imageViewer[i]->setFloatBased(i != 0);
+			//m_moduleViewer[ind]->setAntialiased(true);
+			//m_moduleViewer[ind]->setFloatBased(true);
 			
 			//QCheckBox* cbDispImage=new QCheckBox(tr("Display image"));
 			//connect(cbDispImage, SIGNAL(toggled(bool)),imageViewer[i], SLOT(setDispImage(bool)));
@@ -259,6 +253,7 @@ void markus::resizeEvent(QResizeEvent* event)
 			//connect(timer, SIGNAL(timeout()),imageViewer[i], SLOT(update()));
 			//QPushButton *quit = new QPushButton(tr("&Quit"));
 			//mainLayout->addWidget(quit, 1, i);
+			//connect(m_moduleViewer[ind]->comboModules, SIGNAL(activated(int)), m_moduleViewer[ind], SLOT(QOpenCVWidget::updateModule(int) ));
 		}
 	}
 	

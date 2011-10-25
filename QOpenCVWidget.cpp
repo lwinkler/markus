@@ -78,19 +78,18 @@ QOpenCVWidget::QOpenCVWidget(const Manager* x_manager, QWidget *parent) : QWidge
 	setPalette(QPalette(QColor(0, 0, 40)));
 	setAutoFillBackground(true);
 
-
 	//update();
 	//m_image = QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
 	
 	//imagelabel->
 	//m_painter.setBackground(QPixmap::fromImage(m_image));
-// 	
 	
-//	connect(comboModules, SIGNAL(activated(int)), this, SLOT(QOpenCVWidget::updateModule() ));
+	connect(comboModules, SIGNAL(activated(int)), this, SLOT(updateModule(int) ));
+	connect(comboOutputStreams, SIGNAL(activated(int)), this, SLOT(updateOutputStream(int)));
 }
 
-QOpenCVWidget::~QOpenCVWidget(void) {
-	
+QOpenCVWidget::~QOpenCVWidget(void) 
+{
 }
 
 /*void QOpenCVWidget::Resize(int x_width, int x_height)
@@ -211,7 +210,7 @@ void QOpenCVWidget::updateModule(int x_index)
 {
 	std::list<Module*>::const_iterator it = m_manager->GetModuleList().begin();
 	
-	while(x_index-- > 0)// && it != m_manager->GetModuleList().end())
+	while(x_index-- > 0 && it != m_manager->GetModuleList().end())
 		it++;
 	
 	updateModule(*it);
@@ -219,12 +218,14 @@ void QOpenCVWidget::updateModule(int x_index)
 
 void QOpenCVWidget::updateOutputStream(int x_index)
 {
-	//updateModule(m_currentModule->GetOutputStreamList()[x_index]);
+	std::list<OutputStream>::const_iterator it = m_currentModule->GetOutputStreamList().begin();
+	
+	while(x_index-- > 0 && it != m_currentModule->GetOutputStreamList().end())
+		it++;
+	
+	updateOutputStream(&(*it));
 }
 
-void QOpenCVWidget::updateModule()
-{
-
-}
 
 
+#include "QOpenCVWidget.moc"

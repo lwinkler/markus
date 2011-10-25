@@ -26,7 +26,6 @@ ObjectTracker::ObjectTracker(const std::string& x_name, ConfigReader& x_configRe
 	m_outputStreams.push_back(OutputStream("foreground_rff", STREAM_DEBUG, detect.GetForegroundRff()));
 	//m_outputStreams.push_back(OutputStream("blobs", STREAM_DEBUG, track.GetBlobsImg()));
 	m_outputStreams.push_back(OutputStream("tracker", STREAM_OUTPUT, m_output));
-
 }
 
 ObjectTracker::~ObjectTracker(void )
@@ -55,7 +54,6 @@ void ObjectTracker::ProcessFrame(const IplImage* x_img)
 	track.UpdateTemplates();
 	
 	cvCopy(track.GetBlobsImg(), m_output);
-	
 	//track.PrintTrackedRegions();
 };
 
