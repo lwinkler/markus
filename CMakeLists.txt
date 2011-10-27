@@ -17,6 +17,7 @@ QOpenCVWidget.cpp
 main.cpp 
 Module.cpp
 Manager.cpp
+Input.cpp
 Parameter.cpp
 OutputStream.cpp
 util.cpp

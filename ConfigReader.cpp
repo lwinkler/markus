@@ -7,9 +7,9 @@ using namespace std;
 /* Reads the configuration file with tinyxml */
 //const char * ConfigReader::m_fileName = "config.xml";
 
-void ConfigReader::ReadConfigModule(const std::string& x_moduleName)
+vector<ParameterValue> ConfigReader::ReadConfigModule(const std::string& x_moduleName)
 {
-	m_parameterList.clear();
+	vector<ParameterValue> parameterList;
 	TiXmlDocument doc( m_fileName );
 	bool loadOkay = doc.LoadFile();
 
@@ -38,20 +38,26 @@ void ConfigReader::ReadConfigModule(const std::string& x_moduleName)
 		paramElement = node->ToElement();
 		
 		const char* id = paramElement->Attribute( "id");
-		const char* name = paramElement->Attribute( "name");
+		const char* name  = paramElement->Attribute( "name");
+		const char* type  = paramElement->Attribute( "type");
 		const char* value = paramElement->GetText();
 		if(id == NULL) id = "-1";
 		assert(name);
 		assert(value);
+		if(type == NULL)
+			type = "";
 		//cout<<"name"<<name<<" value "<<value<<endl;
 		
-		m_parameterList.push_back(ParameterValue(atoi(id), std::string(name), value));
+		parameterList.push_back(ParameterValue(atoi(id), std::string(name), std::string(type), value));
 	}
+	
+	return parameterList;
 }
 
-void ConfigReader::ReadConfigModules()
+// Read the config of all modules that will run
+vector<ParameterValue> ConfigReader::ReadConfigDetectors(int x_detectorNumber)
 {
-	m_parameterList.clear();
+	vector<ParameterValue> parameterList;;
 	TiXmlDocument doc( m_fileName );
 	bool loadOkay = doc.LoadFile();
 
@@ -62,9 +68,9 @@ void ConfigReader::ReadConfigModules()
 	TiXmlElement* moduleElement = 0;
 	TiXmlElement* paramElement = 0;
 	
-	node = doc.FirstChild("Modules");
+	node = doc.FirstChild("Detectors");
 	if(node == NULL)
-		throw("Impossible to find <Modules> in config file.");
+		throw("Impossible to find <Detectors> in config file.");
 	moduleElement = node->ToElement();
 	assert( moduleElement  );
 	
@@ -73,30 +79,48 @@ void ConfigReader::ReadConfigModules()
 	paramElement = node->ToElement();
 	assert( paramElement  );*/
 	
-	for( node = moduleElement->FirstChild( "module" );
+	for( node = moduleElement->FirstChild( "detector" );
 		node;
-		node = node->NextSibling( "module" ) )
+		node = node->NextSibling( "detector" ) )
 	{
-		paramElement = node->ToElement();
+		if(x_detectorNumber == 0) break;
+		x_detectorNumber --;
+	}
+	
+	if(node == NULL) return parameterList;
+	
+	moduleElement = node->ToElement();
+	assert( moduleElement  );
+	
+	for(TiXmlNode* nodeParam = moduleElement->FirstChild( "parameter" );
+	nodeParam;
+	nodeParam = nodeParam->NextSibling( "parameter" ) )
+	{
+
+		paramElement = nodeParam->ToElement();
 		
 		const char* id = paramElement->Attribute( "id");
 		const char* type = paramElement->Attribute( "type");
-		const char* name = paramElement->GetText();
+		const char* name = paramElement->Attribute( "name");
+		const char* value = paramElement->GetText();
 		if(id == NULL) id = "-1";
 		assert(name);
 		assert(type);
 		//cout<<"name"<<name<<" value "<<value<<endl;
 		
-		m_parameterList.push_back(ParameterValue(atoi(id), type, name));
+		parameterList.push_back(ParameterValue(atoi(id), name, type, value));
 	}
+
+	
+	return parameterList;
 }
 
 
-string ConfigReader::GetParameterValue(const std::string& x_name) const
+ParameterValue ConfigReader::GetParameterValue(const std::string& x_name, const vector<ParameterValue> & x_parameterList)
 {
-	for(list<ParameterValue>::const_iterator it = m_parameterList.begin(); it != m_parameterList.end(); it++)
+	for(vector<ParameterValue>::const_iterator it = x_parameterList.begin(); it != x_parameterList.end(); it++)
 	{
 		if(x_name.compare(it->m_name) == 0)
-			return it->m_value;
+			return *it;
 	}
 }

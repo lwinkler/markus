@@ -4,9 +4,11 @@
 #include <tinyxml.h>
 #include <string>
 #include "Parameter.h"
+#include <vector>
+
 
 class Module;
-class Manager;
+//class Manager;std::vector<ParameterValue> 
 
 class ConfigReader
 {
@@ -14,15 +16,15 @@ public:
 	ConfigReader(const char * x_fileName)
 	{
 		m_fileName = x_fileName;
-		m_parameterList.clear();
+		//m_parameterList.clear();
 	};
 	~ConfigReader(){};
-	void ReadConfigModule(const std::string& x_moduleName);
-	void ReadConfigModules();
-	std::string GetParameterValue(const std::string& x_name) const;
+	std::vector<ParameterValue> ReadConfigModule(const std::string& x_moduleName);
+	std::vector<ParameterValue> ReadConfigDetectors(int x_detectorNumber);
+	static ParameterValue GetParameterValue(const std::string& x_name, const std::vector<ParameterValue> & x_parameterList);
 	//void SetParameterValues(ParameterStructure& x_param);
-	std::list<ParameterValue> m_parameterList;
 private:
+	//std::vector<ParameterValue> m_parameterList;
 	std::string m_fileName;
 };
 

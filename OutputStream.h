@@ -1,3 +1,6 @@
+#ifndef OUTPUT_STREAM_H
+#define OUTPUT_STREAM_H
+
 #include "cv.h"
 
 
@@ -19,4 +22,9 @@ protected:
 	const std::string m_name;
 	const IplImage * m_image;
 	const StreamType m_type;
+	
+private:
+	OutputStream& operator=(const OutputStream&);
 };
+
+#endif

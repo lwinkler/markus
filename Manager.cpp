@@ -1,5 +1,6 @@
 #include "Manager.h"
 #include "Module.h"
+#include "Input.h"
 
 #include "util.h"
 
@@ -34,40 +35,13 @@ Manager::Manager(ConfigReader& x_configReader) :
 {
 	//m_workIsColor = (m_workChannels==3);	
 	//cout<<"Create Manager : Work image ("<<m_workWidth<<"x"<<m_workHeight<<" depth="<<m_workDepth<<" channels="<<m_workChannels<<")"<<endl;
-	m_capture = NULL;
 	m_frameCount = 0;
-	
-	cout<<"Input "<< m_param.input<<endl;
-
-	if(m_param.input == "cam")
-	{
-		cout<<"Capture from Cam"<<endl;
-		m_capture = cvCaptureFromCAM( CV_CAP_ANY );
-	}
-	else
-	{
-		m_capture = cvCaptureFromFile(m_param.input.c_str());
-	}
-	
-	if(m_capture == NULL)
-	{
-		throw("Error : Input or input file not found ! : " + m_param.input);
-	}
-	assert(m_capture != NULL);
-	
-	// Get capture device information
-	cvQueryFrame(m_capture); // this call is necessary to get correct capture properties
-	//int frameHc    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT);
-	//int frameWc    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH);
-	int fpsc       = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FPS);
-	//int numFramesc = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_COUNT);
-	
 	
 	//Initializing a video writer:
 
 	m_writer = NULL;
 	
-	int fps     = fpsc;  // or 30
+	int fps     = 30; // FIXME fpsc;  // or 30
 	
 	if(m_param.mode == "benchmark")
 	{
@@ -81,31 +55,49 @@ Manager::Manager(ConfigReader& x_configReader) :
 	// Create timers
 	m_timerConv.start();
 			
+	m_inputs.clear();
 	m_modules.clear();
 	
-	m_configReader.ReadConfigModules();
-	std::list<ParameterValue> moduleList =  m_configReader.m_parameterList;
-	for(std::list<ParameterValue>::const_iterator it = moduleList.begin() ; it != moduleList.end() ; it++)
+	int nb = 0;
+	std::vector<ParameterValue> paramList = m_configReader.ReadConfigDetectors(0);
+	
+	while(paramList.size() > 0)
 	{
-		if(it->m_name.compare("SlitCamera") == 0)
-		{
-			AddModule(new SlitCam(it->m_value, m_configReader));
-		}
-		else if(it->m_name.compare("ObjectTracker") == 0)
-		{
-			AddModule(new ObjectTracker(it->m_value, m_configReader));
-		}
-		else throw("Module type unknown : " + it->m_name);
+		//for(std::vector<ParameterValue>::const_iterator it =  paramList.begin();
+		//it != paramList.end();
+		//it++)
+		//{
+				ParameterValue module = ConfigReader::GetParameterValue("module", paramList);
+				ParameterValue input  = ConfigReader::GetParameterValue("input" , paramList);
+				
+				// Create all modules types
+				if(module.m_type.compare("SlitCamera") == 0)
+				{
+					AddModule(new SlitCam(module.m_value, m_configReader));
+				}
+				else if(module.m_type.compare("ObjectTracker") == 0)
+				{
+					AddModule(new ObjectTracker(module.m_value, m_configReader));
+				}
+				else throw("Module type unknown : " + module.m_type);
+				
+				// Create all input objects
+				AddInput(new Input(input.m_value, m_configReader));
+		//}
+		paramList = m_configReader.ReadConfigDetectors(++nb);
 	}
 }
 
 Manager::~Manager()
 {
-	cvReleaseCapture(&m_capture );
 	// Releasing the video writer:
 	if(m_writer != NULL) cvReleaseVideoWriter(&m_writer);
 
-	for(list<Module*>::iterator it = m_modules.begin(); it != m_modules.end(); it++)
+	for(vector<Module*>::iterator it = m_modules.begin(); it != m_modules.end(); it++)
+	{
+		delete(*it);
+	}
+	for(vector<Input*>::iterator it = m_inputs.begin(); it != m_inputs.end(); it++)
 	{
 		delete(*it);
 	}
@@ -121,19 +113,13 @@ void Manager::Process()
 	IplImage *img = cvCreateImage( cvSize(m_param.width, m_param.height), m_param.depth, m_param.channels);	
 	
 	// Main loop
-	cvGrabFrame(m_capture);
 	//while(cvGrabFrame(m_capture) && m_key != 27)
 	{
-		IplImage* source=cvRetrieveFrame(m_capture);           // retrieve the captured frame
+		const IplImage* source = (*(m_inputs.begin()))->GetImage();;
 		
 		static IplImage* tmp1=NULL;
 		static IplImage* tmp2=NULL;
 		adjust(source, img, tmp1, tmp2);
-		
-		//Get frame information:
-		static double posMsec   =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_MSEC);
-		static int posFrames    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_FRAMES);
-		static double posRatio  =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_AVI_RATIO);
 		
 		//printf("Processing frame %d (%dx%d) with %d channels\n", frame, width, height, channels); 
 		// declare a destination IplImage object with correct size, depth and channels			
@@ -141,9 +127,13 @@ void Manager::Process()
 		m_timerConv.stop();
 		timerProc.start();
 		
-		for(list<Module*>::iterator it = m_modules.begin(); it != m_modules.end(); it++)
+		for(vector<Input*>::iterator it = m_inputs.begin(); it != m_inputs.end(); it++)
 		{
-			(*it)->ProcessFrame(img);
+			(*it)->Capture();
+		}
+		for(vector<Module*>::iterator it = m_modules.begin(); it != m_modules.end(); it++)
+		{
+			(*it)->ProcessFrame(m_inputs[0]->GetImage()); // FIXME
 		}
 		
 		timerProc.stop();
@@ -161,13 +151,13 @@ void Manager::Process()
 		else
 		{
 			// Write output to screen
-			/*static IplImage *output = cvCreateImage( cvSize(m_param.width, m_param.height), IPL_DEPTH_8U, m_param.channels);
+			static IplImage *output = cvCreateImage( cvSize(m_param.width, m_param.height), IPL_DEPTH_8U, m_param.channels);
 			static IplImage* tmp1_c1 = NULL;
 			static IplImage* tmp2_c1 = NULL;
 			static IplImage* tmp1_c3 = NULL;
 			static IplImage* tmp2_c3 = NULL;
 			
-			for(list<Module*>::iterator it = m_modules.begin(); it != m_modules.end(); it++)
+			/*for(vector<Module*>::iterator it = m_modules.begin(); it != m_modules.end(); it++)
 			{
 				const std::list<OutputStream> streamList((*it)->GetOutputStreamList());
 				for(list<OutputStream>::const_iterator it2 = streamList.begin(); it2 != streamList.end(); it2++)
@@ -218,3 +208,8 @@ void Manager::AddModule(Module * x_mod)
 }
 
 
+void Manager::AddInput(Input* x_input)
+{
+	int cpt = 0;
+	m_inputs.push_back(x_input);
+}

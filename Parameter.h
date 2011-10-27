@@ -1,7 +1,7 @@
 #ifndef PARAMETER_H
 #define PARAMETER_H
 
-#include <list>
+#include <vector>
 #include <string>
 #include <assert.h>
 #include <iostream>
@@ -32,11 +32,13 @@ class ConfigReader;
 class ParameterValue
 {
 public:
-	ParameterValue(int x_id, const std::string& x_name, const std::string& x_value);
-	const int m_id;
-	const std::string m_name;
-	const std::string m_value;
+	ParameterValue(int x_id, const std::string& x_name, const std::string& x_type, const std::string& x_value);
+	int m_id;
+	std::string m_name;
+	std::string m_type;
+	std::string m_value;
 };
+
 class Parameter
 {
 public:
@@ -147,15 +149,15 @@ public:
 		//Init();
 	};
 	void Init();
-	void ReadParametersFromConfig();
-	void SetFromConfig(const std::list<ParameterValue>& x_params);
+	//void ReadParametersFromConfig();
+	void SetFromConfig(const std::vector<ParameterValue>& x_params);
 	void SetDefault();
 	void CheckRange() const;
 	void PrintParameters() const;
 	void SetValueByName(const std::string& x_name, const std::string& x_value, ParameterConfigType x_configType = PARAMCONF_UNKNOWN);
 	
 //protected:
-	std::list<Parameter*> m_list;
+	std::vector<Parameter*> m_list;
 	ConfigReader& m_configReader;
 	const std::string m_moduleName;
 };

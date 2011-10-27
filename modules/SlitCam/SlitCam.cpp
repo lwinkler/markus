@@ -28,12 +28,13 @@ SlitCam::SlitCam(const std::string& x_name, ConfigReader& x_configReader)
 				 m_param.depth, m_param.channels);
 
 	// Init output images
-	m_outputStreams.push_back(OutputStream("slit", STREAM_OUTPUT, m_output));
+	m_outputStreams.push_back(new OutputStream("slit", STREAM_OUTPUT, m_output));
 }
 
 SlitCam::~SlitCam(void)
 {
 	cvReleaseImage(&m_output);
+	//TODO : delete output streams
 }
 
 void SlitCam::ProcessFrame(const IplImage * x_img)

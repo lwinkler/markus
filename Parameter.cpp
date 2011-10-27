@@ -8,8 +8,8 @@
 
 using namespace std;
 
-ParameterValue::ParameterValue(int x_id, const std::string& x_name, const std::string& x_value) :
-	m_id(x_id), m_name(x_name), m_value(x_value) 
+ParameterValue::ParameterValue(int x_id, const string& x_name, const string& x_type, const string& x_value) :
+	m_id(x_id), m_name(x_name), m_type(x_type), m_value(x_value) 
 {
 };
 
@@ -17,20 +17,17 @@ void ParameterStructure::Init()
 {
 	// Read config file
 	SetDefault();
-	ReadParametersFromConfig();
-	cout<<"Module "<<m_moduleName<<" initialized."<<endl;
+	
+	// Read parameters from config
+	SetFromConfig(m_configReader.ReadConfigModule(m_moduleName));
+	
+	cout<<"Parameters for "<<m_moduleName<<" initialized."<<endl;
 	PrintParameters();
 }
 
-void ParameterStructure::ReadParametersFromConfig()
+void ParameterStructure::SetFromConfig(const std::vector<ParameterValue>& x_list)
 {
-	m_configReader.ReadConfigModule(m_moduleName);
-	SetFromConfig(m_configReader.m_parameterList);
-}
-
-void ParameterStructure::SetFromConfig(const std::list<ParameterValue>& x_list)
-{
-	for(list<ParameterValue>::const_iterator it = x_list.begin(); it != x_list.end(); it++)
+	for(vector<ParameterValue>::const_iterator it = x_list.begin(); it != x_list.end(); it++)
 	{
 		SetValueByName(it->m_name.c_str(), it->m_value, PARAMCONF_XML);
 	}
@@ -38,7 +35,7 @@ void ParameterStructure::SetFromConfig(const std::list<ParameterValue>& x_list)
 
 void ParameterStructure::SetValueByName(const string& x_name, const string& x_value, ParameterConfigType x_configType)
 {
-	for(list<Parameter*>::iterator it = m_list.begin(); it != m_list.end(); it++)
+	for(vector<Parameter*>::iterator it = m_list.begin(); it != m_list.end(); it++)
 	{
 		if((*it)->m_name.compare(x_name) == 0)//(!strcmp(it->m_name, x_name))
 		{
@@ -55,7 +52,7 @@ void ParameterStructure::SetValueByName(const string& x_name, const string& x_va
 
 void ParameterStructure::SetDefault()
 {
-	for(list<Parameter*>::iterator it = m_list.begin(); it != m_list.end(); it++)
+	for(vector<Parameter*>::iterator it = m_list.begin(); it != m_list.end(); it++)
 	{
 		(*it)->SetDefault();
 	}
@@ -63,7 +60,7 @@ void ParameterStructure::SetDefault()
 
 void ParameterStructure::CheckRange() const
 {
-	for(list<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
+	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
 	{
 		if((*it)->m_type != PARAM_STR)
 		{
@@ -78,7 +75,7 @@ void ParameterStructure::CheckRange() const
 void ParameterStructure::PrintParameters() const
 {
 	string confType = "";
-	for(list<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
+	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
 	{
 		switch((*it)->m_confType)
 		{

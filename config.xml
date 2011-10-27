@@ -1,20 +1,27 @@
 <?xml version="1.0" standalone="no" ?>
-<!-- Our to do list data -->
 
-<Modules>
-        <module type="ObjectTracker" >ObjectTracker1</module>
-	<module type="SlitCamera" >SlitCamera1</module>
-        <module type="SlitCamera" >SlitCamera2</module>
-</Modules>
+<Detectors>
+	<detector name="ModuleDeTest">
+		<parameter id="0" name="input" type="usbcam">MyCam1</parameter>
+		<parameter id="2" name="module" type="SlitCamera">SlitCamera1</parameter>
+	</detector>
+</Detectors>
+
 
 <Manager>
-	<parameter id="0" name="input">cam</parameter><!-- cam   ../input/PETS2001set2test2.mov.avi -->
 	<parameter id="1" name="mode">benchmarkAA</parameter>
         <parameter id="2" name="width">320</parameter>
 	<parameter id="3" name="height">240</parameter>
         <parameter id="4" name="depth">8</parameter>
         <parameter id="5" name="channels">3</parameter>
 </Manager>
+
+<!-- List all possibly used inputs-->
+<MyCam1>
+        <parameter id="0" name="source">cam</parameter>
+</MyCam1>
+
+<!-- List all possibly used modules-->
 
 <ObjectTracker1>
         <parameter id="2" name="width">320</parameter>

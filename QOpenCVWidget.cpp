@@ -25,9 +25,10 @@ QOpenCVWidget::QOpenCVWidget(const Manager* x_manager, QWidget *parent) : QWidge
 
 	// Handlers for modules
 	assert(x_manager != NULL);
+	assert(x_manager->GetModuleList().size() > 0);
 	m_manager 		= x_manager;
 	m_currentModule 	= *x_manager->GetModuleList().begin();
-	m_currentOutputStream 	= &(*m_currentModule->GetOutputStreamList().begin());
+	m_currentOutputStream 	= *m_currentModule->GetOutputStreamList().begin();
 		
 	comboModules 		= new QComboBox();
 	comboOutputStreams 	= new QComboBox();
@@ -61,7 +62,7 @@ QOpenCVWidget::QOpenCVWidget(const Manager* x_manager, QWidget *parent) : QWidge
 	vbox->addWidget(lab1,0,0);
 	comboModules->clear();
 	int ind = 0;
-	for(std::list<Module*>::const_iterator it = x_manager->GetModuleList().begin(); it != x_manager->GetModuleList().end(); it++)
+	for(std::vector<Module*>::const_iterator it = x_manager->GetModuleList().begin(); it != x_manager->GetModuleList().end(); it++)
 		comboModules->addItem(QString((*it)->GetName().c_str()), ind++);
 	vbox->addWidget(comboModules,0,1);
 	
@@ -195,10 +196,10 @@ void QOpenCVWidget::updateModule(const Module * x_module)
 {
 	m_currentModule = x_module;
 	comboOutputStreams->clear();
-	for(std::list<OutputStream>::const_iterator it = m_currentModule->GetOutputStreamList().begin(); it != m_currentModule->GetOutputStreamList().end(); it++)
-			comboOutputStreams->addItem(QString(it->GetName().c_str()), 1);
+	for(std::vector<OutputStream*>::const_iterator it = m_currentModule->GetOutputStreamList().begin(); it != m_currentModule->GetOutputStreamList().end(); it++)
+			comboOutputStreams->addItem(QString((*it)->GetName().c_str()), 1);
 
-	updateOutputStream(&*(m_currentModule->GetOutputStreamList().begin()));
+	updateOutputStream(*(m_currentModule->GetOutputStreamList().begin()));
 }
 
 void QOpenCVWidget::updateOutputStream(const OutputStream * x_outputStream)
@@ -208,7 +209,7 @@ void QOpenCVWidget::updateOutputStream(const OutputStream * x_outputStream)
 
 void QOpenCVWidget::updateModule(int x_index)
 {
-	std::list<Module*>::const_iterator it = m_manager->GetModuleList().begin();
+	std::vector<Module*>::const_iterator it = m_manager->GetModuleList().begin();
 	
 	while(x_index-- > 0 && it != m_manager->GetModuleList().end())
 		it++;
@@ -218,12 +219,12 @@ void QOpenCVWidget::updateModule(int x_index)
 
 void QOpenCVWidget::updateOutputStream(int x_index)
 {
-	std::list<OutputStream>::const_iterator it = m_currentModule->GetOutputStreamList().begin();
+	std::vector<OutputStream*>::const_iterator it = m_currentModule->GetOutputStreamList().begin();
 	
 	while(x_index-- > 0 && it != m_currentModule->GetOutputStreamList().end())
 		it++;
 	
-	updateOutputStream(&(*it));
+	updateOutputStream((*it));
 }
 
 

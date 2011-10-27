@@ -14,10 +14,10 @@ Module::Module(const std::string& x_name, ConfigReader& x_configReader) :
 
 Module::~Module()
 {
+	//TODO : delete m_outputStreams
 };
 
 void Module::AddStream(const std::string& x_name, StreamType x_type, IplImage* x_image)
 {
-	OutputStream stream(x_name, x_type, x_image);
-	m_outputStreams.push_back(stream);
+	m_outputStreams.push_back(new OutputStream(x_name, x_type, x_image));
 }

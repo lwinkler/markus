@@ -21,11 +21,11 @@ ObjectTracker::ObjectTracker(const std::string& x_name, ConfigReader& x_configRe
 	cvSet( m_img_blur, cvScalar(0,0,0));
 	detect.Reset();
 	track.Reset();
-	m_outputStreams.push_back(OutputStream("background", STREAM_DEBUG, detect.GetBackground()));
-	m_outputStreams.push_back(OutputStream("foreground", STREAM_DEBUG, detect.GetForeground()));
-	m_outputStreams.push_back(OutputStream("foreground_rff", STREAM_DEBUG, detect.GetForegroundRff()));
+	m_outputStreams.push_back(new OutputStream("background", STREAM_DEBUG, detect.GetBackground()));
+	m_outputStreams.push_back(new OutputStream("foreground", STREAM_DEBUG, detect.GetForeground()));
+	m_outputStreams.push_back(new OutputStream("foreground_rff", STREAM_DEBUG, detect.GetForegroundRff()));
 	//m_outputStreams.push_back(OutputStream("blobs", STREAM_DEBUG, track.GetBlobsImg()));
-	m_outputStreams.push_back(OutputStream("tracker", STREAM_OUTPUT, m_output));
+	m_outputStreams.push_back(new OutputStream("tracker", STREAM_OUTPUT, m_output));
 }
 
 ObjectTracker::~ObjectTracker(void )
