@@ -25,6 +25,7 @@ protected:
 	
 private:
 	OutputStream& operator=(const OutputStream&);
+	OutputStream(const OutputStream&);
 };
 
 #endif

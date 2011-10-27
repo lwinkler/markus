@@ -9,7 +9,6 @@ Input::Input(const std::string& x_name, ConfigReader& x_configReader):
 {
 
 	m_capture = NULL;
-	m_input = NULL;
 	cout<<"Input "<< m_param.source<<endl;
 
 	if(m_param.source == "cam")
@@ -30,11 +29,12 @@ Input::Input(const std::string& x_name, ConfigReader& x_configReader):
 	
 	// Get capture device information
 	cvQueryFrame(m_capture); // this call is necessary to get correct capture properties
-	//int frameHc    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT);
-	//int frameWc    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH);
-	int fpsc       = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FPS);
+	m_width    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH);
+	m_height   = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT);
+	m_fps     = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FPS);
 	//int numFramesc = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_COUNT);
-
+	
+	m_input = cvCreateImage( cvSize(m_width, m_height), IPL_DEPTH_8U, 3);
 }
 
 Input::~Input()

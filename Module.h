@@ -33,8 +33,8 @@ public:
 	virtual void ProcessFrame(const IplImage * m_input) = 0;
 	const std::string& GetName(){return m_name;};
 	const IplImage * GetOutput(){return m_output;}
-	void AddStream(const std::string& x_name, StreamType x_type, IplImage* m_image);
-	const std::vector<OutputStream*> GetOutputStreamList() const {return m_outputStreams;};
+	//void AddStream(const std::string& x_name, StreamType x_type, IplImage* m_image);
+	const std::vector<OutputStream*>& GetOutputStreamList() const {return m_outputStreams;};
 		
 protected:
 	IplImage * m_output;

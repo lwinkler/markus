@@ -68,7 +68,7 @@ QOpenCVWidget::QOpenCVWidget(const Manager* x_manager, QWidget *parent) : QWidge
 	
 	QLabel* lab2 = new QLabel(tr("Out stream"));
 	vbox->addWidget(lab2,1,0);
-	this->updateModule(*x_manager->GetModuleList().begin());
+	this->updateModule(*(x_manager->GetModuleList().begin()));
 	vbox->addWidget(comboOutputStreams,1,1);
 	
 	gbSettings->setLayout(vbox);
@@ -196,8 +196,11 @@ void QOpenCVWidget::updateModule(const Module * x_module)
 {
 	m_currentModule = x_module;
 	comboOutputStreams->clear();
+	int cpt = 0;
 	for(std::vector<OutputStream*>::const_iterator it = m_currentModule->GetOutputStreamList().begin(); it != m_currentModule->GetOutputStreamList().end(); it++)
-			comboOutputStreams->addItem(QString((*it)->GetName().c_str()), 1);
+	{
+		comboOutputStreams->addItem(QString((*it)->GetName().c_str()), cpt++);
+	}
 
 	updateOutputStream(*(m_currentModule->GetOutputStreamList().begin()));
 }

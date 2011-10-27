@@ -110,7 +110,7 @@ void Manager::CaptureInput()
 }
 void Manager::Process()
 {
-	IplImage *img = cvCreateImage( cvSize(m_param.width, m_param.height), m_param.depth, m_param.channels);	
+	IplImage *img = cvCreateImage( cvSize(m_param.width, m_param.height), m_param.depth, m_param.channels);
 	
 	// Main loop
 	//while(cvGrabFrame(m_capture) && m_key != 27)

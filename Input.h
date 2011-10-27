@@ -39,6 +39,9 @@ public:
 protected:
 	IplImage * m_input;
 	CvCapture * m_capture;
+	int m_width;
+	int m_height;
+	int m_fps;
 
 	const std::string m_name;
 	InputParameterStructure m_param;

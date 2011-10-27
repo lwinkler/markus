@@ -1,10 +1,15 @@
 <?xml version="1.0" standalone="no" ?>
 
 <Detectors>
-	<detector name="ModuleDeTest">
+	<!--<detector name="ModuleDeTest">
 		<parameter id="0" name="input" type="usbcam">MyCam1</parameter>
 		<parameter id="2" name="module" type="SlitCamera">SlitCamera1</parameter>
 	</detector>
+        -->
+	<detector name="ModuleDeTest2">
+                <parameter id="0" name="input" type="usbcam">MyCam1</parameter>
+                <parameter id="2" name="module" type="ObjectTracker">ObjectTracker1</parameter>
+        </detector>
 </Detectors>
 
 
@@ -24,8 +29,8 @@
 <!-- List all possibly used modules-->
 
 <ObjectTracker1>
-        <parameter id="2" name="width">320</parameter>
-        <parameter id="3" name="height">240</parameter>
+        <parameter id="2" name="width">640</parameter>
+        <parameter id="3" name="height">480</parameter>
         <parameter id="4" name="depth">8</parameter>
         <parameter id="5" name="channels">3</parameter>
 	<parameter id="3" name="input_blur_size">3</parameter>
@@ -34,8 +39,8 @@
 	<parameter id="3" name="foreground_filter_size">3</parameter>
 </ObjectTracker1>
 <SlitCamera1>
-        <parameter id="2" name="width">320</parameter>
-        <parameter id="3" name="height">240</parameter>
+        <parameter id="2" name="width">640</parameter>
+        <parameter id="3" name="height">480</parameter>
         <parameter id="4" name="depth">8</parameter>
         <parameter id="5" name="channels">3</parameter>
 	<parameter id="1" name="aperture">1</parameter>
