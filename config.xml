@@ -1,15 +1,15 @@
 <?xml version="1.0" standalone="no" ?>
 
 <ImageProcessors>
-	<imageprocessor name="ModuleDeTest">
+	<ImageProcessor name="ModuleDeTest">
 		<parameter id="0" name="input" type="usbcam">MyCam1</parameter>
 		<parameter id="2" name="module" type="SlitCamera">SlitCamera1</parameter>
-	</imageprocessor>
+	</ImageProcessor>
         
-	<imageprocessor name="ModuleDeTest2">
+	<ImageProcessor name="ModuleDeTest2">
                 <parameter id="0" name="input" type="usbcam">MyCam1</parameter>
                 <parameter id="2" name="module" type="ObjectTracker">ObjectTracker1</parameter>
-        </imageprocessor>
+        </ImageProcessor>
 </ImageProcessors>
 
 

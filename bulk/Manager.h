@@ -5,11 +5,17 @@
 #include <cstring>
 
 #include <cv.h>
-//#include <highgui.h>
 #include "timer.h"
 
 #include "ConfigReader.h"
+//#include "ConfigReader.h"
 #include "Input.h"
+#include "Module.h"
+
+class ImageProcessor;
+//class Input;
+//class Module;
+class CvVideoWriter;
 
 class ManagerParameter : public ParameterStructure
 {
@@ -54,6 +60,7 @@ private:
 	
 	std::vector<Module *> m_modules;
 	std::vector<Input  *> m_inputs;
+	std::vector<ImageProcessor  *> m_imageProcessors;
 	long long m_frameCount;
 protected:
 	virtual const ParameterStructure& GetRefParameter(){return m_param;};

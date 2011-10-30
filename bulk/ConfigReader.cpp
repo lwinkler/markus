@@ -13,7 +13,7 @@ vector<ParameterValue> ConfigReader::ReadConfigObject(const std::string& x_objec
 	vector<ParameterValue> parameterList;
 	TiXmlDocument doc( m_fileName );
 	bool loadOkay = doc.LoadFile();
-
+printf("ReadConfigObject(%s, %s)\n", x_objectType.c_str(), x_objectName.c_str());
 	if ( !loadOkay )
 		throw("Could not load test file '" + m_fileName + "'. Error='" + doc.ErrorDesc() + "'. Exiting.");
 
@@ -21,9 +21,16 @@ vector<ParameterValue> ConfigReader::ReadConfigObject(const std::string& x_objec
 	TiXmlElement* moduleElement = 0;
 	TiXmlElement* paramElement = 0;
 	
-	node = doc.FirstChild(x_objectName);
-	if(node == NULL)
-		throw("Impossible to find module in config file : " + x_objectName);
+	node = doc.FirstChild(x_objectType);
+	
+	// If a name is specified, search this name
+	if(x_objectName.compare(""))
+		while(node != NULL && x_objectName.compare(node->ToElement()->Attribute("name")))
+		{
+			//printf("Name = %s\n", node->ToElement()->Attribute("name"));
+			node = node->NextSibling(x_objectType);
+		}
+	if(node == NULL) throw("Impossible to find <" + x_objectType + " name=" + x_objectName + "> in config file");
 	moduleElement = node->ToElement();
 	assert( moduleElement  );
 	
@@ -62,6 +69,7 @@ vector<ParameterValue> ConfigReader::ReadConfigObjectFromVect(const std::string&
 	vector<ParameterValue> parameterList;;
 	TiXmlDocument doc( m_fileName );
 	bool loadOkay = doc.LoadFile();
+printf("ReadConfigObjectFromVect(%s, %s)\n", x_vectorType.c_str(), x_objectType.c_str());
 
 	if ( !loadOkay )
 		throw("Could not load test file '" + m_fileName + "'. Error='" + doc.ErrorDesc() + "'. Exiting.");
@@ -127,7 +135,35 @@ ParameterValue ConfigReader::GetParameterValue(const std::string& x_name, const 
 	}
 }
 
-int ConfigReader::ReadConfigGetVectorSize(const std::string& x_vectorType, const std::string& x_type)
+// Return the size of a vector of config objects
+int ConfigReader::ReadConfigGetVectorSize(const std::string& x_vectorType, const std::string& x_objectType)
 {
+	vector<ParameterValue> parameterList;;
+	TiXmlDocument doc( m_fileName );
+	bool loadOkay = doc.LoadFile();
 
+	if ( !loadOkay )
+		throw("Could not load test file '" + m_fileName + "'. Error='" + doc.ErrorDesc() + "'. Exiting.");
+
+	TiXmlNode* node = 0;
+	TiXmlElement* moduleElement = 0;
+	TiXmlElement* paramElement = 0;
+	
+	node = doc.FirstChild(x_vectorType);
+	if(node == NULL)
+		throw("Impossible to find <" + x_vectorType + "> in config file.");
+	moduleElement = node->ToElement();
+	assert( moduleElement  );
+	
+	int cpt = 0;
+	for( node = moduleElement->FirstChild( x_objectType );
+		node;
+		node = node->NextSibling( x_objectType ) )
+	{
+		cpt++;
+	}
+
+	
+	return cpt;
+	
 }

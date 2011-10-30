@@ -1,6 +1,7 @@
 #include "Manager.h"
 #include "Module.h"
 #include "Input.h"
+#include "ImageProcessor.h"
 
 #include "util.h"
 
@@ -10,10 +11,10 @@
 #include <iostream>
 #include <assert.h>
 
-#include "ObjectTracker.h"
-#include "SlitCam.h"
+//#include "ObjectTracker.h"
+//#include "SlitCam.h"
 
-#include "timer.h"
+//#include "timer.h"
 
 	#include <sstream>
 	#include <string.h>
@@ -58,10 +59,15 @@ Manager::Manager(ConfigReader& x_configReader) :
 	m_inputs.clear();
 	m_modules.clear();
 	
-	int tot = m_configReader.ReadConfigGetVectorSize("ImageProcessor", "imageprocessor");
+	int tot = m_configReader.ReadConfigGetVectorSize("ImageProcessors", "ImageProcessor");
 
 	for(int i = 0 ; i < tot; i++)
-		; // TODO Add ip
+	{
+		ImageProcessor * ip = new ImageProcessor("", i, m_configReader);
+		m_imageProcessors.push_back(ip);
+		m_inputs.push_back(&ip->GetInput());
+		m_modules.push_back(&ip->GetModule());
+	}
 		//m_configReader.ReadConfigObjectFromVect("ImageProcessor", "imageprocessor", i);
 }
 
