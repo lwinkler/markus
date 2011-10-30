@@ -7,6 +7,7 @@ Input::Input(const std::string& x_name, ConfigReader& x_configReader):
 	Configurable(x_configReader),
 	m_name(x_name)
 {
+	cout<<"*** Create object Input : "<<x_name<<" ***"<<endl;
 
 	m_capture = NULL;
 	cout<<"Input "<< m_param.source<<endl;
@@ -47,9 +48,9 @@ Input::~Input()
 void Input::Capture()
 {
 	//Get frame information:
-	double posMsec   =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_MSEC);
-	int posFrames    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_FRAMES);
-	double posRatio  =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_AVI_RATIO);
+	//double posMsec   =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_MSEC);
+	//int posFrames    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_FRAMES);
+	//double posRatio  =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_AVI_RATIO);
 
 	m_input = cvRetrieveFrame(m_capture);           // retrieve the captured frame
 

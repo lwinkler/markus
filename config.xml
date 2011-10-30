@@ -10,6 +10,10 @@
                 <parameter id="0" name="input" type="usbcam">MyCam1</parameter>
                 <parameter id="2" name="module" type="ObjectTracker">ObjectTracker1</parameter>
         </ImageProcessor>
+        <ImageProcessor name="ModuleDeTest3">
+                <parameter id="0" name="input" type="usbcam">MyCam1</parameter>
+                <parameter id="2" name="module" type="SlitCamera">SlitCamera1</parameter>
+        </ImageProcessor>
 </ImageProcessors>
 
 

@@ -34,6 +34,7 @@ Manager::Manager(ConfigReader& x_configReader) :
 	m_param(m_configReader, "Manager"),
 	Configurable(x_configReader)
 {
+	cout<<"*** Create object Manager ***"<<endl;
 	//m_workIsColor = (m_workChannels==3);	
 	//cout<<"Create Manager : Work image ("<<m_workWidth<<"x"<<m_workHeight<<" depth="<<m_workDepth<<" channels="<<m_workChannels<<")"<<endl;
 	m_frameCount = 0;
@@ -63,9 +64,9 @@ Manager::Manager(ConfigReader& x_configReader) :
 
 	for(int i = 0 ; i < tot; i++)
 	{
-		ImageProcessor * ip = new ImageProcessor("", i, m_configReader);
+		ImageProcessor * ip = new ImageProcessor("", i, m_configReader, m_inputs);
 		m_imageProcessors.push_back(ip);
-		m_inputs.push_back(&ip->GetInput());
+		//m_inputs.push_back(&ip->GetInput());
 		m_modules.push_back(&ip->GetModule());
 	}
 		//m_configReader.ReadConfigObjectFromVect("ImageProcessor", "imageprocessor", i);

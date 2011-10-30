@@ -27,8 +27,8 @@ public:
 class ImageProcessor : Configurable
 {
 public:
-	ImageProcessor(const std::string& x_name, int x_nb, ConfigReader& x_confReader);
-	//~ImageProcessor();
+	ImageProcessor(const std::string& x_name, int x_nb, ConfigReader& x_confReader, std::vector<Input*>& x_inputList);
+	~ImageProcessor();
 	
 	void Process();
 	const int & GetNumber(){return m_nb;};
