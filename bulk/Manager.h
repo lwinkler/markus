@@ -24,19 +24,19 @@ public:
 	{
 		m_list.push_back(new ParameterT<std::string>(0, "mode",	"", 	PARAM_STR, &mode));
 		//		m_list.push_back(new ParameterT<std::string>(1, "input",	"cam", 	PARAM_STR, &input));
-		m_list.push_back(new ParameterT<int>(2, "width", 	640, 	PARAM_INT, 0, 4000,	&width));
+	/*	m_list.push_back(new ParameterT<int>(2, "width", 	640, 	PARAM_INT, 0, 4000,	&width));
 		m_list.push_back(new ParameterT<int>(3, "height", 	480, 	PARAM_INT, 0, 3000,	&height));
 		m_list.push_back(new ParameterT<int>(4, "depth", IPL_DEPTH_8U, PARAM_INT, 0, 32,	&depth));
 		m_list.push_back(new ParameterT<int>(5, "channels", 	3, 	PARAM_INT, 1, 3,	&channels));
-
+*/
 		ParameterStructure::Init();
 	};
 	std::string mode;
 	//std::string input;
-	int width;
-	int height;
-	int depth;
-	int channels;
+	//int width;
+	//int height;
+	//int depth;
+	//int channels;
 };
 
 
@@ -63,6 +63,6 @@ private:
 	std::vector<ImageProcessor  *> m_imageProcessors;
 	long long m_frameCount;
 protected:
-	virtual const ParameterStructure& GetRefParameter(){return m_param;};
+	virtual const ParameterStructure& GetRefParameter() const{return m_param;};
 };
 #endif

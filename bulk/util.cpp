@@ -78,17 +78,25 @@ void adjust(const IplImage* im_in, IplImage* im_out, IplImage*& tmp1, IplImage*&
 	if(im_in->depth == im_out->depth)
 	{
 		if(tmp1==NULL)
+		{
+			cout<<"create image in adjust tmp1 depth "<<im_out->depth<<endl;
 			tmp1 = cvCreateImage( cvSize(im_out->width, im_out->height), im_out->depth, im_in->nChannels);
+		}
 		adjustSize(im_in, tmp1);
 		adjustChannels(tmp1, im_out);
 	}
 	else if(im_in->depth == IPL_DEPTH_8U && im_out->depth == IPL_DEPTH_32F) 
 	{
 		if(tmp1==NULL)
+		{
+			cout<<"create image in adjust IPL_DEPTH_32F tmp1"<<endl;
 			tmp1 = cvCreateImage( cvSize(im_out->width, im_out->height), IPL_DEPTH_8U, im_in->nChannels);
+		}
 		if(tmp2==NULL)
-			tmp2 = cvCreateImage( cvSize(im_out->width, im_out->height), IPL_DEPTH_8U, im_out->nChannels);
-
+		{
+			cout<<"create image in adjust IPL_DEPTH_32F tmp2"<<endl;
+			tmp2 = cvCreateImage( cvSize(im_out->width, im_out->height), IPL_DEPTH_32F, im_out->nChannels);
+		}
 		adjustSize(im_in, tmp1);
 		adjustChannels(tmp1, tmp2);
 		convertByte2Float(tmp2, im_out);		
@@ -96,10 +104,15 @@ void adjust(const IplImage* im_in, IplImage* im_out, IplImage*& tmp1, IplImage*&
 	else if(im_in->depth == IPL_DEPTH_32F && im_out->depth == IPL_DEPTH_8U) 
 	{
 		if(tmp1==NULL)
+		{
+			cout<<"create image in adjust IPL_DEPTH_32F tmp1"<<endl;
 			tmp1 = cvCreateImage( cvSize(im_out->width, im_out->height), IPL_DEPTH_32F, im_in->nChannels);
+		}
 		if(tmp2==NULL)
+		{
+			cout<<"create image in adjust IPL_DEPTH_32F tmp2"<<endl;
 			tmp2 = cvCreateImage( cvSize(im_out->width, im_out->height), IPL_DEPTH_32F, im_out->nChannels);
-
+		}
 		adjustSize(im_in, tmp1);		
 		adjustChannels(tmp1, tmp2);
 		convertFloat2Byte(tmp2, im_out);		

@@ -35,11 +35,17 @@ public:
 	const IplImage * GetOutput(){return m_output;}
 	//void AddStream(const std::string& x_name, StreamType x_type, IplImage* m_image);
 	const std::vector<OutputStream*>& GetOutputStreamList() const {return m_outputStreams;};
+	
+	inline int GetWidth() const {return GetRefParameter().width;}
+	inline int GetHeight() const {return GetRefParameter().height;}
+	inline int GetDepth() const {return GetRefParameter().depth;}
+	inline int GetNbChannels() const {return GetRefParameter().channels;}
 		
 protected:
 	IplImage * m_output;
 	const std::string m_name;
 	std::vector<OutputStream *> m_outputStreams;
+	virtual const ModuleParameterStructure & GetRefParameter() const = 0;
 };
 
 #endif

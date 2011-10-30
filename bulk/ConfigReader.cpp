@@ -47,16 +47,16 @@ printf("ReadConfigObject(%s, %s)\n", x_objectType.c_str(), x_objectName.c_str())
 		
 		const char* id = paramElement->Attribute( "id");
 		const char* name  = paramElement->Attribute( "name");
-		const char* type  = paramElement->Attribute( "type");
+		const char* class1  = paramElement->Attribute( "class");
 		const char* value = paramElement->GetText();
 		if(id == NULL) id = "-1";
 		assert(name);
 		assert(value);
-		if(type == NULL)
-			type = "";
+		if(class1 == NULL)
+			class1 = "";
 		//cout<<"name"<<name<<" value "<<value<<endl;
 		
-		parameterList.push_back(ParameterValue(atoi(id), std::string(name), std::string(type), value));
+		parameterList.push_back(ParameterValue(atoi(id), std::string(name), std::string(class1), value));
 	}
 	
 	return parameterList;
@@ -110,15 +110,15 @@ printf("ReadConfigObjectFromVect(%s, %s)\n", x_vectorType.c_str(), x_objectType.
 		paramElement = nodeParam->ToElement();
 		
 		const char* id = paramElement->Attribute( "id");
-		const char* type = paramElement->Attribute( "type");
+		const char* class1 = paramElement->Attribute( "class");
 		const char* name = paramElement->Attribute( "name");
 		const char* value = paramElement->GetText();
 		if(id == NULL) id = "-1";
 		assert(name);
-		assert(type);
+		if(class1 == NULL) class1 = "";
 		//cout<<"name"<<name<<" value "<<value<<endl;
 		
-		parameterList.push_back(ParameterValue(atoi(id), name, type, value));
+		parameterList.push_back(ParameterValue(atoi(id), name, class1, value));
 	}
 
 	

@@ -37,7 +37,7 @@ public:
 protected:
 	void ReadParametersFromConfig();
 	ConfigReader& m_configReader;
-	virtual const ParameterStructure & GetRefParameter() = 0;
+	virtual const ParameterStructure & GetRefParameter() const = 0;
 };
 
 #endif

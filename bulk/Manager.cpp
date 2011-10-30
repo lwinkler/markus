@@ -47,7 +47,7 @@ Manager::Manager(ConfigReader& x_configReader) :
 	
 	if(m_param.mode == "benchmark")
 	{
-		m_writer = cvCreateVideoWriter("out.avi", CV_FOURCC('D','I','V','3'), fps, cvSize(m_param.width, m_param.height), m_param.channels == 3);
+		//m_writer = cvCreateVideoWriter("out.avi", CV_FOURCC('D','I','V','3'), fps, cvSize(m_param.width, m_param.height), m_param.channels == 3);
 		assert(m_writer != NULL);
 		//not working writer=cvCreateVideoWriter("out.mpg",CV_FOURCC('D', 'I', 'V', '3'), fps,cvSize(frameW,frameH),m_workIsColor);
 	}
@@ -64,7 +64,7 @@ Manager::Manager(ConfigReader& x_configReader) :
 
 	for(int i = 0 ; i < tot; i++)
 	{
-		ImageProcessor * ip = new ImageProcessor("", i, m_configReader, m_inputs);
+		ImageProcessor * ip = new ImageProcessor("ip", i, m_configReader, m_inputs);
 		m_imageProcessors.push_back(ip);
 		//m_inputs.push_back(&ip->GetInput());
 		m_modules.push_back(&ip->GetModule());
@@ -77,14 +77,17 @@ Manager::~Manager()
 	// Releasing the video writer:
 	if(m_writer != NULL) cvReleaseVideoWriter(&m_writer);
 
-	for(vector<Module*>::iterator it = m_modules.begin(); it != m_modules.end(); it++)
+
+	/*for(vector<Module*>::iterator it = m_modules.begin(); it != m_modules.end(); it++)
 	{
 		delete(*it);
-	}
+	}*/
 	for(vector<Input*>::iterator it = m_inputs.begin(); it != m_inputs.end(); it++)
 	{
+		cout<<"delete input"<<endl;
 		delete(*it);
 	}
+	cout<<"finish del input"<<endl;
 }
 
 void Manager::CaptureInput()
@@ -95,16 +98,16 @@ void Manager::CaptureInput()
 
 void Manager::Process()
 {
-	IplImage *img = cvCreateImage( cvSize(m_param.width, m_param.height), m_param.depth, m_param.channels);
+	//IplImage *img = cvCreateImage( cvSize(m_param.width, m_param.height), m_param.depth, m_param.channels);
 	
 	// Main loop
 	//while(cvGrabFrame(m_capture) && m_key != 27)
 	{
-		const IplImage* source = (*(m_inputs.begin()))->GetImage();;
+		//const IplImage* source = (*(m_inputs.begin()))->GetImage();;
 		
-		static IplImage* tmp1=NULL;
-		static IplImage* tmp2=NULL;
-		adjust(source, img, tmp1, tmp2);
+		//static IplImage* tmp1=NULL;
+		//static IplImage* tmp2=NULL;
+		//adjust(source, img, tmp1, tmp2);
 		
 		//printf("Processing frame %d (%dx%d) with %d channels\n", frame, width, height, channels); 
 		// declare a destination IplImage object with correct size, depth and channels			
@@ -112,18 +115,19 @@ void Manager::Process()
 		m_timerConv.stop();
 		timerProc.start();
 		
+		// Aquire input images and process
 		for(vector<Input*>::iterator it = m_inputs.begin(); it != m_inputs.end(); it++)
 		{
 			(*it)->Capture();
 		}
-		for(vector<Module*>::iterator it = m_modules.begin(); it != m_modules.end(); it++)
+		for(vector<ImageProcessor*>::iterator it = m_imageProcessors.begin(); it != m_imageProcessors.end(); it++)
 		{
-			(*it)->ProcessFrame(m_inputs[0]->GetImage()); // FIXME
+			(*it)->Process();
 		}
 		
 		timerProc.stop();
 		m_timerConv.start();
-		
+		/*
 		if(m_param.mode == "benchmark")
 		{
 			static IplImage* output = cvCreateImage( cvSize(m_param.width, m_param.height), IPL_DEPTH_8U, m_param.channels);
@@ -154,9 +158,9 @@ void Manager::Process()
 
 					cvShowImage((*it2).GetName().c_str(), output);
 				}
-			}*/
+			}* /
 			//m_key= (char) cvWaitKey(5);           // wait 20 ms
-		}
+		}*/
 
 		m_frameCount++;
 		if(m_frameCount % 100 == 0)

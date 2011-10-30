@@ -8,8 +8,8 @@
 
 using namespace std;
 
-ParameterValue::ParameterValue(int x_id, const string& x_name, const string& x_type, const string& x_value) :
-	m_id(x_id), m_name(x_name), m_type(x_type), m_value(x_value) 
+ParameterValue::ParameterValue(int x_id, const string& x_name, const string& x_class, const string& x_value) :
+	m_id(x_id), m_name(x_name), m_class(x_class), m_value(x_value) 
 {
 };
 

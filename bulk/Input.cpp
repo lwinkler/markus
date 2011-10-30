@@ -16,24 +16,31 @@ Input::Input(const std::string& x_name, ConfigReader& x_configReader):
 	{
 		cout<<"Capture from Cam"<<endl;
 		m_capture = cvCaptureFromCAM( CV_CAP_ANY );
+		m_fps = 0;
 	}
 	else
 	{
 		m_capture = cvCaptureFromFile(m_param.source.c_str());
+		m_fps     = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FPS);
 	}
-	
+
 	if(m_capture == NULL)
 	{
 		throw("Error : Input or input file not found ! : " + m_param.source);
 	}
-	assert(m_capture != NULL);
+	cout<<"Setting "<<m_param.width<<endl;
+	//cvSetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH, m_param.width);
+	//cvSetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
+	cout<<"done Setting "<<m_param.width<<endl;
 	
 	// Get capture device information
 	cvQueryFrame(m_capture); // this call is necessary to get correct capture properties
 	m_width    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH);
 	m_height   = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT);
-	m_fps     = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FPS);
 	//int numFramesc = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_COUNT);
+	
+	//assert(m_width == m_param.width);
+	//assert(m_height == m_param.height);
 	
 	m_input = cvCreateImage( cvSize(m_width, m_height), IPL_DEPTH_8U, 3);
 }
@@ -41,7 +48,7 @@ Input::Input(const std::string& x_name, ConfigReader& x_configReader):
 Input::~Input()
 {
 	cvReleaseCapture(&m_capture );
-
+	cvReleaseImage(&m_input);
 }
 
 

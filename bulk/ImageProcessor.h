@@ -43,7 +43,7 @@ protected:
 	Input * m_input;
 	
 	ImageProcessorParameterStructure m_param;
-	virtual const ParameterStructure& GetRefParameter(){return m_param;};
+	virtual const ParameterStructure& GetRefParameter() const {return m_param;};
 };
 
 #endif

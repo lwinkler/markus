@@ -7,10 +7,10 @@
 
 class ConfigReader;
 
-class ObjectTrackerParameter : public ModuleParameterStructure
+class ObjectTrackerParameterStructure : public ModuleParameterStructure
 {
 public:
-	ObjectTrackerParameter(ConfigReader& x_confReader, const std::string& x_moduleName) : ModuleParameterStructure(x_confReader, x_moduleName)
+	ObjectTrackerParameterStructure(ConfigReader& x_confReader, const std::string& x_moduleName) : ModuleParameterStructure(x_confReader, x_moduleName)
 	{
 		m_list.push_back(new ParameterT<int>(0, "input_blur_size",	1, 	PARAM_INT, 1, 7,	&detector.inputBlurSize));
 		m_list.push_back(new ParameterT<float>(0, "background_alpha",	0.02, 	PARAM_FLOAT, 0, 1,	&detector.backgroundAlpha));
@@ -32,13 +32,13 @@ public:
 	virtual void ProcessFrame(const IplImage* m_img);
 	
 private:
-	ObjectTrackerParameter m_param;
+	ObjectTrackerParameterStructure m_param;
 	IplImage* m_img_blur;
 	Detector detect;
 	Tracker track;
 	static const char * m_type;
 protected:
-	virtual ModuleParameterStructure& GetRefParameter(){ return m_param;};
+	virtual const ModuleParameterStructure& GetRefParameter() const { return m_param;};
 };
 
 

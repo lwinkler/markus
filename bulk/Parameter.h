@@ -32,10 +32,10 @@ class ConfigReader;
 class ParameterValue
 {
 public:
-	ParameterValue(int x_id, const std::string& x_name, const std::string& x_type, const std::string& x_value);
+	ParameterValue(int x_id, const std::string& x_name, const std::string& x_class, const std::string& x_value);
 	int m_id;
 	std::string m_name;
-	std::string m_type;
+	std::string m_class;
 	std::string m_value;
 };
 

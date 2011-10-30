@@ -49,7 +49,7 @@ public:
 
 protected:
 	IplImage * m_inputCopy;
-	virtual ModuleParameterStructure& GetRefParameter(){ return m_param;};
+	virtual const ModuleParameterStructure& GetRefParameter() const { return m_param;};
 };
 
 #endif
