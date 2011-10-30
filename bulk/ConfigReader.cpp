@@ -7,7 +7,8 @@ using namespace std;
 /* Reads the configuration file with tinyxml */
 //const char * ConfigReader::m_fileName = "config.xml";
 
-vector<ParameterValue> ConfigReader::ReadConfigModule(const std::string& x_moduleName)
+
+vector<ParameterValue> ConfigReader::ReadConfigObject(const std::string& x_objectType, const std::string& x_objectName)
 {
 	vector<ParameterValue> parameterList;
 	TiXmlDocument doc( m_fileName );
@@ -20,9 +21,9 @@ vector<ParameterValue> ConfigReader::ReadConfigModule(const std::string& x_modul
 	TiXmlElement* moduleElement = 0;
 	TiXmlElement* paramElement = 0;
 	
-	node = doc.FirstChild(x_moduleName);
+	node = doc.FirstChild(x_objectName);
 	if(node == NULL)
-		throw("Impossible to find module in config file : " + x_moduleName);
+		throw("Impossible to find module in config file : " + x_objectName);
 	moduleElement = node->ToElement();
 	assert( moduleElement  );
 	
@@ -55,7 +56,8 @@ vector<ParameterValue> ConfigReader::ReadConfigModule(const std::string& x_modul
 }
 
 // Read the config of all modules that will run
-vector<ParameterValue> ConfigReader::ReadConfigDetectors(int x_detectorNumber)
+
+vector<ParameterValue> ConfigReader::ReadConfigObjectFromVect(const std::string& x_vectorType, const std::string& x_objectType, int x_objectNumber)
 {
 	vector<ParameterValue> parameterList;;
 	TiXmlDocument doc( m_fileName );
@@ -68,9 +70,9 @@ vector<ParameterValue> ConfigReader::ReadConfigDetectors(int x_detectorNumber)
 	TiXmlElement* moduleElement = 0;
 	TiXmlElement* paramElement = 0;
 	
-	node = doc.FirstChild("Detectors");
+	node = doc.FirstChild(x_vectorType);
 	if(node == NULL)
-		throw("Impossible to find <Detectors> in config file.");
+		throw("Impossible to find <" + x_vectorType + "> in config file.");
 	moduleElement = node->ToElement();
 	assert( moduleElement  );
 	
@@ -79,12 +81,12 @@ vector<ParameterValue> ConfigReader::ReadConfigDetectors(int x_detectorNumber)
 	paramElement = node->ToElement();
 	assert( paramElement  );*/
 	
-	for( node = moduleElement->FirstChild( "detector" );
+	for( node = moduleElement->FirstChild( x_objectType );
 		node;
-		node = node->NextSibling( "detector" ) )
+		node = node->NextSibling( x_objectType ) )
 	{
-		if(x_detectorNumber == 0) break;
-		x_detectorNumber --;
+		if(x_objectNumber == 0) break;
+		x_objectNumber --;
 	}
 	
 	if(node == NULL) return parameterList;
@@ -123,4 +125,9 @@ ParameterValue ConfigReader::GetParameterValue(const std::string& x_name, const 
 		if(x_name.compare(it->m_name) == 0)
 			return *it;
 	}
+}
+
+int ConfigReader::ReadConfigGetVectorSize(const std::string& x_vectorType, const std::string& x_type)
+{
+
 }

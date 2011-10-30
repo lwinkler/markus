@@ -19,9 +19,9 @@ void ParameterStructure::Init()
 	SetDefault();
 	
 	// Read parameters from config
-	SetFromConfig(m_configReader.ReadConfigModule(m_moduleName));
+	SetFromConfig(m_configReader.ReadConfigObject(m_objectType, m_objectName));
 	
-	cout<<"Parameters for "<<m_moduleName<<" initialized."<<endl;
+	cout<<"Parameters for "<<m_objectType<<"::"<<m_objectName<<" initialized."<<endl;
 	PrintParameters();
 }
 

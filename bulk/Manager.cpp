@@ -58,34 +58,11 @@ Manager::Manager(ConfigReader& x_configReader) :
 	m_inputs.clear();
 	m_modules.clear();
 	
-	int nb = 0;
-	std::vector<ParameterValue> paramList = m_configReader.ReadConfigDetectors(0);
-	
-	while(paramList.size() > 0)
-	{
-		//for(std::vector<ParameterValue>::const_iterator it =  paramList.begin();
-		//it != paramList.end();
-		//it++)
-		//{
-				ParameterValue module = ConfigReader::GetParameterValue("module", paramList);
-				ParameterValue input  = ConfigReader::GetParameterValue("input" , paramList);
-				
-				// Create all modules types
-				if(module.m_type.compare("SlitCamera") == 0)
-				{
-					AddModule(new SlitCam(module.m_value, m_configReader));
-				}
-				else if(module.m_type.compare("ObjectTracker") == 0)
-				{
-					AddModule(new ObjectTracker(module.m_value, m_configReader));
-				}
-				else throw("Module type unknown : " + module.m_type);
-				
-				// Create all input objects
-				AddInput(new Input(input.m_value, m_configReader));
-		//}
-		paramList = m_configReader.ReadConfigDetectors(++nb);
-	}
+	int tot = m_configReader.ReadConfigGetVectorSize("ImageProcessor", "imageprocessor");
+
+	for(int i = 0 ; i < tot; i++)
+		; // TODO Add ip
+		//m_configReader.ReadConfigObjectFromVect("ImageProcessor", "imageprocessor", i);
 }
 
 Manager::~Manager()
@@ -108,6 +85,7 @@ void Manager::CaptureInput()
 	
 	
 }
+
 void Manager::Process()
 {
 	IplImage *img = cvCreateImage( cvSize(m_param.width, m_param.height), m_param.depth, m_param.channels);

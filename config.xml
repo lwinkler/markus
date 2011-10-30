@@ -1,16 +1,16 @@
 <?xml version="1.0" standalone="no" ?>
 
-<Detectors>
-	<!--<detector name="ModuleDeTest">
+<ImageProcessors>
+	<imageprocessor name="ModuleDeTest">
 		<parameter id="0" name="input" type="usbcam">MyCam1</parameter>
 		<parameter id="2" name="module" type="SlitCamera">SlitCamera1</parameter>
-	</detector>
-        -->
-	<detector name="ModuleDeTest2">
+	</imageprocessor>
+        
+	<imageprocessor name="ModuleDeTest2">
                 <parameter id="0" name="input" type="usbcam">MyCam1</parameter>
                 <parameter id="2" name="module" type="ObjectTracker">ObjectTracker1</parameter>
-        </detector>
-</Detectors>
+        </imageprocessor>
+</ImageProcessors>
 
 
 <Manager>
@@ -22,13 +22,13 @@
 </Manager>
 
 <!-- List all possibly used inputs-->
-<MyCam1>
+<Input name="MyCam1">
         <parameter id="0" name="source">cam</parameter>
-</MyCam1>
+</Input>
 
 <!-- List all possibly used modules-->
 
-<ObjectTracker1>
+<Module name="ObjectTracker1">
         <parameter id="2" name="width">640</parameter>
         <parameter id="3" name="height">480</parameter>
         <parameter id="4" name="depth">8</parameter>
@@ -37,19 +37,19 @@
 	<parameter id="1" name="background_alpha">0.01</parameter><!-- -->
 	<parameter id="2" name="foreground_thres">0.2</parameter>
 	<parameter id="3" name="foreground_filter_size">3</parameter>
-</ObjectTracker1>
-<SlitCamera1>
+</Module>
+<Module name="SlitCamera1">
         <parameter id="2" name="width">640</parameter>
         <parameter id="3" name="height">480</parameter>
         <parameter id="4" name="depth">8</parameter>
         <parameter id="5" name="channels">3</parameter>
 	<parameter id="1" name="aperture">1</parameter>
-</SlitCamera1>
-<SlitCamera2>
+</Module>
+<Module name="SlitCamera2">
         <parameter id="2" name="width">320</parameter>
         <parameter id="3" name="height">240</parameter>
         <parameter id="4" name="depth">8</parameter>
         <parameter id="5" name="channels">3</parameter>
         <parameter id="1" name="aperture">1</parameter>
-</SlitCamera2>
+</Module>
 

@@ -48,6 +48,7 @@ public:
 	virtual void ProcessFrame(const IplImage * img);
 
 protected:
+	IplImage * m_inputCopy;
 	virtual ModuleParameterStructure& GetRefParameter(){ return m_param;};
 };
 

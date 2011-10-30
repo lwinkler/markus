@@ -21,12 +21,13 @@ bulk/Input.cpp
 bulk/Parameter.cpp
 bulk/OutputStream.cpp
 bulk/util.cpp
+bulk/ConfigReader.cpp
+bulk/ImageProcessor.cpp
 tools/Tracker.cpp
 tools/cvblobs/BlobExtraction.cpp
 tools/cvblobs/BlobResult.cpp
 tools/cvblobs/Blob.cpp
 tools/Detector.cpp
-bulk/ConfigReader.cpp
 modules/SlitCam/SlitCam.cpp
 modules/ObjectTracker/ObjectTracker.cpp
 )
