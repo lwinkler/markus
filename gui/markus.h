@@ -1,7 +1,30 @@
+/*----------------------------------------------------------------------------------
+*
+*    MARKUS : a manager for video analysis modules
+* 
+*    author : Laurent Winkler <lwinkler888@gmail.com>
+* 
+* 
+*    This file is part of Markus.
+*
+*    Markus is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU Lesser General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    Markus is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU Lesser General Public License for more details.
+*
+*    You should have received a copy of the GNU Lesser General Public License
+*    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
+-------------------------------------------------------------------------------------*/
+
 #ifndef markus_H
 #define markus_H
 
-#include "QOpenCVWidget.h"
+#include "QModuleViewer.h"
 
 #include <QMainWindow>
 #include <QScrollArea>
@@ -18,7 +41,7 @@ public:
 	markus(ConfigReader& rx_configReader, Manager& rx_manager);
 	virtual ~markus();
 private:
-	//QOpenCVWidget cvwidget;
+	//QModuleViewer cvwidget;
 
 	ConfigReader& m_configReader;
 	Manager& m_manager;
@@ -37,7 +60,7 @@ private:
 	
 	QWidget m_mainWidget;
 	QGridLayout m_mainLayout;
-	std::vector<QOpenCVWidget *> m_moduleViewer;
+	std::vector<QModuleViewer *> m_moduleViewer;
 	//std::vector<QScrollArea   *> m_scroll;
 	//std::vector<QWidget   *> m_scroll;
 	

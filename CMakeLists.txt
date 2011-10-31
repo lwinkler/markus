@@ -13,7 +13,7 @@ tools/cvblobs
 
 set(markus_SRCS 
 gui/markus.cpp
-gui/QOpenCVWidget.cpp 
+gui/QModuleViewer.cpp 
 main.cpp 
 bulk/Module.cpp
 bulk/Manager.cpp

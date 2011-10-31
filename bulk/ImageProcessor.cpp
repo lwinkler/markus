@@ -1,3 +1,26 @@
+/*----------------------------------------------------------------------------------
+*
+*    MARKUS : a manager for video analysis modules
+* 
+*    author : Laurent Winkler <lwinkler888@gmail.com>
+* 
+* 
+*    This file is part of Markus.
+*
+*    Markus is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU Lesser General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    Markus is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU Lesser General Public License for more details.
+*
+*    You should have received a copy of the GNU Lesser General Public License
+*    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
+-------------------------------------------------------------------------------------*/
+
 #include "ImageProcessor.h"
 #include "SlitCam.h"
 #include "ObjectTracker.h"
@@ -27,6 +50,7 @@ ImageProcessor::ImageProcessor(const string & x_name, int x_nb, ConfigReader& x_
 	// Create all input objects
 	//	check for similar existing input
 	m_input = NULL;
+
 	for(vector<Input*>::const_iterator it = xr_inputList.begin() ; it != xr_inputList.end() ; it++)
 	{
 		if((*it)->GetName().compare(m_param.input))
@@ -57,12 +81,8 @@ ImageProcessor::~ImageProcessor()
 	cvReleaseImage(& m_img_input);
 }
 
-
 void ImageProcessor::Process()
 {
-	
 	adjust(m_input->GetImage(), m_img_input, m_img_tmp1, m_img_tmp2);
-	
 	m_module->ProcessFrame(m_img_input);
-	
 }

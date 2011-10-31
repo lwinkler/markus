@@ -1,5 +1,27 @@
+/*----------------------------------------------------------------------------------
+*
+*    MARKUS : a manager for video analysis modules
+* 
+*    author : Laurent Winkler <lwinkler888@gmail.com>
+* 
+* 
+*    This file is part of Markus.
+*
+*    Markus is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU Lesser General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    Markus is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU Lesser General Public License for more details.
+*
+*    You should have received a copy of the GNU Lesser General Public License
+*    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
+-------------------------------------------------------------------------------------*/
 
-#include "QOpenCVWidget.h"
+#include "QModuleViewer.h"
 #include <cstdio>
 
 #include <QComboBox>
@@ -15,12 +37,12 @@
 #include "util.h"
 
 // Constructor
-QOpenCVWidget::QOpenCVWidget(const Manager* x_manager, QWidget *parent) : QWidget(parent)
+QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidget(parent)
 {
 	//Resize(320, 240);
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	m_outputWidth  = QOpenCVWidget::width();
-	m_outputHeight = QOpenCVWidget::height()/2;
+	m_outputWidth  = QModuleViewer::width();
+	m_outputHeight = QModuleViewer::height()/2;
 	
 
 	// Handlers for modules
@@ -94,7 +116,7 @@ QOpenCVWidget::QOpenCVWidget(const Manager* x_manager, QWidget *parent) : QWidge
 	connect(comboOutputStreams, SIGNAL(activated(int)), this, SLOT(updateOutputStream(int)));
 }
 
-QOpenCVWidget::~QOpenCVWidget(void) 
+QModuleViewer::~QModuleViewer(void) 
 {
 	cvReleaseImage(&m_img_tmp1_c1);
 	cvReleaseImage(&m_img_tmp1_c3);
@@ -102,14 +124,14 @@ QOpenCVWidget::~QOpenCVWidget(void)
 	cvReleaseImage(&m_img_tmp2_c3);
 }
 
-/*void QOpenCVWidget::Resize(int x_width, int x_height)
+/*void QModuleViewer::Resize(int x_width, int x_height)
 {
 	QResizeEvent* e = new QResizeEvent(QSize(x_width, x_height), size());
 	resizeEvent(e);
 	delete(e);
 }*/
 
-/*void QOpenCVWidget::resizeEvent(QResizeEvent * e)
+/*void QModuleViewer::resizeEvent(QResizeEvent * e)
 {
 	m_outputWidth  = width();//e->size().width() * 4;
 	m_outputHeight = height() / 2; //e->size().height() * 2;
@@ -122,18 +144,18 @@ QOpenCVWidget::~QOpenCVWidget(void)
 
 }*/
 
-/*void QOpenCVWidget::putImage() 
+/*void QModuleViewer::putImage() 
 {
 	//paintEvent(NULL);
 	update();
 }*/
-void QOpenCVWidget::paintEvent(QPaintEvent * e) 
+void QModuleViewer::paintEvent(QPaintEvent * e) 
 {
 	int cvIndex, cvLineStart;
 	const IplImage * cvimage = m_currentOutputStream->GetImageRef();
 	
-	//m_outputWidth  = QOpenCVWidget::width();
-	//m_outputHeight = QOpenCVWidget::height()/2;
+	//m_outputWidth  = QModuleViewer::width();
+	//m_outputHeight = QModuleViewer::height()/2;
 	m_outputWidth  = width();
 	m_outputHeight = height();
 	
@@ -185,7 +207,7 @@ void QOpenCVWidget::paintEvent(QPaintEvent * e)
 			}
 			break;
 				default:
-					printf("This type of IplImage is not implemented in QOpenCVWidget\n");
+					printf("This type of IplImage is not implemented in QModuleViewer\n");
 					break;
 	}
 	//imagelabel->setPixmap(QPixmap::fromImage(m_image));
@@ -194,7 +216,7 @@ void QOpenCVWidget::paintEvent(QPaintEvent * e)
 	painter.drawImage(QRect(0, 0, m_outputWidth, m_outputHeight), m_image);
 }
 
-void QOpenCVWidget::updateModule(const Module * x_module)
+void QModuleViewer::updateModule(const Module * x_module)
 {
 	m_currentModule = x_module;
 	comboOutputStreams->clear();
@@ -207,12 +229,12 @@ void QOpenCVWidget::updateModule(const Module * x_module)
 	updateOutputStream(*(m_currentModule->GetOutputStreamList().begin()));
 }
 
-void QOpenCVWidget::updateOutputStream(const OutputStream * x_outputStream)
+void QModuleViewer::updateOutputStream(const OutputStream * x_outputStream)
 {
 	m_currentOutputStream = x_outputStream;
 }
 
-void QOpenCVWidget::updateModule(int x_index)
+void QModuleViewer::updateModule(int x_index)
 {
 	std::vector<Module*>::const_iterator it = m_manager->GetModuleList().begin();
 	
@@ -222,7 +244,7 @@ void QOpenCVWidget::updateModule(int x_index)
 	updateModule(*it);
 }
 
-void QOpenCVWidget::updateOutputStream(int x_index)
+void QModuleViewer::updateOutputStream(int x_index)
 {
 	std::vector<OutputStream*>::const_iterator it = m_currentModule->GetOutputStreamList().begin();
 	
@@ -234,4 +256,4 @@ void QOpenCVWidget::updateOutputStream(int x_index)
 
 
 
-#include "QOpenCVWidget.moc"
+#include "QModuleViewer.moc"
