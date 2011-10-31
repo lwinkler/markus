@@ -42,24 +42,27 @@ ImageProcessor::ImageProcessor(const string & x_name, int x_nb, ConfigReader& x_
 		m_input = new Input(input.m_value, m_configReader);
 		xr_inputList.push_back(m_input);
 	}
+
+	m_img_input = cvCreateImage( cvSize(m_module->GetWidth(), m_module->GetHeight()), m_module->GetDepth(), m_module->GetNbChannels());
+	m_img_tmp1 = NULL; // Will be allocated on forst call of adjust
+	m_img_tmp2 = NULL;
 }
 
 ImageProcessor::~ImageProcessor()
 {
 	delete m_module;
-	// delete m_input; // should not be deleted
+	// delete m_input; // should not be deleted here
+	cvReleaseImage(& m_img_tmp1);
+	cvReleaseImage(& m_img_tmp2);
+	cvReleaseImage(& m_img_input);
 }
 
 
 void ImageProcessor::Process()
 {
-	static IplImage* tmp1 = NULL;
-	static IplImage* tmp2 = NULL;
-	IplImage *img = cvCreateImage( cvSize(m_module->GetWidth(), m_module->GetHeight()), m_module->GetDepth(), m_module->GetNbChannels());
 	
-	adjust(m_input->GetImage(), img, tmp1, tmp2);
+	adjust(m_input->GetImage(), m_img_input, m_img_tmp1, m_img_tmp2);
 	
-	m_module->ProcessFrame(img);
+	m_module->ProcessFrame(m_img_input);
 	
-	cvReleaseImage(&img);
 }

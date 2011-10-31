@@ -85,12 +85,21 @@ QOpenCVWidget::QOpenCVWidget(const Manager* x_manager, QWidget *parent) : QWidge
 	//imagelabel->
 	//m_painter.setBackground(QPixmap::fromImage(m_image));
 	
+	m_img_tmp1_c1 = NULL; // Allocated on first conversion
+	m_img_tmp1_c3 = NULL;
+	m_img_tmp2_c1 = NULL;
+	m_img_tmp2_c3 = NULL;
+	
 	connect(comboModules, SIGNAL(activated(int)), this, SLOT(updateModule(int) ));
 	connect(comboOutputStreams, SIGNAL(activated(int)), this, SLOT(updateOutputStream(int)));
 }
 
 QOpenCVWidget::~QOpenCVWidget(void) 
 {
+	cvReleaseImage(&m_img_tmp1_c1);
+	cvReleaseImage(&m_img_tmp1_c3);
+	cvReleaseImage(&m_img_tmp2_c1);
+	cvReleaseImage(&m_img_tmp2_c3);
 }
 
 /*void QOpenCVWidget::Resize(int x_width, int x_height)
@@ -139,15 +148,11 @@ void QOpenCVWidget::paintEvent(QPaintEvent * e)
 	
 	// Write output to screen
 	static IplImage *cvoutput = cvCreateImage( cvSize(m_outputWidth, m_outputHeight), cvimage->depth, cvimage->nChannels);
-	static IplImage* tmp1_c1 = NULL;
-	static IplImage* tmp2_c1 = NULL;
-	static IplImage* tmp1_c3 = NULL;
-	static IplImage* tmp2_c3 = NULL;
 	
 	if(cvimage->nChannels == 3)
-		adjust(cvimage, cvoutput, tmp1_c3, tmp2_c3);
+		adjust(cvimage, cvoutput, m_img_tmp1_c3, m_img_tmp2_c3);
 	else
-		adjust(cvimage, cvoutput, tmp1_c1, tmp2_c1);
+		adjust(cvimage, cvoutput, m_img_tmp1_c1, m_img_tmp2_c1);
 	
 	// switch between bit depths
 	switch (cvoutput->depth) {
@@ -183,13 +188,10 @@ void QOpenCVWidget::paintEvent(QPaintEvent * e)
 					printf("This type of IplImage is not implemented in QOpenCVWidget\n");
 					break;
 	}
-	//imagelabel->
-	//m_painter.setBackground(QPixmap::fromImage(m_image));
-	//m_painter.setBrush();
+	//imagelabel->setPixmap(QPixmap::fromImage(m_image));
 	
 	QPainter painter(this);
-	painter.drawImage(QRect(0, 0, m_outputWidth, m_outputHeight), m_image);//,QRect(0, m_outputWidth, 0, m_outputHeight), Qt::ImageConversionFlag0);
-	
+	painter.drawImage(QRect(0, 0, m_outputWidth, m_outputHeight), m_image);
 }
 
 void QOpenCVWidget::updateModule(const Module * x_module)

@@ -41,7 +41,11 @@ protected:
 	const int m_nb;
 	Module * m_module;
 	Input * m_input;
-	
+
+	IplImage * m_img_tmp1;
+	IplImage * m_img_tmp2;
+	IplImage * m_img_input;
+
 	ImageProcessorParameterStructure m_param;
 	virtual const ParameterStructure& GetRefParameter() const {return m_param;};
 };
