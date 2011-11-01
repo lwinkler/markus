@@ -39,12 +39,10 @@
 // Constructor
 QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidget(parent)
 {
-	//Resize(320, 240);
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	m_outputWidth  = QModuleViewer::width();
-	m_outputHeight = QModuleViewer::height()/2;
+	m_outputWidth  = 0.8 * width();
+	m_outputHeight = 0.8 * height();
 	
-
 	// Handlers for modules
 	assert(x_manager != NULL);
 	assert(x_manager->GetModuleList().size() > 0);
@@ -102,7 +100,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	setAutoFillBackground(true);
 
 	//update();
-	//m_image = QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
+	m_image = QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
 	
 	//imagelabel->
 	//m_painter.setBackground(QPixmap::fromImage(m_image));
@@ -111,6 +109,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	m_img_tmp1_c3 = NULL;
 	m_img_tmp2_c1 = NULL;
 	m_img_tmp2_c3 = NULL;
+	m_img_output  = NULL;
 	
 	connect(comboModules, SIGNAL(activated(int)), this, SLOT(updateModule(int) ));
 	connect(comboOutputStreams, SIGNAL(activated(int)), this, SLOT(updateOutputStream(int)));
@@ -118,10 +117,11 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 
 QModuleViewer::~QModuleViewer(void) 
 {
-	cvReleaseImage(&m_img_tmp1_c1);
-	cvReleaseImage(&m_img_tmp1_c3);
-	cvReleaseImage(&m_img_tmp2_c1);
-	cvReleaseImage(&m_img_tmp2_c3);
+	if(m_img_output != NULL)  cvReleaseImage(&m_img_output); 
+	if(m_img_tmp1_c1 != NULL) cvReleaseImage(&m_img_tmp1_c1);
+	if(m_img_tmp1_c3 != NULL) cvReleaseImage(&m_img_tmp1_c3);
+	if(m_img_tmp2_c1 != NULL) cvReleaseImage(&m_img_tmp2_c1);
+	if(m_img_tmp2_c3 != NULL) cvReleaseImage(&m_img_tmp2_c3);
 }
 
 /*void QModuleViewer::Resize(int x_width, int x_height)
@@ -131,83 +131,94 @@ QModuleViewer::~QModuleViewer(void)
 	delete(e);
 }*/
 
-/*void QModuleViewer::resizeEvent(QResizeEvent * e)
+void QModuleViewer::resizeEvent(QResizeEvent * e)
 {
-	m_outputWidth  = width();//e->size().width() * 4;
-	m_outputHeight = height() / 2; //e->size().height() * 2;
-	//QImage dummy(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
-	//image = dummy;
-	m_outputWidth = imagelabel->width();
-	m_outputHeight = imagelabel->height();
+	std::cout<<"resizeEvent "<<e->size().width()<<" "<<e->size().height()<<std::endl;
+	m_image =  QImage(e->size().width(), e->size().height(), QImage::Format_RGB32);
+	//usleep(100000);
+	m_outputWidth  = m_image.width();
+	m_outputHeight = m_image.height();
 	
-	m_image =  QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
+	if(m_img_output != NULL) cvReleaseImage(&m_img_output);
+	m_img_output = NULL;
+	
+	if(m_img_output != NULL)  cvReleaseImage(&m_img_output); 
+	if(m_img_tmp1_c1 != NULL) cvReleaseImage(&m_img_tmp1_c1);
+	if(m_img_tmp1_c3 != NULL) cvReleaseImage(&m_img_tmp1_c3);
+	if(m_img_tmp2_c1 != NULL) cvReleaseImage(&m_img_tmp2_c1);
+	if(m_img_tmp2_c3 != NULL) cvReleaseImage(&m_img_tmp2_c3);
+	
+	m_img_tmp1_c1 = m_img_tmp1_c3 = m_img_tmp2_c1 = m_img_tmp2_c3 = NULL;
 
-}*/
+}
 
 /*void QModuleViewer::putImage() 
 {
 	//paintEvent(NULL);
 	update();
 }*/
+
 void QModuleViewer::paintEvent(QPaintEvent * e) 
 {
 	int cvIndex, cvLineStart;
 	const IplImage * cvimage = m_currentOutputStream->GetImageRef();
+	/*
+	if(m_image.width() - 0.8 * width() > 10 || m_image.height() - 0.8 * height() > 10)
+	{
+		// Resize the image
+		m_image =  QImage(width() * 0.8, height() * 0.8, QImage::Format_RGB32);
+		usleep(100000);
+		std::cout<<"Reiszing "<<std::endl;
+	}*/
+	m_outputWidth  = m_image.width();
+	m_outputHeight = m_image.height();
 	
-	//m_outputWidth  = QModuleViewer::width();
-	//m_outputHeight = QModuleViewer::height()/2;
-	m_outputWidth  = width();
-	m_outputHeight = height();
-	
-	m_image =  QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
-	//imagelabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
-	//m_outputWidth = this->width();
-	//m_outputHeight = (this->width() * cvimage->height) /  cvimage->width;
-	
-	//delete mp_image;
-	//mp_image = new QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
-	
+	if(m_img_output == NULL)
+		m_img_output = cvCreateImage( cvSize(m_outputWidth, m_outputHeight), IPL_DEPTH_8U, 3);
 	// Write output to screen
-	static IplImage *cvoutput = cvCreateImage( cvSize(m_outputWidth, m_outputHeight), cvimage->depth, cvimage->nChannels);
-	
+	// TODO : Copy below
 	if(cvimage->nChannels == 3)
-		adjust(cvimage, cvoutput, m_img_tmp1_c3, m_img_tmp2_c3);
+		adjust(cvimage, m_img_output, m_img_tmp1_c3, m_img_tmp2_c3);
 	else
-		adjust(cvimage, cvoutput, m_img_tmp1_c1, m_img_tmp2_c1);
+		adjust(cvimage, m_img_output, m_img_tmp1_c1, m_img_tmp2_c1);
 	
 	// switch between bit depths
-	switch (cvoutput->depth) {
+	switch (m_img_output->depth) {
 		case IPL_DEPTH_8U:
-			switch (cvoutput->nChannels) {
+			switch (m_img_output->nChannels) {
 				case 3:
-					if ( (cvoutput->width != m_image.width()) || (cvoutput->height != m_image.height()) ) {
-						QImage temp(cvoutput->width, cvoutput->height, QImage::Format_RGB32);
+					if ( (m_img_output->width != m_image.width()) || (m_img_output->height != m_image.height()) ) 
+					{
+						assert(false);
+						break;
+						std::cout<<"Resizing"<<std::endl;
+						QImage temp(m_img_output->width, m_img_output->height, QImage::Format_RGB32);
 						m_image = temp;
 					}
 					cvIndex = 0; cvLineStart = 0;
-					for (int y = 0; y < cvoutput->height; y++) {
+					for (int y = 0; y < m_img_output->height; y++) 
+					{
 						unsigned char red,green,blue;
 						cvIndex = cvLineStart;
-						for (int x = 0; x < cvoutput->width; x++) {
+						for (int x = 0; x < m_img_output->width; x++) {
 							// DO it
-							red = cvoutput->imageData[cvIndex+2];
-							green = cvoutput->imageData[cvIndex+1];
-							blue = cvoutput->imageData[cvIndex+0];
+							red = m_img_output->imageData[cvIndex+2];
+							green = m_img_output->imageData[cvIndex+1];
+							blue = m_img_output->imageData[cvIndex+0];
 							
 							m_image.setPixel(x,y,qRgb(red, green, blue));
 							cvIndex += 3;
 						}
-						cvLineStart += cvoutput->widthStep;                        
+						cvLineStart += m_img_output->widthStep;                        
 					}
 					break;
 				default:
-					printf("This number of channels is not supported\n");
+					throw("This number of channels is not supported\n");
 					break;
 			}
 			break;
 				default:
-					printf("This type of IplImage is not implemented in QModuleViewer\n");
+					throw("This type of IplImage is not implemented in QModuleViewer\n");
 					break;
 	}
 	//imagelabel->setPixmap(QPixmap::fromImage(m_image));

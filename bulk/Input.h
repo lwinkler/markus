@@ -29,7 +29,6 @@
 
 #include "ConfigReader.h"
 #include "Parameter.h"
-#include "OutputStream.h"
 
 class InputParameterStructure : public ParameterStructure
 {

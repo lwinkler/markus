@@ -68,7 +68,7 @@ ImageProcessor::ImageProcessor(const string & x_name, int x_nb, ConfigReader& x_
 	}
 
 	m_img_input = cvCreateImage( cvSize(m_module->GetWidth(), m_module->GetHeight()), m_module->GetDepth(), m_module->GetNbChannels());
-	m_img_tmp1 = NULL; // Will be allocated on forst call of adjust
+	m_img_tmp1 = NULL; // Will be allocated on first call of adjust
 	m_img_tmp2 = NULL;
 }
 
@@ -76,9 +76,9 @@ ImageProcessor::~ImageProcessor()
 {
 	delete m_module;
 	// delete m_input; // should not be deleted here
-	cvReleaseImage(& m_img_tmp1);
-	cvReleaseImage(& m_img_tmp2);
-	cvReleaseImage(& m_img_input);
+	if(m_img_tmp1 != NULL) cvReleaseImage(& m_img_tmp1);
+	if(m_img_tmp2 != NULL) cvReleaseImage(& m_img_tmp2);
+	if(m_img_input != NULL) cvReleaseImage(& m_img_input);
 }
 
 void ImageProcessor::Process()

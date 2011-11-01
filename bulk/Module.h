@@ -51,7 +51,7 @@ class Module : Configurable
 {
 public:
 	Module(const std::string& x_name, ConfigReader& x_confReader);
-	~Module();
+	virtual ~Module();
 	
 	virtual void ProcessFrame(const IplImage * m_input) = 0;
 	const std::string& GetName(){return m_name;};

@@ -5,17 +5,14 @@
 		<parameter id="0" name="input" class="usbcam">MyCam1</parameter>
 		<parameter id="2" name="module" class="SlitCamera">SlitCamera1</parameter>
 	</ImageProcessor>
-<!--        
 	<ImageProcessor name="ModuleDeTest2">
                 <parameter id="0" name="input" class="usbcam">MyCam1</parameter>
                 <parameter id="2" name="module" class="ObjectTracker">ObjectTracker1</parameter>
         </ImageProcessor>
--->
         <ImageProcessor name="ModuleDeTest3">
                 <parameter id="0" name="input" class="usbcam">MyCam1</parameter>
                 <parameter id="2" name="module" class="SlitCamera">SlitCamera2</parameter>
         </ImageProcessor>
-
 
 </ImageProcessors>
 
