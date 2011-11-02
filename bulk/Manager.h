@@ -68,7 +68,7 @@ class Manager : public Configurable
 public:
 	Manager(ConfigReader & x_configReader);
 	~Manager();
-	void CaptureInput();
+	//void CaptureInput();
 	void Process();
 	void AddInput(Input * x_input);
 	void AddModule(Module * x_mod);

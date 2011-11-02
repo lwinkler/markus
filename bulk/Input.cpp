@@ -66,13 +66,13 @@ Input::Input(const std::string& x_name, ConfigReader& x_configReader):
 //	assert(m_height == m_param.height);
 	
 	
-	m_input = cvCreateImage( cvSize(m_width, m_height), IPL_DEPTH_8U, 3);
+	m_input = NULL;//cvCreateImage( cvSize(m_width, m_height), IPL_DEPTH_8U, 3);
 }
 
 Input::~Input()
 {
+	//cvReleaseImage(&m_input);
 	cvReleaseCapture(&m_capture );
-	cvReleaseImage(&m_input);
 }
 
 

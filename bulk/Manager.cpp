@@ -97,27 +97,19 @@ Manager::Manager(ConfigReader& x_configReader) :
 
 Manager::~Manager()
 {
-	// Releasing the video writer:
-	if(m_writer != NULL) cvReleaseVideoWriter(&m_writer);
-
-
-	/*for(vector<Module*>::iterator it = m_modules.begin(); it != m_modules.end(); it++)
+	for(vector<ImageProcessor*>::iterator it = m_imageProcessors.begin(); it != m_imageProcessors.end(); it++)
 	{
-		delete(*it);
-	}*/
-	for(vector<Input*>::iterator it = m_inputs.begin(); it != m_inputs.end(); it++)
-	{
-		cout<<"delete input"<<endl;
 		delete(*it);
 	}
-	cout<<"finish del input"<<endl;
+	for(vector<Input*>::iterator it = m_inputs.begin(); it != m_inputs.end(); it++)
+	{
+		delete(*it);
+	}
+	
+	// Releasing the video writer:
+	if(m_writer != NULL) cvReleaseVideoWriter(&m_writer);
 }
 
-void Manager::CaptureInput()
-{
-	
-	
-}
 
 void Manager::Process()
 {
