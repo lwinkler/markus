@@ -55,8 +55,8 @@
 	<parameter id="1" name="aperture">1</parameter>
 </Module>
 <Module name="SlitCamera2">
-        <parameter id="2" name="width">16</parameter>
-        <parameter id="3" name="height">12</parameter>
+        <parameter id="2" name="width">640</parameter>
+        <parameter id="3" name="height">480</parameter>
         <parameter id="4" name="depth">8</parameter>
         <parameter id="5" name="channels">3</parameter>
         <parameter id="1" name="aperture">1</parameter>

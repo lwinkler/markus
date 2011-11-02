@@ -38,6 +38,7 @@ class Module;
 class OutputStream;
 class QComboBox;
 class QPainter;
+class QGroupBox;
 
 class QModuleViewer : public QWidget 
 {
@@ -62,6 +63,7 @@ private:
 	void paintEvent(QPaintEvent *event);
 	//void putImage();
 	
+	QGroupBox * gbSettings;
 	QComboBox * comboModules;
 	QComboBox * comboOutputStreams;
 	virtual void resizeEvent(QResizeEvent * e);
@@ -79,6 +81,7 @@ public slots:
 	void updateOutputStream(const OutputStream * x_outputStream);
 	void updateModule(int x_index);
 	void updateOutputStream(int x_index);
+	void toggleDisplayOptions(int choice = -1);
 }; 
 
 #endif

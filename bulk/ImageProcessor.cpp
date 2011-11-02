@@ -31,7 +31,7 @@ ImageProcessor::ImageProcessor(const string & x_name, int x_nb, ConfigReader& x_
 	Configurable(x_confReader),
 	m_nb(x_nb)
 {
-	cout<<"*** Create object ImageProcessor : "<<x_name<<" ["<<x_nb<<"] ***"<<endl;
+	cout<<"*** Create object ImageProcessor : "<<x_name<<"["<<x_nb<<"] ***"<<endl;
 	vector<ParameterValue> paramList = m_configReader.ReadConfigObjectFromVect("ImageProcessors", "ImageProcessor", x_nb);
 	ParameterValue module = ConfigReader::GetParameterValue("module", paramList);
 	ParameterValue input  = ConfigReader::GetParameterValue("input" , paramList);

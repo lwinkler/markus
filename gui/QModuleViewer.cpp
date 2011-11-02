@@ -71,7 +71,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	
 	imagelabel->setPixmap(QPixmap::fromImage(image));
 	*/
-	QGroupBox *gbSettings = new QGroupBox(tr("Display options"));
+	gbSettings = new QGroupBox(tr("Display options"));
 	gbSettings->setFlat(true);
 	QGridLayout * vbox = new QGridLayout;
 	//vbox->addStretch(1);
@@ -265,6 +265,23 @@ void QModuleViewer::updateOutputStream(int x_index)
 	updateOutputStream((*it));
 }
 
+void QModuleViewer::toggleDisplayOptions(int choice)
+{
+	if(choice == -1)
+	{
+		if(gbSettings->isHidden())
+			choice = 1;
+		else choice = 0;
+	}
+	if(choice == 0)
+	{
+		gbSettings->hide();
+	}
+	else
+	{
+		gbSettings->show();
+	}
+}
 
 
 #include "QModuleViewer.moc"

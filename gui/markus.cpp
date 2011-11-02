@@ -141,6 +141,10 @@ void markus::createActions()
 	aboutAct = new QAction(tr("&About"), this);
 	connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
 	
+	viewDisplayOptions1Act = new QAction(tr("Show display options"), this);
+	connect(viewDisplayOptions1Act, SIGNAL(triggered()), this, SLOT(viewDisplayOptions1()));
+	viewDisplayOptions0Act = new QAction(tr("Hide display options"), this);
+	connect(viewDisplayOptions0Act, SIGNAL(triggered()), this, SLOT(viewDisplayOptions0()));
 	view1x1Act = new QAction(tr("View 1x1"), this);
 	connect(view1x1Act, SIGNAL(triggered()), this, SLOT(view1x1()));
 	view1x2Act = new QAction(tr("View 2x1"), this);
@@ -160,6 +164,8 @@ void markus::createMenus()
 	
 	
 	viewMenu = new QMenu(tr("&View"), this);
+	viewMenu->addAction(viewDisplayOptions1Act);
+	viewMenu->addAction(viewDisplayOptions0Act);
 	viewMenu->addAction(view1x1Act);
 	viewMenu->addAction(view1x2Act);
 	viewMenu->addAction(view2x2Act);
@@ -179,6 +185,25 @@ void markus::createMenus()
 	zoomOutAct->setEnabled(!fitToWindowAct->isChecked());
 	normalSizeAct->setEnabled(!fitToWindowAct->isChecked());
 }*/
+
+void markus::viewDisplayOptions1()
+{
+	int size = m_moduleViewer.size();
+	for(int ind = 0 ; ind < size; ind++)
+	{
+		m_moduleViewer[ind]->toggleDisplayOptions(1);
+	}
+}
+
+void markus::viewDisplayOptions0()
+{
+	int size = m_moduleViewer.size();
+	for(int ind = 0 ; ind < size; ind++)
+	{
+		m_moduleViewer[ind]->toggleDisplayOptions(0);
+	}
+}
+
 
 void markus::view1x1()
 {
@@ -221,73 +246,20 @@ void markus::resizeEvent(QResizeEvent* event)
 	
 	for(int ind = size ; ind < nbLines * nbCols ; ind++)
 	{
-		//m_scroll.push_back(new QScrollArea);
 		m_moduleViewer.push_back(new QModuleViewer(&m_manager));
-		
-		//m_scroll[ind]->setWidget(m_moduleViewer[ind]);
-		//m_moduleViewer[ind]->setGeometry(0, 0, width(), height());
-		//m_scroll[i]->setBaseSize(width()/2, width()/2);
-		//m_scroll[ind]->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-		//m_moduleViewer[ind]->resize(1000, 1000);
-		
-		//imageViewer[i]->setBaseSize(100, 100);
-		//m_scroll[i]->setBaseSize(200, 400);
 		m_moduleViewer[ind]->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	}
-	//m_mainLayout.deleteAllItems();
-	//.deleteAllItems();
 	
 	for (int ii = 0; ii < nbLines; ++ii) 
 	{
 		for (int jj = 0; jj < nbCols; ++jj) 
 		{
 			int ind = ii * nbCols + jj;
-			/*m_scroll[ind]->setWidget(m_moduleViewer[ind]);
-			//imageViewer[i]->setGeometry(i * width()/2, 0, (i + 1) * width()/2, height()/2);
-			//m_scroll[i]->setBaseSize(width()/2, width()/2);
-			m_scroll[ind]->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-			//m_moduleViewer[i]->resize(1000, 1000);
-			
-			//imageViewer[i]->setBaseSize(100, 100);
-			//m_scroll[i]->setBaseSize(200, 400);
-			m_moduleViewer[ind]->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);*/
 			m_mainLayout.addWidget(m_moduleViewer[ind], ii, jj);
 			m_moduleViewer[ind]->show();
-			
-			//m_moduleViewer[ind]->setAntialiased(true);
-			//m_moduleViewer[ind]->setFloatBased(true);
-			
-			//QCheckBox* cbDispImage=new QCheckBox(tr("Display image"));
-			//connect(cbDispImage, SIGNAL(toggled(bool)),imageViewer[i], SLOT(setDispImage(bool)));
-			//cbDispImage->setChecked(true);
-			//mainLayout->addWidget(cbDispImage, 2, i);
-			//connect(imageViewer[i], SIGNAL(dispImageSetted(bool)),cbDispImage, SLOT(setChecked(bool)));
-			
-			//QCheckBox* cbDispKP=new QCheckBox(tr("Display key points"));
-			//connect(cbDispKP, SIGNAL(toggled(bool)),imageViewer[i], SLOT(setDispKP(bool)));
-			//cbDispKP->setChecked(true);
-
-			//QCheckBox* cbDispMatch=new QCheckBox(tr("Display matches"));
-			//connect(cbDispMatch, SIGNAL(toggled(bool)),imageViewer[i], SLOT(setDispMatch(bool)));
-			//cbDispMatch->setChecked(true);
-			
-			//m_mainLayout.addWidget(gbSettings, 2 * ii + 1, jj);
-			
-			//connect(timer, SIGNAL(timeout()),imageViewer[i], SLOT(update()));
-			//QPushButton *quit = new QPushButton(tr("&Quit"));
-			//mainLayout->addWidget(quit, 1, i);
-			//connect(m_moduleViewer[ind]->comboModules, SIGNAL(activated(int)), m_moduleViewer[ind], SLOT(QModuleViewer::updateModule(int) ));
+			m_moduleViewer[ind]->toggleDisplayOptions(1);
 		}
 	}
-	
-	// Resize all widgets
-	/*QResizeEvent e(QSize(width() / nbLines, height() / nbCols), QSize());
-	for(int ind = 0 ; ind < size; ind++)
-	{
-		//m_moduleViewer[ind]->width = width() / nbLines;
-		m_moduleViewer[ind]->resizeEvent(&e);// Resize(width() / nbLines, height() / nbCols);
-	}*/
-
 }
 
 

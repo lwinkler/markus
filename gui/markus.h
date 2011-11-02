@@ -65,6 +65,8 @@ private:
 	//std::vector<QWidget   *> m_scroll;
 	
 	QAction *exitAct;
+	QAction *viewDisplayOptions1Act;
+	QAction *viewDisplayOptions0Act;
 	QAction *view1x1Act;
 	QAction *view1x2Act;
 	QAction *view2x2Act;
@@ -77,10 +79,13 @@ private:
 	QMenu *helpMenu;
 private slots:
 	void about();
-	void view2x3();
+	void viewDisplayOptions1();
+	void viewDisplayOptions0();
 	void view1x1();
 	void view1x2();
 	void view2x2();
+	void view2x3();
+
 };
 
 #endif // markus_H
