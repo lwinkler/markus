@@ -57,6 +57,8 @@ private:
 	
 	int m_outputWidth;
 	int m_outputHeight;
+	int m_offsetX;
+	int m_offsetY;
 	
 	//QSize size;
 	//QIcon icon;

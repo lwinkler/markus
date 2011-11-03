@@ -82,12 +82,13 @@ void Detector::UpdateBackground(IplImage* x_img)
 {
 	float backgroundAlpha = m_param.backgroundAlpha;
 	//cout<<" img depth"<<x_img->depth<<" backgr"<<m_background->depth<<endl;
-	if(m_emptyBackgroundSubtraction) {
+	if(m_emptyBackgroundSubtraction) 
+	{
 		cvCopy(x_img, m_background);
 		m_emptyBackgroundSubtraction = false;
 	}
-	else {
-		
+	else 
+	{
 		assert(x_img->depth == m_background->depth);
 		assert(x_img->width == m_background->width);
 		//assert(x_img->widthStep == m_background->widthStep);
@@ -115,8 +116,8 @@ void Detector::UpdateBackground(IplImage* x_img)
 			}
 		
 		}
-		//cout<<"alpha"<<m_background_alpha<<endl;
-		//cout<<"thres"<<m_foreground_thres<<endl;
+		//cout<<"alpha"<<backgroundAlpha<<endl;
+		//cout<<"thres"<<m_param.foregroundThres<<endl;
 
 		//cvSet(m_foreground, cvScalar(0,0,0));
 	}

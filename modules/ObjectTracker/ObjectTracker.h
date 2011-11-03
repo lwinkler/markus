@@ -56,6 +56,7 @@ public:
 	
 private:
 	ObjectTrackerParameterStructure m_param;
+	IplImage* m_input; // Debug TODO
 	IplImage* m_img_blur;
 	Detector detect;
 	Tracker track;

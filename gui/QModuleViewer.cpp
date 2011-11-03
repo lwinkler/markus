@@ -134,10 +134,28 @@ QModuleViewer::~QModuleViewer(void)
 void QModuleViewer::resizeEvent(QResizeEvent * e)
 {
 	std::cout<<"resizeEvent "<<e->size().width()<<" "<<e->size().height()<<std::endl;
-	m_image =  QImage(e->size().width(), e->size().height(), QImage::Format_RGB32);
-	//usleep(100000);
-	m_outputWidth  = m_image.width();
-	m_outputHeight = m_image.height();
+	
+	// Keep proportionality
+	const IplImage * cvimage = m_currentOutputStream->GetImageRef();
+	double ratio = static_cast<double>(cvimage->height) / cvimage->width;
+	
+	m_outputWidth  = e->size().width();
+	m_outputHeight = e->size().height();
+	
+	if(m_outputHeight >= m_outputWidth * ratio)
+	{
+		m_outputHeight = m_outputWidth * ratio;
+		m_offsetX = 0;
+		m_offsetY = (e->size().height() - m_outputHeight) / 2;
+	}
+	else 
+	{
+		m_outputWidth = m_outputHeight / ratio;
+		m_offsetX = (e->size().width() - m_outputWidth) / 2;
+		m_offsetY = 0;
+	}
+	
+	m_image =  QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
 	
 	if(m_img_output != NULL) cvReleaseImage(&m_img_output);
 	m_img_output = NULL;
@@ -149,7 +167,6 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 	if(m_img_tmp2_c3 != NULL) cvReleaseImage(&m_img_tmp2_c3);
 	
 	m_img_tmp1_c1 = m_img_tmp1_c3 = m_img_tmp2_c1 = m_img_tmp2_c3 = NULL;
-
 }
 
 /*void QModuleViewer::putImage() 
@@ -162,16 +179,6 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 {
 	int cvIndex, cvLineStart;
 	const IplImage * cvimage = m_currentOutputStream->GetImageRef();
-	/*
-	if(m_image.width() - 0.8 * width() > 10 || m_image.height() - 0.8 * height() > 10)
-	{
-		// Resize the image
-		m_image =  QImage(width() * 0.8, height() * 0.8, QImage::Format_RGB32);
-		usleep(100000);
-		std::cout<<"Reiszing "<<std::endl;
-	}*/
-	m_outputWidth  = m_image.width();
-	m_outputHeight = m_image.height();
 	
 	if(m_img_output == NULL)
 		m_img_output = cvCreateImage( cvSize(m_outputWidth, m_outputHeight), IPL_DEPTH_8U, 3);
@@ -187,14 +194,14 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 		case IPL_DEPTH_8U:
 			switch (m_img_output->nChannels) {
 				case 3:
-					if ( (m_img_output->width != m_image.width()) || (m_img_output->height != m_image.height()) ) 
+					/*if ( (m_img_output->width != m_image.width()) || (m_img_output->height != m_image.height()) ) 
 					{
 						assert(false);
 						break;
 						std::cout<<"Resizing"<<std::endl;
 						QImage temp(m_img_output->width, m_img_output->height, QImage::Format_RGB32);
 						m_image = temp;
-					}
+					}*/
 					cvIndex = 0; cvLineStart = 0;
 					for (int y = 0; y < m_img_output->height; y++) 
 					{
@@ -224,7 +231,7 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 	//imagelabel->setPixmap(QPixmap::fromImage(m_image));
 	
 	QPainter painter(this);
-	painter.drawImage(QRect(0, 0, m_outputWidth, m_outputHeight), m_image);
+	painter.drawImage(QRect(m_offsetX, m_offsetY, m_image.width(), m_image.height()), m_image);
 }
 
 void QModuleViewer::updateModule(const Module * x_module)
