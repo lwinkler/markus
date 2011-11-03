@@ -95,7 +95,8 @@ public:
 		mp_value(xp_value){};
 	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
 	{
-		*mp_value = static_cast<T>(atof(rx_value.c_str()));
+		std::istringstream istr(rx_value);
+		istr >> *mp_value; // atof is sensible to locale format and may use , as a separator
 		m_confType = x_confType;
 	};
 	virtual void SetValue(const void * px_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
@@ -116,6 +117,7 @@ public:
 	{
 		*mp_value = m_default;
 	}
+    std::basic_ostream< char >::__ostream_type of(const char* arg1);
 	const T m_default;
 	const T m_min;
 	const T m_max;
@@ -130,7 +132,7 @@ public:
 	ParameterT(int x_id, const std::string& x_name, std::string x_default, ParameterType x_type, std::string * xp_value) : 
 		Parameter(x_id, x_name, x_type),
 		m_default(x_default),
-		mp_value(xp_value){};
+		mp_value(xp_value){ assert(x_type == PARAM_STR);};
 	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
 	{
 		*mp_value = rx_value;

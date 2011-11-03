@@ -87,10 +87,11 @@ void ParameterStructure::CheckRange() const
 	{
 		if((*it)->m_type != PARAM_STR)
 		{
-			/*
-			double value = it->GetValue();
-			if(value < it->m_min || value > it->m_max)
-				throw("Parameter " + std::string(it->m_name) + " out of range");*/
+			/* TODO
+			double value = (*it)->GetValue();
+			if(value < (*it)->m_min || value > (*it)->m_max)
+				throw("Parameter " + std::string(it->m_name) + " out of range");
+			*/
 		}
 	}
 }
