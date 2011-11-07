@@ -7,6 +7,7 @@ include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_
 modules/SlitCam
 modules/ObjectTracker
 inputs/UsbCam
+inputs/VideoFileReader
 tools
 tools/cvblobs
 )
@@ -20,6 +21,7 @@ bulk/Module.cpp
 bulk/Manager.cpp
 bulk/Input.cpp
 inputs/UsbCam/UsbCam.cpp
+inputs/VideoFileReader/VideoFileReader.cpp
 bulk/Parameter.cpp
 bulk/OutputStream.cpp
 bulk/util.cpp

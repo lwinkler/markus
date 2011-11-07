@@ -26,6 +26,7 @@
 #include "ObjectTracker.h"
 #include "util.h"
 #include "UsbCam.h"
+#include "VideoFileReader.h"
 
 ImageProcessor::ImageProcessor(const string & x_name, int x_nb, ConfigReader& x_confReader, std::vector<Input*>& xr_inputList):
 	m_param(x_confReader, x_nb), 
@@ -65,6 +66,10 @@ ImageProcessor::ImageProcessor(const string & x_name, int x_nb, ConfigReader& x_
 		if(input.m_class.compare("UsbCam") == 0)
 		{
 			m_input = new UsbCam(input.m_value, m_configReader);
+		}
+		else if(input.m_class.compare("VideoFileReader") == 0)
+		{
+			m_input = new VideoFileReader(input.m_value, m_configReader);
 		}
 		else throw("Input type unknown : " + input.m_class);
 

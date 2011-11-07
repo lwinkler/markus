@@ -21,25 +21,25 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "UsbCam.h"
+#include "VideoFileReader.h"
 
 using namespace std;
 
-UsbCam::UsbCam(const std::string& x_name, ConfigReader& x_configReader): 
+VideoFileReader::VideoFileReader(const std::string& x_name, ConfigReader& x_configReader): 
 	m_param(x_configReader, x_name), 
 	Input(x_name, x_configReader),
 	m_name(x_name)
 {
-	cout<<"*** Create object UsbCam : "<<x_name<<" ***"<<endl;
+	cout<<"*** Create object VideoFileReader : "<<x_name<<" ***"<<endl;
 
 	m_capture = NULL;
 	
-	m_capture = cvCaptureFromCAM( m_param.num );
-	m_fps = 0;
+	m_capture = cvCaptureFromFile(m_param.file.c_str());
+	m_fps     = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FPS);
 	
 	if(m_capture == NULL)
 	{
-		throw("Error : UsbCam not found ! : " + x_name);
+		throw("Error : VideoFileReader not found ! : " + x_name);
 	}
 	cout<<"Setting "<<m_param.width<<endl;
 	
@@ -49,7 +49,7 @@ UsbCam::UsbCam(const std::string& x_name, ConfigReader& x_configReader):
 	cvQueryFrame(m_capture); // this call is necessary to get correct capture properties
 	m_width    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH);
 	m_height   = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT);
-	//int numFramesc = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_COUNT);
+	int numFramesc = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_COUNT);
 	
 //	cout<<"done Setting "<<m_width<<" "<<m_height<<endl;
 //	assert(m_width == m_param.width);
@@ -59,20 +59,20 @@ UsbCam::UsbCam(const std::string& x_name, ConfigReader& x_configReader):
 	m_input = NULL;//cvCreateImage( cvSize(m_width, m_height), IPL_DEPTH_8U, 3);
 }
 
-UsbCam::~UsbCam()
+VideoFileReader::~VideoFileReader()
 {
 	//cvReleaseImage(&m_input);
 	cvReleaseCapture(&m_capture );
 }
 
 
-void UsbCam::Capture()
+void VideoFileReader::Capture()
 {
 	//Get frame information:
 	//double posMsec   =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_MSEC);
 	//int posFrames    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_FRAMES);
 	//double posRatio  =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_AVI_RATIO);
-	
+
 	cvGrabFrame(m_capture);
 	m_input = cvRetrieveFrame(m_capture);           // retrieve the captured frame
 
