@@ -32,12 +32,12 @@ using namespace std;
 Detector::Detector(const DetectorParameter& x_param, int x_width, int x_height, int x_depth, int x_channels) :
 	m_param(x_param)
 {
-	m_foreground = cvCreateImage(cvSize(x_width, x_height), x_depth, 1);
-	m_foreground_rff = cvCreateImage(cvSize(x_width, x_height), x_depth, 1);
-	m_background = cvCreateImage(cvSize(x_width, x_height), x_depth, x_channels);
-	m_lastImg = cvCreateImage(cvSize(x_width, x_height), x_depth, x_channels);
-	m_temporalDiff = cvCreateImage(cvSize(x_width, x_height), x_depth, 1);
-	m_blobsImg = cvCreateImage(cvSize(x_width, x_height), x_depth, x_channels);
+	m_foreground 		= cvCreateImage(cvSize(x_width, x_height), x_depth, 1);
+	m_foreground_rff	= cvCreateImage(cvSize(x_width, x_height), x_depth, 1);
+	m_background 		= cvCreateImage(cvSize(x_width, x_height), x_depth, x_channels);
+	m_lastImg 		= cvCreateImage(cvSize(x_width, x_height), x_depth, x_channels);
+	m_temporalDiff 		= cvCreateImage(cvSize(x_width, x_height), x_depth, 1);
+	m_blobsImg 		= cvCreateImage(cvSize(x_width, x_height), x_depth, x_channels);
 	
 	Reset();
 }
@@ -89,7 +89,7 @@ void Detector::UpdateBackground(IplImage* x_img)
 	}
 	else 
 	{
-		assert(x_img->depth == m_background->depth);
+		// assert(x_img->depth == m_background->depth);
 		assert(x_img->width == m_background->width);
 		//assert(x_img->widthStep == m_background->widthStep);
 		assert(x_img->height == m_background->height);
@@ -179,7 +179,6 @@ void Detector::UpdateBackgroundMask(IplImage* x_img, IplImage* x_mask)
 
 void Detector::ExtractForeground(IplImage* x_img)
 {
-	
 	static IplImage* tmp = cvCreateImage(cvSize(x_img->width, x_img->height), x_img->depth, x_img->nChannels);
 	
 	cvAbsDiff(x_img, m_background, tmp);
@@ -278,8 +277,6 @@ void Detector::ExtractForegroundMax(IplImage* x_img)
 		
 		cpt--;
 	}
-
-	
 }
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 /* Remove false background pixels by 8 neighbor vote   */

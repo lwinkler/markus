@@ -35,6 +35,7 @@ enum ParameterType
 	PARAM_INT,
 	PARAM_FLOAT,
 	PARAM_DOUBLE,
+	PARAM_BOOL,
 	PARAM_STR
 };
 

@@ -6,6 +6,7 @@ find_package(OpenCV REQUIRED)
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR} bulk gui
 modules/SlitCam
 modules/ObjectTracker
+inputs/UsbCam
 tools
 tools/cvblobs
 )
@@ -18,6 +19,7 @@ main.cpp
 bulk/Module.cpp
 bulk/Manager.cpp
 bulk/Input.cpp
+inputs/UsbCam/UsbCam.cpp
 bulk/Parameter.cpp
 bulk/OutputStream.cpp
 bulk/util.cpp

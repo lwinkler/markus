@@ -39,6 +39,7 @@ public:
 		m_list.push_back(new ParameterT<float>(0, "background_alpha",	0.02, 	PARAM_FLOAT, 0, 1,	&detector.backgroundAlpha));
 		m_list.push_back(new ParameterT<float>(0, "foreground_thres", 	0.2, 	PARAM_FLOAT, 0, 1,	&detector.foregroundThres));
 		m_list.push_back(new ParameterT<int>(0, "foreground_filter_size", 3, 	PARAM_INT, 1, 7,	&detector.foregroundFilterSize));
+		m_list.push_back(new ParameterT<int>(0, "background_depth", IPL_DEPTH_32F, 	PARAM_INT, 0, 32,	&detector.backgroundDepth));
 
 		ParameterStructure::Init();
 	};

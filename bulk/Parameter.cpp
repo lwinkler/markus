@@ -69,7 +69,7 @@ void ParameterStructure::SetValueByName(const string& x_name, const string& x_va
 		}
 	}
 	
-	cout<<("Parameter not found in list (by name) : " + std::string(x_name))<<endl;
+	cout<<("Warning : Parameter not found in list (by name) : " + x_name)<<endl;
 }
 
 

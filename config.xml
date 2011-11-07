@@ -2,15 +2,15 @@
 
 <ImageProcessors>
 	<ImageProcessor name="ModuleDeTest">
-		<parameter id="0" name="input" class="usbcam">MyCam1</parameter>
+		<parameter id="0" name="input" class="UsbCam">MyCam1</parameter>
 		<parameter id="2" name="module" class="SlitCamera">SlitCamera1</parameter>
 	</ImageProcessor>
 	<ImageProcessor name="ModuleDeTest2">
-                <parameter id="0" name="input" class="usbcam">MyCam1</parameter>
+                <parameter id="0" name="input" class="UsbCam">MyCam1</parameter>
                 <parameter id="2" name="module" class="ObjectTracker">ObjectTracker1</parameter>
         </ImageProcessor>
         <ImageProcessor name="ModuleDeTest3">
-                <parameter id="0" name="input" class="usbcam">MyCam1</parameter>
+                <parameter id="0" name="input" class="UsbCam">MyCam1</parameter>
                 <parameter id="2" name="module" class="SlitCamera">SlitCamera2</parameter>
         </ImageProcessor>
 
@@ -28,12 +28,21 @@
 
 <!-- List all possibly used inputs-->
 <Input name="MyCam1">
-        <parameter id="0" name="source">cam</parameter>
         <parameter id="1" name="width">200</parameter>
         <parameter id="2" name="height">100</parameter>
         <parameter id="3" name="depth">8</parameter>
         <parameter id="4" name="channels">3</parameter>
+        <parameter id="4" name="num">-2</parameter>	
 </Input>
+
+<Input name="MyCam2">
+        <parameter id="1" name="width">200</parameter>
+        <parameter id="2" name="height">100</parameter>
+        <parameter id="3" name="depth">8</parameter>
+        <parameter id="4" name="channels">3</parameter>
+        <parameter id="4" name="num">1</parameter>	
+</Input>
+
 
 <!-- List all possibly used modules-->
 
@@ -50,7 +59,7 @@
 <Module name="SlitCamera1">
         <parameter id="2" name="width">160</parameter>
         <parameter id="3" name="height">120</parameter>
-        <parameter id="4" name="depth">8</parameter>
+        <parameter id="4" name="depth">32</parameter>
         <parameter id="5" name="channels">3</parameter>
 	<parameter id="1" name="aperture">1</parameter>
 </Module>

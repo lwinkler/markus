@@ -21,54 +21,50 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef INPUT_H
-#define INPUT_H
+#ifndef INPUT_USBCAM_H
+#define INPUT_USBCAM_H
 
 #include "cv.h"
 #include <highgui.h>
 
-#include "ConfigReader.h"
-#include "Parameter.h"
+#include "Input.h"
 
-class InputParameterStructure : public ParameterStructure
+
+class UsbCamParameterStructure : public InputParameterStructure
 {
 public:
-	InputParameterStructure(ConfigReader& x_confReader, const std::string& x_moduleName) : ParameterStructure(x_confReader, "Input", x_moduleName)
+	UsbCamParameterStructure(ConfigReader& x_confReader, const std::string& x_objectName) : 
+	InputParameterStructure(x_confReader, x_objectName)
 	{
-		m_list.push_back(new ParameterT<int>(0, "width", 	640, 	PARAM_INT, 	0, 	4000,	&width));
-		m_list.push_back(new ParameterT<int>(0, "height", 	480, 	PARAM_INT, 	0, 	3000,	&height));
-		m_list.push_back(new ParameterT<int>(0, "depth", 	IPL_DEPTH_8U, PARAM_INT, 	0, 	32,	&depth));
-		m_list.push_back(new ParameterT<int>(0, "channels", 	3, 	PARAM_INT, 	1, 	3,	&channels));
-		m_list.push_back(new ParameterT<std::string>(0, "source", 	"cam", 	PARAM_STR, 	&source));
-		
+		m_list.push_back(new ParameterT<int>(0, "num", 	640, 	PARAM_INT, 	0, 	-1,	&num));
 		ParameterStructure::Init();
 	};
 
 public:
-	std::string source;
-	int width;
-	int height;
-	int depth;
-	int channels;
+	int num;
 };
 
-class Input : Configurable
+class UsbCam : public Input
 {
 public:
-	Input(const std::string& x_name, ConfigReader& x_confReader);
-	~Input();
+	UsbCam(const std::string& x_name, ConfigReader& x_confReader);
+	~UsbCam();
 	
-	virtual void Capture() = 0;
+	void Capture();
 	const std::string& GetName(){return m_name;};
-	virtual const IplImage * GetImage() const = 0;
+	virtual const IplImage * GetImage() const {return m_input;}
 
 protected:
-	//IplImage * m_input;
-	
+	IplImage * m_input;
+	CvCapture * m_capture;
+	int m_width;
+	int m_height;
+	int m_fps;
+
 	const std::string m_name;
-	InputParameterStructure m_param;
+	UsbCamParameterStructure m_param;
 	
-	virtual const ParameterStructure& GetRefParameter() {return m_param;};
+	virtual const ParameterStructure& GetRefParameter() const {return m_param;};
 };
 
 #endif

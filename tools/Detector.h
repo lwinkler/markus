@@ -41,11 +41,13 @@ public:
 		foregroundThres = 0.2;
 		inputBlurSize = 3;
 		foregroundFilterSize = 3;
+		backgroundDepth = IPL_DEPTH_32F;
 	};
 	float backgroundAlpha;
 	float foregroundThres;
 	int inputBlurSize;
 	int foregroundFilterSize;
+	int backgroundDepth;
 };
 
 class Detector

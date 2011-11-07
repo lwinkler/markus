@@ -36,7 +36,7 @@ vector<ParameterValue> ConfigReader::ReadConfigObject(const std::string& x_objec
 	vector<ParameterValue> parameterList;
 	TiXmlDocument doc( m_fileName );
 	bool loadOkay = doc.LoadFile();
-printf("ReadConfigObject(%s, %s)\n", x_objectType.c_str(), x_objectName.c_str());
+//printf("ReadConfigObject(%s, %s)\n", x_objectType.c_str(), x_objectName.c_str());
 	if ( !loadOkay )
 		throw("Could not load test file '" + m_fileName + "'. Error='" + doc.ErrorDesc() + "'. Exiting.");
 
@@ -92,7 +92,7 @@ vector<ParameterValue> ConfigReader::ReadConfigObjectFromVect(const std::string&
 	vector<ParameterValue> parameterList;;
 	TiXmlDocument doc( m_fileName );
 	bool loadOkay = doc.LoadFile();
-printf("ReadConfigObjectFromVect(%s, %s)\n", x_vectorType.c_str(), x_objectType.c_str());
+//printf("ReadConfigObjectFromVect(%s, %s)\n", x_vectorType.c_str(), x_objectType.c_str());
 
 	if ( !loadOkay )
 		throw("Could not load test file '" + m_fileName + "'. Error='" + doc.ErrorDesc() + "'. Exiting.");
