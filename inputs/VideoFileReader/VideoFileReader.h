@@ -64,7 +64,7 @@ protected:
 	const std::string m_name;
 	VideoFileReaderParameterStructure m_param;
 	
-	virtual const ParameterStructure& GetRefParameter() const {return m_param;};
+	virtual const VideoFileReaderParameterStructure& GetRefParameter() const {return m_param;};
 };
 
 #endif

@@ -42,6 +42,24 @@
 
 using namespace std;
 
+InputTimer::InputTimer(Input& x_input)
+: m_input(x_input)
+{
+	
+	double delay = 10;
+	if(m_input.GetFps() > 0) 
+		delay = 1000.0 / m_input.GetFps();
+	
+	start(delay);
+}
+
+
+void InputTimer::timerEvent(QTimerEvent* )
+{
+	m_input.Capture();
+}
+
+
 markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 	: m_manager(rx_manager), m_configReader(rx_configReader)
 {
@@ -62,6 +80,11 @@ markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 	m_mainWidget.setLayout(&m_mainLayout);
 	setCentralWidget(&m_mainWidget);
 
+	for(vector<Input *>::iterator it = m_manager.GetInputListVar().begin() ; it != m_manager.GetInputList().end() ; it++)
+	{
+		InputTimer * timer = new InputTimer(**it);
+		m_inputTimer.push_back(timer);
+	}
 	
 	//mainWidget->setLayout(mainLayout);
 

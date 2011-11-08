@@ -72,8 +72,9 @@ void VideoFileReader::Capture()
 	//double posMsec   =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_MSEC);
 	//int posFrames    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_FRAMES);
 	//double posRatio  =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_AVI_RATIO);
-
+	m_lock.lockForRead();
 	cvGrabFrame(m_capture);
 	m_input = cvRetrieveFrame(m_capture);           // retrieve the captured frame
 
+	m_lock.unlock();
 }

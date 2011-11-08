@@ -113,88 +113,31 @@ Manager::~Manager()
 
 void Manager::Process()
 {
-	//IplImage *img = cvCreateImage( cvSize(m_param.width, m_param.height), m_param.depth, m_param.channels);
+	m_timerConv.stop();
+	timerProc.start();
 	
-	// Main loop
-	//while(cvGrabFrame(m_capture) && m_key != 27)
+	// Aquire input images and process
+	/*for(vector<Input*>::iterator it = m_inputs.begin(); it != m_inputs.end(); it++)
 	{
-		//const IplImage* source = (*(m_inputs.begin()))->GetImage();;
-		
-		//static IplImage* tmp1=NULL;
-		//static IplImage* tmp2=NULL;
-		//adjust(source, img, tmp1, tmp2);
-		
-		//printf("Processing frame %d (%dx%d) with %d channels\n", frame, width, height, channels); 
-		// declare a destination IplImage object with correct size, depth and channels			
-		
-		m_timerConv.stop();
-		timerProc.start();
-		
-		// Aquire input images and process
-		for(vector<Input*>::iterator it = m_inputs.begin(); it != m_inputs.end(); it++)
-		{
-			(*it)->Capture();
-		}
-		for(vector<ImageProcessor*>::iterator it = m_imageProcessors.begin(); it != m_imageProcessors.end(); it++)
-		{
-			(*it)->Process();
-		}
-		
-		timerProc.stop();
-		m_timerConv.start();
-		/*
-		if(m_param.mode == "benchmark")
-		{
-			static IplImage* output = cvCreateImage( cvSize(m_param.width, m_param.height), IPL_DEPTH_8U, m_param.channels);
-			static IplImage* tmp1 = NULL;
-			static IplImage* tmp2 = NULL;
-			
-			//adjust(detect.GetBackground(), output, tmp1, tmp2);
-			//if(m_workIsColor) cvWriteFrame(m_writer,output); // proble for B&W
-		}
-		else
-		{
-			// Write output to screen
-			static IplImage *output = cvCreateImage( cvSize(m_param.width, m_param.height), IPL_DEPTH_8U, m_param.channels);
-			static IplImage* tmp1_c1 = NULL;
-			static IplImage* tmp2_c1 = NULL;
-			static IplImage* tmp1_c3 = NULL;
-			static IplImage* tmp2_c3 = NULL;
-			
-			/*for(vector<Module*>::iterator it = m_modules.begin(); it != m_modules.end(); it++)
-			{
-				const std::list<OutputStream> streamList((*it)->GetOutputStreamList());
-				for(list<OutputStream>::const_iterator it2 = streamList.begin(); it2 != streamList.end(); it2++)
-				{
-					if((*it2).GetImageRef()->nChannels == 3)
-						adjust((*it2).GetImageRef(), output, tmp1_c3, tmp2_c3);
-					else
-						adjust((*it2).GetImageRef(), output, tmp1_c1, tmp2_c1);
-
-					cvShowImage((*it2).GetName().c_str(), output);
-				}
-			}* /
-			//m_key= (char) cvWaitKey(5);           // wait 20 ms
-		}*/
-
-		m_frameCount++;
-		if(m_frameCount % 100 == 0)
-		{
-			m_timerConv.stop();
-			cout<<m_frameCount<<" frames processed in "<<timerProc.value<<" s "<<m_frameCount/timerProc.value<<" frames/s"<<endl;
-			cout<<"Time for Input/Output conversion "<<m_timerConv.value<<" s "<<m_frameCount/m_timerConv.value<<" frames/s"<<endl;
-			cout<<"Total time "<<timerProc.value + m_timerConv.value<<" s"<<endl;
-			m_timerConv.start();
-		}
-
-	}// end main loop
+		(*it)->Capture();
+	}*/
+	for(vector<ImageProcessor*>::iterator it = m_imageProcessors.begin(); it != m_imageProcessors.end(); it++)
+	{
+		(*it)->Process();
+	}
 	
-	/*m_timerConv.stop();
-	cout<<"--------- end of execution -------------"<<endl;
-	cout<<frame<<" frames processed in "<<timerProc.value<<" s "<<frame/timerProc.value<<" frames/s"<<endl;
-	cout<<"Time for Input/Output conversion "<<m_timerConv.value<<" s "<<frame/m_timerConv.value<<" frames/s"<<endl;
-	cout<<"Total time "<<timerProc.value + m_timerConv.value<<" s"<<endl;
-	m_timerConv.start();*/
+	timerProc.stop();
+	m_timerConv.start();
+
+	m_frameCount++;
+	if(m_frameCount % 100 == 0)
+	{
+		m_timerConv.stop();
+		cout<<m_frameCount<<" frames processed in "<<timerProc.value<<" s "<<m_frameCount/timerProc.value<<" frames/s"<<endl;
+		cout<<"Time for Input/Output conversion "<<m_timerConv.value<<" s "<<m_frameCount/m_timerConv.value<<" frames/s"<<endl;
+		cout<<"Total time "<<timerProc.value + m_timerConv.value<<" s"<<endl;
+		m_timerConv.start();
+	}
 }
 
 void Manager::AddModule(Module * x_mod)

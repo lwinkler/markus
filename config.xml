@@ -33,6 +33,7 @@
         <parameter id="3" name="depth">8</parameter>
         <parameter id="4" name="channels">3</parameter>
         <parameter id="4" name="num">-2</parameter>	
+	<parameter id="4" name="fps">1000</parameter>
 </Input>
 
 <Input name="MyCam2">
@@ -41,6 +42,7 @@
         <parameter id="3" name="depth">8</parameter>
         <parameter id="4" name="channels">3</parameter>
         <parameter id="4" name="num">1</parameter>	
+        <parameter id="4" name="fps">10</parameter>
 </Input>
 
 <Input name="InFile1">
@@ -49,6 +51,7 @@
         <parameter id="3" name="depth">8</parameter>
         <parameter id="4" name="channels">3</parameter>
         <parameter id="4" name="file">input/test.avi</parameter>
+	<parameter id="4" name="fps">10</parameter>
 </Input>
 
 <!-- List all possibly used modules-->

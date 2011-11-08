@@ -26,7 +26,7 @@
 using namespace std;
 
 Input::Input(const std::string& x_name, ConfigReader& x_configReader): 
-	m_param(x_configReader, x_name), 
+	//m_param(x_configReader, x_name), 
 	Configurable(x_configReader),
 	m_name(x_name)
 {

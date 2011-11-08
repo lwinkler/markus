@@ -72,8 +72,11 @@ public:
 	void Process();
 	void AddInput(Input * x_input);
 	void AddModule(Module * x_mod);
-	const std::vector<Input*> & GetinputList()  const {return m_inputs; };
+	const std::vector<Input*> & GetInputList()  const {return m_inputs; };
 	const std::vector<Module*>& GetModuleList() const {return m_modules; };
+
+ 	std::vector<Input*> & GetInputListVar()  {return m_inputs; };
+	std::vector<Module*>& GetModuleListVar() {return m_modules; };
 private:
 	ManagerParameter m_param;
 	CvVideoWriter * m_writer;

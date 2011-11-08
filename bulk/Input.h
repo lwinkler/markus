@@ -30,6 +30,8 @@
 #include "ConfigReader.h"
 #include "Parameter.h"
 
+#include <QReadWriteLock>
+
 class InputParameterStructure : public ParameterStructure
 {
 public:
@@ -37,9 +39,10 @@ public:
 	{
 		m_list.push_back(new ParameterT<int>(0, "width", 	640, 	PARAM_INT, 	0, 	4000,	&width));
 		m_list.push_back(new ParameterT<int>(0, "height", 	480, 	PARAM_INT, 	0, 	3000,	&height));
-		m_list.push_back(new ParameterT<int>(0, "depth", 	IPL_DEPTH_8U, PARAM_INT, 	0, 	32,	&depth));
+		m_list.push_back(new ParameterT<int>(0, "depth", 	IPL_DEPTH_8U, PARAM_INT, 0, 	32,	&depth));
 		m_list.push_back(new ParameterT<int>(0, "channels", 	3, 	PARAM_INT, 	1, 	3,	&channels));
 		// m_list.push_back(new ParameterT<std::string>(0, "source", 	"cam", 	PARAM_STR, 	&source));
+		m_list.push_back(new ParameterT<double>(0, "fps", 	10, 	PARAM_DOUBLE, 	0, 	100,	&fps));
 		
 		ParameterStructure::Init();
 	};
@@ -50,6 +53,7 @@ public:
 	int height;
 	int depth;
 	int channels;
+	double fps;
 };
 
 class Input : Configurable
@@ -59,16 +63,21 @@ public:
 	~Input();
 	
 	virtual void Capture() = 0;
-	const std::string& GetName(){return m_name;};
+	inline const std::string& GetName()const {return m_name;};
 	virtual const IplImage * GetImage() const = 0;
+	QReadWriteLock m_lock;
+	
+	inline double GetFps() const {return GetRefParameter().fps;};
+
+private:
 
 protected:
+	//InputParameterStructure m_param;
 	//IplImage * m_input;
 	
 	const std::string m_name;
-	InputParameterStructure m_param;
 	
-	virtual const ParameterStructure& GetRefParameter() {return m_param;};
+	virtual const InputParameterStructure& GetRefParameter() const = 0;
 };
 
 #endif

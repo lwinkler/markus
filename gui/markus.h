@@ -28,11 +28,25 @@
 
 #include <QMainWindow>
 #include <QScrollArea>
+#include <QTimer>
 
 #include <vector>
 
+
 class Manager;
 class ConfigReader;
+class InputTimer;
+class QTimerEvent;
+class Input;
+
+class InputTimer : public QTimer
+{
+public:
+	InputTimer(Input & x_input);
+	virtual void timerEvent(QTimerEvent *);
+	
+	Input & m_input;
+};
 
 class markus : public QMainWindow
 {
@@ -45,6 +59,9 @@ private:
 
 	ConfigReader& m_configReader;
 	Manager& m_manager;
+	
+	std::vector<InputTimer *> m_inputTimer;
+	
 	void timerEvent(QTimerEvent*);
 	void resizeEvent(QResizeEvent*);
 	
@@ -87,5 +104,6 @@ private slots:
 	void view2x3();
 
 };
+
 
 #endif // markus_H
