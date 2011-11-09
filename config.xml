@@ -28,6 +28,7 @@
 
 <!-- List all possibly used inputs-->
 <Input name="MyCam1">
+	<parameter id="0" name="class">UsbCam</parameter>
         <parameter id="1" name="width">200</parameter>
         <parameter id="2" name="height">100</parameter>
         <parameter id="3" name="depth">8</parameter>
@@ -37,6 +38,7 @@
 </Input>
 
 <Input name="MyCam2">
+	<parameter id="0" name="class">UsbCam</parameter>
         <parameter id="1" name="width">200</parameter>
         <parameter id="2" name="height">100</parameter>
         <parameter id="3" name="depth">8</parameter>
@@ -46,6 +48,7 @@
 </Input>
 
 <Input name="InFile1">
+	<parameter id="0" name="class">VideoFileReader</parameter>
         <parameter id="1" name="width">200</parameter>
         <parameter id="2" name="height">100</parameter>
         <parameter id="3" name="depth">8</parameter>
@@ -57,6 +60,7 @@
 <!-- List all possibly used modules-->
 
 <Module name="ObjectTracker1">
+	<parameter id="0" name="class">ObjectTracker</parameter>
         <parameter id="2" name="width">640</parameter>
         <parameter id="3" name="height">480</parameter>
         <parameter id="4" name="depth">8</parameter>
@@ -68,6 +72,7 @@
 	<parameter id="4" name="fps">0</parameter>
 </Module>
 <Module name="SlitCamera1">
+	<parameter id="0" name="class">SlitCamera</parameter>
         <parameter id="2" name="width">160</parameter>
         <parameter id="3" name="height">120</parameter>
         <parameter id="4" name="depth">8</parameter>
@@ -76,6 +81,7 @@
 	<parameter id="4" name="fps">0</parameter>
 </Module>
 <Module name="SlitCamera2">
+	<parameter id="0" name="class">SlitCamera</parameter>
         <parameter id="2" name="width">640</parameter>
         <parameter id="3" name="height">480</parameter>
         <parameter id="4" name="depth">8</parameter>

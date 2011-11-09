@@ -31,7 +31,7 @@ using namespace std;
 //const char * ConfigReader::m_fileName = "config.xml";
 
 
-vector<ParameterValue> ConfigReader::ReadConfigObject(const std::string& x_objectType, const std::string& x_objectName)
+vector<ParameterValue> ConfigReader::ReadConfigObject(const std::string& x_objectType, const std::string& x_objectName, bool x_getClassOnly)
 {
 	vector<ParameterValue> parameterList;
 	TiXmlDocument doc( m_fileName );
@@ -78,8 +78,8 @@ vector<ParameterValue> ConfigReader::ReadConfigObject(const std::string& x_objec
 		if(class1 == NULL)
 			class1 = "";
 		//cout<<"name"<<name<<" value "<<value<<endl;
-		
-		parameterList.push_back(ParameterValue(atoi(id), std::string(name), std::string(class1), value));
+		if(!x_getClassOnly || !strcmp(name, "class"))
+			parameterList.push_back(ParameterValue(atoi(id), std::string(name),  value));
 	}
 	
 	return parameterList;
@@ -87,7 +87,7 @@ vector<ParameterValue> ConfigReader::ReadConfigObject(const std::string& x_objec
 
 // Read the config of all modules that will run
 
-vector<ParameterValue> ConfigReader::ReadConfigObjectFromVect(const std::string& x_vectorType, const std::string& x_objectType, int x_objectNumber)
+vector<ParameterValue> ConfigReader::ReadConfigObjectFromVect(const std::string& x_vectorType, const std::string& x_objectType, int x_objectNumber, bool x_getClassOnly)
 {
 	vector<ParameterValue> parameterList;;
 	TiXmlDocument doc( m_fileName );
@@ -133,15 +133,15 @@ vector<ParameterValue> ConfigReader::ReadConfigObjectFromVect(const std::string&
 		paramElement = nodeParam->ToElement();
 		
 		const char* id = paramElement->Attribute( "id");
-		const char* class1 = paramElement->Attribute( "class");
+		//const char* class1 = paramElement->Attribute( "class");
 		const char* name = paramElement->Attribute( "name");
 		const char* value = paramElement->GetText();
 		if(id == NULL) id = "-1";
 		assert(name);
-		if(class1 == NULL) class1 = "";
+		//if(class1 == NULL) class1 = "";
 		//cout<<"name"<<name<<" value "<<value<<endl;
-		
-		parameterList.push_back(ParameterValue(atoi(id), name, class1, value));
+		if(!x_getClassOnly || !strcmp(name, "class"))
+			parameterList.push_back(ParameterValue(atoi(id), name, value));
 	}
 
 	

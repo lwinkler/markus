@@ -119,7 +119,7 @@ void Manager::Process()
 	clock_t tmp = clock();
 	double timecount = ( (double)tmp - m_timerLastProcess) / CLOCKS_PER_SEC;
 	m_timerLastProcess = tmp;
-	cout<<"timecount"<<timecount<<endl;
+	//cout<<"timecount"<<timecount * 1000<<endl;
 	
 	// Aquire input images and process
 	/*for(vector<Input*>::iterator it = m_inputs.begin(); it != m_inputs.end(); it++)

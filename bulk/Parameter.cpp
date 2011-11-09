@@ -31,8 +31,8 @@
 
 using namespace std;
 
-ParameterValue::ParameterValue(int x_id, const string& x_name, const string& x_class, const string& x_value) :
-	m_id(x_id), m_name(x_name), m_class(x_class), m_value(x_value) 
+ParameterValue::ParameterValue(int x_id, const string& x_name, const string& x_value) :
+	m_id(x_id), m_name(x_name),m_value(x_value) 
 {
 };
 
@@ -55,6 +55,8 @@ void ParameterStructure::SetFromConfig(const std::vector<ParameterValue>& x_list
 		SetValueByName(it->m_name.c_str(), it->m_value, PARAMCONF_XML);
 	}
 }
+
+/// Browse the parameter list to find the parameter with this name
 
 void ParameterStructure::SetValueByName(const string& x_name, const string& x_value, ParameterConfigType x_configType)
 {

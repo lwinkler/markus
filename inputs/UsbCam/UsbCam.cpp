@@ -31,15 +31,14 @@ UsbCam::UsbCam(const std::string& x_name, ConfigReader& x_configReader):
 	m_name(x_name)
 {
 	m_capture = NULL;
-	
-	m_capture = cvCaptureFromCAM( m_param.num );
+	m_capture = cvCreateCameraCapture( m_param.num );
 	m_fps = 0;
 	
 	if(m_capture == NULL)
 	{
 		throw("Error : UsbCam not found ! : " + x_name);
 	}
-	cout<<"Setting "<<m_param.width<<endl;
+	//cout<<"Setting "<<m_param.width<<endl;
 	
 	// Get capture device information
 	//cvSetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH, m_param.width); // not working

@@ -36,20 +36,28 @@ ImageProcessor::ImageProcessor(const string & x_name, int x_nb, ConfigReader& x_
 	vector<ParameterValue> paramList = m_configReader.ReadConfigObjectFromVect("ImageProcessors", "ImageProcessor", x_nb);
 	ParameterValue module = ConfigReader::GetParameterValue("module", paramList);
 	ParameterValue input  = ConfigReader::GetParameterValue("input" , paramList);
-
+	
+	// Get the object class
+	paramList = m_configReader.ReadConfigObject("Module", module.m_value, true);
+	assert(paramList.size() == 1);
+	std::string moduleClass = paramList[0].m_value;
 	// Create all modules types
-	if(module.m_class.compare("SlitCamera") == 0)
+	if(moduleClass.compare("SlitCamera") == 0)
 	{
 		m_module = new SlitCam(module.m_value, m_configReader);
 	}
-	else if(module.m_class.compare("ObjectTracker") == 0)
+	else if(moduleClass.compare("ObjectTracker") == 0)
 	{
 		m_module = new ObjectTracker(module.m_value, m_configReader);
 	}
-	else throw("Module type unknown : " + module.m_class);
+	else throw("Module type unknown : " + moduleClass);
 	
 	// Create all input objects
 	//	check for similar existing input
+	paramList = m_configReader.ReadConfigObject("Input", input.m_value, true);
+	assert(paramList.size() == 1);
+	std::string inputClass = paramList[0].m_value;
+	
 	m_input = NULL;
 	for(vector<Input*>::const_iterator it = xr_inputList.begin() ; it != xr_inputList.end() ; it++)
 	{
@@ -63,15 +71,15 @@ ImageProcessor::ImageProcessor(const string & x_name, int x_nb, ConfigReader& x_
 	if (m_input == NULL)
 	{
 		// Create new input
-		if(input.m_class.compare("UsbCam") == 0)
+		if(inputClass.compare("UsbCam") == 0)
 		{
 			m_input = new UsbCam(input.m_value, m_configReader);
 		}
-		else if(input.m_class.compare("VideoFileReader") == 0)
+		else if(inputClass.compare("VideoFileReader") == 0)
 		{
 			m_input = new VideoFileReader(input.m_value, m_configReader);
 		}
-		else throw("Input type unknown : " + input.m_class);
+		else throw("Input type unknown : " + inputClass);
 
 		xr_inputList.push_back(m_input);
 	}
