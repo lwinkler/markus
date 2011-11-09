@@ -65,7 +65,7 @@ public:
 
 protected:
 	IplImage * m_inputCopy;
-	virtual const ModuleParameterStructure& GetRefParameter() const { return m_param;};
+	inline virtual const ModuleParameterStructure& GetRefParameter() const { return m_param;};
 };
 
 #endif

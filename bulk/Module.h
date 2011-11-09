@@ -65,6 +65,7 @@ public:
 	inline int GetHeight() const {return GetRefParameter().height;}
 	inline int GetDepth() const {return GetRefParameter().depth;}
 	inline int GetNbChannels() const {return GetRefParameter().channels;}
+	inline int GetFps() const {return GetRefParameter().fps;}
 		
 protected:
 	IplImage * m_output;

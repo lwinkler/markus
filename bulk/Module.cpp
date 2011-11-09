@@ -32,7 +32,7 @@ Module::Module(const std::string& x_name, ConfigReader& x_configReader) :
 	Configurable(x_configReader),
 	m_name(x_name)
 {
-	cout<<"*** Create object Module : "<<x_name<<" ***"<<endl;
+	cout<<endl<<"*** Create object Module : "<<x_name<<" ***"<<endl;
 };
 
 

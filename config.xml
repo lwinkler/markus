@@ -32,7 +32,7 @@
         <parameter id="2" name="height">100</parameter>
         <parameter id="3" name="depth">8</parameter>
         <parameter id="4" name="channels">3</parameter>
-        <parameter id="4" name="num">-2</parameter>	
+        <parameter id="4" name="num">-1</parameter>	
 	<parameter id="4" name="fps">1000</parameter>
 </Input>
 
@@ -65,6 +65,7 @@
 	<parameter id="1" name="background_alpha">0.01</parameter>
 	<parameter id="2" name="foreground_thres">0.2</parameter>
 	<parameter id="3" name="foreground_filter_size">3</parameter>
+	<parameter id="4" name="fps">0</parameter>
 </Module>
 <Module name="SlitCamera1">
         <parameter id="2" name="width">160</parameter>
@@ -72,6 +73,7 @@
         <parameter id="4" name="depth">8</parameter>
         <parameter id="5" name="channels">3</parameter>
 	<parameter id="1" name="aperture">1</parameter>
+	<parameter id="4" name="fps">0</parameter>
 </Module>
 <Module name="SlitCamera2">
         <parameter id="2" name="width">640</parameter>
@@ -79,5 +81,6 @@
         <parameter id="4" name="depth">8</parameter>
         <parameter id="5" name="channels">3</parameter>
         <parameter id="1" name="aperture">1</parameter>
+	<parameter id="4" name="fps">1</parameter>
 </Module>
 

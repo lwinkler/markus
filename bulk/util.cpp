@@ -102,7 +102,7 @@ void adjust(const IplImage* im_in, IplImage* im_out, IplImage*& tmp1, IplImage*&
 	{
 		if(tmp1==NULL)
 		{
-			cout<<"create image in adjust tmp1 depth "<<im_out->depth<<endl;
+			//cout<<"create image in adjust tmp1 depth "<<im_out->depth<<endl;
 			tmp1 = cvCreateImage( cvSize(im_out->width, im_out->height), im_out->depth, im_in->nChannels);
 		}
 		adjustSize(im_in, tmp1);
@@ -112,12 +112,12 @@ void adjust(const IplImage* im_in, IplImage* im_out, IplImage*& tmp1, IplImage*&
 	{
 		if(tmp1==NULL)
 		{
-			cout<<"create image in adjust IPL_DEPTH_32F tmp1"<<endl;
+			//cout<<"create image in adjust IPL_DEPTH_32F tmp1"<<endl;
 			tmp1 = cvCreateImage( cvSize(im_out->width, im_out->height), IPL_DEPTH_8U, im_in->nChannels);
 		}
 		if(tmp2==NULL)
 		{
-			cout<<"create image in adjust IPL_DEPTH_32F tmp2"<<endl;
+			//cout<<"create image in adjust IPL_DEPTH_32F tmp2"<<endl;
 			tmp2 = cvCreateImage( cvSize(im_out->width, im_out->height), IPL_DEPTH_32F, im_out->nChannels);
 		}
 		adjustSize(im_in, tmp1);
@@ -128,12 +128,12 @@ void adjust(const IplImage* im_in, IplImage* im_out, IplImage*& tmp1, IplImage*&
 	{
 		if(tmp1==NULL)
 		{
-			cout<<"create image in adjust IPL_DEPTH_32F tmp1"<<endl;
+			//cout<<"create image in adjust IPL_DEPTH_32F tmp1"<<endl;
 			tmp1 = cvCreateImage( cvSize(im_out->width, im_out->height), IPL_DEPTH_32F, im_in->nChannels);
 		}
 		if(tmp2==NULL)
 		{
-			cout<<"create image in adjust IPL_DEPTH_32F tmp2"<<endl;
+			//cout<<"create image in adjust IPL_DEPTH_32F tmp2"<<endl;
 			tmp2 = cvCreateImage( cvSize(im_out->width, im_out->height), IPL_DEPTH_32F, im_out->nChannels);
 		}
 		adjustSize(im_in, tmp1);		
@@ -142,8 +142,7 @@ void adjust(const IplImage* im_in, IplImage* im_out, IplImage*& tmp1, IplImage*&
 	}
 	else
 	{
-		std::cout<<"Error in adjust : depth="<<im_in->depth<<endl;
-		exit(-1);
+		throw("Error in adjust : depth = " + im_in->depth);
 	}
 }
 

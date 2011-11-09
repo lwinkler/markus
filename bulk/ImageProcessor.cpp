@@ -79,6 +79,9 @@ ImageProcessor::ImageProcessor(const string & x_name, int x_nb, ConfigReader& x_
 	m_img_input = cvCreateImage( cvSize(m_module->GetWidth(), m_module->GetHeight()), m_module->GetDepth(), m_module->GetNbChannels());
 	m_img_tmp1 = NULL; // Will be allocated on first call of adjust
 	m_img_tmp2 = NULL;
+	m_timeSinceLastProcessing = 0;
+	m_timeInterval = 0;
+	if(m_module->GetFps() > 0) m_timeInterval = 1.0 / m_module->GetFps();
 }
 
 ImageProcessor::~ImageProcessor()
@@ -90,13 +93,16 @@ ImageProcessor::~ImageProcessor()
 	if(m_img_input != NULL) cvReleaseImage(& m_img_input);
 }
 
-void ImageProcessor::Process()
+void ImageProcessor::Process(double x_timeSinceLast)
 {
-	if(m_input->GetImage() != NULL)
+	m_timeSinceLastProcessing += x_timeSinceLast;
+	//cout<<"Process "<<m_module->GetName()<<" "<<m_timeSinceLastProcessing<<" >= "<<m_timeInterval<<" "<<m_input->GetImage()<<endl;
+	if(m_timeSinceLastProcessing >= m_timeInterval && m_input->GetImage() != NULL)
 	{
 		m_input->m_lock.lockForRead();
 		adjust(m_input->GetImage(), m_img_input, m_img_tmp1, m_img_tmp2);
 		m_input->m_lock.unlock();
 		m_module->ProcessFrame(m_img_input);
+		m_timeSinceLastProcessing = 0;
 	}
 }

@@ -30,10 +30,6 @@ VideoFileReader::VideoFileReader(const std::string& x_name, ConfigReader& x_conf
 	Input(x_name, x_configReader),
 	m_name(x_name)
 {
-	cout<<"*** Create object VideoFileReader : "<<x_name<<" ***"<<endl;
-
-	m_capture = NULL;
-	
 	m_capture = cvCaptureFromFile(m_param.file.c_str());
 	m_fps     = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FPS);
 	

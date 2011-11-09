@@ -30,6 +30,8 @@ Input::Input(const std::string& x_name, ConfigReader& x_configReader):
 	Configurable(x_configReader),
 	m_name(x_name)
 {
+	cout<<endl<<"*** Create object Input : "<<x_name<<" ***"<<endl;
+
 	//m_input = NULL;//cvCreateImage( cvSize(m_width, m_height), IPL_DEPTH_8U, 3);
 }
 

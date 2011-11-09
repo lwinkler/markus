@@ -80,15 +80,18 @@ public:
 private:
 	ManagerParameter m_param;
 	CvVideoWriter * m_writer;
-	int m_key;
+
 	flann::StartStopTimer m_timerConv;
-	flann::StartStopTimer timerProc;
+	flann::StartStopTimer m_timerProc;
+
+	//flann::StartStopTimer 
+	clock_t m_timerLastProcess;
 	
-	std::vector<Module *> m_modules;
-	std::vector<Input  *> m_inputs;
-	std::vector<ImageProcessor  *> m_imageProcessors;
+	std::vector<Module *> 		m_modules;
+	std::vector<Input  *> 		m_inputs;
+	std::vector<ImageProcessor *> 	m_imageProcessors;
 	long long m_frameCount;
 protected:
-	virtual const ParameterStructure& GetRefParameter() const{return m_param;};
+	inline virtual const ParameterStructure& GetRefParameter() const{return m_param;};
 };
 #endif

@@ -57,7 +57,7 @@ Manager::Manager(ConfigReader& x_configReader) :
 	m_param(m_configReader, "Manager"),
 	Configurable(x_configReader)
 {
-	cout<<"*** Create object Manager ***"<<endl;
+	cout<<endl<<"*** Create object Manager ***"<<endl;
 	//m_workIsColor = (m_workChannels==3);	
 	//cout<<"Create Manager : Work image ("<<m_workWidth<<"x"<<m_workHeight<<" depth="<<m_workDepth<<" channels="<<m_workChannels<<")"<<endl;
 	m_frameCount = 0;
@@ -75,11 +75,12 @@ Manager::Manager(ConfigReader& x_configReader) :
 		//not working writer=cvCreateVideoWriter("out.mpg",CV_FOURCC('D', 'I', 'V', '3'), fps,cvSize(frameW,frameH),m_workIsColor);
 	}
 	
-	m_key=0;
-	
 	// Create timers
-	m_timerConv.start();
-			
+	m_timerConv.reset();
+	
+	
+	m_timerLastProcess = clock();
+	
 	m_inputs.clear();
 	m_modules.clear();
 	
@@ -92,7 +93,6 @@ Manager::Manager(ConfigReader& x_configReader) :
 		//m_inputs.push_back(&ip->GetInput());
 		m_modules.push_back(&ip->GetModule());
 	}
-		//m_configReader.ReadConfigObjectFromVect("ImageProcessor", "imageprocessor", i);
 }
 
 Manager::~Manager()
@@ -114,7 +114,12 @@ Manager::~Manager()
 void Manager::Process()
 {
 	m_timerConv.stop();
-	timerProc.start();
+	m_timerProc.start();
+	
+	clock_t tmp = clock();
+	double timecount = ( (double)tmp - m_timerLastProcess) / CLOCKS_PER_SEC;
+	m_timerLastProcess = tmp;
+	cout<<"timecount"<<timecount<<endl;
 	
 	// Aquire input images and process
 	/*for(vector<Input*>::iterator it = m_inputs.begin(); it != m_inputs.end(); it++)
@@ -123,19 +128,20 @@ void Manager::Process()
 	}*/
 	for(vector<ImageProcessor*>::iterator it = m_imageProcessors.begin(); it != m_imageProcessors.end(); it++)
 	{
-		(*it)->Process();
+		
+		(*it)->Process(timecount);
 	}
 	
-	timerProc.stop();
+	m_timerProc.stop();
 	m_timerConv.start();
 
 	m_frameCount++;
 	if(m_frameCount % 100 == 0)
 	{
 		m_timerConv.stop();
-		cout<<m_frameCount<<" frames processed in "<<timerProc.value<<" s "<<m_frameCount/timerProc.value<<" frames/s"<<endl;
+		cout<<m_frameCount<<" frames processed in "<<m_timerProc.value<<" s "<<m_frameCount/m_timerProc.value<<" frames/s"<<endl;
 		cout<<"Time for Input/Output conversion "<<m_timerConv.value<<" s "<<m_frameCount/m_timerConv.value<<" frames/s"<<endl;
-		cout<<"Total time "<<timerProc.value + m_timerConv.value<<" s"<<endl;
+		cout<<"Total time "<<m_timerProc.value + m_timerConv.value<<" s"<<endl;
 		m_timerConv.start();
 	}
 }

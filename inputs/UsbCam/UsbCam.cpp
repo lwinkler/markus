@@ -30,8 +30,6 @@ UsbCam::UsbCam(const std::string& x_name, ConfigReader& x_configReader):
 	Input(x_name, x_configReader),
 	m_name(x_name)
 {
-	cout<<"*** Create object UsbCam : "<<x_name<<" ***"<<endl;
-
 	m_capture = NULL;
 	
 	m_capture = cvCaptureFromCAM( m_param.num );

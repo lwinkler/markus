@@ -60,7 +60,7 @@ public:
 protected:
 	void ReadParametersFromConfig();
 	ConfigReader& m_configReader;
-	virtual const ParameterStructure & GetRefParameter() const = 0;
+	inline virtual const ParameterStructure & GetRefParameter() const = 0;
 };
 
 #endif

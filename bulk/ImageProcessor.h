@@ -29,8 +29,9 @@
 #include "Parameter.h"
 //#include "OutputStream.h"
 #include "Input.h"
+#include "Module.h"
 
-class Module;
+//class Module;
 //class Input;
 
 class ImageProcessorParameterStructure : public ParameterStructure
@@ -53,15 +54,20 @@ public:
 	ImageProcessor(const std::string& x_name, int x_nb, ConfigReader& x_confReader, std::vector<Input*>& x_inputList);
 	~ImageProcessor();
 	
-	void Process();
+	void Process(double x_timeSinceLast);
 	const int & GetNumber(){return m_nb;};
 	
 	Input & GetInput() {return *m_input;}
 	Module & GetModule() {return *m_module;}
 	
+	inline int GetFps() const {return m_module->GetFps();}
+
+	
 protected:
 	//const std::string m_name;
 	const int m_nb;
+	double m_timeSinceLastProcessing;
+	double m_timeInterval;
 	Module * m_module;
 	Input * m_input;
 
@@ -70,7 +76,7 @@ protected:
 	IplImage * m_img_input;
 
 	ImageProcessorParameterStructure m_param;
-	virtual const ParameterStructure& GetRefParameter() const {return m_param;};
+	inline virtual const ParameterStructure& GetRefParameter() const {return m_param;};
 };
 
 #endif

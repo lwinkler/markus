@@ -64,7 +64,7 @@ protected:
 	const std::string m_name;
 	UsbCamParameterStructure m_param;
 	
-	virtual const UsbCamParameterStructure& GetRefParameter() const {return m_param;};
+	inline virtual const UsbCamParameterStructure& GetRefParameter() const {return m_param;};
 };
 
 #endif
