@@ -2,16 +2,16 @@
 
 <ImageProcessors>
 	<ImageProcessor name="ModuleDeTest">
-		<parameter id="0" name="input" class="VideoFileReader">InFile1</parameter>
-		<parameter id="2" name="module" class="SlitCamera">SlitCamera1</parameter>
+		<parameter id="0" name="input">InFile1</parameter>
+		<parameter id="2" name="module">ObjectTracker1</parameter>
 	</ImageProcessor>
 	<ImageProcessor name="ModuleDeTest2">
-                <parameter id="0" name="input" class="UsbCam">MyCam1</parameter>
-                <parameter id="2" name="module" class="ObjectTracker">ObjectTracker1</parameter>
+                <parameter id="0" name="input">MyCam1</parameter>
+                <parameter id="2" name="module">ObjectTracker1</parameter>
         </ImageProcessor>
         <ImageProcessor name="ModuleDeTest3">
-                <parameter id="0" name="input" class="UsbCam">MyCam1</parameter>
-                <parameter id="2" name="module" class="SlitCamera">SlitCamera2</parameter>
+                <parameter id="0" name="input">MyCam1</parameter>
+                <parameter id="2" name="module">SlitCamera2</parameter>
         </ImageProcessor>
 
 </ImageProcessors>

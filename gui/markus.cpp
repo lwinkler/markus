@@ -96,6 +96,9 @@ markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 	createActions();
 	createMenus();
 
+	
+	resizeEvent(NULL);
+
 	setWindowTitle(tr("Markus"));
 }
 
@@ -176,6 +179,12 @@ void markus::createActions()
 	connect(view2x2Act, SIGNAL(triggered()), this, SLOT(view2x2()));
 	view2x3Act = new QAction(tr("View 2x3"), this);
 	connect(view2x3Act, SIGNAL(triggered()), this, SLOT(view2x3()));
+	view3x3Act = new QAction(tr("View 3x3"), this);
+	connect(view3x3Act, SIGNAL(triggered()), this, SLOT(view3x3()));
+	view3x4Act = new QAction(tr("View 3x4"), this);
+	connect(view3x4Act, SIGNAL(triggered()), this, SLOT(view3x4()));
+	view4x4Act = new QAction(tr("View 4x4"), this);
+	connect(view4x4Act, SIGNAL(triggered()), this, SLOT(view4x4()));
 }
 
 void markus::createMenus()
@@ -193,6 +202,9 @@ void markus::createMenus()
 	viewMenu->addAction(view1x2Act);
 	viewMenu->addAction(view2x2Act);
 	viewMenu->addAction(view2x3Act);
+	viewMenu->addAction(view3x3Act);
+	viewMenu->addAction(view3x4Act);
+	viewMenu->addAction(view4x4Act);
 	
 	helpMenu = new QMenu(tr("&Help"), this);
 	helpMenu->addAction(aboutAct);
@@ -214,7 +226,7 @@ void markus::viewDisplayOptions1()
 	int size = m_moduleViewer.size();
 	for(int ind = 0 ; ind < size; ind++)
 	{
-		m_moduleViewer[ind]->toggleDisplayOptions(1);
+		m_moduleViewer[ind]->showDisplayOptions();
 	}
 }
 
@@ -223,7 +235,7 @@ void markus::viewDisplayOptions0()
 	int size = m_moduleViewer.size();
 	for(int ind = 0 ; ind < size; ind++)
 	{
-		m_moduleViewer[ind]->toggleDisplayOptions(0);
+		m_moduleViewer[ind]->hideDisplayOptions();
 	}
 }
 
@@ -256,9 +268,31 @@ void markus::view2x3()
 	resizeEvent(NULL);
 }
 
+void markus::view3x3()
+{
+	nbLines = 3;
+	nbCols = 3;
+	resizeEvent(NULL);
+}
+
+void markus::view3x4()
+{
+	nbLines = 3;
+	nbCols = 4;
+	resizeEvent(NULL);
+}
+
+void markus::view4x4()
+{
+	nbLines = 4;
+	nbCols = 4;
+	resizeEvent(NULL);
+}
+
 
 void markus::resizeEvent(QResizeEvent* event)
 {
+	// hide all modules
 	int size = m_moduleViewer.size();
 	for(int ind = 0 ; ind < size; ind++)
 	{
@@ -267,12 +301,21 @@ void markus::resizeEvent(QResizeEvent* event)
 		m_moduleViewer[ind]->hide();
 	}
 	
+	// Add new module viewers
 	for(int ind = size ; ind < nbLines * nbCols ; ind++)
 	{
 		m_moduleViewer.push_back(new QModuleViewer(&m_manager));
 		m_moduleViewer[ind]->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+		m_moduleViewer[ind]->showDisplayOptions();
 	}
 	
+	// Remove extra modules
+	for(int ind = nbLines * nbCols ; ind < size ; ind++)
+	{
+		delete(m_moduleViewer[ind]);
+	}
+	m_moduleViewer.resize(nbLines * nbCols);
+
 	for (int ii = 0; ii < nbLines; ++ii) 
 	{
 		for (int jj = 0; jj < nbCols; ++jj) 
@@ -280,10 +323,9 @@ void markus::resizeEvent(QResizeEvent* event)
 			int ind = ii * nbCols + jj;
 			m_mainLayout.addWidget(m_moduleViewer[ind], ii, jj);
 			m_moduleViewer[ind]->show();
-			m_moduleViewer[ind]->toggleDisplayOptions(1);
+			//m_moduleViewer[ind]->toggleDisplayOptions(1);
 		}
 	}
 }
-
 
 #include "markus.moc"

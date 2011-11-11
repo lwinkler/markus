@@ -27,6 +27,7 @@
 #include <QComboBox>
 #include <QGroupBox>
 #include <QGridLayout>
+#include <QMenu>
 #include <qevent.h>
 
 #include <QPixmap>
@@ -95,6 +96,18 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	layout->addWidget(gbSettings);
 	setLayout(layout);
 	int index = 0;
+	
+	//set context menu
+	QAction * actionShowDisplayMenu = new QAction(tr("Show display options"), this);
+	actionShowDisplayMenu->setShortcut(tr("Ctrl+S"));
+	QAction * actionHideDisplayMenu = new QAction(tr("Hide display options"), this);
+	actionHideDisplayMenu->setShortcut(tr("Ctrl+H"));
+	connect(actionShowDisplayMenu, SIGNAL(triggered()), this, SLOT(showDisplayOptions()));
+	connect(actionHideDisplayMenu, SIGNAL(triggered()), this, SLOT(hideDisplayOptions()));
+
+	this->addAction(actionShowDisplayMenu);
+	this->addAction(actionHideDisplayMenu);
+	this->setContextMenuPolicy(Qt::ActionsContextMenu);
 	
 	setPalette(QPalette(QColor(0, 0, 40)));
 	setAutoFillBackground(true);
@@ -270,23 +283,14 @@ void QModuleViewer::updateOutputStream(int x_index)
 	updateOutputStream((*it));
 }
 
-void QModuleViewer::toggleDisplayOptions(int choice)
+void QModuleViewer::showDisplayOptions()
 {
-	if(choice == -1)
-	{
-		if(gbSettings->isHidden())
-			choice = 1;
-		else choice = 0;
-	}
-	if(choice == 0)
-	{
-		gbSettings->hide();
-	}
-	else
-	{
-		gbSettings->show();
-	}
+	gbSettings->show();
 }
 
+void QModuleViewer::hideDisplayOptions()
+{
+	gbSettings->hide();
+}
 
 #include "QModuleViewer.moc"

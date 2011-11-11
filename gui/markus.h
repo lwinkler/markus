@@ -88,6 +88,9 @@ private:
 	QAction *view1x2Act;
 	QAction *view2x2Act;
 	QAction *view2x3Act;
+	QAction *view3x3Act;
+	QAction *view3x4Act;
+	QAction *view4x4Act;
 	QAction *aboutAct;
 	QAction *aboutQtAct;
 	
@@ -102,6 +105,9 @@ private slots:
 	void view1x2();
 	void view2x2();
 	void view2x3();
+	void view3x3();
+	void view3x4();
+	void view4x4();
 
 };
 

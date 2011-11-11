@@ -83,7 +83,8 @@ public slots:
 	void updateOutputStream(const OutputStream * x_outputStream);
 	void updateModule(int x_index);
 	void updateOutputStream(int x_index);
-	void toggleDisplayOptions(int choice = -1);
+	void showDisplayOptions();
+	void hideDisplayOptions();
 }; 
 
 #endif
