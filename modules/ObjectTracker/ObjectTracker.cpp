@@ -58,7 +58,7 @@ ObjectTracker::~ObjectTracker(void )
 	cvReleaseImage(&m_output);
 }
 
-void ObjectTracker::ProcessFrame(const IplImage* x_img)
+void ObjectTracker::ProcessFrame(const IplImage* x_img, const double /*x_timeSinceLastProcessing*/)
 {
 	cvCopy(x_img, m_input);
 	

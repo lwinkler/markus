@@ -110,7 +110,7 @@ void ImageProcessor::Process(double x_timeSinceLast)
 		m_input->m_lock.lockForRead();
 		adjust(m_input->GetImage(), m_img_input, m_img_tmp1, m_img_tmp2);
 		m_input->m_lock.unlock();
-		m_module->ProcessFrame(m_img_input);
+		m_module->ProcessFrame(m_img_input, m_timeSinceLastProcessing);
 		m_timeSinceLastProcessing = 0;
 	}
 }

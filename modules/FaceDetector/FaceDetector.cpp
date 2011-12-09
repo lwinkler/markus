@@ -21,52 +21,34 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef SLITCAM_H
-#define SLITCAM_H
+#include "FaceDetector.h"
 
-#include <cv.h>
-#include "Module.h"
-#include "Parameter.h"
+#include <iostream>
+#include <cstdio>
+#include <highgui.h>
 
-
-/*! \class SlitCam
- *  \brief Class containing methods/attributes of a slit camera
- *
- */
+using namespace std;
 
 
-class SlitCamParameter : public ModuleParameterStructure
+const char * FaceDetector::m_type = "FaceDetector";
+
+
+FaceDetector::FaceDetector(const std::string& x_name, ConfigReader& x_configReader) 
+	 : m_param(x_configReader, x_name), ModuleAsync(x_name, x_configReader)
 {
 	
-public:
-	SlitCamParameter(ConfigReader& x_confReader, const std::string& x_moduleName) : 
-		ModuleParameterStructure(x_confReader, x_moduleName)
-	{
-		m_list.push_back(new ParameterT<int>(0, "aperture", 1, PARAM_INT, 1, 10, &aperture));
-		
-		ParameterStructure::Init();
-	};
-	
-	int aperture;
-};
+	// Init output images
+//	m_outputStreams.push_back(new OutputStream("slit", STREAM_OUTPUT, m_output));
+//	m_outputStreams.push_back(new OutputStream("input", STREAM_OUTPUT, m_inputCopy));
+}
 
-class SlitCam : public Module
+FaceDetector::~FaceDetector(void)
 {
-private:
-	SlitCamParameter m_param;
-	int m_position;
-	static const char * m_type;
-public:
-	SlitCam(const std::string& x_name, ConfigReader& x_configReader);
-	~SlitCam(void);
-	//void CreateParamWindow();
-	
-	virtual void ProcessFrame(const IplImage * img, const double x_timeSinceLastProcessing);
+	//TODO : delete output streams
+}
 
-protected:
-	IplImage * m_inputCopy;
-	inline virtual const ModuleParameterStructure& GetRefParameter() const { return m_param;};
-};
+void FaceDetector::ThreadProcess(const IplImage* img, const double x_timeSinceLastProcessing)
+{
 
-#endif
+}
 

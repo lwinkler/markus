@@ -18,6 +18,7 @@ gui/markus.cpp
 gui/QModuleViewer.cpp 
 main.cpp 
 bulk/Module.cpp
+bulk/ModuleAsync.cpp
 bulk/Manager.cpp
 bulk/Input.cpp
 inputs/UsbCam/UsbCam.cpp
@@ -34,6 +35,7 @@ tools/cvblobs/Blob.cpp
 tools/Detector.cpp
 modules/SlitCam/SlitCam.cpp
 modules/ObjectTracker/ObjectTracker.cpp
+modules/FaceDetector/FaceDetector.cpp
 )
 
 qt4_automoc(${markus_SRCS})

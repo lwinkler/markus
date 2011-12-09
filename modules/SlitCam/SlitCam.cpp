@@ -56,7 +56,7 @@ SlitCam::~SlitCam(void)
 	//TODO : delete output streams
 }
 
-void SlitCam::ProcessFrame(const IplImage * x_img)
+void SlitCam::ProcessFrame(const IplImage * x_img, const double /*x_timeSinceLastProcessing*/)
 {
 	cvCopy(x_img, m_inputCopy);
 	int widthStep = x_img->widthStep;
