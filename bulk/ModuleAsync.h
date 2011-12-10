@@ -52,14 +52,13 @@ public:
 public:
 };
 
-class ModuleAsync : Module
+class ModuleAsync : public Module
 {
 public:
 	ModuleAsync(const std::string& x_name, ConfigReader& x_confReader);
 	virtual ~ModuleAsync();
 	
 	virtual void ProcessFrame(const IplImage * m_input, const double x_timeSinceLastProcessing);
-	virtual void ThreadProcess() = 0;
 	//const std::string& GetName(){return m_name;};
 	//const IplImage * GetOutput(){return m_output;}
 	
@@ -75,6 +74,10 @@ protected:
 //	std::vector<OutputStream *> m_outputStreams;
 	ThreadStatus m_threadStatus;
 	virtual const ModuleAsyncParameterStructure & GetRefParameter() const = 0;
+	
+	virtual void ThreadProcess(const IplImage* m_input, const double x_timeSinceLastProcessing) = 0;
+	virtual void PreProcess(const IplImage * img, const double x_timeSinceLastProcessing) = 0;
+	virtual void PostProcess(const IplImage * img, const double x_timeSinceLastProcessing) = 0;
 };
 
 #endif

@@ -72,8 +72,8 @@ public:
 protected:
 	IplImage * m_output;
 	const std::string m_name;
-	std::vector<OutputStream *> m_outputStreams;
 	virtual const ModuleParameterStructure & GetRefParameter() const = 0;
+	std::vector<OutputStream *> m_outputStreams;
 };
 
 #endif

@@ -55,7 +55,7 @@ void convertByte2Float(const IplImage *byte_img, IplImage *float_img)
 }
 
 
-void convertFloat2Byte(const IplImage *float_img,IplImage *byte_img)
+void convertFloat2Byte(const IplImage *float_img, IplImage *byte_img)
 {
 	if( (byte_img->width != float_img->width) ||
 		(byte_img->height != float_img->height) ||
@@ -118,7 +118,7 @@ void adjust(const IplImage* im_in, IplImage* im_out, IplImage*& tmp1, IplImage*&
 		if(tmp2==NULL)
 		{
 			//cout<<"create image in adjust IPL_DEPTH_32F tmp2"<<endl;
-			tmp2 = cvCreateImage( cvSize(im_out->width, im_out->height), IPL_DEPTH_32F, im_out->nChannels);
+			tmp2 = cvCreateImage( cvSize(im_out->width, im_out->height), IPL_DEPTH_8U, im_out->nChannels);
 		}
 		adjustSize(im_in, tmp1);
 		adjustChannels(tmp1, tmp2);
@@ -142,8 +142,10 @@ void adjust(const IplImage* im_in, IplImage* im_out, IplImage*& tmp1, IplImage*&
 	}
 	else
 	{
-		throw("Error in adjust : depth = " + im_in->depth);
+		printf("Cannot convert from %d to %d\n", im_in->depth, im_out->depth);
+		throw(string("Error in adjust : depth ")); 
 	}
+	// TODO : maybe use cvConvertScale(tmp2,im_out,255,0);
 }
 
 /* Set the image to the right number of channels */

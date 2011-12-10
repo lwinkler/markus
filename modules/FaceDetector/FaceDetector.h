@@ -35,34 +35,49 @@
  */
 
 
-class FaceDetectorParameter : public ModuleParameterStructure
+class FaceDetectorParameterStructure : public ModuleAsyncParameterStructure
 {
 	
 public:
-	FaceDetectorParameter(ConfigReader& x_confReader, const std::string& x_moduleName) : 
-		ModuleParameterStructure(x_confReader, x_moduleName)
+	FaceDetectorParameterStructure(ConfigReader& x_confReader, const std::string& x_moduleName) : 
+		ModuleAsyncParameterStructure(x_confReader, x_moduleName)
 	{
-		//m_list.push_back(new ParameterT<int>(0, "aperture", 1, PARAM_INT, 1, 10, &aperture));
+		m_list.push_back(new ParameterT<int>(0, "minNeighbors", 0, PARAM_INT, 0, 100, &minNeighbors));
+		m_list.push_back(new ParameterT<int>(0, "minFaceSide", 0, PARAM_INT, 0, 200, &minFaceSide));
+		m_list.push_back(new ParameterT<float>(0, "scaleFactor", 1.2, PARAM_FLOAT, 1, 2, &scaleFactor));
+		m_list.push_back(new ParameterT<std::string>(0, "filterFile", "modules/FaceDetector/lbpcascade_frontalface.xml", PARAM_STR, &filterFile));
 		
 		ParameterStructure::Init();
 	};
 	
-	//int aperture;
+	int minNeighbors;
+	int minFaceSide;
+	float scaleFactor;
+	std::string filterFile;
 };
 
 class FaceDetector : public ModuleAsync
 {
 private:
-	FaceDetectorParameter m_param;
+	FaceDetectorParameterStructure m_param;
 	static const char * m_type;
+	
+	cv::CascadeClassifier m_cascade;
+	std::vector<cv::Rect> m_faces;
 public:
 	FaceDetector(const std::string& x_name, ConfigReader& x_configReader);
 	~FaceDetector(void);
 	//void CreateParamWindow();
 	
+	virtual void PreProcess(const IplImage * img, const double x_timeSinceLastProcessing);
 	virtual void ThreadProcess(const IplImage * img, const double x_timeSinceLastProcessing);
+	virtual void PostProcess(const IplImage * img, const double x_timeSinceLastProcessing);
 
 protected:
+	
+private:
+	inline virtual const FaceDetectorParameterStructure& GetRefParameter() const { return m_param;};
+
 };
 
 #endif

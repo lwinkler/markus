@@ -6,6 +6,7 @@ find_package(OpenCV REQUIRED)
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR} bulk gui
 modules/SlitCam
 modules/ObjectTracker
+modules/FaceDetector
 inputs/UsbCam
 inputs/VideoFileReader
 tools

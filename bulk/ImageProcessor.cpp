@@ -24,6 +24,8 @@
 #include "ImageProcessor.h"
 #include "SlitCam.h"
 #include "ObjectTracker.h"
+#include "FaceDetector.h"
+
 #include "util.h"
 #include "UsbCam.h"
 #include "VideoFileReader.h"
@@ -49,6 +51,10 @@ ImageProcessor::ImageProcessor(const string & x_name, int x_nb, ConfigReader& x_
 	else if(moduleClass.compare("ObjectTracker") == 0)
 	{
 		m_module = new ObjectTracker(module.m_value, m_configReader);
+	}
+	else if(moduleClass.compare("FaceDetector") == 0)
+	{
+		m_module = new FaceDetector(module.m_value, m_configReader);
 	}
 	else throw("Module type unknown : " + moduleClass);
 	
