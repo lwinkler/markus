@@ -40,49 +40,38 @@ FaceDetector::FaceDetector(const std::string& x_name, ConfigReader& x_configRead
 	 : m_param(x_configReader, x_name), ModuleAsync(x_name, x_configReader)
 {
 	// Init output images
-	assert(m_cascade.load( m_param.filterFile ));
-	assert(!m_cascade.empty());
+	assert(m_thread.m_cascade.load( m_param.filterFile ));
+	assert(!m_thread.m_cascade.empty());
 	m_output = cvCreateImage(cvSize(m_param.width, m_param.height), m_param.depth, 3);
 
 	m_outputStreams.push_back(new OutputStream("faceDetector", STREAM_OUTPUT, m_output));
 //	m_outputStreams.push_back(new OutputStream("input", STREAM_OUTPUT, m_inputCopy));
+	m_lastInput = cvCreateImage( cvSize(GetWidth(), GetHeight()), GetDepth(), GetNbChannels());
 }
 
 FaceDetector::~FaceDetector(void)
 {
 	cvReleaseImage(&m_output);
+	cvReleaseImage(&m_lastInput);
 
 	//TODO : delete output streams
 }
 
-void FaceDetector::PreProcess(const IplImage* img, const double x_timeSinceLastProcessing)
+// This method launches the thread
+void FaceDetector::LaunchThread(const IplImage* img, const double x_timeSinceLastProcessing)
 {
-//	assert(img->depth == IPL_DEPTH_8U);
-//	assert(img->nChannels == 1);
-}
-
-
-void FaceDetector::ThreadProcess(const IplImage* img, const double x_timeSinceLastProcessing)
-{
-	 cv::CascadeClassifier cascade; 
-    double scale = 1; 
-
-	if( !cascade.load( m_param.filterFile ) ) 
-	{ 
-		printf("Cascade Error: Could not load cascade file, please check the path\n"); 
-	} 
-	
-	m_faces.clear();
-	Mat smallImg(img, false);
+	cvCopy(img, m_lastInput);
+	Mat smallImg(m_lastInput, false);
 	equalizeHist( smallImg, smallImg );
-	//cout<<"m_cascade.detectMultiScale("<<", "<<m_param.scaleFactor<<" "<<m_param.minNeighbors<<" "<<m_param.minFaceSize<<endl;
-	cascade.detectMultiScale(smallImg, m_faces, m_param.scaleFactor, m_param.minNeighbors, CV_HAAR_SCALE_IMAGE, cvSize(m_param.minFaceSide, m_param.minFaceSide));
-//	cout<<" found "<<m_faces.size()<<endl;
+	// Launch a new Thread
+	m_faces = m_thread.GetDetectedObjects();
+	m_thread.SetData(smallImg, m_param.minNeighbors, m_param.minFaceSide, m_param.scaleFactor);
+	m_thread.start();
 }
 
-void FaceDetector::PostProcess(const IplImage* img, const double x_timeSinceLastProcessing)
+void FaceDetector::NormalProcess(const IplImage* img, const double x_timeSinceLastProcessing)
 {
-	cvConvertImage(img, m_output);
+	cvConvertImage(m_lastInput, m_output);
 	for(vector<Rect>::const_iterator it = m_faces.begin() ; it != m_faces.end() ; it++)
 	{
 		Point p1(it->x, it->y);
@@ -91,4 +80,11 @@ void FaceDetector::PostProcess(const IplImage* img, const double x_timeSinceLast
 		// Draw the rectangle in the input image
 		cvRectangle( m_output, p1, p2, CV_RGB(255,0,0), 1, 8, 0 );
         }
+}
+
+
+void DetectionThread::run()
+{
+	m_cascade.detectMultiScale(m_smallImg, m_faces, m_scaleFactor, m_minNeighbors, CV_HAAR_SCALE_IMAGE, cvSize(m_minFaceSide, m_minFaceSide));
+	//QThread::run();
 }

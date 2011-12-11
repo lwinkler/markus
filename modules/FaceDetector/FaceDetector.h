@@ -28,6 +28,7 @@
 #include "ModuleAsync.h"
 #include "Parameter.h"
 
+#include <QThread>
 
 /*! \class FaceDetector
  *  \brief Class containing methods/attributes of a slit camera
@@ -56,25 +57,57 @@ public:
 	std::string filterFile;
 };
 
+class DetectionThread : public QThread
+{
+public:
+	explicit DetectionThread(QObject* parent = 0) {};
+	virtual ~DetectionThread()
+	{
+		exit();
+		wait();
+	}
+	void SetData(const cv::Mat & xr_smallImg, int x_minNeighbors, int x_minFaceSide, float x_scaleFactor)
+	{
+		xr_smallImg.copyTo(m_smallImg);
+		m_minNeighbors = x_minNeighbors;
+		m_minFaceSide = x_minFaceSide;
+		m_scaleFactor = x_scaleFactor;
+	}
+	virtual void run();
+	
+	cv::CascadeClassifier m_cascade;
+	std::vector<cv::Rect> GetDetectedObjects() const{ return m_faces;};
+
+private:
+	cv::Mat m_smallImg;
+	int m_minNeighbors;
+	int m_minFaceSide;
+	float m_scaleFactor;
+	
+	std::vector<cv::Rect> m_faces;
+};
+
 class FaceDetector : public ModuleAsync
 {
 private:
 	FaceDetectorParameterStructure m_param;
 	static const char * m_type;
 	
-	cv::CascadeClassifier m_cascade;
+	//cv::CascadeClassifier m_cascade;
 	std::vector<cv::Rect> m_faces;
+	
+	DetectionThread m_thread;
 public:
 	FaceDetector(const std::string& x_name, ConfigReader& x_configReader);
 	~FaceDetector(void);
 	//void CreateParamWindow();
 	
-	virtual void PreProcess(const IplImage * img, const double x_timeSinceLastProcessing);
-	virtual void ThreadProcess(const IplImage * img, const double x_timeSinceLastProcessing);
-	virtual void PostProcess(const IplImage * img, const double x_timeSinceLastProcessing);
+	virtual void LaunchThread(const IplImage * img, const double x_timeSinceLastProcessing);
+	virtual void NormalProcess(const IplImage * img, const double x_timeSinceLastProcessing);
 
 protected:
-	
+	virtual const QThread & GetRefThread(){return m_thread;};
+
 private:
 	inline virtual const FaceDetectorParameterStructure& GetRefParameter() const { return m_param;};
 

@@ -26,13 +26,7 @@
 
 #include "cv.h"
 #include "Module.h"
-
-enum ThreadStatus
-{
-	ThreadStatusRunning,
-	ThreadStatusStopped,
-	ThreadStatusWaiting
-};
+#include <QThread>
 
 class ModuleAsyncParameterStructure : public ModuleParameterStructure
 {
@@ -72,12 +66,12 @@ protected:
 //	IplImage * m_output;
 //	const std::string m_name;
 //	std::vector<OutputStream *> m_outputStreams;
-	ThreadStatus m_threadStatus;
+//	ThreadStatus m_threadStatus;
+	IplImage * m_lastInput;
 	virtual const ModuleAsyncParameterStructure & GetRefParameter() const = 0;
-	
-	virtual void ThreadProcess(const IplImage* m_input, const double x_timeSinceLastProcessing) = 0;
-	virtual void PreProcess(const IplImage * img, const double x_timeSinceLastProcessing) = 0;
-	virtual void PostProcess(const IplImage * img, const double x_timeSinceLastProcessing) = 0;
+	virtual const QThread & GetRefThread() = 0;
+	virtual void LaunchThread(const IplImage* m_input, const double x_timeSinceLastProcessing) = 0;
+	virtual void NormalProcess(const IplImage * img, const double x_timeSinceLastProcessing) = 0;
 };
 
 #endif

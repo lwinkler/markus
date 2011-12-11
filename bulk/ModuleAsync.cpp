@@ -33,7 +33,6 @@ ModuleAsync::ModuleAsync(const std::string& x_name, ConfigReader& x_configReader
 	//m_name(x_name)
 {
 	cout<<endl<<"*** Create object ModuleAsync : "<<x_name<<" ***"<<endl;
-	m_threadStatus = ThreadStatusWaiting;
 };
 
 void ModuleAsync::ProcessFrame(const IplImage* m_input, const double x_timeSinceLastProcessing)
@@ -47,10 +46,11 @@ void ModuleAsync::ProcessFrame(const IplImage* m_input, const double x_timeSince
 		
 	}
 */
-	
-	PreProcess(m_input, x_timeSinceLastProcessing);
-	ThreadProcess(m_input, x_timeSinceLastProcessing);
-	PostProcess(m_input, x_timeSinceLastProcessing);
+	if(!GetRefThread().isRunning())
+	{
+		LaunchThread(m_input, x_timeSinceLastProcessing);
+	}
+	NormalProcess(m_input, x_timeSinceLastProcessing);
 
 }
 

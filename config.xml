@@ -3,7 +3,7 @@
 <ImageProcessors>
 	<ImageProcessor name="ModuleDeTest">
 		<parameter id="0" name="input">InFile1</parameter>
-		<parameter id="2" name="module">ObjectTracker1</parameter>
+		<parameter id="2" name="module">FaceDetector2</parameter>
 	</ImageProcessor>
 	<ImageProcessor name="ModuleDeTest2">
                 <parameter id="0" name="input">MyCam1</parameter>
@@ -91,8 +91,8 @@
 </Module>
 <Module name="FaceDetector1">
         <parameter id="0" name="class">FaceDetector</parameter>
-        <parameter id="2" name="width">64</parameter>
-        <parameter id="3" name="height">48</parameter>
+        <parameter id="2" name="width">1280</parameter>
+        <parameter id="3" name="height">960</parameter>
         <parameter id="4" name="depth">8</parameter>
         <parameter id="5" name="channels">1</parameter>
         <parameter id="6" name="fps">10</parameter>
@@ -101,3 +101,17 @@
         <parameter id="9" name="scaleFactor">1.1</parameter>
         <parameter id="4" name="filterFile">modules/FaceDetector/lbpcascade_frontalface.xml</parameter>
 </Module>
+
+<Module name="FaceDetector2">
+        <parameter id="0" name="class">FaceDetector</parameter>
+        <parameter id="2" name="width">320</parameter>
+        <parameter id="3" name="height">240</parameter>
+        <parameter id="4" name="depth">8</parameter>
+        <parameter id="5" name="channels">1</parameter>
+        <parameter id="6" name="fps">10</parameter>
+        <parameter id="7" name="minNeighbors">3</parameter>
+        <parameter id="8" name="minFaceSide">0</parameter>
+        <parameter id="9" name="scaleFactor">1.1</parameter>
+        <parameter id="4" name="filterFile">modules/FaceDetector/haarcascade_fullbody.xml</parameter>
+</Module>
+
