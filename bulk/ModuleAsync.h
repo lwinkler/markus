@@ -33,17 +33,11 @@ class ModuleAsyncParameterStructure : public ModuleParameterStructure
 public:
 	ModuleAsyncParameterStructure(ConfigReader& x_confReader, const std::string& x_moduleName) : ModuleParameterStructure(x_confReader, x_moduleName)
 	{
-		/*
-		m_list.push_back(new ParameterT<std::string>(0, "class", 		"", 	PARAM_STR, 			&objClass));
-		m_list.push_back(new ParameterT<int>(0, "width", 		640, 	PARAM_INT, 	0, 	4000,	&width));
-		m_list.push_back(new ParameterT<int>(0, "height", 	480, 	PARAM_INT, 	0, 	3000,		&height));
-		m_list.push_back(new ParameterT<int>(0, "depth", 	IPL_DEPTH_8U, PARAM_INT, 	0, 	32,	&depth));
-		m_list.push_back(new ParameterT<int>(0, "channels", 	3, 	PARAM_INT, 	1, 	3,		&channels));
-		m_list.push_back(new ParameterT<double>(0, "fps", 	10, 	PARAM_DOUBLE, 	0, 	100,		&fps));
-		*/		
+		m_list.push_back(new ParameterT<double>(0, "detectionFps", 	10, 	PARAM_DOUBLE, 	0, 	100,		&detectionFps));
 	};
 
 public:
+	double detectionFps;
 };
 
 class ModuleAsync : public Module
@@ -68,10 +62,14 @@ protected:
 //	std::vector<OutputStream *> m_outputStreams;
 //	ThreadStatus m_threadStatus;
 	IplImage * m_lastInput;
+	double m_timeSinceLastThread;
+	bool m_resultsCopied;
+
 	virtual const ModuleAsyncParameterStructure & GetRefParameter() const = 0;
 	virtual const QThread & GetRefThread() = 0;
 	virtual void LaunchThread(const IplImage* m_input, const double x_timeSinceLastProcessing) = 0;
 	virtual void NormalProcess(const IplImage * img, const double x_timeSinceLastProcessing) = 0;
+	virtual void CopyResults() = 0;
 };
 
 #endif

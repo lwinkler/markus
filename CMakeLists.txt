@@ -6,7 +6,7 @@ find_package(OpenCV REQUIRED)
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR} bulk gui
 modules/SlitCam
 modules/ObjectTracker
-modules/FaceDetector
+modules/CascadeDetector
 inputs/UsbCam
 inputs/VideoFileReader
 tools
@@ -36,7 +36,7 @@ tools/cvblobs/Blob.cpp
 tools/Detector.cpp
 modules/SlitCam/SlitCam.cpp
 modules/ObjectTracker/ObjectTracker.cpp
-modules/FaceDetector/FaceDetector.cpp
+modules/CascadeDetector/CascadeDetector.cpp
 )
 
 qt4_automoc(${markus_SRCS})

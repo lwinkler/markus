@@ -33,25 +33,35 @@ ModuleAsync::ModuleAsync(const std::string& x_name, ConfigReader& x_configReader
 	//m_name(x_name)
 {
 	cout<<endl<<"*** Create object ModuleAsync : "<<x_name<<" ***"<<endl;
+	m_timeSinceLastThread = 1e99;
+	m_resultsCopied = false;
 };
 
 void ModuleAsync::ProcessFrame(const IplImage* m_input, const double x_timeSinceLastProcessing)
 {
-/*	if(m_threadStatus == ThreadStatusRunning)
+	m_timeSinceLastThread += x_timeSinceLastProcessing;
+	
+	if(!m_resultsCopied && !GetRefThread().isRunning())
 	{
-		
+		CopyResults();
+		m_resultsCopied = true;
 	}
-	else if(m_threadStatus == ThreadStatusWaiting)
+	
+	if(m_timeSinceLastThread >= 1 / GetRefParameter().detectionFps)
 	{
-		
-	}
-*/
-	if(!GetRefThread().isRunning())
-	{
-		LaunchThread(m_input, x_timeSinceLastProcessing);
+		if(!GetRefThread().isRunning())
+		{
+			LaunchThread(m_input, x_timeSinceLastProcessing);
+			m_resultsCopied = false;
+		}
+		else
+		{
+			// thread is taking too long
+			cout<<"Thread too slow, frame dropped : "<<m_timeSinceLastThread<<" [s]"<<endl;
+		}
+		m_timeSinceLastThread = 0;
 	}
 	NormalProcess(m_input, x_timeSinceLastProcessing);
-
 }
 
 

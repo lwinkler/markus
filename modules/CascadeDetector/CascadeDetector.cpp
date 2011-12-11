@@ -21,7 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "FaceDetector.h"
+#include "CascadeDetector.h"
 
 #include <iostream>
 #include <cstdio>
@@ -33,10 +33,10 @@ using namespace std;
 using namespace cv;
 
 
-const char * FaceDetector::m_type = "FaceDetector";
+const char * CascadeDetector::m_type = "CascadeDetector";
 
 
-FaceDetector::FaceDetector(const std::string& x_name, ConfigReader& x_configReader) 
+CascadeDetector::CascadeDetector(const std::string& x_name, ConfigReader& x_configReader) 
 	 : m_param(x_configReader, x_name), ModuleAsync(x_name, x_configReader)
 {
 	// Init output images
@@ -49,7 +49,7 @@ FaceDetector::FaceDetector(const std::string& x_name, ConfigReader& x_configRead
 	m_lastInput = cvCreateImage( cvSize(GetWidth(), GetHeight()), GetDepth(), GetNbChannels());
 }
 
-FaceDetector::~FaceDetector(void)
+CascadeDetector::~CascadeDetector(void)
 {
 	cvReleaseImage(&m_output);
 	cvReleaseImage(&m_lastInput);
@@ -58,18 +58,19 @@ FaceDetector::~FaceDetector(void)
 }
 
 // This method launches the thread
-void FaceDetector::LaunchThread(const IplImage* img, const double x_timeSinceLastProcessing)
+void CascadeDetector::LaunchThread(const IplImage* img, const double x_timeSinceLastProcessing)
 {
 	cvCopy(img, m_lastInput);
 	Mat smallImg(m_lastInput, false);
 	equalizeHist( smallImg, smallImg );
+	
+	
 	// Launch a new Thread
-	m_faces = m_thread.GetDetectedObjects();
 	m_thread.SetData(smallImg, m_param.minNeighbors, m_param.minFaceSide, m_param.scaleFactor);
 	m_thread.start();
 }
 
-void FaceDetector::NormalProcess(const IplImage* img, const double x_timeSinceLastProcessing)
+void CascadeDetector::NormalProcess(const IplImage* img, const double x_timeSinceLastProcessing)
 {
 	cvConvertImage(m_lastInput, m_output);
 	for(vector<Rect>::const_iterator it = m_faces.begin() ; it != m_faces.end() ; it++)
@@ -82,6 +83,10 @@ void FaceDetector::NormalProcess(const IplImage* img, const double x_timeSinceLa
         }
 }
 
+void CascadeDetector::CopyResults()
+{
+	m_faces = m_thread.GetDetectedObjects();
+}
 
 void DetectionThread::run()
 {
