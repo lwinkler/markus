@@ -21,18 +21,30 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
+#ifndef STREAM_IMAGE_H
+#define STREAM_IMAGE_H
+
+#include "cv.h"
+
 #include "OutputStream.h"
 
 
-OutputStream::OutputStream(const std::string& x_name, StreamType x_type, int x_width, int x_height) :
-	m_name(x_name),
-	m_type(x_type),
-	m_width(x_width),
-	m_height(x_height)
+class StreamImage : public OutputStream
 {
-}
+public:
+	StreamImage(const std::string& x_name, StreamType x_type, IplImage* x_image);
+	~StreamImage();
+	const std::string& GetName() const {return m_name;};
+	const IplImage* GetImageRef() const {return m_image;};
+	inline int GetWidth() const {return m_width;};
+	inline int GetHeight() const {return m_height;};
+	
+	virtual void Render(IplImage * xp_output) const;
+protected:
+	const IplImage * m_image;
+private:
+	StreamImage& operator=(const StreamImage&);
+	StreamImage(const StreamImage&);
+};
 
-OutputStream::~OutputStream()
-{
-
-}
+#endif

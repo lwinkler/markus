@@ -44,12 +44,12 @@ ObjectTracker::ObjectTracker(const std::string& x_name, ConfigReader& x_configRe
 	cvSet( m_img_blur, cvScalar(0,0,0));
 	detect.Reset();
 	track.Reset();
-	m_outputStreams.push_back(new OutputStream("input", STREAM_DEBUG, m_img_blur));
-	m_outputStreams.push_back(new OutputStream("background", STREAM_DEBUG, detect.GetBackground()));
-	m_outputStreams.push_back(new OutputStream("foreground", STREAM_DEBUG, detect.GetForeground()));
-	m_outputStreams.push_back(new OutputStream("foreground_rff", STREAM_DEBUG, detect.GetForegroundRff()));
-	//m_outputStreams.push_back(OutputStream("blobs", STREAM_DEBUG, track.GetBlobsImg()));
-	m_outputStreams.push_back(new OutputStream("tracker", STREAM_OUTPUT, m_output));
+	m_outputStreams.push_back(new StreamImage("input", STREAM_IMAGE_DEBUG, m_img_blur));
+	m_outputStreams.push_back(new StreamImage("background", STREAM_IMAGE_DEBUG, detect.GetBackground()));
+	m_outputStreams.push_back(new StreamImage("foreground", STREAM_IMAGE_DEBUG, detect.GetForeground()));
+	m_outputStreams.push_back(new StreamImage("foreground_rff", STREAM_IMAGE_DEBUG, detect.GetForegroundRff()));
+	//m_outputStreams.push_back(StreamImage("blobs", STREAM_IMAGE_DEBUG, track.GetBlobsImg()));
+	m_outputStreams.push_back(new StreamImage("tracker", STREAM_IMAGE, m_output));
 }
 
 ObjectTracker::~ObjectTracker(void )

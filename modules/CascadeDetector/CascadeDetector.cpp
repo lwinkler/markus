@@ -43,11 +43,11 @@ CascadeDetector::CascadeDetector(const std::string& x_name, ConfigReader& x_conf
 	assert(m_thread.m_cascade.load( m_param.filterFile ));
 	assert(!m_thread.m_cascade.empty());
 	m_debug = cvCreateImage(cvSize(m_param.width, m_param.height), m_param.depth, 3);
-	m_output = NULL;// No video output //cvCreateImage(cvSize(m_param.width, m_param.height), m_param.depth, 3);
+	m_output = cvCreateImage(cvSize(m_param.width, m_param.height), m_param.depth, 3);
 
-	m_outputStreams.push_back(new OutputStream("faceDetector", STREAM_OUTPUT, m_output));
-	m_outputStreams.push_back(new OutputStream("debug", STREAM_DEBUG, m_debug));
-//	m_outputStreams.push_back(new OutputStream("input", STREAM_OUTPUT, m_inputCopy));
+	m_outputStreams.push_back(new StreamImage("faceDetector", STREAM_IMAGE, m_output));
+	m_outputStreams.push_back(new StreamImage("debug", STREAM_IMAGE_DEBUG, m_debug));
+//	m_outputStreams.push_back(new StreamImage("input", STREAM_IMAGE, m_inputCopy));
 	m_lastInput = cvCreateImage( cvSize(GetWidth(), GetHeight()), GetDepth(), GetNbChannels());
 }
 
@@ -75,7 +75,7 @@ void CascadeDetector::LaunchThread(const IplImage* img, const double x_timeSince
 void CascadeDetector::NormalProcess(const IplImage* img, const double x_timeSinceLastProcessing)
 {
 	cvConvertImage(m_lastInput, m_debug);
-	OutputStream& os(*m_outputStreams[0]);
+	/*OutputStream& os(*m_outputStreams[0]);
 	os.ClearRect();
 	for(vector<Rect>::const_iterator it = m_faces.begin() ; it != m_faces.end() ; it++)
 	{
@@ -88,7 +88,7 @@ void CascadeDetector::NormalProcess(const IplImage* img, const double x_timeSinc
 		
 		// Add rectangle to output streams
 		os.AddRect(cv::Rect(p1, p2));
-        }
+        }*/
 }
 
 void CascadeDetector::CopyResults()

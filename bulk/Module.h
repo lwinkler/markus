@@ -28,6 +28,7 @@
 #include "ConfigReader.h"
 #include "Parameter.h"
 #include "OutputStream.h"
+#include "StreamImage.h"
 
 class ModuleParameterStructure : public ParameterStructure
 {

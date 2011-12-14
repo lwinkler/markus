@@ -36,6 +36,7 @@
 #include "Manager.h"
 #include "Module.h"
 #include "util.h"
+#include "StreamImage.h"
 
 // Constructor
 QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidget(parent)
@@ -147,7 +148,6 @@ QModuleViewer::~QModuleViewer(void)
 void QModuleViewer::resizeEvent(QResizeEvent * e)
 {
 	// Keep proportionality
-	const IplImage * cvimage = m_currentOutputStream->GetImageRef();
 	double ratio = static_cast<double>(m_currentOutputStream->GetHeight()) / m_currentOutputStream->GetWidth();
 	
 	m_outputWidth  = e->size().width();
@@ -189,13 +189,16 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 void QModuleViewer::paintEvent(QPaintEvent * e) 
 {
 	int cvIndex, cvLineStart;
-	const IplImage * cvimage = m_currentOutputStream->GetImageRef();
+	IplImage * cvimage = NULL; // m_currentOutputStream->GetImageRef();
 	
+	if(cvimage == NULL)
+		cvimage = cvCreateImage( cvSize(m_currentOutputStream->GetWidth(), m_currentOutputStream->GetHeight()), IPL_DEPTH_8U, 3);
 	if(m_img_output == NULL)
 		m_img_output = cvCreateImage( cvSize(m_outputWidth, m_outputHeight), IPL_DEPTH_8U, 3);
 	// Write output to screen
 	// TODO : Copy below
-	if(cvimage->nChannels == 3)
+	m_currentOutputStream->Render(cvimage);
+	if(m_img_output->nChannels == 3)
 		adjust(cvimage, m_img_output, m_img_tmp1_c3, m_img_tmp2_c3);
 	else
 		adjust(cvimage, m_img_output, m_img_tmp1_c1, m_img_tmp2_c1);
@@ -205,14 +208,6 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 		case IPL_DEPTH_8U:
 			switch (m_img_output->nChannels) {
 				case 3:
-					/*if ( (m_img_output->width != m_image.width()) || (m_img_output->height != m_image.height()) ) 
-					{
-						assert(false);
-						break;
-						std::cout<<"Resizing"<<std::endl;
-						QImage temp(m_img_output->width, m_img_output->height, QImage::Format_RGB32);
-						m_image = temp;
-					}*/
 					cvIndex = 0; cvLineStart = 0;
 					for (int y = 0; y < m_img_output->height; y++) 
 					{
