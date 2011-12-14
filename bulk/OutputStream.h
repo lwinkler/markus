@@ -38,14 +38,23 @@ class OutputStream
 {
 public:
 	OutputStream(const std::string& x_name, StreamType x_type, IplImage* x_image);
+	OutputStream(const std::string& x_name, StreamType x_type, int x_width, int x_height);
 	~OutputStream();
 	const std::string& GetName() const {return m_name;};
 	const IplImage* GetImageRef() const {return m_image;};
+	inline void ClearRect() {m_rects.clear();};
+	inline void AddRect(cv::Rect x_rect) {m_rects.push_back(x_rect);};
+	inline int GetWidth() const {return m_width;};
+	inline int GetHeight() const {return m_height;};
 protected:
 	const std::string m_name;
 	const IplImage * m_image;
 	const StreamType m_type;
-	
+	const int m_width;
+	const int m_height;
+	std::vector<cv::Point> m_points;
+	std::vector<cv::Rect> m_rects;
+	CvScalar m_color;
 private:
 	OutputStream& operator=(const OutputStream&);
 	OutputStream(const OutputStream&);

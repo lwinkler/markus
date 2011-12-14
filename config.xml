@@ -1,17 +1,25 @@
 <?xml version="1.0" standalone="no" ?>
 
 <ImageProcessors>
-	<ImageProcessor name="ModuleDeTest">
+	<!--<ImageProcessor name="ModuleDeTest">
 		<parameter id="0" name="input">InFile1</parameter>
 		<parameter id="2" name="module">CascadeDetector2</parameter>
-	</ImageProcessor>
-	<ImageProcessor name="ModuleDeTest2">
-                <parameter id="0" name="input">MyCam1</parameter>
+	</ImageProcessor>-->
+	<ImageProcessor name="ModuleDeTest1">
+                <parameter id="0" name="input">InFile1</parameter>
                 <parameter id="2" name="module">CascadeDetector1</parameter>
         </ImageProcessor>
-        <ImageProcessor name="ModuleDeTest3">
+        <ImageProcessor name="ModuleDeTest2">
                 <parameter id="0" name="input">MyCam1</parameter>
-                <parameter id="2" name="module">SlitCamera2</parameter>
+                <parameter id="2" name="module">CascadeDetector2</parameter>
+        </ImageProcessor>
+	<ImageProcessor name="ModuleDeTest3">
+                <parameter id="0" name="input">MyCam1</parameter>
+                <parameter id="2" name="module">CascadeDetector3</parameter>
+        </ImageProcessor>
+        <ImageProcessor name="ModuleDeTest4">
+                <parameter id="0" name="input">MyCam1</parameter>
+                <parameter id="2" name="module">CascadeDetector4</parameter>
         </ImageProcessor>
 
 </ImageProcessors>
@@ -91,8 +99,8 @@
 </Module>
 <Module name="CascadeDetector1">
         <parameter id="0" name="class">CascadeDetector</parameter>
-        <parameter id="2" name="width">1280</parameter>
-        <parameter id="3" name="height">960</parameter>
+        <parameter id="2" name="width">320</parameter>
+        <parameter id="3" name="height">240</parameter>
         <parameter id="4" name="depth">8</parameter>
         <parameter id="5" name="channels">1</parameter>
         <parameter id="6" name="fps">10</parameter>
@@ -100,10 +108,49 @@
         <parameter id="7" name="minNeighbors">3</parameter>
         <parameter id="8" name="minFaceSide">0</parameter>
         <parameter id="9" name="scaleFactor">1.1</parameter>
-        <parameter id="4" name="filterFile">modules/CascadeDetector/lbpcascade_frontalface.xml</parameter>
+        <parameter id="4" name="filterFile">modules/CascadeDetector/haarcascade_fullbody.xml</parameter>
+</Module>
+<Module name="CascadeDetector2">
+        <parameter id="0" name="class">CascadeDetector</parameter>
+        <parameter id="2" name="width">320</parameter>
+        <parameter id="3" name="height">240</parameter>
+        <parameter id="4" name="depth">8</parameter>
+        <parameter id="5" name="channels">1</parameter>
+        <parameter id="6" name="fps">10</parameter>
+        <parameter id="6" name="detectionFps">2</parameter>
+        <parameter id="7" name="minNeighbors">3</parameter>
+        <parameter id="8" name="minFaceSide">0</parameter>
+        <parameter id="9" name="scaleFactor">1.1</parameter>
+        <parameter id="4" name="filterFile">modules/CascadeDetector/haarcascade_fullbody.xml</parameter>
+</Module>
+<Module name="CascadeDetector3">
+        <parameter id="0" name="class">CascadeDetector</parameter>
+        <parameter id="2" name="width">320</parameter>
+        <parameter id="3" name="height">240</parameter>
+        <parameter id="4" name="depth">8</parameter>
+        <parameter id="5" name="channels">1</parameter>
+        <parameter id="6" name="fps">10</parameter>
+        <parameter id="6" name="detectionFps">2</parameter>
+        <parameter id="7" name="minNeighbors">3</parameter>
+        <parameter id="8" name="minFaceSide">0</parameter>
+        <parameter id="9" name="scaleFactor">1.1</parameter>
+        <parameter id="4" name="filterFile">modules/CascadeDetector/haarcascade_eye_tree_eyeglasses.xml</parameter>
+</Module>
+<Module name="CascadeDetector4">
+        <parameter id="0" name="class">CascadeDetector</parameter>
+        <parameter id="2" name="width">320</parameter>
+        <parameter id="3" name="height">240</parameter>
+        <parameter id="4" name="depth">8</parameter>
+        <parameter id="5" name="channels">1</parameter>
+        <parameter id="6" name="fps">10</parameter>
+        <parameter id="6" name="detectionFps">2</parameter>
+        <parameter id="7" name="minNeighbors">3</parameter>
+        <parameter id="8" name="minFaceSide">0</parameter>
+        <parameter id="9" name="scaleFactor">1.1</parameter>
+        <parameter id="4" name="filterFile">modules/CascadeDetector/haarcascade_frontalface_default.xml</parameter>
 </Module>
 
-<Module name="CascadeDetector2">
+<Module name="CascadeDetector22">
         <parameter id="0" name="class">CascadeDetector</parameter>
         <parameter id="2" name="width">320</parameter>
         <parameter id="3" name="height">240</parameter>

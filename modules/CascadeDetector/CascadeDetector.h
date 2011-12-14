@@ -95,6 +95,7 @@ private:
 	
 	//cv::CascadeClassifier m_cascade;
 	std::vector<cv::Rect> m_faces;
+	IplImage * m_debug;
 	
 	DetectionThread m_thread;
 public:

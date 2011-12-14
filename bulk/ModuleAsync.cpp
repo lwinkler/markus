@@ -57,7 +57,7 @@ void ModuleAsync::ProcessFrame(const IplImage* m_input, const double x_timeSince
 		else
 		{
 			// thread is taking too long
-			cout<<"Thread too slow, frame dropped : "<<m_timeSinceLastThread<<" [s]"<<endl;
+			cout<<"Thread too slow, frame dropped after "<<m_timeSinceLastThread<<" [s]"<<endl;
 		}
 		m_timeSinceLastThread = 0;
 	}

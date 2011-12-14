@@ -74,6 +74,7 @@ protected:
 	const std::string m_name;
 	virtual const ModuleParameterStructure & GetRefParameter() const = 0;
 	std::vector<OutputStream *> m_outputStreams;
+	std::vector<OutputStream *> m_debugStreams;
 };
 
 #endif

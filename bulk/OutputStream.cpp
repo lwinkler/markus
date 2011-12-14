@@ -27,7 +27,20 @@
 OutputStream::OutputStream(const std::string& x_name, StreamType x_type, IplImage* x_image) :
 	m_name(x_name),
 	m_type(x_type),
-	m_image(x_image)
+	m_image(x_image),
+	m_width(x_image->width),
+	m_height(x_image->height),
+	m_color(cvScalar(255,255,255))
+{
+}
+
+OutputStream::OutputStream(const std::string& x_name, StreamType x_type, int x_width, int x_height) :
+	m_name(x_name),
+	m_type(x_type),
+	m_image(NULL),
+	m_width(x_width),
+	m_height(x_height),
+	m_color(cvScalar(255,255,255))
 {
 }
 

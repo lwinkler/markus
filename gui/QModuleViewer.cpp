@@ -148,7 +148,7 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 {
 	// Keep proportionality
 	const IplImage * cvimage = m_currentOutputStream->GetImageRef();
-	double ratio = static_cast<double>(cvimage->height) / cvimage->width;
+	double ratio = static_cast<double>(m_currentOutputStream->GetHeight()) / m_currentOutputStream->GetWidth();
 	
 	m_outputWidth  = e->size().width();
 	m_outputHeight = e->size().height();
