@@ -21,22 +21,22 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "StreamImage.h"
+#include "StreamDebug.h"
 
 
-StreamImage::StreamImage(const std::string& x_name, IplImage* x_image) : 
-	OutputStream(x_name, STREAM_IMAGE, x_image->width, x_image->height),
+StreamDebug::StreamDebug(const std::string& x_name, IplImage* x_image) : 
+	OutputStream(x_name, STREAM_DEBUG, x_image->width, x_image->height),
 	m_image(x_image)
 {
 }
 
 
-StreamImage::~StreamImage()
+StreamDebug::~StreamDebug()
 {
 
 }
 
-void StreamImage::Render(IplImage * xp_output) const
+void StreamDebug::Render(IplImage * xp_output) const
 {
 	cvCopy(m_image, xp_output);
 }

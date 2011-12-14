@@ -28,7 +28,7 @@
 
 enum StreamType
 {
-	STREAM_IMAGE_DEBUG,
+	STREAM_DEBUG,
 	STREAM_IMAGE,
 	STREAM_RECTS,
 	STREAM_POINTS
@@ -38,7 +38,7 @@ enum StreamType
 class OutputStream
 {
 public:
-	OutputStream(const std::string& x_name, StreamType x_type, IplImage* x_image);
+	OutputStream(const std::string& x_name, StreamType x_type);
 	OutputStream(const std::string& x_name, StreamType x_type, int x_width, int x_height);
 	~OutputStream();
 	const std::string& GetName() const {return m_name;};

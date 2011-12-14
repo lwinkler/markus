@@ -45,9 +45,9 @@ CascadeDetector::CascadeDetector(const std::string& x_name, ConfigReader& x_conf
 	m_debug = cvCreateImage(cvSize(m_param.width, m_param.height), m_param.depth, 3);
 	m_output = cvCreateImage(cvSize(m_param.width, m_param.height), m_param.depth, 3);
 
-	m_outputStreams.push_back(new StreamImage("faceDetector", STREAM_IMAGE, m_output));
-	m_outputStreams.push_back(new StreamImage("debug", STREAM_IMAGE_DEBUG, m_debug));
-//	m_outputStreams.push_back(new StreamImage("input", STREAM_IMAGE, m_inputCopy));
+	m_outputStreams.push_back(new StreamImage("faceDetector", m_output));
+	m_outputStreams.push_back(new StreamDebug("debug", m_debug));
+//	m_outputStreams.push_back(new StreamImage("input", m_inputCopy));
 	m_lastInput = cvCreateImage( cvSize(GetWidth(), GetHeight()), GetDepth(), GetNbChannels());
 }
 

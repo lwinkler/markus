@@ -32,7 +32,7 @@
 class StreamImage : public OutputStream
 {
 public:
-	StreamImage(const std::string& x_name, StreamType x_type, IplImage* x_image);
+	StreamImage(const std::string& x_name, IplImage* x_image);
 	~StreamImage();
 	const std::string& GetName() const {return m_name;};
 	const IplImage* GetImageRef() const {return m_image;};

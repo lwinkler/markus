@@ -29,6 +29,7 @@
 #include "Parameter.h"
 #include "OutputStream.h"
 #include "StreamImage.h"
+#include "StreamDebug.h"
 
 class ModuleParameterStructure : public ParameterStructure
 {

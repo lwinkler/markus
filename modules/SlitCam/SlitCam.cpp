@@ -45,8 +45,8 @@ SlitCam::SlitCam(const std::string& x_name, ConfigReader& x_configReader)
 				 m_param.depth, m_param.channels);
 	
 	// Init output images
-	m_outputStreams.push_back(new StreamImage("slit", STREAM_IMAGE, m_output));
-	m_outputStreams.push_back(new StreamImage("input", STREAM_IMAGE, m_inputCopy));
+	m_outputStreams.push_back(new StreamImage("slit",  m_output));
+	m_outputStreams.push_back(new StreamImage("input", m_inputCopy));
 }
 
 SlitCam::~SlitCam(void)
