@@ -21,27 +21,29 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef STREAM_IMAGE_H
-#define STREAM_IMAGE_H
+#ifndef STREAM_RECT_H
+#define STREAM_RECT_H
 
 #include "cv.h"
 
 #include "OutputStream.h"
 
 
-class StreamImage : public OutputStream
+class StreamRect : public OutputStream
 {
 public:
-	StreamImage(const std::string& x_name, IplImage* x_image);
-	~StreamImage();
-	const IplImage* GetImageRef() const {return m_image;};
+	StreamRect(const std::string& x_name, int x_width, int x_height, std::vector<cv::Rect>& r_rects);
+	~StreamRect();
+	void Clear() {m_rects.clear();};
+	void AddRect(cv::Rect x_rect) {m_rects.push_back(x_rect);};
 	
 	virtual void Render(IplImage * xp_output) const;
 protected:
-	const IplImage * m_image;
+	std::vector<cv::Rect> & m_rects;
 private:
-	StreamImage& operator=(const StreamImage&);
-	StreamImage(const StreamImage&);
+	const CvScalar m_color;
+	StreamRect& operator=(const StreamRect&);
+	StreamRect(const StreamRect&);
 };
 
 #endif

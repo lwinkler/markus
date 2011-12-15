@@ -34,10 +34,7 @@ class StreamDebug : public OutputStream
 public:
 	StreamDebug(const std::string& x_name, IplImage* x_image);
 	~StreamDebug();
-	const std::string& GetName() const {return m_name;};
 	const IplImage* GetImageRef() const {return m_image;};
-	inline int GetWidth() const {return m_width;};
-	inline int GetHeight() const {return m_height;};
 	
 	virtual void Render(IplImage * xp_output) const;
 protected:

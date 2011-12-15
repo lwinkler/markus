@@ -45,7 +45,7 @@ CascadeDetector::CascadeDetector(const std::string& x_name, ConfigReader& x_conf
 	m_debug = cvCreateImage(cvSize(m_param.width, m_param.height), m_param.depth, 3);
 	m_output = cvCreateImage(cvSize(m_param.width, m_param.height), m_param.depth, 3);
 
-	m_outputStreams.push_back(new StreamImage("faceDetector", m_output));
+	m_outputStreams.push_back(new StreamRect("detected", m_param.width, m_param.height, m_faces)); // TODO : Chg name faces
 	m_outputStreams.push_back(new StreamDebug("debug", m_debug));
 //	m_outputStreams.push_back(new StreamImage("input", m_inputCopy));
 	m_lastInput = cvCreateImage( cvSize(GetWidth(), GetHeight()), GetDepth(), GetNbChannels());
@@ -75,8 +75,8 @@ void CascadeDetector::LaunchThread(const IplImage* img, const double x_timeSince
 void CascadeDetector::NormalProcess(const IplImage* img, const double x_timeSinceLastProcessing)
 {
 	cvConvertImage(m_lastInput, m_debug);
-	/*OutputStream& os(*m_outputStreams[0]);
-	os.ClearRect();
+	OutputStream& os(*m_outputStreams[0]);
+	//os.ClearRect();
 	for(vector<Rect>::const_iterator it = m_faces.begin() ; it != m_faces.end() ; it++)
 	{
 		// TODO : See if we move this to execute it once only
@@ -87,8 +87,8 @@ void CascadeDetector::NormalProcess(const IplImage* img, const double x_timeSinc
 		cvRectangle( m_debug, p1, p2, CV_RGB(255,0,0), 1, 8, 0 );
 		
 		// Add rectangle to output streams
-		os.AddRect(cv::Rect(p1, p2));
-        }*/
+		//os.AddRect(cv::Rect(p1, p2));
+        }
 }
 
 void CascadeDetector::CopyResults()

@@ -28,6 +28,7 @@ bulk/Parameter.cpp
 bulk/OutputStream.cpp
 bulk/StreamImage.cpp
 bulk/StreamDebug.cpp
+bulk/StreamRect.cpp
 bulk/util.cpp
 bulk/ConfigReader.cpp
 bulk/ImageProcessor.cpp

@@ -21,27 +21,42 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef STREAM_IMAGE_H
-#define STREAM_IMAGE_H
+#include "StreamRect.h"
+#include <iostream>
 
-#include "cv.h"
+using namespace std;
+using namespace cv;
 
-#include "OutputStream.h"
-
-
-class StreamImage : public OutputStream
+StreamRect::StreamRect(const std::string& x_name, int x_width, int x_height, vector<Rect>& r_rects) : 
+	OutputStream(x_name, STREAM_IMAGE, x_width, x_height),
+	m_rects(r_rects),
+	m_color(CV_RGB(128,128,0))
 {
-public:
-	StreamImage(const std::string& x_name, IplImage* x_image);
-	~StreamImage();
-	const IplImage* GetImageRef() const {return m_image;};
-	
-	virtual void Render(IplImage * xp_output) const;
-protected:
-	const IplImage * m_image;
-private:
-	StreamImage& operator=(const StreamImage&);
-	StreamImage(const StreamImage&);
-};
+	//m_rects.clear();
+}
 
-#endif
+
+StreamRect::~StreamRect()
+{
+
+}
+
+// Render : Draw rectangles on image
+void StreamRect::Render(IplImage * xp_output) const
+{
+	//cvSet(xp_output, CV_RGB(255,0,0));
+	//m_rects.clear();
+	for(vector<Rect>::const_iterator it = m_rects.begin() ; it != m_rects.end() ; it++)
+	{
+		// TODO : See if we move this to execute it once only
+		Point p1(it->x, it->y);
+		Point p2(it->x + it->width, it->y + it->height);
+		
+		
+		// Draw the rectangle in the input image
+		cvRectangle( xp_output, p1, p2, m_color, 1, 8, 0 );
+		
+		// Add rectangle to output streams
+		//m_rects.push_back(cv::Rect(p1, p2));
+        }
+}

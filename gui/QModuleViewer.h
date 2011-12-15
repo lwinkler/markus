@@ -70,6 +70,7 @@ private:
 	QComboBox * comboOutputStreams;
 	virtual void resizeEvent(QResizeEvent * e);
 
+	IplImage * m_img_original;
 	IplImage * m_img_output;
 	// Images for format conversion
 	IplImage* m_img_tmp1_c1;

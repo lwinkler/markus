@@ -124,6 +124,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	m_img_tmp2_c1 = NULL;
 	m_img_tmp2_c3 = NULL;
 	m_img_output  = NULL;
+	m_img_original = NULL;
 	
 	connect(comboModules, SIGNAL(activated(int)), this, SLOT(updateModule(int) ));
 	connect(comboOutputStreams, SIGNAL(activated(int)), this, SLOT(updateOutputStream(int)));
@@ -131,6 +132,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 
 QModuleViewer::~QModuleViewer(void) 
 {
+	if(m_img_original != NULL)  cvReleaseImage(&m_img_original); 
 	if(m_img_output != NULL)  cvReleaseImage(&m_img_output); 
 	if(m_img_tmp1_c1 != NULL) cvReleaseImage(&m_img_tmp1_c1);
 	if(m_img_tmp1_c3 != NULL) cvReleaseImage(&m_img_tmp1_c3);
@@ -169,9 +171,9 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 	m_image =  QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
 	
 	if(m_img_output != NULL) cvReleaseImage(&m_img_output);
-	m_img_output = NULL;
+	if(m_img_original != NULL)  cvReleaseImage(&m_img_original); 
+	m_img_output = m_img_original = NULL;
 	
-	if(m_img_output != NULL)  cvReleaseImage(&m_img_output); 
 	if(m_img_tmp1_c1 != NULL) cvReleaseImage(&m_img_tmp1_c1);
 	if(m_img_tmp1_c3 != NULL) cvReleaseImage(&m_img_tmp1_c3);
 	if(m_img_tmp2_c1 != NULL) cvReleaseImage(&m_img_tmp2_c1);
@@ -189,31 +191,35 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 void QModuleViewer::paintEvent(QPaintEvent * e) 
 {
 	int cvIndex, cvLineStart;
-	IplImage * cvimage = NULL; // m_currentOutputStream->GetImageRef();
 	
-	if(cvimage == NULL)
-		cvimage = cvCreateImage( cvSize(m_currentOutputStream->GetWidth(), m_currentOutputStream->GetHeight()), IPL_DEPTH_8U, 3);
+	
+	if(m_img_original == NULL)
+		m_img_original = cvCreateImage( cvSize(m_currentOutputStream->GetWidth(), m_currentOutputStream->GetHeight()), IPL_DEPTH_8U, 3);
+	cvSet(m_img_original, cvScalar(0,0,0));
 	if(m_img_output == NULL)
 		m_img_output = cvCreateImage( cvSize(m_outputWidth, m_outputHeight), IPL_DEPTH_8U, 3);
 	// Write output to screen
 	// TODO : Copy below
-	m_currentOutputStream->Render(cvimage);
+	m_currentOutputStream->Render(m_img_original);
 	if(m_img_output->nChannels == 3)
-		adjust(cvimage, m_img_output, m_img_tmp1_c3, m_img_tmp2_c3);
+		adjust(m_img_original, m_img_output, m_img_tmp1_c3, m_img_tmp2_c3);
 	else
-		adjust(cvimage, m_img_output, m_img_tmp1_c1, m_img_tmp2_c1);
+		adjust(m_img_original, m_img_output, m_img_tmp1_c1, m_img_tmp2_c1);
 	
 	// switch between bit depths
-	switch (m_img_output->depth) {
+	switch (m_img_output->depth) 
+	{
 		case IPL_DEPTH_8U:
-			switch (m_img_output->nChannels) {
+			switch (m_img_output->nChannels) 
+			{
 				case 3:
 					cvIndex = 0; cvLineStart = 0;
 					for (int y = 0; y < m_img_output->height; y++) 
 					{
 						unsigned char red,green,blue;
 						cvIndex = cvLineStart;
-						for (int x = 0; x < m_img_output->width; x++) {
+						for (int x = 0; x < m_img_output->width; x++) 
+						{
 							// DO it
 							red = m_img_output->imageData[cvIndex+2];
 							green = m_img_output->imageData[cvIndex+1];

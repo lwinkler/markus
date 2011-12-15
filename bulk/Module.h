@@ -30,6 +30,8 @@
 #include "OutputStream.h"
 #include "StreamImage.h"
 #include "StreamDebug.h"
+#include "StreamRect.h"
+
 
 class ModuleParameterStructure : public ParameterStructure
 {

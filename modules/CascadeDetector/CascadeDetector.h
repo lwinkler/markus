@@ -21,8 +21,8 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef FACE_DETECTOR_H
-#define FACE_DETECTOR_H
+#ifndef CASCADE_DETECTOR_H
+#define CASCADE_DETECTOR_H
 
 #include <cv.h>
 #include "ModuleAsync.h"
@@ -31,7 +31,7 @@
 #include <QThread>
 
 /*! \class CascadeDetector
- *  \brief Class containing methods/attributes of a slit camera
+ *  \brief Module class for detection based on cascade filters (Haar, ...)
  *
  */
 
