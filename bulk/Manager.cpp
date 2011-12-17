@@ -92,6 +92,7 @@ Manager::Manager(ConfigReader& x_configReader) :
 		m_imageProcessors.push_back(ip);
 		//m_inputs.push_back(&ip->GetInput());
 		m_modules.push_back(&ip->GetModule());
+		m_modules.push_back(&ip->GetInput());
 	}
 }
 
@@ -146,7 +147,7 @@ void Manager::Process()
 	}
 }
 
-void Manager::AddModule(Module * x_mod)
+/*void Manager::AddModule(Module * x_mod)
 {
 	int cpt = 0;
 	m_modules.push_back(x_mod);
@@ -157,7 +158,8 @@ void Manager::AddModule(Module * x_mod)
 		cvNamedWindow(it2->GetName().c_str(), CV_WINDOW_AUTOSIZE);
 		cvMoveWindow(it2->GetName().c_str(), 100 * cpt, 30 * cpt);
 		cpt++;
-	}*/
+	}* /
+	cout<<" manager adds module "<<x_mod->GetName()<<endl;
 }
 
 
@@ -165,4 +167,6 @@ void Manager::AddInput(Input* x_input)
 {
 	int cpt = 0;
 	m_inputs.push_back(x_input);
-}
+	m_modules.push_back(x_input);
+	cout<<" manager adds input "<<x_input->GetName()<<endl;
+}*/

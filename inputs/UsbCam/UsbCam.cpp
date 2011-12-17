@@ -22,6 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "UsbCam.h"
+#include "util.h"
 
 using namespace std;
 
@@ -44,8 +45,10 @@ UsbCam::UsbCam(const std::string& x_name, ConfigReader& x_configReader):
 	//cvSetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH, m_param.width); // not working
 	//cvSetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
 	cvQueryFrame(m_capture); // this call is necessary to get correct capture properties
-	m_width    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH);
-	m_height   = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT);
+	IplImage * tmp = cvRetrieveFrame(m_capture); // Test capture
+	m_inputWidth    = tmp->width;//(int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH);
+	m_inputHeight   = tmp->height;//(int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT);
+	cout<<"Capture from UsbCam with resolution "<<m_inputWidth<<"x"<<m_inputHeight<<endl;
 	//int numFramesc = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_COUNT);
 	
 //	cout<<"done Setting "<<m_width<<" "<<m_height<<endl;
@@ -53,12 +56,15 @@ UsbCam::UsbCam(const std::string& x_name, ConfigReader& x_configReader):
 //	assert(m_height == m_param.height);
 	
 	
-	m_input = NULL;//cvCreateImage( cvSize(m_width, m_height), IPL_DEPTH_8U, 3);
+//	m_input = NULL;//cvCreateImage( cvSize(m_width, m_height), IPL_DEPTH_8U, 3);
+
+	m_input = cvCreateImage( cvSize(m_inputWidth, m_inputHeight), IPL_DEPTH_8U, 3);
+	m_outputStreams.push_back(new StreamImage("detected", m_input));
 }
 
 UsbCam::~UsbCam()
 {
-	//cvReleaseImage(&m_input);
+	cvReleaseImage(&m_input);
 	cvReleaseCapture(&m_capture );
 }
 
@@ -72,7 +78,15 @@ void UsbCam::Capture()
 
 	m_lock.lockForWrite();
 	cvGrabFrame(m_capture);
-	m_input = cvRetrieveFrame(m_capture);           // retrieve the captured frame
-
+	//m_input = cvRetrieveFrame(m_capture);           // retrieve the captured frame
+	
+	IplImage * tmp = cvRetrieveFrame(m_capture);
+	//cout<<tmp->width<<" == "<<m_input->width<<endl;
+	/*assert(tmp->width == m_input->width);
+	assert(tmp->height == m_input->height);
+	assert(tmp->depth == m_input->depth);
+	*/
+	cvCopy(tmp, m_input);
+	
 	m_lock.unlock();
 }

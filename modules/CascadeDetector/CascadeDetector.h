@@ -73,6 +73,7 @@ public:
 		m_minFaceSide = x_minFaceSide;
 		m_scaleFactor = x_scaleFactor;
 	}
+	
 	virtual void run();
 	
 	cv::CascadeClassifier m_cascade;
@@ -106,6 +107,11 @@ public:
 	virtual void LaunchThread(const IplImage * img, const double x_timeSinceLastProcessing);
 	virtual void NormalProcess(const IplImage * img, const double x_timeSinceLastProcessing);
 	virtual void CopyResults();
+	
+	inline virtual int GetWidth() const {return m_param.width;};
+	inline virtual int GetHeight() const {return m_param.height;};
+
+
 protected:
 	virtual const QThread & GetRefThread(){return m_thread;};
 

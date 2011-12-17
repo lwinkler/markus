@@ -22,7 +22,8 @@
 -------------------------------------------------------------------------------------*/
 
 #include "StreamImage.h"
-
+#include <iostream>
+using namespace std;
 
 StreamImage::StreamImage(const std::string& x_name, IplImage* x_image) : 
 	OutputStream(x_name, STREAM_IMAGE, x_image->width, x_image->height),
@@ -38,5 +39,9 @@ StreamImage::~StreamImage()
 
 void StreamImage::Render(IplImage * xp_output) const
 {
+	//cout<<"xp_output->width "<<xp_output->width<<endl;
+	//cout<<"GetWidth()"<<GetWidth()<<endl;
+	//assert(xp_output->width == GetWidth());
+	//assert(xp_output->height == GetHeight());
 	cvCopy(m_image, xp_output);
 }

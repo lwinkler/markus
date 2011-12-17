@@ -29,13 +29,14 @@
 
 #include "ConfigReader.h"
 #include "Parameter.h"
+#include "Module.h"
 
 #include <QReadWriteLock>
 
-class InputParameterStructure : public ParameterStructure
+class InputParameterStructure : public ModuleParameterStructure
 {
 public:
-	InputParameterStructure(ConfigReader& x_confReader, const std::string& x_moduleName) : ParameterStructure(x_confReader, "Input", x_moduleName)
+	InputParameterStructure(ConfigReader& x_confReader, const std::string& x_moduleName) : ModuleParameterStructure(x_confReader, x_moduleName)
 	{
 		m_list.push_back(new ParameterT<std::string>(0, "class", "", 	PARAM_STR, 			&objClass));
 		m_list.push_back(new ParameterT<int>(0, "width", 	640, 	PARAM_INT, 	0, 	4000,	&width));
@@ -56,7 +57,7 @@ public:
 	std::string objClass;
 };
 
-class Input : Configurable
+class Input : public Module
 {
 public:
 	Input(const std::string& x_name, ConfigReader& x_confReader);
@@ -65,6 +66,8 @@ public:
 	virtual void Capture() = 0;
 	inline const std::string& GetName()const {return m_name;};
 	virtual const IplImage * GetImage() const = 0;
+	inline virtual int GetWidth() const{return m_inputWidth;};
+	inline virtual int GetHeight() const{return m_inputHeight;};
 	QReadWriteLock m_lock;
 	
 	inline double GetFps() const {return GetRefParameter().fps;};
@@ -73,11 +76,14 @@ private:
 
 protected:
 	//InputParameterStructure m_param;
-	//IplImage * m_input;
+	IplImage * m_input;
 	
 	const std::string m_name;
+	int m_inputWidth;
+	int m_inputHeight;
 	
 	virtual const InputParameterStructure& GetRefParameter() const = 0;
+	virtual void ProcessFrame(const IplImage* x_img, const double x_timeSinceLastProcessing);
 };
 
 #endif

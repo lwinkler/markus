@@ -61,18 +61,18 @@ public:
 	Module(const std::string& x_name, ConfigReader& x_confReader);
 	virtual ~Module();
 	
-	virtual void ProcessFrame(const IplImage * m_input, const double x_timeSinceLastProcessing) = 0;
+	virtual void ProcessFrame(const IplImage * x_img, const double x_timeSinceLastProcessing) = 0;
 	const std::string& GetName(){return m_name;};
 	const IplImage * GetOutput(){return m_output;}
 	//void AddStream(const std::string& x_name, StreamType x_type, IplImage* m_image);
 	const std::vector<OutputStream*>& GetOutputStreamList() const {return m_outputStreams;};
 	
-	inline int GetWidth() const {return GetRefParameter().width;}
-	inline int GetHeight() const {return GetRefParameter().height;}
+	virtual int GetWidth() const = 0;// {return GetRefParameter().width;}
+	virtual int GetHeight() const = 0;// {return GetRefParameter().height;}
 	inline int GetDepth() const {return GetRefParameter().depth;}
-	inline int GetNbChannels() const {return GetRefParameter().channels;}
+	virtual inline int GetNbChannels() const {return GetRefParameter().channels;}
 	inline int GetFps() const {return GetRefParameter().fps;}
-		
+	
 protected:
 	IplImage * m_output;
 	const std::string m_name;

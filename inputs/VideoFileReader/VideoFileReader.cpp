@@ -43,16 +43,17 @@ VideoFileReader::VideoFileReader(const std::string& x_name, ConfigReader& x_conf
 	//cvSetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH, m_param.width); // not working
 	//cvSetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
 	cvQueryFrame(m_capture); // this call is necessary to get correct capture properties
-	m_width    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH);
-	m_height   = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT);
+	IplImage * tmp = cvRetrieveFrame(m_capture);
+	m_inputWidth    = tmp->width;//(int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH);
+	m_inputHeight   = tmp->height;//(int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT);
 	int numFramesc = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_COUNT);
 	
-//	cout<<"done Setting "<<m_width<<" "<<m_height<<endl;
+	cout<<"VideoFileReader "<<m_inputWidth<<"x"<<m_inputHeight<<endl;
 //	assert(m_width == m_param.width);
 //	assert(m_height == m_param.height);
 	
 	
-	m_input = NULL;//cvCreateImage( cvSize(m_width, m_height), IPL_DEPTH_8U, 3);
+	m_input = cvCreateImage( cvSize(m_inputWidth, m_inputHeight), IPL_DEPTH_8U, 3);
 }
 
 VideoFileReader::~VideoFileReader()
@@ -70,7 +71,8 @@ void VideoFileReader::Capture()
 	//double posRatio  =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_AVI_RATIO);
 	m_lock.lockForRead();
 	cvGrabFrame(m_capture);
-	m_input = cvRetrieveFrame(m_capture);           // retrieve the captured frame
-
+	//m_input = cvRetrieveFrame(m_capture);           // retrieve the captured frame
+	cvCopy(cvRetrieveFrame(m_capture), m_input);
+	
 	m_lock.unlock();
 }

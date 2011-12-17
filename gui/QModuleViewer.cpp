@@ -38,6 +38,8 @@
 #include "util.h"
 #include "StreamImage.h"
 
+using namespace std;
+
 // Constructor
 QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidget(parent)
 {
@@ -200,6 +202,7 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 		m_img_output = cvCreateImage( cvSize(m_outputWidth, m_outputHeight), IPL_DEPTH_8U, 3);
 	// Write output to screen
 	// TODO : Copy below
+	//cout<<"Render "<<m_currentOutputStream->GetWidth()<<" to "<<m_img_original->width<<endl;
 	m_currentOutputStream->Render(m_img_original);
 	if(m_img_output->nChannels == 3)
 		adjust(m_img_original, m_img_output, m_img_tmp1_c3, m_img_tmp2_c3);
@@ -236,9 +239,9 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 					break;
 			}
 			break;
-				default:
-					throw("This type of IplImage is not implemented in QModuleViewer\n");
-					break;
+		default:
+			throw("This type of IplImage is not implemented in QModuleViewer\n");
+			break;
 	}
 	//imagelabel->setPixmap(QPixmap::fromImage(m_image));
 	
@@ -255,13 +258,18 @@ void QModuleViewer::updateModule(const Module * x_module)
 	{
 		comboOutputStreams->addItem(QString((*it)->GetName().c_str()), cpt++);
 	}
-
+	assert(m_currentModule->GetOutputStreamList().size() > 0);
 	updateOutputStream(*(m_currentModule->GetOutputStreamList().begin()));
 }
 
 void QModuleViewer::updateOutputStream(const OutputStream * x_outputStream)
 {
 	m_currentOutputStream = x_outputStream;
+	if(m_img_original != NULL)
+	{
+		cvReleaseImage(&m_img_original);
+		m_img_original = NULL;
+	}
 }
 
 void QModuleViewer::updateModule(int x_index)

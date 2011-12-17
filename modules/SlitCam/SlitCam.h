@@ -61,8 +61,9 @@ public:
 	~SlitCam(void);
 	//void CreateParamWindow();
 	
-	virtual void ProcessFrame(const IplImage * img, const double x_timeSinceLastProcessing);
-
+	virtual void ProcessFrame(const IplImage * x_img, const double x_timeSinceLastProcessing);
+	inline virtual int GetWidth() const {return m_param.width;};
+	inline virtual int GetHeight() const {return m_param.height;};
 protected:
 	IplImage * m_inputCopy;
 	inline virtual const ModuleParameterStructure& GetRefParameter() const { return m_param;};

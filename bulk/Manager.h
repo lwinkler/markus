@@ -70,8 +70,8 @@ public:
 	~Manager();
 	//void CaptureInput();
 	void Process();
-	void AddInput(Input * x_input);
-	void AddModule(Module * x_mod);
+	//void AddInput(Input * x_input);
+	//void AddModule(Module * x_mod);
 	const std::vector<Input*> & GetInputList()  const {return m_inputs; };
 	const std::vector<Module*>& GetModuleList() const {return m_modules; };
 

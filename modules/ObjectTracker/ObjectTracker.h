@@ -52,7 +52,9 @@ public:
 	ObjectTracker(const std::string& x_name, ConfigReader& x_configReader);
 	~ObjectTracker(void);
 	
-	virtual void ProcessFrame(const IplImage* m_img, const double x_timeSinceLastProcessing);
+	virtual void ProcessFrame(const IplImage* x_img, const double x_timeSinceLastProcessing);
+	inline virtual int GetWidth() const {return m_param.width;};
+	inline virtual int GetHeight() const {return m_param.height;};
 	
 private:
 	ObjectTrackerParameterStructure m_param;

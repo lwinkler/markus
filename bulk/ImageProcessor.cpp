@@ -60,7 +60,7 @@ ImageProcessor::ImageProcessor(const string & x_name, int x_nb, ConfigReader& x_
 	
 	// Create all input objects
 	//	check for similar existing input
-	paramList = m_configReader.ReadConfigObject("Input", input.m_value, true);
+	paramList = m_configReader.ReadConfigObject("Module", input.m_value, true);
 	assert(paramList.size() == 1);
 	std::string inputClass = paramList[0].m_value;
 	
