@@ -55,7 +55,6 @@ public:
 	virtual const IplImage * GetImage() const {return m_input;}
 
 protected:
-	IplImage * m_input;
 	CvCapture * m_capture;
 	//int m_width;
 	//int m_height;

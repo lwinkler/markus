@@ -2,7 +2,7 @@
 
 <ImageProcessors>
 	<ImageProcessor name="ModuleDeTest1">
-                <parameter id="0" name="input">MyCam1</parameter>
+                <parameter id="0" name="input">InFile1</parameter>
                 <parameter id="2" name="module">CascadeDetector1</parameter>
         </ImageProcessor>
         <ImageProcessor name="ModuleDeTest2">
