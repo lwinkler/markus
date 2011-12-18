@@ -92,7 +92,6 @@ Manager::Manager(ConfigReader& x_configReader) :
 		m_imageProcessors.push_back(ip);
 		//m_inputs.push_back(&ip->GetInput());
 		m_modules.push_back(&ip->GetModule());
-		m_modules.push_back(&ip->GetInput());
 		
 		// Add the module outputs as related streams to the input
 		for(vector<Stream*>::const_iterator it = ip->GetModule().GetStreamList().begin() ; it != ip->GetModule().GetStreamList().end() ; it++)
@@ -100,6 +99,12 @@ Manager::Manager(ConfigReader& x_configReader) :
 			if((*it)->GetType() != STREAM_DEBUG)
 				ip->GetInput().AddRelatedStream(*it);
 		}
+	}
+	//int cpt = 0;
+	for(vector<Input *>::const_iterator it = m_inputs.begin() ; it != m_inputs.end() ; it++)
+	{
+		m_modules.push_back(dynamic_cast<Module *>(*it));
+		//cpt++;
 	}
 }
 

@@ -89,6 +89,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	
 	//vbox->addWidget(m_painter);
 	
+	// Fill the list of modules
 	QLabel* lab1 = new QLabel(tr("Module"));
 	vbox->addWidget(lab1,0,0);
 	comboModules->clear();
