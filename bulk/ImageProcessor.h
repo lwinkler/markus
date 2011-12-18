@@ -27,7 +27,7 @@
 #include "cv.h"
 #include "ConfigReader.h"
 #include "Parameter.h"
-//#include "OutputStream.h"
+//#include "Stream.h"
 #include "Input.h"
 #include "Module.h"
 

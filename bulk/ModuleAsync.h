@@ -59,7 +59,7 @@ public:
 protected:
 //	IplImage * m_output;
 //	const std::string m_name;
-//	std::vector<OutputStream *> m_outputStreams;
+//	std::vector<Stream *> m_outputStreams;
 //	ThreadStatus m_threadStatus;
 	IplImage * m_lastInput;
 	double m_timeSinceLastThread;

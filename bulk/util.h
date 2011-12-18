@@ -35,4 +35,7 @@ void adjust(const IplImage* im_in, IplImage* im_out, IplImage*& tmp1, IplImage*&
 void adjustSize(const IplImage* im_in, IplImage* im_out);
 void adjustChannels(const IplImage* im_in, IplImage* im_out);
 
+CvScalar ColorFromStr(std::string x_str);
+
+
 #endif

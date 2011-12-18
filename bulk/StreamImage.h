@@ -26,10 +26,10 @@
 
 #include "cv.h"
 
-#include "OutputStream.h"
+#include "Stream.h"
 
 
-class StreamImage : public OutputStream
+class StreamImage : public Stream
 {
 public:
 	StreamImage(const std::string& x_name, IplImage* x_image);

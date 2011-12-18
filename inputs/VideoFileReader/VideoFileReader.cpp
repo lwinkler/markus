@@ -53,12 +53,16 @@ VideoFileReader::VideoFileReader(const std::string& x_name, ConfigReader& x_conf
 //	assert(m_height == m_param.height);
 	
 	
-	m_input = cvCreateImage( cvSize(m_inputWidth, m_inputHeight), IPL_DEPTH_8U, 3);
+	m_input = NULL;//cvCreateImage( cvSize(m_inputWidth, m_inputHeight), IPL_DEPTH_8U, 3);
+	m_render = cvCreateImage( cvSize(m_inputWidth, m_inputHeight), IPL_DEPTH_8U, 3);
+	m_outputStreams.push_back(new StreamImage("input", m_input));
+	m_outputStreams.push_back(new StreamImage("render", m_render));
+
 }
 
 VideoFileReader::~VideoFileReader()
 {
-	//cvReleaseImage(&m_input);
+	cvReleaseImage(&m_render);
 	cvReleaseCapture(&m_capture );
 }
 
@@ -71,8 +75,8 @@ void VideoFileReader::Capture()
 	//double posRatio  =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_AVI_RATIO);
 	m_lock.lockForRead();
 	cvGrabFrame(m_capture);
-	//m_input = cvRetrieveFrame(m_capture);           // retrieve the captured frame
-	cvCopy(cvRetrieveFrame(m_capture), m_input);
+	m_input = cvRetrieveFrame(m_capture);           // retrieve the captured frame
+	//cvCopy(cvRetrieveFrame(m_capture), m_input);
 	
 	m_lock.unlock();
 }

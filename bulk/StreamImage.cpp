@@ -26,7 +26,7 @@
 using namespace std;
 
 StreamImage::StreamImage(const std::string& x_name, IplImage* x_image) : 
-	OutputStream(x_name, STREAM_IMAGE, x_image->width, x_image->height),
+	Stream(x_name, STREAM_IMAGE, x_image->width, x_image->height),
 	m_image(x_image)
 {
 }

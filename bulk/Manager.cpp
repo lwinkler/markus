@@ -93,6 +93,13 @@ Manager::Manager(ConfigReader& x_configReader) :
 		//m_inputs.push_back(&ip->GetInput());
 		m_modules.push_back(&ip->GetModule());
 		m_modules.push_back(&ip->GetInput());
+		
+		// Add the module outputs as related streams to the input
+		for(vector<Stream*>::const_iterator it = ip->GetModule().GetStreamList().begin() ; it != ip->GetModule().GetStreamList().end() ; it++)
+		{
+			if((*it)->GetType() != STREAM_DEBUG)
+				ip->GetInput().AddRelatedStream(*it);
+		}
 	}
 }
 
@@ -151,8 +158,8 @@ void Manager::Process()
 {
 	int cpt = 0;
 	m_modules.push_back(x_mod);
-	/*const std::list<OutputStream> streamList(x_mod->GetOutputStreamList());
-	for(list<OutputStream>::const_iterator it2 = streamList.begin(); it2 != streamList.end(); it2++)
+	/*const std::list<Stream> streamList(x_mod->GetStreamList());
+	for(list<Stream>::const_iterator it2 = streamList.begin(); it2 != streamList.end(); it2++)
 	{
 		// Create windows for output streams
 		cvNamedWindow(it2->GetName().c_str(), CV_WINDOW_AUTOSIZE);

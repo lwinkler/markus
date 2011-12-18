@@ -21,10 +21,10 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "OutputStream.h"
+#include "Stream.h"
 
 
-OutputStream::OutputStream(const std::string& x_name, StreamType x_type, int x_width, int x_height) :
+Stream::Stream(const std::string& x_name, StreamType x_type, int x_width, int x_height) :
 	m_name(x_name),
 	m_type(x_type),
 	m_width(x_width),
@@ -32,7 +32,7 @@ OutputStream::OutputStream(const std::string& x_name, StreamType x_type, int x_w
 {
 }
 
-OutputStream::~OutputStream()
+Stream::~Stream()
 {
 
 }

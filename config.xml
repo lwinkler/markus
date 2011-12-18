@@ -1,6 +1,18 @@
 <?xml version="1.0" standalone="no" ?>
 
 <ImageProcessors>
+	<ImageProcessor name="ModuleDeTest1">
+                <parameter id="0" name="input">MyCam1</parameter>
+                <parameter id="2" name="module">CascadeDetector1</parameter>
+        </ImageProcessor>
+        <ImageProcessor name="ModuleDeTest2">
+                <parameter id="0" name="input">MyCam1</parameter>
+                <parameter id="2" name="module">CascadeDetector2</parameter>
+        </ImageProcessor>
+	<ImageProcessor name="ModuleDeTest3">
+                <parameter id="0" name="input">MyCam1</parameter>
+                <parameter id="2" name="module">CascadeDetector3</parameter>
+        </ImageProcessor>
         <ImageProcessor name="ModuleDeTest4">
                 <parameter id="0" name="input">MyCam1</parameter>
                 <parameter id="2" name="module">CascadeDetector4</parameter>
@@ -21,8 +33,8 @@
 <!-- List all possibly used inputs-->
 <Module name="MyCam1">
 	<parameter id="0" name="class">UsbCam</parameter>
-        <parameter id="1" name="width">640</parameter>
-        <parameter id="2" name="height">480</parameter>
+        <parameter id="1" name="width">200</parameter>
+        <parameter id="2" name="height">100</parameter>
         <parameter id="3" name="depth">8</parameter>
         <parameter id="4" name="channels">3</parameter>
         <parameter id="4" name="num">-1</parameter>	
@@ -93,6 +105,7 @@
         <parameter id="8" name="minFaceSide">0</parameter>
         <parameter id="9" name="scaleFactor">1.1</parameter>
         <parameter id="4" name="filterFile">modules/CascadeDetector/haarcascade_fullbody.xml</parameter>
+	<parameter id="4" name="color">(0,255,0)</parameter>
 </Module>
 <Module name="CascadeDetector2">
         <parameter id="0" name="class">CascadeDetector</parameter>
@@ -105,7 +118,8 @@
         <parameter id="7" name="minNeighbors">3</parameter>
         <parameter id="8" name="minFaceSide">0</parameter>
         <parameter id="9" name="scaleFactor">1.1</parameter>
-        <parameter id="4" name="filterFile">modules/CascadeDetector/haarcascade_fullbody.xml</parameter>
+        <parameter id="4" name="filterFile">modules/CascadeDetector/haarcascade_profileface.xml</parameter>
+	<parameter id="4" name="color">(12,255,255)</parameter>
 </Module>
 <Module name="CascadeDetector3">
         <parameter id="0" name="class">CascadeDetector</parameter>
@@ -118,7 +132,8 @@
         <parameter id="7" name="minNeighbors">3</parameter>
         <parameter id="8" name="minFaceSide">0</parameter>
         <parameter id="9" name="scaleFactor">1.1</parameter>
-        <parameter id="4" name="filterFile">modules/CascadeDetector/haarcascade_eye_tree_eyeglasses.xml</parameter>
+        <parameter id="4" name="filterFile">modules/CascadeDetector/haarcascade_mcs_nose.xml</parameter>
+	<parameter id="4" name="color">(255,0,200)</parameter>
 </Module>
 <Module name="CascadeDetector4">
         <parameter id="0" name="class">CascadeDetector</parameter>
@@ -132,6 +147,7 @@
         <parameter id="8" name="minFaceSide">0</parameter>
         <parameter id="9" name="scaleFactor">1.1</parameter>
         <parameter id="4" name="filterFile">modules/CascadeDetector/haarcascade_frontalface_default.xml</parameter>
+	<parameter id="4" name="color">(128,255,0)</parameter>
 </Module>
 
 <Module name="CascadeDetector22">

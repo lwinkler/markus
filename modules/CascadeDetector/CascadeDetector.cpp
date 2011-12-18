@@ -45,7 +45,7 @@ CascadeDetector::CascadeDetector(const std::string& x_name, ConfigReader& x_conf
 	m_debug = cvCreateImage(cvSize(m_param.width, m_param.height), m_param.depth, 3);
 	m_output = cvCreateImage(cvSize(m_param.width, m_param.height), m_param.depth, 3);
 
-	m_outputStreams.push_back(new StreamRect("detected", m_param.width, m_param.height, m_faces)); // TODO : Chg name faces
+	m_outputStreams.push_back(new StreamRect("detected", m_param.width, m_param.height, m_detectedObjects, ColorFromStr(m_param.color))); // TODO : Chg name faces
 	m_outputStreams.push_back(new StreamDebug("debug", m_debug));
 //	m_outputStreams.push_back(new StreamImage("input", m_inputCopy));
 	m_lastInput = cvCreateImage( cvSize(GetWidth(), GetHeight()), GetDepth(), GetNbChannels());
@@ -75,9 +75,9 @@ void CascadeDetector::LaunchThread(const IplImage* img, const double x_timeSince
 void CascadeDetector::NormalProcess(const IplImage* img, const double x_timeSinceLastProcessing)
 {
 	cvConvertImage(m_lastInput, m_debug);
-	OutputStream& os(*m_outputStreams[0]);
+	Stream& os(*m_outputStreams[0]);
 	//os.ClearRect();
-	for(vector<Rect>::const_iterator it = m_faces.begin() ; it != m_faces.end() ; it++)
+	for(vector<Rect>::const_iterator it = m_detectedObjects.begin() ; it != m_detectedObjects.end() ; it++)
 	{
 		// TODO : See if we move this to execute it once only
 		Point p1(it->x, it->y);
@@ -93,11 +93,11 @@ void CascadeDetector::NormalProcess(const IplImage* img, const double x_timeSinc
 
 void CascadeDetector::CopyResults()
 {
-	m_faces = m_thread.GetDetectedObjects();
+	m_detectedObjects = m_thread.GetDetectedObjects();
 }
 
 void DetectionThread::run()
 {
-	m_cascade.detectMultiScale(m_smallImg, m_faces, m_scaleFactor, m_minNeighbors, CV_HAAR_SCALE_IMAGE, cvSize(m_minFaceSide, m_minFaceSide));
+	m_cascade.detectMultiScale(m_smallImg, m_detectedObjects, m_scaleFactor, m_minNeighbors, CV_HAAR_SCALE_IMAGE, cvSize(m_minFaceSide, m_minFaceSide));
 	//QThread::run();
 }

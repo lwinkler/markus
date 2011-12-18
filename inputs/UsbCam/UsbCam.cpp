@@ -58,13 +58,16 @@ UsbCam::UsbCam(const std::string& x_name, ConfigReader& x_configReader):
 	
 //	m_input = NULL;//cvCreateImage( cvSize(m_width, m_height), IPL_DEPTH_8U, 3);
 
-	m_input = cvCreateImage( cvSize(m_inputWidth, m_inputHeight), IPL_DEPTH_8U, 3);
-	m_outputStreams.push_back(new StreamImage("detected", m_input));
+	
+	m_input = cvCreateImage( cvSize(m_inputWidth, m_inputHeight), IPL_DEPTH_8U, 3); // TODO : No allocation needed
+	m_render = cvCreateImage( cvSize(m_inputWidth, m_inputHeight), IPL_DEPTH_8U, 3);
+	m_outputStreams.push_back(new StreamImage("input", m_input));
+	m_outputStreams.push_back(new StreamImage("render", m_render));
 }
 
 UsbCam::~UsbCam()
 {
-	cvReleaseImage(&m_input);
+	cvReleaseImage(&m_render);
 	cvReleaseCapture(&m_capture );
 }
 
@@ -82,10 +85,10 @@ void UsbCam::Capture()
 	
 	IplImage * tmp = cvRetrieveFrame(m_capture);
 	//cout<<tmp->width<<" == "<<m_input->width<<endl;
-	/*assert(tmp->width == m_input->width);
-	assert(tmp->height == m_input->height);
-	assert(tmp->depth == m_input->depth);
-	*/
+	//assert(tmp->width == m_input->width);
+	//assert(tmp->height == m_input->height);
+	//assert(tmp->depth == m_input->depth);
+	
 	cvCopy(tmp, m_input);
 	
 	m_lock.unlock();

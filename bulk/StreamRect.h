@@ -26,13 +26,13 @@
 
 #include "cv.h"
 
-#include "OutputStream.h"
+#include "Stream.h"
 
 
-class StreamRect : public OutputStream
+class StreamRect : public Stream
 {
 public:
-	StreamRect(const std::string& x_name, int x_width, int x_height, std::vector<cv::Rect>& r_rects);
+	StreamRect(const std::string& x_name, int x_width, int x_height, std::vector<cv::Rect>& r_rects, const CvScalar& x_color);
 	~StreamRect();
 	void Clear() {m_rects.clear();};
 	void AddRect(cv::Rect x_rect) {m_rects.push_back(x_rect);};
@@ -41,7 +41,7 @@ public:
 protected:
 	std::vector<cv::Rect> & m_rects;
 private:
-	const CvScalar m_color;
+	CvScalar m_color;
 	StreamRect& operator=(const StreamRect&);
 	StreamRect(const StreamRect&);
 };

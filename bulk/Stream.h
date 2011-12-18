@@ -35,12 +35,12 @@ enum StreamType
 };
 
 
-class OutputStream
+class Stream
 {
 public:
-	OutputStream(const std::string& x_name, StreamType x_type);
-	OutputStream(const std::string& x_name, StreamType x_type, int x_width, int x_height);
-	~OutputStream();
+	Stream(const std::string& x_name, StreamType x_type);
+	Stream(const std::string& x_name, StreamType x_type, int x_width, int x_height);
+	~Stream();
 	const std::string& GetName() const {return m_name;};
 	inline int GetWidth() const {return m_width;};
 	inline int GetHeight() const {return m_height;};
@@ -52,8 +52,8 @@ protected:
 	const int m_width;
 	const int m_height;
 private:
-	OutputStream& operator=(const OutputStream&);
-	OutputStream(const OutputStream&);
+	Stream& operator=(const Stream&);
+	Stream(const Stream&);
 };
 
 #endif

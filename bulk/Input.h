@@ -71,19 +71,23 @@ public:
 	QReadWriteLock m_lock;
 	
 	inline double GetFps() const {return GetRefParameter().fps;};
-
+	
+	void AddRelatedStream(Stream* xp_stream) {m_relatedStreams.push_back(xp_stream);};
+	virtual void ProcessFrame(const IplImage* x_img, const double x_timeSinceLastProcessing);
 private:
 
 protected:
 	//InputParameterStructure m_param;
 	IplImage * m_input;
+	IplImage * m_render;
 	
 	const std::string m_name;
 	int m_inputWidth;
 	int m_inputHeight;
 	
+	std::vector<Stream *> m_relatedStreams;
+	
 	virtual const InputParameterStructure& GetRefParameter() const = 0;
-	virtual void ProcessFrame(const IplImage* x_img, const double x_timeSinceLastProcessing);
 };
 
 #endif

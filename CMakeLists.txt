@@ -25,7 +25,7 @@ bulk/Input.cpp
 inputs/UsbCam/UsbCam.cpp
 inputs/VideoFileReader/VideoFileReader.cpp
 bulk/Parameter.cpp
-bulk/OutputStream.cpp
+bulk/Stream.cpp
 bulk/StreamImage.cpp
 bulk/StreamDebug.cpp
 bulk/StreamRect.cpp

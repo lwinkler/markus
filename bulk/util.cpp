@@ -170,3 +170,25 @@ void adjustChannels(const IplImage* im_in, IplImage* im_out)
 	}
 }
 
+CvScalar ColorFromStr(string x_str)
+{
+	int c1 = 0;
+	int c2 = 0;
+	int c3 = 0;
+	
+	int pos1 = 0;
+	int pos2 = 0;
+	int pos3 = 0;
+	if(x_str[0] == '(')
+	{
+		pos1  = x_str.find(',', 1);
+		pos2  = x_str.find(',', pos1 + 1);
+		pos3  = x_str.find(')', pos2 + 1);
+		assert(pos1 && pos2 && pos3);
+		
+		return cvScalar(atoi(x_str.substr(1, pos1 - 1).c_str()), 
+				atoi(x_str.substr(pos1 + 1, pos2 - pos1 - 1).c_str()), 
+				atoi(x_str.substr(pos2 + 1, pos3 - pos2 - 1).c_str()));
+	}
+	else return cvScalar(0, 0, 0);
+}

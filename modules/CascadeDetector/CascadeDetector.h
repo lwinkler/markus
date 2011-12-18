@@ -47,6 +47,7 @@ public:
 		m_list.push_back(new ParameterT<int>(0, "minFaceSide", 0, PARAM_INT, 0, 200, &minFaceSide));
 		m_list.push_back(new ParameterT<float>(0, "scaleFactor", 1.2, PARAM_FLOAT, 1, 2, &scaleFactor));
 		m_list.push_back(new ParameterT<std::string>(0, "filterFile", "modules/CascadeDetector/lbpcascade_frontalface.xml", PARAM_STR, &filterFile));
+		m_list.push_back(new ParameterT<std::string>(0, "color", "(255,255,255)", PARAM_STR, &color));
 		
 		ParameterStructure::Init();
 	};
@@ -55,6 +56,7 @@ public:
 	int minFaceSide;
 	float scaleFactor;
 	std::string filterFile;
+	std::string color;
 };
 
 class DetectionThread : public QThread
@@ -77,7 +79,7 @@ public:
 	virtual void run();
 	
 	cv::CascadeClassifier m_cascade;
-	std::vector<cv::Rect> GetDetectedObjects() const{ return m_faces;};
+	std::vector<cv::Rect> GetDetectedObjects() const{ return m_detectedObjects;};
 
 private:
 	cv::Mat m_smallImg;
@@ -85,7 +87,7 @@ private:
 	int m_minFaceSide;
 	float m_scaleFactor;
 	
-	std::vector<cv::Rect> m_faces;
+	std::vector<cv::Rect> m_detectedObjects;
 };
 
 class CascadeDetector : public ModuleAsync
@@ -95,7 +97,7 @@ private:
 	static const char * m_type;
 	
 	//cv::CascadeClassifier m_cascade;
-	std::vector<cv::Rect> m_faces;
+	std::vector<cv::Rect> m_detectedObjects;
 	IplImage * m_debug;
 	
 	DetectionThread m_thread;

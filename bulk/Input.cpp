@@ -25,6 +25,7 @@
 
 using namespace std;
 
+
 Input::Input(const std::string& x_name, ConfigReader& x_configReader): 
 	//m_param(x_configReader, x_name), 
 	//Configurable(x_configReader),
@@ -32,7 +33,7 @@ Input::Input(const std::string& x_name, ConfigReader& x_configReader):
 {
 	cout<<endl<<"*** Create object Input : "<<x_name<<" ***"<<endl;
 
-	m_input = NULL;  // cvCreateImage( cvSize(12,12)/*GetWidth(), GetHeight())*/, IPL_DEPTH_8U, 3);
+	m_render = NULL;  // cvCreateImage( cvSize(12,12)/*GetWidth(), GetHeight())*/, IPL_DEPTH_8U, 3);
 	m_inputWidth = 0;
 	m_inputHeight = 0;
 // 	m_outputStreams.push_back(new StreamImage("detected", m_input));
@@ -46,7 +47,10 @@ Input::~Input()
 
 void Input::ProcessFrame(const IplImage* x_img, const double x_timeSinceLastProcessing)
 {
-assert(false);
-//cvCopy(x_img, m_input);
+	cvCopy(m_input, m_render);
+	for(vector<Stream *>::const_iterator it = m_relatedStreams.begin() ; it != m_relatedStreams.end() ; it++)
+	{
+		(*it)->Render(m_render);
+	}
 }
 

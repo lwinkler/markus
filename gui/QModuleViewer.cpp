@@ -43,6 +43,13 @@ using namespace std;
 // Constructor
 QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidget(parent)
 {
+	m_img_tmp1_c1 = NULL; // Allocated on first conversion
+	m_img_tmp1_c3 = NULL;
+	m_img_tmp2_c1 = NULL;
+	m_img_tmp2_c3 = NULL;
+	m_img_output  = NULL;
+	m_img_original = NULL;
+
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	m_outputWidth  = 0.8 * width();
 	m_outputHeight = 0.8 * height();
@@ -52,10 +59,10 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	assert(x_manager->GetModuleList().size() > 0);
 	m_manager 		= x_manager;
 	m_currentModule 	= *x_manager->GetModuleList().begin();
-	m_currentOutputStream 	= *m_currentModule->GetOutputStreamList().begin();
+	m_currentStream 	= *m_currentModule->GetStreamList().begin();
 		
 	comboModules 		= new QComboBox();
-	comboOutputStreams 	= new QComboBox();
+	comboStreams 	= new QComboBox();
 	layout = new QVBoxLayout;
 	//QPainter painter(this);
 	//imagelabel = new QLabel;
@@ -93,7 +100,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	QLabel* lab2 = new QLabel(tr("Out stream"));
 	vbox->addWidget(lab2,1,0);
 	this->updateModule(*(x_manager->GetModuleList().begin()));
-	vbox->addWidget(comboOutputStreams,1,1);
+	vbox->addWidget(comboStreams,1,1);
 	
 	gbSettings->setLayout(vbox);
 	layout->addWidget(gbSettings);
@@ -121,15 +128,9 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	//imagelabel->
 	//m_painter.setBackground(QPixmap::fromImage(m_image));
 	
-	m_img_tmp1_c1 = NULL; // Allocated on first conversion
-	m_img_tmp1_c3 = NULL;
-	m_img_tmp2_c1 = NULL;
-	m_img_tmp2_c3 = NULL;
-	m_img_output  = NULL;
-	m_img_original = NULL;
 	
 	connect(comboModules, SIGNAL(activated(int)), this, SLOT(updateModule(int) ));
-	connect(comboOutputStreams, SIGNAL(activated(int)), this, SLOT(updateOutputStream(int)));
+	connect(comboStreams, SIGNAL(activated(int)), this, SLOT(updateStream(int)));
 }
 
 QModuleViewer::~QModuleViewer(void) 
@@ -152,7 +153,7 @@ QModuleViewer::~QModuleViewer(void)
 void QModuleViewer::resizeEvent(QResizeEvent * e)
 {
 	// Keep proportionality
-	double ratio = static_cast<double>(m_currentOutputStream->GetHeight()) / m_currentOutputStream->GetWidth();
+	double ratio = static_cast<double>(m_currentStream->GetHeight()) / m_currentStream->GetWidth();
 	
 	m_outputWidth  = e->size().width();
 	m_outputHeight = e->size().height();
@@ -196,14 +197,14 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 	
 	
 	if(m_img_original == NULL)
-		m_img_original = cvCreateImage( cvSize(m_currentOutputStream->GetWidth(), m_currentOutputStream->GetHeight()), IPL_DEPTH_8U, 3);
+		m_img_original = cvCreateImage( cvSize(m_currentStream->GetWidth(), m_currentStream->GetHeight()), IPL_DEPTH_8U, 3);
 	cvSet(m_img_original, cvScalar(0,0,0));
 	if(m_img_output == NULL)
 		m_img_output = cvCreateImage( cvSize(m_outputWidth, m_outputHeight), IPL_DEPTH_8U, 3);
 	// Write output to screen
 	// TODO : Copy below
-	//cout<<"Render "<<m_currentOutputStream->GetWidth()<<" to "<<m_img_original->width<<endl;
-	m_currentOutputStream->Render(m_img_original);
+	//cout<<"Render "<<m_currentStream->GetWidth()<<" to "<<m_img_original->width<<endl;
+	m_currentStream->Render(m_img_original);
 	if(m_img_output->nChannels == 3)
 		adjust(m_img_original, m_img_output, m_img_tmp1_c3, m_img_tmp2_c3);
 	else
@@ -252,19 +253,19 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 void QModuleViewer::updateModule(const Module * x_module)
 {
 	m_currentModule = x_module;
-	comboOutputStreams->clear();
+	comboStreams->clear();
 	int cpt = 0;
-	for(std::vector<OutputStream*>::const_iterator it = m_currentModule->GetOutputStreamList().begin(); it != m_currentModule->GetOutputStreamList().end(); it++)
+	for(std::vector<Stream*>::const_iterator it = m_currentModule->GetStreamList().begin(); it != m_currentModule->GetStreamList().end(); it++)
 	{
-		comboOutputStreams->addItem(QString((*it)->GetName().c_str()), cpt++);
+		comboStreams->addItem(QString((*it)->GetName().c_str()), cpt++);
 	}
-	assert(m_currentModule->GetOutputStreamList().size() > 0);
-	updateOutputStream(*(m_currentModule->GetOutputStreamList().begin()));
+	assert(m_currentModule->GetStreamList().size() > 0);
+	updateStream(*(m_currentModule->GetStreamList().begin()));
 }
 
-void QModuleViewer::updateOutputStream(const OutputStream * x_outputStream)
+void QModuleViewer::updateStream(const Stream * x_outputStream)
 {
-	m_currentOutputStream = x_outputStream;
+	m_currentStream = x_outputStream;
 	if(m_img_original != NULL)
 	{
 		cvReleaseImage(&m_img_original);
@@ -282,14 +283,14 @@ void QModuleViewer::updateModule(int x_index)
 	updateModule(*it);
 }
 
-void QModuleViewer::updateOutputStream(int x_index)
+void QModuleViewer::updateStream(int x_index)
 {
-	std::vector<OutputStream*>::const_iterator it = m_currentModule->GetOutputStreamList().begin();
+	std::vector<Stream*>::const_iterator it = m_currentModule->GetStreamList().begin();
 	
-	while(x_index-- > 0 && it != m_currentModule->GetOutputStreamList().end())
+	while(x_index-- > 0 && it != m_currentModule->GetStreamList().end())
 		it++;
 	
-	updateOutputStream((*it));
+	updateStream((*it));
 }
 
 void QModuleViewer::showDisplayOptions()

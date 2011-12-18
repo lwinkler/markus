@@ -43,5 +43,5 @@ Module::~Module()
 
 /*void Module::AddStream(const std::string& x_name, StreamType x_type, IplImage* x_image)
 {
-	m_outputStreams.push_back(new OutputStream(x_name, x_type, x_image));
+	m_outputStreams.push_back(new Stream(x_name, x_type, x_image));
 }*/

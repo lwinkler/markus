@@ -27,7 +27,7 @@
 #include "cv.h"
 #include "ConfigReader.h"
 #include "Parameter.h"
-#include "OutputStream.h"
+#include "Stream.h"
 #include "StreamImage.h"
 #include "StreamDebug.h"
 #include "StreamRect.h"
@@ -65,7 +65,7 @@ public:
 	const std::string& GetName(){return m_name;};
 	const IplImage * GetOutput(){return m_output;}
 	//void AddStream(const std::string& x_name, StreamType x_type, IplImage* m_image);
-	const std::vector<OutputStream*>& GetOutputStreamList() const {return m_outputStreams;};
+	const std::vector<Stream*>& GetStreamList() const {return m_outputStreams;};
 	
 	virtual int GetWidth() const = 0;// {return GetRefParameter().width;}
 	virtual int GetHeight() const = 0;// {return GetRefParameter().height;}
@@ -77,8 +77,8 @@ protected:
 	IplImage * m_output;
 	const std::string m_name;
 	virtual const ModuleParameterStructure & GetRefParameter() const = 0;
-	std::vector<OutputStream *> m_outputStreams;
-	std::vector<OutputStream *> m_debugStreams;
+	std::vector<Stream *> m_outputStreams;
+	std::vector<Stream *> m_debugStreams;
 };
 
 #endif
