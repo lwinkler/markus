@@ -32,13 +32,13 @@
 class StreamImage : public Stream
 {
 public:
-	StreamImage(const std::string& x_name, IplImage* x_image);
+	StreamImage(const std::string& x_name, cv::Mat* x_image);
 	~StreamImage();
-	const IplImage* GetImageRef() const {return m_image;};
+	const cv::Mat* GetImageRef() const {return m_image;};
 	
-	virtual void Render(IplImage * xp_output) const;
+	virtual void Render(cv::Mat * xp_output) const;
 protected:
-	const IplImage * m_image;
+	const cv::Mat * m_image;
 private:
 	StreamImage& operator=(const StreamImage&);
 	StreamImage(const StreamImage&);

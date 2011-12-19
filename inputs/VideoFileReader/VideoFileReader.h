@@ -52,7 +52,7 @@ public:
 	
 	void Capture();
 	const std::string& GetName(){return m_name;};
-	virtual const IplImage * GetImage() const {return m_input;}
+	virtual const cv::Mat * GetImage() const {return m_input;}
 
 protected:
 	CvCapture * m_capture;

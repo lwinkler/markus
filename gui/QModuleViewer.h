@@ -70,13 +70,13 @@ private:
 	QComboBox * comboStreams;
 	virtual void resizeEvent(QResizeEvent * e);
 
-	IplImage * m_img_original;
-	IplImage * m_img_output;
+	cv::Mat * m_img_original;
+	cv::Mat * m_img_output;
 	// Images for format conversion
-	IplImage* m_img_tmp1_c1;
-	IplImage* m_img_tmp2_c1;
-	IplImage* m_img_tmp1_c3;
-	IplImage* m_img_tmp2_c3;
+	cv::Mat* m_img_tmp1_c1;
+	cv::Mat* m_img_tmp2_c1;
+	cv::Mat* m_img_tmp1_c3;
+	cv::Mat* m_img_tmp2_c3;
 
 public slots:
 	//void Resize(int x_width, int x_height);

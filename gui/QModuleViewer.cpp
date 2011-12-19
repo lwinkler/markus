@@ -39,6 +39,7 @@
 #include "StreamImage.h"
 
 using namespace std;
+using namespace cv;
 
 // Constructor
 QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidget(parent)
@@ -136,12 +137,12 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 
 QModuleViewer::~QModuleViewer(void) 
 {
-	if(m_img_original != NULL)  cvReleaseImage(&m_img_original); 
-	if(m_img_output != NULL)  cvReleaseImage(&m_img_output); 
-	if(m_img_tmp1_c1 != NULL) cvReleaseImage(&m_img_tmp1_c1);
-	if(m_img_tmp1_c3 != NULL) cvReleaseImage(&m_img_tmp1_c3);
-	if(m_img_tmp2_c1 != NULL) cvReleaseImage(&m_img_tmp2_c1);
-	if(m_img_tmp2_c3 != NULL) cvReleaseImage(&m_img_tmp2_c3);
+	if(m_img_original != NULL)  delete(m_img_original); 
+	if(m_img_output != NULL)  delete(m_img_output); 
+	if(m_img_tmp1_c1 != NULL) delete(m_img_tmp1_c1);
+	if(m_img_tmp1_c3 != NULL) delete(m_img_tmp1_c3);
+	if(m_img_tmp2_c1 != NULL) delete(m_img_tmp2_c1);
+	if(m_img_tmp2_c3 != NULL) delete(m_img_tmp2_c3);
 }
 
 /*void QModuleViewer::Resize(int x_width, int x_height)
@@ -174,14 +175,14 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 	
 	m_image =  QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
 	
-	if(m_img_output != NULL) cvReleaseImage(&m_img_output);
-	if(m_img_original != NULL)  cvReleaseImage(&m_img_original); 
+	if(m_img_output != NULL) delete(m_img_output);
+	if(m_img_original != NULL)  delete(m_img_original); 
 	m_img_output = m_img_original = NULL;
 	
-	if(m_img_tmp1_c1 != NULL) cvReleaseImage(&m_img_tmp1_c1);
-	if(m_img_tmp1_c3 != NULL) cvReleaseImage(&m_img_tmp1_c3);
-	if(m_img_tmp2_c1 != NULL) cvReleaseImage(&m_img_tmp2_c1);
-	if(m_img_tmp2_c3 != NULL) cvReleaseImage(&m_img_tmp2_c3);
+	if(m_img_tmp1_c1 != NULL) delete(m_img_tmp1_c1);
+	if(m_img_tmp1_c3 != NULL) delete(m_img_tmp1_c3);
+	if(m_img_tmp2_c1 != NULL) delete(m_img_tmp2_c1);
+	if(m_img_tmp2_c3 != NULL) delete(m_img_tmp2_c3);
 	
 	m_img_tmp1_c1 = m_img_tmp1_c3 = m_img_tmp2_c1 = m_img_tmp2_c3 = NULL;
 }
@@ -198,42 +199,42 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 	
 	
 	if(m_img_original == NULL)
-		m_img_original = cvCreateImage( cvSize(m_currentStream->GetWidth(), m_currentStream->GetHeight()), IPL_DEPTH_8U, 3);
+		m_img_original = new Mat( cvSize(m_currentStream->GetWidth(), m_currentStream->GetHeight()), IPL_DEPTH_8U, 3);
 	cvSet(m_img_original, cvScalar(0,0,0));
 	if(m_img_output == NULL)
-		m_img_output = cvCreateImage( cvSize(m_outputWidth, m_outputHeight), IPL_DEPTH_8U, 3);
+		m_img_output = new Mat( cvSize(m_outputWidth, m_outputHeight), IPL_DEPTH_8U, 3);
 	// Write output to screen
 	// TODO : Copy below
 	//cout<<"Render "<<m_currentStream->GetWidth()<<" to "<<m_img_original->width<<endl;
 	m_currentStream->Render(m_img_original);
-	if(m_img_output->nChannels == 3)
+	if(m_img_output->channels() == 3)
 		adjust(m_img_original, m_img_output, m_img_tmp1_c3, m_img_tmp2_c3);
 	else
 		adjust(m_img_original, m_img_output, m_img_tmp1_c1, m_img_tmp2_c1);
 	
 	// switch between bit depths
-	switch (m_img_output->depth) 
+	switch (m_img_output->depth()) 
 	{
 		case IPL_DEPTH_8U:
-			switch (m_img_output->nChannels) 
+			switch (m_img_output->channels()) 
 			{
 				case 3:
 					cvIndex = 0; cvLineStart = 0;
-					for (int y = 0; y < m_img_output->height; y++) 
+					for (int y = 0; y < m_img_output->rows; y++) 
 					{
 						unsigned char red,green,blue;
 						cvIndex = cvLineStart;
-						for (int x = 0; x < m_img_output->width; x++) 
+						for (int x = 0; x < m_img_output->cols; x++) 
 						{
 							// DO it
-							red = m_img_output->imageData[cvIndex+2];
-							green = m_img_output->imageData[cvIndex+1];
-							blue = m_img_output->imageData[cvIndex+0];
+							red = m_img_output->data[cvIndex+2];
+							green = m_img_output->data[cvIndex+1];
+							blue = m_img_output->data[cvIndex+0];
 							
 							m_image.setPixel(x,y,qRgb(red, green, blue));
 							cvIndex += 3;
 						}
-						cvLineStart += m_img_output->widthStep;                        
+						cvLineStart += m_img_output->cols;                        
 					}
 					break;
 				default:
@@ -242,7 +243,7 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 			}
 			break;
 		default:
-			throw("This type of IplImage is not implemented in QModuleViewer\n");
+			throw("This type of Mat is not implemented in QModuleViewer\n");
 			break;
 	}
 	//imagelabel->setPixmap(QPixmap::fromImage(m_image));
@@ -269,7 +270,7 @@ void QModuleViewer::updateStream(const Stream * x_outputStream)
 	m_currentStream = x_outputStream;
 	if(m_img_original != NULL)
 	{
-		cvReleaseImage(&m_img_original);
+		delete(m_img_original);
 		m_img_original = NULL;
 	}
 }

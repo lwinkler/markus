@@ -37,7 +37,7 @@ public:
 	void Clear() {m_rects.clear();};
 	void AddRect(cv::Rect x_rect) {m_rects.push_back(x_rect);};
 	
-	virtual void Render(IplImage * xp_output) const;
+	virtual void Render(cv::Mat * xp_output) const;
 protected:
 	std::vector<cv::Rect> & m_rects;
 private:

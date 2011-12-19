@@ -25,6 +25,7 @@
 #include "util.h"
 
 using namespace std;
+using namespace cv;
 
 UsbCam::UsbCam(const std::string& x_name, ConfigReader& x_configReader): 
 	m_param(x_configReader, x_name), 
@@ -59,15 +60,15 @@ UsbCam::UsbCam(const std::string& x_name, ConfigReader& x_configReader):
 //	m_input = NULL;//cvCreateImage( cvSize(m_width, m_height), IPL_DEPTH_8U, 3);
 
 	
-	m_input = cvCreateImage( cvSize(m_inputWidth, m_inputHeight), IPL_DEPTH_8U, 3); // TODO : No allocation needed
-	m_render = cvCreateImage( cvSize(m_inputWidth, m_inputHeight), IPL_DEPTH_8U, 3);
+	m_input = new Mat( cvSize(m_inputWidth, m_inputHeight), IPL_DEPTH_8U, 3); // TODO : No allocation needed
+	m_render = new Mat( cvSize(m_inputWidth, m_inputHeight), IPL_DEPTH_8U, 3);
 	m_outputStreams.push_back(new StreamImage("input", m_input));
 	m_outputStreams.push_back(new StreamImage("render", m_render));
 }
 
 UsbCam::~UsbCam()
 {
-	cvReleaseImage(&m_render);
+	delete(m_render);
 	cvReleaseCapture(&m_capture );
 }
 
@@ -83,7 +84,7 @@ void UsbCam::Capture()
 	cvGrabFrame(m_capture);
 	//m_input = cvRetrieveFrame(m_capture);           // retrieve the captured frame
 	
-	IplImage * tmp = cvRetrieveFrame(m_capture);
+	Mat * tmp = new Mat(cvRetrieveFrame(m_capture));
 	//cout<<tmp->width<<" == "<<m_input->width<<endl;
 	//assert(tmp->width == m_input->width);
 	//assert(tmp->height == m_input->height);

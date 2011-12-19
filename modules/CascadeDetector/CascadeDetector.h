@@ -98,7 +98,7 @@ private:
 	
 	//cv::CascadeClassifier m_cascade;
 	std::vector<cv::Rect> m_detectedObjects;
-	IplImage * m_debug;
+	cv::Mat * m_debug;
 	
 	DetectionThread m_thread;
 public:
@@ -106,8 +106,8 @@ public:
 	~CascadeDetector(void);
 	//void CreateParamWindow();
 	
-	virtual void LaunchThread(const IplImage * img, const double x_timeSinceLastProcessing);
-	virtual void NormalProcess(const IplImage * img, const double x_timeSinceLastProcessing);
+	virtual void LaunchThread(const cv::Mat * img, const double x_timeSinceLastProcessing);
+	virtual void NormalProcess(const cv::Mat * img, const double x_timeSinceLastProcessing);
 	virtual void CopyResults();
 	
 	inline virtual int GetWidth() const {return m_param.width;};

@@ -45,7 +45,7 @@ public:
 	inline int GetWidth() const {return m_width;};
 	inline int GetHeight() const {return m_height;};
 	inline StreamType GetType() const {return m_type;};
-	virtual void Render(IplImage * x_output) const  = 0;
+	virtual void Render(cv::Mat * x_output) const  = 0;
 protected:
 	const std::string m_name;
 	const StreamType m_type;

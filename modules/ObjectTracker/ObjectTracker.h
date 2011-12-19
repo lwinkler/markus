@@ -52,14 +52,14 @@ public:
 	ObjectTracker(const std::string& x_name, ConfigReader& x_configReader);
 	~ObjectTracker(void);
 	
-	virtual void ProcessFrame(const IplImage* x_img, const double x_timeSinceLastProcessing);
+	virtual void ProcessFrame(const cv::Mat* x_img, const double x_timeSinceLastProcessing);
 	inline virtual int GetWidth() const {return m_param.width;};
 	inline virtual int GetHeight() const {return m_param.height;};
 	
 private:
 	ObjectTrackerParameterStructure m_param;
-	IplImage* m_input; // Debug TODO
-	IplImage* m_img_blur;
+	cv::Mat* m_input; // Debug TODO
+	cv::Mat* m_img_blur;
 	Detector detect;
 	Tracker track;
 	static const char * m_type;

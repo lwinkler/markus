@@ -42,17 +42,17 @@ StreamRect::~StreamRect()
 }
 
 // Render : Draw rectangles on image
-void StreamRect::Render(IplImage * xp_output) const
+void StreamRect::Render(Mat * xp_output) const
 {
 	for(vector<Rect>::const_iterator it = m_rects.begin() ; it != m_rects.end() ; it++)
 	{
 		Point p1(it->x, it->y);
 		Point p2(it->x + it->width, it->y + it->height);
 		
-		float scale = static_cast<float>(xp_output->width) / m_width;
+		float scale = static_cast<float>(xp_output->cols) / m_width;
 		p1.x = p1.x * scale;
 		p2.x = p2.x * scale;
-		scale = static_cast<float>(xp_output->height) / m_height;
+		scale = static_cast<float>(xp_output->rows) / m_height;
 		p1.y = p1.y * scale;
 		p2.y = p2.y * scale;
 		

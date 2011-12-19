@@ -46,3 +46,8 @@ qt4_automoc(${markus_SRCS})
 add_executable(markus ${markus_SRCS})
 target_link_libraries(markus ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${OpenCV_LIBS} tinyxml)
 
+
+SET(CMAKE_CXX_FLAGS "-Wall -g -fno-rtti")
+SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
+SET(CMAKE_CXX_FLAGS_RELEASE "-O2")
+SET(CMAKE_CXX_FLAGS_DEBUG  "-O0 -g")

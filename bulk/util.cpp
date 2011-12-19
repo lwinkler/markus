@@ -25,27 +25,28 @@
 #include <iostream>
 
 using namespace std;
+using namespace cv;
 
 
-void convertByte2Float(const IplImage *byte_img, IplImage *float_img)
+void convertByte2Float(const Mat *byte_img, Mat *float_img)
 {
-	if( (byte_img->width != float_img->width) ||
-		(byte_img->height != float_img->height) ||
-		(byte_img->nChannels != float_img->nChannels) ||
-		(byte_img->depth != IPL_DEPTH_8U) ||
-		(float_img->depth != IPL_DEPTH_32F))
+	if( (byte_img->cols != float_img->cols) ||
+		(byte_img->rows != float_img->rows) ||
+		(byte_img->channels() != float_img->channels()) ||
+		(byte_img->depth() != IPL_DEPTH_8U) ||
+		(float_img->depth() != IPL_DEPTH_32F))
 	{
 		printf("convertByte2Float error. Aborting ... \n");
 		exit(-1);
 	}
-	unsigned char * runner1= (unsigned char *)byte_img->imageDataOrigin;
-	float * runner2 = (float *) float_img->imageDataOrigin;
-	int skip = byte_img->widthStep-byte_img->nChannels*byte_img->width;
-	for(int i=0;i<byte_img->height;i++)
+	unsigned char * runner1= (unsigned char *)byte_img->data;
+	float * runner2 = (float *) float_img->data;
+	int skip = byte_img->cols-byte_img->channels()*byte_img->rows;
+	for(int i=0;i<byte_img->rows;i++)
 	{
-		for(int j=0;j<byte_img->width;j++)
+		for(int j=0;j<byte_img->rows;j++)
 		{
-			for(int k=0;k<byte_img->nChannels;k++)
+			for(int k=0;k<byte_img->channels();k++)
 			{
 				*runner2++ = (float) (*runner1++/255.);
 			}
@@ -55,25 +56,25 @@ void convertByte2Float(const IplImage *byte_img, IplImage *float_img)
 }
 
 
-void convertFloat2Byte(const IplImage *float_img, IplImage *byte_img)
+void convertFloat2Byte(const Mat *float_img, Mat *byte_img)
 {
-	if( (byte_img->width != float_img->width) ||
-		(byte_img->height != float_img->height) ||
-		(byte_img->nChannels != float_img->nChannels) ||
-		(byte_img->depth != IPL_DEPTH_8U) ||
-		(float_img->depth != IPL_DEPTH_32F))
+	if( (byte_img->cols != float_img->cols) ||
+		(byte_img->rows != float_img->rows) ||
+		(byte_img->channels() != float_img->channels()) ||
+		(byte_img->depth() != IPL_DEPTH_8U) ||
+		(float_img->depth() != IPL_DEPTH_32F))
 	{
 		printf("convertByte2Float error. Aborting ... \n");
 		exit(-1);
 	}
-	unsigned char * runner1= (unsigned char *)byte_img->imageDataOrigin;
-	float * runner2 = (float *) float_img->imageDataOrigin;
-	int skip = byte_img->widthStep-byte_img->nChannels*byte_img->width;
-	for(int i=0;i<byte_img->height;i++)
+	unsigned char * runner1= (unsigned char *)byte_img->data;
+	float * runner2 = (float *) float_img->data;
+	int skip = byte_img->cols-byte_img->channels()*byte_img->cols;
+	for(int i=0;i<byte_img->rows;i++)
 	{
-		for(int j=0;j<byte_img->width;j++)
+		for(int j=0;j<byte_img->cols;j++)
 		{
-			for(int k=0;k<byte_img->nChannels;k++)
+			for(int k=0;k<byte_img->channels();k++)
 			{
 				*runner1++ = (unsigned char) (*runner2++*255.);
 			}
@@ -84,9 +85,9 @@ void convertFloat2Byte(const IplImage *float_img, IplImage *byte_img)
 
 /* Set image to the right size */
 
-void adjustSize(const IplImage* im_in, IplImage* im_out)
+void adjustSize(const Mat* im_in, Mat* im_out)
 {
-	if(im_in->width == im_out->width && im_in->height == im_out->height) 
+	if(im_in->cols == im_out->cols && im_in->rows == im_out->rows) 
 		cvCopy(im_in, im_out);
 	else 
 		cvResize(im_in, im_out, CV_INTER_NN);
@@ -95,46 +96,46 @@ void adjustSize(const IplImage* im_in, IplImage* im_out)
 /* Set image to the right depth 
  WARNING :: buffers tmp1 and tmp2 are only generated once (static) so this method must be used only for one type of images  */
 
-void adjust(const IplImage* im_in, IplImage* im_out, IplImage*& tmp1, IplImage*& tmp2)
+void adjust(const Mat* im_in, Mat* im_out, Mat*& tmp1, Mat*& tmp2)
 {
 	
-	if(im_in->depth == im_out->depth)
+	if(im_in->depth() == im_out->depth())
 	{
 		if(tmp1==NULL)
 		{
 			//cout<<"create image in adjust tmp1 depth "<<im_out->depth<<endl;
-			tmp1 = cvCreateImage( cvSize(im_out->width, im_out->height), im_out->depth, im_in->nChannels);
+			tmp1 = new Mat( cvSize(im_out->cols, im_out->rows), im_out->depth(), im_in->channels());
 		}
 		adjustSize(im_in, tmp1);
 		adjustChannels(tmp1, im_out);
 	}
-	else if(im_in->depth == IPL_DEPTH_8U && im_out->depth == IPL_DEPTH_32F) 
+	else if(im_in->depth() == IPL_DEPTH_8U && im_out->depth() == IPL_DEPTH_32F) 
 	{
 		if(tmp1==NULL)
 		{
 			//cout<<"create image in adjust IPL_DEPTH_32F tmp1"<<endl;
-			tmp1 = cvCreateImage( cvSize(im_out->width, im_out->height), IPL_DEPTH_8U, im_in->nChannels);
+			tmp1 = new Mat( cvSize(im_out->cols, im_out->rows), IPL_DEPTH_8U, im_in->channels());
 		}
 		if(tmp2==NULL)
 		{
 			//cout<<"create image in adjust IPL_DEPTH_32F tmp2"<<endl;
-			tmp2 = cvCreateImage( cvSize(im_out->width, im_out->height), IPL_DEPTH_8U, im_out->nChannels);
+			tmp2 = new Mat( cvSize(im_out->cols, im_out->rows), IPL_DEPTH_8U, im_out->channels());
 		}
 		adjustSize(im_in, tmp1);
 		adjustChannels(tmp1, tmp2);
 		convertByte2Float(tmp2, im_out);		
 	}
-	else if(im_in->depth == IPL_DEPTH_32F && im_out->depth == IPL_DEPTH_8U) 
+	else if(im_in->depth() == IPL_DEPTH_32F && im_out->depth() == IPL_DEPTH_8U) 
 	{
 		if(tmp1==NULL)
 		{
 			//cout<<"create image in adjust IPL_DEPTH_32F tmp1"<<endl;
-			tmp1 = cvCreateImage( cvSize(im_out->width, im_out->height), IPL_DEPTH_32F, im_in->nChannels);
+			tmp1 = new Mat( cvSize(im_out->cols, im_out->rows), IPL_DEPTH_32F, im_in->channels());
 		}
 		if(tmp2==NULL)
 		{
 			//cout<<"create image in adjust IPL_DEPTH_32F tmp2"<<endl;
-			tmp2 = cvCreateImage( cvSize(im_out->width, im_out->height), IPL_DEPTH_32F, im_out->nChannels);
+			tmp2 = new Mat( cvSize(im_out->cols, im_out->rows), IPL_DEPTH_32F, im_out->channels());
 		}
 		adjustSize(im_in, tmp1);		
 		adjustChannels(tmp1, tmp2);
@@ -142,7 +143,7 @@ void adjust(const IplImage* im_in, IplImage* im_out, IplImage*& tmp1, IplImage*&
 	}
 	else
 	{
-		printf("Cannot convert from %d to %d\n", im_in->depth, im_out->depth);
+		printf("Cannot convert from %d to %d\n", im_in->depth(), im_out->depth());
 		throw(string("Error in adjust : depth ")); 
 	}
 	// TODO : maybe use cvConvertScale(tmp2,im_out,255,0);
@@ -150,17 +151,17 @@ void adjust(const IplImage* im_in, IplImage* im_out, IplImage*& tmp1, IplImage*&
 
 /* Set the image to the right number of channels */
 
-void adjustChannels(const IplImage* im_in, IplImage* im_out)
+void adjustChannels(const Mat* im_in, Mat* im_out)
 {
-	if(im_in->nChannels == im_out->nChannels)
+	if(im_in->channels() == im_out->channels())
 	{
 		cvCopy(im_in, im_out);
 	}
-	else if(im_in->nChannels == 1 && im_out->nChannels == 3) 
+	else if(im_in->channels() == 1 && im_out->channels() == 3) 
 	{
 		cvCvtColor(im_in, im_out, CV_GRAY2RGB);
 	}
-	else if(im_in->nChannels == 3 && im_out->nChannels == 1) 
+	else if(im_in->channels() == 3 && im_out->channels() == 1) 
 	{
 		cvCvtColor(im_in, im_out, CV_RGB2GRAY);
 	}

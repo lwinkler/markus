@@ -46,9 +46,9 @@ public:
 	ModuleAsync(const std::string& x_name, ConfigReader& x_confReader);
 	virtual ~ModuleAsync();
 	
-	virtual void ProcessFrame(const IplImage * x_input, const double x_timeSinceLastProcessing);
+	virtual void ProcessFrame(const cv::Mat * x_input, const double x_timeSinceLastProcessing);
 	//const std::string& GetName(){return m_name;};
-	//const IplImage * GetOutput(){return m_output;}
+	//const Mat * GetOutput(){return m_output;}
 	
 	/*inline int GetWidth() const {return GetRefParameter().width;}
 	inline int GetHeight() const {return GetRefParameter().height;}
@@ -57,18 +57,18 @@ public:
 	inline int GetFps() const {return GetRefParameter().fps;}
 	*/	
 protected:
-//	IplImage * m_output;
+//	Mat * m_output;
 //	const std::string m_name;
 //	std::vector<Stream *> m_outputStreams;
 //	ThreadStatus m_threadStatus;
-	IplImage * m_lastInput;
+	cv::Mat * m_lastInput;
 	double m_timeSinceLastThread;
 	bool m_resultsCopied;
 
 	virtual const ModuleAsyncParameterStructure & GetRefParameter() const = 0;
 	virtual const QThread & GetRefThread() = 0;
-	virtual void LaunchThread(const IplImage* m_input, const double x_timeSinceLastProcessing) = 0;
-	virtual void NormalProcess(const IplImage * img, const double x_timeSinceLastProcessing) = 0;
+	virtual void LaunchThread(const cv::Mat* m_input, const double x_timeSinceLastProcessing) = 0;
+	virtual void NormalProcess(const cv::Mat * img, const double x_timeSinceLastProcessing) = 0;
 	virtual void CopyResults() = 0;
 };
 

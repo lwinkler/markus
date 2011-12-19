@@ -24,9 +24,10 @@
 #include "StreamImage.h"
 #include <iostream>
 using namespace std;
+using namespace cv;
 
-StreamImage::StreamImage(const std::string& x_name, IplImage* x_image) : 
-	Stream(x_name, STREAM_IMAGE, x_image->width, x_image->height),
+StreamImage::StreamImage(const std::string& x_name, Mat* x_image) : 
+	Stream(x_name, STREAM_IMAGE, x_image->cols, x_image->rows),
 	m_image(x_image)
 {
 }
@@ -37,7 +38,7 @@ StreamImage::~StreamImage()
 
 }
 
-void StreamImage::Render(IplImage * xp_output) const
+void StreamImage::Render(Mat * xp_output) const
 {
 	//cout<<"xp_output->width "<<xp_output->width<<endl;
 	//cout<<"GetWidth()"<<GetWidth()<<endl;

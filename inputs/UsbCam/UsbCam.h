@@ -52,10 +52,10 @@ public:
 	
 	void Capture();
 	const std::string& GetName(){return m_name;};
-	virtual const IplImage * GetImage() const {return m_input;}
+	virtual const cv::Mat * GetImage() const {return m_input;}
 
 protected:
-	//IplImage * m_input;
+	//cv::Mat * m_input;
 	CvCapture * m_capture;
 	int m_fps;
 

@@ -37,7 +37,7 @@ ModuleAsync::ModuleAsync(const std::string& x_name, ConfigReader& x_configReader
 	m_resultsCopied = false;
 };
 
-void ModuleAsync::ProcessFrame(const IplImage* x_input, const double x_timeSinceLastProcessing)
+void ModuleAsync::ProcessFrame(const cv::Mat* x_input, const double x_timeSinceLastProcessing)
 {
 	m_timeSinceLastThread += x_timeSinceLastProcessing;
 	
@@ -70,7 +70,7 @@ ModuleAsync::~ModuleAsync()
 	//TODO : delete m_outputStreams
 };
 
-/*void ModuleAsync::AddStream(const std::string& x_name, StreamType x_type, IplImage* x_image)
+/*void ModuleAsync::AddStream(const std::string& x_name, StreamType x_type, Mat* x_image)
 {
 	m_outputStreams.push_back(new Stream(x_name, x_type, x_image));
 }*/

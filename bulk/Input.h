@@ -65,7 +65,7 @@ public:
 	
 	virtual void Capture() = 0;
 	inline const std::string& GetName()const {return m_name;};
-	virtual const IplImage * GetImage() const = 0;
+	virtual const cv::Mat * GetImage() const = 0;
 	inline virtual int GetWidth() const{return m_inputWidth;};
 	inline virtual int GetHeight() const{return m_inputHeight;};
 	QReadWriteLock m_lock;
@@ -73,13 +73,13 @@ public:
 	inline double GetFps() const {return GetRefParameter().fps;};
 	
 	void AddRelatedStream(Stream* xp_stream) {m_relatedStreams.push_back(xp_stream);};
-	virtual void ProcessFrame(const IplImage* x_img, const double x_timeSinceLastProcessing);
+	virtual void ProcessFrame(const cv::Mat* x_img, const double x_timeSinceLastProcessing);
 private:
 
 protected:
 	//InputParameterStructure m_param;
-	IplImage * m_input;
-	IplImage * m_render;
+	cv::Mat * m_input;
+	cv::Mat * m_render;
 	
 	const std::string m_name;
 	int m_inputWidth;

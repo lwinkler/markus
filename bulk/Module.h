@@ -61,10 +61,10 @@ public:
 	Module(const std::string& x_name, ConfigReader& x_confReader);
 	virtual ~Module();
 	
-	virtual void ProcessFrame(const IplImage * x_img, const double x_timeSinceLastProcessing) = 0;
+	virtual void ProcessFrame(const cv::Mat * x_img, const double x_timeSinceLastProcessing) = 0;
 	const std::string& GetName(){return m_name;};
-	const IplImage * GetOutput(){return m_output;}
-	//void AddStream(const std::string& x_name, StreamType x_type, IplImage* m_image);
+	const cv::Mat * GetOutput(){return m_output;}
+	//void AddStream(const std::string& x_name, StreamType x_type, Mat* m_image);
 	const std::vector<Stream*>& GetStreamList() const {return m_outputStreams;};
 	
 	virtual int GetWidth() const = 0;// {return GetRefParameter().width;}
@@ -74,7 +74,7 @@ public:
 	inline int GetFps() const {return GetRefParameter().fps;}
 	
 protected:
-	IplImage * m_output;
+	cv::Mat * m_output;
 	const std::string m_name;
 	virtual const ModuleParameterStructure & GetRefParameter() const = 0;
 	std::vector<Stream *> m_outputStreams;

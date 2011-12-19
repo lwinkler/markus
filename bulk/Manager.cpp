@@ -139,11 +139,35 @@ void Manager::Process()
 	{
 		(*it)->Capture();
 	}*/
-	for(vector<ImageProcessor*>::iterator it = m_imageProcessors.begin(); it != m_imageProcessors.end(); it++)
+	
+	try
 	{
-		
-		(*it)->Process(timecount);
+		for(vector<ImageProcessor*>::iterator it = m_imageProcessors.begin(); it != m_imageProcessors.end(); it++)
+		{
+			(*it)->Process(timecount);
+		}
 	}
+	catch(cv::Exception& e)
+	{
+		cout << "Exception raised (std::exception) : " << e.what() <<endl;
+	}
+	catch(std::exception& e)
+	{
+		cout << "Exception raised (std::exception) : " << e.what() <<endl;
+	}
+	catch(std::string str)
+	{
+		cout << "Exception raised (string) : " << str <<endl;
+	}
+	catch(const char* str)
+	{
+		cout << "Exception raised (const char*) : " << str <<endl;
+	}
+	catch(...)
+	{
+		cout << "Unknown exception raised: "<<endl;
+	}
+
 	
 	m_timerProc.stop();
 	m_timerConv.start();

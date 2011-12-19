@@ -71,9 +71,9 @@ protected:
 	Module * m_module;
 	Input * m_input;
 
-	IplImage * m_img_tmp1;
-	IplImage * m_img_tmp2;
-	IplImage * m_img_input;
+	cv::Mat * m_img_tmp1;
+	cv::Mat * m_img_tmp2;
+	cv::Mat * m_img_input;
 
 	ImageProcessorParameterStructure m_param;
 	inline virtual const ParameterStructure& GetRefParameter() const {return m_param;};

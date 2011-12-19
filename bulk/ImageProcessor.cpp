@@ -30,6 +30,9 @@
 #include "UsbCam.h"
 #include "VideoFileReader.h"
 
+using namespace std;
+using namespace cv;
+
 ImageProcessor::ImageProcessor(const string & x_name, int x_nb, ConfigReader& x_confReader, std::vector<Input*>& xr_inputList):
 	m_param(x_confReader, x_nb), 
 	Configurable(x_confReader),
@@ -90,7 +93,7 @@ ImageProcessor::ImageProcessor(const string & x_name, int x_nb, ConfigReader& x_
 		xr_inputList.push_back(m_input);
 	}
 
-	m_img_input = cvCreateImage( cvSize(m_module->GetWidth(), m_module->GetHeight()), m_module->GetDepth(), m_module->GetNbChannels());
+	m_img_input = new Mat( cvSize(m_module->GetWidth(), m_module->GetHeight()), m_module->GetDepth(), m_module->GetNbChannels());
 	m_img_tmp1 = NULL; // Will be allocated on first call of adjust
 	m_img_tmp2 = NULL;
 	m_timeSinceLastProcessing = 0;
@@ -102,9 +105,9 @@ ImageProcessor::~ImageProcessor()
 {
 	delete m_module;
 	// delete m_input; // should not be deleted here
-	if(m_img_tmp1 != NULL) cvReleaseImage(& m_img_tmp1);
-	if(m_img_tmp2 != NULL) cvReleaseImage(& m_img_tmp2);
-	if(m_img_input != NULL) cvReleaseImage(& m_img_input);
+	if(m_img_tmp1 != NULL) delete(m_img_tmp1);
+	if(m_img_tmp2 != NULL) delete(m_img_tmp2);
+	if(m_img_input != NULL) delete(m_img_input);
 }
 
 void ImageProcessor::Process(double x_timeSinceLast)

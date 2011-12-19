@@ -42,28 +42,28 @@ CascadeDetector::CascadeDetector(const std::string& x_name, ConfigReader& x_conf
 	// Init output images
 	assert(m_thread.m_cascade.load( m_param.filterFile ));
 	assert(!m_thread.m_cascade.empty());
-	m_debug = cvCreateImage(cvSize(m_param.width, m_param.height), m_param.depth, 3);
-	m_output = cvCreateImage(cvSize(m_param.width, m_param.height), m_param.depth, 3);
+	m_debug = new Mat(cvSize(m_param.width, m_param.height), m_param.depth, 3);
+	m_output = new Mat(cvSize(m_param.width, m_param.height), m_param.depth, 3);
 
 	m_outputStreams.push_back(new StreamRect("detected", m_param.width, m_param.height, m_detectedObjects, ColorFromStr(m_param.color))); // TODO : Chg name faces
 	m_outputStreams.push_back(new StreamDebug("debug", m_debug));
 //	m_outputStreams.push_back(new StreamImage("input", m_inputCopy));
-	m_lastInput = cvCreateImage( cvSize(GetWidth(), GetHeight()), GetDepth(), GetNbChannels());
+	m_lastInput = new Mat( cvSize(GetWidth(), GetHeight()), GetDepth(), GetNbChannels());
 }
 
 CascadeDetector::~CascadeDetector(void)
 {
-	cvReleaseImage(&m_debug);
-	cvReleaseImage(&m_lastInput);
+	delete(m_debug);
+	delete(m_lastInput);
 
 	//TODO : delete output streams
 }
 
 // This method launches the thread
-void CascadeDetector::LaunchThread(const IplImage* img, const double x_timeSinceLastProcessing)
+void CascadeDetector::LaunchThread(const Mat* img, const double x_timeSinceLastProcessing)
 {
 	cvCopy(img, m_lastInput);
-	Mat smallImg(m_lastInput, false);
+	Mat smallImg(*m_lastInput);
 	equalizeHist( smallImg, smallImg );
 	
 	
@@ -72,7 +72,7 @@ void CascadeDetector::LaunchThread(const IplImage* img, const double x_timeSince
 	m_thread.start();
 }
 
-void CascadeDetector::NormalProcess(const IplImage* img, const double x_timeSinceLastProcessing)
+void CascadeDetector::NormalProcess(const Mat* img, const double x_timeSinceLastProcessing)
 {
 	cvConvertImage(m_lastInput, m_debug);
 	Stream& os(*m_outputStreams[0]);

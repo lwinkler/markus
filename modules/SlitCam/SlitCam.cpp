@@ -28,6 +28,7 @@
 #include <highgui.h>
 
 using namespace std;
+using namespace cv;
 
 
 const char * SlitCam::m_type = "SlitCamera";
@@ -39,9 +40,9 @@ SlitCam::SlitCam(const std::string& x_name, ConfigReader& x_configReader)
 	m_position = 0;
 	
 	// Init images
-	m_output = cvCreateImage(cvSize(m_param.width, m_param.height),
+	m_output = new Mat(cvSize(m_param.width, m_param.height),
 				 m_param.depth, m_param.channels);
-	m_inputCopy = cvCreateImage(cvSize(m_param.width, m_param.height),
+	m_inputCopy = new Mat(cvSize(m_param.width, m_param.height),
 				 m_param.depth, m_param.channels);
 	
 	// Init output images
@@ -51,28 +52,28 @@ SlitCam::SlitCam(const std::string& x_name, ConfigReader& x_configReader)
 
 SlitCam::~SlitCam(void)
 {
-	cvReleaseImage(&m_output);
-	cvReleaseImage(&m_inputCopy);
+	delete(m_output);
+	delete(m_inputCopy);
 	//TODO : delete output streams
 }
 
-void SlitCam::ProcessFrame(const IplImage * x_img, const double /*x_timeSinceLastProcessing*/)
+void SlitCam::ProcessFrame(const Mat * x_img, const double /*x_timeSinceLastProcessing*/)
 {
 	cvCopy(x_img, m_inputCopy);
-	int widthStep = x_img->widthStep;
+	int widthStep = x_img->cols;
 	int aperture = m_param.aperture;
-	char * pDst = m_output->imageData + m_position * m_output->nChannels * aperture;// * x_img->nChannels;
-	char * pSrc = x_img->imageData + x_img->widthStep * x_img->nChannels / 2;
-	int size = m_output->depth * aperture;
-	assert(m_output->imageSize == x_img->imageSize);
+	unsigned char * pDst = m_output->datastart + m_position * m_output->channels() * aperture;// * x_img->nChannels;
+	unsigned char * pSrc = x_img->datastart + x_img->cols * x_img->channels() / 2;
+	int size = m_output->depth() * aperture;
+	assert(m_output->size().area() == x_img->size().area());
 	
-	for(int negCount = x_img->height ; negCount ; negCount--)
+	for(int negCount = x_img->rows ; negCount ; negCount--)
 	{
 		memcpy(pDst, pSrc, size);// * x_img->nChannels);
 		//memset(pDst, *pSrc, m_image->depth);
 		pSrc += widthStep;
 		pDst += widthStep;
 	}
-	m_position = m_position == x_img->width - 1 ? 0 : m_position + 1;
+	m_position = m_position == x_img->cols - 1 ? 0 : m_position + 1;
 }
 

@@ -24,8 +24,8 @@
 #include "StreamDebug.h"
 
 
-StreamDebug::StreamDebug(const std::string& x_name, IplImage* x_image) : 
-	Stream(x_name, STREAM_DEBUG, x_image->width, x_image->height),
+StreamDebug::StreamDebug(const std::string& x_name, cv::Mat * x_image) : 
+	Stream(x_name, STREAM_DEBUG, x_image->cols, x_image->rows),
 	m_image(x_image)
 {
 }
@@ -36,7 +36,7 @@ StreamDebug::~StreamDebug()
 
 }
 
-void StreamDebug::Render(IplImage * xp_output) const
+void StreamDebug::Render(cv::Mat * xp_output) const
 {
 	cvCopy(m_image, xp_output);
 }

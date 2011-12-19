@@ -54,13 +54,13 @@ class Detector
 {
 private:
 	// Background subtraction	
-	IplImage* m_foreground;
-	IplImage* m_foreground_rff;
-	IplImage* m_background;
+	cv::Mat* m_foreground;
+	cv::Mat* m_foreground_rff;
+	cv::Mat* m_background;
 	// Temporal differencing
-	IplImage* m_lastImg;
-	IplImage* m_temporalDiff;
-	IplImage* m_blobsImg;
+	cv::Mat* m_lastImg;
+	cv::Mat* m_temporalDiff;
+	cv::Mat* m_blobsImg;
 	bool m_emptyBackgroundSubtraction;
 	bool m_emptyTemporalDiff;
 
@@ -71,22 +71,26 @@ public:
 	~Detector(void);
 
 	void Reset();
-	void BlurInput(const IplImage* src, IplImage* dst);
-	void UpdateBackground(IplImage* img);
-	void UpdateBackgroundMask(IplImage* img, IplImage* x_mask);
-	void ExtractForeground(IplImage* img);
-	void ExtractForegroundMax(IplImage* img);
+	void BlurInput(const cv::Mat* src, cv::Mat* dst);
+	void UpdateBackground(cv::Mat* img);
+	void UpdateBackgroundMask(cv::Mat* img, cv::Mat* x_mask);
+	void ExtractForeground(cv::Mat* img);
+	void ExtractForegroundMax(cv::Mat* img);
 	void RemoveFalseForegroundNeigh();
 	void RemoveFalseForegroundMorph();
 
-	void TemporalDiff(IplImage* img);
+	void TemporalDiff(cv::Mat* img);
 	
 	void ExtractBlobs();
 
-	inline IplImage* GetForeground(){ return m_foreground;};
-	inline IplImage* GetForegroundRff(){ return m_foreground_rff;};
-	inline IplImage* GetBackground(){ return m_background;};
-	inline IplImage* GetTemporalDiff(){ return m_temporalDiff;};
+	inline cv::Mat* GetForeground(){ return m_foreground;};
+	inline cv::Mat* GetForegroundRff(){ return m_foreground_rff;};
+	inline cv::Mat* GetBackground(){ return m_background;};
+	inline cv::Mat* GetTemporalDiff(){ return m_temporalDiff;};
+//void cvCopy(cv::Mat* arg1, cv::Mat* arg2);
+//    void absDiff(cv::Mat arg1, cv::Mat arg2, cv::Mat arg3);
+//    void cvSmooth(const cv::Mat* arg1, cv::Mat* arg2, int arg3, int arg4);
+
 };
 
 #endif

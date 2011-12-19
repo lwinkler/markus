@@ -34,6 +34,7 @@
 #include <highgui.h>
 
 using namespace std;
+using namespace cv;
 
 #define POW2(x) (x) * (x)
 
@@ -184,7 +185,7 @@ Tracker::Tracker(const TrackerParameter& x_param, int width, int height, int dep
 	m_param(x_param)
 {
 
-	m_blobsImg = cvCreateImage(cvSize(width, height), depth, channels);
+	m_blobsImg = new Mat(cvSize(width, height), depth, channels);
 	
 }
 
@@ -294,7 +295,7 @@ double Template::CompareWithTrackedRegion(const TrackedRegion& x_reg) const
 /* Match the template with a region (blob)*/
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-int Template::Match(const std::list<Template>& x_temp, vector<TrackedRegion>& x_regs, IplImage* x_blobsImg, double x_maxMatchingDistance)
+int Template::Match(const std::list<Template>& x_temp, vector<TrackedRegion>& x_regs, cv::Mat* x_blobsImg, double x_maxMatchingDistance)
 {
 
 	double bestDist = 1e99;
@@ -363,15 +364,17 @@ void Template::UpdateFeatures()
 
 Tracker::~Tracker(void)
 {
-	cvReleaseImage(&m_blobsImg);
+	delete(m_blobsImg);
 }
 
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 /* ExtractBlob */
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-void Tracker::ExtractBlobs(IplImage* x_img)
+void Tracker::ExtractBlobs(Mat* x_img)
 {
+	assert(false);
+#if 0
 	// object that will contain blobs of inputImage
 	CBlobResult blobs;
 	cvSet(m_blobsImg, cvScalar(0,0,0));
@@ -386,7 +389,7 @@ void Tracker::ExtractBlobs(IplImage* x_img)
 	int i;
 	CBlob *currentBlob;
 	// exclude the ones smaller than value
-	blobs.Filter( blobs, B_EXCLUDE, CBlobGetArea(), B_OUTSIDE, 25, x_img->imageSize / 4);
+	blobs.Filter( blobs, B_EXCLUDE, CBlobGetArea(), B_OUTSIDE, 25, x_img->size().area() / 4);
 
 	for (i = 0; i < blobs.GetNumBlobs(); i++ )
 	{
@@ -394,7 +397,7 @@ void Tracker::ExtractBlobs(IplImage* x_img)
 			
 			double posx = currentBlob->SumX();
 			double posy = currentBlob->SumY();
-		if(currentBlob->Parent() && !currentBlob->Exterior() && posx > 0 && posx < m_blobsImg->width && posy > 0 && posy < m_blobsImg->height) // TODO : fix this for real
+		if(currentBlob->Parent() && !currentBlob->Exterior() && posx > 0 && posx < m_blobsImg->cols && posy > 0 && posy < m_blobsImg->rows) // TODO : fix this for real
 		{
 			currentBlob->FillBlob( m_blobsImg, m_colorArray[i % m_colorArraySize]);
 			
@@ -431,6 +434,7 @@ void Tracker::ExtractBlobs(IplImage* x_img)
 		}
 		//else throw("ERROR");
 	}
+#endif
 }
 
 

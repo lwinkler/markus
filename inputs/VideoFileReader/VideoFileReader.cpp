@@ -24,6 +24,7 @@
 #include "VideoFileReader.h"
 
 using namespace std;
+using namespace cv;
 
 VideoFileReader::VideoFileReader(const std::string& x_name, ConfigReader& x_configReader): 
 	m_param(x_configReader, x_name), 
@@ -53,16 +54,16 @@ VideoFileReader::VideoFileReader(const std::string& x_name, ConfigReader& x_conf
 //	assert(m_height == m_param.height);
 	
 	
-	m_input = cvCreateImage( cvSize(m_inputWidth, m_inputHeight), IPL_DEPTH_8U, 3);
-	m_render = cvCreateImage( cvSize(m_inputWidth, m_inputHeight), IPL_DEPTH_8U, 3);
+	m_input = new Mat( cvSize(m_inputWidth, m_inputHeight), IPL_DEPTH_8U, 3);
+	m_render = new Mat( cvSize(m_inputWidth, m_inputHeight), IPL_DEPTH_8U, 3);
 	m_outputStreams.push_back(new StreamImage("input", m_input));
 	m_outputStreams.push_back(new StreamImage("render", m_render));
 }
 
 VideoFileReader::~VideoFileReader()
 {
-	cvReleaseImage(&m_input);
-	cvReleaseImage(&m_render);
+	delete(m_input);
+	delete(m_render);
 	cvReleaseCapture(&m_capture );
 }
 
