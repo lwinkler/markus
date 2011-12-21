@@ -40,7 +40,7 @@
 	<parameter id="0" name="class">UsbCam</parameter>
         <parameter id="1" name="inputWidth">200</parameter>
         <parameter id="2" name="inputHeight">100</parameter>
-        <parameter id="3" name="inputType">8</parameter>
+        <parameter id="3" name="inputType">CV_8UC3</parameter>
         <parameter id="4" name="num">-1</parameter>	
 	<parameter id="4" name="fps">1000</parameter>
 </Module>
@@ -78,10 +78,10 @@
 </Module>
 <Module name="SlitCamera1">
 	<parameter id="0" name="class">SlitCamera</parameter>
-	<parameter id="2" name="inputWidth">160</parameter>
-        <parameter id="3" name="inputHeight">120</parameter>
-	<!--<parameter id="4" name="inputType">8</parameter>-->
-	<parameter id="1" name="aperture">1</parameter>
+	<parameter id="2" name="inputWidth">640</parameter>
+        <parameter id="3" name="inputHeight">480</parameter>
+	<parameter id="4" name="inputType">CV_8UC3</parameter>
+	<parameter id="1" name="aperture">4</parameter>
 	<parameter id="4" name="fps">0</parameter>
 </Module>
 <Module name="SlitCamera2">

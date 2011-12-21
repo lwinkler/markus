@@ -26,6 +26,7 @@
 
 #include <vector>
 #include <string>
+#include <map>
 #include <assert.h>
 #include <iostream>
 #include <cstdlib>
@@ -36,7 +37,8 @@ enum ParameterType
 	PARAM_FLOAT,
 	PARAM_DOUBLE,
 	PARAM_BOOL,
-	PARAM_STR
+	PARAM_STR,
+	PARAM_IMAGE_TYPE
 };
 
 enum ParameterConfigType
@@ -156,12 +158,66 @@ public:
 	virtual void SetDefault()
 	{
 		*mp_value = m_default;
+		m_confType = PARAMCONF_DEF;
 	}
 	const std::string m_default;
 private:
 	std::string* mp_value;
 };
 
+class ParameterImageType : public Parameter
+{
+public:
+	ParameterImageType(int x_id, const std::string& x_name, int x_default, int * xp_value);
+	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
+	{
+		*mp_value = ImageTypeStr2Int(rx_value);
+		m_confType = x_confType;
+	};
+	virtual void SetValue(const void * px_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
+	{	
+		*mp_value = ImageTypeStr2Int(*static_cast<const std::string*>(px_value));
+		m_confType = x_confType;
+	};
+	virtual const void * GetValue() const
+	{
+		return static_cast<const void*>(mp_value);
+	}
+	virtual void Print() const 
+	{
+		std::cout<<m_name<<" = "<<ImageTypeInt2Str(*static_cast<const int*>(GetValue()))<<" ["<<*static_cast<const int*>(GetValue())<<"] ("<<configType[m_confType]<<"); ";	
+		
+	};
+	virtual void SetDefault()
+	{
+		*mp_value = m_default;
+		m_confType = PARAMCONF_DEF;
+	}
+	
+	// Conversion methods
+	static int ImageTypeStr2Int(const std::string& x)
+	{
+		std::map<std::string, int>::iterator found = m_map_types.find(x);
+		assert(found != m_map_types.end());
+		return found->second;
+	};
+	static const std::string& ImageTypeInt2Str(int x)
+	{
+		static const std::string unknown = "(unknown image type)";
+		for(std::map<std::string, int>::const_iterator it = m_map_types.begin() ; it != m_map_types.end() ; it++)
+			if(it->second == x)
+				return(it->first);
+		return unknown;
+	};
+	
+    std::basic_ostream< char >::__ostream_type of(const char* arg1);
+	const int m_default;
+	//const T m_min;
+	//const T m_max;
+private:
+	int* mp_value;
+	static std::map<std::string,int>  m_map_types;
+};
 
 
 class ParameterStructure

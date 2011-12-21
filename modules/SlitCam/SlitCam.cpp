@@ -42,6 +42,7 @@ SlitCam::SlitCam(const std::string& x_name, ConfigReader& x_configReader)
 	// Init images
 	m_output = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
 	m_inputCopy = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
+	m_output->setTo(cvScalar(0, 0, 0));
 	
 	// Init output images
 	m_outputStreams.push_back(new StreamImage("slit",  m_output));
@@ -57,10 +58,13 @@ SlitCam::~SlitCam(void)
 
 void SlitCam::ProcessFrame(const Mat * x_img, const double /*x_timeSinceLastProcessing*/)
 {
+	// Copy the input for debug stream
 	x_img->copyTo(*m_inputCopy);
+	
+	
 	int widthStep = x_img->cols;
 	int aperture = m_param.aperture;
-	unsigned char * pDst = m_output->datastart + m_position * m_output->channels() * aperture;// * x_img->nChannels;
+	/*unsigned char * pDst = m_output->datastart + m_position * m_output->channels() * aperture;// * x_img->nChannels;
 	unsigned char * pSrc = x_img->datastart + x_img->cols * x_img->channels() / 2;
 	int size = m_output->depth() * aperture;
 	assert(m_output->size().area() == x_img->size().area());
@@ -72,6 +76,13 @@ void SlitCam::ProcessFrame(const Mat * x_img, const double /*x_timeSinceLastProc
 		pSrc += widthStep;
 		pDst += widthStep;
 	}
-	m_position = m_position == x_img->cols - 1 ? 0 : m_position + 1;
+	*/
+	m_position = m_position + aperture;
+	m_position %= x_img->cols;
+	int x = x_img->cols / 2;
+	assert(aperture < x);
+	for(int i = 0; i < aperture ; i++)
+		if(m_position + i < x_img->cols)
+			m_output->col(m_position + i) = x_img->col(x/* + i*/) * 1;
 }
 

@@ -212,11 +212,6 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 	else
 		adjust(m_img_original, m_img_output, m_img_tmp1_c1, m_img_tmp2_c1);
 	
-	imwrite("m_img_original.bmp", *m_img_original);
-	imwrite("m_img_output.bmp", *m_img_output);
-	//imwrite("m_img_tmp1_c1.bmp", *m_img_tmp1_c1);
-	//imwrite("m_img_tmp2_c3.bmp", *m_img_tmp2_c3);
-
 	// switch between bit depths
 	/*switch (m_img_output->depth()) 
 	{

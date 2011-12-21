@@ -50,8 +50,6 @@ void Input::ProcessFrame(const cv::Mat* x_img, const double x_timeSinceLastProce
 {
 	//cout<<"copy "<<m_input<<" to "<<m_render<<endl;
 	m_input->copyTo(*m_render);
-	imwrite("m_input2.bmp", *m_input);
-	imwrite("m_render.bmp", *m_render);
 	
 	for(vector<Stream *>::const_iterator it = m_relatedStreams.begin() ; it != m_relatedStreams.end() ; it++)
 	{

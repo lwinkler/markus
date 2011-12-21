@@ -38,16 +38,16 @@ class ModuleParameterStructure : public ParameterStructure
 public:
 	ModuleParameterStructure(ConfigReader& x_confReader, const std::string& x_moduleName) : ParameterStructure(x_confReader, "Module", x_moduleName)
 	{
-		m_list.push_back(new ParameterT<std::string>(0, "class", 		"", 	PARAM_STR, 			&objClass));
+		m_list.push_back(new ParameterT<std::string>(0, "class", 		"", 	PARAM_STR, 		&objClass));
 		m_list.push_back(new ParameterT<int>(0, "inputWidth", 		640, 	PARAM_INT, 	0, 	4000,	&width));
 		m_list.push_back(new ParameterT<int>(0, "inputHeight", 	480, 	PARAM_INT, 	0, 	3000,		&height));
-		m_list.push_back(new ParameterT<int>(0, "inputType", 	CV_8UC1, PARAM_INT, 	0, 	32,	&type));
+		m_list.push_back(new ParameterImageType(0, "inputType", 	CV_8UC1, 				&type));
 	//	m_list.push_back(new ParameterT<int>(0, "channels", 	3, 	PARAM_INT, 	1, 	3,		&channels));
 		m_list.push_back(new ParameterT<double>(0, "fps", 	10, 	PARAM_DOUBLE, 	0, 	100,		&fps));
 	};
 
 public:
-	int width;
+	int width; // TODO : rename inputWidth
 	int height;
 	int type;
 	// int channels;
