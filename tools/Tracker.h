@@ -165,7 +165,7 @@ class Template
 class Tracker
 {
 	public:
-		Tracker(const TrackerParameter& x_param, int width, int height, int depth, int channels);
+		Tracker(const TrackerParameter& x_param, int width, int height, int type);
 		~Tracker(void);
 		void Reset();
 				

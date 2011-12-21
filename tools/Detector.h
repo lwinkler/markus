@@ -67,7 +67,7 @@ private:
 	const DetectorParameter& m_param;
 	
 public:
-	Detector(const DetectorParameter& param, int width, int height, int depth, int channels);
+	Detector(const DetectorParameter& param, int width, int height, int type);
 	~Detector(void);
 
 	void Reset();

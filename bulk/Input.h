@@ -38,23 +38,23 @@ class InputParameterStructure : public ModuleParameterStructure
 public:
 	InputParameterStructure(ConfigReader& x_confReader, const std::string& x_moduleName) : ModuleParameterStructure(x_confReader, x_moduleName)
 	{
-		m_list.push_back(new ParameterT<std::string>(0, "class", "", 	PARAM_STR, 			&objClass));
+		/*m_list.push_back(new ParameterT<std::string>(0, "class", "", 	PARAM_STR, 			&objClass));
 		m_list.push_back(new ParameterT<int>(0, "width", 	640, 	PARAM_INT, 	0, 	4000,	&width));
 		m_list.push_back(new ParameterT<int>(0, "height", 	480, 	PARAM_INT, 	0, 	3000,	&height));
-		m_list.push_back(new ParameterT<int>(0, "depth", 	IPL_DEPTH_8U, PARAM_INT, 0, 	32,	&depth));
+		m_list.push_back(new ParameterT<int>(0, "depth", 	CV_8UC1, PARAM_INT, 0, 	32,	&depth));
 		m_list.push_back(new ParameterT<int>(0, "channels", 	3, 	PARAM_INT, 	1, 	3,	&channels));
 		// m_list.push_back(new ParameterT<std::string>(0, "source", 	"cam", 	PARAM_STR, 	&source));
-		m_list.push_back(new ParameterT<double>(0, "fps", 	10, 	PARAM_DOUBLE, 	0, 	100,	&fps));
+		m_list.push_back(new ParameterT<double>(0, "fps", 	10, 	PARAM_DOUBLE, 	0, 	100,	&fps));*/
 	};
 
 public:
 	// std::string source;
-	int width;
+	/*int width;
 	int height;
 	int depth;
 	int channels;
 	double fps;
-	std::string objClass;
+	std::string objClass;*/
 };
 
 class Input : public Module
@@ -66,8 +66,8 @@ public:
 	virtual void Capture() = 0;
 	inline const std::string& GetName()const {return m_name;};
 	virtual const cv::Mat * GetImage() const = 0;
-	inline virtual int GetWidth() const{return m_inputWidth;};
-	inline virtual int GetHeight() const{return m_inputHeight;};
+	inline virtual int GetInputWidth() const{return m_inputWidth;};
+	inline virtual int GetInputHeight() const{return m_inputHeight;};
 	QReadWriteLock m_lock;
 	
 	inline double GetFps() const {return GetRefParameter().fps;};

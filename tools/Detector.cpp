@@ -30,15 +30,15 @@
 using namespace std;
 using namespace cv;
 
-Detector::Detector(const DetectorParameter& x_param, int x_width, int x_height, int x_depth, int x_channels) :
+Detector::Detector(const DetectorParameter& x_param, int x_width, int x_height, int x_type) :
 	m_param(x_param)
 {
-	m_foreground 		= new Mat(cvSize(x_width, x_height), x_depth, 1);
-	m_foreground_rff	= new Mat(cvSize(x_width, x_height), x_depth, 1);
-	m_background 		= new Mat(cvSize(x_width, x_height), x_depth, x_channels);
-	m_lastImg 		= new Mat(cvSize(x_width, x_height), x_depth, x_channels);
-	m_temporalDiff 		= new Mat(cvSize(x_width, x_height), x_depth, 1);
-	m_blobsImg 		= new Mat(cvSize(x_width, x_height), x_depth, x_channels);
+	m_foreground 		= new Mat(cvSize(x_width, x_height), CV_8UC1);
+	m_foreground_rff	= new Mat(cvSize(x_width, x_height), CV_8UC1);
+	m_background 		= new Mat(cvSize(x_width, x_height), x_type);
+	m_lastImg 		= new Mat(cvSize(x_width, x_height), x_type);
+	m_temporalDiff 		= new Mat(cvSize(x_width, x_height), CV_8UC1);
+	m_blobsImg 		= new Mat(cvSize(x_width, x_height), x_type);
 	
 	Reset();
 }

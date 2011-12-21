@@ -155,7 +155,7 @@ QModuleViewer::~QModuleViewer(void)
 void QModuleViewer::resizeEvent(QResizeEvent * e)
 {
 	// Keep proportionality
-	double ratio = static_cast<double>(m_currentStream->GetHeight()) / m_currentStream->GetWidth();
+	double ratio = static_cast<double>(m_currentStream->GetInputHeight()) / m_currentStream->GetInputWidth();
 	
 	m_outputWidth  = e->size().width();
 	m_outputHeight = e->size().height();
@@ -199,19 +199,19 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 	
 	
 	if(m_img_original == NULL)
-		m_img_original = new Mat( cvSize(m_currentStream->GetWidth(), m_currentStream->GetHeight()), IPL_DEPTH_8U, 3);
-	cvSet(m_img_original, cvScalar(0,0,0));
+		m_img_original = new Mat( cvSize(m_currentStream->GetInputWidth(), m_currentStream->GetInputHeight()), IPL_DEPTH_8U, 3);
+	m_img_original->setTo(cvScalar(0,0,0));
 	if(m_img_output == NULL)
 		m_img_output = new Mat( cvSize(m_outputWidth, m_outputHeight), IPL_DEPTH_8U, 3);
 	// Write output to screen
 	// TODO : Copy below
-	//cout<<"Render "<<m_currentStream->GetWidth()<<" to "<<m_img_original->width<<endl;
+	//cout<<"Render "<<m_currentStream->GetInputWidth()<<" to "<<m_img_original->width<<endl;
 	m_currentStream->Render(m_img_original);
 	if(m_img_output->channels() == 3)
 		adjust(m_img_original, m_img_output, m_img_tmp1_c3, m_img_tmp2_c3);
 	else
 		adjust(m_img_original, m_img_output, m_img_tmp1_c1, m_img_tmp2_c1);
-	
+
 	// switch between bit depths
 	switch (m_img_output->depth()) 
 	{
@@ -243,13 +243,17 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 			}
 			break;
 		default:
+		{
+			//cout<<m_img_output->depth()<<endl;
 			throw("This type of Mat is not implemented in QModuleViewer\n");
-			break;
+		}
+		break;
 	}
 	//imagelabel->setPixmap(QPixmap::fromImage(m_image));
 	
 	QPainter painter(this);
 	painter.drawImage(QRect(m_offsetX, m_offsetY, m_image.width(), m_image.height()), m_image);
+	
 }
 
 void QModuleViewer::updateModule(const Module * x_module)

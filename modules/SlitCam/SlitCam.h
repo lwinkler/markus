@@ -62,9 +62,8 @@ public:
 	//void CreateParamWindow();
 	
 	virtual void ProcessFrame(const cv::Mat * x_img, const double x_timeSinceLastProcessing);
-	inline virtual int GetWidth() const {return m_param.width;};
-	inline virtual int GetHeight() const {return m_param.height;};
-//void cvCopy(const Mat* arg1, cv::Mat* arg2);
+	inline virtual int GetInputWidth() const {return m_param.width;};
+	inline virtual int GetInputHeight() const {return m_param.height;};
 
 protected:
 	cv::Mat * m_inputCopy;

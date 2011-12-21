@@ -50,9 +50,9 @@ public:
 	//const std::string& GetName(){return m_name;};
 	//const Mat * GetOutput(){return m_output;}
 	
-	/*inline int GetWidth() const {return GetRefParameter().width;}
-	inline int GetHeight() const {return GetRefParameter().height;}
-	inline int GetDepth() const {return GetRefParameter().depth;}
+	/*inline int GetInputWidth() const {return GetRefParameter().width;}
+	inline int GetInputHeight() const {return GetRefParameter().height;}
+	inline int GetInputType() const {return GetRefParameter().depth;}
 	inline int GetNbChannels() const {return GetRefParameter().channels;}
 	inline int GetFps() const {return GetRefParameter().fps;}
 	*/	

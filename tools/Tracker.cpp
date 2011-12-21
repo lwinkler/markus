@@ -181,11 +181,11 @@ int TrackedRegion::Match(const std::list<Template>& x_temp, double x_maxMatching
 }
 
 
-Tracker::Tracker(const TrackerParameter& x_param, int width, int height, int depth, int channels) :
+Tracker::Tracker(const TrackerParameter& x_param, int width, int height, int type) :
 	m_param(x_param)
 {
 
-	m_blobsImg = new Mat(cvSize(width, height), depth, channels);
+	m_blobsImg = new Mat(cvSize(width, height), type);
 	
 }
 

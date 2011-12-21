@@ -53,8 +53,8 @@ public:
 	~ObjectTracker(void);
 	
 	virtual void ProcessFrame(const cv::Mat* x_img, const double x_timeSinceLastProcessing);
-	inline virtual int GetWidth() const {return m_param.width;};
-	inline virtual int GetHeight() const {return m_param.height;};
+	inline virtual int GetInputWidth() const {return m_param.width;};
+	inline virtual int GetInputHeight() const {return m_param.height;};
 	
 private:
 	ObjectTrackerParameterStructure m_param;

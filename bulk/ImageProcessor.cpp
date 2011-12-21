@@ -93,7 +93,7 @@ ImageProcessor::ImageProcessor(const string & x_name, int x_nb, ConfigReader& x_
 		xr_inputList.push_back(m_input);
 	}
 
-	m_img_input = new Mat( cvSize(m_module->GetWidth(), m_module->GetHeight()), m_module->GetDepth(), m_module->GetNbChannels());
+	m_img_input = new Mat( cvSize(m_module->GetInputWidth(), m_module->GetInputHeight()), m_module->GetInputType());//, m_module->GetNbChannels());
 	m_img_tmp1 = NULL; // Will be allocated on first call of adjust
 	m_img_tmp2 = NULL;
 	m_timeSinceLastProcessing = 0;

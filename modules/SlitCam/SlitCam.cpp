@@ -41,9 +41,9 @@ SlitCam::SlitCam(const std::string& x_name, ConfigReader& x_configReader)
 	
 	// Init images
 	m_output = new Mat(cvSize(m_param.width, m_param.height),
-				 m_param.depth, m_param.channels);
+				 m_param.type);
 	m_inputCopy = new Mat(cvSize(m_param.width, m_param.height),
-				 m_param.depth, m_param.channels);
+				 m_param.type);
 	
 	// Init output images
 	m_outputStreams.push_back(new StreamImage("slit",  m_output));
@@ -59,7 +59,7 @@ SlitCam::~SlitCam(void)
 
 void SlitCam::ProcessFrame(const Mat * x_img, const double /*x_timeSinceLastProcessing*/)
 {
-	cvCopy(x_img, m_inputCopy);
+	x_img->copyTo(*m_inputCopy);
 	int widthStep = x_img->cols;
 	int aperture = m_param.aperture;
 	unsigned char * pDst = m_output->datastart + m_position * m_output->channels() * aperture;// * x_img->nChannels;

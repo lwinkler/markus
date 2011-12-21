@@ -41,8 +41,8 @@ StreamImage::~StreamImage()
 void StreamImage::Render(Mat * xp_output) const
 {
 	//cout<<"xp_output->width "<<xp_output->width<<endl;
-	//cout<<"GetWidth()"<<GetWidth()<<endl;
-	//assert(xp_output->width == GetWidth());
-	//assert(xp_output->height == GetHeight());
-	cvCopy(m_image, xp_output);
+	//cout<<"GetInputWidth()"<<GetInputWidth()<<endl;
+	//assert(xp_output->width == GetInputWidth());
+	//assert(xp_output->height == GetInputHeight());
+	m_image->copyTo(*xp_output);
 }

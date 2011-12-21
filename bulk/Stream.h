@@ -42,8 +42,8 @@ public:
 	Stream(const std::string& x_name, StreamType x_type, int x_width, int x_height);
 	~Stream();
 	const std::string& GetName() const {return m_name;};
-	inline int GetWidth() const {return m_width;};
-	inline int GetHeight() const {return m_height;};
+	inline int GetInputWidth() const {return m_width;};
+	inline int GetInputHeight() const {return m_height;};
 	inline StreamType GetType() const {return m_type;};
 	virtual void Render(cv::Mat * x_output) const  = 0;
 protected:

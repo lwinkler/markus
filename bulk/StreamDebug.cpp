@@ -38,5 +38,5 @@ StreamDebug::~StreamDebug()
 
 void StreamDebug::Render(cv::Mat * xp_output) const
 {
-	cvCopy(m_image, xp_output);
+	m_image->copyTo(*xp_output);
 }

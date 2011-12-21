@@ -88,9 +88,9 @@ void convertFloat2Byte(const Mat *float_img, Mat *byte_img)
 void adjustSize(const Mat* im_in, Mat* im_out)
 {
 	if(im_in->cols == im_out->cols && im_in->rows == im_out->rows) 
-		cvCopy(im_in, im_out);
+		im_in->copyTo(*im_out);
 	else 
-		cvResize(im_in, im_out, CV_INTER_NN);
+		resize(*im_in, *im_out, im_out->size(), CV_INTER_NN);
 }
 
 /* Set image to the right depth 
@@ -155,7 +155,7 @@ void adjustChannels(const Mat* im_in, Mat* im_out)
 {
 	if(im_in->channels() == im_out->channels())
 	{
-		cvCopy(im_in, im_out);
+		im_in->copyTo(*im_out);
 	}
 	else if(im_in->channels() == 1 && im_out->channels() == 3) 
 	{

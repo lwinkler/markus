@@ -42,13 +42,13 @@ CascadeDetector::CascadeDetector(const std::string& x_name, ConfigReader& x_conf
 	// Init output images
 	assert(m_thread.m_cascade.load( m_param.filterFile ));
 	assert(!m_thread.m_cascade.empty());
-	m_debug = new Mat(cvSize(m_param.width, m_param.height), m_param.depth, 3);
-	m_output = new Mat(cvSize(m_param.width, m_param.height), m_param.depth, 3);
+	m_debug = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
+	m_output = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
 
 	m_outputStreams.push_back(new StreamRect("detected", m_param.width, m_param.height, m_detectedObjects, ColorFromStr(m_param.color))); // TODO : Chg name faces
 	m_outputStreams.push_back(new StreamDebug("debug", m_debug));
 //	m_outputStreams.push_back(new StreamImage("input", m_inputCopy));
-	m_lastInput = new Mat( cvSize(GetWidth(), GetHeight()), GetDepth(), GetNbChannels());
+	m_lastInput = new Mat( cvSize(GetInputWidth(), GetInputHeight()), GetInputType());
 }
 
 CascadeDetector::~CascadeDetector(void)
@@ -62,7 +62,7 @@ CascadeDetector::~CascadeDetector(void)
 // This method launches the thread
 void CascadeDetector::LaunchThread(const Mat* img, const double x_timeSinceLastProcessing)
 {
-	cvCopy(img, m_lastInput);
+	img->copyTo(*m_lastInput);
 	Mat smallImg(*m_lastInput);
 	equalizeHist( smallImg, smallImg );
 	
