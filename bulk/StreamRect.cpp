@@ -57,6 +57,6 @@ void StreamRect::Render(Mat * xp_output) const
 		p2.y = p2.y * scale;
 		
 		// Draw the rectangle in the input image
-		cvRectangle( xp_output, p1, p2, m_color, 1, 8, 0 );
+		rectangle( *xp_output, p1, p2, m_color, 1, 8, 0 );
         }
 }

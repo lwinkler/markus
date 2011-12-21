@@ -116,6 +116,7 @@ public:
 	virtual void SetDefault()
 	{
 		*mp_value = m_default;
+		m_confType = PARAMCONF_DEF;
 	}
     std::basic_ostream< char >::__ostream_type of(const char* arg1);
 	const T m_default;

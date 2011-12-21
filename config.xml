@@ -28,9 +28,9 @@
 
 <Manager>
 	<parameter id="1" name="mode">benchmarkAA</parameter>
-        <!--<parameter id="2" name="width">320</parameter>
-	<parameter id="3" name="height">240</parameter>
-        <parameter id="4" name="depth">8</parameter>
+        <!--<parameter id="2" name="inputWidth">320</parameter>
+	<parameter id="3" name="inputHeight">240</parameter>
+        <parameter id="4" name="inputType">8</parameter>
         <parameter id="5" name="channels">3</parameter>
 	-->
 </Manager>
@@ -38,30 +38,27 @@
 <!-- List all possibly used inputs-->
 <Module name="MyCam1">
 	<parameter id="0" name="class">UsbCam</parameter>
-        <parameter id="1" name="width">200</parameter>
-        <parameter id="2" name="height">100</parameter>
-        <parameter id="3" name="depth">8</parameter>
-        <parameter id="4" name="channels">3</parameter>
+        <parameter id="1" name="inputWidth">200</parameter>
+        <parameter id="2" name="inputHeight">100</parameter>
+        <parameter id="3" name="inputType">8</parameter>
         <parameter id="4" name="num">-1</parameter>	
 	<parameter id="4" name="fps">1000</parameter>
 </Module>
 
 <Module name="MyCam2">
 	<parameter id="0" name="class">UsbCam</parameter>
-        <parameter id="1" name="width">200</parameter>
-        <parameter id="2" name="height">100</parameter>
-        <parameter id="3" name="depth">8</parameter>
-        <parameter id="4" name="channels">3</parameter>
+        <parameter id="1" name="inputWidth">200</parameter>
+        <parameter id="2" name="inputHeight">100</parameter>
+        <parameter id="3" name="inputType">8</parameter>
         <parameter id="4" name="num">1</parameter>	
         <parameter id="4" name="fps">10</parameter>
 </Module>
 
 <Module name="InFile1">
 	<parameter id="0" name="class">VideoFileReader</parameter>
-        <parameter id="1" name="width">200</parameter>
-        <parameter id="2" name="height">100</parameter>
-        <parameter id="3" name="depth">8</parameter>
-        <parameter id="4" name="channels">3</parameter>
+        <parameter id="1" name="inputWidth">200</parameter>
+        <parameter id="2" name="inputHeight">100</parameter>
+        <parameter id="3" name="inputType">8</parameter>
         <parameter id="4" name="file">input/test.avi</parameter>
 	<parameter id="4" name="fps">10</parameter>
 </Module>
@@ -70,10 +67,9 @@
 
 <Module name="ObjectTracker1">
 	<parameter id="0" name="class">ObjectTracker</parameter>
-        <parameter id="2" name="width">640</parameter>
-        <parameter id="3" name="height">480</parameter>
-        <parameter id="4" name="depth">8</parameter>
-        <parameter id="5" name="channels">3</parameter>
+        <parameter id="2" name="inputWidth">640</parameter>
+        <parameter id="3" name="inputHeight">480</parameter>
+        <parameter id="4" name="inputType">8</parameter>
 	<parameter id="3" name="input_blur_size">3</parameter>
 	<parameter id="1" name="background_alpha">0.01</parameter>
 	<parameter id="2" name="foreground_thres">0.2</parameter>
@@ -82,28 +78,25 @@
 </Module>
 <Module name="SlitCamera1">
 	<parameter id="0" name="class">SlitCamera</parameter>
-        <parameter id="2" name="width">160</parameter>
-        <parameter id="3" name="height">120</parameter>
-        <parameter id="4" name="depth">8</parameter>
-        <parameter id="5" name="channels">3</parameter>
+	<parameter id="2" name="inputWidth">160</parameter>
+        <parameter id="3" name="inputHeight">120</parameter>
+	<!--<parameter id="4" name="inputType">8</parameter>-->
 	<parameter id="1" name="aperture">1</parameter>
 	<parameter id="4" name="fps">0</parameter>
 </Module>
 <Module name="SlitCamera2">
 	<parameter id="0" name="class">SlitCamera</parameter>
-        <parameter id="2" name="width">640</parameter>
-        <parameter id="3" name="height">480</parameter>
-        <parameter id="4" name="depth">8</parameter>
-        <parameter id="5" name="channels">3</parameter>
+        <parameter id="2" name="inputWidth">640</parameter>
+        <parameter id="3" name="inputHeight">480</parameter>
+        <parameter id="4" name="inputType">8</parameter>
         <parameter id="1" name="aperture">1</parameter>
 	<parameter id="4" name="fps">1</parameter>
 </Module>
 <Module name="CascadeDetector1">
         <parameter id="0" name="class">CascadeDetector</parameter>
-        <parameter id="2" name="width">320</parameter>
-        <parameter id="3" name="height">240</parameter>
-        <parameter id="4" name="depth">8</parameter>
-        <parameter id="5" name="channels">1</parameter>
+        <parameter id="2" name="inputWidth">320</parameter>
+        <parameter id="3" name="inputHeight">240</parameter>
+        <parameter id="4" name="inputType">8</parameter>
         <parameter id="6" name="fps">10</parameter>
         <parameter id="6" name="detectionFps">2</parameter>
         <parameter id="7" name="minNeighbors">3</parameter>
@@ -114,10 +107,9 @@
 </Module>
 <Module name="CascadeDetector2">
         <parameter id="0" name="class">CascadeDetector</parameter>
-        <parameter id="2" name="width">320</parameter>
-        <parameter id="3" name="height">240</parameter>
-        <parameter id="4" name="depth">8</parameter>
-        <parameter id="5" name="channels">1</parameter>
+        <parameter id="2" name="inputWidth">320</parameter>
+        <parameter id="3" name="inputHeight">240</parameter>
+        <parameter id="4" name="inputType">8</parameter>
         <parameter id="6" name="fps">10</parameter>
         <parameter id="6" name="detectionFps">2</parameter>
         <parameter id="7" name="minNeighbors">3</parameter>
@@ -128,10 +120,9 @@
 </Module>
 <Module name="CascadeDetector3">
         <parameter id="0" name="class">CascadeDetector</parameter>
-        <parameter id="2" name="width">320</parameter>
-        <parameter id="3" name="height">240</parameter>
-        <parameter id="4" name="depth">8</parameter>
-        <parameter id="5" name="channels">1</parameter>
+        <parameter id="2" name="inputWidth">320</parameter>
+        <parameter id="3" name="inputHeight">240</parameter>
+        <parameter id="4" name="inputType">8</parameter>
         <parameter id="6" name="fps">10</parameter>
         <parameter id="6" name="detectionFps">2</parameter>
         <parameter id="7" name="minNeighbors">3</parameter>
@@ -142,10 +133,9 @@
 </Module>
 <Module name="CascadeDetector4">
         <parameter id="0" name="class">CascadeDetector</parameter>
-        <parameter id="2" name="width">320</parameter>
-        <parameter id="3" name="height">240</parameter>
-        <parameter id="4" name="depth">8</parameter>
-        <parameter id="5" name="channels">1</parameter>
+        <parameter id="2" name="inputWidth">320</parameter>
+        <parameter id="3" name="inputHeight">240</parameter>
+        <parameter id="4" name="inputType">8</parameter>
         <parameter id="6" name="fps">10</parameter>
         <parameter id="6" name="detectionFps">2</parameter>
         <parameter id="7" name="minNeighbors">3</parameter>
@@ -157,10 +147,9 @@
 
 <Module name="CascadeDetector22">
         <parameter id="0" name="class">CascadeDetector</parameter>
-        <parameter id="2" name="width">320</parameter>
-        <parameter id="3" name="height">240</parameter>
-        <parameter id="4" name="depth">8</parameter>
-        <parameter id="5" name="channels">1</parameter>
+        <parameter id="2" name="inputWidth">320</parameter>
+        <parameter id="3" name="inputHeight">240</parameter>
+        <parameter id="4" name="inputType">8</parameter>
         <parameter id="6" name="fps">10</parameter>
         <parameter id="6" name="detectionFps">1</parameter>
         <parameter id="7" name="minNeighbors">3</parameter>

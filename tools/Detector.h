@@ -41,7 +41,7 @@ public:
 		foregroundThres = 0.2;
 		inputBlurSize = 3;
 		foregroundFilterSize = 3;
-		backgroundDepth = IPL_DEPTH_32F;
+		backgroundDepth = IPL_DEPTH_32F; // TODO : Fix this
 	};
 	float backgroundAlpha;
 	float foregroundThres;

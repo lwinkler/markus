@@ -40,10 +40,8 @@ SlitCam::SlitCam(const std::string& x_name, ConfigReader& x_configReader)
 	m_position = 0;
 	
 	// Init images
-	m_output = new Mat(cvSize(m_param.width, m_param.height),
-				 m_param.type);
-	m_inputCopy = new Mat(cvSize(m_param.width, m_param.height),
-				 m_param.type);
+	m_output = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
+	m_inputCopy = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
 	
 	// Init output images
 	m_outputStreams.push_back(new StreamImage("slit",  m_output));

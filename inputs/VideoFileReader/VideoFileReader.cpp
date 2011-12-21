@@ -54,8 +54,8 @@ VideoFileReader::VideoFileReader(const std::string& x_name, ConfigReader& x_conf
 //	assert(m_height == m_param.height);
 	
 	
-	m_input = new Mat( cvSize(m_inputWidth, m_inputHeight), IPL_DEPTH_8U, 3);
-	m_render = new Mat( cvSize(m_inputWidth, m_inputHeight), IPL_DEPTH_8U, 3);
+	m_input = new Mat( cvSize(m_inputWidth, m_inputHeight), CV_8UC3);
+	m_render = new Mat( cvSize(m_inputWidth, m_inputHeight), CV_8UC3);
 	m_outputStreams.push_back(new StreamImage("input", m_input));
 	m_outputStreams.push_back(new StreamImage("render", m_render));
 }

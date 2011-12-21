@@ -46,6 +46,8 @@ class QModuleViewer : public QWidget
 public:
 	QModuleViewer(const Manager * x_manager, QWidget *parent = 0);
 	virtual ~QModuleViewer();
+	static QImage*  ConvertMat2QImage(const cv::Mat *mat, QImage *qim);
+	static QImage*  ConvertIplImage2QImage(const IplImage *iplImg, QImage *qim);
 private:
 	//QLabel *imagelabel;
 	QVBoxLayout *layout;

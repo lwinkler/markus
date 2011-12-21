@@ -97,7 +97,7 @@ void Detector::UpdateBackground(Mat* x_img)
 		//assert(x_img->imageSize == m_background->imageSize);
 		assert(x_img->channels() == m_background->channels());
 		
-		if(m_background->depth() == IPL_DEPTH_32F)
+		if(m_background->depth() == CV_32F)
 		{
 			assert(false);
 			// HACK runningAvg(x_img, m_background, backgroundAlpha);
@@ -145,7 +145,7 @@ void Detector::UpdateBackgroundMask(Mat* x_img, Mat* x_mask)
 		//assert(x_img->imageSize == m_background->imageSize);
 		assert(x_img->channels() == m_background->channels());
 		
-		if(m_background->depth() == IPL_DEPTH_32F)
+		if(m_background->depth() == CV_32F)
 		{
 			cvRunningAvg(x_img, m_background, backgroundAlpha, x_mask);
 		}
@@ -184,8 +184,8 @@ void Detector::ExtractForeground(Mat* x_img)
 	static Mat* tmp = new Mat(cvSize(x_img->cols, x_img->rows), x_img->depth(), x_img->channels());
 	
 	cvAbsDiff(x_img, m_background, tmp);
-	cvCvtColor(tmp, m_foreground, CV_RGB2GRAY);
-	cvThreshold(m_foreground, m_foreground, m_param.foregroundThres* 255, 255, CV_THRESH_BINARY);
+	cvtColor(*tmp, *m_foreground, CV_RGB2GRAY);
+	threshold(*m_foreground, *m_foreground, m_param.foregroundThres* 255, 255, CV_THRESH_BINARY);
 	//cvAdaptiveThreshold(m_foreground, m_foreground, 255, 0, 1);//, int adaptiveMethod, int thresholdType, int blockSize, double C)
 	/*assert(x_img->depth == m_background->depth);
 	assert(x_img->width == m_background->width);
@@ -286,7 +286,7 @@ void Detector::ExtractForegroundMax(Mat* x_img)
 
 void Detector::RemoveFalseForegroundNeigh()
 {
-	if(m_foreground->depth() == IPL_DEPTH_8U && m_foreground->depth() == IPL_DEPTH_8U)
+	if(m_foreground->depth() == CV_8U && m_foreground->depth() == CV_8U)
 	{
 		for(int i = 1; i< m_foreground->cols - 1; i++)
 			for(int j = 1; j < m_foreground->rows - 1; j++)
@@ -323,7 +323,7 @@ void Detector::RemoveFalseForegroundMorph()
 	if(filterSize > 1)
 	{
 		static IplConvKernel* element = cvCreateStructuringElementEx(3, 3, 0, 0, CV_SHAPE_ELLIPSE); // CV_SHAPE_RECT
-		static int size = filterSize;
+		//static int size = filterSize;
 		
 		if(element->nCols != filterSize)
 		{

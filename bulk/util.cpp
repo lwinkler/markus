@@ -33,8 +33,8 @@ void convertByte2Float(const Mat *byte_img, Mat *float_img)
 	if( (byte_img->cols != float_img->cols) ||
 		(byte_img->rows != float_img->rows) ||
 		(byte_img->channels() != float_img->channels()) ||
-		(byte_img->depth() != IPL_DEPTH_8U) ||
-		(float_img->depth() != IPL_DEPTH_32F))
+		(byte_img->depth() != CV_8U) ||
+		(float_img->depth() != CV_32F))
 	{
 		printf("convertByte2Float error. Aborting ... \n");
 		exit(-1);
@@ -61,8 +61,8 @@ void convertFloat2Byte(const Mat *float_img, Mat *byte_img)
 	if( (byte_img->cols != float_img->cols) ||
 		(byte_img->rows != float_img->rows) ||
 		(byte_img->channels() != float_img->channels()) ||
-		(byte_img->depth() != IPL_DEPTH_8U) ||
-		(float_img->depth() != IPL_DEPTH_32F))
+		(byte_img->depth() != CV_8U) ||
+		(float_img->depth() != CV_32F))
 	{
 		printf("convertByte2Float error. Aborting ... \n");
 		exit(-1);
@@ -104,38 +104,38 @@ void adjust(const Mat* im_in, Mat* im_out, Mat*& tmp1, Mat*& tmp2)
 		if(tmp1==NULL)
 		{
 			//cout<<"create image in adjust tmp1 depth "<<im_out->depth<<endl;
-			tmp1 = new Mat( cvSize(im_out->cols, im_out->rows), im_out->depth(), im_in->channels());
+			tmp1 = new Mat( cvSize(im_out->cols, im_out->rows), im_out->type());
 		}
 		adjustSize(im_in, tmp1);
 		adjustChannels(tmp1, im_out);
 	}
-	else if(im_in->depth() == IPL_DEPTH_8U && im_out->depth() == IPL_DEPTH_32F) 
+	else if(im_in->depth() == CV_8U && im_out->depth() == CV_32F) 
 	{
 		if(tmp1==NULL)
 		{
 			//cout<<"create image in adjust IPL_DEPTH_32F tmp1"<<endl;
-			tmp1 = new Mat( cvSize(im_out->cols, im_out->rows), IPL_DEPTH_8U, im_in->channels());
+			tmp1 = new Mat( cvSize(im_out->cols, im_out->rows), CV_MAKE_TYPE(CV_8U, im_in->channels()));
 		}
 		if(tmp2==NULL)
 		{
 			//cout<<"create image in adjust IPL_DEPTH_32F tmp2"<<endl;
-			tmp2 = new Mat( cvSize(im_out->cols, im_out->rows), IPL_DEPTH_8U, im_out->channels());
+			tmp2 = new Mat( cvSize(im_out->cols, im_out->rows), CV_MAKE_TYPE(CV_8U, im_out->channels()));
 		}
 		adjustSize(im_in, tmp1);
 		adjustChannels(tmp1, tmp2);
 		convertByte2Float(tmp2, im_out);		
 	}
-	else if(im_in->depth() == IPL_DEPTH_32F && im_out->depth() == IPL_DEPTH_8U) 
+	else if(im_in->depth() == CV_32F && im_out->depth() == CV_8U) 
 	{
 		if(tmp1==NULL)
 		{
 			//cout<<"create image in adjust IPL_DEPTH_32F tmp1"<<endl;
-			tmp1 = new Mat( cvSize(im_out->cols, im_out->rows), IPL_DEPTH_32F, im_in->channels());
+			tmp1 = new Mat( cvSize(im_out->cols, im_out->rows), CV_MAKE_TYPE(CV_32F, im_in->channels()));
 		}
 		if(tmp2==NULL)
 		{
 			//cout<<"create image in adjust IPL_DEPTH_32F tmp2"<<endl;
-			tmp2 = new Mat( cvSize(im_out->cols, im_out->rows), IPL_DEPTH_32F, im_out->channels());
+			tmp2 = new Mat( cvSize(im_out->cols, im_out->rows), CV_MAKE_TYPE(CV_32F, im_out->channels()));
 		}
 		adjustSize(im_in, tmp1);		
 		adjustChannels(tmp1, tmp2);
@@ -159,11 +159,11 @@ void adjustChannels(const Mat* im_in, Mat* im_out)
 	}
 	else if(im_in->channels() == 1 && im_out->channels() == 3) 
 	{
-		cvCvtColor(im_in, im_out, CV_GRAY2RGB);
+		cvtColor(*im_in, *im_out, CV_GRAY2RGB);
 	}
 	else if(im_in->channels() == 3 && im_out->channels() == 1) 
 	{
-		cvCvtColor(im_in, im_out, CV_RGB2GRAY);
+		cvtColor(*im_in, *im_out, CV_RGB2GRAY);
 	}
 	else
 	{
@@ -173,10 +173,6 @@ void adjustChannels(const Mat* im_in, Mat* im_out)
 
 CvScalar ColorFromStr(string x_str)
 {
-	int c1 = 0;
-	int c2 = 0;
-	int c3 = 0;
-	
 	int pos1 = 0;
 	int pos2 = 0;
 	int pos3 = 0;

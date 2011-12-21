@@ -46,12 +46,6 @@ public:
 	ManagerParameter(ConfigReader& x_confReader, const std::string& x_moduleName) : ParameterStructure(x_confReader, "Manager", "")
 	{
 		m_list.push_back(new ParameterT<std::string>(0, "mode",	"", 	PARAM_STR, &mode));
-		//		m_list.push_back(new ParameterT<std::string>(1, "input",	"cam", 	PARAM_STR, &input));
-	/*	m_list.push_back(new ParameterT<int>(2, "width", 	640, 	PARAM_INT, 0, 4000,	&width));
-		m_list.push_back(new ParameterT<int>(3, "height", 	480, 	PARAM_INT, 0, 3000,	&height));
-		m_list.push_back(new ParameterT<int>(4, "depth", IPL_DEPTH_8U, PARAM_INT, 0, 32,	&depth));
-		m_list.push_back(new ParameterT<int>(5, "channels", 	3, 	PARAM_INT, 1, 3,	&channels));
-*/
 		ParameterStructure::Init();
 	};
 	std::string mode;

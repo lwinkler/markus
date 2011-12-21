@@ -34,7 +34,7 @@ Input::Input(const std::string& x_name, ConfigReader& x_configReader):
 	cout<<endl<<"*** Create object Input : "<<x_name<<" ***"<<endl;
 
 	m_input = NULL;
-	m_render = NULL;  // cvCreateImage( cvSize(12,12)/*GetInputWidth(), GetInputHeight())*/, IPL_DEPTH_8U, 3);
+	m_render = NULL;  // cvCreateImage( cvSize(12,12)/*GetInputWidth(), GetInputHeight())*/, CV_8U_C3);
 	m_inputWidth = 0;
 	m_inputHeight = 0;
 // 	m_outputStreams.push_back(new StreamImage("detected", m_input));
@@ -50,6 +50,9 @@ void Input::ProcessFrame(const cv::Mat* x_img, const double x_timeSinceLastProce
 {
 	//cout<<"copy "<<m_input<<" to "<<m_render<<endl;
 	m_input->copyTo(*m_render);
+	imwrite("m_input2.bmp", *m_input);
+	imwrite("m_render.bmp", *m_render);
+	
 	for(vector<Stream *>::const_iterator it = m_relatedStreams.begin() ; it != m_relatedStreams.end() ; it++)
 	{
 		(*it)->Render(m_render);
