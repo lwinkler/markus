@@ -1,11 +1,11 @@
 <?xml version="1.0" standalone="no" ?>
 
 <ImageProcessors>
-        <ImageProcessor name="ModuleDeTest4">
+        <!--<ImageProcessor name="ModuleDeTest4">
                 <parameter id="0" name="input">MyCam1</parameter>
                 <parameter id="2" name="module">SlitCamera1</parameter>
-        </ImageProcessor>
-	<!--
+	</ImageProcessor>-->
+	
 	<ImageProcessor name="ModuleDeTest1">
                 <parameter id="0" name="input">InFile1</parameter>
                 <parameter id="2" name="module">CascadeDetector1</parameter>
@@ -28,11 +28,6 @@
 
 <Manager>
 	<parameter id="1" name="mode">benchmarkAA</parameter>
-        <!--<parameter id="2" name="inputWidth">320</parameter>
-	<parameter id="3" name="inputHeight">240</parameter>
-        <parameter id="4" name="inputType">8</parameter>
-        <parameter id="5" name="channels">3</parameter>
-	-->
 </Manager>
 
 <!-- List all possibly used inputs-->
@@ -49,7 +44,7 @@
 	<parameter id="0" name="class">UsbCam</parameter>
         <parameter id="1" name="inputWidth">200</parameter>
         <parameter id="2" name="inputHeight">100</parameter>
-        <parameter id="3" name="inputType">8</parameter>
+        <parameter id="3" name="inputType">CV_8UC3</parameter>
         <parameter id="4" name="num">1</parameter>	
         <parameter id="4" name="fps">10</parameter>
 </Module>
@@ -58,7 +53,7 @@
 	<parameter id="0" name="class">VideoFileReader</parameter>
         <parameter id="1" name="inputWidth">200</parameter>
         <parameter id="2" name="inputHeight">100</parameter>
-        <parameter id="3" name="inputType">8</parameter>
+        <parameter id="3" name="inputType">CV_8UC3</parameter>
         <parameter id="4" name="file">input/test.avi</parameter>
 	<parameter id="4" name="fps">10</parameter>
 </Module>
@@ -69,7 +64,7 @@
 	<parameter id="0" name="class">ObjectTracker</parameter>
         <parameter id="2" name="inputWidth">640</parameter>
         <parameter id="3" name="inputHeight">480</parameter>
-        <parameter id="4" name="inputType">8</parameter>
+        <parameter id="4" name="inputType">CV_8UC3</parameter>
 	<parameter id="3" name="input_blur_size">3</parameter>
 	<parameter id="1" name="background_alpha">0.01</parameter>
 	<parameter id="2" name="foreground_thres">0.2</parameter>
@@ -88,7 +83,7 @@
 	<parameter id="0" name="class">SlitCamera</parameter>
         <parameter id="2" name="inputWidth">640</parameter>
         <parameter id="3" name="inputHeight">480</parameter>
-        <parameter id="4" name="inputType">8</parameter>
+        <parameter id="4" name="inputType">CV_8UC3</parameter>
         <parameter id="1" name="aperture">1</parameter>
 	<parameter id="4" name="fps">1</parameter>
 </Module>
@@ -96,7 +91,7 @@
         <parameter id="0" name="class">CascadeDetector</parameter>
         <parameter id="2" name="inputWidth">320</parameter>
         <parameter id="3" name="inputHeight">240</parameter>
-        <parameter id="4" name="inputType">8</parameter>
+        <parameter id="4" name="inputType">CV_8UC1</parameter>
         <parameter id="6" name="fps">10</parameter>
         <parameter id="6" name="detectionFps">2</parameter>
         <parameter id="7" name="minNeighbors">3</parameter>
@@ -109,7 +104,7 @@
         <parameter id="0" name="class">CascadeDetector</parameter>
         <parameter id="2" name="inputWidth">320</parameter>
         <parameter id="3" name="inputHeight">240</parameter>
-        <parameter id="4" name="inputType">8</parameter>
+        <parameter id="4" name="inputType">CV_8UC1</parameter>
         <parameter id="6" name="fps">10</parameter>
         <parameter id="6" name="detectionFps">2</parameter>
         <parameter id="7" name="minNeighbors">3</parameter>
@@ -122,7 +117,7 @@
         <parameter id="0" name="class">CascadeDetector</parameter>
         <parameter id="2" name="inputWidth">320</parameter>
         <parameter id="3" name="inputHeight">240</parameter>
-        <parameter id="4" name="inputType">8</parameter>
+        <parameter id="4" name="inputType">CV_8UC1</parameter>
         <parameter id="6" name="fps">10</parameter>
         <parameter id="6" name="detectionFps">2</parameter>
         <parameter id="7" name="minNeighbors">3</parameter>
@@ -135,7 +130,7 @@
         <parameter id="0" name="class">CascadeDetector</parameter>
         <parameter id="2" name="inputWidth">320</parameter>
         <parameter id="3" name="inputHeight">240</parameter>
-        <parameter id="4" name="inputType">8</parameter>
+        <parameter id="4" name="inputType">CV_8UC1</parameter>
         <parameter id="6" name="fps">10</parameter>
         <parameter id="6" name="detectionFps">2</parameter>
         <parameter id="7" name="minNeighbors">3</parameter>
@@ -149,7 +144,7 @@
         <parameter id="0" name="class">CascadeDetector</parameter>
         <parameter id="2" name="inputWidth">320</parameter>
         <parameter id="3" name="inputHeight">240</parameter>
-        <parameter id="4" name="inputType">8</parameter>
+        <parameter id="4" name="inputType">CV_8UC1</parameter>
         <parameter id="6" name="fps">10</parameter>
         <parameter id="6" name="detectionFps">1</parameter>
         <parameter id="7" name="minNeighbors">3</parameter>

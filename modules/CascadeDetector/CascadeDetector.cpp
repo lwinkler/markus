@@ -62,11 +62,11 @@ CascadeDetector::~CascadeDetector(void)
 // This method launches the thread
 void CascadeDetector::LaunchThread(const Mat* img, const double x_timeSinceLastProcessing)
 {
+	assert(img->type() == CV_8UC1); // TODO add restriction to param
 	img->copyTo(*m_lastInput);
 	Mat smallImg(*m_lastInput);
 	equalizeHist( smallImg, smallImg );
-	
-	
+		
 	// Launch a new Thread
 	m_thread.SetData(smallImg, m_param.minNeighbors, m_param.minFaceSide, m_param.scaleFactor);
 	m_thread.start();
@@ -74,7 +74,7 @@ void CascadeDetector::LaunchThread(const Mat* img, const double x_timeSinceLastP
 
 void CascadeDetector::NormalProcess(const Mat* img, const double x_timeSinceLastProcessing)
 {
-	cvConvertImage(m_lastInput, m_debug);
+	cvtColor(*m_lastInput, *m_debug, CV_GRAY2RGB);
 	Stream& os(*m_outputStreams[0]);
 	//os.ClearRect();
 	for(vector<Rect>::const_iterator it = m_detectedObjects.begin() ; it != m_detectedObjects.end() ; it++)
@@ -84,7 +84,7 @@ void CascadeDetector::NormalProcess(const Mat* img, const double x_timeSinceLast
 		Point p2(it->x + it->width, it->y + it->height);
 		
 		// Draw the rectangle in the input image
-		cvRectangle( m_debug, p1, p2, CV_RGB(255,0,0), 1, 8, 0 );
+		rectangle( *m_debug, p1, p2, CV_RGB(255,0,0), 1, 8, 0 );
 		
 		// Add rectangle to output streams
 		//os.AddRect(cv::Rect(p1, p2));

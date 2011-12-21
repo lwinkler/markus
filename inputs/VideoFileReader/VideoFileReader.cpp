@@ -78,8 +78,9 @@ void VideoFileReader::Capture()
 	cvGrabFrame(m_capture);
 	//m_input = cvRetrieveFrame(m_capture);           // retrieve the captured frame
 	//cvCopy(cvRetrieveFrame(m_capture), m_input);
-	assert(false);//cvRetrieveFrame(m_capture).copyTo(m_input);
-	//m_input = Mat(*cvRetrieveFrame(m_capture), true); // TODO : Fix copied twice
-	
+	Mat * tmp = new Mat(cvRetrieveFrame(m_capture));
+	tmp->copyTo(*m_input);
+	delete tmp;
+
 	m_lock.unlock();
 }
