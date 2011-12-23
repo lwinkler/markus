@@ -71,12 +71,12 @@ public:
 	inline double GetFps() const {return GetRefParameter().fps;};
 	
 	void AddRelatedStream(Stream* xp_stream) {m_relatedStreams.push_back(xp_stream);};
-	virtual void ProcessFrame(const cv::Mat* x_img, const double x_timeSinceLastProcessing);
+	virtual void ProcessFrame(const double x_timeSinceLastProcessing);
 private:
 
 protected:
 	//InputParameterStructure m_param;
-	cv::Mat * m_input;
+	//cv::Mat * m_input;
 	cv::Mat * m_render;
 	
 	const std::string m_name;

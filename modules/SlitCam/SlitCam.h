@@ -61,12 +61,11 @@ public:
 	~SlitCam(void);
 	//void CreateParamWindow();
 	
-	virtual void ProcessFrame(const cv::Mat * x_img, const double x_timeSinceLastProcessing);
+	virtual void ProcessFrame(const double x_timeSinceLastProcessing);
 	inline virtual int GetInputWidth() const {return m_param.width;};
 	inline virtual int GetInputHeight() const {return m_param.height;};
 
 protected:
-	cv::Mat * m_inputCopy;
 	inline virtual const ModuleParameterStructure& GetRefParameter() const { return m_param;};
 };
 

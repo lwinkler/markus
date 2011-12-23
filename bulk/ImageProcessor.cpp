@@ -46,20 +46,27 @@ ImageProcessor::ImageProcessor(const string & x_name, int x_nb, ConfigReader& x_
 	paramList = m_configReader.ReadConfigObject("Module", module.m_value, true);
 	assert(paramList.size() == 1);
 	std::string moduleClass = paramList[0].m_value;
+	
 	// Create all modules types
-	if(moduleClass.compare("SlitCamera") == 0)
-	{
-		m_module = new SlitCam(module.m_value, m_configReader);
-	}
-	else if(moduleClass.compare("ObjectTracker") == 0)
-	{
-		m_module = new ObjectTracker(module.m_value, m_configReader);
-	}
-	else if(moduleClass.compare("CascadeDetector") == 0)
-	{
-		m_module = new CascadeDetector(module.m_value, m_configReader);
-	}
-	else throw("Module type unknown : " + moduleClass);
+	//for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+	//{
+		Module * tmp;
+		if(moduleClass.compare("SlitCamera") == 0)
+		{
+			tmp = new SlitCam(module.m_value, m_configReader);
+		}
+		else if(moduleClass.compare("ObjectTracker") == 0)
+		{
+			tmp = new ObjectTracker(module.m_value, m_configReader);
+		}
+		else if(moduleClass.compare("CascadeDetector") == 0)
+		{
+			tmp = new CascadeDetector(module.m_value, m_configReader);
+		}
+		else throw("Module type unknown : " + moduleClass);
+	
+		m_modules.push_back(tmp);
+		//}
 	
 	// Create all input objects
 	//	check for similar existing input
@@ -93,21 +100,17 @@ ImageProcessor::ImageProcessor(const string & x_name, int x_nb, ConfigReader& x_
 		xr_inputList.push_back(m_input);
 	}
 
-	m_img_input = new Mat( cvSize(m_module->GetInputWidth(), m_module->GetInputHeight()), m_module->GetInputType());//, m_module->GetNbChannels());
-	m_img_tmp1 = NULL; // Will be allocated on first call of adjust
-	m_img_tmp2 = NULL;
 	m_timeSinceLastProcessing = 0;
-	m_timeInterval = 0;
-	if(m_module->GetFps() > 0) m_timeInterval = 1.0 / m_module->GetFps();
+	//m_timeInterval = 0;
+	//if(m_module->GetFps() > 0) m_timeInterval = 1.0 / m_module->GetFps();
 }
 
 ImageProcessor::~ImageProcessor()
 {
-	delete m_module;
+	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+		delete *it;
 	// delete m_input; // should not be deleted here
-	if(m_img_tmp1 != NULL) delete(m_img_tmp1);
-	if(m_img_tmp2 != NULL) delete(m_img_tmp2);
-	if(m_img_input != NULL) delete(m_img_input);
+	//if(m_img_input != NULL) delete(m_img_input);
 }
 
 void ImageProcessor::Process(double x_timeSinceLast)
@@ -115,14 +118,18 @@ void ImageProcessor::Process(double x_timeSinceLast)
 	m_lock.lockForWrite();
 	m_timeSinceLastProcessing += x_timeSinceLast;
 	//cout<<"Process "<<m_module->GetName()<<" "<<m_timeSinceLastProcessing<<" >= "<<m_timeInterval<<" "<<m_input->GetImage()<<endl;
-	if(m_timeSinceLastProcessing >= m_timeInterval && m_input->GetImage() != NULL)
+	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 	{
-		m_input->m_lock.lockForRead();
-		adjust(m_input->GetImage(), m_img_input, m_img_tmp1, m_img_tmp2);
-		m_input->m_lock.unlock();
-		m_module->ProcessFrame(m_img_input, m_timeSinceLastProcessing);
-		m_input->ProcessFrame(m_img_input, m_timeSinceLastProcessing);
-		m_timeSinceLastProcessing = 0;
+		assert(m_input->GetImage() != NULL);
+		if(m_timeSinceLastProcessing >= 1.0 / (*it)->GetFps())
+		{
+			m_input->m_lock.lockForRead();
+			(*it)->SetInput(m_input->GetImage());
+			m_input->m_lock.unlock();
+			(*it)->ProcessFrame(m_timeSinceLastProcessing);
+			m_input->ProcessFrame(m_timeSinceLastProcessing);
+			m_timeSinceLastProcessing = 0;
+		}
 	}
 	m_lock.unlock();
 }

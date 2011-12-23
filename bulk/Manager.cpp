@@ -86,13 +86,17 @@ Manager::Manager(ConfigReader& x_configReader) :
 		ImageProcessor * ip = new ImageProcessor("ip", i, m_configReader, m_inputs);
 		m_imageProcessors.push_back(ip);
 		//m_inputs.push_back(&ip->GetInput());
-		m_modules.push_back(&ip->GetModule());
 		
-		// Add the module outputs as related streams to the input
-		for(vector<Stream*>::const_iterator it = ip->GetModule().GetStreamList().begin() ; it != ip->GetModule().GetStreamList().end() ; it++)
+		for(vector<Module*>::iterator it1 = ip->GetModules().begin() ; it1 != ip->GetModules().end() ; it1++)
 		{
-			if((*it)->GetType() != STREAM_DEBUG)
-				ip->GetInput().AddRelatedStream(*it);
+			m_modules.push_back(*it1);
+			
+			// Add the module outputs as related streams to the input
+			for(vector<Stream*>::const_iterator it2 = (*it1)->GetStreamList().begin() ; it2 != (*it1)->GetStreamList().end() ; it2++)
+			{
+				if((*it2)->GetType() != STREAM_DEBUG)
+					ip->GetInput().AddRelatedStream(*it2);
+			}
 		}
 	}
 	//int cpt = 0;

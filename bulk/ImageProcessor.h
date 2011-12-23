@@ -59,22 +59,23 @@ public:
 	const int & GetNumber(){return m_nb;};
 	
 	Input & GetInput() {return *m_input;}
-	Module & GetModule() {return *m_module;}
+	std::vector<Module *> & GetModules() {return m_modules;}
 	
-	inline int GetFps() const {return m_module->GetFps();}
+	//inline int GetFps() const {return m_module->GetFps();}
 
 	
 protected:
 	//const std::string m_name;
 	const int m_nb;
 	double m_timeSinceLastProcessing;
-	double m_timeInterval;
-	Module * m_module;
+	//double m_timeInterval;
+	// Module * m_module;
+	std::vector<Module*> m_modules;
 	Input * m_input;
 
-	cv::Mat * m_img_tmp1;
-	cv::Mat * m_img_tmp2;
-	cv::Mat * m_img_input;
+	//cv::Mat * m_img_tmp1;
+	//cv::Mat * m_img_tmp2;
+	//cv::Mat * m_img_input;
 
 	ImageProcessorParameterStructure m_param;
 	inline virtual const ParameterStructure& GetRefParameter() const {return m_param;};

@@ -46,7 +46,7 @@ public:
 	ModuleAsync(const std::string& x_name, ConfigReader& x_confReader);
 	virtual ~ModuleAsync();
 	
-	virtual void ProcessFrame(const cv::Mat * x_input, const double x_timeSinceLastProcessing);
+	virtual void ProcessFrame(const double x_timeSinceLastProcessing);
 	//const std::string& GetName(){return m_name;};
 	//const Mat * GetOutput(){return m_output;}
 	

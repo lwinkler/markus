@@ -37,7 +37,7 @@ ModuleAsync::ModuleAsync(const std::string& x_name, ConfigReader& x_configReader
 	m_resultsCopied = false;
 };
 
-void ModuleAsync::ProcessFrame(const cv::Mat* x_input, const double x_timeSinceLastProcessing)
+void ModuleAsync::ProcessFrame(const double x_timeSinceLastProcessing)
 {
 	m_timeSinceLastThread += x_timeSinceLastProcessing;
 	
@@ -51,7 +51,7 @@ void ModuleAsync::ProcessFrame(const cv::Mat* x_input, const double x_timeSinceL
 	{
 		if(!GetRefThread().isRunning())
 		{
-			LaunchThread(x_input, x_timeSinceLastProcessing);
+			LaunchThread(m_input, x_timeSinceLastProcessing);
 			m_resultsCopied = false;
 		}
 		else
@@ -61,7 +61,7 @@ void ModuleAsync::ProcessFrame(const cv::Mat* x_input, const double x_timeSinceL
 		}
 		m_timeSinceLastThread = 0;
 	}
-	NormalProcess(x_input, x_timeSinceLastProcessing);
+	NormalProcess(m_input, x_timeSinceLastProcessing);
 }
 
 

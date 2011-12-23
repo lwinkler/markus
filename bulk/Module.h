@@ -62,7 +62,8 @@ public:
 	Module(const std::string& x_name, ConfigReader& x_confReader);
 	virtual ~Module();
 	
-	virtual void ProcessFrame(const cv::Mat * x_img, const double x_timeSinceLastProcessing) = 0;
+	void SetInput(const cv::Mat * x_img);
+	virtual void ProcessFrame(const double x_timeSinceLastProcessing) = 0;
 	const std::string& GetName(){return m_name;};
 	const cv::Mat * GetOutput(){return m_output;}
 	//void AddStream(const std::string& x_name, StreamType x_type, Mat* m_image);
@@ -76,12 +77,14 @@ public:
 	QReadWriteLock m_lock;
 	
 protected:
+	cv::Mat * m_input;
 	cv::Mat * m_output;
+	cv::Mat * m_img_tmp1; // To convert the input
+	cv::Mat * m_img_tmp2;
 	const std::string m_name;
 	virtual const ModuleParameterStructure & GetRefParameter() const = 0;
 	std::vector<Stream *> m_outputStreams;
-	std::vector<Stream *> m_debugStreams;
-	
+	std::vector<Stream *> m_debugStreams;	
 };
 
 #endif

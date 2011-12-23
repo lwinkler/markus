@@ -23,6 +23,7 @@
 
 #include "Module.h"
 #include "ConfigReader.h"
+#include "util.h"
 
 #include <list>
 
@@ -33,13 +34,24 @@ Module::Module(const std::string& x_name, ConfigReader& x_configReader) :
 	m_name(x_name)
 {
 	cout<<endl<<"*** Create object Module : "<<x_name<<" ***"<<endl;
+	m_input = NULL;
+	m_img_tmp1 = NULL;
+	m_img_tmp2 = NULL;
 };
 
 
 Module::~Module()
 {
+	if(m_img_tmp1 != NULL) delete(m_img_tmp1);
+	if(m_img_tmp2 != NULL) delete(m_img_tmp2);
+
 	//TODO : delete m_outputStreams
 };
+
+void Module::SetInput(const cv::Mat* x_img)
+{
+	adjust(x_img, m_input, m_img_tmp1, m_img_tmp2);
+}
 
 /*void Module::AddStream(const std::string& x_name, StreamType x_type, Mat* x_image)
 {

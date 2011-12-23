@@ -46,7 +46,7 @@ Input::~Input()
 	//cvReleaseImage(&m_input);
 }
 
-void Input::ProcessFrame(const cv::Mat* x_img, const double x_timeSinceLastProcessing)
+void Input::ProcessFrame(const double x_timeSinceLastProcessing)
 {
 	//cout<<"copy "<<m_input<<" to "<<m_render<<endl;
 	m_input->copyTo(*m_render);

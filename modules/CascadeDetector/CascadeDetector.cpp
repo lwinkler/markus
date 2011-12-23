@@ -43,6 +43,7 @@ CascadeDetector::CascadeDetector(const std::string& x_name, ConfigReader& x_conf
 	assert(m_thread.m_cascade.load( m_param.filterFile ));
 	assert(!m_thread.m_cascade.empty());
 	m_debug = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
+	m_input = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
 	m_output = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
 
 	m_outputStreams.push_back(new StreamRect("detected", m_param.width, m_param.height, m_detectedObjects, ColorFromStr(m_param.color))); // TODO : Chg name faces
@@ -75,7 +76,7 @@ void CascadeDetector::LaunchThread(const Mat* img, const double x_timeSinceLastP
 void CascadeDetector::NormalProcess(const Mat* img, const double x_timeSinceLastProcessing)
 {
 	cvtColor(*m_lastInput, *m_debug, CV_GRAY2RGB);
-	Stream& os(*m_outputStreams[0]);
+	//Stream& os(*m_outputStreams[0]);
 	//os.ClearRect();
 	for(vector<Rect>::const_iterator it = m_detectedObjects.begin() ; it != m_detectedObjects.end() ; it++)
 	{

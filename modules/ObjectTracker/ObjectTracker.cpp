@@ -41,7 +41,7 @@ ObjectTracker::ObjectTracker(const std::string& x_name, ConfigReader& x_configRe
 	m_img_blur = NULL;
 	m_img_blur = new Mat(cvSize(m_param.width, m_param.height), m_param.type);//IPL_DEPTH_8U, m_param.channels);
 	m_output   = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
-	m_input = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
+	m_input    = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
 
 	cvSet( m_img_blur, cvScalar(0,0,0));
 	detect.Reset();
@@ -60,12 +60,10 @@ ObjectTracker::~ObjectTracker(void )
 	delete(m_output);
 }
 
-void ObjectTracker::ProcessFrame(const Mat* x_img, const double /*x_timeSinceLastProcessing*/)
+void ObjectTracker::ProcessFrame(const double /*x_timeSinceLastProcessing*/)
 {
-	cvCopy(x_img, m_input);
-	
 	// Main part of the program
-	detect.BlurInput(x_img, m_img_blur);
+	detect.BlurInput(m_input, m_img_blur);
 	detect.UpdateBackground(m_img_blur);
 	//detect.UpdateBackgroundMask(img, detect.GetForegroundRff());
 	detect.ExtractForeground(m_img_blur);
