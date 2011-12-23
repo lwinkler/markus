@@ -54,8 +54,8 @@ using namespace std;
 
 
 Manager::Manager(ConfigReader& x_configReader) : 
-	m_param(m_configReader, "Manager"),
-	Configurable(x_configReader)
+	Configurable(x_configReader),
+	m_param(m_configReader, "Manager")
 {
 	cout<<endl<<"*** Create object Manager ***"<<endl;
 	//m_workIsColor = (m_workChannels==3);	
@@ -66,7 +66,7 @@ Manager::Manager(ConfigReader& x_configReader) :
 
 	m_writer = NULL;
 	
-	int fps     = 30; // FIXME fpsc;  // or 30
+	//int fps     = 30; // FIXME fpsc;  // or 30
 	
 	if(m_param.mode == "benchmark")
 	{
@@ -194,7 +194,7 @@ void Manager::PrintTimers()
 {
 	int cpt = 0;
 	m_modules.push_back(x_mod);
-	/*const std::list<Stream> streamList(x_mod->GetStreamList());
+	/ *const std::list<Stream> streamList(x_mod->GetStreamList());
 	for(list<Stream>::const_iterator it2 = streamList.begin(); it2 != streamList.end(); it2++)
 	{
 		// Create windows for output streams

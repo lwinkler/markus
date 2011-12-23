@@ -35,7 +35,7 @@ const char * SlitCam::m_type = "SlitCamera";
 
 
 SlitCam::SlitCam(const std::string& x_name, ConfigReader& x_configReader) 
-	 : m_param(x_configReader, x_name), Module(x_name, x_configReader)
+	 : Module(x_name, x_configReader), m_param(x_configReader, x_name)
 {
 	m_position = 0;
 	
@@ -60,7 +60,7 @@ SlitCam::~SlitCam(void)
 
 void SlitCam::ProcessFrame(const double /*x_timeSinceLastProcessing*/)
 {
-	int widthStep = m_input->cols;
+	//int widthStep = m_input->cols;
 	int aperture = m_param.aperture;
 	/*unsigned char * pDst = m_output->datastart + m_position * m_output->channels() * aperture;// * x_img->nChannels;
 	unsigned char * pSrc = x_img->datastart + x_img->cols * x_img->channels() / 2;

@@ -107,7 +107,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	gbSettings->setLayout(vbox);
 	layout->addWidget(gbSettings);
 	setLayout(layout);
-	int index = 0;
+	//int index = 0;
 	
 	//set context menu
 	QAction * actionShowDisplayMenu = new QAction(tr("Show display options"), this);
@@ -206,7 +206,7 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 
 void QModuleViewer::paintEvent(QPaintEvent * e) 
 {
-	int cvIndex, cvLineStart;
+	//int cvIndex, cvLineStart;
 	
 	
 	if(m_img_original == NULL)

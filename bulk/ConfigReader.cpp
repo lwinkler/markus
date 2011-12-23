@@ -156,6 +156,8 @@ ParameterValue ConfigReader::GetParameterValue(const std::string& x_name, const 
 		if(x_name.compare(it->m_name) == 0)
 			return *it;
 	}
+	assert(false);
+	return ParameterValue(0, "", "");
 }
 
 // Return the size of a vector of config objects
@@ -170,7 +172,7 @@ int ConfigReader::ReadConfigGetVectorSize(const std::string& x_vectorType, const
 
 	TiXmlNode* node = 0;
 	TiXmlElement* moduleElement = 0;
-	TiXmlElement* paramElement = 0;
+	//TiXmlElement* paramElement = 0;
 	
 	node = doc.FirstChild(x_vectorType);
 	if(node == NULL)

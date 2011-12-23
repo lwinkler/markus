@@ -61,7 +61,7 @@ void InputTimer::timerEvent(QTimerEvent* )
 
 
 markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
-	: m_manager(rx_manager), m_configReader(rx_configReader)
+	: m_configReader(rx_configReader),  m_manager(rx_manager)
 {
 	nbLines = 1;
 	nbCols = 1;

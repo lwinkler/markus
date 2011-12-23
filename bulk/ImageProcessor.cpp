@@ -34,8 +34,8 @@ using namespace std;
 using namespace cv;
 
 ImageProcessor::ImageProcessor(const string & x_name, int x_nb, ConfigReader& x_confReader, std::vector<Input*>& xr_inputList):
-	m_param(x_confReader, x_nb), 
 	Configurable(x_confReader),
+	m_param(x_confReader, x_nb), 
 	m_nb(x_nb)
 {
 	vector<ParameterValue> paramList = m_configReader.ReadConfigObjectFromVect("ImageProcessors", "ImageProcessor", x_nb);

@@ -70,9 +70,9 @@ class Feature
 		
 		//inline const char* GetName() const {return m_name;};
 		inline double GetValue() const {return m_value;};
-		inline double SetValue( double x) {m_value = x;};
+		inline void SetValue( double x) {m_value = x;};
 		inline double GetVariance() const {return m_variance;};
-		inline double SetVariance( double x) {m_variance = x;};
+		inline void SetVariance( double x) {m_variance = x;};
 		
 		static double GetFeatureValue(const std::vector<Feature>& vect, const char* name);
 		

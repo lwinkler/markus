@@ -34,9 +34,10 @@ const char * ObjectTracker::m_type = "ObjectTracker";
 
 
 ObjectTracker::ObjectTracker(const std::string& x_name, ConfigReader& x_configReader) :
+	Module(x_name, x_configReader),
+	m_param(x_configReader, x_name), 
 	detect(m_param.detector, m_param.width, m_param.height, m_param.type),
-	track(m_param.tracker, m_param.width, m_param.height, m_param.type),
-	m_param(x_configReader, x_name), Module(x_name, x_configReader)
+	track(m_param.tracker, m_param.width, m_param.height, m_param.type)
 {
 	m_img_blur = NULL;
 	m_img_blur = new Mat(cvSize(m_param.width, m_param.height), m_param.type);//IPL_DEPTH_8U, m_param.channels);

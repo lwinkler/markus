@@ -65,6 +65,7 @@ public:
 
 	
 protected:
+	ImageProcessorParameterStructure m_param;
 	//const std::string m_name;
 	const int m_nb;
 	double m_timeSinceLastProcessing;
@@ -77,7 +78,6 @@ protected:
 	//cv::Mat * m_img_tmp2;
 	//cv::Mat * m_img_input;
 
-	ImageProcessorParameterStructure m_param;
 	inline virtual const ParameterStructure& GetRefParameter() const {return m_param;};
 	
 	QReadWriteLock m_lock;

@@ -59,8 +59,8 @@ protected:
 	CvCapture * m_capture;
 	int m_fps;
 
-	const std::string m_name;
 	UsbCamParameterStructure m_param;
+	const std::string m_name;
 	
 	inline virtual const UsbCamParameterStructure& GetRefParameter() const {return m_param;};
 };
