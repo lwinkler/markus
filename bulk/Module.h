@@ -31,6 +31,7 @@
 #include "StreamImage.h"
 #include "StreamDebug.h"
 #include "StreamRect.h"
+#include <QReadWriteLock>
 
 
 class ModuleParameterStructure : public ParameterStructure
@@ -72,6 +73,7 @@ public:
 	inline int GetInputType() const {return GetRefParameter().type;}
 	//virtual inline int GetNbChannels() const {return GetRefParameter().channels;}
 	inline int GetFps() const {return GetRefParameter().fps;}
+	QReadWriteLock m_lock;
 	
 protected:
 	cv::Mat * m_output;
@@ -79,6 +81,7 @@ protected:
 	virtual const ModuleParameterStructure & GetRefParameter() const = 0;
 	std::vector<Stream *> m_outputStreams;
 	std::vector<Stream *> m_debugStreams;
+	
 };
 
 #endif

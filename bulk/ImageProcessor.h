@@ -30,6 +30,7 @@
 //#include "Stream.h"
 #include "Input.h"
 #include "Module.h"
+#include <QReadWriteLock>
 
 //class Module;
 //class Input;
@@ -77,6 +78,8 @@ protected:
 
 	ImageProcessorParameterStructure m_param;
 	inline virtual const ParameterStructure& GetRefParameter() const {return m_param;};
+	
+	QReadWriteLock m_lock;
 };
 
 #endif

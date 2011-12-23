@@ -75,11 +75,6 @@ Manager::Manager(ConfigReader& x_configReader) :
 		//not working writer=cvCreateVideoWriter("out.mpg",CV_FOURCC('D', 'I', 'V', '3'), fps,cvSize(frameW,frameH),m_workIsColor);
 	}
 	
-	// Create timers
-	m_timerConv.reset();
-	
-	
-	m_timerLastProcess = clock();
 	
 	m_inputs.clear();
 	m_modules.clear();
@@ -106,10 +101,16 @@ Manager::Manager(ConfigReader& x_configReader) :
 		m_modules.push_back(dynamic_cast<Module *>(*it));
 		//cpt++;
 	}
+	// Create timers
+	m_timerConv.reset();
+	m_timerProc.reset();
+	
+	m_timerLastProcess = clock();
 }
 
 Manager::~Manager()
 {
+	PrintTimers();
 	for(vector<ImageProcessor*>::iterator it = m_imageProcessors.begin(); it != m_imageProcessors.end(); it++)
 	{
 		delete(*it);
@@ -126,19 +127,13 @@ Manager::~Manager()
 
 void Manager::Process()
 {
-	m_timerConv.stop();
+	m_lock.lockForWrite();
+	//m_timerConv.stop();
 	m_timerProc.start();
 	
 	clock_t tmp = clock();
 	double timecount = ( (double)tmp - m_timerLastProcess) / CLOCKS_PER_SEC;
 	m_timerLastProcess = tmp;
-	//cout<<"timecount"<<timecount * 1000<<endl;
-	
-	// Aquire input images and process
-	/*for(vector<Input*>::iterator it = m_inputs.begin(); it != m_inputs.end(); it++)
-	{
-		(*it)->Capture();
-	}*/
 	
 	try
 	{
@@ -170,17 +165,25 @@ void Manager::Process()
 
 	
 	m_timerProc.stop();
-	m_timerConv.start();
+	//m_timerConv.start();
 
+	//m_timerConv.start();
+	//sleep(1);
+	//m_timerConv.stop();	
+	
 	m_frameCount++;
 	if(m_frameCount % 100 == 0)
 	{
-		m_timerConv.stop();
-		cout<<m_frameCount<<" frames processed in "<<m_timerProc.value<<" s "<<m_frameCount/m_timerProc.value<<" frames/s"<<endl;
-		cout<<"Time for Input/Output conversion "<<m_timerConv.value<<" s "<<m_frameCount/m_timerConv.value<<" frames/s"<<endl;
-		cout<<"Total time "<<m_timerProc.value + m_timerConv.value<<" s"<<endl;
-		m_timerConv.start();
+		PrintTimers();
 	}
+	m_lock.unlock();
+}
+
+void Manager::PrintTimers()
+{
+		cout<<m_frameCount<<" frames processed in "<<m_timerProc.value<<" s ("<<m_frameCount/m_timerProc.value<<" frames/s)"<<endl;
+		cout<<"Time between calls to process method "<<m_timerConv.value<<" s ("<<m_frameCount/m_timerConv.value<<" frames/s)"<<endl;
+		cout<<"Total time "<<m_timerProc.value + m_timerConv.value<<" s ("<<m_frameCount/(m_timerProc.value + m_timerConv.value)<<" frames/s)"<<endl;
 }
 
 /*void Manager::AddModule(Module * x_mod)

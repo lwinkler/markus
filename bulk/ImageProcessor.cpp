@@ -112,6 +112,7 @@ ImageProcessor::~ImageProcessor()
 
 void ImageProcessor::Process(double x_timeSinceLast)
 {
+	m_lock.lockForWrite();
 	m_timeSinceLastProcessing += x_timeSinceLast;
 	//cout<<"Process "<<m_module->GetName()<<" "<<m_timeSinceLastProcessing<<" >= "<<m_timeInterval<<" "<<m_input->GetImage()<<endl;
 	if(m_timeSinceLastProcessing >= m_timeInterval && m_input->GetImage() != NULL)
@@ -123,4 +124,5 @@ void ImageProcessor::Process(double x_timeSinceLast)
 		m_input->ProcessFrame(m_img_input, m_timeSinceLastProcessing);
 		m_timeSinceLastProcessing = 0;
 	}
+	m_lock.unlock();
 }

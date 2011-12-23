@@ -34,6 +34,7 @@
 //#include "ConfigReader.h"
 #include "Input.h"
 #include "Module.h"
+#include <QReadWriteLock>
 
 class ImageProcessor;
 //class Input;
@@ -49,11 +50,6 @@ public:
 		ParameterStructure::Init();
 	};
 	std::string mode;
-	//std::string input;
-	//int width;
-	//int height;
-	//int depth;
-	//int channels;
 };
 
 
@@ -71,6 +67,8 @@ public:
 
  	std::vector<Input*> & GetInputListVar()  {return m_inputs; };
 	std::vector<Module*>& GetModuleListVar() {return m_modules; };
+	
+	void PrintTimers();
 private:
 	ManagerParameter m_param;
 	CvVideoWriter * m_writer;
@@ -87,5 +85,6 @@ private:
 	long long m_frameCount;
 protected:
 	inline virtual const ParameterStructure& GetRefParameter() const{return m_param;};
+	QReadWriteLock m_lock;
 };
 #endif

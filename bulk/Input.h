@@ -31,7 +31,6 @@
 #include "Parameter.h"
 #include "Module.h"
 
-#include <QReadWriteLock>
 
 class InputParameterStructure : public ModuleParameterStructure
 {
@@ -68,7 +67,6 @@ public:
 	virtual const cv::Mat * GetImage() const = 0;
 	inline virtual int GetInputWidth() const{return m_inputWidth;};
 	inline virtual int GetInputHeight() const{return m_inputHeight;};
-	QReadWriteLock m_lock;
 	
 	inline double GetFps() const {return GetRefParameter().fps;};
 	

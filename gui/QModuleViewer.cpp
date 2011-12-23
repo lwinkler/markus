@@ -143,6 +143,17 @@ QModuleViewer::~QModuleViewer(void)
 	if(m_img_tmp1_c3 != NULL) delete(m_img_tmp1_c3);
 	if(m_img_tmp2_c1 != NULL) delete(m_img_tmp2_c1);
 	if(m_img_tmp2_c3 != NULL) delete(m_img_tmp2_c3);
+	
+	delete comboModules ;
+	delete comboStreams;
+	delete layout;
+	delete gbSettings;
+	//vbox;
+	//lab1;
+	//QLabel* lab2 = new QLabel(tr("Out stream"));
+	//QAction * actionShowDisplayMenu = new QAction(tr("Show display options"), this);
+	//QAction * actionHideDisplayMenu = new QAction(tr("Hide display options"), this);
+	//QResizeEvent* e = new QResizeEvent(QSize(x_width, x_height), size());
 }
 
 /*void QModuleViewer::Resize(int x_width, int x_height)

@@ -1,0 +1,13 @@
+
+
+
+
+TODO :
+
+- Add a way to change the parameters live
+- Optimize the input processing
+- Optimize the image display routine
+- Modules can have different inputs
+- Use many modules in Serie
+- Find an intuitive way to create a config
+- Matrices : ref instead of pointers

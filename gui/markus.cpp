@@ -105,7 +105,6 @@ markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 
 void markus::timerEvent(QTimerEvent*)
 {
-
 	try
 	{
 		m_manager.Process();

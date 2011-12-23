@@ -1,12 +1,12 @@
 <?xml version="1.0" standalone="no" ?>
 
 <ImageProcessors>
-        <!--<ImageProcessor name="ModuleDeTest4">
+        <ImageProcessor name="ModuleDeTest4">
                 <parameter id="0" name="input">MyCam1</parameter>
                 <parameter id="2" name="module">SlitCamera1</parameter>
-	</ImageProcessor>-->
+	</ImageProcessor>
 	
-	<ImageProcessor name="ModuleDeTest1">
+	<!--<ImageProcessor name="ModuleDeTest1">
                 <parameter id="0" name="input">InFile1</parameter>
                 <parameter id="2" name="module">CascadeDetector1</parameter>
         </ImageProcessor>
@@ -77,7 +77,7 @@
         <parameter id="3" name="inputHeight">480</parameter>
 	<parameter id="4" name="inputType">CV_8UC3</parameter>
 	<parameter id="1" name="aperture">4</parameter>
-	<parameter id="4" name="fps">0</parameter>
+	<parameter id="4" name="fps">1000</parameter>
 </Module>
 <Module name="SlitCamera2">
 	<parameter id="0" name="class">SlitCamera</parameter>
