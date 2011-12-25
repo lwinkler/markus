@@ -47,8 +47,8 @@ enum ParameterConfigType
 	PARAMCONF_DEF   = 1,
 	PARAMCONF_XML,
 	PARAMCONF_GUI,
-	PARAMCONF_UNKNOWN, 
-	PARAMCONF_SIZE = 5
+	PARAMCONF_UNKNOWN
+	//PARAMCONF_SIZE = 5
 };
 static const char configType[][16] = {"unset", "def", "xml", "gui", "unk"};
 

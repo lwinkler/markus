@@ -13,7 +13,9 @@ MODIFICATIONS (Modification, Author, Date):
 **************************************************************************/
 
 //! Disable warnings referred to 255 character truncation for the std:map
+#ifdef WIN32
 #pragma warning( disable : 4786 ) 
+#endif
 
 #ifndef CBLOB_INSPECTA_INCLUDED
 #define CBLOB_INSPECTA_INCLUDED

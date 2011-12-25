@@ -44,7 +44,7 @@ public:
 		m_list.push_back(new ParameterT<int>(0, "inputHeight", 	480, 	PARAM_INT, 	0, 	3000,		&height));
 		m_list.push_back(new ParameterImageType(0, "inputType", 	CV_8UC1, 				&type));
 	//	m_list.push_back(new ParameterT<int>(0, "channels", 	3, 	PARAM_INT, 	1, 	3,		&channels));
-		m_list.push_back(new ParameterT<double>(0, "fps", 	10, 	PARAM_DOUBLE, 	0, 	100,		&fps));
+		m_list.push_back(new ParameterT<double>(0, "fps", 	10, 	PARAM_DOUBLE, 	0, 	100000,		&fps)); //TODO : Check that min max works
 	};
 
 public:
