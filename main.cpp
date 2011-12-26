@@ -23,6 +23,8 @@
 
 #include <QtGui/QApplication>
 #include "markus.h"
+#include <cstring>
+#include <cstdio>
 
 #include "Manager.h"
 
@@ -30,14 +32,37 @@
 
 using namespace std;
 
+void usage()
+{
+	printf("Usage : markus <configuration> [-d]\n");
+}
+
 int main(int argc, char** argv)
 {
+	bool describe = false;
+	std::string configFile;
+	configFile = "config.xml";
+	int cpt = 1;
+	while(cpt < argc)
+	{
+		if(!strcmp(argv[cpt], "-d"))
+		{
+			describe = true;
+		}	
+		else
+		{
+			configFile = argv[cpt];
+		}
+		cpt++;
+	}
 	try
 	{
 		QApplication app(argc, argv);
 		ConfigReader conf("config.xml");
 		Manager manager(conf);
 
+		if(describe) manager.Describe();
+		
 		markus gui(conf, manager);
 		gui.setWindowTitle("OpenCV --> QtImage");
 		gui.show();

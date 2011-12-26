@@ -78,6 +78,7 @@ public:
 	virtual const void* GetValue() const = 0;
 	virtual void SetDefault() = 0;
 	virtual void Print() const = 0;
+	virtual void Describe(std::ostream& rx_os) = 0;
 	const int m_id;
 	const std::string m_name;
 	const ParameterType m_type;
@@ -120,6 +121,15 @@ public:
 		*mp_value = m_default;
 		m_confType = PARAMCONF_DEF;
 	}
+	virtual void Describe(std::ostream& rx_os)
+	{
+		rx_os<<"<param name=\""<<m_name<<"\">"<<std::endl;
+		rx_os<<"<type>"<<"TODO"<<"</type>"<<std::endl;
+		rx_os<<"<value min=\""<<m_min<<"\" max=\""<<m_max<<"\" default=\""<<m_default<<"\">"<<*static_cast<const T*>(GetValue())<<"</value>"<<std::endl;
+		rx_os<<"<description>"<<"TODO"<<"</description>"<<std::endl;
+		rx_os<<"</param>"<<std::endl;
+	}
+
     std::basic_ostream< char >::__ostream_type of(const char* arg1);
 	const T m_default;
 	const T m_min;
@@ -160,6 +170,15 @@ public:
 		*mp_value = m_default;
 		m_confType = PARAMCONF_DEF;
 	}
+	virtual void Describe(std::ostream& rx_os)
+	{
+		rx_os<<"<param name=\""<<m_name<<"\">"<<std::endl;
+		rx_os<<"<type>"<<"TODO"<<"</type>"<<std::endl;
+		rx_os<<"<value default=\""<<m_default<<"\">"<<*static_cast<const std::string*>(GetValue())<<"</value>"<<std::endl;
+		rx_os<<"<description>"<<"TODO"<<"</description>"<<std::endl;
+		rx_os<<"</param>"<<std::endl;
+	}
+
 	const std::string m_default;
 private:
 	std::string* mp_value;
@@ -209,6 +228,15 @@ public:
 				return(it->first);
 		return unknown;
 	};
+	virtual void Describe(std::ostream& rx_os)
+	{
+		rx_os<<"<param name=\""<<m_name<<"\">"<<std::endl;
+		rx_os<<"<type>"<<"TODO"<<"</type>"<<std::endl;
+		rx_os<<"<value default=\""<<m_default<<"\">"<<*static_cast<const int*>(GetValue())<<"</value>"<<std::endl;
+		rx_os<<"<description>"<<"TODO"<<"</description>"<<std::endl;
+		rx_os<<"</param>"<<std::endl;
+	}
+
 	
     std::basic_ostream< char >::__ostream_type of(const char* arg1);
 	const int m_default;
@@ -239,6 +267,7 @@ public:
 	void CheckRange() const;
 	void PrintParameters() const;
 	void SetValueByName(const std::string& x_name, const std::string& x_value, ParameterConfigType x_configType = PARAMCONF_UNKNOWN);
+	const std::vector<Parameter*>& GetList() const {return m_list;};
 	
 protected:
 	std::vector<Parameter*> m_list;

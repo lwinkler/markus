@@ -32,17 +32,16 @@
 #include <stdio.h>
 #include <math.h>
 #include <iostream>
+#include <fstream>
 #include <assert.h>
 
-//#include "ObjectTracker.h"
-//#include "SlitCam.h"
+#include <sstream>
+#include <string.h>
+using namespace std;
 
-//#include "timer.h"
+#include "Modules.h"
 
-	#include <sstream>
-	#include <string.h>
-	using namespace std;
-
+	
 #if defined( WIN32 ) && defined( TUNE )
 	#include <crtdbg.h>
 	_CrtMemState startMemState;
@@ -189,6 +188,18 @@ void Manager::PrintTimers()
 		cout<<"Time between calls to process method "<<m_timerConv.value<<" s ("<<m_frameCount/m_timerConv.value<<" frames/s)"<<endl;
 		cout<<"Total time "<<m_timerProc.value + m_timerConv.value<<" s ("<<m_frameCount/(m_timerProc.value + m_timerConv.value)<<" frames/s)"<<endl;
 }
+
+void Manager::Describe()
+{
+	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+	{
+		string file((*it)->GetName() + ".xml");
+		ofstream os(file.c_str());
+		(*it)->DescribeModule(os);
+		os.close();
+	}
+}
+
 
 /*void Manager::AddModule(Module * x_mod)
 {

@@ -74,6 +74,7 @@ public:
 	inline int GetInputType() const {return GetRefParameter().type;}
 	//virtual inline int GetNbChannels() const {return GetRefParameter().channels;}
 	inline int GetFps() const {return GetRefParameter().fps;}
+	void DescribeModule(std::ostream& rx_os);
 	QReadWriteLock m_lock;
 	
 protected:

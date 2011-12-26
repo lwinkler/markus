@@ -23,6 +23,7 @@
 
 #include "Stream.h"
 
+using namespace std;
 
 Stream::Stream(const std::string& x_name, StreamType x_type, int x_width, int x_height) :
 	m_name(x_name),
@@ -36,3 +37,13 @@ Stream::~Stream()
 {
 
 }
+
+void Stream::Describe(ostream& rx_os)
+{
+	rx_os<<"<input id=\""<<0<<"\">"<<endl;
+	rx_os<<"<type>"<<"TODO"<<"</type>"<<endl;
+	rx_os<<"<name>"<<m_name<<"</name>"<<endl;
+	rx_os<<"<description>"<<"TODO"<<"</description>"<<endl;
+	rx_os<<"</input>"<<endl;
+}
+

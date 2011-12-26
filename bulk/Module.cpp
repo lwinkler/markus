@@ -57,3 +57,23 @@ void Module::SetInput(const cv::Mat* x_img)
 {
 	m_outputStreams.push_back(new Stream(x_name, x_type, x_image));
 }*/
+
+/// Describe the module with name, parameters, inputs, outputs to an output stream (in xml)
+void Module::DescribeModule(ostream& rx_os)
+{
+	rx_os<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"<<endl;
+	rx_os<<"<module name=\""<<m_name<<"\" description=\""<<"descr!!!TODO"<<"\">"<<endl;
+
+	rx_os<<"<parameters>"<<endl;
+	for(vector<Parameter*>::const_iterator it = GetRefParameter().GetList().begin() ; it != GetRefParameter().GetList().end() ; it++)
+		(*it)->Describe(rx_os);
+	rx_os<<"</parameters>"<<endl;
+
+	rx_os<<"<inputs>"<<endl;
+	rx_os<<"</inputs>"<<endl;
+	rx_os<<"<outputs>"<<endl;
+	for(vector<Stream*>::const_iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
+		(*it)->Describe(rx_os);
+	rx_os<<"</outputs>"<<endl;
+	rx_os<<"</module>"<<endl;
+}

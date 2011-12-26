@@ -24,7 +24,8 @@
 #ifndef OUTPUT_STREAM_H
 #define OUTPUT_STREAM_H
 
-#include "cv.h"
+#include <cv.h>
+#include <iostream>
 
 enum StreamType
 {
@@ -46,6 +47,7 @@ public:
 	inline int GetInputHeight() const {return m_height;};
 	inline StreamType GetType() const {return m_type;};
 	virtual void Render(cv::Mat * x_output) const  = 0;
+	void Describe(std::ostream& rx_os);
 protected:
 	const std::string m_name;
 	const StreamType m_type;
