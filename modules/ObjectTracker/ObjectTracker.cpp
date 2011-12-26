@@ -47,7 +47,9 @@ ObjectTracker::ObjectTracker(const std::string& x_name, ConfigReader& x_configRe
 	cvSet( m_img_blur, cvScalar(0,0,0));
 	detect.Reset();
 	track.Reset();
-	m_outputStreams.push_back(new StreamDebug("input", m_img_blur));
+	
+	m_inputStreams.push_back(new StreamDebug("input", m_img_blur));
+	
 	m_outputStreams.push_back(new StreamDebug("background", detect.GetBackground()));
 	m_outputStreams.push_back(new StreamDebug("foreground", detect.GetForeground()));
 	m_outputStreams.push_back(new StreamDebug("foreground_rff", detect.GetForegroundRff()));

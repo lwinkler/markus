@@ -61,7 +61,7 @@ int main(int argc, char** argv)
 		ConfigReader conf("config.xml");
 		Manager manager(conf);
 
-		if(describe) manager.Describe();
+		if(describe) manager.Export();
 		
 		markus gui(conf, manager);
 		gui.setWindowTitle("OpenCV --> QtImage");

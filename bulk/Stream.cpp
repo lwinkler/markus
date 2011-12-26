@@ -31,19 +31,29 @@ Stream::Stream(const std::string& x_name, StreamType x_type, int x_width, int x_
 	m_width(x_width),
 	m_height(x_height)
 {
+	m_connected = NULL;
+	m_img_tmp1 = NULL; // To convert the input
+	m_img_tmp2 = NULL;
 }
 
 Stream::~Stream()
 {
-
+	if(m_img_tmp1 != NULL) delete m_img_tmp1;
+	if(m_img_tmp2 != NULL) delete m_img_tmp2;
 }
 
-void Stream::Describe(ostream& rx_os)
+void Stream::Export(ostream& rx_os)
 {
 	rx_os<<"<input id=\""<<0<<"\">"<<endl;
 	rx_os<<"<type>"<<"TODO"<<"</type>"<<endl;
 	rx_os<<"<name>"<<m_name<<"</name>"<<endl;
 	rx_os<<"<description>"<<"TODO"<<"</description>"<<endl;
 	rx_os<<"</input>"<<endl;
+}
+
+
+void Stream::Connect(const Stream* x_stream)
+{
+	m_connected = x_stream;
 }
 

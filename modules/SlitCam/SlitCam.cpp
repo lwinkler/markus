@@ -45,8 +45,8 @@ SlitCam::SlitCam(const std::string& x_name, ConfigReader& x_configReader)
 	m_output->setTo(cvScalar(0, 0, 0));
 	
 	// Init output images
+	m_inputStreams.push_back(new StreamImage("input", m_input));
 	m_outputStreams.push_back(new StreamImage("slit",  m_output));
-	m_outputStreams.push_back(new StreamImage("input", m_input));
 }
 
 SlitCam::~SlitCam(void)

@@ -68,7 +68,7 @@ public:
  	std::vector<Input*> & GetInputListVar()  {return m_inputs; };
 	std::vector<Module*>& GetModuleListVar() {return m_modules; };
 	
-	void Describe();
+	void Export();
 	void PrintTimers();
 private:
 	ManagerParameter m_param;

@@ -78,7 +78,7 @@ public:
 	virtual const void* GetValue() const = 0;
 	virtual void SetDefault() = 0;
 	virtual void Print() const = 0;
-	virtual void Describe(std::ostream& rx_os) = 0;
+	virtual void Export(std::ostream& rx_os) = 0;
 	const int m_id;
 	const std::string m_name;
 	const ParameterType m_type;
@@ -121,7 +121,7 @@ public:
 		*mp_value = m_default;
 		m_confType = PARAMCONF_DEF;
 	}
-	virtual void Describe(std::ostream& rx_os)
+	virtual void Export(std::ostream& rx_os)
 	{
 		rx_os<<"<param name=\""<<m_name<<"\">"<<std::endl;
 		rx_os<<"<type>"<<"TODO"<<"</type>"<<std::endl;
@@ -170,7 +170,7 @@ public:
 		*mp_value = m_default;
 		m_confType = PARAMCONF_DEF;
 	}
-	virtual void Describe(std::ostream& rx_os)
+	virtual void Export(std::ostream& rx_os)
 	{
 		rx_os<<"<param name=\""<<m_name<<"\">"<<std::endl;
 		rx_os<<"<type>"<<"TODO"<<"</type>"<<std::endl;
@@ -228,7 +228,7 @@ public:
 				return(it->first);
 		return unknown;
 	};
-	virtual void Describe(std::ostream& rx_os)
+	virtual void Export(std::ostream& rx_os)
 	{
 		rx_os<<"<param name=\""<<m_name<<"\">"<<std::endl;
 		rx_os<<"<type>"<<"TODO"<<"</type>"<<std::endl;

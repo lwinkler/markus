@@ -23,6 +23,8 @@
 
 #include "StreamImage.h"
 #include <iostream>
+#include "util.h"
+
 using namespace std;
 using namespace cv;
 
@@ -38,6 +40,13 @@ StreamImage::~StreamImage()
 
 }
 
+void StreamImage::ConvertInput()
+{
+	assert(m_connected != NULL);
+	adjust((dynamic_cast<const StreamImage*>(m_connected))->GetImageRef(), m_image, m_img_tmp1, m_img_tmp2); // TODO : See if we can avoid to cast each time
+}
+
+
 void StreamImage::Render(Mat * xp_output) const
 {
 	//cout<<"xp_output->width "<<xp_output->width<<endl;
@@ -46,3 +55,5 @@ void StreamImage::Render(Mat * xp_output) const
 	//assert(xp_output->height == GetInputHeight());
 	m_image->copyTo(*xp_output);
 }
+
+

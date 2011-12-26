@@ -41,6 +41,12 @@ StreamRect::~StreamRect()
 
 }
 
+void StreamRect::ConvertInput()
+{
+	assert(m_connected != NULL);
+	assert(false); // TODO
+}
+
 // Render : Draw rectangles on image
 void StreamRect::Render(Mat * xp_output) const
 {

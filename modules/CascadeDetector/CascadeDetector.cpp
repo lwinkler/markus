@@ -44,7 +44,9 @@ CascadeDetector::CascadeDetector(const std::string& x_name, ConfigReader& x_conf
 	assert(!m_thread.m_cascade.empty());
 	m_debug = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
 	m_input = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
-	m_output = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
+	//m_output = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
+
+	m_inputStreams.push_back(new StreamImage("input", m_input)); // TODO : Chg name faces
 
 	m_outputStreams.push_back(new StreamRect("detected", m_param.width, m_param.height, m_detectedObjects, ColorFromStr(m_param.color))); // TODO : Chg name faces
 	m_outputStreams.push_back(new StreamDebug("debug", m_debug));

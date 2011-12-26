@@ -33,7 +33,6 @@ Input::Input(const std::string& x_name, ConfigReader& x_configReader):
 {
 	cout<<endl<<"*** Create object Input : "<<x_name<<" ***"<<endl;
 
-	m_input = NULL;
 	m_render = NULL;  // cvCreateImage( cvSize(12,12)/*GetInputWidth(), GetInputHeight())*/, CV_8U_C3);
 	m_inputWidth = 0;
 	m_inputHeight = 0;
@@ -49,7 +48,9 @@ Input::~Input()
 void Input::ProcessFrame(const double x_timeSinceLastProcessing)
 {
 	//cout<<"copy "<<m_input<<" to "<<m_render<<endl;
-	m_input->copyTo(*m_render);
+	//m_input->copyTo(*m_render);
+	assert(m_outputStreams.size() > 0);
+	m_outputStreams[0]->Render(m_render);
 	
 	for(vector<Stream *>::const_iterator it = m_relatedStreams.begin() ; it != m_relatedStreams.end() ; it++)
 	{

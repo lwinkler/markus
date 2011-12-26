@@ -35,6 +35,7 @@ ModuleAsync::ModuleAsync(const std::string& x_name, ConfigReader& x_configReader
 	cout<<endl<<"*** Create object ModuleAsync : "<<x_name<<" ***"<<endl;
 	m_timeSinceLastThread = 1e99;
 	m_resultsCopied = false;
+	m_input = NULL;
 };
 
 void ModuleAsync::ProcessFrame(const double x_timeSinceLastProcessing)

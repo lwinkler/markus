@@ -189,13 +189,13 @@ void Manager::PrintTimers()
 		cout<<"Total time "<<m_timerProc.value + m_timerConv.value<<" s ("<<m_frameCount/(m_timerProc.value + m_timerConv.value)<<" frames/s)"<<endl;
 }
 
-void Manager::Describe()
+void Manager::Export()
 {
 	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 	{
 		string file((*it)->GetName() + ".xml");
 		ofstream os(file.c_str());
-		(*it)->DescribeModule(os);
+		(*it)->Export(os);
 		os.close();
 	}
 }

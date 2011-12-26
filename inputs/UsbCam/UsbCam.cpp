@@ -60,9 +60,9 @@ UsbCam::UsbCam(const std::string& x_name, ConfigReader& x_configReader):
 //	m_input = NULL;//cvCreateImage( cvSize(m_width, m_height), IPL_DEPTH_8U, 3);
 
 	
-	m_input = new Mat( cvSize(m_inputWidth, m_inputHeight), CV_8UC3); // TODO : No allocation needed
+	m_output = new Mat( cvSize(m_inputWidth, m_inputHeight), CV_8UC3); // TODO : No allocation needed
 	m_render = new Mat( cvSize(m_inputWidth, m_inputHeight), CV_8UC3);
-	m_outputStreams.push_back(new StreamImage("input", m_input));
+	m_outputStreams.push_back(new StreamImage("input", m_output));
 	m_outputStreams.push_back(new StreamImage("render", m_render));
 }
 
@@ -90,7 +90,7 @@ void UsbCam::Capture()
 	//assert(tmp->height == m_input->height);
 	//assert(tmp->depth == m_input->depth);
 	
-	tmp->copyTo(*m_input);
+	tmp->copyTo(*m_output);
 	
 	delete(tmp);
 	m_lock.unlock();

@@ -61,7 +61,8 @@ protected:
 //	const std::string m_name;
 //	std::vector<Stream *> m_outputStreams;
 //	ThreadStatus m_threadStatus;
-	cv::Mat * m_lastInput;
+	cv::Mat * m_input;
+	cv::Mat * m_lastInput; // TODO : Is this used ?
 	double m_timeSinceLastThread;
 	bool m_resultsCopied;
 

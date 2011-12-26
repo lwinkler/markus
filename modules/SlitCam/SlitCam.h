@@ -56,6 +56,9 @@ private:
 	SlitCamParameter m_param;
 	int m_position;
 	static const char * m_type;
+	
+	cv::Mat * m_input;
+	cv::Mat * m_output;
 public:
 	SlitCam(const std::string& x_name, ConfigReader& x_configReader);
 	~SlitCam(void);

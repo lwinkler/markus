@@ -36,6 +36,7 @@ public:
 	~StreamDebug();
 	const cv::Mat* GetImageRef() const {return m_image;};
 	
+	virtual void ConvertInput();
 	virtual void Render(cv::Mat * xp_output) const;
 protected:
 	const cv::Mat * m_image;

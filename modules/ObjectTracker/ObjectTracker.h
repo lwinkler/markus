@@ -58,7 +58,11 @@ public:
 	
 private:
 	ObjectTrackerParameterStructure m_param;
+	
+	cv::Mat * m_input;
+	cv::Mat * m_output;
 	cv::Mat* m_img_blur;
+	
 	Detector detect;
 	Tracker track;
 	static const char * m_type;

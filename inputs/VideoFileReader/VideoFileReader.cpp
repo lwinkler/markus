@@ -54,15 +54,15 @@ VideoFileReader::VideoFileReader(const std::string& x_name, ConfigReader& x_conf
 //	assert(m_height == m_param.height);
 	
 	
-	m_input = new Mat( cvSize(m_inputWidth, m_inputHeight), CV_8UC3);
+	m_output = new Mat( cvSize(m_inputWidth, m_inputHeight), CV_8UC3);
 	m_render = new Mat( cvSize(m_inputWidth, m_inputHeight), CV_8UC3);
-	m_outputStreams.push_back(new StreamImage("input", m_input));
+	m_outputStreams.push_back(new StreamImage("input", m_output));
 	m_outputStreams.push_back(new StreamImage("render", m_render));
 }
 
 VideoFileReader::~VideoFileReader()
 {
-	delete(m_input);
+	delete(m_output);
 	delete(m_render);
 	cvReleaseCapture(&m_capture );
 }
@@ -79,7 +79,7 @@ void VideoFileReader::Capture()
 	//m_input = cvRetrieveFrame(m_capture);           // retrieve the captured frame
 	//cvCopy(cvRetrieveFrame(m_capture), m_input);
 	Mat * tmp = new Mat(cvRetrieveFrame(m_capture));
-	tmp->copyTo(*m_input);
+	tmp->copyTo(*m_output);
 	delete tmp;
 
 	m_lock.unlock();

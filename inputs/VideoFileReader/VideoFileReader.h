@@ -52,12 +52,14 @@ public:
 	
 	void Capture();
 	const std::string& GetName(){return m_name;};
-	virtual const cv::Mat * GetImage() const {return m_input;}
+	virtual const cv::Mat * GetImage() const {return m_output;}
 
 protected:
 	VideoFileReaderParameterStructure m_param;
 	const std::string m_name;
 	CvCapture * m_capture;
+	cv::Mat * m_output;
+
 	//int m_width;
 	//int m_height;
 	int m_fps;

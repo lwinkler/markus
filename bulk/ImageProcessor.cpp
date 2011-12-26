@@ -48,24 +48,22 @@ ImageProcessor::ImageProcessor(const string & x_name, int x_nb, ConfigReader& x_
 	std::string moduleClass = paramList[0].m_value;
 	
 	// Create all modules types
-	//for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
-	//{
-		Module * tmp;
-		if(moduleClass.compare("SlitCamera") == 0)
-		{
-			tmp = new SlitCam(module.m_value, m_configReader);
-		}
-		else if(moduleClass.compare("ObjectTracker") == 0)
-		{
-			tmp = new ObjectTracker(module.m_value, m_configReader);
-		}
-		else if(moduleClass.compare("CascadeDetector") == 0)
-		{
-			tmp = new CascadeDetector(module.m_value, m_configReader);
-		}
-		else throw("Module type unknown : " + moduleClass);
-	
-		m_modules.push_back(tmp);
+	Module * tmp;
+	if(moduleClass.compare("SlitCamera") == 0)
+	{
+		tmp = new SlitCam(module.m_value, m_configReader);
+	}
+	else if(moduleClass.compare("ObjectTracker") == 0)
+	{
+		tmp = new ObjectTracker(module.m_value, m_configReader);
+	}
+	else if(moduleClass.compare("CascadeDetector") == 0)
+	{
+		tmp = new CascadeDetector(module.m_value, m_configReader);
+	}
+	else throw("Module type unknown : " + moduleClass);
+
+	m_modules.push_back(tmp);
 		//}
 	
 	// Create all input objects
@@ -99,7 +97,15 @@ ImageProcessor::ImageProcessor(const string & x_name, int x_nb, ConfigReader& x_
 
 		xr_inputList.push_back(m_input);
 	}
-
+	
+	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+	{
+		for(vector<Stream*>::iterator it2 = (*it)->m_inputStreams.begin() ; it2 != (*it)->m_inputStreams.end() ; it2++)
+		{
+			(*it2)->Connect(m_input->m_outputStreams[0]);
+		}
+	}
+	
 	m_timeSinceLastProcessing = 0;
 	//m_timeInterval = 0;
 	//if(m_module->GetFps() > 0) m_timeInterval = 1.0 / m_module->GetFps();
@@ -124,7 +130,7 @@ void ImageProcessor::Process(double x_timeSinceLast)
 		if(m_timeSinceLastProcessing >= 1.0 / (*it)->GetFps())
 		{
 			m_input->m_lock.lockForRead();
-			(*it)->SetInput(m_input->GetImage());
+			(*it)->ConvertInput(m_input->GetImage());
 			m_input->m_lock.unlock();
 			(*it)->ProcessFrame(m_timeSinceLastProcessing);
 			m_input->ProcessFrame(m_timeSinceLastProcessing);

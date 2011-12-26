@@ -47,12 +47,19 @@ public:
 	inline int GetInputHeight() const {return m_height;};
 	inline StreamType GetType() const {return m_type;};
 	virtual void Render(cv::Mat * x_output) const  = 0;
-	void Describe(std::ostream& rx_os);
+	void Connect(const Stream * x_stream);
+	virtual void ConvertInput() = 0;
+	void Export(std::ostream& rx_os);
 protected:
 	const std::string m_name;
 	const StreamType m_type;
 	const int m_width;
 	const int m_height;
+	
+	const Stream * m_connected;
+	
+	cv::Mat * m_img_tmp1; // To convert the input
+	cv::Mat * m_img_tmp2;
 private:
 	Stream& operator=(const Stream&);
 	Stream(const Stream&);
