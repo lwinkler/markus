@@ -22,13 +22,10 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ImageProcessor.h"
-#include "SlitCam.h"
-#include "ObjectTracker.h"
-#include "CascadeDetector.h"
+#include "AllModules.h"
+#include "AllInputs.h"
 
 #include "util.h"
-#include "UsbCam.h"
-#include "VideoFileReader.h"
 
 using namespace std;
 using namespace cv;
