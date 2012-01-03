@@ -2,158 +2,166 @@
 
 <ImageProcessors>
         <ImageProcessor name="ModuleDeTest4">
-                <parameter id="0" name="input">MyCam1</parameter>
-                <parameter id="2" name="module">SlitCamera1</parameter>
+                <param id="0" name="input">MyCam1</param>
+                <param id="2" name="module">SlitCamera1</param>
 	</ImageProcessor>
         <ImageProcessor name="ModuleDeTest5">
-                <parameter id="0" name="input">MyCam1</parameter>
-                <parameter id="2" name="module">SlitCamera2</parameter>
+                <param id="0" name="input">MyCam1</param>
+                <param id="2" name="module">SlitCamera2</param>
 	</ImageProcessor>
 	
 	<!--<ImageProcessor name="ModuleDeTest1">
-                <parameter id="0" name="input">InFile1</parameter>
-                <parameter id="2" name="module">CascadeDetector1</parameter>
+                <param id="0" name="input">InFile1</param>
+                <param id="2" name="module">CascadeDetector1</param>
         </ImageProcessor>
         <ImageProcessor name="ModuleDeTest2">
-                <parameter id="0" name="input">MyCam1</parameter>
-                <parameter id="2" name="module">CascadeDetector2</parameter>
+                <param id="0" name="input">MyCam1</param>
+                <param id="2" name="module">CascadeDetector2</param>
         </ImageProcessor>
 	<ImageProcessor name="ModuleDeTest3">
-                <parameter id="0" name="input">MyCam1</parameter>
-                <parameter id="2" name="module">CascadeDetector3</parameter>
+                <param id="0" name="input">MyCam1</param>
+                <param id="2" name="module">CascadeDetector3</param>
         </ImageProcessor>
         <ImageProcessor name="ModuleDeTest4">
-                <parameter id="0" name="input">MyCam1</parameter>
-                <parameter id="2" name="module">CascadeDetector4</parameter>
+                <param id="0" name="input">MyCam1</param>
+                <param id="2" name="module">CascadeDetector4</param>
         </ImageProcessor>
 	-->
 </ImageProcessors>
 
 
 <Manager>
-	<parameter id="1" name="mode">benchmarkAA</parameter>
+	<parameters>
+		<param id="1" name="mode">benchmarkAA</param>
+	</parameters>
 </Manager>
 
 <!-- List all possibly used inputs-->
 <Module name="MyCam1">
-	<parameter id="0" name="class">UsbCam</parameter>
-        <parameter id="1" name="inputWidth">200</parameter>
-        <parameter id="2" name="inputHeight">100</parameter>
-        <parameter id="3" name="inputType">CV_8UC3</parameter>
-        <parameter id="4" name="num">-1</parameter>	
-	<parameter id="4" name="fps">1000</parameter>
+	<parameters>
+	<param id="0" name="class">UsbCam</param>
+        <param id="1" name="inputWidth">200</param>
+        <param id="2" name="inputHeight">100</param>
+        <param id="3" name="inputType">CV_8UC3</param>
+        <param id="4" name="num">-1</param>	
+	<param id="4" name="fps">1000</param>
+</parameters>
 </Module>
 
 <Module name="MyCam2">
-	<parameter id="0" name="class">UsbCam</parameter>
-        <parameter id="1" name="inputWidth">200</parameter>
-        <parameter id="2" name="inputHeight">100</parameter>
-        <parameter id="3" name="inputType">CV_8UC3</parameter>
-        <parameter id="4" name="num">1</parameter>	
-        <parameter id="4" name="fps">10</parameter>
+	<param id="0" name="class">UsbCam</param>
+        <param id="1" name="inputWidth">200</param>
+        <param id="2" name="inputHeight">100</param>
+        <param id="3" name="inputType">CV_8UC3</param>
+        <param id="4" name="num">1</param>	
+        <param id="4" name="fps">10</param>
 </Module>
 
 <Module name="InFile1">
-	<parameter id="0" name="class">VideoFileReader</parameter>
-        <parameter id="1" name="inputWidth">200</parameter>
-        <parameter id="2" name="inputHeight">100</parameter>
-        <parameter id="3" name="inputType">CV_8UC3</parameter>
-        <parameter id="4" name="file">input/test.avi</parameter>
-	<parameter id="4" name="fps">10</parameter>
+	<param id="0" name="class">VideoFileReader</param>
+        <param id="1" name="inputWidth">200</param>
+        <param id="2" name="inputHeight">100</param>
+        <param id="3" name="inputType">CV_8UC3</param>
+        <param id="4" name="file">input/test.avi</param>
+	<param id="4" name="fps">10</param>
 </Module>
 
 <!-- List all possibly used modules-->
 
 <Module name="ObjectTracker1">
-	<parameter id="0" name="class">ObjectTracker</parameter>
-        <parameter id="2" name="inputWidth">640</parameter>
-        <parameter id="3" name="inputHeight">480</parameter>
-        <parameter id="4" name="inputType">CV_8UC3</parameter>
-	<parameter id="3" name="input_blur_size">3</parameter>
-	<parameter id="1" name="background_alpha">0.01</parameter>
-	<parameter id="2" name="foreground_thres">0.2</parameter>
-	<parameter id="3" name="foreground_filter_size">3</parameter>
-	<parameter id="4" name="fps">0</parameter>
+	<param id="0" name="class">ObjectTracker</param>
+        <param id="2" name="inputWidth">640</param>
+        <param id="3" name="inputHeight">480</param>
+        <param id="4" name="inputType">CV_8UC3</param>
+	<param id="3" name="input_blur_size">3</param>
+	<param id="1" name="background_alpha">0.01</param>
+	<param id="2" name="foreground_thres">0.2</param>
+	<param id="3" name="foreground_filter_size">3</param>
+	<param id="4" name="fps">0</param>
 </Module>
 <Module name="SlitCamera1">
-	<parameter id="0" name="class">SlitCamera</parameter>
-	<parameter id="2" name="inputWidth">640</parameter>
-        <parameter id="3" name="inputHeight">480</parameter>
-	<parameter id="4" name="inputType">CV_8UC3</parameter>
-	<parameter id="1" name="aperture">4</parameter>
-	<parameter id="4" name="fps">100</parameter>
+		<parameters>
+	<param id="0" name="class">SlitCamera</param>
+	<param id="2" name="inputWidth">640</param>
+        <param id="3" name="inputHeight">480</param>
+	<param id="4" name="inputType">CV_8UC3</param>
+	<param id="1" name="aperture">4</param>
+	<param id="4" name="fps">100</param>
+</parameters>
 </Module>
 <Module name="SlitCamera2">
-	<parameter id="0" name="class">SlitCamera</parameter>
-        <parameter id="2" name="inputWidth">640</parameter>
-        <parameter id="3" name="inputHeight">480</parameter>
-        <parameter id="4" name="inputType">CV_8UC3</parameter>
-        <parameter id="1" name="aperture">1</parameter>
-	<parameter id="4" name="fps">100</parameter>
+		<parameters>
+	<param id="0" name="class">SlitCamera</param>
+        <param id="2" name="inputWidth">640</param>
+        <param id="3" name="inputHeight">480</param>
+        <param id="4" name="inputType">CV_8UC3</param>
+        <param id="1" name="aperture">1</param>
+	<param id="4" name="fps">100</param>
+</parameters>
 </Module>
 <Module name="CascadeDetector1">
-        <parameter id="0" name="class">CascadeDetector</parameter>
-        <parameter id="2" name="inputWidth">320</parameter>
-        <parameter id="3" name="inputHeight">240</parameter>
-        <parameter id="4" name="inputType">CV_8UC1</parameter>
-        <parameter id="6" name="fps">10</parameter>
-        <parameter id="6" name="detectionFps">2</parameter>
-        <parameter id="7" name="minNeighbors">3</parameter>
-        <parameter id="8" name="minFaceSide">0</parameter>
-        <parameter id="9" name="scaleFactor">1.1</parameter>
-        <parameter id="4" name="filterFile">modules/CascadeDetector/haarcascade_fullbody.xml</parameter>
-	<parameter id="4" name="color">(0,255,0)</parameter>
+        <param id="0" name="class">CascadeDetector</param>
+        <param id="2" name="inputWidth">320</param>
+        <param id="3" name="inputHeight">240</param>
+        <param id="4" name="inputType">CV_8UC1</param>
+        <param id="6" name="fps">10</param>
+        <param id="6" name="detectionFps">2</param>
+        <param id="7" name="minNeighbors">3</param>
+        <param id="8" name="minFaceSide">0</param>
+        <param id="9" name="scaleFactor">1.1</param>
+        <param id="4" name="filterFile">modules/CascadeDetector/haarcascade_fullbody.xml</param>
+	<param id="4" name="color">(0,255,0)</param>
 </Module>
 <Module name="CascadeDetector2">
-        <parameter id="0" name="class">CascadeDetector</parameter>
-        <parameter id="2" name="inputWidth">320</parameter>
-        <parameter id="3" name="inputHeight">240</parameter>
-        <parameter id="4" name="inputType">CV_8UC1</parameter>
-        <parameter id="6" name="fps">10</parameter>
-        <parameter id="6" name="detectionFps">2</parameter>
-        <parameter id="7" name="minNeighbors">3</parameter>
-        <parameter id="8" name="minFaceSide">0</parameter>
-        <parameter id="9" name="scaleFactor">1.1</parameter>
-        <parameter id="4" name="filterFile">modules/CascadeDetector/haarcascade_profileface.xml</parameter>
-	<parameter id="4" name="color">(12,255,255)</parameter>
+        <param id="0" name="class">CascadeDetector</param>
+        <param id="2" name="inputWidth">320</param>
+        <param id="3" name="inputHeight">240</param>
+        <param id="4" name="inputType">CV_8UC1</param>
+        <param id="6" name="fps">10</param>
+        <param id="6" name="detectionFps">2</param>
+        <param id="7" name="minNeighbors">3</param>
+        <param id="8" name="minFaceSide">0</param>
+        <param id="9" name="scaleFactor">1.1</param>
+        <param id="4" name="filterFile">modules/CascadeDetector/haarcascade_profileface.xml</param>
+	<param id="4" name="color">(12,255,255)</param>
 </Module>
 <Module name="CascadeDetector3">
-        <parameter id="0" name="class">CascadeDetector</parameter>
-        <parameter id="2" name="inputWidth">320</parameter>
-        <parameter id="3" name="inputHeight">240</parameter>
-        <parameter id="4" name="inputType">CV_8UC1</parameter>
-        <parameter id="6" name="fps">10</parameter>
-        <parameter id="6" name="detectionFps">2</parameter>
-        <parameter id="7" name="minNeighbors">3</parameter>
-        <parameter id="8" name="minFaceSide">0</parameter>
-        <parameter id="9" name="scaleFactor">1.1</parameter>
-        <parameter id="4" name="filterFile">modules/CascadeDetector/haarcascade_mcs_nose.xml</parameter>
-	<parameter id="4" name="color">(255,0,200)</parameter>
+        <param id="0" name="class">CascadeDetector</param>
+        <param id="2" name="inputWidth">320</param>
+        <param id="3" name="inputHeight">240</param>
+        <param id="4" name="inputType">CV_8UC1</param>
+        <param id="6" name="fps">10</param>
+        <param id="6" name="detectionFps">2</param>
+        <param id="7" name="minNeighbors">3</param>
+        <param id="8" name="minFaceSide">0</param>
+        <param id="9" name="scaleFactor">1.1</param>
+        <param id="4" name="filterFile">modules/CascadeDetector/haarcascade_mcs_nose.xml</param>
+	<param id="4" name="color">(255,0,200)</param>
 </Module>
 <Module name="CascadeDetector4">
-        <parameter id="0" name="class">CascadeDetector</parameter>
-        <parameter id="2" name="inputWidth">320</parameter>
-        <parameter id="3" name="inputHeight">240</parameter>
-        <parameter id="4" name="inputType">CV_8UC1</parameter>
-        <parameter id="6" name="fps">10</parameter>
-        <parameter id="6" name="detectionFps">2</parameter>
-        <parameter id="7" name="minNeighbors">3</parameter>
-        <parameter id="8" name="minFaceSide">0</parameter>
-        <parameter id="9" name="scaleFactor">1.1</parameter>
-        <parameter id="4" name="filterFile">modules/CascadeDetector/haarcascade_frontalface_default.xml</parameter>
-	<parameter id="4" name="color">(128,255,0)</parameter>
+        <param id="0" name="class">CascadeDetector</param>
+        <param id="2" name="inputWidth">320</param>
+        <param id="3" name="inputHeight">240</param>
+        <param id="4" name="inputType">CV_8UC1</param>
+        <param id="6" name="fps">10</param>
+        <param id="6" name="detectionFps">2</param>
+        <param id="7" name="minNeighbors">3</param>
+        <param id="8" name="minFaceSide">0</param>
+        <param id="9" name="scaleFactor">1.1</param>
+        <param id="4" name="filterFile">modules/CascadeDetector/haarcascade_frontalface_default.xml</param>
+	<param id="4" name="color">(128,255,0)</param>
 </Module>
 
 <Module name="CascadeDetector22">
-        <parameter id="0" name="class">CascadeDetector</parameter>
-        <parameter id="2" name="inputWidth">320</parameter>
-        <parameter id="3" name="inputHeight">240</parameter>
-        <parameter id="4" name="inputType">CV_8UC1</parameter>
-        <parameter id="6" name="fps">10</parameter>
-        <parameter id="6" name="detectionFps">1</parameter>
-        <parameter id="7" name="minNeighbors">3</parameter>
-        <parameter id="8" name="minFaceSide">0</parameter>
-        <parameter id="9" name="scaleFactor">1.1</parameter>
-        <parameter id="4" name="filterFile">modules/CascadeDetector/haarcascade_fullbody.xml</parameter>
+        <param id="0" name="class">CascadeDetector</param>
+        <param id="2" name="inputWidth">320</param>
+        <param id="3" name="inputHeight">240</param>
+        <param id="4" name="inputType">CV_8UC1</param>
+        <param id="6" name="fps">10</param>
+        <param id="6" name="detectionFps">1</param>
+        <param id="7" name="minNeighbors">3</param>
+        <param id="8" name="minFaceSide">0</param>
+        <param id="9" name="scaleFactor">1.1</param>
+        <param id="4" name="filterFile">modules/CascadeDetector/haarcascade_fullbody.xml</param>
 </Module>
 

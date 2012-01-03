@@ -57,14 +57,13 @@ vector<ParameterValue> ConfigReader::ReadConfigObject(const std::string& x_objec
 	moduleElement = node->ToElement();
 	assert( moduleElement  );
 	
-	/*node = moduleElement->FirstChildElement();	// This skips the "PDA" comment.
-	assert( node );
-	paramElement = node->ToElement();
-	assert( paramElement  );*/
+	TiXmlNode* nodeParams = moduleElement->FirstChild( "parameters" );
+	if(nodeParams == NULL) throw("Impossible to find <parameters> section for module " + x_objectName + " of type " + x_objectType);
+	TiXmlElement* paramsElement = nodeParams->ToElement();
 	
-	for( node = moduleElement->FirstChild( "parameter" );
+	for( node = paramsElement->FirstChild( "param" );
 		node;
-		node = node->NextSibling( "parameter" ) )
+		node = node->NextSibling( "param" ) )
 	{
 		paramElement = node->ToElement();
 		
@@ -107,11 +106,6 @@ vector<ParameterValue> ConfigReader::ReadConfigObjectFromVect(const std::string&
 	moduleElement = node->ToElement();
 	assert( moduleElement  );
 	
-	/*node = moduleElement->FirstChildElement();	// This skips the "PDA" comment.
-	assert( node );
-	paramElement = node->ToElement();
-	assert( paramElement  );*/
-	
 	for( node = moduleElement->FirstChild( x_objectType );
 		node;
 		node = node->NextSibling( x_objectType ) )
@@ -125,9 +119,9 @@ vector<ParameterValue> ConfigReader::ReadConfigObjectFromVect(const std::string&
 	moduleElement = node->ToElement();
 	assert( moduleElement  );
 	
-	for(TiXmlNode* nodeParam = moduleElement->FirstChild( "parameter" );
+	for(TiXmlNode* nodeParam = moduleElement->FirstChild( "param" );
 	nodeParam;
-	nodeParam = nodeParam->NextSibling( "parameter" ) )
+	nodeParam = nodeParam->NextSibling( "param" ) )
 	{
 
 		paramElement = nodeParam->ToElement();
