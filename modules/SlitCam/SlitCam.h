@@ -39,7 +39,7 @@ class SlitCamParameter : public ModuleParameterStructure
 {
 	
 public:
-	SlitCamParameter(ConfigReader& x_confReader, const std::string& x_moduleName) : 
+	SlitCamParameter(const ConfigReader& x_confReader, const std::string& x_moduleName) : 
 		ModuleParameterStructure(x_confReader, x_moduleName)
 	{
 		m_list.push_back(new ParameterT<int>(0, "aperture", 1, PARAM_INT, 1, 10, &aperture));
@@ -60,7 +60,7 @@ private:
 	cv::Mat * m_input;
 	cv::Mat * m_output;
 public:
-	SlitCam(const std::string& x_name, ConfigReader& x_configReader);
+	SlitCam(const std::string& x_name, const ConfigReader& x_configReader);
 	~SlitCam(void);
 	//void CreateParamWindow();
 	

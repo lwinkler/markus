@@ -29,7 +29,7 @@
 
 using namespace std;
 
-Module::Module(const std::string& x_name, ConfigReader& x_configReader) :
+Module::Module(const std::string& x_name, const ConfigReader& x_configReader) :
 	Configurable(x_configReader),
 	m_name(x_name)
 {

@@ -38,7 +38,7 @@
 class ImageProcessorParameterStructure : public ParameterStructure
 {
 public:
-	ImageProcessorParameterStructure(ConfigReader& x_confReader, int x_nb) : ParameterStructure(x_confReader, "ImageProcessors", "ImageProcessor", x_nb)
+	ImageProcessorParameterStructure(const ConfigReader& x_confReader, int x_nb) : ParameterStructure(x_confReader, "ImageProcessors", "ImageProcessor", x_nb)
 	{
 		m_list.push_back(new ParameterT<std::string>(0, "input",  "(definp)",	PARAM_STR,	&input));
 		m_list.push_back(new ParameterT<std::string>(0, "module", "(defmod)",	PARAM_STR,	&module));
@@ -52,7 +52,7 @@ public:
 class ImageProcessor : Configurable
 {
 public:
-	ImageProcessor(const std::string& x_name, int x_nb, ConfigReader& x_confReader, std::vector<Input*>& x_inputList);
+	ImageProcessor(const std::string& x_name, int x_nb, const ConfigReader& x_confReader, std::vector<Input*>& x_inputList);
 	~ImageProcessor();
 	
 	void Process(double x_timeSinceLast);

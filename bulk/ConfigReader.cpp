@@ -31,7 +31,7 @@ using namespace std;
 //const char * ConfigReader::m_fileName = "config.xml";
 
 
-vector<ParameterValue> ConfigReader::ReadConfigObject(const std::string& x_objectType, const std::string& x_objectName, bool x_getClassOnly)
+vector<ParameterValue> ConfigReader::ReadConfigObject(const std::string& x_objectType, const std::string& x_objectName, bool x_getClassOnly) const
 {
 	vector<ParameterValue> parameterList;
 	TiXmlDocument doc( m_fileName );
@@ -86,7 +86,7 @@ vector<ParameterValue> ConfigReader::ReadConfigObject(const std::string& x_objec
 
 // Read the config of all modules that will run
 
-vector<ParameterValue> ConfigReader::ReadConfigObjectFromVect(const std::string& x_vectorType, const std::string& x_objectType, int x_objectNumber, bool x_getClassOnly)
+vector<ParameterValue> ConfigReader::ReadConfigObjectFromVect(const std::string& x_vectorType, const std::string& x_objectType, int x_objectNumber, bool x_getClassOnly) const
 {
 	vector<ParameterValue> parameterList;;
 	TiXmlDocument doc( m_fileName );
@@ -155,7 +155,7 @@ ParameterValue ConfigReader::GetParameterValue(const std::string& x_name, const 
 }
 
 // Return the size of a vector of config objects
-int ConfigReader::ReadConfigGetVectorSize(const std::string& x_vectorType, const std::string& x_objectType)
+int ConfigReader::ReadConfigGetVectorSize(const std::string& x_vectorType, const std::string& x_objectType) const
 {
 	vector<ParameterValue> parameterList;;
 	TiXmlDocument doc( m_fileName );

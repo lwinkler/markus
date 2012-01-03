@@ -40,7 +40,7 @@ class CascadeDetectorParameterStructure : public ModuleAsyncParameterStructure
 {
 	
 public:
-	CascadeDetectorParameterStructure(ConfigReader& x_confReader, const std::string& x_moduleName) : 
+	CascadeDetectorParameterStructure(const ConfigReader& x_confReader, const std::string& x_moduleName) : 
 		ModuleAsyncParameterStructure(x_confReader, x_moduleName)
 	{
 		m_list.push_back(new ParameterT<int>(0, "minNeighbors", 0, PARAM_INT, 0, 100, &minNeighbors));
@@ -102,7 +102,7 @@ private:
 	
 	DetectionThread m_thread;
 public:
-	CascadeDetector(const std::string& x_name, ConfigReader& x_configReader);
+	CascadeDetector(const std::string& x_name, const ConfigReader& x_configReader);
 	~CascadeDetector(void);
 	//void CreateParamWindow();
 	

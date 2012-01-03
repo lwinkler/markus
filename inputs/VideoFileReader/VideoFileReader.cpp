@@ -26,7 +26,7 @@
 using namespace std;
 using namespace cv;
 
-VideoFileReader::VideoFileReader(const std::string& x_name, ConfigReader& x_configReader): 
+VideoFileReader::VideoFileReader(const std::string& x_name, const ConfigReader& x_configReader): 
 	Input(x_name, x_configReader),
 	m_param(x_configReader, x_name), 
 	m_name(x_name)

@@ -30,7 +30,7 @@
 using namespace std;
 using namespace cv;
 
-ImageProcessor::ImageProcessor(const string & x_name, int x_nb, ConfigReader& x_confReader, std::vector<Input*>& xr_inputList):
+ImageProcessor::ImageProcessor(const string & x_name, int x_nb, const ConfigReader& x_confReader, std::vector<Input*>& xr_inputList):
 	Configurable(x_confReader),
 	m_param(x_confReader, x_nb), 
 	m_nb(x_nb)
@@ -45,20 +45,7 @@ ImageProcessor::ImageProcessor(const string & x_name, int x_nb, ConfigReader& x_
 	std::string moduleClass = paramList[0].m_value;
 	
 	// Create all modules types
-	Module * tmp;
-	if(moduleClass.compare("SlitCamera") == 0)
-	{
-		tmp = new SlitCam(module.m_value, m_configReader);
-	}
-	else if(moduleClass.compare("ObjectTracker") == 0)
-	{
-		tmp = new ObjectTracker(module.m_value, m_configReader);
-	}
-	else if(moduleClass.compare("CascadeDetector") == 0)
-	{
-		tmp = new CascadeDetector(module.m_value, m_configReader);
-	}
-	else throw("Module type unknown : " + moduleClass);
+	Module * tmp = createNewModule(moduleClass, module.m_value, m_configReader);
 
 	m_modules.push_back(tmp);
 		//}
@@ -82,15 +69,7 @@ ImageProcessor::ImageProcessor(const string & x_name, int x_nb, ConfigReader& x_
 	if (m_input == NULL)
 	{
 		// Create new input
-		if(inputClass.compare("UsbCam") == 0)
-		{
-			m_input = new UsbCam(input.m_value, m_configReader);
-		}
-		else if(inputClass.compare("VideoFileReader") == 0)
-		{
-			m_input = new VideoFileReader(input.m_value, m_configReader);
-		}
-		else throw("Input type unknown : " + inputClass);
+		m_input = createNewInput(inputClass, input.m_value, m_configReader);
 
 		xr_inputList.push_back(m_input);
 	}

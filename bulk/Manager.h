@@ -44,7 +44,7 @@ class CvVideoWriter;
 class ManagerParameter : public ParameterStructure
 {
 public:
-	ManagerParameter(ConfigReader& x_confReader, const std::string& x_moduleName) : ParameterStructure(x_confReader, "Manager", "")
+	ManagerParameter(const ConfigReader& x_confReader, const std::string& x_moduleName) : ParameterStructure(x_confReader, "Manager", "")
 	{
 		m_list.push_back(new ParameterT<std::string>(0, "mode",	"", 	PARAM_STR, &mode));
 		ParameterStructure::Init();

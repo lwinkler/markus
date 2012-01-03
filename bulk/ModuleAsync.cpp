@@ -28,7 +28,7 @@
 
 using namespace std;
 
-ModuleAsync::ModuleAsync(const std::string& x_name, ConfigReader& x_configReader) :
+ModuleAsync::ModuleAsync(const std::string& x_name, const ConfigReader& x_configReader) :
 	Module(x_name, x_configReader)
 	//m_name(x_name)
 {

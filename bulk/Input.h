@@ -35,7 +35,7 @@
 class InputParameterStructure : public ModuleParameterStructure
 {
 public:
-	InputParameterStructure(ConfigReader& x_confReader, const std::string& x_moduleName) : ModuleParameterStructure(x_confReader, x_moduleName)
+	InputParameterStructure(const ConfigReader& x_confReader, const std::string& x_moduleName) : ModuleParameterStructure(x_confReader, x_moduleName)
 	{
 		/*m_list.push_back(new ParameterT<std::string>(0, "class", "", 	PARAM_STR, 			&objClass));
 		m_list.push_back(new ParameterT<int>(0, "width", 	640, 	PARAM_INT, 	0, 	4000,	&width));
@@ -59,7 +59,7 @@ public:
 class Input : public Module
 {
 public:
-	Input(const std::string& x_name, ConfigReader& x_confReader);
+	Input(const std::string& x_name, const ConfigReader& x_confReader);
 	~Input();
 	
 	virtual void Capture() = 0;

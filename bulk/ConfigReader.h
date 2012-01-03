@@ -42,9 +42,9 @@ public:
 		//m_parameterList.clear();
 	};
 	~ConfigReader(){};
-	std::vector<ParameterValue> ReadConfigObject(const std::string& x_type, const std::string& x_moduleName, bool x_getClassOnly = false);
-	std::vector<ParameterValue> ReadConfigObjectFromVect(const std::string& x_vectorType, const std::string& x_type, int x_objectNumber, bool x_getClassOnly = false);
-	int ReadConfigGetVectorSize(const std::string& x_vectorType, const std::string& x_objectType);
+	std::vector<ParameterValue> ReadConfigObject(const std::string& x_type, const std::string& x_moduleName, bool x_getClassOnly = false) const;
+	std::vector<ParameterValue> ReadConfigObjectFromVect(const std::string& x_vectorType, const std::string& x_type, int x_objectNumber, bool x_getClassOnly = false) const;
+	int ReadConfigGetVectorSize(const std::string& x_vectorType, const std::string& x_objectType) const;
 	static ParameterValue GetParameterValue(const std::string& x_name, const std::vector<ParameterValue> & x_parameterList);
 	//void SetParameterValues(ParameterStructure& x_param);
 private:
@@ -55,11 +55,11 @@ private:
 class Configurable
 {
 public:
-	Configurable(ConfigReader& x_confReader) : m_configReader(x_confReader){};
+	Configurable(const ConfigReader& x_confReader) : m_configReader(x_confReader){};
 	~Configurable(){};
 protected:
 	void ReadParametersFromConfig();
-	ConfigReader& m_configReader;
+	const ConfigReader& m_configReader;
 	inline virtual const ParameterStructure & GetRefParameter() const = 0;
 };
 

@@ -33,7 +33,7 @@
 class VideoFileReaderParameterStructure : public InputParameterStructure
 {
 public:
-	VideoFileReaderParameterStructure(ConfigReader& x_confReader, const std::string& x_objectName) : 
+	VideoFileReaderParameterStructure(const ConfigReader& x_confReader, const std::string& x_objectName) : 
 	InputParameterStructure(x_confReader, x_objectName)
 	{
 		m_list.push_back(new ParameterT<std::string>(0, "file", 	"input.avi", 	PARAM_STR,	&file));
@@ -47,7 +47,7 @@ public:
 class VideoFileReader : public Input
 {
 public:
-	VideoFileReader(const std::string& x_name, ConfigReader& x_confReader);
+	VideoFileReader(const std::string& x_name, const ConfigReader& x_confReader);
 	~VideoFileReader();
 	
 	void Capture();

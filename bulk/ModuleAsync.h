@@ -31,7 +31,7 @@
 class ModuleAsyncParameterStructure : public ModuleParameterStructure
 {
 public:
-	ModuleAsyncParameterStructure(ConfigReader& x_confReader, const std::string& x_moduleName) : ModuleParameterStructure(x_confReader, x_moduleName)
+	ModuleAsyncParameterStructure(const ConfigReader& x_confReader, const std::string& x_moduleName) : ModuleParameterStructure(x_confReader, x_moduleName)
 	{
 		m_list.push_back(new ParameterT<double>(0, "detectionFps", 	10, 	PARAM_DOUBLE, 	0, 	100,		&detectionFps));
 	};
@@ -43,7 +43,7 @@ public:
 class ModuleAsync : public Module
 {
 public:
-	ModuleAsync(const std::string& x_name, ConfigReader& x_confReader);
+	ModuleAsync(const std::string& x_name, const ConfigReader& x_confReader);
 	virtual ~ModuleAsync();
 	
 	virtual void ProcessFrame(const double x_timeSinceLastProcessing);
