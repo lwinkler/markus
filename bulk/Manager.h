@@ -36,9 +36,6 @@
 #include "Module.h"
 #include <QReadWriteLock>
 
-class ImageProcessor;
-//class Input;
-//class Module;
 class CvVideoWriter;
 
 class ManagerParameter : public ParameterStructure
@@ -82,7 +79,7 @@ private:
 	
 	std::vector<Module *> 		m_modules;
 	std::vector<Input  *> 		m_inputs;
-	std::vector<ImageProcessor *> 	m_imageProcessors;
+	//std::vector<ImageProcessor *> 	m_imageProcessors;
 	long long m_frameCount;
 protected:
 	inline virtual const ParameterStructure& GetRefParameter() const{return m_param;};

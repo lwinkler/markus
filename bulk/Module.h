@@ -62,7 +62,7 @@ public:
 	Module(const std::string& x_name, const ConfigReader& x_confReader);
 	virtual ~Module();
 	
-	void ConvertInput(const cv::Mat * x_img);
+	void ReadAndConvertInput(/*const cv::Mat * x_img*/);
 	virtual void ProcessFrame(const double x_timeSinceLastProcessing) = 0;
 	const std::string& GetName(){return m_name;};
 	//const cv::Mat * GetOutput(){return m_output;}

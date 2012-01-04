@@ -28,7 +28,6 @@ bulk/StreamDebug.cpp
 bulk/StreamRect.cpp
 bulk/util.cpp
 bulk/ConfigReader.cpp
-bulk/ImageProcessor.cpp
 tools/Tracker.cpp
 tools/cvblobs/BlobExtraction.cpp
 tools/cvblobs/BlobResult.cpp

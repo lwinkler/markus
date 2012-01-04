@@ -31,7 +31,7 @@ using namespace std;
 //const char * ConfigReader::m_fileName = "config.xml";
 
 
-vector<ParameterValue> ConfigReader::ReadConfigObject(const std::string& x_objectType, const std::string& x_objectName, bool x_getClassOnly) const
+vector<ParameterValue> ConfigReader::ReadParameters(const std::string& x_objectType, const std::string& x_objectName, bool x_getClassOnly) const
 {
 	vector<ParameterValue> parameterList;
 	TiXmlDocument doc( m_fileName );
@@ -48,12 +48,16 @@ vector<ParameterValue> ConfigReader::ReadConfigObject(const std::string& x_objec
 	
 	// If a name is specified, search this name
 	if(x_objectName.compare(""))
+	{
 		while(node != NULL && x_objectName.compare(node->ToElement()->Attribute("name")))
 		{
 			//printf("Name = %s\n", node->ToElement()->Attribute("name"));
 			node = node->NextSibling(x_objectType);
 		}
-	if(node == NULL) throw("Impossible to find <" + x_objectType + " name=" + x_objectName + "> in config file");
+	}
+	if(node == NULL) 
+		throw("Impossible to find <" + x_objectType + " name=" + x_objectName + "> in config file");
+	
 	moduleElement = node->ToElement();
 	assert( moduleElement  );
 	
@@ -84,10 +88,12 @@ vector<ParameterValue> ConfigReader::ReadConfigObject(const std::string& x_objec
 	return parameterList;
 }
 
+
 // Read the config of all modules that will run
 
-vector<ParameterValue> ConfigReader::ReadConfigObjectFromVect(const std::string& x_vectorType, const std::string& x_objectType, int x_objectNumber, bool x_getClassOnly) const
+vector<ParameterValue> ConfigReader::ReadModules(const std::string& x_vectorType, const std::string& x_objectType, int x_objectNumber, bool x_getClassOnly) const
 {
+	//assert(false);
 	vector<ParameterValue> parameterList;;
 	TiXmlDocument doc( m_fileName );
 	bool loadOkay = doc.LoadFile();
@@ -100,15 +106,21 @@ vector<ParameterValue> ConfigReader::ReadConfigObjectFromVect(const std::string&
 	TiXmlElement* moduleElement = 0;
 	TiXmlElement* paramElement = 0;
 	
-	node = doc.FirstChild(x_vectorType);
-	if(node == NULL)
-		throw("Impossible to find <" + x_vectorType + "> in config file.");
-	moduleElement = node->ToElement();
-	assert( moduleElement  );
+	if(x_vectorType.size() == 0)
+	{
+		node = doc.FirstChild( x_objectType );
+	}
+	else
+	{
+		node = doc.FirstChild(x_vectorType);
+		if(node == NULL)
+			throw("Impossible to find <" + x_vectorType + "> in config file.");
+		moduleElement = node->ToElement();
+		assert( moduleElement  );
+		node = moduleElement->FirstChild( x_objectType );
+	}
 	
-	for( node = moduleElement->FirstChild( x_objectType );
-		node;
-		node = node->NextSibling( x_objectType ) )
+	/*for( ; node ; node = node->NextSibling( x_objectType ) )
 	{
 		if(x_objectNumber == 0) break;
 		x_objectNumber --;
@@ -117,11 +129,11 @@ vector<ParameterValue> ConfigReader::ReadConfigObjectFromVect(const std::string&
 	if(node == NULL) return parameterList;
 	
 	moduleElement = node->ToElement();
-	assert( moduleElement  );
+	assert( moduleElement  );*/
 	
-	for(TiXmlNode* nodeParam = moduleElement->FirstChild( "param" );
+	for(TiXmlNode* nodeParam = moduleElement->FirstChild( "module" );
 	nodeParam;
-	nodeParam = nodeParam->NextSibling( "param" ) )
+	nodeParam = nodeParam->NextSibling( "module" ) )
 	{
 
 		paramElement = nodeParam->ToElement();
@@ -168,14 +180,21 @@ int ConfigReader::ReadConfigGetVectorSize(const std::string& x_vectorType, const
 	TiXmlElement* moduleElement = 0;
 	//TiXmlElement* paramElement = 0;
 	
-	node = doc.FirstChild(x_vectorType);
-	if(node == NULL)
-		throw("Impossible to find <" + x_vectorType + "> in config file.");
-	moduleElement = node->ToElement();
-	assert( moduleElement  );
-	
+	if(x_vectorType.size() == 0)
+	{
+		node = doc.FirstChild( x_objectType );
+	}
+	else
+	{
+		node = doc.FirstChild(x_vectorType);
+		if(node == NULL)
+			throw("Impossible to find <" + x_vectorType + "> in config file.");
+		moduleElement = node->ToElement();
+		assert( moduleElement  );
+		node = moduleElement->FirstChild( x_objectType );
+	}
 	int cpt = 0;
-	for( node = moduleElement->FirstChild( x_objectType );
+	for( ;
 		node;
 		node = node->NextSibling( x_objectType ) )
 	{

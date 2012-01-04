@@ -42,11 +42,14 @@ Module::~Module()
 	//TODO : delete m_outputStreams
 };
 
-void Module::ConvertInput(const cv::Mat* x_img)
+void Module::ReadAndConvertInput()//const cv::Mat* x_img)
 {
+	assert(false);//TODO : m_input->m_lock.lockForRead();
+	
 	// adjust(x_img, m_input, m_img_tmp1, m_img_tmp2);
 	for(vector<Stream*>::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
 		(*it)->ConvertInput();
+	//m_input->m_lock.unlock();
 }
 
 /*void Module::AddStream(const std::string& x_name, StreamType x_type, Mat* x_image)

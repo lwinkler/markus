@@ -37,7 +37,7 @@
 </Manager>
 
 <!-- List all possibly used inputs-->
-<Module name="MyCam1">
+<module name="MyCam1">
 	<parameters>
 	<param id="0" name="class">UsbCam</param>
         <param id="1" name="inputWidth">200</param>
@@ -46,25 +46,25 @@
         <param id="4" name="num">-1</param>	
 	<param id="4" name="fps">1000</param>
 </parameters>
-</Module>
+</module>
 
-<Module name="MyCam2">
+<module name="MyCam2">
 	<param id="0" name="class">UsbCam</param>
         <param id="1" name="inputWidth">200</param>
         <param id="2" name="inputHeight">100</param>
         <param id="3" name="inputType">CV_8UC3</param>
         <param id="4" name="num">1</param>	
         <param id="4" name="fps">10</param>
-</Module>
+</module>
 
-<Module name="InFile1">
+<module name="InFile1">
 	<param id="0" name="class">VideoFileReader</param>
         <param id="1" name="inputWidth">200</param>
         <param id="2" name="inputHeight">100</param>
         <param id="3" name="inputType">CV_8UC3</param>
         <param id="4" name="file">input/test.avi</param>
 	<param id="4" name="fps">10</param>
-</Module>
+</module>
 
 <!-- List all possibly used modules-->
 

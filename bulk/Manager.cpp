@@ -24,7 +24,7 @@
 #include "Manager.h"
 #include "Module.h"
 #include "Input.h"
-#include "ImageProcessor.h"
+//#include "ImageProcessor.h"
 
 #include "util.h"
 
@@ -39,7 +39,7 @@
 #include <string.h>
 using namespace std;
 
-//#include "AllModules.h"
+#include "AllModules.h"
 
 	
 #if defined( WIN32 ) && defined( TUNE )
@@ -78,15 +78,66 @@ Manager::Manager(ConfigReader& x_configReader) :
 	m_inputs.clear();
 	m_modules.clear();
 	
-	int tot = m_configReader.ReadConfigGetVectorSize("ImageProcessors", "ImageProcessor");
+	int tot = m_configReader.ReadConfigGetVectorSize("", "module");
 
 	for(int i = 0 ; i < tot; i++)
 	{
-		ImageProcessor * ip = new ImageProcessor("ip", i, m_configReader, m_inputs);
-		m_imageProcessors.push_back(ip);
+		// -- from ImageProc
+		vector<ParameterValue> paramList = m_configReader.ReadModules("", "module", i);
+		//ParameterValue module = ConfigReader::GetParameterValue("module", paramList);
+		//ParameterValue input  = ConfigReader::GetParameterValue("input" , paramList);
+		
+		// Get the object class
+		//paramList = m_configReader.ReadConfigObject("module", module.m_value, true);
+		assert(paramList.size() == 1);
+		std::string moduleClass = paramList[0].m_value;
+		
+		// Create all modules types
+		// Module * tmp1 = createNewModule(moduleClass, module.m_value, m_configReader);
+		Module * tmp1 = createNewModule(moduleClass, paramList[0].m_name, m_configReader);
+
+		m_modules.push_back(tmp1);
+			//}
+		
+		// Create all input objects
+		//	check for similar existing input
+		/*paramList = m_configReader.ReadConfigObject("module", input.m_value, true);
+		assert(paramList.size() == 1);
+		std::string inputClass = paramList[0].m_value;
+		
+		Input * p_new_input = NULL;
+		for(vector<Input*>::const_iterator it = m_inputs.begin() ; it != m_inputs.end() ; it++)
+		{
+			if((*it)->GetName().compare(input.m_value) == 0)
+			{
+				p_new_input = *it;
+				break;
+			}
+		}
+		
+		if (p_new_input == NULL)
+		{
+			// Create new input
+			p_new_input = createNewInput(inputClass, input.m_value, m_configReader);
+			m_inputs.push_back(p_new_input);
+		}
+		
+		for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+		{
+			for(vector<Stream*>::iterator it2 = (*it)->m_inputStreams.begin() ; it2 != (*it)->m_inputStreams.end() ; it2++)
+			{
+				(*it2)->Connect(p_new_input->m_outputStreams[0]);
+			}
+		}
+		*/
+		//m_timeSinceLastProcessing = 0;
+		// --
+		
+		//ImageProcessor * ip = new ImageProcessor("ip", i, m_configReader, m_inputs);
+		//m_imageProcessors.push_back(ip);
 		//m_inputs.push_back(&ip->GetInput());
 		
-		for(vector<Module*>::iterator it1 = ip->GetModules().begin() ; it1 != ip->GetModules().end() ; it1++)
+		/*for(vector<Module*>::iterator it1 = ip->GetModules().begin() ; it1 != ip->GetModules().end() ; it1++)
 		{
 			m_modules.push_back(*it1);
 			
@@ -96,7 +147,7 @@ Manager::Manager(ConfigReader& x_configReader) :
 				if((*it2)->GetType() != STREAM_DEBUG)
 					ip->GetInput().AddRelatedStream(*it2);
 			}
-		}
+		}*/
 	}
 	//int cpt = 0;
 	for(vector<Input *>::const_iterator it = m_inputs.begin() ; it != m_inputs.end() ; it++)
@@ -114,14 +165,17 @@ Manager::Manager(ConfigReader& x_configReader) :
 Manager::~Manager()
 {
 	PrintTimers();
-	for(vector<ImageProcessor*>::iterator it = m_imageProcessors.begin(); it != m_imageProcessors.end(); it++)
+	/*for(vector<ImageProcessor*>::iterator it = m_imageProcessors.begin(); it != m_imageProcessors.end(); it++)
 	{
 		delete(*it);
-	}
+	}*/
 	for(vector<Input*>::iterator it = m_inputs.begin(); it != m_inputs.end(); it++)
 	{
 		delete(*it);
 	}
+	
+	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+		delete *it;
 	
 	// Releasing the video writer:
 	if(m_writer != NULL) cvReleaseVideoWriter(&m_writer);
@@ -140,10 +194,27 @@ void Manager::Process()
 	
 	try
 	{
-		for(vector<ImageProcessor*>::iterator it = m_imageProcessors.begin(); it != m_imageProcessors.end(); it++)
+		/*for(vector<ImageProcessor*>::iterator it = m_imageProcessors.begin(); it != m_imageProcessors.end(); it++)
 		{
 			(*it)->Process(timecount);
+		}*/
+		m_lock.lockForWrite();
+		//m_timeSinceLastProcessing += x_timeSinceLast;
+		//cout<<"Process "<<m_module->GetName()<<" "<<m_timeSinceLastProcessing<<" >= "<<m_timeInterval<<" "<<m_input->GetImage()<<endl;
+		for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+		{
+			//assert(m_input->GetImage() != NULL);
+			if(timecount >= 1.0 / (*it)->GetFps())
+			{
+				//m_input->m_lock.lockForRead();
+				(*it)->ReadAndConvertInput();
+				//m_input->m_lock.unlock();
+				(*it)->ProcessFrame(timecount);
+				//m_input->ProcessFrame(timecount);
+				//m_timeSinceLastProcessing = 0;
+			}
 		}
+		m_lock.unlock();
 	}
 	catch(cv::Exception& e)
 	{
