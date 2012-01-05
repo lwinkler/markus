@@ -78,83 +78,30 @@ Manager::Manager(ConfigReader& x_configReader) :
 	m_inputs.clear();
 	m_modules.clear();
 	
-	int tot = m_configReader.ReadConfigGetVectorSize("", "module");
+	//int tot = m_configReader.ReadConfigGetVectorSize("", "module");
 
-	for(int i = 0 ; i < tot; i++)
+	ConfigReader moduleConfig = m_configReader.SubConfig("module");
+	
+	while(! moduleConfig.IsEmpty())
 	{
-		// -- from ImageProc
-		vector<ParameterValue> paramList = m_configReader.ReadModules("", "module", i);
-		//ParameterValue module = ConfigReader::GetParameterValue("module", paramList);
-		//ParameterValue input  = ConfigReader::GetParameterValue("input" , paramList);
-		
-		// Get the object class
-		//paramList = m_configReader.ReadConfigObject("module", module.m_value, true);
-		assert(paramList.size() == 1);
-		std::string moduleClass = paramList[0].m_value;
-		
-		// Create all modules types
-		// Module * tmp1 = createNewModule(moduleClass, module.m_value, m_configReader);
-		Module * tmp1 = createNewModule(moduleClass, paramList[0].m_name, m_configReader);
+		if( moduleConfig.SubConfig("parameters").IsEmpty()) 
+			throw("Impossible to find <parameters> section for module " +  *moduleConfig.GetAttribute("name"));
+		vector<ParameterValue> paramList = moduleConfig.SubConfig("parameters").ReadParameters("param");
+		string moduleClass = ConfigReader::GetParameterValue("class", paramList).m_value;
+		const string * moduleName = moduleConfig.GetAttribute("name");
+		Module * tmp1 = createNewModule(moduleClass, *moduleName, moduleConfig.SubConfig("parameters"));
 
 		m_modules.push_back(tmp1);
-			//}
-		
-		// Create all input objects
-		//	check for similar existing input
-		/*paramList = m_configReader.ReadConfigObject("module", input.m_value, true);
-		assert(paramList.size() == 1);
-		std::string inputClass = paramList[0].m_value;
-		
-		Input * p_new_input = NULL;
-		for(vector<Input*>::const_iterator it = m_inputs.begin() ; it != m_inputs.end() ; it++)
-		{
-			if((*it)->GetName().compare(input.m_value) == 0)
-			{
-				p_new_input = *it;
-				break;
-			}
-		}
-		
-		if (p_new_input == NULL)
-		{
-			// Create new input
-			p_new_input = createNewInput(inputClass, input.m_value, m_configReader);
-			m_inputs.push_back(p_new_input);
-		}
-		
-		for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
-		{
-			for(vector<Stream*>::iterator it2 = (*it)->m_inputStreams.begin() ; it2 != (*it)->m_inputStreams.end() ; it2++)
-			{
-				(*it2)->Connect(p_new_input->m_outputStreams[0]);
-			}
-		}
-		*/
-		//m_timeSinceLastProcessing = 0;
-		// --
-		
-		//ImageProcessor * ip = new ImageProcessor("ip", i, m_configReader, m_inputs);
-		//m_imageProcessors.push_back(ip);
-		//m_inputs.push_back(&ip->GetInput());
-		
-		/*for(vector<Module*>::iterator it1 = ip->GetModules().begin() ; it1 != ip->GetModules().end() ; it1++)
-		{
-			m_modules.push_back(*it1);
-			
-			// Add the module outputs as related streams to the input
-			for(vector<Stream*>::const_iterator it2 = (*it1)->GetStreamList().begin() ; it2 != (*it1)->GetStreamList().end() ; it2++)
-			{
-				if((*it2)->GetType() != STREAM_DEBUG)
-					ip->GetInput().AddRelatedStream(*it2);
-			}
-		}*/
+		if(tmp1->IsInput()) m_inputs.push_back(dynamic_cast<Input* >(tmp1));
+		moduleConfig = moduleConfig.NextSubConfig("module");
 	}
-	//int cpt = 0;
-	for(vector<Input *>::const_iterator it = m_inputs.begin() ; it != m_inputs.end() ; it++)
+
+	/*for(vector<Input *>::const_iterator it = m_inputs.begin() ; it != m_inputs.end() ; it++)
 	{
 		m_modules.push_back(dynamic_cast<Module *>(*it));
 		//cpt++;
-	}
+	}*/
+	
 	// Create timers
 	m_timerConv.reset();
 	m_timerProc.reset();
@@ -198,7 +145,7 @@ void Manager::Process()
 		{
 			(*it)->Process(timecount);
 		}*/
-		m_lock.lockForWrite();
+		//m_lock.lockForWrite();
 		//m_timeSinceLastProcessing += x_timeSinceLast;
 		//cout<<"Process "<<m_module->GetName()<<" "<<m_timeSinceLastProcessing<<" >= "<<m_timeInterval<<" "<<m_input->GetImage()<<endl;
 		for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
@@ -214,7 +161,7 @@ void Manager::Process()
 				//m_timeSinceLastProcessing = 0;
 			}
 		}
-		m_lock.unlock();
+		//m_lock.unlock();
 	}
 	catch(cv::Exception& e)
 	{

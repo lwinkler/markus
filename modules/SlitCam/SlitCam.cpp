@@ -22,6 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "SlitCam.h"
+#include "StreamImage.h"
 
 #include <iostream>
 #include <cstdio>
@@ -45,8 +46,8 @@ SlitCam::SlitCam(const std::string& x_name, const ConfigReader& x_configReader)
 	m_output->setTo(cvScalar(0, 0, 0));
 	
 	// Init output images
-	m_inputStreams.push_back(new StreamImage("input", m_input));
-	m_outputStreams.push_back(new StreamImage("slit",  m_output));
+	m_inputStreams.push_back(new StreamImage("input", m_input, *this));
+	m_outputStreams.push_back(new StreamImage("slit",  m_output, *this));
 }
 
 SlitCam::~SlitCam(void)

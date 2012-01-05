@@ -22,6 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "VideoFileReader.h"
+#include "StreamImage.h"
 
 using namespace std;
 using namespace cv;
@@ -56,8 +57,8 @@ VideoFileReader::VideoFileReader(const std::string& x_name, const ConfigReader& 
 	
 	m_output = new Mat( cvSize(m_inputWidth, m_inputHeight), CV_8UC3);
 	m_render = new Mat( cvSize(m_inputWidth, m_inputHeight), CV_8UC3);
-	m_outputStreams.push_back(new StreamImage("input", m_output));
-	m_outputStreams.push_back(new StreamImage("render", m_render));
+	m_outputStreams.push_back(new StreamImage("input", m_output, *this));
+	m_outputStreams.push_back(new StreamImage("render", m_render, *this));
 }
 
 VideoFileReader::~VideoFileReader()

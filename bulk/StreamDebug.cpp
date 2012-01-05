@@ -24,8 +24,8 @@
 #include "StreamDebug.h"
 
 
-StreamDebug::StreamDebug(const std::string& x_name, cv::Mat * x_image) : 
-	Stream(x_name, STREAM_DEBUG, x_image->cols, x_image->rows),
+StreamDebug::StreamDebug(const std::string& x_name, cv::Mat * x_image, Module& rx_module) : 
+	Stream(x_name, STREAM_DEBUG, x_image->cols, x_image->rows, rx_module),
 	m_image(x_image)
 {
 }

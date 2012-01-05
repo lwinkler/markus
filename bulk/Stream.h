@@ -27,6 +27,8 @@
 #include <cv.h>
 #include <iostream>
 
+#include "Module.h"
+
 enum StreamType
 {
 	STREAM_DEBUG,
@@ -35,12 +37,11 @@ enum StreamType
 	STREAM_POINTS
 };
 
-
 class Stream
 {
 public:
-	Stream(const std::string& x_name, StreamType x_type);
-	Stream(const std::string& x_name, StreamType x_type, int x_width, int x_height);
+	//Stream(const std::string& x_name, StreamType x_type, Module& rx_module);
+	Stream(const std::string& x_name, StreamType x_type, int x_width, int x_height, Module& rx_module);
 	~Stream();
 	const std::string& GetName() const {return m_name;};
 	inline int GetInputWidth() const {return m_width;};
@@ -50,6 +51,8 @@ public:
 	void Connect(const Stream * x_stream);
 	virtual void ConvertInput() = 0;
 	void Export(std::ostream& rx_os);
+	inline void LockForRead(){mr_module.m_lock.lockForRead();};
+	inline void UnLock(){mr_module.m_lock.unlock();};
 protected:
 	const std::string m_name;
 	const StreamType m_type;
@@ -63,6 +66,7 @@ protected:
 private:
 	Stream& operator=(const Stream&);
 	Stream(const Stream&);
+	Module& mr_module;
 };
 
 #endif

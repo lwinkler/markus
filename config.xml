@@ -1,41 +1,22 @@
 <?xml version="1.0" standalone="no" ?>
 
-<ImageProcessors>
-        <ImageProcessor name="ModuleDeTest4">
-                <param id="0" name="input">MyCam1</param>
-                <param id="2" name="module">SlitCamera1</param>
-	</ImageProcessor>
-        <ImageProcessor name="ModuleDeTest5">
-                <param id="0" name="input">MyCam1</param>
-                <param id="2" name="module">SlitCamera2</param>
-	</ImageProcessor>
-	
-	<!--<ImageProcessor name="ModuleDeTest1">
-                <param id="0" name="input">InFile1</param>
-                <param id="2" name="module">CascadeDetector1</param>
-        </ImageProcessor>
-        <ImageProcessor name="ModuleDeTest2">
-                <param id="0" name="input">MyCam1</param>
-                <param id="2" name="module">CascadeDetector2</param>
-        </ImageProcessor>
-	<ImageProcessor name="ModuleDeTest3">
-                <param id="0" name="input">MyCam1</param>
-                <param id="2" name="module">CascadeDetector3</param>
-        </ImageProcessor>
-        <ImageProcessor name="ModuleDeTest4">
-                <param id="0" name="input">MyCam1</param>
-                <param id="2" name="module">CascadeDetector4</param>
-        </ImageProcessor>
-	-->
-</ImageProcessors>
-
-
+<application>
 <Manager>
 	<parameters>
 		<param id="1" name="mode">benchmarkAA</param>
 	</parameters>
 </Manager>
 
+<!--<module name="InFile1">
+	<parameters>
+	<param id="0" name="class">VideoFileReader</param>
+        <param id="1" name="inputWidth">200</param>
+        <param id="2" name="inputHeight">100</param>
+        <param id="3" name="inputType">CV_8UC3</param>
+        <param id="4" name="file">input/test.avi</param>
+	<param id="4" name="fps">10</param>
+</parameters>
+</module>-->
 <!-- List all possibly used inputs-->
 <module name="MyCam1">
 	<parameters>
@@ -45,17 +26,33 @@
         <param id="3" name="inputType">CV_8UC3</param>
         <param id="4" name="num">-1</param>	
 	<param id="4" name="fps">1000</param>
-</parameters>
+	</parameters>
 </module>
 
-<module name="MyCam2">
+<!--<module name="MyCam2">
+	<parameters>
 	<param id="0" name="class">UsbCam</param>
         <param id="1" name="inputWidth">200</param>
         <param id="2" name="inputHeight">100</param>
         <param id="3" name="inputType">CV_8UC3</param>
         <param id="4" name="num">1</param>	
         <param id="4" name="fps">10</param>
+	</parameters>
+</module>-->
+
+<module name="SlitCamera1">
+	<parameters>
+	<param id="0" name="class">SlitCamera</param>
+	<param id="2" name="inputWidth">640</param>
+        <param id="3" name="inputHeight">480</param>
+	<param id="4" name="inputType">CV_8UC3</param>
+	<param id="1" name="aperture">4</param>
+	<param id="4" name="fps">100</param>
+	</parameters>
 </module>
+
+
+<!-- List all possibly used modules
 
 <module name="InFile1">
 	<param id="0" name="class">VideoFileReader</param>
@@ -65,8 +62,6 @@
         <param id="4" name="file">input/test.avi</param>
 	<param id="4" name="fps">10</param>
 </module>
-
-<!-- List all possibly used modules-->
 
 <Module name="ObjectTracker1">
 	<param id="0" name="class">ObjectTracker</param>
@@ -163,5 +158,5 @@
         <param id="8" name="minFaceSide">0</param>
         <param id="9" name="scaleFactor">1.1</param>
         <param id="4" name="filterFile">modules/CascadeDetector/haarcascade_fullbody.xml</param>
-</Module>
-
+</Module>-->
+</application>

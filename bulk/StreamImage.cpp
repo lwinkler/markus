@@ -28,8 +28,8 @@
 using namespace std;
 using namespace cv;
 
-StreamImage::StreamImage(const std::string& x_name, Mat* x_image) : 
-	Stream(x_name, STREAM_IMAGE, x_image->cols, x_image->rows),
+StreamImage::StreamImage(const std::string& x_name, Mat* x_image, Module& rx_module) : 
+	Stream(x_name, STREAM_IMAGE, x_image->cols, x_image->rows, rx_module),
 	m_image(x_image)
 {
 }
@@ -42,8 +42,14 @@ StreamImage::~StreamImage()
 
 void StreamImage::ConvertInput()
 {
-	assert(m_connected != NULL);
-	adjust((dynamic_cast<const StreamImage*>(m_connected))->GetImageRef(), m_image, m_img_tmp1, m_img_tmp2); // TODO : See if we can avoid to cast each time
+	if(m_connected != NULL)
+	{
+		adjust((dynamic_cast<const StreamImage*>(m_connected))->GetImageRef(), m_image, m_img_tmp1, m_img_tmp2); // TODO : See if we can avoid to cast each time
+	}
+	else
+	{
+		m_image->setTo(cvScalar(0,0,0));
+	}
 }
 
 

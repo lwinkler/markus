@@ -36,7 +36,7 @@ public:
 	UsbCamParameterStructure(const ConfigReader& x_confReader, const std::string& x_objectName) : 
 	InputParameterStructure(x_confReader, x_objectName)
 	{
-		m_list.push_back(new ParameterT<int>(0, "num", 	640, 	PARAM_INT, 	0, 	-1,	&num));
+		m_list.push_back(new ParameterT<int>(0, "num", 	-1, 	PARAM_INT, 	-1, 	2,	&num));
 		ParameterStructure::Init();
 	};
 

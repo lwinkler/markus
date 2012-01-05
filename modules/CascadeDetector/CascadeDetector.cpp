@@ -22,6 +22,9 @@
 -------------------------------------------------------------------------------------*/
 
 #include "CascadeDetector.h"
+#include "StreamImage.h"
+#include "StreamRect.h"
+#include "StreamDebug.h"
 
 #include <iostream>
 #include <cstdio>
@@ -46,10 +49,10 @@ CascadeDetector::CascadeDetector(const std::string& x_name, const ConfigReader& 
 	m_input = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
 	//m_output = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
 
-	m_inputStreams.push_back(new StreamImage("input", m_input)); // TODO : Chg name faces
+	m_inputStreams.push_back(new StreamImage("input", m_input, *this)); // TODO : Chg name faces
 
-	m_outputStreams.push_back(new StreamRect("detected", m_param.width, m_param.height, m_detectedObjects, ColorFromStr(m_param.color))); // TODO : Chg name faces
-	m_outputStreams.push_back(new StreamDebug("debug", m_debug));
+	m_outputStreams.push_back(new StreamRect("detected", m_param.width, m_param.height, m_detectedObjects, ColorFromStr(m_param.color), *this)); // TODO : Chg name faces
+	m_outputStreams.push_back(new StreamDebug("debug", m_debug, *this));
 //	m_outputStreams.push_back(new StreamImage("input", m_inputCopy));
 	m_lastInput = new Mat( cvSize(GetInputWidth(), GetInputHeight()), GetInputType());
 }

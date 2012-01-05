@@ -32,7 +32,7 @@
 class StreamRect : public Stream
 {
 public:
-	StreamRect(const std::string& x_name, int x_width, int x_height, std::vector<cv::Rect>& r_rects, const CvScalar& x_color);
+	StreamRect(const std::string& x_name, int x_width, int x_height, std::vector<cv::Rect>& r_rects, const CvScalar& x_color, Module& rx_module);
 	~StreamRect();
 	void Clear() {m_rects.clear();};
 	void AddRect(cv::Rect x_rect) {m_rects.push_back(x_rect);};

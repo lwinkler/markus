@@ -14,7 +14,7 @@
 *
 *    Markus is distributed in the hope that it will be useful,
 *    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  <See the
 *    GNU Lesser General Public License for more details.
 *
 *    You should have received a copy of the GNU Lesser General Public License
@@ -27,17 +27,14 @@
 #include "cv.h"
 #include "ConfigReader.h"
 #include "Parameter.h"
-#include "Stream.h"
-#include "StreamImage.h"
-#include "StreamDebug.h"
-#include "StreamRect.h"
 #include <QReadWriteLock>
 
+class Stream;
 
 class ModuleParameterStructure : public ParameterStructure
 {
 public:
-	ModuleParameterStructure(const ConfigReader& x_confReader, const std::string& x_moduleName) : ParameterStructure(x_confReader, "Module", x_moduleName)
+	ModuleParameterStructure(const ConfigReader& x_confReader, const std::string& x_moduleName) : ParameterStructure(x_confReader, "module", x_moduleName)
 	{
 		m_list.push_back(new ParameterT<std::string>(0, "class", 		"", 	PARAM_STR, 		&objClass));
 		m_list.push_back(new ParameterT<int>(0, "inputWidth", 		640, 	PARAM_INT, 	0, 	4000,	&width));
@@ -71,9 +68,11 @@ public:
 	
 	virtual int GetInputWidth() const = 0;// {return GetRefParameter().width;}
 	virtual int GetInputHeight() const = 0;// {return GetRefParameter().height;}
-	inline int GetInputType() const {return GetRefParameter().type;}
+	inline int GetInputType() const {return GetRefParameter().type;};
 	//virtual inline int GetNbChannels() const {return GetRefParameter().channels;}
-	inline int GetFps() const {return GetRefParameter().fps;}
+	inline int GetFps() const {return GetRefParameter().fps;};
+	
+	virtual inline bool IsInput() {return false;};
 	void Export(std::ostream& rx_os);
 	QReadWriteLock m_lock;
 	

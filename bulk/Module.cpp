@@ -25,6 +25,11 @@
 #include "ConfigReader.h"
 #include "util.h"
 
+#include "Stream.h"
+#include "StreamImage.h"
+#include "StreamDebug.h"
+#include "StreamRect.h"
+
 #include <list>
 
 using namespace std;
@@ -44,11 +49,15 @@ Module::~Module()
 
 void Module::ReadAndConvertInput()//const cv::Mat* x_img)
 {
-	assert(false);//TODO : m_input->m_lock.lockForRead();
+	//m_input->m_lock.lockForRead();
 	
 	// adjust(x_img, m_input, m_img_tmp1, m_img_tmp2);
 	for(vector<Stream*>::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
+	{
+		(*it)->LockForRead();
 		(*it)->ConvertInput();
+		(*it)->UnLock();
+	}
 	//m_input->m_lock.unlock();
 }
 

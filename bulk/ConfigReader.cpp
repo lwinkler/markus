@@ -30,11 +30,102 @@ using namespace std;
 /* Reads the configuration file with tinyxml */
 //const char * ConfigReader::m_fileName = "config.xml";
 
+ConfigReader ConfigReader::SubConfig(const std::string& x_objectType, string x_objectName) const
+{
+	TiXmlNode* newNode = mp_node->FirstChild(x_objectType);
+	//if(newNode == NULL)
+	//	throw("Impossible to find <" + x_objectType + " name=" + x_objectName + "> in config file");
+	TiXmlElement* moduleElement = NULL;//mp_node->ToElement();
+	//assert(moduleElement);
 
+	//node = moduleElement->FirstChild(x_objectType);
+	
+	if(x_objectName.compare(""))
+	{
+		while(newNode != NULL && x_objectName.compare(newNode->ToElement()->Attribute("name")))
+		{
+			//printf("Name = %s\n", newNode->ToElement()->Attribute("name"));
+			newNode = newNode->NextSibling(x_objectType);
+		}
+	}
+	//if(newNode == NULL) 
+	//	throw("Impossible to find <" + x_objectType + " name=" + x_objectName + "> in config file");
+	
+	//moduleElement = newNode->ToElement();
+	//assert( moduleElement  );
+	
+	return ConfigReader(newNode);
+}
+
+ConfigReader ConfigReader::NextSubConfig(const std::string& x_objectType, string x_objectName) const
+{
+	TiXmlNode* newNode = mp_node->NextSibling(x_objectType);
+	//if(newNode == NULL)
+	//	throw("Impossible to find <" + x_objectType + " name=" + x_objectName + "> in config file");
+	TiXmlElement* moduleElement = NULL;//mp_node->ToElement();
+	//assert(moduleElement);
+
+	//node = moduleElement->FirstChild(x_objectType);
+	
+	if(x_objectName.compare(""))
+	{
+		while(newNode != NULL && x_objectName.compare(newNode->ToElement()->Attribute("name")))
+		{
+			//printf("Name = %s\n", newNode->ToElement()->Attribute("name"));
+			newNode = newNode->NextSibling(x_objectType);
+		}
+	}
+	//if(newNode == NULL) 
+	//	throw("Impossible to find <" + x_objectType + " name=" + x_objectName + "> in config file");
+	
+	//moduleElement = newNode->ToElement();
+	//assert( moduleElement  );
+	
+	return ConfigReader(newNode);
+}
+
+vector< ParameterValue > ConfigReader::ReadParameters(const std::string& rx_type, const std::string& rx_name) const
+{
+	vector<ParameterValue> parameterList;
+	
+	TiXmlElement* element = mp_node->ToElement();
+	//TiXmlNode* nodeParams = element->FirstChild(rx_type);
+	//if(nodeParams == NULL) throw("Impossible to find <" + rx_type + "> section");
+	//TiXmlElement* paramElement = nodeParams->ToElement();
+	
+	for( TiXmlNode * node = element->FirstChild(rx_type);
+		node;
+		node = node->NextSibling(rx_type) )
+	{
+		element = node->ToElement();
+		
+		const char* id 		= element->Attribute("id");
+		const char* name  	= element->Attribute("name");
+		const char* class1  	= element->Attribute("class");
+		const char* value 	= element->GetText();
+		if(id == NULL) id = "-1";
+		assert(name);
+		assert(value);
+		if(class1 == NULL)
+			class1 = "";
+		//cout<<"name"<<name<<" value "<<value<<endl;
+		//if(!x_getClassOnly || !strcmp(name, "class"))
+			parameterList.push_back(ParameterValue(atoi(id), std::string(name),  value));
+	}
+	return parameterList;
+}
+
+const string * ConfigReader::GetAttribute(const std::string& x_attributeName) const
+{
+	TiXmlElement* element = mp_node->ToElement();
+	string s(*element->Attribute(x_attributeName));
+	return element->Attribute(x_attributeName);
+}
+
+#if 0
 vector<ParameterValue> ConfigReader::ReadParameters(const std::string& x_objectType, const std::string& x_objectName, bool x_getClassOnly) const
 {
 	vector<ParameterValue> parameterList;
-	TiXmlDocument doc( m_fileName );
 	bool loadOkay = doc.LoadFile();
 //printf("ReadConfigObject(%s, %s)\n", x_objectType.c_str(), x_objectName.c_str());
 	if ( !loadOkay )
@@ -91,7 +182,7 @@ vector<ParameterValue> ConfigReader::ReadParameters(const std::string& x_objectT
 
 // Read the config of all modules that will run
 
-vector<ParameterValue> ConfigReader::ReadModules(const std::string& x_vectorType, const std::string& x_objectType, int x_objectNumber, bool x_getClassOnly) const
+vector<ParameterValue> ConfigReader::ReadModules(const std::string& x_vectorType, const std::string& x_objectType, bool x_getClassOnly) const
 {
 	//assert(false);
 	vector<ParameterValue> parameterList;;
@@ -154,6 +245,7 @@ vector<ParameterValue> ConfigReader::ReadModules(const std::string& x_vectorType
 	return parameterList;
 }
 
+#endif
 
 ParameterValue ConfigReader::GetParameterValue(const std::string& x_name, const vector<ParameterValue> & x_parameterList)
 {
@@ -165,7 +257,7 @@ ParameterValue ConfigReader::GetParameterValue(const std::string& x_name, const 
 	assert(false);
 	return ParameterValue(0, "", "");
 }
-
+/*
 // Return the size of a vector of config objects
 int ConfigReader::ReadConfigGetVectorSize(const std::string& x_vectorType, const std::string& x_objectType) const
 {
@@ -205,3 +297,4 @@ int ConfigReader::ReadConfigGetVectorSize(const std::string& x_vectorType, const
 	return cpt;
 	
 }
+*/

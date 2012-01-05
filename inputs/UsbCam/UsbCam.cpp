@@ -23,6 +23,7 @@
 
 #include "UsbCam.h"
 #include "util.h"
+#include "StreamImage.h"
 
 using namespace std;
 using namespace cv;
@@ -62,8 +63,8 @@ UsbCam::UsbCam(const std::string& x_name, const ConfigReader& x_configReader):
 	
 	m_output = new Mat( cvSize(m_inputWidth, m_inputHeight), CV_8UC3); // TODO : No allocation needed
 	m_render = new Mat( cvSize(m_inputWidth, m_inputHeight), CV_8UC3);
-	m_outputStreams.push_back(new StreamImage("input", m_output));
-	m_outputStreams.push_back(new StreamImage("render", m_render));
+	m_outputStreams.push_back(new StreamImage("input", m_output, *this));
+	m_outputStreams.push_back(new StreamImage("render", m_render, *this));
 }
 
 UsbCam::~UsbCam()

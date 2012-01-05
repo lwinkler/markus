@@ -22,6 +22,8 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ObjectTracker.h"
+#include "StreamDebug.h"
+#include "StreamImage.h"
 
 // for debug
 #include "util.h"
@@ -48,13 +50,13 @@ ObjectTracker::ObjectTracker(const std::string& x_name, const ConfigReader& x_co
 	detect.Reset();
 	track.Reset();
 	
-	m_inputStreams.push_back(new StreamDebug("input", m_img_blur));
+	m_inputStreams.push_back(new StreamDebug("input", m_img_blur, *this));
 	
-	m_outputStreams.push_back(new StreamDebug("background", detect.GetBackground()));
-	m_outputStreams.push_back(new StreamDebug("foreground", detect.GetForeground()));
-	m_outputStreams.push_back(new StreamDebug("foreground_rff", detect.GetForegroundRff()));
+	m_outputStreams.push_back(new StreamDebug("background", detect.GetBackground(), *this));
+	m_outputStreams.push_back(new StreamDebug("foreground", detect.GetForeground(), *this));
+	m_outputStreams.push_back(new StreamDebug("foreground_rff", detect.GetForegroundRff(), *this));
 	//m_outputStreams.push_back(StreamDebug("blobs", track.GetBlobsImg()));
-	m_outputStreams.push_back(new StreamDebug("tracker", m_output));
+	m_outputStreams.push_back(new StreamDebug("tracker", m_output, *this));
 }
 
 ObjectTracker::~ObjectTracker(void )

@@ -72,6 +72,8 @@ public:
 	
 	void AddRelatedStream(Stream* xp_stream) {m_relatedStreams.push_back(xp_stream);};
 	virtual void ProcessFrame(const double x_timeSinceLastProcessing);
+	
+	virtual inline bool IsInput() {return true;};
 private:
 
 protected:
