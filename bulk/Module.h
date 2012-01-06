@@ -34,7 +34,7 @@ class Stream;
 class ModuleParameterStructure : public ParameterStructure
 {
 public:
-	ModuleParameterStructure(const ConfigReader& x_confReader, const std::string& x_moduleName) : ParameterStructure(x_confReader, "module", x_moduleName)
+	ModuleParameterStructure(const ConfigReader& x_confReader) : ParameterStructure(x_confReader, "module")
 	{
 		m_list.push_back(new ParameterT<std::string>(0, "class", 		"", 	PARAM_STR, 		&objClass));
 		m_list.push_back(new ParameterT<int>(0, "inputWidth", 		640, 	PARAM_INT, 	0, 	4000,	&width));
@@ -56,7 +56,7 @@ public:
 class Module : Configurable
 {
 public:
-	Module(const std::string& x_name, const ConfigReader& x_confReader);
+	Module(const ConfigReader& x_confReader);
 	virtual ~Module();
 	
 	void ReadAndConvertInput(/*const cv::Mat * x_img*/);
@@ -85,7 +85,8 @@ protected:
 	//cv::Mat * m_output;
 	//cv::Mat * m_img_tmp1; // To convert the input
 	//cv::Mat * m_img_tmp2;
-	const std::string m_name;
+	std::string m_name;
+	int m_id;
 	virtual const ModuleParameterStructure & GetRefParameter() const = 0;
 };
 

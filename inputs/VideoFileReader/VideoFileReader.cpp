@@ -27,17 +27,16 @@
 using namespace std;
 using namespace cv;
 
-VideoFileReader::VideoFileReader(const std::string& x_name, const ConfigReader& x_configReader): 
-	Input(x_name, x_configReader),
-	m_param(x_configReader, x_name), 
-	m_name(x_name)
+VideoFileReader::VideoFileReader(const ConfigReader& x_configReader): 
+	Input(x_configReader),
+	m_param(x_configReader)
 {
 	m_capture = cvCaptureFromFile(m_param.file.c_str());
 	m_fps     = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FPS);
 	
 	if(m_capture == NULL)
 	{
-		throw("Error : VideoFileReader not found ! : " + x_name);
+		throw("Error : VideoFileReader not found ! : " + m_name);
 	}
 	cout<<"Setting "<<m_param.width<<endl;
 	

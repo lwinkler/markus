@@ -42,13 +42,23 @@ ParameterValue::ParameterValue(int x_id, const string& x_name, const string& x_v
 {
 };
 
+ParameterStructure::ParameterStructure(const ConfigReader& x_configReader, const std::string& x_objectType):
+		m_configReader(x_configReader),
+		m_objectType(x_objectType),
+		m_objectNumber(0) // TODO : Is this used ?
+	{
+		m_objectName = m_configReader.GetAttribute("name");
+		m_list.clear();
+		//Init();
+	};
+	
 void ParameterStructure::Init()
 {
 	// Read config file
 	SetDefault();
 	
 	// Read parameters from config
-	SetFromConfig(m_configReader.ReadParameters("param"));
+	SetFromConfig(m_configReader.SubConfig("parameters").ReadParameters("param"));
 	
 	cout<<"Parameters for "<<m_objectType<<"::"<<m_objectName<<" initialized."<<endl;
 	PrintParameters();

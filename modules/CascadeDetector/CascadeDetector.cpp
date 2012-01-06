@@ -39,8 +39,8 @@ using namespace cv;
 const char * CascadeDetector::m_type = "CascadeDetector";
 
 
-CascadeDetector::CascadeDetector(const std::string& x_name, const ConfigReader& x_configReader) 
-	 : ModuleAsync(x_name, x_configReader), m_param(x_configReader, x_name)
+CascadeDetector::CascadeDetector(const ConfigReader& x_configReader) 
+	 : ModuleAsync(x_configReader), m_param(x_configReader)
 {
 	// Init output images
 	assert(m_thread.m_cascade.load( m_param.filterFile ));

@@ -27,12 +27,12 @@
 using namespace std;
 
 
-Input::Input(const std::string& x_name, const ConfigReader& x_configReader): 
+Input::Input(const ConfigReader& x_configReader): 
 	//m_param(x_configReader, x_name), 
 	//Configurable(x_configReader),
-	Module(x_name, x_configReader), m_name(x_name)
+	Module(x_configReader)
 {
-	cout<<endl<<"*** Create object Input : "<<x_name<<" ***"<<endl;
+	cout<<endl<<"*** Create object Input : "<<m_name<<" ***"<<endl;
 
 	m_render = NULL;  // cvCreateImage( cvSize(12,12)/*GetInputWidth(), GetInputHeight())*/, CV_8U_C3);
 	m_inputWidth = 0;

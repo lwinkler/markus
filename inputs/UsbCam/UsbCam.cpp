@@ -28,10 +28,9 @@
 using namespace std;
 using namespace cv;
 
-UsbCam::UsbCam(const std::string& x_name, const ConfigReader& x_configReader): 
-	Input(x_name, x_configReader),
-	m_param(x_configReader, x_name), 
-	m_name(x_name)
+UsbCam::UsbCam(const ConfigReader& x_configReader): 
+	Input(x_configReader),
+	m_param(x_configReader)
 {
 	m_capture = NULL;
 	m_capture = cvCreateCameraCapture( m_param.num );
@@ -39,7 +38,7 @@ UsbCam::UsbCam(const std::string& x_name, const ConfigReader& x_configReader):
 	
 	if(m_capture == NULL)
 	{
-		throw("Error : UsbCam not found ! : " + x_name);
+		throw("Error : UsbCam not found ! : " + m_name);
 	}
 	//cout<<"Setting "<<m_param.width<<endl;
 	

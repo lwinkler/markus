@@ -63,7 +63,7 @@ public:
 	int ReadConfigGetVectorSize(const std::string& x_vectorType, const std::string& x_objectType) const;
 	*/
 	static ParameterValue GetParameterValue(const std::string& x_name, const std::vector<ParameterValue> & x_parameterList);
-	const std::string * GetAttribute(const std::string& x_attributeName) const;
+	const std::string GetAttribute(const std::string& x_attributeName) const;
 private:
 	//std::string m_fileName;
 	TiXmlNode * mp_node;

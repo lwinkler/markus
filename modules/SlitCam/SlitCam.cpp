@@ -35,8 +35,8 @@ using namespace cv;
 const char * SlitCam::m_type = "SlitCamera";
 
 
-SlitCam::SlitCam(const std::string& x_name, const ConfigReader& x_configReader) 
-	 : Module(x_name, x_configReader), m_param(x_configReader, x_name)
+SlitCam::SlitCam(const ConfigReader& x_configReader) 
+	 : Module(x_configReader), m_param(x_configReader)
 {
 	m_position = 0;
 	

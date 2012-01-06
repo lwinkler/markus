@@ -1,46 +1,5 @@
-<?xml version="1.0" standalone="no" ?>
-
-<application>
-<Manager>
-	<parameters>
-		<param id="1" name="mode">benchmarkAA</param>
-	</parameters>
-</Manager>
-
-<!--<module name="InFile1">
-	<parameters>
-	<param id="0" name="class">VideoFileReader</param>
-        <param id="1" name="inputWidth">200</param>
-        <param id="2" name="inputHeight">100</param>
-        <param id="3" name="inputType">CV_8UC3</param>
-        <param id="4" name="file">input/test.avi</param>
-	<param id="4" name="fps">10</param>
-</parameters>
-</module>-->
-<!-- List all possibly used inputs-->
-<module name="MyCam1">
-	<parameters>
-	<param id="0" name="class">UsbCam</param>
-        <param id="1" name="inputWidth">200</param>
-        <param id="2" name="inputHeight">100</param>
-        <param id="3" name="inputType">CV_8UC3</param>
-        <param id="4" name="num">-1</param>	
-	<param id="4" name="fps">1000</param>
-	</parameters>
-</module>
-
-<!--<module name="MyCam2">
-	<parameters>
-	<param id="0" name="class">UsbCam</param>
-        <param id="1" name="inputWidth">200</param>
-        <param id="2" name="inputHeight">100</param>
-        <param id="3" name="inputType">CV_8UC3</param>
-        <param id="4" name="num">1</param>	
-        <param id="4" name="fps">10</param>
-	</parameters>
-</module>-->
-
-<module name="SlitCamera1">
+<application name="ddd2" description="" cyclelimit="-1" gui="">
+  <module name="SlitCamera1">
 	<parameters>
 	<param id="0" name="class">SlitCamera</param>
 	<param id="2" name="inputWidth">640</param>
@@ -49,114 +8,30 @@
 	<param id="1" name="aperture">4</param>
 	<param id="4" name="fps">100</param>
 	</parameters>
-</module>
-
-
-<!-- List all possibly used modules
-
-<module name="InFile1">
-	<param id="0" name="class">VideoFileReader</param>
-        <param id="1" name="inputWidth">200</param>
-        <param id="2" name="inputHeight">100</param>
-        <param id="3" name="inputType">CV_8UC3</param>
-        <param id="4" name="file">input/test.avi</param>
-	<param id="4" name="fps">10</param>
-</module>
-
-<Module name="ObjectTracker1">
-	<param id="0" name="class">ObjectTracker</param>
-        <param id="2" name="inputWidth">640</param>
-        <param id="3" name="inputHeight">480</param>
-        <param id="4" name="inputType">CV_8UC3</param>
-	<param id="3" name="input_blur_size">3</param>
-	<param id="1" name="background_alpha">0.01</param>
-	<param id="2" name="foreground_thres">0.2</param>
-	<param id="3" name="foreground_filter_size">3</param>
-	<param id="4" name="fps">0</param>
-</Module>
-<Module name="SlitCamera1">
-		<parameters>
-	<param id="0" name="class">SlitCamera</param>
-	<param id="2" name="inputWidth">640</param>
-        <param id="3" name="inputHeight">480</param>
-	<param id="4" name="inputType">CV_8UC3</param>
-	<param id="1" name="aperture">4</param>
-	<param id="4" name="fps">100</param>
-</parameters>
-</Module>
-<Module name="SlitCamera2">
-		<parameters>
-	<param id="0" name="class">SlitCamera</param>
-        <param id="2" name="inputWidth">640</param>
-        <param id="3" name="inputHeight">480</param>
-        <param id="4" name="inputType">CV_8UC3</param>
-        <param id="1" name="aperture">1</param>
-	<param id="4" name="fps">100</param>
-</parameters>
-</Module>
-<Module name="CascadeDetector1">
-        <param id="0" name="class">CascadeDetector</param>
-        <param id="2" name="inputWidth">320</param>
-        <param id="3" name="inputHeight">240</param>
-        <param id="4" name="inputType">CV_8UC1</param>
-        <param id="6" name="fps">10</param>
-        <param id="6" name="detectionFps">2</param>
-        <param id="7" name="minNeighbors">3</param>
-        <param id="8" name="minFaceSide">0</param>
-        <param id="9" name="scaleFactor">1.1</param>
-        <param id="4" name="filterFile">modules/CascadeDetector/haarcascade_fullbody.xml</param>
-	<param id="4" name="color">(0,255,0)</param>
-</Module>
-<Module name="CascadeDetector2">
-        <param id="0" name="class">CascadeDetector</param>
-        <param id="2" name="inputWidth">320</param>
-        <param id="3" name="inputHeight">240</param>
-        <param id="4" name="inputType">CV_8UC1</param>
-        <param id="6" name="fps">10</param>
-        <param id="6" name="detectionFps">2</param>
-        <param id="7" name="minNeighbors">3</param>
-        <param id="8" name="minFaceSide">0</param>
-        <param id="9" name="scaleFactor">1.1</param>
-        <param id="4" name="filterFile">modules/CascadeDetector/haarcascade_profileface.xml</param>
-	<param id="4" name="color">(12,255,255)</param>
-</Module>
-<Module name="CascadeDetector3">
-        <param id="0" name="class">CascadeDetector</param>
-        <param id="2" name="inputWidth">320</param>
-        <param id="3" name="inputHeight">240</param>
-        <param id="4" name="inputType">CV_8UC1</param>
-        <param id="6" name="fps">10</param>
-        <param id="6" name="detectionFps">2</param>
-        <param id="7" name="minNeighbors">3</param>
-        <param id="8" name="minFaceSide">0</param>
-        <param id="9" name="scaleFactor">1.1</param>
-        <param id="4" name="filterFile">modules/CascadeDetector/haarcascade_mcs_nose.xml</param>
-	<param id="4" name="color">(255,0,200)</param>
-</Module>
-<Module name="CascadeDetector4">
-        <param id="0" name="class">CascadeDetector</param>
-        <param id="2" name="inputWidth">320</param>
-        <param id="3" name="inputHeight">240</param>
-        <param id="4" name="inputType">CV_8UC1</param>
-        <param id="6" name="fps">10</param>
-        <param id="6" name="detectionFps">2</param>
-        <param id="7" name="minNeighbors">3</param>
-        <param id="8" name="minFaceSide">0</param>
-        <param id="9" name="scaleFactor">1.1</param>
-        <param id="4" name="filterFile">modules/CascadeDetector/haarcascade_frontalface_default.xml</param>
-	<param id="4" name="color">(128,255,0)</param>
-</Module>
-
-<Module name="CascadeDetector22">
-        <param id="0" name="class">CascadeDetector</param>
-        <param id="2" name="inputWidth">320</param>
-        <param id="3" name="inputHeight">240</param>
-        <param id="4" name="inputType">CV_8UC1</param>
-        <param id="6" name="fps">10</param>
-        <param id="6" name="detectionFps">1</param>
-        <param id="7" name="minNeighbors">3</param>
-        <param id="8" name="minFaceSide">0</param>
-        <param id="9" name="scaleFactor">1.1</param>
-        <param id="4" name="filterFile">modules/CascadeDetector/haarcascade_fullbody.xml</param>
-</Module>-->
+    <inputs>
+      <input id="0" moduleid="1" outputid="0" />
+    </inputs>
+    <outputs>
+      <output id="0" />
+    </outputs>
+    <display x="284" y="242" width="150" height="75" />
+    <uiobject type="" x="0" y="0" width="0" height="0" />
+  </module>
+  <module name="UsbCam" machineurl="localhost" id="1">
+    <parameters>
+      <param name="class">UsbCam</param>
+      <param name="inputWidth">200</param>
+      <param name="inputHeight">100</param>
+      <param name="inputType">CV_8UC3</param>
+      <param name="num">-1</param>
+      <param name="fps">1000</param>
+    </parameters>
+    <inputs />
+    <outputs>
+      <output id="0" />
+    </outputs>
+    <display x="50" y="50" width="150" height="75" />
+    <uiobject type="" x="0" y="0" width="0" height="0" />
+  </module>
 </application>
+

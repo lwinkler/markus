@@ -28,11 +28,10 @@
 
 using namespace std;
 
-ModuleAsync::ModuleAsync(const std::string& x_name, const ConfigReader& x_configReader) :
-	Module(x_name, x_configReader)
-	//m_name(x_name)
+ModuleAsync::ModuleAsync(const ConfigReader& x_configReader) :
+	Module(x_configReader)
 {
-	cout<<endl<<"*** Create object ModuleAsync : "<<x_name<<" ***"<<endl;
+	cout<<endl<<"*** Create object ModuleAsync : "<<m_name<<" ***"<<endl;
 	m_timeSinceLastThread = 1e99;
 	m_resultsCopied = false;
 	m_input = NULL;

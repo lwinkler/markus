@@ -84,13 +84,30 @@ Manager::Manager(ConfigReader& x_configReader) :
 	
 	while(! moduleConfig.IsEmpty())
 	{
+		// Read parameters
 		if( moduleConfig.SubConfig("parameters").IsEmpty()) 
-			throw("Impossible to find <parameters> section for module " +  *moduleConfig.GetAttribute("name"));
+			throw("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name"));
 		vector<ParameterValue> paramList = moduleConfig.SubConfig("parameters").ReadParameters("param");
-		string moduleClass = ConfigReader::GetParameterValue("class", paramList).m_value;
-		const string * moduleName = moduleConfig.GetAttribute("name");
-		Module * tmp1 = createNewModule(moduleClass, *moduleName, moduleConfig.SubConfig("parameters"));
-
+		//string moduleClass = ConfigReader::GetParameterValue("class", paramList).m_value;
+		//const string moduleName = moduleConfig.GetAttribute("name");
+		Module * tmp1 = createNewModule( moduleConfig);
+		
+		// Read conections of inputs
+		if( moduleConfig.SubConfig("inputs").IsEmpty()) 
+			throw("Impossible to find <inputs> section for module " +  moduleConfig.GetAttribute("name"));
+		
+		ConfigReader inputConfig = moduleConfig.SubConfig("inputs").SubConfig("input");
+	
+		while(! inputConfig.IsEmpty())
+		{
+			int id 			= atoi(inputConfig.GetAttribute("id").c_str());
+			int outputModuleId 	= atoi(inputConfig.GetAttribute("moduleid").c_str());
+			int outputId 		= atoi(inputConfig.GetAttribute("outputid").c_str());
+			
+			inputConfig = inputConfig.NextSubConfig("input");
+		}
+		
+		// Add to inputs if an input
 		m_modules.push_back(tmp1);
 		if(tmp1->IsInput()) m_inputs.push_back(dynamic_cast<Input* >(tmp1));
 		moduleConfig = moduleConfig.NextSubConfig("module");

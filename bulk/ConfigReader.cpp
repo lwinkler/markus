@@ -33,12 +33,6 @@ using namespace std;
 ConfigReader ConfigReader::SubConfig(const std::string& x_objectType, string x_objectName) const
 {
 	TiXmlNode* newNode = mp_node->FirstChild(x_objectType);
-	//if(newNode == NULL)
-	//	throw("Impossible to find <" + x_objectType + " name=" + x_objectName + "> in config file");
-	TiXmlElement* moduleElement = NULL;//mp_node->ToElement();
-	//assert(moduleElement);
-
-	//node = moduleElement->FirstChild(x_objectType);
 	
 	if(x_objectName.compare(""))
 	{
@@ -60,12 +54,6 @@ ConfigReader ConfigReader::SubConfig(const std::string& x_objectType, string x_o
 ConfigReader ConfigReader::NextSubConfig(const std::string& x_objectType, string x_objectName) const
 {
 	TiXmlNode* newNode = mp_node->NextSibling(x_objectType);
-	//if(newNode == NULL)
-	//	throw("Impossible to find <" + x_objectType + " name=" + x_objectName + "> in config file");
-	TiXmlElement* moduleElement = NULL;//mp_node->ToElement();
-	//assert(moduleElement);
-
-	//node = moduleElement->FirstChild(x_objectType);
 	
 	if(x_objectName.compare(""))
 	{
@@ -115,11 +103,16 @@ vector< ParameterValue > ConfigReader::ReadParameters(const std::string& rx_type
 	return parameterList;
 }
 
-const string * ConfigReader::GetAttribute(const std::string& x_attributeName) const
+const string ConfigReader::GetAttribute(const std::string& x_attributeName) const
 {
 	TiXmlElement* element = mp_node->ToElement();
-	string s(*element->Attribute(x_attributeName));
-	return element->Attribute(x_attributeName);
+	//string s(*element->Attribute(x_attributeName));
+	
+	const string * str = element->Attribute(x_attributeName);
+	if(str == NULL)
+		return "";
+	else
+		return *str;
 }
 
 #if 0

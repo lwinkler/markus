@@ -251,15 +251,7 @@ private:
 class ParameterStructure
 {
 public:
-	ParameterStructure(const ConfigReader& x_configReader, const std::string& x_objectType, const std::string& x_objectName, int x_nb = 0) :
-		m_configReader(x_configReader),
-		m_objectType(x_objectType),
-		m_objectName(x_objectName),
-		m_objectNumber(x_nb)
-	{
-		m_list.clear();
-		//Init();
-	};
+	ParameterStructure(const ConfigReader& x_configReader, const std::string& x_objectType);
 	void Init();
 	//void ReadParametersFromConfig();
 	void SetFromConfig(const std::vector<ParameterValue>& x_params);
@@ -273,7 +265,7 @@ protected:
 	std::vector<Parameter*> m_list;
 	const ConfigReader& m_configReader;
 	const std::string m_objectType;
-	const std::string m_objectName;
+	std::string m_objectName;
 	const int m_objectNumber;
 };
 

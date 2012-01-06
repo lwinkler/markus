@@ -33,7 +33,7 @@ class ConfigReader;
 class ObjectTrackerParameterStructure : public ModuleParameterStructure
 {
 public:
-	ObjectTrackerParameterStructure(const ConfigReader& x_confReader, const std::string& x_moduleName) : ModuleParameterStructure(x_confReader, x_moduleName)
+	ObjectTrackerParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
 		m_list.push_back(new ParameterT<int>(0, "input_blur_size",	1, 	PARAM_INT, 1, 7,	&detector.inputBlurSize));
 		m_list.push_back(new ParameterT<float>(0, "background_alpha",	0.02, 	PARAM_FLOAT, 0, 1,	&detector.backgroundAlpha));
@@ -49,8 +49,8 @@ public:
 class ObjectTracker : public Module
 {
 public:
-	ObjectTracker(const std::string& x_name, const ConfigReader& x_configReader);
-	~ObjectTracker(void);
+	ObjectTracker(const ConfigReader& x_configReader);
+	~ObjectTracker();
 	
 	virtual void ProcessFrame(const double x_timeSinceLastProcessing);
 	inline virtual int GetInputWidth() const {return m_param.width;};

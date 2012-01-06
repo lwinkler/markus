@@ -33,8 +33,8 @@
 class UsbCamParameterStructure : public InputParameterStructure
 {
 public:
-	UsbCamParameterStructure(const ConfigReader& x_confReader, const std::string& x_objectName) : 
-	InputParameterStructure(x_confReader, x_objectName)
+	UsbCamParameterStructure(const ConfigReader& x_confReader) : 
+	InputParameterStructure(x_confReader)
 	{
 		m_list.push_back(new ParameterT<int>(0, "num", 	-1, 	PARAM_INT, 	-1, 	2,	&num));
 		ParameterStructure::Init();
@@ -47,7 +47,7 @@ public:
 class UsbCam : public Input
 {
 public:
-	UsbCam(const std::string& x_name, const ConfigReader& x_confReader);
+	UsbCam(const ConfigReader& x_confReader);
 	~UsbCam();
 	
 	void Capture();
@@ -60,7 +60,7 @@ protected:
 	int m_fps;
 
 	UsbCamParameterStructure m_param;
-	const std::string m_name;
+	//const std::string m_name;
 	
 	inline virtual const UsbCamParameterStructure& GetRefParameter() const {return m_param;};
 };

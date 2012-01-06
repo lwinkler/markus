@@ -35,9 +35,9 @@ using namespace cv;
 const char * ObjectTracker::m_type = "ObjectTracker";
 
 
-ObjectTracker::ObjectTracker(const std::string& x_name, const ConfigReader& x_configReader) :
-	Module(x_name, x_configReader),
-	m_param(x_configReader, x_name), 
+ObjectTracker::ObjectTracker(const ConfigReader& x_configReader) :
+	Module(x_configReader),
+	m_param(x_configReader), 
 	detect(m_param.detector, m_param.width, m_param.height, m_param.type),
 	track(m_param.tracker, m_param.width, m_param.height, m_param.type)
 {
