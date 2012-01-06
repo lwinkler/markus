@@ -62,6 +62,7 @@ public:
 	void ReadAndConvertInput(/*const cv::Mat * x_img*/);
 	virtual void ProcessFrame(const double x_timeSinceLastProcessing) = 0;
 	const std::string& GetName(){return m_name;};
+	int GetId() const {return m_id;};
 	//const cv::Mat * GetOutput(){return m_output;}
 	//void AddStream(const std::string& x_name, StreamType x_type, Mat* m_image);
 	const std::vector<Stream*>& GetStreamList() const {return m_outputStreams;};
@@ -74,6 +75,8 @@ public:
 	
 	virtual inline bool IsInput() {return false;};
 	void Export(std::ostream& rx_os);
+	Stream * GetInputStreamById(int x_id) const;
+	Stream * GetOutputStreamById(int x_id) const;
 	QReadWriteLock m_lock;
 	
 	std::vector<Stream *> m_inputStreams; // TODO : Should be protected
@@ -88,6 +91,7 @@ protected:
 	std::string m_name;
 	int m_id;
 	virtual const ModuleParameterStructure & GetRefParameter() const = 0;
+	
 };
 
 #endif

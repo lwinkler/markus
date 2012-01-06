@@ -24,7 +24,7 @@
 #include "Manager.h"
 #include "Module.h"
 #include "Input.h"
-//#include "ImageProcessor.h"
+#include "Stream.h"
 
 #include "util.h"
 
@@ -87,7 +87,7 @@ Manager::Manager(ConfigReader& x_configReader) :
 		// Read parameters
 		if( moduleConfig.SubConfig("parameters").IsEmpty()) 
 			throw("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name"));
-		vector<ParameterValue> paramList = moduleConfig.SubConfig("parameters").ReadParameters("param");
+		//vector<ParameterValue> paramList = moduleConfig.SubConfig("parameters").ReadParameters("param");
 		//string moduleClass = ConfigReader::GetParameterValue("class", paramList).m_value;
 		//const string moduleName = moduleConfig.GetAttribute("name");
 		Module * tmp1 = createNewModule( moduleConfig);
@@ -96,23 +96,35 @@ Manager::Manager(ConfigReader& x_configReader) :
 		if( moduleConfig.SubConfig("inputs").IsEmpty()) 
 			throw("Impossible to find <inputs> section for module " +  moduleConfig.GetAttribute("name"));
 		
-		ConfigReader inputConfig = moduleConfig.SubConfig("inputs").SubConfig("input");
-	
-		while(! inputConfig.IsEmpty())
-		{
-			int id 			= atoi(inputConfig.GetAttribute("id").c_str());
-			int outputModuleId 	= atoi(inputConfig.GetAttribute("moduleid").c_str());
-			int outputId 		= atoi(inputConfig.GetAttribute("outputid").c_str());
-			
-			inputConfig = inputConfig.NextSubConfig("input");
-		}
-		
 		// Add to inputs if an input
 		m_modules.push_back(tmp1);
 		if(tmp1->IsInput()) m_inputs.push_back(dynamic_cast<Input* >(tmp1));
 		moduleConfig = moduleConfig.NextSubConfig("module");
 	}
 
+	
+	// Connect input and output streams
+	moduleConfig = m_configReader.SubConfig("module");
+	
+	while(! moduleConfig.IsEmpty())
+	{
+		ConfigReader inputConfig = moduleConfig.SubConfig("inputs").SubConfig("input");
+		while(! inputConfig.IsEmpty())
+		{
+			int moduleId		= atoi(moduleConfig.GetAttribute("id").c_str());
+			int inputId 		= atoi(inputConfig.GetAttribute("id").c_str());
+			int outputModuleId 	= atoi(inputConfig.GetAttribute("moduleid").c_str());
+			int outputId 		= atoi(inputConfig.GetAttribute("outputid").c_str());
+			
+			Stream * inputStream  = GetModuleById(moduleId)->GetInputStreamById(inputId);
+			Stream * outputStream = GetModuleById(outputModuleId)->GetOutputStreamById(outputId);
+			
+			inputStream->Connect(outputStream);
+			
+			inputConfig = inputConfig.NextSubConfig("input");
+		}
+		moduleConfig = moduleConfig.NextSubConfig("module");
+	}
 	/*for(vector<Input *>::const_iterator it = m_inputs.begin() ; it != m_inputs.end() ; it++)
 	{
 		m_modules.push_back(dynamic_cast<Module *>(*it));
@@ -235,6 +247,14 @@ void Manager::Export()
 	}
 }
 
+Module* Manager::GetModuleById(int x_id) const
+{
+	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+		if((*it)->GetId() == x_id) 
+			return *it;
+	assert(false);
+	return NULL;
+}
 
 /*void Manager::AddModule(Module * x_mod)
 {

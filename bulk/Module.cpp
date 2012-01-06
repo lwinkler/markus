@@ -86,3 +86,23 @@ void Module::Export(ostream& rx_os)
 	rx_os<<"</outputs>"<<endl;
 	rx_os<<"</module>"<<endl;
 }
+
+/// Get a stream by its id
+Stream* Module::GetInputStreamById(int x_id) const
+{
+	for(vector<Stream *>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
+		if((*it)->GetId() == x_id) return *it;
+	assert(false);
+	return NULL;
+}
+
+/// Get a stream by its id
+Stream* Module::GetOutputStreamById(int x_id) const
+{
+	for(vector<Stream *>::const_iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
+		if((*it)->GetId() == x_id) return *it;
+	assert(false);
+	return NULL;
+}
+
+

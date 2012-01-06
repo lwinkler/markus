@@ -65,6 +65,8 @@ public:
  	std::vector<Input*> & GetInputListVar()  {return m_inputs; };
 	std::vector<Module*>& GetModuleListVar() {return m_modules; };
 	
+	Module * GetModuleById(int x_id) const;
+	
 	void Export();
 	void PrintTimers();
 private:

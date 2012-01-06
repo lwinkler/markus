@@ -25,8 +25,9 @@
 
 using namespace std;
 
-Stream::Stream(const std::string& x_name, StreamType x_type, int x_width, int x_height, Module& rx_module) :
+Stream::Stream(int x_id, const std::string& x_name, StreamType x_type, int x_width, int x_height, Module& rx_module) :
 	m_name(x_name),
+	m_id(x_id),
 	m_type(x_type),
 	m_width(x_width),
 	m_height(x_height),

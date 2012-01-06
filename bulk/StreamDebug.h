@@ -32,7 +32,7 @@
 class StreamDebug : public Stream
 {
 public:
-	StreamDebug(const std::string& x_name, cv::Mat* x_image, Module& rx_module);
+	StreamDebug(int x_id, const std::string& x_name, cv::Mat* x_image, Module& rx_module);
 	~StreamDebug();
 	const cv::Mat* GetImageRef() const {return m_image;};
 	

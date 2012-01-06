@@ -41,9 +41,10 @@ class Stream
 {
 public:
 	//Stream(const std::string& x_name, StreamType x_type, Module& rx_module);
-	Stream(const std::string& x_name, StreamType x_type, int x_width, int x_height, Module& rx_module);
+	Stream(int x_id, const std::string& x_name, StreamType x_type, int x_width, int x_height, Module& rx_module);
 	~Stream();
-	const std::string& GetName() const {return m_name;};
+	inline const std::string& GetName() const {return m_name;};
+	inline int GetId() const {return m_id;};
 	inline int GetInputWidth() const {return m_width;};
 	inline int GetInputHeight() const {return m_height;};
 	inline StreamType GetType() const {return m_type;};
@@ -55,6 +56,7 @@ public:
 	inline void UnLock(){mr_module.m_lock.unlock();};
 protected:
 	const std::string m_name;
+	const int m_id;
 	const StreamType m_type;
 	const int m_width;
 	const int m_height;

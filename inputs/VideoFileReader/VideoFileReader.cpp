@@ -56,8 +56,8 @@ VideoFileReader::VideoFileReader(const ConfigReader& x_configReader):
 	
 	m_output = new Mat( cvSize(m_inputWidth, m_inputHeight), CV_8UC3);
 	m_render = new Mat( cvSize(m_inputWidth, m_inputHeight), CV_8UC3);
-	m_outputStreams.push_back(new StreamImage("input", m_output, *this));
-	m_outputStreams.push_back(new StreamImage("render", m_render, *this));
+	m_outputStreams.push_back(new StreamImage(0, "input", m_output, *this));
+	m_outputStreams.push_back(new StreamImage(1, "render", m_render, *this));
 }
 
 VideoFileReader::~VideoFileReader()
