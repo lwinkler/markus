@@ -72,7 +72,7 @@ void Module::Export(ostream& rx_os, int x_tabs)
 {
 	string tabs(x_tabs + 1, '\t');
 	rx_os<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"<<endl;
-	rx_os<<tabs<<"<module name=\""<<m_name<<"\" description=\""<<"descr!!!TODO"<<"\">"<<endl;
+	rx_os<<tabs<<"<module name=\""<<m_name<<"\" description=\""<<GetDescription()<<"\">"<<endl;
 
 	rx_os<<tabs<<"<parameters>"<<endl;
 	for(vector<Parameter*>::const_iterator it = GetRefParameter().GetList().begin() ; it != GetRefParameter().GetList().end() ; it++)

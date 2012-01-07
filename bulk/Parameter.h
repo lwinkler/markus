@@ -55,6 +55,7 @@ static const char configType[][16] = {"unset", "def", "xml", "gui", "unk"};
 
 class ConfigReader;
 
+// TODO : This should disappear probably
 class ParameterValue
 {
 public:
@@ -67,31 +68,37 @@ public:
 class Parameter
 {
 public:
-	Parameter(int x_id, const std::string& x_name, ParameterType x_type):
+	Parameter(int x_id, const std::string& x_name, ParameterType x_type, const std::string& x_description):
 		m_id(x_id),
 		m_name(x_name),
 		m_type(x_type),
-		m_confType(PARAMCONF_UNSET){};
+		m_confSource(PARAMCONF_UNSET),
+		m_description(x_description){};
 		
 	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN) = 0;
 	virtual void SetValue(const void* x_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN) = 0;
 	virtual const void* GetValue() const = 0;
+	inline const std::string& GetName() const {return m_name;};
+	inline const ParameterType& GetType() const {return m_type;};
+	inline const std::string& GetDescription() const {return m_description;};
+	inline const ParameterConfigType& GetConfigurationSource() const {return m_confSource;};
 	virtual void SetDefault() = 0;
 	virtual void Print() const = 0;
 	virtual void Export(std::ostream& rx_os, int x_tabs) = 0;
+protected:
 	const int m_id;
 	const std::string m_name;
 	const ParameterType m_type;
-	ParameterConfigType m_confType;
-private:
+	ParameterConfigType m_confSource;
+	const std::string m_description;
 	//const void* mp_value;
 };
 
 template<class T> class ParameterT : public Parameter
 {
 public:
-	ParameterT(int x_id, const std::string& x_name, T x_default, ParameterType x_type, T x_min, T x_max, T * xp_value) : 
-		Parameter(x_id, x_name, x_type),
+	ParameterT(int x_id, const std::string& x_name, T x_default, ParameterType x_type, T x_min, T x_max, T * xp_value, const std::string& x_description) : 
+		Parameter(x_id, x_name, x_type, x_description),
 		m_default(x_default),
 		m_min(x_min),
 		m_max(x_max),
@@ -100,12 +107,12 @@ public:
 	{
 		std::istringstream istr(rx_value);
 		istr >> *mp_value; // atof is sensible to locale format and may use , as a separator
-		m_confType = x_confType;
+		m_confSource = x_confType;
 	};
 	virtual void SetValue(const void * px_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
 	{	
 		*mp_value = *static_cast<const T*>(px_value);
-		m_confType = x_confType;
+		m_confSource = x_confType;
 	};
 	virtual const void * GetValue() const
 	{
@@ -113,13 +120,13 @@ public:
 	}
 	virtual void Print() const 
 	{
-		std::cout<<m_name<<" = "<<*static_cast<const T*>(GetValue())<<" ["<<m_min<<":"<<m_max<<"] ("<<configType[m_confType]<<"); ";	
+		std::cout<<m_name<<" = "<<*static_cast<const T*>(GetValue())<<" ["<<m_min<<":"<<m_max<<"] ("<<configType[m_confSource]<<"); ";	
 		
 	};
 	virtual void SetDefault()
 	{
 		*mp_value = m_default;
-		m_confType = PARAMCONF_DEF;
+		m_confSource = PARAMCONF_DEF;
 	}
 	virtual void Export(std::ostream& rx_os, int x_tabs)
 	{
@@ -127,7 +134,7 @@ public:
 		rx_os<<"<param name=\""<<m_name<<"\">"<<std::endl;
 		rx_os<<tabs<<"<type>"<<"TODO"<<"</type>"<<std::endl;
 		rx_os<<tabs<<"<value min=\""<<m_min<<"\" max=\""<<m_max<<"\" default=\""<<m_default<<"\">"<<*static_cast<const T*>(GetValue())<<"</value>"<<std::endl;
-		rx_os<<tabs<<"<description>"<<"TODO"<<"</description>"<<std::endl;
+		rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<std::endl;
 		rx_os<<"</param>"<<std::endl;
 	}
 
@@ -143,19 +150,19 @@ private:
 template <> class ParameterT<std::string> : public Parameter
 {
 public:
-	ParameterT(int x_id, const std::string& x_name, std::string x_default, ParameterType x_type, std::string * xp_value) : 
-		Parameter(x_id, x_name, x_type),
+	ParameterT(int x_id, const std::string& x_name, std::string x_default, ParameterType x_type, std::string * xp_value, const std::string& x_description) : 
+		Parameter(x_id, x_name, x_type, x_description),
 		m_default(x_default),
 		mp_value(xp_value){ assert(x_type == PARAM_STR);};
 	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
 	{
 		*mp_value = rx_value;
-		m_confType = x_confType;
+		m_confSource = x_confType;
 	};
 	virtual void SetValue(const void * px_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
 	{	
 		*mp_value = *static_cast<const std::string*>(px_value);
-		m_confType = x_confType;
+		m_confSource = x_confType;
 	};
 	virtual const void * GetValue() const
 	{
@@ -163,13 +170,13 @@ public:
 	}
 	virtual void Print() const 
 	{
-		std::cout<<m_name<<" = "<<*static_cast<const std::string*>(GetValue())<<" ("<<configType[m_confType]<<"); ";	
+		std::cout<<m_name<<" = "<<*static_cast<const std::string*>(GetValue())<<" ("<<configType[m_confSource]<<"); ";	
 		
 	};
 	virtual void SetDefault()
 	{
 		*mp_value = m_default;
-		m_confType = PARAMCONF_DEF;
+		m_confSource = PARAMCONF_DEF;
 	}
 	virtual void Export(std::ostream& rx_os, int x_tabs)
 	{
@@ -177,7 +184,7 @@ public:
 		rx_os<<"<param name=\""<<m_name<<"\">"<<std::endl;
 		rx_os<<tabs<<"<type>"<<"TODO"<<"</type>"<<std::endl;
 		rx_os<<tabs<<"<value default=\""<<m_default<<"\">"<<*static_cast<const std::string*>(GetValue())<<"</value>"<<std::endl;
-		rx_os<<tabs<<"<description>"<<"TODO"<<"</description>"<<std::endl;
+		rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<std::endl;
 		rx_os<<"</param>"<<std::endl;
 	}
 
@@ -189,16 +196,16 @@ private:
 class ParameterImageType : public Parameter
 {
 public:
-	ParameterImageType(int x_id, const std::string& x_name, int x_default, int * xp_value);
+	ParameterImageType(int x_id, const std::string& x_name, int x_default, int * xp_value, const std::string x_description);
 	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
 	{
 		*mp_value = ImageTypeStr2Int(rx_value);
-		m_confType = x_confType;
+		m_confSource = x_confType;
 	};
 	virtual void SetValue(const void * px_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
 	{	
 		*mp_value = ImageTypeStr2Int(*static_cast<const std::string*>(px_value));
-		m_confType = x_confType;
+		m_confSource = x_confType;
 	};
 	virtual const void * GetValue() const
 	{
@@ -206,13 +213,13 @@ public:
 	}
 	virtual void Print() const 
 	{
-		std::cout<<m_name<<" = "<<ImageTypeInt2Str(*static_cast<const int*>(GetValue()))<<" ["<<*static_cast<const int*>(GetValue())<<"] ("<<configType[m_confType]<<"); ";	
+		std::cout<<m_name<<" = "<<ImageTypeInt2Str(*static_cast<const int*>(GetValue()))<<" ["<<*static_cast<const int*>(GetValue())<<"] ("<<configType[m_confSource]<<"); ";	
 		
 	};
 	virtual void SetDefault()
 	{
 		*mp_value = m_default;
-		m_confType = PARAMCONF_DEF;
+		m_confSource = PARAMCONF_DEF;
 	}
 	
 	// Conversion methods
@@ -236,7 +243,7 @@ public:
 		rx_os<<"<param name=\""<<m_name<<"\">"<<std::endl;
 		rx_os<<tabs<<"<type>"<<"TODO"<<"</type>"<<std::endl;
 		rx_os<<tabs<<"<value default=\""<<m_default<<"\">"<<*static_cast<const int*>(GetValue())<<"</value>"<<std::endl;
-		rx_os<<tabs<<"<description>"<<"TODO"<<"</description>"<<std::endl;
+		rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<std::endl;
 		rx_os<<"</param>"<<std::endl;
 	}
 
@@ -249,7 +256,6 @@ private:
 	int* mp_value;
 	static std::map<std::string,int>  m_map_types;
 };
-
 
 class ParameterStructure
 {

@@ -78,7 +78,7 @@ void ParameterStructure::SetValueByName(const string& x_name, const string& x_va
 {
 	for(vector<Parameter*>::iterator it = m_list.begin(); it != m_list.end(); it++)
 	{
-		if((*it)->m_name.compare(x_name) == 0)//(!strcmp(it->m_name, x_name))
+		if((*it)->GetName().compare(x_name) == 0)//(!strcmp(it->m_name, x_name))
 		{
 			//if(x_value < it->m_min || x_value > it->m_max)
 			//	throw("Parameter " + std::string(x_name) + " out of range");
@@ -103,7 +103,7 @@ void ParameterStructure::CheckRange() const
 {
 	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
 	{
-		if((*it)->m_type != PARAM_STR)
+		if((*it)->GetType() != PARAM_STR)
 		{
 			/* TODO
 			double value = (*it)->GetValue();
@@ -119,7 +119,7 @@ void ParameterStructure::PrintParameters() const
 	string confType = "";
 	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
 	{
-		switch((*it)->m_confType)
+		switch((*it)->GetConfigurationSource())
 		{
 			case PARAMCONF_DEF: confType = "def"; break;
 			case PARAMCONF_GUI: confType = "gui"; break;
@@ -132,8 +132,8 @@ void ParameterStructure::PrintParameters() const
 	cout<<endl;
 }
 
-ParameterImageType::ParameterImageType(int x_id, const std::string& x_name, int x_default, int * xp_value) : 
-		Parameter(x_id, x_name, PARAM_IMAGE_TYPE),
+ParameterImageType::ParameterImageType(int x_id, const std::string& x_name, int x_default, int * xp_value, const std::string x_description) : 
+		Parameter(x_id, x_name, PARAM_IMAGE_TYPE, x_description),
 		m_default(x_default),
 		mp_value(xp_value)
 {

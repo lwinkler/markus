@@ -41,6 +41,7 @@ ObjectTracker::ObjectTracker(const ConfigReader& x_configReader) :
 	detect(m_param.detector, m_param.width, m_param.height, m_param.type),
 	track(m_param.tracker, m_param.width, m_param.height, m_param.type)
 {
+	m_description = "Track moving objects on video by using backgroung subtraction.";
 	m_img_blur = NULL;
 	m_img_blur = new Mat(cvSize(m_param.width, m_param.height), m_param.type);//IPL_DEPTH_8U, m_param.channels);
 	m_output   = new Mat(cvSize(m_param.width, m_param.height), m_param.type);

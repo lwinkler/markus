@@ -32,6 +32,7 @@ UsbCam::UsbCam(const ConfigReader& x_configReader):
 	Input(x_configReader),
 	m_param(x_configReader)
 {
+	m_description = "Input from an USB webcam.";
 	m_capture = NULL;
 	m_capture = cvCreateCameraCapture( m_param.num );
 	m_fps = 0;

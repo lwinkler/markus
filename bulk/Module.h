@@ -36,12 +36,12 @@ class ModuleParameterStructure : public ParameterStructure
 public:
 	ModuleParameterStructure(const ConfigReader& x_confReader) : ParameterStructure(x_confReader, "module")
 	{
-		m_list.push_back(new ParameterT<std::string>(0, "class", 		"", 	PARAM_STR, 		&objClass));
-		m_list.push_back(new ParameterT<int>(0, "inputWidth", 		640, 	PARAM_INT, 	0, 	4000,	&width));
-		m_list.push_back(new ParameterT<int>(0, "inputHeight", 	480, 	PARAM_INT, 	0, 	3000,		&height));
-		m_list.push_back(new ParameterImageType(0, "inputType", 	CV_8UC1, 				&type));
+		m_list.push_back(new ParameterT<std::string>(0, "class", 		"", 	PARAM_STR, 		&objClass,	"Class of the module (define the module's function)"));
+		m_list.push_back(new ParameterT<int>(0, "inputWidth", 		640, 	PARAM_INT, 	0, 	4000,	&width,		"Width of the input"));
+		m_list.push_back(new ParameterT<int>(0, "inputHeight", 	480, 	PARAM_INT, 	0, 	3000,		&height,	"Height of the input"));
+		m_list.push_back(new ParameterImageType(0, "inputType", 	CV_8UC1, 				&type,		"Format of the input image"));
 	//	m_list.push_back(new ParameterT<int>(0, "channels", 	3, 	PARAM_INT, 	1, 	3,		&channels));
-		m_list.push_back(new ParameterT<double>(0, "fps", 	10, 	PARAM_DOUBLE, 	0, 	100000,		&fps)); //TODO : Check that min max works
+		m_list.push_back(new ParameterT<double>(0, "fps", 	10, 	PARAM_DOUBLE, 	0, 	100000,		&fps,		"Frames per seconds (processing speed)")); //TODO : Check that min max works
 	};
 
 public:
@@ -62,6 +62,7 @@ public:
 	void ReadAndConvertInput(/*const cv::Mat * x_img*/);
 	virtual void ProcessFrame(const double x_timeSinceLastProcessing) = 0;
 	const std::string& GetName(){return m_name;};
+	const std::string& GetDescription(){return m_description;};
 	int GetId() const {return m_id;};
 	//const cv::Mat * GetOutput(){return m_output;}
 	//void AddStream(const std::string& x_name, StreamType x_type, Mat* m_image);
@@ -89,6 +90,7 @@ protected:
 	//cv::Mat * m_img_tmp1; // To convert the input
 	//cv::Mat * m_img_tmp2;
 	std::string m_name;
+	std::string m_description; 
 	int m_id;
 	virtual const ModuleParameterStructure & GetRefParameter() const = 0;
 	

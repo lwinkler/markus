@@ -31,6 +31,7 @@ VideoFileReader::VideoFileReader(const ConfigReader& x_configReader):
 	Input(x_configReader),
 	m_param(x_configReader)
 {
+	m_description = "Input from a video file.";
 	m_capture = cvCaptureFromFile(m_param.file.c_str());
 	m_fps     = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FPS);
 	

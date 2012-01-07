@@ -33,7 +33,7 @@ class ModuleAsyncParameterStructure : public ModuleParameterStructure
 public:
 	ModuleAsyncParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterT<double>(0, "detectionFps", 	10, 	PARAM_DOUBLE, 	0, 	100,		&detectionFps));
+		m_list.push_back(new ParameterT<double>(0, "detectionFps", 	10, 	PARAM_DOUBLE, 	0, 	100,		&detectionFps,	"Frames per seconds for the asynchronous detection (normally smaller that module)"));
 	};
 
 public:
