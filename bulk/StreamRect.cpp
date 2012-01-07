@@ -27,8 +27,9 @@
 using namespace std;
 using namespace cv;
 
-StreamRect::StreamRect(int x_id, const std::string& x_name, int x_width, int x_height, vector<Rect>& r_rects, const CvScalar& x_color, Module& rx_module) : 
-	Stream(x_id, x_name, STREAM_IMAGE, x_width, x_height, rx_module),
+StreamRect::StreamRect(int x_id, const std::string& x_name, int x_width, int x_height, 
+		       vector<Rect>& r_rects, const CvScalar& x_color, Module& rx_module, const string& rx_description) : 
+	Stream(x_id, x_name, STREAM_IMAGE, x_width, x_height, rx_module, rx_description),
 	m_rects(r_rects),
 	m_color(x_color)
 {

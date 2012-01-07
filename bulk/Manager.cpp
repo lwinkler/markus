@@ -239,10 +239,12 @@ void Manager::PrintTimers()
 
 void Manager::Export()
 {
+	system("mkdir -p modules");
 	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 	{
-		string file((*it)->GetName() + ".xml");
+		string file("modules/" + (*it)->GetName() + ".xml");
 		ofstream os(file.c_str());
+		os<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"<<endl;
 		(*it)->Export(os, 0);
 		os.close();
 	}

@@ -51,13 +51,13 @@ ObjectTracker::ObjectTracker(const ConfigReader& x_configReader) :
 	detect.Reset();
 	track.Reset();
 	
-	m_inputStreams.push_back(new StreamDebug(0, "input", m_img_blur, *this));
+	m_inputStreams.push_back(new StreamDebug(0, "input", m_img_blur, *this,					"Video input"));
 	
-	m_outputStreams.push_back(new StreamDebug(0, "background", detect.GetBackground(), *this));
-	m_outputStreams.push_back(new StreamDebug(1, "foreground", detect.GetForeground(), *this));
-	m_outputStreams.push_back(new StreamDebug(2, "foreground_rff", detect.GetForegroundRff(), *this));
+	m_outputStreams.push_back(new StreamDebug(0, "background", detect.GetBackground(), *this,		""));
+	m_outputStreams.push_back(new StreamDebug(1, "foreground", detect.GetForeground(), *this,		""));
+	m_outputStreams.push_back(new StreamDebug(2, "foreground_rff", detect.GetForegroundRff(), *this,	""));
 	//m_outputStreams.push_back(StreamDebug("blobs", track.GetBlobsImg()));
-	m_outputStreams.push_back(new StreamDebug(3, "tracker", m_output, *this));
+	m_outputStreams.push_back(new StreamDebug(3, "tracker", m_output, *this,				"Tracked objects"));
 }
 
 ObjectTracker::~ObjectTracker(void )

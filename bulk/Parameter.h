@@ -80,11 +80,12 @@ public:
 	virtual const void* GetValue() const = 0;
 	inline const std::string& GetName() const {return m_name;};
 	inline const ParameterType& GetType() const {return m_type;};
+	const std::string GetTypeString() const;
 	inline const std::string& GetDescription() const {return m_description;};
 	inline const ParameterConfigType& GetConfigurationSource() const {return m_confSource;};
 	virtual void SetDefault() = 0;
 	virtual void Print() const = 0;
-	virtual void Export(std::ostream& rx_os, int x_tabs) = 0;
+	virtual void Export(std::ostream& rx_os, int x_indentation) = 0;
 protected:
 	const int m_id;
 	const std::string m_name;
@@ -128,14 +129,16 @@ public:
 		*mp_value = m_default;
 		m_confSource = PARAMCONF_DEF;
 	}
-	virtual void Export(std::ostream& rx_os, int x_tabs)
+	virtual void Export(std::ostream& rx_os, int x_indentation)
 	{
-		std::string tabs(x_tabs + 1, '\t');
-		rx_os<<"<param name=\""<<m_name<<"\">"<<std::endl;
-		rx_os<<tabs<<"<type>"<<"TODO"<<"</type>"<<std::endl;
+		std::string tabs(x_indentation, '\t');
+		rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<std::endl;
+		tabs = std::string(x_indentation + 1, '\t');
+		rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<std::endl;
 		rx_os<<tabs<<"<value min=\""<<m_min<<"\" max=\""<<m_max<<"\" default=\""<<m_default<<"\">"<<*static_cast<const T*>(GetValue())<<"</value>"<<std::endl;
 		rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<std::endl;
-		rx_os<<"</param>"<<std::endl;
+		tabs = std::string(x_indentation, '\t');
+		rx_os<<tabs<<"</param>"<<std::endl;
 	}
 
     std::basic_ostream< char >::__ostream_type of(const char* arg1);
@@ -180,12 +183,14 @@ public:
 	}
 	virtual void Export(std::ostream& rx_os, int x_tabs)
 	{
-		std::string tabs(x_tabs + 1, '\t');
-		rx_os<<"<param name=\""<<m_name<<"\">"<<std::endl;
-		rx_os<<tabs<<"<type>"<<"TODO"<<"</type>"<<std::endl;
+		std::string tabs(x_tabs, '\t');
+		rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<std::endl;
+		tabs = std::string(x_tabs + 1, '\t');
+		rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<std::endl;
 		rx_os<<tabs<<"<value default=\""<<m_default<<"\">"<<*static_cast<const std::string*>(GetValue())<<"</value>"<<std::endl;
 		rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<std::endl;
-		rx_os<<"</param>"<<std::endl;
+		tabs = std::string(x_tabs, '\t');
+		rx_os<<tabs<<"</param>"<<std::endl;
 	}
 
 	const std::string m_default;
@@ -237,21 +242,21 @@ public:
 				return(it->first);
 		return unknown;
 	};
-	virtual void Export(std::ostream& rx_os, int x_tabs)
+	virtual void Export(std::ostream& rx_os, int x_indentation)
 	{
-		std::string tabs(x_tabs + 1, '\t');
-		rx_os<<"<param name=\""<<m_name<<"\">"<<std::endl;
-		rx_os<<tabs<<"<type>"<<"TODO"<<"</type>"<<std::endl;
-		rx_os<<tabs<<"<value default=\""<<m_default<<"\">"<<*static_cast<const int*>(GetValue())<<"</value>"<<std::endl;
+		std::string tabs(x_indentation, '\t');
+		rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<std::endl;
+		tabs = std::string(x_indentation + 1, '\t');
+		rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<std::endl;
+		rx_os<<tabs<<"<value default=\""<<ImageTypeInt2Str(m_default)<<"\">"<<ImageTypeInt2Str(*static_cast<const int*>(GetValue()))<<"</value>"<<std::endl;
 		rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<std::endl;
-		rx_os<<"</param>"<<std::endl;
+		tabs = std::string(x_indentation, '\t');
+		rx_os<<tabs<<"</param>"<<std::endl;
 	}
 
 	
     std::basic_ostream< char >::__ostream_type of(const char* arg1);
 	const int m_default;
-	//const T m_min;
-	//const T m_max;
 private:
 	int* mp_value;
 	static std::map<std::string,int>  m_map_types;

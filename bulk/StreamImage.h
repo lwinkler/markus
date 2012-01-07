@@ -32,12 +32,13 @@
 class StreamImage : public Stream
 {
 public:
-	StreamImage(int x_id, const std::string& x_name, cv::Mat* x_image, Module& rx_module);
+	StreamImage(int x_id, const std::string& x_name, cv::Mat* x_image, Module& rx_module, const std::string& rx_description);
 	~StreamImage();
 	const cv::Mat* GetImageRef() const {return m_image;};
 	
 	virtual void ConvertInput();
 	virtual void Render(cv::Mat * xp_output) const;
+	inline virtual const std::string GetTypeString()const {return "Image";};
 protected:
 	cv::Mat * m_image;
 private:

@@ -28,8 +28,8 @@
 using namespace std;
 using namespace cv;
 
-StreamImage::StreamImage(int x_id, const std::string& x_name, Mat* x_image, Module& rx_module) : 
-	Stream(x_id, x_name, STREAM_IMAGE, x_image->cols, x_image->rows, rx_module),
+StreamImage::StreamImage(int x_id, const std::string& x_name, Mat* x_image, Module& rx_module, const string& rx_description) : 
+	Stream(x_id, x_name, STREAM_IMAGE, x_image->cols, x_image->rows, rx_module, rx_description),
 	m_image(x_image)
 {
 }

@@ -132,6 +132,20 @@ void ParameterStructure::PrintParameters() const
 	cout<<endl;
 }
 
+const std::string Parameter::GetTypeString() const
+{	
+	switch(m_type)
+	{
+		case PARAM_INT: 	return "int";
+		case PARAM_FLOAT:	return "float";
+		case PARAM_DOUBLE: 	return "double";
+		case PARAM_BOOL:	return "bool";
+		case PARAM_STR: 	return "string";
+		case PARAM_IMAGE_TYPE:	return "image type";
+		default :		return "unknown";
+	}
+}
+
 ParameterImageType::ParameterImageType(int x_id, const std::string& x_name, int x_default, int * xp_value, const std::string x_description) : 
 		Parameter(x_id, x_name, PARAM_IMAGE_TYPE, x_description),
 		m_default(x_default),

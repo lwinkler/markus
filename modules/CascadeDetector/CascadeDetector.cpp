@@ -50,10 +50,11 @@ CascadeDetector::CascadeDetector(const ConfigReader& x_configReader)
 	m_input = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
 	//m_output = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
 
-	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this)); // TODO : Chg name faces
+	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this, 		"Video input")); 
 
-	m_outputStreams.push_back(new StreamRect(0, "detected", m_param.width, m_param.height, m_detectedObjects, ColorFromStr(m_param.color), *this)); // TODO : Chg name faces
-	m_outputStreams.push_back(new StreamDebug(1, "debug", m_debug, *this));
+	m_outputStreams.push_back(new StreamRect(0, "detected", m_param.width, m_param.height, 
+				m_detectedObjects, ColorFromStr(m_param.color), *this,	"Detected objects"));
+	m_outputStreams.push_back(new StreamDebug(1, "debug", m_debug, *this,		""));
 //	m_outputStreams.push_back(new StreamImage("input", m_inputCopy));
 	m_lastInput = new Mat( cvSize(GetInputWidth(), GetInputHeight()), GetInputType());
 }

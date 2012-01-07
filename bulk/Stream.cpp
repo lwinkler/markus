@@ -25,13 +25,14 @@
 
 using namespace std;
 
-Stream::Stream(int x_id, const std::string& x_name, StreamType x_type, int x_width, int x_height, Module& rx_module) :
+Stream::Stream(int x_id, const std::string& x_name, StreamType x_type, int x_width, int x_height, Module& rx_module, const string& rx_description) :
 	m_name(x_name),
 	m_id(x_id),
 	m_type(x_type),
 	m_width(x_width),
 	m_height(x_height),
-	mr_module(rx_module)
+	mr_module(rx_module),
+	m_description(rx_description)
 {
 	m_connected = NULL;
 	m_img_tmp1 = NULL; // To convert the input
@@ -44,16 +45,18 @@ Stream::~Stream()
 	if(m_img_tmp2 != NULL) delete m_img_tmp2;
 }
 
-void Stream::Export(ostream& rx_os, int x_tabs, bool x_isInput)
+void Stream::Export(ostream& rx_os, int x_indentation, bool x_isInput)
 {
-	string tabs(x_tabs + 1, '\t');
+	string tabs(x_indentation , '\t');
 	string inout = "output";
 	if(x_isInput) inout = "input";
-	rx_os<<"<"<<inout<<" id=\""<<m_id<<"\">"<<endl;
-	rx_os<<tabs<<"<type>"<<"TODO"<<"</type>"<<endl;
+	rx_os<<tabs<<"<"<<inout<<" id=\""<<m_id<<"\">"<<endl;
+	tabs = std::string(x_indentation + 1, '\t');
+	rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<endl;
 	rx_os<<tabs<<"<name>"<<m_name<<"</name>"<<endl;
-	rx_os<<tabs<<"<description>"<<"TODO"<<"</description>"<<endl;
-	rx_os<<"</"<<inout<<">"<<endl;
+	rx_os<<tabs<<"<description>"<<GetDescription()<<"</description>"<<endl;
+	tabs = std::string(x_indentation, '\t');
+	rx_os<<tabs<<"</"<<inout<<">"<<endl;
 }
 
 

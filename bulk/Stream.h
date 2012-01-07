@@ -41,17 +41,19 @@ class Stream
 {
 public:
 	//Stream(const std::string& x_name, StreamType x_type, Module& rx_module);
-	Stream(int x_id, const std::string& x_name, StreamType x_type, int x_width, int x_height, Module& rx_module);
+	Stream(int x_id, const std::string& x_name, StreamType x_type, int x_width, int x_height, Module& rx_module, const std::string& rx_description);
 	~Stream();
 	inline const std::string& GetName() const {return m_name;};
 	inline int GetId() const {return m_id;};
 	inline int GetInputWidth() const {return m_width;};
 	inline int GetInputHeight() const {return m_height;};
 	inline StreamType GetType() const {return m_type;};
+	inline const std::string& GetDescription() const {return m_description;};
+	virtual const std::string GetTypeString() const = 0;
 	virtual void Render(cv::Mat * x_output) const  = 0;
 	void Connect(const Stream * x_stream);
 	virtual void ConvertInput() = 0;
-	void Export(std::ostream& rx_os, int x_tabs, bool x_isInput);
+	void Export(std::ostream& rx_os, int x_indentation, bool x_isInput);
 	inline void LockForRead(){mr_module.m_lock.lockForRead();};
 	inline void UnLock(){mr_module.m_lock.unlock();};
 protected:
@@ -60,6 +62,8 @@ protected:
 	const StreamType m_type;
 	const int m_width;
 	const int m_height;
+	Module& mr_module;
+	const std::string m_description;
 	
 	const Stream * m_connected;
 	
@@ -68,7 +72,6 @@ protected:
 private:
 	Stream& operator=(const Stream&);
 	Stream(const Stream&);
-	Module& mr_module;
 };
 
 #endif

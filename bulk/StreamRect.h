@@ -32,13 +32,15 @@
 class StreamRect : public Stream
 {
 public:
-	StreamRect(int x_id, const std::string& x_name, int x_width, int x_height, std::vector<cv::Rect>& r_rects, const CvScalar& x_color, Module& rx_module);
+	StreamRect(int x_id, const std::string& x_name, int x_width, int x_height, 
+		   std::vector<cv::Rect>& r_rects, const CvScalar& x_color, Module& rx_module, const std::string& rx_description);
 	~StreamRect();
 	void Clear() {m_rects.clear();};
 	void AddRect(cv::Rect x_rect) {m_rects.push_back(x_rect);};
 	
 	virtual void ConvertInput();
 	virtual void Render(cv::Mat * xp_output) const;
+	inline virtual const std::string GetTypeString()const {return "Rect";};
 protected:
 	std::vector<cv::Rect> & m_rects;
 private:
