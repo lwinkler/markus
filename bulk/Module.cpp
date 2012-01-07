@@ -68,22 +68,26 @@ void Module::ReadAndConvertInput()//const cv::Mat* x_img)
 }*/
 
 /// Describe the module with name, parameters, inputs, outputs to an output stream (in xml)
-void Module::Export(ostream& rx_os)
+void Module::Export(ostream& rx_os, int x_tabs)
 {
+	string tabs(x_tabs + 1, '\t');
 	rx_os<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"<<endl;
-	rx_os<<"<module name=\""<<m_name<<"\" description=\""<<"descr!!!TODO"<<"\">"<<endl;
+	rx_os<<tabs<<"<module name=\""<<m_name<<"\" description=\""<<"descr!!!TODO"<<"\">"<<endl;
 
-	rx_os<<"<parameters>"<<endl;
+	rx_os<<tabs<<"<parameters>"<<endl;
 	for(vector<Parameter*>::const_iterator it = GetRefParameter().GetList().begin() ; it != GetRefParameter().GetList().end() ; it++)
-		(*it)->Export(rx_os);
-	rx_os<<"</parameters>"<<endl;
+		(*it)->Export(rx_os, x_tabs + 1);
+	rx_os<<tabs<<"</parameters>"<<endl;
 
-	rx_os<<"<inputs>"<<endl;
-	rx_os<<"</inputs>"<<endl;
-	rx_os<<"<outputs>"<<endl;
+	rx_os<<tabs<<"<inputs>"<<endl;
+	for(vector<Stream*>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
+		(*it)->Export(rx_os, x_tabs + 1, true);
+	rx_os<<tabs<<"</inputs>"<<endl;
+
+	rx_os<<tabs<<"<outputs>"<<endl;
 	for(vector<Stream*>::const_iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
-		(*it)->Export(rx_os);
-	rx_os<<"</outputs>"<<endl;
+		(*it)->Export(rx_os, x_tabs + 1, false);
+	rx_os<<tabs<<"</outputs>"<<endl;
 	rx_os<<"</module>"<<endl;
 }
 

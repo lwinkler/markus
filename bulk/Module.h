@@ -74,7 +74,7 @@ public:
 	inline int GetFps() const {return GetRefParameter().fps;};
 	
 	virtual inline bool IsInput() {return false;};
-	void Export(std::ostream& rx_os);
+	void Export(std::ostream& rx_os, int x_tabs);
 	Stream * GetInputStreamById(int x_id) const;
 	Stream * GetOutputStreamById(int x_id) const;
 	QReadWriteLock m_lock;

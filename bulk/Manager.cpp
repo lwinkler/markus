@@ -92,9 +92,6 @@ Manager::Manager(ConfigReader& x_configReader) :
 		//const string moduleName = moduleConfig.GetAttribute("name");
 		Module * tmp1 = createNewModule( moduleConfig);
 		
-		// Read conections of inputs
-		if( moduleConfig.SubConfig("inputs").IsEmpty()) 
-			throw("Impossible to find <inputs> section for module " +  moduleConfig.GetAttribute("name"));
 		
 		// Add to inputs if an input
 		m_modules.push_back(tmp1);
@@ -108,20 +105,24 @@ Manager::Manager(ConfigReader& x_configReader) :
 	
 	while(! moduleConfig.IsEmpty())
 	{
-		ConfigReader inputConfig = moduleConfig.SubConfig("inputs").SubConfig("input");
-		while(! inputConfig.IsEmpty())
+		// Read conections of inputs
+		if(!moduleConfig.SubConfig("inputs").IsEmpty()) 
 		{
-			int moduleId		= atoi(moduleConfig.GetAttribute("id").c_str());
-			int inputId 		= atoi(inputConfig.GetAttribute("id").c_str());
-			int outputModuleId 	= atoi(inputConfig.GetAttribute("moduleid").c_str());
-			int outputId 		= atoi(inputConfig.GetAttribute("outputid").c_str());
-			
-			Stream * inputStream  = GetModuleById(moduleId)->GetInputStreamById(inputId);
-			Stream * outputStream = GetModuleById(outputModuleId)->GetOutputStreamById(outputId);
-			
-			inputStream->Connect(outputStream);
-			
-			inputConfig = inputConfig.NextSubConfig("input");
+			ConfigReader inputConfig = moduleConfig.SubConfig("inputs").SubConfig("input");
+			while(! inputConfig.IsEmpty())
+			{
+				int moduleId		= atoi(moduleConfig.GetAttribute("id").c_str());
+				int inputId 		= atoi(inputConfig.GetAttribute("id").c_str());
+				int outputModuleId 	= atoi(inputConfig.GetAttribute("moduleid").c_str());
+				int outputId 		= atoi(inputConfig.GetAttribute("outputid").c_str());
+				
+				Stream * inputStream  = GetModuleById(moduleId)->GetInputStreamById(inputId);
+				Stream * outputStream = GetModuleById(outputModuleId)->GetOutputStreamById(outputId);
+				
+				inputStream->Connect(outputStream);
+				
+				inputConfig = inputConfig.NextSubConfig("input");
+			}
 		}
 		moduleConfig = moduleConfig.NextSubConfig("module");
 	}
@@ -145,10 +146,10 @@ Manager::~Manager()
 	{
 		delete(*it);
 	}*/
-	for(vector<Input*>::iterator it = m_inputs.begin(); it != m_inputs.end(); it++)
+	/*for(vector<Input*>::iterator it = m_inputs.begin(); it != m_inputs.end(); it++)
 	{
 		delete(*it);
-	}
+	}*/
 	
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		delete *it;
@@ -242,7 +243,7 @@ void Manager::Export()
 	{
 		string file((*it)->GetName() + ".xml");
 		ofstream os(file.c_str());
-		(*it)->Export(os);
+		(*it)->Export(os, 0);
 		os.close();
 	}
 }

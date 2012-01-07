@@ -28,7 +28,6 @@
 using namespace std;
 
 /* Reads the configuration file with tinyxml */
-//const char * ConfigReader::m_fileName = "config.xml";
 
 ConfigReader ConfigReader::SubConfig(const std::string& x_objectType, string x_objectName) const
 {
@@ -247,7 +246,7 @@ ParameterValue ConfigReader::GetParameterValue(const std::string& x_name, const 
 		if(x_name.compare(it->m_name) == 0)
 			return *it;
 	}
-	assert(false);
+	throw("Impossible to find parameter " + x_name);
 	return ParameterValue(0, "", "");
 }
 /*

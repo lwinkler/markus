@@ -58,12 +58,15 @@ int main(int argc, char** argv)
 	try
 	{
 		QApplication app(argc, argv);
-		ConfigReader mainConfig("config.xml");
+		ConfigReader mainConfig(configFile);
 		ConfigReader appConfig = mainConfig.SubConfig("application");
 		Manager manager(appConfig);
 
-		if(describe) manager.Export();
-		
+		if(describe) 
+		{
+			manager.Export();
+			return 0;
+		}
 		markus gui(mainConfig, manager);
 		gui.setWindowTitle("OpenCV --> QtImage");
 		gui.show();

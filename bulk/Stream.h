@@ -51,7 +51,7 @@ public:
 	virtual void Render(cv::Mat * x_output) const  = 0;
 	void Connect(const Stream * x_stream);
 	virtual void ConvertInput() = 0;
-	void Export(std::ostream& rx_os);
+	void Export(std::ostream& rx_os, int x_tabs, bool x_isInput);
 	inline void LockForRead(){mr_module.m_lock.lockForRead();};
 	inline void UnLock(){mr_module.m_lock.unlock();};
 protected:

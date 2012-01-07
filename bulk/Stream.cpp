@@ -44,13 +44,16 @@ Stream::~Stream()
 	if(m_img_tmp2 != NULL) delete m_img_tmp2;
 }
 
-void Stream::Export(ostream& rx_os)
+void Stream::Export(ostream& rx_os, int x_tabs, bool x_isInput)
 {
-	rx_os<<"<input id=\""<<0<<"\">"<<endl;
-	rx_os<<"<type>"<<"TODO"<<"</type>"<<endl;
-	rx_os<<"<name>"<<m_name<<"</name>"<<endl;
-	rx_os<<"<description>"<<"TODO"<<"</description>"<<endl;
-	rx_os<<"</input>"<<endl;
+	string tabs(x_tabs + 1, '\t');
+	string inout = "output";
+	if(x_isInput) inout = "input";
+	rx_os<<"<"<<inout<<" id=\""<<m_id<<"\">"<<endl;
+	rx_os<<tabs<<"<type>"<<"TODO"<<"</type>"<<endl;
+	rx_os<<tabs<<"<name>"<<m_name<<"</name>"<<endl;
+	rx_os<<tabs<<"<description>"<<"TODO"<<"</description>"<<endl;
+	rx_os<<"</"<<inout<<">"<<endl;
 }
 
 
