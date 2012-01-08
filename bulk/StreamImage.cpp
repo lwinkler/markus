@@ -32,12 +32,15 @@ StreamImage::StreamImage(int x_id, const std::string& x_name, Mat* x_image, Modu
 	Stream(x_id, x_name, STREAM_IMAGE, x_image->cols, x_image->rows, rx_module, rx_description),
 	m_image(x_image)
 {
+	m_img_tmp1 = NULL; // To convert the input
+	m_img_tmp2 = NULL;
 }
 
 
 StreamImage::~StreamImage()
 {
-
+	if(m_img_tmp1 != NULL) delete m_img_tmp1;
+	if(m_img_tmp2 != NULL) delete m_img_tmp2;
 }
 
 void StreamImage::ConvertInput()

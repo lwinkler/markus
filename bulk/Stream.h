@@ -67,8 +67,6 @@ protected:
 	
 	const Stream * m_connected;
 	
-	cv::Mat * m_img_tmp1; // To convert the input
-	cv::Mat * m_img_tmp2;
 private:
 	Stream& operator=(const Stream&);
 	Stream(const Stream&);

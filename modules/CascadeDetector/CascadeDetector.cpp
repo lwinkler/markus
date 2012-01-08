@@ -47,7 +47,7 @@ CascadeDetector::CascadeDetector(const ConfigReader& x_configReader)
 	assert(!m_thread.m_cascade.empty());
 	m_description = "Detect objects from a video stream using a cascade filter (c.f. Haar patterns).";
 	m_debug = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
-	m_input = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
+	m_input = new Mat(cvSize(m_param.width, m_param.height), CV_8UC1);
 	//m_output = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
 
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this, 		"Video input")); 
@@ -63,21 +63,21 @@ CascadeDetector::~CascadeDetector(void)
 {
 	delete(m_debug);
 	delete(m_lastInput);
-
-	//TODO : delete output streams
 }
 
 // This method launches the thread
 void CascadeDetector::LaunchThread(const Mat* img, const double x_timeSinceLastProcessing)
 {
 	assert(img->type() == CV_8UC1); // TODO add restriction to param
+	//	throw("For cascade detection, input type must be CV_8UC1 and not " + ParameterImageType::ImageTypeInt2Str(img->type()));
 	img->copyTo(*m_lastInput);
 	Mat smallImg(*m_lastInput);
 	equalizeHist( smallImg, smallImg );
-		
+	
 	// Launch a new Thread
 	m_thread.SetData(smallImg, m_param.minNeighbors, m_param.minFaceSide, m_param.scaleFactor);
 	m_thread.start();
+	// m_thread.run(); // Use run instead of start for synchronous use
 }
 
 void CascadeDetector::NormalProcess(const Mat* img, const double x_timeSinceLastProcessing)
@@ -92,7 +92,7 @@ void CascadeDetector::NormalProcess(const Mat* img, const double x_timeSinceLast
 		Point p2(it->x + it->width, it->y + it->height);
 		
 		// Draw the rectangle in the input image
-		rectangle( *m_debug, p1, p2, CV_RGB(255,0,0), 1, 8, 0 );
+		rectangle( *m_debug, p1, p2, ColorFromStr(m_param.color), 1, 8, 0 );
 		
 		// Add rectangle to output streams
 		//os.AddRect(cv::Rect(p1, p2));
@@ -106,6 +106,7 @@ void CascadeDetector::CopyResults()
 
 void DetectionThread::run()
 {
+	m_detectedObjects.clear();
+	//cout<<"m_smallImg"<<&m_smallImg<<" m_detectedObjects"<<&m_detectedObjects<<" m_scaleFactor"<<m_scaleFactor<<" m_minNeighbors"<<m_minNeighbors<<endl;
 	m_cascade.detectMultiScale(m_smallImg, m_detectedObjects, m_scaleFactor, m_minNeighbors, CV_HAAR_SCALE_IMAGE, cvSize(m_minFaceSide, m_minFaceSide));
-	//QThread::run();
 }

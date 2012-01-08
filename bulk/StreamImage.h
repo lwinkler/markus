@@ -41,6 +41,9 @@ public:
 	inline virtual const std::string GetTypeString()const {return "Image";};
 protected:
 	cv::Mat * m_image;
+	cv::Mat * m_img_tmp1; // To convert the input
+	cv::Mat * m_img_tmp2;
+
 private:
 	StreamImage& operator=(const StreamImage&);
 	StreamImage(const StreamImage&);

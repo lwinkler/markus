@@ -45,6 +45,13 @@ Module::Module(const ConfigReader& x_configReader) :
 
 Module::~Module()
 {
+	// Delete all streams
+	for(std::vector<Stream* >::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
+		delete(*it);
+	for(std::vector<Stream* >::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
+		delete(*it);
+	for(std::vector<Stream* >::iterator it = m_debugStreams.begin() ; it != m_debugStreams.end() ; it++)
+		delete(*it);
 };
 
 void Module::ReadAndConvertInput()//const cv::Mat* x_img)

@@ -52,6 +52,12 @@ ParameterStructure::ParameterStructure(const ConfigReader& x_configReader, const
 		//Init();
 	};
 	
+ParameterStructure::~ParameterStructure()
+{
+	for(std::vector<Parameter* >::iterator it = m_list.begin() ; it != m_list.end() ; it++)
+		delete(*it);
+}
+
 void ParameterStructure::Init()
 {
 	// Read config file

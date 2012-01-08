@@ -80,11 +80,11 @@ public:
 	Stream * GetOutputStreamById(int x_id) const;
 	QReadWriteLock m_lock;
 	
-	std::vector<Stream *> m_inputStreams; // TODO : Should be protected
-	std::vector<Stream *> m_outputStreams;
-	std::vector<Stream *> m_debugStreams;	
 	
 protected:
+	std::vector<Stream *> m_inputStreams;
+	std::vector<Stream *> m_outputStreams;
+	std::vector<Stream *> m_debugStreams;	
 	//cv::Mat * m_input;
 	//cv::Mat * m_output;
 	//cv::Mat * m_img_tmp1; // To convert the input

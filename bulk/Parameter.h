@@ -266,6 +266,7 @@ class ParameterStructure
 {
 public:
 	ParameterStructure(const ConfigReader& x_configReader, const std::string& x_objectType);
+	~ParameterStructure();
 	void Init();
 	//void ReadParametersFromConfig();
 	void SetFromConfig(const std::vector<ParameterValue>& x_params);

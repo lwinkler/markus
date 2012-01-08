@@ -35,14 +35,10 @@ Stream::Stream(int x_id, const std::string& x_name, StreamType x_type, int x_wid
 	m_description(rx_description)
 {
 	m_connected = NULL;
-	m_img_tmp1 = NULL; // To convert the input
-	m_img_tmp2 = NULL;
 }
 
 Stream::~Stream()
 {
-	if(m_img_tmp1 != NULL) delete m_img_tmp1;
-	if(m_img_tmp2 != NULL) delete m_img_tmp2;
 }
 
 void Stream::Export(ostream& rx_os, int x_indentation, bool x_isInput)
