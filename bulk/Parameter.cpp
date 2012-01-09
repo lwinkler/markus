@@ -80,7 +80,7 @@ void ParameterStructure::SetFromConfig(const ConfigReader& x_conf)
 		string name = conf.GetAttribute("name");
 		string value = conf.GetValue();
 		SetValueByName(name, value, PARAMCONF_XML);
-		x_conf.NextSubConfig("param");
+		conf = conf.NextSubConfig("param");
 	}
 }
 
