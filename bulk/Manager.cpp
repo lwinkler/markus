@@ -142,10 +142,6 @@ Manager::Manager(ConfigReader& x_configReader) :
 Manager::~Manager()
 {
 	PrintTimers();
-	/*for(vector<ImageProcessor*>::iterator it = m_imageProcessors.begin(); it != m_imageProcessors.end(); it++)
-	{
-		delete(*it);
-	}*/
 	/*for(vector<Input*>::iterator it = m_inputs.begin(); it != m_inputs.end(); it++)
 	{
 		delete(*it);

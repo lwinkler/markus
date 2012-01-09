@@ -37,10 +37,10 @@ using namespace std;
 std::map<std::string,int>  ParameterImageType::m_map_types;
 
 
-ParameterValue::ParameterValue(int x_id, const string& x_name, const string& x_value) :
+/*ParameterValue::ParameterValue(int x_id, const string& x_name, const string& x_value) :
 	m_id(x_id), m_name(x_name),m_value(x_value) 
 {
-};
+};*/
 
 ParameterStructure::ParameterStructure(const ConfigReader& x_configReader, const std::string& x_objectType):
 		m_configReader(x_configReader),
@@ -64,17 +64,23 @@ void ParameterStructure::Init()
 	SetDefault();
 	
 	// Read parameters from config
-	SetFromConfig(m_configReader.SubConfig("parameters").ReadParameters("param"));
+	//SetFromConfig(m_configReader.SubConfig("parameters").ReadParameters("param"));
+	SetFromConfig(m_configReader.SubConfig("parameters"));
 	
 	cout<<"Parameters for "<<m_objectType<<"::"<<m_objectName<<" initialized."<<endl;
 	PrintParameters();
 }
 
-void ParameterStructure::SetFromConfig(const std::vector<ParameterValue>& x_list)
+void ParameterStructure::SetFromConfig(const ConfigReader& x_conf)
 {
-	for(vector<ParameterValue>::const_iterator it = x_list.begin(); it != x_list.end(); it++)
+	ConfigReader conf = x_conf.SubConfig("param");
+	while(!conf.IsEmpty())
+	//for(vector<ParameterValue>::const_iterator it = x_list.begin(); it != x_list.end(); it++)
 	{
-		SetValueByName(it->m_name.c_str(), it->m_value, PARAMCONF_XML);
+		string name = conf.GetAttribute("name");
+		string value = conf.GetValue();
+		SetValueByName(name, value, PARAMCONF_XML);
+		x_conf.NextSubConfig("param");
 	}
 }
 

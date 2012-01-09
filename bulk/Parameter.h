@@ -55,16 +55,6 @@ static const char configType[][16] = {"unset", "def", "xml", "gui", "unk"};
 
 class ConfigReader;
 
-// TODO : This should disappear probably
-class ParameterValue
-{
-public:
-	ParameterValue(int x_id, const std::string& x_name, const std::string& x_value);
-	int m_id;
-	std::string m_name;
-	std::string m_value;
-};
-
 class Parameter
 {
 public:
@@ -269,7 +259,7 @@ public:
 	~ParameterStructure();
 	void Init();
 	//void ReadParametersFromConfig();
-	void SetFromConfig(const std::vector<ParameterValue>& x_params);
+	void SetFromConfig(const ConfigReader& x_conf);
 	void SetDefault();
 	void CheckRange() const;
 	void PrintParameters() const;

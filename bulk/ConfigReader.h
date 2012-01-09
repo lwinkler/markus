@@ -57,12 +57,13 @@ public:
 	ConfigReader SubConfig(const std::string& x_objectType, std::string x_objectName = "") const;
 	ConfigReader NextSubConfig(const std::string& x_objectType, std::string x_objectName = "") const;
 	bool IsEmpty(){ return mp_doc == NULL && mp_node == NULL;};
-	std::vector<ParameterValue> ReadParameters(const std::string& rx_type, const std::string& rx_name = "") const;
+	//std::vector<ParameterValue> ReadParameters(const std::string& rx_type, const std::string& rx_name = "") const;
 	/*std::vector<ParameterValue> ReadParameters(const std::string& x_type, const std::string& x_moduleName, bool x_getClassOnly = false) const;
 	std::vector<ParameterValue> ReadModules(const std::string& x_vectorType, const std::string& x_type, int x_objectNumber, bool x_getClassOnly = false) const;
 	int ReadConfigGetVectorSize(const std::string& x_vectorType, const std::string& x_objectType) const;
 	*/
-	static ParameterValue GetParameterValue(const std::string& x_name, const std::vector<ParameterValue> & x_parameterList);
+	//static ParameterValue GetParameterValue(const std::string& x_name, const std::vector<ParameterValue> & x_parameterList);
+	const std::string GetValue() const;
 	const std::string GetAttribute(const std::string& x_attributeName) const;
 private:
 	//std::string m_fileName;

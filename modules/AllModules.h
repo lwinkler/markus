@@ -12,10 +12,10 @@ Module * createNewModule(const ConfigReader& rx_configReader)
 {
 	// TODO : class parameter useless
 	Module * tmp = NULL;
-	vector<ParameterValue> paramList = rx_configReader.SubConfig("parameters").ReadParameters("param");
-	const string moduleClass = ConfigReader::GetParameterValue("class", paramList).m_value;
+	//vector<ParameterValue> paramList = rx_configReader.SubConfig("parameters").ReadParameters("param");
+	//const string moduleClass = ConfigReader::GetParameterValue("class", paramList).m_value;
 
-	// const string moduleClass = rx_configReader.GetAttribute("class"); // TODO this is better
+	const string moduleClass = rx_configReader.SubConfig("parameters").SubConfig("param", "class").GetValue();
 	
 	if(moduleClass.compare("SlitCamera") == 0)
 	{
