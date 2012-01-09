@@ -67,5 +67,4 @@ void ModuleAsync::ProcessFrame(const double x_timeSinceLastProcessing)
 
 ModuleAsync::~ModuleAsync()
 {
-	//TODO : delete m_outputStreams
 };

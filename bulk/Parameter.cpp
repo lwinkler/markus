@@ -44,8 +44,7 @@ std::map<std::string,int>  ParameterImageType::m_map_types;
 
 ParameterStructure::ParameterStructure(const ConfigReader& x_configReader, const std::string& x_objectType):
 		m_configReader(x_configReader),
-		m_objectType(x_objectType),
-		m_objectNumber(0) // TODO : Is this used ?
+		m_objectType(x_objectType)
 	{
 		m_objectName = m_configReader.GetAttribute("name");
 		m_list.clear();
@@ -58,6 +57,8 @@ ParameterStructure::~ParameterStructure()
 		delete(*it);
 }
 
+/// Initialize the parameter structure with the value from default or xml configuration
+
 void ParameterStructure::Init()
 {
 	// Read config file
@@ -69,7 +70,10 @@ void ParameterStructure::Init()
 	
 	cout<<"Parameters for "<<m_objectType<<"::"<<m_objectName<<" initialized."<<endl;
 	PrintParameters();
+	CheckRange();
 }
+
+/// Set the value from xml configuration 
 
 void ParameterStructure::SetFromConfig(const ConfigReader& x_conf)
 {
@@ -102,6 +106,7 @@ void ParameterStructure::SetValueByName(const string& x_name, const string& x_va
 	cout<<("Warning : Parameter not found in list (by name) : " + x_name)<<endl;
 }
 
+/// Set the hard default value
 
 void ParameterStructure::SetDefault()
 {
@@ -111,20 +116,23 @@ void ParameterStructure::SetDefault()
 	}
 }
 
+/// Check that the parameter values are in range [min;max]
+
 void ParameterStructure::CheckRange() const
 {
 	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
 	{
 		if((*it)->GetType() != PARAM_STR)
 		{
-			/* TODO
-			double value = (*it)->GetValue();
-			if(value < (*it)->m_min || value > (*it)->m_max)
-				throw("Parameter " + std::string(it->m_name) + " out of range");
-			*/
+			if(!(*it)->CheckRange())
+			{
+				throw("Parameter " + (*it)->GetName() + " out of range");
+			}
 		}
 	}
 }
+
+/// Print parameters to stdout with details
 
 void ParameterStructure::PrintParameters() const
 {
@@ -143,6 +151,8 @@ void ParameterStructure::PrintParameters() const
 	}
 	cout<<endl;
 }
+
+/// Return the type as a string (e.g. for xml)
 
 const std::string Parameter::GetTypeString() const
 {	

@@ -75,6 +75,7 @@ public:
 	inline const ParameterConfigType& GetConfigurationSource() const {return m_confSource;};
 	virtual void SetDefault() = 0;
 	virtual void Print() const = 0;
+	virtual bool CheckRange() const = 0;
 	virtual void Export(std::ostream& rx_os, int x_indentation) = 0;
 protected:
 	const int m_id;
@@ -108,6 +109,11 @@ public:
 	virtual const void * GetValue() const
 	{
 		return static_cast<const void*>(mp_value);
+	}
+	virtual bool CheckRange() const
+	{
+		T value = *static_cast<const T*>(GetValue());
+		return (value <= m_max && value >= m_min);
 	}
 	virtual void Print() const 
 	{
@@ -161,6 +167,10 @@ public:
 	{
 		return static_cast<const void*>(mp_value);
 	}
+	inline virtual bool CheckRange() const
+	{
+		return true;
+	}
 	virtual void Print() const 
 	{
 		std::cout<<m_name<<" = "<<*static_cast<const std::string*>(GetValue())<<" ("<<configType[m_confSource]<<"); ";	
@@ -205,7 +215,13 @@ public:
 	virtual const void * GetValue() const
 	{
 		return static_cast<const void*>(mp_value);
-	}
+	};
+	virtual bool CheckRange() const
+	{
+		for(std::map<std::string, int>::const_iterator it = m_map_types.begin() ; it != m_map_types.end() ; it++)
+			return true;
+		return false;
+	};
 	virtual void Print() const 
 	{
 		std::cout<<m_name<<" = "<<ImageTypeInt2Str(*static_cast<const int*>(GetValue()))<<" ["<<*static_cast<const int*>(GetValue())<<"] ("<<configType[m_confSource]<<"); ";	
@@ -215,14 +231,15 @@ public:
 	{
 		*mp_value = m_default;
 		m_confSource = PARAMCONF_DEF;
-	}
+	};
 	
 	// Conversion methods
 	static int ImageTypeStr2Int(const std::string& x)
 	{
 		std::map<std::string, int>::iterator found = m_map_types.find(x);
-		assert(found != m_map_types.end());
-		return found->second;
+		if(found != m_map_types.end())
+			return found->second;
+		else return -1;
 	};
 	static const std::string& ImageTypeInt2Str(int x)
 	{
@@ -271,7 +288,6 @@ protected:
 	const ConfigReader& m_configReader;
 	const std::string m_objectType;
 	std::string m_objectName;
-	const int m_objectNumber;
 };
 
 

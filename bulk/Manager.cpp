@@ -177,14 +177,10 @@ void Manager::Process()
 		for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		{
 			//assert(m_input->GetImage() != NULL);
-			if(timecount >= 1.0 / (*it)->GetFps())
+			if((*it)->GetFps() <= 0 || timecount >= 1.0 / (*it)->GetFps())
 			{
-				//m_input->m_lock.lockForRead();
 				(*it)->ReadAndConvertInput();
-				//m_input->m_lock.unlock();
 				(*it)->ProcessFrame(timecount);
-				//m_input->ProcessFrame(timecount);
-				//m_timeSinceLastProcessing = 0;
 			}
 		}
 		//m_lock.unlock();
@@ -254,27 +250,3 @@ Module* Manager::GetModuleById(int x_id) const
 	assert(false);
 	return NULL;
 }
-
-/*void Manager::AddModule(Module * x_mod)
-{
-	int cpt = 0;
-	m_modules.push_back(x_mod);
-	/ *const std::list<Stream> streamList(x_mod->GetStreamList());
-	for(list<Stream>::const_iterator it2 = streamList.begin(); it2 != streamList.end(); it2++)
-	{
-		// Create windows for output streams
-		cvNamedWindow(it2->GetName().c_str(), CV_WINDOW_AUTOSIZE);
-		cvMoveWindow(it2->GetName().c_str(), 100 * cpt, 30 * cpt);
-		cpt++;
-	}* /
-	cout<<" manager adds module "<<x_mod->GetName()<<endl;
-}
-
-
-void Manager::AddInput(Input* x_input)
-{
-	int cpt = 0;
-	m_inputs.push_back(x_input);
-	m_modules.push_back(x_input);
-	cout<<" manager adds input "<<x_input->GetName()<<endl;
-}*/

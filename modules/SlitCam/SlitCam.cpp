@@ -54,11 +54,11 @@ SlitCam::SlitCam(const ConfigReader& x_configReader)
 
 SlitCam::~SlitCam(void)
 {
+	delete(m_input);
 	delete(m_output);
-	//TODO : delete output streams
-	for(vector<Stream *>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
-		delete *it;
-	m_outputStreams.resize(0);
+	//for(vector<Stream *>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
+	//	delete *it;
+	//m_outputStreams.resize(0);
 }
 
 void SlitCam::ProcessFrame(const double /*x_timeSinceLastProcessing*/)
