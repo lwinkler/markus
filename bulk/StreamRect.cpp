@@ -49,7 +49,7 @@ void StreamRect::ConvertInput()
 }
 
 // Render : Draw rectangles on image
-void StreamRect::Render(Mat * xp_output) const
+void StreamRect::RenderTo(Mat * xp_output) const
 {
 	for(vector<Rect>::const_iterator it = m_rects.begin() ; it != m_rects.end() ; it++)
 	{

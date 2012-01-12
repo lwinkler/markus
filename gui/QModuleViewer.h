@@ -46,8 +46,8 @@ class QModuleViewer : public QWidget
 public:
 	QModuleViewer(const Manager * x_manager, QWidget *parent = 0);
 	virtual ~QModuleViewer();
-	static QImage*  ConvertMat2QImage(const cv::Mat *mat, QImage *qim);
-	static QImage*  ConvertIplImage2QImage(const IplImage *iplImg, QImage *qim);
+	static void  ConvertMat2QImage(const cv::Mat *mat, QImage *qim);
+	static void  ConvertIplImage2QImage(const IplImage *iplImg, QImage *qim);
 private:
 	//QLabel *imagelabel;
 	QVBoxLayout *layout;
@@ -75,10 +75,8 @@ private:
 	cv::Mat * m_img_original;
 	cv::Mat * m_img_output;
 	// Images for format conversion
-	cv::Mat* m_img_tmp1_c1;
-	cv::Mat* m_img_tmp2_c1;
-	cv::Mat* m_img_tmp1_c3;
-	cv::Mat* m_img_tmp2_c3;
+	cv::Mat* m_img_tmp1;
+	cv::Mat* m_img_tmp2;
 
 public slots:
 	//void Resize(int x_width, int x_height);

@@ -22,16 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "Tracker.h"
-
-/*#include "cvblobs/BlobResult.h"
-#include "cvblobs/BlobExtraction.h"
-#include "cvblobs/Blob.h"
-#include "cvblobs/BlobLibraryConfiguration.h"
-#include "cvblobs/BlobResult.h"*/
-
 #include <iostream>
-#include <cstdio>
-#include <highgui.h>
 
 using namespace std;
 using namespace cv;
@@ -185,7 +176,6 @@ Tracker::Tracker(const TrackerParameter& x_param, int width, int height, int typ
 	m_param(x_param)
 {
 
-	m_blobsImg = new Mat(cvSize(width, height), type);
 	
 }
 
@@ -295,7 +285,7 @@ double Template::CompareWithTrackedRegion(const TrackedRegion& x_reg) const
 /* Match the template with a region (blob)*/
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-int Template::Match(const std::list<Template>& x_temp, vector<TrackedRegion>& x_regs, cv::Mat* x_blobsImg, double x_maxMatchingDistance)
+int Template::Match(const std::list<Template>& x_temp, vector<TrackedRegion>& x_regs, /*cv::Mat* x_blobsImg, */double x_maxMatchingDistance)
 {
 
 	double bestDist = 1e99;
@@ -322,7 +312,7 @@ int Template::Match(const std::list<Template>& x_temp, vector<TrackedRegion>& x_
 		x_regs[bestTrackedRegion].m_isMatched = 1;
 		CvPoint p = {x_regs[bestTrackedRegion].m_posX, x_regs[bestTrackedRegion].m_posY};
 		
-		cvCircle(x_blobsImg, p, 10, Tracker::m_colorArray[m_num % Tracker::m_colorArraySize]);
+		//cvCircle(x_blobsImg, p, 10, Tracker::m_colorArray[m_num % Tracker::m_colorArraySize]);
 		
 		return 1;
 	}
@@ -364,84 +354,10 @@ void Template::UpdateFeatures()
 
 Tracker::~Tracker(void)
 {
-	delete(m_blobsImg);
 }
 
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-/* ExtractBlob */
-/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-void Tracker::ExtractBlobs(Mat* x_img)
-{
-	assert(false);
-#if 0
-	// object that will contain blobs of inputImage
-	CBlobResult blobs;
-	cvSet(m_blobsImg, cvScalar(0,0,0));
-	m_regions.clear();
-	
-	// Extract the blobs using a threshold of 100 in the image
-	blobs = CBlobResult( x_img, NULL, 100/*m_foreground_thres* 255*/, true);
-	
-	// create a file with some of the extracted features
-	blobs.PrintBlobs( (char*) "blobs.txt" );
-	
-	int i;
-	CBlob *currentBlob;
-	// exclude the ones smaller than value
-	blobs.Filter( blobs, B_EXCLUDE, CBlobGetArea(), B_OUTSIDE, 25, x_img->size().area() / 4);
 
-	for (i = 0; i < blobs.GetNumBlobs(); i++ )
-	{
-			currentBlob = blobs.GetBlob(i);
-			
-			double posx = currentBlob->SumX();
-			double posy = currentBlob->SumY();
-		if(currentBlob->Parent() && !currentBlob->Exterior() && posx > 0 && posx < m_blobsImg->cols && posy > 0 && posy < m_blobsImg->rows) // TODO : fix this for real
-		{
-			currentBlob->FillBlob( m_blobsImg, m_colorArray[i % m_colorArraySize]);
-			
-			TrackedRegion reg(i);
-			reg.m_posX = currentBlob->SumX();
-			reg.m_posY = currentBlob->SumY();
-			
-			// Add here all features that are to be added in the templates/region
-			static int do_once = 1;
-			if(do_once)
-			{
-				// Write names once
-				Feature::m_names.push_back("area");
-				Feature::m_names.push_back("perimeter");
-				Feature::m_names.push_back("position x");
-				Feature::m_names.push_back("position y");
-				do_once = 0;
-			}
-			
-			reg.AddFeature(currentBlob->Area());
-	 		reg.AddFeature(currentBlob->Perimeter());
-	
-	// 		//reg.AddFeature("mean", GetSTLResult(currentBlob, CBlobGetMean()));
-	// 		reg.AddFeature("compactness", GetSTLResult(currentBlob, CBlobGetCompactness()));
-	// 		reg.AddFeature("length", GetSTLResult(currentBlob, CBlobGetLength()));
-	// 
-	// 		reg.AddFeature("convex hull perimeter", GetSTLResult(currentBlob, CBlobGetHullPerimeter()));
-	
-			reg.AddFeature(currentBlob->SumX());
-			reg.AddFeature(currentBlob->SumY());
-			
-			//cout<<"Blob extracted position "<<currentBlob->SumX()<<","<<currentBlob->SumY()<<endl;;
-			m_regions.push_back(reg);
-		}
-		//else throw("ERROR");
-	}
-#endif
-}
-
-
-double Tracker::GetSTLResult( CBlob* blob, funcio_calculBlob *evaluador ) const
-{
-	return (*evaluador)(*blob);
-}
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 /* MatchTemplates : Match blobs with former object templates */
@@ -458,7 +374,7 @@ void Tracker::MatchTemplates()
 	{
 		it1->m_bestMatchingTrackedRegion = -1;
 		//int isMatched = 
-		it1->Match(m_templates, m_regions, m_blobsImg, m_param.maxMatchingDistance);
+		it1->Match(m_templates, m_regions, /*m_blobsImg,*/ m_param.maxMatchingDistance);
 	}
 #ifdef VERBOSE
 	cout<<"MatchTemplates : "<<m_templates.size()<<" templates and "<<m_regions.size()<<" regions."<<endl;

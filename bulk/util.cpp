@@ -24,12 +24,18 @@
 #include "util.h"
 #include <iostream>
 
+#include <highgui.h>
+
 using namespace std;
 using namespace cv;
 
-
+#if 0
 void convertByte2Float(const Mat *byte_img, Mat *float_img)
 {
+	byte_img->convertTo(*float_img, float_img->type(), 1.0/255);
+	return;
+	// There is an error in this method
+
 	if( (byte_img->cols != float_img->cols) ||
 		(byte_img->rows != float_img->rows) ||
 		(byte_img->channels() != float_img->channels()) ||
@@ -44,7 +50,7 @@ void convertByte2Float(const Mat *byte_img, Mat *float_img)
 	int skip = byte_img->cols-byte_img->channels()*byte_img->rows;
 	for(int i=0;i<byte_img->rows;i++)
 	{
-		for(int j=0;j<byte_img->rows;j++)
+		for(int j=0;j<byte_img->cols;j++)
 		{
 			for(int k=0;k<byte_img->channels();k++)
 			{
@@ -58,30 +64,47 @@ void convertByte2Float(const Mat *byte_img, Mat *float_img)
 
 void convertFloat2Byte(const Mat *float_img, Mat *byte_img)
 {
+//	saveMat(float_img, "float_img.bmp");
+	float_img->convertTo(*byte_img, byte_img->type(), 255);
+	return;
+	
 	if( (byte_img->cols != float_img->cols) ||
 		(byte_img->rows != float_img->rows) ||
 		(byte_img->channels() != float_img->channels()) ||
 		(byte_img->depth() != CV_8U) ||
 		(float_img->depth() != CV_32F))
 	{
-		printf("convertByte2Float error. Aborting ... \n");
-		exit(-1);
+		throw("convertByte2Float error. Aborting ...");
 	}
-	unsigned char * runner1= (unsigned char *)byte_img->data;
-	float * runner2 = (float *) float_img->data;
-	int skip = byte_img->cols-byte_img->channels()*byte_img->cols;
-	for(int i=0;i<byte_img->rows;i++)
+	//unsigned char * runner1= (unsigned char *)byte_img->data;
+	//float * runner2 = (float *) float_img->data;
+	//int skip = byte_img->cols - byte_img->channels() * byte_img->cols;
+	//assert(byte_img->cols * byte_img->rows * byte_img->channels() == byte_img->size().area());
+	for(int i=0;i<byte_img->rows;i++) // TODO : rewrite loop
 	{
-		for(int j=0;j<byte_img->cols;j++)
+		unsigned char * runner1 = byte_img->ptr<unsigned char>(i);
+		const float * runner2 = float_img->ptr<float>(i); // float !
+		for(int j=0;j<byte_img->cols * byte_img->channels();j++)
 		{
-			for(int k=0;k<byte_img->channels();k++)
-			{
-				*runner1++ = (unsigned char) (*runner2++*255.);
-			}
+			*runner1 = (unsigned char) 255;//(*runner2/**255.*/);
+			runner1++;
+			runner2++;
 		}
-		runner1+=skip;
+		//runner1+=skip;
 	}
+	/*for(int i = 0; i < byte_img->rows; i++)
+	{
+		unsigned char* pU = byte_img->ptr<unsigned char>(i);
+		const double* pF = float_img->ptr<double>(i);
+		for(int j = 0; j < byte_img->cols * byte_img->channels(); j++)
+		{
+			printf("%d <- %f\n", *pU, *pF);
+			*pU++ = static_cast<unsigned char> (*pF++ * 255.);
+			printf("%d  <- %f\n", *(pU-1), *(pF-1) * 255.);
+		}
+	}*/
 }
+#endif
 
 /* Set image to the right size */
 
@@ -94,7 +117,7 @@ void adjustSize(const Mat* im_in, Mat* im_out)
 }
 
 /* Set image to the right depth 
- WARNING :: buffers tmp1 and tmp2 are only generated once (static) so this method must be used only for one type of images  */
+ WARNING :: buffers tmp1 and tmp2 are only generated once so this method must be used only for one type of images  */
 
 void adjust(const Mat* im_in, Mat* im_out, Mat*& tmp1, Mat*& tmp2)
 {
@@ -123,7 +146,8 @@ void adjust(const Mat* im_in, Mat* im_out, Mat*& tmp1, Mat*& tmp2)
 		}
 		adjustSize(im_in, tmp1);
 		adjustChannels(tmp1, tmp2);
-		convertByte2Float(tmp2, im_out);		
+		//convertByte2Float(tmp2, im_out);
+		tmp2->convertTo(*im_out, im_out->type(), 1.0 / 255);
 	}
 	else if(im_in->depth() == CV_32F && im_out->depth() == CV_8U) 
 	{
@@ -139,7 +163,9 @@ void adjust(const Mat* im_in, Mat* im_out, Mat*& tmp1, Mat*& tmp2)
 		}
 		adjustSize(im_in, tmp1);		
 		adjustChannels(tmp1, tmp2);
-		convertFloat2Byte(tmp2, im_out);		
+
+		//convertFloat2Byte(tmp2, im_out);		
+		tmp2->convertTo(*im_out, im_out->type(), 255);
 	}
 	else
 	{
@@ -191,3 +217,20 @@ CvScalar ColorFromStr(string x_str)
 	}
 	else return cvScalar(0, 0, 0);
 }
+
+void saveMat(const cv::Mat* x_mat, const std::string& x_name)
+{
+	IplImage img = *x_mat;
+	cvSaveImage(x_name.c_str(), &img);
+	
+/*	FileStorage fs("x_name", FileStorage::WRITE);
+	//if (!fs.isOpened())
+	//{
+	//fs.open();//(", FileStorage::WRITE);
+	fs / *<< "mtxCam"* / << *x_mat;
+	//fs << "mtxDist" << distCoeffs;
+	fs.release();
+*/
+	
+}
+

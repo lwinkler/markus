@@ -26,6 +26,7 @@
 #include <iostream>
 #include <cstdio>
 #include <highgui.h>
+#include "util.h"
 
 using namespace std;
 using namespace cv;
@@ -38,8 +39,10 @@ Detector::Detector(const DetectorParameter& x_param, int x_width, int x_height, 
 	m_background 		= new Mat(cvSize(x_width, x_height), x_type);
 	m_lastImg 		= new Mat(cvSize(x_width, x_height), x_type);
 	m_temporalDiff 		= new Mat(cvSize(x_width, x_height), CV_8UC1);
-	m_blobsImg 		= new Mat(cvSize(x_width, x_height), x_type);
+//	m_blobsImg 		= new Mat(cvSize(x_width, x_height), x_type);
 	
+	//*m_elementRemoveNoiseForeground = createMorphologyFilter(1, CV_SHAPE_ELLIPSE, *m_elementRemoveNoiseForeground); // CV_SHAPE_RECT
+		
 	Reset();
 }
 
@@ -55,8 +58,8 @@ Detector::~Detector(void)
 
 void Detector::Reset()
 {
-	m_emptyTemporalDiff = false;
-	m_emptyBackgroundSubtraction = false;
+	m_emptyTemporalDiff = true;
+	m_emptyBackgroundSubtraction = true;
 }
 
 
@@ -74,7 +77,7 @@ void Detector::BlurInput(const Mat* x_img, Mat* x_output)
 	{
 		cvSmooth(x_img, x_output, CV_GAUSSIAN, blurSize);
 	}
-	else cvCopy(x_img, x_output);
+	else x_img->copyTo(*x_output);
 }
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 /* Background update  */
@@ -83,9 +86,10 @@ void Detector::UpdateBackground(Mat* x_img)
 {
 	float backgroundAlpha = m_param.backgroundAlpha;
 	//cout<<" img depth"<<x_img->depth<<" backgr"<<m_background->depth<<endl;
-	if(m_emptyBackgroundSubtraction) 
+	if(m_emptyBackgroundSubtraction) // TODO : SEe why backgroung is badly displayed if in float
 	{
-		cvCopy(x_img, m_background);
+		//x_img->copyTo(*m_background);
+		adjustChannels(x_img, m_background);
 		m_emptyBackgroundSubtraction = false;
 	}
 	else 
@@ -97,17 +101,17 @@ void Detector::UpdateBackground(Mat* x_img)
 		//assert(x_img->imageSize == m_background->imageSize);
 		assert(x_img->channels() == m_background->channels());
 		
-		if(m_background->depth() == CV_32F)
+		if(x_img->depth() == CV_32F)
 		{
-			assert(false);
-			// HACK runningAvg(x_img, m_background, backgroundAlpha);
+			accumulateWeighted(*x_img, *m_background, backgroundAlpha);
+			//m_background->setTo(cvScalar(255,0,33));
 		}
-		else
+		else if(x_img->depth() == CV_8U)
 		{
 			// Image in unsigned char
 			uchar * p_runner1 = (uchar *) x_img->datastart;
 			uchar * p_runner2 = (uchar *) m_background->datastart;
-			int cpt = x_img->size().area();
+			int cpt = x_img->size().area() * x_img->channels();
 			
 			while (cpt)
 			{
@@ -117,6 +121,10 @@ void Detector::UpdateBackground(Mat* x_img)
 				cpt--;
 			}
 		
+		}
+		else
+		{
+			throw("UpdateBackground : wrong image depth.");
 		}
 		//cout<<"alpha"<<backgroundAlpha<<endl;
 		//cout<<"thres"<<m_param.foregroundThres<<endl;
@@ -132,8 +140,10 @@ void Detector::UpdateBackgroundMask(Mat* x_img, Mat* x_mask)
 {
 	float backgroundAlpha = m_param.backgroundAlpha;
 	//cout<<" img depth"<<x_img->depth<<" backgr"<<m_background->depth<<endl;
-	if(m_emptyBackgroundSubtraction) {
-		cvCopy(x_img, m_background);
+	if(m_emptyBackgroundSubtraction) 
+	{
+		//x_img->copyTo(*m_background);
+		adjustChannels(x_img, m_background);
 		m_emptyBackgroundSubtraction = false;
 	}
 	else {
@@ -145,9 +155,9 @@ void Detector::UpdateBackgroundMask(Mat* x_img, Mat* x_mask)
 		//assert(x_img->imageSize == m_background->imageSize);
 		assert(x_img->channels() == m_background->channels());
 		
-		if(m_background->depth() == CV_32F)
+		if(x_img->depth() == CV_32F)
 		{
-			cvRunningAvg(x_img, m_background, backgroundAlpha, x_mask);
+			accumulateWeighted(*x_img, *m_background, backgroundAlpha, *x_mask);
 		}
 		else
 		{
@@ -183,8 +193,10 @@ void Detector::ExtractForeground(Mat* x_img)
 {
 	static Mat* tmp = new Mat(cvSize(x_img->cols, x_img->rows), x_img->depth(), x_img->channels());
 	
-	cvAbsDiff(x_img, m_background, tmp);
-	cvtColor(*tmp, *m_foreground, CV_RGB2GRAY);
+	absdiff(*x_img, *m_background, *tmp);
+	
+	// cvtColor(*tmp, *m_foreground, CV_RGB2GRAY);
+	adjustChannels(tmp, m_foreground);
 	threshold(*m_foreground, *m_foreground, m_param.foregroundThres* 255, 255, CV_THRESH_BINARY);
 	//cvAdaptiveThreshold(m_foreground, m_foreground, 255, 0, 1);//, int adaptiveMethod, int thresholdType, int blockSize, double C)
 	/*assert(x_img->depth == m_background->depth);
@@ -244,6 +256,7 @@ void Detector::ExtractForeground(Mat* x_img)
 	else throw("Error : in ExtractForeground");
 		
 		*/
+	delete(tmp);
 }
 
 
@@ -256,7 +269,7 @@ void Detector::ExtractForegroundMax(Mat* x_img)
 	float foregroundThres = m_param.foregroundThres;
 	static Mat* tmp = new Mat(cvSize(x_img->cols, x_img->rows), x_img->depth(), x_img->channels());
 	
-	cvAbsDiff(x_img, m_background, tmp);
+	absdiff(*x_img, *m_background, *tmp);
 	
 	char* p_tmp = (char*) tmp->datastart;
 	char* p_fore = (char*) m_foreground->datastart;
@@ -316,25 +329,22 @@ void Detector::RemoveFalseForegroundNeigh()
 /* Remove false background pixels a morphological filter   */
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-void Detector::RemoveFalseForegroundMorph()
+void Detector::RemoveNoiseForeground()
 {
 	int filterSize = m_param.foregroundFilterSize;
 	if(filterSize == 0) filterSize=1;
-	if(filterSize > 1)
+	if(false && filterSize > 1) // TODO remove HACK
 	{
-		static IplConvKernel* element = cvCreateStructuringElementEx(3, 3, 0, 0, CV_SHAPE_ELLIPSE); // CV_SHAPE_RECT
-		//static int size = filterSize;
-		
-		if(element->nCols != filterSize)
+		if(m_elementRemoveNoiseForeground->cols != filterSize)
 		{
-			cvReleaseStructuringElement(&element);
-			element = cvCreateStructuringElementEx(filterSize, filterSize, 0, 0, CV_SHAPE_ELLIPSE); // CV_SHAPE_RECT
+			//delete(m_elementRemoveNoiseForeground);
+			//m_elementRemoveNoiseForeground = createMorphologyFilter(filterSize, filterSize, 0, 0, CV_SHAPE_ELLIPSE); // CV_SHAPE_RECT
 		}
 		
-		cvMorphologyEx(m_foreground, m_foreground_rff, NULL, element, CV_MOP_OPEN, 1);
+		//morphologyEx(*m_foreground, *m_foreground_rff, NULL, m_elementRemoveNoiseForeground, CV_MOP_OPEN, 1);
 	
 	}
-	else cvCopy(m_foreground, m_foreground_rff);
+	else m_foreground->copyTo(*m_foreground_rff);
 }
 
 
@@ -345,7 +355,7 @@ void Detector::TemporalDiff(Mat* x_img)
 {
 	if(m_emptyTemporalDiff) 
 	{
-		cvCopy(x_img, m_lastImg);
+		x_img->copyTo(*m_lastImg);
 		m_emptyTemporalDiff = false;
 	}
 	else 
@@ -353,10 +363,10 @@ void Detector::TemporalDiff(Mat* x_img)
 		static Mat* tmp = new Mat(cvSize(x_img->cols, x_img->rows), x_img->depth(), x_img->channels());
 	
 		subtract(*x_img, *m_lastImg, *tmp);
-		cvAbsDiff(x_img, m_lastImg, tmp);
-		cvtColor(*tmp, *m_temporalDiff, CV_RGB2GRAY);
+		absdiff(*x_img, *m_lastImg, *tmp);
+		adjustChannels(tmp, m_temporalDiff);
 		
-		cvCopy(x_img, m_lastImg);
+		x_img->copyTo(*m_lastImg);
 	}
 
 

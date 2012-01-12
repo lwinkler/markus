@@ -39,7 +39,7 @@ public:
 	void AddRect(cv::Rect x_rect) {m_rects.push_back(x_rect);};
 	
 	virtual void ConvertInput();
-	virtual void Render(cv::Mat * xp_output) const;
+	virtual void RenderTo(cv::Mat * xp_output) const;
 	inline virtual const std::string GetTypeString()const {return "Rect";};
 protected:
 	std::vector<cv::Rect> & m_rects;

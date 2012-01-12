@@ -177,7 +177,7 @@ void Manager::Process()
 		for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		{
 			//assert(m_input->GetImage() != NULL);
-			if((*it)->GetFps() <= 0 || timecount >= 1.0 / (*it)->GetFps())
+			if((*it)->AddProcessingTime(timecount))
 			{
 				(*it)->ReadAndConvertInput();
 				(*it)->ProcessFrame(timecount);

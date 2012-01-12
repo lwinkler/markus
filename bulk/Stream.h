@@ -50,7 +50,7 @@ public:
 	inline StreamType GetType() const {return m_type;};
 	inline const std::string& GetDescription() const {return m_description;};
 	virtual const std::string GetTypeString() const = 0;
-	virtual void Render(cv::Mat * x_output) const  = 0;
+	virtual void RenderTo(cv::Mat * x_output) const  = 0;
 	void Connect(const Stream * x_stream);
 	virtual void ConvertInput() = 0;
 	void Export(std::ostream& rx_os, int x_indentation, bool x_isInput);

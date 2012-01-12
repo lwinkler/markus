@@ -60,7 +60,7 @@ public:
 	virtual ~Module();
 	
 	void ReadAndConvertInput(/*const cv::Mat * x_img*/);
-	virtual void ProcessFrame(const double x_timeSinceLastProcessing) = 0;
+	virtual void ProcessFrame(const double x_timeSinceLastProcessing) = 0; // TODO : time arg is useless !
 	const std::string& GetName(){return m_name;};
 	const std::string& GetDescription(){return m_description;};
 	int GetId() const {return m_id;};
@@ -73,6 +73,8 @@ public:
 	inline int GetInputType() const {return GetRefParameter().type;};
 	//virtual inline int GetNbChannels() const {return GetRefParameter().channels;}
 	inline int GetFps() const {return GetRefParameter().fps;};
+	inline bool AddProcessingTime(double x_time){ return GetFps() == 0 ||  (m_processingTime += x_time) > 1.0 / GetFps(); };
+	inline void ResetProcessingTime(){m_processingTime = 0;};
 	
 	virtual inline bool IsInput() {return false;};
 	void Export(std::ostream& rx_os, int x_indentation);
@@ -92,6 +94,7 @@ protected:
 	std::string m_name;
 	std::string m_description; 
 	int m_id;
+	double m_processingTime;
 	virtual const ModuleParameterStructure & GetRefParameter() const = 0;
 	
 };

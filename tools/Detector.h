@@ -60,7 +60,8 @@ private:
 	// Temporal differencing
 	cv::Mat* m_lastImg;
 	cv::Mat* m_temporalDiff;
-	cv::Mat* m_blobsImg;
+	//cv::Mat* m_blobsImg;
+	cv::Mat* m_elementRemoveNoiseForeground;
 	bool m_emptyBackgroundSubtraction;
 	bool m_emptyTemporalDiff;
 
@@ -77,11 +78,11 @@ public:
 	void ExtractForeground(cv::Mat* img);
 	void ExtractForegroundMax(cv::Mat* img);
 	void RemoveFalseForegroundNeigh();
-	void RemoveFalseForegroundMorph();
+	void RemoveNoiseForeground();
 
 	void TemporalDiff(cv::Mat* img);
 	
-	void ExtractBlobs();
+	//void ExtractBlobs();
 
 	inline cv::Mat* GetForeground(){ return m_foreground;};
 	inline cv::Mat* GetForegroundRff(){ return m_foreground_rff;};

@@ -21,49 +21,55 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef OBJECTTRACKER_H
-#define OBJECTTRACKER_H
+#ifndef BLOBSEGMENTER_H
+#define BLOBSEGMENTER_H
 
 #include "Module.h"
-#include "Detector.h"
+
+#include "cvblobs/BlobResult.h"
+#include "cvblobs/BlobExtraction.h"
+#include "cvblobs/Blob.h"
+#include "cvblobs/BlobLibraryConfiguration.h"
+#include "cvblobs/BlobResult.h"
+
+#include "Tracker.h" // TODO : should not be here
 
 class ConfigReader;
 
-class ObjectTrackerParameterStructure : public ModuleParameterStructure
+class BlobSegmenterParameterStructure : public ModuleParameterStructure
 {
 public:
-	ObjectTrackerParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
+	BlobSegmenterParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-		//m_list.push_back(new ParameterT<int>(0, "input_blur_size",	1, 	PARAM_INT, 1, 7,	&detector.inputBlurSize,	"Strength of the blur applied to the input"));
-		m_list.push_back(new ParameterT<float>(0, "background_alpha",	0.02, 	PARAM_FLOAT, 0, 1,	&detector.backgroundAlpha,	"Defines the speed at which the background adapts"));
-		m_list.push_back(new ParameterT<float>(0, "foreground_thres", 	0.2, 	PARAM_FLOAT, 0, 1,	&detector.foregroundThres,	"Threshold to accept a pixel as foreground"));
-		m_list.push_back(new ParameterT<int>(0, "foreground_filter_size", 3, 	PARAM_INT, 1, 7,	&detector.foregroundFilterSize,	"Size of the filter to remove noise"));
-
 		ParameterStructure::Init();
 	};
-	DetectorParameter detector;
 };
 
-class ObjectTracker : public Module
+class BlobSegmenter : public Module
 {
 public:
-	ObjectTracker(const ConfigReader& x_configReader);
-	~ObjectTracker();
+	BlobSegmenter(const ConfigReader& x_configReader);
+	~BlobSegmenter();
 	
 	virtual void ProcessFrame(const double x_timeSinceLastProcessing);
 	inline virtual int GetInputWidth() const {return m_param.width;};
 	inline virtual int GetInputHeight() const {return m_param.height;};
 	
 private:
-	ObjectTrackerParameterStructure m_param;
+	void ExtractBlobs(cv::Mat* x_img);
 	
+	BlobSegmenterParameterStructure m_param;
+	
+	// for streams
 	cv::Mat * m_input;
-	cv::Mat * m_output;
-	//cv::Mat* m_img_blur;
-	
-	Detector detect;
+	std::vector<cv::Rect> m_trackerOutput;
+	cv::Mat* m_blobsImg;
+
 	static const char * m_type;
+	std::vector <TrackedRegion> m_regions;		
+
 protected:
+	double GetSTLResult( CBlob* blob, funcio_calculBlob *evaluador ) const;
 	inline virtual const ModuleParameterStructure& GetRefParameter() const { return m_param;};
 };
 

@@ -4,6 +4,8 @@
 #include "SlitCam/SlitCam.h"
 #include "ObjectTracker/ObjectTracker.h"
 #include "CascadeDetector/CascadeDetector.h"
+#include "SimpleTracker/SimpleTracker.h"
+#include "BlobSegmenter/BlobSegmenter.h"
 
 #include "UsbCam/UsbCam.h"
 #include "VideoFileReader/VideoFileReader.h"
@@ -21,6 +23,14 @@ Module * createNewModule(const ConfigReader& rx_configReader)
 	else if(moduleClass.compare("ObjectTracker") == 0)
 	{
 		tmp = new ObjectTracker(rx_configReader);
+	}
+	else if(moduleClass.compare("BlobSegmenter") == 0)
+	{
+		tmp = new BlobSegmenter(rx_configReader);
+	}
+	else if(moduleClass.compare("SimpleTracker") == 0)
+	{
+		tmp = new SimpleTracker(rx_configReader);
 	}
 	else if(moduleClass.compare("CascadeDetector") == 0)
 	{

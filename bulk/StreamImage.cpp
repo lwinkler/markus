@@ -56,12 +56,13 @@ void StreamImage::ConvertInput()
 }
 
 
-void StreamImage::Render(Mat * xp_output) const
+void StreamImage::RenderTo(Mat * xp_output) const
 {
 	//cout<<"xp_output->width "<<xp_output->width<<endl;
 	//cout<<"GetInputWidth()"<<GetInputWidth()<<endl;
 	//assert(xp_output->width == GetInputWidth());
 	//assert(xp_output->height == GetInputHeight());
+	
 	m_image->copyTo(*xp_output);
 }
 

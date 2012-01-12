@@ -37,7 +37,7 @@ public:
 	const cv::Mat* GetImageRef() const {return m_image;};
 	
 	virtual void ConvertInput();
-	virtual void Render(cv::Mat * xp_output) const;
+	virtual void RenderTo(cv::Mat * xp_output) const;
 	inline virtual const std::string GetTypeString()const {return "Debug";};
 protected:
 	const cv::Mat * m_image;

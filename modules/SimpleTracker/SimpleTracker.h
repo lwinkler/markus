@@ -21,41 +21,47 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "Input.h"
-#include "Stream.h"
+#ifndef SIMPLETRACKER_H
+#define SIMPLETRACKER_H
 
-using namespace std;
+#include "Module.h"
+#include "Tracker.h"
 
+class ConfigReader;
 
-Input::Input(const ConfigReader& x_configReader): 
-	//m_param(x_configReader, x_name), 
-	//Configurable(x_configReader),
-	Module(x_configReader)
+class SimpleTrackerParameterStructure : public ModuleParameterStructure
 {
-	cout<<endl<<"*** Create object Input : "<<m_name<<" ***"<<endl;
-
-	m_render = NULL;  // cvCreateImage( cvSize(12,12)/*GetInputWidth(), GetInputHeight())*/, CV_8U_C3);
-	m_inputWidth = 0;
-	m_inputHeight = 0;
-// 	m_outputStreams.push_back(new StreamImage("detected", m_input));
-
-}
-
-Input::~Input()
-{
-	//cvReleaseImage(&m_input);
-}
-
-void Input::ProcessFrame(const double x_timeSinceLastProcessing)
-{
-	//cout<<"copy "<<m_input<<" to "<<m_render<<endl;
-	//m_input->copyTo(*m_render);
-	assert(m_outputStreams.size() > 0);
-	m_outputStreams[0]->RenderTo(m_render);
-	
-	for(vector<Stream *>::const_iterator it = m_relatedStreams.begin() ; it != m_relatedStreams.end() ; it++)
+public:
+	SimpleTrackerParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-		(*it)->RenderTo(m_render);
-	}
-}
 
+		ParameterStructure::Init();
+	};
+	TrackerParameter tracker;
+};
+
+class SimpleTracker : public Module
+{
+public:
+	SimpleTracker(const ConfigReader& x_configReader);
+	~SimpleTracker();
+	
+	virtual void ProcessFrame(const double x_timeSinceLastProcessing);
+	inline virtual int GetInputWidth() const {return m_param.width;};
+	inline virtual int GetInputHeight() const {return m_param.height;};
+	
+private:
+	SimpleTrackerParameterStructure m_param;
+	
+	// for streams
+	std::vector<cv::Rect> m_trackerInput;
+	std::vector<cv::Rect> m_trackerOutput;
+	
+	Tracker track;
+	static const char * m_type;
+protected:
+	inline virtual const ModuleParameterStructure& GetRefParameter() const { return m_param;};
+};
+
+
+#endif

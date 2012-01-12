@@ -61,8 +61,8 @@ UsbCam::UsbCam(const ConfigReader& x_configReader):
 //	m_input = NULL;//cvCreateImage( cvSize(m_width, m_height), IPL_DEPTH_8U, 3);
 
 	
-	m_output = new Mat( cvSize(m_inputWidth, m_inputHeight), CV_8UC3); // TODO : No allocation needed
-	m_render = new Mat( cvSize(m_inputWidth, m_inputHeight), CV_8UC3);
+	m_output = new Mat( cvSize(m_inputWidth, m_inputHeight), m_param.type); // TODO : No allocation needed
+	m_render = new Mat( cvSize(m_inputWidth, m_inputHeight), m_param.type);
 	m_outputStreams.push_back(new StreamImage(0, "input", m_output, *this, 		"Video stream of the camera"));
 	m_outputStreams.push_back(new StreamImage(1, "render", m_render, *this, 	"Render"));
 }

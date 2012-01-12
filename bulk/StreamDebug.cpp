@@ -42,7 +42,7 @@ void StreamDebug::ConvertInput()
 	assert(false); // Should not be used
 }
 
-void StreamDebug::Render(cv::Mat * xp_output) const
+void StreamDebug::RenderTo(cv::Mat * xp_output) const
 {
 	m_image->copyTo(*xp_output);
 }

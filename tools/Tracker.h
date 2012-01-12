@@ -30,12 +30,6 @@
 #include <list>
 #include <cstring>
 
-#include "cvblobs/BlobResult.h"
-#include "cvblobs/BlobExtraction.h"
-#include "cvblobs/Blob.h"
-#include "cvblobs/BlobLibraryConfiguration.h"
-#include "cvblobs/BlobResult.h"
-
 using namespace std;
 
 class Feature;
@@ -130,7 +124,7 @@ class Template
 		~Template();
 		
 		double CompareWithTrackedRegion(const TrackedRegion& x_reg) const;
-		int Match(const std::list<Template>& x_temp, std::vector<TrackedRegion>& x_reg, cv::Mat* x_blobsImg, double x_maxMatchingDistance);
+		int Match(const std::list<Template>& x_temp, std::vector<TrackedRegion>& x_reg, /*cv::Mat* x_blobsImg,*/ double x_maxMatchingDistance);
 		void UpdateFeatures();
 		
 		
@@ -169,28 +163,21 @@ class Tracker
 		~Tracker(void);
 		void Reset();
 				
-		void ExtractBlobs(cv::Mat* x_img);
+		//void ExtractBlobs(cv::Mat* x_img);
 		void MatchTemplates();
 		void CleanTemplates();
 		void DetectNewTemplates();
 		void UpdateTemplates();
 		void PrintTrackedRegions() const;
 		
-		inline cv::Mat* GetBlobsImg(){ return m_blobsImg;};
+		//inline cv::Mat* GetBlobsImg(){ return m_blobsImg;};
 		
 		static int m_colorArraySize;
 		static CvScalar m_colorArray[];
 		
-		/*static int GetMaxNbFramesDisappearance(){return m_maxNbFramesDisappearance;};
-		static void SetMaxNbFramesDisappearance(int a){ m_maxNbFramesDisappearance = a;};
-
-		static int GetMaxMatchingDistance(){return m_maxMatchingDistance;};
-		static void SetMaxMatchingDistance(int a){ m_maxMatchingDistance = a;};*/
-		
 	private:
-		double GetSTLResult( CBlob* blob, funcio_calculBlob *evaluador ) const;
 		// Background subtraction
-		cv::Mat* m_blobsImg;
+//		cv::Mat* m_blobsImg;
 		std::list <Template> m_templates;
 		std::vector <TrackedRegion> m_regions;		
 		

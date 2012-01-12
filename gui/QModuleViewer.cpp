@@ -44,10 +44,8 @@ using namespace cv;
 // Constructor
 QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidget(parent)
 {
-	m_img_tmp1_c1 = NULL; // Allocated on first conversion
-	m_img_tmp1_c3 = NULL;
-	m_img_tmp2_c1 = NULL;
-	m_img_tmp2_c3 = NULL;
+	m_img_tmp1 = NULL; // Allocated on first conversion
+	m_img_tmp2 = NULL;
 	m_img_output  = NULL;
 	m_img_original = NULL;
 
@@ -139,10 +137,8 @@ QModuleViewer::~QModuleViewer(void)
 {
 	if(m_img_original != NULL)  delete(m_img_original); 
 	if(m_img_output != NULL)  delete(m_img_output); 
-	if(m_img_tmp1_c1 != NULL) delete(m_img_tmp1_c1);
-	if(m_img_tmp1_c3 != NULL) delete(m_img_tmp1_c3);
-	if(m_img_tmp2_c1 != NULL) delete(m_img_tmp2_c1);
-	if(m_img_tmp2_c3 != NULL) delete(m_img_tmp2_c3);
+	if(m_img_tmp1 != NULL) delete(m_img_tmp1);
+	if(m_img_tmp2 != NULL) delete(m_img_tmp2);
 	
 	delete comboModules ;
 	delete comboStreams;
@@ -190,12 +186,10 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 	if(m_img_original != NULL)  delete(m_img_original); 
 	m_img_output = m_img_original = NULL;
 	
-	if(m_img_tmp1_c1 != NULL) delete(m_img_tmp1_c1);
-	if(m_img_tmp1_c3 != NULL) delete(m_img_tmp1_c3);
-	if(m_img_tmp2_c1 != NULL) delete(m_img_tmp2_c1);
-	if(m_img_tmp2_c3 != NULL) delete(m_img_tmp2_c3);
+	if(m_img_tmp1 != NULL) delete(m_img_tmp1);
+	if(m_img_tmp2 != NULL) delete(m_img_tmp2);
 	
-	m_img_tmp1_c1 = m_img_tmp1_c3 = m_img_tmp2_c1 = m_img_tmp2_c3 = NULL;
+	m_img_tmp1 = m_img_tmp2 = NULL;
 }
 
 /*void QModuleViewer::putImage() 
@@ -206,9 +200,6 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 
 void QModuleViewer::paintEvent(QPaintEvent * e) 
 {
-	//int cvIndex, cvLineStart;
-	
-	
 	if(m_img_original == NULL)
 		m_img_original = new Mat( cvSize(m_currentStream->GetInputWidth(), m_currentStream->GetInputHeight()), CV_8UC3);
 	m_img_original->setTo(cvScalar(0,0,0));
@@ -217,54 +208,14 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 	// Write output to screen
 	// TODO : Copy below
 	//cout<<"Render "<<m_currentStream->GetInputWidth()<<" to "<<m_img_original->width<<endl;
-	m_currentStream->Render(m_img_original);
-	if(m_img_output->channels() == 3)
-		adjust(m_img_original, m_img_output, m_img_tmp1_c3, m_img_tmp2_c3);
-	else
-		adjust(m_img_original, m_img_output, m_img_tmp1_c1, m_img_tmp2_c1);
 	
-	// switch between bit depths
-	/*switch (m_img_output->depth()) 
-	{
-		case CV_8U:
-			switch (m_img_output->channels()) 
-			{
-				case 3:
-				{
-					cvIndex = 0; cvLineStart = 0;
-					for (int y = 0; y < m_img_output->rows; y++) 
-					{
-						unsigned char red,green,blue;
-						cvIndex = cvLineStart;
-						for (int x = 0; x < m_img_output->cols; x++) 
-						{
-							// DO it
-							red = m_img_output->at<Vec3w>(y, x)[1];// ->data[cvIndex+2];
-							green = m_img_output->at<Vec3w>(y, x)[2];// ->data[cvIndex+2];
-							blue = m_img_output->at<Vec3w>(y, x)[0];// ->data[cvIndex+2];
-							//green = m_img_output->data[cvIndex+1];
-							//blue = m_img_output->data[cvIndex+0];
-							
-							m_image.setPixel(x,y,qRgb(red, green, blue));
-							cvIndex += 3;
-						}
-						cvLineStart += m_img_output->cols;                        
-					}
-				}
-				break;
-				default:
-					throw("This number of channels is not supported\n");
-					break;
-			}
-			break;
-		default:
-		{
-			//cout<<m_img_output->depth()<<endl;
-			throw("This type of Mat is not implemented in QModuleViewer\n");
-		}
-		break;
-	}*/
-	//imagelabel->setPixmap(QPixmap::fromImage(m_image));
+	m_currentStream->RenderTo(m_img_original);
+	
+	
+	//m_img_original
+	//dynamic_cast<const StreamImage*>(m_currentStream)->GetImage().convertTo(*m_img_output, CV_8UC3, 255);
+	adjust(m_img_original, m_img_output, m_img_tmp1, m_img_tmp2);
+
 	ConvertMat2QImage(m_img_output, &m_image);
 	
 	QPainter painter(this);
@@ -325,20 +276,20 @@ void QModuleViewer::hideDisplayOptions()
 	gbSettings->hide();
 }
 
-QImage*  QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qim)
+void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qim)
 {
-	IplImage iplim = *mat;
-	return ConvertIplImage2QImage(&iplim, qim);
+	const IplImage iplim = *mat;
+	ConvertIplImage2QImage(&iplim, qim);
 }
 
 // Based on http://umanga.wordpress.com/2010/04/19/how-to-covert-qt-qimage-into-opencv-iplimage-and-wise-versa/
-QImage*  QModuleViewer::ConvertIplImage2QImage(const IplImage *iplImg, QImage *qimg)
+void  QModuleViewer::ConvertIplImage2QImage(const IplImage *iplImg, QImage *qimg)
 {
 	int h = iplImg->height;
 	int w = iplImg->width;
 	int channels = iplImg->nChannels;
 	char *data = iplImg->imageData;
-	
+
 	for (int y = 0; y < h; y++, data += iplImg->widthStep)
 	{
 		for (int x = 0; x < w; x++)
@@ -368,8 +319,7 @@ QImage*  QModuleViewer::ConvertIplImage2QImage(const IplImage *iplImg, QImage *q
 			}
 		}
 	}
-	return qimg;
-	
+	//return qimg;
 }
 
 #include "QModuleViewer.moc"

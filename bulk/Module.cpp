@@ -40,6 +40,7 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_name 	= x_configReader.GetAttribute("name");
 	m_id	= atoi(x_configReader.GetAttribute("id").c_str());
 	cout<<endl<<"*** Create object Module : "<<m_name<<" id:"<<m_id<<" ***"<<endl;
+	m_processingTime = 0;
 };
 
 
