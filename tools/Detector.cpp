@@ -94,17 +94,13 @@ void Detector::UpdateBackground(Mat* x_img)
 	}
 	else 
 	{
-		// assert(x_img->depth == m_background->depth);
 		assert(x_img->cols == m_background->cols);
-		//assert(x_img->widthStep == m_background->widthStep);
 		assert(x_img->rows == m_background->rows);
-		//assert(x_img->imageSize == m_background->imageSize);
 		assert(x_img->channels() == m_background->channels());
 		
 		if(x_img->depth() == CV_32F)
 		{
 			accumulateWeighted(*x_img, *m_background, backgroundAlpha);
-			//m_background->setTo(cvScalar(255,0,33));
 		}
 		else if(x_img->depth() == CV_8U)
 		{
@@ -191,13 +187,21 @@ void Detector::UpdateBackgroundMask(Mat* x_img, Mat* x_mask)
 
 void Detector::ExtractForeground(Mat* x_img)
 {
-	static Mat* tmp = new Mat(cvSize(x_img->cols, x_img->rows), x_img->depth(), x_img->channels());
-	
+	Mat* tmp = new Mat(cvSize(x_img->cols, x_img->rows), x_img->type()); // TODO : alloc once only
+
 	absdiff(*x_img, *m_background, *tmp);
 	
 	// cvtColor(*tmp, *m_foreground, CV_RGB2GRAY);
-	adjustChannels(tmp, m_foreground);
-	threshold(*m_foreground, *m_foreground, m_param.foregroundThres* 255, 255, CV_THRESH_BINARY);
+	
+	if(tmp->depth() == CV_32F)
+		tmp->convertTo(*m_foreground, m_foreground->type(), 255);
+	else 
+		tmp->convertTo(*m_foreground, m_foreground->type());
+	
+	//adjustChannels(tmp, m_foreground);
+	
+	//threshold(*m_foreground, *m_foreground, m_param.foregroundThres* 255, 255, CV_THRESH_BINARY);
+	
 	//cvAdaptiveThreshold(m_foreground, m_foreground, 255, 0, 1);//, int adaptiveMethod, int thresholdType, int blockSize, double C)
 	/*assert(x_img->depth == m_background->depth);
 	assert(x_img->width == m_background->width);

@@ -192,11 +192,7 @@ void adjustChannels(const Mat* im_in, Mat* im_out)
 	{
 		cvtColor(*im_in, *im_out, CV_RGB2GRAY);
 	}
-	else
-	{
-		cout<<"Error in adjustChannels"<<endl;
-		assert(false);
-	}
+	else throw("Error in adjustChannels");
 }
 
 CvScalar ColorFromStr(string x_str)
@@ -220,8 +216,18 @@ CvScalar ColorFromStr(string x_str)
 
 void saveMat(const cv::Mat* x_mat, const std::string& x_name)
 {
-	IplImage img = *x_mat;
-	cvSaveImage(x_name.c_str(), &img);
+	if(x_mat->depth() == CV_32F)
+	{
+		Mat mat(x_mat->size(), CV_8UC3);
+		x_mat->convertTo(mat, CV_8UC3, 255);
+		IplImage img = mat;
+		cvSaveImage(x_name.c_str(), &img);
+	}
+	else 
+	{
+		IplImage img = *x_mat;
+		cvSaveImage(x_name.c_str(), &img);
+	}
 	
 /*	FileStorage fs("x_name", FileStorage::WRITE);
 	//if (!fs.isOpened())

@@ -77,7 +77,7 @@ void ObjectTracker::ProcessFrame(const double /*x_timeSinceLastProcessing*/)
 	//detect.UpdateBackgroundMask(img, detect.GetForegroundRff());
 	
 	//detect.ExtractForeground(m_img_blur);
-	//detect.ExtractForeground(m_input);
+	detect.ExtractForeground(m_input);
 	
 	//detect.ExtractForegroundMax(img);
 	//detect.RemoveFalseForegroundNeigh();
