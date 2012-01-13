@@ -39,6 +39,8 @@ Detector::Detector(const DetectorParameter& x_param, int x_width, int x_height, 
 	m_background 		= new Mat(cvSize(x_width, x_height), x_type);
 	m_lastImg 		= new Mat(cvSize(x_width, x_height), x_type);
 	m_temporalDiff 		= new Mat(cvSize(x_width, x_height), CV_8UC1);
+	m_foreground_tmp1 	= new Mat(cvSize(x_width, x_height), x_type); // TODO : alloc once only
+	m_foreground_tmp2 	= new Mat(cvSize(x_width, x_height), CV_8UC1); // TODO : alloc once only
 //	m_blobsImg 		= new Mat(cvSize(x_width, x_height), x_type);
 	
 	//*m_elementRemoveNoiseForeground = createMorphologyFilter(1, CV_SHAPE_ELLIPSE, *m_elementRemoveNoiseForeground); // CV_SHAPE_RECT
@@ -54,6 +56,8 @@ Detector::~Detector(void)
 	delete(m_foreground_rff);
 	delete(m_lastImg);
 	delete(m_temporalDiff);
+	delete(m_foreground_tmp1);
+	delete(m_foreground_tmp2);
 }
 
 void Detector::Reset()
@@ -187,20 +191,17 @@ void Detector::UpdateBackgroundMask(Mat* x_img, Mat* x_mask)
 
 void Detector::ExtractForeground(Mat* x_img)
 {
-	Mat* tmp = new Mat(cvSize(x_img->cols, x_img->rows), x_img->type()); // TODO : alloc once only
-
-	absdiff(*x_img, *m_background, *tmp);
+	absdiff(*x_img, *m_background, *m_foreground_tmp1);
 	
-	// cvtColor(*tmp, *m_foreground, CV_RGB2GRAY);
-	
-	if(tmp->depth() == CV_32F)
-		tmp->convertTo(*m_foreground, m_foreground->type(), 255);
+	if(m_foreground_tmp1->depth() == CV_32F)
+		m_foreground_tmp1->convertTo(*m_foreground_tmp2, m_foreground->type(), 255);
 	else 
-		tmp->convertTo(*m_foreground, m_foreground->type());
+		m_foreground_tmp1->convertTo(*m_foreground_tmp2, m_foreground->type());
 	
 	//adjustChannels(tmp, m_foreground);
-	
-	//threshold(*m_foreground, *m_foreground, m_param.foregroundThres* 255, 255, CV_THRESH_BINARY);
+	cvtColor(*m_foreground_tmp2, *m_foreground, CV_RGB2GRAY);
+		
+	threshold(*m_foreground, *m_foreground, m_param.foregroundThres* 255, 255, CV_THRESH_BINARY);
 	
 	//cvAdaptiveThreshold(m_foreground, m_foreground, 255, 0, 1);//, int adaptiveMethod, int thresholdType, int blockSize, double C)
 	/*assert(x_img->depth == m_background->depth);
@@ -260,7 +261,6 @@ void Detector::ExtractForeground(Mat* x_img)
 	else throw("Error : in ExtractForeground");
 		
 		*/
-	delete(tmp);
 }
 
 
@@ -326,7 +326,7 @@ void Detector::RemoveFalseForegroundNeigh()
 				//cout<<"cpt"<<cpt<<endl;
 			}
 	}
-	else throw("Error in RemoveFalseForeground");
+	else throw("Error in RemoveFalseForegroundNeigh");
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/

@@ -61,6 +61,8 @@ private:
 	cv::Mat* m_lastImg;
 	cv::Mat* m_temporalDiff;
 	//cv::Mat* m_blobsImg;
+	cv::Mat* m_foreground_tmp1;
+	cv::Mat* m_foreground_tmp2;
 	cv::Mat* m_elementRemoveNoiseForeground;
 	bool m_emptyBackgroundSubtraction;
 	bool m_emptyTemporalDiff;

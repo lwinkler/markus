@@ -44,7 +44,7 @@ BlobSegmenter::BlobSegmenter(const ConfigReader& x_configReader) :
 
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,	"Input binary stream"));
 
-	m_outputStreams.push_back(new StreamRect(0, "tracker", m_param.width, m_param.height, m_trackerOutput, cvScalar(255,100,255), *this,	"Segmented objects"));
+	m_outputStreams.push_back(new StreamRect(0, "segmented", m_param.width, m_param.height, m_regions, cvScalar(255,100,255), *this,	"Segmented objects"));
 	
 	m_debugStreams.push_back(new StreamDebug(0, "blobs", m_blobsImg, *this,	"Blobs"));
 }
@@ -89,7 +89,7 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 			
 			double posx = currentBlob->SumX();
 			double posy = currentBlob->SumY();
-		if(currentBlob->Parent() && !currentBlob->Exterior() && posx > 0 /*&& posx < m_blobsImg->cols && posy > 0 && posy < m_blobsImg->rows*/) // TODO : fix this for real
+		if(currentBlob->Parent() && !currentBlob->Exterior() && posx > 0 && posx < m_blobsImg->cols && posy > 0 && posy < m_blobsImg->rows) // TODO : fix this for real
 		{
 			// currentBlob->FillBlob( m_blobsImg, m_colorArray[i % m_colorArraySize]);
 			
@@ -98,15 +98,13 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 			reg.m_posY = currentBlob->SumY();
 			
 			// Add here all features that are to be added in the templates/region
-			static int do_once = 1;
-			if(do_once)
+			if(Feature::m_names.size() == 0)
 			{
 				// Write names once
 				Feature::m_names.push_back("area");
 				Feature::m_names.push_back("perimeter");
 				Feature::m_names.push_back("position x");
 				Feature::m_names.push_back("position y");
-				do_once = 0;
 			}
 			
 			reg.AddFeature(currentBlob->Area());
@@ -122,7 +120,13 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 			reg.AddFeature(currentBlob->SumY());
 			
 			//cout<<"Blob extracted position "<<currentBlob->SumX()<<","<<currentBlob->SumY()<<endl;;
-			m_regions.push_back(reg);
+			//m_regions.push_back(reg); // TODO : Manage regions better
+			cv::Rect rect;
+			rect.x = posx;
+			rect.y = posy;
+			rect.width  = currentBlob->MaxX() - currentBlob->MinX();
+			rect.height = currentBlob->MaxY() - currentBlob->MinY();
+			m_regions.push_back(rect);
 		}
 		//else throw("ERROR");
 	}

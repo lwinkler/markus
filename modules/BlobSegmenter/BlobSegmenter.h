@@ -62,12 +62,11 @@ private:
 	
 	// for streams
 	cv::Mat * m_input;
-	std::vector<cv::Rect> m_trackerOutput;
 	cv::Mat* m_blobsImg;
 
 	static const char * m_type;
-	std::vector <TrackedRegion> m_regions;		
-
+	//std::vector <TrackedRegion> m_regions;		
+	std::vector<cv::Rect> m_regions;
 protected:
 	double GetSTLResult( CBlob* blob, funcio_calculBlob *evaluador ) const;
 	inline virtual const ModuleParameterStructure& GetRefParameter() const { return m_param;};
