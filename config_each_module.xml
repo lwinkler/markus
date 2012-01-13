@@ -1,0 +1,40 @@
+<application name="ddd2" description="" cyclelimit="-1" gui="">
+  <module name="UsbCam">
+	  <parameters>
+		  <param name="class">UsbCam</param>
+	  </parameters>
+  </module>
+  <module name="VideoFileReader">
+	  <parameters>
+		  <param name="class">VideoFileReader</param>
+		  <param name="file">input/test.avi</param>
+	  </parameters>
+  </module>
+  <module name="SlitCamera">
+	  <parameters>
+		  <param name="class">SlitCamera</param>
+		  <param name="inputType">CV_8UC3</param>
+	  </parameters>
+  </module>
+  <module name="CascadeDetector">
+	  <parameters>
+		  <param name="class">CascadeDetector</param>
+	  </parameters>
+  </module>
+  <module name="ObjectTracker">
+	  <parameters>
+		  <param name="class">ObjectTracker</param>
+	  </parameters>
+  </module>
+  <module name="SimpleTracker">
+	  <parameters>
+		  <param name="class">SimpleTracker</param>
+	  </parameters>
+  </module>
+  <module name="BlobSegmenter">
+	  <parameters>
+		  <param name="class">BlobSegmenter</param>
+	  </parameters>
+  </module>
+</application>
+
