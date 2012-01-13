@@ -37,9 +37,9 @@ ModuleAsync::ModuleAsync(const ConfigReader& x_configReader) :
 	m_input = NULL;
 };
 
-void ModuleAsync::ProcessFrame(const double x_timeSinceLastProcessing)
+void ModuleAsync::ProcessFrame()
 {
-	m_timeSinceLastThread += x_timeSinceLastProcessing;
+	m_timeSinceLastThread += m_processingTime;
 	
 	if(!m_resultsCopied && !GetRefThread().isRunning())
 	{
@@ -51,7 +51,7 @@ void ModuleAsync::ProcessFrame(const double x_timeSinceLastProcessing)
 	{
 		if(!GetRefThread().isRunning())
 		{
-			LaunchThread(m_input, x_timeSinceLastProcessing);
+			LaunchThread(m_input, m_processingTime);
 			m_resultsCopied = false;
 		}
 		else
@@ -61,7 +61,7 @@ void ModuleAsync::ProcessFrame(const double x_timeSinceLastProcessing)
 		}
 		m_timeSinceLastThread = 0;
 	}
-	NormalProcess(m_input, x_timeSinceLastProcessing);
+	NormalProcess(m_input, m_processingTime);
 }
 
 

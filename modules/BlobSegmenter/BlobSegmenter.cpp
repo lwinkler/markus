@@ -55,7 +55,7 @@ BlobSegmenter::~BlobSegmenter(void )
 	delete(m_blobsImg);
 }
 
-void BlobSegmenter::ProcessFrame(const double x_timeSinceLastProcessing)
+void BlobSegmenter::ProcessFrame()
 {
 	ExtractBlobs(m_input);
 }

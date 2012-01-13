@@ -180,7 +180,7 @@ void Manager::Process()
 			if((*it)->AddProcessingTime(timecount))
 			{
 				(*it)->ReadAndConvertInput();
-				(*it)->ProcessFrame(timecount);
+				(*it)->ProcessFrame();
 			}
 		}
 		//m_lock.unlock();

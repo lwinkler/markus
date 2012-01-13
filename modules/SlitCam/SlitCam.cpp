@@ -61,7 +61,7 @@ SlitCam::~SlitCam(void)
 	//m_outputStreams.resize(0);
 }
 
-void SlitCam::ProcessFrame(const double /*x_timeSinceLastProcessing*/)
+void SlitCam::ProcessFrame()
 {
 	//int widthStep = m_input->cols;
 	int aperture = m_param.aperture;

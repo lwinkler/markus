@@ -67,7 +67,7 @@ ObjectTracker::~ObjectTracker(void )
 	delete(m_output);
 }
 
-void ObjectTracker::ProcessFrame(const double /*x_timeSinceLastProcessing*/)
+void ObjectTracker::ProcessFrame()
 {
 	// Main part of the program
 	//detect.BlurInput(m_input, m_img_blur);

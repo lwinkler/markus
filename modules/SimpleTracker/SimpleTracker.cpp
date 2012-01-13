@@ -50,7 +50,7 @@ SimpleTracker::~SimpleTracker(void )
 {
 }
 
-void SimpleTracker::ProcessFrame(const double /*x_timeSinceLastProcessing*/)
+void SimpleTracker::ProcessFrame()
 {
 	// Main part of the program
 	//track.ExtractBlobs(detect.GetForegroundRff());

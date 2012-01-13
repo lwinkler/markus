@@ -50,7 +50,7 @@ public:
 	ObjectTracker(const ConfigReader& x_configReader);
 	~ObjectTracker();
 	
-	virtual void ProcessFrame(const double x_timeSinceLastProcessing);
+	virtual void ProcessFrame();
 	inline virtual int GetInputWidth() const {return m_param.width;};
 	inline virtual int GetInputHeight() const {return m_param.height;};
 	

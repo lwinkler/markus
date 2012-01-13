@@ -45,7 +45,19 @@ StreamRect::~StreamRect()
 void StreamRect::ConvertInput()
 {
 	assert(m_connected != NULL);
-	assert(false); // TODO
+	const StreamRect * pstream = dynamic_cast<const StreamRect*>(m_connected);
+	std::vector<Rect> rectsTarget = pstream->m_rects;
+	double ratioX = static_cast<double>(m_width) / pstream->GetInputWidth();
+	double ratioY = static_cast<double>(m_height) / pstream->GetInputHeight();
+	for(vector<Rect>::const_iterator it = m_rects.begin() ; it != m_rects.end() ; it++)
+	{
+		Rect rect;  
+		rect.x 		= it->x * ratioX;
+		rect.y 		= it->y * ratioY;
+		rect.width 	= it->width  * ratioX;
+		rect.height 	= it->height * ratioY;
+		rectsTarget.push_back(rect);
+	}
 }
 
 // Render : Draw rectangles on image

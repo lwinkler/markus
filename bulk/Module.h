@@ -60,7 +60,7 @@ public:
 	virtual ~Module();
 	
 	void ReadAndConvertInput(/*const cv::Mat * x_img*/);
-	virtual void ProcessFrame(const double x_timeSinceLastProcessing) = 0; // TODO : time arg is useless !
+	virtual void ProcessFrame() = 0;
 	const std::string& GetName(){return m_name;};
 	const std::string& GetDescription(){return m_description;};
 	int GetId() const {return m_id;};

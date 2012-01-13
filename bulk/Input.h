@@ -71,7 +71,7 @@ public:
 	inline double GetFps() const {return GetRefParameter().fps;};
 	
 	void AddRelatedStream(Stream* xp_stream) {m_relatedStreams.push_back(xp_stream);};
-	virtual void ProcessFrame(const double x_timeSinceLastProcessing);
+	virtual void ProcessFrame();
 	
 	virtual inline bool IsInput() {return true;};
 private:
