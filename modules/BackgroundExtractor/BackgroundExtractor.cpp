@@ -21,7 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "ObjectTracker.h"
+#include "BackgroundExtractor.h"
 #include "StreamDebug.h"
 #include "StreamImage.h"
 
@@ -32,10 +32,10 @@
 
 using namespace cv;
 
-const char * ObjectTracker::m_type = "ObjectTracker";
+const char * BackgroundExtractor::m_type = "BackgroundExtractor";
 
 
-ObjectTracker::ObjectTracker(const ConfigReader& x_configReader) :
+BackgroundExtractor::BackgroundExtractor(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader), 
 	detect(m_param.detector, m_param.width, m_param.height, m_param.type)
@@ -60,14 +60,14 @@ ObjectTracker::ObjectTracker(const ConfigReader& x_configReader) :
 	//m_debugStreams.push_back(StreamDebug("blobs", track.GetBlobsImg()));
 }
 
-ObjectTracker::~ObjectTracker(void )
+BackgroundExtractor::~BackgroundExtractor(void )
 {
 	//delete(m_img_blur);
 	delete(m_input);
 	delete(m_output);
 }
 
-void ObjectTracker::ProcessFrame()
+void BackgroundExtractor::ProcessFrame()
 {
 	// Main part of the program
 	//detect.BlurInput(m_input, m_img_blur);

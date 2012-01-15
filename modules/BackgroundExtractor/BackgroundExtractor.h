@@ -21,18 +21,18 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef OBJECTTRACKER_H
-#define OBJECTTRACKER_H
+#ifndef BACKGROUNDEXTRACTOR_H
+#define BACKGROUNDEXTRACTOR_H
 
 #include "Module.h"
 #include "Detector.h"
 
 class ConfigReader;
 
-class ObjectTrackerParameterStructure : public ModuleParameterStructure
+class BackgroundExtractorParameterStructure : public ModuleParameterStructure
 {
 public:
-	ObjectTrackerParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
+	BackgroundExtractorParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
 		//m_list.push_back(new ParameterT<int>(0, "input_blur_size",	1, 	PARAM_INT, 1, 7,	&detector.inputBlurSize,	"Strength of the blur applied to the input"));
 		m_list.push_back(new ParameterT<float>(0, "background_alpha",	0.02, 	PARAM_FLOAT, 0, 1,	&detector.backgroundAlpha,	"Defines the speed at which the background adapts"));
@@ -44,18 +44,18 @@ public:
 	DetectorParameter detector;
 };
 
-class ObjectTracker : public Module
+class BackgroundExtractor : public Module
 {
 public:
-	ObjectTracker(const ConfigReader& x_configReader);
-	~ObjectTracker();
+	BackgroundExtractor(const ConfigReader& x_configReader);
+	~BackgroundExtractor();
 	
 	virtual void ProcessFrame();
 	inline virtual int GetInputWidth() const {return m_param.width;};
 	inline virtual int GetInputHeight() const {return m_param.height;};
 	
 private:
-	ObjectTrackerParameterStructure m_param;
+	BackgroundExtractorParameterStructure m_param;
 	
 	cv::Mat * m_input;
 	cv::Mat * m_output;

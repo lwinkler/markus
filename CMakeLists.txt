@@ -37,7 +37,7 @@ tools/cvblobs/BlobProperties.cpp
 tools/cvblobs/ComponentLabeling.cpp
 tools/Detector.cpp
 modules/SlitCam/SlitCam.cpp
-modules/ObjectTracker/ObjectTracker.cpp
+modules/BackgroundExtractor/BackgroundExtractor.cpp
 modules/SimpleTracker/SimpleTracker.cpp
 modules/BlobSegmenter/BlobSegmenter.cpp
 modules/CascadeDetector/CascadeDetector.cpp
