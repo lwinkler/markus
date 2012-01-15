@@ -29,9 +29,12 @@ bulk/StreamRect.cpp
 bulk/util.cpp
 bulk/ConfigReader.cpp
 tools/Tracker.cpp
-tools/cvblobs/BlobExtraction.cpp
+tools/cvblobs/BlobContour.cpp
+tools/cvblobs/BlobOperators.cpp
 tools/cvblobs/BlobResult.cpp
-tools/cvblobs/Blob.cpp
+tools/cvblobs/blob.cpp
+tools/cvblobs/BlobProperties.cpp
+tools/cvblobs/ComponentLabeling.cpp
 tools/Detector.cpp
 modules/SlitCam/SlitCam.cpp
 modules/ObjectTracker/ObjectTracker.cpp

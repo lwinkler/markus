@@ -310,8 +310,8 @@ int Template::Match(const std::list<Template>& x_temp, vector<TrackedRegion>& x_
 		//cout<<"Template "<<GetNum()<<" matched with region "<<bestTrackedRegion<<" dist="<<bestDist<<" pos:("<<m_posX<<","<<m_posY<<")"<<endl;
 		m_matchingTrackedRegions.push_back(x_regs[bestTrackedRegion]);
 		x_regs[bestTrackedRegion].m_isMatched = 1;
-		CvPoint p = {x_regs[bestTrackedRegion].m_posX, x_regs[bestTrackedRegion].m_posY};
 		
+		//CvPoint p = {x_regs[bestTrackedRegion].m_posX, x_regs[bestTrackedRegion].m_posY};
 		//cvCircle(x_blobsImg, p, 10, Tracker::m_colorArray[m_num % Tracker::m_colorArraySize]);
 		
 		return 1;

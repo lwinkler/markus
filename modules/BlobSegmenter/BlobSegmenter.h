@@ -27,8 +27,8 @@
 #include "Module.h"
 
 #include "cvblobs/BlobResult.h"
-#include "cvblobs/BlobExtraction.h"
-#include "cvblobs/Blob.h"
+//#include "cvblobs/BlobExtraction.h"
+//#include "cvblobs/Blob.h"
 #include "cvblobs/BlobLibraryConfiguration.h"
 #include "cvblobs/BlobResult.h"
 

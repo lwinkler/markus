@@ -15,5 +15,8 @@ MODIFICATIONS (Modification, Author, Date):
 //! Use/Not use the MatrixCV class
 //#define MATRIXCV_ACTIU
 
-// Uses/not use the blob object factory
+//! Uses/not use the blob object factory
 //#define BLOB_OBJECT_FACTORY
+
+//! Show/not show blob access errors
+//#define _SHOW_ERRORS  //AO: Only works for WIN.

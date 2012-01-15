@@ -7,14 +7,18 @@ LDFLAGS= `pkg-config --libs opencv gtk+-2.0` -L. -lblob
 CXX=g++
 
 CPPFILES= \
-	Blob.cpp\
-	BlobResult.cpp \
-	BlobExtraction.cpp
+	testBlobs/main.cpp\
+	blob.cpp\
+	BlobContour.cpp\
+	BlobOperators.cpp\
+	BlobProperties.cpp\
+	BlobResult.cpp\
+	ComponentLabeling.cpp
 
 .SUFFIXES: .cpp.o
 .cpp.o:	; echo 'Compiling $*.cpp' ; $(CXX) $(CFLAGS) -c $*.cpp
 
-.SILENT:
+# .SILENT:
 
 libblob.a: $(CPPFILES:.cpp=.o)
 	ar ru libblob.a $(CPPFILES:.cpp=.o) 2> /dev/null
@@ -24,12 +28,13 @@ libblob.a: $(CPPFILES:.cpp=.o)
 #	$(CXX) -g blobdemo.cpp $(LDFLAGS) $(CFLAGS) -o blobdemo
 #	$(CXX) -g blobdemo2.cpp $(LDFLAGS) $(CFLAGS) -o blobdemo2
 #
-	@echo Copy include files...
+#	@echo Copy include files...
 #
-	@echo Cleaning objects...
-	rm -f $(CPPFILES:.cpp=.o)
 
-all: clean
+#	@echo Cleaning objects...
+#	rm -f $(CPPFILES:.cpp=.o)
+
+all:
 
 clean:
 	@echo Cleaning...

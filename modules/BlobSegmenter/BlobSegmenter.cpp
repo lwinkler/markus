@@ -26,6 +26,9 @@
 #include "StreamRect.h"
 #include "StreamImage.h"
 
+#include "cvblobs/blob.h"
+#include "cvblobs/BlobResult.h"
+
 // for debug
 #include "util.h"
 
@@ -73,29 +76,38 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 	
 	// Extract the blobs using a threshold of 100 in the image
 	IplImage img = *x_img;
-	blobs = CBlobResult(&img, NULL, 100/*m_foreground_thres* 255*/, true); 
-	
+	// blobs = CBlobResult(&img, NULL, 100/*m_foreground_thres* 255*/, true);  // old lib cvBlobs
+	blobs = CBlobResult(&img, NULL, 0);/*m_foreground_thres* 255*/ 
+	saveMat(x_img, "x_img.bmp");
 	// create a file with some of the extracted features
 	blobs.PrintBlobs( (char*) "blobs.txt" );
 	
 	int i;
 	CBlob *currentBlob;
 	// exclude the ones smaller than value
-	blobs.Filter( blobs, B_EXCLUDE, CBlobGetArea(), B_OUTSIDE, 25, x_img->size().area() / 4);
+	blobs.Filter( blobs, B_EXCLUDE, CBlobGetArea(), B_OUTSIDE, 25, x_img->size().area() / 4); // TODO Add param
 
 	for (i = 0; i < blobs.GetNumBlobs(); i++ )
 	{
 			currentBlob = blobs.GetBlob(i);
 			
-			double posx = currentBlob->SumX();
-			double posy = currentBlob->SumY();
-		if(currentBlob->Parent() && !currentBlob->Exterior() && posx > 0 && posx < m_blobsImg->cols && posy > 0 && posy < m_blobsImg->rows) // TODO : fix this for real
+			//double posx = currentBlob->SumX();
+			//double posy = currentBlob->SumY();
+			
+			//double posx = currentBlob->GetBoundingBox().x;
+			//double posy = currentBlob->GetBoundingBox().y;
+			cv::Rect rect = currentBlob->GetBoundingBox();
+			
+			
+			
+		//if(currentBlob->Parent() && !currentBlob->Exterior() && posx > 0 && posx < m_blobsImg->cols && posy > 0 && posy < m_blobsImg->rows) // TODO : fix this for real
+		if(true)//posx >= 0 && posx < m_blobsImg->cols && posy >= 0 && posy < m_blobsImg->rows) // TODO : fix this for real
 		{
 			// currentBlob->FillBlob( m_blobsImg, m_colorArray[i % m_colorArraySize]);
 			
 			TrackedRegion reg(i);
-			reg.m_posX = currentBlob->SumX();
-			reg.m_posY = currentBlob->SumY();
+			reg.m_posX = rect.x;
+			reg.m_posY = rect.y;
 			
 			// Add here all features that are to be added in the templates/region
 			if(Feature::m_names.size() == 0)
@@ -116,16 +128,16 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 	// 
 	// 		reg.AddFeature("convex hull perimeter", GetSTLResult(currentBlob, CBlobGetHullPerimeter()));
 	
-			reg.AddFeature(currentBlob->SumX());
-			reg.AddFeature(currentBlob->SumY());
+			reg.AddFeature(rect.x);
+			reg.AddFeature(rect.y); // TODO : Add width / 2 ??
 			
 			//cout<<"Blob extracted position "<<currentBlob->SumX()<<","<<currentBlob->SumY()<<endl;;
 			//m_regions.push_back(reg); // TODO : Manage regions better
-			cv::Rect rect;
+			/*cv::Rect rect;
 			rect.x = posx;
 			rect.y = posy;
 			rect.width  = currentBlob->MaxX() - currentBlob->MinX();
-			rect.height = currentBlob->MaxY() - currentBlob->MinY();
+			rect.height = currentBlob->MaxY() - currentBlob->MinY();*/
 			m_regions.push_back(rect);
 		}
 		//else throw("ERROR");

@@ -21,7 +21,7 @@ MODIFICATIONS (Modification, Author, Date):
 
 #include "BlobLibraryConfiguration.h"
 #include <math.h>
-#include "cxcore.h"
+#include <opencv/cxcore.h>
 
 #ifdef MATRIXCV_ACTIU
 	#include "matrixCV.h"
@@ -34,8 +34,9 @@ MODIFICATIONS (Modification, Author, Date):
 
 #include <vector>		// vectors de la STL
 #include <functional>
-#include "Blob.h"
-
+#include "blob.h"
+#include "BlobOperators.h"
+#include "ComponentLabeling.h"
 /**************************************************************************
 	Filtres / Filters
 **************************************************************************/
@@ -65,9 +66,6 @@ MODIFICATIONS (Modification, Author, Date):
 #define EXCEPTION_BLOB_OUT_OF_BOUNDS	1000
 #define EXCEPCIO_CALCUL_BLOBS			1001
 
-//! definició de que es un vector de blobs
-typedef std::vector<CBlob*>	blob_vector;
-
 /** 
 	Classe que conté un conjunt de blobs i permet extreure'n propietats 
 	o filtrar-los segons determinats criteris.
@@ -84,7 +82,7 @@ public:
 	CBlobResult();
 	//! constructor a partir d'una imatge
 	//! Image constructor, it creates an object with the blobs of the image
-	CBlobResult(IplImage *source, IplImage *mask, int threshold, bool findmoments);
+	CBlobResult(IplImage *source, IplImage *mask, uchar backgroundColor);
 	//! constructor de còpia
 	//! Copy constructor
 	CBlobResult( const CBlobResult &source );
@@ -96,7 +94,7 @@ public:
 	CBlobResult& operator=(const CBlobResult& source);
 	//! operador + per concatenar dos CBlobResult
 	//! Addition operator to concatenate two sets of blobs
-	CBlobResult operator+( const CBlobResult& source );
+	CBlobResult operator+( const CBlobResult& source ) const;
 	
 	//! Afegeix un blob al conjunt
 	//! Adds a blob to the set of blobs
@@ -120,6 +118,9 @@ public:
 	void Filter(CBlobResult &dst,
 				int filterAction, funcio_calculBlob *evaluador, 
 				int condition, double lowLimit, double highLimit = 0 );
+	void Filter(CBlobResult &dst,
+				int filterAction, funcio_calculBlob *evaluador, 
+				int condition, double lowLimit, double highLimit = 0 ) const;
 			
 	//! Retorna l'enèssim blob segons un determinat criteri
 	//! Sorts the blobs of the class acording to some criteria and returns the n-th blob
@@ -155,11 +156,16 @@ private:
 	//! Function to manage the errors
 	void RaiseError(const int errorCode) const;
 
+	//! Does the Filter method job
+	void DoFilter(CBlobResult &dst,
+				int filterAction, funcio_calculBlob *evaluador, 
+				int condition, double lowLimit, double highLimit = 0) const;
+
 protected:
 
 	//! Vector amb els blobs
 	//! Vector with all the blobs
-	blob_vector		m_blobs;
+	Blob_vector		m_blobs;
 };
 
 #endif // !defined(_CLASSE_BLOBRESULT_INCLUDED)

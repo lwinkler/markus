@@ -12,8 +12,9 @@ MODIFICACIONS (Modificació, Autor, Data):
 #include <functional>
 #include <algorithm>
 #include "BlobResult.h"
-#include "BlobExtraction.h"
-#ifdef _DEBUG
+
+//! Show errors functions: only works for windows releases
+#ifdef _SHOW_ERRORS
 	#include <afx.h>			//suport per a CStrings
 	#include <afxwin.h>			//suport per a AfxMessageBox
 #endif
@@ -47,7 +48,7 @@ MODIFICACIONS (Modificació, Autor, Data):
 */
 CBlobResult::CBlobResult()
 {
-	m_blobs = blob_vector();
+	m_blobs = Blob_vector();
 }
 
 /**
@@ -61,6 +62,9 @@ CBlobResult::CBlobResult()
 			considerats exteriors.
 	- threshold: llindar que s'aplicarà a la imatge source abans de calcular els blobs
 	- findmoments: indica si s'han de calcular els moments de cada blob
+	- blackBlobs: true per buscar blobs negres a la binaritzazió (it will join all extern white blobs).
+				  false per buscar blobs negres a la binaritzazió (it will join all extern black blobs).
+
 - RESULTAT:
 	- objecte CBlobResult amb els blobs de la imatge source
 - RESTRICCIONS:
@@ -77,7 +81,9 @@ CBlobResult::CBlobResult()
 	- mask: optional mask to apply. The blobs will be extracted where the mask is
 			not 0. All the neighbouring blobs where the mask is 0 will be extern blobs
 	- threshold: threshold level to apply to the image before computing blobs
-	- findmoments: true to calculate the blob moments (slower)
+	- findmoments: true to calculate the blob moments (slower) (needed to calculate elipses!)
+ 	- blackBlobs: true to search for black blobs in the binarization (it will join all extern white blobs).
+				  false to search for white blobs in the binarization (it will join all extern black blobs).
 - RESULT:
 	- object with all the blobs in the image. It throws an EXCEPCIO_CALCUL_BLOBS
 	  if some error appears in the BlobAnalysis function
@@ -86,14 +92,13 @@ CBlobResult::CBlobResult()
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
-CBlobResult::CBlobResult(IplImage *source, IplImage *mask, int threshold, bool findmoments)
+CBlobResult::CBlobResult(IplImage *source, IplImage *mask, uchar backgroundColor )
 {
 	bool success;
 
 	try
 	{
-		// cridem la funció amb el marc a true=1=blanc (així no unirà els blobs externs)
-		success = BlobAnalysis(source,(uchar)threshold,mask,true,findmoments, m_blobs );
+		success = ComponentLabeling( source, mask, backgroundColor, m_blobs );
 	}
 	catch(...)
 	{
@@ -129,17 +134,17 @@ CBlobResult::CBlobResult(IplImage *source, IplImage *mask, int threshold, bool f
 */
 CBlobResult::CBlobResult( const CBlobResult &source )
 {
-	m_blobs = blob_vector( source.GetNumBlobs() );
+	m_blobs = Blob_vector( source.GetNumBlobs() );
 	
 	// creem el nou a partir del passat com a paràmetre
-	m_blobs = blob_vector( source.GetNumBlobs() );
+	m_blobs = Blob_vector( source.GetNumBlobs() );
 	// copiem els blobs de l'origen a l'actual
-	blob_vector::const_iterator pBlobsSrc = source.m_blobs.begin();
-	blob_vector::iterator pBlobsDst = m_blobs.begin();
+	Blob_vector::const_iterator pBlobsSrc = source.m_blobs.begin();
+	Blob_vector::iterator pBlobsDst = m_blobs.begin();
 
 	while( pBlobsSrc != source.m_blobs.end() )
 	{
-		// no podem cridar a l'operador = ja que blob_vector és un 
+		// no podem cridar a l'operador = ja que Blob_vector és un 
 		// vector de CBlob*. Per tant, creem un blob nou a partir del
 		// blob original
 		*pBlobsDst = new CBlob(**pBlobsSrc);
@@ -215,14 +220,14 @@ CBlobResult& CBlobResult::operator=(const CBlobResult& source)
 		}
 		m_blobs.clear();
 		// creem el nou a partir del passat com a paràmetre
-		m_blobs = blob_vector( source.GetNumBlobs() );
+		m_blobs = Blob_vector( source.GetNumBlobs() );
 		// copiem els blobs de l'origen a l'actual
-		blob_vector::const_iterator pBlobsSrc = source.m_blobs.begin();
-		blob_vector::iterator pBlobsDst = m_blobs.begin();
+		Blob_vector::const_iterator pBlobsSrc = source.m_blobs.begin();
+		Blob_vector::iterator pBlobsDst = m_blobs.begin();
 
 		while( pBlobsSrc != source.m_blobs.end() )
 		{
-			// no podem cridar a l'operador = ja que blob_vector és un 
+			// no podem cridar a l'operador = ja que Blob_vector és un 
 			// vector de CBlob*. Per tant, creem un blob nou a partir del
 			// blob original
 			*pBlobsDst = new CBlob(**pBlobsSrc);
@@ -259,7 +264,7 @@ CBlobResult& CBlobResult::operator=(const CBlobResult& source)
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
-CBlobResult CBlobResult::operator+( const CBlobResult& source )
+CBlobResult CBlobResult::operator+( const CBlobResult& source ) const
 {	
 	//creem el resultat a partir dels blobs actuals
 	CBlobResult resultat( *this );
@@ -268,8 +273,8 @@ CBlobResult CBlobResult::operator+( const CBlobResult& source )
 	resultat.m_blobs.resize( resultat.GetNumBlobs() + source.GetNumBlobs() );
 
 	// declarem els iterador per recòrrer els blobs d'origen i desti
-	blob_vector::const_iterator pBlobsSrc = source.m_blobs.begin();
-	blob_vector::iterator pBlobsDst = resultat.m_blobs.end();
+	Blob_vector::const_iterator pBlobsSrc = source.m_blobs.begin();
+	Blob_vector::iterator pBlobsDst = resultat.m_blobs.end();
 
 	// insertem els blobs de l'origen a l'actual
 	while( pBlobsSrc != source.m_blobs.end() )
@@ -344,7 +349,7 @@ double_vector CBlobResult::GetResult( funcio_calculBlob *evaluador ) const
 	double_vector result = double_vector( GetNumBlobs() );
 	// i iteradors sobre els blobs i el resultat
 	double_vector::iterator itResult = result.GetIterator();
-	blob_vector::const_iterator itBlobs = m_blobs.begin();
+	Blob_vector::const_iterator itBlobs = m_blobs.begin();
 
 	// avaluem la funció en tots els blobs
 	while( itBlobs != m_blobs.end() )
@@ -394,7 +399,7 @@ double_stl_vector CBlobResult::GetSTLResult( funcio_calculBlob *evaluador ) cons
 	double_stl_vector result = double_stl_vector( GetNumBlobs() );
 	// i iteradors sobre els blobs i el resultat
 	double_stl_vector::iterator itResult = result.begin();
-	blob_vector::const_iterator itBlobs = m_blobs.begin();
+	Blob_vector::const_iterator itBlobs = m_blobs.begin();
 
 	// avaluem la funció en tots els blobs
 	while( itBlobs != m_blobs.end() )
@@ -496,8 +501,95 @@ void CBlobResult::Filter(CBlobResult &dst,
 						 int filterAction, 
 						 funcio_calculBlob *evaluador, 
 						 int condition, 
+						 double lowLimit, double highLimit /*=0*/) const
+							
+{
+	// do the job
+	DoFilter(dst, filterAction, evaluador, condition, lowLimit, highLimit );
+}
+
+/**
+- FUNCIÓ: Filter (const version)
+- FUNCIONALITAT: Filtra els blobs de la classe i deixa el resultat amb només 
+			   els blobs que han passat el filtre.
+			   El filtrat es basa en especificar condicions sobre un resultat dels blobs
+			   i seleccionar (o excloure) aquells blobs que no compleixen una determinada
+			   condicio
+- PARÀMETRES:
+	- dst: variable per deixar els blobs filtrats
+	- filterAction:	acció de filtrat. Incloure els blobs trobats (B_INCLUDE),
+				    o excloure els blobs trobats (B_EXCLUDE)
+	- evaluador: Funció per evaluar els blobs (qualsevol objecte derivat de COperadorBlob
+	- Condition: tipus de condició que ha de superar la mesura (FilterType) 
+				 sobre cada blob per a ser considerat.
+				    B_EQUAL,B_NOT_EQUAL,B_GREATER,B_LESS,B_GREATER_OR_EQUAL,
+				    B_LESS_OR_EQUAL,B_INSIDE,B_OUTSIDE
+	- LowLimit:  valor numèric per a la comparació (Condition) de la mesura (FilterType)
+	- HighLimit: valor numèric per a la comparació (Condition) de la mesura (FilterType)
+				 (només té sentit per a aquelles condicions que tenen dos valors 
+				 (B_INSIDE, per exemple).
+- RESULTAT:
+	- Deixa els blobs resultants del filtrat a destination
+- RESTRICCIONS:
+- AUTOR: Ricard Borràs
+- DATA DE CREACIÓ: 25-05-2005.
+- MODIFICACIÓ: Data. Autor. Descripció.
+*/
+/**
+- FUNCTION: Filter (const version)
+- FUNCTIONALITY: Get some blobs from the class based on conditions on measures
+				 of the blobs. 
+- PARAMETERS:
+	- dst: where to store the selected blobs
+	- filterAction:	B_INCLUDE: include the blobs which pass the filter in the result 
+				    B_EXCLUDE: exclude the blobs which pass the filter in the result 
+	- evaluador: Object to evaluate the blob
+	- Condition: How to decide if  the result returned by evaluador on each blob
+				 is included or not. It can be:
+				    B_EQUAL,B_NOT_EQUAL,B_GREATER,B_LESS,B_GREATER_OR_EQUAL,
+				    B_LESS_OR_EQUAL,B_INSIDE,B_OUTSIDE
+	- LowLimit:  numerical value to evaluate the Condition on evaluador(blob)
+	- HighLimit: numerical value to evaluate the Condition on evaluador(blob).
+				 Only useful for B_INSIDE and B_OUTSIDE
+- RESULT:
+	- It returns on dst the blobs that accomplish (B_INCLUDE) or discards (B_EXCLUDE)
+	  the Condition on the result returned by evaluador on each blob
+- RESTRICTIONS:
+- AUTHOR: Ricard Borràs
+- CREATION DATE: 25-05-2005.
+- MODIFICATION: Date. Author. Description.
+*/
+void CBlobResult::Filter(CBlobResult &dst, 
+						 int filterAction, 
+						 funcio_calculBlob *evaluador, 
+						 int condition, 
 						 double lowLimit, double highLimit /*=0*/)
 							
+{
+	int numBlobs = GetNumBlobs();
+
+	// do the job
+	DoFilter(dst, filterAction, evaluador, condition, lowLimit, highLimit );
+
+	// inline operation: remove previous blobs
+	if( &dst == this ) 
+	{
+		// esborrem els primers blobs ( que són els originals )
+		// ja que els tindrem replicats al final si passen el filtre
+		Blob_vector::iterator itBlobs = m_blobs.begin();
+		for( int i = 0; i < numBlobs; i++ )
+		{
+			delete *itBlobs;
+			itBlobs++;
+		}
+		m_blobs.erase( m_blobs.begin(), itBlobs );
+	}
+}
+
+
+//! Does the Filter method job
+void CBlobResult::DoFilter(CBlobResult &dst, int filterAction, funcio_calculBlob *evaluador, 
+						   int condition, double lowLimit, double highLimit/* = 0*/) const
 {
 	int i, numBlobs;
 	bool resultavaluacio;
@@ -601,25 +693,7 @@ void CBlobResult::Filter(CBlobResult &dst,
 			}
 			break;
 	}
-
-
-	// en cas de voler filtrar un CBlobResult i deixar-ho en el mateix CBlobResult
-	// ( operacio inline )
-	if( &dst == this ) 
-	{
-		// esborrem els primers blobs ( que són els originals )
-		// ja que els tindrem replicats al final si passen el filtre
-		blob_vector::iterator itBlobs = m_blobs.begin();
-		for( int i = 0; i < numBlobs; i++ )
-		{
-			delete *itBlobs;
-			itBlobs++;
-		}
-		m_blobs.erase( m_blobs.begin(), itBlobs );
-	}
 }
-
-
 /**
 - FUNCIÓ: GetBlob
 - FUNCIONALITAT: Retorna un blob si aquest existeix (index != -1)
@@ -754,11 +828,7 @@ void CBlobResult::GetNthBlob( funcio_calculBlob *criteri, int nBlob, CBlob &dst 
 */
 void CBlobResult::ClearBlobs()
 {
-	/*for( int i = 0; i < GetNumBlobs(); i++ )
-	{
-		delete m_blobs[i];
-	}*/
-	blob_vector::iterator itBlobs = m_blobs.begin();
+	Blob_vector::iterator itBlobs = m_blobs.begin();
 	while( itBlobs != m_blobs.end() )
 	{
 		delete *itBlobs;
@@ -787,7 +857,7 @@ void CBlobResult::ClearBlobs()
 - PARAMETERS:
 	- errorCode: reason of the error
 - RESULT:
-	- in _DEBUG version, shows a message box with the error. In release is silent.
+	- in _SHOW_ERRORS version, shows a message box with the error. In release is silent.
 	  In both cases throws an exception with the error.
 - RESTRICTIONS:
 - AUTHOR: Ricard Borràs
@@ -796,8 +866,8 @@ void CBlobResult::ClearBlobs()
 */
 void CBlobResult::RaiseError(const int errorCode) const
 {
-	// estem en mode debug?
-#ifdef _DEBUG
+//! Do we need to show errors?
+#ifdef _SHOW_ERRORS
 	CString msg, format = "Error en CBlobResult: %s";
 
 	switch (errorCode)
@@ -848,7 +918,7 @@ void CBlobResult::RaiseError(const int errorCode) const
 */
 void CBlobResult::PrintBlobs( char *nom_fitxer ) const
 {
-	double_stl_vector area, /*perimetre,*/ exterior, mitjana, compacitat, longitud, 
+	double_stl_vector area, /*perimetre,*/ exterior, compacitat, longitud, 
 					  externPerimeter, perimetreConvex, perimetre;
 	int i;
 	FILE *fitxer_sortida;
@@ -856,7 +926,6 @@ void CBlobResult::PrintBlobs( char *nom_fitxer ) const
  	area      = GetSTLResult( CBlobGetArea());
 	perimetre = GetSTLResult( CBlobGetPerimeter());
 	exterior  = GetSTLResult( CBlobGetExterior());
-	mitjana   = GetSTLResult( CBlobGetMean());
 	compacitat = GetSTLResult(CBlobGetCompactness());
 	longitud  = GetSTLResult( CBlobGetLength());
 	externPerimeter = GetSTLResult( CBlobGetExternPerimeter());
@@ -867,7 +936,7 @@ void CBlobResult::PrintBlobs( char *nom_fitxer ) const
 	for(i=0; i<GetNumBlobs(); i++)
 	{
 		fprintf( fitxer_sortida, "blob %d ->\t a=%7.0f\t p=%8.2f (%8.2f extern)\t pconvex=%8.2f\t ext=%.0f\t m=%7.2f\t c=%3.2f\t l=%8.2f\n",
-				 i, area[i], perimetre[i], externPerimeter[i], perimetreConvex[i], exterior[i], mitjana[i], compacitat[i], longitud[i] );
+				 i, area[i], perimetre[i], externPerimeter[i], perimetreConvex[i], exterior[i], compacitat[i], longitud[i] );
 	}
 	fclose( fitxer_sortida );
 
