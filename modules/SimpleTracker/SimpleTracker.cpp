@@ -23,7 +23,7 @@
 
 #include "SimpleTracker.h"
 #include "StreamDebug.h"
-#include "StreamRect.h"
+#include "StreamObject.h"
 
 // for debug
 #include "util.h"
@@ -38,12 +38,12 @@ SimpleTracker::SimpleTracker(const ConfigReader& x_configReader) :
 	m_param(x_configReader), 
 	track(m_param.tracker, m_param.width, m_param.height, m_param.type)
 {
-	m_description = "Track any detect objects (from StreamRect).";
+	m_description = "Track any detect objects (from StreamObject).";
 	track.Reset();
 	
-	m_inputStreams.push_back(new StreamRect(0, "input", 	m_param.width, m_param.height, m_trackerInput, cvScalar(255,255,255), *this,	"Input objects"));
+	m_inputStreams.push_back(new StreamObject(0, "input", 	m_param.width, m_param.height, m_trackerInput, cvScalar(255,255,255), *this,	"Input objects"));
 
-	m_outputStreams.push_back(new StreamRect(0, "tracker", m_param.width, m_param.height, m_trackerOutput, cvScalar(255,255,255), *this,	"Tracked objects"));
+	m_outputStreams.push_back(new StreamObject(0, "tracker", m_param.width, m_param.height, m_trackerOutput, cvScalar(255,255,255), *this,	"Tracked objects"));
 }
 
 SimpleTracker::~SimpleTracker(void )

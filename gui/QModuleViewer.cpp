@@ -58,35 +58,14 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	assert(x_manager->GetModuleList().size() > 0);
 	m_manager 		= x_manager;
 	m_currentModule 	= *x_manager->GetModuleList().begin();
-	m_currentStream 	= *m_currentModule->GetStreamList().begin();
+	m_currentStream 	= *m_currentModule->GetOutputStreamList().begin();
 		
 	comboModules 		= new QComboBox();
 	comboStreams 	= new QComboBox();
 	layout = new QVBoxLayout;
-	//QPainter painter(this);
-	//imagelabel = new QLabel;
-	//imagelabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	//QImage dummy(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
-	//m_image = dummy;
-	
-	//layout->addWidget(imagelabel);
-	
-	/*for (int x = 0; x < m_outputWidth; x ++) 
-	{
-		for (int y =0; y < m_outputHeight; y++) 
-		{
-			image.setPixel(x,y,qRgb(x, y, y));
-		}
-	}
-	
-	imagelabel->setPixmap(QPixmap::fromImage(image));
-	*/
 	gbSettings = new QGroupBox(tr("Display options"));
 	gbSettings->setFlat(true);
 	QGridLayout * vbox = new QGridLayout;
-	//vbox->addStretch(1);
-	
-	//vbox->addWidget(m_painter);
 	
 	// Fill the list of modules
 	QLabel* lab1 = new QLabel(tr("Module"));
@@ -125,10 +104,6 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	//update();
 	m_image = QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
 	
-	//imagelabel->
-	//m_painter.setBackground(QPixmap::fromImage(m_image));
-	
-	
 	connect(comboModules, SIGNAL(activated(int)), this, SLOT(updateModule(int) ));
 	connect(comboStreams, SIGNAL(activated(int)), this, SLOT(updateStream(int)));
 }
@@ -144,20 +119,7 @@ QModuleViewer::~QModuleViewer(void)
 	delete comboStreams;
 	delete layout;
 	delete gbSettings;
-	//vbox;
-	//lab1;
-	//QLabel* lab2 = new QLabel(tr("Out stream"));
-	//QAction * actionShowDisplayMenu = new QAction(tr("Show display options"), this);
-	//QAction * actionHideDisplayMenu = new QAction(tr("Hide display options"), this);
-	//QResizeEvent* e = new QResizeEvent(QSize(x_width, x_height), size());
 }
-
-/*void QModuleViewer::Resize(int x_width, int x_height)
-{
-	QResizeEvent* e = new QResizeEvent(QSize(x_width, x_height), size());
-	resizeEvent(e);
-	delete(e);
-}*/
 
 void QModuleViewer::resizeEvent(QResizeEvent * e)
 {
@@ -192,12 +154,6 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 	m_img_tmp1 = m_img_tmp2 = NULL;
 }
 
-/*void QModuleViewer::putImage() 
-{
-	//paintEvent(NULL);
-	update();
-}*/
-
 void QModuleViewer::paintEvent(QPaintEvent * e) 
 {
 	if(m_img_original == NULL)
@@ -211,9 +167,6 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 	
 	m_currentStream->RenderTo(m_img_original);
 	
-	
-	//m_img_original
-	//dynamic_cast<const StreamImage*>(m_currentStream)->GetImage().convertTo(*m_img_output, CV_8UC3, 255);
 	adjust(m_img_original, m_img_output, m_img_tmp1, m_img_tmp2);
 
 	ConvertMat2QImage(m_img_output, &m_image);
@@ -228,12 +181,16 @@ void QModuleViewer::updateModule(const Module * x_module)
 	m_currentModule = x_module;
 	comboStreams->clear();
 	int cpt = 0;
-	for(std::vector<Stream*>::const_iterator it = m_currentModule->GetStreamList().begin(); it != m_currentModule->GetStreamList().end(); it++)
+	for(std::vector<Stream*>::const_iterator it = m_currentModule->GetOutputStreamList().begin(); it != m_currentModule->GetOutputStreamList().end(); it++)
 	{
 		comboStreams->addItem(QString((*it)->GetName().c_str()), cpt++);
 	}
-	assert(m_currentModule->GetStreamList().size() > 0);
-	updateStream(*(m_currentModule->GetStreamList().begin()));
+	for(std::vector<Stream*>::const_iterator it = m_currentModule->GetDebugStreamList().begin(); it != m_currentModule->GetDebugStreamList().end(); it++)
+	{
+		comboStreams->addItem(QString((*it)->GetName().c_str()), cpt++);
+	}
+	assert(m_currentModule->GetOutputStreamList().size() > 0);
+	updateStream(*(m_currentModule->GetOutputStreamList().begin()));
 }
 
 void QModuleViewer::updateStream(const Stream * x_outputStream)
@@ -258,12 +215,20 @@ void QModuleViewer::updateModule(int x_index)
 
 void QModuleViewer::updateStream(int x_index)
 {
-	std::vector<Stream*>::const_iterator it = m_currentModule->GetStreamList().begin();
-	
-	while(x_index-- > 0 && it != m_currentModule->GetStreamList().end())
-		it++;
-	
-	updateStream((*it));
+	unsigned int cpt = static_cast<unsigned int>(x_index);
+	if(cpt < m_currentModule->GetOutputStreamList().size())
+	{
+		updateStream(m_currentModule->GetOutputStreamList()[cpt]);
+		return;
+	}
+
+	cpt -= m_currentModule->GetOutputStreamList().size();
+	if(cpt < m_currentModule->GetDebugStreamList().size())
+	{
+		updateStream(m_currentModule->GetDebugStreamList()[cpt]);
+		return;
+	}	
+	assert(false);
 }
 
 void QModuleViewer::showDisplayOptions()
@@ -319,7 +284,6 @@ void  QModuleViewer::ConvertIplImage2QImage(const IplImage *iplImg, QImage *qimg
 			}
 		}
 	}
-	//return qimg;
 }
 
 #include "QModuleViewer.moc"

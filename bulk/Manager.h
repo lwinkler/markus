@@ -26,17 +26,18 @@
 
 #include <list>
 #include <cstring>
+#include <QReadWriteLock>
 
 #include <cv.h>
 #include "timer.h"
 
 #include "ConfigReader.h"
-//#include "ConfigReader.h"
 #include "Input.h"
 #include "Module.h"
-#include <QReadWriteLock>
 
 class CvVideoWriter;
+
+/// Parameter class
 
 class ManagerParameter : public ParameterStructure
 {
@@ -49,16 +50,14 @@ public:
 	std::string mode;
 };
 
+/// Class for managing all modules
 
 class Manager : public Configurable
 {
 public:
 	Manager(ConfigReader & x_configReader);
 	~Manager();
-	//void CaptureInput();
 	void Process();
-	//void AddInput(Input * x_input);
-	//void AddModule(Module * x_mod);
 	const std::vector<Input*> & GetInputList()  const {return m_inputs; };
 	const std::vector<Module*>& GetModuleList() const {return m_modules; };
 
@@ -76,12 +75,11 @@ private:
 	flann::StartStopTimer m_timerConv;
 	flann::StartStopTimer m_timerProc;
 
-	//flann::StartStopTimer 
 	clock_t m_timerLastProcess;
 	
 	std::vector<Module *> 		m_modules;
 	std::vector<Input  *> 		m_inputs;
-	//std::vector<ImageProcessor *> 	m_imageProcessors;
+
 	long long m_frameCount;
 protected:
 	inline virtual const ParameterStructure& GetRefParameter() const{return m_param;};

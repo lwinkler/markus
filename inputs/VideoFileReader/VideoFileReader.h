@@ -55,15 +55,12 @@ public:
 	virtual const cv::Mat * GetImage() const {return m_output;}
 
 protected:
-	VideoFileReaderParameterStructure m_param;
-	//const std::string m_name;
 	CvCapture * m_capture;
 	cv::Mat * m_output;
-
-	//int m_width;
-	//int m_height;
 	int m_fps;
-	
+
+private:
+	VideoFileReaderParameterStructure m_param;
 	inline virtual const VideoFileReaderParameterStructure& GetRefParameter() const {return m_param;};
 };
 

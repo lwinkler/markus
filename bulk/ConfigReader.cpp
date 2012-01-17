@@ -27,7 +27,32 @@
 
 using namespace std;
 
-/* Reads the configuration file with tinyxml */
+/// Reads the configuration file with tinyxml
+
+/// Constructor : config based on a configuration file
+
+ConfigReader::ConfigReader(const std::string& x_fileName)
+{
+	mp_doc = new TiXmlDocument(x_fileName);
+	if (! mp_doc->LoadFile())
+		throw("Could not load test file '" + x_fileName + "'. Error='" + mp_doc->ErrorDesc() + "'. Exiting.");
+	mp_node = mp_doc;
+};
+
+/// Constructor : config based on another config objects
+
+ConfigReader::ConfigReader(TiXmlNode * xp_node)
+{
+	mp_doc = NULL;
+	mp_node = xp_node;
+};
+
+ConfigReader::~ConfigReader()
+{
+	delete mp_doc;
+};
+
+/// Return a config objects that points to the sub element of configuration
 
 ConfigReader ConfigReader::SubConfig(const std::string& x_objectType, string x_objectName) const
 {
@@ -41,14 +66,11 @@ ConfigReader ConfigReader::SubConfig(const std::string& x_objectType, string x_o
 			newNode = newNode->NextSibling(x_objectType);
 		}
 	}
-	//if(newNode == NULL) 
-	//	throw("Impossible to find <" + x_objectType + " name=" + x_objectName + "> in config file");
-	
-	//moduleElement = newNode->ToElement();
-	//assert( moduleElement  );
 	
 	return ConfigReader(newNode);
 }
+
+/// Return a sub element that points to the next sub element of the configuration
 
 ConfigReader ConfigReader::NextSubConfig(const std::string& x_objectType, string x_objectName) const
 {
@@ -62,14 +84,11 @@ ConfigReader ConfigReader::NextSubConfig(const std::string& x_objectType, string
 			newNode = newNode->NextSibling(x_objectType);
 		}
 	}
-	//if(newNode == NULL) 
-	//	throw("Impossible to find <" + x_objectType + " name=" + x_objectName + "> in config file");
-	
-	//moduleElement = newNode->ToElement();
-	//assert( moduleElement  );
 	
 	return ConfigReader(newNode);
 }
+
+/// Return the attribute (as string) for one element
 
 const string ConfigReader::GetAttribute(const std::string& x_attributeName) const
 {
@@ -82,6 +101,8 @@ const string ConfigReader::GetAttribute(const std::string& x_attributeName) cons
 	else
 		return *str;
 }
+
+/// Return the value (as string) for one element
 
 const string ConfigReader::GetValue() const
 {

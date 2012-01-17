@@ -21,9 +21,9 @@
 		  <param name="class">CascadeDetector</param>
 	  </parameters>
   </module>
-  <module name="ObjectTracker">
+  <module name="BackgroundExtractor">
 	  <parameters>
-		  <param name="class">ObjectTracker</param>
+		  <param name="class">BackgroundExtractor</param>
 	  </parameters>
   </module>
   <module name="SimpleTracker">

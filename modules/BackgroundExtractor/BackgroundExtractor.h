@@ -53,18 +53,17 @@ public:
 	virtual void ProcessFrame();
 	inline virtual int GetInputWidth() const {return m_param.width;};
 	inline virtual int GetInputHeight() const {return m_param.height;};
-	
+		
 private:
 	BackgroundExtractorParameterStructure m_param;
-	
+	inline virtual const ModuleParameterStructure& GetRefParameter() const { return m_param;};
+
+protected:
 	cv::Mat * m_input;
 	cv::Mat * m_output;
-	//cv::Mat* m_img_blur;
 	
 	Detector detect;
 	static const char * m_type;
-protected:
-	inline virtual const ModuleParameterStructure& GetRefParameter() const { return m_param;};
 };
 
 

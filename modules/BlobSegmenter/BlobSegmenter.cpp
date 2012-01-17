@@ -23,7 +23,7 @@
 
 #include "BlobSegmenter.h"
 #include "StreamDebug.h"
-#include "StreamRect.h"
+#include "StreamObject.h"
 #include "StreamImage.h"
 
 #include "cvblobs/blob.h"
@@ -47,7 +47,7 @@ BlobSegmenter::BlobSegmenter(const ConfigReader& x_configReader) :
 
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,	"Input binary stream"));
 
-	m_outputStreams.push_back(new StreamRect(0, "segmented", m_param.width, m_param.height, m_regions, cvScalar(255,100,255), *this,	"Segmented objects"));
+	m_outputStreams.push_back(new StreamObject(0, "segmented", m_param.width, m_param.height, m_regions, cvScalar(255,100,255), *this,	"Segmented objects"));
 	
 	m_debugStreams.push_back(new StreamDebug(0, "blobs", m_blobsImg, *this,	"Blobs"));
 }
@@ -71,7 +71,7 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 {
 	// object that will contain blobs of inputImage
 	CBlobResult blobs;
-	//cvSet(m_blobsImg, cvScalar(0,0,0));
+	cvSet(m_blobsImg, cvScalar(0,0,0));
 	m_regions.clear();
 	
 	// Extract the blobs using a threshold of 100 in the image
@@ -89,6 +89,7 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 
 	for (i = 0; i < blobs.GetNumBlobs(); i++ )
 	{
+			IplImage img = *m_blobsImg; // TODO : debug only
 			currentBlob = blobs.GetBlob(i);
 			
 			//double posx = currentBlob->SumX();
@@ -103,7 +104,7 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 		//if(currentBlob->Parent() && !currentBlob->Exterior() && posx > 0 && posx < m_blobsImg->cols && posy > 0 && posy < m_blobsImg->rows) // TODO : fix this for real
 		if(true)//posx >= 0 && posx < m_blobsImg->cols && posy >= 0 && posy < m_blobsImg->rows) // TODO : fix this for real
 		{
-			// currentBlob->FillBlob( m_blobsImg, m_colorArray[i % m_colorArraySize]);
+			currentBlob->FillBlob( &img, Tracker::m_colorArray[i % Tracker::m_colorArraySize]);
 			
 			TrackedRegion reg(i);
 			reg.m_posX = rect.x;

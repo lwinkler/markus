@@ -36,11 +36,7 @@ using namespace std;
 // Static variables
 std::map<std::string,int>  ParameterImageType::m_map_types;
 
-
-/*ParameterValue::ParameterValue(int x_id, const string& x_name, const string& x_value) :
-	m_id(x_id), m_name(x_name),m_value(x_value) 
-{
-};*/
+/// Parent for all parameter structures
 
 ParameterStructure::ParameterStructure(const ConfigReader& x_configReader, const std::string& x_objectType):
 		m_configReader(x_configReader),
@@ -48,7 +44,6 @@ ParameterStructure::ParameterStructure(const ConfigReader& x_configReader, const
 	{
 		m_objectName = m_configReader.GetAttribute("name");
 		m_list.clear();
-		//Init();
 	};
 	
 ParameterStructure::~ParameterStructure()
@@ -65,7 +60,6 @@ void ParameterStructure::Init()
 	SetDefault();
 	
 	// Read parameters from config
-	//SetFromConfig(m_configReader.SubConfig("parameters").ReadParameters("param"));
 	SetFromConfig(m_configReader.SubConfig("parameters"));
 	
 	cout<<"Parameters for "<<m_objectType<<"::"<<m_objectName<<" initialized."<<endl;
@@ -79,7 +73,6 @@ void ParameterStructure::SetFromConfig(const ConfigReader& x_conf)
 {
 	ConfigReader conf = x_conf.SubConfig("param");
 	while(!conf.IsEmpty())
-	//for(vector<ParameterValue>::const_iterator it = x_list.begin(); it != x_list.end(); it++)
 	{
 		string name = conf.GetAttribute("name");
 		string value = conf.GetValue();
@@ -96,8 +89,6 @@ void ParameterStructure::SetValueByName(const string& x_name, const string& x_va
 	{
 		if((*it)->GetName().compare(x_name) == 0)//(!strcmp(it->m_name, x_name))
 		{
-			//if(x_value < it->m_min || x_value > it->m_max)
-			//	throw("Parameter " + std::string(x_name) + " out of range");
 			(*it)->SetValue(x_value, x_configType);
 			return;
 		}

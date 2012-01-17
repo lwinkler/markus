@@ -37,6 +37,8 @@ ModuleAsync::ModuleAsync(const ConfigReader& x_configReader) :
 	m_input = NULL;
 };
 
+/// Process one frame
+
 void ModuleAsync::ProcessFrame()
 {
 	m_timeSinceLastThread += m_processingTime;

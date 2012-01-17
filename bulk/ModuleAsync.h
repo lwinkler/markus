@@ -24,9 +24,12 @@
 #ifndef MODULE_ASYNC_H
 #define MODULE_ASYNC_H
 
-#include "cv.h"
+#include <cv.h>
+
 #include "Module.h"
 #include <QThread>
+
+/// This class represents a parent module that can process data asynchronously (in a separate thread)
 
 class ModuleAsyncParameterStructure : public ModuleParameterStructure
 {
@@ -47,30 +50,19 @@ public:
 	virtual ~ModuleAsync();
 	
 	virtual void ProcessFrame();
-	//const std::string& GetName(){return m_name;};
-	//const Mat * GetOutput(){return m_output;}
-	
-	/*inline int GetInputWidth() const {return GetRefParameter().width;}
-	inline int GetInputHeight() const {return GetRefParameter().height;}
-	inline int GetInputType() const {return GetRefParameter().depth;}
-	inline int GetNbChannels() const {return GetRefParameter().channels;}
-	inline int GetFps() const {return GetRefParameter().fps;}
-	*/	
 protected:
-//	Mat * m_output;
-//	const std::string m_name;
-//	std::vector<Stream *> m_outputStreams;
-//	ThreadStatus m_threadStatus;
 	cv::Mat * m_input;
 	cv::Mat * m_lastInput; // TODO : Is this used ?
 	double m_timeSinceLastThread;
 	bool m_resultsCopied;
 
-	virtual const ModuleAsyncParameterStructure & GetRefParameter() const = 0;
 	virtual const QThread & GetRefThread() = 0;
 	virtual void LaunchThread(const cv::Mat* m_input, const double x_timeSinceLastProcessing) = 0;
 	virtual void NormalProcess(const cv::Mat * img, const double x_timeSinceLastProcessing) = 0;
 	virtual void CopyResults() = 0;
+	
+private:
+	virtual const ModuleAsyncParameterStructure & GetRefParameter() const = 0;
 };
 
 #endif

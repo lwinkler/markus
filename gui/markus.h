@@ -55,8 +55,6 @@ public:
 	markus(ConfigReader& rx_configReader, Manager& rx_manager);
 	virtual ~markus();
 private:
-	//QModuleViewer cvwidget;
-
 	ConfigReader& m_configReader;
 	Manager& m_manager;
 	
@@ -70,16 +68,12 @@ private:
 	
 	void createActions();
 	void createMenus();
-	//void updateActions();
-	//void updateModuleViewers();
 	
 	QLabel *createLabel(const QString &text);
 	
 	QWidget m_mainWidget;
 	QGridLayout m_mainLayout;
 	std::vector<QModuleViewer *> m_moduleViewer;
-	//std::vector<QScrollArea   *> m_scroll;
-	//std::vector<QWidget   *> m_scroll;
 	
 	QAction *exitAct;
 	QAction *viewDisplayOptions1Act;

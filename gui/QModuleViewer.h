@@ -62,19 +62,16 @@ private:
 	int m_offsetX;
 	int m_offsetY;
 	
-	//QSize size;
-	//QIcon icon;
 	void paintEvent(QPaintEvent *event);
-	//void putImage();
 	
 	QGroupBox * gbSettings;
 	QComboBox * comboModules;
 	QComboBox * comboStreams;
 	virtual void resizeEvent(QResizeEvent * e);
 
+	// Images for format conversion
 	cv::Mat * m_img_original;
 	cv::Mat * m_img_output;
-	// Images for format conversion
 	cv::Mat* m_img_tmp1;
 	cv::Mat* m_img_tmp2;
 

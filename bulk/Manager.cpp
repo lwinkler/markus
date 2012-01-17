@@ -57,15 +57,11 @@ Manager::Manager(ConfigReader& x_configReader) :
 	m_param(m_configReader, "Manager")
 {
 	cout<<endl<<"*** Create object Manager ***"<<endl;
-	//m_workIsColor = (m_workChannels==3);	
-	//cout<<"Create Manager : Work image ("<<m_workWidth<<"x"<<m_workHeight<<" depth="<<m_workDepth<<" channels="<<m_workChannels<<")"<<endl;
 	m_frameCount = 0;
 	
 	//Initializing a video writer:
 
 	m_writer = NULL;
-	
-	//int fps     = 30; // FIXME fpsc;  // or 30
 	
 	if(m_param.mode == "benchmark")
 	{
@@ -78,8 +74,7 @@ Manager::Manager(ConfigReader& x_configReader) :
 	m_inputs.clear();
 	m_modules.clear();
 	
-	//int tot = m_configReader.ReadConfigGetVectorSize("", "module");
-
+	// Read the configuration of each module
 	ConfigReader moduleConfig = m_configReader.SubConfig("module");
 	
 	while(! moduleConfig.IsEmpty())
@@ -87,11 +82,7 @@ Manager::Manager(ConfigReader& x_configReader) :
 		// Read parameters
 		if( moduleConfig.SubConfig("parameters").IsEmpty()) 
 			throw("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name"));
-		//vector<ParameterValue> paramList = moduleConfig.SubConfig("parameters").ReadParameters("param");
-		//string moduleClass = ConfigReader::GetParameterValue("class", paramList).m_value;
-		//const string moduleName = moduleConfig.GetAttribute("name");
-		Module * tmp1 = createNewModule( moduleConfig);
-		
+		Module * tmp1 = createNewModule( moduleConfig);		
 		
 		// Add to inputs if an input
 		m_modules.push_back(tmp1);
@@ -100,7 +91,7 @@ Manager::Manager(ConfigReader& x_configReader) :
 	}
 
 	
-	// Connect input and output streams
+	// Connect input and output streams (re-read the config once since we need all modules to be connected)
 	moduleConfig = m_configReader.SubConfig("module");
 	
 	while(! moduleConfig.IsEmpty())
@@ -126,13 +117,8 @@ Manager::Manager(ConfigReader& x_configReader) :
 		}
 		moduleConfig = moduleConfig.NextSubConfig("module");
 	}
-	/*for(vector<Input *>::const_iterator it = m_inputs.begin() ; it != m_inputs.end() ; it++)
-	{
-		m_modules.push_back(dynamic_cast<Module *>(*it));
-		//cpt++;
-	}*/
 	
-	// Create timers
+	// Reset timers
 	m_timerConv.reset();
 	m_timerProc.reset();
 	
@@ -142,10 +128,6 @@ Manager::Manager(ConfigReader& x_configReader) :
 Manager::~Manager()
 {
 	PrintTimers();
-	/*for(vector<Input*>::iterator it = m_inputs.begin(); it != m_inputs.end(); it++)
-	{
-		delete(*it);
-	}*/
 	
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		delete *it;
@@ -154,6 +136,7 @@ Manager::~Manager()
 	if(m_writer != NULL) cvReleaseVideoWriter(&m_writer);
 }
 
+/// Process all modules
 
 void Manager::Process()
 {
@@ -167,13 +150,6 @@ void Manager::Process()
 	
 	try
 	{
-		/*for(vector<ImageProcessor*>::iterator it = m_imageProcessors.begin(); it != m_imageProcessors.end(); it++)
-		{
-			(*it)->Process(timecount);
-		}*/
-		//m_lock.lockForWrite();
-		//m_timeSinceLastProcessing += x_timeSinceLast;
-		//cout<<"Process "<<m_module->GetName()<<" "<<m_timeSinceLastProcessing<<" >= "<<m_timeInterval<<" "<<m_input->GetImage()<<endl;
 		for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		{
 			//assert(m_input->GetImage() != NULL);
@@ -183,7 +159,6 @@ void Manager::Process()
 				(*it)->ProcessFrame();
 			}
 		}
-		//m_lock.unlock();
 	}
 	catch(cv::Exception& e)
 	{
@@ -208,12 +183,7 @@ void Manager::Process()
 
 	
 	m_timerProc.stop();
-	//m_timerConv.start();
 
-	//m_timerConv.start();
-	//sleep(1);
-	//m_timerConv.stop();	
-	
 	m_frameCount++;
 	if(m_frameCount % 100 == 0)
 	{
@@ -222,12 +192,16 @@ void Manager::Process()
 	m_lock.unlock();
 }
 
+/// Print the results of timings
+
 void Manager::PrintTimers()
 {
 		cout<<m_frameCount<<" frames processed in "<<m_timerProc.value<<" s ("<<m_frameCount/m_timerProc.value<<" frames/s)"<<endl;
 		cout<<"Time between calls to process method "<<m_timerConv.value<<" s ("<<m_frameCount/m_timerConv.value<<" frames/s)"<<endl;
 		cout<<"Total time "<<m_timerProc.value + m_timerConv.value<<" s ("<<m_frameCount/(m_timerProc.value + m_timerConv.value)<<" frames/s)"<<endl;
 }
+
+/// Export current configuration to xml
 
 void Manager::Export()
 {

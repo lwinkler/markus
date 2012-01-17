@@ -29,83 +29,6 @@
 using namespace std;
 using namespace cv;
 
-#if 0
-void convertByte2Float(const Mat *byte_img, Mat *float_img)
-{
-	byte_img->convertTo(*float_img, float_img->type(), 1.0/255);
-	return;
-	// There is an error in this method
-
-	if( (byte_img->cols != float_img->cols) ||
-		(byte_img->rows != float_img->rows) ||
-		(byte_img->channels() != float_img->channels()) ||
-		(byte_img->depth() != CV_8U) ||
-		(float_img->depth() != CV_32F))
-	{
-		printf("convertByte2Float error. Aborting ... \n");
-		exit(-1);
-	}
-	unsigned char * runner1= (unsigned char *)byte_img->data;
-	float * runner2 = (float *) float_img->data;
-	int skip = byte_img->cols-byte_img->channels()*byte_img->rows;
-	for(int i=0;i<byte_img->rows;i++)
-	{
-		for(int j=0;j<byte_img->cols;j++)
-		{
-			for(int k=0;k<byte_img->channels();k++)
-			{
-				*runner2++ = (float) (*runner1++/255.);
-			}
-		}
-		runner1+=skip;
-	}
-}
-
-
-void convertFloat2Byte(const Mat *float_img, Mat *byte_img)
-{
-//	saveMat(float_img, "float_img.bmp");
-	float_img->convertTo(*byte_img, byte_img->type(), 255);
-	return;
-	
-	if( (byte_img->cols != float_img->cols) ||
-		(byte_img->rows != float_img->rows) ||
-		(byte_img->channels() != float_img->channels()) ||
-		(byte_img->depth() != CV_8U) ||
-		(float_img->depth() != CV_32F))
-	{
-		throw("convertByte2Float error. Aborting ...");
-	}
-	//unsigned char * runner1= (unsigned char *)byte_img->data;
-	//float * runner2 = (float *) float_img->data;
-	//int skip = byte_img->cols - byte_img->channels() * byte_img->cols;
-	//assert(byte_img->cols * byte_img->rows * byte_img->channels() == byte_img->size().area());
-	for(int i=0;i<byte_img->rows;i++) // TODO : rewrite loop
-	{
-		unsigned char * runner1 = byte_img->ptr<unsigned char>(i);
-		const float * runner2 = float_img->ptr<float>(i); // float !
-		for(int j=0;j<byte_img->cols * byte_img->channels();j++)
-		{
-			*runner1 = (unsigned char) 255;//(*runner2/**255.*/);
-			runner1++;
-			runner2++;
-		}
-		//runner1+=skip;
-	}
-	/*for(int i = 0; i < byte_img->rows; i++)
-	{
-		unsigned char* pU = byte_img->ptr<unsigned char>(i);
-		const double* pF = float_img->ptr<double>(i);
-		for(int j = 0; j < byte_img->cols * byte_img->channels(); j++)
-		{
-			printf("%d <- %f\n", *pU, *pF);
-			*pU++ = static_cast<unsigned char> (*pF++ * 255.);
-			printf("%d  <- %f\n", *(pU-1), *(pF-1) * 255.);
-		}
-	}*/
-}
-#endif
-
 /* Set image to the right size */
 
 void adjustSize(const Mat* im_in, Mat* im_out)
@@ -228,15 +151,5 @@ void saveMat(const cv::Mat* x_mat, const std::string& x_name)
 		IplImage img = *x_mat;
 		cvSaveImage(x_name.c_str(), &img);
 	}
-	
-/*	FileStorage fs("x_name", FileStorage::WRITE);
-	//if (!fs.isOpened())
-	//{
-	//fs.open();//(", FileStorage::WRITE);
-	fs / *<< "mtxCam"* / << *x_mat;
-	//fs << "mtxDist" << distCoeffs;
-	fs.release();
-*/
-	
 }
 

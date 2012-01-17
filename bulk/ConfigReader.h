@@ -31,45 +31,26 @@
 
 
 class Module;
-//class Manager;std::vector<ParameterValue> 
+
+/// Class to read a config file
 
 class ConfigReader
 {
 public:
-	ConfigReader(const std::string& x_fileName)
-	{
-		//m_fileName = x_fileName;
-		//m_parameterList.clear();
-		mp_doc = new TiXmlDocument(x_fileName);
-		if (! mp_doc->LoadFile())
-			throw("Could not load test file '" + x_fileName + "'. Error='" + mp_doc->ErrorDesc() + "'. Exiting.");
-		mp_node = mp_doc;//mp_doc->FirstChild( "application" );
-	};
-	ConfigReader(TiXmlNode * xp_node)
-	{
-		mp_doc = NULL;
-		mp_node = xp_node;
-	};
-	~ConfigReader()
-	{
-		delete mp_doc;
-	};
+	ConfigReader(const std::string& x_fileName);
+	ConfigReader(TiXmlNode * xp_node);
+	~ConfigReader();
 	ConfigReader SubConfig(const std::string& x_objectType, std::string x_objectName = "") const;
 	ConfigReader NextSubConfig(const std::string& x_objectType, std::string x_objectName = "") const;
 	bool IsEmpty(){ return mp_doc == NULL && mp_node == NULL;};
-	//std::vector<ParameterValue> ReadParameters(const std::string& rx_type, const std::string& rx_name = "") const;
-	/*std::vector<ParameterValue> ReadParameters(const std::string& x_type, const std::string& x_moduleName, bool x_getClassOnly = false) const;
-	std::vector<ParameterValue> ReadModules(const std::string& x_vectorType, const std::string& x_type, int x_objectNumber, bool x_getClassOnly = false) const;
-	int ReadConfigGetVectorSize(const std::string& x_vectorType, const std::string& x_objectType) const;
-	*/
-	//static ParameterValue GetParameterValue(const std::string& x_name, const std::vector<ParameterValue> & x_parameterList);
 	const std::string GetValue() const;
 	const std::string GetAttribute(const std::string& x_attributeName) const;
 private:
-	//std::string m_fileName;
 	TiXmlNode * mp_node;
 	TiXmlDocument * mp_doc;
 };
+
+/// Class for a configurable object (containing parameters)
 
 class Configurable
 {
@@ -77,7 +58,6 @@ public:
 	Configurable(const ConfigReader& x_confReader) : m_configReader(x_confReader){};
 	~Configurable(){};
 protected:
-	void ReadParametersFromConfig();
 	const ConfigReader m_configReader;
 	inline virtual const ParameterStructure & GetRefParameter() const = 0;
 };

@@ -40,7 +40,6 @@ public:
 		m_list.push_back(new ParameterT<int>(0, "inputWidth", 		640, 	PARAM_INT, 	0, 	4000,	&width,		"Width of the input"));
 		m_list.push_back(new ParameterT<int>(0, "inputHeight", 	480, 	PARAM_INT, 	0, 	3000,		&height,	"Height of the input"));
 		m_list.push_back(new ParameterImageType(0, "inputType", 	CV_8UC1, 				&type,		"Format of the input image"));
-	//	m_list.push_back(new ParameterT<int>(0, "channels", 	3, 	PARAM_INT, 	1, 	3,		&channels));
 		m_list.push_back(new ParameterT<double>(0, "fps", 	10, 	PARAM_DOUBLE, 	0, 	100000,		&fps,		"Frames per seconds (processing speed)")); //TODO : Check that min max works
 	};
 
@@ -48,7 +47,6 @@ public:
 	int width; // TODO : rename inputWidth
 	int height;
 	int type;
-	// int channels;
 	double fps;
 	std::string objClass;
 };
@@ -64,14 +62,14 @@ public:
 	const std::string& GetName(){return m_name;};
 	const std::string& GetDescription(){return m_description;};
 	int GetId() const {return m_id;};
-	//const cv::Mat * GetOutput(){return m_output;}
-	//void AddStream(const std::string& x_name, StreamType x_type, Mat* m_image);
-	const std::vector<Stream*>& GetStreamList() const {return m_outputStreams;};
+
+	const std::vector<Stream*>& GetInputStreamList() const {return m_inputStreams;};
+	const std::vector<Stream*>& GetOutputStreamList() const {return m_outputStreams;};
+	const std::vector<Stream*>& GetDebugStreamList() const {return m_debugStreams;};
 	
 	virtual int GetInputWidth() const = 0;// {return GetRefParameter().width;}
 	virtual int GetInputHeight() const = 0;// {return GetRefParameter().height;}
 	inline int GetInputType() const {return GetRefParameter().type;};
-	//virtual inline int GetNbChannels() const {return GetRefParameter().channels;}
 	inline int GetFps() const {return GetRefParameter().fps;};
 	inline bool AddProcessingTime(double x_time){ return GetFps() == 0 ||  (m_processingTime += x_time) > 1.0 / GetFps(); };
 	inline void ResetProcessingTime(){m_processingTime = 0;};
@@ -87,16 +85,11 @@ protected:
 	std::vector<Stream *> m_inputStreams;
 	std::vector<Stream *> m_outputStreams;
 	std::vector<Stream *> m_debugStreams;	
-	//cv::Mat * m_input;
-	//cv::Mat * m_output;
-	//cv::Mat * m_img_tmp1; // To convert the input
-	//cv::Mat * m_img_tmp2;
 	std::string m_name;
 	std::string m_description; 
 	int m_id;
 	double m_processingTime;
 	virtual const ModuleParameterStructure & GetRefParameter() const = 0;
-	
 };
 
 #endif

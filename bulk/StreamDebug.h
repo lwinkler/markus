@@ -28,6 +28,8 @@
 
 #include "Stream.h"
 
+/// This class represents a stream that is only used for debug
+// TODO : See if we keep a specific class for this finally
 
 class StreamDebug : public Stream
 {

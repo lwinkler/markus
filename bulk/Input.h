@@ -24,8 +24,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#include "cv.h"
-#include <highgui.h>
+#include <cv.h>
 
 #include "ConfigReader.h"
 #include "Parameter.h"
@@ -37,23 +36,7 @@ class InputParameterStructure : public ModuleParameterStructure
 public:
 	InputParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-		/*m_list.push_back(new ParameterT<std::string>(0, "class", "", 	PARAM_STR, 			&objClass));
-		m_list.push_back(new ParameterT<int>(0, "width", 	640, 	PARAM_INT, 	0, 	4000,	&width));
-		m_list.push_back(new ParameterT<int>(0, "height", 	480, 	PARAM_INT, 	0, 	3000,	&height));
-		m_list.push_back(new ParameterT<int>(0, "depth", 	CV_8UC1, PARAM_INT, 0, 	32,	&depth));
-		m_list.push_back(new ParameterT<int>(0, "channels", 	3, 	PARAM_INT, 	1, 	3,	&channels));
-		// m_list.push_back(new ParameterT<std::string>(0, "source", 	"cam", 	PARAM_STR, 	&source));
-		m_list.push_back(new ParameterT<double>(0, "fps", 	10, 	PARAM_DOUBLE, 	0, 	100,	&fps));*/
 	};
-
-public:
-	// std::string source;
-	/*int width;
-	int height;
-	int depth;
-	int channels;
-	double fps;
-	std::string objClass;*/
 };
 
 class Input : public Module
@@ -77,8 +60,6 @@ public:
 private:
 
 protected:
-	//InputParameterStructure m_param;
-	//cv::Mat * m_input;
 	cv::Mat * m_render;
 	
 	const std::string m_name;

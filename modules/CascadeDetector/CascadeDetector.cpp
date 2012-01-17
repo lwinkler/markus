@@ -23,7 +23,7 @@
 
 #include "CascadeDetector.h"
 #include "StreamImage.h"
-#include "StreamRect.h"
+#include "StreamObject.h"
 #include "StreamDebug.h"
 
 #include <iostream>
@@ -52,7 +52,7 @@ CascadeDetector::CascadeDetector(const ConfigReader& x_configReader)
 
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this, 		"Video input")); 
 
-	m_outputStreams.push_back(new StreamRect(0, "detected", m_param.width, m_param.height, 
+	m_outputStreams.push_back(new StreamObject(0, "detected", m_param.width, m_param.height, 
 				m_detectedObjects, ColorFromStr(m_param.color), *this,	"Detected objects"));
 	m_outputStreams.push_back(new StreamDebug(1, "debug", m_debug, *this,		""));
 //	m_outputStreams.push_back(new StreamImage("input", m_inputCopy));

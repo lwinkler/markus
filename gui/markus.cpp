@@ -28,10 +28,7 @@
 #include <QMenuBar>
 #include <QAction>
 
-//#include <QVBoxLayout>
-//#include <QGridLayout>
 #include <QTimer>
-//#include <QGroupBox>
 #include <QMessageBox>
 #include <QComboBox>
 #include <qevent.h>
@@ -67,10 +64,6 @@ markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 	nbCols = 1;
 
 	startTimer(10);  // 100 -> 0.1-second timer
-
-	//QTimer *timer = new QTimer(this);
-	//QWidget* mainWidget = new QWidget;
-	//QGridLayout* mainLayout = new QGridLayout;
 	
 	setWindowState(Qt::WindowMaximized);
 	
@@ -86,17 +79,8 @@ markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 		m_inputTimer.push_back(timer);
 	}
 	
-	//mainWidget->setLayout(mainLayout);
-
-	//setCentralWidget(mainWidget);
-	
-	//layout()->addWidget(quit);
-	//	layout->addWidget(quit);//, 0 , 1 );
-	//timer->start(100);
 	createActions();
 	createMenus();
-
-	
 	resizeEvent(NULL);
 
 	setWindowTitle(tr("Markus"));
@@ -212,13 +196,6 @@ void markus::createMenus()
 	menuBar()->addMenu(viewMenu);
 	menuBar()->addMenu(helpMenu);
 }
-
-/*void Window::updateActions()
-{
-	zoomInAct->setEnabled(!fitToWindowAct->isChecked());
-	zoomOutAct->setEnabled(!fitToWindowAct->isChecked());
-	normalSizeAct->setEnabled(!fitToWindowAct->isChecked());
-}*/
 
 void markus::viewDisplayOptions1()
 {

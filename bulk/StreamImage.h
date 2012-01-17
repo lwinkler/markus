@@ -28,6 +28,7 @@
 
 #include "Stream.h"
 
+/// Class for a stream of images (or video) used for input and output
 
 class StreamImage : public Stream
 {

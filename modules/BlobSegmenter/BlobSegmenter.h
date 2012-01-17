@@ -55,10 +55,8 @@ public:
 	inline virtual int GetInputWidth() const {return m_param.width;};
 	inline virtual int GetInputHeight() const {return m_param.height;};
 	
-private:
+protected:
 	void ExtractBlobs(cv::Mat* x_img);
-	
-	BlobSegmenterParameterStructure m_param;
 	
 	// for streams
 	cv::Mat * m_input;
@@ -67,8 +65,10 @@ private:
 	static const char * m_type;
 	//std::vector <TrackedRegion> m_regions;		
 	std::vector<cv::Rect> m_regions;
-protected:
 	double GetSTLResult( CBlob* blob, funcio_calculBlob *evaluador ) const;
+
+private:
+	BlobSegmenterParameterStructure m_param;
 	inline virtual const ModuleParameterStructure& GetRefParameter() const { return m_param;};
 };
 

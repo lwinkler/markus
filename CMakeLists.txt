@@ -25,7 +25,7 @@ bulk/Parameter.cpp
 bulk/Stream.cpp
 bulk/StreamImage.cpp
 bulk/StreamDebug.cpp
-bulk/StreamRect.cpp
+bulk/StreamObject.cpp
 bulk/util.cpp
 bulk/ConfigReader.cpp
 tools/Tracker.cpp

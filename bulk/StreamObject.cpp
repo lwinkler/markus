@@ -21,31 +21,32 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "StreamRect.h"
+#include "StreamObject.h"
 #include <iostream>
 
 using namespace std;
 using namespace cv;
 
-StreamRect::StreamRect(int x_id, const std::string& x_name, int x_width, int x_height, 
+StreamObject::StreamObject(int x_id, const std::string& x_name, int x_width, int x_height, 
 		       vector<Rect>& r_rects, const CvScalar& x_color, Module& rx_module, const string& rx_description) : 
 	Stream(x_id, x_name, STREAM_IMAGE, x_width, x_height, rx_module, rx_description),
 	m_rects(r_rects),
 	m_color(x_color)
 {
-	//m_rects.clear();
 }
 
 
-StreamRect::~StreamRect()
+StreamObject::~StreamObject()
 {
 
 }
 
-void StreamRect::ConvertInput()
+/// Convert the input to the right format
+
+void StreamObject::ConvertInput()
 {
 	assert(m_connected != NULL);
-	const StreamRect * pstream = dynamic_cast<const StreamRect*>(m_connected);
+	const StreamObject * pstream = dynamic_cast<const StreamObject*>(m_connected);
 	std::vector<Rect> rectsTarget = pstream->m_rects;
 	double ratioX = static_cast<double>(m_width) / pstream->GetInputWidth();
 	double ratioY = static_cast<double>(m_height) / pstream->GetInputHeight();
@@ -60,8 +61,9 @@ void StreamRect::ConvertInput()
 	}
 }
 
-// Render : Draw rectangles on image
-void StreamRect::RenderTo(Mat * xp_output) const
+/// Render : Draw rectangles on image
+
+void StreamObject::RenderTo(Mat * xp_output) const
 {
 	for(vector<Rect>::const_iterator it = m_rects.begin() ; it != m_rects.end() ; it++)
 	{

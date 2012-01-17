@@ -26,9 +26,6 @@
 #include "util.h"
 
 #include "Stream.h"
-#include "StreamImage.h"
-#include "StreamDebug.h"
-#include "StreamRect.h"
 
 #include <list>
 
@@ -57,24 +54,16 @@ Module::~Module()
 
 void Module::ReadAndConvertInput()//const cv::Mat* x_img)
 {
-	//m_input->m_lock.lockForRead();
-	
-	// adjust(x_img, m_input, m_img_tmp1, m_img_tmp2);
 	for(vector<Stream*>::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
 	{
 		(*it)->LockForRead();
 		(*it)->ConvertInput();
 		(*it)->UnLock();
 	}
-	//m_input->m_lock.unlock();
 }
 
-/*void Module::AddStream(const std::string& x_name, StreamType x_type, Mat* x_image)
-{
-	m_outputStreams.push_back(new Stream(x_name, x_type, x_image));
-}*/
-
 /// Describe the module with name, parameters, inputs, outputs to an output stream (in xml)
+
 void Module::Export(ostream& rx_os, int x_indentation)
 {
 	string tabs(x_indentation, '\t');

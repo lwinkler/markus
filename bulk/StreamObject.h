@@ -28,13 +28,14 @@
 
 #include "Stream.h"
 
+/// Stream in the form of located objects
 
-class StreamRect : public Stream
+class StreamObject : public Stream
 {
 public:
-	StreamRect(int x_id, const std::string& x_name, int x_width, int x_height, 
+	StreamObject(int x_id, const std::string& x_name, int x_width, int x_height, 
 		   std::vector<cv::Rect>& r_rects, const CvScalar& x_color, Module& rx_module, const std::string& rx_description);
-	~StreamRect();
+	~StreamObject();
 	void Clear() {m_rects.clear();};
 	void AddRect(cv::Rect x_rect) {m_rects.push_back(x_rect);};
 	
@@ -45,8 +46,8 @@ protected:
 	std::vector<cv::Rect> & m_rects;
 private:
 	CvScalar m_color;
-	StreamRect& operator=(const StreamRect&);
-	StreamRect(const StreamRect&);
+	StreamObject& operator=(const StreamObject&);
+	StreamObject(const StreamObject&);
 };
 
 #endif

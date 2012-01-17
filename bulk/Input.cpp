@@ -28,28 +28,21 @@ using namespace std;
 
 
 Input::Input(const ConfigReader& x_configReader): 
-	//m_param(x_configReader, x_name), 
-	//Configurable(x_configReader),
 	Module(x_configReader)
 {
 	cout<<endl<<"*** Create object Input : "<<m_name<<" ***"<<endl;
 
-	m_render = NULL;  // cvCreateImage( cvSize(12,12)/*GetInputWidth(), GetInputHeight())*/, CV_8U_C3);
+	m_render = NULL;
 	m_inputWidth = 0;
 	m_inputHeight = 0;
-// 	m_outputStreams.push_back(new StreamImage("detected", m_input));
-
 }
 
 Input::~Input()
 {
-	//cvReleaseImage(&m_input);
 }
 
 void Input::ProcessFrame()
 {
-	//cout<<"copy "<<m_input<<" to "<<m_render<<endl;
-	//m_input->copyTo(*m_render);
 	assert(m_outputStreams.size() > 0);
 	m_outputStreams[0]->RenderTo(m_render);
 	
