@@ -103,8 +103,6 @@ class TrackedRegion
 		double m_posX;
 		double m_posY;
 	private:
-		//static int m_counter;
-		
 		int m_num;
 		std::vector <Feature> m_feats;
 };
@@ -174,12 +172,12 @@ class Tracker
 		
 		static int m_colorArraySize;
 		static CvScalar m_colorArray[];
+		std::list <Template> m_templates;
+		std::vector <TrackedRegion> m_regions;
 		
 	private:
 		// Background subtraction
 //		cv::Mat* m_blobsImg;
-		std::list <Template> m_templates;
-		std::vector <TrackedRegion> m_regions;		
 		
 		const TrackerParameter& m_param;
 };

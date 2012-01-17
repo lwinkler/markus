@@ -27,11 +27,17 @@
 using namespace std;
 using namespace cv;
 
+Object::Object()
+{
+
+}
+
+
 StreamObject::StreamObject(int x_id, const std::string& x_name, int x_width, int x_height, 
-		       vector<Rect>& r_rects, const CvScalar& x_color, Module& rx_module, const string& rx_description) : 
+		       vector<Object>& xr_objects, const CvScalar& x_color, Module& rx_module, const string& rx_description) : 
 	Stream(x_id, x_name, STREAM_IMAGE, x_width, x_height, rx_module, rx_description),
-	m_rects(r_rects),
-	m_color(x_color)
+	m_objects(xr_objects)
+	//m_color(x_color)
 {
 }
 
@@ -47,17 +53,22 @@ void StreamObject::ConvertInput()
 {
 	assert(m_connected != NULL);
 	const StreamObject * pstream = dynamic_cast<const StreamObject*>(m_connected);
-	std::vector<Rect> rectsTarget = pstream->m_rects;
+	std::vector<Object> rectsTarget = pstream->m_objects;
 	double ratioX = static_cast<double>(m_width) / pstream->GetInputWidth();
 	double ratioY = static_cast<double>(m_height) / pstream->GetInputHeight();
-	for(vector<Rect>::const_iterator it = m_rects.begin() ; it != m_rects.end() ; it++)
+	
+	m_objects.clear();
+	for(vector<Object>::const_iterator it = rectsTarget.begin() ; it != rectsTarget.end() ; it++)
 	{
-		Rect rect;  
-		rect.x 		= it->x * ratioX;
-		rect.y 		= it->y * ratioY;
-		rect.width 	= it->width  * ratioX;
-		rect.height 	= it->height * ratioY;
-		rectsTarget.push_back(rect);
+		const Rect & rectIn = it->GetRect();
+		Rect rectOut;
+		rectOut.x 		= rectIn.x * ratioX;
+		rectOut.y 		= rectIn.y * ratioY;
+		rectOut.width 		= rectIn.width  * ratioX;
+		rectOut.height 		= rectIn.height * ratioY;
+		Object obj = *it;
+		obj.SetRect(rectOut);
+		m_objects.push_back(obj);
 	}
 }
 
@@ -65,10 +76,11 @@ void StreamObject::ConvertInput()
 
 void StreamObject::RenderTo(Mat * xp_output) const
 {
-	for(vector<Rect>::const_iterator it = m_rects.begin() ; it != m_rects.end() ; it++)
+	for(vector<Object>::const_iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
 	{
-		Point p1(it->x, it->y);
-		Point p2(it->x + it->width, it->y + it->height);
+		Rect rect = it->GetRect();
+		Point p1(rect.x, rect.y);
+		Point p2(rect.x + rect.width, rect.y + rect.height);
 		
 		float scale = static_cast<float>(xp_output->cols) / m_width;
 		p1.x = p1.x * scale;
@@ -78,6 +90,6 @@ void StreamObject::RenderTo(Mat * xp_output) const
 		p2.y = p2.y * scale;
 		
 		// Draw the rectangle in the input image
-		rectangle( *xp_output, p1, p2, m_color, 1, 8, 0 );
+		rectangle( *xp_output, p1, p2, /*it->GetColor()*/ cvScalar(255,66,222), 1, 8, 0 );
         }
 }

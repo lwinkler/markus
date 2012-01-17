@@ -26,6 +26,7 @@
 
 #include "Module.h"
 #include "Tracker.h"
+#include "StreamObject.h"
 
 class ConfigReader;
 
@@ -54,8 +55,8 @@ private:
 	SimpleTrackerParameterStructure m_param;
 	
 	// for streams
-	std::vector<cv::Rect> m_trackerInput;
-	std::vector<cv::Rect> m_trackerOutput;
+	std::vector<Object> m_trackerInput;
+	std::vector<Object> m_trackerOutput;
 	
 	Tracker track;
 	static const char * m_type;

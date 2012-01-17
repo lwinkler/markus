@@ -85,11 +85,12 @@ void CascadeDetector::NormalProcess(const Mat* img, const double x_timeSinceLast
 	cvtColor(*m_lastInput, *m_debug, CV_GRAY2RGB);
 	//Stream& os(*m_outputStreams[0]);
 	//os.ClearRect();
-	for(vector<Rect>::const_iterator it = m_detectedObjects.begin() ; it != m_detectedObjects.end() ; it++)
+	for(vector<Object>::const_iterator it = m_detectedObjects.begin() ; it != m_detectedObjects.end() ; it++)
 	{
 		// TODO : See if we move this to execute it once only
-		Point p1(it->x, it->y);
-		Point p2(it->x + it->width, it->y + it->height);
+		const Rect& rect = it->GetRect();
+		Point p1(rect.x, rect.y);
+		Point p2(rect.x + rect.width, rect.y + rect.height);
 		
 		// Draw the rectangle in the input image
 		rectangle( *m_debug, p1, p2, ColorFromStr(m_param.color), 1, 8, 0 );
@@ -101,7 +102,14 @@ void CascadeDetector::NormalProcess(const Mat* img, const double x_timeSinceLast
 
 void CascadeDetector::CopyResults()
 {
-	m_detectedObjects = m_thread.GetDetectedObjects();
+	// TODO : See if we can find faster by avoiding copies
+	m_detectedObjects.clear();
+	for(std::vector<Rect>::const_iterator it = m_thread.GetDetectedObjects().begin() ; it != m_thread.GetDetectedObjects().end() ; it++)
+	{
+		Object obj;
+		obj.SetRect(*it);
+		m_detectedObjects.push_back(obj);
+	}
 }
 
 void DetectionThread::run()

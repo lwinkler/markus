@@ -25,6 +25,7 @@
 #define BLOBSEGMENTER_H
 
 #include "Module.h"
+#include "StreamObject.h"
 
 #include "cvblobs/BlobResult.h"
 //#include "cvblobs/BlobExtraction.h"
@@ -64,7 +65,7 @@ protected:
 
 	static const char * m_type;
 	//std::vector <TrackedRegion> m_regions;		
-	std::vector<cv::Rect> m_regions;
+	std::vector<Object> m_regions;
 	double GetSTLResult( CBlob* blob, funcio_calculBlob *evaluador ) const;
 
 private:

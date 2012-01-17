@@ -71,7 +71,7 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 {
 	// object that will contain blobs of inputImage
 	CBlobResult blobs;
-	cvSet(m_blobsImg, cvScalar(0,0,0));
+	m_blobsImg->setTo(cvScalar(0,0,0));
 	m_regions.clear();
 	
 	// Extract the blobs using a threshold of 100 in the image
@@ -139,7 +139,9 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 			rect.y = posy;
 			rect.width  = currentBlob->MaxX() - currentBlob->MinX();
 			rect.height = currentBlob->MaxY() - currentBlob->MinY();*/
-			m_regions.push_back(rect);
+			Object obj;
+			obj.SetRect(rect);
+			m_regions.push_back(obj);
 		}
 		//else throw("ERROR");
 	}

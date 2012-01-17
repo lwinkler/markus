@@ -28,24 +28,39 @@
 
 #include "Stream.h"
 
+class Object
+{
+public:
+	Object();
+	inline const cv::Rect& GetRect() const {return m_rect;};
+	inline void SetRect(const cv::Rect x_rect){m_rect = x_rect;};
+	inline const CvScalar& GetColor() const {return m_color;};
+protected:
+	cv::Rect m_rect;
+	CvScalar m_color;
+};
+
 /// Stream in the form of located objects
 
 class StreamObject : public Stream
 {
 public:
 	StreamObject(int x_id, const std::string& x_name, int x_width, int x_height, 
-		   std::vector<cv::Rect>& r_rects, const CvScalar& x_color, Module& rx_module, const std::string& rx_description);
+		   std::vector<Object>& r_rects, const CvScalar& x_color, Module& rx_module, const std::string& rx_description);
 	~StreamObject();
-	void Clear() {m_rects.clear();};
-	void AddRect(cv::Rect x_rect) {m_rects.push_back(x_rect);};
+	void Clear() {m_objects.clear();};
+	void AddObject(const Object x_obj) {m_objects.push_back(x_obj);};
 	
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat * xp_output) const;
-	inline virtual const std::string GetTypeString()const {return "Rect";};
+	inline virtual const std::string GetTypeString()const {return "Objects";};
+	inline void AddPropertyName(const std::string & x_name){m_propertyNames.push_back(x_name);};
+
 protected:
-	std::vector<cv::Rect> & m_rects;
+	std::vector<Object> & m_objects;
+	std::vector<std::string> m_propertyNames;
+
 private:
-	CvScalar m_color;
 	StreamObject& operator=(const StreamObject&);
 	StreamObject(const StreamObject&);
 };

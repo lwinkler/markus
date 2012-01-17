@@ -25,10 +25,11 @@
 #define CASCADE_DETECTOR_H
 
 #include <cv.h>
+#include <QThread>
+
 #include "ModuleAsync.h"
 #include "Parameter.h"
-
-#include <QThread>
+#include "StreamObject.h"
 
 /*! \class CascadeDetector
  *  \brief Module class for detection based on cascade filters (Haar, ...)
@@ -98,7 +99,7 @@ private:
 	static const char * m_type;
 	
 	//cv::CascadeClassifier m_cascade;
-	std::vector<cv::Rect> m_detectedObjects;
+	std::vector<Object> m_detectedObjects;
 	cv::Mat * m_debug;
 	
 	DetectionThread m_thread;

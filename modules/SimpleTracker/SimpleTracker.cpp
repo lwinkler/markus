@@ -55,11 +55,51 @@ void SimpleTracker::ProcessFrame()
 	// Main part of the program
 	//track.ExtractBlobs(detect.GetForegroundRff());
 	//track.PrintRegions();
+	int cpt = 0;
+	track.m_regions.clear();
+	for(vector<Object>::const_iterator it = m_trackerInput.begin()  ; it != m_trackerInput.end() ; it++ )
+	{
+		TrackedRegion reg(cpt);
+		const Rect& rect = it->GetRect();
+		reg.m_posX = rect.x;
+		reg.m_posY = rect.y;
+		
+		/*if(Feature::m_names.size() == 0)
+		{
+			// Write names once
+			Feature::m_names.push_back("area");
+			Feature::m_names.push_back("perimeter");
+			Feature::m_names.push_back("position x");
+			Feature::m_names.push_back("position y");
+		}*/
+		reg.AddFeature(rect.x);
+		reg.AddFeature(rect.y);
+		reg.AddFeature(rect.width);
+		reg.AddFeature(rect.height);
+		
+		track.m_regions.push_back(reg);
+		cpt++;
+	}
+	
+	
 	track.MatchTemplates();
 	track.CleanTemplates();
 	track.DetectNewTemplates();
 	track.UpdateTemplates();
 	
+	m_trackerOutput.clear();
+	for(list<Template>::const_iterator it = track.m_templates.begin()  ; it != track.m_templates.end() ; it++ )
+	{
+		Rect rect;
+		rect.x = it->m_posX;
+		rect.y = it->m_posY;
+		rect.width = 10;
+		rect.height = 30;//TODO
+		Object obj;
+		obj.SetRect(rect); // TODO : Objects must be centered !!!!
+		m_trackerOutput.push_back(obj);
+	}
+
 	//cvCopy(track.GetBlobsImg(), m_output);
 	//track.PrintTrackedRegions();
 };
