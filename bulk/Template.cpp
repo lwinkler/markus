@@ -73,6 +73,7 @@ double Template::CompareWithObject(const Object& x_reg) const
 	double sum = 0;
 	//cout<<"m_feats.size() ="<<m_feats.size()<<endl;
 	assert(m_feats.size() == x_reg.GetFeatures().size());
+	assert(m_feats.size() > 0);
 	
 	for ( unsigned int i=0 ; i < m_feats.size() ; i++)
 	{

@@ -48,6 +48,7 @@ public:
 protected:
 	std::vector<Object> & m_objects;
 	std::vector<std::string> m_propertyNames;
+	CvScalar m_color;
 
 private:
 	StreamObject& operator=(const StreamObject&);

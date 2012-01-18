@@ -1,11 +1,16 @@
 #include "Object.h"
 
+using namespace std;
 
-Object::Object()
+Object::Object(const string& x_name) :
+	m_name(x_name),
+	m_id(-1),
+	m_posX(0),
+	m_posY(0),
+	m_width(0),
+	m_height(0)
+	//m_color(cvScalar(255,255,255))
 {
-	//m_num = x_num;//m_counter;
-	//m_counter++;
-	m_color = cvScalar(255,255,255);
 };
 
 /*

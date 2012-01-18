@@ -1,0 +1,60 @@
+<application name="FaceAndTracker" description="" cyclelimit="-1" gui="">
+  <module name="UsbCam" machineurl="localhost" id="0">
+    <parameters>
+      <param name="class">UsbCam</param>
+      <param name="inputWidth">640</param>
+      <param name="inputHeight">480</param>
+      <param name="inputType">CV_8UC1</param>
+      <param name="fps">10</param>
+      <param name="num">-1</param>
+    </parameters>
+    <inputs />
+    <outputs>
+      <output id="0" />
+      <output id="1" />
+    </outputs>
+    <display x="50" y="50" width="150" height="75" />
+    <uiobject type="" x="0" y="0" width="0" height="0" />
+  </module>
+  <module name="CascadeDetector" machineurl="localhost" id="1">
+    <parameters>
+      <param name="class">CascadeDetector</param>
+      <param name="inputWidth">640</param>
+      <param name="inputHeight">480</param>
+      <param name="inputType">CV_8UC1</param>
+      <param name="fps">1000</param>
+      <param name="detectionFps">2</param>
+      <param name="minNeighbors">2</param>
+      <param name="minSide">0</param>
+      <param name="scaleFactor">1.2</param>
+      <param name="filterFile">modules/CascadeDetector/lbpcascade_frontalface.xml</param>
+      <param name="color">(255,0,255)</param>
+    </parameters>
+    <inputs>
+      <input id="0" moduleid="0" outputid="0" />
+    </inputs>
+    <outputs>
+      <output id="0" />
+      <output id="1" />
+    </outputs>
+    <display x="273" y="50" width="150" height="75" />
+    <uiobject type="" x="0" y="0" width="0" height="0" />
+  </module>
+  <module name="SimpleTracker" machineurl="localhost" id="2">
+    <parameters>
+      <param name="class">SimpleTracker</param>
+      <param name="inputWidth">640</param>
+      <param name="inputHeight">480</param>
+      <param name="inputType">CV_8UC1</param>
+      <param name="fps">10</param>
+    </parameters>
+    <inputs>
+      <input id="0" moduleid="1" outputid="0" />
+    </inputs>
+    <outputs>
+      <output id="0" />
+    </outputs>
+    <display x="523" y="51" width="150" height="75" />
+    <uiobject type="" x="0" y="0" width="0" height="0" />
+  </module>
+</application>

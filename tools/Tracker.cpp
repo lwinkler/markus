@@ -25,72 +25,12 @@
 #include "Template.h"
 #include <iostream>
 
+#define MAX_NB_TEMPLATES 100
+
 using namespace std;
 using namespace cv;
 
-//int Object::m_counter = 0;
-
-vector <string> Feature::m_names;
-
-int Tracker::m_colorArraySize=54;
-CvScalar Tracker::m_colorArray[] =
-{
-	CV_RGB(128,128,128), // gray//CV_RGB(255,255,255), // white
-	CV_RGB(255,0,0), // red
-	CV_RGB(0,255,0), // green
-	CV_RGB(0,0,255), // blue
-	CV_RGB(255,255,0), // yellow
-	CV_RGB(0,150,255), // blue
-	CV_RGB(130,77,191), // purple
-	CV_RGB(255,100,0), // yellow
-	CV_RGB(185,135,95), // brown
-	CV_RGB(160, 32, 240),
-	CV_RGB(255, 165, 0),
-	CV_RGB(132, 112, 255),
-	CV_RGB(0, 250, 154),
-	CV_RGB(255, 192, 203),
-	CV_RGB(0, 255, 255),
-	CV_RGB(185, 185, 185),
-	CV_RGB(216, 191, 216),
-	CV_RGB(255, 105, 180),
-	CV_RGB(0, 255, 255),
-	CV_RGB(240, 255, 240),
-	CV_RGB(173, 216, 230),
-	CV_RGB(127, 255, 212),
-	CV_RGB(100, 149, 237),
-	CV_RGB(255, 165, 0),
-	CV_RGB(255, 255, 0),
-	CV_RGB(210, 180, 140),
-	CV_RGB(211, 211, 211),
-	CV_RGB(222, 184, 135),
-	CV_RGB(205, 133, 63),
-	CV_RGB(139, 69, 19),
-	CV_RGB(165, 42, 42),
-	CV_RGB(84, 134, 11),
-	CV_RGB(210, 105, 30),
-	CV_RGB(255, 127, 80),
-	CV_RGB(255, 0, 255),
-	CV_RGB(70, 130, 180),
-	CV_RGB(95, 158, 160),
-	CV_RGB(199, 21, 133),
-	CV_RGB(255, 182, 193),
-	CV_RGB(255, 140, 0),
-	CV_RGB(240, 255, 255),
-	CV_RGB(152, 251, 152),
-	CV_RGB(143, 188, 143),
-	CV_RGB(240, 230, 140),
-	CV_RGB(240, 128, 128),
-	CV_RGB(0, 191, 255),
-	CV_RGB(250, 128, 114),
-	CV_RGB(189, 183, 107),
-	CV_RGB(255, 218, 185),
-	CV_RGB(60, 179, 113),
-	CV_RGB(178, 34, 34),
-	CV_RGB(30, 144, 255),
-	CV_RGB(255, 140, 0),
-	CV_RGB(175, 238, 238)
-};
-
+vector <string> Feature::m_names; // TODO : should not be static
 
 
 Tracker::Tracker(const TrackerParameter& x_param, int width, int height, int type) :
@@ -108,19 +48,19 @@ void Tracker::Reset()
 
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-/* Match the template with a region (blob)*/
+/// Match the template with an object (blob)
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-int Tracker::MatchTemplate(Template& x_temp, vector<Object>& x_regs, /*cv::Mat* x_blobsImg, */double x_maxMatchingDistance)
+int Tracker::MatchTemplate(Template& x_temp)
 {
 	double bestDist = 1e99;
 	int bestObject = -1;
 
 	//cout<<"Comparing template "<<m_num<<" with "<<x_regs.size()<<" regions"<<endl;
 	
-	for(unsigned int i = 0 ; i< x_regs.size() ; i++)
+	for(unsigned int i = 0 ; i< m_objects.size() ; i++)
 	{
-		double dist = x_temp.CompareWithObject(x_regs[i]);
+		double dist = x_temp.CompareWithObject(m_objects[i]);
 		//cout<<"dist ="<<dist;
 		if(dist < bestDist)
 		{
@@ -128,13 +68,15 @@ int Tracker::MatchTemplate(Template& x_temp, vector<Object>& x_regs, /*cv::Mat* 
 			bestObject = i;
 		}
 	}
-       if(bestObject != -1 && bestDist < x_maxMatchingDistance
-               && (x_temp.GetNum() == MatchObject(x_regs[bestObject], x_maxMatchingDistance))) // Symetric match
+       if(bestObject != -1 && bestDist < m_param.maxMatchingDistance
+               && (x_temp.GetNum() == MatchObject(m_objects[bestObject]))) // Symetric match // TODO param
 	{
 		x_temp.m_bestMatchingObject = bestObject;
-		//cout<<"Template "<<GetNum()<<" matched with region "<<bestObject<<" dist="<<bestDist<<" pos:("<<m_posX<<","<<m_posY<<")"<<endl;
-		x_temp.m_matchingObjects.push_back(x_regs[bestObject]);
-		x_regs[bestObject].m_isMatched = 1;
+#ifdef VERBOSE
+//		cout<<"Template "<<x_temp.GetNum()<<" matched with region "<<bestObject<<" dist="<<bestDist<<" pos:("<<m_posX<<","<<m_posY<<")"<<endl;
+#endif
+		x_temp.m_matchingObjects.push_back(m_objects[bestObject]);
+		m_objects[bestObject].m_isMatched = 1;
 		
 		//CvPoint p = {x_regs[bestObject].m_posX, x_regs[bestObject].m_posY};
 		//cvCircle(x_blobsImg, p, 10, Tracker::m_colorArray[m_num % Tracker::m_colorArraySize]);
@@ -170,7 +112,7 @@ void Tracker::MatchTemplates()
 	{
 		it1->m_bestMatchingObject = -1;
 		//int isMatched = 
-		MatchTemplate(*it1, m_objects, /*m_blobsImg,*/ m_param.maxMatchingDistance);
+		MatchTemplate(*it1);
 	}
 #ifdef VERBOSE
 	cout<<"MatchTemplates : "<<m_templates.size()<<" templates and "<<m_objects.size()<<" regions."<<endl;
@@ -224,7 +166,7 @@ void Tracker::DetectNewTemplates()
 	int cpt = 0;
 	for(vector<Object>::iterator it2 = m_objects.begin() ; it2 != m_objects.end(); it2++ )
 	{
-		if(!it2->m_isMatched && m_templates.size() < 100)
+		if(!it2->m_isMatched && m_templates.size() < MAX_NB_TEMPLATES)
 		{
 			Template t(*it2, m_param.maxNbFramesDisappearance);
 			m_templates.push_back(t);
@@ -259,7 +201,7 @@ void Tracker::PrintObjects() const
 }
 
 
-int Tracker::MatchObject(Object& x_obj, double x_maxMatchingDistance)
+int Tracker::MatchObject(Object& x_obj)
 {
 
 	double bestDist = 1e99;
@@ -277,9 +219,14 @@ int Tracker::MatchObject(Object& x_obj, double x_maxMatchingDistance)
 			bestTemp = &(*it1);
 		}
 	}
-	if(bestTemp != NULL && bestDist < x_maxMatchingDistance)
+	if(bestTemp != NULL && bestDist < m_param.maxMatchingDistance)
+	{
+		x_obj.SetId(bestTemp->GetNum()); // Set color of template //TODO : maybe should not be here
 		return bestTemp->GetNum();
+	}
 	else 
+	{
+		x_obj.SetId(-1);
 		return 0;
-
+	}
 }

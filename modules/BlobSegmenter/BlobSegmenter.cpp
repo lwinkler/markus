@@ -47,7 +47,7 @@ BlobSegmenter::BlobSegmenter(const ConfigReader& x_configReader) :
 
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,	"Input binary stream"));
 
-	m_outputStreams.push_back(new StreamObject(0, "segmented", m_param.width, m_param.height, m_regions, cvScalar(255,100,255), *this,	"Segmented objects"));
+	m_outputStreams.push_back(new StreamObject(0, "segmented", m_param.width, m_param.height, m_regions, cvScalar(255, 255, 255), *this,	"Segmented objects"));
 	
 	m_debugStreams.push_back(new StreamDebug(0, "blobs", m_blobsImg, *this,	"Blobs"));
 }
@@ -104,11 +104,13 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 		//if(currentBlob->Parent() && !currentBlob->Exterior() && posx > 0 && posx < m_blobsImg->cols && posy > 0 && posy < m_blobsImg->rows) // TODO : fix this for real
 		if(true)//posx >= 0 && posx < m_blobsImg->cols && posy >= 0 && posy < m_blobsImg->rows) // TODO : fix this for real
 		{
-			currentBlob->FillBlob( &img, Tracker::m_colorArray[i % Tracker::m_colorArraySize]);
+			currentBlob->FillBlob( &img, colorFromId(i));
 			
-			Object obj;
-			obj.m_posX = rect.x - rect.width / 2;
-			obj.m_posY = rect.y - rect.height / 2;
+			Object obj("obj"); // TODO param
+			obj.m_posX 	= rect.x - rect.width / 2;
+			obj.m_posY 	= rect.y - rect.height / 2;
+			obj.m_width	= rect.width;
+			obj.m_height 	= rect.height;
 			
 			// Add here all features that are to be added in the templates/region
 			if(Feature::m_names.size() == 0)
@@ -116,8 +118,8 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 				// Write names once
 				Feature::m_names.push_back("area");
 				Feature::m_names.push_back("perimeter");
-				Feature::m_names.push_back("position x");
-				Feature::m_names.push_back("position y");
+				Feature::m_names.push_back("x");
+				Feature::m_names.push_back("y");
 			}
 			
 			obj.AddFeature(currentBlob->Area());

@@ -41,9 +41,9 @@ SimpleTracker::SimpleTracker(const ConfigReader& x_configReader) :
 	m_description = "Track any detect objects (from StreamObject).";
 	track.Reset();
 	
-	m_inputStreams.push_back(new StreamObject(0, "input", 	m_param.width, m_param.height, track.m_objects, cvScalar(255,255,255), *this,	"Input objects"));
+	m_inputStreams.push_back(new StreamObject(0, "input", 	m_param.width, m_param.height, track.m_objects, cvScalar(255, 255, 255), *this,	"Input objects"));
 
-	m_outputStreams.push_back(new StreamObject(0, "tracker", m_param.width, m_param.height, track.m_objects, cvScalar(255,255,255), *this,	"Tracked objects"));
+	m_outputStreams.push_back(new StreamObject(0, "tracker", m_param.width, m_param.height, track.m_objects, cvScalar(255, 255, 255), *this,	"Tracked objects"));
 
 	// TODO : Output template + check if ok in/out same
 	
@@ -68,7 +68,7 @@ void SimpleTracker::ProcessFrame()
 		reg.m_posX = rect.x;
 		reg.m_posY = rect.y;
 		
-		/*if(Feature::m_names.size() == 0)
+		/ *if(Feature::m_names.size() == 0)
 		{
 			// Write names once
 			Feature::m_names.push_back("area");

@@ -29,6 +29,70 @@
 using namespace std;
 using namespace cv;
 
+// Global variables
+
+int g_colorArraySize = 54;
+CvScalar g_colorArray[] =
+{
+	CV_RGB(128,128,128), // gray//CV_RGB(255,255,255), // white
+	CV_RGB(255,0,0), // red
+	CV_RGB(0,255,0), // green
+	CV_RGB(0,0,255), // blue
+	CV_RGB(255,255,0), // yellow
+	CV_RGB(0,150,255), // blue
+	CV_RGB(130,77,191), // purple
+	CV_RGB(255,100,0), // yellow
+	CV_RGB(185,135,95), // brown
+	CV_RGB(160, 32, 240),
+	CV_RGB(255, 165, 0),
+	CV_RGB(132, 112, 255),
+	CV_RGB(0, 250, 154),
+	CV_RGB(255, 192, 203),
+	CV_RGB(0, 255, 255),
+	CV_RGB(185, 185, 185),
+	CV_RGB(216, 191, 216),
+	CV_RGB(255, 105, 180),
+	CV_RGB(0, 255, 255),
+	CV_RGB(240, 255, 240),
+	CV_RGB(173, 216, 230),
+	CV_RGB(127, 255, 212),
+	CV_RGB(100, 149, 237),
+	CV_RGB(255, 165, 0),
+	CV_RGB(255, 255, 0),
+	CV_RGB(210, 180, 140),
+	CV_RGB(211, 211, 211),
+	CV_RGB(222, 184, 135),
+	CV_RGB(205, 133, 63),
+	CV_RGB(139, 69, 19),
+	CV_RGB(165, 42, 42),
+	CV_RGB(84, 134, 11),
+	CV_RGB(210, 105, 30),
+	CV_RGB(255, 127, 80),
+	CV_RGB(255, 0, 255),
+	CV_RGB(70, 130, 180),
+	CV_RGB(95, 158, 160),
+	CV_RGB(199, 21, 133),
+	CV_RGB(255, 182, 193),
+	CV_RGB(255, 140, 0),
+	CV_RGB(240, 255, 255),
+	CV_RGB(152, 251, 152),
+	CV_RGB(143, 188, 143),
+	CV_RGB(240, 230, 140),
+	CV_RGB(240, 128, 128),
+	CV_RGB(0, 191, 255),
+	CV_RGB(250, 128, 114),
+	CV_RGB(189, 183, 107),
+	CV_RGB(255, 218, 185),
+	CV_RGB(60, 179, 113),
+	CV_RGB(178, 34, 34),
+	CV_RGB(30, 144, 255),
+	CV_RGB(255, 140, 0),
+	CV_RGB(175, 238, 238)
+};
+
+
+
+
 /* Set image to the right size */
 
 void adjustSize(const Mat* im_in, Mat* im_out)
@@ -118,7 +182,7 @@ void adjustChannels(const Mat* im_in, Mat* im_out)
 	else throw("Error in adjustChannels");
 }
 
-CvScalar ColorFromStr(string x_str)
+CvScalar colorFromStr(string x_str)
 {
 	int pos1 = 0;
 	int pos2 = 0;
@@ -136,6 +200,12 @@ CvScalar ColorFromStr(string x_str)
 	}
 	else return cvScalar(0, 0, 0);
 }
+
+CvScalar colorFromId(int x_id)
+{
+	return g_colorArray[x_id % g_colorArraySize];
+}
+
 
 void saveMat(const cv::Mat* x_mat, const std::string& x_name)
 {

@@ -36,7 +36,8 @@ void adjustChannels(const cv::Mat* im_in, cv::Mat* im_out);
 
 void saveMat(const cv::Mat * x_mat, const std::string& x_name);
 
-CvScalar ColorFromStr(std::string x_str);
+CvScalar colorFromStr(std::string x_str);
+CvScalar colorFromId(int x_id);
 
 
 #endif

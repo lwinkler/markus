@@ -62,27 +62,19 @@ class Tracker
 		Tracker(const TrackerParameter& x_param, int width, int height, int type);
 		~Tracker(void);
 		void Reset();
-				
-		//void ExtractBlobs(cv::Mat* x_img);
+
 		void MatchTemplates();
 		void CleanTemplates();
 		void DetectNewTemplates();
 		void UpdateTemplates();
 		void PrintObjects() const;
-		int MatchObject(Object& x_obj, double x_maxMaxingDistance);
-		int MatchTemplate(Template& x_temp, std::vector<Object>& x_reg, /*cv::Mat* x_blobsImg,*/ double x_maxMatchingDistance);
+		int MatchObject(Object& x_obj);
+		int MatchTemplate(Template& x_temp);
 		
-		//inline cv::Mat* GetBlobsImg(){ return m_blobsImg;};
-		
-		static int m_colorArraySize;
-		static CvScalar m_colorArray[];
 		std::list <Template> m_templates;
 		std::vector <Object> m_objects;
 		
 	private:
-		// Background subtraction
-//		cv::Mat* m_blobsImg;
-		
 		const TrackerParameter& m_param;
 };
 

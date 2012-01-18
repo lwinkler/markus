@@ -22,7 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "StreamObject.h"
-#include <iostream>
+#include "util.h"
 
 using namespace std;
 using namespace cv;
@@ -31,8 +31,8 @@ using namespace cv;
 StreamObject::StreamObject(int x_id, const std::string& x_name, int x_width, int x_height, 
 		       vector<Object>& xr_objects, const CvScalar& x_color, Module& rx_module, const string& rx_description) : 
 	Stream(x_id, x_name, STREAM_IMAGE, x_width, x_height, rx_module, rx_description),
-	m_objects(xr_objects)
-	//m_color(x_color)
+	m_objects(xr_objects),
+	m_color(x_color)
 {
 }
 
@@ -92,6 +92,22 @@ void StreamObject::RenderTo(Mat * xp_output) const
 		p2.y = p2.y * scale;
 		
 		// Draw the rectangle in the input image
-		rectangle( *xp_output, p1, p2, it->GetColor(), 1, 8, 0 );
+		// if id is present, draw to the equivalent color
+		
+		if(it->GetId() > 0)
+		{
+			rectangle( *xp_output, p1, p2, colorFromId(it->GetId()), 1, 8, 0 );
+			string text = it->GetName();
+			//text += atoi(it->GetId());
+			p1.y -= 2;
+			putText(*xp_output, text, p1,  FONT_HERSHEY_COMPLEX_SMALL, 0.5, colorFromId(it->GetId()));
+		}
+		else
+		{
+			// color from stream
+			rectangle( *xp_output, p1, p2, m_color, 1, 8, 0 );
+			p1.y -= 2;
+			putText(*xp_output, it->GetName(), p1, FONT_HERSHEY_COMPLEX_SMALL, 0.5, m_color);
+		}
         }
 }
