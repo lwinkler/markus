@@ -27,11 +27,6 @@
 using namespace std;
 using namespace cv;
 
-Object::Object()
-{
-
-}
-
 
 StreamObject::StreamObject(int x_id, const std::string& x_name, int x_width, int x_height, 
 		       vector<Object>& xr_objects, const CvScalar& x_color, Module& rx_module, const string& rx_description) : 
@@ -60,15 +55,22 @@ void StreamObject::ConvertInput()
 	m_objects.clear();
 	for(vector<Object>::const_iterator it = rectsTarget.begin() ; it != rectsTarget.end() ; it++)
 	{
-		const Rect & rectIn = it->GetRect();
+		/*const Rect & rectIn = it->GetRect();
 		Rect rectOut;
 		rectOut.x 		= rectIn.x * ratioX;
 		rectOut.y 		= rectIn.y * ratioY;
 		rectOut.width 		= rectIn.width  * ratioX;
 		rectOut.height 		= rectIn.height * ratioY;
 		Object obj = *it;
-		obj.SetRect(rectOut);
-		m_objects.push_back(obj);
+		obj.SetRect(rectOut);*/
+		
+		
+		m_objects.push_back(*it);
+		Object& obj(m_objects[m_objects.size() - 1]);
+		obj.m_posX *= ratioX;
+		obj.m_posY *= ratioY;
+		obj.m_width *= ratioX;
+		obj.m_height *= ratioY;
 	}
 }
 
@@ -78,9 +80,9 @@ void StreamObject::RenderTo(Mat * xp_output) const
 {
 	for(vector<Object>::const_iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
 	{
-		Rect rect = it->GetRect();
-		Point p1(rect.x, rect.y);
-		Point p2(rect.x + rect.width, rect.y + rect.height);
+		//Rect rect = it->GetRect();
+		Point p1(it->m_posX - it->m_width / 2, it->m_posY - it->m_height / 2);
+		Point p2(it->m_posX + it->m_width / 2, it->m_posY + it->m_height / 2);
 		
 		float scale = static_cast<float>(xp_output->cols) / m_width;
 		p1.x = p1.x * scale;

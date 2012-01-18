@@ -88,9 +88,8 @@ void CascadeDetector::NormalProcess(const Mat* img, const double x_timeSinceLast
 	for(vector<Object>::const_iterator it = m_detectedObjects.begin() ; it != m_detectedObjects.end() ; it++)
 	{
 		// TODO : See if we move this to execute it once only
-		const Rect& rect = it->GetRect();
-		Point p1(rect.x, rect.y);
-		Point p2(rect.x + rect.width, rect.y + rect.height);
+		Point p1(it->m_posX - it->m_width, it->m_posY - it->m_width);
+		Point p2(it->m_posX + it->m_width, it->m_posY + it->m_width);
 		
 		// Draw the rectangle in the input image
 		rectangle( *m_debug, p1, p2, ColorFromStr(m_param.color), 1, 8, 0 );
@@ -107,7 +106,12 @@ void CascadeDetector::CopyResults()
 	for(std::vector<Rect>::const_iterator it = m_thread.GetDetectedObjects().begin() ; it != m_thread.GetDetectedObjects().end() ; it++)
 	{
 		Object obj;
-		obj.SetRect(*it);
+		//obj.SetRect(*it);
+		obj.m_posX = it->x + it->width / 2;
+		obj.m_posY = it->y + it->height / 2;
+		obj.m_width = it->width;
+		obj.m_height = it->height;
+		
 		m_detectedObjects.push_back(obj);
 	}
 }

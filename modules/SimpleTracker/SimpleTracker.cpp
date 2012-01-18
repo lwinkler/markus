@@ -41,9 +41,12 @@ SimpleTracker::SimpleTracker(const ConfigReader& x_configReader) :
 	m_description = "Track any detect objects (from StreamObject).";
 	track.Reset();
 	
-	m_inputStreams.push_back(new StreamObject(0, "input", 	m_param.width, m_param.height, m_trackerInput, cvScalar(255,255,255), *this,	"Input objects"));
+	m_inputStreams.push_back(new StreamObject(0, "input", 	m_param.width, m_param.height, track.m_objects, cvScalar(255,255,255), *this,	"Input objects"));
 
-	m_outputStreams.push_back(new StreamObject(0, "tracker", m_param.width, m_param.height, m_trackerOutput, cvScalar(255,255,255), *this,	"Tracked objects"));
+	m_outputStreams.push_back(new StreamObject(0, "tracker", m_param.width, m_param.height, track.m_objects, cvScalar(255,255,255), *this,	"Tracked objects"));
+
+	// TODO : Output template + check if ok in/out same
+	
 }
 
 SimpleTracker::~SimpleTracker(void )
@@ -55,11 +58,12 @@ void SimpleTracker::ProcessFrame()
 	// Main part of the program
 	//track.ExtractBlobs(detect.GetForegroundRff());
 	//track.PrintRegions();
-	int cpt = 0;
-	track.m_regions.clear();
+	//int cpt = 0;
+	
+	/*track.m_objects.clear();
 	for(vector<Object>::const_iterator it = m_trackerInput.begin()  ; it != m_trackerInput.end() ; it++ )
 	{
-		TrackedRegion reg(cpt);
+		TrackedRegion reg;
 		const Rect& rect = it->GetRect();
 		reg.m_posX = rect.x;
 		reg.m_posY = rect.y;
@@ -71,15 +75,15 @@ void SimpleTracker::ProcessFrame()
 			Feature::m_names.push_back("perimeter");
 			Feature::m_names.push_back("position x");
 			Feature::m_names.push_back("position y");
-		}*/
+		}* /
 		reg.AddFeature(rect.x);
 		reg.AddFeature(rect.y);
 		reg.AddFeature(rect.width);
 		reg.AddFeature(rect.height);
 		
-		track.m_regions.push_back(reg);
-		cpt++;
-	}
+		track.m_objects.push_back(reg);
+		//cpt++;
+	}*/
 	
 	
 	track.MatchTemplates();
@@ -87,7 +91,7 @@ void SimpleTracker::ProcessFrame()
 	track.DetectNewTemplates();
 	track.UpdateTemplates();
 	
-	m_trackerOutput.clear();
+	/*m_trackerOutput.clear();
 	for(list<Template>::const_iterator it = track.m_templates.begin()  ; it != track.m_templates.end() ; it++ )
 	{
 		Rect rect;
@@ -98,7 +102,7 @@ void SimpleTracker::ProcessFrame()
 		Object obj;
 		obj.SetRect(rect); // TODO : Objects must be centered !!!!
 		m_trackerOutput.push_back(obj);
-	}
+	}*/
 
 	//cvCopy(track.GetBlobsImg(), m_output);
 	//track.PrintTrackedRegions();

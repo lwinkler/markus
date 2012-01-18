@@ -27,18 +27,7 @@
 #include "cv.h"
 
 #include "Stream.h"
-
-class Object
-{
-public:
-	Object();
-	inline const cv::Rect& GetRect() const {return m_rect;};
-	inline void SetRect(const cv::Rect x_rect){m_rect = x_rect;};
-	inline const CvScalar& GetColor() const {return m_color;};
-protected:
-	cv::Rect m_rect;
-	CvScalar m_color;
-};
+#include "Object.h"
 
 /// Stream in the form of located objects
 

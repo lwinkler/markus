@@ -55,8 +55,8 @@ private:
 	SimpleTrackerParameterStructure m_param;
 	
 	// for streams
-	std::vector<Object> m_trackerInput;
-	std::vector<Object> m_trackerOutput;
+	//std::vector<Object> m_trackerInput;
+	//std::vector<Object> m_trackerOutput;
 	
 	Tracker track;
 	static const char * m_type;

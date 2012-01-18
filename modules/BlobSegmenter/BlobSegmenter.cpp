@@ -106,9 +106,9 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 		{
 			currentBlob->FillBlob( &img, Tracker::m_colorArray[i % Tracker::m_colorArraySize]);
 			
-			TrackedRegion reg(i);
-			reg.m_posX = rect.x;
-			reg.m_posY = rect.y;
+			Object obj;
+			obj.m_posX = rect.x - rect.width / 2;
+			obj.m_posY = rect.y - rect.height / 2;
 			
 			// Add here all features that are to be added in the templates/region
 			if(Feature::m_names.size() == 0)
@@ -120,8 +120,8 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 				Feature::m_names.push_back("position y");
 			}
 			
-			reg.AddFeature(currentBlob->Area());
-	 		reg.AddFeature(currentBlob->Perimeter());
+			obj.AddFeature(currentBlob->Area());
+	 		obj.AddFeature(currentBlob->Perimeter());
 	
 	// 		//reg.AddFeature("mean", GetSTLResult(currentBlob, CBlobGetMean()));
 	// 		reg.AddFeature("compactness", GetSTLResult(currentBlob, CBlobGetCompactness()));
@@ -129,8 +129,8 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 	// 
 	// 		reg.AddFeature("convex hull perimeter", GetSTLResult(currentBlob, CBlobGetHullPerimeter()));
 	
-			reg.AddFeature(rect.x);
-			reg.AddFeature(rect.y); // TODO : Add width / 2 ??
+			obj.AddFeature(rect.x);
+			obj.AddFeature(rect.y); // TODO : Add width / 2 ??
 			
 			//cout<<"Blob extracted position "<<currentBlob->SumX()<<","<<currentBlob->SumY()<<endl;;
 			//m_regions.push_back(reg); // TODO : Manage regions better
@@ -139,8 +139,9 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 			rect.y = posy;
 			rect.width  = currentBlob->MaxX() - currentBlob->MinX();
 			rect.height = currentBlob->MaxY() - currentBlob->MinY();*/
-			Object obj;
-			obj.SetRect(rect);
+			//Object obj;
+			
+			//obj.SetRect(rect);
 			m_regions.push_back(obj);
 		}
 		//else throw("ERROR");
