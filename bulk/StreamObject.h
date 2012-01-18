@@ -38,7 +38,7 @@ public:
 		   std::vector<Object>& r_rects, const CvScalar& x_color, Module& rx_module, const std::string& rx_description);
 	~StreamObject();
 	void Clear() {m_objects.clear();};
-	void AddObject(const Object x_obj) {m_objects.push_back(x_obj);};
+	void AddObject(const Object& x_obj) {m_objects.push_back(x_obj);};
 	
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat * xp_output) const;

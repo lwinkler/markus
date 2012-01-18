@@ -5,8 +5,10 @@ Object::Object()
 {
 	//m_num = x_num;//m_counter;
 	//m_counter++;
+	m_color = cvScalar(255,255,255);
 };
 
+/*
 Object::Object(const Object& r)
 {
 	//m_num = r.GetNum();
@@ -24,6 +26,6 @@ Object& Object::operator = (const Object& r)
 
 	return *this;
 }
-
+*/
 Object::~Object(){};
 

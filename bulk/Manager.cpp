@@ -157,6 +157,7 @@ void Manager::Process()
 			{
 				(*it)->ReadAndConvertInput();
 				(*it)->ProcessFrame();
+				(*it)->ResetProcessingTime();
 			}
 		}
 	}

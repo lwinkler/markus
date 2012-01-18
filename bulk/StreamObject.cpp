@@ -92,6 +92,6 @@ void StreamObject::RenderTo(Mat * xp_output) const
 		p2.y = p2.y * scale;
 		
 		// Draw the rectangle in the input image
-		rectangle( *xp_output, p1, p2, /*it->GetColor()*/ cvScalar(255,66,222), 1, 8, 0 );
+		rectangle( *xp_output, p1, p2, it->GetColor(), 1, 8, 0 );
         }
 }

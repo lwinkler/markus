@@ -45,7 +45,7 @@ public:
 		ModuleAsyncParameterStructure(x_confReader)
 	{
 		m_list.push_back(new ParameterT<int>(0, "minNeighbors", 2, PARAM_INT, 1, 100, &minNeighbors,	"Minimum numbers of neighbors (higher: less sensitive)")); // TODO : Seems to be a bug with minNeighbors = 1 with most filters
-		m_list.push_back(new ParameterT<int>(0, "minFaceSide", 0, PARAM_INT, 0, 200, &minFaceSide,	"Minimum size of the detected object"));
+		m_list.push_back(new ParameterT<int>(0, "minSide", 0, PARAM_INT, 0, 200, &minSide,	"Minimum size of the detected object"));
 		m_list.push_back(new ParameterT<float>(0, "scaleFactor", 1.2, PARAM_FLOAT, 1, 2, &scaleFactor,	"Scale factor for scanning (higher: less sensitive)"));
 		m_list.push_back(new ParameterT<std::string>(0, "filterFile", "modules/CascadeDetector/lbpcascade_frontalface.xml", PARAM_STR, &filterFile,
 														"File with filter data of the detected object"));
@@ -55,7 +55,7 @@ public:
 	};
 	
 	int minNeighbors;
-	int minFaceSide;
+	int minSide;
 	float scaleFactor;
 	std::string filterFile;
 	std::string color;
@@ -70,26 +70,26 @@ public:
 		exit();
 		wait();
 	}
-	void SetData(const cv::Mat & xr_smallImg, int x_minNeighbors, int x_minFaceSide, float x_scaleFactor)
+	void SetData(const cv::Mat & xr_smallImg, int x_minNeighbors, int x_minSide, float x_scaleFactor)
 	{
 		xr_smallImg.copyTo(m_smallImg);
-		m_minNeighbors = x_minNeighbors;
-		m_minFaceSide = x_minFaceSide;
-		m_scaleFactor = x_scaleFactor;
+		m_minNeighbors 	= x_minNeighbors;
+		m_minSide 	= x_minSide;
+		m_scaleFactor 	= x_scaleFactor;
 	}
 	
 	virtual void run();
 	
 	cv::CascadeClassifier m_cascade;
-	std::vector<cv::Rect> GetDetectedObjects() const{ return m_detectedObjects;};
+	const std::vector<cv::Rect>& GetDetectedObjects() const{ return m_detected;};
 
 private:
 	cv::Mat m_smallImg;
 	int m_minNeighbors;
-	int m_minFaceSide;
+	int m_minSide;
 	float m_scaleFactor;
 	
-	std::vector<cv::Rect> m_detectedObjects;
+	std::vector<cv::Rect> m_detected;
 };
 
 class CascadeDetector : public ModuleAsync
@@ -98,7 +98,6 @@ private:
 	CascadeDetectorParameterStructure m_param;
 	static const char * m_type;
 	
-	//cv::CascadeClassifier m_cascade;
 	std::vector<Object> m_detectedObjects;
 	cv::Mat * m_debug;
 	

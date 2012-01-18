@@ -18,8 +18,6 @@ class Object
 {
 	public:
 		Object();
-		Object(const Object&);
-		Object& operator = (const Object&);
 		~Object();
 		
 		inline void AddFeature(/*const char* name, */double value)
@@ -32,6 +30,7 @@ class Object
 		//inline const cv::Rect& GetRect() const {return cv::Rect();};
 		//inline void SetRect(const cv::Rect x_rect){m_rect = x_rect;};
 		inline const CvScalar& GetColor() const {return m_color;};
+		inline void SetColor(const CvScalar& x_color) {m_color = x_color;};
 		
 		int m_isMatched;
 		double m_posX;
@@ -42,5 +41,8 @@ class Object
 		//int m_num;
 		std::vector <Feature> m_feats;
 		CvScalar m_color;
+		//Object(const Object&);
+		//Object& operator = (const Object&);
+
 };
 #endif

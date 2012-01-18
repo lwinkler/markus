@@ -75,7 +75,7 @@ void CascadeDetector::LaunchThread(const Mat* img, const double x_timeSinceLastP
 	equalizeHist( smallImg, smallImg );
 	
 	// Launch a new Thread
-	m_thread.SetData(smallImg, m_param.minNeighbors, m_param.minFaceSide, m_param.scaleFactor);
+	m_thread.SetData(smallImg, m_param.minNeighbors, m_param.minSide, m_param.scaleFactor);
 	m_thread.start();
 	// m_thread.run(); // Use run instead of start for synchronous use
 }
@@ -88,8 +88,8 @@ void CascadeDetector::NormalProcess(const Mat* img, const double x_timeSinceLast
 	for(vector<Object>::const_iterator it = m_detectedObjects.begin() ; it != m_detectedObjects.end() ; it++)
 	{
 		// TODO : See if we move this to execute it once only
-		Point p1(it->m_posX - it->m_width, it->m_posY - it->m_width);
-		Point p2(it->m_posX + it->m_width, it->m_posY + it->m_width);
+		Point p1(it->m_posX - it->m_width / 2, it->m_posY - it->m_width / 2);
+		Point p2(it->m_posX + it->m_width / 2, it->m_posY + it->m_width / 2);
 		
 		// Draw the rectangle in the input image
 		rectangle( *m_debug, p1, p2, ColorFromStr(m_param.color), 1, 8, 0 );
@@ -111,14 +111,14 @@ void CascadeDetector::CopyResults()
 		obj.m_posY = it->y + it->height / 2;
 		obj.m_width = it->width;
 		obj.m_height = it->height;
-		
+		obj.SetColor(ColorFromStr(m_param.color)); // TODO : store value
 		m_detectedObjects.push_back(obj);
 	}
 }
 
 void DetectionThread::run()
 {
-	m_detectedObjects.clear();
+	m_detected.clear();
 	//cout<<"m_smallImg"<<&m_smallImg<<" m_detectedObjects"<<&m_detectedObjects<<" m_scaleFactor"<<m_scaleFactor<<" m_minNeighbors"<<m_minNeighbors<<endl;
-	m_cascade.detectMultiScale(m_smallImg, m_detectedObjects, m_scaleFactor, m_minNeighbors, CV_HAAR_SCALE_IMAGE, cvSize(m_minFaceSide, m_minFaceSide));
+	m_cascade.detectMultiScale(m_smallImg, m_detected, m_scaleFactor, m_minNeighbors, CV_HAAR_SCALE_IMAGE, cvSize(m_minSide, m_minSide));
 }
