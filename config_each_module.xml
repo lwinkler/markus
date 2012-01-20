@@ -36,5 +36,10 @@
 		  <param name="class">BlobSegmenter</param>
 	  </parameters>
   </module>
+  <module name="VideoOutput">
+	  <parameters>
+		  <param name="class">VideoOutput</param>
+	  </parameters>
+  </module>
 </application>
 

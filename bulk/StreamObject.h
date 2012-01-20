@@ -36,6 +36,8 @@ class StreamObject : public Stream
 public:
 	StreamObject(int x_id, const std::string& x_name, int x_width, int x_height, 
 		   std::vector<Object>& r_rects, const CvScalar& x_color, Module& rx_module, const std::string& rx_description);
+	StreamObject(int x_id, const std::string& x_name, int x_width, int x_height, 
+		   std::vector<Object>& r_rects, Module& rx_module, const std::string& rx_description);
 	~StreamObject();
 	void Clear() {m_objects.clear();};
 	void AddObject(const Object& x_obj) {m_objects.push_back(x_obj);};
@@ -49,6 +51,7 @@ protected:
 	std::vector<Object> & m_objects;
 	std::vector<std::string> m_propertyNames;
 	CvScalar m_color;
+	bool m_isColorSet;
 
 private:
 	StreamObject& operator=(const StreamObject&);

@@ -44,6 +44,7 @@ modules/BackgroundExtractor/BackgroundExtractor.cpp
 modules/SimpleTracker/SimpleTracker.cpp
 modules/BlobSegmenter/BlobSegmenter.cpp
 modules/CascadeDetector/CascadeDetector.cpp
+modules/VideoOutput/VideoOutput.cpp
 )
 
 qt4_automoc(${markus_SRCS})

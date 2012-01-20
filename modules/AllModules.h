@@ -10,6 +10,8 @@
 #include "UsbCam/UsbCam.h"
 #include "VideoFileReader/VideoFileReader.h"
 
+#include "VideoOutput/VideoOutput.h"
+
 Module * createNewModule(const ConfigReader& rx_configReader)
 {
 	Module * tmp = NULL;
@@ -43,6 +45,10 @@ Module * createNewModule(const ConfigReader& rx_configReader)
 	else if(moduleClass.compare("VideoFileReader") == 0)
 	{
 		tmp = new VideoFileReader(rx_configReader);
+	}
+	else if(moduleClass.compare("VideoOutput") == 0)
+	{
+		tmp = new VideoOutput(rx_configReader);
 	}
 	else throw("Module type unknown : " + moduleClass);
 
