@@ -105,7 +105,7 @@ void CascadeDetector::CopyResults()
 	m_detectedObjects.clear();
 	for(std::vector<Rect>::const_iterator it = m_thread.GetDetectedObjects().begin() ; it != m_thread.GetDetectedObjects().end() ; it++)
 	{
-		Object obj("casc"); // TODO param
+		Object obj(m_param.objectLabel);
 		//obj.SetRect(*it);
 		obj.m_posX = it->x + it->width / 2;
 		obj.m_posY = it->y + it->height / 2;
@@ -115,7 +115,7 @@ void CascadeDetector::CopyResults()
 		if(Feature::m_names.size() == 0)
 		{
 			// Write names once
-			Feature::m_names.push_back("x");
+			Feature::m_names.push_back("x"); // TODO : avoid static names !!
 			Feature::m_names.push_back("y");
 			Feature::m_names.push_back("w");
 			Feature::m_names.push_back("h");

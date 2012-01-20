@@ -50,6 +50,7 @@ public:
 		m_list.push_back(new ParameterT<std::string>(0, "filterFile", "modules/CascadeDetector/lbpcascade_frontalface.xml", PARAM_STR, &filterFile,
 														"File with filter data of the detected object"));
 		m_list.push_back(new ParameterT<std::string>(0, "color", "(255,255,255)", PARAM_STR, &color,	"Color to draw the output"));
+		m_list.push_back(new ParameterT<std::string>(0, "objectLabel", "casc", PARAM_STR, &objectLabel,	"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
 		
 		ParameterStructure::Init();
 	};
@@ -59,6 +60,7 @@ public:
 	float scaleFactor;
 	std::string filterFile;
 	std::string color;
+	std::string objectLabel;
 };
 
 class DetectionThread : public QThread

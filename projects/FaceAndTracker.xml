@@ -29,6 +29,7 @@
       <param name="scaleFactor">1.2</param>
       <param name="filterFile">modules/CascadeDetector/lbpcascade_frontalface.xml</param>
       <param name="color">(255,0,255)</param>
+      <param name="objectLabel">face</param>
     </parameters>
     <inputs>
       <input id="0" moduleid="0" outputid="0" />

@@ -17,7 +17,7 @@
       <output id="0" />
       <output id="1" />
     </outputs>
-    <display x="368" y="53" width="150" height="75" />
+    <display x="383" y="49" width="150" height="75" />
     <uiobject type="" x="0" y="0" width="0" height="0" />
   </module>
   <module name="UsbCam" machineurl="localhost" id="1">
@@ -51,7 +51,7 @@
     <outputs>
       <output id="0" />
     </outputs>
-    <display x="292" y="284" width="150" height="75" />
+    <display x="40" y="264" width="150" height="75" />
     <uiobject type="" x="0" y="0" width="0" height="0" />
   </module>
   <module name="SimpleTracker" machineurl="localhost" id="3">
@@ -68,7 +68,7 @@
     <outputs>
       <output id="0" />
     </outputs>
-    <display x="746" y="333" width="150" height="75" />
+    <display x="396" y="263" width="150" height="75" />
     <uiobject type="" x="0" y="0" width="0" height="0" />
   </module>
 </application>
