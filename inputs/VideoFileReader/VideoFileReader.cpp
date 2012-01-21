@@ -54,17 +54,13 @@ VideoFileReader::VideoFileReader(const ConfigReader& x_configReader):
 //	assert(m_width == m_param.width);
 //	assert(m_height == m_param.height);
 	
-	
 	m_output = new Mat( cvSize(m_inputWidth, m_inputHeight), CV_8UC3);
-	m_render = new Mat( cvSize(m_inputWidth, m_inputHeight), CV_8UC3);
 	m_outputStreams.push_back(new StreamImage(0, "input", m_output, *this,	"Video stream"));
-	m_outputStreams.push_back(new StreamImage(1, "render", m_render, *this,	"Render"));
 }
 
 VideoFileReader::~VideoFileReader()
 {
 	delete(m_output);
-	delete(m_render);
 	cvReleaseCapture(&m_capture );
 }
 

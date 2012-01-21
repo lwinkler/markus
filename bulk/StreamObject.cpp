@@ -104,13 +104,13 @@ void StreamObject::RenderTo(Mat * xp_output) const
 		// Draw the rectangle in the input image
 		// if id is present, draw to the equivalent color
 		
-		if(it->GetId() > 0)
+		if(it->GetId() >= 0)
 		{
 			rectangle( *xp_output, p1, p2, colorFromId(it->GetId()), 1, 8, 0 );
-			string text = it->GetName();
-			//text += atoi(it->GetId());
+			ostringstream text;
+			text<<it->GetName()<<" "<<it->GetId();
 			p1.y -= 2;
-			putText(*xp_output, text, p1,  FONT_HERSHEY_COMPLEX_SMALL, 0.5, colorFromId(it->GetId()));
+			putText(*xp_output, text.str(), p1,  FONT_HERSHEY_COMPLEX_SMALL, 0.5, colorFromId(it->GetId()));
 		}
 		else
 		{

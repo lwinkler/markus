@@ -31,8 +31,6 @@ Input::Input(const ConfigReader& x_configReader):
 	Module(x_configReader)
 {
 	cout<<endl<<"*** Create object Input : "<<m_name<<" ***"<<endl;
-
-	m_render = NULL;
 	m_inputWidth = 0;
 	m_inputHeight = 0;
 }
@@ -40,15 +38,3 @@ Input::Input(const ConfigReader& x_configReader):
 Input::~Input()
 {
 }
-
-void Input::ProcessFrame()
-{
-	assert(m_outputStreams.size() > 0);
-	m_outputStreams[0]->RenderTo(m_render);
-	
-	for(vector<Stream *>::const_iterator it = m_relatedStreams.begin() ; it != m_relatedStreams.end() ; it++)
-	{
-		(*it)->RenderTo(m_render);
-	}
-}
-
