@@ -42,6 +42,7 @@ Module::Module(const ConfigReader& x_configReader) :
 	
 	m_timerConvertion = 0;
 	m_timerProcessing = 0;
+	m_timerWaiting    = 0;
 	m_countProcessedFrames = 0;
 };
 
@@ -69,7 +70,10 @@ void Module::Process(double x_timeCount)
 		{
 			for(vector<Stream*>::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
 			{
+				QTime ti2;
+				ti2.start();
 				(*it)->LockForRead();
+				m_timerWaiting += ti2.elapsed();
 				(*it)->ConvertInput();
 				(*it)->UnLock();
 			}
@@ -133,6 +137,7 @@ Stream* Module::GetOutputStreamById(int x_id) const
 
 void Module::PrintStatistics(ostream& os) const
 {
-	os<<"Module "<<GetName()<<" : "<<m_countProcessedFrames<<" frames processed (tproc="<<m_timerProcessing<<"ms, tconv="<<m_timerConvertion<<"ms)"<<endl;
+	os<<"Module "<<GetName()<<" : "<<m_countProcessedFrames<<" frames processed (tproc="<<m_timerProcessing<<"ms, tconv="<<m_timerConvertion<<"ms, twait="<<
+		m_timerWaiting<<"ms)"<<endl;
 }
 

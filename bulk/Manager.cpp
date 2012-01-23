@@ -142,7 +142,12 @@ Manager::~Manager()
 
 void Manager::Process()
 {
-	m_lock.lockForWrite();
+	//m_lock.lockForWrite();
+	if(!m_lock.tryLockForWrite())
+	{
+		cout<<"Warning : Manager too slow !"<<endl;
+		return;
+	}
 	
 	clock_t tmp = clock();
 	double timecount = static_cast<double>(tmp - m_timeLastProcess) / CLOCKS_PER_SEC;

@@ -40,10 +40,10 @@ std::map<std::string,int>  ParameterImageType::m_map_types;
 
 ParameterStructure::ParameterStructure(const ConfigReader& x_configReader):
 		m_configReader(x_configReader)
-	{
-		m_objectName = m_configReader.GetAttribute("name");
-		m_list.clear();
-	};
+{
+	m_objectName = m_configReader.GetAttribute("name");
+	m_list.clear();
+};
 	
 ParameterStructure::~ParameterStructure()
 {

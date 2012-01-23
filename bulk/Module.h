@@ -72,7 +72,7 @@ public:
 	inline int GetInputType() const {return GetRefParameter().type;};
 	inline int GetFps() const {return GetRefParameter().fps;};
 	
-	void PrintStatistics(std::ostream& os) const;
+	virtual void PrintStatistics(std::ostream& os) const;
 	
 	virtual inline bool IsInput() {return false;};
 	void Export(std::ostream& rx_os, int x_indentation);
@@ -80,11 +80,12 @@ public:
 	Stream * GetOutputStreamById(int x_id) const;
 	QReadWriteLock m_lock;
 	
+protected:
 	long long m_timerConvertion;
 	long long m_timerProcessing;
+	long long m_timerWaiting;
 	long long m_countProcessedFrames;
 	
-protected:
 	virtual void ProcessFrame() = 0;
 	inline virtual bool IsInputUsed(double x_timeCount) const {return true;}
 	std::vector<Stream *> m_inputStreams;

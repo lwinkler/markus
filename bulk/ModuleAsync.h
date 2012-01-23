@@ -50,15 +50,20 @@ public:
 	virtual ~ModuleAsync();
 	
 	virtual void ProcessFrame();
+	
 protected:
 	double m_timeSinceLastThread;
 	bool m_resultsCopied;
+	
+	long long m_timerThread;
+	long long m_countFramesThread;
 
 	inline virtual bool IsInputUsed(double x_timeCount) const {return m_timeSinceLastThread + m_processingTime >= 1 / GetRefParameter().detectionFps;};
 	virtual const QThread & GetRefThread() = 0;
 	virtual void LaunchThread() = 0;
 	virtual void NormalProcess() = 0;
 	virtual void CopyResults() = 0;
+	virtual void PrintStatistics(std::ostream& os) const;
 	
 private:
 	virtual const ModuleAsyncParameterStructure & GetRefParameter() const = 0;

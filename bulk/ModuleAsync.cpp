@@ -32,8 +32,10 @@ ModuleAsync::ModuleAsync(const ConfigReader& x_configReader) :
 	Module(x_configReader)
 {
 	cout<<endl<<"*** Create object ModuleAsync : "<<m_name<<" ***"<<endl;
-	m_timeSinceLastThread = 1e99;
-	m_resultsCopied = false;
+	m_timeSinceLastThread 	= 1e99;
+	m_resultsCopied 	= false;
+	m_timerThread 		= 0;
+	m_countFramesThread 	= 0;
 };
 
 /// Process one frame
@@ -70,3 +72,9 @@ void ModuleAsync::ProcessFrame()
 ModuleAsync::~ModuleAsync()
 {
 };
+
+void ModuleAsync::PrintStatistics(ostream& os) const
+{
+    Module::PrintStatistics(os);
+    os<<m_countFramesThread<<" frames processed asynchronously in "<<m_timerThread<<"ms ("<<m_countFramesThread / (m_timerThread * 0.001)<<" fps)"<<endl;
+}

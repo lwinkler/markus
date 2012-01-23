@@ -66,7 +66,7 @@ public:
 class DetectionThread : public QThread
 {
 public:
-	explicit DetectionThread(QObject* parent = 0) {};
+	explicit DetectionThread(QObject* parent = 0) {m_timerThread = 0;};
 	virtual ~DetectionThread()
 	{
 		exit();
@@ -84,12 +84,13 @@ public:
 	
 	cv::CascadeClassifier m_cascade;
 	const std::vector<cv::Rect>& GetDetectedObjects() const{ return m_detected;};
+	long long m_timerThread;
 
-private:
+protected:
+	float m_scaleFactor;
 	cv::Mat m_smallImg;
 	int m_minNeighbors;
 	int m_minSide;
-	float m_scaleFactor;
 	
 	std::vector<cv::Rect> m_detected;
 };

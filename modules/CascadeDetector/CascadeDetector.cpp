@@ -29,6 +29,7 @@
 #include <iostream>
 #include <cstdio>
 #include <highgui.h>
+#include <QTime>
 
 #include "util.h"
 
@@ -122,11 +123,16 @@ void CascadeDetector::CopyResults()
 
 		m_detectedObjects.push_back(obj);
 	}
+	m_timerThread += m_thread.m_timerThread;
+	m_countFramesThread++;
 }
 
 void DetectionThread::run()
 {
+	QTime ti;
+	ti.start();
 	m_detected.clear();
 	//cout<<"m_smallImg"<<&m_smallImg<<" m_detectedObjects"<<&m_detectedObjects<<" m_scaleFactor"<<m_scaleFactor<<" m_minNeighbors"<<m_minNeighbors<<endl;
 	m_cascade.detectMultiScale(m_smallImg, m_detected, m_scaleFactor, m_minNeighbors, CV_HAAR_SCALE_IMAGE, cvSize(m_minSide, m_minSide));
+	m_timerThread = ti.elapsed();
 }
