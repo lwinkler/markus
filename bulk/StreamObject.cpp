@@ -65,16 +65,6 @@ void StreamObject::ConvertInput()
 	m_objects.clear();
 	for(vector<Object>::const_iterator it = rectsTarget.begin() ; it != rectsTarget.end() ; it++)
 	{
-		/*const Rect & rectIn = it->GetRect();
-		Rect rectOut;
-		rectOut.x 		= rectIn.x * ratioX;
-		rectOut.y 		= rectIn.y * ratioY;
-		rectOut.width 		= rectIn.width  * ratioX;
-		rectOut.height 		= rectIn.height * ratioY;
-		Object obj = *it;
-		obj.SetRect(rectOut);*/
-		
-		
 		m_objects.push_back(*it);
 		Object& obj(m_objects[m_objects.size() - 1]);
 		obj.m_posX *= ratioX;

@@ -38,9 +38,8 @@ std::map<std::string,int>  ParameterImageType::m_map_types;
 
 /// Parent for all parameter structures
 
-ParameterStructure::ParameterStructure(const ConfigReader& x_configReader, const std::string& x_objectType):
-		m_configReader(x_configReader),
-		m_objectType(x_objectType)
+ParameterStructure::ParameterStructure(const ConfigReader& x_configReader):
+		m_configReader(x_configReader)
 	{
 		m_objectName = m_configReader.GetAttribute("name");
 		m_list.clear();
@@ -62,7 +61,7 @@ void ParameterStructure::Init()
 	// Read parameters from config
 	SetFromConfig(m_configReader.SubConfig("parameters"));
 	
-	cout<<"Parameters for "<<m_objectType<<"::"<<m_objectName<<" initialized."<<endl;
+	cout<<"Parameters for "<<m_objectName<<" initialized."<<endl;
 	PrintParameters();
 	CheckRange();
 }

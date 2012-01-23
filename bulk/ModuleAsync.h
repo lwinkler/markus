@@ -51,14 +51,13 @@ public:
 	
 	virtual void ProcessFrame();
 protected:
-	cv::Mat * m_input;
-	cv::Mat * m_lastInput; // TODO : Is this used ?
 	double m_timeSinceLastThread;
 	bool m_resultsCopied;
 
+	inline virtual bool IsInputUsed(double x_timeCount) const {return m_timeSinceLastThread + m_processingTime >= 1 / GetRefParameter().detectionFps;};
 	virtual const QThread & GetRefThread() = 0;
-	virtual void LaunchThread(const cv::Mat* m_input, const double x_timeSinceLastProcessing) = 0;
-	virtual void NormalProcess(const cv::Mat * img, const double x_timeSinceLastProcessing) = 0;
+	virtual void LaunchThread() = 0;
+	virtual void NormalProcess() = 0;
 	virtual void CopyResults() = 0;
 	
 private:

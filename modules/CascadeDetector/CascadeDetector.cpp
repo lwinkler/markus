@@ -46,31 +46,29 @@ CascadeDetector::CascadeDetector(const ConfigReader& x_configReader)
 	if(! m_thread.m_cascade.load( m_param.filterFile ) || m_thread.m_cascade.empty())
 		throw("Impossible to load cascade filter " + m_param.filterFile);
 	m_description = "Detect objects from a video stream using a cascade filter (c.f. Haar patterns).";
-	m_debug = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
 	m_input = new Mat(cvSize(m_param.width, m_param.height), CV_8UC1);
-	//m_output = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
+	m_lastInput = new Mat( cvSize(GetInputWidth(), GetInputHeight()), GetInputType());
+	m_debug = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
 
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this, 		"Video input")); 
 
 	m_outputStreams.push_back(new StreamObject(0, "detected", m_param.width, m_param.height, 
 				m_detectedObjects, colorFromStr(m_param.color), *this,	"Detected objects"));
 	m_outputStreams.push_back(new StreamDebug(1, "debug", m_debug, *this,		""));
-//	m_outputStreams.push_back(new StreamImage("input", m_inputCopy));
-	m_lastInput = new Mat( cvSize(GetInputWidth(), GetInputHeight()), GetInputType());
 }
 
-CascadeDetector::~CascadeDetector(void)
+CascadeDetector::~CascadeDetector()
 {
 	delete(m_debug);
 	delete(m_lastInput);
 }
 
 // This method launches the thread
-void CascadeDetector::LaunchThread(const Mat* img, const double x_timeSinceLastProcessing)
+void CascadeDetector::LaunchThread()
 {
-	assert(img->type() == CV_8UC1); // TODO add restriction to param
+	assert(m_input->type() == CV_8UC1); // TODO add restriction to param
 	//	throw("For cascade detection, input type must be CV_8UC1 and not " + ParameterImageType::ImageTypeInt2Str(img->type()));
-	img->copyTo(*m_lastInput);
+	m_input->copyTo(*m_lastInput);
 	Mat smallImg(*m_lastInput);
 	equalizeHist( smallImg, smallImg );
 	
@@ -80,11 +78,10 @@ void CascadeDetector::LaunchThread(const Mat* img, const double x_timeSinceLastP
 	// m_thread.run(); // Use run instead of start for synchronous use
 }
 
-void CascadeDetector::NormalProcess(const Mat* img, const double x_timeSinceLastProcessing)
+void CascadeDetector::NormalProcess()
 {
 	cvtColor(*m_lastInput, *m_debug, CV_GRAY2RGB);
-	//Stream& os(*m_outputStreams[0]);
-	//os.ClearRect();
+
 	for(vector<Object>::const_iterator it = m_detectedObjects.begin() ; it != m_detectedObjects.end() ; it++)
 	{
 		// TODO : See if we move this to execute it once only
@@ -93,9 +90,6 @@ void CascadeDetector::NormalProcess(const Mat* img, const double x_timeSinceLast
 		
 		// Draw the rectangle in the input image
 		rectangle( *m_debug, p1, p2, colorFromStr(m_param.color), 1, 8, 0 );
-		
-		// Add rectangle to output streams
-		//os.AddRect(cv::Rect(p1, p2));
         }
 }
 

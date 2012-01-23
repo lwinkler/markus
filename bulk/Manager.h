@@ -29,7 +29,6 @@
 #include <QReadWriteLock>
 
 #include <cv.h>
-#include "timer.h"
 
 #include "ConfigReader.h"
 #include "Input.h"
@@ -42,7 +41,7 @@ class CvVideoWriter;
 class ManagerParameter : public ParameterStructure
 {
 public:
-	ManagerParameter(const ConfigReader& x_confReader, const std::string& x_moduleName) : ParameterStructure(x_confReader, "Manager")
+	ManagerParameter(const ConfigReader& x_confReader, const std::string& x_moduleName) : ParameterStructure(x_confReader)
 	{
 		m_list.push_back(new ParameterT<std::string>(0, "mode",	"", 	PARAM_STR, &mode, 	"Mode"));
 		//ParameterStructure::Init(); // TODO : restore this
@@ -72,10 +71,10 @@ private:
 	ManagerParameter m_param;
 	CvVideoWriter * m_writer;
 
-	flann::StartStopTimer m_timerConv;
-	flann::StartStopTimer m_timerProc;
+	long long m_timerConvertion;
+	long long m_timerProcessing;
 
-	clock_t m_timerLastProcess;
+	clock_t m_timeLastProcess;
 	
 	std::vector<Module *> 		m_modules;
 	std::vector<Input  *> 		m_inputs;

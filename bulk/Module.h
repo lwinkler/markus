@@ -34,7 +34,7 @@ class Stream;
 class ModuleParameterStructure : public ParameterStructure
 {
 public:
-	ModuleParameterStructure(const ConfigReader& x_confReader) : ParameterStructure(x_confReader, "module")
+	ModuleParameterStructure(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
 	{
 		m_list.push_back(new ParameterT<std::string>(0, "class", 		"", 	PARAM_STR, 		&objClass,	"Class of the module (define the module's function)"));
 		m_list.push_back(new ParameterT<int>(0, "inputWidth", 		640, 	PARAM_INT, 	0, 	4000,	&width,		"Width of the input"));
@@ -57,9 +57,9 @@ public:
 	Module(const ConfigReader& x_confReader);
 	virtual ~Module();
 	
-	void ReadAndConvertInput(/*const cv::Mat * x_img*/);
-	virtual void ProcessFrame() = 0;
-	const std::string& GetName(){return m_name;};
+	void Process(double x_timeCount);
+	
+	const std::string& GetName() const{return m_name;};
 	const std::string& GetDescription(){return m_description;};
 	int GetId() const {return m_id;};
 
@@ -71,8 +71,8 @@ public:
 	virtual int GetInputHeight() const = 0;// {return GetRefParameter().height;}
 	inline int GetInputType() const {return GetRefParameter().type;};
 	inline int GetFps() const {return GetRefParameter().fps;};
-	inline bool AddProcessingTime(double x_time){ return GetFps() == 0 ||  (m_processingTime += x_time) > 1.0 / GetFps(); };
-	inline void ResetProcessingTime(){m_processingTime = 0;};
+	
+	void PrintStatistics(std::ostream& os) const;
 	
 	virtual inline bool IsInput() {return false;};
 	void Export(std::ostream& rx_os, int x_indentation);
@@ -80,8 +80,13 @@ public:
 	Stream * GetOutputStreamById(int x_id) const;
 	QReadWriteLock m_lock;
 	
+	long long m_timerConvertion;
+	long long m_timerProcessing;
+	long long m_countProcessedFrames;
 	
 protected:
+	virtual void ProcessFrame() = 0;
+	inline virtual bool IsInputUsed(double x_timeCount) const {return true;}
 	std::vector<Stream *> m_inputStreams;
 	std::vector<Stream *> m_outputStreams;
 	std::vector<Stream *> m_debugStreams;	

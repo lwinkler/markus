@@ -96,11 +96,13 @@ private:
 
 class CascadeDetector : public ModuleAsync
 {
-private:
+protected:
 	CascadeDetectorParameterStructure m_param;
 	static const char * m_type;
 	
 	std::vector<Object> m_detectedObjects;
+	cv::Mat * m_input;
+	cv::Mat * m_lastInput;
 	cv::Mat * m_debug;
 	
 	DetectionThread m_thread;
@@ -109,8 +111,8 @@ public:
 	~CascadeDetector(void);
 	//void CreateParamWindow();
 	
-	virtual void LaunchThread(const cv::Mat * img, const double x_timeSinceLastProcessing);
-	virtual void NormalProcess(const cv::Mat * img, const double x_timeSinceLastProcessing);
+	virtual void LaunchThread();
+	virtual void NormalProcess();
 	virtual void CopyResults();
 	
 	inline virtual int GetInputWidth() const {return m_param.width;};

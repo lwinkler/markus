@@ -34,7 +34,6 @@ ModuleAsync::ModuleAsync(const ConfigReader& x_configReader) :
 	cout<<endl<<"*** Create object ModuleAsync : "<<m_name<<" ***"<<endl;
 	m_timeSinceLastThread = 1e99;
 	m_resultsCopied = false;
-	m_input = NULL;
 };
 
 /// Process one frame
@@ -42,6 +41,7 @@ ModuleAsync::ModuleAsync(const ConfigReader& x_configReader) :
 void ModuleAsync::ProcessFrame()
 {
 	m_timeSinceLastThread += m_processingTime;
+	//cout<<GetRefParameter().detectionFps<<" : "<<m_timeSinceLastThread<<" += "<<m_processingTime<<endl;
 	
 	if(!m_resultsCopied && !GetRefThread().isRunning())
 	{
@@ -53,7 +53,7 @@ void ModuleAsync::ProcessFrame()
 	{
 		if(!GetRefThread().isRunning())
 		{
-			LaunchThread(m_input, m_processingTime);
+			LaunchThread();
 			m_resultsCopied = false;
 		}
 		else
@@ -63,7 +63,7 @@ void ModuleAsync::ProcessFrame()
 		}
 		m_timeSinceLastThread = 0;
 	}
-	NormalProcess(m_input, m_processingTime);
+	NormalProcess();
 }
 
 

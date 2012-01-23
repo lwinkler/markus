@@ -28,6 +28,7 @@
 #include "Stream.h"
 
 #include <list>
+#include <QTime>
 
 using namespace std;
 
@@ -38,6 +39,10 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_id	= atoi(x_configReader.GetAttribute("id").c_str());
 	cout<<endl<<"*** Create object Module : "<<m_name<<" id:"<<m_id<<" ***"<<endl;
 	m_processingTime = 0;
+	
+	m_timerConvertion = 0;
+	m_timerProcessing = 0;
+	m_countProcessedFrames = 0;
 };
 
 
@@ -52,15 +57,35 @@ Module::~Module()
 		delete(*it);
 };
 
-void Module::ReadAndConvertInput()//const cv::Mat* x_img)
+void Module::Process(double x_timeCount)
 {
-	for(vector<Stream*>::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
+	if(GetFps() == 0 || (m_processingTime += x_timeCount) > 1.0 / GetFps()) 
 	{
-		(*it)->LockForRead();
-		(*it)->ConvertInput();
-		(*it)->UnLock();
+		QTime ti;
+		ti.start();
+	
+		// Read and convert inputs
+		if(IsInputUsed(x_timeCount))
+		{
+			for(vector<Stream*>::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
+			{
+				(*it)->LockForRead();
+				(*it)->ConvertInput();
+				(*it)->UnLock();
+			}
+		}
+		m_timerConvertion 	+= ti.elapsed();
+		ti.restart();
+		
+		ProcessFrame();
+		
+		m_timerProcessing 	 += ti.elapsed();
+		
+		m_processingTime = 0;
+		m_countProcessedFrames++;
 	}
 }
+
 
 /// Describe the module with name, parameters, inputs, outputs to an output stream (in xml)
 
@@ -106,4 +131,8 @@ Stream* Module::GetOutputStreamById(int x_id) const
 	return NULL;
 }
 
+void Module::PrintStatistics(ostream& os) const
+{
+	os<<"Module "<<GetName()<<" : "<<m_countProcessedFrames<<" frames processed (tproc="<<m_timerProcessing<<"ms, tconv="<<m_timerConvertion<<"ms)"<<endl;
+}
 

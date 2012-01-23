@@ -35,6 +35,8 @@
 #include <fstream>
 #include <assert.h>
 
+#include <QTime>
+
 #include <sstream>
 #include <string.h>
 using namespace std;
@@ -119,10 +121,10 @@ Manager::Manager(ConfigReader& x_configReader) :
 	}
 	
 	// Reset timers
-	m_timerConv.reset();
-	m_timerProc.reset();
-	
-	m_timerLastProcess = clock();
+	m_timerConvertion = 0;
+	m_timerProcessing = 0;
+		
+	m_timeLastProcess = clock();
 }
 
 Manager::~Manager()
@@ -141,24 +143,16 @@ Manager::~Manager()
 void Manager::Process()
 {
 	m_lock.lockForWrite();
-	//m_timerConv.stop();
-	m_timerProc.start();
 	
 	clock_t tmp = clock();
-	double timecount = ( (double)tmp - m_timerLastProcess) / CLOCKS_PER_SEC;
-	m_timerLastProcess = tmp;
+	double timecount = static_cast<double>(tmp - m_timeLastProcess) / CLOCKS_PER_SEC;
+	m_timeLastProcess = tmp;
 	
 	try
 	{
 		for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		{
-			//assert(m_input->GetImage() != NULL);
-			if((*it)->AddProcessingTime(timecount))
-			{
-				(*it)->ReadAndConvertInput();
-				(*it)->ProcessFrame();
-				(*it)->ResetProcessingTime();
-			}
+			(*it)->Process(timecount);
 		}
 	}
 	catch(cv::Exception& e)
@@ -182,9 +176,6 @@ void Manager::Process()
 		cout << "Unknown exception raised: "<<endl;
 	}
 
-	
-	m_timerProc.stop();
-
 	m_frameCount++;
 	if(m_frameCount % 100 == 0)
 	{
@@ -197,9 +188,17 @@ void Manager::Process()
 
 void Manager::PrintTimers()
 {
-		cout<<m_frameCount<<" frames processed in "<<m_timerProc.value<<" s ("<<m_frameCount/m_timerProc.value<<" frames/s)"<<endl;
-		cout<<"Time between calls to process method "<<m_timerConv.value<<" s ("<<m_frameCount/m_timerConv.value<<" frames/s)"<<endl;
-		cout<<"Total time "<<m_timerProc.value + m_timerConv.value<<" s ("<<m_frameCount/(m_timerProc.value + m_timerConv.value)<<" frames/s)"<<endl;
+		cout<<m_frameCount<<" frames processed in "<<m_timerProcessing<<" ms ("<<  (1000.0 * m_frameCount) / m_timerProcessing<<" frames/s)"<<endl;
+		cout<<"input convertion "                  <<m_timerConvertion<<" ms ("<<(1000.0 * m_frameCount) / m_timerConvertion<<" frames/s)"<<endl;
+		cout<<"Total time "<< m_timerProcessing + m_timerConvertion<<" ms ("<<     (1000.0 * m_frameCount) /(m_timerProcessing + m_timerConvertion)<<" frames/s)"<<endl;
+
+		int cpt = 0;
+		for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+		{
+			cout<<cpt<<": ";
+			(*it)->PrintStatistics(cout);
+			cpt++;
+		}
 }
 
 /// Export current configuration to xml
