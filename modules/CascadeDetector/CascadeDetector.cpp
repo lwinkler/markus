@@ -25,11 +25,12 @@
 #include "StreamImage.h"
 #include "StreamObject.h"
 #include "StreamDebug.h"
+#include "Timer.h"
 
 #include <iostream>
 #include <cstdio>
 #include <highgui.h>
-#include <QTime>
+
 
 #include "util.h"
 
@@ -129,10 +130,9 @@ void CascadeDetector::CopyResults()
 
 void DetectionThread::run()
 {
-	QTime ti;
-	ti.start();
+	Timer ti;
 	m_detected.clear();
 	//cout<<"m_smallImg"<<&m_smallImg<<" m_detectedObjects"<<&m_detectedObjects<<" m_scaleFactor"<<m_scaleFactor<<" m_minNeighbors"<<m_minNeighbors<<endl;
 	m_cascade.detectMultiScale(m_smallImg, m_detected, m_scaleFactor, m_minNeighbors, CV_HAAR_SCALE_IMAGE, cvSize(m_minSide, m_minSide));
-	m_timerThread = ti.elapsed();
+	m_timerThread = ti.GetMSecLong();
 }

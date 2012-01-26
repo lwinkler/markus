@@ -26,9 +26,9 @@
 #include "util.h"
 
 #include "Stream.h"
+#include "Timer.h"
 
-#include <list>
-#include <QTime>
+//#include <list>
 
 using namespace std;
 
@@ -62,28 +62,26 @@ void Module::Process(double x_timeCount)
 {
 	if(GetFps() == 0 || (m_processingTime += x_timeCount) > 1.0 / GetFps()) 
 	{
-		QTime ti;
-		ti.start();
+		Timer ti;
 	
 		// Read and convert inputs
 		if(IsInputUsed(x_timeCount))
 		{
 			for(vector<Stream*>::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
 			{
-				QTime ti2;
-				ti2.start();
+				Timer ti2;
 				(*it)->LockForRead();
-				m_timerWaiting += ti2.elapsed();
+				m_timerWaiting += ti2.GetMSecLong();
 				(*it)->ConvertInput();
 				(*it)->UnLock();
 			}
 		}
-		m_timerConvertion 	+= ti.elapsed();
-		ti.restart();
+		m_timerConvertion 	+= ti.GetMSecLong();
+		ti.Restart();
 		
 		ProcessFrame();
 		
-		m_timerProcessing 	 += ti.elapsed();
+		m_timerProcessing 	 += ti.GetMSecLong();
 		
 		m_processingTime = 0;
 		m_countProcessedFrames++;

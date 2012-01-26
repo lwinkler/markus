@@ -33,6 +33,7 @@
 #include "ConfigReader.h"
 #include "Input.h"
 #include "Module.h"
+#include "Timer.h"
 
 class CvVideoWriter;
 
@@ -74,11 +75,12 @@ private:
 	long long m_timerConvertion;
 	long long m_timerProcessing;
 
-	clock_t m_timeLastProcess;
+	//clock_t m_timeLastProcess;
 	
 	std::vector<Module *> 		m_modules;
 	std::vector<Input  *> 		m_inputs;
 
+	Timer m_timer;
 	long long m_frameCount;
 protected:
 	inline virtual const ParameterStructure& GetRefParameter() const{return m_param;};

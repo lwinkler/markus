@@ -35,8 +35,6 @@
 #include <fstream>
 #include <assert.h>
 
-#include <QTime>
-
 #include <sstream>
 #include <string.h>
 using namespace std;
@@ -124,7 +122,7 @@ Manager::Manager(ConfigReader& x_configReader) :
 	m_timerConvertion = 0;
 	m_timerProcessing = 0;
 		
-	m_timeLastProcess = clock();
+	m_timer.Restart();
 }
 
 Manager::~Manager()
@@ -149,9 +147,10 @@ void Manager::Process()
 		return;
 	}
 	
-	clock_t tmp = clock();
-	double timecount = static_cast<double>(tmp - m_timeLastProcess) / CLOCKS_PER_SEC;
-	m_timeLastProcess = tmp;
+	m_timer.Restart();
+	usleep(100000);
+	double timecount = m_timer.GetSecDouble();
+	m_timer.Restart();
 	
 	try
 	{

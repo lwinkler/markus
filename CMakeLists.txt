@@ -31,6 +31,7 @@ bulk/Feature.cpp
 bulk/Template.cpp
 bulk/util.cpp
 bulk/ConfigReader.cpp
+bulk/Timer.cpp
 tools/Tracker.cpp
 tools/cvblobs/BlobContour.cpp
 tools/cvblobs/BlobOperators.cpp

@@ -20,39 +20,25 @@
 *    You should have received a copy of the GNU Lesser General Public License
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
-#include "Object.h"
 
-using namespace std;
+#ifndef MK_TIMER_H
+#define MK_TIMER_H
 
-Object::Object(const string& x_name) :
-	m_name(x_name),
-	m_id(-1),
-	m_posX(0),
-	m_posY(0),
-	m_width(0),
-	m_height(0)
-	//m_color(cvScalar(255,255,255))
+//#include <time.h>
+#include <sys/time.h>
+#include <unistd.h>
+
+class Timer
 {
+public:
+	Timer(){Restart();};
+	long GetMSecLong();
+	float GetSecFloat();
+	double GetSecDouble();
+	inline void Restart(){gettimeofday(&m_start, NULL);};
+
+protected:
+	timeval m_start;
 };
 
-/*
-Object::Object(const Object& r)
-{
-	//m_num = r.GetNum();
-	m_feats = r.GetFeatures();
-	m_posX = r.m_posX;
-	m_posY = r.m_posY;
-}
-
-Object& Object::operator = (const Object& r)
-{
-	//m_num = r.GetNum();
-	m_feats = r.GetFeatures();
-	m_posX = r.m_posX;
-	m_posY = r.m_posY;
-
-	return *this;
-}
-*/
-Object::~Object(){};
-
+#endif

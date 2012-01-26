@@ -23,7 +23,7 @@
       <param name="inputHeight">480</param>
       <param name="inputType">CV_8UC1</param>
       <param name="fps">1000</param>
-      <param name="detectionFps">.2</param>
+      <param name="detectionFps">.05</param>
       <param name="minNeighbors">2</param>
       <param name="minSide">0</param>
       <param name="scaleFactor">1.2</param>
@@ -87,7 +87,7 @@
       <param name="inputHeight">480</param>
       <param name="inputType">CV_8UC1</param>
       <param name="fps">10</param>
-      <param name="detectionFps">10</param>
+      <param name="detectionFps">1</param>
       <param name="minNeighbors">2</param>
       <param name="minSide">0</param>
       <param name="scaleFactor">1.2</param>
@@ -112,7 +112,7 @@
       <param name="inputHeight">480</param>
       <param name="inputType">CV_8UC1</param>
       <param name="fps">10</param>
-      <param name="detectionFps">10</param>
+      <param name="detectionFps">1</param>
       <param name="minNeighbors">2</param>
       <param name="minSide">0</param>
       <param name="scaleFactor">1.2</param>
@@ -137,7 +137,7 @@
       <param name="inputHeight">480</param>
       <param name="inputType">CV_8UC1</param>
       <param name="fps">10</param>
-      <param name="detectionFps">10</param>
+      <param name="detectionFps">1</param>
       <param name="minNeighbors">2</param>
       <param name="minSide">0</param>
       <param name="scaleFactor">1.2</param>
@@ -162,7 +162,7 @@
       <param name="inputHeight">480</param>
       <param name="inputType">CV_8UC1</param>
       <param name="fps">10</param>
-      <param name="detectionFps">10</param>
+      <param name="detectionFps">1</param>
       <param name="minNeighbors">2</param>
       <param name="minSide">0</param>
       <param name="scaleFactor">1.2</param>
