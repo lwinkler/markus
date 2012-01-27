@@ -34,7 +34,7 @@
 class Feature
 {
 	public:
-		Feature(double value=0);
+		Feature(double value, double x_variance);
 		Feature(const Feature&);
 		Feature& operator = (const Feature&);
 		~Feature();
@@ -45,11 +45,10 @@ class Feature
 		inline double GetVariance() const {return m_variance;};
 		inline void SetVariance( double x) {m_variance = x;};
 		
-		static double GetFeatureValue(const std::vector<Feature>& vect, const char* name);
+		//static double GetFeatureValue(const std::vector<Feature>& vect, const char* name);
 		
 		
 	public:
-		static std::vector<std::string> m_names; // TODO : Names should be in a static array to save memory space
 		double m_value;
 		double m_variance;
 };

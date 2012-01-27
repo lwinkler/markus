@@ -37,9 +37,9 @@ StreamObject::StreamObject(int x_id, const string& x_name, int x_width, int x_he
 {
 }
 
-StreamObject::StreamObject(int x_id, const string& x_name, int x_width, int x_height, 
+StreamObject::StreamObject(int x_id, const string& rx_name, int x_width, int x_height, 
 			vector<Object>& xr_objects, Module& rx_module, const string& rx_description):
-	Stream(x_id, x_name, STREAM_IMAGE, x_width, x_height, rx_module, rx_description),
+	Stream(x_id, rx_name, STREAM_IMAGE, x_width, x_height, rx_module, rx_description),
 	m_objects(xr_objects),
 	m_color(cvScalar(255, 255, 255)),
 	m_isColorSet(false)
@@ -110,4 +110,20 @@ void StreamObject::RenderTo(Mat * xp_output) const
 			putText(*xp_output, it->GetName(), p1, FONT_HERSHEY_COMPLEX_SMALL, 0.5, m_color);
 		}
         }
+}
+
+/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
+/// Get a value from a feature vector
+/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
+double StreamObject::GetFeatureValue(const std::vector< Feature >& x_vect, const char* x_name)
+{
+	int cpt = 0;
+	
+	for ( vector<Feature>::const_iterator it1= x_vect.begin() ; it1 != x_vect.end(); it1++ )
+	{
+		if(!m_featureNames.at(cpt).compare(x_name))// !strcmp((const char*) Feature::m_names.at(cpt).compare(x_name)/* it1->m_name* /, x_name))
+			return it1->m_value;
+		cpt++;
+	}
+	throw("GetFeatureValue : cannot find feature " + string(x_name));
 }

@@ -30,8 +30,6 @@
 using namespace std;
 using namespace cv;
 
-vector <string> Feature::m_names; // TODO : should not be static
-
 
 Tracker::Tracker(const TrackerParameter& x_param, int width, int height, int type) :
 	m_param(x_param)
@@ -191,7 +189,7 @@ void Tracker::PrintObjects() const
 		cout<<"Object "/*<<(int)it1->GetNum()*/<<" : ";
 		for ( vector<Feature>::const_iterator it2=it1->GetFeatures().begin() ; it2 < it1->GetFeatures().end(); it2++ )
 		{
-			cout<<" "<<it2->m_names.at(cpt)<<"="<<it2->GetValue()<<"|";
+			cout<<" "<<"it2->m_names.at(cpt)"<<"="<<it2->GetValue()<<"|"; // TODO : Names
 			cpt++;
 		}
 		cout<<endl;

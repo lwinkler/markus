@@ -42,9 +42,9 @@ class Object
 		Object(const std::string & x_name);
 		~Object();
 		
-		inline void AddFeature(/*const char* name, */double value)
+		inline void AddFeature(double x_value, double x_variance)
 		{
-			Feature f(value);
+			Feature f(x_value, x_variance);
 			m_feats.push_back(f);
 		};
 		inline const std::vector <Feature>& GetFeatures() const {return m_feats;};

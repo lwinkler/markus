@@ -34,9 +34,9 @@
 class StreamObject : public Stream
 {
 public:
-	StreamObject(int x_id, const std::string& x_name, int x_width, int x_height, 
+	StreamObject(int x_id, const std::string& rx_name, int x_width, int x_height, 
 		   std::vector<Object>& r_rects, const CvScalar& x_color, Module& rx_module, const std::string& rx_description);
-	StreamObject(int x_id, const std::string& x_name, int x_width, int x_height, 
+	StreamObject(int x_id, const std::string& rx_name, int x_width, int x_height, 
 		   std::vector<Object>& r_rects, Module& rx_module, const std::string& rx_description);
 	~StreamObject();
 	void Clear() {m_objects.clear();};
@@ -45,11 +45,12 @@ public:
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat * xp_output) const;
 	inline virtual const std::string GetTypeString()const {return "Objects";};
-	inline void AddPropertyName(const std::string & x_name){m_propertyNames.push_back(x_name);};
+	inline void AddFeatureName(const std::string & x_name){m_featureNames.push_back(x_name);};
+	double GetFeatureValue(const std::vector<Feature>& x_vect, const char* x_name);
 
 protected:
 	std::vector<Object> & m_objects;
-	std::vector<std::string> m_propertyNames;
+	std::vector<std::string> m_featureNames;
 	CvScalar m_color;
 	bool m_isColorSet;
 

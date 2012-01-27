@@ -48,6 +48,11 @@ BlobSegmenter::BlobSegmenter(const ConfigReader& x_configReader) :
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,	"Input binary stream"));
 
 	m_outputStreams.push_back(new StreamObject(0, "segmented", m_param.width, m_param.height, m_regions, cvScalar(255, 255, 255), *this,	"Segmented objects"));
+	StreamObject* tmp = dynamic_cast<StreamObject*>(m_outputStreams[0]);
+	tmp->AddFeatureName("area");
+	tmp->AddFeatureName("perimeter");
+	tmp->AddFeatureName("x");
+	tmp->AddFeatureName("y");
 	
 	m_debugStreams.push_back(new StreamDebug(0, "blobs", m_blobsImg, *this,	"Blobs"));
 }
@@ -92,38 +97,21 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 			IplImage img = *m_blobsImg; // TODO : debug only
 			currentBlob = blobs.GetBlob(i);
 			
-			//double posx = currentBlob->SumX();
-			//double posy = currentBlob->SumY();
-			
-			//double posx = currentBlob->GetBoundingBox().x;
-			//double posy = currentBlob->GetBoundingBox().y;
 			cv::Rect rect = currentBlob->GetBoundingBox();
 			
-			
-			
-		//if(currentBlob->Parent() && !currentBlob->Exterior() && posx > 0 && posx < m_blobsImg->cols && posy > 0 && posy < m_blobsImg->rows) // TODO : fix this for real
-		if(true)//posx >= 0 && posx < m_blobsImg->cols && posy >= 0 && posy < m_blobsImg->rows) // TODO : fix this for real
+		if(rect.width >= m_param.minWidth && rect.height >= m_param.minHeight)
 		{
 			currentBlob->FillBlob( &img, colorFromId(i));
 			
-			Object obj("obj"); // TODO param
-			obj.m_posX 	= rect.x - rect.width / 2;
-			obj.m_posY 	= rect.y - rect.height / 2;
+			Object obj(m_param.objectLabel);
+			obj.m_posX 	= rect.x + rect.width / 2;
+			obj.m_posY 	= rect.y + rect.height / 2;
 			obj.m_width	= rect.width;
 			obj.m_height 	= rect.height;
 			
 			// Add here all features that are to be added in the templates/region
-			if(Feature::m_names.size() == 0)
-			{
-				// Write names once
-				Feature::m_names.push_back("area");
-				Feature::m_names.push_back("perimeter");
-				Feature::m_names.push_back("x");
-				Feature::m_names.push_back("y");
-			}
-			
-			obj.AddFeature(currentBlob->Area());
-	 		obj.AddFeature(currentBlob->Perimeter());
+			obj.AddFeature(currentBlob->Area(), 0.1);
+	 		obj.AddFeature(currentBlob->Perimeter(), 0.1);
 	
 	// 		//reg.AddFeature("mean", GetSTLResult(currentBlob, CBlobGetMean()));
 	// 		reg.AddFeature("compactness", GetSTLResult(currentBlob, CBlobGetCompactness()));
@@ -131,19 +119,8 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 	// 
 	// 		reg.AddFeature("convex hull perimeter", GetSTLResult(currentBlob, CBlobGetHullPerimeter()));
 	
-			obj.AddFeature(rect.x);
-			obj.AddFeature(rect.y); // TODO : Add width / 2 ??
-			
-			//cout<<"Blob extracted position "<<currentBlob->SumX()<<","<<currentBlob->SumY()<<endl;;
-			//m_regions.push_back(reg); // TODO : Manage regions better
-			/*cv::Rect rect;
-			rect.x = posx;
-			rect.y = posy;
-			rect.width  = currentBlob->MaxX() - currentBlob->MinX();
-			rect.height = currentBlob->MaxY() - currentBlob->MinY();*/
-			//Object obj;
-			
-			//obj.SetRect(rect);
+			obj.AddFeature(rect.x, 0.1);
+			obj.AddFeature(rect.y, 0.1); // TODO : Add width / 2 ??
 			m_regions.push_back(obj);
 		}
 		//else throw("ERROR");

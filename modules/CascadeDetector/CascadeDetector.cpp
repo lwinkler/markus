@@ -108,19 +108,10 @@ void CascadeDetector::CopyResults()
 		obj.m_width = it->width;
 		obj.m_height = it->height;
 		
-		if(Feature::m_names.size() == 0)
-		{
-			// Write names once
-			Feature::m_names.push_back("x"); // TODO : avoid static names !!
-			Feature::m_names.push_back("y");
-			Feature::m_names.push_back("w");
-			Feature::m_names.push_back("h");
-		}
-		
-		obj.AddFeature(obj.m_posX);
-		obj.AddFeature(obj.m_posY);
-		obj.AddFeature(obj.m_width);
-		obj.AddFeature(obj.m_height);
+		obj.AddFeature(obj.m_posX, 0.1);
+		obj.AddFeature(obj.m_posY, 0.1);
+		obj.AddFeature(obj.m_width, 0.1);
+		obj.AddFeature(obj.m_height, 0.1);
 
 		m_detectedObjects.push_back(obj);
 	}
