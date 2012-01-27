@@ -89,8 +89,9 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 	
 	int i;
 	CBlob *currentBlob;
+	
 	// exclude the ones smaller than value
-	blobs.Filter( blobs, B_EXCLUDE, CBlobGetArea(), B_OUTSIDE, 25, x_img->size().area() / 4); // TODO Add param
+	//blobs.Filter( blobs, B_EXCLUDE, CBlobGetArea(), B_OUTSIDE, m_param.minSize, m_param.maxSize);
 
 	for (i = 0; i < blobs.GetNumBlobs(); i++ )
 	{
@@ -120,7 +121,7 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 	// 		reg.AddFeature("convex hull perimeter", GetSTLResult(currentBlob, CBlobGetHullPerimeter()));
 	
 			obj.AddFeature(rect.x, 0.1);
-			obj.AddFeature(rect.y, 0.1); // TODO : Add width / 2 ??
+			obj.AddFeature(rect.y, 0.1);
 			m_regions.push_back(obj);
 		}
 		//else throw("ERROR");

@@ -35,6 +35,9 @@ class SimpleTrackerParameterStructure : public ModuleParameterStructure
 public:
 	SimpleTrackerParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
+		m_list.push_back(new ParameterT<double>(0, "maxMatchingDistance", 100, 	PARAM_DOUBLE, 0, MAX_WIDTH + MAX_HEIGHT, &tracker.maxMatchingDistance,		"Tolerance of the tracker."));
+		m_list.push_back(new ParameterT<int>(0, "maxNbFramesDisappearance", 10, PARAM_INT, 1, 1000,			&tracker.maxNbFramesDisappearance,	"Time before disappearence of an object")); // TODO : should be in seconds
+		m_list.push_back(new ParameterT<bool>(0, "symetricMatch", 	true, 	PARAM_BOOL, 0, 1, 			&tracker.symetricMatch,			"Each match between objects and templates must be symetrical"));
 
 		ParameterStructure::Init();
 	};
@@ -53,11 +56,7 @@ public:
 	
 private:
 	SimpleTrackerParameterStructure m_param;
-	
-	// for streams
-	//std::vector<Object> m_trackerInput;
-	//std::vector<Object> m_trackerOutput;
-	
+
 	Tracker track;
 	static const char * m_type;
 protected:

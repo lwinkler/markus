@@ -46,9 +46,11 @@ public:
 	{
 		maxMatchingDistance = 100;
 		maxNbFramesDisappearance = 10;
+		symetricMatch = true;
 	};
 	double maxMatchingDistance;
 	int maxNbFramesDisappearance;
+	bool symetricMatch;
 };
 
 /*! \class Tracker

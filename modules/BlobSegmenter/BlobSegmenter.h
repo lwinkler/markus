@@ -33,8 +33,6 @@
 #include "cvblobs/BlobLibraryConfiguration.h"
 #include "cvblobs/BlobResult.h"
 
-#include "Tracker.h" // TODO : should not be here
-
 class ConfigReader;
 
 class BlobSegmenterParameterStructure : public ModuleParameterStructure

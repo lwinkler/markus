@@ -67,7 +67,7 @@ int Tracker::MatchTemplate(Template& x_temp)
 		}
 	}
        if(bestObject != -1 && bestDist < m_param.maxMatchingDistance
-               && (x_temp.GetNum() == MatchObject(m_objects[bestObject]))) // Symetric match // TODO param
+               && (x_temp.GetNum() == MatchObject(m_objects[bestObject]) || !m_param.symetricMatch)) // Note: the order of this condition is important since MatchObject must be called each time !!
 	{
 		x_temp.m_bestMatchingObject = bestObject;
 #ifdef VERBOSE
@@ -219,7 +219,7 @@ int Tracker::MatchObject(Object& x_obj)
 	}
 	if(bestTemp != NULL && bestDist < m_param.maxMatchingDistance)
 	{
-		x_obj.SetId(bestTemp->GetNum()); // Set color of template //TODO : maybe should not be here
+		x_obj.SetId(bestTemp->GetNum()); // Set color of template 
 		return bestTemp->GetNum();
 	}
 	else 
