@@ -67,7 +67,7 @@ public:
 	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN) = 0;
 	//virtual void SetValue(const void* x_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN) = 0;
 	virtual void SetDefault(const std::string& x_value) = 0;
-	virtual const void* GetValue() const = 0;
+	//virtual const void* GetValue() const = 0;
 	inline const std::string& GetName() const {return m_name;};
 	virtual const ParameterType GetType() const = 0;
 	virtual const std::string GetTypeString() const = 0;
@@ -113,18 +113,18 @@ public:
 		std::istringstream istr(rx_value);
 		istr >> m_default; // atof is sensible to locale format and may use , as a separator
 	};
-	virtual const void * GetValue() const
+	virtual T GetValue() const
 	{
-		return static_cast<const void*>(mp_value);
+		return *mp_value;
 	}
 	virtual bool CheckRange() const
 	{
-		T value = *static_cast<const T*>(GetValue());
+		T value = GetValue();
 		return (value <= m_max && value >= m_min);
 	}
 	virtual void Print() const 
 	{
-		std::cout<<m_name<<" = "<<*static_cast<const T*>(GetValue())<<" ["<<m_min<<":"<<m_max<<"] ("<<configType[m_confSource]<<"); ";	
+		std::cout<<m_name<<" = "<<GetValue()<<" ["<<m_min<<":"<<m_max<<"] ("<<configType[m_confSource]<<"); ";	
 		
 	};
 	virtual void SetValueToDefault()
@@ -138,7 +138,7 @@ public:
 		rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<std::endl;
 		tabs = std::string(x_indentation + 1, '\t');
 		rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<std::endl;
-		rx_os<<tabs<<"<value min=\""<<m_min<<"\" max=\""<<m_max<<"\" default=\""<<m_default<<"\">"<<*static_cast<const T*>(GetValue())<<"</value>"<<std::endl;
+		rx_os<<tabs<<"<value min=\""<<m_min<<"\" max=\""<<m_max<<"\" default=\""<<m_default<<"\">"<<GetValue()<<"</value>"<<std::endl;
 		rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<std::endl;
 		tabs = std::string(x_indentation, '\t');
 		rx_os<<tabs<<"</param>"<<std::endl;
@@ -176,9 +176,9 @@ public:
 	{	
 		m_default = x_value;
 	};
-	virtual const void * GetValue() const
+	virtual std::string GetValue() const
 	{
-		return static_cast<const void*>(mp_value);
+		return *mp_value;
 	}
 	inline virtual bool CheckRange() const
 	{
@@ -186,7 +186,7 @@ public:
 	}
 	virtual void Print() const 
 	{
-		std::cout<<m_name<<" = "<<*static_cast<const std::string*>(GetValue())<<" ("<<configType[m_confSource]<<"); ";	
+		std::cout<<m_name<<" = "<<GetValue()<<" ("<<configType[m_confSource]<<"); ";	
 		
 	};
 	virtual void SetValueToDefault()
@@ -200,7 +200,7 @@ public:
 		rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<std::endl;
 		tabs = std::string(x_tabs + 1, '\t');
 		rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<std::endl;
-		rx_os<<tabs<<"<value default=\""<<m_default<<"\">"<<*static_cast<const std::string*>(GetValue())<<"</value>"<<std::endl;
+		rx_os<<tabs<<"<value default=\""<<m_default<<"\">"<<GetValue()<<"</value>"<<std::endl;
 		rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<std::endl;
 		tabs = std::string(x_tabs, '\t');
 		rx_os<<tabs<<"</param>"<<std::endl;
@@ -232,9 +232,9 @@ public:
 	{	
 		m_default = ImageTypeStr2Int(rx_value);
 	};
-	virtual const void * GetValue() const
+	virtual int GetValue() const
 	{
-		return static_cast<const void*>(mp_value);
+		return *mp_value;
 	};
 	virtual bool CheckRange() const
 	{
@@ -244,7 +244,7 @@ public:
 	};
 	virtual void Print() const 
 	{
-		std::cout<<m_name<<" = "<<ImageTypeInt2Str(*static_cast<const int*>(GetValue()))<<" ["<<*static_cast<const int*>(GetValue())<<"] ("<<configType[m_confSource]<<"); ";	
+		std::cout<<m_name<<" = "<<ImageTypeInt2Str(GetValue())<<" ["<<GetValue()<<"] ("<<configType[m_confSource]<<"); ";	
 		
 	};
 	virtual void SetValueToDefault()
@@ -277,7 +277,7 @@ public:
 		rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<std::endl;
 		tabs = std::string(x_indentation + 1, '\t');
 		rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<std::endl;
-		rx_os<<tabs<<"<value default=\""<<ImageTypeInt2Str(m_default)<<"\">"<<ImageTypeInt2Str(*static_cast<const int*>(GetValue()))<<"</value>"<<std::endl;
+		rx_os<<tabs<<"<value default=\""<<ImageTypeInt2Str(m_default)<<"\">"<<ImageTypeInt2Str(GetValue())<<"</value>"<<std::endl;
 		rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<std::endl;
 		tabs = std::string(x_indentation, '\t');
 		rx_os<<tabs<<"</param>"<<std::endl;
