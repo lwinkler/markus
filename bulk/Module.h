@@ -39,11 +39,11 @@ class ModuleParameterStructure : public ParameterStructure
 public:
 	ModuleParameterStructure(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterT<std::string>(0, "class", 		"", 	PARAM_STR, 		&objClass,	"Class of the module (define the module's function)"));
-		m_list.push_back(new ParameterT<int>(0, "inputWidth", 	640, 	PARAM_INT, 	0, MAX_WIDTH,		&width,		"Width of the input"));
-		m_list.push_back(new ParameterT<int>(0, "inputHeight", 	480, 	PARAM_INT, 	0, MAX_HEIGHT,		&height,	"Height of the input"));
+		m_list.push_back(new ParameterString(0, "class", 		"", 					&objClass,	"Class of the module (define the module's function)"));
+		m_list.push_back(new ParameterInt(0, "inputWidth", 	640, 	PARAM_INT, 	0, MAX_WIDTH,		&width,		"Width of the input"));
+		m_list.push_back(new ParameterInt(0, "inputHeight", 	480, 	PARAM_INT, 	0, MAX_HEIGHT,		&height,	"Height of the input"));
 		m_list.push_back(new ParameterImageType(0, "inputType", 	CV_8UC1, 				&type,		"Format of the input image"));
-		m_list.push_back(new ParameterT<double>(0, "fps", 	10, 	PARAM_DOUBLE, 	0, 	100000,		&fps,		"Frames per seconds (processing speed)")); //TODO : Check that min max works
+		m_list.push_back(new ParameterDouble(0, "fps", 	10, 	PARAM_DOUBLE, 	0, 	100000,		&fps,		"Frames per seconds (processing speed)")); //TODO : Check that min max works
 	};
 
 public:

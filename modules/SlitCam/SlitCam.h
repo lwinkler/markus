@@ -42,7 +42,7 @@ public:
 	SlitCamParameter(const ConfigReader& x_confReader) : 
 		ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterT<int>(0, "aperture", 1, PARAM_INT, 1, 10, &aperture,	"Size of the aperture of the camera"));
+		m_list.push_back(new ParameterInt(0, "aperture", 1, PARAM_INT, 1, 10, &aperture,	"Size of the aperture of the camera"));
 		
 		ParameterStructure::Init();
 	};

@@ -70,10 +70,10 @@ public:
 	virtual const void* GetValue() const = 0;
 	inline const std::string& GetName() const {return m_name;};
 	inline const ParameterType& GetType() const {return m_type;};
-	const std::string GetTypeString() const;
+	virtual const std::string GetTypeString() const = 0;
 	inline const std::string& GetDescription() const {return m_description;};
 	inline const ParameterConfigType& GetConfigurationSource() const {return m_confSource;};
-	virtual void SetDefault() = 0;
+	virtual void SetValueToDefault() = 0;
 	virtual void Print() const = 0;
 	virtual bool CheckRange() const = 0;
 	virtual void Export(std::ostream& rx_os, int x_indentation) = 0;
@@ -120,7 +120,7 @@ public:
 		std::cout<<m_name<<" = "<<*static_cast<const T*>(GetValue())<<" ["<<m_min<<":"<<m_max<<"] ("<<configType[m_confSource]<<"); ";	
 		
 	};
-	virtual void SetDefault()
+	virtual void SetValueToDefault()
 	{
 		*mp_value = m_default;
 		m_confSource = PARAMCONF_DEF;
@@ -136,6 +136,20 @@ public:
 		tabs = std::string(x_indentation, '\t');
 		rx_os<<tabs<<"</param>"<<std::endl;
 	}
+	/// Return the type as a string (e.g. for xml)
+
+	inline const std::string GetTypeString() const
+	{	
+		switch(m_type)
+		{
+			case PARAM_INT: 	return "int";
+			case PARAM_FLOAT:	return "float";
+			case PARAM_DOUBLE: 	return "double";
+			case PARAM_BOOL:	return "bool";
+			default :		assert(false);//return "unknown";
+		}
+	}
+
 
     std::basic_ostream< char >::__ostream_type of(const char* arg1);
 	const T m_default;
@@ -146,13 +160,13 @@ private:
 };
 
 // Specialization for string type param
-template <> class ParameterT<std::string> : public Parameter
+class ParameterString : public Parameter
 {
 public:
-	ParameterT(int x_id, const std::string& x_name, std::string x_default, ParameterType x_type, std::string * xp_value, const std::string& x_description) : 
-		Parameter(x_id, x_name, x_type, x_description),
+	ParameterString(int x_id, const std::string& x_name, std::string x_default, std::string * xp_value, const std::string& x_description) : 
+		Parameter(x_id, x_name, PARAM_STR, x_description),
 		m_default(x_default),
-		mp_value(xp_value){ assert(x_type == PARAM_STR);};
+		mp_value(xp_value){};
 	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
 	{
 		*mp_value = rx_value;
@@ -176,7 +190,7 @@ public:
 		std::cout<<m_name<<" = "<<*static_cast<const std::string*>(GetValue())<<" ("<<configType[m_confSource]<<"); ";	
 		
 	};
-	virtual void SetDefault()
+	virtual void SetValueToDefault()
 	{
 		*mp_value = m_default;
 		m_confSource = PARAMCONF_DEF;
@@ -192,6 +206,7 @@ public:
 		tabs = std::string(x_tabs, '\t');
 		rx_os<<tabs<<"</param>"<<std::endl;
 	}
+	inline const std::string GetTypeString() const {return "string";};
 
 	const std::string m_default;
 private:
@@ -227,11 +242,13 @@ public:
 		std::cout<<m_name<<" = "<<ImageTypeInt2Str(*static_cast<const int*>(GetValue()))<<" ["<<*static_cast<const int*>(GetValue())<<"] ("<<configType[m_confSource]<<"); ";	
 		
 	};
-	virtual void SetDefault()
+	virtual void SetValueToDefault()
 	{
 		*mp_value = m_default;
 		m_confSource = PARAMCONF_DEF;
 	};
+	inline const std::string GetTypeString() const {return "image type";};
+
 	
 	// Conversion methods
 	static int ImageTypeStr2Int(const std::string& x)
@@ -277,7 +294,7 @@ public:
 	void Init();
 	//void ReadParametersFromConfig();
 	void SetFromConfig(const ConfigReader& x_conf);
-	void SetDefault();
+	void SetValueToDefault();
 	void CheckRange() const;
 	void PrintParameters() const;
 	void SetValueByName(const std::string& x_name, const std::string& x_value, ParameterConfigType x_configType = PARAMCONF_UNKNOWN);
@@ -289,7 +306,10 @@ protected:
 	std::string m_objectName;
 };
 
-
+typedef ParameterT<int> 	ParameterInt;
+typedef ParameterT<double> 	ParameterDouble;
+typedef ParameterT<float> 	ParameterFloat;
+typedef ParameterT<bool> 	ParameterBool;
 
 
 

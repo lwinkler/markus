@@ -127,3 +127,20 @@ double StreamObject::GetFeatureValue(const std::vector< Feature >& x_vect, const
 	}
 	throw("GetFeatureValue : cannot find feature " + string(x_name));
 }
+
+void StreamObject::PrintObjects() const
+{
+	//cout<<"print region name="<<m_objects.at(0).GetFeatures().at(0).m_name<<endl;
+	for ( vector<Object>::const_iterator it1= m_objects.begin() ; it1 < m_objects.end(); it1++ )
+	{
+		int cpt=0;
+		cout<<"Object "/*<<(int)it1->GetNum()*/<<" : ";
+		for ( vector<Feature>::const_iterator it2=it1->GetFeatures().begin() ; it2 < it1->GetFeatures().end(); it2++ )
+		{
+			cout<<" "<<m_featureNames.at(cpt)<<"="<<it2->GetValue()<<"|";
+			cpt++;
+		}
+		cout<<endl;
+	}	
+}
+

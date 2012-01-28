@@ -177,27 +177,6 @@ void Tracker::DetectNewTemplates()
 #endif
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-/* PrintObjects */
-/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-void Tracker::PrintObjects() const
-{
-	//cout<<"print region name="<<m_objects.at(0).GetFeatures().at(0).m_name<<endl;
-	for ( vector<Object>::const_iterator it1= m_objects.begin() ; it1 < m_objects.end(); it1++ )
-	{
-		int cpt=0;
-		cout<<"Object "/*<<(int)it1->GetNum()*/<<" : ";
-		for ( vector<Feature>::const_iterator it2=it1->GetFeatures().begin() ; it2 < it1->GetFeatures().end(); it2++ )
-		{
-			cout<<" "<<"it2->m_names.at(cpt)"<<"="<<it2->GetValue()<<"|"; // TODO : Names
-			cpt++;
-		}
-		cout<<endl;
-	}
-	
-	
-}
-
 
 int Tracker::MatchObject(Object& x_obj)
 {

@@ -40,9 +40,9 @@ class BlobSegmenterParameterStructure : public ModuleParameterStructure
 public:
 	BlobSegmenterParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterT<std::string>(0, "objectLabel", "object", PARAM_STR, &objectLabel,	"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
-		m_list.push_back(new ParameterT<int>(0, "minWidth",  0, 	 PARAM_INT, 0, MAX_WIDTH, &minWidth,	"Minimal width of an object to segment."));
-		m_list.push_back(new ParameterT<int>(0, "minHeight", 0, 	 PARAM_INT, 0, MAX_HEIGHT, &minHeight,	"Minimal height of an object to segment."));
+		m_list.push_back(new ParameterString(0, "objectLabel", "object", 		   &objectLabel,"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
+		m_list.push_back(new ParameterInt(0, "minWidth",  0, 	 PARAM_INT, 0, MAX_WIDTH,  &minWidth,	"Minimal width of an object to segment."));
+		m_list.push_back(new ParameterInt(0, "minHeight", 0, 	 PARAM_INT, 0, MAX_HEIGHT, &minHeight,	"Minimal height of an object to segment."));
 		
 		ParameterStructure::Init();
 	};

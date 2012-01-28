@@ -66,6 +66,7 @@ BlobSegmenter::~BlobSegmenter(void )
 void BlobSegmenter::ProcessFrame()
 {
 	ExtractBlobs(m_input);
+	dynamic_cast<StreamObject*>(m_outputStreams[0])->PrintObjects();
 }
 
 

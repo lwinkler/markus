@@ -56,7 +56,7 @@ ParameterStructure::~ParameterStructure()
 void ParameterStructure::Init()
 {
 	// Read config file
-	SetDefault();
+	SetValueToDefault();
 	
 	// Read parameters from config
 	SetFromConfig(m_configReader.SubConfig("parameters"));
@@ -98,11 +98,11 @@ void ParameterStructure::SetValueByName(const string& x_name, const string& x_va
 
 /// Set the hard default value
 
-void ParameterStructure::SetDefault()
+void ParameterStructure::SetValueToDefault()
 {
 	for(vector<Parameter*>::iterator it = m_list.begin(); it != m_list.end(); it++)
 	{
-		(*it)->SetDefault();
+		(*it)->SetValueToDefault();
 	}
 }
 
@@ -140,22 +140,6 @@ void ParameterStructure::PrintParameters() const
 		(*it)->Print();
 	}
 	cout<<endl;
-}
-
-/// Return the type as a string (e.g. for xml)
-
-const std::string Parameter::GetTypeString() const
-{	
-	switch(m_type)
-	{
-		case PARAM_INT: 	return "int";
-		case PARAM_FLOAT:	return "float";
-		case PARAM_DOUBLE: 	return "double";
-		case PARAM_BOOL:	return "bool";
-		case PARAM_STR: 	return "string";
-		case PARAM_IMAGE_TYPE:	return "image type";
-		default :		return "unknown";
-	}
 }
 
 ParameterImageType::ParameterImageType(int x_id, const std::string& x_name, int x_default, int * xp_value, const std::string x_description) : 
