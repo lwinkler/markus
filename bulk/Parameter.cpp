@@ -36,6 +36,17 @@ using namespace std;
 // Static variables
 std::map<std::string,int>  ParameterImageType::m_map_types;
 
+
+template<> const ParameterType ParameterT<bool>::m_type   = PARAM_BOOL;
+template<> const ParameterType ParameterT<int>::m_type    = PARAM_INT;
+template<> const ParameterType ParameterT<float>::m_type  = PARAM_FLOAT;
+template<> const ParameterType ParameterT<double>::m_type = PARAM_DOUBLE;
+
+template<> const std::string ParameterT<bool>::m_typeStr   = "bool";
+template<> const std::string ParameterT<int>::m_typeStr    = "int";
+template<> const std::string ParameterT<float>::m_typeStr  = "float";
+template<> const std::string ParameterT<double>::m_typeStr = "double";
+
 /// Parent for all parameter structures
 
 ParameterStructure::ParameterStructure(const ConfigReader& x_configReader):
@@ -59,7 +70,7 @@ void ParameterStructure::Init()
 	SetValueToDefault();
 	
 	// Read parameters from config
-	SetFromConfig(m_configReader.SubConfig("parameters"));
+	SetFromConfig();
 	
 	cout<<"Parameters for "<<m_objectName<<" initialized."<<endl;
 	PrintParameters();
@@ -68,9 +79,9 @@ void ParameterStructure::Init()
 
 /// Set the value from xml configuration 
 
-void ParameterStructure::SetFromConfig(const ConfigReader& x_conf)
+void ParameterStructure::SetFromConfig()
 {
-	ConfigReader conf = x_conf.SubConfig("param");
+	ConfigReader conf = m_configReader.SubConfig("parameters").SubConfig("param");
 	while(!conf.IsEmpty())
 	{
 		string name = conf.GetAttribute("name");
@@ -96,6 +107,21 @@ void ParameterStructure::SetValueByName(const string& x_name, const string& x_va
 	cout<<("Warning : Parameter not found in list (by name) : " + x_name)<<endl;
 }
 
+/// Get the reference to a parameter by name
+Parameter& ParameterStructure::RefParameterByName(const std::string& x_name)
+{
+	for(vector<Parameter*>::iterator it = m_list.begin(); it != m_list.end(); it++)
+	{
+		if((*it)->GetName().compare(x_name) == 0)//(!strcmp(it->m_name, x_name))
+		{
+			return **it;
+		}
+	}
+	
+	throw("Parameter not found in list (by name) : " + x_name);
+}
+
+
 /// Set the hard default value
 
 void ParameterStructure::SetValueToDefault()
@@ -112,12 +138,9 @@ void ParameterStructure::CheckRange() const
 {
 	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
 	{
-		if((*it)->GetType() != PARAM_STR)
+		if(!(*it)->CheckRange())
 		{
-			if(!(*it)->CheckRange())
-			{
-				throw("Parameter " + (*it)->GetName() + " out of range");
-			}
+			throw("Parameter " + (*it)->GetName() + " out of range");
 		}
 	}
 }
@@ -143,7 +166,7 @@ void ParameterStructure::PrintParameters() const
 }
 
 ParameterImageType::ParameterImageType(int x_id, const std::string& x_name, int x_default, int * xp_value, const std::string x_description) : 
-		Parameter(x_id, x_name, PARAM_IMAGE_TYPE, x_description),
+		Parameter(x_id, x_name, x_description),
 		m_default(x_default),
 		mp_value(xp_value)
 {

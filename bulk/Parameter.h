@@ -58,18 +58,18 @@ class ConfigReader;
 class Parameter
 {
 public:
-	Parameter(int x_id, const std::string& x_name, ParameterType x_type, const std::string& x_description):
+	Parameter(int x_id, const std::string& x_name, const std::string& x_description):
 		m_id(x_id),
 		m_name(x_name),
-		m_type(x_type),
 		m_confSource(PARAMCONF_UNSET),
 		m_description(x_description){};
 		
 	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN) = 0;
 	virtual void SetValue(const void* x_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN) = 0;
+	virtual void SetDefault(const void* x_value) = 0;
 	virtual const void* GetValue() const = 0;
 	inline const std::string& GetName() const {return m_name;};
-	inline const ParameterType& GetType() const {return m_type;};
+	virtual const ParameterType GetType() const = 0;
 	virtual const std::string GetTypeString() const = 0;
 	inline const std::string& GetDescription() const {return m_description;};
 	inline const ParameterConfigType& GetConfigurationSource() const {return m_confSource;};
@@ -77,24 +77,26 @@ public:
 	virtual void Print() const = 0;
 	virtual bool CheckRange() const = 0;
 	virtual void Export(std::ostream& rx_os, int x_indentation) = 0;
-protected:
+
+protected:	
 	const int m_id;
 	const std::string m_name;
-	const ParameterType m_type;
 	ParameterConfigType m_confSource;
 	const std::string m_description;
-	//const void* mp_value;
 };
 
 template<class T> class ParameterT : public Parameter
 {
 public:
 	ParameterT(int x_id, const std::string& x_name, T x_default, ParameterType x_type, T x_min, T x_max, T * xp_value, const std::string& x_description) : 
-		Parameter(x_id, x_name, x_type, x_description),
+		Parameter(x_id, x_name, x_description),
 		m_default(x_default),
 		m_min(x_min),
 		m_max(x_max),
 		mp_value(xp_value){};
+	inline const ParameterType GetType() const {return m_type;};
+	inline const std::string GetTypeString() const{return m_typeStr;};
+	
 	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
 	{
 		std::istringstream istr(rx_value);
@@ -105,6 +107,10 @@ public:
 	{	
 		*mp_value = *static_cast<const T*>(px_value);
 		m_confSource = x_confType;
+	};
+	virtual void SetDefault(const void * px_value)
+	{	
+		m_default = *static_cast<const T*>(px_value);
 	};
 	virtual const void * GetValue() const
 	{
@@ -136,35 +142,23 @@ public:
 		tabs = std::string(x_indentation, '\t');
 		rx_os<<tabs<<"</param>"<<std::endl;
 	}
-	/// Return the type as a string (e.g. for xml)
-
-	inline const std::string GetTypeString() const
-	{	
-		switch(m_type)
-		{
-			case PARAM_INT: 	return "int";
-			case PARAM_FLOAT:	return "float";
-			case PARAM_DOUBLE: 	return "double";
-			case PARAM_BOOL:	return "bool";
-			default :		assert(false);//return "unknown";
-		}
-	}
-
-
-    std::basic_ostream< char >::__ostream_type of(const char* arg1);
-	const T m_default;
+	
+	T m_default;
 	const T m_min;
 	const T m_max;
 private:
 	T* mp_value;
+	static const ParameterType m_type;
+	static const std::string m_typeStr;
 };
 
-// Specialization for string type param
+
+// for string type param
 class ParameterString : public Parameter
 {
 public:
 	ParameterString(int x_id, const std::string& x_name, std::string x_default, std::string * xp_value, const std::string& x_description) : 
-		Parameter(x_id, x_name, PARAM_STR, x_description),
+		Parameter(x_id, x_name, x_description),
 		m_default(x_default),
 		mp_value(xp_value){};
 	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
@@ -176,6 +170,10 @@ public:
 	{	
 		*mp_value = *static_cast<const std::string*>(px_value);
 		m_confSource = x_confType;
+	};
+	virtual void SetDefault(const void * px_value)
+	{	
+		m_default = *static_cast<const std::string*>(px_value);
 	};
 	virtual const void * GetValue() const
 	{
@@ -206,12 +204,14 @@ public:
 		tabs = std::string(x_tabs, '\t');
 		rx_os<<tabs<<"</param>"<<std::endl;
 	}
+	inline const ParameterType GetType() const {return PARAM_STR;};
 	inline const std::string GetTypeString() const {return "string";};
 
-	const std::string m_default;
+	std::string m_default;
 private:
 	std::string* mp_value;
 };
+
 
 class ParameterImageType : public Parameter
 {
@@ -226,6 +226,10 @@ public:
 	{	
 		*mp_value = ImageTypeStr2Int(*static_cast<const std::string*>(px_value));
 		m_confSource = x_confType;
+	};
+	virtual void SetDefault(const void * px_value)
+	{	
+		m_default = *static_cast<const int*>(px_value);
 	};
 	virtual const void * GetValue() const
 	{
@@ -247,8 +251,8 @@ public:
 		*mp_value = m_default;
 		m_confSource = PARAMCONF_DEF;
 	};
+	inline const ParameterType GetType() const {return PARAM_IMAGE_TYPE;};
 	inline const std::string GetTypeString() const {return "image type";};
-
 	
 	// Conversion methods
 	static int ImageTypeStr2Int(const std::string& x)
@@ -278,13 +282,13 @@ public:
 		rx_os<<tabs<<"</param>"<<std::endl;
 	}
 
-	
-    std::basic_ostream< char >::__ostream_type of(const char* arg1);
-	const int m_default;
+	int m_default;
 private:
 	int* mp_value;
 	static std::map<std::string,int>  m_map_types;
 };
+
+
 
 class ParameterStructure
 {
@@ -292,12 +296,12 @@ public:
 	ParameterStructure(const ConfigReader& x_configReader);
 	~ParameterStructure();
 	void Init();
-	//void ReadParametersFromConfig();
-	void SetFromConfig(const ConfigReader& x_conf);
+	void SetFromConfig();
 	void SetValueToDefault();
 	void CheckRange() const;
 	void PrintParameters() const;
 	void SetValueByName(const std::string& x_name, const std::string& x_value, ParameterConfigType x_configType = PARAMCONF_UNKNOWN);
+	Parameter & RefParameterByName(const std::string& x_name);
 	const std::vector<Parameter*>& GetList() const {return m_list;};
 	
 protected:
