@@ -86,13 +86,15 @@ void ParameterStructure::SetFromConfig()
 	{
 		string name = conf.GetAttribute("name");
 		string value = conf.GetValue();
-		SetValueByName(name, value, PARAMCONF_XML);
+		//SetValueByName(name, value, PARAMCONF_XML);
+		
+		RefParameterByName(name).SetValue(value, PARAMCONF_XML);
 		conf = conf.NextSubConfig("param");
 	}
 }
 
 /// Browse the parameter list to find the parameter with this name
-
+/*
 void ParameterStructure::SetValueByName(const string& x_name, const string& x_value, ParameterConfigType x_configType)
 {
 	for(vector<Parameter*>::iterator it = m_list.begin(); it != m_list.end(); it++)
@@ -105,7 +107,7 @@ void ParameterStructure::SetValueByName(const string& x_name, const string& x_va
 	}
 	
 	cout<<("Warning : Parameter not found in list (by name) : " + x_name)<<endl;
-}
+}*/
 
 /// Get the reference to a parameter by name
 Parameter& ParameterStructure::RefParameterByName(const std::string& x_name)

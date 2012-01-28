@@ -34,8 +34,8 @@ class VideoOutputParameterStructure : public ModuleParameterStructure
 public:
 	VideoOutputParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
+		RefParameterByName("inputType").SetDefault("CV_8UC3");
 		ParameterStructure::Init();
-		//RefParameterByName("inputType").SetDefault(static_cast<const void*>(&CV_8UC3));
 	};
 };
 

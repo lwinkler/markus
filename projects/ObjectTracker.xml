@@ -20,7 +20,6 @@
       <param name="class">VideoOutput</param>
       <param name="inputWidth">640</param>
       <param name="inputHeight">480</param>
-      <param name="inputType">CV_8UC3</param>
       <param name="fps">10</param>
     </parameters>
     <inputs>
@@ -42,7 +41,7 @@
       <param name="class">BackgroundExtractor</param>
       <param name="inputWidth">640</param>
       <param name="inputHeight">480</param>
-      <param name="inputType">CV_32FC3</param>
+      <param name="inputType">CV_8UC3</param>
       <param name="fps">1</param>
       <param name="background_alpha">0.01</param>
       <param name="foreground_thres">0.1</param>
@@ -83,8 +82,8 @@
       <param name="inputType">CV_8UC1</param>
       <param name="fps">10</param>
       <param name="objectLabel">object</param>
-      <param name="minWidth">0</param>
-      <param name="minWidth">0</param>
+      <param name="minWidth">4</param>
+      <param name="minHeight">4</param>
     </parameters>
     <inputs>
       <input id="0" moduleid="2" outputid="0" />

@@ -39,6 +39,8 @@ public:
 		m_list.push_back(new ParameterFloat(0, "foreground_thres", 	0.2, 	PARAM_FLOAT, 0, 1,	&detector.foregroundThres,	"Threshold to accept a pixel as foreground"));
 		m_list.push_back(new ParameterInt(0, "foreground_filter_size", 3, 	PARAM_INT, 1, 7,	&detector.foregroundFilterSize,	"Size of the filter to remove noise"));
 
+		RefParameterByName("inputType").SetDefault("CV_32FC3");
+
 		ParameterStructure::Init();
 	};
 	DetectorParameter detector;

@@ -65,8 +65,8 @@ public:
 		m_description(x_description){};
 		
 	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN) = 0;
-	virtual void SetValue(const void* x_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN) = 0;
-	virtual void SetDefault(const void* x_value) = 0;
+	//virtual void SetValue(const void* x_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN) = 0;
+	virtual void SetDefault(const std::string& x_value) = 0;
 	virtual const void* GetValue() const = 0;
 	inline const std::string& GetName() const {return m_name;};
 	virtual const ParameterType GetType() const = 0;
@@ -103,14 +103,15 @@ public:
 		istr >> *mp_value; // atof is sensible to locale format and may use , as a separator
 		m_confSource = x_confType;
 	};
-	virtual void SetValue(const void * px_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
+	/*virtual void SetValue(const void * px_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
 	{	
 		*mp_value = *static_cast<const T*>(px_value);
 		m_confSource = x_confType;
-	};
-	virtual void SetDefault(const void * px_value)
+	};*/
+	virtual void SetDefault(const std::string& rx_value)
 	{	
-		m_default = *static_cast<const T*>(px_value);
+		std::istringstream istr(rx_value);
+		istr >> m_default; // atof is sensible to locale format and may use , as a separator
 	};
 	virtual const void * GetValue() const
 	{
@@ -166,14 +167,14 @@ public:
 		*mp_value = rx_value;
 		m_confSource = x_confType;
 	};
-	virtual void SetValue(const void * px_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
+	/*virtual void SetValue(const void * px_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
 	{	
 		*mp_value = *static_cast<const std::string*>(px_value);
 		m_confSource = x_confType;
-	};
-	virtual void SetDefault(const void * px_value)
+	};*/
+	virtual void SetDefault(const std::string& x_value)
 	{	
-		m_default = *static_cast<const std::string*>(px_value);
+		m_default = x_value;
 	};
 	virtual const void * GetValue() const
 	{
@@ -222,14 +223,14 @@ public:
 		*mp_value = ImageTypeStr2Int(rx_value);
 		m_confSource = x_confType;
 	};
-	virtual void SetValue(const void * px_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
+	/*virtual void SetValue(const void * px_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
 	{	
 		*mp_value = ImageTypeStr2Int(*static_cast<const std::string*>(px_value));
 		m_confSource = x_confType;
-	};
-	virtual void SetDefault(const void * px_value)
+	};*/
+	virtual void SetDefault(const std::string& rx_value)
 	{	
-		m_default = *static_cast<const int*>(px_value);
+		m_default = ImageTypeStr2Int(rx_value);
 	};
 	virtual const void * GetValue() const
 	{
@@ -300,7 +301,7 @@ public:
 	void SetValueToDefault();
 	void CheckRange() const;
 	void PrintParameters() const;
-	void SetValueByName(const std::string& x_name, const std::string& x_value, ParameterConfigType x_configType = PARAMCONF_UNKNOWN);
+	//void SetValueByName(const std::string& x_name, const std::string& x_value, ParameterConfigType x_configType = PARAMCONF_UNKNOWN);
 	Parameter & RefParameterByName(const std::string& x_name);
 	const std::vector<Parameter*>& GetList() const {return m_list;};
 	
