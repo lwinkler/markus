@@ -35,11 +35,11 @@
  */
 
 
-class SlitCamParameter : public ModuleParameterStructure
+class SlitCamParameterStructure : public ModuleParameterStructure
 {
 	
 public:
-	SlitCamParameter(const ConfigReader& x_confReader) : 
+	SlitCamParameterStructure(const ConfigReader& x_confReader) : 
 		ModuleParameterStructure(x_confReader)
 	{
 		m_list.push_back(new ParameterInt(0, "aperture", 1, PARAM_INT, 1, 10, &aperture,	"Size of the aperture of the camera"));
@@ -56,7 +56,7 @@ public:
 class SlitCam : public Module
 {
 private:
-	SlitCamParameter m_param;
+	SlitCamParameterStructure m_param;
 	int m_position;
 	static const char * m_type;
 	
@@ -72,7 +72,7 @@ public:
 	inline virtual int GetInputHeight() const {return m_param.height;};
 
 protected:
-	inline virtual const ModuleParameterStructure& GetRefParameter() const { return m_param;};
+	inline virtual SlitCamParameterStructure& RefParameter() { return m_param;};
 };
 
 #endif

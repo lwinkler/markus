@@ -43,7 +43,7 @@ ModuleAsync::ModuleAsync(const ConfigReader& x_configReader) :
 void ModuleAsync::ProcessFrame()
 {
 	m_timeSinceLastThread += m_processingTime;
-	//cout<<GetRefParameter().detectionFps<<" : "<<m_timeSinceLastThread<<" += "<<m_processingTime<<endl;
+	//cout<<RefParameter().detectionFps<<" : "<<m_timeSinceLastThread<<" += "<<m_processingTime<<endl;
 	
 	if(!m_resultsCopied && !GetRefThread().isRunning())
 	{
@@ -51,7 +51,7 @@ void ModuleAsync::ProcessFrame()
 		m_resultsCopied = true;
 	}
 	
-	if(m_timeSinceLastThread >= 1 / GetRefParameter().detectionFps)
+	if(m_timeSinceLastThread >= 1 / RefParameter().detectionFps)
 	{
 		if(!GetRefThread().isRunning())
 		{

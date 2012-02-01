@@ -26,6 +26,7 @@
 #include "util.h"
 
 #include "Stream.h"
+#include "Control.h"
 #include "Timer.h"
 
 //#include <list>
@@ -44,6 +45,9 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_timerProcessing = 0;
 	m_timerWaiting    = 0;
 	m_countProcessedFrames = 0;
+	
+	// Add controls for parameters' change
+	m_controls.push_back(new Control("Parameters", "Change the values of parameters at runtime."));
 };
 
 
@@ -98,7 +102,7 @@ void Module::Export(ostream& rx_os, int x_indentation)
 	rx_os<<tabs<<"<module name=\""<<m_name<<"\" description=\""<<GetDescription()<<"\">"<<endl;
 	tabs = string(x_indentation + 1, '\t');
 	rx_os<<tabs<<"<parameters>"<<endl;
-	for(vector<Parameter*>::const_iterator it = GetRefParameter().GetList().begin() ; it != GetRefParameter().GetList().end() ; it++)
+	for(vector<Parameter*>::const_iterator it = RefParameter().GetList().begin() ; it != RefParameter().GetList().end() ; it++)
 		(*it)->Export(rx_os, x_indentation + 2);
 	rx_os<<tabs<<"</parameters>"<<endl;
 

@@ -60,7 +60,7 @@ private:
 	Tracker track;
 	static const char * m_type;
 protected:
-	inline virtual const ModuleParameterStructure& GetRefParameter() const { return m_param;};
+	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
 };
 
 

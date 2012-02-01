@@ -33,6 +33,7 @@
 #define MAX_HEIGHT 4800
 
 class Stream;
+class Control;
 
 class ModuleParameterStructure : public ParameterStructure
 {
@@ -64,17 +65,19 @@ public:
 	void Process(double x_timeCount);
 	
 	const std::string& GetName() const{return m_name;};
-	const std::string& GetDescription(){return m_description;};
+	const std::string& GetDescription() const{return m_description;};
 	int GetId() const {return m_id;};
 
 	const std::vector<Stream*>& GetInputStreamList() const {return m_inputStreams;};
 	const std::vector<Stream*>& GetOutputStreamList() const {return m_outputStreams;};
 	const std::vector<Stream*>& GetDebugStreamList() const {return m_debugStreams;};
+	const std::vector<Control*>& GetControlList() const {return m_controls;};
+	virtual ModuleParameterStructure & RefParameter() = 0;
 	
-	virtual int GetInputWidth() const = 0;// {return GetRefParameter().width;}
-	virtual int GetInputHeight() const = 0;// {return GetRefParameter().height;}
-	inline int GetInputType() const {return GetRefParameter().type;};
-	inline int GetFps() const {return GetRefParameter().fps;};
+	virtual int GetInputWidth() {return RefParameter().width;}
+	virtual int GetInputHeight(){return RefParameter().height;}
+	inline int GetInputType()  {return RefParameter().type;};
+	inline int GetFps() {return RefParameter().fps;};
 	
 	virtual void PrintStatistics(std::ostream& os) const;
 	
@@ -95,11 +98,11 @@ protected:
 	std::vector<Stream *> m_inputStreams;
 	std::vector<Stream *> m_outputStreams;
 	std::vector<Stream *> m_debugStreams;	
+	std::vector<Control *> m_controls;	
 	std::string m_name;
 	std::string m_description; 
 	int m_id;
 	double m_processingTime;
-	virtual const ModuleParameterStructure & GetRefParameter() const = 0;
 };
 
 #endif

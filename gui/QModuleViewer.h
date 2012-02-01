@@ -36,6 +36,7 @@
 class Manager;
 class Module;
 class Stream;
+class Control;
 class QComboBox;
 class QPainter;
 class QGroupBox;
@@ -53,8 +54,9 @@ private:
 	QVBoxLayout *layout;
 	
 	QImage m_image;
-	const Module * 		m_currentModule;
-	const Stream * 	m_currentStream;
+	Module * 		m_currentModule;
+	const Stream * 		m_currentStream;
+	Control*	 	m_currentControl;
 	const Manager* 		m_manager;
 	
 	int m_outputWidth;
@@ -65,6 +67,7 @@ private:
 	void paintEvent(QPaintEvent *event);
 	
 	QGroupBox * gbSettings;
+	QGroupBox * gbControls;
 	QComboBox * comboModules;
 	QComboBox * comboStreams;
 	virtual void resizeEvent(QResizeEvent * e);
@@ -72,15 +75,15 @@ private:
 	// Images for format conversion
 	cv::Mat * m_img_original;
 	cv::Mat * m_img_output;
-	cv::Mat* m_img_tmp1;
-	cv::Mat* m_img_tmp2;
+	cv::Mat * m_img_tmp1;
+	cv::Mat * m_img_tmp2;
 
 public slots:
-	//void Resize(int x_width, int x_height);
-	void updateModule(const Module * x_module);
-	void updateStream(const Stream * x_outputStream);
 	void updateModule(int x_index);
-	void updateStream(int x_index);
+	void updateStreamOrControl(int x_index);
+	void updateModule(Module * x_module);
+	void updateStream(Stream * x_outputStream);
+	void updateControl(Control * x_control);
 	void showDisplayOptions();
 	void hideDisplayOptions();
 }; 

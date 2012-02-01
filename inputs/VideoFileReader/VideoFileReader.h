@@ -61,7 +61,7 @@ protected:
 
 private:
 	VideoFileReaderParameterStructure m_param;
-	inline virtual const VideoFileReaderParameterStructure& GetRefParameter() const {return m_param;};
+	inline virtual VideoFileReaderParameterStructure& RefParameter() {return m_param;};
 };
 
 #endif

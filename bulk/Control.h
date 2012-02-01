@@ -21,45 +21,55 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef CONFIGREADER_H
-#define CONFIGREADER_H
+#ifndef CONTROL_H
+#define CONTROL_H
 
-#include <tinyxml.h>
 #include <string>
-#include "Parameter.h"
 #include <vector>
-
+#include "Parameter.h"
 
 class Module;
+class QWidget;
 
-/// Class to read a config file
-
-class ConfigReader
+class Controller
 {
 public:
-	ConfigReader(const std::string& x_fileName);
-	ConfigReader(TiXmlNode * xp_node);
-	~ConfigReader();
-	ConfigReader SubConfig(const std::string& x_objectType, std::string x_objectName = "") const;
-	ConfigReader NextSubConfig(const std::string& x_objectType, std::string x_objectName = "") const;
-	bool IsEmpty(){ return mp_doc == NULL && mp_node == NULL;};
-	const std::string GetValue() const;
-	const std::string GetAttribute(const std::string& x_attributeName) const;
+	Controller(const std::string& x_name);
+	Controller(Parameter& x_param);
+	~Controller();
+	
+	QWidget* RefWidget(){return m_widget;};
+	inline const std::string& GetName(){return m_name;};
 private:
-	TiXmlNode * mp_node;
-	TiXmlDocument * mp_doc;
+	QWidget * m_widget;
+	std::string m_name;
 };
 
-/// Class for a configurable object (containing parameters)
+/// Class to control a module (settings ...)
 
-class Configurable
+class Control
 {
 public:
-	Configurable(const ConfigReader& x_confReader) : m_configReader(x_confReader){};
-	~Configurable(){};
+	Control(const std::string& x_name, const std::string& x_description);
+	~Control();
+	inline const std::string& GetName() const {return m_name;};
+	inline const std::string& GetDescription() const{return m_description;};
+	inline std::vector<Controller*>& RefListControllers(){return m_controllers;};
+	inline void AddController(Controller * x_ctrr){m_controllers.push_back(x_ctrr);}
 protected:
-	const ConfigReader m_configReader;
-	inline virtual const ParameterStructure & RefParameter() = 0;
+	std::string m_name;
+	std::string m_description;
+	
+	std::vector<Controller*> m_controllers;
+};
+
+class ParameterControl : public Control
+{
+public:
+	ParameterControl(const std::string& x_name, const std::string& x_description, ParameterStructure& x_param);
+	~ParameterControl();
+private:
+	ParameterStructure& m_param;
 };
 
 #endif

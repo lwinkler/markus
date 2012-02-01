@@ -28,6 +28,7 @@
 #include <QGroupBox>
 #include <QGridLayout>
 #include <QMenu>
+#include <QScrollBar>
 #include <qevent.h>
 
 #include <QPixmap>
@@ -37,6 +38,7 @@
 #include "Module.h"
 #include "util.h"
 #include "StreamImage.h"
+#include "Control.h"
 
 using namespace std;
 using namespace cv;
@@ -59,14 +61,15 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	m_manager 		= x_manager;
 	m_currentModule 	= *x_manager->GetModuleList().begin();
 	m_currentStream 	= *m_currentModule->GetOutputStreamList().begin();
+	m_currentControl	= NULL;
 		
 	comboModules 		= new QComboBox();
-	comboStreams 	= new QComboBox();
-	layout = new QVBoxLayout;
-	gbSettings = new QGroupBox(tr("Display options"));
-	gbSettings->setFlat(true);
-	QGridLayout * vbox = new QGridLayout;
-	
+	comboStreams 		= new QComboBox();
+	layout 			= new QVBoxLayout;
+	gbSettings 		= new QGroupBox(tr("Display options"));
+	//gbSettings->setFlat(true);
+	gbSettings->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+	QGridLayout * vbox 	= new QGridLayout;
 	// Fill the list of modules
 	QLabel* lab1 = new QLabel(tr("Module"));
 	vbox->addWidget(lab1,0,0);
@@ -84,7 +87,6 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	gbSettings->setLayout(vbox);
 	layout->addWidget(gbSettings);
 	setLayout(layout);
-	//int index = 0;
 	
 	//set context menu
 	QAction * actionShowDisplayMenu = new QAction(tr("Show display options"), this);
@@ -103,9 +105,10 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 
 	//update();
 	m_image = QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
+	gbControls = NULL;
 	
 	connect(comboModules, SIGNAL(activated(int)), this, SLOT(updateModule(int) ));
-	connect(comboStreams, SIGNAL(activated(int)), this, SLOT(updateStream(int)));
+	connect(comboStreams, SIGNAL(activated(int)), this, SLOT(updateStreamOrControl(int)));
 }
 
 QModuleViewer::~QModuleViewer(void) 
@@ -119,30 +122,34 @@ QModuleViewer::~QModuleViewer(void)
 	delete comboStreams;
 	delete layout;
 	delete gbSettings;
+	if(gbControls != NULL) delete gbControls;
 }
 
 void QModuleViewer::resizeEvent(QResizeEvent * e)
 {
-	// Keep proportionality
-	double ratio = static_cast<double>(m_currentStream->GetInputHeight()) / m_currentStream->GetInputWidth();
-	
-	m_outputWidth  = e->size().width();
-	m_outputHeight = e->size().height();
-	
-	if(m_outputHeight >= m_outputWidth * ratio)
+	if(m_currentStream != NULL)
 	{
-		m_outputHeight = m_outputWidth * ratio;
-		m_offsetX = 0;
-		m_offsetY = (e->size().height() - m_outputHeight) / 2;
-	}
-	else 
-	{
-		m_outputWidth = m_outputHeight / ratio;
-		m_offsetX = (e->size().width() - m_outputWidth) / 2;
-		m_offsetY = 0;
-	}
+		// Keep proportionality
+		double ratio = static_cast<double>(m_currentStream->GetInputHeight()) / m_currentStream->GetInputWidth();
 	
-	m_image =  QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
+		m_outputWidth  = e->size().width();
+		m_outputHeight = e->size().height();
+	
+		if(m_outputHeight >= m_outputWidth * ratio)
+		{
+			m_outputHeight = m_outputWidth * ratio;
+			m_offsetX = 0;
+			m_offsetY = (e->size().height() - m_outputHeight) / 2;
+		}
+		else 
+		{
+			m_outputWidth = m_outputHeight / ratio;
+			m_offsetX = (e->size().width() - m_outputWidth) / 2;
+			m_offsetY = 0;
+		}
+	
+		m_image =  QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
+	}
 	
 	if(m_img_output != NULL) delete(m_img_output);
 	if(m_img_original != NULL)  delete(m_img_original); 
@@ -156,27 +163,61 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 
 void QModuleViewer::paintEvent(QPaintEvent * e) 
 {
-	if(m_img_original == NULL)
-		m_img_original = new Mat( cvSize(m_currentStream->GetInputWidth(), m_currentStream->GetInputHeight()), CV_8UC3);
-	m_img_original->setTo(cvScalar(0,0,0));
-	if(m_img_output == NULL)
-		m_img_output = new Mat( cvSize(m_outputWidth, m_outputHeight), CV_8UC3);
-	// Write output to screen
-	// TODO : Copy below
-	//cout<<"Render "<<m_currentStream->GetInputWidth()<<" to "<<m_img_original->width<<endl;
-	
-	m_currentStream->RenderTo(m_img_original);
-	
-	adjust(m_img_original, m_img_output, m_img_tmp1, m_img_tmp2);
+	if(m_currentStream != NULL)
+	{
+		if(gbControls != NULL) gbControls->hide(); // TODO : move this so it is lessed called
+		
+		// We paint the image from the stream
+		if(m_img_original == NULL)
+			m_img_original = new Mat( cvSize(m_currentStream->GetInputWidth(), m_currentStream->GetInputHeight()), CV_8UC3);
+		m_img_original->setTo(cvScalar(0,0,0));
+		if(m_img_output == NULL)
+			m_img_output = new Mat( cvSize(m_outputWidth, m_outputHeight), CV_8UC3);
+		// Write output to screen
+		// TODO : Copy below
+		//cout<<"Render "<<m_currentStream->GetInputWidth()<<" to "<<m_img_original->width<<endl;
+		
+		m_currentStream->RenderTo(m_img_original);
+		
+		adjust(m_img_original, m_img_output, m_img_tmp1, m_img_tmp2);
 
-	ConvertMat2QImage(m_img_output, &m_image);
-	
-	QPainter painter(this);
-	painter.drawImage(QRect(m_offsetX, m_offsetY, m_image.width(), m_image.height()), m_image);
-	
+		ConvertMat2QImage(m_img_output, &m_image);
+		
+		QPainter painter(this);
+		painter.drawImage(QRect(m_offsetX, m_offsetY, m_image.width(), m_image.height()), m_image);
+	}
+	else	
+	{
+		if(gbControls == NULL)
+		{
+			gbSettings->hide();
+
+			// Create new control screen
+			string str = m_currentModule->GetName() + ", " + m_currentControl->GetName();
+			gbControls = new QGroupBox(str.c_str());
+			QGridLayout * vbox = new QGridLayout;
+			
+			if(m_currentControl != NULL) delete m_currentControl;
+			m_currentControl = new ParameterControl(m_currentModule->GetName(), m_currentModule->GetDescription(), m_currentModule->RefParameter());
+			
+			int cpt = 0;
+			for(vector<Controller*>::iterator it = m_currentControl->RefListControllers().begin() ; it != m_currentControl->RefListControllers().end() ; it++)
+			{
+				QLabel * lab = new QLabel((*it)->GetName().c_str());
+				vbox->addWidget(lab, cpt, 0);
+				vbox->addWidget((*it)->RefWidget(), cpt, 1);
+				cpt++;
+			}
+			vbox->setColumnStretch(1, 2);
+			
+			gbControls->setLayout(vbox);
+			layout->addWidget(gbControls);
+			setLayout(layout);
+		}
+	}
 }
 
-void QModuleViewer::updateModule(const Module * x_module)
+void QModuleViewer::updateModule(Module * x_module)
 {
 	m_currentModule = x_module;
 	comboStreams->clear();
@@ -189,18 +230,14 @@ void QModuleViewer::updateModule(const Module * x_module)
 	{
 		comboStreams->addItem(QString((*it)->GetName().c_str()), cpt++);
 	}
+	// Add a fake streams for control
+	for(std::vector<Control*>::const_iterator it = m_currentModule->GetControlList().begin(); it != m_currentModule->GetControlList().end(); it++)
+	{
+		comboStreams->addItem(QString((*it)->GetName().c_str()), cpt++);
+	}
+	
 	assert(m_currentModule->GetOutputStreamList().size() > 0);
 	updateStream(*(m_currentModule->GetOutputStreamList().begin()));
-}
-
-void QModuleViewer::updateStream(const Stream * x_outputStream)
-{
-	m_currentStream = x_outputStream;
-	if(m_img_original != NULL)
-	{
-		delete(m_img_original);
-		m_img_original = NULL;
-	}
 }
 
 void QModuleViewer::updateModule(int x_index)
@@ -213,7 +250,7 @@ void QModuleViewer::updateModule(int x_index)
 	updateModule(*it);
 }
 
-void QModuleViewer::updateStream(int x_index)
+void QModuleViewer::updateStreamOrControl(int x_index)
 {
 	unsigned int cpt = static_cast<unsigned int>(x_index);
 	if(cpt < m_currentModule->GetOutputStreamList().size())
@@ -227,8 +264,34 @@ void QModuleViewer::updateStream(int x_index)
 	{
 		updateStream(m_currentModule->GetDebugStreamList()[cpt]);
 		return;
-	}	
+	}
+	cpt -= m_currentModule->GetDebugStreamList().size();
+	if(cpt < m_currentModule->GetControlList().size())
+	{
+		updateControl(m_currentModule->GetControlList()[cpt]);
+		return;
+	}
+	
+	
 	assert(false);
+}
+
+
+void QModuleViewer::updateStream(Stream * x_outputStream)
+{
+	m_currentStream  = x_outputStream;
+	m_currentControl = NULL;
+	if(m_img_original != NULL)
+	{
+		delete(m_img_original);
+		m_img_original = NULL;
+	}
+}
+
+void QModuleViewer::updateControl(Control* x_control)
+{
+	m_currentStream  = NULL;
+	m_currentControl = x_control;
 }
 
 void QModuleViewer::showDisplayOptions()

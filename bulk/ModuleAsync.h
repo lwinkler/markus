@@ -58,7 +58,7 @@ protected:
 	long long m_timerThread;
 	long long m_countFramesThread;
 
-	inline virtual bool IsInputUsed(double x_timeCount) const {return m_timeSinceLastThread + m_processingTime >= 1 / GetRefParameter().detectionFps;};
+	inline virtual bool IsInputUsed(double x_timeCount) {return m_timeSinceLastThread + m_processingTime >= 1 / RefParameter().detectionFps;};
 	virtual const QThread & GetRefThread() = 0;
 	virtual void LaunchThread() = 0;
 	virtual void NormalProcess() = 0;
@@ -66,7 +66,7 @@ protected:
 	virtual void PrintStatistics(std::ostream& os) const;
 	
 private:
-	virtual const ModuleAsyncParameterStructure & GetRefParameter() const = 0;
+	virtual ModuleAsyncParameterStructure & RefParameter() = 0;
 };
 
 #endif

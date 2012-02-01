@@ -83,7 +83,7 @@ private:
 	Timer m_timer;
 	long long m_frameCount;
 protected:
-	inline virtual const ParameterStructure& GetRefParameter() const{return m_param;};
+	inline virtual const ParameterStructure& RefParameter() {return m_param;};
 	QReadWriteLock m_lock;
 };
 #endif

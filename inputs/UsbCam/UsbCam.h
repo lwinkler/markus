@@ -61,7 +61,7 @@ protected:
 
 private:
 	UsbCamParameterStructure m_param;
-	inline virtual const UsbCamParameterStructure& GetRefParameter() const {return m_param;};
+	inline virtual UsbCamParameterStructure& RefParameter() {return m_param;};
 };
 
 #endif

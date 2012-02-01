@@ -51,7 +51,7 @@ public:
 	inline virtual int GetInputWidth() const{return m_inputWidth;};
 	inline virtual int GetInputHeight() const{return m_inputHeight;};
 	
-	inline double GetFps() const {return GetRefParameter().fps;};
+	inline double GetFps() {return RefParameter().fps;};
 	
 	inline void ProcessFrame() {/*Capture();*/};
 	
@@ -63,7 +63,7 @@ protected:
 	int m_inputWidth;
 	int m_inputHeight;
 	
-	virtual const InputParameterStructure& GetRefParameter() const = 0;
+	virtual InputParameterStructure& RefParameter() = 0;
 };
 
 #endif

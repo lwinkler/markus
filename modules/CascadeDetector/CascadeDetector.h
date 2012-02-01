@@ -124,7 +124,7 @@ protected:
 	virtual const QThread & GetRefThread(){return m_thread;};
 
 private:
-	inline virtual const CascadeDetectorParameterStructure& GetRefParameter() const { return m_param;};
+	inline virtual CascadeDetectorParameterStructure& RefParameter() { return m_param;};
 
 };
 
