@@ -49,7 +49,7 @@ CascadeDetector::CascadeDetector(const ConfigReader& x_configReader)
 		throw("Impossible to load cascade filter " + m_param.filterFile);
 	m_description = "Detect objects from a video stream using a cascade filter (c.f. Haar patterns).";
 	m_input = new Mat(cvSize(m_param.width, m_param.height), CV_8UC1);
-	m_lastInput = new Mat( cvSize(GetInputWidth(), GetInputHeight()), GetInputType());
+	m_lastInput = new Mat( cvSize(m_param.width, m_param.height), m_param.type);
 	m_debug = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
 
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this, 		"Video input")); 
@@ -63,6 +63,10 @@ CascadeDetector::~CascadeDetector()
 {
 	delete(m_debug);
 	delete(m_lastInput);
+}
+
+void CascadeDetector::Reset()
+{
 }
 
 // This method launches the thread

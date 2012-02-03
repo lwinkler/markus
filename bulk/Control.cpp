@@ -20,32 +20,22 @@
 *    You should have received a copy of the GNU Lesser General Public License
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
-#include <QWidget>
 
 #include "Control.h"
+#include <cstdio>
 
 using namespace std;
 
+#include <QWidget>
 #include <QScrollBar>
-
+#include <QBoxLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QCheckBox>
 
 Controller::Controller()
 {
 	m_widget = NULL;
-}
-
-ControllerInt::ControllerInt(ParameterInt& x_param):
-	Controller(),
-	m_param(x_param)
-{
-	m_scrollBar = new QScrollBar;
-	m_scrollBar->setOrientation(Qt::Horizontal);
-	m_scrollBar->setMinimum(m_param.GetMin());
-	m_scrollBar->setMaximum(m_param.GetMax());
-	//0, 100, 1, 10, 42, Qt::Horizontal, 0, 0 );
-	m_scrollBar->resize( 100, m_scrollBar->height() );
-
-	m_widget = m_scrollBar;
 }
 
 
@@ -54,11 +44,100 @@ Controller::~Controller()
 	if(m_widget != NULL) delete m_widget;
 }
 
+ControllerInt::ControllerInt(ParameterInt& x_param):
+        Controller(),
+        m_param(x_param)
+{
+        m_widget	= new QWidget;
+        m_boxLayout 	= new QBoxLayout(QBoxLayout::LeftToRight);
+
+        char str[16];
+        sprintf(str, "%d", m_param.GetMin());
+        m_boxLayout->addWidget(new QLabel(str));
+
+        m_lineEdit      = new QLineEdit();
+        m_lineEdit->setText(str);
+        m_boxLayout->addWidget(m_lineEdit);
+
+        //m_lineEdit->setSizePolicy(QSizePolicy::Expanding);
+
+        m_scrollBar 	= new QScrollBar(Qt::Horizontal);
+        //m_scrollBar->setOrientation(Qt::Horizontal);
+        m_scrollBar->setMinimum(m_param.GetMin());
+        m_scrollBar->setMaximum(m_param.GetMax());
+        m_scrollBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        //m_scrollBar->resize( 100, m_scrollBar->height() );
+        m_boxLayout->addWidget(m_scrollBar);
+
+        sprintf(str, "%d", m_param.GetMax());
+        m_boxLayout->addWidget(new QLabel(str));
+
+        m_widget->setLayout(m_boxLayout);
+}
+
 void ControllerInt::SetControlledValue()
 {
 	m_param.SetValue(m_scrollBar->value());
 }
+/*------------------------------------------------------------------------------------------------*/
+ControllerDouble::ControllerDouble(ParameterDouble& x_param):
+        Controller(),
+        m_param(x_param)
+{
+        m_widget	= new QWidget;
+        m_boxLayout 	= new QBoxLayout(QBoxLayout::LeftToRight);
 
+        char str[16];
+        sprintf(str, "%.2lf", m_param.GetMin());
+        m_boxLayout->addWidget(new QLabel(str));
+
+        m_lineEdit      = new QLineEdit();
+        sprintf(str, "%.2lf", m_param.GetValue());
+        m_lineEdit->setText(str);
+        m_boxLayout->addWidget(m_lineEdit);
+
+        m_scrollBar 	= new QScrollBar(Qt::Horizontal);
+        //m_scrollBar->setOrientation(Qt::Horizontal);
+        m_scrollBar->setMinimum(m_param.GetMin());
+        m_scrollBar->setMaximum(m_param.GetMax());
+        m_scrollBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        //m_scrollBar->resize( 100, m_scrollBar->height() );
+        m_boxLayout->addWidget(m_scrollBar);
+
+        sprintf(str, "%.2lf", m_param.GetMax());
+        m_boxLayout->addWidget(new QLabel(str));
+
+        m_widget->setLayout(m_boxLayout);
+}
+
+void ControllerDouble::SetControlledValue()
+{
+        m_param.SetValue(m_scrollBar->value());
+}
+/*------------------------------------------------------------------------------------------------*/
+
+ControllerBool::ControllerBool(ParameterBool& x_param):
+        Controller(),
+        m_param(x_param)
+{
+        m_widget	= new QWidget;
+        m_boxLayout 	= new QBoxLayout(QBoxLayout::LeftToRight);
+
+        m_boxLayout->addWidget(new QCheckBox("Enabled"));
+
+        m_widget->setLayout(m_boxLayout);
+}
+
+void ControllerBool::SetControlledValue()
+{
+        m_param.SetValue(m_checkBox->isChecked());
+}
+
+/*------------------------------------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------------------------*/
+
+
+/*------------------------------------------------------------------------------------------------*/
 
 Control::Control(const std::string& x_name, const std::string& x_description):
 	m_name(x_name),
@@ -84,11 +163,14 @@ ParameterControl::ParameterControl(const std::string& x_name, const std::string&
 		switch((*it)->GetType())
 		{
 			case PARAM_BOOL:
-			break;
+                            ctrr = new ControllerBool(*dynamic_cast<ParameterBool*>(*it));
+                        break;
 			case PARAM_DOUBLE:
-			break;
+                            ctrr = new ControllerDouble(*dynamic_cast<ParameterDouble*>(*it));
+                        break;
 			case PARAM_FLOAT:
-			break;
+                            //ctrr = new ControllerFloat(*dynamic_cast<ParameterFloat*>(*it));
+                        break;
 			case PARAM_IMAGE_TYPE:
 			break;
 			case PARAM_INT:

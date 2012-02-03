@@ -57,6 +57,11 @@ VideoOutput::~VideoOutput(void )
 	delete(m_imageOutput);
 }
 
+
+void VideoOutput::Reset()
+{
+}
+
 void VideoOutput::ProcessFrame()
 {
 	for(int i = 0 ; i < 5 ; i++)

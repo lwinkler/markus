@@ -48,8 +48,6 @@ public:
 	virtual void Capture() = 0;
 	inline const std::string& GetName()const {return m_name;};
 	virtual const cv::Mat * GetImage() const = 0;
-	inline virtual int GetInputWidth() const{return m_inputWidth;};
-	inline virtual int GetInputHeight() const{return m_inputHeight;};
 	
 	inline double GetFps() {return RefParameter().fps;};
 	
@@ -60,8 +58,8 @@ private:
 
 protected:
 	const std::string m_name;
-	int m_inputWidth;
-	int m_inputHeight;
+        //int m_inputWidth;
+        //int m_inputHeight;
 	
 	virtual InputParameterStructure& RefParameter() = 0;
 };

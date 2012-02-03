@@ -59,8 +59,7 @@ public:
 	~BlobSegmenter();
 	
 	virtual void ProcessFrame();
-	inline virtual int GetInputWidth() const {return m_param.width;};
-	inline virtual int GetInputHeight() const {return m_param.height;};
+	void Reset();
 	
 protected:
 	void ExtractBlobs(cv::Mat* x_img);

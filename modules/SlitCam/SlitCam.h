@@ -55,21 +55,20 @@ public:
 
 class SlitCam : public Module
 {
-private:
+protected:
+	virtual void ProcessFrame();
 	SlitCamParameterStructure m_param;
 	int m_position;
 	static const char * m_type;
-	
+
 	cv::Mat * m_input;
 	cv::Mat * m_output;
+
 public:
 	SlitCam(const ConfigReader& x_configReader);
 	~SlitCam(void);
-	//void CreateParamWindow();
-	
-	virtual void ProcessFrame();
-	inline virtual int GetInputWidth() const {return m_param.width;};
-	inline virtual int GetInputHeight() const {return m_param.height;};
+	void Reset();
+
 
 protected:
 	inline virtual SlitCamParameterStructure& RefParameter() { return m_param;};

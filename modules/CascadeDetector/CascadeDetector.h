@@ -115,10 +115,7 @@ public:
 	virtual void LaunchThread();
 	virtual void NormalProcess();
 	virtual void CopyResults();
-	
-	inline virtual int GetInputWidth() const {return m_param.width;};
-	inline virtual int GetInputHeight() const {return m_param.height;};
-
+	void Reset();
 
 protected:
 	virtual const QThread & GetRefThread(){return m_thread;};

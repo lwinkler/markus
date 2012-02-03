@@ -31,6 +31,9 @@
 class Module;
 class QWidget;
 class QScrollBar;
+class QBoxLayout;
+class QLineEdit;
+class QCheckBox;
 
 class Controller
 {
@@ -45,6 +48,7 @@ protected:
 	QWidget * m_widget;
 };
 
+/// Control class for an integer parameter
 class ControllerInt : public Controller
 {
 public:
@@ -52,10 +56,46 @@ public:
 	~ControllerInt();
 	void SetControlledValue();
 	inline virtual const std::string& GetName() const {return m_param.GetName();}; 
+
 protected:
-	QScrollBar * m_scrollBar;
-	ParameterInt & m_param;
+	QBoxLayout * m_boxLayout;
+        QLineEdit * m_lineEdit;
+        QScrollBar * m_scrollBar;
+        ParameterInt & m_param;
 };
+
+
+/// Control class for a double parameter
+class ControllerDouble : public Controller
+{
+public:
+        ControllerDouble(ParameterDouble & x_param);
+        ~ControllerDouble();
+        void SetControlledValue();
+        inline virtual const std::string& GetName() const {return m_param.GetName();};
+
+protected:
+        QBoxLayout * m_boxLayout;
+        QLineEdit * m_lineEdit;
+        QScrollBar * m_scrollBar;
+        ParameterDouble & m_param;
+};
+
+/// Control class for a boolean parameter
+class ControllerBool : public Controller
+{
+public:
+        ControllerBool(ParameterBool & x_param);
+        ~ControllerBool();
+        void SetControlledValue();
+        inline virtual const std::string& GetName() const {return m_param.GetName();};
+
+protected:
+        QBoxLayout * m_boxLayout;
+        QCheckBox  * m_checkBox;
+        ParameterBool & m_param;
+};
+
 
 /// Class to control a module (settings ...)
 

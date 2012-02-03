@@ -46,15 +46,15 @@ VideoFileReader::VideoFileReader(const ConfigReader& x_configReader):
 	//cvSetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
 	cvQueryFrame(m_capture); // this call is necessary to get correct capture properties
 	IplImage * tmp = cvRetrieveFrame(m_capture);
-	m_inputWidth    = tmp->width;//(int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH);
-	m_inputHeight   = tmp->height;//(int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT);
+	//m_inputWidth    = tmp->width;//(int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH);
+	//m_inputHeight   = tmp->height;//(int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT);
 	int numFramesc = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_COUNT);
 	
-	cout<<"VideoFileReader "<<m_inputWidth<<"x"<<m_inputHeight<<", "<<numFramesc<<" fps"<<endl;
+	cout<<"VideoFileReader "<<GetWidth()<<"x"<<GetHeight()<<", "<<numFramesc<<" fps"<<endl;
 //	assert(m_width == m_param.width);
 //	assert(m_height == m_param.height);
 	
-	m_output = new Mat( cvSize(m_inputWidth, m_inputHeight), CV_8UC3);
+	m_output = new Mat( cvSize(m_param.width, m_param.height), CV_8UC3);
 	m_outputStreams.push_back(new StreamImage(0, "input", m_output, *this,	"Video stream"));
 }
 
@@ -64,6 +64,10 @@ VideoFileReader::~VideoFileReader()
 	cvReleaseCapture(&m_capture );
 }
 
+void VideoFileReader::Reset()
+{
+
+}
 
 void VideoFileReader::Capture()
 {

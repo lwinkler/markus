@@ -53,8 +53,7 @@ public:
 	~BackgroundExtractor();
 	
 	virtual void ProcessFrame();
-	inline virtual int GetInputWidth() const {return m_param.width;};
-	inline virtual int GetInputHeight() const {return m_param.height;};
+	void Reset();
 		
 private:
 	BackgroundExtractorParameterStructure m_param;

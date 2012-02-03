@@ -53,6 +53,10 @@ SimpleTracker::~SimpleTracker(void )
 {
 }
 
+void SimpleTracker::Reset()
+{
+}
+
 void SimpleTracker::ProcessFrame()
 {
 	// Main part of the program

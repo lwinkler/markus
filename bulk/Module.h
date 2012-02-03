@@ -62,8 +62,9 @@ public:
 	Module(const ConfigReader& x_confReader);
 	virtual ~Module();
 	
-	void Process(double x_timeCount);
-	
+        virtual void Reset() = 0;
+        void Process(double x_timeCount);
+
 	const std::string& GetName() const{return m_name;};
 	const std::string& GetDescription() const{return m_description;};
 	int GetId() const {return m_id;};
@@ -74,9 +75,9 @@ public:
 	const std::vector<Control*>& GetControlList() const {return m_controls;};
 	virtual ModuleParameterStructure & RefParameter() = 0;
 	
-	virtual int GetInputWidth() {return RefParameter().width;}
-	virtual int GetInputHeight(){return RefParameter().height;}
-	inline int GetInputType()  {return RefParameter().type;};
+	inline int GetWidth() {return RefParameter().width;}
+	inline int GetHeight(){return RefParameter().height;}
+	inline int GetType()  {return RefParameter().type;};
 	inline int GetFps() {return RefParameter().fps;};
 	
 	virtual void PrintStatistics(std::ostream& os) const;

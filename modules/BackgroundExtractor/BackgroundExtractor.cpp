@@ -67,6 +67,10 @@ BackgroundExtractor::~BackgroundExtractor(void )
 	delete(m_output);
 }
 
+void BackgroundExtractor::Reset()
+{
+}
+
 void BackgroundExtractor::ProcessFrame()
 {
 	// Main part of the program

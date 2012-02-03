@@ -61,6 +61,11 @@ SlitCam::~SlitCam(void)
 	//m_outputStreams.resize(0);
 }
 
+void SlitCam::Reset()
+{
+
+}
+
 void SlitCam::ProcessFrame()
 {
 	//int widthStep = m_input->cols;

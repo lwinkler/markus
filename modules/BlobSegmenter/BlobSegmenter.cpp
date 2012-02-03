@@ -63,6 +63,10 @@ BlobSegmenter::~BlobSegmenter(void )
 	delete(m_blobsImg);
 }
 
+void BlobSegmenter::Reset()
+{
+}
+
 void BlobSegmenter::ProcessFrame()
 {
 	ExtractBlobs(m_input);
