@@ -40,6 +40,7 @@ class Control;
 class QComboBox;
 class QPainter;
 class QGroupBox;
+class QPushButton;
 
 class QModuleViewer : public QWidget 
 {
@@ -70,6 +71,7 @@ private:
 	QGroupBox * gbControls;
 	QComboBox * comboModules;
 	QComboBox * comboStreams;
+	QPushButton*  m_buttonUpdateControl;
 	virtual void resizeEvent(QResizeEvent * e);
 
 	// Images for format conversion
@@ -86,6 +88,7 @@ public slots:
 	void updateControl(Control * x_control);
 	void showDisplayOptions();
 	void hideDisplayOptions();
+	void applyControl();
 }; 
 
 #endif

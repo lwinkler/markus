@@ -29,6 +29,7 @@
 #include <QGridLayout>
 #include <QMenu>
 #include <QScrollBar>
+#include <QPushButton>
 #include <qevent.h>
 
 #include <QPixmap>
@@ -84,11 +85,14 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	this->updateModule(*(x_manager->GetModuleList().begin()));
 	vbox->addWidget(comboStreams,1,1);
 	
+	// Contros
+	m_buttonUpdateControl = new QPushButton(tr("Update"));
+	
 	gbSettings->setLayout(vbox);
 	layout->addWidget(gbSettings);
 	setLayout(layout);
 	
-	//set context menu
+	// Set context menu
 	QAction * actionShowDisplayMenu = new QAction(tr("Show display options"), this);
 	actionShowDisplayMenu->setShortcut(tr("Ctrl+S"));
 	QAction * actionHideDisplayMenu = new QAction(tr("Hide display options"), this);
@@ -109,6 +113,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	
 	connect(comboModules, SIGNAL(activated(int)), this, SLOT(updateModule(int) ));
 	connect(comboStreams, SIGNAL(activated(int)), this, SLOT(updateStreamOrControl(int)));
+	connect(m_buttonUpdateControl, SIGNAL(pressed()), this, SLOT(applyControl(void)));
 }
 
 QModuleViewer::~QModuleViewer(void) 
@@ -208,6 +213,7 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 				vbox->addWidget((*it)->RefWidget(), cpt, 1);
 				cpt++;
 			}
+			vbox->addWidget(m_buttonUpdateControl);
 			vbox->setColumnStretch(1, 2);
 			
 			gbControls->setLayout(vbox);
@@ -292,6 +298,18 @@ void QModuleViewer::updateControl(Control* x_control)
 {
 	m_currentStream  = NULL;
 	m_currentControl = x_control;
+}
+
+void QModuleViewer::applyControl()
+{
+	if(m_currentControl != NULL)
+	{
+		for(vector<Controller*>::iterator it = m_currentControl->RefListControllers().begin() ; it != m_currentControl->RefListControllers().end() ; it++)
+		{
+			
+			(*it)->SetControlledValue();
+		}
+	}
 }
 
 void QModuleViewer::showDisplayOptions()

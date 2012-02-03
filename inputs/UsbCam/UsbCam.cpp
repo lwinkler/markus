@@ -89,7 +89,8 @@ void UsbCam::Capture()
 	//assert(tmp->height == m_input->height);
 	//assert(tmp->depth == m_input->depth);
 	
-	tmp->copyTo(*m_output);
+	//tmp->copyTo(*m_output);
+	adjustSize(tmp, m_output);
 	
 	delete(tmp);
 	m_lock.unlock();

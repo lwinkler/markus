@@ -96,6 +96,8 @@ public:
 		mp_value(xp_value){};
 	inline const ParameterType GetType() const {return m_type;};
 	inline const std::string GetTypeString() const{return m_typeStr;};
+	inline const T GetMin(){return m_min;};
+	inline const T GetMax(){return m_max;};
 	
 	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
 	{
@@ -103,6 +105,7 @@ public:
 		istr >> *mp_value; // atof is sensible to locale format and may use , as a separator
 		m_confSource = x_confType;
 	};
+	inline void SetValue(T x_value){*mp_value = x_value;};
 	/*virtual void SetValue(const void * px_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
 	{	
 		*mp_value = *static_cast<const T*>(px_value);
