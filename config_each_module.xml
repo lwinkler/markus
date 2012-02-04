@@ -13,7 +13,7 @@
   <module name="SlitCamera">
 	  <parameters>
 		  <param name="class">SlitCamera</param>
-		  <param name="inputType">CV_8UC3</param>
+		  <param name="type">CV_8UC3</param>
 	  </parameters>
   </module>
   <module name="CascadeDetector">

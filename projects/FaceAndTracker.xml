@@ -2,9 +2,9 @@
   <module name="UsbCam" machineurl="localhost" id="0">
     <parameters>
       <param name="class">UsbCam</param>
-      <param name="inputWidth">640</param>
-      <param name="inputHeight">480</param>
-      <param name="inputType">CV_8UC1</param>
+      <param name="width">640</param>
+      <param name="height">480</param>
+      <param name="type">CV_8UC1</param>
       <param name="fps">10</param>
       <param name="num">-1</param>
     </parameters>
@@ -19,9 +19,9 @@
   <module name="CascadeDetector" machineurl="localhost" id="1">
     <parameters>
       <param name="class">CascadeDetector</param>
-      <param name="inputWidth">640</param>
-      <param name="inputHeight">480</param>
-      <param name="inputType">CV_8UC1</param>
+      <param name="width">640</param>
+      <param name="height">480</param>
+      <param name="type">CV_8UC1</param>
       <param name="fps">1000</param>
       <param name="detectionFps">.2</param>
       <param name="minNeighbors">2</param>
@@ -44,9 +44,9 @@
   <module name="SimpleTracker" machineurl="localhost" id="2">
     <parameters>
       <param name="class">SimpleTracker</param>
-      <param name="inputWidth">640</param>
-      <param name="inputHeight">480</param>
-      <param name="inputType">CV_8UC1</param>
+      <param name="width">640</param>
+      <param name="height">480</param>
+      <param name="type">CV_8UC1</param>
       <param name="fps">10</param>
     </parameters>
     <inputs>
@@ -61,9 +61,9 @@
   <module name="VideoOutput" machineurl="localhost" id="3">
     <parameters>
       <param name="class">VideoOutput</param>
-      <param name="inputWidth">640</param>
-      <param name="inputHeight">480</param>
-      <param name="inputType">CV_8UC3</param>
+      <param name="width">640</param>
+      <param name="height">480</param>
+      <param name="type">CV_8UC3</param>
       <param name="fps">10</param>
     </parameters>
     <inputs>

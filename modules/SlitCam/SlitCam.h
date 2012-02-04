@@ -45,7 +45,7 @@ public:
 		m_list.push_back(new ParameterInt(0, "aperture", 1, PARAM_INT, 1, 10, &aperture,	"Size of the aperture of the camera"));
 		
 		// Set default value of module parameter (re-definition)
-		RefParameterByName("inputType").SetDefault("CV_8UC3");
+		RefParameterByName("type").SetDefault("CV_8UC3");
 
 		ParameterStructure::Init();
 	};

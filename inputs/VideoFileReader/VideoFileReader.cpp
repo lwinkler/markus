@@ -45,7 +45,7 @@ VideoFileReader::VideoFileReader(const ConfigReader& x_configReader):
 	//cvSetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH, m_param.width); // not working
 	//cvSetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
 	cvQueryFrame(m_capture); // this call is necessary to get correct capture properties
-	IplImage * tmp = cvRetrieveFrame(m_capture);
+	//IplImage * tmp = cvRetrieveFrame(m_capture);
 	//m_inputWidth    = tmp->width;//(int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH);
 	//m_inputHeight   = tmp->height;//(int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT);
 	int numFramesc = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_COUNT);

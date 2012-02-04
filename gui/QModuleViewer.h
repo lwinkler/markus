@@ -72,6 +72,7 @@ private:
 	QComboBox * comboModules;
 	QComboBox * comboStreams;
 	QPushButton*  m_buttonUpdateControl;
+	QPushButton*  m_buttonResetControl;
 	virtual void resizeEvent(QResizeEvent * e);
 
 	// Images for format conversion
@@ -89,6 +90,7 @@ public slots:
 	void showDisplayOptions();
 	void hideDisplayOptions();
 	void applyControl();
-}; 
+	void resetControl();
+};
 
 #endif

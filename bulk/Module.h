@@ -41,15 +41,15 @@ public:
 	ModuleParameterStructure(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
 	{
 		m_list.push_back(new ParameterString(0, "class", 		"", 					&objClass,	"Class of the module (define the module's function)"));
-		Parameter * param = new ParameterInt(0, "inputWidth", 	640, 	PARAM_INT, 	0, MAX_WIDTH,		&width,		"Width of the input");
+		Parameter * param = new ParameterInt(0, "width", 	640, 	PARAM_INT, 	1, MAX_WIDTH,		&width,		"Width of the input");
 		m_list.push_back(param);
-		m_list.push_back(new ParameterInt(0, "inputHeight", 	480, 	PARAM_INT, 	0, MAX_HEIGHT,		&height,	"Height of the input"));
-		m_list.push_back(new ParameterImageType(0, "inputType", 	CV_8UC1, 				&type,		"Format of the input image"));
-		m_list.push_back(new ParameterDouble(0, "fps", 	10, 	PARAM_DOUBLE, 	0, 	100000,		&fps,		"Frames per seconds (processing speed)")); //TODO : Check that min max works
+		m_list.push_back(new ParameterInt(0, "height", 	480, 	PARAM_INT, 	1, MAX_HEIGHT,		&height,	"Height of the input"));
+		m_list.push_back(new ParameterImageType(0, "type", 	CV_8UC1, 				&type,		"Format of the input image"));
+		m_list.push_back(new ParameterDouble(0, "fps", 	10, 	PARAM_DOUBLE, 	0, 	1000,		&fps,		"Frames per seconds (processing speed)")); //TODO : Check that min max works
 	};
 
 public:
-	int width; // TODO : rename inputWidth
+	int width;
 	int height;
 	int type;
 	double fps;

@@ -72,7 +72,9 @@ ControllerInt::ControllerInt(ParameterInt& x_param):
         sprintf(str, "%d", m_param.GetMax());
         m_boxLayout->addWidget(new QLabel(str));
 
-        m_widget->setLayout(m_boxLayout);
+	m_widget->setLayout(m_boxLayout);
+
+	QWidget::connect(m_scrollBar, SIGNAL(sliderReleased()), m_lineEdit, SLOT(setText(const QString &)));
 }
 
 void ControllerInt::SetControlledValue()

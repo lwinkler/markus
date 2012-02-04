@@ -58,8 +58,8 @@ private:
 
 protected:
 	const std::string m_name;
-        //int m_inputWidth;
-        //int m_inputHeight;
+        //int m_width;
+        //int m_height;
 	
 	virtual InputParameterStructure& RefParameter() = 0;
 };

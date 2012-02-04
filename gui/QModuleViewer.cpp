@@ -87,7 +87,8 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	
 	// Contros
 	m_buttonUpdateControl = new QPushButton(tr("Update"));
-	
+	m_buttonResetControl = new QPushButton(tr("Reset"));
+
 	gbSettings->setLayout(vbox);
 	layout->addWidget(gbSettings);
 	setLayout(layout);
@@ -114,6 +115,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	connect(comboModules, SIGNAL(activated(int)), this, SLOT(updateModule(int) ));
 	connect(comboStreams, SIGNAL(activated(int)), this, SLOT(updateStreamOrControl(int)));
 	connect(m_buttonUpdateControl, SIGNAL(pressed()), this, SLOT(applyControl(void)));
+	connect(m_buttonResetControl, SIGNAL(pressed()), this, SLOT(resetControl(void)));
 }
 
 QModuleViewer::~QModuleViewer(void) 
@@ -214,6 +216,7 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 				cpt++;
 			}
 			vbox->addWidget(m_buttonUpdateControl);
+			vbox->addWidget(m_buttonResetControl);
 			vbox->setColumnStretch(1, 2);
 			
 			gbControls->setLayout(vbox);
@@ -310,6 +313,11 @@ void QModuleViewer::applyControl()
 			(*it)->SetControlledValue();
 		}
 	}
+}
+
+void QModuleViewer::resetControl()
+{
+	m_currentModule->Reset();
 }
 
 void QModuleViewer::showDisplayOptions()

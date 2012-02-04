@@ -2,9 +2,9 @@
   <module name="SlitCamera1">
 	<parameters>
 	<param id="0" name="class">SlitCamera</param>
-	<param id="2" name="inputWidth">640</param>
-        <param id="3" name="inputHeight">480</param>
-	<param id="4" name="inputType">CV_8UC3</param>
+	<param id="2" name="width">640</param>
+        <param id="3" name="height">480</param>
+	<param id="4" name="type">CV_8UC3</param>
 	<param id="1" name="aperture">4</param>
 	<param id="4" name="fps">100</param>
 	</parameters>
@@ -20,9 +20,9 @@
   <module name="UsbCam" machineurl="localhost" id="1">
     <parameters>
       <param name="class">UsbCam</param>
-      <param name="inputWidth">200</param>
-      <param name="inputHeight">100</param>
-      <param name="inputType">CV_8UC3</param>
+      <param name="width">200</param>
+      <param name="height">100</param>
+      <param name="type">CV_8UC3</param>
       <param name="num">-1</param>
       <param name="fps">1000</param>
     </parameters>

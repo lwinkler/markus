@@ -46,16 +46,17 @@ UsbCam::UsbCam(const ConfigReader& x_configReader):
 	// Get capture device information
 	//cvSetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH, m_param.width); // not working
 	//cvSetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
-	cvQueryFrame(m_capture); // this call is necessary to get correct capture properties
-	IplImage * tmp = cvRetrieveFrame(m_capture); // Test capture
+	//cvQueryFrame(m_capture); // this call is necessary to get correct capture properties
+	//IplImage * tmp = cvRetrieveFrame(m_capture); // Test capture
 	//m_inputWidth    = tmp->width;//(int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH);
 	//m_inputHeight   = tmp->height;//(int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT);
 	cout<<"Capture from UsbCam with resolution "<<GetWidth()<<"x"<<GetHeight()<<endl;
 	//int numFramesc = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_COUNT);
 	
-	m_output = NULL;
+	m_output = new Mat( cvSize(m_param.width, m_param.height), m_param.type);
+	m_outputStreams.push_back(new StreamImage(0, "input", m_output, *this, 		"Video stream of the camera"));
 
-	Reset();
+	//Reset();
 }
 
 UsbCam::~UsbCam()
@@ -66,9 +67,7 @@ UsbCam::~UsbCam()
 
 void UsbCam::Reset()
 {
-    m_outputStreams.clear();
-    m_output = new Mat( cvSize(m_param.width, m_param.height), m_param.type);
-    m_outputStreams.push_back(new StreamImage(0, "input", m_output, *this, 		"Video stream of the camera"));
+	resize(*m_output, *m_output, cvSize(m_param.width, m_param.height));
 }
 
 void UsbCam::Capture()
