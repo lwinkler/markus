@@ -105,7 +105,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	this->addAction(actionHideDisplayMenu);
 	this->setContextMenuPolicy(Qt::ActionsContextMenu);
 	
-	setPalette(QPalette(QColor(0, 0, 40)));
+	setPalette(QPalette(QColor(0, 0, 0)));
 	setAutoFillBackground(true);
 
 	//update();

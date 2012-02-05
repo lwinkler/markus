@@ -27,13 +27,14 @@
 using namespace std;
 
 #include <QWidget>
-#include <QScrollBar>
 #include <QBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
 #include <QCheckBox>
 
-#define PRECISION_DOUBLE 100
+#include "QParameterSlider.h"
+
+#define PRECISION_DOUBLE 2
 
 Controller::Controller()
 {
@@ -50,74 +51,34 @@ ControllerInt::ControllerInt(ParameterInt& x_param):
         Controller(),
         m_param(x_param)
 {
-        m_widget	= new QWidget;
-        m_boxLayout 	= new QBoxLayout(QBoxLayout::LeftToRight);
+	m_widget = m_parameterSlider = new QParameterSlider(m_param.GetValue(), m_param.GetMin(), m_param.GetMax(), 0);
+}
 
-        char str[16];
-        sprintf(str, "%d", m_param.GetMin());
-        m_boxLayout->addWidget(new QLabel(str));
-
-        m_lineEdit      = new QLineEdit();
-        m_lineEdit->setText(str);
-        m_boxLayout->addWidget(m_lineEdit);
-
-        //m_lineEdit->setSizePolicy(QSizePolicy::Expanding);
-
-        m_scrollBar 	= new QScrollBar(Qt::Horizontal);
-        //m_scrollBar->setOrientation(Qt::Horizontal);
-        m_scrollBar->setMinimum(m_param.GetMin());
-        m_scrollBar->setMaximum(m_param.GetMax());
-	m_scrollBar->setValue(m_param.GetValue());
-	m_scrollBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-        //m_scrollBar->resize( 100, m_scrollBar->height() );
-        m_boxLayout->addWidget(m_scrollBar);
-
-        sprintf(str, "%d", m_param.GetMax());
-        m_boxLayout->addWidget(new QLabel(str));
-
-	m_widget->setLayout(m_boxLayout);
-
-	QWidget::connect(m_scrollBar, SIGNAL(sliderReleased()), m_lineEdit, SLOT(setText(const QString &)));
+ControllerInt::~ControllerInt()
+{
+	delete(m_parameterSlider);
 }
 
 void ControllerInt::SetControlledValue()
 {
-	m_param.SetValue(m_scrollBar->value(), PARAMCONF_GUI);
+	m_param.SetValue(m_parameterSlider->GetValue(), PARAMCONF_GUI);
 }
 /*------------------------------------------------------------------------------------------------*/
 ControllerDouble::ControllerDouble(ParameterDouble& x_param):
         Controller(),
         m_param(x_param)
 {
-        m_widget	= new QWidget;
-        m_boxLayout 	= new QBoxLayout(QBoxLayout::LeftToRight);
+	m_widget = m_parameterSlider = new QParameterSlider(m_param.GetValue(), m_param.GetMin(), m_param.GetMax(), PRECISION_DOUBLE);
+}
 
-        char str[16];
-        sprintf(str, "%.2lf", m_param.GetMin());
-        m_boxLayout->addWidget(new QLabel(str));
-
-        m_lineEdit      = new QLineEdit();
-        sprintf(str, "%.2lf", m_param.GetValue());
-        m_lineEdit->setText(str);
-        m_boxLayout->addWidget(m_lineEdit);
-
-        m_scrollBar 	= new QScrollBar(Qt::Horizontal);
-        //m_scrollBar->setOrientation(Qt::Horizontal);
-	m_scrollBar->setMinimum(m_param.GetMin() * PRECISION_DOUBLE);
-	m_scrollBar->setMaximum(m_param.GetMax() * PRECISION_DOUBLE);
-	m_scrollBar->setValue(m_param.GetValue() * PRECISION_DOUBLE);
-        m_scrollBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-        m_boxLayout->addWidget(m_scrollBar);
-
-        sprintf(str, "%.2lf", m_param.GetMax());
-        m_boxLayout->addWidget(new QLabel(str));
-
-        m_widget->setLayout(m_boxLayout);
+ControllerDouble::~ControllerDouble()
+{
+	delete(m_parameterSlider);
 }
 
 void ControllerDouble::SetControlledValue()
 {
-	m_param.SetValue(static_cast<double>(m_scrollBar->value()) * PRECISION_DOUBLE, PARAMCONF_GUI);
+	m_param.SetValue(m_parameterSlider->GetValue(), PARAMCONF_GUI);
 }
 /*------------------------------------------------------------------------------------------------*/
 
@@ -125,13 +86,18 @@ ControllerBool::ControllerBool(ParameterBool& x_param):
         Controller(),
         m_param(x_param)
 {
-        m_widget	= new QWidget;
+	m_widget	= new QWidget; // TODO : simplify
         m_boxLayout 	= new QBoxLayout(QBoxLayout::LeftToRight);
 	m_checkBox	= new QCheckBox("Enabled");
 	m_checkBox->setChecked(m_param.GetValue());
 	m_boxLayout->addWidget(m_checkBox);
 
         m_widget->setLayout(m_boxLayout);
+}
+
+ControllerBool::~ControllerBool()
+{
+	delete(m_checkBox);
 }
 
 void ControllerBool::SetControlledValue()
@@ -144,15 +110,21 @@ ControllerString::ControllerString(ParameterString& x_param):
 	Controller(),
 	m_param(x_param)
 {
-	m_widget	= new QWidget;
+	m_widget	= new QWidget; // TODO simplify
 	m_boxLayout 	= new QBoxLayout(QBoxLayout::LeftToRight);
 
 	m_lineEdit 	= new QLineEdit();
 	m_lineEdit->setText(m_param.GetValue().c_str());
+	m_lineEdit->setStyleSheet("color: black; background-color: white");
 
 	m_boxLayout->addWidget(m_lineEdit);
 
 	m_widget->setLayout(m_boxLayout);
+}
+
+ControllerString::~ControllerString()
+{
+	delete(m_lineEdit);
 }
 
 void ControllerString::SetControlledValue()

@@ -51,7 +51,6 @@ public:
 	static void  ConvertMat2QImage(const cv::Mat *mat, QImage *qim);
 	static void  ConvertIplImage2QImage(const IplImage *iplImg, QImage *qim);
 private:
-	//QLabel *imagelabel;
 	QVBoxLayout *layout;
 	
 	QImage m_image;

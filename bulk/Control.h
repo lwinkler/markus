@@ -30,10 +30,10 @@
 
 class Module;
 class QWidget;
-class QScrollBar;
+class QParameterSlider;
 class QBoxLayout;
-class QLineEdit;
 class QCheckBox;
+class QLineEdit;
 
 class Controller
 {
@@ -58,9 +58,7 @@ public:
 	inline virtual const std::string& GetName() const {return m_param.GetName();}; 
 
 protected:
-	QBoxLayout * m_boxLayout;
-        QLineEdit * m_lineEdit;
-        QScrollBar * m_scrollBar;
+	QParameterSlider * m_parameterSlider;
         ParameterInt & m_param;
 };
 
@@ -76,9 +74,8 @@ public:
 
 protected:
         QBoxLayout * m_boxLayout;
-        QLineEdit * m_lineEdit;
-        QScrollBar * m_scrollBar;
-        ParameterDouble & m_param;
+	QParameterSlider * m_parameterSlider;
+	ParameterDouble & m_param;
 };
 
 /// Control class for a boolean parameter
@@ -91,7 +88,7 @@ public:
         inline virtual const std::string& GetName() const {return m_param.GetName();};
 
 protected:
-        QBoxLayout * m_boxLayout;
+	QBoxLayout * m_boxLayout; // TODO : remove
         QCheckBox  * m_checkBox;
         ParameterBool & m_param;
 };
@@ -135,6 +132,7 @@ class ParameterControl : public Control
 public:
 	ParameterControl(const std::string& x_name, const std::string& x_description, ParameterStructure& x_param);
 	~ParameterControl();
+
 private:
 	ParameterStructure& m_param;
 };

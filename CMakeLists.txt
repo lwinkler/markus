@@ -13,8 +13,9 @@ tools/cvblobs
 
 set(markus_SRCS 
 gui/markus.cpp
-gui/QModuleViewer.cpp 
-main.cpp 
+gui/QModuleViewer.cpp
+gui/QParameterSlider.cpp
+main.cpp
 bulk/Module.cpp
 bulk/ModuleAsync.cpp
 bulk/Manager.cpp
