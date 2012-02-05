@@ -105,7 +105,11 @@ public:
 		istr >> *mp_value; // atof is sensible to locale format and may use , as a separator
 		m_confSource = x_confType;
 	};
-	inline void SetValue(T x_value){*mp_value = x_value;};
+	inline void SetValue(T x_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
+	{
+		*mp_value = x_value;
+		m_confSource = x_confType;
+	};
 	/*virtual void SetValue(const void * px_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
 	{	
 		*mp_value = *static_cast<const T*>(px_value);

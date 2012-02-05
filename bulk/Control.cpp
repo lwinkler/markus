@@ -33,6 +33,8 @@ using namespace std;
 #include <QLineEdit>
 #include <QCheckBox>
 
+#define PRECISION_DOUBLE 100
+
 Controller::Controller()
 {
 	m_widget = NULL;
@@ -65,7 +67,8 @@ ControllerInt::ControllerInt(ParameterInt& x_param):
         //m_scrollBar->setOrientation(Qt::Horizontal);
         m_scrollBar->setMinimum(m_param.GetMin());
         m_scrollBar->setMaximum(m_param.GetMax());
-        m_scrollBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+	m_scrollBar->setValue(m_param.GetValue());
+	m_scrollBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
         //m_scrollBar->resize( 100, m_scrollBar->height() );
         m_boxLayout->addWidget(m_scrollBar);
 
@@ -79,7 +82,7 @@ ControllerInt::ControllerInt(ParameterInt& x_param):
 
 void ControllerInt::SetControlledValue()
 {
-	m_param.SetValue(m_scrollBar->value());
+	m_param.SetValue(m_scrollBar->value(), PARAMCONF_GUI);
 }
 /*------------------------------------------------------------------------------------------------*/
 ControllerDouble::ControllerDouble(ParameterDouble& x_param):
@@ -100,10 +103,10 @@ ControllerDouble::ControllerDouble(ParameterDouble& x_param):
 
         m_scrollBar 	= new QScrollBar(Qt::Horizontal);
         //m_scrollBar->setOrientation(Qt::Horizontal);
-        m_scrollBar->setMinimum(m_param.GetMin());
-        m_scrollBar->setMaximum(m_param.GetMax());
+	m_scrollBar->setMinimum(m_param.GetMin() * PRECISION_DOUBLE);
+	m_scrollBar->setMaximum(m_param.GetMax() * PRECISION_DOUBLE);
+	m_scrollBar->setValue(m_param.GetValue() * PRECISION_DOUBLE);
         m_scrollBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-        //m_scrollBar->resize( 100, m_scrollBar->height() );
         m_boxLayout->addWidget(m_scrollBar);
 
         sprintf(str, "%.2lf", m_param.GetMax());
@@ -114,7 +117,7 @@ ControllerDouble::ControllerDouble(ParameterDouble& x_param):
 
 void ControllerDouble::SetControlledValue()
 {
-        m_param.SetValue(m_scrollBar->value());
+	m_param.SetValue(static_cast<double>(m_scrollBar->value()) * PRECISION_DOUBLE, PARAMCONF_GUI);
 }
 /*------------------------------------------------------------------------------------------------*/
 
@@ -124,18 +127,38 @@ ControllerBool::ControllerBool(ParameterBool& x_param):
 {
         m_widget	= new QWidget;
         m_boxLayout 	= new QBoxLayout(QBoxLayout::LeftToRight);
-
-        m_boxLayout->addWidget(new QCheckBox("Enabled"));
+	m_checkBox	= new QCheckBox("Enabled");
+	m_checkBox->setChecked(m_param.GetValue());
+	m_boxLayout->addWidget(m_checkBox);
 
         m_widget->setLayout(m_boxLayout);
 }
 
 void ControllerBool::SetControlledValue()
 {
-        m_param.SetValue(m_checkBox->isChecked());
+	m_param.SetValue(m_checkBox->isChecked(), PARAMCONF_GUI);
 }
 
 /*------------------------------------------------------------------------------------------------*/
+ControllerString::ControllerString(ParameterString& x_param):
+	Controller(),
+	m_param(x_param)
+{
+	m_widget	= new QWidget;
+	m_boxLayout 	= new QBoxLayout(QBoxLayout::LeftToRight);
+
+	m_lineEdit 	= new QLineEdit();
+	m_lineEdit->setText(m_param.GetValue().c_str());
+
+	m_boxLayout->addWidget(m_lineEdit);
+
+	m_widget->setLayout(m_boxLayout);
+}
+
+void ControllerString::SetControlledValue()
+{
+	m_param.SetValue(m_lineEdit->text().toStdString(), PARAMCONF_GUI);
+}
 /*------------------------------------------------------------------------------------------------*/
 
 
@@ -171,7 +194,7 @@ ParameterControl::ParameterControl(const std::string& x_name, const std::string&
                             ctrr = new ControllerDouble(*dynamic_cast<ParameterDouble*>(*it));
                         break;
 			case PARAM_FLOAT:
-                            //ctrr = new ControllerFloat(*dynamic_cast<ParameterFloat*>(*it));
+			    //ctrr = new ControllerFloat(*dynamic_cast<ParameterFloat*>(*it)); // TODO
                         break;
 			case PARAM_IMAGE_TYPE:
 			break;
@@ -179,6 +202,7 @@ ParameterControl::ParameterControl(const std::string& x_name, const std::string&
 				ctrr = new ControllerInt(*dynamic_cast<ParameterInt*>(*it));
 			break;
 			case PARAM_STR:
+				ctrr = new ControllerString(*dynamic_cast<ParameterString*>(*it));
 			break;
 		}
 		if(ctrr != NULL)AddController(ctrr); // TODO : use asssert

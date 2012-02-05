@@ -96,6 +96,20 @@ protected:
         ParameterBool & m_param;
 };
 
+/// Control class for a boolean parameter
+class ControllerString : public Controller
+{
+public:
+	ControllerString(ParameterString & x_param);
+	~ControllerString();
+	void SetControlledValue();
+	inline virtual const std::string& GetName() const {return m_param.GetName();};
+
+protected:
+	QBoxLayout * m_boxLayout;
+	QLineEdit  * m_lineEdit;
+	ParameterString & m_param;
+};
 
 /// Class to control a module (settings ...)
 
