@@ -36,6 +36,7 @@
 #include <QPixmap>
 #include <QPainter>
 #include <QScrollArea>
+#include <QListWidget>
 
 #include "Manager.h"
 #include "Module.h"
@@ -66,32 +67,34 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	m_currentStream 	= *m_currentModule->GetOutputStreamList().begin();
 	m_currentControl	= NULL;
 		
-	mp_comboModules 		= new QComboBox();
-	mp_comboStreams 		= new QComboBox();
-	mp_layout 		= new QVBoxLayout; // TODO : Box or VBox
+	mp_comboModules 	= new QComboBox();
+	mp_comboStreams 	= new QComboBox();
+	mp_layout 		= new QBoxLayout(QBoxLayout::TopToBottom);
 	mp_gbSettings 		= new QGroupBox(tr("Display options"));
-	//gbSettings->setFlat(true);
-	QGridLayout * vbox 	= new QGridLayout;
+
+	QGridLayout * layoutCombos = new QGridLayout;
 
 	// Fill the list of modules
 	QLabel* lab1 = new QLabel(tr("Module"));
-	vbox->addWidget(lab1,0,0);
+	layoutCombos->addWidget(lab1,0,0);
 	mp_comboModules->clear();
 	int ind = 0;
 	for(std::vector<Module*>::const_iterator it = x_manager->GetModuleList().begin(); it != x_manager->GetModuleList().end(); it++)
 		mp_comboModules->addItem(QString((*it)->GetName().c_str()), ind++);
-	vbox->addWidget(mp_comboModules,0,1);
+	layoutCombos->addWidget(mp_comboModules,0,1);
 	
 	QLabel* lab2 = new QLabel(tr("Out stream"));
-	vbox->addWidget(lab2,1,0);
+	layoutCombos->addWidget(lab2,1,0);
 	this->updateModule(*(x_manager->GetModuleList().begin()));
-	vbox->addWidget(mp_comboStreams,1,1);
+	layoutCombos->addWidget(mp_comboStreams,1,1);
 	
-	// Contros
-	mp_buttonUpdateControl = new QPushButton(tr("Update"));
-	mp_buttonResetControl = new QPushButton(tr("Reset"));
+	// Controls
+	mp_buttonGetCurrentControl  = new QPushButton(tr("Get current"));
+	mp_buttonGetDefaultControl  = new QPushButton(tr("Get default"));
+	mp_buttonSetControl         = new QPushButton(tr("Set"));
+	mp_buttonResetModule        = new QPushButton(tr("Reset module"));
 
-	mp_gbSettings->setLayout(vbox);
+	mp_gbSettings->setLayout(layoutCombos);
 	mp_gbSettings->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 	mp_layout->addWidget(mp_gbSettings, 0);
 	//mp_layout->addWidget(new QWidget, 1); // this is only for alignment
@@ -119,8 +122,10 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	
 	connect(mp_comboModules, SIGNAL(activated(int)), this, SLOT(updateModule(int) ));
 	connect(mp_comboStreams, SIGNAL(activated(int)), this, SLOT(updateStreamOrControl(int)));
-	connect(mp_buttonUpdateControl, SIGNAL(pressed()), this, SLOT(applyControl(void)));
-	connect(mp_buttonResetControl, SIGNAL(pressed()), this, SLOT(resetControl(void)));
+	connect(mp_buttonGetCurrentControl, SIGNAL(pressed()), this, SLOT(getCurrentControl(void)));
+	connect(mp_buttonGetDefaultControl, SIGNAL(pressed()), this, SLOT(getDefaultControl(void)));
+	connect(mp_buttonSetControl, SIGNAL(pressed()), this, SLOT(setControl(void)));
+	connect(mp_buttonResetModule, SIGNAL(pressed()), this, SLOT(resetModule(void)));
 }
 
 QModuleViewer::~QModuleViewer(void) 
@@ -230,10 +235,13 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 			mp_gbControls->setLayout(vbox);
 			mp_layout->addWidget(mp_gbControls, 1);
 
-			mp_gbButtons = new QGroupBox;
-			QBoxLayout * buttonLayout = new QBoxLayout(QBoxLayout::LeftToRight); // TODO : maybe avoid layout
-			buttonLayout->addWidget(mp_buttonUpdateControl);
-			buttonLayout->addWidget(mp_buttonResetControl);
+			mp_gbButtons = new QListWidget;
+
+			QBoxLayout * buttonLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+			buttonLayout->addWidget(mp_buttonGetCurrentControl);
+			buttonLayout->addWidget(mp_buttonGetDefaultControl);
+			buttonLayout->addWidget(mp_buttonSetControl);
+			buttonLayout->addWidget(mp_buttonResetModule);
 			mp_gbButtons->setLayout(buttonLayout);
 			mp_layout->addWidget(mp_gbButtons, 0);
 		}
@@ -317,21 +325,26 @@ void QModuleViewer::updateControl(Control* x_control)
 	m_currentControl = x_control;
 }
 
-void QModuleViewer::applyControl()
+void QModuleViewer::setControl()
 {
 	if(m_currentControl != NULL)
 	{
-		for(vector<Controller*>::iterator it = m_currentControl->RefListControllers().begin() ; it != m_currentControl->RefListControllers().end() ; it++)
-		{
-			
-			(*it)->SetControlledValue();
-		}
+		m_currentControl->SetControlledValue();
 	}
 }
 
-void QModuleViewer::resetControl()
+void QModuleViewer::resetModule()
 {
 	m_currentModule->Reset();
+}
+
+void QModuleViewer::getCurrentControl()
+{
+
+}
+
+void QModuleViewer::getDefaultControl()
+{
 }
 
 void QModuleViewer::showDisplayOptions()

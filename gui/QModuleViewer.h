@@ -41,6 +41,7 @@ class QPushButton;
 class QBoxLayout;
 class QLabel;
 class QScrollArea;
+class QListWidget;
 
 class QModuleViewer : public QWidget 
 {
@@ -69,11 +70,13 @@ private:
 
 	QGroupBox   * mp_gbSettings;
 	QScrollArea * mp_gbControls;
-	QGroupBox   * mp_gbButtons;
+	QListWidget * mp_gbButtons;
 	QComboBox   * mp_comboModules;
 	QComboBox   * mp_comboStreams;
-	QPushButton * mp_buttonUpdateControl;
-	QPushButton * mp_buttonResetControl;
+	QPushButton * mp_buttonGetCurrentControl;
+	QPushButton * mp_buttonGetDefaultControl;
+	QPushButton * mp_buttonSetControl;
+	QPushButton * mp_buttonResetModule;
 
 	// Images for format conversion
 	cv::Mat * m_img_original;
@@ -89,8 +92,10 @@ public slots:
 	void updateControl(Control * x_control);
 	void showDisplayOptions();
 	void hideDisplayOptions();
-	void applyControl();
-	void resetControl();
+	void getCurrentControl();
+	void getDefaultControl();
+	void setControl();
+	void resetModule();
 };
 
 #endif

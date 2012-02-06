@@ -25,6 +25,7 @@
 #define QPARAMETERSLIDER_H
 
 #include <QWidget>
+#include <QGroupBox>
 
 class QScrollBar;
 class QLineEdit;
@@ -37,7 +38,8 @@ class QParameterSlider : public QWidget
 public:
 	QParameterSlider(double x_value, double x_min, double x_max, int x_precision, QWidget *parent = 0);
 	virtual ~QParameterSlider();
-	inline double GetValue(){return m_value;};
+	inline double GetValue() const {return m_value;};
+	void SetValue(double x_value);
 
 private:
 	double       m_value;

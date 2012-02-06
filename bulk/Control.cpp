@@ -63,6 +63,16 @@ void ControllerInt::SetControlledValue()
 {
 	m_param.SetValue(m_parameterSlider->GetValue(), PARAMCONF_GUI);
 }
+
+void ControllerInt::GetCurrent()
+{
+	m_parameterSlider->SetValue(m_param.GetDefault());
+}
+
+void ControllerInt::GetDefault()
+{
+	m_parameterSlider->SetValue(m_parameterSlider->GetValue());
+}
 /*------------------------------------------------------------------------------------------------*/
 ControllerDouble::ControllerDouble(ParameterDouble& x_param):
         Controller(),
@@ -80,19 +90,24 @@ void ControllerDouble::SetControlledValue()
 {
 	m_param.SetValue(m_parameterSlider->GetValue(), PARAMCONF_GUI);
 }
+
+void ControllerDouble::GetCurrent()
+{
+	m_parameterSlider->SetValue(m_param.GetValue());
+}
+
+void ControllerDouble::GetDefault()
+{
+	m_parameterSlider->SetValue(m_param.GetDefault());
+}
 /*------------------------------------------------------------------------------------------------*/
 
 ControllerBool::ControllerBool(ParameterBool& x_param):
         Controller(),
         m_param(x_param)
 {
-	m_widget	= new QWidget; // TODO : simplify
-        m_boxLayout 	= new QBoxLayout(QBoxLayout::LeftToRight);
-	m_checkBox	= new QCheckBox("Enabled");
+	m_widget = m_checkBox = new QCheckBox("Enabled");
 	m_checkBox->setChecked(m_param.GetValue());
-	m_boxLayout->addWidget(m_checkBox);
-
-        m_widget->setLayout(m_boxLayout);
 }
 
 ControllerBool::~ControllerBool()
@@ -105,21 +120,24 @@ void ControllerBool::SetControlledValue()
 	m_param.SetValue(m_checkBox->isChecked(), PARAMCONF_GUI);
 }
 
+void ControllerBool::GetCurrent()
+{
+	m_checkBox->setChecked(m_param.GetValue());
+}
+
+void ControllerBool::GetDefault()
+{
+	m_checkBox->setChecked(m_param.GetDefault());
+}
+
 /*------------------------------------------------------------------------------------------------*/
 ControllerString::ControllerString(ParameterString& x_param):
 	Controller(),
 	m_param(x_param)
 {
-	m_widget	= new QWidget; // TODO simplify
-	m_boxLayout 	= new QBoxLayout(QBoxLayout::LeftToRight);
-
-	m_lineEdit 	= new QLineEdit();
+	m_widget = m_lineEdit = new QLineEdit();
 	m_lineEdit->setText(m_param.GetValue().c_str());
 	m_lineEdit->setStyleSheet("color: black; background-color: white");
-
-	m_boxLayout->addWidget(m_lineEdit);
-
-	m_widget->setLayout(m_boxLayout);
 }
 
 ControllerString::~ControllerString()
@@ -131,7 +149,44 @@ void ControllerString::SetControlledValue()
 {
 	m_param.SetValue(m_lineEdit->text().toStdString(), PARAMCONF_GUI);
 }
+
+void ControllerString::GetCurrent()
+{
+	m_lineEdit->setText(m_param.GetValue().c_str());
+}
+
+void ControllerString::GetDefault()
+{
+	m_lineEdit->setText(m_param.GetDefault().c_str());
+}
 /*------------------------------------------------------------------------------------------------*/
+
+ControllerFloat::ControllerFloat(ParameterFloat& x_param):
+	Controller(),
+	m_param(x_param)
+{
+	m_widget = m_parameterSlider = new QParameterSlider(m_param.GetValue(), m_param.GetMin(), m_param.GetMax(), PRECISION_DOUBLE);
+}
+
+ControllerFloat::~ControllerFloat()
+{
+	delete(m_parameterSlider);
+}
+
+void ControllerFloat::SetControlledValue()
+{
+	m_param.SetValue(m_parameterSlider->GetValue(), PARAMCONF_GUI);
+}
+
+void ControllerFloat::GetCurrent()
+{
+	m_parameterSlider->SetValue(m_param.GetValue());
+}
+
+void ControllerFloat::GetDefault()
+{
+	m_parameterSlider->SetValue(m_param.GetDefault());
+}
 
 
 /*------------------------------------------------------------------------------------------------*/
@@ -166,9 +221,10 @@ ParameterControl::ParameterControl(const std::string& x_name, const std::string&
                             ctrr = new ControllerDouble(*dynamic_cast<ParameterDouble*>(*it));
                         break;
 			case PARAM_FLOAT:
-			    //ctrr = new ControllerFloat(*dynamic_cast<ParameterFloat*>(*it)); // TODO
+			    ctrr = new ControllerFloat(*dynamic_cast<ParameterFloat*>(*it)); // TODO
                         break;
 			case PARAM_IMAGE_TYPE:
+			//TODO
 			break;
 			case PARAM_INT:
 				ctrr = new ControllerInt(*dynamic_cast<ParameterInt*>(*it));
@@ -190,3 +246,16 @@ void Control::SetControlledValue()
 	for(vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)
 		(*it)->SetControlledValue();
 }
+
+void Control::GetDefault()
+{
+	for(vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)
+		(*it)->GetDefault();
+}
+
+void Control::GetCurrent()
+{
+	for(vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)
+		(*it)->GetCurrent();
+}
+

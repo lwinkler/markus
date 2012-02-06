@@ -31,7 +31,6 @@
 class Module;
 class QWidget;
 class QParameterSlider;
-class QBoxLayout;
 class QCheckBox;
 class QLineEdit;
 
@@ -41,6 +40,9 @@ public:
 	Controller();
 	~Controller();
 	virtual void SetControlledValue() = 0;
+	virtual void GetCurrent() = 0;
+	virtual void GetDefault() = 0;
+
 	QWidget* RefWidget(){return m_widget;};
 	virtual const std::string& GetName() const = 0;
 	
@@ -55,6 +57,8 @@ public:
 	ControllerInt(ParameterInt & x_param);
 	~ControllerInt();
 	void SetControlledValue();
+	void GetCurrent();
+	void GetDefault();
 	inline virtual const std::string& GetName() const {return m_param.GetName();}; 
 
 protected:
@@ -70,12 +74,29 @@ public:
         ControllerDouble(ParameterDouble & x_param);
         ~ControllerDouble();
         void SetControlledValue();
-        inline virtual const std::string& GetName() const {return m_param.GetName();};
+	void GetCurrent();
+	void GetDefault();
+	inline virtual const std::string& GetName() const {return m_param.GetName();};
 
 protected:
-        QBoxLayout * m_boxLayout;
 	QParameterSlider * m_parameterSlider;
 	ParameterDouble & m_param;
+};
+
+/// Control class for a double parameter
+class ControllerFloat : public Controller
+{
+public:
+	ControllerFloat(ParameterFloat & x_param);
+	~ControllerFloat();
+	void SetControlledValue();
+	void GetCurrent();
+	void GetDefault();
+	inline virtual const std::string& GetName() const {return m_param.GetName();};
+
+protected:
+	QParameterSlider * m_parameterSlider;
+	ParameterFloat & m_param;
 };
 
 /// Control class for a boolean parameter
@@ -85,10 +106,11 @@ public:
         ControllerBool(ParameterBool & x_param);
         ~ControllerBool();
         void SetControlledValue();
-        inline virtual const std::string& GetName() const {return m_param.GetName();};
+	void GetCurrent();
+	void GetDefault();
+	inline virtual const std::string& GetName() const {return m_param.GetName();};
 
 protected:
-	QBoxLayout * m_boxLayout; // TODO : remove
         QCheckBox  * m_checkBox;
         ParameterBool & m_param;
 };
@@ -100,10 +122,11 @@ public:
 	ControllerString(ParameterString & x_param);
 	~ControllerString();
 	void SetControlledValue();
+	void GetCurrent();
+	void GetDefault();
 	inline virtual const std::string& GetName() const {return m_param.GetName();};
 
 protected:
-	QBoxLayout * m_boxLayout;
 	QLineEdit  * m_lineEdit;
 	ParameterString & m_param;
 };
@@ -120,6 +143,9 @@ public:
 	inline std::vector<Controller*>& RefListControllers(){return m_controllers;};
 	inline void AddController(Controller * x_ctrr){m_controllers.push_back(x_ctrr);}
 	void SetControlledValue();
+	void GetCurrent();
+	void GetDefault();
+
 protected:
 	std::string m_name;
 	std::string m_description;

@@ -90,4 +90,11 @@ void QParameterSlider::SetValueFromText()
 	m_scrollBar->setValue(m_value * m_divisionPerUnit);
 }
 
+void QParameterSlider::SetValue(double x_value)
+{
+	m_value = m_value;
+	m_scrollBar->setValue(m_value * m_divisionPerUnit);
+}
+
+
 #include "QParameterSlider.moc"

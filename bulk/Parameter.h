@@ -96,8 +96,9 @@ public:
 		mp_value(xp_value){};
 	inline const ParameterType GetType() const {return m_type;};
 	inline const std::string GetTypeString() const{return m_typeStr;};
-	inline const T GetMin(){return m_min;};
-	inline const T GetMax(){return m_max;};
+	inline const T GetDefault() const {return m_default;};
+	inline const T GetMin() const {return m_min;};
+	inline const T GetMax() const{return m_max;};
 	
 	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
 	{
@@ -174,11 +175,6 @@ public:
 		*mp_value = rx_value;
 		m_confSource = x_confType;
 	};
-	/*virtual void SetValue(const void * px_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
-	{	
-		*mp_value = *static_cast<const std::string*>(px_value);
-		m_confSource = x_confType;
-	};*/
 	virtual void SetDefault(const std::string& x_value)
 	{	
 		m_default = x_value;
@@ -215,8 +211,9 @@ public:
 	inline const ParameterType GetType() const {return PARAM_STR;};
 	inline const std::string GetTypeString() const {return "string";};
 
-	std::string m_default;
+	inline const std::string& GetDefault(){return m_default;};
 private:
+	std::string m_default;
 	std::string* mp_value;
 };
 
@@ -230,11 +227,6 @@ public:
 		*mp_value = ImageTypeStr2Int(rx_value);
 		m_confSource = x_confType;
 	};
-	/*virtual void SetValue(const void * px_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
-	{	
-		*mp_value = ImageTypeStr2Int(*static_cast<const std::string*>(px_value));
-		m_confSource = x_confType;
-	};*/
 	virtual void SetDefault(const std::string& rx_value)
 	{	
 		m_default = ImageTypeStr2Int(rx_value);
@@ -290,8 +282,8 @@ public:
 		rx_os<<tabs<<"</param>"<<std::endl;
 	}
 
-	int m_default;
 private:
+	int m_default;
 	int* mp_value;
 	static std::map<std::string,int>  m_map_types;
 };
