@@ -71,7 +71,7 @@ Manager::Manager(ConfigReader& x_configReader) :
 	}
 	
 	
-	m_inputs.clear();
+	// m_inputs.clear();
 	m_modules.clear();
 	
 	// Read the configuration of each module
@@ -86,7 +86,7 @@ Manager::Manager(ConfigReader& x_configReader) :
 		
 		// Add to inputs if an input
 		m_modules.push_back(tmp1);
-		if(tmp1->IsInput()) m_inputs.push_back(dynamic_cast<Input* >(tmp1));
+		// if(tmp1->IsInput()) m_inputs.push_back(dynamic_cast<Input* >(tmp1));
 		moduleConfig = moduleConfig.NextSubConfig("module");
 	}
 

@@ -39,21 +39,21 @@
 
 using namespace std;
 
-InputTimer::InputTimer(Input& x_input)
-: m_input(x_input)
+ModuleTimer::ModuleTimer(Module& x_module)
+: m_module(x_module)
 {
 	
 	double delay = 10;
-	if(m_input.GetFps() > 0) 
-		delay = 1000.0 / m_input.GetFps();
+	if(m_module.GetFps() > 0)
+		delay = 1000.0 / m_module.GetFps();
 	
 	start(delay);
 }
 
 
-void InputTimer::timerEvent(QTimerEvent* )
+void ModuleTimer::timerEvent(QTimerEvent* )
 {
-	m_input.Capture();
+	m_module.Process(0);
 }
 
 
@@ -73,10 +73,10 @@ markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 	m_mainWidget.setLayout(&m_mainLayout);
 	setCentralWidget(&m_mainWidget);
 
-	for(vector<Input *>::iterator it = m_manager.GetInputListVar().begin() ; it != m_manager.GetInputList().end() ; it++)
+	for(vector<Module *>::iterator it = m_manager.GetModuleListVar().begin() ; it != m_manager.GetModuleListVar().end() ; it++)
 	{
-		InputTimer * timer = new InputTimer(**it);
-		m_inputTimer.push_back(timer);
+		ModuleTimer * timer = new ModuleTimer(**it);
+		m_moduleTimer.push_back(timer);
 	}
 	
 	createActions();

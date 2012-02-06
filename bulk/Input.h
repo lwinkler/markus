@@ -51,7 +51,7 @@ public:
 	
 	inline double GetFps() {return RefParameter().fps;};
 	
-	inline void ProcessFrame() {/*Capture();*/};
+	inline void ProcessFrame() {Capture();};
 	
 	virtual inline bool IsInput() {return true;};
 private:

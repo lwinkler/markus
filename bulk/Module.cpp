@@ -62,9 +62,9 @@ Module::~Module()
 		delete(*it);
 };
 
-void Module::Process(double x_timeCount)
+void Module::Process(double x_timeCount) // TODO remove param ??
 {
-	if(GetFps() == 0 || (m_processingTime += x_timeCount) > 1.0 / GetFps()) 
+	///if(GetFps() == 0 || (m_processingTime += x_timeCount) > 1.0 / GetFps())
 	{
 		Timer ti;
 	

@@ -36,17 +36,17 @@
 
 class Manager;
 class ConfigReader;
-class InputTimer;
+class ModuleTimer;
 class QTimerEvent;
 class Input;
 
-class InputTimer : public QTimer
+class ModuleTimer : public QTimer
 {
 public:
-	InputTimer(Input & x_input);
+	ModuleTimer(Module & x_module);
 	virtual void timerEvent(QTimerEvent *);
 	
-	Input & m_input;
+	Module & m_module;
 };
 
 class markus : public QMainWindow
@@ -59,7 +59,7 @@ private:
 	ConfigReader& m_configReader;
 	Manager& m_manager;
 	
-	std::vector<InputTimer *> m_inputTimer;
+	std::vector<ModuleTimer *> m_moduleTimer;
 	
 	void timerEvent(QTimerEvent*);
 	void resizeEvent(QResizeEvent*);
