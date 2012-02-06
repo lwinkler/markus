@@ -177,7 +177,7 @@ ParameterControl::ParameterControl(const std::string& x_name, const std::string&
 				ctrr = new ControllerString(*dynamic_cast<ParameterString*>(*it));
 			break;
 		}
-		if(ctrr != NULL)AddController(ctrr); // TODO : use asssert
+		if(ctrr != NULL)AddController(ctrr); // TODO : use assert
 	}
 }
 

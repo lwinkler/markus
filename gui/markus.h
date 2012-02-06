@@ -29,6 +29,7 @@
 #include <QMainWindow>
 #include <QScrollArea>
 #include <QTimer>
+#include <QGridLayout>
 
 #include <vector>
 

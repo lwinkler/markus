@@ -26,11 +26,8 @@
 
 #include <opencv/cv.h>
 #include <QPixmap>
-#include <QLabel>
 #include <QWidget>
-#include <QVBoxLayout>
 #include <QImage>
-//#include <QIcon>
 #include <QPainter>
 
 class Manager;
@@ -41,6 +38,9 @@ class QComboBox;
 class QPainter;
 class QGroupBox;
 class QPushButton;
+class QBoxLayout;
+class QLabel;
+class QScrollArea;
 
 class QModuleViewer : public QWidget 
 {
@@ -51,7 +51,7 @@ public:
 	static void  ConvertMat2QImage(const cv::Mat *mat, QImage *qim);
 	static void  ConvertIplImage2QImage(const IplImage *iplImg, QImage *qim);
 private:
-	QVBoxLayout *layout;
+	QBoxLayout * mp_layout;
 	
 	QImage m_image;
 	Module * 		m_currentModule;
@@ -65,14 +65,15 @@ private:
 	int m_offsetY;
 	
 	void paintEvent(QPaintEvent *event);
-	
-	QGroupBox * gbSettings;
-	QGroupBox * gbControls;
-	QComboBox * comboModules;
-	QComboBox * comboStreams;
-	QPushButton*  m_buttonUpdateControl;
-	QPushButton*  m_buttonResetControl;
 	virtual void resizeEvent(QResizeEvent * e);
+
+	QGroupBox   * mp_gbSettings;
+	QScrollArea * mp_gbControls;
+	QGroupBox   * mp_gbButtons;
+	QComboBox   * mp_comboModules;
+	QComboBox   * mp_comboStreams;
+	QPushButton * mp_buttonUpdateControl;
+	QPushButton * mp_buttonResetControl;
 
 	// Images for format conversion
 	cv::Mat * m_img_original;
