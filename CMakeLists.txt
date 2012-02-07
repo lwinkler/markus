@@ -3,60 +3,32 @@ cmake_minimum_required(VERSION 2.6)
 find_package(Qt4 REQUIRED)
 find_package(OpenCV REQUIRED)
 
-include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR} bulk gui
+include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR} 
+bulk 
+gui
 modules
-inputs
 tools
 tools/cvblobs
 )
 
 
 set(markus_SRCS 
-gui/markus.cpp
-gui/QModuleViewer.cpp
-gui/QParameterSlider.cpp
-gui/QModuleTimer.cpp
 main.cpp
-bulk/Module.cpp
-bulk/ModuleAsync.cpp
-bulk/Manager.cpp
-bulk/Input.cpp
-inputs/UsbCam/UsbCam.cpp
-inputs/VideoFileReader/VideoFileReader.cpp
-bulk/Parameter.cpp
-bulk/Stream.cpp
-bulk/StreamImage.cpp
-bulk/StreamDebug.cpp
-bulk/StreamObject.cpp
-bulk/Object.cpp
-bulk/Feature.cpp
-bulk/Template.cpp
-bulk/util.cpp
-bulk/ConfigReader.cpp
-bulk/Timer.cpp
-bulk/Control.cpp
-tools/Tracker.cpp
-tools/cvblobs/BlobContour.cpp
-tools/cvblobs/BlobOperators.cpp
-tools/cvblobs/BlobResult.cpp
-tools/cvblobs/blob.cpp
-tools/cvblobs/BlobProperties.cpp
-tools/cvblobs/ComponentLabeling.cpp
-tools/Detector.cpp
-modules/SlitCam/SlitCam.cpp
-modules/BackgroundExtractor/BackgroundExtractor.cpp
-modules/SimpleTracker/SimpleTracker.cpp
-modules/BlobSegmenter/BlobSegmenter.cpp
-modules/CascadeDetector/CascadeDetector.cpp
-modules/VideoOutput/VideoOutput.cpp
 )
+
+add_subdirectory(bulk)
+add_subdirectory(gui)
+add_subdirectory(modules)
+add_subdirectory(tools)
 
 qt4_automoc(${markus_SRCS})
 add_executable(markus ${markus_SRCS})
-target_link_libraries(markus ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${OpenCV_LIBS} tinyxml)
+target_link_libraries(markus ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} bulk gui modules tools ${OpenCV_LIBS} tinyxml bulk)
 
 
 SET(CMAKE_CXX_FLAGS "-Wall -g")
 SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
 SET(CMAKE_CXX_FLAGS_RELEASE "-O2")
 SET(CMAKE_CXX_FLAGS_DEBUG  "-O0 -g")
+
+
