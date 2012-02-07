@@ -146,7 +146,6 @@ void Manager::Process()
 		cout<<"Warning : Manager too slow !"<<endl;
 		return;
 	}
-	
 	m_timer.Restart();
 	usleep(100000);
 	double timecount = m_timer.GetSecDouble();
@@ -179,7 +178,6 @@ void Manager::Process()
 	{
 		cout << "Unknown exception raised: "<<endl;
 	}
-
 	m_frameCount++;
 	if(m_frameCount % 100 == 0)
 	{

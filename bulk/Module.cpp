@@ -64,32 +64,60 @@ Module::~Module()
 
 void Module::Process(double x_timeCount) // TODO remove param ??
 {
-	///if(GetFps() == 0 || (m_processingTime += x_timeCount) > 1.0 / GetFps())
+	try
 	{
-		Timer ti;
-	
-		// Read and convert inputs
-		if(IsInputUsed(x_timeCount))
+#ifdef CENTRALIZE_PROCESS
+		if(GetFps() == 0 || (m_processingTime += x_timeCount) > 1.0 / GetFps())
+#else
+		m_processingTime += x_timeCount;
+#endif
 		{
-			for(vector<Stream*>::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
+			Timer ti;
+
+			// Read and convert inputs
+			if(IsInputUsed(x_timeCount))
 			{
-				Timer ti2;
-				(*it)->LockForRead();
-				m_timerWaiting += ti2.GetMSecLong();
-				(*it)->ConvertInput();
-				(*it)->UnLock();
+				for(vector<Stream*>::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
+				{
+					Timer ti2;
+					(*it)->LockForRead();
+					m_timerWaiting += ti2.GetMSecLong();
+					(*it)->ConvertInput();
+					(*it)->UnLock();
+				}
 			}
+			m_timerConvertion 	+= ti.GetMSecLong();
+			ti.Restart();
+
+			ProcessFrame();
+
+			m_timerProcessing 	 += ti.GetMSecLong();
+
+			m_processingTime = 0;
+			m_countProcessedFrames++;
 		}
-		m_timerConvertion 	+= ti.GetMSecLong();
-		ti.Restart();
-		
-		ProcessFrame();
-		
-		m_timerProcessing 	 += ti.GetMSecLong();
-		
-		m_processingTime = 0;
-		m_countProcessedFrames++;
 	}
+	catch(cv::Exception& e)
+	{
+		cout << "Exception raised (std::exception) : " << e.what() <<endl;
+	}
+	catch(std::exception& e)
+	{
+		cout << "Exception raised (std::exception) : " << e.what() <<endl;
+	}
+	catch(std::string str)
+	{
+		cout << "Exception raised (string) : " << str <<endl;
+	}
+	catch(const char* str)
+	{
+		cout << "Exception raised (const char*) : " << str <<endl;
+	}
+	catch(...)
+	{
+		cout << "Unknown exception raised: "<<endl;
+	}
+
 }
 
 

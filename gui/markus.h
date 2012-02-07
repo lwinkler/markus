@@ -47,6 +47,7 @@ public:
 	virtual void timerEvent(QTimerEvent *);
 	
 	Module & m_module;
+	double m_timeInterval;
 };
 
 class markus : public QMainWindow

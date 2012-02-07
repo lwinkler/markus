@@ -45,9 +45,18 @@ ModuleTimer::ModuleTimer(Module& x_module)
 	
 	double delay = 10;
 	if(m_module.GetFps() > 0)
+	{
+		// Start a timer for module process
 		delay = 1000.0 / m_module.GetFps();
-	
-	start(delay);
+		m_timeInterval = 1 / m_module.GetFps();
+		start(delay);
+	}
+	else
+	{
+		// We do not start the timer :
+		//  the module will be called from another module
+		delay = m_timeInterval = 0;
+	}
 }
 
 
@@ -63,8 +72,9 @@ markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 	nbLines = 1;
 	nbCols = 1;
 
+	// Call to manager process each 10 ms
 	startTimer(10);  // 100 -> 0.1-second timer
-	
+
 	setWindowState(Qt::WindowMaximized);
 	
 	//m_scroll.clear();
@@ -89,30 +99,9 @@ markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 
 void markus::timerEvent(QTimerEvent*)
 {
-	try
-	{
-		m_manager.Process();
-	}
-	catch(cv::Exception& e)
-	{
-		cout << "Exception raised (std::exception) : " << e.what() <<endl;
-	}
-	catch(std::exception& e)
-	{
-		cout << "Exception raised (std::exception) : " << e.what() <<endl;
-	}
-	catch(std::string str)
-	{
-		cout << "Exception raised (string) : " << str <<endl;
-	}
-	catch(const char* str)
-	{
-		cout << "Exception raised (const char*) : " << str <<endl;
-	}
-	catch(...)
-	{
-		cout << "Unknown exception raised: "<<endl;
-	}
+#ifdef CENTRALIZE_PROCESS
+	m_manager.Process();
+#endif
 	for(int i = 0 ; i < nbCols * nbLines ; i++)
 		m_moduleViewer[i]->update();
 	

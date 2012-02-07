@@ -51,7 +51,7 @@ void ModuleAsync::ProcessFrame()
 		m_resultsCopied = true;
 	}
 	
-	if(m_timeSinceLastThread >= 1 / RefParameter().detectionFps)
+	if(true)//m_timeSinceLastThread >= 1 / RefParameter().detectionFps)
 	{
 		if(!GetRefThread().isRunning())
 		{
