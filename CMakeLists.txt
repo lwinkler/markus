@@ -15,6 +15,7 @@ set(markus_SRCS
 gui/markus.cpp
 gui/QModuleViewer.cpp
 gui/QParameterSlider.cpp
+gui/QModuleTimer.cpp
 main.cpp
 bulk/Module.cpp
 bulk/ModuleAsync.cpp

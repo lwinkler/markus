@@ -35,35 +35,10 @@
 
 #include "Manager.h"
 #include "Module.h"
+#include "QModuleTimer.h"
 
 
 using namespace std;
-
-ModuleTimer::ModuleTimer(Module& x_module)
-: m_module(x_module)
-{
-	
-	double delay = 10;
-	if(m_module.GetFps() > 0)
-	{
-		// Start a timer for module process
-		delay = 1000.0 / m_module.GetFps();
-		m_timeInterval = 1 / m_module.GetFps();
-		start(delay);
-	}
-	else
-	{
-		// We do not start the timer :
-		//  the module will be called from another module
-		delay = m_timeInterval = 0;
-	}
-}
-
-
-void ModuleTimer::timerEvent(QTimerEvent* )
-{
-	m_module.Process(0);
-}
 
 
 markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
@@ -85,7 +60,7 @@ markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 
 	for(vector<Module *>::iterator it = m_manager.GetModuleListVar().begin() ; it != m_manager.GetModuleListVar().end() ; it++)
 	{
-		ModuleTimer * timer = new ModuleTimer(**it);
+		QModuleTimer * timer = new QModuleTimer(**it);
 		m_moduleTimer.push_back(timer);
 	}
 	
