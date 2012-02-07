@@ -26,7 +26,7 @@
 
 #include <QTimer>
 
-using namespace std;
+using namespace std; // TODO : markus namespace ??
 
 QModuleTimer::QModuleTimer(Module& x_module)
 : m_module(x_module)

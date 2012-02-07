@@ -24,12 +24,7 @@
 #ifndef QMODULE_TIMER_H
 #define QMODULE_TIMER_H
 
-#include <QMainWindow>
-#include <QScrollArea>
 #include <QTimer>
-#include <QGridLayout>
-
-#include <vector>
 
 class Module;
 
@@ -44,4 +39,4 @@ public:
 };
 
 
-#endif // markus_H
+#endif
