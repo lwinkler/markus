@@ -46,7 +46,7 @@ public:
 		m_list.push_back(new ParameterInt(0, "height", 	480, 	PARAM_INT, 	1, MAX_HEIGHT,		&height,	"Height of the input"));
 		m_list.push_back(new ParameterImageType(0, "type", 	CV_8UC1, 				&type,		"Format of the input image"));
 		m_list.push_back(new ParameterDouble(0, "fps", 	10, 	PARAM_DOUBLE, 	0, 	1000,		&fps,		"Frames per seconds (processing speed)")); //TODO : Check that min max works
-	};
+	}
 
 public:
 	int width;
@@ -65,24 +65,26 @@ public:
         virtual void Reset() = 0;
         void Process(double x_timeCount);
 
-	const std::string& GetName() const{return m_name;};
-	const std::string& GetDescription() const{return m_description;};
-	int GetId() const {return m_id;};
+	const std::string& GetName() const{return m_name;}
+	const std::string& GetDescription() const{return m_description;}
+	int GetId() const {return m_id;}
 
-	const std::vector<Stream*>& GetInputStreamList() const {return m_inputStreams;};
-	const std::vector<Stream*>& GetOutputStreamList() const {return m_outputStreams;};
-	const std::vector<Stream*>& GetDebugStreamList() const {return m_debugStreams;};
-	const std::vector<Control*>& GetControlList() const {return m_controls;};
+	const std::vector<Stream*>& GetInputStreamList() const {return m_inputStreams;}
+	const std::vector<Stream*>& GetOutputStreamList() const {return m_outputStreams;}
+	const std::vector<Stream*>& GetDebugStreamList() const {return m_debugStreams;}
+	const std::vector<Control*>& GetControlList() const {return m_controls;}
 	virtual ModuleParameterStructure & RefParameter() = 0;
 	
 	inline int GetWidth() {return RefParameter().width;}
 	inline int GetHeight(){return RefParameter().height;}
-	inline int GetType()  {return RefParameter().type;};
-	inline int GetFps() {return RefParameter().fps;};
+	inline int GetType()  {return RefParameter().type;}
+	inline int GetFps() {return RefParameter().fps;}
 	
+	inline void SetPreceedingModule(Module & x_module){m_modulePreceeding = &x_module;}
+	inline void AddFollowingModule (Module & x_module){m_modulesFollowing.push_back(&x_module);}
 	virtual void PrintStatistics(std::ostream& os) const;
 	
-	virtual inline bool IsInput() {return false;};
+	virtual inline bool IsInput() {return false;}
 	void Export(std::ostream& rx_os, int x_indentation);
 	Stream * GetInputStreamById(int x_id) const;
 	Stream * GetOutputStreamById(int x_id) const;
@@ -104,6 +106,8 @@ protected:
 	std::string m_description; 
 	int m_id;
 	double m_processingTime;
+	Module * m_modulePreceeding;
+	std::vector<Module *> m_modulesFollowing;
 };
 
 #endif

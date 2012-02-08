@@ -42,7 +42,7 @@ public:
 	~ConfigReader();
 	ConfigReader SubConfig(const std::string& x_objectType, std::string x_objectName = "") const;
 	ConfigReader NextSubConfig(const std::string& x_objectType, std::string x_objectName = "") const;
-	bool IsEmpty(){ return mp_doc == NULL && mp_node == NULL;};
+	bool IsEmpty(){ return mp_doc == NULL && mp_node == NULL;}
 	const std::string GetValue() const;
 	const std::string GetAttribute(const std::string& x_attributeName) const;
 private:
@@ -55,8 +55,8 @@ private:
 class Configurable
 {
 public:
-	Configurable(const ConfigReader& x_confReader) : m_configReader(x_confReader){};
-	~Configurable(){};
+	Configurable(const ConfigReader& x_confReader) : m_configReader(x_confReader){}
+	~Configurable(){}
 protected:
 	const ConfigReader m_configReader;
 	inline virtual const ParameterStructure & RefParameter() = 0;

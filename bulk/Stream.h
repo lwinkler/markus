@@ -44,20 +44,23 @@ class Stream
 public:
 	Stream(int x_id, const std::string& x_name, StreamType x_type, int x_width, int x_height, Module& rx_module, const std::string& rx_description);
 	~Stream();
-	inline const std::string& GetName() const {return m_name;};
-	inline int GetId() const {return m_id;};
-	inline int GetInputWidth() const {return m_width;};
-	inline int GetInputHeight() const {return m_height;};
-	inline StreamType GetType() const {return m_type;};
-	inline const std::string& GetDescription() const {return m_description;};
+	inline const std::string& GetName() const {return m_name;}
+	inline int GetId() const {return m_id;}
+	inline int GetInputWidth() const {return m_width;}
+	inline int GetInputHeight() const {return m_height;}
+	inline StreamType GetType() const {return m_type;}
+	inline const std::string& GetDescription() const {return m_description;}
 	virtual const std::string GetTypeString() const = 0;
 	virtual void RenderTo(cv::Mat * x_output) const  = 0;
-	void Connect(const Stream * x_stream);
+	void Connect(Stream * x_stream);
 	virtual void ConvertInput() = 0;
 	void Export(std::ostream& rx_os, int x_indentation, bool x_isInput);
-	inline void LockForRead(){mr_module.m_lock.lockForRead();};
-	inline void UnLock(){mr_module.m_lock.unlock();};
-	inline bool IsConnected() const {return m_connected != NULL;};
+	inline void LockForRead(){mr_module.m_lock.lockForRead();}
+	inline void UnLock(){mr_module.m_lock.unlock();}
+	inline bool IsConnected() const {return m_connected != NULL;}
+	inline Module& RefModule(){return mr_module;}
+	inline Stream& RefConnected(){return *m_connected;}
+
 protected:
 	const std::string m_name;
 	const int m_id;
@@ -67,7 +70,7 @@ protected:
 	Module& mr_module;
 	const std::string m_description;
 	
-	const Stream * m_connected;
+	Stream * m_connected;
 	
 private:
 	Stream& operator=(const Stream&);

@@ -45,10 +45,11 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_timerProcessing = 0;
 	m_timerWaiting    = 0;
 	m_countProcessedFrames = 0;
-	
+	m_modulePreceeding = NULL;
+
 	// Add controls for parameters' change
 	m_controls.push_back(new Control("Parameters", "Change the values of parameters at runtime."));
-};
+}
 
 
 Module::~Module()
@@ -60,7 +61,7 @@ Module::~Module()
 		delete(*it);
 	for(std::vector<Stream* >::iterator it = m_debugStreams.begin() ; it != m_debugStreams.end() ; it++)
 		delete(*it);
-};
+}
 
 void Module::Process(double x_timeCount) // TODO remove param ??
 {
@@ -92,6 +93,10 @@ void Module::Process(double x_timeCount) // TODO remove param ??
 			ProcessFrame();
 
 			m_timerProcessing 	 += ti.GetMSecLong();
+
+			// Call deppending modules
+			for(vector<Module*>::iterator it = m_modulesFollowing.begin() ; it != m_modulesFollowing.end() ; it++)
+				(*it)->Process(m_processingTime);
 
 			m_processingTime = 0;
 			m_countProcessedFrames++;
@@ -152,7 +157,7 @@ Stream* Module::GetInputStreamById(int x_id) const
 {
 	for(vector<Stream *>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
 		if((*it)->GetId() == x_id) return *it;
-	assert(false);
+	throw(string("GetInputStreamById : no stream with this id for module ") + string(GetName()));
 	return NULL;
 }
 

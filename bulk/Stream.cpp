@@ -56,7 +56,7 @@ void Stream::Export(ostream& rx_os, int x_indentation, bool x_isInput)
 }
 
 
-void Stream::Connect(const Stream* x_stream)
+void Stream::Connect(Stream* x_stream)
 {
 	m_connected = x_stream;
 }

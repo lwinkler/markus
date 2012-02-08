@@ -117,7 +117,20 @@ Manager::Manager(ConfigReader& x_configReader) :
 		}
 		moduleConfig = moduleConfig.NextSubConfig("module");
 	}
-	
+
+	// Set the module preceeding the current module
+	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+	{
+		try
+		{
+			Module& preceeding((*it)->GetInputStreamById(0)->RefConnected().RefModule());
+			(*it)->SetPreceedingModule(preceeding);
+			if((*it)->GetFps() == 0)
+				preceeding.AddFollowingModule(**it); // TODO : rename functions clearly
+		}
+		catch(...){}
+	}
+
 	// Reset timers
 	m_timerConvertion = 0;
 	m_timerProcessing = 0;
