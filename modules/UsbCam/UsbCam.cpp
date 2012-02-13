@@ -77,9 +77,12 @@ void UsbCam::Capture()
 	//int posFrames    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_FRAMES);
 	//double posRatio  =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_AVI_RATIO);
 
-	m_lock.lockForWrite();
+	m_lock.lockForWrite(); // TODO how to use locks in modules
 	cvGrabFrame(m_capture);
 	//m_input = cvRetrieveFrame(m_capture);           // retrieve the captured frame
+
+	int frameH    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT);
+	int frameW    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH);	
 	
 	Mat * tmp = new Mat(cvRetrieveFrame(m_capture));
 	//cout<<tmp->width<<" == "<<m_input->width<<endl;

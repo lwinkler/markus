@@ -58,11 +58,11 @@ markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 	m_mainWidget.setLayout(&m_mainLayout);
 	setCentralWidget(&m_mainWidget);
 
-	for(vector<Module *>::iterator it = m_manager.GetModuleListVar().begin() ; it != m_manager.GetModuleListVar().end() ; it++)
+	/*for(vector<Module *>::iterator it = m_manager.GetModuleListVar().begin() ; it != m_manager.GetModuleListVar().end() ; it++)
 	{
 		QModuleTimer * timer = new QModuleTimer(**it);
 		m_moduleTimer.push_back(timer);
-	}
+	}*/
 	
 	createActions();
 	createMenus();

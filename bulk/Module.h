@@ -34,6 +34,7 @@
 
 class Stream;
 class Control;
+class QModuleTimer;
 
 class ModuleParameterStructure : public ParameterStructure
 {
@@ -62,7 +63,7 @@ public:
 	Module(const ConfigReader& x_confReader);
 	virtual ~Module();
 	
-        virtual void Reset() = 0;
+	virtual void Reset() = 0;
         void Process(double x_timeCount);
 
 	const std::string& GetName() const{return m_name;}
@@ -108,6 +109,7 @@ protected:
 	double m_processingTime;
 	Module * m_modulePreceeding;
 	std::vector<Module *> m_modulesFollowing;
+	QModuleTimer * m_moduleTimer;
 };
 
 #endif

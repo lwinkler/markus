@@ -28,26 +28,28 @@
 
 using namespace std; // TODO : markus namespace ??
 
-QModuleTimer::QModuleTimer(Module& x_module)
+QModuleTimer::QModuleTimer(Module& x_module, double x_fps) // TODO : avoid param fps
 : m_module(x_module)
 {
-	
-	double delay = 10;
-	if(m_module.GetFps() > 0)
+	Reset(x_fps);
+}
+
+void QModuleTimer::Reset(double x_fps)
+{
+	if(x_fps > 0)
 	{
 		// Start a timer for module process
-		delay = 1000.0 / m_module.GetFps();
-		m_timeInterval = 1 / m_module.GetFps();
+		double delay = 1000.0 / x_fps;
+		m_timeInterval = delay / 1000.0;
 		start(delay);
 	}
 	else
 	{
 		// We do not start the timer :
 		//  the module will be called from another module
-		delay = m_timeInterval = 0;
+		m_timeInterval = 0;
 	}
 }
-
 
 void QModuleTimer::timerEvent(QTimerEvent* )
 {

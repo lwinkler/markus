@@ -28,8 +28,7 @@
 #include "Stream.h"
 #include "Control.h"
 #include "Timer.h"
-
-//#include <list>
+#include "QModuleTimer.h"
 
 using namespace std;
 
@@ -49,6 +48,9 @@ Module::Module(const ConfigReader& x_configReader) :
 
 	// Add controls for parameters' change
 	m_controls.push_back(new Control("Parameters", "Change the values of parameters at runtime."));
+
+	// Add the module timer (only works with QT)
+	m_moduleTimer = new QModuleTimer(*this, RefParameter().GetFps());
 }
 
 
@@ -61,6 +63,8 @@ Module::~Module()
 		delete(*it);
 	for(std::vector<Stream* >::iterator it = m_debugStreams.begin() ; it != m_debugStreams.end() ; it++)
 		delete(*it);
+
+	delete(m_moduleTimer);
 }
 
 void Module::Process(double x_timeCount) // TODO remove param ??

@@ -49,7 +49,7 @@ private:
 	ConfigReader& m_configReader;
 	Manager& m_manager;
 	
-	std::vector<QModuleTimer *> m_moduleTimer;
+	//std::vector<QModuleTimer *> m_moduleTimer;
 	
 	void timerEvent(QTimerEvent*);
 	void resizeEvent(QResizeEvent*);
