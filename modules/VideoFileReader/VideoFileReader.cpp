@@ -66,7 +66,7 @@ VideoFileReader::~VideoFileReader()
 
 void VideoFileReader::Reset()
 {
-
+	Module::Reset();
 }
 
 void VideoFileReader::Capture()

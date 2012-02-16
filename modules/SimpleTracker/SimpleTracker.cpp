@@ -55,6 +55,7 @@ SimpleTracker::~SimpleTracker(void )
 
 void SimpleTracker::Reset()
 {
+	Module::Reset();
 }
 
 void SimpleTracker::ProcessFrame()

@@ -69,6 +69,7 @@ BackgroundExtractor::~BackgroundExtractor(void )
 
 void BackgroundExtractor::Reset()
 {
+	Module::Reset();
 }
 
 void BackgroundExtractor::ProcessFrame()

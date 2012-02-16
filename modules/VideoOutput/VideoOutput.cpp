@@ -60,6 +60,7 @@ VideoOutput::~VideoOutput(void )
 
 void VideoOutput::Reset()
 {
+	Module::Reset();
 }
 
 void VideoOutput::ProcessFrame()

@@ -67,6 +67,7 @@ UsbCam::~UsbCam()
 
 void UsbCam::Reset()
 {
+	Module::Reset();
 	resize(*m_output, *m_output, cvSize(m_param.width, m_param.height));
 }
 

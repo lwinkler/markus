@@ -63,7 +63,7 @@ SlitCam::~SlitCam(void)
 
 void SlitCam::Reset()
 {
-
+	Module::Reset();
 }
 
 void SlitCam::ProcessFrame()

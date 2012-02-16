@@ -63,8 +63,8 @@ public:
 	Module(const ConfigReader& x_confReader);
 	virtual ~Module();
 	
-	virtual void Reset() = 0;
-        void Process(double x_timeCount);
+	virtual void Reset();
+	void Process(double x_timeCount);
 
 	const std::string& GetName() const{return m_name;}
 	const std::string& GetDescription() const{return m_description;}

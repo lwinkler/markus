@@ -65,6 +65,7 @@ BlobSegmenter::~BlobSegmenter(void )
 
 void BlobSegmenter::Reset()
 {
+	Module::Reset();
 }
 
 void BlobSegmenter::ProcessFrame()

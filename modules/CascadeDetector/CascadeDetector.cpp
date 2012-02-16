@@ -67,6 +67,7 @@ CascadeDetector::~CascadeDetector()
 
 void CascadeDetector::Reset()
 {
+	ModuleAsync::Reset();
 }
 
 // This method launches the thread

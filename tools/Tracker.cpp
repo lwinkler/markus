@@ -40,7 +40,7 @@ Tracker::Tracker(const TrackerParameter& x_param, int width, int height, int typ
 
 void Tracker::Reset()
 {
-	
+
 }
 
 

@@ -50,7 +50,12 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_controls.push_back(new Control("Parameters", "Change the values of parameters at runtime."));
 
 	// Add the module timer (only works with QT)
-	m_moduleTimer = new QModuleTimer(*this, RefParameter().GetFps());
+	m_moduleTimer = new QModuleTimer(*this, 0);
+}
+
+void Module::Reset()
+{
+	m_moduleTimer->Reset(RefParameter().fps);
 }
 
 

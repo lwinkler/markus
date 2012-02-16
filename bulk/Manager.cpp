@@ -134,7 +134,12 @@ Manager::Manager(ConfigReader& x_configReader) :
 	// Reset timers
 	m_timerConvertion = 0;
 	m_timerProcessing = 0;
-		
+
+	// Reset all modules (to set the module timer)
+	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+	{
+		(*it)->Reset();
+	}
 	m_timer.Restart();
 }
 
