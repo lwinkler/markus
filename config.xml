@@ -24,7 +24,7 @@
       <param name="height">100</param>
       <param name="type">CV_8UC3</param>
       <param name="num">-1</param>
-      <param name="fps">1</param>
+      <param name="fps">100</param>
     </parameters>
     <inputs />
     <outputs>

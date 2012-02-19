@@ -34,7 +34,7 @@
 using namespace std;
 
 // Static variables
-std::map<std::string,int>  ParameterImageType::m_map_types;
+std::map<std::string,int>  ParameterImageType::m_map_enum;
 
 
 template<> const ParameterType ParameterT<bool>::m_type   = PARAM_BOOL;
@@ -167,47 +167,84 @@ void ParameterStructure::PrintParameters() const
 	cout<<endl;
 }
 
-ParameterImageType::ParameterImageType(int x_id, const std::string& x_name, int x_default, int * xp_value, const std::string x_description) : 
-		Parameter(x_id, x_name, x_description),
-		m_default(x_default),
-		mp_value(xp_value)
+
+void ParameterImageType::Export(std::ostream& rx_os, int x_indentation)
+{
+	std::string tabs(x_indentation, '\t');
+	rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<std::endl;
+	tabs = std::string(x_indentation + 1, '\t');
+	rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<std::endl;
+	rx_os<<tabs<<"<value default=\""<<Int2Str(m_default)<<"\">"<<Int2Str(GetValue())<<"</value>"<<std::endl;
+	rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<std::endl;
+	tabs = std::string(x_indentation, '\t');
+	rx_os<<tabs<<"</param>"<<std::endl;
+}
+
+ParameterImageType::ParameterImageType(int x_id, const std::string& x_name, int x_default, int * xp_value, const std::string x_description) :
+		ParameterEnum(x_id, x_name, x_default, xp_value, x_description)
 {
 	// Init static type vector once
-	if(ParameterImageType::m_map_types.size() == 0)
+	if(ParameterImageType::m_map_enum.size() == 0)
 	{
-		m_map_types["CV_8UC1"] = CV_8UC1;
-		m_map_types["CV_8UC2"] = CV_8UC2;
-		m_map_types["CV_8UC3"] = CV_8UC3;
-		//m_map_types["CV_8UC(n)"] = CV_8UC(n);
-		m_map_types["CV_8SC1"] = CV_8SC1;
-		m_map_types["CV_8SC2"] = CV_8SC2;
-		m_map_types["CV_8SC3"] = CV_8SC3;
-		m_map_types["CV_8SC4"] = CV_8SC4;
-		//m_map_types["CV_8SC(n)"] = CV_8SC(n);
-		m_map_types["CV_16UC1"] = CV_16UC1;
-		m_map_types["CV_16UC2"] = CV_16UC2;
-		m_map_types["CV_16UC3"] = CV_16UC3;
-		m_map_types["CV_16UC4"] = CV_16UC4;
-		//m_map_types["CV_16UC(n)"] = CV_16UC(n);
-		m_map_types["CV_16SC1"] = CV_16SC1;
-		m_map_types["CV_16SC2"] = CV_16SC2;
-		m_map_types["CV_16SC3"] = CV_16SC3;
-		m_map_types["CV_16SC4"] = CV_16SC4;
-		//m_map_types["CV_16SC(n)"] = ;
-		m_map_types["CV_32SC1"] = CV_32SC1;
-		m_map_types["CV_32SC2"] = CV_32SC2;
-		m_map_types["CV_32SC3"] = CV_32SC3;
-		m_map_types["CV_32SC4"] = CV_32SC4;
-		//m_map_types["CV_32SC1"] = CV_32SC1;
-		m_map_types["CV_32FC1"] = CV_32FC1;
-		m_map_types["CV_32FC2"] = CV_32FC2;
-		m_map_types["CV_32FC3"] = CV_32FC3;
-		m_map_types["CV_32FC4"] = CV_32FC4;
-		//m_map_types["CV_32FC1"] = CV_32FC1;
-		m_map_types["CV_64FC1"] = CV_64FC1;
-		m_map_types["CV_64FC2"] = CV_64FC2;
-		m_map_types["CV_64FC3"] = CV_64FC3;
-		m_map_types["CV_64FC4"] = CV_64FC4;
-		//m_map_types["CV_64FC1"] = CV_64FC1;
+		m_map_enum["CV_8UC1"] = CV_8UC1;
+		m_map_enum["CV_8UC2"] = CV_8UC2;
+		m_map_enum["CV_8UC3"] = CV_8UC3;
+		//m_map_enum["CV_8UC(n)"] = CV_8UC(n);
+		m_map_enum["CV_8SC1"] = CV_8SC1;
+		m_map_enum["CV_8SC2"] = CV_8SC2;
+		m_map_enum["CV_8SC3"] = CV_8SC3;
+		m_map_enum["CV_8SC4"] = CV_8SC4;
+		//m_map_enum["CV_8SC(n)"] = CV_8SC(n);
+		m_map_enum["CV_16UC1"] = CV_16UC1;
+		m_map_enum["CV_16UC2"] = CV_16UC2;
+		m_map_enum["CV_16UC3"] = CV_16UC3;
+		m_map_enum["CV_16UC4"] = CV_16UC4;
+		//m_map_enum["CV_16UC(n)"] = CV_16UC(n);
+		m_map_enum["CV_16SC1"] = CV_16SC1;
+		m_map_enum["CV_16SC2"] = CV_16SC2;
+		m_map_enum["CV_16SC3"] = CV_16SC3;
+		m_map_enum["CV_16SC4"] = CV_16SC4;
+		//m_map_enum["CV_16SC(n)"] = ;
+		m_map_enum["CV_32SC1"] = CV_32SC1;
+		m_map_enum["CV_32SC2"] = CV_32SC2;
+		m_map_enum["CV_32SC3"] = CV_32SC3;
+		m_map_enum["CV_32SC4"] = CV_32SC4;
+		//m_map_enum["CV_32SC1"] = CV_32SC1;
+		m_map_enum["CV_32FC1"] = CV_32FC1;
+		m_map_enum["CV_32FC2"] = CV_32FC2;
+		m_map_enum["CV_32FC3"] = CV_32FC3;
+		m_map_enum["CV_32FC4"] = CV_32FC4;
+		//m_map_enum["CV_32FC1"] = CV_32FC1;
+		m_map_enum["CV_64FC1"] = CV_64FC1;
+		m_map_enum["CV_64FC2"] = CV_64FC2;
+		m_map_enum["CV_64FC3"] = CV_64FC3;
+		m_map_enum["CV_64FC4"] = CV_64FC4;
+		//m_map_enum["CV_64FC1"] = CV_64FC1;
 	}
-};
+}
+
+void ParameterEnum::SetValue(const std::string& rx_value, ParameterConfigType x_confType)
+{
+	*mp_value = Str2Int(rx_value);
+	m_confSource = x_confType;
+}
+
+void ParameterEnum::SetDefault(const std::string& rx_value)
+{
+	m_default = Str2Int(rx_value);
+}
+
+bool ParameterEnum::CheckRange() const
+{
+	//for(std::map<std::string, int>::const_iterator it = m_map_enum.begin() ; it != m_map_enum.end() ; it++)
+		return true;
+	// TODO : Check range !!!
+	return false;
+}
+
+void ParameterEnum::Print() const
+{
+	std::cout<<m_name<<" = "<<Int2Str(GetValue())<<" ["<<GetValue()<<"] ("<<configType[m_confSource]<<"); ";
+
+}
+
