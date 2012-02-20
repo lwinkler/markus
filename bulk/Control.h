@@ -33,6 +33,7 @@ class QWidget;
 class QParameterSlider;
 class QCheckBox;
 class QLineEdit;
+class QComboBox;
 
 class Controller
 {
@@ -115,7 +116,7 @@ protected:
         ParameterBool & m_param;
 };
 
-/// Control class for a boolean parameter
+/// Control class for a string parameter
 class ControllerString : public Controller
 {
 public:
@@ -129,6 +130,23 @@ public:
 protected:
 	QLineEdit  * m_lineEdit;
 	ParameterString & m_param;
+};
+
+
+/// Control class for a string parameter
+class ControllerEnum : public Controller
+{
+public:
+	ControllerEnum(ParameterEnum & x_param);
+	~ControllerEnum();
+	void SetControlledValue();
+	void GetCurrent();
+	void GetDefault();
+	inline virtual const std::string& GetName() const {return m_param.GetName();};
+
+protected:
+	QComboBox  * m_comboBox;
+	ParameterEnum & m_param;
 };
 
 /// Class to control a module (settings ...)
@@ -156,11 +174,12 @@ protected:
 class ParameterControl : public Control
 {
 public:
-	ParameterControl(const std::string& x_name, const std::string& x_description, ParameterStructure& x_param);
+	ParameterControl(const std::string& x_name, const std::string& x_description);
 	~ParameterControl();
+	void SetParameterStructure(ParameterStructure& rx_param);
 
 private:
-	ParameterStructure& m_param;
+	ParameterStructure* mp_param;
 };
 
 #endif

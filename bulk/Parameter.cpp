@@ -161,6 +161,7 @@ void ParameterStructure::PrintParameters() const
 			case PARAMCONF_UNKNOWN: confType = "unk"; break;
 			case PARAMCONF_UNSET: confType = "unset"; break;
 			case PARAMCONF_XML: confType = "xml"; break;
+			default: assert(false); break;
 		}
 		(*it)->Print();
 	}
@@ -228,6 +229,13 @@ void ParameterEnum::SetValue(const std::string& rx_value, ParameterConfigType x_
 	*mp_value = Str2Int(rx_value);
 	m_confSource = x_confType;
 }
+
+void ParameterEnum::SetValue(int rx_value, ParameterConfigType x_confType)
+{
+	*mp_value = rx_value;
+	m_confSource = x_confType;
+}
+
 
 void ParameterEnum::SetDefault(const std::string& rx_value)
 {

@@ -65,7 +65,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	m_manager 		= x_manager;
 	m_currentModule 	= *x_manager->GetModuleList().begin();
 	m_currentStream 	= *m_currentModule->GetOutputStreamList().begin();
-	m_currentControl	= NULL;
+	m_currentControl 	= new ParameterControl(m_currentModule->GetName(), m_currentModule->GetDescription());
 		
 	mp_comboModules 	= new QComboBox();
 	mp_comboStreams 	= new QComboBox();
@@ -80,7 +80,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	mp_comboModules->clear();
 	int ind = 0;
 	for(std::vector<Module*>::const_iterator it = x_manager->GetModuleList().begin(); it != x_manager->GetModuleList().end(); it++)
-		mp_comboModules->addItem(QString((*it)->GetName().c_str()), ind++);
+		mp_comboModules->addItem((*it)->GetName().c_str(), ind++);
 	layoutCombos->addWidget(mp_comboModules,0,1);
 	
 	QLabel* lab2 = new QLabel(tr("Out stream"));
@@ -219,9 +219,6 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 			mp_gbControls = new QScrollArea;//(str.c_str());
 			QGridLayout * vbox = new QGridLayout;
 
-			if(m_currentControl != NULL) delete m_currentControl;
-			m_currentControl = new ParameterControl(m_currentModule->GetName(), m_currentModule->GetDescription(), m_currentModule->RefParameter());
-			
 			int cpt = 0;
 			for(vector<Controller*>::iterator it = m_currentControl->RefListControllers().begin() ; it != m_currentControl->RefListControllers().end() ; it++)
 			{
@@ -255,16 +252,16 @@ void QModuleViewer::updateModule(Module * x_module)
 	int cpt = 0;
 	for(std::vector<Stream*>::const_iterator it = m_currentModule->GetOutputStreamList().begin(); it != m_currentModule->GetOutputStreamList().end(); it++)
 	{
-		mp_comboStreams->addItem(QString((*it)->GetName().c_str()), cpt++);
+		mp_comboStreams->addItem((*it)->GetName().c_str(), cpt++);
 	}
 	for(std::vector<Stream*>::const_iterator it = m_currentModule->GetDebugStreamList().begin(); it != m_currentModule->GetDebugStreamList().end(); it++)
 	{
-		mp_comboStreams->addItem(QString((*it)->GetName().c_str()), cpt++);
+		mp_comboStreams->addItem((*it)->GetName().c_str(), cpt++);
 	}
 	// Add a fake streams for control
 	for(std::vector<Control*>::const_iterator it = m_currentModule->GetControlList().begin(); it != m_currentModule->GetControlList().end(); it++)
 	{
-		mp_comboStreams->addItem(QString((*it)->GetName().c_str()), cpt++);
+		mp_comboStreams->addItem((*it)->GetName().c_str(), cpt++);
 	}
 	
 	assert(m_currentModule->GetOutputStreamList().size() > 0);
@@ -323,6 +320,7 @@ void QModuleViewer::updateControl(Control* x_control)
 {
 	m_currentStream  = NULL;
 	m_currentControl = x_control;
+	static_cast<ParameterControl*>(m_currentControl)->SetParameterStructure(m_currentModule->RefParameter()); // TODO : Avoid static cast ??
 }
 
 void QModuleViewer::setControl()
@@ -340,11 +338,18 @@ void QModuleViewer::resetModule()
 
 void QModuleViewer::getCurrentControl()
 {
-
+	if(m_currentControl != NULL)
+	{
+		m_currentControl->GetCurrent();
+	}
 }
 
 void QModuleViewer::getDefaultControl()
 {
+	if(m_currentControl != NULL)
+	{
+		m_currentControl->GetDefault();
+	}
 }
 
 void QModuleViewer::showDisplayOptions()

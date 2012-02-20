@@ -102,7 +102,7 @@ protected:
 	std::vector<Stream *> m_inputStreams;
 	std::vector<Stream *> m_outputStreams;
 	std::vector<Stream *> m_debugStreams;	
-	std::vector<Control *> m_controls;	
+	std::vector<Control *> m_controls;
 	std::string m_name;
 	std::string m_description; 
 	int m_id;

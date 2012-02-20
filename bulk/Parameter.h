@@ -47,10 +47,10 @@ enum ParameterConfigType
 	PARAMCONF_DEF   = 1,
 	PARAMCONF_XML,
 	PARAMCONF_GUI,
-	PARAMCONF_UNKNOWN
-	//PARAMCONF_SIZE = 5
+	PARAMCONF_UNKNOWN,
+	PARAMCONF_SIZE
 };
-static const char configType[][16] = {"unset", "def", "xml", "gui", "unk"};
+static const char configType[PARAMCONF_SIZE][16] = {"unset", "def", "xml", "gui", "unk"};
 
 
 class ConfigReader;
@@ -64,7 +64,7 @@ public:
 		m_confSource(PARAMCONF_UNSET),
 		m_description(x_description){};
 		
-	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN) = 0;
+	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) = 0;
 	//virtual void SetValue(const void* x_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN) = 0;
 	virtual void SetDefault(const std::string& x_value) = 0;
 	//virtual const void* GetValue() const = 0;
@@ -100,13 +100,13 @@ public:
 	inline const T GetMin() const {return m_min;}
 	inline const T GetMax() const{return m_max;}
 	
-	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
+	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
 	{
 		std::istringstream istr(rx_value);
 		istr >> *mp_value; // atof is sensible to locale format and may use , as a separator
 		m_confSource = x_confType;
 	}
-	inline void SetValue(T x_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
+	inline void SetValue(T x_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
 	{
 		*mp_value = x_value;
 		m_confSource = x_confType;
@@ -170,7 +170,7 @@ public:
 		Parameter(x_id, x_name, x_description),
 		m_default(x_default),
 		mp_value(xp_value){}
-	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
+	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/)
 	{
 		*mp_value = rx_value;
 		m_confSource = x_confType;
@@ -225,12 +225,11 @@ public:
 		Parameter(x_id, x_name, x_description),
 		m_default(x_default),
 		mp_value(xp_value){}
-	void SetValue(const std::string& rx_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN);
+	void SetValue(const std::string& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/);
+	void SetValue(int rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/);
 	void SetDefault(const std::string& rx_value);
-	inline int GetValue() const
-	{
-		return *mp_value;
-	}
+	inline int GetDefault() const {return m_default;};
+	inline int GetValue() const{return *mp_value;}
 	virtual bool CheckRange() const;
 	virtual void Print() const;
 	virtual void SetValueToDefault()
@@ -243,9 +242,24 @@ public:
 	
 	virtual void Export(std::ostream& rx_os, int x_indentation) = 0;
 
-	virtual int Str2Int(const std::string& x) const = 0;
-	virtual const std::string Int2Str(int x) const = 0;
-
+	virtual int Str2Int(const std::string& x) const
+	{
+		std::map<std::string, int>::const_iterator found = RefEnum().find(x);
+		if(found != RefEnum().end())
+			return found->second;
+		else return -1;
+	}
+	virtual const std::string Int2Str(int x) const
+	{
+		static const std::string unknown = "(unknown enum value)";
+		for(std::map<std::string, int>::const_iterator it = RefEnum().begin() ; it != RefEnum().end() ; it++)
+			if(it->second == x)
+				return(it->first);
+		return unknown;
+	}
+	
+	virtual const std::map<std::string,int>& RefEnum() const = 0;
+	
 protected:
 
 	int m_default;
@@ -263,21 +277,7 @@ public:
 	inline const std::string GetTypeString() const {return "image type";}
 	//virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN) = 0;
 	//virtual void SetDefault(const std::string& rx_value);
-	virtual int Str2Int(const std::string& x) const
-	{
-		std::map<std::string, int>::iterator found = m_map_enum.find(x);
-		if(found != m_map_enum.end())
-			return found->second;
-		else return -1;
-	}
-	virtual const std::string Int2Str(int x) const
-	{
-		static const std::string unknown = "(unknown image type)";
-		for(std::map<std::string, int>::const_iterator it = m_map_enum.begin() ; it != m_map_enum.end() ; it++)
-			if(it->second == x)
-				return(it->first);
-		return unknown;
-	}
+	const std::map<std::string,int> & RefEnum() const {return m_map_enum;}
 
 private:
 	static std::map<std::string,int>  m_map_enum;
