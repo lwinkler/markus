@@ -126,7 +126,7 @@ Manager::Manager(ConfigReader& x_configReader) :
 			Module& preceeding((*it)->GetInputStreamById(0)->RefConnected().RefModule());
 			(*it)->SetPreceedingModule(preceeding);
 			if((*it)->GetFps() == 0)
-				preceeding.AddFollowingModule(**it); // TODO : rename functions clearly
+				preceeding.AddDependingModule(**it);
 		}
 		catch(...){}
 	}

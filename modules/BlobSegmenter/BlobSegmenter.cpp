@@ -86,10 +86,10 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 	m_regions.clear();
 	
 	// Extract the blobs using a threshold of 100 in the image
-	IplImage img = *x_img;
+	IplImage img1 = *x_img; // TODO : See if copy is needed
 	// blobs = CBlobResult(&img, NULL, 100/*m_foreground_thres* 255*/, true);  // old lib cvBlobs
-	blobs = CBlobResult(&img, NULL, 0);/*m_foreground_thres* 255*/ 
-	saveMat(x_img, "x_img.bmp");
+	blobs = CBlobResult(&img1, NULL, 0);/*m_foreground_thres* 255*/ 
+	//saveMat(x_img, "x_img.bmp");
 	// create a file with some of the extracted features
 	blobs.PrintBlobs( (char*) "blobs.txt" );
 	

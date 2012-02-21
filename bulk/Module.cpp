@@ -104,7 +104,7 @@ void Module::Process(double x_timeCount) // TODO remove param ??
 			m_timerProcessing 	 += ti.GetMSecLong();
 
 			// Call deppending modules
-			for(vector<Module*>::iterator it = m_modulesFollowing.begin() ; it != m_modulesFollowing.end() ; it++)
+			for(vector<Module*>::iterator it = m_modulesDepending.begin() ; it != m_modulesDepending.end() ; it++)
 				(*it)->Process(m_processingTime);
 
 			m_processingTime = 0;

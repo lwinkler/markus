@@ -82,7 +82,7 @@ public:
 	inline int GetFps() {return RefParameter().fps;}
 	
 	inline void SetPreceedingModule(Module & x_module){m_modulePreceeding = &x_module;}
-	inline void AddFollowingModule (Module & x_module){m_modulesFollowing.push_back(&x_module);}
+	inline void AddDependingModule (Module & x_module){m_modulesDepending.push_back(&x_module);}
 	virtual void PrintStatistics(std::ostream& os) const;
 	
 	virtual inline bool IsInput() {return false;}
@@ -108,7 +108,7 @@ protected:
 	int m_id;
 	double m_processingTime;
 	Module * m_modulePreceeding;
-	std::vector<Module *> m_modulesFollowing;
+	std::vector<Module *> m_modulesDepending;
 	QModuleTimer * m_moduleTimer;
 };
 
