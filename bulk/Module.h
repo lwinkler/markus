@@ -33,7 +33,7 @@
 #define MAX_HEIGHT 4800
 
 class Stream;
-class Control;
+class ParameterControl;
 class QModuleTimer;
 
 class ModuleParameterStructure : public ParameterStructure
@@ -42,8 +42,7 @@ public:
 	ModuleParameterStructure(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
 	{
 		m_list.push_back(new ParameterString(0, "class", 		"", 					&objClass,	"Class of the module (define the module's function)"));
-		Parameter * param = new ParameterInt(0, "width", 	640, 	PARAM_INT, 	1, MAX_WIDTH,		&width,		"Width of the input");
-		m_list.push_back(param);
+		m_list.push_back(new ParameterInt(0, "width", 	640, 	PARAM_INT, 	1, MAX_WIDTH,		&width,		"Width of the input"));
 		m_list.push_back(new ParameterInt(0, "height", 	480, 	PARAM_INT, 	1, MAX_HEIGHT,		&height,	"Height of the input"));
 		m_list.push_back(new ParameterImageType(0, "type", 	CV_8UC1, 				&type,		"Format of the input image"));
 		m_list.push_back(new ParameterDouble(0, "fps", 	10, 	PARAM_DOUBLE, 	0, 	1000,		&fps,		"Frames per seconds (processing speed)")); //TODO : Check that min max works
@@ -73,7 +72,7 @@ public:
 	const std::vector<Stream*>& GetInputStreamList() const {return m_inputStreams;}
 	const std::vector<Stream*>& GetOutputStreamList() const {return m_outputStreams;}
 	const std::vector<Stream*>& GetDebugStreamList() const {return m_debugStreams;}
-	const std::vector<Control*>& GetControlList() const {return m_controls;}
+	const std::vector<ParameterControl*>& GetControlList() const {return m_controls;}
 	virtual ModuleParameterStructure & RefParameter() = 0;
 	
 	inline int GetWidth() {return RefParameter().width;}
@@ -102,7 +101,7 @@ protected:
 	std::vector<Stream *> m_inputStreams;
 	std::vector<Stream *> m_outputStreams;
 	std::vector<Stream *> m_debugStreams;	
-	std::vector<Control *> m_controls;
+	std::vector<ParameterControl *> m_controls;
 	std::string m_name;
 	std::string m_description; 
 	int m_id;

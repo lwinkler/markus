@@ -48,18 +48,17 @@ template<> const std::string ParameterT<float>::m_typeStr  = "float";
 template<> const std::string ParameterT<double>::m_typeStr = "double";
 
 /// Parent for all parameter structures
-
 ParameterStructure::ParameterStructure(const ConfigReader& x_configReader):
 		m_configReader(x_configReader)
 {
 	m_objectName = m_configReader.GetAttribute("name");
-	m_list.clear();
-};
+}
 	
 ParameterStructure::~ParameterStructure()
 {
 	for(std::vector<Parameter* >::iterator it = m_list.begin() ; it != m_list.end() ; it++)
 		delete(*it);
+	m_list.clear();
 }
 
 /// Initialize the parameter structure with the value from default or xml configuration

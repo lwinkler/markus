@@ -71,7 +71,7 @@ public:
 
 
 protected:
-	inline virtual SlitCamParameterStructure& RefParameter() { return m_param;};
+	inline virtual SlitCamParameterStructure& RefParameter() { return m_param;}
 };
 
 #endif

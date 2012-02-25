@@ -47,7 +47,7 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_modulePreceeding = NULL;
 
 	// Add controls for parameters' change
-	m_controls.push_back(new Control("Parameters", "Change the values of parameters at runtime."));
+	m_controls.push_back(new ParameterControl("Parameters", "Change the values of parameters at runtime."));
 
 	// Add the module timer (only works with QT)
 	m_moduleTimer = new QModuleTimer(*this, 0);
@@ -67,6 +67,8 @@ Module::~Module()
 	for(std::vector<Stream* >::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
 		delete(*it);
 	for(std::vector<Stream* >::iterator it = m_debugStreams.begin() ; it != m_debugStreams.end() ; it++)
+		delete(*it);
+	for(std::vector<ParameterControl* >::iterator it = m_controls.begin() ; it != m_controls.end() ; it++)
 		delete(*it);
 
 	delete(m_moduleTimer);

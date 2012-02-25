@@ -38,7 +38,7 @@ const char * SlitCam::m_type = "SlitCamera";
 SlitCam::SlitCam(const ConfigReader& x_configReader) 
 	 : Module(x_configReader), m_param(x_configReader)
 {
-	m_description = "A simple example module that mimics a slit camera or linear camera. The camera input is a range of pixels in the middle of the image.";
+	m_description = "A simple example module that mimics a slit camera (or linear camera). The camera input is a range of pixels in the middle of the image.";
 	m_position = 0;
 	
 	// Init images

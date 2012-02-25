@@ -36,7 +36,7 @@ class InputParameterStructure : public ModuleParameterStructure
 public:
 	InputParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-	};
+	}
 };
 
 class Input : public Module

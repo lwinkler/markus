@@ -46,7 +46,7 @@ Controller::Controller()
 
 Controller::~Controller()
 {
-	if(m_widget != NULL) delete m_widget;
+	// if(m_widget != NULL) delete m_widget; // no need to delete
 }
 
 ControllerInt::ControllerInt(ParameterInt& x_param):
@@ -251,6 +251,12 @@ ParameterControl::ParameterControl(const std::string& x_name, const std::string&
 
 ParameterControl::~ParameterControl()
 {
+	// Delete all controllers
+	for(vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)
+	{
+		delete(*it);
+	}
+	m_controllers.clear();
 }
 
 void Control::SetControlledValue()
@@ -274,6 +280,14 @@ void Control::GetCurrent()
 void ParameterControl::SetParameterStructure(ParameterStructure& rx_param)
 {
 	mp_param = &rx_param;
+
+	// Delete all controllers
+	for(vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)
+	{
+		delete(*it);
+	}
+	m_controllers.clear();
+
 	for(vector<Parameter*>::const_iterator it = mp_param->GetList().begin(); it != mp_param->GetList().end(); it++)
 	{
 		Controller * ctrr = NULL;
@@ -301,4 +315,14 @@ void ParameterControl::SetParameterStructure(ParameterStructure& rx_param)
 		if(ctrr == NULL) throw("Controller creation failed");
 		else AddController(ctrr);
 	}
+}
+
+void ParameterControl::CleanParameterStructure()
+{
+	// Delete all controllers
+	for(vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)
+	{
+		delete(*it);
+	}
+	m_controllers.clear();
 }

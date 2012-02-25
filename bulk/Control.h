@@ -44,7 +44,7 @@ public:
 	virtual void GetCurrent() = 0;
 	virtual void GetDefault() = 0;
 
-	QWidget* RefWidget(){return m_widget;};
+	QWidget* RefWidget(){return m_widget;}
 	virtual const std::string& GetName() const = 0;
 	
 protected:
@@ -60,7 +60,7 @@ public:
 	void SetControlledValue();
 	void GetCurrent();
 	void GetDefault();
-	inline virtual const std::string& GetName() const {return m_param.GetName();}; 
+	inline virtual const std::string& GetName() const {return m_param.GetName();}
 
 protected:
 	QParameterSlider * m_parameterSlider;
@@ -77,7 +77,7 @@ public:
         void SetControlledValue();
 	void GetCurrent();
 	void GetDefault();
-	inline virtual const std::string& GetName() const {return m_param.GetName();};
+	inline virtual const std::string& GetName() const {return m_param.GetName();}
 
 protected:
 	QParameterSlider * m_parameterSlider;
@@ -93,7 +93,7 @@ public:
 	void SetControlledValue();
 	void GetCurrent();
 	void GetDefault();
-	inline virtual const std::string& GetName() const {return m_param.GetName();};
+	inline virtual const std::string& GetName() const {return m_param.GetName();}
 
 protected:
 	QParameterSlider * m_parameterSlider;
@@ -109,7 +109,7 @@ public:
         void SetControlledValue();
 	void GetCurrent();
 	void GetDefault();
-	inline virtual const std::string& GetName() const {return m_param.GetName();};
+	inline virtual const std::string& GetName() const {return m_param.GetName();}
 
 protected:
         QCheckBox  * m_checkBox;
@@ -125,7 +125,7 @@ public:
 	void SetControlledValue();
 	void GetCurrent();
 	void GetDefault();
-	inline virtual const std::string& GetName() const {return m_param.GetName();};
+	inline virtual const std::string& GetName() const {return m_param.GetName();}
 
 protected:
 	QLineEdit  * m_lineEdit;
@@ -142,7 +142,7 @@ public:
 	void SetControlledValue();
 	void GetCurrent();
 	void GetDefault();
-	inline virtual const std::string& GetName() const {return m_param.GetName();};
+	inline virtual const std::string& GetName() const {return m_param.GetName();}
 
 protected:
 	QComboBox  * m_comboBox;
@@ -156,9 +156,9 @@ class Control
 public:
 	Control(const std::string& x_name, const std::string& x_description);
 	~Control();
-	inline const std::string& GetName() const {return m_name;};
-	inline const std::string& GetDescription() const{return m_description;};
-	inline std::vector<Controller*>& RefListControllers(){return m_controllers;};
+	inline const std::string& GetName() const {return m_name;}
+	inline const std::string& GetDescription() const{return m_description;}
+	inline std::vector<Controller*>& RefListControllers(){return m_controllers;}
 	inline void AddController(Controller * x_ctrr){m_controllers.push_back(x_ctrr);}
 	void SetControlledValue();
 	void GetCurrent();
@@ -177,6 +177,7 @@ public:
 	ParameterControl(const std::string& x_name, const std::string& x_description);
 	~ParameterControl();
 	void SetParameterStructure(ParameterStructure& rx_param);
+	void CleanParameterStructure();
 
 private:
 	ParameterStructure* mp_param;

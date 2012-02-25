@@ -62,7 +62,7 @@ public:
 		m_id(x_id),
 		m_name(x_name),
 		m_confSource(PARAMCONF_UNSET),
-		m_description(x_description){};
+		m_description(x_description){}
 		
 	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) = 0;
 	//virtual void SetValue(const void* x_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN) = 0;
