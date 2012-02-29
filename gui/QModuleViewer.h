@@ -85,8 +85,8 @@ private:
 	cv::Mat * m_img_tmp2;
 
 public slots:
-	void updateModule(int x_index);
-	void updateStreamOrControl(int x_index);
+	void updateModuleNb(int x_index);
+	void updateStreamOrControlNb(int x_index);
 	void updateModule(Module * x_module);
 	void updateStream(Stream * x_outputStream);
 	void updateControl(ParameterControl * x_control);

@@ -24,12 +24,13 @@ set(markus_SRCS
 main.cpp
 )
 
+
 add_subdirectory(bulk)
 add_subdirectory(gui)
 add_subdirectory(modules)
 add_subdirectory(tools)
 
-qt4_automoc(${markus_SRCS})
+
 add_executable(markus ${markus_SRCS})
 target_link_libraries(markus ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} bulk gui modules tools ${OpenCV_LIBS} tinyxml bulk)
 

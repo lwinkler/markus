@@ -122,8 +122,8 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	//update();
 	m_image = QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
 	
-	connect(mp_comboModules, SIGNAL(activated(int)), this, SLOT(updateModule(int) ));
-	connect(mp_comboStreams, SIGNAL(activated(int)), this, SLOT(updateStreamOrControl(int)));
+	connect(mp_comboModules, SIGNAL(activated(int)), this, SLOT(updateModuleNb(int) ));
+	connect(mp_comboStreams, SIGNAL(activated(int)), this, SLOT(updateStreamOrControlNb(int)));
 	connect(mp_buttonGetCurrentControl, SIGNAL(pressed()), this, SLOT(getCurrentControl(void)));
 	connect(mp_buttonGetDefaultControl, SIGNAL(pressed()), this, SLOT(getDefaultControl(void)));
 	connect(mp_buttonSetControl, SIGNAL(pressed()), this, SLOT(SetControlledValue(void)));
@@ -236,7 +236,7 @@ void QModuleViewer::updateModule(Module * x_module)
 	updateStream(*(m_currentModule->GetOutputStreamList().begin()));
 }
 
-void QModuleViewer::updateModule(int x_index)
+void QModuleViewer::updateModuleNb(int x_index)
 {
 	std::vector<Module*>::const_iterator it = m_manager->GetModuleList().begin();
 	
@@ -246,7 +246,7 @@ void QModuleViewer::updateModule(int x_index)
 	updateModule(*it);
 }
 
-void QModuleViewer::updateStreamOrControl(int x_index)
+void QModuleViewer::updateStreamOrControlNb(int x_index)
 {
 	unsigned int cpt = static_cast<unsigned int>(x_index);
 	if(cpt < m_currentModule->GetOutputStreamList().size())
