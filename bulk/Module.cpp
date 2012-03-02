@@ -74,7 +74,7 @@ Module::~Module()
 	delete(m_moduleTimer);
 }
 
-void Module::Process(double x_timeCount) // TODO remove param ??
+void Module::Process(double x_timeCount)
 {
 	try
 	{

@@ -118,49 +118,43 @@ void adjust(const Mat* im_in, Mat* im_out, Mat*& tmp1, Mat*& tmp2)
 		}
 		adjustSize(im_in, tmp1);
 		adjustChannels(tmp1, im_out);
-	}
-	else if(im_in->depth() == CV_8U && im_out->depth() == CV_32F) 
-	{
-		if(tmp1==NULL)
-		{
-			//cout<<"create image in adjust IPL_DEPTH_32F tmp1"<<endl;
-			tmp1 = new Mat( cvSize(im_out->cols, im_out->rows), CV_MAKE_TYPE(CV_8U, im_in->channels()));
-		}
-		if(tmp2==NULL)
-		{
-			//cout<<"create image in adjust IPL_DEPTH_32F tmp2"<<endl;
-			tmp2 = new Mat( cvSize(im_out->cols, im_out->rows), CV_MAKE_TYPE(CV_8U, im_out->channels()));
-		}
-		adjustSize(im_in, tmp1);
-		adjustChannels(tmp1, tmp2);
-		//convertByte2Float(tmp2, im_out);
-		tmp2->convertTo(*im_out, im_out->type(), 1.0 / 255);
-	}
-	else if(im_in->depth() == CV_32F && im_out->depth() == CV_8U) 
-	{
-		if(tmp1==NULL)
-		{
-			//cout<<"create image in adjust IPL_DEPTH_32F tmp1"<<endl;
-			tmp1 = new Mat( cvSize(im_out->cols, im_out->rows), CV_MAKE_TYPE(CV_32F, im_in->channels()));
-		}
-		if(tmp2==NULL)
-		{
-			//cout<<"create image in adjust IPL_DEPTH_32F tmp2"<<endl;
-			tmp2 = new Mat( cvSize(im_out->cols, im_out->rows), CV_MAKE_TYPE(CV_32F, im_out->channels()));
-		}
-		adjustSize(im_in, tmp1);		
-		adjustChannels(tmp1, tmp2);
 
-		//convertFloat2Byte(tmp2, im_out);		
-		tmp2->convertTo(*im_out, im_out->type(), 255);
 	}
 	else
 	{
-		printf("Cannot convert from %d to %d\n", im_in->depth(), im_out->depth());
-		//throw(string("Error in adjust : depth ")); 
-		assert(false);
+		if(tmp1==NULL)
+		{
+			//cout<<"create image in adjust IPL_DEPTH_32F tmp1"<<endl;
+			tmp1 = new Mat( cvSize(im_out->cols, im_out->rows), im_in->type());
+		}
+		if(tmp2==NULL)
+		{
+			//cout<<"create image in adjust IPL_DEPTH_32F tmp2"<<endl;
+			tmp2 = new Mat( cvSize(im_out->cols, im_out->rows), CV_MAKE_TYPE(im_in->depth(), im_out->channels()));
+		}
+
+		if(im_in->depth() == CV_8U && im_out->depth() == CV_32F)
+		{
+			adjustSize(im_in, tmp1);
+			adjustChannels(tmp1, tmp2);
+			//convertByte2Float(tmp2, im_out);
+			tmp2->convertTo(*im_out, im_out->type(), 1.0 / 255);
+		}
+		else if(im_in->depth() == CV_32F && im_out->depth() == CV_8U)
+		{
+			adjustSize(im_in, tmp1);
+			adjustChannels(tmp1, tmp2);
+
+			//convertFloat2Byte(tmp2, im_out);
+			tmp2->convertTo(*im_out, im_out->type(), 255);
+		}
+		else
+		{
+			printf("Cannot convert from %d to %d\n", im_in->depth(), im_out->depth());
+			//throw(string("Error in adjust : depth "));
+			assert(false);
+		}
 	}
-	// TODO : maybe use cvConvertScale(tmp2,im_out,255,0);
 }
 
 /* Set the image to the right number of channels */

@@ -193,9 +193,6 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 		m_img_original->setTo(cvScalar(0,0,0));
 		if(m_img_output == NULL)
 			m_img_output = new Mat( cvSize(m_outputWidth, m_outputHeight), CV_8UC3);
-		// Write output to screen
-		// TODO : Copy below
-		//cout<<"Render "<<m_currentStream->GetInputWidth()<<" to "<<m_img_original->width<<endl;
 		
 		m_currentStream->RenderTo(m_img_original);
 		

@@ -171,10 +171,11 @@ void Manager::Process()
 	
 	try
 	{
+		/*
 		for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		{
 			(*it)->Process(timecount);
-		}
+		}*/
 	}
 	catch(cv::Exception& e)
 	{
