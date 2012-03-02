@@ -29,21 +29,21 @@ Feature::Feature(double x_value, double x_variance)
 	//sprintf(m_name,"%s", x_name);
 	//printf("name %s %s\n",x_name, m_name);
 	m_value = x_value;
-	m_variance = 0.1;
+	m_sqVariance = 0.01;
 }
 
 Feature::Feature(const Feature& f)
 {
 	//strcpy(m_name, f.GetName());
 	m_value=f.GetValue();
-	m_variance = f.GetVariance();
+	m_sqVariance = f.GetSqVariance();
 };
 
 Feature&  Feature::operator = (const Feature& f)
 {
 	//strcpy(m_name, f.GetName());
 	m_value=f.GetValue();
-	m_variance = f.GetVariance();
+	m_sqVariance = f.GetSqVariance();
 
 	return *this;
 };

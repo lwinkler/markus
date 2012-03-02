@@ -143,7 +143,8 @@ QModuleViewer::~QModuleViewer(void)
 	delete mp_gbSettings;
 	if(mp_gbControls != NULL) delete mp_gbControls;
 	if(mp_gbButtons != NULL) delete mp_gbButtons;
-	static_cast<ParameterControl*>(m_currentControl)->CleanParameterStructure(); // TODO avoid static cast
+	
+	//m_currentControl->Destroy();
 }
 
 void QModuleViewer::resizeEvent(QResizeEvent * e)
@@ -204,12 +205,6 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 		
 		QPainter painter(this);
 		painter.drawImage(QRect(m_offsetX, m_offsetY, m_image.width(), m_image.height()), m_image);
-	}
-	else	
-	{
-		if(mp_gbControls == NULL)
-		{
-		}
 	}
 }
 

@@ -104,7 +104,7 @@ double Template::CompareWithObject(const Object& x_reg) const
 		
 		//cout<<"temp val ="<<m_feats[i].GetValue()<<" region val="<<x_reg.GetFeatures()[i].GetValue()<<" temp var="<<m_feats[i].GetVariance()<<endl;
 		sum += POW2(m_feats[i].GetValue() - x_reg.GetFeatures()[i].GetValue()) 
-			/ POW2(m_feats[i].GetVariance());
+			/ POW2(m_feats[i].GetSqVariance());
 	}
 	return sqrt(sum) / m_feats.size();
 }
@@ -135,7 +135,7 @@ void Template::UpdateFeatures()
 		//cout<<"UpdateFeatures : "<<m_feats[i].GetValue()<<"->"<<mean<<endl;
 		//cout<<"UpdateFeatures : "<<m_feats[i].GetVariance()<<"->"<<sqrt(sqstdev)<<endl;
 		m_feats[i].SetValue(mean);
-		m_feats[i].SetVariance(sqstdev<0.01 ? 0.01 : sqrt(sqstdev)); /// !!!! TODO ? Faster if left squared
+		m_feats[i].SetSqVariance(sqstdev<0.01 ? 0.01 : sqstdev);
 	}
 	
 }

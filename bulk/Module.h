@@ -88,7 +88,9 @@ public:
 	void Export(std::ostream& rx_os, int x_indentation);
 	Stream * GetInputStreamById(int x_id) const;
 	Stream * GetOutputStreamById(int x_id) const;
-	QReadWriteLock m_lock;
+	inline void LockForRead(){m_lock.lockForRead();};
+	inline void LockForWrite(){m_lock.lockForWrite();};
+	inline void Unlock(){m_lock.unlock();};
 	
 protected:
 	long long m_timerConvertion;
@@ -109,6 +111,7 @@ protected:
 	Module * m_modulePreceeding;
 	std::vector<Module *> m_modulesDepending;
 	QModuleTimer * m_moduleTimer;
+	QReadWriteLock m_lock;
 };
 
 #endif

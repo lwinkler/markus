@@ -55,8 +55,8 @@ public:
 	virtual void Connect(Stream * x_stream);
 	virtual void ConvertInput() = 0;
 	void Export(std::ostream& rx_os, int x_indentation, bool x_isInput);
-	inline void LockForRead(){mr_module.m_lock.lockForRead();}
-	inline void UnLock(){mr_module.m_lock.unlock();}
+	inline void LockModuleForRead(){mr_module.LockForRead();}
+	inline void UnLockModule(){mr_module.Unlock();}
 	inline bool IsConnected() const {return m_connected != NULL;}
 	inline Module& RefModule(){return mr_module;}
 	inline Stream& RefConnected(){return *m_connected;}

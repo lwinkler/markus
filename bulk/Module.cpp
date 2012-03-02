@@ -84,6 +84,8 @@ void Module::Process(double x_timeCount) // TODO remove param ??
 		m_processingTime += x_timeCount;
 #endif
 		{
+			m_lock.lockForRead();
+			
 			Timer ti;
 
 			// Read and convert inputs
@@ -92,10 +94,10 @@ void Module::Process(double x_timeCount) // TODO remove param ??
 				for(vector<Stream*>::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
 				{
 					Timer ti2;
-					(*it)->LockForRead();
+					(*it)->LockModuleForRead();
 					m_timerWaiting += ti2.GetMSecLong();
 					(*it)->ConvertInput();
-					(*it)->UnLock();
+					(*it)->UnLockModule();
 				}
 			}
 			m_timerConvertion 	+= ti.GetMSecLong();
@@ -111,6 +113,7 @@ void Module::Process(double x_timeCount) // TODO remove param ??
 
 			m_processingTime = 0;
 			m_countProcessedFrames++;
+			m_lock.unlock();
 		}
 	}
 	catch(cv::Exception& e)

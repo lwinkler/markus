@@ -26,9 +26,9 @@
 
 #include <QTimer>
 
-using namespace std; // TODO : markus namespace ??
+using namespace std;
 
-QModuleTimer::QModuleTimer(Module& x_module, double x_fps) // TODO : avoid param fps
+QModuleTimer::QModuleTimer(Module& x_module, double x_fps)
 : m_module(x_module)
 {
 	Reset(x_fps);

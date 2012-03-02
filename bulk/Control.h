@@ -163,6 +163,7 @@ public:
 	void SetControlledValue();
 	void GetCurrent();
 	void GetDefault();
+	virtual void Destroy(){};
 
 protected:
 	std::string m_name;
@@ -178,7 +179,7 @@ public:
 	~ParameterControl();
 	void SetParameterStructure(ParameterStructure& rx_param);
 	void CleanParameterStructure();
-
+	virtual void Destroy(){CleanParameterStructure();};
 private:
 	ParameterStructure* mp_param;
 };

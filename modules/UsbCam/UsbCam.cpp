@@ -78,7 +78,6 @@ void UsbCam::Capture()
 	//int posFrames    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_FRAMES);
 	//double posRatio  =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_AVI_RATIO);
 
-	m_lock.lockForWrite(); // TODO how to use locks in modules
 	cvGrabFrame(m_capture);
 	//m_input = cvRetrieveFrame(m_capture);           // retrieve the captured frame
 
@@ -95,5 +94,4 @@ void UsbCam::Capture()
 	adjustSize(tmp, m_output);
 	
 	delete(tmp);
-	m_lock.unlock();
 }
