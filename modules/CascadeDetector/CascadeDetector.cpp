@@ -91,7 +91,6 @@ void CascadeDetector::NormalProcess()
 
 	for(vector<Object>::const_iterator it = m_detectedObjects.begin() ; it != m_detectedObjects.end() ; it++)
 	{
-		// TODO : See if we move this to execute it once only
 		Point p1(it->m_posX - it->m_width / 2, it->m_posY - it->m_width / 2);
 		Point p2(it->m_posX + it->m_width / 2, it->m_posY + it->m_width / 2);
 		

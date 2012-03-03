@@ -243,15 +243,11 @@ void ParameterEnum::SetDefault(const std::string& rx_value)
 
 bool ParameterEnum::CheckRange() const
 {
-	//for(std::map<std::string, int>::const_iterator it = m_map_enum.begin() ; it != m_map_enum.end() ; it++)
-		return true;
-	// TODO : Check range !!!
-	return false;
+	return true;
 }
 
 void ParameterEnum::Print() const
 {
 	std::cout<<m_name<<" = "<<Int2Str(GetValue())<<" ["<<GetValue()<<"] ("<<configType[m_confSource]<<"); ";
-
 }
 

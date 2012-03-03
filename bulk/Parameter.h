@@ -50,6 +50,7 @@ enum ParameterConfigType
 	PARAMCONF_UNKNOWN,
 	PARAMCONF_SIZE
 };
+
 static const char configType[PARAMCONF_SIZE][16] = {"unset", "def", "xml", "gui", "unk"};
 
 
@@ -228,7 +229,7 @@ public:
 	void SetValue(const std::string& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/);
 	void SetValue(int rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/);
 	void SetDefault(const std::string& rx_value);
-	inline int GetDefault() const {return m_default;};
+	inline int GetDefault() const {return m_default;}
 	inline int GetValue() const{return *mp_value;}
 	virtual bool CheckRange() const;
 	virtual void Print() const;
@@ -284,6 +285,7 @@ private:
 };
 
 /// Represents a set of parameters for a configurable objects
+
 class ParameterStructure
 {
 public:

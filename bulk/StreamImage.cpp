@@ -34,6 +34,7 @@ StreamImage::StreamImage(int x_id, const std::string& x_name, Mat* x_image, Modu
 {
 	m_img_tmp1 = NULL; // To convert the input
 	m_img_tmp2 = NULL;
+	m_img_input = NULL;
 }
 
 
@@ -47,7 +48,7 @@ void StreamImage::ConvertInput()
 {
 	if(m_connected != NULL)
 	{
-		adjust((dynamic_cast<const StreamImage*>(m_connected))->GetImageRef(), m_image, m_img_tmp1, m_img_tmp2); // TODO : See if we can avoid to cast each time
+		adjust(m_img_input, m_image, m_img_tmp1, m_img_tmp2);
 	}
 	else
 	{
@@ -61,4 +62,8 @@ void StreamImage::RenderTo(Mat * xp_output) const
 	m_image->copyTo(*xp_output);
 }
 
-
+void StreamImage::Connect(Stream* x_stream)
+{
+	m_connected = x_stream;
+	m_img_input = dynamic_cast<const StreamImage*>(m_connected)->GetImageRef();
+}
