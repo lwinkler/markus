@@ -190,7 +190,7 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 		// We paint the image from the stream
 		if(m_img_original == NULL)
 			m_img_original = new Mat( cvSize(m_currentStream->GetInputWidth(), m_currentStream->GetInputHeight()), CV_8UC3);
-		m_img_original->setTo(cvScalar(0,0,0));
+		m_img_original->setTo(0);
 		if(m_img_output == NULL)
 			m_img_output = new Mat( cvSize(m_outputWidth, m_outputHeight), CV_8UC3);
 		

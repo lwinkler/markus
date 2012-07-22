@@ -82,7 +82,7 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 {
 	// object that will contain blobs of inputImage
 	CBlobResult blobs;
-	m_blobsImg->setTo(cvScalar(0,0,0));
+	m_blobsImg->setTo(0);
 	m_regions.clear();
 	
 	// Extract the blobs using a threshold of 100 in the image

@@ -52,7 +52,7 @@ void StreamImage::ConvertInput()
 	}
 	else
 	{
-		m_image->setTo(cvScalar(0,0,0));
+		m_image->setTo(0);
 	}
 }
 

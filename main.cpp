@@ -60,6 +60,7 @@ int main(int argc, char** argv)
 		QApplication app(argc, argv);
 		ConfigReader mainConfig(configFile);
 		ConfigReader appConfig = mainConfig.SubConfig("application");
+		assert(!appConfig.IsEmpty());
 		Manager manager(appConfig);
 
 		if(describe) 
