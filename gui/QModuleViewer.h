@@ -70,7 +70,7 @@ private:
 
 	QGroupBox   * mp_gbSettings;
 	QScrollArea * mp_gbControls;
-	QListWidget * mp_gbButtons;
+	QGroupBox   * mp_gbButtons;
 	QComboBox   * mp_comboModules;
 	QComboBox   * mp_comboStreams;
 	QPushButton * mp_buttonGetCurrentControl;

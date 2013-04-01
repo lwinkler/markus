@@ -73,8 +73,8 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	mp_comboStreams 	= new QComboBox();
 	mp_layout 		= new QBoxLayout(QBoxLayout::TopToBottom);
 	mp_gbSettings 		= new QGroupBox(tr("Display options"));
-	mp_gbControls		= new QScrollArea;;
-	mp_gbButtons		= new QListWidget;;
+	mp_gbControls		= new QScrollArea;
+	mp_gbButtons		= new QGroupBox(tr("Parameter options"));
 
 	QGridLayout * layoutCombos = new QGridLayout;
 
@@ -101,7 +101,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	mp_gbSettings->setLayout(layoutCombos);
 	mp_gbSettings->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 	mp_layout->addWidget(mp_gbSettings, 0);
-	mp_layout->addWidget(new QWidget, 1); // this is only for alignment
+	//mp_layout->addWidget(new QWidget, 1); // this is only for alignment
 	setLayout(mp_layout);
 	
 	// Set context menu
@@ -218,7 +218,7 @@ void QModuleViewer::updateModule(Module * x_module)
 	{
 		mp_comboStreams->addItem((*it)->GetName().c_str(), cpt++);
 	}
-	// Add a fake streams for control
+	// Add a fake stream for control
 	for(std::vector<ParameterControl*>::const_iterator it = m_currentModule->GetControlList().begin(); it != m_currentModule->GetControlList().end(); it++)
 	{
 		mp_comboStreams->addItem((*it)->GetName().c_str(), cpt++);
@@ -295,6 +295,7 @@ void QModuleViewer::updateControl(ParameterControl* x_control)
 	/// Create new control screen
 	// string str = m_currentModule->GetName() + ", " + m_currentControl->GetName();
 	//mp_gbControls = new QScrollArea;//(str.c_str());
+	mp_gbControls->setWidgetResizable(true);
 	QGridLayout * vbox = new QGridLayout;
 
 	int cpt = 0;
@@ -305,14 +306,19 @@ void QModuleViewer::updateControl(ParameterControl* x_control)
 		vbox->addWidget((*it)->RefWidget(), cpt, 1);
 		cpt++;
 	}
-	vbox->setColumnStretch(1, 2);
+	//vbox->setColumnStretch(1, 2);
+	
 
-	mp_gbControls->setLayout(vbox);
+	QWidget *viewport = new QWidget;
+	viewport->setLayout(vbox);
+	viewport->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+
+	mp_gbControls->setWidget(viewport);
 	mp_layout->addWidget(mp_gbControls, 1);
 
 	//mp_gbButtons = new QListWidget;
 
-	QBoxLayout * buttonLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+	QHBoxLayout * buttonLayout = new QHBoxLayout;
 	buttonLayout->addWidget(mp_buttonGetCurrentControl);
 	buttonLayout->addWidget(mp_buttonGetDefaultControl);
 	buttonLayout->addWidget(mp_buttonSetControl);

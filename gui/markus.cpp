@@ -40,6 +40,9 @@
 
 using namespace std;
 
+//---------------------------------------------------------------------------------------------------- 
+// Main constructor
+//---------------------------------------------------------------------------------------------------- 
 
 markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 	: m_configReader(rx_configReader),  m_manager(rx_manager)
@@ -96,6 +99,9 @@ QLabel *markus::createLabel(const QString &text)
 	return label;
 }
 
+//---------------------------------------------------------------------------------------------------- 
+// Print about text
+//---------------------------------------------------------------------------------------------------- 
 void markus::about()
 {
 	QMessageBox::about(this, tr("About Image Viewer"),
@@ -105,6 +111,11 @@ void markus::about()
 				    "<p><b>Author : Laurent Winkler</b></p>"));
 }
 
+
+
+//---------------------------------------------------------------------------------------------------- 
+// Create actions for menus
+//---------------------------------------------------------------------------------------------------- 
 void markus::createActions()
 {
 	exitAct = new QAction(tr("E&xit"), this);
@@ -134,6 +145,9 @@ void markus::createActions()
 	connect(view4x4Act, SIGNAL(triggered()), this, SLOT(view4x4()));
 }
 
+//---------------------------------------------------------------------------------------------------- 
+// Create the menus themselves
+//---------------------------------------------------------------------------------------------------- 
 void markus::createMenus()
 {
 	fileMenu = new QMenu(tr("&File"), this);

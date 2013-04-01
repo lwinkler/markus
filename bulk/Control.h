@@ -84,7 +84,7 @@ protected:
 	ParameterDouble & m_param;
 };
 
-/// Control class for a double parameter
+/// Control class for a float parameter
 class ControllerFloat : public Controller
 {
 public:
