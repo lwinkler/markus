@@ -21,6 +21,11 @@
 		  <param name="class">CascadeDetector</param>
 	  </parameters>
   </module>
+  <module name="TemporalDifferencing">
+	  <parameters>
+		  <param name="class">TemporalDifferencing</param>
+	  </parameters>
+  </module>
   <module name="BackgroundExtractor">
 	  <parameters>
 		  <param name="class">BackgroundExtractor</param>
@@ -36,10 +41,10 @@
 		  <param name="class">BlobSegmenter</param>
 	  </parameters>
   </module>
-  <module name="VideoOutput">
+  <!--<module name="VideoOutput">
 	  <parameters>
 		  <param name="class">VideoOutput</param>
 	  </parameters>
-  </module>
+  </module>-->
 </application>
 

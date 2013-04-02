@@ -8,5 +8,6 @@ SimpleTracker/SimpleTracker.cpp
 BlobSegmenter/BlobSegmenter.cpp
 CascadeDetector/CascadeDetector.cpp
 VideoOutput/VideoOutput.cpp
+TemporalDifferencing/TemporalDifferencing.cpp
 )
 

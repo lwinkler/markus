@@ -3,6 +3,7 @@
 
 #include "SlitCam/SlitCam.h"
 #include "BackgroundExtractor/BackgroundExtractor.h"
+#include "TemporalDifferencing/TemporalDifferencing.h"
 #include "CascadeDetector/CascadeDetector.h"
 #include "SimpleTracker/SimpleTracker.h"
 #include "BlobSegmenter/BlobSegmenter.h"
@@ -25,6 +26,10 @@ Module * createNewModule(const ConfigReader& rx_configReader)
 	else if(moduleClass.compare("BackgroundExtractor") == 0)
 	{
 		tmp = new BackgroundExtractor(rx_configReader);
+	}
+	else if(moduleClass.compare("TemporalDifferencing") == 0)
+	{
+		tmp = new TemporalDifferencing(rx_configReader);
 	}
 	else if(moduleClass.compare("BlobSegmenter") == 0)
 	{
