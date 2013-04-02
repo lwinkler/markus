@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module name="VideoFileReader" description="Input from a video file.">
+	<parameters>
+		<param name="class">
+			<type>string</type>
+			<value default="">VideoFileReader</value>
+			<description>Class of the module (define the module's function)</description>
+		</param>
+		<param name="width">
+			<type>int</type>
+			<value min="1" max="6400" default="640">640</value>
+			<description>Width of the input</description>
+		</param>
+		<param name="height">
+			<type>int</type>
+			<value min="1" max="4800" default="480">480</value>
+			<description>Height of the input</description>
+		</param>
+		<param name="type">
+			<type>image type</type>
+			<value default="CV_8UC1">CV_8UC1</value>
+			<description>Format of the input image</description>
+		</param>
+		<param name="fps">
+			<type>double</type>
+			<value min="0" max="1000" default="10">10</value>
+			<description>Frames per seconds (processing speed)</description>
+		</param>
+		<param name="file">
+			<type>string</type>
+			<value default="input.avi">input/test.avi</value>
+			<description>Name of the video file to read, with path</description>
+		</param>
+	</parameters>
+	<inputs>
+	</inputs>
+	<outputs>
+		<output id="0">
+			<type>Image</type>
+			<name>input</name>
+			<description>Video stream</description>
+		</output>
+	</outputs>
+</module>

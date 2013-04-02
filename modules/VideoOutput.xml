@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module name="VideoOutput" description="Output video stream with additional object streams.">
+	<parameters>
+		<param name="class">
+			<type>string</type>
+			<value default="">VideoOutput</value>
+			<description>Class of the module (define the module's function)</description>
+		</param>
+		<param name="width">
+			<type>int</type>
+			<value min="1" max="6400" default="640">640</value>
+			<description>Width of the input</description>
+		</param>
+		<param name="height">
+			<type>int</type>
+			<value min="1" max="4800" default="480">480</value>
+			<description>Height of the input</description>
+		</param>
+		<param name="type">
+			<type>image type</type>
+			<value default="CV_8UC3">CV_8UC3</value>
+			<description>Format of the input image</description>
+		</param>
+		<param name="fps">
+			<type>double</type>
+			<value min="0" max="1000" default="10">10</value>
+			<description>Frames per seconds (processing speed)</description>
+		</param>
+	</parameters>
+	<inputs>
+		<input id="0">
+			<type>Image</type>
+			<name>input</name>
+			<description>Input video stream</description>
+		</input>
+		<input id="1">
+			<type>Objects</type>
+			<name>input</name>
+			<description>Object stream 1</description>
+		</input>
+		<input id="2">
+			<type>Objects</type>
+			<name>input</name>
+			<description>Object stream 1</description>
+		</input>
+		<input id="3">
+			<type>Objects</type>
+			<name>input</name>
+			<description>Object stream 1</description>
+		</input>
+		<input id="4">
+			<type>Objects</type>
+			<name>input</name>
+			<description>Object stream 1</description>
+		</input>
+		<input id="5">
+			<type>Objects</type>
+			<name>input</name>
+			<description>Object stream 1</description>
+		</input>
+	</inputs>
+	<outputs>
+		<output id="0">
+			<type>Image</type>
+			<name>output</name>
+			<description>Output video stream</description>
+		</output>
+	</outputs>
+</module>

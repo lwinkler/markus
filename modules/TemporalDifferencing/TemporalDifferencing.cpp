@@ -47,7 +47,7 @@ TemporalDifferencing::TemporalDifferencing(const ConfigReader& x_configReader) :
 	m_temporalDiff 		= new Mat(cvSize(m_param.width, m_param.height), CV_8UC1);
 	
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,             "Video input"));
-	m_outputStreams.push_back(new StreamImage(0, "temp_diff", m_temporalDiff, *this, "Temporal diference"));
+	m_outputStreams.push_back(new StreamImage(0, "temp_diff", m_temporalDiff, *this, "Temporal difference"));
 		
 	Reset();
 }

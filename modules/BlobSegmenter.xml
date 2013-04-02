@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module name="BlobSegmenter" description="Segments the binary blobs.">
+	<parameters>
+		<param name="class">
+			<type>string</type>
+			<value default="">BlobSegmenter</value>
+			<description>Class of the module (define the module's function)</description>
+		</param>
+		<param name="width">
+			<type>int</type>
+			<value min="1" max="6400" default="640">640</value>
+			<description>Width of the input</description>
+		</param>
+		<param name="height">
+			<type>int</type>
+			<value min="1" max="4800" default="480">480</value>
+			<description>Height of the input</description>
+		</param>
+		<param name="type">
+			<type>image type</type>
+			<value default="CV_8UC1">CV_8UC1</value>
+			<description>Format of the input image</description>
+		</param>
+		<param name="fps">
+			<type>double</type>
+			<value min="0" max="1000" default="10">10</value>
+			<description>Frames per seconds (processing speed)</description>
+		</param>
+		<param name="objectLabel">
+			<type>string</type>
+			<value default="object">object</value>
+			<description>Label to be applied to the objects detected by the cascade filter (e.g. face)</description>
+		</param>
+		<param name="minWidth">
+			<type>int</type>
+			<value min="0" max="6400" default="0">4</value>
+			<description>Minimal width of an object to segment.</description>
+		</param>
+		<param name="minHeight">
+			<type>int</type>
+			<value min="0" max="4800" default="0">4</value>
+			<description>Minimal height of an object to segment.</description>
+		</param>
+	</parameters>
+	<inputs>
+		<input id="0">
+			<type>Image</type>
+			<name>input</name>
+			<description>Input binary stream</description>
+		</input>
+	</inputs>
+	<outputs>
+		<output id="0">
+			<type>Objects</type>
+			<name>segmented</name>
+			<description>Segmented objects</description>
+		</output>
+	</outputs>
+</module>

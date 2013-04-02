@@ -1,5 +1,5 @@
 <application name="ddd2" description="" cyclelimit="-1" gui="">
-  <module name="UsbCam">
+  <module name="UsbCam" machineurl="localhost" id="0">
 	  <parameters>
 		  <param name="class">UsbCam</param>
 	  </parameters>
@@ -10,21 +10,30 @@
 		  <param name="file">input/test.avi</param>
 	  </parameters>
   </module>
-  <module name="SlitCamera">
+  <module name="SlitCamera" machineurl="localhost" id="1">
 	  <parameters>
 		  <param name="class">SlitCamera</param>
-		  <param name="type">CV_8UC3</param>
-	  </parameters>
+	</parameters>
+    <inputs>
+      <input id="0" />
+    </inputs>
   </module>
+  <!--
   <module name="CascadeDetector">
 	  <parameters>
 		  <param name="class">CascadeDetector</param>
 	  </parameters>
+    <inputs>
+      <input id="0" />
+    </inputs>
   </module>
   <module name="TemporalDifferencing">
 	  <parameters>
 		  <param name="class">TemporalDifferencing</param>
 	  </parameters>
+    <inputs>
+      <input id="0" />
+    </inputs>
   </module>
   <module name="BackgroundExtractor">
 	  <parameters>
@@ -40,7 +49,7 @@
 	  <parameters>
 		  <param name="class">BlobSegmenter</param>
 	  </parameters>
-  </module>
+  </module>-->
   <!--<module name="VideoOutput">
 	  <parameters>
 		  <param name="class">VideoOutput</param>
