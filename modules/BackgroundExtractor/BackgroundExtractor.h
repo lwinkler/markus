@@ -25,25 +25,27 @@
 #define BACKGROUNDEXTRACTOR_H
 
 #include "Module.h"
-#include "Detector.h"
 
 class ConfigReader;
+
 
 class BackgroundExtractorParameterStructure : public ModuleParameterStructure
 {
 public:
 	BackgroundExtractorParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-		//m_list.push_back(new ParameterInt(0, "input_blur_size",	1, 	PARAM_INT, 1, 7,	&detector.inputBlurSize,	"Strength of the blur applied to the input"));
-		m_list.push_back(new ParameterFloat(0, "background_alpha",	0.02, 	PARAM_FLOAT, 0, 1,	&detector.backgroundAlpha,	"Defines the speed at which the background adapts"));
-		m_list.push_back(new ParameterFloat(0, "foreground_thres", 	0.2, 	PARAM_FLOAT, 0, 1,	&detector.foregroundThres,	"Threshold to accept a pixel as foreground"));
-		m_list.push_back(new ParameterInt(0, "foreground_filter_size", 3, 	PARAM_INT, 1, 7,	&detector.foregroundFilterSize,	"Size of the filter to remove noise"));
+		m_list.push_back(new ParameterFloat(0, "background_alpha",	0.02, 	PARAM_FLOAT, 0, 1,	&backgroundAlpha,	"Defines the speed at which the background adapts"));
+		m_list.push_back(new ParameterFloat(0, "foreground_thres", 	0.2, 	PARAM_FLOAT, 0, 1,	&foregroundThres,	"Threshold to accept a pixel as foreground"));
+		m_list.push_back(new ParameterInt(0, "foreground_filter_size", 3, 	PARAM_INT, 1, 7,	&foregroundFilterSize,	"Size of the filter to remove noise"));
 
 		RefParameterByName("type").SetDefault("CV_32FC3");
 
 		ParameterStructure::Init();
 	};
-	DetectorParameter detector;
+	float backgroundAlpha;
+	float foregroundThres;
+	int foregroundFilterSize;
+	int backgroundDepth;
 };
 
 class BackgroundExtractor : public Module
@@ -59,11 +61,32 @@ private:
 	BackgroundExtractorParameterStructure m_param;
 	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
 
+	// Background subtraction	
+	cv::Mat* m_foreground;
+	cv::Mat* m_foreground_rff;
+	cv::Mat* m_background;
+	// Temporal differencing
+	cv::Mat* m_lastImg;
+	cv::Mat* m_temporalDiff;
+	//cv::Mat* m_blobsImg;
+	cv::Mat* m_foreground_tmp1;
+	cv::Mat* m_foreground_tmp2;
+	cv::Mat* m_elementRemoveNoiseForeground;
+	bool m_emptyBackgroundSubtraction;
+	bool m_emptyTemporalDiff;
+	void UpdateBackground(cv::Mat* img);
+	void UpdateBackgroundMask(cv::Mat* img, cv::Mat* x_mask);
+	void ExtractForeground(cv::Mat* img);
+	void ExtractForegroundMax(cv::Mat* img);
+	void RemoveFalseForegroundNeigh();
+	void RemoveNoiseForeground();
+
+	void TemporalDiff(cv::Mat* img);
+
 protected:
 	cv::Mat * m_input;
 	cv::Mat * m_output;
 	
-	Detector detect;
 	static const char * m_type;
 };
 

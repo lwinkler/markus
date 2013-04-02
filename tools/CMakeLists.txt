@@ -7,6 +7,5 @@ cvblobs/BlobResult.cpp
 cvblobs/blob.cpp
 cvblobs/BlobProperties.cpp
 cvblobs/ComponentLabeling.cpp
-Detector.cpp
 )
 
