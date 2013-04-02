@@ -46,8 +46,8 @@ BackgroundExtractor::BackgroundExtractor(const ConfigReader& x_configReader) :
 	m_foreground 		= new Mat(cvSize(m_param.width, m_param.height), CV_8UC1);
 	m_foreground_rff	= new Mat(cvSize(m_param.width, m_param.height), CV_8UC1);
 	m_background 		= new Mat(cvSize(m_param.width, m_param.height), m_param.type);
-	m_lastImg 		= new Mat(cvSize(m_param.width, m_param.height), m_param.type);
-	m_temporalDiff 		= new Mat(cvSize(m_param.width, m_param.height), CV_8UC1);
+	// m_lastImg 		= new Mat(cvSize(m_param.width, m_param.height), m_param.type);
+	//m_temporalDiff 		= new Mat(cvSize(m_param.width, m_param.height), CV_8UC1);
 	m_foreground_tmp1 	= new Mat(cvSize(m_param.width, m_param.height), m_param.type); // TODO : alloc once only
 	m_foreground_tmp2 	= new Mat(cvSize(m_param.width, m_param.height), CV_8UC1); // TODO : alloc once only
 	
@@ -68,8 +68,8 @@ BackgroundExtractor::~BackgroundExtractor(void )
 	delete(m_background);
 	delete(m_foreground);
 	delete(m_foreground_rff);
-	delete(m_lastImg);
-	delete(m_temporalDiff);
+	// delete(m_lastImg);
+	// delete(m_temporalDiff);
 	delete(m_foreground_tmp1);
 	delete(m_foreground_tmp2);
 }
@@ -77,7 +77,7 @@ BackgroundExtractor::~BackgroundExtractor(void )
 void BackgroundExtractor::Reset()
 {
 	Module::Reset();
-	m_emptyTemporalDiff = true;
+	// m_emptyTemporalDiff = true;
 	m_emptyBackgroundSubtraction = true;
 }
 
@@ -90,7 +90,7 @@ void BackgroundExtractor::ProcessFrame()
 	
 	RemoveNoiseForeground();
 
-	TemporalDiff(m_input);
+	// TemporalDiff(m_input);
 };
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -380,7 +380,7 @@ void BackgroundExtractor::RemoveNoiseForeground()
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 /* Temporal differencing  */
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-void BackgroundExtractor::TemporalDiff(Mat* x_img)
+/*void BackgroundExtractor::TemporalDiff(Mat* x_img)
 {
 	if(m_emptyTemporalDiff) 
 	{
@@ -400,5 +400,5 @@ void BackgroundExtractor::TemporalDiff(Mat* x_img)
 
 
 
-}
+}*/
 
