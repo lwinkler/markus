@@ -52,7 +52,7 @@ public:
 	static void  ConvertMat2QImage(const cv::Mat *mat, QImage *qim);
 	static void  ConvertIplImage2QImage(const IplImage *iplImg, QImage *qim);
 private:
-	QBoxLayout * mp_layout;
+	QBoxLayout * mp_mainLayout;
 	
 	QImage m_image;
 	Module * 		m_currentModule;
@@ -68,7 +68,7 @@ private:
 	void paintEvent(QPaintEvent *event);
 	virtual void resizeEvent(QResizeEvent * e);
 
-	QGroupBox   * mp_gbSettings;
+	QGroupBox   * mp_gbCombos;
 	QScrollArea * mp_gbControls;
 	QGroupBox   * mp_gbButtons;
 	QComboBox   * mp_comboModules;
@@ -77,6 +77,7 @@ private:
 	QPushButton * mp_buttonGetDefaultControl;
 	QPushButton * mp_buttonSetControl;
 	QPushButton * mp_buttonResetModule;
+	QWidget     * mp_widEmpty;
 
 	// Images for format conversion
 	cv::Mat * m_img_original;

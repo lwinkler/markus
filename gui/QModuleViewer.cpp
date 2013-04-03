@@ -71,10 +71,11 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 		
 	mp_comboModules 	= new QComboBox();
 	mp_comboStreams 	= new QComboBox();
-	mp_layout 		= new QBoxLayout(QBoxLayout::TopToBottom);
-	mp_gbSettings 		= new QGroupBox(tr("Display options"));
+	mp_mainLayout 		= new QBoxLayout(QBoxLayout::TopToBottom);
+	mp_gbCombos 		= new QGroupBox(tr("Display options"));
 	mp_gbControls		= new QScrollArea;
 	mp_gbButtons		= new QGroupBox(tr("Parameter options"));
+	mp_widEmpty		= new QWidget();
 
 	QGridLayout * layoutCombos = new QGridLayout;
 
@@ -91,20 +92,34 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	layoutCombos->addWidget(lab2,1,0);
 	this->updateModule(*(x_manager->GetModuleList().begin()));
 	layoutCombos->addWidget(mp_comboStreams,1,1);
+
+	// Create the group with combo menus
+	mp_gbCombos->setLayout(layoutCombos);
+	mp_gbCombos->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 	
-	// Controls
+	// Create the group with control buttons (for settings)
 	mp_buttonGetCurrentControl  = new QPushButton(tr("Get current"));
 	mp_buttonGetDefaultControl  = new QPushButton(tr("Get default"));
 	mp_buttonSetControl         = new QPushButton(tr("Set"));
 	mp_buttonResetModule        = new QPushButton(tr("Reset module"));
-
-	mp_gbSettings->setLayout(layoutCombos);
-	mp_gbSettings->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-	mp_layout->addWidget(mp_gbSettings, 0);
-	//mp_layout->addWidget(new QWidget, 1); // this is only for alignment
-	setLayout(mp_layout);
 	
-	// Set context menu
+
+	// Create the group with settings buttons	
+	QHBoxLayout * buttonLayout = new QHBoxLayout;
+	buttonLayout->addWidget(mp_buttonGetCurrentControl);
+	buttonLayout->addWidget(mp_buttonGetDefaultControl);
+	buttonLayout->addWidget(mp_buttonSetControl);
+	buttonLayout->addWidget(mp_buttonResetModule);
+	mp_gbButtons->setLayout(buttonLayout);
+
+	// add widgets to main layout
+	mp_mainLayout->addWidget(mp_gbCombos, 0);
+	mp_mainLayout->addWidget(mp_gbControls, 0);
+	mp_mainLayout->addWidget(mp_gbButtons, 1);
+	mp_mainLayout->addWidget(mp_widEmpty, 2); // this is only for alignment
+	
+	
+	// Set context menus
 	QAction * actionShowDisplayMenu = new QAction(tr("Show display options"), this);
 	actionShowDisplayMenu->setShortcut(tr("Ctrl+S"));
 	QAction * actionHideDisplayMenu = new QAction(tr("Hide display options"), this);
@@ -121,6 +136,9 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 
 	//update();
 	m_image = QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
+	
+	// set layout to main
+	setLayout(mp_mainLayout);
 	
 	connect(mp_comboModules, SIGNAL(activated(int)), this, SLOT(updateModuleNb(int) ));
 	connect(mp_comboStreams, SIGNAL(activated(int)), this, SLOT(updateStreamOrControlNb(int)));
@@ -139,12 +157,11 @@ QModuleViewer::~QModuleViewer(void)
 	
 	delete mp_comboModules ;
 	delete mp_comboStreams;
-	delete mp_layout;
-	delete mp_gbSettings;
+	delete mp_mainLayout;
+	delete mp_gbCombos;
 	if(mp_gbControls != NULL) delete mp_gbControls;
 	if(mp_gbButtons != NULL) delete mp_gbButtons;
-	
-	//m_currentControl->Destroy();
+	if(mp_widEmpty != NULL) delete mp_widEmpty;
 }
 
 void QModuleViewer::resizeEvent(QResizeEvent * e)
@@ -281,6 +298,7 @@ void QModuleViewer::updateStream(Stream * x_outputStream)
 	{
 		mp_gbControls->hide();
 		mp_gbButtons->hide();
+		//mp_widEmpty->show();
 	}
 }
 
@@ -290,14 +308,11 @@ void QModuleViewer::updateControl(ParameterControl* x_control)
 	m_currentControl = x_control;
 	static_cast<ParameterControl*>(m_currentControl)->SetParameterStructure(m_currentModule->RefParameter());
 
-	//mp_gbSettings->hide();
-
 	/// Create new control screen
-	// string str = m_currentModule->GetName() + ", " + m_currentControl->GetName();
-	//mp_gbControls = new QScrollArea;//(str.c_str());
 	mp_gbControls->setWidgetResizable(true);
 	QGridLayout * vbox = new QGridLayout;
 
+	// Add controls (= parameters)
 	int cpt = 0;
 	for(vector<Controller*>::iterator it = m_currentControl->RefListControllers().begin() ; it != m_currentControl->RefListControllers().end() ; it++)
 	{
@@ -306,26 +321,13 @@ void QModuleViewer::updateControl(ParameterControl* x_control)
 		vbox->addWidget((*it)->RefWidget(), cpt, 1);
 		cpt++;
 	}
-	//vbox->setColumnStretch(1, 2);
-	
 
 	QWidget *viewport = new QWidget;
 	viewport->setLayout(vbox);
 	viewport->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-
 	mp_gbControls->setWidget(viewport);
-	mp_layout->addWidget(mp_gbControls, 1);
 
-	//mp_gbButtons = new QListWidget;
-
-	QHBoxLayout * buttonLayout = new QHBoxLayout;
-	buttonLayout->addWidget(mp_buttonGetCurrentControl);
-	buttonLayout->addWidget(mp_buttonGetDefaultControl);
-	buttonLayout->addWidget(mp_buttonSetControl);
-	buttonLayout->addWidget(mp_buttonResetModule);
-	mp_gbButtons->setLayout(buttonLayout);
-	mp_layout->addWidget(mp_gbButtons, 0);
-
+	//mp_widEmpty->hide();
 	mp_gbControls->show();
 	mp_gbButtons->show();
 }
@@ -361,12 +363,12 @@ void QModuleViewer::getDefaultControl()
 
 void QModuleViewer::showDisplayOptions()
 {
-	mp_gbSettings->show();
+	mp_gbCombos->show();
 }
 
 void QModuleViewer::hideDisplayOptions()
 {
-	mp_gbSettings->hide();
+	mp_gbCombos->hide();
 }
 
 void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qim)
