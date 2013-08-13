@@ -5,14 +5,22 @@ Markus is a program to create video detection applications. Its base philosophy 
 
 Each module implements a simple function (pattern detection, object tracking, background subtraction ...).
 
+Compilation for Linux
+---------------------
+You will need to Install Opencv from sources (preferably). 
+	http://opencv.org/downloads.html
+
+Also Qt4 is needed.
+
 
 To run:
 -------
 
 run with the default configuration as defined by config.xml:
 
-./markus 
+	./markus 
 
 or run any example application present in the project/ folder:
 
-e.g. : ./markus project/FourCascades.xml
+e.g. : 
+	./markus project/FourCascades.xml
