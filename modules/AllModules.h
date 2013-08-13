@@ -9,6 +9,7 @@
 #include "BlobSegmenter/BlobSegmenter.h"
 
 #include "UsbCam/UsbCam.h"
+#include "NetworkCam/NetworkCam.h"
 #include "VideoFileReader/VideoFileReader.h"
 
 #include "VideoOutput/VideoOutput.h"
@@ -46,6 +47,10 @@ Module * createNewModule(const ConfigReader& rx_configReader)
 	else if(moduleClass.compare("UsbCam") == 0)
 	{
 		tmp = new UsbCam(rx_configReader);
+	}
+	else if(moduleClass.compare("NetworkCam") == 0)
+	{
+		tmp = new NetworkCam(rx_configReader);
 	}
 	else if(moduleClass.compare("VideoFileReader") == 0)
 	{

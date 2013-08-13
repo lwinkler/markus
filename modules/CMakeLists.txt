@@ -1,6 +1,7 @@
 
 add_library(modules
 UsbCam/UsbCam.cpp
+NetworkCam/NetworkCam.cpp
 VideoFileReader/VideoFileReader.cpp
 SlitCam/SlitCam.cpp
 BackgroundExtractor/BackgroundExtractor.cpp
