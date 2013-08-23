@@ -31,6 +31,7 @@
 #include "highgui.h"
 */
 using namespace cv;
+using namespace std;
 
 const char * BackgroundSubtractorSimple::m_type = "BackgroundSubtractorSimple";
 
@@ -39,13 +40,13 @@ BackgroundSubtractorSimple::BackgroundSubtractorSimple(const ConfigReader& x_con
 	Module(x_configReader),
 	m_param(x_configReader)
 {
-	m_tmp1 = NULL;
+	m_tmp1 = new Mat();
 	m_tmp2 = NULL;
 	m_description = "Track moving objects on video by using backgroung subtraction.";
 	m_input    = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
-	m_background 		= new Mat(cvSize(m_param.width, m_param.height), CV_32F);
-	m_foreground 		= new Mat(cvSize(m_param.width, m_param.height), CV_8UC1);
-	m_foreground_tmp	= new Mat(cvSize(m_param.width, m_param.height), CV_8UC1);
+	m_background 		= new Mat(cvSize(m_param.width, m_param.height), m_param.type);
+	m_foreground 		= new Mat(cvSize(m_param.width, m_param.height), m_param.type);
+	m_foreground_tmp	= new Mat(cvSize(m_param.width, m_param.height), m_param.type);
 	
 	m_inputStreams.push_back(new StreamImage(0, "input",             m_input, *this,   "Video input"));
 	m_outputStreams.push_back(new StreamImage(0, "foreground", m_foreground,*this,      "Foreground"));
@@ -73,14 +74,19 @@ void BackgroundSubtractorSimple::Reset()
 
 void BackgroundSubtractorSimple::ProcessFrame()
 {
+	// cout<<"input "<<m_input->size()<<" "<<m_input->depth();
+	// cout<<"backgr "<<m_background->size()<<" "<<m_background->depth();
 	if(m_emptyBackgroundSubtractor) {
 		//m_input->copyTo(*m_background);
-		adjust(m_input, m_background, m_tmp1, m_tmp2);
+		// accumulateWeighted(*m_input, *m_background, 1);
 		m_emptyBackgroundSubtractor = false;
+		m_input->convertTo(*m_tmp1, CV_32F);
+		m_input->copyTo(*m_background); // TODO: See why images in 32F such as tmp1 cannot be displayed correctly
 	}
 	// Main part of the program
-	cv:accumulateWeighted(*m_input, *m_background, 0); // m_param.backgroundAlpha);
-	//cv::subtract(*m_input, *m_background, *m_foreground_tmp);
-	//cv::threshold(*m_foreground_tmp, *m_foreground_tmp, m_param.foregroundThres, 255, cv::THRESH_BINARY);
+	accumulateWeighted(*m_input, *m_tmp1, m_param.backgroundAlpha);
+	m_tmp1->convertTo(*m_background, m_background->depth());
+	absdiff(*m_input, *m_background, *m_foreground_tmp);
+	threshold(*m_foreground_tmp, *m_foreground, m_param.foregroundThres * 255, 255, cv::THRESH_BINARY);
 };
 
