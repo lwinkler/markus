@@ -3,12 +3,14 @@
 
 #include "SlitCam/SlitCam.h"
 #include "BackgroundExtractor/BackgroundExtractor.h"
+#include "BackgroundSubtractorSimple/BackgroundSubtractorSimple.h"
 #include "TemporalDifferencing/TemporalDifferencing.h"
 #include "CascadeDetector/CascadeDetector.h"
 #include "SimpleTracker/SimpleTracker.h"
 #include "BlobSegmenter/BlobSegmenter.h"
 
 #include "UsbCam/UsbCam.h"
+#include "NetworkCam/NetworkCam.h"
 #include "VideoFileReader/VideoFileReader.h"
 
 #include "VideoOutput/VideoOutput.h"
@@ -26,6 +28,10 @@ Module * createNewModule(const ConfigReader& rx_configReader)
 	else if(moduleClass.compare("BackgroundExtractor") == 0)
 	{
 		tmp = new BackgroundExtractor(rx_configReader);
+	}
+	else if(moduleClass.compare("BackgroundSubtractorSimple") == 0)
+	{
+		tmp = new BackgroundSubtractorSimple(rx_configReader);
 	}
 	else if(moduleClass.compare("TemporalDifferencing") == 0)
 	{
@@ -46,6 +52,10 @@ Module * createNewModule(const ConfigReader& rx_configReader)
 	else if(moduleClass.compare("UsbCam") == 0)
 	{
 		tmp = new UsbCam(rx_configReader);
+	}
+	else if(moduleClass.compare("NetworkCam") == 0)
+	{
+		tmp = new NetworkCam(rx_configReader);
 	}
 	else if(moduleClass.compare("VideoFileReader") == 0)
 	{
