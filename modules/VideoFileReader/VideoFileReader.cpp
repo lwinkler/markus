@@ -49,8 +49,9 @@ VideoFileReader::VideoFileReader(const ConfigReader& x_configReader):
 	//m_inputWidth    = tmp->width;//(int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH);
 	//m_inputHeight   = tmp->height;//(int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT);
 	int numFramesc = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_COUNT);
+	long msecFrames = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_MSEC);
 	
-	cout<<"VideoFileReader "<<GetWidth()<<"x"<<GetHeight()<<", "<<numFramesc<<" fps"<<endl;
+	cout<<"VideoFileReader "<<GetWidth()<<"x"<<GetHeight()<<", "<<numFramesc<<" fps "<<" msec:"<<msecFrames<<endl;
 //	assert(m_width == m_param.width);
 //	assert(m_height == m_param.height);
 	

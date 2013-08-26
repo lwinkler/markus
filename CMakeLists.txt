@@ -36,8 +36,8 @@ target_link_libraries(markus ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} bulk gui m
 
 
 add_custom_command(
-	OUTPUT AllModules.h
-	COMMAND ./generate_all_modules.sh > AllModules.h
+	OUTPUT modules/AllModules.h
+	COMMAND ./generate_all_modules.sh > modules/AllModules.h
 )
 add_custom_target(list_modules
-DEPENDS AllModules.h)
+DEPENDS modules/AllModules.h)

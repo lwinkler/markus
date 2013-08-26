@@ -43,7 +43,7 @@ class Stream
 {
 public:
 	Stream(int x_id, const std::string& x_name, StreamType x_type, int x_width, int x_height, Module& rx_module, const std::string& rx_description);
-	~Stream();
+	virtual ~Stream();
 	inline const std::string& GetName() const {return m_name;}
 	inline int GetId() const {return m_id;}
 	inline int GetInputWidth() const {return m_width;}

@@ -2,8 +2,8 @@
 
 echo "// WARNING: This file is generated automatically !!"
 
-echo #ifndef ALL_MODULES_H
-echo #define ALL_MODULES_H
+echo "#ifndef ALL_MODULES_H"
+echo "#define ALL_MODULES_H"
 
 
 find modules -name "*.h" | awk {'print "#include \""$1"\""'}
@@ -20,4 +20,4 @@ echo "else throw(\"Module type unknown : \" + moduleClass);"
 echo "return tmp;"
 echo }
 
-echo #endif
+echo "#endif"

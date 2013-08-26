@@ -39,7 +39,7 @@ class Controller
 {
 public:
 	Controller();
-	~Controller();
+	virtual ~Controller();
 	virtual void SetControlledValue() = 0;
 	virtual void GetCurrent() = 0;
 	virtual void GetDefault() = 0;
@@ -155,7 +155,7 @@ class Control
 {
 public:
 	Control(const std::string& x_name, const std::string& x_description);
-	~Control();
+	virtual ~Control();
 	inline const std::string& GetName() const {return m_name;}
 	inline const std::string& GetDescription() const{return m_description;}
 	inline std::vector<Controller*>& RefListControllers(){return m_controllers;}

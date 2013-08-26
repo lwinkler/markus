@@ -241,8 +241,9 @@ void QModuleViewer::updateModule(Module * x_module)
 		mp_comboStreams->addItem((*it)->GetName().c_str(), cpt++);
 	}
 	
-	assert(m_currentModule->GetOutputStreamList().size() > 0);
-	updateStream(*(m_currentModule->GetOutputStreamList().begin()));
+	// assert(m_currentModule->GetOutputStreamList().size() > 0);
+	if(m_currentModule->GetOutputStreamList().size() > 0)
+		updateStream(*(m_currentModule->GetOutputStreamList().begin()));
 }
 
 void QModuleViewer::updateModuleNb(int x_index)
