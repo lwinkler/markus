@@ -10,6 +10,8 @@ var availableModulesNames = [
 	"VideoFileReader",
 	"VideoOutput"
 ];
+
+var nbModules = 0;
 var availableModules = [];
 
 
@@ -119,9 +121,9 @@ var availableModules = [];
 			var colorDefault = "#316b31";
 			
 			var pointsColor = {
-				default: "#316b31",	
-				Images: "#316b31",	
-				Objects: "#316b31",	
+				Image: "#316b31",	
+				Objects: "#00f",	
+				Debug: "#09098e"
 			};
 
 			var inputPoint = {
@@ -130,8 +132,8 @@ var availableModules = [];
 				isSource:false,
 				scope:"default",
 				connectorStyle:{ strokeStyle:colorDefault, lineWidth:2 },
-				connector: ["Bezier", { curviness:63 } ],
-				maxConnections:3,
+				// connector: ["Bezier", { curviness:63 } ],
+				maxConnections:1,
 				isTarget:true,
 				dropOptions : exampleDropOptions
 			};
@@ -142,8 +144,8 @@ var availableModules = [];
 				isSource:true,
 				scope:"default",
 				connectorStyle:{ strokeStyle:colorDefault, lineWidth:2 },
-				connector: ["Bezier", { curviness:63 } ],
-				maxConnections:3,
+				// connector: ["Bezier", { curviness:63 } ],
+				maxConnections:99,
 				isTarget:false,
 				dropOptions : exampleDropOptions
 			};
@@ -213,13 +215,15 @@ var availableModules = [];
 			// Functions and utilities
 			//--------------------------------------------------------------------------------
 			function createNewModule(type){
+				var id = type + nbModules;
+				nbModules++;
 				var newModule = $('<div/>', {
 					class:"window",
-					id:"foo"
+					id: id
 				}).append(type + " 1" + '<br/>')
-				.append('<a href="#" class="cmdLink hide" rel="window2">toggle connections</a><br/>')
-				.append('<a href="#" class="cmdLink drag" rel="window2">disable dragging</a><br/>')
-				.append('<a href="#" class="cmdLink detach" rel="window2">detach all</a>');
+				.append('<a href="#" class="cmdLink hide"   rel="' + id + '">toggle connections</a><br/>')
+				.append('<a href="#" class="cmdLink drag"   rel="' + id + '">disable dragging</a><br/>')
+				.append('<a href="#" class="cmdLink detach" rel="' + id + '">detach all</a>');
 
 				$("#main").append(newModule);	
 
@@ -227,8 +231,18 @@ var availableModules = [];
 				var inputs = $(availableModules[type]).find(" inputs > input");
 				var offset = 1.0 / (inputs.length + 1);
 				var y = offset;
-				inputs.each(function(){
-					var e1 = jsPlumb.addEndpoint('foo', { anchor:[0, y, 0, 1] }, inputPoint);
+				inputs.each(function(el){
+					var scope = $(this).find('type').text();
+					var color = pointsColor[scope];
+					var e1 = jsPlumb.addEndpoint(
+						id, {
+							anchor:[0, y, -1, 0], 
+							scope: scope,
+							paintStyle:{ fillStyle: color},
+							connectorStyle:{ strokeStyle: color}
+						},
+						inputPoint
+					);
 					y += offset;
 				});
 
@@ -237,12 +251,43 @@ var availableModules = [];
 				offset = 1.0 / (outputs.length + 1);
 				y = offset;
 				outputs.each(function(){
-					var e1 = jsPlumb.addEndpoint('foo', { anchor:[1, y, 0, 1] }, outputPoint);
+					var scope = $(this).find('type').text();
+					var color = pointsColor[scope];
+					var e1 = jsPlumb.addEndpoint(
+						id, { 
+							anchor:[1, y, 1, 0], 
+							scope: scope,
+							paintStyle:{ fillStyle: color},
+							connectorStyle:{ strokeStyle: color}
+						}, 
+						outputPoint
+					);
 					y += offset;
 				});
 				
 				// Make it draggable
 				jsPlumb.draggable(newModule);
+
+				// Add events on controls
+				newModule.find(".hide").click(function() {
+					jsPlumb.toggleVisible($(this).attr("rel"));
+				})
+				.find(".drag").click(function() {
+					var s = jsPlumb.toggleDraggable($(this).attr("rel"));
+					$(this).html(s ? 'disable dragging' : 'enable dragging');
+					if (!s)
+						$("#" + $(this).attr("rel")).addClass('drag-locked');
+					else
+						$("#" + $(this).attr("rel")).removeClass('drag-locked');
+					$("#" + $(this).attr("rel")).css("cursor", s ? "pointer" : "default");
+				})
+				.find(".detach").click(function() {
+					jsPlumb.detachAllConnections($(this).attr("rel"));
+				})
+				.find("#clear").click(function() { 
+					jsPlumb.detachEveryConnection();
+					showConnectionInfo("");
+				});
 			}
 
 			
@@ -252,7 +297,7 @@ var availableModules = [];
 
 
 			if (!_initialised) {
-				$(".hide").click(function() {
+				/*$(".hide").click(function() {
 					jsPlumb.toggleVisible($(this).attr("rel"));
 				});
 	
@@ -273,12 +318,12 @@ var availableModules = [];
 				$("#clear").click(function() { 
 					jsPlumb.detachEveryConnection();
 					showConnectionInfo("");
-				});
+				});*/
 
 				// Populate select modules with existing modules
 
 				for(var i = 0 ; i < availableModulesNames.length ; i++) {
-					var name = availableModulesNames[i];
+					var type = availableModulesNames[i];
 
 					// Add the module for module creation
 					$("#selectModule").append('<option value=' + availableModulesNames[i] + '>' + availableModulesNames[i] + '</option>');
@@ -291,7 +336,7 @@ var availableModules = [];
 						async: false,
 						dataType: "xml",
 						success : function (data) {
-							availableModules[name] = data;
+							availableModules[type] = data;
 						},
 						error: function(e) { console.log("Error : Failed to load " +  "modules/" + availableModulesNames[i] + ".xml status:" + e.status)}
 					});
