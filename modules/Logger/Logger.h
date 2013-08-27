@@ -21,8 +21,8 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef ANALYSE_STATISTICS_H
-#define ANALYSE_STATISTICS_H
+#ifndef LOGGER_H
+#define LOGGER_H
 
 #include <cv.h>
 #include "Module.h"
@@ -30,35 +30,30 @@
 #include "Timer.h"
 
 
-/*! \class AnalyseStatistics
+/*! \class Logger
  *  \brief Class containing methods/attributes of a slit camera
  *
  */
 
 
-class AnalyseStatisticsParameterStructure : public ModuleParameterStructure
+class LoggerParameterStructure : public ModuleParameterStructure
 {
 	
 public:
-	AnalyseStatisticsParameterStructure(const ConfigReader& x_confReader) : 
+	LoggerParameterStructure(const ConfigReader& x_confReader) : 
 		ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterFloat(0, "motion_thres", 0.1, PARAM_FLOAT, 0, 1, &motionThres,	"Threshold for motion analysis"));
-
 		ParameterStructure::Init();
 	}
-	
-	float motionThres;
 };
 
-class AnalyseStatistics : public Module
+class Logger : public Module
 {
 protected:
 	virtual void ProcessFrame();
-	AnalyseStatisticsParameterStructure m_param;
+	LoggerParameterStructure m_param;
 	static const char * m_type;
 
-	cv::Mat * m_input;
 
 	bool m_status;
 	long int m_subId;
@@ -67,13 +62,13 @@ protected:
 	std::string m_srtFileName;;
 
 public:
-	AnalyseStatistics(const ConfigReader& x_configReader);
-	~AnalyseStatistics(void);
+	Logger(const ConfigReader& x_configReader);
+	~Logger(void);
 	void Reset();
 
 
 protected:
-	inline virtual AnalyseStatisticsParameterStructure& RefParameter() { return m_param;}
+	inline virtual LoggerParameterStructure& RefParameter() { return m_param;}
 };
 
 #endif

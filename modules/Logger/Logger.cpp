@@ -21,7 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "AnalyseStatistics.h"
+#include "Logger.h"
 #include "StreamImage.h"
 
 #include <iostream>
@@ -34,28 +34,28 @@ using namespace std;
 using namespace cv;
 
 
-const char * AnalyseStatistics::m_type = "AnalyseStatistics";
+const char * Logger::m_type = "Logger";
 
 
-AnalyseStatistics::AnalyseStatistics(const ConfigReader& x_configReader) 
+Logger::Logger(const ConfigReader& x_configReader) 
 	 : Module(x_configReader), m_param(x_configReader)
 {
-	m_description = "This modules analyses some statistics as input and save states as result";
+	m_description = "This takes a state as input and logs it to .srt file";
 	
 	// Init images
-	m_input = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
+	// m_input = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
 	
 	// Init output images
-	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this, 	"Video input"));
+	// m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this, 	"Video input"));
 	//m_outputStreams.push_back(new StreamImage(0, "slit",  m_output, *this, 	"Slit camera stream"));
 }
 
-AnalyseStatistics::~AnalyseStatistics(void)
+Logger::~Logger(void)
 {
-	delete(m_input);
+	// delete(m_input);
 }
 
-void AnalyseStatistics::Reset()
+void Logger::Reset()
 {
 	Module::Reset();
 	m_timer.Restart();
@@ -66,17 +66,9 @@ void AnalyseStatistics::Reset()
 	m_subId = 0;
 }
 
-void AnalyseStatistics::ProcessFrame()
+void Logger::ProcessFrame()
 {
-	assert(m_input->channels() == 1); // Currently only supporting 1 channel
-
-	vector<Mat> channels;
-	split(*m_input, channels);
-	Scalar m = mean(channels[0]);
-
-	m /= 255.0;
-	float val = sum(m)[0];
-	bool newStatus = (val >= m_param.motionThres);
+	bool newStatus = 0; // (val >= m_param.motionThres);
 
 	if(m_status != newStatus) {
 		// Log the change in status
@@ -105,6 +97,5 @@ void AnalyseStatistics::ProcessFrame()
 		m_status = newStatus;
 		m_subId++;
 	}
-
 }
 
