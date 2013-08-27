@@ -33,7 +33,6 @@
 	}\
 }*/
 
-
 long int Timer::GetMSecLong()
 {
 	timeval now;

@@ -49,9 +49,8 @@ VideoFileReader::VideoFileReader(const ConfigReader& x_configReader):
 	//m_inputWidth    = tmp->width;//(int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH);
 	//m_inputHeight   = tmp->height;//(int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT);
 	int numFramesc = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_COUNT);
-	long msecFrames = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_MSEC);
 	
-	cout<<"VideoFileReader "<<GetWidth()<<"x"<<GetHeight()<<", "<<numFramesc<<" fps "<<" msec:"<<msecFrames<<endl;
+	cout<<"VideoFileReader "<<GetWidth()<<"x"<<GetHeight()<<", "<<numFramesc<<" frames"<<endl;
 //	assert(m_width == m_param.width);
 //	assert(m_height == m_param.height);
 	
@@ -77,6 +76,10 @@ void VideoFileReader::Capture()
 	//int posFrames    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_FRAMES);
 	//double posRatio  =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_AVI_RATIO);
 	cvGrabFrame(m_capture);
+
+	//long msecFrames = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_MSEC);
+	//cout<<" msec "<<msecFrames<<" secs "<<msecFrames / 1000.0<<endl;
+
 	//m_input = cvRetrieveFrame(m_capture);           // retrieve the captured frame
 	//cvCopy(cvRetrieveFrame(m_capture), m_input);
 	Mat * tmp = new Mat(cvRetrieveFrame(m_capture));

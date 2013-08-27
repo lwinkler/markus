@@ -1,19 +1,19 @@
 // WARNING: This file is generated automatically !!
 #ifndef ALL_MODULES_H
 #define ALL_MODULES_H
-#include "modules/BlobSegmenter/BlobSegmenter.h"
-#include "modules/SlitCam/SlitCam.h"
-#include "modules/VideoOutput/VideoOutput.h"
-#include "modules/BackgroundSubtractorSimple/BackgroundSubtractorSimple.h"
 #include "modules/AllModules.h"
-#include "modules/VideoFileReader/VideoFileReader.h"
-#include "modules/TemporalDifferencing/TemporalDifferencing.h"
-#include "modules/CascadeDetector/CascadeDetector.h"
-#include "modules/UsbCam/UsbCam.h"
-#include "modules/SimpleTracker/SimpleTracker.h"
-#include "modules/NetworkCam/NetworkCam.h"
-#include "modules/BackgroundExtractor/BackgroundExtractor.h"
 #include "modules/AnalyseStatistics/AnalyseStatistics.h"
+#include "modules/BackgroundExtractor/BackgroundExtractor.h"
+#include "modules/CascadeDetector/CascadeDetector.h"
+#include "modules/SlitCam/SlitCam.h"
+#include "modules/SimpleTracker/SimpleTracker.h"
+#include "modules/TemporalDifferencing/TemporalDifferencing.h"
+#include "modules/BlobSegmenter/BlobSegmenter.h"
+#include "modules/VideoOutput/VideoOutput.h"
+#include "modules/VideoFileReader/VideoFileReader.h"
+#include "modules/BackgroundSubtractorSimple/BackgroundSubtractorSimple.h"
+#include "modules/UsbCam/UsbCam.h"
+#include "modules/NetworkCam/NetworkCam.h"
 Module * createNewModule(const ConfigReader& rx_configReader)
 {
 Module * tmp = NULL;

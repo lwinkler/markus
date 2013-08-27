@@ -58,6 +58,10 @@ AnalyseStatistics::~AnalyseStatistics(void)
 void AnalyseStatistics::Reset()
 {
 	Module::Reset();
+	m_timer.Restart();
+	m_startTime = "00:00:00,000";
+	time_t now = time(0);
+	m_srtFileName = "log." + string(ctime(&now)) + ".srt";
 	m_status = 0;
 	m_subId = 0;
 }
@@ -78,13 +82,28 @@ void AnalyseStatistics::ProcessFrame()
 		// Log the change in status
 		ofstream myfile;
 
-		myfile.open ("log.srt", std::ios_base::app);
-		myfile<<m_subId<<endl<<endl;
-		myfile<<"00:03:24,350 –> 00:03:28,800"<<endl<<endl;
+		long t  = m_timer.GetMSecLong();
+		int msecs = t % 1000;
+		t /= 1000;
+		int secs = t % 60; 
+		t /= 60;
+		int mins = t % 60; 
+		t /= 60;
+		int hours = t; 
+
+		char str[32];
+		// str<<hours<<":"<<min<<":"<<secs<<","<<msecs;
+		sprintf(str, "%02d:%02d:%02d,%03d", hours, mins, secs, msecs);
+
+		myfile.open (m_srtFileName.c_str(), std::ios_base::app);
+		myfile<<m_subId<<endl;
+		myfile<<m_startTime<<" --> "<<str<<endl;
 		myfile<<"state_"<<newStatus<<endl<<endl;
 
 		myfile.close();
+		m_startTime = str;
 		m_status = newStatus;
+		m_subId++;
 	}
 
 }

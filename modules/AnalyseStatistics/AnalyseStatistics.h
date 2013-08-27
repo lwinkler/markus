@@ -27,6 +27,7 @@
 #include <cv.h>
 #include "Module.h"
 #include "Parameter.h"
+#include "Timer.h"
 
 
 /*! \class AnalyseStatistics
@@ -61,6 +62,9 @@ protected:
 
 	bool m_status;
 	long int m_subId;
+	Timer m_timer;
+	std::string m_startTime;
+	std::string m_srtFileName;;
 
 public:
 	AnalyseStatistics(const ConfigReader& x_configReader);
