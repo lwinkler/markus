@@ -22,14 +22,14 @@
 /** PAGE STRUCTURE **/
 
 /** FB **/
-#like {
+/*#like {
     position: fixed;
     width: 50px;
     height: 70px;
     border: 0;
     right: 13px;
     bottom: 8px;
-}
+}*/
 
 body {
     padding:0;
@@ -45,40 +45,46 @@ body {
 	background-color:black;
 	position:fixed;
 	top:0;left:0;
-  z-index:10000;
+	z-index:10000;
 	height:44px;
-  padding:0;
-  opacity:0.8;
+	padding:0;
+	opacity:0.8;
 }
 
 #header {
 	margin-top:0;
-  height:44px;
-  font-size:13px;
+	height:44px;
+	font-size:13px;
 	margin-left:auto;
 	margin-right:auto;    
-  width:950px;
-  background-image:url(logo_bw_44h.jpg);
-  background-repeat:no-repeat;    
+	width:950px;
+	background-image:url(logo_bw_44h.jpg);
+	background-repeat:no-repeat;    
 }
 
- #main {  
-  margin-top:44px;
-  position: relative;
-  font-size: 80%;    
+#main {  
+	margin-top:44px;
+	position: relative;
+	font-size: 80%;    
 }
 
 #sidebar {            
-  width: 420px;
-  font-size: 12px;
-  position: fixed;
-  right: 20px;
-  top: 90px;    
+	width: 420px;
+	font-size: 12px;
+	position: fixed;
+	right: 20px;
+	top: 90px;    
 }
 
 #explanation {
     text-align: center;
     padding: 10px;        
+}
+
+#detail {
+    text-align: center;
+    padding: 10px;        
+    display: none;
 }
 
 
@@ -98,7 +104,7 @@ a:hover {
     color:#1b911b;
 }
 
-.menu, #render, #explanation {   
+.menu, #render, #explanation, #detail {   
 	background-color:#fff;	    
 }
 
@@ -228,12 +234,10 @@ path, ._jsPlumb_endpoint { cursor:pointer; }
     -moz-box-shadow: 2px 2px 19px #e0e0e0;
     -moz-border-radius:0.5em;
     border-radius:0.5em;        
-    width:5em; height:5em;        
+    width:10em; height:7em;        
     position:absolute;    
     color:black;
     padding:0.5em;
-    width:8em; 
-    height:8em;
     line-height: 8em; 
     font-size:0.8em;
     -webkit-transition: -webkit-box-shadow 0.15s ease-in;

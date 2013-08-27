@@ -12,7 +12,8 @@ var availableModulesNames = [
 ];
 
 var nbModules = 0;
-var availableModules = [];
+var xmlModuleTypes = [];
+// var xmlModules = [];
 
 
 
@@ -75,7 +76,7 @@ var availableModules = [];
 			});
 
 			// configure some drop options for use by all endpoints.
-			var exampleDropOptions = {
+			var dropOptions = {
 				tolerance:"touch",
 				hoverClass:"dropHover",
 				activeClass:"dragActive"
@@ -111,7 +112,7 @@ var availableModules = [];
 				beforeDrop:function(params) { 
 					return confirm("Connect " + params.sourceId + " to " + params.targetId + "?"); 
 				},				
-				dropOptions : exampleDropOptions
+				dropOptions : dropOptions
 			};*/			
 
 			//
@@ -135,7 +136,7 @@ var availableModules = [];
 				// connector: ["Bezier", { curviness:63 } ],
 				maxConnections:1,
 				isTarget:true,
-				dropOptions : exampleDropOptions
+				dropOptions : dropOptions
 			};
 
 			var outputPoint = {
@@ -147,7 +148,7 @@ var availableModules = [];
 				// connector: ["Bezier", { curviness:63 } ],
 				maxConnections:99,
 				isTarget:false,
-				dropOptions : exampleDropOptions
+				dropOptions : dropOptions
 			};
 			//
 			// the third example uses a Dot of radius 17 as the endpoint marker, is both a source and target, and has scope
@@ -167,7 +168,7 @@ var availableModules = [];
 				connectorStyle:{ strokeStyle:example3Color, lineWidth:4 },
 				connector : "Straight",
 				isTarget:true,
-				dropOptions : exampleDropOptions,
+				dropOptions : dropOptions,
 				beforeDetach:function(conn) { 
 					return confirm("Detach connection?"); 
 				},
@@ -210,7 +211,6 @@ var availableModules = [];
 			// add endpoint of type 3 using a selector. 
 			jsPlumb.addEndpoint($(".window"), exampleEndpoint3);
 */
-			//			
 			//-------------------------------------------------------------------------------- 
 			// Functions and utilities
 			//--------------------------------------------------------------------------------
@@ -220,15 +220,22 @@ var availableModules = [];
 				var newModule = $('<div/>', {
 					class:"window",
 					id: id
-				}).append(type + " 1" + '<br/>')
+				})
+				.append('<h3 id="name">' + type + " 1" + '</h3>')
+				.append('<p id="type">' + type + '</p>')
 				.append('<a href="#" class="cmdLink hide"   rel="' + id + '">toggle connections</a><br/>')
 				.append('<a href="#" class="cmdLink drag"   rel="' + id + '">disable dragging</a><br/>')
 				.append('<a href="#" class="cmdLink detach" rel="' + id + '">detach all</a>');
 
-				$("#main").append(newModule);	
+				// Append the module window to main div 
+				$("#main").append(newModule);
+				// newModule.data(xmlModuleTypes[type]);
+				//var a = $(xmlModuleTypes[type]).clone();
+				//$("#result").append(a);
+				var xml = xmlModuleTypes[type];
 
 				// Draw input connectors
-				var inputs = $(availableModules[type]).find(" inputs > input");
+				var inputs = $(xml).find(" inputs > input");
 				var offset = 1.0 / (inputs.length + 1);
 				var y = offset;
 				inputs.each(function(el){
@@ -247,7 +254,7 @@ var availableModules = [];
 				});
 
 				// Draw output connectors
-				var outputs = $(availableModules[type]).find(" outputs > output");
+				var outputs = $(xml).find(" outputs > output");
 				offset = 1.0 / (outputs.length + 1);
 				y = offset;
 				outputs.each(function(){
@@ -267,12 +274,15 @@ var availableModules = [];
 				
 				// Make it draggable
 				jsPlumb.draggable(newModule);
+				newModule.click(function(){
+					showDetails(newModule);	
+				});
 
 				// Add events on controls
 				newModule.find(".hide").click(function() {
 					jsPlumb.toggleVisible($(this).attr("rel"));
-				})
-				.find(".drag").click(function() {
+				});
+				newModule.find(".drag").click(function() {
 					var s = jsPlumb.toggleDraggable($(this).attr("rel"));
 					$(this).html(s ? 'disable dragging' : 'enable dragging');
 					if (!s)
@@ -280,15 +290,32 @@ var availableModules = [];
 					else
 						$("#" + $(this).attr("rel")).removeClass('drag-locked');
 					$("#" + $(this).attr("rel")).css("cursor", s ? "pointer" : "default");
-				})
-				.find(".detach").click(function() {
+				});
+				newModule.find(".detach").click(function() {
 					jsPlumb.detachAllConnections($(this).attr("rel"));
-				})
-				.find("#clear").click(function() { 
+				});
+				newModule.find("#clear").click(function() { 
 					jsPlumb.detachEveryConnection();
 					showConnectionInfo("");
 				});
 			}
+
+			/* display the detail of the module in the right panel */
+			function showDetails(module){
+
+
+				return;
+				$("#explanation").hide();
+				var div = $("#detail").show();
+				var inputs = div.find("#inputs").html();
+				module.data.find("inputs > input").each(function(el){
+					inputs.append('<p>' + this.find('name') + ': ' + this.find('description') + '</p>');
+				
+				});
+				
+
+			}
+
 
 			
 			//--------------------------------------------------------------------------------
@@ -336,7 +363,7 @@ var availableModules = [];
 						async: false,
 						dataType: "xml",
 						success : function (data) {
-							availableModules[type] = data;
+							xmlModuleTypes[type] = data;
 						},
 						error: function(e) { console.log("Error : Failed to load " +  "modules/" + availableModulesNames[i] + ".xml status:" + e.status)}
 					});

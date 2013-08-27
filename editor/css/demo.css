@@ -1,12 +1,12 @@
 /** ELEMENT POSITIONS **/
-#window1 { top:6em;left:10%; }
+/*#window1 { top:6em;left:10%; }
 #window2 { top:8em; right:50%; }
 #window3 { top:30em; left:8%; }
-#window4 { top:33em; right:40%}
+#window4 { top:33em; right:40%}*/
 
 /** ELEMENTS **/
-.window {  
-    font-size:0.9em;
+.window{
+    font-size:0.8em;
     font-family:serif;
     font-style:italic;
     padding-top:0.9em; 
@@ -14,8 +14,8 @@
 }
 
 /** LINKS IN WINDOWS **/
-.drag-locked { border:1px solid red; }
-.cmdLink { font-size:0.80em;}
+.window.drag-locked { border:1px solid red; }
+.window.cmdLink { font-size:0.80em;}
 
 /** DRAG/DROP CLASSES **/
 .dragActive { border:2px dotted orange; }
