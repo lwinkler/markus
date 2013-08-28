@@ -22,7 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "Logger.h"
-#include "StreamImage.h"
+#include "StreamDebug.h"
 
 #include <iostream>
 #include <fstream>
@@ -40,7 +40,7 @@ const char * Logger::m_type = "Logger";
 Logger::Logger(const ConfigReader& x_configReader) 
 	 : Module(x_configReader), m_param(x_configReader)
 {
-	m_description = "This takes a state as input and logs it to .srt file";
+	m_description = "This module takes a state as input and logs it to .srt file";
 	
 	// Init images
 	// m_input = new Mat(cvSize(m_param.width, m_param.height), m_param.type);

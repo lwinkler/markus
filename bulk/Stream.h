@@ -34,7 +34,8 @@ enum StreamType
 	STREAM_DEBUG,
 	STREAM_IMAGE,
 	STREAM_RECTS,
-	STREAM_POINTS
+	STREAM_POINTS,
+	STREAM_STATE
 };
 
 /// This is the parent class for all streams (input and output data)

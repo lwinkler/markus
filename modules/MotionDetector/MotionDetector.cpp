@@ -24,6 +24,7 @@
 #include "MotionDetector.h"
 #include "StreamImage.h"
 #include "StreamDebug.h"
+#include "StreamState.h"
 
 #include <iostream>
 #include <cstdio>
@@ -51,7 +52,7 @@ MotionDetector::MotionDetector(const ConfigReader& x_configReader)
 	
 	// Init output images
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this, 	"Video input"));
-	//m_outputStreams.push_back(new StreamImage(0, "slit",  m_output, *this, 	"Slit camera stream"));
+	m_outputStreams.push_back(new StreamState(1, "motion", m_state,  *this, 	"Motion is detected"));
 
 	m_debugStreams.push_back(new StreamDebug(0, "motion", m_debug, *this, 	"Motion percentage"));
 }
@@ -86,7 +87,7 @@ void MotionDetector::ProcessFrame()
 	// Mat col(m_debug->rows, 1, CV_8UC3);
 	Mat col = m_debug->col(m_debug->cols - 1); // (*m_debug)(Rect(m_debug->cols - 1 / 2, 0, 1, m_debug->rows));
 	col.setTo(m_colorPlotBack);
-	circle(col, Point(0, m_debug->rows * (1 - val / 3 / m_param.motionThres)), 0, m_colorPlotValue, -1);
+	line(col, Point(0, m_debug->rows * (1 - val / 3 / m_param.motionThres)), Point(0, m_debug->cols - 1), m_colorPlotValue);
 	circle(col, Point(0, m_debug->rows * (1 - 0.333)),                         0, m_colorPlotThres, -1);
 	
 	// m_debug->row(m_debug->rows -1) = col.row(0);

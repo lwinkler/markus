@@ -39,5 +39,6 @@ add_custom_command(
 	OUTPUT modules/AllModules.h
 	COMMAND ./generate_all_modules.sh > modules/AllModules.h
 )
-add_custom_target(list_modules
-DEPENDS modules/AllModules.h)
+add_custom_target(update_modules_list
+DEPENDS modules/AllModules.h
+)
