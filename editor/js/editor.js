@@ -13,13 +13,7 @@ var availableModulesNames = [
 
 var nbModules = 0;
 var xmlModuleTypes = [];
-// var xmlModules = [];
-
-
-
-
-
-
+var xmlProject = "";
 
 
 ;(function() {
@@ -214,10 +208,26 @@ var xmlModuleTypes = [];
 			//-------------------------------------------------------------------------------- 
 			// Functions and utilities
 			//--------------------------------------------------------------------------------
-			function createNewModule(type){
-				var id = type + nbModules;
-				nbModules++;
-				var newModule = $('<div/>', {
+
+			/* Load an xml file */
+			function loadXML(fileName) {
+				var target = "";
+				$.ajax({
+					type: "GET",
+					url : fileName,
+					cache: false,
+					async: false,
+					dataType: "xml",
+					success : function (data) {
+						target = data;
+					},
+					error: function(e) { console.log("Error : Failed to load " + fileName + " status:" + e.status)}
+				});
+				return target;
+			}
+
+			function createModuleWindow(type, id) {
+				var newWindow = $('<div/>', {
 					class:"window",
 					id: id
 				})
@@ -228,14 +238,23 @@ var xmlModuleTypes = [];
 				.append('<a href="#" class="cmdLink detach" rel="' + id + '">detach all</a>');
 
 				// Append the module window to main div 
-				$("#main").append(newModule);
-				// newModule.data(xmlModuleTypes[type]);
-				//var a = $(xmlModuleTypes[type]).clone();
-				//$("#result").append(a);
-				var xml = xmlModuleTypes[type];
+				$("#main").append(newWindow);
+
+				return newWindow;
+			}
+
+			/* Instanciate a module of a known type */
+
+			function createNewModule(type){
+				var id = type + nbModules;
+				nbModules++;
+
+				newWindow = createModuleWindow(type, id);
+
+				var xml = $(xmlProject).find("application").append($(xmlModuleTypes[type]).find("module").clone());
 
 				// Draw input connectors
-				var inputs = $(xml).find(" inputs > input");
+				var inputs = xml.find(" inputs > input");
 				var offset = 1.0 / (inputs.length + 1);
 				var y = offset;
 				inputs.each(function(el){
@@ -254,7 +273,7 @@ var xmlModuleTypes = [];
 				});
 
 				// Draw output connectors
-				var outputs = $(xml).find(" outputs > output");
+				var outputs = xml.find(" outputs > output");
 				offset = 1.0 / (outputs.length + 1);
 				y = offset;
 				outputs.each(function(){
@@ -273,16 +292,16 @@ var xmlModuleTypes = [];
 				});
 				
 				// Make it draggable
-				jsPlumb.draggable(newModule);
-				newModule.click(function(){
-					showDetails(newModule);	
+				jsPlumb.draggable(newWindow);
+				newWindow.click(function(){
+					showDetails(newWindow);	
 				});
 
 				// Add events on controls
-				newModule.find(".hide").click(function() {
+				newWindow.find(".hide").click(function() {
 					jsPlumb.toggleVisible($(this).attr("rel"));
 				});
-				newModule.find(".drag").click(function() {
+				newWindow.find(".drag").click(function() {
 					var s = jsPlumb.toggleDraggable($(this).attr("rel"));
 					$(this).html(s ? 'disable dragging' : 'enable dragging');
 					if (!s)
@@ -291,26 +310,38 @@ var xmlModuleTypes = [];
 						$("#" + $(this).attr("rel")).removeClass('drag-locked');
 					$("#" + $(this).attr("rel")).css("cursor", s ? "pointer" : "default");
 				});
-				newModule.find(".detach").click(function() {
+				newWindow.find(".detach").click(function() {
 					jsPlumb.detachAllConnections($(this).attr("rel"));
 				});
-				newModule.find("#clear").click(function() { 
+				newWindow.find("#clear").click(function() { 
 					jsPlumb.detachEveryConnection();
 					showConnectionInfo("");
 				});
+				newWindow.data('xml', xml);
 			}
 
 			/* display the detail of the module in the right panel */
-			function showDetails(module){
-
-
-				return;
+			function showDetails(window){
+				var xml = window.data('xml');
 				$("#explanation").hide();
 				var div = $("#detail").show();
-				var inputs = div.find("#inputs").html();
-				module.data.find("inputs > input").each(function(el){
-					inputs.append('<p>' + this.find('name') + ': ' + this.find('description') + '</p>');
 				
+				// Show inputs
+				var inputs = div.find("#inputs").empty();
+				xml.find("inputs > input").each(function(el){
+					inputs.append('<p>' + $(this).find('name').text() + ': ' + $(this).find('description').text() + '</p>');
+				});
+				
+				// Show outputs
+				var outputs = div.find("#outputs").empty();
+				xml.find("outputs > output").each(function(el){
+					outputs.append('<p>' + $(this).find('name').text() + ': ' + $(this).find('description').text() + '</p>');
+				});
+				
+				// Show inputs
+				var parameters = div.find("#parameters").empty();
+				xml.find("parameters > param").each(function(el){
+					parameters.append('<p>' + $(this).find('value').text() + '(' + $(this).find('type').text() + ')' + ': ' + $(this).find('description').text() + '</p>');
 				});
 				
 
@@ -356,17 +387,7 @@ var xmlModuleTypes = [];
 					$("#selectModule").append('<option value=' + availableModulesNames[i] + '>' + availableModulesNames[i] + '</option>');
 
 					// Load the matching xml file
-					$.ajax({
-						type: "GET",
-						url : "modules/" + availableModulesNames[i] + ".xml",
-						cache: false,
-						async: false,
-						dataType: "xml",
-						success : function (data) {
-							xmlModuleTypes[type] = data;
-						},
-						error: function(e) { console.log("Error : Failed to load " +  "modules/" + availableModulesNames[i] + ".xml status:" + e.status)}
-					});
+					xmlModuleTypes[type] = loadXML("modules/" + availableModulesNames[i] + ".xml");
 				}
 				
 				// Create a div representing a new module
@@ -374,7 +395,7 @@ var xmlModuleTypes = [];
 					var type = $("#selectModule").val();
 					createNewModule(type);
 				});
-
+				xmlProject = loadXML("editor/xml/EmptyProject.xml");
 				_initialised = true;
 			}
 		}
