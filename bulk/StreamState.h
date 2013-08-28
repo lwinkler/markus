@@ -36,9 +36,10 @@ public:
 	StreamState(int x_id, const std::string& rx_name, bool& x_state, const CvScalar& x_color, Module& rx_module, const std::string& rx_description);
 	StreamState(int x_id, const std::string& rx_name, bool& x_state, Module& rx_module, const std::string& rx_description);
 	~StreamState();
-	// inline void SetState(bool x_state){m_state = x_state;};
+	inline void SetState(bool x_state){m_state = x_state;};
+	inline bool GetState() const {return m_state;};
 	
-	virtual void ConvertInput() {};
+	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat * xp_output) const;
 	inline virtual const std::string GetTypeString()const {return "State";};
 

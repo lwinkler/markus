@@ -55,7 +55,8 @@ protected:
 	static const char * m_type;
 
 
-	bool m_status;
+	bool m_state;
+	bool m_oldState;
 	long int m_subId;
 	Timer m_timer;
 	std::string m_startTime;

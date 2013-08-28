@@ -52,7 +52,7 @@ MotionDetector::MotionDetector(const ConfigReader& x_configReader)
 	
 	// Init output images
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this, 	"Video input"));
-	m_outputStreams.push_back(new StreamState(1, "motion", m_state,  *this, 	"Motion is detected"));
+	m_outputStreams.push_back(new StreamState(0, "motion", m_state,  *this, 	"Motion is detected"));
 
 	m_debugStreams.push_back(new StreamDebug(0, "motion", m_debug, *this, 	"Motion percentage"));
 }

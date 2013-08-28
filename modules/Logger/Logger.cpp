@@ -22,13 +22,13 @@
 -------------------------------------------------------------------------------------*/
 
 #include "Logger.h"
-#include "StreamDebug.h"
+#include "StreamState.h"
 
 #include <iostream>
 #include <fstream>
 #include <cstdio>
 #include <highgui.h>
-
+#include <ctime>
 
 using namespace std;
 using namespace cv;
@@ -42,12 +42,8 @@ Logger::Logger(const ConfigReader& x_configReader)
 {
 	m_description = "This module takes a state as input and logs it to .srt file";
 	
-	// Init images
-	// m_input = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
-	
-	// Init output images
-	// m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this, 	"Video input"));
-	//m_outputStreams.push_back(new StreamImage(0, "slit",  m_output, *this, 	"Slit camera stream"));
+	// Init input images
+	m_inputStreams.push_back(new StreamState(0, "input", m_state, *this, 	"Input state to be logged"));
 }
 
 Logger::~Logger(void)
@@ -59,19 +55,33 @@ void Logger::Reset()
 {
 	Module::Reset();
 	m_timer.Restart();
-	m_startTime = "00:00:00,000";
-	time_t now = time(0);
-	m_srtFileName = "log." + string(ctime(&now)) + ".srt";
-	m_status = 0;
+	m_state = m_oldState = 0;
 	m_subId = 0;
+	m_startTime = "00:00:00,000";
+	
+	// write time stamp in log filename
+	/*time_t now = time(0);
+	struct tm tm_struct;
+	assert(gmtime(&tm_struct, &now) == 0);
+	m_srtFileName = "log." + gmtime(&tm_struct, &now) + ".srt";
+	*/
+
+
+	time_t rawtime;
+	time(&rawtime);
+	const tm* timeinfo = localtime (&rawtime);
+
+	char dd[16] ;
+	strftime(dd, sizeof(dd), "%Y%m%d_%H:%M", timeinfo);
+	m_srtFileName = "log." + string(dd) + ".srt";
+	// cout<<m_srtFileName<<endl;
 }
 
 void Logger::ProcessFrame()
 {
-	bool newStatus = 0; // (val >= m_param.motionThres);
-
-	if(m_status != newStatus) {
-		// Log the change in status
+	if(m_state != m_oldState) {
+		cout<<"state change"<<endl;
+		// Log the change in state
 		ofstream myfile;
 
 		long t  = m_timer.GetMSecLong();
@@ -90,11 +100,11 @@ void Logger::ProcessFrame()
 		myfile.open (m_srtFileName.c_str(), std::ios_base::app);
 		myfile<<m_subId<<endl;
 		myfile<<m_startTime<<" --> "<<str<<endl;
-		myfile<<"state_"<<newStatus<<endl<<endl;
+		myfile<<"state_"<<m_oldState<<endl<<endl;
 
 		myfile.close();
 		m_startTime = str;
-		m_status = newStatus;
+		m_oldState = m_state;
 		m_subId++;
 	}
 }

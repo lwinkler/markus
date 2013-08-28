@@ -51,6 +51,17 @@ StreamState::~StreamState()
 
 }
 
+// Transmit the state to the connected module
+
+void StreamState::ConvertInput()
+{
+	if(m_connected == NULL) return;
+	
+	const StreamState * pstream = dynamic_cast<const StreamState*>(m_connected);
+	if(pstream == NULL) return;
+	m_state = pstream->GetState();
+}
+
 /// Render : to display the state we simply color the image in black/white
 
 void StreamState::RenderTo(Mat * xp_output) const
