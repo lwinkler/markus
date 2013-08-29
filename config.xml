@@ -1,7 +1,7 @@
 <application name="ddd2" description="" cyclelimit="-1" gui="">
   <module name="SlitCamera1">
 	<parameters>
-	<param id="0" name="class">SlitCamera</param>
+	<param id="0" name="class">SlitCam</param>
 	<param id="2" name="width">640</param>
         <param id="3" name="height">480</param>
 	<param id="4" name="type">CV_8UC3</param>

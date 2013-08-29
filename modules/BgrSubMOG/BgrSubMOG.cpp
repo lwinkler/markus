@@ -21,8 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "BackgroundSubtractorSimple.h"
-#include "StreamDebug.h"
+#include "BgrSubMOG.h"
 #include "StreamImage.h"
 
 // for debug
@@ -33,58 +32,45 @@
 using namespace cv;
 using namespace std;
 
-const char * BackgroundSubtractorSimple::m_type = "BackgroundSubtractorSimple";
+const char * BgrSubMOG::m_type = "BackgroundSubtractorSimpleMOG";
 
 
-BackgroundSubtractorSimple::BackgroundSubtractorSimple(const ConfigReader& x_configReader) :
+BgrSubMOG::BgrSubMOG(const ConfigReader& x_configReader) :
 	Module(x_configReader),
+	m_mog(3, 4, false),
 	m_param(x_configReader)
 {
-	m_tmp1 = new Mat();
-	m_tmp2 = NULL;
-	m_description = "Perform a background subtraction using a running average";
+	//m_mog.nmixtures = 3;
+
+
+	m_description = "Perform background subtraction via Mixtures Of Gaussians";
 	m_input    = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
 	m_background 		= new Mat(cvSize(m_param.width, m_param.height), m_param.type);
 	m_foreground 		= new Mat(cvSize(m_param.width, m_param.height), m_param.type);
-	m_foreground_tmp	= new Mat(cvSize(m_param.width, m_param.height), m_param.type);
 	
 	m_inputStreams.push_back(new StreamImage(0, "input",             m_input, *this,   "Video input"));
+
 	m_outputStreams.push_back(new StreamImage(0, "foreground", m_foreground,*this,      "Foreground"));
 	m_outputStreams.push_back(new StreamImage(1, "background", m_background, *this,		"Background"));
-	m_debugStreams.push_back(new StreamImage(0, "foreground_tmp", m_foreground_tmp,*this,      "Foreground tmp"));
 };
 		
 
-BackgroundSubtractorSimple::~BackgroundSubtractorSimple()
+BgrSubMOG::~BgrSubMOG()
 {
 	delete(m_input);
 	delete(m_background);
 	delete(m_foreground);
-	delete(m_tmp1);
-	delete(m_tmp2);
 }
 
-void BackgroundSubtractorSimple::Reset()
+void BgrSubMOG::Reset()
 {
 	Module::Reset();
-	m_emptyBackgroundSubtractor = true;
+	// m_emptyBackgroundSubtractor = true;
 }
 
-void BackgroundSubtractorSimple::ProcessFrame()
+void BgrSubMOG::ProcessFrame()
 {
-	// cout<<"input "<<m_input->size()<<" "<<m_input->depth();
-	// cout<<"backgr "<<m_background->size()<<" "<<m_background->depth();
-	if(m_emptyBackgroundSubtractor) {
-		//m_input->copyTo(*m_background);
-		// accumulateWeighted(*m_input, *m_background, 1);
-		m_emptyBackgroundSubtractor = false;
-		m_input->convertTo(*m_tmp1, CV_32F);
-		m_input->copyTo(*m_background); // TODO: See why images in 32F such as tmp1 cannot be displayed correctly
-	}
-	// Main part of the program
-	accumulateWeighted(*m_input, *m_tmp1, m_param.backgroundAlpha);
-	m_tmp1->convertTo(*m_background, m_background->depth());
-	absdiff(*m_input, *m_background, *m_foreground_tmp);
-	threshold(*m_foreground_tmp, *m_foreground, m_param.foregroundThres * 255, 255, cv::THRESH_BINARY);
+	m_mog.operator ()(*m_input, *m_foreground);
+	m_mog.getBackgroundImage(*m_background);
 };
 

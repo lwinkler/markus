@@ -37,7 +37,7 @@ VideoFileReader::VideoFileReader(const ConfigReader& x_configReader):
 	
 	if(m_capture == NULL)
 	{
-		throw("Error : VideoFileReader not found ! : " + m_name);
+		throw("Error : VideoFileReader file not found ! : " + m_param.file);
 	}
 	cout<<"Setting "<<m_param.width<<endl;
 	

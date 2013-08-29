@@ -10,6 +10,7 @@
 #include "modules/VideoFileReader/VideoFileReader.h"
 #include "modules/TemporalDifferencing/TemporalDifferencing.h"
 #include "modules/CascadeDetector/CascadeDetector.h"
+#include "modules/BgrSubMOG/BgrSubMOG.h"
 #include "modules/UsbCam/UsbCam.h"
 #include "modules/SimpleTracker/SimpleTracker.h"
 #include "modules/NetworkCam/NetworkCam.h"
@@ -22,6 +23,7 @@ const string moduleClass = rx_configReader.SubConfig("parameters").SubConfig("pa
 if(false){}
 else if(moduleClass.compare("BackgroundExtractor") == 0) {tmp = new BackgroundExtractor(rx_configReader);} 
 else if(moduleClass.compare("BackgroundSubtractorSimple") == 0) {tmp = new BackgroundSubtractorSimple(rx_configReader);} 
+else if(moduleClass.compare("BgrSubMOG") == 0) {tmp = new BgrSubMOG(rx_configReader);} 
 else if(moduleClass.compare("BlobSegmenter") == 0) {tmp = new BlobSegmenter(rx_configReader);} 
 else if(moduleClass.compare("CascadeDetector") == 0) {tmp = new CascadeDetector(rx_configReader);} 
 else if(moduleClass.compare("Logger") == 0) {tmp = new Logger(rx_configReader);} 
