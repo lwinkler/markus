@@ -24,8 +24,8 @@
 #ifndef INPUT_VIDEOFILEREADER_H
 #define INPUT_VIDEOFILEREADER_H
 
-#include "cv.h"
-#include <highgui.h>
+#include <opencv/cv.h>
+#include <opencv/highgui.h>
 
 #include "Input.h"
 

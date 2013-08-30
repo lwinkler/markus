@@ -24,7 +24,7 @@
 #ifndef STREAM_DEBUG_H
 #define STREAM_DEBUG_H
 
-#include "cv.h"
+#include <opencv/cv.h>
 
 #include "Stream.h"
 

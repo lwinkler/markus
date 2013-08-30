@@ -27,7 +27,7 @@
 #include <list>
 #include <vector>
 
-#include <cv.h>
+#include <opencv/cv.h>
 
 #include "Feature.h"
 

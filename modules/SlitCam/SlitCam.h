@@ -24,7 +24,7 @@
 #ifndef SLITCAM_H
 #define SLITCAM_H
 
-#include <cv.h>
+#include <opencv/cv.h>
 #include "Module.h"
 #include "Parameter.h"
 

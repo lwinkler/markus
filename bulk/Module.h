@@ -24,7 +24,7 @@
 #ifndef MODULE_H
 #define MODULE_H
 
-#include "cv.h"
+#include <opencv/cv.h>
 #include "ConfigReader.h"
 #include "Parameter.h"
 #include <QReadWriteLock>

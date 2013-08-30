@@ -37,8 +37,8 @@ const char * BgrSubMOG::m_type = "BackgroundSubtractorSimpleMOG";
 
 BgrSubMOG::BgrSubMOG(const ConfigReader& x_configReader) :
 	Module(x_configReader),
-	m_mog(3, 4, false),
-	m_param(x_configReader)
+	m_param(x_configReader),
+	m_mog(3, 4, false)
 {
 	//m_mog.nmixtures = 3;
 

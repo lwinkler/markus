@@ -28,7 +28,7 @@
 #include <cstring>
 #include <QReadWriteLock>
 
-#include <cv.h>
+#include <opencv/cv.h>
 
 #include "ConfigReader.h"
 #include "Input.h"

@@ -24,10 +24,10 @@
 #include "Logger.h"
 #include "StreamState.h"
 
+#include <opencv/highgui.h>
 #include <iostream>
 #include <fstream>
 #include <cstdio>
-#include <highgui.h>
 #include <ctime>
 
 using namespace std;

@@ -24,7 +24,7 @@
 #ifndef MOTION_DETECTOR_H
 #define MOTION_DETECTOR_H
 
-#include <cv.h>
+#include <opencv/cv.h>
 #include "Module.h"
 #include "Parameter.h"
 // #include "Timer.h"

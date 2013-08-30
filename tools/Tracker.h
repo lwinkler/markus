@@ -25,7 +25,7 @@
 #define TRACKER_H
 
 
-#include <cv.h>
+#include <opencv/cv.h>
 #include <vector>
 #include <list>
 #include <cstring>

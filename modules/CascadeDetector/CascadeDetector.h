@@ -24,7 +24,7 @@
 #ifndef CASCADE_DETECTOR_H
 #define CASCADE_DETECTOR_H
 
-#include <cv.h>
+#include <opencv/cv.h>
 #include <QThread>
 
 #include "ModuleAsync.h"

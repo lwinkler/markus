@@ -24,7 +24,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#include <cv.h>
+#include <opencv/cv.h>
 
 #include "ConfigReader.h"
 #include "Parameter.h"

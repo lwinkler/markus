@@ -28,7 +28,7 @@
 
 #include <iostream>
 #include <cstdio>
-#include <highgui.h>
+#include <opencv/highgui.h>
 
 
 using namespace std;
