@@ -144,7 +144,7 @@ ControllerString::ControllerString(ParameterString& x_param):
 
 ControllerString::~ControllerString()
 {
-	delete(m_lineEdit);
+	delete(m_lineEdit); // TODO: this causes a crash at closing if the parameter screen is activated. 
 }
 
 void ControllerString::SetControlledValue()

@@ -1,12 +1,11 @@
 <application name="VideoFileReader" description="" cyclelimit="-1" gui="">
   <module name="VideoFileReader" machineurl="localhost" id="0">
     <parameters>
-      <param name="class">VideoFileReader</param>
+      <param name="class">UsbCam</param>
       <param name="width">640</param>
       <param name="height">480</param>
       <param name="type">CV_8UC1</param>
       <param name="fps">10</param>
-      <param name="file">0060_20130820_AxisM3007V4_P2_random_activity.avi</param>
       <!--param name="url">http://root:admin@192.168.5.100/mjpg/1/video.mjpg</param-->
     </parameters>
     <inputs />
@@ -37,7 +36,7 @@
     <display x="263" y="54" width="150" height="75" />
     <uiobject type="" x="0" y="0" width="0" height="0" />
   </module>
-  <module name="MotionDetector" machineurl="localhost" id="2">
+  <!--<module name="MotionDetector" machineurl="localhost" id="2">
     <parameters>
       <param name="class">MotionDetector</param>
       <param name="width">640</param>
@@ -70,5 +69,5 @@
     </outputs>
     <display x="263" y="54" width="150" height="75" />
     <uiobject type="" x="0" y="0" width="0" height="0" />
-  </module>
+  </module>-->
 </application>

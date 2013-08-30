@@ -26,9 +26,7 @@
 
 // for debug
 #include "util.h"
-/*#include "cv.h"
-#include "highgui.h"
-*/
+
 using namespace cv;
 using namespace std;
 
@@ -38,9 +36,9 @@ const char * BgrSubMOG::m_type = "BackgroundSubtractorSimpleMOG";
 BgrSubMOG::BgrSubMOG(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader),
-	m_mog(3, 4, false)
+	m_mog2(m_param.history, m_param.varThres, m_param.bShadowDetection)
 {
-	//m_mog.nmixtures = 3;
+	//m_mog2.nmixtures = 3;
 
 
 	m_description = "Perform background subtraction via Mixtures Of Gaussians";
@@ -52,6 +50,13 @@ BgrSubMOG::BgrSubMOG(const ConfigReader& x_configReader) :
 
 	m_outputStreams.push_back(new StreamImage(0, "foreground", m_foreground,*this,      "Foreground"));
 	m_outputStreams.push_back(new StreamImage(1, "background", m_background, *this,		"Background"));
+
+
+	//vector<string> names;
+	//m_mog2.getParams(names);
+	//cout<<"size fo fparams"<<names.size()<<endl;
+	//for(int i = 0; i < names.size() ; i++)
+		//cout<<names[i]<<endl;
 };
 		
 
@@ -65,12 +70,13 @@ BgrSubMOG::~BgrSubMOG()
 void BgrSubMOG::Reset()
 {
 	Module::Reset();
+	m_mog2.initialize(m_input->size(), m_input->type());
 	// m_emptyBackgroundSubtractor = true;
 }
 
 void BgrSubMOG::ProcessFrame()
 {
-	m_mog.operator ()(*m_input, *m_foreground, 0.00001);
-	m_mog.getBackgroundImage(*m_background);
+	m_mog2.operator ()(*m_input, *m_foreground, m_param.learningRate);
+	m_mog2.getBackgroundImage(*m_background);
 };
 

@@ -27,6 +27,19 @@
 #include "Module.h"
 #include "opencv2/video/background_segm.hpp"
 
+
+// default parameters of gaussian background detection algorithm from opencv
+/*static const int defaultHistory2 = 500; // Learning rate; alpha = 1/defaultHistory2
+static const float defaultVarThreshold2 = 4.0f*4.0f;
+static const int defaultNMixtures2 = 5; // maximal number of Gaussians in mixture
+static const float defaultBackgroundRatio2 = 0.9f; // threshold sum of weights for background test
+static const float defaultVarThresholdGen2 = 3.0f*3.0f;
+static const float defaultVarInit2 = 15.0f; // initial variance for new components
+static const float defaultVarMax2 = 5*defaultVarInit2;
+static const float defaultVarMin2 = 4.0f;
+*/
+
+
 class ConfigReader;
 
 
@@ -35,15 +48,24 @@ class BgrSubMOGParameterStructure : public ModuleParameterStructure
 public:
 	BgrSubMOGParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-		//m_list.push_back(new ParameterFloat(0, "background_alpha",	0.02, 	PARAM_FLOAT, 0, 1,	&backgroundAlpha,	"Defines the speed at which the background adapts"));
+
+		// This parameters should not change
+		m_list.push_back(new ParameterInt  (0, "history",	500, 	PARAM_INT,   1, 10000,	&history,	"Length of the history"));
+		m_list.push_back(new ParameterFloat(1, "var_thres",	16, 	PARAM_FLOAT, 1, 1000,	&varThres,	"Threshold on the squared Mahalanobis distance to decide whether it is well described by the background model "));
+		m_list.push_back(new ParameterBool  (3, "b_shadow_detection",	false, 	PARAM_BOOL, 0, 1, &bShadowDetection,	"Enable shadow detection"));
+		m_list.push_back(new ParameterDouble(4, "learning_rate",	-1, 	PARAM_DOUBLE, -1, 1, &learningRate,	"Learning rate of the model"));
+
 		//m_list.push_back(new ParameterFloat(0, "foreground_thres", 	0.2, 	PARAM_FLOAT, 0, 1,	&foregroundThres,	"Threshold to accept a pixel as foreground"));
 
-		// RefParameterByName("type").SetDefault("CV_32FC3");
+		// RefParameterByName("history").Lock();
 
 		ParameterStructure::Init();
 	};
-	float backgroundAlpha;
-	float foregroundThres;
+	int history;
+	float varThres;
+	bool bShadowDetection;
+
+	double learningRate;
 };
 
 class BgrSubMOG : public Module
@@ -59,7 +81,7 @@ private:
 	BgrSubMOGParameterStructure m_param;
 	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
 
-	cv::BackgroundSubtractorMOG m_mog;
+	cv::BackgroundSubtractorMOG m_mog2;
 
 	// Background subtraction	
 	cv::Mat* m_foreground;
