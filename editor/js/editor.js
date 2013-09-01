@@ -121,8 +121,9 @@ var xmlProject = "";
 				Debug: "#09098e"
 			};
 
+
 			var inputPoint = {
-				endpoint:["Dot", { radius:15 }],
+				endpoint:"Rectangle",
 				paintStyle:{ fillStyle:colorDefault },
 				isSource:false,
 				scope:"default",
@@ -130,8 +131,25 @@ var xmlProject = "";
 				// connector: ["Bezier", { curviness:63 } ],
 				maxConnections:1,
 				isTarget:true,
+				beforeDrop:function(params) { 
+					// Connect input with output on xml
+
+					var xmlOutput = $(params.connection.endpoints[0]).data('config');
+					var xmlInput  = $(params.dropEndpoint).data('config');
+
+					// if(!! xmlInput && !! xmlOutput)
+					// return false;
+					xmlInput.attr('outputid', xmlOutput.attr('id'));
+					xmlInput.attr('moduleid', xmlOutput.parent().parent().attr('id'));
+
+					return true;
+
+				},				
 				dropOptions : dropOptions
 			};
+
+
+			// inputPoint.bind("maxConnections", maxConnectionsCallback);
 
 			var outputPoint = {
 				endpoint:["Dot", { radius:10 }],
@@ -246,13 +264,14 @@ var xmlProject = "";
 			/* Instanciate a module of a known type */
 
 			function createNewModule(type){
-				var id = type + nbModules;
+				var id = /*type +*/ nbModules;
 				nbModules++;
 
-				newWindow = createModuleWindow(type, id);
+				newWindow = createModuleWindow(type, 'w' + id);
 
 				// var xml = $(xmlProject).find("application").append($(xmlModuleTypes[type]).find("module").clone());
 				var xml = $(xmlModuleTypes[type]).find("module").clone().appendTo($(xmlProject).find("application"));
+				xml.attr('id', id);
 
 				// Draw input connectors
 				var inputs = xml.find(" inputs > input");
@@ -262,7 +281,7 @@ var xmlProject = "";
 					var scope = $(this).find('type').text();
 					var color = pointsColor[scope];
 					var e1 = jsPlumb.addEndpoint(
-						id, {
+						'w' + id, {
 							anchor:[0, y, -1, 0], 
 							scope: scope,
 							paintStyle:{ fillStyle: color},
@@ -270,6 +289,7 @@ var xmlProject = "";
 						},
 						inputPoint
 					);
+					$(e1).data('config', $(this));
 					y += offset;
 				});
 
@@ -281,7 +301,7 @@ var xmlProject = "";
 					var scope = $(this).find('type').text();
 					var color = pointsColor[scope];
 					var e1 = jsPlumb.addEndpoint(
-						id, { 
+						'w' + id, { 
 							anchor:[1, y, 1, 0], 
 							scope: scope,
 							paintStyle:{ fillStyle: color},
@@ -289,6 +309,8 @@ var xmlProject = "";
 						}, 
 						outputPoint
 					);
+					// Add a link to the xml config
+					$(e1).data('config', $(this));
 					y += offset;
 				});
 				
@@ -318,12 +340,12 @@ var xmlProject = "";
 					jsPlumb.detachEveryConnection();
 					showConnectionInfo("");
 				});
-				newWindow.data('xml', xml);
+				newWindow.data('config', xml);
 			}
 
 			/* display the detail of the module in the right panel */
 			function showDetails(window){
-				var xml = window.data('xml');
+				var xml = window.data('config');
 				$("#explanation").hide();
 				var div = $("#detail").show();
 				
