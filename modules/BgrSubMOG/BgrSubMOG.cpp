@@ -70,7 +70,7 @@ void BgrSubMOG::Reset()
 
 void BgrSubMOG::ProcessFrame()
 {
-	m_mog.operator ()(*m_input, *m_foreground);
+	m_mog.operator ()(*m_input, *m_foreground, 0.00001);
 	m_mog.getBackgroundImage(*m_background);
 };
 

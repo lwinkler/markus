@@ -251,7 +251,8 @@ var xmlProject = "";
 
 				newWindow = createModuleWindow(type, id);
 
-				var xml = $(xmlProject).find("application").append($(xmlModuleTypes[type]).find("module").clone());
+				// var xml = $(xmlProject).find("application").append($(xmlModuleTypes[type]).find("module").clone());
+				var xml = $(xmlModuleTypes[type]).find("module").clone().appendTo($(xmlProject).find("application"));
 
 				// Draw input connectors
 				var inputs = xml.find(" inputs > input");
@@ -294,7 +295,7 @@ var xmlProject = "";
 				// Make it draggable
 				jsPlumb.draggable(newWindow);
 				newWindow.click(function(){
-					showDetails(newWindow);	
+					showDetails(this);	
 				});
 
 				// Add events on controls
@@ -395,6 +396,28 @@ var xmlProject = "";
 					var type = $("#selectModule").val();
 					createNewModule(type);
 				});
+				// Create a div representing a new module
+				$("#downloadProject").click(function() {
+					if (! window['XSLTProcessor'])
+					{
+						// Trasformation for IE
+						// Note: not tested
+						transformed = xml.transformNode(xmlProject);
+					}
+					else
+					{
+						// Transformation for non-IE
+						// var processor = new XSLTProcessor();
+						// processor.importStylesheet(xslt);
+						// var xmldom = processor.transformToDocument(xml);
+						var serializer = new XMLSerializer();
+						var transformed = serializer.serializeToString(xmlProject.documentElement);
+					}
+
+					var win = window.open('data:text/xml,<?xml version="1.0" encoding="UTF-8"?>' + transformed, 'Project', '', true)
+				});
+
+				// Load an empty project
 				xmlProject = loadXML("editor/xml/EmptyProject.xml");
 				_initialised = true;
 			}
