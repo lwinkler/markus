@@ -258,15 +258,30 @@ var xmlProject = "";
 
 				newWindow = createModuleWindow(type, 'w' + id);
 
-				// var xml = $(xmlProject).find("application").append($(xmlModuleTypes[type]).find("module").clone());
-				var xml = $(xmlModuleTypes[type]).find("module").clone().appendTo($(xmlProject).find("application"));
-				xml.attr('id', id);
+				// var xml = $(xmlModuleTypes[type]).find("module").clone().appendTo($(xmlProject).find("application"));
+				
+				var xmlInstance = $("<module>", {
+					id: id,
+					name: type + nbModules,
+				});
+				$(xmlProject).find("application").append(xmlInstance);
+				
 
 				// Draw input connectors
-				var inputs = xml.find(" inputs > input");
-				var offset = 1.0 / (inputs.length + 1);
+				var classInputs    = $(xmlModuleTypes[type]).find("inputs");
+				var instanceInputs = $('<inputs>');
+				xmlInstance.append(instanceInputs);
+				var offset = 1.0 / (classInputs.length + 1);
 				var y = offset;
-				inputs.each(function(el){
+
+				classInputs.each(function(index){
+					// Add input to instance
+					var instance = $('<input>', {
+						id: $(this).attr('id')
+					});
+					instanceInputs.append(instance);
+
+					// Create anchor point for GUI
 					var scope = $(this).find('type').text();
 					var color = pointsColor[scope];
 					var e1 = jsPlumb.addEndpoint(
@@ -278,29 +293,44 @@ var xmlProject = "";
 						},
 						inputPoint
 					);
-					$(e1).data('config', $(this));
+					$(e1).data('config', instance);
 					y += offset;
 				});
 
-				// Draw output connectors
-				var outputs = xml.find(" outputs > output");
-				offset = 1.0 / (outputs.length + 1);
+				var classOutputs    = $(xmlModuleTypes[type]).find("outputs");
+				var instanceOutputs = $('<outputs>').appendTo(xmlInstance);
+				offset = 1.0 / (classOutputs.length + 1);
 				y = offset;
-				outputs.each(function(){
+				classOutputs.each(function(index){
+					// Add output to instance
+					var instance = $('<output>', {
+						id: $(this).attr('id')
+					}).appendTo(instanceOutputs);
+
+					// Create anchor point for GUI
 					var scope = $(this).find('type').text();
 					var color = pointsColor[scope];
 					var e1 = jsPlumb.addEndpoint(
-						'w' + id, { 
+						'w' + id, {
 							anchor:[1, y, 1, 0], 
 							scope: scope,
 							paintStyle:{ fillStyle: color},
 							connectorStyle:{ strokeStyle: color}
-						}, 
+						},
 						outputPoint
 					);
-					// Add a link to the xml config
-					$(e1).data('config', $(this));
+					$(e1).data('config', instance);
 					y += offset;
+				});
+				
+				var classParameters  = $(xmlModuleTypes[type]).find("parameters");
+				var instanceParameters = $('<parameters>').appendTo(xmlInstance);
+				classParameters.each(function(index){
+					// Add parameter to instance
+					var instance = $('<param>', {
+						name: $(this).attr('name') ,	
+					}).appendTo(instanceParameters);
+					instance.val(instanceParameters.find('value').attr('default'));
 				});
 				
 				// Make it draggable
@@ -329,7 +359,7 @@ var xmlProject = "";
 					jsPlumb.detachEveryConnection();
 					showConnectionInfo("");
 				});
-				newWindow.data('config', xml);
+				newWindow.data('config', xmlInstance);
 			}
 
 			/* display the detail of the module in the right panel */
