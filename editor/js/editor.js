@@ -1,15 +1,4 @@
 // Global objects
-var availableModulesNames = [
-	"BackgroundExtractor", 
-	"BlobSegmenter",
-	"CascadeDetector",
-	"SimpleTracker",
-	"SlitCamera",
-	"TemporalDifferencing",
-	"UsbCam",
-	"VideoFileReader",
-	"VideoOutput"
-];
 
 var nbModules = 0;
 var xmlModuleTypes = [];

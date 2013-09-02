@@ -1,4 +1,4 @@
-<application name="ddd2" description="" cyclelimit="-1" gui="">
+<application name="each_module" description="" cyclelimit="-1" gui="">
 <module name="BackgroundExtractor"><parameters><param name="class">BackgroundExtractor</param></parameters></module>
 <module name="BackgroundSubtractorSimple"><parameters><param name="class">BackgroundSubtractorSimple</param></parameters></module>
 <module name="BgrSubMOG2"><parameters><param name="class">BgrSubMOG2</param></parameters></module>
@@ -6,12 +6,12 @@
 <module name="BlobSegmenter"><parameters><param name="class">BlobSegmenter</param></parameters></module>
 <module name="CascadeDetector"><parameters><param name="class">CascadeDetector</param></parameters></module>
 <module name="Logger"><parameters><param name="class">Logger</param></parameters></module>
-
+<module name="MotionDetector"><parameters><param name="class">MotionDetector</param></parameters></module>
 <module name="NetworkCam"><parameters><param name="class">NetworkCam</param></parameters></module>
 <module name="SimpleTracker"><parameters><param name="class">SimpleTracker</param></parameters></module>
-
 <module name="SlitCam"><parameters><param name="class">SlitCam</param></parameters></module>
 <module name="TemporalDifferencing"><parameters><param name="class">TemporalDifferencing</param></parameters></module>
 <module name="UsbCam"><parameters><param name="class">UsbCam</param></parameters></module>
 <module name="VideoFileReader"><parameters><param name="class">VideoFileReader</param></parameters></module>
+<module name="VideoOutput"><parameters><param name="class">VideoOutput</param></parameters></module>
 </application>
