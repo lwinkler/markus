@@ -28,7 +28,7 @@
 // for debug
 #include "util.h"
 #include <opencv/cv.h>
-#include <opencv/highgui.h>
+#include <opencv2/highgui/highgui.hpp>
 
 using namespace cv;
 

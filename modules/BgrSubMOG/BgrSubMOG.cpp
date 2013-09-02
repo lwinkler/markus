@@ -23,6 +23,7 @@
 
 #include "BgrSubMOG.h"
 #include "StreamImage.h"
+#include "StreamDebug.h"
 
 // for debug
 #include "util.h"
@@ -49,6 +50,7 @@ BgrSubMOG::BgrSubMOG(const ConfigReader& x_configReader) :
 	m_outputStreams.push_back(new StreamImage(0, "foreground", m_foreground,*this,      "Foreground"));
 	m_outputStreams.push_back(new StreamImage(1, "background", m_background, *this,		"Background"));
 
+	m_debugStreams.push_back(new StreamDebug(0, "input", m_input,*this,      "Input"));
 
 	//vector<string> names;
 	//m_mog.getParams(names);
@@ -74,7 +76,7 @@ void BgrSubMOG::Reset()
 
 void BgrSubMOG::ProcessFrame()
 {
-	m_mog.operator ()(*m_input, *m_foreground, m_param.learningRate);
+	m_mog.operator ()(*m_input, *m_foreground , m_param.learningRate);
 	m_mog.getBackgroundImage(*m_background);
 };
 
