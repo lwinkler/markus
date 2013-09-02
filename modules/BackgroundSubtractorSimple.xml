@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="NetworkCam" description="">
+<module name="BackgroundSubtractorSimple" description="Perform a background subtraction using a running average">
 	<parameters>
 		<param name="class">
 			<type>string</type>
-			<value default="">NetworkCam</value>
+			<value default="">BackgroundSubtractorSimple</value>
 			<description>Class of the module (define the module's function)</description>
 		</param>
 		<param name="width">
@@ -18,7 +18,7 @@
 		</param>
 		<param name="type">
 			<type>image type</type>
-			<value default="CV_8UC1">CV_8UC1</value>
+			<value default="CV_32FC3">CV_32FC3</value>
 			<description>Format of the input image</description>
 		</param>
 		<param name="fps">
@@ -26,19 +26,34 @@
 			<value min="0" max="1000" default="10">10</value>
 			<description>Frames per seconds (processing speed)</description>
 		</param>
-		<param name="url">
-			<type>string</type>
-			<value default="http://root:admin@192.168.3.62/mjpg/1/video.mjpg">http://root:admin@192.168.3.62/mjpg/1/video.mjpg</value>
-			<description>Network address of the camera</description>
+		<param name="background_alpha">
+			<type>float</type>
+			<value min="0" max="1" default="0.02">0.02</value>
+			<description>Defines the speed at which the background adapts</description>
+		</param>
+		<param name="foreground_thres">
+			<type>float</type>
+			<value min="0" max="1" default="0.2">0.2</value>
+			<description>Threshold to accept a pixel as foreground</description>
 		</param>
 	</parameters>
 	<inputs>
+		<input id="0">
+			<type>Image</type>
+			<name>input</name>
+			<description>Video input</description>
+		</input>
 	</inputs>
 	<outputs>
 		<output id="0">
 			<type>Image</type>
-			<name>input</name>
-			<description>Video stream of the camera</description>
+			<name>foreground</name>
+			<description>Foreground</description>
+		</output>
+		<output id="1">
+			<type>Image</type>
+			<name>background</name>
+			<description>Background</description>
 		</output>
 	</outputs>
 </module>

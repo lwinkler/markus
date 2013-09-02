@@ -123,7 +123,9 @@ Manager::Manager(ConfigReader& x_configReader) :
 	{
 		try
 		{
-			Module& preceeding((*it)->GetInputStreamById(0)->RefConnected().RefModule());
+			Stream& stream = (*it)->GetInputStreamById(0)->RefConnected();
+			if(&stream == NULL) throw(0);
+			Module& preceeding(stream.RefModule());
 			(*it)->SetPreceedingModule(preceeding);
 			if((*it)->GetFps() == 0)
 				preceeding.AddDependingModule(**it);

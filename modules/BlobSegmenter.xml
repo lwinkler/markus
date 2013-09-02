@@ -33,12 +33,12 @@
 		</param>
 		<param name="minWidth">
 			<type>int</type>
-			<value min="0" max="6400" default="0">4</value>
+			<value min="0" max="6400" default="0">0</value>
 			<description>Minimal width of an object to segment.</description>
 		</param>
 		<param name="minHeight">
 			<type>int</type>
-			<value min="0" max="4800" default="0">4</value>
+			<value min="0" max="4800" default="0">0</value>
 			<description>Minimal height of an object to segment.</description>
 		</param>
 	</parameters>

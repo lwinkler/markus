@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="NetworkCam" description="">
+<module name="SlitCam" description="A simple example module that mimics a slit camera (or linear camera). The camera input is a range of pixels in the middle of the image.">
 	<parameters>
 		<param name="class">
 			<type>string</type>
-			<value default="">NetworkCam</value>
+			<value default="">SlitCam</value>
 			<description>Class of the module (define the module's function)</description>
 		</param>
 		<param name="width">
@@ -18,7 +18,7 @@
 		</param>
 		<param name="type">
 			<type>image type</type>
-			<value default="CV_8UC1">CV_8UC1</value>
+			<value default="CV_8UC3">CV_8UC3</value>
 			<description>Format of the input image</description>
 		</param>
 		<param name="fps">
@@ -26,19 +26,24 @@
 			<value min="0" max="1000" default="10">10</value>
 			<description>Frames per seconds (processing speed)</description>
 		</param>
-		<param name="url">
-			<type>string</type>
-			<value default="http://root:admin@192.168.3.62/mjpg/1/video.mjpg">http://root:admin@192.168.3.62/mjpg/1/video.mjpg</value>
-			<description>Network address of the camera</description>
+		<param name="aperture">
+			<type>int</type>
+			<value min="1" max="10" default="1">1</value>
+			<description>Size of the aperture of the camera</description>
 		</param>
 	</parameters>
 	<inputs>
+		<input id="0">
+			<type>Image</type>
+			<name>input</name>
+			<description>Video input</description>
+		</input>
 	</inputs>
 	<outputs>
 		<output id="0">
 			<type>Image</type>
-			<name>input</name>
-			<description>Video stream of the camera</description>
+			<name>slit</name>
+			<description>Slit camera stream</description>
 		</output>
 	</outputs>
 </module>

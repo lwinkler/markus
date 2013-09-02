@@ -28,7 +28,7 @@
 		</param>
 		<param name="file">
 			<type>string</type>
-			<value default="input.avi">input/test.avi</value>
+			<value default="input.avi">input.avi</value>
 			<description>Name of the video file to read, with path</description>
 		</param>
 	</parameters>

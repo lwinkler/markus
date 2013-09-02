@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="BackgroundExtractor" description="Track moving objects on video by using backgroung subtraction.">
+<module name="BgrSubMOG" description="Perform background subtraction via Mixtures Of Gaussians">
 	<parameters>
 		<param name="class">
 			<type>string</type>
-			<value default="">BackgroundExtractor</value>
+			<value default="">BgrSubMOG</value>
 			<description>Class of the module (define the module's function)</description>
 		</param>
 		<param name="width">
@@ -18,7 +18,7 @@
 		</param>
 		<param name="type">
 			<type>image type</type>
-			<value default="CV_32FC3">CV_32FC3</value>
+			<value default="CV_8UC1">CV_8UC1</value>
 			<description>Format of the input image</description>
 		</param>
 		<param name="fps">
@@ -26,20 +26,30 @@
 			<value min="0" max="1000" default="10">10</value>
 			<description>Frames per seconds (processing speed)</description>
 		</param>
-		<param name="background_alpha">
-			<type>float</type>
-			<value min="0" max="1" default="0.02">0.02</value>
-			<description>Defines the speed at which the background adapts</description>
-		</param>
-		<param name="foreground_thres">
-			<type>float</type>
-			<value min="0" max="1" default="0.2">0.2</value>
-			<description>Threshold to accept a pixel as foreground</description>
-		</param>
-		<param name="foreground_filter_size">
+		<param name="history">
 			<type>int</type>
-			<value min="1" max="7" default="3">3</value>
-			<description>Size of the filter to remove noise</description>
+			<value min="1" max="10000" default="200">200</value>
+			<description>Length of the history</description>
+		</param>
+		<param name="nmixtures">
+			<type>int</type>
+			<value min="1" max="10" default="5">5</value>
+			<description>Number of Gaussian mixtures</description>
+		</param>
+		<param name="background_ratio">
+			<type>double</type>
+			<value min="0" max="1" default="0.7">0.7</value>
+			<description>Background ratio</description>
+		</param>
+		<param name="noise_sigma">
+			<type>double</type>
+			<value min="0" max="1000" default="15">15</value>
+			<description>noise strength</description>
+		</param>
+		<param name="learning_rate">
+			<type>double</type>
+			<value min="-1" max="1" default="-1">-1</value>
+			<description>Learning rate of the model</description>
 		</param>
 	</parameters>
 	<inputs>
@@ -52,7 +62,7 @@
 	<outputs>
 		<output id="0">
 			<type>Image</type>
-			<name>foreground_rff</name>
+			<name>foreground</name>
 			<description>Foreground</description>
 		</output>
 		<output id="1">
