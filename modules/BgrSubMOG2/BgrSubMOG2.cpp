@@ -21,7 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "BgrSubMOG.h"
+#include "BgrSubMOG2.h"
 #include "StreamImage.h"
 
 // for debug
@@ -30,14 +30,16 @@
 using namespace cv;
 using namespace std;
 
-const char * BgrSubMOG::m_type = "BackgroundSubtractorSimpleMOG";
+const char * BgrSubMOG2::m_type = "BackgroundSubtractorSimpleMOG";
 
 
-BgrSubMOG::BgrSubMOG(const ConfigReader& x_configReader) :
+BgrSubMOG2::BgrSubMOG2(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader),
-	m_mog(m_param.history, m_param.nmixtures, m_param.backgroundRatio, m_param.noiseSigma)
+	m_mog2(m_param.history, m_param.varThres, m_param.bShadowDetection)
 {
+	//m_mog2.nmixtures = 3;
+
 
 	m_description = "Perform background subtraction via Mixtures Of Gaussians";
 	m_input    = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
@@ -51,30 +53,30 @@ BgrSubMOG::BgrSubMOG(const ConfigReader& x_configReader) :
 
 
 	//vector<string> names;
-	//m_mog.getParams(names);
+	//m_mog2.getParams(names);
 	//cout<<"size fo fparams"<<names.size()<<endl;
 	//for(int i = 0; i < names.size() ; i++)
 		//cout<<names[i]<<endl;
 };
 		
 
-BgrSubMOG::~BgrSubMOG()
+BgrSubMOG2::~BgrSubMOG2()
 {
 	delete(m_input);
 	delete(m_background);
 	delete(m_foreground);
 }
 
-void BgrSubMOG::Reset()
+void BgrSubMOG2::Reset()
 {
 	Module::Reset();
-	m_mog.initialize(m_input->size(), m_input->type());
+	m_mog2.initialize(m_input->size(), m_input->type());
 	// m_emptyBackgroundSubtractor = true;
 }
 
-void BgrSubMOG::ProcessFrame()
+void BgrSubMOG2::ProcessFrame()
 {
-	m_mog.operator ()(*m_input, *m_foreground, m_param.learningRate);
-	m_mog.getBackgroundImage(*m_background);
+	m_mog2.operator ()(*m_input, *m_foreground, m_param.learningRate);
+	m_mog2.getBackgroundImage(*m_background);
 };
 

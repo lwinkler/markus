@@ -21,8 +21,8 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef BACKGROUNDSUBTRACTORMOG_H
-#define BACKGROUNDSUBTRACTORMOG_H
+#ifndef BACKGROUNDSUBTRACTORMOG2_H
+#define BACKGROUNDSUBTRACTORMOG2_H
 
 #include "Module.h"
 #include "opencv2/video/background_segm.hpp"
@@ -43,18 +43,17 @@ static const float defaultVarMin2 = 4.0f;
 class ConfigReader;
 
 
-class BgrSubMOGParameterStructure : public ModuleParameterStructure
+class BgrSubMOG2ParameterStructure : public ModuleParameterStructure
 {
 public:
-	BgrSubMOGParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
+	BgrSubMOG2ParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
 
 		// This parameters should not change
-		m_list.push_back(new ParameterInt   (0, "history",          200,    PARAM_INT,      1,   10000,     &history,         "Length of the history"));
-		m_list.push_back(new ParameterInt   (1, "nmixtures",          5,    PARAM_INT,      1,      10,     &nmixtures,       "Number of Gaussian mixtures"));
-		m_list.push_back(new ParameterDouble(2, "background_ratio", 0.7,    PARAM_DOUBLE,   0,       1,     &backgroundRatio, "Background ratio"));
-		m_list.push_back(new ParameterDouble(3, "noise_sigma",       15,    PARAM_DOUBLE,   0,    1000,     &noiseSigma,      "noise strength"));
-		m_list.push_back(new ParameterDouble(4, "learning_rate",     -1,    PARAM_DOUBLE,  -1,       1,     &learningRate,    "Learning rate of the model"));
+		m_list.push_back(new ParameterInt  (0, "history",	500, 	PARAM_INT,   1, 10000,	&history,	"Length of the history"));
+		m_list.push_back(new ParameterFloat(1, "var_thres",	16, 	PARAM_FLOAT, 1, 1000,	&varThres,	"Threshold on the squared Mahalanobis distance to decide whether it is well described by the background model "));
+		m_list.push_back(new ParameterBool  (3, "b_shadow_detection",	false, 	PARAM_BOOL, 0, 1, &bShadowDetection,	"Enable shadow detection"));
+		m_list.push_back(new ParameterDouble(4, "learning_rate",	-1, 	PARAM_DOUBLE, -1, 1, &learningRate,	"Learning rate of the model"));
 
 		//m_list.push_back(new ParameterFloat(0, "foreground_thres", 	0.2, 	PARAM_FLOAT, 0, 1,	&foregroundThres,	"Threshold to accept a pixel as foreground"));
 
@@ -63,27 +62,26 @@ public:
 		ParameterStructure::Init();
 	};
 	int history;
-	int nmixtures;
-	double backgroundRatio;
-	double noiseSigma;
+	float varThres;
+	bool bShadowDetection;
 
 	double learningRate;
 };
 
-class BgrSubMOG : public Module
+class BgrSubMOG2 : public Module
 {
 public:
-	BgrSubMOG(const ConfigReader& x_configReader);
-	~BgrSubMOG();
+	BgrSubMOG2(const ConfigReader& x_configReader);
+	~BgrSubMOG2();
 	
 	virtual void ProcessFrame();
 	void Reset();
 		
 private:
-	BgrSubMOGParameterStructure m_param;
+	BgrSubMOG2ParameterStructure m_param;
 	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
 
-	cv::BackgroundSubtractorMOG m_mog;
+	cv::BackgroundSubtractorMOG2 m_mog2;
 
 	// Background subtraction	
 	cv::Mat* m_foreground;

@@ -35,10 +35,6 @@ add_executable(markus ${markus_SRCS})
 target_link_libraries(markus ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} bulk gui modules tools ${OpenCV_LIBS} tinyxml bulk)
 
 
-add_custom_command(
-	OUTPUT modules/AllModules.h
-	COMMAND ./generate_all_modules.sh > modules/AllModules.h
-)
 add_custom_target(update_modules_list
-DEPENDS modules/AllModules.h
+	COMMAND modules/AllModules.in.sh > modules/AllModules.h
 )
