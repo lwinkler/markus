@@ -260,26 +260,23 @@ var xmlProject = "";
 
 				// var xml = $(xmlModuleTypes[type]).find("module").clone().appendTo($(xmlProject).find("application"));
 				
-				var xmlInstance = $("<module>", {
+				var xmlInstance = $("<module/>", xmlProject).appendTo($(xmlProject).find("application"));
+				xmlInstance.attr({
 					id: id,
-					name: type + nbModules,
+					name: type + id
 				});
-				$(xmlProject).find("application").append(xmlInstance);
 				
 
 				// Draw input connectors
 				var classInputs    = $(xmlModuleTypes[type]).find("inputs");
-				var instanceInputs = $('<inputs>');
-				xmlInstance.append(instanceInputs);
+				var instanceInputs = $('<inputs/>', xmlProject).appendTo(xmlInstance);
 				var offset = 1.0 / (classInputs.length + 1);
 				var y = offset;
 
-				classInputs.each(function(index){
+				classInputs.find("input").each(function(index){
 					// Add input to instance
-					var instance = $('<input>', {
-						id: $(this).attr('id')
-					});
-					instanceInputs.append(instance);
+					var instance = $('<input/>', xmlProject).appendTo(instanceInputs);
+					instance.attr("id", $(this).attr('id'));
 
 					// Create anchor point for GUI
 					var scope = $(this).find('type').text();
@@ -298,14 +295,13 @@ var xmlProject = "";
 				});
 
 				var classOutputs    = $(xmlModuleTypes[type]).find("outputs");
-				var instanceOutputs = $('<outputs>').appendTo(xmlInstance);
+				var instanceOutputs = $('<outputs/>', xmlProject).appendTo(xmlInstance);
 				offset = 1.0 / (classOutputs.length + 1);
 				y = offset;
-				classOutputs.each(function(index){
+				classOutputs.find("output").each(function(index){
 					// Add output to instance
-					var instance = $('<output>', {
-						id: $(this).attr('id')
-					}).appendTo(instanceOutputs);
+					var instance = $('<output/>', xmlProject).appendTo(instanceOutputs);
+					instance.attr('id', $(this).attr('id'));
 
 					// Create anchor point for GUI
 					var scope = $(this).find('type').text();
@@ -324,13 +320,12 @@ var xmlProject = "";
 				});
 				
 				var classParameters  = $(xmlModuleTypes[type]).find("parameters");
-				var instanceParameters = $('<parameters>').appendTo(xmlInstance);
-				classParameters.each(function(index){
+				var instanceParameters = $('<parameters/>', xmlProject).appendTo(xmlInstance);
+				classParameters.find('param').each(function(index){
 					// Add parameter to instance
-					var instance = $('<param>', {
-						name: $(this).attr('name') ,	
-					}).appendTo(instanceParameters);
-					instance.val(instanceParameters.find('value').attr('default'));
+					var instance = $('<param/>', xmlProject).appendTo(instanceParameters);
+					instance.attr('name', $(this).attr('name'))
+					.text($(this).find('value').text());
 				});
 				
 				// Make it draggable
@@ -460,6 +455,7 @@ var xmlProject = "";
 
 				// Load an empty project
 				xmlProject = loadXML("editor/xml/EmptyProject.xml");
+				$(xmlProject).find('application').attr('name', "Custom project")
 				_initialised = true;
 			}
 		}

@@ -1,0 +1,17 @@
+var availableModulesNames = [
+"BackgroundExtractor",
+"BackgroundSubtractorSimple",
+"BgrSubMOG2",
+"BgrSubMOG",
+"BlobSegmenter",
+"CascadeDetector",
+"Logger",
+"MotionDetector",
+"NetworkCam",
+"SimpleTracker",
+"SlitCam",
+"TemporalDifferencing",
+"UsbCam",
+"VideoFileReader",
+"VideoOutput",
+];
