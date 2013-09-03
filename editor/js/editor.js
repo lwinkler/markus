@@ -2,7 +2,7 @@
 
 var nbModules = 0;
 var xmlModuleTypes = [];
-var xmlProject = "";
+var xmlProject = null;
 
 
 ;(function() {
@@ -268,15 +268,15 @@ var xmlProject = "";
 				
 
 				// Draw input connectors
-				var classInputs    = $(xmlModuleTypes[type]).find("inputs");
+				var classInputs    = $(xmlModuleTypes[type]).find("inputs > input");
 				var instanceInputs = $('<inputs/>', xmlProject).appendTo(xmlInstance);
 				var offset = 1.0 / (classInputs.length + 1);
 				var y = offset;
 
-				classInputs.find("input").each(function(index){
+				classInputs.each(function(index){
 					// Add input to instance
-					var instance = $('<input/>', xmlProject).appendTo(instanceInputs);
-					instance.attr("id", $(this).attr('id'));
+					var instance = $('<input/>', xmlProject).appendTo(instanceInputs)
+					.attr("id", $(this).attr('id'));
 
 					// Create anchor point for GUI
 					var scope = $(this).find('type').text();
@@ -294,14 +294,14 @@ var xmlProject = "";
 					y += offset;
 				});
 
-				var classOutputs    = $(xmlModuleTypes[type]).find("outputs");
+				var classOutputs    = $(xmlModuleTypes[type]).find("outputs > output");
 				var instanceOutputs = $('<outputs/>', xmlProject).appendTo(xmlInstance);
 				offset = 1.0 / (classOutputs.length + 1);
 				y = offset;
-				classOutputs.find("output").each(function(index){
+				classOutputs.each(function(index){
 					// Add output to instance
-					var instance = $('<output/>', xmlProject).appendTo(instanceOutputs);
-					instance.attr('id', $(this).attr('id'));
+					var instance = $('<output/>', xmlProject).appendTo(instanceOutputs)
+					.attr('id', $(this).attr('id'));
 
 					// Create anchor point for GUI
 					var scope = $(this).find('type').text();
@@ -323,8 +323,8 @@ var xmlProject = "";
 				var instanceParameters = $('<parameters/>', xmlProject).appendTo(xmlInstance);
 				classParameters.find('param').each(function(index){
 					// Add parameter to instance
-					var instance = $('<param/>', xmlProject).appendTo(instanceParameters);
-					instance.attr('name', $(this).attr('name'))
+					var instance = $('<param/>', xmlProject).appendTo(instanceParameters)
+					.attr('name', $(this).attr('name'))
 					.text($(this).find('value').text());
 				});
 				
@@ -359,7 +359,7 @@ var xmlProject = "";
 
 			/* display the detail of the module in the right panel */
 			function showDetails(window){
-				var xml = window.data('config');
+				var xml = $(window).data('config');
 				$("#explanation").hide();
 				var div = $("#detail").show();
 				
@@ -447,15 +447,21 @@ var xmlProject = "";
 						// processor.importStylesheet(xslt);
 						// var xmldom = processor.transformToDocument(xml);
 						var serializer = new XMLSerializer();
-						var transformed = serializer.serializeToString(xmlProject.documentElement);
+						var transformed = serializer.serializeToString(xmlProject[0]);
 					}
 
 					var win = window.open('data:text/xml,<?xml version="1.0" encoding="UTF-8"?>' + transformed, 'Project', '', true)
 				});
 
 				// Load an empty project
-				xmlProject = loadXML("editor/xml/EmptyProject.xml");
-				$(xmlProject).find('application').attr('name', "Custom project")
+				//xmlProject = $(loadXML("editor/xml/EmptyProject.xml"));
+				xmlProject = $(document.implementation.createDocument(null, "application", null));
+				// var xmlProject = document.implementation.createDocument(namespace,'application', doctype);
+
+
+
+
+				//doc.documentElement.appendChild(somenode);
 				_initialised = true;
 			}
 		}
