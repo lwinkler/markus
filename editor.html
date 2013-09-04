@@ -10,26 +10,24 @@
 
         <div id="main">
 			<div id="render">
-				<select id="selectModule">
-				</select>
-				<button id="createModule">Create</button>
-				Download the project:
-				<button id="downloadProject">Download</button>
+				<div>
+					Create a new module:
+					<select id="selectModule">
+					</select>
+					<button id="createModule">Create</button>
+				</div>
+				<div>
+					Download the project:
+					<button id="downloadProject">Download</button>
+				</div>
+				<div>
+					Load project:
+					<input id="selectProjectFile" type="file"/>
+					<button id="loadProjectFile">Load</button>
+				</div>
 			</div>
 			<div id="modules" style="display:none;"/>
-
-			<!-- All modules: -->		
-			<div class="window" id="window1">
-				one<br/><br/>
-				<a href="#" class="cmdLink hide" rel="window1">toggle connections</a>
-				<br/><a href="#" class="cmdLink drag" rel="window1">disable dragging</a>
-				<br/><a href="#" class="cmdLink detach" rel="window1">detach all</a>
-			</div>
-			<div class="window" id="window2">two<br/><br/><a href="#" class="cmdLink hide" rel="window2">toggle connections</a><br/><a href="#" class="cmdLink drag" rel="window2">disable dragging</a><br/><a href="#" class="cmdLink detach" rel="window2">detach all</a></div>
-			<div class="window" id="window3">three<br/><br/><a href="#" class="cmdLink hide" rel="window3">toggle connections</a><br/><a href="#" class="cmdLink drag" rel="window3">disable dragging</a><br/><a href="#" class="cmdLink detach" rel="window3">detach all</a></div>
-			<div class="window" id="window4">four<br/><br/><a href="#" class="cmdLink hide" rel="window4">toggle connections</a><br/><a href="#" class="cmdLink drag" rel="window4">disable dragging</a><br/><a href="#" class="cmdLink detach" rel="window4">detach all</a></div>			
-			<div id="list"></div>
-
+			<div id="drawingBoard"/>
 		</div>
 		<div id="sidebar">
             <div id="explanation">         

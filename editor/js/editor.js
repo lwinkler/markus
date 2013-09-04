@@ -240,9 +240,9 @@ var xmlProject = null;
 				})
 				.append('<h3 id="name">' + type + " 1" + '</h3>')
 				.append('<p id="type">' + type + '</p>')
-				.append('<a href="#" class="cmdLink hide"   rel="' + id + '">toggle connections</a><br/>')
-				.append('<a href="#" class="cmdLink drag"   rel="' + id + '">disable dragging</a><br/>')
-				.append('<a href="#" class="cmdLink detach" rel="' + id + '">detach all</a>');
+				.append('<a class="cmdLink hide"   rel="' + id + '">toggle connections</a><br/>')
+				.append('<a class="cmdLink drag"   rel="' + id + '">disable dragging</a><br/>')
+				.append('<a class="cmdLink detach" rel="' + id + '">detach all</a>');
 
 				// Append the module window to main div 
 				$("#main").append(newWindow);
@@ -250,10 +250,11 @@ var xmlProject = null;
 				return newWindow;
 			}
 
-			/* Instanciate a module of a known type */
-
+			//--------------------------------------------------------------------------------
+			// Instaanciate a module of a given type
+			//--------------------------------------------------------------------------------
 			function createNewModule(type){
-				var id = /*type +*/ nbModules;
+				var id = nbModules;
 				nbModules++;
 
 				newWindow = createModuleWindow(type, 'w' + id);
@@ -357,7 +358,33 @@ var xmlProject = null;
 				newWindow.data('config', xmlInstance);
 			}
 
-			/* display the detail of the module in the right panel */
+			//--------------------------------------------------------------------------------
+			// Delete the current modules and load a XML project file 
+			//--------------------------------------------------------------------------------
+			function loadProjectFile(fileName) { 
+				if(fileName.search(".xml") != fileName.length - 4){
+					alert("Project file must be in .xml format");
+					return;
+				}
+
+				var xml = loadXML("projects/" + fileName);
+				if(!xml) 
+					loadXML("projects2/" + fileName);
+				if(!xml) {
+					alert("Error: the file must be inside the 'projects/' or 'projects2/' folder. Sorry for this limitation.");
+					return;
+				}
+
+
+				// Load the xml file
+				$("#main > .window").remove();
+				$("#main > ._jsPlumb_endpoint").remove();
+				xmlProject = $(xml);
+			}
+
+			//--------------------------------------------------------------------------------
+			// Display the details of a module in the right panel
+			//--------------------------------------------------------------------------------
 			function showDetails(window){
 				var xml = $(window).data('config');
 				$("#explanation").hide();
@@ -380,8 +407,6 @@ var xmlProject = null;
 				xml.find("parameters > param").each(function(el){
 					parameters.append('<p>' + $(this).find('value').text() + '(' + $(this).find('type').text() + ')' + ': ' + $(this).find('description').text() + '</p>');
 				});
-				
-
 			}
 
 
@@ -451,6 +476,9 @@ var xmlProject = null;
 					}
 
 					var win = window.open('data:text/xml,<?xml version="1.0" encoding="UTF-8"?>' + transformed, 'Project', '', true)
+				});
+				$("#loadProjectFile").click(function (){
+					loadProjectFile($("#selectProjectFile").val());
 				});
 
 				// Load an empty project
