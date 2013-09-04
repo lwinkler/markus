@@ -38,7 +38,7 @@ target_link_libraries(markus ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} bulk gui m
 add_custom_target(update_modules_list
 	COMMAND modules/AllModules.h.sh > modules/AllModules.h
 	COMMAND ./config_each_module.xml.sh > config_each_module.xml
-	COMMAND editor/js/all_modules.js.sh > editor/js/all_modules
+	COMMAND editor/js/all_modules.js.sh > editor/js/all_modules.js
 	COMMAND make
 	COMMAND ./markus -d config_each_module.xml
 )

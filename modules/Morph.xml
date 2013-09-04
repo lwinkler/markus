@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="BgrSubMOG2" description="Perform background subtraction via Mixtures Of Gaussians">
+<module name="Morph" description="Apply a morphological operator to an image">
 	<parameters>
 		<param name="class">
 			<type>string</type>
-			<value default="">BgrSubMOG2</value>
+			<value default="">Morph</value>
 			<description>Class of the module (define the module's function)</description>
 		</param>
 		<param name="width">
@@ -26,25 +26,20 @@
 			<value min="0" max="1000" default="10">10</value>
 			<description>Frames per seconds (processing speed)</description>
 		</param>
-		<param name="history">
+		<param name="operator">
 			<type>int</type>
-			<value min="1" max="10000" default="500">500</value>
-			<description>Length of the history</description>
+			<value min="0" max="6" default="0">0</value>
+			<description>Morphological operator: ERODE=0,DILATE=1,OPEN=2,CLOSE=3,GRADIENT=4,TOPHAT=5,BLACKHAT=6</description>
 		</param>
-		<param name="var_thres">
-			<type>float</type>
-			<value min="1" max="255" default="16">16</value>
-			<description>Threshold on the squared Mahalanobis distance to decide whether it is well described by the background model (selectivity of background) </description>
+		<param name="element">
+			<type>int</type>
+			<value min="0" max="2" default="2">2</value>
+			<description>Morphological element: RECT=0, CROSS=1, ELLIPSE=2</description>
 		</param>
-		<param name="b_shadow_detection">
-			<type>bool</type>
-			<value min="0" max="1" default="0">0</value>
-			<description>Enable shadow detection</description>
-		</param>
-		<param name="learning_rate">
-			<type>double</type>
-			<value min="-1" max="1" default="-1">-1</value>
-			<description>Learning rate of the model</description>
+		<param name="kernel_size">
+			<type>int</type>
+			<value min="1" max="100" default="5">5</value>
+			<description>Size of the element</description>
 		</param>
 	</parameters>
 	<inputs>
@@ -57,13 +52,8 @@
 	<outputs>
 		<output id="0">
 			<type>Image</type>
-			<name>foreground</name>
-			<description>Foreground</description>
-		</output>
-		<output id="1">
-			<type>Image</type>
-			<name>background</name>
-			<description>Background</description>
+			<name>output</name>
+			<description>Output</description>
 		</output>
 	</outputs>
 </module>

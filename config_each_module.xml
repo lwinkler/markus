@@ -6,6 +6,7 @@
 <module name="BlobSegmenter"><parameters><param name="class">BlobSegmenter</param></parameters></module>
 <module name="CascadeDetector"><parameters><param name="class">CascadeDetector</param></parameters></module>
 <module name="Logger"><parameters><param name="class">Logger</param></parameters></module>
+<module name="Morph"><parameters><param name="class">Morph</param></parameters></module>
 <module name="MotionDetector"><parameters><param name="class">MotionDetector</param></parameters></module>
 <module name="NetworkCam"><parameters><param name="class">NetworkCam</param></parameters></module>
 <module name="SimpleTracker"><parameters><param name="class">SimpleTracker</param></parameters></module>
