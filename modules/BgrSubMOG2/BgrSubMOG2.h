@@ -51,7 +51,7 @@ public:
 
 		// This parameters should not change
 		m_list.push_back(new ParameterInt  (0, "history",	500, 	PARAM_INT,   1, 10000,	&history,	"Length of the history"));
-		m_list.push_back(new ParameterFloat(1, "var_thres",	16, 	PARAM_FLOAT, 1, 1000,	&varThres,	"Threshold on the squared Mahalanobis distance to decide whether it is well described by the background model "));
+		m_list.push_back(new ParameterFloat(1, "var_thres",	16, 	PARAM_FLOAT, 1, 255,	&varThres,	"Threshold on the squared Mahalanobis distance to decide whether it is well described by the background model (selectivity of background) "));
 		m_list.push_back(new ParameterBool  (3, "b_shadow_detection",	false, 	PARAM_BOOL, 0, 1, &bShadowDetection,	"Enable shadow detection"));
 		m_list.push_back(new ParameterDouble(4, "learning_rate",	-1, 	PARAM_DOUBLE, -1, 1, &learningRate,	"Learning rate of the model"));
 
@@ -81,10 +81,11 @@ private:
 	BgrSubMOG2ParameterStructure m_param;
 	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
 
-	cv::BackgroundSubtractorMOG2 m_mog2;
+	cv::BackgroundSubtractorMOG2* mp_mog2;
 
 	// Background subtraction	
 	cv::Mat* m_foreground;
+	cv::Mat* m_foregroundWithShadows;
 	cv::Mat* m_background;
 	//bool m_emptyBackgroundSubtractor;
 
