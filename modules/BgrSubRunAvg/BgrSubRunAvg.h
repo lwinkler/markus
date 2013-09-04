@@ -21,18 +21,18 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef BACKGROUNDSUBTRACTORSIMPLE_H
-#define BACKGROUNDSUBTRACTORSIMPLE_H
+#ifndef BGRSUBRUNAVG_H
+#define BGRSUBRUNAVG_H
 
 #include "Module.h"
 
 class ConfigReader;
 
 
-class BackgroundSubtractorSimpleParameterStructure : public ModuleParameterStructure
+class BgrSubRunAvgParameterStructure : public ModuleParameterStructure
 {
 public:
-	BackgroundSubtractorSimpleParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
+	BgrSubRunAvgParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
 		m_list.push_back(new ParameterFloat(0, "background_alpha",	0.02, 	PARAM_FLOAT, 0, 1,	&backgroundAlpha,	"Defines the speed at which the background adapts"));
 		m_list.push_back(new ParameterFloat(0, "foreground_thres", 	0.2, 	PARAM_FLOAT, 0, 1,	&foregroundThres,	"Threshold to accept a pixel as foreground"));
@@ -45,17 +45,17 @@ public:
 	float foregroundThres;
 };
 
-class BackgroundSubtractorSimple : public Module
+class BgrSubRunAvg : public Module
 {
 public:
-	BackgroundSubtractorSimple(const ConfigReader& x_configReader);
-	~BackgroundSubtractorSimple();
+	BgrSubRunAvg(const ConfigReader& x_configReader);
+	~BgrSubRunAvg();
 	
 	virtual void ProcessFrame();
 	void Reset();
 		
 private:
-	BackgroundSubtractorSimpleParameterStructure m_param;
+	BgrSubRunAvgParameterStructure m_param;
 	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
 
 	// Background subtraction	

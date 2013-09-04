@@ -1,8 +1,7 @@
 var availableModulesNames = [
-"BackgroundExtractor",
-"BackgroundSubtractorSimple",
 "BgrSubMOG2",
 "BgrSubMOG",
+"BgrSubRunAvg",
 "BlobSegmenter",
 "CascadeDetector",
 "Logger",

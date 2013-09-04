@@ -2,16 +2,16 @@
 #ifndef ALL_MODULES_H
 #define ALL_MODULES_H
 #include "modules/AllModules.h"
-#include "modules/BackgroundExtractor/BackgroundExtractor.h"
-#include "modules/BackgroundSubtractorSimple/BackgroundSubtractorSimple.h"
 #include "modules/BgrSubMOG2/BgrSubMOG2.h"
 #include "modules/BgrSubMOG/BgrSubMOG.h"
+#include "modules/BgrSubRunAvg/BgrSubRunAvg.h"
 #include "modules/BlobSegmenter/BlobSegmenter.h"
 #include "modules/CascadeDetector/CascadeDetector.h"
 #include "modules/Logger/Logger.h"
 #include "modules/Morph/Morph.h"
 #include "modules/MotionDetector/MotionDetector.h"
 #include "modules/NetworkCam/NetworkCam.h"
+#include "modules/old_modules/BackgroundExtractor/BackgroundExtractor.h"
 #include "modules/SimpleTracker/SimpleTracker.h"
 #include "modules/SlitCam/SlitCam.h"
 #include "modules/TemporalDifferencing/TemporalDifferencing.h"
@@ -23,10 +23,9 @@ Module * createNewModule(const ConfigReader& rx_configReader)
 Module * tmp = NULL;
 const string moduleClass = rx_configReader.SubConfig("parameters").SubConfig("param", "class").GetValue();
 if(false){}
-else if(moduleClass.compare("BackgroundExtractor") == 0) {tmp = new BackgroundExtractor(rx_configReader);} 
-else if(moduleClass.compare("BackgroundSubtractorSimple") == 0) {tmp = new BackgroundSubtractorSimple(rx_configReader);} 
 else if(moduleClass.compare("BgrSubMOG2") == 0) {tmp = new BgrSubMOG2(rx_configReader);} 
 else if(moduleClass.compare("BgrSubMOG") == 0) {tmp = new BgrSubMOG(rx_configReader);} 
+else if(moduleClass.compare("BgrSubRunAvg") == 0) {tmp = new BgrSubRunAvg(rx_configReader);} 
 else if(moduleClass.compare("BlobSegmenter") == 0) {tmp = new BlobSegmenter(rx_configReader);} 
 else if(moduleClass.compare("CascadeDetector") == 0) {tmp = new CascadeDetector(rx_configReader);} 
 else if(moduleClass.compare("Logger") == 0) {tmp = new Logger(rx_configReader);} 

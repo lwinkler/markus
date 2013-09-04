@@ -1,8 +1,7 @@
 <application name="each_module" description="" cyclelimit="-1" gui="">
-<module name="BackgroundExtractor"><parameters><param name="class">BackgroundExtractor</param></parameters></module>
-<module name="BackgroundSubtractorSimple"><parameters><param name="class">BackgroundSubtractorSimple</param></parameters></module>
 <module name="BgrSubMOG2"><parameters><param name="class">BgrSubMOG2</param></parameters></module>
 <module name="BgrSubMOG"><parameters><param name="class">BgrSubMOG</param></parameters></module>
+<module name="BgrSubRunAvg"><parameters><param name="class">BgrSubRunAvg</param></parameters></module>
 <module name="BlobSegmenter"><parameters><param name="class">BlobSegmenter</param></parameters></module>
 <module name="CascadeDetector"><parameters><param name="class">CascadeDetector</param></parameters></module>
 <module name="Logger"><parameters><param name="class">Logger</param></parameters></module>

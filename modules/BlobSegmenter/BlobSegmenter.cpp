@@ -50,7 +50,7 @@ BlobSegmenter::BlobSegmenter(const ConfigReader& x_configReader) :
 	m_outputStreams.push_back(new StreamObject(0, "segmented", m_param.width, m_param.height, m_regions, cvScalar(255, 255, 255), *this,	"Segmented objects"));
 	StreamObject* tmp = dynamic_cast<StreamObject*>(m_outputStreams[0]);
 	tmp->AddFeatureName("area");
-	tmp->AddFeatureName("perimeter");
+	// tmp->AddFeatureName("perimeter");
 	tmp->AddFeatureName("x");
 	tmp->AddFeatureName("y");
 	

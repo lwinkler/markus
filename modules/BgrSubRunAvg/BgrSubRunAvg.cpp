@@ -21,7 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "BackgroundSubtractorSimple.h"
+#include "BgrSubRunAvg.h"
 #include "StreamDebug.h"
 #include "StreamImage.h"
 
@@ -33,10 +33,10 @@
 using namespace cv;
 using namespace std;
 
-const char * BackgroundSubtractorSimple::m_type = "BackgroundSubtractorSimple";
+const char * BgrSubRunAvg::m_type = "BgrSubRunAvg";
 
 
-BackgroundSubtractorSimple::BackgroundSubtractorSimple(const ConfigReader& x_configReader) :
+BgrSubRunAvg::BgrSubRunAvg(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader)
 {
@@ -55,7 +55,7 @@ BackgroundSubtractorSimple::BackgroundSubtractorSimple(const ConfigReader& x_con
 };
 		
 
-BackgroundSubtractorSimple::~BackgroundSubtractorSimple()
+BgrSubRunAvg::~BgrSubRunAvg()
 {
 	delete(m_input);
 	delete(m_background);
@@ -64,13 +64,13 @@ BackgroundSubtractorSimple::~BackgroundSubtractorSimple()
 	delete(m_tmp2);
 }
 
-void BackgroundSubtractorSimple::Reset()
+void BgrSubRunAvg::Reset()
 {
 	Module::Reset();
 	m_emptyBackgroundSubtractor = true;
 }
 
-void BackgroundSubtractorSimple::ProcessFrame()
+void BgrSubRunAvg::ProcessFrame()
 {
 	// cout<<"input "<<m_input->size()<<" "<<m_input->depth();
 	// cout<<"backgr "<<m_background->size()<<" "<<m_background->depth();

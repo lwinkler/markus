@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="BackgroundSubtractorSimple" description="Perform a background subtraction using a running average">
+<module name="BgrSubRunAvg" description="Perform a background subtraction using a running average">
 	<parameters>
 		<param name="class">
 			<type>string</type>
-			<value default="">BackgroundSubtractorSimple</value>
+			<value default="">BgrSubRunAvg</value>
 			<description>Class of the module (define the module's function)</description>
 		</param>
 		<param name="width">
