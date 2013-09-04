@@ -6,6 +6,7 @@ var availableModulesNames = [
 "BlobSegmenter",
 "CascadeDetector",
 "Logger",
+"Morph",
 "MotionDetector",
 "NetworkCam",
 "SimpleTracker",
