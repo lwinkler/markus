@@ -8,6 +8,7 @@ var xmlProject = null;
 ;(function() {
 
 
+	// Declarations
 	var _initialised = false,
 	showConnectionInfo = function(s) {
 		$("#list").html(s);
@@ -38,7 +39,7 @@ var xmlProject = null;
 			hideConnectionInfo();
 	};
 	
-	window.jsPlumbDemo = {
+	window.markusEditor = {
 		init : function() {
 		
 			// setup jsPlumb defaults.
@@ -212,11 +213,13 @@ var xmlProject = null;
 			// add endpoint of type 3 using a selector. 
 			jsPlumb.addEndpoint($(".window"), exampleEndpoint3);
 */
-			//-------------------------------------------------------------------------------- 
+			//================================================================================
 			// Functions and utilities
-			//--------------------------------------------------------------------------------
+			//================================================================================
 
-			/* Load an xml file */
+			//-------------------------------------------------------------------------------- 
+			// Load an xml file
+			//--------------------------------------------------------------------------------
 			function loadXML(fileName) {
 				var target = "";
 				$.ajax({
@@ -233,12 +236,15 @@ var xmlProject = null;
 				return target;
 			}
 
-			function createModuleWindow(type, id) {
+			//--------------------------------------------------------------------------------
+			// Create a window to visualize the module with jsPlumb
+			//--------------------------------------------------------------------------------
+			function createModuleWindow(xmlModule, type, id) {
 				var newWindow = $('<div/>', {
 					class:"window",
-					id: id
+					id: 'w' + id
 				})
-				.append('<h3 id="name">' + type + " 1" + '</h3>')
+				.append('<h3 id="name">' + type + id + '</h3>')
 				.append('<p id="type">' + type + '</p>')
 				.append('<a class="cmdLink hide"   rel="' + id + '">toggle connections</a><br/>')
 				.append('<a class="cmdLink drag"   rel="' + id + '">disable dragging</a><br/>')
@@ -247,40 +253,16 @@ var xmlProject = null;
 				// Append the module window to main div 
 				$("#main").append(newWindow);
 
-				return newWindow;
-			}
-
-			//--------------------------------------------------------------------------------
-			// Instaanciate a module of a given type
-			//--------------------------------------------------------------------------------
-			function createNewModule(type){
-				var id = nbModules;
-				nbModules++;
-
-				newWindow = createModuleWindow(type, 'w' + id);
-
-				// var xml = $(xmlModuleTypes[type]).find("module").clone().appendTo($(xmlProject).find("application"));
-				
-				var xmlInstance = $("<module/>", xmlProject).appendTo($(xmlProject).find("application"));
-				xmlInstance.attr({
-					id: id,
-					name: type + id
-				});
-				
-
 				// Draw input connectors
-				var classInputs    = $(xmlModuleTypes[type]).find("inputs > input");
-				var instanceInputs = $('<inputs/>', xmlProject).appendTo(xmlInstance);
-				var offset = 1.0 / (classInputs.length + 1);
+				var xmlInputs  = xmlModule.find("inputs > input");
+				// var classInputs = $(xmlModuleTypes[type]).find("inputs > input");
+				var offset = 1.0 / (xmlInputs.length + 1);
 				var y = offset;
 
-				classInputs.each(function(index){
-					// Add input to instance
-					var instance = $('<input/>', xmlProject).appendTo(instanceInputs)
-					.attr("id", $(this).attr('id'));
-
+				xmlInputs.each(function(index){
 					// Create anchor point for GUI
-					var scope = $(this).find('type').text();
+					//var classInput = classInputs.find("id=" + $(this).attr();
+					var scope = $(this).data('class').find('type').text();
 					var color = pointsColor[scope];
 					var e1 = jsPlumb.addEndpoint(
 						'w' + id, {
@@ -291,21 +273,16 @@ var xmlProject = null;
 						},
 						inputPoint
 					);
-					$(e1).data('config', instance);
+					$(e1).data('config', $(this));
 					y += offset;
 				});
 
-				var classOutputs    = $(xmlModuleTypes[type]).find("outputs > output");
-				var instanceOutputs = $('<outputs/>', xmlProject).appendTo(xmlInstance);
-				offset = 1.0 / (classOutputs.length + 1);
+				var xmlOutputs = xmlModule.find("outputs > output");
+				offset = 1.0 / (xmlOutputs.length + 1);
 				y = offset;
-				classOutputs.each(function(index){
-					// Add output to instance
-					var instance = $('<output/>', xmlProject).appendTo(instanceOutputs)
-					.attr('id', $(this).attr('id'));
-
+				xmlOutputs.each(function(index){
 					// Create anchor point for GUI
-					var scope = $(this).find('type').text();
+					var scope = $(this).data('class').find('type').text();
 					var color = pointsColor[scope];
 					var e1 = jsPlumb.addEndpoint(
 						'w' + id, {
@@ -316,19 +293,20 @@ var xmlProject = null;
 						},
 						outputPoint
 					);
-					$(e1).data('config', instance);
+					$(e1).data('config', $(this));
 					y += offset;
 				});
 				
-				var classParameters  = $(xmlModuleTypes[type]).find("parameters");
+				/*var xmlParameters  = xmlModule.find("parameters");
 				var instanceParameters = $('<parameters/>', xmlProject).appendTo(xmlInstance);
-				classParameters.find('param').each(function(index){
+				xmlParameters.find('param').each(function(index){
 					// Add parameter to instance
 					var instance = $('<param/>', xmlProject).appendTo(instanceParameters)
 					.attr('name', $(this).attr('name'))
 					.text($(this).find('value').text());
 				});
-				
+				*/
+
 				// Make it draggable
 				jsPlumb.draggable(newWindow);
 				newWindow.click(function(){
@@ -355,6 +333,57 @@ var xmlProject = null;
 					jsPlumb.detachEveryConnection();
 					showConnectionInfo("");
 				});
+
+				return newWindow;
+			}
+
+			//--------------------------------------------------------------------------------
+			// Instanciate a module of a given type
+			//--------------------------------------------------------------------------------
+			function createNewModuleInConfig(type){
+				var id = nbModules;
+				nbModules++;
+
+
+				var xmlInstance = $("<module/>", xmlProject).appendTo($(xmlProject).find("application"));
+				xmlInstance.attr({
+					id: id,
+					name: type + id
+				});
+				
+
+				// Draw input connectors
+				var classInputs    = $(xmlModuleTypes[type]).find("inputs > input");
+				var instanceInputs = $('<inputs/>', xmlProject).appendTo(xmlInstance);
+
+				classInputs.each(function(index){
+					// Add input to instance
+					$('<input/>', xmlProject).appendTo(instanceInputs)
+					.attr("id", $(this).attr('id'))
+					.data('class', $(this));
+				});
+
+				var classOutputs    = $(xmlModuleTypes[type]).find("outputs > output");
+				var instanceOutputs = $('<outputs/>', xmlProject).appendTo(xmlInstance);
+				classOutputs.each(function(index){
+					// Add output to instance
+					var instance = $('<output/>', xmlProject).appendTo(instanceOutputs)
+					.attr('id', $(this).attr('id'))
+					.data('class', $(this));
+				});
+				
+				var classParameters  = $(xmlModuleTypes[type]).find("parameters");
+				var instanceParameters = $('<parameters/>', xmlProject).appendTo(xmlInstance);
+				classParameters.find('param').each(function(index){
+					// Add parameter to instance
+					var instance = $('<param/>', xmlProject).appendTo(instanceParameters)
+					.attr('name', $(this).attr('name'))
+					.data('class', $(this))
+					.text($(this).find('value').text());
+				});
+				
+				// Create the associated window
+				var newWindow = createModuleWindow(xmlInstance, type, id);
 				newWindow.data('config', xmlInstance);
 			}
 
@@ -455,7 +484,7 @@ var xmlProject = null;
 				// Create a div representing a new module
 				$("#createModule").click(function() {
 					var type = $("#selectModule").val();
-					createNewModule(type);
+					createNewModuleInConfig(type);
 				});
 				// Create a div representing a new module
 				$("#downloadProject").click(function() {
@@ -484,12 +513,6 @@ var xmlProject = null;
 				// Load an empty project
 				//xmlProject = $(loadXML("editor/xml/EmptyProject.xml"));
 				xmlProject = $(document.implementation.createDocument(null, "application", null));
-				// var xmlProject = document.implementation.createDocument(namespace,'application', doctype);
-
-
-
-
-				//doc.documentElement.appendChild(somenode);
 				_initialised = true;
 			}
 		}
@@ -513,12 +536,12 @@ jsPlumb.bind("ready", function() {
 		$(".rmode[mode='svg']").attr("disabled", !jsPlumb.isSVGAvailable());
 		$(".rmode[mode='vml']").attr("disabled", !jsPlumb.isVMLAvailable());
 		     
-		jsPlumbDemo.init();
+		markusEditor.init();
 	};
 
 	$(".rmode").bind("click", function() {
 		var desiredMode = $(this).attr("mode");
-		if (jsPlumbDemo.reset) jsPlumbDemo.reset();
+		if (markusEditor.reset) markusEditor.reset();
 		jsPlumb.reset();
 		resetRenderMode(desiredMode);
 	});
