@@ -144,7 +144,7 @@ var xmlProject = null;
 				isSource:true,
 				scope:"default",
 				connectorStyle:{ strokeStyle:colorDefault, lineWidth:2 },
-				connector: ["Bezier", { curviness:63 } ],
+				// connector: ["Bezier", { curviness:63 } ],
 				// connector: "Straight",
 				maxConnections:99,
 				isTarget:false,
@@ -245,9 +245,9 @@ var xmlProject = null;
 				})
 				.append('<h3 id="name">' + type + id + '</h3>')
 				.append('<p id="type">' + type + '</p>')
-				.append('<a class="cmdLink hide"   rel="' + id + '">toggle connections</a><br/>')
-				.append('<a class="cmdLink drag"   rel="' + id + '">disable dragging</a><br/>')
-				.append('<a class="cmdLink detach" rel="' + id + '">detach all</a>');
+				.append('<a class="cmdLink hide"   rel="w' + id + '">toggle connections</a><br/>')
+				.append('<a class="cmdLink drag"   rel="w' + id + '">disable dragging</a><br/>')
+				.append('<a class="cmdLink detach" rel="w' + id + '">detach all</a>');
 
 				// Append the module window to main div 
 				$("#main").append(newWindow);
@@ -280,6 +280,7 @@ var xmlProject = null;
 						inputPoint
 					);
 					$(e1).data('config', $(this));
+					$(this).data('gui', $(e1));
 					y += offset;
 				});
 
@@ -300,6 +301,7 @@ var xmlProject = null;
 						outputPoint
 					);
 					$(e1).data('config', $(this));
+					$(this).data('gui', $(e1));
 					y += offset;
 				});
 				
@@ -341,7 +343,7 @@ var xmlProject = null;
 				});
 
 				newWindow.data('config', xmlModule);
-				xmlModule.data('window', newWindow);
+				xmlModule.data('gui', newWindow);
 
 				return newWindow;
 			}
@@ -414,7 +416,7 @@ var xmlProject = null;
 				// Load the xml file
 				$("#main > .window").remove();
 				$("#main > ._jsPlumb_endpoint").remove();
-				xmlProject = $(xml);
+				xmlProject = $(xml).find("application");
 
 				xmlProject.find('application > module').each(function(index){
 					var type = $(this).find('parameters > param[name="class"]').text();
@@ -429,9 +431,27 @@ var xmlProject = null;
 						$(this).data('class', xmlModuleTypes[type].find('parameters > param[name="' + $(this).attr('name') + '"]'));
 					});
 
+					// create the window representing the module
 					createModuleWindow($(this), index, $(this).find('uiobject'));
 					if(index >= maxIdModules)
 						maxIdModules = index + 1;
+				});
+
+				// Link inputs-outputs
+				xmlProject.find('application > module').each(function(index){
+					$(this).find('inputs > input').each(function(){
+
+						// rebuild connections
+						var moduleid = $(this).attr('moduleid');
+						var outputid = $(this).attr('outputid');
+						if(moduleid != "" && outputid != "") {
+							jsPlumb.connect({
+								sourceEndpoint: $(this).data('gui')[0],
+								targetEndpoint: xmlProject.find('application > module[id="' + moduleid + '"] > outputs > output[id="' + outputid + '"]').data('gui')[0],
+								// type:"basic"
+							});
+						}
+					});
 				});
 			}
 
@@ -515,7 +535,7 @@ var xmlProject = null;
 
 					// Include position information in the xml
     					xmlProject.find('application > module').each(function(){
-						var window = $(this).data('window');
+						var window = $(this).data('gui');
 						var pos = window.offset();
 						$(this).find('uiobject').remove();
 						$('<uiobject/>', xmlProject).appendTo($(this))
