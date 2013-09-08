@@ -21,7 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "TemporalDifferencing.h"
+#include "TempDiff.h"
 #include "StreamDebug.h"
 #include "StreamImage.h"
 
@@ -32,10 +32,10 @@
 
 using namespace cv;
 
-const char * TemporalDifferencing::m_type = "TemporalDifferencing";
+const char * TempDiff::m_type = "TempDiff";
 
 
-TemporalDifferencing::TemporalDifferencing(const ConfigReader& x_configReader) :
+TempDiff::TempDiff(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader)
 {
@@ -52,7 +52,7 @@ TemporalDifferencing::TemporalDifferencing(const ConfigReader& x_configReader) :
 	Reset();
 }
 
-TemporalDifferencing::~TemporalDifferencing(void )
+TempDiff::~TempDiff(void )
 {
 	delete(m_input);
 	delete(m_output);
@@ -60,13 +60,13 @@ TemporalDifferencing::~TemporalDifferencing(void )
 	delete(m_temporalDiff);
 }
 
-void TemporalDifferencing::Reset()
+void TempDiff::Reset()
 {
 	Module::Reset();
 	m_emptyTemporalDiff = true;
 }
 
-void TemporalDifferencing::ProcessFrame()
+void TempDiff::ProcessFrame()
 {
 	// Main part of the program
 	if(m_emptyTemporalDiff) 

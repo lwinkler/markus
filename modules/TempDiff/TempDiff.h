@@ -21,18 +21,18 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef TEMPORALDIFFERENCING_H
-#define TEMPORALDIFFERENCING_H
+#ifndef TEMPDIFF_H
+#define TEMPDIFF_H
 
 #include "Module.h"
 
 class ConfigReader;
 
 
-class TemporalDifferencingParameterStructure : public ModuleParameterStructure
+class TempDiffParameterStructure : public ModuleParameterStructure
 {
 public:
-	TemporalDifferencingParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
+	TempDiffParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
 		// m_list.push_back(new ParameterFloat(0, "background_alpha",	0.02, 	PARAM_FLOAT, 0, 1,	&backgroundAlpha,	"Defines the speed at which the background adapts"));
 		// RefParameterByName("type").SetDefault("CV_32FC3");
@@ -42,17 +42,17 @@ public:
 	//float backgroundAlpha;
 };
 
-class TemporalDifferencing : public Module
+class TempDiff : public Module
 {
 public:
-	TemporalDifferencing(const ConfigReader& x_configReader);
-	~TemporalDifferencing();
+	TempDiff(const ConfigReader& x_configReader);
+	~TempDiff();
 	
 	virtual void ProcessFrame();
 	void Reset();
 		
 private:
-	TemporalDifferencingParameterStructure m_param;
+	TempDiffParameterStructure m_param;
 	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
 
 	// Temporal differencing

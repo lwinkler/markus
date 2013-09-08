@@ -20,24 +20,12 @@
 }
 
 /** PAGE STRUCTURE **/
-
-/** FB **/
-/*#like {
-	position: fixed;
-	width: 50px;
-	height: 70px;
-	border: 0;
-	right: 13px;
-	bottom: 8px;
-}*/
-
 body {
 	padding:0;
 	margin:0;
 	background-color:white;
 	font-family:'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	background-color:#eaedef;
-   
 }
 
 #headerWrapper {
@@ -77,12 +65,12 @@ body {
 }
 
 #explanation {
-	text-align: center;
+	text-align: left;
 	padding: 10px;
 }
 
 #detail {
-	text-align: center;
+	text-align: left;
 	padding: 10px;
 	display: none;
 }
@@ -181,9 +169,9 @@ a:hover {
 	z-index:24;
 	cursor:pointer;
 	box-shadow: 2px 2px 19px #aaa;
-   -o-box-shadow: 2px 2px 19px #aaa;
-   -webkit-box-shadow: 2px 2px 19px #aaa;
-   -moz-box-shadow: 2px 2px 19px #aaa;
+	-o-box-shadow: 2px 2px 19px #aaa;
+	-webkit-box-shadow: 2px 2px 19px #aaa;
+	-moz-box-shadow: 2px 2px 19px #aaa;
 
 }
 path, ._jsPlumb_endpoint { cursor:pointer; }
@@ -250,9 +238,9 @@ path, ._jsPlumb_endpoint { cursor:pointer; }
 .window:hover {
 	border:1px solid #123456;
 	box-shadow: 2px 2px 19px #444;
-   -o-box-shadow: 2px 2px 19px #444;
-   -webkit-box-shadow: 2px 2px 19px #444;
-   -moz-box-shadow: 2px 2px 19px #fff;
+	-o-box-shadow: 2px 2px 19px #444;
+	-webkit-box-shadow: 2px 2px 19px #444;
+	-moz-box-shadow: 2px 2px 19px #fff;
 	opacity:0.9;
 	filter:alpha(opacity=90);
 }

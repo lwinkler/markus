@@ -157,17 +157,19 @@ var xmlProject = null;
 				catch(err){}
 				$("#main > .window").remove();
 				$("#main > ._jsPlumb_endpoint").remove();
+				maxIdModules = 0;
 			}
 			//--------------------------------------------------------------------------------
 			// Create a window to visualize the module with jsPlumb
 			//--------------------------------------------------------------------------------
 			function createModuleWindow(xmlModule, id, uiobject) {
 				var type = getModuleType(xmlModule); 
+				var name = xmlModule.attr("name");
 				var newWindow = $('<div/>', {
 					class:"window",
 					id: 'w' + id
 				})
-				.append('<h3 id="name">' + type + id + '</h3>')
+				.append('<h3 id="name">' + name + '</h3>')
 				.append('<p id="type">' + type + '</p>')
 				// .append('<a class="cmdLink hide"   rel="w' + id + '">toggle connections</a><br/>')
 				// .append('<p><a class="cmdLink drag"   rel="w' + id + '">disable dragging</a></p>')
@@ -230,16 +232,6 @@ var xmlProject = null;
 					y += offset;
 				});
 				
-				/*var xmlParameters  = xmlModule.find("parameters");
-				var instanceParameters = $('<parameters/>', xmlProject).appendTo(xmlInstance);
-				xmlParameters.find('param').each(function(index){
-					// Add parameter to instance
-					var instance = $('<param/>', xmlProject).appendTo(instanceParameters)
-					.attr('name', $(this).attr('name'))
-					.text($(this).find('value').text());
-				});
-				*/
-
 				// Make it draggable
 				jsPlumb.draggable(newWindow);
 				newWindow.click(function(){
@@ -263,6 +255,10 @@ var xmlProject = null;
 					jsPlumb.detachAllConnections($(this).attr("rel"));
 				});
 				newWindow.find(".delete").click(function() {
+
+					if(!confirm("Do you want to delete this module ?"))
+						return;
+
 					jsPlumb.detachAllConnections($(this).attr("rel"));
 					var window = $('#' + $(this).attr("rel"));
 					jsPlumb.removeAllEndpoints(window);
@@ -283,7 +279,7 @@ var xmlProject = null;
 			//--------------------------------------------------------------------------------
 			// Instanciate a module of a given type
 			//--------------------------------------------------------------------------------
-			function createNewModuleInConfig(type){
+			function createNewModule(type){
 
 				var id = maxIdModules;
 				var xmlInstance = $("<module/>", xmlProject).appendTo($(xmlProject));
@@ -324,6 +320,7 @@ var xmlProject = null;
 				
 				// Create the associated window
 				var newWindow = createModuleWindow(xmlInstance, id);
+				xmlInstance.data('class', xmlModuleTypes[type].find('module'));
 				maxIdModules++;
 			}
 
@@ -361,6 +358,7 @@ var xmlProject = null;
 					$(this).find('parameters > param').each(function(){
 						$(this).data('class', xmlModuleTypes[type].find('parameters > param[name="' + $(this).attr('name') + '"]'));
 					});
+					$(this).data('class', xmlModuleTypes[type].find('module'));
 
 					// create the window representing the module
 					createModuleWindow($(this), index, $(this).find('uiobject'));
@@ -393,23 +391,35 @@ var xmlProject = null;
 				var xml = $(window).data('config');
 				$("#explanation").hide();
 				var div = $("#detail").show();
-				
+
+				// Module description
+				var module = div.find("#module").empty();
+				var cl1 = xml.data('class');
+				// module.append('<ul>')
+				module.append('<li><b>Name: </b>' + cl1.attr('name') + '</li>')
+				.append('<li><b>Description: </b>' + cl1.attr('description') + '</li>')
+				// .append('</ul>');
+
+
 				// Show inputs
 				var inputs = div.find("#inputs").empty();
 				xml.find("inputs > input").each(function(el){
-					inputs.append('<p>' + $(this).find('name').text() + ': ' + $(this).find('description').text() + '</p>');
+					var cl = $(this).data('class');
+					inputs.append('<p>' + cl.find('name').text() + ': ' + cl.find('description').text() + '</p>');
 				});
 				
 				// Show outputs
 				var outputs = div.find("#outputs").empty();
 				xml.find("outputs > output").each(function(el){
-					outputs.append('<p>' + $(this).find('name').text() + ': ' + $(this).find('description').text() + '</p>');
+					var cl = $(this).data('class');
+					outputs.append('<p>' + cl.find('name').text() + ': ' + cl.find('description').text() + '</p>');
 				});
 				
 				// Show inputs
 				var parameters = div.find("#parameters").empty();
 				xml.find("parameters > param").each(function(el){
-					parameters.append('<p>' + $(this).find('value').text() + '(' + $(this).find('type').text() + ')' + ': ' + $(this).find('description').text() + '</p>');
+					var cl = $(this).data('class');
+					parameters.append('<p>' + cl.attr('name') + '=' + cl.find('value').text() + '(' + cl.find('type').text() + ')' + ': ' + cl.find('description').text() + '</p>');
 				});
 			}
 
@@ -437,7 +447,7 @@ var xmlProject = null;
 				// Create a div representing a new module
 				$("#createModule").click(function() {
 					var type = $("#selectModule").val();
-					createNewModuleInConfig(type);
+					createNewModule(type);
 				});
 				// Create a div representing a new module
 				$("#downloadProject").click(function() {
@@ -479,7 +489,8 @@ var xmlProject = null;
 					loadProjectFile($("#selectProjectFile").val());
 				});
 				$("#deleteAll").click(function() {
-					deleteAll();
+					if(confirm("Do you want to delete all existing modules ?"))
+						deleteAll();
 				});
 					
 					
@@ -497,9 +508,6 @@ var xmlProject = null;
  *  between render modes.
  */
 jsPlumb.bind("ready", function() {
-
-	/*jsPlumb.DemoList.init(); */
-
 	// render mode
 	var resetRenderMode = function(desiredMode) {
 		var newMode = jsPlumb.setRenderMode(desiredMode);
@@ -521,5 +529,4 @@ jsPlumb.bind("ready", function() {
 	});
 
 	resetRenderMode(jsPlumb.SVG);
-
 });

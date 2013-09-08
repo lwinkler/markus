@@ -10,7 +10,7 @@ var availableModulesNames = [
 "NetworkCam",
 "SimpleTracker",
 "SlitCam",
-"TemporalDifferencing",
+"TempDiff",
 "UsbCam",
 "VideoFileReader",
 "VideoOutput",

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="TemporalDifferencing" description="Perform temporal differencing: compare frame with previous frame by subtraction">
+<module name="TempDiff" description="Perform temporal differencing: compare frame with previous frame by subtraction">
 	<parameters>
 		<param name="class">
 			<type>string</type>
-			<value default="">TemporalDifferencing</value>
+			<value default="">TempDiff</value>
 			<description>Class of the module (define the module's function)</description>
 		</param>
 		<param name="width">
