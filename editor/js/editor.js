@@ -1,6 +1,6 @@
 // Global objects
 
-var nbModules = 0;
+var maxIdModules = 0;
 var xmlModuleTypes = [];
 var xmlProject = null;
 
@@ -123,12 +123,11 @@ var xmlProject = null;
 				isTarget:true,
 				beforeDrop:function(params) { 
 					// Connect input with output on xml
-
 					var xmlOutput = $(params.connection.endpoints[0]).data('config');
 					var xmlInput  = $(params.dropEndpoint).data('config');
 
-					// if(!! xmlInput && !! xmlOutput)
-					// return false;
+					// if(!! xmlInput || !! xmlOutput)
+					// 	return false;
 					xmlInput.attr('outputid', xmlOutput.attr('id'));
 					xmlInput.attr('moduleid', xmlOutput.parent().parent().attr('id'));
 
@@ -139,15 +138,14 @@ var xmlProject = null;
 			};
 
 
-			// inputPoint.bind("maxConnections", maxConnectionsCallback);
-
 			var outputPoint = {
 				endpoint:["Dot", { radius:10 }],
 				paintStyle:{ fillStyle:colorDefault },
 				isSource:true,
 				scope:"default",
 				connectorStyle:{ strokeStyle:colorDefault, lineWidth:2 },
-				// connector: ["Bezier", { curviness:63 } ],
+				connector: ["Bezier", { curviness:63 } ],
+				// connector: "Straight",
 				maxConnections:99,
 				isTarget:false,
 				dropOptions : dropOptions
@@ -239,7 +237,8 @@ var xmlProject = null;
 			//--------------------------------------------------------------------------------
 			// Create a window to visualize the module with jsPlumb
 			//--------------------------------------------------------------------------------
-			function createModuleWindow(xmlModule, type, id) {
+			function createModuleWindow(xmlModule, id, uiobject) {
+				var type = xmlModule.find('parameters > param[name="class"]').text();
 				var newWindow = $('<div/>', {
 					class:"window",
 					id: 'w' + id
@@ -253,15 +252,22 @@ var xmlProject = null;
 				// Append the module window to main div 
 				$("#main").append(newWindow);
 
+				// Position the window if a position was saved
+				if(!! uiobject)
+					newWindow.offset({
+						left: uiobject.attr('x'),
+						top: uiobject.attr('y')
+					})
+
+
 				// Draw input connectors
 				var xmlInputs  = xmlModule.find("inputs > input");
-				// var classInputs = $(xmlModuleTypes[type]).find("inputs > input");
+				// var classInputs = xmlModuleTypes[type].find("inputs > input");
 				var offset = 1.0 / (xmlInputs.length + 1);
 				var y = offset;
 
 				xmlInputs.each(function(index){
 					// Create anchor point for GUI
-					//var classInput = classInputs.find("id=" + $(this).attr();
 					var scope = $(this).data('class').find('type').text();
 					var color = pointsColor[scope];
 					var e1 = jsPlumb.addEndpoint(
@@ -334,6 +340,9 @@ var xmlProject = null;
 					showConnectionInfo("");
 				});
 
+				newWindow.data('config', xmlModule);
+				xmlModule.data('window', newWindow);
+
 				return newWindow;
 			}
 
@@ -341,16 +350,13 @@ var xmlProject = null;
 			// Instanciate a module of a given type
 			//--------------------------------------------------------------------------------
 			function createNewModuleInConfig(type){
-				var id = nbModules;
-				nbModules++;
 
-
+				var id = maxIdModules;
 				var xmlInstance = $("<module/>", xmlProject).appendTo($(xmlProject).find("application"));
 				xmlInstance.attr({
 					id: id,
 					name: type + id
 				});
-				
 
 				// Draw input connectors
 				var classInputs    = $(xmlModuleTypes[type]).find("inputs > input");
@@ -383,8 +389,8 @@ var xmlProject = null;
 				});
 				
 				// Create the associated window
-				var newWindow = createModuleWindow(xmlInstance, type, id);
-				newWindow.data('config', xmlInstance);
+				var newWindow = createModuleWindow(xmlInstance, id);
+				maxIdModules++;
 			}
 
 			//--------------------------------------------------------------------------------
@@ -409,6 +415,24 @@ var xmlProject = null;
 				$("#main > .window").remove();
 				$("#main > ._jsPlumb_endpoint").remove();
 				xmlProject = $(xml);
+
+				xmlProject.find('application > module').each(function(index){
+					var type = $(this).find('parameters > param[name="class"]').text();
+
+					$(this).find('inputs > input').each(function(){
+						$(this).data('class', xmlModuleTypes[type].find('inputs > input[id="' + $(this).attr('id') + '"]'));
+					});
+					$(this).find('outputs > output').each(function(){
+						$(this).data('class', xmlModuleTypes[type].find('outputs > output[id="' + $(this).attr('id') + '"]'));
+					});
+					$(this).find('parameters > param').each(function(){
+						$(this).data('class', xmlModuleTypes[type].find('parameters > param[name="' + $(this).attr('name') + '"]'));
+					});
+
+					createModuleWindow($(this), index, $(this).find('uiobject'));
+					if(index >= maxIdModules)
+						maxIdModules = index + 1;
+				});
 			}
 
 			//--------------------------------------------------------------------------------
@@ -478,7 +502,7 @@ var xmlProject = null;
 					$("#selectModule").append('<option value=' + availableModulesNames[i] + '>' + availableModulesNames[i] + '</option>');
 
 					// Load the matching xml file
-					xmlModuleTypes[type] = loadXML("modules/" + availableModulesNames[i] + ".xml");
+					xmlModuleTypes[type] = $(loadXML("modules/" + availableModulesNames[i] + ".xml"));
 				}
 				
 				// Create a div representing a new module
@@ -488,6 +512,22 @@ var xmlProject = null;
 				});
 				// Create a div representing a new module
 				$("#downloadProject").click(function() {
+
+					// Include position information in the xml
+    					xmlProject.find('application > module').each(function(){
+						var window = $(this).data('window');
+						var pos = window.offset();
+						$(this).find('uiobject').remove();
+						$('<uiobject/>', xmlProject).appendTo($(this))
+						.attr({
+							type:   "",
+							x:      pos.left,
+							y:      pos.top,
+							width:  "0",
+							height: "0"
+						});
+					});
+
 					if (! window['XSLTProcessor'])
 					{
 						// Trasformation for IE
