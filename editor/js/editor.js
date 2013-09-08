@@ -95,7 +95,6 @@ var xmlProject = null;
 					xmlInput.attr('moduleid', xmlOutput.parent().parent().attr('id'));
 
 					return true;
-
 				},				
 				dropOptions : dropOptions
 			};
@@ -112,12 +111,24 @@ var xmlProject = null;
 				// connector: "Flowchart",
 				maxConnections:99,
 				isTarget:false,
+				beforeDetach: function(params) { 
+					// Connect input with output on xml
+					var xmlInput = $(params.suspendedEndpoint).data('config'); 
+
+					// if(!! xmlInput || !! xmlOutput)
+					// 	return false;
+					xmlInput.removeAttr('outputid');
+					xmlInput.removeAttr('moduleid');
+					return true;
+				},
 				dropOptions : dropOptions
 			};
 			//================================================================================
 			// Functions and utilities
 			//================================================================================
-
+			function getModuleType(xmlModule) {
+				return xmlModule.find('parameters > param[name="class"]').text();
+			}
 			//-------------------------------------------------------------------------------- 
 			// Load an xml file
 			//--------------------------------------------------------------------------------
@@ -136,21 +147,32 @@ var xmlProject = null;
 				});
 				return target;
 			}
-
+			//--------------------------------------------------------------------------------
+			// Delete everything
+			//--------------------------------------------------------------------------------
+			function deleteAll(){
+				try{
+					jsPlumb.detachEveryConnection();
+				}
+				catch(err){}
+				$("#main > .window").remove();
+				$("#main > ._jsPlumb_endpoint").remove();
+			}
 			//--------------------------------------------------------------------------------
 			// Create a window to visualize the module with jsPlumb
 			//--------------------------------------------------------------------------------
 			function createModuleWindow(xmlModule, id, uiobject) {
-				var type = xmlModule.find('parameters > param[name="class"]').text();
+				var type = getModuleType(xmlModule); 
 				var newWindow = $('<div/>', {
 					class:"window",
 					id: 'w' + id
 				})
 				.append('<h3 id="name">' + type + id + '</h3>')
 				.append('<p id="type">' + type + '</p>')
-				.append('<a class="cmdLink hide"   rel="w' + id + '">toggle connections</a><br/>')
-				.append('<a class="cmdLink drag"   rel="w' + id + '">disable dragging</a><br/>')
-				.append('<a class="cmdLink detach" rel="w' + id + '">detach all</a>');
+				// .append('<a class="cmdLink hide"   rel="w' + id + '">toggle connections</a><br/>')
+				// .append('<p><a class="cmdLink drag"   rel="w' + id + '">disable dragging</a></p>')
+				// .append('<p><a class="cmdLink detach" rel="w' + id + '">detach all</a></p>')
+				.append('<p><a class="cmdLink delete" rel="w' + id + '">delete</a></p>');
 
 				// Append the module window to main div 
 				$("#main").append(newWindow);
@@ -240,6 +262,13 @@ var xmlProject = null;
 				newWindow.find(".detach").click(function() {
 					jsPlumb.detachAllConnections($(this).attr("rel"));
 				});
+				newWindow.find(".delete").click(function() {
+					jsPlumb.detachAllConnections($(this).attr("rel"));
+					var window = $('#' + $(this).attr("rel"));
+					jsPlumb.removeAllEndpoints(window);
+					window.data('config').remove(); 
+					window.remove();
+				});
 				newWindow.find("#clear").click(function() { 
 					jsPlumb.detachEveryConnection();
 					showConnectionInfo("");
@@ -317,13 +346,11 @@ var xmlProject = null;
 
 
 				// Load the xml file
-				jsPlumb.detachEveryConnection();
-				$("#main > .window").remove();
-				$("#main > ._jsPlumb_endpoint").remove();
+				deleteAll();
 				xmlProject = $(xml).find("application");
 
 				xmlProject.find('module').each(function(index){
-					var type = $(this).find('parameters > param[name="class"]').text();
+					var type = getModuleType($(this));
 
 					$(this).find('inputs > input').each(function(){
 						$(this).data('class', xmlModuleTypes[type].find('inputs > input[id="' + $(this).attr('id') + '"]'));
@@ -422,7 +449,7 @@ var xmlProject = null;
 						$(this).find('uiobject').remove();
 						$('<uiobject/>', xmlProject).appendTo($(this))
 						.attr({
-							type:   "",
+							// type:   getModuleType($(this)),
 							x:      pos.left,
 							y:      pos.top,
 							width:  "0",
@@ -445,19 +472,21 @@ var xmlProject = null;
 						var serializer = new XMLSerializer();
 						var transformed = serializer.serializeToString(xmlProject[0]);
 					}
-
-					var win = window.open('data:text/xml,<?xml version="1.0" encoding="UTF-8"?>' + transformed, 'Project', '', true)
+					transformed = transformed.replace(/>[ ]*</g, '><').replace(/></g, '>\r\n<');
+					var win = window.open('data:text/xml,<?xml version="1.0" encoding="UTF-8"?>' + encodeURIComponent(transformed), 'Project', '', true)
 				});
 				$("#loadProjectFile").click(function (){
 					loadProjectFile($("#selectProjectFile").val());
 				});
 				$("#deleteAll").click(function() {
-					
-					
+					deleteAll();
 				});
+					
+					
 
 				// Load an empty project
-				xmlProject = $(document.implementation.createDocument(null, "application", null));
+				xmlProject = $(document.implementation.createDocument(null, "application", null)).find('application');
+				xmlProject.attr("name", "CustomProject")
 				_initialised = true;
 			}
 		}

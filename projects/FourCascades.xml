@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <application name="FourCascades" description="" cyclelimit="-1" gui="">
   <module name="UsbCam" machineurl="localhost" id="0">
     <parameters>
@@ -8,14 +9,15 @@
       <param name="fps">10</param>
       <param name="num">-1</param>
     </parameters>
-    <inputs />
+    <inputs/>
     <outputs>
-      <output id="0" />
-      <output id="1" />
+      <output id="0"/>
+      <output id="1"/>
     </outputs>
-    <display x="17" y="88" width="150" height="75" />
-    <uiobject type="" x="0" y="0" width="0" height="0" />
-  </module>
+    <display x="17" y="88" width="150" height="75"/>
+    
+  <uiobject x="71" y="94" width="0" height="0"/>
+</module>
   <module name="CascadeDetector" machineurl="localhost" id="1">
     <parameters>
       <param name="class">CascadeDetector</param>
@@ -32,15 +34,16 @@
       <param name="objectLabel">face</param>
     </parameters>
     <inputs>
-      <input id="0" moduleid="0" outputid="0" />
+      <input id="0" moduleid="0" outputid="0"/>
     </inputs>
     <outputs>
-      <output id="0" />
-      <output id="1" />
+      <output id="0"/>
+      <output id="1"/>
     </outputs>
-    <display x="263" y="54" width="150" height="75" />
-    <uiobject type="" x="0" y="0" width="0" height="0" />
-  </module>
+    <display x="263" y="54" width="150" height="75"/>
+    
+  <uiobject x="548" y="80" width="0" height="0"/>
+</module>
   <module name="SimpleTracker" machineurl="localhost" id="2">
     <parameters>
       <param name="class">SimpleTracker</param>
@@ -50,14 +53,15 @@
       <param name="fps">10</param>
     </parameters>
     <inputs>
-      <input id="0" moduleid="1" outputid="0" />
+      <input id="0" moduleid="1" outputid="0"/>
     </inputs>
     <outputs>
-      <output id="0" />
+      <output id="0"/>
     </outputs>
-    <display x="648" y="52" width="150" height="75" />
-    <uiobject type="" x="0" y="0" width="0" height="0" />
-  </module>
+    <display x="648" y="52" width="150" height="75"/>
+    
+  <uiobject x="746" y="84" width="0" height="0"/>
+</module>
   <module name="VideoOutput" machineurl="localhost" id="3">
     <parameters>
       <param name="class">VideoOutput</param>
@@ -67,19 +71,20 @@
       <param name="fps">10</param>
     </parameters>
     <inputs>
-      <input id="0" moduleid="0" outputid="0" />
-      <input id="1" moduleid="2" outputid="0" />
-      <input id="2" moduleid="8" outputid="0" />
-      <input id="3" moduleid="9" outputid="0" />
-      <input id="4" moduleid="10" outputid="0" />
-      <input id="5" moduleid="11" outputid="0" />
+      <input id="0" moduleid="0" outputid="0"/>
+      <input id="1" moduleid="2" outputid="0"/>
+      <input id="2" moduleid="8" outputid="0"/>
+      <input id="3" moduleid="9" outputid="0"/>
+      <input id="4" moduleid="10" outputid="0"/>
+      <input id="5" moduleid="11" outputid="0"/>
     </inputs>
     <outputs>
-      <output id="0" />
+      <output id="0"/>
     </outputs>
-    <display x="1049" y="242" width="150" height="165" />
-    <uiobject type="" x="0" y="0" width="0" height="0" />
-  </module>
+    <display x="1049" y="242" width="150" height="165"/>
+    
+  <uiobject x="1051" y="130" width="0" height="0"/>
+</module>
   <module name="CascadeDetector" machineurl="localhost" id="4">
     <parameters>
       <param name="class">CascadeDetector</param>
@@ -96,15 +101,16 @@
       <param name="objectLabel">upper body</param>
     </parameters>
     <inputs>
-      <input id="0" moduleid="0" outputid="0" />
+      <input id="0" moduleid="0" outputid="0"/>
     </inputs>
     <outputs>
-      <output id="0" />
-      <output id="1" />
+      <output id="0"/>
+      <output id="1"/>
     </outputs>
-    <display x="271" y="154" width="150" height="75" />
-    <uiobject type="" x="0" y="0" width="0" height="0" />
-  </module>
+    <display x="271" y="154" width="150" height="75"/>
+    
+  <uiobject x="545" y="190" width="0" height="0"/>
+</module>
   <module name="CascadeDetector" machineurl="localhost" id="5">
     <parameters>
       <param name="class">CascadeDetector</param>
@@ -121,15 +127,16 @@
       <param name="objectLabel">profile</param>
     </parameters>
     <inputs>
-      <input id="0" moduleid="0" outputid="0" />
+      <input id="0" moduleid="0" outputid="0"/>
     </inputs>
     <outputs>
-      <output id="0" />
-      <output id="1" />
+      <output id="0"/>
+      <output id="1"/>
     </outputs>
-    <display x="275" y="255" width="150" height="75" />
-    <uiobject type="" x="0" y="0" width="0" height="0" />
-  </module>
+    <display x="275" y="255" width="150" height="75"/>
+    
+  <uiobject x="548" y="314" width="0" height="0"/>
+</module>
   <module name="CascadeDetector" machineurl="localhost" id="6">
     <parameters>
       <param name="class">CascadeDetector</param>
@@ -146,15 +153,16 @@
       <param name="objectLabel">left eyes</param>
     </parameters>
     <inputs>
-      <input id="0" moduleid="0" outputid="0" />
+      <input id="0" moduleid="0" outputid="0"/>
     </inputs>
     <outputs>
-      <output id="0" />
-      <output id="1" />
+      <output id="0"/>
+      <output id="1"/>
     </outputs>
-    <display x="275" y="372" width="150" height="75" />
-    <uiobject type="" x="0" y="0" width="0" height="0" />
-  </module>
+    <display x="275" y="372" width="150" height="75"/>
+    
+  <uiobject x="551" y="448" width="0" height="0"/>
+</module>
   <module name="CascadeDetector" machineurl="localhost" id="7">
     <parameters>
       <param name="class">CascadeDetector</param>
@@ -171,15 +179,16 @@
       <param name="objectLabel">upper body B</param>
     </parameters>
     <inputs>
-      <input id="0" moduleid="0" outputid="0" />
+      <input id="0" moduleid="0" outputid="0"/>
     </inputs>
     <outputs>
-      <output id="0" />
-      <output id="1" />
+      <output id="0"/>
+      <output id="1"/>
     </outputs>
-    <display x="273" y="496" width="150" height="75" />
-    <uiobject type="" x="0" y="0" width="0" height="0" />
-  </module>
+    <display x="273" y="496" width="150" height="75"/>
+    
+  <uiobject x="558" y="568" width="0" height="0"/>
+</module>
   <module name="SimpleTracker" machineurl="localhost" id="8">
     <parameters>
       <param name="class">SimpleTracker</param>
@@ -189,14 +198,15 @@
       <param name="fps">10</param>
     </parameters>
     <inputs>
-      <input id="0" moduleid="4" outputid="0" />
+      <input id="0" moduleid="4" outputid="0"/>
     </inputs>
     <outputs>
-      <output id="0" />
+      <output id="0"/>
     </outputs>
-    <display x="655" y="155" width="150" height="75" />
-    <uiobject type="" x="0" y="0" width="0" height="0" />
-  </module>
+    <display x="655" y="155" width="150" height="75"/>
+    
+  <uiobject x="745" y="195" width="0" height="0"/>
+</module>
   <module name="SimpleTracker" machineurl="localhost" id="9">
     <parameters>
       <param name="class">SimpleTracker</param>
@@ -206,14 +216,15 @@
       <param name="fps">10</param>
     </parameters>
     <inputs>
-      <input id="0" moduleid="5" outputid="0" />
+      <input id="0" moduleid="5" outputid="0"/>
     </inputs>
     <outputs>
-      <output id="0" />
+      <output id="0"/>
     </outputs>
-    <display x="652" y="252" width="150" height="75" />
-    <uiobject type="" x="0" y="0" width="0" height="0" />
-  </module>
+    <display x="652" y="252" width="150" height="75"/>
+    
+  <uiobject x="744" y="317" width="0" height="0"/>
+</module>
   <module name="SimpleTracker" machineurl="localhost" id="10">
     <parameters>
       <param name="class">SimpleTracker</param>
@@ -223,14 +234,15 @@
       <param name="fps">10</param>
     </parameters>
     <inputs>
-      <input id="0" moduleid="6" outputid="0" />
+      <input id="0" moduleid="6" outputid="0"/>
     </inputs>
     <outputs>
-      <output id="0" />
+      <output id="0"/>
     </outputs>
-    <display x="655" y="376" width="150" height="75" />
-    <uiobject type="" x="0" y="0" width="0" height="0" />
-  </module>
+    <display x="655" y="376" width="150" height="75"/>
+    
+  <uiobject x="744" y="450" width="0" height="0"/>
+</module>
   <module name="SimpleTracker" machineurl="localhost" id="11">
     <parameters>
       <param name="class">SimpleTracker</param>
@@ -240,12 +252,13 @@
       <param name="fps">10</param>
     </parameters>
     <inputs>
-      <input id="0" moduleid="7" outputid="0" />
+      <input id="0" moduleid="7" outputid="0"/>
     </inputs>
     <outputs>
-      <output id="0" />
+      <output id="0"/>
     </outputs>
-    <display x="654" y="500" width="150" height="75" />
-    <uiobject type="" x="0" y="0" width="0" height="0" />
-  </module>
+    <display x="654" y="500" width="150" height="75"/>
+    
+  <uiobject x="745" y="567" width="0" height="0"/>
+</module>
 </application>
