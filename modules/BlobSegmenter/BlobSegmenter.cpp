@@ -41,7 +41,7 @@ BlobSegmenter::BlobSegmenter(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader)
 {
-	m_description = "Segments the binary blobs.";
+	m_description = "Segments a binary image and outputs a stream of objects (from segmented blobs) with their features (position, width and height)";
 	m_input = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
 	m_blobsImg = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
 
@@ -49,10 +49,12 @@ BlobSegmenter::BlobSegmenter(const ConfigReader& x_configReader) :
 
 	m_outputStreams.push_back(new StreamObject(0, "segmented", m_param.width, m_param.height, m_regions, cvScalar(255, 255, 255), *this,	"Segmented objects"));
 	StreamObject* tmp = dynamic_cast<StreamObject*>(m_outputStreams[0]);
-	tmp->AddFeatureName("area");
+	// tmp->AddFeatureName("area");
 	// tmp->AddFeatureName("perimeter");
 	tmp->AddFeatureName("x");
 	tmp->AddFeatureName("y");
+	tmp->AddFeatureName("width");
+	tmp->AddFeatureName("height");
 	
 	m_debugStreams.push_back(new StreamDebug(0, "blobs", m_blobsImg, *this,	"Blobs"));
 }
@@ -101,10 +103,10 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 
 	for (i = 0; i < blobs.GetNumBlobs(); i++ )
 	{
-			IplImage img = *m_blobsImg; // TODO : debug only
-			currentBlob = blobs.GetBlob(i);
-			
-			cv::Rect rect = currentBlob->GetBoundingBox();
+		IplImage img = *m_blobsImg; // TODO : debug only
+		currentBlob = blobs.GetBlob(i);
+		
+		cv::Rect rect = currentBlob->GetBoundingBox();
 			
 		if(rect.width >= m_param.minWidth && rect.height >= m_param.minHeight)
 		{
@@ -117,8 +119,8 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 			obj.m_height 	= rect.height;
 			
 			// Add here all features that are to be added in the templates/region
-			obj.AddFeature(currentBlob->Area(), 0.1);
-	 		obj.AddFeature(currentBlob->Perimeter(), 0.1);
+			// obj.AddFeature(currentBlob->Area(), 0.1); // Note: it seems that the tracker algo does not work good with these 2 features
+	 		// obj.AddFeature(currentBlob->Perimeter(), 0.1);
 	
 	// 		//reg.AddFeature("mean", GetSTLResult(currentBlob, CBlobGetMean()));
 	// 		reg.AddFeature("compactness", GetSTLResult(currentBlob, CBlobGetCompactness()));
@@ -128,6 +130,8 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 	
 			obj.AddFeature(rect.x, 0.1);
 			obj.AddFeature(rect.y, 0.1);
+			obj.AddFeature(rect.width, 0.1);
+			obj.AddFeature(rect.height, 0.1);
 			m_regions.push_back(obj);
 		}
 		//else throw("ERROR");

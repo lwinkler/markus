@@ -72,7 +72,8 @@ var xmlProject = null;
 			var pointsColor = {
 				Image: "#316b31",	
 				Objects: "#00f",	
-				Debug: "#09098e"
+				Debug: "#09098e",
+				State: "#cd7f32"
 			};
 
 
@@ -335,7 +336,7 @@ var xmlProject = null;
 
 				var xml = loadXML("projects/" + fileName);
 				if(!xml) 
-					loadXML("projects2/" + fileName);
+					xml = loadXML("projects2/" + fileName);
 				if(!xml) {
 					alert("Error: the file must be inside the 'projects/' or 'projects2/' folder. Sorry for this limitation.");
 					return;
@@ -419,7 +420,7 @@ var xmlProject = null;
 				var parameters = div.find("#parameters").empty();
 				xml.find("parameters > param").each(function(el){
 					var cl = $(this).data('class');
-					parameters.append('<p>' + cl.attr('name') + '=' + cl.find('value').text() + '(' + cl.find('type').text() + ')' + ': ' + cl.find('description').text() + '</p>');
+					parameters.append('<p>' + cl.attr('name') + '=' + $(this).text() + '(' + cl.find('value').text() + cl.find('type').text() + ')' + ': ' + cl.find('description').text() + '</p>');
 				});
 			}
 
