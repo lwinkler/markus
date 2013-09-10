@@ -90,23 +90,25 @@ Template::~Template()
 /* Compare a candidate region with the template */
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-double Template::CompareWithObject(const Object& x_reg) const
+double Template::CompareWithObject(const Object& x_reg, const vector<int>& x_featureIndices) const
 {
 	double sum = 0;
 	//cout<<"m_feats.size() ="<<m_feats.size()<<endl;
 	assert(m_feats.size() == x_reg.GetFeatures().size());
 	assert(m_feats.size() > 0);
 	
-	for ( unsigned int i=0 ; i < m_feats.size() ; i++)
+	for (vector<int>::const_iterator it = x_featureIndices.begin() ; it != x_featureIndices.end() ; it++)
 	{
+		const Feature & f1(m_feats.at(*it));
+		const Feature & f2(x_reg.GetFeatures().at(*it));
 		//cout<<"m_feats[i].GetValue()"<<m_feats[i].GetValue()<<endl;
 		//cout<<"x_reg.GetFeatures()[i].GetValue()"<<x_reg.GetFeatures()[i].GetValue()<<endl;
 		
 		//cout<<"temp val ="<<m_feats[i].GetValue()<<" region val="<<x_reg.GetFeatures()[i].GetValue()<<" temp var="<<m_feats[i].GetVariance()<<endl;
-		sum += POW2(m_feats[i].GetValue() - x_reg.GetFeatures()[i].GetValue()) 
-			/ POW2(m_feats[i].GetSqVariance());
+		sum += POW2(f1.GetValue() - f2.GetValue()) 
+			/ POW2(f1.GetSqVariance());
 	}
-	return sqrt(sum) / m_feats.size();
+	return sqrt(sum) / x_featureIndices.size();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/

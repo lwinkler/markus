@@ -37,7 +37,7 @@ class Template
 		Template& operator = (const Template&);
 		~Template();
 		
-		double CompareWithObject(const Object& x_reg) const;
+		double CompareWithObject(const Object& x_reg, const std::vector<int>& x_featureIndices) const;
 		void UpdateFeatures();
 		
 		

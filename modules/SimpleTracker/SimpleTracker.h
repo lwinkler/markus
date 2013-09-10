@@ -25,8 +25,8 @@
 #define SIMPLETRACKER_H
 
 #include "Module.h"
-#include "Tracker.h"
 #include "StreamObject.h"
+#include "Template.h"
 
 class ConfigReader;
 
@@ -35,14 +35,17 @@ class SimpleTrackerParameterStructure : public ModuleParameterStructure
 public:
 	SimpleTrackerParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterDouble(0, "maxMatchingDistance", 100, 	PARAM_DOUBLE, 0, MAX_WIDTH + MAX_HEIGHT, &tracker.maxMatchingDistance,		"Tolerance of the tracker."));
-		m_list.push_back(new ParameterInt   (0, "maxNbFramesDisappearance", 10, PARAM_INT, 1, 1000,			&tracker.maxNbFramesDisappearance,	"Time before disappearence of an object")); // TODO : should be in seconds
-		m_list.push_back(new ParameterBool  (0, "symetricMatch", 	true, 	PARAM_BOOL, 0, 1, 			&tracker.symetricMatch,			"Each match between objects and templates must be symetrical"));
-		m_list.push_back(new ParameterString(0, "features",     "x,y,width,height",      &tracker.features,   "List of features to use for tracking (only scalar values, must be present in objects to track)"));
+		m_list.push_back(new ParameterDouble(0, "maxMatchingDistance", 100, 	PARAM_DOUBLE, 0, MAX_WIDTH + MAX_HEIGHT, &maxMatchingDistance,		"Tolerance of the tracker."));
+		m_list.push_back(new ParameterInt   (0, "maxNbFramesDisappearance", 10, PARAM_INT, 1, 1000,			&maxNbFramesDisappearance,	"Time before disappearence of an object")); // TODO : should be in seconds
+		m_list.push_back(new ParameterBool  (0, "symetricMatch", 	true, 	PARAM_BOOL, 0, 1, 			&symetricMatch,			"Each match between objects and templates must be symetrical"));
+		m_list.push_back(new ParameterString(0, "features",     "x,y,width,height",      &features,   "List of features to use for tracking (only scalar values, must be present in objects to track)"));
 
 		ParameterStructure::Init();
 	};
-	TrackerParameter tracker;
+	double maxMatchingDistance;
+	int maxNbFramesDisappearance;
+	bool symetricMatch;
+	std::string features;
 };
 
 class SimpleTracker : public Module
@@ -57,8 +60,21 @@ public:
 private:
 	SimpleTrackerParameterStructure m_param;
 
-	Tracker track;
+	void MatchTemplates();
+	void CleanTemplates();
+	void DetectNewTemplates();
+	void UpdateTemplates();
+	void PrintObjects() const;
+	int MatchObject(Object& x_obj);
+	int MatchTemplate(Template& x_temp);
+	
+	std::list <Template> m_templates;
+	std::vector <Object> m_objects;
+	std::vector <int>    m_featureIndices;
+	StreamObject* m_outputObjectStream;
+
 	static const char * m_type;
+
 protected:
 	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
 };

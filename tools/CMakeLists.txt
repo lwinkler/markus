@@ -1,6 +1,5 @@
 
 add_library(tools
-Tracker.cpp
 cvblobs/BlobContour.cpp
 cvblobs/BlobOperators.cpp
 cvblobs/BlobResult.cpp
