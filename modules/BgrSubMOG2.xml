@@ -18,7 +18,7 @@
 		</param>
 		<param name="type">
 			<type>image type</type>
-			<value default="CV_8UC1">CV_8UC1</value>
+			<value default="CV_8UC3">CV_8UC3</value>
 			<description>Format of the input image</description>
 		</param>
 		<param name="fps">

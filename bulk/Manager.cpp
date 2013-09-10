@@ -168,7 +168,7 @@ void Manager::Process()
 	}
 	m_timer.Restart();
 	usleep(100000);
-	double timecount = m_timer.GetSecDouble();
+	// double timecount = m_timer.GetSecDouble();
 	m_timer.Restart();
 	
 	try

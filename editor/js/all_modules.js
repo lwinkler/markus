@@ -8,6 +8,7 @@ var availableModulesNames = [
 "MotionDetector",
 "NetworkCam",
 "SegmenterBlob",
+"SegmenterContour",
 "SimpleTracker",
 "SlitCam",
 "TempDiff",

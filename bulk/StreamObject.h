@@ -47,6 +47,7 @@ public:
 	inline virtual const std::string GetTypeString()const {return "Objects";};
 	inline void AddFeatureName(const std::string & x_name){m_featureNames.push_back(x_name);};
 	double GetFeatureValue(const std::vector<Feature>& x_vect, const char* x_name);
+	const std::vector<std::string>& GetFeatureNames() const{return m_featureNames;}
 	void PrintObjects() const;
 
 protected:

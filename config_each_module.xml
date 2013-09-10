@@ -8,6 +8,7 @@
 <module name="MotionDetector"><parameters><param name="class">MotionDetector</param></parameters></module>
 <module name="NetworkCam"><parameters><param name="class">NetworkCam</param></parameters></module>
 <module name="SegmenterBlob"><parameters><param name="class">SegmenterBlob</param></parameters></module>
+<module name="SegmenterContour"><parameters><param name="class">SegmenterContour</param></parameters></module>
 <module name="SimpleTracker"><parameters><param name="class">SimpleTracker</param></parameters></module>
 <module name="SlitCam"><parameters><param name="class">SlitCam</param></parameters></module>
 <module name="TempDiff"><parameters><param name="class">TempDiff</param></parameters></module>

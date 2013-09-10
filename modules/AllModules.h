@@ -12,6 +12,7 @@
 #include "modules/NetworkCam/NetworkCam.h"
 #include "modules/old_modules/BackgroundExtractor/BackgroundExtractor.h"
 #include "modules/SegmenterBlob/SegmenterBlob.h"
+#include "modules/SegmenterContour/SegmenterContour.h"
 #include "modules/SimpleTracker/SimpleTracker.h"
 #include "modules/SlitCam/SlitCam.h"
 #include "modules/TempDiff/TempDiff.h"
@@ -32,6 +33,7 @@ else if(moduleClass.compare("Morph") == 0) {tmp = new Morph(rx_configReader);}
 else if(moduleClass.compare("MotionDetector") == 0) {tmp = new MotionDetector(rx_configReader);} 
 else if(moduleClass.compare("NetworkCam") == 0) {tmp = new NetworkCam(rx_configReader);} 
 else if(moduleClass.compare("SegmenterBlob") == 0) {tmp = new SegmenterBlob(rx_configReader);} 
+else if(moduleClass.compare("SegmenterContour") == 0) {tmp = new SegmenterContour(rx_configReader);} 
 else if(moduleClass.compare("SimpleTracker") == 0) {tmp = new SimpleTracker(rx_configReader);} 
 else if(moduleClass.compare("SlitCam") == 0) {tmp = new SlitCam(rx_configReader);} 
 else if(moduleClass.compare("TempDiff") == 0) {tmp = new TempDiff(rx_configReader);} 

@@ -159,6 +159,11 @@ var xmlProject = null;
 				$("#main > .window").remove();
 				$("#main > ._jsPlumb_endpoint").remove();
 				maxIdModules = 0;
+
+				// Load an empty project
+				xmlProject = $(document.implementation.createDocument(null, "application", null)).find('application');
+				xmlProject.attr("name", "CustomProject")
+				_initialised = true;
 			}
 			//--------------------------------------------------------------------------------
 			// Create a window to visualize the module with jsPlumb
@@ -495,11 +500,7 @@ var xmlProject = null;
 				});
 					
 					
-
-				// Load an empty project
-				xmlProject = $(document.implementation.createDocument(null, "application", null)).find('application');
-				xmlProject.attr("name", "CustomProject")
-				_initialised = true;
+				deleteAll();
 			}
 		}
 	};	

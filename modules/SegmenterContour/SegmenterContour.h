@@ -21,28 +21,23 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef SEGMENTER_BLOB_H
-#define SEGMENTER_BLOB_H
+#ifndef SEGMENTER_CONTOUR_H
+#define SEGMENTER_CONTOUR_H
 
 #include "Module.h"
 #include "StreamObject.h"
 
-#include "cvblobs/BlobResult.h"
-//#include "cvblobs/BlobExtraction.h"
-//#include "cvblobs/Blob.h"
-#include "cvblobs/BlobLibraryConfiguration.h"
-#include "cvblobs/BlobResult.h"
-
 class ConfigReader;
 
-class SegmenterBlobParameterStructure : public ModuleParameterStructure
+class SegmenterContourParameterStructure : public ModuleParameterStructure
 {
 public:
-	SegmenterBlobParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
+	SegmenterContourParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterString(0, "objectLabel", "object", 		   &objectLabel,"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
-		m_list.push_back(new ParameterInt(0, "minWidth",  0, 	 PARAM_INT, 0, MAX_WIDTH,  &minWidth,	"Minimal width of an object to segment."));
-		m_list.push_back(new ParameterInt(0, "minHeight", 0, 	 PARAM_INT, 0, MAX_HEIGHT, &minHeight,	"Minimal height of an object to segment."));
+		m_list.push_back(new ParameterInt(   0, "minWidth",  0, 	 PARAM_INT, 0, MAX_WIDTH,  &minWidth,	"Minimal width of an object to segment."));
+		m_list.push_back(new ParameterInt(   0, "minHeight", 0, 	 PARAM_INT, 0, MAX_HEIGHT, &minHeight,	"Minimal height of an object to segment."));
+		m_list.push_back(new ParameterString(0, "objectLabel", "object", &objectLabel,"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
+		m_list.push_back(new ParameterString(0, "features",     "x,y,width,height",      &features,   "List of features to extract, separated with ','"));
 		
 		ParameterStructure::Init();
 	};
@@ -50,31 +45,31 @@ public:
 	std::string objectLabel;
 	int minWidth;
 	int minHeight;
+	std::string features;
 };
 
-class SegmenterBlob : public Module
+class SegmenterContour : public Module
 {
 public:
-	SegmenterBlob(const ConfigReader& x_configReader);
-	~SegmenterBlob();
+	SegmenterContour(const ConfigReader& x_configReader);
+	~SegmenterContour();
 	
 	virtual void ProcessFrame();
 	void Reset();
 	
 protected:
-	void ExtractBlobs(cv::Mat* x_img);
 	
 	// for streams
 	cv::Mat * m_input;
-	cv::Mat* m_blobsImg;
+	cv::Mat * m_debug;
 
 	static const char * m_type;
-	//std::vector <TrackedRegion> m_regions;		
 	std::vector<Object> m_regions;
-	double GetSTLResult( CBlob* blob, funcio_calculBlob *evaluador ) const;
+	StreamObject* m_outputObjectStream;
 
 private:
-	SegmenterBlobParameterStructure m_param;
+	SegmenterContourParameterStructure m_param;
+	cv::RNG m_rng;
 	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
 };
 

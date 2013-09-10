@@ -55,9 +55,7 @@ public:
 		m_list.push_back(new ParameterBool  (3, "b_shadow_detection",	false, 	PARAM_BOOL, 0, 1, &bShadowDetection,	"Enable shadow detection"));
 		m_list.push_back(new ParameterDouble(4, "learning_rate",	-1, 	PARAM_DOUBLE, -1, 1, &learningRate,	"Learning rate of the model"));
 
-		//m_list.push_back(new ParameterFloat(0, "foreground_thres", 	0.2, 	PARAM_FLOAT, 0, 1,	&foregroundThres,	"Threshold to accept a pixel as foreground"));
-
-		// RefParameterByName("history").Lock();
+		RefParameterByName("type").SetDefault("CV_8UC3");
 
 		ParameterStructure::Init();
 	};
