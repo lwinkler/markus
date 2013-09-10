@@ -34,8 +34,13 @@ using namespace cv;
 Tracker::Tracker(const TrackerParameter& x_param, int width, int height, int type) :
 	m_param(x_param)
 {
-
-	
+	/*vector<string> elems;
+	split(m_param.features, ',', elems);
+	for(vector<std::string>::const_iterator it = elems.begin() ; it != elems.end() ; it++)
+	{
+		// cout<<" "<<*it;
+		m_outputObjectStream->AddFeatureName(*it);
+	}*/
 }
 
 void Tracker::Reset()

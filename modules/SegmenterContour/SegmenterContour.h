@@ -71,6 +71,8 @@ private:
 	SegmenterContourParameterStructure m_param;
 	cv::RNG m_rng;
 	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
+	bool m_computeFitEllipse;
+	bool m_computeMinRect;
 };
 
 

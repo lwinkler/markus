@@ -47,10 +47,12 @@ public:
 		maxMatchingDistance = 100;
 		maxNbFramesDisappearance = 10;
 		symetricMatch = true;
+		features = "";
 	};
 	double maxMatchingDistance;
 	int maxNbFramesDisappearance;
 	bool symetricMatch;
+	std::string features;
 };
 
 /*! \class Tracker

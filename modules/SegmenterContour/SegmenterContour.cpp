@@ -66,7 +66,8 @@ SegmenterContour::SegmenterContour(const ConfigReader& x_configReader) :
 		// cout<<" "<<*it;
 		m_outputObjectStream->AddFeatureName(*it);
 	}
-	
+	m_computeFitEllipse = m_param.features.find("ellipse_");
+	m_computeMinRect    = m_param.features.find("minrect_");
 }
 
 SegmenterContour::~SegmenterContour()
@@ -102,7 +103,10 @@ void SegmenterContour::ProcessFrame()
 		Rect rect = boundingRect(contours[i]);
 		if(rect.width >= m_param.minWidth && rect.height >= m_param.minHeight)
 		{
-			RotatedRect minEllipse; /// Find the rotated rectangles and ellipses for each contour
+			RotatedRect minEllipse; 
+			/// Find the rotated rectangles and ellipses for each contour
+			if(contours[i].size() >= 5)
+				minEllipse = fitEllipse(Mat(contours[i]));
 			// RotatedRect minRect = minAreaRect(Mat(contours[i]));
 
 			// contour
@@ -129,32 +133,24 @@ void SegmenterContour::ProcessFrame()
 					obj.AddFeature(rect.height, 0.1);
 				else if(it->compare("ellipse_angle") == 0)
 				{
-					if(!minEllipse.size.width != 0)
-						minEllipse = fitEllipse(Mat(contours[i]));
 					obj.AddFeature(minEllipse.angle, 0.1);
 				}
 				else if(it->compare("ellipse_width") == 0)
 				{
-					if(!minEllipse.size.width != 0)
-						minEllipse = fitEllipse(Mat(contours[i]));
 					obj.AddFeature(minEllipse.size.width, 0.1);
 				}
 				else if(it->compare("ellipse_height") == 0)
 				{
-					if(!minEllipse.size.width != 0)
-						minEllipse = fitEllipse(Mat(contours[i]));
 					obj.AddFeature(minEllipse.size.height, 0.1);
 				}
 				else if(it->compare("ellipse_ratio") == 0)
 				{
-					if(minEllipse.size.width != 0)
-						minEllipse = fitEllipse(Mat(contours[i]));
 					obj.AddFeature(minEllipse.size.width / minEllipse.size.height, 0.1);
 				}
 			}
 
 			// ellipse
-			if(minEllipse.size.width != 0)
+			if(m_computeFitEllipse && minEllipse.size.width != 0)
 				ellipse(*m_debug, minEllipse, color, 2, 8);
 			// rotated rectangle
 			/*Point2f rect_points[4]; minRect[i].points(rect_points);

@@ -38,6 +38,7 @@ public:
 		m_list.push_back(new ParameterDouble(0, "maxMatchingDistance", 100, 	PARAM_DOUBLE, 0, MAX_WIDTH + MAX_HEIGHT, &tracker.maxMatchingDistance,		"Tolerance of the tracker."));
 		m_list.push_back(new ParameterInt   (0, "maxNbFramesDisappearance", 10, PARAM_INT, 1, 1000,			&tracker.maxNbFramesDisappearance,	"Time before disappearence of an object")); // TODO : should be in seconds
 		m_list.push_back(new ParameterBool  (0, "symetricMatch", 	true, 	PARAM_BOOL, 0, 1, 			&tracker.symetricMatch,			"Each match between objects and templates must be symetrical"));
+		m_list.push_back(new ParameterString(0, "features",     "x,y,width,height",      &tracker.features,   "List of features to use for tracking (only scalar values, must be present in objects to track)"));
 
 		ParameterStructure::Init();
 	};
