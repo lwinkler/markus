@@ -63,7 +63,7 @@ SegmenterContour::SegmenterContour(const ConfigReader& x_configReader) :
 	split(m_param.features, ',', elems);
 	for(vector<std::string>::const_iterator it = elems.begin() ; it != elems.end() ; it++)
 	{
-		cout<<"add feature "<<*it<<endl;
+		// cout<<" "<<*it;
 		m_outputObjectStream->AddFeatureName(*it);
 	}
 	
@@ -91,27 +91,20 @@ void SegmenterContour::ProcessFrame()
 	/// Find contours
 	findContours(*m_input, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
 
-	/// Find the rotated rectangles and ellipses for each contour
-	vector<RotatedRect> minRect(contours.size());
-	vector<RotatedRect> minEllipse(contours.size());
-
-	for(unsigned int i = 0; i < contours.size(); i++)
-	{
-		minRect[i] = minAreaRect(Mat(contours[i]));
-		if(contours[i].size() > 5)
-		{
-			minEllipse[i] = fitEllipse(Mat(contours[i]));
-		}
-	}
 
 	m_regions.clear();
 	m_debug->setTo(0); // TODO debug only
-	/// Draw contours + rotated rects + ellipses
+	const vector<string> featureNames = m_outputObjectStream->GetFeatureNames();
+
+	/// Extract features
 	for(unsigned int i = 0; i< contours.size(); i++)
 	{
 		Rect rect = boundingRect(contours[i]);
 		if(rect.width >= m_param.minWidth && rect.height >= m_param.minHeight)
 		{
+			RotatedRect minEllipse; /// Find the rotated rectangles and ellipses for each contour
+			// RotatedRect minRect = minAreaRect(Mat(contours[i]));
+
 			// contour
 			Scalar color = Scalar(m_rng.uniform(0, 255), m_rng.uniform(0,255), m_rng.uniform(0,255));
 			drawContours(*m_debug, contours, i, color, 1, 8, vector<Vec4i>(), 0, Point()); // TODO debug only
@@ -123,26 +116,52 @@ void SegmenterContour::ProcessFrame()
 			obj.m_width	= rect.width;
 			obj.m_height 	= rect.height;
 
-			// Add the possible features
-			for(vector<string>::const_iterator it = m_outputObjectStream->GetFeatureNames().begin() ; it != m_outputObjectStream->GetFeatureNames().end() ; it++)
+			// Add the possible features // TODO: list features in param description
+			for(vector<string>::const_iterator it = featureNames.begin() ; it != featureNames.end() ; it++)
 			{
 				if(it->compare("x") == 0)
 					obj.AddFeature(rect.x, 0.1);
-				if(it->compare("y") == 0)
+				else if(it->compare("y") == 0)
 					obj.AddFeature(rect.y, 0.1);
-				if(it->compare("width") == 0)
+				else if(it->compare("width") == 0)
 					obj.AddFeature(rect.width, 0.1);
-				if(it->compare("height") == 0)
+				else if(it->compare("height") == 0)
 					obj.AddFeature(rect.height, 0.1);
-				m_regions.push_back(obj);
+				else if(it->compare("ellipse_angle") == 0)
+				{
+					if(!minEllipse.size.width != 0)
+						minEllipse = fitEllipse(Mat(contours[i]));
+					obj.AddFeature(minEllipse.angle, 0.1);
+				}
+				else if(it->compare("ellipse_width") == 0)
+				{
+					if(!minEllipse.size.width != 0)
+						minEllipse = fitEllipse(Mat(contours[i]));
+					obj.AddFeature(minEllipse.size.width, 0.1);
+				}
+				else if(it->compare("ellipse_height") == 0)
+				{
+					if(!minEllipse.size.width != 0)
+						minEllipse = fitEllipse(Mat(contours[i]));
+					obj.AddFeature(minEllipse.size.height, 0.1);
+				}
+				else if(it->compare("ellipse_ratio") == 0)
+				{
+					if(minEllipse.size.width != 0)
+						minEllipse = fitEllipse(Mat(contours[i]));
+					obj.AddFeature(minEllipse.size.width / minEllipse.size.height, 0.1);
+				}
 			}
 
 			// ellipse
-			ellipse(*m_debug, minEllipse[i], color, 2, 8);
+			if(minEllipse.size.width != 0)
+				ellipse(*m_debug, minEllipse, color, 2, 8);
 			// rotated rectangle
-			Point2f rect_points[4]; minRect[i].points(rect_points);
+			/*Point2f rect_points[4]; minRect[i].points(rect_points);
 			for(int j = 0; j < 4; j++)
 				line(*m_debug, rect_points[j], rect_points[(j+1)%4], color, 1, 8);
+			*/
+			m_regions.push_back(obj);
 		}
 	}
 }
