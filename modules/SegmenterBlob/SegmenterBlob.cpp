@@ -21,7 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "BlobSegmenter.h"
+#include "SegmenterBlob.h"
 #include "StreamDebug.h"
 #include "StreamObject.h"
 #include "StreamImage.h"
@@ -34,10 +34,10 @@
 
 using namespace cv;
 
-const char * BlobSegmenter::m_type = "BlobSegmenter";
+const char * SegmenterBlob::m_type = "SegmenterBlob";
 
 
-BlobSegmenter::BlobSegmenter(const ConfigReader& x_configReader) :
+SegmenterBlob::SegmenterBlob(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader)
 {
@@ -59,18 +59,18 @@ BlobSegmenter::BlobSegmenter(const ConfigReader& x_configReader) :
 	m_debugStreams.push_back(new StreamDebug(0, "blobs", m_blobsImg, *this,	"Blobs"));
 }
 
-BlobSegmenter::~BlobSegmenter(void )
+SegmenterBlob::~SegmenterBlob(void )
 {
 	delete(m_input);
 	delete(m_blobsImg);
 }
 
-void BlobSegmenter::Reset()
+void SegmenterBlob::Reset()
 {
 	Module::Reset();
 }
 
-void BlobSegmenter::ProcessFrame()
+void SegmenterBlob::ProcessFrame()
 {
 	ExtractBlobs(m_input);
 	//dynamic_cast<StreamObject*>(m_outputStreams[0])->PrintObjects();
@@ -80,7 +80,7 @@ void BlobSegmenter::ProcessFrame()
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 /* ExtractBlob */
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-void BlobSegmenter::ExtractBlobs(Mat* x_img)
+void SegmenterBlob::ExtractBlobs(Mat* x_img)
 {
 	// object that will contain blobs of inputImage
 	CBlobResult blobs;
@@ -139,7 +139,7 @@ void BlobSegmenter::ExtractBlobs(Mat* x_img)
 }
 
 
-double BlobSegmenter::GetSTLResult( CBlob* blob, funcio_calculBlob *evaluador ) const
+double SegmenterBlob::GetSTLResult( CBlob* blob, funcio_calculBlob *evaluador ) const
 {
 	return (*evaluador)(*blob);
 }

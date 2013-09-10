@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="BlobSegmenter" description="Segments the binary blobs.">
+<module name="SegmenterBlob" description="Segments a binary image and outputs a stream of objects (from segmented blobs) with their features (position, width and height)">
 	<parameters>
 		<param name="class">
 			<type>string</type>
-			<value default="">BlobSegmenter</value>
+			<value default="">SegmenterBlob</value>
 			<description>Class of the module (define the module's function)</description>
 		</param>
 		<param name="width">

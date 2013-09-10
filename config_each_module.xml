@@ -2,12 +2,12 @@
 <module name="BgrSubMOG2"><parameters><param name="class">BgrSubMOG2</param></parameters></module>
 <module name="BgrSubMOG"><parameters><param name="class">BgrSubMOG</param></parameters></module>
 <module name="BgrSubRunAvg"><parameters><param name="class">BgrSubRunAvg</param></parameters></module>
-<module name="BlobSegmenter"><parameters><param name="class">BlobSegmenter</param></parameters></module>
 <module name="CascadeDetector"><parameters><param name="class">CascadeDetector</param></parameters></module>
 <module name="Logger"><parameters><param name="class">Logger</param></parameters></module>
 <module name="Morph"><parameters><param name="class">Morph</param></parameters></module>
 <module name="MotionDetector"><parameters><param name="class">MotionDetector</param></parameters></module>
 <module name="NetworkCam"><parameters><param name="class">NetworkCam</param></parameters></module>
+<module name="SegmenterBlob"><parameters><param name="class">SegmenterBlob</param></parameters></module>
 <module name="SimpleTracker"><parameters><param name="class">SimpleTracker</param></parameters></module>
 <module name="SlitCam"><parameters><param name="class">SlitCam</param></parameters></module>
 <module name="TempDiff"><parameters><param name="class">TempDiff</param></parameters></module>

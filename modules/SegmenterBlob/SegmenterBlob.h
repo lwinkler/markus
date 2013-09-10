@@ -21,8 +21,8 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef BLOBSEGMENTER_H
-#define BLOBSEGMENTER_H
+#ifndef SEGMENTER_BLOB_H
+#define SEGMENTER_BLOB_H
 
 #include "Module.h"
 #include "StreamObject.h"
@@ -52,11 +52,11 @@ public:
 	int minHeight;
 };
 
-class BlobSegmenter : public Module
+class SegmenterBlob : public Module
 {
 public:
-	BlobSegmenter(const ConfigReader& x_configReader);
-	~BlobSegmenter();
+	SegmenterBlob(const ConfigReader& x_configReader);
+	~SegmenterBlob();
 	
 	virtual void ProcessFrame();
 	void Reset();
