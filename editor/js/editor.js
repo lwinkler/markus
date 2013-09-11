@@ -163,7 +163,9 @@ var xmlProject = null;
 				// Load an empty project
 				xmlProject = $(document.implementation.createDocument(null, "application", null)).find('application');
 				xmlProject.attr("name", "CustomProject")
-				_initialised = true;
+
+				$('#detail').hide();
+				$('#explanation').show();
 			}
 			//--------------------------------------------------------------------------------
 			// Create a window to visualize the module with jsPlumb
@@ -193,7 +195,7 @@ var xmlProject = null;
 					})
 				else {
 					// Find the window at the far right
-					var x = 0, y = 0;
+					var x = 300, y = 300;
 					$("#main > .window").each(function() {
 						var pos = $(this).offset();
 						if(pos.left > x){
@@ -517,6 +519,7 @@ var xmlProject = null;
 					
 					
 				deleteAll();
+				_initialised = true;
 			}
 		}
 	};	

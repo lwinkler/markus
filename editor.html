@@ -9,56 +9,55 @@
 	<body>
 
         <div id="main">
-			<div id="render">
-					Create a new module:
-					<select id="selectModule">
-					</select>
-					<button id="createModule">Create</button>
-					&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-					Download the project:
-					<button id="downloadProject">Download</button>
-					&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-					Clean:
-					<button id="deleteAll">Delete all</button>
-					&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-					Load project:
-					<input id="selectProjectFile" type="file"/>
-					<button id="loadProjectFile">Load</button>
-			</div>
-			<div id="modules"/>
+		<div id="render">
+				Create a new module:
+				<select id="selectModule">
+				</select>
+				<button id="createModule">Create</button>
+				&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+				Download the project:
+				<button id="downloadProject">Download</button>
+				&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+				Clean:
+				<button id="deleteAll">Delete all</button>
+				&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+				Load project:
+				<input id="selectProjectFile" type="file"/>
+				<button id="loadProjectFile">Load</button>
 		</div>
-		<div id="sidebar">
+		<div id="modules"/>
+	</div>
+	<div id="sidebar">
  		<div id="explanation">         
-            	<h3>Markus module editor</h3>       
-			<p>This is the visual module editor for Markus. With this simple web interface you can open, visualize and edit projects. </p>
-			<ul>
-				<li><b>Create a new module: </b>Add the module you need using the 'Create' selection box above and connect the modules'inputs and outputs by drag and drop.</li>
-				<li><b>Download the project: </b>This opens a new tab to your browser. You can save it as an xml file under the 'project/' directory.</li>
-				<li><b>Clean: </b>Remove all modules from the board and start a new project.</li>
-				<li><b>Load a project: </b>Load an existing project</li>
-			</ul>
-			<p>This demonstration uses jsPlumb 1.5.1, jQuery 1.9.0 and jQuery UI 1.9.2. For touch support, jQuery Touch Punch is used.</p>
-            	<h3>Tips</h3>       
-			<ul>
-				<li><b>Supported browsers: </b>So far the module editor has only been tested with Firefox. It should work with Chrome as well but only through a web server. (E.g. Apache)</li>
-				<li><b>XML files: </b>Modules classes (with inputs and outputs) are defined in xml files inside the 'module/' directory. Project files are saved as XML files inside the project directory.</li>
-			</ul>
-
-            </div>			
-	    <div id="detail">
-		<h3>Module</h3>
-		<ul id="module"></ul>
-		<h3>Inputs</h3>
-		<p id="inputs" />
-		<h3>Outputs</h3>
-		<p id="outputs" />
-		<h3>Parameters</h3>
-		<p id="parameters" />
-	    </div>
-	    <div id="result" style="display:none;" />
+			<h3>Markus module editor</h3>       
+				<p>This is the visual module editor for Markus. With this simple web interface you can open, visualize and edit projects. </p>
+				<ul>
+					<li><b>Create a new module: </b>Add the module you need using the 'Create' selection box above and connect the modules'inputs and outputs by drag and drop.</li>
+					<li><b>Download the project: </b>This opens a new tab to your browser. You can save it as an xml file under the 'project/' directory.</li>
+					<li><b>Clean: </b>Remove all modules from the board and start a new project.</li>
+					<li><b>Load a project: </b>Load an existing project</li>
+				</ul>
+				<p>This demonstration uses jsPlumb 1.5.1, jQuery 1.9.0 and jQuery UI 1.9.2. For touch support, jQuery Touch Punch is used.</p>
+			<h3>Tips</h3>       
+				<ul>
+					<li><b>Supported browsers: </b>So far the module editor has only been tested with Firefox. It should work with Chrome as well but only through a web server. (E.g. Apache)</li>
+					<li><b>XML files: </b>Modules classes (with inputs and outputs) are defined in xml files inside the 'module/' directory. Project files are saved as XML files inside the project directory.</li>
+				</ul>
+		</div>			
+		<div id="detail">
+			<h3>Module</h3>
+			<ul id="module"></ul>
+			<h3>Inputs</h3>
+			<p id="inputs" />
+			<h3>Outputs</h3>
+			<p id="outputs" />
+			<h3>Parameters</h3>
+			<p id="parameters" />
+		</div>
+		<!--div id="result" style="display:none;" /-->
         </div>
 				
-		<!-- DEP -->
+	<!-- DEP -->
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.js"></script>
 	<script type="text/javascript" src="editor/js/jquery.jsPlumb-1.5.1.js"></script>
