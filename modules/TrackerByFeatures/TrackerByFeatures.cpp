@@ -21,7 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "SimpleTracker.h"
+#include "TrackerByFeatures.h"
 #include "StreamDebug.h"
 #include "StreamObject.h"
 
@@ -30,7 +30,7 @@
 
 using namespace cv;
 
-const char * SimpleTracker::m_type = "SimpleTracker";
+const char * TrackerByFeatures::m_type = "TrackerByFeatures";
 
 #define MAX_NB_TEMPLATES 100
 
@@ -39,11 +39,11 @@ using namespace cv;
 
 
 
-SimpleTracker::SimpleTracker(const ConfigReader& x_configReader) :
+TrackerByFeatures::TrackerByFeatures(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader)
 {
-	m_description = "Track any detect objects (from StreamObject).";
+	m_description = "Track objects by matching a set of features (typically position and size)";
 	
 	m_inputStreams.push_back(new StreamObject(0, "input", 	m_param.width, m_param.height, m_objects, cvScalar(255, 255, 255), *this,	"Input objects"));
 
@@ -64,16 +64,16 @@ SimpleTracker::SimpleTracker(const ConfigReader& x_configReader) :
 	}
 }
 
-SimpleTracker::~SimpleTracker(void )
+TrackerByFeatures::~TrackerByFeatures(void )
 {
 }
 
-void SimpleTracker::Reset()
+void TrackerByFeatures::Reset()
 {
 	Module::Reset();
 }
 
-void SimpleTracker::ProcessFrame()
+void TrackerByFeatures::ProcessFrame()
 {
 	MatchTemplates();
 	CleanTemplates();
@@ -103,7 +103,7 @@ void SimpleTracker::ProcessFrame()
 /// Match the template with an object (blob)
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-int SimpleTracker::MatchTemplate(Template& x_temp)
+int TrackerByFeatures::MatchTemplate(Template& x_temp)
 {
 	double bestDist = 1e99;
 	int bestObject = -1;
@@ -131,7 +131,7 @@ int SimpleTracker::MatchTemplate(Template& x_temp)
 		m_objects[bestObject].m_isMatched = 1;
 		
 		//CvPoint p = {x_regs[bestObject].m_posX, x_regs[bestObject].m_posY};
-		//cvCircle(x_blobsImg, p, 10, SimpleTracker::m_colorArray[m_num % SimpleTracker::m_colorArraySize]);
+		//cvCircle(x_blobsImg, p, 10, TrackerByFeatures::m_colorArray[m_num % TrackerByFeatures::m_colorArraySize]);
 		
 		return 1;
 	}
@@ -142,7 +142,7 @@ int SimpleTracker::MatchTemplate(Template& x_temp)
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 /* MatchTemplates : Match blobs with former object templates */
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-void SimpleTracker::MatchTemplates()
+void TrackerByFeatures::MatchTemplates()
 {
 	for(vector<Object>::iterator it2 = m_objects.begin() ; it2 != m_objects.end(); it2++ )
 	{
@@ -164,7 +164,7 @@ void SimpleTracker::MatchTemplates()
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 /* UpdateTemplates */
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-void SimpleTracker::UpdateTemplates()
+void TrackerByFeatures::UpdateTemplates()
 {
 	for(list<Template>::iterator it1= m_templates.begin() ; it1 != m_templates.end(); it1++ )
 		it1->UpdateFeatures();
@@ -174,7 +174,7 @@ void SimpleTracker::UpdateTemplates()
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 /* CleanTemplates */
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-void SimpleTracker::CleanTemplates()
+void TrackerByFeatures::CleanTemplates()
 {
 	int cptCleaned = 0;
 	int cptTotal = 0;
@@ -202,7 +202,7 @@ void SimpleTracker::CleanTemplates()
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 /* UpdateTemplates */
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-void SimpleTracker::DetectNewTemplates()
+void TrackerByFeatures::DetectNewTemplates()
 {
 	// If region not matched, add a template
 	int cpt = 0;
@@ -222,7 +222,7 @@ void SimpleTracker::DetectNewTemplates()
 }
 
 
-int SimpleTracker::MatchObject(Object& x_obj)
+int TrackerByFeatures::MatchObject(Object& x_obj)
 {
 
 	double bestDist = 1e99;

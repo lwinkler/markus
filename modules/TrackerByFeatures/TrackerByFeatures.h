@@ -21,8 +21,8 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef SIMPLETRACKER_H
-#define SIMPLETRACKER_H
+#ifndef TRACKER_BY_FEATURES_H
+#define TRACKER_BY_FEATURES_H
 
 #include "Module.h"
 #include "StreamObject.h"
@@ -30,10 +30,10 @@
 
 class ConfigReader;
 
-class SimpleTrackerParameterStructure : public ModuleParameterStructure
+class TrackerByFeaturesParameterStructure : public ModuleParameterStructure
 {
 public:
-	SimpleTrackerParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
+	TrackerByFeaturesParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
 		m_list.push_back(new ParameterDouble(0, "maxMatchingDistance", 100, 	PARAM_DOUBLE, 0, MAX_WIDTH + MAX_HEIGHT, &maxMatchingDistance,		"Tolerance of the tracker."));
 		m_list.push_back(new ParameterInt   (0, "maxNbFramesDisappearance", 10, PARAM_INT, 1, 1000,			&maxNbFramesDisappearance,	"Time before disappearence of an object")); // TODO : should be in seconds
@@ -48,17 +48,17 @@ public:
 	std::string features;
 };
 
-class SimpleTracker : public Module
+class TrackerByFeatures : public Module
 {
 public:
-	SimpleTracker(const ConfigReader& x_configReader);
-	~SimpleTracker();
+	TrackerByFeatures(const ConfigReader& x_configReader);
+	~TrackerByFeatures();
 	
 	virtual void ProcessFrame();
 	void Reset();
 	
 private:
-	SimpleTrackerParameterStructure m_param;
+	TrackerByFeaturesParameterStructure m_param;
 
 	void MatchTemplates();
 	void CleanTemplates();

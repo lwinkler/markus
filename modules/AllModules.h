@@ -14,9 +14,9 @@
 #include "modules/old_modules/BackgroundExtractor/BackgroundExtractor.h"
 #include "modules/SegmenterBlob/SegmenterBlob.h"
 #include "modules/SegmenterContour/SegmenterContour.h"
-#include "modules/SimpleTracker/SimpleTracker.h"
 #include "modules/SlitCam/SlitCam.h"
 #include "modules/TempDiff/TempDiff.h"
+#include "modules/TrackerByFeatures/TrackerByFeatures.h"
 #include "modules/UsbCam/UsbCam.h"
 #include "modules/VideoFileReader/VideoFileReader.h"
 #include "modules/VideoOutput/VideoOutput.h"
@@ -36,9 +36,9 @@ else if(moduleClass.compare("MotionDetector") == 0) {tmp = new MotionDetector(rx
 else if(moduleClass.compare("NetworkCam") == 0) {tmp = new NetworkCam(rx_configReader);} 
 else if(moduleClass.compare("SegmenterBlob") == 0) {tmp = new SegmenterBlob(rx_configReader);} 
 else if(moduleClass.compare("SegmenterContour") == 0) {tmp = new SegmenterContour(rx_configReader);} 
-else if(moduleClass.compare("SimpleTracker") == 0) {tmp = new SimpleTracker(rx_configReader);} 
 else if(moduleClass.compare("SlitCam") == 0) {tmp = new SlitCam(rx_configReader);} 
 else if(moduleClass.compare("TempDiff") == 0) {tmp = new TempDiff(rx_configReader);} 
+else if(moduleClass.compare("TrackerByFeatures") == 0) {tmp = new TrackerByFeatures(rx_configReader);} 
 else if(moduleClass.compare("UsbCam") == 0) {tmp = new UsbCam(rx_configReader);} 
 else if(moduleClass.compare("VideoFileReader") == 0) {tmp = new VideoFileReader(rx_configReader);} 
 else if(moduleClass.compare("VideoOutput") == 0) {tmp = new VideoOutput(rx_configReader);} 

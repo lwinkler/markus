@@ -16,9 +16,9 @@
     <display x="17" y="88" width="150" height="75" />
     <uiobject type="" x="0" y="0" width="0" height="0" />
   </module>
-  <module name="BackgroundSubtractorSimple" machineurl="localhost" id="1">
+  <module name="BgrSubRunAvg" machineurl="localhost" id="1">
     <parameters>
-      <param name="class">BackgroundSubtractorSimple</param>
+      <param name="class">BgrSubRunAvg</param>
       <param name="width">640</param>
       <param name="height">480</param>
       <param name="type">CV_8UC1</param>

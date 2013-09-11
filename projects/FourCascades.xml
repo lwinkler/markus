@@ -44,9 +44,9 @@
     
   <uiobject x="548" y="80" width="0" height="0"/>
 </module>
-  <module name="SimpleTracker" machineurl="localhost" id="2">
+  <module name="TrackerByFeatures" machineurl="localhost" id="2">
     <parameters>
-      <param name="class">SimpleTracker</param>
+      <param name="class">TrackerByFeatures</param>
       <param name="width">640</param>
       <param name="height">480</param>
       <param name="type">CV_8UC1</param>
@@ -189,9 +189,9 @@
     
   <uiobject x="558" y="568" width="0" height="0"/>
 </module>
-  <module name="SimpleTracker" machineurl="localhost" id="8">
+  <module name="TrackerByFeatures" machineurl="localhost" id="8">
     <parameters>
-      <param name="class">SimpleTracker</param>
+      <param name="class">TrackerByFeatures</param>
       <param name="width">640</param>
       <param name="height">480</param>
       <param name="type">CV_8UC1</param>
@@ -207,9 +207,9 @@
     
   <uiobject x="745" y="195" width="0" height="0"/>
 </module>
-  <module name="SimpleTracker" machineurl="localhost" id="9">
+  <module name="TrackerByFeatures" machineurl="localhost" id="9">
     <parameters>
-      <param name="class">SimpleTracker</param>
+      <param name="class">TrackerByFeatures</param>
       <param name="width">640</param>
       <param name="height">480</param>
       <param name="type">CV_8UC1</param>
@@ -225,9 +225,9 @@
     
   <uiobject x="744" y="317" width="0" height="0"/>
 </module>
-  <module name="SimpleTracker" machineurl="localhost" id="10">
+  <module name="TrackerByFeatures" machineurl="localhost" id="10">
     <parameters>
-      <param name="class">SimpleTracker</param>
+      <param name="class">TrackerByFeatures</param>
       <param name="width">640</param>
       <param name="height">480</param>
       <param name="type">CV_8UC1</param>
@@ -243,9 +243,9 @@
     
   <uiobject x="744" y="450" width="0" height="0"/>
 </module>
-  <module name="SimpleTracker" machineurl="localhost" id="11">
+  <module name="TrackerByFeatures" machineurl="localhost" id="11">
     <parameters>
-      <param name="class">SimpleTracker</param>
+      <param name="class">TrackerByFeatures</param>
       <param name="width">640</param>
       <param name="height">480</param>
       <param name="type">CV_8UC1</param>

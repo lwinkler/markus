@@ -397,7 +397,7 @@ var xmlProject = null;
 						// rebuild connections
 						var moduleid = $(this).attr('moduleid');
 						var outputid = $(this).attr('outputid');
-						if(moduleid != "" && outputid != "") {
+						if($.isNumeric(moduleid) && $.isNumeric(outputid)) {
 							jsPlumb.connect({
 								sourceEndpoint: $(this).data('gui')[0],
 								targetEndpoint: xmlProject.find('module[id="' + moduleid + '"] > outputs > output[id="' + outputid + '"]').data('gui')[0],
@@ -439,7 +439,7 @@ var xmlProject = null;
 					outputs.append('<p>' + cl.find('name').text() + ': ' + cl.find('description').text() + '</p>');
 				});
 				
-				// Show inputs
+				// Show parameters
 				var parameters = div.find("#parameters").empty();
 				xml.find("parameters > param").each(function(el){
 					var cl = $(this).data('class');
@@ -465,7 +465,7 @@ var xmlProject = null;
 					$("#selectModule").append('<option value=' + availableModulesNames[i] + '>' + availableModulesNames[i] + '</option>');
 
 					// Load the matching xml file
-					xmlModuleTypes[type] = $(loadXML("modules/" + availableModulesNames[i] + ".xml"));
+					xmlModuleTypes[type] = $(loadXML("modules/" + availableModulesNames[i] + ".xml")).find("module");
 				}
 				
 				// Create a div representing a new module
