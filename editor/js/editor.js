@@ -191,6 +191,22 @@ var xmlProject = null;
 						left: uiobject.attr('x'),
 						top: uiobject.attr('y')
 					})
+				else {
+					// Find the window at the far right
+					var x = 0, y = 0;
+					$("#main > .window").each(function() {
+						var pos = $(this).offset();
+						if(pos.left > x){
+							x = pos.left;
+							y = pos.top;
+						}
+					});
+
+					newWindow.offset({
+						left: x + 200,
+						top:  y
+					});
+				}
 
 
 				// Draw input connectors
