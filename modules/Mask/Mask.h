@@ -21,48 +21,46 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef INPUT_NETWORKCAM_H
-#define INPUT_NETWORKCAM_H
+#ifndef MASK_H
+#define MASK_H
 
-#include <opencv/cv.h>
-#include <opencv2/highgui/highgui.hpp>
-
-#include "Input.h"
+#include "Module.h"
+#include "opencv2/video/background_segm.hpp"
 
 
-class NetworkCamParameterStructure : public InputParameterStructure
+class ConfigReader;
+
+
+class MaskParameterStructure : public ModuleParameterStructure
 {
 public:
-	NetworkCamParameterStructure(const ConfigReader& x_confReader) : 
-	InputParameterStructure(x_confReader)
+	MaskParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterString(0, "url", 	"", 	&url,	"Network address of the camera (e.g. http://root:admin@192.168.3.62/mjpg/1/video.mjpg"));
 		ParameterStructure::Init();
 	};
-
-public:
-	std::string url;
 };
 
-class NetworkCam : public Input
+class Mask : public Module
 {
 public:
-	NetworkCam(const ConfigReader& x_confReader);
-	~NetworkCam();
+	Mask(const ConfigReader& x_configReader);
+	~Mask();
 	
-	void Capture();
-        virtual void Reset();
-	const std::string& GetName(){return m_name;};
-	virtual const cv::Mat * GetImage() const {return m_output;}
+	virtual void ProcessFrame();
+	void Reset();
+		
+private:
+	MaskParameterStructure m_param;
+	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
+
+	cv::Mat* m_output;
 
 protected:
-	cv::Mat * m_output;
-	cv::VideoCapture m_capture;
-	int m_fps;
-
-private:
-	NetworkCamParameterStructure m_param;
-	inline virtual NetworkCamParameterStructure& RefParameter() {return m_param;};
+	cv::Mat * m_input;
+	cv::Mat * m_mask;
+	
+	static const char * m_type;
 };
+
 
 #endif

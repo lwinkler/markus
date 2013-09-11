@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="NetworkCam" description="">
+<module name="Mask" description="Apply a binary mask to an image input">
 	<parameters>
 		<param name="class">
 			<type>string</type>
-			<value default="">NetworkCam</value>
+			<value default="">Mask</value>
 			<description>Class of the module (define the module's function)</description>
 		</param>
 		<param name="width">
@@ -26,19 +26,24 @@
 			<value min="0" max="1000" default="10">10</value>
 			<description>Frames per seconds (processing speed)</description>
 		</param>
-		<param name="url">
-			<type>string</type>
-			<value default=""></value>
-			<description>Network address of the camera (e.g. http://root:admin@192.168.3.62/mjpg/1/video.mjpg</description>
-		</param>
 	</parameters>
 	<inputs>
+		<input id="0">
+			<type>Image</type>
+			<name>input</name>
+			<description>Video input</description>
+		</input>
+		<input id="1">
+			<type>Image</type>
+			<name>mask</name>
+			<description>Binary mask</description>
+		</input>
 	</inputs>
 	<outputs>
 		<output id="0">
 			<type>Image</type>
-			<name>input</name>
-			<description>Video stream of the camera</description>
+			<name>masked</name>
+			<description>Binary mask applied to input</description>
 		</output>
 	</outputs>
 </module>

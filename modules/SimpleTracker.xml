@@ -41,6 +41,11 @@
 			<value min="0" max="1" default="1">1</value>
 			<description>Each match between objects and templates must be symetrical</description>
 		</param>
+		<param name="features">
+			<type>string</type>
+			<value default="x,y,width,height">x,y,width,height</value>
+			<description>List of features to use for tracking (only scalar values, must be present in objects to track)</description>
+		</param>
 	</parameters>
 	<inputs>
 		<input id="0">

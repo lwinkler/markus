@@ -37,7 +37,9 @@ NetworkCam::NetworkCam(const ConfigReader& x_configReader):
 	/* it may be an address of an mjpeg stream, 
 	e.g. "http://user:pass@cam_address:8081/cgi/mjpg/mjpg.cgi?.mjpg" 
 	"rtsp://cam_address:554/live.sdp" */
-	if(!m_capture.open(m_param.url)) {
+	if(m_param.url.size() == 0)
+		m_capture.open("input.avi");
+	else if(!m_capture.open(m_param.url)) {
 		throw( "Error opening video stream or file" + m_param.url);
 	}
 	

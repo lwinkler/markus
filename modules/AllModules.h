@@ -7,6 +7,7 @@
 #include "modules/BgrSubRunAvg/BgrSubRunAvg.h"
 #include "modules/CascadeDetector/CascadeDetector.h"
 #include "modules/Logger/Logger.h"
+#include "modules/Mask/Mask.h"
 #include "modules/Morph/Morph.h"
 #include "modules/MotionDetector/MotionDetector.h"
 #include "modules/NetworkCam/NetworkCam.h"
@@ -29,6 +30,7 @@ else if(moduleClass.compare("BgrSubMOG") == 0) {tmp = new BgrSubMOG(rx_configRea
 else if(moduleClass.compare("BgrSubRunAvg") == 0) {tmp = new BgrSubRunAvg(rx_configReader);} 
 else if(moduleClass.compare("CascadeDetector") == 0) {tmp = new CascadeDetector(rx_configReader);} 
 else if(moduleClass.compare("Logger") == 0) {tmp = new Logger(rx_configReader);} 
+else if(moduleClass.compare("Mask") == 0) {tmp = new Mask(rx_configReader);} 
 else if(moduleClass.compare("Morph") == 0) {tmp = new Morph(rx_configReader);} 
 else if(moduleClass.compare("MotionDetector") == 0) {tmp = new MotionDetector(rx_configReader);} 
 else if(moduleClass.compare("NetworkCam") == 0) {tmp = new NetworkCam(rx_configReader);} 

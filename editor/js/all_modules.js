@@ -4,6 +4,7 @@ var availableModulesNames = [
 "BgrSubRunAvg",
 "CascadeDetector",
 "Logger",
+"Mask",
 "Morph",
 "MotionDetector",
 "NetworkCam",
