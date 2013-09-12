@@ -78,7 +78,7 @@ void FilterObjects::ProcessFrame()
 		const Feature& posY = it->GetFeatureByName("y", m_inputObjectStream->GetFeatureNames());
 		// const Feature& distance = it->GetFeatureByName("distance", featureNames);
 
-		if(POW2(posX.value - posX.initial) + POW2(posY.value - posY.initial) > 1000)
+		if(POW2(posX.value - posX.initial) + POW2(posY.value - posY.initial) > m_param.minDist)
 		// if(distance.max >= m_param.minDist)
 			m_objectsOut.push_back(*it);
 	}
