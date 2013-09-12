@@ -53,6 +53,7 @@ class Object
 		inline int GetId() const {return m_id;}
 		inline void SetId(int x_id){m_id = x_id;}
 		inline const std::string& GetName() const {return m_name;}
+		const Feature& GetFeatureByName(std::string& x_name, const std::vector<std::string>& x_featureNames) const;
 		int m_isMatched;
 		
 	private:

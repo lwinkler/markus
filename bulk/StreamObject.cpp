@@ -107,13 +107,13 @@ void StreamObject::RenderTo(Mat * xp_output) const
             color = colorFromId(it1->GetId());
             ostringstream text;
             text<<it1->GetName()<<" "<<it1->GetId();
-            p1.y -= 2;
+            p1.y -= 3;
             putText(*xp_output, text.str(), p1,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
         }
         else
         {
             // color from stream
-            p1.y -= 2;
+            p1.y -= 3;
             putText(*xp_output, it1->GetName(), p1, FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
         }
         rectangle( *xp_output, p1, p2, color, 1, 8, 0 );

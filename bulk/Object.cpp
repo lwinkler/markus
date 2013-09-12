@@ -60,3 +60,20 @@ const Feature& Object::GetFeature(int x_index) const
 {
 	return m_feats.at(x_index);
 }
+
+/// Search a feature by name by using the list of feature names (probably from StreamObject)
+const Feature& Object::GetFeatureByName(std::string& x_name, const vector<std::string>& x_featureNames) const
+{
+	vector<Feature>::const_iterator feat = m_feats.begin();
+	if(m_feats.size() != x_featureNames.size())
+		throw("Error: feature vector length is not equal to the length of feature names vector in Object::GetFeatureByName");
+	for(vector<std::string>::const_iterator it = x_featureNames.begin() ; it != x_featureNames.end() ; it++)
+	{
+		if(it->compare(x_name) == 0)
+		{
+			return *feat;
+		}
+		feat++;
+	}
+	throw("Error: feature not found in Object::GetFeatureByName");
+}
