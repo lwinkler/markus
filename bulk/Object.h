@@ -44,14 +44,15 @@ class Object
 		
 		inline void AddFeature(double x_value, double x_variance)
 		{
-			Feature f(x_value, x_variance);
+			Feature f(x_value);
 			m_feats.push_back(f);
 		};
-		inline const std::vector <Feature>& GetFeatures() const {return m_feats;};
+		inline const std::vector <Feature>& GetFeatures() const {return m_feats;}
+		const Feature& GetFeature(int x_index) const;
 		//inline const CvScalar& GetColor() const {return m_color;};
-		inline int GetId() const {return m_id;};
-		inline void SetId(int x_id){m_id = x_id;};
-		inline const std::string& GetName() const {return m_name;};
+		inline int GetId() const {return m_id;}
+		inline void SetId(int x_id){m_id = x_id;}
+		inline const std::string& GetName() const {return m_name;}
 		int m_isMatched;
 		
 	private:

@@ -26,7 +26,8 @@
 /*! \class Template
  *  \brief Class representing an object template
  *
- *  A template is what allows to track an object, e.g. a red car, through different frames.
+ *  A template is what allows to track an Object, through different frames. A set of Templates is typically
+ * used inside a Tracker.
  */
 class Template
 {
@@ -38,22 +39,23 @@ class Template
 		~Template();
 		
 		double CompareWithObject(const Object& x_reg, const std::vector<int>& x_featureIndices) const;
-		void UpdateFeatures();
+		void UpdateFeatures(double x_alpha);
 		
 		
-		inline void AddFeature(double x_value, double x_variance)
+		inline void AddFeature(double x_value)
 		{
-			Feature f(x_value, x_variance);
+			Feature f(x_value);
 			m_feats.push_back(f);
-		};
-		inline const std::vector <Feature>& GetFeatures() const{ return m_feats;};
-		inline const std::list <Object>& GetMatchingObjects() const{ return m_matchingObjects;};
-		inline int GetNum() const {return m_num;};
+		}
+		inline const std::vector <Feature>& GetFeatures() const{ return m_feats;}
+		// inline const std::list <Object>& GetMatchingObjects() const{ return m_matchingObjects;}
+		inline int GetNum() const {return m_num;}
 		
 		//int m_isMatched;
 		int m_bestMatchingObject;
 		int m_counterClean;
-		std::list <Object> m_matchingObjects;
+		// std::list <Object> m_matchingObjects;
+		Object * m_lastMatchingObject;
 		double m_posX;
 		double m_posY;
 
@@ -61,5 +63,4 @@ class Template
 		int m_num;
 		static int m_counter;
 		std::vector <Feature> m_feats;
-		
 };

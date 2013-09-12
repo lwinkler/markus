@@ -81,7 +81,7 @@ public:
 	virtual void Export(std::ostream& rx_os, int x_indentation) = 0;
 
 protected:	
-	const int m_id;
+	const int m_id; // TODO : this id should probably disappear 
 	const std::string m_name;
 	ParameterConfigType m_confSource;
 	const std::string m_description;

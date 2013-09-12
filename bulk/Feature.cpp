@@ -22,32 +22,62 @@
 -------------------------------------------------------------------------------------*/
 #include "Feature.h"
 
+#define POW2(x) (x) * (x)
+
 using namespace std;
 
-Feature::Feature(double x_value, double x_variance)
+Feature::Feature(double x_value)
 {
 	//sprintf(m_name,"%s", x_name);
 	//printf("name %s %s\n",x_name, m_name);
-	m_value = x_value;
-	m_sqVariance = 0.01;
+	value      = x_value;
+	sqVariance = 0.01;
+	mean       = x_value;
+	initial    = x_value;
+	min        = x_value;
+	max        = x_value;
+	nbSamples  = 0;
 }
 
 Feature::Feature(const Feature& f)
 {
 	//strcpy(m_name, f.GetName());
-	m_value=f.GetValue();
-	m_sqVariance = f.GetSqVariance();
-};
+	value      = f.value;
+	sqVariance = f.sqVariance;
+	mean       = f.value;
+	initial    = f.value;
+	min        = f.value;
+	max        = f.value;
+	nbSamples  = f.nbSamples;
+}
 
 Feature&  Feature::operator = (const Feature& f)
 {
-	//strcpy(m_name, f.GetName());
-	m_value=f.GetValue();
-	m_sqVariance = f.GetSqVariance();
+	value      = f.value;
+	sqVariance = f.sqVariance;
+	mean       = f.value;
+	initial    = f.value;
+	min        = f.value;
+	max        = f.value;
+	nbSamples  = f.nbSamples;
 
 	return *this;
-};
+}
 
 Feature::~Feature(){}
 
-
+/* Update a feature from the current value
+ *
+ * This function can be used to keep a feature up to date in a dynamic way (similar to a running average)
+*/
+void Feature::Update(double x_currentValue, double x_alpha)
+{
+	value      = x_currentValue;
+	mean       = mean * (1.0 - x_alpha) + x_currentValue * x_alpha;
+	sqVariance = sqVariance * (1.0 - x_alpha) + POW2(x_currentValue - mean) * x_alpha;
+	if(x_currentValue < min)
+		min        = x_currentValue;
+	if(x_currentValue > max)
+		max        = x_currentValue;
+	nbSamples++;
+}

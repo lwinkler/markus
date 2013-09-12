@@ -43,25 +43,16 @@ TrackerByFeatures::TrackerByFeatures(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader)
 {
-	m_description = "Track objects by matching a set of features (typically position and size)";
-	
-	m_inputStreams.push_back(new StreamObject(0, "input", 	m_param.width, m_param.height, m_objects, cvScalar(255, 255, 255), *this,	"Input objects"));
+	m_description = "Track objects by matching a set of features (typically x,y,width and height)";
+
+	m_inputObjectStream = new StreamObject(0, "input", 	m_param.width, m_param.height, m_objects, cvScalar(255, 255, 255), *this,	"Input objects");
+	m_inputStreams.push_back(m_inputObjectStream);
 
 	m_outputObjectStream = new StreamObject(0, "tracker", m_param.width, m_param.height, m_objects, cvScalar(255, 255, 255), *this,	"Tracked objects");
 	m_outputStreams.push_back(m_outputObjectStream);
 
 	// TODO : Output template + check if ok in/out same
-	
-	vector<string> elems;
-	split(m_param.features, ',', elems);
-	int n = 0;
-	for(vector<std::string>::const_iterator it = elems.begin() ; it != elems.end() ; it++)
-	{
-		cout<<" "<<*it;
-		m_outputObjectStream->AddFeatureName(*it);
-		m_featureIndices.push_back(n);
-		n++;
-	}
+
 }
 
 TrackerByFeatures::~TrackerByFeatures(void )
@@ -75,29 +66,65 @@ void TrackerByFeatures::Reset()
 
 void TrackerByFeatures::ProcessFrame()
 {
+	static bool once = false;
+	if(!once)
+	{
+		AddFeatureNames();
+		once = true;
+	}
 	MatchTemplates();
 	CleanTemplates();
 	DetectNewTemplates();
 	UpdateTemplates();
-	
+
 	// Output the list of templates
 	/*m_trackerOutput.clear();
-	for(list<Template>::const_iterator it = m_templates.begin()  ; it != m_templates.end() ; it++ )
-	{
-		Rect rect;
-		rect.x = it->m_posX;
-		rect.y = it->m_posY;
-		rect.width = 10;
-		rect.height = 30;//TODO
-		Object obj;
-		obj.SetRect(rect); // TODO : Objects must be centered !!!!
-		m_trackerOutput.push_back(obj);
-	}*/
+    for(list<Template>::const_iterator it = m_templates.begin()  ; it != m_templates.end() ; it++ )
+    {
+	Rect rect;
+	rect.x = it->m_posX;
+	rect.y = it->m_posY;
+	rect.width = 10;
+	rect.height = 30;//TODO
+	Object obj;
+	obj.SetRect(rect); // TODO : Objects must be centered !!!!
+	m_trackerOutput.push_back(obj);
+    }*/
 
 	//track.PrintTrackedRegions();
-};
+}
 
+void TrackerByFeatures::AddFeatureNames()
+{
+	// Get the indices of the features that we want to track
+	vector<string> elems;
+	split(m_param.features, ',', elems);
 
+	// Add features to pass to the output
+	for(vector<std::string>::const_iterator it = m_inputObjectStream->GetFeatureNames().begin() ; it != m_inputObjectStream->GetFeatureNames().end() ; it++)
+	{
+		cout<<"Add feature "<<*it<<endl;
+		if(it->size() == 0)
+			continue;
+		m_outputObjectStream->AddFeatureName(*it);
+
+		// add the feature to the list of features to track
+		int n = 0;
+		for(vector<std::string>::const_iterator it2 = elems.begin() ; it2 != elems.end() ; it2++)
+		{
+			cout<<"compare"<<*it<<" and "<<*it2<<endl;
+			if(it->compare(*it2) == 0)
+			{
+				m_featureIndices.push_back(n);
+				break;
+			}
+			n++;
+		}
+	}
+	if(m_featureIndices.size() != elems.size())
+		throw("Error: Some features were not found in input stream in TrackerByFeatures::AddFeatureNames()");
+
+}
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 /// Match the template with an object (blob)
@@ -109,7 +136,7 @@ int TrackerByFeatures::MatchTemplate(Template& x_temp)
 	int bestObject = -1;
 
 	//cout<<"Comparing template "<<m_num<<" with "<<x_regs.size()<<" regions"<<endl;
-	
+
 	for(unsigned int i = 0 ; i< m_objects.size() ; i++)
 	{
 		double dist = x_temp.CompareWithObject(m_objects[i], m_featureIndices);
@@ -120,23 +147,24 @@ int TrackerByFeatures::MatchTemplate(Template& x_temp)
 			bestObject = i;
 		}
 	}
-       if(bestObject != -1 && bestDist < m_param.maxMatchingDistance
-               && (x_temp.GetNum() == MatchObject(m_objects[bestObject]) || !m_param.symetricMatch)) // Note: the order of this condition is important since MatchObject must be called each time !!
+	if(bestObject != -1 && bestDist < m_param.maxMatchingDistance
+			&& (x_temp.GetNum() == MatchObject(m_objects[bestObject]) || !m_param.symetricMatch)) // Note: the order of this condition is important since MatchObject must be called each time !!
 	{
 		x_temp.m_bestMatchingObject = bestObject;
 #ifdef VERBOSE
-//		cout<<"Template "<<x_temp.GetNum()<<" matched with region "<<bestObject<<" dist="<<bestDist<<" pos:("<<m_posX<<","<<m_posY<<")"<<endl;
+		//		cout<<"Template "<<x_temp.GetNum()<<" matched with region "<<bestObject<<" dist="<<bestDist<<" pos:("<<m_posX<<","<<m_posY<<")"<<endl;
 #endif
-		x_temp.m_matchingObjects.push_back(m_objects[bestObject]);
+		// x_temp.m_matchingObjects.push_back(m_objects[bestObject]);
+		x_temp.m_lastMatchingObject = &m_objects[bestObject];
 		m_objects[bestObject].m_isMatched = 1;
-		
+
 		//CvPoint p = {x_regs[bestObject].m_posX, x_regs[bestObject].m_posY};
 		//cvCircle(x_blobsImg, p, 10, TrackerByFeatures::m_colorArray[m_num % TrackerByFeatures::m_colorArraySize]);
-		
+
 		return 1;
 	}
 	else return 0;
-	
+
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -153,7 +181,7 @@ void TrackerByFeatures::MatchTemplates()
 	for(list<Template>::iterator it1 = m_templates.begin() ; it1 != m_templates.end(); it1++ )
 	{
 		it1->m_bestMatchingObject = -1;
-		//int isMatched = 
+		//int isMatched =
 		MatchTemplate(*it1);
 	}
 #ifdef VERBOSE
@@ -167,8 +195,8 @@ void TrackerByFeatures::MatchTemplates()
 void TrackerByFeatures::UpdateTemplates()
 {
 	for(list<Template>::iterator it1= m_templates.begin() ; it1 != m_templates.end(); it1++ )
-		it1->UpdateFeatures();
-	
+		it1->UpdateFeatures(m_param.alpha);
+
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -229,7 +257,7 @@ int TrackerByFeatures::MatchObject(Object& x_obj)
 	const Template* bestTemp = NULL;
 
 	//cout<<"Comparing template "<<m_num<<" with "<<x_regs.size()<<" regions"<<endl;
-	
+
 	for(list<Template>::const_iterator it1 = m_templates.begin() ; it1 != m_templates.end(); it1++ )
 	{
 		double dist = it1->CompareWithObject(x_obj, m_featureIndices);
@@ -242,10 +270,10 @@ int TrackerByFeatures::MatchObject(Object& x_obj)
 	}
 	if(bestTemp != NULL && bestDist < m_param.maxMatchingDistance)
 	{
-		x_obj.SetId(bestTemp->GetNum()); // Set color of template 
+		x_obj.SetId(bestTemp->GetNum()); // Set color of template
 		return bestTemp->GetNum();
 	}
-	else 
+	else
 	{
 		x_obj.SetId(-1);
 		return 0;

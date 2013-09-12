@@ -54,5 +54,9 @@ Object& Object::operator = (const Object& r)
 	return *this;
 }
 */
-Object::~Object(){};
+Object::~Object(){}
 
+const Feature& Object::GetFeature(int x_index) const
+{
+	return m_feats.at(x_index);
+}

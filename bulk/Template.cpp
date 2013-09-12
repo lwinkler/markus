@@ -33,6 +33,7 @@ Template::Template(int x_maxNbFramesDisappearance)
 {
 	m_num = m_counter;
 	m_bestMatchingObject = -1;
+	m_lastMatchingObject = NULL;
 	m_counterClean = x_maxNbFramesDisappearance;
 	m_posX = 0;
 	m_posY = 0;
@@ -43,7 +44,7 @@ Template::Template(int x_maxNbFramesDisappearance)
 Template::Template(const Template& t, int x_maxNbFramesDisappearance)
 {
 	m_num = t.GetNum();
-	m_matchingObjects = t.GetMatchingObjects();
+	m_lastMatchingObject = NULL; //  t.GetMatchingObjects();
 	m_feats = t.GetFeatures();
 	m_posX = t.m_posX;
 	m_posY = t.m_posY;
@@ -61,6 +62,7 @@ Template::Template(const Object& x_reg, int x_maxNbFramesDisappearance)
 	m_posX = x_reg.m_posX;
 	m_posY = x_reg.m_posY;
 	m_bestMatchingObject = -1;
+	m_lastMatchingObject = NULL;
 	m_counterClean = x_maxNbFramesDisappearance;
 
 	//cout<<"Object "<<x_reg.GetNum()<<" is used to create template "<<m_num<<" with "<<x_reg.GetFeatures().size()<<" features"<<endl;
@@ -69,7 +71,7 @@ Template::Template(const Object& x_reg, int x_maxNbFramesDisappearance)
 Template& Template::operator = (const Template& t)
 {
 	m_num = t.GetNum();
-	m_matchingObjects = t.GetMatchingObjects();
+	m_lastMatchingObject = NULL; // t.GetMatchingObjects();
 	m_feats = t.GetFeatures();
 	m_posX = t.m_posX;
 	m_posY = t.m_posY;
@@ -105,21 +107,21 @@ double Template::CompareWithObject(const Object& x_reg, const vector<int>& x_fea
 		//cout<<"x_reg.GetFeatures()[i].GetValue()"<<x_reg.GetFeatures()[i].GetValue()<<endl;
 		
 		//cout<<"temp val ="<<m_feats[i].GetValue()<<" region val="<<x_reg.GetFeatures()[i].GetValue()<<" temp var="<<m_feats[i].GetVariance()<<endl;
-		sum += POW2(f1.GetValue() - f2.GetValue()) 
-			/ POW2(f1.GetSqVariance());
+		sum += POW2(f1.value - f2.value) 
+			/ POW2(f1.sqVariance);
 	}
 	return sqrt(sum) / x_featureIndices.size();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-/* Update the template's features based on the latest 50 matching regions */
+/* Update the template's features */
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-void Template::UpdateFeatures()
+void Template::UpdateFeatures(double x_alpha)
 {
 	for ( unsigned int i=0 ; i < m_feats.size() ; i++)
 	{
-		double mean=0;
+		/*double mean=0;
 		double sqstdev=0;
 		int size = m_matchingObjects.size();
 		if (size <= 0) return;
@@ -137,7 +139,12 @@ void Template::UpdateFeatures()
 		//cout<<"UpdateFeatures : "<<m_feats[i].GetValue()<<"->"<<mean<<endl;
 		//cout<<"UpdateFeatures : "<<m_feats[i].GetVariance()<<"->"<<sqrt(sqstdev)<<endl;
 		m_feats[i].SetValue(mean);
-		m_feats[i].SetSqVariance(sqstdev<0.01 ? 0.01 : sqstdev);
+		m_feats[i].SetSqVariance(sqstdev<0.01 ? 0.01 : sqstdev);*/
+		if(m_lastMatchingObject != NULL)
+		{
+			m_feats[i].Update(m_lastMatchingObject->GetFeatures().at(i).value, x_alpha);
+			m_lastMatchingObject = NULL;
+		}
 	}
 	
 }

@@ -34,23 +34,30 @@
 class Feature
 {
 	public:
-		Feature(double value, double x_variance);
+		Feature(double value);
 		Feature(const Feature&);
 		Feature& operator = (const Feature&);
 		~Feature();
 		
 		//inline const char* GetName() const {return m_name;};
-		inline double GetValue() const {return m_value;};
-		inline void SetValue( double x) {m_value = x;};
-		inline double GetSqVariance() const {return m_sqVariance;};
-		inline void SetSqVariance( double x) {m_sqVariance = x;};
+		/*inline double GetValue() const {return m_value;}
+		inline void SetValue( double x) {m_value = x;}
+		inline double GetSqVariance() const {return m_sqVariance;}
+		inline void SetSqVariance( double x) {m_sqVariance = x;}*/
+		void Update(double x_currentValue, double x_alpha);
 		
 		//static double GetFeatureValue(const std::vector<Feature>& vect, const char* name);
 		
 		
 	public:
-		double m_value;
-		double m_sqVariance;
+		// The different values of the feature
+		double value;
+		double mean;
+		double sqVariance;
+		double initial;
+		double min;
+		double max;
+		int    nbSamples;
 };
 
 

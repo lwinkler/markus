@@ -72,44 +72,64 @@ void StreamObject::ConvertInput()
 		obj.m_width *= ratioX;
 		obj.m_height *= ratioY;
 	}
+	
+	// Also pass feature names TODO there is maybe a more efficient way
+	m_featureNames.clear();
+
+	for (vector<string>::const_iterator it1 = pstream->GetFeatureNames().begin() ; it1 != pstream->GetFeatureNames().end(); it1++)
+	{
+		m_featureNames.push_back(*it1);	
+	}
 }
 
 /// Render : Draw rectangles on image
 
 void StreamObject::RenderTo(Mat * xp_output) const
 {
-	for(vector<Object>::const_iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
-	{
-		//Rect rect = it->GetRect();
-		Point p1(it->m_posX - it->m_width / 2, it->m_posY - it->m_height / 2);
-		Point p2(it->m_posX + it->m_width / 2, it->m_posY + it->m_height / 2);
-		
-		float scale = static_cast<float>(xp_output->cols) / m_width;
-		p1.x = p1.x * scale;
-		p2.x = p2.x * scale;
-		scale = static_cast<float>(xp_output->rows) / m_height;
-		p1.y = p1.y * scale;
-		p2.y = p2.y * scale;
-		
-		// Draw the rectangle in the input image
-		// if id is present, draw to the equivalent color
-		
-		if(it->GetId() >= 0)
-		{
-			rectangle( *xp_output, p1, p2, colorFromId(it->GetId()), 1, 8, 0 );
-			ostringstream text;
-			text<<it->GetName()<<" "<<it->GetId();
-			p1.y -= 2;
-			putText(*xp_output, text.str(), p1,  FONT_HERSHEY_COMPLEX_SMALL, 0.5, colorFromId(it->GetId()));
-		}
-		else
-		{
-			// color from stream
-			rectangle( *xp_output, p1, p2, m_color, 1, 8, 0 );
-			p1.y -= 2;
-			putText(*xp_output, it->GetName(), p1, FONT_HERSHEY_COMPLEX_SMALL, 0.5, m_color);
-		}
+    for(vector<Object>::const_iterator it1 = m_objects.begin() ; it1 != m_objects.end() ; it1++)
+    {
+        //Rect rect = it1->GetRect();
+        Point p1(it1->m_posX - it1->m_width / 2, it1->m_posY - it1->m_height / 2);
+        Point p2(it1->m_posX + it1->m_width / 2, it1->m_posY + it1->m_height / 2);
+
+        float scale = static_cast<float>(xp_output->cols) / m_width;
+        p1.x = p1.x * scale;
+        p2.x = p2.x * scale;
+        scale = static_cast<float>(xp_output->rows) / m_height;
+        p1.y = p1.y * scale;
+        p2.y = p2.y * scale;
+
+        // Draw the rectangle in the input image
+        // if id is present, draw to the equivalent color
+        CvScalar color = m_color;
+        if(it1->GetId() >= 0)
+        {
+            color = colorFromId(it1->GetId());
+            ostringstream text;
+            text<<it1->GetName()<<" "<<it1->GetId();
+            p1.y -= 2;
+            putText(*xp_output, text.str(), p1,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
         }
+        else
+        {
+            // color from stream
+            p1.y -= 2;
+            putText(*xp_output, it1->GetName(), p1, FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
+        }
+        rectangle( *xp_output, p1, p2, color, 1, 8, 0 );
+
+        // Print features and values
+        p1.x += 2;
+        int i = 0;
+        for(vector<string>::const_iterator it2 = m_featureNames.begin() ; it2 != m_featureNames.end() ; it2++)
+        {
+            ostringstream text;
+            text<<*it2<<"="<<it1->GetFeature(i).value;
+            p1.y += 7;
+            putText(*xp_output, text.str(), p1,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
+            i++;
+        }
+    }
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -122,7 +142,7 @@ double StreamObject::GetFeatureValue(const std::vector< Feature >& x_vect, const
 	for ( vector<Feature>::const_iterator it1= x_vect.begin() ; it1 != x_vect.end(); it1++ )
 	{
 		if(!m_featureNames.at(cpt).compare(x_name))// !strcmp((const char*) Feature::m_names.at(cpt).compare(x_name)/* it1->m_name* /, x_name))
-			return it1->m_value;
+			return it1->value;
 		cpt++;
 	}
 	throw("GetFeatureValue : cannot find feature " + string(x_name));
@@ -137,7 +157,7 @@ void StreamObject::PrintObjects() const
 		cout<<"Object "/*<<(int)it1->GetNum()*/<<" : ";
 		for ( vector<Feature>::const_iterator it2=it1->GetFeatures().begin() ; it2 < it1->GetFeatures().end(); it2++ )
 		{
-			cout<<" "<<m_featureNames.at(cpt)<<"="<<it2->GetValue()<<"|";
+			cout<<" "<<m_featureNames.at(cpt)<<"="<<it2->value<<"|";
 			cpt++;
 		}
 		cout<<endl;
