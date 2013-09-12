@@ -33,6 +33,7 @@ using namespace cv;
 const char * TrackerByFeatures::m_type = "TrackerByFeatures";
 
 #define MAX_NB_TEMPLATES 100
+#define DIST(x, y) sqrt((x) * (x) + (y) * (y))
 
 using namespace std;
 using namespace cv;
@@ -124,6 +125,9 @@ void TrackerByFeatures::AddFeatureNames()
 	if(m_featureIndices.size() != elems.size())
 		throw("Error: Some features were not found in input stream in TrackerByFeatures::AddFeatureNames()");
 
+	// m_outputObjectStream->AddFeatureName("distance");
+	// m_outputObjectStream->AddFeatureName("speed_x");
+	// m_outputObjectStream->AddFeatureName("speed_y");
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -139,7 +143,8 @@ int TrackerByFeatures::MatchTemplate(Template& x_temp)
 
 	for(unsigned int i = 0 ; i< m_objects.size() ; i++)
 	{
-		double dist = x_temp.CompareWithObject(m_objects[i], m_featureIndices);
+        // Add empty features for distance and speed
+        double dist = x_temp.CompareWithObject(m_objects[i], m_featureIndices);
 		//cout<<"dist ="<<dist;
 		if(dist < bestDist)
 		{
@@ -194,9 +199,29 @@ void TrackerByFeatures::MatchTemplates()
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 void TrackerByFeatures::UpdateTemplates()
 {
-	for(list<Template>::iterator it1= m_templates.begin() ; it1 != m_templates.end(); it1++ )
-		it1->UpdateFeatures(m_param.alpha);
+    const vector<string> & featureNames = m_outputObjectStream->GetFeatureNames();
 
+	for(list<Template>::iterator it1= m_templates.begin() ; it1 != m_templates.end(); it1++ )
+	{
+		if(it1->m_lastMatchingObject != NULL)
+		{
+			// Add two extra features: distance and speed
+			const Feature& x = it1->m_lastMatchingObject->GetFeatureByName("x", featureNames);
+			const Feature& y = it1->m_lastMatchingObject->GetFeatureByName("y", featureNames);
+
+
+			// distance
+			// it1->m_lastMatchingObject->SetFeatureByName("distance", featureNames, DIST(x.value - x.initial, y.value - y.initial));
+			// speed
+			// it1->m_lastMatchingObject->SetFeatureByName("speed_x", featureNames, x.value - x.mean); // TODO : This is experimental
+			// it1->m_lastMatchingObject->SetFeatureByName("speed_y", featureNames, y.value - y.mean);
+
+			// Update the template and copy to the object
+			it1->UpdateFeatures(m_param.alpha);
+			it1->m_lastMatchingObject->SetFeatures(it1->GetFeatures());
+			it1->m_lastMatchingObject = NULL;
+		}
+	}
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/

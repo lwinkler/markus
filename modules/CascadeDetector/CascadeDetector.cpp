@@ -112,10 +112,10 @@ void CascadeDetector::CopyResults()
 		obj.m_width = it->width;
 		obj.m_height = it->height;
 		
-		obj.AddFeature(obj.m_posX, 0.1);
-		obj.AddFeature(obj.m_posY, 0.1);
-		obj.AddFeature(obj.m_width, 0.1);
-		obj.AddFeature(obj.m_height, 0.1);
+        obj.AddFeature(obj.m_posX);
+        obj.AddFeature(obj.m_posY);
+        obj.AddFeature(obj.m_width);
+        obj.AddFeature(obj.m_height);
 
 		m_detectedObjects.push_back(obj);
 	}

@@ -62,18 +62,39 @@ const Feature& Object::GetFeature(int x_index) const
 }
 
 /// Search a feature by name by using the list of feature names (probably from StreamObject)
-const Feature& Object::GetFeatureByName(std::string& x_name, const vector<std::string>& x_featureNames) const
+const Feature& Object::GetFeatureByName(const std::string& x_name, const vector<std::string>& x_featureNames) const
 {
-	vector<Feature>::const_iterator feat = m_feats.begin();
-	if(m_feats.size() != x_featureNames.size())
+	vector<std::string>::const_iterator names = x_featureNames.begin();
+	
+	if(m_feats.size() > x_featureNames.size())
 		throw("Error: feature vector length is not equal to the length of feature names vector in Object::GetFeatureByName");
-	for(vector<std::string>::const_iterator it = x_featureNames.begin() ; it != x_featureNames.end() ; it++)
+
+	for(vector<Feature>::const_iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
 	{
-		if(it->compare(x_name) == 0)
+		if(names->compare(x_name) == 0)
 		{
-			return *feat;
+			return *it;
 		}
-		feat++;
+		names++;
+	}
+	throw("Error: feature not found in Object::GetFeatureByName");
+}
+
+void Object::SetFeatureByName(const std::string& x_name, const std::vector<std::string>& x_featureNames, double x_value)
+{
+	vector<std::string>::const_iterator names = x_featureNames.begin();
+	
+	if(m_feats.size() > x_featureNames.size())
+		throw("Error: feature vector length is not equal to the length of feature names vector in Object::GetFeatureByName");
+
+	for(vector<Feature>::iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
+	{
+		if(names->compare(x_name) == 0)
+		{
+			it->value = x_value;
+			return;
+		}
+		names++;
 	}
 	throw("Error: feature not found in Object::GetFeatureByName");
 }

@@ -120,28 +120,28 @@ void SegmenterContour::ProcessFrame()
 			for(vector<string>::const_iterator it = featureNames.begin() ; it != featureNames.end() ; it++)
 			{
 				if(it->compare("x") == 0)
-					obj.AddFeature(rect.x, 0.1);
+                    obj.AddFeature(rect.x);
 				else if(it->compare("y") == 0)
-					obj.AddFeature(rect.y, 0.1);
+                    obj.AddFeature(rect.y);
 				else if(it->compare("width") == 0)
-					obj.AddFeature(rect.width, 0.1);
+                    obj.AddFeature(rect.width);
 				else if(it->compare("height") == 0)
-					obj.AddFeature(rect.height, 0.1);
+                    obj.AddFeature(rect.height);
 				else if(it->compare("ellipse_angle") == 0)
 				{
-					obj.AddFeature(minEllipse.angle, 0.1);
+                    obj.AddFeature(minEllipse.angle);
 				}
 				else if(it->compare("ellipse_width") == 0)
 				{
-					obj.AddFeature(minEllipse.size.width, 0.1);
+                    obj.AddFeature(minEllipse.size.width);
 				}
 				else if(it->compare("ellipse_height") == 0)
 				{
-					obj.AddFeature(minEllipse.size.height, 0.1);
+                    obj.AddFeature(minEllipse.size.height);
 				}
 				else if(it->compare("ellipse_ratio") == 0)
 				{
-					obj.AddFeature(minEllipse.size.width / minEllipse.size.height, 0.1);
+                    obj.AddFeature(minEllipse.size.width / minEllipse.size.height);
 				}
 			}
 

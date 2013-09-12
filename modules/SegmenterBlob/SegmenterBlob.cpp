@@ -128,10 +128,10 @@ void SegmenterBlob::ExtractBlobs(Mat* x_img)
 	// 
 	// 		reg.AddFeature("convex hull perimeter", GetSTLResult(currentBlob, CBlobGetHullPerimeter()));
 	
-			obj.AddFeature(rect.x, 0.1);
-			obj.AddFeature(rect.y, 0.1);
-			obj.AddFeature(rect.width, 0.1);
-			obj.AddFeature(rect.height, 0.1);
+            obj.AddFeature(rect.x);
+            obj.AddFeature(rect.y);
+            obj.AddFeature(rect.width);
+            obj.AddFeature(rect.height);
 			m_regions.push_back(obj);
 		}
 		//else throw("ERROR");

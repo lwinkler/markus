@@ -96,7 +96,7 @@ double Template::CompareWithObject(const Object& x_reg, const vector<int>& x_fea
 {
 	double sum = 0;
 	//cout<<"m_feats.size() ="<<m_feats.size()<<endl;
-	assert(m_feats.size() == x_reg.GetFeatures().size());
+	assert(m_feats.size() >= x_reg.GetFeatures().size());
 	assert(m_feats.size() > 0);
 	
 	for (vector<int>::const_iterator it = x_featureIndices.begin() ; it != x_featureIndices.end() ; it++)
@@ -143,7 +143,6 @@ void Template::UpdateFeatures(double x_alpha)
 		if(m_lastMatchingObject != NULL)
 		{
 			m_feats[i].Update(m_lastMatchingObject->GetFeatures().at(i).value, x_alpha);
-			m_lastMatchingObject = NULL;
 		}
 	}
 	

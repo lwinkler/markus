@@ -1,25 +1,25 @@
 /*----------------------------------------------------------------------------------
-*
-*    MARKUS : a manager for video analysis modules
-* 
-*    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
-*    This file is part of Markus.
-*
-*    Markus is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Lesser General Public License as published by
-*    the Free Software Foundation, either version 3 of the License, or
-*    (at your option) any later version.
-*
-*    Markus is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Lesser General Public License for more details.
-*
-*    You should have received a copy of the GNU Lesser General Public License
-*    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
--------------------------------------------------------------------------------------*/
+ *
+ *    MARKUS : a manager for video analysis modules
+ * 
+ *    author : Laurent Winkler <lwinkler888@gmail.com>
+ * 
+ * 
+ *    This file is part of Markus.
+ *
+ *    Markus is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Lesser General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    Markus is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Lesser General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Lesser General Public License
+ *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
+ -------------------------------------------------------------------------------------*/
 
 #include "StreamObject.h"
 #include "util.h"
@@ -29,7 +29,7 @@ using namespace cv;
 
 
 StreamObject::StreamObject(int x_id, const string& x_name, int x_width, int x_height, 
-		       vector<Object>& xr_objects, const CvScalar& x_color, Module& rx_module, const string& rx_description) : 
+		vector<Object>& xr_objects, const CvScalar& x_color, Module& rx_module, const string& rx_description) :
 	Stream(x_id, x_name, STREAM_IMAGE, x_width, x_height, rx_module, rx_description),
 	m_objects(xr_objects),
 	m_color(x_color),
@@ -38,7 +38,7 @@ StreamObject::StreamObject(int x_id, const string& x_name, int x_width, int x_he
 }
 
 StreamObject::StreamObject(int x_id, const string& rx_name, int x_width, int x_height, 
-			vector<Object>& xr_objects, Module& rx_module, const string& rx_description):
+		vector<Object>& xr_objects, Module& rx_module, const string& rx_description):
 	Stream(x_id, rx_name, STREAM_IMAGE, x_width, x_height, rx_module, rx_description),
 	m_objects(xr_objects),
 	m_color(cvScalar(255, 255, 255)),
@@ -55,13 +55,13 @@ StreamObject::~StreamObject()
 void StreamObject::ConvertInput()
 {
 	if(m_connected == NULL) return;
-	
+
 	const StreamObject * pstream = dynamic_cast<const StreamObject*>(m_connected);
 	if(pstream == NULL) return;
 	std::vector<Object> rectsTarget = pstream->m_objects;
 	double ratioX = static_cast<double>(m_width) / pstream->GetInputWidth();
 	double ratioY = static_cast<double>(m_height) / pstream->GetInputHeight();
-	
+
 	m_objects.clear();
 	for(vector<Object>::const_iterator it = rectsTarget.begin() ; it != rectsTarget.end() ; it++)
 	{
@@ -72,13 +72,13 @@ void StreamObject::ConvertInput()
 		obj.m_width *= ratioX;
 		obj.m_height *= ratioY;
 	}
-	
+
 	// Also pass feature names TODO there is maybe a more efficient way
 	m_featureNames.clear();
 
 	for (vector<string>::const_iterator it1 = pstream->GetFeatureNames().begin() ; it1 != pstream->GetFeatureNames().end(); it1++)
 	{
-		m_featureNames.push_back(*it1);	
+		m_featureNames.push_back(*it1);
 	}
 }
 
@@ -86,50 +86,54 @@ void StreamObject::ConvertInput()
 
 void StreamObject::RenderTo(Mat * xp_output) const
 {
-    for(vector<Object>::const_iterator it1 = m_objects.begin() ; it1 != m_objects.end() ; it1++)
-    {
-        //Rect rect = it1->GetRect();
-        Point p1(it1->m_posX - it1->m_width / 2, it1->m_posY - it1->m_height / 2);
-        Point p2(it1->m_posX + it1->m_width / 2, it1->m_posY + it1->m_height / 2);
+	for(vector<Object>::const_iterator it1 = m_objects.begin() ; it1 != m_objects.end() ; it1++)
+	{
+		//Rect rect = it1->GetRect();
+		Point p1(it1->m_posX - it1->m_width / 2, it1->m_posY - it1->m_height / 2);
+		Point p2(it1->m_posX + it1->m_width / 2, it1->m_posY + it1->m_height / 2);
 
-        float scale = static_cast<float>(xp_output->cols) / m_width;
-        p1.x = p1.x * scale;
-        p2.x = p2.x * scale;
-        scale = static_cast<float>(xp_output->rows) / m_height;
-        p1.y = p1.y * scale;
-        p2.y = p2.y * scale;
+		float scale = static_cast<float>(xp_output->cols) / m_width;
+		p1.x = p1.x * scale;
+		p2.x = p2.x * scale;
+		scale = static_cast<float>(xp_output->rows) / m_height;
+		p1.y = p1.y * scale;
+		p2.y = p2.y * scale;
 
-        // Draw the rectangle in the input image
-        // if id is present, draw to the equivalent color
-        CvScalar color = m_color;
-        if(it1->GetId() >= 0)
-        {
-            color = colorFromId(it1->GetId());
-            ostringstream text;
-            text<<it1->GetName()<<" "<<it1->GetId();
-            p1.y -= 3;
-            putText(*xp_output, text.str(), p1,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
-        }
-        else
-        {
-            // color from stream
-            p1.y -= 3;
-            putText(*xp_output, it1->GetName(), p1, FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
-        }
-        rectangle( *xp_output, p1, p2, color, 1, 8, 0 );
+		// Draw the rectangle in the input image
+		// if id is present, draw to the equivalent color
+		CvScalar color = m_color;
+		if(it1->GetId() >= 0)
+		{
+			color = colorFromId(it1->GetId());
+			ostringstream text;
+			text<<it1->GetName()<<" "<<it1->GetId();
+			p1.y -= 3;
+			putText(*xp_output, text.str(), p1,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
+		}
+		else
+		{
+			// color from stream
+			p1.y -= 3;
+			putText(*xp_output, it1->GetName(), p1, FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
+		}
+		rectangle( *xp_output, p1, p2, color, 1, 8, 0 );
 
-        // Print features and values
-        p1.x += 2;
-        int i = 0;
-        for(vector<string>::const_iterator it2 = m_featureNames.begin() ; it2 != m_featureNames.end() ; it2++)
-        {
-            ostringstream text;
-            text<<*it2<<"="<<it1->GetFeature(i).value;
-            p1.y += 7;
-            putText(*xp_output, text.str(), p1,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
-            i++;
-        }
-    }
+		// Print features and values
+		p1.x += 2;
+		int i = 0;
+		for(vector<string>::const_iterator it2 = m_featureNames.begin() ; it2 != m_featureNames.end() ; it2++)
+		{
+			//try
+			{
+				ostringstream text;
+				text<<*it2<<"="<<it1->GetFeature(i).value;
+				p1.y += 7;
+				putText(*xp_output, text.str(), p1,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
+				i++;
+			}
+			//catch(...){}
+		}
+	}
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -138,7 +142,7 @@ void StreamObject::RenderTo(Mat * xp_output) const
 double StreamObject::GetFeatureValue(const std::vector< Feature >& x_vect, const char* x_name)
 {
 	int cpt = 0;
-	
+
 	for ( vector<Feature>::const_iterator it1= x_vect.begin() ; it1 != x_vect.end(); it1++ )
 	{
 		if(!m_featureNames.at(cpt).compare(x_name))// !strcmp((const char*) Feature::m_names.at(cpt).compare(x_name)/* it1->m_name* /, x_name))
@@ -161,6 +165,6 @@ void StreamObject::PrintObjects() const
 			cpt++;
 		}
 		cout<<endl;
-	}	
+	}
 }
 

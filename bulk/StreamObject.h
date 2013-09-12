@@ -35,17 +35,17 @@ class StreamObject : public Stream
 {
 public:
 	StreamObject(int x_id, const std::string& rx_name, int x_width, int x_height, 
-		   std::vector<Object>& r_rects, const CvScalar& x_color, Module& rx_module, const std::string& rx_description);
+			std::vector<Object>& r_rects, const CvScalar& x_color, Module& rx_module, const std::string& rx_description);
 	StreamObject(int x_id, const std::string& rx_name, int x_width, int x_height, 
-		   std::vector<Object>& r_rects, Module& rx_module, const std::string& rx_description);
+			std::vector<Object>& r_rects, Module& rx_module, const std::string& rx_description);
 	~StreamObject();
-    void Clear() {m_objects.clear();}
-    void AddObject(const Object& x_obj) {m_objects.push_back(x_obj);}
-	
+	void Clear() {m_objects.clear();}
+	void AddObject(const Object& x_obj) {m_objects.push_back(x_obj);}
+
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat * xp_output) const;
-    inline virtual const std::string GetTypeString()const {return "Objects";}
-    inline void AddFeatureName(const std::string & x_name){m_featureNames.push_back(x_name);}
+	inline virtual const std::string GetTypeString()const {return "Objects";}
+	inline void AddFeatureName(const std::string & x_name){m_featureNames.push_back(x_name);}
 	double GetFeatureValue(const std::vector<Feature>& x_vect, const char* x_name);
 	const std::vector<std::string>& GetFeatureNames() const{return m_featureNames;}
 	void PrintObjects() const;

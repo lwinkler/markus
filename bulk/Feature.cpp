@@ -44,10 +44,10 @@ Feature::Feature(const Feature& f)
 	//strcpy(m_name, f.GetName());
 	value      = f.value;
 	sqVariance = f.sqVariance;
-	mean       = f.value;
-	initial    = f.value;
-	min        = f.value;
-	max        = f.value;
+    mean       = f.mean;
+    initial    = f.initial;
+    min        = f.min;
+    max        = f.max;
 	nbSamples  = f.nbSamples;
 }
 
@@ -55,10 +55,10 @@ Feature&  Feature::operator = (const Feature& f)
 {
 	value      = f.value;
 	sqVariance = f.sqVariance;
-	mean       = f.value;
-	initial    = f.value;
-	min        = f.value;
-	max        = f.value;
+    mean       = f.mean;
+    initial    = f.initial;
+    min        = f.min;
+    max        = f.max;
 	nbSamples  = f.nbSamples;
 
 	return *this;
