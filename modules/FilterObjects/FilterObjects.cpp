@@ -70,12 +70,11 @@ void FilterObjects::ProcessFrame()
 	}
 
 	// Filter incoming objects and add them to the output
-	const vector<string>& featureNames = m_inputObjectStream->GetFeatureNames();
 	m_objectsOut.clear();
 	for(vector<Object>::const_iterator it = m_objectsIn.begin() ; it != m_objectsIn.end() ; it++)
 	{
-		const Feature& posX = it->GetFeatureByName("x", m_inputObjectStream->GetFeatureNames());
-		const Feature& posY = it->GetFeatureByName("y", m_inputObjectStream->GetFeatureNames());
+		const Feature& posX = it->GetFeature("x");
+		const Feature& posY = it->GetFeature("y");
 		// const Feature& distance = it->GetFeatureByName("distance", featureNames);
 
 		if(POW2(posX.value - posX.initial) + POW2(posY.value - posY.initial) > m_param.minDist)

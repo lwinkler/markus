@@ -42,25 +42,22 @@ class Object
 		Object(const std::string & x_name);
 		~Object();
 
-		inline void AddFeature(double x_value)
-		{
-			m_feats.push_back(Feature(x_value));
-		}
-		inline const std::vector <Feature>& GetFeatures() const {return m_feats;}
-		const Feature& GetFeature(int x_index) const;
-		//inline const CvScalar& GetColor() const {return m_color;};
+		inline const std::string& GetName() const {return m_name;}
 		inline int GetId() const {return m_id;}
 		inline void SetId(int x_id){m_id = x_id;}
-		inline const std::string& GetName() const {return m_name;}
-		const Feature& GetFeatureByName(const std::string& x_name, const std::vector<std::string>& x_featureNames) const;
-		void SetFeatureByName(const std::string& x_name, const std::vector<std::string>& x_featureNames, double x_value);
-		void SetFeatures(const std::vector<Feature>& x_feats){m_feats = x_feats;}
+
+		inline void AddFeature(std::string x_name, double x_value) {m_feats.insert(std::make_pair(x_name, Feature(x_value)));}
+		inline const std::map <std::string, Feature>& GetFeatures() const {return m_feats;}
+		inline const Feature& GetFeature(const std::string& x_name) const {return m_feats.find(x_name)->second;}
+		// inline void SetFeatureByName(const std::string& x_name, double x_value) {m_feats.find(x_name)->second = Feature();}
+		void SetFeatures(const std::map<std::string, Feature>& x_feats){m_feats = x_feats;}
+
 		int m_isMatched;
 
 	private:
 		std::string m_name;
 		int m_id;
-		std::vector <Feature> m_feats;
+		std::map <std::string, Feature> m_feats;
 		//CvScalar m_color;
 		//Object(const Object&);
 		//Object& operator = (const Object&);

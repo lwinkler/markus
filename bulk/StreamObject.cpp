@@ -121,12 +121,12 @@ void StreamObject::RenderTo(Mat * xp_output) const
 		// Print features and values
 		p1.x += 2;
 		int i = 0;
-		for(vector<string>::const_iterator it2 = m_featureNames.begin() ; it2 != m_featureNames.end() ; it2++)
+		for(map<string, Feature>::const_iterator it2 = it1->GetFeatures().begin() ; it2 != it1->GetFeatures().end() ; it2++)
 		{
 			//try
 			{
 				ostringstream text;
-				text<<*it2<<"="<<it1->GetFeature(i).value;
+				text<<it2->first<<"="<<it2->second.value;
 				p1.y += 7;
 				putText(*xp_output, text.str(), p1,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
 				i++;
@@ -159,9 +159,9 @@ void StreamObject::PrintObjects() const
 	{
 		int cpt=0;
 		cout<<"Object "/*<<(int)it1->GetNum()*/<<" : ";
-		for ( vector<Feature>::const_iterator it2=it1->GetFeatures().begin() ; it2 < it1->GetFeatures().end(); it2++ )
+		for ( map<string, Feature>::const_iterator it2 = it1->GetFeatures().begin() ; it2 != it1->GetFeatures().end(); it2++ )
 		{
-			cout<<" "<<m_featureNames.at(cpt)<<"="<<it2->value<<"|";
+			cout<<" "<<it2->first<<"="<<it2->second.value<<"|";
 			cpt++;
 		}
 		cout<<endl;

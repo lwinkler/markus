@@ -98,11 +98,10 @@ void TrackerByFeatures::ProcessFrame()
 void TrackerByFeatures::AddFeatureNames()
 {
 	// Get the indices of the features that we want to track
-	vector<string> elems;
-	split(m_param.features, ',', elems);
+	split(m_param.features, ',', m_featureIndices); // TODO suppress indices maybe
 
 	// Add features to pass to the output
-	for(vector<std::string>::const_iterator it = m_inputObjectStream->GetFeatureNames().begin() ; it != m_inputObjectStream->GetFeatureNames().end() ; it++)
+	/*for(vector<std::string>::const_iterator it = m_inputObjectStream->GetFeatureNames().begin() ; it != m_inputObjectStream->GetFeatureNames().end() ; it++)
 	{
 		cout<<"Add feature "<<*it<<endl;
 		if(it->size() == 0)
@@ -110,21 +109,19 @@ void TrackerByFeatures::AddFeatureNames()
 		m_outputObjectStream->AddFeatureName(*it);
 
 		// add the feature to the list of features to track
-		int n = 0;
 		for(vector<std::string>::const_iterator it2 = elems.begin() ; it2 != elems.end() ; it2++)
 		{
 			cout<<"compare"<<*it<<" and "<<*it2<<endl;
 			if(it->compare(*it2) == 0)
 			{
 				m_featureIndices.push_back(n);
-				break;
 			}
 			n++;
 		}
 	}
 	if(m_featureIndices.size() != elems.size())
 		throw("Error: Some features were not found in input stream in TrackerByFeatures::AddFeatureNames()");
-
+	*/
 	// m_outputObjectStream->AddFeatureName("distance");
 	// m_outputObjectStream->AddFeatureName("speed_x");
 	// m_outputObjectStream->AddFeatureName("speed_y");
@@ -143,8 +140,8 @@ int TrackerByFeatures::MatchTemplate(Template& x_temp)
 
 	for(unsigned int i = 0 ; i< m_objects.size() ; i++)
 	{
-        // Add empty features for distance and speed
-        double dist = x_temp.CompareWithObject(m_objects[i], m_featureIndices);
+		// Add empty features for distance and speed
+		double dist = x_temp.CompareWithObject(m_objects[i], m_featureIndices);
 		//cout<<"dist ="<<dist;
 		if(dist < bestDist)
 		{
@@ -199,15 +196,13 @@ void TrackerByFeatures::MatchTemplates()
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 void TrackerByFeatures::UpdateTemplates()
 {
-    const vector<string> & featureNames = m_outputObjectStream->GetFeatureNames();
-
 	for(list<Template>::iterator it1= m_templates.begin() ; it1 != m_templates.end(); it1++ )
 	{
 		if(it1->m_lastMatchingObject != NULL)
 		{
 			// Add two extra features: distance and speed
-			const Feature& x = it1->m_lastMatchingObject->GetFeatureByName("x", featureNames);
-			const Feature& y = it1->m_lastMatchingObject->GetFeatureByName("y", featureNames);
+			const Feature& x = it1->m_lastMatchingObject->GetFeature("x");
+			const Feature& y = it1->m_lastMatchingObject->GetFeature("y");
 
 
 			// distance

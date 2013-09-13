@@ -73,7 +73,7 @@ private:
 
 	std::list <Template> m_templates;
 	std::vector <Object> m_objects;
-	std::vector <int>    m_featureIndices;
+	std::vector <std::string>    m_featureIndices;
 	StreamObject* m_inputObjectStream;
 	StreamObject* m_outputObjectStream;
 

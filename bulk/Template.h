@@ -38,16 +38,12 @@ class Template
 		Template& operator = (const Template&);
 		~Template();
 		
-		double CompareWithObject(const Object& x_reg, const std::vector<int>& x_featureIndices) const;
+		double CompareWithObject(const Object& x_reg, const std::vector<std::string>& x_features) const;
 		void UpdateFeatures(double x_alpha);
 		
-		
-		inline void AddFeature(double x_value)
-		{
-			Feature f(x_value);
-			m_feats.push_back(f);
-		}
-		inline const std::vector <Feature>& GetFeatures() const{ return m_feats;}
+		inline void AddFeature(std::string x_name, double x_value) {m_feats.insert(std::make_pair(x_name, Feature(x_value)));}
+		inline const Feature& GetFeature(const std::string& x_name) const {return m_feats.find(x_name)->second;}
+		inline const std::map <std::string, Feature>& GetFeatures() const{ return m_feats;}
 		// inline const std::list <Object>& GetMatchingObjects() const{ return m_matchingObjects;}
 		inline int GetNum() const {return m_num;}
 		
@@ -62,5 +58,5 @@ class Template
 	private:
 		int m_num;
 		static int m_counter;
-		std::vector <Feature> m_feats;
+		std::map <std::string, Feature> m_feats;
 };

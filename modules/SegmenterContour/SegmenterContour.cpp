@@ -120,28 +120,28 @@ void SegmenterContour::ProcessFrame()
 			for(vector<string>::const_iterator it = featureNames.begin() ; it != featureNames.end() ; it++)
 			{
 				if(it->compare("x") == 0)
-                    obj.AddFeature(rect.x);
+					obj.AddFeature("x", rect.x);
 				else if(it->compare("y") == 0)
-                    obj.AddFeature(rect.y);
+					obj.AddFeature("y", rect.y);
 				else if(it->compare("width") == 0)
-                    obj.AddFeature(rect.width);
+					obj.AddFeature("width", rect.width);
 				else if(it->compare("height") == 0)
-                    obj.AddFeature(rect.height);
+					obj.AddFeature("height", rect.height);
 				else if(it->compare("ellipse_angle") == 0)
 				{
-                    obj.AddFeature(minEllipse.angle);
+					obj.AddFeature("ellipse_angle", minEllipse.angle);
 				}
 				else if(it->compare("ellipse_width") == 0)
 				{
-                    obj.AddFeature(minEllipse.size.width);
+					obj.AddFeature("ellipse_width", minEllipse.size.width);
 				}
 				else if(it->compare("ellipse_height") == 0)
 				{
-                    obj.AddFeature(minEllipse.size.height);
+					obj.AddFeature("ellipse_height", minEllipse.size.height);
 				}
 				else if(it->compare("ellipse_ratio") == 0)
 				{
-                    obj.AddFeature(minEllipse.size.width / minEllipse.size.height);
+					obj.AddFeature("ellipse_ratio", minEllipse.size.width / minEllipse.size.height);
 				}
 			}
 

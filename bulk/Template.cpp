@@ -92,17 +92,17 @@ Template::~Template()
 /* Compare a candidate region with the template */
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-double Template::CompareWithObject(const Object& x_reg, const vector<int>& x_featureIndices) const
+double Template::CompareWithObject(const Object& x_reg, const vector<string>& x_features) const
 {
 	double sum = 0;
 	//cout<<"m_feats.size() ="<<m_feats.size()<<endl;
 	assert(m_feats.size() >= x_reg.GetFeatures().size());
 	assert(m_feats.size() > 0);
 	
-	for (vector<int>::const_iterator it = x_featureIndices.begin() ; it != x_featureIndices.end() ; it++)
+	for (vector<string>::const_iterator it = x_features.begin() ; it != x_features.end() ; it++)
 	{
-		const Feature & f1(m_feats.at(*it));
-		const Feature & f2(x_reg.GetFeatures().at(*it));
+		const Feature & f1(GetFeature(*it));
+		const Feature & f2(x_reg.GetFeature(*it));
 		//cout<<"m_feats[i].GetValue()"<<m_feats[i].GetValue()<<endl;
 		//cout<<"x_reg.GetFeatures()[i].GetValue()"<<x_reg.GetFeatures()[i].GetValue()<<endl;
 		
@@ -110,7 +110,7 @@ double Template::CompareWithObject(const Object& x_reg, const vector<int>& x_fea
 		sum += POW2(f1.value - f2.value) 
 			/ POW2(f1.sqVariance);
 	}
-	return sqrt(sum) / x_featureIndices.size();
+	return sqrt(sum) / x_features.size();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -119,30 +119,11 @@ double Template::CompareWithObject(const Object& x_reg, const vector<int>& x_fea
 
 void Template::UpdateFeatures(double x_alpha)
 {
-	for ( unsigned int i=0 ; i < m_feats.size() ; i++)
+	if(m_lastMatchingObject != NULL)
 	{
-		/*double mean=0;
-		double sqstdev=0;
-		int size = m_matchingObjects.size();
-		if (size <= 0) return;
-		
-		//cout<<"Updating template "<<m_num<<" with "<<m_matchingObjects.size()<<" matching regions."<<endl;
-		
-		for ( list<Object>::iterator it1= m_matchingObjects.begin() ; it1 != m_matchingObjects.end(); it1++ )
-			mean += it1->GetFeatures().at(i).GetValue();
-		mean /= size;
-		
-		for ( list<Object>::iterator it1= m_matchingObjects.begin() ; it1 != m_matchingObjects.end(); it1++ )
-			sqstdev += (it1->GetFeatures().at(i).GetValue() - mean) * (it1->GetFeatures().at(i).GetValue() - mean);
-		sqstdev /= size;
-
-		//cout<<"UpdateFeatures : "<<m_feats[i].GetValue()<<"->"<<mean<<endl;
-		//cout<<"UpdateFeatures : "<<m_feats[i].GetVariance()<<"->"<<sqrt(sqstdev)<<endl;
-		m_feats[i].SetValue(mean);
-		m_feats[i].SetSqVariance(sqstdev<0.01 ? 0.01 : sqstdev);*/
-		if(m_lastMatchingObject != NULL)
+		for (map<string,Feature>::iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
 		{
-			m_feats[i].Update(m_lastMatchingObject->GetFeatures().at(i).value, x_alpha);
+			it->second.Update(m_lastMatchingObject->GetFeature(it->first).value, x_alpha);
 		}
 	}
 	
