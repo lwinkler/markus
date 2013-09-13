@@ -66,6 +66,7 @@ SegmenterContour::~SegmenterContour()
 void SegmenterContour::Reset()
 {
 	Module::Reset();
+	split(m_param.features, ',', m_featureNames);
 }
 
 void SegmenterContour::ProcessFrame()
@@ -83,9 +84,6 @@ void SegmenterContour::ProcessFrame()
 	m_regions.clear();
 	m_debug->setTo(0); // TODO debug only
 
-	vector<string> elems;
-	split(m_param.features, ',', elems); // TODO :A avoid splitting each time
-	const vector<string> featureNames = elems;
 
 	/// Extract features
 	for(unsigned int i = 0; i< contours.size(); i++)
@@ -111,7 +109,7 @@ void SegmenterContour::ProcessFrame()
 			obj.m_height 	= rect.height;
 
 			// Add the possible features // TODO: list features in param description
-			for(vector<string>::const_iterator it = featureNames.begin() ; it != featureNames.end() ; it++)
+			for(vector<string>::const_iterator it = m_featureNames.begin() ; it != m_featureNames.end() ; it++)
 			{
 				if(it->compare("x") == 0)
 					obj.AddFeature("x", rect.x);

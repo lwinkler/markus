@@ -65,6 +65,7 @@ protected:
 
 	static const char * m_type;
 	std::vector<Object> m_regions;
+	std::vector<std::string> m_featureNames;
 	StreamObject* m_outputObjectStream;
 
 private:
