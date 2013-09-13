@@ -69,11 +69,10 @@ private:
 	void PrintObjects() const;
 	int MatchObject(Object& x_obj);
 	int MatchTemplate(Template& x_temp);
-	void AddFeatureNames();
 
 	std::list <Template> m_templates;
 	std::vector <Object> m_objects;
-	std::vector <std::string>    m_featureIndices;
+	std::vector <std::string>    m_featureNames;
 	StreamObject* m_inputObjectStream;
 	StreamObject* m_outputObjectStream;
 

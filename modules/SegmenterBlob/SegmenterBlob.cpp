@@ -48,13 +48,7 @@ SegmenterBlob::SegmenterBlob(const ConfigReader& x_configReader) :
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,	"Input binary stream"));
 
 	m_outputStreams.push_back(new StreamObject(0, "segmented", m_param.width, m_param.height, m_regions, cvScalar(255, 255, 255), *this,	"Segmented objects"));
-	StreamObject* tmp = dynamic_cast<StreamObject*>(m_outputStreams[0]);
-	// tmp->AddFeatureName("area");
-	// tmp->AddFeatureName("perimeter");
-	tmp->AddFeatureName("x");
-	tmp->AddFeatureName("y");
-	tmp->AddFeatureName("width");
-	tmp->AddFeatureName("height");
+	// StreamObject* tmp = dynamic_cast<StreamObject*>(m_outputStreams[0]);
 	
 	m_debugStreams.push_back(new StreamDebug(0, "blobs", m_blobsImg, *this,	"Blobs"));
 }

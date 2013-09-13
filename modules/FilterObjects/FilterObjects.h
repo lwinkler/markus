@@ -49,7 +49,6 @@ public:
 	
 	virtual void ProcessFrame();
 	void Reset();
-	void AddFeatureNames();
 	
 private:
 	FilterObjectsParameterStructure m_param;

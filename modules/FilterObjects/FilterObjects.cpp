@@ -62,13 +62,6 @@ void FilterObjects::Reset()
 
 void FilterObjects::ProcessFrame()
 {
-	static bool once = false;
-	if(!once)
-	{
-		AddFeatureNames();
-		once = true;
-	}
-
 	// Filter incoming objects and add them to the output
 	m_objectsOut.clear();
 	for(vector<Object>::const_iterator it = m_objectsIn.begin() ; it != m_objectsIn.end() ; it++)
@@ -83,13 +76,3 @@ void FilterObjects::ProcessFrame()
 	}
 }
 
-void FilterObjects::AddFeatureNames()
-{
-	// Add features to pass to the output
-	for(vector<std::string>::const_iterator it = m_inputObjectStream->GetFeatureNames().begin() ; it != m_inputObjectStream->GetFeatureNames().end() ; it++)
-	{
-		if(it->size() == 0)
-			continue;
-		m_outputObjectStream->AddFeatureName(*it);
-	}
-}

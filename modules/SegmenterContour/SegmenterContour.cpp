@@ -52,15 +52,6 @@ SegmenterContour::SegmenterContour(const ConfigReader& x_configReader) :
 
 	m_debugStreams.push_back(new StreamDebug(0, "blobs", m_debug, *this,	"Blobs"));
 
-
-	// Add features to extract for each object
-	vector<string> elems;
-	split(m_param.features, ',', elems);
-	for(vector<std::string>::const_iterator it = elems.begin() ; it != elems.end() ; it++)
-	{
-		if(it->size() > 0)
-			m_outputObjectStream->AddFeatureName(*it);
-	}
 	// Decide which features to compute
 	m_computeFitEllipse = m_param.features.find("ellipse_");
 	m_computeMinRect    = m_param.features.find("minrect_");
@@ -91,7 +82,10 @@ void SegmenterContour::ProcessFrame()
 
 	m_regions.clear();
 	m_debug->setTo(0); // TODO debug only
-	const vector<string> featureNames = m_outputObjectStream->GetFeatureNames();
+
+	vector<string> elems;
+	split(m_param.features, ',', elems); // TODO :A avoid splitting each time
+	const vector<string> featureNames = elems;
 
 	/// Extract features
 	for(unsigned int i = 0; i< contours.size(); i++)

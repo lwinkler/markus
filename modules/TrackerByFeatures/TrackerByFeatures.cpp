@@ -63,68 +63,15 @@ TrackerByFeatures::~TrackerByFeatures(void )
 void TrackerByFeatures::Reset()
 {
 	Module::Reset();
+	split(m_param.features, ',', m_featureNames);
 }
 
 void TrackerByFeatures::ProcessFrame()
 {
-	static bool once = false;
-	if(!once)
-	{
-		AddFeatureNames();
-		once = true;
-	}
 	MatchTemplates();
 	CleanTemplates();
 	DetectNewTemplates();
 	UpdateTemplates();
-
-	// Output the list of templates
-	/*m_trackerOutput.clear();
-    for(list<Template>::const_iterator it = m_templates.begin()  ; it != m_templates.end() ; it++ )
-    {
-	Rect rect;
-	rect.x = it->m_posX;
-	rect.y = it->m_posY;
-	rect.width = 10;
-	rect.height = 30;//TODO
-	Object obj;
-	obj.SetRect(rect); // TODO : Objects must be centered !!!!
-	m_trackerOutput.push_back(obj);
-    }*/
-
-	//track.PrintTrackedRegions();
-}
-
-void TrackerByFeatures::AddFeatureNames()
-{
-	// Get the indices of the features that we want to track
-	split(m_param.features, ',', m_featureIndices); // TODO suppress indices maybe
-
-	// Add features to pass to the output
-	/*for(vector<std::string>::const_iterator it = m_inputObjectStream->GetFeatureNames().begin() ; it != m_inputObjectStream->GetFeatureNames().end() ; it++)
-	{
-		cout<<"Add feature "<<*it<<endl;
-		if(it->size() == 0)
-			continue;
-		m_outputObjectStream->AddFeatureName(*it);
-
-		// add the feature to the list of features to track
-		for(vector<std::string>::const_iterator it2 = elems.begin() ; it2 != elems.end() ; it2++)
-		{
-			cout<<"compare"<<*it<<" and "<<*it2<<endl;
-			if(it->compare(*it2) == 0)
-			{
-				m_featureIndices.push_back(n);
-			}
-			n++;
-		}
-	}
-	if(m_featureIndices.size() != elems.size())
-		throw("Error: Some features were not found in input stream in TrackerByFeatures::AddFeatureNames()");
-	*/
-	// m_outputObjectStream->AddFeatureName("distance");
-	// m_outputObjectStream->AddFeatureName("speed_x");
-	// m_outputObjectStream->AddFeatureName("speed_y");
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -141,7 +88,7 @@ int TrackerByFeatures::MatchTemplate(Template& x_temp)
 	for(unsigned int i = 0 ; i< m_objects.size() ; i++)
 	{
 		// Add empty features for distance and speed
-		double dist = x_temp.CompareWithObject(m_objects[i], m_featureIndices);
+		double dist = x_temp.CompareWithObject(m_objects[i], m_featureNames);
 		//cout<<"dist ="<<dist;
 		if(dist < bestDist)
 		{
@@ -280,7 +227,7 @@ int TrackerByFeatures::MatchObject(Object& x_obj)
 
 	for(list<Template>::const_iterator it1 = m_templates.begin() ; it1 != m_templates.end(); it1++ )
 	{
-		double dist = it1->CompareWithObject(x_obj, m_featureIndices);
+		double dist = it1->CompareWithObject(x_obj, m_featureNames);
 		//cout<<"dist ="<<dist;
 		if(dist < bestDist)
 		{

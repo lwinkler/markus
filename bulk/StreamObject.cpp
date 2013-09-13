@@ -72,14 +72,6 @@ void StreamObject::ConvertInput()
 		obj.m_width *= ratioX;
 		obj.m_height *= ratioY;
 	}
-
-	// Also pass feature names TODO there is maybe a more efficient way
-	m_featureNames.clear();
-
-	for (vector<string>::const_iterator it1 = pstream->GetFeatureNames().begin() ; it1 != pstream->GetFeatureNames().end(); it1++)
-	{
-		m_featureNames.push_back(*it1);
-	}
 }
 
 /// Render : Draw rectangles on image
@@ -136,21 +128,6 @@ void StreamObject::RenderTo(Mat * xp_output) const
 	}
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-/// Get a value from a feature vector
-/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-double StreamObject::GetFeatureValue(const std::vector< Feature >& x_vect, const char* x_name)
-{
-	int cpt = 0;
-
-	for ( vector<Feature>::const_iterator it1= x_vect.begin() ; it1 != x_vect.end(); it1++ )
-	{
-		if(!m_featureNames.at(cpt).compare(x_name))// !strcmp((const char*) Feature::m_names.at(cpt).compare(x_name)/* it1->m_name* /, x_name))
-			return it1->value;
-		cpt++;
-	}
-	throw("GetFeatureValue : cannot find feature " + string(x_name));
-}
 
 void StreamObject::PrintObjects() const
 {

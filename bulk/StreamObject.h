@@ -45,14 +45,11 @@ public:
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat * xp_output) const;
 	inline virtual const std::string GetTypeString()const {return "Objects";}
-	inline void AddFeatureName(const std::string & x_name){m_featureNames.push_back(x_name);}
 	double GetFeatureValue(const std::vector<Feature>& x_vect, const char* x_name);
-	const std::vector<std::string>& GetFeatureNames() const{return m_featureNames;}
 	void PrintObjects() const;
 
 protected:
 	std::vector<Object> & m_objects;
-	std::vector<std::string> m_featureNames;
 	CvScalar m_color;
 	bool m_isColorSet;
 
