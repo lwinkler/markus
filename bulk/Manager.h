@@ -44,7 +44,7 @@ class ManagerParameter : public ParameterStructure
 public:
 	ManagerParameter(const ConfigReader& x_confReader, const std::string& x_moduleName) : ParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterString(0, "mode",	"", 	&mode, 	"Mode"));
+		m_list.push_back(new ParameterString("mode",	"", 	&mode, 	"Mode"));
 		//ParameterStructure::Init(); // TODO : restore this
 	}
 	std::string mode;
@@ -70,7 +70,6 @@ public:
 	void PrintTimers();
 private:
 	ManagerParameter m_param;
-	CvVideoWriter * m_writer;
 
 	long long m_timerConvertion;
 	long long m_timerProcessing;

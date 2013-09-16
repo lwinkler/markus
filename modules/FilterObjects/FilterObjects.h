@@ -34,7 +34,7 @@ class FilterObjectsParameterStructure : public ModuleParameterStructure
 public:
 	FilterObjectsParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterDouble(0, "min_distance", 0.0, PARAM_DOUBLE, 0, 100000, &minDist, "Minimal distance criterion for the object"));
+		m_list.push_back(new ParameterDouble("min_distance", 0.0, PARAM_DOUBLE, 0, 100000, &minDist, "Minimal distance criterion for the object"));
 
 		ParameterStructure::Init();
 	}

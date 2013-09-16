@@ -61,13 +61,9 @@ Manager::Manager(ConfigReader& x_configReader) :
 	
 	//Initializing a video writer:
 
-	m_writer = NULL;
-	
 	if(m_param.mode == "benchmark")
 	{
-		//m_writer = cvCreateVideoWriter("out.avi", CV_FOURCC('D','I','V','3'), fps, cvSize(m_param.width, m_param.height), m_param.channels == 3);
-		assert(m_writer != NULL);
-		//not working writer=cvCreateVideoWriter("out.mpg",CV_FOURCC('D', 'I', 'V', '3'), fps,cvSize(frameW,frameH),m_workIsColor);
+		//assert(m_writer != NULL);
 	}
 	
 	
@@ -151,9 +147,6 @@ Manager::~Manager()
 	
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		delete *it;
-	
-	// Releasing the video writer:
-	if(m_writer != NULL) cvReleaseVideoWriter(&m_writer);
 }
 
 /// Process all modules

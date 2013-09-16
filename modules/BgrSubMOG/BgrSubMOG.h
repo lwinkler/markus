@@ -50,13 +50,13 @@ public:
 	{
 
 		// This parameters should not change
-		m_list.push_back(new ParameterInt   (0, "history",          200,    PARAM_INT,      1,   10000,     &history,         "Length of the history"));
-		m_list.push_back(new ParameterInt   (1, "nmixtures",          5,    PARAM_INT,      1,      10,     &nmixtures,       "Number of Gaussian mixtures"));
-		m_list.push_back(new ParameterDouble(2, "background_ratio", 0.7,    PARAM_DOUBLE,   0,       1,     &backgroundRatio, "Background ratio"));
-		m_list.push_back(new ParameterDouble(3, "noise_sigma",       15,    PARAM_DOUBLE,   0,    1000,     &noiseSigma,      "noise strength"));
-		m_list.push_back(new ParameterDouble(4, "learning_rate",     -1,    PARAM_DOUBLE,  -1,       1,     &learningRate,    "Learning rate of the model"));
+		m_list.push_back(new ParameterInt   ("history",          200,    PARAM_INT,      1,   10000,     &history,         "Length of the history"));
+		m_list.push_back(new ParameterInt   ("nmixtures",          5,    PARAM_INT,      1,      10,     &nmixtures,       "Number of Gaussian mixtures"));
+		m_list.push_back(new ParameterDouble("background_ratio", 0.7,    PARAM_DOUBLE,   0,       1,     &backgroundRatio, "Background ratio"));
+		m_list.push_back(new ParameterDouble("noise_sigma",       15,    PARAM_DOUBLE,   0,    1000,     &noiseSigma,      "noise strength"));
+		m_list.push_back(new ParameterDouble("learning_rate",     -1,    PARAM_DOUBLE,  -1,       1,     &learningRate,    "Learning rate of the model"));
 
-		//m_list.push_back(new ParameterFloat(0, "foreground_thres", 	0.2, 	PARAM_FLOAT, 0, 1,	&foregroundThres,	"Threshold to accept a pixel as foreground"));
+		//m_list.push_back(new ParameterFloat("foreground_thres", 	0.2, 	PARAM_FLOAT, 0, 1,	&foregroundThres,	"Threshold to accept a pixel as foreground"));
 
 		// RefParameterByName("history").Lock();
 

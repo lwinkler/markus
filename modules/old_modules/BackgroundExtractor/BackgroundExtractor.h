@@ -34,9 +34,9 @@ class BackgroundExtractorParameterStructure : public ModuleParameterStructure
 public:
 	BackgroundExtractorParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterFloat(0, "background_alpha",	0.02, 	PARAM_FLOAT, 0, 1,	&backgroundAlpha,	"Defines the speed at which the background adapts"));
-		m_list.push_back(new ParameterFloat(0, "foreground_thres", 	0.2, 	PARAM_FLOAT, 0, 1,	&foregroundThres,	"Threshold to accept a pixel as foreground"));
-		m_list.push_back(new ParameterInt(0, "foreground_filter_size", 3, 	PARAM_INT, 1, 7,	&foregroundFilterSize,	"Size of the filter to remove noise"));
+		m_list.push_back(new ParameterFloat("background_alpha",	0.02, 	PARAM_FLOAT, 0, 1,	&backgroundAlpha,	"Defines the speed at which the background adapts"));
+		m_list.push_back(new ParameterFloat("foreground_thres", 	0.2, 	PARAM_FLOAT, 0, 1,	&foregroundThres,	"Threshold to accept a pixel as foreground"));
+		m_list.push_back(new ParameterInt("foreground_filter_size", 3, 	PARAM_INT, 1, 7,	&foregroundFilterSize,	"Size of the filter to remove noise"));
 
 		RefParameterByName("type").SetDefault("CV_32FC3");
 

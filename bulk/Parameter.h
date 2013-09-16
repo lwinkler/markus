@@ -59,8 +59,7 @@ class ConfigReader;
 class Parameter
 {
 public:
-	Parameter(int x_id, const std::string& x_name, const std::string& x_description):
-		m_id(x_id),
+	Parameter(const std::string& x_name, const std::string& x_description):
 		m_name(x_name),
 		m_confSource(PARAMCONF_UNSET),
 		m_description(x_description){}
@@ -81,7 +80,6 @@ public:
 	virtual void Export(std::ostream& rx_os, int x_indentation) = 0;
 
 protected:	
-	const int m_id; // TODO : this id should probably disappear 
 	const std::string m_name;
 	ParameterConfigType m_confSource;
 	const std::string m_description;
@@ -90,8 +88,8 @@ protected:
 template<class T> class ParameterT : public Parameter
 {
 public:
-	ParameterT(int x_id, const std::string& x_name, T x_default, ParameterType x_type, T x_min, T x_max, T * xp_value, const std::string& x_description) : 
-		Parameter(x_id, x_name, x_description),
+	ParameterT(const std::string& x_name, T x_default, ParameterType x_type, T x_min, T x_max, T * xp_value, const std::string& x_description) : 
+		Parameter(x_name, x_description),
 		m_default(x_default),
 		m_min(x_min),
 		m_max(x_max),
@@ -168,8 +166,8 @@ private:
 class ParameterString : public Parameter
 {
 public:
-	ParameterString(int x_id, const std::string& x_name, std::string x_default, std::string * xp_value, const std::string& x_description) : 
-		Parameter(x_id, x_name, x_description),
+	ParameterString(const std::string& x_name, std::string x_default, std::string * xp_value, const std::string& x_description) : 
+		Parameter(x_name, x_description),
 		m_default(x_default),
 		mp_value(xp_value){}
 	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/)
@@ -223,8 +221,8 @@ private:
 class ParameterEnum : public Parameter
 {
 public:
-	ParameterEnum(int x_id, const std::string& x_name, int x_default, int * xp_value, const std::string x_description):
-		Parameter(x_id, x_name, x_description),
+	ParameterEnum(const std::string& x_name, int x_default, int * xp_value, const std::string x_description):
+		Parameter(x_name, x_description),
 		m_default(x_default),
 		mp_value(xp_value){}
 	void SetValue(const std::string& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/);
@@ -271,7 +269,7 @@ protected:
 class ParameterImageType : public ParameterEnum
 {
 public:
-	ParameterImageType(int x_id, const std::string& x_name, int x_default, int * xp_value, const std::string x_description);
+	ParameterImageType(const std::string& x_name, int x_default, int * xp_value, const std::string x_description);
 	~ParameterImageType(){}
 	void Export(std::ostream& rx_os, int x_indentation);
 

@@ -180,8 +180,8 @@ void ParameterImageType::Export(std::ostream& rx_os, int x_indentation)
 	rx_os<<tabs<<"</param>"<<std::endl;
 }
 
-ParameterImageType::ParameterImageType(int x_id, const std::string& x_name, int x_default, int * xp_value, const std::string x_description) :
-		ParameterEnum(x_id, x_name, x_default, xp_value, x_description)
+ParameterImageType::ParameterImageType(const std::string& x_name, int x_default, int * xp_value, const std::string x_description) :
+		ParameterEnum(x_name, x_default, xp_value, x_description)
 {
 	// Init static type vector once
 	if(ParameterImageType::m_map_enum.size() == 0)
