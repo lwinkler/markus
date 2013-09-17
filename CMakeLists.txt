@@ -15,6 +15,7 @@ include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_
 bulk 
 gui
 modules
+modules2
 tools
 tools/cvblobs
 )
@@ -28,11 +29,12 @@ main.cpp
 add_subdirectory(bulk)
 add_subdirectory(gui)
 add_subdirectory(modules)
+add_subdirectory(modules2)
 add_subdirectory(tools)
 
 
 add_executable(markus ${markus_SRCS})
-target_link_libraries(markus ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} bulk gui modules tools ${OpenCV_LIBS} tinyxml bulk)
+target_link_libraries(markus ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} bulk gui modules modules2 tools ${OpenCV_LIBS} tinyxml bulk)
 
 
 add_custom_target(update_modules_list

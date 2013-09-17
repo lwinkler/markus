@@ -48,7 +48,8 @@ class Object
 
 		inline void AddFeature(std::string x_name, double x_value) {m_feats.insert(std::make_pair(x_name, Feature(x_value)));}
 		inline const std::map <std::string, Feature>& GetFeatures() const {return m_feats;}
-		inline const Feature& GetFeature(const std::string& x_name) const {return m_feats.find(x_name)->second;}
+		inline const Feature& GetFeature(const std::string& x_name) const {
+			return m_feats.find(x_name)->second;} /// TODO: manage case where the feature is not found
 		// inline void SetFeatureByName(const std::string& x_name, double x_value) {m_feats.find(x_name)->second = Feature();}
 		void SetFeatures(const std::map<std::string, Feature>& x_feats){m_feats = x_feats;}
 

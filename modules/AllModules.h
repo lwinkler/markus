@@ -1,6 +1,7 @@
 // WARNING: This file is generated automatically !!
 #ifndef ALL_MODULES_H
 #define ALL_MODULES_H
+#include "modules2/FallDetection/FallDetection.h"
 #include "modules/AllModules.h"
 #include "modules/BgrSubMOG2/BgrSubMOG2.h"
 #include "modules/BgrSubMOG/BgrSubMOG.h"
@@ -12,7 +13,6 @@
 #include "modules/Morph/Morph.h"
 #include "modules/MotionDetector/MotionDetector.h"
 #include "modules/NetworkCam/NetworkCam.h"
-#include "modules/old_modules/BackgroundExtractor/BackgroundExtractor.h"
 #include "modules/SegmenterBlob/SegmenterBlob.h"
 #include "modules/SegmenterContour/SegmenterContour.h"
 #include "modules/SlitCam/SlitCam.h"
@@ -30,6 +30,7 @@ else if(moduleClass.compare("BgrSubMOG2") == 0) {tmp = new BgrSubMOG2(rx_configR
 else if(moduleClass.compare("BgrSubMOG") == 0) {tmp = new BgrSubMOG(rx_configReader);} 
 else if(moduleClass.compare("BgrSubRunAvg") == 0) {tmp = new BgrSubRunAvg(rx_configReader);} 
 else if(moduleClass.compare("CascadeDetector") == 0) {tmp = new CascadeDetector(rx_configReader);} 
+else if(moduleClass.compare("FallDetection") == 0) {tmp = new FallDetection(rx_configReader);} 
 else if(moduleClass.compare("FilterObjects") == 0) {tmp = new FilterObjects(rx_configReader);} 
 else if(moduleClass.compare("Logger") == 0) {tmp = new Logger(rx_configReader);} 
 else if(moduleClass.compare("Mask") == 0) {tmp = new Mask(rx_configReader);} 
