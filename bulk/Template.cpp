@@ -108,7 +108,7 @@ double Template::CompareWithObject(const Object& x_reg, const vector<string>& x_
 		
 		//cout<<"temp val ="<<m_feats[i].GetValue()<<" region val="<<x_reg.GetFeatures()[i].GetValue()<<" temp var="<<m_feats[i].GetVariance()<<endl;
 		sum += POW2(f1.value - f2.value) 
-			/ POW2(f1.sqVariance);
+			/ POW2(f1.sqVariance); // TODO: See if sqVariance has a reasonable value !!
 	}
 	return sqrt(sum) / x_features.size();
 }

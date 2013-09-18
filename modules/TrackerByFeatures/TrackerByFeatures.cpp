@@ -148,8 +148,8 @@ void TrackerByFeatures::UpdateTemplates()
 		if(it1->m_lastMatchingObject != NULL)
 		{
 			// Add two extra features: distance and speed
-			const Feature& x = it1->m_lastMatchingObject->GetFeature("x");
-			const Feature& y = it1->m_lastMatchingObject->GetFeature("y");
+			// const Feature& x = it1->m_lastMatchingObject->GetFeature("x");
+			// const Feature& y = it1->m_lastMatchingObject->GetFeature("y");
 
 
 			// distance
