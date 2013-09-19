@@ -74,15 +74,16 @@ Module::~Module()
 	delete(m_moduleTimer);
 }
 
-void Module::Process(double x_timeCount)
+void Module::Process(double x_timeCount, bool x_centralized)
 {
 	try
 	{
-#ifdef CENTRALIZE_PROCESS
-		if(GetFps() == 0 || (m_processingTime += x_timeCount) > 1.0 / GetFps())
-#else
-		m_processingTime += x_timeCount;
-#endif
+		if(!x_centralized)
+		{
+			m_processingTime += x_timeCount; // TODO: test this
+		}
+
+		if(!x_centralized || GetFps() == 0 || (m_processingTime += x_timeCount) > 1.0 / GetFps())
 		{
 			m_lock.lockForRead();
 			
@@ -109,7 +110,7 @@ void Module::Process(double x_timeCount)
 
 			// Call deppending modules
 			for(vector<Module*>::iterator it = m_modulesDepending.begin() ; it != m_modulesDepending.end() ; it++)
-				(*it)->Process(m_processingTime);
+				(*it)->Process(m_processingTime, x_centralized);
 
 			m_processingTime = 0;
 			m_countProcessedFrames++;

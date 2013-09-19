@@ -63,7 +63,7 @@ public:
 	virtual ~Module();
 	
 	virtual void Reset();
-	void Process(double x_timeCount);
+	void Process(double x_timeCount, bool x_centralized);
 
 	const std::string& GetName() const{return m_name;}
 	const std::string& GetDescription() const{return m_description;}

@@ -34,12 +34,17 @@ using namespace std;
 
 void usage()
 {
-	printf("Usage : markus <configuration> [-d]\n");
+	printf("Usage : markus --no-gui --centralized <configuration> [-d]\n");
+	printf("     --no-gui          Run process without gui\n");
+	// printf("     --centralized     Call all modules processing methods in a centralized way\n");
 }
 
 int main(int argc, char** argv)
 {
-	bool describe = false;
+	bool describe    = false;
+	bool nogui       = false;
+	bool centralized = false;
+
 	std::string configFile;
 	configFile = "config.xml";
 	int cpt = 1;
@@ -49,6 +54,14 @@ int main(int argc, char** argv)
 		{
 			describe = true;
 		}	
+		else if(!strcmp(argv[cpt], "--no-gui"))
+		{
+			nogui = true;
+		}
+		/* else if(!strcmp(argv[cpt], "--centralized"))
+		{
+			centralized = true;
+		}*/ 
 		else
 		{
 			configFile = argv[cpt];
@@ -68,10 +81,27 @@ int main(int argc, char** argv)
 			manager.Export();
 			return 0;
 		}
-		markus gui(mainConfig, manager);
-		gui.setWindowTitle("OpenCV --> QtImage");
-		gui.show();
-		return app.exec();
+
+		if(nogui)
+		{
+			// No gui. launch the process directly
+			// so far we cannot launch the process in a decentralized manner (with a timer on each module)
+//#ifdef CENTRALIZE_PROCESS
+			while(true)
+				manager.Process(MARKUS_TIMER_S, true);
+//#endif
+			//for(int i = 0 ; i < nbCols * nbLines ; i++)
+			//	m_moduleViewer[i]->update();
+			return 0;
+		}
+		else
+		{
+	
+			markus gui(mainConfig, manager, centralized);
+			gui.setWindowTitle("OpenCV --> QtImage");
+			gui.show();
+			return app.exec();
+		}
 	}
 	catch(cv::Exception& e)
 	{

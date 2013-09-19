@@ -61,11 +61,21 @@ void VideoFileReader::Reset()
 	// note on the next line: the image will be overloaded but the properties are used to set the input ratio, the type is probably ignored
 	m_output = new Mat(Size(m_capture.get(CV_CAP_PROP_FRAME_WIDTH), m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)), CV_8UC3);//  Size(m_param.width, m_param.height), CV_8UC3);
 	m_outputStreams.push_back(new StreamImage(0, "input", m_output, *this,	"Video stream"));
+
+	m_endOfStream = false;
 }
 
 void VideoFileReader::Capture()
 {
-	m_capture>>*m_output;
+	if(m_capture.grab() == 0)
+	{
+		// throw("Capture failed in VideoFileReader::Capture.");	
+		m_endOfStream = true;
+		return;
+	}
+
+	m_capture.retrieve(*m_output);
+	
 	// cout<<"VideoFileReader capture image "<<m_output->cols<<"x"<<m_output->rows<<endl;
 }
 

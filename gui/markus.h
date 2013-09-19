@@ -33,6 +33,7 @@
 
 #include <vector>
 
+#define MARKUS_TIMER_S 0.01 // Interval for the main timer
 
 class Manager;
 class ConfigReader;
@@ -43,7 +44,7 @@ class markus : public QMainWindow
 {
 Q_OBJECT
 public:
-	markus(ConfigReader& rx_configReader, Manager& rx_manager);
+	markus(ConfigReader& rx_configReader, Manager& rx_manager, bool x_centralized);
 	virtual ~markus();
 private:
 	ConfigReader& m_configReader;
@@ -54,6 +55,7 @@ private:
 	void timerEvent(QTimerEvent*);
 	void resizeEvent(QResizeEvent*);
 	
+	bool m_centralized;
 	int nbCols;
 	int nbLines;
 	

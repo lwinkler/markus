@@ -57,7 +57,7 @@ class Manager : public Configurable
 public:
 	Manager(ConfigReader & x_configReader);
 	~Manager();
-	void Process();
+	void Process(double x_timeCount, bool x_centralized);
 	// const std::vector<Input*> & GetInputList()  const {return m_inputs; };
 	const std::vector<Module*>& GetModuleList() const {return m_modules; };
 

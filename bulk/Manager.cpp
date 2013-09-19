@@ -151,7 +151,7 @@ Manager::~Manager()
 
 /// Process all modules
 
-void Manager::Process()
+void Manager::Process(double x_timeCount, bool x_centralized)
 {
 	//m_lock.lockForWrite();
 	if(!m_lock.tryLockForWrite())
@@ -164,13 +164,16 @@ void Manager::Process()
 	// double timecount = m_timer.GetSecDouble();
 	m_timer.Restart();
 	
+	// If methods are not called in a centralized way, we will rely on timers on each module
+	if(! x_centralized)
+		return;
+
 	try
 	{
-		/*
 		for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		{
-			(*it)->Process(timecount);
-		}*/
+			(*it)->Process(x_timeCount, x_centralized);
+		}
 	}
 	catch(cv::Exception& e)
 	{

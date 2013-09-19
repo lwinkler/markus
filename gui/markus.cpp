@@ -44,14 +44,15 @@ using namespace std;
 // Main constructor
 //---------------------------------------------------------------------------------------------------- 
 
-markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
-	: m_configReader(rx_configReader),  m_manager(rx_manager)
+markus::markus(ConfigReader & rx_configReader, Manager& rx_manager, bool x_centralized)
+	: m_configReader(rx_configReader),  m_manager(rx_manager), m_centralized(x_centralized)
 {
 	nbLines = 1;
 	nbCols = 1;
 
 	// Call to manager process each 10 ms
-	startTimer(10);  // 100 -> 0.1-second timer
+	if(!m_centralized)
+		startTimer(static_cast<int>(MARKUS_TIMER_S * 1000));  // 10 -> 0.01-second timer
 
 	setWindowState(Qt::WindowMaximized);
 	
@@ -77,9 +78,12 @@ markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 
 void markus::timerEvent(QTimerEvent*)
 {
-#ifdef CENTRALIZE_PROCESS
-	m_manager.Process();
-#endif
+	if(m_centralized)
+	{
+		// at each increment, call the general Process method
+		m_manager.Process(MARKUS_TIMER_S, m_centralized);
+	}
+
 	for(int i = 0 ; i < nbCols * nbLines ; i++)
 		m_moduleViewer[i]->update();
 	

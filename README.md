@@ -12,12 +12,13 @@ You will need to Install Opencv from sources (preferably).
 
 Also Qt4 is needed.
 
-Compilation commands:
+First compilation commands:
 
 	cmake .
 	make update_module_list
 	make
 
+Then simply use 'make' as for any other projects. 
 
 Adding new modules
 ------------------
@@ -41,6 +42,14 @@ e.g. :
 	./markus project/FourCascades.xml
 
 
+Troubleshooting
+===============
+
+AllModules.h is missing
+-----------------------
+Solution:  simply run 
+
+	make update_module_list
 
 Technical details
 =================
