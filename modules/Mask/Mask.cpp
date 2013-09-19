@@ -38,7 +38,7 @@ Mask::Mask(const ConfigReader& x_configReader) :
 	m_param(x_configReader)
 {
 	m_description = "Apply a binary mask to an image input";
-	m_input       = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
+	m_input       = new Mat(cvSize(m_param.width, m_param.height), m_param.type); // TODO: replace cvSize with Size
 	m_mask        = new Mat(cvSize(m_param.width, m_param.height), CV_8UC1);
 	m_output      = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
 

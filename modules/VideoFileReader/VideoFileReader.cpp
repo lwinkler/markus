@@ -32,57 +32,62 @@ VideoFileReader::VideoFileReader(const ConfigReader& x_configReader):
 	m_param(x_configReader)
 {
 	m_description = "Input from a video file.";
-	m_capture = cvCaptureFromFile(m_param.file.c_str());
-	m_fps     = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FPS);
-	
-	if(m_capture == NULL)
-	{
-		throw("Error : VideoFileReader file not found ! : " + m_param.file);
-	}
-	cout<<"Setting "<<m_param.width<<endl;
-	
-	// Get capture device information
-	//cvSetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH, m_param.width); // not working
-	//cvSetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
-	cvQueryFrame(m_capture); // this call is necessary to get correct capture properties
-	//IplImage * tmp = cvRetrieveFrame(m_capture);
-	//m_inputWidth    = tmp->width;//(int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH);
-	//m_inputHeight   = tmp->height;//(int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT);
-	int numFramesc = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_COUNT);
-	
-	cout<<"VideoFileReader "<<GetWidth()<<"x"<<GetHeight()<<", "<<numFramesc<<" frames"<<endl;
-//	assert(m_width == m_param.width);
-//	assert(m_height == m_param.height);
-	
-	m_output = new Mat( cvSize(m_param.width, m_param.height), CV_8UC3);
-	m_outputStreams.push_back(new StreamImage(0, "input", m_output, *this,	"Video stream"));
+	m_output = NULL;
 }
 
 VideoFileReader::~VideoFileReader()
 {
 	delete(m_output);
-	cvReleaseCapture(&m_capture );
 }
 
 void VideoFileReader::Reset()
 {
 	Module::Reset();
+
+	m_capture.release();
+	m_capture.open(m_param.file);
+	// m_fps     = m_capture.get(CV_CAP_PROP_FPS);
+	GetProperties();
+	
+	if(! m_capture.isOpened())
+	{
+		throw("Error : VideoFileReader cannot open file : " + m_param.file);
+	}
+
+	// Apparently you cannot set width and height. We try anyway
+	m_capture.set(CV_CAP_PROP_FRAME_WIDTH,  m_param.width);
+	m_capture.set(CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
+	
+	// note on the next line: the image will be overloaded but the properties are used to set the input ratio, the type is probably ignored
+	m_output = new Mat(Size(m_capture.get(CV_CAP_PROP_FRAME_WIDTH), m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)), CV_8UC3);//  Size(m_param.width, m_param.height), CV_8UC3);
+	m_outputStreams.push_back(new StreamImage(0, "input", m_output, *this,	"Video stream"));
 }
 
 void VideoFileReader::Capture()
 {
-	//Get frame information:
-	//double posMsec   =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_MSEC);
-	//int posFrames    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_FRAMES);
-	//double posRatio  =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_AVI_RATIO);
-	cvGrabFrame(m_capture);
+	m_capture>>*m_output;
+	// cout<<"VideoFileReader capture image "<<m_output->cols<<"x"<<m_output->rows<<endl;
+}
 
-	//long msecFrames = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_MSEC);
-	//cout<<" msec "<<msecFrames<<" secs "<<msecFrames / 1000.0<<endl;
-
-	//m_input = cvRetrieveFrame(m_capture);           // retrieve the captured frame
-	//cvCopy(cvRetrieveFrame(m_capture), m_input);
-	Mat * tmp = new Mat(cvRetrieveFrame(m_capture));
-	tmp->copyTo(*m_output);
-	delete tmp;
+void VideoFileReader::GetProperties()
+{
+	cout<<"CV_CAP_PROP_POS_MSEC "<<m_capture.get(CV_CAP_PROP_POS_MSEC)<<endl;
+	cout<<"CV_CAP_PROP_POS_FRAMES "<<m_capture.get(CV_CAP_PROP_POS_FRAMES)<<endl;
+	cout<<"CV_CAP_PROP_POS_AVI_RATIO "<<m_capture.get(CV_CAP_PROP_POS_AVI_RATIO)<<endl;
+	cout<<"CV_CAP_PROP_FRAME_WIDTH "<<m_capture.get(CV_CAP_PROP_FRAME_WIDTH)<<endl;
+	cout<<"CV_CAP_PROP_FRAME_HEIGHT "<<m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)<<endl;
+	cout<<"CV_CAP_PROP_FPS "<<m_capture.get(CV_CAP_PROP_FPS)<<endl;
+	cout<<"CV_CAP_PROP_FOURCC "<<m_capture.get(CV_CAP_PROP_FOURCC)<<endl;
+	cout<<"CV_CAP_PROP_FRAME_COUNT "<<m_capture.get(CV_CAP_PROP_FRAME_COUNT)<<endl;
+	cout<<"CV_CAP_PROP_FORMAT "<<m_capture.get(CV_CAP_PROP_FORMAT)<<endl;
+	cout<<"CV_CAP_PROP_MODE "<<m_capture.get(CV_CAP_PROP_MODE)<<endl;
+	cout<<"CV_CAP_PROP_BRIGHTNESS "<<m_capture.get(CV_CAP_PROP_BRIGHTNESS)<<endl;
+	cout<<"CV_CAP_PROP_CONTRAST "<<m_capture.get(CV_CAP_PROP_CONTRAST)<<endl;
+	cout<<"CV_CAP_PROP_SATURATION "<<m_capture.get(CV_CAP_PROP_SATURATION)<<endl;
+	cout<<"CV_CAP_PROP_HUE "<<m_capture.get(CV_CAP_PROP_HUE)<<endl;
+	cout<<"CV_CAP_PROP_GAIN "<<m_capture.get(CV_CAP_PROP_GAIN)<<endl;
+	cout<<"CV_CAP_PROP_EXPOSURE "<<m_capture.get(CV_CAP_PROP_EXPOSURE)<<endl;
+	cout<<"CV_CAP_PROP_CONVERT_RGB "<<m_capture.get(CV_CAP_PROP_CONVERT_RGB)<<endl;
+	// cout<<"CV_CAP_PROP_WHITE_BALANCE"<<m_capture.get(CV_CAP_PROP_WHITE_BALANCE)<<endl;
+	cout<<"CV_CAP_PROP_RECTIFICATION"<<m_capture.get(CV_CAP_PROP_RECTIFICATION)<<endl;
 }

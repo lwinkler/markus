@@ -1,5 +1,5 @@
 file(GLOB modules_src
-    "*/*.cpp"
+    "../modules*/*/*.cpp"
 )
 
 add_library(modules

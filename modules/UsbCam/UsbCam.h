@@ -57,7 +57,7 @@ public:
 
 protected:
 	cv::Mat * m_output;
-	CvCapture * m_capture;
+	CvCapture * m_capture;// TODO : use VideoCapture instead
 	int m_fps;
 
 private:
