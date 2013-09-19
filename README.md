@@ -12,6 +12,13 @@ You will need to Install Opencv from sources (preferably).
 
 Also Qt4 is needed.
 
+Compilation commands:
+
+	cmake .
+	make update_module_list
+	make
+
+
 Adding new modules
 ------------------
 Add a NewModule directory and NewModule.xml in modules/
