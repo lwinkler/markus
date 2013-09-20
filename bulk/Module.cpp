@@ -77,7 +77,7 @@ Module::~Module()
 
 void Module::Process()
 {
-	try
+    //try
 	{
 		// m_processingTime += x_timeCount;
 
@@ -122,7 +122,7 @@ void Module::Process()
 			m_lock.unlock();
 		}
 	}
-	catch(cv::Exception& e)
+    /*catch(cv::Exception& e)
 	{
 		cout << "Exception raised (std::exception) : " << e.what() <<endl;
 	}
@@ -141,7 +141,7 @@ void Module::Process()
 	catch(...)
 	{
 		cout << "Unknown exception raised: "<<endl;
-	}
+    }*/
 
 }
 

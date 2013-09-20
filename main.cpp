@@ -69,7 +69,7 @@ int main(int argc, char** argv)
 		}
 		cpt++;
 	}
-	try
+	// try
 	{
 		QApplication app(argc, argv);
 		ConfigReader mainConfig(configFile);
@@ -104,7 +104,7 @@ int main(int argc, char** argv)
 			return app.exec();
 		}
 	}
-	catch(cv::Exception& e)
+	/*catch(cv::Exception& e)
 	{
 		cout << "Exception raised (std::exception) : " << e.what() <<endl;
 	}
@@ -123,6 +123,6 @@ int main(int argc, char** argv)
 	catch(...)
 	{
 		cout << "Unknown exception raised: "<<endl;
-	}
+	} */
 	return -1;
 }

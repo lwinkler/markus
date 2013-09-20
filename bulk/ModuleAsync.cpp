@@ -47,7 +47,7 @@ void ModuleAsync::ProcessFrame()
 		throw("Error: Module must have at least one input or inherit from class Input in ModuleAsync::Process");
 	double timeStamp = m_inputStreams[0]->GetTimeStamp();
 
-	double timeSinceLastThread = timeStamp - m_timeStampLastThread;
+	double timeSinceLastThread = timeStamp - m_timeStampLastThread; // TODO: Test if the new way of handling time stamps works in async modules
 	//cout<<RefParameter().detectionFps<<" : "<<m_timeStampLastThread<<" += "<<m_processingTime<<endl;
 	
 	if(!m_resultsCopied && !GetRefThread().isRunning())

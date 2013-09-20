@@ -50,6 +50,7 @@ public:
 	virtual const cv::Mat * GetImage() const = 0;
 
 	inline double GetFps() {return RefParameter().fps;}
+	inline bool   IsEndOfStream() const {return m_endOfStream;}
 
 	inline void ProcessFrame() {Capture();}
 
@@ -58,6 +59,7 @@ private:
 
 protected:
 	const std::string m_name;
+	bool m_endOfStream;
 	virtual InputParameterStructure& RefParameter() = 0;
 };
 

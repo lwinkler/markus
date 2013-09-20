@@ -169,33 +169,50 @@ void Manager::Process()
 	if(! m_centralized)
 		return;
 
-	try
+	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 	{
-		for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+		try
 		{
 			(*it)->Process();
 		}
+		catch(cv::Exception& e)
+		{
+			cout << (*it)->GetName() << ": Exception raised (std::exception) : " << e.what() <<endl;
+		}
+		catch(std::exception& e)
+		{
+			cout << (*it)->GetName() << ": Exception raised (std::exception) : " << e.what() <<endl;
+
+			// test if all inputs are over
+			bool endOfStreams = true;
+			for(vector<Module*>::const_iterator it1 = m_modules.begin() ; it1 != m_modules.end() ; it1++)
+			{
+				if((*it1)->IsInput())
+				{
+					const Input* input = dynamic_cast<const Input*>(*it1);
+					if(!input->IsEndOfStream())
+						endOfStreams = false;
+				}
+			}
+			if(endOfStreams)
+			{
+                throw("End of all video streams : Manager::Process");
+			}
+		}
+		catch(std::string str)
+		{
+			cout << (*it)->GetName() << ":  Exception raised (string) : " << str <<endl;
+		}
+		catch(const char* str)
+		{
+			cout << (*it)->GetName() << ": Exception raised (const char*) : " << str <<endl;
+		}
+		catch(...)
+		{
+			cout << (*it)->GetName() << ": Unknown exception raised: "<<endl;
+		}
 	}
-	catch(cv::Exception& e)
-	{
-		cout << "Exception raised (std::exception) : " << e.what() <<endl;
-	}
-	catch(std::exception& e)
-	{
-		cout << "Exception raised (std::exception) : " << e.what() <<endl;
-	}
-	catch(std::string str)
-	{
-		cout << "Exception raised (string) : " << str <<endl;
-	}
-	catch(const char* str)
-	{
-		cout << "Exception raised (const char*) : " << str <<endl;
-	}
-	catch(...)
-	{
-		cout << "Unknown exception raised: "<<endl;
-	}
+
 	m_frameCount++;
 	if(m_frameCount % 100 == 0)
 	{

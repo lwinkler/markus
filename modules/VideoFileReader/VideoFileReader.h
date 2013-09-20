@@ -59,7 +59,6 @@ protected:
 	cv::VideoCapture m_capture;
 	cv::Mat * m_output;
 	int m_fps;
-	bool m_endOfStream;
 
 private:
 	void GetProperties();

@@ -31,6 +31,7 @@ Input::Input(const ConfigReader& x_configReader):
 	Module(x_configReader)
 {
 	cout<<endl<<"*** Create object Input : "<<m_name<<" ***"<<endl;
+	m_endOfStream = false;
 }
 
 Input::~Input()
