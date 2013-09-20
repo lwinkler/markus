@@ -31,6 +31,7 @@ add_subdirectory(gui)
 add_subdirectory(modules)
 # add_subdirectory(modules2)
 add_subdirectory(lib)
+add_subdirectory(tools)
 
 
 add_executable(markus ${markus_SRCS})
