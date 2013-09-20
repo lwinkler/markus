@@ -16,8 +16,8 @@ bulk
 gui
 modules
 # modules2
-tools
-tools/cvblobs
+lib
+lib/cvblobs
 )
 
 
@@ -30,7 +30,7 @@ add_subdirectory(bulk)
 add_subdirectory(gui)
 add_subdirectory(modules)
 # add_subdirectory(modules2)
-add_subdirectory(tools)
+add_subdirectory(lib)
 
 
 add_executable(markus ${markus_SRCS})
