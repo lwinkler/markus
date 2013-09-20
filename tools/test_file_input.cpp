@@ -38,7 +38,12 @@ void displayProperties(VideoCapture& cap)
 
 int main(int argc, char** argv)
 {
-	assert(argc > 1);
+	if(argc <= 1)
+	{
+		cout<<"Usage: "<<argv[0]<<" input"<<endl;
+		cout<<"input can be a file or a network camera"<<endl;
+		return 0;
+	}
 
 	cout<<"Opening "<<argv[1]<<endl;
 	VideoCapture cap(argv[1]); // open the default camera
