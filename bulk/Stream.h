@@ -38,7 +38,7 @@ enum StreamType
 	STREAM_STATE
 };
 
-/// This is the parent class for all streams (input and output data)
+/// This is the parent class for all streams (input and output of data)
 
 class Stream
 {
@@ -62,6 +62,9 @@ public:
 	inline Module& RefModule(){return mr_module;}
 	inline Stream& RefConnected(){return *m_connected;}
 
+	inline double GetTimeStamp() const             {return m_timeStamp;}
+	inline void   SetTimeStamp(double x_timeStamp) {m_timeStamp = x_timeStamp;}
+
 protected:
 	const std::string m_name;
 	const int m_id;
@@ -70,6 +73,7 @@ protected:
 	const int m_height;
 	Module& mr_module;
 	const std::string m_description;
+	double m_timeStamp;
 	
 	Stream * m_connected;
 	

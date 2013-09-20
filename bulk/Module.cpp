@@ -38,13 +38,14 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_name 	= x_configReader.GetAttribute("name");
 	m_id	= atoi(x_configReader.GetAttribute("id").c_str());
 	cout<<endl<<"*** Create object Module : "<<m_name<<" id:"<<m_id<<" ***"<<endl;
-	m_processingTime = 0;
+	// m_processingTime = 0;
 	
 	m_timerConvertion = 0;
 	m_timerProcessing = 0;
 	m_timerWaiting    = 0;
 	m_countProcessedFrames = 0;
 	m_modulePreceeding = NULL;
+	m_lastTimeStamp = DBL_MIN;
 
 	// Add controls for parameters' change
 	m_controls.push_back(new ParameterControl("Parameters", "Change the values of parameters at runtime."));
@@ -74,23 +75,28 @@ Module::~Module()
 	delete(m_moduleTimer);
 }
 
-void Module::Process(double x_timeCount, bool x_centralized)
+void Module::Process()
 {
 	try
 	{
-		if(!x_centralized)
-		{
-			m_processingTime += x_timeCount; // TODO: test this
-		}
+		// m_processingTime += x_timeCount;
 
-		if(!x_centralized || GetFps() == 0 || (m_processingTime += x_timeCount) > 1.0 / GetFps())
+		// Timestamp of the module is given by the input stream // TODO: How to manage if there are several streams
+
+		double timeStamp = DBL_MAX; // TODO: Find a way to manage time stamps for a module with no input
+		if(m_inputStreams.size() >= 1)
+			timeStamp = m_inputStreams[0]->GetTimeStamp();
+			// throw("Error: Module must have at least one input or inherit from class Input in Module::Process");
+
+		if(timeStamp > m_lastTimeStamp && (GetFps() == 0 || timeStamp * GetFps() > 1.0))
 		{
 			m_lock.lockForRead();
 			
+			// Timer for banchmark
 			Timer ti;
 
 			// Read and convert inputs
-			if(IsInputUsed(x_timeCount))
+			if(IsInputProcessed(timeStamp))
 			{
 				for(vector<Stream*>::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
 				{
@@ -110,9 +116,8 @@ void Module::Process(double x_timeCount, bool x_centralized)
 
 			// Call deppending modules
 			for(vector<Module*>::iterator it = m_modulesDepending.begin() ; it != m_modulesDepending.end() ; it++)
-				(*it)->Process(m_processingTime, x_centralized);
+				(*it)->Process();
 
-			m_processingTime = 0;
 			m_countProcessedFrames++;
 			m_lock.unlock();
 		}

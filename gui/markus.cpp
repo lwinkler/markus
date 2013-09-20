@@ -81,7 +81,7 @@ void markus::timerEvent(QTimerEvent*)
 	if(m_centralized)
 	{
 		// at each increment, call the general Process method
-		m_manager.Process(MARKUS_TIMER_S, m_centralized);
+		m_manager.Process();
 	}
 
 	for(int i = 0 ; i < nbCols * nbLines ; i++)

@@ -57,6 +57,7 @@ int main(int argc, char** argv)
 		else if(!strcmp(argv[cpt], "--no-gui"))
 		{
 			nogui = true;
+			centralized = true;
 		}
 		/* else if(!strcmp(argv[cpt], "--centralized"))
 		{
@@ -74,7 +75,7 @@ int main(int argc, char** argv)
 		ConfigReader mainConfig(configFile);
 		ConfigReader appConfig = mainConfig.SubConfig("application");
 		assert(!appConfig.IsEmpty());
-		Manager manager(appConfig);
+		Manager manager(appConfig, centralized);
 
 		if(describe) 
 		{
@@ -88,7 +89,7 @@ int main(int argc, char** argv)
 			// so far we cannot launch the process in a decentralized manner (with a timer on each module)
 //#ifdef CENTRALIZE_PROCESS
 			while(true)
-				manager.Process(MARKUS_TIMER_S, true);
+				manager.Process();
 //#endif
 			//for(int i = 0 ; i < nbCols * nbLines ; i++)
 			//	m_moduleViewer[i]->update();

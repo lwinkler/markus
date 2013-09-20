@@ -52,13 +52,14 @@ public:
 	virtual void ProcessFrame();
 	
 protected:
-	double m_timeSinceLastThread;
+	double m_timeStampLastThread;
 	bool m_resultsCopied;
 	
 	long long m_timerThread;
 	long long m_countFramesThread;
 
-	inline virtual bool IsInputUsed(double x_timeCount) {return m_timeSinceLastThread + m_processingTime >= 1 / RefParameter().detectionFps;};
+	// For an async module, this method is used to check if we need to process the input
+	inline virtual bool IsInputProcessed(double x_timeCount) {return m_timeStampLastThread + x_timeCount >= 1 / RefParameter().detectionFps;};
 	virtual const QThread & GetRefThread() = 0;
 	virtual void LaunchThread() = 0;
 	virtual void NormalProcess() = 0;

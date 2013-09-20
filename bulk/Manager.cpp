@@ -52,9 +52,10 @@ using namespace std;
 using namespace std;
 
 
-Manager::Manager(ConfigReader& x_configReader) : 
+Manager::Manager(ConfigReader& x_configReader, bool x_centralized) : 
 	Configurable(x_configReader),
-	m_param(m_configReader, "Manager")
+	m_param(m_configReader, "Manager"),
+	m_centralized(x_centralized)
 {
 	cout<<endl<<"*** Create object Manager ***"<<endl;
 	m_frameCount = 0;
@@ -151,7 +152,7 @@ Manager::~Manager()
 
 /// Process all modules
 
-void Manager::Process(double x_timeCount, bool x_centralized)
+void Manager::Process()
 {
 	//m_lock.lockForWrite();
 	if(!m_lock.tryLockForWrite())
@@ -159,20 +160,20 @@ void Manager::Process(double x_timeCount, bool x_centralized)
 		cout<<"Warning : Manager too slow !"<<endl;
 		return;
 	}
-	m_timer.Restart();
-	usleep(100000);
+    // m_timer.Restart();
+    // usleep(100000);
 	// double timecount = m_timer.GetSecDouble();
 	m_timer.Restart();
 	
 	// If methods are not called in a centralized way, we will rely on timers on each module
-	if(! x_centralized)
+	if(! m_centralized)
 		return;
 
 	try
 	{
 		for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		{
-			(*it)->Process(x_timeCount, x_centralized);
+			(*it)->Process();
 		}
 	}
 	catch(cv::Exception& e)

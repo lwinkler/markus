@@ -46,14 +46,14 @@ public:
 	~Input();
 	
 	virtual void Capture() = 0;
-    inline const std::string& GetName()const {return m_name;}
+	inline const std::string& GetName()const {return m_name;}
 	virtual const cv::Mat * GetImage() const = 0;
-	
-    inline double GetFps() {return RefParameter().fps;}
-	
-    inline void ProcessFrame() {Capture();}
-	
-    virtual inline bool IsInput() {return true;}
+
+	inline double GetFps() {return RefParameter().fps;}
+
+	inline void ProcessFrame() {Capture();}
+
+	virtual inline bool IsInput() {return true;}
 private:
 
 protected:
