@@ -40,12 +40,13 @@ Module::Module(const ConfigReader& x_configReader) :
 	cout<<endl<<"*** Create object Module : "<<m_name<<" id:"<<m_id<<" ***"<<endl;
 	// m_processingTime = 0;
 	
-	m_timerConvertion = 0;
-	m_timerProcessing = 0;
-	m_timerWaiting    = 0;
+	m_timerConvertion      = 0;
+	m_timerProcessing      = 0;
+	m_timerWaiting         = 0;
 	m_countProcessedFrames = 0;
-	m_modulePreceeding = NULL;
-	m_lastTimeStamp = DBL_MIN;
+	m_modulePreceeding     = NULL;
+	m_lastTimeStamp        = DBL_MIN;
+	m_pause                = false;
 
 	// Add controls for parameters' change
 	m_controls.push_back(new ParameterControl("Parameters", "Change the values of parameters at runtime."));
@@ -57,6 +58,10 @@ Module::Module(const ConfigReader& x_configReader) :
 void Module::Reset()
 {
 	m_moduleTimer->Reset(RefParameter().fps);
+}
+
+void Module::Pause(bool x_pause){
+	m_pause = x_pause;
 }
 
 
@@ -77,6 +82,8 @@ Module::~Module()
 
 void Module::Process()
 {
+	if(m_pause)
+		return;
     //try
 	{
 		// m_processingTime += x_timeCount;
@@ -88,7 +95,7 @@ void Module::Process()
 			timeStamp = m_inputStreams[0]->GetTimeStamp();
 			// throw("Error: Module must have at least one input or inherit from class Input in Module::Process");
 
-		if(timeStamp > m_lastTimeStamp && (GetFps() == 0 || timeStamp * GetFps() > 1.0))
+		if(/*timeStamp > m_lastTimeStamp &&*/ (GetFps() == 0 || timeStamp * GetFps() > 1.0))
 		{
 			m_lock.lockForRead();
 			

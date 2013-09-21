@@ -63,6 +63,7 @@ public:
 	virtual ~Module();
 	
 	virtual void Reset();
+	void Pause(bool x_pause);
 	void Process();
 
 	const std::string& GetName() const{return m_name;}
@@ -98,6 +99,7 @@ protected:
 	long long m_timerWaiting;
 	long long m_countProcessedFrames;
 	double m_lastTimeStamp;
+	bool m_pause;
 	
 	virtual void ProcessFrame() = 0;
 	inline virtual bool IsInputProcessed(double x_timeCount) const {return true;}

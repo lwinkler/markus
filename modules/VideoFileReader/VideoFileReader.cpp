@@ -68,10 +68,10 @@ void VideoFileReader::Capture()
 {
 	if(m_capture.grab() == 0)
 	{
-        m_endOfStream = true;
-        std::exception e;
-
-        throw e; // TODO: Impl custom exceptions ("Capture failed in VideoFileReader::Capture.");
+		m_endOfStream = true;
+		std::exception e;
+		Pause(true);
+		throw e; // TODO: Impl custom exceptions ("Capture failed in VideoFileReader::Capture.");
 	}
 
 	m_capture.retrieve(*m_output);

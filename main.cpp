@@ -27,6 +27,7 @@
 #include <cstdio>
 
 #include "Manager.h"
+#include "MarkusApplication.h"
 
 #include <iostream>
 
@@ -71,7 +72,7 @@ int main(int argc, char** argv)
 	}
 	// try
 	{
-		QApplication app(argc, argv);
+		MarkusApplication app(argc, argv);
 		ConfigReader mainConfig(configFile);
 		ConfigReader appConfig = mainConfig.SubConfig("application");
 		assert(!appConfig.IsEmpty());
@@ -88,8 +89,10 @@ int main(int argc, char** argv)
 			// No gui. launch the process directly
 			// so far we cannot launch the process in a decentralized manner (with a timer on each module)
 //#ifdef CENTRALIZE_PROCESS
-			while(true)
-				manager.Process();
+			while(manager.Process())
+			{
+				// nothing 
+			}
 //#endif
 			//for(int i = 0 ; i < nbCols * nbLines ; i++)
 			//	m_moduleViewer[i]->update();

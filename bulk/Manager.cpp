@@ -83,7 +83,8 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 		
 		// Add to inputs if an input
 		m_modules.push_back(tmp1);
-		// if(tmp1->IsInput()) m_inputs.push_back(dynamic_cast<Input* >(tmp1));
+		if(tmp1->IsInput())
+			m_inputs.push_back(dynamic_cast<Input* >(tmp1));
 		moduleConfig = moduleConfig.NextSubConfig("module");
 	}
 
@@ -152,23 +153,20 @@ Manager::~Manager()
 
 /// Process all modules
 
-void Manager::Process()
+bool Manager::Process()
 {
-	//m_lock.lockForWrite();
+	// If methods are not called in a centralized way, we will rely on timers on each module
+	assert(m_centralized);
+
 	if(!m_lock.tryLockForWrite())
 	{
 		cout<<"Warning : Manager too slow !"<<endl;
-		return;
+		return true;
 	}
-    // m_timer.Restart();
-    // usleep(100000);
-	// double timecount = m_timer.GetSecDouble();
 	m_timer.Restart();
 	
-	// If methods are not called in a centralized way, we will rely on timers on each module
-	if(! m_centralized)
-		return;
 
+	bool continueFlag = true;
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 	{
 		try
@@ -184,19 +182,11 @@ void Manager::Process()
 			cout << (*it)->GetName() << ": Exception raised (std::exception) : " << e.what() <<endl;
 
 			// test if all inputs are over
-			bool endOfStreams = true;
-			for(vector<Module*>::const_iterator it1 = m_modules.begin() ; it1 != m_modules.end() ; it1++)
+			if(EndOfAllStreams())
 			{
-				if((*it1)->IsInput())
-				{
-					const Input* input = dynamic_cast<const Input*>(*it1);
-					if(!input->IsEndOfStream())
-						endOfStreams = false;
-				}
-			}
-			if(endOfStreams)
-			{
-                throw("End of all video streams : Manager::Process");
+				// throw("End of all video streams : Manager::Process");
+				cout << "End of all video streams : Manager::Process" << endl;
+				continueFlag = false;
 			}
 		}
 		catch(std::string str)
@@ -219,6 +209,7 @@ void Manager::Process()
 		PrintTimers();
 	}
 	m_lock.unlock();
+	return continueFlag;
 }
 
 /// Print the results of timings
@@ -236,6 +227,37 @@ void Manager::PrintTimers()
 			(*it)->PrintStatistics(cout);
 			cpt++;
 		}
+}
+
+/// Pause all modules
+void Manager::Pause(bool x_pause)
+{
+	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)	
+	{
+		(*it)->Pause(x_pause);	
+	}
+}
+
+/// Pause all inputs
+void Manager::PauseInputs(bool x_pause)
+{
+	for(vector<Input*>::iterator it = m_inputs.begin() ; it != m_inputs.end() ; it++)	
+	{
+		(*it)->Pause(x_pause);	
+	}
+}
+
+/// Check if end of all input streams
+
+bool Manager::EndOfAllStreams() const
+{
+	bool endOfStreams = true;
+	for(vector<Input*>::const_iterator it1 = m_inputs.begin() ; it1 != m_inputs.end() ; it1++)
+	{
+		if(!(*it1)->IsEndOfStream())
+			endOfStreams = false;
+	}
+	return endOfStreams;
 }
 
 /// Export current configuration to xml

@@ -9,6 +9,7 @@ qt4_automoc(markus.cpp QModuleViewer.cpp QParameterSlider.cpp)
 
 add_library(gui
 markus.cpp
+MarkusApplication.cpp
 QModuleViewer.cpp
 QParameterSlider.cpp
 QModuleTimer.cpp

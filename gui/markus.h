@@ -52,6 +52,7 @@ private:
 	
 	//std::vector<QModuleTimer *> m_moduleTimer;
 	
+	bool notify(QObject *receiver_, QEvent *event_);
 	void timerEvent(QTimerEvent*);
 	void resizeEvent(QResizeEvent*);
 	
