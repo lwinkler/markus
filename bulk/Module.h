@@ -63,7 +63,7 @@ public:
 	virtual ~Module();
 	
 	virtual void Reset();
-	void Process(double x_timeCount);
+	void Process();
 
 	const std::string& GetName() const{return m_name;}
 	const std::string& GetDescription() const{return m_description;}
@@ -97,9 +97,10 @@ protected:
 	long long m_timerProcessing;
 	long long m_timerWaiting;
 	long long m_countProcessedFrames;
+	double m_lastTimeStamp;
 	
 	virtual void ProcessFrame() = 0;
-	inline virtual bool IsInputUsed(double x_timeCount) const {return true;}
+	inline virtual bool IsInputProcessed(double x_timeCount) const {return true;}
 	std::vector<Stream *> m_inputStreams;
 	std::vector<Stream *> m_outputStreams;
 	std::vector<Stream *> m_debugStreams;	
@@ -107,7 +108,7 @@ protected:
 	std::string m_name;
 	std::string m_description; 
 	int m_id;
-	double m_processingTime;
+	// double m_processingTime;
 	Module * m_modulePreceeding;
 	std::vector<Module *> m_modulesDepending;
 	QModuleTimer * m_moduleTimer;

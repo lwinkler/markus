@@ -36,7 +36,7 @@ public:
 	void Reset(double x_fps);
 protected:
 	Module & m_module;
-	double m_timeInterval;
+	// double m_timeInterval;
 };
 
 

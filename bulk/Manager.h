@@ -55,7 +55,7 @@ public:
 class Manager : public Configurable
 {
 public:
-	Manager(ConfigReader & x_configReader);
+	Manager(ConfigReader & x_configReader, bool x_centralized);
 	~Manager();
 	void Process();
 	// const std::vector<Input*> & GetInputList()  const {return m_inputs; };
@@ -71,6 +71,7 @@ public:
 private:
 	ManagerParameter m_param;
 
+	bool m_centralized;
 	long long m_timerConvertion;
 	long long m_timerProcessing;
 

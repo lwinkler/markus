@@ -35,11 +35,14 @@ Stream::Stream(int x_id, const std::string& x_name, StreamType x_type, int x_wid
 	m_description(rx_description)
 {
 	m_connected = NULL;
+	m_timeStamp = DBL_MIN;
 }
 
 Stream::~Stream()
 {
 }
+
+/// Write current configuration of stream as an xml output 
 
 void Stream::Export(ostream& rx_os, int x_indentation, bool x_isInput)
 {

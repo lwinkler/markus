@@ -52,9 +52,10 @@ using namespace std;
 using namespace std;
 
 
-Manager::Manager(ConfigReader& x_configReader) : 
+Manager::Manager(ConfigReader& x_configReader, bool x_centralized) : 
 	Configurable(x_configReader),
-	m_param(m_configReader, "Manager")
+	m_param(m_configReader, "Manager"),
+	m_centralized(x_centralized)
 {
 	cout<<endl<<"*** Create object Manager ***"<<endl;
 	m_frameCount = 0;
@@ -159,39 +160,59 @@ void Manager::Process()
 		cout<<"Warning : Manager too slow !"<<endl;
 		return;
 	}
-	m_timer.Restart();
-	usleep(100000);
+    // m_timer.Restart();
+    // usleep(100000);
 	// double timecount = m_timer.GetSecDouble();
 	m_timer.Restart();
 	
-	try
+	// If methods are not called in a centralized way, we will rely on timers on each module
+	if(! m_centralized)
+		return;
+
+	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 	{
-		/*
-		for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+		try
 		{
-			(*it)->Process(timecount);
-		}*/
+			(*it)->Process();
+		}
+		catch(cv::Exception& e)
+		{
+			cout << (*it)->GetName() << ": Exception raised (std::exception) : " << e.what() <<endl;
+		}
+		catch(std::exception& e)
+		{
+			cout << (*it)->GetName() << ": Exception raised (std::exception) : " << e.what() <<endl;
+
+			// test if all inputs are over
+			bool endOfStreams = true;
+			for(vector<Module*>::const_iterator it1 = m_modules.begin() ; it1 != m_modules.end() ; it1++)
+			{
+				if((*it1)->IsInput())
+				{
+					const Input* input = dynamic_cast<const Input*>(*it1);
+					if(!input->IsEndOfStream())
+						endOfStreams = false;
+				}
+			}
+			if(endOfStreams)
+			{
+                throw("End of all video streams : Manager::Process");
+			}
+		}
+		catch(std::string str)
+		{
+			cout << (*it)->GetName() << ":  Exception raised (string) : " << str <<endl;
+		}
+		catch(const char* str)
+		{
+			cout << (*it)->GetName() << ": Exception raised (const char*) : " << str <<endl;
+		}
+		catch(...)
+		{
+			cout << (*it)->GetName() << ": Unknown exception raised: "<<endl;
+		}
 	}
-	catch(cv::Exception& e)
-	{
-		cout << "Exception raised (std::exception) : " << e.what() <<endl;
-	}
-	catch(std::exception& e)
-	{
-		cout << "Exception raised (std::exception) : " << e.what() <<endl;
-	}
-	catch(std::string str)
-	{
-		cout << "Exception raised (string) : " << str <<endl;
-	}
-	catch(const char* str)
-	{
-		cout << "Exception raised (const char*) : " << str <<endl;
-	}
-	catch(...)
-	{
-		cout << "Unknown exception raised: "<<endl;
-	}
+
 	m_frameCount++;
 	if(m_frameCount % 100 == 0)
 	{
