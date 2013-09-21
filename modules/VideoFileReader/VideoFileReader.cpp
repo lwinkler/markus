@@ -32,7 +32,8 @@ VideoFileReader::VideoFileReader(const ConfigReader& x_configReader):
 	m_param(x_configReader)
 {
 	m_description = "Input from a video file.";
-	m_output = NULL;
+	m_output = new Mat(Size(m_param.width, m_param.height), CV_8UC3); // Note: sizes will be overrided !
+	m_outputStreams.push_back(new StreamImage(0, "input", m_output, *this,	"Video stream"));
 }
 
 VideoFileReader::~VideoFileReader()
@@ -59,8 +60,8 @@ void VideoFileReader::Reset()
 	m_capture.set(CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
 	
 	// note on the next line: the image will be overloaded but the properties are used to set the input ratio, the type is probably ignored
-	m_output = new Mat(Size(m_capture.get(CV_CAP_PROP_FRAME_WIDTH), m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)), CV_8UC3);//  Size(m_param.width, m_param.height), CV_8UC3);
-	m_outputStreams.push_back(new StreamImage(0, "input", m_output, *this,	"Video stream"));
+	delete m_output;
+	m_output = new Mat(Size(m_capture.get(CV_CAP_PROP_FRAME_WIDTH), m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)), m_param.type);
 }
 
 void VideoFileReader::Capture()
@@ -77,7 +78,8 @@ void VideoFileReader::GetProperties()
 	cout<<"CV_CAP_PROP_FRAME_WIDTH "<<m_capture.get(CV_CAP_PROP_FRAME_WIDTH)<<endl;
 	cout<<"CV_CAP_PROP_FRAME_HEIGHT "<<m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)<<endl;
 	cout<<"CV_CAP_PROP_FPS "<<m_capture.get(CV_CAP_PROP_FPS)<<endl;
-	cout<<"CV_CAP_PROP_FOURCC "<<m_capture.get(CV_CAP_PROP_FOURCC)<<endl;
+	int cc = static_cast<int>(m_capture.get(CV_CAP_PROP_FOURCC));
+	cout<<"CV_CAP_PROP_FOURCC "<< (char)(cc & 0XFF) << (char)((cc & 0XFF00) >> 8) << (char)((cc & 0XFF0000) >> 16) << (char)((cc & 0XFF000000) >> 24) <<endl;
 	cout<<"CV_CAP_PROP_FRAME_COUNT "<<m_capture.get(CV_CAP_PROP_FRAME_COUNT)<<endl;
 	cout<<"CV_CAP_PROP_FORMAT "<<m_capture.get(CV_CAP_PROP_FORMAT)<<endl;
 	cout<<"CV_CAP_PROP_MODE "<<m_capture.get(CV_CAP_PROP_MODE)<<endl;

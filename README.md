@@ -55,16 +55,32 @@ The values of the different parameters and the connections between modules is de
 
 Concepts:
 ---------
-	- One module must be as simple as possible. If one module is too complex it must be splitted in two modules.
-	- In case of inheritence the list of parameters is inherited as well.
+- One module must be as simple as possible. If one module is too complex it must be split in two modules.
+- In case of inheritance the list of parameters is inherited as well.
 
 
 Classes
 -------
-	- **Streams:** Streams can consist of video images, list of objects or states, ... They are inherited from the base Stream class
-	- **Objects:** An object is an entity that was detected by a module. It has a position and size that allow it to be drawn on the stream. It also possesses a list of features.
-	- **Features:** A double value that represent a quantity associated with an object. The mean, variance, min, max of the value is computed automatically. 
-	- **Templates:** Templates are primarily used in trackers they differ slighly from objects 
+- **Streams:** Streams can consist of video images, list of objects or states, ... They are inherited from the base Stream class. 
+- **Objects:** An object is an entity that was detected by a module. It has a position and size that allow it to be drawn on the stream. It also possesses a list of features.
+- **Features:** A double value that represent a quantity associated with an object. The mean, variance, min, max of the value is computed automatically. 
+- **Templates:** Templates are primarily used in trackers they differ slighly from objects as they have a unique id and are persistent in time.
+
+--------------------------------------------------------------------------------
+Developer documentation
+=======================
+This section contains documentation that is meant for developers or people who need an advanced knowledge of the functionalities.
+
+Processing and time
+-------------------
+A module will only process the input streams and produce an output if a set of conditions is met. Mainly there are two types of conditions.
+
+- **Modules with a defined frame rate:** These modules will read the input stream and process it at a rate given by the fps parameter. The ProcessFrame method of these modules will be called by a timer.
+- **Module with a fixed frame rate:** Modules with a parameter fps=0 will be called each time the previous module produces an output. In a way they will be depending from the input. In a way these modules will never miss a frame or perform a computation twice on the same frame.
+
+Time values are given by a time stamp that is linked with the input stream. They match the time at which the frame was extracted by a module of the Input class.
+
+
 
 
 

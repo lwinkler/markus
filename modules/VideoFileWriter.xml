@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module name="VideoFileWriter" description="Write output to a video file.">
+	<parameters>
+		<param name="class">
+			<type>string</type>
+			<value default="">VideoFileWriter</value>
+			<description>Class of the module (define the module's function)</description>
+		</param>
+		<param name="width">
+			<type>int</type>
+			<value min="1" max="6400" default="640">640</value>
+			<description>Width of the input</description>
+		</param>
+		<param name="height">
+			<type>int</type>
+			<value min="1" max="4800" default="480">480</value>
+			<description>Height of the input</description>
+		</param>
+		<param name="type">
+			<type>image type</type>
+			<value default="CV_8UC1">CV_8UC1</value>
+			<description>Format of the input image</description>
+		</param>
+		<param name="fps">
+			<type>double</type>
+			<value min="0" max="1000" default="10">10</value>
+			<description>Frames per seconds (processing speed)</description>
+		</param>
+		<param name="file">
+			<type>string</type>
+			<value default="output.avi">output.avi</value>
+			<description>Name of the video file to write, with path</description>
+		</param>
+		<param name="fourcc">
+			<type>string</type>
+			<value default="MJPG">MJPG</value>
+			<description>Four character code, determinses the format</description>
+		</param>
+	</parameters>
+	<inputs>
+		<input id="0">
+			<type>Image</type>
+			<name>input</name>
+			<description>Video input</description>
+		</input>
+	</inputs>
+	<outputs>
+	</outputs>
+</module>

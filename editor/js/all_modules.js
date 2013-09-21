@@ -3,7 +3,6 @@ var availableModulesNames = [
 "BgrSubMOG",
 "BgrSubRunAvg",
 "CascadeDetector",
-"FallDetection",
 "FilterObjects",
 "Logger",
 "Mask",
@@ -17,5 +16,6 @@ var availableModulesNames = [
 "TrackerByFeatures",
 "UsbCam",
 "VideoFileReader",
+"VideoFileWriter",
 "VideoOutput",
 ];
