@@ -76,7 +76,7 @@ void VideoFileReader::Capture()
 
 	m_capture.retrieve(*m_output);
 	
-	cout<<"VideoFileReader capture image "<<m_output->cols<<"x"<<m_output->rows<<endl;
+	// cout<<"VideoFileReader capture image "<<m_output->cols<<"x"<<m_output->rows<<endl;
 
 	m_outputStreams[0]->SetTimeStamp(m_capture.get(CV_CAP_PROP_POS_MSEC) * 1000.0); // TODO : add a method in input to do this ?
 }

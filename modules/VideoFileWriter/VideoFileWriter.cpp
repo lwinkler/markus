@@ -50,18 +50,35 @@ VideoFileWriter::VideoFileWriter(const ConfigReader& x_configReader):
 
 VideoFileWriter::~VideoFileWriter()
 {
+	m_writer.release();
 }
 
 void VideoFileWriter::Reset()
 {
 	Module::Reset();
 	m_writer.release();
-	m_writer.open(m_param.file, CV_FOURCC('M','J','P','G'), m_param.fps, Size(m_param.width, m_param.height), true); // TODO: compute last param. Iscolor
+	// m_writer.open(m_param.file, CV_FOURCC('P','I','M','1'), m_param.fps, Size(m_param.width, m_param.height), true); // TODO: compute last param. Iscolor
+	m_writer.open(m_param.file, CV_FOURCC('M','P','4','2'), m_param.fps, Size(m_param.width, m_param.height), true); // TODO: compute last param. Iscolor
+	if(!m_writer.isOpened())
+	{
+		cout<<"Failed to open output video file in VideoFileWriter::Reset"<<endl;
+		throw("Failed to open output video file in VideoFileWriter::Reset");
+	}
 }
 
 void VideoFileWriter::ProcessFrame()
 {
+	static int cpt = 0; // TODO: remove
+	if(cpt == 100 && m_writer.isOpened())
+	{
+		cout<<"Close write file" << endl;
+		m_writer.release();
+		cpt++;
+	}
+	if(!m_writer.isOpened()) return;
 	cout << "write frame " << m_input->cols << "x" << m_input->rows << endl;
-	m_writer << *m_input;
+	// m_writer << *m_input;
+	m_writer.write(*m_input);
+	cpt++;
 }
 
