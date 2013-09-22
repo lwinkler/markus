@@ -36,21 +36,11 @@ VideoFileWriter::VideoFileWriter(const ConfigReader& x_configReader):
 	m_input    = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
 
 	m_inputStreams.push_back(new StreamImage(0, "input",             m_input, *this,   "Video input"));
-	/*
-	CV_FOURCC('P','I','M','1') = MPEG-1 codec
-	CV_FOURCC('M','J','P','G') = motion-jpeg codec (does not work well)
-	CV_FOURCC('M','P','4','2') = MPEG-4.2 codec
-	CV_FOURCC('D','I','V','3') = MPEG-4.3 codec
-	CV_FOURCC('D','I','V','X') = MPEG-4 codec
-	CV_FOURCC('U','2','6','3') = H263 codec
-	CV_FOURCC('I','2','6','3') = H263I codec
-	CV_FOURCC('F','L','V','1') = FLV1 codec 
-	*/
 }
 
 VideoFileWriter::~VideoFileWriter()
 {
-	cout<<"Release FileWriter"<<endl;
+	// cout<<"Release FileWriter"<<endl;
 	m_writer.release();
 }
 
@@ -58,8 +48,17 @@ void VideoFileWriter::Reset()
 {
 	Module::Reset();
 	m_writer.release();
-	// m_writer.open(m_param.file, CV_FOURCC('P','I','M','1'), m_param.fps, Size(m_param.width, m_param.height), true); // TODO: compute last param. Iscolor
-	m_writer.open(m_param.file, CV_FOURCC('M','P','4','2'), /*m_param.fps*/120, Size(m_param.width, m_param.height), true); // TODO: compute last param. Iscolor
+	if(m_param.fourcc.size() != 4)
+		throw("Error in parameter: fourcc must have 4 characters in VideoFileWriter::Reset");
+	const char * s = m_param.fourcc.c_str();
+	bool isColor = false;
+	if(m_param.type == CV_8UC3) // TODO : find a way to restrain parameters values
+		isColor = true;
+	else if(m_param.type == CV_8UC1)
+		isColor = false;
+	else assert(false);
+
+	m_writer.open(m_param.file, CV_FOURCC(s[0], s[1], s[2], s[3]), m_param.fps > 0 ? m_param.fps : 12, Size(m_param.width, m_param.height), isColor); // TODO: compute last param. Iscolor
 	if(!m_writer.isOpened())
 	{
 		cout<<"Failed to open output video file in VideoFileWriter::Reset"<<endl;
@@ -69,7 +68,6 @@ void VideoFileWriter::Reset()
 
 void VideoFileWriter::ProcessFrame()
 {
-	// if(!m_writer.isOpened()) return;
 	cout << "write frame " << m_input->cols << "x" << m_input->rows << endl;
 	// m_writer << *m_input;
 	m_writer.write(*m_input);

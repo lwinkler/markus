@@ -98,7 +98,7 @@ protected:
 	long long m_timerProcessing;
 	long long m_timerWaiting;
 	long long m_countProcessedFrames;
-	double m_lastTimeStamp;
+	// double m_lastTimeStamp;
 	bool m_pause;
 	
 	virtual void ProcessFrame() = 0;

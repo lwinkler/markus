@@ -36,6 +36,7 @@ UsbCam::UsbCam(const ConfigReader& x_configReader):
 	m_capture = NULL;
 	m_capture = cvCreateCameraCapture( m_param.num );
 	m_fps = 0;
+	m_timeStamp = 0;
 	
 	if(m_capture == NULL)
 	{
@@ -92,6 +93,8 @@ void UsbCam::Capture()
 	
 	//tmp->copyTo(*m_output);
 	adjustSize(tmp, m_output);
+	m_timeStamp += 1.0 / m_param.fps;
+	SetTimeStampToOutputs(m_timeStamp);
 	
 	delete(tmp);
 }

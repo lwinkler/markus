@@ -37,3 +37,11 @@ Input::Input(const ConfigReader& x_configReader):
 Input::~Input()
 {
 }
+
+/// Set the timestamps of all the outputs
+void Input::SetTimeStampToOutputs(double x_timeStamp)
+{
+	for(vector<Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
+		(*it)->SetTimeStamp(x_timeStamp);
+	
+}

@@ -45,7 +45,7 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_timerWaiting         = 0;
 	m_countProcessedFrames = 0;
 	m_modulePreceeding     = NULL;
-	m_lastTimeStamp        = DBL_MIN;
+	// m_lastTimeStamp        = DBL_MIN;
 	m_pause                = false;
 
 	// Add controls for parameters' change
@@ -92,7 +92,7 @@ void Module::Process()
 
 		double timeStamp = DBL_MAX; // TODO: Find a way to manage time stamps for a module with no input
 		if(m_inputStreams.size() >= 1)
-			timeStamp = m_inputStreams[0]->GetTimeStamp();
+			timeStamp = m_inputStreams[0]->GetTimeStampConnected();
 			// throw("Error: Module must have at least one input or inherit from class Input in Module::Process");
 
 		if(/*timeStamp > m_lastTimeStamp &&*/ (GetFps() == 0 || timeStamp * GetFps() > 1.0))
@@ -121,7 +121,11 @@ void Module::Process()
 
 			m_timerProcessing 	 += ti.GetMSecLong();
 
-			// Call deppending modules
+			// Set time stamps to outputs
+			for(vector<Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
+				(*it)->SetTimeStamp(timeStamp);
+			
+			// Call depending modules (modules with fps = 0)
 			for(vector<Module*>::iterator it = m_modulesDepending.begin() ; it != m_modulesDepending.end() ; it++)
 				(*it)->Process();
 

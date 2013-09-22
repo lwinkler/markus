@@ -64,6 +64,7 @@ public:
 
 	inline double GetTimeStamp() const             {return m_timeStamp;}
 	inline void   SetTimeStamp(double x_timeStamp) {m_timeStamp = x_timeStamp;}
+	inline double GetTimeStampConnected() const    {return m_connected->GetTimeStamp();}
 
 protected:
 	const std::string m_name;

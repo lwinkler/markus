@@ -37,7 +37,7 @@ public:
 	ModuleParameterStructure(x_confReader)
 	{
 		m_list.push_back(new ParameterString("file", 	"output.avi", 	&file,   "Name of the video file to write, with path"));
-		m_list.push_back(new ParameterString("fourcc", 	"MJPG", 	&fourcc, "Four character code, determinses the format"));
+		m_list.push_back(new ParameterString("fourcc", 	"MJPG", 	&fourcc, "Four character code, determines the format. PIM1, MJPG, MP42, DIV3, DIVX, U263, I263, FLV1"));
 		ParameterStructure::Init();
 	};
 
