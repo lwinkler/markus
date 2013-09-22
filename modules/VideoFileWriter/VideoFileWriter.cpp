@@ -58,7 +58,8 @@ void VideoFileWriter::Reset()
 		isColor = false;
 	else assert(false);
 
-	m_writer.open(m_param.file, CV_FOURCC(s[0], s[1], s[2], s[3]), m_param.fps > 0 ? m_param.fps : 12, Size(m_param.width, m_param.height), isColor); // TODO: compute last param. Iscolor
+	// TODO: Manage fps for stream recording
+	m_writer.open(m_param.file, CV_FOURCC(s[0], s[1], s[2], s[3]), /*m_param.fps > 0 ? m_param.fps :*/ 12, Size(m_param.width, m_param.height), isColor); // TODO: compute last param. Iscolor
 	if(!m_writer.isOpened())
 	{
 		cout<<"Failed to open output video file in VideoFileWriter::Reset"<<endl;

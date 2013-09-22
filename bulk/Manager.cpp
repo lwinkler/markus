@@ -60,15 +60,8 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 	cout<<endl<<"*** Create object Manager ***"<<endl;
 	m_frameCount = 0;
 	
-	//Initializing a video writer:
-
-	if(m_param.mode == "benchmark")
-	{
-		//assert(m_writer != NULL);
-	}
 	
-	
-	// m_inputs.clear();
+	m_inputs.clear();
 	m_modules.clear();
 	
 	// Read the configuration of each module
@@ -125,8 +118,8 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 			if(&stream == NULL) throw(0);
 			Module& preceeding(stream.RefModule());
 			(*it)->SetPreceedingModule(preceeding);
-			if((*it)->GetFps() == 0)
-				preceeding.AddDependingModule(**it);
+			if((*it)->RefParameter().realTime == false)
+				preceeding.AddDependingModule(**it); // TODO: find a better way to execute non real time modules
 		}
 		catch(...){}
 	}
@@ -171,7 +164,8 @@ bool Manager::Process()
 	{
 		try
 		{
-			(*it)->Process();
+			if((*it)->RefParameter().realTime)
+				(*it)->Process();
 		}
 		catch(cv::Exception& e)
 		{
@@ -216,17 +210,18 @@ bool Manager::Process()
 
 void Manager::PrintTimers()
 {
-		cout<<m_frameCount<<" frames processed in "<<m_timerProcessing<<" ms ("<<  (1000.0 * m_frameCount) / m_timerProcessing<<" frames/s)"<<endl;
-		cout<<"input convertion "                  <<m_timerConvertion<<" ms ("<<(1000.0 * m_frameCount) / m_timerConvertion<<" frames/s)"<<endl;
-		cout<<"Total time "<< m_timerProcessing + m_timerConvertion<<" ms ("<<     (1000.0 * m_frameCount) /(m_timerProcessing + m_timerConvertion)<<" frames/s)"<<endl;
+	// TODO: Check the use of the timers of manager
+	cout<<m_frameCount<<" frames processed in "<<m_timerProcessing<<" ms ("<<  (1000.0 * m_frameCount) / m_timerProcessing<<" frames/s)"<<endl;
+	cout<<"input convertion "                  <<m_timerConvertion<<" ms ("<<(1000.0 * m_frameCount) / m_timerConvertion<<" frames/s)"<<endl;
+	cout<<"Total time "<< m_timerProcessing + m_timerConvertion<<" ms ("<<     (1000.0 * m_frameCount) /(m_timerProcessing + m_timerConvertion)<<" frames/s)"<<endl;
 
-		int cpt = 0;
-		for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
-		{
-			cout<<cpt<<": ";
-			(*it)->PrintStatistics(cout);
-			cpt++;
-		}
+	int cpt = 0;
+	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+	{
+		cout<<cpt<<": ";
+		(*it)->PrintStatistics(cout);
+		cpt++;
+	}
 }
 
 /// Pause all modules

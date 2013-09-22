@@ -45,6 +45,7 @@ public:
 		m_list.push_back(new ParameterInt("width", 	640, 	PARAM_INT, 	1, MAX_WIDTH,		&width,		"Width of the input"));
 		m_list.push_back(new ParameterInt("height", 	480, 	PARAM_INT, 	1, MAX_HEIGHT,		&height,	"Height of the input"));
 		m_list.push_back(new ParameterImageType("type", 	CV_8UC1, 				&type,		"Format of the input image"));
+		m_list.push_back(new ParameterBool("real_time",  0, 	PARAM_BOOL, 	0, 	1,		&realTime,	"Real time: if yes the module processes with a fixed fps, if no the module processes based on the time stamp of the input stream"));
 		m_list.push_back(new ParameterDouble("fps", 	10, 	PARAM_DOUBLE, 	0, 	1000,		&fps,		"Frames per seconds (processing speed)"));
 	}
 
@@ -52,6 +53,7 @@ public:
 	int width;
 	int height;
 	int type;
+	bool realTime;
 	double fps;
 	std::string objClass;
 };
@@ -94,23 +96,29 @@ public:
 	inline void Unlock(){m_lock.unlock();};
 	
 protected:
+
+	// for benchmarking
 	long long m_timerConvertion;
 	long long m_timerProcessing;
 	long long m_timerWaiting;
 	long long m_countProcessedFrames;
-	// double m_lastTimeStamp;
+
+	double m_lastTimeStamp;     // time stamp of the lastly processed input
+	double m_currentTimeStamp;  // time stamp of the current input
 	bool m_pause;
 	
 	virtual void ProcessFrame() = 0;
-	inline virtual bool IsInputProcessed(double x_timeCount) const {return true;}
+	inline virtual bool IsInputProcessed() const {return true;}
+
+	// Streams
 	std::vector<Stream *> m_inputStreams;
 	std::vector<Stream *> m_outputStreams;
 	std::vector<Stream *> m_debugStreams;	
+
 	std::vector<ParameterControl *> m_controls;
 	std::string m_name;
 	std::string m_description; 
 	int m_id;
-	// double m_processingTime;
 	Module * m_modulePreceeding;
 	std::vector<Module *> m_modulesDepending;
 	QModuleTimer * m_moduleTimer;

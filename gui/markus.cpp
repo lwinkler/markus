@@ -51,8 +51,8 @@ markus::markus(ConfigReader & rx_configReader, Manager& rx_manager, bool x_centr
 	nbCols = 1;
 
 	// Call to manager process each 10 ms
-	if(!m_centralized)
-		startTimer(static_cast<int>(MARKUS_TIMER_S * 1000));  // 10 -> 0.01-second timer
+	//if(!m_centralized)
+	startTimer(static_cast<int>(MARKUS_TIMER_S * 1000));  // 10 -> 0.01-second timer
 
 	setWindowState(Qt::WindowMaximized);
 	
@@ -78,11 +78,11 @@ markus::markus(ConfigReader & rx_configReader, Manager& rx_manager, bool x_centr
 
 void markus::timerEvent(QTimerEvent*)
 {
-	if(m_centralized)
+	/*if(m_centralized)
 	{
 		// at each increment, call the general Process method
 		m_manager.Process();
-	}
+	}*/
 
 	for(int i = 0 ; i < nbCols * nbLines ; i++)
 		m_moduleViewer[i]->update();

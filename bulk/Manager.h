@@ -35,7 +35,6 @@
 #include "Module.h"
 #include "Timer.h"
 
-class CvVideoWriter;
 
 /// Parameter class
 

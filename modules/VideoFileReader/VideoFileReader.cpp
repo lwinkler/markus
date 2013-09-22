@@ -68,6 +68,7 @@ void VideoFileReader::Capture()
 {
 	if(m_capture.grab() == 0)
 	{
+		// Note: there seems to be a 3 seconds lag when grabbing after the last frame. This is linked to format h264: MJPG is ok
 		m_endOfStream = true;
 		std::exception e;
 		Pause(true);
@@ -76,9 +77,9 @@ void VideoFileReader::Capture()
 
 	m_capture.retrieve(*m_output);
 	
-	// cout<<"VideoFileReader capture image "<<m_output->cols<<"x"<<m_output->rows<<endl;
+	// cout<<"VideoFileReader capture image "<<m_output->cols<<"x"<<m_output->rows<<" time stamp "<<m_capture.get(CV_CAP_PROP_POS_MSEC) / 1000.0<< endl;
 
-	SetTimeStampToOutputs(m_capture.get(CV_CAP_PROP_POS_MSEC) * 1000.0);
+	SetTimeStampToOutputs(m_capture.get(CV_CAP_PROP_POS_MSEC) / 1000.0);
 }
 
 void VideoFileReader::GetProperties()

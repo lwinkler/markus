@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<application name="Simple" description="" cyclelimit="-1" gui="">
-<module name="UsbCam" machineurl="localhost" id="0">
+<application name="CustomProject">
+<module id="0" name="UsbCam0">
+<inputs/>
+<outputs>
+<output id="0"/>
+</outputs>
 <parameters>
 <param name="class">UsbCam</param>
 <param name="width">640</param>
 <param name="height">480</param>
 <param name="type">CV_8UC1</param>
-<param name="fps">1000000</param>
+<param name="fps">10</param>
 <param name="num">-1</param>
 </parameters>
-<inputs/>
-<outputs>
-<output id="0"/>
+<uiobject x="500" y="300" width="0" height="0"/>
 </module>
 </application>
-

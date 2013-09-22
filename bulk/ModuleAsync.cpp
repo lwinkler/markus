@@ -33,7 +33,7 @@ ModuleAsync::ModuleAsync(const ConfigReader& x_configReader) :
 	Module(x_configReader)
 {
 	cout<<endl<<"*** Create object ModuleAsync : "<<m_name<<" ***"<<endl;
-	m_timeStampLastThread 	= DBL_MIN;
+	m_timeStampLastThread 	= - DBL_MAX;
 	m_resultsCopied 	= false;
 	m_timerThread 		= 0;
 	m_countFramesThread 	= 0;
@@ -45,9 +45,9 @@ void ModuleAsync::ProcessFrame()
 {
 	if(m_inputStreams.size() < 1)
 		throw("Error: Module must have at least one input or inherit from class Input in ModuleAsync::Process");
-	double timeStamp = m_inputStreams[0]->GetTimeStamp();
 
-	double timeSinceLastThread = timeStamp - m_timeStampLastThread; // TODO: Test if the new way of handling time stamps works in async modules
+	cout << "m_timeStampLastThread" << m_timeStampLastThread;
+	cout << " m_currentTimeStamp " <<  m_currentTimeStamp << endl;
 	//cout<<RefParameter().detectionFps<<" : "<<m_timeStampLastThread<<" += "<<m_processingTime<<endl;
 	
 	if(!m_resultsCopied && !GetRefThread().isRunning())
@@ -56,7 +56,7 @@ void ModuleAsync::ProcessFrame()
 		m_resultsCopied = true;
 	}
 	
-	if(timeSinceLastThread >= 1 / RefParameter().detectionFps)
+	if(m_currentTimeStamp - m_timeStampLastThread >= 1 / RefParameter().detectionFps)
 	{
 		if(!GetRefThread().isRunning())
 		{
@@ -66,10 +66,11 @@ void ModuleAsync::ProcessFrame()
 		else
 		{
 			// thread is taking too long
-			cout<<"Thread too slow, frame dropped after "<<timeSinceLastThread<<" [s]"<<endl;
+			cout<<"Thread too slow, frame dropped after "<<m_currentTimeStamp - m_timeStampLastThread<<" [s]"<<endl;
 		}
 	}
 	NormalProcess();
+	m_timeStampLastThread = m_currentTimeStamp;
 }
 
 

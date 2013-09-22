@@ -35,7 +35,7 @@ Stream::Stream(int x_id, const std::string& x_name, StreamType x_type, int x_wid
 	m_description(rx_description)
 {
 	m_connected = NULL;
-	m_timeStamp = DBL_MIN;
+	m_timeStamp = 0;
 }
 
 Stream::~Stream()

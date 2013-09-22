@@ -93,7 +93,7 @@ void UsbCam::Capture()
 	
 	//tmp->copyTo(*m_output);
 	adjustSize(tmp, m_output);
-	m_timeStamp += 1.0 / m_param.fps;
+	m_timeStamp += 1.0 / m_param.fps; // TODO: improve this
 	SetTimeStampToOutputs(m_timeStamp);
 	
 	delete(tmp);

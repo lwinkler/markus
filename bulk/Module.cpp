@@ -45,22 +45,31 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_timerWaiting         = 0;
 	m_countProcessedFrames = 0;
 	m_modulePreceeding     = NULL;
-	// m_lastTimeStamp        = DBL_MIN;
+	m_lastTimeStamp        = - DBL_MAX;
+	m_currentTimeStamp     = 0;
 	m_pause                = false;
 
 	// Add controls for parameters' change
 	m_controls.push_back(new ParameterControl("Parameters", "Change the values of parameters at runtime."));
-
-	// Add the module timer (only works with QT)
-	m_moduleTimer = new QModuleTimer(*this, 0);
+	m_moduleTimer = NULL;
 }
 
 void Module::Reset()
 {
-	m_moduleTimer->Reset(RefParameter().fps);
+	// Add the module timer (only works with QT)
+	if(RefParameter().realTime)
+	{
+		if(m_moduleTimer)
+			delete(m_moduleTimer);
+		m_moduleTimer = new QModuleTimer(*this, 0);
+		m_moduleTimer->Reset(RefParameter().fps);
+	}
+	else m_moduleTimer = NULL;
+	
 }
 
-void Module::Pause(bool x_pause){
+void Module::Pause(bool x_pause)
+{
 	m_pause = x_pause;
 }
 
@@ -77,33 +86,35 @@ Module::~Module()
 	for(std::vector<ParameterControl* >::iterator it = m_controls.begin() ; it != m_controls.end() ; it++)
 		delete(*it);
 
-	delete(m_moduleTimer);
+	if(m_moduleTimer)
+		delete(m_moduleTimer);
 }
 
 void Module::Process()
 {
 	if(m_pause)
-		return;
+		return; // TODO: Manage pause more elegantly
     //try
 	{
-		// m_processingTime += x_timeCount;
-
+		const ModuleParameterStructure& param = RefParameter();
+		
 		// Timestamp of the module is given by the input stream // TODO: How to manage if there are several streams
-
-		double timeStamp = DBL_MAX; // TODO: Find a way to manage time stamps for a module with no input
+		m_currentTimeStamp = 0;
 		if(m_inputStreams.size() >= 1)
-			timeStamp = m_inputStreams[0]->GetTimeStampConnected();
-			// throw("Error: Module must have at least one input or inherit from class Input in Module::Process");
+			m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected();
+		else if(! param.realTime)
+			throw("Error: Module must have at least one input or have parameter real_time=true in Module::Process");
 
-		if(/*timeStamp > m_lastTimeStamp &&*/ (GetFps() == 0 || timeStamp * GetFps() > 1.0))
+		if(param.realTime || param.fps == 0 || (m_currentTimeStamp - m_lastTimeStamp) * param.fps > 1.0)
 		{
+			// Process this frame
 			m_lock.lockForRead();
 			
-			// Timer for banchmark
+			// Timer for benchmark
 			Timer ti;
 
 			// Read and convert inputs
-			if(IsInputProcessed(timeStamp))
+			if(IsInputProcessed())
 			{
 				for(vector<Stream*>::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
 				{
@@ -122,38 +133,19 @@ void Module::Process()
 			m_timerProcessing 	 += ti.GetMSecLong();
 
 			// Set time stamps to outputs
-			for(vector<Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
-				(*it)->SetTimeStamp(timeStamp);
+			if(!IsInput())
+				for(vector<Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
+				(*it)->SetTimeStamp(m_currentTimeStamp);
 			
 			// Call depending modules (modules with fps = 0)
 			for(vector<Module*>::iterator it = m_modulesDepending.begin() ; it != m_modulesDepending.end() ; it++)
 				(*it)->Process();
 
 			m_countProcessedFrames++;
+			m_lastTimeStamp = m_currentTimeStamp;
 			m_lock.unlock();
 		}
 	}
-    /*catch(cv::Exception& e)
-	{
-		cout << "Exception raised (std::exception) : " << e.what() <<endl;
-	}
-	catch(std::exception& e)
-	{
-		cout << "Exception raised (std::exception) : " << e.what() <<endl;
-	}
-	catch(std::string str)
-	{
-		cout << "Exception raised (string) : " << str <<endl;
-	}
-	catch(const char* str)
-	{
-		cout << "Exception raised (const char*) : " << str <<endl;
-	}
-	catch(...)
-	{
-		cout << "Unknown exception raised: "<<endl;
-    }*/
-
 }
 
 
@@ -203,7 +195,8 @@ Stream* Module::GetOutputStreamById(int x_id) const
 
 void Module::PrintStatistics(ostream& os) const
 {
-	os<<"Module "<<GetName()<<" : "<<m_countProcessedFrames<<" frames processed (tproc="<<m_timerProcessing<<"ms, tconv="<<m_timerConvertion<<"ms, twait="<<
-		m_timerWaiting<<"ms)"<<endl;
+	os<<"Module "<<GetName()<<" : "<<m_countProcessedFrames<<" frames processed (tproc="<<
+		m_timerProcessing<<"ms, tconv="<<m_timerConvertion<<"ms, twait="<<
+		m_timerWaiting<<"ms), "<< (m_countProcessedFrames * 1000.0 / (m_timerProcessing + m_timerConvertion + m_timerWaiting))<<" fps"<<endl;
 }
 

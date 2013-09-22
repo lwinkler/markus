@@ -51,14 +51,7 @@ BgrSubMOG::BgrSubMOG(const ConfigReader& x_configReader) :
 	m_outputStreams.push_back(new StreamImage(1, "background", m_background, *this,		"Background"));
 
 	m_debugStreams.push_back(new StreamDebug(0, "input", m_input,*this,      "Input"));
-
-	//vector<string> names;
-	//m_mog.getParams(names);
-	//cout<<"size fo fparams"<<names.size()<<endl;
-	//for(int i = 0; i < names.size() ; i++)
-		//cout<<names[i]<<endl;
 };
-		
 
 BgrSubMOG::~BgrSubMOG()
 {

@@ -36,19 +36,13 @@ QModuleTimer::QModuleTimer(Module& x_module, double x_fps)
 
 void QModuleTimer::Reset(double x_fps)
 {
+	double delay = 1000.0 / 100;
 	if(x_fps > 0)
 	{
 		// Start a timer for module process
-		double delay = 1000.0 / x_fps;
-		// m_timeInterval = delay / 1000.0;
-		start(delay);
+		delay = 1000.0 / x_fps;
 	}
-	/*else
-	{
-		// We do not start the timer :
-		//  the module will be called from another module
-		m_timeInterval = 0;
-	}*/
+	start(delay);
 }
 
 void QModuleTimer::timerEvent(QTimerEvent* )

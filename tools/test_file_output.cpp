@@ -23,14 +23,13 @@ int main(int argc, char *argv[])
 {
     help();
 
-    if (argc != 4)
+    if (argc < 3)
     {
         cout << "Not enough parameters" << endl;
         return -1;
     }
 
     const string source      = argv[1];           // the source file name
-    const bool askOutputType = argv[3][0] =='Y';  // If false it will use the inputs codec type
 
     VideoCapture inputVideo(source);              // Open input
     if (!inputVideo.isOpened())
