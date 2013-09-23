@@ -59,9 +59,9 @@
 <display x="542" y="51" width="150" height="75"/>
 <uiobject type="" x="662" y="333" width="0" height="0"/>
 </module>
-<module name="VideoOutput" machineurl="localhost" id="3">
+<module name="RenderObjects" machineurl="localhost" id="3">
 <parameters>
-<param name="class">VideoOutput</param>
+<param name="class">RenderObjects</param>
 <param name="width">640</param>
 <param name="height">480</param>
 <param name="type">CV_8UC3</param>

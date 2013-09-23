@@ -10,6 +10,7 @@ var availableModulesNames = [
 "Morph",
 "MotionDetector",
 "NetworkCam",
+"RenderObjects",
 "SegmenterBlob",
 "SegmenterContour",
 "SlitCam",
@@ -18,5 +19,4 @@ var availableModulesNames = [
 "UsbCam",
 "VideoFileReader",
 "VideoFileWriter",
-"VideoOutput",
 ];

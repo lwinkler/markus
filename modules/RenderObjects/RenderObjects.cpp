@@ -21,7 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "VideoOutput.h"
+#include "RenderObjects.h"
 #include "StreamDebug.h"
 #include "StreamObject.h"
 #include "StreamImage.h"
@@ -30,10 +30,10 @@
 
 using namespace cv;
 
-const char * VideoOutput::m_type = "VideoOutput";
+const char * RenderObjects::m_type = "RenderObjects";
 
 
-VideoOutput::VideoOutput(const ConfigReader& x_configReader) :
+RenderObjects::RenderObjects(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader)
 {
@@ -51,19 +51,19 @@ VideoOutput::VideoOutput(const ConfigReader& x_configReader) :
 	m_outputStreams.push_back(new StreamImage(0, "output", m_imageOutput, *this,	"Output video stream"));
 }
 
-VideoOutput::~VideoOutput(void )
+RenderObjects::~RenderObjects(void )
 {
 	delete(m_imageInput);
 	delete(m_imageOutput);
 }
 
 
-void VideoOutput::Reset()
+void RenderObjects::Reset()
 {
 	Module::Reset();
 }
 
-void VideoOutput::ProcessFrame()
+void RenderObjects::ProcessFrame()
 {
 	for(int i = 0 ; i < 5 ; i++)
 		m_inputStreams[i]->RenderTo(m_imageOutput);

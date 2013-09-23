@@ -21,29 +21,29 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef VIDEOOUTPUT_H
-#define VIDEOOUTPUT_H
+#ifndef RENDER_OBJECTS_H
+#define RENDER_OBJECTS_H
 
 #include "Module.h"
 
 class ConfigReader;
 class Object;
 
-class VideoOutputParameterStructure : public ModuleParameterStructure
+class RenderObjectsParameterStructure : public ModuleParameterStructure
 {
 public:
-	VideoOutputParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
+	RenderObjectsParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
 		RefParameterByName("type").SetDefault("CV_8UC3");
 		ParameterStructure::Init();
 	};
 };
 
-class VideoOutput : public Module
+class RenderObjects : public Module
 {
 public:
-	VideoOutput(const ConfigReader& x_configReader);
-	~VideoOutput();
+	RenderObjects(const ConfigReader& x_configReader);
+	~RenderObjects();
 	
 	void Reset();
 	virtual void ProcessFrame();
@@ -61,7 +61,7 @@ protected:
 	std::vector<Object> m_objectInput5;
 
 private:
-	VideoOutputParameterStructure m_param;
+	RenderObjectsParameterStructure m_param;
 	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
 };
 

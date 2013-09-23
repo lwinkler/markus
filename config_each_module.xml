@@ -10,6 +10,7 @@
 <module name="Morph"><parameters><param name="class">Morph</param></parameters></module>
 <module name="MotionDetector"><parameters><param name="class">MotionDetector</param></parameters></module>
 <module name="NetworkCam"><parameters><param name="class">NetworkCam</param></parameters></module>
+<module name="RenderObjects"><parameters><param name="class">RenderObjects</param></parameters></module>
 <module name="SegmenterBlob"><parameters><param name="class">SegmenterBlob</param></parameters></module>
 <module name="SegmenterContour"><parameters><param name="class">SegmenterContour</param></parameters></module>
 <module name="SlitCam"><parameters><param name="class">SlitCam</param></parameters></module>
@@ -18,5 +19,4 @@
 <module name="UsbCam"><parameters><param name="class">UsbCam</param></parameters></module>
 <module name="VideoFileReader"><parameters><param name="class">VideoFileReader</param></parameters></module>
 <module name="VideoFileWriter"><parameters><param name="class">VideoFileWriter</param></parameters></module>
-<module name="VideoOutput"><parameters><param name="class">VideoOutput</param></parameters></module>
 </application>

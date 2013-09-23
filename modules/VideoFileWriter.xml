@@ -21,20 +21,30 @@
 			<value default="CV_8UC1">CV_8UC1</value>
 			<description>Format of the input image</description>
 		</param>
+		<param name="auto_process">
+			<type>bool</type>
+			<value min="0" max="1" default="0">0</value>
+			<description>If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream</description>
+		</param>
 		<param name="fps">
 			<type>double</type>
-			<value min="0" max="1000" default="10">10</value>
+			<value min="0" max="1000" default="0">0</value>
 			<description>Frames per seconds (processing speed)</description>
 		</param>
 		<param name="file">
 			<type>string</type>
-			<value default="output.avi">output.avi</value>
+			<value default="output">output</value>
 			<description>Name of the video file to write, with path</description>
+		</param>
+		<param name="timestamp">
+			<type>bool</type>
+			<value min="0" max="1" default="1">1</value>
+			<description>Add a time stamp the to file name</description>
 		</param>
 		<param name="fourcc">
 			<type>string</type>
 			<value default="MJPG">MJPG</value>
-			<description>Four character code, determinses the format</description>
+			<description>Four character code, determines the format. PIM1, MJPG, MP42, DIV3, DIVX, U263, I263, FLV1</description>
 		</param>
 	</parameters>
 	<inputs>

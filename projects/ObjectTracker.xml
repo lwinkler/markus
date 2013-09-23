@@ -17,9 +17,9 @@
     
   <uiobject x="493" y="238" width="0" height="0"/>
 </module>
-  <module name="VideoOutput" machineurl="localhost" id="1">
+  <module name="RenderObjects" machineurl="localhost" id="1">
     <parameters>
-      <param name="class">VideoOutput</param>
+      <param name="class">RenderObjects</param>
       <param name="width">640</param>
       <param name="height">480</param>
       <param name="fps">10</param>
