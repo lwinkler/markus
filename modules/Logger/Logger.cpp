@@ -23,6 +23,7 @@
 
 #include "Logger.h"
 #include "StreamState.h"
+#include "util.h"
 
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
@@ -67,13 +68,7 @@ void Logger::Reset()
 	*/
 
 
-	time_t rawtime;
-	time(&rawtime);
-	const tm* timeinfo = localtime (&rawtime);
-
-	char dd[16] ;
-	strftime(dd, sizeof(dd), "%Y%m%d_%H:%M", timeinfo);
-	m_srtFileName = "log." + string(dd) + ".srt";
+	m_srtFileName = "log." + timeStamp() + ".srt";
 	// cout<<m_srtFileName<<endl;
 }
 

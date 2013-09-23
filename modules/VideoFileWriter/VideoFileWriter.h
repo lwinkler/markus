@@ -36,13 +36,15 @@ public:
 	VideoFileWriterParameterStructure(const ConfigReader& x_confReader) : 
 	ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterString("file", 	"output.avi", 	&file,   "Name of the video file to write, with path"));
-		m_list.push_back(new ParameterString("fourcc", 	"MJPG", 	&fourcc, "Four character code, determines the format. PIM1, MJPG, MP42, DIV3, DIVX, U263, I263, FLV1"));
+		m_list.push_back(new ParameterString("file", 	  "output", 	     &file,      "Name of the video file to write, with path"));
+		m_list.push_back(new ParameterBool("timestamp", 1, PARAM_BOOL, 0, 1, &timeStamp, "Add a time stamp the to file name"));
+		m_list.push_back(new ParameterString("fourcc", 	  "MJPG", 	     &fourcc,    "Four character code, determines the format. PIM1, MJPG, MP42, DIV3, DIVX, U263, I263, FLV1"));
 		ParameterStructure::Init();
 	};
 
 	std::string file;
 	std::string fourcc;
+	bool timeStamp;
 };
 
 class VideoFileWriter : public Module
@@ -53,6 +55,7 @@ public:
 	
 	virtual void ProcessFrame();
         void Reset();
+	static const std::string ExtensionFromFourcc(const std::string& x_fourcc);
 
 protected:
 	cv::VideoWriter m_writer;

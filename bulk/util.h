@@ -41,5 +41,6 @@ CvScalar colorFromId(int x_id);
 
 std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems);
 
+const std::string timeStamp();
 
 #endif

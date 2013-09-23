@@ -23,6 +23,7 @@
 
 #include "VideoFileWriter.h"
 #include "StreamImage.h"
+#include "util.h"
 
 using namespace std;
 using namespace cv;
@@ -58,8 +59,11 @@ void VideoFileWriter::Reset()
 		isColor = false;
 	else assert(false);
 
+	const string filename = m_param.file  + (m_param.timeStamp ? ("." + timeStamp()) : ".") + "." + ExtensionFromFourcc(m_param.fourcc);
+
+cout<<"Opening "<<filename<<endl;
 	// TODO: Manage fps for stream recording
-	m_writer.open(m_param.file, CV_FOURCC(s[0], s[1], s[2], s[3]), /*m_param.fps > 0 ? m_param.fps :*/ 12, Size(m_param.width, m_param.height), isColor); // TODO: compute last param. Iscolor
+	m_writer.open(filename, CV_FOURCC(s[0], s[1], s[2], s[3]), /*m_param.fps > 0 ? m_param.fps :*/ 12, Size(m_param.width, m_param.height), isColor); // TODO: compute last param. Iscolor
 	if(!m_writer.isOpened())
 	{
 		cout<<"Failed to open output video file in VideoFileWriter::Reset"<<endl;
@@ -74,3 +78,26 @@ void VideoFileWriter::ProcessFrame()
 	m_writer.write(*m_input);
 }
 
+
+const string VideoFileWriter::ExtensionFromFourcc(const string& x_fourcc) 
+{
+	if(x_fourcc.compare("PIM1") == 0)
+		return "PIM1.mpeg";
+	if(x_fourcc.compare("MJPG") == 0)
+		return "mjpg";
+	if(x_fourcc.compare("MP42") == 0)
+		return "MP42.avi";
+	if(x_fourcc.compare("DIV3") == 0)
+		return "DIV3.avi";
+	if(x_fourcc.compare("DIVX") == 0)
+		return "DIVX.avi";
+	if(x_fourcc.compare("H263") == 0)
+		return "h263";
+	if(x_fourcc.compare("I263") == 0) // TODO: not working ?
+		return "I263.avi";
+	if(x_fourcc.compare("FLV1") == 0) 
+		return "flv1.avi";
+	
+	cout<<"WARNING: Unknown fourcc code, cannot find a matching extension in VideoFileWriter::ExtensionFromFourcc"<<endl;
+	return "avi";
+}

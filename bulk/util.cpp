@@ -227,3 +227,18 @@ std::vector<std::string> &split(const std::string &s, char delim, std::vector<st
 	}
 	return elems;
 }
+
+
+/// Return a time stamp in a string format
+const string timeStamp(){
+
+
+	time_t rawtime;
+	time(&rawtime);
+	const tm* timeinfo = localtime (&rawtime);
+
+	char dd[20] ;
+	strftime(dd, sizeof(dd), "%Y%m%d_%T", timeinfo);
+	return dd;
+}
+

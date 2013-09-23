@@ -4,7 +4,7 @@
       <param name="class">UsbCam</param>
       <param name="width">640</param>
       <param name="height">480</param>
-      <param name="type">CV_8UC1</param>
+      <param name="type">CV_8UC3</param>
       <param name="fps">10</param>
       <!--param name="url">http://root:admin@192.168.5.100/mjpg/1/video.mjpg</param-->
     </parameters>
@@ -19,9 +19,9 @@
   <module name="BgrSubRunAvg" machineurl="localhost" id="1">
     <parameters>
       <param name="class">BgrSubRunAvg</param>
-      <param name="width">640</param>
-      <param name="height">480</param>
-      <param name="type">CV_8UC1</param>
+      <param name="width">320</param>
+      <param name="height">240</param>
+      <param name="type">CV_8UC3</param>
       <param name="fps">1000</param>
       <param name="background_alpha">0.001</param>
       <param name="foreground_thres">0.1</param>
@@ -36,11 +36,11 @@
     <display x="263" y="54" width="150" height="75" />
     <uiobject type="" x="0" y="0" width="0" height="0" />
   </module>
-  <!--<module name="MotionDetector" machineurl="localhost" id="2">
+  <module name="MotionDetector" machineurl="localhost" id="2">
     <parameters>
       <param name="class">MotionDetector</param>
-      <param name="width">640</param>
-      <param name="height">480</param>
+      <param name="width">320</param>
+      <param name="height">240</param>
       <param name="type">CV_8UC1</param>
       <param name="fps">1000</param>
       <param name="motion_thres">0.01</param>
@@ -69,5 +69,5 @@
     </outputs>
     <display x="263" y="54" width="150" height="75" />
     <uiobject type="" x="0" y="0" width="0" height="0" />
-  </module>-->
+  </module>
 </application>
