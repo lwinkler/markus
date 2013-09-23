@@ -55,7 +55,6 @@ Logger::~Logger(void)
 void Logger::Reset()
 {
 	Module::Reset();
-	m_timer.Restart();
 	m_state = m_oldState = 0;
 	m_subId = 0;
 	m_startTime = "00:00:00,000";
@@ -68,8 +67,10 @@ void Logger::Reset()
 	*/
 
 
-	m_srtFileName = "log." + timeStamp() + ".srt";
-	// cout<<m_srtFileName<<endl;
+	m_srtFileName = m_param.file + (m_param.timeStamp ? "." + timeStamp() : "") + ".srt";
+	cout<<"file"<<m_param.file<<endl;
+	cout<<"timeStamp"<<timeStamp()<<endl;
+	cout<<m_srtFileName<<endl;
 }
 
 void Logger::ProcessFrame()
@@ -79,7 +80,7 @@ void Logger::ProcessFrame()
 		// Log the change in state
 		ofstream myfile;
 
-		long t  = m_timer.GetMSecLong();
+		long t  = static_cast<long>(m_currentTimeStamp * 1000); // m_timer.GetMSecLong();
 		int msecs = t % 1000;
 		t /= 1000;
 		int secs = t % 60; 

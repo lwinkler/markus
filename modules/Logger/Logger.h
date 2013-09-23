@@ -43,8 +43,12 @@ public:
 	LoggerParameterStructure(const ConfigReader& x_confReader) : 
 		ModuleParameterStructure(x_confReader)
 	{
+		m_list.push_back(new ParameterString("file", 	  "state", 	     &file,      "Name of the .srt file without extension"));
+		m_list.push_back(new ParameterBool("timestamp", 1, PARAM_BOOL, 0, 1, &timeStamp, "Add a time stamp the to file name"));
 		ParameterStructure::Init();
 	}
+	std::string file;
+	bool timeStamp;
 };
 
 class Logger : public Module
@@ -58,9 +62,8 @@ protected:
 	bool m_state;
 	bool m_oldState;
 	long int m_subId;
-	Timer m_timer;
 	std::string m_startTime;
-	std::string m_srtFileName;;
+	std::string m_srtFileName;
 
 public:
 	Logger(const ConfigReader& x_configReader);
