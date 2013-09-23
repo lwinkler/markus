@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module name="LogObjects" description="This module takes a stream of objects as inputs and logs data to a text file">
+	<parameters>
+		<param name="class">
+			<type>string</type>
+			<value default="">LogObjects</value>
+			<description>Class of the module (define the module's function)</description>
+		</param>
+		<param name="width">
+			<type>int</type>
+			<value min="1" max="6400" default="640">640</value>
+			<description>Width of the input</description>
+		</param>
+		<param name="height">
+			<type>int</type>
+			<value min="1" max="4800" default="480">480</value>
+			<description>Height of the input</description>
+		</param>
+		<param name="type">
+			<type>image type</type>
+			<value default="CV_8UC1">CV_8UC1</value>
+			<description>Format of the input image</description>
+		</param>
+		<param name="auto_process">
+			<type>bool</type>
+			<value min="0" max="1" default="0">0</value>
+			<description>If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream</description>
+		</param>
+		<param name="fps">
+			<type>double</type>
+			<value min="0" max="1000" default="0">0</value>
+			<description>Frames per seconds (processing speed)</description>
+		</param>
+		<param name="file">
+			<type>string</type>
+			<value default="objects">objects</value>
+			<description>Name of the .srt file without extension</description>
+		</param>
+		<param name="timestamp">
+			<type>bool</type>
+			<value min="0" max="1" default="1">1</value>
+			<description>Add a time stamp the to file name</description>
+		</param>
+	</parameters>
+	<inputs>
+		<input id="0">
+			<type>Objects</type>
+			<name>input</name>
+			<description>Incoming objects</description>
+		</input>
+	</inputs>
+	<outputs>
+	</outputs>
+</module>
