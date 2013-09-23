@@ -45,15 +45,15 @@ public:
 		m_list.push_back(new ParameterInt("width", 	640, 	PARAM_INT, 	1, MAX_WIDTH,		&width,		"Width of the input"));
 		m_list.push_back(new ParameterInt("height", 	480, 	PARAM_INT, 	1, MAX_HEIGHT,		&height,	"Height of the input"));
 		m_list.push_back(new ParameterImageType("type", 	CV_8UC1, 				&type,		"Format of the input image"));
-		m_list.push_back(new ParameterBool("real_time",  0, 	PARAM_BOOL, 	0, 	1,		&realTime,	"Real time: if yes the module processes with a fixed fps, if no the module processes based on the time stamp of the input stream"));
-		m_list.push_back(new ParameterDouble("fps", 	10, 	PARAM_DOUBLE, 	0, 	1000,		&fps,		"Frames per seconds (processing speed)"));
+		m_list.push_back(new ParameterBool("auto_process",  0, 	PARAM_BOOL, 	0, 	1,		&autoProcess,	"If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream"));
+		m_list.push_back(new ParameterDouble("fps", 	 0, 	PARAM_DOUBLE, 	0, 	1000,		&fps,		"Frames per seconds (processing speed)"));
 	}
 
 public:
 	int width;
 	int height;
 	int type;
-	bool realTime;
+	bool autoProcess;
 	double fps;
 	std::string objClass;
 };

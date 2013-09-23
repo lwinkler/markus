@@ -84,8 +84,8 @@ Processing and time
 -------------------
 A module will only process one frame if a set of conditions is met. Mainly there are two types of conditions.
 
-- **Modules with a defined frame rate (real_time=1):** These modules will read the input stream and process it at a rate given by the fps parameter. The ProcessFrame method of these modules will be called by a timer.
-- **Module with a fixed frame rate (real_time=0):** These modules will be called each time the previous module produces an output. If the fps parameter is 0 they will process each time after the previous module. If fps>0 they will check the time stamp from the input first.
+- **Modules with a defined frame rate (auto_process=1):** These modules will read the input stream and process it at a rate given by the fps parameter. The ProcessFrame method of these modules will be called by a timer.
+- **Module with a fixed frame rate (auto_process=0):** These modules will be called each time the previous module produces an output. If the fps parameter is 0 they will process each time after the previous module. If fps>0 they will check the time stamp from the input first.
 
 Time values are given by a time stamp that is linked with the input stream. They match the time at which the frame was extracted by a module of the Input class.
 

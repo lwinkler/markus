@@ -3,6 +3,7 @@ var availableModulesNames = [
 "BgrSubMOG",
 "BgrSubRunAvg",
 "CascadeDetector",
+"FallDetection",
 "FilterObjects",
 "Logger",
 "Mask",

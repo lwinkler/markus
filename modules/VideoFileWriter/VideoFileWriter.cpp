@@ -41,13 +41,13 @@ VideoFileWriter::VideoFileWriter(const ConfigReader& x_configReader):
 VideoFileWriter::~VideoFileWriter()
 {
 	// cout<<"Release FileWriter"<<endl;
-	m_writer.release();
+	// m_writer.release();
 }
 
 void VideoFileWriter::Reset()
 {
 	Module::Reset();
-	m_writer.release();
+	// m_writer.release();
 	if(m_param.fourcc.size() != 4)
 		throw("Error in parameter: fourcc must have 4 characters in VideoFileWriter::Reset");
 	const char * s = m_param.fourcc.c_str();

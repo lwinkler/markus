@@ -57,7 +57,7 @@ Module::Module(const ConfigReader& x_configReader) :
 void Module::Reset()
 {
 	// Add the module timer (only works with QT)
-	if(RefParameter().realTime)
+	if(RefParameter().autoProcess)
 	{
 		if(m_moduleTimer)
 			delete(m_moduleTimer);
@@ -102,10 +102,10 @@ void Module::Process()
 		m_currentTimeStamp = 0;
 		if(m_inputStreams.size() >= 1)
 			m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected();
-		else if(! param.realTime)
-			throw("Error: Module must have at least one input or have parameter real_time=true in Module::Process");
+		else if(! param.autoProcess)
+			throw("Error: Module must have at least one input or have parameter auto_process=true in Module::Process");
 
-		if(param.realTime || param.fps == 0 || (m_currentTimeStamp - m_lastTimeStamp) * param.fps > 1.0)
+		if(param.autoProcess || param.fps == 0 || (m_currentTimeStamp - m_lastTimeStamp) * param.fps > 1.0)
 		{
 			// Process this frame
 			m_lock.lockForRead();

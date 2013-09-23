@@ -25,7 +25,7 @@
       <param name="height">480</param>
       <param name="type">CV_8UC1</param>
       <param name="fps">1000</param>
-      <param name="real_time">0</param>
+      <param name="auto_process">0</param>
       <param name="detectionFps">.05</param>
       <param name="minNeighbors">2</param>
       <param name="minSide">0</param>

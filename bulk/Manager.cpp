@@ -118,7 +118,7 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 			if(&stream == NULL) throw(0);
 			Module& preceeding(stream.RefModule());
 			(*it)->SetPreceedingModule(preceeding);
-			if((*it)->RefParameter().realTime == false)
+			if((*it)->RefParameter().autoProcess == false)
 				preceeding.AddDependingModule(**it); // TODO: find a better way to execute non real time modules
 		}
 		catch(...){}
@@ -164,7 +164,7 @@ bool Manager::Process()
 	{
 		try
 		{
-			if((*it)->RefParameter().realTime)
+			if((*it)->RefParameter().autoProcess)
 				(*it)->Process();
 		}
 		catch(cv::Exception& e)
