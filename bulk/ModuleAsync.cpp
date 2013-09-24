@@ -33,7 +33,7 @@ ModuleAsync::ModuleAsync(const ConfigReader& x_configReader) :
 	Module(x_configReader)
 {
 	cout<<endl<<"*** Create object ModuleAsync : "<<m_name<<" ***"<<endl;
-	m_timeStampLastThread 	= - DBL_MAX;
+	m_timeStampLastThread 	= TIME_STAMP_MIN;
 	m_resultsCopied 	= false;
 	m_timerThread 		= 0;
 	m_countFramesThread 	= 0;
@@ -56,7 +56,7 @@ void ModuleAsync::ProcessFrame()
 		m_resultsCopied = true;
 	}
 	
-	if(m_currentTimeStamp - m_timeStampLastThread >= 1 / RefParameter().detectionFps)
+	if((m_currentTimeStamp - m_timeStampLastThread) * RefParameter().detectionFps >= 1000)
 	{
 		if(!GetRefThread().isRunning())
 		{
@@ -66,7 +66,7 @@ void ModuleAsync::ProcessFrame()
 		else
 		{
 			// thread is taking too long
-			cout<<"Thread too slow, frame dropped after "<<m_currentTimeStamp - m_timeStampLastThread<<" [s]"<<endl;
+			cout<<"Thread too slow, frame dropped after "<<m_currentTimeStamp - m_timeStampLastThread<<" [ms]"<<endl;
 		}
 	}
 	NormalProcess();

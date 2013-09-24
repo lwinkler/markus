@@ -62,8 +62,8 @@ public:
 	inline Module& RefModule(){return mr_module;}
 	inline Stream& RefConnected(){return *m_connected;}
 
-	inline double GetTimeStamp() const             {return m_timeStamp;}
-	inline void   SetTimeStamp(double x_timeStamp) {m_timeStamp = x_timeStamp;}
+	inline TIME_STAMP GetTimeStamp() const             {return m_timeStamp;}
+	inline void   SetTimeStamp(TIME_STAMP x_timeStamp) {m_timeStamp = x_timeStamp;}
 	inline double GetTimeStampConnected() const    {return m_connected->GetTimeStamp();}
 
 protected:
@@ -74,7 +74,7 @@ protected:
 	const int m_height;
 	Module& mr_module;
 	const std::string m_description;
-	double m_timeStamp;
+	TIME_STAMP m_timeStamp;
 	
 	Stream * m_connected;
 	

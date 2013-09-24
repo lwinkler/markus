@@ -59,7 +59,7 @@ protected:
 	cv::Mat * m_output;
 	CvCapture * m_capture;// TODO : use VideoCapture instead
 	int m_fps;
-	double m_timeStamp; // TODO: see format of timestamps
+	TIME_STAMP m_timeStamp; // TODO: see format of timestamps
 
 private:
 	UsbCamParameterStructure m_param;

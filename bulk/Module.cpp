@@ -45,8 +45,8 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_timerWaiting         = 0;
 	m_countProcessedFrames = 0;
 	m_modulePreceeding     = NULL;
-	m_lastTimeStamp        = - DBL_MAX;
-	m_currentTimeStamp     = 0;
+	m_lastTimeStamp        = TIME_STAMP_MIN;
+	m_currentTimeStamp     = TIME_STAMP_INITIAL;
 	m_pause                = false;
 
 	// Add controls for parameters' change
@@ -105,7 +105,7 @@ void Module::Process()
 		else if(! param.autoProcess)
 			throw("Error: Module must have at least one input or have parameter auto_process=true in Module::Process");
 
-		if(param.autoProcess || param.fps == 0 || (m_currentTimeStamp - m_lastTimeStamp) * param.fps > 1.0)
+		if(param.autoProcess || param.fps == 0 || (m_currentTimeStamp - m_lastTimeStamp) * param.fps > 1000)
 		{
 			// Process this frame
 			m_lock.lockForRead();

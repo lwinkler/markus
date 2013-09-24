@@ -79,7 +79,7 @@ void VideoFileReader::Capture()
 	
 	// cout<<"VideoFileReader capture image "<<m_output->cols<<"x"<<m_output->rows<<" time stamp "<<m_capture.get(CV_CAP_PROP_POS_MSEC) / 1000.0<< endl;
 
-	SetTimeStampToOutputs(m_capture.get(CV_CAP_PROP_POS_MSEC) / 1000.0);
+	SetTimeStampToOutputs(m_capture.get(CV_CAP_PROP_POS_MSEC));
 }
 
 void VideoFileReader::GetProperties()

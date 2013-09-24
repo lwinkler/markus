@@ -80,7 +80,7 @@ void Logger::ProcessFrame()
 		// Log the change in state
 		ofstream myfile;
 
-		long t  = static_cast<long>(m_currentTimeStamp * 1000); // m_timer.GetMSecLong();
+		long t  = static_cast<long>(m_currentTimeStamp); // m_timer.GetMSecLong();
 		int msecs = t % 1000;
 		t /= 1000;
 		int secs = t % 60; 

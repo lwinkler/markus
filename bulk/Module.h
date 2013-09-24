@@ -32,6 +32,12 @@
 #define MAX_WIDTH  6400
 #define MAX_HEIGHT 4800
 
+// time stamp: use for all time stamps on frames in [ms]
+#define TIME_STAMP unsigned long long
+#define TIME_STAMP_INITIAL 0
+#define TIME_STAMP_MIN -100000 // for initialization as well
+
+
 class Stream;
 class ParameterControl;
 class QModuleTimer;
@@ -103,8 +109,8 @@ protected:
 	long long m_timerWaiting;
 	long long m_countProcessedFrames;
 
-	double m_lastTimeStamp;     // time stamp of the lastly processed input
-	double m_currentTimeStamp;  // time stamp of the current input
+	TIME_STAMP m_lastTimeStamp;     // time stamp of the lastly processed input
+	TIME_STAMP m_currentTimeStamp;  // time stamp of the current input
 	bool m_pause;
 	
 	virtual void ProcessFrame() = 0;
