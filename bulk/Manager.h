@@ -58,10 +58,10 @@ public:
 	~Manager();
 	bool Process();
 	// const std::vector<Input*> & GetInputList()  const {return m_inputs; };
-	const std::vector<Module*>& GetModuleList() const {return m_modules; };
+	const std::vector<Module*>& GetModuleList() const {return m_modules; }
 
 	//std::vector<Input*> & GetInputListVar()  {return m_inputs; };
-	std::vector<Module*>& GetModuleListVar() {return m_modules; };
+	std::vector<Module*>& GetModuleListVar() {return m_modules; }
 	
 	Module * GetModuleById(int x_id) const;
 	
@@ -85,7 +85,7 @@ private:
 	Timer m_timer;
 	long long m_frameCount;
 protected:
-	inline virtual const ParameterStructure& RefParameter() {return m_param;};
+	inline virtual const ParameterStructure& RefParameter() {return m_param;}
 	QReadWriteLock m_lock;
 };
 #endif
