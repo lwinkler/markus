@@ -47,7 +47,7 @@ public:
 	
 	virtual void Capture() = 0;
 	inline const std::string& GetName()const {return m_name;}
-	virtual const cv::Mat * GetImage() const = 0;
+	// virtual const cv::Mat * GetImage() const = 0;
 
 	inline double GetFps() {return RefParameter().fps;}
 	inline bool   IsEndOfStream() const {return m_endOfStream;}

@@ -53,7 +53,7 @@ public:
 	void Capture();
         void Reset();
 	const std::string& GetName(){return m_name;};
-        const cv::Mat * GetImage() const {return m_output;}
+	// const cv::Mat * GetImage() const {return m_output;}
 
 protected:
 	cv::VideoCapture m_capture;

@@ -46,8 +46,8 @@ void ModuleAsync::ProcessFrame()
 	if(m_inputStreams.size() < 1)
 		throw("Error: Module must have at least one input or inherit from class Input in ModuleAsync::Process");
 
-	cout << "m_timeStampLastThread" << m_timeStampLastThread;
-	cout << " m_currentTimeStamp " <<  m_currentTimeStamp << endl;
+	// cout << "m_timeStampLastThread" << m_timeStampLastThread;
+	// cout << " m_currentTimeStamp " <<  m_currentTimeStamp << endl;
 	//cout<<RefParameter().detectionFps<<" : "<<m_timeStampLastThread<<" += "<<m_processingTime<<endl;
 	
 	if(!m_resultsCopied && !GetRefThread().isRunning())
@@ -68,9 +68,9 @@ void ModuleAsync::ProcessFrame()
 			// thread is taking too long
 			cout<<"Thread too slow, frame dropped after "<<m_currentTimeStamp - m_timeStampLastThread<<" [ms]"<<endl;
 		}
+		m_timeStampLastThread = m_currentTimeStamp;
 	}
 	NormalProcess();
-	m_timeStampLastThread = m_currentTimeStamp;
 }
 
 
