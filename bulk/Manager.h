@@ -43,10 +43,10 @@ class ManagerParameter : public ParameterStructure
 public:
 	ManagerParameter(const ConfigReader& x_confReader, const std::string& x_moduleName) : ParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterString("mode",	"", 	&mode, 	"Mode"));
-		//ParameterStructure::Init(); // TODO : restore this
+		// m_list.push_back(new ParameterString("mode",	"", 	&mode, 	"Mode"));
+		ParameterStructure::Init();
 	}
-	std::string mode;
+	// std::string mode; // unused
 };
 
 /// Class for managing all modules

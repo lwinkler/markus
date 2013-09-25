@@ -49,11 +49,11 @@ template<> const std::string ParameterT<double>::m_typeStr = "double";
 
 /// Parent for all parameter structures
 ParameterStructure::ParameterStructure(const ConfigReader& x_configReader):
-		m_configReader(x_configReader)
+	m_configReader(x_configReader)
 {
 	m_objectName = m_configReader.GetAttribute("name");
 }
-	
+
 ParameterStructure::~ParameterStructure()
 {
 	for(std::vector<Parameter* >::iterator it = m_list.begin() ; it != m_list.end() ; it++)
@@ -80,13 +80,16 @@ void ParameterStructure::Init()
 
 void ParameterStructure::SetFromConfig()
 {
-	ConfigReader conf = m_configReader.SubConfig("parameters").SubConfig("param");
+	ConfigReader conf = m_configReader.SubConfig("parameters");
+	if(conf.IsEmpty())
+		return;
+	conf = conf.SubConfig("param");
 	while(!conf.IsEmpty())
 	{
 		string name = conf.GetAttribute("name");
 		string value = conf.GetValue();
 		//SetValueByName(name, value, PARAMCONF_XML);
-		
+
 		RefParameterByName(name).SetValue(value, PARAMCONF_XML);
 		conf = conf.NextSubConfig("param");
 	}
@@ -155,12 +158,12 @@ void ParameterStructure::PrintParameters() const
 	{
 		switch((*it)->GetConfigurationSource())
 		{
-			case PARAMCONF_DEF: confType = "def"; break;
-			case PARAMCONF_GUI: confType = "gui"; break;
-			case PARAMCONF_UNKNOWN: confType = "unk"; break;
-			case PARAMCONF_UNSET: confType = "unset"; break;
-			case PARAMCONF_XML: confType = "xml"; break;
-			default: assert(false); break;
+		case PARAMCONF_DEF: confType = "def"; break;
+		case PARAMCONF_GUI: confType = "gui"; break;
+		case PARAMCONF_UNKNOWN: confType = "unk"; break;
+		case PARAMCONF_UNSET: confType = "unset"; break;
+		case PARAMCONF_XML: confType = "xml"; break;
+		default: assert(false); break;
 		}
 		(*it)->Print();
 	}
@@ -181,7 +184,7 @@ void ParameterImageType::Export(std::ostream& rx_os, int x_indentation)
 }
 
 ParameterImageType::ParameterImageType(const std::string& x_name, int x_default, int * xp_value, const std::string x_description) :
-		ParameterEnum(x_name, x_default, xp_value, x_description)
+	ParameterEnum(x_name, x_default, xp_value, x_description)
 {
 	// Init static type vector once
 	if(ParameterImageType::m_map_enum.size() == 0)
