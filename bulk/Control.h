@@ -64,7 +64,7 @@ public:
 
 protected:
 	QParameterSlider * m_parameterSlider;
-        ParameterInt & m_param;
+	ParameterInt & m_param;
 };
 
 
@@ -72,9 +72,9 @@ protected:
 class ControllerDouble : public Controller
 {
 public:
-        ControllerDouble(ParameterDouble & x_param);
-        ~ControllerDouble();
-        void SetControlledValue();
+	ControllerDouble(ParameterDouble & x_param);
+	~ControllerDouble();
+	void SetControlledValue();
 	void GetCurrent();
 	void GetDefault();
 	inline virtual const std::string& GetName() const {return m_param.GetName();}
@@ -104,16 +104,16 @@ protected:
 class ControllerBool : public Controller
 {
 public:
-        ControllerBool(ParameterBool & x_param);
-        ~ControllerBool();
-        void SetControlledValue();
+	ControllerBool(ParameterBool & x_param);
+	~ControllerBool();
+	void SetControlledValue();
 	void GetCurrent();
 	void GetDefault();
 	inline virtual const std::string& GetName() const {return m_param.GetName();}
 
 protected:
-        QCheckBox  * m_checkBox;
-        ParameterBool & m_param;
+	QCheckBox  * m_checkBox;
+	ParameterBool & m_param;
 };
 
 /// Control class for a string parameter

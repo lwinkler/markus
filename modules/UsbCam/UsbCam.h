@@ -51,7 +51,7 @@ public:
 	~UsbCam();
 	
 	void Capture();
-        virtual void Reset();
+	virtual void Reset();
 	const std::string& GetName(){return m_name;};
 	// virtual const cv::Mat * GetImage() const {return m_output;}
 

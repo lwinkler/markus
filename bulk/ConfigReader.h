@@ -42,7 +42,7 @@ public:
 	~ConfigReader();
 	ConfigReader SubConfig(const std::string& x_objectType, std::string x_objectName = "") const;
 	ConfigReader NextSubConfig(const std::string& x_objectType, std::string x_objectName = "") const;
-    bool IsEmpty() const{ return mp_doc == NULL && mp_node == NULL;}
+	bool IsEmpty() const{ return mp_doc == NULL && mp_node == NULL;}
 	const std::string GetValue() const;
 	const std::string GetAttribute(const std::string& x_attributeName) const;
 private:

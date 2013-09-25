@@ -40,7 +40,7 @@ long int Timer::GetMSecLong()
 	gettimeofday(&now, NULL);
 	
 	long seconds  = now.tv_sec  - m_start.tv_sec;
-        long useconds = now.tv_usec - m_start.tv_usec;
+	long useconds = now.tv_usec - m_start.tv_usec;
 
 	return seconds * 1000 + useconds / 1000;
 }
@@ -51,7 +51,7 @@ double Timer::GetSecDouble()
 	gettimeofday(&now, NULL);
 	//DIFF(m_start, now, temp);
 	long seconds  = now.tv_sec  - m_start.tv_sec;
-        long useconds = now.tv_usec - m_start.tv_usec;
+	long useconds = now.tv_usec - m_start.tv_usec;
 	
 	return seconds + useconds / 1000000.0;
 }
@@ -62,7 +62,7 @@ float Timer::GetSecFloat()
 	gettimeofday(&now, NULL);
 	//DIFF(m_start, now, temp);
 	long seconds  = now.tv_sec  - m_start.tv_sec;
-        long useconds = now.tv_usec - m_start.tv_usec;
+	long useconds = now.tv_usec - m_start.tv_usec;
 	
 	return seconds + useconds / 1000000.0f;
 }

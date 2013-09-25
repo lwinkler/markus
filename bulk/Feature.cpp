@@ -44,10 +44,10 @@ Feature::Feature(const Feature& f)
 	//strcpy(m_name, f.GetName());
 	value      = f.value;
 	sqVariance = f.sqVariance;
-    mean       = f.mean;
-    initial    = f.initial;
-    min        = f.min;
-    max        = f.max;
+	mean       = f.mean;
+	initial    = f.initial;
+	min        = f.min;
+	max        = f.max;
 	nbSamples  = f.nbSamples;
 }
 
@@ -55,10 +55,10 @@ Feature&  Feature::operator = (const Feature& f)
 {
 	value      = f.value;
 	sqVariance = f.sqVariance;
-    mean       = f.mean;
-    initial    = f.initial;
-    min        = f.min;
-    max        = f.max;
+	mean       = f.mean;
+	initial    = f.initial;
+	min        = f.min;
+	max        = f.max;
 	nbSamples  = f.nbSamples;
 
 	return *this;
@@ -69,7 +69,7 @@ Feature::~Feature(){}
 /* Update a feature from the current value
  *
  * This function can be used to keep a feature up to date in a dynamic way (similar to a running average)
-*/
+ */
 void Feature::Update(double x_currentValue, double x_alpha)
 {
 	value      = x_currentValue;

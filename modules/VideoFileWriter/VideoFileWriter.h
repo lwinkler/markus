@@ -54,7 +54,7 @@ public:
 	~VideoFileWriter();
 	
 	virtual void ProcessFrame();
-        void Reset();
+	void Reset();
 	static const std::string ExtensionFromFourcc(const std::string& x_fourcc);
 
 protected:

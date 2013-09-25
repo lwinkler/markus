@@ -80,6 +80,6 @@ ModuleAsync::~ModuleAsync()
 
 void ModuleAsync::PrintStatistics(ostream& os) const
 {
-    Module::PrintStatistics(os);
-    os<<"\t"<<m_countFramesThread<<" frames processed asynchronously in "<<m_timerThread<<"ms ("<<m_countFramesThread / (m_timerThread * 0.001)<<" fps)"<<endl;
+	Module::PrintStatistics(os);
+	os<<"\t"<<m_countFramesThread<<" frames processed asynchronously in "<<m_timerThread<<"ms ("<<m_countFramesThread / (m_timerThread * 0.001)<<" fps)"<<endl;
 }

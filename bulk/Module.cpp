@@ -94,7 +94,7 @@ void Module::Process()
 {
 	if(m_pause)
 		return; // TODO: Manage pause more elegantly
-    //try
+	//try
 	{
 		const ModuleParameterStructure& param = RefParameter();
 		

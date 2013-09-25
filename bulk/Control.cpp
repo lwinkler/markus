@@ -50,8 +50,8 @@ Controller::~Controller()
 }
 
 ControllerInt::ControllerInt(ParameterInt& x_param):
-        Controller(),
-        m_param(x_param)
+	Controller(),
+	m_param(x_param)
 {
 	m_widget = m_parameterSlider = new QParameterSlider(m_param.GetValue(), m_param.GetMin(), m_param.GetMax(), 0);
 }
@@ -77,8 +77,8 @@ void ControllerInt::GetDefault()
 }
 /*------------------------------------------------------------------------------------------------*/
 ControllerDouble::ControllerDouble(ParameterDouble& x_param):
-        Controller(),
-        m_param(x_param)
+	Controller(),
+	m_param(x_param)
 {
 	m_widget = m_parameterSlider = new QParameterSlider(m_param.GetValue(), m_param.GetMin(), m_param.GetMax(), PRECISION_DOUBLE);
 }
@@ -105,8 +105,8 @@ void ControllerDouble::GetDefault()
 /*------------------------------------------------------------------------------------------------*/
 
 ControllerBool::ControllerBool(ParameterBool& x_param):
-        Controller(),
-        m_param(x_param)
+	Controller(),
+	m_param(x_param)
 {
 	m_widget = m_checkBox = new QCheckBox("Enabled");
 	GetCurrent();
@@ -229,7 +229,7 @@ void ControllerEnum::GetDefault()
 
 
 /*------------------------------------------------------------------------------------------------*/
-  
+	 
 Control::Control(const std::string& x_name, const std::string& x_description):
 	m_name(x_name),
 	m_description(x_description)
@@ -294,23 +294,23 @@ void ParameterControl::SetParameterStructure(ParameterStructure& rx_param)
 		switch((*it)->GetType())
 		{
 			case PARAM_BOOL:
-                            ctrr = new ControllerBool(*dynamic_cast<ParameterBool*>(*it));
-                        break;
+				ctrr = new ControllerBool(*dynamic_cast<ParameterBool*>(*it));
+				break;
 			case PARAM_DOUBLE:
-                            ctrr = new ControllerDouble(*dynamic_cast<ParameterDouble*>(*it));
-                        break;
+				ctrr = new ControllerDouble(*dynamic_cast<ParameterDouble*>(*it));
+				break;
 			case PARAM_FLOAT:
-			    ctrr = new ControllerFloat(*dynamic_cast<ParameterFloat*>(*it));
-                        break;
+				ctrr = new ControllerFloat(*dynamic_cast<ParameterFloat*>(*it));
+				break;
 			case PARAM_IMAGE_TYPE:
-			    ctrr = new ControllerEnum(*dynamic_cast<ParameterEnum*>(*it)); 
-                        break;
+				ctrr = new ControllerEnum(*dynamic_cast<ParameterEnum*>(*it)); 
+				break;
 			case PARAM_INT:
 				ctrr = new ControllerInt(*dynamic_cast<ParameterInt*>(*it));
-			break;
+				break;
 			case PARAM_STR:
 				ctrr = new ControllerString(*dynamic_cast<ParameterString*>(*it));
-			break;
+				break;
 		}
 		if(ctrr == NULL) throw("Controller creation failed");
 		else AddController(ctrr);
