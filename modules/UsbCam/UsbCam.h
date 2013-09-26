@@ -36,7 +36,7 @@ public:
 	UsbCamParameterStructure(const ConfigReader& x_confReader) : 
 	InputParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterInt("num", 	-1, 	PARAM_INT, 	-1, 	2,	&num,	"Number of the camera, as defined by OpenCV"));
+		m_list.push_back(new ParameterInt("num", 	-1, 	PARAM_INT, 	-1, 	2,	&num,	"Number of the camera, as defined by OpenCV")); // TODO: should work with a default parameter even if no camera is present
 		ParameterStructure::Init();
 	};
 
