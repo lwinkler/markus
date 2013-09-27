@@ -13,6 +13,21 @@ import math
 import datetime
 
 
+def plot_object(objName):
+# Filter data per feature
+	vect = np.where((data['object'] == objName) & (data['feature'] == feature))
+	result = data[vect[0]]
+	time1 = [ datetime.datetime.fromtimestamp(ms/1000.0) for ms in result['time']] 
+	plt.errorbar(time1,result['value'],yerr=[math.sqrt(i) for i in result['sqVariance']], fmt="-o") # , label='value with variance') #, errorevery=5)
+	plt.plot(time1, result['mean']) # , color='r', label='mean')
+# plt.plot(time1, result['min'], color='g', label='min')
+# plt.plot(time1, result['max'], color='g', label='max')
+# plt.plot(time1, result['initial'], color='y', label='initial')
+# plt.plot(time1, result['nbSamples'], color='pink', label='nbSamples')
+
+
+
+# Main
 
 # check arguments
 if len(sys.argv) < 4:
@@ -26,30 +41,27 @@ feature  = sys.argv[3]
 data = np.genfromtxt(fileName, delimiter='\t', names=True, dtype=None)
 
 
-# Filter data per feature
-
-vect = np.where((data['object'] == objName) & (data['feature'] == feature))
-result = data[vect[0]]
-
 #Build and show plot
 fig = plt.figure()
 ax1 = fig.add_subplot(111)
 
-xfmt = md.DateFormatter('%H:%M:%S,%f')
+# xfmt = md.DateFormatter('%H:%M:%S,%f')
 # time1 = [ t / 1000.0 for t in result['time']] 
-time1 = [ datetime.datetime.fromtimestamp(ms/1000.0) for ms in result['time']] 
 
 
 plt.xticks(rotation=90)
 # ax1.xaxis.set_major_formatter(xfmt)
 
-plt.errorbar(time1,result['value'],yerr=[math.sqrt(i) for i in result['sqVariance']], fmt="-o", label='value with variance') #, errorevery=5)
-plt.plot(time1, result['mean'], color='r', label='mean')
-# plt.plot(time1, result['min'], color='g', label='min')
-# plt.plot(time1, result['max'], color='g', label='max')
-# plt.plot(time1, result['initial'], color='y', label='initial')
-# plt.plot(time1, result['nbSamples'], color='pink', label='nbSamples')
+if objName == "all":
+	objNames = set(data['object'])
+else:
+	objNames = [objName]
 
+
+# Plot all objects
+for name in objNames:
+	print "plot_object " + name
+	plot_object(name)
 
 ax1.set_title("Evolution of " + feature + " for " + objName)
 ax1.set_xlabel('time')
