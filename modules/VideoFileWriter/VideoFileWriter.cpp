@@ -73,7 +73,7 @@ cout<<"Opening "<<filename<<endl;
 
 void VideoFileWriter::ProcessFrame()
 {
-	cout << "write frame " << m_input->cols << "x" << m_input->rows << endl;
+	// cout << "write frame " << m_input->cols << "x" << m_input->rows << endl;
 	// m_writer << *m_input;
 	m_writer.write(*m_input);
 }
