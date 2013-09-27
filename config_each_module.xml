@@ -3,6 +3,7 @@
 <module name="BgrSubMOG"><parameters><param name="class">BgrSubMOG</param></parameters></module>
 <module name="BgrSubRunAvg"><parameters><param name="class">BgrSubRunAvg</param></parameters></module>
 <module name="CascadeDetector"><parameters><param name="class">CascadeDetector</param></parameters></module>
+<module name="FallDetection"><parameters><param name="class">FallDetection</param></parameters></module>
 <module name="FilterObjects"><parameters><param name="class">FilterObjects</param></parameters></module>
 <module name="Logger"><parameters><param name="class">Logger</param></parameters></module>
 <module name="LogObjects"><parameters><param name="class">LogObjects</param></parameters></module>

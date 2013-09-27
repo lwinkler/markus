@@ -31,6 +31,9 @@
 #include <cstdio>
 #include <ctime>
 
+#define SEP "\t"
+
+
 using namespace std;
 using namespace cv;
 
@@ -56,35 +59,41 @@ void LogObjects::Reset()
 {
 	Module::Reset();
 
-	m_fileName = m_param.file + (m_param.timeStamp ? "." + timeStamp() : "") + ".txt";
+	m_fileName = "out/" + m_param.file + (m_param.timeStamp ? "." + timeStamp() : "") + ".txt";
+	ofstream outputFile;
+	outputFile.open (m_fileName.c_str(), ios::out);
+	outputFile<<"time"<<SEP<<"object"<<SEP<<"feature"<<SEP<<"value"<<SEP<<"mean"<<SEP<<"sqVariance"<<SEP<<"initial"<<SEP<<"min"<<SEP<<"max"<<SEP<<"nbSamples"<<endl;
+	outputFile.close();
 }
 
 void LogObjects::ProcessFrame()
 {
-	ofstream myfile;
-	myfile.open (m_fileName.c_str(), std::ios_base::app);
+	ofstream outputFile;
+	outputFile.open (m_fileName.c_str(), ios::app);
 	
 	// Log time stamp
-	myfile<<"## "<<m_currentTimeStamp<<endl;
+	// outputFile<<"## "<<m_currentTimeStamp<<endl;
 
 	// Log each feature of every object into a text file
 	for(vector<Object>::const_iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; it1++)
 	{
-		myfile<<it1->GetName()<<it1->GetId()<<endl;
+		// outputFile<<it1->GetName()<<it1->GetId()<<endl;
 		for(map<string, Feature>::const_iterator it2 = it1->GetFeatures().begin() ; it2 != it1->GetFeatures().end() ; it2++)
 		{
 			const Feature & feat = it2->second;
-			myfile<<it2->first<<":\t"
-				<<feat.value<<"\t"
-				<<feat.mean<<"\t"
-				<<feat.sqVariance<<"\t"
-				<<feat.initial<<"\t"
-				<<feat.min<<"\t"
-				<<feat.max<<"\t"
+			outputFile<<m_currentTimeStamp<<SEP
+				<<it1->GetName()<<it1->GetId()<<SEP
+				<<it2->first<<SEP
+				<<feat.value<<SEP
+				<<feat.mean<<SEP
+				<<feat.sqVariance<<SEP
+				<<feat.initial<<SEP
+				<<feat.min<<SEP
+				<<feat.max<<SEP
 				<<feat.nbSamples<<endl;
 		}
-		myfile<<endl;
+		outputFile<<endl;
 	}
-	myfile.close();
+	outputFile.close();
 }
 

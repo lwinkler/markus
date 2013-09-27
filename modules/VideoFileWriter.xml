@@ -33,7 +33,7 @@
 		</param>
 		<param name="file">
 			<type>string</type>
-			<value default="output">output</value>
+			<value default="out/output">out/output</value>
 			<description>Name of the video file to write, with path</description>
 		</param>
 		<param name="timestamp">

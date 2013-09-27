@@ -208,6 +208,7 @@ void TrackerByFeatures::DetectNewTemplates()
 			Template t(*it2, m_param.maxNbFramesDisappearance);
 			m_templates.push_back(t);
 			//cout<<"Added template "<<t.GetNum()<<endl;
+			it2->SetId(t.GetNum());
 			cpt++;
 		}
 	}

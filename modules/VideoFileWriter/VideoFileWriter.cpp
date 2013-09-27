@@ -66,7 +66,7 @@ cout<<"Opening "<<filename<<endl;
 	m_writer.open(filename, CV_FOURCC(s[0], s[1], s[2], s[3]), /*m_param.fps > 0 ? m_param.fps :*/ 12, Size(m_param.width, m_param.height), isColor); // TODO: compute last param. Iscolor
 	if(!m_writer.isOpened())
 	{
-		cout<<"Failed to open output video file in VideoFileWriter::Reset"<<endl;
+		cout<<"Failed to open output video file in VideoFileWriter::Reset"<<endl; // TODO: display and manage exceptions
 		throw("Failed to open output video file in VideoFileWriter::Reset");
 	}
 }
