@@ -58,8 +58,7 @@ public:
 protected:
 	cv::VideoCapture m_capture;
 	cv::Mat * m_output;
-	int m_fps;
-	TIME_STAMP m_timeStamp; // TODO: see format of timestamps
+	TIME_STAMP m_timeStamp;
 
 private:
 	void GetProperties();

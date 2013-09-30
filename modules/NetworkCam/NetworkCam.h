@@ -52,16 +52,16 @@ public:
 	
 	void Capture();
 	virtual void Reset();
-
 	const std::string& GetName(){return m_name;};
-	virtual const cv::Mat * GetImage() const {return m_output;}
+	// virtual const cv::Mat * GetImage() const {return m_output;}
 
 protected:
-	cv::Mat * m_output;
 	cv::VideoCapture m_capture;
-	int m_fps;
+	cv::Mat * m_output;
+	TIME_STAMP m_timeStamp;
 
 private:
+	void GetProperties();
 	NetworkCamParameterStructure m_param;
 	inline virtual NetworkCamParameterStructure& RefParameter() {return m_param;};
 };

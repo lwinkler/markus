@@ -22,7 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "NetworkCam.h"
-#include "util.h"
+// #include "util.h"
 #include "StreamImage.h"
 
 using namespace std;
@@ -32,56 +32,89 @@ NetworkCam::NetworkCam(const ConfigReader& x_configReader):
 	Input(x_configReader),
 	m_param(x_configReader)
 {
-
-	//open the video stream and make sure it's opened
-	/* it may be an address of an mjpeg stream, 
-	e.g. "http://user:pass@cam_address:8081/cgi/mjpg/mjpg.cgi?.mjpg" 
-	"rtsp://cam_address:554/live.sdp" */
-	if(m_param.url.size() == 0)
-		m_capture.open("input.avi");
-	else if(!m_capture.open(m_param.url)) {
-		throw( "Error opening video stream or file" + m_param.url);
-	}
+	m_timeStamp = TIME_STAMP_INITIAL;
 	
-	cout<<"Capture from NetworkCam with resolution "<<GetWidth()<<"x"<<GetHeight()<<endl;
-	
-	m_output = new Mat( cvSize(m_param.width, m_param.height), m_param.type);
+	m_output = new Mat(Size(m_param.width, m_param.height), m_param.type);  // Note: sizes will be overridden !
 	m_outputStreams.push_back(new StreamImage(0, "input", m_output, *this, 		"Video stream of the camera"));
-
-	//Reset();
 }
 
 NetworkCam::~NetworkCam()
 {
-	// cvReleaseCapture(&m_capture );
 	delete(m_output);
 }
 
 void NetworkCam::Reset()
 {
 	Module::Reset();
-	resize(*m_output, *m_output, cvSize(m_param.width, m_param.height));
+	m_capture.release();
+
+	//open the video stream and make sure it's opened
+	/* it may be an address of an mjpeg stream, 
+	e.g. "http://user:pass@cam_address:8081/cgi/mjpg/mjpg.cgi?.mjpg" 
+	"rtsp://cam_address:554/live.sdp" rtsp://<servername>/axis-media/media.amp */
+	if(m_param.url.size() == 0)
+		m_capture.open("input.avi");
+	else m_capture.open(m_param.url);
+	
+	if(! m_capture.isOpened())
+	{
+		throw("Error : Network cannot open url : " + m_param.url);
+	}
+
+	// Apparently you cannot set width and height. We try anyway
+	m_capture.set(CV_CAP_PROP_FRAME_WIDTH,  m_param.width);
+	m_capture.set(CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
+	
+	GetProperties();
+
+	// note on the next line: the image will be overloaded but the properties are used to set the input ratio, the type is probably ignored
+	delete m_output;
+	m_output = new Mat(Size(m_capture.get(CV_CAP_PROP_FRAME_WIDTH), m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)), m_param.type);
 }
 
 void NetworkCam::Capture()
 {
-	//Get frame information:
-	//double posMsec   =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_MSEC);
-	//int posFrames    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_FRAMES);
-	//double posRatio  =       cvGetCaptureProperty(m_capture, CV_CAP_PROP_POS_AVI_RATIO);
-	Mat tmp;// = new Mat(cvRetrieveFrame(m_capture));
-	m_capture.read(tmp);
+	if(m_capture.grab() == 0)
+	{
+		cout<<"WARNING: Error while reading stream, try to reopen in NetworkCam::Capture"<<endl;
+		Reset();
+		if(m_capture.grab() == 0)
+		{
+			m_endOfStream = true;
+			std::exception e;
+			Pause(true);
+			throw e; // TODO: Impl custom exceptions ("Capture failed in NetworkCam::Capture.");
+		}
+	}
 
-	//int frameH    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_HEIGHT);
-	//int frameW    = (int) cvGetCaptureProperty(m_capture, CV_CAP_PROP_FRAME_WIDTH);	
+	m_capture.retrieve(*m_output);
 	
-	//cout<<tmp->width<<" == "<<m_input->width<<endl;
-	//assert(tmp->width == m_input->width);
-	//assert(tmp->height == m_input->height);
-	//assert(tmp->depth == m_input->depth);
-	
-	//tmp->copyTo(*m_output);
-	adjustSize(&tmp, m_output);
-	
-	//delete(tmp);
+	// cout<<"UsbCam capture image "<<m_output->cols<<"x"<<m_output->rows<<" time stamp "<<m_capture.get(CV_CAP_PROP_POS_MSEC) / 1000.0<< endl;
+
+	m_timeStamp += 1000.0 / m_param.fps; // TODO: improve this
+	SetTimeStampToOutputs(m_timeStamp);
+}
+
+void NetworkCam::GetProperties()
+{
+	cout<<"CV_CAP_PROP_POS_MSEC "<<m_capture.get(CV_CAP_PROP_POS_MSEC)<<endl;
+	cout<<"CV_CAP_PROP_POS_FRAMES "<<m_capture.get(CV_CAP_PROP_POS_FRAMES)<<endl;
+	cout<<"CV_CAP_PROP_POS_AVI_RATIO "<<m_capture.get(CV_CAP_PROP_POS_AVI_RATIO)<<endl;
+	cout<<"CV_CAP_PROP_FRAME_WIDTH "<<m_capture.get(CV_CAP_PROP_FRAME_WIDTH)<<endl;
+	cout<<"CV_CAP_PROP_FRAME_HEIGHT "<<m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)<<endl;
+	cout<<"CV_CAP_PROP_FPS "<<m_capture.get(CV_CAP_PROP_FPS)<<endl;
+	int cc = static_cast<int>(m_capture.get(CV_CAP_PROP_FOURCC));
+	cout<<"CV_CAP_PROP_FOURCC "<< (char)(cc & 0XFF) << (char)((cc & 0XFF00) >> 8) << (char)((cc & 0XFF0000) >> 16) << (char)((cc & 0XFF000000) >> 24) <<endl;
+	cout<<"CV_CAP_PROP_FRAME_COUNT "<<m_capture.get(CV_CAP_PROP_FRAME_COUNT)<<endl;
+	cout<<"CV_CAP_PROP_FORMAT "<<m_capture.get(CV_CAP_PROP_FORMAT)<<endl;
+	cout<<"CV_CAP_PROP_MODE "<<m_capture.get(CV_CAP_PROP_MODE)<<endl;
+	cout<<"CV_CAP_PROP_BRIGHTNESS "<<m_capture.get(CV_CAP_PROP_BRIGHTNESS)<<endl;
+	cout<<"CV_CAP_PROP_CONTRAST "<<m_capture.get(CV_CAP_PROP_CONTRAST)<<endl;
+	cout<<"CV_CAP_PROP_SATURATION "<<m_capture.get(CV_CAP_PROP_SATURATION)<<endl;
+	cout<<"CV_CAP_PROP_HUE "<<m_capture.get(CV_CAP_PROP_HUE)<<endl;
+	cout<<"CV_CAP_PROP_GAIN "<<m_capture.get(CV_CAP_PROP_GAIN)<<endl;
+	cout<<"CV_CAP_PROP_EXPOSURE "<<m_capture.get(CV_CAP_PROP_EXPOSURE)<<endl;
+	cout<<"CV_CAP_PROP_CONVERT_RGB "<<m_capture.get(CV_CAP_PROP_CONVERT_RGB)<<endl;
+	// cout<<"CV_CAP_PROP_WHITE_BALANCE"<<m_capture.get(CV_CAP_PROP_WHITE_BALANCE)<<endl;
+	cout<<"CV_CAP_PROP_RECTIFICATION"<<m_capture.get(CV_CAP_PROP_RECTIFICATION)<<endl;
 }

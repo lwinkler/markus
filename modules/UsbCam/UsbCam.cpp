@@ -32,7 +32,6 @@ UsbCam::UsbCam(const ConfigReader& x_configReader):
 	Input(x_configReader),
 	m_param(x_configReader)
 {
-	m_fps = 0;
 	m_timeStamp = TIME_STAMP_INITIAL;
 	
 	m_output = new Mat(Size(m_param.width, m_param.height), m_param.type);  // Note: sizes will be overridden !
