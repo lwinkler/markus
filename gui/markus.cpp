@@ -35,7 +35,7 @@
 
 #include "Manager.h"
 #include "Module.h"
-#include "QModuleTimer.h"
+#include "ModuleTimer.h"
 
 
 using namespace std;

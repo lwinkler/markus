@@ -12,6 +12,6 @@ markus.cpp
 MarkusApplication.cpp
 QModuleViewer.cpp
 QParameterSlider.cpp
-QModuleTimer.cpp
+Control.cpp
 )
 

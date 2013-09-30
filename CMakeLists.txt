@@ -2,6 +2,7 @@ project(markus)
 cmake_minimum_required(VERSION 2.6)
 find_package(Qt4 REQUIRED)
 find_package(OpenCV REQUIRED)
+# find_package(tinyxml REQUIRED) # TODO: How to add this dependancy ?
 
 
 
@@ -13,9 +14,7 @@ SET(CMAKE_CXX_FLAGS_DEBUG  "-O0 -g")
 
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR} 
 bulk 
-gui
 modules
-# modules2
 lib
 lib/cvblobs
 )
@@ -26,16 +25,24 @@ main.cpp
 )
 
 
-add_subdirectory(bulk)
+# with GUI
 add_subdirectory(gui)
+include_directories(gui)
+SET(DEPS markus bulk gui modules tools tinyxml bulk ${OpenCV_LIBS} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} )
+
+# without GUI
+#add_definitions(-DMARKUS_NO_GUI)
+#SET(DEPS markus bulk modules tools tinyxml bulk ${OpenCV_LIBS} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} )
+
+add_subdirectory(bulk)
 add_subdirectory(modules)
-# add_subdirectory(modules2)
 add_subdirectory(lib)
 add_subdirectory(tools)
 
 
 add_executable(markus ${markus_SRCS})
-target_link_libraries(markus ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} bulk gui modules tools ${OpenCV_LIBS} tinyxml bulk)
+# target_link_libraries(markus ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} bulk gui modules tools ${OpenCV_LIBS} tinyxml bulk)
+target_link_libraries(${DEPS})
 
 
 add_custom_target(update_modules_list

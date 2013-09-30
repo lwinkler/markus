@@ -26,9 +26,13 @@
 #include "util.h"
 
 #include "Stream.h"
-#include "Control.h"
 #include "Timer.h"
-#include "QModuleTimer.h"
+#include "ModuleTimer.h"
+
+
+#ifndef MARKUS_NO_GUI
+#include "Control.h"
+#endif
 
 using namespace std;
 
@@ -50,7 +54,9 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_pause                = false;
 
 	// Add controls for parameters' change
+#ifndef MARKUS_NO_GUI
 	m_controls.push_back(new ParameterControl("Parameters", "Change the values of parameters at runtime."));
+#endif
 	m_moduleTimer = NULL;
 }
 
@@ -83,8 +89,10 @@ Module::~Module()
 		delete(*it);
 	for(std::vector<Stream* >::iterator it = m_debugStreams.begin() ; it != m_debugStreams.end() ; it++)
 		delete(*it);
+#ifndef MARKUS_NO_GUI
 	for(std::vector<ParameterControl* >::iterator it = m_controls.begin() ; it != m_controls.end() ; it++)
 		delete(*it);
+#endif
 
 	if(m_moduleTimer)
 		delete(m_moduleTimer);

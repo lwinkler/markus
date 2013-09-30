@@ -16,6 +16,6 @@ Template.cpp
 util.cpp
 ConfigReader.cpp
 Timer.cpp
-Control.cpp
+ModuleTimer.cpp
 )
 

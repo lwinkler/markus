@@ -31,9 +31,9 @@ using namespace std;
 #include <QLabel>
 #include <QLineEdit>
 #include <QCheckBox>
+#include <QComboBox>
 
 #include "QParameterSlider.h"
-#include "QComboBox"
 
 
 #define PRECISION_DOUBLE 2

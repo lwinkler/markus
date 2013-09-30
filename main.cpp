@@ -22,12 +22,15 @@
 -------------------------------------------------------------------------------------*/
 
 #include <QtGui/QApplication>
-#include "markus.h"
 #include <cstring>
 #include <cstdio>
 
 #include "Manager.h"
+
+#ifndef MARKUS_NO_GUI
+#include "markus.h"
 #include "MarkusApplication.h"
+#endif
 
 #include <iostream>
 
@@ -72,7 +75,9 @@ int main(int argc, char** argv)
 	}
 	// try
 	{
+#ifndef MARKUS_NO_GUI
 		MarkusApplication app(argc, argv);
+#endif
 		ConfigReader mainConfig(configFile);
 		ConfigReader appConfig = mainConfig.SubConfig("application");
 		assert(!appConfig.IsEmpty());
@@ -100,11 +105,15 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-	
+#ifndef MARKUS_NO_GUI
 			markus gui(mainConfig, manager, centralized);
 			gui.setWindowTitle("OpenCV --> QtImage");
 			gui.show();
 			return app.exec();
+#else
+			cout<<"ERROR: Markus was compiled without GUI. It can only be launched with option --no-gui"<<endl;
+			return -1;
+#endif
 		}
 	}
 	/*catch(cv::Exception& e)
@@ -129,3 +138,4 @@ int main(int argc, char** argv)
 	} */
 	return -1;
 }
+

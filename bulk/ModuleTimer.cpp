@@ -21,7 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "QModuleTimer.h"
+#include "ModuleTimer.h"
 #include "Module.h"
 
 #include <QTimer>
