@@ -44,7 +44,7 @@ class markus : public QMainWindow
 {
 Q_OBJECT
 public:
-	markus(ConfigReader& rx_configReader, Manager& rx_manager, bool x_centralized);
+	markus(ConfigReader& rx_configReader, Manager& rx_manager);
 	virtual ~markus();
 private:
 	ConfigReader& m_configReader;
@@ -56,7 +56,6 @@ private:
 	void timerEvent(QTimerEvent*);
 	void resizeEvent(QResizeEvent*);
 	
-	bool m_centralized;
 	int nbCols;
 	int nbLines;
 	

@@ -73,7 +73,7 @@ int main(int argc, char** argv)
 		}
 		cpt++;
 	}
-	// try
+	try
 	{
 #ifndef MARKUS_NO_GUI
 		MarkusApplication app(argc, argv);
@@ -94,7 +94,7 @@ int main(int argc, char** argv)
 			// No gui. launch the process directly
 			// so far we cannot launch the process in a decentralized manner (with a timer on each module)
 //#ifdef CENTRALIZE_PROCESS
-			while(manager.Process())
+			while(manager.Process()) // TODO: Find a better way to call Process. Through timers for example
 			{
 				// nothing 
 			}
@@ -106,7 +106,7 @@ int main(int argc, char** argv)
 		else
 		{
 #ifndef MARKUS_NO_GUI
-			markus gui(mainConfig, manager, centralized);
+			markus gui(mainConfig, manager);
 			gui.setWindowTitle("OpenCV --> QtImage");
 			gui.show();
 			return app.exec();
@@ -116,7 +116,7 @@ int main(int argc, char** argv)
 #endif
 		}
 	}
-	/*catch(cv::Exception& e)
+	catch(cv::Exception& e)
 	{
 		cout << "Exception raised (std::exception) : " << e.what() <<endl;
 	}
@@ -135,7 +135,7 @@ int main(int argc, char** argv)
 	catch(...)
 	{
 		cout << "Unknown exception raised: "<<endl;
-	} */
+	}
 	return -1;
 }
 

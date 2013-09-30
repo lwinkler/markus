@@ -44,8 +44,8 @@ using namespace std;
 // Main constructor
 //---------------------------------------------------------------------------------------------------- 
 
-markus::markus(ConfigReader & rx_configReader, Manager& rx_manager, bool x_centralized)
-	: m_configReader(rx_configReader),  m_manager(rx_manager), m_centralized(x_centralized)
+markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
+	: m_configReader(rx_configReader),  m_manager(rx_manager)
 {
 	nbLines = 1;
 	nbCols = 1;
