@@ -134,7 +134,7 @@ int main(int argc, char** argv)
 	}
 	catch(...)
 	{
-		LOG_ERROR("Unknown exception raised: ");
+		LOG_ERROR("Unknown exception raised");
 	}
 	return -1;
 }

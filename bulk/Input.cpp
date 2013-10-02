@@ -32,7 +32,7 @@ using namespace std;
 Input::Input(const ConfigReader& x_configReader): 
 	Module(x_configReader)
 {
-	LOG_DEBUG("*** Create object Input : "<<m_name<<" ***");
+	LOG_INFO("*** Create object Input : "<<m_name<<" ***");
 	m_endOfStream = false;
 }
 
