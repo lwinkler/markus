@@ -61,7 +61,7 @@ void VideoFileWriter::Reset()
 
 	const string filename = m_param.file  + (m_param.timeStamp ? ("." + timeStamp()) : ".") + "." + ExtensionFromFourcc(m_param.fourcc);
 
-cout<<"Opening "<<filename<<endl;
+	// cout<<"Opening "<<filename<<endl;
 	// TODO: Manage fps for stream recording
 	m_writer.open(filename, CV_FOURCC(s[0], s[1], s[2], s[3]), /*m_param.fps > 0 ? m_param.fps :*/ 12, Size(m_param.width, m_param.height), isColor); // TODO: compute last param. Iscolor
 	if(!m_writer.isOpened())

@@ -68,9 +68,9 @@ void Logger::Reset()
 
 
 	m_srtFileName = m_param.file + (m_param.timeStamp ? "." + timeStamp() : "") + ".srt";
-	cout<<"file"<<m_param.file<<endl;
-	cout<<"timeStamp"<<timeStamp()<<endl;
-	cout<<m_srtFileName<<endl;
+	// cout<<"file"<<m_param.file<<endl;
+	// cout<<"timeStamp"<<timeStamp()<<endl;
+	// cout<<m_srtFileName<<endl;
 }
 
 void Logger::ProcessFrame()

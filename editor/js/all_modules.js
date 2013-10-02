@@ -5,6 +5,7 @@ var availableModulesNames = [
 "CascadeDetector",
 "FallDetection",
 "FilterObjects",
+"HOGDetector",
 "Logger",
 "LogObjects",
 "Mask",
