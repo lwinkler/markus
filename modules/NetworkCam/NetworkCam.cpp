@@ -76,7 +76,7 @@ void NetworkCam::Capture()
 {
 	if(m_capture.grab() == 0)
 	{
-		cout<<"WARNING: Error while reading stream, try to reopen in NetworkCam::Capture"<<endl;
+		LOG_WARNING("Grab failure while reading stream, try to reopen in NetworkCam::Capture");
 		Reset();
 		if(m_capture.grab() == 0)
 		{
@@ -97,24 +97,25 @@ void NetworkCam::Capture()
 
 void NetworkCam::GetProperties()
 {
-	cout<<"CV_CAP_PROP_POS_MSEC "<<m_capture.get(CV_CAP_PROP_POS_MSEC)<<endl;
-	cout<<"CV_CAP_PROP_POS_FRAMES "<<m_capture.get(CV_CAP_PROP_POS_FRAMES)<<endl;
-	cout<<"CV_CAP_PROP_POS_AVI_RATIO "<<m_capture.get(CV_CAP_PROP_POS_AVI_RATIO)<<endl;
-	cout<<"CV_CAP_PROP_FRAME_WIDTH "<<m_capture.get(CV_CAP_PROP_FRAME_WIDTH)<<endl;
-	cout<<"CV_CAP_PROP_FRAME_HEIGHT "<<m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)<<endl;
-	cout<<"CV_CAP_PROP_FPS "<<m_capture.get(CV_CAP_PROP_FPS)<<endl;
 	int cc = static_cast<int>(m_capture.get(CV_CAP_PROP_FOURCC));
-	cout<<"CV_CAP_PROP_FOURCC "<< (char)(cc & 0XFF) << (char)((cc & 0XFF00) >> 8) << (char)((cc & 0XFF0000) >> 16) << (char)((cc & 0XFF000000) >> 24) <<endl;
-	cout<<"CV_CAP_PROP_FRAME_COUNT "<<m_capture.get(CV_CAP_PROP_FRAME_COUNT)<<endl;
-	cout<<"CV_CAP_PROP_FORMAT "<<m_capture.get(CV_CAP_PROP_FORMAT)<<endl;
-	cout<<"CV_CAP_PROP_MODE "<<m_capture.get(CV_CAP_PROP_MODE)<<endl;
-	cout<<"CV_CAP_PROP_BRIGHTNESS "<<m_capture.get(CV_CAP_PROP_BRIGHTNESS)<<endl;
-	cout<<"CV_CAP_PROP_CONTRAST "<<m_capture.get(CV_CAP_PROP_CONTRAST)<<endl;
-	cout<<"CV_CAP_PROP_SATURATION "<<m_capture.get(CV_CAP_PROP_SATURATION)<<endl;
-	cout<<"CV_CAP_PROP_HUE "<<m_capture.get(CV_CAP_PROP_HUE)<<endl;
-	cout<<"CV_CAP_PROP_GAIN "<<m_capture.get(CV_CAP_PROP_GAIN)<<endl;
-	cout<<"CV_CAP_PROP_EXPOSURE "<<m_capture.get(CV_CAP_PROP_EXPOSURE)<<endl;
-	cout<<"CV_CAP_PROP_CONVERT_RGB "<<m_capture.get(CV_CAP_PROP_CONVERT_RGB)<<endl;
-	// cout<<"CV_CAP_PROP_WHITE_BALANCE"<<m_capture.get(CV_CAP_PROP_WHITE_BALANCE)<<endl;
-	cout<<"CV_CAP_PROP_RECTIFICATION"<<m_capture.get(CV_CAP_PROP_RECTIFICATION)<<endl;
+
+	LOG_DEBUG("POS_MSEC "<<m_capture.get(CV_CAP_PROP_POS_MSEC)
+		<<" POS_FRAMES "<<m_capture.get(CV_CAP_PROP_POS_FRAMES)
+		<<" POS_AVI_RATIO "<<m_capture.get(CV_CAP_PROP_POS_AVI_RATIO)
+		<<" FRAME_WIDTH "<<m_capture.get(CV_CAP_PROP_FRAME_WIDTH)
+		<<" FRAME_HEIGHT "<<m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)
+		<<" FPS "<<m_capture.get(CV_CAP_PROP_FPS)
+		<<" FOURCC "<< (char)(cc & 0XFF) << (char)((cc & 0XFF00) >> 8) << (char)((cc & 0XFF0000) >> 16) << (char)((cc & 0XFF000000) >> 24) 
+		<<" FRAME_COUNT "<<m_capture.get(CV_CAP_PROP_FRAME_COUNT)
+		<<" FORMAT "<<m_capture.get(CV_CAP_PROP_FORMAT)
+		<<" MODE "<<m_capture.get(CV_CAP_PROP_MODE)
+		<<" BRIGHTNESS "<<m_capture.get(CV_CAP_PROP_BRIGHTNESS)
+		<<" CONTRAST "<<m_capture.get(CV_CAP_PROP_CONTRAST)
+		<<" SATURATION "<<m_capture.get(CV_CAP_PROP_SATURATION)
+		<<" HUE "<<m_capture.get(CV_CAP_PROP_HUE)
+		<<" GAIN "<<m_capture.get(CV_CAP_PROP_GAIN)
+		<<" EXPOSURE "<<m_capture.get(CV_CAP_PROP_EXPOSURE)
+		<<" CONVERT_RGB "<<m_capture.get(CV_CAP_PROP_CONVERT_RGB)
+	// 	<<" WHITE_BALANCE"<<m_capture.get(CV_CAP_PROP_WHITE_BALANCE)
+		<<" RECTIFICATION"<<m_capture.get(CV_CAP_PROP_RECTIFICATION));
 }

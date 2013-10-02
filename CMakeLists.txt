@@ -25,6 +25,7 @@ main.cpp
 )
 
 
+#-------------------------------------------------------------------------------- 
 # with GUI
 add_subdirectory(gui)
 include_directories(gui)
@@ -33,6 +34,11 @@ SET(DEPS markus bulk gui modules tools tinyxml bulk ${OpenCV_LIBS} ${QT_QTCORE_L
 # without GUI
 #add_definitions(-DMARKUS_NO_GUI)
 #SET(DEPS markus bulk modules tools tinyxml bulk ${OpenCV_LIBS} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} )
+
+# enable debug streams
+add_definitions(-DMARKUS_DEBUG_STREAMS)
+
+#-------------------------------------------------------------------------------- 
 
 add_subdirectory(bulk)
 add_subdirectory(modules)

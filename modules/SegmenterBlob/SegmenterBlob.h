@@ -66,7 +66,9 @@ protected:
 	
 	// for streams
 	cv::Mat * m_input;
+#ifdef MARKUS_DEBUG_STREAMS
 	cv::Mat* m_blobsImg;
+#endif
 
 	static const char * m_type;
 	//std::vector <TrackedRegion> m_regions;		

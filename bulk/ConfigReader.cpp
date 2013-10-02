@@ -62,7 +62,6 @@ ConfigReader ConfigReader::SubConfig(const std::string& x_objectType, string x_o
 	{
 		while(newNode != NULL && x_objectName.compare(newNode->ToElement()->Attribute("name")))
 		{
-			//printf("Name = %s\n", newNode->ToElement()->Attribute("name"));
 			newNode = newNode->NextSibling(x_objectType);
 		}
 	}
@@ -80,7 +79,6 @@ ConfigReader ConfigReader::NextSubConfig(const std::string& x_objectType, string
 	{
 		while(newNode != NULL && x_objectName.compare(newNode->ToElement()->Attribute("name")))
 		{
-			//printf("Name = %s\n", newNode->ToElement()->Attribute("name"));
 			newNode = newNode->NextSibling(x_objectType);
 		}
 	}

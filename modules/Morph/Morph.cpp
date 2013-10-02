@@ -22,7 +22,6 @@
 -------------------------------------------------------------------------------------*/
 
 #include "Morph.h"
-#include "StreamDebug.h"
 #include "StreamImage.h"
 
 // for debug

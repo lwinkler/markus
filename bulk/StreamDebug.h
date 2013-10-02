@@ -24,6 +24,8 @@
 #ifndef STREAM_DEBUG_H
 #define STREAM_DEBUG_H
 
+#ifdef MARKUS_DEBUG_STREAMS // If the flag is not set, do not use the streams at all
+
 #include <opencv/cv.h>
 
 #include "Stream.h"
@@ -48,4 +50,5 @@ private:
 	StreamDebug(const StreamDebug&);
 };
 
+#endif
 #endif

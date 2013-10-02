@@ -50,7 +50,9 @@ BgrSubMOG::BgrSubMOG(const ConfigReader& x_configReader) :
 	m_outputStreams.push_back(new StreamImage(0, "foreground", m_foreground,*this,      "Foreground"));
 	m_outputStreams.push_back(new StreamImage(1, "background", m_background, *this,		"Background"));
 
+#ifdef MARKUS_DEBUG_STREAMS
 	m_debugStreams.push_back(new StreamDebug(0, "input", m_input,*this,      "Input"));
+#endif
 };
 
 BgrSubMOG::~BgrSubMOG()

@@ -22,7 +22,6 @@
 -------------------------------------------------------------------------------------*/
 
 #include "TrackerByFeatures.h"
-#include "StreamDebug.h"
 #include "StreamObject.h"
 
 // for debug
@@ -133,9 +132,7 @@ void TrackerByFeatures::MatchTemplates()
 		//int isMatched =
 		MatchTemplate(*it1);
 	}
-#ifdef VERBOSE
-	cout<<"MatchTemplates : "<<m_templates.size()<<" templates and "<<m_objects.size()<<" regions."<<endl;
-#endif
+	LOG_DEBUG("MatchTemplates : "<<m_templates.size()<<" templates and "<<m_objects.size()<<" regions.");
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -189,9 +186,7 @@ void TrackerByFeatures::CleanTemplates()
 		else it1->m_counterClean = m_param.maxNbFramesDisappearance;
 		cptTotal++;
 	}
-#ifdef VERBOSE
-	cout<<"CleanTemplates : "<<cptCleaned<<" templates erased out of "<<cptTotal<<" templates"<<endl;
-#endif
+	LOG_DEBUG("CleanTemplates : "<<cptCleaned<<" templates erased out of "<<cptTotal<<" templates");
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -212,9 +207,7 @@ void TrackerByFeatures::DetectNewTemplates()
 			cpt++;
 		}
 	}
-#ifdef VERBOSE
-	cout<<"DetectNewTemplates : "<<cpt<<" new templates added."<<endl;
-#endif
+	LOG_DEBUG("DetectNewTemplates : "<<cpt<<" new templates added.");
 }
 
 

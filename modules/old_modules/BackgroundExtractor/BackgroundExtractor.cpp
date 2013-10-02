@@ -54,7 +54,9 @@ BackgroundExtractor::BackgroundExtractor(const ConfigReader& x_configReader) :
 	m_outputStreams.push_back(new StreamImage(0, "foreground_rff", m_foreground_rff, *this,				"Foreground"));
 	m_outputStreams.push_back(new StreamImage(1, "background", m_background, *this,		"Background"));
 	
+#ifdef MARKUS_DEBUG_STREAMS
 	m_debugStreams.push_back(new StreamDebug(0, "foreground", m_foreground, *this,		""));
+#endif
 		
 	Reset();
 }

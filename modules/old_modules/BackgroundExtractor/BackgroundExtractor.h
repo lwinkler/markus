@@ -62,7 +62,9 @@ private:
 	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
 
 	// Background subtraction	
+#ifdef MARKUS_DEBUG_STREAMS
 	cv::Mat* m_foreground;
+#endif
 	cv::Mat* m_foreground_rff;
 	cv::Mat* m_background;
 	cv::Mat* m_foreground_tmp1;

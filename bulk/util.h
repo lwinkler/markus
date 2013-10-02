@@ -43,4 +43,11 @@ std::vector<std::string> &split(const std::string &s, char delim, std::vector<st
 
 const std::string timeStamp();
 
+
+// Logging functions
+#define LOG_ERROR(x)   std::cout<<"ERROR: "<<x<<std::endl;
+#define LOG_WARNING(x) std::cout<<"WARNING: "<<x<<std::endl;
+#define LOG_INFO(x)    std::cout<<x<<std::endl;
+#define LOG_DEBUG(x)   std::cout<<"DEBUG: "<<x<<std::endl;
+
 #endif

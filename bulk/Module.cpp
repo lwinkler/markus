@@ -41,7 +41,7 @@ Module::Module(const ConfigReader& x_configReader) :
 {
 	m_name 	= x_configReader.GetAttribute("name");
 	m_id	= atoi(x_configReader.GetAttribute("id").c_str());
-	cout<<endl<<"*** Create object Module : "<<m_name<<" id:"<<m_id<<" ***"<<endl;
+	LOG_INFO("*** Create object Module : "<<m_name<<" id:"<<m_id<<" ***");
 	// m_processingTime = 0;
 	
 	m_timerConvertion      = 0;
@@ -87,8 +87,10 @@ Module::~Module()
 		delete(*it);
 	for(std::vector<Stream* >::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
 		delete(*it);
+#ifdef MARKUS_DEBUG_STREAMS
 	for(std::vector<Stream* >::iterator it = m_debugStreams.begin() ; it != m_debugStreams.end() ; it++)
 		delete(*it);
+#endif
 #ifndef MARKUS_NO_GUI
 	for(std::vector<ParameterControl* >::iterator it = m_controls.begin() ; it != m_controls.end() ; it++)
 		delete(*it);

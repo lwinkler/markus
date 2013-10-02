@@ -22,6 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "StreamDebug.h"
+#ifdef MARKUS_DEBUG_STREAMS
 
 using namespace std;
 
@@ -47,3 +48,4 @@ void StreamDebug::RenderTo(cv::Mat * xp_output) const
 	m_image->copyTo(*xp_output);
 }
 
+#endif

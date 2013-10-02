@@ -61,7 +61,9 @@ protected:
 	
 	// for streams
 	cv::Mat * m_input;
+#ifdef MARKUS_DEBUG_STREAMS
 	cv::Mat * m_debug;
+#endif
 
 	static const char * m_type;
 	std::vector<Object> m_regions;

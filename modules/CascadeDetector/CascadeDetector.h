@@ -104,7 +104,9 @@ protected:
 	std::vector<Object> m_detectedObjects;
 	cv::Mat * m_input;
 	cv::Mat * m_lastInput;
+#ifdef MARKUS_DEBUG_STREAMS
 	cv::Mat * m_debug;
+#endif
 	
 	DetectionThread m_thread;
 public:

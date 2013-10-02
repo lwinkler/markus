@@ -150,9 +150,7 @@ void adjust(const Mat* im_in, Mat* im_out, Mat*& tmp1, Mat*& tmp2)
 		}
 		else
 		{
-			printf("Cannot convert from %d to %d\n", im_in->depth(), im_out->depth());
-			//throw(string("Error in adjust : depth "));
-			assert(false);
+			throw("Cannot convert");
 		}
 	}
 }

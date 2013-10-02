@@ -28,8 +28,6 @@ using namespace std;
 
 Feature::Feature(double x_value)
 {
-	//sprintf(m_name,"%s", x_name);
-	//printf("name %s %s\n",x_name, m_name);
 	value      = x_value;
 	sqVariance = 0.01;
 	mean       = x_value;

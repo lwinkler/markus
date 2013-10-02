@@ -59,7 +59,9 @@ protected:
 	static const char * m_type;
 
 	cv::Mat * m_input;
+#ifdef MARKUS_DEBUG_STREAMS
 	cv::Mat * m_debug;
+#endif
 
 	bool m_state;
 

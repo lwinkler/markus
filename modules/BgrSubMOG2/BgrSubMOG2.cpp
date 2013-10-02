@@ -46,21 +46,16 @@ BgrSubMOG2::BgrSubMOG2(const ConfigReader& x_configReader) :
 	m_input       = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
 	m_background  = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
 	m_foreground  = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
-	m_foregroundWithShadows  = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
 	
 	m_inputStreams.push_back(new StreamImage(0, "input",       m_input, *this,   "Video input"));
 
 	m_outputStreams.push_back(new StreamImage(0, "foreground", m_foreground,*this,      "Foreground"));
 	m_outputStreams.push_back(new StreamImage(1, "background", m_background, *this,		"Background"));
 
+#ifdef MARKUS_DEBUG_STREAMS
+	m_foregroundWithShadows  = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
 	m_debugStreams.push_back(new StreamDebug(0, "foreground_with_shadows", m_foregroundWithShadows, *this,	"Foreground with shadows"));
-
-
-	//vector<string> names;
-	//mp_mog2.getParams(names);
-	//cout<<"size fo fparams"<<names.size()<<endl;
-	//for(int i = 0; i < names.size() ; i++)
-		//cout<<names[i]<<endl;
+#endif
 };
 		
 

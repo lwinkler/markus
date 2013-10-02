@@ -48,26 +48,32 @@ MotionDetector::MotionDetector(const ConfigReader& x_configReader)
 	
 	// Init images
 	m_input = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
-	m_debug = new Mat(cvSize(640, 480), CV_8UC3);
 	
 	// Init output images
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this, 	"Video input"));
 	m_outputStreams.push_back(new StreamState(0, "motion", m_state,  *this, 	"Motion is detected"));
 
+#ifdef MARKUS_DEBUG_STREAMS
+	m_debug = new Mat(cvSize(640, 480), CV_8UC3);
 	m_debugStreams.push_back(new StreamDebug(0, "motion", m_debug, *this, 	"Motion percentage"));
+#endif
 }
 
 MotionDetector::~MotionDetector(void)
 {
 	delete(m_input);
+#ifdef MARKUS_DEBUG_STREAMS
 	delete(m_debug);
+#endif
 }
 
 void MotionDetector::Reset()
 {
 	Module::Reset();
 	m_state = 0;
+#ifdef MARKUS_DEBUG_STREAMS
 	m_debug->setTo(m_colorPlotBack);
+#endif
 }
 
 void MotionDetector::ProcessFrame()
@@ -83,6 +89,7 @@ void MotionDetector::ProcessFrame()
 	m_state = (val >= m_param.motionThres);
 
 
+#ifdef MARKUS_DEBUG_STREAMS
 	// Debug image: moving plot displaying threshold and current value
 	// Mat col(m_debug->rows, 1, CV_8UC3);
 	Mat col = m_debug->col(m_debug->cols - 1); // (*m_debug)(Rect(m_debug->cols - 1 / 2, 0, 1, m_debug->rows));
@@ -107,5 +114,6 @@ void MotionDetector::ProcessFrame()
 	m_debug->adjustROI(0, 0, 0, -1);
 	crop.copyTo(*m_debug);
 	m_debug->adjustROI(0, 0, 0, 1);
+#endif
 }
 

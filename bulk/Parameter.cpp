@@ -71,7 +71,7 @@ void ParameterStructure::Init()
 	// Read parameters from config
 	SetFromConfig();
 	
-	cout<<"Parameters for "<<m_objectName<<" initialized."<<endl;
+	LOG_INFO("Parameters for "<<m_objectName<<" initialized.");
 	PrintParameters();
 	CheckRange();
 }

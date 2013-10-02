@@ -43,20 +43,24 @@ SegmenterBlob::SegmenterBlob(const ConfigReader& x_configReader) :
 {
 	m_description = "Segments a binary image and outputs a stream of objects (from segmented blobs) with their features (position, width and height)";
 	m_input = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
-	m_blobsImg = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
 
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,	"Input binary stream"));
 
 	m_outputStreams.push_back(new StreamObject(0, "segmented", m_param.width, m_param.height, m_regions, cvScalar(255, 255, 255), *this,	"Segmented objects"));
 	// StreamObject* tmp = dynamic_cast<StreamObject*>(m_outputStreams[0]);
 	
+#ifdef MARKUS_DEBUG_STREAMS
+	m_blobsImg = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
 	m_debugStreams.push_back(new StreamDebug(0, "blobs", m_blobsImg, *this,	"Blobs"));
+#endif
 }
 
 SegmenterBlob::~SegmenterBlob(void )
 {
 	delete(m_input);
+#ifdef MARKUS_DEBUG_STREAMS
 	delete(m_blobsImg);
+#endif
 }
 
 void SegmenterBlob::Reset()
@@ -78,7 +82,9 @@ void SegmenterBlob::ExtractBlobs(Mat* x_img)
 {
 	// object that will contain blobs of inputImage
 	CBlobResult blobs;
+#ifdef MARKUS_DEBUG_STREAMS
 	m_blobsImg->setTo(0);
+#endif
 	m_regions.clear();
 	
 	// Extract the blobs using a threshold of 100 in the image
@@ -97,14 +103,18 @@ void SegmenterBlob::ExtractBlobs(Mat* x_img)
 
 	for (i = 0; i < blobs.GetNumBlobs(); i++ )
 	{
+#ifdef MARKUS_DEBUG_STREAMS
 		IplImage img = *m_blobsImg; // TODO : debug only
+#endif
 		currentBlob = blobs.GetBlob(i);
 		
 		cv::Rect rect = currentBlob->GetBoundingBox();
 			
 		if(rect.width >= m_param.minWidth && rect.height >= m_param.minHeight)
 		{
+#ifdef MARKUS_DEBUG_STREAMS
 			currentBlob->FillBlob( &img, colorFromId(i));
+#endif
 			
 			Object obj(m_param.objectLabel);
 			obj.m_posX 	= rect.x + rect.width / 2;

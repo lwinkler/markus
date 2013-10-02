@@ -57,7 +57,7 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 	m_param(m_configReader, "Manager"),
 	m_centralized(x_centralized)
 {
-	cout<<endl<<"*** Create object Manager ***"<<endl;
+	LOG_INFO("*** Create object Manager ***");
 	m_frameCount = 0;
 	
 	
@@ -153,7 +153,7 @@ bool Manager::Process()
 
 	if(!m_lock.tryLockForWrite())
 	{
-		cout<<"Warning : Manager too slow !"<<endl;
+		LOG_WARNING("Manager too slow !");
 		return true;
 	}
 	m_timer.Restart();
@@ -169,31 +169,31 @@ bool Manager::Process()
 		}
 		catch(cv::Exception& e)
 		{
-			cout << (*it)->GetName() << ": Exception raised (std::exception) : " << e.what() <<endl;
+			LOG_ERROR((*it)->GetName() << ": Exception raised (std::exception) : " << e.what());
 		}
 		catch(std::exception& e)
 		{
-			cout << (*it)->GetName() << ": Exception raised (std::exception) : " << e.what() <<endl;
+			LOG_WARNING((*it)->GetName() << ": Exception raised (std::exception) : " << e.what()); // TODO: Exceptions
 
 			// test if all inputs are over
 			if(EndOfAllStreams())
 			{
 				// throw("End of all video streams : Manager::Process");
-				cout << "End of all video streams : Manager::Process" << endl;
+				LOG_WARNING("End of all video streams : Manager::Process");
 				continueFlag = false;
 			}
 		}
 		catch(std::string str)
 		{
-			cout << (*it)->GetName() << ":  Exception raised (string) : " << str <<endl;
+			LOG_ERROR((*it)->GetName() << ":  Exception raised (string) : " << str);
 		}
 		catch(const char* str)
 		{
-			cout << (*it)->GetName() << ": Exception raised (const char*) : " << str <<endl;
+			LOG_ERROR((*it)->GetName() << ": Exception raised (const char*) : " << str);
 		}
 		catch(...)
 		{
-			cout << (*it)->GetName() << ": Unknown exception raised: "<<endl;
+			LOG_ERROR((*it)->GetName() << ": Unknown exception raised");
 		}
 	}
 
@@ -211,14 +211,14 @@ bool Manager::Process()
 void Manager::PrintTimers()
 {
 	// TODO: Check the use of the timers of manager
-	cout<<m_frameCount<<" frames processed in "<<m_timerProcessing<<" ms ("<<  (1000.0 * m_frameCount) / m_timerProcessing<<" frames/s)"<<endl;
-	cout<<"input convertion "                  <<m_timerConvertion<<" ms ("<<(1000.0 * m_frameCount) / m_timerConvertion<<" frames/s)"<<endl;
-	cout<<"Total time "<< m_timerProcessing + m_timerConvertion<<" ms ("<<     (1000.0 * m_frameCount) /(m_timerProcessing + m_timerConvertion)<<" frames/s)"<<endl;
+	LOG_INFO(m_frameCount<<" frames processed in "<<m_timerProcessing<<" ms ("<<  (1000.0 * m_frameCount) / m_timerProcessing<<" frames/s)");
+	LOG_INFO("input convertion "                  <<m_timerConvertion<<" ms ("<<(1000.0 * m_frameCount) / m_timerConvertion<<" frames/s)");
+	LOG_INFO("Total time "<< m_timerProcessing + m_timerConvertion<<" ms ("<<     (1000.0 * m_frameCount) /(m_timerProcessing + m_timerConvertion)<<" frames/s)");
 
 	int cpt = 0;
 	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 	{
-		cout<<cpt<<": ";
+		// LOG_INFO(cpt<<": ");
 		(*it)->PrintStatistics(cout);
 		cpt++;
 	}

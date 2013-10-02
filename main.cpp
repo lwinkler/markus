@@ -111,30 +111,30 @@ int main(int argc, char** argv)
 			gui.show();
 			return app.exec();
 #else
-			cout<<"ERROR: Markus was compiled without GUI. It can only be launched with option --no-gui"<<endl;
+			LOG_ERROR("Markus was compiled without GUI. It can only be launched with option --no-gui");
 			return -1;
 #endif
 		}
 	}
 	catch(cv::Exception& e)
 	{
-		cout << "Exception raised (std::exception) : " << e.what() <<endl;
+		LOG_ERROR("Exception raised (std::exception) : " << e.what() );
 	}
 	catch(std::exception& e)
 	{
-		cout << "Exception raised (std::exception) : " << e.what() <<endl;
+		LOG_ERROR("Exception raised (std::exception) : " << e.what() );
 	}
 	catch(std::string str)
 	{
-		cout << "Exception raised (string) : " << str <<endl;
+		LOG_ERROR("Exception raised (string) : " << str );
 	}
 	catch(const char* str)
 	{
-		cout << "Exception raised (const char*) : " << str <<endl;
+		LOG_ERROR("Exception raised (const char*) : " << str );
 	}
 	catch(...)
 	{
-		cout << "Unknown exception raised: "<<endl;
+		LOG_ERROR("Unknown exception raised: ");
 	}
 	return -1;
 }

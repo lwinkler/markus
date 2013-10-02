@@ -76,7 +76,7 @@ void Logger::Reset()
 void Logger::ProcessFrame()
 {
 	if(m_state != m_oldState) {
-		cout<<"state change"<<endl;
+		LOG_DEBUG("state change");
 		// Log the change in state
 		ofstream myfile;
 

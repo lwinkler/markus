@@ -32,7 +32,7 @@ using namespace std;
 ModuleAsync::ModuleAsync(const ConfigReader& x_configReader) :
 	Module(x_configReader)
 {
-	cout<<endl<<"*** Create object ModuleAsync : "<<m_name<<" ***"<<endl;
+	LOG_INFO("*** Create object ModuleAsync : "<<m_name<<" ***");
 	m_timeStampLastThread 	= TIME_STAMP_MIN;
 	m_resultsCopied 	= false;
 	m_timerThread 		= 0;
@@ -66,7 +66,7 @@ void ModuleAsync::ProcessFrame()
 		else
 		{
 			// thread is taking too long
-			cout<<"Thread too slow, frame dropped after "<<m_currentTimeStamp - m_timeStampLastThread<<" [ms]"<<endl;
+			LOG_WARNING("Thread too slow, frame dropped after "<<m_currentTimeStamp - m_timeStampLastThread<<" [ms]");
 		}
 		m_timeStampLastThread = m_currentTimeStamp;
 	}

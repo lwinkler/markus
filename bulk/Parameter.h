@@ -31,6 +31,8 @@
 #include <iostream>
 #include <cstdlib>
 
+#include "util.h"
+
 enum ParameterType
 {
 	PARAM_INT,
@@ -132,8 +134,7 @@ public:
 	}
 	virtual void Print() const 
 	{
-		std::cout<<m_name<<" = "<<GetValue()<<" ["<<m_min<<":"<<m_max<<"] ("<<configType[m_confSource]<<"); ";	
-		
+		LOG_INFO(m_name<<" = "<<GetValue()<<" ["<<m_min<<":"<<m_max<<"] ("<<configType[m_confSource]<<"); ");	
 	}
 	virtual void SetValueToDefault()
 	{
@@ -189,8 +190,7 @@ public:
 	}
 	virtual void Print() const 
 	{
-		std::cout<<m_name<<" = "<<GetValue()<<" ("<<configType[m_confSource]<<"); ";	
-		
+		LOG_INFO(m_name<<" = "<<GetValue()<<" ("<<configType[m_confSource]<<"); ");
 	}
 	virtual void SetValueToDefault()
 	{

@@ -42,7 +42,6 @@ SegmenterContour::SegmenterContour(const ConfigReader& x_configReader) :
 {
 	m_description = "Segments a binary image and outputs a stream of objects (with OpenCV contour) and extracts their features (position, width and height)";
 	m_input = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
-	m_debug = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
 
 	// Initialize inputs and outputs streams
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,	"Input binary stream"));
@@ -50,7 +49,10 @@ SegmenterContour::SegmenterContour(const ConfigReader& x_configReader) :
 	m_outputObjectStream = new StreamObject(0, "segmented", m_param.width, m_param.height, m_regions, cvScalar(255, 255, 255), *this,	"Segmented objects");
 	m_outputStreams.push_back(m_outputObjectStream);
 
+#ifdef MARKUS_DEBUG_STREAMS
+	m_debug = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
 	m_debugStreams.push_back(new StreamDebug(0, "blobs", m_debug, *this,	"Blobs"));
+#endif
 
 	// Decide which features to compute
 	m_computeFitEllipse = m_param.features.find("ellipse_");
@@ -60,7 +62,9 @@ SegmenterContour::SegmenterContour(const ConfigReader& x_configReader) :
 SegmenterContour::~SegmenterContour()
 {
 	delete(m_input);
+#ifdef MARKUS_DEBUG_STREAMS
 	delete(m_debug);
+#endif
 }
 
 void SegmenterContour::Reset()
@@ -82,7 +86,9 @@ void SegmenterContour::ProcessFrame()
 
 
 	m_regions.clear();
-	m_debug->setTo(0); // TODO debug only
+#ifdef MARKUS_DEBUG_STREAMS
+	m_debug->setTo(0);
+#endif
 
 
 	/// Extract features
@@ -99,7 +105,9 @@ void SegmenterContour::ProcessFrame()
 
 			// contour
 			Scalar color = Scalar(m_rng.uniform(0, 255), m_rng.uniform(0,255), m_rng.uniform(0,255));
+#ifdef MARKUS_DEBUG_STREAMS
 			drawContours(*m_debug, contours, i, color, 1, 8, vector<Vec4i>(), 0, Point()); // TODO debug only
+#endif
 
 
 			Object obj(m_param.objectLabel);
@@ -137,9 +145,11 @@ void SegmenterContour::ProcessFrame()
 				}
 			}
 
+#ifdef MARKUS_DEBUG_STREAMS
 			// ellipse
 			if(m_computeFitEllipse && minEllipse.size.width != 0)
 				ellipse(*m_debug, minEllipse, color, 2, 8);
+#endif
 			// rotated rectangle
 			/*Point2f rect_points[4]; minRect[i].points(rect_points);
 			for(int j = 0; j < 4; j++)
