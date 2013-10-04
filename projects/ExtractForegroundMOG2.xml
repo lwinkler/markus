@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application name="CustomProject">
+<module id="0" name="VideoFileReader0">
+<inputs/>
+<outputs>
+<output id="0"/>
+</outputs>
+<parameters>
+<param name="class">VideoFileReader</param>
+<param name="width">320</param>
+<param name="height">240</param>
+<param name="file">in/input.avi</param>
+</parameters>
+<uiobject x="500" y="300" width="0" height="0"/>
+</module>
+<module id="1" name="BgrSubMOG21">
+<inputs>
+<input id="0" outputid="0" moduleid="0"/>
+</inputs>
+<outputs>
+<output id="0"/>
+<output id="1"/>
+</outputs>
+<parameters>
+<param name="class">BgrSubMOG2</param>
+<param name="width">320</param>
+<param name="height">240</param>
+<param name="type">CV_8UC3</param>
+<param name="auto_process">0</param>
+<param name="fps">0</param>
+<param name="history">500</param>
+<param name="var_thres">16</param>
+<param name="b_shadow_detection">0</param>
+<param name="learning_rate">-1</param>
+</parameters>
+<uiobject x="699" y="423" width="0" height="0"/>
+</module>
+<module id="2" name="VideoFileWriter2">
+<inputs>
+<input id="0" outputid="0" moduleid="0"/>
+</inputs>
+<outputs/>
+<parameters>
+<param name="class">VideoFileWriter</param>
+<param name="width">320</param>
+<param name="height">240</param>
+<param name="type">CV_8UC3</param>
+<param name="auto_process">0</param>
+<param name="fps">0</param>
+<param name="file">out/standard</param>
+<param name="timestamp">1</param>
+<param name="fourcc">MJPG</param>
+</parameters>
+<uiobject x="701" y="262" width="0" height="0"/>
+</module>
+<module id="3" name="VideoFileWriter3">
+<inputs>
+<input id="0" outputid="0" moduleid="1"/>
+</inputs>
+<outputs/>
+<parameters>
+<param name="class">VideoFileWriter</param>
+<param name="width">320</param>
+<param name="height">240</param>
+<param name="type">CV_8UC3</param>
+<param name="auto_process">0</param>
+<param name="fps">0</param>
+<param name="file">out/foreground</param>
+<param name="timestamp">1</param>
+<param name="fourcc">MJPG</param>
+</parameters>
+<uiobject x="905" y="418" width="0" height="0"/>
+</module>
+</application>
