@@ -30,7 +30,7 @@ using namespace std;
 using namespace cv;
 
 // Global variables
-
+Log MkLog::log;
 int g_colorArraySize = 54;
 CvScalar g_colorArray[] =
 {
@@ -238,5 +238,39 @@ const string timeStamp(){
 	char dd[20] ;
 	strftime(dd, sizeof(dd), "%Y%m%d_%T", timeinfo);
 	return dd;
+}
+
+
+
+/// Log class
+Log::Log()
+{
+	Log::m_logFile.open("log.txt", std::ios::app);
+	m_cnull.open("/dev/null");
+};	
+
+
+Log::~Log()
+{
+	m_logFile.close();
+	m_cnull.close();
+}
+
+
+std::ostream & Log::stream(logLevel x_level)
+{
+	switch(x_level)	
+	{
+		case LOG_EVENT:   return std::cout<<"EVENT:";
+		case LOG_WARNING: return std::cerr<<"WARNING:";
+		case LOG_ERROR:   return std::cerr<<"ERROR:";
+		case LOG_INFO:    return m_logFile;
+		case LOG_DEBUG:   
+			if(m_showDebug)
+				return m_logFile<<"DEBUG:";
+			else
+				return m_cnull; 
+		default:	return std::cerr;
+	}
 }
 

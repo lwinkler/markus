@@ -43,7 +43,7 @@ BgrSubMOG::BgrSubMOG(const ConfigReader& x_configReader) :
 	m_description = "Perform background subtraction via Mixtures Of Gaussians";
 	m_input    = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
 	m_background 		= new Mat(cvSize(m_param.width, m_param.height), m_param.type);
-	m_foreground 		= new Mat(cvSize(m_param.width, m_param.height), m_param.type);
+	m_foreground 		= new Mat(cvSize(m_param.width, m_param.height), CV_8UC1);
 	
 	m_inputStreams.push_back(new StreamImage(0, "input",             m_input, *this,   "Video input"));
 

@@ -25,8 +25,10 @@
 #define UTIL_H
 
 #include <opencv/cv.h>
-#include <cstdio>
-#include <cstdlib>
+// #include <cstdio>
+// #include <cstdlib>
+#include <iostream>
+#include <fstream>
 
 /// this file contains some usefull functions and methods
 
@@ -45,9 +47,37 @@ const std::string timeStamp();
 
 
 // Logging functions
-#define LOG_ERROR(x)   std::cout<<"ERROR: "<<x<<std::endl;
-#define LOG_WARNING(x) std::cout<<"WARNING: "<<x<<std::endl;
-#define LOG_INFO(x)    std::cout<<x<<std::endl;
-#define LOG_DEBUG(x)   std::cout<<"DEBUG: "<<x<<std::endl;
+#define LOG_ERROR(x)   MkLog::log.stream(LOG_ERROR)<<x<<std::endl;
+#define LOG_WARNING(x) MkLog::log.stream(LOG_WARNING)<<x<<std::endl;
+#define LOG_INFO(x)    MkLog::log.stream(LOG_INFO)<<x<<std::endl;
+#define LOG_DEBUG(x)   MkLog::log.stream(LOG_DEBUG)<<x<<std::endl;
+
+typedef enum
+{
+	LOG_EVENT,
+	LOG_ERROR,
+	LOG_WARNING,
+	LOG_INFO,
+	LOG_DEBUG
+} logLevel;
+
+class Log {
+	public:
+		Log();
+		~Log();
+		// char m_mode;
+		std::ostream & stream(logLevel x_level);
+		inline void ShowDebug(bool x_show) {m_showDebug = x_show;}
+
+	private:
+		std::ofstream m_logFile;
+		std::ofstream m_cnull;
+		bool m_showDebug;
+};
+
+class MkLog{
+	public:
+		static Log log;	
+};
 
 #endif

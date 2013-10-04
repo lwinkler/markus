@@ -52,18 +52,22 @@ void VideoFileWriter::Reset()
 	if(m_param.fourcc.size() != 4)
 		throw("Error in parameter: fourcc must have 4 characters in VideoFileWriter::Reset");
 	const char * s = m_param.fourcc.c_str();
-	bool isColor = false;
-	if(m_param.type == CV_8UC3) // TODO : find a way to restrain parameters values
+	// The color flag seem to be supported on Windows only
+	// http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videowriter-videowriter
+	bool isColor = true;
+	assert(m_param.type == CV_8UC3); // TODO : find a way to restrain parameters values
+
+	/*if(m_param.type == CV_8UC3)
 		isColor = true;
 	else if(m_param.type == CV_8UC1)
 		isColor = false;
-	else assert(false);
+	else assert(false); */
 
 	const string filename = m_param.file  + (m_param.timeStamp ? ("." + timeStamp()) : ".") + "." + ExtensionFromFourcc(m_param.fourcc);
 
 	// cout<<"Opening "<<filename<<endl;
 	// TODO: Manage fps for stream recording
-	m_writer.open(filename, CV_FOURCC(s[0], s[1], s[2], s[3]), /*m_param.fps > 0 ? m_param.fps :*/ 12, Size(m_param.width, m_param.height), isColor); // TODO: compute last param. Iscolor
+	m_writer.open(filename, CV_FOURCC(s[0], s[1], s[2], s[3]), /*m_param.fps > 0 ? m_param.fps :*/ 12, Size(m_param.width, m_param.height), isColor);
 	if(!m_writer.isOpened())
 	{
 		throw("Failed to open output video file in VideoFileWriter::Reset");
@@ -83,7 +87,7 @@ const string VideoFileWriter::ExtensionFromFourcc(const string& x_fourcc)
 	if(x_fourcc.compare("PIM1") == 0)
 		return "PIM1.mpeg";
 	if(x_fourcc.compare("MJPG") == 0)
-		return "mjpg";
+		return "MJPG.avi";
 	if(x_fourcc.compare("MP42") == 0)
 		return "MP42.avi";
 	if(x_fourcc.compare("DIV3") == 0)
