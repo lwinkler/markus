@@ -47,6 +47,15 @@ bool MarkusApplication::notify(QObject *receiver_, QEvent *event_)
 	catch(std::exception& e)
 	{
 		cout << "Exception raised (std::exception) : " << e.what() <<endl;
+			// test if all inputs are over
+			/*if(EndOfAllStreams())
+			{
+				// throw("End of all video streams : Manager::Process");
+				LOG_WARNING("End of all video streams : Manager::Process");
+				continueFlag = false;
+			} TODO implement something similar*/ 
+		cout<<"Exception raised. Ending process"<<endl;
+		exit(0);
 	}
 	catch(std::string str)
 	{
