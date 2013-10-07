@@ -245,7 +245,7 @@ const string timeStamp(){
 /// Log class
 Log::Log()
 {
-	Log::m_logFile.open("log.txt", std::ios::app);
+	Log::m_logFile.open("log.txt"); // , std::ios::app);
 	m_cnull.open("/dev/null");
 };	
 

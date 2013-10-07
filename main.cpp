@@ -24,6 +24,7 @@
 #include <QtGui/QApplication>
 #include <cstring>
 #include <cstdio>
+#include <getopt.h>    /* for getopt_long; standard getopt is in unistd.h */
 
 #include "Manager.h"
 
@@ -49,30 +50,71 @@ int main(int argc, char** argv)
 	bool nogui       = false;
 	bool centralized = false;
 
-	std::string configFile;
-	configFile = "config.xml";
-	int cpt = 1;
-	while(cpt < argc)
-	{
-		if(!strcmp(argv[cpt], "-d"))
-		{
-			describe = true;
-		}	
-		else if(!strcmp(argv[cpt], "--no-gui"))
-		{
-			nogui = true;
-			centralized = true;
+	string configFile = "config.xml";
+	vector<string> parameters;
+
+
+	// Read arguments
+
+	//int digit_optind = 0;
+	static struct option long_options[] = {
+		{"help",        0, 0, 'h'},
+		{"version",     0, 0, 'v'},
+		{"describe",    0, 0, 'd'},
+		{"centralized", 0, 0, 'c'},
+		{"no-gui",      0, 0, 'n'},
+		{"parameter",   1, 0, 'p'},
+		{NULL, 0, NULL, 0}
+	};
+	int c;
+	int option_index = 0;
+	while ((c = getopt_long(argc, argv, "hvcnp:",
+					long_options, &option_index)) != -1) {
+		// int this_option_optind = optind ? optind : 1;
+		switch (c) {
+			case 'h':
+				usage();
+				break;
+			case 'v':
+				LOG_ERROR("version TODO b\n");
+				return 0;
+			case 'd':
+				describe = true;
+				printf("desccribe");
+				break;
+			case 'c':
+				centralized = true;
+				printf("centralized");
+				break;
+			case 'n':
+				nogui = true;
+				break;
+			case 'p':
+				// push optarg;
+				break;
+			case '?':
+				break;
+			default:
+				LOG_ERROR("Unknown parameter "<<c);
+				return -1;
 		}
-		/* else if(!strcmp(argv[cpt], "--centralized"))
-		{
-			centralized = true;
-		}*/ 
-		else
-		{
-			configFile = argv[cpt];
-		}
-		cpt++;
 	}
+
+
+
+	if (optind == argc - 1) {
+		configFile = argv[argc - 1];
+	}
+	else if(optind == argc)
+	{
+		LOG_INFO("Using default configuration file "<<configFile);
+	}
+	else 
+	{
+		LOG_ERROR("Invalid number of arguments "<<(argc - optind));
+		return -1;
+	}
+
 	try
 	{
 #ifndef MARKUS_NO_GUI
@@ -89,16 +131,14 @@ int main(int argc, char** argv)
 			return 0;
 		}
 
-		if(nogui)
+		if(centralized)
 		{
 			// No gui. launch the process directly
 			// so far we cannot launch the process in a decentralized manner (with a timer on each module)
-//#ifdef CENTRALIZE_PROCESS
 			while(manager.Process()) // TODO: Find a better way to call Process. Through timers for example
 			{
 				// nothing 
 			}
-//#endif
 			//for(int i = 0 ; i < nbCols * nbLines ; i++)
 			//	m_moduleViewer[i]->update();
 			return 0;
@@ -108,10 +148,11 @@ int main(int argc, char** argv)
 #ifndef MARKUS_NO_GUI
 			markus gui(mainConfig, manager);
 			gui.setWindowTitle("OpenCV --> QtImage");
-			gui.show();
-			return app.exec();
+			if(!nogui)
+				gui.show();
+			return app.exec(); // TODO: Manage case where centralized with GUI
 #else
-			LOG_ERROR("Markus was compiled without GUI. It can only be launched with option --no-gui");
+			LOG_ERROR("Markus was compiled without GUI. It can only be launched with option --centralized");
 			return -1;
 #endif
 		}
