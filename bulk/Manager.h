@@ -64,6 +64,7 @@ public:
 	std::vector<Module*>& GetModuleListVar() {return m_modules; }
 	
 	Module * GetModuleById(int x_id) const;
+	Module * GetModuleByName(const std::string& x_name) const;
 	
 	void Export();
 	void PrintTimers();

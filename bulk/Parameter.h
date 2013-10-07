@@ -49,6 +49,7 @@ enum ParameterConfigType
 	PARAMCONF_DEF   = 1,
 	PARAMCONF_XML,
 	PARAMCONF_GUI,
+	PARAMCONF_CMD,
 	PARAMCONF_UNKNOWN,
 	PARAMCONF_SIZE
 };
@@ -77,7 +78,7 @@ public:
 	inline const std::string& GetDescription() const {return m_description;}
 	inline const ParameterConfigType& GetConfigurationSource() const {return m_confSource;}
 	virtual void SetValueToDefault() = 0;
-	virtual void Print() const = 0;
+	virtual void Print(std::ostream& os) const = 0;
 	virtual bool CheckRange() const = 0;
 	virtual void Export(std::ostream& rx_os, int x_indentation) = 0;
 
@@ -132,9 +133,9 @@ public:
 		T value = GetValue();
 		return (value <= m_max && value >= m_min);
 	}
-	virtual void Print() const 
+	virtual void Print(std::ostream& os) const 
 	{
-		LOG_INFO(m_name<<" = "<<GetValue()<<" ["<<m_min<<":"<<m_max<<"] ("<<configType[m_confSource]<<"); ");	
+		os<<m_name<<" = "<<GetValue()<<" ["<<m_min<<":"<<m_max<<"] ("<<configType[m_confSource]<<"); ";
 	}
 	virtual void SetValueToDefault()
 	{
@@ -188,9 +189,9 @@ public:
 	{
 		return true;
 	}
-	virtual void Print() const 
+	virtual void Print(std::ostream& os) const 
 	{
-		LOG_INFO(m_name<<" = "<<GetValue()<<" ("<<configType[m_confSource]<<"); ");
+		os<<m_name<<" = "<<GetValue()<<" ("<<configType[m_confSource]<<"); ";
 	}
 	virtual void SetValueToDefault()
 	{
@@ -231,7 +232,7 @@ public:
 	inline int GetDefault() const {return m_default;}
 	inline int GetValue() const{return *mp_value;}
 	virtual bool CheckRange() const;
-	virtual void Print() const;
+	virtual void Print(std::ostream& os) const;
 	virtual void SetValueToDefault()
 	{
 		*mp_value = m_default;

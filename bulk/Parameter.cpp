@@ -158,14 +158,15 @@ void ParameterStructure::PrintParameters() const
 	{
 		switch((*it)->GetConfigurationSource())
 		{
-		case PARAMCONF_DEF: confType = "def"; break;
-		case PARAMCONF_GUI: confType = "gui"; break;
-		case PARAMCONF_UNKNOWN: confType = "unk"; break;
-		case PARAMCONF_UNSET: confType = "unset"; break;
-		case PARAMCONF_XML: confType = "xml"; break;
-		default: assert(false); break;
+			case PARAMCONF_DEF: confType = "def"; break;
+			case PARAMCONF_GUI: confType = "gui"; break;
+			case PARAMCONF_CMD: confType = "cmd"; break;
+			case PARAMCONF_UNKNOWN: confType = "unk"; break;
+			case PARAMCONF_UNSET: confType = "unset"; break;
+			case PARAMCONF_XML: confType = "xml"; break;
+			default: assert(false); break;
 		}
-		(*it)->Print();
+		(*it)->Print(MkLog::log.stream(LOG_INFO));
 	}
 	cout<<endl;
 }
@@ -249,8 +250,8 @@ bool ParameterEnum::CheckRange() const
 	return true;
 }
 
-void ParameterEnum::Print() const
+void ParameterEnum::Print(ostream& os) const
 {
-	std::cout<<m_name<<" = "<<Int2Str(GetValue())<<" ["<<GetValue()<<"] ("<<configType[m_confSource]<<"); ";
+	os<<m_name<<" = "<<Int2Str(GetValue())<<" ["<<GetValue()<<"] ("<<configType[m_confSource]<<"); ";
 }
 

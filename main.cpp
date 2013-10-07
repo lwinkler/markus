@@ -53,6 +53,7 @@ int main(int argc, char** argv)
 	string configFile = "config.xml";
 	vector<string> parameters;
 
+	MkLog::log.ShowDebug(true);// TODO Add a param for this
 
 	// Read arguments
 
@@ -90,7 +91,7 @@ int main(int argc, char** argv)
 				nogui = true;
 				break;
 			case 'p':
-				// push optarg;
+				parameters.push_back(optarg);
 				break;
 			case '?':
 				break;
@@ -124,6 +125,19 @@ int main(int argc, char** argv)
 		ConfigReader appConfig = mainConfig.SubConfig("application");
 		assert(!appConfig.IsEmpty());
 		Manager manager(appConfig, centralized);
+
+		for(vector<string>::const_iterator it = parameters.begin() ; it != parameters.end() ; it++)
+		{
+			vector<string> elems;
+			split(*it, '=', elems);
+			if(elems.size() != 2)
+				throw("Badly formed parameter in main");
+			vector<string> path;
+			split(elems[0], '.', path);
+			if(path.size() != 2)
+				throw("Badly formed parameter in main");
+			manager.GetModuleByName(path[0])->RefParameter().RefParameterByName(path[1]).SetValue(elems[1], PARAMCONF_CMD);
+		}
 
 		if(describe) 
 		{

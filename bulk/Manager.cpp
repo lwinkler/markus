@@ -278,3 +278,13 @@ Module* Manager::GetModuleById(int x_id) const
 	assert(false);
 	return NULL;
 }
+
+
+Module* Manager::GetModuleByName(const string& x_name) const
+{
+	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+		if((*it)->GetName() == x_name) 
+			return *it;
+	assert(false);
+	return NULL;
+}
