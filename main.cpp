@@ -53,7 +53,6 @@ int main(int argc, char** argv)
 	string configFile = "config.xml";
 	vector<string> parameters;
 
-	MkLog::log.ShowDebug(true);// TODO Add a param for this
 
 	// Read arguments
 
@@ -64,14 +63,14 @@ int main(int argc, char** argv)
 		{"describe",    0, 0, 'd'},
 		{"centralized", 0, 0, 'c'},
 		{"no-gui",      0, 0, 'n'},
+		{"log-mode",    1, 0, 'l'},
 		{"parameter",   1, 0, 'p'},
 		{NULL, 0, NULL, 0}
 	};
 	int c;
 	int option_index = 0;
-	while ((c = getopt_long(argc, argv, "hvcnp:",
-					long_options, &option_index)) != -1) {
-		// int this_option_optind = optind ? optind : 1;
+	while ((c = getopt_long(argc, argv, "hvcnlp:",
+					long_options, &option_index)) != -1) { // TODO: handle case with unknown parameter
 		switch (c) {
 			case 'h':
 				usage();
@@ -88,6 +87,9 @@ int main(int argc, char** argv)
 			case 'n':
 				nogui = true;
 				break;
+			case 'l':
+				Global::logger.SetMode(atoi(optarg));
+				break;
 			case 'p':
 				parameters.push_back(optarg);
 				break;
@@ -98,7 +100,6 @@ int main(int argc, char** argv)
 				return -1;
 		}
 	}
-
 
 
 	if (optind == argc - 1) {
@@ -147,6 +148,8 @@ int main(int argc, char** argv)
 
 		if(centralized)
 		{
+			if(!nogui)
+				LOG_WARNING("GUI is not shown if you use --centralized option. To avoid this message use --no-gui option.");
 			// No gui. launch the process directly
 			// so far we cannot launch the process in a decentralized manner (with a timer on each module)
 			while(manager.Process()) // TODO: Find a better way to call Process. Through timers for example

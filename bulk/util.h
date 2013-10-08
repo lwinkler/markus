@@ -47,10 +47,10 @@ const std::string timeStamp();
 
 
 // Logging functions
-#define LOG_ERROR(x)   MkLog::log.stream(LOG_ERROR)<<x<<std::endl;
-#define LOG_WARNING(x) MkLog::log.stream(LOG_WARNING)<<x<<std::endl;
-#define LOG_INFO(x)    MkLog::log.stream(LOG_INFO)<<x<<std::endl;
-#define LOG_DEBUG(x)   MkLog::log.stream(LOG_DEBUG)<<x<<std::endl;
+#define LOG_ERROR(x)   Global::logger.Stream(LOG_ERROR)<<x<<std::endl;
+#define LOG_WARNING(x) Global::logger.Stream(LOG_WARNING)<<x<<std::endl;
+#define LOG_INFO(x)    Global::logger.Stream(LOG_INFO)<<x<<std::endl;
+#define LOG_DEBUG(x)   Global::logger.Stream(LOG_DEBUG)<<x<<std::endl;
 
 typedef enum
 {
@@ -58,26 +58,28 @@ typedef enum
 	LOG_ERROR,
 	LOG_WARNING,
 	LOG_INFO,
-	LOG_DEBUG
+	LOG_DEBUG,
+	LOG_SIZE
 } logLevel;
 
-class Log {
+class Logging {
 	public:
-		Log();
-		~Log();
+		Logging();
+		~Logging();
 		// char m_mode;
-		std::ostream & stream(logLevel x_level);
-		inline void ShowDebug(bool x_show) {m_showDebug = x_show;}
+		std::ostream & Stream(logLevel x_level);
+		void SetMode(char x_mode);
 
 	private:
 		std::ofstream m_logFile;
 		std::ofstream m_cnull;
-		bool m_showDebug;
+		std::vector<std::ostream*> m_oss;
+		char m_mode;
 };
 
-class MkLog{
+class Global{
 	public:
-		static Log log;	
+		static Logging logger;	
 };
 
 #endif

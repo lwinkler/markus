@@ -30,7 +30,7 @@ using namespace std;
 using namespace cv;
 
 // Global variables
-Log MkLog::log;
+Logging Global::logger;
 int g_colorArraySize = 54;
 CvScalar g_colorArray[] =
 {
@@ -243,33 +243,90 @@ const string timeStamp(){
 
 
 /// Log class
-Log::Log()
+Logging::Logging()
 {
-	Log::m_logFile.open("log.txt"); // , std::ios::app);
-	m_cnull.open("/dev/null");
+	SetMode(0);
 };	
 
 
-Log::~Log()
+Logging::~Logging()
 {
-	m_logFile.close();
-	m_cnull.close();
+	if(m_logFile.is_open())
+		m_logFile.close();
+	if(m_cnull.is_open())
+		m_cnull.close();
 }
 
+// Set logging mode
+void Logging::SetMode(char x_mode)
+{
+	m_mode = x_mode;
+	if(m_logFile.is_open())
+		m_logFile.close();
+	if(m_cnull.is_open())
+		m_cnull.close();
+	m_oss.resize(LOG_SIZE);
 
-std::ostream & Log::stream(logLevel x_level)
+	switch(m_mode)
+	{
+		case 0:
+		{
+			// Log standard, hide debug info
+			m_cnull.open("/dev/null");
+			m_oss[LOG_EVENT]   = &std::cout;
+			m_oss[LOG_ERROR]   = &std::cerr;
+			m_oss[LOG_WARNING] = &std::cerr;
+			m_oss[LOG_INFO]    = &std::cout;
+			m_oss[LOG_DEBUG]   = &m_cnull;
+		}
+		break;
+		case 1:
+		{
+			// Log standard, show debug info
+			m_oss[LOG_EVENT]   = &std::cout;
+			m_oss[LOG_ERROR]   = &std::cerr;
+			m_oss[LOG_WARNING] = &std::cerr;
+			m_oss[LOG_INFO]    = &std::cout;
+			m_oss[LOG_DEBUG]   = &std::cout;
+		}
+		break;
+		case 2:
+		{
+			// Log info to file, hide debug info
+			m_logFile.open("log.txt"); // , std::ios::app);
+			m_cnull.open("/dev/null");
+			m_oss[LOG_EVENT]   = &std::cout;
+			m_oss[LOG_ERROR]   = &std::cerr;
+			m_oss[LOG_WARNING] = &std::cerr;
+			m_oss[LOG_INFO]    = &m_logFile;
+			m_oss[LOG_DEBUG]   = &m_cnull;
+		}
+		break;
+		case 3:
+		{
+			// Log info to file, show debug info
+			m_logFile.open("log.txt"); // , std::ios::app);
+			m_oss[LOG_EVENT]   = &std::cout;
+			m_oss[LOG_ERROR]   = &std::cerr;
+			m_oss[LOG_WARNING] = &std::cerr;
+			m_oss[LOG_INFO]    = &m_logFile;
+			m_oss[LOG_DEBUG]   = &std::cout;
+		}
+		break;
+		default:
+			cerr<<"This logging mode is non-existant"<<endl;
+	}
+}
+
+std::ostream & Logging::Stream(logLevel x_level)
 {
 	switch(x_level)	
 	{
-		case LOG_EVENT:   return std::cout<<"EVENT:";
-		case LOG_WARNING: return std::cerr<<"WARNING:";
-		case LOG_ERROR:   return std::cerr<<"ERROR:";
-		case LOG_INFO:    return m_logFile;
-		case LOG_DEBUG:   
-			if(m_showDebug)
-				return m_logFile<<"DEBUG:";
-			else
-				return m_cnull; 
+		case LOG_EVENT:   return *m_oss[LOG_EVENT]<<"EVENT: ";
+		case LOG_WARNING: return *m_oss[LOG_WARNING]<<"WARNING: ";
+		case LOG_ERROR:   return *m_oss[LOG_ERROR]<<"ERROR: ";
+		case LOG_INFO:    return *m_oss[LOG_INFO];
+		case LOG_DEBUG:   return *m_oss[LOG_DEBUG]<<"DEBUG: ";
 		default:	return std::cerr;
 	}
 }

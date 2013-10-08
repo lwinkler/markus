@@ -71,7 +71,7 @@ void Module::Reset()
 		m_moduleTimer->Reset(RefParameter().fps);
 	}
 	else m_moduleTimer = NULL;
-	RefParameter().PrintParameters(MkLog::log.stream(LOG_INFO));
+	RefParameter().PrintParameters(Global::logger.Stream(LOG_INFO));
 
 }
 

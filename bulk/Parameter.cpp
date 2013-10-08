@@ -72,7 +72,7 @@ void ParameterStructure::Init()
 	SetFromConfig();
 	
 	LOG_INFO("Parameters for "<<m_objectName<<" initialized.");
-	// PrintParameters(MkLog::log.stream(LOG_INFO));
+	// PrintParameters(Global::log.stream(LOG_INFO));
 	CheckRange();
 }
 
