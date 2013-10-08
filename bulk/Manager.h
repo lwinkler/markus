@@ -56,6 +56,7 @@ class Manager : public Configurable
 public:
 	Manager(ConfigReader & x_configReader, bool x_centralized);
 	~Manager();
+	void Reset();
 	bool Process();
 	// const std::vector<Input*> & GetInputList()  const {return m_inputs; };
 	const std::vector<Module*>& GetModuleList() const {return m_modules; }

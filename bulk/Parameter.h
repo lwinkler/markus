@@ -54,7 +54,7 @@ enum ParameterConfigType
 	PARAMCONF_SIZE
 };
 
-static const char configType[PARAMCONF_SIZE][16] = {"unset", "def", "xml", "gui", "unk"};
+static const char configType[PARAMCONF_SIZE][16] = {"unset", "def", "xml", "gui", "cmd", "unk"};
 
 
 class ConfigReader;
@@ -66,7 +66,7 @@ public:
 		m_name(x_name),
 		m_confSource(PARAMCONF_UNSET),
 		m_description(x_description){}
-	virtual ~Parameter(){};
+	virtual ~Parameter(){}
 		
 	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) = 0;
 	//virtual void SetValue(const void* x_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN) = 0;
@@ -295,7 +295,7 @@ public:
 	void SetFromConfig();
 	void SetValueToDefault();
 	void CheckRange() const;
-	void PrintParameters() const;
+	void PrintParameters(std::ostream& os) const;
 	//void SetValueByName(const std::string& x_name, const std::string& x_value, ParameterConfigType x_configType = PARAMCONF_UNKNOWN);
 	Parameter & RefParameterByName(const std::string& x_name);
 	const std::vector<Parameter*>& GetList() const {return m_list;}

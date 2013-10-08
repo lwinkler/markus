@@ -72,7 +72,7 @@ void ParameterStructure::Init()
 	SetFromConfig();
 	
 	LOG_INFO("Parameters for "<<m_objectName<<" initialized.");
-	PrintParameters();
+	// PrintParameters(MkLog::log.stream(LOG_INFO));
 	CheckRange();
 }
 
@@ -151,12 +151,12 @@ void ParameterStructure::CheckRange() const
 
 /// Print parameters to stdout with details
 
-void ParameterStructure::PrintParameters() const
+void ParameterStructure::PrintParameters(ostream &os) const
 {
 	string confType = "";
 	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
 	{
-		switch((*it)->GetConfigurationSource())
+		/*switch((*it)->GetConfigurationSource())
 		{
 			case PARAMCONF_DEF: confType = "def"; break;
 			case PARAMCONF_GUI: confType = "gui"; break;
@@ -165,10 +165,10 @@ void ParameterStructure::PrintParameters() const
 			case PARAMCONF_UNSET: confType = "unset"; break;
 			case PARAMCONF_XML: confType = "xml"; break;
 			default: assert(false); break;
-		}
-		(*it)->Print(MkLog::log.stream(LOG_INFO));
+		}*/
+		(*it)->Print(os);
 	}
-	cout<<endl;
+	os<<endl;
 }
 
 

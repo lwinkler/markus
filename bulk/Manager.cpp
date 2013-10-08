@@ -124,6 +124,20 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 		catch(...){}
 	}
 
+}
+
+Manager::~Manager()
+{
+	PrintTimers();
+	
+	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+		delete *it;
+}
+
+
+/// Reset the manager: must be called externally after initialization
+void Manager::Reset()
+{
 	// Reset timers
 	m_timerConvertion = 0;
 	m_timerProcessing = 0;
@@ -134,14 +148,6 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 		(*it)->Reset();
 	}
 	m_timer.Restart();
-}
-
-Manager::~Manager()
-{
-	PrintTimers();
-	
-	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
-		delete *it;
 }
 
 /// Process all modules

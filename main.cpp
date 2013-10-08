@@ -39,7 +39,7 @@ using namespace std;
 
 void usage()
 {
-	printf("Usage : markus --no-gui --centralized <configuration> [-d]\n");
+	printf("Usage : markus --no-gui --centralized <configuration> [-d]\n"); //TODO: update this
 	printf("     --no-gui          Run process without gui\n");
 	// printf("     --centralized     Call all modules processing methods in a centralized way\n");
 }
@@ -81,11 +81,9 @@ int main(int argc, char** argv)
 				return 0;
 			case 'd':
 				describe = true;
-				printf("desccribe");
 				break;
 			case 'c':
 				centralized = true;
-				printf("centralized");
 				break;
 			case 'n':
 				nogui = true;
@@ -126,6 +124,7 @@ int main(int argc, char** argv)
 		assert(!appConfig.IsEmpty());
 		Manager manager(appConfig, centralized);
 
+		// Set values of parameters if set from command line
 		for(vector<string>::const_iterator it = parameters.begin() ; it != parameters.end() ; it++)
 		{
 			vector<string> elems;
@@ -138,6 +137,7 @@ int main(int argc, char** argv)
 				throw("Badly formed parameter in main");
 			manager.GetModuleByName(path[0])->RefParameter().RefParameterByName(path[1]).SetValue(elems[1], PARAMCONF_CMD);
 		}
+		manager.Reset();
 
 		if(describe) 
 		{
