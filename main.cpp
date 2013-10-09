@@ -39,9 +39,20 @@ using namespace std;
 
 void usage()
 {
-	printf("Usage : markus --no-gui --centralized <configuration> [-d]\n"); //TODO: update this
-	printf("     --no-gui          Run process without gui\n");
-	// printf("     --centralized     Call all modules processing methods in a centralized way\n");
+	printf("Usage : markus <options> <configuration.xml> \n");
+	printf("options:\n");
+	printf(" -h  --help            Print this help        \n");
+	printf(" -v  --version         Print version information\n");
+	printf(" -d  --describe        Create a description of all modules in XML format inside module/ directory\n");
+	printf(" -c  --centralized     Module processing function is called from the manager (instead of decentralized timers)\n");
+	printf(" -n  --no-gui          Run process without gui\n");
+	printf(" -l  --log-mode [0-3]  Set logging mode:\n");
+	printf("                       0: Print log to console output (default)\n");
+	printf("                       1: Print log to console output, show debug logs\n");
+	printf("                       2: Print informative log to 'log.txt'\n");
+	printf("                       3: Print informative log to 'log.txt', show debug logs\n");
+	printf(" -p  --parameter \"moduleName.paramName=value\"\n");
+	printf("                       Override the value of one parameter ");
 }
 
 int main(int argc, char** argv)
@@ -69,11 +80,12 @@ int main(int argc, char** argv)
 	};
 	int c;
 	int option_index = 0;
-	while ((c = getopt_long(argc, argv, "hvcnlp:",
+	while ((c = getopt_long(argc, argv, "hvcnl:p:",
 					long_options, &option_index)) != -1) { // TODO: handle case with unknown parameter
 		switch (c) {
 			case 'h':
 				usage();
+				return 0;
 				break;
 			case 'v':
 				LOG_ERROR("version TODO b\n");
@@ -93,8 +105,13 @@ int main(int argc, char** argv)
 			case 'p':
 				parameters.push_back(optarg);
 				break;
-			case '?':
-				break;
+			case ':': // missing argument
+				LOG_ERROR("--"<<long_options[::optopt].name<<": an argument is required");
+				return -1;
+
+			case '?': // unknown option
+				LOG_ERROR(argv[optind - 1]<<": unknown option");
+				return -1;
 			default:
 				LOG_ERROR("Unknown parameter "<<c);
 				return -1;
@@ -112,6 +129,7 @@ int main(int argc, char** argv)
 	else 
 	{
 		LOG_ERROR("Invalid number of arguments "<<(argc - optind));
+		usage();
 		return -1;
 	}
 
