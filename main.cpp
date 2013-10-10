@@ -146,15 +146,26 @@ int main(int argc, char** argv)
 		// Set values of parameters if set from command line
 		for(vector<string>::const_iterator it = parameters.begin() ; it != parameters.end() ; it++)
 		{
-			vector<string> elems;
-			split(*it, '=', elems);
-			if(elems.size() != 2)
-				throw("Badly formed parameter in main");
-			vector<string> path;
-			split(elems[0], '.', path);
-			if(path.size() != 2)
-				throw("Badly formed parameter in main");
-			manager.GetModuleByName(path[0])->RefParameter().RefParameterByName(path[1]).SetValue(elems[1], PARAMCONF_CMD);
+			// vector<string> elems;
+			// split(*it, '=', elems);
+			// if(elems.size() != 2)
+				// throw("Badly formed parameter in main");
+			try
+			{
+				string param = it->substr(0, it->find("="));
+				string value = it->substr(it->find("=") + 1);
+				vector<string> path;
+				split(param, '.', path);
+				cout<<param<<endl;
+				if(path.size() != 2)
+					throw("Parameter set in command line must be in format 'module.parameter'");
+				manager.GetModuleByName(path[0])->RefParameter().RefParameterByName(path[1]).SetValue(value, PARAMCONF_CMD);
+			}
+			catch(exception & e)
+			{
+				LOG_ERROR("Cannot parse command line parameter "<<*it<<" :"<<e.what());
+				throw("Cannot parse command line parameter");
+			}
 		}
 		manager.Reset();
 
