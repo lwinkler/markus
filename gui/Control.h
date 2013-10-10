@@ -133,7 +133,7 @@ protected:
 };
 
 
-/// Control class for a string parameter
+/// Control class for a enum parameter
 class ControllerEnum : public Controller
 {
 public:

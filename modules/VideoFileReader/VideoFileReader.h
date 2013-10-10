@@ -54,6 +54,10 @@ public:
         void Reset();
 	const std::string& GetName(){return m_name;};
 	// const cv::Mat * GetImage() const {return m_output;}
+	
+	// Specific to file reader
+	void SetMsec(int x_msec);
+	void SetFrame(int x_frame);
 
 protected:
 	cv::VideoCapture m_capture;

@@ -48,7 +48,7 @@ void VideoFileReader::Reset()
 	m_capture.release();
 	m_capture.open(m_param.file);
 	// m_fps     = m_capture.get(CV_CAP_PROP_FPS);
-	GetProperties();
+	GetProperties(); // TODO: debug only
 	
 	if(! m_capture.isOpened())
 	{
@@ -105,4 +105,16 @@ void VideoFileReader::GetProperties()
 		<<" CONVERT_RGB "<<m_capture.get(CV_CAP_PROP_CONVERT_RGB)
 	// 	<<" WHITE_BALANCE"<<m_capture.get(CV_CAP_PROP_WHITE_BALANCE)<<endl;
 		<<" RECTIFICATION"<<m_capture.get(CV_CAP_PROP_RECTIFICATION));
+}
+
+// Set reading time in msec
+void VideoFileReader::SetMsec(int x_msec)
+{
+	m_capture.set(CV_CAP_PROP_POS_MSEC, x_msec);	
+}
+
+// Set reading time in frames
+void VideoFileReader::SetFrame(int x_frame)
+{
+	m_capture.set(CV_CAP_PROP_POS_FRAMES, x_frame);	
 }
