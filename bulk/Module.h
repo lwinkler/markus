@@ -39,7 +39,7 @@
 
 
 class Stream;
-class Control;
+class ControlBoard;
 class QModuleTimer;
 
 class ModuleParameterStructure : public ParameterStructure
@@ -81,7 +81,7 @@ public:
 	const std::vector<Stream*>& GetInputStreamList() const {return m_inputStreams;}
 	const std::vector<Stream*>& GetOutputStreamList() const {return m_outputStreams;}
 	const std::vector<Stream*>& GetDebugStreamList() const {return m_debugStreams;}
-	const std::vector<Control*>& GetControlList() const {return m_controls;}
+	const std::vector<ControlBoard*>& GetControlList() const {return m_controls;}
 	virtual ModuleParameterStructure & RefParameter() = 0;
 	
 	inline int GetWidth() {return RefParameter().width;}
@@ -121,7 +121,7 @@ protected:
 	std::vector<Stream *> m_outputStreams;
 	std::vector<Stream *> m_debugStreams;	
 
-	std::vector<Control *> m_controls;
+	std::vector<ControlBoard *> m_controls;
 	std::string m_name;
 	std::string m_description; 
 	int m_id;

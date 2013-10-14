@@ -93,7 +93,7 @@ Module::~Module()
 		delete(*it);
 #endif
 #ifndef MARKUS_NO_GUI
-	for(std::vector<Control* >::iterator it = m_controls.begin() ; it != m_controls.end() ; it++)
+	for(std::vector<ControlBoard* >::iterator it = m_controls.begin() ; it != m_controls.end() ; it++)
 		delete(*it);
 #endif
 

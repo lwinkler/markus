@@ -23,12 +23,14 @@
 
 #include "InputStreamControl.h"
 #include "QParameterSlider.h"
+#include "VideoFileReader/VideoFileReader.h"
 
 using namespace std;
 
+const std::string ControllerStream::m_name = "StreamControl";
 
 InputStreamControl::InputStreamControl(const std::string& x_name, const std::string& x_description):
-	Control(x_name, x_description)
+	ControlBoard(x_name, x_description)
 {
 
 }
@@ -37,4 +39,48 @@ InputStreamControl::~InputStreamControl()
 {
 }
 
+
+void InputStreamControl::SetModule(VideoFileReader & rx_module)
+{
+	m_module = &rx_module;
+
+	// Delete all controllers
+	for(vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)
+	{
+		delete(*it);
+	}
+	m_controllers.clear();
+
+	Controller * ctrr = new ControllerStream(rx_module);
+	if(ctrr == NULL) throw("Controller creation failed");
+	else AddController(ctrr);
+}
+
+/*--------------------------------------------------------------------------------*/
+
+ControllerStream::ControllerStream(VideoFileReader& rx_module) :
+	Controller(),
+	m_module(rx_module)
+{
+	m_widget = m_parameterSlider = new QParameterSlider(0, 0, m_module.GetMaxMsec(), 0);
+}
+
+ControllerStream::~ControllerStream()
+{
+}
+
+void ControllerStream::SetControlledValue()
+{
+	m_module.SetMsec(m_parameterSlider->GetValue());
+}
+
+void ControllerStream::GetCurrent()
+{
+	m_parameterSlider->SetValue(m_module.GetMsec());
+}
+		
+void ControllerStream::GetDefault()
+{
+	m_parameterSlider->SetValue(0);
+}
 

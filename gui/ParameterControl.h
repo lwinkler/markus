@@ -29,7 +29,7 @@
 #include "Control.h"
 
 
-class ParameterControl : public Control
+class ParameterControl : public ControlBoard
 {
 public:
 	ParameterControl(const std::string& x_name, const std::string& x_description);

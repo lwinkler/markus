@@ -58,6 +58,10 @@ public:
 	// Specific to file reader
 	void SetMsec(int x_msec);
 	void SetFrame(int x_frame);
+	int GetMsec();
+	int GetFrame();
+	int GetMaxMsec();
+	int GetMaxFrame();
 
 protected:
 	cv::VideoCapture m_capture;

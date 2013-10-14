@@ -22,13 +22,13 @@
 -------------------------------------------------------------------------------------*/
 
 #include "QParameterSlider.h"
-#include <cstdio>
 
 #include <QBoxLayout>
 #include <QScrollBar>
 #include <QLineEdit>
-#include <QSlider>
 #include <QLabel>
+
+#include <cstdio>
 
 
 using namespace std;
@@ -40,6 +40,7 @@ QParameterSlider::QParameterSlider(double x_value, double x_min, double x_max, i
 	for(int tmp = x_precision ; tmp ; tmp--)
 		m_divisionPerUnit *= 10;
 
+	// Create Qt objects
 	m_boxLayout = new QBoxLayout(QBoxLayout::LeftToRight);
 	char str[16];
 	sprintf(m_format, "%%.%dlf", x_precision);
@@ -65,6 +66,7 @@ QParameterSlider::QParameterSlider(double x_value, double x_min, double x_max, i
 
 	setLayout(m_boxLayout);
 
+	// Connect slots
 	connect(m_scrollBar, SIGNAL(valueChanged(int)), this, SLOT(SetValueFromSlider()));
 	connect(m_lineEdit, SIGNAL(textEdited(const QString &)), this, SLOT(SetValueFromText()));
 }
@@ -76,6 +78,7 @@ QParameterSlider::~QParameterSlider()
 	delete(m_scrollBar);
 }
 
+/// Use the current position of the slider to set the controlled value
 void QParameterSlider::SetValueFromSlider()
 {
 	m_value = static_cast<double>(m_scrollBar->value()) / m_divisionPerUnit;
@@ -84,15 +87,18 @@ void QParameterSlider::SetValueFromSlider()
 	m_lineEdit->setText(str);
 }
 
+
+/// Use the current text to set the controlled value
 void QParameterSlider::SetValueFromText()
 {
 	m_value = m_lineEdit->text().toDouble();
 	m_scrollBar->setValue(m_value * m_divisionPerUnit);
 }
 
+/// Set the controlled value
 void QParameterSlider::SetValue(double x_value)
 {
-	m_value = m_value;
+	m_value = x_value;
 	m_scrollBar->setValue(m_value * m_divisionPerUnit);
 }
 

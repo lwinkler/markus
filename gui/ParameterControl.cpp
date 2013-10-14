@@ -40,19 +40,13 @@ using namespace std;
 
 
 ParameterControl::ParameterControl(const std::string& x_name, const std::string& x_description):
-	Control(x_name, x_description)
+	ControlBoard(x_name, x_description)
 {
 
 }
 
 ParameterControl::~ParameterControl()
 {
-	// Delete all controllers
-	for(vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)
-	{
-		delete(*it);
-	}
-	m_controllers.clear();
 }
 
 void ParameterControl::SetParameterStructure(ParameterStructure& rx_param)

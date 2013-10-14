@@ -43,6 +43,8 @@
 #include "util.h"
 #include "StreamImage.h"
 #include "ParameterControl.h"
+#include "InputStreamControl.h"
+#include "VideoFileReader/VideoFileReader.h"
 
 #define CLEAN_DELETE(x) if((x) != NULL){delete((x));(x) = NULL}
 
@@ -236,7 +238,7 @@ void QModuleViewer::updateModule(Module * x_module)
 		mp_comboStreams->addItem((*it)->GetName().c_str(), cpt++);
 	}
 	// Add a fake stream for control
-	for(std::vector<Control*>::const_iterator it = m_currentModule->GetControlList().begin(); it != m_currentModule->GetControlList().end(); it++)
+	for(std::vector<ControlBoard*>::const_iterator it = m_currentModule->GetControlList().begin(); it != m_currentModule->GetControlList().end(); it++)
 	{
 		mp_comboStreams->addItem((*it)->GetName().c_str(), cpt++);
 	}
@@ -303,11 +305,25 @@ void QModuleViewer::updateStream(Stream * x_outputStream)
 	}
 }
 
-void QModuleViewer::updateControl(Control* x_control)
+void QModuleViewer::updateControl(ControlBoard* x_control)
 {
 	m_currentStream  = NULL;
 	m_currentControl = x_control;
-	static_cast<ParameterControl*>(m_currentControl)->SetParameterStructure(m_currentModule->RefParameter());
+
+	ParameterControl   * controlParam = dynamic_cast<ParameterControl*>(m_currentControl);
+	InputStreamControl * controlInput = dynamic_cast<InputStreamControl*>(m_currentControl);
+
+	
+	if(controlParam)
+		controlParam->SetParameterStructure(m_currentModule->RefParameter());
+	else if(controlInput)
+	{
+		VideoFileReader * module = dynamic_cast<VideoFileReader*>(m_currentModule);
+		assert(module);
+		controlInput->SetModule(*module);
+	}
+	else assert(false);
+
 
 	/// Create new control screen
 	mp_gbControls->setWidgetResizable(true);

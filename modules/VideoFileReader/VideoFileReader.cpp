@@ -128,3 +128,27 @@ void VideoFileReader::SetFrame(int x_frame)
 {
 	m_capture.set(CV_CAP_PROP_POS_FRAMES, x_frame);	
 }
+
+// Get reading time in msec
+int VideoFileReader::GetMsec()
+{
+	return m_capture.get(CV_CAP_PROP_POS_MSEC);	
+}
+
+// Get reading time in frames
+int VideoFileReader::GetFrame()
+{
+	return m_capture.get(CV_CAP_PROP_POS_FRAMES);	
+}
+
+// Get reading time in msec
+int VideoFileReader::GetMaxMsec()
+{
+	return 1000 * m_capture.get(CV_CAP_PROP_FRAME_COUNT) / m_capture.get(CV_CAP_PROP_FPS);	
+}
+
+// Get reading time in frames
+int VideoFileReader::GetMaxFrame()
+{
+	return m_capture.get(CV_CAP_PROP_FRAME_COUNT);	
+}

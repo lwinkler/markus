@@ -230,32 +230,32 @@ void ControllerEnum::GetDefault()
 
 /*------------------------------------------------------------------------------------------------*/
 	 
-Control::Control(const std::string& x_name, const std::string& x_description):
+ControlBoard::ControlBoard(const std::string& x_name, const std::string& x_description):
 	m_name(x_name),
 	m_description(x_description)
 {
 
 }
 
-Control::~Control()
+ControlBoard::~ControlBoard()
 {
 	for (vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)
 		delete *it;
 }
 
-void Control::SetControlledValue()
+void ControlBoard::SetControlledValue()
 {
 	for(vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)
 		(*it)->SetControlledValue();
 }
 
-void Control::GetDefault()
+void ControlBoard::GetDefault()
 {
 	for(vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)
 		(*it)->GetDefault();
 }
 
-void Control::GetCurrent()
+void ControlBoard::GetCurrent()
 {
 	for(vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)
 		(*it)->GetCurrent();

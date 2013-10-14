@@ -151,11 +151,11 @@ protected:
 
 /// Class to control a module (settings ...)
 
-class Control
+class ControlBoard
 {
 public:
-	Control(const std::string& x_name, const std::string& x_description);
-	virtual ~Control();
+	ControlBoard(const std::string& x_name, const std::string& x_description);
+	virtual ~ControlBoard();
 	inline const std::string& GetName() const {return m_name;}
 	inline const std::string& GetDescription() const{return m_description;}
 	inline std::vector<Controller*>& RefListControllers(){return m_controllers;}
