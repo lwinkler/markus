@@ -21,73 +21,57 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef QMODULEVIEWER_H
-#define QMODULEVIEWER_H
+#ifndef QPARAMETERCONTROLBOARD_H
+#define QPARAMETERCONTROLBOARD_H
 
 #include <opencv/cv.h>
 #include <QPixmap>
 #include <QWidget>
 #include <QImage>
 #include <QPainter>
-#include "QParameterControlBoard.h"
 
-class Manager;
-class Module;
-class Stream;
+// class Manager;
+// class Module;
+// class Stream;
 class ControlBoard;
-class QComboBox;
-class QPainter;
-// class QGroupBox;
-// class QPushButton;
-class QBoxLayout;
-class QLabel;
-// class QScrollArea;
-class QListWidget;
+// class QComboBox;
+// class QPainter;
+class QGroupBox;
+class QPushButton;
+// class QBoxLayout;
+// class QLabel;
+class QScrollArea;
+// class QListWidget;
+class Module;
 
-class QModuleViewer : public QWidget 
+class QParameterControlBoard : public QWidget 
 {
 	Q_OBJECT
 public:
-	QModuleViewer(const Manager * x_manager, QWidget *parent = 0);
-	virtual ~QModuleViewer();
-	static void  ConvertMat2QImage(const cv::Mat *mat, QImage *qim);
-	static void  ConvertIplImage2QImage(const IplImage *iplImg, QImage *qim);
+	QParameterControlBoard(Module * x_module, QWidget *parent = 0);
+	virtual ~QParameterControlBoard();
 private:
-	QBoxLayout * mp_mainLayout;
 	
-	QImage m_image;
 	Module        * m_currentModule;
-	const Stream  * m_currentStream;
-	const Manager * m_manager;
-	
-	int m_outputWidth;
-	int m_outputHeight;
-	int m_offsetX;
-	int m_offsetY;
-	
+	ControlBoard  * m_currentControl;
+
 	void paintEvent(QPaintEvent *event);
 	virtual void resizeEvent(QResizeEvent * e);
 
-	QGroupBox   * mp_gbCombos;
-	QComboBox   * mp_comboModules;
-	QComboBox   * mp_comboStreams;
-	QWidget     * mp_widEmpty;
+	QScrollArea * mp_gbControls;
+	QGroupBox   * mp_gbButtons;
+	QPushButton * mp_buttonGetCurrentControl;
+	QPushButton * mp_buttonGetDefaultControl;
+	QPushButton * mp_buttonSetControl;
+	QPushButton * mp_buttonResetModule;
 
-	// Images for format conversion
-	cv::Mat * m_img_original;
-	cv::Mat * m_img_output;
-	cv::Mat * m_img_tmp1;
-	cv::Mat * m_img_tmp2;
-
-	QParameterControlBoard * m_parameterControlBoard;
 
 public slots:
-	void updateModuleNb(int x_index);
-	void updateStreamOrControlNb(int x_index);
-	void updateModule(Module * x_module);
-	void updateStream(Stream * x_outputStream);
-	void showDisplayOptions();
-	void hideDisplayOptions();
+	void updateControl(ControlBoard * x_control);
+	void getCurrentControl();
+	void getDefaultControl();
+	void SetControlledValue();
+	void resetModule();
 };
 
 #endif

@@ -29,24 +29,22 @@
 #include <QGridLayout>
 #include <QMenu>
 #include <QScrollBar>
-#include <QPushButton>
+// #include <QPushButton>
 #include <QLabel>
 #include <qevent.h>
 
 #include <QPixmap>
 #include <QPainter>
-#include <QScrollArea>
+// #include <QScrollArea>
 #include <QListWidget>
 
 #include "Manager.h"
 #include "Module.h"
 #include "util.h"
 #include "StreamImage.h"
-#include "ParameterControl.h"
-#include "InputStreamControl.h"
-#include "VideoFileReader/VideoFileReader.h"
+#include "QParameterControlBoard.h"
 
-#define CLEAN_DELETE(x) if((x) != NULL){delete((x));(x) = NULL}
+#define CLEAN_DELETE(x) if((x) != NULL){delete((x));(x) = NULL;}
 
 using namespace std;
 using namespace cv;
@@ -54,10 +52,11 @@ using namespace cv;
 // Constructor
 QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidget(parent)
 {
-	m_img_tmp1 = NULL; // Allocated on first conversion
-	m_img_tmp2 = NULL;
-	m_img_output  = NULL;
-	m_img_original = NULL;
+	m_img_tmp1              = NULL; // Allocated on first conversion
+	m_img_tmp2              = NULL;
+	m_img_output            = NULL;
+	m_img_original          = NULL;
+	m_parameterControlBoard = NULL;
 
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	m_outputWidth  = 0.8 * width();
@@ -69,14 +68,11 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	m_manager 		= x_manager;
 	m_currentModule 	= *x_manager->GetModuleList().begin();
 	m_currentStream 	= *m_currentModule->GetOutputStreamList().begin();
-	m_currentControl 	= NULL;
 		
 	mp_comboModules 	= new QComboBox();
 	mp_comboStreams 	= new QComboBox();
 	mp_mainLayout 		= new QBoxLayout(QBoxLayout::TopToBottom);
 	mp_gbCombos 		= new QGroupBox(tr("Display options"));
-	mp_gbControls		= new QScrollArea;
-	mp_gbButtons		= new QGroupBox(tr("Parameter options"));
 	mp_widEmpty		= new QWidget();
 
 	QGridLayout * layoutCombos = new QGridLayout;
@@ -99,25 +95,11 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	mp_gbCombos->setLayout(layoutCombos);
 	mp_gbCombos->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 	
-	// Create the group with control buttons (for settings)
-	mp_buttonGetCurrentControl  = new QPushButton(tr("Get current"));
-	mp_buttonGetDefaultControl  = new QPushButton(tr("Get default"));
-	mp_buttonSetControl         = new QPushButton(tr("Set"));
-	mp_buttonResetModule        = new QPushButton(tr("Reset module"));
 	
-
-	// Create the group with settings buttons	
-	QHBoxLayout * buttonLayout = new QHBoxLayout;
-	buttonLayout->addWidget(mp_buttonGetCurrentControl);
-	buttonLayout->addWidget(mp_buttonGetDefaultControl);
-	buttonLayout->addWidget(mp_buttonSetControl);
-	buttonLayout->addWidget(mp_buttonResetModule);
-	mp_gbButtons->setLayout(buttonLayout);
 
 	// add widgets to main layout
 	mp_mainLayout->addWidget(mp_gbCombos, 0);
-	mp_mainLayout->addWidget(mp_gbControls, 0);
-	mp_mainLayout->addWidget(mp_gbButtons, 1);
+	// mp_mainLayout->addWidget(mp_gbButtons, 1);
 	mp_mainLayout->addWidget(mp_widEmpty, 2); // this is only for alignment
 	
 	
@@ -144,10 +126,6 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	
 	connect(mp_comboModules, SIGNAL(activated(int)), this, SLOT(updateModuleNb(int) ));
 	connect(mp_comboStreams, SIGNAL(activated(int)), this, SLOT(updateStreamOrControlNb(int)));
-	connect(mp_buttonGetCurrentControl, SIGNAL(pressed()), this, SLOT(getCurrentControl(void)));
-	connect(mp_buttonGetDefaultControl, SIGNAL(pressed()), this, SLOT(getDefaultControl(void)));
-	connect(mp_buttonSetControl, SIGNAL(pressed()), this, SLOT(SetControlledValue(void)));
-	connect(mp_buttonResetModule, SIGNAL(pressed()), this, SLOT(resetModule(void)));
 }
 
 QModuleViewer::~QModuleViewer(void) 
@@ -161,9 +139,6 @@ QModuleViewer::~QModuleViewer(void)
 	delete mp_comboStreams;
 	delete mp_mainLayout;
 	delete mp_gbCombos;
-	if(mp_gbControls != NULL) delete mp_gbControls;
-	if(mp_gbButtons != NULL) delete mp_gbButtons;
-	if(mp_widEmpty != NULL) delete mp_widEmpty;
 }
 
 void QModuleViewer::resizeEvent(QResizeEvent * e)
@@ -238,10 +213,11 @@ void QModuleViewer::updateModule(Module * x_module)
 		mp_comboStreams->addItem((*it)->GetName().c_str(), cpt++);
 	}
 	// Add a fake stream for control
+	/*
 	for(std::vector<ControlBoard*>::const_iterator it = m_currentModule->GetControlList().begin(); it != m_currentModule->GetControlList().end(); it++)
 	{
 		mp_comboStreams->addItem((*it)->GetName().c_str(), cpt++);
-	}
+	}*/
 	
 	// assert(m_currentModule->GetOutputStreamList().size() > 0);
 	if(m_currentModule->GetOutputStreamList().size() > 0)
@@ -261,6 +237,9 @@ void QModuleViewer::updateModuleNb(int x_index)
 void QModuleViewer::updateStreamOrControlNb(int x_index)
 {
 	unsigned int cpt = static_cast<unsigned int>(x_index);
+
+	CLEAN_DELETE(m_parameterControlBoard);
+	m_parameterControlBoard = new QParameterControlBoard(m_currentModule);
 	if(cpt < m_currentModule->GetOutputStreamList().size())
 	{
 		updateStream(m_currentModule->GetOutputStreamList()[cpt]);
@@ -276,7 +255,7 @@ void QModuleViewer::updateStreamOrControlNb(int x_index)
 	cpt -= m_currentModule->GetDebugStreamList().size();
 	if(cpt < m_currentModule->GetControlList().size())
 	{
-		updateControl(m_currentModule->GetControlList()[cpt]);
+		m_parameterControlBoard->updateControl(m_currentModule->GetControlList()[cpt]);
 		return;
 	}
 	
@@ -289,94 +268,20 @@ void QModuleViewer::updateStream(Stream * x_outputStream)
 {
 	m_currentStream  = x_outputStream;
 
-	m_currentControl = NULL;
 
-	if(m_img_original != NULL)
-	{
-		delete(m_img_original);
-		m_img_original = NULL;
-	}
+	CLEAN_DELETE(m_parameterControlBoard);
+	CLEAN_DELETE(m_img_original);
 
 	//if(mp_gbControls != NULL)
+	if(m_parameterControlBoard != NULL)
 	{
-		mp_gbControls->hide();
-		mp_gbButtons->hide();
-		//mp_widEmpty->show();
+		m_parameterControlBoard->hide();
+		// mp_gbControls->hide();
+		// mp_gbButtons->hide();
+		// //mp_widEmpty->show();
 	}
 }
 
-void QModuleViewer::updateControl(ControlBoard* x_control)
-{
-	m_currentStream  = NULL;
-	m_currentControl = x_control;
-
-	ParameterControl   * controlParam = dynamic_cast<ParameterControl*>(m_currentControl);
-	InputStreamControl * controlInput = dynamic_cast<InputStreamControl*>(m_currentControl);
-
-	
-	if(controlParam)
-		controlParam->SetParameterStructure(m_currentModule->RefParameter());
-	else if(controlInput)
-	{
-		VideoFileReader * module = dynamic_cast<VideoFileReader*>(m_currentModule);
-		assert(module);
-		controlInput->SetModule(*module);
-	}
-	else assert(false);
-
-
-	/// Create new control screen
-	mp_gbControls->setWidgetResizable(true);
-	QGridLayout * vbox = new QGridLayout;
-
-	// Add controls (= parameters)
-	int cpt = 0;
-	for(vector<Controller*>::iterator it = m_currentControl->RefListControllers().begin() ; it != m_currentControl->RefListControllers().end() ; it++)
-	{
-		QLabel * lab = new QLabel((*it)->GetName().c_str());
-		vbox->addWidget(lab, cpt, 0);
-		vbox->addWidget((*it)->RefWidget(), cpt, 1);
-		cpt++;
-	}
-
-	QWidget *viewport = new QWidget;
-	viewport->setLayout(vbox);
-	viewport->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-	mp_gbControls->setWidget(viewport);
-
-	//mp_widEmpty->hide();
-	mp_gbControls->show();
-	mp_gbButtons->show();
-}
-
-void QModuleViewer::SetControlledValue()
-{
-	if(m_currentControl != NULL)
-	{
-		m_currentControl->SetControlledValue();
-	}
-}
-
-void QModuleViewer::resetModule()
-{
-	m_currentModule->Reset();
-}
-
-void QModuleViewer::getCurrentControl()
-{
-	if(m_currentControl != NULL)
-	{
-		m_currentControl->GetCurrent();
-	}
-}
-
-void QModuleViewer::getDefaultControl()
-{
-	if(m_currentControl != NULL)
-	{
-		m_currentControl->GetDefault();
-	}
-}
 
 void QModuleViewer::showDisplayOptions()
 {
@@ -387,7 +292,6 @@ void QModuleViewer::hideDisplayOptions()
 {
 	mp_gbCombos->hide();
 }
-
 void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qim)
 {
 	const IplImage iplim = *mat;
