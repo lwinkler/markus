@@ -33,7 +33,7 @@
 class Manager;
 class Module;
 class Stream;
-class ParameterControl;
+class Control;
 class QComboBox;
 class QPainter;
 class QGroupBox;
@@ -57,7 +57,7 @@ private:
 	QImage m_image;
 	Module * 		m_currentModule;
 	const Stream * 		m_currentStream;
-	ParameterControl*	m_currentControl;
+	Control*	m_currentControl;
 	const Manager* 		m_manager;
 	
 	int m_outputWidth;
@@ -90,7 +90,7 @@ public slots:
 	void updateStreamOrControlNb(int x_index);
 	void updateModule(Module * x_module);
 	void updateStream(Stream * x_outputStream);
-	void updateControl(ParameterControl * x_control);
+	void updateControl(Control * x_control);
 	void showDisplayOptions();
 	void hideDisplayOptions();
 	void getCurrentControl();

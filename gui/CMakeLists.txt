@@ -13,5 +13,7 @@ MarkusApplication.cpp
 QModuleViewer.cpp
 QParameterSlider.cpp
 Control.cpp
+ParameterControl.cpp
+InputStreamControl.cpp
 )
 

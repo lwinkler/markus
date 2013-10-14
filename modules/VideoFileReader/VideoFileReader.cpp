@@ -24,6 +24,10 @@
 #include "VideoFileReader.h"
 #include "StreamImage.h"
 
+#ifndef MARKUS_NO_GUI
+#include "InputStreamControl.h"
+#endif
+
 using namespace std;
 using namespace cv;
 
@@ -34,6 +38,12 @@ VideoFileReader::VideoFileReader(const ConfigReader& x_configReader):
 	m_description = "Input from a video file.";
 	m_output = new Mat(Size(m_param.width, m_param.height), CV_8UC3); // Note: sizes will be overridden !
 	m_outputStreams.push_back(new StreamImage(0, "input", m_output, *this,	"Video stream"));
+
+
+#ifndef MARKUS_NO_GUI
+	// Add a new control to play forward and rewind
+	m_controls.push_back(new InputStreamControl("InputStreamControl", "Control the reading of the video file"));
+#endif
 }
 
 VideoFileReader::~VideoFileReader()

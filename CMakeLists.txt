@@ -32,11 +32,14 @@ main.cpp
 # with GUI
 add_subdirectory(gui)
 include_directories(gui)
-SET(DEPS markus bulk gui modules tools tinyxml bulk ${OpenCV_LIBS} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} )
+SET(DEPS bulk gui modules tools)
 
 # without GUI
 #add_definitions(-DMARKUS_NO_GUI)
-#SET(DEPS markus bulk modules tools tinyxml bulk ${OpenCV_LIBS} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} )
+#SET(DEPS bulk modules tools)
+
+SET(DEPS ${DEPS} ${DEPS} ) # double the dependancies to avoid linking error
+SET(DEPS ${DEPS} tinyxml ${OpenCV_LIBS} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} )
 
 # enable debug streams
 add_definitions(-DMARKUS_DEBUG_STREAMS)
@@ -51,7 +54,7 @@ add_subdirectory(tools)
 
 add_executable(markus ${markus_SRCS})
 # target_link_libraries(markus ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} bulk gui modules tools ${OpenCV_LIBS} tinyxml bulk)
-target_link_libraries(${DEPS})
+target_link_libraries(markus ${DEPS})
 
 
 add_custom_target(update_modules_list

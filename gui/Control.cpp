@@ -243,22 +243,6 @@ Control::~Control()
 		delete *it;
 }
 
-ParameterControl::ParameterControl(const std::string& x_name, const std::string& x_description):
-	Control(x_name, x_description)
-{
-
-}
-
-ParameterControl::~ParameterControl()
-{
-	// Delete all controllers
-	for(vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)
-	{
-		delete(*it);
-	}
-	m_controllers.clear();
-}
-
 void Control::SetControlledValue()
 {
 	for(vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)
@@ -277,52 +261,3 @@ void Control::GetCurrent()
 		(*it)->GetCurrent();
 }
 
-void ParameterControl::SetParameterStructure(ParameterStructure& rx_param)
-{
-	mp_param = &rx_param;
-
-	// Delete all controllers
-	for(vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)
-	{
-		delete(*it);
-	}
-	m_controllers.clear();
-
-	for(vector<Parameter*>::const_iterator it = mp_param->GetList().begin(); it != mp_param->GetList().end(); it++)
-	{
-		Controller * ctrr = NULL;
-		switch((*it)->GetType())
-		{
-			case PARAM_BOOL:
-				ctrr = new ControllerBool(*dynamic_cast<ParameterBool*>(*it));
-				break;
-			case PARAM_DOUBLE:
-				ctrr = new ControllerDouble(*dynamic_cast<ParameterDouble*>(*it));
-				break;
-			case PARAM_FLOAT:
-				ctrr = new ControllerFloat(*dynamic_cast<ParameterFloat*>(*it));
-				break;
-			case PARAM_IMAGE_TYPE:
-				ctrr = new ControllerEnum(*dynamic_cast<ParameterEnum*>(*it)); 
-				break;
-			case PARAM_INT:
-				ctrr = new ControllerInt(*dynamic_cast<ParameterInt*>(*it));
-				break;
-			case PARAM_STR:
-				ctrr = new ControllerString(*dynamic_cast<ParameterString*>(*it));
-				break;
-		}
-		if(ctrr == NULL) throw("Controller creation failed");
-		else AddController(ctrr);
-	}
-}
-
-void ParameterControl::CleanParameterStructure()
-{
-	// Delete all controllers
-	for(vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)
-	{
-		delete(*it);
-	}
-	m_controllers.clear();
-}

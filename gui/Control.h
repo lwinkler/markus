@@ -172,16 +172,5 @@ protected:
 	std::vector<Controller*> m_controllers;
 };
 
-class ParameterControl : public Control
-{
-public:
-	ParameterControl(const std::string& x_name, const std::string& x_description);
-	~ParameterControl();
-	void SetParameterStructure(ParameterStructure& rx_param);
-	void CleanParameterStructure();
-	virtual void Destroy(){CleanParameterStructure();};
-private:
-	ParameterStructure* mp_param;
-};
 
 #endif

@@ -31,7 +31,7 @@
 
 
 #ifndef MARKUS_NO_GUI
-#include "Control.h"
+#include "ParameterControl.h"
 #endif
 
 using namespace std;
@@ -93,7 +93,7 @@ Module::~Module()
 		delete(*it);
 #endif
 #ifndef MARKUS_NO_GUI
-	for(std::vector<ParameterControl* >::iterator it = m_controls.begin() ; it != m_controls.end() ; it++)
+	for(std::vector<Control* >::iterator it = m_controls.begin() ; it != m_controls.end() ; it++)
 		delete(*it);
 #endif
 

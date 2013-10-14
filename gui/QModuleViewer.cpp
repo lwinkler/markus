@@ -42,7 +42,7 @@
 #include "Module.h"
 #include "util.h"
 #include "StreamImage.h"
-#include "Control.h"
+#include "ParameterControl.h"
 
 #define CLEAN_DELETE(x) if((x) != NULL){delete((x));(x) = NULL}
 
@@ -236,7 +236,7 @@ void QModuleViewer::updateModule(Module * x_module)
 		mp_comboStreams->addItem((*it)->GetName().c_str(), cpt++);
 	}
 	// Add a fake stream for control
-	for(std::vector<ParameterControl*>::const_iterator it = m_currentModule->GetControlList().begin(); it != m_currentModule->GetControlList().end(); it++)
+	for(std::vector<Control*>::const_iterator it = m_currentModule->GetControlList().begin(); it != m_currentModule->GetControlList().end(); it++)
 	{
 		mp_comboStreams->addItem((*it)->GetName().c_str(), cpt++);
 	}
@@ -303,7 +303,7 @@ void QModuleViewer::updateStream(Stream * x_outputStream)
 	}
 }
 
-void QModuleViewer::updateControl(ParameterControl* x_control)
+void QModuleViewer::updateControl(Control* x_control)
 {
 	m_currentStream  = NULL;
 	m_currentControl = x_control;
