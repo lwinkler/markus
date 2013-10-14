@@ -36,6 +36,7 @@
 // #include <QPixmap>
 #include <QScrollArea>
 // #include <QListWidget>
+#include <QBoxLayout>
 
 #include "Manager.h"
 #include "Module.h"
@@ -53,7 +54,8 @@ using namespace cv;
 // Constructor
 QParameterControlBoard::QParameterControlBoard(Module *x_module, QWidget *parent) : QWidget(parent)
 {
-	m_currentModule = x_module;
+	QBoxLayout * mainLayout = new QBoxLayout(QBoxLayout::TopToBottom);
+	m_currentModule         = x_module;
 	mp_gbControls		= new QScrollArea;
 	mp_gbButtons		= new QGroupBox(tr("Parameter options"));
 
@@ -69,7 +71,8 @@ QParameterControlBoard::QParameterControlBoard(Module *x_module, QWidget *parent
 	QHBoxLayout * buttonLayout = new QHBoxLayout;
 	mp_gbButtons->setLayout(buttonLayout);
 
-	// mp_mainLayout->addWidget(mp_gbControls, 0);
+	mainLayout->addWidget(mp_gbControls, 0);
+	mainLayout->addWidget(mp_gbButtons, 1);
 
 	buttonLayout->addWidget(mp_buttonGetCurrentControl);
 	buttonLayout->addWidget(mp_buttonGetDefaultControl);
@@ -80,6 +83,8 @@ QParameterControlBoard::QParameterControlBoard(Module *x_module, QWidget *parent
 	connect(mp_buttonGetDefaultControl, SIGNAL(pressed()), this, SLOT(getDefaultControl(void)));
 	connect(mp_buttonSetControl, SIGNAL(pressed()), this, SLOT(SetControlledValue(void)));
 	connect(mp_buttonResetModule, SIGNAL(pressed()), this, SLOT(resetModule(void)));
+
+	// parent->setLayout(mainLayout); // TODO fix this
 }
 
 QParameterControlBoard::~QParameterControlBoard(void) 

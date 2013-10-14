@@ -37,6 +37,7 @@
 #include <QPainter>
 // #include <QScrollArea>
 #include <QListWidget>
+#include <QSignalMapper>
 
 #include "Manager.h"
 #include "Module.h"
@@ -100,20 +101,9 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	// add widgets to main layout
 	mp_mainLayout->addWidget(mp_gbCombos, 0);
 	// mp_mainLayout->addWidget(mp_gbButtons, 1);
-	mp_mainLayout->addWidget(mp_widEmpty, 2); // this is only for alignment
+	mp_mainLayout->addWidget(mp_widEmpty, 1); // this is only for alignment
 	
 	
-	// Set context menus
-	QAction * actionShowDisplayMenu = new QAction(tr("Show display options"), this);
-	actionShowDisplayMenu->setShortcut(tr("Ctrl+S"));
-	QAction * actionHideDisplayMenu = new QAction(tr("Hide display options"), this);
-	actionHideDisplayMenu->setShortcut(tr("Ctrl+H"));
-	connect(actionShowDisplayMenu, SIGNAL(triggered()), this, SLOT(showDisplayOptions()));
-	connect(actionHideDisplayMenu, SIGNAL(triggered()), this, SLOT(hideDisplayOptions()));
-
-	this->addAction(actionShowDisplayMenu);
-	this->addAction(actionHideDisplayMenu);
-	this->setContextMenuPolicy(Qt::ActionsContextMenu);
 	
 	setPalette(QPalette(QColor(0, 0, 0)));
 	setAutoFillBackground(true);
@@ -222,6 +212,35 @@ void QModuleViewer::updateModule(Module * x_module)
 	// assert(m_currentModule->GetOutputStreamList().size() > 0);
 	if(m_currentModule->GetOutputStreamList().size() > 0)
 		updateStream(*(m_currentModule->GetOutputStreamList().begin()));
+
+
+	// Set context menus
+	QAction * actionShowDisplayMenu = new QAction(tr("Show display options"), this);
+	actionShowDisplayMenu->setShortcut(tr("Ctrl+S"));
+	QAction * actionHideDisplayMenu = new QAction(tr("Hide display options"), this);
+	actionHideDisplayMenu->setShortcut(tr("Ctrl+H"));
+	connect(actionShowDisplayMenu, SIGNAL(triggered()), this, SLOT(showDisplayOptions()));
+	connect(actionHideDisplayMenu, SIGNAL(triggered()), this, SLOT(hideDisplayOptions()));
+	this->addAction(actionShowDisplayMenu);
+	this->addAction(actionHideDisplayMenu);
+
+	// Show control board for parameters
+	const vector<ControlBoard*>& ctrs = m_currentModule->GetControlList();
+	cpt = 0;
+	//const char * title[32] = {"params", "stream"};
+	for(vector<ControlBoard*>::const_iterator it = ctrs.begin() ; it != ctrs.end() ; it++)
+	{
+		QAction * actionShowControl = new QAction(tr("Show controls"), this);
+		QSignalMapper * signalMapper = new QSignalMapper(this);
+		signalMapper->setMapping(actionShowControl, cpt);
+		//actionShowControl->setShortcut(tr("Ctrl+C"));
+		connect(actionShowControl, SIGNAL(triggered()), signalMapper, SLOT(map()));
+		connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(updateControlNb(int)));
+		// m_parameterControlBoard->updateControl(m_currentModule->GetControlList()[cpt]);
+		this->addAction(actionShowControl);
+		cpt++;
+	}
+	this->setContextMenuPolicy(Qt::ActionsContextMenu);
 }
 
 void QModuleViewer::updateModuleNb(int x_index)
@@ -238,8 +257,8 @@ void QModuleViewer::updateStreamOrControlNb(int x_index)
 {
 	unsigned int cpt = static_cast<unsigned int>(x_index);
 
-	CLEAN_DELETE(m_parameterControlBoard);
-	m_parameterControlBoard = new QParameterControlBoard(m_currentModule);
+	// CLEAN_DELETE(m_parameterControlBoard);
+	// m_parameterControlBoard = new QParameterControlBoard(m_currentModule);
 	if(cpt < m_currentModule->GetOutputStreamList().size())
 	{
 		updateStream(m_currentModule->GetOutputStreamList()[cpt]);
@@ -252,34 +271,43 @@ void QModuleViewer::updateStreamOrControlNb(int x_index)
 		updateStream(m_currentModule->GetDebugStreamList()[cpt]);
 		return;
 	}
+	/*
 	cpt -= m_currentModule->GetDebugStreamList().size();
 	if(cpt < m_currentModule->GetControlList().size())
 	{
 		m_parameterControlBoard->updateControl(m_currentModule->GetControlList()[cpt]);
 		return;
 	}
-	
+	*/
 	
 	assert(false);
 }
 
+void QModuleViewer::updateControlNb(int x_index)
+{
+	assert(x_index < (int) m_currentModule->GetControlList().size());
+	CLEAN_DELETE(m_parameterControlBoard);
+	m_parameterControlBoard = new QParameterControlBoard(m_currentModule, this);
+	mp_mainLayout->addWidget(m_parameterControlBoard, 0);
+	m_parameterControlBoard->updateControl(m_currentModule->GetControlList()[x_index]);
+
+}
 
 void QModuleViewer::updateStream(Stream * x_outputStream)
 {
 	m_currentStream  = x_outputStream;
 
 
-	CLEAN_DELETE(m_parameterControlBoard);
 	CLEAN_DELETE(m_img_original);
 
 	//if(mp_gbControls != NULL)
-	if(m_parameterControlBoard != NULL)
+	/*if(m_parameterControlBoard != NULL)
 	{
 		m_parameterControlBoard->hide();
 		// mp_gbControls->hide();
 		// mp_gbButtons->hide();
 		// //mp_widEmpty->show();
-	}
+	}*/
 }
 
 

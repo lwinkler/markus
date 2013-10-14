@@ -84,6 +84,7 @@ private:
 public slots:
 	void updateModuleNb(int x_index);
 	void updateStreamOrControlNb(int x_index);
+	void updateControlNb(int x_index);
 	void updateModule(Module * x_module);
 	void updateStream(Stream * x_outputStream);
 	void showDisplayOptions();
