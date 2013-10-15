@@ -118,10 +118,10 @@ void CascadeDetector::CopyResults()
 		obj.m_width = it->width;
 		obj.m_height = it->height;
 
-		obj.AddFeature("x", obj.m_posX); // TODO: divide
-		obj.AddFeature("y", obj.m_posY);
-		obj.AddFeature("width", obj.m_width);
-		obj.AddFeature("height", obj.m_height);
+		obj.AddFeature("x"      , obj.m_posX   / m_param.width);
+		obj.AddFeature("y"      , obj.m_posY   / m_param.height);
+		obj.AddFeature("width"  , obj.m_width  / m_param.width);
+		obj.AddFeature("height" , obj.m_height / m_param.height);
 
 		m_detectedObjects.push_back(obj);
 	}

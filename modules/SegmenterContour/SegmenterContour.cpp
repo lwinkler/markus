@@ -120,7 +120,7 @@ void SegmenterContour::ProcessFrame()
 			for(vector<string>::const_iterator it = m_featureNames.begin() ; it != m_featureNames.end() ; it++)
 			{
 				if(it->compare("x") == 0)
-					obj.AddFeature("x", obj.m_posX / m_param.width); // TODO: Better to divide by diagonal ?
+					obj.AddFeature("x", obj.m_posX / m_param.width);
 				else if(it->compare("y") == 0)
 					obj.AddFeature("y", obj.m_posY / m_param.height);
 				else if(it->compare("width") == 0)
@@ -133,11 +133,11 @@ void SegmenterContour::ProcessFrame()
 				}
 				else if(it->compare("ellipse_width") == 0)
 				{
-					obj.AddFeature("ellipse_width", minEllipse.size.width); // TODO: divide by something
+					obj.AddFeature("ellipse_width", minEllipse.size.width / m_param.width);
 				}
 				else if(it->compare("ellipse_height") == 0)
 				{
-					obj.AddFeature("ellipse_height", minEllipse.size.height);
+					obj.AddFeature("ellipse_height", minEllipse.size.height  / m_param.height);
 				}
 				else if(it->compare("ellipse_ratio") == 0)
 				{
