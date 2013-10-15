@@ -67,7 +67,7 @@ private:
 	void DetectNewTemplates();
 	void UpdateTemplates();
 	void PrintObjects() const;
-	int MatchObject(Object& x_obj);
+	const Template * MatchObject(const Object& x_obj)const;
 	int MatchTemplate(Template& x_temp);
 
 	std::list <Template> m_templates;
