@@ -47,8 +47,8 @@ class Template
 		// inline const std::list <Object>& GetMatchingObjects() const{ return m_matchingObjects;}
 		inline int GetNum() const {return m_num;}
 		
-		//int m_isMatched;
-		int m_bestMatchingObject;
+		// int m_isMatched;
+		// int m_bestMatchingObject;
 		int m_counterClean;
 		// std::list <Object> m_matchingObjects;
 		Object * m_lastMatchingObject;

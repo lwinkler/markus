@@ -32,7 +32,7 @@ int Template::m_counter = 0;
 Template::Template(int x_maxNbFramesDisappearance)
 {
 	m_num = m_counter;
-	m_bestMatchingObject = -1;
+	// m_bestMatchingObject = -1;
 	m_lastMatchingObject = NULL;
 	m_counterClean = x_maxNbFramesDisappearance;
 	m_posX = 0;
@@ -49,7 +49,7 @@ Template::Template(const Template& t, int x_maxNbFramesDisappearance)
 	m_posX = t.m_posX;
 	m_posY = t.m_posY;
 
-	m_bestMatchingObject = -1;
+	// m_bestMatchingObject = -1;
 	m_counterClean = x_maxNbFramesDisappearance;
 
 }
@@ -61,7 +61,7 @@ Template::Template(const Object& x_reg, int x_maxNbFramesDisappearance)
 	m_feats = x_reg.GetFeatures();
 	m_posX = x_reg.m_posX;
 	m_posY = x_reg.m_posY;
-	m_bestMatchingObject = -1;
+	// m_bestMatchingObject = -1;
 	m_lastMatchingObject = NULL;
 	m_counterClean = x_maxNbFramesDisappearance;
 
@@ -76,7 +76,7 @@ Template& Template::operator = (const Template& t)
 	m_posX = t.m_posX;
 	m_posY = t.m_posY;
 	
-	m_bestMatchingObject = -1;
+	// m_bestMatchingObject = -1;
 	m_counterClean = t.m_counterClean;// ::m_maxNbFramesDisappearance;
 
 	return *this;

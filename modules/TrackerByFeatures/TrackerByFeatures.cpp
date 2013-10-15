@@ -81,32 +81,32 @@ void TrackerByFeatures::ProcessFrame()
 
 int TrackerByFeatures::MatchTemplate(Template& x_temp)
 {
-	double bestDist = 1e99;
-	int bestObject = -1;
+	double bestDist = DBL_MAX;
+	Object* bestObject = NULL;
 
 	//cout<<"Comparing template "<<m_num<<" with "<<x_regs.size()<<" regions"<<endl;
 
-	for(unsigned int i = 0 ; i< m_objects.size() ; i++)
+	for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
 	{
 		// Add empty features for distance and speed
-		double dist = x_temp.CompareWithObject(m_objects[i], m_featureNames);
+		double dist = x_temp.CompareWithObject(*it, m_featureNames);
 		//cout<<"dist ="<<dist;
 		if(dist < bestDist)
 		{
-			bestDist = dist;
-			bestObject = i;
+			bestDist   = dist;
+			bestObject = &(*it);
 		}
 	}
-	if(bestObject != -1 && bestDist < m_param.maxMatchingDistance
-			&& (x_temp.GetNum() == MatchObject(m_objects[bestObject]) || !m_param.symetricMatch)) // Note: the order of this condition is important since MatchObject must be called each time !!
+	if(bestObject != NULL && bestDist < m_param.maxMatchingDistance
+			&& (x_temp.GetNum() == MatchObject(*bestObject) || !m_param.symetricMatch)) // Note: the order of this condition is important since MatchObject must be called each time !!
 	{
-		x_temp.m_bestMatchingObject = bestObject;
+		// x_temp.m_bestMatchingObject = bestObject;
 #ifdef VERBOSE
 		//		cout<<"Template "<<x_temp.GetNum()<<" matched with region "<<bestObject<<" dist="<<bestDist<<" pos:("<<m_posX<<","<<m_posY<<")"<<endl;
 #endif
 		// x_temp.m_matchingObjects.push_back(m_objects[bestObject]);
-		x_temp.m_lastMatchingObject = &m_objects[bestObject];
-		m_objects[bestObject].m_isMatched = 1;
+		x_temp.m_lastMatchingObject = bestObject;
+		bestObject->m_isMatched = 1;
 
 		//CvPoint p = {x_regs[bestObject].m_posX, x_regs[bestObject].m_posY};
 		//cvCircle(x_blobsImg, p, 10, TrackerByFeatures::m_colorArray[m_num % TrackerByFeatures::m_colorArraySize]);
@@ -130,7 +130,8 @@ void TrackerByFeatures::MatchTemplates()
 	// Try to match each region with a template
 	for(list<Template>::iterator it1 = m_templates.begin() ; it1 != m_templates.end(); it1++ )
 	{
-		it1->m_bestMatchingObject = -1;
+		// it1->m_bestMatchingObject = -1;
+		it1->m_lastMatchingObject = NULL;
 		//int isMatched =
 		MatchTemplate(*it1);
 	}
@@ -176,7 +177,7 @@ void TrackerByFeatures::CleanTemplates()
 	{
 		//cout<<"it1->m_isMatched"<<it1->m_isMatched<<endl;
 		//cout<<"it1->m_counterClean"<<it1->m_counterClean<<endl;
-		if(it1->m_bestMatchingObject == -1)
+		if(it1->m_lastMatchingObject == NULL)
 		{
 			it1->m_counterClean--;
 			if(it1->m_counterClean <= 0)
@@ -203,6 +204,10 @@ void TrackerByFeatures::DetectNewTemplates()
 		if(!it2->m_isMatched && m_templates.size() < MAX_NB_TEMPLATES)
 		{
 			Template t(*it2, m_param.maxNbFramesDisappearance);
+			/*if()
+			{
+				
+			}*/
 			m_templates.push_back(t);
 			//cout<<"Added template "<<t.GetNum()<<endl;
 			it2->SetId(t.GetNum());
@@ -214,7 +219,7 @@ void TrackerByFeatures::DetectNewTemplates()
 
 /// Match an object with the set of templates
 
-int TrackerByFeatures::MatchObject(Object& x_obj)
+int TrackerByFeatures::MatchObject(const Object& x_obj)
 {
 
 	double bestDist = 1e99;
@@ -234,7 +239,7 @@ int TrackerByFeatures::MatchObject(Object& x_obj)
 	}
 	if(bestTemp != NULL && bestDist < m_param.maxMatchingDistance)
 	{
-		x_obj.SetId(bestTemp->GetNum()); // Set color of template
+		x_obj.SetId(bestTemp->GetNum()); // Set id of template
 		return bestTemp->GetNum();
 	}
 	else
