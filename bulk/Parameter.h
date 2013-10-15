@@ -83,10 +83,9 @@ public:
 	virtual bool CheckRange() const = 0;
 	virtual void Export(std::ostream& rx_os, int x_indentation) = 0;
 	inline void Lock(){
-		SetValueToDefault(); // We save the default before locking since the value will not be set later
 		m_lock = true;
 	}
-	inline bool IsLocked(){return m_lock;}
+	inline bool IsLocked() const {return m_lock;}
 
 protected:	
 	const std::string m_name;

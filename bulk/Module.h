@@ -54,10 +54,11 @@ public:
 		m_list.push_back(new ParameterBool("auto_process",  0, 	PARAM_BOOL, 	0, 	1,		&autoProcess,	"If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream"));
 		m_list.push_back(new ParameterDouble("fps", 	 0, 	PARAM_DOUBLE, 	0, 	1000,		&fps,		"Frames per seconds (processing speed)"));
 
-		// Lock class parameter as it can never be changed
-		RefParameterByName("class").Lock();
-		RefParameterByName("width").Lock();
-		RefParameterByName("height").Lock();
+		// Lock class parameter as it can never be changed // TODO: make this work
+		// Init();
+		// RefParameterByName("class").Lock();
+		// RefParameterByName("width").Lock();
+		// RefParameterByName("height").Lock();
 	}
 
 public:

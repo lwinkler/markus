@@ -35,11 +35,11 @@ class TrackerByFeaturesParameterStructure : public ModuleParameterStructure
 public:
 	TrackerByFeaturesParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterDouble("maxMatchingDistance", 100, 	PARAM_DOUBLE, 0, MAX_WIDTH + MAX_HEIGHT, &maxMatchingDistance,		"Tolerance of the tracker."));
-		m_list.push_back(new ParameterInt   ("maxNbFramesDisappearance", 10, PARAM_INT, 1, 1000,			&maxNbFramesDisappearance,	"Time before disappearence of an object")); // TODO : should be in seconds
-		m_list.push_back(new ParameterBool  ("symetricMatch", 	true, 	PARAM_BOOL, 0, 1, 			&symetricMatch,			"Each match between objects and templates must be symetrical"));
-		m_list.push_back(new ParameterString("features",        "x,y,width,height",  &features,    "List of features to use for tracking (only scalar values, must be present in objects to track)"));
-		m_list.push_back(new ParameterDouble("alpha", 0.01,                  PARAM_DOUBLE, 0, 1, &alpha,		"Alpha for feature update, used to set the mean value in dynamically and therefore define at which speed the features can vary"));
+		m_list.push_back(new ParameterDouble("maxMatchingDistance"     , 0.5 , PARAM_DOUBLE, 0    , 100    , &maxMatchingDistance     , "Tolerance of the tracker."));
+		m_list.push_back(new ParameterInt   ("maxNbFramesDisappearance", 10  , PARAM_INT   , 1    , 1000   , &maxNbFramesDisappearance, "Time before disappearence of an object")); // TODO : should be in seconds
+		m_list.push_back(new ParameterBool  ("symetricMatch"           , true, PARAM_BOOL  , 0    , 1      , &symetricMatch           , "Each match between objects and templates must be symetrical"));
+		m_list.push_back(new ParameterString("features"                , "x,y,width,height"                , &features                , "List of features to use for tracking (only scalar values, must be present in objects to track)"));
+		m_list.push_back(new ParameterDouble("alpha"                   , 0.01, PARAM_DOUBLE, 0    , 1      , &alpha                   , "Alpha for feature update, used to set the mean value in dynamically and therefore define at which speed the features can vary"));
 
 		ParameterStructure::Init();
 	}

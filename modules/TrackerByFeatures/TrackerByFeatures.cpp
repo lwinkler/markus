@@ -63,6 +63,8 @@ void TrackerByFeatures::Reset()
 {
 	Module::Reset();
 	split(m_param.features, ',', m_featureNames);
+	m_templates.clear();
+	m_objects.clear();
 }
 
 void TrackerByFeatures::ProcessFrame()
@@ -116,7 +118,7 @@ int TrackerByFeatures::MatchTemplate(Template& x_temp)
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-/* MatchTemplates : Match blobs with former object templates */
+/* MatchTemplates : Match our object with the existing object templates */
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 void TrackerByFeatures::MatchTemplates()
 {
@@ -190,7 +192,7 @@ void TrackerByFeatures::CleanTemplates()
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-/* UpdateTemplates */
+/* DetectNewTemplates */
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 void TrackerByFeatures::DetectNewTemplates()
 {
@@ -210,6 +212,7 @@ void TrackerByFeatures::DetectNewTemplates()
 	LOG_DEBUG("DetectNewTemplates : "<<cpt<<" new templates added.");
 }
 
+/// Match an object with the set of templates
 
 int TrackerByFeatures::MatchObject(Object& x_obj)
 {

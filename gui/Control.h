@@ -44,7 +44,7 @@ public:
 	virtual void GetCurrent() = 0;
 	virtual void GetDefault() = 0;
 
-	QWidget* RefWidget(){return m_widget;}
+	inline QWidget* RefWidget(){return m_widget;}
 	virtual const std::string& GetName() const = 0;
 	
 protected:

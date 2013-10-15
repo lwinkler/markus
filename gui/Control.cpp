@@ -246,7 +246,14 @@ ControlBoard::~ControlBoard()
 void ControlBoard::SetControlledValue()
 {
 	for(vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)
-		(*it)->SetControlledValue();
+	{
+		try
+		{
+			// Try because some parameter may be locked
+			(*it)->SetControlledValue();
+		}
+		catch(...){}
+	}
 }
 
 void ControlBoard::GetDefault()
