@@ -90,7 +90,9 @@ void ParameterStructure::SetFromConfig()
 		string value = conf.GetValue();
 		//SetValueByName(name, value, PARAMCONF_XML);
 
-		RefParameterByName(name).SetValue(value, PARAMCONF_XML);
+		Parameter& param = RefParameterByName(name);
+		if(!param.IsLocked())
+			param.SetValue(value, PARAMCONF_XML);
 		conf = conf.NextSubConfig("param");
 	}
 }
@@ -132,7 +134,8 @@ void ParameterStructure::SetValueToDefault()
 {
 	for(vector<Parameter*>::iterator it = m_list.begin(); it != m_list.end(); it++)
 	{
-		(*it)->SetValueToDefault();
+		if(!(*it)->IsLocked())
+			(*it)->SetValueToDefault();
 	}
 }
 
@@ -229,12 +232,16 @@ ParameterImageType::ParameterImageType(const std::string& x_name, int x_default,
 
 void ParameterEnum::SetValue(const std::string& rx_value, ParameterConfigType x_confType)
 {
+	if(m_lock) 
+		throw("You tried to set the value of a locked parameter.");
 	*mp_value = Str2Int(rx_value);
 	m_confSource = x_confType;
 }
 
 void ParameterEnum::SetValue(int rx_value, ParameterConfigType x_confType)
 {
+	if(m_lock) 
+		throw("You tried to set the value of a locked parameter.");
 	*mp_value = rx_value;
 	m_confSource = x_confType;
 }
