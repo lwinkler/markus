@@ -109,10 +109,8 @@ int TrackerByFeatures::MatchTemplate(Template& x_temp)
 
 	for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
 	{
-		// it->SetId(-1); // See if we move this TODO
 		// Add empty features for distance and speed
 		double dist = x_temp.CompareWithObject(*it, m_featureNames);
-		//cout<<"dist ="<<dist;
 		if(dist < bestDist)
 		{
 			bestDist   = dist;
@@ -123,11 +121,11 @@ int TrackerByFeatures::MatchTemplate(Template& x_temp)
 		return 0;
 	const Template * bestTemplate = MatchObject(*bestObject);
 	if(bestDist < m_param.maxMatchingDistance
-			&& (bestTemplate == &x_temp || !m_param.symetricMatch))
+			&& (bestTemplate->GetNum() == x_temp.GetNum() || !m_param.symetricMatch))
 	{
-		bestObject->SetId(bestTemplate->GetNum()); // Set id of object
 		// x_temp.m_bestMatchingObject = bestObject;
 		LOG_DEBUG("Template "<<x_temp.GetNum()<<" matched with object "<<bestObject->GetId()<<" dist="<<bestDist);
+		bestObject->SetId(bestTemplate->GetNum()); // Set id of object
 		// x_temp.m_matchingObjects.push_back(m_objects[bestObject]);
 		x_temp.m_lastMatchingObject = bestObject;
 		bestObject->m_isMatched = 1;
@@ -137,7 +135,11 @@ int TrackerByFeatures::MatchTemplate(Template& x_temp)
 
 		return 1;
 	}
-	else return 0;
+	else
+	{
+		x_temp.m_lastMatchingObject = NULL;
+		return 0;
+	}
 
 }
 
@@ -205,16 +207,44 @@ void TrackerByFeatures::DetectNewTemplates()
 	int cpt = 0;
 	for(vector<Object>::iterator it2 = m_objects.begin() ; it2 != m_objects.end(); it2++ )
 	{
-		if(!it2->m_isMatched && m_templates.size() < MAX_NB_TEMPLATES)
+		if(!it2->m_isMatched)
 		{
-			Template t(*it2, m_param.maxNbFramesDisappearance);
-			/*if()
+			if(m_templates.size() >= MAX_NB_TEMPLATES)
 			{
-				
-			}*/
-			m_templates.push_back(t);
+				LOG_WARNING("Too many templates created in TrackerByFeatures::DetectNewTemplates");
+				return;
+			}
+
+			// Detect if the new object similar to a template
+			double bestDist = DBL_MAX;
+			const Template * bestTemplate = NULL;
+
+			LOG_DEBUG("New object. Detect if the new object similar to another template ");
+
+			for(list<Template>::iterator it3 = m_templates.begin() ; it3 != m_templates.end() ; it3++)
+			{
+				// Add empty features for distance and speed
+				double dist = it3->CompareWithObject(*it2, m_featureNames);
+				if(dist < bestDist)
+				{
+					bestDist     = dist;
+					bestTemplate = &(*it3);
+				}
+			}
+			Template template1(*it2, m_param.maxNbFramesDisappearance);
+			if(bestDist <= m_param.maxMatchingDistance && bestTemplate != NULL)
+			{
+				// Copy the template to the object (but not the id)
+// 				m_feats = t.GetFeatures();
+				template1.SetFeatures(bestTemplate->GetFeatures()); // TODO: may be a problem with this line: adds identical object
+// 				m_posX = t.m_posX;
+// 				m_posY = t.m_posY;
+
+			}
+
+			m_templates.push_back(template1);
 			//cout<<"Added template "<<t.GetNum()<<endl;
-			it2->SetId(t.GetNum());
+			it2->SetId(template1.GetNum());
 			cpt++;
 		}
 	}

@@ -43,6 +43,7 @@ class Template
 		
 		inline void AddFeature(std::string x_name, double x_value) {m_feats.insert(std::make_pair(x_name, Feature(x_value)));}
 		inline const Feature& GetFeature(const std::string& x_name) const {return m_feats.find(x_name)->second;}
+		inline const void SetFeatures(const std::map <std::string, Feature>& x_feats) {m_feats = x_feats;}
 		inline const std::map <std::string, Feature>& GetFeatures() const{ return m_feats;}
 		// inline const std::list <Object>& GetMatchingObjects() const{ return m_matchingObjects;}
 		inline int GetNum() const {return m_num;}
@@ -52,8 +53,8 @@ class Template
 		int m_counterClean;
 		// std::list <Object> m_matchingObjects;
 		Object * m_lastMatchingObject;
-		double m_posX;
-		double m_posY;
+		// double m_posX;
+		// double m_posY;
 
 	private:
 		int m_num;
