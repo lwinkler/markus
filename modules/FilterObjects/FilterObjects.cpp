@@ -23,6 +23,7 @@
 
 #include "FilterObjects.h"
 #include "StreamObject.h"
+#include "StreamDebug.h"
 
 // for debug
 #include "util.h"
@@ -49,10 +50,18 @@ FilterObjects::FilterObjects(const ConfigReader& x_configReader) :
 
 	m_outputObjectStream = new StreamObject(0, "filtered",  m_param.width, m_param.height, m_objectsOut, cvScalar(255, 255, 255), *this,	"Filtered objects objects");
 	m_outputStreams.push_back(m_outputObjectStream);
+#ifdef MARKUS_DEBUG_STREAMS
+	// add a debug stream
+	m_debug = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
+	m_debugStreams.push_back(new StreamDebug(0, "debug", m_debug, *this,	"Debug"));
+#endif
 }
 
 FilterObjects::~FilterObjects(void )
 {
+#ifdef MARKUS_DEBUG_STREAMS
+	delete(m_debug);
+#endif
 }
 
 void FilterObjects::Reset()
@@ -62,17 +71,32 @@ void FilterObjects::Reset()
 
 void FilterObjects::ProcessFrame()
 {
+#ifdef MARKUS_DEBUG_STREAMS
+	static const Scalar Green = Scalar(0, 255, 33);
+	static const Scalar Gray  = Scalar(200, 200, 200);
+	m_debug->setTo(0);
+#endif
 	// Filter incoming objects and add them to the output
 	m_objectsOut.clear();
+	double sqDist = pow(m_param.minDist, 2);
 	for(vector<Object>::const_iterator it = m_objectsIn.begin() ; it != m_objectsIn.end() ; it++)
 	{
+		bool valid = false;
 		const Feature& posX = it->GetFeature("x");
 		const Feature& posY = it->GetFeature("y");
 		// const Feature& distance = it->GetFeatureByName("distance", featureNames);
 
-		if(POW2(posX.value - posX.initial) + POW2(posY.value - posY.initial) > m_param.minDist)
-		// if(distance.max >= m_param.minDist)
+		// cout<<POW2(posX.value - posX.initial) + POW2(posY.value - posY.initial)<<" >= "<<POW2(m_param.minDist)<<endl;
+		if(pow((posX.value - posX.initial) * m_param.width, 2) + pow((posY.value - posY.initial) * m_param.height, 2) >= sqDist)
+		{
+			valid = true;
 			m_objectsOut.push_back(*it);
+		}
+#ifdef MARKUS_DEBUG_STREAMS
+		Rect rect(it->m_posX - it->m_width / 2, it->m_posY - it->m_height / 2, it->m_width, it->m_height);
+		rectangle(*m_debug, rect, valid ? Green : Gray, 2, 8);
+		line(*m_debug, Point(posX.initial * m_param.width, posY.initial * m_param.height), Point(posX.value * m_param.width, posY.value * m_param.height), valid ? Green : Gray, 1, 8);
+#endif
 	}
 }
 

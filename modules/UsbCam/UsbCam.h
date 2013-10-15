@@ -38,7 +38,7 @@ public:
 	{
 		m_list.push_back(new ParameterInt("num", 	-1, 	PARAM_INT, 	-1, 	2,	&num,	"Number of the camera, as defined by OpenCV")); // TODO: should work with a default parameter even if no camera is present
 		ParameterStructure::Init();
-	};
+	}
 
 public:
 	int num;
@@ -52,7 +52,7 @@ public:
 	
 	void Capture();
 	virtual void Reset();
-	const std::string& GetName(){return m_name;};
+	const std::string& GetName(){return m_name;}
 	// virtual const cv::Mat * GetImage() const {return m_output;}
 
 protected:
@@ -63,7 +63,7 @@ protected:
 private:
 	void GetProperties();
 	UsbCamParameterStructure m_param;
-	inline virtual UsbCamParameterStructure& RefParameter() {return m_param;};
+	inline virtual UsbCamParameterStructure& RefParameter() {return m_param;}
 };
 
 #endif

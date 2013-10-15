@@ -120,20 +120,20 @@ void SegmenterContour::ProcessFrame()
 			for(vector<string>::const_iterator it = m_featureNames.begin() ; it != m_featureNames.end() ; it++)
 			{
 				if(it->compare("x") == 0)
-					obj.AddFeature("x", rect.x);
+					obj.AddFeature("x", obj.m_posX / m_param.width); // TODO: Better to divide by diagonal ?
 				else if(it->compare("y") == 0)
-					obj.AddFeature("y", rect.y);
+					obj.AddFeature("y", obj.m_posY / m_param.height);
 				else if(it->compare("width") == 0)
-					obj.AddFeature("width", rect.width);
+					obj.AddFeature("width", rect.width / m_param.width);
 				else if(it->compare("height") == 0)
-					obj.AddFeature("height", rect.height);
+					obj.AddFeature("height", rect.height / m_param.height);
 				else if(it->compare("ellipse_angle") == 0)
 				{
 					obj.AddFeature("ellipse_angle", minEllipse.angle);
 				}
 				else if(it->compare("ellipse_width") == 0)
 				{
-					obj.AddFeature("ellipse_width", minEllipse.size.width);
+					obj.AddFeature("ellipse_width", minEllipse.size.width); // TODO: divide by something
 				}
 				else if(it->compare("ellipse_height") == 0)
 				{

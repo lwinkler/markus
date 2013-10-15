@@ -327,7 +327,7 @@ void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qim)
 }
 
 // Based on http://umanga.wordpress.com/2010/04/19/how-to-covert-qt-qimage-into-opencv-iplimage-and-wise-versa/
-void  QModuleViewer::ConvertIplImage2QImage(const IplImage *iplImg, QImage *qimg)
+void  QModuleViewer::ConvertIplImage2QImage(const IplImage *iplImg, QImage *qimg) // TODO: use Mat ?
 {
 	int h = iplImg->height;
 	int w = iplImg->width;

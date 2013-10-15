@@ -118,7 +118,7 @@ void CascadeDetector::CopyResults()
 		obj.m_width = it->width;
 		obj.m_height = it->height;
 
-		obj.AddFeature("x", obj.m_posX);
+		obj.AddFeature("x", obj.m_posX); // TODO: divide
 		obj.AddFeature("y", obj.m_posY);
 		obj.AddFeature("width", obj.m_width);
 		obj.AddFeature("height", obj.m_height);

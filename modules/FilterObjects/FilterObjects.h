@@ -59,6 +59,9 @@ private:
 	StreamObject* m_outputObjectStream;
 
 	static const char * m_type;
+#ifdef MARKUS_DEBUG_STREAMS
+	cv::Mat * m_debug;
+#endif
 
 protected:
 	inline virtual ModuleParameterStructure& RefParameter() { return m_param;}
