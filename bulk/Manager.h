@@ -74,7 +74,7 @@ private:
 	ManagerParameter m_param;
 
 	bool m_centralized;
-	long long m_timerConvertion;
+	// long long m_timerConvertion;
 	long long m_timerProcessing;
 
 	//clock_t m_timeLastProcess;
@@ -82,7 +82,6 @@ private:
 	std::vector<Module *> m_modules;
 	std::vector<Input  *> m_inputs;
 
-	Timer m_timer;
 	long long m_frameCount;
 protected:
 	inline virtual const ParameterStructure& RefParameter() {return m_param;}

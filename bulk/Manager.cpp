@@ -139,7 +139,7 @@ Manager::~Manager()
 void Manager::Reset()
 {
 	// Reset timers
-	m_timerConvertion = 0;
+	// m_timerConvertion = 0;
 	m_timerProcessing = 0;
 
 	// Reset all modules (to set the module timer)
@@ -147,7 +147,6 @@ void Manager::Reset()
 	{
 		(*it)->Reset();
 	}
-	m_timer.Restart();
 }
 
 /// Process all modules
@@ -162,7 +161,7 @@ bool Manager::Process()
 		LOG_WARNING("Manager too slow !");
 		return true;
 	}
-	m_timer.Restart();
+	Timer ti;
 	
 
 	bool continueFlag = true;
@@ -203,6 +202,7 @@ bool Manager::Process()
 		}
 	}
 
+	m_timerProcessing += ti.GetMSecLong();
 	m_frameCount++;
 	if(m_frameCount % 100 == 0)
 	{
@@ -216,10 +216,9 @@ bool Manager::Process()
 
 void Manager::PrintTimers()
 {
-	// TODO: Check the use of the timers of manager
-	LOG_INFO(m_frameCount<<" frames processed in "<<m_timerProcessing<<" ms ("<<  (1000.0 * m_frameCount) / m_timerProcessing<<" frames/s)");
-	LOG_INFO("input convertion "                  <<m_timerConvertion<<" ms ("<<(1000.0 * m_frameCount) / m_timerConvertion<<" frames/s)");
-	LOG_INFO("Total time "<< m_timerProcessing + m_timerConvertion<<" ms ("<<     (1000.0 * m_frameCount) /(m_timerProcessing + m_timerConvertion)<<" frames/s)");
+	LOG_INFO("Manager: "<<m_frameCount<<" frames processed in "<<m_timerProcessing<<" ms ("<<  (1000.0 * m_frameCount) / m_timerProcessing<<" frames/s)");
+	// LOG_INFO("input convertion "                  <<m_timerConvertion<<" ms ("<<(1000.0 * m_frameCount) / m_timerConvertion<<" frames/s)");
+	// LOG_INFO("Total time "<< m_timerProcessing + m_timerConvertion<<" ms ("<<     (1000.0 * m_frameCount) /(m_timerProcessing + m_timerConvertion)<<" frames/s)");
 
 	int cpt = 0;
 	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)

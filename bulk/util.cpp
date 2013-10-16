@@ -216,14 +216,14 @@ void saveMat(const cv::Mat* x_mat, const std::string& x_name)
 }
 
 /* Split a string separated by a character*/
-std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) { // TODO: odd that this returns a ref to an argument
+std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
 	std::stringstream ss(s);
 	std::string item;
 	elems.clear();
 	while (std::getline(ss, item, delim)) {
 		elems.push_back(item);
 	}
-	return elems;
+	return elems; // Return an input parameter so the reference is valid !
 }
 
 
