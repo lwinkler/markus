@@ -60,7 +60,8 @@ void ThumbnailWriter::ProcessFrame()
 	int cpt = 0;
 	for(vector<Object>::const_iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; it1++)
 	{
-		Rect &rect(it->Rect); // TODO: Add a Rect function to Object // TODO: test this condition !!!
+		const Rect &rect(it1->Rect());
+
 
 		// If the object touches the border, do not save
 		if(!m_param.avoidBorders || ! (rect.x <= 1 || rect.y <= 1 || rect.x + rect.width >= m_param.width || rect.y + rect.height >= m_param.height))

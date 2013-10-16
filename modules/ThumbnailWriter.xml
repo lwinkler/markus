@@ -3,7 +3,7 @@
 	<parameters>
 		<param name="class">
 			<type>string</type>
-			<value default=""></value>
+			<value default="">ThumbnailWriter</value>
 			<description>Class of the module (define the module's function)</description>
 		</param>
 		<param name="width">
@@ -46,6 +46,11 @@
 			<value default="jpg">jpg</value>
 			<description>Extension of the thumbnails. Determines the output format.</description>
 		</param>
+		<param name="avoid_borders">
+			<type>bool</type>
+			<value min="0" max="1" default="0">0</value>
+			<description>Do not take thumbnail if the object touches the border of the image.</description>
+		</param>
 	</parameters>
 	<inputs>
 		<input id="0">
@@ -53,7 +58,7 @@
 			<name>input</name>
 			<description>Video input</description>
 		</input>
-		<input id="0">
+		<input id="1">
 			<type>Objects</type>
 			<name>objects</name>
 			<description>Incoming objects</description>

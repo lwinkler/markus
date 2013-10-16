@@ -3,7 +3,7 @@
 	<parameters>
 		<param name="class">
 			<type>string</type>
-			<value default=""></value>
+			<value default="">TrackerByFeatures</value>
 			<description>Class of the module (define the module's function)</description>
 		</param>
 		<param name="width">
@@ -33,7 +33,7 @@
 		</param>
 		<param name="maxMatchingDistance">
 			<type>double</type>
-			<value min="0" max="11200" default="100">100</value>
+			<value min="0" max="100" default="0.5">0.5</value>
 			<description>Tolerance of the tracker.</description>
 		</param>
 		<param name="maxNbFramesDisappearance">

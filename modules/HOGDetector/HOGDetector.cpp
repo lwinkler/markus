@@ -110,7 +110,7 @@ void HOGDetector::CopyResults()
 	m_detectedObjects.clear();
 	for(std::vector<Rect>::const_iterator it = m_thread.GetDetectedObjects().begin() ; it != m_thread.GetDetectedObjects().end() ; it++)
 	{
-		Object obj(m_param.objectLabel, it->Rect());
+		Object obj(m_param.objectLabel, *it);
 
 		obj.AddFeature("x"      , obj.m_posX   / m_param.width);
 		obj.AddFeature("y"      , obj.m_posY   / m_param.height);

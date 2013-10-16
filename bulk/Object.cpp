@@ -22,8 +22,8 @@
 -------------------------------------------------------------------------------------*/
 #include "Object.h"
 
-using namespace std;
 using namespace cv;
+using namespace std;
 
 Object::Object(const string& x_name) :
 	m_name(x_name),
@@ -32,11 +32,10 @@ Object::Object(const string& x_name) :
 	m_posY(0),
 	m_width(0),
 	m_height(0)
-	//m_color(cvScalar(255,255,255))
 {
 };
 
-Object::Object(const string& x_name, const Rect& x_rect) :
+Object::Object(const string& x_name, const cv::Rect& x_rect) :
         m_name(x_name)
 {
 	m_posX 	 = x_rect.x + x_rect.width / 2;
