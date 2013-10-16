@@ -25,7 +25,6 @@
 #ifndef HOG_DETECTOR_H
 #define HOG_DETECTOR_H
 
-#include <opencv2/opencv.hpp>
 #include <QThread>
 
 #include "ModuleAsync.h"

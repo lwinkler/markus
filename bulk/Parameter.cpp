@@ -28,8 +28,6 @@
 #include <iostream>
 #include <cstdlib>
 
-#include <opencv/cv.h>
-
 
 using namespace std;
 

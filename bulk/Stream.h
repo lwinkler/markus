@@ -24,7 +24,6 @@
 #ifndef OUTPUT_STREAM_H
 #define OUTPUT_STREAM_H
 
-#include <opencv/cv.h>
 #include <iostream>
 
 #include "Module.h"

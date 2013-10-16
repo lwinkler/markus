@@ -28,8 +28,6 @@
 #include <cstring>
 #include <QReadWriteLock>
 
-#include <opencv/cv.h> // TODO : better to use opencv2/opencv.hpp
-
 #include "ConfigReader.h"
 #include "Input.h"
 #include "Module.h"

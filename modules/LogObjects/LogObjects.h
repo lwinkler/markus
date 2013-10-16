@@ -24,7 +24,6 @@
 #ifndef LOG_OBJECTS_H
 #define LOG_OBJECTS_H
 
-#include <opencv/cv.h>
 #include "Module.h"
 #include "Parameter.h"
 #include "StreamObject.h"

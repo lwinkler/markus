@@ -26,8 +26,6 @@
 
 #ifdef MARKUS_DEBUG_STREAMS // If the flag is not set, do not use the streams at all
 
-#include <opencv/cv.h>
-
 #include "Stream.h"
 
 /// This class represents a stream that is only used for debug

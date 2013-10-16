@@ -26,11 +26,11 @@
 
 #include <tinyxml.h>
 #include <string>
-#include "Parameter.h"
 #include <vector>
 
 
 class Module;
+class ParameterStructure;
 
 /// Class to read a config file
 

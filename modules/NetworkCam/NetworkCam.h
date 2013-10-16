@@ -24,7 +24,6 @@
 #ifndef INPUT_NETWORKCAM_H
 #define INPUT_NETWORKCAM_H
 
-#include <opencv/cv.h>
 #include <opencv2/highgui/highgui.hpp>
 
 #include "Input.h"

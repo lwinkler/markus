@@ -24,8 +24,6 @@
 #ifndef MODULE_ASYNC_H
 #define MODULE_ASYNC_H
 
-#include <opencv/cv.h>
-
 #include "Module.h"
 #include <QThread>
 

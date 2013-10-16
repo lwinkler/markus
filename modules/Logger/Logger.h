@@ -24,7 +24,6 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
-#include <opencv/cv.h>
 #include "Module.h"
 #include "Parameter.h"
 #include "Timer.h"

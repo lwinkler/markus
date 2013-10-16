@@ -26,9 +26,6 @@
 
 // for debug
 #include "util.h"
-/*#include "cv.h"
-#include "highgui.h"
-*/
 using namespace cv;
 using namespace std;
 

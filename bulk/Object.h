@@ -26,8 +26,8 @@
 
 #include <list>
 #include <vector>
-#include <opencv2/opencv.hpp>
 
+#include "util.h"
 #include "Feature.h"
 
 /*! \class Object

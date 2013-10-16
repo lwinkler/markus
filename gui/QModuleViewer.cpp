@@ -47,8 +47,8 @@
 
 #define CLEAN_DELETE(x) if((x) != NULL){delete((x));(x) = NULL;}
 
-using namespace std;
 using namespace cv;
+using namespace std;
 
 // Constructor
 QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidget(parent)

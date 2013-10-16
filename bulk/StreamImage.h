@@ -24,7 +24,6 @@
 #ifndef STREAM_IMAGE_H
 #define STREAM_IMAGE_H
 
-#include <opencv/cv.h>
 #include "Stream.h"
 
 /// Class for a stream of images (or video) used for input and output

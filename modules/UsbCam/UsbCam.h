@@ -24,7 +24,6 @@
 #ifndef INPUT_USBCAM_H
 #define INPUT_USBCAM_H
 
-#include <opencv/cv.h>
 #include <opencv2/highgui/highgui.hpp>
 
 #include "Input.h"

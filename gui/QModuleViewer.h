@@ -24,7 +24,7 @@
 #ifndef QMODULEVIEWER_H
 #define QMODULEVIEWER_H
 
-#include <opencv/cv.h>
+#include <opencv2/opencv.hpp>
 #include <QPixmap>
 #include <QWidget>
 #include <QImage>

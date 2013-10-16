@@ -24,8 +24,6 @@
 #ifndef STREAM_OBJECT_H
 #define STREAM_OBJECT_H
 
-#include <opencv/cv.h>
-
 #include "Stream.h"
 #include "Object.h"
 

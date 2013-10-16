@@ -24,7 +24,6 @@
 #ifndef QPARAMETERCONTROLBOARD_H
 #define QPARAMETERCONTROLBOARD_H
 
-#include <opencv/cv.h>
 #include <QPixmap>
 #include <QWidget>
 #include <QImage>

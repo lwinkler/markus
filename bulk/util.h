@@ -24,9 +24,7 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include <opencv/cv.h>
-// #include <cstdio>
-// #include <cstdlib>
+#include <opencv2/opencv.hpp>
 #include <iostream>
 #include <fstream>
 

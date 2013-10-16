@@ -24,7 +24,6 @@
 #ifndef THUMBNAIL_WRITER_H
 #define THUMBNAIL_WRITER_H
 
-#include <opencv/cv.h>
 // #include <opencv2/highgui/highgui.hpp>
 #include <Module.h>
 #include <StreamObject.h>

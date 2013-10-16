@@ -24,7 +24,6 @@
 #ifndef INPUT_VIDEOFILEWRITER_H
 #define INPUT_VIDEOFILEWRITER_H
 
-#include <opencv/cv.h>
 #include <opencv2/highgui/highgui.hpp>
 #include <Module.h>
 

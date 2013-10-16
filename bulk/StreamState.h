@@ -24,8 +24,6 @@
 #ifndef STREAM_STATE_H
 #define STREAM_STATE_H
 
-#include <opencv/cv.h>
-
 #include "Stream.h"
 
 /// Stream in the form of located objects
