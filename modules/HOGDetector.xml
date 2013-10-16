@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module name="HOGDetector" description="Detect objects from a video stream using a HOG descriptor">
+	<parameters>
+		<param name="class">
+			<type>string</type>
+			<value default=""></value>
+			<description>Class of the module (define the module's function)</description>
+		</param>
+		<param name="width">
+			<type>int</type>
+			<value min="1" max="6400" default="640">640</value>
+			<description>Width of the input</description>
+		</param>
+		<param name="height">
+			<type>int</type>
+			<value min="1" max="4800" default="480">480</value>
+			<description>Height of the input</description>
+		</param>
+		<param name="type">
+			<type>image type</type>
+			<value default="CV_8UC1">CV_8UC1</value>
+			<description>Format of the input image</description>
+		</param>
+		<param name="auto_process">
+			<type>bool</type>
+			<value min="0" max="1" default="0">0</value>
+			<description>If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream</description>
+		</param>
+		<param name="fps">
+			<type>double</type>
+			<value min="0" max="1000" default="0">0</value>
+			<description>Frames per seconds (processing speed)</description>
+		</param>
+		<param name="detectionFps">
+			<type>double</type>
+			<value min="0" max="1000" default="10">10</value>
+			<description>Frames per seconds for the asynchronous detection (normally smaller that module)</description>
+		</param>
+		<param name="minSide">
+			<type>int</type>
+			<value min="0" max="200" default="0">0</value>
+			<description>Minimum size of the detected object</description>
+		</param>
+		<param name="scaleFactor">
+			<type>float</type>
+			<value min="1" max="2" default="1.2">1.2</value>
+			<description>Scale factor for scanning (higher: less sensitive)</description>
+		</param>
+		<param name="color">
+			<type>string</type>
+			<value default="(255,255,255)">(255,255,255)</value>
+			<description>Color to draw the output</description>
+		</param>
+		<param name="objectLabel">
+			<type>string</type>
+			<value default="hog">hog</value>
+			<description>Label to be applied to the objects detected by the cascade filter (e.g. face)</description>
+		</param>
+	</parameters>
+	<inputs>
+		<input id="0">
+			<type>Image</type>
+			<name>input</name>
+			<description>Video input</description>
+		</input>
+	</inputs>
+	<outputs>
+		<output id="0">
+			<type>Objects</type>
+			<name>detected</name>
+			<description>Detected objects</description>
+		</output>
+	</outputs>
+</module>
