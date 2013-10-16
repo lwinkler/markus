@@ -36,7 +36,7 @@ public:
 	VideoFileReaderParameterStructure(const ConfigReader& x_confReader) : 
 	InputParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterString("file", 	"in/input.avi", 	&file,	"Name of the video file to read, with path"));
+		m_list.push_back(new ParameterString("file", 	"in/input.mp4", 	&file,	"Name of the video file to read, with path"));
 		ParameterStructure::Init();
 	};
 

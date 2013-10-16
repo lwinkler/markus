@@ -80,7 +80,7 @@ int main(int argc, char** argv)
 	};
 	int c;
 	int option_index = 0;
-	while ((c = getopt_long(argc, argv, "hvcnl:p:",
+	while ((c = getopt_long(argc, argv, "hvdcnl:p:",
 					long_options, &option_index)) != -1) { // TODO: handle case with unknown parameter
 		switch (c) {
 			case 'h':
