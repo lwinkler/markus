@@ -51,7 +51,7 @@ public:
 	QModuleViewer(const Manager * x_manager, QWidget *parent = 0);
 	virtual ~QModuleViewer();
 	static void  ConvertMat2QImage(const cv::Mat *mat, QImage *qim);
-	static void  ConvertIplImage2QImage(const IplImage *iplImg, QImage *qim);
+	// static void  ConvertIplImage2QImage(const IplImage *iplImg, QImage *qim);
 private:
 	QBoxLayout * mp_mainLayout;
 	

@@ -29,7 +29,7 @@ using namespace cv;
 
 
 StreamObject::StreamObject(int x_id, const string& x_name, int x_width, int x_height, 
-		vector<Object>& xr_objects, const CvScalar& x_color, Module& rx_module, const string& rx_description) :
+		vector<Object>& xr_objects, const Scalar& x_color, Module& rx_module, const string& rx_description) :
 	Stream(x_id, x_name, STREAM_IMAGE, x_width, x_height, rx_module, rx_description),
 	m_objects(xr_objects),
 	m_color(x_color),
@@ -96,7 +96,7 @@ void StreamObject::RenderTo(Mat * xp_output) const
 
 		// Draw the rectangle in the input image
 		// if id is present, draw to the equivalent color
-		CvScalar color = m_color;
+		Scalar color = m_color;
 		if(it1->GetId() >= 0)
 		{
 			color = colorFromId(it1->GetId());

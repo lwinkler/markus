@@ -60,7 +60,7 @@ class Object
 		std::string m_name;
 		int m_id;
 		std::map <std::string, Feature> m_feats;
-		//CvScalar m_color;
+		//Scalar m_color;
 		//Object(const Object&);
 		//Object& operator = (const Object&);
 	public:

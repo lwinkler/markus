@@ -34,10 +34,8 @@ void adjust(const cv::Mat* im_in, cv::Mat* im_out, cv::Mat*& tmp1, cv::Mat*& tmp
 void adjustSize(const cv::Mat* im_in, cv::Mat* im_out);
 void adjustChannels(const cv::Mat* im_in, cv::Mat* im_out);
 
-void saveMat(const cv::Mat * x_mat, const std::string& x_name);
-
-CvScalar colorFromStr(std::string x_str);
-CvScalar colorFromId(int x_id);
+cv::Scalar colorFromStr(std::string x_str);
+cv::Scalar colorFromId(int x_id);
 
 std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems);
 

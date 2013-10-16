@@ -32,7 +32,7 @@ using namespace cv;
 // Global variables
 Logging Global::logger;
 int g_colorArraySize = 54;
-CvScalar g_colorArray[] =
+Scalar g_colorArray[] =
 {
 	CV_RGB(128,128,128), // gray//CV_RGB(255,255,255), // white
 	CV_RGB(255,0,0), // red
@@ -174,7 +174,7 @@ void adjustChannels(const Mat* im_in, Mat* im_out)
 	else throw("Error in adjustChannels");
 }
 
-CvScalar colorFromStr(string x_str)
+Scalar colorFromStr(string x_str)
 {
 	int pos1 = 0;
 	int pos2 = 0;
@@ -193,27 +193,11 @@ CvScalar colorFromStr(string x_str)
 	else return cvScalar(0, 0, 0);
 }
 
-CvScalar colorFromId(int x_id)
+Scalar colorFromId(int x_id)
 {
 	return g_colorArray[x_id % g_colorArraySize];
 }
 
-
-void saveMat(const cv::Mat* x_mat, const std::string& x_name)
-{
-	if(x_mat->depth() == CV_32F)
-	{
-		Mat mat(x_mat->size(), CV_8UC3);
-		x_mat->convertTo(mat, CV_8UC3, 255);
-		IplImage img = mat;
-		cvSaveImage(x_name.c_str(), &img);
-	}
-	else 
-	{
-		IplImage img = *x_mat;
-		cvSaveImage(x_name.c_str(), &img);
-	}
-}
 
 /* Split a string separated by a character*/
 std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {

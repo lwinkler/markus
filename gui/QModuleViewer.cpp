@@ -320,21 +320,21 @@ void QModuleViewer::hideDisplayOptions()
 {
 	mp_gbCombos->hide();
 }
-void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qim)
+void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qimg)
 {
-	const IplImage iplim = *mat;
-	ConvertIplImage2QImage(&iplim, qim);
-}
+	// const IplImage iplim = *mat;
+	// ConvertIplImage2QImage(&iplim, qim);
+// }
 
 // Based on http://umanga.wordpress.com/2010/04/19/how-to-covert-qt-qimage-into-opencv-iplimage-and-wise-versa/
-void  QModuleViewer::ConvertIplImage2QImage(const IplImage *iplImg, QImage *qimg) // TODO: use Mat ?
-{
-	int h = iplImg->height;
-	int w = iplImg->width;
-	int channels = iplImg->nChannels;
-	char *data = iplImg->imageData;
+// void  QModuleViewer::ConvertIplImage2QImage(const IplImage *iplImg, QImage *qimg) // TODO: use Mat ?
+// {
+	const int & h = mat->rows;
+	const int & w = mat->cols;
+	const int & channels = mat->channels();
+	const char *data = (char*) mat->data;
 
-	for (int y = 0; y < h; y++, data += iplImg->widthStep)
+	for (int y = 0; y < h; y++, data += mat->cols * mat->channels())
 	{
 		for (int x = 0; x < w; x++)
 		{

@@ -31,7 +31,7 @@
 class StreamState : public Stream
 {
 public:
-	StreamState(int x_id, const std::string& rx_name, bool& x_state, const CvScalar& x_color, Module& rx_module, const std::string& rx_description);
+	StreamState(int x_id, const std::string& rx_name, bool& x_state, const cv::Scalar& x_color, Module& rx_module, const std::string& rx_description);
 	StreamState(int x_id, const std::string& rx_name, bool& x_state, Module& rx_module, const std::string& rx_description);
 	~StreamState();
 	inline void SetState(bool x_state){m_state = x_state;};
@@ -43,7 +43,7 @@ public:
 
 protected:
 	bool& m_state;
-	CvScalar m_color;
+	cv::Scalar m_color;
 	bool m_isColorSet;
 
 private:
