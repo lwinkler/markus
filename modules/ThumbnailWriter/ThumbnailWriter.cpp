@@ -38,7 +38,7 @@ ThumbnailWriter::ThumbnailWriter(const ConfigReader& x_configReader):
 	m_input    = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
 
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,   "Video input"));
-	m_inputStreams.push_back(new StreamObject(0, "objects", m_param.width, m_param.height, m_objectsIn, cvScalar(255, 255, 255), *this,     "Incoming objects"));
+	m_inputStreams.push_back(new StreamObject(1, "objects", m_param.width, m_param.height, m_objectsIn, cvScalar(255, 255, 255), *this,     "Incoming objects"));
 }
 
 ThumbnailWriter::~ThumbnailWriter()
@@ -56,12 +56,14 @@ void ThumbnailWriter::Reset()
 
 void ThumbnailWriter::ProcessFrame()
 {
+	int cpt = 0;
 	for(vector<Object>::const_iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; it1++)
 	{
 		Rect rect(it1->m_posX - it1->m_width / 2, it1->m_posY - it1->m_height / 2, it1->m_width, it1->m_height); // TODO: Add a Rect function to Object
 		std::stringstream ss;
-		ss << m_folderName << m_currentTimeStamp << it1->GetName() << "." << m_param.extension;
+		ss << m_folderName << m_currentTimeStamp << "_" << it1->GetName()<< it1->GetId() << "_" << cpt << "." << m_param.extension;
 		imwrite(ss.str(), (*m_input)(rect));
+		cpt++;
 	}
 }
 
