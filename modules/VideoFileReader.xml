@@ -3,7 +3,7 @@
 	<parameters>
 		<param name="class">
 			<type>string</type>
-			<value default="">VideoFileReader</value>
+			<value default=""></value>
 			<description>Class of the module (define the module's function)</description>
 		</param>
 		<param name="width">
@@ -33,7 +33,7 @@
 		</param>
 		<param name="file">
 			<type>string</type>
-			<value default="in/input.avi">in/input.avi</value>
+			<value default="in/input.mp4">in/input.mp4</value>
 			<description>Name of the video file to read, with path</description>
 		</param>
 	</parameters>

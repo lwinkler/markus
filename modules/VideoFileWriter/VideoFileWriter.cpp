@@ -63,7 +63,7 @@ void VideoFileWriter::Reset()
 		isColor = false;
 	else assert(false); */
 
-	const string filename = m_param.file  + (m_param.timeStamp ? ("." + timeStamp()) : ".") + "." + ExtensionFromFourcc(m_param.fourcc);
+	const string filename = m_param.file  + (m_param.timeStamp ? ("." + timeStamp()) : ".") + "." + ExtensionFromFourcc(m_param.fourcc); // TODO: out/should be added automatically
 
 	// cout<<"Opening "<<filename<<endl;
 	// TODO: Manage fps for stream recording

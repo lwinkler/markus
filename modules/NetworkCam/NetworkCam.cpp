@@ -53,7 +53,7 @@ void NetworkCam::Reset()
 	e.g. "http://user:pass@cam_address:8081/cgi/mjpg/mjpg.cgi?.mjpg" 
 	"rtsp://cam_address:554/live.sdp" rtsp://<servername>/axis-media/media.amp */
 	if(m_param.url.size() == 0)
-		m_capture.open("in/input.avi");
+		m_capture.open("in/input.mp4");
 	else m_capture.open(m_param.url);
 	
 	if(! m_capture.isOpened())

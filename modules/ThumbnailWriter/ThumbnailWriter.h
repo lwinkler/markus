@@ -21,52 +21,54 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef INPUT_VIDEOFILEWRITER_H
-#define INPUT_VIDEOFILEWRITER_H
+#ifndef THUMBNAIL_WRITER_H
+#define THUMBNAIL_WRITER_H
 
 #include <opencv/cv.h>
-#include <opencv2/highgui/highgui.hpp>
+// #include <opencv2/highgui/highgui.hpp>
 #include <Module.h>
+#include <StreamObject.h>
 
 
 
-class VideoFileWriterParameterStructure : public ModuleParameterStructure
+class ThumbnailWriterParameterStructure : public ModuleParameterStructure
 {
 public:
-	VideoFileWriterParameterStructure(const ConfigReader& x_confReader) : 
+	ThumbnailWriterParameterStructure(const ConfigReader& x_confReader) : 
 	ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterString("file", 	  "out/output", 	     &file,      "Name of the video file to write, with path"));
-		m_list.push_back(new ParameterBool("timestamp", 1, PARAM_BOOL, 0, 1, &timeStamp, "Add a time stamp the to file name"));
-		m_list.push_back(new ParameterString("fourcc", 	  "MJPG", 	     &fourcc,    "Four character code, determines the format. PIM1, MJPG, MP42, DIV3, DIVX, U263, I263, FLV1"));
-		RefParameterByName("type").SetDefault("CV_8UC3");
+		m_list.push_back(new ParameterString("folder"     , "out/thumbs" , &folder    , "Name of the folder to create, with path"));
+		m_list.push_back(new ParameterBool("timestamp"    , 1            , PARAM_BOOL , 0, 1, &timeStamp , "Add a time stamp the to folder"));
+		m_list.push_back(new ParameterString("extension"  , "jpg"        , &extension , "Extension of the thumbnails. Determines the output format."));
+		m_list.push_back(new ParameterBool("avoid_borders", 0            , PARAM_BOOL , 0, 1, &avoidBorders , "Do not take thumbnail if the object touches the border of the image."));
 		ParameterStructure::Init();
 	};
 
-	std::string file;
-	std::string fourcc;
+	std::string folder;
+	std::string extension;
 	bool timeStamp;
+	bool avoidBorders;
 };
 
-class VideoFileWriter : public Module
+class ThumbnailWriter : public Module
 {
 public:
-	VideoFileWriter(const ConfigReader& x_confReader);
-	~VideoFileWriter();
+	ThumbnailWriter(const ConfigReader& x_confReader);
+	~ThumbnailWriter();
 	
 	virtual void ProcessFrame();
 	void Reset();
-	static const std::string ExtensionFromFourcc(const std::string& x_fourcc);
 
 protected:
-	cv::VideoWriter m_writer;
 	cv::Mat * m_input;
+	std::vector <Object> m_objectsIn;
+	std::string m_folderName;
 	
 	static const char * m_type;
 
 private:
-	VideoFileWriterParameterStructure m_param;
-	inline virtual VideoFileWriterParameterStructure& RefParameter() {return m_param;};
+	ThumbnailWriterParameterStructure m_param;
+	inline virtual ThumbnailWriterParameterStructure& RefParameter() {return m_param;};
 };
 
 #endif

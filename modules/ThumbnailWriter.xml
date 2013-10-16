@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="LogObjects" description="This module takes a stream of objects as inputs and logs data to a text file">
+<module name="ThumbnailWriter" description="Write an object stream as separate images in a folder.">
 	<parameters>
 		<param name="class">
 			<type>string</type>
@@ -31,21 +31,31 @@
 			<value min="0" max="1000" default="0">0</value>
 			<description>Frames per seconds (processing speed)</description>
 		</param>
-		<param name="file">
+		<param name="folder">
 			<type>string</type>
-			<value default="objects">objects</value>
-			<description>Name of the .srt file without extension</description>
+			<value default="out/thumbs">out/thumbs</value>
+			<description>Name of the folder to create, with path</description>
 		</param>
 		<param name="timestamp">
 			<type>bool</type>
 			<value min="0" max="1" default="1">1</value>
-			<description>Add a time stamp the to file name</description>
+			<description>Add a time stamp the to folder</description>
+		</param>
+		<param name="extension">
+			<type>string</type>
+			<value default="jpg">jpg</value>
+			<description>Extension of the thumbnails. Determines the output format.</description>
 		</param>
 	</parameters>
 	<inputs>
 		<input id="0">
-			<type>Objects</type>
+			<type>Image</type>
 			<name>input</name>
+			<description>Video input</description>
+		</input>
+		<input id="0">
+			<type>Objects</type>
+			<name>objects</name>
 			<description>Incoming objects</description>
 		</input>
 	</inputs>

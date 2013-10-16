@@ -79,7 +79,10 @@ void UsbCam::Capture()
 	
 	// cout<<"UsbCam capture image "<<m_output->cols<<"x"<<m_output->rows<<" time stamp "<<m_capture.get(CV_CAP_PROP_POS_MSEC) / 1000.0<< endl;
 
-	m_timeStamp += 1000.0 / m_param.fps; // TODO: improve this
+	if(m_param.fps == 0)
+		m_timeStamp += 1000.0 / 100; // TODO: improve this
+	else
+		m_timeStamp += 1000.0 / m_param.fps; // TODO: improve this
 	SetTimeStampToOutputs(m_timeStamp);
 }
 

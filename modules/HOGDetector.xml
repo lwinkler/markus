@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="LogObjects" description="This module takes a stream of objects as inputs and logs data to a text file">
+<module name="HOGDetector" description="Detect objects from a video stream using a HOG descriptor">
 	<parameters>
 		<param name="class">
 			<type>string</type>
@@ -31,24 +31,44 @@
 			<value min="0" max="1000" default="0">0</value>
 			<description>Frames per seconds (processing speed)</description>
 		</param>
-		<param name="file">
-			<type>string</type>
-			<value default="objects">objects</value>
-			<description>Name of the .srt file without extension</description>
+		<param name="detectionFps">
+			<type>double</type>
+			<value min="0" max="1000" default="10">10</value>
+			<description>Frames per seconds for the asynchronous detection (normally smaller that module)</description>
 		</param>
-		<param name="timestamp">
-			<type>bool</type>
-			<value min="0" max="1" default="1">1</value>
-			<description>Add a time stamp the to file name</description>
+		<param name="minSide">
+			<type>int</type>
+			<value min="0" max="200" default="0">0</value>
+			<description>Minimum size of the detected object</description>
+		</param>
+		<param name="scaleFactor">
+			<type>float</type>
+			<value min="1" max="2" default="1.2">1.2</value>
+			<description>Scale factor for scanning (higher: less sensitive)</description>
+		</param>
+		<param name="color">
+			<type>string</type>
+			<value default="(255,255,255)">(255,255,255)</value>
+			<description>Color to draw the output</description>
+		</param>
+		<param name="objectLabel">
+			<type>string</type>
+			<value default="hog">hog</value>
+			<description>Label to be applied to the objects detected by the cascade filter (e.g. face)</description>
 		</param>
 	</parameters>
 	<inputs>
 		<input id="0">
-			<type>Objects</type>
+			<type>Image</type>
 			<name>input</name>
-			<description>Incoming objects</description>
+			<description>Video input</description>
 		</input>
 	</inputs>
 	<outputs>
+		<output id="0">
+			<type>Objects</type>
+			<name>detected</name>
+			<description>Detected objects</description>
+		</output>
 	</outputs>
 </module>

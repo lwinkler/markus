@@ -3,7 +3,7 @@
 	<parameters>
 		<param name="class">
 			<type>string</type>
-			<value default="">SlitCam</value>
+			<value default=""></value>
 			<description>Class of the module (define the module's function)</description>
 		</param>
 		<param name="width">
