@@ -17,6 +17,7 @@ var availableModulesNames = [
 "SegmenterContour",
 "SlitCam",
 "TempDiff",
+"ThumbnailWriter",
 "TrackerByFeatures",
 "UsbCam",
 "VideoFileReader",

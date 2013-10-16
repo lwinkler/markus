@@ -1,0 +1,72 @@
+/*----------------------------------------------------------------------------------
+*
+*    MARKUS : a manager for video analysis modules
+* 
+*    author : Laurent Winkler <lwinkler888@gmail.com>
+* 
+* 
+*    This file is part of Markus.
+*
+*    Markus is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU Lesser General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    Markus is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU Lesser General Public License for more details.
+*
+*    You should have received a copy of the GNU Lesser General Public License
+*    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
+-------------------------------------------------------------------------------------*/
+
+#ifndef THUMBNAIL_WRITER_H
+#define THUMBNAIL_WRITER_H
+
+#include <opencv/cv.h>
+// #include <opencv2/highgui/highgui.hpp>
+#include <Module.h>
+#include <StreamObject.h>
+
+
+
+class ThumbnailWriterParameterStructure : public ModuleParameterStructure
+{
+public:
+	ThumbnailWriterParameterStructure(const ConfigReader& x_confReader) : 
+	ModuleParameterStructure(x_confReader)
+	{
+		m_list.push_back(new ParameterString("folder"    , "out/thumbs" , &folder    , "Name of the folder to create, with path"));
+		m_list.push_back(new ParameterBool("timestamp"   , 1            , PARAM_BOOL , 0, 1, &timeStamp , "Add a time stamp the to folder"));
+		m_list.push_back(new ParameterString("extension" , "jpg"        , &extension , "Extension of the thumbnails. Determines the output format."));
+		ParameterStructure::Init();
+	};
+
+	std::string folder;
+	std::string extension;
+	bool timeStamp;
+};
+
+class ThumbnailWriter : public Module
+{
+public:
+	ThumbnailWriter(const ConfigReader& x_confReader);
+	~ThumbnailWriter();
+	
+	virtual void ProcessFrame();
+	void Reset();
+
+protected:
+	cv::Mat * m_input;
+	std::vector <Object> m_objectsIn;
+	std::string m_folderName;
+	
+	static const char * m_type;
+
+private:
+	ThumbnailWriterParameterStructure m_param;
+	inline virtual ThumbnailWriterParameterStructure& RefParameter() {return m_param;};
+};
+
+#endif
