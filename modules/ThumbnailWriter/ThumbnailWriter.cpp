@@ -56,13 +56,19 @@ void ThumbnailWriter::Reset()
 
 void ThumbnailWriter::ProcessFrame()
 {
+	// For each object save a thumbnail
 	int cpt = 0;
 	for(vector<Object>::const_iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; it1++)
 	{
-		Rect rect(it1->m_posX - it1->m_width / 2, it1->m_posY - it1->m_height / 2, it1->m_width, it1->m_height); // TODO: Add a Rect function to Object
-		std::stringstream ss;
-		ss << m_folderName << m_currentTimeStamp << "_" << it1->GetName()<< it1->GetId() << "_" << cpt << "." << m_param.extension;
-		imwrite(ss.str(), (*m_input)(rect));
+		Rect rect(it1->m_posX - it1->m_width / 2, it1->m_posY - it1->m_height / 2, it1->m_width, it1->m_height); // TODO: Add a Rect function to Object // TODO: test this condition !!!
+
+		// If the object touches the border, do not save
+		if(!m_param.avoidBorders || ! (rect.x <= 1 || rect.y <= 1 || rect.x + rect.width >= m_param.width || rect.y + rect.height >= m_param.height))
+		{
+			std::stringstream ss;
+			ss << m_folderName << m_currentTimeStamp << "_" << it1->GetName()<< it1->GetId() << "_" << cpt << "." << m_param.extension;
+			imwrite(ss.str(), (*m_input)(rect));
+		}
 		cpt++;
 	}
 }

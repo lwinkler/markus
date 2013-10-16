@@ -37,15 +37,17 @@ public:
 	ThumbnailWriterParameterStructure(const ConfigReader& x_confReader) : 
 	ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterString("folder"    , "out/thumbs" , &folder    , "Name of the folder to create, with path"));
-		m_list.push_back(new ParameterBool("timestamp"   , 1            , PARAM_BOOL , 0, 1, &timeStamp , "Add a time stamp the to folder"));
-		m_list.push_back(new ParameterString("extension" , "jpg"        , &extension , "Extension of the thumbnails. Determines the output format."));
+		m_list.push_back(new ParameterString("folder"     , "out/thumbs" , &folder    , "Name of the folder to create, with path"));
+		m_list.push_back(new ParameterBool("timestamp"    , 1            , PARAM_BOOL , 0, 1, &timeStamp , "Add a time stamp the to folder"));
+		m_list.push_back(new ParameterString("extension"  , "jpg"        , &extension , "Extension of the thumbnails. Determines the output format."));
+		m_list.push_back(new ParameterBool("avoid_borders", 0            , PARAM_BOOL , 0, 1, &avoidBorders , "Do not take thumbnail if the object touches the border of the image."));
 		ParameterStructure::Init();
 	};
 
 	std::string folder;
 	std::string extension;
 	bool timeStamp;
+	bool avoidBorders;
 };
 
 class ThumbnailWriter : public Module
