@@ -40,6 +40,7 @@ class Object
 {
 	public:
 		Object(const std::string & x_name);
+		Object(const std::string & x_name, const cv::Rect & x_rect);
 		~Object();
 
 		inline const std::string& GetName() const {return m_name;}
@@ -52,6 +53,7 @@ class Object
 			return m_feats.find(x_name)->second;} /// TODO: manage case where the feature is not found
 		// inline void SetFeatureByName(const std::string& x_name, double x_value) {m_feats.find(x_name)->second = Feature();}
 		void SetFeatures(const std::map<std::string, Feature>& x_feats){m_feats = x_feats;}
+		inline cv::Rect Rect() const {return cv::Rect(m_posX - m_width / 2, m_posY - m_height / 2, m_width, m_height);}
 
 		int m_isMatched;
 
@@ -67,6 +69,5 @@ class Object
 		double m_posY;
 		double m_width;
 		double m_height;
-
 };
 #endif

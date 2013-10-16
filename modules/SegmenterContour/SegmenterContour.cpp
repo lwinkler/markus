@@ -110,11 +110,7 @@ void SegmenterContour::ProcessFrame()
 #endif
 
 
-			Object obj(m_param.objectLabel);
-			obj.m_posX 	= rect.x + rect.width / 2;
-			obj.m_posY 	= rect.y + rect.height / 2;
-			obj.m_width	= rect.width;
-			obj.m_height 	= rect.height;
+			Object obj(m_param.objectLabel, rect);
 
 			// Add the possible features // TODO: list features in param description
 			for(vector<string>::const_iterator it = m_featureNames.begin() ; it != m_featureNames.end() ; it++)

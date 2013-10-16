@@ -53,8 +53,6 @@ class Template
 		int m_counterClean;
 		// std::list <Object> m_matchingObjects;
 		Object * m_lastMatchingObject;
-		// double m_posX;
-		// double m_posY;
 
 	private:
 		int m_num;

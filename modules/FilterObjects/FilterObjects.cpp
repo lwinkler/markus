@@ -93,7 +93,7 @@ void FilterObjects::ProcessFrame()
 			m_objectsOut.push_back(*it);
 		}
 #ifdef MARKUS_DEBUG_STREAMS
-		Rect rect(it->m_posX - it->m_width / 2, it->m_posY - it->m_height / 2, it->m_width, it->m_height);
+		const Rect & rect(it->Rect());
 		rectangle(*m_debug, rect, valid ? Green : Gray, 2, 8);
 		line(*m_debug, Point(posX.initial * m_param.width, posY.initial * m_param.height), Point(posX.value * m_param.width, posY.value * m_param.height), valid ? Green : Gray, 1, 8);
 #endif

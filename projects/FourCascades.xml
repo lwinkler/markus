@@ -6,7 +6,6 @@
       <param name="width">640</param>
       <param name="height">480</param>
       <param name="type">CV_8UC1</param>
-      <param name="fps">0</param>
       <param name="num">-1</param>
     </parameters>
     <inputs/>
@@ -18,15 +17,13 @@
     
   <uiobject x="71" y="94" width="0" height="0"/>
 </module>
-  <module name="CascadeDetector" machineurl="localhost" id="1">
+  <module name="CascadeDetector1" machineurl="localhost" id="1">
     <parameters>
       <param name="class">CascadeDetector</param>
       <param name="width">640</param>
       <param name="height">480</param>
       <param name="type">CV_8UC1</param>
-      <param name="fps">1000</param>
-      <param name="auto_process">0</param>
-      <param name="detectionFps">.05</param>
+      <param name="detectionFps">1</param>
       <param name="minNeighbors">2</param>
       <param name="minSide">0</param>
       <param name="scaleFactor">1.2</param>

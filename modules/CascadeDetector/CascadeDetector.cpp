@@ -96,11 +96,8 @@ void CascadeDetector::NormalProcess()
 
 	for(vector<Object>::const_iterator it = m_detectedObjects.begin() ; it != m_detectedObjects.end() ; it++)
 	{
-		Point p1(it->m_posX - it->m_width / 2, it->m_posY - it->m_width / 2);
-		Point p2(it->m_posX + it->m_width / 2, it->m_posY + it->m_width / 2);
-		
 		// Draw the rectangle in the input image
-		rectangle( *m_debug, p1, p2, colorFromStr(m_param.color), 1, 8, 0 );
+		rectangle( *m_debug, it->Rect(), colorFromStr(m_param.color), 1, 8, 0 );
         }
 #endif
 }
@@ -111,12 +108,7 @@ void CascadeDetector::CopyResults()
 	m_detectedObjects.clear();
 	for(std::vector<Rect>::const_iterator it = m_thread.GetDetectedObjects().begin() ; it != m_thread.GetDetectedObjects().end() ; it++)
 	{
-		Object obj(m_param.objectLabel);
-		//obj.SetRect(*it);
-		obj.m_posX = it->x + it->width / 2;
-		obj.m_posY = it->y + it->height / 2;
-		obj.m_width = it->width;
-		obj.m_height = it->height;
+		Object obj(m_param.objectLabel, *it);
 
 		obj.AddFeature("x"      , obj.m_posX   / m_param.width);
 		obj.AddFeature("y"      , obj.m_posY   / m_param.height);

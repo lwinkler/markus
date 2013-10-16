@@ -116,11 +116,7 @@ void SegmenterBlob::ExtractBlobs(Mat* x_img)
 			currentBlob->FillBlob( &img, colorFromId(i));
 #endif
 			
-			Object obj(m_param.objectLabel);
-			obj.m_posX 	= rect.x + rect.width / 2;
-			obj.m_posY 	= rect.y + rect.height / 2;
-			obj.m_width	= rect.width;
-			obj.m_height 	= rect.height;
+			Object obj(m_param.objectLabel, rect);
 			
 			// Add here all features that are to be added in the templates/region
 			// obj.AddFeature(currentBlob->Area(), 0.1); // Note: it seems that the tracker algo does not work good with these 2 features

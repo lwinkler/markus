@@ -23,6 +23,7 @@
 
 #include "TrackerByFeatures.h"
 #include "StreamObject.h"
+#include "StreamDebug.h"
 
 // for debug
 #include "util.h"
@@ -53,6 +54,10 @@ TrackerByFeatures::TrackerByFeatures(const ConfigReader& x_configReader) :
 
 	// TODO : Output template + check if ok in/out same
 
+#ifdef MARKUS_DEBUG_STREAMS
+	m_debug = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
+	m_debugStreams.push_back(new StreamDebug(0, "debug", m_debug, *this,	"Debug"));
+#endif
 }
 
 TrackerByFeatures::~TrackerByFeatures(void )
@@ -107,6 +112,9 @@ int TrackerByFeatures::MatchTemplate(Template& x_temp)
 
 	LOG_DEBUG("Comparing template "<<x_temp.GetNum()<<" with "<<m_objects.size()<<" objects");
 
+#ifdef MARKUS_DEBUG_STREAMS
+	m_debug->setTo(0);
+#endif
 	for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
 	{
 		// Add empty features for distance and speed
@@ -130,8 +138,14 @@ int TrackerByFeatures::MatchTemplate(Template& x_temp)
 		x_temp.m_lastMatchingObject = bestObject;
 		bestObject->m_isMatched = 1;
 
-		//CvPoint p = {x_regs[bestObject].m_posX, x_regs[bestObject].m_posY};
-		//cvCircle(x_blobsImg, p, 10, TrackerByFeatures::m_colorArray[m_num % TrackerByFeatures::m_colorArraySize]);
+#ifdef MARKUS_DEBUG_STREAMS
+		if(bestObject != NULL)
+		{
+			// Point p(bestObject->m_posX, bestObject->m_posY);
+			// circle(*m_debug, p, 4, colorFromId(x_temp.GetNum()));
+			rectangle(*m_debug, bestObject->Rect(), colorFromId(x_temp.GetNum()));
+		}
+#endif
 
 		return 1;
 	}
@@ -235,10 +249,7 @@ void TrackerByFeatures::DetectNewTemplates()
 			if(bestDist <= m_param.maxMatchingDistance && bestTemplate != NULL)
 			{
 				// Copy the template to the object (but not the id)
-// 				m_feats = t.GetFeatures();
 				template1.SetFeatures(bestTemplate->GetFeatures()); // TODO: may be a problem with this line: adds identical object
-// 				m_posX = t.m_posX;
-// 				m_posY = t.m_posY;
 
 			}
 

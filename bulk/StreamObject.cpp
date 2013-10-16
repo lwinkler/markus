@@ -70,9 +70,9 @@ void StreamObject::ConvertInput()
 	{
 		m_objects.push_back(*it);
 		Object& obj(m_objects[m_objects.size() - 1]);
-		obj.m_posX *= ratioX;
-		obj.m_posY *= ratioY;
-		obj.m_width *= ratioX;
+		obj.m_posX   *= ratioX;
+		obj.m_posY   *= ratioY;
+		obj.m_width  *= ratioX;
 		obj.m_height *= ratioY;
 	}
 }
