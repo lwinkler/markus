@@ -34,11 +34,13 @@ class FilterObjectsParameterStructure : public ModuleParameterStructure
 public:
 	FilterObjectsParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterDouble("min_distance", 0.0, PARAM_DOUBLE, 0, 100000, &minDist, "Minimal distance criterion for the object"));
+		m_list.push_back(new ParameterDouble("min_distance", 0.0, PARAM_DOUBLE, 0, 1, &minDist      , "Minimal distance criterion for the object"));
+		m_list.push_back(new ParameterBool("avoid_borders", 0   , PARAM_BOOL  , 0, 1, &avoidBorders , "Do not take thumbnail if the object touches the border of the image."));
 
 		ParameterStructure::Init();
 	}
 	double minDist;
+	bool avoidBorders;
 };
 
 class FilterObjects : public Module

@@ -81,20 +81,28 @@ void FilterObjects::ProcessFrame()
 	double sqDist = pow(m_param.minDist, 2);
 	for(vector<Object>::const_iterator it = m_objectsIn.begin() ; it != m_objectsIn.end() ; it++)
 	{
-		bool valid = false;
+		bool valid = true;
+		const Rect &rect(it->Rect());
 		const Feature& posX = it->GetFeature("x");
 		const Feature& posY = it->GetFeature("y");
 		// const Feature& distance = it->GetFeatureByName("distance", featureNames);
 
 		// cout<<POW2(posX.value - posX.initial) + POW2(posY.value - posY.initial)<<" >= "<<POW2(m_param.minDist)<<endl;
-		if(pow((posX.value - posX.initial) * m_param.width, 2) + pow((posY.value - posY.initial) * m_param.height, 2) >= sqDist)
+		if(pow((posX.value - posX.initial) * m_param.width, 2) + pow((posY.value - posY.initial) * m_param.height, 2) < sqDist)
 		{
-			valid = true;
-			m_objectsOut.push_back(*it);
+			valid = false;
 		}
+		// If the object touches the border, do not valid
+		//	value is set to 2 = 1 + 1 so that we avoid rounding errors
+		if(m_param.avoidBorders && (rect.x <= 2 || rect.y <= 2 || rect.x + rect.width >= m_param.width - 2 || rect.y + rect.height >= m_param.height - 2))
+		{
+			valid = false;
+
+		}
+		if(valid)
+			m_objectsOut.push_back(*it);
 #ifdef MARKUS_DEBUG_STREAMS
-		const Rect & rect(it->Rect());
-		rectangle(*m_debug, rect, valid ? Green : Gray, 2, 8);
+		rectangle(*m_debug, rect, valid ? Green : Gray, 1, 8);
 		line(*m_debug, Point(posX.initial * m_param.width, posY.initial * m_param.height), Point(posX.value * m_param.width, posY.value * m_param.height), valid ? Green : Gray, 1, 8);
 #endif
 	}

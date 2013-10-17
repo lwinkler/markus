@@ -61,15 +61,9 @@ void ThumbnailWriter::ProcessFrame()
 	for(vector<Object>::const_iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; it1++)
 	{
 		const Rect &rect(it1->Rect());
-
-
-		// If the object touches the border, do not save
-		if(!m_param.avoidBorders || ! (rect.x <= 1 || rect.y <= 1 || rect.x + rect.width >= m_param.width || rect.y + rect.height >= m_param.height))
-		{
-			std::stringstream ss;
-			ss << m_folderName << m_currentTimeStamp << "_" << it1->GetName()<< it1->GetId() << "_" << cpt << "." << m_param.extension;
-			imwrite(ss.str(), (*m_input)(rect));
-		}
+		std::stringstream ss;
+		ss << m_folderName << m_currentTimeStamp << "_" << it1->GetName()<< it1->GetId() << "_" << cpt << "." << m_param.extension;
+		imwrite(ss.str(), (*m_input)(rect));
 		cpt++;
 	}
 }
