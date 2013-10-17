@@ -42,7 +42,7 @@ Template::Template(int x_maxNbFramesDisappearance)
 Template::Template(const Template& t, int x_maxNbFramesDisappearance)
 {
 	m_num = t.GetNum();
-	m_lastMatchingObject = NULL; //  t.GetMatchingObjects();
+	m_lastMatchingObject = t.m_lastMatchingObject;
 	m_feats = t.GetFeatures();
 
 	// m_bestMatchingObject = -1;
@@ -56,7 +56,7 @@ Template::Template(const Object& x_reg, int x_maxNbFramesDisappearance)
 	m_counter++;
 	m_feats = x_reg.GetFeatures();
 	// m_bestMatchingObject = -1;
-	m_lastMatchingObject = NULL;
+	m_lastMatchingObject = NULL; // &x_reg;
 	m_counterClean = x_maxNbFramesDisappearance;
 
 	//cout<<"Object "<<x_reg.GetNum()<<" is used to create template "<<m_num<<" with "<<x_reg.GetFeatures().size()<<" features"<<endl;
@@ -65,7 +65,7 @@ Template::Template(const Object& x_reg, int x_maxNbFramesDisappearance)
 Template& Template::operator = (const Template& t)
 {
 	m_num = t.GetNum();
-	m_lastMatchingObject = NULL; // t.GetMatchingObjects();
+	m_lastMatchingObject = t.m_lastMatchingObject;
 	m_feats = t.GetFeatures();
 	
 	// m_bestMatchingObject = -1;
@@ -95,12 +95,10 @@ double Template::CompareWithObject(const Object& x_reg, const vector<string>& x_
 	{
 		const Feature & f1(GetFeature(*it));
 		const Feature & f2(x_reg.GetFeature(*it));
-		//cout<<"m_feats[i].GetValue()"<<m_feats[i].GetValue()<<endl;
-		//cout<<"x_reg.GetFeatures()[i].GetValue()"<<x_reg.GetFeatures()[i].GetValue()<<endl;
-		
-		//cout<<"temp val ="<<m_feats[i].GetValue()<<" region val="<<x_reg.GetFeatures()[i].GetValue()<<" temp var="<<m_feats[i].GetVariance()<<endl;
 		sum += POW2(f1.value - f2.value) 
 			/ POW2(f1.sqVariance); // TODO: See if sqVariance has a reasonable value !!
+		// sum += POW2(f1.mean - f2.value) 
+			// / POW2(f1.sqVariance);
 	}
 	return sqrt(sum) / x_features.size();
 }

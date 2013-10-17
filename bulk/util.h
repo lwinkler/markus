@@ -43,7 +43,7 @@ const std::string timeStamp();
 
 
 // Logging functions
-#define LOG_EVENT(x)   Global::logger.Stream(LOG_ERROR)<<x<<std::endl;
+#define LOG_EVENT(x)   Global::logger.Stream(LOG_EVENT)<<x<<std::endl;
 #define LOG_ERROR(x)   Global::logger.Stream(LOG_ERROR)<<x<<std::endl;
 #define LOG_WARNING(x) Global::logger.Stream(LOG_WARNING)<<x<<std::endl;
 #define LOG_INFO(x)    Global::logger.Stream(LOG_INFO)<<x<<std::endl;

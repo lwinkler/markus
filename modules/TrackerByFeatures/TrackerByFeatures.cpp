@@ -52,8 +52,6 @@ TrackerByFeatures::TrackerByFeatures(const ConfigReader& x_configReader) :
 	m_outputObjectStream = new StreamObject(0, "tracker", m_param.width, m_param.height, m_objects, cvScalar(255, 255, 255), *this,	"Tracked objects");
 	m_outputStreams.push_back(m_outputObjectStream);
 
-	// TODO : Output template + check if ok in/out same
-
 #ifdef MARKUS_DEBUG_STREAMS
 	m_debug = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
 	m_debugStreams.push_back(new StreamDebug(0, "debug", m_debug, *this,	"Debug"));
@@ -78,6 +76,7 @@ void TrackerByFeatures::ProcessFrame()
 	CleanTemplates();
 	DetectNewTemplates();
 	UpdateTemplates();
+
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -90,7 +89,7 @@ void TrackerByFeatures::MatchTemplates()
 		it2->m_isMatched = 0;
 	}
 
-	// Try to match each region with a template
+	// Try to match each objects with a template
 	for(list<Template>::iterator it1 = m_templates.begin() ; it1 != m_templates.end(); it1++ )
 	{
 		// it1->m_bestMatchingObject = -1;
@@ -98,7 +97,7 @@ void TrackerByFeatures::MatchTemplates()
 		//int isMatched =
 		MatchTemplate(*it1);
 	}
-	LOG_DEBUG("MatchTemplates : "<<m_templates.size()<<" templates and "<<m_objects.size()<<" regions.");
+	LOG_DEBUG("MatchTemplates : "<<m_templates.size()<<" templates and "<<m_objects.size()<<" objects.");
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -109,12 +108,10 @@ int TrackerByFeatures::MatchTemplate(Template& x_temp)
 {
 	double bestDist = DBL_MAX;
 	Object* bestObject = NULL;
+	x_temp.m_lastMatchingObject = NULL;
 
 	LOG_DEBUG("Comparing template "<<x_temp.GetNum()<<" with "<<m_objects.size()<<" objects");
 
-#ifdef MARKUS_DEBUG_STREAMS
-	m_debug->setTo(0);
-#endif
 	for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
 	{
 		// Add empty features for distance and speed
@@ -127,44 +124,68 @@ int TrackerByFeatures::MatchTemplate(Template& x_temp)
 	}
 	if(bestObject == NULL)
 		return 0;
-	const Template * bestTemplate = MatchObject(*bestObject);
-	if(bestDist < m_param.maxMatchingDistance
-			&& (bestTemplate->GetNum() == x_temp.GetNum() || !m_param.symetricMatch))
+	if(bestDist <= m_param.maxMatchingDistance)
 	{
+		if(m_param.symetricMatch)
+		{
+			const Template * bestTemplate = MatchObject(*bestObject);
+			assert(bestTemplate != NULL);
+			if(bestTemplate == NULL || bestTemplate->GetNum() != x_temp.GetNum())
+				return 0;
+		}
 		// x_temp.m_bestMatchingObject = bestObject;
 		LOG_DEBUG("Template "<<x_temp.GetNum()<<" matched with object "<<bestObject->GetId()<<" dist="<<bestDist);
-		bestObject->SetId(bestTemplate->GetNum()); // Set id of object
+		bestObject->SetId(x_temp.GetNum()); // Set id of object
 		// x_temp.m_matchingObjects.push_back(m_objects[bestObject]);
 		x_temp.m_lastMatchingObject = bestObject;
 		bestObject->m_isMatched = 1;
-
-#ifdef MARKUS_DEBUG_STREAMS
-		if(bestObject != NULL)
-		{
-			// Point p(bestObject->m_posX, bestObject->m_posY);
-			// circle(*m_debug, p, 4, colorFromId(x_temp.GetNum()));
-			rectangle(*m_debug, bestObject->Rect(), colorFromId(x_temp.GetNum()));
-		}
-#endif
 
 		return 1;
 	}
 	else
 	{
-		x_temp.m_lastMatchingObject = NULL;
 		return 0;
 	}
-
 }
 
+/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
+/// Match an object with the set of templates
+/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
+const Template * TrackerByFeatures::MatchObject(const Object& x_obj)const
+{
+	double bestDist = DBL_MAX;
+	const Template* bestTemp = NULL;
+
+	//cout<<"Comparing template "<<m_num<<" with "<<x_regs.size()<<" objects"<<endl;
+
+	for(list<Template>::const_iterator it1 = m_templates.begin() ; it1 != m_templates.end(); it1++ )
+	{
+		double dist = it1->CompareWithObject(x_obj, m_featureNames);
+		//cout<<"dist ="<<dist;
+		if(dist < bestDist)
+		{
+			bestDist = dist;
+			bestTemp = &(*it1);
+		}
+	}
+	return bestTemp;
+}
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 /* UpdateTemplates */
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 void TrackerByFeatures::UpdateTemplates()
 {
+#ifdef MARKUS_DEBUG_STREAMS
+	m_debug->setTo(0);
+#endif
 	for(list<Template>::iterator it1= m_templates.begin() ; it1 != m_templates.end(); it1++ )
 	{
+#ifdef MARKUS_DEBUG_STREAMS
+		// Draw matching object
+		if(it1->m_lastMatchingObject != NULL)
+			rectangle(*m_debug, it1->m_lastMatchingObject->Rect(), colorFromId(it1->GetNum()));
+#endif
 		if(it1->m_lastMatchingObject != NULL)
 		{
 			// Add two extra features: distance and speed
@@ -183,6 +204,17 @@ void TrackerByFeatures::UpdateTemplates()
 			it1->m_lastMatchingObject->SetFeatures(it1->GetFeatures());
 			it1->m_lastMatchingObject = NULL;
 		}
+
+#ifdef MARKUS_DEBUG_STREAMS
+		// draw template (if position is available)
+		try{
+			double x = it1->GetFeature("x").value;
+			double y = it1->GetFeature("y").value;
+			Point p(x * m_param.width, y * m_param.height);
+			circle(*m_debug, p, 4, colorFromId(it1->GetNum()));
+		}
+		catch(...){}
+#endif
 	}
 }
 
@@ -217,7 +249,7 @@ void TrackerByFeatures::CleanTemplates()
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 void TrackerByFeatures::DetectNewTemplates()
 {
-	// If region not matched, add a template
+	// If objects not matched, add a template
 	int cpt = 0;
 	for(vector<Object>::iterator it2 = m_objects.begin() ; it2 != m_objects.end(); it2++ )
 	{
@@ -249,10 +281,17 @@ void TrackerByFeatures::DetectNewTemplates()
 			if(bestDist <= m_param.maxMatchingDistance && bestTemplate != NULL)
 			{
 				// Copy the template to the object (but not the id)
-				template1.SetFeatures(bestTemplate->GetFeatures()); // TODO: may be a problem with this line: adds identical object
-
+				template1.SetFeatures(bestTemplate->GetFeatures()); // TODO: See if it is ok to copy all the features
+				try{
+					double x = template1.GetFeature("x").value;
+					double y = template1.GetFeature("y").value;
+					Point p(x * m_param.width, y * m_param.height);
+					circle(*m_debug, p, 8, colorFromId(template1.GetNum()));
+				}
+				catch(...){}
 			}
 
+			template1.m_lastMatchingObject = &(*it2);
 			m_templates.push_back(template1);
 			//cout<<"Added template "<<t.GetNum()<<endl;
 			it2->SetId(template1.GetNum());
@@ -262,25 +301,3 @@ void TrackerByFeatures::DetectNewTemplates()
 	LOG_DEBUG("DetectNewTemplates : "<<cpt<<" new templates added.");
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-/// Match an object with the set of templates
-/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-const Template * TrackerByFeatures::MatchObject(const Object& x_obj)const
-{
-	double bestDist = DBL_MAX;
-	const Template* bestTemp = NULL;
-
-	//cout<<"Comparing template "<<m_num<<" with "<<x_regs.size()<<" regions"<<endl;
-
-	for(list<Template>::const_iterator it1 = m_templates.begin() ; it1 != m_templates.end(); it1++ )
-	{
-		double dist = it1->CompareWithObject(x_obj, m_featureNames);
-		//cout<<"dist ="<<dist;
-		if(dist < bestDist)
-		{
-			bestDist = dist;
-			bestTemp = &(*it1);
-		}
-	}
-	return bestTemp;
-}
