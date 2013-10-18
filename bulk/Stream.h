@@ -78,6 +78,7 @@ protected:
 	Stream * m_connected;
 	
 private:
+	// These are defined as a trick to prevent unwanted copies !
 	Stream& operator=(const Stream&);
 	Stream(const Stream&);
 };

@@ -72,6 +72,9 @@ void TrackerByFeatures::Reset()
 
 void TrackerByFeatures::ProcessFrame()
 {
+#ifdef MARKUS_DEBUG_STREAMS
+	m_debug->setTo(0);
+#endif
 	MatchTemplates();
 	CleanTemplates();
 	DetectNewTemplates();
@@ -176,9 +179,6 @@ const Template * TrackerByFeatures::MatchObject(const Object& x_obj)const
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 void TrackerByFeatures::UpdateTemplates()
 {
-#ifdef MARKUS_DEBUG_STREAMS
-	m_debug->setTo(0);
-#endif
 	for(list<Template>::iterator it1= m_templates.begin() ; it1 != m_templates.end(); it1++ )
 	{
 #ifdef MARKUS_DEBUG_STREAMS
@@ -210,7 +210,11 @@ void TrackerByFeatures::UpdateTemplates()
 		try{
 			double x = it1->GetFeature("x").value;
 			double y = it1->GetFeature("y").value;
+			// double w = it1->GetFeature("width").value;
+			// double h = it1->GetFeature("height").value;
 			Point p(x * m_param.width, y * m_param.height);
+			// Size s(w * m_param.width / 2, h * m_param.height / 2);
+			// ellipse(*m_debug, p, s, 0, 0, 360, colorFromId(it1->GetNum()));
 			circle(*m_debug, p, 4, colorFromId(it1->GetNum()));
 		}
 		catch(...){}
@@ -261,34 +265,51 @@ void TrackerByFeatures::DetectNewTemplates()
 				return;
 			}
 
-			// Detect if the new object similar to a template
-			double bestDist = DBL_MAX;
-			const Template * bestTemplate = NULL;
-
-			LOG_DEBUG("New object. Detect if the new object similar to another template ");
-
-			for(list<Template>::iterator it3 = m_templates.begin() ; it3 != m_templates.end() ; it3++)
-			{
-				// Add empty features for distance and speed
-				double dist = it3->CompareWithObject(*it2, m_featureNames);
-				if(dist < bestDist)
-				{
-					bestDist     = dist;
-					bestTemplate = &(*it3);
-				}
-			}
 			Template template1(*it2, m_param.maxNbFramesDisappearance);
-			if(bestDist <= m_param.maxMatchingDistance && bestTemplate != NULL)
+			// if(bestDist <= m_param.maxMatchingDistance && bestTemplate != NULL)
+
+			// TODO: We may want to inherit this class and create an AdvancedTracker !
+			if(m_param.handleSplit)
 			{
-				// Copy the template to the object (but not the id)
-				template1.SetFeatures(bestTemplate->GetFeatures()); // TODO: See if it is ok to copy all the features
-				try{
-					double x = template1.GetFeature("x").value;
-					double y = template1.GetFeature("y").value;
-					Point p(x * m_param.width, y * m_param.height);
-					circle(*m_debug, p, 8, colorFromId(template1.GetNum()));
+				// Detect if the new object is similar to a template
+				double bestDist = DBL_MAX;
+				const Template * bestTemplate = NULL;
+
+				LOG_DEBUG("New object. Detect if the new object similar to another template ");
+
+				for(list<Template>::iterator it3 = m_templates.begin() ; it3 != m_templates.end() ; it3++)
+				{
+					// Add empty features for distance and speed
+					double dist = it3->CompareWithObject(*it2, m_featureNames);
+					if(dist < bestDist)
+					{
+						bestDist     = dist;
+						bestTemplate = &(*it3);
+					}
 				}
-				catch(...){}
+
+				if(bestTemplate != NULL)
+				{
+					// TODO: Manage cases where x is absent
+					try
+					{
+						double xt = bestTemplate->GetFeature("x").value;
+						double yt = bestTemplate->GetFeature("y").value;
+						double wt = bestTemplate->GetFeature("width").value;
+						double ht = bestTemplate->GetFeature("height").value;
+						double xo = it2->GetFeature("x").value;
+						double yo = it2->GetFeature("y").value;
+
+						// Condition for object split
+						// note: so far the distance to consider a split is the double of w/2 . This is a security margin
+						if(abs(xt - xo) <= wt / 2 && abs(yt - yo) <= ht / 2)
+						{
+							// Copy the template to the object (but not the id)
+							template1.SetFeatures(bestTemplate->GetFeatures()); // TODO: See if it is ok to copy all the features
+						}
+					}
+					catch(...){}
+				}
 			}
 
 			template1.m_lastMatchingObject = &(*it2);

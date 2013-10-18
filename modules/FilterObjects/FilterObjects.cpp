@@ -94,7 +94,7 @@ void FilterObjects::ProcessFrame()
 		}
 		// If the object touches the border, do not valid
 		//	value is set to 2 = 1 + 1 so that we avoid rounding errors
-		if(m_param.avoidBorders && (rect.x <= 2 || rect.y <= 2 || rect.x + rect.width >= m_param.width - 2 || rect.y + rect.height >= m_param.height - 2))
+		if(m_param.avoidBorders && (rect.x <= 2 || rect.y <= 2 || rect.x + rect.width >= m_param.width - 2 || rect.y + rect.height >= m_param.height - 2)) // TODO: It would be cleaner to have objects pos [0:width-1]
 		{
 			valid = false;
 

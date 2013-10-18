@@ -68,12 +68,12 @@ void ControllerInt::SetControlledValue()
 
 void ControllerInt::GetCurrent()
 {
-	m_parameterSlider->SetValue(m_param.GetDefault());
+	m_parameterSlider->SetValue(m_parameterSlider->GetValue());
 }
 
 void ControllerInt::GetDefault()
 {
-	m_parameterSlider->SetValue(m_parameterSlider->GetValue());
+	m_parameterSlider->SetValue(m_param.GetDefault());
 }
 /*------------------------------------------------------------------------------------------------*/
 ControllerDouble::ControllerDouble(ParameterDouble& x_param):
