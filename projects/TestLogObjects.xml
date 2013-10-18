@@ -49,9 +49,9 @@
 <param name="height">240</param>
 <param name="type">CV_8UC1</param>
 <param name="fps">0</param>
-<param name="minWidth">10</param>
-<param name="minHeight">10</param>
-<param name="objectLabel">object</param>
+<param name="min_width">10</param>
+<param name="min_height">10</param>
+<param name="object_label">object</param>
 <param name="features">x,y,width,height</param>
 </parameters>
 <uiobject x="900" y="300" width="0" height="0"/>
@@ -85,9 +85,6 @@
 <param name="height">240</param>
 <param name="type">CV_8UC1</param>
 <param name="fps">0</param>
-<param name="maxMatchingDistance">100</param>
-<param name="maxNbFramesDisappearance">10</param>
-<param name="symetricMatch">1</param>
 <param name="features">x,y,width,height</param>
 <param name="alpha">0.1</param>
 </parameters>

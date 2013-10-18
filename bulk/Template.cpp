@@ -29,35 +29,35 @@ using namespace std;
 int Template::m_counter = 0;
 
 
-Template::Template(int x_maxNbFramesDisappearance)
+Template::Template()
 {
 	m_num = m_counter;
 	// m_bestMatchingObject = -1;
 	m_lastMatchingObject = NULL;
-	m_counterClean = x_maxNbFramesDisappearance;
+	m_lastSeen = TIME_STAMP_MIN;
 
 	m_counter++;
 }
 
-Template::Template(const Template& t, int x_maxNbFramesDisappearance)
+Template::Template(const Template& t)
 {
 	m_num = t.GetNum();
 	m_lastMatchingObject = t.m_lastMatchingObject;
 	m_feats = t.GetFeatures();
 
 	// m_bestMatchingObject = -1;
-	m_counterClean = x_maxNbFramesDisappearance;
+	m_lastSeen = TIME_STAMP_MIN;
 
 }
 
-Template::Template(const Object& x_reg, int x_maxNbFramesDisappearance)
+Template::Template(const Object& x_reg)
 {
 	m_num = m_counter;
 	m_counter++;
 	m_feats = x_reg.GetFeatures();
 	// m_bestMatchingObject = -1;
 	m_lastMatchingObject = NULL; // &x_reg;
-	m_counterClean = x_maxNbFramesDisappearance;
+	m_lastSeen = TIME_STAMP_MIN;
 
 	//cout<<"Object "<<x_reg.GetNum()<<" is used to create template "<<m_num<<" with "<<x_reg.GetFeatures().size()<<" features"<<endl;
 }
@@ -69,7 +69,7 @@ Template& Template::operator = (const Template& t)
 	m_feats = t.GetFeatures();
 	
 	// m_bestMatchingObject = -1;
-	m_counterClean = t.m_counterClean;// ::m_maxNbFramesDisappearance;
+	m_lastSeen = t.m_lastSeen;// ::m_timeDisappear;
 
 	return *this;
 }
@@ -107,7 +107,7 @@ double Template::CompareWithObject(const Object& x_reg, const vector<string>& x_
 /* Update the template's features */
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-void Template::UpdateFeatures(double x_alpha)
+void Template::UpdateFeatures(double x_alpha, TIME_STAMP m_currentTimeStamp)
 {
 	if(m_lastMatchingObject != NULL)
 	{
@@ -115,6 +115,16 @@ void Template::UpdateFeatures(double x_alpha)
 		{
 			it->second.Update(m_lastMatchingObject->GetFeature(it->first).value, x_alpha);
 		}
+		m_lastSeen = m_currentTimeStamp;
 	}
 	
+}
+/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
+/* This template needs to be cleaned */
+/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+bool Template::NeedCleaning(TIME_STAMP x_cleaningTimeStamp)
+{
+	int tmp = m_lastSeen - x_cleaningTimeStamp; // note: this condition would not resist an overflow
+	return tmp < 0;
 }

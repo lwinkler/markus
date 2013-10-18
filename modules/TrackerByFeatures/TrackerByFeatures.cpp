@@ -200,7 +200,7 @@ void TrackerByFeatures::UpdateTemplates()
 			// it1->m_lastMatchingObject->SetFeatureByName("speed_y", featureNames, y.value - y.mean);
 
 			// Update the template and copy to the object
-			it1->UpdateFeatures(m_param.alpha);
+			it1->UpdateFeatures(m_param.alpha, m_currentTimeStamp);
 			it1->m_lastMatchingObject->SetFeatures(it1->GetFeatures());
 			it1->m_lastMatchingObject = NULL;
 		}
@@ -229,20 +229,14 @@ void TrackerByFeatures::CleanTemplates()
 {
 	int cptCleaned = 0;
 	int cptTotal = 0;
+	TIME_STAMP timeStampClean = m_currentTimeStamp - m_param.timeDisappear * 1000;
 	for(list<Template>::iterator it1 = m_templates.begin() ; it1 != m_templates.end(); it1++ )
 	{
-		//cout<<"it1->m_isMatched"<<it1->m_isMatched<<endl;
-		//cout<<"it1->m_counterClean"<<it1->m_counterClean<<endl;
-		if(it1->m_lastMatchingObject == NULL)
+		if(it1->NeedCleaning(timeStampClean))
 		{
-			it1->m_counterClean--;
-			if(it1->m_counterClean <= 0)
-			{
-				it1 = m_templates.erase(it1);
-				cptCleaned++;
-			}
+			it1 = m_templates.erase(it1);
+			cptCleaned++;
 		}
-		else it1->m_counterClean = m_param.maxNbFramesDisappearance;
 		cptTotal++;
 	}
 	LOG_DEBUG("CleanTemplates : "<<cptCleaned<<" templates erased out of "<<cptTotal<<" templates");
@@ -265,7 +259,7 @@ void TrackerByFeatures::DetectNewTemplates()
 				return;
 			}
 
-			Template template1(*it2, m_param.maxNbFramesDisappearance);
+			Template template1(*it2);
 			// if(bestDist <= m_param.maxMatchingDistance && bestTemplate != NULL)
 
 			// TODO: We may want to inherit this class and create an AdvancedTracker !
