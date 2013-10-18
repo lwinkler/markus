@@ -105,7 +105,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	
 	
 	
-	setPalette(QPalette(QColor(0, 0, 0)));
+	setPalette(QPalette(QColor(20, 20, 20)));
 	setAutoFillBackground(true);
 
 	//update();
