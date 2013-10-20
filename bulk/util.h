@@ -66,6 +66,7 @@ class Logging {
 		// char m_mode;
 		std::ostream & Stream(logLevel x_level);
 		void SetMode(char x_mode);
+		inline bool HasDebugMode() const {return m_mode == 1 || m_mode == 3;}
 
 	private:
 		std::ofstream m_logFile;

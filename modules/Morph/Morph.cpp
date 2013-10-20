@@ -38,8 +38,8 @@ Morph::Morph(const ConfigReader& x_configReader) :
 	m_param(x_configReader)
 {
 	m_description = "Apply a morphological operator to an image";
-	m_output   = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
-	m_input    = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
+	m_output   = new Mat(Size(m_param.width, m_param.height), m_param.type);
+	m_input    = new Mat(Size(m_param.width, m_param.height), m_param.type);
 
 	
 	m_inputStreams.push_back(new StreamImage( 0, "input" , m_input , *this, "Video input"));

@@ -47,15 +47,15 @@ HOGDetector::HOGDetector(const ConfigReader& x_configReader)
 	// Init output images
 
 	m_description = "Detect objects from a video stream using a HOG descriptor";
-	m_input = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
-	m_lastInput = new Mat( cvSize(m_param.width, m_param.height), m_param.type);
+	m_input = new Mat(Size(m_param.width, m_param.height), m_param.type);
+	m_lastInput = new Mat( Size(m_param.width, m_param.height), m_param.type);
 
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this, 		"Video input")); 
 
 	m_outputStreams.push_back(new StreamObject(0, "detected", m_param.width, m_param.height, 
 				m_detectedObjects, colorFromStr(m_param.color), *this,	"Detected objects"));
 #ifdef MARKUS_DEBUG_STREAMS
-	m_debug = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
+	m_debug = new Mat(Size(m_param.width, m_param.height), CV_8UC3);
 	m_debugStreams.push_back(new StreamDebug(1, "debug", m_debug, *this,		""));
 #endif
 }
@@ -106,7 +106,6 @@ void HOGDetector::NormalProcess()
 /// Copy the results from the thread to the module
 void HOGDetector::CopyResults()
 {
-	// TODO : See if we can find faster by avoiding copies
 	m_detectedObjects.clear();
 	for(std::vector<Rect>::const_iterator it = m_thread.GetDetectedObjects().begin() ; it != m_thread.GetDetectedObjects().end() ; it++)
 	{

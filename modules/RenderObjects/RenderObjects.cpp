@@ -37,8 +37,8 @@ RenderObjects::RenderObjects(const ConfigReader& x_configReader) :
 	m_param(x_configReader)
 {
 	m_description = "Output video stream with additional object streams.";
-	m_imageInput = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
-	m_imageOutput = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
+	m_imageInput = new Mat(Size(m_param.width, m_param.height), m_param.type);
+	m_imageOutput = new Mat(Size(m_param.width, m_param.height), m_param.type);
 	
 	m_inputStreams.push_back(new StreamImage(0, "input", m_imageInput, *this,	"Input video stream"));
 	m_inputStreams.push_back(new StreamObject(1, "input", m_param.width, m_param.height, m_objectInput1, *this,	"Object stream 1"));

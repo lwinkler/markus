@@ -114,7 +114,7 @@ void adjust(const Mat* im_in, Mat* im_out, Mat*& tmp1, Mat*& tmp2)
 		if(tmp1==NULL)
 		{
 			//cout<<"create image in adjust tmp1 depth "<<im_out->depth<<endl;
-			tmp1 = new Mat( cvSize(im_out->cols, im_out->rows), im_out->type());
+			tmp1 = new Mat( Size(im_out->cols, im_out->rows), im_out->type());
 		}
 		adjustSize(im_in, tmp1);
 		adjustChannels(tmp1, im_out);
@@ -125,12 +125,12 @@ void adjust(const Mat* im_in, Mat* im_out, Mat*& tmp1, Mat*& tmp2)
 		if(tmp1==NULL)
 		{
 			//cout<<"create image in adjust IPL_DEPTH_32F tmp1"<<endl;
-			tmp1 = new Mat( cvSize(im_out->cols, im_out->rows), im_in->type());
+			tmp1 = new Mat( Size(im_out->cols, im_out->rows), im_in->type());
 		}
 		if(tmp2==NULL)
 		{
 			//cout<<"create image in adjust IPL_DEPTH_32F tmp2"<<endl;
-			tmp2 = new Mat( cvSize(im_out->cols, im_out->rows), CV_MAKE_TYPE(im_in->depth(), im_out->channels()));
+			tmp2 = new Mat( Size(im_out->cols, im_out->rows), CV_MAKE_TYPE(im_in->depth(), im_out->channels()));
 		}
 
 		if(im_in->depth() == CV_8U && im_out->depth() == CV_32F)
@@ -230,7 +230,7 @@ const string timeStamp(){
 Logging::Logging()
 {
 	SetMode(0);
-};	
+}
 
 
 Logging::~Logging()
@@ -240,6 +240,7 @@ Logging::~Logging()
 	if(m_cnull.is_open())
 		m_cnull.close();
 }
+
 
 // Set logging mode
 void Logging::SetMode(char x_mode)

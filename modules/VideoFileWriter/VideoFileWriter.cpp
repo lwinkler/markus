@@ -34,7 +34,7 @@ VideoFileWriter::VideoFileWriter(const ConfigReader& x_configReader):
 {
 	m_description = "Write output to a video file.";
 
-	m_input    = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
+	m_input    = new Mat(Size(m_param.width, m_param.height), m_param.type);
 
 	m_inputStreams.push_back(new StreamImage(0, "input",             m_input, *this,   "Video input"));
 }

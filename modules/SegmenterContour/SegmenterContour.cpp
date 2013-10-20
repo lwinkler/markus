@@ -41,7 +41,7 @@ SegmenterContour::SegmenterContour(const ConfigReader& x_configReader) :
 	m_rng(12345)
 {
 	m_description = "Segments a binary image and outputs a stream of objects (with OpenCV contour) and extracts their features (position, width and height)";
-	m_input = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
+	m_input = new Mat(Size(m_param.width, m_param.height), m_param.type);
 
 	// Initialize inputs and outputs streams
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,	"Input binary stream"));
@@ -50,7 +50,7 @@ SegmenterContour::SegmenterContour(const ConfigReader& x_configReader) :
 	m_outputStreams.push_back(m_outputObjectStream);
 
 #ifdef MARKUS_DEBUG_STREAMS
-	m_debug = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
+	m_debug = new Mat(Size(m_param.width, m_param.height), CV_8UC3);
 	m_debugStreams.push_back(new StreamDebug(0, "blobs", m_debug, *this,	"Blobs"));
 #endif
 

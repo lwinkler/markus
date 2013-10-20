@@ -49,7 +49,8 @@ void UsbCam::Reset()
 
 	m_capture.release();
 	m_capture.open(m_param.num);
-	GetProperties();
+	if(Global::logger.HasDebugMode())
+		GetProperties();
 	
 	if(! m_capture.isOpened())
 	{

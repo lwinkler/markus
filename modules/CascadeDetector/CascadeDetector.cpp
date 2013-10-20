@@ -48,15 +48,15 @@ CascadeDetector::CascadeDetector(const ConfigReader& x_configReader)
 	if(! m_thread.m_cascade.load( m_param.filterFile ) || m_thread.m_cascade.empty())
 		throw("Impossible to load cascade filter " + m_param.filterFile);
 	m_description = "Detect objects from a video stream using a cascade filter (c.f. Haar patterns).";
-	m_input = new Mat(cvSize(m_param.width, m_param.height), CV_8UC1);
-	m_lastInput = new Mat( cvSize(m_param.width, m_param.height), m_param.type);
+	m_input = new Mat(Size(m_param.width, m_param.height), CV_8UC1);
+	m_lastInput = new Mat( Size(m_param.width, m_param.height), m_param.type);
 
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this, 		"Video input")); 
 
 	m_outputStreams.push_back(new StreamObject(0, "detected", m_param.width, m_param.height, 
 				m_detectedObjects, colorFromStr(m_param.color), *this,	"Detected objects"));
 #ifdef MARKUS_DEBUG_STREAMS
-	m_debug = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
+	m_debug = new Mat(Size(m_param.width, m_param.height), CV_8UC3);
 	m_debugStreams.push_back(new StreamDebug(1, "debug", m_debug, *this,		""));
 #endif
 }
@@ -104,7 +104,6 @@ void CascadeDetector::NormalProcess()
 
 void CascadeDetector::CopyResults()
 {
-	// TODO : See if we can find faster by avoiding copies
 	m_detectedObjects.clear();
 	for(std::vector<Rect>::const_iterator it = m_thread.GetDetectedObjects().begin() ; it != m_thread.GetDetectedObjects().end() ; it++)
 	{
@@ -126,6 +125,6 @@ void DetectionThread::run()
 	Timer ti;
 	m_detected.clear();
 	//cout<<"m_smallImg"<<&m_smallImg<<" m_detectedObjects"<<&m_detectedObjects<<" m_scaleFactor"<<m_scaleFactor<<" m_minNeighbors"<<m_minNeighbors<<endl;
-	m_cascade.detectMultiScale(m_smallImg, m_detected, m_scaleFactor, m_minNeighbors, CV_HAAR_SCALE_IMAGE, cvSize(m_minSide, m_minSide));
+	m_cascade.detectMultiScale(m_smallImg, m_detected, m_scaleFactor, m_minNeighbors, CV_HAAR_SCALE_IMAGE, Size(m_minSide, m_minSide));
 	m_timerThread = ti.GetMSecLong();
 }

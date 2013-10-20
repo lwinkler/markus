@@ -58,7 +58,8 @@ void VideoFileReader::Reset()
 	m_capture.release();
 	m_capture.open(m_param.file);
 	// m_fps     = m_capture.get(CV_CAP_PROP_FPS);
-	GetProperties(); // TODO: debug only
+	if(Global::logger.HasDebugMode())
+		GetProperties();
 	
 	if(! m_capture.isOpened())
 	{

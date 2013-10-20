@@ -39,10 +39,10 @@ BgrSubRunAvg::BgrSubRunAvg(const ConfigReader& x_configReader) :
 	m_tmp1 = new Mat();
 	m_tmp2 = NULL;
 	m_description = "Perform a background subtraction using a running average";
-	m_input    = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
-	m_background 		= new Mat(cvSize(m_param.width, m_param.height), m_param.type);
-	m_foreground 		= new Mat(cvSize(m_param.width, m_param.height), m_param.type);
-	m_foreground_tmp	= new Mat(cvSize(m_param.width, m_param.height), m_param.type);
+	m_input    = new Mat(Size(m_param.width, m_param.height), m_param.type);
+	m_background 		= new Mat(Size(m_param.width, m_param.height), m_param.type);
+	m_foreground 		= new Mat(Size(m_param.width, m_param.height), m_param.type);
+	m_foreground_tmp	= new Mat(Size(m_param.width, m_param.height), m_param.type);
 	
 	m_inputStreams.push_back(new StreamImage(0, "input",             m_input, *this,   "Video input"));
 	m_outputStreams.push_back(new StreamImage(0, "foreground", m_foreground,*this,      "Foreground"));

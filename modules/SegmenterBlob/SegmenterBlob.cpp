@@ -42,7 +42,7 @@ SegmenterBlob::SegmenterBlob(const ConfigReader& x_configReader) :
 	m_param(x_configReader)
 {
 	m_description = "Segments a binary image and outputs a stream of objects (from segmented blobs) with their features (position, width and height)";
-	m_input = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
+	m_input = new Mat(Size(m_param.width, m_param.height), m_param.type);
 
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,	"Input binary stream"));
 
@@ -50,7 +50,7 @@ SegmenterBlob::SegmenterBlob(const ConfigReader& x_configReader) :
 	// StreamObject* tmp = dynamic_cast<StreamObject*>(m_outputStreams[0]);
 	
 #ifdef MARKUS_DEBUG_STREAMS
-	m_blobsImg = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
+	m_blobsImg = new Mat(Size(m_param.width, m_param.height), CV_8UC3);
 	m_debugStreams.push_back(new StreamDebug(0, "blobs", m_blobsImg, *this,	"Blobs"));
 #endif
 }
@@ -104,7 +104,7 @@ void SegmenterBlob::ExtractBlobs(Mat* x_img)
 	for (i = 0; i < blobs.GetNumBlobs(); i++ )
 	{
 #ifdef MARKUS_DEBUG_STREAMS
-		IplImage img = *m_blobsImg; // TODO : debug only
+		IplImage img = *m_blobsImg;
 #endif
 		currentBlob = blobs.GetBlob(i);
 		

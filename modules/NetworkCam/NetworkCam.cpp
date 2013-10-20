@@ -65,7 +65,8 @@ void NetworkCam::Reset()
 	m_capture.set(CV_CAP_PROP_FRAME_WIDTH,  m_param.width);
 	m_capture.set(CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
 	
-	GetProperties();
+	if(Global::logger.HasDebugMode())
+		GetProperties();
 
 	// note on the next line: the image will be overloaded but the properties are used to set the input ratio, the type is probably ignored
 	delete m_output;

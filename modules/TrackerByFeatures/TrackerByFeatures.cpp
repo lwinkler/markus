@@ -53,7 +53,7 @@ TrackerByFeatures::TrackerByFeatures(const ConfigReader& x_configReader) :
 	m_outputStreams.push_back(m_outputObjectStream);
 
 #ifdef MARKUS_DEBUG_STREAMS
-	m_debug = new Mat(cvSize(m_param.width, m_param.height), CV_8UC3);
+	m_debug = new Mat(Size(m_param.width, m_param.height), CV_8UC3);
 	m_debugStreams.push_back(new StreamDebug(0, "debug", m_debug, *this,	"Debug"));
 #endif
 }

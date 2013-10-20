@@ -39,14 +39,14 @@ BackgroundExtractor::BackgroundExtractor(const ConfigReader& x_configReader) :
 	m_param(x_configReader)
 {
 	m_description = "Track moving objects on video by using backgroung subtraction.";
-	m_output   = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
-	m_input    = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
+	m_output   = new Mat(Size(m_param.width, m_param.height), m_param.type);
+	m_input    = new Mat(Size(m_param.width, m_param.height), m_param.type);
 
-	m_foreground 		= new Mat(cvSize(m_param.width, m_param.height), CV_8UC1);
-	m_foreground_rff	= new Mat(cvSize(m_param.width, m_param.height), CV_8UC1);
-	m_background 		= new Mat(cvSize(m_param.width, m_param.height), m_param.type);
-	m_foreground_tmp1 	= new Mat(cvSize(m_param.width, m_param.height), m_param.type); // TODO : alloc once only
-	m_foreground_tmp2 	= new Mat(cvSize(m_param.width, m_param.height), CV_8UC1); // TODO : alloc once only
+	m_foreground 		= new Mat(Size(m_param.width, m_param.height), CV_8UC1);
+	m_foreground_rff	= new Mat(Size(m_param.width, m_param.height), CV_8UC1);
+	m_background 		= new Mat(Size(m_param.width, m_param.height), m_param.type);
+	m_foreground_tmp1 	= new Mat(Size(m_param.width, m_param.height), m_param.type); // TODO : alloc once only
+	m_foreground_tmp2 	= new Mat(Size(m_param.width, m_param.height), CV_8UC1); // TODO : alloc once only
 	
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,					"Video input"));
 
@@ -290,7 +290,7 @@ void BackgroundExtractor::ExtractForeground(Mat* x_img)
 void BackgroundExtractor::ExtractForegroundMax(Mat* x_img)
 {
 	float foregroundThres = m_param.foregroundThres;
-	static Mat* tmp = new Mat(cvSize(x_img->cols, x_img->rows), x_img->depth(), x_img->channels());
+	static Mat* tmp = new Mat(Size(x_img->cols, x_img->rows), x_img->depth(), x_img->channels());
 	
 	absdiff(*x_img, *m_background, *tmp);
 	
@@ -383,7 +383,7 @@ void BackgroundExtractor::RemoveNoiseForeground()
 	}
 	else 
 	{
-		static Mat* tmp = new Mat(cvSize(x_img->cols, x_img->rows), x_img->depth(), x_img->channels());
+		static Mat* tmp = new Mat(Size(x_img->cols, x_img->rows), x_img->depth(), x_img->channels());
 	
 		subtract(*x_img, *m_lastImg, *tmp);
 		absdiff(*x_img, *m_lastImg, *tmp);

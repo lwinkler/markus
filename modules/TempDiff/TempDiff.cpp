@@ -38,11 +38,11 @@ TempDiff::TempDiff(const ConfigReader& x_configReader) :
 	m_param(x_configReader)
 {
 	m_description = "Perform temporal differencing: compare frame with previous frame by subtraction";
-	m_output   = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
-	m_input    = new Mat(cvSize(m_param.width, m_param.height), m_param.type);
+	m_output   = new Mat(Size(m_param.width, m_param.height), m_param.type);
+	m_input    = new Mat(Size(m_param.width, m_param.height), m_param.type);
 
-	m_lastImg 		= new Mat(cvSize(m_param.width, m_param.height), m_param.type);
-	m_temporalDiff 		= new Mat(cvSize(m_param.width, m_param.height), CV_8UC1);
+	m_lastImg 		= new Mat(Size(m_param.width, m_param.height), m_param.type);
+	m_temporalDiff 		= new Mat(Size(m_param.width, m_param.height), CV_8UC1);
 	
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,             "Video input"));
 	m_outputStreams.push_back(new StreamImage(0, "temp_diff", m_temporalDiff, *this, "Temporal difference"));
@@ -74,7 +74,7 @@ void TempDiff::ProcessFrame()
 	}
 	else 
 	{
-		static Mat* tmp = new Mat(cvSize(m_input->cols, m_input->rows), m_input->depth(), m_input->channels());
+		static Mat* tmp = new Mat(Size(m_input->cols, m_input->rows), m_input->depth(), m_input->channels());
 	
 		subtract(*m_input, *m_lastImg, *tmp);
 		absdiff(*m_input, *m_lastImg, *tmp);
