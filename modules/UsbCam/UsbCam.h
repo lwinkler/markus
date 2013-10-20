@@ -27,7 +27,7 @@
 #include <opencv2/highgui/highgui.hpp>
 
 #include "Input.h"
-
+#include "Timer.h"
 
 class UsbCamParameterStructure : public InputParameterStructure
 {
@@ -63,6 +63,7 @@ private:
 	void GetProperties();
 	UsbCamParameterStructure m_param;
 	inline virtual UsbCamParameterStructure& RefParameter() {return m_param;}
+	Timer m_frameTimer;
 };
 
 #endif

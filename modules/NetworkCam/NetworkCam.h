@@ -27,6 +27,7 @@
 #include <opencv2/highgui/highgui.hpp>
 
 #include "Input.h"
+#include "Timer.h"
 
 
 class NetworkCamParameterStructure : public InputParameterStructure
@@ -63,6 +64,7 @@ private:
 	void GetProperties();
 	NetworkCamParameterStructure m_param;
 	inline virtual NetworkCamParameterStructure& RefParameter() {return m_param;};
+	Timer m_frameTimer;
 };
 
 #endif

@@ -71,6 +71,8 @@ void NetworkCam::Reset()
 	// note on the next line: the image will be overloaded but the properties are used to set the input ratio, the type is probably ignored
 	delete m_output;
 	m_output = new Mat(Size(m_capture.get(CV_CAP_PROP_FRAME_WIDTH), m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)), m_param.type);
+
+	m_frameTimer.Restart();
 }
 
 void NetworkCam::Capture()
@@ -92,8 +94,10 @@ void NetworkCam::Capture()
 	
 	// cout<<"UsbCam capture image "<<m_output->cols<<"x"<<m_output->rows<<" time stamp "<<m_capture.get(CV_CAP_PROP_POS_MSEC) / 1000.0<< endl;
 
-	m_timeStamp += 1000.0 / m_param.fps; // TODO: improve this
-	SetTimeStampToOutputs(m_timeStamp);
+	time_t rawtime;
+	time(&rawtime);
+	LOG_DEBUG("UsbCam: Capture time: "<<m_frameTimer.GetMSecLong());
+	SetTimeStampToOutputs(m_frameTimer.GetMSecLong());
 }
 
 void NetworkCam::GetProperties()

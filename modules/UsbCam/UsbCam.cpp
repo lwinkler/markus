@@ -64,6 +64,9 @@ void UsbCam::Reset()
 	// note on the next line: the image will be overloaded but the properties are used to set the input ratio, the type is probably ignored
 	delete m_output;
 	m_output = new Mat(Size(m_capture.get(CV_CAP_PROP_FRAME_WIDTH), m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)), m_param.type);
+
+
+	m_frameTimer.Restart();
 }
 
 void UsbCam::Capture()
@@ -80,11 +83,10 @@ void UsbCam::Capture()
 	
 	// cout<<"UsbCam capture image "<<m_output->cols<<"x"<<m_output->rows<<" time stamp "<<m_capture.get(CV_CAP_PROP_POS_MSEC) / 1000.0<< endl;
 
-	if(m_param.fps == 0)
-		m_timeStamp += 1000.0 / 100; // TODO: improve this
-	else
-		m_timeStamp += 1000.0 / m_param.fps; // TODO: improve this
-	SetTimeStampToOutputs(m_timeStamp);
+	time_t rawtime;
+	time(&rawtime);
+	LOG_DEBUG("UsbCam: Capture time: "<<m_frameTimer.GetMSecLong());
+	SetTimeStampToOutputs(m_frameTimer.GetMSecLong());
 }
 
 void UsbCam::GetProperties()

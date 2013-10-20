@@ -43,11 +43,11 @@ const std::string timeStamp();
 
 
 // Logging functions
-#define LOG_EVENT(x)   Global::logger.Stream(LOG_EVENT)<<x<<std::endl;
-#define LOG_ERROR(x)   Global::logger.Stream(LOG_ERROR)<<x<<std::endl;
-#define LOG_WARNING(x) Global::logger.Stream(LOG_WARNING)<<x<<std::endl;
-#define LOG_INFO(x)    Global::logger.Stream(LOG_INFO)<<x<<std::endl;
-#define LOG_DEBUG(x)   Global::logger.Stream(LOG_DEBUG)<<x<<std::endl;
+#define LOG_EVENT(x)   Global::logger.Stream(LOG_EVENT)<<x<<std::endl
+#define LOG_ERROR(x)   Global::logger.Stream(LOG_ERROR)<<x<<std::endl
+#define LOG_WARNING(x) Global::logger.Stream(LOG_WARNING)<<x<<std::endl
+#define LOG_INFO(x)    Global::logger.Stream(LOG_INFO)<<x<<std::endl
+#define LOG_DEBUG(x)   if(Global::logger.HasDebugMode()){Global::logger.Stream(LOG_DEBUG)<<x<<std::endl;}
 
 typedef enum
 {
@@ -66,7 +66,7 @@ class Logging {
 		// char m_mode;
 		std::ostream & Stream(logLevel x_level);
 		void SetMode(char x_mode);
-		inline bool HasDebugMode() const {return m_mode == 1 || m_mode == 3;}
+		inline bool HasDebugMode() const {return m_oss[LOG_DEBUG] != m_cnull;}
 
 	private:
 		std::ofstream m_logFile;
