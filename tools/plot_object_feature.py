@@ -28,7 +28,7 @@ def plot_object(objName, features, plotType):
 		# plt.plot(time1, result['nbSamples'], color='pink', label='nbSamples')
 
 		# Set plot
-		ax1.set_title("Evolution of " + features[0] + " for " + objName)
+		ax1.set_title("Evolution of " + features[0]) # + " for " + objName)
 		ax1.set_xlabel('time')
 		ax1.set_ylabel(features[0])
 	elif plotType == 'scatter':
@@ -51,9 +51,9 @@ def plot_object(objName, features, plotType):
 
 # check arguments
 if len(sys.argv) < 4:
-	print "usage: " + sys.argv[0] + " plot_type file object feature(s)"
-	print "ex: " + sys.argv[0] + " linear file object feature"
-	print "ex: " + sys.argv[0] + " scatter file object feature1 feature2"
+	print "usage: " + sys.argv[0] + " <file> <plot_type> <object> <feature(s)>"
+	print "ex: " + sys.argv[0] + " <file> linear object123 ellipse_angle"
+	print "ex: " + sys.argv[0] + " <file> scatter all width height"
 
 	exit()
 
