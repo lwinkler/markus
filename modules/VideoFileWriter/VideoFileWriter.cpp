@@ -58,7 +58,17 @@ void VideoFileWriter::Reset()
 	assert(m_param.type == CV_8UC3); // TODO : find a way to restrain parameters values
 
 	const string filename = m_param.file  + (m_param.timeStamp ? ("." + timeStamp()) : ".") + "." + ExtensionFromFourcc(m_param.fourcc); // TODO: out/should be added automatically
-	double fps = GetRecordingFps();
+	double fps = 12;
+	
+	try
+	{
+		fps = GetRecordingFps();
+	}
+	catch(...)
+	{
+		// This may happen if the module is not connected
+		LOG_WARNING("Impossible to acquire the fps value for recording in VideoFileWriter::Reset set to default value "<< fps);	
+	}
 
 	// cout<<"Opening "<<filename<<endl;
 	LOG_DEBUG("Start recording file "<<filename<<" with fps="<<fps);

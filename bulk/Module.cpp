@@ -100,7 +100,15 @@ double Module::GetRecordingFps()
 		// Note: we assume that the fps is given by the first stream in the module
 		assert(m_inputStreams.size() > 0);
 		if(fps == 0)
-			return m_inputStreams.at(0)->RefConnected().RefModule().GetRecordingFps();
+		{
+			Stream * stream = m_inputStreams.at(0);
+			if(stream == NULL)
+				throw("First stream is null in Module::GetRecordingFps");
+			stream = &(stream->RefConnected());
+			if(stream == NULL)
+				throw("Connected stream is null in Module::GetRecordingFps");
+			return stream->RefModule().GetRecordingFps();
+		}
 		else
 		{
 			// estimate the fps to the min of input and current

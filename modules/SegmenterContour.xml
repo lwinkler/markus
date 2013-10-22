@@ -31,17 +31,17 @@
 			<value min="0" max="1000" default="0">0</value>
 			<description>Frames per seconds (processing speed)</description>
 		</param>
-		<param name="minWidth">
+		<param name="min_width">
 			<type>int</type>
 			<value min="0" max="6400" default="0">0</value>
 			<description>Minimal width of an object to segment.</description>
 		</param>
-		<param name="minHeight">
+		<param name="min_height">
 			<type>int</type>
 			<value min="0" max="4800" default="0">0</value>
 			<description>Minimal height of an object to segment.</description>
 		</param>
-		<param name="objectLabel">
+		<param name="object_label">
 			<type>string</type>
 			<value default="object">object</value>
 			<description>Label to be applied to the objects detected by the cascade filter (e.g. face)</description>
