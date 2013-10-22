@@ -81,6 +81,35 @@ void Module::Pause(bool x_pause)
 }
 
 
+/// Return the fps that can be used to recording. This value is special as it depends from preceeding modules. 
+
+double Module::GetRecordingFps()
+{
+	double fps = RefParameter().fps;
+	bool autop = RefParameter().autoProcess;
+
+	if(autop)
+	{
+		// If the module is autoprocessed then the FPS is determining
+		assert(fps != 0);
+		return fps;
+	}
+	else
+	{
+		// If the module is not autoprocessed then the FPS is given by the previous module
+		// Note: we assume that the fps is given by the first stream in the module
+		assert(m_inputStreams.size() > 0);
+		if(fps == 0)
+			return m_inputStreams.at(0)->RefConnected().RefModule().GetRecordingFps();
+		else
+		{
+			// estimate the fps to the min of input and current
+			return MIN(fps, m_inputStreams.at(0)->RefConnected().RefModule().GetRecordingFps());
+		}
+	}
+
+}
+
 Module::~Module()
 {
 	// Delete all streams

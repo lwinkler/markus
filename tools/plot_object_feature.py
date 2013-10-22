@@ -19,6 +19,7 @@ def plot_object(objName, features, plotType):
 	if plotType == 'linear':
 		vect = np.where((data['object'] == objName) & (data['feature'] == features[0]))
 		result = data[vect[0]]
+		# TODO: this time stamp adds one hour to the result: fix this
 		time1 = [ datetime.datetime.fromtimestamp(ms/1000.0) for ms in result['time']] 
 		plt.errorbar(time1, result['value'], yerr=[math.sqrt(i) for i in result['sqVariance']], fmt="-o") # , label='value with variance') #, errorevery=5)
 		plt.plot(time1, result['mean']) # , color='r', label='mean')

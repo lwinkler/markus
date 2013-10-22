@@ -153,3 +153,9 @@ int VideoFileReader::GetMaxFrame()
 {
 	return m_capture.get(CV_CAP_PROP_FRAME_COUNT);	
 }
+
+
+double VideoFileReader::GetRecordingFps()
+{
+	return m_capture.get(CV_CAP_PROP_FPS);	
+}

@@ -89,10 +89,10 @@ public:
 	const std::vector<ControlBoard*>& GetControlList() const {return m_controls;}
 	virtual ModuleParameterStructure & RefParameter() = 0;
 	
-	inline int GetWidth() {return RefParameter().width;}
-	inline int GetHeight(){return RefParameter().height;}
-	inline int GetType()  {return RefParameter().type;}
-	inline int GetFps() {return RefParameter().fps;}
+	// inline int GetWidth() {return RefParameter().width;}
+	// inline int GetHeight(){return RefParameter().height;}
+	// inline int GetType()  {return RefParameter().type;}
+	virtual double GetRecordingFps();
 	
 	inline void SetPreceedingModule(Module & x_module){m_modulePreceeding = &x_module;}
 	inline void AddDependingModule (Module & x_module){m_modulesDepending.push_back(&x_module);}

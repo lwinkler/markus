@@ -61,6 +61,7 @@ public:
 	int GetFrame();
 	int GetMaxMsec();
 	int GetMaxFrame();
+	virtual double GetRecordingFps();
 
 protected:
 	cv::VideoCapture m_capture;

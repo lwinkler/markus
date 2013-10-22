@@ -57,17 +57,12 @@ void VideoFileWriter::Reset()
 	bool isColor = true;
 	assert(m_param.type == CV_8UC3); // TODO : find a way to restrain parameters values
 
-	/*if(m_param.type == CV_8UC3)
-		isColor = true;
-	else if(m_param.type == CV_8UC1)
-		isColor = false;
-	else assert(false); */
-
 	const string filename = m_param.file  + (m_param.timeStamp ? ("." + timeStamp()) : ".") + "." + ExtensionFromFourcc(m_param.fourcc); // TODO: out/should be added automatically
+	double fps = GetRecordingFps();
 
 	// cout<<"Opening "<<filename<<endl;
-	// TODO: Manage fps for stream recording
-	m_writer.open(filename, CV_FOURCC(s[0], s[1], s[2], s[3]), /*m_param.fps > 0 ? m_param.fps :*/ 12, Size(m_param.width, m_param.height), isColor);
+	LOG_DEBUG("Start recording file "<<filename<<" with fps="<<fps);
+	m_writer.open(filename, CV_FOURCC(s[0], s[1], s[2], s[3]), fps, Size(m_param.width, m_param.height), isColor);
 	if(!m_writer.isOpened())
 	{
 		throw("Failed to open output video file in VideoFileWriter::Reset");
