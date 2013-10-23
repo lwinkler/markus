@@ -22,6 +22,9 @@ lib
 lib/cvblobs
 )
 
+## Python libs
+find_package(PythonLibs REQUIRED)
+include_directories(${PYTHON_INCLUDE_DIRS})  # TODO: Only use for one module
 
 set(markus_SRCS 
 main.cpp
@@ -40,6 +43,7 @@ SET(DEPS bulk gui modules tools)
 
 SET(DEPS ${DEPS} ${DEPS} ) # double the dependancies to avoid linking error
 SET(DEPS ${DEPS} tinyxml ${OpenCV_LIBS} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} )
+SET(DEPS ${DEPS} ${PYTHON_LIBRARIES} )
 
 # enable debug streams
 add_definitions(-DMARKUS_DEBUG_STREAMS)
