@@ -54,9 +54,9 @@
     <display x="263" y="54" width="150" height="75" />
     <uiobject type="" x="0" y="0" width="0" height="0" />
   </module>
-  <module name="Logger" machineurl="localhost" id="3">
+  <module name="LogState" machineurl="localhost" id="3">
     <parameters>
-      <param name="class">Logger</param>
+      <param name="class">LogState</param>
       <param name="width">640</param>
       <param name="height">480</param>
       <param name="type">CV_8UC1</param>

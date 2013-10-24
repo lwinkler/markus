@@ -21,7 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "Logger.h"
+#include "LogState.h"
 #include "StreamState.h"
 #include "util.h"
 #include "Manager.h"
@@ -36,10 +36,10 @@ using namespace std;
 using namespace cv;
 
 
-const char * Logger::m_type = "Logger";
+const char * LogState::m_type = "LogState";
 
 
-Logger::Logger(const ConfigReader& x_configReader) 
+LogState::LogState(const ConfigReader& x_configReader) 
 	 : Module(x_configReader), m_param(x_configReader)
 {
 	m_description = "This module takes a state as input and logs it to .srt file";
@@ -48,12 +48,12 @@ Logger::Logger(const ConfigReader& x_configReader)
 	m_inputStreams.push_back(new StreamState(0, "input", m_state, *this, 	"Input state to be logged"));
 }
 
-Logger::~Logger(void)
+LogState::~LogState(void)
 {
 	// delete(m_input);
 }
 
-void Logger::Reset()
+void LogState::Reset()
 {
 	Module::Reset();
 	m_state = m_oldState = 0;
@@ -73,7 +73,7 @@ void Logger::Reset()
 	// cout<<m_srtFileName<<endl;
 }
 
-void Logger::ProcessFrame()
+void LogState::ProcessFrame()
 {
 	if(m_state != m_oldState) {
 		LOG_DEBUG("state change");

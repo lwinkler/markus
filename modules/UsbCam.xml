@@ -34,7 +34,7 @@
 		<param name="num">
 			<type>int</type>
 			<value min="-1" max="2" default="-1">-1</value>
-			<description>Number of the camera, as defined by OpenCV</description>
+			<description>Number of the USB camera (usually 0 or 1)</description>
 		</param>
 	</parameters>
 	<inputs>

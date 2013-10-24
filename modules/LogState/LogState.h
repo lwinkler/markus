@@ -21,25 +21,25 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef LOGGER_H
-#define LOGGER_H
+#ifndef LOG_STATE_H
+#define LOG_STATE_H
 
 #include "Module.h"
 #include "Parameter.h"
 #include "Timer.h"
 
 
-/*! \class Logger
+/*! \class LogState
  *  \brief Class containing methods/attributes of a slit camera
  *
  */
 
 
-class LoggerParameterStructure : public ModuleParameterStructure
+class LogStateParameterStructure : public ModuleParameterStructure
 {
 	
 public:
-	LoggerParameterStructure(const ConfigReader& x_confReader) : 
+	LogStateParameterStructure(const ConfigReader& x_confReader) : 
 		ModuleParameterStructure(x_confReader)
 	{
 		m_list.push_back(new ParameterString("file", 	  "state", 	     &file,      "Name of the .srt file without extension"));
@@ -48,11 +48,11 @@ public:
 	std::string file;
 };
 
-class Logger : public Module
+class LogState : public Module
 {
 protected:
 	virtual void ProcessFrame();
-	LoggerParameterStructure m_param;
+	LogStateParameterStructure m_param;
 	static const char * m_type;
 
 
@@ -63,13 +63,13 @@ protected:
 	std::string m_srtFileName;
 
 public:
-	Logger(const ConfigReader& x_configReader);
-	~Logger(void);
+	LogState(const ConfigReader& x_configReader);
+	~LogState(void);
 	void Reset();
 
 
 protected:
-	inline virtual LoggerParameterStructure& RefParameter() { return m_param;}
+	inline virtual LogStateParameterStructure& RefParameter() { return m_param;}
 };
 
 #endif

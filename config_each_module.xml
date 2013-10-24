@@ -7,8 +7,8 @@
 <module name="FilterObjects"><parameters><param name="class">FilterObjects</param></parameters></module>
 <module name="FilterPython"><parameters><param name="class">FilterPython</param></parameters></module>
 <module name="HOGDetector"><parameters><param name="class">HOGDetector</param></parameters></module>
-<module name="Logger"><parameters><param name="class">Logger</param></parameters></module>
 <module name="LogObjects"><parameters><param name="class">LogObjects</param></parameters></module>
+<module name="LogState"><parameters><param name="class">LogState</param></parameters></module>
 <module name="Mask"><parameters><param name="class">Mask</param></parameters></module>
 <module name="Morph"><parameters><param name="class">Morph</param></parameters></module>
 <module name="MotionDetector"><parameters><param name="class">MotionDetector</param></parameters></module>
