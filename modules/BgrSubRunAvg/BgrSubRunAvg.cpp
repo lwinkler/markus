@@ -75,7 +75,7 @@ void BgrSubRunAvg::ProcessFrame()
 		// accumulateWeighted(*m_input, *m_background, 1);
 		m_emptyBackgroundSubtractor = false;
 		m_input->convertTo(*m_tmp1, CV_32F);
-		m_input->copyTo(*m_background); // TODO: See why images in 32F such as tmp1 cannot be displayed correctly
+		m_input->copyTo(*m_background);
 	}
 	// Main part of the program
 	accumulateWeighted(*m_input, *m_tmp1, m_param.backgroundAlpha);

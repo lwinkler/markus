@@ -38,11 +38,9 @@ public:
 		ModuleParameterStructure(x_confReader)
 	{
 		m_list.push_back(new ParameterString("file", 	  "objects", 	     &file,      "Name of the .srt file without extension"));
-		m_list.push_back(new ParameterBool("timestamp", 1, PARAM_BOOL, 0, 1, &timeStamp, "Add a time stamp the to file name"));
 		ParameterStructure::Init();
 	}
 	std::string file;
-	bool timeStamp;
 };
 
 class LogObjects : public Module

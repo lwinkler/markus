@@ -45,8 +45,8 @@ BackgroundExtractor::BackgroundExtractor(const ConfigReader& x_configReader) :
 	m_foreground 		= new Mat(Size(m_param.width, m_param.height), CV_8UC1);
 	m_foreground_rff	= new Mat(Size(m_param.width, m_param.height), CV_8UC1);
 	m_background 		= new Mat(Size(m_param.width, m_param.height), m_param.type);
-	m_foreground_tmp1 	= new Mat(Size(m_param.width, m_param.height), m_param.type); // TODO : alloc once only
-	m_foreground_tmp2 	= new Mat(Size(m_param.width, m_param.height), CV_8UC1); // TODO : alloc once only
+	m_foreground_tmp1 	= new Mat(Size(m_param.width, m_param.height), m_param.type);
+	m_foreground_tmp2 	= new Mat(Size(m_param.width, m_param.height), CV_8UC1);
 	
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,					"Video input"));
 
@@ -109,7 +109,7 @@ void BackgroundExtractor::UpdateBackground(Mat* x_img)
 {
 	float backgroundAlpha = m_param.backgroundAlpha;
 	//cout<<" img depth"<<x_img->depth<<" backgr"<<m_background->depth<<endl;
-	if(m_emptyBackgroundSubtraction) // TODO : SEe why backgroung is badly displayed if in float
+	if(m_emptyBackgroundSubtraction)
 	{
 		//x_img->copyTo(*m_background);
 		adjustChannels(x_img, m_background);
@@ -356,7 +356,7 @@ void BackgroundExtractor::RemoveNoiseForeground()
 {
 	int filterSize = m_param.foregroundFilterSize;
 	if(filterSize == 0) filterSize=1;
-	if(false && filterSize > 1) // TODO remove HACK
+	if(filterSize > 1)
 	{
 		if(m_elementRemoveNoiseForeground->cols != filterSize)
 		{

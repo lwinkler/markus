@@ -106,13 +106,13 @@ void SegmenterContour::ProcessFrame()
 			// contour
 			Scalar color = Scalar(m_rng.uniform(0, 255), m_rng.uniform(0,255), m_rng.uniform(0,255));
 #ifdef MARKUS_DEBUG_STREAMS
-			drawContours(*m_debug, contours, i, color, 1, 8, vector<Vec4i>(), 0, Point()); // TODO debug only
+			drawContours(*m_debug, contours, i, color, 1, 8, vector<Vec4i>(), 0, Point());
 #endif
 
 
 			Object obj(m_param.objectLabel, rect);
 
-			// Add the possible features // TODO: list features in param description
+			// Add the possible features
 			for(vector<string>::const_iterator it = m_featureNames.begin() ; it != m_featureNames.end() ; it++)
 			{
 				if(it->compare("x") == 0)

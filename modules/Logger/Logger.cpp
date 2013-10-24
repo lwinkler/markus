@@ -24,6 +24,7 @@
 #include "Logger.h"
 #include "StreamState.h"
 #include "util.h"
+#include "Manager.h"
 
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
@@ -67,9 +68,8 @@ void Logger::Reset()
 	*/
 
 
-	m_srtFileName = m_param.file + (m_param.timeStamp ? "." + timeStamp() : "") + ".srt";
+	m_srtFileName = Manager::OutputDir() + "/" + m_param.file + ".srt";
 	// cout<<"file"<<m_param.file<<endl;
-	// cout<<"timeStamp"<<timeStamp()<<endl;
 	// cout<<m_srtFileName<<endl;
 }
 

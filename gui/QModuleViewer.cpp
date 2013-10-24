@@ -322,13 +322,11 @@ void QModuleViewer::hideDisplayOptions()
 }
 void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qimg)
 {
-	// const IplImage iplim = *mat;
-	// ConvertIplImage2QImage(&iplim, qim);
-// }
 
-// Based on http://umanga.wordpress.com/2010/04/19/how-to-covert-qt-qimage-into-opencv-iplimage-and-wise-versa/
-// void  QModuleViewer::ConvertIplImage2QImage(const IplImage *iplImg, QImage *qimg) // TODO: use Mat ?
-// {
+	// Soo far only char images are supported
+	if(mat->type() != CV_8UC3 && mat->type() != CV_8UC3)
+		return;
+
 	const int & h = mat->rows;
 	const int & w = mat->cols;
 	const int & channels = mat->channels();

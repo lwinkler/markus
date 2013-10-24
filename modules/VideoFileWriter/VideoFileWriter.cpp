@@ -24,6 +24,7 @@
 #include "VideoFileWriter.h"
 #include "StreamImage.h"
 #include "util.h"
+#include "Manager.h"
 
 using namespace std;
 using namespace cv;
@@ -57,7 +58,7 @@ void VideoFileWriter::Reset()
 	bool isColor = true;
 	assert(m_param.type == CV_8UC3); // TODO : find a way to restrain parameters values
 
-	const string filename = m_param.file  + (m_param.timeStamp ? ("." + timeStamp()) : ".") + "." + ExtensionFromFourcc(m_param.fourcc); // TODO: out/should be added automatically
+	const string filename = Manager::OutputDir() + "/" + m_param.file  + "." + ExtensionFromFourcc(m_param.fourcc);
 	double fps = 12;
 	
 	try

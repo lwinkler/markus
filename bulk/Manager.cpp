@@ -51,6 +51,7 @@ using namespace std;
 
 using namespace std;
 
+string Manager::m_outputDir;
 
 Manager::Manager(ConfigReader& x_configReader, bool x_centralized) : 
 	Configurable(x_configReader),
@@ -245,6 +246,19 @@ void Manager::PauseInputs(bool x_pause)
 	{
 		(*it)->Pause(x_pause);	
 	}
+}
+
+/// Returns a directory that will contain all outputs
+const string& Manager::OutputDir()
+{
+	if(m_outputDir.size() == 0)
+	{
+		m_outputDir = "out_" + timeStamp();
+		string cmd = "mkdir -f " + m_outputDir;
+		system(cmd.c_str());
+		// TODO : Copy xml and write code version to output dir
+	}
+	return m_outputDir;
 }
 
 /// Check if end of all input streams
