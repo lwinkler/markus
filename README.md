@@ -22,7 +22,7 @@ You need to install:
 
 On Ubuntu the command is:
 
-	sudo apt-get install libqt4-core libtinyxml-dev  libopencv-core-dev libopencv-highgui-dev
+	sudo apt-get install libqt4-core  libqt4-dev libtinyxml-dev  libopencv-core-dev libopencv-highgui-dev
 
 
 First compilation commands:
