@@ -49,7 +49,7 @@
 		<param name="features">
 			<type>string</type>
 			<value default="x,y,width,height">x,y,width,height</value>
-			<description>List of features to extract, separated with ','</description>
+			<description>List of features to extract, separated with ',' possible: x,y,width,height,ellipse_{angle,ratio,width,height}</description>
 		</param>
 	</parameters>
 	<inputs>

@@ -167,13 +167,14 @@ int main(int argc, char** argv)
 				throw("Cannot parse command line parameter");
 			}
 		}
-		manager.Reset();
 
 		if(describe) 
 		{
 			manager.Export();
 			return 0;
 		}
+
+		manager.Reset();
 
 		if(centralized)
 		{

@@ -54,7 +54,6 @@ void UsbCam::Reset()
 	
 	if(! m_capture.isOpened())
 	{
-		// TODO: manage case with no cam
 		throw("Error : UsbCam cannot open cam : " + m_param.num);
 	}
 

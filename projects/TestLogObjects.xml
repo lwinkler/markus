@@ -68,7 +68,6 @@
 <param name="type">CV_8UC1</param>
 <param name="fps">0</param>
 <param name="file">untracked</param>
-<param name="timestamp">1</param>
 </parameters>
 <uiobject x="1075" y="459" width="0" height="0"/>
 </module>
@@ -102,7 +101,6 @@
 <param name="type">CV_8UC1</param>
 <param name="fps">0</param>
 <param name="file">tracked</param>
-<param name="timestamp">1</param>
 </parameters>
 <uiobject x="1326" y="270" width="0" height="0"/>
 </module>

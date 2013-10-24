@@ -36,11 +36,6 @@
 			<value default="out/output">out/output</value>
 			<description>Name of the video file to write, with path</description>
 		</param>
-		<param name="timestamp">
-			<type>bool</type>
-			<value min="0" max="1" default="1">1</value>
-			<description>Add a time stamp the to file name</description>
-		</param>
 		<param name="fourcc">
 			<type>string</type>
 			<value default="MJPG">MJPG</value>
