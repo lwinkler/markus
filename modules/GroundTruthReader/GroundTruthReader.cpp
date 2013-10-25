@@ -22,31 +22,28 @@
 -------------------------------------------------------------------------------------*/
 
 #include "GroundTruthReader.h"
+#include "StreamImage.h"
 #include "StreamState.h"
-
-#ifndef MARKUS_NO_GUI
-#include "InputStreamControl.h"
-#endif
 
 using namespace std;
 using namespace cv;
 
 GroundTruthReader::GroundTruthReader(const ConfigReader& x_configReader): 
-	Input(x_configReader),
+	Module(x_configReader),
 	m_param(x_configReader)
 {
-	m_description = "Input from a video file.";
-	m_outputStreams.push_back(new StreamState(0, "state", m_state,  *this, 	"State read from the annotation file"));
+	m_description = "Read a ground truth file";
 
+	m_input       = new Mat(Size(m_param.width, m_param.height), m_param.type);
+	m_inputStreams.push_back(new StreamImage(0, "input",  m_input, *this, "Video input"));
 
-#ifndef MARKUS_NO_GUI
-	// Add a new control to play forward and rewind
-	m_controls.push_back(new InputStreamControl("InputStreamControl", "Control the reading of the video file"));
-#endif
+	m_outputStreams.push_back(new StreamImage(0, "input", m_input,  *this, 	"Copy of the input stream"));
+	m_outputStreams.push_back(new StreamState(1, "state", m_state,  *this, 	"State read from the annotation file"));
 }
 
 GroundTruthReader::~GroundTruthReader()
 {
+	delete(m_input);
 	m_srtFile.close();
 }
 
@@ -57,6 +54,10 @@ void GroundTruthReader::Reset()
 	m_srtStart = "";
 	m_srtEnd   = "";
 
+	LOG_DEBUG("Open ground truth file: "<<m_param.file);
+	if(m_param.file.size() == 0)
+		// No file
+		return;
 
 	m_srtFile.open(m_param.file.c_str(), std::ifstream::in);
 	
@@ -66,12 +67,11 @@ void GroundTruthReader::Reset()
 	}
 }
 
-void GroundTruthReader::Capture()
+void GroundTruthReader::ProcessFrame()
 {
 	// istringstream ss;
 	m_state = 0;
-	TIME_STAMP currentMs = m_frameTimer.GetMSecLong();
-	string current = msToTimeStamp(currentMs);
+	string current = msToTimeStamp(m_currentTimeStamp);
 
 	if(current > m_srtEnd)
 	{
@@ -125,9 +125,6 @@ void GroundTruthReader::Capture()
 	{
 		m_state = 0;
 	}
-
-	LOG_DEBUG("GroundTruthReader: Capture time: "<<currentMs);
-	SetTimeStampToOutputs(currentMs);
 }
 
 

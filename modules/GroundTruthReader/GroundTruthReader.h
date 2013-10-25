@@ -24,15 +24,14 @@
 #ifndef INPUT_GROUNDTRUTH_READER_H
 #define INPUT_GROUNDTRUTH_READER_H
 
-#include "Input.h"
-#include "Timer.h"
+#include "Module.h"
 
 
-class GroundTruthReaderParameterStructure : public InputParameterStructure
+class GroundTruthReaderParameterStructure : public ModuleParameterStructure
 {
 public:
 	GroundTruthReaderParameterStructure(const ConfigReader& x_confReader) : 
-	InputParameterStructure(x_confReader)
+	ModuleParameterStructure(x_confReader)
 	{
 		m_list.push_back(new ParameterString("file", 	"in/input.srt", 	&file,	"Name of the video file to read, with path"));
 		ParameterStructure::Init();
@@ -42,19 +41,19 @@ public:
 	std::string file;
 };
 
-class GroundTruthReader : public Input
+class GroundTruthReader : public Module
 {
 public:
 	GroundTruthReader(const ConfigReader& x_confReader);
 	~GroundTruthReader();
 	
-	void Capture();
-        void Reset();
-	const std::string& GetName(){return m_name;};
+	void ProcessFrame();
+    void Reset();
+	// const std::string& GetName(){return m_name;};
 	
 protected:
+	cv::Mat * m_input;
 	bool m_state;
-	Timer m_frameTimer;
 	std::ifstream m_srtFile;
 	int m_num;
 	std::string m_srtStart;
