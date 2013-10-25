@@ -36,6 +36,11 @@
 			<value default="in/input.srt">in/input.srt</value>
 			<description>Name of the video file to read, with path</description>
 		</param>
+		<param name="pattern">
+			<type>string</type>
+			<value default="state_1">state_1</value>
+			<description>Pattern to search in text. If this is found the state is set to 1</description>
+		</param>
 	</parameters>
 	<inputs>
 		<input id="0">
