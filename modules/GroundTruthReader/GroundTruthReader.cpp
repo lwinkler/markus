@@ -70,6 +70,9 @@ void GroundTruthReader::Reset()
 
 void GroundTruthReader::ProcessFrame()
 {
+	if(! m_srtFile.good())
+		return;
+	
 	// istringstream ss;
 	m_state = 0;
 	string current = msToTimeStamp(m_currentTimeStamp);
@@ -86,7 +89,11 @@ void GroundTruthReader::ProcessFrame()
 			// state_0
 
 			while(line.size() == 0)
+			{
 				m_srtFile >> line;
+				if(! m_srtFile.good())
+					throw("End of file in GroundTruthReader::ProcessFrame");
+			}
 			num = atoi(line.c_str());
 			if(num != m_num + 1)
 				LOG_WARNING("Missing number in subtitle file "<<(m_num + 1));
@@ -107,12 +114,15 @@ void GroundTruthReader::ProcessFrame()
 			{
 				tmp += line + " ";
 				getline(m_srtFile, line);
+				if(! m_srtFile.good())
+					throw("End of file in GroundTruthReader::ProcessFrame");
 			}
 			m_stateSub = tmp.find(m_param.pattern) != string::npos;
 		}
 		catch(...)
 		{
 			LOG_WARNING("Exception in ground truth reader"); // TODO : improve and re-throw exception
+			throw;
 		}
 	}
 
