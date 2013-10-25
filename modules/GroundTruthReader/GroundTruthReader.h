@@ -33,12 +33,14 @@ public:
 	GroundTruthReaderParameterStructure(const ConfigReader& x_confReader) : 
 	ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterString("file", 	"in/input.srt", 	&file,	"Name of the video file to read, with path"));
+		m_list.push_back(new ParameterString("file", 	"in/input.srt", &file,    "Name of the video file to read, with path"));
+		m_list.push_back(new ParameterString("pattern",	"state_1",      &pattern, "Pattern to search in text. If this is found the state is set to 1"));
 		ParameterStructure::Init();
 	};
 
 public:
 	std::string file;
+	std::string pattern;
 };
 
 class GroundTruthReader : public Module
@@ -48,12 +50,13 @@ public:
 	~GroundTruthReader();
 	
 	void ProcessFrame();
-    void Reset();
+	void Reset();
 	// const std::string& GetName(){return m_name;};
 	
 protected:
 	cv::Mat * m_input;
 	bool m_state;
+	bool m_stateSub;
 	std::ifstream m_srtFile;
 	int m_num;
 	std::string m_srtStart;

@@ -60,6 +60,7 @@ protected:
 	bool m_oldState;
 	long int m_subId;
 	std::string m_startTime;
+	std::string m_endTime;
 	std::string m_srtFileName;
 
 public:
@@ -69,7 +70,10 @@ public:
 
 
 protected:
+	void WriteState();
 	inline virtual LogStateParameterStructure& RefParameter() { return m_param;}
+	
+	std::ofstream m_file;
 };
 
 #endif

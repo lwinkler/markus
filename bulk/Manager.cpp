@@ -130,6 +130,8 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 Manager::~Manager()
 {
 	PrintTimers();
+	if(m_outputDir.size() != 0)
+		LOG_INFO("Results written to directory "<<m_outputDir);
 	
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		delete *it;
@@ -254,7 +256,7 @@ const string& Manager::OutputDir()
 	if(m_outputDir.size() == 0)
 	{
 		m_outputDir = "out_" + timeStamp();
-		string cmd = "mkdir -f " + m_outputDir;
+		string cmd = "mkdir \"" + m_outputDir + "\"";
 		system(cmd.c_str());
 		// TODO : Copy xml and write code version to output dir
 	}

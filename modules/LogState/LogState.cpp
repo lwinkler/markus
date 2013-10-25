@@ -26,12 +26,6 @@
 #include "util.h"
 #include "Manager.h"
 
-#include <opencv2/highgui/highgui.hpp>
-#include <iostream>
-#include <fstream>
-#include <cstdio>
-#include <ctime>
-
 using namespace std;
 using namespace cv;
 
@@ -50,11 +44,14 @@ LogState::LogState(const ConfigReader& x_configReader)
 
 LogState::~LogState(void)
 {
+	WriteState();
 	// delete(m_input);
 }
 
 void LogState::Reset()
 {
+	if(m_file.is_open())
+		WriteState();
 	Module::Reset();
 	m_state = m_oldState = 0;
 	m_subId = 0;
@@ -71,26 +68,34 @@ void LogState::Reset()
 	m_srtFileName = Manager::OutputDir() + "/" + m_param.file + ".srt";
 	// cout<<"file"<<m_param.file<<endl;
 	// cout<<m_srtFileName<<endl;
+	m_file.close();
+	m_file.open (m_srtFileName.c_str(), std::ios_base::app);
+	if(! m_file.is_open())
+		throw("Impossible to open file in LogState::Reset");
 }
 
 void LogState::ProcessFrame()
 {
-	if(m_state != m_oldState) {
+	if(m_state != m_oldState)
+	{
 		LOG_DEBUG("state change");
 		// Log the change in state
-		ofstream myfile; // TODO: this file should be opened once only and use flush
-
-		const string str = msToTimeStamp(m_currentTimeStamp);
-
-		myfile.open (m_srtFileName.c_str(), std::ios_base::app);
-		myfile<<m_subId<<endl;
-		myfile<<m_startTime<<" --> "<<str<<endl;
-		myfile<<"state_"<<m_oldState<<endl<<endl;
-
-		myfile.close();
-		m_startTime = str;
-		m_oldState = m_state;
-		m_subId++;
+		WriteState();
 	}
 }
 
+/// Write the subtitle in log file
+void LogState::WriteState()
+{
+	m_endTime = msToTimeStamp(m_currentTimeStamp);
+
+	if(m_oldState)
+	{
+		m_file<<m_subId<<endl;
+		m_file<<m_startTime<<" --> "<<m_endTime<<endl;
+		m_file<<"state_"<<m_oldState<<endl<<endl;
+		m_subId++;
+	}
+	m_startTime = m_endTime;
+	m_oldState = m_state;
+}

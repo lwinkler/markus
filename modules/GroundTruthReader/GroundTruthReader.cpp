@@ -51,13 +51,14 @@ void GroundTruthReader::Reset()
 {
 	Module::Reset();
 	m_state    = false;
+	m_stateSub = false;
 	m_srtStart = "";
 	m_srtEnd   = "";
 
 	LOG_DEBUG("Open ground truth file: "<<m_param.file);
-	if(m_param.file.size() == 0)
+	// if(m_param.file.size() == 0)
 		// No file
-		return;
+		// return;
 
 	m_srtFile.open(m_param.file.c_str(), std::ifstream::in);
 	
@@ -98,7 +99,6 @@ void GroundTruthReader::ProcessFrame()
 			assert(tmp == "-->");
 			m_srtFile >> m_srtEnd;
 
-			tmp = "";
 			getline(m_srtFile, line); // end of line: must be empty
 			assert(line.size() == 0);
 			getline(m_srtFile, line);
@@ -108,6 +108,7 @@ void GroundTruthReader::ProcessFrame()
 				tmp += line + " ";
 				getline(m_srtFile, line);
 			}
+			m_stateSub = tmp.find(m_param.pattern) != string::npos;
 		}
 		catch(...)
 		{
@@ -119,7 +120,7 @@ void GroundTruthReader::ProcessFrame()
 	// Interpret the current state
 	if(current >= m_srtStart && current <= m_srtEnd)
 	{
-		m_state = 1;
+		m_state = m_stateSub;
 	}
 	else
 	{
