@@ -70,7 +70,7 @@ MotionDetector::~MotionDetector(void)
 void MotionDetector::Reset()
 {
 	Module::Reset();
-	m_state = 0;
+	m_state = false;
 #ifdef MARKUS_DEBUG_STREAMS
 	m_debug->setTo(m_colorPlotBack);
 #endif

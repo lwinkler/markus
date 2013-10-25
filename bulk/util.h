@@ -28,6 +28,18 @@
 #include <iostream>
 #include <fstream>
 
+// time stamp: use for all time stamps on frames in [ms]
+#define TIME_STAMP unsigned long long
+#define TIME_STAMP_INITIAL 0
+#define TIME_STAMP_MIN -100000 // for initialization as well
+
+// Logging functions
+#define LOG_EVENT(x)   Global::logger.Stream(LOG_EVENT)<<x<<std::endl
+#define LOG_ERROR(x)   Global::logger.Stream(LOG_ERROR)<<x<<std::endl
+#define LOG_WARNING(x) Global::logger.Stream(LOG_WARNING)<<x<<std::endl
+#define LOG_INFO(x)    Global::logger.Stream(LOG_INFO)<<x<<std::endl
+#define LOG_DEBUG(x)   if(Global::logger.HasDebugMode()){Global::logger.Stream(LOG_DEBUG)<<x<<std::endl;}
+
 /// this file contains some usefull functions and methods
 
 void adjust(const cv::Mat* im_in, cv::Mat* im_out, cv::Mat*& tmp1, cv::Mat*& tmp2);//, Mat* tmp2);
@@ -40,14 +52,9 @@ cv::Scalar colorFromId(int x_id);
 std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems);
 
 const std::string timeStamp();
+const std::string msToTimeStamp(TIME_STAMP x_ms);
 
 
-// Logging functions
-#define LOG_EVENT(x)   Global::logger.Stream(LOG_EVENT)<<x<<std::endl
-#define LOG_ERROR(x)   Global::logger.Stream(LOG_ERROR)<<x<<std::endl
-#define LOG_WARNING(x) Global::logger.Stream(LOG_WARNING)<<x<<std::endl
-#define LOG_INFO(x)    Global::logger.Stream(LOG_INFO)<<x<<std::endl
-#define LOG_DEBUG(x)   if(Global::logger.HasDebugMode()){Global::logger.Stream(LOG_DEBUG)<<x<<std::endl;}
 
 typedef enum
 {

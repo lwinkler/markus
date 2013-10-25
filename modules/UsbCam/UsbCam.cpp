@@ -83,8 +83,8 @@ void UsbCam::Capture()
 	
 	// cout<<"UsbCam capture image "<<m_output->cols<<"x"<<m_output->rows<<" time stamp "<<m_capture.get(CV_CAP_PROP_POS_MSEC) / 1000.0<< endl;
 
-	time_t rawtime;
-	time(&rawtime);
+	// time_t rawtime;
+	// time(&rawtime);
 	LOG_DEBUG("UsbCam: Capture time: "<<m_frameTimer.GetMSecLong());
 	SetTimeStampToOutputs(m_frameTimer.GetMSecLong());
 }

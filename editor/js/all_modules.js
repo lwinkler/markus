@@ -6,6 +6,7 @@ var availableModulesNames = [
 "FallDetection",
 "FilterObjects",
 "FilterPython",
+"GroundTruthReader",
 "HOGDetector",
 "LogObjects",
 "LogState",

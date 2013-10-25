@@ -224,7 +224,23 @@ const string timeStamp(){
 	return dd;
 }
 
+/// Convert a time in miliseconds to a time stamp (format used in subtitle files)
+const std::string msToTimeStamp(TIME_STAMP x_ms)
+{
+	TIME_STAMP t = x_ms;
+	int msecs = t % 1000;
+	t /= 1000;
+	int secs = t % 60; 
+	t /= 60;
+	int mins = t % 60; 
+	t /= 60;
+	int hours = t; 
 
+	char str[32];
+	sprintf(str, "%02d:%02d:%02d,%03d", hours, mins, secs, msecs);
+
+	return string(str);
+}
 
 /// Log class
 Logging::Logging()

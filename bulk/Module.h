@@ -31,10 +31,6 @@
 #define MAX_WIDTH  6400
 #define MAX_HEIGHT 4800
 
-// time stamp: use for all time stamps on frames in [ms]
-#define TIME_STAMP unsigned long long
-#define TIME_STAMP_INITIAL 0
-#define TIME_STAMP_MIN -100000 // for initialization as well
 
 
 class Stream;

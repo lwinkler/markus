@@ -78,20 +78,9 @@ void LogState::ProcessFrame()
 	if(m_state != m_oldState) {
 		LOG_DEBUG("state change");
 		// Log the change in state
-		ofstream myfile;
+		ofstream myfile; // TODO: this file should be opened once only and use flush
 
-		long t  = static_cast<long>(m_currentTimeStamp); // m_timer.GetMSecLong();
-		int msecs = t % 1000;
-		t /= 1000;
-		int secs = t % 60; 
-		t /= 60;
-		int mins = t % 60; 
-		t /= 60;
-		int hours = t; 
-
-		char str[32];
-		// str<<hours<<":"<<min<<":"<<secs<<","<<msecs;
-		sprintf(str, "%02d:%02d:%02d,%03d", hours, mins, secs, msecs);
+		const string str = msToTimeStamp(m_currentTimeStamp);
 
 		myfile.open (m_srtFileName.c_str(), std::ios_base::app);
 		myfile<<m_subId<<endl;

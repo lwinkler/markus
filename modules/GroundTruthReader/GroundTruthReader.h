@@ -21,21 +21,20 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef INPUT_VIDEOFILEREADER_H
-#define INPUT_VIDEOFILEREADER_H
-
-#include <opencv2/highgui/highgui.hpp>
+#ifndef INPUT_GROUNDTRUTH_READER_H
+#define INPUT_GROUNDTRUTH_READER_H
 
 #include "Input.h"
+#include "Timer.h"
 
 
-class VideoFileReaderParameterStructure : public InputParameterStructure
+class GroundTruthReaderParameterStructure : public InputParameterStructure
 {
 public:
-	VideoFileReaderParameterStructure(const ConfigReader& x_confReader) : 
+	GroundTruthReaderParameterStructure(const ConfigReader& x_confReader) : 
 	InputParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterString("file", 	"in/input.mp4", 	&file,	"Name of the video file to read, with path"));
+		m_list.push_back(new ParameterString("file", 	"in/input.srt", 	&file,	"Name of the video file to read, with path"));
 		ParameterStructure::Init();
 	};
 
@@ -43,35 +42,27 @@ public:
 	std::string file;
 };
 
-class VideoFileReader : public Input
+class GroundTruthReader : public Input
 {
 public:
-	VideoFileReader(const ConfigReader& x_confReader);
-	~VideoFileReader();
+	GroundTruthReader(const ConfigReader& x_confReader);
+	~GroundTruthReader();
 	
 	void Capture();
         void Reset();
 	const std::string& GetName(){return m_name;};
-	// const cv::Mat * GetImage() const {return m_output;}
 	
-	// Specific to file reader
-	void SetMsec(int x_msec);
-	void SetFrame(int x_frame);
-	int GetMsec();
-	int GetFrame();
-	int GetMaxMsec();
-	int GetMaxFrame();
-	virtual double GetRecordingFps();
-
 protected:
-	cv::VideoCapture m_capture;
-	cv::Mat * m_output;
-	// int m_fps;
+	bool m_state;
+	Timer m_frameTimer;
+	std::ifstream m_srtFile;
+	int m_num;
+	std::string m_srtStart;
+	std::string m_srtEnd;
 
 private:
-	void GetProperties();
-	VideoFileReaderParameterStructure m_param;
-	inline virtual VideoFileReaderParameterStructure& RefParameter() {return m_param;};
+	GroundTruthReaderParameterStructure m_param;
+	inline virtual GroundTruthReaderParameterStructure& RefParameter() {return m_param;};
 };
 
 #endif

@@ -6,6 +6,7 @@
 <module name="FallDetection"><parameters><param name="class">FallDetection</param></parameters></module>
 <module name="FilterObjects"><parameters><param name="class">FilterObjects</param></parameters></module>
 <module name="FilterPython"><parameters><param name="class">FilterPython</param></parameters></module>
+<module name="GroundTruthReader"><parameters><param name="class">GroundTruthReader</param></parameters></module>
 <module name="HOGDetector"><parameters><param name="class">HOGDetector</param></parameters></module>
 <module name="LogObjects"><parameters><param name="class">LogObjects</param></parameters></module>
 <module name="LogState"><parameters><param name="class">LogState</param></parameters></module>
