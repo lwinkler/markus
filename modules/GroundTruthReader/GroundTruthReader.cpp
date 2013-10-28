@@ -121,7 +121,7 @@ void GroundTruthReader::ProcessFrame()
 		}
 		catch(...)
 		{
-			LOG_WARNING("Exception in ground truth reader"); // TODO : improve and re-throw exception
+			LOG_WARNING("Exception while reading .srt file in GroundTruthReader::ProcessFrame"); // TODO : improve and re-throw exception
 			throw;
 		}
 	}
