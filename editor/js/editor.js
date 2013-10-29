@@ -365,7 +365,6 @@ var xmlProject = null;
 					return;
 				}
 
-
 				// Load the xml file
 				deleteAll();
 				xmlProject = $(xml).find("application");
@@ -515,6 +514,30 @@ var xmlProject = null;
 				$("#deleteAll").click(function() {
 					if(confirm("Do you want to delete all existing modules ?"))
 						deleteAll();
+				});
+				$('#dropZone').on('dragover', function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+				});
+				$('#dropZone').on('dragenter', function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+				});
+				$('#dropZone').on('drop', function(e) {
+					var reader = new FileReader();
+					if(e.originalEvent.dataTransfer){
+						if(e.originalEvent.dataTransfer.files.length) {
+							var file = e.originalEvent.dataTransfer.files[0];
+							e.preventDefault();
+							e.stopPropagation();
+							/*UPLOAD FILES HERE*/
+							reader.onload = function(e) {
+								var text = reader.result;
+							}
+
+							reader.readAsText(file, encoding, "UTF-8");
+						}   
+					}
 				});
 					
 					

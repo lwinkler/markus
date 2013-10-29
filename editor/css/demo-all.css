@@ -64,7 +64,7 @@ body {
 	top: 90px;
 }
 
-#explanation {
+#explanation, #dropZone {
 	text-align: left;
 	padding: 10px;
 }
@@ -92,7 +92,7 @@ a:hover {
 	color:#1b911b;
 }
 
-.menu, #render, #explanation, #detail {   
+.menu, #render, #explanation, #detail, #dropZone {   
 	background-color:#fff;
 }
 
