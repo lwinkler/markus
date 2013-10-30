@@ -54,6 +54,7 @@ public:
 	virtual void Reset();
 	const std::string& GetName(){return m_name;};
 	// virtual const cv::Mat * GetImage() const {return m_output;}
+	virtual double GetRecordingFps();
 
 protected:
 	cv::VideoCapture m_capture;

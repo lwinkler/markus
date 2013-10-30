@@ -96,7 +96,11 @@ void StreamObject::RenderTo(Mat * xp_output) const
 
 		// Draw the rectangle in the input image
 		// if id is present, draw to the equivalent color
+#ifndef MARKUS_DEBUG_STREAMS
+		rectangle( *xp_output, p1, p2, Scalar(20,0,230), 3, 8, 0 );
+#else
 		Scalar color = m_color;
+		rectangle( *xp_output, p1, p2, color, 1, 8, 0 );
 		if(it1->GetId() >= 0)
 		{
 			color = colorFromId(it1->GetId());
@@ -111,8 +115,7 @@ void StreamObject::RenderTo(Mat * xp_output) const
 			p1.y -= 3;
 			putText(*xp_output, it1->GetName(), p1, FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
 		}
-		rectangle( *xp_output, p1, p2, color, 1, 8, 0 );
-
+ 
 		// Print features and values
 		p1.x += 2;
 		int i = 0;
@@ -128,6 +131,7 @@ void StreamObject::RenderTo(Mat * xp_output) const
 			}
 			//catch(...){}
 		}
+#endif
 	}
 }
 

@@ -92,11 +92,11 @@ void NetworkCam::Capture()
 
 	m_capture.retrieve(*m_output);
 	
-	// cout<<"UsbCam capture image "<<m_output->cols<<"x"<<m_output->rows<<" time stamp "<<m_capture.get(CV_CAP_PROP_POS_MSEC) / 1000.0<< endl;
+	// cout<<"NetworkCam capture image "<<m_output->cols<<"x"<<m_output->rows<<" time stamp "<<m_capture.get(CV_CAP_PROP_POS_MSEC) / 1000.0<< endl;
 
 	time_t rawtime;
 	time(&rawtime);
-	LOG_DEBUG("UsbCam: Capture time: "<<m_frameTimer.GetMSecLong());
+	LOG_DEBUG("NetworkCam: Capture time: "<<m_frameTimer.GetMSecLong());
 	SetTimeStampToOutputs(m_frameTimer.GetMSecLong());
 }
 
@@ -123,4 +123,9 @@ void NetworkCam::GetProperties()
 		<<" CONVERT_RGB "<<m_capture.get(CV_CAP_PROP_CONVERT_RGB)
 	// 	<<" WHITE_BALANCE"<<m_capture.get(CV_CAP_PROP_WHITE_BALANCE)
 		<<" RECTIFICATION"<<m_capture.get(CV_CAP_PROP_RECTIFICATION));
+}
+
+double NetworkCam::GetRecordingFps()
+{
+	return 8; //  m_capture.get(CV_CAP_PROP_FPS);	// TODO remove hack
 }
