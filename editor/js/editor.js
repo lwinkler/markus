@@ -148,6 +148,24 @@ var xmlProject = null;
 				});
 				return target;
 			}
+
+			//-------------------------------------------------------------------------------- 
+			// Parse string and return string
+			//--------------------------------------------------------------------------------
+			if (window.DOMParser) {
+				parseXml = function(xmlStr) {
+					return ( new window.DOMParser() ).parseFromString(xmlStr, "text/xml");
+				};
+			} else if (typeof window.ActiveXObject != "undefined" && new window.ActiveXObject("Microsoft.XMLDOM")) {
+				parseXml = function(xmlStr) {
+					var xmlDoc = new window.ActiveXObject("Microsoft.XMLDOM");
+					xmlDoc.async = "false";
+					xmlDoc.loadXML(xmlStr);
+					return xmlDoc;
+				};
+			} else {
+				parseXml = function() { return null; }
+			}
 			//--------------------------------------------------------------------------------
 			// Delete everything
 			//--------------------------------------------------------------------------------
@@ -365,6 +383,11 @@ var xmlProject = null;
 					return;
 				}
 
+				loadProjectFile2(xml);
+			}
+
+			function loadProjectFile2(xml){
+
 				// Load the xml file
 				deleteAll();
 				xmlProject = $(xml).find("application");
@@ -406,7 +429,6 @@ var xmlProject = null;
 					});
 				});
 			}
-
 			//--------------------------------------------------------------------------------
 			// Display the details of a module in the right panel
 			//--------------------------------------------------------------------------------
@@ -524,18 +546,24 @@ var xmlProject = null;
 					e.stopPropagation();
 				});
 				$('#dropZone').on('drop', function(e) {
+					// Read a project file from the drag and drop div
 					var reader = new FileReader();
 					if(e.originalEvent.dataTransfer){
 						if(e.originalEvent.dataTransfer.files.length) {
-							var file = e.originalEvent.dataTransfer.files[0];
 							e.preventDefault();
 							e.stopPropagation();
-							/*UPLOAD FILES HERE*/
+							var file = e.originalEvent.dataTransfer.files[0];
+							if(file.type != 'text/xml') {
+								alert('File must be of type XML');
+								return;
+							}
 							reader.onload = function(e) {
 								var text = reader.result;
+								var xml = parseXml(text);
+								loadProjectFile2(xml);
 							}
 
-							reader.readAsText(file, encoding, "UTF-8");
+							reader.readAsText(file, "UTF-8");
 						}   
 					}
 				});
