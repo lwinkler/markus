@@ -100,24 +100,26 @@ void StreamObject::RenderTo(Mat * xp_output) const
 		rectangle( *xp_output, p1, p2, Scalar(20,0,230), 3, 8, 0 );
 #else
 		Scalar color = m_color;
-		rectangle( *xp_output, p1, p2, color, 1, 8, 0 );
+		Point pText = p1;
+
 		if(it1->GetId() >= 0)
 		{
 			color = colorFromId(it1->GetId());
 			ostringstream text;
 			text<<it1->GetName()<<" "<<it1->GetId();
-			p1.y -= 3;
-			putText(*xp_output, text.str(), p1,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
+			pText.y -= 3;
+			putText(*xp_output, text.str(), pText,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
 		}
 		else
 		{
 			// color from stream
-			p1.y -= 3;
-			putText(*xp_output, it1->GetName(), p1, FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
+			pText.y -= 3;
+			putText(*xp_output, it1->GetName(), pText, FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
 		}
+		rectangle( *xp_output, p1, p2, color, 1, 8, 0 );
  
 		// Print features and values
-		p1.x += 2;
+		pText.x += 2;
 		int i = 0;
 		for(map<string, Feature>::const_iterator it2 = it1->GetFeatures().begin() ; it2 != it1->GetFeatures().end() ; it2++)
 		{
@@ -125,8 +127,8 @@ void StreamObject::RenderTo(Mat * xp_output) const
 			{
 				ostringstream text;
 				text<<it2->first<<"="<<it2->second.value;
-				p1.y += 7;
-				putText(*xp_output, text.str(), p1,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
+				pText.y += 7;
+				putText(*xp_output, text.str(), pText,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
 				i++;
 			}
 			//catch(...){}
