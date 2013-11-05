@@ -68,3 +68,7 @@ add_custom_target(update_modules_list
 	COMMAND make
 	COMMAND ./markus -d config_each_module.xml
 )
+
+add_custom_target(update_projects_list
+	COMMAND editor/js/all_projects.js.sh > editor/js/all_projects.js
+)
