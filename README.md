@@ -28,6 +28,7 @@ On Ubuntu the command is:
 First compilation commands:
 
 	cmake .
+	make clean
 	make update_module_list
 	make
 
@@ -39,6 +40,7 @@ Add a NewModule directory and NewModule.xml in modules/
 then
 
 	cmake .
+	make clean
 	make update_modules_list
 	make
 

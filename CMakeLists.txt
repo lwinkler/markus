@@ -65,6 +65,7 @@ add_custom_target(update_modules_list
 	COMMAND modules/AllModules.h.sh > modules/AllModules.h
 	COMMAND ./config_each_module.xml.sh > config_each_module.xml
 	COMMAND editor/js/all_modules.js.sh > editor/js/all_modules.js
+	COMMAND make clean
 	COMMAND make
 	COMMAND ./markus -d config_each_module.xml
 )

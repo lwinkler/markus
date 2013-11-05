@@ -375,11 +375,12 @@ var xmlProject = null;
 					return;
 				}
 
-				var xml = loadXML("projects/" + fileName);
-				if(!xml) 
-					xml = loadXML("projects2/" + fileName);
+				var xml = loadXML(fileName);
+				/*if(!xml) 
+					xml = loadXML("projects2/" + fileName);*/
 				if(!xml) {
-					alert("Error: the file must be inside the 'projects/' or 'projects2/' folder. Sorry for this limitation.");
+					// alert("Error: the file must be inside the 'projects/' or 'projects2/' folder. Sorry for this limitation.");
+					alert("Error while loading " + fileName);
 					return;
 				}
 
@@ -478,7 +479,6 @@ var xmlProject = null;
 			if (!_initialised) {
 
 				// Populate select modules with existing modules
-
 				for(var i = 0 ; i < availableModulesNames.length ; i++) {
 					var type = availableModulesNames[i];
 
@@ -487,6 +487,11 @@ var xmlProject = null;
 
 					// Load the matching xml file
 					xmlModuleTypes[type] = $(loadXML("modules/" + availableModulesNames[i] + ".xml")).find("module");
+				}
+				
+				// Populate select projects with existing projects
+				for(var i = 0 ; i < availableProjectsNames.length ; i++) {
+					$("#selectProjectFile").append('<option value=' + availableProjectsNames[i] + '>' + availableProjectsNames[i] + '</option>');
 				}
 				
 				// Create a div representing a new module
