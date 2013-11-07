@@ -38,7 +38,7 @@ BgrSubMOG2::BgrSubMOG2(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader)
 {
-	mp_mog2 = new BackgroundSubtractorMOG2(m_param.history, m_param.varThres, m_param.bShadowDetection);
+	mp_mog2 = new BackgroundSubtractorMOG2(m_param.history, m_param.varThres, m_param.bShadowDetection); // TODO initialize or not ?
 	//mp_mog2.nmixtures = 3;
 
 
@@ -52,7 +52,7 @@ BgrSubMOG2::BgrSubMOG2(const ConfigReader& x_configReader) :
 	m_outputStreams.push_back(new StreamImage(0, "foreground", m_foreground,*this,      "Foreground"));
 	m_outputStreams.push_back(new StreamImage(1, "background", m_background, *this,		"Background"));
 
-#ifdef MARKUS_DEBUG_STREAMS
+#ifdef MARKUS_DEBUG_STREAMS // TODO : there is a segfault if we deactivate this flag
 	m_foregroundWithShadows  = new Mat(Size(m_param.width, m_param.height), m_param.type);
 	m_debugStreams.push_back(new StreamDebug(0, "foreground_with_shadows", m_foregroundWithShadows, *this,	"Foreground with shadows"));
 #endif
@@ -82,5 +82,5 @@ void BgrSubMOG2::ProcessFrame()
 
 	// Threshold shadows (value=128) to 0
 	threshold(*m_foregroundWithShadows, *m_foreground, 254, 255, cv::THRESH_BINARY);
-};
+}
 
