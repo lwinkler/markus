@@ -89,6 +89,8 @@ void SegmenterContour::ProcessFrame()
 #ifdef MARKUS_DEBUG_STREAMS
 	m_debug->setTo(0);
 #endif
+	const double diagonal = sqrt(m_input->rows * m_input->rows + m_input->cols * m_input->cols);
+	const double fullArea = m_input->rows * m_input->cols;
 
 
 	/// Extract features
@@ -116,24 +118,36 @@ void SegmenterContour::ProcessFrame()
 			for(vector<string>::const_iterator it = m_featureNames.begin() ; it != m_featureNames.end() ; it++)
 			{
 				if(it->compare("x") == 0)
-					obj.AddFeature("x", obj.m_posX / m_param.width);
+				{
+					obj.AddFeature("x", obj.m_posX / diagonal);
+				}
 				else if(it->compare("y") == 0)
-					obj.AddFeature("y", obj.m_posY / m_param.height);
+				{
+					obj.AddFeature("y", obj.m_posY / diagonal);
+				}
 				else if(it->compare("width") == 0)
-					obj.AddFeature("width", obj.m_width / m_param.width);
+				{
+					obj.AddFeature("width", obj.m_width / diagonal);
+				}
 				else if(it->compare("height") == 0)
-					obj.AddFeature("height", obj.m_height / m_param.height);
+				{
+					obj.AddFeature("height", obj.m_height / diagonal);
+				}
+				else if(it->compare("area") == 0)
+				{
+					obj.AddFeature("area", contourArea(contours) / fullArea);
+				}
 				else if(it->compare("ellipse_angle") == 0)
 				{
-					obj.AddFeature("ellipse_angle", minEllipse.angle);
+					obj.AddFeature("ellipse_angle", minEllipse.angle / 360.0);
 				}
 				else if(it->compare("ellipse_width") == 0)
 				{
-					obj.AddFeature("ellipse_width", static_cast<double>(minEllipse.size.width) / m_param.width);
+					obj.AddFeature("ellipse_width", static_cast<double>(minEllipse.size.width) / diagonal);
 				}
 				else if(it->compare("ellipse_height") == 0)
 				{
-					obj.AddFeature("ellipse_height", static_cast<double>(minEllipse.size.height)  / m_param.height);
+					obj.AddFeature("ellipse_height", static_cast<double>(minEllipse.size.height)  / diagonal);
 				}
 				else if(it->compare("ellipse_ratio") == 0)
 				{

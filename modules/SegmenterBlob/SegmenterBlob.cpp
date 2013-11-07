@@ -101,6 +101,8 @@ void SegmenterBlob::ExtractBlobs(Mat* x_img)
 	// exclude the ones smaller than value
 	//blobs.Filter( blobs, B_EXCLUDE, CBlobGetArea(), B_OUTSIDE, m_param.minSize, m_param.maxSize);
 
+	const double diagonal = sqrt(x_img->rows * x_img->rows + x_img->cols * x_img->cols);
+
 	for (i = 0; i < blobs.GetNumBlobs(); i++ )
 	{
 #ifdef MARKUS_DEBUG_STREAMS
@@ -128,10 +130,10 @@ void SegmenterBlob::ExtractBlobs(Mat* x_img)
 	// 
 	// 		reg.AddFeature("convex hull perimeter", GetSTLResult(currentBlob, CBlobGetHullPerimeter()));
 	
-			obj.AddFeature("x"     , obj.m_posX  / m_param.width);
-			obj.AddFeature("y"     , obj.m_posY  / m_param.height);
-			obj.AddFeature("width" , rect.width  / m_param.width);
-			obj.AddFeature("height", rect.height / m_param.height);
+			obj.AddFeature("x"     , obj.m_posX  / diagonal);
+			obj.AddFeature("y"     , obj.m_posY  / diagonal);
+			obj.AddFeature("width" , rect.width  / diagonal);
+			obj.AddFeature("height", rect.height / diagonal);
 			m_regions.push_back(obj);
 		}
 	}
