@@ -31,7 +31,7 @@
 using namespace cv;
 using namespace std;
 
-const char * BgrSubMOG2::m_type = "BackgroundSubtractorSimpleMOG";
+const char * BgrSubMOG2::m_type = "BgrSubMOG2"; // TODO: this is never used: find out why !
 
 
 BgrSubMOG2::BgrSubMOG2(const ConfigReader& x_configReader) :

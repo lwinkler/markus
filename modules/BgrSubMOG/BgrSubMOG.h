@@ -93,7 +93,7 @@ private:
 protected:
 	cv::Mat * m_input;
 	
-	static const char * m_type;
+	// static const char * m_type;
 };
 
 
