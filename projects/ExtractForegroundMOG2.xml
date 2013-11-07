@@ -9,7 +9,7 @@
 <param name="class">VideoFileReader</param>
 <param name="width">320</param>
 <param name="height">240</param>
-<param name="file">in/input.avi</param>
+<param name="file">in/input.mp4</param>
 </parameters>
 <uiobject x="500" y="300" width="0" height="0"/>
 </module>

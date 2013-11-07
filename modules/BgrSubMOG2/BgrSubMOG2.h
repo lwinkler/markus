@@ -81,13 +81,13 @@ private:
 
 	cv::BackgroundSubtractorMOG2* mp_mog2;
 
+protected:
 	// Background subtraction	
 	cv::Mat* m_foreground;
 	cv::Mat* m_foregroundWithShadows;
 	cv::Mat* m_background;
 	//bool m_emptyBackgroundSubtractor;
 
-protected:
 	cv::Mat * m_input;
 	
 	static const char * m_type;

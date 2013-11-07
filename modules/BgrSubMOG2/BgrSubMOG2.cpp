@@ -31,7 +31,7 @@
 using namespace cv;
 using namespace std;
 
-const char * BgrSubMOG2::m_type = "BgrSubMOG2"; // TODO: this is never used: find out why !
+const char * BgrSubMOG2::m_type = "BgrSubMOG2"; // TODO: this is never used: should we stil keep this line ?
 
 
 BgrSubMOG2::BgrSubMOG2(const ConfigReader& x_configReader) :
@@ -46,6 +46,7 @@ BgrSubMOG2::BgrSubMOG2(const ConfigReader& x_configReader) :
 	m_input       = new Mat(Size(m_param.width, m_param.height), m_param.type);
 	m_background  = new Mat(Size(m_param.width, m_param.height), m_param.type);
 	m_foreground  = new Mat(Size(m_param.width, m_param.height), CV_8UC1);
+	m_foregroundWithShadows  = new Mat(Size(m_param.width, m_param.height), m_param.type);
 	
 	m_inputStreams.push_back(new StreamImage(0, "input",       m_input, *this,   "Video input"));
 
@@ -53,7 +54,6 @@ BgrSubMOG2::BgrSubMOG2(const ConfigReader& x_configReader) :
 	m_outputStreams.push_back(new StreamImage(1, "background", m_background, *this,		"Background"));
 
 #ifdef MARKUS_DEBUG_STREAMS // TODO : there is a segfault if we deactivate this flag
-	m_foregroundWithShadows  = new Mat(Size(m_param.width, m_param.height), m_param.type);
 	m_debugStreams.push_back(new StreamDebug(0, "foreground_with_shadows", m_foregroundWithShadows, *this,	"Foreground with shadows"));
 #endif
 };

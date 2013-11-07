@@ -179,7 +179,10 @@ const Template * TrackerByFeatures::MatchObject(const Object& x_obj)const
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 void TrackerByFeatures::UpdateTemplates()
 {
+#ifdef MARKUS_DEBUG_STREAMS
 	const double diagonal = sqrt(m_param.width * m_param.width + m_param.height * m_param.height);
+#endif
+
 	for(list<Template>::iterator it1= m_templates.begin() ; it1 != m_templates.end(); it1++ )
 	{
 #ifdef MARKUS_DEBUG_STREAMS

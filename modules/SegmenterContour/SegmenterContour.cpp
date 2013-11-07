@@ -106,8 +106,8 @@ void SegmenterContour::ProcessFrame()
 			// RotatedRect minRect = minAreaRect(Mat(contours[i]));
 
 			// contour
-			Scalar color = Scalar(m_rng.uniform(0, 255), m_rng.uniform(0,255), m_rng.uniform(0,255));
 #ifdef MARKUS_DEBUG_STREAMS
+			Scalar color = Scalar(m_rng.uniform(0, 255), m_rng.uniform(0,255), m_rng.uniform(0,255));
 			drawContours(*m_debug, contours, i, color, 1, 8, vector<Vec4i>(), 0, Point());
 #endif
 
