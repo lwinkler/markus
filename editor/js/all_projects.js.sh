@@ -3,5 +3,5 @@
 
 
 echo "var availableProjectsNames = ["
-find projects*/  -name "*.xml" -type f -exec ls -l {} \; 2> /dev/null | sort | awk {'print "\""$1"\","'}
+find projects*/  -name "*.xml" | sort | awk {'print "\""$1"\","'}
 echo "];"
