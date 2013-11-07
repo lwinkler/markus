@@ -135,7 +135,7 @@ void SegmenterContour::ProcessFrame()
 				}
 				else if(it->compare("area") == 0)
 				{
-					obj.AddFeature("area", contourArea(contours) / fullArea);
+					obj.AddFeature("area", contourArea(contours[i]) / fullArea);
 				}
 				else if(it->compare("ellipse_angle") == 0)
 				{
@@ -157,7 +157,9 @@ void SegmenterContour::ProcessFrame()
 
 #ifdef MARKUS_DEBUG_STREAMS
 			// ellipse
-			if(m_computeFitEllipse && minEllipse.size.width != 0)
+			if(m_computeFitEllipse && minEllipse.size.width != 0
+					&& minEllipse.center.x > 0 && minEllipse.center.y > 0
+					&& minEllipse.center.x < m_debug->cols && minEllipse.center.y < m_debug->rows) // note: extra conditions are present to avoid a segfault
 				ellipse(*m_debug, minEllipse, color, 2, 8);
 #endif
 			// rotated rectangle

@@ -38,6 +38,8 @@ using namespace std;
 
 #define PRECISION_DOUBLE 2
 
+#define CLEAN_DELETE(x) if((x) != NULL){delete((x));(x) = NULL;}
+
 Controller::Controller()
 {
 	m_widget = NULL;
@@ -144,7 +146,7 @@ ControllerString::ControllerString(ParameterString& x_param):
 
 ControllerString::~ControllerString()
 {
-	delete(m_lineEdit); // TODO: this causes a crash at closing if the parameter screen is activated. 
+	CLEAN_DELETE(m_lineEdit); // TODO: this causes a crash at closing if the parameter screen is activated.
 }
 
 void ControllerString::SetControlledValue()

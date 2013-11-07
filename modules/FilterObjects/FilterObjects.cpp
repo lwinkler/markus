@@ -78,33 +78,53 @@ void FilterObjects::ProcessFrame()
 #endif
 	// Filter incoming objects and add them to the output
 	m_objectsOut.clear();
-	double sqDist = pow(m_param.minDist, 2);
+
+	double sqDist = pow(m_param.minTravelDist, 2);
+	const double diagonal = sqrt(m_param.width * m_param.width + m_param.height * m_param.height);
 	for(vector<Object>::const_iterator it = m_objectsIn.begin() ; it != m_objectsIn.end() ; it++)
 	{
 		bool valid = true;
 		const Rect &rect(it->Rect());
-		const Feature& posX = it->GetFeature("x");
-		const Feature& posY = it->GetFeature("y");
+		const Feature& posX   = it->GetFeature("x");
+		const Feature& posY   = it->GetFeature("y");
+		const Feature& width  = it->GetFeature("width");
+		const Feature& height = it->GetFeature("height");
 		// const Feature& distance = it->GetFeatureByName("distance", featureNames);
 
+		if(	(m_param.minObjectWidth > 0 && width.value < m_param.minObjectWidth) ||
+			(m_param.maxObjectWidth < 1 && width.value > m_param.maxObjectWidth) ||
+			(m_param.minObjectHeight > 0 && height.value < m_param.minObjectHeight) ||
+			(m_param.maxObjectHeight < 1 && height.value > m_param.maxObjectHeight))
+		{
+			valid = false;
+		}
+
 		// cout<<POW2(posX.value - posX.initial) + POW2(posY.value - posY.initial)<<" >= "<<POW2(m_param.minDist)<<endl;
-		if(pow((posX.value - posX.initial) * m_param.width, 2) + pow((posY.value - posY.initial) * m_param.height, 2) < sqDist)
+		if(pow(posX.value - posX.initial, 2) + pow(posY.value - posY.initial, 2) < sqDist)
 		{
 			valid = false;
 		}
 		// If the object touches the border, do not valid
 		//	value is set to 2 = 1 + 1 so that we avoid rounding errors
-		if(m_param.avoidBorders && (rect.x <= 2 || rect.y <= 2 || rect.x + rect.width >= m_param.width - 2 || rect.y + rect.height >= m_param.height - 2)) // TODO: It would be cleaner to have objects pos [0:width-1]
+		if(m_param.minBorderDist > 0)
 		{
-			valid = false;
-
+			const double dist = m_param.minBorderDist * diagonal;
+			if(rect.x <= dist || rect.y <= dist 
+				|| m_param.width - rect.x - rect.width <= dist || m_param.height - rect.y - rect.height <= dist)
+			{
+				valid = false;
+			}
 		}
 		if(valid)
 			m_objectsOut.push_back(*it);
 #ifdef MARKUS_DEBUG_STREAMS
 		rectangle(*m_debug, rect, valid ? Green : Gray, 1, 8);
-		line(*m_debug, Point(posX.initial * m_param.width, posY.initial * m_param.height), Point(posX.value * m_param.width, posY.value * m_param.height), valid ? Green : Gray, 1, 8);
+		line(*m_debug, Point(posX.initial * diagonal, posY.initial * diagonal), Point(posX.value * diagonal, posY.value * diagonal), valid ? Green : Gray, 1, 8);
 #endif
 	}
+	// Max number of objects criterion
+	if(m_param.maxObjectsNb >= 0 && m_objectsOut.size() > static_cast<unsigned int>(m_param.maxObjectsNb))
+		m_objectsOut.clear();
+
 }
 

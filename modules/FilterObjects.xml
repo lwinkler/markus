@@ -31,15 +31,40 @@
 			<value min="0" max="1000" default="0">0</value>
 			<description>Frames per seconds (processing speed)</description>
 		</param>
-		<param name="min_distance">
+		<param name="min_travel_dist">
 			<type>double</type>
 			<value min="0" max="1" default="0">0</value>
-			<description>Minimal distance criterion for the object</description>
+			<description>An object must have been tracked on this distance to be accepted [%% of image diagonal]</description>
 		</param>
-		<param name="avoid_borders">
-			<type>bool</type>
+		<param name="min_border_dist">
+			<type>double</type>
 			<value min="0" max="1" default="0">0</value>
-			<description>Do not take thumbnail if the object touches the border of the image.</description>
+			<description>An object must be distant from the image border [%% of image diagonal]</description>
+		</param>
+		<param name="max_object_nb">
+			<type>int</type>
+			<value min="-1" max="1000" default="-1">-1</value>
+			<description>If there are more than this number of objects, all are filtered out</description>
+		</param>
+		<param name="min_obj_width">
+			<type>double</type>
+			<value min="0" max="1" default="0">0</value>
+			<description>Minimum width to accept an object</description>
+		</param>
+		<param name="min_obj_height">
+			<type>double</type>
+			<value min="0" max="1" default="0">0</value>
+			<description>Minimum hdight to accept an object</description>
+		</param>
+		<param name="max_obj_width">
+			<type>double</type>
+			<value min="0" max="1" default="0">0</value>
+			<description>Maximum width to accept an object</description>
+		</param>
+		<param name="max_obj_height">
+			<type>double</type>
+			<value min="0" max="1" default="0">0</value>
+			<description>Maximum hdight to accept an object</description>
 		</param>
 	</parameters>
 	<inputs>

@@ -179,6 +179,7 @@ const Template * TrackerByFeatures::MatchObject(const Object& x_obj)const
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 void TrackerByFeatures::UpdateTemplates()
 {
+	const double diagonal = sqrt(m_param.width * m_param.width + m_param.height * m_param.height);
 	for(list<Template>::iterator it1= m_templates.begin() ; it1 != m_templates.end(); it1++ )
 	{
 #ifdef MARKUS_DEBUG_STREAMS
@@ -208,11 +209,11 @@ void TrackerByFeatures::UpdateTemplates()
 #ifdef MARKUS_DEBUG_STREAMS
 		// draw template (if position is available)
 		try{
-			double x = it1->GetFeature("x").value;
-			double y = it1->GetFeature("y").value;
-			// double w = it1->GetFeature("width").value;
-			// double h = it1->GetFeature("height").value;
-			Point p(x * m_param.width, y * m_param.height);
+			double x = it1->GetFeature("x").value * diagonal;
+			double y = it1->GetFeature("y").value * diagonal;
+			// double w = it1->GetFeature("width").value * diagonal;
+			// double h = it1->GetFeature("height").value * diagonal;
+			Point p(x, y);
 			// Size s(w * m_param.width / 2, h * m_param.height / 2);
 			// ellipse(*m_debug, p, s, 0, 0, 360, colorFromId(it1->GetNum()));
 			circle(*m_debug, p, 4, colorFromId(it1->GetNum()));
