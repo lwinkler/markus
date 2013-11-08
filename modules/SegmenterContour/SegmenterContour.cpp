@@ -139,7 +139,7 @@ void SegmenterContour::ProcessFrame()
 				}
 				else if(it->compare("ellipse_angle") == 0)
 				{
-					obj.AddFeature("ellipse_angle", minEllipse.angle / 360.0);
+					obj.AddFeature("ellipse_angle", minEllipse.angle / 180.0); // 180 is the max possible angle
 				}
 				else if(it->compare("ellipse_width") == 0)
 				{
