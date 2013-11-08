@@ -56,6 +56,8 @@ ConfigReader::~ConfigReader()
 
 ConfigReader ConfigReader::SubConfig(const std::string& x_objectType, string x_objectName) const
 {
+	if(IsEmpty())
+		throw("Impossible to find node in ConfigReader");
 	TiXmlNode* newNode = mp_node->FirstChild(x_objectType);
 	
 	if(x_objectName.compare(""))
@@ -65,7 +67,26 @@ ConfigReader ConfigReader::SubConfig(const std::string& x_objectType, string x_o
 			newNode = newNode->NextSibling(x_objectType);
 		}
 	}
+
+	return ConfigReader(newNode);
+}
+
+/// Return a config objects that points to the sub element of configuration (non-constant)
+
+ConfigReader ConfigReader::SubConfig2(const std::string& x_objectType, string x_objectName)
+{
+	if(IsEmpty())
+		throw("Impossible to find node in ConfigReader");
+
+	TiXmlNode* newNode = mp_node->FirstChild(x_objectType);
 	
+	if(x_objectName.compare(""))
+	{
+		while(newNode != NULL && x_objectName.compare(newNode->ToElement()->Attribute("name")))
+		{
+			newNode = newNode->NextSibling(x_objectType);
+		}
+	}
 	return ConfigReader(newNode);
 }
 
@@ -73,6 +94,8 @@ ConfigReader ConfigReader::SubConfig(const std::string& x_objectType, string x_o
 
 ConfigReader ConfigReader::NextSubConfig(const std::string& x_objectType, string x_objectName) const
 {
+	if(IsEmpty())
+		throw("Impossible to find node in ConfigReader");
 	TiXmlNode* newNode = mp_node->NextSibling(x_objectType);
 	
 	if(x_objectName.compare(""))
@@ -90,6 +113,8 @@ ConfigReader ConfigReader::NextSubConfig(const std::string& x_objectType, string
 
 const string ConfigReader::GetAttribute(const std::string& x_attributeName) const
 {
+	if(IsEmpty())
+		throw("Impossible to find node in ConfigReader");
 	TiXmlElement* element = mp_node->ToElement();
 	//string s(*element->Attribute(x_attributeName));
 	
@@ -104,6 +129,8 @@ const string ConfigReader::GetAttribute(const std::string& x_attributeName) cons
 
 const string ConfigReader::GetValue() const
 {
+	if(IsEmpty())
+		throw("Impossible to find node in ConfigReader");
 	TiXmlElement* element = mp_node->ToElement();
 	const char * str = element->GetText();
 	if(str == NULL)
@@ -112,3 +139,19 @@ const string ConfigReader::GetValue() const
 		return str;
 }
 
+/// Set the value as string
+void ConfigReader::SetValue(const std::string& x_value)
+{
+	if(IsEmpty())
+		throw("Impossible to find node in ConfigReader");
+	mp_node->Clear();
+	mp_node->LinkEndChild(new TiXmlText(x_value)); //ToText();
+}
+
+/// Save the config as an xml file
+void ConfigReader::SaveToFile(const std::string& x_file) const
+{
+	if(!mp_doc)
+		throw("Can only save global config to file");
+	mp_doc->SaveFile(x_file);
+}

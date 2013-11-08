@@ -41,10 +41,13 @@ public:
 	ConfigReader(TiXmlNode * xp_node);
 	~ConfigReader();
 	ConfigReader SubConfig(const std::string& x_objectType, std::string x_objectName = "") const;
+	ConfigReader SubConfig2(const std::string& x_objectType, std::string x_objectName = "");
 	ConfigReader NextSubConfig(const std::string& x_objectType, std::string x_objectName = "") const;
 	bool IsEmpty() const{ return mp_doc == NULL && mp_node == NULL;}
 	const std::string GetValue() const;
+	void SetValue(const std::string& x_value);
 	const std::string GetAttribute(const std::string& x_attributeName) const;
+	void SaveToFile(const std::string& x_file) const;
 private:
 	TiXmlNode * mp_node;
 	TiXmlDocument * mp_doc;

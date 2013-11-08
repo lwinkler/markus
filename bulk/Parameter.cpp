@@ -67,7 +67,7 @@ void ParameterStructure::Init()
 	SetValueToDefault();
 	
 	// Read parameters from config
-	SetFromConfig();
+		SetFromConfig();
 	
 	LOG_INFO("Parameters for "<<m_objectName<<" initialized.");
 	// PrintParameters(Global::log.stream(LOG_INFO));

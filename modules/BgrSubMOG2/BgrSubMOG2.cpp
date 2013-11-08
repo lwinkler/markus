@@ -53,7 +53,7 @@ BgrSubMOG2::BgrSubMOG2(const ConfigReader& x_configReader) :
 	m_outputStreams.push_back(new StreamImage(0, "foreground", m_foreground,*this,      "Foreground"));
 	m_outputStreams.push_back(new StreamImage(1, "background", m_background, *this,		"Background"));
 
-#ifdef MARKUS_DEBUG_STREAMS // TODO : there is a segfault if we deactivate this flag
+#ifdef MARKUS_DEBUG_STREAMS
 	m_debugStreams.push_back(new StreamDebug(0, "foreground_with_shadows", m_foregroundWithShadows, *this,	"Foreground with shadows"));
 #endif
 };

@@ -143,8 +143,6 @@ int main(int argc, char** argv)
 		ConfigReader mainConfig(configFile);
 		ConfigReader appConfig = mainConfig.SubConfig("application");
 		assert(!appConfig.IsEmpty());
-		Manager manager(appConfig, centralized);
-		Global::SetConfigFile(configFile);
 
 		// Set values of parameters if set from command line
 		for(vector<string>::const_iterator it = parameters.begin() ; it != parameters.end() ; it++)
@@ -159,17 +157,19 @@ int main(int argc, char** argv)
 				string value = it->substr(it->find("=") + 1);
 				vector<string> path;
 				split(param, '.', path);
-				cout<<param<<endl;
 				if(path.size() != 2)
 					throw("Parameter set in command line must be in format 'module.parameter'");
-				manager.GetModuleByName(path[0])->RefParameter().RefParameterByName(path[1]).SetValue(value, PARAMCONF_CMD);
+				appConfig.SubConfig2("module", path[0]).SubConfig2("parameters").SubConfig2("param", path[1]).SetValue(value);
+				// manager.GetModuleByName(path[0])->RefParameter().RefParameterByName(path[1]).SetValue(value, PARAMCONF_CMD);
 			}
-			catch(exception & e)
+			catch(...)
 			{
-				LOG_ERROR("Cannot parse command line parameter "<<*it<<" :"<<e.what());
+				LOG_ERROR("Cannot parse command line parameter "); // TODO: Exception <<*it<<" :"<<e.what());
 				throw("Cannot parse command line parameter");
 			}
 		}
+		Manager manager(appConfig, centralized);
+		Global::SetConfigFile(configFile);
 
 		if(describe) 
 		{

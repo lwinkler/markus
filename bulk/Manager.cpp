@@ -87,25 +87,26 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 	
 	while(! moduleConfig.IsEmpty())
 	{
-		// Read conections of inputs
-		if(!moduleConfig.SubConfig("inputs").IsEmpty()) 
-		{
-			ConfigReader inputConfig = moduleConfig.SubConfig("inputs").SubConfig("input");
-			while(! inputConfig.IsEmpty())
+			// Read conections of inputs
+			ConfigReader conf = moduleConfig.SubConfig("inputs");
+			if(!conf.IsEmpty())
 			{
-				int moduleId		= atoi(moduleConfig.GetAttribute("id").c_str());
-				int inputId 		= atoi(inputConfig.GetAttribute("id").c_str());
-				int outputModuleId 	= atoi(inputConfig.GetAttribute("moduleid").c_str());
-				int outputId 		= atoi(inputConfig.GetAttribute("outputid").c_str());
-				
-				Stream * inputStream  = GetModuleById(moduleId)->GetInputStreamById(inputId);
-				Stream * outputStream = GetModuleById(outputModuleId)->GetOutputStreamById(outputId);
-				
-				inputStream->Connect(outputStream);
-				
-				inputConfig = inputConfig.NextSubConfig("input");
+				ConfigReader inputConfig = conf.SubConfig("input");
+				while(! inputConfig.IsEmpty())
+				{
+					int moduleId		= atoi(moduleConfig.GetAttribute("id").c_str());
+					int inputId 		= atoi(inputConfig.GetAttribute("id").c_str());
+					int outputModuleId 	= atoi(inputConfig.GetAttribute("moduleid").c_str());
+					int outputId 		= atoi(inputConfig.GetAttribute("outputid").c_str());
+
+					Stream * inputStream  = GetModuleById(moduleId)->GetInputStreamById(inputId);
+					Stream * outputStream = GetModuleById(outputModuleId)->GetOutputStreamById(outputId);
+
+					inputStream->Connect(outputStream);
+
+					inputConfig = inputConfig.NextSubConfig("input");
+				}
 			}
-		}
 		moduleConfig = moduleConfig.NextSubConfig("module");
 	}
 
