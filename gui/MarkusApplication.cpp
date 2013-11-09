@@ -27,7 +27,7 @@
 
 using namespace std;
 
-MarkusApplication::MarkusApplication(int argc, char ** argv) : QApplication(argc, argv){}
+MarkusApplication::MarkusApplication(int &argc, char ** argv) : QApplication(argc, argv){}
 // ~MarkusApplication();
 
 

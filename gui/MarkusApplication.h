@@ -29,7 +29,7 @@
 class MarkusApplication : public QApplication
 {
 public:
-	MarkusApplication(int argc, char ** argv);
+	MarkusApplication(int &argc, char ** argv);
 	// ~MarkusApplication();
 private:
 	bool notify(QObject *receiver_, QEvent *event_);
