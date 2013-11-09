@@ -24,7 +24,7 @@
 #ifndef MK_APPLICATION_H
 #define MK_APPLICATION_H
 
-#include <QtGui/QApplication>
+#include <QApplication>
 
 class MarkusApplication : public QApplication
 {

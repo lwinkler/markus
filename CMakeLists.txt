@@ -1,12 +1,15 @@
 project(markus)
 cmake_minimum_required(VERSION 2.6)
-find_package(Qt4 REQUIRED)
+# find_package(Qt4 REQUIRED)
+find_package(Qt5Core REQUIRED)
+# find_package(Qt5Gui REQUIRED)
+find_package(Qt5Widgets REQUIRED)
+
 find_package(OpenCV REQUIRED)
 # find_package(tinyxml REQUIRED) # TODO: How to add this dependancy ?
 
 
-
-SET(CMAKE_CXX_FLAGS "-Wall -g")
+SET(CMAKE_CXX_FLAGS "-Wall -g -fPIE")
 SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
 SET(CMAKE_CXX_FLAGS_RELEASE "-O2")
 SET(CMAKE_CXX_FLAGS_DEBUG  "-O0 -g")
@@ -14,8 +17,15 @@ SET(CMAKE_CXX_FLAGS_DEBUG  "-O0 -g")
 # SET(CMAKE_CXX_FLAGS_RELEASE "-O3")
 # SET(CMAKE_CXX_FLAGS_DEBUG  "-O3 -g")
 
+# Tell CMake to run moc when necessary:
+set(CMAKE_AUTOMOC ON)
+# As moc files are generated in the binary dir, tell CMake
+# to always look for includes there:
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR} 
+include_directories(${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR} 
+${Qt5Core_INCLUDE_DIRS}
+${Qt5Widgets_INCLUDE_DIRS}
 bulk 
 modules
 lib
@@ -42,11 +52,18 @@ SET(DEPS bulk gui modules tools)
 #SET(DEPS bulk modules tools)
 
 SET(DEPS ${DEPS} ${DEPS} ) # double the dependancies to avoid linking error
-SET(DEPS ${DEPS} tinyxml ${OpenCV_LIBS} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} )
+SET(DEPS ${DEPS} tinyxml ${OpenCV_LIBS} 
+${Qt5Core_LIBRARIES}
+${Qt5Widgets_LIBRARIES}
+)
 SET(DEPS ${DEPS} ${PYTHON_LIBRARIES} )
+# Executables fail to build with Qt 5 in the default configuration
+# without -fPIE. We add that here.
+set(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 
 # enable debug streams
 add_definitions(-DMARKUS_DEBUG_STREAMS)
+add_definitions(${Qt5Widgets_DEFINITIONS})
 
 #-------------------------------------------------------------------------------- 
 

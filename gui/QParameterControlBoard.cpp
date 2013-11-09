@@ -176,4 +176,4 @@ void QParameterControlBoard::getDefaultControl()
 }
 
 
-#include "QParameterControlBoard.moc"
+// #include "QParameterControlBoard.moc"

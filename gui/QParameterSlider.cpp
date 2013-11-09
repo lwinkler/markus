@@ -103,4 +103,4 @@ void QParameterSlider::SetValue(double x_value)
 }
 
 
-#include "QParameterSlider.moc"
+// #include "QParameterSlider.moc"

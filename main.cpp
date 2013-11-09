@@ -21,7 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include <QtGui/QApplication>
+#include <QApplication>
 #include <cstring>
 #include <cstdio>
 #include <getopt.h>    /* for getopt_long; standard getopt is in unistd.h */
