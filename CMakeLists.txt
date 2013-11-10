@@ -10,9 +10,8 @@ set(Markus_USE_PYTHON_LIBS false CACHE PATH "Compile with Python libs: only used
 find_package(OpenCV REQUIRED)
 # find_package(tinyxml REQUIRED) # TODO: How to add this dependancy ?
 IF(Markus_USE_QT5)
-	find_package(Qt5Gui REQUIRED)
 	find_package(Qt5Widgets REQUIRED)
-	find_package(Qt5Core REQUIRED)
+	# find_package(Qt5Core REQUIRED) # already found via Qt5Widgets
 ELSE(Markus_USE_QT5)
 	find_package(Qt4 REQUIRED)
 ENDIF(Markus_USE_QT5)
@@ -52,16 +51,18 @@ ENDIF(Markus_NO_GUI)
 
 SET(DEPS ${DEPS} ${DEPS} tinyxml ${OpenCV_LIBS}) # double the dependancies to avoid linking error
 IF(Markus_USE_QT5)
-	include_directories(${QT_INCLUDES} ${Qt5Widgets_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR})
-	SET(DEPS ${DEPS} {Qt5Core_LIBRARIES} ${Qt5Widgets_LIBRARIES})
-ELSE(Markus_USE_QT5)
-	include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR})
-	SET(DEPS ${DEPS} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} )
+	include_directories(${Qt5Widgets_INCLUDE_DIRS})
+	SET(DEPS ${DEPS} ${Qt5Widgets_LIBRARIES})
 	# Executables fail to build with Qt 5 in the default configuration
 	# without -fPIE. We add that here.
 	set(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 	add_definitions(${Qt5Widgets_DEFINITIONS})
+ELSE(Markus_USE_QT5)
+	include_directories(${QT_INCLUDES})
+	SET(DEPS ${DEPS} ${QT_QTGUI_LIBRARY} )
 ENDIF(Markus_USE_QT5)
+
+include_directories(${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR})
 
 ## Python libs
 IF(Markus_USE_PYTHON_LIBS)
