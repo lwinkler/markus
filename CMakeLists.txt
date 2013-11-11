@@ -2,9 +2,9 @@ project(markus)
 cmake_minimum_required(VERSION 2.6)
 
 # Options to be set with ccmake or cmake-gui
-set(Markus_NO_GUI          false CACHE PATH "Compile Markus without a graphical user interface")
-set(Markus_USE_QT5         false CACHE PATH "Use QT 5 instead of 4")
-set(Markus_USE_PYTHON_LIBS false CACHE PATH "Compile with Python libs: only used in some modules")
+set(Markus_NO_GUI          false CACHE BOOL "Compile Markus without a graphical user interface")
+set(Markus_USE_QT5         false CACHE BOOL "Use QT 5 instead of 4")
+set(Markus_USE_PYTHON_LIBS false CACHE BOOL "Compile with Python libs: only used in some modules")
 
 # Required packages
 find_package(OpenCV REQUIRED)
@@ -106,3 +106,39 @@ add_custom_target(update_modules_list
 add_custom_target(update_projects_list
 	COMMAND editor/js/all_projects.js.sh > editor/js/all_projects.js
 )
+
+#-------------------------------------------------------------------------------- 
+# Get the current working branch
+execute_process(
+	COMMAND git rev-parse --abbrev-ref HEAD
+	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+	OUTPUT_VARIABLE GIT_BRANCH
+	OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+# Get the latest abbreviated commit hash of the working branch
+execute_process(
+	COMMAND git log -1 --format=%h
+	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+	OUTPUT_VARIABLE GIT_COMMIT_HASH
+	OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+# Get the latest abbreviated commit hash of the working branch
+# execute_process(
+	# COMMAND ./tools/version.sh
+	# WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+	# OUTPUT_VARIABLE GIT_DESCR
+	# OUTPUT_STRIP_TRAILING_WHITESPACE
+# )
+
+# add_definitions("-DGIT_COMMIT_HASH=${GIT_COMMIT_HASH}")
+# add_definitions("-DGIT_BRANCH=${GIT_BRANCH}")
+
+configure_file(
+	${CMAKE_SOURCE_DIR}/bulk/version.h.in
+	${CMAKE_BINARY_DIR}/bulk/version.h
+)
+
+include_directories(${CMAKE_BINARY_DIR}/generated)
+

@@ -27,6 +27,7 @@
 #include <getopt.h>    /* for getopt_long; standard getopt is in unistd.h */
 
 #include "Manager.h"
+#include "version.h"
 
 #ifndef MARKUS_NO_GUI
 #include "markus.h"
@@ -88,7 +89,7 @@ int main(int argc, char** argv)
 				return 0;
 				break;
 			case 'v':
-				LOG_ERROR("version TODO b\n");
+				LOG_ERROR("Markus version "<<GIT_BRANCH<<", build "<<GIT_COMMIT_HASH);
 				return 0;
 			case 'd':
 				describe = true;
