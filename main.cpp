@@ -89,7 +89,8 @@ int main(int argc, char** argv)
 				return 0;
 				break;
 			case 'v':
-				LOG_ERROR("Markus version "<<GIT_BRANCH<<", build "<<GIT_COMMIT_HASH);
+				LOG_INFO("Markus version "<<VERSION_STRING); // <<", build "<<GIT_COMMIT_HASH<<", on "<<GIT_BUILD_DATE);
+
 				return 0;
 			case 'd':
 				describe = true;

@@ -108,37 +108,30 @@ add_custom_target(update_projects_list
 )
 
 #-------------------------------------------------------------------------------- 
-# Get the current working branch
-execute_process(
-	COMMAND git rev-parse --abbrev-ref HEAD
-	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-	OUTPUT_VARIABLE GIT_BRANCH
-	OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+#create a pretty commit id using git
+#uses 'git describe --tags', so tags are required in the repo
+#create a tag with 'git tag <name>' and 'git push --tags'
 
-# Get the latest abbreviated commit hash of the working branch
-execute_process(
-	COMMAND git log -1 --format=%h
-	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-	OUTPUT_VARIABLE GIT_COMMIT_HASH
-	OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+find_package(Git)
+if(GIT_FOUND)
+	execute_process(COMMAND ${GIT_EXECUTABLE} describe --all --long RESULT_VARIABLE res_var OUTPUT_VARIABLE GIT_COM_ID )
+	if( NOT ${res_var} EQUAL 0 )
+		set( GIT_COMMIT_ID "git commit id unknown")
+		message( WARNING "Git failed (not a repo, or no tags). Build will not contain git revision info." )
+	endif()
+	string( REPLACE "\n" "" GIT_COMMIT_ID ${GIT_COM_ID} )
+else()
+	set( GIT_COMMIT_ID "unknown (git not found!)")
+	message( WARNING "Git not found. Build will not contain git revision info." )
+endif()
 
-# Get the latest abbreviated commit hash of the working branch
-# execute_process(
-	# COMMAND ./tools/version.sh
-	# WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-	# OUTPUT_VARIABLE GIT_DESCR
-	# OUTPUT_STRIP_TRAILING_WHITESPACE
-# )
+set( vstring "//version.h - written by cmake. changes will be lost!\n"
+	"#ifndef MARKUS_VERSION_H\n"
+	"#define MARKUS_VERSION_H\n"
+	"const char * VERSION_STRING = \"${GIT_COMMIT_ID}\"\;\n"
+	"#endif")
 
-# add_definitions("-DGIT_COMMIT_HASH=${GIT_COMMIT_HASH}")
-# add_definitions("-DGIT_BRANCH=${GIT_BRANCH}")
-
-configure_file(
-	${CMAKE_SOURCE_DIR}/bulk/version.h.in
-	${CMAKE_BINARY_DIR}/bulk/version.h
-)
-
-include_directories(${CMAKE_BINARY_DIR}/generated)
-
+file(WRITE version.h.txt ${vstring} )
+# copy the file to the final header only if the version changes
+# reduces needless rebuilds
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different version.h.txt ${CMAKE_CURRENT_BINARY_DIR}/bulk/version.h)
