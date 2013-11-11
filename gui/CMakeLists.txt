@@ -5,7 +5,7 @@
 
 #qt4_wrap_cpp (MOC_OUTFILES ${MOC_HEADERS})
 
-qt4_automoc(markus.cpp QModuleViewer.cpp QParameterControlBoard.cpp QParameterSlider.cpp)
+#qt5_automoc(markus.cpp QModuleViewer.cpp QParameterControlBoard.cpp QParameterSlider.cpp)
 
 add_library(gui
 markus.cpp

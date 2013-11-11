@@ -363,4 +363,4 @@ void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qimg)
 	}
 }
 
-#include "QModuleViewer.moc"
+// #include "QModuleViewer.moc"

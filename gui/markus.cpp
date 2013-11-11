@@ -287,4 +287,4 @@ void markus::resizeEvent(QResizeEvent* event)
 	}
 }
 
-#include "markus.moc"
+// #include "markus.moc"
