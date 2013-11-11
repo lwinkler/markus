@@ -94,7 +94,10 @@ add_executable(markus ${markus_SRCS})
 target_link_libraries(markus ${DEPS})
 
 
+
+
 add_custom_target(update_modules_list
+	COMMENT "Update the list of modules"
 	COMMAND modules/AllModules.h.sh > modules/AllModules.h
 	COMMAND ./config_each_module.xml.sh > config_each_module.xml
 	COMMAND editor/js/all_modules.js.sh > editor/js/all_modules.js
@@ -104,6 +107,7 @@ add_custom_target(update_modules_list
 )
 
 add_custom_target(update_projects_list
+	COMMENT "Update the list of projects"
 	COMMAND editor/js/all_projects.js.sh > editor/js/all_projects.js
 )
 
