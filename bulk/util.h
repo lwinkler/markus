@@ -85,6 +85,7 @@ class Logging {
 class Global{
 	public:
 		static Logging logger;	
+		static std::string configFile;
 };
 
 #endif

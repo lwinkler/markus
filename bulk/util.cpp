@@ -30,7 +30,8 @@ using namespace std;
 using namespace cv;
 
 // Global variables
-Logging Global::logger;
+Logging Global::logger; // TODO: See if we add this to Manager or not !
+string Global::configFile;
 int g_colorArraySize = 54;
 Scalar g_colorArray[] =
 {

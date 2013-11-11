@@ -256,9 +256,9 @@ const string& Manager::OutputDir()
 	if(m_outputDir.size() == 0)
 	{
 		m_outputDir = "out_" + timeStamp();
-		string cmd = "mkdir \"" + m_outputDir + "\"";
-		system(cmd.c_str());
-		// TODO : Copy xml and write code version to output dir
+		system(string("mkdir \"" + m_outputDir + "\"").c_str());
+		system(string("tools/version.sh > " + m_outputDir + "/version.txt").c_str());
+		system(string("cp " + Global::configFile + " " + m_outputDir).c_str());
 	}
 	return m_outputDir;
 }
