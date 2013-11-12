@@ -144,7 +144,7 @@ int main(int argc, char** argv)
 		ConfigReader appConfig = mainConfig.SubConfig("application");
 		assert(!appConfig.IsEmpty());
 		Manager manager(appConfig, centralized);
-		Global::configFile = configFile;
+		Global::SetConfigFile(configFile);
 
 		// Set values of parameters if set from command line
 		for(vector<string>::const_iterator it = parameters.begin() ; it != parameters.end() ; it++)

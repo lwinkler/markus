@@ -51,7 +51,6 @@ using namespace std;
 
 using namespace std;
 
-string Manager::m_outputDir;
 
 Manager::Manager(ConfigReader& x_configReader, bool x_centralized) : 
 	Configurable(x_configReader),
@@ -130,11 +129,9 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 Manager::~Manager()
 {
 	PrintTimers();
-	if(m_outputDir.size() != 0)
-		LOG_INFO("Results written to directory "<<m_outputDir);
-	
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		delete *it;
+	Global::Infos();
 }
 
 
@@ -250,18 +247,6 @@ void Manager::PauseInputs(bool x_pause)
 	}
 }
 
-/// Returns a directory that will contain all outputs
-const string& Manager::OutputDir()
-{
-	if(m_outputDir.size() == 0)
-	{
-		m_outputDir = "out_" + timeStamp();
-		system(string("mkdir \"" + m_outputDir + "\"").c_str());
-		system(string("tools/version.sh > " + m_outputDir + "/version.txt").c_str());
-		system(string("cp " + Global::configFile + " " + m_outputDir).c_str());
-	}
-	return m_outputDir;
-}
 
 /// Check if end of all input streams
 

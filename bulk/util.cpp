@@ -31,7 +31,8 @@ using namespace cv;
 
 // Global variables
 Logging Global::logger; // TODO: See if we add this to Manager or not !
-string Global::configFile;
+string Global::m_configFile;
+string Global::m_outputDir;
 int g_colorArraySize = 54;
 Scalar g_colorArray[] =
 {
@@ -242,6 +243,26 @@ const std::string msToTimeStamp(TIME_STAMP x_ms)
 
 	return string(str);
 }
+
+void Global::Infos()
+{
+	if(m_outputDir.size() != 0)
+		LOG_INFO("Results written to directory "<<m_outputDir);
+}
+	
+/// Returns a directory that will contain all outputs
+const string& Global::OutputDir()
+{
+	if(m_outputDir.size() == 0)
+	{
+		m_outputDir = "out_" + timeStamp();
+		system(string("mkdir \"" + m_outputDir + "\"").c_str());
+		system(string("tools/version.sh > " + m_outputDir + "/version.txt").c_str());
+		system(string("cp " + m_configFile + " " + m_outputDir).c_str());
+	}
+	return m_outputDir;
+}
+
 
 /// Log class
 Logging::Logging()

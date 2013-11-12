@@ -24,8 +24,6 @@
 #ifndef MANAGER_H
 #define MANAGER_H
 
-#include <list>
-#include <cstring>
 #include <QReadWriteLock>
 
 #include "ConfigReader.h"
@@ -70,14 +68,12 @@ public:
 	void Pause(bool x_pause);
 	void PauseInputs(bool x_pause);
 	bool EndOfAllStreams() const;
-	static const std::string& OutputDir();
 private:
 	ManagerParameter m_param;
 
 	bool m_centralized;
 	// long long m_timerConvertion;
 	long long m_timerProcessing;
-	static std::string m_outputDir;
 
 	//clock_t m_timeLastProcess;
 	

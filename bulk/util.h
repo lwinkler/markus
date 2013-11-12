@@ -85,7 +85,16 @@ class Logging {
 class Global{
 	public:
 		static Logging logger;	
-		static std::string configFile;
+		static const std::string& OutputDir();
+		static inline void SetConfigFile(const std::string& x_configFile){
+			assert(m_configFile.size() == 0);
+			m_configFile = x_configFile;
+		}
+		static void Infos();
+		static inline const std::string& GetConfigFile(){return m_configFile;}
+	private:
+		static std::string m_configFile;
+		static std::string m_outputDir;
 };
 
 #endif

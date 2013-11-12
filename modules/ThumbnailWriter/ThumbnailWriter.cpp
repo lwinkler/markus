@@ -24,7 +24,6 @@
 #include "ThumbnailWriter.h"
 #include "StreamImage.h"
 #include "util.h"
-#include "Manager.h"
 #include <opencv2/highgui/highgui.hpp>
 
 using namespace std;
@@ -50,7 +49,7 @@ ThumbnailWriter::~ThumbnailWriter()
 void ThumbnailWriter::Reset()
 {
 	Module::Reset();
-	m_folderName  = Manager::OutputDir() + "/" + m_param.folder + "/"; 
+	m_folderName  = Global::OutputDir() + "/" + m_param.folder + "/"; 
 	char cmd[256];
 	sprintf(cmd, "mkdir -p %s", m_folderName.c_str());
 	system(cmd);
