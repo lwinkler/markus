@@ -13,23 +13,66 @@ You will need to Install Opencv from sources (preferably).
 Also Qt4 is needed.
 
 ### Dependancies
-You need to install:
+In all cases you will need:
+	- *CMake*
 	- *Qt4*
 	- *OpenCV 2*
 		- from sources http://opencv.org/downloads.html
 		- or via a package installer
 	- *LibTinyXML*
 
-On Ubuntu the command is:
+On Ubuntu the apt-get install command is:
 
-	sudo apt-get install libqt4-core  libqt4-dev libtinyxml-dev  libopencv-core-dev libopencv-highgui-dev
+	sudo apt-get install cmake libqt4-core  libqt4-dev libtinyxml-dev  libopencv-core-dev libopencv-highgui-dev
+
+Other dependencies:
+	- *CMake GUI* : (or cmake-curses-gui) to set the compilation flags visually
+	- *Qt Creator* : a full IDE for C++ and QT
+	- *Python*
+
+Alternatively you can compile OpenCV from sources. In this case use:
+
+	git clone https://github.com/Itseez/opencv.git
+
+Checkout a stable version (e.g.):
+
+	git checkout 2.4.6.2-rc1
+
+For compilation use the following flags.
+
+	cmake \
+        -DCMAKE_VERBOSE_MAKEFILE=ON \
+        -DCMAKE_BUILD_TYPE=Debug        \
+        -DBUILD_NEW_PYTHON_SUPPORT=ON   \
+        -DWITH_FFMPEG=ON        \
+        -DWITH_GSTREAMER=OFF    \
+        -DWITH_GTK=ON   \
+        -DWITH_JASPER=ON        \
+        -DWITH_JPEG=ON  \
+        -DWITH_PNG=ON   \
+        -DWITH_TIFF=ON  \
+        -DWITH_OPENEXR=ON \
+        -DWITH_PVAPI=ON \
+        -DWITH_UNICAP=OFF       \
+        -DWITH_1394=ON  \
+        -DWITH_V4L=ON   \
+        -DWITH_EIGEN=ON \
+        -DWITH_XINE=OFF \
+        -DBUILD_TESTS=OFF \
+        -DCMAKE_SKIP_RPATH=ON \
+        -DWITH_CUDA=OFF
+
+        make
+        sudo make install
 
 
+
+###  Compilation
 First compilation commands:
 
 	cmake .
 	make clean
-	make update_module_list
+	make update_modules_list
 	make
 
 Then simply use 'make' as for any other projects. 
@@ -65,6 +108,11 @@ AllModules.h is missing
 Solution:  simply run 
 
 	make update_module_list
+
+
+FindOpenCV.cmake is missing
+---------------------------
+At compilation CMake may complain that FindOpencv.cmake is missing. In this case you should compile OpenCV from sources. This problem happens in Ubuntu since version 13.04.
 
 Technical details
 =================
