@@ -17,7 +17,8 @@ import subprocess
 
 
 def overlap(evt1, evt2):
-	return evt1['start'] < evt2['start'] < evt1['end'] or evt1['start'] < evt2['end'] < evt1['end'] or evt2['start'] < evt1['start'] < evt2['end'] or evt2['start'] < evt1['end'] < evt2['end']
+	return evt1['start'] < evt2['start'] < evt1['end'] or evt1['start'] < evt2['end'] < evt1['end']
+# or evt2['start'] < evt1['start'] < evt2['end'] or evt2['start'] < evt1['end'] < evt2['end']
 	
 # Read a subtitle file and store values
 def srttable(textfile):

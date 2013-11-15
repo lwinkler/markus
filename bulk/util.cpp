@@ -316,7 +316,8 @@ void Logging::SetMode(char x_mode)
 		case 2:
 		{
 			// Log info to file, hide debug info
-			m_logFile.open("log.txt"); // , std::ios::app);
+			string filename = Global::OutputDir() + "/log.txt";
+			m_logFile.open(filename.c_str()); // , std::ios::app);
 			m_cnull.open("/dev/null");
 			m_oss[LOG_EVENT]   = &std::cout;
 			m_oss[LOG_ERROR]   = &std::cerr;
@@ -328,7 +329,8 @@ void Logging::SetMode(char x_mode)
 		case 3:
 		{
 			// Log info to file, show debug info
-			m_logFile.open("log.txt"); // , std::ios::app);
+			string filename = Global::OutputDir() + "/log.txt";
+			m_logFile.open(filename.c_str()); // , std::ios::app);
 			m_oss[LOG_EVENT]   = &std::cout;
 			m_oss[LOG_ERROR]   = &std::cerr;
 			m_oss[LOG_WARNING] = &std::cerr;
