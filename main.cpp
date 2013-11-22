@@ -35,6 +35,7 @@
 #endif
 
 #include <iostream>
+#include <log4cxx/xml/domconfigurator.h>
 
 using namespace std;
 
@@ -58,6 +59,18 @@ void usage()
 
 int main(int argc, char** argv)
 {
+	// Load XML configuration file using DOMConfigurator
+	log4cxx::xml::DOMConfigurator::configure("log4j.xml");
+
+log4cxx::LoggerPtr loggerMyMain(log4cxx::Logger::getLogger( "main"));
+
+    LOG4CXX_TRACE(loggerMyMain, "this is a debug message for detailed code discovery. Value=");
+    LOG4CXX_DEBUG(loggerMyMain, "this is a debug message.");
+    LOG4CXX_INFO (loggerMyMain, "this is a info message, ignore. Value=");
+    LOG4CXX_WARN (loggerMyMain, "this is a warn message, not too bad.");
+    LOG4CXX_ERROR(loggerMyMain, "this is a error message, something serious is happening.");
+    LOG4CXX_FATAL(loggerMyMain, "this is a fatal message!!!");
+
 	bool describe    = false;
 	bool nogui       = false;
 	bool centralized = false;

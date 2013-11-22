@@ -37,12 +37,14 @@
 using namespace std;
 
 Module::Module(const ConfigReader& x_configReader) :
-	Configurable(x_configReader)
+	Configurable(x_configReader),
+	m_name(x_configReader.GetAttribute("name")),
+	m_logger(log4cxx::Logger::getLogger(m_name))
 {
-	m_name 	= x_configReader.GetAttribute("name");
 	m_id	= atoi(x_configReader.GetAttribute("id").c_str());
 	LOG_INFO("*** Create object Module : "<<m_name<<" id:"<<m_id<<" ***");
 	// m_processingTime = 0;
+	LOG4CXX_WARN (m_logger, "this is a warn message, not too bad.");
 	
 	m_timerConvertion      = 0;
 	m_timerProcessing      = 0;

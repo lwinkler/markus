@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!--  Log4j Configuration                                                  -->
+<!--                                                                       -->
+<!-- $Id: jboss-log4j.xml,v 1.1 2009/04/20 13:55:56 sc Exp $ -->
+<!--
+   | For more configuration infromation and examples see the Jakarta Log4j
+   | owebsite: http://jakarta.apache.org/log4j
+-->
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+      <!-- ================================= -->
+      <!-- Preserve messages in a local file -->
+      <!-- ================================= -->
+      <!-- A time/date based rolling appender -->
+      <appender name="FILE" class="org.jboss.logging.appender.RollingFileAppender">
+            <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
+            <param name="File" value="${jboss.server.log.dir}/server.log"/>
+            <param name="Append" value="true"/>
+            <param name="MaxFileSize" value="5Mb"/>
+            <param name="MaxBackupIndex" value="50"/>
+            <layout class="org.apache.log4j.PatternLayout">
+                  <!-- The default pattern: Date Priority [Category] Message\n -->
+ 
+                  <param name="ConversionPattern" value="%d [%t] %-5p [%c] %m%n"/>
+                  <!-- The full pattern: Date MS Priority [Category] (Thread:NDC) Message\n
+         <param name="ConversionPattern" value="%d %-5r %-5p [%c] (%t:%x) %m%n"/>
+          -->
+            </layout>
+      </appender>
+      <!-- ============================== -->
+      <!-- Append messages to the console -->
+      <!-- ============================== -->
+      <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+            <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
+            <param name="Target" value="System.out"/>
+            <param name="Threshold" value="DEBUG"/>
+            <layout class="org.apache.log4j.PatternLayout">
+                  <!-- The default pattern: Date Priority [Category] Message\n -->
+ 
+                  <param name="ConversionPattern" value="%d{ABSOLUTE} [%t] %-5p [%c{1}] %m%n"/>
+            </layout>
+      </appender>
+      <!-- ================ -->
+      <!-- Limit categories -->
+      <!-- ================ -->
+      <!-- Limit the org.apache category to INFO as its DEBUG is verbose -->
+      <category name="org.apache">
+            <priority value="INFO"/>
+      </category>
+      <!-- Limit the jacorb category to WARN as its INFO is verbose -->
+      <category name="jacorb">
+            <priority value="WARN"/>
+      </category>
+      <!-- Limit the org.jgroups category to WARN as its INFO is verbose -->
+      <category name="org.jgroups">
+            <priority value="WARN"/>
+      </category>
+      <!-- Limit the org.quartz category to INFO as its DEBUG is verbose -->
+      <category name="org.quartz">
+            <priority value="INFO"/>
+      </category>
+      <!-- Limit JSF logging to DEBUG.  FINER and FINEST will not be logged -->
+      <category name="javax.enterprise.resource.webcontainer.jsf">
+            <priority value="WARN"/>
+      </category>
+  <category name="org.jboss">
+    <priority value="INFO"/>
+  </category>
+      <!-- Limit the JSR77 categories -->
+      <category name="org.jboss.management">
+            <priority value="INFO"/>
+      </category>
+      <!-- Limit the org.jboss.serial (jboss-serialization) to INFO as its DEBUG is verbose -->
+      <category name="org.jboss.serial">
+            <priority value="INFO"/>
+      </category>
+      <category name="ch.softcomponent">
+     <priority value="DEBUG" />
+   </category>
+      <category name="ch.softcomponent.liferay.security.jaas.ext.jboss.PortalLoginModule">
+            <priority value="INFO"/>
+      </category>
+      <category name="ch.softcomponent.morphean.vms">
+            <priority value="DEBUG"/>
+      </category>
+      <category name="ch.softcomponent.morphean.vms.http.listener.AxisListenerServlet">
+            <priority value="DEBUG"/>
+      </category>
+      <category name="ch.softcomponent.morphean.vms.api">
+            <priority value="DEBUG"/>
+      </category>
+      <!-- ======================= -->
+      <!-- Setup the Root category -->
+      <!-- ======================= -->
+      <root>
+            <priority value="INFO"/>
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+      </root>
+</log4j:configuration>

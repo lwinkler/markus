@@ -9,6 +9,7 @@ set(Markus_USE_PYTHON_LIBS false CACHE BOOL "Compile with Python libs: only used
 # Required packages
 find_package(OpenCV REQUIRED)
 # find_package(tinyxml REQUIRED) # TODO: How to add this dependancy ?
+# find_package(log4cxx REQUIRED) # TODO: How to add this dependancy ?
 IF(Markus_USE_QT5)
 	find_package(Qt5Widgets REQUIRED)
 	# find_package(Qt5Core REQUIRED) # already found via Qt5Widgets
@@ -46,7 +47,7 @@ ELSE(Markus_NO_GUI)
 	include_directories(gui)
 ENDIF(Markus_NO_GUI)
 
-SET(DEPS ${DEPS} ${DEPS} tinyxml ${OpenCV_LIBS}) # double the dependencies to avoid linking error
+SET(DEPS ${DEPS} ${DEPS} tinyxml log4cxx ${OpenCV_LIBS}) # double the dependencies to avoid linking error
 IF(Markus_USE_QT5)
 	include_directories(${Qt5Widgets_INCLUDE_DIRS})
 	SET(DEPS ${DEPS} ${Qt5Widgets_LIBRARIES})
@@ -87,7 +88,7 @@ ENDIF()
 
 
 add_executable(markus ${markus_SRCS})
-# target_link_libraries(markus AAA ${QT_QTCORE_LIBRARY} BBB ${QT_QTGUI_LIBRARY} bulk gui modules tools ${OpenCV_LIBS} tinyxml bulk)
+# target_link_libraries(markus AAA ${QT_QTCORE_LIBRARY} BBB ${QT_QTGUI_LIBRARY} bulk gui modules tools ${OpenCV_LIBS} tinyxml log4cxx bulk)
 target_link_libraries(markus ${DEPS})
 
 

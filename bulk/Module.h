@@ -28,6 +28,9 @@
 #include "Parameter.h"
 #include <QReadWriteLock>
 
+#include <log4cxx/logger.h>
+#include <log4cxx/xml/domconfigurator.h>
+
 #define MAX_WIDTH  6400
 #define MAX_HEIGHT 4800
 
@@ -130,6 +133,7 @@ protected:
 	std::vector<Module *> m_modulesDepending;
 	QModuleTimer * m_moduleTimer;
 	QReadWriteLock m_lock;
+	log4cxx::LoggerPtr m_logger;
 };
 
 #endif
