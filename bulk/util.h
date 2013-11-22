@@ -34,11 +34,11 @@
 #define TIME_STAMP_MIN -100000 // for initialization as well
 
 // Logging functions
-#define LOG_EVENT(x)   Global::logger.Stream(LOG_EVENT)<<x<<std::endl
-#define LOG_ERROR(x)   Global::logger.Stream(LOG_ERROR)<<x<<std::endl
-#define LOG_WARNING(x) Global::logger.Stream(LOG_WARNING)<<x<<std::endl
-#define LOG_INFO(x)    Global::logger.Stream(LOG_INFO)<<x<<std::endl
-#define LOG_DEBUG(x)   if(Global::logger.HasDebugMode()){Global::logger.Stream(LOG_DEBUG)<<x<<std::endl;}
+#define LOG_EVENT(x)   LOG4CXX_WARN(m_logger, x) // Global::logger.Stream(LOG_EVENT)<<x<<std::endl
+#define LOG_ERROR(x)   LOG4CXX_ERROR(m_logger, x) // Global::logger.Stream(LOG_ERROR)<<x<<std::endl
+#define LOG_WARN(x)    LOG4CXX_WARN(m_logger, x) // Global::logger.Stream(LOG_WARN)<<x<<std::endl
+#define LOG_INFO(x)    LOG4CXX_INFO(m_logger, x) // Global::logger.Stream(LOG_INFO)<<x<<std::endl
+#define LOG_DEBUG(x)   LOG4CXX_DEBUG(m_logger, x) // if(Global::logger.HasDebugMode()){Global::logger.Stream(LOG_DEBUG)<<x<<std::endl;}
 
 /// this file contains some usefull functions and methods
 
@@ -60,7 +60,7 @@ typedef enum
 {
 	LOG_EVENT,
 	LOG_ERROR,
-	LOG_WARNING,
+	LOG_WARN,
 	LOG_INFO,
 	LOG_DEBUG,
 	LOG_SIZE

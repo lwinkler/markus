@@ -259,7 +259,7 @@ void TrackerByFeatures::DetectNewTemplates()
 		{
 			if(m_templates.size() >= MAX_NB_TEMPLATES)
 			{
-				LOG_WARNING("Too many templates created in TrackerByFeatures::DetectNewTemplates");
+				LOG_WARN("Too many templates created in TrackerByFeatures::DetectNewTemplates");
 				return;
 			}
 

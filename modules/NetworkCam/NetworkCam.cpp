@@ -79,7 +79,7 @@ void NetworkCam::Capture()
 {
 	if(m_capture.grab() == 0)
 	{
-		LOG_WARNING("Grab failure while reading stream, try to reopen in NetworkCam::Capture");
+		LOG_WARN("Grab failure while reading stream, try to reopen in NetworkCam::Capture");
 		Reset();
 		if(m_capture.grab() == 0)
 		{

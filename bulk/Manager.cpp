@@ -55,7 +55,8 @@ using namespace std;
 Manager::Manager(ConfigReader& x_configReader, bool x_centralized) : 
 	Configurable(x_configReader),
 	m_param(m_configReader, "Manager"),
-	m_centralized(x_centralized)
+	m_centralized(x_centralized),
+	m_logger(log4cxx::Logger::getLogger("manager"))
 {
 	LOG_INFO("*** Create object Manager ***");
 	m_frameCount = 0;
@@ -159,7 +160,7 @@ bool Manager::Process()
 
 	if(!m_lock.tryLockForWrite())
 	{
-		LOG_WARNING("Manager too slow !");
+		LOG_WARN("Manager too slow !");
 		return true;
 	}
 	Timer ti;
@@ -179,13 +180,13 @@ bool Manager::Process()
 		}
 		catch(std::exception& e)
 		{
-			LOG_WARNING((*it)->GetName() << ": Exception raised (std::exception) : " << e.what()); // TODO: Exceptions
+			LOG_WARN((*it)->GetName() << ": Exception raised (std::exception) : " << e.what()); // TODO: Exceptions
 
 			// test if all inputs are over
 			if(EndOfAllStreams())
 			{
 				// throw("End of all video streams : Manager::Process");
-				LOG_WARNING("End of all video streams : Manager::Process");
+				LOG_WARN("End of all video streams : Manager::Process");
 				continueFlag = false;
 			}
 		}

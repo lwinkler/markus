@@ -246,8 +246,8 @@ const std::string msToTimeStamp(TIME_STAMP x_ms)
 
 void Global::Infos()
 {
-	if(m_outputDir.size() != 0)
-		LOG_INFO("Results written to directory "<<m_outputDir);
+	// if(m_outputDir.size() != 0)
+		// TODO enable this LOG_INFO("Results written to directory "<<m_outputDir);
 }
 	
 /// Returns a directory that will contain all outputs
@@ -298,7 +298,7 @@ void Logging::SetMode(char x_mode)
 			m_cnull.open("/dev/null");
 			m_oss[LOG_EVENT]   = &std::cout;
 			m_oss[LOG_ERROR]   = &std::cerr;
-			m_oss[LOG_WARNING] = &std::cerr;
+			m_oss[LOG_WARN] = &std::cerr;
 			m_oss[LOG_INFO]    = &std::cout;
 			m_oss[LOG_DEBUG]   = &m_cnull;
 		}
@@ -308,7 +308,7 @@ void Logging::SetMode(char x_mode)
 			// Log standard, show debug info
 			m_oss[LOG_EVENT]   = &std::cout;
 			m_oss[LOG_ERROR]   = &std::cerr;
-			m_oss[LOG_WARNING] = &std::cerr;
+			m_oss[LOG_WARN] = &std::cerr;
 			m_oss[LOG_INFO]    = &std::cout;
 			m_oss[LOG_DEBUG]   = &std::cout;
 		}
@@ -321,7 +321,7 @@ void Logging::SetMode(char x_mode)
 			m_cnull.open("/dev/null");
 			m_oss[LOG_EVENT]   = &std::cout;
 			m_oss[LOG_ERROR]   = &std::cerr;
-			m_oss[LOG_WARNING] = &std::cerr;
+			m_oss[LOG_WARN] = &std::cerr;
 			m_oss[LOG_INFO]    = &m_logFile;
 			m_oss[LOG_DEBUG]   = &m_cnull;
 		}
@@ -333,7 +333,7 @@ void Logging::SetMode(char x_mode)
 			m_logFile.open(filename.c_str()); // , std::ios::app);
 			m_oss[LOG_EVENT]   = &std::cout;
 			m_oss[LOG_ERROR]   = &std::cerr;
-			m_oss[LOG_WARNING] = &std::cerr;
+			m_oss[LOG_WARN] = &std::cerr;
 			m_oss[LOG_INFO]    = &m_logFile;
 			m_oss[LOG_DEBUG]   = &std::cout;
 		}
@@ -348,7 +348,7 @@ std::ostream & Logging::Stream(logLevel x_level)
 	switch(x_level)	
 	{
 		case LOG_EVENT:   return *m_oss[LOG_EVENT]<<"EVENT: ";
-		case LOG_WARNING: return *m_oss[LOG_WARNING]<<"WARNING: ";
+		case LOG_WARN: return *m_oss[LOG_WARN]<<"WARNING: ";
 		case LOG_ERROR:   return *m_oss[LOG_ERROR]<<"ERROR: ";
 		case LOG_INFO:    return *m_oss[LOG_INFO];
 		case LOG_DEBUG:   return *m_oss[LOG_DEBUG]<<"DEBUG: ";

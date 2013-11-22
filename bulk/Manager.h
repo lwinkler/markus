@@ -84,5 +84,6 @@ private:
 protected:
 	inline virtual const ParameterStructure& RefParameter() {return m_param;}
 	QReadWriteLock m_lock;
+	log4cxx::LoggerPtr m_logger;
 };
 #endif

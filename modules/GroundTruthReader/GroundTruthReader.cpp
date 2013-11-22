@@ -96,7 +96,7 @@ void GroundTruthReader::ProcessFrame()
 			}
 			num = atoi(line.c_str());
 			if(num != m_num + 1)
-				LOG_WARNING("Missing number in subtitle file "<<(m_num + 1));
+				LOG_WARN("Missing number in subtitle file "<<(m_num + 1));
 			m_num = num;
 			//getline(m_srtFile, line);
 			//istringstream ss(line);
@@ -121,7 +121,7 @@ void GroundTruthReader::ProcessFrame()
 		}
 		catch(...)
 		{
-			LOG_WARNING("Exception while reading .srt file in GroundTruthReader::ProcessFrame"); // TODO : improve and re-throw exception
+			LOG_WARN("Exception while reading .srt file in GroundTruthReader::ProcessFrame"); // TODO : improve and re-throw exception
 			throw;
 		}
 	}

@@ -66,7 +66,7 @@ void ModuleAsync::ProcessFrame()
 		else
 		{
 			// thread is taking too long
-			LOG_WARNING("Thread too slow, frame dropped after "<<m_currentTimeStamp - m_timeStampLastThread<<" [ms]");
+			LOG_WARN("Thread too slow, frame dropped after "<<m_currentTimeStamp - m_timeStampLastThread<<" [ms]");
 		}
 		m_timeStampLastThread = m_currentTimeStamp;
 	}

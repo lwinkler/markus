@@ -51,7 +51,7 @@ bool MarkusApplication::notify(QObject *receiver_, QEvent *event_)
 			/*if(EndOfAllStreams())
 			{
 				// throw("End of all video streams : Manager::Process");
-				LOG_WARNING("End of all video streams : Manager::Process");
+				LOG_WARN("End of all video streams : Manager::Process");
 				continueFlag = false;
 			} TODO implement something similar*/ 
 		cout<<"Exception raised. Ending process"<<endl;

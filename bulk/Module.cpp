@@ -42,9 +42,9 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_logger(log4cxx::Logger::getLogger(m_name))
 {
 	m_id	= atoi(x_configReader.GetAttribute("id").c_str());
-	LOG_INFO("*** Create object Module : "<<m_name<<" id:"<<m_id<<" ***");
+	LOG_WARN("*** Create object Module : "); //<<m_name<<" id:"<<m_id<<" ***");
 	// m_processingTime = 0;
-	LOG4CXX_WARN (m_logger, "this is a warn message, not too bad.");
+	LOG4CXX_WARN (m_logger, "this is a warn message, not too bad."<<m_name);
 	
 	m_timerConvertion      = 0;
 	m_timerProcessing      = 0;
@@ -245,8 +245,8 @@ Stream* Module::GetOutputStreamById(int x_id) const
 
 void Module::PrintStatistics(ostream& os) const
 {
-	os<<"Module "<<GetName()<<" : "<<m_countProcessedFrames<<" frames processed (tproc="<<
+	LOG_INFO("Module "<<GetName()<<" : "<<m_countProcessedFrames<<" frames processed (tproc="<<
 		m_timerProcessing<<"ms, tconv="<<m_timerConvertion<<"ms, twait="<<
-		m_timerWaiting<<"ms), "<< (m_countProcessedFrames * 1000.0 / (m_timerProcessing + m_timerConvertion + m_timerWaiting))<<" fps"<<endl;
+		m_timerWaiting<<"ms), "<< (m_countProcessedFrames * 1000.0 / (m_timerProcessing + m_timerConvertion + m_timerWaiting))<<" fps");
 }
 

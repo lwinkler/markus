@@ -60,16 +60,9 @@ void usage()
 int main(int argc, char** argv)
 {
 	// Load XML configuration file using DOMConfigurator
-	log4cxx::xml::DOMConfigurator::configure("log4j.xml");
+	log4cxx::xml::DOMConfigurator::configure("log4cxx.xml");
 
-log4cxx::LoggerPtr loggerMyMain(log4cxx::Logger::getLogger( "main"));
-
-    LOG4CXX_TRACE(loggerMyMain, "this is a debug message for detailed code discovery. Value=");
-    LOG4CXX_DEBUG(loggerMyMain, "this is a debug message.");
-    LOG4CXX_INFO (loggerMyMain, "this is a info message, ignore. Value=");
-    LOG4CXX_WARN (loggerMyMain, "this is a warn message, not too bad.");
-    LOG4CXX_ERROR(loggerMyMain, "this is a error message, something serious is happening.");
-    LOG4CXX_FATAL(loggerMyMain, "this is a fatal message!!!");
+	log4cxx::LoggerPtr m_logger(log4cxx::Logger::getLogger( "main"));
 
 	bool describe    = false;
 	bool nogui       = false;
@@ -191,7 +184,7 @@ log4cxx::LoggerPtr loggerMyMain(log4cxx::Logger::getLogger( "main"));
 		if(centralized)
 		{
 			if(!nogui)
-				LOG_WARNING("GUI is not shown if you use --centralized option. To avoid this message use --no-gui option.");
+				LOG_WARN("GUI is not shown if you use --centralized option. To avoid this message use --no-gui option.");
 			// No gui. launch the process directly
 			// so far we cannot launch the process in a decentralized manner (with a timer on each module)
 			while(manager.Process()) // TODO: Find a better way to call Process. Through timers for example

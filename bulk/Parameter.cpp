@@ -69,7 +69,7 @@ void ParameterStructure::Init()
 	// Read parameters from config
 		SetFromConfig();
 	
-	LOG_INFO("Parameters for "<<m_objectName<<" initialized.");
+	// LOG_INFO("Parameters for "<<m_objectName<<" initialized.");
 	// PrintParameters(Global::log.stream(LOG_INFO));
 	CheckRange();
 }

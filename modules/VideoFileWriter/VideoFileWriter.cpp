@@ -67,7 +67,7 @@ void VideoFileWriter::Reset()
 	catch(...)
 	{
 		// This may happen if the module is not connected
-		LOG_WARNING("Impossible to acquire the fps value for recording in VideoFileWriter::Reset set to default value "<< fps);	
+		LOG_WARN("Impossible to acquire the fps value for recording in VideoFileWriter::Reset set to default value "<< fps);	
 	}
 
 	// cout<<"Opening "<<filename<<endl;
@@ -106,6 +106,6 @@ const string VideoFileWriter::ExtensionFromFourcc(const string& x_fourcc)
 	if(x_fourcc.compare("FLV1") == 0) 
 		return "flv1.avi";
 	
-	LOG_WARNING("Unknown fourcc code, cannot find a matching extension in VideoFileWriter::ExtensionFromFourcc");
+	// TODO enable this LOG_WARN("Unknown fourcc code, cannot find a matching extension in VideoFileWriter::ExtensionFromFourcc");
 	return "avi";
 }
