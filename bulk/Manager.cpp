@@ -65,12 +65,12 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 	m_modules.clear();
 	
 	// Read the configuration of each module
-	ConfigReader moduleConfig = m_configReader.SubConfig("module");
+	ConfigReader moduleConfig = m_configReader.GetSubConfig("module");
 	
 	while(! moduleConfig.IsEmpty())
 	{
 		// Read parameters
-		if( moduleConfig.SubConfig("parameters").IsEmpty()) 
+		if( moduleConfig.GetSubConfig("parameters").IsEmpty()) 
 			throw("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name"));
 		Module * tmp1 = createNewModule( moduleConfig);		
 		
@@ -83,15 +83,15 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 
 	
 	// Connect input and output streams (re-read the config once since we need all modules to be connected)
-	moduleConfig = m_configReader.SubConfig("module");
+	moduleConfig = m_configReader.GetSubConfig("module");
 	
 	while(! moduleConfig.IsEmpty())
 	{
 			// Read conections of inputs
-			ConfigReader conf = moduleConfig.SubConfig("inputs");
+			ConfigReader conf = moduleConfig.GetSubConfig("inputs");
 			if(!conf.IsEmpty())
 			{
-				ConfigReader inputConfig = conf.SubConfig("input");
+				ConfigReader inputConfig = conf.GetSubConfig("input");
 				while(! inputConfig.IsEmpty())
 				{
 					int moduleId		= atoi(moduleConfig.GetAttribute("id").c_str());
@@ -266,7 +266,7 @@ bool Manager::EndOfAllStreams() const
 
 void Manager::Export()
 {
-	system("mkdir -p modules");
+	assert(system("mkdir -p modules"));
 	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 	{
 		string file("modules/" + (*it)->GetName() + ".xml");

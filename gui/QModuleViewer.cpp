@@ -336,7 +336,7 @@ void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qimg)
 	{
 		for (int x = 0; x < w; x++)
 		{
-			char r, g, b, a = 0;
+			char r = 0, g = 0, b = 0, a = 0;
 			if (channels == 1)
 			{
 				r = data[x * channels];

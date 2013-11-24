@@ -52,7 +52,7 @@ void ThumbnailWriter::Reset()
 	m_folderName  = Global::OutputDir() + "/" + m_param.folder + "/"; 
 	char cmd[256];
 	sprintf(cmd, "mkdir -p %s", m_folderName.c_str());
-	system(cmd);
+	assert(system(cmd));
 }
 
 void ThumbnailWriter::ProcessFrame()

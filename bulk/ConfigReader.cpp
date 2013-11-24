@@ -54,7 +54,7 @@ ConfigReader::~ConfigReader()
 
 /// Return a config objects that points to the sub element of configuration
 
-ConfigReader ConfigReader::SubConfig(const std::string& x_objectType, string x_objectName) const
+ConfigReader ConfigReader::GetSubConfig(const std::string& x_objectType, string x_objectName) const
 {
 	if(IsEmpty())
 		throw("Impossible to find node in ConfigReader");
@@ -73,7 +73,7 @@ ConfigReader ConfigReader::SubConfig(const std::string& x_objectType, string x_o
 
 /// Return a config objects that points to the sub element of configuration (non-constant)
 
-ConfigReader ConfigReader::SubConfig2(const std::string& x_objectType, string x_objectName)
+ConfigReader ConfigReader::RefSubConfig(const std::string& x_objectType, string x_objectName, bool x_allowCreation)
 {
 	if(IsEmpty())
 		throw("Impossible to find node in ConfigReader");
@@ -86,6 +86,15 @@ ConfigReader ConfigReader::SubConfig2(const std::string& x_objectType, string x_
 		{
 			newNode = newNode->NextSibling(x_objectType);
 		}
+	}
+	if(newNode == NULL && x_allowCreation)
+	{ 
+		// Add a sub config element if not found
+		TiXmlElement* element = new TiXmlElement(x_objectType);
+		if(x_objectName.size())
+			element->SetAttribute("name", x_objectName);
+		mp_node->LinkEndChild(element);
+		return ConfigReader(element);
 	}
 	return ConfigReader(newNode);
 }

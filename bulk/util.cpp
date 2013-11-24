@@ -256,9 +256,9 @@ const string& Global::OutputDir()
 	if(m_outputDir.size() == 0)
 	{
 		m_outputDir = "out_" + timeStamp();
-		system(string("mkdir \"" + m_outputDir + "\"").c_str());
-		system(string("tools/version.sh > " + m_outputDir + "/version.txt").c_str());
-		system(string("cp " + m_configFile + " " + m_outputDir).c_str());
+		assert(system(string("mkdir \"" + m_outputDir + "\"").c_str()));
+		assert(system(string("tools/version.sh > " + m_outputDir + "/version.txt").c_str()));
+		assert(system(string("cp " + m_configFile + " " + m_outputDir).c_str()));
 	}
 	return m_outputDir;
 }

@@ -12,7 +12,7 @@ echo "Module * createNewModule(const ConfigReader& rx_configReader)"
 echo {
 echo "Module * tmp = NULL;"
 
-echo "const string moduleClass = rx_configReader.SubConfig(\"parameters\").SubConfig(\"param\", \"class\").GetValue();"
+echo "const string moduleClass = rx_configReader.GetSubConfig(\"parameters\").GetSubConfig(\"param\", \"class\").GetValue();"
 echo "if(false){}"
 find modules*/ -mindepth 2  -maxdepth 2 -name "*.cpp"  -exec basename {} \; | sort | sed s/\.cpp//g | awk {'print "else if(moduleClass.compare(\""$1"\") == 0) {tmp = new "$1"(rx_configReader);} "'}
 

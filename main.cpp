@@ -141,16 +141,12 @@ int main(int argc, char** argv)
 		MarkusApplication app(argc, argv); // TODO: See if we can move this line
 #endif
 		ConfigReader mainConfig(configFile);
-		ConfigReader appConfig = mainConfig.SubConfig("application");
+		ConfigReader appConfig = mainConfig.GetSubConfig("application");
 		assert(!appConfig.IsEmpty());
 
 		// Set values of parameters if set from command line
 		for(vector<string>::const_iterator it = parameters.begin() ; it != parameters.end() ; it++)
 		{
-			// vector<string> elems;
-			// split(*it, '=', elems);
-			// if(elems.size() != 2)
-				// throw("Badly formed parameter in main");
 			try
 			{
 				string param = it->substr(0, it->find("="));
@@ -159,7 +155,7 @@ int main(int argc, char** argv)
 				split(param, '.', path);
 				if(path.size() != 2)
 					throw("Parameter set in command line must be in format 'module.parameter'");
-				appConfig.SubConfig2("module", path[0]).SubConfig2("parameters").SubConfig2("param", path[1]).SetValue(value);
+				appConfig.RefSubConfig("module", path[0]).RefSubConfig("parameters").RefSubConfig("param", path[1], true).SetValue(value);
 				// manager.GetModuleByName(path[0])->RefParameter().RefParameterByName(path[1]).SetValue(value, PARAMCONF_CMD);
 			}
 			catch(...)

@@ -78,10 +78,10 @@ void ParameterStructure::Init()
 
 void ParameterStructure::SetFromConfig()
 {
-	ConfigReader conf = m_configReader.SubConfig("parameters");
+	ConfigReader conf = m_configReader.GetSubConfig("parameters");
 	if(conf.IsEmpty())
 		return;
-	conf = conf.SubConfig("param");
+	conf = conf.GetSubConfig("param");
 	while(!conf.IsEmpty())
 	{
 		string name = conf.GetAttribute("name");
