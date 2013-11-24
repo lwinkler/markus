@@ -57,6 +57,7 @@ public:
 
 		RefParameterByName("type").SetDefault("CV_8UC3");
 
+
 		ParameterStructure::Init();
 	};
 	int history;

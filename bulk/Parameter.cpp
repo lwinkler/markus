@@ -88,9 +88,16 @@ void ParameterStructure::SetFromConfig()
 		string value = conf.GetValue();
 		//SetValueByName(name, value, PARAMCONF_XML);
 
-		Parameter& param = RefParameterByName(name);
-		if(!param.IsLocked())
-			param.SetValue(value, PARAMCONF_XML);
+		try
+		{
+			Parameter& param = RefParameterByName(name);
+			if(!param.IsLocked())
+				param.SetValue(value, PARAMCONF_XML);
+		}
+		catch(...)
+		{
+			LOG_WARNING("Unknown parameter in configuration: "<<name<<" in module "<<m_objectName);
+		}
 		conf = conf.NextSubConfig("param");
 	}
 }
