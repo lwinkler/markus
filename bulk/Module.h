@@ -95,7 +95,7 @@ public:
 	
 	inline void SetPreceedingModule(Module & x_module){m_modulePreceeding = &x_module;}
 	inline void AddDependingModule (Module & x_module){m_modulesDepending.push_back(&x_module);}
-	virtual void PrintStatistics(std::ostream& os) const;
+	virtual void PrintStatistics() const;
 	
 	virtual inline bool IsInput() {return false;}
 	void Export(std::ostream& rx_os, int x_indentation);

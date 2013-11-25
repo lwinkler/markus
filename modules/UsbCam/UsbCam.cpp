@@ -49,7 +49,7 @@ void UsbCam::Reset()
 
 	m_capture.release();
 	m_capture.open(m_param.num);
-	if(Global::logger.HasDebugMode())
+	// TODO if(Global::logger.HasDebugMode())
 		GetProperties();
 	
 	if(! m_capture.isOpened())
@@ -85,13 +85,13 @@ void UsbCam::Capture()
 
 	// time_t rawtime;
 	// time(&rawtime);
-	LOG_DEBUG("UsbCam: Capture time: "<<m_frameTimer.GetMSecLong());
+	LOG4CXX_DEBUG(m_logger, "UsbCam: Capture time: "<<m_frameTimer.GetMSecLong());
 	SetTimeStampToOutputs(m_frameTimer.GetMSecLong());
 }
 
 void UsbCam::GetProperties()
 {
-	LOG_DEBUG("FRAME_WIDTH "<<m_capture.get(CV_CAP_PROP_FRAME_WIDTH)
+	LOG4CXX_DEBUG(m_logger, "FRAME_WIDTH "<<m_capture.get(CV_CAP_PROP_FRAME_WIDTH)
 		<<" FRAME_HEIGHT "<<m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)
 		<<" MODE "<<m_capture.get(CV_CAP_PROP_MODE)
 		<<" BRIGHTNESS "<<m_capture.get(CV_CAP_PROP_BRIGHTNESS)

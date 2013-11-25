@@ -58,7 +58,7 @@ void VideoFileReader::Reset()
 	m_capture.release();
 	m_capture.open(m_param.file);
 	// m_fps     = m_capture.get(CV_CAP_PROP_FPS);
-	if(Global::logger.HasDebugMode())
+	// TODO if(Global::logger.HasDebugMode())
 		GetProperties();
 	
 	if(! m_capture.isOpened())
@@ -97,7 +97,7 @@ void VideoFileReader::GetProperties()
 {
 	int cc = static_cast<int>(m_capture.get(CV_CAP_PROP_FOURCC));
 
-	LOG_DEBUG("POS_MSEC "<<m_capture.get(CV_CAP_PROP_POS_MSEC)
+	LOG4CXX_DEBUG(m_logger, "POS_MSEC "<<m_capture.get(CV_CAP_PROP_POS_MSEC)
 		<<" POS_FRAMES "<<m_capture.get(CV_CAP_PROP_POS_FRAMES)
 		<<" POS_AVI_RATIO "<<m_capture.get(CV_CAP_PROP_POS_AVI_RATIO)
 		<<" FRAME_WIDTH "<<m_capture.get(CV_CAP_PROP_FRAME_WIDTH)

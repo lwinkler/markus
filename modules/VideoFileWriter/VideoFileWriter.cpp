@@ -67,11 +67,11 @@ void VideoFileWriter::Reset()
 	catch(...)
 	{
 		// This may happen if the module is not connected
-		LOG_WARN("Impossible to acquire the fps value for recording in VideoFileWriter::Reset set to default value "<< fps);	
+		LOG4CXX_WARN(m_logger, "Impossible to acquire the fps value for recording in VideoFileWriter::Reset set to default value "<< fps);	
 	}
 
 	// cout<<"Opening "<<filename<<endl;
-	LOG_DEBUG("Start recording file "<<filename<<" with fps="<<fps<<" and size "<<m_param.width<<"x"<<m_param.height);
+	LOG4CXX_DEBUG(m_logger, "Start recording file "<<filename<<" with fps="<<fps<<" and size "<<m_param.width<<"x"<<m_param.height);
 	m_writer.open(filename, CV_FOURCC(s[0], s[1], s[2], s[3]), fps, Size(m_param.width, m_param.height), isColor);
 	if(!m_writer.isOpened())
 	{

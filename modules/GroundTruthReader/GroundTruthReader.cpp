@@ -55,7 +55,7 @@ void GroundTruthReader::Reset()
 	m_srtStart = "";
 	m_srtEnd   = "";
 
-	LOG_DEBUG("Open ground truth file: "<<m_param.file);
+	LOG4CXX_DEBUG(m_logger, "Open ground truth file: "<<m_param.file);
 	// if(m_param.file.size() == 0)
 		// No file
 		// return;
@@ -96,7 +96,7 @@ void GroundTruthReader::ProcessFrame()
 			}
 			num = atoi(line.c_str());
 			if(num != m_num + 1)
-				LOG_WARN("Missing number in subtitle file "<<(m_num + 1));
+				LOG4CXX_WARN(m_logger, "Missing number in subtitle file "<<(m_num + 1));
 			m_num = num;
 			//getline(m_srtFile, line);
 			//istringstream ss(line);
@@ -121,7 +121,7 @@ void GroundTruthReader::ProcessFrame()
 		}
 		catch(...)
 		{
-			LOG_WARN("Exception while reading .srt file in GroundTruthReader::ProcessFrame"); // TODO : improve and re-throw exception
+			LOG4CXX_WARN(m_logger, "Exception while reading .srt file in GroundTruthReader::ProcessFrame"); // TODO : improve and re-throw exception
 			throw;
 		}
 	}

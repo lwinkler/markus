@@ -91,12 +91,13 @@ void ParameterStructure::SetFromConfig()
 		try
 		{
 			Parameter& param = RefParameterByName(name);
+			// TODO: If we use threads, check that setting parameters is thread safe! 
 			if(!param.IsLocked())
 				param.SetValue(value, PARAMCONF_XML);
 		}
 		catch(...)
 		{
-			LOG_WARNING("Unknown parameter in configuration: "<<name<<" in module "<<m_objectName);
+			LOG4CXX_WARN(Global::logger, "Unknown parameter in configuration: "<<name<<" in module "<<m_objectName);
 		}
 		conf = conf.NextSubConfig("param");
 	}
@@ -164,16 +165,6 @@ void ParameterStructure::PrintParameters(ostream &os) const
 	string confType = "";
 	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
 	{
-		/*switch((*it)->GetConfigurationSource())
-		{
-			case PARAMCONF_DEF: confType = "def"; break;
-			case PARAMCONF_GUI: confType = "gui"; break;
-			case PARAMCONF_CMD: confType = "cmd"; break;
-			case PARAMCONF_UNKNOWN: confType = "unk"; break;
-			case PARAMCONF_UNSET: confType = "unset"; break;
-			case PARAMCONF_XML: confType = "xml"; break;
-			default: assert(false); break;
-		}*/
 		(*it)->Print(os);
 	}
 	os<<endl;

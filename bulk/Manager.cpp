@@ -58,7 +58,7 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 	m_centralized(x_centralized),
 	m_logger(log4cxx::Logger::getLogger("manager"))
 {
-	LOG_INFO("*** Create object Manager ***");
+	LOG4CXX_INFO(m_logger, "*** Create object Manager ***");
 	m_frameCount = 0;
 	
 	
@@ -160,7 +160,7 @@ bool Manager::Process()
 
 	if(!m_lock.tryLockForWrite())
 	{
-		LOG_WARN("Manager too slow !");
+		LOG4CXX_WARN(m_logger, "Manager too slow !");
 		return true;
 	}
 	Timer ti;
@@ -176,31 +176,31 @@ bool Manager::Process()
 		}
 		catch(cv::Exception& e)
 		{
-			LOG_ERROR((*it)->GetName() << ": Exception raised (std::exception) : " << e.what());
+			LOG4CXX_ERROR(m_logger, (*it)->GetName() << ": Exception raised (std::exception) : " << e.what());
 		}
 		catch(std::exception& e)
 		{
-			LOG_WARN((*it)->GetName() << ": Exception raised (std::exception) : " << e.what()); // TODO: Exceptions
+			LOG4CXX_WARN(m_logger, (*it)->GetName() << ": Exception raised (std::exception) : " << e.what()); // TODO: Exceptions
 
 			// test if all inputs are over
 			if(EndOfAllStreams())
 			{
 				// throw("End of all video streams : Manager::Process");
-				LOG_WARN("End of all video streams : Manager::Process");
+				LOG4CXX_WARN(m_logger, "End of all video streams : Manager::Process");
 				continueFlag = false;
 			}
 		}
 		catch(std::string str)
 		{
-			LOG_ERROR((*it)->GetName() << ":  Exception raised (string) : " << str);
+			LOG4CXX_ERROR(m_logger, (*it)->GetName() << ":  Exception raised (string) : " << str);
 		}
 		catch(const char* str)
 		{
-			LOG_ERROR((*it)->GetName() << ": Exception raised (const char*) : " << str);
+			LOG4CXX_ERROR(m_logger, "" << (*it)->GetName() << ": Exception raised (const char*) : " << str);
 		}
 		catch(...)
 		{
-			LOG_ERROR((*it)->GetName() << ": Unknown exception raised");
+			LOG4CXX_ERROR(m_logger, "" << (*it)->GetName() << ": Unknown exception raised");
 		}
 	}
 
@@ -218,7 +218,7 @@ bool Manager::Process()
 
 void Manager::PrintTimers()
 {
-	LOG_INFO("Manager: "<<m_frameCount<<" frames processed in "<<m_timerProcessing<<" ms ("<<  (1000.0 * m_frameCount) / m_timerProcessing<<" frames/s)");
+	LOG4CXX_INFO(m_logger, "Manager: "<<m_frameCount<<" frames processed in "<<m_timerProcessing<<" ms ("<<  (1000.0 * m_frameCount) / m_timerProcessing<<" frames/s)");
 	// LOG_INFO("input convertion "                  <<m_timerConvertion<<" ms ("<<(1000.0 * m_frameCount) / m_timerConvertion<<" frames/s)");
 	// LOG_INFO("Total time "<< m_timerProcessing + m_timerConvertion<<" ms ("<<     (1000.0 * m_frameCount) /(m_timerProcessing + m_timerConvertion)<<" frames/s)");
 
@@ -226,7 +226,7 @@ void Manager::PrintTimers()
 	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 	{
 		// LOG_INFO(cpt<<": ");
-		(*it)->PrintStatistics(cout);
+		(*it)->PrintStatistics();
 		cpt++;
 	}
 }

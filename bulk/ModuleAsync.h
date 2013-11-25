@@ -62,7 +62,7 @@ protected:
 	virtual void LaunchThread() = 0;
 	virtual void NormalProcess() = 0;
 	virtual void CopyResults() = 0;
-	virtual void PrintStatistics(std::ostream& os) const;
+	virtual void PrintStatistics() const;
 	
 private:
 	virtual ModuleAsyncParameterStructure & RefParameter() = 0;

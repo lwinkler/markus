@@ -100,7 +100,7 @@ void TrackerByFeatures::MatchTemplates()
 		//int isMatched =
 		MatchTemplate(*it1);
 	}
-	LOG_DEBUG("MatchTemplates : "<<m_templates.size()<<" templates and "<<m_objects.size()<<" objects.");
+	LOG4CXX_DEBUG(m_logger, "MatchTemplates : "<<m_templates.size()<<" templates and "<<m_objects.size()<<" objects.");
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -113,7 +113,7 @@ int TrackerByFeatures::MatchTemplate(Template& x_temp)
 	Object* bestObject = NULL;
 	x_temp.m_lastMatchingObject = NULL;
 
-	LOG_DEBUG("Comparing template "<<x_temp.GetNum()<<" with "<<m_objects.size()<<" objects");
+	LOG4CXX_DEBUG(m_logger, "Comparing template "<<x_temp.GetNum()<<" with "<<m_objects.size()<<" objects");
 
 	for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
 	{
@@ -137,7 +137,7 @@ int TrackerByFeatures::MatchTemplate(Template& x_temp)
 				return 0;
 		}
 		// x_temp.m_bestMatchingObject = bestObject;
-		LOG_DEBUG("Template "<<x_temp.GetNum()<<" matched with object "<<bestObject->GetId()<<" dist="<<bestDist);
+		LOG4CXX_DEBUG(m_logger, "Template "<<x_temp.GetNum()<<" matched with object "<<bestObject->GetId()<<" dist="<<bestDist);
 		bestObject->SetId(x_temp.GetNum()); // Set id of object
 		// x_temp.m_matchingObjects.push_back(m_objects[bestObject]);
 		x_temp.m_lastMatchingObject = bestObject;
@@ -243,7 +243,7 @@ void TrackerByFeatures::CleanTemplates()
 		}
 		cptTotal++;
 	}
-	LOG_DEBUG("CleanTemplates : "<<cptCleaned<<" templates erased out of "<<cptTotal<<" templates");
+	LOG4CXX_DEBUG(m_logger, "CleanTemplates : "<<cptCleaned<<" templates erased out of "<<cptTotal<<" templates");
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -259,7 +259,7 @@ void TrackerByFeatures::DetectNewTemplates()
 		{
 			if(m_templates.size() >= MAX_NB_TEMPLATES)
 			{
-				LOG_WARN("Too many templates created in TrackerByFeatures::DetectNewTemplates");
+				LOG4CXX_WARN(m_logger, "Too many templates created in TrackerByFeatures::DetectNewTemplates");
 				return;
 			}
 
@@ -273,7 +273,7 @@ void TrackerByFeatures::DetectNewTemplates()
 				double bestDist = DBL_MAX;
 				const Template * bestTemplate = NULL;
 
-				LOG_DEBUG("New object. Detect if the new object similar to another template ");
+				LOG4CXX_DEBUG(m_logger, "New object. Detect if the new object similar to another template ");
 
 				for(list<Template>::iterator it3 = m_templates.begin() ; it3 != m_templates.end() ; it3++)
 				{
@@ -317,6 +317,6 @@ void TrackerByFeatures::DetectNewTemplates()
 			cpt++;
 		}
 	}
-	LOG_DEBUG("DetectNewTemplates : "<<cpt<<" new templates added.");
+	LOG4CXX_DEBUG(m_logger, "DetectNewTemplates : "<<cpt<<" new templates added.");
 }
 

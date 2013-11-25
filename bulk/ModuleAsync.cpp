@@ -32,7 +32,7 @@ using namespace std;
 ModuleAsync::ModuleAsync(const ConfigReader& x_configReader) :
 	Module(x_configReader)
 {
-	LOG_INFO("*** Create object ModuleAsync : "<<m_name<<" ***");
+	LOG4CXX_INFO(m_logger, "Create object "<<m_name<<" of type ModuleAsync");
 	m_timeStampLastThread 	= TIME_STAMP_MIN;
 	m_resultsCopied 	= false;
 	m_timerThread 		= 0;
@@ -66,7 +66,7 @@ void ModuleAsync::ProcessFrame()
 		else
 		{
 			// thread is taking too long
-			LOG_WARN("Thread too slow, frame dropped after "<<m_currentTimeStamp - m_timeStampLastThread<<" [ms]");
+			LOG4CXX_WARN(m_logger, "Thread too slow, frame dropped after "<<m_currentTimeStamp - m_timeStampLastThread<<" [ms]");
 		}
 		m_timeStampLastThread = m_currentTimeStamp;
 	}
@@ -78,8 +78,8 @@ ModuleAsync::~ModuleAsync()
 {
 };
 
-void ModuleAsync::PrintStatistics(ostream& os) const
+void ModuleAsync::PrintStatistics() const
 {
-	Module::PrintStatistics(os);
-	os<<"\t"<<m_countFramesThread<<" frames processed asynchronously in "<<m_timerThread<<"ms ("<<m_countFramesThread / (m_timerThread * 0.001)<<" fps)"<<endl;
+	Module::PrintStatistics();
+	LOG4CXX_INFO(m_logger, "\t" << m_countFramesThread<<" frames processed asynchronously in "<<m_timerThread<<"ms ("<<m_countFramesThread / (m_timerThread * 0.001)<<" fps)");
 }

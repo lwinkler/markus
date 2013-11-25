@@ -30,7 +30,8 @@ using namespace std;
 using namespace cv;
 
 // Global variables
-Logging Global::logger; // TODO: See if we add this to Manager or not !
+//Logging Global::logger; // TODO: See if we add this to Manager or not !
+log4cxx::LoggerPtr Global::logger(log4cxx::Logger::getLogger("global"));
 string Global::m_configFile;
 string Global::m_outputDir;
 int g_colorArraySize = 54;
@@ -265,7 +266,7 @@ const string& Global::OutputDir()
 
 
 /// Log class
-Logging::Logging()
+/* Logging::Logging()
 {
 	SetMode(0);
 }
@@ -355,4 +356,4 @@ std::ostream & Logging::Stream(logLevel x_level)
 		default:	return std::cerr;
 	}
 }
-
+*/

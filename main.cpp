@@ -62,7 +62,7 @@ int main(int argc, char** argv)
 	// Load XML configuration file using DOMConfigurator
 	log4cxx::xml::DOMConfigurator::configure("log4cxx.xml");
 
-	log4cxx::LoggerPtr m_logger(log4cxx::Logger::getLogger( "main"));
+	log4cxx::LoggerPtr logger(log4cxx::Logger::getLogger("main"));
 
 	bool describe    = false;
 	bool nogui       = false;
@@ -95,7 +95,7 @@ int main(int argc, char** argv)
 				return 0;
 				break;
 			case 'v':
-				LOG_INFO("Markus version "<<VERSION_STRING); // <<", build "<<GIT_COMMIT_HASH<<", on "<<GIT_BUILD_DATE);
+				LOG4CXX_INFO(logger, "Markus version "<<VERSION_STRING); // <<", build "<<GIT_COMMIT_HASH<<", on "<<GIT_BUILD_DATE);
 
 				return 0;
 			case 'd':
@@ -108,20 +108,20 @@ int main(int argc, char** argv)
 				nogui = true;
 				break;
 			case 'l':
-				Global::logger.SetMode(atoi(optarg));
+				// TODO Global::logger.SetMode(atoi(optarg));
 				break;
 			case 'p':
 				parameters.push_back(optarg);
 				break;
 			case ':': // missing argument
-				LOG_ERROR("--"<<long_options[::optopt].name<<": an argument is required");
+				LOG4CXX_ERROR(logger, "--"<<long_options[::optopt].name<<": an argument is required");
 				return -1;
 
 			case '?': // unknown option
-				LOG_ERROR(argv[optind - 1]<<": unknown option");
+				LOG4CXX_ERROR(logger, argv[optind - 1]<<": unknown option");
 				return -1;
 			default:
-				LOG_ERROR("Unknown parameter "<<c);
+				LOG4CXX_ERROR(logger, "Unknown parameter "<<c);
 				return -1;
 		}
 	}
@@ -132,11 +132,11 @@ int main(int argc, char** argv)
 	}
 	else if(optind == argc)
 	{
-		LOG_INFO("Using default configuration file "<<configFile);
+		LOG4CXX_INFO(logger, "Using default configuration file "<<configFile);
 	}
 	else 
 	{
-		LOG_ERROR("Invalid number of arguments "<<(argc - optind));
+		LOG4CXX_ERROR(logger, "Invalid number of arguments "<<(argc - optind));
 		usage();
 		return -1;
 	}
@@ -166,7 +166,7 @@ int main(int argc, char** argv)
 			}
 			catch(...)
 			{
-				LOG_ERROR("Cannot parse command line parameter "); // TODO: Exception <<*it<<" :"<<e.what());
+				LOG4CXX_ERROR(logger, "Cannot parse command line parameter "); // TODO: Exception <<*it<<" :"<<e.what());
 				throw("Cannot parse command line parameter");
 			}
 		}
@@ -184,7 +184,7 @@ int main(int argc, char** argv)
 		if(centralized)
 		{
 			if(!nogui)
-				LOG_WARN("GUI is not shown if you use --centralized option. To avoid this message use --no-gui option.");
+				LOG4CXX_WARN(logger, "GUI is not shown if you use --centralized option. To avoid this message use --no-gui option.");
 			// No gui. launch the process directly
 			// so far we cannot launch the process in a decentralized manner (with a timer on each module)
 			while(manager.Process()) // TODO: Find a better way to call Process. Through timers for example
@@ -204,30 +204,30 @@ int main(int argc, char** argv)
 				gui.show();
 			return app.exec(); // TODO: Manage case where centralized with GUI
 #else
-			LOG_ERROR("Markus was compiled without GUI. It can only be launched with option --centralized");
+			LOG4CXX_ERROR(logger, "Markus was compiled without GUI. It can only be launched with option --centralized");
 			return -1;
 #endif
 		}
 	}
 	catch(cv::Exception& e)
 	{
-		LOG_ERROR("Exception raised (std::exception) : " << e.what() );
+		LOG4CXX_ERROR(logger, "Exception raised (std::exception) : " << e.what() );
 	}
 	catch(std::exception& e)
 	{
-		LOG_ERROR("Exception raised (std::exception) : " << e.what() );
+		LOG4CXX_ERROR(logger, "Exception raised (std::exception) : " << e.what() );
 	}
 	catch(std::string str)
 	{
-		LOG_ERROR("Exception raised (string) : " << str );
+		LOG4CXX_ERROR(logger, "Exception raised (string) : " << str );
 	}
 	catch(const char* str)
 	{
-		LOG_ERROR("Exception raised (const char*) : " << str );
+		LOG4CXX_ERROR(logger, "Exception raised (const char*) : " << str );
 	}
 	catch(...)
 	{
-		LOG_ERROR("Unknown exception raised");
+		LOG4CXX_ERROR(logger, "Unknown exception raised");
 	}
 	return -1;
 }
