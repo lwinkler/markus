@@ -58,7 +58,7 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 	m_centralized(x_centralized),
 	m_logger(log4cxx::Logger::getLogger("manager"))
 {
-	LOG4CXX_INFO(m_logger, "*** Create object Manager ***");
+	LOG4CXX_INFO(m_logger, "Create object Manager");
 	m_frameCount = 0;
 	
 	

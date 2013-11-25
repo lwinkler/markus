@@ -42,7 +42,7 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_logger(log4cxx::Logger::getLogger(m_name))
 {
 	m_id	= atoi(x_configReader.GetAttribute("id").c_str()); // TODO: remove id ?
-	LOG4CXX_INFO(m_logger, "Create object " << m_name << " of type Module");
+	LOG4CXX_INFO(m_logger, "Create object " << m_name);
 	
 	m_timerConvertion      = 0;
 	m_timerProcessing      = 0;
@@ -72,7 +72,7 @@ void Module::Reset()
 	}
 	else m_moduleTimer = NULL;
 	stringstream ss;
-	RefParameter().PrintParameters(ss);
+	RefParameter().PrintParameters();
 	LOG4CXX_INFO(m_logger, ss);
 }
 

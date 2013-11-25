@@ -313,7 +313,7 @@ public:
 	void SetFromConfig();
 	void SetValueToDefault();
 	void CheckRange() const;
-	void PrintParameters(std::ostream& os) const;
+	void PrintParameters() const;
 	//void SetValueByName(const std::string& x_name, const std::string& x_value, ParameterConfigType x_configType = PARAMCONF_UNKNOWN);
 	Parameter & RefParameterByName(const std::string& x_name);
 	const std::vector<Parameter*>& GetList() const {return m_list;}

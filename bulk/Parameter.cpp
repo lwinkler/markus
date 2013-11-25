@@ -70,7 +70,7 @@ void ParameterStructure::Init()
 		SetFromConfig();
 	
 	// LOG_INFO("Parameters for "<<m_objectName<<" initialized.");
-	// PrintParameters(Global::log.stream(LOG_INFO));
+	PrintParameters(); // Global::log.stream(LOG_INFO));
 	CheckRange();
 }
 
@@ -160,14 +160,16 @@ void ParameterStructure::CheckRange() const
 
 /// Print parameters to stdout with details
 
-void ParameterStructure::PrintParameters(ostream &os) const
+void ParameterStructure::PrintParameters() const
 {
-	string confType = "";
+	stringstream ss;
+	// string confType = "";
 	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
 	{
-		(*it)->Print(os);
+		(*it)->Print(ss);
 	}
-	os<<endl;
+	if(m_list.size() > 0)
+		LOG4CXX_INFO(Global::logger, ss.str());
 }
 
 

@@ -32,7 +32,7 @@ using namespace std;
 ModuleAsync::ModuleAsync(const ConfigReader& x_configReader) :
 	Module(x_configReader)
 {
-	LOG4CXX_INFO(m_logger, "Create object "<<m_name<<" of type ModuleAsync");
+	// LOG4CXX_INFO(m_logger, "Create object "<<m_name<<" of type ModuleAsync");
 	m_timeStampLastThread 	= TIME_STAMP_MIN;
 	m_resultsCopied 	= false;
 	m_timerThread 		= 0;
