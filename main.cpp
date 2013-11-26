@@ -45,10 +45,10 @@ void usage()
 	printf("options:\n");
 	printf(" -h  --help            Print this help        \n");
 	printf(" -v  --version         Print version information\n");
-	printf(" -d  --describe        Create a description of all modules in XML format inside module/ directory\n");
+	printf(" -d  --describe        Create a description of all modules in XML format inside module/ directory. For development purpose.\n");
 	printf(" -c  --centralized     Module processing function is called from the manager (instead of decentralized timers)\n");
 	printf(" -n  --no-gui          Run process without gui\n");
-	printf(" -l  --log-mode [0-3]  Set logging mode:\n");
+	printf(" -l  --log-mode [0-3]  Set logging mode:\n TODO: Not working yet");
 	printf("                       0: Print log to console output (default)\n");
 	printf("                       1: Print log to console output, show debug logs\n");
 	printf("                       2: Print informative log to 'log.txt'\n");

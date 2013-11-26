@@ -247,8 +247,8 @@ const std::string msToTimeStamp(TIME_STAMP x_ms)
 
 void Global::Infos()
 {
-	// if(m_outputDir.size() != 0)
-		// TODO enable this LOG_INFO("Results written to directory "<<m_outputDir);
+	if(m_outputDir.size() != 0)
+		LOG4CXX_INFO(Global::logger, "Results written to directory "<<m_outputDir);
 }
 	
 /// Returns a directory that will contain all outputs
@@ -256,10 +256,17 @@ const string& Global::OutputDir()
 {
 	if(m_outputDir.size() == 0)
 	{
-		m_outputDir = "out_" + timeStamp();
-		assert(system(string("mkdir \"" + m_outputDir + "\"").c_str()));
-		assert(system(string("tools/version.sh > " + m_outputDir + "/version.txt").c_str()));
-		assert(system(string("cp " + m_configFile + " " + m_outputDir).c_str()));
+		try
+		{
+			m_outputDir = "out_" + timeStamp();
+			SYSTEM("mkdir -p \"" + m_outputDir + "\"");
+			SYSTEM("tools/version.sh > " + m_outputDir + "/version.txt");
+			SYSTEM("cp " + m_configFile + " " + m_outputDir);
+		}
+		catch(...)
+		{
+			LOG4CXX_WARN(Global::logger, "Exception in Global::OutputDir");
+		}
 	}
 	return m_outputDir;
 }

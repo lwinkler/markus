@@ -41,6 +41,8 @@
 // #define LOG_INFO(x)    LOG4CXX_INFO(m_logger, x) // Global::logger.Stream(LOG_INFO)<<x<<std::endl
 // #define LOG_DEBUG(x)   LOG4CXX_DEBUG(m_logger, x) // if(Global::logger.HasDebugMode()){Global::logger.Stream(LOG_DEBUG)<<x<<std::endl;}
 
+#define SYSTEM(x) {std::string cmd; cmd = (x) ; if(system(cmd.c_str())) throw("Execution of command failed: " + cmd);}
+
 /// this file contains some usefull functions and methods
 
 void adjust(const cv::Mat* im_in, cv::Mat* im_out, cv::Mat*& tmp1, cv::Mat*& tmp2);//, Mat* tmp2);
