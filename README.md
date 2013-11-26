@@ -20,10 +20,11 @@ In all cases you will need:
 		- from sources http://opencv.org/downloads.html
 		- or via a package installer
 	- *LibTinyXML*
+	- *LibLog4Cxx*
 
 On Ubuntu the apt-get install command is:
 
-	sudo apt-get install cmake libqt4-core  libqt4-dev libtinyxml-dev  libopencv-core-dev libopencv-highgui-dev
+	sudo apt-get install cmake libqt4-core  libqt4-dev libtinyxml-dev  libopencv-core-dev libopencv-highgui-dev liblog4cxx10-dev
 
 Other dependencies:
 	- *CMake GUI* : (or cmake-curses-gui) to set the compilation flags visually

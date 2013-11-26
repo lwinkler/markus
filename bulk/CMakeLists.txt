@@ -17,5 +17,6 @@ util.cpp
 ConfigReader.cpp
 Timer.cpp
 ModuleTimer.cpp
+MkException.cpp
 )
 

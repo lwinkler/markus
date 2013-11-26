@@ -28,6 +28,7 @@
 #include <iostream>
 #include <fstream>
 #include <log4cxx/logger.h>
+#include "MkException.h"
 
 // time stamp: use for all time stamps on frames in [ms]
 #define TIME_STAMP unsigned long long

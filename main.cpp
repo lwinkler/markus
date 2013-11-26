@@ -59,6 +59,7 @@ void usage()
 
 int main(int argc, char** argv)
 {
+	throw ParameterValueException("myParam", LOC);
 	// Load XML configuration file using DOMConfigurator
 	log4cxx::xml::DOMConfigurator::configure("log4cxx.xml");
 
