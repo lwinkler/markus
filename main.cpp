@@ -27,6 +27,7 @@
 #include <getopt.h>    /* for getopt_long; standard getopt is in unistd.h */
 
 #include "Manager.h"
+#include "MkException.h"
 #include "version.h"
 
 #ifndef MARKUS_NO_GUI
@@ -59,7 +60,6 @@ void usage()
 
 int main(int argc, char** argv)
 {
-	throw ParameterValueException("myParam", LOC);
 	// Load XML configuration file using DOMConfigurator
 	log4cxx::xml::DOMConfigurator::configure("log4cxx.xml");
 
@@ -161,14 +161,14 @@ int main(int argc, char** argv)
 				vector<string> path;
 				split(param, '.', path);
 				if(path.size() != 2)
-					throw("Parameter set in command line must be in format 'module.parameter'");
+					throw MkException("Parameter set in command line must be in format 'module.parameter'", LOC);
 				appConfig.RefSubConfig("module", path[0]).RefSubConfig("parameters").RefSubConfig("param", path[1], true).SetValue(value);
 				// manager.GetModuleByName(path[0])->RefParameter().RefParameterByName(path[1]).SetValue(value, PARAMCONF_CMD);
 			}
-			catch(...)
+			catch(std::exception& e)
 			{
-				LOG4CXX_ERROR(logger, "Cannot parse command line parameter "); // TODO: Exception <<*it<<" :"<<e.what());
-				throw("Cannot parse command line parameter");
+				LOG4CXX_ERROR(logger, "Cannot parse command line parameter "<<*it<<": "<<e.what());
+				throw MkException("Cannot parse command line parameter", LOC);
 			}
 		}
 		Manager manager(appConfig, centralized);

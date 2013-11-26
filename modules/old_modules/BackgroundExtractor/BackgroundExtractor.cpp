@@ -143,7 +143,7 @@ void BackgroundExtractor::UpdateBackground(Mat* x_img)
 		}
 		else
 		{
-			throw("UpdateBackground : wrong image depth.");
+			throw MkException("Wrong image depth", LOC);
 		}
 		//cout<<"alpha"<<backgroundAlpha<<endl;
 		//cout<<"thres"<<m_param.foregroundThres<<endl;
@@ -345,7 +345,7 @@ void BackgroundExtractor::RemoveFalseForegroundNeigh()
 				//cout<<"cpt"<<cpt<<endl;
 			}
 	}
-	else throw("Error in RemoveFalseForegroundNeigh");
+	else throw MkException("Error in RemoveFalseForegroundNeigh", LOC);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/

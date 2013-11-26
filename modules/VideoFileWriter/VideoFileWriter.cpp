@@ -50,7 +50,7 @@ void VideoFileWriter::Reset()
 	Module::Reset();
 	// m_writer.release();
 	if(m_param.fourcc.size() != 4)
-		throw("Error in parameter: fourcc must have 4 characters in VideoFileWriter::Reset");
+		throw MkException("Error in parameter: fourcc must have 4 characters in VideoFileWriter::Reset", LOC);
 	const char * s = m_param.fourcc.c_str();
 	// The color flag seem to be supported on Windows only
 	// http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videowriter-videowriter
@@ -75,7 +75,7 @@ void VideoFileWriter::Reset()
 	m_writer.open(filename, CV_FOURCC(s[0], s[1], s[2], s[3]), fps, Size(m_param.width, m_param.height), isColor);
 	if(!m_writer.isOpened())
 	{
-		throw("Failed to open output video file in VideoFileWriter::Reset");
+		throw MkException("Failed to open output video file in VideoFileWriter::Reset", LOC);
 	}
 }
 

@@ -16,7 +16,7 @@ echo "const string moduleClass = rx_configReader.GetSubConfig(\"parameters\").Ge
 echo "if(false){}"
 find modules*/ -mindepth 2  -maxdepth 2 -name "*.cpp"  -exec basename {} \; | sort | sed s/\.cpp//g | awk {'print "else if(moduleClass.compare(\""$1"\") == 0) {tmp = new "$1"(rx_configReader);} "'}
 
-echo "else throw(\"Module type unknown : \" + moduleClass);"
+echo "else throw MkException(\"Module type unknown : \" + moduleClass, LOC);"
 echo "return tmp;"
 echo }
 

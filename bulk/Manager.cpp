@@ -25,6 +25,7 @@
 #include "Module.h"
 #include "Input.h"
 #include "Stream.h"
+#include "MkException.h"
 
 #include "util.h"
 
@@ -72,7 +73,7 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 	{
 		// Read parameters
 		if( moduleConfig.GetSubConfig("parameters").IsEmpty()) 
-			throw("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name"));
+			throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name"), LOC);
 		Module * tmp1 = createNewModule( moduleConfig);		
 		
 		// Add to inputs if an input
@@ -117,7 +118,8 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 		try
 		{
 			Stream& stream = (*it)->GetInputStreamById(0)->RefConnected();
-			if(&stream == NULL) throw(0);
+			if(&stream == NULL)
+				throw MkException("Module must have at least one stream", LOC);
 			Module& preceeding(stream.RefModule());
 			(*it)->SetPreceedingModule(preceeding);
 			if((*it)->RefParameter().autoProcess == false)
@@ -165,7 +167,6 @@ bool Manager::Process()
 	}
 	Timer ti;
 	
-
 	bool continueFlag = true;
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 	{
@@ -174,13 +175,14 @@ bool Manager::Process()
 			if((*it)->RefParameter().autoProcess)
 				(*it)->Process();
 		}
-		catch(cv::Exception& e)
+		/*catch(cv::Exception& e)
 		{
 			LOG4CXX_ERROR(m_logger, (*it)->GetName() << ": Exception raised (std::exception) : " << e.what());
-		}
-		catch(std::exception& e)
+		}*/
+		catch(EndOfStreamException& e)
 		{
-			LOG4CXX_WARN(m_logger, (*it)->GetName() << ": Exception raised (std::exception) : " << e.what()); // TODO: Exceptions
+			// TODO: Catch end of stream exception
+			LOG4CXX_WARN(m_logger, (*it)->GetName() << ": Exception raised (EndOfStream) : " << e.what());
 
 			// test if all inputs are over
 			if(EndOfAllStreams())
@@ -190,17 +192,21 @@ bool Manager::Process()
 				continueFlag = false;
 			}
 		}
+		catch(std::exception e)
+		{
+			LOG4CXX_ERROR(m_logger, (*it)->GetName() << ": Exception raised (std::exception): " << e.what());
+		}
 		catch(std::string str)
 		{
-			LOG4CXX_ERROR(m_logger, (*it)->GetName() << ":  Exception raised (string) : " << str);
+			LOG4CXX_ERROR(m_logger, (*it)->GetName() << ": Exception raised (string): " << str);
 		}
 		catch(const char* str)
 		{
-			LOG4CXX_ERROR(m_logger, "" << (*it)->GetName() << ": Exception raised (const char*) : " << str);
+			LOG4CXX_ERROR(m_logger, (*it)->GetName() << ": Exception raised (const char*): " << str);
 		}
 		catch(...)
 		{
-			LOG4CXX_ERROR(m_logger, "" << (*it)->GetName() << ": Unknown exception raised");
+			LOG4CXX_ERROR(m_logger, (*it)->GetName() << ": Unknown exception raised");
 		}
 	}
 
@@ -300,6 +306,6 @@ Module* Manager::GetModuleByName(const string& x_name) const
 	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		if((*it)->GetName() == x_name) 
 			return *it;
-	throw("Cannot find module " + x_name);
+	throw MkException("Cannot find module " + x_name, LOC);
 	return NULL;
 }

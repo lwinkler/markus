@@ -25,6 +25,7 @@
 #include <iostream>
 
 #include <opencv2/highgui/highgui.hpp>
+#include "MkException.h"
 
 using namespace std;
 using namespace cv;
@@ -153,7 +154,7 @@ void adjust(const Mat* im_in, Mat* im_out, Mat*& tmp1, Mat*& tmp2)
 		}
 		else
 		{
-			throw("Cannot convert");
+			throw MkException("Cannot convert", LOC);
 		}
 	}
 }
@@ -174,7 +175,7 @@ void adjustChannels(const Mat* im_in, Mat* im_out)
 	{
 		cvtColor(*im_in, *im_out, CV_RGB2GRAY);
 	}
-	else throw("Error in adjustChannels");
+	else throw MkException("Error in adjustChannels", LOC);
 }
 
 Scalar colorFromStr(string x_str)

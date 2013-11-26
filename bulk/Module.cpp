@@ -104,10 +104,10 @@ double Module::GetRecordingFps()
 		{
 			Stream * stream = m_inputStreams.at(0);
 			if(stream == NULL)
-				throw("First stream is null in Module::GetRecordingFps");
+				throw MkException("First stream is null in Module::GetRecordingFps", LOC);
 			stream = &(stream->RefConnected());
 			if(stream == NULL)
-				throw("Connected stream is null in Module::GetRecordingFps");
+				throw MkException("Connected stream is null in Module::GetRecordingFps", LOC);
 			return stream->RefModule().GetRecordingFps();
 		}
 		else
@@ -152,7 +152,7 @@ void Module::Process()
 		if(m_inputStreams.size() >= 1)
 			m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected();
 		else if(! param.autoProcess)
-			throw("Error: Module must have at least one input or have parameter auto_process=true in Module::Process");
+			throw MkException("Error: Module must have at least one input or have parameter auto_process=true in Module::Process", LOC);
 
 		if(param.autoProcess || param.fps == 0 || (m_currentTimeStamp - m_lastTimeStamp) * param.fps > 1000)
 		{
@@ -229,7 +229,7 @@ Stream* Module::GetInputStreamById(int x_id) const
 {
 	for(vector<Stream *>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
 		if((*it)->GetId() == x_id) return *it;
-	throw(string("GetInputStreamById : no stream with this id for module ") + string(GetName()));
+	throw MkException(string("GetInputStreamById : no stream with this id for module ") + string(GetName()), LOC);
 	return NULL;
 }
 

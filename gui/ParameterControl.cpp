@@ -84,7 +84,8 @@ void ParameterControl::SetParameterStructure(ParameterStructure& rx_param)
 				ctrr = new ControllerString(*dynamic_cast<ParameterString*>(*it));
 				break;
 		}
-		if(ctrr == NULL) throw("Controller creation failed");
+		if(ctrr == NULL)
+			throw MkException("Controller creation failed", LOC);
 		else AddController(ctrr);
 	}
 }

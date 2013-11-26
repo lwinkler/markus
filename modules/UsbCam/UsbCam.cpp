@@ -54,7 +54,7 @@ void UsbCam::Reset()
 	
 	if(! m_capture.isOpened())
 	{
-		throw("Error : UsbCam cannot open cam : " + m_param.num);
+		throw MkException("Cannot open USB or local camera number " + m_param.num, LOC);
 	}
 
 	// Apparently you cannot set width and height. We try anyway
@@ -76,7 +76,7 @@ void UsbCam::Capture()
 		m_endOfStream = true;
 		std::exception e;
 		Pause(true);
-		throw e; // TODO: Impl custom exceptions ("Capture failed in UsbCam::Capture.");
+		throw MkException("Capture failed on USB camera", LOC);
 	}
 
 	m_capture.retrieve(*m_output);

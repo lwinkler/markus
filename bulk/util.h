@@ -28,7 +28,6 @@
 #include <iostream>
 #include <fstream>
 #include <log4cxx/logger.h>
-#include "MkException.h"
 
 // time stamp: use for all time stamps on frames in [ms]
 #define TIME_STAMP unsigned long long
@@ -42,7 +41,7 @@
 // #define LOG_INFO(x)    LOG4CXX_INFO(m_logger, x) // Global::logger.Stream(LOG_INFO)<<x<<std::endl
 // #define LOG_DEBUG(x)   LOG4CXX_DEBUG(m_logger, x) // if(Global::logger.HasDebugMode()){Global::logger.Stream(LOG_DEBUG)<<x<<std::endl;}
 
-#define SYSTEM(x) {std::string cmd; cmd = (x) ; if(system(cmd.c_str())) throw("Execution of command failed: " + cmd);}
+#define SYSTEM(x) {std::string cmd; cmd = (x) ; if(system(cmd.c_str())) throw MkException("Execution of command failed: " + cmd, LOC);}
 
 /// this file contains some usefull functions and methods
 

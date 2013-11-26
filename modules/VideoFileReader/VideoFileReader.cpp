@@ -63,7 +63,7 @@ void VideoFileReader::Reset()
 	
 	if(! m_capture.isOpened())
 	{
-		throw("Error : VideoFileReader cannot open file : " + m_param.file);
+		throw MkException("Error : VideoFileReader cannot open file : " + m_param.file, LOC);
 	}
 
 	// Apparently you cannot set width and height. We try anyway
@@ -83,7 +83,7 @@ void VideoFileReader::Capture()
 		m_endOfStream = true;
 		std::exception e;
 		Pause(true);
-		throw e; // TODO: Impl custom exceptions ("Capture failed in VideoFileReader::Capture.");
+		throw EndOfStreamException("Capture failed in VideoFileReader::Capture.", LOC);
 	}
 
 	m_capture.retrieve(*m_output);

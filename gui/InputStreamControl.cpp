@@ -52,7 +52,8 @@ void InputStreamControl::SetModule(VideoFileReader & rx_module)
 	m_controllers.clear();
 
 	Controller * ctrr = new ControllerStream(rx_module);
-	if(ctrr == NULL) throw("Controller creation failed");
+	if(ctrr == NULL)
+		throw MkException("Controller creation failed", LOC);
 	else AddController(ctrr);
 }
 

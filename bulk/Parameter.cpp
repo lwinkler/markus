@@ -130,7 +130,7 @@ Parameter& ParameterStructure::RefParameterByName(const std::string& x_name)
 		}
 	}
 	
-	throw("Parameter not found in list (by name) : " + x_name);
+	throw MkException("Parameter not found in list (by name) : " + x_name, LOC);
 }
 
 
@@ -153,7 +153,7 @@ void ParameterStructure::CheckRange() const
 	{
 		if(!(*it)->CheckRange())
 		{
-			throw("Parameter " + (*it)->GetName() + " out of range");
+			throw MkException("Parameter " + (*it)->GetName() + " out of range", LOC);
 		}
 	}
 }
@@ -231,7 +231,7 @@ ParameterImageType::ParameterImageType(const std::string& x_name, int x_default,
 void ParameterEnum::SetValue(const std::string& rx_value, ParameterConfigType x_confType)
 {
 	if(m_lock) 
-		throw("You tried to set the value of a locked parameter.");
+		throw MkException("You tried to set the value of a locked parameter.", LOC);
 	*mp_value = Str2Int(rx_value);
 	m_confSource = x_confType;
 }
@@ -239,7 +239,7 @@ void ParameterEnum::SetValue(const std::string& rx_value, ParameterConfigType x_
 void ParameterEnum::SetValue(int rx_value, ParameterConfigType x_confType)
 {
 	if(m_lock) 
-		throw("You tried to set the value of a locked parameter.");
+		throw MkException("You tried to set the value of a locked parameter.", LOC);
 	*mp_value = rx_value;
 	m_confSource = x_confType;
 }

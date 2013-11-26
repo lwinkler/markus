@@ -64,7 +64,7 @@ void GroundTruthReader::Reset()
 	
 	if(! m_srtFile.is_open())
 	{
-		throw("Error : GroundTruthReader cannot open file : " + m_param.file);
+		throw MkException("Error : GroundTruthReader cannot open file : " + m_param.file, LOC);
 	}
 }
 
@@ -92,7 +92,7 @@ void GroundTruthReader::ProcessFrame()
 			{
 				m_srtFile >> line;
 				if(! m_srtFile.good())
-					throw("End of file in GroundTruthReader::ProcessFrame");
+					throw MkException("End of file in GroundTruthReader", LOC);
 			}
 			num = atoi(line.c_str());
 			if(num != m_num + 1)
@@ -115,13 +115,13 @@ void GroundTruthReader::ProcessFrame()
 				tmp += line + " ";
 				getline(m_srtFile, line);
 				if(! m_srtFile.good())
-					throw("End of file in GroundTruthReader::ProcessFrame");
+					throw MkException("End of file in GroundTruthReader", LOC);
 			}
 			m_stateSub = tmp.find(m_param.pattern) != string::npos;
 		}
-		catch(...)
+		catch(MkException& e)
 		{
-			LOG4CXX_WARN(m_logger, "Exception while reading .srt file in GroundTruthReader::ProcessFrame"); // TODO : improve and re-throw exception
+			LOG4CXX_WARN(m_logger, "Exception while reading .srt file in GroundTruthReader " << e.what()); 
 			throw;
 		}
 	}

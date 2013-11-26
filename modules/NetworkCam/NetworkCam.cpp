@@ -58,7 +58,7 @@ void NetworkCam::Reset()
 	
 	if(! m_capture.isOpened())
 	{
-		throw("Error : Network cannot open url : " + m_param.url);
+		throw MkException("Error : Network cannot open url : " + m_param.url, LOC);
 	}
 
 	// Apparently you cannot set width and height. We try anyway
@@ -86,7 +86,7 @@ void NetworkCam::Capture()
 			m_endOfStream = true;
 			std::exception e;
 			Pause(true);
-			throw e; // TODO: Impl custom exceptions ("Capture failed in NetworkCam::Capture.");
+			throw MkException("Capture failed on network camera", LOC);
 		}
 	}
 

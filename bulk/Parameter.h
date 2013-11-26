@@ -32,6 +32,7 @@
 #include <cstdlib>
 
 #include "util.h"
+#include "MkException.h"
 
 enum ParameterType
 {
@@ -112,7 +113,7 @@ public:
 	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
 	{
 		if(m_lock) 
-			throw("You tried to set the value of a locked parameter.");
+			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		std::istringstream istr(rx_value);
 		istr >> *mp_value; // atof is sensible to locale format and may use , as a separator
 		m_confSource = x_confType;
@@ -120,7 +121,7 @@ public:
 	inline void SetValue(T x_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
 	{
 		if(m_lock) 
-			throw("You tried to set the value of a locked parameter.");
+			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		*mp_value = x_value;
 		m_confSource = x_confType;
 	}
@@ -150,7 +151,7 @@ public:
 	virtual void SetValueToDefault()
 	{
 		if(m_lock) 
-			throw("You tried to set the value of a locked parameter.");
+			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		*mp_value = m_default;
 		m_confSource = PARAMCONF_DEF;
 	}
@@ -187,7 +188,7 @@ public:
 	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/)
 	{
 		if(m_lock) 
-			throw("You tried to set the value of a locked parameter.");
+			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		*mp_value = rx_value;
 		m_confSource = x_confType;
 	}
@@ -210,7 +211,7 @@ public:
 	virtual void SetValueToDefault()
 	{
 		if(m_lock) 
-			throw("You tried to set the value of a locked parameter.");
+			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		*mp_value = m_default;
 		m_confSource = PARAMCONF_DEF;
 	}
@@ -252,7 +253,7 @@ public:
 	virtual void SetValueToDefault()
 	{
 		if(m_lock) 
-			throw("You tried to set the value of a locked parameter.");
+			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		*mp_value = m_default;
 		m_confSource = PARAMCONF_DEF;
 	}
