@@ -259,7 +259,9 @@ const string& Global::OutputDir()
 		try
 		{
 			m_outputDir = "out_" + timeStamp();
+			SYSTEM("rm -rf out_latest");
 			SYSTEM("mkdir -p \"" + m_outputDir + "\"");
+			SYSTEM("ln -s \"" + m_outputDir + "\" out_latest");
 			SYSTEM("tools/version.sh > " + m_outputDir + "/version.txt");
 			SYSTEM("cp " + m_configFile + " " + m_outputDir);
 		}
