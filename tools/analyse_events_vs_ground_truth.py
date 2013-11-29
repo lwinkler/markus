@@ -56,6 +56,24 @@ def extract_thumbnails(evt_list, shortname):
 
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+# format header and write to html file
+def format_header(dst):
+	dst.write("""<!DOCTYPE html>
+	<html>
+	<head></head>
+	<body>""")
+	dst.write("<h1>Analysis of false alarms</h1>\n")
+	dst.write("<h2>Informations</h2>\n")
+	dst.write("<ul>\n")
+	dst.write("<li><b>Ground truth file: </b>%s</li>\n" % gt_file)
+	dst.write("<li><b>Detected events file: </b>%s</li>\n" % evt_file)
+	dst.write("<li><b>Video file: </b>%s</li>\n" % video_file)
+	dst.write("</ul>\n")
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+# format footer and write to html file
+def format_footer(dst):
+	dst.write("</body>\n</html>")
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 # format a list of events and write to html file
 def format_events_list(evt_list, list_name, shortname, dst):
 	dst.write("<h2>" + list_name + "</h2>\n")
@@ -83,7 +101,7 @@ def format_event(evt, name):
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 # format statistics in html
 def format_statistics(falsepositives, falsenegatives, dst):
-# calculate metrics
+	# calculate metrics
 	fp = len(falsepositives)
 	fn = len(falsenegatives)
 	tp = ftot - fp
@@ -155,7 +173,6 @@ except:
 	print "Cannot create directory " + output_dir + "/."
 	# exit(0)
 
-dst = open("analysis/analysis.html", "w")
 
 gtp = 0 # positives for ground thruth
 gtn = 0 # total number of sequences for ground thruth
@@ -170,6 +187,20 @@ gtn += n
 ftot += len(evt_list)
 
 
+#write results to text file
+dst = open("analysis/analysis.html", "w")
+format_header(dst)
+
+# Extract thumbnails from video with avconv
+extract_thumbnails(gt_list, "gt")
+extract_thumbnails(evt_list, "ev")
+
+# Artificially add 5 seconds to events in GT
+for gt in gt_list:
+	gt["start"] -= 5
+	gt["end"]   += 5
+
+# Check if events are overlapping
 for intrusion in evt_list:
 	islegit = False
 	intrusion["matching"] = []
@@ -190,31 +221,6 @@ for truth in gt_list:
 	truth["valid"] = islegit
 	if not islegit:
 		falsenegatives.append(truth)
-
-
-#write results to text file
-
-dst.write("""<!DOCTYPE html>
-<html>
-<head></head>
-<body>""")
-dst.write("<h1>Analysis of false alarms</h1>\n")
-dst.write("<h2>Informations</h2>\n")
-dst.write("<ul>\n")
-dst.write("<li><b>Ground truth file: </b>%s</li>\n" % gt_file)
-dst.write("<li><b>Detected events file: </b>%s</li>\n" % evt_file)
-dst.write("<li><b>Video file: </b>%s</li>\n" % video_file)
-dst.write("</ul>\n")
-
-# Extract thumbnails from video with avconv
-extract_thumbnails(gt_list, "gt")
-extract_thumbnails(evt_list, "ev")
-
-# Artificially add 5 seconds to events in GT
-for gt in gt_list:
-	gt["start"] -= 5
-	gt["end"]   += 5
-
 # Add the required chapters to the html output
 format_events_list(gt_list, "Ground truth", "gt", dst)
 format_events_list(evt_list, "Detected events", "ev", dst)
@@ -224,8 +230,7 @@ format_events_list(falsepositives, "False positives", "ev", dst)
 format_statistics(falsepositives, falsenegatives, dst)
 
 
-
-dst.write("</body>\n</html>")
+format_footer(dst)
 dst.close()
 
 exit(0)
