@@ -2,9 +2,10 @@ project(markus)
 cmake_minimum_required(VERSION 2.6)
 
 # Options to be set with ccmake or cmake-gui
-set(Markus_NO_GUI          false CACHE BOOL "Compile Markus without a graphical user interface")
-set(Markus_USE_QT5         false CACHE BOOL "Use QT 5 instead of 4")
-set(Markus_USE_PYTHON_LIBS false CACHE BOOL "Compile with Python libs: only used in some modules")
+set(CMAKE_BUILD_TYPE       "Debug" CACHE BOOL "Mode of compilation")
+set(Markus_NO_GUI          false   CACHE BOOL "Compile Markus without a graphical user interface")
+set(Markus_USE_QT5         false   CACHE BOOL "Use QT 5 instead of 4")
+set(Markus_USE_PYTHON_LIBS false   CACHE BOOL "Compile with Python libs: only used in some modules")
 
 # Required packages
 find_package(OpenCV REQUIRED)
@@ -19,9 +20,9 @@ ENDIF()
 
 
 SET(CMAKE_CXX_FLAGS "-Wall")
-SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
+SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g -DMARKUS_DEBUG_STREAMS")
 SET(CMAKE_CXX_FLAGS_RELEASE "-O3")
-SET(CMAKE_CXX_FLAGS_DEBUG  "-O2 -g")
+SET(CMAKE_CXX_FLAGS_DEBUG  "-O2 -g -DMARKUS_DEBUG_STREAMS")
 # SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
 # SET(CMAKE_CXX_FLAGS_RELEASE "-O3")
 # SET(CMAKE_CXX_FLAGS_DEBUG  "-O3 -g")
@@ -67,12 +68,6 @@ IF(Markus_USE_PYTHON_LIBS)
 	find_package(PythonLibs REQUIRED)
 	include_directories(${PYTHON_INCLUDE_DIRS})
 	SET(DEPS ${DEPS} ${PYTHON_LIBRARIES} )
-ENDIF()
-
-
-# enable debug streams
-IF(CMAKE_BUILD_TYPE EQUAL "Debug")
-	add_definitions(-DMARKUS_DEBUG_STREAMS)
 ENDIF()
 
 

@@ -7,7 +7,6 @@
 # 
 # Modified Nov 2013: Laurent Winkler
 
-import miscfunctions as mf
 import string
 import time
 import datetime
@@ -16,10 +15,11 @@ import os
 import subprocess
 
 
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 def overlap(evt1, evt2):
-	return evt1['start'] < evt2['start'] < evt1['end'] or evt1['start'] < evt2['end'] < evt1['end']
-# or evt2['start'] < evt1['start'] < evt2['end'] or evt2['start'] < evt1['end'] < evt2['end']
+	return evt1['start'] < evt2['start'] < evt1['end'] or evt2['start'] < evt1['start'] < evt2['end']
 	
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 # Read a subtitle file and store values
 def srttable(textfile):
 	gt = open(textfile,"r")
@@ -45,18 +45,30 @@ def srttable(textfile):
 		findex += 1
 	return flist, tindex
 
-# format a list of events and write to html file
-def format_events_list(evt_list, name, shortname, dst):
-	dst.write("<h2>" + name + "</h2>\n")
-	dst.write("<table border=\"1\" ><caption>" + name + ": %d</caption>\n" % len(evt_list))
-	dst.write("<tr><th>picture</th><th>index</th><th>start</th><th>end</th><th>label</th><th>valid</th><th>matching</th></tr>\n")
-	for index, evt in enumerate(evt_list):
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+# Extract thumbnails from video
+def extract_thumbnails(evt_list, shortname):
+	for evt in evt_list:
 		# if avconv is not available, use ffmpeg
-		name = shortname + str(index)
+		name = shortname + str(evt['index'])
 		subprocess.call("avconv -ss " + str(evt['start']) + " -i " + video_file + " -r 1 -f image2 " + output_dir + "/" + name + "-%d.jpg", shell=True, stdout=None, stderr=None)
+
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+# format a list of events and write to html file
+def format_events_list(evt_list, list_name, shortname, dst):
+	dst.write("<h2>" + list_name + "</h2>\n")
+	dst.write("<table border=\"1\" ><caption>" + list_name + ": %d</caption>\n" % len(evt_list))
+	dst.write("<tr><th>picture</th><th>index</th><th>start</th><th>end</th><th>label</th><th>valid</th><th>matching</th></tr>\n")
+	for evt in evt_list:
+		# if avconv is not available, use ffmpeg
+		name = shortname + str(evt['index'])
+		# subprocess.call("avconv -ss " + str(evt['start']) + " -i " + video_file + " -r 1 -f image2 " + output_dir + "/" + name + "-%d.jpg", shell=True, stdout=None, stderr=None)
 		dst.write(format_event(evt, name))
 	dst.write("</table>")
 
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 # format an event in html
 def format_event(evt, name):
 	return "<tr><td><a href=\"" + name + "-1.jpg\"><img src=\"" + name + "-1.jpg\" width=\"120\" alt=\"" + name + "\"/></a><td>" \
@@ -67,6 +79,44 @@ def format_event(evt, name):
 	+ str(evt["valid"]) + "</td><td>" \
 	+ str(evt["matching"]) \
 	+ "</td></tr>\n"
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+# format statistics in html
+def format_statistics(falsepositives, falsenegatives, dst):
+# calculate metrics
+	fp = len(falsepositives)
+	fn = len(falsenegatives)
+	tp = ftot - fp
+	gtneg = gtn - gtp
+	tn = gtneg - fp
+
+	try:
+		tpr = tp / float(tp + fn)
+		fpr = fp / float(fp + tn)
+		precision = tp / float(tp + fp)
+	except:
+		tpr = 0
+		fpr = 0
+		precision = 0
+
+	duration = 0 # TODO
+
+	dst.write("<h2>Statistics</h2>")
+	dst.write("<ul>\n")
+	dst.write("<li><b>Total time:</b> %s </li>\n" % (duration))
+	dst.write("<li><b>Events in ground truth: </b>%d</li>\n" % len(gt_list))
+	dst.write("<li><b>Events detected: </b> %d</li>\n" % len(evt_list))
+	dst.write("<li><b>False positives: </b> %d</li>\n" % fp)
+	dst.write("<li><b>False negatives: </b> %d</li>\n" % fn)
+	dst.write("<li>N:    %d TPR: %.2f FPR: %.2f precision: %.2f</li>\n" % (gtn, tpr, fpr, precision))
+	dst.write("</ul>\n")
+
+	try:
+		# Not working TODO
+		p = subprocess.Popen("avprobe " + video_file, stdout=subprocess.PIPE)
+		dst.write("<h2>Information on video file</h2> %s" % p.communicate()[0])
+	except:
+		print "Cannot read info on video file " + video_file
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 
@@ -90,6 +140,7 @@ print "Found %d events in events list " % n
 
 try:
 	gt_list, n = srttable(gt_file)
+
 except:
 	gt_list = []
 	gt_file = ""
@@ -155,56 +206,27 @@ dst.write("<li><b>Detected events file: </b>%s</li>\n" % evt_file)
 dst.write("<li><b>Video file: </b>%s</li>\n" % video_file)
 dst.write("</ul>\n")
 
+# Extract thumbnails from video with avconv
+extract_thumbnails(gt_list, "gt")
+extract_thumbnails(evt_list, "ev")
 
+# Artificially add 5 seconds to events in GT
+for gt in gt_list:
+	gt["start"] -= 5
+	gt["end"]   += 5
+
+# Add the required chapters to the html output
 format_events_list(gt_list, "Ground truth", "gt", dst)
 format_events_list(evt_list, "Detected events", "ev", dst)
+format_events_list(falsenegatives, "False negatives", "gt", dst)
+format_events_list(falsepositives, "False positives", "ev", dst)
 
+format_statistics(falsepositives, falsenegatives, dst)
 
-# calculate metrics
-fp = len(falsepositives)
-fn = len(falsenegatives)
-tp = ftot - fp
-gtneg = gtn - gtp
-tn = gtneg - fp
-
-try:
-	tpr = tp / float(tp + fn)
-	fpr = fp / float(fp + tn)
-	precision = tp / float(tp + fp)
-except:
-	tpr = 0
-	fpr = 0
-	precision = 0
-
-duration = 0 # TODO
-
-dst.write("<h2>Statistics</h2>")
-dst.write("<ul>\n")
-dst.write("<li><b>Total time:</b> %s </li>\n" % (duration))
-dst.write("<li><b>Events in ground truth: </b>%d</li>\n" % len(gt_list))
-dst.write("<li><b>Events detected: </b> %d</li>\n" % len(evt_list))
-dst.write("<li><b>False positives: </b> %d</li>\n" % fp)
-dst.write("<li><b>False negatives: </b> %d</li>\n" % fn)
-dst.write("<li>N:    %d TPR: %.2f FPR: %.2f precision: %.2f</li>\n" % (gtn, tpr, fpr, precision))
-dst.write("</ul>\n")
-
-try:
-	# Not working TODO
-	p = subprocess.Popen("avprobe " + video_file, stdout=subprocess.PIPE)
-	dst.write("<h2>Information on video file</h2> %s" % p.communicate()[0])
-except:
-	print "Cannot read info on video file " + video_file
 
 
 dst.write("</body>\n</html>")
 dst.close()
-
-
-# print "False positives:\n"
-# print falsepositives
-# print "False negatives:"
-# print falsenegatives
-
 
 exit(0)
 
