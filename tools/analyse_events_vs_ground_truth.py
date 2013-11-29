@@ -100,7 +100,17 @@ def format_event(evt, name):
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 # format statistics in html
-def format_statistics(falsepositives, falsenegatives, dst):
+def format_statistics(gt_list, evt_list, falsepositives, falsenegatives, dst):
+	gtp = 0 # positives for ground thruth
+	gtn = 0 # total number of sequences for ground thruth
+	fn = 0 # number of false negatives
+	ftot = 0 # total number of found sequences
+
+	# Analyse
+	gtp += len(gt_list)
+	gtn += n
+	ftot += len(evt_list)
+
 	# calculate metrics
 	fp = len(falsepositives)
 	fn = len(falsenegatives)
@@ -174,17 +184,8 @@ except:
 	# exit(0)
 
 
-gtp = 0 # positives for ground thruth
-gtn = 0 # total number of sequences for ground thruth
-fn = 0 # number of false negatives
-ftot = 0 # total number of found sequences
 falsenegatives = []
 falsepositives = []
-
-# Analyse
-gtp += len(gt_list)
-gtn += n
-ftot += len(evt_list)
 
 
 #write results to text file
@@ -227,7 +228,7 @@ format_events_list(evt_list, "Detected events", "ev", dst)
 format_events_list(falsenegatives, "False negatives", "gt", dst)
 format_events_list(falsepositives, "False positives", "ev", dst)
 
-format_statistics(falsepositives, falsenegatives, dst)
+format_statistics(gt_list, evt_list, falsepositives, falsenegatives, dst)
 
 
 format_footer(dst)
