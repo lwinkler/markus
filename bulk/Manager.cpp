@@ -29,15 +29,15 @@
 
 #include "util.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
-#include <iostream>
-#include <fstream>
-#include <assert.h>
+// #include <stdlib.h>
+// #include <stdio.h>
+// #include <math.h>
+// #include <iostream>
+// #include <fstream>
+// #include <assert.h>
 
-#include <sstream>
-#include <string.h>
+// #include <sstream>
+// #include <string.h>
 using namespace std;
 
 #include "AllModules.h"
@@ -187,7 +187,6 @@ bool Manager::Process()
 			// test if all inputs are over
 			if(EndOfAllStreams())
 			{
-				// throw("End of all video streams : Manager::Process");
 				LOG4CXX_WARN(m_logger, "End of all video streams : Manager::Process");
 				continueFlag = false;
 			}
@@ -296,7 +295,8 @@ Module* Manager::GetModuleById(int x_id) const
 	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		if((*it)->GetId() == x_id) 
 			return *it;
-	assert(false);
+	// TODO: check one module for each id
+	throw MkException("Module not found " + x_id, LOC);
 	return NULL;
 }
 

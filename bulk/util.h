@@ -92,7 +92,7 @@ class Global
 		static log4cxx::LoggerPtr logger;
 		static const std::string& OutputDir();
 		static inline void SetConfigFile(const std::string& x_configFile){
-			assert(m_configFile.size() == 0);
+			assert(m_configFile.size() == 0); // TODO: why this line does't create an error ?
 			m_configFile = x_configFile;
 		}
 		static void Infos();

@@ -188,7 +188,8 @@ Scalar colorFromStr(string x_str)
 		pos1  = x_str.find(',', 1);
 		pos2  = x_str.find(',', pos1 + 1);
 		pos3  = x_str.find(')', pos2 + 1);
-		assert(pos1 && pos2 && pos3);
+		if(!(pos1 && pos2 && pos3))
+			throw MkException("Error in colorFromStr", LOC);
 		
 		return cvScalar(atoi(x_str.substr(1, pos1 - 1).c_str()), 
 				atoi(x_str.substr(pos1 + 1, pos2 - pos1 - 1).c_str()), 

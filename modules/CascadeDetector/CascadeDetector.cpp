@@ -78,7 +78,7 @@ void CascadeDetector::Reset()
 void CascadeDetector::LaunchThread()
 {
 	assert(m_input->type() == CV_8UC1); // TODO add restriction to param
-	//	throw("For cascade detection, input type must be CV_8UC1 and not " + ParameterImageType::ImageTypeInt2Str(img->type()));
+	//	throw MkException("For cascade detection, input type must be CV_8UC1 and not " + ParameterImageType::ImageTypeInt2Str(img->type()));
 	m_input->copyTo(*m_lastInput);
 	Mat smallImg(*m_lastInput);
 	equalizeHist( smallImg, smallImg );

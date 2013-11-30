@@ -273,11 +273,11 @@ void BackgroundExtractor::ExtractForeground(Mat* x_img)
 	}	
 	else if(x_img->depth == IPL_DEPTH_32F)
 	{
-		throw("Error : in ExtractForeground");
+		throw MkException("Error : in ExtractForeground");
 		
 		
 	}
-	else throw("Error : in ExtractForeground");
+	else throw MkException("Error : in ExtractForeground");
 		
 		*/
 }

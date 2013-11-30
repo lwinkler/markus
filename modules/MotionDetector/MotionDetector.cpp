@@ -78,7 +78,7 @@ void MotionDetector::Reset()
 
 void MotionDetector::ProcessFrame()
 {
-	assert(m_input->channels() == 1); // Currently only supporting 1 channel
+	assert(m_input->channels() == 1); // Currently only supporting 1 channel // TODO
 
 	vector<Mat> channels;
 	split(*m_input, channels);

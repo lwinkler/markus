@@ -50,7 +50,7 @@ bool MarkusApplication::notify(QObject *receiver_, QEvent *event_)
 			// test if all inputs are over
 			/*if(EndOfAllStreams())
 			{
-				// throw("End of all video streams : Manager::Process");
+				// throw MkException("End of all video streams : Manager::Process");
 				LOG_WARN("End of all video streams : Manager::Process");
 				continueFlag = false;
 			} TODO implement something similar*/ 

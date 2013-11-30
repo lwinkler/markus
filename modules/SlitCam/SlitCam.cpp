@@ -68,21 +68,7 @@ void SlitCam::Reset()
 
 void SlitCam::ProcessFrame()
 {
-	//int widthStep = m_input->cols;
 	int aperture = m_param.aperture;
-	/*unsigned char * pDst = m_output->datastart + m_position * m_output->channels() * aperture;// * x_img->nChannels;
-	unsigned char * pSrc = x_img->datastart + x_img->cols * x_img->channels() / 2;
-	int size = m_output->depth() * aperture;
-	assert(m_output->size().area() == x_img->size().area());
-	
-	for(int negCount = x_img->rows ; negCount ; negCount--)
-	{
-		memcpy(pDst, pSrc, size);// * x_img->nChannels);
-		//memset(pDst, *pSrc, m_image->depth);
-		pSrc += widthStep;
-		pDst += widthStep;
-	}
-	*/
 	m_position = m_position + aperture;
 	m_position %= m_input->cols;
 	int x = m_input->cols / 2;

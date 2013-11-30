@@ -3,9 +3,9 @@
 
 using namespace std;
 
-MkException::MkException(const std::string& x_description, const std::string& x_position)
+MkException::MkException(const std::string& x_description, const std::string& x_position, const std::string& x_function)
 {
-	if (x_position=="")
+	if (x_position == "")
 	{
 		m_description = x_description + " [position unknown]";
 	}
@@ -13,9 +13,17 @@ MkException::MkException(const std::string& x_description, const std::string& x_
 	{
 		const char * basename = strrchr(x_position.c_str(), '/');
 		if(basename == NULL)
-			m_description = x_description + " [" + x_position + "]";
+			m_description = x_description + " [" + x_position;
 		else 
-			m_description = x_description + " [" + (basename + 1) + "]";
+			m_description = x_description + " [" + (basename + 1);
+	}
+	if (x_function == "")
+	{
+		m_description += "]";
+	}
+	else
+	{
+		m_description += " in " + x_function + "]";
 	}
 }
 
@@ -30,22 +38,22 @@ const char* MkException::what() const throw()
 
 
 
-ParameterValueException::ParameterValueException(const std::string& x_descr, const std::string& x_position) : 
+ParameterValueException::ParameterValueException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
 	MkException("ParameterValueException: " + x_descr, x_position)
 {}
 
-ProcessingException::ProcessingException(const std::string& x_descr, const std::string& x_position) : 
+ProcessingException::ProcessingException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
 	MkException("ProcessingValueException: " + x_descr, x_position)
 {}
 
-FileException::FileException(const std::string& x_descr, const std::string& x_position) : 
+FileNotFoundException::FileNotFoundException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
 	MkException("FileException: " + x_descr, x_position)
 {}
 
-EndOfStreamException::EndOfStreamException(const std::string& x_descr, const std::string& x_position) : 
+EndOfStreamException::EndOfStreamException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
 	MkException("EndOfStreamException: " + x_descr, x_position)
 {}
-
-UnknownException::UnknownException(const std::string& x_descr, const std::string& x_position) : 
+/*
+UnknownException::UnknownException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
 	MkException("UnknownException: " + x_descr, x_position)
-{}
+{}*/

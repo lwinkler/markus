@@ -103,11 +103,13 @@ void GroundTruthReader::ProcessFrame()
 			//ss >> m_srtStart >> tmp >> m_srtEnd;
 			m_srtFile >> m_srtStart;
 			m_srtFile >> tmp;
-			assert(tmp == "-->");
+			if(tmp != "-->")
+				throw MkException("Subtitle format error: must contain '-->'", LOC);
 			m_srtFile >> m_srtEnd;
 
 			getline(m_srtFile, line); // end of line: must be empty
-			assert(line.size() == 0);
+			if(line.size() != 0)
+				throw MkException("Subtitle format error", LOC);
 			getline(m_srtFile, line);
 
 			while(line.size() != 0)

@@ -65,7 +65,8 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	
 	// Handlers for modules
 	assert(x_manager != NULL);
-	assert(x_manager->GetModuleList().size() > 0);
+	if(x_manager->GetModuleList().size() == 0)
+		throw MkException("Module list cannot be empty", LOC);
 	m_manager 		= x_manager;
 	m_currentModule 	= *x_manager->GetModuleList().begin();
 	m_currentStream 	= *m_currentModule->GetOutputStreamList().begin();
@@ -209,7 +210,6 @@ void QModuleViewer::updateModule(Module * x_module)
 		mp_comboStreams->addItem((*it)->GetName().c_str(), cpt++);
 	}*/
 	
-	// assert(m_currentModule->GetOutputStreamList().size() > 0);
 	if(m_currentModule->GetOutputStreamList().size() > 0)
 		updateStream(*(m_currentModule->GetOutputStreamList().begin()));
 

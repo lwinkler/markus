@@ -92,14 +92,16 @@ double Module::GetRecordingFps()
 	if(autop)
 	{
 		// If the module is autoprocessed then the FPS is determining
-		assert(fps != 0);
+		if(fps == 0)
+			throw MkException("FPS cannot be equal to zero", LOC);
 		return fps;
 	}
 	else
 	{
 		// If the module is not autoprocessed then the FPS is given by the previous module
 		// Note: we assume that the fps is given by the first stream in the module
-		assert(m_inputStreams.size() > 0);
+		if(m_inputStreams.size() == 0)
+			throw MkException("This module must have at least one input stream", LOC);
 		if(fps == 0)
 		{
 			Stream * stream = m_inputStreams.at(0);
@@ -238,7 +240,8 @@ Stream* Module::GetOutputStreamById(int x_id) const
 {
 	for(vector<Stream *>::const_iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
 		if((*it)->GetId() == x_id) return *it;
-	assert(false);
+
+	throw MkException("Input stream not found " + x_id, LOC);
 	return NULL;
 }
 

@@ -6,13 +6,15 @@
 
 #define S1(x) #x
 #define S2(x) S1(x)
-#define LOC __FILE__ " : " S2(__LINE__)
+// note: the next lines defines 2 parameters separated with a comma
+#define LOC __FILE__ ":" S2(__LINE__), __FUNCTION__ 
+#define POSITION __FILE__ ":" S2(__LINE__)
 
 class Parameter;
 
 class MkException : public std::exception {
 	public:
-		MkException(const std::string& x_description="Exception occured", const std::string& x_position="");
+		MkException(const std::string& x_description="Exception occured", const std::string& x_position="", const std::string& x_function="");
 		~MkException() throw();
 		const char* what() const throw();
 
@@ -22,26 +24,26 @@ class MkException : public std::exception {
 
 class ParameterValueException : public MkException {
 	public:
-		ParameterValueException(const std::string& x_description, const std::string& x_position);
+		ParameterValueException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
 };
 
 class ProcessingException : public MkException {
 	public:
-		ProcessingException(const std::string& x_description, const std::string& x_position);
+		ProcessingException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
 };
 
-class FileException : public MkException {
+class FileNotFoundException : public MkException {
 	public:
-		FileException(const std::string& x_description, const std::string& x_position);
+		FileNotFoundException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
 };
 
 class EndOfStreamException : public MkException {
 	public:
-		EndOfStreamException(const std::string& x_description, const std::string& x_position);
+		EndOfStreamException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
 };
 
-class UnknownException : public MkException {
+/*class UnknownException : public MkException {
 	public:
-		UnknownException(const std::string& x_description, const std::string& x_position);
-};
+		UnknownException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
+};*/
 #endif

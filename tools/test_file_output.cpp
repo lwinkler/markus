@@ -90,7 +90,6 @@ int main(int argc, char *argv[])
        outputVideo << res;
     }
 
-throw("aaaarg");
     cout << "Finished writing" << endl;
     return 0;
 }
