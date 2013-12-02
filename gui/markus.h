@@ -69,8 +69,7 @@ private:
 	std::vector<QModuleViewer *> m_moduleViewer;
 	
 	QAction *exitAct;
-	QAction *viewDisplayOptions1Act;
-	QAction *viewDisplayOptions0Act;
+	QAction *viewDisplayOptionsAct;
 	QAction *view1x1Act;
 	QAction *view1x2Act;
 	QAction *view2x2Act;
@@ -86,8 +85,7 @@ private:
 	QMenu *helpMenu;
 private slots:
 	void about();
-	void viewDisplayOptions1();
-	void viewDisplayOptions0();
+	void viewDisplayOptions(bool x_isChecked);
 	void view1x1();
 	void view1x2();
 	void view2x2();

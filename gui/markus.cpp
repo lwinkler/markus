@@ -130,10 +130,9 @@ void markus::createActions()
 	aboutAct = new QAction(tr("&About"), this);
 	connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
 	
-	viewDisplayOptions1Act = new QAction(tr("Show display options"), this);
-	connect(viewDisplayOptions1Act, SIGNAL(triggered()), this, SLOT(viewDisplayOptions1()));
-	viewDisplayOptions0Act = new QAction(tr("Hide display options"), this);
-	connect(viewDisplayOptions0Act, SIGNAL(triggered()), this, SLOT(viewDisplayOptions0()));
+	viewDisplayOptionsAct = new QAction(tr("Show display options"), this);
+	viewDisplayOptionsAct->setCheckable(true);
+	connect(viewDisplayOptionsAct, SIGNAL(triggered(bool)), this, SLOT(viewDisplayOptions(bool)));
 	view1x1Act = new QAction(tr("View 1x1"), this);
 	connect(view1x1Act, SIGNAL(triggered()), this, SLOT(view1x1()));
 	view1x2Act = new QAction(tr("View 2x1"), this);
@@ -162,8 +161,7 @@ void markus::createMenus()
 	
 	
 	viewMenu = new QMenu(tr("&View"), this);
-	viewMenu->addAction(viewDisplayOptions1Act);
-	viewMenu->addAction(viewDisplayOptions0Act);
+	viewMenu->addAction(viewDisplayOptionsAct);
 	viewMenu->addAction(view1x1Act);
 	viewMenu->addAction(view1x2Act);
 	viewMenu->addAction(view2x2Act);
@@ -180,24 +178,14 @@ void markus::createMenus()
 	menuBar()->addMenu(helpMenu);
 }
 
-void markus::viewDisplayOptions1()
+void markus::viewDisplayOptions(bool x_isChecked)
 {
 	int size = m_moduleViewer.size();
 	for(int ind = 0 ; ind < size; ind++)
 	{
-		m_moduleViewer[ind]->showDisplayOptions();
+		m_moduleViewer[ind]->showDisplayOptions(x_isChecked);
 	}
 }
-
-void markus::viewDisplayOptions0()
-{
-	int size = m_moduleViewer.size();
-	for(int ind = 0 ; ind < size; ind++)
-	{
-		m_moduleViewer[ind]->hideDisplayOptions();
-	}
-}
-
 
 void markus::view1x1()
 {
@@ -265,7 +253,7 @@ void markus::resizeEvent(QResizeEvent* event)
 	{
 		m_moduleViewer.push_back(new QModuleViewer(&m_manager));
 		m_moduleViewer[ind]->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-		m_moduleViewer[ind]->showDisplayOptions();
+		m_moduleViewer[ind]->showDisplayOptions(true);
 	}
 	
 	// Remove extra modules

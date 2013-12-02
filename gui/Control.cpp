@@ -60,19 +60,22 @@ ControllerInt::ControllerInt(ParameterInt& x_param):
 
 ControllerInt::~ControllerInt()
 {
-	delete(m_parameterSlider);
+	// delete(m_parameterSlider);
 }
 
+/// Set the controlled value (e.g. parameter) to the value on control
 void ControllerInt::SetControlledValue()
 {
 	m_param.SetValue(m_parameterSlider->GetValue(), PARAMCONF_GUI);
 }
 
+/// Display the current value of the controlled object
 void ControllerInt::GetCurrent()
 {
 	m_parameterSlider->SetValue(m_parameterSlider->GetValue());
 }
 
+/// Display the default value of the controlled object
 void ControllerInt::GetDefault()
 {
 	m_parameterSlider->SetValue(m_param.GetDefault());
@@ -87,7 +90,7 @@ ControllerDouble::ControllerDouble(ParameterDouble& x_param):
 
 ControllerDouble::~ControllerDouble()
 {
-	delete(m_parameterSlider);
+	// delete(m_parameterSlider);
 }
 
 void ControllerDouble::SetControlledValue()
@@ -116,7 +119,7 @@ ControllerBool::ControllerBool(ParameterBool& x_param):
 
 ControllerBool::~ControllerBool()
 {
-	delete(m_checkBox);
+	// delete(m_checkBox);
 }
 
 void ControllerBool::SetControlledValue()
@@ -146,7 +149,7 @@ ControllerString::ControllerString(ParameterString& x_param):
 
 ControllerString::~ControllerString()
 {
-	CLEAN_DELETE(m_lineEdit); // TODO: this causes a crash at closing if the parameter screen is activated.
+	// CLEAN_DELETE(m_lineEdit); // TODO: this causes a crash at closing if the parameter screen is activated.
 }
 
 void ControllerString::SetControlledValue()
@@ -174,7 +177,7 @@ ControllerFloat::ControllerFloat(ParameterFloat& x_param):
 
 ControllerFloat::~ControllerFloat()
 {
-	delete(m_parameterSlider);
+	// delete(m_parameterSlider);
 }
 
 void ControllerFloat::SetControlledValue()
@@ -209,7 +212,7 @@ ControllerEnum::ControllerEnum(ParameterEnum& x_param):
 
 ControllerEnum::~ControllerEnum()
 {
-	delete(m_comboBox);
+	// delete(m_comboBox);
 }
 
 void ControllerEnum::SetControlledValue()
@@ -245,6 +248,7 @@ ControlBoard::~ControlBoard()
 		delete *it;
 }
 
+/// Set the controlled value (e.g. parameter) to the value on the control board
 void ControlBoard::SetControlledValue()
 {
 	for(vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)
@@ -258,12 +262,14 @@ void ControlBoard::SetControlledValue()
 	}
 }
 
+/// Show the default value on all controllers
 void ControlBoard::GetDefault()
 {
 	for(vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)
 		(*it)->GetDefault();
 }
 
+/// Show the current value on all controllers
 void ControlBoard::GetCurrent()
 {
 	for(vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)

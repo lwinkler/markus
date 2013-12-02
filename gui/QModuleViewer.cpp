@@ -44,6 +44,7 @@
 #include "util.h"
 #include "StreamImage.h"
 #include "QParameterControlBoard.h"
+#include "Control.h"
 
 #define CLEAN_DELETE(x) if((x) != NULL){delete((x));(x) = NULL;}
 
@@ -190,10 +191,12 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 	}
 }
 
+/// Change the module being currently displayed
 void QModuleViewer::updateModule(Module * x_module)
 {
 	m_currentModule = x_module;
 	mp_comboStreams->clear();
+	updateControlNb(); // destroy all controls
 	int cpt = 0;
 	for(std::vector<Stream*>::const_iterator it = m_currentModule->GetOutputStreamList().begin(); it != m_currentModule->GetOutputStreamList().end(); it++)
 	{
@@ -203,26 +206,22 @@ void QModuleViewer::updateModule(Module * x_module)
 	{
 		mp_comboStreams->addItem((*it)->GetName().c_str(), cpt++);
 	}
-	// Add a fake stream for control
-	/*
-	for(std::vector<ControlBoard*>::const_iterator it = m_currentModule->GetControlList().begin(); it != m_currentModule->GetControlList().end(); it++)
-	{
-		mp_comboStreams->addItem((*it)->GetName().c_str(), cpt++);
-	}*/
 	
 	if(m_currentModule->GetOutputStreamList().size() > 0)
 		updateStream(*(m_currentModule->GetOutputStreamList().begin()));
 
+	// Empty the action menu (different for each module)
+	QList<QAction *> actions = this->actions();
+	for(QList<QAction*>::iterator it = actions.begin() ; it != actions.end() ; it++)
+		this->removeAction(*it);
 
 	// Set context menus
 	QAction * actionShowDisplayMenu = new QAction(tr("Show display options"), this);
+	actionShowDisplayMenu->setCheckable(true);
+	actionShowDisplayMenu->setChecked(true);
 	actionShowDisplayMenu->setShortcut(tr("Ctrl+S"));
-	QAction * actionHideDisplayMenu = new QAction(tr("Hide display options"), this);
-	actionHideDisplayMenu->setShortcut(tr("Ctrl+H"));
-	connect(actionShowDisplayMenu, SIGNAL(triggered()), this, SLOT(showDisplayOptions()));
-	connect(actionHideDisplayMenu, SIGNAL(triggered()), this, SLOT(hideDisplayOptions()));
+	connect(actionShowDisplayMenu, SIGNAL(triggered(bool)), this, SLOT(showDisplayOptions(bool)));
 	this->addAction(actionShowDisplayMenu);
-	this->addAction(actionHideDisplayMenu);
 
 	// Show control board for parameters
 	const vector<ControlBoard*>& ctrs = m_currentModule->GetControlList();
@@ -230,19 +229,30 @@ void QModuleViewer::updateModule(Module * x_module)
 	//const char * title[32] = {"params", "stream"};
 	for(vector<ControlBoard*>::const_iterator it = ctrs.begin() ; it != ctrs.end() ; it++)
 	{
-		QAction * actionShowControl = new QAction(tr("Show controls"), this);
+		// Add an action for each control associated with the module
+		string name = string("Control: ") + (*it)->GetName();
+		QAction * actionShowControl = new QAction(tr(name.c_str()), this);
 		QSignalMapper * signalMapper = new QSignalMapper(this);
 		signalMapper->setMapping(actionShowControl, cpt);
 		//actionShowControl->setShortcut(tr("Ctrl+C"));
 		connect(actionShowControl, SIGNAL(triggered()), signalMapper, SLOT(map()));
 		connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(updateControlNb(int)));
-		// m_parameterControlBoard->updateControl(m_currentModule->GetControlList()[cpt]);
 		this->addAction(actionShowControl);
 		cpt++;
+	}
+	if(ctrs.size() > 0)
+	{
+		QAction * actionShowControl = new QAction("Hide all controls", this);
+		QSignalMapper * signalMapper = new QSignalMapper(this);
+		signalMapper->setMapping(actionShowControl, cpt);
+		connect(actionShowControl, SIGNAL(triggered()), this, SLOT(updateControlNb()));
+		this->addAction(actionShowControl);
+		
 	}
 	this->setContextMenuPolicy(Qt::ActionsContextMenu);
 }
 
+/// change the module being currently displayed (by index)
 void QModuleViewer::updateModuleNb(int x_index)
 {
 	std::vector<Module*>::const_iterator it = m_manager->GetModuleList().begin();
@@ -253,6 +263,7 @@ void QModuleViewer::updateModuleNb(int x_index)
 	updateModule(*it);
 }
 
+/// Change the stream being currently displayed (by index)
 void QModuleViewer::updateStreamOrControlNb(int x_index)
 {
 	unsigned int cpt = static_cast<unsigned int>(x_index);
@@ -283,14 +294,16 @@ void QModuleViewer::updateStreamOrControlNb(int x_index)
 	assert(false);
 }
 
+/// display the control with the given index
 void QModuleViewer::updateControlNb(int x_index)
 {
 	assert(x_index < (int) m_currentModule->GetControlList().size());
 	CLEAN_DELETE(m_parameterControlBoard);
+	if(x_index < 0)
+		return;
 	m_parameterControlBoard = new QParameterControlBoard(m_currentModule, this);
 	mp_mainLayout->addWidget(m_parameterControlBoard, 0);
 	m_parameterControlBoard->updateControl(m_currentModule->GetControlList()[x_index]);
-
 }
 
 void QModuleViewer::updateStream(Stream * x_outputStream)
@@ -311,15 +324,14 @@ void QModuleViewer::updateStream(Stream * x_outputStream)
 }
 
 
-void QModuleViewer::showDisplayOptions()
+void QModuleViewer::showDisplayOptions(bool x_isChecked)
 {
-	mp_gbCombos->show();
+	if(x_isChecked)
+		mp_gbCombos->show();
+	else
+		mp_gbCombos->hide();
 }
 
-void QModuleViewer::hideDisplayOptions()
-{
-	mp_gbCombos->hide();
-}
 void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qimg)
 {
 

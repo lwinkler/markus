@@ -51,7 +51,6 @@ public:
 	QModuleViewer(const Manager * x_manager, QWidget *parent = 0);
 	virtual ~QModuleViewer();
 	static void  ConvertMat2QImage(const cv::Mat *mat, QImage *qim);
-	// static void  ConvertIplImage2QImage(const IplImage *iplImg, QImage *qim);
 private:
 	QBoxLayout * mp_mainLayout;
 	
@@ -84,11 +83,10 @@ private:
 public slots:
 	void updateModuleNb(int x_index);
 	void updateStreamOrControlNb(int x_index);
-	void updateControlNb(int x_index);
+	void updateControlNb(int x_index = -1);
 	void updateModule(Module * x_module);
 	void updateStream(Stream * x_outputStream);
-	void showDisplayOptions();
-	void hideDisplayOptions();
+	void showDisplayOptions(bool x_isChecked);
 };
 
 #endif
