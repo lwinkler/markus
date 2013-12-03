@@ -100,7 +100,7 @@ void ParameterStructure::SetFromConfig()
 		}
 		catch(...)
 		{
-			LOG4CXX_WARN(Global::logger, "Unknown parameter in configuration: "<<name<<" in module "<<m_objectName);
+			LOG_WARN(Global::logger, "Unknown parameter in configuration: "<<name<<" in module "<<m_objectName);
 		}
 		conf = conf.NextSubConfig("param");
 	}
@@ -172,7 +172,7 @@ void ParameterStructure::PrintParameters() const
 		(*it)->Print(ss);
 	}
 	if(m_list.size() > 0)
-		LOG4CXX_INFO(Global::logger, ss.str());
+		LOG_INFO(Global::logger, ss.str());
 }
 
 

@@ -79,7 +79,7 @@ void NetworkCam::Capture()
 {
 	if(m_capture.grab() == 0)
 	{
-		LOG4CXX_WARN(m_logger, "Grab failure while reading stream, try to reopen in NetworkCam::Capture");
+		LOG_WARN(m_logger, "Grab failure while reading stream, try to reopen in NetworkCam::Capture");
 		Reset();
 		if(m_capture.grab() == 0)
 		{
@@ -96,7 +96,7 @@ void NetworkCam::Capture()
 
 	time_t rawtime;
 	time(&rawtime);
-	LOG4CXX_DEBUG(m_logger, "NetworkCam: Capture time: "<<m_frameTimer.GetMSecLong());
+	LOG_DEBUG(m_logger, "NetworkCam: Capture time: "<<m_frameTimer.GetMSecLong());
 	SetTimeStampToOutputs(m_frameTimer.GetMSecLong());
 }
 
@@ -104,7 +104,7 @@ void NetworkCam::GetProperties()
 {
 	int cc = static_cast<int>(m_capture.get(CV_CAP_PROP_FOURCC));
 
-	LOG4CXX_DEBUG(m_logger, "POS_MSEC "<<m_capture.get(CV_CAP_PROP_POS_MSEC)
+	LOG_DEBUG(m_logger, "POS_MSEC "<<m_capture.get(CV_CAP_PROP_POS_MSEC)
 		<<" POS_FRAMES "<<m_capture.get(CV_CAP_PROP_POS_FRAMES)
 		<<" POS_AVI_RATIO "<<m_capture.get(CV_CAP_PROP_POS_AVI_RATIO)
 		<<" FRAME_WIDTH "<<m_capture.get(CV_CAP_PROP_FRAME_WIDTH)

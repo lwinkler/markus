@@ -35,11 +35,11 @@
 #define TIME_STAMP_MIN -100000 // for initialization as well
 
 // Logging functions
-#define LOG_EVENT(logger, message)   LOG4CXX_WARN(logger, "EVENT " << message) // Global::logger.Stream(LOG_EVENT)<<x<<std::endl // TODO: define this
-// #define LOG_ERROR(x)   LOG4CXX_ERROR(m_logger, x) // Global::logger.Stream(LOG_ERROR)<<x<<std::endl
-// #define LOG_WARN(x)    LOG4CXX_WARN(m_logger, x) // Global::logger.Stream(LOG_WARN)<<x<<std::endl
-// #define LOG_INFO(x)    LOG4CXX_INFO(m_logger, x) // Global::logger.Stream(LOG_INFO)<<x<<std::endl
-// #define LOG_DEBUG(x)   LOG4CXX_DEBUG(m_logger, x) // if(Global::logger.HasDebugMode()){Global::logger.Stream(LOG_DEBUG)<<x<<std::endl;}
+#define LOG_ERROR LOG4CXX_ERROR
+#define LOG_WARN  LOG4CXX_WARN
+#define LOG_INFO  LOG4CXX_INFO
+#define LOG_DEBUG LOG4CXX_DEBUG
+#define LOG_EVENT(logger, message)   LOG4CXX_WARN((logger), "EVENT " << message) // Global::logger.Stream(LOG_EVENT)<<x<<std::endl // TODO: define this
 
 #define SYSTEM(x) {std::string cmd; cmd = (x) ; if(system(cmd.c_str())) throw MkException("Execution of command failed: " + cmd, LOC);}
 

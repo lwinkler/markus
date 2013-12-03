@@ -42,7 +42,7 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_logger(log4cxx::Logger::getLogger(m_name))
 {
 	m_id	= atoi(x_configReader.GetAttribute("id").c_str());
-	LOG4CXX_INFO(m_logger, "Create object " << m_name);
+	LOG_INFO(m_logger, "Create object " << m_name);
 	
 	m_timerConvertion      = 0;
 	m_timerProcessing      = 0;
@@ -245,7 +245,7 @@ Stream* Module::GetOutputStreamById(int x_id) const
 
 void Module::PrintStatistics() const
 {
-	LOG4CXX_INFO(m_logger, "Module "<<GetName()<<" : "<<m_countProcessedFrames<<" frames processed (tproc="<<
+	LOG_INFO(m_logger, "Module "<<GetName()<<" : "<<m_countProcessedFrames<<" frames processed (tproc="<<
 		m_timerProcessing<<"ms, tconv="<<m_timerConvertion<<"ms, twait="<<
 		m_timerWaiting<<"ms), "<< (m_countProcessedFrames * 1000.0 / (m_timerProcessing + m_timerConvertion + m_timerWaiting))<<" fps");
 }

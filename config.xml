@@ -1,5 +1,5 @@
 <application name="ddd2" description="" cyclelimit="-1" gui="">
-  <module name="SlitCamera1">
+  <module name="SlitCamera1" id="0">
 	<parameters>
 	<param id="0" name="class">SlitCam</param>
 	<param id="2" name="width">640</param>

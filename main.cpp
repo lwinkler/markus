@@ -49,27 +49,23 @@ void usage()
 	printf(" -d  --describe        Create a description of all modules in XML format inside module/ directory. For development purpose.\n");
 	printf(" -c  --centralized     Module processing function is called from the manager (instead of decentralized timers)\n");
 	printf(" -n  --no-gui          Run process without gui\n");
-	printf(" -l  --log-mode [0-3]  Set logging mode:\n TODO: Not working yet");
-	printf("                       0: Print log to console output (default)\n");
-	printf("                       1: Print log to console output, show debug logs\n");
-	printf("                       2: Print informative log to 'log.txt'\n");
-	printf("                       3: Print informative log to 'log.txt', show debug logs\n");
+	printf(" -l  --log-conf <log4cxx_config>.xml\n");
+	printf("                       Set logging mode\n");
 	printf(" -p  --parameter \"moduleName.paramName=value\"\n");
-	printf("                       Override the value of one parameter ");
+	printf("                       Override the value of one parameter\n");
 }
 
 int main(int argc, char** argv)
 {
 	// Load XML configuration file using DOMConfigurator
-	log4cxx::xml::DOMConfigurator::configure("log4cxx.xml"); // TODO log file as parameter
-
 	log4cxx::LoggerPtr logger(log4cxx::Logger::getLogger("main"));
 
 	bool describe    = false;
 	bool nogui       = false;
 	bool centralized = false;
 
-	string configFile = "config.xml";
+	string configFile    = "config.xml";
+	string logConfigFile = "log4cxx.xml";
 	vector<string> parameters;
 
 
@@ -82,21 +78,21 @@ int main(int argc, char** argv)
 		{"describe",    0, 0, 'd'},
 		{"centralized", 0, 0, 'c'},
 		{"no-gui",      0, 0, 'n'},
-		{"log-mode",    1, 0, 'l'},
+		{"log-conf",    1, 0, 'l'},
 		{"parameter",   1, 0, 'p'},
 		{NULL, 0, NULL, 0}
 	};
 	int c;
 	int option_index = 0;
-	while ((c = getopt_long(argc, argv, "hvdcnl:p:",
-					long_options, &option_index)) != -1) { // TODO: handle case with unknown parameter
+	while ((c = getopt_long(argc, argv, "hvdcnl:p:", long_options, &option_index)) != -1)
+	{
 		switch (c) {
 			case 'h':
 				usage();
 				return 0;
 				break;
 			case 'v':
-				LOG4CXX_INFO(logger, "Markus version "<<VERSION_STRING); // <<", build "<<GIT_COMMIT_HASH<<", on "<<GIT_BUILD_DATE);
+				LOG_INFO(logger, "Markus version "<<VERSION_STRING);
 
 				return 0;
 			case 'd':
@@ -109,35 +105,35 @@ int main(int argc, char** argv)
 				nogui = true;
 				break;
 			case 'l':
-				// TODO Global::logger.SetMode(atoi(optarg));
+				logConfigFile = optarg;
 				break;
 			case 'p':
 				parameters.push_back(optarg);
 				break;
 			case ':': // missing argument
-				LOG4CXX_ERROR(logger, "--"<<long_options[::optopt].name<<": an argument is required");
+				LOG_ERROR(logger, "--"<<long_options[::optopt].name<<": an argument is required");
 				return -1;
 
 			case '?': // unknown option
-				LOG4CXX_ERROR(logger, argv[optind - 1]<<": unknown option");
+				LOG_ERROR(logger, argv[optind - 1]<<": unknown option");
 				return -1;
 			default:
-				LOG4CXX_ERROR(logger, "Unknown parameter "<<c);
+				LOG_ERROR(logger, "Unknown parameter "<<c);
 				return -1;
 		}
 	}
-
+	log4cxx::xml::DOMConfigurator::configure(logConfigFile);
 
 	if (optind == argc - 1) {
 		configFile = argv[argc - 1];
 	}
 	else if(optind == argc)
 	{
-		LOG4CXX_INFO(logger, "Using default configuration file "<<configFile);
+		LOG_INFO(logger, "Using default configuration file "<<configFile);
 	}
 	else 
 	{
-		LOG4CXX_ERROR(logger, "Invalid number of arguments "<<(argc - optind));
+		LOG_ERROR(logger, "Invalid number of arguments "<<(argc - optind));
 		usage();
 		return -1;
 	}
@@ -168,7 +164,7 @@ int main(int argc, char** argv)
 			}
 			catch(std::exception& e)
 			{
-				LOG4CXX_ERROR(logger, "Cannot parse command line parameter "<<*it<<": "<<e.what());
+				LOG_ERROR(logger, "Cannot parse command line parameter "<<*it<<": "<<e.what());
 				throw MkException("Cannot parse command line parameter", LOC);
 			}
 		}
@@ -187,7 +183,7 @@ int main(int argc, char** argv)
 		if(centralized)
 		{
 			if(!nogui)
-				LOG4CXX_WARN(logger, "GUI is not shown if you use --centralized option. To avoid this message use --no-gui option.");
+				LOG_WARN(logger, "GUI is not shown if you use --centralized option. To avoid this message use --no-gui option.");
 			// No gui. launch the process directly
 			// so far we cannot launch the process in a decentralized manner (with a timer on each module)
 			while(manager.Process()) // TODO: Find a better way to call Process. Through timers for example
@@ -207,30 +203,30 @@ int main(int argc, char** argv)
 				gui.show();
 			return app.exec(); // TODO: Manage case where centralized with GUI
 #else
-			LOG4CXX_ERROR(logger, "Markus was compiled without GUI. It can only be launched with option --centralized");
+			LOG_ERROR(logger, "Markus was compiled without GUI. It can only be launched with option --centralized");
 			return -1;
 #endif
 		}
 	}
 	catch(cv::Exception& e)
 	{
-		LOG4CXX_ERROR(logger, "Exception raised (std::exception) : " << e.what() );
+		LOG_ERROR(logger, "Exception raised (std::exception) : " << e.what() );
 	}
 	catch(std::exception& e)
 	{
-		LOG4CXX_ERROR(logger, "Exception raised (std::exception) : " << e.what() );
+		LOG_ERROR(logger, "Exception raised (std::exception) : " << e.what() );
 	}
 	catch(std::string str)
 	{
-		LOG4CXX_ERROR(logger, "Exception raised (string) : " << str );
+		LOG_ERROR(logger, "Exception raised (string) : " << str );
 	}
 	catch(const char* str)
 	{
-		LOG4CXX_ERROR(logger, "Exception raised (const char*) : " << str );
+		LOG_ERROR(logger, "Exception raised (const char*) : " << str );
 	}
 	catch(...)
 	{
-		LOG4CXX_ERROR(logger, "Unknown exception raised");
+		LOG_ERROR(logger, "Unknown exception raised");
 	}
 	return -1;
 }

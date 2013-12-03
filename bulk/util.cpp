@@ -250,7 +250,7 @@ const std::string msToTimeStamp(TIME_STAMP x_ms)
 void Global::Infos()
 {
 	if(m_outputDir.size() != 0)
-		LOG4CXX_INFO(Global::logger, "Results written to directory "<<m_outputDir);
+		LOG_INFO(Global::logger, "Results written to directory "<<m_outputDir);
 }
 	
 /// Returns a directory that will contain all outputs
@@ -269,7 +269,7 @@ const string& Global::OutputDir()
 		}
 		catch(...)
 		{
-			LOG4CXX_WARN(Global::logger, "Exception in Global::OutputDir");
+			LOG_WARN(Global::logger, "Exception in Global::OutputDir");
 		}
 	}
 	return m_outputDir;

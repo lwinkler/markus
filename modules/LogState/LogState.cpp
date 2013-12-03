@@ -77,7 +77,7 @@ void LogState::ProcessFrame()
 {
 	if(m_state != m_oldState)
 	{
-		LOG4CXX_DEBUG(m_logger, "state change");
+		LOG_DEBUG(m_logger, "state change");
 		// Log the change in state
 		WriteState();
 	}

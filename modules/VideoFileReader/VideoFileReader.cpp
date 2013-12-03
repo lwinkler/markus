@@ -97,7 +97,7 @@ void VideoFileReader::GetProperties()
 {
 	int cc = static_cast<int>(m_capture.get(CV_CAP_PROP_FOURCC));
 
-	LOG4CXX_DEBUG(m_logger, "POS_MSEC "<<m_capture.get(CV_CAP_PROP_POS_MSEC)
+	LOG_DEBUG(m_logger, "POS_MSEC "<<m_capture.get(CV_CAP_PROP_POS_MSEC)
 		<<" POS_FRAMES "<<m_capture.get(CV_CAP_PROP_POS_FRAMES)
 		<<" POS_AVI_RATIO "<<m_capture.get(CV_CAP_PROP_POS_AVI_RATIO)
 		<<" FRAME_WIDTH "<<m_capture.get(CV_CAP_PROP_FRAME_WIDTH)
