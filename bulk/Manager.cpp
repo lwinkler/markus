@@ -292,11 +292,20 @@ void Manager::Export()
 
 Module* Manager::GetModuleById(int x_id) const
 {
+	Module* module = NULL;
+	int found = 0;
 	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		if((*it)->GetId() == x_id) 
-			return *it;
-	// TODO: check one module for each id
-	throw MkException("Module not found " + x_id, LOC);
+		{
+			module = *it;
+			found++;
+		}
+	if(found == 1)
+		return module;
+	if(found == 0)
+		throw MkException("Module not found " + x_id, LOC);
+	else
+		throw MkException("more than one module with id " + x_id, LOC);
 	return NULL;
 }
 

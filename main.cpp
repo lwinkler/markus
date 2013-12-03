@@ -61,7 +61,7 @@ void usage()
 int main(int argc, char** argv)
 {
 	// Load XML configuration file using DOMConfigurator
-	log4cxx::xml::DOMConfigurator::configure("log4cxx.xml");
+	log4cxx::xml::DOMConfigurator::configure("log4cxx.xml"); // TODO log file as parameter
 
 	log4cxx::LoggerPtr logger(log4cxx::Logger::getLogger("main"));
 
@@ -148,6 +148,7 @@ int main(int argc, char** argv)
 		MarkusApplication app(argc, argv); // TODO: See if we can move this line
 #endif
 		ConfigReader mainConfig(configFile);
+		mainConfig.Validate();
 		ConfigReader appConfig = mainConfig.GetSubConfig("application");
 		assert(!appConfig.IsEmpty());
 

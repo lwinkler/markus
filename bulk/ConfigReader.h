@@ -48,7 +48,9 @@ public:
 	void SetValue(const std::string& x_value);
 	const std::string GetAttribute(const std::string& x_attributeName) const;
 	void SaveToFile(const std::string& x_file) const;
+	void Validate() const;
 private:
+	void CheckUniquenessOfId(const std::string& x_group, const std::string& x_type, const std::string& x_idLabel, const std::string& x_moduleName) const;
 	TiXmlNode * mp_node;
 	TiXmlDocument * mp_doc;
 };

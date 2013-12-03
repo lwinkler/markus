@@ -29,6 +29,7 @@ using namespace std;
 
 /// Reads the configuration file with tinyxml
 
+
 /// Constructor : config based on a configuration file
 
 ConfigReader::ConfigReader(const std::string& x_fileName)
@@ -164,3 +165,57 @@ void ConfigReader::SaveToFile(const std::string& x_file) const
 		throw MkException("Can only save global config to file", LOC);
 	mp_doc->SaveFile(x_file);
 }
+
+/// Validate that the configuration is valid
+void ConfigReader::Validate() const
+{
+	ConfigReader appConf = GetSubConfig("application");
+	if(appConf.IsEmpty())
+		throw MkException("Configuration must contain <application> subconfiguration", LOC);
+	std::map<string,bool> moduleIds;
+	std::map<string,bool> moduleNames;
+	ConfigReader conf = appConf.GetSubConfig("module");
+	
+	while(!conf.IsEmpty())
+	{
+		string id = conf.GetAttribute("id");
+		string name = conf.GetAttribute("name");
+		if(id == "")
+			throw MkException("Module " + name + " has no id", LOC);
+		if(name == "")
+			throw MkException("Module " + id + " has no name", LOC);
+		if(moduleIds[id])
+			throw MkException("Module with id=" + id + " must be unique", LOC);
+		moduleIds[id] = true;
+		if(moduleNames[name])
+			throw MkException("Module with name=" + name + " must be unique", LOC);
+		moduleNames[name] = true;
+
+		conf.CheckUniquenessOfId("inputs",     "input",  "id",   name);
+		conf.CheckUniquenessOfId("outputs",    "output", "id",   name);
+		conf.CheckUniquenessOfId("parameters", "param",  "name", name);
+		conf = conf.NextSubConfig("module");
+	}
+}
+
+/// Check that an id is unique: for validation purpose
+void ConfigReader::CheckUniquenessOfId(const string& x_group, const string& x_type, const string& x_idLabel, const string& x_moduleName) const
+{
+	// Check that input streams are unique
+	std::map<string,bool> ids;
+	ConfigReader conf = GetSubConfig(x_group);
+	if(conf.IsEmpty())
+		return;
+	conf = conf.GetSubConfig(x_type);
+	while(!conf.IsEmpty())
+	{
+		string id = conf.GetAttribute(x_idLabel);
+		if(id == "")
+			throw MkException(x_type + " of module name=" + x_moduleName + " has no " + x_idLabel, LOC);
+		if(ids[id])
+			throw MkException(x_type + " with " + x_idLabel + "=" + id + " must be unique for module name=" + x_moduleName, LOC);
+		ids[id] = true;
+		conf = conf.NextSubConfig(x_type);
+	}
+}
+

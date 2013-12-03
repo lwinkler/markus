@@ -71,9 +71,7 @@ void Module::Reset()
 		m_moduleTimer->Reset(RefParameter().fps);
 	}
 	else m_moduleTimer = NULL;
-	stringstream ss;
 	RefParameter().PrintParameters();
-	LOG4CXX_INFO(m_logger, ss);
 }
 
 void Module::Pause(bool x_pause)
@@ -231,7 +229,9 @@ Stream* Module::GetInputStreamById(int x_id) const
 {
 	for(vector<Stream *>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
 		if((*it)->GetId() == x_id) return *it;
-	throw MkException(string("GetInputStreamById : no stream with this id for module ") + string(GetName()), LOC);
+	stringstream ss;
+	ss<<"GetInputStreamById : no stream with id="<<x_id<<" for module "<<GetName();
+	throw MkException(ss.str(), LOC);
 	return NULL;
 }
 
