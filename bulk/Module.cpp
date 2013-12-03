@@ -41,7 +41,7 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_name(x_configReader.GetAttribute("name")),
 	m_logger(log4cxx::Logger::getLogger(m_name))
 {
-	m_id	= atoi(x_configReader.GetAttribute("id").c_str()); // TODO: remove id ?
+	m_id	= atoi(x_configReader.GetAttribute("id").c_str());
 	LOG4CXX_INFO(m_logger, "Create object " << m_name);
 	
 	m_timerConvertion      = 0;
@@ -143,57 +143,55 @@ void Module::Process()
 {
 	if(m_pause)
 		return; // TODO: Manage pause more elegantly
-	//try
+
+	const ModuleParameterStructure& param = RefParameter();
+	
+	// Timestamp of the module is given by the input stream // TODO: How to manage if there are several streams
+	m_currentTimeStamp = 0;
+	if(m_inputStreams.size() >= 1)
+		m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected();
+	else if(! param.autoProcess)
+		throw MkException("Error: Module must have at least one input or have parameter auto_process=true in Module::Process", LOC);
+
+	if(param.autoProcess || param.fps == 0 || (m_currentTimeStamp - m_lastTimeStamp) * param.fps > 1000)
 	{
-		const ModuleParameterStructure& param = RefParameter();
+		// Process this frame
+		m_lock.lockForRead();
 		
-		// Timestamp of the module is given by the input stream // TODO: How to manage if there are several streams
-		m_currentTimeStamp = 0;
-		if(m_inputStreams.size() >= 1)
-			m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected();
-		else if(! param.autoProcess)
-			throw MkException("Error: Module must have at least one input or have parameter auto_process=true in Module::Process", LOC);
+		// Timer for benchmark
+		Timer ti;
 
-		if(param.autoProcess || param.fps == 0 || (m_currentTimeStamp - m_lastTimeStamp) * param.fps > 1000)
+		// Read and convert inputs
+		if(IsInputProcessed())
 		{
-			// Process this frame
-			m_lock.lockForRead();
-			
-			// Timer for benchmark
-			Timer ti;
-
-			// Read and convert inputs
-			if(IsInputProcessed())
+			for(vector<Stream*>::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
 			{
-				for(vector<Stream*>::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
-				{
-					Timer ti2;
-					(*it)->LockModuleForRead();
-					m_timerWaiting += ti2.GetMSecLong();
-					(*it)->ConvertInput();
-					(*it)->UnLockModule();
-				}
+				Timer ti2;
+				(*it)->LockModuleForRead();
+				m_timerWaiting += ti2.GetMSecLong();
+				(*it)->ConvertInput();
+				(*it)->UnLockModule();
 			}
-			m_timerConvertion 	+= ti.GetMSecLong();
-			ti.Restart();
-
-			ProcessFrame();
-
-			m_timerProcessing 	 += ti.GetMSecLong();
-
-			// Set time stamps to outputs
-			if(!IsInput())
-				for(vector<Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
-				(*it)->SetTimeStamp(m_currentTimeStamp);
-			
-			// Call depending modules (modules with fps = 0)
-			for(vector<Module*>::iterator it = m_modulesDepending.begin() ; it != m_modulesDepending.end() ; it++)
-				(*it)->Process();
-
-			m_countProcessedFrames++;
-			m_lastTimeStamp = m_currentTimeStamp;
-			m_lock.unlock();
 		}
+		m_timerConvertion 	+= ti.GetMSecLong();
+		ti.Restart();
+
+		ProcessFrame();
+
+		m_timerProcessing 	 += ti.GetMSecLong();
+
+		// Set time stamps to outputs
+		if(!IsInput())
+			for(vector<Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
+			(*it)->SetTimeStamp(m_currentTimeStamp);
+		
+		// Call depending modules (modules with fps = 0)
+		for(vector<Module*>::iterator it = m_modulesDepending.begin() ; it != m_modulesDepending.end() ; it++)
+			(*it)->Process();
+
+		m_countProcessedFrames++;
+		m_lastTimeStamp = m_currentTimeStamp;
+		m_lock.unlock();
 	}
 }
 

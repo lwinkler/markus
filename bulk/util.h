@@ -35,7 +35,7 @@
 #define TIME_STAMP_MIN -100000 // for initialization as well
 
 // Logging functions
-#define LOG_EVENT(logger, message)   LOG4CXX_WARN(logger, "EVENT" << message) // Global::logger.Stream(LOG_EVENT)<<x<<std::endl // TODO: define this
+#define LOG_EVENT(logger, message)   LOG4CXX_WARN(logger, "EVENT " << message) // Global::logger.Stream(LOG_EVENT)<<x<<std::endl // TODO: define this
 // #define LOG_ERROR(x)   LOG4CXX_ERROR(m_logger, x) // Global::logger.Stream(LOG_ERROR)<<x<<std::endl
 // #define LOG_WARN(x)    LOG4CXX_WARN(m_logger, x) // Global::logger.Stream(LOG_WARN)<<x<<std::endl
 // #define LOG_INFO(x)    LOG4CXX_INFO(m_logger, x) // Global::logger.Stream(LOG_INFO)<<x<<std::endl
@@ -57,34 +57,6 @@ std::vector<std::string> &split(const std::string &s, char delim, std::vector<st
 const std::string timeStamp();
 const std::string msToTimeStamp(TIME_STAMP x_ms);
 
-
-
-/*typedef enum
-{
-	LOG_EVENT,
-	LOG_ERROR,
-	LOG_WARN,
-	LOG_INFO,
-	LOG_DEBUG,
-	LOG_SIZE
-} logLevel;
-
-class Logging
-{
-	public:
-		Logging();
-		~Logging();
-		// char m_mode;
-		std::ostream & Stream(logLevel x_level);
-		void SetMode(char x_mode);
-		inline bool HasDebugMode() const {return m_oss[LOG_DEBUG] != m_cnull;}
-
-	private:
-		std::ofstream m_logFile;
-		std::ofstream m_cnull;
-		std::vector<std::ostream*> m_oss;
-		char m_mode;
-};*/
 
 class Global
 {

@@ -45,6 +45,9 @@ template<> const std::string ParameterT<int>::m_typeStr    = "int";
 template<> const std::string ParameterT<float>::m_typeStr  = "float";
 template<> const std::string ParameterT<double>::m_typeStr = "double";
 
+
+// TODO: Check that parameter setting is thread safe
+
 /// Parent for all parameter structures
 ParameterStructure::ParameterStructure(const ConfigReader& x_configReader):
 	m_configReader(x_configReader)

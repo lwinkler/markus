@@ -182,6 +182,7 @@ int main(int argc, char** argv)
 		}
 
 		manager.Reset();
+		LOG_EVENT(logger, "STARTED pid="<<getpid());
 
 		if(centralized)
 		{

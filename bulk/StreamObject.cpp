@@ -96,7 +96,7 @@ void StreamObject::RenderTo(Mat * xp_output) const
 
 		// Draw the rectangle in the input image
 		// if id is present, draw to the equivalent color
-#ifndef MARKUS_DEBUG_STREAMS_AAA
+#ifndef MARKUS_DEBUG_STREAMS
 		rectangle( *xp_output, p1, p2, Scalar(20,0,230), 3, 8, 0 );
 #else
 		Scalar color = m_color;
