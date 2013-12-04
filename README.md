@@ -21,6 +21,7 @@ In all cases you will need:
 		- or via a package installer
 	- *LibTinyXML*
 	- *LibLog4Cxx*
+	- **awk**: used at compile time
 
 On Ubuntu the apt-get install command is:
 
