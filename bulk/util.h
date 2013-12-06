@@ -64,11 +64,12 @@ class Global
 		static log4cxx::LoggerPtr logger;
 		static const std::string& OutputDir();
 		static inline void SetConfigFile(const std::string& x_configFile){
-			assert(m_configFile.size() == 0); // TODO: why this line does't create an error ?
+			assert(m_configFile.size() == 0);
 			m_configFile = x_configFile;
 		}
 		static void Infos();
 		static inline const std::string& GetConfigFile(){return m_configFile;}
+		static void Finalize();
 	private:
 		static std::string m_configFile;
 		static std::string m_outputDir;

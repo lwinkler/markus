@@ -136,6 +136,7 @@ Manager::~Manager()
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		delete *it;
 	Global::Infos();
+	Global::Finalize();
 }
 
 

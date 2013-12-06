@@ -275,96 +275,11 @@ const string& Global::OutputDir()
 	return m_outputDir;
 }
 
-
-/// Log class
-/* Logging::Logging()
+/// Do the final operations on the static class
+void Global::Finalize()
 {
-	SetMode(0);
-}
-
-
-Logging::~Logging()
-{
-	if(m_logFile.is_open())
-		m_logFile.close();
-	if(m_cnull.is_open())
-		m_cnull.close();
-}
-
-
-// Set logging mode
-void Logging::SetMode(char x_mode)
-{
-	m_mode = x_mode;
-	if(m_logFile.is_open())
-		m_logFile.close();
-	if(m_cnull.is_open())
-		m_cnull.close();
-	m_oss.resize(LOG_SIZE);
-
-	switch(m_mode)
+	if(m_outputDir.size() != 0) // TODO: probably include all global stuff in Manager
 	{
-		case 0:
-		{
-			// Log standard, hide debug info
-			m_cnull.open("/dev/null");
-			m_oss[LOG_EVENT]   = &std::cout;
-			m_oss[LOG_ERROR]   = &std::cerr;
-			m_oss[LOG_WARN] = &std::cerr;
-			m_oss[LOG_INFO]    = &std::cout;
-			m_oss[LOG_DEBUG]   = &m_cnull;
-		}
-		break;
-		case 1:
-		{
-			// Log standard, show debug info
-			m_oss[LOG_EVENT]   = &std::cout;
-			m_oss[LOG_ERROR]   = &std::cerr;
-			m_oss[LOG_WARN] = &std::cerr;
-			m_oss[LOG_INFO]    = &std::cout;
-			m_oss[LOG_DEBUG]   = &std::cout;
-		}
-		break;
-		case 2:
-		{
-			// Log info to file, hide debug info
-			string filename = Global::OutputDir() + "/log.txt";
-			m_logFile.open(filename.c_str()); // , std::ios::app);
-			m_cnull.open("/dev/null");
-			m_oss[LOG_EVENT]   = &std::cout;
-			m_oss[LOG_ERROR]   = &std::cerr;
-			m_oss[LOG_WARN] = &std::cerr;
-			m_oss[LOG_INFO]    = &m_logFile;
-			m_oss[LOG_DEBUG]   = &m_cnull;
-		}
-		break;
-		case 3:
-		{
-			// Log info to file, show debug info
-			string filename = Global::OutputDir() + "/log.txt";
-			m_logFile.open(filename.c_str()); // , std::ios::app);
-			m_oss[LOG_EVENT]   = &std::cout;
-			m_oss[LOG_ERROR]   = &std::cerr;
-			m_oss[LOG_WARN] = &std::cerr;
-			m_oss[LOG_INFO]    = &m_logFile;
-			m_oss[LOG_DEBUG]   = &std::cout;
-		}
-		break;
-		default:
-			cerr<<"This logging mode is non-existant"<<endl;
+		SYSTEM("cp markus.log " + m_outputDir);
 	}
 }
-
-std::ostream & Logging::Stream(logLevel x_level)
-{
-	switch(x_level)	
-	{
-		case LOG_EVENT:   return *m_oss[LOG_EVENT]<<"EVENT: ";
-		case LOG_WARN: return *m_oss[LOG_WARN]<<"WARNING: ";
-		case LOG_ERROR:   return *m_oss[LOG_ERROR]<<"ERROR: ";
-		case LOG_INFO:    return *m_oss[LOG_INFO];
-		case LOG_DEBUG:   return *m_oss[LOG_DEBUG]<<"DEBUG: ";
-		default:	return std::cerr;
-	}
-}
-*/
