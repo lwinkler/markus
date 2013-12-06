@@ -101,10 +101,18 @@ Scalar g_colorArray[] =
 
 void adjustSize(const Mat* im_in, Mat* im_out)
 {
-	if(im_in->cols == im_out->cols && im_in->rows == im_out->rows) 
-		im_in->copyTo(*im_out);
-	else 
-		resize(*im_in, *im_out, im_out->size(), CV_INTER_NN);
+	if(!im_in->cols || !im_in->rows)
+	{
+		LOG_WARN(Global::logger, "Module input image has size 0x0, inserting a black frame");
+		im_out->setTo(0);
+	}
+	else
+	{
+		if(im_in->cols == im_out->cols && im_in->rows == im_out->rows)
+			im_in->copyTo(*im_out);
+		else
+			resize(*im_in, *im_out, im_out->size(), CV_INTER_NN);
+	}
 }
 
 /* Set image to the right depth 
@@ -262,7 +270,26 @@ const string& Global::OutputDir()
 		{
 			m_outputDir = "out_" + timeStamp();
 			SYSTEM("rm -rf out_latest");
-			SYSTEM("mkdir -p \"" + m_outputDir + "\"");
+			short trial = 0;
+			string tmp = m_outputDir;
+
+			// Try to create the output dir, if it fails, try changing the name
+			while(trial < 250)
+			{
+				try
+				{
+					SYSTEM("mkdir \"" + m_outputDir + "\"");
+					trial = 250;
+				}
+				catch(...)
+				{
+					stringstream ss;
+					trial++;
+					ss<<tmp<<"_"<<trial;
+					m_outputDir = ss.str();
+				}
+			}
+
 			SYSTEM("ln -s \"" + m_outputDir + "\" out_latest");
 			SYSTEM("tools/version.sh > " + m_outputDir + "/version.txt");
 			SYSTEM("cp " + m_configFile + " " + m_outputDir);
