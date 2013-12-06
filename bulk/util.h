@@ -62,7 +62,7 @@ class Global
 {
 	public:
 		static log4cxx::LoggerPtr logger;
-		static const std::string& OutputDir();
+		static const std::string& OutputDir(const std::string& x_outputDir = "");
 		static inline void SetConfigFile(const std::string& x_configFile){
 			assert(m_configFile.size() == 0);
 			m_configFile = x_configFile;

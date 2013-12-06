@@ -262,13 +262,16 @@ void Global::Infos()
 }
 	
 /// Returns a directory that will contain all outputs
-const string& Global::OutputDir()
+const string& Global::OutputDir(const string& x_outputDir)
 {
 	if(m_outputDir.size() == 0)
 	{
 		try
 		{
-			m_outputDir = "out_" + timeStamp();
+			if(x_outputDir == "")
+				m_outputDir = "out_" + timeStamp();
+			else
+				m_outputDir = x_outputDir;
 			SYSTEM("rm -rf out_latest");
 			short trial = 0;
 			string tmp = m_outputDir;
@@ -289,6 +292,7 @@ const string& Global::OutputDir()
 					m_outputDir = ss.str();
 				}
 			}
+			LOG_INFO(logger, "Creating directory "<<m_outputDir);
 
 			SYSTEM("ln -s \"" + m_outputDir + "\" out_latest");
 			SYSTEM("tools/version.sh > " + m_outputDir + "/version.txt");

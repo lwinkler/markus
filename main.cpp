@@ -51,6 +51,8 @@ void usage()
 	printf(" -n  --no-gui          Run process without gui\n");
 	printf(" -l  --log-conf <log4cxx_config>.xml\n");
 	printf("                       Set logging mode\n");
+	printf(" -o  --output-dir directory\n");
+	printf("                       Set the name of the output directory\n");
 	printf(" -p  --parameter \"moduleName.paramName=value\"\n");
 	printf("                       Override the value of one parameter\n");
 }
@@ -66,6 +68,7 @@ int main(int argc, char** argv)
 
 	string configFile    = "config.xml";
 	string logConfigFile = "log4cxx.xml";
+	string outputDir     = "";
 	vector<string> parameters;
 
 
@@ -79,12 +82,13 @@ int main(int argc, char** argv)
 		{"centralized", 0, 0, 'c'},
 		{"no-gui",      0, 0, 'n'},
 		{"log-conf",    1, 0, 'l'},
+		{"output_dir",  1, 0, 'o'},
 		{"parameter",   1, 0, 'p'},
 		{NULL, 0, NULL, 0}
 	};
 	int c;
 	int option_index = 0;
-	while ((c = getopt_long(argc, argv, "hvdcnl:p:", long_options, &option_index)) != -1)
+	while ((c = getopt_long(argc, argv, "hvdcnl:o:p:", long_options, &option_index)) != -1)
 	{
 		switch (c) {
 			case 'h':
@@ -106,6 +110,9 @@ int main(int argc, char** argv)
 				break;
 			case 'l':
 				logConfigFile = optarg;
+				break;
+			case 'o':
+				outputDir = optarg;
 				break;
 			case 'p':
 				parameters.push_back(optarg);
@@ -170,6 +177,8 @@ int main(int argc, char** argv)
 		}
 		Manager manager(appConfig, centralized);
 		Global::SetConfigFile(configFile);
+		if(outputDir != "")
+			Global::OutputDir(outputDir);
 
 		if(describe) 
 		{

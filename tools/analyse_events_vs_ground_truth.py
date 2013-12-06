@@ -13,6 +13,7 @@ import datetime
 import sys
 import os
 import subprocess
+import re
 
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------- 
@@ -21,7 +22,9 @@ def overlap(evt1, evt2):
 	
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 # Read a subtitle file and store values
-def srttable(textfile):
+def srttable(textfile, pattern):
+	regex = re.compile(pattern)
+
 	gt = open(textfile,"r")
 	flist = []
 	findex = 1
@@ -40,7 +43,8 @@ def srttable(textfile):
 		x = time.strptime(secs,"%H:%M:%S")
 		fend = datetime.timedelta(hours=x.tm_hour,minutes=x.tm_min,seconds=x.tm_sec).total_seconds() + float(cents)/1000
 		label = gt.readline().rstrip()
-		flist.append({'index': findex, 'start': fstart, 'end': fend, 'label': label})
+		if regex.match(label) :
+			flist.append({'index': findex, 'start': fstart, 'end': fend, 'label': label})
 		gt.readline()
 		findex += 1
 	return flist, tindex
@@ -159,7 +163,7 @@ gt_file    = sys.argv[2]
 video_file = sys.argv[3]
 
 try:
-	evt_list, n  = srttable(evt_file)
+	evt_list, n  = srttable(evt_file, ".*")
 except:
 	evt_list = []
 	evt_file = ""
@@ -167,7 +171,7 @@ except:
 print "Found %d events in events list " % n
 
 try:
-	gt_list, n = srttable(gt_file)
+	gt_list, n = srttable(gt_file, "anor.*")
 
 except:
 	gt_list = []
