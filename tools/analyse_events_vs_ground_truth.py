@@ -105,43 +105,39 @@ def format_event(evt, name):
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 # format statistics in html
 def format_statistics(gt_list, evt_list, falsepositives, falsenegatives, dst):
-	gtp = 0 # positives for ground thruth
-	gtn = 0 # total number of sequences for ground thruth
-	fn = 0 # number of false negatives
-	ftot = 0 # total number of found sequences
-
-	# Analyse
-	gtp += len(gt_list)
-	gtn += n
-	ftot += len(evt_list)
+	gtp  = len(gt_list)        # positives for ground thruth
+	gtn  = len(gt_list)        # total number of sequences for ground thruth (assumed to be the number of seqs between events)
+	fn   = len(falsenegatives) # number of false negatives
+	fp   = len(falsepositives) # number of false positives
+	evt  = len(gt_list)       # total number of found events
 
 	# calculate metrics
-	fp = len(falsepositives)
-	fn = len(falsenegatives)
-	tp = ftot - fp
-	gtneg = gtn - gtp
-	tn = gtneg - fp
+	tp = evt - fp
+	# tn = 0 # note : impossible to compute so far
 
 	try:
 		tpr = tp / float(tp + fn)
-		fpr = fp / float(fp + tn)
+		# fpr = fp / float(fp + tn)
 		precision = tp / float(tp + fp)
+		recall = tp / float(tp + fn)
 	except:
 		tpr = 0
-		fpr = 0
+		# fpr = 0
 		precision = 0
+		recall = 0
 
 	duration = 0 # TODO
 
 	dst.write("<h2>Statistics</h2>")
 	dst.write("<ul>\n")
 	dst.write("<li><b>Total time:</b> %s </li>\n" % (duration))
-	dst.write("<li><b>Events in ground truth: </b>%d</li>\n" % len(gt_list))
-	dst.write("<li><b>Events detected: </b> %d</li>\n" % len(evt_list))
+	dst.write("<li><b>Events in ground truth: </b>%d</li>\n" % evt)
+	# dst.write("<li><b>Events detected: </b> %d</li>\n" % len(evt_list))
 	dst.write("<li><b>False positives: </b> %d</li>\n" % fp)
 	dst.write("<li><b>False negatives: </b> %d</li>\n" % fn)
-	dst.write("<li>N:    %d TPR: %.2f FPR: %.2f precision: %.2f</li>\n" % (gtn, tpr, fpr, precision))
+	# dst.write("<li>EVT: %d TPR: %.2f FPR: %.2f</li>\n" % (evt, tpr, -1))
 	dst.write("</ul>\n")
+	dst.write("#SUMMARY# EVT=%d FP=%d FN=%d precision=%.2f recall=%.2f\n" % (evt, fp, fn, precision, recall))
 
 	try:
 		# Not working TODO
