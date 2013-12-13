@@ -129,7 +129,6 @@ int main(int argc, char** argv)
 				return -1;
 		}
 	}
-	log4cxx::xml::DOMConfigurator::configure(logConfigFile);
 
 	if (optind == argc - 1) {
 		configFile = argv[argc - 1];
@@ -144,6 +143,14 @@ int main(int argc, char** argv)
 		usage();
 		return -1;
 	}
+	Manager::SetConfigFile(configFile);
+	if(outputDir != "")
+	{
+		Manager::OutputDir(outputDir);
+		string dir = outputDir + "/";
+		setenv("LOG_DIR", dir.c_str(), 1);
+	}
+	log4cxx::xml::DOMConfigurator::configure(logConfigFile);
 
 	try
 	{
@@ -176,9 +183,6 @@ int main(int argc, char** argv)
 			}
 		}
 		Manager manager(appConfig, centralized);
-		Manager::SetConfigFile(configFile);
-		if(outputDir != "")
-			Manager::OutputDir(outputDir);
 
 		if(describe) 
 		{

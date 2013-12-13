@@ -146,9 +146,10 @@ Manager::~Manager()
 		LOG_INFO(m_logger, "Results written to directory "<<m_outputDir);
 
 	/// Do the final operations on the static class
-	if(m_outputDir.size() != 0) // TODO: probably include all global stuff in Manager
+	if(m_outputDir.size() != 0 && getenv("LOG_DIR") == NULL)
 	{
-		SYSTEM("cp markus.log " + m_outputDir);
+		SYSTEM("cp markus.log " + m_outputDir + "/markus.copy.log");
+		// SYSTEM("cp markus " + m_outputDir);
 	}
 }
 
@@ -344,7 +345,6 @@ const string& Manager::OutputDir(const string& x_outputDir)
 				m_outputDir = "out_" + timeStamp();
 			else
 				m_outputDir = x_outputDir;
-			SYSTEM("rm -rf out_latest");
 			short trial = 0;
 			string tmp = m_outputDir;
 
@@ -362,17 +362,20 @@ const string& Manager::OutputDir(const string& x_outputDir)
 					trial++;
 					ss<<tmp<<"_"<<trial;
 					m_outputDir = ss.str();
+					if(trial == 250)
+						throw MkException("Cannot create output directory", LOC);
 				}
 			}
 			LOG_INFO(m_logger, "Creating directory "<<m_outputDir);
 
+			SYSTEM("rm -rf out_latest");
 			SYSTEM("ln -s \"" + m_outputDir + "\" out_latest");
 			SYSTEM("tools/version.sh > " + m_outputDir + "/version.txt");
 			SYSTEM("cp " + m_configFile + " " + m_outputDir);
 		}
-		catch(...)
+		catch(exception& e)
 		{
-			LOG_WARN(m_logger, "Exception in Global::OutputDir");
+			LOG_WARN(m_logger, "Exception in Manager::OutputDir" << e.what());
 		}
 	}
 	return m_outputDir;
