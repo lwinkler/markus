@@ -123,7 +123,10 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 			Module& preceeding(stream.RefModule());
 			(*it)->SetPreceedingModule(preceeding);
 			if((*it)->RefParameter().autoProcess == false)
+			{
+				// cout<<"Module "<<(*it)->GetName()<<" depends on module "<<preceeding.GetName()<<endl;
 				preceeding.AddDependingModule(**it); // TODO: find a better way to execute non real time modules
+			}
 		}
 		catch(...){}
 	}
