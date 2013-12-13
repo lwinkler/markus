@@ -176,9 +176,9 @@ int main(int argc, char** argv)
 			}
 		}
 		Manager manager(appConfig, centralized);
-		Global::SetConfigFile(configFile);
+		Manager::SetConfigFile(configFile);
 		if(outputDir != "")
-			Global::OutputDir(outputDir);
+			Manager::OutputDir(outputDir);
 
 		if(describe) 
 		{

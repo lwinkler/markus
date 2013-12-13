@@ -24,6 +24,7 @@
 #include "LogState.h"
 #include "StreamState.h"
 #include "util.h"
+#include "Manager.h"
 
 using namespace std;
 using namespace cv;
@@ -64,7 +65,7 @@ void LogState::Reset()
 	*/
 
 
-	m_srtFileName = Global::OutputDir() + "/" + m_param.file + ".srt";
+	m_srtFileName = Manager::OutputDir() + "/" + m_param.file + ".srt";
 	// cout<<"file"<<m_param.file<<endl;
 	// cout<<m_srtFileName<<endl;
 	m_file.close();

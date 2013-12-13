@@ -24,6 +24,7 @@
 #include "VideoFileWriter.h"
 #include "StreamImage.h"
 #include "util.h"
+#include "Manager.h"
 
 using namespace std;
 using namespace cv;
@@ -58,7 +59,7 @@ void VideoFileWriter::Reset()
 	if(m_param.type != CV_8UC3) // TODO : find a way to restrain parameters values
 		throw MkException("Input image type must be in color [CV_8UC3]", LOC);
 
-	const string filename = Global::OutputDir() + "/" + m_param.file  + "." + ExtensionFromFourcc(m_param.fourcc);
+	const string filename = Manager::OutputDir() + "/" + m_param.file  + "." + ExtensionFromFourcc(m_param.fourcc);
 	double fps = 12;
 	
 	try

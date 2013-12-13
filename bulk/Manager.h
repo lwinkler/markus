@@ -68,6 +68,13 @@ public:
 	void Pause(bool x_pause);
 	void PauseInputs(bool x_pause);
 	bool EndOfAllStreams() const;
+	static const std::string& OutputDir(const std::string& x_outputDir = "");
+	inline static log4cxx::LoggerPtr& Logger(){return m_logger;};
+	static inline void SetConfigFile(const std::string& x_configFile){
+		assert(m_configFile.size() == 0);
+		m_configFile = x_configFile;
+	}
+	static inline const std::string& GetConfigFile(){return m_configFile;}
 private:
 	ManagerParameter m_param;
 
@@ -81,9 +88,11 @@ private:
 	std::vector<Input  *> m_inputs;
 
 	long long m_frameCount;
+	static log4cxx::LoggerPtr m_logger;
+	static std::string m_configFile;
+	static std::string m_outputDir;
 protected:
 	inline virtual const ParameterStructure& RefParameter() {return m_param;}
 	QReadWriteLock m_lock;
-	log4cxx::LoggerPtr m_logger;
 };
 #endif

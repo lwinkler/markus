@@ -52,12 +52,14 @@ using namespace std;
 
 using namespace std;
 
+log4cxx::LoggerPtr Manager::m_logger(log4cxx::Logger::getLogger("manager"));
+string Manager::m_configFile;
+string Manager::m_outputDir;
 
 Manager::Manager(ConfigReader& x_configReader, bool x_centralized) : 
 	Configurable(x_configReader),
 	m_param(m_configReader, "Manager"),
-	m_centralized(x_centralized),
-	m_logger(log4cxx::Logger::getLogger("manager"))
+	m_centralized(x_centralized)
 {
 	LOG_INFO(m_logger, "Create object Manager");
 	m_frameCount = 0;
@@ -138,8 +140,16 @@ Manager::~Manager()
 	PrintTimers();
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		delete *it;
-	Global::Infos();
-	Global::Finalize();
+
+	// Write final infos
+	if(m_outputDir.size() != 0)
+		LOG_INFO(m_logger, "Results written to directory "<<m_outputDir);
+
+	/// Do the final operations on the static class
+	if(m_outputDir.size() != 0) // TODO: probably include all global stuff in Manager
+	{
+		SYSTEM("cp markus.log " + m_outputDir);
+	}
 }
 
 
@@ -321,4 +331,49 @@ Module* Manager::GetModuleByName(const string& x_name) const
 			return *it;
 	throw MkException("Cannot find module " + x_name, LOC);
 	return NULL;
+}
+
+/// Returns a directory that will contain all outputs
+const string& Manager::OutputDir(const string& x_outputDir)
+{
+	if(m_outputDir.size() == 0)
+	{
+		try
+		{
+			if(x_outputDir == "")
+				m_outputDir = "out_" + timeStamp();
+			else
+				m_outputDir = x_outputDir;
+			SYSTEM("rm -rf out_latest");
+			short trial = 0;
+			string tmp = m_outputDir;
+
+			// Try to create the output dir, if it fails, try changing the name
+			while(trial < 250)
+			{
+				try
+				{
+					SYSTEM("mkdir \"" + m_outputDir + "\"");
+					trial = 250;
+				}
+				catch(...)
+				{
+					stringstream ss;
+					trial++;
+					ss<<tmp<<"_"<<trial;
+					m_outputDir = ss.str();
+				}
+			}
+			LOG_INFO(m_logger, "Creating directory "<<m_outputDir);
+
+			SYSTEM("ln -s \"" + m_outputDir + "\" out_latest");
+			SYSTEM("tools/version.sh > " + m_outputDir + "/version.txt");
+			SYSTEM("cp " + m_configFile + " " + m_outputDir);
+		}
+		catch(...)
+		{
+			LOG_WARN(m_logger, "Exception in Global::OutputDir");
+		}
+	}
+	return m_outputDir;
 }
