@@ -366,10 +366,9 @@ const string& Manager::OutputDir(const string& x_outputDir)
 						throw MkException("Cannot create output directory", LOC);
 				}
 			}
-			LOG_INFO(m_logger, "Creating directory "<<m_outputDir);
-
-			SYSTEM("rm -rf out_latest");
-			SYSTEM("ln -s \"" + m_outputDir + "\" out_latest");
+			LOG_INFO(m_logger, "Creating directory "<<m_outputDir<<" and symbolic link out_latest");
+			// note: use ln with atgs sfn to override existing link
+			SYSTEM("ln -sfn \"" + m_outputDir + "\" out_latest");
 			SYSTEM("tools/version.sh > " + m_outputDir + "/version.txt");
 			SYSTEM("cp " + m_configFile + " " + m_outputDir);
 		}
