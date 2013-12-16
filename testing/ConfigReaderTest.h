@@ -27,11 +27,16 @@
 #include <cppunit/TestCase.h>
 #include <cppunit/TestCaller.h>
 #include "ConfigReader.h"
+#include "util.h"
+#include "MkException.h"
+
+/// Unit testing class for ConfigReader class
 
 class ConfigReaderTest : public CppUnit::TestFixture
 {
 	protected:
 		ConfigReader* m_conf1;
+		ConfigReader* m_conf2;
 	public:
 	void runTest()
 	{
@@ -39,12 +44,15 @@ class ConfigReaderTest : public CppUnit::TestFixture
 	void setUp()
 	{
 		m_conf1 = new ConfigReader("testing/config1.xml");
+		m_conf2 = new ConfigReader("testing/config_empty.xml");
 	}
 	void tearDown()
 	{
 		delete m_conf1;
+		delete m_conf2;
 	}
 
+	/// Load and save a config file
 	void testLoad()
 	{
 		ConfigReader appConf = m_conf1->GetSubConfig("application");
@@ -66,20 +74,36 @@ class ConfigReaderTest : public CppUnit::TestFixture
 		CPPUNIT_ASSERT(atoi(param1.GetAttribute("id").c_str()) == 0);
 		CPPUNIT_ASSERT(param1.GetAttribute("name") == "param_text");
 
-		m_conf1->SaveToFile("testing/config1_copy.xml"); // TODO: Test that files are identical
+		m_conf1->SaveToFile("testing/config1_copy.xml");
 		m_conf1->Validate();
 
-/*
-	ConfigReader RefSubConfig(const std::string& x_objectType, std::string x_objectName = "", bool x_allowCreation = false);
-	void SetValue(const std::string& x_value);
-	void Validate() const;
-	*/
+		// note: this is kind of hackish ... can you find a better way :-)
+		SYSTEM("diff testing/config1.xml testing/config1_copy.xml | xargs -i{} ERROR_non_identical_files");
 	}
+
+	/// Generate a config from an empty file and test
+	void testGenerate()
+	{
+		ConfigReader appConf = m_conf2->RefSubConfig("application");
+		appConf.RefSubConfig("aaa", "nameX", true)
+			.RefSubConfig("bbb", "nameY", true)
+			.RefSubConfig("ccc", "nameZ", true).SetValue("someValue");
+		m_conf2->SaveToFile("testing/config_generated.xml");
+
+		ConfigReader generatedConf("testing/config_generated.xml");
+		CPPUNIT_ASSERT(generatedConf.GetSubConfig("application")
+				.GetSubConfig("aaa", "nameX")
+				.GetSubConfig("bbb", "nameY")
+				.GetSubConfig("ccc", "nameZ")
+				.GetValue() == "someValue");
+	}
+
 
 	static CppUnit::Test *suite()
 	{
 		CppUnit::TestSuite *suiteOfTests = new CppUnit::TestSuite("ConfigReaderTest");
 		suiteOfTests->addTest(new CppUnit::TestCaller<ConfigReaderTest>("testLoad", &ConfigReaderTest::testLoad));
+		suiteOfTests->addTest(new CppUnit::TestCaller<ConfigReaderTest>("testGenerate", &ConfigReaderTest::testGenerate));
 		return suiteOfTests;
 	}
 };

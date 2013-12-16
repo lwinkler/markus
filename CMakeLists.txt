@@ -13,22 +13,22 @@ find_package(OpenCV REQUIRED)
 # find_package(tinyxml REQUIRED) # TODO: How to add this dependancy ?
 # find_package(log4cxx REQUIRED) # TODO: How to add this dependancy ?
 # find_package(CppUnit REQUIRED)
-IF(Markus_USE_QT5)
+if(Markus_USE_QT5)
 	find_package(Qt5Widgets REQUIRED)
 	# find_package(Qt5Core REQUIRED) # already found via Qt5Widgets
 ELSE()
 	find_package(Qt4 REQUIRED)
-ENDIF()
+endif()
 
-SET(CMAKE_CXX_FLAGS "-Wall")
-SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g -DMARKUS_DEBUG_STREAMS")
-SET(CMAKE_CXX_FLAGS_RELEASE "-O3")
-SET(CMAKE_CXX_FLAGS_DEBUG  "-O2 -g -DMARKUS_DEBUG_STREAMS")
-# SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
-# SET(CMAKE_CXX_FLAGS_RELEASE "-O3")
-# SET(CMAKE_CXX_FLAGS_DEBUG  "-O3 -g")
+set(CMAKE_CXX_FLAGS "-Wall")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g -DMARKUS_DEBUG_STREAMS")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+set(CMAKE_CXX_FLAGS_DEBUG  "-O2 -g -DMARKUS_DEBUG_STREAMS")
+# set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
+# set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+# set(CMAKE_CXX_FLAGS_DEBUG  "-O3 -g")
 if(Markus_USE_PYTHON_LIBS)
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMARKUS_USE_PYTHON")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMARKUS_USE_PYTHON")
 endif()
 
 # Tell CMake to run moc when necessary:
@@ -48,37 +48,37 @@ if(Markus_NO_GUI)
 	add_definitions(-DMARKUS_NO_GUI)
 	set(DEPS bulk modules tools)
 else()
-	SET(DEPS bulk gui modules tools)
+	set(DEPS bulk gui modules tools)
 	include_directories(gui)
 endif()
 
 if(Markus_UNIT_TESTING)
 	add_definitions(-DMARKUS_UNIT_TESTING)
-	SET(DEPS ${DEPS} testing cppunit)
+	set(DEPS ${DEPS} testing cppunit)
 	include_directories(testing)
 endif()
 
-SET(DEPS ${DEPS} ${DEPS} tinyxml log4cxx ${OpenCV_LIBS}) # double the dependencies to avoid linking error
-IF(Markus_USE_QT5)
+set(DEPS ${DEPS} ${DEPS} tinyxml log4cxx ${OpenCV_LIBS}) # double the dependencies to avoid linking error
+if(Markus_USE_QT5)
 	include_directories(${Qt5Widgets_INCLUDE_DIRS})
-	SET(DEPS ${DEPS} ${Qt5Widgets_LIBRARIES})
+	set(DEPS ${DEPS} ${Qt5Widgets_LIBRARIES})
 	# Executables fail to build with Qt 5 in the default configuration
 	# without -fPIE. We add that here.
 	set(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 	add_definitions(${Qt5Widgets_DEFINITIONS})
 ELSE()
 	include_directories(${QT_INCLUDES})
-	SET(DEPS ${DEPS} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} )
-ENDIF()
+	set(DEPS ${DEPS} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} )
+endif()
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR})
 
 ## Python libs
-IF(Markus_USE_PYTHON_LIBS)
+if(Markus_USE_PYTHON_LIBS)
 	find_package(PythonLibs REQUIRED)
 	include_directories(${PYTHON_INCLUDE_DIRS})
-	SET(DEPS ${DEPS} ${PYTHON_LIBRARIES} )
-ENDIF()
+	set(DEPS ${DEPS} ${PYTHON_LIBRARIES} )
+endif()
 
 
 #-------------------------------------------------------------------------------- 
