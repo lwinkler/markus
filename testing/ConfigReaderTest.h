@@ -38,23 +38,48 @@ class ConfigReaderTest : public CppUnit::TestFixture
 	}
 	void setUp()
 	{
-		m_conf1 = new ConfigReader();
+		m_conf1 = new ConfigReader("testing/config1.xml");
 	}
 	void tearDown()
 	{
+		delete m_conf1;
 	}
 
-	void testA()
+	void testLoad()
 	{
-		// CPPUNIT_ASSERT(Complex(10, 1) == Complex(10, 1));
-		// CPPUNIT_ASSERT(!(Complex(1, 1) == Complex(2, 2)));
+		ConfigReader appConf = m_conf1->GetSubConfig("application");
+		ConfigReader module0conf = appConf.GetSubConfig("module", "Module0");
+		ConfigReader module1conf = appConf.GetSubConfig("module", "Module1");
+		CPPUNIT_ASSERT(module0conf == appConf.GetSubConfig("module", "Module0"));
+		CPPUNIT_ASSERT(module1conf == module0conf.NextSubConfig("module"));
+		CPPUNIT_ASSERT(module1conf == module0conf.NextSubConfig("module", "Module1"));
+		CPPUNIT_ASSERT(module1conf.NextSubConfig("module").IsEmpty());
+		CPPUNIT_ASSERT(! module0conf.GetSubConfig("parameters").IsEmpty());
+
+		ConfigReader param1 = module0conf.GetSubConfig("parameters").GetSubConfig("param", "param_text");
+		CPPUNIT_ASSERT(param1.GetValue() == "SomeText");
+		ConfigReader param2 = module0conf.GetSubConfig("parameters").GetSubConfig("param", "param_int");
+		CPPUNIT_ASSERT(param2.GetValue() == "21");
+		ConfigReader param3 = module0conf.GetSubConfig("parameters").GetSubConfig("param", "param_float");
+		CPPUNIT_ASSERT(param3.GetValue() == "3.1415");
+
+		CPPUNIT_ASSERT(atoi(param1.GetAttribute("id").c_str()) == 0);
+		CPPUNIT_ASSERT(param1.GetAttribute("name") == "param_text");
+
+		m_conf1->SaveToFile("testing/config1_copy.xml"); // TODO: Test that files are identical
+		m_conf1->Validate();
+
+/*
+	ConfigReader RefSubConfig(const std::string& x_objectType, std::string x_objectName = "", bool x_allowCreation = false);
+	void SetValue(const std::string& x_value);
+	void Validate() const;
+	*/
 	}
 
 	static CppUnit::Test *suite()
 	{
 		CppUnit::TestSuite *suiteOfTests = new CppUnit::TestSuite("ConfigReaderTest");
-		suiteOfTests->addTest(new CppUnit::TestCaller<ConfigReaderTest>("testEquality", &ConfigReaderTest::testA));
-		suiteOfTests->addTest(new CppUnit::TestCaller<ConfigReaderTest>("testAddition", &ConfigReaderTest::testA));
+		suiteOfTests->addTest(new CppUnit::TestCaller<ConfigReaderTest>("testLoad", &ConfigReaderTest::testLoad));
 		return suiteOfTests;
 	}
 };

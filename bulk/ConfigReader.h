@@ -49,6 +49,7 @@ public:
 	const std::string GetAttribute(const std::string& x_attributeName) const;
 	void SaveToFile(const std::string& x_file) const;
 	void Validate() const;
+	inline bool operator == (const ConfigReader &a){return a.mp_node == mp_node;}
 private:
 	void CheckUniquenessOfId(const std::string& x_group, const std::string& x_type, const std::string& x_idLabel, const std::string& x_moduleName) const;
 	TiXmlNode * mp_node;
