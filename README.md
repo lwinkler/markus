@@ -21,7 +21,7 @@ In all cases you will need:
 		- or via a package installer
 	- *LibTinyXML*
 	- *LibLog4Cxx*
-	- **awk**: used at compile time
+	- *awk*: used at compile time
 
 On Ubuntu the apt-get install command is:
 
@@ -31,6 +31,9 @@ Other dependencies:
 	- *CMake GUI* : (or cmake-curses-gui) to set the compilation flags visually
 	- *Qt Creator* : a full IDE for C++ and QT
 	- *Python*
+	- *CppUnit** : 
+
+	sudo apt-get install cmake-qt-gui cmake-curses-gui qt-creator python-dev libcppunit-dev
 
 Alternatively you can compile OpenCV from sources. In this case use:
 

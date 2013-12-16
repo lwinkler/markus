@@ -6,18 +6,19 @@ set(CMAKE_BUILD_TYPE       "Debug" CACHE BOOL "Mode of compilation")
 set(Markus_NO_GUI          false   CACHE BOOL "Compile Markus without a graphical user interface")
 set(Markus_USE_QT5         false   CACHE BOOL "Use QT 5 instead of 4")
 set(Markus_USE_PYTHON_LIBS false   CACHE BOOL "Compile with Python libs: only used in some modules")
+set(Markus_UNIT_TESTING    false   CACHE BOOL "Enable unit testing")
 
 # Required packages
 find_package(OpenCV REQUIRED)
 # find_package(tinyxml REQUIRED) # TODO: How to add this dependancy ?
 # find_package(log4cxx REQUIRED) # TODO: How to add this dependancy ?
+# find_package(CppUnit REQUIRED)
 IF(Markus_USE_QT5)
 	find_package(Qt5Widgets REQUIRED)
 	# find_package(Qt5Core REQUIRED) # already found via Qt5Widgets
 ELSE()
 	find_package(Qt4 REQUIRED)
 ENDIF()
-
 
 SET(CMAKE_CXX_FLAGS "-Wall")
 SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g -DMARKUS_DEBUG_STREAMS")
@@ -43,13 +44,19 @@ include_directories(bulk modules lib lib/cvblobs )
 set(markus_SRCS main.cpp)
 
 #-------------------------------------------------------------------------------- 
-IF(Markus_NO_GUI)
+if(Markus_NO_GUI)
 	add_definitions(-DMARKUS_NO_GUI)
-	SET(DEPS bulk modules tools)
-ELSE(Markus_NO_GUI)
+	set(DEPS bulk modules tools)
+else()
 	SET(DEPS bulk gui modules tools)
 	include_directories(gui)
-ENDIF(Markus_NO_GUI)
+endif()
+
+if(Markus_UNIT_TESTING)
+	add_definitions(-DMARKUS_UNIT_TESTING)
+	SET(DEPS ${DEPS} testing cppunit)
+	include_directories(testing)
+endif()
 
 SET(DEPS ${DEPS} ${DEPS} tinyxml log4cxx ${OpenCV_LIBS}) # double the dependencies to avoid linking error
 IF(Markus_USE_QT5)
@@ -80,13 +87,15 @@ add_subdirectory(bulk)
 add_subdirectory(modules)
 add_subdirectory(lib)
 add_subdirectory(tools)
-IF(NOT Markus_NO_GUI)
+if(NOT Markus_NO_GUI)
 	add_subdirectory(gui)
-ENDIF()
+endif()
+if(Markus_UNIT_TESTING)
+	add_subdirectory(testing)
+endif()
 
 
 add_executable(markus ${markus_SRCS})
-# target_link_libraries(markus AAA ${QT_QTCORE_LIBRARY} BBB ${QT_QTGUI_LIBRARY} bulk gui modules tools ${OpenCV_LIBS} tinyxml log4cxx bulk)
 target_link_libraries(markus ${DEPS})
 
 
