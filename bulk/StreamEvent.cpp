@@ -51,13 +51,13 @@ void StreamEvent::ConvertInput()
 
 	const StreamEvent * pstream = dynamic_cast<const StreamEvent*>(m_connected);
 	if(pstream == NULL) return;
-	// TODO m_event = pstream->GetState();
+	m_event = pstream->GetEvent();
 }
 
 /// Render : to display the event
 
 void StreamEvent::RenderTo(Mat * xp_output) const
 {
-	// TODO xp_output->setTo(Scalar(255 * m_event, 255 * m_event, 255 * m_event));
+	xp_output->setTo(Scalar(255 * m_event.IsRaised(), 255 * m_event.IsRaised(), 255 * m_event.IsRaised()));
 }
 

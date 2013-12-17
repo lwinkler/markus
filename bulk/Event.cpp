@@ -21,13 +21,14 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 #include "Event.h"
+#include "Object.h"
 
 using namespace cv;
 using namespace std;
 
 Event::Event()
 {
-};
+}
 
 Event::~Event(){}
 
@@ -36,19 +37,24 @@ Event::~Event(){}
 void Event::Empty()
 {
 	m_label = "";
+	m_objectLabel = "";
 	m_feats.clear();
-};
+}
 
 /// Raise an event with a set of features
-void Event::Raise(const string x_label, const std::map<std::string, Feature>& x_feats)
+void Event::Raise(const string x_label, const Object& x_object)
 {
-	m_label = x_label;
-	m_feats = x_feats;
-};
+	// stringstream ss;
+	// ss<<x_object.GetName()<<x_object.GetId();
+	m_label       = x_label;
+	m_objectLabel = x_object.GetName(); // ss.str();
+	m_feats       = x_object.GetFeatures();
+}
 
 /// Raise an event without features
 void Event::Raise(const string x_label)
 {
 	m_label = x_label;
+	m_objectLabel = "";
 	m_feats.clear();
-};
+}

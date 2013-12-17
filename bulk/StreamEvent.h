@@ -34,12 +34,12 @@ class StreamEvent : public Stream
 public:
 	StreamEvent(int x_id, const std::string& rx_name, Event& x_event, Module& rx_module, const std::string& rx_description);
 	~StreamEvent();
-	//inline void SetState(bool x_state){m_state = x_state;};
-	//inline bool GetState() const {return m_state;};
+	inline void SetEvent(const Event& x_event){m_event = x_event;}
+	inline const Event& GetEvent() const {return m_event;}
 	
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat * xp_output) const;
-	inline virtual const std::string GetTypeString() const {return "Event";};
+	inline virtual const std::string GetTypeString() const {return "Event";}
 
 
 protected:
