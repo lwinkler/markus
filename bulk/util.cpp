@@ -159,7 +159,7 @@ void adjust(const Mat* im_in, Mat* im_out, Mat*& tmp1, Mat*& tmp2)
 		}
 		else
 		{
-			LOG_ERROR(Global::logger, "Cannot convert format "<<im_in->depth()<<" to format "<<im_out->depth());
+			LOG_ERROR(Manager::Logger(), "Cannot convert format "<<im_in->depth()<<" to format "<<im_out->depth());
 			throw MkException("Cannot convert", LOC);
 		}
 	}

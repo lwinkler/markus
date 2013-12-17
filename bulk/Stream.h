@@ -28,13 +28,14 @@
 
 #include "Module.h"
 
-enum StreamType
+enum StreamType // TODO: See if this is really used
 {
 	STREAM_DEBUG,
 	STREAM_IMAGE,
-	STREAM_RECTS,
-	STREAM_POINTS,
-	STREAM_STATE
+	STREAM_OBJECTS,
+	// STREAM_POINTS,
+	STREAM_STATE,
+	STREAM_EVENT
 };
 
 /// This is the parent class for all streams (input and output of data)

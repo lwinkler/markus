@@ -20,32 +20,35 @@
 *    You should have received a copy of the GNU Lesser General Public License
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
+#include "Event.h"
 
-#ifndef STREAM_STATE_H
-#define STREAM_STATE_H
+using namespace cv;
+using namespace std;
 
-#include "Stream.h"
-
-/// Stream containing only one binary state (e.g Is there motion or not ?)
-
-class StreamState : public Stream
+Event::Event()
 {
-public:
-	StreamState(int x_id, const std::string& rx_name, bool& x_state, Module& rx_module, const std::string& rx_description);
-	~StreamState();
-	inline void SetState(bool x_state){m_state = x_state;};
-	inline bool GetState() const {return m_state;};
-	
-	virtual void ConvertInput();
-	virtual void RenderTo(cv::Mat * xp_output) const;
-	inline virtual const std::string GetTypeString()const {return "State";};
-
-protected:
-	bool& m_state;
-
-private:
-	StreamState& operator=(const StreamState&);
-	StreamState(const StreamState&);
 };
 
-#endif
+Event::~Event(){}
+
+
+/// Empty the event: must be called on each frame process to avoid raising multiple events
+void Event::Empty()
+{
+	m_label = "";
+	m_feats.clear();
+};
+
+/// Raise an event with a set of features
+void Event::Raise(const string x_label, const std::map<std::string, Feature>& x_feats)
+{
+	m_label = x_label;
+	m_feats = x_feats;
+};
+
+/// Raise an event without features
+void Event::Raise(const string x_label)
+{
+	m_label = x_label;
+	m_feats.clear();
+};

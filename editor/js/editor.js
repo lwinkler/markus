@@ -73,7 +73,8 @@ var xmlProject = null;
 				Image: "#316b31",	
 				Objects: "#00f",	
 				Debug: "#09098e",
-				State: "#cd7f32"
+				State: "#cd7f32",
+				Event: "#df0101"
 			};
 
 

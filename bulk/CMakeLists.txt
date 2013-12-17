@@ -8,9 +8,11 @@ Parameter.cpp
 Stream.cpp
 StreamImage.cpp
 StreamDebug.cpp
+StreamEvent.cpp
 StreamObject.cpp
 StreamState.cpp
 Object.cpp
+Event.cpp
 Feature.cpp
 Template.cpp
 util.cpp

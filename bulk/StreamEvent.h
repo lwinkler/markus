@@ -21,31 +21,33 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef STREAM_STATE_H
-#define STREAM_STATE_H
+#ifndef STREAM_EVENT_H
+#define STREAM_EVENT_H
 
 #include "Stream.h"
+#include "Event.h"
 
-/// Stream containing only one binary state (e.g Is there motion or not ?)
+/// Stream in the form of located objects
 
-class StreamState : public Stream
+class StreamEvent : public Stream
 {
 public:
-	StreamState(int x_id, const std::string& rx_name, bool& x_state, Module& rx_module, const std::string& rx_description);
-	~StreamState();
-	inline void SetState(bool x_state){m_state = x_state;};
-	inline bool GetState() const {return m_state;};
+	StreamEvent(int x_id, const std::string& rx_name, Event& x_event, Module& rx_module, const std::string& rx_description);
+	~StreamEvent();
+	//inline void SetState(bool x_state){m_state = x_state;};
+	//inline bool GetState() const {return m_state;};
 	
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat * xp_output) const;
-	inline virtual const std::string GetTypeString()const {return "State";};
+	inline virtual const std::string GetTypeString() const {return "Event";};
+
 
 protected:
-	bool& m_state;
+	Event& m_event;
 
 private:
-	StreamState& operator=(const StreamState&);
-	StreamState(const StreamState&);
+	StreamEvent& operator=(const StreamEvent&);
+	StreamEvent(const StreamEvent&);
 };
 
 #endif

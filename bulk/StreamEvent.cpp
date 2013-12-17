@@ -21,31 +21,43 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef STREAM_STATE_H
-#define STREAM_STATE_H
+#include "StreamEvent.h"
+#include "util.h"
 
-#include "Stream.h"
+using namespace std;
+using namespace cv;
 
-/// Stream containing only one binary state (e.g Is there motion or not ?)
 
-class StreamState : public Stream
+StreamEvent::StreamEvent(int x_id, const string& x_name, Event& x_event, Module& rx_module, const string& rx_description) : 
+	Stream(x_id, x_name, STREAM_EVENT, 1, 1, rx_module, rx_description),
+	m_event(x_event)
 {
-public:
-	StreamState(int x_id, const std::string& rx_name, bool& x_state, Module& rx_module, const std::string& rx_description);
-	~StreamState();
-	inline void SetState(bool x_state){m_state = x_state;};
-	inline bool GetState() const {return m_state;};
+}
+
+
+StreamEvent::~StreamEvent()
+{
+
+}
+
+// Transmit the event to the connected module
+
+void StreamEvent::ConvertInput()
+{
+	if(m_connected == NULL) return;
 	
-	virtual void ConvertInput();
-	virtual void RenderTo(cv::Mat * xp_output) const;
-	inline virtual const std::string GetTypeString()const {return "State";};
+	// Copy time stamp to output
+	m_timeStamp = RefConnected().GetTimeStamp();
 
-protected:
-	bool& m_state;
+	const StreamEvent * pstream = dynamic_cast<const StreamEvent*>(m_connected);
+	if(pstream == NULL) return;
+	// TODO m_event = pstream->GetState();
+}
 
-private:
-	StreamState& operator=(const StreamState&);
-	StreamState(const StreamState&);
-};
+/// Render : to display the event
 
-#endif
+void StreamEvent::RenderTo(Mat * xp_output) const
+{
+	// TODO xp_output->setTo(Scalar(255 * m_event, 255 * m_event, 255 * m_event));
+}
+

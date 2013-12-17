@@ -24,6 +24,7 @@
 #ifndef TRACKER_BY_FEATURES_H
 #define TRACKER_BY_FEATURES_H
 
+#include "list"
 #include "Module.h"
 #include "StreamObject.h"
 #include "Template.h"

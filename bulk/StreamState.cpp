@@ -28,22 +28,10 @@ using namespace std;
 using namespace cv;
 
 
-StreamState::StreamState(int x_id, const string& x_name, bool& x_state, const cv::Scalar& x_color, Module& rx_module, const string& rx_description) : 
+StreamState::StreamState(int x_id, const string& x_name, bool& x_state, Module& rx_module, const string& rx_description) : 
 	Stream(x_id, x_name, STREAM_STATE, 1, 1, rx_module, rx_description),
-	m_state(x_state),
-	m_color(x_color),
-	m_isColorSet(true)
+	m_state(x_state)
 {
-	//m_state = 0;
-}
-
-StreamState::StreamState(int x_id, const string& rx_name, bool& x_state, Module& rx_module, const string& rx_description):
-	Stream(x_id, rx_name, STREAM_IMAGE, 1, 1, rx_module, rx_description),
-	m_state(x_state),
-	m_color(cvScalar(255, 255, 255)),
-	m_isColorSet(false)
-{
-	//m_state = 0;
 }
 
 StreamState::~StreamState()
