@@ -22,6 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "util.h"
+#include "Manager.h"
 #include <iostream>
 
 #include <opencv2/highgui/highgui.hpp>
@@ -31,10 +32,6 @@ using namespace std;
 using namespace cv;
 
 // Global variables
-//Logging Global::logger; // TODO: See if we add this to Manager or not !
-log4cxx::LoggerPtr Global::logger(log4cxx::Logger::getLogger("global"));
-string Global::m_configFile;
-string Global::m_outputDir;
 int g_colorArraySize = 54;
 Scalar g_colorArray[] =
 {
@@ -103,7 +100,7 @@ void adjustSize(const Mat* im_in, Mat* im_out)
 {
 	if(!im_in->cols || !im_in->rows)
 	{
-		LOG_WARN(Global::logger, "Module input image has size 0x0, inserting a black frame");
+		LOG_WARN(Manager::Logger(), "Module input image has size 0x0, inserting a black frame"); // TODO: This error appears sometimes for strange reasons with FallDetection.write.xml
 		im_out->setTo(0);
 	}
 	else
@@ -255,62 +252,4 @@ const std::string msToTimeStamp(TIME_STAMP x_ms)
 	return string(str);
 }
 
-void Global::Infos()
-{
-	if(m_outputDir.size() != 0)
-		LOG_INFO(Global::logger, "Results written to directory "<<m_outputDir);
-}
-	
-/// Returns a directory that will contain all outputs
-const string& Global::OutputDir(const string& x_outputDir)
-{
-	if(m_outputDir.size() == 0)
-	{
-		try
-		{
-			if(x_outputDir == "")
-				m_outputDir = "out_" + timeStamp();
-			else
-				m_outputDir = x_outputDir;
-			SYSTEM("rm -rf out_latest");
-			short trial = 0;
-			string tmp = m_outputDir;
 
-			// Try to create the output dir, if it fails, try changing the name
-			while(trial < 250)
-			{
-				try
-				{
-					SYSTEM("mkdir \"" + m_outputDir + "\"");
-					trial = 250;
-				}
-				catch(...)
-				{
-					stringstream ss;
-					trial++;
-					ss<<tmp<<"_"<<trial;
-					m_outputDir = ss.str();
-				}
-			}
-			LOG_INFO(logger, "Creating directory "<<m_outputDir);
-
-			SYSTEM("ln -s \"" + m_outputDir + "\" out_latest");
-			SYSTEM("tools/version.sh > " + m_outputDir + "/version.txt");
-			SYSTEM("cp " + m_configFile + " " + m_outputDir);
-		}
-		catch(...)
-		{
-			LOG_WARN(Global::logger, "Exception in Global::OutputDir");
-		}
-	}
-	return m_outputDir;
-}
-
-/// Do the final operations on the static class
-void Global::Finalize()
-{
-	if(m_outputDir.size() != 0) // TODO: probably include all global stuff in Manager
-	{
-		SYSTEM("cp markus.log " + m_outputDir);
-	}
-}

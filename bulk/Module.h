@@ -101,9 +101,9 @@ public:
 	void Export(std::ostream& rx_os, int x_indentation);
 	Stream * GetInputStreamById(int x_id) const;
 	Stream * GetOutputStreamById(int x_id) const;
-	inline void LockForRead(){m_lock.lockForRead();};
-	inline void LockForWrite(){m_lock.lockForWrite();};
-	inline void Unlock(){m_lock.unlock();};
+	inline void LockForRead(){m_lock.lockForRead();}
+	inline void LockForWrite(){m_lock.lockForWrite();}
+	inline void Unlock(){m_lock.unlock();}
 	
 protected:
 

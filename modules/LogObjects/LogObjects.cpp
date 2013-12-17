@@ -24,6 +24,7 @@
 #include "LogObjects.h"
 #include "StreamState.h"
 #include "util.h"
+#include "Manager.h"
 
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
@@ -59,7 +60,7 @@ void LogObjects::Reset()
 {
 	Module::Reset();
 
-	m_fileName = Global::OutputDir() + "/" + m_param.file + ".txt";
+	m_fileName = Manager::OutputDir() + "/" + m_param.file + ".txt";
 	ofstream outputFile;
 	outputFile.open (m_fileName.c_str(), ios::out);
 	outputFile<<"time"<<SEP<<"object"<<SEP<<"feature"<<SEP<<"value"<<SEP<<"mean"<<SEP<<"sqVariance"<<SEP<<"initial"<<SEP<<"min"<<SEP<<"max"<<SEP<<"nbSamples"<<endl;

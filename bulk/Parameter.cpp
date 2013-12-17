@@ -23,6 +23,7 @@
 
 #include "Parameter.h"
 #include "ConfigReader.h"
+#include "Manager.h"
 
 #include <cstring>
 #include <iostream>
@@ -100,7 +101,7 @@ void ParameterStructure::SetFromConfig()
 		}
 		catch(...)
 		{
-			LOG_WARN(Global::logger, "Unknown parameter in configuration: "<<name<<" in module "<<m_objectName);
+			LOG_WARN(Manager::Logger(), "Unknown parameter in configuration: "<<name<<" in module "<<m_objectName);
 		}
 		conf = conf.NextSubConfig("param");
 	}
@@ -172,7 +173,7 @@ void ParameterStructure::PrintParameters() const
 		(*it)->Print(ss);
 	}
 	if(m_list.size() > 0)
-		LOG_INFO(Global::logger, ss.str());
+		LOG_INFO(Manager::Logger(), ss.str());
 }
 
 

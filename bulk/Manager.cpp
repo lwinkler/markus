@@ -52,12 +52,14 @@ using namespace std;
 
 using namespace std;
 
+log4cxx::LoggerPtr Manager::m_logger(log4cxx::Logger::getLogger("manager"));
+string Manager::m_configFile;
+string Manager::m_outputDir;
 
 Manager::Manager(ConfigReader& x_configReader, bool x_centralized) : 
 	Configurable(x_configReader),
 	m_param(m_configReader, "Manager"),
-	m_centralized(x_centralized),
-	m_logger(log4cxx::Logger::getLogger("manager"))
+	m_centralized(x_centralized)
 {
 	LOG_INFO(m_logger, "Create object Manager");
 	m_frameCount = 0;
@@ -123,7 +125,10 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 			Module& preceeding(stream.RefModule());
 			(*it)->SetPreceedingModule(preceeding);
 			if((*it)->RefParameter().autoProcess == false)
+			{
+				// cout<<"Module "<<(*it)->GetName()<<" depends on module "<<preceeding.GetName()<<endl;
 				preceeding.AddDependingModule(**it); // TODO: find a better way to execute non real time modules
+			}
 		}
 		catch(...){}
 	}
@@ -135,8 +140,17 @@ Manager::~Manager()
 	PrintTimers();
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		delete *it;
-	Global::Infos();
-	Global::Finalize();
+
+	// Write final infos
+	if(m_outputDir.size() != 0)
+		LOG_INFO(m_logger, "Results written to directory "<<m_outputDir);
+
+	/// Do the final operations on the static class
+	if(m_outputDir.size() != 0 && getenv("LOG_DIR") == NULL)
+	{
+		SYSTEM("cp markus.log " + m_outputDir + "/markus.copy.log");
+		// SYSTEM("cp markus " + m_outputDir);
+	}
 }
 
 
@@ -318,4 +332,50 @@ Module* Manager::GetModuleByName(const string& x_name) const
 			return *it;
 	throw MkException("Cannot find module " + x_name, LOC);
 	return NULL;
+}
+
+/// Returns a directory that will contain all outputs
+const string& Manager::OutputDir(const string& x_outputDir)
+{
+	if(m_outputDir.size() == 0)
+	{
+		try
+		{
+			if(x_outputDir == "")
+				m_outputDir = "out_" + timeStamp();
+			else
+				m_outputDir = x_outputDir;
+			short trial = 0;
+			string tmp = m_outputDir;
+
+			// Try to create the output dir, if it fails, try changing the name
+			while(trial < 250)
+			{
+				try
+				{
+					SYSTEM("mkdir \"" + m_outputDir + "\"");
+					trial = 250;
+				}
+				catch(...)
+				{
+					stringstream ss;
+					trial++;
+					ss<<tmp<<"_"<<trial;
+					m_outputDir = ss.str();
+					if(trial == 250)
+						throw MkException("Cannot create output directory", LOC);
+				}
+			}
+			LOG_INFO(m_logger, "Creating directory "<<m_outputDir<<" and symbolic link out_latest");
+			// note: use ln with atgs sfn to override existing link
+			SYSTEM("ln -sfn \"" + m_outputDir + "\" out_latest");
+			SYSTEM("tools/version.sh > " + m_outputDir + "/version.txt");
+			SYSTEM("cp " + m_configFile + " " + m_outputDir);
+		}
+		catch(exception& e)
+		{
+			LOG_WARN(m_logger, "Exception in Manager::OutputDir" << e.what());
+		}
+	}
+	return m_outputDir;
 }

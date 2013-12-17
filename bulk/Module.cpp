@@ -71,7 +71,7 @@ void Module::Reset()
 		m_moduleTimer->Reset(RefParameter().fps);
 	}
 	else m_moduleTimer = NULL;
-	RefParameter().PrintParameters();
+	// RefParameter().PrintParameters(); // Do not print 2x at startup
 }
 
 void Module::Pause(bool x_pause)
@@ -183,7 +183,7 @@ void Module::Process()
 		// Set time stamps to outputs
 		if(!IsInput())
 			for(vector<Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
-			(*it)->SetTimeStamp(m_currentTimeStamp);
+				(*it)->SetTimeStamp(m_currentTimeStamp);
 		
 		// Call depending modules (modules with fps = 0)
 		for(vector<Module*>::iterator it = m_modulesDepending.begin() ; it != m_modulesDepending.end() ; it++)
