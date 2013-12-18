@@ -52,12 +52,21 @@ void StreamEvent::ConvertInput()
 	const StreamEvent * pstream = dynamic_cast<const StreamEvent*>(m_connected);
 	if(pstream == NULL) return;
 	m_event = pstream->GetEvent();
+
+	Object obj = pstream->m_event.GetObject();
+	double ratioX = static_cast<double>(m_width) / pstream->GetInputWidth();
+	double ratioY = static_cast<double>(m_height) / pstream->GetInputHeight();
+	obj.m_posX   *= ratioX;
+	obj.m_posY   *= ratioY;
+	obj.m_width  *= ratioX;
+	obj.m_height *= ratioY;
+	pstream->m_event.SetObject(obj);
 }
 
 /// Render : to display the event
 
 void StreamEvent::RenderTo(Mat * xp_output) const
 {
-	xp_output->setTo(Scalar(255 * m_event.IsRaised(), 255 * m_event.IsRaised(), 255 * m_event.IsRaised()));
+	xp_output->setTo(Scalar(255 * m_event.IsRaised(), 255 * m_event.IsRaised(), 255 * m_event.IsRaised())); // TODO : this should be improved
 }
 

@@ -42,41 +42,41 @@ public:
 	LogEventParameterStructure(const ConfigReader& x_confReader) : 
 		ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterString("file",  "event",  &file,                           "Name of the .srt file without extension"));
-		m_list.push_back(new ParameterDouble("time",  0,        PARAM_DOUBLE, 0, 600, &duration, "Duration of the event for logging in .srt file"));
+		m_list.push_back(new ParameterString("file"      , "event" , &file        , "Name of the .srt file without extension"));
+		m_list.push_back(new ParameterDouble("time"      , 0       , PARAM_DOUBLE , 0, 600 , &duration , "Duration of the event for logging in .srt file"));
+		m_list.push_back(new ParameterString("extension" , "jpg"   , &extension   , "Extension of the thumbnails. Determines the output format."));
+
+		RefParameterByName("type").SetDefault("CV_8UC3");
 		ParameterStructure::Init();
 	}
 	std::string file;
 	double duration;
+	std::string extension;
 };
 
 class LogEvent : public Module
 {
-protected:
-	virtual void ProcessFrame();
-	LogEventParameterStructure m_param;
-	static const char * m_type;
-
-
-	Event m_event;
-	// bool m_state;
-	// bool m_oldState;
-	long int m_subId;
-	// std::string m_startTime;
-	// std::string m_endTime;
-	std::string m_srtFileName;
-
 public:
 	LogEvent(const ConfigReader& x_configReader);
 	~LogEvent(void);
 	void Reset();
 
-
 protected:
+	virtual void ProcessFrame();
 	void WriteEvent();
-	inline virtual LogEventParameterStructure& RefParameter() { return m_param;}
-	
+	void SaveImage();
+
+	Event m_event;
+	long int m_subId;
+	std::string m_srtFileName;
+	cv::Mat * m_input;
 	std::ofstream m_file;
+	bool m_saveImage;
+
+private:
+	inline virtual LogEventParameterStructure& RefParameter() { return m_param;} // TODO: see that this is always private
+	static const char * m_type; // TODO: see if we keep this or not
+	LogEventParameterStructure m_param;
 };
 
 #endif

@@ -60,11 +60,21 @@ public:
 	inline void UnLockModule(){mr_module.Unlock();}
 	inline bool IsConnected() const {return m_connected != NULL;}
 	inline Module& RefModule(){return mr_module;}
-	inline Stream& RefConnected(){return *m_connected;}
+	inline Stream& RefConnected()
+	{
+		if(m_connected == NULL)
+			throw MkException("Stream " + GetName() + " is not connected", LOC);
+		return *m_connected;
+	}
 
 	inline TIME_STAMP GetTimeStamp() const             {return m_timeStamp;}
 	inline void   SetTimeStamp(TIME_STAMP x_timeStamp) {m_timeStamp = x_timeStamp;}
-	inline double GetTimeStampConnected() const    {return m_connected->GetTimeStamp();}
+	inline double GetTimeStampConnected() const
+	{
+		if(m_connected == NULL)
+			throw MkException("Stream " + GetName() + " is not connected", LOC);
+		return m_connected->GetTimeStamp();
+	}
 
 protected:
 	const std::string m_name;

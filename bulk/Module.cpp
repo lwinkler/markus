@@ -154,7 +154,8 @@ void Module::Process()
 		if(! param.allowUnsyncInput)
 			for(unsigned int i = 1 ; i < m_inputStreams.size() ; i++)
 			{
-				if(m_inputStreams[i]->GetTimeStampConnected() != m_currentTimeStamp)
+				Stream& stream(*m_inputStreams.at(i));
+				if(stream.IsConnected() && stream.GetTimeStampConnected() != m_currentTimeStamp)
 					LOG_WARN(m_logger, "Input stream id="<<i<<" is not in sync with input stream id=0. To avoid this warning, either set parameter allow_unsync_input=1 for this module or move this module in the xml configuration file after the modules it depends on and set auto_process=0 to the preceeding modules. Sorry :-)"); // TODO: manage any order of modules in config file: manage connection order
 			}
 	}

@@ -23,6 +23,7 @@
 
 #include "LogEvent.h"
 #include "StreamEvent.h"
+#include "StreamImage.h"
 #include "util.h"
 #include "Manager.h"
 
@@ -37,13 +38,18 @@ LogEvent::LogEvent(const ConfigReader& x_configReader)
 	 : Module(x_configReader), m_param(x_configReader)
 {
 	m_description = "This module takes an event as input and logs it to .srt file";
-	
+	m_input       = new Mat(Size(m_param.width, m_param.height), m_param.type);
+
 	// Init input images
-	m_inputStreams.push_back(new StreamEvent(0, "input", m_event, *this, 	"Input event to be logged"));
+	m_inputStreams.push_back(new StreamEvent(0, "event", m_event, *this, "Input event to be logged"));
+	m_inputStreams.push_back(new StreamImage(1, "image", m_input, *this, "Video input for image extraction"));
+
+	m_saveImage = false;
 }
 
 LogEvent::~LogEvent(void)
 {
+	delete(m_input);
 }
 
 void LogEvent::Reset()
@@ -57,6 +63,7 @@ void LogEvent::Reset()
 	m_file.open (m_srtFileName.c_str(), std::ios_base::app);
 	if(! m_file.is_open())
 		throw FileNotFoundException("Impossible to open file in LogEvent::Reset", LOC);
+	m_saveImage = m_inputStreams.at(1)->IsConnected();
 }
 
 void LogEvent::ProcessFrame()
@@ -67,6 +74,9 @@ void LogEvent::ProcessFrame()
 		LOG_DEBUG(m_logger, "event change");
 		// Log the change in event
 		WriteEvent();
+		if(m_saveImage)
+			SaveImage();
+		m_subId++;
 	}
 }
 
@@ -89,7 +99,7 @@ void LogEvent::WriteEvent()
 	{
 		const Feature & feat = it2->second;
 		m_file<<m_currentTimeStamp<<SEP
-			<<m_event.GetObjectLabel()<<SEP
+			<<m_event.GetObject().GetName()<<m_event.GetObject().GetId()<<SEP
 			<<it2->first<<SEP
 			<<feat.value<<SEP
 			<<feat.mean<<SEP
@@ -100,5 +110,20 @@ void LogEvent::WriteEvent()
 			<<feat.nbSamples<<endl;
 	}
 	m_file<<endl;
-	m_subId++;
+}
+
+/// Save related images
+void LogEvent::SaveImage()
+{
+	const Object& obj(m_event.GetObject());
+	std::stringstream ss;
+	if(obj.m_width > 0 && obj.m_height > 0)
+	{
+		ss << m_subId << "_" << m_currentTimeStamp << "_" << obj.GetName()<< obj.GetId() << "." << m_param.extension;
+		imwrite(ss.str(), (*m_input)(obj.Rect()));
+		ss.flush();
+	}
+
+	ss << m_subId << "_" << m_currentTimeStamp << "_" << obj.GetName()<< obj.GetId() << "." << m_param.extension;
+	imwrite(ss.str(), *m_input);
 }

@@ -41,17 +41,17 @@ BgrSubMOG::BgrSubMOG(const ConfigReader& x_configReader) :
 {
 
 	m_description = "Perform background subtraction via Mixtures Of Gaussians";
-	m_input    = new Mat(Size(m_param.width, m_param.height), m_param.type);
-	m_background 		= new Mat(Size(m_param.width, m_param.height), m_param.type);
-	m_foreground 		= new Mat(Size(m_param.width, m_param.height), CV_8UC1);
+	m_input       = new Mat(Size(m_param.width, m_param.height), m_param.type);
+	m_background  = new Mat(Size(m_param.width, m_param.height), m_param.type);
+	m_foreground  = new Mat(Size(m_param.width, m_param.height), CV_8UC1);
 	
-	m_inputStreams.push_back(new StreamImage(0, "input",             m_input, *this,   "Video input"));
+	m_inputStreams.push_back(new StreamImage(0, "input",       m_input,      *this,   "Video input"));
 
-	m_outputStreams.push_back(new StreamImage(0, "foreground", m_foreground,*this,      "Foreground"));
-	m_outputStreams.push_back(new StreamImage(1, "background", m_background, *this,		"Background"));
+	m_outputStreams.push_back(new StreamImage(0, "foreground", m_foreground, *this,   "Foreground"));
+	m_outputStreams.push_back(new StreamImage(1, "background", m_background, *this,   "Background"));
 
 #ifdef MARKUS_DEBUG_STREAMS
-	m_debugStreams.push_back(new StreamDebug(0, "input", m_input,*this,      "Input"));
+	m_debugStreams.push_back(new StreamDebug(0, "input",       m_input,      *this,   "Input"));
 #endif
 };
 

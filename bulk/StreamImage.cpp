@@ -47,9 +47,9 @@ StreamImage::~StreamImage()
 void StreamImage::ConvertInput()
 {
 	// Copy time stamp to output
-	m_timeStamp = RefConnected().GetTimeStamp();
 	if(m_connected != NULL)
 	{
+		m_timeStamp = RefConnected().GetTimeStamp();
 		adjust(m_img_input, m_image, m_img_tmp1, m_img_tmp2);
 	}
 	else

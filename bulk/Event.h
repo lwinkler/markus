@@ -25,9 +25,8 @@
 #define MKEVENT_H
 
 #include "util.h"
-#include "Feature.h"
+#include "Object.h"
 
-class Object;
 
 /*! \class Event
  *  \brief Class representing a event (e.g. Ponctual moment in time where an intrusion occurs)
@@ -42,19 +41,22 @@ class Event
 		void Raise(const std::string x_label);
 		void Raise(const std::string x_label, const Object& m_object);
 		inline bool IsRaised() {return m_label != "";}
-		inline const std::string& GetLabel(){return m_label;};
-		inline const std::string& GetObjectLabel(){return m_objectLabel;};
+		inline const std::string& GetLabel(){return m_label;}
+		inline const Object& GetObject(){return m_object;}
+		inline void SetObject(const Object& x_object){m_object = x_object;}
+		// inline const std::string& GetObjectLabel(){return m_objectLabel;};
 
-		inline void AddFeature(std::string x_name, double x_value) {m_feats.insert(std::make_pair(x_name, Feature(x_value)));}
-		inline const std::map <std::string, Feature>& GetFeatures() const {return m_feats;}
+		inline void AddFeature(std::string x_name, double x_value) {m_object.AddFeature(x_name, x_value);}
+		inline const std::map <std::string, Feature>& GetFeatures() const {return m_object.GetFeatures();}
 		inline const Feature& GetFeature(const std::string& x_name) const {
-			return m_feats.find(x_name)->second;} /// TODO: manage case where the feature is not found
+			return m_object.GetFeature(x_name);} /// TODO: manage case where the feature is not found
 		// inline void SetFeatureByName(const std::string& x_name, double x_value) {m_feats.find(x_name)->second = Feature();}
 		// void SetFeatures(const std::map<std::string, Feature>& x_feats){m_feats = x_feats;}
 
 	protected:
 		std::string m_label;
-		std::string m_objectLabel;
-		std::map <std::string, Feature> m_feats;
+		Object m_object;
+		// std::string m_objectLabel;
+		// std::map <std::string, Feature> m_feats;
 };
 #endif

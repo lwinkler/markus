@@ -26,7 +26,8 @@
 using namespace cv;
 using namespace std;
 
-Event::Event()
+Event::Event() :
+	m_object("empty")
 {
 }
 
@@ -37,24 +38,19 @@ Event::~Event(){}
 void Event::Empty()
 {
 	m_label = "";
-	m_objectLabel = "";
-	m_feats.clear();
+	m_object = Object("empty");
 }
 
 /// Raise an event with a set of features
 void Event::Raise(const string x_label, const Object& x_object)
 {
-	// stringstream ss;
-	// ss<<x_object.GetName()<<x_object.GetId();
 	m_label       = x_label;
-	m_objectLabel = x_object.GetName(); // ss.str();
-	m_feats       = x_object.GetFeatures();
+	m_object      = x_object;
 }
 
 /// Raise an event without features
 void Event::Raise(const string x_label)
 {
 	m_label = x_label;
-	m_objectLabel = "";
-	m_feats.clear();
+	m_object = Object("empty");
 }
