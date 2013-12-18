@@ -26,6 +26,11 @@
 			<value min="0" max="1" default="1">1</value>
 			<description>If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream</description>
 		</param>
+		<param name="allow_unsync_input">
+			<type>bool</type>
+			<value min="0" max="1" default="0">0</value>
+			<description>If yes the module accepts that its input can be on a different time stamp. Only relevant if the module has many inputs. Use at your own risks.</description>
+		</param>
 		<param name="fps">
 			<type>double</type>
 			<value min="0" max="1000" default="0">0</value>

@@ -149,7 +149,15 @@ void Module::Process()
 	// Timestamp of the module is given by the input stream // TODO: How to manage if there are several streams
 	m_currentTimeStamp = 0;
 	if(m_inputStreams.size() >= 1)
+	{
 		m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected();
+		if(! param.allowUnsyncInput)
+			for(unsigned int i = 1 ; i < m_inputStreams.size() ; i++)
+			{
+				if(m_inputStreams[i]->GetTimeStampConnected() != m_currentTimeStamp)
+					LOG_WARN(m_logger, "Input stream id="<<i<<" is not in sync with input stream id=0. To avoid this warning, either set parameter allow_unsync_input=1 for this module or move this module in the xml configuration file after the modules it depends on and set auto_process=0 to the preceeding modules. Sorry :-)"); // TODO: manage any order of modules in config file: manage connection order
+			}
+	}
 	else if(! param.autoProcess)
 		throw MkException("Error: Module must have at least one input or have parameter auto_process=true in Module::Process", LOC);
 
