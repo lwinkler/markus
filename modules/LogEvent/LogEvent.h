@@ -42,9 +42,10 @@ public:
 	LogEventParameterStructure(const ConfigReader& x_confReader) : 
 		ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterString("file"      , "event" , &file        , "Name of the .srt file without extension"));
-		m_list.push_back(new ParameterDouble("time"      , 0       , PARAM_DOUBLE , 0, 600 , &duration , "Duration of the event for logging in .srt file"));
-		m_list.push_back(new ParameterString("extension" , "jpg"   , &extension   , "Extension of the thumbnails. Determines the output format."));
+		m_list.push_back(new ParameterString("file"       , "event" , &file        , "Name of the .srt file without extension"));
+		m_list.push_back(new ParameterDouble("time"       , 0       , PARAM_DOUBLE , 0, 600 , &duration , "Duration of the event for logging in .srt file"));
+		m_list.push_back(new ParameterString("folder_name", "events_img" , &folder    , "Name of the folder to create for images"));
+		m_list.push_back(new ParameterString("extension"  , "jpg"   , &extension   , "Extension of the thumbnails. Determines the output format."));
 
 		RefParameterByName("type").SetDefault("CV_8UC3");
 		ParameterStructure::Init();
@@ -52,6 +53,7 @@ public:
 	std::string file;
 	double duration;
 	std::string extension;
+	std::string folder;
 };
 
 class LogEvent : public Module
@@ -72,6 +74,7 @@ protected:
 	cv::Mat * m_input;
 	std::ofstream m_file;
 	bool m_saveImage;
+	std::string m_folderName;
 
 private:
 	inline virtual LogEventParameterStructure& RefParameter() { return m_param;} // TODO: see that this is always private

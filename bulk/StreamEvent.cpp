@@ -23,13 +23,14 @@
 
 #include "StreamEvent.h"
 #include "util.h"
+#include "Manager.h"
 
 using namespace std;
 using namespace cv;
 
 
-StreamEvent::StreamEvent(int x_id, const string& x_name, Event& x_event, Module& rx_module, const string& rx_description) : 
-	Stream(x_id, x_name, STREAM_EVENT, 1, 1, rx_module, rx_description),
+StreamEvent::StreamEvent(int x_id, const string& x_name, int x_width, int x_height, Event& x_event, Module& rx_module, const string& rx_description) :
+	Stream(x_id, x_name, STREAM_EVENT, x_width, x_height, rx_module, rx_description),
 	m_event(x_event)
 {
 }
@@ -53,14 +54,15 @@ void StreamEvent::ConvertInput()
 	if(pstream == NULL) return;
 	m_event = pstream->GetEvent();
 
-	Object obj = pstream->m_event.GetObject();
+	if(! m_event.IsRaised()) return;
+
+	Object& obj(m_event.RefObject());
 	double ratioX = static_cast<double>(m_width) / pstream->GetInputWidth();
 	double ratioY = static_cast<double>(m_height) / pstream->GetInputHeight();
 	obj.m_posX   *= ratioX;
 	obj.m_posY   *= ratioY;
 	obj.m_width  *= ratioX;
 	obj.m_height *= ratioY;
-	pstream->m_event.SetObject(obj);
 }
 
 /// Render : to display the event

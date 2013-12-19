@@ -41,7 +41,7 @@ LogEvent::LogEvent(const ConfigReader& x_configReader)
 	m_input       = new Mat(Size(m_param.width, m_param.height), m_param.type);
 
 	// Init input images
-	m_inputStreams.push_back(new StreamEvent(0, "event", m_event, *this, "Input event to be logged"));
+	m_inputStreams.push_back(new StreamEvent(0, "event", m_param.width, m_param.height, m_event, *this, "Input event to be logged"));
 	m_inputStreams.push_back(new StreamImage(1, "image", m_input, *this, "Video input for image extraction"));
 
 	m_saveImage = false;
@@ -64,6 +64,9 @@ void LogEvent::Reset()
 	if(! m_file.is_open())
 		throw FileNotFoundException("Impossible to open file in LogEvent::Reset", LOC);
 	m_saveImage = m_inputStreams.at(1)->IsConnected();
+
+	m_folderName  = Manager::OutputDir() + "/" + m_param.folder + "/"; 
+	SYSTEM("mkdir -p " + m_folderName);
 }
 
 void LogEvent::ProcessFrame()
@@ -116,14 +119,16 @@ void LogEvent::WriteEvent()
 void LogEvent::SaveImage()
 {
 	const Object& obj(m_event.GetObject());
-	std::stringstream ss;
 	if(obj.m_width > 0 && obj.m_height > 0)
 	{
-		ss << m_subId << "_" << m_currentTimeStamp << "_" << obj.GetName()<< obj.GetId() << "." << m_param.extension;
-		imwrite(ss.str(), (*m_input)(obj.Rect()));
-		ss.flush();
+		std::stringstream ss1;
+		ss1 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetLabel() << "_" << obj.GetName()<< obj.GetId() << "." << m_param.extension;
+		// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
+		imwrite(ss1.str(), (*m_input)(obj.Rect()));
+		//ss1.flush();
 	}
 
-	ss << m_subId << "_" << m_currentTimeStamp << "_" << obj.GetName()<< obj.GetId() << "." << m_param.extension;
-	imwrite(ss.str(), *m_input);
+	std::stringstream ss2;
+	ss2 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetLabel() << "_global." << m_param.extension;
+	imwrite(ss2.str(), *m_input);
 }

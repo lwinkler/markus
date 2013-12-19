@@ -42,7 +42,8 @@ class Event
 		void Raise(const std::string x_label, const Object& m_object);
 		inline bool IsRaised() {return m_label != "";}
 		inline const std::string& GetLabel(){return m_label;}
-		inline const Object& GetObject(){return m_object;}
+		inline const Object& GetObject() const {return m_object;}
+		inline Object& RefObject() {return m_object;}
 		inline void SetObject(const Object& x_object){m_object = x_object;}
 		// inline const std::string& GetObjectLabel(){return m_objectLabel;};
 
