@@ -34,7 +34,7 @@ Feature::Feature(double x_value)
 	initial    = x_value;
 	min        = x_value;
 	max        = x_value;
-	nbSamples  = 0;
+	nbSamples  = 1;
 }
 
 Feature::Feature(const Feature& f)

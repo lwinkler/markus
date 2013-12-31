@@ -100,14 +100,17 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 				{
 					int moduleId		= atoi(moduleConfig.GetAttribute("id").c_str());
 					int inputId 		= atoi(inputConfig.GetAttribute("id").c_str());
-					int outputModuleId 	= atoi(inputConfig.GetAttribute("moduleid").c_str());
-					int outputId 		= atoi(inputConfig.GetAttribute("outputid").c_str());
+					const string& tmp1 = inputConfig.GetAttribute("moduleid");
+					const string& tmp2 = inputConfig.GetAttribute("outputid");
+					if(tmp1 != "" && tmp2 != "")
+					{
+						int outputModuleId 	= atoi(tmp1.c_str());
+						int outputId 		= atoi(tmp2.c_str());
+						Stream * inputStream  = GetModuleById(moduleId)->GetInputStreamById(inputId);
+						Stream * outputStream = GetModuleById(outputModuleId)->GetOutputStreamById(outputId);
 
-					Stream * inputStream  = GetModuleById(moduleId)->GetInputStreamById(inputId);
-					Stream * outputStream = GetModuleById(outputModuleId)->GetOutputStreamById(outputId);
-
-					inputStream->Connect(outputStream);
-
+						inputStream->Connect(outputStream);
+					}
 					inputConfig = inputConfig.NextSubConfig("input");
 				}
 			}

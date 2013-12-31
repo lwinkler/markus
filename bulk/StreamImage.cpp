@@ -67,5 +67,13 @@ void StreamImage::RenderTo(Mat * xp_output) const
 void StreamImage::Connect(Stream* x_stream)
 {
 	m_connected = x_stream;
-	m_img_input = dynamic_cast<const StreamImage*>(m_connected)->GetImageRef();
+	if(m_connected == NULL)
+		return;
+	const StreamImage* tmp = dynamic_cast<const StreamImage*>(m_connected);
+	if(tmp == NULL)
+	{
+		m_connected = NULL;
+		throw MkException("Input stram cannot be connected probably because it is not of type StreamImage", LOC);
+	}
+	m_img_input = tmp->GetImageRef();
 }
