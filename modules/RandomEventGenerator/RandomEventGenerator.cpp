@@ -24,8 +24,10 @@
 #include "RandomEventGenerator.h"
 // #include "util.h"
 #include "StreamEvent.h"
+#include "StreamImage.h"
 
 using namespace std;
+using namespace cv;
 
 RandomEventGenerator::RandomEventGenerator(const ConfigReader& x_configReader): 
 	Input(x_configReader),
@@ -33,7 +35,9 @@ RandomEventGenerator::RandomEventGenerator(const ConfigReader& x_configReader):
 {
 	m_timeStamp = TIME_STAMP_INITIAL;
 	
-	m_outputStreams.push_back(new StreamEvent(0, "event", m_param.width, m_param.height, m_event, *this, 		"Event generated"));
+	m_outputStreams.push_back(new StreamEvent(0, "event", m_param.width, m_param.height, m_event, *this,  "Event generated"));
+	m_output = new Mat(Size(m_param.width, m_param.height), m_param.type);  // Note: sizes will be overridden !
+	m_outputStreams.push_back(new StreamImage(1, "image",                                m_output, *this, "Test image")); // TODO: Raise an error if two streams with same id
 
 	if(m_param.randomSeed == 0)
 		srand(time(NULL));
@@ -54,15 +58,40 @@ void RandomEventGenerator::Reset()
 void RandomEventGenerator::Capture()
 {
 	m_event.Empty();
-	Object obj("test");
-	for(int i = 0 ; i < m_param.nbFeatures ; i++)
+	m_output->setTo(0);
+
+	// Generate an event with an associated object
+	if(m_param.nbFeatures == 0)
 	{
-		stringstream name;
-		name<<"feat"<<i;
-		obj.AddFeature(name.str(), static_cast<float>(rand()) / RAND_MAX);
+		m_event.Raise("random");
 	}
-	m_event.Raise("random", obj);
-	LOG_DEBUG(m_logger, "RandomEventGenerator: Capture time: "<<m_frameTimer.GetMSecLong());
-	SetTimeStampToOutputs(m_frameTimer.GetMSecLong());
+	else
+	{
+		Object obj("test");
+		for(int i = 0 ; i < m_param.nbFeatures ; i++)
+		{
+			stringstream name;
+			name<<"feat"<<i;
+			obj.AddFeature(name.str(), static_cast<float>(rand()) / RAND_MAX);
+		}
+		m_event.Raise("random", obj);
+
+		// Output an image in relation with the event
+		int x = m_param.width / 2, y = m_param.width / 2, r = m_param.width / 4,  c = 0, l = -1;
+		if(m_param.nbFeatures > 0)
+			x = obj.GetFeature("feat0").value * m_param.width;
+		if(m_param.nbFeatures > 1)
+			y = obj.GetFeature("feat1").value * m_param.height;
+		if(m_param.nbFeatures > 2)
+			r = obj.GetFeature("feat2").value * m_param.width / 4;
+		if(m_param.nbFeatures > 3)
+			c = obj.GetFeature("feat3").value * 255;
+		if(m_param.nbFeatures > 4)
+			l = obj.GetFeature("feat4").value * 5 + 1;
+		circle(*m_output, Point(x, y), r, Scalar(100, c, 255 - c), l);
+
+		LOG_DEBUG(m_logger, "RandomEventGenerator: Capture time: "<<m_frameTimer.GetMSecLong());
+		SetTimeStampToOutputs(m_frameTimer.GetMSecLong());
+	}
 }
 

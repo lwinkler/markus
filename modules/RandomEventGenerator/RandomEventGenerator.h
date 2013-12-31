@@ -34,9 +34,10 @@ public:
 	RandomEventGeneratorParameterStructure(const ConfigReader& x_confReader) : 
 	InputParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterInt("nb_features", 	3, 	PARAM_INT, 	0, 	1000,	 &nbFeatures,	"Number of features per event"));
+		m_list.push_back(new ParameterInt("nb_features", 	4, 	PARAM_INT, 	0, 	1000,	 &nbFeatures,	"Number of features per event"));
 		m_list.push_back(new ParameterInt("random_seed", 	0, 	PARAM_INT, 	0, 	INT_MAX, &randomSeed,	"Seed for random generator: 0 means seed is generated from timer"));
-		RefParameterByName("fps").SetDefault("0.2"); // default FPS: 10 secs
+		RefParameterByName("type").SetDefault("CV_8UC3");
+		RefParameterByName("fps").SetDefault("0.2");
 		ParameterStructure::Init();
 	}
 
@@ -59,6 +60,7 @@ public:
 protected:
 	TIME_STAMP m_timeStamp;
 	Event m_event;
+	cv::Mat * m_output;
 
 private:
 	RandomEventGeneratorParameterStructure m_param;

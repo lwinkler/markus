@@ -248,7 +248,9 @@ Stream* Module::GetOutputStreamById(int x_id) const
 	for(vector<Stream *>::const_iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
 		if((*it)->GetId() == x_id) return *it;
 
-	throw MkException("Input stream not found " + x_id, LOC);
+	stringstream ss;
+	ss<<"Input stream not found module="<<GetName()<<" id="<<x_id;
+	throw MkException(ss.str(), LOC);
 	return NULL;
 }
 

@@ -18,7 +18,7 @@
 		</param>
 		<param name="type">
 			<type>image type</type>
-			<value default="CV_8UC1">CV_8UC1</value>
+			<value default="CV_8UC3">CV_8UC3</value>
 			<description>Format of the input image</description>
 		</param>
 		<param name="auto_process">
@@ -33,12 +33,12 @@
 		</param>
 		<param name="fps">
 			<type>double</type>
-			<value min="0" max="1000" default="0.1">0.1</value>
+			<value min="0" max="1000" default="0.2">0.2</value>
 			<description>Frames per seconds (processing speed)</description>
 		</param>
 		<param name="nb_features">
 			<type>int</type>
-			<value min="0" max="1000" default="3">3</value>
+			<value min="0" max="1000" default="4">4</value>
 			<description>Number of features per event</description>
 		</param>
 		<param name="random_seed">
@@ -52,8 +52,13 @@
 	<outputs>
 		<output id="0">
 			<type>Event</type>
-			<name>input</name>
+			<name>event</name>
 			<description>Event generated</description>
+		</output>
+		<output id="0">
+			<type>Image</type>
+			<name>image</name>
+			<description>Test image</description>
 		</output>
 	</outputs>
 </module>
