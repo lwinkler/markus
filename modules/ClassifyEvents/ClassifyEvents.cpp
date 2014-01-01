@@ -29,7 +29,7 @@ ClassifyEvents::ClassifyEvents(const ConfigReader& x_configReader) :
 
 #ifndef MARKUS_NO_GUI
 	// Add a new control to play forward and rewind
-	m_controls.push_back(new EventControl("Classify events", "Use user's feedback to classify events"));
+	// TODO m_controls.push_back(new EventControl("Classify events", "Use user's feedback to classify events"));
 #endif
 }
 

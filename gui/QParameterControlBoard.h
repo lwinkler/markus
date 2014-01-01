@@ -43,7 +43,7 @@ class QScrollArea;
 // class QListWidget;
 class Module;
 
-class QParameterControlBoard : public QWidget 
+class QParameterControlBoard : public QWidget // TODO: This should disappear
 {
 	Q_OBJECT
 public:

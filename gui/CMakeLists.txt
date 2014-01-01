@@ -11,10 +11,9 @@ add_library(gui
 markus.cpp
 MarkusApplication.cpp
 QModuleViewer.cpp
-QParameterControlBoard.cpp
+QControlBoard.cpp
 QParameterSlider.cpp
 Control.cpp
-ParameterControl.cpp
 InputStreamControl.cpp
 EventControl.cpp
 )

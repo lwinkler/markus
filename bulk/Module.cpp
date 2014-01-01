@@ -28,10 +28,11 @@
 #include "Stream.h"
 #include "Timer.h"
 #include "ModuleTimer.h"
+#include "Control.h"
 
 
 #ifndef MARKUS_NO_GUI
-#include "ParameterControl.h"
+// #include "ParameterControl.h"
 #endif
 
 using namespace std;
@@ -53,10 +54,6 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_currentTimeStamp     = TIME_STAMP_INITIAL;
 	m_pause                = false;
 
-	// Add controls for parameters' change
-#ifndef MARKUS_NO_GUI
-	m_controls.push_back(new ParameterControl("Parameters", "Change the values of parameters at runtime."));
-#endif
 	m_moduleTimer = NULL;
 }
 
@@ -72,6 +69,49 @@ void Module::Reset()
 	}
 	else m_moduleTimer = NULL;
 	// RefParameter().PrintParameters(); // Do not print 2x at startup
+
+	// Add controls for parameters' change
+#ifndef MARKUS_NO_GUI
+	const std::vector<Parameter*>& list = RefParameter().GetList();
+	// for(const vector<Parameter*>&::iterator it = list.begin() ; it != list.end() ; it++)
+		// m_controls.push_back(new ParameterControl("Parameters", "Change the values of parameters at runtime."));
+
+	// Delete all controllers
+	for(vector<Controller*>::iterator it = m_controls.begin() ; it != m_controls.end() ; it++)
+	{
+		delete(*it);
+	}
+	m_controls.clear();
+
+	for(vector<Parameter*>::const_iterator it = list.begin(); it != list.end(); it++)
+	{
+		Controller * ctrr = NULL;
+		switch((*it)->GetType())
+		{
+			case PARAM_BOOL:
+				ctrr = new ControllerBool(*dynamic_cast<ParameterBool*>(*it));
+				break;
+			case PARAM_DOUBLE:
+				ctrr = new ControllerDouble(*dynamic_cast<ParameterDouble*>(*it));
+				break;
+			case PARAM_FLOAT:
+				ctrr = new ControllerFloat(*dynamic_cast<ParameterFloat*>(*it));
+				break;
+			case PARAM_IMAGE_TYPE:
+				ctrr = new ControllerEnum(*dynamic_cast<ParameterEnum*>(*it)); 
+				break;
+			case PARAM_INT:
+				ctrr = new ControllerInt(*dynamic_cast<ParameterInt*>(*it));
+				break;
+			case PARAM_STR:
+				ctrr = new ControllerString(*dynamic_cast<ParameterString*>(*it));
+				break;
+		}
+		if(ctrr == NULL)
+			throw MkException("Controller creation failed", LOC);
+		else m_controls.push_back(ctrr);
+	}
+#endif
 }
 
 void Module::Pause(bool x_pause)
@@ -131,7 +171,7 @@ Module::~Module()
 		delete(*it);
 #endif
 #ifndef MARKUS_NO_GUI
-	for(std::vector<ControlBoard* >::iterator it = m_controls.begin() ; it != m_controls.end() ; it++)
+	for(std::vector<Controller* >::iterator it = m_controls.begin() ; it != m_controls.end() ; it++)
 		delete(*it);
 #endif
 

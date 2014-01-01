@@ -43,7 +43,7 @@
 #include "Module.h"
 #include "util.h"
 #include "StreamImage.h"
-#include "QParameterControlBoard.h"
+#include "QControlBoard.h"
 #include "Control.h"
 
 #define CLEAN_DELETE(x) if((x) != NULL){delete((x));(x) = NULL;}
@@ -58,7 +58,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	m_img_tmp2              = NULL;
 	m_img_output            = NULL;
 	m_img_original          = NULL;
-	m_parameterControlBoard = NULL;
+	m_controlBoard          = NULL;
 
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	m_outputWidth  = 0.8 * width();
@@ -224,10 +224,10 @@ void QModuleViewer::updateModule(Module * x_module)
 	this->addAction(actionShowDisplayMenu);
 
 	// Show control board for parameters
-	const vector<ControlBoard*>& ctrs = m_currentModule->GetControlList();
+	const vector<Controller*>& ctrs = m_currentModule->GetControlList();
 	cpt = 0;
 	//const char * title[32] = {"params", "stream"};
-	for(vector<ControlBoard*>::const_iterator it = ctrs.begin() ; it != ctrs.end() ; it++)
+	for(vector<Controller*>::const_iterator it = ctrs.begin() ; it != ctrs.end() ; it++)
 	{
 		// Add an action for each control associated with the module
 		string name = string("Control: ") + (*it)->GetName();
@@ -268,8 +268,8 @@ void QModuleViewer::updateStreamOrControlNb(int x_index)
 {
 	unsigned int cpt = static_cast<unsigned int>(x_index);
 
-	// CLEAN_DELETE(m_parameterControlBoard);
-	// m_parameterControlBoard = new QParameterControlBoard(m_currentModule);
+	// CLEAN_DELETE(m_controlBoard);
+	// m_controlBoard = new QParameterControlBoard(m_currentModule);
 	if(cpt < m_currentModule->GetOutputStreamList().size())
 	{
 		updateStream(m_currentModule->GetOutputStreamList()[cpt]);
@@ -286,7 +286,7 @@ void QModuleViewer::updateStreamOrControlNb(int x_index)
 	cpt -= m_currentModule->GetDebugStreamList().size();
 	if(cpt < m_currentModule->GetControlList().size())
 	{
-		m_parameterControlBoard->updateControl(m_currentModule->GetControlList()[cpt]);
+		m_controlBoard->updateControl(m_currentModule->GetControlList()[cpt]);
 		return;
 	}
 	*/
@@ -298,12 +298,12 @@ void QModuleViewer::updateStreamOrControlNb(int x_index)
 void QModuleViewer::updateControlNb(int x_index)
 {
 	assert(x_index < (int) m_currentModule->GetControlList().size());
-	CLEAN_DELETE(m_parameterControlBoard);
+	CLEAN_DELETE(m_controlBoard);
 	if(x_index < 0)
 		return;
-	m_parameterControlBoard = new QParameterControlBoard(m_currentModule, this);
-	mp_mainLayout->addWidget(m_parameterControlBoard, 0);
-	m_parameterControlBoard->updateControl(m_currentModule->GetControlList()[x_index]);
+	m_controlBoard = new QControlBoard(m_currentModule, this);
+	mp_mainLayout->addWidget(m_controlBoard, 0);
+	m_controlBoard->updateControl(m_currentModule->GetControlList().at(x_index));
 }
 
 void QModuleViewer::updateStream(Stream * x_outputStream)
@@ -314,9 +314,9 @@ void QModuleViewer::updateStream(Stream * x_outputStream)
 	CLEAN_DELETE(m_img_original);
 
 	//if(mp_gbControls != NULL)
-	/*if(m_parameterControlBoard != NULL)
+	/*if(m_controlBoard != NULL)
 	{
-		m_parameterControlBoard->hide();
+		m_controlBoard->hide();
 		// mp_gbControls->hide();
 		// mp_gbButtons->hide();
 		// //mp_widEmpty->show();

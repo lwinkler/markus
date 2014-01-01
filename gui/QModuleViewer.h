@@ -29,7 +29,7 @@
 #include <QWidget>
 #include <QImage>
 #include <QPainter>
-#include "QParameterControlBoard.h"
+#include "QControlBoard.h"
 
 class Manager;
 class Module;
@@ -37,7 +37,7 @@ class Stream;
 class ControlBoard;
 class QComboBox;
 class QPainter;
-// class QGroupBox;
+class QGroupBox;
 // class QPushButton;
 class QBoxLayout;
 class QLabel;
@@ -78,7 +78,7 @@ private:
 	cv::Mat * m_img_tmp1;
 	cv::Mat * m_img_tmp2;
 
-	QParameterControlBoard * m_parameterControlBoard;
+	QControlBoard * m_controlBoard;
 
 public slots:
 	void updateModuleNb(int x_index);
