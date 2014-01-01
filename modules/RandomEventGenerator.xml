@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="RandomEventGenerator" description="">
+<module name="RandomEventGenerator" description="Generate events with random features at each step">
 	<parameters>
 		<param name="class">
 			<type>string</type>
@@ -55,7 +55,7 @@
 			<name>event</name>
 			<description>Event generated</description>
 		</output>
-		<output id="0">
+		<output id="1">
 			<type>Image</type>
 			<name>image</name>
 			<description>Test image</description>

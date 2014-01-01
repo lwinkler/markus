@@ -16,5 +16,6 @@ QParameterSlider.cpp
 Control.cpp
 ParameterControl.cpp
 InputStreamControl.cpp
+EventControl.cpp
 )
 

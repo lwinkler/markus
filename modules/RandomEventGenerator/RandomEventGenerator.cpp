@@ -33,6 +33,7 @@ RandomEventGenerator::RandomEventGenerator(const ConfigReader& x_configReader):
 	Input(x_configReader),
 	m_param(x_configReader)
 {
+	m_description = "Generate events with random features at each step"; // TODO: Verify that all modules have a description
 	m_timeStamp = TIME_STAMP_INITIAL;
 	
 	m_outputStreams.push_back(new StreamEvent(0, "event", m_param.width, m_param.height, m_event, *this,  "Event generated"));
