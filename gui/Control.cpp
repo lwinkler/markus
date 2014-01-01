@@ -51,11 +51,39 @@ Controller::~Controller()
 	// if(m_widget != NULL) delete m_widget; // no need to delete
 }
 
+/// Set the controlled value (e.g. parameter) to the value on control
+void setControlledValueInt(Controller* x_ctr)
+{
+	ControllerInt* ctr = dynamic_cast<ControllerInt*>(x_ctr);
+	assert(ctr != NULL);
+	ctr->m_param.SetValue(ctr->m_parameterSlider->GetValue(), PARAMCONF_GUI);
+}
+
+/// Display the current value of the controlled object
+void getCurrentInt(Controller* x_ctr)
+{
+	ControllerInt* ctr = dynamic_cast<ControllerInt*>(x_ctr);
+	assert(ctr != NULL);
+	ctr->m_parameterSlider->SetValue(ctr->m_param.GetValue());
+}
+
+/// Display the default value of the controlled object
+void getDefaultInt(Controller* x_ctr)
+{
+	ControllerInt* ctr = dynamic_cast<ControllerInt*>(x_ctr);
+	assert(ctr != NULL);
+	ctr->m_parameterSlider->SetValue(ctr->m_param.GetDefault());
+}
+
 ControllerInt::ControllerInt(ParameterInt& x_param):
 	Controller(),
 	m_param(x_param)
 {
 	m_widget = m_parameterSlider = new QParameterSlider(m_param.GetValue(), m_param.GetMin(), m_param.GetMax(), 0);
+	// m_actions["Set"] = &ControllerInt::SetControlledValue;
+	m_actions.insert(std::make_pair("Set", &setControlledValueInt));
+	m_actions.insert(std::make_pair("GetCurrent", &getCurrentInt));
+	m_actions.insert(std::make_pair("GetDefault", &getDefaultInt));
 }
 
 ControllerInt::~ControllerInt()
@@ -63,23 +91,7 @@ ControllerInt::~ControllerInt()
 	// delete(m_parameterSlider);
 }
 
-/// Set the controlled value (e.g. parameter) to the value on control
-void ControllerInt::SetControlledValue()
-{
-	m_param.SetValue(m_parameterSlider->GetValue(), PARAMCONF_GUI);
-}
 
-/// Display the current value of the controlled object
-void ControllerInt::GetCurrent()
-{
-	m_parameterSlider->SetValue(m_parameterSlider->GetValue());
-}
-
-/// Display the default value of the controlled object
-void ControllerInt::GetDefault()
-{
-	m_parameterSlider->SetValue(m_param.GetDefault());
-}
 /*------------------------------------------------------------------------------------------------*/
 ControllerDouble::ControllerDouble(ParameterDouble& x_param):
 	Controller(),

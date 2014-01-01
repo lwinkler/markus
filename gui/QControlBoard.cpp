@@ -25,6 +25,8 @@
 #include "Control.h"
 #include <QBoxLayout>
 #include <QLabel>
+#include <QGroupBox>
+#include <QPushButton>
 
 using namespace std;
 
@@ -38,34 +40,15 @@ QControlBoard::QControlBoard(Module * x_module, QWidget *parent) :
 	QBoxLayout * mainLayout = new QBoxLayout(QBoxLayout::TopToBottom);
 	// m_currentModule         = x_module;
 	mp_gbControls		= new QScrollArea;
-	// mp_gbButtons		= new QGroupBox(tr("Parameter options"));
-
-
-	// Create the group with control buttons (for settings)
-	// mp_buttonGetCurrentControl  = new QPushButton(tr("Get current"));
-	// mp_buttonGetDefaultControl  = new QPushButton(tr("Get default"));
-	// mp_buttonSetControl         = new QPushButton(tr("Set"));
-	// mp_buttonResetModule        = new QPushButton(tr("Reset module"));
-
+	mp_gbButtons		= new QGroupBox(tr("Actions"));
 
 	// Create the group with settings buttons	
-	// QHBoxLayout * buttonLayout = new QHBoxLayout;
-	// mp_gbButtons->setLayout(buttonLayout);
+	mp_buttonLayout = new QHBoxLayout;
 
+	mp_gbButtons->setLayout(mp_buttonLayout);
 	mainLayout->addWidget(mp_gbControls, 0);
-	// mainLayout->addWidget(mp_gbButtons, 1);
-
-	// buttonLayout->addWidget(mp_buttonGetCurrentControl);
-	// buttonLayout->addWidget(mp_buttonGetDefaultControl);
-	// buttonLayout->addWidget(mp_buttonSetControl);
-	// buttonLayout->addWidget(mp_buttonResetModule);
-
-	// connect(mp_buttonGetCurrentControl, SIGNAL(pressed()), this, SLOT(getCurrentControl(void)));
-	// connect(mp_buttonGetDefaultControl, SIGNAL(pressed()), this, SLOT(getDefaultControl(void)));
-	// connect(mp_buttonSetControl       , SIGNAL(pressed()), this, SLOT(SetControlledValue(void)));
-	// connect(mp_buttonResetModule      , SIGNAL(pressed()), this, SLOT(resetModule(void)));
-
-	setLayout(mainLayout); // TODO fix this
+	mainLayout->addWidget(mp_gbButtons, 1);
+	setLayout(mainLayout);
 }
 
 QControlBoard::~QControlBoard()
@@ -86,7 +69,7 @@ void QControlBoard::paintEvent(QPaintEvent * e)
 
 void QControlBoard::updateControl(Controller* x_control)
 {
-	// m_currentControl = x_control;
+	m_currentControl = x_control;
 
 	// ParameterControl   * controlParam = dynamic_cast<ParameterControl*>(x_control);
 	// InputStreamControl * controlInput = dynamic_cast<InputStreamControl*>(x_control);
@@ -102,20 +85,33 @@ void QControlBoard::updateControl(Controller* x_control)
 	}
 	else assert(false); */
 
+	// Create the control buttons
+	// TODO: remove buttons and delete widgets
+	for(map<string, const px_action>::iterator it = m_currentControl->m_actions.begin() ; it != m_currentControl->m_actions.end() ; it++)
+	{
+		// note : names must match between buttons and actions
+		QPushButton* button = new QPushButton(it->first.c_str());
+		mp_buttonLayout->addWidget(button);
+		connect(button, SIGNAL(pressed()), this, SLOT(callAction(void)));
+	}
+
 
 	/// Create new control screen
 	mp_gbControls->setWidgetResizable(true);
 	QGridLayout * vbox = new QGridLayout;
 
 	// Add controls (= parameters)
-	int cpt = 0;
+	/*int cpt = 0;
 	for(vector<Controller*>::iterator it = RefListControllers().begin() ; it != RefListControllers().end() ; it++)
 	{
 		QLabel * lab = new QLabel((*it)->GetName().c_str());
 		vbox->addWidget(lab, cpt, 0);
 		vbox->addWidget((*it)->RefWidget(), cpt, 1);
 		cpt++;
-	}
+	}*/
+	QLabel * lab = new QLabel(x_control->GetName().c_str());
+	vbox->addWidget(lab, 0, 0);
+	vbox->addWidget(x_control->RefWidget(), 0, 1);
 
 	QWidget *viewport = new QWidget;
 	viewport->setLayout(vbox);
@@ -124,7 +120,17 @@ void QControlBoard::updateControl(Controller* x_control)
 
 	//mp_widEmpty->hide();
 	mp_gbControls->show();
-	// mp_gbButtons->show();
+	mp_gbButtons->show();
 }
 
 
+void QControlBoard::callAction()
+{
+	QPushButton* button = dynamic_cast<QPushButton*>(sender());
+	assert(button != NULL);
+	map<string, const px_action>::iterator it = m_currentControl->m_actions.find(button->text().toStdString());
+	if(it == m_currentControl->m_actions.end())
+		throw MkException("Cannot find action in controller " + button->text().toStdString(), LOC);
+	(*(it->second))(m_currentControl);
+	// cout<<"Action called "<<button->text().toStdString()<<endl;	
+}

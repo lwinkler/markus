@@ -230,7 +230,7 @@ void QModuleViewer::updateModule(Module * x_module)
 	for(vector<Controller*>::const_iterator it = ctrs.begin() ; it != ctrs.end() ; it++)
 	{
 		// Add an action for each control associated with the module
-		string name = string("Control: ") + (*it)->GetName();
+		string name = string("Control ") + (*it)->GetName();
 		QAction * actionShowControl = new QAction(tr(name.c_str()), this);
 		QSignalMapper * signalMapper = new QSignalMapper(this);
 		signalMapper->setMapping(actionShowControl, cpt);

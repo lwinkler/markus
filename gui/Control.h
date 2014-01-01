@@ -35,17 +35,22 @@ class QCheckBox;
 class QLineEdit;
 class QComboBox;
 
+// Pointer to a void method
+class Controller;
+typedef void (*px_action)(Controller*);
+
 class Controller
 {
 public:
 	Controller();
 	virtual ~Controller();
-	virtual void SetControlledValue() = 0;
-	virtual void GetCurrent() = 0;
-	virtual void GetDefault() = 0;
+	// virtual void SetControlledValue() = 0;
+	// virtual void GetCurrent() = 0;
+	// virtual void GetDefault() = 0;
 
 	inline QWidget* RefWidget(){return m_widget;}
 	virtual const std::string& GetName() const = 0;
+	std::map<std::string, const px_action> m_actions;
 	
 protected:
 	QWidget * m_widget;
@@ -57,12 +62,10 @@ class ControllerInt : public Controller
 public:
 	ControllerInt(ParameterInt & x_param);
 	~ControllerInt();
-	void SetControlledValue();
-	void GetCurrent();
-	void GetDefault();
+	// void SetControlledValue();
 	inline virtual const std::string& GetName() const {return m_param.GetName();}
 
-protected:
+// protected:
 	QParameterSlider * m_parameterSlider;
 	ParameterInt & m_param;
 };
