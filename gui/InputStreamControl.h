@@ -34,10 +34,7 @@ class InputStreamControl : public Controller
 public:
 	InputStreamControl(VideoFileReader& rx_module);
 	~InputStreamControl();
-	void SetPosition(int x_position);
-	void SetControlledValue();
-	void GetCurrent();
-	void GetDefault();
+	virtual QWidget* CreateWidget();
 
 // protected:
 	QParameterSlider * parameterSlider;

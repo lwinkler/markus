@@ -111,7 +111,7 @@ void QControlBoard::updateControl(Controller* x_control)
 	}*/
 	QLabel * lab = new QLabel(x_control->GetName().c_str());
 	vbox->addWidget(lab, 0, 0);
-	vbox->addWidget(x_control->RefWidget(), 0, 1);
+	vbox->addWidget(x_control->CreateWidget(), 0, 1);
 
 	QWidget *viewport = new QWidget;
 	viewport->setLayout(vbox);

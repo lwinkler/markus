@@ -43,7 +43,6 @@ using namespace std;
 Controller::Controller(string x_name) :
 	m_name(x_name)
 {
-	m_widget = NULL;
 }
 
 
@@ -80,8 +79,6 @@ ControllerInt::ControllerInt(ParameterInt& x_param):
 	Controller(x_param.GetName()),
 	param(x_param)
 {
-	m_widget = parameterSlider = new QParameterSlider(param.GetValue(), param.GetMin(), param.GetMax(), 0);
-	// m_actions["Set"] = &ControllerInt::SetControlledValue;
 	m_actions.insert(std::make_pair("Set", &setControlledValueInt));
 	m_actions.insert(std::make_pair("GetCurrent", &getCurrentInt));
 	m_actions.insert(std::make_pair("GetDefault", &getDefaultInt));
@@ -92,6 +89,10 @@ ControllerInt::~ControllerInt()
 	// delete(m_parameterSlider);
 }
 
+QWidget* ControllerInt::CreateWidget()
+{
+	return parameterSlider = new QParameterSlider(param.GetValue(), param.GetMin(), param.GetMax(), 0);
+}
 
 /*------------------------------------------------------------------------------------------------*/
 void setControlledValueDouble(Controller* x_ctr)
@@ -119,7 +120,6 @@ ControllerDouble::ControllerDouble(ParameterDouble& x_param):
 	Controller(x_param.GetName()),
 	param(x_param)
 {
-	m_widget = parameterSlider = new QParameterSlider(param.GetValue(), param.GetMin(), param.GetMax(), PRECISION_DOUBLE);
 	m_actions.insert(std::make_pair("Set", &setControlledValueDouble));
 	m_actions.insert(std::make_pair("GetCurrent", &getCurrentDouble));
 	m_actions.insert(std::make_pair("GetDefault", &getDefaultDouble));
@@ -130,6 +130,10 @@ ControllerDouble::~ControllerDouble()
 	// delete(m_parameterSlider);
 }
 
+QWidget* ControllerDouble::CreateWidget()
+{
+	return parameterSlider = new QParameterSlider(param.GetValue(), param.GetMin(), param.GetMax(), PRECISION_DOUBLE);
+}
 /*------------------------------------------------------------------------------------------------*/
 
 void setControlledValueBool(Controller* x_ctr)
@@ -157,8 +161,6 @@ ControllerBool::ControllerBool(ParameterBool& x_param):
 	Controller(x_param.GetName()),
 	param(x_param)
 {
-	m_widget = checkBox = new QCheckBox("Enabled");
-	(*getCurrentBool)(this);
 	m_actions.insert(std::make_pair("Set", &setControlledValueBool));
 	m_actions.insert(std::make_pair("GetCurrent", &getCurrentBool));
 	m_actions.insert(std::make_pair("GetDefault", &getDefaultBool));
@@ -169,6 +171,12 @@ ControllerBool::~ControllerBool()
 	// delete(m_checkBox);
 }
 
+QWidget* ControllerBool::CreateWidget()
+{
+	checkBox = new QCheckBox("Enabled");
+	(*getCurrentBool)(this);
+	return checkBox;
+}
 /*------------------------------------------------------------------------------------------------*/
 void setControlledValueString(Controller* x_ctr)
 {
@@ -195,12 +203,9 @@ ControllerString::ControllerString(ParameterString& x_param):
 	Controller(x_param.GetName()),
 	param(x_param)
 {
-	m_widget = lineEdit = new QLineEdit();
-	lineEdit->setStyleSheet("color: black; background-color: white");
 	m_actions.insert(std::make_pair("Set", &setControlledValueString));
 	m_actions.insert(std::make_pair("GetCurrent", &getCurrentString));
 	m_actions.insert(std::make_pair("GetDefault", &getDefaultString));
-	(*getCurrentString)(this);
 }
 
 ControllerString::~ControllerString()
@@ -208,6 +213,13 @@ ControllerString::~ControllerString()
 	// CLEAN_DELETE(m_lineEdit); // TODO: this causes a crash at closing if the parameter screen is activated.
 }
 
+QWidget* ControllerString::CreateWidget()
+{
+	lineEdit = new QLineEdit();
+	lineEdit->setStyleSheet("color: black; background-color: white");
+	(*getCurrentString)(this);
+	return lineEdit;
+}
 /*------------------------------------------------------------------------------------------------*/
 
 void setControlledValueFloat(Controller* x_ctr)
@@ -235,7 +247,6 @@ ControllerFloat::ControllerFloat(ParameterFloat& x_param):
 	Controller(x_param.GetName()),
 	param(x_param)
 {
-	m_widget = parameterSlider = new QParameterSlider(param.GetValue(), param.GetMin(), param.GetMax(), PRECISION_DOUBLE);
 	m_actions.insert(std::make_pair("Set", &setControlledValueFloat));
 	m_actions.insert(std::make_pair("GetCurrent", &getCurrentFloat));
 	m_actions.insert(std::make_pair("GetDefault", &getDefaultFloat));
@@ -247,6 +258,10 @@ ControllerFloat::~ControllerFloat()
 }
 
 
+QWidget* ControllerFloat::CreateWidget()
+{
+	return parameterSlider = new QParameterSlider(param.GetValue(), param.GetMin(), param.GetMax(), PRECISION_DOUBLE);
+}
 
 /*------------------------------------------------------------------------------------------------*/
 void setControlledValueEnum(Controller* x_ctr)
@@ -276,15 +291,9 @@ ControllerEnum::ControllerEnum(ParameterEnum& x_param):
 	Controller(x_param.GetName()),
 	param(x_param)
 {
-	m_widget = comboBox = new QComboBox;
-	for(std::map<std::string, int>::const_iterator it = param.RefEnum().begin() ; it != param.RefEnum().end() ; it++)
-	{
-		comboBox->addItem(it->first.c_str(), it->second);
-	}
 	m_actions.insert(std::make_pair("Set", &setControlledValueEnum));
 	m_actions.insert(std::make_pair("GetCurrent", &getCurrentEnum));
 	m_actions.insert(std::make_pair("GetDefault", &getDefaultEnum));
-	(*getCurrentEnum)(this);
 }
 
 ControllerEnum::~ControllerEnum()
@@ -292,6 +301,16 @@ ControllerEnum::~ControllerEnum()
 	// delete(comboBox);
 }
 
+QWidget* ControllerEnum::CreateWidget()
+{
+	comboBox = new QComboBox;
+	for(std::map<std::string, int>::const_iterator it = param.RefEnum().begin() ; it != param.RefEnum().end() ; it++)
+	{
+		comboBox->addItem(it->first.c_str(), it->second);
+	}
+	(*getCurrentEnum)(this);
+	return comboBox;
+}
 
 
 /*------------------------------------------------------------------------------------------------*/

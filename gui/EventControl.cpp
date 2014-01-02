@@ -40,7 +40,11 @@ ControllerEvent::ControllerEvent(ClassifyEvents& rx_module) :
 	Controller("Event"),
 	module(rx_module)
 {
-	// m_widget = m_parameterSlider = new QParameterSlider(0, 0, m_module.GetMaxMsec(), 0);
 	m_actions.insert(std::make_pair("Invalidate", &invalidate));
 }
 
+QWidget* ControllerEvent::CreateWidget()
+{
+	return NULL; // TODO ?
+	// m_widget = m_parameterSlider = new QParameterSlider(0, 0, m_module.GetMaxMsec(), 0);
+}

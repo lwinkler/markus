@@ -46,11 +46,15 @@ InputStreamControl::InputStreamControl(VideoFileReader& rx_module) :
 	Controller("File reader"),
 	module(rx_module)
 {
-	m_widget = parameterSlider = new QParameterSlider(0, 0, module.GetMaxMsec(), 0);
 	m_actions.insert(std::make_pair("Get", &getCursor));
 	m_actions.insert(std::make_pair("Set", &setCursor));
 }
 
 InputStreamControl::~InputStreamControl()
 {
+}
+
+QWidget* InputStreamControl::CreateWidget()
+{
+	return parameterSlider = new QParameterSlider(0, 0, module.GetMaxMsec(), 0);
 }

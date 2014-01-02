@@ -45,12 +45,13 @@ public:
 	Controller(std::string x_name);
 	virtual ~Controller();
 
-	inline QWidget* RefWidget(){return m_widget;}
+	// inline QWidget* RefWidget(){return m_widget;}
+	virtual QWidget* CreateWidget() = 0;
 	const std::string& GetName() {return m_name;};
 	const std::map<std::string, const px_action>& GetActions() {return m_actions;}
 	
 protected:
-	QWidget * m_widget;
+	// QWidget * m_widget;
 	std::map<std::string, const px_action> m_actions;
 	std::string m_name;
 };
@@ -61,9 +62,8 @@ class ControllerInt : public Controller
 public:
 	ControllerInt(ParameterInt & x_param);
 	~ControllerInt();
-	// void SetControlledValue();
+	virtual QWidget* CreateWidget();
 
-// protected:
 	QParameterSlider * parameterSlider;
 	ParameterInt     & param;
 };
@@ -75,6 +75,7 @@ class ControllerDouble : public Controller
 public:
 	ControllerDouble(ParameterDouble & x_param);
 	~ControllerDouble();
+	virtual QWidget* CreateWidget();
 
 	QParameterSlider * parameterSlider;
 	ParameterDouble  & param;
@@ -86,6 +87,7 @@ class ControllerFloat : public Controller
 public:
 	ControllerFloat(ParameterFloat & x_param);
 	~ControllerFloat();
+	virtual QWidget* CreateWidget();
 
 	QParameterSlider * parameterSlider;
 	ParameterFloat   & param;
@@ -97,6 +99,7 @@ class ControllerBool : public Controller
 public:
 	ControllerBool(ParameterBool & x_param);
 	~ControllerBool();
+	virtual QWidget* CreateWidget();
 
 	QCheckBox     * checkBox;
 	ParameterBool & param;
@@ -108,8 +111,8 @@ class ControllerString : public Controller
 public:
 	ControllerString(ParameterString & x_param);
 	~ControllerString();
+	virtual QWidget* CreateWidget();
 
-// protected:
 	QLineEdit  * lineEdit;
 	ParameterString & param;
 };
@@ -121,8 +124,8 @@ class ControllerEnum : public Controller
 public:
 	ControllerEnum(ParameterEnum & x_param);
 	~ControllerEnum();
+	virtual QWidget* CreateWidget();
 
-// protected:
 	QComboBox  * comboBox;
 	ParameterEnum & param;
 };
