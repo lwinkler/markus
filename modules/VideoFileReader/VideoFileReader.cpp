@@ -25,7 +25,7 @@
 #include "StreamImage.h"
 
 #ifndef MARKUS_NO_GUI
-#include "InputStreamControl.h"
+#include "ControllerInputStream.h"
 #endif
 
 using namespace std;

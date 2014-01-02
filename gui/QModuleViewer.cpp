@@ -44,7 +44,7 @@
 #include "util.h"
 #include "StreamImage.h"
 #include "QControlBoard.h"
-#include "Control.h"
+#include "ControllerParameters.h"
 
 #define CLEAN_DELETE(x) if((x) != NULL){delete((x));(x) = NULL;}
 

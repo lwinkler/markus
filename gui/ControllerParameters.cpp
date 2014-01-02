@@ -21,7 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "Control.h"
+#include "ControllerParameters.h"
 #include <cstdio>
 
 using namespace std;
@@ -40,16 +40,6 @@ using namespace std;
 
 #define CLEAN_DELETE(x) if((x) != NULL){delete((x));(x) = NULL;}
 
-Controller::Controller(string x_name) :
-	m_name(x_name)
-{
-}
-
-
-Controller::~Controller()
-{
-	// if(m_widget != NULL) delete m_widget; // no need to delete
-}
 
 /// Set the controlled value (e.g. parameter) to the value on control
 void setControlledValueInt(Controller* x_ctr)

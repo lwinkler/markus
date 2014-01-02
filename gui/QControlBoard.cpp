@@ -22,7 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "QControlBoard.h"
-#include "Control.h"
+#include "Controller.h"
 #include <QBoxLayout>
 #include <QLabel>
 #include <QGroupBox>

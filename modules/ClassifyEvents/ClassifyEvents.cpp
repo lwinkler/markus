@@ -8,7 +8,7 @@
 
 #include "ClassifyEvents.h"
 #include "StreamEvent.h"
-#include "EventControl.h"
+#include "ControllerEvent.h"
 
 
 const char * ClassifyEvents::m_type = "ClassifyEvents";

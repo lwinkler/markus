@@ -13,8 +13,9 @@ MarkusApplication.cpp
 QModuleViewer.cpp
 QControlBoard.cpp
 QParameterSlider.cpp
-Control.cpp
-InputStreamControl.cpp
-EventControl.cpp
+Controller.cpp
+ControllerParameters.cpp
+ControllerInputStream.cpp
+ControllerEvent.cpp
 )
 

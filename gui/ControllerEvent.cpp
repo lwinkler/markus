@@ -21,21 +21,30 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef EVENT_CONTROL_H
-#define EVENT_CONTROL_H
+#include "ControllerEvent.h"
+#include "ClassifyEvents/ClassifyEvents.h"
 
-#include "Control.h"
+using namespace std;
 
-class ClassifyEvents;
 
-/// Control class for an event classifier
-class ControllerEvent : public Controller
+/*--------------------------------------------------------------------------------*/
+
+void invalidate(Controller* x_ctr)
 {
-public:
-	ControllerEvent(ClassifyEvents& rx_module);
-	~ControllerEvent(){};
-	virtual QWidget* CreateWidget();
+	ControllerEvent* ctr = dynamic_cast<ControllerEvent*>(x_ctr);
+	assert(ctr != NULL);
+	// TODO
+}
 
-	ClassifyEvents  & module;
-};
-#endif
+ControllerEvent::ControllerEvent(ClassifyEvents& rx_module) :
+	Controller("Event"),
+	module(rx_module)
+{
+	m_actions.insert(std::make_pair("Invalidate", &invalidate));
+}
+
+QWidget* ControllerEvent::CreateWidget()
+{
+	return NULL; // TODO ?
+	// m_widget = m_parameterSlider = new QParameterSlider(0, 0, m_module.GetMaxMsec(), 0);
+}

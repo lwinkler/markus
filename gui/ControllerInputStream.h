@@ -21,40 +21,23 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "InputStreamControl.h"
-#include "QParameterSlider.h"
-#include "VideoFileReader/VideoFileReader.h"
+#ifndef INPUT_STREAM_CONTROL_H
+#define INPUT_STREAM_CONTROL_H
 
-using namespace std;
+#include "Controller.h"
 
+class VideoFileReader;
 
-void setCursor(Controller* x_ctr)
+/// Control class for an input
+class InputStreamControl : public Controller
 {
-	InputStreamControl* ctr = dynamic_cast<InputStreamControl*>(x_ctr);
-	assert(ctr != NULL);
-	ctr->module.SetMsec(ctr->parameterSlider->GetValue());
-}
+public:
+	InputStreamControl(VideoFileReader& rx_module);
+	~InputStreamControl();
+	virtual QWidget* CreateWidget();
 
-void getCursor(Controller* x_ctr)
-{
-	InputStreamControl* ctr = dynamic_cast<InputStreamControl*>(x_ctr);
-	assert(ctr != NULL);
-	ctr->parameterSlider->SetValue(ctr->module.GetMsec());
-}
-
-InputStreamControl::InputStreamControl(VideoFileReader& rx_module) :
-	Controller("File reader"),
-	module(rx_module)
-{
-	m_actions.insert(std::make_pair("Get", &getCursor));
-	m_actions.insert(std::make_pair("Set", &setCursor));
-}
-
-InputStreamControl::~InputStreamControl()
-{
-}
-
-QWidget* InputStreamControl::CreateWidget()
-{
-	return parameterSlider = new QParameterSlider(0, 0, module.GetMaxMsec(), 0);
-}
+// protected:
+	QParameterSlider * parameterSlider;
+	VideoFileReader  & module;
+};
+#endif

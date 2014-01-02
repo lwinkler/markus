@@ -21,30 +21,40 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "EventControl.h"
-#include "ClassifyEvents/ClassifyEvents.h" // TODO: include base module in markus
+#include "ControllerInputStream.h"
+#include "QParameterSlider.h"
+#include "VideoFileReader/VideoFileReader.h"
 
 using namespace std;
 
 
-/*--------------------------------------------------------------------------------*/
-
-void invalidate(Controller* x_ctr)
+void setCursor(Controller* x_ctr)
 {
-	ControllerEvent* ctr = dynamic_cast<ControllerEvent*>(x_ctr);
+	InputStreamControl* ctr = dynamic_cast<InputStreamControl*>(x_ctr);
 	assert(ctr != NULL);
-	// TODO
+	ctr->module.SetMsec(ctr->parameterSlider->GetValue());
 }
 
-ControllerEvent::ControllerEvent(ClassifyEvents& rx_module) :
-	Controller("Event"),
+void getCursor(Controller* x_ctr)
+{
+	InputStreamControl* ctr = dynamic_cast<InputStreamControl*>(x_ctr);
+	assert(ctr != NULL);
+	ctr->parameterSlider->SetValue(ctr->module.GetMsec());
+}
+
+InputStreamControl::InputStreamControl(VideoFileReader& rx_module) :
+	Controller("File reader"),
 	module(rx_module)
 {
-	m_actions.insert(std::make_pair("Invalidate", &invalidate));
+	m_actions.insert(std::make_pair("Get", &getCursor));
+	m_actions.insert(std::make_pair("Set", &setCursor));
 }
 
-QWidget* ControllerEvent::CreateWidget()
+InputStreamControl::~InputStreamControl()
 {
-	return NULL; // TODO ?
-	// m_widget = m_parameterSlider = new QParameterSlider(0, 0, m_module.GetMaxMsec(), 0);
+}
+
+QWidget* InputStreamControl::CreateWidget()
+{
+	return parameterSlider = new QParameterSlider(0, 0, module.GetMaxMsec(), 0);
 }

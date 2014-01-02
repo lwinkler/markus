@@ -28,7 +28,7 @@
 #include "Stream.h"
 #include "Timer.h"
 #include "ModuleTimer.h"
-#include "Control.h"
+#include "ControllerParameters.h"
 
 
 #ifndef MARKUS_NO_GUI

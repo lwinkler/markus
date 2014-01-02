@@ -21,23 +21,21 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef INPUT_STREAM_CONTROL_H
-#define INPUT_STREAM_CONTROL_H
+#include "Controller.h"
 
-#include "Control.h"
+using namespace std;
 
-class VideoFileReader;
 
-/// Control class for an input
-class InputStreamControl : public Controller
+#define CLEAN_DELETE(x) if((x) != NULL){delete((x));(x) = NULL;}
+
+Controller::Controller(string x_name) :
+	m_name(x_name)
 {
-public:
-	InputStreamControl(VideoFileReader& rx_module);
-	~InputStreamControl();
-	virtual QWidget* CreateWidget();
+}
 
-// protected:
-	QParameterSlider * parameterSlider;
-	VideoFileReader  & module;
-};
-#endif
+
+Controller::~Controller()
+{
+	// if(m_widget != NULL) delete m_widget; // no need to delete
+}
+
