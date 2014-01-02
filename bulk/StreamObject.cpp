@@ -83,57 +83,7 @@ void StreamObject::RenderTo(Mat * xp_output) const
 {
 	for(vector<Object>::const_iterator it1 = m_objects.begin() ; it1 != m_objects.end() ; it1++)
 	{
-		//Rect rect = it1->GetRect();
-		Point p1(it1->m_posX - it1->m_width / 2, it1->m_posY - it1->m_height / 2);
-		Point p2(it1->m_posX + it1->m_width / 2, it1->m_posY + it1->m_height / 2);
-
-		float scale = static_cast<float>(xp_output->cols) / m_width;
-		p1.x = p1.x * scale;
-		p2.x = p2.x * scale;
-		scale = static_cast<float>(xp_output->rows) / m_height;
-		p1.y = p1.y * scale;
-		p2.y = p2.y * scale;
-
-		// Draw the rectangle in the input image
-		// if id is present, draw to the equivalent color
-#ifndef MARKUS_DEBUG_STREAMS
-		rectangle( *xp_output, p1, p2, Scalar(20,0,230), 3, 8, 0 );
-#else
-		Scalar color = m_color;
-		Point pText = p1;
-
-		if(it1->GetId() >= 0)
-		{
-			color = colorFromId(it1->GetId());
-			ostringstream text;
-			text<<it1->GetName()<<" "<<it1->GetId();
-			pText.y -= 3;
-			putText(*xp_output, text.str(), pText,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
-		}
-		else
-		{
-			// color from stream
-			pText.y -= 3;
-			putText(*xp_output, it1->GetName(), pText, FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
-		}
-		rectangle( *xp_output, p1, p2, color, 1, 8, 0 );
- 
-		// Print features and values
-		pText.x += 2;
-		int i = 0;
-		for(map<string, Feature>::const_iterator it2 = it1->GetFeatures().begin() ; it2 != it1->GetFeatures().end() ; it2++)
-		{
-			//try
-			{
-				ostringstream text;
-				text<<it2->first<<"="<<it2->second.value;
-				pText.y += 7;
-				putText(*xp_output, text.str(), pText,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
-				i++;
-			}
-			//catch(...){}
-		}
-#endif
+		it1->RenderTo(xp_output, m_color);
 	}
 }
 

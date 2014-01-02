@@ -65,3 +65,58 @@ Object& Object::operator = (const Object& r)
 */
 Object::~Object(){}
 
+/// Draw an object on an image (for visualization)
+void Object::RenderTo(Mat* xp_output, const Scalar& x_color) const
+{
+	//Rect rect = it1->GetRect();
+	Point p1(m_posX - m_width / 2, m_posY - m_height / 2);
+	Point p2(m_posX + m_width / 2, m_posY + m_height / 2);
+
+	float scale = static_cast<float>(xp_output->cols) / m_width;
+	p1.x = p1.x * scale;
+	p2.x = p2.x * scale;
+	scale = static_cast<float>(xp_output->rows) / m_height;
+	p1.y = p1.y * scale;
+	p2.y = p2.y * scale;
+
+	// Draw the rectangle in the input image
+	// if id is present, draw to the equivalent color
+#ifndef MARKUS_DEBUG_STREAMS
+	rectangle( *xp_output, p1, p2, Scalar(20,0,230), 3, 8, 0 );
+#else
+	Scalar color = x_color;
+	Point pText = p1;
+
+	if(GetId() >= 0)
+	{
+		color = colorFromId(GetId());
+		ostringstream text;
+		text<<GetName()<<" "<<GetId();
+		pText.y -= 3;
+		putText(*xp_output, text.str(), pText,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
+	}
+	else
+	{
+		// color from stream
+		pText.y -= 3;
+		putText(*xp_output, GetName(), pText, FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
+	}
+	rectangle( *xp_output, p1, p2, color, 1, 8, 0 );
+
+	// Print features and values
+	pText.x += 2;
+	int i = 0;
+	for(map<string, Feature>::const_iterator it2 = GetFeatures().begin() ; it2 != GetFeatures().end() ; it2++)
+	{
+		//try
+		{
+			ostringstream text;
+			text<<it2->first<<"="<<it2->second.value;
+			pText.y += 7;
+			putText(*xp_output, text.str(), pText,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
+			i++;
+		}
+		//catch(...){}
+	}
+#endif
+}

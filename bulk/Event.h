@@ -51,13 +51,9 @@ class Event
 		inline const std::map <std::string, Feature>& GetFeatures() const {return m_object.GetFeatures();}
 		inline const Feature& GetFeature(const std::string& x_name) const {
 			return m_object.GetFeature(x_name);} /// TODO: manage case where the feature is not found
-		// inline void SetFeatureByName(const std::string& x_name, double x_value) {m_feats.find(x_name)->second = Feature();}
-		// void SetFeatures(const std::map<std::string, Feature>& x_feats){m_feats = x_feats;}
 
 	protected:
 		std::string m_label;
 		Object m_object;
-		// std::string m_objectLabel;
-		// std::map <std::string, Feature> m_feats;
 };
 #endif

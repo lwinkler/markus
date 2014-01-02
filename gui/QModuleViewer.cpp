@@ -272,25 +272,16 @@ void QModuleViewer::updateStreamOrControlNb(int x_index)
 	// m_controlBoard = new QParameterControlBoard(m_currentModule);
 	if(cpt < m_currentModule->GetOutputStreamList().size())
 	{
-		updateStream(m_currentModule->GetOutputStreamList()[cpt]);
+		updateStream(m_currentModule->GetOutputStreamList().at(cpt));
 		return;
 	}
 
 	cpt -= m_currentModule->GetOutputStreamList().size();
 	if(cpt < m_currentModule->GetDebugStreamList().size())
 	{
-		updateStream(m_currentModule->GetDebugStreamList()[cpt]);
+		updateStream(m_currentModule->GetDebugStreamList().at(cpt));
 		return;
 	}
-	/*
-	cpt -= m_currentModule->GetDebugStreamList().size();
-	if(cpt < m_currentModule->GetControlList().size())
-	{
-		m_controlBoard->updateControl(m_currentModule->GetControlList()[cpt]);
-		return;
-	}
-	*/
-	
 	assert(false);
 }
 
@@ -309,18 +300,7 @@ void QModuleViewer::updateControlNb(int x_index)
 void QModuleViewer::updateStream(Stream * x_outputStream)
 {
 	m_currentStream  = x_outputStream;
-
-
 	CLEAN_DELETE(m_img_original);
-
-	//if(mp_gbControls != NULL)
-	/*if(m_controlBoard != NULL)
-	{
-		m_controlBoard->hide();
-		// mp_gbControls->hide();
-		// mp_gbButtons->hide();
-		// //mp_widEmpty->show();
-	}*/
 }
 
 
@@ -335,7 +315,7 @@ void QModuleViewer::showDisplayOptions(bool x_isChecked)
 void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qimg)
 {
 
-	// Soo far only char images are supported
+	// So far only char images are supported
 	if(mat->type() != CV_8UC3 && mat->type() != CV_8UC3)
 		return;
 

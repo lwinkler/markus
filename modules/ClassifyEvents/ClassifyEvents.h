@@ -33,6 +33,8 @@ public:
 	
 	virtual void ProcessFrame();
 	void Reset();
+	void InvalidateLastEvent(){};
+	void ValidateLastEvent(){};
 	
 protected:
 

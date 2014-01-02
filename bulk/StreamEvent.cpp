@@ -69,6 +69,11 @@ void StreamEvent::ConvertInput()
 
 void StreamEvent::RenderTo(Mat * xp_output) const
 {
-	xp_output->setTo(Scalar(255 * m_event.IsRaised(), 255 * m_event.IsRaised(), 255 * m_event.IsRaised())); // TODO : this should be improved
+	if(m_event.IsRaised())
+	{
+		xp_output->setTo(Scalar(255, 255, 255));
+		m_event.RefObject().RenderTo(xp_output, Scalar(255, 0, 0));
+	}
+	else xp_output->setTo(0);
 }
 

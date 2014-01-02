@@ -26,6 +26,7 @@ ClassifyEvents::ClassifyEvents(const ConfigReader& x_configReader) :
 	m_inputStreams.push_back(new StreamEvent( 0, "events",   m_param.width, m_param.height, m_eventIn,  *this, "Incoming events"));
 
 	m_outputStreams.push_back(new StreamEvent(0, "filtered", m_param.width, m_param.height, m_eventOut, *this, "Filtered events"));
+	m_outputStreams.push_back(new StreamEvent(1, "last_event", m_param.width, m_param.height, m_eventIn, *this, "Event awaiting user feedback"));
 }
 
 ClassifyEvents::~ClassifyEvents(void )
@@ -38,7 +39,6 @@ void ClassifyEvents::Reset()
 #ifndef MARKUS_NO_GUI
 	// Add a new control to play forward and rewind
 	m_controls.push_back(new ControllerEvent(*this));
-	cout<<m_controls.size()<<endl;
 #endif
 }
 
@@ -50,5 +50,6 @@ void ClassifyEvents::ProcessFrame()
 
 
 	m_eventOut = m_eventIn;
+	m_eventOut.AddFeature("valid", 1);
 }
 

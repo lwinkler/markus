@@ -53,8 +53,7 @@ class Object
 		// inline void SetFeatureByName(const std::string& x_name, double x_value) {m_feats.find(x_name)->second = Feature();}
 		void SetFeatures(const std::map<std::string, Feature>& x_feats){m_feats = x_feats;}
 		inline cv::Rect Rect() const {return cv::Rect(m_posX - m_width / 2, m_posY - m_height / 2, m_width, m_height);}
-
-		int m_isMatched;
+		void RenderTo(cv::Mat* xp_output, const cv::Scalar& x_color) const;
 
 	private:
 		std::string m_name;
@@ -68,5 +67,6 @@ class Object
 		double m_posY;
 		double m_width;
 		double m_height;
+		int m_isMatched; // TODO: remove m_
 };
 #endif
