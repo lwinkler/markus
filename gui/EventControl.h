@@ -36,26 +36,9 @@ public:
 	~ControllerEvent(){};
 	inline virtual const std::string& GetName() const {return m_name;} // TODO: Is this necessary ?
 	void InvalidateEvent();
-	virtual void SetControlledValue(){};
-	virtual void GetCurrent(){};
-	virtual void GetDefault(){};
 
-protected:
-	// QParameterSlider * m_parameterSlider;
-	ClassifyEvents  & m_module;
+// protected:
+	ClassifyEvents  & module;
 	static const std::string m_name;
 };
-
-
-/// The control board for the module
-class EventControl : public ControlBoard
-{
-public:
-	EventControl(const std::string& x_name, const std::string& x_description);
-	~EventControl();
-	void SetModule(ClassifyEvents& rx_module);
-private:
-	ClassifyEvents  * m_module;
-};
-
 #endif

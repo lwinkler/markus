@@ -56,7 +56,7 @@ void setControlledValueInt(Controller* x_ctr)
 {
 	ControllerInt* ctr = dynamic_cast<ControllerInt*>(x_ctr);
 	assert(ctr != NULL);
-	ctr->m_param.SetValue(ctr->m_parameterSlider->GetValue(), PARAMCONF_GUI);
+	ctr->param.SetValue(ctr->parameterSlider->GetValue(), PARAMCONF_GUI);
 }
 
 /// Display the current value of the controlled object
@@ -64,7 +64,7 @@ void getCurrentInt(Controller* x_ctr)
 {
 	ControllerInt* ctr = dynamic_cast<ControllerInt*>(x_ctr);
 	assert(ctr != NULL);
-	ctr->m_parameterSlider->SetValue(ctr->m_param.GetValue());
+	ctr->parameterSlider->SetValue(ctr->param.GetValue());
 }
 
 /// Display the default value of the controlled object
@@ -72,14 +72,14 @@ void getDefaultInt(Controller* x_ctr)
 {
 	ControllerInt* ctr = dynamic_cast<ControllerInt*>(x_ctr);
 	assert(ctr != NULL);
-	ctr->m_parameterSlider->SetValue(ctr->m_param.GetDefault());
+	ctr->parameterSlider->SetValue(ctr->param.GetDefault());
 }
 
 ControllerInt::ControllerInt(ParameterInt& x_param):
 	Controller(),
-	m_param(x_param)
+	param(x_param)
 {
-	m_widget = m_parameterSlider = new QParameterSlider(m_param.GetValue(), m_param.GetMin(), m_param.GetMax(), 0);
+	m_widget = parameterSlider = new QParameterSlider(param.GetValue(), param.GetMin(), param.GetMax(), 0);
 	// m_actions["Set"] = &ControllerInt::SetControlledValue;
 	m_actions.insert(std::make_pair("Set", &setControlledValueInt));
 	m_actions.insert(std::make_pair("GetCurrent", &getCurrentInt));
@@ -93,11 +93,35 @@ ControllerInt::~ControllerInt()
 
 
 /*------------------------------------------------------------------------------------------------*/
+void setControlledValueDouble(Controller* x_ctr)
+{
+	ControllerDouble* ctr = dynamic_cast<ControllerDouble*>(x_ctr);
+	assert(ctr != NULL);
+	ctr->param.SetValue(ctr->parameterSlider->GetValue(), PARAMCONF_GUI);
+}
+
+void getCurrentDouble(Controller* x_ctr)
+{
+	ControllerDouble* ctr = dynamic_cast<ControllerDouble*>(x_ctr);
+	assert(ctr != NULL);
+	ctr->parameterSlider->SetValue(ctr->param.GetValue());
+}
+
+void getDefaultDouble(Controller* x_ctr)
+{
+	ControllerDouble* ctr = dynamic_cast<ControllerDouble*>(x_ctr);
+	assert(ctr != NULL);
+	ctr->parameterSlider->SetValue(ctr->param.GetDefault());
+}
+
 ControllerDouble::ControllerDouble(ParameterDouble& x_param):
 	Controller(),
-	m_param(x_param)
+	param(x_param)
 {
-	m_widget = m_parameterSlider = new QParameterSlider(m_param.GetValue(), m_param.GetMin(), m_param.GetMax(), PRECISION_DOUBLE);
+	m_widget = parameterSlider = new QParameterSlider(param.GetValue(), param.GetMin(), param.GetMax(), PRECISION_DOUBLE);
+	m_actions.insert(std::make_pair("Set", &setControlledValueDouble));
+	m_actions.insert(std::make_pair("GetCurrent", &getCurrentDouble));
+	m_actions.insert(std::make_pair("GetDefault", &getDefaultDouble));
 }
 
 ControllerDouble::~ControllerDouble()
@@ -105,48 +129,43 @@ ControllerDouble::~ControllerDouble()
 	// delete(m_parameterSlider);
 }
 
-void ControllerDouble::SetControlledValue()
-{
-	m_param.SetValue(m_parameterSlider->GetValue(), PARAMCONF_GUI);
-}
-
-void ControllerDouble::GetCurrent()
-{
-	m_parameterSlider->SetValue(m_param.GetValue());
-}
-
-void ControllerDouble::GetDefault()
-{
-	m_parameterSlider->SetValue(m_param.GetDefault());
-}
 /*------------------------------------------------------------------------------------------------*/
+
+void setControlledValueBool(Controller* x_ctr)
+{
+	ControllerBool* ctr = dynamic_cast<ControllerBool*>(x_ctr);
+	assert(ctr != NULL);
+	ctr->param.SetValue(ctr->checkBox->isChecked(), PARAMCONF_GUI);
+}
+
+void getCurrentBool(Controller* x_ctr)
+{
+	ControllerBool* ctr = dynamic_cast<ControllerBool*>(x_ctr);
+	assert(ctr != NULL);
+	ctr->checkBox->setChecked(ctr->param.GetValue());
+}
+
+void getDefaultBool(Controller* x_ctr)
+{
+	ControllerBool* ctr = dynamic_cast<ControllerBool*>(x_ctr);
+	assert(ctr != NULL);
+	ctr->checkBox->setChecked(ctr->param.GetDefault());
+}
 
 ControllerBool::ControllerBool(ParameterBool& x_param):
 	Controller(),
-	m_param(x_param)
+	param(x_param)
 {
-	m_widget = m_checkBox = new QCheckBox("Enabled");
-	GetCurrent();
+	m_widget = checkBox = new QCheckBox("Enabled");
+	(*getCurrentBool)(this);
+	m_actions.insert(std::make_pair("Set", &setControlledValueBool));
+	m_actions.insert(std::make_pair("GetCurrent", &getCurrentBool));
+	m_actions.insert(std::make_pair("GetDefault", &getDefaultBool));
 }
 
 ControllerBool::~ControllerBool()
 {
 	// delete(m_checkBox);
-}
-
-void ControllerBool::SetControlledValue()
-{
-	m_param.SetValue(m_checkBox->isChecked(), PARAMCONF_GUI);
-}
-
-void ControllerBool::GetCurrent()
-{
-	m_checkBox->setChecked(m_param.GetValue());
-}
-
-void ControllerBool::GetDefault()
-{
-	m_checkBox->setChecked(m_param.GetDefault());
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -180,11 +199,35 @@ void ControllerString::GetDefault()
 }
 /*------------------------------------------------------------------------------------------------*/
 
+void setControlledValueFloat(Controller* x_ctr)
+{
+	ControllerFloat* ctr = dynamic_cast<ControllerFloat*>(x_ctr);
+	assert(ctr != NULL);
+	ctr->param.SetValue(ctr->parameterSlider->GetValue(), PARAMCONF_GUI);
+}
+
+void getCurrentFloat(Controller* x_ctr)
+{
+	ControllerFloat* ctr = dynamic_cast<ControllerFloat*>(x_ctr);
+	assert(ctr != NULL);
+	ctr->parameterSlider->SetValue(ctr->param.GetValue());
+}
+
+void getDefaultFloat(Controller* x_ctr)
+{
+	ControllerFloat* ctr = dynamic_cast<ControllerFloat*>(x_ctr);
+	assert(ctr != NULL);
+	ctr->parameterSlider->SetValue(ctr->param.GetDefault());
+}
+
 ControllerFloat::ControllerFloat(ParameterFloat& x_param):
 	Controller(),
-	m_param(x_param)
+	param(x_param)
 {
-	m_widget = m_parameterSlider = new QParameterSlider(m_param.GetValue(), m_param.GetMin(), m_param.GetMax(), PRECISION_DOUBLE);
+	m_widget = parameterSlider = new QParameterSlider(param.GetValue(), param.GetMin(), param.GetMax(), PRECISION_DOUBLE);
+	m_actions.insert(std::make_pair("Set", &setControlledValueFloat));
+	m_actions.insert(std::make_pair("GetCurrent", &getCurrentFloat));
+	m_actions.insert(std::make_pair("GetDefault", &getDefaultFloat));
 }
 
 ControllerFloat::~ControllerFloat()
@@ -192,20 +235,6 @@ ControllerFloat::~ControllerFloat()
 	// delete(m_parameterSlider);
 }
 
-void ControllerFloat::SetControlledValue()
-{
-	m_param.SetValue(m_parameterSlider->GetValue(), PARAMCONF_GUI);
-}
-
-void ControllerFloat::GetCurrent()
-{
-	m_parameterSlider->SetValue(m_param.GetValue());
-}
-
-void ControllerFloat::GetDefault()
-{
-	m_parameterSlider->SetValue(m_param.GetDefault());
-}
 
 
 /*------------------------------------------------------------------------------------------------*/

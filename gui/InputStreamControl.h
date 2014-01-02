@@ -29,33 +29,20 @@
 class VideoFileReader;
 
 /// Control class for an input
-class ControllerStream : public Controller
+class InputStreamControl : public Controller
 {
 public:
-	ControllerStream(VideoFileReader& rx_module);
-	~ControllerStream();
+	InputStreamControl(VideoFileReader& rx_module);
+	~InputStreamControl();
 	void SetPosition(int x_position);
 	inline virtual const std::string& GetName() const {return m_name;}
 	void SetControlledValue();
 	void GetCurrent();
 	void GetDefault();
 
-protected:
-	QParameterSlider * m_parameterSlider;
-	VideoFileReader  & m_module;
+// protected:
+	QParameterSlider * parameterSlider;
+	VideoFileReader  & module;
 	static const std::string m_name;
 };
-
-
-/// The control board for the module
-class InputStreamControl : public ControlBoard
-{
-public:
-	InputStreamControl(const std::string& x_name, const std::string& x_description);
-	~InputStreamControl();
-	void SetModule(VideoFileReader& rx_module);
-private:
-	VideoFileReader  * m_module;
-};
-
 #endif

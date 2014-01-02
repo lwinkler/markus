@@ -28,45 +28,15 @@ using namespace std;
 
 const std::string ControllerEvent::m_name = "EventControl";
 
-EventControl::EventControl(const std::string& x_name, const std::string& x_description):
-	ControlBoard(x_name, x_description)
-{
-
-}
-
-EventControl::~EventControl()
-{
-}
-
-
-void EventControl::SetModule(ClassifyEvents & rx_module)
-{
-	m_module = &rx_module;
-
-	// Delete all controllers
-	for(vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)
-	{
-		delete(*it);
-	}
-	m_controllers.clear();
-
-	Controller * ctrr = new ControllerEvent(rx_module);
-	if(ctrr == NULL)
-		throw MkException("Controller creation failed", LOC);
-	else AddController(ctrr);
-}
 
 /*--------------------------------------------------------------------------------*/
 
 
 ControllerEvent::ControllerEvent(ClassifyEvents& rx_module) :
 	Controller(),
-	m_module(rx_module)
+	module(rx_module)
 {
 	// m_widget = m_parameterSlider = new QParameterSlider(0, 0, m_module.GetMaxMsec(), 0);
+	//m_actions.insert(std::make_pair("Set", &setControlledValueFloat));
 }
 
-void ControllerEvent::InvalidateEvent()
-{
-	//m_module.SetMsec(m_parameterSlider->GetValue());
-}

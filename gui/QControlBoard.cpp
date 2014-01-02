@@ -87,7 +87,7 @@ void QControlBoard::updateControl(Controller* x_control)
 
 	// Create the control buttons
 	// TODO: remove buttons and delete widgets
-	for(map<string, const px_action>::iterator it = m_currentControl->m_actions.begin() ; it != m_currentControl->m_actions.end() ; it++)
+	for(map<string, const px_action>::const_iterator it = m_currentControl->GetActions().begin() ; it != m_currentControl->GetActions().end() ; it++)
 	{
 		// note : names must match between buttons and actions
 		QPushButton* button = new QPushButton(it->first.c_str());
@@ -128,8 +128,8 @@ void QControlBoard::callAction()
 {
 	QPushButton* button = dynamic_cast<QPushButton*>(sender());
 	assert(button != NULL);
-	map<string, const px_action>::iterator it = m_currentControl->m_actions.find(button->text().toStdString());
-	if(it == m_currentControl->m_actions.end())
+	map<string, const px_action>::const_iterator it = m_currentControl->GetActions().find(button->text().toStdString());
+	if(it == m_currentControl->GetActions().end())
 		throw MkException("Cannot find action in controller " + button->text().toStdString(), LOC);
 	(*(it->second))(m_currentControl);
 	// cout<<"Action called "<<button->text().toStdString()<<endl;	

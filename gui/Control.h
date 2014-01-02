@@ -44,16 +44,14 @@ class Controller
 public:
 	Controller();
 	virtual ~Controller();
-	// virtual void SetControlledValue() = 0;
-	// virtual void GetCurrent() = 0;
-	// virtual void GetDefault() = 0;
 
 	inline QWidget* RefWidget(){return m_widget;}
 	virtual const std::string& GetName() const = 0;
-	std::map<std::string, const px_action> m_actions;
+	const std::map<std::string, const px_action>& GetActions() {return m_actions;}
 	
 protected:
 	QWidget * m_widget;
+	std::map<std::string, const px_action> m_actions;
 };
 
 /// Control class for an integer parameter
@@ -63,11 +61,11 @@ public:
 	ControllerInt(ParameterInt & x_param);
 	~ControllerInt();
 	// void SetControlledValue();
-	inline virtual const std::string& GetName() const {return m_param.GetName();}
+	inline virtual const std::string& GetName() const {return param.GetName();}
 
 // protected:
-	QParameterSlider * m_parameterSlider;
-	ParameterInt & m_param;
+	QParameterSlider * parameterSlider;
+	ParameterInt     & param;
 };
 
 
@@ -77,14 +75,10 @@ class ControllerDouble : public Controller
 public:
 	ControllerDouble(ParameterDouble & x_param);
 	~ControllerDouble();
-	void SetControlledValue();
-	void GetCurrent();
-	void GetDefault();
-	inline virtual const std::string& GetName() const {return m_param.GetName();}
+	inline virtual const std::string& GetName() const {return param.GetName();}
 
-protected:
-	QParameterSlider * m_parameterSlider;
-	ParameterDouble & m_param;
+	QParameterSlider * parameterSlider;
+	ParameterDouble  & param;
 };
 
 /// Control class for a float parameter
@@ -93,14 +87,10 @@ class ControllerFloat : public Controller
 public:
 	ControllerFloat(ParameterFloat & x_param);
 	~ControllerFloat();
-	void SetControlledValue();
-	void GetCurrent();
-	void GetDefault();
-	inline virtual const std::string& GetName() const {return m_param.GetName();}
+	inline virtual const std::string& GetName() const {return param.GetName();}
 
-protected:
-	QParameterSlider * m_parameterSlider;
-	ParameterFloat & m_param;
+	QParameterSlider * parameterSlider;
+	ParameterFloat   & param;
 };
 
 /// Control class for a boolean parameter
@@ -109,14 +99,10 @@ class ControllerBool : public Controller
 public:
 	ControllerBool(ParameterBool & x_param);
 	~ControllerBool();
-	void SetControlledValue();
-	void GetCurrent();
-	void GetDefault();
-	inline virtual const std::string& GetName() const {return m_param.GetName();}
+	inline virtual const std::string& GetName() const {return param.GetName();}
 
-protected:
-	QCheckBox  * m_checkBox;
-	ParameterBool & m_param;
+	QCheckBox     * checkBox;
+	ParameterBool & param;
 };
 
 /// Control class for a string parameter
@@ -154,7 +140,7 @@ protected:
 
 /// Class to control a module (settings ...)
 
-class ControlBoard
+/*class ControlBoard
 {
 public:
 	ControlBoard(const std::string& x_name, const std::string& x_description);
@@ -174,6 +160,6 @@ protected:
 	
 	std::vector<Controller*> m_controllers;
 };
-
+*/
 
 #endif

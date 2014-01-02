@@ -27,61 +27,36 @@
 
 using namespace std;
 
-const std::string ControllerStream::m_name = "StreamControl";
+const std::string InputStreamControl::m_name = "StreamControl";
 
-InputStreamControl::InputStreamControl(const std::string& x_name, const std::string& x_description):
-	ControlBoard(x_name, x_description)
+
+
+InputStreamControl::InputStreamControl(VideoFileReader& rx_module) :
+	Controller(),
+	module(rx_module)
 {
-
+	m_widget = parameterSlider = new QParameterSlider(0, 0, module.GetMaxMsec(), 0);
+	//m_actions.insert(std::make_pair("Set", &setControlledValueFloat));
+	//m_actions.insert(std::make_pair("GetCurrent", &getCurrentFloat));
+	//m_actions.insert(std::make_pair("GetDefault", &getDefaultFloat));
 }
 
 InputStreamControl::~InputStreamControl()
 {
 }
-
-
-void InputStreamControl::SetModule(VideoFileReader & rx_module)
+/*
+void InputStreamControl::SetControlledValue()
 {
-	m_module = &rx_module;
-
-	// Delete all controllers
-	for(vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)
-	{
-		delete(*it);
-	}
-	m_controllers.clear();
-
-	Controller * ctrr = new ControllerStream(rx_module);
-	if(ctrr == NULL)
-		throw MkException("Controller creation failed", LOC);
-	else AddController(ctrr);
+	module.SetMsec(parameterSlider->GetValue());
 }
 
-/*--------------------------------------------------------------------------------*/
-
-ControllerStream::ControllerStream(VideoFileReader& rx_module) :
-	Controller(),
-	m_module(rx_module)
+void InputStreamControl::GetCurrent()
 {
-	m_widget = m_parameterSlider = new QParameterSlider(0, 0, m_module.GetMaxMsec(), 0);
-}
-
-ControllerStream::~ControllerStream()
-{
-}
-
-void ControllerStream::SetControlledValue()
-{
-	m_module.SetMsec(m_parameterSlider->GetValue());
-}
-
-void ControllerStream::GetCurrent()
-{
-	m_parameterSlider->SetValue(m_module.GetMsec());
+	parameterSlider->SetValue(module.GetMsec());
 }
 		
-void ControllerStream::GetDefault()
+void InputStreamControl::GetDefault()
 {
-	m_parameterSlider->SetValue(0);
+	parameterSlider->SetValue(0);
 }
-
+*/

@@ -42,8 +42,7 @@ VideoFileReader::VideoFileReader(const ConfigReader& x_configReader):
 
 #ifndef MARKUS_NO_GUI
 	// Add a new control to play forward and rewind
-	// TODO m_controls.push_back(new InputStreamControl("Video file reader", "Control the reading of the video file"));
-	// TODO m_controls.back()->SetModule(*module);
+	m_controls.push_back(new InputStreamControl(*this));
 #endif
 }
 
