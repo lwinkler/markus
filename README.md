@@ -127,6 +127,7 @@ The philosophy of Markus is very simple to grasp. An application for video analy
 - Input streams: incoming streams
 - Output streams: outcoming streams
 - Parameters: list of parameters for the module operation
+- Controllers: A controller allows the user to interact with the module at runtime (for advanced use). It is used for example to change the value of a parameter or to interact with a file player.
 
 The values of the different parameters and the connections between modules is defined in a XML file (You can find samples inside the **projects/** directory)
 
