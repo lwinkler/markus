@@ -34,11 +34,8 @@ class ControllerEvent : public Controller
 public:
 	ControllerEvent(ClassifyEvents& rx_module);
 	~ControllerEvent(){};
-	inline virtual const std::string& GetName() const {return m_name;} // TODO: Is this necessary ?
-	void InvalidateEvent();
 
 // protected:
 	ClassifyEvents  & module;
-	static const std::string m_name;
 };
 #endif

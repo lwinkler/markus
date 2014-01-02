@@ -42,16 +42,17 @@ typedef void (*px_action)(Controller*);
 class Controller
 {
 public:
-	Controller();
+	Controller(std::string x_name);
 	virtual ~Controller();
 
 	inline QWidget* RefWidget(){return m_widget;}
-	virtual const std::string& GetName() const = 0;
+	const std::string& GetName() {return m_name;};
 	const std::map<std::string, const px_action>& GetActions() {return m_actions;}
 	
 protected:
 	QWidget * m_widget;
 	std::map<std::string, const px_action> m_actions;
+	std::string m_name;
 };
 
 /// Control class for an integer parameter
@@ -61,7 +62,6 @@ public:
 	ControllerInt(ParameterInt & x_param);
 	~ControllerInt();
 	// void SetControlledValue();
-	inline virtual const std::string& GetName() const {return param.GetName();}
 
 // protected:
 	QParameterSlider * parameterSlider;
@@ -75,7 +75,6 @@ class ControllerDouble : public Controller
 public:
 	ControllerDouble(ParameterDouble & x_param);
 	~ControllerDouble();
-	inline virtual const std::string& GetName() const {return param.GetName();}
 
 	QParameterSlider * parameterSlider;
 	ParameterDouble  & param;
@@ -87,7 +86,6 @@ class ControllerFloat : public Controller
 public:
 	ControllerFloat(ParameterFloat & x_param);
 	~ControllerFloat();
-	inline virtual const std::string& GetName() const {return param.GetName();}
 
 	QParameterSlider * parameterSlider;
 	ParameterFloat   & param;
@@ -99,7 +97,6 @@ class ControllerBool : public Controller
 public:
 	ControllerBool(ParameterBool & x_param);
 	~ControllerBool();
-	inline virtual const std::string& GetName() const {return param.GetName();}
 
 	QCheckBox     * checkBox;
 	ParameterBool & param;
@@ -111,14 +108,10 @@ class ControllerString : public Controller
 public:
 	ControllerString(ParameterString & x_param);
 	~ControllerString();
-	void SetControlledValue();
-	void GetCurrent();
-	void GetDefault();
-	inline virtual const std::string& GetName() const {return m_param.GetName();}
 
-protected:
-	QLineEdit  * m_lineEdit;
-	ParameterString & m_param;
+// protected:
+	QLineEdit  * lineEdit;
+	ParameterString & param;
 };
 
 
@@ -128,38 +121,11 @@ class ControllerEnum : public Controller
 public:
 	ControllerEnum(ParameterEnum & x_param);
 	~ControllerEnum();
-	void SetControlledValue();
-	void GetCurrent();
-	void GetDefault();
-	inline virtual const std::string& GetName() const {return m_param.GetName();}
 
-protected:
-	QComboBox  * m_comboBox;
-	ParameterEnum & m_param;
+// protected:
+	QComboBox  * comboBox;
+	ParameterEnum & param;
 };
 
-/// Class to control a module (settings ...)
-
-/*class ControlBoard
-{
-public:
-	ControlBoard(const std::string& x_name, const std::string& x_description);
-	virtual ~ControlBoard();
-	inline const std::string& GetName() const {return m_name;}
-	inline const std::string& GetDescription() const{return m_description;}
-	inline std::vector<Controller*>& RefListControllers(){return m_controllers;}
-	inline void AddController(Controller * x_ctrr){m_controllers.push_back(x_ctrr);}
-	void SetControlledValue();
-	void GetCurrent();
-	void GetDefault();
-	virtual void Destroy(){};
-
-protected:
-	std::string m_name;
-	std::string m_description;
-	
-	std::vector<Controller*> m_controllers;
-};
-*/
 
 #endif

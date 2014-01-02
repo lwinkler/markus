@@ -26,17 +26,21 @@
 
 using namespace std;
 
-const std::string ControllerEvent::m_name = "EventControl";
-
 
 /*--------------------------------------------------------------------------------*/
 
+void invalidate(Controller* x_ctr)
+{
+	ControllerEvent* ctr = dynamic_cast<ControllerEvent*>(x_ctr);
+	assert(ctr != NULL);
+	// TODO
+}
 
 ControllerEvent::ControllerEvent(ClassifyEvents& rx_module) :
-	Controller(),
+	Controller("Event"),
 	module(rx_module)
 {
 	// m_widget = m_parameterSlider = new QParameterSlider(0, 0, m_module.GetMaxMsec(), 0);
-	//m_actions.insert(std::make_pair("Set", &setControlledValueFloat));
+	m_actions.insert(std::make_pair("Invalidate", &invalidate));
 }
 

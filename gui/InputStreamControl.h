@@ -35,7 +35,6 @@ public:
 	InputStreamControl(VideoFileReader& rx_module);
 	~InputStreamControl();
 	void SetPosition(int x_position);
-	inline virtual const std::string& GetName() const {return m_name;}
 	void SetControlledValue();
 	void GetCurrent();
 	void GetDefault();
@@ -43,6 +42,5 @@ public:
 // protected:
 	QParameterSlider * parameterSlider;
 	VideoFileReader  & module;
-	static const std::string m_name;
 };
 #endif
