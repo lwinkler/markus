@@ -38,12 +38,6 @@ VideoFileReader::VideoFileReader(const ConfigReader& x_configReader):
 	m_description = "Input from a video file.";
 	m_output = new Mat(Size(m_param.width, m_param.height), CV_8UC3); // Note: sizes will be overridden !
 	m_outputStreams.push_back(new StreamImage(0, "input", m_output, *this,	"Video stream"));
-
-
-#ifndef MARKUS_NO_GUI
-	// Add a new control to play forward and rewind
-	m_controls.push_back(new InputStreamControl(*this));
-#endif
 }
 
 VideoFileReader::~VideoFileReader()
@@ -54,6 +48,10 @@ VideoFileReader::~VideoFileReader()
 void VideoFileReader::Reset()
 {
 	Module::Reset();
+#ifndef MARKUS_NO_GUI
+	// Add a new control to play forward and rewind
+	m_controls.push_back(new InputStreamControl(*this));
+#endif
 
 	m_capture.release();
 	m_capture.open(m_param.file);

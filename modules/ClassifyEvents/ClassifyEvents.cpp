@@ -26,11 +26,6 @@ ClassifyEvents::ClassifyEvents(const ConfigReader& x_configReader) :
 	m_inputStreams.push_back(new StreamEvent( 0, "events",   m_param.width, m_param.height, m_eventIn,  *this, "Incoming events"));
 
 	m_outputStreams.push_back(new StreamEvent(0, "filtered", m_param.width, m_param.height, m_eventOut, *this, "Filtered events"));
-
-#ifndef MARKUS_NO_GUI
-	// Add a new control to play forward and rewind
-	m_controls.push_back(new ControllerEvent(*this));
-#endif
 }
 
 ClassifyEvents::~ClassifyEvents(void )
@@ -40,6 +35,11 @@ ClassifyEvents::~ClassifyEvents(void )
 void ClassifyEvents::Reset()
 {
 	Module::Reset();
+#ifndef MARKUS_NO_GUI
+	// Add a new control to play forward and rewind
+	m_controls.push_back(new ControllerEvent(*this));
+	cout<<m_controls.size()<<endl;
+#endif
 }
 
 void ClassifyEvents::ProcessFrame()
