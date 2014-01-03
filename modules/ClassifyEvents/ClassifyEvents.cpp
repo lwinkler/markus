@@ -52,7 +52,7 @@ void ClassifyEvents::ProcessFrame()
 	m_eventIn.AddFeature("valid", result);
 
 	// Output the event if the prob > 0.5
-	if(result > 0.5)
+	if(result > m_param.validityThres)
 		m_eventOut = m_eventIn;
 }
 
