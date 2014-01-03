@@ -48,8 +48,33 @@ void ClassifyEvents::ProcessFrame()
 	if(! m_eventIn.IsRaised())
 		return;
 
+	float result = PredictEventValidity(m_eventIn);
+	m_eventIn.AddFeature("valid", result);
 
-	m_eventOut = m_eventIn;
-	m_eventOut.AddFeature("valid", 1);
+	// Output the event if the prob > 0.5
+	if(result > 0.5)
+		m_eventOut = m_eventIn;
 }
 
+// ---------------------------------------------------------------------------------
+// The following functions must be redefined
+// ---------------------------------------------------------------------------------
+
+
+/// Consider the last event as invalid and train the classifier
+void ClassifyEvents::InvalidateLastEvent()
+{
+	
+}
+
+/// Consider the last event as valid and train the classifier
+void ClassifyEvents::ValidateLastEvent()
+{
+
+}
+
+/// Return a probability [0..1] that the event is valid
+float ClassifyEvents::PredictEventValidity(const Event& x_event)
+{
+	return 1;
+}

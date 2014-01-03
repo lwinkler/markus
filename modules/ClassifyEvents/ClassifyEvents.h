@@ -33,8 +33,9 @@ public:
 	
 	virtual void ProcessFrame();
 	void Reset();
-	void InvalidateLastEvent(){};
-	void ValidateLastEvent(){};
+	virtual void InvalidateLastEvent();
+	virtual void ValidateLastEvent();
+	virtual float PredictEventValidity(const Event& x_event);
 	
 protected:
 
