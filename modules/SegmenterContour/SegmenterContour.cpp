@@ -119,19 +119,19 @@ void SegmenterContour::ProcessFrame()
 			{
 				if(it->compare("x") == 0)
 				{
-					obj.AddFeature("x", obj.m_posX / diagonal);
+					obj.AddFeature("x", obj.posX / diagonal);
 				}
 				else if(it->compare("y") == 0)
 				{
-					obj.AddFeature("y", obj.m_posY / diagonal);
+					obj.AddFeature("y", obj.posY / diagonal);
 				}
 				else if(it->compare("width") == 0)
 				{
-					obj.AddFeature("width", obj.m_width / diagonal);
+					obj.AddFeature("width", obj.width / diagonal);
 				}
 				else if(it->compare("height") == 0)
 				{
-					obj.AddFeature("height", obj.m_height / diagonal);
+					obj.AddFeature("height", obj.height / diagonal);
 				}
 				else if(it->compare("area") == 0)
 				{

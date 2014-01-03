@@ -28,54 +28,35 @@ using namespace std;
 Object::Object(const string& x_name) :
 	m_name(x_name),
 	m_id(-1),
-	m_posX(0),
-	m_posY(0),
-	m_width(0),
-	m_height(0)
+	posX(0),
+	posY(0),
+	width(0),
+	height(0)
 {
 };
 
 Object::Object(const string& x_name, const cv::Rect& x_rect) :
         m_name(x_name)
 {
-	m_posX 	 = x_rect.x + x_rect.width / 2;
-	m_posY 	 = x_rect.y + x_rect.height / 2;
-	m_width	 = x_rect.width;
-	m_height = x_rect.height;
+	posX 	 = x_rect.x + x_rect.width / 2;
+	posY 	 = x_rect.y + x_rect.height / 2;
+	width	 = x_rect.width;
+	height   = x_rect.height;
 }
 
-/*
-Object::Object(const Object& r)
-{
-	//m_num = r.GetNum();
-	m_feats = r.GetFeatures();
-	m_posX = r.m_posX;
-	m_posY = r.m_posY;
-}
-
-Object& Object::operator = (const Object& r)
-{
-	//m_num = r.GetNum();
-	m_feats = r.GetFeatures();
-	m_posX = r.m_posX;
-	m_posY = r.m_posY;
-
-	return *this;
-}
-*/
 Object::~Object(){}
 
 /// Draw an object on an image (for visualization)
 void Object::RenderTo(Mat* xp_output, const Scalar& x_color) const
 {
 	//Rect rect = it1->GetRect();
-	Point p1(m_posX - m_width / 2, m_posY - m_height / 2);
-	Point p2(m_posX + m_width / 2, m_posY + m_height / 2);
+	Point p1(posX - width / 2, posY - height / 2);
+	Point p2(posX + width / 2, posY + height / 2);
 
-	float scale = static_cast<float>(xp_output->cols) / m_width;
+	float scale = static_cast<float>(xp_output->cols) / width;
 	p1.x = p1.x * scale;
 	p2.x = p2.x * scale;
-	scale = static_cast<float>(xp_output->rows) / m_height;
+	scale = static_cast<float>(xp_output->rows) / height;
 	p1.y = p1.y * scale;
 	p2.y = p2.y * scale;
 

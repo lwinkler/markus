@@ -59,10 +59,10 @@ void StreamEvent::ConvertInput()
 	Object& obj(m_event.RefObject());
 	double ratioX = static_cast<double>(m_width) / pstream->GetInputWidth();
 	double ratioY = static_cast<double>(m_height) / pstream->GetInputHeight();
-	obj.m_posX   *= ratioX;
-	obj.m_posY   *= ratioY;
-	obj.m_width  *= ratioX;
-	obj.m_height *= ratioY;
+	obj.posX   *= ratioX;
+	obj.posY   *= ratioY;
+	obj.width  *= ratioX;
+	obj.height *= ratioY;
 }
 
 /// Render : to display the event

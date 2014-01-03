@@ -29,6 +29,7 @@
 
 #include "util.h"
 #include "Feature.h"
+#include "MkException.h"
 
 /*! \class Object
  *  \brief Class representing a region (or blob)
@@ -48,11 +49,16 @@ class Object
 
 		inline void AddFeature(std::string x_name, double x_value) {m_feats.insert(std::make_pair(x_name, Feature(x_value)));}
 		inline const std::map <std::string, Feature>& GetFeatures() const {return m_feats;}
-		inline const Feature& GetFeature(const std::string& x_name) const {
-			return m_feats.find(x_name)->second;} /// TODO: manage case where the feature is not found
+		inline const Feature& GetFeature(const std::string& x_name) const
+		{
+			std::map <std::string, Feature>::const_iterator it = m_feats.find(x_name);
+			if(it == m_feats.end())
+				throw MkException("Feature is inexistant", LOC);
+			return it->second;
+		}
 		// inline void SetFeatureByName(const std::string& x_name, double x_value) {m_feats.find(x_name)->second = Feature();}
 		void SetFeatures(const std::map<std::string, Feature>& x_feats){m_feats = x_feats;}
-		inline cv::Rect Rect() const {return cv::Rect(m_posX - m_width / 2, m_posY - m_height / 2, m_width, m_height);}
+		inline cv::Rect Rect() const {return cv::Rect(posX - width / 2, posY - height / 2, width, height);}
 		void RenderTo(cv::Mat* xp_output, const cv::Scalar& x_color) const;
 
 	private:
@@ -63,10 +69,10 @@ class Object
 		//Object(const Object&);
 		//Object& operator = (const Object&);
 	public:
-		double m_posX;
-		double m_posY;
-		double m_width;
-		double m_height;
-		int m_isMatched; // TODO: remove m_
+		double posX;
+		double posY;
+		double width;
+		double height;
+		int isMatched;
 };
 #endif

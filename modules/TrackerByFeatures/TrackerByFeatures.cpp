@@ -89,7 +89,7 @@ void TrackerByFeatures::MatchTemplates()
 {
 	for(vector<Object>::iterator it2 = m_objects.begin() ; it2 != m_objects.end(); it2++ )
 	{
-		it2->m_isMatched = 0;
+		it2->isMatched = 0;
 	}
 
 	// Try to match each objects with a template
@@ -141,7 +141,7 @@ int TrackerByFeatures::MatchTemplate(Template& x_temp)
 		bestObject->SetId(x_temp.GetNum()); // Set id of object
 		// x_temp.m_matchingObjects.push_back(m_objects[bestObject]);
 		x_temp.m_lastMatchingObject = bestObject;
-		bestObject->m_isMatched = 1;
+		bestObject->isMatched = 1;
 
 		return 1;
 	}
@@ -255,7 +255,7 @@ void TrackerByFeatures::DetectNewTemplates()
 	int cpt = 0;
 	for(vector<Object>::iterator it2 = m_objects.begin() ; it2 != m_objects.end(); it2++ )
 	{
-		if(!it2->m_isMatched)
+		if(!it2->isMatched)
 		{
 			if(m_templates.size() >= MAX_NB_TEMPLATES)
 			{

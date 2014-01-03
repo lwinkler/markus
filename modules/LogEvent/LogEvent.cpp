@@ -119,7 +119,7 @@ void LogEvent::WriteEvent()
 void LogEvent::SaveImage()
 {
 	const Object& obj(m_event.GetObject());
-	if(obj.m_width > 0 && obj.m_height > 0)
+	if(obj.width > 0 && obj.height > 0)
 	{
 		std::stringstream ss1;
 		ss1 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetLabel() << "_" << obj.GetName()<< obj.GetId() << "." << m_param.extension;
