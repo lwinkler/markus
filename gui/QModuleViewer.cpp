@@ -46,8 +46,6 @@
 #include "QControlBoard.h"
 #include "ControllerParameters.h"
 
-#include "define.h"
-
 using namespace cv;
 using namespace std;
 

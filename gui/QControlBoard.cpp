@@ -27,7 +27,6 @@
 #include <QLabel>
 #include <QGroupBox>
 #include <QPushButton>
-#include "define.h"
 
 using namespace std;
 
