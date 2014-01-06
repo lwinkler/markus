@@ -29,7 +29,10 @@ def srttable(textfile, pattern):
 	flist = []
 	findex = 1
 	tindex = 0
-	while True:
+
+	line = "Empty"
+
+	while line:
 		line = gt.readline()
 		if line == "":
 			break
@@ -45,8 +48,13 @@ def srttable(textfile, pattern):
 		label = gt.readline().rstrip()
 		if regex.match(label) :
 			flist.append({'index': findex, 'start': fstart, 'end': fend, 'label': label})
-		gt.readline()
+
+		while line != "\n":
+			line = gt.readline()
 		findex += 1
+
+	gt.close()
+
 	return flist, tindex
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------- 
@@ -161,6 +169,8 @@ video_file = sys.argv[3]
 try:
 	evt_list, n  = srttable(evt_file, ".*")
 except:
+	print "Error reading " + evt_file
+	raise
 	evt_list = []
 	evt_file = ""
 	n = 0
