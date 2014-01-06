@@ -29,6 +29,14 @@
 #include <fstream>
 #include <log4cxx/logger.h>
 
+/// this file contains some usefull functions and methods
+
+#define POW2(x) (x) * (x)
+#define DIST(x, y) sqrt((x) * (x) + (y) * (y))
+#define DIFF_REL(f) ((f).value - (f).mean) * ((f).value - (f).mean) / (f).sqVariance
+#define CLEAN_DELETE(x) if((x) != NULL){delete((x));(x) = NULL;}
+
+
 // time stamp: use for all time stamps on frames in [ms]
 #define TIME_STAMP unsigned long long
 #define TIME_STAMP_INITIAL 0
@@ -42,8 +50,6 @@
 #define LOG_EVENT(logger, message)   LOG4CXX_WARN((logger), "EVENT " << message) // Global::logger.Stream(LOG_EVENT)<<x<<std::endl // TODO: define this
 
 #define SYSTEM(x) {std::string cmd; cmd = (x) ; if(system(cmd.c_str())) throw MkException("Execution of command failed: " + cmd, LOC);}
-
-/// this file contains some usefull functions and methods
 
 void adjust(const cv::Mat* im_in, cv::Mat* im_out, cv::Mat*& tmp1, cv::Mat*& tmp2);//, Mat* tmp2);
 void adjustSize(const cv::Mat* im_in, cv::Mat* im_out);

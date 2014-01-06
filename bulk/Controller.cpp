@@ -26,8 +26,6 @@
 using namespace std;
 
 
-#define CLEAN_DELETE(x) if((x) != NULL){delete((x));(x) = NULL;}
-
 Controller::Controller(string x_name) :
 	m_name(x_name)
 {

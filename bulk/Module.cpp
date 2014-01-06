@@ -28,11 +28,10 @@
 #include "Stream.h"
 #include "Timer.h"
 #include "ModuleTimer.h"
-#include "ControllerParameters.h"
 
 
 #ifndef MARKUS_NO_GUI
-// #include "ParameterControl.h"
+#include "ControllerParameters.h"
 #endif
 
 using namespace std;

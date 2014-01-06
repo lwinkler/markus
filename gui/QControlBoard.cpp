@@ -27,10 +27,10 @@
 #include <QLabel>
 #include <QGroupBox>
 #include <QPushButton>
+#include "define.h"
 
 using namespace std;
 
-#define CLEAN_DELETE(x) if((x) != NULL){delete((x));(x) = NULL;}
 	 
 //QControlBoard::QControlBoard(const std::string& x_name, const std::string& x_description):
 QControlBoard::QControlBoard(Module * x_module, QWidget *parent) :

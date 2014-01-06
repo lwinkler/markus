@@ -46,7 +46,7 @@
 #include "QControlBoard.h"
 #include "ControllerParameters.h"
 
-#define CLEAN_DELETE(x) if((x) != NULL){delete((x));(x) = NULL;}
+#include "define.h"
 
 using namespace cv;
 using namespace std;

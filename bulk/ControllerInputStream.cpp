@@ -22,24 +22,31 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ControllerInputStream.h"
-#include "QParameterSlider.h"
 #include "VideoFileReader/VideoFileReader.h"
+
+#ifndef MARKUS_NO_GUI
+#include "QParameterSlider.h"
+#endif
 
 using namespace std;
 
 
 void setCursor(Controller* x_ctr)
 {
+#ifndef MARKUS_NO_GUI
 	InputStreamControl* ctr = dynamic_cast<InputStreamControl*>(x_ctr);
 	assert(ctr != NULL);
 	ctr->module.SetMsec(ctr->parameterSlider->GetValue());
+#endif
 }
 
 void getCursor(Controller* x_ctr)
 {
+#ifndef MARKUS_NO_GUI
 	InputStreamControl* ctr = dynamic_cast<InputStreamControl*>(x_ctr);
 	assert(ctr != NULL);
 	ctr->parameterSlider->SetValue(ctr->module.GetMsec());
+#endif
 }
 
 InputStreamControl::InputStreamControl(VideoFileReader& rx_module) :
@@ -56,5 +63,9 @@ InputStreamControl::~InputStreamControl()
 
 QWidget* InputStreamControl::CreateWidget()
 {
+#ifndef MARKUS_NO_GUI
 	return parameterSlider = new QParameterSlider(0, 0, module.GetMaxMsec(), 0);
+#else
+	return NULL;
+#endif
 }

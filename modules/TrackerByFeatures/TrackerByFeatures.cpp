@@ -33,7 +33,6 @@ using namespace cv;
 const char * TrackerByFeatures::m_type = "TrackerByFeatures";
 
 #define MAX_NB_TEMPLATES 128
-#define DIST(x, y) sqrt((x) * (x) + (y) * (y))
 
 using namespace std;
 using namespace cv;

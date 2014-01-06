@@ -20,5 +20,9 @@ ConfigReader.cpp
 Timer.cpp
 ModuleTimer.cpp
 MkException.cpp
+Controller.cpp
+ControllerParameters.cpp
+ControllerInputStream.cpp
+ControllerEvent.cpp
 )
 

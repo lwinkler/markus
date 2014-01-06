@@ -31,7 +31,7 @@ Other dependencies:
 	- *CMake GUI* : (or cmake-curses-gui) to set the compilation flags visually
 	- *Qt Creator* : a full IDE for C++ and QT
 	- *Python*
-	- *CppUnit** : 
+	- *CppUnit** : libcppunit-dev
 
 	sudo apt-get install cmake-qt-gui cmake-curses-gui qt-creator python-dev libcppunit-dev
 
@@ -108,11 +108,16 @@ e.g. :
 Troubleshooting
 ===============
 
-AllModules.h is missing
------------------------
-Solution:  simply run 
+AllModules.h is missing or a module is unknown
+-----------------------------------------------
+Possible error messages:
+
+	ERROR [main] Exception raised (string) : Module type unknown : <some_module>
+
+Solution: You need to regenerate the list of modules simply run 
 
 	make update_module_list
+	make
 
 
 FindOpenCV.cmake is missing
