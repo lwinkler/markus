@@ -28,28 +28,17 @@
 
 #include "Module.h"
 
-enum StreamType // TODO: See if this is really used
-{
-	STREAM_DEBUG,
-	STREAM_IMAGE,
-	STREAM_OBJECTS,
-	// STREAM_POINTS,
-	STREAM_STATE,
-	STREAM_EVENT
-};
-
 /// This is the parent class for all streams (input and output of data)
 
 class Stream
 {
 public:
-	Stream(int x_id, const std::string& x_name, StreamType x_type, int x_width, int x_height, Module& rx_module, const std::string& rx_description);
+	Stream(int x_id, const std::string& x_name, int x_width, int x_height, Module& rx_module, const std::string& rx_description);
 	virtual ~Stream();
 	inline const std::string& GetName() const {return m_name;}
 	inline int GetId() const {return m_id;}
 	inline int GetInputWidth() const {return m_width;}
 	inline int GetInputHeight() const {return m_height;}
-	inline StreamType GetType() const {return m_type;}
 	inline const std::string& GetDescription() const {return m_description;}
 	virtual const std::string GetTypeString() const = 0;
 	virtual void RenderTo(cv::Mat * x_output) const  = 0;
@@ -79,7 +68,6 @@ public:
 protected:
 	const std::string m_name;
 	const int m_id;
-	const StreamType m_type;
 	const int m_width;
 	const int m_height;
 	Module& mr_module;

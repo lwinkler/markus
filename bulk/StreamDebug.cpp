@@ -27,7 +27,7 @@
 using namespace std;
 
 StreamDebug::StreamDebug(int x_id, const std::string& x_name, cv::Mat * x_image, Module& rx_module, const string& rx_description) : 
-	Stream(x_id, x_name, STREAM_DEBUG, x_image->cols, x_image->rows, rx_module, rx_description),
+	Stream(x_id, x_name, x_image->cols, x_image->rows, rx_module, rx_description),
 	m_image(x_image)
 {
 }

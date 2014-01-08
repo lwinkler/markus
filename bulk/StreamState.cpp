@@ -29,7 +29,7 @@ using namespace cv;
 
 
 StreamState::StreamState(int x_id, const string& x_name, bool& x_state, Module& rx_module, const string& rx_description) : 
-	Stream(x_id, x_name, STREAM_STATE, 1, 1, rx_module, rx_description),
+	Stream(x_id, x_name, 1, 1, rx_module, rx_description),
 	m_state(x_state)
 {
 }

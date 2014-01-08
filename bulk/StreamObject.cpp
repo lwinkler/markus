@@ -30,7 +30,7 @@ using namespace cv;
 
 StreamObject::StreamObject(int x_id, const string& x_name, int x_width, int x_height, 
 		vector<Object>& xr_objects, const Scalar& x_color, Module& rx_module, const string& rx_description) :
-	Stream(x_id, x_name, STREAM_OBJECTS, x_width, x_height, rx_module, rx_description),
+	Stream(x_id, x_name, x_width, x_height, rx_module, rx_description),
 	m_objects(xr_objects),
 	m_color(x_color),
 	m_isColorSet(true)
@@ -39,7 +39,7 @@ StreamObject::StreamObject(int x_id, const string& x_name, int x_width, int x_he
 
 StreamObject::StreamObject(int x_id, const string& rx_name, int x_width, int x_height, 
 		vector<Object>& xr_objects, Module& rx_module, const string& rx_description):
-	Stream(x_id, rx_name, STREAM_OBJECTS, x_width, x_height, rx_module, rx_description),
+	Stream(x_id, rx_name, x_width, x_height, rx_module, rx_description),
 	m_objects(xr_objects),
 	m_color(cvScalar(255, 255, 255)),
 	m_isColorSet(false)
