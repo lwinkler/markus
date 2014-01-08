@@ -46,7 +46,7 @@ SegmenterContour::SegmenterContour(const ConfigReader& x_configReader) :
 	// Initialize inputs and outputs streams
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,	"Input binary stream"));
 
-	m_outputObjectStream = new StreamObject(0, "segmented", m_regions, cvScalar(255, 255, 255), *this,	"Segmented objects");
+	m_outputObjectStream = new StreamObject(0, "segmented", m_regions, *this,	"Segmented objects");
 	m_outputStreams.push_back(m_outputObjectStream);
 
 #ifdef MARKUS_DEBUG_STREAMS

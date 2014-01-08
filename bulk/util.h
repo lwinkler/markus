@@ -47,11 +47,11 @@
 #define LOG_WARN  LOG4CXX_WARN
 #define LOG_INFO  LOG4CXX_INFO
 #define LOG_DEBUG LOG4CXX_DEBUG
-#define LOG_EVENT(logger, message)   LOG4CXX_WARN((logger), "EVENT " << message) // Global::logger.Stream(LOG_EVENT)<<x<<std::endl // TODO: define this
+#define LOG_EVENT(logger, message)   LOG4CXX_WARN((logger), "EVENT " << message)
 
 #define SYSTEM(x) {std::string cmd; cmd = (x) ; if(system(cmd.c_str())) throw MkException("Execution of command failed: " + cmd, LOC);}
 
-void adjust(const cv::Mat* im_in, cv::Mat* im_out, cv::Mat*& tmp1, cv::Mat*& tmp2);//, Mat* tmp2);
+void adjust(const cv::Mat* im_in, cv::Mat* im_out, cv::Mat*& tmp1, cv::Mat*& tmp2);
 void adjustSize(const cv::Mat* im_in, cv::Mat* im_out);
 void adjustChannels(const cv::Mat* im_in, cv::Mat* im_out);
 

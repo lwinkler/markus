@@ -197,11 +197,11 @@ Scalar colorFromStr(string x_str)
 		if(!(pos1 && pos2 && pos3))
 			throw MkException("Error in colorFromStr", LOC);
 		
-		return cvScalar(atoi(x_str.substr(1, pos1 - 1).c_str()), 
+		return Scalar(atoi(x_str.substr(1, pos1 - 1).c_str()), 
 				atoi(x_str.substr(pos1 + 1, pos2 - pos1 - 1).c_str()), 
 				atoi(x_str.substr(pos2 + 1, pos3 - pos2 - 1).c_str()));
 	}
-	else return cvScalar(0, 0, 0);
+	else return Scalar(0, 0, 0);
 }
 
 Scalar colorFromId(int x_id)

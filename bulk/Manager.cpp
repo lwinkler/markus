@@ -199,7 +199,6 @@ bool Manager::Process()
 		}*/
 		catch(EndOfStreamException& e)
 		{
-			// TODO: Catch end of stream exception
 			LOG_WARN(m_logger, (*it)->GetName() << ": Exception raised (EndOfStream) : " << e.what());
 
 			// test if all inputs are over

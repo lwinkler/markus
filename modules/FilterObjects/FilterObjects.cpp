@@ -45,10 +45,10 @@ FilterObjects::FilterObjects(const ConfigReader& x_configReader) :
 {
 	m_description = "Filter the input objects based on different criterion";
 
-	m_inputObjectStream = new StreamObject(0, "input", 	m_objectsIn, cvScalar(255, 255, 255), *this,	"Incoming objects");
+	m_inputObjectStream = new StreamObject(0, "input", 	m_objectsIn, *this,	"Incoming objects");
 	m_inputStreams.push_back(m_inputObjectStream);
 
-	m_outputObjectStream = new StreamObject(0, "filtered",  m_objectsOut, cvScalar(255, 255, 255), *this,	"Filtered objects objects");
+	m_outputObjectStream = new StreamObject(0, "filtered",  m_objectsOut, *this,	"Filtered objects objects");
 	m_outputStreams.push_back(m_outputObjectStream);
 #ifdef MARKUS_DEBUG_STREAMS
 	// add a debug stream

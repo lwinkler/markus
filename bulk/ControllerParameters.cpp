@@ -235,7 +235,7 @@ ControllerString::ControllerString(ParameterString& x_param):
 
 ControllerString::~ControllerString()
 {
-	// CLEAN_DELETE(m_lineEdit); // TODO: this causes a crash at closing if the parameter screen is activated.
+	// CLEAN_DELETE(m_lineEdit);
 }
 
 QWidget* ControllerString::CreateWidget()

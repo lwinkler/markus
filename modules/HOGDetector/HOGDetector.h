@@ -49,7 +49,7 @@ public:
 		m_list.push_back(new ParameterFloat("scaleFactor", 1.2, PARAM_FLOAT, 1, 2, 	&scaleFactor,	"Scale factor for scanning (higher: less sensitive)"));
 		// m_list.push_back(new ParameterString("filterFile", "modules/HOGDetector/lbpcascade_frontalface.xml",  &filterFile,
 														// "File with filter data of the detected object"));
-		m_list.push_back(new ParameterString("color", "(255,255,255)",		&color,	"Color to draw the output"));
+		// m_list.push_back(new ParameterString("color", "(255,255,255)",		&color,	"Color to draw the output"));
 		m_list.push_back(new ParameterString("objectLabel", "hog", 			&objectLabel,	"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
 		
 		ParameterStructure::Init();
@@ -59,7 +59,7 @@ public:
 	int minSide;
 	float scaleFactor;
 	// std::string filterFile;
-	std::string color;
+	// std::string color;
 	std::string objectLabel;
 };
 

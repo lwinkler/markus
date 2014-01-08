@@ -27,13 +27,16 @@
 #include "Stream.h"
 #include "Object.h"
 
+#define DEFAULT_STREAM_COLOR cv::Scalar(255, 255, 255)
+
+
 /// Stream in the form of located objects
 
 class StreamObject : public Stream
 {
 public:
-	StreamObject(int x_id, const std::string& rx_name, 
-			std::vector<Object>& r_rects, const cv::Scalar& x_color, Module& rx_module, const std::string& rx_description);
+	//StreamObject(int x_id, const std::string& rx_name, 
+			//std::vector<Object>& r_rects, const cv::Scalar& x_color, Module& rx_module, const std::string& rx_description);
 	StreamObject(int x_id, const std::string& rx_name, 
 			std::vector<Object>& r_rects, Module& rx_module, const std::string& rx_description);
 	~StreamObject();
@@ -48,7 +51,7 @@ public:
 
 protected:
 	std::vector<Object> & m_objects;
-	cv::Scalar m_color;
+	// cv::Scalar m_color;
 	bool m_isColorSet;
 
 private:

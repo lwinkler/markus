@@ -22,7 +22,6 @@
 -------------------------------------------------------------------------------------*/
 
 #include "Object.h"
-#include "Module.h" // for time stamps // TODO: see if we can improve this include
 
 /*! \class Template
  *  \brief Class representing an object template
@@ -44,9 +43,13 @@ class Template
 		bool NeedCleaning(TIME_STAMP x_cleaningTimeStamp);
 		
 		inline void AddFeature(std::string x_name, double x_value) {m_feats.insert(std::make_pair(x_name, Feature(x_value)));}
-		inline const Feature& GetFeature(const std::string& x_name) const {
-			// TODO: Raise exception if feature not found
-			return m_feats.find(x_name)->second;}
+		inline const Feature& GetFeature(const std::string& x_name) const
+		{
+			std::map <std::string, Feature>::const_iterator it = m_feats.find(x_name);
+			if(it == m_feats.end())
+				throw MkException("Feature is inexistant", LOC);
+			return it->second;
+		}
 		inline const void SetFeatures(const std::map <std::string, Feature>& x_feats) {m_feats = x_feats;}
 		inline const std::map <std::string, Feature>& GetFeatures() const{ return m_feats;}
 		// inline const std::list <Object>& GetMatchingObjects() const{ return m_matchingObjects;}

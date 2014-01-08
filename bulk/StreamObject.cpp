@@ -28,20 +28,20 @@ using namespace std;
 using namespace cv;
 
 
-StreamObject::StreamObject(int x_id, const string& x_name, 
+/*StreamObject::StreamObject(int x_id, const string& x_name, 
 		vector<Object>& xr_objects, const Scalar& x_color, Module& rx_module, const string& rx_description) :
 	Stream(x_id, x_name, DEFAULT_STREAM_WIDTH, DEFAULT_STREAM_HEIGHT, rx_module, rx_description),
 	m_objects(xr_objects),
-	m_color(x_color),
+	// m_color(x_color),
 	m_isColorSet(true)
 {
-}
+}*/
 
 StreamObject::StreamObject(int x_id, const string& rx_name, 
 		vector<Object>& xr_objects, Module& rx_module, const string& rx_description):
 	Stream(x_id, rx_name, DEFAULT_STREAM_WIDTH, DEFAULT_STREAM_HEIGHT, rx_module, rx_description),
 	m_objects(xr_objects),
-	m_color(cvScalar(255, 255, 255)),
+	// m_color(cvScalar(255, 255, 255)),
 	m_isColorSet(false)
 {}
 
@@ -83,7 +83,7 @@ void StreamObject::RenderTo(Mat * xp_output) const
 {
 	for(vector<Object>::const_iterator it1 = m_objects.begin() ; it1 != m_objects.end() ; it1++)
 	{
-		it1->RenderTo(xp_output, m_color);
+		it1->RenderTo(xp_output, DEFAULT_STREAM_COLOR);
 	}
 }
 

@@ -54,7 +54,7 @@ CascadeDetector::CascadeDetector(const ConfigReader& x_configReader)
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this, 		"Video input")); 
 
 	m_outputStreams.push_back(new StreamObject(0, "detected", 
-				m_detectedObjects, colorFromStr(m_param.color), *this,	"Detected objects"));
+				m_detectedObjects, *this,	"Detected objects"));
 #ifdef MARKUS_DEBUG_STREAMS
 	m_debug = new Mat(Size(m_param.width, m_param.height), CV_8UC3);
 	m_debugStreams.push_back(new StreamDebug(1, "debug", m_debug, *this,		""));
