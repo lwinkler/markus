@@ -41,7 +41,7 @@ LogEvent::LogEvent(const ConfigReader& x_configReader)
 	m_input       = new Mat(Size(m_param.width, m_param.height), m_param.type);
 
 	// Init input images
-	m_inputStreams.push_back(new StreamEvent(0, "event", m_param.width, m_param.height, m_event, *this, "Input event to be logged"));
+	m_inputStreams.push_back(new StreamEvent(0, "event", m_event, *this, "Input event to be logged"));
 	m_inputStreams.push_back(new StreamImage(1, "image", m_input, *this, "Video input for image extraction"));
 
 	m_saveImage = false;

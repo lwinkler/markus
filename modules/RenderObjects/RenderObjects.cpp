@@ -41,11 +41,11 @@ RenderObjects::RenderObjects(const ConfigReader& x_configReader) :
 	m_imageOutput = new Mat(Size(m_param.width, m_param.height), m_param.type);
 	
 	m_inputStreams.push_back(new StreamImage(0, "input", m_imageInput, *this,	"Input video stream"));
-	m_inputStreams.push_back(new StreamObject(1, "input", m_param.width, m_param.height, m_objectInput1, *this,	"Object stream 1"));
-	m_inputStreams.push_back(new StreamObject(2, "input", m_param.width, m_param.height, m_objectInput2, *this,	"Object stream 1"));
-	m_inputStreams.push_back(new StreamObject(3, "input", m_param.width, m_param.height, m_objectInput3, *this,	"Object stream 1"));
-	m_inputStreams.push_back(new StreamObject(4, "input", m_param.width, m_param.height, m_objectInput4, *this,	"Object stream 1"));
-	m_inputStreams.push_back(new StreamObject(5, "input", m_param.width, m_param.height, m_objectInput5, *this,	"Object stream 1"));
+	m_inputStreams.push_back(new StreamObject(1, "input", m_objectInput1, *this,	"Object stream 1"));
+	m_inputStreams.push_back(new StreamObject(2, "input", m_objectInput2, *this,	"Object stream 1"));
+	m_inputStreams.push_back(new StreamObject(3, "input", m_objectInput3, *this,	"Object stream 1"));
+	m_inputStreams.push_back(new StreamObject(4, "input", m_objectInput4, *this,	"Object stream 1"));
+	m_inputStreams.push_back(new StreamObject(5, "input", m_objectInput5, *this,	"Object stream 1"));
 	
 	m_outputStreams.push_back(new StreamImage(0, "output", m_imageOutput, *this,	"Output video stream"));
 }

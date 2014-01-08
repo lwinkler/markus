@@ -40,7 +40,7 @@ ThumbnailWriter::ThumbnailWriter(const ConfigReader& x_configReader):
 	m_input    = new Mat(Size(m_param.width, m_param.height), m_param.type);
 
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,   "Video input"));
-	m_inputStreams.push_back(new StreamObject(1, "objects", m_param.width, m_param.height, m_objectsIn, cvScalar(255, 255, 255), *this,     "Incoming objects"));
+	m_inputStreams.push_back(new StreamObject(1, "objects", m_objectsIn, cvScalar(255, 255, 255), *this,     "Incoming objects"));
 }
 
 ThumbnailWriter::~ThumbnailWriter()

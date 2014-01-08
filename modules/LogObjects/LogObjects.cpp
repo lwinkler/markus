@@ -48,7 +48,7 @@ LogObjects::LogObjects(const ConfigReader& x_configReader)
 	m_description = "This module takes a stream of objects as inputs and logs data to a text file";
 	
 	// Init input streams
-	m_inputStreams.push_back(new StreamObject(0, "input",      m_param.width, m_param.height, m_objectsIn, cvScalar(255, 255, 255), *this,     "Incoming objects"));
+	m_inputStreams.push_back(new StreamObject(0, "input",      m_objectsIn, cvScalar(255, 255, 255), *this,     "Incoming objects"));
 }
 
 LogObjects::~LogObjects(void)

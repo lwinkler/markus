@@ -32,9 +32,9 @@
 class StreamObject : public Stream
 {
 public:
-	StreamObject(int x_id, const std::string& rx_name, int x_width, int x_height, 
+	StreamObject(int x_id, const std::string& rx_name, 
 			std::vector<Object>& r_rects, const cv::Scalar& x_color, Module& rx_module, const std::string& rx_description);
-	StreamObject(int x_id, const std::string& rx_name, int x_width, int x_height, 
+	StreamObject(int x_id, const std::string& rx_name, 
 			std::vector<Object>& r_rects, Module& rx_module, const std::string& rx_description);
 	~StreamObject();
 	void Clear() {m_objects.clear();}

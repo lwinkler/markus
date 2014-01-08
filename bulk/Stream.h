@@ -24,9 +24,13 @@
 #ifndef OUTPUT_STREAM_H
 #define OUTPUT_STREAM_H
 
-#include <iostream>
-
+// #include <iostream>
 #include "Module.h"
+
+// Default size for a stream like StreamObject and StreamEvent, where size is only for display
+#define DEFAULT_STREAM_WIDTH  640
+#define DEFAULT_STREAM_HEIGHT 480
+
 
 /// This is the parent class for all streams (input and output of data)
 

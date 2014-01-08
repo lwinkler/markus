@@ -23,10 +23,10 @@ ClassifyEvents::ClassifyEvents(const ConfigReader& x_configReader) :
 {
 	m_description = "Filter events based on user feedback";
 
-	m_inputStreams.push_back(new StreamEvent( 0, "events",   m_param.width, m_param.height, m_eventIn,  *this, "Incoming events"));
+	m_inputStreams.push_back(new StreamEvent( 0, "events",   m_eventIn,  *this, "Incoming events"));
 
-	m_outputStreams.push_back(new StreamEvent(0, "filtered", m_param.width, m_param.height, m_eventOut, *this, "Filtered events"));
-	m_outputStreams.push_back(new StreamEvent(1, "last_event", m_param.width, m_param.height, m_eventIn, *this, "Event awaiting user feedback"));
+	m_outputStreams.push_back(new StreamEvent(0, "filtered", m_eventOut, *this, "Filtered events"));
+	m_outputStreams.push_back(new StreamEvent(1, "last_event", m_eventIn, *this, "Event awaiting user feedback"));
 }
 
 ClassifyEvents::~ClassifyEvents(void )
