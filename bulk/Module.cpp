@@ -185,7 +185,7 @@ void Module::Process()
 
 	const ModuleParameterStructure& param = RefParameter();
 	
-	// Timestamp of the module is given by the input stream // TODO: How to manage if there are several streams
+	// Timestamp of the module is given by the input stream
 	m_currentTimeStamp = 0;
 	if(m_inputStreams.size() >= 1)
 	{
