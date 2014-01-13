@@ -58,7 +58,7 @@ public:
 	int minSide;
 	float scaleFactor;
 	std::string filterFile;
-	std::string color;
+	std::string color; // TODO remove this
 	std::string objectLabel;
 };
 

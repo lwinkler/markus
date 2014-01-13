@@ -90,9 +90,9 @@ public:
 	const std::vector<Controller*>& GetControlList() const {return m_controls;}
 	virtual ModuleParameterStructure & RefParameter() = 0;
 	
-	// inline int GetWidth() {return RefParameter().width;}
-	// inline int GetHeight(){return RefParameter().height;}
-	// inline int GetType()  {return RefParameter().type;}
+	inline int GetWidth() {return RefParameter().width;}
+	inline int GetHeight(){return RefParameter().height;}
+	inline int GetType()  {return RefParameter().type;}
 	virtual double GetRecordingFps();
 	
 	inline void SetPreceedingModule(Module & x_module){m_modulePreceeding = &x_module;}

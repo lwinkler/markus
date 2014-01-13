@@ -29,9 +29,11 @@ using namespace std;
 using namespace cv;
 
 StreamImage::StreamImage(int x_id, const std::string& x_name, Mat* x_image, Module& rx_module, const string& rx_description) : 
-	Stream(x_id, x_name, x_image->cols, x_image->rows, rx_module, rx_description),
+	Stream(x_id, x_name, rx_module, rx_description),
 	m_image(x_image)
 {
+	assert(x_image->cols == rx_module.GetWidth() && x_image->rows == rx_module.GetHeight());
+	assert(x_image != NULL);
 	m_img_tmp1 = NULL; // To convert the input
 	m_img_tmp2 = NULL;
 	m_img_input = NULL;

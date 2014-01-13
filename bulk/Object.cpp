@@ -53,12 +53,12 @@ void Object::RenderTo(Mat* xp_output, const Scalar& x_color) const
 	Point p1(posX - width / 2, posY - height / 2);
 	Point p2(posX + width / 2, posY + height / 2);
 
-	float scale = static_cast<float>(xp_output->cols) / width;
+	/*float scale = static_cast<float>(xp_output->cols) / width;
 	p1.x = p1.x * scale;
 	p2.x = p2.x * scale;
 	scale = static_cast<float>(xp_output->rows) / height;
 	p1.y = p1.y * scale;
-	p2.y = p2.y * scale;
+	p2.y = p2.y * scale;*/
 
 	// Draw the rectangle in the input image
 	// if id is present, draw to the equivalent color

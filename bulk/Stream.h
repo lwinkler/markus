@@ -27,17 +27,13 @@
 // #include <iostream>
 #include "Module.h"
 
-// Default size for a stream like StreamObject and StreamEvent, where size is only for display
-#define DEFAULT_STREAM_WIDTH  640
-#define DEFAULT_STREAM_HEIGHT 480
-
 
 /// This is the parent class for all streams (input and output of data)
 
 class Stream
 {
 public:
-	Stream(int x_id, const std::string& x_name, int x_width, int x_height, Module& rx_module, const std::string& rx_description);
+	Stream(int x_id, const std::string& x_name, Module& rx_module, const std::string& rx_description);
 	virtual ~Stream();
 	inline const std::string& GetName() const {return m_name;}
 	inline int GetId() const {return m_id;}
