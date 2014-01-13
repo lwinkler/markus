@@ -25,13 +25,13 @@ In all cases you will need:
 
 On Ubuntu the apt-get install command is:
 
-	sudo apt-get install cmake libqt4-core  libqt4-dev libtinyxml-dev  libopencv-core-dev libopencv-highgui-dev liblog4cxx10-dev
+	sudo apt-get install cmake libqt4-core  libqt4-dev libtinyxml-dev libopencv-dev liblog4cxx10-dev
 
 Other dependencies:
-	- *CMake GUI* : (or cmake-curses-gui) to set the compilation flags visually
-	- *Qt Creator* : a full IDE for C++ and QT
-	- *Python*
-	- *CppUnit** : libcppunit-dev
+	- *CMake GUI* : to set the compilation flags visually (packages cmake-curses-gui or cmake-qt-gui)
+	- *Qt Creator* : a full IDE for C++ and QT (package qtcreator)
+	- *Python*: for some modules (package python-dev)
+	- *CppUnit** : To run the unit test (package libcppunit-dev)
 
 	sudo apt-get install cmake-qt-gui cmake-curses-gui qt-creator python-dev libcppunit-dev
 

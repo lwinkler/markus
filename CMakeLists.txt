@@ -38,7 +38,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 
-include_directories(bulk modules lib lib/cvblobs )
+include_directories(bulk modules)
 
 
 set(markus_SRCS main.cpp)
@@ -46,9 +46,9 @@ set(markus_SRCS main.cpp)
 #-------------------------------------------------------------------------------- 
 if(Markus_NO_GUI)
 	add_definitions(-DMARKUS_NO_GUI)
-	set(DEPS bulk modules tools)
+	set(DEPS bulk modules)
 else()
-	set(DEPS bulk gui modules tools)
+	set(DEPS bulk gui modules)
 	include_directories(gui)
 endif()
 
@@ -85,7 +85,6 @@ endif()
 
 add_subdirectory(bulk)
 add_subdirectory(modules)
-add_subdirectory(lib)
 add_subdirectory(tools)
 if(NOT Markus_NO_GUI)
 	add_subdirectory(gui)
