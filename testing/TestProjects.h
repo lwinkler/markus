@@ -66,6 +66,7 @@ class TestProjects : public CppUnit::TestFixture
 	{
 		runConfig("testing/projects/sync_test1.xml");
 		runConfig("testing/projects/sync_test2.xml");
+		runConfig("testing/projects/FaceAndTracker.xml");
 	}
 
 	static CppUnit::Test *suite()
