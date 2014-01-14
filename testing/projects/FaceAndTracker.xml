@@ -2,7 +2,7 @@
 <application name="FaceAndTracker" description="" cyclelimit="-1" gui="">
 <module name="Input" machineurl="localhost" id="0">
 <parameters>
-<param name="class">UsbCam</param>
+<param name="class">VideoFileReader</param>
 </parameters>
 <inputs/>
 <outputs>

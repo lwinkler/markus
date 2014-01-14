@@ -42,7 +42,7 @@ bool MarkusApplication::notify(QObject *receiver_, QEvent *event_)
 	}
 	catch(cv::Exception& e)
 	{
-		cout << "Exception raised (std::exception) : " << e.what() <<endl;
+		cout << "Exception raised (std::exception) : " << e.what() <<endl; // TODO: Use logger
 	}
 	catch(std::exception& e)
 	{
