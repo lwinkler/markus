@@ -98,7 +98,7 @@ protected:
 template<class T> class ParameterT : public Parameter
 {
 public:
-	ParameterT(const std::string& x_name, T x_default, ParameterType x_type, T x_min, T x_max, T * xp_value, const std::string& x_description) : 
+	ParameterT(const std::string& x_name, T x_default, T x_min, T x_max, T * xp_value, const std::string& x_description) : 
 		Parameter(x_name, x_description),
 		m_default(x_default),
 		m_min(x_min),

@@ -43,9 +43,9 @@ public:
 	CascadeDetectorParameterStructure(const ConfigReader& x_confReader) : 
 		ModuleAsyncParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterInt("minNeighbors", 2, PARAM_INT, 1, 100, 	&minNeighbors,	"Minimum numbers of neighbors (higher: less sensitive)")); // Note : Seems to be a bug with minNeighbors = 1 with most filters
-		m_list.push_back(new ParameterInt("minSide", 0, PARAM_INT, 0, 200, 		&minSide,	"Minimum size of the detected object"));
-		m_list.push_back(new ParameterFloat("scaleFactor", 1.2, PARAM_FLOAT, 1, 2, 	&scaleFactor,	"Scale factor for scanning (higher: less sensitive)"));
+		m_list.push_back(new ParameterInt("minNeighbors", 2, 1, 100, 	&minNeighbors,	"Minimum numbers of neighbors (higher: less sensitive)")); // Note : Seems to be a bug with minNeighbors = 1 with most filters
+		m_list.push_back(new ParameterInt("minSide", 0, 0, 200, 		&minSide,	"Minimum size of the detected object"));
+		m_list.push_back(new ParameterFloat("scaleFactor", 1.2, 1, 2, 	&scaleFactor,	"Scale factor for scanning (higher: less sensitive)"));
 		m_list.push_back(new ParameterString("filterFile", "modules/CascadeDetector/lbpcascade_frontalface.xml",  &filterFile,
 														"File with filter data of the detected object"));
 		m_list.push_back(new ParameterString("color", "(255,255,255)",		&color,	"Color to draw the output"));

@@ -34,13 +34,13 @@ class FilterObjectsParameterStructure : public ModuleParameterStructure
 public:
 	FilterObjectsParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterDouble("min_travel_dist", 0.0, PARAM_DOUBLE, 0, 1,    &minTravelDist  , "An object must have been tracked on this distance to be accepted [%% of image diagonal]"));
-		m_list.push_back(new ParameterDouble("min_border_dist", 0.0, PARAM_DOUBLE, 0, 1,    &minBorderDist  , "An object must be distant from the image border [%% of image diagonal]"));
-		m_list.push_back(new ParameterInt(   "max_object_nb"  ,  -1, PARAM_INT,   -1, 1000, &maxObjectsNb   , "If there are more than this number of objects, all are filtered out"));
-		m_list.push_back(new ParameterDouble("min_obj_width"  , 0.0, PARAM_DOUBLE, 0, 1,    &minObjectWidth , "Minimum width to accept an object"));
-		m_list.push_back(new ParameterDouble("min_obj_height" , 0.0, PARAM_DOUBLE, 0, 1,    &minObjectHeight, "Minimum hdight to accept an object"));
-		m_list.push_back(new ParameterDouble("max_obj_width"  , 1.0, PARAM_DOUBLE, 0, 1,    &maxObjectWidth , "Maximum width to accept an object"));
-		m_list.push_back(new ParameterDouble("max_obj_height" , 1.0, PARAM_DOUBLE, 0, 1,    &maxObjectHeight, "Maximum hdight to accept an object"));
+		m_list.push_back(new ParameterDouble("min_travel_dist", 0.0, 0, 1,    &minTravelDist  , "An object must have been tracked on this distance to be accepted [%% of image diagonal]"));
+		m_list.push_back(new ParameterDouble("min_border_dist", 0.0, 0, 1,    &minBorderDist  , "An object must be distant from the image border [%% of image diagonal]"));
+		m_list.push_back(new ParameterInt(   "max_object_nb"  ,  -1, -1, 1000, &maxObjectsNb   , "If there are more than this number of objects, all are filtered out"));
+		m_list.push_back(new ParameterDouble("min_obj_width"  , 0.0, 0, 1,    &minObjectWidth , "Minimum width to accept an object"));
+		m_list.push_back(new ParameterDouble("min_obj_height" , 0.0, 0, 1,    &minObjectHeight, "Minimum hdight to accept an object"));
+		m_list.push_back(new ParameterDouble("max_obj_width"  , 1.0, 0, 1,    &maxObjectWidth , "Maximum width to accept an object"));
+		m_list.push_back(new ParameterDouble("max_obj_height" , 1.0, 0, 1,    &maxObjectHeight, "Maximum hdight to accept an object"));
 
 		ParameterStructure::Init();
 	}

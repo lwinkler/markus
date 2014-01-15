@@ -42,7 +42,7 @@ public:
 	MotionDetectorParameterStructure(const ConfigReader& x_confReader) : 
 		ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterFloat("motion_thres", 0.1, PARAM_FLOAT, 0, 1, &motionThres,	"Threshold for motion analysis"));
+		m_list.push_back(new ParameterFloat("motion_thres", 0.1, 0, 1, &motionThres,	"Threshold for motion analysis"));
 
 		ParameterStructure::Init();
 	}

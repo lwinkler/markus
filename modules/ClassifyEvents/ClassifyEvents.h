@@ -20,7 +20,7 @@ class ClassifyEventsParameterStructure : public ModuleParameterStructure
 public:
 	ClassifyEventsParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterDouble("validity_thres", 0.5, PARAM_DOUBLE, 0, 1, &validityThres, "Decision threshold to consider an event as valid [0 to 1]"));
+		m_list.push_back(new ParameterDouble("validity_thres", 0.5, 0, 1, &validityThres, "Decision threshold to consider an event as valid [0 to 1]"));
 		ParameterStructure::Init(); // TODO: This causes a warning when inherited !
 	}
 	double validityThres;

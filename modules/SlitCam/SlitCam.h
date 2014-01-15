@@ -41,7 +41,7 @@ public:
 	SlitCamParameterStructure(const ConfigReader& x_confReader) : 
 		ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterInt("aperture", 1, PARAM_INT, 1, 10, &aperture,	"Size of the aperture of the camera"));
+		m_list.push_back(new ParameterInt("aperture", 1, 1, 10, &aperture,	"Size of the aperture of the camera"));
 		
 		// Set default value of module parameter (re-definition)
 		RefParameterByName("type").SetDefault("CV_8UC3");

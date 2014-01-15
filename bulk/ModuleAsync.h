@@ -34,7 +34,7 @@ class ModuleAsyncParameterStructure : public ModuleParameterStructure
 public:
 	ModuleAsyncParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterDouble("detectionFps", 	10, 	PARAM_DOUBLE, 	0, 	1000,		&detectionFps,	"Frames per seconds for the asynchronous detection (normally smaller that module)")); // TODO rename detection_fps
+		m_list.push_back(new ParameterDouble("detectionFps", 	10, 	0, 	1000,		&detectionFps,	"Frames per seconds for the asynchronous detection (normally smaller that module)")); // TODO rename detection_fps
 	};
 
 public:

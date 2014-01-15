@@ -34,8 +34,8 @@ public:
 	RandomEventGeneratorParameterStructure(const ConfigReader& x_confReader) : 
 	InputParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterInt("nb_features", 	4, 	PARAM_INT, 	0, 	1000,	 &nbFeatures,	"Number of features per event"));
-		m_list.push_back(new ParameterInt("random_seed", 	0, 	PARAM_INT, 	0, 	INT_MAX, &randomSeed,	"Seed for random generator: 0 means seed is generated from timer"));
+		m_list.push_back(new ParameterInt("nb_features", 	4, 	0, 	1000,	 &nbFeatures,	"Number of features per event"));
+		m_list.push_back(new ParameterInt("random_seed", 	0, 	0, 	INT_MAX, &randomSeed,	"Seed for random generator: 0 means seed is generated from timer"));
 		RefParameterByName("type").SetDefault("CV_8UC3");
 		RefParameterByName("fps").SetDefault("0.2");
 		ParameterStructure::Init();

@@ -50,10 +50,10 @@ public:
 	{
 
 		// This parameters should not change
-		m_list.push_back(new ParameterInt  ("history",	500, 	PARAM_INT,   1, 10000,	&history,	"Length of the history"));
-		m_list.push_back(new ParameterFloat("var_thres",	16, 	PARAM_FLOAT, 1, 255,	&varThres,	"Threshold on the squared Mahalanobis distance to decide whether it is well described by the background model (selectivity of background) "));
-		m_list.push_back(new ParameterBool  ("b_shadow_detection",	false, 	PARAM_BOOL, 0, 1, &bShadowDetection,	"Enable shadow detection"));
-		m_list.push_back(new ParameterDouble("learning_rate",	-1, 	PARAM_DOUBLE, -1, 1, &learningRate,	"Learning rate of the model"));
+		m_list.push_back(new ParameterInt  ("history",	500, 	1, 10000,	&history,	"Length of the history"));
+		m_list.push_back(new ParameterFloat("var_thres",	16, 	1, 255,	&varThres,	"Threshold on the squared Mahalanobis distance to decide whether it is well described by the background model (selectivity of background) "));
+		m_list.push_back(new ParameterBool  ("b_shadow_detection",	false, 	0, 1, &bShadowDetection,	"Enable shadow detection"));
+		m_list.push_back(new ParameterDouble("learning_rate",	-1, 	-1, 1, &learningRate,	"Learning rate of the model"));
 
 		RefParameterByName("type").SetDefault("CV_8UC3");
 

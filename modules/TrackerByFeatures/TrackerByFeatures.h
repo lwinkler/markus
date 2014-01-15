@@ -36,12 +36,12 @@ class TrackerByFeaturesParameterStructure : public ModuleParameterStructure
 public:
 	TrackerByFeaturesParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterDouble("max_matching_distance"   , 0.1 , PARAM_DOUBLE, 0    , 100    , &maxMatchingDistance     , "Tolerance of the tracker."));
-		m_list.push_back(new ParameterDouble("time_disappear"          , 1.0 , PARAM_DOUBLE, 0    , 300    , &timeDisappear           , "Time before disappearence of an object [s]"));
-		m_list.push_back(new ParameterBool  ("symetric_match"          , true, PARAM_BOOL  , 0    , 1      , &symetricMatch           , "Each match between objects and templates must be symetrical"));
+		m_list.push_back(new ParameterDouble("max_matching_distance"   , 0.1 , 0    , 100    , &maxMatchingDistance     , "Tolerance of the tracker."));
+		m_list.push_back(new ParameterDouble("time_disappear"          , 1.0 , 0    , 300    , &timeDisappear           , "Time before disappearence of an object [s]"));
+		m_list.push_back(new ParameterBool  ("symetric_match"          , true, 0    , 1      , &symetricMatch           , "Each match between objects and templates must be symetrical"));
 		m_list.push_back(new ParameterString("features"                , "x,y,width,height"                , &features                , "List of features to use for tracking (only scalar values, must be present in objects to track)"));
-		m_list.push_back(new ParameterDouble("alpha"                   , 0.01, PARAM_DOUBLE, 0    , 1      , &alpha                   , "Alpha for feature update, used to set the mean value dynamically. Sets the adaptibility of the tracker and is used to calculate mean and variation features."));
-		m_list.push_back(new ParameterBool  ("handle_split"            , 0   , PARAM_BOOL  , 0    , 1      , &handleSplit             , "Handle the splitting of one object into multiple objects."));
+		m_list.push_back(new ParameterDouble("alpha"                   , 0.01, 0    , 1      , &alpha                   , "Alpha for feature update, used to set the mean value dynamically. Sets the adaptibility of the tracker and is used to calculate mean and variation features."));
+		m_list.push_back(new ParameterBool  ("handle_split"            , 0   , 0    , 1      , &handleSplit             , "Handle the splitting of one object into multiple objects."));
 
 
 		ParameterStructure::Init();
