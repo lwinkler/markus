@@ -58,20 +58,29 @@ Module::Module(const ConfigReader& x_configReader) :
 
 void Module::Reset()
 {
+	// Lock the parameters that cannot be changed
+	ModuleParameterStructure& param(RefParameter());
+	param.RefParameterByName("class").Lock();
+	param.RefParameterByName("width").Lock();
+	param.RefParameterByName("height").Lock();
+	param.RefParameterByName("type").Lock();
+	param.RefParameterByName("auto_process").Lock();
+	param.RefParameterByName("allow_unsync_input").Lock();
+
 	// Add the module timer (only works with QT)
-	if(RefParameter().autoProcess)
+	if(param.autoProcess)
 	{
 		if(m_moduleTimer)
 			delete(m_moduleTimer);
 		m_moduleTimer = new QModuleTimer(*this, 0);
-		m_moduleTimer->Reset(RefParameter().fps);
+		m_moduleTimer->Reset(param.fps);
 	}
 	else m_moduleTimer = NULL;
-	// RefParameter().PrintParameters(); // Do not print 2x at startup
+	// param.PrintParameters(); // Do not print 2x at startup
 
 	// Add controls for parameters' change
 #ifndef MARKUS_NO_GUI
-	const std::vector<Parameter*>& list = RefParameter().GetList();
+	const std::vector<Parameter*>& list = param.GetList();
 	// for(const vector<Parameter*>&::iterator it = list.begin() ; it != list.end() ; it++)
 		// m_controls.push_back(new ParameterControl("Parameters", "Change the values of parameters at runtime."));
 
@@ -84,6 +93,8 @@ void Module::Reset()
 
 	for(vector<Parameter*>::const_iterator it = list.begin(); it != list.end(); it++)
 	{
+		if((*it)->IsLocked())
+			continue;
 		Controller * ctrr = NULL;
 		switch((*it)->GetType())
 		{

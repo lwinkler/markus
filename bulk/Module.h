@@ -55,9 +55,6 @@ public:
 
 		// Lock class parameter as it can never be changed // TODO: make this work
 		// Init();
-		// RefParameterByName("class").Lock();
-		// RefParameterByName("width").Lock();
-		// RefParameterByName("height").Lock();
 	}
 
 public:
