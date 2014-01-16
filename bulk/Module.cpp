@@ -31,6 +31,7 @@
 
 
 #ifndef MARKUS_NO_GUI
+#include "ControllerModule.h"
 #include "ControllerParameters.h"
 #endif
 
@@ -90,6 +91,9 @@ void Module::Reset()
 		delete(*it);
 	}
 	m_controls.clear();
+
+	// Add module controller
+	m_controls.push_back(new ControllerModule(*this));
 
 	for(vector<Parameter*>::const_iterator it = list.begin(); it != list.end(); it++)
 	{

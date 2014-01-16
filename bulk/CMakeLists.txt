@@ -23,6 +23,7 @@ MkException.cpp
 Controller.cpp
 ControllerParameters.cpp
 ControllerInputStream.cpp
+ControllerModule.cpp
 ControllerEvent.cpp
 )
 
