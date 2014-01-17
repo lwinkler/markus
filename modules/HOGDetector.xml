@@ -51,11 +51,6 @@
 			<value min="1" max="2" default="1.2">1.2</value>
 			<description>Scale factor for scanning (higher: less sensitive)</description>
 		</param>
-		<param name="color">
-			<type>string</type>
-			<value default="(255,255,255)">(255,255,255)</value>
-			<description>Color to draw the output</description>
-		</param>
 		<param name="objectLabel">
 			<type>string</type>
 			<value default="hog">hog</value>

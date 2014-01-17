@@ -36,14 +36,14 @@ void reset(Controller* x_ctr)
 	ctr->module.Reset();
 }
 
-void pause(Controller* x_ctr)
+void pauseModule(Controller* x_ctr)
 {
 	ControllerModule* ctr = dynamic_cast<ControllerModule*>(x_ctr);
 	assert(ctr != NULL);
 	ctr->module.Pause(true);
 }
 
-void unpause(Controller* x_ctr)
+void unpauseModule(Controller* x_ctr)
 {
 	ControllerModule* ctr = dynamic_cast<ControllerModule*>(x_ctr);
 	assert(ctr != NULL);
@@ -63,8 +63,8 @@ ControllerModule::ControllerModule(Module& rx_module) :
 	module(rx_module)
 {
 	m_actions.insert(std::make_pair("Reset",   &reset));
-	m_actions.insert(std::make_pair("Pause",   &pause));
-	m_actions.insert(std::make_pair("Unpause",   &unpause));
+	m_actions.insert(std::make_pair("Pause",   &pauseModule));
+	m_actions.insert(std::make_pair("Unpause",   &unpauseModule));
 	m_actions.insert(std::make_pair("Print statistics",   &printStatistics));
 }
 
