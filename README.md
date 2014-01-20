@@ -25,16 +25,20 @@ In all cases you will need:
 
 On Ubuntu the apt-get install command is:
 
+**CAUTION**: Be careful if you install libopencv-dev as this installs nvidia packages along. This might harm your computer http://askubuntu.com/questions/243043/after-logging-in-theres-a-black-screen-and-my-cursor-nothing-else-in-ubuntu
+
 	sudo apt-get install cmake libqt4-core  libqt4-dev libtinyxml-dev libopencv-dev liblog4cxx10-dev
 
-Other dependencies:
+
+### Other dependencies
 	- *CMake GUI* : to set the compilation flags visually (packages cmake-curses-gui or cmake-qt-gui)
 	- *Qt Creator* : a full IDE for C++ and QT (package qtcreator)
 	- *Python*: for some modules (package python-dev)
 	- *CppUnit** : To run the unit test (package libcppunit-dev)
 
-	sudo apt-get install cmake-qt-gui cmake-curses-gui qt-creator python-dev libcppunit-dev
+	sudo apt-get install cmake-qt-gui cmake-curses-gui qtcreator python-dev libcppunit-dev
 
+### Compile OpenCV from sources
 Alternatively you can compile OpenCV from sources. In this case use:
 
 	git clone https://github.com/Itseez/opencv.git
