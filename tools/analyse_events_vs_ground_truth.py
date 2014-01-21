@@ -25,10 +25,14 @@ def overlap(evt1, evt2):
 def srttable(textfile, pattern):
 	regex = re.compile(pattern)
 
-	gt = open(textfile,"r")
+	try:
+		gt = open(textfile,"r")
+	except:
+		return []
+
 	flist = []
 	findex = 1
-	tindex = 0
+	# tindex = 0
 
 	line = "Empty"
 
@@ -36,7 +40,7 @@ def srttable(textfile, pattern):
 		line = gt.readline()
 		if line == "":
 			break
-		tindex += 1
+		# tindex += 1
 		line = gt.readline().rstrip()
 		fstart, fend = string.split(line," --> ")
 		secs, cents = fstart.split(",")
@@ -55,7 +59,8 @@ def srttable(textfile, pattern):
 
 	gt.close()
 
-	return flist, tindex
+	return flist
+	# , tindex
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 # Extract thumbnails from video
@@ -167,23 +172,23 @@ gt_file    = sys.argv[2]
 video_file = sys.argv[3]
 
 try:
-	evt_list, n  = srttable(evt_file, ".*")
+	evt_list  = srttable(evt_file, ".*")
 except:
 	print "Error reading " + evt_file
 	raise
 	evt_list = []
 	evt_file = ""
-	n = 0
-print "Found %d events in events list " % n
+print "Found %d events in events list " % len(evt_list)
 
 try:
-	gt_list, n = srttable(gt_file, "anor.*")
+	gt_list = srttable(gt_file, "anor.*")
 
 except:
+	print "Error reading " + gt_file
+	raise
 	gt_list = []
 	gt_file = ""
-	n = 0
-print "Found %d events in ground truth " % n
+print "Found %d events in ground truth " % len(gt_list)
 
 output_dir   = "analysis"
 
