@@ -91,9 +91,6 @@ protected:
 	// Background subtraction	
 	cv::Mat* m_foreground;
 	cv::Mat* m_background;
-	
-	// static const char * m_type;
-
 };
 
 

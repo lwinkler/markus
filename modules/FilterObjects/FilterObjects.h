@@ -70,7 +70,6 @@ private:
 	StreamObject* m_inputObjectStream;
 	StreamObject* m_outputObjectStream;
 
-	static const char * m_type;
 #ifdef MARKUS_DEBUG_STREAMS
 	cv::Mat * m_debug;
 #endif

@@ -48,8 +48,6 @@ class LogObjects : public Module
 protected:
 	virtual void ProcessFrame();
 	LogObjectsParameterStructure m_param;
-	static const char * m_type;
-
 	std::string m_fileName;
 
 	std::vector <Object> m_objectsIn;

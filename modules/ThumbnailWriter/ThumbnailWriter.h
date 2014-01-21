@@ -59,8 +59,6 @@ protected:
 	std::vector <Object> m_objectsIn;
 	std::string m_folderName;
 	
-	static const char * m_type;
-
 private:
 	ThumbnailWriterParameterStructure m_param;
 	inline virtual ThumbnailWriterParameterStructure& RefParameter() {return m_param;};

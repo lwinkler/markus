@@ -83,8 +83,6 @@ private:
 #ifdef MARKUS_DEBUG_STREAMS
 	cv::Mat * m_debug;
 #endif
-	static const char * m_type;
-
 protected:
 	inline virtual ModuleParameterStructure& RefParameter() { return m_param;}
 };

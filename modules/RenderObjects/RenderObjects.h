@@ -52,8 +52,6 @@ protected:
 	// for streams
 	cv::Mat * m_imageInput;
 	cv::Mat * m_imageOutput;
-
-	static const char * m_type;
 	std::vector<Object> m_objectInput1;
 	std::vector<Object> m_objectInput2;
 	std::vector<Object> m_objectInput3;

@@ -99,7 +99,6 @@ class HOGDetector : public ModuleAsync
 {
 protected:
 	HOGDetectorParameterStructure m_param;
-	static const char * m_type;
 	
 	std::vector<Object> m_detectedObjects;
 	cv::Mat * m_input;

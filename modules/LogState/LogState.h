@@ -53,7 +53,6 @@ class LogState : public Module
 protected:
 	virtual void ProcessFrame();
 	LogStateParameterStructure m_param;
-	static const char * m_type;
 
 
 	bool m_state;

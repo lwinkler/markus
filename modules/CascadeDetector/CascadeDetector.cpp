@@ -38,9 +38,6 @@ using namespace std;
 using namespace cv;
 
 
-const char * CascadeDetector::m_type = "CascadeDetector";
-
-
 CascadeDetector::CascadeDetector(const ConfigReader& x_configReader) 
 	 : ModuleAsync(x_configReader), m_param(x_configReader)
 {

@@ -25,13 +25,10 @@
 #include "StreamImage.h"
 
 // for debug
-#include "util.h"
-#include <opencv2/highgui/highgui.hpp>
+// #include "util.h"
+// #include <opencv2/highgui/highgui.hpp>
 
 using namespace cv;
-
-const char * Morph::m_type = "Morph";
-
 
 Morph::Morph(const ConfigReader& x_configReader) :
 	Module(x_configReader),

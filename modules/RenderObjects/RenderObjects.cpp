@@ -25,12 +25,7 @@
 #include "StreamObject.h"
 #include "StreamImage.h"
 
-//#include "util.h"
-
 using namespace cv;
-
-const char * RenderObjects::m_type = "RenderObjects";
-
 
 RenderObjects::RenderObjects(const ConfigReader& x_configReader) :
 	Module(x_configReader),

@@ -59,8 +59,6 @@ protected:
 	cv::VideoWriter m_writer;
 	cv::Mat * m_input;
 	
-	static const char * m_type;
-
 private:
 	VideoFileWriterParameterStructure m_param;
 	inline virtual VideoFileWriterParameterStructure& RefParameter() {return m_param;};

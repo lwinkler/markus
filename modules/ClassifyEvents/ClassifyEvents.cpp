@@ -11,8 +11,6 @@
 #include "ControllerEvent.h"
 
 
-const char * ClassifyEvents::m_type = "ClassifyEvents";
-
 using namespace std;
 using namespace cv;
 

@@ -32,9 +32,6 @@
 using namespace std;
 using namespace cv;
 
-const char * SegmenterContour::m_type = "SegmenterContour";
-
-
 SegmenterContour::SegmenterContour(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader),

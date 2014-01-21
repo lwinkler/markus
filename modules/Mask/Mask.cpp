@@ -30,8 +30,6 @@
 using namespace cv;
 using namespace std;
 
-const char * Mask::m_type = "Mask";
-
 
 Mask::Mask(const ConfigReader& x_configReader) :
 	Module(x_configReader),

@@ -30,9 +30,6 @@ using namespace std;
 using namespace cv;
 
 
-const char * LogState::m_type = "LogState";
-
-
 LogState::LogState(const ConfigReader& x_configReader) 
 	 : Module(x_configReader), m_param(x_configReader)
 {

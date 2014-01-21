@@ -58,7 +58,6 @@ protected:
 	virtual void ProcessFrame();
 	SlitCamParameterStructure m_param;
 	int m_position;
-	static const char * m_type;
 
 	cv::Mat * m_input;
 	cv::Mat * m_output;

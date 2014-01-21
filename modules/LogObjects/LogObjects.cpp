@@ -39,9 +39,6 @@ using namespace std;
 using namespace cv;
 
 
-const char * LogObjects::m_type = "LogObjects";
-
-
 LogObjects::LogObjects(const ConfigReader& x_configReader) 
 	 : Module(x_configReader), m_param(x_configReader)
 {

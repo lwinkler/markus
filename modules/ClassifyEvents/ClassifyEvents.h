@@ -44,8 +44,6 @@ protected:
 	Event m_eventIn;
 	Event m_eventOut;
 
-	static const char * m_type;
-
 private:
 	ClassifyEventsParameterStructure m_param;
 	inline virtual ModuleParameterStructure& RefParameter() { return m_param;}

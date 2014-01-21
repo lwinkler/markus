@@ -26,12 +26,9 @@
 
 // for debug
 #include "util.h"
-#include <opencv2/highgui/highgui.hpp>
+// #include <opencv2/highgui/highgui.hpp>
 
 using namespace cv;
-
-const char * TempDiff::m_type = "TempDiff";
-
 
 TempDiff::TempDiff(const ConfigReader& x_configReader) :
 	Module(x_configReader),

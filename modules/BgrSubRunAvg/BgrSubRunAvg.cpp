@@ -29,9 +29,6 @@
 using namespace cv;
 using namespace std;
 
-const char * BgrSubRunAvg::m_type = "BgrSubRunAvg";
-
-
 BgrSubRunAvg::BgrSubRunAvg(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader)

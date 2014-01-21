@@ -78,7 +78,6 @@ protected:
 
 private:
 	inline virtual LogEventParameterStructure& RefParameter() { return m_param;} // TODO: see that this is always private
-	static const char * m_type; // TODO: see if we keep this or not
 	LogEventParameterStructure m_param;
 };
 

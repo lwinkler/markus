@@ -32,8 +32,6 @@
 using namespace std;
 using namespace cv;
 
-const char * LogEvent::m_type = "LogEvent";
-
 LogEvent::LogEvent(const ConfigReader& x_configReader) 
 	 : Module(x_configReader), m_param(x_configReader)
 {

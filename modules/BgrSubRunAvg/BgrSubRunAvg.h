@@ -68,8 +68,6 @@ protected:
 	cv::Mat * m_input;
 	cv::Mat * m_tmp1;
 	cv::Mat * m_tmp2;
-	
-	static const char * m_type;
 };
 
 

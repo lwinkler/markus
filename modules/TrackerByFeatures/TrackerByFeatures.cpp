@@ -26,12 +26,7 @@
 #include "StreamDebug.h"
 
 // for debug
-#include "util.h"
-
-using namespace cv;
-
-const char * TrackerByFeatures::m_type = "TrackerByFeatures";
-
+// #include "util.h"
 #define MAX_NB_TEMPLATES 128
 
 using namespace std;

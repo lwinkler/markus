@@ -26,13 +26,10 @@
 #include "StreamDebug.h"
 
 // for debug
-#include "util.h"
+// #include "util.h"
 
 using namespace cv;
 using namespace std;
-
-const char * BgrSubMOG2::m_type = "BgrSubMOG2"; // TODO: this is never used: should we stil keep this line ?
-
 
 BgrSubMOG2::BgrSubMOG2(const ConfigReader& x_configReader) :
 	Module(x_configReader),

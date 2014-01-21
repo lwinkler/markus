@@ -35,8 +35,6 @@ using namespace std;
 using namespace cv;
 
 
-const char * MotionDetector::m_type = "MotionDetector";
-
 const Scalar MotionDetector::m_colorPlotBack  = cv::Scalar(255, 255, 240);
 const Scalar MotionDetector::m_colorPlotValue = cv::Scalar(10, 255, 30);
 const Scalar MotionDetector::m_colorPlotThres = cv::Scalar(0, 0, 0);

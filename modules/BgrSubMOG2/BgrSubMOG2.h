@@ -90,8 +90,6 @@ protected:
 	//bool m_emptyBackgroundSubtractor;
 
 	cv::Mat * m_input;
-	
-	static const char * m_type;
 };
 
 

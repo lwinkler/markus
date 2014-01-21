@@ -98,8 +98,6 @@ class CascadeDetector : public ModuleAsync
 {
 protected:
 	CascadeDetectorParameterStructure m_param;
-	static const char * m_type;
-	
 	std::vector<Object> m_detectedObjects;
 	cv::Mat * m_input;
 	cv::Mat * m_lastInput;

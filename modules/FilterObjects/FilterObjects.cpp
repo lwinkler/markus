@@ -26,14 +26,8 @@
 #include "StreamDebug.h"
 
 // for debug
-#include "util.h"
-
-
-#define POW2(x) (x) * (x)
-
-using namespace cv;
-
-const char * FilterObjects::m_type = "FilterObjects";
+// #include "util.h"
+// #define POW2(x) (x) * (x)
 
 using namespace std;
 using namespace cv;

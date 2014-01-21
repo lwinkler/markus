@@ -27,16 +27,11 @@
 #include "StreamDebug.h"
 #include "Timer.h"
 
-#include <opencv2/highgui/highgui.hpp>
-
-
-#include "util.h"
+// #include <opencv2/highgui/highgui.hpp>
+// #include "util.h"
 
 using namespace std;
 using namespace cv;
-
-
-const char * HOGDetector::m_type = "HOGDetector";
 
 
 HOGDetector::HOGDetector(const ConfigReader& x_configReader) 

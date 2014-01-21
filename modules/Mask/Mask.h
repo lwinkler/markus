@@ -58,8 +58,6 @@ private:
 protected:
 	cv::Mat * m_input;
 	cv::Mat * m_mask;
-	
-	static const char * m_type;
 };
 
 

@@ -26,13 +26,10 @@
 #include "StreamImage.h"
 
 // for debug
-#include "util.h"
-#include <opencv2/highgui/highgui.hpp>
+// #include "util.h"
+// #include <opencv2/highgui/highgui.hpp>
 
 using namespace cv;
-
-const char * BackgroundExtractor::m_type = "BackgroundExtractor";
-
 
 BackgroundExtractor::BackgroundExtractor(const ConfigReader& x_configReader) :
 	Module(x_configReader),
