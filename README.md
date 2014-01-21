@@ -39,7 +39,11 @@ On Ubuntu the apt-get install command is:
 	sudo apt-get install cmake-qt-gui cmake-curses-gui qtcreator python-dev libcppunit-dev
 
 ### Compile OpenCV from sources
-Alternatively you can compile OpenCV from sources. In this case use:
+Alternatively you can compile OpenCV from sources. Do not forget to install the depandencies with apt-get build-dep first:
+	
+	sudo apt-get build-dep libcv-dev
+
+Clone the github repository:
 
 	git clone https://github.com/Itseez/opencv.git
 

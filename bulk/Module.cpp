@@ -86,44 +86,48 @@ void Module::Reset()
 		// m_controls.push_back(new ParameterControl("Parameters", "Change the values of parameters at runtime."));
 
 	// Delete all controllers
-	for(vector<Controller*>::iterator it = m_controls.begin() ; it != m_controls.end() ; it++)
+	/*for(vector<Controller*>::iterator it = m_controls.begin() ; it != m_controls.end() ; it++)
 	{
 		delete(*it);
 	}
 	m_controls.clear();
-
-	// Add module controller
-	m_controls.push_back(new ControllerModule(*this));
-
-	for(vector<Parameter*>::const_iterator it = list.begin(); it != list.end(); it++)
+	*/
+	// This must be done only once to avoid troubles in the GUI
+	if(m_controls.size() == 0)
 	{
-		if((*it)->IsLocked())
-			continue;
-		Controller * ctrr = NULL;
-		switch((*it)->GetType())
+		// Add module controller
+		m_controls.push_back(new ControllerModule(*this));
+
+		for(vector<Parameter*>::const_iterator it = list.begin(); it != list.end(); it++)
 		{
-			case PARAM_BOOL:
-				ctrr = new ControllerBool(*dynamic_cast<ParameterBool*>(*it));
-				break;
-			case PARAM_DOUBLE:
-				ctrr = new ControllerDouble(*dynamic_cast<ParameterDouble*>(*it));
-				break;
-			case PARAM_FLOAT:
-				ctrr = new ControllerFloat(*dynamic_cast<ParameterFloat*>(*it));
-				break;
-			case PARAM_IMAGE_TYPE:
-				ctrr = new ControllerEnum(*dynamic_cast<ParameterEnum*>(*it)); 
-				break;
-			case PARAM_INT:
-				ctrr = new ControllerInt(*dynamic_cast<ParameterInt*>(*it));
-				break;
-			case PARAM_STR:
-				ctrr = new ControllerString(*dynamic_cast<ParameterString*>(*it));
-				break;
+			if((*it)->IsLocked())
+				continue;
+			Controller * ctrr = NULL;
+			switch((*it)->GetType())
+			{
+				case PARAM_BOOL:
+					ctrr = new ControllerBool(*dynamic_cast<ParameterBool*>(*it));
+					break;
+				case PARAM_DOUBLE:
+					ctrr = new ControllerDouble(*dynamic_cast<ParameterDouble*>(*it));
+					break;
+				case PARAM_FLOAT:
+					ctrr = new ControllerFloat(*dynamic_cast<ParameterFloat*>(*it));
+					break;
+				case PARAM_IMAGE_TYPE:
+					ctrr = new ControllerEnum(*dynamic_cast<ParameterEnum*>(*it)); 
+					break;
+				case PARAM_INT:
+					ctrr = new ControllerInt(*dynamic_cast<ParameterInt*>(*it));
+					break;
+				case PARAM_STR:
+					ctrr = new ControllerString(*dynamic_cast<ParameterString*>(*it));
+					break;
+			}
+			if(ctrr == NULL)
+				throw MkException("Controller creation failed", LOC);
+			else m_controls.push_back(ctrr);
 		}
-		if(ctrr == NULL)
-			throw MkException("Controller creation failed", LOC);
-		else m_controls.push_back(ctrr);
 	}
 #endif
 }
