@@ -95,7 +95,6 @@ void ParameterStructure::SetFromConfig()
 		try
 		{
 			Parameter& param = RefParameterByName(name);
-			// TODO: If we use threads, check that setting parameters is thread safe! 
 			if(!param.IsLocked())
 				param.SetValue(value, PARAMCONF_XML);
 		}

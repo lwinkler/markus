@@ -23,13 +23,13 @@
       <param name="width">640</param>
       <param name="height">480</param>
       <param name="type">CV_8UC1</param>
-      <param name="detectionFps">1</param>
-      <param name="minNeighbors">2</param>
-      <param name="minSide">0</param>
-      <param name="scaleFactor">1.2</param>
-      <param name="filterFile">modules/CascadeDetector/lbpcascade_frontalface.xml</param>
+      <param name="detection_fps">1</param>
+      <param name="min_neighbors">2</param>
+      <param name="min_side">0</param>
+      <param name="scale_factor">1.2</param>
+      <param name="filter_file">modules/CascadeDetector/lbpcascade_frontalface.xml</param>
       <param name="color">(255,0,255)</param>
-      <param name="objectLabel">face</param>
+      <param name="object_label">face</param>
     </parameters>
     <inputs>
       <input id="0" moduleid="0" outputid="0"/>
@@ -90,13 +90,13 @@
       <param name="height">480</param>
       <param name="type">CV_8UC1</param>
       <param name="fps">10</param>
-      <param name="detectionFps">1</param>
-      <param name="minNeighbors">2</param>
-      <param name="minSide">0</param>
-      <param name="scaleFactor">1.2</param>
-      <param name="filterFile">modules/CascadeDetector/haarcascade_mcs_upperbody.xml</param>
+      <param name="detection_fps">1</param>
+      <param name="min_neighbors">2</param>
+      <param name="min_side">0</param>
+      <param name="scale_factor">1.2</param>
+      <param name="filter_file">modules/CascadeDetector/haarcascade_mcs_upperbody.xml</param>
       <param name="color">(255,255,255)</param>
-      <param name="objectLabel">upper body</param>
+      <param name="object_label">upper body</param>
     </parameters>
     <inputs>
       <input id="0" moduleid="0" outputid="0"/>
@@ -116,13 +116,13 @@
       <param name="height">480</param>
       <param name="type">CV_8UC1</param>
       <param name="fps">10</param>
-      <param name="detectionFps">1</param>
-      <param name="minNeighbors">2</param>
-      <param name="minSide">0</param>
-      <param name="scaleFactor">1.2</param>
-      <param name="filterFile">modules/CascadeDetector/haarcascade_profileface.xml</param>
+      <param name="detection_fps">1</param>
+      <param name="min_neighbors">2</param>
+      <param name="min_side">0</param>
+      <param name="scale_factor">1.2</param>
+      <param name="filter_file">modules/CascadeDetector/haarcascade_profileface.xml</param>
       <param name="color">(255,255,255)</param>
-      <param name="objectLabel">profile</param>
+      <param name="object_label">profile</param>
     </parameters>
     <inputs>
       <input id="0" moduleid="0" outputid="0"/>
@@ -142,13 +142,13 @@
       <param name="height">480</param>
       <param name="type">CV_8UC1</param>
       <param name="fps">10</param>
-      <param name="detectionFps">1</param>
-      <param name="minNeighbors">2</param>
-      <param name="minSide">0</param>
-      <param name="scaleFactor">1.2</param>
-      <param name="filterFile">modules/CascadeDetector/haarcascade_lefteye_2splits.xml</param>
+      <param name="detection_fps">1</param>
+      <param name="min_neighbors">2</param>
+      <param name="min_side">0</param>
+      <param name="scale_factor">1.2</param>
+      <param name="filter_file">modules/CascadeDetector/haarcascade_lefteye_2splits.xml</param>
       <param name="color">(255,255,255)</param>
-      <param name="objectLabel">left eyes</param>
+      <param name="object_label">left eyes</param>
     </parameters>
     <inputs>
       <input id="0" moduleid="0" outputid="0"/>
@@ -168,13 +168,13 @@
       <param name="height">480</param>
       <param name="type">CV_8UC1</param>
       <param name="fps">10</param>
-      <param name="detectionFps">1</param>
-      <param name="minNeighbors">2</param>
-      <param name="minSide">0</param>
-      <param name="scaleFactor">1.2</param>
-      <param name="filterFile">modules/CascadeDetector/haarcascade_upperbody.xml</param>
+      <param name="detection_fps">1</param>
+      <param name="min_neighbors">2</param>
+      <param name="min_side">0</param>
+      <param name="scale_factor">1.2</param>
+      <param name="filter_file">modules/CascadeDetector/haarcascade_upperbody.xml</param>
       <param name="color">(255,255,255)</param>
-      <param name="objectLabel">upper body B</param>
+      <param name="object_label">upper body B</param>
     </parameters>
     <inputs>
       <input id="0" moduleid="0" outputid="0"/>

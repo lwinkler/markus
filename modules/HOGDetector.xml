@@ -36,22 +36,22 @@
 			<value min="0" max="1000" default="0">0</value>
 			<description>Frames per seconds (processing speed)</description>
 		</param>
-		<param name="detectionFps">
+		<param name="detection_fps">
 			<type>double</type>
 			<value min="0" max="1000" default="10">10</value>
 			<description>Frames per seconds for the asynchronous detection (normally smaller that module)</description>
 		</param>
-		<param name="minSide">
+		<param name="min_side">
 			<type>int</type>
 			<value min="0" max="200" default="0">0</value>
 			<description>Minimum size of the detected object</description>
 		</param>
-		<param name="scaleFactor">
+		<param name="scale_factor">
 			<type>float</type>
 			<value min="1" max="2" default="1.2">1.2</value>
 			<description>Scale factor for scanning (higher: less sensitive)</description>
 		</param>
-		<param name="objectLabel">
+		<param name="object_label">
 			<type>string</type>
 			<value default="hog">hog</value>
 			<description>Label to be applied to the objects detected by the cascade filter (e.g. face)</description>

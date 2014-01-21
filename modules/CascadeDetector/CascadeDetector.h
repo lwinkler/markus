@@ -43,13 +43,13 @@ public:
 	CascadeDetectorParameterStructure(const ConfigReader& x_confReader) : 
 		ModuleAsyncParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterInt("minNeighbors", 2, 1, 100, 	&minNeighbors,	"Minimum numbers of neighbors (higher: less sensitive)")); // Note : Seems to be a bug with minNeighbors = 1 with most filters
-		m_list.push_back(new ParameterInt("minSide", 0, 0, 200, 		&minSide,	"Minimum size of the detected object"));
-		m_list.push_back(new ParameterFloat("scaleFactor", 1.2, 1, 2, 	&scaleFactor,	"Scale factor for scanning (higher: less sensitive)"));
-		m_list.push_back(new ParameterString("filterFile", "modules/CascadeDetector/lbpcascade_frontalface.xml",  &filterFile,
+		m_list.push_back(new ParameterInt("min_neighbors", 2, 1, 100, 	&minNeighbors,	"Minimum numbers of neighbors (higher: less sensitive)")); // Note : Seems to be a bug with minNeighbors = 1 with most filters
+		m_list.push_back(new ParameterInt("min_side", 0, 0, 200, 		&minSide,	"Minimum size of the detected object"));
+		m_list.push_back(new ParameterFloat("scale_factor", 1.2, 1, 2, 	&scaleFactor,	"Scale factor for scanning (higher: less sensitive)"));
+		m_list.push_back(new ParameterString("filter_file", "modules/CascadeDetector/lbpcascade_frontalface.xml",  &filterFile,
 														"File with filter data of the detected object"));
 		m_list.push_back(new ParameterString("color", "(255,255,255)",		&color,	"Color to draw the output"));
-		m_list.push_back(new ParameterString("objectLabel", "casc", 			&objectLabel,	"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
+		m_list.push_back(new ParameterString("object_label", "casc", 			&objectLabel,	"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
 		
 		ParameterStructure::Init();
 	};
