@@ -64,7 +64,7 @@ if(Markus_USE_QT5)
 	set(DEPS ${DEPS} ${Qt5Widgets_LIBRARIES})
 	# Executables fail to build with Qt 5 in the default configuration
 	# without -fPIE. We add that here.
-	set(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 	add_definitions(${Qt5Widgets_DEFINITIONS})
 ELSE()
 	include_directories(${QT_INCLUDES})
@@ -106,7 +106,7 @@ add_custom_target(update_modules_list
 	COMMAND ./config_each_module.xml.sh > config_each_module.xml
 	COMMAND editor/js/all_modules.js.sh > editor/js/all_modules.js
 #	COMMAND make clean
-	COMMAND make
+	COMMAND +make
 	COMMAND ./markus -d config_each_module.xml
 )
 
