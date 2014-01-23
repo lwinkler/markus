@@ -93,9 +93,9 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 	while(! moduleConfig.IsEmpty())
 	{
 		int moduleId = atoi(moduleConfig.GetAttribute("id").c_str());
-		Module * module = GetModuleById(moduleId);
-		if(module->RefParameter().autoProcess)
-			module->SetIsReady();
+		Module& module = RefModuleById(moduleId);
+		if(module.IsAutoProcessed())
+			module.SetIsReady();
 
 		// Read conections of inputs
 		ConfigReader conf = moduleConfig.GetSubConfig("inputs");
@@ -111,11 +111,11 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 				{
 					int outputModuleId    = atoi(tmp1.c_str());
 					int outputId          = atoi(tmp2.c_str());
-					Stream * inputStream  = module->GetInputStreamById(inputId);
-					Stream * outputStream = GetModuleById(outputModuleId)->GetOutputStreamById(outputId);
+					Stream& inputStream  = module.RefInputStreamById(inputId);
+					Stream& outputStream = RefModuleById(outputModuleId).RefOutputStreamById(outputId);
 
 					// Connect input and output streams
-					inputStream->Connect(outputStream);
+					inputStream.Connect(&outputStream);
 				}
 				inputConfig = inputConfig.NextSubConfig("input");
 			}
@@ -201,7 +201,7 @@ bool Manager::Process()
 	{
 		try
 		{
-			if((*it)->RefParameter().autoProcess)
+			if((*it)->IsAutoProcessed())
 				(*it)->Process();
 		}
 		/*catch(cv::Exception& e)
@@ -318,7 +318,7 @@ void Manager::Export()
 	}
 }
 
-Module* Manager::GetModuleById(int x_id) const
+Module& Manager::RefModuleById(int x_id) const
 {
 	Module* module = NULL;
 	int found = 0;
@@ -329,22 +329,22 @@ Module* Manager::GetModuleById(int x_id) const
 			found++;
 		}
 	if(found == 1)
-		return module;
+		return *module;
 	if(found == 0)
 		throw MkException("Module not found " + x_id, LOC);
 	else
 		throw MkException("more than one module with id " + x_id, LOC);
-	return NULL;
+	//return NULL;
 }
 
 
-Module* Manager::GetModuleByName(const string& x_name) const
+Module& Manager::RefModuleByName(const string& x_name) const
 {
 	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		if((*it)->GetName() == x_name) 
-			return *it;
+			return **it;
 	throw MkException("Cannot find module " + x_name, LOC);
-	return NULL;
+	// return NULL;
 }
 
 /// Returns a directory that will contain all outputs
@@ -408,18 +408,18 @@ bool Manager::SetDependingModules(Module& x_master, Module& x_recurse, const Con
 			// cout<<inputConfig.GetAttribute("moduleid").c_str()<<endl;
 			if(atoi(inputConfig.GetAttribute("moduleid").c_str()) == x_recurse.GetId())
 			{
-				Module* depending = GetModuleByName(moduleConfig.GetAttribute("name"));
-				if(!depending->GetIsReady() && CheckInputsAreReady(moduleConfig))
+				Module& depending = RefModuleByName(moduleConfig.GetAttribute("name"));
+				if(!depending.GetIsReady() && CheckInputsAreReady(moduleConfig))
 				{
 					// All depending modules are added to master
-					depending->SetPreceedingModule(x_master);
-					x_master.AddDependingModule(*depending);
-					depending->SetIsReady();
+					depending.SetPreceedingModule(x_master);
+					x_master.AddDependingModule(depending);
+					depending.SetIsReady();
 					// cout<<"Set module "<<depending->GetName()<<" as ready"<<endl;
 
 					// Call recursively
 					changed = true;
-					SetDependingModules(x_master, *depending, x_moduleConfig);
+					SetDependingModules(x_master, depending, x_moduleConfig);
 				}
 			}
 			inputConfig = inputConfig.NextSubConfig("input");
@@ -438,8 +438,8 @@ bool Manager::CheckInputsAreReady(const ConfigReader x_moduleConfig) const
 		const string& str = inputConfig.GetAttribute("moduleid");
 		if(str != "") // not connected
 		{
-			Module* preceeding = GetModuleById(atoi(str.c_str()));
-			if(!preceeding->GetIsReady() && !preceeding->RefParameter().autoProcess)
+			Module& preceeding = RefModuleById(atoi(str.c_str()));
+			if(!preceeding.GetIsReady() && !preceeding.IsAutoProcessed())
 				return false;
 		}
 		inputConfig = inputConfig.NextSubConfig("input");

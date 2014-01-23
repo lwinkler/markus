@@ -82,11 +82,11 @@ public:
 	const std::vector<Stream*>& GetOutputStreamList() const {return m_outputStreams;}
 	const std::vector<Stream*>& GetDebugStreamList() const {return m_debugStreams;}
 	const std::vector<Controller*>& GetControlList() const {return m_controls;}
-	virtual ModuleParameterStructure & RefParameter() = 0; // TODO: Should be const or private ?
 	
 	inline int GetWidth() {return RefParameter().width;}
 	inline int GetHeight(){return RefParameter().height;}
 	inline int GetType()  {return RefParameter().type;}
+	inline bool IsAutoProcessed()  {return RefParameter().autoProcess;}
 	virtual double GetRecordingFps();
 	
 	inline void SetPreceedingModule(Module & x_module)
@@ -99,8 +99,8 @@ public:
 	
 	virtual inline bool IsInput() {return false;}
 	void Export(std::ostream& rx_os, int x_indentation);
-	Stream * GetInputStreamById(int x_id) const; // TODO: should return const ?
-	Stream * GetOutputStreamById(int x_id) const;
+	Stream& RefInputStreamById(int x_id) const;
+	Stream& RefOutputStreamById(int x_id) const;
 	inline void LockForRead(){m_lock.lockForRead();}
 	inline void LockForWrite(){m_lock.lockForWrite();}
 	inline void Unlock(){m_lock.unlock();}
@@ -137,6 +137,9 @@ protected:
 	QModuleTimer * m_moduleTimer;
 	QReadWriteLock m_lock;
 	log4cxx::LoggerPtr m_logger;
+
+private:
+	virtual ModuleParameterStructure & RefParameter() = 0;
 };
 
 #endif
