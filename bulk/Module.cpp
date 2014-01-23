@@ -219,7 +219,7 @@ void Module::Process()
 			}
 	}
 	else if(! param.autoProcess)
-		throw MkException("Error: Module must have at least one input or have parameter auto_process=true in Module::Process", LOC);
+		throw MkException("Module must have at least one input or have parameter auto_process=true", LOC);
 
 	if(param.autoProcess || param.fps == 0 || (m_currentTimeStamp - m_lastTimeStamp) * param.fps > 1000)
 	{

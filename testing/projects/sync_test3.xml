@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application name="CustomProject">
+<module id="0" name="VideoFileReader0">
+<inputs/>
+<outputs>
+<output id="0"/>
+</outputs>
+<parameters>
+<param name="class">VideoFileReader</param>
+<param name="file">in/input.mp4</param>
+</parameters>
+<uiobject x="500" y="300" width="0" height="0"/>
+</module>
+<module id="1" name="BgrSubRunAvg1">
+<inputs>
+<input id="0" outputid="0" moduleid="0"/>
+</inputs>
+<outputs>
+<output id="0"/>
+<output id="1"/>
+</outputs>
+<parameters>
+<param name="class">BgrSubRunAvg</param>
+</parameters>
+<uiobject x="690" y="200" width="0" height="0"/>
+</module>
+<module id="2" name="TempDiff2">
+<inputs>
+<input id="0" outputid="0" moduleid="0"/>
+</inputs>
+<outputs>
+<output id="0"/>
+</outputs>
+<parameters>
+<param name="class">TempDiff</param>
+</parameters>
+<uiobject x="735" y="314" width="0" height="0"/>
+</module>
+<module id="4" name="Morph4">
+<inputs>
+<input id="0" outputid="0" moduleid="15"/>
+</inputs>
+<outputs>
+<output id="0"/>
+</outputs>
+<parameters>
+<param name="class">Morph</param>
+<param name="operator">0</param>
+<param name="element">2</param>
+<param name="kernel_size">5</param>
+</parameters>
+<uiobject x="1114" y="191" width="0" height="0"/>
+</module>
+<module id="6" name="Morph6">
+<inputs>
+<input id="0" outputid="0" moduleid="0"/>
+</inputs>
+<outputs>
+<output id="0"/>
+</outputs>
+<parameters>
+<param name="class">Morph</param>
+<param name="operator">0</param>
+<param name="element">2</param>
+<param name="kernel_size">5</param>
+</parameters>
+<uiobject x="883" y="478" width="0" height="0"/>
+</module>
+<module id="8" name="RenderObjects8">
+<inputs>
+<input id="0" outputid="0" moduleid="0"/>
+<input id="1" outputid="0" moduleid="9"/>
+<input id="2" outputid="0" moduleid="9"/>
+<input id="3" outputid="0" moduleid="10"/>
+<input id="4" outputid="0" moduleid="14"/>
+<input id="5" outputid="0" moduleid="14"/>
+</inputs>
+<outputs>
+<output id="0"/>
+</outputs>
+<parameters>
+<param name="class">RenderObjects</param>
+<param name="allow_unsync_input">0</param>
+</parameters>
+<uiobject x="1334" y="474" width="0" height="0"/>
+</module>
+<module id="9" name="SegmenterContour9">
+<inputs>
+<input id="0" outputid="0" moduleid="4"/>
+</inputs>
+<outputs>
+<output id="0"/>
+</outputs>
+<parameters>
+<param name="class">SegmenterContour</param>
+</parameters>
+<uiobject x="1296" y="187" width="0" height="0"/>
+</module>
+<module id="10" name="SegmenterContour10">
+<inputs>
+<input id="0" outputid="0" moduleid="16"/>
+</inputs>
+<outputs>
+<output id="0"/>
+</outputs>
+<parameters>
+<param name="class">SegmenterContour</param>
+</parameters>
+<uiobject x="1137" y="329" width="0" height="0"/>
+</module>
+<module id="12" name="MotionDetector12">
+<inputs>
+<input id="0" outputid="0" moduleid="2"/>
+</inputs>
+<outputs>
+<output id="0"/>
+</outputs>
+<parameters>
+<param name="class">MotionDetector</param>
+</parameters>
+<uiobject x="885" y="601" width="0" height="0"/>
+</module>
+<module id="14" name="SegmenterContour14">
+<inputs>
+<input id="0" outputid="0" moduleid="6"/>
+</inputs>
+<outputs>
+<output id="0"/>
+</outputs>
+<parameters>
+<param name="class">SegmenterContour</param>
+</parameters>
+<uiobject x="1092" y="474" width="0" height="0"/>
+</module>
+<module id="15" name="Morph15">
+<inputs>
+<input id="0" outputid="0" moduleid="1"/>
+</inputs>
+<outputs>
+<output id="0"/>
+</outputs>
+<parameters>
+<param name="class">Morph</param>
+<param name="operator">0</param>
+<param name="element">2</param>
+<param name="kernel_size">5</param>
+</parameters>
+<uiobject x="891" y="179" width="0" height="0"/>
+</module>
+<module id="16" name="Morph16">
+<inputs>
+<input id="0" outputid="0" moduleid="2"/>
+</inputs>
+<outputs>
+<output id="0"/>
+</outputs>
+<parameters>
+<param name="class">Morph</param>
+<param name="operator">0</param>
+<param name="element">2</param>
+<param name="kernel_size">5</param>
+</parameters>
+<uiobject x="931" y="314" width="0" height="0"/>
+</module>
+</application>

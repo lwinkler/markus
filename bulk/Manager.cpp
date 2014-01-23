@@ -219,7 +219,7 @@ bool Manager::Process()
 				continueFlag = false;
 			}
 		}
-		catch(std::exception e)
+		catch(std::exception& e)
 		{
 			LOG_ERROR(m_logger, (*it)->GetName() << ": Exception raised (std::exception): " << e.what());
 		}
