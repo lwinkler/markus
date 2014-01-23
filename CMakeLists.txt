@@ -75,7 +75,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR})
 
 ## Python libs
 if(Markus_USE_PYTHON_LIBS)
-	find_package(PythonLibs REQUIRED)
+	find_package(PythonLibs 2 REQUIRED)
 	include_directories(${PYTHON_INCLUDE_DIRS})
 	set(DEPS ${DEPS} ${PYTHON_LIBRARIES} )
 endif()
