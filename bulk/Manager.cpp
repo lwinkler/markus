@@ -56,6 +56,7 @@ log4cxx::LoggerPtr Manager::m_logger(log4cxx::Logger::getLogger("manager"));
 string Manager::m_configFile;
 string Manager::m_outputDir;
 
+
 Manager::Manager(ConfigReader& x_configReader, bool x_centralized) : 
 	Configurable(x_configReader),
 	m_param(m_configReader, "Manager"),
@@ -76,7 +77,7 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 		// Read parameters
 		if( moduleConfig.GetSubConfig("parameters").IsEmpty()) 
 			throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name"), LOC);
-		Module * tmp1 = createNewModule( moduleConfig);		
+		Module * tmp1 = createNewModule(moduleConfig);		
 		
 		// Add to inputs if an input
 		m_modules.push_back(tmp1);
@@ -91,6 +92,11 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 	
 	while(! moduleConfig.IsEmpty())
 	{
+		int moduleId = atoi(moduleConfig.GetAttribute("id").c_str());
+		Module * module = GetModuleById(moduleId);
+		if(module->RefParameter().autoProcess)
+			module->SetIsReady();
+
 		// Read conections of inputs
 		ConfigReader conf = moduleConfig.GetSubConfig("inputs");
 		if(!conf.IsEmpty())
@@ -98,17 +104,17 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 			ConfigReader inputConfig = conf.GetSubConfig("input");
 			while(! inputConfig.IsEmpty())
 			{
-				int moduleId		= atoi(moduleConfig.GetAttribute("id").c_str());
-				int inputId 		= atoi(inputConfig.GetAttribute("id").c_str());
+				int inputId        = atoi(inputConfig.GetAttribute("id").c_str());
 				const string& tmp1 = inputConfig.GetAttribute("moduleid");
 				const string& tmp2 = inputConfig.GetAttribute("outputid");
 				if(tmp1 != "" && tmp2 != "")
 				{
-					int outputModuleId 	= atoi(tmp1.c_str());
-					int outputId 		= atoi(tmp2.c_str());
-					Stream * inputStream  = GetModuleById(moduleId)->GetInputStreamById(inputId);
+					int outputModuleId    = atoi(tmp1.c_str());
+					int outputId          = atoi(tmp2.c_str());
+					Stream * inputStream  = module->GetInputStreamById(inputId);
 					Stream * outputStream = GetModuleById(outputModuleId)->GetOutputStreamById(outputId);
 
+					// Connect input and output streams
 					inputStream->Connect(outputStream);
 				}
 				inputConfig = inputConfig.NextSubConfig("input");
@@ -118,24 +124,29 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 	}
 
 	// Set the module preceeding the current module
-	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+	// we loop through the modules and add the modules recuresively to their master
+	int changed = true;
+	while(changed)
 	{
-		try
+		changed = false;
+		for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		{
-			Stream& stream = (*it)->GetInputStreamById(0)->RefConnected();
-			if(&stream == NULL)
-				throw MkException("Module must have at least one stream", LOC);
-			Module& preceeding(stream.RefModule());
-			(*it)->SetPreceedingModule(preceeding);
-			if((*it)->RefParameter().autoProcess == false)
+			if((*it)->GetIsReady())
 			{
-				// cout<<"Module "<<(*it)->GetName()<<" depends on module "<<preceeding.GetName()<<endl;
-				preceeding.AddDependingModule(**it); // TODO: find a better way to execute non real time modules
+				changed = SetDependingModules(**it, **it, m_configReader.GetSubConfig("module"));
 			}
 		}
-		catch(...){}
 	}
 
+	// Just loop once more to check that all modules are ready
+	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+	{
+		if(!(*it)->GetIsReady())
+		{
+			LOG_ERROR(Manager::Logger(), "Module "<<(*it)->GetName()<<" is not ready")
+			throw MkException("Module is not ready", LOC);
+		}
+	}
 }
 
 Manager::~Manager()
@@ -380,4 +391,58 @@ const string& Manager::OutputDir(const string& x_outputDir)
 		}
 	}
 	return m_outputDir;
+}
+
+/// Set all modules as depending to an auto_process module recorsively
+///  the structure of this method is important as the depending modules must be called in a given order
+bool Manager::SetDependingModules(Module& x_master, Module& x_recurse, const ConfigReader x_moduleConfig) const
+{
+	int changed = false;
+	// Look inside config and find all depending modules
+	ConfigReader moduleConfig = x_moduleConfig; //.GetSubConfig("module");
+	while(! moduleConfig.IsEmpty())
+	{
+		ConfigReader inputConfig = moduleConfig.GetSubConfig("inputs").GetSubConfig("input");
+		while(! inputConfig.IsEmpty())
+		{
+			// cout<<inputConfig.GetAttribute("moduleid").c_str()<<endl;
+			if(atoi(inputConfig.GetAttribute("moduleid").c_str()) == x_recurse.GetId())
+			{
+				Module* depending = GetModuleByName(moduleConfig.GetAttribute("name"));
+				if(!depending->GetIsReady() && CheckInputsAreReady(moduleConfig))
+				{
+					// All depending modules are added to master
+					depending->SetPreceedingModule(x_master);
+					x_master.AddDependingModule(*depending);
+					depending->SetIsReady();
+					// cout<<"Set module "<<depending->GetName()<<" as ready"<<endl;
+
+					// Call recursively
+					changed = true;
+					SetDependingModules(x_master, *depending, x_moduleConfig);
+				}
+			}
+			inputConfig = inputConfig.NextSubConfig("input");
+		}
+		moduleConfig = moduleConfig.NextSubConfig("module");
+	}
+	return changed;
+}
+
+bool Manager::CheckInputsAreReady(const ConfigReader x_moduleConfig) const
+{
+	ConfigReader inputConfig = x_moduleConfig.GetSubConfig("inputs").GetSubConfig("input");	
+
+	while(!inputConfig.IsEmpty())
+	{
+		const string& str = inputConfig.GetAttribute("moduleid");
+		if(str != "") // not connected
+		{
+			Module* preceeding = GetModuleById(atoi(str.c_str()));
+			if(!preceeding->GetIsReady() && !preceeding->RefParameter().autoProcess)
+				return false;
+		}
+		inputConfig = inputConfig.NextSubConfig("input");
+	}
+	return true;
 }

@@ -69,12 +69,14 @@ public:
 	void PauseInputs(bool x_pause);
 	bool EndOfAllStreams() const;
 	static const std::string& OutputDir(const std::string& x_outputDir = "");
-	inline static log4cxx::LoggerPtr& Logger(){return m_logger;};
+	inline static log4cxx::LoggerPtr& Logger(){return m_logger;}
 	static inline void SetConfigFile(const std::string& x_configFile){
 		assert(m_configFile.size() == 0);
 		m_configFile = x_configFile;
 	}
 	static inline const std::string& GetConfigFile(){return m_configFile;}
+	bool SetDependingModules(Module& x_master, Module& x_recurse, const ConfigReader x_moduleConfig) const;
+	bool CheckInputsAreReady(const ConfigReader x_moduleConfig) const;
 private:
 	ManagerParameter m_param;
 

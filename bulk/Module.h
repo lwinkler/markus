@@ -82,24 +82,30 @@ public:
 	const std::vector<Stream*>& GetOutputStreamList() const {return m_outputStreams;}
 	const std::vector<Stream*>& GetDebugStreamList() const {return m_debugStreams;}
 	const std::vector<Controller*>& GetControlList() const {return m_controls;}
-	virtual ModuleParameterStructure & RefParameter() = 0;
+	virtual ModuleParameterStructure & RefParameter() = 0; // TODO: Should be const or private ?
 	
 	inline int GetWidth() {return RefParameter().width;}
 	inline int GetHeight(){return RefParameter().height;}
 	inline int GetType()  {return RefParameter().type;}
 	virtual double GetRecordingFps();
 	
-	inline void SetPreceedingModule(Module & x_module){m_modulePreceeding = &x_module;}
+	inline void SetPreceedingModule(Module & x_module)
+	{
+		assert(m_modulePreceeding == NULL);
+		m_modulePreceeding = &x_module;
+	}
 	inline void AddDependingModule (Module & x_module){m_modulesDepending.push_back(&x_module);}
 	virtual void PrintStatistics() const;
 	
 	virtual inline bool IsInput() {return false;}
 	void Export(std::ostream& rx_os, int x_indentation);
-	Stream * GetInputStreamById(int x_id) const;
+	Stream * GetInputStreamById(int x_id) const; // TODO: should return const ?
 	Stream * GetOutputStreamById(int x_id) const;
 	inline void LockForRead(){m_lock.lockForRead();}
 	inline void LockForWrite(){m_lock.lockForWrite();}
 	inline void Unlock(){m_lock.unlock();}
+	inline bool GetIsReady(){return m_isReady;}
+	inline void SetIsReady(){m_isReady = true;}
 	
 protected:
 
@@ -112,6 +118,7 @@ protected:
 	TIME_STAMP m_lastTimeStamp;     // time stamp of the lastly processed input
 	TIME_STAMP m_currentTimeStamp;  // time stamp of the current input
 	bool m_pause;
+	bool m_isReady;
 	
 	virtual void ProcessFrame() = 0;
 	inline virtual bool IsInputProcessed() const {return true;}

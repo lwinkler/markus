@@ -53,6 +53,7 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_lastTimeStamp        = TIME_STAMP_MIN;
 	m_currentTimeStamp     = TIME_STAMP_INITIAL;
 	m_pause                = false;
+	m_isReady              = false;
 
 	m_moduleTimer = NULL;
 }
@@ -200,7 +201,7 @@ Module::~Module()
 void Module::Process()
 {
 	if(m_pause)
-		return; // TODO: Manage pause more elegantly
+		return;
 
 	const ModuleParameterStructure& param = RefParameter();
 	
