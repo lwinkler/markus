@@ -95,7 +95,7 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 		int moduleId = atoi(moduleConfig.GetAttribute("id").c_str());
 		Module& module = RefModuleById(moduleId);
 		if(module.IsAutoProcessed())
-			module.SetIsReady(); // TODO: change IsReady too
+			module.SetAsReady();
 
 		// Read conections of inputs
 		ConfigReader conf = moduleConfig.GetSubConfig("inputs");
@@ -139,7 +139,7 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 				if((*it)->AllInputsAreReady())
 				{
 					Module& master = RefModuleByName((*it)->GetMasterModule().GetName());
-					(*it)->SetIsReady();
+					(*it)->SetAsReady();
 					master.AddDependingModule(**it);
 					// cout<<"Set module "<<depending->GetName()<<" as ready"<<endl;
 					changed = true;
@@ -149,16 +149,6 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 	}
 	if(! ready)
 		throw MkException("Not all modules can be assigned to a master. There is probably some connections problems.");
-
-	// Just loop once more to check that all modules are ready // TODO avoid this loop
-	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
-	{
-		if(!(*it)->IsReady())
-		{
-			LOG_ERROR(Manager::Logger(), "Module "<<(*it)->GetName()<<" is not ready")
-			throw MkException("Module is not ready", LOC);
-		}
-	}
 }
 
 Manager::~Manager()

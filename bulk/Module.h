@@ -100,7 +100,7 @@ public:
 	inline void LockForWrite(){m_lock.lockForWrite();}
 	inline void Unlock(){m_lock.unlock();}
 	inline bool IsReady(){return IsAutoProcessed() || m_isReady;}
-	void SetIsReady();
+	void SetAsReady();
 	bool AllInputsAreReady() const;
 	const Module& GetMasterModule();
 	

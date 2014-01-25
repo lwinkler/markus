@@ -348,11 +348,11 @@ const Module& Module::GetMasterModule()
 }
 
 /// Set as ready (and all inputs too)
-void Module::SetIsReady()
+void Module::SetAsReady()
 {
 	m_isReady = true;
 	for(vector<Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
 	{
-		(*it)->SetIsReady();
+		(*it)->SetAsReady();
 	}
 }

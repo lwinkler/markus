@@ -65,7 +65,7 @@ public:
 		return m_connected->GetTimeStamp();
 	}
 	inline bool IsReady(){return m_isReady;}
-	inline void SetIsReady(){m_isReady = true;}
+	inline void SetAsReady(){m_isReady = true;}
 
 protected:
 	const std::string m_name;

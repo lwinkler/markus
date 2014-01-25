@@ -31,10 +31,9 @@
 using namespace std;
 
 	 
-//QControlBoard::QControlBoard(const std::string& x_name, const std::string& x_description):
-QControlBoard::QControlBoard(Module * x_module, QWidget *parent) :
-	m_name("bla"),
-	m_description("TODO")
+QControlBoard::QControlBoard(Module * x_module, QWidget *parent)
+	// m_name("bla"),
+	// m_description("TODO")
 {
 	QBoxLayout * mainLayout = new QBoxLayout(QBoxLayout::TopToBottom);
 	// m_currentModule         = x_module;

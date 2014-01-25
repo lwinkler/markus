@@ -42,21 +42,17 @@ public:
 	// QControlBoard(const std::string& x_name, const std::string& x_description);
 	QControlBoard(Module * x_module, QWidget *parent = 0);
 	~QControlBoard();
-	inline const std::string& GetName() const {return m_name;}
-	inline const std::string& GetDescription() const{return m_description;}
+	// inline const std::string& GetName() const {return m_name;}
+	// inline const std::string& GetDescription() const{return m_description;}
 	// inline std::vector<Controller*>& RefListControllers(){return m_controllers;}
 	// inline void AddController(Controller * x_ctrr){m_controllers.push_back(x_ctrr);}
 	virtual void Destroy(){};
 	void updateControl(Controller* x_control);
 
 protected:
-	std::string m_name;
-	std::string m_description;
+	// std::string m_name;
+	// std::string m_description;
 	
-	// std::vector<Controller*> m_controllers;
-
-
-	// Module        * m_currentModule;
 	Controller  * m_currentControl;
 
 	void paintEvent(QPaintEvent *event);
