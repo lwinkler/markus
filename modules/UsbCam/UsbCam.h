@@ -58,9 +58,9 @@ protected:
 	cv::VideoCapture m_capture;
 	cv::Mat * m_output;
 	TIME_STAMP m_timeStamp;
+	void GetProperties();
 
 private:
-	void GetProperties();
 	UsbCamParameterStructure m_param;
 	inline virtual UsbCamParameterStructure& RefParameter() {return m_param;}
 	Timer m_frameTimer;

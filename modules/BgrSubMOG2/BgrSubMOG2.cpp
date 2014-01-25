@@ -25,9 +25,6 @@
 #include "StreamImage.h"
 #include "StreamDebug.h"
 
-// for debug
-// #include "util.h"
-
 using namespace cv;
 using namespace std;
 
@@ -35,9 +32,7 @@ BgrSubMOG2::BgrSubMOG2(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader)
 {
-	mp_mog2 = new BackgroundSubtractorMOG2(m_param.history, m_param.varThres, m_param.bShadowDetection); // TODO initialize or not ?
-	//mp_mog2.nmixtures = 3;
-
+	mp_mog2 = NULL;
 
 	m_description = "Perform background subtraction via Mixtures Of Gaussians";
 	m_input       = new Mat(Size(m_param.width, m_param.height), m_param.type);
@@ -66,10 +61,10 @@ BgrSubMOG2::~BgrSubMOG2()
 void BgrSubMOG2::Reset()
 {
 	Module::Reset();
-	delete(mp_mog2);
+	if(mp_mog2 != NULL)
+		delete(mp_mog2);
 	mp_mog2 = new BackgroundSubtractorMOG2(m_param.history, m_param.varThres, m_param.bShadowDetection);
 	mp_mog2->initialize(m_input->size(), m_input->type());
-	// m_emptyBackgroundSubtractor = true;
 }
 
 void BgrSubMOG2::ProcessFrame()

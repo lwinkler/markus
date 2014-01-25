@@ -50,9 +50,14 @@ public:
 
 class LogState : public Module
 {
-protected:
+public:
+	LogState(const ConfigReader& x_configReader);
+	~LogState(void);
+	void Reset();
 	virtual void ProcessFrame();
-	LogStateParameterStructure m_param;
+
+protected:
+	void WriteState();
 
 
 	bool m_state;
@@ -61,18 +66,11 @@ protected:
 	std::string m_startTime;
 	std::string m_endTime;
 	std::string m_srtFileName;
-
-public:
-	LogState(const ConfigReader& x_configReader);
-	~LogState(void);
-	void Reset();
-
-
-protected:
-	void WriteState();
-	inline virtual LogStateParameterStructure& RefParameter() { return m_param;}
-	
 	std::ofstream m_file;
+
+private:
+	LogStateParameterStructure m_param;
+	inline virtual LogStateParameterStructure& RefParameter() { return m_param;}
 };
 
 #endif

@@ -54,20 +54,21 @@ public:
 	virtual void ProcessFrame();
 	void Reset();
 		
-private:
-	BgrSubRunAvgParameterStructure m_param;
-	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
 
+protected:
 	// Background subtraction	
 	cv::Mat* m_foreground;
 	cv::Mat* m_foreground_tmp;
 	cv::Mat* m_background;
 	bool m_emptyBackgroundSubtractor;
 
-protected:
 	cv::Mat * m_input;
 	cv::Mat * m_tmp1;
 	cv::Mat * m_tmp2;
+
+private:
+	BgrSubRunAvgParameterStructure m_param;
+	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
 };
 
 

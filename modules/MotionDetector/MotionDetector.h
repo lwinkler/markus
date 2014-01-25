@@ -54,7 +54,6 @@ class MotionDetector : public Module
 {
 protected:
 	virtual void ProcessFrame();
-	MotionDetectorParameterStructure m_param;
 
 	cv::Mat * m_input;
 #ifdef MARKUS_DEBUG_STREAMS
@@ -74,6 +73,7 @@ public:
 
 
 protected:
+	MotionDetectorParameterStructure m_param;
 	inline virtual MotionDetectorParameterStructure& RefParameter() { return m_param;}
 };
 

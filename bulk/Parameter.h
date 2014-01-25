@@ -24,13 +24,12 @@
 #ifndef PARAMETER_H
 #define PARAMETER_H
 
-#include <vector>
+/*#include <vector>
 #include <string>
 #include <map>
-// #include <assert.h>
 #include <iostream>
 #include <cstdlib>
-
+*/
 #include "util.h"
 #include "MkException.h"
 

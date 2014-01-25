@@ -56,7 +56,6 @@ class SlitCam : public Module
 {
 protected:
 	virtual void ProcessFrame();
-	SlitCamParameterStructure m_param;
 	int m_position;
 
 	cv::Mat * m_input;
@@ -67,8 +66,8 @@ public:
 	~SlitCam(void);
 	void Reset();
 
-
 protected:
+	SlitCamParameterStructure m_param;
 	inline virtual SlitCamParameterStructure& RefParameter() { return m_param;}
 };
 

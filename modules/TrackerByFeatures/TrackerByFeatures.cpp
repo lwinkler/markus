@@ -194,7 +194,7 @@ void TrackerByFeatures::UpdateTemplates()
 			// distance
 			// it1->m_lastMatchingObject->SetFeatureByName("distance", featureNames, DIST(x.value - x.initial, y.value - y.initial));
 			// speed
-			// it1->m_lastMatchingObject->SetFeatureByName("speed_x", featureNames, x.value - x.mean); // TODO : This is experimental
+			// it1->m_lastMatchingObject->SetFeatureByName("speed_x", featureNames, x.value - x.mean);
 			// it1->m_lastMatchingObject->SetFeatureByName("speed_y", featureNames, y.value - y.mean);
 
 			// Update the template and copy to the object
@@ -260,7 +260,7 @@ void TrackerByFeatures::DetectNewTemplates()
 			Template template1(*it2);
 			// if(bestDist <= m_param.maxMatchingDistance && bestTemplate != NULL)
 
-			// TODO: We may want to inherit this class and create an AdvancedTracker !
+			// note: We may want to inherit this class and create an AdvancedTracker !
 			if(m_param.handleSplit)
 			{
 				// Detect if the new object is similar to a template
@@ -297,7 +297,7 @@ void TrackerByFeatures::DetectNewTemplates()
 						if(abs(xt - xo) <= wt / 2 && abs(yt - yo) <= ht / 2)
 						{
 							// Copy the template to the object (but not the id)
-							template1.SetFeatures(bestTemplate->GetFeatures()); // TODO: See if it is ok to copy all the features
+							template1.SetFeatures(bestTemplate->GetFeatures());
 						}
 					}
 					catch(...){}

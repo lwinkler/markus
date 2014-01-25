@@ -67,9 +67,9 @@ protected:
 	cv::VideoCapture m_capture;
 	cv::Mat * m_output;
 	// int m_fps;
+	void GetProperties();
 
 private:
-	void GetProperties();
 	VideoFileReaderParameterStructure m_param;
 	inline virtual VideoFileReaderParameterStructure& RefParameter() {return m_param;};
 };

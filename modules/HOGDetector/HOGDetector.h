@@ -98,7 +98,6 @@ protected:
 class HOGDetector : public ModuleAsync
 {
 protected:
-	HOGDetectorParameterStructure m_param;
 	
 	std::vector<Object> m_detectedObjects;
 	cv::Mat * m_input;
@@ -122,6 +121,7 @@ protected:
 	virtual const QThread & GetRefThread(){return m_thread;};
 
 private:
+	HOGDetectorParameterStructure m_param;
 	inline virtual HOGDetectorParameterStructure& RefParameter() { return m_param;};
 
 };

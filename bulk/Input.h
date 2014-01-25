@@ -33,7 +33,8 @@ class InputParameterStructure : public ModuleParameterStructure
 public:
 	InputParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-		RefParameterByName("auto_process").SetDefault("1"); // Input must be in real time otherwise they are never called // TODO: force parameter value
+		RefParameterByName("auto_process").SetDefault("1"); // Input must be in real time otherwise they are never called
+		RefParameterByName("auto_process").Lock();
 	}
 };
 

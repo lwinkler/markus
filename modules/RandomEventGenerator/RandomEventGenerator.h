@@ -61,11 +61,11 @@ protected:
 	TIME_STAMP m_timeStamp;
 	Event m_event;
 	cv::Mat * m_output;
+	Timer m_frameTimer;
 
 private:
 	RandomEventGeneratorParameterStructure m_param;
 	inline virtual RandomEventGeneratorParameterStructure& RefParameter() {return m_param;}
-	Timer m_frameTimer;
 };
 
 #endif

@@ -61,6 +61,7 @@ protected:
 	
 	// for streams
 	cv::Mat * m_input;
+	cv::RNG m_rng;
 #ifdef MARKUS_DEBUG_STREAMS
 	cv::Mat * m_debug;
 #endif
@@ -71,7 +72,6 @@ protected:
 
 private:
 	SegmenterContourParameterStructure m_param;
-	cv::RNG m_rng;
 	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
 	bool m_computeFitEllipse;
 	bool m_computeMinRect;

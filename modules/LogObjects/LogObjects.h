@@ -47,7 +47,6 @@ class LogObjects : public Module
 {
 protected:
 	virtual void ProcessFrame();
-	LogObjectsParameterStructure m_param;
 	std::string m_fileName;
 
 	std::vector <Object> m_objectsIn;
@@ -58,7 +57,8 @@ public:
 	void Reset();
 
 
-protected:
+private:
+	LogObjectsParameterStructure m_param;
 	inline virtual LogObjectsParameterStructure& RefParameter() { return m_param;}
 };
 

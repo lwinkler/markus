@@ -56,8 +56,7 @@ void VideoFileWriter::Reset()
 	// The color flag seem to be supported on Windows only
 	// http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videowriter-videowriter
 	bool isColor = true;
-	if(m_param.type != CV_8UC3) // TODO : find a way to restrain parameters values
-		throw MkException("Input image type must be in color [CV_8UC3]", LOC);
+	assert(m_param.type != CV_8UC3);
 
 	const string filename = Manager::OutputDir() + "/" + m_param.file  + "." + ExtensionFromFourcc(m_param.fourcc);
 	double fps = 12;
@@ -103,11 +102,12 @@ const string VideoFileWriter::ExtensionFromFourcc(const string& x_fourcc)
 		return "DIVX.avi";
 	if(x_fourcc.compare("H263") == 0)
 		return "h263.avi";
-	if(x_fourcc.compare("I263") == 0) // TODO: not working ?
+	if(x_fourcc.compare("I263") == 0) // note: seems not to be working
 		return "I263.avi";
 	if(x_fourcc.compare("FLV1") == 0) 
 		return "flv1.avi";
 	
-	// TODO enable this LOG_WARN("Unknown fourcc code, cannot find a matching extension in VideoFileWriter::ExtensionFromFourcc");
+	LOG_WARN(Manager::Logger(), "Unknown fourcc code, cannot find a matching extension in VideoFileWriter::ExtensionFromFourcc");
+
 	return "avi";
 }

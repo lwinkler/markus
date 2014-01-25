@@ -60,12 +60,12 @@ protected:
 	cv::VideoCapture m_capture;
 	cv::Mat * m_output;
 	TIME_STAMP m_timeStamp;
+	void GetProperties();
+	Timer m_frameTimer;
 
 private:
-	void GetProperties();
 	NetworkCamParameterStructure m_param;
 	inline virtual NetworkCamParameterStructure& RefParameter() {return m_param;};
-	Timer m_frameTimer;
 };
 
 #endif

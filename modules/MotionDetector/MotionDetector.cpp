@@ -76,16 +76,18 @@ void MotionDetector::Reset()
 
 void MotionDetector::ProcessFrame()
 {
-	assert(m_input->channels() == 1); // Currently only supporting 1 channel // TODO
-
 	vector<Mat> channels;
 	split(*m_input, channels);
-	Scalar m = mean(channels[0]);
+	double val = 0;
 
-	m /= 255.0;
-	float val = sum(m)[0];
+	for(int i = 0 ; i < m_input->channels() ; i++)
+	{
+		Scalar m = mean(channels[i]);
+		m /= 255.0;
+		val += sum(m)[i];
+	}
+	val /= m_input->channels();
 	m_state = (val >= m_param.motionThres);
-
 
 #ifdef MARKUS_DEBUG_STREAMS
 	// Debug image: moving plot displaying threshold and current value

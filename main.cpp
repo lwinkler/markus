@@ -168,7 +168,7 @@ int main(int argc, char** argv)
 	try
 	{
 #ifndef MARKUS_NO_GUI
-		MarkusApplication app(argc, argv); // TODO: See if we can move this line
+		MarkusApplication app(argc, argv);
 #endif
 		ConfigReader mainConfig(configFile);
 		mainConfig.Validate();

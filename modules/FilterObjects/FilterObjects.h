@@ -62,8 +62,7 @@ public:
 	virtual void ProcessFrame();
 	void Reset();
 	
-private:
-	FilterObjectsParameterStructure m_param;
+protected:
 
 	std::vector <Object> m_objectsIn;
 	std::vector <Object> m_objectsOut;
@@ -74,7 +73,8 @@ private:
 	cv::Mat * m_debug;
 #endif
 
-protected:
+private:
+	FilterObjectsParameterStructure m_param;
 	inline virtual ModuleParameterStructure& RefParameter() { return m_param;}
 };
 

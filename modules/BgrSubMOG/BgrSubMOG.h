@@ -48,7 +48,6 @@ class BgrSubMOGParameterStructure : public ModuleParameterStructure
 public:
 	BgrSubMOGParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-
 		// This parameters should not change
 		m_list.push_back(new ParameterInt   ("history",          200,    1,   10000,     &history,         "Length of the history"));
 		m_list.push_back(new ParameterInt   ("nmixtures",          5,    1,      10,     &nmixtures,       "Number of Gaussian mixtures"));
@@ -78,19 +77,18 @@ public:
 	
 	virtual void ProcessFrame();
 	void Reset();
-		
-
-private:
-	BgrSubMOGParameterStructure m_param;
-	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
 
 protected:
 	cv::Mat * m_input;
-	cv::BackgroundSubtractorMOG m_mog;
+	cv::BackgroundSubtractorMOG* mp_mog;
 
 	// Background subtraction	
 	cv::Mat* m_foreground;
 	cv::Mat* m_background;
+
+private:
+	BgrSubMOGParameterStructure m_param;
+	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
 };
 
 

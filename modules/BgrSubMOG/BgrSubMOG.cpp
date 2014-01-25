@@ -33,10 +33,9 @@ using namespace std;
 
 BgrSubMOG::BgrSubMOG(const ConfigReader& x_configReader) :
 	Module(x_configReader),
-	m_param(x_configReader),
-	m_mog(m_param.history, m_param.nmixtures, m_param.backgroundRatio, m_param.noiseSigma)
+	m_param(x_configReader)
 {
-
+	mp_mog = NULL;
 	m_description = "Perform background subtraction via Mixtures Of Gaussians";
 	m_input       = new Mat(Size(m_param.width, m_param.height), m_param.type);
 	m_background  = new Mat(Size(m_param.width, m_param.height), m_param.type);
@@ -62,13 +61,15 @@ BgrSubMOG::~BgrSubMOG()
 void BgrSubMOG::Reset()
 {
 	Module::Reset();
-	m_mog.initialize(m_input->size(), m_input->type());
-	// m_emptyBackgroundSubtractor = true;
+	if(mp_mog == NULL)
+		delete mp_mog;
+	mp_mog = new BackgroundSubtractorMOG(m_param.history, m_param.nmixtures, m_param.backgroundRatio, m_param.noiseSigma);
+	mp_mog->initialize(m_input->size(), m_input->type());
 }
 
 void BgrSubMOG::ProcessFrame()
 {
-	m_mog.operator ()(*m_input, *m_foreground , m_param.learningRate);
-	m_mog.getBackgroundImage(*m_background);
+	mp_mog->operator ()(*m_input, *m_foreground , m_param.learningRate);
+	mp_mog->getBackgroundImage(*m_background);
 };
 

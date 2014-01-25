@@ -49,15 +49,14 @@ public:
 	virtual void ProcessFrame();
 	void Reset();
 		
-private:
-	MaskParameterStructure m_param;
-	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
-
-	cv::Mat* m_output;
-
 protected:
 	cv::Mat * m_input;
 	cv::Mat * m_mask;
+	cv::Mat* m_output;
+
+private:
+	MaskParameterStructure m_param;
+	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
 };
 
 

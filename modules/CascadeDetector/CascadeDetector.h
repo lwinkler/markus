@@ -48,9 +48,11 @@ public:
 		m_list.push_back(new ParameterFloat("scale_factor", 1.2, 1, 2, 	&scaleFactor,	"Scale factor for scanning (higher: less sensitive)"));
 		m_list.push_back(new ParameterString("filter_file", "modules/CascadeDetector/lbpcascade_frontalface.xml",  &filterFile,
 														"File with filter data of the detected object"));
-		m_list.push_back(new ParameterString("color", "(255,255,255)",		&color,	"Color to draw the output"));
+		// m_list.push_back(new ParameterString("color", "(255,255,255)",		&color,	"Color to draw the output"));
 		m_list.push_back(new ParameterString("object_label", "casc", 			&objectLabel,	"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
 		
+		RefParameterByName("type").SetDefault("CV_8C1");
+		RefParameterByName("type").Lock();
 		ParameterStructure::Init();
 	};
 	
@@ -58,7 +60,7 @@ public:
 	int minSide;
 	float scaleFactor;
 	std::string filterFile;
-	std::string color; // TODO remove this
+	// std::string color;
 	std::string objectLabel;
 };
 
@@ -97,7 +99,6 @@ protected:
 class CascadeDetector : public ModuleAsync
 {
 protected:
-	CascadeDetectorParameterStructure m_param;
 	std::vector<Object> m_detectedObjects;
 	cv::Mat * m_input;
 	cv::Mat * m_lastInput;
@@ -120,8 +121,8 @@ protected:
 	virtual const QThread & GetRefThread(){return m_thread;};
 
 private:
+	CascadeDetectorParameterStructure m_param;
 	inline virtual CascadeDetectorParameterStructure& RefParameter() { return m_param;};
-
 };
 
 #endif
