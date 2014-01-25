@@ -89,11 +89,6 @@ public:
 	inline bool IsAutoProcessed()  {return RefParameter().autoProcess;}
 	virtual double GetRecordingFps();
 	
-	inline void SetPreceedingModule(Module & x_module)
-	{
-		assert(m_modulePreceeding == NULL);
-		m_modulePreceeding = &x_module;
-	}
 	inline void AddDependingModule (Module & x_module){m_modulesDepending.push_back(&x_module);}
 	virtual void PrintStatistics() const;
 	
@@ -104,8 +99,10 @@ public:
 	inline void LockForRead(){m_lock.lockForRead();}
 	inline void LockForWrite(){m_lock.lockForWrite();}
 	inline void Unlock(){m_lock.unlock();}
-	inline bool GetIsReady(){return m_isReady;}
-	inline void SetIsReady(){m_isReady = true;}
+	inline bool IsReady(){return IsAutoProcessed() || m_isReady;}
+	void SetIsReady();
+	bool AllInputsAreReady() const;
+	const Module& GetMasterModule();
 	
 protected:
 
@@ -132,7 +129,6 @@ protected:
 	std::string m_name;
 	std::string m_description; 
 	int m_id;
-	Module * m_modulePreceeding;
 	std::vector<Module *> m_modulesDepending;
 	QModuleTimer * m_moduleTimer;
 	QReadWriteLock m_lock;

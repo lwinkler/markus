@@ -64,6 +64,8 @@ public:
 			throw MkException("Stream " + GetName() + " is not connected", LOC);
 		return m_connected->GetTimeStamp();
 	}
+	inline bool IsReady(){return m_isReady;}
+	inline void SetIsReady(){m_isReady = true;}
 
 protected:
 	const std::string m_name;
@@ -75,6 +77,7 @@ protected:
 	TIME_STAMP m_timeStamp;
 	
 	Stream * m_connected;
+	bool m_isReady;
 	
 private:
 	// These are defined as a trick to prevent unwanted copies !

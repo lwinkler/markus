@@ -394,7 +394,7 @@ var xmlProject = null;
 				deleteAll();
 				xmlProject = $(xml).find("application");
 
-				xmlProject.find('module').each(function(index){
+				xmlProject.find('module').each(function(){
 					var type = getModuleType($(this));
 
 					$(this).find('inputs > input').each(function(){
@@ -409,7 +409,9 @@ var xmlProject = null;
 					$(this).data('class', xmlModuleTypes[type].find('module'));
 
 					// create the window representing the module
+					index = parseInt($(this).attr('id'));
 					createModuleWindow($(this), index, $(this).find('uiobject'));
+					console.log(index + " " + maxIdModules)
 					if(index >= maxIdModules)
 						maxIdModules = index + 1;
 				});

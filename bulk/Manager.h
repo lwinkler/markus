@@ -75,8 +75,6 @@ public:
 		m_configFile = x_configFile;
 	}
 	static inline const std::string& GetConfigFile(){return m_configFile;}
-	bool SetDependingModules(Module& x_master, Module& x_recurse, const ConfigReader x_moduleConfig) const;
-	bool CheckInputsAreReady(const ConfigReader x_moduleConfig) const;
 private:
 	ManagerParameter m_param;
 

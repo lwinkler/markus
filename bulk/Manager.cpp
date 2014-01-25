@@ -95,7 +95,7 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 		int moduleId = atoi(moduleConfig.GetAttribute("id").c_str());
 		Module& module = RefModuleById(moduleId);
 		if(module.IsAutoProcessed())
-			module.SetIsReady();
+			module.SetIsReady(); // TODO: change IsReady too
 
 		// Read conections of inputs
 		ConfigReader conf = moduleConfig.GetSubConfig("inputs");
@@ -123,25 +123,37 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 		moduleConfig = moduleConfig.NextSubConfig("module");
 	}
 
-	// Set the module preceeding the current module
-	// we loop through the modules and add the modules recuresively to their master
-	int changed = true;
+	// Set the master module for each module
+	//    the master module is the module responsible to call the Process method
+	bool changed = true;
+	bool ready = true;
 	while(changed)
 	{
 		changed = false;
+		ready = true;
 		for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		{
-			if((*it)->GetIsReady())
+			if(!(*it)->IsReady())
 			{
-				changed = SetDependingModules(**it, **it, m_configReader.GetSubConfig("module"));
+				ready = false;
+				if((*it)->AllInputsAreReady())
+				{
+					Module& master = RefModuleByName((*it)->GetMasterModule().GetName());
+					(*it)->SetIsReady();
+					master.AddDependingModule(**it);
+					// cout<<"Set module "<<depending->GetName()<<" as ready"<<endl;
+					changed = true;
+				}
 			}
 		}
 	}
+	if(! ready)
+		throw MkException("Not all modules can be assigned to a master. There is probably some connections problems.");
 
-	// Just loop once more to check that all modules are ready
+	// Just loop once more to check that all modules are ready // TODO avoid this loop
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 	{
-		if(!(*it)->GetIsReady())
+		if(!(*it)->IsReady())
 		{
 			LOG_ERROR(Manager::Logger(), "Module "<<(*it)->GetName()<<" is not ready")
 			throw MkException("Module is not ready", LOC);
@@ -393,56 +405,4 @@ const string& Manager::OutputDir(const string& x_outputDir)
 	return m_outputDir;
 }
 
-/// Set all modules as depending to an auto_process module recorsively
-///  the structure of this method is important as the depending modules must be called in a given order
-bool Manager::SetDependingModules(Module& x_master, Module& x_recurse, const ConfigReader x_moduleConfig) const
-{
-	int changed = false;
-	// Look inside config and find all depending modules
-	ConfigReader moduleConfig = x_moduleConfig; //.GetSubConfig("module");
-	while(! moduleConfig.IsEmpty())
-	{
-		ConfigReader inputConfig = moduleConfig.GetSubConfig("inputs").GetSubConfig("input");
-		while(! inputConfig.IsEmpty())
-		{
-			// cout<<inputConfig.GetAttribute("moduleid").c_str()<<endl;
-			if(atoi(inputConfig.GetAttribute("moduleid").c_str()) == x_recurse.GetId())
-			{
-				Module& depending = RefModuleByName(moduleConfig.GetAttribute("name"));
-				if(!depending.GetIsReady() && CheckInputsAreReady(moduleConfig))
-				{
-					// All depending modules are added to master
-					depending.SetPreceedingModule(x_master);
-					x_master.AddDependingModule(depending);
-					depending.SetIsReady();
-					// cout<<"Set module "<<depending->GetName()<<" as ready"<<endl;
 
-					// Call recursively
-					changed = true;
-					SetDependingModules(x_master, depending, x_moduleConfig);
-				}
-			}
-			inputConfig = inputConfig.NextSubConfig("input");
-		}
-		moduleConfig = moduleConfig.NextSubConfig("module");
-	}
-	return changed;
-}
-
-bool Manager::CheckInputsAreReady(const ConfigReader x_moduleConfig) const
-{
-	ConfigReader inputConfig = x_moduleConfig.GetSubConfig("inputs").GetSubConfig("input");	
-
-	while(!inputConfig.IsEmpty())
-	{
-		const string& str = inputConfig.GetAttribute("moduleid");
-		if(str != "") // not connected
-		{
-			Module& preceeding = RefModuleById(atoi(str.c_str()));
-			if(!preceeding.GetIsReady() && !preceeding.IsAutoProcessed())
-				return false;
-		}
-		inputConfig = inputConfig.NextSubConfig("input");
-	}
-	return true;
-}

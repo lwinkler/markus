@@ -49,7 +49,6 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_timerProcessing      = 0;
 	m_timerWaiting         = 0;
 	m_countProcessedFrames = 0;
-	m_modulePreceeding     = NULL;
 	m_lastTimeStamp        = TIME_STAMP_MIN;
 	m_currentTimeStamp     = TIME_STAMP_INITIAL;
 	m_pause                = false;
@@ -139,7 +138,7 @@ void Module::Pause(bool x_pause)
 }
 
 
-/// Return the fps that can be used to recording. This value is special as it depends from preceeding modules. 
+/// Return the fps that can be used to recording. This value is special as it depends from preceding modules. 
 
 double Module::GetRecordingFps()
 {
@@ -215,7 +214,7 @@ void Module::Process()
 			{
 				Stream& stream(*m_inputStreams.at(i));
 				if(stream.IsConnected() && stream.GetTimeStampConnected() != m_currentTimeStamp)
-					LOG_WARN(m_logger, "Input stream id="<<i<<" is not in sync with input stream id=0. To avoid this warning, either set parameter allow_unsync_input=1 for this module or move this module in the xml configuration file after the modules it depends on and set auto_process=0 to the preceeding modules. Sorry :-)"); // TODO: manage any order of modules in config file: manage connection order
+					LOG_WARN(m_logger, "Input stream id="<<i<<" is not in sync with input stream id=0 for module "<<GetName()<<". If this is acceptable set parameter allow_unsync_input=1 for this module. To fix this problem cleanly you should probably set parameters auto_process=0 and fps=0 for the modules located between the input and module "<<GetName()<<".");
 			}
 	}
 	else if(! param.autoProcess)
@@ -320,3 +319,40 @@ void Module::PrintStatistics() const
 		m_timerWaiting<<"ms), "<< (m_countProcessedFrames * 1000.0 / (m_timerProcessing + m_timerConvertion + m_timerWaiting))<<" fps");
 }
 
+/// Check that all inputs are ready (they are connected to a working module)
+bool Module::AllInputsAreReady() const
+{
+	for(vector<Stream*>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
+	{
+		if((*it)->IsConnected() && !(*it)->RefConnected().IsReady())
+			return false;
+	}
+	return true;
+}
+
+/// Return a reference to the master module
+const Module& Module::GetMasterModule()
+{
+	for(vector<Stream*>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
+	{
+		if((*it)->IsConnected())
+		{
+			Module& preceding = (*it)->RefConnected().RefModule();
+			if(preceding.IsAutoProcessed())
+				return preceding;
+			else
+				return preceding.GetMasterModule();
+		}
+	}
+	throw MkException("Module must have at least one input connected or have auto_process=1");
+}
+
+/// Set as ready (and all inputs too)
+void Module::SetIsReady()
+{
+	m_isReady = true;
+	for(vector<Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
+	{
+		(*it)->SetIsReady();
+	}
+}

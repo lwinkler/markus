@@ -34,6 +34,7 @@ Stream::Stream(int x_id, const std::string& x_name, Module& rx_module, const str
 	m_description(rx_description)
 {
 	m_connected = NULL;
+	m_isReady = false;
 	m_timeStamp = TIME_STAMP_INITIAL;
 }
 
