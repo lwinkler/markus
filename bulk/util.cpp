@@ -100,7 +100,7 @@ void adjustSize(const Mat* im_in, Mat* im_out)
 {
 	if(!im_in->cols || !im_in->rows)
 	{
-		LOG_WARN(Manager::Logger(), "Module input image has size 0x0, inserting a black frame"); // TODO: This error appears sometimes for strange reasons with FallDetection.write.xml
+		throw MkException("Module input image has size 0x0, inserting a black frame", LOC); // TODO: This error appears sometimes for strange reasons with FallDetection.write.xml
 		im_out->setTo(0);
 	}
 	else

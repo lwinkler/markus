@@ -344,7 +344,7 @@ const Module& Module::GetMasterModule()
 				return preceding.GetMasterModule();
 		}
 	}
-	throw MkException("Module must have at least one input connected or have auto_process=1");
+	throw MkException("Module must have at least one input connected or have auto_process=1", LOC);
 }
 
 /// Set as ready (and all inputs too)
