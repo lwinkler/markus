@@ -54,6 +54,7 @@ class TestProjects : public CppUnit::TestFixture
 		ConfigReader appConfig = mainConfig.GetSubConfig("application");
 		CPPUNIT_ASSERT(!appConfig.IsEmpty());
 		Manager manager(appConfig, 1);
+		manager.Connect();
 		manager.Reset();
 		while(manager.Process())
 		{
