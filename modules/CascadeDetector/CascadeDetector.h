@@ -52,7 +52,7 @@ public:
 		m_list.push_back(new ParameterString("object_label", "casc", 			&objectLabel,	"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
 		
 		RefParameterByName("type").SetDefault("CV_8C1");
-		RefParameterByName("type").Lock();
+		RefParameterByName("type").Lock();// TODO: Decide if we lock here or in Reset
 		ParameterStructure::Init();
 	};
 	

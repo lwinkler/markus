@@ -18,7 +18,7 @@
 		</param>
 		<param name="type">
 			<type>image type</type>
-			<value default="CV_8UC1">CV_8UC1</value>
+			<value default="(unknown enum value)">(unknown enum value)</value>
 			<description>Format of the input image</description>
 		</param>
 		<param name="auto_process">
@@ -60,11 +60,6 @@
 			<type>string</type>
 			<value default="modules/CascadeDetector/lbpcascade_frontalface.xml">modules/CascadeDetector/lbpcascade_frontalface.xml</value>
 			<description>File with filter data of the detected object</description>
-		</param>
-		<param name="color">
-			<type>string</type>
-			<value default="(255,255,255)">(255,255,255)</value>
-			<description>Color to draw the output</description>
 		</param>
 		<param name="object_label">
 			<type>string</type>

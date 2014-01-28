@@ -138,7 +138,7 @@ void Module::Pause(bool x_pause)
 }
 
 
-/// Return the fps that can be used to recording. This value is special as it depends from preceding modules. 
+/// Return the fps that can be used to recording. This value is special as it depends from preceeding modules. 
 
 double Module::GetRecordingFps()
 {
@@ -201,6 +201,8 @@ void Module::Process()
 {
 	if(m_pause)
 		return;
+	if(!m_isReady)
+		throw MkException("Module must be ready before processing", LOC);
 
 	const ModuleParameterStructure& param = RefParameter();
 	

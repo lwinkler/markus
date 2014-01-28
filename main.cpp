@@ -203,6 +203,7 @@ int main(int argc, char** argv)
 			return 0;
 		}
 
+		manager.Connect();
 		manager.Reset();
 		LOG_EVENT(logger, "STARTED pid="<<getpid());
 

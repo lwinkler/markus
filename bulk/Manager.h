@@ -63,6 +63,7 @@ public:
 	Module& RefModuleById(int x_id) const;
 	Module& RefModuleByName(const std::string& x_name) const;
 	
+	void Connect();
 	void Export();
 	void PrintTimers();
 	void Pause(bool x_pause);
@@ -79,6 +80,7 @@ private:
 	ManagerParameter m_param;
 
 	bool m_centralized;
+	bool m_isConnected;
 	// long long m_timerConvertion;
 	long long m_timerProcessing;
 

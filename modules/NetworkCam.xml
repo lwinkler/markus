@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="NetworkCam" description="">
+<module name="NetworkCam" description="Module to acquire a video stream from a network camera">
 	<parameters>
 		<param name="class">
 			<type>string</type>

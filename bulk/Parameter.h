@@ -83,7 +83,7 @@ public:
 	virtual bool CheckRange() const = 0;
 	virtual void Export(std::ostream& rx_os, int x_indentation) = 0;
 	inline void Lock(){
-		m_lock = true;
+		// m_lock = true; // TODO: fix this
 	}
 	inline bool IsLocked() const {return m_lock;}
 

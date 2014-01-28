@@ -29,15 +29,6 @@
 
 #include "util.h"
 
-// #include <stdlib.h>
-// #include <stdio.h>
-// #include <math.h>
-// #include <iostream>
-// #include <fstream>
-// #include <assert.h>
-
-// #include <sstream>
-// #include <string.h>
 using namespace std;
 
 #include "AllModules.h"
@@ -64,7 +55,7 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 {
 	LOG_INFO(m_logger, "Create object Manager");
 	m_frameCount = 0;
-	
+	m_isConnected = false;
 	
 	m_inputs.clear();
 	m_modules.clear();
@@ -85,10 +76,34 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 			m_inputs.push_back(dynamic_cast<Input* >(tmp1));
 		moduleConfig = moduleConfig.NextSubConfig("module");
 	}
+}
 
+Manager::~Manager()
+{
+	PrintTimers();
+	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+		delete *it;
+
+	// Write final infos
+	if(m_outputDir.size() != 0)
+		LOG_INFO(m_logger, "Results written to directory "<<m_outputDir);
+
+	/// Do the final operations on the static class
+	if(m_outputDir.size() != 0 && getenv("LOG_DIR") == NULL)
+	{
+		SYSTEM("cp markus.log " + m_outputDir + "/markus.copy.log");
+		// SYSTEM("cp markus " + m_outputDir);
+	}
+}
+
+/// Connect the different modules
+void Manager::Connect()
+{
+	if(m_isConnected)
+		throw MkException("Manager can only connect modules once", LOC);
 	
 	// Connect input and output streams (re-read the config once since we need all modules to be connected)
-	moduleConfig = m_configReader.GetSubConfig("module");
+	ConfigReader moduleConfig = m_configReader.GetSubConfig("module");
 	
 	while(! moduleConfig.IsEmpty())
 	{
@@ -149,26 +164,9 @@ Manager::Manager(ConfigReader& x_configReader, bool x_centralized) :
 	}
 	if(! ready)
 		throw MkException("Not all modules can be assigned to a master. There is probably some connections problems.");
+	
+	m_isConnected = true;	
 }
-
-Manager::~Manager()
-{
-	PrintTimers();
-	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
-		delete *it;
-
-	// Write final infos
-	if(m_outputDir.size() != 0)
-		LOG_INFO(m_logger, "Results written to directory "<<m_outputDir);
-
-	/// Do the final operations on the static class
-	if(m_outputDir.size() != 0 && getenv("LOG_DIR") == NULL)
-	{
-		SYSTEM("cp markus.log " + m_outputDir + "/markus.copy.log");
-		// SYSTEM("cp markus " + m_outputDir);
-	}
-}
-
 
 /// Reset the manager: must be called externally after initialization
 void Manager::Reset()
@@ -188,6 +186,9 @@ void Manager::Reset()
 
 bool Manager::Process()
 {
+	if(!m_isConnected)
+		throw MkException("Modules must be connected before processing", LOC);
+
 	// If methods are not called in a centralized way, we will rely on timers on each module
 	assert(m_centralized);
 
