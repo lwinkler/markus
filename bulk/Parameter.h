@@ -82,8 +82,9 @@ public:
 	virtual void Print(std::ostream& os) const = 0;
 	virtual bool CheckRange() const = 0;
 	virtual void Export(std::ostream& rx_os, int x_indentation) = 0;
-	inline void Lock(){
-		// m_lock = true; // TODO: fix this
+	inline void Lock()
+	{
+		m_lock = true;
 	}
 	inline bool IsLocked() const {return m_lock;}
 
@@ -313,7 +314,7 @@ public:
 	void SetFromConfig();
 	void SetValueToDefault();
 	void CheckRange() const;
-	void PrintParameters() const;
+	void PrintParameters(log4cxx::LoggerPtr& x_logger) const;
 	//void SetValueByName(const std::string& x_name, const std::string& x_value, ParameterConfigType x_configType = PARAMCONF_UNKNOWN);
 	Parameter & RefParameterByName(const std::string& x_name);
 	const std::vector<Parameter*>& GetList() const {return m_list;}

@@ -35,6 +35,7 @@ public:
 	ModuleAsyncParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
 		m_list.push_back(new ParameterDouble("detection_fps", 	10, 	0, 	1000,		&detectionFps,	"Frames per seconds for the asynchronous detection (normally smaller that module)"));
+		Init();
 	};
 
 public:

@@ -74,8 +74,8 @@ void ParameterStructure::Init()
 	SetFromConfig();
 	
 	// LOG_INFO("Parameters for "<<m_objectName<<" initialized.");
-	PrintParameters(); // Global::log.stream(LOG_INFO));
-	CheckRange();
+	// PrintParameters(); // Global::log.stream(LOG_INFO));
+	// CheckRange();
 }
 
 /// Set the value from xml configuration 
@@ -100,7 +100,7 @@ void ParameterStructure::SetFromConfig()
 		}
 		catch(...)
 		{
-			LOG_WARN(Manager::Logger(), "Unknown parameter in configuration: "<<name<<" in module "<<m_objectName);
+			LOG_WARN(Manager::Logger(), "Unknown parameter in configuration: "<<name<<" in module "<<m_objectName); // TODO: avoid this warning in parent
 		}
 		conf = conf.NextSubConfig("param");
 	}
@@ -156,14 +156,16 @@ void ParameterStructure::CheckRange() const
 	{
 		if(!(*it)->CheckRange())
 		{
-			throw MkException("Parameter " + (*it)->GetName() + " out of range", LOC);
+			stringstream ss;
+			ss<<"Parameter "<<(*it)->GetName()<<" is out of range"; // TODO: implement PrintValue
+			throw MkException(ss.str(), LOC);
 		}
 	}
 }
 
 /// Print parameters to stdout with details
 
-void ParameterStructure::PrintParameters() const
+void ParameterStructure::PrintParameters(log4cxx::LoggerPtr& x_logger) const
 {
 	stringstream ss;
 	// string confType = "";
@@ -172,7 +174,7 @@ void ParameterStructure::PrintParameters() const
 		(*it)->Print(ss);
 	}
 	if(m_list.size() > 0)
-		LOG_INFO(Manager::Logger(), ss.str());
+		LOG_INFO(x_logger, ss.str());
 }
 
 

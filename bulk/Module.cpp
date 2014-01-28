@@ -61,12 +61,8 @@ void Module::Reset()
 {
 	// Lock the parameters that cannot be changed
 	ModuleParameterStructure& param(RefParameter());
-	param.RefParameterByName("class").Lock();
-	param.RefParameterByName("width").Lock();
-	param.RefParameterByName("height").Lock();
-	param.RefParameterByName("type").Lock();
-	param.RefParameterByName("auto_process").Lock();
-	param.RefParameterByName("allow_unsync_input").Lock();
+	param.PrintParameters(m_logger);
+	param.CheckRange();
 
 	// Add the module timer (only works with QT)
 	if(param.autoProcess)

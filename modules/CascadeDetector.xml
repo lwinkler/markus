@@ -18,7 +18,7 @@
 		</param>
 		<param name="type">
 			<type>image type</type>
-			<value default="(unknown enum value)">(unknown enum value)</value>
+			<value default="(unknown enum value)">CV_8UC1</value>
 			<description>Format of the input image</description>
 		</param>
 		<param name="auto_process">
