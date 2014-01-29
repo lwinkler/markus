@@ -30,21 +30,25 @@
 
 using namespace std;
 
-
-void setCursor(Controller* x_ctr)
+void setCursor(Controller* xp_ctr, string* xp_value)
 {
-#ifndef MARKUS_NO_GUI
-	InputStreamControl* ctr = dynamic_cast<InputStreamControl*>(x_ctr);
+	InputStreamControl* ctr = dynamic_cast<InputStreamControl*>(xp_ctr);
 	assert(ctr != NULL);
-	ctr->module.SetMsec(ctr->parameterSlider->GetValue());
+	if(xp_value != NULL)
+		ctr->module.SetMsec(PSTR2FLOAT(xp_value));
+#ifndef MARKUS_NO_GUI
+	else
+		ctr->module.SetMsec(ctr->parameterSlider->GetValue());
 #endif
 }
 
-void getCursor(Controller* x_ctr)
+void getCursor(Controller* xp_ctr, string* xp_value)
 {
-#ifndef MARKUS_NO_GUI
-	InputStreamControl* ctr = dynamic_cast<InputStreamControl*>(x_ctr);
+	InputStreamControl* ctr = dynamic_cast<InputStreamControl*>(xp_ctr);
 	assert(ctr != NULL);
+	if(xp_value != NULL)
+		FLOAT2PSTR(ctr->module.GetMsec(), xp_value);
+#ifndef MARKUS_NO_GUI
 	ctr->parameterSlider->SetValue(ctr->module.GetMsec());
 #endif
 }

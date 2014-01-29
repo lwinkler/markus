@@ -29,16 +29,16 @@ using namespace std;
 
 /*--------------------------------------------------------------------------------*/
 
-void validate(Controller* x_ctr)
+void validate(Controller* xp_ctr, string* xp_value)
 {
-	ControllerEvent* ctr = dynamic_cast<ControllerEvent*>(x_ctr);
+	ControllerEvent* ctr = dynamic_cast<ControllerEvent*>(xp_ctr);
 	assert(ctr != NULL);
 	ctr->module.ValidateLastEvent();
 }
 
-void invalidate(Controller* x_ctr)
+void invalidate(Controller* xp_ctr, string* xp_value)
 {
-	ControllerEvent* ctr = dynamic_cast<ControllerEvent*>(x_ctr);
+	ControllerEvent* ctr = dynamic_cast<ControllerEvent*>(xp_ctr);
 	assert(ctr != NULL);
 	ctr->module.InvalidateLastEvent();
 }

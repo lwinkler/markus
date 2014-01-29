@@ -29,30 +29,30 @@ using namespace std;
 
 /*--------------------------------------------------------------------------------*/
 
-void reset(Controller* x_ctr)
+void reset(Controller* xp_ctr, string* xp_value)
 {
-	ControllerModule* ctr = dynamic_cast<ControllerModule*>(x_ctr);
+	ControllerModule* ctr = dynamic_cast<ControllerModule*>(xp_ctr);
 	assert(ctr != NULL);
 	ctr->module.Reset();
 }
 
-void pauseModule(Controller* x_ctr)
+void pauseModule(Controller* xp_ctr, string* xp_value)
 {
-	ControllerModule* ctr = dynamic_cast<ControllerModule*>(x_ctr);
+	ControllerModule* ctr = dynamic_cast<ControllerModule*>(xp_ctr);
 	assert(ctr != NULL);
 	ctr->module.Pause(true);
 }
 
-void unpauseModule(Controller* x_ctr)
+void unpauseModule(Controller* xp_ctr, string* xp_value)
 {
-	ControllerModule* ctr = dynamic_cast<ControllerModule*>(x_ctr);
+	ControllerModule* ctr = dynamic_cast<ControllerModule*>(xp_ctr);
 	assert(ctr != NULL);
 	ctr->module.Pause(false);
 }
 
-void printStatistics(Controller* x_ctr)
+void printStatistics(Controller* xp_ctr, string* xp_value)
 {
-	ControllerModule* ctr = dynamic_cast<ControllerModule*>(x_ctr);
+	ControllerModule* ctr = dynamic_cast<ControllerModule*>(xp_ctr);
 	assert(ctr != NULL);
 	ctr->module.PrintStatistics();
 }

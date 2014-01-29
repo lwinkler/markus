@@ -30,6 +30,11 @@
 #include "Controller.h"
 
 
+class QParameterSlider;
+class QCheckBox;
+class QLineEdit;
+class QComboBox;
+
 /// Control class for an integer parameter
 class ControllerInt : public Controller
 {

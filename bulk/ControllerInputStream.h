@@ -27,6 +27,7 @@
 #include "Controller.h"
 
 class VideoFileReader;
+class QParameterSlider;
 
 /// Control class for an input
 class InputStreamControl : public Controller

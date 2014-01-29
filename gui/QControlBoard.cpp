@@ -129,6 +129,6 @@ void QControlBoard::callAction()
 	map<string, const px_action>::const_iterator it = m_currentControl->GetActions().find(button->text().toStdString());
 	if(it == m_currentControl->GetActions().end())
 		throw MkException("Cannot find action in controller " + button->text().toStdString(), LOC);
-	(*(it->second))(m_currentControl);
+	(*(it->second))(m_currentControl, NULL);
 	// cout<<"Action called "<<button->text().toStdString()<<endl;	
 }
