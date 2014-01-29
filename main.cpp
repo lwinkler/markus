@@ -50,6 +50,7 @@ void usage()
 	printf(" -v  --version         Print version information\n");
 	printf(" -d  --describe        Create a description of all modules in XML format inside module/ directory. For development purpose.\n");
 	printf(" -c  --centralized     Module processing function is called from the manager (instead of decentralized timers)\n");
+	printf(" -i  --stdin           Read commands from stdin\n");
 	printf(" -n  --no-gui          Run process without gui\n");
 	printf(" -t  --run-tests       Run unit tests (if enabled)\n");
 	printf(" -l  --log-conf <log4cxx_config>.xml\n");
@@ -60,6 +61,49 @@ void usage()
 	printf("                       Override the value of one parameter\n");
 }
 
+
+/// Specific thread dedicated to the reading of commands via stdin
+void *send_commands(void *x_void_ptr)
+{
+	Manager *pManager = (Manager *)x_void_ptr;
+	assert(pManager != NULL);
+	string input;
+	vector<string> elems;
+	string value;
+	while(true)
+	{
+		try
+		{
+			// cout << "CMD > ";
+			getline(cin, input);
+			split(input, ' ', elems);
+			if(elems.size() == 1)
+				value = "";
+			else if(elems.size() == 2)
+				value = elems.at(1);
+			else throw MkException("Command must have one or two elements", LOC);
+			LOG_INFO(Manager::Logger(), "Send command: "<<elems.at(0)<<" \""<<value<<"\"");
+			pManager->SendCommand(elems.at(0), value);
+			//if(input == "exit")
+				//break;
+
+			//cin.clear();
+
+			cout << endl;
+		}
+		catch(std::exception& e)
+		{
+			LOG_ERROR(Manager::Logger(), "Cannot execute command: "<<e.what());
+		}
+		catch(...)
+		{
+			LOG_ERROR(Manager::Logger(), "Cannot execute command");
+		}
+	}
+
+	return NULL;
+}
+
 int main(int argc, char** argv)
 {
 	// Load XML configuration file using DOMConfigurator
@@ -68,6 +112,7 @@ int main(int argc, char** argv)
 	bool describe    = false;
 	bool nogui       = false;
 	bool centralized = false;
+	bool useStdin    = false;
 
 	string configFile    = "config.xml";
 	string logConfigFile = "log4cxx.xml";
@@ -83,6 +128,7 @@ int main(int argc, char** argv)
 		{"version",     0, 0, 'v'},
 		{"describe",    0, 0, 'd'},
 		{"centralized", 0, 0, 'c'},
+		{"stdin",       0, 0, 'i'},
 		{"no-gui",      0, 0, 'n'},
 		{"run-tests",   0, 0, 't'},
 		{"log-conf",    1, 0, 'l'},
@@ -92,7 +138,7 @@ int main(int argc, char** argv)
 	};
 	int c;
 	int option_index = 0;
-	while ((c = getopt_long(argc, argv, "hvdcntl:o:p:", long_options, &option_index)) != -1)
+	while ((c = getopt_long(argc, argv, "hvdcintl:o:p:", long_options, &option_index)) != -1)
 	{
 		switch (c) {
 			case 'h':
@@ -108,6 +154,9 @@ int main(int argc, char** argv)
 				break;
 			case 'c':
 				centralized = true;
+				break;
+			case 'i':
+				useStdin = true;
 				break;
 			case 'n':
 				nogui = true;
@@ -205,6 +254,21 @@ int main(int argc, char** argv)
 
 		manager.Connect();
 		manager.Reset();
+
+
+		/// Create a separate thread to read the commands from stdin
+		pthread_t command_thread;
+		if(useStdin && pthread_create(&command_thread, NULL, send_commands, &manager))
+		{
+			LOG_ERROR(Manager::Logger(), "Error creating thread");
+			return -1;
+		}
+		/* wait for the second thread to finish */
+		/*if(useStdin && pthread_join(command_thread, NULL)) {
+
+			LOG_ERROR(Manager::Logger(), "Error joining thread");
+			return -1;
+		}*/
 		LOG_EVENT(logger, "STARTED pid="<<getpid());
 
 		if(centralized)
@@ -237,23 +301,23 @@ int main(int argc, char** argv)
 	}
 	catch(cv::Exception& e)
 	{
-		LOG_ERROR(logger, "Exception raised (std::exception) : " << e.what() );
+		LOG_ERROR(logger, "Exception (std::exception): " << e.what() );
 	}
 	catch(std::exception& e)
 	{
-		LOG_ERROR(logger, "Exception raised (std::exception) : " << e.what() );
+		LOG_ERROR(logger, "Exception (std::exception): " << e.what() );
 	}
 	catch(std::string str)
 	{
-		LOG_ERROR(logger, "Exception raised (string) : " << str );
+		LOG_ERROR(logger, "Exception (string): " << str );
 	}
 	catch(const char* str)
 	{
-		LOG_ERROR(logger, "Exception raised (const char*) : " << str );
+		LOG_ERROR(logger, "Exception (const char*): " << str );
 	}
 	catch(...)
 	{
-		LOG_ERROR(logger, "Unknown exception raised");
+		LOG_ERROR(logger, "Exception: Unknown");
 	}
 	return -1;
 }

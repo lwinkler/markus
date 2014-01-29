@@ -250,6 +250,17 @@ bool Manager::Process()
 	return continueFlag;
 }
 
+/// Send a command
+void Manager::SendCommand(const std::string& x_command, std::string x_value)
+{
+	cout<<"TODO send command to controller"<<endl;
+	vector<string> elems;
+	split(x_command, '.', elems);
+	if(elems.size() != 3)
+		throw MkException("Command must be in format \"module.controller.command\"", LOC);
+}
+
+
 /// Print the results of timings
 
 void Manager::PrintTimers()
