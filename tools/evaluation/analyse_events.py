@@ -23,7 +23,8 @@ from collections import namedtuple
 
 # Evaluation metrics
 Evaluation = namedtuple('Evaluation',
-                        'total '
+                        'totaldet '
+                        'totaltru '
                         'truepos '
                         'falsepos '
                         'falseneg ')
@@ -104,7 +105,7 @@ def evaluate(events, truths):
     matched = [False] * len(truths)
 
     # Stats
-    total = 0
+    total_det = 0
     tp = 0
     fp = 0
     fn = 0
@@ -113,7 +114,7 @@ def evaluate(events, truths):
     for event in events:
 
         # Increase total counter
-        total += 1
+        total_det += 1
 
         good = False
 
@@ -132,23 +133,28 @@ def evaluate(events, truths):
         else:
             fp += 1
 
-    fn = len(filter(lambda x: x, matched))
+    fn = len(filter(lambda x: not x, matched))
 
     return Evaluation(truepos=tp,
                       falseneg=fn,
                       falsepos=fp,
-                      total=total)
+                      totaldet=total_det,
+                      totaltru=len(truths))
 
 
-def statistics(results):
+def statistics(r):
     """Compute the statistics on the evaluation"""
     # Prepare the statistic dictionnary
     stats = {}
 
-    stats['total'] = results.total
-    stats['p_det'] = (results.truepos / results.total) * 100.0
-    stats['p_fa'] = (results.falsepos / results.total) * 100.0
-    stats['p_mis'] = (results.falseneg / results.total) * 100.0
+    stats['tot_det'] = r.totaldet
+    stats['tot_tru'] = r.totaltru
+    stats['p_det'] = (float(r.truepos) / r.totaltru) * 100.0
+    stats['p_fa'] = (float(r.falsepos) / r.totaltru) * 100.0
+    stats['p_mis'] = (float(r.falseneg) / r.totaltru) * 100.0
+    stats['precision'] = float(r.truepos) / (r.truepos + r.falsepos) * 100
+    stats['f1'] = 2 * float(r.truepos) / (2 * r.truepos
+                                          + r.falsepos + r.falseneg) * 100
 
     return stats
 
@@ -157,10 +163,13 @@ def format_report(stats):
     """Display the statistics"""
 
     fmt = ''
-    fmt += 'Total events  : %(total)d\n'
-    fmt += 'Detection     : %(p_det)3.2f%%\n'
-    fmt += 'False alarm   : %(p_fa)3.2f%%\n'
-    fmt += 'Missdetection : %(p_mis)3.2f%%'
+    fmt += 'Detected events      : %(tot_det)d\n'
+    fmt += 'Ground truth events  : %(tot_tru)d\n'
+    fmt += 'Detection            : %(p_det)3.2f%%\n'
+    fmt += 'False alarm          : %(p_fa)3.2f%%\n'
+    fmt += 'Missdetection        : %(p_mis)3.2f%%\n'
+    fmt += 'Precision            : %(precision)3.2f%%\n'
+    fmt += 'F1                   : %(f1)3.2f%%'
 
     return fmt % stats
 
