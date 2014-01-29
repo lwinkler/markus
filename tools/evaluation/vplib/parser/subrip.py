@@ -19,7 +19,7 @@ def parse(file_path):
 
     # Verify the existence of the file
     if not os.path.isfile(file_path):
-        sys.exit("The file '%s' doesn\'t exist" % file_path)
+        return []
 
     # Read the file
     with open(file_path, 'r') as f:

@@ -145,6 +145,7 @@ def statistics(results):
     # Prepare the statistic dictionnary
     stats = {}
 
+    stats['total'] = results.total
     stats['p_det'] = (results.truepos / results.total) * 100.0
     stats['p_fa'] = (results.falsepos / results.total) * 100.0
     stats['p_mis'] = (results.falseneg / results.total) * 100.0
@@ -156,6 +157,7 @@ def format_report(stats):
     """Display the statistics"""
 
     fmt = ''
+    fmt += 'Total events  : %(total)d\n'
     fmt += 'Detection     : %(p_det)3.2f%%\n'
     fmt += 'False alarm   : %(p_fa)3.2f%%\n'
     fmt += 'Missdetection : %(p_mis)3.2f%%'
@@ -207,16 +209,12 @@ def main():
     # Parse the arguments
     global args
     args = arguments_parser()
-    assert args.EVENT_FILE
-    assert args.TRUTH_FILE
 
     # Get the array of events
     events = read_events(args.EVENT_FILE)
-    assert events, "There is no events parsed"
 
     # Get the array of truths
     truths = read_truths(args.TRUTH_FILE)
-    assert truths, "There is no ground truths parsed"
 
     # Evaluate the events regarding to the ground truth
     evaluation = evaluate(events, truths)
