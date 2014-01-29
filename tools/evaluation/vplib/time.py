@@ -43,13 +43,13 @@ class Time:
                          milis=ms)
 
     def __cmp__(self, other):
-        return self.milis.__cmp__(other)
+        return self.milis.__cmp__(other.milis)
 
     def __add__(self, other):
-        return self.milis.__add__(other)
+        return Time(milis=self.milis.__add__(other.milis))
 
     def __sub__(self, other):
-        return self.milis.__sub__(other)
+        return Time(milis=self.milis.__sub__(other.milis))
 
     def __repr__(self):
         fmt = "%02d:%02d:%02d,%03d"
