@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <application name="CustomProject">
-<module id="0" name="VideoFileReader0">
+<module id="0" name="Input">
 <inputs/>
 <outputs>
 <output id="0"/>

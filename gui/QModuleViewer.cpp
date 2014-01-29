@@ -222,13 +222,13 @@ void QModuleViewer::updateModule(Module * x_module)
 	this->addAction(actionShowDisplayMenu);
 
 	// Show control board for parameters
-	const vector<Controller*>& ctrs = m_currentModule->GetControlList();
+	const map<string, Controller*>& ctrs = m_currentModule->GetControlsList();
 	cpt = 0;
-	//const char * title[32] = {"params", "stream"};
-	for(vector<Controller*>::const_iterator it = ctrs.begin() ; it != ctrs.end() ; it++)
+
+	for(map<string, Controller*>::const_iterator it = ctrs.begin() ; it != ctrs.end() ; it++)
 	{
 		// Add an action for each control associated with the module
-		string name = string("Control ") + (*it)->GetName();
+		string name = string("Control ") + (it->second)->GetName();
 		QAction * actionShowControl = new QAction(tr(name.c_str()), this);
 		QSignalMapper * signalMapper = new QSignalMapper(this);
 		signalMapper->setMapping(actionShowControl, cpt);
@@ -286,13 +286,15 @@ void QModuleViewer::updateStreamOrControlNb(int x_index)
 /// display the control with the given index
 void QModuleViewer::updateControlNb(int x_index)
 {
-	assert(x_index < (int) m_currentModule->GetControlList().size());
+	assert(x_index < (int) m_currentModule->GetControlsList().size());
 	CLEAN_DELETE(m_controlBoard);
 	if(x_index < 0)
 		return;
 	m_controlBoard = new QControlBoard(m_currentModule, this);
 	mp_mainLayout->addWidget(m_controlBoard, 0);
-	m_controlBoard->updateControl(m_currentModule->GetControlList().at(x_index));
+	map<string, Controller*>::const_iterator it = m_currentModule->GetControlsList().begin();
+	advance(it, x_index);
+	m_controlBoard->updateControl(it->second);
 }
 
 void QModuleViewer::updateStream(Stream * x_outputStream)

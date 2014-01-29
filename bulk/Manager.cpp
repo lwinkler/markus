@@ -32,6 +32,7 @@
 using namespace std;
 
 #include "AllModules.h"
+#include "Controller.h"
 
 	
 #if defined( WIN32 ) && defined( TUNE )
@@ -258,6 +259,12 @@ void Manager::SendCommand(const std::string& x_command, std::string x_value)
 	split(x_command, '.', elems);
 	if(elems.size() != 3)
 		throw MkException("Command must be in format \"module.controller.command\"", LOC);
+	
+	if(elems.at(0) == "manager")
+		;	// manager.GetControlList();
+	else
+		RefModuleByName(elems.at(0)).FindController(elems.at(1))->CallAction(elems.at(2), &x_value);
+	
 }
 
 

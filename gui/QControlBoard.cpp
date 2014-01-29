@@ -65,23 +65,10 @@ void QControlBoard::paintEvent(QPaintEvent * e)
 }
 
 
+/// Update the list of controls associated with the module
 void QControlBoard::updateControl(Controller* x_control)
 {
 	m_currentControl = x_control;
-
-	// ParameterControl   * controlParam = dynamic_cast<ParameterControl*>(x_control);
-	// InputStreamControl * controlInput = dynamic_cast<InputStreamControl*>(x_control);
-
-	
-	// if(controlParam)
-		// controlParam->SetParameterStructure(m_currentModule->RefParameter());
-	/* else if(controlInput)
-	{
-		VideoFileReader * module = dynamic_cast<VideoFileReader*>(m_currentModule);
-		assert(module);
-		controlInput->SetModule(*module);
-	}
-	else assert(false); */
 
 	// Create the control buttons
 	// TODO: remove buttons and delete widgets
@@ -98,25 +85,17 @@ void QControlBoard::updateControl(Controller* x_control)
 	mp_gbControls->setWidgetResizable(true);
 	QGridLayout * vbox = new QGridLayout;
 
-	// Add controls (= parameters)
-	/*int cpt = 0;
-	for(vector<Controller*>::iterator it = RefListControllers().begin() ; it != RefListControllers().end() ; it++)
-	{
-		QLabel * lab = new QLabel((*it)->GetName().c_str());
-		vbox->addWidget(lab, cpt, 0);
-		vbox->addWidget((*it)->RefWidget(), cpt, 1);
-		cpt++;
-	}*/
 	QLabel * lab = new QLabel(x_control->GetName().c_str());
 	vbox->addWidget(lab, 0, 0);
-	vbox->addWidget(x_control->CreateWidget(), 0, 1);
+	QWidget* wid = x_control->CreateWidget();
+	if(wid != NULL)
+		vbox->addWidget(wid, 0, 1);
 
 	QWidget *viewport = new QWidget;
 	viewport->setLayout(vbox);
 	viewport->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 	mp_gbControls->setWidget(viewport);
 
-	//mp_widEmpty->hide();
 	mp_gbControls->show();
 	mp_gbButtons->show();
 }
@@ -129,6 +108,7 @@ void QControlBoard::callAction()
 	map<string, const px_action>::const_iterator it = m_currentControl->GetActions().find(button->text().toStdString());
 	if(it == m_currentControl->GetActions().end())
 		throw MkException("Cannot find action in controller " + button->text().toStdString(), LOC);
+
+	// Call the function pointer associated with the action
 	(*(it->second))(m_currentControl, NULL);
-	// cout<<"Action called "<<button->text().toStdString()<<endl;	
 }
