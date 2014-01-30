@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Evaluation of videos events regarding to the ground truth
+Evaluation of a video events regarding to its ground truth
 
 This python module evaluate a file containing video events in comparison with
 the ground truth of the same video.
