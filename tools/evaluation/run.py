@@ -15,6 +15,9 @@ from time import strftime, localtime
 # Absolute path to markus
 abs_markus = None
 
+# Absolute path to analyse_event.py
+abs_analyse = None
+
 # Original path
 orig_path = None
 
@@ -33,10 +36,12 @@ class Evaluation():
         self.abs_project = os.path.abspath(project)
         self.abs_video = os.path.abspath(video)
         self.eval_name = os.path.basename(video).split('_')[0]
+        self.eval_path = os.path.join(run_path, self.eval_name)
 
     def run(self):
         self._run_markus()
         self._copy_srt()
+        self._run_analyse()
 
     def _run_markus(self):
         # Prepare the command
@@ -44,9 +49,9 @@ class Evaluation():
                self.abs_project,
                '-nc',
                '-pInput.class=VideoFileReader',
-               #'-pInput.file=' + self.abs_video,
+               #'-pInput.file=' + self.abs_video, # TODO
                '-pInput.file=/home/fabien/dev/videoprotector/markus/in/input.mp4',
-               '-o' + os.path.join(run_path, self.eval_name)]
+               '-o' + self.eval_path]
 
         # Run the command
         markus = subprocess.Popen(cmd)
@@ -54,19 +59,29 @@ class Evaluation():
 
     def _copy_srt(self):
         # Get base name
-        base = os.path.splitext(os.path.basename(self.abs_video))[0]
         orig = os.path.splitext(self.abs_video)[0] + '.srt'
-        dest = os.path.join(run_path, self.eval_name, base + '.srt')
-
-        print(orig)
-        print(dest)
+        dest = os.path.join(self.eval_path, 'ground_truth.srt')
 
         # Check if file exist
         if os.path.exists(orig):
             shutil.copy(orig, dest)
 
-def run(test):
-    test.run()
+    def _run_analyse(self):
+        # Python 3 hack
+        if args.python3:
+            cmd = ['python2']
+
+        # Prepare the command
+        cmd += [abs_analyse,
+                os.path.join(self.eval_path, 'event.srt'),
+                os.path.join(self.eval_path, 'ground_truth.srt'),
+                '-V', self.abs_video,
+                '-o', os.path.join(self.eval_name, 'analysis'),
+                '--html',
+                '-i']
+
+        analyse = subprocess.Popen(cmd)
+        analyse.communicate()
 
 
 def arguments_parser():
@@ -86,32 +101,45 @@ def arguments_parser():
                         type=str,
                         help='the path to the videos directory')
 
-    # Video directory
+    # Output directory
     parser.add_argument('-o',
                         type=str,
                         default=None,
                         dest='output',
                         help='output directory')
 
+    # Python3 hack
+    parser.add_argument('-p',
+                        dest='python3',
+                        action='store_true',
+                        help='hack for python3 distributions')
+
     return parser.parse_args()
+
+
+# Dummy function needed to parallelize processes
+def run(test):
+    test.run()
 
 
 def main():
     # Define some global variables
-    global args, orig_path, run_path, abs_markus
+    global args, orig_path, run_path, abs_analyse, abs_markus
 
     # Parse arguments
     args = arguments_parser()
 
     # Register some paths
     orig_path = os.getcwd()
+    abs_analyse = os.path.abspath('./analyse_events.py')
     abs_markus = os.path.abspath('../../markus')
     abs_videos_dir = os.path.abspath(args.VIDEO_DIR)
 
-    # Run path
+    # Define a run path
     if args.output is None:
         run_path = 'run_' + strftime('%Y_%m_%d_%H_%M_%S', localtime())
     else:
+        # If it is precised by the user, use it
         run_path = args.output
 
     # Verify run path and create dir
@@ -122,7 +150,9 @@ def main():
         os.makedirs(run_path)
 
     # Get the files
-    video_names = ['0081_20130821_AxisM3204_P1_anormal_50.mp4']
+    video_names = ['0081_20130821_AxisM3204_P1_anormal_50.mp4',
+                   '0101_20130821_AxisM3204_P3_anormal_50.mp4',
+                   '0111_20130821_AxisM3204_P4_people_crawling.srt']
     video_files = [os.path.join(abs_videos_dir, v) for v in video_names]
 
     # Prepare the evaluations
@@ -130,6 +160,8 @@ def main():
 
     # Define a pool of workers
     pool = Pool(8)
+
+    # Run the evaluations in parallel
     pool.map(run, evals)
 
 
