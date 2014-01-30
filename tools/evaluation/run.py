@@ -6,6 +6,7 @@ Created 2014-01-30 Fabien Dubosson
 """
 
 import os
+import shutil
 import argparse
 import subprocess
 from multiprocessing import Pool
@@ -34,21 +35,35 @@ class Evaluation():
         self.eval_name = os.path.basename(video).split('_')[0]
 
     def run(self):
-        self.run_markus()
+        self._run_markus()
+        self._copy_srt()
 
-    def run_markus(self):
+    def _run_markus(self):
         # Prepare the command
         cmd = [abs_markus,
                self.abs_project,
                '-nc',
                '-pInput.class=VideoFileReader',
-               '-pInput.file=' + self.abs_video,
+               #'-pInput.file=' + self.abs_video,
+               '-pInput.file=/home/fabien/dev/videoprotector/markus/in/input.mp4',
                '-o' + os.path.join(run_path, self.eval_name)]
 
         # Run the command
         markus = subprocess.Popen(cmd)
         markus.communicate()
 
+    def _copy_srt(self):
+        # Get base name
+        base = os.path.splitext(os.path.basename(self.abs_video))[0]
+        orig = os.path.splitext(self.abs_video)[0] + '.srt'
+        dest = os.path.join(run_path, self.eval_name, base + '.srt')
+
+        print(orig)
+        print(dest)
+
+        # Check if file exist
+        if os.path.exists(orig):
+            shutil.copy(orig, dest)
 
 def run(test):
     test.run()
@@ -99,7 +114,7 @@ def main():
     else:
         run_path = args.output
 
-    # Verify run path
+    # Verify run path and create dir
     if os.path.exists(run_path):
         print('Run path already exists')
         exit(1)
