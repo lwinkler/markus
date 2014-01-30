@@ -423,13 +423,6 @@ def arguments_parser():
                         default=None,
                         help='the video file')
 
-    # Screenshot folders
-    parser.add_argument('-S',
-                        dest='SCREEN_DIR',
-                        type=str,
-                        default=None,
-                        help='the directory containing extracted screenshots')
-
     # Delay
     parser.add_argument('-d',
                         dest='delay',
