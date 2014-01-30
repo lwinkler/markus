@@ -15,11 +15,12 @@ TimeTuple = namedtuple("Time", "hours minutes seconds milis")
 class Time:
     """A class reprenseting a Time"""
 
-    def __init__(self, hours=0, minutes=0, seconds=0, milis=0, text=None):
+    def __init__(self, hours=0, minutes=0, seconds=0, milis=0, text=None,
+                 sep=':', sep_ms=','):
         if text:
             # Parse text values
-            h, m, rest = text.split(':')
-            s, ms = rest.split(',')
+            h, m, rest = text.split(sep)
+            s, ms = rest.split(sep_ms)
 
             # Cast values
             hours = int(h)
@@ -51,6 +52,9 @@ class Time:
     def __sub__(self, other):
         return Time(milis=self.milis.__sub__(other.milis))
 
+    def __div__(self, other):
+        return Time(milis=self.milis.__div__(other))
+
     def __repr__(self):
-        fmt = "%02d:%02d:%02d,%03d"
+        fmt = "%02d:%02d:%02d.%03d"
         return fmt % self.toTuple()

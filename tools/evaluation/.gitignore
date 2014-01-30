@@ -1,3 +1,4 @@
 samples/
 *.pyc
 __pycache__
+.ropeproject

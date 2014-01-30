@@ -11,7 +11,7 @@ import sys
 from vplib.time import Time
 from collections import namedtuple
 
-Event = namedtuple('Event', 'time')
+Event = namedtuple('Event', 'id time')
 
 
 def parse(file_path):
@@ -40,7 +40,7 @@ def _parse_lines(lines):
     events = []
 
     # Parse lines
-    for line in lines:
+    for i, line in enumerate(lines):
         # If it is not a line containig an event time
         if '-->' not in line:
             continue
@@ -51,8 +51,10 @@ def _parse_lines(lines):
         # Transform it to time
         time = Time(text=time_text)
 
+        ident = int(lines[i+3].strip().split('\t')[0])
+
         # Prepare the event
-        event = Event(time=time)
+        event = Event(id=ident, time=time)
 
         # Save the event
         events.append(event)
