@@ -51,6 +51,7 @@ class Evaluation():
                '-pInput.class=VideoFileReader',
                #'-pInput.file=' + self.abs_video, # TODO
                '-pInput.file=/home/fabien/dev/videoprotector/markus/in/input.mp4',
+               '-pFileterPython9.script=../../modules2/FilterPython/analyse.py',
                '-o' + self.eval_path]
 
         # Run the command
@@ -76,7 +77,7 @@ class Evaluation():
                 os.path.join(self.eval_path, 'event.srt'),
                 os.path.join(self.eval_path, 'ground_truth.srt'),
                 '-V', self.abs_video,
-                '-o', os.path.join(self.eval_name, 'analysis'),
+                '-o', os.path.join(self.eval_path, 'analysis'),
                 '--html',
                 '-i']
 
@@ -100,6 +101,13 @@ def arguments_parser():
     parser.add_argument('VIDEO_DIR',
                         type=str,
                         help='the path to the videos directory')
+
+    # set file
+    parser.add_argument('-s',
+                        type=str,
+                        default='sets/all.txt',
+                        dest='set',
+                        help='the file listing videos that must be used')
 
     # Output directory
     parser.add_argument('-o',
@@ -149,10 +157,9 @@ def main():
     else:
         os.makedirs(run_path)
 
-    # Get the files
-    video_names = ['0081_20130821_AxisM3204_P1_anormal_50.mp4',
-                   '0101_20130821_AxisM3204_P3_anormal_50.mp4',
-                   '0111_20130821_AxisM3204_P4_people_crawling.srt']
+    # Get the video files
+    with open(args.set, 'r') as f:
+        video_names = f.read().splitlines()
     video_files = [os.path.join(abs_videos_dir, v) for v in video_names]
 
     # Prepare the evaluations

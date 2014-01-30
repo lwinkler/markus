@@ -3,4 +3,4 @@ samples/
 __pycache__
 .ropeproject
 run_*/
-out_latest/
+out_latest
