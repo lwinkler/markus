@@ -87,9 +87,9 @@ void *send_commands(void *x_void_ptr)
 			//if(input == "exit")
 				//break;
 
-			//cin.clear();
+			cin.clear();
 
-			cout << endl;
+			//cout << endl;
 		}
 		catch(std::exception& e)
 		{

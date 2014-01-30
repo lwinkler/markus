@@ -45,6 +45,7 @@ UsbCam::~UsbCam()
 
 void UsbCam::Reset()
 {
+	m_lock.lockForRead(); //TODO remove ?
 	Module::Reset();
 
 	m_capture.release();
@@ -67,6 +68,7 @@ void UsbCam::Reset()
 
 
 	m_frameTimer.Restart();
+	m_lock.unlock(); // TODO remove ?
 }
 
 void UsbCam::Capture()

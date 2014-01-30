@@ -254,7 +254,6 @@ bool Manager::Process()
 /// Send a command
 void Manager::SendCommand(const std::string& x_command, std::string x_value)
 {
-	cout<<"TODO send command to controller"<<endl;
 	vector<string> elems;
 	split(x_command, '.', elems);
 	if(elems.size() != 3)
@@ -264,6 +263,7 @@ void Manager::SendCommand(const std::string& x_command, std::string x_value)
 		;	// manager.GetControlList();
 	else
 		RefModuleByName(elems.at(0)).FindController(elems.at(1))->CallAction(elems.at(2), &x_value);
+	LOG_INFO(m_logger, "Command "<<x_command<<" returned value "<<x_value);
 	
 }
 

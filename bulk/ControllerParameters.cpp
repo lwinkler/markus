@@ -75,7 +75,7 @@ ControllerInt::ControllerInt(ParameterInt& x_param):
 	param(x_param)
 {
 	m_actions.insert(std::make_pair("Set", &setControlledValueInt));
-	m_actions.insert(std::make_pair("GetCurrent", &getCurrentInt));
+	m_actions.insert(std::make_pair("Get", &getCurrentInt));
 	m_actions.insert(std::make_pair("GetDefault", &getDefaultInt));
 }
 
@@ -126,7 +126,7 @@ ControllerDouble::ControllerDouble(ParameterDouble& x_param):
 	param(x_param)
 {
 	m_actions.insert(std::make_pair("Set", &setControlledValueDouble));
-	m_actions.insert(std::make_pair("GetCurrent", &getCurrentDouble));
+	m_actions.insert(std::make_pair("Get", &getCurrentDouble));
 	m_actions.insert(std::make_pair("GetDefault", &getDefaultDouble));
 }
 
@@ -177,7 +177,7 @@ ControllerBool::ControllerBool(ParameterBool& x_param):
 	param(x_param)
 {
 	m_actions.insert(std::make_pair("Set", &setControlledValueBool));
-	m_actions.insert(std::make_pair("GetCurrent", &getCurrentBool));
+	m_actions.insert(std::make_pair("Get", &getCurrentBool));
 	m_actions.insert(std::make_pair("GetDefault", &getDefaultBool));
 }
 
@@ -229,7 +229,7 @@ ControllerString::ControllerString(ParameterString& x_param):
 	param(x_param)
 {
 	m_actions.insert(std::make_pair("Set", &setControlledValueString));
-	m_actions.insert(std::make_pair("GetCurrent", &getCurrentString));
+	m_actions.insert(std::make_pair("Get", &getCurrentString));
 	m_actions.insert(std::make_pair("GetDefault", &getDefaultString));
 }
 
@@ -283,7 +283,7 @@ ControllerFloat::ControllerFloat(ParameterFloat& x_param):
 	param(x_param)
 {
 	m_actions.insert(std::make_pair("Set", &setControlledValueFloat));
-	m_actions.insert(std::make_pair("GetCurrent", &getCurrentFloat));
+	m_actions.insert(std::make_pair("Get", &getCurrentFloat));
 	m_actions.insert(std::make_pair("GetDefault", &getDefaultFloat));
 }
 
@@ -337,7 +337,7 @@ ControllerEnum::ControllerEnum(ParameterEnum& x_param):
 	param(x_param)
 {
 	m_actions.insert(std::make_pair("Set", &setControlledValueEnum));
-	m_actions.insert(std::make_pair("GetCurrent", &getCurrentEnum));
+	m_actions.insert(std::make_pair("Get", &getCurrentEnum));
 	m_actions.insert(std::make_pair("GetDefault", &getDefaultEnum));
 }
 

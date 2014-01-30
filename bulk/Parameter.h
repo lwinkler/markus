@@ -66,7 +66,7 @@ public:
 		m_name(x_name),
 		m_confSource(PARAMCONF_UNSET),
 		m_description(x_description),
-		m_lock(false){}
+		m_isLocked(false){}
 	virtual ~Parameter(){}
 		
 	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) = 0;
@@ -84,15 +84,15 @@ public:
 	virtual void Export(std::ostream& rx_os, int x_indentation) = 0;
 	inline void Lock()
 	{
-		m_lock = true;
+		m_isLocked = true;
 	}
-	inline bool IsLocked() const {return m_lock;}
+	inline bool IsLocked() const {return m_isLocked;}
 
 protected:	
 	const std::string m_name;
 	ParameterConfigType m_confSource;
 	const std::string m_description;
-	bool m_lock;
+	bool m_isLocked;
 };
 
 template<class T> class ParameterT : public Parameter
@@ -112,7 +112,7 @@ public:
 	
 	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
 	{
-		if(m_lock) 
+		if(m_isLocked) 
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		std::istringstream istr(rx_value);
 		istr >> *mp_value; // atof is sensible to locale format and may use , as a separator
@@ -120,7 +120,7 @@ public:
 	}
 	inline void SetValue(T x_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
 	{
-		if(m_lock) 
+		if(m_isLocked) 
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		*mp_value = x_value;
 		m_confSource = x_confType;
@@ -150,7 +150,7 @@ public:
 	}
 	virtual void SetValueToDefault()
 	{
-		if(m_lock) 
+		if(m_isLocked) 
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		*mp_value = m_default;
 		m_confSource = PARAMCONF_DEF;
@@ -187,7 +187,7 @@ public:
 		mp_value(xp_value){}
 	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/)
 	{
-		if(m_lock) 
+		if(m_isLocked) 
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		*mp_value = rx_value;
 		m_confSource = x_confType;
@@ -210,7 +210,7 @@ public:
 	}
 	virtual void SetValueToDefault()
 	{
-		if(m_lock) 
+		if(m_isLocked) 
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		*mp_value = m_default;
 		m_confSource = PARAMCONF_DEF;
@@ -252,7 +252,7 @@ public:
 	virtual void Print(std::ostream& os) const;
 	virtual void SetValueToDefault()
 	{
-		if(m_lock) 
+		if(m_isLocked) 
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		*mp_value = m_default;
 		m_confSource = PARAMCONF_DEF;
