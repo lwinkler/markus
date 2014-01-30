@@ -54,6 +54,7 @@ public:
 	~Manager();
 	void Reset();
 	bool Process();
+	void SendCommand(const std::string& x_command, std::string x_value);
 	// const std::vector<Input*> & GetInputList()  const {return m_inputs; };
 	const std::vector<Module*>& GetModuleList() const {return m_modules; }
 

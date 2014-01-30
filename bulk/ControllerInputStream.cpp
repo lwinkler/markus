@@ -37,8 +37,9 @@ void setCursor(Controller* xp_ctr, string* xp_value)
 	if(xp_value != NULL)
 		ctr->module.SetMsec(PSTR2FLOAT(xp_value));
 #ifndef MARKUS_NO_GUI
-	else
-		ctr->module.SetMsec(ctr->parameterSlider->GetValue());
+	else ctr->module.SetMsec(ctr->parameterSlider->GetValue());
+#else
+	else throw MkException("This function can only be called with a GUI or along with a string pointer for input/output", LOC);
 #endif
 }
 
@@ -47,9 +48,13 @@ void getCursor(Controller* xp_ctr, string* xp_value)
 	InputStreamControl* ctr = dynamic_cast<InputStreamControl*>(xp_ctr);
 	assert(ctr != NULL);
 	if(xp_value != NULL)
+	{
 		FLOAT2PSTR(ctr->module.GetMsec(), xp_value);
+	}
 #ifndef MARKUS_NO_GUI
-	ctr->parameterSlider->SetValue(ctr->module.GetMsec());
+	else ctr->parameterSlider->SetValue(ctr->module.GetMsec());
+#else
+	else throw MkException("This function can only be called with a GUI or along with a string pointer for input/output", LOC);
 #endif
 }
 

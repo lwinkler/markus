@@ -59,13 +59,13 @@ void printStatistics(Controller* xp_ctr, string* xp_value)
 
 
 ControllerModule::ControllerModule(Module& rx_module) :
-	Controller("Module"),
+	Controller("main"),
 	module(rx_module)
 {
-	m_actions.insert(std::make_pair("Reset",   &reset));
-	m_actions.insert(std::make_pair("Pause",   &pauseModule));
-	m_actions.insert(std::make_pair("Unpause",   &unpauseModule));
-	m_actions.insert(std::make_pair("Print statistics",   &printStatistics));
+	m_actions.insert(std::make_pair("Reset",           &reset));
+	m_actions.insert(std::make_pair("Pause",           &pauseModule));
+	m_actions.insert(std::make_pair("Unpause",         &unpauseModule));
+	m_actions.insert(std::make_pair("PrintStatistics", &printStatistics));
 }
 
 QWidget* ControllerModule::CreateWidget()

@@ -50,6 +50,7 @@ public:
 	virtual QWidget* CreateWidget() = 0;
 	const std::string& GetName() {return m_name;};
 	const std::map<std::string, const px_action>& GetActions() {return m_actions;}
+	const void CallAction(const std::string& x_name, std::string* xp_value);
 	
 protected:
 	// QWidget * m_widget;

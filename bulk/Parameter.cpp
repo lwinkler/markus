@@ -235,7 +235,7 @@ ParameterImageType::ParameterImageType(const std::string& x_name, int x_default,
 
 void ParameterEnum::SetValue(const std::string& rx_value, ParameterConfigType x_confType)
 {
-	if(m_lock) 
+	if(m_isLocked) 
 		throw MkException("You tried to set the value of a locked parameter.", LOC);
 	*mp_value = Str2Int(rx_value);
 	m_confSource = x_confType;
@@ -243,7 +243,7 @@ void ParameterEnum::SetValue(const std::string& rx_value, ParameterConfigType x_
 
 void ParameterEnum::SetValue(int rx_value, ParameterConfigType x_confType)
 {
-	if(m_lock) 
+	if(m_isLocked) 
 		throw MkException("You tried to set the value of a locked parameter.", LOC);
 	*mp_value = rx_value;
 	m_confSource = x_confType;

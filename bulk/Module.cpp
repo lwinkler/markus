@@ -92,37 +92,39 @@ void Module::Reset()
 	if(m_controls.size() == 0)
 	{
 		// Add module controller
-		m_controls.push_back(new ControllerModule(*this));
+		Controller* ctr = new ControllerModule(*this);
+		m_controls.insert(std::make_pair(ctr->GetName(), ctr));
 
 		for(vector<Parameter*>::const_iterator it = list.begin(); it != list.end(); it++)
 		{
 			if((*it)->IsLocked())
 				continue;
-			Controller * ctrr = NULL;
+			ctr = NULL;
 			switch((*it)->GetType())
 			{
 				case PARAM_BOOL:
-					ctrr = new ControllerBool(*dynamic_cast<ParameterBool*>(*it));
+					ctr = new ControllerBool(*dynamic_cast<ParameterBool*>(*it));
 					break;
 				case PARAM_DOUBLE:
-					ctrr = new ControllerDouble(*dynamic_cast<ParameterDouble*>(*it));
+					ctr = new ControllerDouble(*dynamic_cast<ParameterDouble*>(*it));
 					break;
 				case PARAM_FLOAT:
-					ctrr = new ControllerFloat(*dynamic_cast<ParameterFloat*>(*it));
+					ctr = new ControllerFloat(*dynamic_cast<ParameterFloat*>(*it));
 					break;
 				case PARAM_IMAGE_TYPE:
-					ctrr = new ControllerEnum(*dynamic_cast<ParameterEnum*>(*it)); 
+					ctr = new ControllerEnum(*dynamic_cast<ParameterEnum*>(*it)); 
 					break;
 				case PARAM_INT:
-					ctrr = new ControllerInt(*dynamic_cast<ParameterInt*>(*it));
+					ctr = new ControllerInt(*dynamic_cast<ParameterInt*>(*it));
 					break;
 				case PARAM_STR:
-					ctrr = new ControllerString(*dynamic_cast<ParameterString*>(*it));
+					ctr = new ControllerString(*dynamic_cast<ParameterString*>(*it));
 					break;
 			}
-			if(ctrr == NULL)
+			if(ctr == NULL)
 				throw MkException("Controller creation failed", LOC);
-			else m_controls.push_back(ctrr);
+			// else m_controls.push_back(ctr);
+			else m_controls.insert(make_pair(ctr->GetName(), ctr));
 		}
 	}
 #endif
@@ -185,8 +187,8 @@ Module::~Module()
 		delete(*it);
 #endif
 #ifndef MARKUS_NO_GUI
-	for(std::vector<Controller* >::iterator it = m_controls.begin() ; it != m_controls.end() ; it++)
-		delete(*it);
+	for(std::map<string, Controller* >::iterator it = m_controls.begin() ; it != m_controls.end() ; it++)
+		delete(it->second);
 #endif
 
 	if(m_moduleTimer)
@@ -354,3 +356,16 @@ void Module::SetAsReady()
 		(*it)->SetAsReady();
 	}
 }
+
+/// find a controller in map by name
+Controller* Module::FindController(const std::string& x_name) const
+{
+	map<string, Controller*>::const_iterator it = m_controls.find(x_name);
+	if(it == m_controls.end())
+		throw MkException("Cannot find controller in module", LOC);
+
+	// Call the function pointer associated with the action
+	return it->second;
+}
+
+

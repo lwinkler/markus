@@ -89,7 +89,8 @@ public:
 	const std::vector<Stream*>& GetInputStreamList() const {return m_inputStreams;}
 	const std::vector<Stream*>& GetOutputStreamList() const {return m_outputStreams;}
 	const std::vector<Stream*>& GetDebugStreamList() const {return m_debugStreams;}
-	const std::vector<Controller*>& GetControlList() const {return m_controls;}
+	const std::map<std::string, Controller*>& GetControlsList() const {return m_controls;}
+	Controller* FindController(const std::string& x_name) const;
 	
 	inline int GetWidth() {return RefParameter().width;}
 	inline int GetHeight(){return RefParameter().height;}
@@ -133,7 +134,7 @@ protected:
 	std::vector<Stream *> m_outputStreams;
 	std::vector<Stream *> m_debugStreams;	
 
-	std::vector<Controller*> m_controls;
+	std::map<std::string, Controller*> m_controls;
 	std::string m_name;
 	std::string m_description; 
 	int m_id;

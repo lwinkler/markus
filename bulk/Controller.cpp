@@ -37,3 +37,16 @@ Controller::~Controller()
 	// if(m_widget != NULL) delete m_widget; // no need to delete
 }
 
+/// find a controller in map by name
+const void Controller::CallAction(const std::string& x_name, std::string* xp_value)
+{
+	map<string, const px_action>::const_iterator it = m_actions.find(x_name);
+	if(it == m_actions.end())
+		throw MkException("Cannot find action in controller", LOC);
+
+	// Call the function pointer associated with the action
+	it->second;
+	(*(it->second))(this, xp_value);
+}
+
+

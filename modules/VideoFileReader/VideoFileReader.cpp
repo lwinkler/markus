@@ -47,10 +47,12 @@ VideoFileReader::~VideoFileReader()
 
 void VideoFileReader::Reset()
 {
+	m_lock.lockForRead(); // TODO remove ?
 	Module::Reset();
 #ifndef MARKUS_NO_GUI
 	// Add a new control to play forward and rewind
-	m_controls.push_back(new InputStreamControl(*this));
+	Controller* ctr = new InputStreamControl(*this);
+	m_controls.insert(make_pair(ctr->GetName(), ctr)); // TODO: only once 
 #endif
 
 	m_capture.release();
@@ -71,6 +73,8 @@ void VideoFileReader::Reset()
 	// note on the next line: the image will be overloaded but the properties are used to set the input ratio, the type is probably ignored
 	delete m_output;
 	m_output = new Mat(Size(m_capture.get(CV_CAP_PROP_FRAME_WIDTH), m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)), m_param.type);
+
+	m_lock.unlock(); // TODO remove ?
 }
 
 void VideoFileReader::Capture()
