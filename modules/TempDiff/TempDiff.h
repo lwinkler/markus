@@ -59,6 +59,7 @@ protected:
 	cv::Mat m_output;
 	cv::Mat m_lastImg;
 	cv::Mat m_temporalDiff;
+	cv::Mat* m_tmp;
 	bool m_emptyTemporalDiff;
 };
 

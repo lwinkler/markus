@@ -39,7 +39,7 @@ TempDiff::TempDiff(const ConfigReader& x_configReader) :
 	m_temporalDiff(Size(m_param.width, m_param.height), CV_8UC1)
 {
 	m_description = "Perform temporal differencing: compare frame with previous frame by subtraction";
-
+	m_tmp = NULL;
 	
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,             "Video input"));
 	m_outputStreams.push_back(new StreamImage(0, "temp_diff", m_temporalDiff, *this, "Temporal difference"));
@@ -49,11 +49,14 @@ TempDiff::TempDiff(const ConfigReader& x_configReader) :
 
 TempDiff::~TempDiff(void )
 {
+	CLEAN_DELETE(m_tmp);
 }
 
 void TempDiff::Reset()
 {
 	Module::Reset();
+	CLEAN_DELETE(m_tmp);
+	m_tmp = new Mat(Size(m_input.cols, m_input.rows), m_input.depth(), m_input.channels());
 	m_emptyTemporalDiff = true;
 }
 
@@ -67,11 +70,9 @@ void TempDiff::ProcessFrame()
 	}
 	else 
 	{
-		static Mat* tmp = new Mat(Size(m_input.cols, m_input.rows), m_input.depth(), m_input.channels());
-	
-		subtract(m_input, m_lastImg, *tmp);
-		absdiff(m_input,  m_lastImg, *tmp);
-		adjustChannels(*tmp, m_temporalDiff); // TODO do not use pointer
+		subtract(m_input, m_lastImg, *m_tmp);
+		absdiff(m_input,  m_lastImg, *m_tmp);
+		adjustChannels(*m_tmp, m_temporalDiff); // TODO do not use pointer
 		
 		m_input.copyTo(m_lastImg);
 	}
