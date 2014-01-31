@@ -49,7 +49,7 @@ string Manager::m_configFile;
 string Manager::m_outputDir;
 
 
-Manager::Manager(ConfigReader& x_configReader, bool x_centralized) : 
+Manager::Manager(const ConfigReader& x_configReader, bool x_centralized) : 
 	Configurable(x_configReader),
 	m_param(m_configReader, "Manager"),
 	m_centralized(x_centralized)
@@ -214,7 +214,7 @@ bool Manager::Process()
 		}*/
 		catch(EndOfStreamException& e)
 		{
-			LOG_WARN(m_logger, (*it)->GetName() << ": Exception raised (EndOfStream) : " << e.what());
+			LOG_INFO(m_logger, (*it)->GetName() << ": Exception raised (EndOfStream) : " << e.what());
 
 			// test if all inputs are over
 			if(EndOfAllStreams())

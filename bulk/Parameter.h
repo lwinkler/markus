@@ -31,6 +31,7 @@
 #include <cstdlib>
 */
 #include "util.h"
+#include "ConfigReader.h"
 #include "MkException.h"
 
 enum ParameterType
@@ -322,7 +323,7 @@ public:
 	
 protected:
 	std::vector<Parameter*> m_list;
-	const ConfigReader& m_configReader;
+	const ConfigReader m_configReader; // Warning this still contains reference to the tinyxml config!
 	std::string m_objectName;
 };
 

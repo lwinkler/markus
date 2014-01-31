@@ -30,7 +30,7 @@ using namespace cv;
 
 UsbCam::UsbCam(const ConfigReader& x_configReader): 
 	Input(x_configReader),
-	m_param(x_configReader)
+    m_param(x_configReader)
 {
 	m_timeStamp = TIME_STAMP_INITIAL;
 	

@@ -50,7 +50,7 @@ public:
 class Manager : public Configurable
 {
 public:
-	Manager(ConfigReader & x_configReader, bool x_centralized);
+	Manager(const ConfigReader & x_configReader, bool x_centralized);
 	~Manager();
 	void Reset();
 	bool Process();

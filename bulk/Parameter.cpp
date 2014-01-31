@@ -51,7 +51,7 @@ template<> const std::string ParameterT<double>::m_typeStr = "double";
 
 /// Parent for all parameter structures
 ParameterStructure::ParameterStructure(const ConfigReader& x_configReader):
-	m_configReader(x_configReader)
+    m_configReader(x_configReader)
 {
 	m_objectName = m_configReader.GetAttribute("name");
 }
@@ -167,7 +167,7 @@ void ParameterStructure::SetValueToDefault()
 void ParameterStructure::CheckRange() const
 {
 	// Check that all parameters in config are related to the module
-	ConfigReader conf = m_configReader.GetSubConfig("parameters");
+	ConfigReader conf = m_configReader.GetSubConfig("parameters"); // TODO: Should be directly selected at construction ?
 	if(conf.IsEmpty())
 		return;
 	conf = conf.GetSubConfig("param");
