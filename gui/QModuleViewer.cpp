@@ -159,8 +159,8 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 	
 	//if(m_img_output != NULL) delete(m_img_output);
 	//if(m_img_original != NULL)  delete(m_img_original); 
-	m_img_output = Mat(); //TODO keep this ?
-	m_img_original = Mat();
+	m_img_output   = NULL;
+	m_img_original = NULL;
 	
 	if(m_img_tmp1 != NULL) delete(m_img_tmp1);
 	if(m_img_tmp2 != NULL) delete(m_img_tmp2);
@@ -181,7 +181,7 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 		
 		m_currentStream->RenderTo(m_img_original);
 		
-		adjust(m_img_original, m_img_output, m_img_tmp1, m_img_tmp2);
+		adjust(*m_img_original, *m_img_output, m_img_tmp1, m_img_tmp2);
 
 		ConvertMat2QImage(m_img_output, &m_image);
 		

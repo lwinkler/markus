@@ -44,7 +44,7 @@ protected:
 	cv::Mat &  m_image;
 	cv::Mat * m_img_tmp1; // To convert the input
 	cv::Mat * m_img_tmp2;
-	const cv::Mat m_img_input;
+	cv::Mat m_img_input;
 
 private:
 	StreamImage& operator=(const StreamImage&);
