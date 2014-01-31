@@ -125,6 +125,7 @@ protected:
 	TIME_STAMP m_currentTimeStamp;  // time stamp of the current input
 	bool m_pause;
 	bool m_isReady;
+	bool m_unsyncWarning;
 	
 	virtual void ProcessFrame() = 0;
 	inline virtual bool IsInputProcessed() const {return true;}

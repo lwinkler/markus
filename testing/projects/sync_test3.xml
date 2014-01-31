@@ -33,7 +33,6 @@
 </outputs>
 <parameters>
 <param name="class">TempDiff</param>
-<param name="adsf">TempDiff</param>
 </parameters>
 <uiobject x="735" y="314" width="0" height="0"/>
 </module>

@@ -53,6 +53,7 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_currentTimeStamp     = TIME_STAMP_INITIAL;
 	m_pause                = false;
 	m_isReady              = false;
+	m_unsyncWarning        = true;
 
 	m_moduleTimer = NULL;
 }
@@ -62,7 +63,6 @@ void Module::Reset()
 	// Lock the parameters that cannot be changed
 	ModuleParameterStructure& param(RefParameter());
 	param.PrintParameters(m_logger);
-	// param.SetFromConfig(); // TODO remove
 	param.CheckRange();
 
 	// Add the module timer (only works with QT)
@@ -210,12 +210,15 @@ void Module::Process()
 	if(m_inputStreams.size() >= 1)
 	{
 		m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected();
-		if(! param.allowUnsyncInput)
+		if(! param.allowUnsyncInput && ! m_unsyncWarning)
 			for(unsigned int i = 1 ; i < m_inputStreams.size() ; i++)
 			{
 				Stream& stream(*m_inputStreams.at(i));
 				if(stream.IsConnected() && stream.GetTimeStampConnected() != m_currentTimeStamp)
+				{
 					LOG_WARN(m_logger, "Input stream id="<<i<<" is not in sync with input stream id=0 for module "<<GetName()<<". If this is acceptable set parameter allow_unsync_input=1 for this module. To fix this problem cleanly you should probably set parameters auto_process=0 and fps=0 for the modules located between the input and module "<<GetName()<<".");
+					m_unsyncWarning = false;
+				}
 			}
 	}
 	else if(! param.autoProcess)
