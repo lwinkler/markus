@@ -210,7 +210,7 @@ void Module::Process()
 	if(m_inputStreams.size() >= 1)
 	{
 		m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected();
-		if(! param.allowUnsyncInput && ! m_unsyncWarning)
+		if(! param.allowUnsyncInput && m_unsyncWarning)
 			for(unsigned int i = 1 ; i < m_inputStreams.size() ; i++)
 			{
 				Stream& stream(*m_inputStreams.at(i));

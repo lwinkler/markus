@@ -411,7 +411,7 @@ var xmlProject = null;
 					// create the window representing the module
 					index = parseInt($(this).attr('id'));
 					createModuleWindow($(this), index, $(this).find('uiobject'));
-					console.log(index + " " + maxIdModules)
+					// console.log(index + " " + maxIdModules)
 					if(index >= maxIdModules)
 						maxIdModules = index + 1;
 				});
