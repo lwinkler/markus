@@ -65,7 +65,7 @@ public:
 
 protected:
 	cv::VideoCapture m_capture;
-	cv::Mat * m_output;
+	cv::Mat m_output;
 	// int m_fps;
 	void GetProperties();
 

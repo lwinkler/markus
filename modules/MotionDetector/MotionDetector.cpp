@@ -112,7 +112,7 @@ void MotionDetector::ProcessFrame()
 	// Move the left boundary to the right
 	//*m_debug = Scalar::all(0);
 	m_debug->adjustROI(0, 0, 0, -1);
-	crop.copyTo(*m_debug);
+	crop.copyTo(*m_debug); // TODO: warning valgrind : Source and destination overlap in memcpy
 	m_debug->adjustROI(0, 0, 0, 1);
 #endif
 }
