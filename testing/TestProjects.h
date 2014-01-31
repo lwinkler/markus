@@ -49,6 +49,7 @@ class TestProjects : public CppUnit::TestFixture
 
 	void runConfig(const std::string& x_configFile)
 	{
+		LOG_INFO(Manager::Logger(), "Unit test with configuration "<<x_configFile);
 		ConfigReader mainConfig(x_configFile);
 		mainConfig.Validate();
 		ConfigReader appConfig = mainConfig.GetSubConfig("application");

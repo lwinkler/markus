@@ -100,7 +100,7 @@ void ParameterStructure::SetFromConfig()
 		}
 		catch(...)
 		{
-			LOG_WARN(Manager::Logger(), "Unknown parameter in configuration: "<<name<<" in module "<<m_objectName); // TODO: avoid this warning in parent
+			// LOG_WARN(Manager::Logger(), "Unknown parameter in configuration: "<<name<<" in module "<<m_objectName); // TODO: avoid this warning in parent
 		}
 		conf = conf.NextSubConfig("param");
 	}
@@ -122,12 +122,26 @@ void ParameterStructure::SetValueByName(const string& x_name, const string& x_va
 	cout<<("Warning : Parameter not found in list (by name) : " + x_name)<<endl;
 }*/
 
+/// Get the parameter by name
+const Parameter& ParameterStructure::GetParameterByName(const std::string& x_name) const
+{
+	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
+	{
+		if((*it)->GetName().compare(x_name) == 0)
+		{
+			return **it;
+		}
+	}
+	
+	throw MkException("Parameter not found in list (by name) : " + x_name, LOC);
+}
+
 /// Get the reference to a parameter by name
 Parameter& ParameterStructure::RefParameterByName(const std::string& x_name)
 {
 	for(vector<Parameter*>::iterator it = m_list.begin(); it != m_list.end(); it++)
 	{
-		if((*it)->GetName().compare(x_name) == 0)//(!strcmp(it->m_name, x_name))
+		if((*it)->GetName().compare(x_name) == 0)
 		{
 			return **it;
 		}
@@ -152,6 +166,28 @@ void ParameterStructure::SetValueToDefault()
 
 void ParameterStructure::CheckRange() const
 {
+	// Check that all parameters in config are related to the module
+	ConfigReader conf = m_configReader.GetSubConfig("parameters");
+	if(conf.IsEmpty())
+		return;
+	conf = conf.GetSubConfig("param");
+	while(!conf.IsEmpty())
+	{
+		string name = conf.GetAttribute("name");
+
+		try
+		{
+			GetParameterByName(name);
+		}
+		catch(...)
+		{
+			LOG_WARN(Manager::Logger(), "Unknown parameter in configuration: "<<name<<" in module "<<m_objectName);
+		}
+		conf = conf.NextSubConfig("param");
+	}
+
+
+	// Check that each parameter's value is within range
 	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
 	{
 		if(!(*it)->CheckRange())

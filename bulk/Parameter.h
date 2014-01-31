@@ -317,6 +317,7 @@ public:
 	void PrintParameters(log4cxx::LoggerPtr& x_logger) const;
 	//void SetValueByName(const std::string& x_name, const std::string& x_value, ParameterConfigType x_configType = PARAMCONF_UNKNOWN);
 	Parameter & RefParameterByName(const std::string& x_name);
+	const Parameter & GetParameterByName(const std::string& x_name) const;
 	const std::vector<Parameter*>& GetList() const {return m_list;}
 	
 protected:

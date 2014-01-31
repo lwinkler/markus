@@ -62,6 +62,7 @@ void Module::Reset()
 	// Lock the parameters that cannot be changed
 	ModuleParameterStructure& param(RefParameter());
 	param.PrintParameters(m_logger);
+	// param.SetFromConfig(); // TODO remove
 	param.CheckRange();
 
 	// Add the module timer (only works with QT)

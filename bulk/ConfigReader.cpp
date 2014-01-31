@@ -51,6 +51,8 @@ ConfigReader::ConfigReader(TiXmlNode * xp_node)
 ConfigReader::~ConfigReader()
 {
 	delete mp_doc;
+	mp_doc = NULL;
+	mp_node = NULL;
 };
 
 /// Return a config objects that points to the sub element of configuration

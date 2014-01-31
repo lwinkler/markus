@@ -74,11 +74,12 @@ class ConfigReaderTest : public CppUnit::TestFixture
 		CPPUNIT_ASSERT(atoi(param1.GetAttribute("id").c_str()) == 0);
 		CPPUNIT_ASSERT(param1.GetAttribute("name") == "param_text");
 
-		m_conf1->SaveToFile("testing/config1_copy.xml");
+		m_conf1->SaveToFile("testing/tmp/config1_copy.xml");
 		m_conf1->Validate();
 
+		// Compare with the initial config
 		// note: this is kind of hackish ... can you find a better way :-)
-		SYSTEM("diff testing/config1.xml testing/config1_copy.xml | xargs -i{} ERROR_non_identical_files");
+		SYSTEM("diff testing/config1.xml testing/tmp/config1_copy.xml | xargs -i{} ERROR_non_identical_files");
 	}
 
 	/// Generate a config from an empty file and test
