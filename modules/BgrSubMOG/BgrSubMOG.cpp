@@ -33,13 +33,13 @@ using namespace std;
 
 BgrSubMOG::BgrSubMOG(const ConfigReader& x_configReader) :
 	Module(x_configReader),
-	m_param(x_configReader)
+	m_param(x_configReader),
+	m_input(Size(m_param.width, m_param.height), m_param.type),
+	m_foreground(Size(m_param.width, m_param.height), CV_8UC1),
+	m_background(Size(m_param.width, m_param.height), m_param.type)
 {
 	mp_mog = NULL;
 	m_description = "Perform background subtraction via Mixtures Of Gaussians";
-	m_input       = new Mat(Size(m_param.width, m_param.height), m_param.type);
-	m_background  = new Mat(Size(m_param.width, m_param.height), m_param.type);
-	m_foreground  = new Mat(Size(m_param.width, m_param.height), CV_8UC1);
 	
 	m_inputStreams.push_back(new StreamImage(0, "input",       m_input,      *this,   "Video input"));
 
@@ -53,9 +53,6 @@ BgrSubMOG::BgrSubMOG(const ConfigReader& x_configReader) :
 
 BgrSubMOG::~BgrSubMOG()
 {
-	delete(m_input);
-	delete(m_background);
-	delete(m_foreground);
 }
 
 void BgrSubMOG::Reset()
@@ -64,12 +61,12 @@ void BgrSubMOG::Reset()
 	if(mp_mog == NULL)
 		delete mp_mog;
 	mp_mog = new BackgroundSubtractorMOG(m_param.history, m_param.nmixtures, m_param.backgroundRatio, m_param.noiseSigma);
-	mp_mog->initialize(m_input->size(), m_input->type());
+	mp_mog->initialize(m_input.size(), m_input.type());
 }
 
 void BgrSubMOG::ProcessFrame()
 {
-	mp_mog->operator ()(*m_input, *m_foreground , m_param.learningRate);
-	mp_mog->getBackgroundImage(*m_background);
+	mp_mog->operator ()(m_input, m_foreground , m_param.learningRate);
+	mp_mog->getBackgroundImage(m_background);
 };
 

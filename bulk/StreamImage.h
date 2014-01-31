@@ -31,20 +31,20 @@
 class StreamImage : public Stream
 {
 public:
-	StreamImage(int x_id, const std::string& x_name, cv::Mat* x_image, Module& rx_module, const std::string& rx_description);
+	StreamImage(int x_id, const std::string& x_name, cv::Mat& x_image, Module& rx_module, const std::string& rx_description);
 	~StreamImage();
-	const cv::Mat& GetImageRef() const {return m_image;}
+	const cv::Mat& GetImageRef() const {return *m_image;}
 	
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat * xp_output) const;
 	inline virtual const std::string GetTypeString()const {return "Image";}
-	const cv::Mat& GetImage() const {return m_image;}
+	const cv::Mat& GetImage() const {return *m_image;}
 	void Connect(Stream * x_stream);
 protected:
-	cv::Mat &  m_image;
-	cv::Mat * m_img_tmp1; // To convert the input
-	cv::Mat * m_img_tmp2;
-	cv::Mat m_img_input;
+	cv::Mat* m_image;
+	const cv::Mat* m_img_input;
+	cv::Mat * mp_img_tmp1; // To convert the input
+	cv::Mat * mp_img_tmp2;
 
 private:
 	StreamImage& operator=(const StreamImage&);

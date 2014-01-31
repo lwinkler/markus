@@ -53,18 +53,17 @@ public:
 	
 	virtual void ProcessFrame();
 	void Reset();
-		
-protected:
-	cv::Mat * m_input;
-	cv::Mat * m_output;
-	cv::Mat m_element;
-
-	// Background subtraction	
-	cv::Mat* m_foreground;
-
 private:
 	MorphParameterStructure m_param;
 	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
+protected:
+	cv::Mat m_input;
+	cv::Mat m_output;
+	cv::Mat m_element;
+
+	// Background subtraction	
+	cv::Mat m_foreground;
+
 };
 
 

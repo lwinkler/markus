@@ -97,16 +97,6 @@ protected:
 
 class HOGDetector : public ModuleAsync
 {
-protected:
-	
-	std::vector<Object> m_detectedObjects;
-	cv::Mat * m_input;
-	cv::Mat * m_lastInput; // This is used by the thread
-#ifdef MARKUS_DEBUG_STREAMS
-	cv::Mat * m_debug;
-#endif
-	
-	HOGDetectionThread m_thread;
 public:
 	HOGDetector(const ConfigReader& x_configReader);
 	~HOGDetector(void);
@@ -117,13 +107,19 @@ public:
 	virtual void CopyResults();
 	void Reset();
 
-protected:
-	virtual const QThread & GetRefThread(){return m_thread;};
-
 private:
 	HOGDetectorParameterStructure m_param;
 	inline virtual HOGDetectorParameterStructure& RefParameter() { return m_param;};
-
+protected:
+	std::vector<Object> m_detectedObjects;
+	cv::Mat m_input;
+	cv::Mat m_lastInput; // This is used by the thread
+#ifdef MARKUS_DEBUG_STREAMS
+	cv::Mat m_debug;
+#endif
+	
+	HOGDetectionThread m_thread;
+	virtual const QThread & GetRefThread(){return m_thread;};
 };
 
 #endif

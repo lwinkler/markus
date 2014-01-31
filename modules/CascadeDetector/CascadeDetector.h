@@ -98,15 +98,6 @@ protected:
 
 class CascadeDetector : public ModuleAsync
 {
-protected:
-	std::vector<Object> m_detectedObjects;
-	cv::Mat * m_input;
-	cv::Mat * m_lastInput;
-#ifdef MARKUS_DEBUG_STREAMS
-	cv::Mat * m_debug;
-#endif
-	
-	DetectionThread m_thread;
 public:
 	CascadeDetector(const ConfigReader& x_configReader);
 	~CascadeDetector(void);
@@ -116,13 +107,18 @@ public:
 	virtual void NormalProcess();
 	virtual void CopyResults();
 	void Reset();
-
-protected:
-	virtual const QThread & GetRefThread(){return m_thread;};
-
 private:
 	CascadeDetectorParameterStructure m_param;
 	inline virtual CascadeDetectorParameterStructure& RefParameter() { return m_param;};
+protected:
+	std::vector<Object> m_detectedObjects;
+	cv::Mat m_input;
+	cv::Mat m_lastInput;
+#ifdef MARKUS_DEBUG_STREAMS
+	cv::Mat m_debug;
+#endif
+	DetectionThread m_thread;
+	virtual const QThread & GetRefThread(){return m_thread;};
 };
 
 #endif

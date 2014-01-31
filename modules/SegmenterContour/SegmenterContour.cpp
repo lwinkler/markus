@@ -34,20 +34,20 @@ using namespace cv;
 
 SegmenterContour::SegmenterContour(const ConfigReader& x_configReader) :
 	Module(x_configReader),
+	m_param(x_configReader),
 	m_rng(12345),
-	m_param(x_configReader)
+	m_input(Size(m_param.width, m_param.height), m_param.type),
+	m_debug(Size(m_param.width, m_param.height), CV_8UC3)
 {
 	m_description = "Segments a binary image and outputs a stream of objects (with OpenCV contour) and extracts their features (position, width and height)";
-	m_input = new Mat(Size(m_param.width, m_param.height), m_param.type);
 
 	// Initialize inputs and outputs streams
-	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,	"Input binary stream"));
+	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,	"Input binary stream")); // TODO
 
 	m_outputObjectStream = new StreamObject(0, "segmented", m_regions, *this,	"Segmented objects");
 	m_outputStreams.push_back(m_outputObjectStream);
 
 #ifdef MARKUS_DEBUG_STREAMS
-	m_debug = new Mat(Size(m_param.width, m_param.height), CV_8UC3);
 	m_debugStreams.push_back(new StreamDebug(0, "blobs", m_debug, *this,	"Blobs"));
 #endif
 
@@ -58,10 +58,6 @@ SegmenterContour::SegmenterContour(const ConfigReader& x_configReader) :
 
 SegmenterContour::~SegmenterContour()
 {
-	delete(m_input);
-#ifdef MARKUS_DEBUG_STREAMS
-	delete(m_debug);
-#endif
 }
 
 void SegmenterContour::Reset()
@@ -79,15 +75,15 @@ void SegmenterContour::ProcessFrame()
 	/// Detect edges using Threshold
 	// threshold(m_input, threshold_output, thresh, 255, THRESH_BINARY);
 	/// Find contours
-	findContours(*m_input, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+	findContours(m_input, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
 
 
 	m_regions.clear();
 #ifdef MARKUS_DEBUG_STREAMS
-	m_debug->setTo(0);
+	m_debug.setTo(0);
 #endif
-	const double diagonal = sqrt(m_input->rows * m_input->rows + m_input->cols * m_input->cols);
-	const double fullArea = m_input->rows * m_input->cols;
+	const double diagonal = sqrt(m_input.rows * m_input.rows + m_input.cols * m_input.cols);
+	const double fullArea = m_input.rows * m_input.cols;
 
 
 	/// Extract features
@@ -105,7 +101,7 @@ void SegmenterContour::ProcessFrame()
 			// contour
 #ifdef MARKUS_DEBUG_STREAMS
 			Scalar color = Scalar(m_rng.uniform(0, 255), m_rng.uniform(0,255), m_rng.uniform(0,255));
-			drawContours(*m_debug, contours, i, color, 1, 8, vector<Vec4i>(), 0, Point());
+			drawContours(m_debug, contours, i, color, 1, 8, vector<Vec4i>(), 0, Point());
 #endif
 
 
@@ -156,8 +152,8 @@ void SegmenterContour::ProcessFrame()
 			// ellipse
 			if(m_computeFitEllipse && minEllipse.size.width != 0
 					&& minEllipse.center.x > 0 && minEllipse.center.y > 0
-					&& minEllipse.center.x < m_debug->cols && minEllipse.center.y < m_debug->rows) // note: extra conditions are present to avoid a segfault
-				ellipse(*m_debug, minEllipse, color, 2, 8);
+					&& minEllipse.center.x < m_debug.cols && minEllipse.center.y < m_debug.rows) // note: extra conditions are present to avoid a segfault
+				ellipse(m_debug, minEllipse, color, 2, 8);
 #endif
 			// rotated rectangle
 			/*Point2f rect_points[4]; minRect[i].points(rect_points);

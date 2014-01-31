@@ -26,12 +26,11 @@
 
 using namespace std;
 
-StreamDebug::StreamDebug(int x_id, const std::string& x_name, cv::Mat * x_image, Module& rx_module, const string& rx_description) : 
+StreamDebug::StreamDebug(int x_id, const std::string& x_name, cv::Mat& x_image, Module& rx_module, const string& rx_description) : 
 	Stream(x_id, x_name, rx_module, rx_description),
 	m_image(x_image)
 {
-	assert(x_image->cols == rx_module.GetWidth() && x_image->rows == rx_module.GetHeight());
-	assert(x_image != NULL);
+	assert(x_image.cols == rx_module.GetWidth() && x_image.rows == rx_module.GetHeight());
 }
 
 
@@ -45,9 +44,9 @@ void StreamDebug::ConvertInput()
 	assert(false); // Should not be used
 }
 
-void StreamDebug::RenderTo(cv::Mat * xp_output) const
+void StreamDebug::RenderTo(cv::Mat * xp_output) const // TODO use ref
 {
-	m_image->copyTo(*xp_output);
+	m_image.copyTo(*xp_output);
 }
 
 #endif

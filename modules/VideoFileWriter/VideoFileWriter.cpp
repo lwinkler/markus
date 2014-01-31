@@ -31,13 +31,13 @@ using namespace cv;
 
 VideoFileWriter::VideoFileWriter(const ConfigReader& x_configReader): 
 	Module(x_configReader),
-	m_param(x_configReader)
+	m_param(x_configReader),
+	m_input(Size(m_param.width, m_param.height), m_param.type)
 {
 	m_description = "Write output to a video file.";
 
-	m_input    = new Mat(Size(m_param.width, m_param.height), m_param.type);
 
-	m_inputStreams.push_back(new StreamImage(0, "input",             m_input, *this,   "Video input"));
+	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,   "Video input"));
 }
 
 VideoFileWriter::~VideoFileWriter()
@@ -84,7 +84,7 @@ void VideoFileWriter::ProcessFrame()
 {
 	// cout << "write frame " << m_input->cols << "x" << m_input->rows << endl;
 	// m_writer << *m_input;
-	m_writer.write(*m_input);
+	m_writer.write(m_input);
 }
 
 

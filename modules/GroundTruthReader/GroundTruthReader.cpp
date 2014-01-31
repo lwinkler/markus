@@ -30,11 +30,11 @@ using namespace cv;
 
 GroundTruthReader::GroundTruthReader(const ConfigReader& x_configReader): 
 	Module(x_configReader),
-	m_param(x_configReader)
+	m_param(x_configReader),
+	m_input(Size(m_param.width, m_param.height), m_param.type)
 {
 	m_description = "Read a ground truth file";
 
-	m_input       = new Mat(Size(m_param.width, m_param.height), m_param.type);
 	m_inputStreams.push_back(new StreamImage(0, "input",  m_input, *this, "Video input"));
 
 	m_outputStreams.push_back(new StreamImage(0, "input", m_input,  *this, 	"Copy of the input stream"));
@@ -43,7 +43,6 @@ GroundTruthReader::GroundTruthReader(const ConfigReader& x_configReader):
 
 GroundTruthReader::~GroundTruthReader()
 {
-	delete(m_input);
 	m_srtFile.close();
 }
 

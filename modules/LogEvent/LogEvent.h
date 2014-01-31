@@ -62,7 +62,9 @@ public:
 	LogEvent(const ConfigReader& x_configReader);
 	~LogEvent(void);
 	void Reset();
-
+private:
+	inline virtual LogEventParameterStructure& RefParameter() { return m_param;} // TODO: see that this is always private
+	LogEventParameterStructure m_param;
 protected:
 	virtual void ProcessFrame();
 	void WriteEvent();
@@ -71,14 +73,10 @@ protected:
 	Event m_event;
 	long int m_subId;
 	std::string m_srtFileName;
-	cv::Mat * m_input;
+	cv::Mat m_input;
 	std::ofstream m_file;
 	bool m_saveImage;
 	std::string m_folderName;
-
-private:
-	inline virtual LogEventParameterStructure& RefParameter() { return m_param;} // TODO: see that this is always private
-	LogEventParameterStructure m_param;
 };
 
 #endif

@@ -36,7 +36,8 @@ using namespace cv;
 
 TrackerByFeatures::TrackerByFeatures(const ConfigReader& x_configReader) :
 	Module(x_configReader),
-	m_param(x_configReader)
+	m_param(x_configReader),
+	m_debug(Size(m_param.width, m_param.height), CV_8UC3)
 {
 	m_description = "Track objects by matching a set of features (typically x,y,width and height)";
 
@@ -47,7 +48,6 @@ TrackerByFeatures::TrackerByFeatures(const ConfigReader& x_configReader) :
 	m_outputStreams.push_back(m_outputObjectStream);
 
 #ifdef MARKUS_DEBUG_STREAMS
-	m_debug = new Mat(Size(m_param.width, m_param.height), CV_8UC3);
 	m_debugStreams.push_back(new StreamDebug(0, "debug", m_debug, *this,	"Debug"));
 #endif
 }
@@ -67,7 +67,7 @@ void TrackerByFeatures::Reset()
 void TrackerByFeatures::ProcessFrame()
 {
 #ifdef MARKUS_DEBUG_STREAMS
-	m_debug->setTo(0);
+	m_debug.setTo(0);
 #endif
 	MatchTemplates();
 	CleanTemplates();
@@ -182,7 +182,7 @@ void TrackerByFeatures::UpdateTemplates()
 #ifdef MARKUS_DEBUG_STREAMS
 		// Draw matching object
 		if(it1->m_lastMatchingObject != NULL)
-			rectangle(*m_debug, it1->m_lastMatchingObject->Rect(), colorFromId(it1->GetNum()));
+			rectangle(m_debug, it1->m_lastMatchingObject->Rect(), colorFromId(it1->GetNum()));
 #endif
 		if(it1->m_lastMatchingObject != NULL)
 		{
@@ -213,7 +213,7 @@ void TrackerByFeatures::UpdateTemplates()
 			Point p(x, y);
 			// Size s(w * m_param.width / 2, h * m_param.height / 2);
 			// ellipse(*m_debug, p, s, 0, 0, 360, colorFromId(it1->GetNum()));
-			circle(*m_debug, p, 4, colorFromId(it1->GetNum()));
+			circle(m_debug, p, 4, colorFromId(it1->GetNum()));
 		}
 		catch(...){}
 #endif

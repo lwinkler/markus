@@ -64,7 +64,9 @@ public:
 	void Reset();
 	
 private:
-
+	TrackerByFeaturesParameterStructure m_param;
+	inline virtual ModuleParameterStructure& RefParameter() { return m_param;}
+protected:
 	void MatchTemplates();
 	void CleanTemplates();
 	void DetectNewTemplates();
@@ -80,11 +82,8 @@ private:
 	StreamObject* m_outputObjectStream;
 
 #ifdef MARKUS_DEBUG_STREAMS
-	cv::Mat * m_debug;
+	cv::Mat m_debug;
 #endif
-private:
-	TrackerByFeaturesParameterStructure m_param;
-	inline virtual ModuleParameterStructure& RefParameter() { return m_param;}
 };
 
 

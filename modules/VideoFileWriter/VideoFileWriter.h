@@ -55,14 +55,13 @@ public:
 	virtual void ProcessFrame();
 	void Reset();
 	static const std::string ExtensionFromFourcc(const std::string& x_fourcc);
-
-protected:
-	cv::VideoWriter m_writer;
-	cv::Mat * m_input;
-	
 private:
 	VideoFileWriterParameterStructure m_param;
 	inline virtual VideoFileWriterParameterStructure& RefParameter() {return m_param;};
+protected:
+	cv::VideoWriter m_writer;
+	cv::Mat m_input;
+	
 };
 
 #endif

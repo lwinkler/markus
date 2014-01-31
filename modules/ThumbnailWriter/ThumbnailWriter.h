@@ -53,15 +53,13 @@ public:
 	
 	virtual void ProcessFrame();
 	void Reset();
-
-protected:
-	cv::Mat * m_input;
-	std::vector <Object> m_objectsIn;
-	std::string m_folderName;
-	
 private:
 	ThumbnailWriterParameterStructure m_param;
 	inline virtual ThumbnailWriterParameterStructure& RefParameter() {return m_param;};
+protected:
+	cv::Mat m_input;
+	std::vector <Object> m_objectsIn;
+	std::string m_folderName;
 };
 
 #endif

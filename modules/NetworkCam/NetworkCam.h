@@ -55,17 +55,15 @@ public:
 	const std::string& GetName(){return m_name;};
 	// virtual const cv::Mat * GetImage() const {return m_output;}
 	virtual double GetRecordingFps();
-
-protected:
-	cv::VideoCapture m_capture;
-	cv::Mat * m_output;
-	TIME_STAMP m_timeStamp;
-	void GetProperties();
-	Timer m_frameTimer;
-
 private:
 	NetworkCamParameterStructure m_param;
 	inline virtual NetworkCamParameterStructure& RefParameter() {return m_param;};
+protected:
+	cv::VideoCapture m_capture;
+	cv::Mat m_output;
+	TIME_STAMP m_timeStamp;
+	void GetProperties();
+	Timer m_frameTimer;
 };
 
 #endif
