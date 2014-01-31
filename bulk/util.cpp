@@ -126,7 +126,7 @@ void adjust(const Mat* im_in, Mat* im_out, Mat*& tmp1, Mat*& tmp2)
 			tmp1 = new Mat( Size(im_out->cols, im_out->rows), im_out->type());
 		}
 		adjustSize(im_in, tmp1);
-		adjustChannels(tmp1, im_out);
+		adjustChannels(*tmp1, im_out);
 
 	}
 	else
@@ -167,7 +167,7 @@ void adjust(const Mat* im_in, Mat* im_out, Mat*& tmp1, Mat*& tmp2)
 
 /* Set the image to the right number of channels */
 
-void adjustChannels(const Mat* im_in, Mat* im_out)
+void adjustChannels(const Mat& im_in, Mat& im_out)
 {
 	if(im_in->channels() == im_out->channels())
 	{

@@ -30,13 +30,13 @@ using namespace cv;
 
 StreamImage::StreamImage(int x_id, const std::string& x_name, Mat* x_image, Module& rx_module, const string& rx_description) : 
 	Stream(x_id, x_name, rx_module, rx_description),
-	m_image(x_image)
+	m_image(*x_image) // TODO: use ref
 {
 	assert(x_image->cols == rx_module.GetWidth() && x_image->rows == rx_module.GetHeight());
 	assert(x_image != NULL);
 	m_img_tmp1 = NULL; // To convert the input
 	m_img_tmp2 = NULL;
-	m_img_input = NULL;
+	// m_img_input = NULL;
 }
 
 
@@ -56,14 +56,14 @@ void StreamImage::ConvertInput()
 	}
 	else
 	{
-		m_image->setTo(0);
+		m_image.setTo(0);
 	}
 }
 
 
 void StreamImage::RenderTo(Mat * xp_output) const
 {
-	m_image->copyTo(*xp_output);
+	m_image.copyTo(*xp_output);
 }
 
 void StreamImage::Connect(Stream* x_stream)

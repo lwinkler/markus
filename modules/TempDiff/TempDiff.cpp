@@ -75,7 +75,7 @@ void TempDiff::ProcessFrame()
 	
 		subtract(*m_input, *m_lastImg, *tmp);
 		absdiff(*m_input, *m_lastImg, *tmp);
-		adjustChannels(tmp, m_temporalDiff);
+		adjustChannels(*tmp, *m_temporalDiff); // TODO do not use pointer
 		
 		m_input->copyTo(*m_lastImg);
 	}
