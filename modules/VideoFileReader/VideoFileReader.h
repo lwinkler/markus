@@ -64,7 +64,7 @@ public:
 	virtual double GetRecordingFps();
 private:
 	VideoFileReaderParameterStructure m_param;
-	inline virtual VideoFileReaderParameterStructure& RefParameter() {return m_param;};
+	inline virtual const VideoFileReaderParameterStructure& RefParameter() const {return m_param;};
 protected:
 	cv::VideoCapture m_capture;
 	cv::Mat m_output;

@@ -79,7 +79,7 @@ public:
 	void Reset();
 private:
 	BgrSubMOGParameterStructure m_param;
-	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
+	inline virtual const ModuleParameterStructure& RefParameter() const { return m_param;};
 protected:
 	cv::Mat m_input;
 	cv::BackgroundSubtractorMOG* mp_mog;

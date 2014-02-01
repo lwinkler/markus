@@ -61,7 +61,7 @@ Module::Module(const ConfigReader& x_configReader) :
 void Module::Reset()
 {
 	// Lock the parameters that cannot be changed
-	ModuleParameterStructure& param(RefParameter());
+	const ModuleParameterStructure& param(RefParameter());
 	param.PrintParameters(m_logger);
 	param.CheckRange();
 

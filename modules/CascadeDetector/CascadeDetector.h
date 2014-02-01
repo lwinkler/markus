@@ -109,7 +109,7 @@ public:
 	void Reset();
 private:
 	CascadeDetectorParameterStructure m_param;
-	inline virtual CascadeDetectorParameterStructure& RefParameter() { return m_param;};
+	inline virtual const CascadeDetectorParameterStructure& RefParameter() const { return m_param;};
 protected:
 	std::vector<Object> m_detectedObjects;
 	cv::Mat m_input;

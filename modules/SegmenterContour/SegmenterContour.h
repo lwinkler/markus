@@ -58,7 +58,7 @@ public:
 	void Reset();
 private:
 	SegmenterContourParameterStructure m_param;
-	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
+	inline virtual const ModuleParameterStructure& RefParameter() const { return m_param;};
 	bool m_computeFitEllipse;
 	bool m_computeMinRect;
 protected:

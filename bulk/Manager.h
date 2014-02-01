@@ -95,7 +95,7 @@ private:
 	static std::string m_configFile;
 	static std::string m_outputDir;
 protected:
-	inline virtual const ParameterStructure& RefParameter() {return m_param;}
+	inline virtual const ParameterStructure& RefParameter() const {return m_param;}
 	QReadWriteLock m_lock;
 };
 #endif

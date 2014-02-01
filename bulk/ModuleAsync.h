@@ -66,7 +66,7 @@ protected:
 	virtual void PrintStatistics() const;
 	
 private:
-	virtual ModuleAsyncParameterStructure & RefParameter() = 0;
+	virtual const ModuleAsyncParameterStructure & RefParameter() const = 0;
 };
 
 #endif

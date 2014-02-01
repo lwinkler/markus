@@ -49,7 +49,7 @@ public:
 	virtual void ProcessFrame();
 private:
 	RenderObjectsParameterStructure m_param;
-	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
+	inline virtual const ModuleParameterStructure& RefParameter() const { return m_param;};
 protected:
 	// for streams
 	cv::Mat m_imageInput;

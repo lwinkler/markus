@@ -57,7 +57,7 @@ public:
 	virtual double GetRecordingFps();
 private:
 	NetworkCamParameterStructure m_param;
-	inline virtual NetworkCamParameterStructure& RefParameter() {return m_param;};
+	inline virtual const NetworkCamParameterStructure& RefParameter() const {return m_param;};
 protected:
 	cv::VideoCapture m_capture;
 	cv::Mat m_output;

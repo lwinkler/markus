@@ -95,6 +95,7 @@ public:
 	inline int GetWidth() {return RefParameter().width;}
 	inline int GetHeight(){return RefParameter().height;}
 	inline int GetType()  {return RefParameter().type;}
+	inline double GetFps() {return RefParameter().fps;}
 	inline bool IsAutoProcessed()  {return RefParameter().autoProcess;}
 	virtual double GetRecordingFps();
 	
@@ -145,7 +146,7 @@ protected:
 	log4cxx::LoggerPtr m_logger;
 
 private:
-	virtual ModuleParameterStructure & RefParameter() = 0;
+	virtual const ModuleParameterStructure & RefParameter() const = 0;
 };
 
 #endif

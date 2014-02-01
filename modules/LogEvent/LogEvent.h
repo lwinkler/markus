@@ -63,7 +63,7 @@ public:
 	~LogEvent(void);
 	void Reset();
 private:
-	inline virtual LogEventParameterStructure& RefParameter() { return m_param;} // TODO: see that this is always private
+	inline virtual const LogEventParameterStructure& RefParameter() const { return m_param;} // TODO: see that this is always private
 	LogEventParameterStructure m_param;
 protected:
 	virtual void ProcessFrame();

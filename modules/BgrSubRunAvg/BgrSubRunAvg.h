@@ -55,7 +55,7 @@ public:
 	void Reset();
 private:
 	BgrSubRunAvgParameterStructure m_param;
-	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
+	inline virtual const ModuleParameterStructure& RefParameter() const { return m_param;};
 protected:
 	// Background subtraction	
 	cv::Mat m_input;

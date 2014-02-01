@@ -56,7 +56,7 @@ public:
 
 private:
 	UsbCamParameterStructure m_param;
-	inline virtual UsbCamParameterStructure& RefParameter() {return m_param;}
+	inline virtual const UsbCamParameterStructure& RefParameter() const {return m_param;}
 	Timer m_frameTimer;
 protected:
 	cv::VideoCapture m_capture;

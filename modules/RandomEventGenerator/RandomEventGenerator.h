@@ -57,7 +57,7 @@ public:
 	const std::string& GetName(){return m_name;}
 private:
 	RandomEventGeneratorParameterStructure m_param;
-	inline virtual RandomEventGeneratorParameterStructure& RefParameter() {return m_param;}
+	inline virtual const RandomEventGeneratorParameterStructure& RefParameter() const {return m_param;}
 protected:
 	TIME_STAMP m_timeStamp;
 	Event m_event;

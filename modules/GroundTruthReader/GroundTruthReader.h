@@ -53,7 +53,7 @@ public:
 	void Reset();
 private:
 	GroundTruthReaderParameterStructure m_param;
-	inline virtual GroundTruthReaderParameterStructure& RefParameter() {return m_param;};
+	inline virtual const GroundTruthReaderParameterStructure& RefParameter() const {return m_param;};
 protected:
 	cv::Mat m_input;
 	bool m_state;
