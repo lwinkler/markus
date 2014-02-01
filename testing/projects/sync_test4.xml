@@ -21,7 +21,7 @@
 </outputs>
 <parameters>
 <param name="class">BgrSubRunAvg</param>
-<param name="fps">8</param>
+<param name="fps">1</param>
 </parameters>
 <uiobject x="690" y="200" width="0" height="0"/>
 </module>
@@ -34,7 +34,7 @@
 </outputs>
 <parameters>
 <param name="class">TempDiff</param>
-<param name="fps">8</param>
+<param name="fps">1</param>
 </parameters>
 <uiobject x="735" y="314" width="0" height="0"/>
 </module>
@@ -47,7 +47,6 @@
 </outputs>
 <parameters>
 <param name="class">Morph</param>
-<param name="fps">8</param>
 <param name="operator">0</param>
 <param name="element">2</param>
 <param name="kernel_size">5</param>
@@ -63,7 +62,7 @@
 </outputs>
 <parameters>
 <param name="class">Morph</param>
-<param name="fps">8</param>
+<param name="fps">1</param>
 <param name="operator">0</param>
 <param name="element">2</param>
 <param name="kernel_size">5</param>
@@ -84,8 +83,8 @@
 </outputs>
 <parameters>
 <param name="class">RenderObjects</param>
-<param name="fps">8</param>
 <param name="allow_unsync_input">0</param>
+<param name="fps">1</param>
 </parameters>
 <uiobject x="1334" y="474" width="0" height="0"/>
 </module>
@@ -98,7 +97,6 @@
 </outputs>
 <parameters>
 <param name="class">SegmenterContour</param>
-<param name="fps">8</param>
 </parameters>
 <uiobject x="1296" y="187" width="0" height="0"/>
 </module>
@@ -111,7 +109,6 @@
 </outputs>
 <parameters>
 <param name="class">SegmenterContour</param>
-<param name="fps">8</param>
 </parameters>
 <uiobject x="1137" y="329" width="0" height="0"/>
 </module>
@@ -124,7 +121,6 @@
 </outputs>
 <parameters>
 <param name="class">MotionDetector</param>
-<param name="fps">8</param>
 </parameters>
 <uiobject x="885" y="601" width="0" height="0"/>
 </module>
@@ -137,7 +133,6 @@
 </outputs>
 <parameters>
 <param name="class">SegmenterContour</param>
-<param name="fps">8</param>
 </parameters>
 <uiobject x="1092" y="474" width="0" height="0"/>
 </module>
@@ -150,7 +145,6 @@
 </outputs>
 <parameters>
 <param name="class">Morph</param>
-<param name="fps">8</param>
 <param name="operator">0</param>
 <param name="element">2</param>
 <param name="kernel_size">5</param>
@@ -166,7 +160,6 @@
 </outputs>
 <parameters>
 <param name="class">Morph</param>
-<param name="fps">8</param>
 <param name="operator">0</param>
 <param name="element">2</param>
 <param name="kernel_size">5</param>

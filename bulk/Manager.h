@@ -37,7 +37,7 @@
 class ManagerParameter : public ParameterStructure
 {
 public:
-	ManagerParameter(const ConfigReader& x_confReader, const std::string& x_moduleName) : ParameterStructure(x_confReader)
+	ManagerParameter(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
 	{
 		// m_list.push_back(new ParameterString("mode",	"", 	&mode, 	"Mode"));
 		ParameterStructure::Init();

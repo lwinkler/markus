@@ -209,7 +209,22 @@ void Module::Process()
 	m_currentTimeStamp = 0;
 	if(m_inputStreams.size() >= 1)
 	{
-		m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected();
+		m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected(); // TODO: should we lock module here ?
+	}
+	else if(! param.autoProcess)
+		throw MkException("Module must have at least one input or have parameter auto_process=true", LOC);
+
+	if(param.autoProcess || (param.fps == 0 && m_currentTimeStamp != m_lastTimeStamp) || (m_currentTimeStamp - m_lastTimeStamp) * param.fps > 1000)
+	{
+		// Process this frame
+		m_lock.lockForRead();
+		
+		// Timer for benchmark
+		Timer ti;
+
+		// cout<<GetName()<<" "<<m_currentTimeStamp<<" "<<m_lastTimeStamp<<endl;
+
+		// Check that all inputs are in sync
 		if(! param.allowUnsyncInput && m_unsyncWarning)
 			for(unsigned int i = 1 ; i < m_inputStreams.size() ; i++)
 			{
@@ -220,17 +235,6 @@ void Module::Process()
 					m_unsyncWarning = false;
 				}
 			}
-	}
-	else if(! param.autoProcess)
-		throw MkException("Module must have at least one input or have parameter auto_process=true", LOC);
-
-	if(param.autoProcess || param.fps == 0 || (m_currentTimeStamp - m_lastTimeStamp) * param.fps > 1000)
-	{
-		// Process this frame
-		m_lock.lockForRead();
-		
-		// Timer for benchmark
-		Timer ti;
 
 		// Read and convert inputs
 		if(IsInputProcessed())

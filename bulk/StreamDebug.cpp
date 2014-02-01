@@ -26,6 +26,9 @@
 
 using namespace std;
 
+/// This class represents a debug stream, a stream that is only used to help the user 
+/// it can typically be used to show what is happening inside a detection module
+
 StreamDebug::StreamDebug(int x_id, const std::string& x_name, cv::Mat& x_image, Module& rx_module, const string& rx_description) : 
 	Stream(x_id, x_name, rx_module, rx_description),
 	m_image(x_image)
@@ -39,12 +42,14 @@ StreamDebug::~StreamDebug()
 
 }
 
+/// Convert the input: not used since no debug stream is connected
 void StreamDebug::ConvertInput()
 {
 	assert(false); // Should not be used
 }
 
-void StreamDebug::RenderTo(cv::Mat& x_output) const // TODO use ref
+/// Draw the stream on an image
+void StreamDebug::RenderTo(cv::Mat& x_output) const
 {
 	m_image.copyTo(x_output);
 }

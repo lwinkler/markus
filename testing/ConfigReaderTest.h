@@ -28,7 +28,13 @@
 #include <cppunit/TestCaller.h>
 #include "ConfigReader.h"
 #include "util.h"
+#include "Manager.h"
 #include "MkException.h"
+
+#define LOG_TEST(str) {\
+	std::cout<<std::endl<<str<<std::endl;\
+	LOG_INFO(Manager::Logger(), str);\
+}
 
 /// Unit testing class for ConfigReader class
 
@@ -55,6 +61,8 @@ class ConfigReaderTest : public CppUnit::TestFixture
 	/// Load and save a config file
 	void testLoad()
 	{
+		LOG_TEST("# Test the loading of configurations");
+
 		ConfigReader appConf = m_conf1->GetSubConfig("application");
 		ConfigReader module0conf = appConf.GetSubConfig("module", "Module0");
 		ConfigReader module1conf = appConf.GetSubConfig("module", "Module1");
@@ -85,6 +93,7 @@ class ConfigReaderTest : public CppUnit::TestFixture
 	/// Generate a config from an empty file and test
 	void testGenerate()
 	{
+		LOG_TEST("# Test the generation of configurations");
 		ConfigReader appConf = m_conf2->RefSubConfig("application");
 		appConf.RefSubConfig("aaa", "nameX", true)
 			.RefSubConfig("bbb", "nameY", true)

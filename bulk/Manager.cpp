@@ -51,7 +51,7 @@ string Manager::m_outputDir;
 
 Manager::Manager(const ConfigReader& x_configReader, bool x_centralized) : 
 	Configurable(x_configReader),
-	m_param(m_configReader, "Manager"),
+	m_param(m_configReader),
 	m_centralized(x_centralized)
 {
 	LOG_INFO(m_logger, "Create object Manager");

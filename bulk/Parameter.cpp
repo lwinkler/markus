@@ -51,9 +51,9 @@ template<> const std::string ParameterT<double>::m_typeStr = "double";
 
 /// Parent for all parameter structures
 ParameterStructure::ParameterStructure(const ConfigReader& x_configReader):
-    m_configReader(x_configReader)
+	m_configReader(x_configReader.GetSubConfig("parameters")),
+	m_moduleName(x_configReader.GetAttribute("name"))
 {
-	m_objectName = m_configReader.GetAttribute("name");
 }
 
 ParameterStructure::~ParameterStructure()
@@ -73,7 +73,7 @@ void ParameterStructure::Init()
 	// Read parameters from config
 	SetFromConfig();
 	
-	// LOG_INFO("Parameters for "<<m_objectName<<" initialized.");
+	// LOG_INFO("Parameters for "<<m_moduleName<<" initialized.");
 	// PrintParameters(); // Global::log.stream(LOG_INFO));
 	// CheckRange();
 }
@@ -82,7 +82,7 @@ void ParameterStructure::Init()
 
 void ParameterStructure::SetFromConfig()
 {
-	ConfigReader conf = m_configReader.GetSubConfig("parameters");
+	ConfigReader conf = m_configReader; // .GetSubConfig("parameters");
 	if(conf.IsEmpty())
 		return;
 	conf = conf.GetSubConfig("param");
@@ -98,9 +98,10 @@ void ParameterStructure::SetFromConfig()
 			if(!param.IsLocked())
 				param.SetValue(value, PARAMCONF_XML);
 		}
-		catch(...)
+		catch(ParameterException& e)
 		{
-			// LOG_WARN(Manager::Logger(), "Unknown parameter in configuration: "<<name<<" in module "<<m_objectName); // TODO: avoid this warning in parent
+			// note: do not output a warning, unused parameters are checked inside CheckRange
+			// LOG_WARN(Manager::Logger(), "Unknown parameter in configuration: "<<name<<" in module "<<m_moduleName);
 		}
 		conf = conf.NextSubConfig("param");
 	}
@@ -133,7 +134,7 @@ const Parameter& ParameterStructure::GetParameterByName(const std::string& x_nam
 		}
 	}
 	
-	throw MkException("Parameter not found in list (by name) : " + x_name, LOC);
+	throw ParameterException("Parameter not found in module " + m_moduleName + ": " + x_name, LOC);
 }
 
 /// Get the reference to a parameter by name
@@ -147,7 +148,7 @@ Parameter& ParameterStructure::RefParameterByName(const std::string& x_name)
 		}
 	}
 	
-	throw MkException("Parameter not found in list (by name) : " + x_name, LOC);
+	throw ParameterException("Parameter not found in module " + m_moduleName + ": " + x_name, LOC);
 }
 
 
@@ -167,7 +168,7 @@ void ParameterStructure::SetValueToDefault()
 void ParameterStructure::CheckRange() const
 {
 	// Check that all parameters in config are related to the module
-	ConfigReader conf = m_configReader.GetSubConfig("parameters"); // TODO: Should be directly selected at construction ?
+	ConfigReader conf = m_configReader; // .GetSubConfig("parameters");
 	if(conf.IsEmpty())
 		return;
 	conf = conf.GetSubConfig("param");
@@ -179,9 +180,9 @@ void ParameterStructure::CheckRange() const
 		{
 			GetParameterByName(name);
 		}
-		catch(...)
+		catch(ParameterException& e)
 		{
-			LOG_WARN(Manager::Logger(), "Unknown parameter in configuration: "<<name<<" in module "<<m_objectName);
+			LOG_WARN(Manager::Logger(), e.what());
 		}
 		conf = conf.NextSubConfig("param");
 	}
@@ -194,7 +195,7 @@ void ParameterStructure::CheckRange() const
 		{
 			stringstream ss;
 			ss<<"Parameter "<<(*it)->GetName()<<" is out of range"; // TODO: implement PrintValue
-			throw MkException(ss.str(), LOC);
+			throw ParameterException(ss.str(), LOC);
 		}
 	}
 }
@@ -272,7 +273,7 @@ ParameterImageType::ParameterImageType(const std::string& x_name, int x_default,
 void ParameterEnum::SetValue(const std::string& rx_value, ParameterConfigType x_confType)
 {
 	if(m_isLocked) 
-		throw MkException("You tried to set the value of a locked parameter.", LOC);
+		throw ParameterException("You tried to set the value of a locked parameter.", LOC);
 	*mp_value = Str2Int(rx_value);
 	m_confSource = x_confType;
 }
@@ -280,7 +281,7 @@ void ParameterEnum::SetValue(const std::string& rx_value, ParameterConfigType x_
 void ParameterEnum::SetValue(int rx_value, ParameterConfigType x_confType)
 {
 	if(m_isLocked) 
-		throw MkException("You tried to set the value of a locked parameter.", LOC);
+		throw ParameterException("You tried to set the value of a locked parameter.", LOC);
 	*mp_value = rx_value;
 	m_confSource = x_confType;
 }

@@ -324,7 +324,7 @@ public:
 protected:
 	std::vector<Parameter*> m_list;
 	const ConfigReader m_configReader; // Warning this still contains reference to the tinyxml config!
-	std::string m_objectName;
+	std::string m_moduleName;
 };
 
 typedef ParameterT<int> 	ParameterInt;
