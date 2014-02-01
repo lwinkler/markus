@@ -58,5 +58,5 @@ void RenderObjects::Reset()
 void RenderObjects::ProcessFrame()
 {
 	for(int i = 0 ; i < 5 ; i++)
-		m_inputStreams[i]->RenderTo(&m_imageOutput);
+		m_inputStreams[i]->RenderTo(m_imageOutput);
 }

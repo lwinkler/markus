@@ -60,9 +60,9 @@ void StreamImage::ConvertInput()
 }
 
 
-void StreamImage::RenderTo(Mat * xp_output) const
+void StreamImage::RenderTo(Mat& x_output) const
 {
-	m_image.copyTo(*xp_output);
+	m_image.copyTo(x_output);
 }
 
 void StreamImage::Connect(Stream* x_stream)
@@ -76,5 +76,5 @@ void StreamImage::Connect(Stream* x_stream)
 		m_connected = NULL;
 		throw MkException("Input stram cannot be connected probably because it is not of type StreamImage", LOC);
 	}
-	m_img_input = &tmp->GetImageRef();
+	m_img_input = &tmp->RefImage();
 }

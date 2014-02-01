@@ -179,7 +179,7 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 		if(m_img_output == NULL)
 			m_img_output = new Mat( Size(m_outputWidth, m_outputHeight), CV_8UC3);
 		
-		m_currentStream->RenderTo(m_img_original);
+		m_currentStream->RenderTo(*m_img_original);
 		
 		adjust(*m_img_original, *m_img_output, m_img_tmp1, m_img_tmp2);
 

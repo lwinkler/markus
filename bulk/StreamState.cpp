@@ -55,8 +55,8 @@ void StreamState::ConvertInput()
 
 /// Render : to display the state we simply color the image in black/white
 
-void StreamState::RenderTo(Mat * xp_output) const
+void StreamState::RenderTo(Mat& x_output) const
 {
-	xp_output->setTo(Scalar(255 * m_state, 255 * m_state, 255 * m_state));
+	x_output.setTo(Scalar(255 * m_state, 255 * m_state, 255 * m_state));
 }
 

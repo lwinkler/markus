@@ -44,9 +44,9 @@ void StreamDebug::ConvertInput()
 	assert(false); // Should not be used
 }
 
-void StreamDebug::RenderTo(cv::Mat * xp_output) const // TODO use ref
+void StreamDebug::RenderTo(cv::Mat& x_output) const // TODO use ref
 {
-	m_image.copyTo(*xp_output);
+	m_image.copyTo(x_output);
 }
 
 #endif
