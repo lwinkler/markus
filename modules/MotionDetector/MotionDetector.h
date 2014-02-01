@@ -58,7 +58,7 @@ public:
 	void Reset();
 private:
 	MotionDetectorParameterStructure m_param;
-	inline virtual const MotionDetectorParameterStructure& RefParameter() const { return m_param;}
+	inline virtual const MotionDetectorParameterStructure& GetParameters() const { return m_param;}
 protected:
 	virtual void ProcessFrame();
 

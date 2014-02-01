@@ -61,7 +61,7 @@ Module::Module(const ConfigReader& x_configReader) :
 void Module::Reset()
 {
 	// Lock the parameters that cannot be changed
-	const ModuleParameterStructure& param(RefParameter());
+	const ModuleParameterStructure& param(GetParameters());
 	param.PrintParameters(m_logger);
 	param.CheckRange();
 
@@ -141,8 +141,8 @@ void Module::Pause(bool x_pause)
 
 double Module::GetRecordingFps()
 {
-	double fps = RefParameter().fps;
-	bool autop = RefParameter().autoProcess;
+	double fps = GetParameters().fps;
+	bool autop = GetParameters().autoProcess;
 
 	if(autop)
 	{
@@ -203,7 +203,7 @@ void Module::Process()
 	if(!m_isReady)
 		throw MkException("Module must be ready before processing", LOC);
 
-	const ModuleParameterStructure& param = RefParameter();
+	const ModuleParameterStructure& param = GetParameters();
 	
 	// Timestamp of the module is given by the input stream
 	m_currentTimeStamp = 0;
@@ -280,7 +280,7 @@ void Module::Export(ostream& rx_os, int x_indentation)
 	rx_os<<tabs<<"<module name=\""<<m_name<<"\" description=\""<<GetDescription()<<"\">"<<endl;
 	tabs = string(x_indentation + 1, '\t');
 	rx_os<<tabs<<"<parameters>"<<endl;
-	for(vector<Parameter*>::const_iterator it = RefParameter().GetList().begin() ; it != RefParameter().GetList().end() ; it++)
+	for(vector<Parameter*>::const_iterator it = GetParameters().GetList().begin() ; it != GetParameters().GetList().end() ; it++)
 		(*it)->Export(rx_os, x_indentation + 2);
 	rx_os<<tabs<<"</parameters>"<<endl;
 

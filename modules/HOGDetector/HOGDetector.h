@@ -109,7 +109,7 @@ public:
 
 private:
 	HOGDetectorParameterStructure m_param;
-	inline virtual const HOGDetectorParameterStructure& RefParameter() const { return m_param;};
+	inline virtual const HOGDetectorParameterStructure& GetParameters() const { return m_param;};
 protected:
 	std::vector<Object> m_detectedObjects;
 	cv::Mat m_input;

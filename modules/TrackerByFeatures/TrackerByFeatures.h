@@ -65,7 +65,7 @@ public:
 	
 private:
 	TrackerByFeaturesParameterStructure m_param;
-	inline virtual const ModuleParameterStructure& RefParameter() const { return m_param;}
+	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;}
 protected:
 	void MatchTemplates();
 	void CleanTemplates();

@@ -59,7 +59,7 @@ private:
 protected:
 	// const std::string m_name;
 	bool m_endOfStream;
-	virtual const InputParameterStructure& RefParameter() const = 0;
+	virtual const InputParameterStructure& GetParameters() const = 0;
 	void SetTimeStampToOutputs(TIME_STAMP x_timeStamp);
 };
 

@@ -55,7 +55,7 @@ public:
 	void Reset();
 private:
 	ThumbnailWriterParameterStructure m_param;
-	inline virtual const ThumbnailWriterParameterStructure& RefParameter() const {return m_param;};
+	inline virtual const ThumbnailWriterParameterStructure& GetParameters() const {return m_param;};
 protected:
 	cv::Mat m_input;
 	std::vector <Object> m_objectsIn;

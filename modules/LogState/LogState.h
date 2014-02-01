@@ -70,7 +70,7 @@ protected:
 
 private:
 	LogStateParameterStructure m_param;
-	inline virtual const LogStateParameterStructure& RefParameter() const { return m_param;}
+	inline virtual const LogStateParameterStructure& GetParameters() const { return m_param;}
 };
 
 #endif

@@ -92,11 +92,11 @@ public:
 	const std::map<std::string, Controller*>& GetControlsList() const {return m_controls;}
 	Controller* FindController(const std::string& x_name) const;
 	
-	inline int GetWidth() {return RefParameter().width;}
-	inline int GetHeight(){return RefParameter().height;}
-	inline int GetType()  {return RefParameter().type;}
-	inline double GetFps() {return RefParameter().fps;}
-	inline bool IsAutoProcessed()  {return RefParameter().autoProcess;}
+	inline int GetWidth() const          {return GetParameters().width;}
+	inline int GetHeight() const         {return GetParameters().height;}
+	inline int GetType() const           {return GetParameters().type;}
+	inline double GetFps() const         {return GetParameters().fps;}
+	inline bool IsAutoProcessed() const  {return GetParameters().autoProcess;}
 	virtual double GetRecordingFps();
 	
 	inline void AddDependingModule (Module & x_module){m_modulesDepending.push_back(&x_module);}
@@ -146,7 +146,7 @@ protected:
 	log4cxx::LoggerPtr m_logger;
 
 private:
-	virtual const ModuleParameterStructure & RefParameter() const = 0;
+	virtual const ModuleParameterStructure & GetParameters() const = 0;
 };
 
 #endif

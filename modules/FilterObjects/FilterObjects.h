@@ -63,7 +63,7 @@ public:
 	void Reset();
 private:
 	FilterObjectsParameterStructure m_param;
-	inline virtual const ModuleParameterStructure& RefParameter() const { return m_param;}
+	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;}
 protected:
 	std::vector <Object> m_objectsIn;
 	std::vector <Object> m_objectsOut;

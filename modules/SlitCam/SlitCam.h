@@ -60,7 +60,7 @@ public:
 	void Reset();
 private:
 	SlitCamParameterStructure m_param;
-	inline virtual const SlitCamParameterStructure& RefParameter() const { return m_param;}
+	inline virtual const SlitCamParameterStructure& GetParameters() const { return m_param;}
 protected:
 	virtual void ProcessFrame();
 	int m_position;
