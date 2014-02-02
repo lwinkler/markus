@@ -255,7 +255,7 @@ void Module::Process()
 
 		m_timerProcessing 	 += ti.GetMSecLong();
 
-		// Set time stamps to outputs
+		// Set time stamps to outputs // TODO can we use the dedicated method ? Why only Input
 		if(!IsInput())
 			for(vector<Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
 				(*it)->SetTimeStamp(m_currentTimeStamp);

@@ -8,6 +8,7 @@
 <parameters>
 <param name="class">VideoFileReader</param>
 <param name="file">in/input.mp4</param>
+<param name="fps">1</param>
 </parameters>
 <uiobject x="500" y="300" width="0" height="0"/>
 </module>
@@ -21,7 +22,6 @@
 </outputs>
 <parameters>
 <param name="class">BgrSubRunAvg</param>
-<param name="fps">1</param>
 </parameters>
 <uiobject x="690" y="200" width="0" height="0"/>
 </module>

@@ -79,20 +79,29 @@ void VideoFileReader::Reset()
 
 void VideoFileReader::Capture()
 {
-	if(m_capture.grab() == 0)
+	while(true)
 	{
-		// Note: there seems to be a 3 seconds lag when grabbing after the last frame. This is linked to format h264: MJPG is ok
-		m_endOfStream = true;
-		std::exception e;
-		Pause(true);
-		throw EndOfStreamException("Capture failed in VideoFileReader::Capture.", LOC);
-	}
+		if(m_capture.grab() == 0)
+		{
+			// Note: there seems to be a 3 seconds lag when grabbing after the last frame. This is linked to format h264: MJPG is ok
+			m_endOfStream = true;
+			std::exception e;
+			Pause(true);
+			throw EndOfStreamException("Capture failed in VideoFileReader::Capture.", LOC);
+		}
 
-	m_capture.retrieve(m_output);
+		m_capture.retrieve(m_output);
+		m_currentTimeStamp = m_capture.get(CV_CAP_PROP_POS_MSEC);
+		//cout<<m_currentTimeStamp<<" - "<<m_lastTimeStamp<<endl;
+
+		// only break out of the loop once we fulfill the fps criterion
+		if(m_param.fps == 0 || (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps > 1000)
+			break;
+	}
 	
 	// cout<<"VideoFileReader capture image "<<m_output->cols<<"x"<<m_output->rows<<" time stamp "<<m_capture.get(CV_CAP_PROP_POS_MSEC) / 1000.0<< endl;
 
-	SetTimeStampToOutputs(m_capture.get(CV_CAP_PROP_POS_MSEC));
+	SetTimeStampToOutputs(m_currentTimeStamp); // TODO : do we keep this line
 }
 
 void VideoFileReader::GetProperties()
