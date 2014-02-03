@@ -239,10 +239,10 @@ void Module::Process()
 			for(vector<Stream*>::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
 			{
 				Timer ti2;
-				(*it)->LockModuleForRead();
+				//(*it)->LockModuleForRead();
 				m_timerWaiting += ti2.GetMSecLong();
 				(*it)->ConvertInput();
-				(*it)->UnLockModule();
+				//(*it)->UnLockModule();
 			}
 		}
 		m_timerConvertion 	+= ti.GetMSecLong();
