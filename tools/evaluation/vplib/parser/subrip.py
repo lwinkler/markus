@@ -7,7 +7,6 @@ Created 2014-01-29 Fabien Dubosson
 """
 
 import os
-import sys
 from vplib.time import Time
 from collections import namedtuple
 
@@ -47,8 +46,8 @@ def _parse_lines(lines):
 
         # Get subtitles timestamps
         b_stamp, e_stamp = lines.pop(0).strip().split('-->')
-        b_time = Time(text=b_stamp)
-        e_time = Time(text=e_stamp)
+        b_time = Time(text=b_stamp, sep_ms=',')
+        e_time = Time(text=e_stamp, sep_ms=',')
 
         # Get text
         text = ""

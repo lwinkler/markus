@@ -16,7 +16,7 @@ class Time:
     """A class reprenseting a Time"""
 
     def __init__(self, hours=0, minutes=0, seconds=0, milis=0, text=None,
-                 sep=':', sep_ms=','):
+                 sep=':', sep_ms='.'):
         if text:
             # Parse text values
             h, m, rest = text.split(sep)

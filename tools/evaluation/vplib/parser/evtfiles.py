@@ -53,7 +53,7 @@ def _parse_lines(lines):
         # Transform it to time
         time = Time(text=time_text)
 
-        ident = int(lines[i+3].strip().split('\t')[0])
+        ident = int(lines[i + 3].strip().split('\t')[0])
 
         # Prepare the event
         event = Event(id=ident, time=time)
