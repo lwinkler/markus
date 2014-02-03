@@ -296,11 +296,11 @@ void Module::Export(ostream& rx_os, int x_indentation)
 }
 
 /// Get a stream by its id
-Stream& Module::RefInputStreamById(int x_id) const // TODO: this should not be const
+Stream& Module::RefInputStreamById(int x_id)
 {
 	//for(vector<Stream *>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
 		//if((*it)->GetId() == x_id) return **it;
-	map<int, Stream*>::const_iterator it = m_inputStreams.find(x_id);
+	map<int, Stream*>::iterator it = m_inputStreams.find(x_id);
 
 	if(it == m_inputStreams.end())
 	{
@@ -312,9 +312,9 @@ Stream& Module::RefInputStreamById(int x_id) const // TODO: this should not be c
 }
 
 /// Get a stream by its id
-Stream& Module::RefOutputStreamById(int x_id) const
+Stream& Module::RefOutputStreamById(int x_id)
 {
-	map<int, Stream*>::const_iterator it = m_outputStreams.find(x_id);
+	map<int, Stream*>::iterator it = m_outputStreams.find(x_id);
 
 	if(it == m_outputStreams.end())
 	{
@@ -376,18 +376,24 @@ void Module::AddInputStream(int x_id, Stream* xp_stream)
 {
 	// m_inputStreams.push_back(xp_stream);
 	// xp_stream->SetId(x_id);
+	if(m_inputStreams.find(x_id) != m_inputStreams.end())
+		throw MkException("Two streams with same id", LOC);
 	m_inputStreams.insert(make_pair(x_id, xp_stream));
 }
 
 /// Add an input stream
 void Module::AddOutputStream(int x_id, Stream* xp_stream)
 {
+	if(m_outputStreams.find(x_id) != m_outputStreams.end())
+		throw MkException("Two streams with same id", LOC);
 	m_outputStreams.insert(make_pair(x_id, xp_stream));
 }
 
 /// Add an input stream
 void Module::AddDebugStream(int x_id, Stream* xp_stream)
 {
+	if(m_debugStreams.find(x_id) != m_debugStreams.end())
+		throw MkException("Two streams with same id", LOC);
 	m_debugStreams.insert(make_pair(x_id, xp_stream));
 }
 
