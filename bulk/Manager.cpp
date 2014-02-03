@@ -262,7 +262,12 @@ void Manager::SendCommand(const std::string& x_command, std::string x_value)
 	if(elems.at(0) == "manager")
 		;	// manager.GetControlList();
 	else
-		RefModuleByName(elems.at(0)).FindController(elems.at(1))->CallAction(elems.at(2), &x_value);
+	{
+		Module& module(RefModuleByName(elems.at(0)));
+		module.LockForWrite();
+		module.FindController(elems.at(1))->CallAction(elems.at(2), &x_value);
+		module.Unlock();
+	}
 	LOG_INFO(m_logger, "Command "<<x_command<<" returned value "<<x_value);
 	
 }
