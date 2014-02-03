@@ -22,8 +22,8 @@
 -------------------------------------------------------------------------------------*/
 
 #include <QApplication>
-#include <cstring>
-#include <cstdio>
+// #include <cstring>
+// #include <cstdio>
 #include <getopt.h>    /* for getopt_long; standard getopt is in unistd.h */
 
 #include "Manager.h"

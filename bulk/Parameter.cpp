@@ -25,9 +25,9 @@
 #include "ConfigReader.h"
 #include "Manager.h"
 
-#include <cstring>
-#include <iostream>
-#include <cstdlib>
+//#include <cstring>
+//#include <iostream>
+//#include <cstdlib>
 
 
 using namespace std;
