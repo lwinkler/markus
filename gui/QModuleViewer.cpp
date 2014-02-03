@@ -68,7 +68,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 		throw MkException("Module list cannot be empty", LOC);
 	m_manager 		= x_manager;
 	m_currentModule 	= *x_manager->GetModules().begin();
-	m_currentStream 	= *m_currentModule->GetOutputStreamList().begin();
+	m_currentStream 	= m_currentModule->GetOutputStreamList().begin()->second;
 		
 	mp_comboModules 	= new QComboBox();
 	mp_comboStreams 	= new QComboBox();
@@ -199,17 +199,17 @@ void QModuleViewer::updateModule(Module * x_module)
 	mp_comboStreams->clear();
 	updateControlNb(); // destroy all controls
 	int cpt = 0;
-	for(std::vector<Stream*>::const_iterator it = m_currentModule->GetOutputStreamList().begin(); it != m_currentModule->GetOutputStreamList().end(); it++)
+	for(map<int, Stream*>::const_iterator it = m_currentModule->GetOutputStreamList().begin(); it != m_currentModule->GetOutputStreamList().end(); it++)
 	{
-		mp_comboStreams->addItem((*it)->GetName().c_str(), cpt++);
+		mp_comboStreams->addItem(it->second->GetName().c_str(), cpt++);
 	}
-	for(std::vector<Stream*>::const_iterator it = m_currentModule->GetDebugStreamList().begin(); it != m_currentModule->GetDebugStreamList().end(); it++)
+	for(map<int, Stream*>::const_iterator it = m_currentModule->GetDebugStreamList().begin(); it != m_currentModule->GetDebugStreamList().end(); it++)
 	{
-		mp_comboStreams->addItem((*it)->GetName().c_str(), cpt++);
+		mp_comboStreams->addItem(it->second->GetName().c_str(), cpt++);
 	}
 	
 	if(m_currentModule->GetOutputStreamList().size() > 0)
-		updateStream(*(m_currentModule->GetOutputStreamList().begin()));
+		updateStream(m_currentModule->GetOutputStreamList().begin()->second);
 
 	// Empty the action menu (different for each module)
 	QList<QAction *> actions = this->actions();

@@ -86,9 +86,9 @@ public:
 	const std::string& GetDescription() const{return m_description;}
 	int GetId() const {return m_id;}
 
-	const std::vector<Stream*>& GetInputStreamList() const {return m_inputStreams;}
-	const std::vector<Stream*>& GetOutputStreamList() const {return m_outputStreams;}
-	const std::vector<Stream*>& GetDebugStreamList() const {return m_debugStreams;}
+	const std::map<int, Stream*>& GetInputStreamList() const {return m_inputStreams;}
+	const std::map<int, Stream*>& GetOutputStreamList() const {return m_outputStreams;}
+	const std::map<int, Stream*>& GetDebugStreamList() const {return m_debugStreams;}
 	void AddInputStream(int x_id, Stream* xp_stream);
 	void AddOutputStream(int x_id, Stream* xp_stream);
 	void AddDebugStream(int x_id, Stream* xp_stream);
@@ -137,9 +137,9 @@ protected:
 	inline virtual bool IsInputProcessed() const {return true;}
 
 	// Streams
-	std::vector<Stream *> m_inputStreams;
-	std::vector<Stream *> m_outputStreams;
-	std::vector<Stream *> m_debugStreams;	
+	std::map<int, Stream *> m_inputStreams;
+	std::map<int, Stream *> m_outputStreams;
+	std::map<int, Stream *> m_debugStreams;	
 
 	std::map<std::string, Controller*> m_controls;
 	std::string m_name;
