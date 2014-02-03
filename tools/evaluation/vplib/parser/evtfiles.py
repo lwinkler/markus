@@ -51,7 +51,7 @@ def _parse_lines(lines):
         time_text, _ = line.strip().split('-->')
 
         # Transform it to time
-        time = Time(text=time_text)
+        time = Time(text=time_text, sep_ms=',')
 
         ident = int(lines[i + 3].strip().split('\t')[0])
 
