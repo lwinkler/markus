@@ -392,10 +392,11 @@ def generate_html(stats, log, data, out='out', filename='report.html'):
         f.write(str(HTML(head + body)))
 
     # Open report in browser
-    try:
-        subprocess.call(['xdg-open', os.path.abspath(path)])
-    except OSError:
-        print('Please open a browser on: ' + path)
+    if not args.no_browser:
+        try:
+            subprocess.call(['xdg-open', os.path.abspath(path)])
+        except OSError:
+            print('Please open a browser on: ' + path)
 
 
 def arguments_parser():
@@ -461,6 +462,11 @@ def arguments_parser():
     parser.add_argument('--html',
                         action='store_true',
                         help='output HTML report')
+
+    # No browser
+    parser.add_argument('--no-browser',
+                        action='store_true',
+                        help='don\' try to open the browser')
 
     return parser.parse_args()
 
