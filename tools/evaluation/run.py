@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """
+Run the evaluation of an algorithm on a set of videos.
+
 Created 2014-01-30 Fabien Dubosson
 """
 
@@ -19,7 +21,7 @@ abs_markus = None
 abs_analyse = None
 
 # Original path
-orig_path = None
+abs_orig = None
 
 # Run path
 run_path = None
@@ -49,9 +51,7 @@ class Evaluation():
                self.abs_project,
                '-nc',
                '-pInput.class=VideoFileReader',
-               #'-pInput.file=' + self.abs_video, # TODO
-               '-pInput.file=/home/fabien/dev/videoprotector/markus/in/input.mp4',
-               '-pFileterPython9.script=../../modules2/FilterPython/analyse.py',
+               '-pInput.file=' + self.abs_video,
                '-o' + self.eval_path]
 
         # Run the command
@@ -79,6 +79,9 @@ class Evaluation():
                 '-V', self.abs_video,
                 '-o', os.path.join(self.eval_path, 'analysis'),
                 '--html',
+                '-d', '0',
+                '-t', '0',
+                '--no-browser',
                 '-i']
 
         analyse = subprocess.Popen(cmd)
@@ -125,34 +128,35 @@ def arguments_parser():
     return parser.parse_args()
 
 
-# Dummy function needed to parallelize processes
 def run(test):
+    """ Dummy function needed to parallelize processes """
     test.run()
 
 
 def main():
     # Define some global variables
-    global args, orig_path, run_path, abs_analyse, abs_markus
+    global args, abs_orig, run_path, abs_analyse, abs_markus
 
     # Parse arguments
     args = arguments_parser()
 
     # Register some paths
-    orig_path = os.getcwd()
+    abs_orig = os.getcwd()
     abs_analyse = os.path.abspath('./analyse_events.py')
     abs_markus = os.path.abspath('../../markus')
     abs_videos_dir = os.path.abspath(args.VIDEO_DIR)
 
     # Define a run path
     if args.output is None:
+        # Based on date-time if not specified
         run_path = 'run_' + strftime('%Y_%m_%d_%H_%M_%S', localtime())
     else:
         # If it is precised by the user, use it
         run_path = args.output
 
-    # Verify run path and create dir
+    # Verify the run path and create the dir
     if os.path.exists(run_path):
-        print('Run path already exists')
+        print('The run path already exists')
         exit(1)
     else:
         os.makedirs(run_path)
