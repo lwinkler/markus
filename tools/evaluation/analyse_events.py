@@ -16,6 +16,7 @@ Created 2014-01-29 Fabien Dubosson
 
 import re
 import os
+import vplib
 import pickle
 import argparse
 import subprocess
@@ -26,9 +27,6 @@ from vplib.HTMLTags import *
 from vplib.parser import subrip
 from vplib.parser import evtfiles
 from collections import namedtuple, OrderedDict
-
-# Current version
-version = '0.1.0'
 
 # Evaluation metrics
 Evaluation = namedtuple('Evaluation',
@@ -317,7 +315,7 @@ def generate_html(stats, log, data, out='out', filename='report.html'):
     table <= TR(TH('Name') + TH('Value'), style='background: lightgray;')
     table <= TR(TD(B('Date')) + TD(strftime("%Y-%m-%d %H:%M:%S",
                                             localtime())))
-    table <= TR(TD(B('Script Version')) + TD(version))
+    table <= TR(TD(B('Script Version')) + TD(vplib.__version__))
     table <= TR(TD(B('System info')) + TD(platform()))
     body <= table
 
@@ -347,11 +345,11 @@ def generate_html(stats, log, data, out='out', filename='report.html'):
         else:
             row <= TD(B(event.id))
         row <= TD(event.time)
-        if args.images:
+        if truth is not None and args.images:
             row <= TD(A(truth.id,
                         href="./images/truth_" + str(truth.id) + ".png"))
         else:
-            row <= TD(truth.id)
+            row <= TD(truth.id if truth is not None else '')
         table <= row
     body <= table
 
@@ -361,7 +359,7 @@ def generate_html(stats, log, data, out='out', filename='report.html'):
     table <= TR(TH('ID') + TH('Matched') + TH('Infos'),
                 style='background: lightgray;')
     for truth in truths:
-        matches = [i.id for (i, t, g) in log if truth.id == t.id]
+        matches = [i.id for (i, t, g) in log if truth is not None and t is not None and truth.id == t.id]
 
         if not matches:
             bg = "#FFD4D3"
@@ -493,6 +491,7 @@ def main():
     # Get video info
     video = video_info(args.VIDEO_FILE)
 
+    # Extract images
     if args.images:
         extract_images(events, truths, args.VIDEO_FILE, out=args.output)
 
@@ -500,7 +499,7 @@ def main():
     stats = statistics(evaluation, video)
 
     # Save stats
-    pickle.dump(stats, open(os.path.join(args.output, "report.pkl"), 'w'))
+    pickle.dump(evaluation, open(os.path.join(args.output, "report.pkl"), 'w'))
 
     # If an HTML report is desired
     if args.html:
