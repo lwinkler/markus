@@ -230,7 +230,7 @@ def statistics(evaluation, video=None):
     """Compute the statistics on the evaluation"""
 
     # Shortcuts
-    r = evaluation
+    e = evaluation
     v = video
 
     # Prepare the statistic dictionnary
@@ -238,27 +238,28 @@ def statistics(evaluation, video=None):
 
     # Counters statistics
     stats['Counters'] = ('-' * 20, '%s')
-    stats['Total ground truth'] = (r.pos, '%2d')
-    stats['Total events'] = (r.det, '%2d')
-    stats['Total correct detection'] = (r.tp, '%2d')
-    stats['Total false alarm'] = (r.fp, '%2d')
-    stats['Total missed'] = (r.fn, '%2d')
-    stats['Duplicate events'] = (r.dups, '%2d')
+    stats['Total ground truth'] = (e.pos, '%2d')
+    stats['Total detected'] = (e.det, '%2d')
+    stats['Total correct detections'] = (e.tp, '%2d')
+    stats['Total false alarms'] = (e.fp, '%2d')
+    stats['Total missed'] = (e.fn, '%2d')
+    stats['Total duplicates'] = (e.dups, '%2d')
 
     # Confusion matrix statistics
     stats['Statistics'] = ('-' * 20, '%s')
-    stats['Detected'] = ((float(r.tp) / r.pos) * 100, '%3.2f%%')
-    stats['False alarm'] = ((float(r.fp) / r.pos) * 100, '%3.2f%%')
-    stats['Misses'] = ((float(r.fn) / r.pos) * 100, '%3.2f%%')
-    stats['Precision'] = (float(r.tp) / (r.tp + r.fp) * 100, '%3.2f%%')
-    stats['F1 score'] = (2 * float(r.tp) / (2 * r.tp + r.fp + r.fn) * 100,
+    if not e.pos == 0:
+        stats['Detected'] = ((float(e.tp) / e.pos) * 100, '%3.2f%%')
+    else:
+        stats['Detected'] = ('N/A', '%s')
+    stats['Precision'] = (float(e.tp) / (e.tp + e.fp) * 100, '%3.2f%%')
+    stats['F1 score'] = (2 * float(e.tp) / (2 * e.tp + e.fp + e.fn) * 100,
                          '%3.2f%%')
 
     # Video statistics
     if video is not None:
         stats['Video related'] = ('-' * 20, '%s')
         stats['Video duration'] = (v.duration, '%s')
-        stats['False alarm rate'] = (float(r.fp * 60 * 60 * 1000) /
+        stats['False alarm rate'] = (float(e.fp * 60 * 60 * 1000) /
                                      v.duration.milis, '%.1f alarms/hour')
 
     return stats
