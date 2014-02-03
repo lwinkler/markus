@@ -20,6 +20,9 @@ abs_markus = None
 # Absolute path to analyse_event.py
 abs_analyse = None
 
+# Absolute path to aggregate.py
+abs_aggregate = None
+
 # Original path
 abs_orig = None
 
@@ -71,6 +74,8 @@ class Evaluation():
         # Python 3 hack
         if args.python3:
             cmd = ['python2']
+        else:
+            cmd = []
 
         # Prepare the command
         cmd += [abs_analyse,
@@ -86,6 +91,22 @@ class Evaluation():
 
         analyse = subprocess.Popen(cmd)
         analyse.communicate()
+
+
+def run_aggregate(run_path):
+    # Python 3 hack
+    if args.python3:
+        cmd = ['python2']
+    else:
+        cmd = []
+
+    # Prepare the command
+    cmd += [abs_aggregate,
+            run_path]
+
+    # Run the command
+    aggregate = subprocess.Popen(cmd)
+    aggregate.communicate()
 
 
 def arguments_parser():
@@ -135,7 +156,7 @@ def run(test):
 
 def main():
     # Define some global variables
-    global args, abs_orig, run_path, abs_analyse, abs_markus
+    global args, abs_orig, run_path, abs_analyse, abs_aggregate, abs_markus
 
     # Parse arguments
     args = arguments_parser()
@@ -143,6 +164,7 @@ def main():
     # Register some paths
     abs_orig = os.getcwd()
     abs_analyse = os.path.abspath('./analyse_events.py')
+    abs_aggregate = os.path.abspath('./aggregate.py')
     abs_markus = os.path.abspath('../../markus')
     abs_videos_dir = os.path.abspath(args.VIDEO_DIR)
 
@@ -174,6 +196,9 @@ def main():
 
     # Run the evaluations in parallel
     pool.map(run, evals)
+
+    # Run the aggregation at the end
+    run_aggregate(run_path)
 
 
 if __name__ == "__main__":

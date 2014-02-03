@@ -12,39 +12,41 @@ import pickle
 import vplib
 import argparse
 import subprocess
-from pprint import pprint
 from time import strftime, localtime
 from platform import platform
 from vplib.time import Time
 from vplib.HTMLTags import *
-from analyse_events import Evaluation, statistics
+from analyse_events import Evaluation, Video, statistics
 
 
-def list_analyses(path, dirname='analysis', filename='report.pkl'):
+def list_analyses(path, dirname='analysis', checkname='evals.pkl'):
     """ Return the list of evaluations made successfully """
     # Get all folders
     evals = os.listdir(path)
 
     # Filter
     is_valid = lambda x: os.path.exists(os.path.join(path, x,
-                                                     dirname, filename))
+                                                     dirname, checkname))
 
     # Apply the filter
     return filter(is_valid, evals)
 
 
-def read_analyses(path, analyses, dirname='analysis', filename='report.pkl'):
+def read_analyses(path, analyses, dirname='analysis'):
     """ Read the evaluation results """
-
     # For each evaluation
     for a in analyses:
-        report = os.path.join(path, a, dirname, filename)
-        stats = pickle.load(open(report, 'r'))
-        yield (a, stats)
+        evals_path = os.path.join(path, a, dirname, 'evals.pkl')
+        stats_path = os.path.join(path, a, dirname, 'stats.pkl')
+        evals = pickle.load(open(evals_path, 'r'))
+        stats = pickle.load(open(stats_path, 'r'))
+        yield (a, evals, stats)
 
 
-def generate_html(path, evals, dirname='analysis', filename='report.html'):
+def generate_html(path, datas, dirname='analysis', filename='report.html'):
     """ Generate an HTML report """
+    # Prepare datas
+    datas = list(datas)
 
     # Create HEAD and BODY
     head = HEAD(TITLE('Report'))
@@ -74,32 +76,41 @@ def generate_html(path, evals, dirname='analysis', filename='report.html'):
     table <= TR(TD(B('System info')) + TD(platform()))
     body <= table
 
+    # Compute total
+    tot = dict()
+    first = datas[0]
+    for k in vars(first[1]):
+        for _, e, _ in datas:
+            if not k in tot:
+                tot[k] = 0
+            tot[k] += vars(e)[k]
+    vid = Time()
+    for _, _, s in datas:
+        vid += s['Video duration'][0]
+    total = statistics(Evaluation(**tot), Video(duration=vid))
+
     # Results section
     body <= H2('Results')
     table = TABLE(border=1, style='border-collapse: collapse;')
-    evals = list(evals)
-    cols = statistics(evals[0][1])
     row = TR(style='background: lightgray;')
-    row <= TH('Video')
-    for col in cols:
-        row <= TH(col)
+    row <= TH('Statistics')
+    for col in datas:
+        row <= TH(A(B(col[0]), href=os.path.join(col[0], dirname, filename)))
+    row <= TH('Overall')
     table <= row
-    for name, e in evals:
+    for k in first[2]:
         row = TR()
-        row <= TD(A(B(name), href=os.path.join(name, dirname, filename)))
-        stats = statistics(e)
-        for k in stats:
-            v, f = stats[k]
+        row <= TD(B(k))
+        for _, _, s in datas:
+            v, f = s[k]
             row <= TD(f % v)
+        if k in total:
+            v, f = total[k]
+            row <= TD(f % v)
+        else:
+            row <= TD('N/A')
+
         table <= row
-    # Total
-    row = TR(style='background: #D3D3FF;')
-    row <= TD(B('Total'))
-    stats = statistics(e)
-    for k in stats:
-        v, f = stats[k]
-        row <= TD(f % v)
-    table <= row
     body <= table
 
     # Get file path
@@ -151,10 +162,10 @@ def main():
     analyses = list_analyses(rpath)
 
     # Read the evaluations of analyses
-    evals = read_analyses(rpath, analyses)
+    datas = read_analyses(rpath, analyses)
 
     # Generate html report
-    generate_html(rpath, evals)
+    generate_html(rpath, datas)
 
 
 if __name__ == '__main__':

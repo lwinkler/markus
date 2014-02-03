@@ -256,8 +256,8 @@ def statistics(evaluation, video=None):
 
     # Video statistics
     if video is not None:
-        stats['Videos related'] = ('-' * 20, '%s')
-        stats['Videos duration'] = (v.duration, '%s')
+        stats['Video related'] = ('-' * 20, '%s')
+        stats['Video duration'] = (v.duration, '%s')
         stats['False alarm rate'] = (float(r.fp * 60 * 60 * 1000) /
                                      v.duration.milis, '%.1f alarms/hour')
 
@@ -404,7 +404,7 @@ def arguments_parser():
     # Main parser
     parser = argparse.ArgumentParser(description='Evaluation of videos events '
                                      'regarding to the ground truth',
-                                     version=version)
+                                     version=vplib.__version__)
 
     # Events file
     parser.add_argument('EVENT_FILE',
@@ -499,7 +499,8 @@ def main():
     stats = statistics(evaluation, video)
 
     # Save stats
-    pickle.dump(evaluation, open(os.path.join(args.output, "report.pkl"), 'w'))
+    pickle.dump(evaluation, open(os.path.join(args.output, "evals.pkl"), 'w'))
+    pickle.dump(stats, open(os.path.join(args.output, "stats.pkl"), 'w'))
 
     # If an HTML report is desired
     if args.html:
