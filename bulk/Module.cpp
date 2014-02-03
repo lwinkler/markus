@@ -363,6 +363,28 @@ void Module::SetAsReady()
 	}
 }
 
+
+/// Add an input stream
+void Module::AddInputStream(int x_id, Stream* xp_stream)
+{
+	m_inputStreams.push_back(xp_stream);
+	xp_stream->SetId(x_id);
+}
+
+/// Add an input stream
+void Module::AddOutputStream(int x_id, Stream* xp_stream)
+{
+	m_outputStreams.push_back(xp_stream);
+	xp_stream->SetId(x_id);
+}
+
+/// Add an input stream
+void Module::AddDebugStream(int x_id, Stream* xp_stream)
+{
+	m_debugStreams.push_back(xp_stream);
+	xp_stream->SetId(x_id);
+}
+
 /// find a controller in map by name
 Controller* Module::FindController(const std::string& x_name) const
 {

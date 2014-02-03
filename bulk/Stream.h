@@ -36,6 +36,7 @@ public:
 	virtual ~Stream();
 	inline const std::string& GetName() const {return m_name;}
 	inline int GetId() const {return m_id;}
+	inline void SetId(int x_id) {m_id = x_id;} // id should disappear at term
 	inline int GetInputWidth() const {return m_width;}
 	inline int GetInputHeight() const {return m_height;}
 	inline const std::string& GetDescription() const {return m_description;}
@@ -68,7 +69,7 @@ public:
 
 protected:
 	const std::string m_name;
-	const int m_id;
+	int m_id; // TODO remove
 	const int m_width;
 	const int m_height;
 	Module& mr_module;

@@ -39,8 +39,8 @@ LogEvent::LogEvent(const ConfigReader& x_configReader)
 	m_description = "This module takes an event as input and logs it to .srt file";
 
 	// Init input images
-	m_inputStreams.push_back(new StreamEvent(0, "event", m_event, *this, "Input event to be logged"));
-	m_inputStreams.push_back(new StreamImage(1, "image", m_input, *this, "Video input for image extraction"));
+	AddInputStream(0, new StreamEvent(0, "event", m_event, *this, "Input event to be logged"));
+	AddInputStream(1, new StreamImage(1, "image", m_input, *this, "Video input for image extraction"));
 
 	m_saveImage = false;
 }

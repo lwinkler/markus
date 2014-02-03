@@ -41,10 +41,10 @@ TempDiff::TempDiff(const ConfigReader& x_configReader) :
 	m_description = "Perform temporal differencing: compare frame with previous frame by subtraction";
 	m_tmp = NULL;
 	
-	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,             "Video input"));
-	m_outputStreams.push_back(new StreamImage(0, "temp_diff", m_temporalDiff, *this, "Temporal difference"));
+	AddInputStream(0, new StreamImage(0, "input", m_input, *this,             "Video input"));
+	AddOutputStream(0, new StreamImage(0, "temp_diff", m_temporalDiff, *this, "Temporal difference"));
 		
-	Reset();
+	// Reset(); //  TODO: check that no reset is called in any constructor
 }
 
 TempDiff::~TempDiff(void )

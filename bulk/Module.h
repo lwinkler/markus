@@ -89,6 +89,11 @@ public:
 	const std::vector<Stream*>& GetInputStreamList() const {return m_inputStreams;}
 	const std::vector<Stream*>& GetOutputStreamList() const {return m_outputStreams;}
 	const std::vector<Stream*>& GetDebugStreamList() const {return m_debugStreams;}
+	void AddInputStream(int x_id, Stream* xp_stream);
+	void AddOutputStream(int x_id, Stream* xp_stream);
+	void AddDebugStream(int x_id, Stream* xp_stream);
+
+
 	const std::map<std::string, Controller*>& GetControlsList() const {return m_controls;}
 	Controller* FindController(const std::string& x_name) const;
 	

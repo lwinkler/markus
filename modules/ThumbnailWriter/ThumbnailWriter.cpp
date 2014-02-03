@@ -39,8 +39,8 @@ ThumbnailWriter::ThumbnailWriter(const ConfigReader& x_configReader):
 	m_description = "Write an object stream as separate images in a folder.";
 
 
-	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,   "Video input"));
-	m_inputStreams.push_back(new StreamObject(1, "objects", m_objectsIn, *this,     "Incoming objects"));
+	AddInputStream(0, new StreamImage(0, "input", m_input, *this,   "Video input"));
+	AddInputStream(1, new StreamObject(1, "objects", m_objectsIn, *this,     "Incoming objects"));
 }
 
 ThumbnailWriter::~ThumbnailWriter()

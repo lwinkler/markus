@@ -41,13 +41,13 @@ BgrSubMOG::BgrSubMOG(const ConfigReader& x_configReader) :
 	mp_mog = NULL;
 	m_description = "Perform background subtraction via Mixtures Of Gaussians";
 	
-	m_inputStreams.push_back(new StreamImage(0, "input",       m_input,      *this,   "Video input"));
+	AddInputStream(0, new StreamImage(0, "input",       m_input,      *this,   "Video input"));
 
-	m_outputStreams.push_back(new StreamImage(0, "foreground", m_foreground, *this,   "Foreground"));
-	m_outputStreams.push_back(new StreamImage(1, "background", m_background, *this,   "Background"));
+	AddOutputStream(0, new StreamImage(0, "foreground", m_foreground, *this,   "Foreground"));
+	AddOutputStream(1, new StreamImage(1, "background", m_background, *this,   "Background"));
 
 #ifdef MARKUS_DEBUG_STREAMS
-	m_debugStreams.push_back(new StreamDebug(0, "input",       m_input,      *this,   "Input"));
+	AddDebugStream(0, new StreamDebug(0, "input",       m_input,      *this,   "Input"));
 #endif
 };
 
