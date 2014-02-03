@@ -16,6 +16,7 @@ Created 2014-01-29 Fabien Dubosson
 
 import re
 import os
+import pickle
 import argparse
 import subprocess
 from time import strftime, localtime
@@ -497,6 +498,9 @@ def main():
 
     # Compute the statistics on the evaluation
     stats = statistics(evaluation, video)
+
+    # Save stats
+    pickle.dump(stats, open(os.path.join(args.output, "report.pkl"), 'w'))
 
     # If an HTML report is desired
     if args.html:
