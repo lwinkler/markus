@@ -194,7 +194,7 @@ Module::~Module()
 
 void Module::Process()
 {
-	m_lock.lockForRead();
+	m_lock.lockForWrite();
 	if(m_pause)
 		return;
 	if(!m_isReady)

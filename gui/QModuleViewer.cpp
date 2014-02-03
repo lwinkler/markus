@@ -64,10 +64,10 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	
 	// Handlers for modules
 	assert(x_manager != NULL);
-	if(x_manager->GetModuleList().size() == 0)
+	if(x_manager->GetModules().size() == 0)
 		throw MkException("Module list cannot be empty", LOC);
 	m_manager 		= x_manager;
-	m_currentModule 	= *x_manager->GetModuleList().begin();
+	m_currentModule 	= *x_manager->GetModules().begin();
 	m_currentStream 	= *m_currentModule->GetOutputStreamList().begin();
 		
 	mp_comboModules 	= new QComboBox();
@@ -83,13 +83,13 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 	layoutCombos->addWidget(lab1,0,0);
 	mp_comboModules->clear();
 	int ind = 0;
-	for(std::vector<Module*>::const_iterator it = x_manager->GetModuleList().begin(); it != x_manager->GetModuleList().end(); it++)
+	for(std::vector<Module*>::const_iterator it = x_manager->GetModules().begin(); it != x_manager->GetModules().end(); it++)
 		mp_comboModules->addItem((*it)->GetName().c_str(), ind++);
 	layoutCombos->addWidget(mp_comboModules,0,1);
 	
 	QLabel* lab2 = new QLabel(tr("Out stream"));
 	layoutCombos->addWidget(lab2,1,0);
-	this->updateModule(*(x_manager->GetModuleList().begin()));
+	this->updateModule(*(x_manager->GetModules().begin()));
 	layoutCombos->addWidget(mp_comboStreams,1,1);
 
 	// Create the group with combo menus
@@ -179,7 +179,9 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 		if(m_img_output == NULL)
 			m_img_output = new Mat( Size(m_outputWidth, m_outputHeight), CV_8UC3);
 		
+		m_currentModule->LockForRead();
 		m_currentStream->RenderTo(*m_img_original);
+		m_currentModule->Unlock();
 		
 		adjust(*m_img_original, *m_img_output, m_img_tmp1, m_img_tmp2);
 
@@ -254,9 +256,9 @@ void QModuleViewer::updateModule(Module * x_module)
 /// change the module being currently displayed (by index)
 void QModuleViewer::updateModuleNb(int x_index)
 {
-	std::vector<Module*>::const_iterator it = m_manager->GetModuleList().begin();
+	std::vector<Module*>::const_iterator it = m_manager->GetModules().begin();
 	
-	while(x_index-- > 0 && it != m_manager->GetModuleList().end())
+	while(x_index-- > 0 && it != m_manager->GetModules().end())
 		it++;
 	
 	updateModule(*it);

@@ -56,10 +56,10 @@ public:
 	bool Process();
 	void SendCommand(const std::string& x_command, std::string x_value);
 	// const std::vector<Input*> & GetInputList()  const {return m_inputs; };
-	const std::vector<Module*>& GetModuleList() const {return m_modules; }
+	const std::vector<Module*>& GetModules() const {return m_modules; }
 
 	//std::vector<Input*> & GetInputListVar()  {return m_inputs; };
-	std::vector<Module*>& GetModuleListVar() {return m_modules; }
+	//std::vector<Module*>& RefModules() {return m_modules; }
 	
 	Module& RefModuleById(int x_id) const;
 	Module& RefModuleByName(const std::string& x_name) const;

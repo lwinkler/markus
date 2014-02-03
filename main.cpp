@@ -77,6 +77,7 @@ void *send_commands(void *x_void_ptr)
 			// cout << "CMD > ";
 			if(getline(cin, input))
 			{
+				cout<<"command :"<<input<<endl;
 				split(input, ' ', elems);
 				if(elems.size() == 1)
 					value = "";

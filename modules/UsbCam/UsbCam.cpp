@@ -73,7 +73,6 @@ void UsbCam::Capture()
 	if(m_capture.grab() == 0)
 	{
 		m_endOfStream = true;
-		std::exception e;
 		Pause(true);
 		throw MkException("Capture failed on USB camera", LOC);
 	}
