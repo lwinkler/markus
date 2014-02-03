@@ -75,21 +75,19 @@ void *send_commands(void *x_void_ptr)
 		try
 		{
 			// cout << "CMD > ";
-			getline(cin, input);
-			split(input, ' ', elems);
-			if(elems.size() == 1)
-				value = "";
-			else if(elems.size() == 2)
-				value = elems.at(1);
-			else throw MkException("Command must have one or two elements", LOC);
-			LOG_INFO(Manager::Logger(), "Send command: "<<elems.at(0)<<" \""<<value<<"\"");
-			pManager->SendCommand(elems.at(0), value);
-			//if(input == "exit")
-				//break;
-
-			cin.clear();
-
-			//cout << endl;
+			if(getline(cin, input))
+			{
+				split(input, ' ', elems);
+				if(elems.size() == 1)
+					value = "";
+				else if(elems.size() == 2)
+					value = elems.at(1);
+				else throw MkException("Command must have one or two elements", LOC);
+				LOG_INFO(Manager::Logger(), "Send command: "<<elems.at(0)<<" \""<<value<<"\"");
+				pManager->SendCommand(elems.at(0), value);
+				cin.clear();
+			}
+			else cout<<"Getline failed"<<endl;
 		}
 		catch(std::exception& e)
 		{
@@ -99,6 +97,7 @@ void *send_commands(void *x_void_ptr)
 		{
 			LOG_ERROR(Manager::Logger(), "Cannot execute command");
 		}
+		usleep(1000000); // Do we keep this TODO
 	}
 
 	return NULL;

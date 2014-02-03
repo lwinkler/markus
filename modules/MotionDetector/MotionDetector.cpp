@@ -41,8 +41,7 @@ const Scalar MotionDetector::m_colorPlotThres = cv::Scalar(0, 0, 0);
 
 MotionDetector::MotionDetector(const ConfigReader& x_configReader) 
 	: Module(x_configReader), m_param(x_configReader),
-	m_input(Size(m_param.width, m_param.height), m_param.type),
-	m_debug(Size(640, 480), CV_8UC3)
+	m_input(Size(m_param.width, m_param.height), m_param.type)
 {
 	m_description = "This module analyse an image where pixel value represents movement and outputs a state (motion or not)";
 	
@@ -51,6 +50,7 @@ MotionDetector::MotionDetector(const ConfigReader& x_configReader)
 	m_outputStreams.push_back(new StreamState(0, "motion", m_state,  *this, 	"Motion is detected"));
 
 #ifdef MARKUS_DEBUG_STREAMS
+	m_debug = Mat(Size(640, 480), CV_8UC3);
 	m_debugStreams.push_back(new StreamDebug(0, "motion", m_debug, *this, 	"Motion percentage"));
 #endif
 }

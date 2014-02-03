@@ -34,7 +34,6 @@ UsbCam::UsbCam(const ConfigReader& x_configReader):
 	m_output(Size(m_param.width, m_param.height), m_param.type)  // Note: sizes will be overridden !
 {
 	m_timeStamp = TIME_STAMP_INITIAL;
-	
 	m_outputStreams.push_back(new StreamImage(0, "input", m_output, *this, 		"Video stream of the camera"));
 }
 
@@ -62,7 +61,7 @@ void UsbCam::Reset()
 	m_capture.set(CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
 	
 	// note on the next line: the image will be overloaded but the properties are used to set the input ratio, the type is probably ignored
-	m_output = Mat(Size(m_capture.get(CV_CAP_PROP_FRAME_WIDTH), m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)), m_param.type);
+	// m_output = Mat(Size(m_capture.get(CV_CAP_PROP_FRAME_WIDTH), m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)), m_param.type);
 
 
 	m_frameTimer.Restart();

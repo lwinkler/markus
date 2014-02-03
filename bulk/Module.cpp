@@ -30,10 +30,8 @@
 #include "ModuleTimer.h"
 
 
-#ifndef MARKUS_NO_GUI
 #include "ControllerModule.h"
 #include "ControllerParameters.h"
-#endif
 
 using namespace std;
 
@@ -77,7 +75,6 @@ void Module::Reset()
 	// param.PrintParameters(); // Do not print 2x at startup
 
 	// Add controls for parameters' change
-#ifndef MARKUS_NO_GUI
 	const std::vector<Parameter*>& list = param.GetList();
 	// for(const vector<Parameter*>&::iterator it = list.begin() ; it != list.end() ; it++)
 		// m_controls.push_back(new ParameterControl("Parameters", "Change the values of parameters at runtime."));
@@ -128,7 +125,6 @@ void Module::Reset()
 			else m_controls.insert(make_pair(ctr->GetName(), ctr));
 		}
 	}
-#endif
 }
 
 void Module::Pause(bool x_pause)
@@ -198,6 +194,7 @@ Module::~Module()
 
 void Module::Process()
 {
+	m_lock.lockForRead();
 	if(m_pause)
 		return;
 	if(!m_isReady)
@@ -217,7 +214,7 @@ void Module::Process()
 	if(param.autoProcess || (param.fps == 0 && m_currentTimeStamp != m_lastTimeStamp) || (m_currentTimeStamp - m_lastTimeStamp) * param.fps > 1000)
 	{
 		// Process this frame
-		m_lock.lockForRead();
+		// m_lock.lockForRead();
 		
 		// Timer for benchmark
 		Timer ti;
@@ -266,8 +263,9 @@ void Module::Process()
 
 		m_countProcessedFrames++;
 		m_lastTimeStamp = m_currentTimeStamp;
-		m_lock.unlock();
+		// m_lock.unlock();
 	}
+	m_lock.unlock();
 }
 
 
@@ -370,7 +368,7 @@ Controller* Module::FindController(const std::string& x_name) const
 {
 	map<string, Controller*>::const_iterator it = m_controls.find(x_name);
 	if(it == m_controls.end())
-		throw MkException("Cannot find controller in module", LOC);
+		throw MkException("Cannot find controller " + x_name + " in module", LOC);
 
 	// Call the function pointer associated with the action
 	return it->second;

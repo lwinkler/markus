@@ -35,8 +35,7 @@ using namespace cv;
 
 FilterObjects::FilterObjects(const ConfigReader& x_configReader) :
 	Module(x_configReader),
-	m_param(x_configReader),
-	m_debug(Size(m_param.width, m_param.height), CV_8UC3)
+	m_param(x_configReader)
 {
 	m_description = "Filter the input objects based on different criterion";
 
@@ -47,6 +46,7 @@ FilterObjects::FilterObjects(const ConfigReader& x_configReader) :
 	m_outputStreams.push_back(m_outputObjectStream);
 #ifdef MARKUS_DEBUG_STREAMS
 	// add a debug stream
+	m_debug = Mat(Size(m_param.width, m_param.height), CV_8UC3);
 	m_debugStreams.push_back(new StreamDebug(0, "debug", m_debug, *this,	"Debug"));
 #endif
 }
