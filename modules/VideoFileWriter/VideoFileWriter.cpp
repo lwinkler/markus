@@ -37,7 +37,7 @@ VideoFileWriter::VideoFileWriter(const ConfigReader& x_configReader):
 	m_description = "Write output to a video file.";
 
 
-	AddInputStream(0, new StreamImage(0, "input", m_input, *this,   "Video input"));
+	AddInputStream(0, new StreamImage("input", m_input, *this,   "Video input"));
 }
 
 VideoFileWriter::~VideoFileWriter()

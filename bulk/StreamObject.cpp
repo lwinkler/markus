@@ -28,8 +28,8 @@ using namespace std;
 using namespace cv;
 
 
-StreamObject::StreamObject(int x_id, const string& rx_name, vector<Object>& xr_objects, Module& rx_module, const string& rx_description):
-	Stream(x_id, rx_name, rx_module, rx_description),
+StreamObject::StreamObject(const string& rx_name, vector<Object>& xr_objects, Module& rx_module, const string& rx_description):
+	Stream(rx_name, rx_module, rx_description),
 	m_objects(xr_objects),
 	// m_color(cvScalar(255, 255, 255)),
 	m_isColorSet(false)

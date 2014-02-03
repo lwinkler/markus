@@ -39,11 +39,11 @@ Morph::Morph(const ConfigReader& x_configReader) :
 	m_description = "Apply a morphological operator to an image";
 
 	
-	AddInputStream(0, new StreamImage( 0, "input" , m_input , *this, "Video input"));
+	AddInputStream(0, new StreamImage("input" , m_input , *this, "Video input"));
 
-	AddOutputStream(0, new StreamImage(0, "output", m_output, *this,	"Output"));
+	AddOutputStream(0, new StreamImage("output", m_output, *this,	"Output"));
 	
-	Reset();
+	// Reset();
 }
 
 Morph::~Morph(void )

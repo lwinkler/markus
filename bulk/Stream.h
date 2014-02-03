@@ -32,7 +32,7 @@
 class Stream
 {
 public:
-	Stream(int x_id, const std::string& x_name, Module& rx_module, const std::string& rx_description);
+	Stream(const std::string& x_name, Module& rx_module, const std::string& rx_description);
 	virtual ~Stream();
 	inline const std::string& GetName() const {return m_name;}
 	inline int GetId() const {return m_id;}

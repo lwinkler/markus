@@ -41,12 +41,12 @@ BgrSubRunAvg::BgrSubRunAvg(const ConfigReader& x_configReader) :
 	m_tmp2 = NULL;
 	m_description = "Perform a background subtraction using a running average";
 	
-	AddInputStream(0, new StreamImage(0, "input",             m_input, *this,   "Video input"));
+	AddInputStream(0, new StreamImage("input",             m_input, *this,   "Video input"));
 
-	AddOutputStream(0, new StreamImage(0, "foreground", m_foreground,*this,      "Foreground"));
-	AddOutputStream(1, new StreamImage(1, "background", m_background, *this,		"Background"));
+	AddOutputStream(0, new StreamImage("foreground", m_foreground,*this,      "Foreground"));
+	AddOutputStream(1, new StreamImage("background", m_background, *this,		"Background"));
 
-	AddDebugStream(0,new StreamImage(0, "foreground_tmp", m_foreground_tmp,*this,      "Foreground tmp"));
+	AddDebugStream(0, new StreamImage("foreground_tmp", m_foreground_tmp,*this,      "Foreground tmp"));
 };
 		
 

@@ -42,9 +42,9 @@ SlitCam::SlitCam(const ConfigReader& x_configReader):
 	m_position = 0;
 	
 	// Init output images
-	AddInputStream(0, new StreamImage(0, "input", m_input, *this, 	"Video input"));
+	AddInputStream(0, new StreamImage("input", m_input, *this, 	"Video input"));
 	
-	AddOutputStream(0, new StreamImage(0, "slit",  m_output, *this, 	"Slit camera stream"));
+	AddOutputStream(0, new StreamImage("slit",  m_output, *this, 	"Slit camera stream"));
 }
 
 SlitCam::~SlitCam(void)

@@ -36,7 +36,7 @@ LogState::LogState(const ConfigReader& x_configReader)
 	m_description = "This module takes a state as input and logs it to .srt file";
 	
 	// Init input images
-	AddInputStream(0, new StreamState(0, "input", m_state, *this, 	"Input state to be logged"));
+	AddInputStream(0, new StreamState("input", m_state, *this, 	"Input state to be logged"));
 }
 
 LogState::~LogState(void)

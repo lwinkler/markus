@@ -43,12 +43,12 @@ HOGDetector::HOGDetector(const ConfigReader& x_configReader)
 
 	m_description = "Detect objects from a video stream using a HOG descriptor";
 
-	AddInputStream(0, new StreamImage(0, "input", m_input, *this, 		"Video input")); 
+	AddInputStream(0, new StreamImage("input", m_input, *this, 		"Video input")); 
 
-	AddOutputStream(0, new StreamObject(0, "detected", m_detectedObjects, /*colorFromStr(m_param.color),*/ *this,	"Detected objects"));
+	AddOutputStream(0, new StreamObject("detected", m_detectedObjects, /*colorFromStr(m_param.color),*/ *this,	"Detected objects"));
 #ifdef MARKUS_DEBUG_STREAMS
 	m_debug = Mat(Size(m_param.width, m_param.height), CV_8UC3);
-	AddDebugStream(0, new StreamDebug(1, "debug", m_debug, *this,		"Debug image"));
+	AddDebugStream(0, new StreamDebug("debug", m_debug, *this,		"Debug image"));
 #endif
 }
 

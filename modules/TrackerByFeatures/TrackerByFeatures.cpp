@@ -40,13 +40,13 @@ TrackerByFeatures::TrackerByFeatures(const ConfigReader& x_configReader) :
 {
 	m_description = "Track objects by matching a set of features (typically x,y,width and height)";
 
-	AddInputStream(0, new StreamObject(0, "input",      m_objects, *this,       "Input objects"));
+	AddInputStream(0, new StreamObject("input",      m_objects, *this,       "Input objects"));
 
-	AddOutputStream(0, new StreamObject(0, "tracker", m_objects, *this, "Tracked objects"));
+	AddOutputStream(0, new StreamObject("tracker", m_objects, *this, "Tracked objects"));
 
 #ifdef MARKUS_DEBUG_STREAMS
 	m_debug = Mat(Size(m_param.width, m_param.height), CV_8UC3);
-	AddDebugStream(0, new StreamDebug(0, "debug", m_debug, *this,	"Debug"));
+	AddDebugStream(0, new StreamDebug("debug", m_debug, *this,	"Debug"));
 #endif
 }
 

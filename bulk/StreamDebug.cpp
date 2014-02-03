@@ -29,8 +29,8 @@ using namespace std;
 /// This class represents a debug stream, a stream that is only used to help the user 
 /// it can typically be used to show what is happening inside a detection module
 
-StreamDebug::StreamDebug(int x_id, const std::string& x_name, cv::Mat& x_image, Module& rx_module, const string& rx_description) : 
-	Stream(x_id, x_name, rx_module, rx_description),
+StreamDebug::StreamDebug(const std::string& x_name, cv::Mat& x_image, Module& rx_module, const string& rx_description) : 
+	Stream(x_name, rx_module, rx_description),
 	m_image(x_image)
 {
 	assert(x_image.cols == rx_module.GetWidth() && x_image.rows == rx_module.GetHeight());
