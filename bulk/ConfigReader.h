@@ -65,7 +65,7 @@ public:
 	~Configurable(){}
 protected:
 	const ConfigReader m_configReader;
-	inline virtual const ParameterStructure & RefParameter() = 0;
+	inline virtual const ParameterStructure & GetParameters() const = 0;
 };
 
 #endif

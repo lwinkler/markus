@@ -30,17 +30,15 @@ using namespace cv;
 
 UsbCam::UsbCam(const ConfigReader& x_configReader): 
 	Input(x_configReader),
-	m_param(x_configReader)
+ 	m_param(x_configReader),
+	m_output(Size(m_param.width, m_param.height), m_param.type)  // Note: sizes will be overridden !
 {
 	m_timeStamp = TIME_STAMP_INITIAL;
-	
-	m_output = new Mat(Size(m_param.width, m_param.height), m_param.type);  // Note: sizes will be overridden !
 	m_outputStreams.push_back(new StreamImage(0, "input", m_output, *this, 		"Video stream of the camera"));
 }
 
 UsbCam::~UsbCam()
 {
-	delete(m_output);
 }
 
 void UsbCam::Reset()
@@ -63,8 +61,7 @@ void UsbCam::Reset()
 	m_capture.set(CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
 	
 	// note on the next line: the image will be overloaded but the properties are used to set the input ratio, the type is probably ignored
-	delete m_output;
-	m_output = new Mat(Size(m_capture.get(CV_CAP_PROP_FRAME_WIDTH), m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)), m_param.type);
+	// m_output = Mat(Size(m_capture.get(CV_CAP_PROP_FRAME_WIDTH), m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)), m_param.type);
 
 
 	m_frameTimer.Restart();
@@ -76,12 +73,11 @@ void UsbCam::Capture()
 	if(m_capture.grab() == 0)
 	{
 		m_endOfStream = true;
-		std::exception e;
 		Pause(true);
 		throw MkException("Capture failed on USB camera", LOC);
 	}
 
-	m_capture.retrieve(*m_output);
+	m_capture.retrieve(m_output);
 	
 	// cout<<"UsbCam capture image "<<m_output->cols<<"x"<<m_output->rows<<" time stamp "<<m_capture.get(CV_CAP_PROP_POS_MSEC) / 1000.0<< endl;
 

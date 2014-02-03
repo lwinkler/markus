@@ -33,12 +33,12 @@ using namespace std;
 
 Mask::Mask(const ConfigReader& x_configReader) :
 	Module(x_configReader),
-	m_param(x_configReader)
+	m_param(x_configReader),
+	m_input(Size(m_param.width, m_param.height), m_param.type),
+	m_mask(Size(m_param.width, m_param.height), CV_8UC1),
+	m_output(Size(m_param.width, m_param.height), m_param.type)
 {
 	m_description = "Apply a binary mask to an image input";
-	m_input       = new Mat(Size(m_param.width, m_param.height), m_param.type);
-	m_mask        = new Mat(Size(m_param.width, m_param.height), CV_8UC1);
-	m_output      = new Mat(Size(m_param.width, m_param.height), m_param.type);
 
 	m_inputStreams.push_back(new StreamImage(0, "input",   m_output, *this, "Video input"));
 	m_inputStreams.push_back(new StreamImage(1, "mask" ,   m_mask,   *this, "Binary mask"));
@@ -49,8 +49,6 @@ Mask::Mask(const ConfigReader& x_configReader) :
 
 Mask::~Mask()
 {
-	delete(m_input);
-	delete(m_output);
 }
 
 void Mask::Reset()
@@ -61,8 +59,8 @@ void Mask::Reset()
 void Mask::ProcessFrame()
 {
 	// m_input->mul(*m_mask);
-	threshold(*m_mask, *m_mask, 128, 255, THRESH_BINARY_INV);
-	m_input->copyTo(*m_output, *m_mask);
+	threshold(m_mask, m_mask, 128, 255, THRESH_BINARY_INV);
+	m_input.copyTo(m_output, m_mask);
 	// cvAnd(m_input, m_mask, m_output);
 };
 

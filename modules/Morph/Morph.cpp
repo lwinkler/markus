@@ -32,11 +32,11 @@ using namespace cv;
 
 Morph::Morph(const ConfigReader& x_configReader) :
 	Module(x_configReader),
-	m_param(x_configReader)
+	m_param(x_configReader),
+	m_input(Size(m_param.width, m_param.height), m_param.type),
+	m_output(Size(m_param.width, m_param.height), m_param.type)
 {
 	m_description = "Apply a morphological operator to an image";
-	m_output   = new Mat(Size(m_param.width, m_param.height), m_param.type);
-	m_input    = new Mat(Size(m_param.width, m_param.height), m_param.type);
 
 	
 	m_inputStreams.push_back(new StreamImage( 0, "input" , m_input , *this, "Video input"));
@@ -48,8 +48,6 @@ Morph::Morph(const ConfigReader& x_configReader) :
 
 Morph::~Morph(void )
 {
-	delete(m_input);
-	delete(m_output);
 }
 
 void Morph::Reset()
@@ -60,5 +58,5 @@ void Morph::Reset()
 
 void Morph::ProcessFrame()
 {
-	morphologyEx(*m_input, *m_output, m_param.oper, m_element);
+	morphologyEx(m_input, m_output, m_param.oper, m_element);
 };

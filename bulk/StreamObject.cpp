@@ -28,8 +28,7 @@ using namespace std;
 using namespace cv;
 
 
-StreamObject::StreamObject(int x_id, const string& rx_name, 
-		vector<Object>& xr_objects, Module& rx_module, const string& rx_description):
+StreamObject::StreamObject(int x_id, const string& rx_name, vector<Object>& xr_objects, Module& rx_module, const string& rx_description):
 	Stream(x_id, rx_name, rx_module, rx_description),
 	m_objects(xr_objects),
 	// m_color(cvScalar(255, 255, 255)),
@@ -70,13 +69,13 @@ void StreamObject::ConvertInput()
 
 /// Render : Draw rectangles on image
 
-void StreamObject::RenderTo(Mat * xp_output) const
+void StreamObject::RenderTo(Mat& x_output) const
 {
-	if(xp_output->cols != m_width || xp_output->rows != m_height)
+	if(x_output.cols != m_width || x_output.rows != m_height)
 		throw MkException("Cannot render, image must have the same size as the stream", LOC);
 	for(vector<Object>::const_iterator it1 = m_objects.begin() ; it1 != m_objects.end() ; it1++)
 	{
-		it1->RenderTo(xp_output, DEFAULT_STREAM_COLOR);
+		it1->RenderTo(x_output, DEFAULT_STREAM_COLOR);
 	}
 }
 

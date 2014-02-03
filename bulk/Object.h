@@ -47,9 +47,9 @@ class Object
 		inline int GetId() const {return m_id;}
 		inline void SetId(int x_id){m_id = x_id;}
 
-        inline void AddFeature(std::string x_name, const Feature& x_feat) {m_feats.insert(std::make_pair(x_name, x_feat));}
-        inline void AddFeature(std::string x_name, double x_value) {m_feats.insert(std::make_pair(x_name, Feature(x_value)));}
-        inline const std::map <std::string, Feature>& GetFeatures() const {return m_feats;}
+		inline void AddFeature(std::string x_name, const Feature& x_feat) {m_feats.insert(std::make_pair(x_name, x_feat));}
+		inline void AddFeature(std::string x_name, double x_value) {m_feats.insert(std::make_pair(x_name, Feature(x_value)));}
+		inline const std::map <std::string, Feature>& GetFeatures() const {return m_feats;}
 		inline const Feature& GetFeature(const std::string& x_name) const
 		{
 			std::map <std::string, Feature>::const_iterator it = m_feats.find(x_name);
@@ -60,7 +60,7 @@ class Object
 		// inline void SetFeatureByName(const std::string& x_name, double x_value) {m_feats.find(x_name)->second = Feature();}
 		void SetFeatures(const std::map<std::string, Feature>& x_feats){m_feats = x_feats;}
 		inline cv::Rect Rect() const {return cv::Rect(posX - width / 2, posY - height / 2, width, height);}
-		void RenderTo(cv::Mat* xp_output, const cv::Scalar& x_color) const;
+		void RenderTo(cv::Mat& x_output, const cv::Scalar& x_color) const;
 
 	private:
 		std::string m_name;

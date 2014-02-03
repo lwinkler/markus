@@ -61,21 +61,19 @@ public:
 	
 	virtual void ProcessFrame();
 	void Reset();
-	
+private:
+	FilterObjectsParameterStructure m_param;
+	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;}
 protected:
-
 	std::vector <Object> m_objectsIn;
 	std::vector <Object> m_objectsOut;
 	StreamObject* m_inputObjectStream;
 	StreamObject* m_outputObjectStream;
 
 #ifdef MARKUS_DEBUG_STREAMS
-	cv::Mat * m_debug;
+	cv::Mat m_debug;
 #endif
 
-private:
-	FilterObjectsParameterStructure m_param;
-	inline virtual ModuleParameterStructure& RefParameter() { return m_param;}
 };
 
 

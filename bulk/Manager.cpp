@@ -49,9 +49,9 @@ string Manager::m_configFile;
 string Manager::m_outputDir;
 
 
-Manager::Manager(ConfigReader& x_configReader, bool x_centralized) : 
+Manager::Manager(const ConfigReader& x_configReader, bool x_centralized) : 
 	Configurable(x_configReader),
-	m_param(m_configReader, "Manager"),
+	m_param(m_configReader),
 	m_centralized(x_centralized)
 {
 	LOG_INFO(m_logger, "Create object Manager");
@@ -214,12 +214,12 @@ bool Manager::Process()
 		}*/
 		catch(EndOfStreamException& e)
 		{
-			LOG_WARN(m_logger, (*it)->GetName() << ": Exception raised (EndOfStream) : " << e.what());
+			LOG_INFO(m_logger, (*it)->GetName() << ": Exception raised (EndOfStream) : " << e.what());
 
 			// test if all inputs are over
 			if(EndOfAllStreams())
 			{
-				LOG_WARN(m_logger, "End of all video streams : Manager::Process");
+				LOG_INFO(m_logger, "End of all video streams : Manager::Process");
 				continueFlag = false;
 			}
 		}
@@ -262,7 +262,12 @@ void Manager::SendCommand(const std::string& x_command, std::string x_value)
 	if(elems.at(0) == "manager")
 		;	// manager.GetControlList();
 	else
-		RefModuleByName(elems.at(0)).FindController(elems.at(1))->CallAction(elems.at(2), &x_value);
+	{
+		Module& module(RefModuleByName(elems.at(0)));
+		module.LockForWrite();
+		module.FindController(elems.at(1))->CallAction(elems.at(2), &x_value);
+		module.Unlock();
+	}
 	LOG_INFO(m_logger, "Command "<<x_command<<" returned value "<<x_value);
 	
 }

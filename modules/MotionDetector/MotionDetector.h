@@ -52,12 +52,19 @@ public:
 
 class MotionDetector : public Module
 {
+public:
+	MotionDetector(const ConfigReader& x_configReader);
+	~MotionDetector(void);
+	void Reset();
+private:
+	MotionDetectorParameterStructure m_param;
+	inline virtual const MotionDetectorParameterStructure& GetParameters() const { return m_param;}
 protected:
 	virtual void ProcessFrame();
 
-	cv::Mat * m_input;
+	cv::Mat m_input;
 #ifdef MARKUS_DEBUG_STREAMS
-	cv::Mat * m_debug;
+	cv::Mat m_debug;
 #endif
 
 	bool m_state;
@@ -65,16 +72,6 @@ protected:
 	static const cv::Scalar m_colorPlotBack;
 	static const cv::Scalar m_colorPlotValue;
 	static const cv::Scalar m_colorPlotThres;
-
-public:
-	MotionDetector(const ConfigReader& x_configReader);
-	~MotionDetector(void);
-	void Reset();
-
-
-protected:
-	MotionDetectorParameterStructure m_param;
-	inline virtual MotionDetectorParameterStructure& RefParameter() { return m_param;}
 };
 
 #endif

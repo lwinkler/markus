@@ -50,19 +50,17 @@ public:
 	
 	virtual void ProcessFrame();
 	void Reset();
-		
-
-protected:
-	// Temporal differencing
-	cv::Mat* m_lastImg;
-	cv::Mat* m_temporalDiff;
-	bool m_emptyTemporalDiff;
-	cv::Mat * m_input;
-	cv::Mat * m_output;
-
 private:
 	TempDiffParameterStructure m_param;
-	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
+	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;};
+protected:
+	// Temporal differencing
+	cv::Mat m_input;
+	cv::Mat m_output;
+	cv::Mat m_lastImg;
+	cv::Mat m_temporalDiff;
+	cv::Mat* m_tmp;
+	bool m_emptyTemporalDiff;
 };
 
 

@@ -92,10 +92,11 @@ public:
 	const std::map<std::string, Controller*>& GetControlsList() const {return m_controls;}
 	Controller* FindController(const std::string& x_name) const;
 	
-	inline int GetWidth() {return RefParameter().width;}
-	inline int GetHeight(){return RefParameter().height;}
-	inline int GetType()  {return RefParameter().type;}
-	inline bool IsAutoProcessed()  {return RefParameter().autoProcess;}
+	inline int GetWidth() const          {return GetParameters().width;}
+	inline int GetHeight() const         {return GetParameters().height;}
+	inline int GetType() const           {return GetParameters().type;}
+	inline double GetFps() const         {return GetParameters().fps;}
+	inline bool IsAutoProcessed() const  {return GetParameters().autoProcess;}
 	virtual double GetRecordingFps();
 	
 	inline void AddDependingModule (Module & x_module){m_modulesDepending.push_back(&x_module);}
@@ -125,6 +126,7 @@ protected:
 	TIME_STAMP m_currentTimeStamp;  // time stamp of the current input
 	bool m_pause;
 	bool m_isReady;
+	bool m_unsyncWarning;
 	
 	virtual void ProcessFrame() = 0;
 	inline virtual bool IsInputProcessed() const {return true;}
@@ -144,7 +146,7 @@ protected:
 	log4cxx::LoggerPtr m_logger;
 
 private:
-	virtual ModuleParameterStructure & RefParameter() = 0;
+	virtual const ModuleParameterStructure & GetParameters() const = 0;
 };
 
 #endif

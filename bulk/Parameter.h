@@ -31,6 +31,7 @@
 #include <cstdlib>
 */
 #include "util.h"
+#include "ConfigReader.h"
 #include "MkException.h"
 
 enum ParameterType
@@ -316,13 +317,14 @@ public:
 	void CheckRange() const;
 	void PrintParameters(log4cxx::LoggerPtr& x_logger) const;
 	//void SetValueByName(const std::string& x_name, const std::string& x_value, ParameterConfigType x_configType = PARAMCONF_UNKNOWN);
-	Parameter & RefParameterByName(const std::string& x_name);
+	const Parameter & GetParameterByName(const std::string& x_name) const;
 	const std::vector<Parameter*>& GetList() const {return m_list;}
 	
 protected:
 	std::vector<Parameter*> m_list;
-	const ConfigReader& m_configReader;
-	std::string m_objectName;
+	const ConfigReader m_configReader; // Warning this still contains reference to the tinyxml config!
+	std::string m_moduleName;
+	Parameter & RefParameterByName(const std::string& x_name);
 };
 
 typedef ParameterT<int> 	ParameterInt;

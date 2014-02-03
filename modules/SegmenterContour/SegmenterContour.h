@@ -56,25 +56,24 @@ public:
 	
 	virtual void ProcessFrame();
 	void Reset();
-	
+private:
+	SegmenterContourParameterStructure m_param;
+	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;};
+	bool m_computeFitEllipse;
+	bool m_computeMinRect;
 protected:
 	
-	// for streams
-	cv::Mat * m_input;
 	cv::RNG m_rng;
+	// for streams
+	cv::Mat m_input;
 #ifdef MARKUS_DEBUG_STREAMS
-	cv::Mat * m_debug;
+	cv::Mat m_debug;
 #endif
 
 	std::vector<Object> m_regions;
 	std::vector<std::string> m_featureNames;
 	StreamObject* m_outputObjectStream;
 
-private:
-	SegmenterContourParameterStructure m_param;
-	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
-	bool m_computeFitEllipse;
-	bool m_computeMinRect;
 };
 
 

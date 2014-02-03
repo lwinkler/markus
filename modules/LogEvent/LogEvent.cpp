@@ -33,10 +33,10 @@ using namespace std;
 using namespace cv;
 
 LogEvent::LogEvent(const ConfigReader& x_configReader) 
-	 : Module(x_configReader), m_param(x_configReader)
+	 : Module(x_configReader), m_param(x_configReader),
+	m_input(Size(m_param.width, m_param.height), m_param.type)
 {
 	m_description = "This module takes an event as input and logs it to .srt file";
-	m_input       = new Mat(Size(m_param.width, m_param.height), m_param.type);
 
 	// Init input images
 	m_inputStreams.push_back(new StreamEvent(0, "event", m_event, *this, "Input event to be logged"));
@@ -47,7 +47,6 @@ LogEvent::LogEvent(const ConfigReader& x_configReader)
 
 LogEvent::~LogEvent(void)
 {
-	delete(m_input);
 }
 
 void LogEvent::Reset()
@@ -122,11 +121,11 @@ void LogEvent::SaveImage()
 		std::stringstream ss1;
 		ss1 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetLabel() << "_" << obj.GetName()<< obj.GetId() << "." << m_param.extension;
 		// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
-		imwrite(ss1.str(), (*m_input)(obj.Rect()));
+		imwrite(ss1.str(), (m_input)(obj.Rect()));
 		//ss1.flush();
 	}
 
 	std::stringstream ss2;
 	ss2 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetLabel() << "_global." << m_param.extension;
-	imwrite(ss2.str(), *m_input);
+	imwrite(ss2.str(), m_input);
 }

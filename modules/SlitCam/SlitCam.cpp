@@ -32,15 +32,14 @@ using namespace std;
 using namespace cv;
 
 
-SlitCam::SlitCam(const ConfigReader& x_configReader) 
-	 : Module(x_configReader), m_param(x_configReader)
+SlitCam::SlitCam(const ConfigReader& x_configReader):
+	Module(x_configReader), 
+	m_param(x_configReader),
+	m_input(Size(m_param.width, m_param.height), m_param.type),
+	m_output(Size(m_param.width, m_param.height), m_param.type)
 {
 	m_description = "A simple example module that mimics a slit camera (or linear camera). The camera input is a range of pixels in the middle of the image.";
 	m_position = 0;
-	
-	// Init images
-	m_input = new Mat(Size(m_param.width, m_param.height), m_param.type);
-	m_output = new Mat(Size(m_param.width, m_param.height), m_param.type);
 	
 	// Init output images
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this, 	"Video input"));
@@ -50,28 +49,23 @@ SlitCam::SlitCam(const ConfigReader& x_configReader)
 
 SlitCam::~SlitCam(void)
 {
-	delete(m_input);
-	delete(m_output);
-	//for(vector<Stream *>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
-	//	delete *it;
-	//m_outputStreams.resize(0);
 }
 
 void SlitCam::Reset()
 {
 	Module::Reset();
-	m_output->setTo(0);
+	m_output.setTo(0);
 }
 
 void SlitCam::ProcessFrame()
 {
 	int aperture = m_param.aperture;
 	m_position = m_position + aperture;
-	m_position %= m_input->cols;
-	int x = m_input->cols / 2;
+	m_position %= m_input.cols;
+	int x = m_input.cols / 2;
 	assert(aperture < x);
 	for(int i = 0; i < aperture ; i++)
-		if(m_position + i < m_input->cols)
-			m_output->col(m_position + i) = m_input->col(x/* + i*/) * 1;
+		if(m_position + i < m_input.cols)
+			m_output.col(m_position + i) = m_input.col(x/* + i*/) * 1;
 }
 

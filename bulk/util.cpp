@@ -96,37 +96,37 @@ Scalar g_colorArray[] =
 
 /* Set image to the right size */
 
-void adjustSize(const Mat* im_in, Mat* im_out)
+void adjustSize(const Mat& im_in, Mat& im_out)
 {
-	if(!im_in->cols || !im_in->rows)
+	if(!im_in.cols || !im_in.rows)
 	{
 		throw MkException("Module input image has width of height with zero value", LOC); // TODO: This error appears sometimes for strange reasons with FallDetection.write.xml
 		// im_out->setTo(0);
 	}
 	else
 	{
-		if(im_in->cols == im_out->cols && im_in->rows == im_out->rows)
-			im_in->copyTo(*im_out);
+		if(im_in.cols == im_out.cols && im_in.rows == im_out.rows)
+			im_in.copyTo(im_out);
 		else
-			resize(*im_in, *im_out, im_out->size(), CV_INTER_NN);
+			resize(im_in, im_out, im_out.size(), CV_INTER_NN);
 	}
 }
 
 /* Set image to the right depth 
  WARNING :: buffers tmp1 and tmp2 are only generated once so this method must be used only for one type of images  */
 
-void adjust(const Mat* im_in, Mat* im_out, Mat*& tmp1, Mat*& tmp2)
+void adjust(const Mat& im_in, Mat& im_out, Mat*& tmp1, Mat*& tmp2)
 {
 	
-	if(im_in->depth() == im_out->depth())
+	if(im_in.depth() == im_out.depth())
 	{
 		if(tmp1==NULL)
 		{
 			//cout<<"create image in adjust tmp1 depth "<<im_out->depth<<endl;
-			tmp1 = new Mat( Size(im_out->cols, im_out->rows), im_out->type());
+			tmp1 = new Mat( Size(im_out.cols, im_out.rows), im_out.type());
 		}
-		adjustSize(im_in, tmp1);
-		adjustChannels(tmp1, im_out);
+		adjustSize(im_in, *tmp1);
+		adjustChannels(*tmp1, im_out);
 
 	}
 	else
@@ -134,32 +134,32 @@ void adjust(const Mat* im_in, Mat* im_out, Mat*& tmp1, Mat*& tmp2)
 		if(tmp1==NULL)
 		{
 			//cout<<"create image in adjust IPL_DEPTH_32F tmp1"<<endl;
-			tmp1 = new Mat( Size(im_out->cols, im_out->rows), im_in->type());
+			tmp1 = new Mat( Size(im_out.cols, im_out.rows), im_in.type());
 		}
 		if(tmp2==NULL)
 		{
 			//cout<<"create image in adjust IPL_DEPTH_32F tmp2"<<endl;
-			tmp2 = new Mat( Size(im_out->cols, im_out->rows), CV_MAKE_TYPE(im_in->depth(), im_out->channels()));
+			tmp2 = new Mat( Size(im_out.cols, im_out.rows), CV_MAKE_TYPE(im_in.depth(), im_out.channels()));
 		}
 
-		if(im_in->depth() == CV_8U && im_out->depth() == CV_32F)
+		if(im_in.depth() == CV_8U && im_out.depth() == CV_32F)
 		{
-			adjustSize(im_in, tmp1);
-			adjustChannels(tmp1, tmp2);
+			adjustSize(im_in, *tmp1);
+			adjustChannels(*tmp1, *tmp2);
 			//convertByte2Float(tmp2, im_out);
-			tmp2->convertTo(*im_out, im_out->type(), 1.0 / 255);
+			tmp2->convertTo(im_out, im_out.type(), 1.0 / 255);
 		}
-		else if(im_in->depth() == CV_32F && im_out->depth() == CV_8U)
+		else if(im_in.depth() == CV_32F && im_out.depth() == CV_8U)
 		{
-			adjustSize(im_in, tmp1);
-			adjustChannels(tmp1, tmp2);
+			adjustSize(im_in, *tmp1);
+			adjustChannels(*tmp1, *tmp2);
 
 			//convertFloat2Byte(tmp2, im_out);
-			tmp2->convertTo(*im_out, im_out->type(), 255);
+			tmp2->convertTo(im_out, im_out.type(), 255);
 		}
 		else
 		{
-			LOG_ERROR(Manager::Logger(), "Cannot convert format "<<im_in->depth()<<" to format "<<im_out->depth());
+			LOG_ERROR(Manager::Logger(), "Cannot convert format "<<im_in.depth()<<" to format "<<im_out.depth());
 			throw MkException("Cannot convert", LOC);
 		}
 	}
@@ -167,19 +167,19 @@ void adjust(const Mat* im_in, Mat* im_out, Mat*& tmp1, Mat*& tmp2)
 
 /* Set the image to the right number of channels */
 
-void adjustChannels(const Mat* im_in, Mat* im_out)
+void adjustChannels(const Mat& im_in, Mat& im_out)
 {
-	if(im_in->channels() == im_out->channels())
+	if(im_in.channels() == im_out.channels())
 	{
-		im_in->copyTo(*im_out);
+		im_in.copyTo(im_out);
 	}
-	else if(im_in->channels() == 1 && im_out->channels() == 3) 
+	else if(im_in.channels() == 1 && im_out.channels() == 3) 
 	{
-		cvtColor(*im_in, *im_out, CV_GRAY2RGB);
+		cvtColor(im_in, im_out, CV_GRAY2RGB);
 	}
-	else if(im_in->channels() == 3 && im_out->channels() == 1) 
+	else if(im_in.channels() == 3 && im_out.channels() == 1) 
 	{
-		cvtColor(*im_in, *im_out, CV_RGB2GRAY);
+		cvtColor(im_in, im_out, CV_RGB2GRAY);
 	}
 	else throw MkException("Error in adjustChannels", LOC);
 }

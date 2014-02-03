@@ -39,31 +39,28 @@ using namespace cv;
 
 
 CascadeDetector::CascadeDetector(const ConfigReader& x_configReader) 
-	 : ModuleAsync(x_configReader), m_param(x_configReader)
+	: ModuleAsync(x_configReader),
+	m_param(x_configReader),
+	m_input(Size(m_param.width, m_param.height), CV_8UC1),
+	m_lastInput(Size(m_param.width, m_param.height), m_param.type)
 {
 	// Init output images
 	if(! m_thread.m_cascade.load( m_param.filterFile ) || m_thread.m_cascade.empty())
 		throw MkException("Impossible to load cascade filter " + m_param.filterFile, LOC);
 	m_description = "Detect objects from a video stream using a cascade filter (c.f. Haar patterns).";
-	m_input = new Mat(Size(m_param.width, m_param.height), CV_8UC1);
-	m_lastInput = new Mat( Size(m_param.width, m_param.height), m_param.type);
 
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this, 		"Video input")); 
 
 	m_outputStreams.push_back(new StreamObject(0, "detected", 
 				m_detectedObjects, *this,	"Detected objects"));
 #ifdef MARKUS_DEBUG_STREAMS
-	m_debug = new Mat(Size(m_param.width, m_param.height), CV_8UC3);
+	m_debug = Mat(Size(m_param.width, m_param.height), CV_8UC3);
 	m_debugStreams.push_back(new StreamDebug(1, "debug", m_debug, *this,		""));
 #endif
 }
 
 CascadeDetector::~CascadeDetector()
 {
-	delete(m_lastInput);
-#ifdef MARKUS_DEBUG_STREAMS
-	delete(m_debug);
-#endif
 }
 
 void CascadeDetector::Reset()
@@ -74,10 +71,10 @@ void CascadeDetector::Reset()
 // This method launches the thread
 void CascadeDetector::LaunchThread()
 {
-	assert(m_input->type() == CV_8UC1); // TODO add restriction to param
+	assert(m_input.type() == CV_8UC1); // TODO add restriction to param
 	//	throw MkException("For cascade detection, input type must be CV_8UC1 and not " + ParameterImageType::ImageTypeInt2Str(img->type()));
-	m_input->copyTo(*m_lastInput);
-	Mat smallImg(*m_lastInput);
+	m_input.copyTo(m_lastInput);
+	Mat smallImg(m_lastInput);
 	equalizeHist( smallImg, smallImg );
 	
 	// Launch a new Thread
@@ -89,12 +86,12 @@ void CascadeDetector::LaunchThread()
 void CascadeDetector::NormalProcess()
 {
 #ifdef MARKUS_DEBUG_STREAMS
-	cvtColor(*m_lastInput, *m_debug, CV_GRAY2RGB);
+	cvtColor(m_lastInput, m_debug, CV_GRAY2RGB);
 
 	for(vector<Object>::const_iterator it = m_detectedObjects.begin() ; it != m_detectedObjects.end() ; it++)
 	{
 		// Draw the rectangle in the input image
-		rectangle( *m_debug, it->Rect(), Scalar(255, 0, 23)/*colorFromStr(m_param.color)*/, 1, 8, 0 );
+		rectangle(m_debug, it->Rect(), Scalar(255, 0, 23)/*colorFromStr(m_param.color)*/, 1, 8, 0 );
         }
 #endif
 }

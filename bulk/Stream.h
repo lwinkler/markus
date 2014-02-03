@@ -24,7 +24,6 @@
 #ifndef OUTPUT_STREAM_H
 #define OUTPUT_STREAM_H
 
-// #include <iostream>
 #include "Module.h"
 
 
@@ -41,7 +40,7 @@ public:
 	inline int GetInputHeight() const {return m_height;}
 	inline const std::string& GetDescription() const {return m_description;}
 	virtual const std::string GetTypeString() const = 0;
-	virtual void RenderTo(cv::Mat * x_output) const  = 0;
+	virtual void RenderTo(cv::Mat& x_output) const  = 0;
 	virtual void Connect(Stream *x_stream);
 	virtual void ConvertInput() = 0;
 	void Export(std::ostream& rx_os, int x_indentation, bool x_isInput);

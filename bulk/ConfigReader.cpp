@@ -38,7 +38,7 @@ ConfigReader::ConfigReader(const std::string& x_fileName)
 	if (! mp_doc->LoadFile())
 		throw FileNotFoundException("Could not load test file '" + x_fileName + "'. Error='" + mp_doc->ErrorDesc() + "'. Exiting.", LOC);
 	mp_node = mp_doc;
-};
+}
 
 /// Constructor : config based on another config objects
 
@@ -46,12 +46,14 @@ ConfigReader::ConfigReader(TiXmlNode * xp_node)
 {
 	mp_doc = NULL;
 	mp_node = xp_node;
-};
+}
 
 ConfigReader::~ConfigReader()
 {
 	delete mp_doc;
-};
+	mp_doc = NULL;
+	mp_node = NULL;
+}
 
 /// Return a config objects that points to the sub element of configuration
 

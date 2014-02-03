@@ -28,7 +28,13 @@
 #include <cppunit/TestCaller.h>
 #include "ConfigReader.h"
 #include "util.h"
+#include "Manager.h"
 #include "MkException.h"
+
+#define LOG_TEST(str) {\
+	std::cout<<std::endl<<str<<std::endl;\
+	LOG_INFO(Manager::Logger(), str);\
+}
 
 /// Unit testing class for ConfigReader class
 
@@ -55,6 +61,8 @@ class ConfigReaderTest : public CppUnit::TestFixture
 	/// Load and save a config file
 	void testLoad()
 	{
+		LOG_TEST("# Test the loading of configurations");
+
 		ConfigReader appConf = m_conf1->GetSubConfig("application");
 		ConfigReader module0conf = appConf.GetSubConfig("module", "Module0");
 		ConfigReader module1conf = appConf.GetSubConfig("module", "Module1");
@@ -74,16 +82,18 @@ class ConfigReaderTest : public CppUnit::TestFixture
 		CPPUNIT_ASSERT(atoi(param1.GetAttribute("id").c_str()) == 0);
 		CPPUNIT_ASSERT(param1.GetAttribute("name") == "param_text");
 
-		m_conf1->SaveToFile("testing/config1_copy.xml");
+		m_conf1->SaveToFile("testing/tmp/config1_copy.xml");
 		m_conf1->Validate();
 
+		// Compare with the initial config
 		// note: this is kind of hackish ... can you find a better way :-)
-		SYSTEM("diff testing/config1.xml testing/config1_copy.xml | xargs -i{} ERROR_non_identical_files");
+		SYSTEM("diff testing/config1.xml testing/tmp/config1_copy.xml | xargs -i{} ERROR_non_identical_files");
 	}
 
 	/// Generate a config from an empty file and test
 	void testGenerate()
 	{
+		LOG_TEST("# Test the generation of configurations");
 		ConfigReader appConf = m_conf2->RefSubConfig("application");
 		appConf.RefSubConfig("aaa", "nameX", true)
 			.RefSubConfig("bbb", "nameY", true)

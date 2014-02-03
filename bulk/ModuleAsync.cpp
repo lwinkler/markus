@@ -49,7 +49,7 @@ void ModuleAsync::ProcessFrame()
 
 	// cout << "m_timeStampLastThread" << m_timeStampLastThread;
 	// cout << " m_currentTimeStamp " <<  m_currentTimeStamp << endl;
-	//cout<<RefParameter().detectionFps<<" : "<<m_timeStampLastThread<<" += "<<m_processingTime<<endl;
+	//cout<<GetParameters().detectionFps<<" : "<<m_timeStampLastThread<<" += "<<m_processingTime<<endl;
 	
 	if(!m_resultsCopied && !GetRefThread().isRunning())
 	{
@@ -57,7 +57,7 @@ void ModuleAsync::ProcessFrame()
 		m_resultsCopied = true;
 	}
 	
-	if((m_currentTimeStamp - m_timeStampLastThread) * RefParameter().detectionFps >= 1000)
+	if((m_currentTimeStamp - m_timeStampLastThread) * GetParameters().detectionFps >= 1000)
 	{
 		if(!GetRefThread().isRunning())
 		{

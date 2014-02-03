@@ -30,10 +30,8 @@
 #include "ModuleTimer.h"
 
 
-#ifndef MARKUS_NO_GUI
 #include "ControllerModule.h"
 #include "ControllerParameters.h"
-#endif
 
 using namespace std;
 
@@ -53,6 +51,7 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_currentTimeStamp     = TIME_STAMP_INITIAL;
 	m_pause                = false;
 	m_isReady              = false;
+	m_unsyncWarning        = true;
 
 	m_moduleTimer = NULL;
 }
@@ -60,7 +59,7 @@ Module::Module(const ConfigReader& x_configReader) :
 void Module::Reset()
 {
 	// Lock the parameters that cannot be changed
-	ModuleParameterStructure& param(RefParameter());
+	const ModuleParameterStructure& param(GetParameters());
 	param.PrintParameters(m_logger);
 	param.CheckRange();
 
@@ -76,7 +75,6 @@ void Module::Reset()
 	// param.PrintParameters(); // Do not print 2x at startup
 
 	// Add controls for parameters' change
-#ifndef MARKUS_NO_GUI
 	const std::vector<Parameter*>& list = param.GetList();
 	// for(const vector<Parameter*>&::iterator it = list.begin() ; it != list.end() ; it++)
 		// m_controls.push_back(new ParameterControl("Parameters", "Change the values of parameters at runtime."));
@@ -127,7 +125,6 @@ void Module::Reset()
 			else m_controls.insert(make_pair(ctr->GetName(), ctr));
 		}
 	}
-#endif
 }
 
 void Module::Pause(bool x_pause)
@@ -140,8 +137,8 @@ void Module::Pause(bool x_pause)
 
 double Module::GetRecordingFps()
 {
-	double fps = RefParameter().fps;
-	bool autop = RefParameter().autoProcess;
+	double fps = GetParameters().fps;
+	bool autop = GetParameters().autoProcess;
 
 	if(autop)
 	{
@@ -197,36 +194,44 @@ Module::~Module()
 
 void Module::Process()
 {
+	m_lock.lockForWrite();
 	if(m_pause)
 		return;
 	if(!m_isReady)
 		throw MkException("Module must be ready before processing", LOC);
 
-	const ModuleParameterStructure& param = RefParameter();
+	const ModuleParameterStructure& param = GetParameters();
 	
 	// Timestamp of the module is given by the input stream
 	m_currentTimeStamp = 0;
 	if(m_inputStreams.size() >= 1)
 	{
-		m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected();
-		if(! param.allowUnsyncInput)
-			for(unsigned int i = 1 ; i < m_inputStreams.size() ; i++)
-			{
-				Stream& stream(*m_inputStreams.at(i));
-				if(stream.IsConnected() && stream.GetTimeStampConnected() != m_currentTimeStamp)
-					LOG_WARN(m_logger, "Input stream id="<<i<<" is not in sync with input stream id=0 for module "<<GetName()<<". If this is acceptable set parameter allow_unsync_input=1 for this module. To fix this problem cleanly you should probably set parameters auto_process=0 and fps=0 for the modules located between the input and module "<<GetName()<<".");
-			}
+		m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected(); // TODO: should we lock module here ?
 	}
 	else if(! param.autoProcess)
 		throw MkException("Module must have at least one input or have parameter auto_process=true", LOC);
 
-	if(param.autoProcess || param.fps == 0 || (m_currentTimeStamp - m_lastTimeStamp) * param.fps > 1000)
+	if(param.autoProcess || (param.fps == 0 && m_currentTimeStamp != m_lastTimeStamp) || (m_currentTimeStamp - m_lastTimeStamp) * param.fps > 1000)
 	{
 		// Process this frame
-		m_lock.lockForRead();
+		// m_lock.lockForRead();
 		
 		// Timer for benchmark
 		Timer ti;
+
+		// cout<<GetName()<<" "<<m_currentTimeStamp<<" "<<m_lastTimeStamp<<endl;
+
+		// Check that all inputs are in sync
+		if(! param.allowUnsyncInput && m_unsyncWarning)
+			for(unsigned int i = 1 ; i < m_inputStreams.size() ; i++)
+			{
+				Stream& stream(*m_inputStreams.at(i));
+				if(stream.IsConnected() && stream.GetTimeStampConnected() != m_currentTimeStamp)
+				{
+					LOG_WARN(m_logger, "Input stream id="<<i<<" is not in sync with input stream id=0 for module "<<GetName()<<". If this is acceptable set parameter allow_unsync_input=1 for this module. To fix this problem cleanly you should probably set parameters auto_process=0 and fps=0 for the modules located between the input and module "<<GetName()<<".");
+					m_unsyncWarning = false;
+				}
+			}
 
 		// Read and convert inputs
 		if(IsInputProcessed())
@@ -234,10 +239,10 @@ void Module::Process()
 			for(vector<Stream*>::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
 			{
 				Timer ti2;
-				(*it)->LockModuleForRead();
+				//(*it)->LockModuleForRead();
 				m_timerWaiting += ti2.GetMSecLong();
 				(*it)->ConvertInput();
-				(*it)->UnLockModule();
+				//(*it)->UnLockModule();
 			}
 		}
 		m_timerConvertion 	+= ti.GetMSecLong();
@@ -247,7 +252,7 @@ void Module::Process()
 
 		m_timerProcessing 	 += ti.GetMSecLong();
 
-		// Set time stamps to outputs
+		// Set time stamps to outputs // TODO can we use the dedicated method ? Why only Input
 		if(!IsInput())
 			for(vector<Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
 				(*it)->SetTimeStamp(m_currentTimeStamp);
@@ -258,8 +263,9 @@ void Module::Process()
 
 		m_countProcessedFrames++;
 		m_lastTimeStamp = m_currentTimeStamp;
-		m_lock.unlock();
+		// m_lock.unlock();
 	}
+	m_lock.unlock();
 }
 
 
@@ -272,7 +278,7 @@ void Module::Export(ostream& rx_os, int x_indentation)
 	rx_os<<tabs<<"<module name=\""<<m_name<<"\" description=\""<<GetDescription()<<"\">"<<endl;
 	tabs = string(x_indentation + 1, '\t');
 	rx_os<<tabs<<"<parameters>"<<endl;
-	for(vector<Parameter*>::const_iterator it = RefParameter().GetList().begin() ; it != RefParameter().GetList().end() ; it++)
+	for(vector<Parameter*>::const_iterator it = GetParameters().GetList().begin() ; it != GetParameters().GetList().end() ; it++)
 		(*it)->Export(rx_os, x_indentation + 2);
 	rx_os<<tabs<<"</parameters>"<<endl;
 
@@ -362,7 +368,7 @@ Controller* Module::FindController(const std::string& x_name) const
 {
 	map<string, Controller*>::const_iterator it = m_controls.find(x_name);
 	if(it == m_controls.end())
-		throw MkException("Cannot find controller in module", LOC);
+		throw MkException("Cannot find controller " + x_name + " in module", LOC);
 
 	// Call the function pointer associated with the action
 	return it->second;

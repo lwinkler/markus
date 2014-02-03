@@ -54,16 +54,15 @@ public:
 	const std::string& GetName(){return m_name;}
 	// virtual const cv::Mat * GetImage() const {return m_output;}
 
-protected:
-	cv::VideoCapture m_capture;
-	cv::Mat * m_output;
-	TIME_STAMP m_timeStamp;
-	void GetProperties();
-
 private:
 	UsbCamParameterStructure m_param;
-	inline virtual UsbCamParameterStructure& RefParameter() {return m_param;}
+	inline virtual const UsbCamParameterStructure& GetParameters() const {return m_param;}
 	Timer m_frameTimer;
+protected:
+	cv::VideoCapture m_capture;
+	cv::Mat m_output;
+	TIME_STAMP m_timeStamp;
+	void GetProperties();
 };
 
 #endif

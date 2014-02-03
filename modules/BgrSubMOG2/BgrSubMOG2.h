@@ -75,20 +75,18 @@ public:
 	
 	virtual void ProcessFrame();
 	void Reset();
-		
-protected:
-	// Background subtraction	
-	cv::Mat* m_foreground;
-	cv::Mat* m_foregroundWithShadows;
-	cv::Mat* m_background;
-	//bool m_emptyBackgroundSubtractor;
-
-	cv::Mat * m_input;
-	cv::BackgroundSubtractorMOG2* mp_mog2;
-
 private:
 	BgrSubMOG2ParameterStructure m_param;
-	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
+	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;};
+protected:
+	cv::Mat m_input;
+	// Background subtraction	
+	cv::Mat m_foreground;
+	cv::Mat m_background;
+	cv::Mat m_foregroundWithShadows;
+	//bool m_emptyBackgroundSubtractor;
+
+	cv::BackgroundSubtractorMOG2* mp_mog2;
 };
 
 

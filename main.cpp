@@ -22,8 +22,8 @@
 -------------------------------------------------------------------------------------*/
 
 #include <QApplication>
-#include <cstring>
-#include <cstdio>
+// #include <cstring>
+// #include <cstdio>
 #include <getopt.h>    /* for getopt_long; standard getopt is in unistd.h */
 
 #include "Manager.h"
@@ -75,21 +75,20 @@ void *send_commands(void *x_void_ptr)
 		try
 		{
 			// cout << "CMD > ";
-			getline(cin, input);
-			split(input, ' ', elems);
-			if(elems.size() == 1)
-				value = "";
-			else if(elems.size() == 2)
-				value = elems.at(1);
-			else throw MkException("Command must have one or two elements", LOC);
-			LOG_INFO(Manager::Logger(), "Send command: "<<elems.at(0)<<" \""<<value<<"\"");
-			pManager->SendCommand(elems.at(0), value);
-			//if(input == "exit")
-				//break;
-
-			cin.clear();
-
-			//cout << endl;
+			if(getline(cin, input))
+			{
+				cout<<"command :"<<input<<endl;
+				split(input, ' ', elems);
+				if(elems.size() == 1)
+					value = "";
+				else if(elems.size() == 2)
+					value = elems.at(1);
+				else throw MkException("Command must have one or two elements", LOC);
+				LOG_INFO(Manager::Logger(), "Send command: "<<elems.at(0)<<" \""<<value<<"\"");
+				pManager->SendCommand(elems.at(0), value);
+				cin.clear();
+			}
+			else cout<<"Getline failed"<<endl;
 		}
 		catch(std::exception& e)
 		{
@@ -99,6 +98,7 @@ void *send_commands(void *x_void_ptr)
 		{
 			LOG_ERROR(Manager::Logger(), "Cannot execute command");
 		}
+		usleep(1000000); // Do we keep this TODO
 	}
 
 	return NULL;
@@ -163,10 +163,12 @@ int main(int argc, char** argv)
 				break;
 			case 't':
 #ifdef MARKUS_UNIT_TESTING
+				logConfigFile = "testing/log4cxx.xml";
+				log4cxx::xml::DOMConfigurator::configure(logConfigFile);
 				LOG_INFO(logger, "Running test suite");
 				return run_tests();
 #else
-				LOG_ERROR(logger, "Unit test must be enabled at compile time");
+				LOG_ERROR(logger, "Unit test must be enabled at compilation");
 				return -1;
 #endif
 				break;
@@ -236,7 +238,7 @@ int main(int argc, char** argv)
 				if(path.size() != 2)
 					throw MkException("Parameter set in command line must be in format 'module.parameter'", LOC);
 				appConfig.RefSubConfig("module", path[0]).RefSubConfig("parameters").RefSubConfig("param", path[1], true).SetValue(value);
-				// manager.GetModuleByName(path[0])->RefParameter().RefParameterByName(path[1]).SetValue(value, PARAMCONF_CMD);
+				// manager.GetModuleByName(path[0])->GetParameters().RefParameterByName(path[1]).SetValue(value, PARAMCONF_CMD);
 			}
 			catch(std::exception& e)
 			{

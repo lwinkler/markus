@@ -29,13 +29,13 @@ using namespace cv;
 
 RenderObjects::RenderObjects(const ConfigReader& x_configReader) :
 	Module(x_configReader),
-	m_param(x_configReader)
+	m_param(x_configReader),
+	m_imageInput(Size(m_param.width, m_param.height), m_param.type),
+	m_imageOutput(Size(m_param.width, m_param.height), m_param.type)
 {
 	m_description = "Output video stream with additional object streams.";
-	m_imageInput = new Mat(Size(m_param.width, m_param.height), m_param.type);
-	m_imageOutput = new Mat(Size(m_param.width, m_param.height), m_param.type);
 	
-	m_inputStreams.push_back(new StreamImage(0, "input", m_imageInput, *this,	"Input video stream"));
+	m_inputStreams.push_back(new StreamImage( 0, "input", m_imageInput, *this,	"Input video stream"));
 	m_inputStreams.push_back(new StreamObject(1, "input", m_objectInput1, *this,	"Object stream 1"));
 	m_inputStreams.push_back(new StreamObject(2, "input", m_objectInput2, *this,	"Object stream 1"));
 	m_inputStreams.push_back(new StreamObject(3, "input", m_objectInput3, *this,	"Object stream 1"));
@@ -47,8 +47,6 @@ RenderObjects::RenderObjects(const ConfigReader& x_configReader) :
 
 RenderObjects::~RenderObjects(void )
 {
-	delete(m_imageInput);
-	delete(m_imageOutput);
 }
 
 

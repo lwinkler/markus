@@ -59,7 +59,7 @@ public:
 
 private:
 	LogObjectsParameterStructure m_param;
-	inline virtual LogObjectsParameterStructure& RefParameter() { return m_param;}
+	inline virtual const LogObjectsParameterStructure& GetParameters() const { return m_param;}
 };
 
 #endif

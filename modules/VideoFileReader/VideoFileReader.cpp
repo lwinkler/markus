@@ -33,16 +33,16 @@ using namespace cv;
 
 VideoFileReader::VideoFileReader(const ConfigReader& x_configReader): 
 	Input(x_configReader),
-	m_param(x_configReader)
+	m_param(x_configReader),
+	m_output(Size(m_param.width, m_param.height), CV_8UC3) // Note: sizes will be overridden !
 {
 	m_description = "Input from a video file.";
-	m_output = new Mat(Size(m_param.width, m_param.height), CV_8UC3); // Note: sizes will be overridden !
 	m_outputStreams.push_back(new StreamImage(0, "input", m_output, *this,	"Video stream"));
 }
 
 VideoFileReader::~VideoFileReader()
 {
-	delete(m_output);
+	//delete(m_output);
 }
 
 void VideoFileReader::Reset()
@@ -71,28 +71,37 @@ void VideoFileReader::Reset()
 	m_capture.set(CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
 	
 	// note on the next line: the image will be overloaded but the properties are used to set the input ratio, the type is probably ignored
-	delete m_output;
-	m_output = new Mat(Size(m_capture.get(CV_CAP_PROP_FRAME_WIDTH), m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)), m_param.type);
+	// delete m_output; // TODO: valgrind says there may be a leak here
+	m_output = Mat(Size(m_capture.get(CV_CAP_PROP_FRAME_WIDTH), m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)), m_param.type);
 
 	m_lock.unlock(); // TODO remove ?
 }
 
 void VideoFileReader::Capture()
 {
-	if(m_capture.grab() == 0)
+	while(true)
 	{
-		// Note: there seems to be a 3 seconds lag when grabbing after the last frame. This is linked to format h264: MJPG is ok
-		m_endOfStream = true;
-		std::exception e;
-		Pause(true);
-		throw EndOfStreamException("Capture failed in VideoFileReader::Capture.", LOC);
-	}
+		if(m_capture.grab() == 0)
+		{
+			// Note: there seems to be a 3 seconds lag when grabbing after the last frame. This is linked to format h264: MJPG is ok
+			m_endOfStream = true;
+			std::exception e;
+			Pause(true);
+			throw EndOfStreamException("Capture failed in VideoFileReader::Capture.", LOC);
+		}
 
-	m_capture.retrieve(*m_output);
+		m_capture.retrieve(m_output);
+		m_currentTimeStamp = m_capture.get(CV_CAP_PROP_POS_MSEC);
+		//cout<<m_currentTimeStamp<<" - "<<m_lastTimeStamp<<endl;
+
+		// only break out of the loop once we fulfill the fps criterion
+		if(m_param.fps == 0 || (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps > 1000)
+			break;
+	}
 	
 	// cout<<"VideoFileReader capture image "<<m_output->cols<<"x"<<m_output->rows<<" time stamp "<<m_capture.get(CV_CAP_PROP_POS_MSEC) / 1000.0<< endl;
 
-	SetTimeStampToOutputs(m_capture.get(CV_CAP_PROP_POS_MSEC));
+	SetTimeStampToOutputs(m_currentTimeStamp); // TODO : do we keep this line
 }
 
 void VideoFileReader::GetProperties()

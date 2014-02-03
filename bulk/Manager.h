@@ -37,7 +37,7 @@
 class ManagerParameter : public ParameterStructure
 {
 public:
-	ManagerParameter(const ConfigReader& x_confReader, const std::string& x_moduleName) : ParameterStructure(x_confReader)
+	ManagerParameter(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
 	{
 		// m_list.push_back(new ParameterString("mode",	"", 	&mode, 	"Mode"));
 		ParameterStructure::Init();
@@ -50,16 +50,16 @@ public:
 class Manager : public Configurable
 {
 public:
-	Manager(ConfigReader & x_configReader, bool x_centralized);
+	Manager(const ConfigReader & x_configReader, bool x_centralized);
 	~Manager();
 	void Reset();
 	bool Process();
 	void SendCommand(const std::string& x_command, std::string x_value);
 	// const std::vector<Input*> & GetInputList()  const {return m_inputs; };
-	const std::vector<Module*>& GetModuleList() const {return m_modules; }
+	const std::vector<Module*>& GetModules() const {return m_modules; }
 
 	//std::vector<Input*> & GetInputListVar()  {return m_inputs; };
-	std::vector<Module*>& GetModuleListVar() {return m_modules; }
+	//std::vector<Module*>& RefModules() {return m_modules; }
 	
 	Module& RefModuleById(int x_id) const;
 	Module& RefModuleByName(const std::string& x_name) const;
@@ -95,7 +95,7 @@ private:
 	static std::string m_configFile;
 	static std::string m_outputDir;
 protected:
-	inline virtual const ParameterStructure& RefParameter() {return m_param;}
+	inline virtual const ParameterStructure& GetParameters() const {return m_param;}
 	QReadWriteLock m_lock;
 };
 #endif

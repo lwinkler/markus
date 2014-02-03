@@ -37,7 +37,7 @@ public:
 	inline bool GetState() const {return m_state;};
 	
 	virtual void ConvertInput();
-	virtual void RenderTo(cv::Mat * xp_output) const;
+	virtual void RenderTo(cv::Mat& x_output) const;
 	inline virtual const std::string GetTypeString()const {return "State";};
 
 protected:

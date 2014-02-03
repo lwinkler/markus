@@ -38,10 +38,6 @@ const char* MkException::what() const throw()
 
 
 
-ParameterValueException::ParameterValueException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
-	MkException("ParameterValueException: " + x_descr, x_position)
-{}
-
 ProcessingException::ProcessingException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
 	MkException("ProcessingValueException: " + x_descr, x_position)
 {}
@@ -53,7 +49,7 @@ FileNotFoundException::FileNotFoundException(const std::string& x_descr, const s
 EndOfStreamException::EndOfStreamException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
 	MkException("EndOfStreamException: " + x_descr, x_position)
 {}
-/*
-UnknownException::UnknownException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
-	MkException("UnknownException: " + x_descr, x_position)
-{}*/
+
+ParameterException::ParameterException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
+	MkException("ParameterException: " + x_descr, x_position)
+{}

@@ -46,16 +46,13 @@ FilterObjects::FilterObjects(const ConfigReader& x_configReader) :
 	m_outputStreams.push_back(m_outputObjectStream);
 #ifdef MARKUS_DEBUG_STREAMS
 	// add a debug stream
-	m_debug = new Mat(Size(m_param.width, m_param.height), CV_8UC3);
+	m_debug = Mat(Size(m_param.width, m_param.height), CV_8UC3);
 	m_debugStreams.push_back(new StreamDebug(0, "debug", m_debug, *this,	"Debug"));
 #endif
 }
 
 FilterObjects::~FilterObjects(void )
 {
-#ifdef MARKUS_DEBUG_STREAMS
-	delete(m_debug);
-#endif
 }
 
 void FilterObjects::Reset()
@@ -68,7 +65,7 @@ void FilterObjects::ProcessFrame()
 #ifdef MARKUS_DEBUG_STREAMS
 	static const Scalar Green = Scalar(0, 255, 33);
 	static const Scalar Gray  = Scalar(200, 200, 200);
-	m_debug->setTo(0);
+	m_debug.setTo(0);
 #endif
 	// Filter incoming objects and add them to the output
 	m_objectsOut.clear();
@@ -112,8 +109,8 @@ void FilterObjects::ProcessFrame()
 		if(valid)
 			m_objectsOut.push_back(*it);
 #ifdef MARKUS_DEBUG_STREAMS
-		rectangle(*m_debug, rect, valid ? Green : Gray, 1, 8);
-		line(*m_debug, Point(posX.initial * diagonal, posY.initial * diagonal), Point(posX.value * diagonal, posY.value * diagonal), valid ? Green : Gray, 1, 8);
+		rectangle(m_debug, rect, valid ? Green : Gray, 1, 8);
+		line(m_debug, Point(posX.initial * diagonal, posY.initial * diagonal), Point(posX.value * diagonal, posY.value * diagonal), valid ? Green : Gray, 1, 8);
 #endif
 	}
 	// Max number of objects criterion

@@ -47,7 +47,7 @@ Object::Object(const string& x_name, const cv::Rect& x_rect) :
 Object::~Object(){}
 
 /// Draw an object on an image (for visualization)
-void Object::RenderTo(Mat* xp_output, const Scalar& x_color) const
+void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 {
 	//Rect rect = it1->GetRect();
 	Point p1(posX - width / 2, posY - height / 2);
@@ -63,7 +63,7 @@ void Object::RenderTo(Mat* xp_output, const Scalar& x_color) const
 	// Draw the rectangle in the input image
 	// if id is present, draw to the equivalent color
 #ifndef MARKUS_DEBUG_STREAMS
-	rectangle( *xp_output, p1, p2, Scalar(20,0,230), 3, 8, 0 );
+	rectangle(x_output, p1, p2, Scalar(20,0,230), 3, 8, 0 );
 #else
 	Scalar color = x_color;
 	Point pText = p1;
@@ -74,15 +74,15 @@ void Object::RenderTo(Mat* xp_output, const Scalar& x_color) const
 		ostringstream text;
 		text<<GetName()<<" "<<GetId();
 		pText.y -= 3;
-		putText(*xp_output, text.str(), pText,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
+		putText(x_output, text.str(), pText,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
 	}
 	else
 	{
 		// color from stream
 		pText.y -= 3;
-		putText(*xp_output, GetName(), pText, FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
+		putText(x_output, GetName(), pText, FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
 	}
-	rectangle( *xp_output, p1, p2, color, 1, 8, 0 );
+	rectangle(x_output, p1, p2, color, 1, 8, 0 );
 
 	// Print features and values
 	pText.x += 2;
@@ -94,7 +94,7 @@ void Object::RenderTo(Mat* xp_output, const Scalar& x_color) const
 			ostringstream text;
 			text<<it2->first<<"="<<it2->second.value;
 			pText.y += 7;
-			putText(*xp_output, text.str(), pText,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
+			putText(x_output, text.str(), pText,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
 			i++;
 		}
 		//catch(...){}

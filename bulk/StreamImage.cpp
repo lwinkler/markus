@@ -28,22 +28,21 @@
 using namespace std;
 using namespace cv;
 
-StreamImage::StreamImage(int x_id, const std::string& x_name, Mat* x_image, Module& rx_module, const string& rx_description) : 
+StreamImage::StreamImage(int x_id, const std::string& x_name, Mat& x_image, Module& rx_module, const string& rx_description) : 
 	Stream(x_id, x_name, rx_module, rx_description),
 	m_image(x_image)
 {
-	assert(x_image->cols == rx_module.GetWidth() && x_image->rows == rx_module.GetHeight());
-	assert(x_image != NULL);
-	m_img_tmp1 = NULL; // To convert the input
-	m_img_tmp2 = NULL;
+	assert(x_image.cols == rx_module.GetWidth() && x_image.rows == rx_module.GetHeight());
+	mp_img_tmp1 = NULL; // To convert the input
+	mp_img_tmp2 = NULL;
 	m_img_input = NULL;
 }
 
 
 StreamImage::~StreamImage()
 {
-	if(m_img_tmp1 != NULL) delete m_img_tmp1;
-	if(m_img_tmp2 != NULL) delete m_img_tmp2;
+	if(mp_img_tmp1 != NULL) delete mp_img_tmp1;
+	if(mp_img_tmp2 != NULL) delete mp_img_tmp2;
 }
 
 void StreamImage::ConvertInput()
@@ -52,18 +51,18 @@ void StreamImage::ConvertInput()
 	if(m_connected != NULL)
 	{
 		m_timeStamp = RefConnected().GetTimeStamp();
-		adjust(m_img_input, m_image, m_img_tmp1, m_img_tmp2);
+		adjust(*m_img_input, m_image, mp_img_tmp1, mp_img_tmp2);
 	}
 	else
 	{
-		m_image->setTo(0);
+		m_image.setTo(0);
 	}
 }
 
 
-void StreamImage::RenderTo(Mat * xp_output) const
+void StreamImage::RenderTo(Mat& x_output) const
 {
-	m_image->copyTo(*xp_output);
+	m_image.copyTo(x_output);
 }
 
 void StreamImage::Connect(Stream* x_stream)
@@ -77,5 +76,5 @@ void StreamImage::Connect(Stream* x_stream)
 		m_connected = NULL;
 		throw MkException("Input stram cannot be connected probably because it is not of type StreamImage", LOC);
 	}
-	m_img_input = tmp->GetImageRef();
+	m_img_input = &tmp->RefImage();
 }

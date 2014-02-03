@@ -31,13 +31,13 @@ using namespace cv;
 
 RandomEventGenerator::RandomEventGenerator(const ConfigReader& x_configReader): 
 	Input(x_configReader),
-	m_param(x_configReader)
+	m_param(x_configReader),
+	m_output(Size(m_param.width, m_param.height), m_param.type)  // Note: sizes will be overridden !
 {
 	m_description = "Generate events with random features at each step";
 	m_timeStamp = TIME_STAMP_INITIAL;
 	
 	m_outputStreams.push_back(new StreamEvent(0, "event", m_event, *this,  "Event generated"));
-	m_output = new Mat(Size(m_param.width, m_param.height), m_param.type);  // Note: sizes will be overridden !
 	m_outputStreams.push_back(new StreamImage(1, "image", m_output, *this, "Test image"));
 
 	if(m_param.randomSeed == 0)
@@ -59,7 +59,7 @@ void RandomEventGenerator::Reset()
 void RandomEventGenerator::Capture()
 {
 	m_event.Empty();
-	m_output->setTo(0);
+	m_output.setTo(0);
 
 	// Generate an event with an associated object
 	if(m_param.nbFeatures == 0)
@@ -89,7 +89,7 @@ void RandomEventGenerator::Capture()
 			c = obj.GetFeature("feat3").value * 255;
 		if(m_param.nbFeatures > 4)
 			l = obj.GetFeature("feat4").value * 5 + 1;
-		circle(*m_output, Point(x, y), r, Scalar(100, c, 255 - c), l);
+		circle(m_output, Point(x, y), r, Scalar(100, c, 255 - c), l);
 
 		LOG_DEBUG(m_logger, "RandomEventGenerator: Capture time: "<<m_frameTimer.GetMSecLong());
 		SetTimeStampToOutputs(m_frameTimer.GetMSecLong());

@@ -58,7 +58,7 @@ protected:
 	long long m_countFramesThread;
 
 	// For an async module, this method is used to check if we need to process the input
-	inline virtual bool IsInputProcessed() {return (m_currentTimeStamp - m_timeStampLastThread) * RefParameter().detectionFps >= 1000;};
+	inline virtual bool IsInputProcessed() {return (m_currentTimeStamp - m_timeStampLastThread) * GetParameters().detectionFps >= 1000;};
 	virtual const QThread & GetRefThread() = 0;
 	virtual void LaunchThread() = 0;
 	virtual void NormalProcess() = 0;
@@ -66,7 +66,7 @@ protected:
 	virtual void PrintStatistics() const;
 	
 private:
-	virtual ModuleAsyncParameterStructure & RefParameter() = 0;
+	virtual const ModuleAsyncParameterStructure & GetParameters() const = 0;
 };
 
 #endif

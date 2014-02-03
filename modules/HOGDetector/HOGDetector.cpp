@@ -35,30 +35,25 @@ using namespace cv;
 
 
 HOGDetector::HOGDetector(const ConfigReader& x_configReader) 
-	 : ModuleAsync(x_configReader), m_param(x_configReader)
+	 : ModuleAsync(x_configReader), m_param(x_configReader),
+	m_input(Size(m_param.width, m_param.height), m_param.type),
+	m_lastInput(Size(m_param.width, m_param.height), m_param.type)
 {
 	// Init output images
 
 	m_description = "Detect objects from a video stream using a HOG descriptor";
-	m_input = new Mat(Size(m_param.width, m_param.height), m_param.type);
-	m_lastInput = new Mat( Size(m_param.width, m_param.height), m_param.type);
 
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this, 		"Video input")); 
 
 	m_outputStreams.push_back(new StreamObject(0, "detected", m_detectedObjects, /*colorFromStr(m_param.color),*/ *this,	"Detected objects"));
 #ifdef MARKUS_DEBUG_STREAMS
-	m_debug = new Mat(Size(m_param.width, m_param.height), CV_8UC3);
+	m_debug = Mat(Size(m_param.width, m_param.height), CV_8UC3);
 	m_debugStreams.push_back(new StreamDebug(1, "debug", m_debug, *this,		""));
 #endif
 }
 
 HOGDetector::~HOGDetector()
 {
-	delete(m_input);
-	delete(m_lastInput);
-#ifdef MARKUS_DEBUG_STREAMS
-	delete(m_debug);
-#endif
 }
 
 void HOGDetector::Reset()
@@ -72,8 +67,8 @@ void HOGDetector::LaunchThread()
 {
 	// assert(m_input->type() == CV_8UC1);
 	//	throw MkException("For cascade detection, input type must be CV_8UC1 and not " + ParameterImageType::ImageTypeInt2Str(img->type()));
-	m_input->copyTo(*m_lastInput);
-	Mat smallImg(*m_lastInput);
+	m_input.copyTo(m_lastInput);
+	Mat smallImg(m_lastInput);
 	// equalizeHist( smallImg, smallImg );
 	
 	// Launch a new Thread
@@ -85,12 +80,12 @@ void HOGDetector::LaunchThread()
 void HOGDetector::NormalProcess()
 {
 #ifdef MARKUS_DEBUG_STREAMS
-	m_lastInput->copyTo(*m_debug);
+	m_lastInput.copyTo(m_debug);
 
 	for(vector<Object>::const_iterator it = m_detectedObjects.begin() ; it != m_detectedObjects.end() ; it++)
 	{
 		// Draw the rectangle in the input image
-		rectangle( *m_debug, it->Rect(), Scalar(255, 0, 33), 1, 8, 0 );
+		rectangle(m_debug, it->Rect(), Scalar(255, 0, 33), 1, 8, 0 );
         }
 #endif
 }

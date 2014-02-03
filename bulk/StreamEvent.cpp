@@ -67,13 +67,13 @@ void StreamEvent::ConvertInput()
 
 /// Render : to display the event
 
-void StreamEvent::RenderTo(Mat * xp_output) const
+void StreamEvent::RenderTo(Mat& x_output) const
 {
 	if(m_event.IsRaised())
 	{
-		xp_output->setTo(Scalar(255, 255, 255));
-		m_event.RefObject().RenderTo(xp_output, Scalar(255, 0, 0));
+		x_output.setTo(Scalar(255, 255, 255));
+		m_event.RefObject().RenderTo(x_output, Scalar(255, 0, 0));
 	}
-	else xp_output->setTo(0);
+	else x_output.setTo(0);
 }
 

@@ -33,11 +33,11 @@ using namespace cv;
 
 ThumbnailWriter::ThumbnailWriter(const ConfigReader& x_configReader): 
 	Module(x_configReader),
-	m_param(x_configReader)
+	m_param(x_configReader),
+	m_input(Size(m_param.width, m_param.height), m_param.type)
 {
 	m_description = "Write an object stream as separate images in a folder.";
 
-	m_input    = new Mat(Size(m_param.width, m_param.height), m_param.type);
 
 	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this,   "Video input"));
 	m_inputStreams.push_back(new StreamObject(1, "objects", m_objectsIn, *this,     "Incoming objects"));
@@ -63,7 +63,7 @@ void ThumbnailWriter::ProcessFrame()
 		const Rect &rect(it1->Rect());
 		std::stringstream ss;
 		ss << m_folderName << m_currentTimeStamp << "_" << it1->GetName()<< it1->GetId() << "_" << cpt << "." << m_param.extension;
-		imwrite(ss.str(), (*m_input)(rect));
+		imwrite(ss.str(), (m_input)(rect));
 		cpt++;
 	}
 }

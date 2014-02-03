@@ -55,9 +55,9 @@
 	ss<<"Execution of command failed: "<<cmd;\
 	throw MkException(ss.str(), LOC);}}
 
-void adjust(const cv::Mat* im_in, cv::Mat* im_out, cv::Mat*& tmp1, cv::Mat*& tmp2);
-void adjustSize(const cv::Mat* im_in, cv::Mat* im_out);
-void adjustChannels(const cv::Mat* im_in, cv::Mat* im_out);
+void adjust(const cv::Mat& im_in, cv::Mat& im_out, cv::Mat*& tmp1, cv::Mat*& tmp2);
+void adjustSize(const cv::Mat& im_in, cv::Mat& im_out);
+void adjustChannels(const cv::Mat& im_in, cv::Mat& im_out);
 
 cv::Scalar colorFromStr(std::string x_str);
 cv::Scalar colorFromId(int x_id);

@@ -55,17 +55,14 @@ public:
 	void Capture();
 	virtual void Reset();
 	const std::string& GetName(){return m_name;}
-	// virtual const cv::Mat * GetImage() const {return m_output;}
-
+private:
+	RandomEventGeneratorParameterStructure m_param;
+	inline virtual const RandomEventGeneratorParameterStructure& GetParameters() const {return m_param;}
 protected:
 	TIME_STAMP m_timeStamp;
 	Event m_event;
-	cv::Mat * m_output;
+	cv::Mat m_output;
 	Timer m_frameTimer;
-
-private:
-	RandomEventGeneratorParameterStructure m_param;
-	inline virtual RandomEventGeneratorParameterStructure& RefParameter() {return m_param;}
 };
 
 #endif

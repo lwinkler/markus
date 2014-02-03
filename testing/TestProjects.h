@@ -31,6 +31,12 @@
 #include "util.h"
 #include "MkException.h"
 
+#define LOG_TEST(str) {\
+	std::cout<<std::endl<<str<<std::endl;\
+	LOG_INFO(Manager::Logger(), str);\
+}
+
+
 /// Unit testing class for ConfigReader class
 
 class TestProjects : public CppUnit::TestFixture
@@ -49,11 +55,12 @@ class TestProjects : public CppUnit::TestFixture
 
 	void runConfig(const std::string& x_configFile)
 	{
+		LOG_TEST("## Unit test with configuration "<<x_configFile);
 		ConfigReader mainConfig(x_configFile);
 		mainConfig.Validate();
 		ConfigReader appConfig = mainConfig.GetSubConfig("application");
 		CPPUNIT_ASSERT(!appConfig.IsEmpty());
-		Manager manager(appConfig, 1);
+		Manager manager(appConfig, true);
 		manager.Connect();
 		manager.Reset();
 		while(manager.Process())
@@ -65,9 +72,11 @@ class TestProjects : public CppUnit::TestFixture
 	/// Run different existing configs
 	void testSync()
 	{
+		LOG_TEST("# Unit test with different test projects");
 		runConfig("testing/projects/sync_test1.xml");
 		runConfig("testing/projects/sync_test2.xml");
 		runConfig("testing/projects/sync_test3.xml");
+		runConfig("testing/projects/sync_test4.xml");
 		runConfig("testing/projects/FaceAndTracker.xml");
 	}
 

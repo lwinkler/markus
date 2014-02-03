@@ -47,20 +47,19 @@ public:
 	
 	void Reset();
 	virtual void ProcessFrame();
-	
+private:
+	RenderObjectsParameterStructure m_param;
+	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;};
 protected:
 	// for streams
-	cv::Mat * m_imageInput;
-	cv::Mat * m_imageOutput;
+	cv::Mat m_imageInput;
+	cv::Mat m_imageOutput;
 	std::vector<Object> m_objectInput1;
 	std::vector<Object> m_objectInput2;
 	std::vector<Object> m_objectInput3;
 	std::vector<Object> m_objectInput4;
 	std::vector<Object> m_objectInput5;
 
-private:
-	RenderObjectsParameterStructure m_param;
-	inline virtual ModuleParameterStructure& RefParameter() { return m_param;};
 };
 
 

@@ -38,7 +38,7 @@ public:
 	inline const Event& GetEvent() const {return m_event;}
 	
 	virtual void ConvertInput();
-	virtual void RenderTo(cv::Mat * xp_output) const;
+	virtual void RenderTo(cv::Mat& x_output) const;
 	inline virtual const std::string GetTypeString() const {return "Event";}
 
 

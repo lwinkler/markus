@@ -44,7 +44,7 @@ public:
 	void AddObject(const Object& x_obj) {m_objects.push_back(x_obj);}
 
 	virtual void ConvertInput();
-	virtual void RenderTo(cv::Mat * xp_output) const;
+	virtual void RenderTo(cv::Mat& x_output) const;
 	inline virtual const std::string GetTypeString()const {return "Objects";}
 	double GetFeatureValue(const std::vector<Feature>& x_vect, const char* x_name);
 	void PrintObjects() const;

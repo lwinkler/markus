@@ -51,20 +51,17 @@ public:
 	
 	void ProcessFrame();
 	void Reset();
-	// const std::string& GetName(){return m_name;};
-	
+private:
+	GroundTruthReaderParameterStructure m_param;
+	inline virtual const GroundTruthReaderParameterStructure& GetParameters() const {return m_param;};
 protected:
-	cv::Mat * m_input;
+	cv::Mat m_input;
 	bool m_state;
 	bool m_stateSub;
 	std::ifstream m_srtFile;
 	int m_num;
 	std::string m_srtStart;
 	std::string m_srtEnd;
-
-private:
-	GroundTruthReaderParameterStructure m_param;
-	inline virtual GroundTruthReaderParameterStructure& RefParameter() {return m_param;};
 };
 
 #endif
