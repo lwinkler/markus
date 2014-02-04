@@ -47,7 +47,6 @@ VideoFileReader::~VideoFileReader()
 
 void VideoFileReader::Reset()
 {
-	m_lock.lockForRead(); // TODO remove ?
 	Module::Reset();
 #ifndef MARKUS_NO_GUI
 	// Add a new control to play forward and rewind
@@ -74,7 +73,6 @@ void VideoFileReader::Reset()
 	// delete m_output; // TODO: valgrind says there may be a leak here
 	m_output = Mat(Size(m_capture.get(CV_CAP_PROP_FRAME_WIDTH), m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)), m_param.type);
 
-	m_lock.unlock(); // TODO remove ?
 }
 
 void VideoFileReader::Capture()

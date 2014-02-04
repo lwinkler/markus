@@ -293,7 +293,7 @@ void QModuleViewer::updateControlNb(int x_index)
 	CLEAN_DELETE(m_controlBoard);
 	if(x_index < 0)
 		return;
-	m_controlBoard = new QControlBoard(m_currentModule, this);
+	m_controlBoard = new QControlBoard(*m_currentModule, this);
 	mp_mainLayout->addWidget(m_controlBoard, 0);
 	map<string, Controller*>::const_iterator it = m_currentModule->GetControlsList().begin();
 	advance(it, x_index);
