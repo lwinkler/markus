@@ -29,8 +29,8 @@ using namespace std;
 using namespace cv;
 
 
-StreamEvent::StreamEvent(int x_id, const string& x_name, Event& x_event, Module& rx_module, const string& rx_description) :
-	Stream(x_id, x_name, rx_module, rx_description),
+StreamEvent::StreamEvent(const string& x_name, Event& x_event, Module& rx_module, const string& rx_description) :
+	Stream(x_name, rx_module, rx_description),
 	m_event(x_event)
 {
 }

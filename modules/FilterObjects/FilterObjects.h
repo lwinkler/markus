@@ -67,8 +67,8 @@ private:
 protected:
 	std::vector <Object> m_objectsIn;
 	std::vector <Object> m_objectsOut;
-	StreamObject* m_inputObjectStream;
-	StreamObject* m_outputObjectStream;
+	// StreamObject* m_inputObjectStream;
+	// StreamObject* m_outputObjectStream;
 
 #ifdef MARKUS_DEBUG_STREAMS
 	cv::Mat m_debug;

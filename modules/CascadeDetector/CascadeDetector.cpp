@@ -49,13 +49,12 @@ CascadeDetector::CascadeDetector(const ConfigReader& x_configReader)
 		throw MkException("Impossible to load cascade filter " + m_param.filterFile, LOC);
 	m_description = "Detect objects from a video stream using a cascade filter (c.f. Haar patterns).";
 
-	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this, 		"Video input")); 
+	AddInputStream(0, new StreamImage("input", m_input, *this, 		"Video input")); 
 
-	m_outputStreams.push_back(new StreamObject(0, "detected", 
-				m_detectedObjects, *this,	"Detected objects"));
+	AddOutputStream(0, new StreamObject("detected", m_detectedObjects, *this,	"Detected objects"));
 #ifdef MARKUS_DEBUG_STREAMS
 	m_debug = Mat(Size(m_param.width, m_param.height), CV_8UC3);
-	m_debugStreams.push_back(new StreamDebug(1, "debug", m_debug, *this,		""));
+	AddDebugStream(0, new StreamDebug("debug", m_debug, *this,		""));
 #endif
 }
 

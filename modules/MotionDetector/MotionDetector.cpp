@@ -46,12 +46,12 @@ MotionDetector::MotionDetector(const ConfigReader& x_configReader)
 	m_description = "This module analyse an image where pixel value represents movement and outputs a state (motion or not)";
 	
 	// Init output images
-	m_inputStreams.push_back(new StreamImage(0, "input", m_input, *this, 	"Video input"));
-	m_outputStreams.push_back(new StreamState(0, "motion", m_state,  *this, 	"Motion is detected"));
+	AddInputStream(0, new StreamImage("input", m_input, *this, 	"Video input"));
+	AddOutputStream(0, new StreamState("motion", m_state,  *this, 	"Motion is detected"));
 
 #ifdef MARKUS_DEBUG_STREAMS
 	m_debug = Mat(Size(640, 480), CV_8UC3);
-	m_debugStreams.push_back(new StreamDebug(0, "motion", m_debug, *this, 	"Motion percentage"));
+	AddDebugStream(0, new StreamDebug("motion", m_debug, *this, 	"Motion percentage"));
 #endif
 }
 

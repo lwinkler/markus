@@ -37,8 +37,8 @@ RandomEventGenerator::RandomEventGenerator(const ConfigReader& x_configReader):
 	m_description = "Generate events with random features at each step";
 	m_timeStamp = TIME_STAMP_INITIAL;
 	
-	m_outputStreams.push_back(new StreamEvent(0, "event", m_event, *this,  "Event generated"));
-	m_outputStreams.push_back(new StreamImage(1, "image", m_output, *this, "Test image"));
+	AddOutputStream(0, new StreamEvent("event", m_event, *this,  "Event generated"));
+	AddOutputStream(1, new StreamImage("image", m_output, *this, "Test image"));
 
 	if(m_param.randomSeed == 0)
 		srand(time(NULL));

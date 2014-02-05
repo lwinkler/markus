@@ -23,6 +23,7 @@
 
 #include "QControlBoard.h"
 #include "Controller.h"
+#include "Module.h"
 #include <QBoxLayout>
 #include <QLabel>
 #include <QGroupBox>
@@ -31,12 +32,10 @@
 using namespace std;
 
 	 
-QControlBoard::QControlBoard(Module * x_module, QWidget *parent)
-	// m_name("bla"),
-	// m_description("TODO")
+QControlBoard::QControlBoard(Module& x_module, QWidget *parent):
+	m_currentModule(x_module)
 {
 	QBoxLayout * mainLayout = new QBoxLayout(QBoxLayout::TopToBottom);
-	// m_currentModule         = x_module;
 	mp_gbControls		= new QScrollArea;
 	mp_gbButtons		= new QGroupBox(tr("Actions"));
 
@@ -68,11 +67,11 @@ void QControlBoard::paintEvent(QPaintEvent * e)
 /// Update the list of controls associated with the module
 void QControlBoard::updateControl(Controller* x_control)
 {
-	m_currentControl = x_control;
+	mp_currentControl = x_control;
 
 	// Create the control buttons
 	// TODO: remove buttons and delete widgets
-	for(map<string, const px_action>::const_iterator it = m_currentControl->GetActions().begin() ; it != m_currentControl->GetActions().end() ; it++)
+	for(map<string, const px_action>::const_iterator it = mp_currentControl->GetActions().begin() ; it != mp_currentControl->GetActions().end() ; it++)
 	{
 		// note : names must match between buttons and actions
 		QPushButton* button = new QPushButton(it->first.c_str());
@@ -105,10 +104,17 @@ void QControlBoard::callAction()
 {
 	QPushButton* button = dynamic_cast<QPushButton*>(sender());
 	assert(button != NULL);
-	map<string, const px_action>::const_iterator it = m_currentControl->GetActions().find(button->text().toStdString());
-	if(it == m_currentControl->GetActions().end())
+	/*map<string, const px_action>::const_iterator it = mp_currentControl->GetActions().find(button->text().toStdString());
+	if(it == mp_currentControl->GetActions().end())
 		throw MkException("Cannot find action in controller " + button->text().toStdString(), LOC);
+	*/
 
 	// Call the function pointer associated with the action
-	(*(it->second))(m_currentControl, NULL);
+	//(*(it->second))(mp_currentControl, NULL);
+
+
+	m_currentModule.LockForWrite();
+	cout<<"Call control on module "<<m_currentModule.GetName()<<endl; // TODO remove
+	mp_currentControl->CallAction(button->text().toStdString(), NULL);
+	m_currentModule.Unlock();
 }

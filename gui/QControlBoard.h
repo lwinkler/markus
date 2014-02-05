@@ -40,7 +40,7 @@ class QControlBoard : public QWidget
 	Q_OBJECT
 public:
 	// QControlBoard(const std::string& x_name, const std::string& x_description);
-	QControlBoard(Module * x_module, QWidget *parent = 0);
+	QControlBoard(Module& x_module, QWidget *parent = 0);
 	~QControlBoard();
 	// inline const std::string& GetName() const {return m_name;}
 	// inline const std::string& GetDescription() const{return m_description;}
@@ -53,7 +53,8 @@ protected:
 	// std::string m_name;
 	// std::string m_description;
 	
-	Controller  * m_currentControl;
+	Controller  * mp_currentControl;
+	Module      & m_currentModule;
 
 	void paintEvent(QPaintEvent *event);
 	virtual void resizeEvent(QResizeEvent * e);
@@ -61,6 +62,7 @@ protected:
 	QScrollArea * mp_gbControls;
 	QGroupBox   * mp_gbButtons;
 	QHBoxLayout * mp_buttonLayout;
+
 public slots:
 	void callAction();
 };

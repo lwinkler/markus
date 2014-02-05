@@ -28,8 +28,8 @@ using namespace std;
 using namespace cv;
 
 
-StreamState::StreamState(int x_id, const string& x_name, bool& x_state, Module& rx_module, const string& rx_description) : 
-	Stream(x_id, x_name, rx_module, rx_description),
+StreamState::StreamState(const string& x_name, bool& x_state, Module& rx_module, const string& rx_description) : 
+	Stream(x_name, rx_module, rx_description),
 	m_state(x_state)
 {
 }

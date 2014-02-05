@@ -32,7 +32,7 @@
 class StreamEvent : public Stream
 {
 public:
-	StreamEvent(int x_id, const std::string& rx_name, Event& x_event, Module& rx_module, const std::string& rx_description);
+	StreamEvent(const std::string& rx_name, Event& x_event, Module& rx_module, const std::string& rx_description);
 	~StreamEvent();
 	inline void SetEvent(const Event& x_event){m_event = x_event;}
 	inline const Event& GetEvent() const {return m_event;}

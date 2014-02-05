@@ -31,7 +31,7 @@
 class StreamImage : public Stream
 {
 public:
-	StreamImage(int x_id, const std::string& x_name, cv::Mat& x_image, Module& rx_module, const std::string& rx_description);
+	StreamImage(const std::string& x_name, cv::Mat& x_image, Module& rx_module, const std::string& rx_description);
 	~StreamImage();
 	const cv::Mat& RefImage() const {return m_image;}
 	

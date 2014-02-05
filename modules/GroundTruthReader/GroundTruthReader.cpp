@@ -35,10 +35,10 @@ GroundTruthReader::GroundTruthReader(const ConfigReader& x_configReader):
 {
 	m_description = "Read a ground truth file";
 
-	m_inputStreams.push_back(new StreamImage(0, "input",  m_input, *this, "Video input"));
+	AddInputStream(0, new StreamImage("input",  m_input, *this, "Video input"));
 
-	m_outputStreams.push_back(new StreamImage(0, "input", m_input,  *this, 	"Copy of the input stream"));
-	m_outputStreams.push_back(new StreamState(1, "state", m_state,  *this, 	"State read from the annotation file"));
+	AddOutputStream(0, new StreamImage("input", m_input,  *this, 	"Copy of the input stream"));
+	AddOutputStream(1, new StreamState("state", m_state,  *this, 	"State read from the annotation file"));
 }
 
 GroundTruthReader::~GroundTruthReader()

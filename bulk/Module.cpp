@@ -175,13 +175,13 @@ double Module::GetRecordingFps()
 Module::~Module()
 {
 	// Delete all streams
-	for(std::vector<Stream* >::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
-		delete(*it);
-	for(std::vector<Stream* >::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
-		delete(*it);
+	for(std::map<int, Stream* >::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
+		delete(it->second);
+	for(std::map<int, Stream* >::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
+		delete(it->second);
 #ifdef MARKUS_DEBUG_STREAMS
-	for(std::vector<Stream* >::iterator it = m_debugStreams.begin() ; it != m_debugStreams.end() ; it++)
-		delete(*it);
+	for(std::map<int, Stream* >::iterator it = m_debugStreams.begin() ; it != m_debugStreams.end() ; it++)
+		delete(it->second);
 #endif
 #ifndef MARKUS_NO_GUI
 	for(std::map<string, Controller* >::iterator it = m_controls.begin() ; it != m_controls.end() ; it++)
@@ -236,12 +236,12 @@ void Module::Process()
 		// Read and convert inputs
 		if(IsInputProcessed())
 		{
-			for(vector<Stream*>::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
+			for(map<int, Stream*>::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
 			{
 				Timer ti2;
 				//(*it)->LockModuleForRead();
 				m_timerWaiting += ti2.GetMSecLong();
-				(*it)->ConvertInput();
+				it->second->ConvertInput();
 				//(*it)->UnLockModule();
 			}
 		}
@@ -254,8 +254,8 @@ void Module::Process()
 
 		// Set time stamps to outputs // TODO can we use the dedicated method ? Why only Input
 		if(!IsInput())
-			for(vector<Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
-				(*it)->SetTimeStamp(m_currentTimeStamp);
+			for(map<int, Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
+				it->second->SetTimeStamp(m_currentTimeStamp);
 		
 		// Call depending modules (modules with fps = 0)
 		for(vector<Module*>::iterator it = m_modulesDepending.begin() ; it != m_modulesDepending.end() ; it++)
@@ -283,39 +283,46 @@ void Module::Export(ostream& rx_os, int x_indentation)
 	rx_os<<tabs<<"</parameters>"<<endl;
 
 	rx_os<<tabs<<"<inputs>"<<endl;
-	for(vector<Stream*>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
-		(*it)->Export(rx_os, x_indentation + 2, true);
+	for(map<int, Stream*>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
+		it->second->Export(rx_os, x_indentation + 2, true);
 	rx_os<<tabs<<"</inputs>"<<endl;
 
 	rx_os<<tabs<<"<outputs>"<<endl;
-	for(vector<Stream*>::const_iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
-		(*it)->Export(rx_os, x_indentation + 2, false);
+	for(map<int, Stream*>::const_iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
+		it->second->Export(rx_os, x_indentation + 2, false);
 	rx_os<<tabs<<"</outputs>"<<endl;
 	tabs = string(x_indentation, '\t');
 	rx_os<<tabs<<"</module>"<<endl;
 }
 
 /// Get a stream by its id
-Stream& Module::RefInputStreamById(int x_id) const
+Stream& Module::RefInputStreamById(int x_id)
 {
-	for(vector<Stream *>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
-		if((*it)->GetId() == x_id) return **it;
-	stringstream ss;
-	ss<<"GetInputStreamById : no stream with id="<<x_id<<" for module "<<GetName();
-	throw MkException(ss.str(), LOC);
-	// return NULL;
+	//for(vector<Stream *>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
+		//if((*it)->GetId() == x_id) return **it;
+	map<int, Stream*>::iterator it = m_inputStreams.find(x_id);
+
+	if(it == m_inputStreams.end())
+	{
+		stringstream ss;
+		ss<<"GetInputStreamById : no stream with id="<<x_id<<" for module "<<GetName();
+		throw MkException(ss.str(), LOC);
+	}
+	return *(it->second);
 }
 
 /// Get a stream by its id
-Stream& Module::RefOutputStreamById(int x_id) const
+Stream& Module::RefOutputStreamById(int x_id)
 {
-	for(vector<Stream *>::const_iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
-		if((*it)->GetId() == x_id) return **it;
+	map<int, Stream*>::iterator it = m_outputStreams.find(x_id);
 
-	stringstream ss;
-	ss<<"Input stream not found module="<<GetName()<<" id="<<x_id;
-	throw MkException(ss.str(), LOC);
-	// return NULL;
+	if(it == m_outputStreams.end())
+	{
+		stringstream ss;
+		ss<<"GetInputStreamById : no stream with id="<<x_id<<" for module "<<GetName();
+		throw MkException(ss.str(), LOC);
+	}
+	return *(it->second);
 }
 
 void Module::PrintStatistics() const
@@ -328,9 +335,9 @@ void Module::PrintStatistics() const
 /// Check that all inputs are ready (they are connected to a working module)
 bool Module::AllInputsAreReady() const
 {
-	for(vector<Stream*>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
+	for(map<int, Stream*>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
 	{
-		if((*it)->IsConnected() && !(*it)->RefConnected().IsReady())
+		if(it->second->IsConnected() && !it->second->RefConnected().IsReady())
 			return false;
 	}
 	return true;
@@ -339,11 +346,11 @@ bool Module::AllInputsAreReady() const
 /// Return a reference to the master module
 const Module& Module::GetMasterModule()
 {
-	for(vector<Stream*>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
+	for(map<int, Stream*>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
 	{
-		if((*it)->IsConnected())
+		if(it->second->IsConnected())
 		{
-			Module& preceding = (*it)->RefConnected().RefModule();
+			Module& preceding = it->second->RefConnected().RefModule();
 			if(preceding.IsAutoProcessed())
 				return preceding;
 			else
@@ -357,10 +364,39 @@ const Module& Module::GetMasterModule()
 void Module::SetAsReady()
 {
 	m_isReady = true;
-	for(vector<Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
+	for(map<int, Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
 	{
-		(*it)->SetAsReady();
+		it->second->SetAsReady();
 	}
+}
+
+
+/// Add an input stream
+void Module::AddInputStream(int x_id, Stream* xp_stream)
+{
+	// m_inputStreams.push_back(xp_stream);
+	xp_stream->SetId(x_id);
+	if(m_inputStreams.find(x_id) != m_inputStreams.end())
+		throw MkException("Two streams with same id", LOC);
+	m_inputStreams.insert(make_pair(x_id, xp_stream));
+}
+
+/// Add an input stream
+void Module::AddOutputStream(int x_id, Stream* xp_stream)
+{
+	xp_stream->SetId(x_id);
+	if(m_outputStreams.find(x_id) != m_outputStreams.end())
+		throw MkException("Two streams with same id", LOC);
+	m_outputStreams.insert(make_pair(x_id, xp_stream));
+}
+
+/// Add an input stream
+void Module::AddDebugStream(int x_id, Stream* xp_stream)
+{
+	xp_stream->SetId(x_id);
+	if(m_debugStreams.find(x_id) != m_debugStreams.end())
+		throw MkException("Two streams with same id", LOC);
+	m_debugStreams.insert(make_pair(x_id, xp_stream));
 }
 
 /// find a controller in map by name

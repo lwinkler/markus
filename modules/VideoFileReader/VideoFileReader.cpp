@@ -37,7 +37,7 @@ VideoFileReader::VideoFileReader(const ConfigReader& x_configReader):
 	m_output(Size(m_param.width, m_param.height), CV_8UC3) // Note: sizes will be overridden !
 {
 	m_description = "Input from a video file.";
-	m_outputStreams.push_back(new StreamImage(0, "input", m_output, *this,	"Video stream"));
+	AddOutputStream(0, new StreamImage("input", m_output, *this,	"Video stream"));
 }
 
 VideoFileReader::~VideoFileReader()
@@ -47,7 +47,6 @@ VideoFileReader::~VideoFileReader()
 
 void VideoFileReader::Reset()
 {
-	m_lock.lockForRead(); // TODO remove ?
 	Module::Reset();
 #ifndef MARKUS_NO_GUI
 	// Add a new control to play forward and rewind
@@ -74,7 +73,6 @@ void VideoFileReader::Reset()
 	// delete m_output; // TODO: valgrind says there may be a leak here
 	m_output = Mat(Size(m_capture.get(CV_CAP_PROP_FRAME_WIDTH), m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)), m_param.type);
 
-	m_lock.unlock(); // TODO remove ?
 }
 
 void VideoFileReader::Capture()

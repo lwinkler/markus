@@ -40,10 +40,10 @@ Mask::Mask(const ConfigReader& x_configReader) :
 {
 	m_description = "Apply a binary mask to an image input";
 
-	m_inputStreams.push_back(new StreamImage(0, "input",   m_output, *this, "Video input"));
-	m_inputStreams.push_back(new StreamImage(1, "mask" ,   m_mask,   *this, "Binary mask"));
+	AddInputStream(0, new StreamImage("input",   m_output, *this, "Video input"));
+	AddInputStream(1, new StreamImage("mask" ,   m_mask,   *this, "Binary mask"));
 
-	m_outputStreams.push_back(new StreamImage(0, "masked", m_output, *this, "Binary mask applied to input"));
+	AddOutputStream(0, new StreamImage("masked", m_output, *this, "Binary mask applied to input"));
 };
 		
 

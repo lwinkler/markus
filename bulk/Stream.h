@@ -32,10 +32,11 @@
 class Stream
 {
 public:
-	Stream(int x_id, const std::string& x_name, Module& rx_module, const std::string& rx_description);
+	Stream(const std::string& x_name, Module& rx_module, const std::string& rx_description);
 	virtual ~Stream();
 	inline const std::string& GetName() const {return m_name;}
 	inline int GetId() const {return m_id;}
+	inline void SetId(int x_id) {m_id = x_id;} // id should disappear at term
 	inline int GetInputWidth() const {return m_width;}
 	inline int GetInputHeight() const {return m_height;}
 	inline const std::string& GetDescription() const {return m_description;}
@@ -68,7 +69,7 @@ public:
 
 protected:
 	const std::string m_name;
-	const int m_id;
+	int m_id; // TODO see if we remove
 	const int m_width;
 	const int m_height;
 	Module& mr_module;

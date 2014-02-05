@@ -39,15 +39,13 @@ FilterObjects::FilterObjects(const ConfigReader& x_configReader) :
 {
 	m_description = "Filter the input objects based on different criterion";
 
-	m_inputObjectStream = new StreamObject(0, "input", 	m_objectsIn, *this,	"Incoming objects");
-	m_inputStreams.push_back(m_inputObjectStream);
+	AddInputStream(0, new StreamObject("input", 	m_objectsIn, *this,	"Incoming objects"));
 
-	m_outputObjectStream = new StreamObject(0, "filtered",  m_objectsOut, *this,	"Filtered objects objects");
-	m_outputStreams.push_back(m_outputObjectStream);
+	AddOutputStream(0, new StreamObject("filtered",  m_objectsOut, *this,	"Filtered objects objects"));
 #ifdef MARKUS_DEBUG_STREAMS
 	// add a debug stream
 	m_debug = Mat(Size(m_param.width, m_param.height), CV_8UC3);
-	m_debugStreams.push_back(new StreamDebug(0, "debug", m_debug, *this,	"Debug"));
+	AddDebugStream(0, new StreamDebug("debug", m_debug, *this,	"Debug"));
 #endif
 }
 
