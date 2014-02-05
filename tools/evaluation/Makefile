@@ -2,6 +2,7 @@ protect:
 	@echo ">>> Precise a target"
 
 clean:
+	@rm out_latest -rf
 	@echo -e "\e[91mThe following files will be removed:\e[0m"
 	@find . -name *.pyc
 	@echo -en "\e[91mAre you sure? [y/n]\e[0m "
