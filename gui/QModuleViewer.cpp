@@ -157,15 +157,10 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 		m_image =  QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
 	}
 	
-	//if(m_img_output != NULL) delete(m_img_output);
-	//if(m_img_original != NULL)  delete(m_img_original); 
-	m_img_output   = NULL;
-	m_img_original = NULL;
-	
+	CLEAN_DELETE(m_img_output);
+	CLEAN_DELETE(m_img_original);
 	CLEAN_DELETE(m_img_tmp1);
 	CLEAN_DELETE(m_img_tmp2);
-	
-	m_img_tmp1 = m_img_tmp2 = NULL;
 }
 
 void QModuleViewer::paintEvent(QPaintEvent * e) 
