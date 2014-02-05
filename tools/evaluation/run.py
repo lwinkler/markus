@@ -192,7 +192,7 @@ def main():
     evals = [Evaluation(args.PROJECT_FILE, v) for v in video_files]
 
     # Define a pool of workers
-    pool = Pool(8)
+    pool = Pool()
 
     # Run the evaluations in parallel
     pool.map(run, evals)
