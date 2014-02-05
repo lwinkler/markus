@@ -45,7 +45,7 @@ FilterObjects::FilterObjects(const ConfigReader& x_configReader) :
 #ifdef MARKUS_DEBUG_STREAMS
 	// add a debug stream
 	m_debug = Mat(Size(m_param.width, m_param.height), CV_8UC3);
-	AddOutputStream(0, new StreamDebug("debug", m_debug, *this,	"Debug"));
+	AddDebugStream(0, new StreamDebug("debug", m_debug, *this,	"Debug"));
 #endif
 }
 
