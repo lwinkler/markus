@@ -196,7 +196,10 @@ void Module::Process()
 {
 	m_lock.lockForWrite();
 	if(m_pause)
+	{
+		m_lock.unlock();
 		return;
+	}
 	if(!m_isReady)
 		throw MkException("Module must be ready before processing", LOC);
 

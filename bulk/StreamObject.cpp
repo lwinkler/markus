@@ -71,8 +71,8 @@ void StreamObject::ConvertInput()
 
 void StreamObject::RenderTo(Mat& x_output) const
 {
-	// if(x_output.cols != m_width || x_output.rows != m_height) // TODO: this raises an error with FilterOBjects !!!
-		// throw MkException("Cannot render, image must have the same size as the stream", LOC);
+	if(x_output.cols != m_width || x_output.rows != m_height) // TODO: this raises an error with FilterOBjects !!!
+		throw MkException("Cannot render, image must have the same size as the stream", LOC);
 	for(vector<Object>::const_iterator it1 = m_objects.begin() ; it1 != m_objects.end() ; it1++)
 	{
 		it1->RenderTo(x_output, DEFAULT_STREAM_COLOR);
@@ -86,7 +86,7 @@ void StreamObject::PrintObjects() const
 	for ( vector<Object>::const_iterator it1= m_objects.begin() ; it1 < m_objects.end(); it1++ )
 	{
 		int cpt=0;
-		cout<<"Object "/*<<(int)it1->GetNum()*/<<" : ";
+		cout<<"Object "/*<<(int)it1->GetNum()*/<<" : "; // TODO: print to log
 		for ( map<string, Feature>::const_iterator it2 = it1->GetFeatures().begin() ; it2 != it1->GetFeatures().end(); it2++ )
 		{
 			cout<<" "<<it2->first<<"="<<it2->second.value<<"|";

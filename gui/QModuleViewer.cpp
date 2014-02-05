@@ -120,11 +120,11 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 
 QModuleViewer::~QModuleViewer(void) 
 {
-	//if(m_img_original != NULL)  delete(m_img_original); 
-	//if(m_img_output != NULL)  delete(m_img_output); 
-	if(m_img_tmp1 != NULL) delete(m_img_tmp1);
-	if(m_img_tmp2 != NULL) delete(m_img_tmp2);
-	
+	CLEAN_DELETE(m_img_original);
+	CLEAN_DELETE(m_img_output);
+	CLEAN_DELETE(m_img_tmp1);
+	CLEAN_DELETE(m_img_tmp2);
+
 	delete mp_comboModules ;
 	delete mp_comboStreams;
 	delete mp_mainLayout;
@@ -162,8 +162,8 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 	m_img_output   = NULL;
 	m_img_original = NULL;
 	
-	if(m_img_tmp1 != NULL) delete(m_img_tmp1);
-	if(m_img_tmp2 != NULL) delete(m_img_tmp2);
+	CLEAN_DELETE(m_img_tmp1);
+	CLEAN_DELETE(m_img_tmp2);
 	
 	m_img_tmp1 = m_img_tmp2 = NULL;
 }
@@ -303,7 +303,8 @@ void QModuleViewer::updateControlNb(int x_index)
 void QModuleViewer::updateStream(Stream * x_outputStream)
 {
 	m_currentStream  = x_outputStream;
-	// CLEAN_DELETE(m_img_original);
+	CLEAN_DELETE(m_img_original);
+	CLEAN_DELETE(m_img_output);
 }
 
 
