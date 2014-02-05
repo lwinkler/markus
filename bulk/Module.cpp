@@ -375,7 +375,7 @@ void Module::SetAsReady()
 void Module::AddInputStream(int x_id, Stream* xp_stream)
 {
 	// m_inputStreams.push_back(xp_stream);
-	// xp_stream->SetId(x_id);
+	xp_stream->SetId(x_id);
 	if(m_inputStreams.find(x_id) != m_inputStreams.end())
 		throw MkException("Two streams with same id", LOC);
 	m_inputStreams.insert(make_pair(x_id, xp_stream));
@@ -384,6 +384,7 @@ void Module::AddInputStream(int x_id, Stream* xp_stream)
 /// Add an input stream
 void Module::AddOutputStream(int x_id, Stream* xp_stream)
 {
+	xp_stream->SetId(x_id);
 	if(m_outputStreams.find(x_id) != m_outputStreams.end())
 		throw MkException("Two streams with same id", LOC);
 	m_outputStreams.insert(make_pair(x_id, xp_stream));
@@ -392,6 +393,7 @@ void Module::AddOutputStream(int x_id, Stream* xp_stream)
 /// Add an input stream
 void Module::AddDebugStream(int x_id, Stream* xp_stream)
 {
+	xp_stream->SetId(x_id);
 	if(m_debugStreams.find(x_id) != m_debugStreams.end())
 		throw MkException("Two streams with same id", LOC);
 	m_debugStreams.insert(make_pair(x_id, xp_stream));

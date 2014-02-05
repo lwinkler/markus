@@ -47,7 +47,7 @@ MotionDetector::MotionDetector(const ConfigReader& x_configReader)
 	
 	// Init output images
 	AddInputStream(0, new StreamImage("input", m_input, *this, 	"Video input"));
-	AddOutputStream(1, new StreamState("motion", m_state,  *this, 	"Motion is detected"));
+	AddOutputStream(0, new StreamState("motion", m_state,  *this, 	"Motion is detected"));
 
 #ifdef MARKUS_DEBUG_STREAMS
 	m_debug = Mat(Size(640, 480), CV_8UC3);
