@@ -14,41 +14,50 @@ import subprocess
 from multiprocessing import Pool
 from time import strftime, localtime
 
-# Absolute path to markus
-abs_markus = None
-
-# Absolute path to analyse_event.py
-abs_analyse = None
-
-# Absolute path to aggregate.py
-abs_aggregate = None
+# Arguments
+args = None
 
 # Original path
 abs_orig = None
 
+# Absolute path to markus
+abs_markus = None
+
 # Run path
 run_path = None
 
-# Arguments
-args = None
+
+def is_tool(name):
+    """ Check if a tool exists """
+    try:
+        subprocess.check_call(['which', name])
+    except subprocess.CalledProcessError:
+        return False
+    return True
+
+
+def list_videos(dir, ext='mp4'):
+    """ List all the videos names in a directory """
+    return []
 
 
 class Evaluation():
-    """
-    An evaluation of a specific project on a specific video
-    """
+    """ An evaluation of a specific project on a specific video """
     def __init__(self, project, video):
+        """ Initalize the evaluation parameters """
         self.abs_project = os.path.abspath(project)
         self.abs_video = os.path.abspath(video)
         self.eval_name = os.path.basename(video).split('_')[0]
         self.eval_path = os.path.join(run_path, self.eval_name)
 
     def run(self):
+        """ Run the evaluation """
         self._run_markus()
         self._copy_srt()
         self._run_analyse()
 
     def _run_markus(self):
+        """ Run markus """
         # Prepare the command
         cmd = [abs_markus,
                self.abs_project,
@@ -62,47 +71,56 @@ class Evaluation():
         markus.communicate()
 
     def _copy_srt(self):
+        """ Copy the ground truth file """
         # Get base name
         orig = os.path.splitext(self.abs_video)[0] + '.srt'
         dest = os.path.join(self.eval_path, 'ground_truth.srt')
 
-        # Check if file exist
+        # Check if file exist and copy it
         if os.path.exists(orig):
             shutil.copy(orig, dest)
 
     def _run_analyse(self):
-        # Python 3 hack
-        if args.python3:
+        """ Run the analysis of detected events """
+        # Hack for Python 3 distros
+        if is_tool('python2'):
             cmd = ['python2']
         else:
             cmd = []
 
         # Prepare the command
-        cmd += [abs_analyse,
+        cmd += [os.path.join(abs_orig, 'analyse_events.py'),
                 os.path.join(self.eval_path, 'event.srt'),
                 os.path.join(self.eval_path, 'ground_truth.srt'),
                 '-V', self.abs_video,
                 '-o', os.path.join(self.eval_path, 'analysis'),
+                '-d', str(args.delay),
+                '-t', str(args.tolerance),
+                '-i',
                 '--html',
-                '-d', '0',
-                '-t', '0',
-                '--no-browser',
-                '-i']
+                '--no-browser']
 
+        if args.uncompromising:
+            cmd += ['-u']
+
+        # Run the command
         analyse = subprocess.Popen(cmd)
         analyse.communicate()
 
 
 def run_aggregate(run_path):
-    # Python 3 hack
-    if args.python3:
+    """ Aggregate the results of all evaluation sets """
+    # Hack for Python 3 distros
+    if is_tool('python2'):
         cmd = ['python2']
     else:
         cmd = []
 
     # Prepare the command
-    cmd += [abs_aggregate,
-            run_path]
+    cmd += [os.path.join(abs_orig, 'aggregate.py'), run_path]
+
+    if args.no_browser:
+        cmd += ['--no-browser']
 
     # Run the command
     aggregate = subprocess.Popen(cmd)
@@ -128,23 +146,43 @@ def arguments_parser():
 
     # set file
     parser.add_argument('-s',
-                        type=str,
-                        default='sets/all.txt',
                         dest='set',
+                        default='sets/all.txt',
+                        type=str,
                         help='the file listing videos that must be used')
 
     # Output directory
     parser.add_argument('-o',
-                        type=str,
-                        default=None,
                         dest='output',
+                        default=None,
+                        type=str,
                         help='output directory')
 
-    # Python3 hack
-    parser.add_argument('-p',
-                        dest='python3',
+    # Delay
+    parser.add_argument('-d',
+                        dest='delay',
+                        default=10,
+                        type=int,
+                        help='the delay to use, default=10s.')
+
+    # Uncompromising
+    parser.add_argument('-u',
+                        dest='uncompromising',
                         action='store_true',
-                        help='hack for python3 distributions')
+                        help='uncompromising: don\'t accept event before '
+                        'delay')
+
+    # Tolerance
+    parser.add_argument('-t',
+                        dest='tolerance',
+                        default=1,
+                        type=int,
+                        help='tolerance time (e.g. falling time), default=1s.')
+
+    # No browser
+    parser.add_argument('--no-browser',
+                        action='store_true',
+                        help='don\' try to open the browser')
 
     return parser.parse_args()
 
@@ -155,17 +193,18 @@ def run(test):
 
 
 def main():
-    # Define some global variables
-    global args, abs_orig, run_path, abs_analyse, abs_aggregate, abs_markus
+    """ Main function, do the job """
+    # Specify global variables
+    global args
+    global abs_orig, abs_markus
+    global run_path
 
     # Parse arguments
     args = arguments_parser()
 
     # Register some paths
-    abs_orig = os.getcwd()
-    abs_analyse = os.path.abspath('./analyse_events.py')
-    abs_aggregate = os.path.abspath('./aggregate.py')
-    abs_markus = os.path.abspath('../../markus')
+    abs_orig = os.path.abspath(os.path.dirname(__file__))
+    abs_markus = os.path.abspath(os.path.join(abs_orig, '../../markus'))
     abs_videos_dir = os.path.abspath(args.VIDEO_DIR)
 
     # Define a run path
@@ -183,18 +222,23 @@ def main():
     else:
         os.makedirs(run_path)
 
-    # Get the video files
-    with open(args.set, 'r') as f:
-        video_names = f.read().splitlines()
+    # Get the video names
+    if args.set is not None:
+        # If specified, use the file list
+        with open(args.set, 'r') as f:
+            video_names = f.read().splitlines()
+    else:
+        # Otherwise use all videos from the videos folder
+        video_names = list_videos()
+
+    # transform video to filepaths
     video_files = [os.path.join(abs_videos_dir, v) for v in video_names]
 
     # Prepare the evaluations
     evals = [Evaluation(args.PROJECT_FILE, v) for v in video_files]
 
-    # Define a pool of workers
-    pool = Pool()
-
     # Run the evaluations in parallel
+    pool = Pool()
     pool.map(run, evals)
 
     # Run the aggregation at the end

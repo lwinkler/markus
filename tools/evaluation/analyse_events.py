@@ -438,18 +438,18 @@ def arguments_parser():
                         help='uncompromising: don\'t accept event before '
                         'delay')
 
-    # Images
-    parser.add_argument('-i',
-                        dest='images',
-                        action='store_true',
-                        help='extract images of events')
-
     # Tolerance
     parser.add_argument('-t',
                         dest='tolerance',
                         default=1,
                         type=int,
                         help='tolerance time (e.g. falling time), default=1s.')
+
+    # Images
+    parser.add_argument('-i',
+                        dest='images',
+                        action='store_true',
+                        help='extract images of events')
 
     # Output
     parser.add_argument('-o',
