@@ -38,9 +38,12 @@ def is_tool(name):
     return True
 
 
-def list_videos(dir, ext='mp4'):
+def list_videos(path, ext=['.avi', '.mp4']):
     """ List all the videos names in a directory """
-    return []
+    files = os.listdir(path)
+    names = [os.path.splitext(os.path.basename(f)) for f in files]
+    videos = filter(lambda n: n[1] in ext, names)
+    return [v[0] + v[1] for v in videos]
 
 
 class Evaluation():
@@ -149,7 +152,7 @@ def arguments_parser():
     # set file
     parser.add_argument('-s',
                         dest='set',
-                        default='sets/all.txt',
+                        default=None,
                         type=str,
                         help='the file listing videos that must be used')
 
@@ -231,7 +234,7 @@ def main():
             video_names = f.read().splitlines()
     else:
         # Otherwise use all videos from the videos folder
-        video_names = list_videos()
+        video_names = list_videos(abs_videos_dir)
 
     # transform video to filepaths
     video_files = [os.path.join(abs_videos_dir, v) for v in video_names]
