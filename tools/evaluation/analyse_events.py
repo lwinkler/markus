@@ -294,6 +294,7 @@ def generate_html(stats, log, data, out='out', filename='report.html'):
 
     # Create HEAD and BODY
     head = HEAD(TITLE('Report'))
+    head <= SCRIPT(src='http://code.jquery.com/jquery-1.11.0.min.js')
     body = BODY(H1('Report'))
 
     # Parameters section
@@ -327,8 +328,14 @@ def generate_html(stats, log, data, out='out', filename='report.html'):
 
     # Events section
     body <= H2('Events')
+    body <= INPUT(type='button',
+                  value='Hide thumbnails',
+                  onclick="$('.images').css('display', 'none');") + \
+            INPUT(type='button',
+                  value='Show thumbnails',
+                  onclick="$('.images').css('display', 'block');") + P()
     table = TABLE(border=1, style='border-collapse: collapse;')
-    table <= TR(TH('ID') + TH('Time') + TH('Matched'),
+    table <= TR(TH('ID') + TH('Thumbnail') + TH('Time') + TH('Matched'),
                 style='background: lightgray;')
     for (event, truth, good) in log:
 
@@ -343,6 +350,10 @@ def generate_html(stats, log, data, out='out', filename='report.html'):
         if args.images:
             row <= TD(A(B(event.id),
                         href="./images/event_" + str(event.id) + ".png"))
+            row <= TD(CENTER(IMG(src="./images/event_" + str(event.id) +
+                                 ".png",
+                                 width='100',
+                                 CLASS='images')))
         else:
             row <= TD(B(event.id))
         row <= TD(event.time)
@@ -359,6 +370,7 @@ def generate_html(stats, log, data, out='out', filename='report.html'):
     table = TABLE(border=1, style='border-collapse: collapse;')
     header = TR(style='background: lightgray;')
     header <= TH('ID')
+    header <= TH('Thumbnail')
     header <= TH('Matched')
     header <= TH('Begin')
     header <= TH('End')
@@ -380,6 +392,10 @@ def generate_html(stats, log, data, out='out', filename='report.html'):
         if args.images:
             row <= TD(A(B(truth.id),
                         href="./images/truth_" + str(truth.id) + ".png"))
+            row <= TD(CENTER(IMG(src="./images/truth_" + str(truth.id) +
+                                 ".png",
+                                 width='100',
+                                 CLASS='images')))
         else:
             row <= TD(B(truth.id))
         cell = TD()
@@ -389,10 +405,14 @@ def generate_html(stats, log, data, out='out', filename='report.html'):
             cell <= A(match, href="./images/event_" + str(match) + ".png")
             comma = ', '
         row <= cell
-        row <= TD(truth.begin, style='padding-left: 20px; padding-right: 20px')
-        row <= TD(truth.end, style='padding-left: 20px; padding-right: 20px')
-        row <= TD(truth.match_begin, style='padding-left: 20px; padding-right: 20px')
-        row <= TD(truth.match_end, style='padding-left: 20px; padding-right: 20px')
+        row <= TD(truth.begin, style='padding-left: 20px; '
+                  'padding-right: 20px')
+        row <= TD(truth.end, style='padding-left: 20px; '
+                  'padding-right: 20px')
+        row <= TD(truth.match_begin, style='padding-left: 20px; '
+                  'padding-right: 20px')
+        row <= TD(truth.match_end, style='padding-left: 20px; '
+                  'padding-right: 20px')
         table <= row
     body <= table
 
