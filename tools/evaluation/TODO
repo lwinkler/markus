@@ -1,3 +1,3 @@
 Check for ffmpeg/avconv
-Propagate options to analyse_events.py
-Run script `run.py` from any place
+Display thumbnails
+Improve GT display and add links
