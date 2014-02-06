@@ -357,10 +357,17 @@ def generate_html(stats, log, data, out='out', filename='report.html'):
     # Ground truth
     body <= H2('Ground truth')
     table = TABLE(border=1, style='border-collapse: collapse;')
-    table <= TR(TH('ID') + TH('Matched') + TH('Infos'),
-                style='background: lightgray;')
+    header = TR(style='background: lightgray;')
+    header <= TH('ID')
+    header <= TH('Matched')
+    header <= TH('Begin')
+    header <= TH('End')
+    header <= TH('Match begin')
+    header <= TH('Match end')
+    table <= header
     for truth in truths:
-        matches = [i.id for (i, t, g) in log if truth is not None and t is not None and truth.id == t.id]
+        matches = [i.id for (i, t, g) in log if truth is not None and t is not
+                   None and truth.id == t.id]
 
         if not matches:
             bg = "#FFD4D3"
@@ -375,8 +382,17 @@ def generate_html(stats, log, data, out='out', filename='report.html'):
                         href="./images/truth_" + str(truth.id) + ".png"))
         else:
             row <= TD(B(truth.id))
-        row <= TD(str(matches))
-        row <= TD(truth)
+        cell = TD()
+        comma = ''
+        for match in matches:
+            cell <= comma
+            cell <= A(match, href="./images/event_" + str(match) + ".png")
+            comma = ', '
+        row <= cell
+        row <= TD(truth.begin, style='padding-left: 20px; padding-right: 20px')
+        row <= TD(truth.end, style='padding-left: 20px; padding-right: 20px')
+        row <= TD(truth.match_begin, style='padding-left: 20px; padding-right: 20px')
+        row <= TD(truth.match_end, style='padding-left: 20px; padding-right: 20px')
         table <= row
     body <= table
 
