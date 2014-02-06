@@ -47,6 +47,17 @@ Truth = namedtuple('Truth', 'id begin end match_begin match_end is_fall')
 args = None
 
 
+def is_tool(name):
+    """ Check if a tool exists """
+    try:
+        devnull = open(os.devnull, 'w')
+        subprocess.check_call(['which', name], stdout=devnull,
+                              stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError:
+        return False
+    return True
+
+
 def is_fall(text):
     """ Function to check if a subtitle is a fall """
     if text[0:4] == 'anor':
@@ -87,9 +98,14 @@ def extract_images(events, truths, video, out='out'):
     if not os.path.exists(path):
         os.makedirs(path)
 
+    if is_tool('avconv'):
+        cmd = 'avconv'
+    else:
+        cmd = 'ffmpeg'
+
     # The function to extract a precise image
     def extract(kind, time, name):
-        subprocess.Popen(['ffmpeg', '-ss', str(time), '-i', str(video),
+        subprocess.Popen([cmd, '-ss', str(time), '-i', str(video),
                          '-frames:v', '1',
                          os.path.join(path, str(kind) + '_' + str(name) +
                                       '.png'), '-y'], stderr=subprocess.PIPE)
@@ -331,9 +347,9 @@ def generate_html(stats, log, data, out='out', filename='report.html'):
     body <= INPUT(type='button',
                   value='Hide thumbnails',
                   onclick="$('.images').css('display', 'none');") + \
-            INPUT(type='button',
-                  value='Show thumbnails',
-                  onclick="$('.images').css('display', 'block');") + P()
+        INPUT(type='button',
+              value='Show thumbnails',
+              onclick="$('.images').css('display', 'block');") + P()
     table = TABLE(border=1, style='border-collapse: collapse;')
     table <= TR(TH('ID') + TH('Thumbnail') + TH('Time') + TH('Matched'),
                 style='background: lightgray;')

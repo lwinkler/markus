@@ -30,7 +30,9 @@ run_path = None
 def is_tool(name):
     """ Check if a tool exists """
     try:
-        subprocess.check_call(['which', name])
+        devnull = open(os.devnull, 'w')
+        subprocess.check_call(['which', name], stdout=devnull,
+                              stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError:
         return False
     return True
