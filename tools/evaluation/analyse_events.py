@@ -302,6 +302,17 @@ def format_report(stats):
     return result
 
 
+def video_thumbnail(video, path):
+    if is_tool('avconv'):
+        cmd = 'avconv'
+    else:
+        cmd = 'ffmpeg'
+
+    subprocess.Popen([cmd, '-i', str(video), '-frames:v', '1',
+                     os.path.join(path, 'thumbnail.png'), '-y'],
+                     stderr=subprocess.PIPE)
+
+
 def generate_html(stats, log, data, out='out', filename='report.html'):
     """ Generate an HTML report """
 
@@ -547,6 +558,7 @@ def main():
     # Extract images
     if args.images:
         extract_images(events, truths, args.VIDEO_FILE, out=args.output)
+        video_thumbnail(args.VIDEO_FILE, args.output)
 
     # Compute the statistics on the evaluation
     stats = statistics(evaluation, video)

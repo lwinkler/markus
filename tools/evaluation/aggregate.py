@@ -46,7 +46,7 @@ def read_analyses(path, analyses, dirname='analysis'):
 def generate_html(path, datas, dirname='analysis', filename='report.html'):
     """ Generate an HTML report """
     # Prepare datas
-    datas = list(datas)
+    datas = sorted(list(datas))
 
     if len(datas) == 0:
         print('No results to aggregate')
@@ -101,6 +101,13 @@ def generate_html(path, datas, dirname='analysis', filename='report.html'):
     for col in datas:
         row <= TH(A(B(col[0]), href=os.path.join(col[0], dirname, filename)))
     row <= TH('Overall')
+    table <= row
+    row = TR()
+    row <= TD('')
+    for col in datas:
+        row <= TD(IMG(src=os.path.join(col[0], dirname, 'thumbnail.png'),
+                      width=120))
+    row <= TD('')
     table <= row
     for k in first[2]:
         row = TR()
