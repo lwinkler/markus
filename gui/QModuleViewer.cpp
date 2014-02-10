@@ -54,8 +54,8 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 {
 	m_img_tmp1              = NULL; // Allocated on first conversion
 	m_img_tmp2              = NULL;
-	//m_img_output            = NULL;
-	//m_img_original          = NULL;
+	m_img_output            = NULL;
+	m_img_original          = NULL;
 	m_controlBoard          = NULL;
 
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
