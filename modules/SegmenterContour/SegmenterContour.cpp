@@ -35,7 +35,6 @@ using namespace cv;
 SegmenterContour::SegmenterContour(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader),
-	m_rng(12345),
 	m_input(Size(m_param.width, m_param.height), m_param.type)
 {
 	m_description = "Segments a binary image and outputs a stream of objects (with OpenCV contour) and extracts their features (position, width and height)";
