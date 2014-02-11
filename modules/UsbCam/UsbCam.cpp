@@ -22,7 +22,6 @@
 -------------------------------------------------------------------------------------*/
 
 #include "UsbCam.h"
-// #include "util.h"
 #include "StreamImage.h"
 
 using namespace std;
@@ -68,21 +67,30 @@ void UsbCam::Reset()
 
 void UsbCam::Capture()
 {
-	if(m_capture.grab() == 0)
+	while(true)
 	{
-		m_endOfStream = true;
-		Pause(true);
-		throw MkException("Capture failed on USB camera", LOC);
-	}
+		if(m_capture.grab() == 0)
+		{
+			m_endOfStream = true;
+			Pause(true);
+			throw MkException("Capture failed on USB camera", LOC);
+		}
 
-	m_capture.retrieve(m_output);
+		m_capture.retrieve(m_output);
+		m_currentTimeStamp = m_frameTimer.GetMSecLong();
+		// cout<<m_capture.get(CV_CAP_PROP_POS_MSEC)<<endl;
+
+		// only break out of the loop once we fulfill the fps criterion
+		if(m_param.fps == 0 || (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps > 1000)
+			break;
+	}
 	
 	// cout<<"UsbCam capture image "<<m_output->cols<<"x"<<m_output->rows<<" time stamp "<<m_capture.get(CV_CAP_PROP_POS_MSEC) / 1000.0<< endl;
 
 	// time_t rawtime;
 	// time(&rawtime);
 	LOG_DEBUG(m_logger, "UsbCam: Capture time: "<<m_frameTimer.GetMSecLong());
-	SetTimeStampToOutputs(m_frameTimer.GetMSecLong());
+	SetTimeStampToOutputs(m_currentTimeStamp);
 }
 
 void UsbCam::GetProperties()

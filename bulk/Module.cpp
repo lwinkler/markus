@@ -68,7 +68,13 @@ void Module::Reset()
 	{
 		CLEAN_DELETE(m_moduleTimer);
 		m_moduleTimer = new QModuleTimer(*this, 0);
-		m_moduleTimer->Reset(param.fps);
+		
+		// An input will try to acquire frames as fast as possible
+		// another module is called at the rate specified by the fps parameter
+		if(IsInput())
+			m_moduleTimer->Reset(100);
+		else
+			m_moduleTimer->Reset(param.fps);
 	}
 	else m_moduleTimer = NULL;
 	// param.PrintParameters(); // Do not print 2x at startup
