@@ -66,8 +66,7 @@ void Module::Reset()
 	// Add the module timer (only works with QT)
 	if(param.autoProcess)
 	{
-		if(m_moduleTimer)
-			delete(m_moduleTimer);
+		CLEAN_DELETE(m_moduleTimer);
 		m_moduleTimer = new QModuleTimer(*this, 0);
 		m_moduleTimer->Reset(param.fps);
 	}

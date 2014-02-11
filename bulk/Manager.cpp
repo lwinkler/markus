@@ -164,7 +164,7 @@ void Manager::Connect()
 		}
 	}
 	if(! ready)
-		throw MkException("Not all modules can be assigned to a master. There is probably some connections problems.");
+		throw MkException("Not all modules can be assigned to a master. There is probably a problem with the connections between modules.");
 	
 	m_isConnected = true;	
 }

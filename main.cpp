@@ -98,7 +98,7 @@ void *send_commands(void *x_void_ptr)
 		{
 			LOG_ERROR(Manager::Logger(), "Cannot execute command");
 		}
-		usleep(1000000); // Do we keep this TODO
+		usleep(1000000); // Do we keep this ? TODO
 	}
 
 	return NULL;
@@ -279,24 +279,22 @@ int main(int argc, char** argv)
 				LOG_WARN(logger, "GUI is not shown if you use --centralized option. To avoid this message use --no-gui option.");
 			// No gui. launch the process directly
 			// so far we cannot launch the process in a decentralized manner (with a timer on each module)
-			while(manager.Process()) // TODO: Find a better way to call Process. Through timers for example
+			while(manager.Process())
 			{
 				// nothing 
 			}
-			//for(int i = 0 ; i < nbCols * nbLines ; i++)
-			//	m_moduleViewer[i]->update();
 			return 0;
 		}
 		else
 		{
 #ifndef MARKUS_NO_GUI
 			markus gui(mainConfig, manager);
-			gui.setWindowTitle("OpenCV --> QtImage");
+			gui.setWindowTitle("Markus");
 			if(!nogui)
 				gui.show();
 			return app.exec(); // TODO: Manage case where centralized with GUI
 #else
-			LOG_ERROR(logger, "Markus was compiled without GUI. It can only be launched with option --centralized");
+			LOG_ERROR(logger, "Markus was compiled without GUI. It can only be launched with option -nc");
 			return -1;
 #endif
 		}
