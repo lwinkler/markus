@@ -45,7 +45,7 @@ ModuleAsync::ModuleAsync(const ConfigReader& x_configReader) :
 void ModuleAsync::ProcessFrame()
 {
 	if(m_inputStreams.size() < 1)
-		throw ProcessingException("Module must have at least one input or inherit from class Input", LOC);
+		throw MkException("Module must have at least one input or inherit from class Input", LOC);
 
 	// cout << "m_timeStampLastThread" << m_timeStampLastThread;
 	// cout << " m_currentTimeStamp " <<  m_currentTimeStamp << endl;

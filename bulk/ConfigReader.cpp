@@ -36,7 +36,7 @@ ConfigReader::ConfigReader(const std::string& x_fileName)
 {
 	mp_doc = new TiXmlDocument(x_fileName);
 	if (! mp_doc->LoadFile())
-		throw FileNotFoundException("Could not load test file '" + x_fileName + "'. Error='" + mp_doc->ErrorDesc() + "'. Exiting.", LOC);
+		throw MkException("Could not load test file '" + x_fileName + "'. Error='" + mp_doc->ErrorDesc() + "'. Exiting.", LOC);
 	mp_node = mp_doc;
 }
 

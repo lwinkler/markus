@@ -92,7 +92,8 @@ void RandomEventGenerator::Capture()
 		circle(m_output, Point(x, y), r, Scalar(100, c, 255 - c), l);
 
 		LOG_DEBUG(m_logger, "RandomEventGenerator: Capture time: "<<m_frameTimer.GetMSecLong());
-		SetTimeStampToOutputs(m_frameTimer.GetMSecLong());
+		m_currentTimeStamp = m_frameTimer.GetMSecLong();
+		// SetTimeStampToOutputs(m_frameTimer.GetMSecLong());
 	}
 }
 

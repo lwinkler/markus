@@ -260,10 +260,12 @@ void Module::Process()
 
 		m_timerProcessing 	 += ti.GetMSecLong();
 
-		// Set time stamps to outputs // TODO can we use the dedicated method ? Why only Input
-		if(!IsInput())
-			for(map<int, Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
-				it->second->SetTimeStamp(m_currentTimeStamp);
+		// Propagate time stamps to outputs
+		for(map<int, Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
+			it->second->SetTimeStamp(m_currentTimeStamp);
+		// if(!IsInput())
+			// for(map<int, Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
+				// it->second->SetTimeStamp(m_currentTimeStamp);
 		
 		// Call depending modules (modules with fps = 0)
 		for(vector<Module*>::iterator it = m_modulesDepending.begin() ; it != m_modulesDepending.end() ; it++)

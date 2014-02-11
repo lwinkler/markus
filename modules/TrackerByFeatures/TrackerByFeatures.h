@@ -71,7 +71,6 @@ protected:
 	void CleanTemplates();
 	void DetectNewTemplates();
 	void UpdateTemplates();
-	void PrintObjects() const;
 	const Template * MatchObject(const Object& x_obj)const;
 	int MatchTemplate(Template& x_temp);
 

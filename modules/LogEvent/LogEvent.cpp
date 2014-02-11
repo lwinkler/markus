@@ -59,7 +59,7 @@ void LogEvent::Reset()
 	m_file.close();
 	m_file.open (m_srtFileName.c_str(), std::ios_base::app);
 	if(! m_file.is_open())
-		throw FileNotFoundException("Impossible to open file in LogEvent::Reset", LOC);
+		throw MkException("Impossible to open file " + m_srtFileName, LOC);
 	m_saveImage = m_inputStreams.at(1)->IsConnected();
 
 	m_folderName  = Manager::OutputDir() + "/" + m_param.folder + "/"; 

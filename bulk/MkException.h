@@ -22,8 +22,7 @@ class MkException : public std::exception {
 		std::string m_description;
 };
 
-// TODO :are those used
-class ProcessingException : public MkException {
+/*class ProcessingException : public MkException {
 	public:
 		ProcessingException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
 };
@@ -31,7 +30,7 @@ class ProcessingException : public MkException {
 class FileNotFoundException : public MkException {
 	public:
 		FileNotFoundException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
-};
+};*/
 
 /// Exception that occurs when a video file ends
 class EndOfStreamException : public MkException {

@@ -68,7 +68,7 @@ void LogState::Reset()
 	m_file.close();
 	m_file.open (m_srtFileName.c_str(), std::ios_base::app);
 	if(! m_file.is_open())
-		throw FileNotFoundException("Impossible to open file in LogState::Reset", LOC);
+		throw MkException("Impossible to open file " + m_srtFileName, LOC);
 }
 
 void LogState::ProcessFrame()

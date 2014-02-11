@@ -65,7 +65,7 @@ void NetworkCam::Reset()
 	m_capture.set(CV_CAP_PROP_FRAME_WIDTH,  m_param.width);
 	m_capture.set(CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
 	
-	// TODO if(Global::logger.HasDebugMode())
+	if(m_logger->isDebugEnabled())
 		GetProperties();
 
 	// note on the next line: the image will be overloaded but the properties are used to set the input ratio, the type is probably ignored
@@ -106,7 +106,7 @@ void NetworkCam::Capture()
 	// cout<<m_currentTimeStamp<<" - "<<m_lastTimeStamp<<endl;
 
 	LOG_DEBUG(m_logger, "NetworkCam: Capture time: "<<m_currentTimeStamp);
-	SetTimeStampToOutputs(m_currentTimeStamp);
+	// SetTimeStampToOutputs(m_currentTimeStamp);
 }
 
 void NetworkCam::GetProperties()

@@ -44,7 +44,6 @@ public:
 	virtual void RenderTo(cv::Mat& x_output) const;
 	inline virtual const std::string GetTypeString()const {return "Objects";}
 	double GetFeatureValue(const std::vector<Feature>& x_vect, const char* x_name);
-	void PrintObjects() const;
 
 protected:
 	std::vector<Object> & m_objects;

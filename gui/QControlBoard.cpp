@@ -24,6 +24,7 @@
 #include "QControlBoard.h"
 #include "Controller.h"
 #include "Module.h"
+#include "Manager.h"
 #include <QBoxLayout>
 #include <QLabel>
 #include <QGroupBox>
@@ -114,7 +115,7 @@ void QControlBoard::callAction()
 
 
 	m_currentModule.LockForWrite();
-	cout<<"Call control on module "<<m_currentModule.GetName()<<endl; // TODO remove
+	LOG_DEBUG(Manager::Logger(), "Call control on module "<<m_currentModule.GetName());
 	mp_currentControl->CallAction(button->text().toStdString(), NULL);
 	m_currentModule.Unlock();
 }

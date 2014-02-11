@@ -23,6 +23,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "MarkusApplication.h"
+#include "Manager.h"
 #include <opencv2/opencv.hpp>
 
 using namespace std;
@@ -42,32 +43,24 @@ bool MarkusApplication::notify(QObject *receiver_, QEvent *event_)
 	}
 	catch(cv::Exception& e)
 	{
-		cout << "Exception raised (std::exception) : " << e.what() <<endl; // TODO: Use logger
+		LOG_ERROR(Manager::Logger(), "Exception raised (std::exception) : "); // TODO: Use logger
 	}
 	catch(std::exception& e)
 	{
-		cout << "Exception raised (std::exception) : " << e.what() <<endl;
-			// test if all inputs are over
-			/*if(EndOfAllStreams())
-			{
-				// throw MkException("End of all video streams : Manager::Process");
-				LOG_WARN("End of all video streams : Manager::Process");
-				continueFlag = false;
-			} TODO implement something similar*/ 
-		cout<<"Exception raised. Ending process"<<endl;
-		exit(0);
+		LOG_ERROR(Manager::Logger(), "Exception raised (std::exception) : ");
+		// exit(0);
 	}
-	catch(std::string str)
+	catch(std::string& str)
 	{
-		cout << "Exception raised (string) : " << str <<endl;
+		LOG_ERROR(Manager::Logger(), "Exception raised (string)" << str);
 	}
 	catch(const char* str)
 	{
-		cout << "Exception raised (const char*) : " << str <<endl;
+		LOG_ERROR(Manager::Logger(), "Exception raised (const char*)" << str);
 	}
 	catch(...)
 	{
-		cout << "Unknown exception raised: "<<endl;
+		LOG_ERROR(Manager::Logger(), "Unknown exception");
 	}
 
 	return false;

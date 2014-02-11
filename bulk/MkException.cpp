@@ -38,13 +38,13 @@ const char* MkException::what() const throw()
 
 
 
-ProcessingException::ProcessingException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
-	MkException("ProcessingValueException: " + x_descr, x_position)
-{}
+// ProcessingException::ProcessingException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
+	// MkException("ProcessingValueException: " + x_descr, x_position)
+// {}
 
-FileNotFoundException::FileNotFoundException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
-	MkException("FileException: " + x_descr, x_position)
-{}
+// FileNotFoundException::FileNotFoundException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
+	// MkException("FileException: " + x_descr, x_position)
+// {}
 
 EndOfStreamException::EndOfStreamException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
 	MkException("EndOfStreamException: " + x_descr, x_position)

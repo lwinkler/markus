@@ -74,10 +74,8 @@ void *send_commands(void *x_void_ptr)
 	{
 		try
 		{
-			// cout << "CMD > ";
 			if(getline(cin, input))
 			{
-				cout<<"command :"<<input<<endl;
 				split(input, ' ', elems);
 				if(elems.size() == 1)
 					value = "";
@@ -88,7 +86,7 @@ void *send_commands(void *x_void_ptr)
 				pManager->SendCommand(elems.at(0), value);
 				cin.clear();
 			}
-			else cout<<"Getline failed"<<endl;
+			// else cout<<"Getline failed"<<endl;
 		}
 		catch(std::exception& e)
 		{
@@ -98,7 +96,7 @@ void *send_commands(void *x_void_ptr)
 		{
 			LOG_ERROR(Manager::Logger(), "Cannot execute command");
 		}
-		usleep(1000000); // Do we keep this ? TODO
+		// usleep(1000000);
 	}
 
 	return NULL;

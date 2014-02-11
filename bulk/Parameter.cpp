@@ -25,11 +25,6 @@
 #include "ConfigReader.h"
 #include "Manager.h"
 
-//#include <cstring>
-//#include <iostream>
-//#include <cstdlib>
-
-
 using namespace std;
 
 // Static variables
@@ -194,7 +189,8 @@ void ParameterStructure::CheckRange() const
 		if(!(*it)->CheckRange())
 		{
 			stringstream ss;
-			ss<<"Parameter "<<(*it)->GetName()<<" is out of range"; // TODO: implement PrintValue
+			ss<<"Parameter "<<(*it)->GetName()<<" is out of range: ";
+			(*it)->Print(ss);
 			throw ParameterException(ss.str(), LOC);
 		}
 	}

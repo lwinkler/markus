@@ -57,7 +57,8 @@ void VideoFileReader::Reset()
 	m_capture.release();
 	m_capture.open(m_param.file);
 	// m_fps     = m_capture.get(CV_CAP_PROP_FPS);
-	// TODO if(Global::logger.HasDebugMode())
+
+	if(m_logger->isDebugEnabled())
 		GetProperties();
 	
 	if(! m_capture.isOpened())
@@ -99,7 +100,7 @@ void VideoFileReader::Capture()
 	
 	// cout<<"VideoFileReader capture image "<<m_output->cols<<"x"<<m_output->rows<<" time stamp "<<m_capture.get(CV_CAP_PROP_POS_MSEC) / 1000.0<< endl;
 
-	SetTimeStampToOutputs(m_currentTimeStamp);
+	// SetTimeStampToOutputs(m_currentTimeStamp);
 }
 
 void VideoFileReader::GetProperties()

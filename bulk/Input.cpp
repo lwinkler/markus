@@ -40,9 +40,3 @@ Input::~Input()
 {
 }
 
-/// Set the timestamps of all the outputs
-void Input::SetTimeStampToOutputs(TIME_STAMP x_timeStamp)
-{
-	for(map<int, Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
-		it->second->SetTimeStamp(x_timeStamp);
-}
