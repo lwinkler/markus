@@ -66,10 +66,15 @@ void Module::Reset()
 	// Add the module timer (only works with QT)
 	if(param.autoProcess)
 	{
-		if(m_moduleTimer)
-			delete(m_moduleTimer);
+		CLEAN_DELETE(m_moduleTimer);
 		m_moduleTimer = new QModuleTimer(*this, 0);
-		m_moduleTimer->Reset(param.fps);
+		
+		// An input will try to acquire frames as fast as possible
+		// another module is called at the rate specified by the fps parameter
+		if(IsInput())
+			m_moduleTimer->Reset(100);
+		else
+			m_moduleTimer->Reset(param.fps);
 	}
 	else m_moduleTimer = NULL;
 	// param.PrintParameters(); // Do not print 2x at startup
@@ -196,7 +201,10 @@ void Module::Process()
 {
 	m_lock.lockForWrite();
 	if(m_pause)
+	{
+		m_lock.unlock();
 		return;
+	}
 	if(!m_isReady)
 		throw MkException("Module must be ready before processing", LOC);
 

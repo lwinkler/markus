@@ -63,17 +63,17 @@ private:
 	bool m_computeMinRect;
 protected:
 	
-	cv::RNG m_rng;
 	// for streams
 	cv::Mat m_input;
-#ifdef MARKUS_DEBUG_STREAMS
-	cv::Mat m_debug;
-#endif
 
 	std::vector<Object> m_regions;
 	std::vector<std::string> m_featureNames;
-	StreamObject* m_outputObjectStream;
+	// StreamObject* m_outputObjectStream;
 
+#ifdef MARKUS_DEBUG_STREAMS
+	cv::RNG m_rng;
+	cv::Mat m_debug;
+#endif
 };
 
 

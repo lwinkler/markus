@@ -39,12 +39,12 @@
 		<param name="min_travel_dist">
 			<type>double</type>
 			<value min="0" max="1" default="0">0</value>
-			<description>An object must have been tracked on this distance to be accepted [%% of image diagonal]</description>
+			<description>An object must have been tracked on this distance to be accepted [% of image diagonal]</description>
 		</param>
 		<param name="min_border_dist">
 			<type>double</type>
 			<value min="0" max="1" default="0">0</value>
-			<description>An object must be distant from the image border [%% of image diagonal]</description>
+			<description>An object must be distant from the image border [% of image diagonal]</description>
 		</param>
 		<param name="max_object_nb">
 			<type>int</type>

@@ -76,27 +76,37 @@ void NetworkCam::Reset()
 
 void NetworkCam::Capture()
 {
-	if(m_capture.grab() == 0)
+	while(true)
 	{
-		LOG_WARN(m_logger, "Grab failure while reading stream, try to reopen in NetworkCam::Capture");
-		Reset();
 		if(m_capture.grab() == 0)
 		{
-			m_endOfStream = true;
-			std::exception e;
-			Pause(true);
-			throw MkException("Capture failed on network camera", LOC);
+			LOG_WARN(m_logger, "Grab failure while reading stream, try to reopen in NetworkCam::Capture");
+			Reset();
+			if(m_capture.grab() == 0)
+			{
+				m_endOfStream = true;
+				Pause(true);
+				throw MkException("Capture failed on network camera", LOC);
+			}
 		}
+
+		m_capture.retrieve(m_output);
+		
+		// cout<<"NetworkCam capture image "<<m_output->cols<<"x"<<m_output->rows<<" time stamp "<<m_capture.get(CV_CAP_PROP_POS_MSEC) / 1000.0<< endl;
+
+		// note: we use the time stamp of the modules since the official time stamp of the camera
+		//    has a strange behavior
+		m_currentTimeStamp = m_frameTimer.GetMSecLong();
+		// cout<<m_capture.get(CV_CAP_PROP_POS_MSEC)<<endl;
+
+		// only break out of the loop once we fulfill the fps criterion
+		if(m_param.fps == 0 || (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps > 1000)
+			break;
 	}
+	// cout<<m_currentTimeStamp<<" - "<<m_lastTimeStamp<<endl;
 
-	m_capture.retrieve(m_output);
-	
-	// cout<<"NetworkCam capture image "<<m_output->cols<<"x"<<m_output->rows<<" time stamp "<<m_capture.get(CV_CAP_PROP_POS_MSEC) / 1000.0<< endl;
-
-	time_t rawtime;
-	time(&rawtime);
-	LOG_DEBUG(m_logger, "NetworkCam: Capture time: "<<m_frameTimer.GetMSecLong());
-	SetTimeStampToOutputs(m_frameTimer.GetMSecLong());
+	LOG_DEBUG(m_logger, "NetworkCam: Capture time: "<<m_currentTimeStamp);
+	SetTimeStampToOutputs(m_currentTimeStamp);
 }
 
 void NetworkCam::GetProperties()
