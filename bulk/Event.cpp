@@ -22,6 +22,7 @@
 -------------------------------------------------------------------------------------*/
 #include "Event.h"
 #include "Object.h"
+#include "Manager.h"
 
 using namespace cv;
 using namespace std;
@@ -44,6 +45,8 @@ void Event::Empty()
 /// Raise an event with a set of features
 void Event::Raise(const string x_label, const Object& x_object)
 {
+	if(IsRaised())
+		LOG_WARN(Manager::Logger(), "The same event is raised several times. Older events are overrided");
 	m_label       = x_label;
 	m_object      = x_object;
 }
@@ -51,6 +54,8 @@ void Event::Raise(const string x_label, const Object& x_object)
 /// Raise an event without features
 void Event::Raise(const string x_label)
 {
+	if(IsRaised())
+		LOG_WARN(Manager::Logger(), "The same event is raised several times. Older events are overrided");
 	m_label = x_label;
 	m_object = Object("empty");
 }
