@@ -26,12 +26,13 @@
 #include "Input.h"
 #include "Stream.h"
 #include "MkException.h"
+#include "FactoryModules.h"
 
 #include "util.h"
 
 using namespace std;
 
-#include "AllModules.h"
+//#include "AllModules.h"
 #include "Controller.h"
 
 	
@@ -55,6 +56,7 @@ Manager::Manager(const ConfigReader& x_configReader, bool x_centralized) :
 	m_centralized(x_centralized)
 {
 	LOG_INFO(m_logger, "Create object Manager");
+	FactoryModules factory;
 	m_frameCount = 0;
 	m_isConnected = false;
 	
@@ -69,7 +71,8 @@ Manager::Manager(const ConfigReader& x_configReader, bool x_centralized) :
 		// Read parameters
 		if( moduleConfig.GetSubConfig("parameters").IsEmpty()) 
 			throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name"), LOC);
-		Module * tmp1 = createNewModule(moduleConfig);		
+		string moduleType = moduleConfig.GetSubConfig("parameters").GetSubConfig("param", "class").GetValue();
+		Module * tmp1 = factory.CreateModule(moduleType, moduleConfig);		
 		
 		// Add to inputs if an input
 		m_modules.push_back(tmp1);

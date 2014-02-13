@@ -25,5 +25,6 @@ ControllerParameters.cpp
 ControllerInputStream.cpp
 ControllerModule.cpp
 ControllerEvent.cpp
+FactoryModules.cpp
 )
 

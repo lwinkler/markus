@@ -8,16 +8,12 @@ echo "#define ALL_MODULES_H"
 
 find modules*/ -mindepth 2  -maxdepth 2 -name "*.h" | sort | awk {'print "#include \""$1"\""'}
 
-echo "Module * createNewModule(const ConfigReader& rx_configReader)"
+echo
+echo "void registerAllModules(FactoryModules& x_fact)"
 echo {
-echo "Module * tmp = NULL;"
 
-echo "const string moduleClass = rx_configReader.GetSubConfig(\"parameters\").GetSubConfig(\"param\", \"class\").GetValue();"
-echo "if(false){}"
-find modules*/ -mindepth 2  -maxdepth 2 -name "*.cpp"  -exec basename {} \; | sort | sed s/\.cpp//g | awk {'print "else if(moduleClass.compare(\""$1"\") == 0) {tmp = new "$1"(rx_configReader);} "'}
+find modules*/ -mindepth 2  -maxdepth 2 -name "*.cpp"  -exec basename {} \; | sort | sed s/\.cpp//g | awk {'print "\tx_fact.RegisterModule<"$1">(\""$1"\"); "'}
 
-echo "else throw MkException(\"Module type unknown : \" + moduleClass, LOC);"
-echo "return tmp;"
 echo }
 
 echo "#endif"
