@@ -7,6 +7,7 @@ Created 2014-01-29 Fabien Dubosson
 """
 
 import os
+import codecs
 from vplib.time import Time
 from collections import namedtuple
 
@@ -20,8 +21,30 @@ def parse(file_path):
     if not os.path.isfile(file_path):
         return []
 
-    # Read the file
-    with open(file_path, 'r') as f:
+    # Read the header
+    with open(file_path, 'rb') as f:
+        header = f.read(4)
+
+    # Supported encodings
+    encodings = [(codecs.BOM_UTF32, 'utf-32'),
+                 (codecs.BOM_UTF16, 'utf-16'),
+                 (codecs.BOM_UTF8, 'utf-8')]
+
+    # Check if one of the encoding is present
+    encoding = None
+    hasBom = False
+    for h, e in encodings:
+        if header.startswith(h):
+            encoding = e
+            hasBom = True
+            break
+
+    # Read the files
+    with codecs.open(file_path, 'r', encoding) as f:
+        # If there is an encoding, consume the first character
+        if hasBom:
+            f.read(1)
+        # Then read lines
         lines = f.readlines()
 
     # Parse the lines
