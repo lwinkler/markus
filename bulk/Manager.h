@@ -30,6 +30,7 @@
 #include "Input.h"
 #include "Module.h"
 #include "Timer.h"
+#include "FactoryModules.h"
 
 
 /// Parameter class
@@ -94,6 +95,7 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 	static std::string m_configFile;
 	static std::string m_outputDir;
+	FactoryModules m_factory;
 protected:
 	inline virtual const ParameterStructure& GetParameters() const {return m_param;}
 	QReadWriteLock m_lock;

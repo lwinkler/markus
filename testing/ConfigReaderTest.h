@@ -50,7 +50,7 @@ class ConfigReaderTest : public CppUnit::TestFixture
 	void setUp()
 	{
 		m_conf1 = new ConfigReader("testing/config1.xml");
-		m_conf2 = new ConfigReader("testing/config_empty.xml");
+		m_conf2 = new ConfigReader("config_empty.xml");
 	}
 	void tearDown()
 	{

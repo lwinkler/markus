@@ -26,7 +26,6 @@
 #include "Input.h"
 #include "Stream.h"
 #include "MkException.h"
-#include "FactoryModules.h"
 
 #include "util.h"
 
@@ -56,7 +55,6 @@ Manager::Manager(const ConfigReader& x_configReader, bool x_centralized) :
 	m_centralized(x_centralized)
 {
 	LOG_INFO(m_logger, "Create object Manager");
-	FactoryModules factory;
 	m_frameCount = 0;
 	m_isConnected = false;
 	
@@ -72,7 +70,7 @@ Manager::Manager(const ConfigReader& x_configReader, bool x_centralized) :
 		if( moduleConfig.GetSubConfig("parameters").IsEmpty()) 
 			throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name"), LOC);
 		string moduleType = moduleConfig.GetSubConfig("parameters").GetSubConfig("param", "class").GetValue();
-		Module * tmp1 = factory.CreateModule(moduleType, moduleConfig);		
+		Module * tmp1 = m_factory.CreateModule(moduleType, moduleConfig);		
 		
 		// Add to inputs if an input
 		m_modules.push_back(tmp1);
@@ -332,12 +330,18 @@ void Manager::Export()
 	try
 	{
 		SYSTEM("mkdir -p modules");
-		for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+		vector<string> moduleTypes = m_factory.ListModules();
+		for(vector<string>::const_iterator it = moduleTypes.begin() ; it != moduleTypes.end() ; it++)
 		{
-			string file("modules/" + (*it)->GetName() + ".xml");
+			string file("modules/" + *it + ".xml");
 			ofstream os(file.c_str());
 			os<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"<<endl;
-			(*it)->Export(os, 0);
+			ConfigReader config("config_empty.xml");
+			ConfigReader moduleConfig = config.RefSubConfig("application", "").RefSubConfig("module", *it, true);
+
+			Module* module = m_factory.CreateModule(*it, moduleConfig);
+			module->Export(os, 0);
+			delete module;
 			os.close();
 		}
 	}

@@ -103,11 +103,10 @@ target_link_libraries(markus ${DEPS})
 add_custom_target(update_modules_list
 	COMMENT "Update the list of modules"
 	COMMAND modules/AllModules.h.sh > modules/AllModules.h
-	COMMAND ./config_each_module.xml.sh > config_each_module.xml
 	COMMAND editor/js/all_modules.js.sh > editor/js/all_modules.js
 #	COMMAND make clean
 	COMMAND +make
-	COMMAND ./markus -d config_each_module.xml
+	COMMAND ./markus -d
 )
 
 add_custom_target(update_projects_list

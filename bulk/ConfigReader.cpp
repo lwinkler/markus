@@ -34,6 +34,7 @@ using namespace std;
 
 ConfigReader::ConfigReader(const std::string& x_fileName)
 {
+	mp_doc = NULL; // Initialize to null as there can be an error in construction
 	mp_doc = new TiXmlDocument(x_fileName);
 	if (! mp_doc->LoadFile())
 		throw MkException("Could not load test file '" + x_fileName + "'. Error='" + mp_doc->ErrorDesc() + "'. Exiting.", LOC);
@@ -50,8 +51,7 @@ ConfigReader::ConfigReader(TiXmlNode * xp_node)
 
 ConfigReader::~ConfigReader()
 {
-	delete mp_doc;
-	mp_doc = NULL;
+	CLEAN_DELETE(mp_doc);
 	mp_node = NULL;
 }
 
@@ -129,7 +129,9 @@ const string ConfigReader::GetAttribute(const std::string& x_attributeName) cons
 		throw MkException("Impossible to find node in ConfigReader", LOC);
 	TiXmlElement* element = mp_node->ToElement();
 	//string s(*element->Attribute(x_attributeName));
-	
+	if(element == NULL)
+		throw MkException("Impossible to find node in ConfigReader", LOC);
+
 	const string * str = element->Attribute(x_attributeName);
 	if(str == NULL)
 		return "";
