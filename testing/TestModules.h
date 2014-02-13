@@ -118,6 +118,7 @@ class TestModules : public CppUnit::TestFixture
 
 				inputStream.Connect(outputStream);
 			}
+			// module->SetParameterByName("auto_process", "0") // TODO ?
 			module->SetAsReady();
 			module->Reset();
 

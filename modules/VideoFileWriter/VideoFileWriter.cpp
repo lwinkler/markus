@@ -56,7 +56,7 @@ void VideoFileWriter::Reset()
 	// The color flag seem to be supported on Windows only
 	// http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videowriter-videowriter
 	bool isColor = true;
-    assert(m_param.type == CV_8UC3);
+ 	assert(m_param.type == CV_8UC3);
 
 	const string filename = Manager::OutputDir() + "/" + m_param.file  + "." + ExtensionFromFourcc(m_param.fourcc);
 	double fps = 12;
