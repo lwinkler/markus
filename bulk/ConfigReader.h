@@ -47,6 +47,7 @@ public:
 	const std::string GetValue() const;
 	void SetValue(const std::string& x_value);
 	const std::string GetAttribute(const std::string& x_attributeName) const;
+	void SetAttribute(const std::string& x_attributeName, std::string x_value);
 	void SaveToFile(const std::string& x_file) const;
 	void Validate() const;
 	inline bool operator == (const ConfigReader &a){return a.mp_node == mp_node;}

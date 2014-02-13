@@ -78,6 +78,8 @@ public:
 		m_configFile = x_configFile;
 	}
 	static inline const std::string& GetConfigFile(){return m_configFile;}
+	static inline void ListModules(std::vector<std::string>& xr_types) {m_factory.ListModules(xr_types);};
+
 private:
 	ManagerParameter m_param;
 
@@ -95,7 +97,8 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 	static std::string m_configFile;
 	static std::string m_outputDir;
-	FactoryModules m_factory;
+	static FactoryModules m_factory;
+
 protected:
 	inline virtual const ParameterStructure& GetParameters() const {return m_param;}
 	QReadWriteLock m_lock;

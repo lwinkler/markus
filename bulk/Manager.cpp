@@ -47,6 +47,7 @@ using namespace std;
 log4cxx::LoggerPtr Manager::m_logger(log4cxx::Logger::getLogger("manager"));
 string Manager::m_configFile;
 string Manager::m_outputDir;
+FactoryModules Manager::m_factory;
 
 
 Manager::Manager(const ConfigReader& x_configReader, bool x_centralized) : 
@@ -330,7 +331,8 @@ void Manager::Export()
 	try
 	{
 		SYSTEM("mkdir -p modules");
-		vector<string> moduleTypes = m_factory.ListModules();
+		vector<string> moduleTypes;
+		m_factory.ListModules(moduleTypes);
 		for(vector<string>::const_iterator it = moduleTypes.begin() ; it != moduleTypes.end() ; it++)
 		{
 			string file("modules/" + *it + ".xml");

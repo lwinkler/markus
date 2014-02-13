@@ -49,7 +49,7 @@ public:
 	}
 	Module * CreateModule(const std::string& name, const ConfigReader& x_config);
 	void RegisterAllModules();
-	std::vector<std::string> ListModules() const;
+	void ListModules(std::vector<std::string>& xr_types) const;
 
 protected:
 	ModuleRegistry m_register;

@@ -45,10 +45,8 @@ Module * FactoryModules::CreateModule(const std::string& name, const ConfigReade
 }
 
 
-vector<string> FactoryModules::ListModules() const
+void FactoryModules::ListModules(vector<string>& xr_types) const
 {
-	vector<string> moduleTypes;
 	for(ModuleRegistry::const_iterator it = m_register.begin() ; it != m_register.end() ; it++)
-		moduleTypes.push_back(it->first);
-	return moduleTypes;
+		xr_types.push_back(it->first);
 }

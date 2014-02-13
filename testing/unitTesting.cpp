@@ -23,6 +23,7 @@
 #include <cppunit/ui/text/TestRunner.h>
 #include "ConfigReaderTest.h"
 #include "TestProjects.h"
+#include "TestModules.h"
 
 
 
@@ -30,8 +31,9 @@
 bool run_tests()
 {
 	CppUnit::TextUi::TestRunner runner;
-	runner.addTest(ConfigReaderTest::suite());
-	runner.addTest(TestProjects::suite());
+	//runner.addTest(ConfigReaderTest::suite());
+	//runner.addTest(TestProjects::suite());
+	runner.addTest(TestModules::suite());
 	runner.run();
 	return 0;
 }

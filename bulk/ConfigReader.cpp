@@ -139,6 +139,19 @@ const string ConfigReader::GetAttribute(const std::string& x_attributeName) cons
 		return *str;
 }
 
+/// Set the attribute for one element
+
+void ConfigReader::SetAttribute(const std::string& x_attributeName, string x_value)
+{
+	if(IsEmpty())
+		throw MkException("Impossible to find node in ConfigReader", LOC);
+	TiXmlElement* element = mp_node->ToElement();
+	if(element == NULL)
+		throw MkException("Impossible to find node in ConfigReader", LOC);
+
+	element->SetAttribute("name", x_value);
+}
+
 /// Return the value (as string) for one element
 
 const string ConfigReader::GetValue() const
