@@ -353,13 +353,13 @@ var xmlProject = null;
 				
 				var classParameters  = $(xmlModuleTypes[type]).find("parameters");
 				var instanceParameters = $('<parameters/>', xmlProject).appendTo(xmlInstance);
-				classParameters.find('param').each(function(index){
+				/* classParameters.find('param').each(function(index){
 					// Add parameter to instance
 					var instance = $('<param/>', xmlProject).appendTo(instanceParameters)
 					.attr('name', $(this).attr('name'))
 					.data('class', $(this))
 					.text($(this).find('value').text());
-				});
+				}); */
 				
 				// Create the associated window
 				var newWindow = createModuleWindow(xmlInstance, id);
@@ -466,9 +466,16 @@ var xmlProject = null;
 				
 				// Show parameters
 				var parameters = div.find("#parameters").empty();
-				xml.find("parameters > param").each(function(el){
-					var cl = $(this).data('class');
-					parameters.append('<p>' + cl.attr('name') + '=' + $(this).text() + '(' + cl.find('value').text() + cl.find('type').text() + ')' + ': ' + cl.find('description').text() + '</p>');
+				var classParameters  = $(xmlModuleTypes[type]).find("parameters");
+				classParameters.find("parameters > param").each(function(el){
+					var cl = $(this); // $(this).data('class');
+					var value = xml.find("parameters > param[name=" + cl.attr('name') + "]");
+					if(value.length <= 0)
+						value = '';
+					else
+						value = ' = ' + value.text();
+
+					parameters.append('<p>' + cl.attr('name') + value + ' (' + cl.find('value').text() + ", " + cl.find('type').text() + ')' + ': ' + cl.find('description').text() + '</p>');
 				});
 			}
 

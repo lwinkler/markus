@@ -323,7 +323,7 @@ bool Manager::EndOfAllStreams() const
 	return endOfStreams;
 }
 
-/// Export current configuration to xml
+/// Export current configuration to xml: this is used to create the XML files to describe each module
 
 void Manager::Export()
 {
