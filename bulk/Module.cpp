@@ -162,7 +162,7 @@ double Module::GetRecordingFps()
 		{
 			Stream * stream = m_inputStreams.at(0);
 			if(stream == NULL)
-				throw MkException("First stream is null in Module::GetRecordingFps", LOC);
+				throw MkException("First stream is null", LOC);
 			stream = &(stream->RefConnected());
 			if(stream == NULL)
 				throw MkException("Connected stream is null in Module::GetRecordingFps", LOC);

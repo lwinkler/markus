@@ -346,20 +346,22 @@ var xmlProject = null;
 				var instanceOutputs = $('<outputs/>', xmlProject).appendTo(xmlInstance);
 				classOutputs.each(function(index){
 					// Add output to instance
-					var instance = $('<output/>', xmlProject).appendTo(instanceOutputs)
+					$('<output/>', xmlProject).appendTo(instanceOutputs)
 					.attr('id', $(this).attr('id'))
 					.data('class', $(this));
 				});
 				
 				var classParameters  = $(xmlModuleTypes[type]).find("parameters");
 				var instanceParameters = $('<parameters/>', xmlProject).appendTo(xmlInstance);
-				/* classParameters.find('param').each(function(index){
+				// note: do not list all parameters: only the class
+				classParameters.find('param[name="class"]').each(function(index){
 					// Add parameter to instance
 					var instance = $('<param/>', xmlProject).appendTo(instanceParameters)
 					.attr('name', $(this).attr('name'))
 					.data('class', $(this))
 					.text($(this).find('value').text());
-				}); */
+				});
+
 				
 				// Create the associated window
 				var newWindow = createModuleWindow(xmlInstance, id);

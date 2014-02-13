@@ -164,8 +164,6 @@ int main(int argc, char** argv)
 				break;
 			case 't':
 #ifdef MARKUS_UNIT_TESTING
-				logConfigFile = "testing/log4cxx.xml";
-				log4cxx::xml::DOMConfigurator::configure(logConfigFile);
 				LOG_INFO(logger, "Running test suite");
 				return run_tests();
 #else

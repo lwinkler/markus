@@ -340,6 +340,7 @@ void Manager::Export()
 			os<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"<<endl;
 			ConfigReader config("config_empty.xml");
 			ConfigReader moduleConfig = config.RefSubConfig("application", "").RefSubConfig("module", *it, true);
+			moduleConfig.RefSubConfig("parameters", "", true).RefSubConfig("param", "class", true).SetValue(*it);
 
 			Module* module = m_factory.CreateModule(*it, moduleConfig);
 			module->Export(os, 0);
@@ -393,6 +394,9 @@ const string& Manager::OutputDir(const string& x_outputDir)
 				m_outputDir = "out_" + timeStamp();
 			else
 				m_outputDir = x_outputDir;
+
+			if(m_configFile == "")
+				throw MkException("Config file not set in Manager. You need to specify it with Manager::SetConfigFile(...).");
 			short trial = 0;
 			string tmp = m_outputDir;
 

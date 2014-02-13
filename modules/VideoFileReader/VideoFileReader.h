@@ -37,7 +37,7 @@ public:
 	{
 		m_list.push_back(new ParameterString("file", 	"in/input.mp4", 	&file,	"Name of the video file to read, with path"));
 		ParameterStructure::Init();
-	};
+	}
 
 public:
 	std::string file;
@@ -51,7 +51,7 @@ public:
 	
 	void Capture();
         void Reset();
-	const std::string& GetName(){return m_name;};
+	const std::string& GetName(){return m_name;}
 	// const cv::Mat * GetImage() const {return m_output;}
 	
 	// Specific to file reader
@@ -64,7 +64,7 @@ public:
 	virtual double GetRecordingFps();
 private:
 	VideoFileReaderParameterStructure m_param;
-	inline virtual const VideoFileReaderParameterStructure& GetParameters() const {return m_param;};
+	inline virtual const VideoFileReaderParameterStructure& GetParameters() const {return m_param;}
 protected:
 	cv::VideoCapture m_capture;
 	cv::Mat m_output;

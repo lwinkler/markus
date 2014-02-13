@@ -50,7 +50,7 @@ MotionDetector::MotionDetector(const ConfigReader& x_configReader)
 	AddOutputStream(0, new StreamState("motion", m_state,  *this, 	"Motion is detected"));
 
 #ifdef MARKUS_DEBUG_STREAMS
-	m_debug = Mat(Size(640, 480), CV_8UC3);
+	m_debug = Mat(Size(m_param.width, m_param.height), CV_8UC3);
 	AddDebugStream(0, new StreamDebug("motion", m_debug, *this, 	"Motion percentage"));
 #endif
 }

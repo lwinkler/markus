@@ -47,7 +47,8 @@ class TestModules : public CppUnit::TestFixture
 	protected:
 		std::vector<std::string> moduleTypes;
 		FactoryModules m_factory;
-		Module* m_inputModuleImages;
+		Module* mp_fakeInput;
+		ConfigReader* mp_config;
 	public:
 	void runTest()
 	{
@@ -55,13 +56,22 @@ class TestModules : public CppUnit::TestFixture
 	void setUp()
 	{
 		m_factory.ListModules(moduleTypes);
+		mp_config = new ConfigReader("config_empty.xml");
+		addModuleToConfig("VideoFileReader", *mp_config)
+			.RefSubConfig("parameters", "", true)
+			.RefSubConfig("param", "fps", true).SetValue("22");
+		mp_fakeInput = m_factory.CreateModule("VideoFileReader", mp_config->GetSubConfig("application").GetSubConfig("module", "VideoFileReader0"));
+		// note: we need a fake module to create the input streams
+		mp_fakeInput->SetAsReady();
+		mp_fakeInput->Reset();
 	}
 	void tearDown()
 	{
-		delete m_inputModuleImages;
+		delete mp_config;
+		delete mp_fakeInput;
 	}
 
-	void addModuleToConfig(const std::string& rx_type, ConfigReader& xr_config)
+	ConfigReader addModuleToConfig(const std::string& rx_type, ConfigReader& xr_config)
 	{
 		ConfigReader moduleConfig =  xr_config.RefSubConfig("application", "")
 			.RefSubConfig("module", rx_type + "0", true);
@@ -71,6 +81,7 @@ class TestModules : public CppUnit::TestFixture
 		moduleConfig.RefSubConfig("inputs", "", true);
 		moduleConfig.RefSubConfig("outputs", "", true);
 		moduleConfig.SetAttribute("name", rx_type + "0");
+		return moduleConfig;
 	}
 
 	/// Load and save a config file
@@ -82,12 +93,11 @@ class TestModules : public CppUnit::TestFixture
 		{
 			LOG_TEST("## create module "<<*it1);
 
-			ConfigReader config("config_empty.xml");
-			addModuleToConfig(*it1, config);
-					config.SaveToFile("a.xml");
-			Module* module = m_factory.CreateModule(*it1, config.GetSubConfig("application").GetSubConfig("module", *it1 + "0"));
+			addModuleToConfig(*it1, *mp_config);
+			mp_config->SaveToFile("testing/tmp.xml");
+			Module* module = m_factory.CreateModule(*it1, mp_config->GetSubConfig("application").GetSubConfig("module", *it1 + "0"));
+
 			const std::map<int, Stream*> inputs  = module->GetInputStreamList();
-			// std::vector<Module*> modules;
 
 			// Objects for streams
 			cv::Mat image(module->GetHeight(), module->GetWidth(), module->GetType());
@@ -102,23 +112,22 @@ class TestModules : public CppUnit::TestFixture
 				Stream* outputStream = NULL;
 
 				if(it2->second->GetTypeString() == "Image")
-					outputStream = new StreamImage("test", image, *module, "Test input");
+					outputStream = new StreamImage("test", image, *mp_fakeInput, "Test input");
 				else if(it2->second->GetTypeString() == "Objects")
-					outputStream = new StreamObject("test", objects, *module, "Test input");
+					outputStream = new StreamObject("test", objects, *mp_fakeInput, "Test input");
 				else if(it2->second->GetTypeString() == "State")
-					outputStream = new StreamState("test", state, *module, "Test input");
+					outputStream = new StreamState("test", state, *mp_fakeInput, "Test input");
 				else if(it2->second->GetTypeString() == "Event")
-					outputStream = new StreamEvent("test", event, *module, "Test input");
+					outputStream = new StreamEvent("test", event, *mp_fakeInput, "Test input");
 				else
 				{
 					LOG_ERROR(Manager::Logger(), "Unknown input stream type "<<it2->second->GetTypeString());
 					CPPUNIT_ASSERT_MESSAGE("Unknown input stream type", false);
 				}
-				CPPUNIT_ASSERT(outputStream != NULL);
-
 				inputStream.Connect(outputStream);
+				CPPUNIT_ASSERT(outputStream != NULL);
+				CPPUNIT_ASSERT(inputStream.IsConnected());
 			}
-			// module->SetParameterByName("auto_process", "0") // TODO ?
 			module->SetAsReady();
 			module->Reset();
 

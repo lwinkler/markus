@@ -15,8 +15,8 @@
 <module name="CascadeDetector" machineurl="localhost" id="1">
 <parameters>
 <param name="class">CascadeDetector</param>
-<param name="width">640</param>
-<param name="height">480</param>
+<param name="width">64</param>
+<param name="height">48</param>
 <param name="type">CV_8UC1</param>
 <param name="detection_fps">1</param>
 <param name="min_neighbors">2</param>
@@ -51,8 +51,8 @@
 <module name="RenderObjects" machineurl="localhost" id="3">
 <parameters>
 <param name="class">RenderObjects</param>
-<param name="width">640</param>
-<param name="height">480</param>
+<param name="width">64</param>
+<param name="height">48</param>
 <param name="fps">10</param>
 <param name="allow_unsync_input">0</param>
 </parameters>

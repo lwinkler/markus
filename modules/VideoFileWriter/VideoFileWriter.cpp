@@ -65,10 +65,10 @@ void VideoFileWriter::Reset()
 	{
 		fps = GetRecordingFps();
 	}
-	catch(...)
+	catch(exception& e)
 	{
 		// This may happen if the module is not connected
-		LOG_WARN(m_logger, "Impossible to acquire the fps value for recording in VideoFileWriter::Reset set to default value "<< fps);	
+		LOG_WARN(m_logger, "Impossible to acquire the fps value for recording in VideoFileWriter::Reset. Set to default value " << fps << ". Reason: " << e.what());	
 	}
 
 	// cout<<"Opening "<<filename<<endl;
