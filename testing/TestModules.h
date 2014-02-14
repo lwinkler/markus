@@ -49,6 +49,12 @@ class TestModules : public CppUnit::TestFixture
 		FactoryModules m_factory;
 		Module* mp_fakeInput;
 		ConfigReader* mp_config;
+
+		// Objects for streams
+		cv::Mat m_image; // (module->GetHeight(), module->GetWidth(), module->GetType());
+		bool m_state;
+		Event m_event;
+		std::vector<Object> m_objects;
 	public:
 	void runTest()
 	{
@@ -84,6 +90,121 @@ class TestModules : public CppUnit::TestFixture
 		return moduleConfig;
 	}
 
+
+	/// Create random object
+	Object createRandomObject()
+	{
+		Object obj("test");
+		obj.posX  = rand() % m_image.cols;
+		obj.posY  = rand() % m_image.cols;
+		obj.width  = rand() % (m_image.cols - (int)obj.posX);
+		obj.height = rand() % (m_image.rows - (int)obj.posY);
+		int nb = rand() % 100;
+		for(int i = 0 ; i < nb ; i++)
+		{
+			std::stringstream name;
+			name<<"feat"<<i;
+			obj.AddFeature(name.str(), static_cast<float>(rand()) / RAND_MAX);
+		}
+		obj.AddFeature("x", static_cast<float>(rand()) / RAND_MAX);
+		obj.AddFeature("y", static_cast<float>(rand()) / RAND_MAX);
+		obj.AddFeature("width", static_cast<float>(rand()) / RAND_MAX);
+		obj.AddFeature("height", static_cast<float>(rand()) / RAND_MAX);
+		obj.AddFeature("ellipse_angle", static_cast<float>(rand()) / RAND_MAX);
+		obj.AddFeature("ellipse_ratio", static_cast<float>(rand()) / RAND_MAX);
+		return obj;
+	}
+
+	/// Randomize input values
+	void randomizeInputs()
+	{
+		// random event
+		m_event.Empty();
+		if(rand() < RAND_MAX /10)
+		{
+			if(rand() < RAND_MAX /10)
+			{
+				m_event.Raise("random");
+			}
+			else
+			{
+				m_event.Raise("random", createRandomObject());
+			}
+		}
+
+		// random objects
+		m_objects.clear();
+		int nb = rand() % 100;
+		for(int i = 0 ; i < nb ; i++)
+		{
+			m_objects.push_back(createRandomObject());
+		}
+
+
+		// random state
+		if(rand() < RAND_MAX /10)
+			m_state = !m_state;
+
+
+		// random image
+		m_image.setTo(0);
+		nb = rand() % 100;
+		for ( int i = 0; i < nb; i++ )
+		{
+			cv::Point center;
+			center.x = rand() % m_image.cols;
+			center.y = rand() % m_image.rows;
+
+			cv::Size axes;
+			axes.width  = rand() % 200;
+			axes.height = rand() % 200;
+
+			double angle = rand() % 180;
+			cv::Scalar randomColor(rand() % 255, rand() % 255, rand() % 255);
+
+			ellipse(m_image, center, axes, angle, angle - 100, angle + 200,
+					randomColor, (rand() % 10) - 1);
+		}
+	}
+
+	/// Create module and make it ready to process
+	Module* createAndConnectModule(const std::string& x_type)
+	{
+		ConfigReader moduleConfig = addModuleToConfig(x_type, *mp_config);
+		mp_config->SaveToFile("testing/tmp.xml");
+		Module* module = m_factory.CreateModule(x_type, moduleConfig);
+		m_image = cv::Mat(module->GetHeight(), module->GetWidth(), module->GetType());
+
+		const std::map<int, Stream*> inputs  = module->GetInputStreamList();
+		
+		// Create custom streams to feed each input of the module
+		for(std::map<int, Stream*>::const_iterator it2 = inputs.begin() ; it2 != inputs.end() ; it2++)
+		{
+			Stream& inputStream = module->RefInputStreamById(it2->first);
+			Stream* outputStream = NULL;
+
+			if(it2->second->GetTypeString() == "Image")
+				outputStream = new StreamImage("test", m_image, *mp_fakeInput, "Test input");
+			else if(it2->second->GetTypeString() == "Objects")
+				outputStream = new StreamObject("test", m_objects, *mp_fakeInput, "Test input");
+			else if(it2->second->GetTypeString() == "State")
+				outputStream = new StreamState("test", m_state, *mp_fakeInput, "Test input");
+			else if(it2->second->GetTypeString() == "Event")
+				outputStream = new StreamEvent("test", m_event, *mp_fakeInput, "Test input");
+			else
+			{
+				LOG_ERROR(Manager::Logger(), "Unknown input stream type "<<it2->second->GetTypeString());
+				CPPUNIT_ASSERT_MESSAGE("Unknown input stream type", false);
+			}
+			inputStream.Connect(outputStream);
+			CPPUNIT_ASSERT(outputStream != NULL);
+			CPPUNIT_ASSERT(inputStream.IsConnected());
+		}
+		module->SetAsReady();
+		module->Reset();
+		return module;
+	}
+
 	/// Load and save a config file
 	void testInputs()
 	{
@@ -93,50 +214,18 @@ class TestModules : public CppUnit::TestFixture
 		{
 			LOG_TEST("## create module "<<*it1);
 
-			addModuleToConfig(*it1, *mp_config);
-			mp_config->SaveToFile("testing/tmp.xml");
-			Module* module = m_factory.CreateModule(*it1, mp_config->GetSubConfig("application").GetSubConfig("module", *it1 + "0"));
+			Module* module = createAndConnectModule(*it1);
 
-			const std::map<int, Stream*> inputs  = module->GetInputStreamList();
-
-			// Objects for streams
-			cv::Mat image(module->GetHeight(), module->GetWidth(), module->GetType());
-			bool state;
-			Event event;
-			std::vector<Object> objects;
-			
-			// Create custom streams to feed each input of the module
-			for(std::map<int, Stream*>::const_iterator it2 = inputs.begin() ; it2 != inputs.end() ; it2++)
-			{
-				Stream& inputStream = module->RefInputStreamById(it2->first);
-				Stream* outputStream = NULL;
-
-				if(it2->second->GetTypeString() == "Image")
-					outputStream = new StreamImage("test", image, *mp_fakeInput, "Test input");
-				else if(it2->second->GetTypeString() == "Objects")
-					outputStream = new StreamObject("test", objects, *mp_fakeInput, "Test input");
-				else if(it2->second->GetTypeString() == "State")
-					outputStream = new StreamState("test", state, *mp_fakeInput, "Test input");
-				else if(it2->second->GetTypeString() == "Event")
-					outputStream = new StreamEvent("test", event, *mp_fakeInput, "Test input");
-				else
-				{
-					LOG_ERROR(Manager::Logger(), "Unknown input stream type "<<it2->second->GetTypeString());
-					CPPUNIT_ASSERT_MESSAGE("Unknown input stream type", false);
-				}
-				inputStream.Connect(outputStream);
-				CPPUNIT_ASSERT(outputStream != NULL);
-				CPPUNIT_ASSERT(inputStream.IsConnected());
-			}
-			module->SetAsReady();
-			module->Reset();
 
 
 			// const std::map<int, Stream*> outputs = module->GetOutputStreamList();
 			// const std::map<int, Stream*> debugs  = module->GetDebugStreamList();
 
-			for(int i = 0 ; i < 100 ; i++)
+			for(int i = 0 ; i < 50 ; i++)
+			{
+				randomizeInputs();
 				module->Process();
+			}
 			delete module;
 		}
 	}

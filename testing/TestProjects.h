@@ -63,10 +63,10 @@ class TestProjects : public CppUnit::TestFixture
 		Manager manager(appConfig, true);
 		manager.Connect();
 		manager.Reset();
-		while(manager.Process())
-		{
-			// nothing 
-		}
+
+		for(int i = 0 ; i < 10 ; i++)
+			if(!manager.Process())
+				break;
 	}
 
 	/// Run different existing configs

@@ -30,6 +30,7 @@
 
 bool run_tests()
 {
+	srand(12345); // Force random seed
 	CppUnit::TextUi::TestRunner runner;
 	Manager::SetConfigFile("testing/markus.log");
 	log4cxx::xml::DOMConfigurator::configure("testing/log4cxx.xml");
