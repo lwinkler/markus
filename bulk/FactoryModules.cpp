@@ -31,13 +31,13 @@ FactoryModules::FactoryModules()
 	registerAllModules(*this);	
 }
 
-Module * FactoryModules::CreateModule(const std::string& name, const ConfigReader& x_config)
+Module * FactoryModules::CreateModule(const std::string& x_name, const ConfigReader& x_config)
 {
-	ModuleRegistry::iterator it = m_register.find(name);
+	ModuleRegistry::iterator it = m_register.find(x_name);
 
 	if (it == m_register.end())
 	{
-		//TODO
+		throw MkException("Cannot find a constructor for module of type " + x_name, LOC);
 	}
 
 	CreateModuleFunc func = it->second;

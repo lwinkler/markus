@@ -53,6 +53,7 @@ void GroundTruthReader::Reset()
 	m_stateSub = false;
 	m_srtStart = "";
 	m_srtEnd   = "";
+	m_num      = -1;
 
 	LOG_DEBUG(m_logger, "Open ground truth file: "<<m_param.file);
 	// if(m_param.file.size() == 0)
