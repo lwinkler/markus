@@ -50,3 +50,8 @@ const void Controller::CallAction(const std::string& x_name, std::string* xp_val
 }
 
 
+void Controller::ListActions(std::vector<std::string>& xr_actions) const
+{
+	for(map<string, const px_action>::const_iterator it = m_actions.begin() ; it != m_actions.end() ; it++)
+		xr_actions.push_back(it->first);
+}

@@ -220,7 +220,7 @@ void QModuleViewer::updateModule(Module * x_module)
 	this->addAction(actionShowDisplayMenu);
 
 	// Show control board for parameters
-	const map<string, Controller*>& ctrs = m_currentModule->GetControlsList();
+	const map<string, Controller*>& ctrs = m_currentModule->GetControllersList();
 	cpt = 0;
 
 	for(map<string, Controller*>::const_iterator it = ctrs.begin() ; it != ctrs.end() ; it++)
@@ -284,13 +284,13 @@ void QModuleViewer::updateStreamOrControlNb(int x_index)
 /// display the control with the given index
 void QModuleViewer::updateControlNb(int x_index)
 {
-	assert(x_index < (int) m_currentModule->GetControlsList().size());
+	assert(x_index < (int) m_currentModule->GetControllersList().size());
 	CLEAN_DELETE(m_controlBoard);
 	if(x_index < 0)
 		return;
 	m_controlBoard = new QControlBoard(*m_currentModule, this);
 	mp_mainLayout->addWidget(m_controlBoard, 0);
-	map<string, Controller*>::const_iterator it = m_currentModule->GetControlsList().begin();
+	map<string, Controller*>::const_iterator it = m_currentModule->GetControllersList().begin();
 	advance(it, x_index);
 	m_controlBoard->updateControl(it->second);
 }

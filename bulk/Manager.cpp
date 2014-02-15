@@ -31,7 +31,6 @@
 
 using namespace std;
 
-//#include "AllModules.h"
 #include "Controller.h"
 
 	
@@ -181,6 +180,7 @@ void Manager::Reset()
 	// Reset all modules (to set the module timer)
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 	{
+		(*it)->SetProcessByTimer(!m_centralized);
 		(*it)->Reset();
 	}
 }

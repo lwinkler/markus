@@ -51,6 +51,7 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_currentTimeStamp     = TIME_STAMP_INITIAL;
 	m_pause                = false;
 	m_isReady              = false;
+	m_processByTimer       = false;
 	m_unsyncWarning        = true;
 
 	m_moduleTimer = NULL;
@@ -64,7 +65,7 @@ void Module::Reset()
 	param.CheckRange();
 
 	// Add the module timer (only works with QT)
-	if(param.autoProcess)
+	if(param.autoProcess && m_processByTimer)
 	{
 		CLEAN_DELETE(m_moduleTimer);
 		m_moduleTimer = new QModuleTimer(*this, 0);
@@ -81,16 +82,7 @@ void Module::Reset()
 
 	// Add controls for parameters' change
 	const std::vector<Parameter*>& list = param.GetList();
-	// for(const vector<Parameter*>&::iterator it = list.begin() ; it != list.end() ; it++)
-		// m_controls.push_back(new ParameterControl("Parameters", "Change the values of parameters at runtime."));
 
-	// Delete all controllers
-	/*for(vector<Controller*>::iterator it = m_controls.begin() ; it != m_controls.end() ; it++)
-	{
-		delete(*it);
-	}
-	m_controls.clear();
-	*/
 	// This must be done only once to avoid troubles in the GUI
 	if(m_controls.size() == 0)
 	{

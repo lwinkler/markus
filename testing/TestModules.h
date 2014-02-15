@@ -27,6 +27,7 @@
 #include <cppunit/TestCase.h>
 #include <cppunit/TestCaller.h>
 #include "Module.h"
+#include "Controller.h"
 #include "util.h"
 #include "Manager.h"
 #include "StreamEvent.h"
@@ -36,7 +37,7 @@
 #include "MkException.h"
 
 #define LOG_TEST(str) {\
-	std::cout<<std::endl<<str<<std::endl;\
+	std::cout<<str<<std::endl;\
 	LOG_INFO(Manager::Logger(), str);\
 }
 
@@ -87,6 +88,9 @@ class TestModules : public CppUnit::TestFixture
 		moduleConfig.RefSubConfig("parameters", "", true)
 			.RefSubConfig("param", "auto_process", true)
 			.SetValue("1");
+		moduleConfig.RefSubConfig("parameters", "", true)
+			.RefSubConfig("param", "fps", true)
+			.SetValue("123");
 		moduleConfig.RefSubConfig("inputs", "", true);
 		moduleConfig.RefSubConfig("outputs", "", true);
 		moduleConfig.SetAttribute("name", rx_type + "0");
@@ -207,21 +211,16 @@ class TestModules : public CppUnit::TestFixture
 		return module;
 	}
 
-	/// Load and save a config file
+	/// Run the modules with different inputs generated randomly
 	void testInputs()
 	{
-		LOG_TEST("# Test the creation of modules");
+		LOG_TEST("\n# Test different inputs");
 		
 		for(std::vector<std::string>::const_iterator it1 = moduleTypes.begin() ; it1 != moduleTypes.end() ; it1++)
 		{
-			LOG_TEST("## create module "<<*it1);
+			LOG_TEST("## on module "<<*it1);
 
 			Module* module = createAndConnectModule(*it1);
-
-
-
-			// const std::map<int, Stream*> outputs = module->GetOutputStreamList();
-			// const std::map<int, Stream*> debugs  = module->GetDebugStreamList();
 
 			for(int i = 0 ; i < 50 ; i++)
 			{
@@ -232,11 +231,42 @@ class TestModules : public CppUnit::TestFixture
 		}
 	}
 
+	void testControllers()
+	{
+		LOG_TEST("\n# Test all controllers");
+		
+		for(std::vector<std::string>::const_iterator it1 = moduleTypes.begin() ; it1 != moduleTypes.end() ; it1++)
+		{
+			LOG_TEST("## on module "<<*it1);
+
+			Module* module = createAndConnectModule(*it1);
+
+			for(std::map<std::string, Controller*>::const_iterator it2 = module->GetControllersList().begin() ; it2 != module->GetControllersList().end() ; it2++)
+			{
+				std::vector<std::string> actions;
+				it2->second->ListActions(actions);
+
+				for(std::vector<std::string>::const_iterator it3 = actions.begin() ; it3 != actions.end() ; it3++)
+				{
+					std::cout<<it2->first<<"."<<*it3<<std::endl;
+
+					for(int i = 0 ; i < 10 ; i++)
+					{
+						randomizeInputs();
+						module->Process();
+					}
+				}
+			}
+
+			delete module;
+		}
+	}
 
 	static CppUnit::Test *suite()
 	{
 		CppUnit::TestSuite *suiteOfTests = new CppUnit::TestSuite("TestModules");
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testInputs", &TestModules::testInputs));
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testControllers", &TestModules::testControllers));
 		return suiteOfTests;
 	}
 };

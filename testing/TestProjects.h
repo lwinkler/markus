@@ -32,7 +32,7 @@
 #include "MkException.h"
 
 #define LOG_TEST(str) {\
-	std::cout<<std::endl<<str<<std::endl;\
+	std::cout<<str<<std::endl;\
 	LOG_INFO(Manager::Logger(), str);\
 }
 
@@ -72,7 +72,7 @@ class TestProjects : public CppUnit::TestFixture
 	/// Run different existing configs
 	void testSync()
 	{
-		LOG_TEST("# Unit test with different test projects");
+		LOG_TEST("\n# Unit test with different test projects");
 		runConfig("testing/projects/sync_test1.xml");
 		runConfig("testing/projects/sync_test2.xml");
 		runConfig("testing/projects/sync_test3.xml");

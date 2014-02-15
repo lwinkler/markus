@@ -32,7 +32,7 @@
 #include "MkException.h"
 
 #define LOG_TEST(str) {\
-	std::cout<<std::endl<<str<<std::endl;\
+	std::cout<<str<<std::endl;\
 	LOG_INFO(Manager::Logger(), str);\
 }
 
@@ -61,7 +61,7 @@ class ConfigReaderTest : public CppUnit::TestFixture
 	/// Load and save a config file
 	void testLoad()
 	{
-		LOG_TEST("# Test the loading of configurations");
+		LOG_TEST("\n# Test the loading of configurations");
 
 		ConfigReader appConf = m_conf1->GetSubConfig("application");
 		ConfigReader module0conf = appConf.GetSubConfig("module", "Module0");

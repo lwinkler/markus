@@ -94,7 +94,7 @@ public:
 	void AddDebugStream(int x_id, Stream* xp_stream);
 
 
-	const std::map<std::string, Controller*>& GetControlsList() const {return m_controls;}
+	const std::map<std::string, Controller*>& GetControllersList() const {return m_controls;}
 	Controller* FindController(const std::string& x_name) const;
 	
 	inline int GetWidth() const          {return GetParameters().width;}
@@ -116,6 +116,7 @@ public:
 	inline void Unlock(){m_lock.unlock();}
 	inline bool IsReady(){return IsAutoProcessed() || m_isReady;}
 	void SetAsReady();
+	void SetProcessByTimer(bool x_proc) {m_processByTimer = x_proc;}
 	bool AllInputsAreReady() const;
 	const Module& GetMasterModule();
 	
@@ -131,6 +132,7 @@ protected:
 	TIME_STAMP m_currentTimeStamp;  // time stamp of the current input
 	bool m_pause;
 	bool m_isReady;
+	bool m_processByTimer;
 	bool m_unsyncWarning;
 	
 	virtual void ProcessFrame() = 0;
