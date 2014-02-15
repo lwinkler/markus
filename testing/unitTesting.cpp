@@ -33,6 +33,8 @@ bool run_tests()
 	srand(12345); // Force random seed
 	CppUnit::TextUi::TestRunner runner;
 	Manager::SetConfigFile("testing/markus.log");
+	SYSTEM("rm -rf testing/out");
+	Manager::OutputDir("testing/out");
 	log4cxx::xml::DOMConfigurator::configure("testing/log4cxx.xml");
 	runner.addTest(ConfigReaderTest::suite());
 	runner.addTest(TestProjects::suite());

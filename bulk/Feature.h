@@ -39,15 +39,8 @@ class Feature
 		Feature& operator = (const Feature&);
 		~Feature();
 		
-		//inline const char* GetName() const {return m_name;};
-		/*inline double GetValue() const {return m_value;}
-		inline void SetValue( double x) {m_value = x;}
-		inline double GetSqVariance() const {return m_sqVariance;}
-		inline void SetSqVariance( double x) {m_sqVariance = x;}*/
 		void Update(double x_currentValue, double x_alpha);
-		
-		//static double GetFeatureValue(const std::vector<Feature>& vect, const char* name);
-		
+
 		
 	public:
 		// The different values of the feature

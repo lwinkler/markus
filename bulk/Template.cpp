@@ -50,16 +50,16 @@ Template::Template(const Template& t)
 
 }
 
-Template::Template(const Object& x_reg)
+Template::Template(const Object& x_obj)
 {
 	m_num = m_counter;
 	m_counter++;
-	m_feats = x_reg.GetFeatures();
+	m_feats = x_obj.GetFeatures();
 	// m_bestMatchingObject = -1;
-	m_lastMatchingObject = NULL; // &x_reg;
+	m_lastMatchingObject = NULL; // &x_obj;
 	m_lastSeen = TIME_STAMP_MIN;
 
-	//cout<<"Object "<<x_reg.GetNum()<<" is used to create template "<<m_num<<" with "<<x_reg.GetFeatures().size()<<" features"<<endl;
+	//cout<<"Object "<<x_obj.GetNum()<<" is used to create template "<<m_num<<" with "<<x_obj.GetFeatures().size()<<" features"<<endl;
 }
 
 Template& Template::operator = (const Template& t)
@@ -84,18 +84,18 @@ Template::~Template()
 /* Compare a candidate region with the template */
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-double Template::CompareWithObject(const Object& x_reg, const vector<string>& x_features) const
+double Template::CompareWithObject(const Object& x_obj, const vector<string>& x_features) const
 {
 	double sum = 0;
 	//cout<<"m_feats.size() ="<<m_feats.size()<<endl;
-	assert(m_feats.size() >= x_reg.GetFeatures().size());
+	//assert(m_feats.size() >= x_obj.GetFeatures().size());
 	if(m_feats.size() <= 0)
 		throw MkException("Feature vector of Template canot be empty", LOC);
 	
 	for (vector<string>::const_iterator it = x_features.begin() ; it != x_features.end() ; it++)
 	{
 		const Feature & f1(GetFeature(*it));
-		const Feature & f2(x_reg.GetFeature(*it));
+		const Feature & f2(x_obj.GetFeature(*it));
 		sum += POW2(f1.value - f2.value) 
 			/ POW2(f1.sqVariance); // TODO: See if sqVariance has a reasonable value !!
 		// sum += POW2(f1.mean - f2.value) 
@@ -114,7 +114,13 @@ void Template::UpdateFeatures(double x_alpha, TIME_STAMP m_currentTimeStamp)
 	{
 		for (map<string,Feature>::iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
 		{
-			it->second.Update(m_lastMatchingObject->GetFeature(it->first).value, x_alpha);
+			try
+			{
+				it->second.Update(m_lastMatchingObject->GetFeature(it->first).value, x_alpha);
+			}
+			catch(MkException&) // TODO specific exception
+			{
+			}
 		}
 		m_lastSeen = m_currentTimeStamp;
 	}

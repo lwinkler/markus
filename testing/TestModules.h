@@ -84,6 +84,9 @@ class TestModules : public CppUnit::TestFixture
 		moduleConfig.RefSubConfig("parameters", "", true)
 			.RefSubConfig("param", "class", true)
 			.SetValue(rx_type);
+		moduleConfig.RefSubConfig("parameters", "", true)
+			.RefSubConfig("param", "auto_process", true)
+			.SetValue("1");
 		moduleConfig.RefSubConfig("inputs", "", true);
 		moduleConfig.RefSubConfig("outputs", "", true);
 		moduleConfig.SetAttribute("name", rx_type + "0");
@@ -94,11 +97,10 @@ class TestModules : public CppUnit::TestFixture
 	/// Create random object
 	Object createRandomObject()
 	{
-		Object obj("test");
-		obj.posX  = rand() % m_image.cols;
-		obj.posY  = rand() % m_image.cols;
-		obj.width  = rand() % (m_image.cols - (int)obj.posX);
-		obj.height = rand() % (m_image.rows - (int)obj.posY);
+		Object obj("test", cv::Rect(
+			cv::Point(rand() % m_image.cols, rand() % m_image.rows), 
+			cv::Point(rand() % m_image.cols, rand() % m_image.rows))
+		);
 		int nb = rand() % 100;
 		for(int i = 0 ; i < nb ; i++)
 		{
@@ -134,7 +136,7 @@ class TestModules : public CppUnit::TestFixture
 
 		// random objects
 		m_objects.clear();
-		int nb = rand() % 100;
+		int nb = rand() % 10;
 		for(int i = 0 ; i < nb ; i++)
 		{
 			m_objects.push_back(createRandomObject());
