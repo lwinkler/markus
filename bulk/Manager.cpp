@@ -166,7 +166,7 @@ void Manager::Connect()
 		}
 	}
 	if(! ready)
-		throw MkException("Not all modules can be assigned to a master. There is probably a problem with the connections between modules.");
+		throw MkException("Not all modules can be assigned to a master. There is probably a problem with the connections between modules.", LOC);
 	
 	m_isConnected = true;	
 }
@@ -396,7 +396,7 @@ const string& Manager::OutputDir(const string& x_outputDir)
 				m_outputDir = x_outputDir;
 
 			if(m_configFile == "")
-				throw MkException("Config file not set in Manager. You need to specify it with Manager::SetConfigFile(...).");
+				throw MkException("Config file not set in Manager. You need to specify it with Manager::SetConfigFile(...).", LOC);
 			short trial = 0;
 			string tmp = m_outputDir;
 
