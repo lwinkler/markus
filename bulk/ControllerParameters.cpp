@@ -253,6 +253,7 @@ QWidget* ControllerString::CreateWidget()
 
 void setControlledValueFloat(Controller* xp_ctr, string* xp_value)
 {
+	// TODO: set value via parameter
 	ControllerFloat* ctr = dynamic_cast<ControllerFloat*>(xp_ctr);
 	assert(ctr != NULL);
 #ifndef MARKUS_NO_GUI
