@@ -45,7 +45,7 @@ const void Controller::CallAction(const std::string& x_name, std::string* xp_val
 		throw MkException("Cannot find action in controller", LOC);
 
 	// Call the function pointer associated with the action
-	it->second;
+	// cout<<(it->first)<<endl;
 	(*(it->second))(this, xp_value);
 }
 

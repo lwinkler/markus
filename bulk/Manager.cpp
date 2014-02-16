@@ -262,7 +262,7 @@ void Manager::SendCommand(const std::string& x_command, std::string x_value)
 		throw MkException("Command must be in format \"module.controller.command\"", LOC);
 	
 	if(elems.at(0) == "manager")
-		;	// manager.GetControlList();
+		;	// manager.GetControlList(); // TODO
 	else
 	{
 		Module& module(RefModuleByName(elems.at(0)));

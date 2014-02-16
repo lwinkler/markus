@@ -101,6 +101,11 @@ class TestModules : public CppUnit::TestFixture
 	/// Create random object
 	Object createRandomObject()
 	{
+<<<<<<< HEAD
+=======
+		// std::cout<<m_image.size()<<std::endl;
+		assert(m_image.size() != cv::Size(0,0));
+>>>>>>> improve testing
 		Object obj("test", cv::Rect(
 			cv::Point(rand() % m_image.cols, rand() % m_image.rows), 
 			cv::Point(rand() % m_image.cols, rand() % m_image.rows))
@@ -240,21 +245,31 @@ class TestModules : public CppUnit::TestFixture
 			LOG_TEST("## on module "<<*it1);
 
 			Module* module = createAndConnectModule(*it1);
+			randomizeInputs();
 
 			for(std::map<std::string, Controller*>::const_iterator it2 = module->GetControllersList().begin() ; it2 != module->GetControllersList().end() ; it2++)
 			{
 				std::vector<std::string> actions;
 				it2->second->ListActions(actions);
+				// TODO call action
 
 				for(std::vector<std::string>::const_iterator it3 = actions.begin() ; it3 != actions.end() ; it3++)
 				{
+<<<<<<< HEAD
 					std::cout<<it2->first<<"."<<*it3<<std::endl;
 
 					for(int i = 0 ; i < 10 ; i++)
 					{
 						randomizeInputs();
+=======
+					// std::cout<<it2->first<<"."<<*it3<<std::endl;
+					std::string value = "0";
+					module->LockForWrite();
+					it2->second->CallAction(*it3, &value);
+					module->Unlock();
+					for(int i = 0 ; i < 3 ; i++)
+>>>>>>> improve testing
 						module->Process();
-					}
 				}
 			}
 
@@ -265,7 +280,7 @@ class TestModules : public CppUnit::TestFixture
 	static CppUnit::Test *suite()
 	{
 		CppUnit::TestSuite *suiteOfTests = new CppUnit::TestSuite("TestModules");
-		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testInputs", &TestModules::testInputs));
+		// suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testInputs", &TestModules::testInputs));
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testControllers", &TestModules::testControllers));
 		return suiteOfTests;
 	}
