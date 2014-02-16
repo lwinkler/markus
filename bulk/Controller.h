@@ -46,10 +46,9 @@ public:
 	Controller(std::string x_name);
 	virtual ~Controller();
 
-	// inline QWidget* RefWidget(){return m_widget;}
 	virtual QWidget* CreateWidget() = 0;
 	const std::string& GetName() {return m_name;};
-	const std::map<std::string, const px_action>& GetActions() {return m_actions;}
+	// const std::map<std::string, const px_action>& GetActions() {return m_actions;}
 	void ListActions(std::vector<std::string>& xr_actions) const;
 	const void CallAction(const std::string& x_name, std::string* xp_value);
 	

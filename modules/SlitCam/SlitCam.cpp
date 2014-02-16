@@ -55,6 +55,7 @@ void SlitCam::Reset()
 {
 	Module::Reset();
 	m_output.setTo(0);
+	m_position = 0;
 }
 
 void SlitCam::ProcessFrame()

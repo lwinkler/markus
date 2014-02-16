@@ -22,7 +22,6 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ControllerParameters.h"
-#include <cstdio>
 
 using namespace std;
 
@@ -45,9 +44,19 @@ void setControlledValueInt(Controller* xp_ctr, string* xp_value)
 {
 	ControllerInt* ctr = dynamic_cast<ControllerInt*>(xp_ctr);
 	assert(ctr != NULL);
-#ifndef MARKUS_NO_GUI
-	ctr->param.SetValue(ctr->parameterSlider->GetValue(), PARAMCONF_GUI);
+	if(xp_value != NULL)
+	{
+		ctr->param.SetValue(*xp_value, PARAMCONF_CMD);
+	}
+	else
+	{
+#ifdef MARKUS_NO_GUI
+		assert(false);
+#else
+		ctr->param.SetValue(ctr->parameterSlider->GetValue(), PARAMCONF_GUI);
 #endif
+	}
+	assert(ctr->param.CheckRange()); // TODO throw
 }
 
 /// Display the current value of the controlled object
@@ -55,7 +64,16 @@ void getCurrentInt(Controller* xp_ctr, string* xp_value)
 {
 	ControllerInt* ctr = dynamic_cast<ControllerInt*>(xp_ctr);
 	assert(ctr != NULL);
-#ifndef MARKUS_NO_GUI
+	if(xp_value != NULL)
+	{
+		stringstream ss;
+		ss<<ctr->param.GetValue();
+		*xp_value = ss.str();
+		return;
+	}
+#ifdef MARKUS_NO_GUI
+	assert(false);
+#else
 	ctr->parameterSlider->SetValue(ctr->param.GetValue());
 #endif
 }
@@ -65,7 +83,14 @@ void getDefaultInt(Controller* xp_ctr, string* xp_value)
 {
 	ControllerInt* ctr = dynamic_cast<ControllerInt*>(xp_ctr);
 	assert(ctr != NULL);
-#ifndef MARKUS_NO_GUI
+	if(xp_value != NULL)
+	{
+		*xp_value = ctr->param.GetDefault();
+		return;
+	}
+#ifdef MARKUS_NO_GUI
+	assert(false);
+#else
 	ctr->parameterSlider->SetValue(ctr->param.GetDefault());
 #endif
 }
@@ -267,6 +292,8 @@ void getCurrentFloat(Controller* xp_ctr, string* xp_value)
 	assert(ctr != NULL);
 #ifndef MARKUS_NO_GUI
 	ctr->parameterSlider->SetValue(ctr->param.GetValue());
+#else
+	assert(false);
 #endif
 }
 

@@ -72,10 +72,12 @@ void QControlBoard::updateControl(Controller* x_control)
 
 	// Create the control buttons
 	// TODO: remove buttons and delete widgets
-	for(map<string, const px_action>::const_iterator it = mp_currentControl->GetActions().begin() ; it != mp_currentControl->GetActions().end() ; it++)
+	vector<string> actions;
+	mp_currentControl->ListActions(actions);
+	for(vector<string>::const_iterator it = actions.begin() ; it != actions.end() ; it++)
 	{
 		// note : names must match between buttons and actions
-		QPushButton* button = new QPushButton(it->first.c_str());
+		QPushButton* button = new QPushButton(it->c_str());
 		mp_buttonLayout->addWidget(button);
 		connect(button, SIGNAL(pressed()), this, SLOT(callAction(void)));
 	}

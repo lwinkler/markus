@@ -247,12 +247,14 @@ class TestModules : public CppUnit::TestFixture
 			for(std::map<std::string, Controller*>::const_iterator it2 = module->GetControllersList().begin() ; it2 != module->GetControllersList().end() ; it2++)
 			{
 				std::vector<std::string> actions;
-				it2->second->ListActions(actions);
+				// it2->second->ListActions(actions);
 				// TODO call action
 
 				for(std::vector<std::string>::const_iterator it3 = actions.begin() ; it3 != actions.end() ; it3++)
 				{
 					// std::cout<<it2->first<<"."<<*it3<<std::endl;
+					if(*it3 == "Get")
+						continue;
 					std::string value = "0";
 					module->LockForWrite();
 					it2->second->CallAction(*it3, &value);
