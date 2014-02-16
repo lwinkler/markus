@@ -101,11 +101,8 @@ class TestModules : public CppUnit::TestFixture
 	/// Create random object
 	Object createRandomObject()
 	{
-<<<<<<< HEAD
-=======
 		// std::cout<<m_image.size()<<std::endl;
 		assert(m_image.size() != cv::Size(0,0));
->>>>>>> improve testing
 		Object obj("test", cv::Rect(
 			cv::Point(rand() % m_image.cols, rand() % m_image.rows), 
 			cv::Point(rand() % m_image.cols, rand() % m_image.rows))
@@ -255,20 +252,13 @@ class TestModules : public CppUnit::TestFixture
 
 				for(std::vector<std::string>::const_iterator it3 = actions.begin() ; it3 != actions.end() ; it3++)
 				{
-<<<<<<< HEAD
-					std::cout<<it2->first<<"."<<*it3<<std::endl;
-
-					for(int i = 0 ; i < 10 ; i++)
-					{
-						randomizeInputs();
-=======
 					// std::cout<<it2->first<<"."<<*it3<<std::endl;
 					std::string value = "0";
 					module->LockForWrite();
 					it2->second->CallAction(*it3, &value);
 					module->Unlock();
+
 					for(int i = 0 ; i < 3 ; i++)
->>>>>>> improve testing
 						module->Process();
 				}
 			}
