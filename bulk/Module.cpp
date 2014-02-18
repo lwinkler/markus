@@ -206,7 +206,9 @@ void Module::Process()
 	m_currentTimeStamp = 0;
 	if(m_inputStreams.size() >= 1)
 	{
+		// m_inputStreams[0]->LockModuleForRead();
 		m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected(); // TODO: should we lock module here ?
+		// m_inputStreams[0]->UnLockModule();
 	}
 	else if(! param.autoProcess)
 		throw MkException("Module must have at least one input or have parameter auto_process=true", LOC);
@@ -214,7 +216,6 @@ void Module::Process()
 	if(param.autoProcess || (param.fps == 0 && m_currentTimeStamp != m_lastTimeStamp) || (m_currentTimeStamp - m_lastTimeStamp) * param.fps > 1000)
 	{
 		// Process this frame
-		// m_lock.lockForRead();
 		
 		// Timer for benchmark
 		Timer ti;
@@ -244,6 +245,7 @@ void Module::Process()
 				it->second->ConvertInput();
 				//(*it)->UnLockModule();
 			}
+			//assert(m_currentTimeStamp == m_inputStreams[0]->GetTimeStamp());
 		}
 		m_timerConvertion 	+= ti.GetMSecLong();
 		ti.Restart();
@@ -255,9 +257,6 @@ void Module::Process()
 		// Propagate time stamps to outputs
 		for(map<int, Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
 			it->second->SetTimeStamp(m_currentTimeStamp);
-		// if(!IsInput())
-			// for(map<int, Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
-				// it->second->SetTimeStamp(m_currentTimeStamp);
 		
 		// Call depending modules (modules with fps = 0)
 		for(vector<Module*>::iterator it = m_modulesDepending.begin() ; it != m_modulesDepending.end() ; it++)
@@ -265,7 +264,6 @@ void Module::Process()
 
 		m_countProcessedFrames++;
 		m_lastTimeStamp = m_currentTimeStamp;
-		// m_lock.unlock();
 	}
 	m_lock.unlock();
 }

@@ -281,7 +281,6 @@ class TestModules : public CppUnit::TestFixture
 			Module* module = createAndConnectModule(*it1);
 			if(module->IsInput())
 			{
-				// TODO : only blacklist problematic parameters
 				delete module;
 				continue;
 			}
@@ -332,10 +331,6 @@ class TestModules : public CppUnit::TestFixture
 						LOG_INFO(Manager::Logger(), "###  "<<it2->first<<".Set returned "<<value);
 						LOG_INFO(Manager::Logger(), "###  "<<it2->first<<".Get returned "<<newValue);
 					}
-				}
-				else if(it2->second->GetType() == "event")
-				{
-					// TODO fix this
 				}
 				else
 				{
