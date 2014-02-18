@@ -24,8 +24,6 @@
 #ifndef CONTROLLER_PARAMETERS_H
 #define CONTROLLER_PARAMETERS_H
 
-// #include <string>
-// #include <vector>
 #include "Parameter.h"
 #include "Controller.h"
 
@@ -35,78 +33,102 @@ class QCheckBox;
 class QLineEdit;
 class QComboBox;
 
+/// Control class for any parameter
+class ControllerParameter : public Controller
+{
+public:
+	ControllerParameter(Parameter& x_param);
+	virtual QWidget* CreateWidget() = 0;
+	virtual void SetWidgetValue(const std::string& x_value) = 0;
+	virtual std::string GetValueFromWidget() = 0;
+
+	Parameter& param;
+};
+
 /// Control class for an integer parameter
-class ControllerInt : public Controller
+class ControllerInt : public ControllerParameter
 {
 public:
 	ControllerInt(ParameterInt & x_param);
-	~ControllerInt();
 	virtual QWidget* CreateWidget();
+	virtual void SetWidgetValue(const std::string& x_value);
+	virtual std::string GetValueFromWidget();
 
+protected:
 	QParameterSlider * parameterSlider;
-	ParameterInt     & param;
+	ParameterInt& m_param2;
 };
 
 
 /// Control class for a double parameter
-class ControllerDouble : public Controller
+class ControllerDouble : public ControllerParameter
 {
 public:
 	ControllerDouble(ParameterDouble & x_param);
-	~ControllerDouble();
 	virtual QWidget* CreateWidget();
+	virtual void SetWidgetValue(const std::string& x_value);
+	virtual std::string GetValueFromWidget();
 
+protected:
 	QParameterSlider * parameterSlider;
-	ParameterDouble  & param;
+	ParameterDouble& m_param2;
 };
 
 /// Control class for a float parameter
-class ControllerFloat : public Controller
+class ControllerFloat : public ControllerParameter
 {
 public:
 	ControllerFloat(ParameterFloat & x_param);
-	~ControllerFloat();
 	virtual QWidget* CreateWidget();
+	virtual void SetWidgetValue(const std::string& x_value);
+	virtual std::string GetValueFromWidget();
 
+protected:
 	QParameterSlider * parameterSlider;
-	ParameterFloat   & param;
+	ParameterFloat   & m_param2;
 };
 
 /// Control class for a boolean parameter
-class ControllerBool : public Controller
+class ControllerBool : public ControllerParameter
 {
 public:
 	ControllerBool(ParameterBool & x_param);
-	~ControllerBool();
 	virtual QWidget* CreateWidget();
+	virtual void SetWidgetValue(const std::string& x_value);
+	virtual std::string GetValueFromWidget();
 
+protected:
 	QCheckBox     * checkBox;
-	ParameterBool & param;
+	ParameterBool & m_param2;
 };
 
 /// Control class for a string parameter
-class ControllerString : public Controller
+class ControllerString : public ControllerParameter
 {
 public:
 	ControllerString(ParameterString & x_param);
-	~ControllerString();
 	virtual QWidget* CreateWidget();
+	virtual void SetWidgetValue(const std::string& x_value);
+	virtual std::string GetValueFromWidget();
 
+protected:
 	QLineEdit  * lineEdit;
-	ParameterString & param;
+	ParameterString & m_param2;
 };
 
 
 /// Control class for a enum parameter
-class ControllerEnum : public Controller
+class ControllerEnum : public ControllerParameter
 {
 public:
 	ControllerEnum(ParameterEnum & x_param);
-	~ControllerEnum();
 	virtual QWidget* CreateWidget();
+	virtual void SetWidgetValue(const std::string& x_value);
+	virtual std::string GetValueFromWidget();
 
-	QComboBox  * comboBox;
-	ParameterEnum & param;
+protected:
+	QComboBox     * comboBox;
+	ParameterEnum & m_param2;
 };
 
 

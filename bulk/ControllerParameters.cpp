@@ -40,9 +40,9 @@ using namespace std;
 #define PRECISION_DOUBLE 2
 
 /// Set the controlled value (e.g. parameter) to the value on control
-void setControlledValueInt(Controller* xp_ctr, string* xp_value)
+void setControlledValue(Controller* xp_ctr, string* xp_value)
 {
-	ControllerInt* ctr = dynamic_cast<ControllerInt*>(xp_ctr);
+	ControllerParameter* ctr = dynamic_cast<ControllerParameter*>(xp_ctr);
 	assert(ctr != NULL);
 	if(xp_value != NULL)
 	{
@@ -53,214 +53,203 @@ void setControlledValueInt(Controller* xp_ctr, string* xp_value)
 #ifdef MARKUS_NO_GUI
 		assert(false);
 #else
-		ctr->param.SetValue(ctr->parameterSlider->GetValue(), PARAMCONF_GUI);
+		ctr->param.SetValue(ctr->GetValueFromWidget(), PARAMCONF_GUI);
 #endif
 	}
 	assert(ctr->param.CheckRange()); // TODO throw
 }
 
 /// Display the current value of the controlled object
-void getCurrentInt(Controller* xp_ctr, string* xp_value)
+void getCurrent(Controller* xp_ctr, string* xp_value)
 {
-	ControllerInt* ctr = dynamic_cast<ControllerInt*>(xp_ctr);
+	ControllerParameter* ctr = dynamic_cast<ControllerParameter*>(xp_ctr);
 	assert(ctr != NULL);
 	if(xp_value != NULL)
 	{
 		stringstream ss;
-		ss<<ctr->param.GetValue();
+		ss<<ctr->param.GetValueString();
 		*xp_value = ss.str();
 		return;
 	}
 #ifdef MARKUS_NO_GUI
 	assert(false);
 #else
-	ctr->parameterSlider->SetValue(ctr->param.GetValue());
+	ctr->SetWidgetValue(ctr->param.GetValueString());
 #endif
 }
 
 /// Display the default value of the controlled object
-void getDefaultInt(Controller* xp_ctr, string* xp_value)
+void getDefault(Controller* xp_ctr, string* xp_value)
 {
-	ControllerInt* ctr = dynamic_cast<ControllerInt*>(xp_ctr);
+	ControllerParameter* ctr = dynamic_cast<ControllerParameter*>(xp_ctr);
 	assert(ctr != NULL);
 	if(xp_value != NULL)
 	{
-		*xp_value = ctr->param.GetDefault();
+		*xp_value = ctr->param.GetDefaultString();
 		return;
 	}
 #ifdef MARKUS_NO_GUI
 	assert(false);
 #else
-	ctr->parameterSlider->SetValue(ctr->param.GetDefault());
+	ctr->SetWidgetValue(ctr->param.GetDefaultString());
 #endif
 }
 
-ControllerInt::ControllerInt(ParameterInt& x_param):
+ControllerParameter::ControllerParameter(Parameter& x_param):
 	Controller(x_param.GetName()),
 	param(x_param)
 {
-	m_actions.insert(std::make_pair("Set", &setControlledValueInt));
-	m_actions.insert(std::make_pair("Get", &getCurrentInt));
-	m_actions.insert(std::make_pair("GetDefault", &getDefaultInt));
+	m_actions.insert(std::make_pair("Set", &setControlledValue));
+	m_actions.insert(std::make_pair("Get", &getCurrent));
+	m_actions.insert(std::make_pair("GetDefault", &getDefault));
 }
 
-ControllerInt::~ControllerInt()
+
+/*------------------------------------------------------------------------------------------------*/
+
+ControllerInt::ControllerInt(ParameterInt& x_param):
+	ControllerParameter(x_param),
+	m_param2(x_param)
 {
-	// delete(m_parameterSlider);
 }
 
 QWidget* ControllerInt::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return parameterSlider = new QParameterSlider(param.GetValue(), param.GetMin(), param.GetMax(), 0);
+	return parameterSlider = new QParameterSlider(m_param2.GetValue(), m_param2.GetMin(), m_param2.GetMax(), 0);
 #else
 	return NULL;
 #endif
 }
 
+
+void ControllerInt::SetWidgetValue(const std::string& x_value)
+{
+#ifndef MARKUS_NO_GUI
+	parameterSlider->SetValue(atoi(x_value.c_str()));
+#endif
+}
+
+std::string ControllerInt::GetValueFromWidget()
+{
+#ifndef MARKUS_NO_GUI
+	stringstream ss;
+	ss<<parameterSlider->GetValue();
+	return ss.str();
+#else
+	assert(false);
+	return "";
+#endif
+}
 /*------------------------------------------------------------------------------------------------*/
-void setControlledValueDouble(Controller* xp_ctr, string* xp_value)
-{
-	ControllerDouble* ctr = dynamic_cast<ControllerDouble*>(xp_ctr);
-	assert(ctr != NULL);
-#ifndef MARKUS_NO_GUI
-	ctr->param.SetValue(ctr->parameterSlider->GetValue(), PARAMCONF_GUI);
-#endif
-}
-
-void getCurrentDouble(Controller* xp_ctr, string* xp_value)
-{
-	ControllerDouble* ctr = dynamic_cast<ControllerDouble*>(xp_ctr);
-	assert(ctr != NULL);
-#ifndef MARKUS_NO_GUI
-	ctr->parameterSlider->SetValue(ctr->param.GetValue());
-#endif
-}
-
-void getDefaultDouble(Controller* xp_ctr, string* xp_value)
-{
-	ControllerDouble* ctr = dynamic_cast<ControllerDouble*>(xp_ctr);
-	assert(ctr != NULL);
-#ifndef MARKUS_NO_GUI
-	ctr->parameterSlider->SetValue(ctr->param.GetDefault());
-#endif
-}
-
 ControllerDouble::ControllerDouble(ParameterDouble& x_param):
-	Controller(x_param.GetName()),
-	param(x_param)
+	ControllerParameter(x_param),
+	m_param2(x_param)
 {
-	m_actions.insert(std::make_pair("Set", &setControlledValueDouble));
-	m_actions.insert(std::make_pair("Get", &getCurrentDouble));
-	m_actions.insert(std::make_pair("GetDefault", &getDefaultDouble));
 }
-
-ControllerDouble::~ControllerDouble()
-{
-	// delete(m_parameterSlider);
-}
-
 QWidget* ControllerDouble::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return parameterSlider = new QParameterSlider(param.GetValue(), param.GetMin(), param.GetMax(), PRECISION_DOUBLE);
+	return parameterSlider = new QParameterSlider(m_param2.GetValue(), m_param2.GetMin(), m_param2.GetMax(), PRECISION_DOUBLE);
 #else
 	return NULL;
 #endif
 }
+void ControllerDouble::SetWidgetValue(const std::string& x_value)
+{
+#ifndef MARKUS_NO_GUI
+	parameterSlider->SetValue(atof(x_value.c_str()));
+#endif
+}
+
+std::string ControllerDouble::GetValueFromWidget()
+{
+#ifndef MARKUS_NO_GUI
+	stringstream ss;
+	ss<<parameterSlider->GetValue();
+	return ss.str();
+#else
+	assert(false);
+	return "";
+#endif
+}
 /*------------------------------------------------------------------------------------------------*/
 
-void setControlledValueBool(Controller* xp_ctr, string* xp_value)
+ControllerFloat::ControllerFloat(ParameterFloat& x_param):
+	ControllerParameter(x_param),
+	m_param2(x_param)
 {
-	ControllerBool* ctr = dynamic_cast<ControllerBool*>(xp_ctr);
-	assert(ctr != NULL);
+}
+
+
+QWidget* ControllerFloat::CreateWidget()
+{
 #ifndef MARKUS_NO_GUI
-	ctr->param.SetValue(ctr->checkBox->isChecked(), PARAMCONF_GUI);
+	return parameterSlider = new QParameterSlider(m_param2.GetValue(), m_param2.GetMin(), m_param2.GetMax(), PRECISION_DOUBLE);
+#else
+	return NULL;
 #endif
 }
 
-void getCurrentBool(Controller* xp_ctr, string* xp_value)
+void ControllerFloat::SetWidgetValue(const std::string& x_value)
 {
-	ControllerBool* ctr = dynamic_cast<ControllerBool*>(xp_ctr);
-	assert(ctr != NULL);
 #ifndef MARKUS_NO_GUI
-	ctr->checkBox->setChecked(ctr->param.GetValue());
+	parameterSlider->SetValue(atof(x_value.c_str()));
 #endif
 }
 
-void getDefaultBool(Controller* xp_ctr, string* xp_value)
+std::string ControllerFloat::GetValueFromWidget()
 {
-	ControllerBool* ctr = dynamic_cast<ControllerBool*>(xp_ctr);
-	assert(ctr != NULL);
 #ifndef MARKUS_NO_GUI
-	ctr->checkBox->setChecked(ctr->param.GetDefault());
+	stringstream ss;
+	ss<<parameterSlider->GetValue();
+	return ss.str();
+#else
+	assert(false);
+	return "";
 #endif
 }
-
+/*------------------------------------------------------------------------------------------------*/
 ControllerBool::ControllerBool(ParameterBool& x_param):
-	Controller(x_param.GetName()),
-	param(x_param)
+	ControllerParameter(x_param),
+	m_param2(x_param)
 {
-	m_actions.insert(std::make_pair("Set", &setControlledValueBool));
-	m_actions.insert(std::make_pair("Get", &getCurrentBool));
-	m_actions.insert(std::make_pair("GetDefault", &getDefaultBool));
-}
-
-ControllerBool::~ControllerBool()
-{
-	// delete(m_checkBox);
 }
 
 QWidget* ControllerBool::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
 	checkBox = new QCheckBox("Enabled");
-	(*getCurrentBool)(this, NULL);
+	checkBox->setChecked(m_param2.GetValue());
 	return checkBox;
 #else
 	return NULL;
 #endif
 }
+
+void ControllerBool::SetWidgetValue(const std::string& x_value)
+{
+#ifndef MARKUS_NO_GUI
+	checkBox->setChecked(x_value == "1");
+#endif
+}
+
+std::string ControllerBool::GetValueFromWidget()
+{
+#ifndef MARKUS_NO_GUI
+	stringstream ss;
+	checkBox->setChecked(m_param2.GetValue());
+	return ss.str();
+#else
+	assert(false);
+	return "";
+#endif
+}
 /*------------------------------------------------------------------------------------------------*/
-void setControlledValueString(Controller* xp_ctr, string* xp_value)
-{
-	ControllerString* ctr = dynamic_cast<ControllerString*>(xp_ctr);
-	assert(ctr != NULL);
-#ifndef MARKUS_NO_GUI
-	ctr->param.SetValue(ctr->lineEdit->text().toStdString(), PARAMCONF_GUI);
-#endif
-}
-
-void getCurrentString(Controller* xp_ctr, string* xp_value)
-{
-	ControllerString* ctr = dynamic_cast<ControllerString*>(xp_ctr);
-	assert(ctr != NULL);
-#ifndef MARKUS_NO_GUI
-	ctr->lineEdit->setText(ctr->param.GetValue().c_str());
-#endif
-}
-
-void getDefaultString(Controller* xp_ctr, string* xp_value)
-{
-	ControllerString* ctr = dynamic_cast<ControllerString*>(xp_ctr);
-	assert(ctr != NULL);
-#ifndef MARKUS_NO_GUI
-	ctr->lineEdit->setText(ctr->param.GetDefault().c_str());
-#endif
-}
-
 ControllerString::ControllerString(ParameterString& x_param):
-	Controller(x_param.GetName()),
-	param(x_param)
+	ControllerParameter(x_param),
+	m_param2(x_param)
 {
-	m_actions.insert(std::make_pair("Set", &setControlledValueString));
-	m_actions.insert(std::make_pair("Get", &getCurrentString));
-	m_actions.insert(std::make_pair("GetDefault", &getDefaultString));
-}
-
-ControllerString::~ControllerString()
-{
-	// CLEAN_DELETE(m_lineEdit);
 }
 
 QWidget* ControllerString::CreateWidget()
@@ -268,126 +257,70 @@ QWidget* ControllerString::CreateWidget()
 #ifndef MARKUS_NO_GUI
 	lineEdit = new QLineEdit();
 	lineEdit->setStyleSheet("color: black; background-color: white");
-	(*getCurrentString)(this, NULL);
+	lineEdit->setText(m_param2.GetValue().c_str());
 	return lineEdit;
 #else
 	return NULL;
 #endif
 }
-/*------------------------------------------------------------------------------------------------*/
-
-void setControlledValueFloat(Controller* xp_ctr, string* xp_value)
+void ControllerString::SetWidgetValue(const std::string& x_value)
 {
-	// TODO: set value via parameter
-	ControllerFloat* ctr = dynamic_cast<ControllerFloat*>(xp_ctr);
-	assert(ctr != NULL);
 #ifndef MARKUS_NO_GUI
-	ctr->param.SetValue(ctr->parameterSlider->GetValue(), PARAMCONF_GUI);
+	lineEdit->setText(x_value.c_str());
 #endif
 }
 
-void getCurrentFloat(Controller* xp_ctr, string* xp_value)
+std::string ControllerString::GetValueFromWidget()
 {
-	ControllerFloat* ctr = dynamic_cast<ControllerFloat*>(xp_ctr);
-	assert(ctr != NULL);
 #ifndef MARKUS_NO_GUI
-	ctr->parameterSlider->SetValue(ctr->param.GetValue());
+	return lineEdit->text().toStdString();
 #else
 	assert(false);
+	return "";
 #endif
 }
-
-void getDefaultFloat(Controller* xp_ctr, string* xp_value)
-{
-	ControllerFloat* ctr = dynamic_cast<ControllerFloat*>(xp_ctr);
-	assert(ctr != NULL);
-#ifndef MARKUS_NO_GUI
-	ctr->parameterSlider->SetValue(ctr->param.GetDefault());
-#endif
-}
-
-ControllerFloat::ControllerFloat(ParameterFloat& x_param):
-	Controller(x_param.GetName()),
-	param(x_param)
-{
-	m_actions.insert(std::make_pair("Set", &setControlledValueFloat));
-	m_actions.insert(std::make_pair("Get", &getCurrentFloat));
-	m_actions.insert(std::make_pair("GetDefault", &getDefaultFloat));
-}
-
-ControllerFloat::~ControllerFloat()
-{
-	// delete(m_parameterSlider);
-}
-
-
-QWidget* ControllerFloat::CreateWidget()
-{
-#ifndef MARKUS_NO_GUI
-	return parameterSlider = new QParameterSlider(param.GetValue(), param.GetMin(), param.GetMax(), PRECISION_DOUBLE);
-#else
-	return NULL;
-#endif
-}
-
 /*------------------------------------------------------------------------------------------------*/
-void setControlledValueEnum(Controller* xp_ctr, string* xp_value)
-{
-	ControllerEnum* ctr = dynamic_cast<ControllerEnum*>(xp_ctr);
-	assert(ctr != NULL);
-#ifndef MARKUS_NO_GUI
-	ctr->param.SetValue(ctr->comboBox->itemData(ctr->comboBox->currentIndex()).toInt(), PARAMCONF_GUI);
-#endif
-}
-
-void getCurrentEnum(Controller* xp_ctr, string* xp_value)
-{
-	ControllerEnum* ctr = dynamic_cast<ControllerEnum*>(xp_ctr);
-	assert(ctr != NULL);
-#ifndef MARKUS_NO_GUI
-	int index = ctr->comboBox->findData(ctr->param.GetValue());
-	ctr->comboBox->setCurrentIndex(index);
-#endif
-}
-
-void getDefaultEnum(Controller* xp_ctr, string* xp_value)
-{
-	ControllerEnum* ctr = dynamic_cast<ControllerEnum*>(xp_ctr);
-	assert(ctr != NULL);
-#ifndef MARKUS_NO_GUI
-	int index = ctr->comboBox->findData(ctr->param.GetDefault());
-	ctr->comboBox->setCurrentIndex(index);
-#endif
-}
 
 ControllerEnum::ControllerEnum(ParameterEnum& x_param):
-	Controller(x_param.GetName()),
-	param(x_param)
+	ControllerParameter(x_param),
+	m_param2(x_param)
 {
-	m_actions.insert(std::make_pair("Set", &setControlledValueEnum));
-	m_actions.insert(std::make_pair("Get", &getCurrentEnum));
-	m_actions.insert(std::make_pair("GetDefault", &getDefaultEnum));
 }
 
-ControllerEnum::~ControllerEnum()
-{
-	// delete(comboBox);
-}
 
 QWidget* ControllerEnum::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
 	comboBox = new QComboBox;
-	for(std::map<std::string, int>::const_iterator it = param.RefEnum().begin() ; it != param.RefEnum().end() ; it++)
+	for(std::map<std::string, int>::const_iterator it = m_param2.RefEnum().begin() ; it != m_param2.RefEnum().end() ; it++)
 	{
 		comboBox->addItem(it->first.c_str(), it->second);
 	}
-	(*getCurrentEnum)(this, NULL);
+	int index = comboBox->findData(m_param2.GetValue());
+	comboBox->setCurrentIndex(index);
+
 	return comboBox;
 #else
 	return NULL;
 #endif
 }
 
+void ControllerEnum::SetWidgetValue(const std::string& x_value)
+{
+#ifndef MARKUS_NO_GUI
+	int index = comboBox->findData(m_param2.GetValue());
+	comboBox->setCurrentIndex(index);
+#endif
+}
+
+std::string ControllerEnum::GetValueFromWidget()
+{
+#ifndef MARKUS_NO_GUI
+	return m_param2.Int2Str(comboBox->itemData(comboBox->currentIndex()).toInt());
+#else
+	assert(false);
+	return "";
+#endif
+}
 
 /*------------------------------------------------------------------------------------------------*/

@@ -253,8 +253,8 @@ class TestModules : public CppUnit::TestFixture
 				for(std::vector<std::string>::const_iterator it3 = actions.begin() ; it3 != actions.end() ; it3++)
 				{
 					// std::cout<<it2->first<<"."<<*it3<<std::endl;
-					if(*it3 == "Get")
-						continue;
+					// if(*it3 == "Get")
+						// continue;
 					std::string value = "0";
 					module->LockForWrite();
 					it2->second->CallAction(*it3, &value);
@@ -272,7 +272,7 @@ class TestModules : public CppUnit::TestFixture
 	static CppUnit::Test *suite()
 	{
 		CppUnit::TestSuite *suiteOfTests = new CppUnit::TestSuite("TestModules");
-		// suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testInputs", &TestModules::testInputs));
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testInputs", &TestModules::testInputs));
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testControllers", &TestModules::testControllers));
 		return suiteOfTests;
 	}

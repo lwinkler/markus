@@ -67,7 +67,9 @@ public:
 	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) = 0;
 	//virtual void SetValue(const void* x_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN) = 0;
 	virtual void SetDefault(const std::string& x_value) = 0;
-	//virtual const void* GetValue() const = 0;
+	// virtual const void* GetValue() const = 0;
+	virtual std::string GetValueString() const = 0;
+	virtual std::string GetDefaultString() const = 0;
 	inline const std::string& GetName() const {return m_name;}
 	virtual const ParameterType GetType() const = 0;
 	virtual const std::string GetTypeString() const = 0;
@@ -99,6 +101,8 @@ public:
 		m_min(x_min),
 		m_max(x_max),
 		mp_value(xp_value){}
+	inline std::string GetValueString() const {std::stringstream ss; ss<<*mp_value; return ss.str();}
+	inline std::string GetDefaultString() const{std::stringstream ss; ss<<m_default; return ss.str();}
 	inline const ParameterType GetType() const {return m_type;}
 	inline const std::string GetTypeString() const{return m_typeStr;}
 	inline const T GetDefault() const {return m_default;}
@@ -195,6 +199,8 @@ public:
 	{
 		return *mp_value;
 	}
+	inline std::string GetValueString() const {return *mp_value;}
+	inline std::string GetDefaultString() const {return m_default;}
 	inline virtual bool CheckRange() const
 	{
 		return true;
@@ -243,6 +249,8 @@ public:
 	void SetDefault(const std::string& rx_value);
 	inline int GetDefault() const {return m_default;}
 	inline int GetValue() const{return *mp_value;}
+	inline std::string GetValueString() const {return Int2Str(*mp_value);}
+	inline std::string GetDefaultString() const{return Int2Str(m_default);}
 	virtual bool CheckRange() const;
 	virtual void Print(std::ostream& os) const;
 	virtual void SetValueToDefault()
