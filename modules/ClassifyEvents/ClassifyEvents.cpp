@@ -64,13 +64,13 @@ void ClassifyEvents::ProcessFrame()
 /// Consider the last event as invalid and train the classifier
 void ClassifyEvents::InvalidateLastEvent()
 {
-	throw MkException("This method must be redefined in a children", LOC);
+	LOG_WARN(m_logger, "This method is empty and must be redefined in a children");
 }
 
 /// Consider the last event as valid and train the classifier
 void ClassifyEvents::ValidateLastEvent()
 {
-	throw MkException("This method must be redefined in a children", LOC);
+	LOG_WARN(m_logger, "This method must be redefined in a children");
 }
 
 /// Return a probability [0..1] that the event is valid

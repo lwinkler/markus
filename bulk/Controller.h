@@ -43,7 +43,7 @@ typedef void (*px_action)(Controller*, std::string*);
 class Controller
 {
 public:
-	Controller(std::string x_name);
+	Controller(const std::string& x_name, const std::string& x_type);
 	virtual ~Controller();
 
 	virtual QWidget* CreateWidget() = 0;
@@ -51,10 +51,12 @@ public:
 	// const std::map<std::string, const px_action>& GetActions() {return m_actions;}
 	void ListActions(std::vector<std::string>& xr_actions) const;
 	const void CallAction(const std::string& x_name, std::string* xp_value);
+	const std::string& GetType(){return m_type;}
 	
 protected:
 	// QWidget * m_widget;
 	std::map<std::string, const px_action> m_actions;
 	std::string m_name;
+	std::string m_type;
 };
 #endif

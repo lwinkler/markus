@@ -44,7 +44,7 @@ void invalidate(Controller* xp_ctr, string* xp_value)
 }
 
 ControllerEvent::ControllerEvent(ClassifyEvents& rx_module) :
-	Controller("Event"),
+	Controller("event", "event"),
 	module(rx_module)
 {
 	m_actions.insert(std::make_pair("Validate",   &validate));

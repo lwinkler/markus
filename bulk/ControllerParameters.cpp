@@ -39,6 +39,40 @@ using namespace std;
 
 #define PRECISION_DOUBLE 2
 
+/// Display the type of the parameter
+void getType(Controller* xp_ctr, string* xp_value)
+{
+	ControllerParameter* ctr = dynamic_cast<ControllerParameter*>(xp_ctr);
+	assert(ctr != NULL);
+	if(xp_value != NULL)
+	{
+		*xp_value = ctr->param.GetTypeString();
+		return;
+	}
+#ifdef MARKUS_NO_GUI
+	assert(false);
+#else
+	// TODO ctr->SetWidgetValue(ctr->param.GetDefaultString());
+#endif
+}
+
+/// Display the range string of the parameter
+void getRange(Controller* xp_ctr, string* xp_value)
+{
+	ControllerParameter* ctr = dynamic_cast<ControllerParameter*>(xp_ctr);
+	assert(ctr != NULL);
+	if(xp_value != NULL)
+	{
+		*xp_value = ctr->param.GetRange();
+		return;
+	}
+#ifdef MARKUS_NO_GUI
+	assert(false);
+#else
+	// TODO ctr->SetWidgetValue(ctr->param.GetDefaultString());
+#endif
+}
+
 /// Set the controlled value (e.g. parameter) to the value on control
 void setControlledValue(Controller* xp_ctr, string* xp_value)
 {
@@ -95,10 +129,13 @@ void getDefault(Controller* xp_ctr, string* xp_value)
 #endif
 }
 
+
 ControllerParameter::ControllerParameter(Parameter& x_param):
-	Controller(x_param.GetName()),
+	Controller(x_param.GetName(), "parameter"),
 	param(x_param)
 {
+	m_actions.insert(std::make_pair("GetType", &getType));
+	m_actions.insert(std::make_pair("GetRange", &getRange));
 	m_actions.insert(std::make_pair("Set", &setControlledValue));
 	m_actions.insert(std::make_pair("Get", &getCurrent));
 	m_actions.insert(std::make_pair("GetDefault", &getDefault));

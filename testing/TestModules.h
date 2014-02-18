@@ -111,7 +111,7 @@ class TestModules : public CppUnit::TestFixture
 		for(int i = 0 ; i < nb ; i++)
 		{
 			std::stringstream name;
-			name<<"feat"<<i;
+			name<<"rand"<<i;
 			obj.AddFeature(name.str(), static_cast<float>(rand()) / RAND_MAX);
 		}
 		obj.AddFeature("x", static_cast<float>(rand()) / RAND_MAX);
@@ -120,6 +120,8 @@ class TestModules : public CppUnit::TestFixture
 		obj.AddFeature("height", static_cast<float>(rand()) / RAND_MAX);
 		obj.AddFeature("ellipse_angle", static_cast<float>(rand()) / RAND_MAX);
 		obj.AddFeature("ellipse_ratio", static_cast<float>(rand()) / RAND_MAX);
+		obj.AddFeature("feat0", static_cast<float>(rand()) / RAND_MAX);
+		obj.AddFeature("feat1", static_cast<float>(rand()) / RAND_MAX);
 		return obj;
 	}
 
@@ -213,11 +215,43 @@ class TestModules : public CppUnit::TestFixture
 		return module;
 	}
 
+	/// Generate a random string value for the parameter
+	std::string GenerateValueFromRange(const std::string& x_range, const std::string& x_type)
+	{
+		if(x_range == "")
+			return "";
+		else if(x_range.at(0) == '[')
+		{
+			std::stringstream ss;
+			double min = 0, max = 0;
+			if (2 == sscanf(x_range.c_str(), "[%lf:%lf]", &min, &max))
+			{
+				if(x_type == "int")
+					ss<<static_cast<int>(min + rand() % static_cast<int>(max - min + 1));
+				else if(x_type == "bool")
+					ss<<(rand() % 2);
+				else 
+					ss<<(min + rand() * (max - min) / RAND_MAX);
+			}
+			else assert(false);
+		
+			return ss.str();
+		}
+		else
+		{
+			std::vector<std::string> elems;
+			split(x_range, ',', elems);
+			assert(elems.size() > 0);
+			return elems.at(rand() % elems.size());
+		}
+	}
+
 	/// Run the modules with different inputs generated randomly
 	void testInputs()
 	{
 		LOG_TEST("\n# Test different inputs");
 		
+		// Test on each type of module
 		for(std::vector<std::string>::const_iterator it1 = moduleTypes.begin() ; it1 != moduleTypes.end() ; it1++)
 		{
 			LOG_TEST("## on module "<<*it1);
@@ -233,40 +267,94 @@ class TestModules : public CppUnit::TestFixture
 		}
 	}
 
+
+	/// Call each controller of each module
 	void testControllers()
 	{
 		LOG_TEST("\n# Test all controllers");
 		
+		// Test on each type of module
 		for(std::vector<std::string>::const_iterator it1 = moduleTypes.begin() ; it1 != moduleTypes.end() ; it1++)
 		{
-			LOG_TEST("## on module "<<*it1);
+			LOG_TEST("# on module "<<*it1);
 
 			Module* module = createAndConnectModule(*it1);
+			if(module->IsInput())
+			{
+				// TODO : only blacklist problematic parameters
+				delete module;
+				continue;
+			}
 			randomizeInputs();
 
 			for(std::map<std::string, Controller*>::const_iterator it2 = module->GetControllersList().begin() ; it2 != module->GetControllersList().end() ; it2++)
 			{
+				LOG_INFO(Manager::Logger(), "## on controller "<<it2->first<<" of type "<<it2->second->GetType());
 				std::vector<std::string> actions;
-				// it2->second->ListActions(actions);
-				// TODO call action
+				it2->second->ListActions(actions);
 
-				for(std::vector<std::string>::const_iterator it3 = actions.begin() ; it3 != actions.end() ; it3++)
+				if(it2->second->GetType() == "parameter")
 				{
-					// std::cout<<it2->first<<"."<<*it3<<std::endl;
-					// if(*it3 == "Get")
-						// continue;
-					std::string value = "0";
-					module->LockForWrite();
-					it2->second->CallAction(*it3, &value);
-					module->Unlock();
+					// Do not test input modules: to many errors
+					// if(!module->IsInput())
+					{
+						// Test specific for controllers of type parameter
+						std::string type, range, value, defval, newValue;
+						assert(actions.size() == 5); // If not you need to write one more test
 
-					for(int i = 0 ; i < 3 ; i++)
-						module->Process();
+						type = "0";
+						it2->second->CallAction("GetType", &type);
+						LOG_INFO(Manager::Logger(), "###  "<<it2->first<<".GetType returned "<<type);
+
+						range = "0";
+						it2->second->CallAction("GetRange", &range);
+						LOG_INFO(Manager::Logger(), "###  "<<it2->first<<".GetRange returned "<<range);
+
+						defval = "0";
+						it2->second->CallAction("GetDefault", &defval);
+						LOG_INFO(Manager::Logger(), "###  "<<it2->first<<".GetDefault returned "<<defval);
+
+						for(int i = 0 ; i < 10 ; i++)
+						{
+							// For string type we cannot set random values
+							value = type == "string" ? defval : GenerateValueFromRange(range, type);
+							// std::cout<<"set "<<value<<std::endl;
+							it2->second->CallAction("Set", &value);
+
+							newValue = "0";
+							it2->second->CallAction("Get", &newValue);
+
+							CPPUNIT_ASSERT_MESSAGE("Value set must be returned by get", value == newValue);
+
+							for(int i = 0 ; i < 3 ; i++)
+								module->Process();
+						}
+						LOG_INFO(Manager::Logger(), "###  "<<it2->first<<".Set returned "<<value);
+						LOG_INFO(Manager::Logger(), "###  "<<it2->first<<".Get returned "<<newValue);
+					}
+				}
+				else if(it2->second->GetType() == "event")
+				{
+					// TODO fix this
+				}
+				else
+				{
+					for(std::vector<std::string>::const_iterator it3 = actions.begin() ; it3 != actions.end() ; it3++)
+					{
+						std::string value = "0";
+						// module->LockForWrite();
+						it2->second->CallAction(*it3, &value);
+						LOG_INFO(Manager::Logger(), "###  "<<it2->first<<"."<<*it3<<" returned "<<value);
+						// module->Unlock();
+
+						for(int i = 0 ; i < 3 ; i++) module->Process();
+					}
 				}
 			}
 
 			delete module;
 		}
+		// TODO test locked parameters too
 	}
 
 	static CppUnit::Test *suite()

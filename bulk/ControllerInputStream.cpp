@@ -59,7 +59,7 @@ void getCursor(Controller* xp_ctr, string* xp_value)
 }
 
 InputStreamControl::InputStreamControl(VideoFileReader& rx_module) :
-	Controller("reader"),
+	Controller("reader", "inputStream"),
 	module(rx_module)
 {
 	m_actions.insert(std::make_pair("Get", &getCursor));

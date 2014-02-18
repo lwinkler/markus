@@ -68,8 +68,6 @@ public:
 	//virtual void SetValue(const void* x_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN) = 0;
 	virtual void SetDefault(const std::string& x_value) = 0;
 	// virtual const void* GetValue() const = 0;
-	virtual std::string GetValueString() const = 0;
-	virtual std::string GetDefaultString() const = 0;
 	inline const std::string& GetName() const {return m_name;}
 	virtual const ParameterType GetType() const = 0;
 	virtual const std::string GetTypeString() const = 0;
@@ -84,6 +82,11 @@ public:
 		m_isLocked = true;
 	}
 	inline bool IsLocked() const {return m_isLocked;}
+
+	// For controllers and actions
+	virtual std::string GetValueString() const = 0;
+	virtual std::string GetDefaultString() const = 0;
+	virtual std::string GetRange() const = 0;
 
 protected:	
 	const std::string m_name;
@@ -103,6 +106,7 @@ public:
 		mp_value(xp_value){}
 	inline std::string GetValueString() const {std::stringstream ss; ss<<*mp_value; return ss.str();}
 	inline std::string GetDefaultString() const{std::stringstream ss; ss<<m_default; return ss.str();}
+	inline std::string GetRange() const{std::stringstream ss; ss<<"["<<m_min<<":"<<m_max<<"]"; return ss.str();}
 	inline const ParameterType GetType() const {return m_type;}
 	inline const std::string GetTypeString() const{return m_typeStr;}
 	inline const T GetDefault() const {return m_default;}
@@ -201,6 +205,7 @@ public:
 	}
 	inline std::string GetValueString() const {return *mp_value;}
 	inline std::string GetDefaultString() const {return m_default;}
+	inline std::string GetRange() const{return "";}
 	inline virtual bool CheckRange() const
 	{
 		return true;
@@ -251,6 +256,13 @@ public:
 	inline int GetValue() const{return *mp_value;}
 	inline std::string GetValueString() const {return Int2Str(*mp_value);}
 	inline std::string GetDefaultString() const{return Int2Str(m_default);}
+	inline std::string GetRange() const
+	{
+		std::stringstream ss; 
+		for(std::map<std::string,int>::const_iterator it = RefEnum().begin() ; it != RefEnum().end() ; it++)
+			ss<<it->first<<",";
+		return ss.str();
+	}
 	virtual bool CheckRange() const;
 	virtual void Print(std::ostream& os) const;
 	virtual void SetValueToDefault()
@@ -297,7 +309,7 @@ public:
 	void Export(std::ostream& rx_os, int x_indentation);
 
 	// Conversion methods
-	inline const std::string GetTypeString() const {return "image type";}
+	inline const std::string GetTypeString() const {return "imageType";}
 	//virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN) = 0;
 	//virtual void SetDefault(const std::string& rx_value);
 	const std::map<std::string,int> & RefEnum() const {return m_map_enum;}

@@ -37,8 +37,8 @@ bool run_tests()
 	Manager::OutputDir("testing/out");
 	log4cxx::xml::DOMConfigurator::configure("testing/log4cxx.xml");
 
-	// runner.addTest(ConfigReaderTest::suite());
-	// runner.addTest(TestProjects::suite());
+	runner.addTest(ConfigReaderTest::suite());
+	runner.addTest(TestProjects::suite());
 	runner.addTest(TestModules::suite());
 	runner.run();
 

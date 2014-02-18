@@ -36,7 +36,7 @@ public:
 	{
 		m_list.push_back(new ParameterInt("operator",    0,   0, 6,    &oper,       "Morphological operator: ERODE=0,DILATE=1,OPEN=2,CLOSE=3,GRADIENT=4,TOPHAT=5,BLACKHAT=6"));
 		m_list.push_back(new ParameterInt("element",     2,   0, 2,    &element,    "Morphological element: RECT=0, CROSS=1, ELLIPSE=2"));
-		m_list.push_back(new ParameterInt("kernel_size", 5,   1, 100,  &kernelSize, "Size of the element"));
+		m_list.push_back(new ParameterInt("kernel_size", 5,   3, 100,  &kernelSize, "Size of the element"));
 
 		ParameterStructure::Init();
 	};
