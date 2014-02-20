@@ -64,9 +64,10 @@ class Configurable
 public:
 	Configurable(const ConfigReader& x_confReader) : m_configReader(x_confReader){}
 	~Configurable(){}
+	void SaveConfig();
 protected:
 	const ConfigReader m_configReader;
-	inline virtual const ParameterStructure & GetParameters() const = 0;
+	virtual const ParameterStructure & GetParameters() const = 0;
 };
 
 #endif

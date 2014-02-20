@@ -30,6 +30,14 @@ using namespace std;
 /// Reads the configuration file with tinyxml
 
 
+/// Configurable: parent class for all configurable classes
+
+/// Save the parameters values to the config object, ready to be written to disk
+void Configurable::SaveConfig()
+{
+	GetParameters().SaveConfig();
+}
+
 /// Constructor : config based on a configuration file
 
 ConfigReader::ConfigReader(const std::string& x_fileName)

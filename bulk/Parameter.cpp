@@ -100,21 +100,22 @@ void ParameterStructure::SetFromConfig()
 	}
 }
 
-/// Browse the parameter list to find the parameter with this name
-/*
-void ParameterStructure::SetValueByName(const string& x_name, const string& x_value, ParameterConfigType x_configType)
+/// Save all values and prepare xml configuration for writing
+
+void ParameterStructure::SaveConfig() const
 {
-	for(vector<Parameter*>::iterator it = m_list.begin(); it != m_list.end(); it++)
+	// assert(!m_configReader.IsEmpty());
+	ConfigReader conf = m_configReader;
+	
+	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
 	{
-		if((*it)->GetName().compare(x_name) == 0)//(!strcmp(it->m_name, x_name))
+		if((*it)->GetConfigurationSource() != PARAMCONF_DEF)
 		{
-			(*it)->SetValue(x_value, x_configType);
-			return;
+			conf.RefSubConfig("param", (*it)->GetName(), true).SetValue((*it)->GetValueString());
 		}
 	}
-	
-	cout<<("Warning : Parameter not found in list (by name) : " + x_name)<<endl;
-}*/
+}
+
 
 /// Get the parameter by name
 const Parameter& ParameterStructure::GetParameterByName(const std::string& x_name) const

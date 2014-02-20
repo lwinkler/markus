@@ -52,8 +52,6 @@ enum ParameterConfigType
 static const char configType[PARAMCONF_SIZE][16] = {"unset", "def", "xml", "gui", "cmd", "unk"};
 
 
-class ConfigReader;
-
 class Parameter
 {
 public:
@@ -327,6 +325,7 @@ public:
 	~ParameterStructure();
 	void Init();
 	void SetFromConfig();
+	void SaveConfig() const;
 	void SetValueToDefault();
 	void CheckRange() const;
 	void PrintParameters(log4cxx::LoggerPtr& x_logger) const;

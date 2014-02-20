@@ -72,7 +72,7 @@ public:
 	std::string objClass;
 };
 
-class Module : Configurable
+class Module : public Configurable
 {
 public:
 	Module(const ConfigReader& x_confReader);

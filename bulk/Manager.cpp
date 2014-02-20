@@ -49,10 +49,11 @@ string Manager::m_outputDir;
 FactoryModules Manager::m_factory;
 
 
-Manager::Manager(const ConfigReader& x_configReader, bool x_centralized) : 
+Manager::Manager(const ConfigReader& x_configReader, const ConfigReader& x_mainConfigReader, bool x_centralized) : 
 	Configurable(x_configReader),
 	m_param(m_configReader),
-	m_centralized(x_centralized)
+	m_centralized(x_centralized),
+	m_mainConfig(x_mainConfigReader)
 {
 	LOG_INFO(m_logger, "Create object Manager");
 	m_frameCount = 0;
@@ -83,6 +84,9 @@ Manager::Manager(const ConfigReader& x_configReader, bool x_centralized) :
 Manager::~Manager()
 {
 	PrintTimers();
+
+	SaveConfigToFile("last_config.xml");
+
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		delete *it;
 
@@ -432,4 +436,14 @@ const string& Manager::OutputDir(const string& x_outputDir)
 	return m_outputDir;
 }
 
+/// Save the configuration of manager and modules to file
+
+void Manager::SaveConfigToFile(const string& x_fileName)
+{
+	// Set all config ready to be saved
+	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+		(*it)->SaveConfig();
+	SaveConfig();
+	m_mainConfig.SaveToFile(x_fileName);
+}
 
