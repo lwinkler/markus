@@ -108,7 +108,7 @@ def extract_images(events, truths, video, out='out'):
         subprocess.Popen([cmd, '-ss', str(time), '-i', str(video),
                          '-frames:v', '1',
                          os.path.join(path, str(kind) + '_' + str(name) +
-                                      '.png'), '-y'], stderr=subprocess.PIPE)
+                                      '.jpg'), '-y'], stderr=subprocess.PIPE)
 
     # Extract events
     for event in events:
@@ -309,7 +309,7 @@ def video_thumbnail(video, path):
         cmd = 'ffmpeg'
 
     subprocess.Popen([cmd, '-i', str(video), '-frames:v', '1',
-                     os.path.join(path, 'thumbnail.png'), '-y'],
+                     os.path.join(path, 'thumbnail.jpg'), '-y'],
                      stderr=subprocess.PIPE)
 
 
@@ -376,9 +376,9 @@ def generate_html(stats, log, data, out='out', filename='report.html'):
         row = TR(style='background: ' + bg + ';')
         if args.images:
             row <= TD(A(B(event.id),
-                        href="./images/event_" + str(event.id) + ".png"))
+                        href="./images/event_" + str(event.id) + ".jpg"))
             row <= TD(CENTER(IMG(src="./images/event_" + str(event.id) +
-                                 ".png",
+                                 ".jpg",
                                  width='100',
                                  CLASS='images')))
         else:
@@ -386,7 +386,7 @@ def generate_html(stats, log, data, out='out', filename='report.html'):
         row <= TD(event.time)
         if truth is not None and args.images:
             row <= TD(A(truth.id,
-                        href="./images/truth_" + str(truth.id) + ".png"))
+                        href="./images/truth_" + str(truth.id) + ".jpg"))
         else:
             row <= TD(truth.id if truth is not None else '')
         table <= row
@@ -418,9 +418,9 @@ def generate_html(stats, log, data, out='out', filename='report.html'):
         row = TR(style='background: ' + bg + ';')
         if args.images:
             row <= TD(A(B(truth.id),
-                        href="./images/truth_" + str(truth.id) + ".png"))
+                        href="./images/truth_" + str(truth.id) + ".jpg"))
             row <= TD(CENTER(IMG(src="./images/truth_" + str(truth.id) +
-                                 ".png",
+                                 ".jpg",
                                  width='100',
                                  CLASS='images')))
         else:
@@ -429,7 +429,7 @@ def generate_html(stats, log, data, out='out', filename='report.html'):
         comma = ''
         for match in matches:
             cell <= comma
-            cell <= A(match, href="./images/event_" + str(match) + ".png")
+            cell <= A(match, href="./images/event_" + str(match) + ".jpg")
             comma = ', '
         row <= cell
         row <= TD(truth.begin, style='padding-left: 20px; '
