@@ -30,6 +30,7 @@
 #include <QImage>
 #include <QPainter>
 #include "QControlBoard.h"
+#include "Parameter.h"
 
 class Manager;
 class Module;
@@ -38,17 +39,28 @@ class ControlBoard;
 class QComboBox;
 class QPainter;
 class QGroupBox;
-// class QPushButton;
 class QBoxLayout;
 class QLabel;
-// class QScrollArea;
 class QListWidget;
 
-class QModuleViewer : public QWidget 
+class QModuleViewerParameterStructure : public ParameterStructure
+{
+public:
+	QModuleViewerParameterStructure(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
+	{
+		m_list.push_back(new ParameterString("module", "", &module, "Module to display"));
+		// m_list.push_back(new ParameterInt("height", 	480, 	1, MAX_HEIGHT,		&height,	"Height of the input"));
+
+		Init();
+	}
+	std::string module;
+};
+
+class QModuleViewer : public QWidget, public Configurable
 {
 	Q_OBJECT
 public:
-	QModuleViewer(const Manager * x_manager, QWidget *parent = 0);
+	QModuleViewer(const Manager * x_manager, const ConfigReader& x_configReader, QWidget *parent = 0);
 	virtual ~QModuleViewer();
 	static void  ConvertMat2QImage(const cv::Mat *mat, QImage *qim);
 private:
@@ -79,6 +91,8 @@ private:
 	cv::Mat * m_img_tmp2;
 
 	QControlBoard * m_controlBoard;
+	QModuleViewerParameterStructure m_param;
+        inline const QModuleViewerParameterStructure& GetParameters() const{return m_param;}
 
 public slots:
 	void updateModuleNb(int x_index);

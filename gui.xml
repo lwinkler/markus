@@ -1,0 +1,8 @@
+<gui name="gui" description="GUI config">
+    <parameters>
+        <param name="nb_cols">3</param>
+    </parameters>
+</gui>
+<gui name="config.xml">
+    <viewer0 />
+</gui>

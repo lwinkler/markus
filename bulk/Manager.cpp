@@ -442,8 +442,9 @@ void Manager::SaveConfigToFile(const string& x_fileName)
 {
 	// Set all config ready to be saved
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
-		(*it)->SaveConfig();
-	SaveConfig();
+		(*it)->UpdateConfig();
+	UpdateConfig(); // TODO this must be done is destructor
+	// SaveToFile(x_fileName);
 	m_mainConfig.SaveToFile(x_fileName);
 }
 

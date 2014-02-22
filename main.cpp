@@ -31,7 +31,7 @@
 #include "version.h"
 
 #ifndef MARKUS_NO_GUI
-#include "markus.h"
+#include "Markus.h"
 #include "MarkusApplication.h"
 #endif
 
@@ -114,12 +114,14 @@ int main(int argc, char** argv)
 	bool nogui       = false;
 	bool centralized = false;
 	bool useStdin    = false;
+	int returnValue  = -1;
 
 	string configFile    = "config.xml";
 	string logConfigFile = "log4cxx.xml";
 	string outputDir     = "";
 	vector<string> parameters;
 
+	ConfigReader mainGuiConfig("gui.xml");
 
 	// Read arguments
 
@@ -283,42 +285,51 @@ int main(int argc, char** argv)
 				// nothing 
 			}
 
-			return 0;
+			returnValue = 0;
 		}
 		else
 		{
 #ifndef MARKUS_NO_GUI
-			markus gui(mainConfig, manager);
+			ConfigReader guiConfig = mainGuiConfig.RefSubConfig("gui", configFile, true);
+			Markus gui(guiConfig, manager);
 			gui.setWindowTitle("Markus");
 			if(!nogui)
 				gui.show();
-			return app.exec(); // TODO: Manage case where centralized with GUI
+			returnValue = app.exec(); // TODO: Manage case where centralized with GUI
 #else
 			LOG_ERROR(logger, "Markus was compiled without GUI. It can only be launched with option -nc");
-			return -1;
+			returnValue = -1;
 #endif
 		}
 	}
 	catch(cv::Exception& e)
 	{
 		LOG_ERROR(logger, "Exception (std::exception): " << e.what() );
+		returnValue = -1;
 	}
 	catch(std::exception& e)
 	{
 		LOG_ERROR(logger, "Exception (std::exception): " << e.what() );
+		returnValue = -1;
 	}
 	catch(std::string str)
 	{
 		LOG_ERROR(logger, "Exception (string): " << str );
+		returnValue = -1;
 	}
 	catch(const char* str)
 	{
 		LOG_ERROR(logger, "Exception (const char*): " << str );
+		returnValue = -1;
 	}
 	catch(...)
 	{
 		LOG_ERROR(logger, "Exception: Unknown");
+		returnValue = -1;
 	}
-	return -1;
+
+	mainGuiConfig.SaveToFile("gui.xml");
+
+	return returnValue;
 }
 

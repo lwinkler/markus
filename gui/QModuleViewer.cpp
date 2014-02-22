@@ -50,7 +50,10 @@ using namespace cv;
 using namespace std;
 
 // Constructor
-QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidget(parent)
+QModuleViewer::QModuleViewer(const Manager* x_manager, const ConfigReader& x_configReader, QWidget *parent) : 
+	QWidget(parent),
+	Configurable(x_configReader),
+ 	m_param(x_configReader)
 {
 	m_img_tmp1              = NULL; // Allocated on first conversion
 	m_img_tmp2              = NULL;
@@ -120,6 +123,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, QWidget *parent) : QWidge
 
 QModuleViewer::~QModuleViewer(void) 
 {
+	UpdateConfig();
 	CLEAN_DELETE(m_img_original);
 	CLEAN_DELETE(m_img_output);
 	CLEAN_DELETE(m_img_tmp1);

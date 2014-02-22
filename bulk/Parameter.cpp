@@ -102,7 +102,7 @@ void ParameterStructure::SetFromConfig()
 
 /// Save all values and prepare xml configuration for writing
 
-void ParameterStructure::SaveConfig() const
+void ParameterStructure::UpdateConfig() const
 {
 	// assert(!m_configReader.IsEmpty());
 	ConfigReader conf = m_configReader;

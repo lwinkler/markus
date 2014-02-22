@@ -33,15 +33,16 @@ using namespace std;
 /// Configurable: parent class for all configurable classes
 
 /// Save the parameters values to the config object, ready to be written to disk
-void Configurable::SaveConfig()
+void Configurable::UpdateConfig()
 {
-	GetParameters().SaveConfig();
+	GetParameters().UpdateConfig();
 }
 
 /// Constructor : config based on a configuration file
 
 ConfigReader::ConfigReader(const std::string& x_fileName)
 {
+	m_isOriginal = true;
 	mp_doc = NULL; // Initialize to null as there can be an error in construction
 	mp_doc = new TiXmlDocument(x_fileName);
 	if (! mp_doc->LoadFile())
@@ -53,13 +54,15 @@ ConfigReader::ConfigReader(const std::string& x_fileName)
 
 ConfigReader::ConfigReader(TiXmlNode * xp_node)
 {
+	m_isOriginal = false;
 	mp_doc = NULL;
 	mp_node = xp_node;
 }
 
 ConfigReader::~ConfigReader()
 {
-	CLEAN_DELETE(mp_doc);
+	if(m_isOriginal)
+		CLEAN_DELETE(mp_doc);
 	mp_node = NULL;
 }
 

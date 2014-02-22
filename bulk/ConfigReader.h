@@ -53,6 +53,7 @@ public:
 	inline bool operator == (const ConfigReader &a){return a.mp_node == mp_node;}
 private:
 	void CheckUniquenessOfId(const std::string& x_group, const std::string& x_type, const std::string& x_idLabel, const std::string& x_moduleName) const;
+	bool m_isOriginal;
 	TiXmlNode * mp_node;
 	TiXmlDocument * mp_doc;
 };
@@ -64,9 +65,9 @@ class Configurable
 public:
 	Configurable(const ConfigReader& x_confReader) : m_configReader(x_confReader){}
 	~Configurable(){}
-	void SaveConfig();
+	void UpdateConfig();
 protected:
-	const ConfigReader m_configReader;
+	ConfigReader m_configReader;
 	virtual const ParameterStructure & GetParameters() const = 0;
 };
 

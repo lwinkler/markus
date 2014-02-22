@@ -325,7 +325,7 @@ public:
 	~ParameterStructure();
 	void Init();
 	void SetFromConfig();
-	void SaveConfig() const;
+	void UpdateConfig() const;
 	void SetValueToDefault();
 	void CheckRange() const;
 	void PrintParameters(log4cxx::LoggerPtr& x_logger) const;
