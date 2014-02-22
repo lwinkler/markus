@@ -71,7 +71,7 @@ ConfigReader::~ConfigReader()
 ConfigReader ConfigReader::GetSubConfig(const std::string& x_objectType, string x_objectName) const
 {
 	if(IsEmpty())
-		throw MkException("Impossible to find node in ConfigReader", LOC);
+		throw MkException("Impossible to find node " + x_objectType + " in ConfigReader with name \"" + x_objectName + "\"" , LOC);
 	TiXmlNode* newNode = mp_node->FirstChild(x_objectType);
 	
 	if(x_objectName.compare(""))
@@ -90,7 +90,7 @@ ConfigReader ConfigReader::GetSubConfig(const std::string& x_objectType, string 
 ConfigReader ConfigReader::RefSubConfig(const std::string& x_objectType, string x_objectName, bool x_allowCreation)
 {
 	if(IsEmpty())
-		throw MkException("Impossible to find node in ConfigReader", LOC);
+		throw MkException("Impossible to find node " + x_objectType + " in ConfigReader with name \"" + x_objectName + "\"" , LOC);
 
 	TiXmlNode* newNode = mp_node->FirstChild(x_objectType);
 	
@@ -118,7 +118,7 @@ ConfigReader ConfigReader::RefSubConfig(const std::string& x_objectType, string 
 ConfigReader ConfigReader::NextSubConfig(const std::string& x_objectType, string x_objectName) const
 {
 	if(IsEmpty())
-		throw MkException("Impossible to find node in ConfigReader", LOC);
+		throw MkException("Impossible to find node " + x_objectType + " in ConfigReader with name \"" + x_objectName + "\"" , LOC);
 	TiXmlNode* newNode = mp_node->NextSibling(x_objectType);
 	
 	if(x_objectName.compare(""))
@@ -137,7 +137,7 @@ ConfigReader ConfigReader::NextSubConfig(const std::string& x_objectType, string
 const string ConfigReader::GetAttribute(const std::string& x_attributeName) const
 {
 	if(IsEmpty())
-		throw MkException("Impossible to find node in ConfigReader", LOC);
+		throw MkException("Impossible to find attribute " + x_attributeName + " in ConfigReader" , LOC);
 	TiXmlElement* element = mp_node->ToElement();
 	//string s(*element->Attribute(x_attributeName));
 	if(element == NULL)
@@ -155,10 +155,10 @@ const string ConfigReader::GetAttribute(const std::string& x_attributeName) cons
 void ConfigReader::SetAttribute(const std::string& x_attributeName, string x_value)
 {
 	if(IsEmpty())
-		throw MkException("Impossible to find node in ConfigReader", LOC);
+		throw MkException("Impossible to find attribute " + x_attributeName + " in ConfigReader" , LOC);
 	TiXmlElement* element = mp_node->ToElement();
 	if(element == NULL)
-		throw MkException("Impossible to find node in ConfigReader", LOC);
+		throw MkException("Impossible to find attribute " + x_attributeName + " in ConfigReader" , LOC);
 
 	element->SetAttribute("name", x_value);
 }
@@ -168,7 +168,7 @@ void ConfigReader::SetAttribute(const std::string& x_attributeName, string x_val
 const string ConfigReader::GetValue() const
 {
 	if(IsEmpty())
-		throw MkException("Impossible to find node in ConfigReader", LOC);
+		throw MkException("Impossible to find node" , LOC);
 	TiXmlElement* element = mp_node->ToElement();
 	const char * str = element->GetText();
 	if(str == NULL)
@@ -181,7 +181,7 @@ const string ConfigReader::GetValue() const
 void ConfigReader::SetValue(const std::string& x_value)
 {
 	if(IsEmpty())
-		throw MkException("Impossible to find node in ConfigReader", LOC);
+		throw MkException("Impossible to find node" , LOC);
 	mp_node->Clear();
 	mp_node->LinkEndChild(new TiXmlText(x_value)); //ToText();
 }

@@ -29,13 +29,11 @@
 #include <QGridLayout>
 #include <QMenu>
 #include <QScrollBar>
-// #include <QPushButton>
 #include <QLabel>
 #include <qevent.h>
 
 #include <QPixmap>
 #include <QPainter>
-// #include <QScrollArea>
 #include <QListWidget>
 #include <QSignalMapper>
 
@@ -92,7 +90,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, const ConfigReader& x_con
 	
 	QLabel* lab2 = new QLabel(tr("Out stream"));
 	layoutCombos->addWidget(lab2,1,0);
-	this->updateModule(*(x_manager->GetModules().begin()));
+	this->updateModuleNb(m_param.module);
 	layoutCombos->addWidget(mp_comboStreams,1,1);
 
 	// Create the group with combo menus
@@ -123,7 +121,6 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, const ConfigReader& x_con
 
 QModuleViewer::~QModuleViewer(void) 
 {
-	UpdateConfig();
 	CLEAN_DELETE(m_img_original);
 	CLEAN_DELETE(m_img_output);
 	CLEAN_DELETE(m_img_tmp1);
@@ -255,12 +252,20 @@ void QModuleViewer::updateModule(Module * x_module)
 /// change the module being currently displayed (by index)
 void QModuleViewer::updateModuleNb(int x_index)
 {
-	std::vector<Module*>::const_iterator it = m_manager->GetModules().begin();
-	
-	while(x_index-- > 0 && it != m_manager->GetModules().end())
-		it++;
-	
-	updateModule(*it);
+	Module* mod = NULL;
+
+	try
+	{
+		mod = m_manager->GetModules().at(x_index);
+		m_param.module = x_index;
+	}
+	catch(...)
+	{
+		mod = m_manager->GetModules().at(0);
+		m_param.module = 0;
+	}
+
+	updateModule(mod);
 }
 
 /// Change the stream being currently displayed (by index)

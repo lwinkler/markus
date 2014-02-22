@@ -61,6 +61,7 @@ Q_OBJECT
 public:
 	Markus(ConfigReader& rx_configReader, Manager& rx_manager);
 	virtual ~Markus();
+        void UpdateConfig();
 private:
 	// ConfigReader& m_configReader;
 	MarkusParameterStructure m_param;
@@ -73,9 +74,6 @@ private:
 	bool notify(QObject *receiver_, QEvent *event_);
 	void timerEvent(QTimerEvent*);
 	void resizeEvent(QResizeEvent*);
-	
-	// int nbCols;
-	// int nbLines;
 	
 	void createActions();
 	void createMenus();

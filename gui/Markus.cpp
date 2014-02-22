@@ -71,7 +71,6 @@ Markus::Markus(ConfigReader & rx_configReader, Manager& rx_manager)
 
 void Markus::timerEvent(QTimerEvent*)
 {
-	UpdateConfig();
 	/*if(m_centralized)
 	{
 		// at each increment, call the general Process method
@@ -86,9 +85,14 @@ void Markus::timerEvent(QTimerEvent*)
 
 Markus::~Markus()
 {
-	UpdateConfig();
 }
 
+void Markus::UpdateConfig()
+{
+	for(vector<QModuleViewer *>::iterator it = m_moduleViewer.begin() ; it != m_moduleViewer.end() ; it++)
+		(*it)->UpdateConfig();
+	Configurable::UpdateConfig();
+}
 
 QLabel *Markus::createLabel(const QString &text)
 {

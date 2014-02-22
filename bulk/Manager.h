@@ -79,7 +79,7 @@ public:
 	}
 	static inline const std::string& GetConfigFile(){return m_configFile;}
 	static inline void ListModules(std::vector<std::string>& xr_types) {m_factory.ListModules(xr_types);};
-	void SaveConfigToFile(const std::string& x_fileName);
+	void UpdateConfig();
 
 private:
 	ManagerParameter m_param;

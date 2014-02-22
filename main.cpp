@@ -121,8 +121,6 @@ int main(int argc, char** argv)
 	string outputDir     = "";
 	vector<string> parameters;
 
-	ConfigReader mainGuiConfig("gui.xml");
-
 	// Read arguments
 
 	//int digit_optind = 0;
@@ -290,6 +288,7 @@ int main(int argc, char** argv)
 		else
 		{
 #ifndef MARKUS_NO_GUI
+			ConfigReader mainGuiConfig("gui.xml");
 			ConfigReader guiConfig = mainGuiConfig.RefSubConfig("gui", configFile, true);
 			guiConfig.RefSubConfig("parameters", "", true);
 
@@ -298,11 +297,19 @@ int main(int argc, char** argv)
 			if(!nogui)
 				gui.show();
 			returnValue = app.exec(); // TODO: Manage case where centralized with GUI
+
+			// write the modified params in config and save
+			gui.UpdateConfig();
+			mainGuiConfig.SaveToFile("gui.xml");
 #else
 			LOG_ERROR(logger, "Markus was compiled without GUI. It can only be launched with option -nc");
 			returnValue = -1;
 #endif
 		}
+
+		// Write the modified params in config and save
+		manager.UpdateConfig();
+		mainConfig.SaveToFile("last_config.xml");
 	}
 	catch(cv::Exception& e)
 	{
@@ -330,7 +337,6 @@ int main(int argc, char** argv)
 		returnValue = -1;
 	}
 
-	mainGuiConfig.SaveToFile("gui.xml");
 
 	return returnValue;
 }

@@ -43,20 +43,20 @@ bool MarkusApplication::notify(QObject *receiver_, QEvent *event_)
 	}
 	catch(cv::Exception& e)
 	{
-		LOG_ERROR(Manager::Logger(), "Exception raised (std::exception) : "); // TODO: Use logger
+		LOG_ERROR(Manager::Logger(), "Exception raised (cv::Exception): "<<e.what());
 	}
 	catch(std::exception& e)
 	{
-		LOG_ERROR(Manager::Logger(), "Exception raised (std::exception) : ");
+		LOG_ERROR(Manager::Logger(), "Exception raised (std::exception): "<<e.what());
 		// exit(0);
 	}
 	catch(std::string& str)
 	{
-		LOG_ERROR(Manager::Logger(), "Exception raised (string)" << str);
+		LOG_ERROR(Manager::Logger(), "Exception raised (string): " << str);
 	}
 	catch(const char* str)
 	{
-		LOG_ERROR(Manager::Logger(), "Exception raised (const char*)" << str);
+		LOG_ERROR(Manager::Logger(), "Exception raised (const char*): " << str);
 	}
 	catch(...)
 	{

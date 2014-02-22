@@ -85,7 +85,6 @@ Manager::~Manager()
 {
 	PrintTimers();
 
-	SaveConfigToFile("last_config.xml");
 
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		delete *it;
@@ -438,13 +437,11 @@ const string& Manager::OutputDir(const string& x_outputDir)
 
 /// Save the configuration of manager and modules to file
 
-void Manager::SaveConfigToFile(const string& x_fileName)
+void Manager::UpdateConfig()
 {
 	// Set all config ready to be saved
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		(*it)->UpdateConfig();
-	UpdateConfig(); // TODO this must be done is destructor
-	// SaveToFile(x_fileName);
-	m_mainConfig.SaveToFile(x_fileName);
+	Configurable::UpdateConfig();
 }
 
