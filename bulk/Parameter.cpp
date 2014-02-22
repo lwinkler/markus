@@ -47,6 +47,7 @@ ParameterStructure::ParameterStructure(const ConfigReader& x_configReader):
 	m_configReader(x_configReader.GetSubConfig("parameters")),
 	m_moduleName(x_configReader.GetAttribute("name"))
 {
+	m_writeAllParamsToConfig = false;
 }
 
 ParameterStructure::~ParameterStructure()
@@ -109,7 +110,7 @@ void ParameterStructure::UpdateConfig() const
 	
 	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
 	{
-		if((*it)->GetConfigurationSource() != PARAMCONF_DEF)
+		if(m_writeAllParamsToConfig || (*it)->GetConfigurationSource() != PARAMCONF_DEF)
 		{
 			conf.RefSubConfig("param", (*it)->GetName(), true).SetValue((*it)->GetValueString());
 		}

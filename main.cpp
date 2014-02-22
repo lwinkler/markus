@@ -291,6 +291,8 @@ int main(int argc, char** argv)
 		{
 #ifndef MARKUS_NO_GUI
 			ConfigReader guiConfig = mainGuiConfig.RefSubConfig("gui", configFile, true);
+			guiConfig.RefSubConfig("parameters", "", true);
+
 			Markus gui(guiConfig, manager);
 			gui.setWindowTitle("Markus");
 			if(!nogui)
@@ -304,7 +306,7 @@ int main(int argc, char** argv)
 	}
 	catch(cv::Exception& e)
 	{
-		LOG_ERROR(logger, "Exception (std::exception): " << e.what() );
+		LOG_ERROR(logger, "Exception (cv::Exception): " << e.what() );
 		returnValue = -1;
 	}
 	catch(std::exception& e)

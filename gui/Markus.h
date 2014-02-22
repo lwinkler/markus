@@ -49,6 +49,7 @@ public:
 		m_list.push_back(new ParameterInt("nb_rows", 1, 1, 4, &nbRows, "Number of rows for display"));
 
 		Init();
+		m_writeAllParamsToConfig = true;
 	}
 	int nbCols;
 	int nbRows;

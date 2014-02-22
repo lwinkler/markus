@@ -337,6 +337,7 @@ protected:
 	std::vector<Parameter*> m_list;
 	const ConfigReader m_configReader; // Warning this still contains reference to the tinyxml config!
 	std::string m_moduleName;
+	bool m_writeAllParamsToConfig;
 	Parameter & RefParameterByName(const std::string& x_name);
 };
 

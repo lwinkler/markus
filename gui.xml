@@ -1,8 +1,42 @@
-<gui name="gui" description="GUI config">
-    <parameters>
-        <param name="nb_cols">3</param>
-    </parameters>
-</gui>
+<gui name="" description="" />
 <gui name="config.xml">
+    <parameters />
     <viewer0 />
+    <viewer1 />
+    <viewer2 />
+    <viewer3 />
+    <viewer4 />
+    <viewer5 />
+    <viewer6 />
+    <viewer7 />
+    <viewer8 />
+    <viewer9 />
+    <viewer10 />
+    <viewer11 />
+    <viewer12 />
+    <viewer13 />
+    <viewer14 />
+    <viewer15 />
+</gui>
+<gui name="projects/FaceAndTracker.xml">
+    <parameters>
+        <param name="nb_cols">2</param>
+        <param name="nb_rows">1</param>
+    </parameters>
+    <viewer0 />
+    <viewer1 />
+    <viewer2 />
+    <viewer3 />
+    <viewer4 />
+    <viewer5 />
+    <viewer6 />
+    <viewer7 />
+    <viewer8 />
+    <viewer9 />
+    <viewer10 />
+    <viewer11 />
+    <viewer12 />
+    <viewer13 />
+    <viewer14 />
+    <viewer15 />
 </gui>
