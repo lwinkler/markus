@@ -40,13 +40,24 @@ void Configurable::UpdateConfig()
 
 /// Constructor : config based on a configuration file
 
-ConfigReader::ConfigReader(const std::string& x_fileName)
+ConfigReader::ConfigReader(const std::string& x_fileName, bool x_allowCreation)
 {
 	m_isOriginal = true;
 	mp_doc = NULL; // Initialize to null as there can be an error in construction
 	mp_doc = new TiXmlDocument(x_fileName);
 	if (! mp_doc->LoadFile())
-		throw MkException("Could not load test file '" + x_fileName + "'. Error='" + mp_doc->ErrorDesc() + "'. Exiting.", LOC);
+	{
+		delete mp_doc;
+		if(x_allowCreation)
+		{
+			ConfigReader conf("config_empty.xml"); // TODO: Use a specific empty file ?
+			conf.SaveToFile(x_fileName);
+			mp_doc = new TiXmlDocument(x_fileName);
+			assert(mp_doc->LoadFile());
+		}
+		else
+			throw MkException("Could not load test file '" + x_fileName + "'. Error='" + mp_doc->ErrorDesc() + "'. Exiting.", LOC);
+	}
 	mp_node = mp_doc;
 }
 

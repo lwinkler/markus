@@ -288,7 +288,7 @@ int main(int argc, char** argv)
 		else
 		{
 #ifndef MARKUS_NO_GUI
-			ConfigReader mainGuiConfig("gui.xml");
+			ConfigReader mainGuiConfig("gui.xml", true);
 			ConfigReader guiConfig = mainGuiConfig.RefSubConfig("gui", configFile, true);
 			guiConfig.RefSubConfig("parameters", "", true);
 

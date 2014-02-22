@@ -37,7 +37,7 @@ class ParameterStructure;
 class ConfigReader
 {
 public:
-	ConfigReader(const std::string& x_fileName);
+	ConfigReader(const std::string& x_fileName, bool x_allowCreation=false);
 	ConfigReader(TiXmlNode * xp_node);
 	~ConfigReader();
 	ConfigReader GetSubConfig(const std::string& x_objectType, std::string x_objectName = "") const;
