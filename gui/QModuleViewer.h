@@ -49,10 +49,10 @@ public:
 	QModuleViewerParameterStructure(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
 	{
 		// m_list.push_back(new ParameterString("module", "", &module, "Module to display"));
-		m_list.push_back(new ParameterInt("module",  -1, -1, 1000, &module,  "Index of the module to display"));
-		m_list.push_back(new ParameterInt("stream",  -1, -1, 1000, &stream,  "Index of the stream to display"));
+		m_list.push_back(new ParameterInt("module",   0, -1, 1000, &module,  "Index of the module to display"));
+		m_list.push_back(new ParameterInt("stream",   0, -1, 1000, &stream,  "Index of the stream to display"));
 		m_list.push_back(new ParameterInt("control", -1, -1, 1000, &control, "Index of the control to display"));
-		m_list.push_back(new ParameterBool("display_options", 0, 0, 1, &displayOptions, "Display the options to select the module, stream, ..."));
+		m_list.push_back(new ParameterBool("display_options", 1, 0, 1, &displayOptions, "Display the options to select the module, stream, ..."));
 
 		Init();
 		m_writeAllParamsToConfig = true;
@@ -67,7 +67,7 @@ class QModuleViewer : public QWidget, public Configurable
 {
 	Q_OBJECT
 public:
-	QModuleViewer(const Manager * x_manager, const ConfigReader& x_configReader, QWidget *parent = 0);
+	QModuleViewer(const Manager * x_manager, ConfigReader& x_configReader, QWidget *parent = 0);
 	virtual ~QModuleViewer();
 	static void  ConvertMat2QImage(const cv::Mat *mat, QImage *qim);
 private:

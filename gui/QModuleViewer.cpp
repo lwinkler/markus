@@ -48,7 +48,7 @@ using namespace cv;
 using namespace std;
 
 // Constructor
-QModuleViewer::QModuleViewer(const Manager* x_manager, const ConfigReader& x_configReader, QWidget *parent) : 
+QModuleViewer::QModuleViewer(const Manager* x_manager, ConfigReader& x_configReader, QWidget *parent) : 
 	QWidget(parent),
 	Configurable(x_configReader),
  	m_param(x_configReader)
@@ -81,32 +81,28 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, const ConfigReader& x_con
 
 	// Fill the list of modules
 	QLabel* lab1 = new QLabel(tr("Module"));
-	layoutCombos->addWidget(lab1,0,0);
+	layoutCombos->addWidget(lab1, 0, 0);
 	mp_comboModules->clear();
 	int ind = 0;
 	for(std::vector<Module*>::const_iterator it = x_manager->GetModules().begin(); it != x_manager->GetModules().end(); it++)
 		mp_comboModules->addItem((*it)->GetName().c_str(), ind++);
-	layoutCombos->addWidget(mp_comboModules,0,1);
+	layoutCombos->addWidget(mp_comboModules, 0, 1);
 	if(m_param.module > 0 && m_param.module < mp_comboModules->count())
 		mp_comboModules->setCurrentIndex(m_param.module);
 	
 	QLabel* lab2 = new QLabel(tr("Out stream"));
-	layoutCombos->addWidget(lab2,1,0);
+	layoutCombos->addWidget(lab2, 1, 0);
 	this->updateModuleNb(m_param.module);
-	layoutCombos->addWidget(mp_comboStreams,1,1);
+	layoutCombos->addWidget(mp_comboStreams, 1, 1);
 
 	// Create the group with combo menus
 	mp_gbCombos->setLayout(layoutCombos);
 	mp_gbCombos->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 	
-	
-
 	// add widgets to main layout
 	mp_mainLayout->addWidget(mp_gbCombos, 0);
 	// mp_mainLayout->addWidget(mp_gbButtons, 1);
 	mp_mainLayout->addWidget(mp_widEmpty, 1); // this is only for alignment
-	
-	
 	
 	setPalette(QPalette(QColor(20, 20, 20)));
 	setAutoFillBackground(true);
@@ -207,8 +203,9 @@ void QModuleViewer::updateModule(Module * x_module)
 	}
 	
 	// Update the stream
-	if(m_currentModule->GetOutputStreamList().size() > 0)
-		updateStreamNb(m_param.stream);
+	updateStreamNb(m_param.stream);
+	if(m_param.stream > 0 && m_param.stream < mp_comboStreams->count())
+		mp_comboStreams->setCurrentIndex(m_param.stream);
 
 	// Empty the action menu (different for each module)
 	QList<QAction *> actions = this->actions();
@@ -251,8 +248,8 @@ void QModuleViewer::updateModule(Module * x_module)
 	this->setContextMenuPolicy(Qt::ActionsContextMenu);
 
 	// Should we display options ? // TODO not working
-	actionShowDisplayMenu->setChecked(m_param.displayOptions);
-	showDisplayOptions(false);
+	// actionShowDisplayMenu->setChecked(m_param.displayOptions);
+	showDisplayOptions(m_param.displayOptions);
 }
 
 /// change the module being currently displayed (by index)
@@ -319,7 +316,7 @@ void QModuleViewer::updateControlNb(int x_index)
 
 void QModuleViewer::updateStream(Stream * x_outputStream)
 {
-	m_currentStream  = x_outputStream;
+	m_currentStream = x_outputStream;
 	CLEAN_DELETE(m_img_original);
 	CLEAN_DELETE(m_img_output);
 }

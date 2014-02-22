@@ -245,7 +245,7 @@ int main(int argc, char** argv)
 				throw MkException("Cannot parse command line parameter", LOC);
 			}
 		}
-		Manager manager(appConfig, mainConfig, centralized);
+		Manager manager(appConfig, centralized);
 
 		if(describe) 
 		{

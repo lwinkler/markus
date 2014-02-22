@@ -51,7 +51,7 @@ public:
 class Manager : public Configurable
 {
 public:
-	Manager(const ConfigReader& x_configReader, const ConfigReader& x_mainConfigReader, bool x_centralized);
+	Manager(const ConfigReader& x_configReader, bool x_centralized);
 	~Manager();
 	void Reset();
 	bool Process();
@@ -99,7 +99,6 @@ private:
 	static std::string m_configFile;
 	static std::string m_outputDir;
 	static FactoryModules m_factory;
-	const ConfigReader& m_mainConfig; // Only used to write the xml file at destruction
 
 protected:
 	inline virtual const ParameterStructure& GetParameters() const {return m_param;}

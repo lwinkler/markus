@@ -253,9 +253,11 @@ void Markus::resizeEvent(QResizeEvent* event)
 	{
 		stringstream ss;
 		ss<<"viewer"<<ind;
-		m_moduleViewer.push_back(new QModuleViewer(&m_manager, m_configReader.RefSubConfig(ss.str(), "", true)));
+		ConfigReader conf = m_configReader.RefSubConfig("viewer", ss.str(), true);
+		conf.RefSubConfig("parameters", "", true);
+		m_moduleViewer.push_back(new QModuleViewer(&m_manager, conf));
 		m_moduleViewer[ind]->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-		m_moduleViewer[ind]->showDisplayOptions(true);
+		// m_moduleViewer[ind]->showDisplayOptions(true);
 	}
 	
 	// Remove extra modules

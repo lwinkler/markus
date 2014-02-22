@@ -49,11 +49,10 @@ string Manager::m_outputDir;
 FactoryModules Manager::m_factory;
 
 
-Manager::Manager(const ConfigReader& x_configReader, const ConfigReader& x_mainConfigReader, bool x_centralized) : 
+Manager::Manager(const ConfigReader& x_configReader, bool x_centralized) : 
 	Configurable(x_configReader),
 	m_param(m_configReader),
-	m_centralized(x_centralized),
-	m_mainConfig(x_mainConfigReader)
+	m_centralized(x_centralized)
 {
 	LOG_INFO(m_logger, "Create object Manager");
 	m_frameCount = 0;
