@@ -87,6 +87,8 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, const ConfigReader& x_con
 	for(std::vector<Module*>::const_iterator it = x_manager->GetModules().begin(); it != x_manager->GetModules().end(); it++)
 		mp_comboModules->addItem((*it)->GetName().c_str(), ind++);
 	layoutCombos->addWidget(mp_comboModules,0,1);
+	if(m_param.module > 0 && m_param.module < mp_comboModules->count())
+		mp_comboModules->setCurrentIndex(m_param.module);
 	
 	QLabel* lab2 = new QLabel(tr("Out stream"));
 	layoutCombos->addWidget(lab2,1,0);
@@ -116,7 +118,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, const ConfigReader& x_con
 	setLayout(mp_mainLayout);
 	
 	connect(mp_comboModules, SIGNAL(activated(int)), this, SLOT(updateModuleNb(int) ));
-	connect(mp_comboStreams, SIGNAL(activated(int)), this, SLOT(updateStreamOrControlNb(int)));
+	connect(mp_comboStreams, SIGNAL(activated(int)), this, SLOT(updateStreamNb(int)));
 }
 
 QModuleViewer::~QModuleViewer(void) 
@@ -204,8 +206,9 @@ void QModuleViewer::updateModule(Module * x_module)
 		mp_comboStreams->addItem(it->second->GetName().c_str(), cpt++);
 	}
 	
+	// Update the stream
 	if(m_currentModule->GetOutputStreamList().size() > 0)
-		updateStream(m_currentModule->GetOutputStreamList().begin()->second);
+		updateStreamNb(m_param.stream);
 
 	// Empty the action menu (different for each module)
 	QList<QAction *> actions = this->actions();
@@ -215,9 +218,9 @@ void QModuleViewer::updateModule(Module * x_module)
 	// Set context menus
 	QAction * actionShowDisplayMenu = new QAction(tr("Show display options"), this);
 	actionShowDisplayMenu->setCheckable(true);
-	actionShowDisplayMenu->setChecked(true);
-	actionShowDisplayMenu->setShortcut(tr("Ctrl+S"));
 	connect(actionShowDisplayMenu, SIGNAL(triggered(bool)), this, SLOT(showDisplayOptions(bool)));
+	actionShowDisplayMenu->setChecked(m_param.displayOptions);
+	actionShowDisplayMenu->setShortcut(tr("Ctrl+S"));
 	this->addAction(actionShowDisplayMenu);
 
 	// Show control board for parameters
@@ -244,9 +247,12 @@ void QModuleViewer::updateModule(Module * x_module)
 		signalMapper->setMapping(actionShowControl, cpt);
 		connect(actionShowControl, SIGNAL(triggered()), this, SLOT(updateControlNb()));
 		this->addAction(actionShowControl);
-		
 	}
 	this->setContextMenuPolicy(Qt::ActionsContextMenu);
+
+	// Should we display options ? // TODO not working
+	actionShowDisplayMenu->setChecked(m_param.displayOptions);
+	showDisplayOptions(false);
 }
 
 /// change the module being currently displayed (by index)
@@ -254,40 +260,47 @@ void QModuleViewer::updateModuleNb(int x_index)
 {
 	Module* mod = NULL;
 
-	try
-	{
-		mod = m_manager->GetModules().at(x_index);
-		m_param.module = x_index;
-	}
-	catch(...)
+	if(x_index < 0 || x_index >= (int) m_manager->GetModules().size())
 	{
 		mod = m_manager->GetModules().at(0);
 		m_param.module = 0;
 	}
-
+	else
+	{
+		mod = m_manager->GetModules().at(x_index);
+		m_param.module = x_index;
+	}
 	updateModule(mod);
 }
 
 /// Change the stream being currently displayed (by index)
-void QModuleViewer::updateStreamOrControlNb(int x_index)
+void QModuleViewer::updateStreamNb(int x_index)
 {
 	unsigned int cpt = static_cast<unsigned int>(x_index);
+	Stream* stream = NULL;
 
-	// CLEAN_DELETE(m_controlBoard);
-	// m_controlBoard = new QParameterControlBoard(m_currentModule);
-	if(cpt < m_currentModule->GetOutputStreamList().size())
+	if(x_index >= 0 && cpt < m_currentModule->GetOutputStreamList().size())
 	{
-		updateStream(m_currentModule->GetOutputStreamList().at(cpt));
-		return;
+		// Pick an output stream
+		stream = m_currentModule->GetOutputStreamList().at(cpt);
+		m_param.stream = x_index;
 	}
-
-	cpt -= m_currentModule->GetOutputStreamList().size();
-	if(cpt < m_currentModule->GetDebugStreamList().size())
+	else
 	{
-		updateStream(m_currentModule->GetDebugStreamList().at(cpt));
-		return;
+		// Pick a debug stream
+		cpt -= m_currentModule->GetOutputStreamList().size();
+		if(cpt < m_currentModule->GetDebugStreamList().size())
+		{
+			stream = m_currentModule->GetDebugStreamList().at(cpt);
+			m_param.stream = x_index;
+		}
+		else
+		{
+			stream = m_currentModule->GetOutputStreamList().at(0);
+			m_param.stream = 0;
+		}
 	}
-	assert(false);
+	updateStream(stream);
 }
 
 /// display the control with the given index
@@ -318,6 +331,7 @@ void QModuleViewer::showDisplayOptions(bool x_isChecked)
 		mp_gbCombos->show();
 	else
 		mp_gbCombos->hide();
+	m_param.displayOptions = x_isChecked;
 }
 
 void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qimg)

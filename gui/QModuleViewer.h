@@ -103,7 +103,7 @@ private:
 
 public slots:
 	void updateModuleNb(int x_index);
-	void updateStreamOrControlNb(int x_index);
+	void updateStreamNb(int x_index);
 	void updateControlNb(int x_index = -1);
 	void updateModule(Module * x_module);
 	void updateStream(Stream * x_outputStream);
