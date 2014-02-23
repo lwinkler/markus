@@ -191,7 +191,8 @@ void QModuleViewer::updateModule(Module * x_module)
 {
 	m_currentModule = x_module;
 	mp_comboStreams->clear();
-	updateControlNb(); // destroy all controls
+	CLEAN_DELETE(m_controlBoard);
+
 	int cpt = 0;
 	for(map<int, Stream*>::const_iterator it = m_currentModule->GetOutputStreamList().begin(); it != m_currentModule->GetOutputStreamList().end(); it++)
 	{
@@ -250,6 +251,7 @@ void QModuleViewer::updateModule(Module * x_module)
 	// Should we display options ? // TODO not working
 	// actionShowDisplayMenu->setChecked(m_param.displayOptions);
 	showDisplayOptions(m_param.displayOptions);
+	updateControlNb(m_param.control);
 }
 
 /// change the module being currently displayed (by index)
@@ -304,14 +306,22 @@ void QModuleViewer::updateStreamNb(int x_index)
 void QModuleViewer::updateControlNb(int x_index)
 {
 	assert(x_index < (int) m_currentModule->GetControllersList().size());
+	m_param.control = x_index;
 	CLEAN_DELETE(m_controlBoard);
 	if(x_index < 0)
 		return;
 	m_controlBoard = new QControlBoard(*m_currentModule, this);
 	mp_mainLayout->addWidget(m_controlBoard, 0);
 	map<string, Controller*>::const_iterator it = m_currentModule->GetControllersList().begin();
-	advance(it, x_index);
-	m_controlBoard->updateControl(it->second);
+	try
+	{
+		advance(it, x_index);
+		m_controlBoard->updateControl(it->second);
+	}
+	catch(...)
+	{
+		m_param.control = -1;
+	}
 }
 
 void QModuleViewer::updateStream(Stream * x_outputStream)

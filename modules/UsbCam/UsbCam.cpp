@@ -42,6 +42,7 @@ UsbCam::~UsbCam()
 
 void UsbCam::Reset()
 {
+	// TODO: Tere is a bug if we reset this module through a command
 	Module::Reset();
 
 	m_capture.release();
@@ -56,8 +57,8 @@ void UsbCam::Reset()
 	}
 
 	// Apparently you cannot set width and height. We try anyway
-	m_capture.set(CV_CAP_PROP_FRAME_WIDTH,  m_param.width);
-	m_capture.set(CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
+	// m_capture.set(CV_CAP_PROP_FRAME_WIDTH,  m_param.width);
+	//m_capture.set(CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
 	
 	// note on the next line: the image will be overloaded but the properties are used to set the input ratio, the type is probably ignored
 	// m_output = Mat(Size(m_capture.get(CV_CAP_PROP_FRAME_WIDTH), m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)), m_param.type);
