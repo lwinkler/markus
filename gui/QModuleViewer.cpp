@@ -295,7 +295,7 @@ void QModuleViewer::updateStreamNb(int x_index)
 		}
 		else
 		{
-			stream = m_currentModule->GetOutputStreamList().at(0);
+			// stream = m_currentModule->GetOutputStreamList().at(0);
 			m_param.stream = 0;
 		}
 	}

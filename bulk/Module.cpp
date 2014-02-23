@@ -197,73 +197,81 @@ void Module::Process()
 		m_lock.unlock();
 		return;
 	}
-	if(!m_isReady)
-		throw MkException("Module must be ready before processing", LOC);
-
-	const ModuleParameterStructure& param = GetParameters();
-	
-	// Timestamp of the module is given by the input stream
-	m_currentTimeStamp = 0;
-	if(m_inputStreams.size() >= 1)
+	try
 	{
-		// m_inputStreams[0]->LockModuleForRead();
-		m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected(); // TODO: should we lock module here ?
-		// m_inputStreams[0]->UnLockModule();
-	}
-	else if(! param.autoProcess)
-		throw MkException("Module must have at least one input or have parameter auto_process=true", LOC);
+		if(!m_isReady)
+			throw MkException("Module must be ready before processing", LOC);
 
-	if(param.autoProcess || (param.fps == 0 && m_currentTimeStamp != m_lastTimeStamp) || (m_currentTimeStamp - m_lastTimeStamp) * param.fps > 1000)
-	{
-		// Process this frame
-		
-		// Timer for benchmark
-		Timer ti;
+		const ModuleParameterStructure& param = GetParameters();
 
-		// cout<<GetName()<<" "<<m_currentTimeStamp<<" "<<m_lastTimeStamp<<endl;
-
-		// Check that all inputs are in sync
-		if(! param.allowUnsyncInput && m_unsyncWarning)
-			for(unsigned int i = 1 ; i < m_inputStreams.size() ; i++)
-			{
-				Stream& stream(*m_inputStreams.at(i));
-				if(stream.IsConnected() && stream.GetTimeStampConnected() != m_currentTimeStamp)
-				{
-					LOG_WARN(m_logger, "Input stream id="<<i<<" is not in sync with input stream id=0 for module "<<GetName()<<". If this is acceptable set parameter allow_unsync_input=1 for this module. To fix this problem cleanly you should probably set parameters auto_process=0 and fps=0 for the modules located between the input and module "<<GetName()<<".");
-					m_unsyncWarning = false;
-				}
-			}
-
-		// Read and convert inputs
-		if(IsInputProcessed())
+		// Timestamp of the module is given by the input stream
+		m_currentTimeStamp = 0;
+		if(m_inputStreams.size() >= 1)
 		{
-			for(map<int, Stream*>::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
-			{
-				Timer ti2;
-				//(*it)->LockModuleForRead();
-				m_timerWaiting += ti2.GetMSecLong();
-				it->second->ConvertInput();
-				//(*it)->UnLockModule();
-			}
-			//assert(m_currentTimeStamp == m_inputStreams[0]->GetTimeStamp());
+			// m_inputStreams[0]->LockModuleForRead();
+			m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected(); // TODO: should we lock module here ?
+			// m_inputStreams[0]->UnLockModule();
 		}
-		m_timerConvertion 	+= ti.GetMSecLong();
-		ti.Restart();
+		else if(! param.autoProcess)
+			throw MkException("Module must have at least one input or have parameter auto_process=true", LOC);
 
-		ProcessFrame();
+		if(param.autoProcess || (param.fps == 0 && m_currentTimeStamp != m_lastTimeStamp) || (m_currentTimeStamp - m_lastTimeStamp) * param.fps > 1000)
+		{
+			// Process this frame
 
-		m_timerProcessing 	 += ti.GetMSecLong();
+			// Timer for benchmark
+			Timer ti;
 
-		// Propagate time stamps to outputs
-		for(map<int, Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
-			it->second->SetTimeStamp(m_currentTimeStamp);
-		
-		// Call depending modules (modules with fps = 0)
-		for(vector<Module*>::iterator it = m_modulesDepending.begin() ; it != m_modulesDepending.end() ; it++)
-			(*it)->Process();
+			// cout<<GetName()<<" "<<m_currentTimeStamp<<" "<<m_lastTimeStamp<<endl;
 
-		m_countProcessedFrames++;
-		m_lastTimeStamp = m_currentTimeStamp;
+			// Check that all inputs are in sync
+			if(! param.allowUnsyncInput && m_unsyncWarning)
+				for(unsigned int i = 1 ; i < m_inputStreams.size() ; i++)
+				{
+					Stream& stream(*m_inputStreams.at(i));
+					if(stream.IsConnected() && stream.GetTimeStampConnected() != m_currentTimeStamp)
+					{
+						LOG_WARN(m_logger, "Input stream id="<<i<<" is not in sync with input stream id=0 for module "<<GetName()<<". If this is acceptable set parameter allow_unsync_input=1 for this module. To fix this problem cleanly you should probably set parameters auto_process=0 and fps=0 for the modules located between the input and module "<<GetName()<<".");
+						m_unsyncWarning = false;
+					}
+				}
+
+			// Read and convert inputs
+			if(IsInputProcessed())
+			{
+				for(map<int, Stream*>::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
+				{
+					Timer ti2;
+					//(*it)->LockModuleForRead();
+					m_timerWaiting += ti2.GetMSecLong();
+					it->second->ConvertInput();
+					//(*it)->UnLockModule();
+				}
+				//assert(m_currentTimeStamp == m_inputStreams[0]->GetTimeStamp());
+			}
+			m_timerConvertion 	+= ti.GetMSecLong();
+			ti.Restart();
+
+			ProcessFrame();
+
+			m_timerProcessing 	 += ti.GetMSecLong();
+
+			// Propagate time stamps to outputs
+			for(map<int, Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
+				it->second->SetTimeStamp(m_currentTimeStamp);
+
+			// Call depending modules (modules with fps = 0)
+			for(vector<Module*>::iterator it = m_modulesDepending.begin() ; it != m_modulesDepending.end() ; it++)
+				(*it)->Process();
+
+			m_countProcessedFrames++;
+			m_lastTimeStamp = m_currentTimeStamp;
+		}
+	}
+	catch(...)
+	{
+		m_lock.unlock();
+		throw;
 	}
 	m_lock.unlock();
 }
