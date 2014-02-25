@@ -47,7 +47,7 @@
 #define LOG_WARN  LOG4CXX_WARN
 #define LOG_INFO  LOG4CXX_INFO
 #define LOG_DEBUG LOG4CXX_DEBUG
-#define LOG_EVENT(logger, message)   LOG4CXX_WARN((logger), "EVENT " << message)
+#define LOG_EVENT(logger, descriptor)   LOG4CXX_WARN((logger), "@notif@ EVENT" << " " << descriptor )
 
 #define SYSTEM(x) {std::string cmd; cmd = (x);\
 	if(system(cmd.c_str())) {\
@@ -66,6 +66,9 @@ std::vector<std::string> &split(const std::string &s, char delim, std::vector<st
 
 const std::string timeStamp();
 const std::string msToTimeStamp(TIME_STAMP x_ms);
+std::string jsonify(const std::string& x_name, const std::string& x_value);
+std::string jsonify(const std::string& x_name, long long x_value);
+void logEvent(log4cxx::LoggerPtr& x_logger, const std::string& x_name, TIME_STAMP x_timeStamp, const std::string& x_extraInfo);
 
 
 #endif

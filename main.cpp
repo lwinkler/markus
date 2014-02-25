@@ -194,6 +194,8 @@ int main(int argc, char** argv)
 		}
 	}
 
+	log4cxx::xml::DOMConfigurator::configure(logConfigFile);
+
 	if (optind == argc - 1) {
 		configFile = argv[argc - 1];
 	}
@@ -214,7 +216,6 @@ int main(int argc, char** argv)
 		string dir = outputDir + "/";
 		setenv("LOG_DIR", dir.c_str(), 1);
 	}
-	log4cxx::xml::DOMConfigurator::configure(logConfigFile);
 
 	try
 	{
@@ -271,7 +272,7 @@ int main(int argc, char** argv)
 			LOG_ERROR(Manager::Logger(), "Error joining thread");
 			return -1;
 		}*/
-		LOG_EVENT(logger, "STARTED pid="<<getpid());
+		logEvent(logger, "start", 0, jsonify("pid", getpid()));
 
 		if(centralized)
 		{
