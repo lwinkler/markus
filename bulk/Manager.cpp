@@ -95,7 +95,12 @@ Manager::~Manager()
 	/// Do the final operations on the static class
 	if(m_outputDir.size() != 0 && getenv("LOG_DIR") == NULL)
 	{
-		SYSTEM("cp markus.log " + m_outputDir + "/markus.copy.log");
+		try
+		{
+			SYSTEM("cp markus.log " + m_outputDir + "/markus.copy.log");
+		}
+		catch(...) // TODO: Implement no throw equivalent ?
+		{}
 		// SYSTEM("cp markus " + m_outputDir);
 	}
 }
