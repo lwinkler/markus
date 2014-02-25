@@ -31,6 +31,8 @@
 using namespace cv;
 using namespace std;
 
+log4cxx::LoggerPtr BgrSubMOG::m_logger(log4cxx::Logger::getLogger("BgrSubMOG"));
+
 BgrSubMOG::BgrSubMOG(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader),

@@ -31,6 +31,7 @@
 using namespace std;
 using namespace cv;
 
+log4cxx::LoggerPtr SlitCam::m_logger(log4cxx::Logger::getLogger("SlitCam"));
 
 SlitCam::SlitCam(const ConfigReader& x_configReader):
 	Module(x_configReader), 

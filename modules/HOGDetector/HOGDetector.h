@@ -110,6 +110,7 @@ public:
 private:
 	HOGDetectorParameterStructure m_param;
 	inline virtual const HOGDetectorParameterStructure& GetParameters() const { return m_param;};
+	static log4cxx::LoggerPtr m_logger;
 protected:
 	std::vector<Object> m_detectedObjects;
 	cv::Mat m_input;

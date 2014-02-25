@@ -69,6 +69,7 @@ void usage()
 void *send_commands(void *x_void_ptr)
 {
 	Manager *pManager = (Manager *)x_void_ptr;
+	static log4cxx::LoggerPtr logger(log4cxx::Logger::getLogger("Module"));
 	assert(pManager != NULL);
 	string input;
 	vector<string> elems;
@@ -85,7 +86,7 @@ void *send_commands(void *x_void_ptr)
 				else if(elems.size() == 2)
 					value = elems.at(1);
 				else throw MkException("Command must have one or two elements", LOC);
-				LOG_INFO(Manager::Logger(), "Send command: "<<elems.at(0)<<" \""<<value<<"\"");
+				LOG_INFO(logger, "Send command: "<<elems.at(0)<<" \""<<value<<"\"");
 				pManager->SendCommand(elems.at(0), value);
 				cin.clear();
 			}
@@ -93,11 +94,11 @@ void *send_commands(void *x_void_ptr)
 		}
 		catch(std::exception& e)
 		{
-			LOG_ERROR(Manager::Logger(), "Cannot execute command: "<<e.what());
+			LOG_ERROR(logger, "Cannot execute command: "<<e.what());
 		}
 		catch(...)
 		{
-			LOG_ERROR(Manager::Logger(), "Cannot execute command");
+			LOG_ERROR(logger, "Cannot execute command");
 		}
 		// usleep(1000000);
 	}
@@ -261,7 +262,7 @@ int main(int argc, char** argv)
 		pthread_t command_thread;
 		if(useStdin && pthread_create(&command_thread, NULL, send_commands, &manager))
 		{
-			LOG_ERROR(Manager::Logger(), "Error creating thread");
+			LOG_ERROR(logger, "Error creating thread");
 			return -1;
 		}
 		/* wait for the second thread to finish */

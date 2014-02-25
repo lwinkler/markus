@@ -31,6 +31,8 @@
 using namespace std;
 using namespace cv;
 
+log4cxx::LoggerPtr VideoFileReader::m_logger(log4cxx::Logger::getLogger("VideoFileReader"));
+
 VideoFileReader::VideoFileReader(const ConfigReader& x_configReader): 
 	Input(x_configReader),
 	m_param(x_configReader),

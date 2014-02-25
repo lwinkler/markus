@@ -72,7 +72,6 @@ public:
 	void PauseInputs(bool x_pause);
 	bool EndOfAllStreams() const;
 	static const std::string& OutputDir(const std::string& x_outputDir = "");
-	inline static log4cxx::LoggerPtr& Logger(){return m_logger;}
 	static inline void SetConfigFile(const std::string& x_configFile){
 		assert(m_configFile.size() == 0);
 		m_configFile = x_configFile;

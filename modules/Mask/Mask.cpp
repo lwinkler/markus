@@ -30,6 +30,7 @@
 using namespace cv;
 using namespace std;
 
+log4cxx::LoggerPtr Mask::m_logger(log4cxx::Logger::getLogger("Mask"));
 
 Mask::Mask(const ConfigReader& x_configReader) :
 	Module(x_configReader),

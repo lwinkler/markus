@@ -43,7 +43,8 @@ using namespace std;
 
 using namespace std;
 
-log4cxx::LoggerPtr Manager::m_logger(log4cxx::Logger::getLogger("manager"));
+log4cxx::LoggerPtr Manager::m_logger(log4cxx::Logger::getLogger("Manager"));
+
 string Manager::m_configFile;
 string Manager::m_outputDir;
 FactoryModules Manager::m_factory;

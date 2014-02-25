@@ -30,6 +30,8 @@
 
 using namespace std;
 
+log4cxx::LoggerPtr ModuleAsync::m_logger(log4cxx::Logger::getLogger("ModuleAsync"));
+
 ModuleAsync::ModuleAsync(const ConfigReader& x_configReader) :
 	Module(x_configReader)
 {
@@ -77,7 +79,7 @@ void ModuleAsync::ProcessFrame()
 
 ModuleAsync::~ModuleAsync()
 {
-};
+}
 
 void ModuleAsync::PrintStatistics() const
 {

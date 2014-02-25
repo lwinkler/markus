@@ -117,7 +117,7 @@ void QControlBoard::callAction()
 
 
 	m_currentModule.LockForWrite();
-	LOG_DEBUG(Manager::Logger(), "Call control on module "<<m_currentModule.GetName());
+	// LOG_DEBUG(Manager::Logger(), "Call control on module "<<m_currentModule.GetName());
 	mp_currentControl->CallAction(button->text().toStdString(), NULL);
 	m_currentModule.Unlock();
 }

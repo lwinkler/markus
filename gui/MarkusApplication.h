@@ -25,6 +25,7 @@
 #define MK_APPLICATION_H
 
 #include <QApplication>
+#include <log4cxx/logger.h>
 
 class MarkusApplication : public QApplication
 {
@@ -33,6 +34,7 @@ public:
 	// ~MarkusApplication();
 private:
 	bool notify(QObject *receiver_, QEvent *event_);
+	static log4cxx::LoggerPtr m_logger;
 };
 
 

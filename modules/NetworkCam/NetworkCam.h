@@ -58,6 +58,7 @@ public:
 private:
 	NetworkCamParameterStructure m_param;
 	inline virtual const NetworkCamParameterStructure& GetParameters() const {return m_param;};
+	static log4cxx::LoggerPtr m_logger;
 protected:
 	cv::VideoCapture m_capture;
 	cv::Mat m_output;

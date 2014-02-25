@@ -30,6 +30,7 @@
 using namespace std;
 using namespace cv;
 
+log4cxx::LoggerPtr ThumbnailWriter::m_logger(log4cxx::Logger::getLogger("ThumbnailWriter"));
 
 ThumbnailWriter::ThumbnailWriter(const ConfigReader& x_configReader): 
 	Module(x_configReader),

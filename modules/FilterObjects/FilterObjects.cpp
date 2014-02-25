@@ -32,6 +32,7 @@
 using namespace std;
 using namespace cv;
 
+log4cxx::LoggerPtr FilterObjects::m_logger(log4cxx::Logger::getLogger("FilterObjects"));
 
 FilterObjects::FilterObjects(const ConfigReader& x_configReader) :
 	Module(x_configReader),

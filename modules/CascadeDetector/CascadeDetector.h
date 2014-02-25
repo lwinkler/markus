@@ -110,6 +110,7 @@ public:
 private:
 	CascadeDetectorParameterStructure m_param;
 	inline virtual const CascadeDetectorParameterStructure& GetParameters() const { return m_param;};
+	static log4cxx::LoggerPtr m_logger;
 protected:
 	std::vector<Object> m_detectedObjects;
 	cv::Mat m_input;

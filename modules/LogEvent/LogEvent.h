@@ -65,6 +65,7 @@ public:
 private:
 	inline virtual const LogEventParameterStructure& GetParameters() const { return m_param;} // TODO: see that this is always private
 	LogEventParameterStructure m_param;
+	static log4cxx::LoggerPtr m_logger;
 protected:
 	virtual void ProcessFrame();
 	void WriteEvent();

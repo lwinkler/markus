@@ -71,6 +71,7 @@ protected:
 private:
 	LogStateParameterStructure m_param;
 	inline virtual const LogStateParameterStructure& GetParameters() const { return m_param;}
+	static log4cxx::LoggerPtr m_logger;
 };
 
 #endif

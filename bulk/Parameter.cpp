@@ -29,6 +29,8 @@ using namespace std;
 
 // Static variables
 std::map<std::string,int>  ParameterImageType::m_map_enum;
+log4cxx::LoggerPtr Parameter::m_logger(log4cxx::Logger::getLogger("Parameter"));
+log4cxx::LoggerPtr ParameterStructure::m_logger(log4cxx::Logger::getLogger("ParameterStructure"));
 
 
 template<> const ParameterType ParameterT<bool>::m_type   = PARAM_BOOL;
@@ -95,7 +97,7 @@ void ParameterStructure::SetFromConfig()
 		catch(ParameterException& e)
 		{
 			// note: do not output a warning, unused parameters are checked inside CheckRange
-			// LOG_WARN(Manager::Logger(), "Unknown parameter in configuration: "<<name<<" in module "<<m_moduleName);
+			// LOG_WARN(m_logger, "Unknown parameter in configuration: "<<name<<" in module "<<m_moduleName);
 		}
 		conf = conf.NextSubConfig("param");
 	}
@@ -177,7 +179,7 @@ void ParameterStructure::CheckRange() const
 		}
 		catch(ParameterException& e)
 		{
-			LOG_WARN(Manager::Logger(), e.what());
+			LOG_WARN(m_logger, e.what());
 		}
 		conf = conf.NextSubConfig("param");
 	}
@@ -198,7 +200,7 @@ void ParameterStructure::CheckRange() const
 
 /// Print parameters to stdout with details
 
-void ParameterStructure::PrintParameters(log4cxx::LoggerPtr& x_logger) const
+void ParameterStructure::PrintParameters() const
 {
 	stringstream ss;
 	// string confType = "";
@@ -207,7 +209,7 @@ void ParameterStructure::PrintParameters(log4cxx::LoggerPtr& x_logger) const
 		(*it)->Print(ss);
 	}
 	if(m_list.size() > 0)
-		LOG_INFO(x_logger, ss.str());
+		LOG_INFO(m_logger, ss.str());
 }
 
 

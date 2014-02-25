@@ -91,6 +91,8 @@ protected:
 	ParameterConfigType m_confSource;
 	const std::string m_description;
 	bool m_isLocked;
+private:
+	static log4cxx::LoggerPtr m_logger;
 };
 
 template<class T> class ParameterT : public Parameter
@@ -328,7 +330,7 @@ public:
 	void UpdateConfig() const;
 	void SetValueToDefault();
 	void CheckRange() const;
-	void PrintParameters(log4cxx::LoggerPtr& x_logger) const;
+	void PrintParameters() const;
 	//void SetValueByName(const std::string& x_name, const std::string& x_value, ParameterConfigType x_configType = PARAMCONF_UNKNOWN);
 	const Parameter & GetParameterByName(const std::string& x_name) const;
 	const std::vector<Parameter*>& GetList() const {return m_list;}
@@ -339,6 +341,8 @@ protected:
 	std::string m_moduleName;
 	bool m_writeAllParamsToConfig;
 	Parameter & RefParameterByName(const std::string& x_name);
+private:
+	static log4cxx::LoggerPtr m_logger;
 };
 
 typedef ParameterT<int> 	ParameterInt;

@@ -29,6 +29,7 @@
 using namespace std;
 using namespace cv;
 
+log4cxx::LoggerPtr LogState::m_logger(log4cxx::Logger::getLogger("LogState"));
 
 LogState::LogState(const ConfigReader& x_configReader) 
 	 : Module(x_configReader), m_param(x_configReader)

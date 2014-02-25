@@ -28,6 +28,8 @@
 using namespace std;
 using namespace cv;
 
+log4cxx::LoggerPtr GroundTruthReader::m_logger(log4cxx::Logger::getLogger("GroundTruthReader"));
+
 GroundTruthReader::GroundTruthReader(const ConfigReader& x_configReader): 
 	Module(x_configReader),
 	m_param(x_configReader),

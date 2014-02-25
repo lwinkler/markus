@@ -35,10 +35,11 @@
 
 using namespace std;
 
+log4cxx::LoggerPtr Module::m_logger(log4cxx::Logger::getLogger("Module"));
+
 Module::Module(const ConfigReader& x_configReader) :
 	Configurable(x_configReader),
-	m_name(x_configReader.GetAttribute("name")),
-	m_logger(log4cxx::Logger::getLogger(m_name))
+	m_name(x_configReader.GetAttribute("name"))
 {
 	m_id	= atoi(x_configReader.GetAttribute("id").c_str());
 	LOG_INFO(m_logger, "Create object " << m_name);
@@ -60,8 +61,9 @@ Module::Module(const ConfigReader& x_configReader) :
 void Module::Reset()
 {
 	// Lock the parameters that cannot be changed
+	LOG_INFO(m_logger, "Reseting module "<<GetName());
 	const ModuleParameterStructure& param(GetParameters());
-	param.PrintParameters(m_logger);
+	param.PrintParameters();
 	param.CheckRange();
 
 	// Add the module timer (only works with QT)
