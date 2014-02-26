@@ -28,6 +28,8 @@
 
 using namespace std;
 
+log4cxx::LoggerPtr MarkusApplication::m_logger(log4cxx::Logger::getLogger("MarkusApplication"));
+
 MarkusApplication::MarkusApplication(int &argc, char ** argv) : QApplication(argc, argv){}
 // ~MarkusApplication();
 
@@ -43,24 +45,24 @@ bool MarkusApplication::notify(QObject *receiver_, QEvent *event_)
 	}
 	catch(cv::Exception& e)
 	{
-		LOG_ERROR(Manager::Logger(), "Exception raised (std::exception) : "); // TODO: Use logger
+		LOG_ERROR(m_logger, "Exception raised (cv::Exception): "<<e.what());
 	}
 	catch(std::exception& e)
 	{
-		LOG_ERROR(Manager::Logger(), "Exception raised (std::exception) : ");
+		LOG_ERROR(m_logger, "Exception raised (std::exception): "<<e.what());
 		// exit(0);
 	}
 	catch(std::string& str)
 	{
-		LOG_ERROR(Manager::Logger(), "Exception raised (string)" << str);
+		LOG_ERROR(m_logger, "Exception raised (string): " << str);
 	}
 	catch(const char* str)
 	{
-		LOG_ERROR(Manager::Logger(), "Exception raised (const char*)" << str);
+		LOG_ERROR(m_logger, "Exception raised (const char*): " << str);
 	}
 	catch(...)
 	{
-		LOG_ERROR(Manager::Logger(), "Unknown exception");
+		LOG_ERROR(m_logger, "Unknown exception");
 	}
 
 	return false;

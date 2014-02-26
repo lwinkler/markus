@@ -72,7 +72,7 @@ public:
 	std::string objClass;
 };
 
-class Module : Configurable
+class Module : public Configurable
 {
 public:
 	Module(const ConfigReader& x_confReader);
@@ -150,10 +150,10 @@ protected:
 	std::vector<Module *> m_modulesDepending;
 	QModuleTimer * m_moduleTimer;
 	QReadWriteLock m_lock;
-	log4cxx::LoggerPtr m_logger;
 
 private:
 	virtual const ModuleParameterStructure & GetParameters() const = 0;
+	static log4cxx::LoggerPtr m_logger;
 };
 
 #endif

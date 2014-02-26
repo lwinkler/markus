@@ -43,7 +43,8 @@ using namespace std;
 
 using namespace std;
 
-log4cxx::LoggerPtr Manager::m_logger(log4cxx::Logger::getLogger("manager"));
+log4cxx::LoggerPtr Manager::m_logger(log4cxx::Logger::getLogger("Manager"));
+
 string Manager::m_configFile;
 string Manager::m_outputDir;
 FactoryModules Manager::m_factory;
@@ -83,6 +84,8 @@ Manager::Manager(const ConfigReader& x_configReader, bool x_centralized) :
 Manager::~Manager()
 {
 	PrintTimers();
+
+
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		delete *it;
 
@@ -93,7 +96,12 @@ Manager::~Manager()
 	/// Do the final operations on the static class
 	if(m_outputDir.size() != 0 && getenv("LOG_DIR") == NULL)
 	{
-		SYSTEM("cp markus.log " + m_outputDir + "/markus.copy.log");
+		try
+		{
+			SYSTEM("cp markus.log " + m_outputDir + "/markus.copy.log");
+		}
+		catch(...) // TODO: Implement no throw equivalent ?
+		{}
 		// SYSTEM("cp markus " + m_outputDir);
 	}
 }
@@ -432,4 +440,13 @@ const string& Manager::OutputDir(const string& x_outputDir)
 	return m_outputDir;
 }
 
+/// Save the configuration of manager and modules to file
+
+void Manager::UpdateConfig()
+{
+	// Set all config ready to be saved
+	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+		(*it)->UpdateConfig();
+	Configurable::UpdateConfig();
+}
 

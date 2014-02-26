@@ -56,11 +56,13 @@ public:
 private:
 	UsbCamParameterStructure m_param;
 	inline virtual const UsbCamParameterStructure& GetParameters() const {return m_param;}
-	Timer m_frameTimer;
+	static log4cxx::LoggerPtr m_logger;
+
 protected:
 	cv::VideoCapture m_capture;
 	cv::Mat m_output;
 	TIME_STAMP m_timeStamp;
+	Timer m_frameTimer;
 	void GetProperties();
 };
 

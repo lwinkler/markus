@@ -30,6 +30,7 @@
 #include <QImage>
 #include <QPainter>
 #include "QControlBoard.h"
+#include "Parameter.h"
 
 class Manager;
 class Module;
@@ -38,17 +39,35 @@ class ControlBoard;
 class QComboBox;
 class QPainter;
 class QGroupBox;
-// class QPushButton;
 class QBoxLayout;
 class QLabel;
-// class QScrollArea;
 class QListWidget;
 
-class QModuleViewer : public QWidget 
+class QModuleViewerParameterStructure : public ParameterStructure
+{
+public:
+	QModuleViewerParameterStructure(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
+	{
+		// m_list.push_back(new ParameterString("module", "", &module, "Module to display"));
+		m_list.push_back(new ParameterInt("module",   0, -1, 1000, &module,  "Index of the module to display"));
+		m_list.push_back(new ParameterInt("stream",   0, -1, 1000, &stream,  "Index of the stream to display"));
+		m_list.push_back(new ParameterInt("control", -1, -1, 1000, &control, "Index of the control to display"));
+		m_list.push_back(new ParameterBool("display_options", 1, 0, 1, &displayOptions, "Display the options to select the module, stream, ..."));
+
+		Init();
+		m_writeAllParamsToConfig = true;
+	}
+	int module;
+	int stream;
+	int control;
+	bool displayOptions;
+};
+
+class QModuleViewer : public QWidget, public Configurable
 {
 	Q_OBJECT
 public:
-	QModuleViewer(const Manager * x_manager, QWidget *parent = 0);
+	QModuleViewer(const Manager * x_manager, ConfigReader& x_configReader, QWidget *parent = 0);
 	virtual ~QModuleViewer();
 	static void  ConvertMat2QImage(const cv::Mat *mat, QImage *qim);
 private:
@@ -79,10 +98,12 @@ private:
 	cv::Mat * m_img_tmp2;
 
 	QControlBoard * m_controlBoard;
+	QModuleViewerParameterStructure m_param;
+        inline const QModuleViewerParameterStructure& GetParameters() const{return m_param;}
 
 public slots:
 	void updateModuleNb(int x_index);
-	void updateStreamOrControlNb(int x_index);
+	void updateStreamNb(int x_index);
 	void updateControlNb(int x_index = -1);
 	void updateModule(Module * x_module);
 	void updateStream(Stream * x_outputStream);

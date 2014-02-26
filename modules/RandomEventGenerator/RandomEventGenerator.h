@@ -58,6 +58,7 @@ public:
 private:
 	RandomEventGeneratorParameterStructure m_param;
 	inline virtual const RandomEventGeneratorParameterStructure& GetParameters() const {return m_param;}
+	static log4cxx::LoggerPtr m_logger;
 protected:
 	TIME_STAMP m_timeStamp;
 	Event m_event;

@@ -59,6 +59,7 @@ public:
 private:
 	MotionDetectorParameterStructure m_param;
 	inline virtual const MotionDetectorParameterStructure& GetParameters() const { return m_param;}
+	static log4cxx::LoggerPtr m_logger;
 protected:
 	virtual void ProcessFrame();
 

@@ -27,21 +27,23 @@
 #include <cppunit/TestCase.h>
 #include <cppunit/TestCaller.h>
 
-#include "Manager.h"
 #include "util.h"
 #include "MkException.h"
+#include "Manager.h"
 
-#define LOG_TEST(str) {\
+#define LOG_TEST(logger, str) {\
 	std::cout<<str<<std::endl;\
-	LOG_INFO(Manager::Logger(), str);\
+	LOG_INFO((logger), str);\
 }
 
 
 /// Unit testing class for ConfigReader class
 
+
 class TestProjects : public CppUnit::TestFixture
 {
-	protected:
+	private:
+		static log4cxx::LoggerPtr m_logger;
 	public:
 	/*void runTest()
 	{
@@ -55,7 +57,7 @@ class TestProjects : public CppUnit::TestFixture
 
 	void runConfig(const std::string& x_configFile)
 	{
-		LOG_TEST("## Unit test with configuration "<<x_configFile);
+		LOG_TEST(m_logger, "## Unit test with configuration "<<x_configFile);
 		ConfigReader mainConfig(x_configFile);
 		mainConfig.Validate();
 		ConfigReader appConfig = mainConfig.GetSubConfig("application");
@@ -72,7 +74,7 @@ class TestProjects : public CppUnit::TestFixture
 	/// Run different existing configs
 	void testSync()
 	{
-		LOG_TEST("\n# Unit test with different test projects");
+		LOG_TEST(m_logger, "\n# Unit test with different test projects");
 		runConfig("testing/projects/sync_test1.xml");
 		runConfig("testing/projects/sync_test2.xml");
 		runConfig("testing/projects/sync_test3.xml");
@@ -87,4 +89,5 @@ class TestProjects : public CppUnit::TestFixture
 		return suiteOfTests;
 	}
 };
+log4cxx::LoggerPtr TestProjects::m_logger(log4cxx::Logger::getLogger("TestProjects"));
 #endif

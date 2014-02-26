@@ -51,7 +51,7 @@ public:
 class Manager : public Configurable
 {
 public:
-	Manager(const ConfigReader & x_configReader, bool x_centralized);
+	Manager(const ConfigReader& x_configReader, bool x_centralized);
 	~Manager();
 	void Reset();
 	bool Process();
@@ -72,13 +72,13 @@ public:
 	void PauseInputs(bool x_pause);
 	bool EndOfAllStreams() const;
 	static const std::string& OutputDir(const std::string& x_outputDir = "");
-	inline static log4cxx::LoggerPtr& Logger(){return m_logger;}
 	static inline void SetConfigFile(const std::string& x_configFile){
 		assert(m_configFile.size() == 0);
 		m_configFile = x_configFile;
 	}
 	static inline const std::string& GetConfigFile(){return m_configFile;}
 	static inline void ListModules(std::vector<std::string>& xr_types) {m_factory.ListModules(xr_types);};
+	void UpdateConfig();
 
 private:
 	ManagerParameter m_param;

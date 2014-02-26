@@ -17,7 +17,7 @@
 			<description>Height of the input</description>
 		</param>
 		<param name="type">
-			<type>image type</type>
+			<type>imageType</type>
 			<value default="CV_8UC3">CV_8UC3</value>
 			<description>Format of the input image</description>
 		</param>

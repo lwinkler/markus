@@ -67,6 +67,7 @@ protected:
 	
 private:
 	virtual const ModuleAsyncParameterStructure & GetParameters() const = 0;
+	static log4cxx::LoggerPtr m_logger;
 };
 
 #endif

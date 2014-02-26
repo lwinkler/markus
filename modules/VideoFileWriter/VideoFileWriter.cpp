@@ -29,6 +29,8 @@
 using namespace std;
 using namespace cv;
 
+log4cxx::LoggerPtr VideoFileWriter::m_logger(log4cxx::Logger::getLogger("VideoFileWriter"));
+
 VideoFileWriter::VideoFileWriter(const ConfigReader& x_configReader): 
 	Module(x_configReader),
 	m_param(x_configReader),
@@ -107,7 +109,7 @@ const string VideoFileWriter::ExtensionFromFourcc(const string& x_fourcc)
 	if(x_fourcc.compare("FLV1") == 0) 
 		return "flv1.avi";
 	
-	LOG_WARN(Manager::Logger(), "Unknown fourcc code, cannot find a matching extension in VideoFileWriter::ExtensionFromFourcc");
+	LOG_WARN(m_logger, "Unknown fourcc code, cannot find a matching extension in VideoFileWriter::ExtensionFromFourcc");
 
 	return "avi";
 }

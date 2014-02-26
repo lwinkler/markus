@@ -8,7 +8,7 @@
 #qt5_automoc(markus.cpp QModuleViewer.cpp QParameterControlBoard.cpp QParameterSlider.cpp)
 
 add_library(gui
-markus.cpp
+Markus.cpp
 MarkusApplication.cpp
 QModuleViewer.cpp
 QControlBoard.cpp

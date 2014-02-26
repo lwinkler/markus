@@ -64,6 +64,7 @@ public:
 private:
 	FilterObjectsParameterStructure m_param;
 	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;}
+	static log4cxx::LoggerPtr m_logger;
 protected:
 	std::vector <Object> m_objectsIn;
 	std::vector <Object> m_objectsOut;

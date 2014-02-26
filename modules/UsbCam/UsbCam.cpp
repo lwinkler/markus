@@ -27,13 +27,15 @@
 using namespace std;
 using namespace cv;
 
+log4cxx::LoggerPtr UsbCam::m_logger(log4cxx::Logger::getLogger("UsbCam"));
+
 UsbCam::UsbCam(const ConfigReader& x_configReader): 
 	Input(x_configReader),
  	m_param(x_configReader),
 	m_output(Size(m_param.width, m_param.height), m_param.type)  // Note: sizes will be overridden !
 {
 	m_timeStamp = TIME_STAMP_INITIAL;
-	AddOutputStream(0, new StreamImage("input", m_output, *this, 		"Video stream of the camera"));
+	AddOutputStream(0, new StreamImage("input", m_output, *this, "Video stream of the camera"));
 }
 
 UsbCam::~UsbCam()
@@ -42,6 +44,7 @@ UsbCam::~UsbCam()
 
 void UsbCam::Reset()
 {
+	// TODO: Tere is a bug if we reset this module through a command
 	Module::Reset();
 
 	m_capture.release();
@@ -52,12 +55,12 @@ void UsbCam::Reset()
 	
 	if(! m_capture.isOpened())
 	{
-		throw MkException("Cannot open USB or local camera number " + m_param.num, LOC);
+		throw MkException("Cannot open USB or local camera: check the value of the num parameter", LOC);
 	}
 
 	// Apparently you cannot set width and height. We try anyway
-	m_capture.set(CV_CAP_PROP_FRAME_WIDTH,  m_param.width);
-	m_capture.set(CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
+	// m_capture.set(CV_CAP_PROP_FRAME_WIDTH,  m_param.width);
+	//m_capture.set(CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
 	
 	// note on the next line: the image will be overloaded but the properties are used to set the input ratio, the type is probably ignored
 	// m_output = Mat(Size(m_capture.get(CV_CAP_PROP_FRAME_WIDTH), m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)), m_param.type);

@@ -37,7 +37,7 @@ class ParameterStructure;
 class ConfigReader
 {
 public:
-	ConfigReader(const std::string& x_fileName);
+	ConfigReader(const std::string& x_fileName, bool x_allowCreation=false);
 	ConfigReader(TiXmlNode * xp_node);
 	~ConfigReader();
 	ConfigReader GetSubConfig(const std::string& x_objectType, std::string x_objectName = "") const;
@@ -51,8 +51,10 @@ public:
 	void SaveToFile(const std::string& x_file) const;
 	void Validate() const;
 	inline bool operator == (const ConfigReader &a){return a.mp_node == mp_node;}
+
 private:
 	void CheckUniquenessOfId(const std::string& x_group, const std::string& x_type, const std::string& x_idLabel, const std::string& x_moduleName) const;
+	bool m_isOriginal;
 	TiXmlNode * mp_node;
 	TiXmlDocument * mp_doc;
 };
@@ -64,9 +66,11 @@ class Configurable
 public:
 	Configurable(const ConfigReader& x_confReader) : m_configReader(x_confReader){}
 	~Configurable(){}
+	virtual void UpdateConfig();
+
 protected:
-	const ConfigReader m_configReader;
-	inline virtual const ParameterStructure & GetParameters() const = 0;
+	ConfigReader m_configReader;
+	virtual const ParameterStructure & GetParameters() const = 0;
 };
 
 #endif

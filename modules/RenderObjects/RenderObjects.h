@@ -47,9 +47,12 @@ public:
 	
 	void Reset();
 	virtual void ProcessFrame();
+
 private:
 	RenderObjectsParameterStructure m_param;
 	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;};
+	static log4cxx::LoggerPtr m_logger;
+
 protected:
 	// for streams
 	cv::Mat m_imageInput;
@@ -59,7 +62,6 @@ protected:
 	std::vector<Object> m_objectInput3;
 	std::vector<Object> m_objectInput4;
 	std::vector<Object> m_objectInput5;
-
 };
 
 

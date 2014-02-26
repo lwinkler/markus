@@ -29,6 +29,8 @@
 using namespace cv;
 using namespace std;
 
+log4cxx::LoggerPtr BgrSubRunAvg::m_logger(log4cxx::Logger::getLogger("BgrSubRunAvg"));
+
 BgrSubRunAvg::BgrSubRunAvg(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader),

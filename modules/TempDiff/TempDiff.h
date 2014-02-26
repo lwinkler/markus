@@ -53,6 +53,7 @@ public:
 private:
 	TempDiffParameterStructure m_param;
 	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;};
+	static log4cxx::LoggerPtr m_logger;
 protected:
 	// Temporal differencing
 	cv::Mat m_input;

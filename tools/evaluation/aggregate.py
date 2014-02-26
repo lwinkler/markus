@@ -105,7 +105,7 @@ def generate_html(path, datas, dirname='analysis', filename='report.html'):
     row = TR()
     row <= TD('')
     for col in datas:
-        row <= TD(IMG(src=os.path.join(col[0], dirname, 'thumbnail.png'),
+        row <= TD(IMG(src=os.path.join(col[0], dirname, 'thumbnail.jpg'),
                       width=120))
     row <= TD('')
     table <= row

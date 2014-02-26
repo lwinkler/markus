@@ -32,6 +32,7 @@
 using namespace std;
 using namespace cv;
 
+log4cxx::LoggerPtr TrackerByFeatures::m_logger(log4cxx::Logger::getLogger("TrackerByFeatures"));
 
 
 TrackerByFeatures::TrackerByFeatures(const ConfigReader& x_configReader) :

@@ -59,6 +59,7 @@ public:
 private:
 	VideoFileWriterParameterStructure m_param;
 	inline virtual const VideoFileWriterParameterStructure& GetParameters() const {return m_param;};
+	static log4cxx::LoggerPtr m_logger;
 protected:
 	cv::VideoWriter m_writer;
 	cv::Mat m_input;

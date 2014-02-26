@@ -61,6 +61,7 @@ public:
 private:
 	SlitCamParameterStructure m_param;
 	inline virtual const SlitCamParameterStructure& GetParameters() const { return m_param;}
+	static log4cxx::LoggerPtr m_logger;
 protected:
 	virtual void ProcessFrame();
 	int m_position;

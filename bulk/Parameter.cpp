@@ -29,6 +29,8 @@ using namespace std;
 
 // Static variables
 std::map<std::string,int>  ParameterImageType::m_map_enum;
+log4cxx::LoggerPtr Parameter::m_logger(log4cxx::Logger::getLogger("Parameter"));
+log4cxx::LoggerPtr ParameterStructure::m_logger(log4cxx::Logger::getLogger("ParameterStructure"));
 
 
 template<> const ParameterType ParameterT<bool>::m_type   = PARAM_BOOL;
@@ -42,13 +44,12 @@ template<> const std::string ParameterT<float>::m_typeStr  = "float";
 template<> const std::string ParameterT<double>::m_typeStr = "double";
 
 
-// TODO: Check that parameter setting is thread safe
-
 /// Parent for all parameter structures
 ParameterStructure::ParameterStructure(const ConfigReader& x_configReader):
 	m_configReader(x_configReader.GetSubConfig("parameters")),
 	m_moduleName(x_configReader.GetAttribute("name"))
 {
+	m_writeAllParamsToConfig = false;
 }
 
 ParameterStructure::~ParameterStructure()
@@ -96,27 +97,28 @@ void ParameterStructure::SetFromConfig()
 		catch(ParameterException& e)
 		{
 			// note: do not output a warning, unused parameters are checked inside CheckRange
-			// LOG_WARN(Manager::Logger(), "Unknown parameter in configuration: "<<name<<" in module "<<m_moduleName);
+			// LOG_WARN(m_logger, "Unknown parameter in configuration: "<<name<<" in module "<<m_moduleName);
 		}
 		conf = conf.NextSubConfig("param");
 	}
 }
 
-/// Browse the parameter list to find the parameter with this name
-/*
-void ParameterStructure::SetValueByName(const string& x_name, const string& x_value, ParameterConfigType x_configType)
+/// Save all values and prepare xml configuration for writing
+
+void ParameterStructure::UpdateConfig() const
 {
-	for(vector<Parameter*>::iterator it = m_list.begin(); it != m_list.end(); it++)
+	// assert(!m_configReader.IsEmpty());
+	ConfigReader conf = m_configReader;
+	
+	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
 	{
-		if((*it)->GetName().compare(x_name) == 0)//(!strcmp(it->m_name, x_name))
+		if(m_writeAllParamsToConfig || (*it)->GetConfigurationSource() != PARAMCONF_DEF)
 		{
-			(*it)->SetValue(x_value, x_configType);
-			return;
+			conf.RefSubConfig("param", (*it)->GetName(), true).SetValue((*it)->GetValueString());
 		}
 	}
-	
-	cout<<("Warning : Parameter not found in list (by name) : " + x_name)<<endl;
-}*/
+}
+
 
 /// Get the parameter by name
 const Parameter& ParameterStructure::GetParameterByName(const std::string& x_name) const
@@ -177,7 +179,7 @@ void ParameterStructure::CheckRange() const
 		}
 		catch(ParameterException& e)
 		{
-			LOG_WARN(Manager::Logger(), e.what());
+			LOG_WARN(m_logger, e.what());
 		}
 		conf = conf.NextSubConfig("param");
 	}
@@ -198,7 +200,7 @@ void ParameterStructure::CheckRange() const
 
 /// Print parameters to stdout with details
 
-void ParameterStructure::PrintParameters(log4cxx::LoggerPtr& x_logger) const
+void ParameterStructure::PrintParameters() const
 {
 	stringstream ss;
 	// string confType = "";
@@ -207,7 +209,7 @@ void ParameterStructure::PrintParameters(log4cxx::LoggerPtr& x_logger) const
 		(*it)->Print(ss);
 	}
 	if(m_list.size() > 0)
-		LOG_INFO(x_logger, ss.str());
+		LOG_INFO(m_logger, ss.str());
 }
 
 

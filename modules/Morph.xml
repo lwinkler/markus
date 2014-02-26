@@ -17,7 +17,7 @@
 			<description>Height of the input</description>
 		</param>
 		<param name="type">
-			<type>image type</type>
+			<type>imageType</type>
 			<value default="CV_8UC1">CV_8UC1</value>
 			<description>Format of the input image</description>
 		</param>
@@ -48,7 +48,7 @@
 		</param>
 		<param name="kernel_size">
 			<type>int</type>
-			<value min="1" max="100" default="5">5</value>
+			<value min="3" max="100" default="5">5</value>
 			<description>Size of the element</description>
 		</param>
 	</parameters>

@@ -29,22 +29,24 @@
 #include "Module.h"
 #include "Controller.h"
 #include "util.h"
-#include "Manager.h"
 #include "StreamEvent.h"
 #include "StreamObject.h"
 #include "StreamImage.h"
 #include "StreamState.h"
 #include "MkException.h"
 
-#define LOG_TEST(str) {\
+#define LOG_TEST(logger, str) {\
 	std::cout<<str<<std::endl;\
-	LOG_INFO(Manager::Logger(), str);\
+	LOG_INFO((logger), str);\
 }
+
 
 /// Unit testing class for ConfigReader class
 
 class TestModules : public CppUnit::TestFixture
 {
+	private:
+		static log4cxx::LoggerPtr m_logger;
 	protected:
 		std::vector<std::string> moduleTypes;
 		FactoryModules m_factory;
@@ -203,7 +205,6 @@ class TestModules : public CppUnit::TestFixture
 				outputStream = new StreamEvent("test", m_event, *mp_fakeInput, "Test input");
 			else
 			{
-				LOG_ERROR(Manager::Logger(), "Unknown input stream type "<<it2->second->GetTypeString());
 				CPPUNIT_ASSERT_MESSAGE("Unknown input stream type", false);
 			}
 			inputStream.Connect(outputStream);
@@ -249,12 +250,12 @@ class TestModules : public CppUnit::TestFixture
 	/// Run the modules with different inputs generated randomly
 	void testInputs()
 	{
-		LOG_TEST("\n# Test different inputs");
+		LOG_TEST(m_logger, "\n# Test different inputs");
 		
 		// Test on each type of module
 		for(std::vector<std::string>::const_iterator it1 = moduleTypes.begin() ; it1 != moduleTypes.end() ; it1++)
 		{
-			LOG_TEST("## on module "<<*it1);
+			LOG_TEST(m_logger, "## on module "<<*it1);
 
 			Module* module = createAndConnectModule(*it1);
 
@@ -271,17 +272,16 @@ class TestModules : public CppUnit::TestFixture
 	/// Call each controller of each module
 	void testControllers()
 	{
-		LOG_TEST("\n# Test all controllers");
+		LOG_TEST(m_logger, "\n# Test all controllers");
 		
 		// Test on each type of module
 		for(std::vector<std::string>::const_iterator it1 = moduleTypes.begin() ; it1 != moduleTypes.end() ; it1++)
 		{
-			LOG_TEST("# on module "<<*it1);
+			LOG_TEST(m_logger, "# on module "<<*it1);
 
 			Module* module = createAndConnectModule(*it1);
 			if(module->IsInput())
 			{
-				// TODO : only blacklist problematic parameters
 				delete module;
 				continue;
 			}
@@ -289,7 +289,7 @@ class TestModules : public CppUnit::TestFixture
 
 			for(std::map<std::string, Controller*>::const_iterator it2 = module->GetControllersList().begin() ; it2 != module->GetControllersList().end() ; it2++)
 			{
-				LOG_INFO(Manager::Logger(), "## on controller "<<it2->first<<" of type "<<it2->second->GetType());
+				LOG_INFO(m_logger, "## on controller "<<it2->first<<" of type "<<it2->second->GetType());
 				std::vector<std::string> actions;
 				it2->second->ListActions(actions);
 
@@ -304,15 +304,15 @@ class TestModules : public CppUnit::TestFixture
 
 						type = "0";
 						it2->second->CallAction("GetType", &type);
-						LOG_INFO(Manager::Logger(), "###  "<<it2->first<<".GetType returned "<<type);
+						LOG_INFO(m_logger, "###  "<<it2->first<<".GetType returned "<<type);
 
 						range = "0";
 						it2->second->CallAction("GetRange", &range);
-						LOG_INFO(Manager::Logger(), "###  "<<it2->first<<".GetRange returned "<<range);
+						LOG_INFO(m_logger, "###  "<<it2->first<<".GetRange returned "<<range);
 
 						defval = "0";
 						it2->second->CallAction("GetDefault", &defval);
-						LOG_INFO(Manager::Logger(), "###  "<<it2->first<<".GetDefault returned "<<defval);
+						LOG_INFO(m_logger, "###  "<<it2->first<<".GetDefault returned "<<defval);
 
 						for(int i = 0 ; i < 10 ; i++)
 						{
@@ -329,13 +329,9 @@ class TestModules : public CppUnit::TestFixture
 							for(int i = 0 ; i < 3 ; i++)
 								module->Process();
 						}
-						LOG_INFO(Manager::Logger(), "###  "<<it2->first<<".Set returned "<<value);
-						LOG_INFO(Manager::Logger(), "###  "<<it2->first<<".Get returned "<<newValue);
+						LOG_INFO(m_logger, "###  "<<it2->first<<".Set returned "<<value);
+						LOG_INFO(m_logger, "###  "<<it2->first<<".Get returned "<<newValue);
 					}
-				}
-				else if(it2->second->GetType() == "event")
-				{
-					// TODO fix this
 				}
 				else
 				{
@@ -344,7 +340,7 @@ class TestModules : public CppUnit::TestFixture
 						std::string value = "0";
 						// module->LockForWrite();
 						it2->second->CallAction(*it3, &value);
-						LOG_INFO(Manager::Logger(), "###  "<<it2->first<<"."<<*it3<<" returned "<<value);
+						LOG_INFO(m_logger, "###  "<<it2->first<<"."<<*it3<<" returned "<<value);
 						// module->Unlock();
 
 						for(int i = 0 ; i < 3 ; i++) module->Process();
@@ -365,4 +361,5 @@ class TestModules : public CppUnit::TestFixture
 		return suiteOfTests;
 	}
 };
+log4cxx::LoggerPtr TestModules::m_logger(log4cxx::Logger::getLogger("TestModules"));
 #endif

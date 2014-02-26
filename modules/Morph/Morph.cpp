@@ -30,6 +30,8 @@
 
 using namespace cv;
 
+log4cxx::LoggerPtr Morph::m_logger(log4cxx::Logger::getLogger("Morph"));
+
 Morph::Morph(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader),

@@ -57,5 +57,7 @@ class Event
 	protected:
 		std::string m_label;
 		Object m_object;
+	private:
+		static log4cxx::LoggerPtr m_logger;
 };
 #endif

@@ -28,22 +28,24 @@
 #include <cppunit/TestCaller.h>
 #include "ConfigReader.h"
 #include "util.h"
-#include "Manager.h"
 #include "MkException.h"
 
-#define LOG_TEST(str) {\
+#define LOG_TEST(logger, str) {\
 	std::cout<<str<<std::endl;\
-	LOG_INFO(Manager::Logger(), str);\
+	LOG_INFO((logger), str);\
 }
+
 
 /// Unit testing class for ConfigReader class
 
 class ConfigReaderTest : public CppUnit::TestFixture
 {
-	protected:
-		ConfigReader* m_conf1;
-		ConfigReader* m_conf2;
-	public:
+private:
+	static log4cxx::LoggerPtr m_logger;
+protected:
+	ConfigReader* m_conf1;
+	ConfigReader* m_conf2;
+public:
 	void runTest()
 	{
 	}
@@ -61,7 +63,7 @@ class ConfigReaderTest : public CppUnit::TestFixture
 	/// Load and save a config file
 	void testLoad()
 	{
-		LOG_TEST("\n# Test the loading of configurations");
+		LOG_TEST(m_logger, "\n# Test the loading of configurations");
 
 		ConfigReader appConf = m_conf1->GetSubConfig("application");
 		ConfigReader module0conf = appConf.GetSubConfig("module", "Module0");
@@ -93,7 +95,7 @@ class ConfigReaderTest : public CppUnit::TestFixture
 	/// Generate a config from an empty file and test
 	void testGenerate()
 	{
-		LOG_TEST("# Test the generation of configurations");
+		LOG_TEST(m_logger, "# Test the generation of configurations");
 		ConfigReader appConf = m_conf2->RefSubConfig("application");
 		appConf.RefSubConfig("aaa", "nameX", true)
 			.RefSubConfig("bbb", "nameY", true)
@@ -117,4 +119,6 @@ class ConfigReaderTest : public CppUnit::TestFixture
 		return suiteOfTests;
 	}
 };
+
+log4cxx::LoggerPtr ConfigReaderTest::m_logger(log4cxx::Logger::getLogger("ConfigReaderTest"));
 #endif

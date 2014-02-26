@@ -158,8 +158,7 @@ void adjust(const Mat& im_in, Mat& im_out, Mat*& tmp1, Mat*& tmp2)
 		}
 		else
 		{
-			LOG_ERROR(Manager::Logger(), "Cannot convert format "<<im_in.depth()<<" to format "<<im_out.depth());
-			throw MkException("Cannot convert", LOC);
+			throw MkException("Cannot convert format", LOC);
 		}
 	}
 }
@@ -210,11 +209,11 @@ Scalar colorFromId(int x_id)
 
 
 /* Split a string separated by a character*/
-std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
-	std::stringstream ss(s);
-	std::string item;
+vector<string> &split(const string &s, char delim, vector<string> &elems) {
+	stringstream ss(s);
+	string item;
 	elems.clear();
-	while (std::getline(ss, item, delim)) {
+	while (getline(ss, item, delim)) {
 		elems.push_back(item);
 	}
 	return elems; // Return an input parameter so the reference is valid !
@@ -235,7 +234,7 @@ const string timeStamp(){
 }
 
 /// Convert a time in miliseconds to a time stamp (format used in subtitle files)
-const std::string msToTimeStamp(TIME_STAMP x_ms)
+const string msToTimeStamp(TIME_STAMP x_ms)
 {
 	TIME_STAMP t = x_ms;
 	int msecs = t % 1000;
@@ -252,4 +251,34 @@ const std::string msToTimeStamp(TIME_STAMP x_ms)
 	return string(str);
 }
 
+// Convert a string to json object
+string jsonify(const string& x_name, const string& x_value)
+{
+	stringstream ss;
+	ss<<"'"<<x_name<<"': '"<<x_value<<"'";
+	return ss.str();
+}
 
+// Convert a string to json object
+string jsonify(const string& x_name, long long x_value)
+{
+	stringstream ss;
+	ss<<"'"<<x_name<<"': "<<x_value;
+	return ss.str();
+}
+
+
+// Log an event and notify the parent process
+void logEvent(log4cxx::LoggerPtr& x_logger, const string& x_name, TIME_STAMP x_timeStamp, const string& x_extraInfo)
+{
+	struct timeval tp;
+
+	gettimeofday(&tp, NULL);
+
+	LOG_WARN(x_logger, "@notif@ EVENT {"
+		<< jsonify("name", x_name) <<", "
+		<< jsonify("date_event", x_timeStamp) <<", "
+		<< jsonify("date_notif", tp.tv_sec * 1000 + tp.tv_usec / 1000) <<", "
+		<< x_extraInfo
+		<<"}");
+}

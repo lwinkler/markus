@@ -14,6 +14,7 @@
 using namespace std;
 using namespace cv;
 
+log4cxx::LoggerPtr ClassifyEvents::m_logger(log4cxx::Logger::getLogger("ClassifyEvents"));
 
 ClassifyEvents::ClassifyEvents(const ConfigReader& x_configReader) :
 	Module(x_configReader),

@@ -31,7 +31,7 @@
 #include "version.h"
 
 #ifndef MARKUS_NO_GUI
-#include "markus.h"
+#include "Markus.h"
 #include "MarkusApplication.h"
 #endif
 
@@ -69,6 +69,7 @@ void usage()
 void *send_commands(void *x_void_ptr)
 {
 	Manager *pManager = (Manager *)x_void_ptr;
+	static log4cxx::LoggerPtr logger(log4cxx::Logger::getLogger("Module"));
 	assert(pManager != NULL);
 	string input;
 	vector<string> elems;
@@ -85,7 +86,7 @@ void *send_commands(void *x_void_ptr)
 				else if(elems.size() == 2)
 					value = elems.at(1);
 				else throw MkException("Command must have one or two elements", LOC);
-				LOG_INFO(Manager::Logger(), "Send command: "<<elems.at(0)<<" \""<<value<<"\"");
+				LOG_INFO(logger, "Send command: "<<elems.at(0)<<" \""<<value<<"\"");
 				pManager->SendCommand(elems.at(0), value);
 				cin.clear();
 			}
@@ -93,11 +94,11 @@ void *send_commands(void *x_void_ptr)
 		}
 		catch(std::exception& e)
 		{
-			LOG_ERROR(Manager::Logger(), "Cannot execute command: "<<e.what());
+			LOG_ERROR(logger, "Cannot execute command: "<<e.what());
 		}
 		catch(...)
 		{
-			LOG_ERROR(Manager::Logger(), "Cannot execute command");
+			LOG_ERROR(logger, "Cannot execute command");
 		}
 		// usleep(1000000);
 	}
@@ -114,12 +115,12 @@ int main(int argc, char** argv)
 	bool nogui       = false;
 	bool centralized = false;
 	bool useStdin    = false;
+	int returnValue  = -1;
 
 	string configFile    = "config.xml";
 	string logConfigFile = "log4cxx.xml";
 	string outputDir     = "";
 	vector<string> parameters;
-
 
 	// Read arguments
 
@@ -193,6 +194,8 @@ int main(int argc, char** argv)
 		}
 	}
 
+	log4cxx::xml::DOMConfigurator::configure(logConfigFile);
+
 	if (optind == argc - 1) {
 		configFile = argv[argc - 1];
 	}
@@ -213,7 +216,6 @@ int main(int argc, char** argv)
 		string dir = outputDir + "/";
 		setenv("LOG_DIR", dir.c_str(), 1);
 	}
-	log4cxx::xml::DOMConfigurator::configure(logConfigFile);
 
 	try
 	{
@@ -261,7 +263,7 @@ int main(int argc, char** argv)
 		pthread_t command_thread;
 		if(useStdin && pthread_create(&command_thread, NULL, send_commands, &manager))
 		{
-			LOG_ERROR(Manager::Logger(), "Error creating thread");
+			LOG_ERROR(logger, "Error creating thread");
 			return -1;
 		}
 		/* wait for the second thread to finish */
@@ -270,7 +272,7 @@ int main(int argc, char** argv)
 			LOG_ERROR(Manager::Logger(), "Error joining thread");
 			return -1;
 		}*/
-		LOG_EVENT(logger, "STARTED pid="<<getpid());
+		logEvent(logger, "start", 0, jsonify("pid", getpid()));
 
 		if(centralized)
 		{
@@ -282,42 +284,62 @@ int main(int argc, char** argv)
 			{
 				// nothing 
 			}
-			return 0;
+
+			returnValue = 0;
 		}
 		else
 		{
 #ifndef MARKUS_NO_GUI
-			markus gui(mainConfig, manager);
+			ConfigReader mainGuiConfig("gui.xml", true);
+			ConfigReader guiConfig = mainGuiConfig.RefSubConfig("gui", configFile, true);
+			guiConfig.RefSubConfig("parameters", "", true);
+
+			Markus gui(guiConfig, manager);
 			gui.setWindowTitle("Markus");
 			if(!nogui)
 				gui.show();
-			return app.exec(); // TODO: Manage case where centralized with GUI
+			returnValue = app.exec(); // TODO: Manage case where centralized with GUI
+
+			// write the modified params in config and save
+			gui.UpdateConfig();
+			mainGuiConfig.SaveToFile("gui.xml");
 #else
 			LOG_ERROR(logger, "Markus was compiled without GUI. It can only be launched with option -nc");
-			return -1;
+			returnValue = -1;
 #endif
 		}
+
+		// Write the modified params in config and save
+		manager.UpdateConfig();
+		mainConfig.SaveToFile("last_config.xml");
 	}
 	catch(cv::Exception& e)
 	{
-		LOG_ERROR(logger, "Exception (std::exception): " << e.what() );
+		LOG_ERROR(logger, "Exception (cv::Exception): " << e.what() );
+		returnValue = -1;
 	}
 	catch(std::exception& e)
 	{
 		LOG_ERROR(logger, "Exception (std::exception): " << e.what() );
+		returnValue = -1;
 	}
 	catch(std::string str)
 	{
 		LOG_ERROR(logger, "Exception (string): " << str );
+		returnValue = -1;
 	}
 	catch(const char* str)
 	{
 		LOG_ERROR(logger, "Exception (const char*): " << str );
+		returnValue = -1;
 	}
 	catch(...)
 	{
 		LOG_ERROR(logger, "Exception: Unknown");
+		returnValue = -1;
 	}
-	return -1;
+
+
+	return returnValue;
 }
 

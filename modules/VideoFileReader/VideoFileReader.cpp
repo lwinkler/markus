@@ -31,6 +31,8 @@
 using namespace std;
 using namespace cv;
 
+log4cxx::LoggerPtr VideoFileReader::m_logger(log4cxx::Logger::getLogger("VideoFileReader"));
+
 VideoFileReader::VideoFileReader(const ConfigReader& x_configReader): 
 	Input(x_configReader),
 	m_param(x_configReader),
@@ -84,7 +86,7 @@ void VideoFileReader::Capture()
 		{
 			// Note: there seems to be a 3 seconds lag when grabbing after the last frame. This is linked to format h264: MJPG is ok
 			m_endOfStream = true;
-			std::exception e;
+			//std::exception e;
 			Pause(true);
 			throw EndOfStreamException("Capture failed in VideoFileReader::Capture.", LOC);
 		}

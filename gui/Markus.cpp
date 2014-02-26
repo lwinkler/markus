@@ -21,7 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "markus.h"
+#include "Markus.h"
 
 #include <QLabel>
 #include <QMenu>
@@ -44,12 +44,11 @@ using namespace std;
 // Main constructor
 //---------------------------------------------------------------------------------------------------- 
 
-markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
-	: m_configReader(rx_configReader),  m_manager(rx_manager)
+Markus::Markus(ConfigReader & rx_configReader, Manager& rx_manager)
+	: Configurable(rx_configReader),
+ 	m_param(rx_configReader),
+	m_manager(rx_manager)
 {
-	nbLines = 1;
-	nbCols = 1;
-
 	// Call to manager process each 10 ms
 	//if(!m_centralized)
 	startTimer(static_cast<int>(MARKUS_TIMER_S * 1000));  // 10 -> 0.01-second timer
@@ -62,12 +61,6 @@ markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 	m_mainWidget.setLayout(&m_mainLayout);
 	setCentralWidget(&m_mainWidget);
 
-	/*for(vector<Module *>::iterator it = m_manager.GetModuleListVar().begin() ; it != m_manager.GetModuleListVar().end() ; it++)
-	{
-		QModuleTimer * timer = new QModuleTimer(**it);
-		m_moduleTimer.push_back(timer);
-	}*/
-	
 	createActions();
 	createMenus();
 	resizeEvent(NULL);
@@ -76,7 +69,7 @@ markus::markus(ConfigReader & rx_configReader, Manager& rx_manager)
 }
 
 
-void markus::timerEvent(QTimerEvent*)
+void Markus::timerEvent(QTimerEvent*)
 {
 	/*if(m_centralized)
 	{
@@ -84,17 +77,24 @@ void markus::timerEvent(QTimerEvent*)
 		m_manager.Process();
 	}*/
 
-	for(int i = 0 ; i < nbCols * nbLines ; i++)
+	for(int i = 0 ; i < m_param.nbCols * m_param.nbRows ; i++)
 		m_moduleViewer[i]->update();
 	
 	//update();
 }
 
-markus::~markus()
-{}
+Markus::~Markus()
+{
+}
 
+void Markus::UpdateConfig()
+{
+	for(vector<QModuleViewer *>::iterator it = m_moduleViewer.begin() ; it != m_moduleViewer.end() ; it++)
+		(*it)->UpdateConfig();
+	Configurable::UpdateConfig();
+}
 
-QLabel *markus::createLabel(const QString &text)
+QLabel *Markus::createLabel(const QString &text)
 {
 	QLabel *label = new QLabel(text);
 	label->setAlignment(Qt::AlignCenter);
@@ -107,7 +107,7 @@ QLabel *markus::createLabel(const QString &text)
 //---------------------------------------------------------------------------------------------------- 
 // Print about text
 //---------------------------------------------------------------------------------------------------- 
-void markus::about()
+void Markus::about()
 {
 	QMessageBox::about(this, tr("About Image Viewer"),
 				    tr("<p>The <b>Markus</b> image processing environment lets "
@@ -121,7 +121,7 @@ void markus::about()
 //---------------------------------------------------------------------------------------------------- 
 // Create actions for menus
 //---------------------------------------------------------------------------------------------------- 
-void markus::createActions()
+void Markus::createActions()
 {
 	exitAct = new QAction(tr("E&xit"), this);
 	exitAct->setShortcut(tr("Ctrl+Q"));
@@ -152,7 +152,7 @@ void markus::createActions()
 //---------------------------------------------------------------------------------------------------- 
 // Create the menus themselves
 //---------------------------------------------------------------------------------------------------- 
-void markus::createMenus()
+void Markus::createMenus()
 {
 	fileMenu = new QMenu(tr("&File"), this);
 	//fileMenu->addAction(cleanAct);
@@ -178,7 +178,7 @@ void markus::createMenus()
 	menuBar()->addMenu(helpMenu);
 }
 
-void markus::viewDisplayOptions(bool x_isChecked)
+void Markus::viewDisplayOptions(bool x_isChecked)
 {
 	int size = m_moduleViewer.size();
 	for(int ind = 0 ; ind < size; ind++)
@@ -187,57 +187,57 @@ void markus::viewDisplayOptions(bool x_isChecked)
 	}
 }
 
-void markus::view1x1()
+void Markus::view1x1()
 {
-	nbLines = 1;
-	nbCols = 1;
+	m_param.nbRows = 1;
+	m_param.nbCols = 1;
 	resizeEvent(NULL);
 }
 
-void markus::view1x2()
+void Markus::view1x2()
 {
-	nbLines = 1;
-	nbCols = 2;
+	m_param.nbRows = 1;
+	m_param.nbCols = 2;
 	resizeEvent(NULL);
 }
 
-void markus::view2x2()
+void Markus::view2x2()
 {
-	nbLines = 2;
-	nbCols = 2;
+	m_param.nbRows = 2;
+	m_param.nbCols = 2;
 	resizeEvent(NULL);
 }
 
-void markus::view2x3()
+void Markus::view2x3()
 {
-	nbLines = 2;
-	nbCols = 3;
+	m_param.nbRows = 2;
+	m_param.nbCols = 3;
 	resizeEvent(NULL);
 }
 
-void markus::view3x3()
+void Markus::view3x3()
 {
-	nbLines = 3;
-	nbCols = 3;
+	m_param.nbRows = 3;
+	m_param.nbCols = 3;
 	resizeEvent(NULL);
 }
 
-void markus::view3x4()
+void Markus::view3x4()
 {
-	nbLines = 3;
-	nbCols = 4;
+	m_param.nbRows = 3;
+	m_param.nbCols = 4;
 	resizeEvent(NULL);
 }
 
-void markus::view4x4()
+void Markus::view4x4()
 {
-	nbLines = 4;
-	nbCols = 4;
+	m_param.nbRows = 4;
+	m_param.nbCols = 4;
 	resizeEvent(NULL);
 }
 
 
-void markus::resizeEvent(QResizeEvent* event)
+void Markus::resizeEvent(QResizeEvent* event)
 {
 	// hide all modules
 	int size = m_moduleViewer.size();
@@ -249,25 +249,29 @@ void markus::resizeEvent(QResizeEvent* event)
 	}
 	
 	// Add new module viewers
-	for(int ind = size ; ind < nbLines * nbCols ; ind++)
+	for(int ind = size ; ind < m_param.nbRows * m_param.nbCols ; ind++)
 	{
-		m_moduleViewer.push_back(new QModuleViewer(&m_manager));
+		stringstream ss;
+		ss<<"viewer"<<ind;
+		ConfigReader conf = m_configReader.RefSubConfig("viewer", ss.str(), true);
+		conf.RefSubConfig("parameters", "", true);
+		m_moduleViewer.push_back(new QModuleViewer(&m_manager, conf));
 		m_moduleViewer[ind]->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-		m_moduleViewer[ind]->showDisplayOptions(true);
+		// m_moduleViewer[ind]->showDisplayOptions(true);
 	}
 	
 	// Remove extra modules
-	for(int ind = nbLines * nbCols ; ind < size ; ind++)
+	for(int ind = m_param.nbRows * m_param.nbCols ; ind < size ; ind++)
 	{
 		delete(m_moduleViewer[ind]);
 	}
-	m_moduleViewer.resize(nbLines * nbCols);
+	m_moduleViewer.resize(m_param.nbRows * m_param.nbCols);
 
-	for (int ii = 0; ii < nbLines; ++ii) 
+	for (int ii = 0; ii < m_param.nbRows; ++ii) 
 	{
-		for (int jj = 0; jj < nbCols; ++jj) 
+		for (int jj = 0; jj < m_param.nbCols; ++jj) 
 		{
-			int ind = ii * nbCols + jj;
+			int ind = ii * m_param.nbCols + jj;
 			m_mainLayout.addWidget(m_moduleViewer[ind], ii, jj);
 			m_moduleViewer[ind]->show();
 			//m_moduleViewer[ind]->toggleDisplayOptions(1);

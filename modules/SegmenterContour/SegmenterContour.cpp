@@ -32,6 +32,8 @@
 using namespace std;
 using namespace cv;
 
+log4cxx::LoggerPtr SegmenterContour::m_logger(log4cxx::Logger::getLogger("SegmenterContour"));
+
 SegmenterContour::SegmenterContour(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader),

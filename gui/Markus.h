@@ -21,8 +21,8 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef markus_H
-#define markus_H
+#ifndef MARKUS_H
+#define MARKUS_H
 
 #include "QModuleViewer.h"
 
@@ -39,15 +39,34 @@ class Manager;
 class ConfigReader;
 class QModuleTimer;
 
+class MarkusParameterStructure : public ParameterStructure
+{
+public:
+	MarkusParameterStructure(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
+	{
+		// m_list.push_back(new ParameterString("module", "", &module, "Module to display"));
+		m_list.push_back(new ParameterInt("nb_cols", 1, 1, 4, &nbCols, "Number of columns for display"));
+		m_list.push_back(new ParameterInt("nb_rows", 1, 1, 4, &nbRows, "Number of rows for display"));
 
-class markus : public QMainWindow
+		Init();
+		m_writeAllParamsToConfig = true;
+	}
+	int nbCols;
+	int nbRows;
+};
+
+class Markus : public QMainWindow, public Configurable
 {
 Q_OBJECT
 public:
-	markus(ConfigReader& rx_configReader, Manager& rx_manager);
-	virtual ~markus();
+	Markus(ConfigReader& rx_configReader, Manager& rx_manager);
+	virtual ~Markus();
+        void UpdateConfig();
 private:
-	ConfigReader& m_configReader;
+	// ConfigReader& m_configReader;
+	MarkusParameterStructure m_param;
+        inline const MarkusParameterStructure& GetParameters() const{return m_param;}
+
 	Manager& m_manager;
 	
 	//std::vector<QModuleTimer *> m_moduleTimer;
@@ -55,9 +74,6 @@ private:
 	bool notify(QObject *receiver_, QEvent *event_);
 	void timerEvent(QTimerEvent*);
 	void resizeEvent(QResizeEvent*);
-	
-	int nbCols;
-	int nbLines;
 	
 	void createActions();
 	void createMenus();
@@ -83,6 +99,7 @@ private:
 	QMenu *fileMenu;
 	QMenu *viewMenu;
 	QMenu *helpMenu;
+	
 private slots:
 	void about();
 	void viewDisplayOptions(bool x_isChecked);
@@ -97,4 +114,4 @@ private slots:
 };
 
 
-#endif // markus_H
+#endif // Markus_H

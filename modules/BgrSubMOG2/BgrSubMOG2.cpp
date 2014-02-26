@@ -28,6 +28,8 @@
 using namespace cv;
 using namespace std;
 
+log4cxx::LoggerPtr BgrSubMOG2::m_logger(log4cxx::Logger::getLogger("BgrSubMOG2"));
+
 BgrSubMOG2::BgrSubMOG2(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader),

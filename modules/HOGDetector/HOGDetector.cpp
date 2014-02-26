@@ -33,6 +33,7 @@
 using namespace std;
 using namespace cv;
 
+log4cxx::LoggerPtr HOGDetector::m_logger(log4cxx::Logger::getLogger("HOGDetector"));
 
 HOGDetector::HOGDetector(const ConfigReader& x_configReader) 
 	 : ModuleAsync(x_configReader), m_param(x_configReader),

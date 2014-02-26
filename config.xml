@@ -1,12 +1,10 @@
 <application name="ddd2" description="" cyclelimit="-1" gui="">
   <module name="SlitCamera1" id="0">
 	<parameters>
-	<param id="0" name="class">SlitCam</param>
-	<param id="2" name="width">640</param>
-        <param id="3" name="height">480</param>
-	<param id="4" name="type">CV_8UC3</param>
-	<param id="1" name="aperture">1</param>
-	<param id="4" name="fps">0</param>
+	<param name="class">SlitCam</param>
+	<param name="width">640</param>
+        <param name="height">480</param>
+	<param name="aperture">1</param>
 	</parameters>
     <inputs>
       <input id="0" moduleid="1" outputid="0" />
@@ -20,8 +18,6 @@
   <module name="Input" id="1">
     <parameters>
       <param name="class">UsbCam</param>
-      <param name="width">200</param>
-      <param name="height">100</param>
       <param name="type">CV_8UC3</param>
       <param name="num">-1</param>
       <param name="fps">100</param>
