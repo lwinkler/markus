@@ -274,9 +274,7 @@ void ControllerBool::SetWidgetValue(const std::string& x_value)
 std::string ControllerBool::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
-	stringstream ss;
-	checkBox->setChecked(m_param2.GetValue());
-	return ss.str();
+	return checkBox->isChecked() ? "1" : "0";
 #else
 	assert(false);
 	return "";
