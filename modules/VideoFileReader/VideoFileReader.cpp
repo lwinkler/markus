@@ -44,7 +44,6 @@ VideoFileReader::VideoFileReader(const ConfigReader& x_configReader):
 
 VideoFileReader::~VideoFileReader()
 {
-	//delete(m_output);
 }
 
 void VideoFileReader::Reset()
@@ -73,9 +72,7 @@ void VideoFileReader::Reset()
 	m_capture.set(CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
 	
 	// note on the next line: the image will be overloaded but the properties are used to set the input ratio, the type is probably ignored
-	// delete m_output; // TODO: valgrind says there may be a leak here
 	m_output = Mat(Size(m_capture.get(CV_CAP_PROP_FRAME_WIDTH), m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)), m_param.type);
-
 }
 
 void VideoFileReader::Capture()

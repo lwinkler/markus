@@ -82,6 +82,7 @@ public:
 
 private:
 	ManagerParameter m_param;
+	inline virtual const ParameterStructure& GetParameters() const {return m_param;}
 
 	bool m_centralized;
 	bool m_isConnected;
@@ -100,7 +101,6 @@ private:
 	static FactoryModules m_factory;
 
 protected:
-	inline virtual const ParameterStructure& GetParameters() const {return m_param;}
 	QReadWriteLock m_lock;
 };
 #endif

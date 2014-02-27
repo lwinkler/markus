@@ -55,11 +55,11 @@ public:
 
 	virtual inline bool IsInput() {return true;}
 private:
+	virtual const InputParameterStructure& GetParameters() const = 0;
 
 protected:
 	// const std::string m_name;
 	bool m_endOfStream;
-	virtual const InputParameterStructure& GetParameters() const = 0;
 };
 
 #endif

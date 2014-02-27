@@ -45,8 +45,6 @@ TempDiff::TempDiff(const ConfigReader& x_configReader) :
 	
 	AddInputStream(0, new StreamImage("input", m_input, *this,             "Video input"));
 	AddOutputStream(0, new StreamImage("temp_diff", m_temporalDiff, *this, "Temporal difference"));
-		
-	// Reset(); //  TODO: check that no reset is called in any constructor
 }
 
 TempDiff::~TempDiff(void )
@@ -74,7 +72,7 @@ void TempDiff::ProcessFrame()
 	{
 		subtract(m_input, m_lastImg, *m_tmp);
 		absdiff(m_input,  m_lastImg, *m_tmp);
-		adjustChannels(*m_tmp, m_temporalDiff); // TODO do not use pointer
+		adjustChannels(*m_tmp, m_temporalDiff);
 		
 		m_input.copyTo(m_lastImg);
 	}
