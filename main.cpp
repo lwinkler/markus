@@ -22,9 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include <QApplication>
-// #include <cstring>
-// #include <cstdio>
-#include <getopt.h>    /* for getopt_long; standard getopt is in unistd.h */
+#include <QtWebKit>
 
 #include "Manager.h"
 #include "MkException.h"
@@ -37,6 +35,7 @@
 
 #include <iostream>
 #include <log4cxx/xml/domconfigurator.h>
+#include <getopt.h>    /* for getopt_long; standard getopt is in unistd.h */
 
 using namespace std;
 
@@ -52,6 +51,7 @@ void usage()
 	printf(" -h  --help            Print this help        \n");
 	printf(" -v  --version         Print version information\n");
 	printf(" -d  --describe        Create a description of all modules in XML format inside module/ directory. For development purpose.\n");
+	printf(" -e  --editor          Launch the module editor. \n");
 	printf(" -c  --centralized     Module processing function is called from the manager (instead of decentralized timers)\n");
 	printf(" -i  --stdin           Read commands from stdin\n");
 	printf(" -n  --no-gui          Run process without gui\n");
@@ -129,6 +129,7 @@ int main(int argc, char** argv)
 		{"help",        0, 0, 'h'},
 		{"version",     0, 0, 'v'},
 		{"describe",    0, 0, 'd'},
+		{"editor",      0, 0, 'e'},
 		{"centralized", 0, 0, 'c'},
 		{"stdin",       0, 0, 'i'},
 		{"no-gui",      0, 0, 'n'},
@@ -140,7 +141,7 @@ int main(int argc, char** argv)
 	};
 	int c;
 	int option_index = 0;
-	while ((c = getopt_long(argc, argv, "hvdcintl:o:p:", long_options, &option_index)) != -1)
+	while ((c = getopt_long(argc, argv, "hvdecintl:o:p:", long_options, &option_index)) != -1)
 	{
 		switch (c) {
 			case 'h':
@@ -153,6 +154,15 @@ int main(int argc, char** argv)
 				return 0;
 			case 'd':
 				describe = true;
+				break;
+			case 'e':
+				{
+					QApplication app(argc, argv);
+					QWebView view;
+					view.show();
+					view.setUrl(QUrl("editor.html"));
+					return app.exec();
+				}
 				break;
 			case 'c':
 				centralized = true;
