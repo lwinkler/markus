@@ -15,7 +15,7 @@ find_package(OpenCV REQUIRED)
 # find_package(CppUnit REQUIRED)
 if(Markus_USE_QT5)
 	find_package(Qt5Widgets REQUIRED)
-	find_package(Qt5Webkit REQUIRED) ## TODO : is it used ?
+	find_package(Qt5WebKit REQUIRED)
 	# find_package(Qt5Core REQUIRED) # already found via Qt5Widgets
 ELSE()
 	find_package(Qt4 REQUIRED)
@@ -61,8 +61,8 @@ endif()
 
 set(DEPS ${DEPS} ${DEPS} tinyxml log4cxx ${OpenCV_LIBS}) # double the dependencies to avoid linking error
 if(Markus_USE_QT5)
-	include_directories(${Qt5Widgets_INCLUDE_DIRS})
-	set(DEPS ${DEPS} ${Qt5Widgets_LIBRARIES} ${Qt5Webkit_LIBRARIES})
+	include_directories(${Qt5Widgets_INCLUDE_DIRS} ${Qt5WebKit_INCLUDE_DIRS})
+	set(DEPS ${DEPS} ${Qt5Widgets_LIBRARIES} ${Qt5WebKit_LIBRARIES})
 	# Executables fail to build with Qt 5 in the default configuration
 	# without -fPIE. We add that here.
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")

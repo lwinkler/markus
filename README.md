@@ -29,6 +29,12 @@ On Ubuntu the apt-get install command is:
 
 	sudo apt-get install cmake libqt4-core  libqt4-dev libtinyxml-dev libopencv-dev liblog4cxx10-dev
 
+### Alternative: use Qt5
+	
+	sudo apt-get install qt5-default libqt5webkit5-dev
+	ccmake .
+
+Then enable compilation with Qt5.
 
 ### Other dependencies
 	- *CMake GUI* : to set the compilation flags visually (packages cmake-curses-gui or cmake-qt-gui)
