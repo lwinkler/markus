@@ -19,8 +19,7 @@ def parse(file_path):
 
     # Verify the existence of the file
     if not os.path.isfile(file_path):
-        print('The events file is empty')
-        sys.exit(1)
+        return []
 
     # Read the file
     with open(file_path, 'r') as f:
@@ -35,8 +34,7 @@ def _parse_lines(lines):
 
     # Check input
     if len(lines) == 0:
-        print('The events file is empty')
-        sys.exit(1)
+        return []
 
     # Prepare results array
     events = []
