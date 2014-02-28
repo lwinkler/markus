@@ -104,7 +104,7 @@ void VideoFileReader::Capture()
 
 void VideoFileReader::GetProperties()
 {
-	int cc = static_cast<int>(m_capture.get(CV_CAP_PROP_FOURCC));
+	// int cc = static_cast<int>(m_capture.get(CV_CAP_PROP_FOURCC));
 
 	LOG_DEBUG(m_logger, "POS_MSEC "<<m_capture.get(CV_CAP_PROP_POS_MSEC)
 		<<" POS_FRAMES "<<m_capture.get(CV_CAP_PROP_POS_FRAMES)
@@ -112,7 +112,7 @@ void VideoFileReader::GetProperties()
 		<<" FRAME_WIDTH "<<m_capture.get(CV_CAP_PROP_FRAME_WIDTH)
 		<<" FRAME_HEIGHT "<<m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)
 		<<" FPS "<<m_capture.get(CV_CAP_PROP_FPS)
-		<<" FOURCC "<< (char)(cc & 0XFF) << (char)((cc & 0XFF00) >> 8) << (char)((cc & 0XFF0000) >> 16) << (char)((cc & 0XFF000000) >> 24) 
+		// <<" FOURCC "<< (char)(cc & 0XFF) << (char)((cc & 0XFF00) >> 8) << (char)((cc & 0XFF0000) >> 16) << (char)((cc & 0XFF000000) >> 24) 
 		<<" FRAME_COUNT "<<m_capture.get(CV_CAP_PROP_FRAME_COUNT)
 		<<" FORMAT "<<m_capture.get(CV_CAP_PROP_FORMAT)
 		<<" MODE "<<m_capture.get(CV_CAP_PROP_MODE)
@@ -123,8 +123,8 @@ void VideoFileReader::GetProperties()
 		<<" GAIN "<<m_capture.get(CV_CAP_PROP_GAIN)
 		<<" EXPOSURE "<<m_capture.get(CV_CAP_PROP_EXPOSURE)
 		<<" CONVERT_RGB "<<m_capture.get(CV_CAP_PROP_CONVERT_RGB)
-	// 	<<" WHITE_BALANCE"<<m_capture.get(CV_CAP_PROP_WHITE_BALANCE)<<endl;
-		<<" RECTIFICATION"<<m_capture.get(CV_CAP_PROP_RECTIFICATION));
+	// 	<<" WHITE_BALANCE "<<m_capture.get(CV_CAP_PROP_WHITE_BALANCE)<<endl;
+		<<" RECTIFICATION "<<m_capture.get(CV_CAP_PROP_RECTIFICATION));
 }
 
 // Set reading time in msec

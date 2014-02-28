@@ -206,7 +206,13 @@ int main(int argc, char** argv)
 
 	log4cxx::xml::DOMConfigurator::configure(logConfigFile);
 
-	if (optind == argc - 1) {
+	if (optind == argc - 2) {
+		configFile = argv[argc - 2];
+		stringstream ss;
+		ss<<"Input.file="<<argv[argc - 1];
+		parameters.push_back(ss.str());
+	}
+	else if (optind == argc - 1) {
 		configFile = argv[argc - 1];
 	}
 	else if(optind == argc)
