@@ -30,11 +30,13 @@ On Ubuntu the apt-get install command is:
 	sudo apt-get install cmake libqt4-core  libqt4-dev libtinyxml-dev libopencv-dev liblog4cxx10-dev
 
 ### Alternative: use Qt5
+
+Markus can also be compiled with Qt5. The packages required for qt webkit are a bit more complicated in this case:
 	
-	sudo apt-get install qt5-default libqt5webkit5-dev
+	sudo apt-get install qt5-default libqt5webkit5-dev qtquick1-5-dev qtlocation5-dev qtsensors5-dev qtdeclarative5-dev
 	ccmake .
 
-Then enable compilation with Qt5.
+Then enable compilation with Qt5 in the menu.
 
 ### Other dependencies
 	- *CMake GUI* : to set the compilation flags visually (packages cmake-curses-gui or cmake-qt-gui)

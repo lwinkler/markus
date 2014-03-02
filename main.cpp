@@ -23,6 +23,7 @@
 
 #include <QApplication>
 #include <QtWebKit>
+#include <QtWebKitWidgets/QWebView>
 
 #include "Manager.h"
 #include "MkException.h"
@@ -160,7 +161,12 @@ int main(int argc, char** argv)
 					QApplication app(argc, argv);
 					QWebView view;
 					view.show();
-					view.setUrl(QUrl("editor.html"));
+					stringstream ss;
+
+					char pwd[256];
+					assert(getcwd(pwd, sizeof(pwd)) != NULL);
+					ss<<"file://"<<pwd<<"/editor.html";
+					view.setUrl(QUrl(ss.str().c_str()));
 					return app.exec();
 				}
 				break;
