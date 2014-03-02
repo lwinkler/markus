@@ -375,9 +375,9 @@ Module& Manager::RefModuleById(int x_id) const
 	if(found == 1)
 		return *module;
 	if(found == 0)
-		throw MkException("Module not found " + x_id, LOC);
+		throw MkException("Module not found", LOC);
 	else
-		throw MkException("more than one module with id " + x_id, LOC);
+		throw MkException("more than one module with id ", LOC);
 	//return NULL;
 }
 
