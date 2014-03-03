@@ -27,30 +27,46 @@
 
 #include <QWebElement>
 #include <QWebFrame>
+#include <QAction>
 #include "Editor.h"
 
-// #include <QtWebKit>
-#include <QtWebKitWidgets/QtWebKitWidgets>
-#include <QtWebKitWidgets/QWebView>
+#include <QtWebKit>
+//#include <QtWebKitWidgets>
+#include <QWebView>
+
+#include <QLabel>
+#include <QMenu>
+#include <QMenuBar>
+#include <QAction>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QApplication>
+#include <QStatusBar>
 
 using namespace std;
 
 Editor::Editor(QWidget *parent)
-    : QWidget(parent)
 {
+	setWindowState(Qt::WindowMaximized);
+	setCentralWidget(&m_view);
+	// m_view.show();
 	// setupUi(this);
 	stringstream ss;
 	char pwd[256];
 	assert(getcwd(pwd, sizeof(pwd)) != NULL);
 	ss<<"file://"<<pwd<<"/editor.html";
 	m_view.load(QUrl(ss.str().c_str()));
-	m_view.show();
 
-	connect(&m_view, SIGNAL(loadFinished(bool)), this, SLOT(AdaptDom(bool)));
+	connect(&m_view, SIGNAL(loadFinished(bool)), this, SLOT(adaptDom(bool)));
+
+	CreateActions();
+	CreateMenus();
+	setWindowTitle(tr("Markus project editor"));
+	show();
 }
 
 /// Adapt the DOM to the Qt environment
-void Editor::AdaptDom(bool x_loadOk)
+void Editor::adaptDom(bool x_loadOk)
 {
 	assert(x_loadOk); // TODO Exception
 	QWebFrame *frame = m_view.page()->mainFrame();
@@ -64,11 +80,130 @@ void Editor::AdaptDom(bool x_loadOk)
 }
 
 /// Load an XML project file
-void Editor::LoadProject(QString x_file)
+void Editor::loadProject()
 {
+	if(maybeSave())
+	{
+		QString fileName = QFileDialog::getOpenFileName(this);
+		if (!fileName.isEmpty())
+			cout<<"load"<<fileName.toStdString()<<endl; //loadFile(fileName);
+	}
+}
+
+
+/// Check if the user wants to save its work
+bool Editor::maybeSave()
+{
+	/* TODO
+	if (textEdit->document()->isModified())
+	{
+		QMessageBox::StandardButton ret;
+		ret = QMessageBox::warning(this, tr("Application"),
+				tr("The project has been modified.\n"
+					"Do you want to save your changes?"),
+				QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+		if (ret == QMessageBox::Save)
+			return save();
+		else if (ret == QMessageBox::Cancel)
+			return false;
+	}
+	*/
+	return true;
+}
+
+/// Save file
+bool Editor::save()
+{
+	if (true) // TODO curFile.isEmpty())
+	{
+		return saveAs();
+	}
+	// else
+	// {
+		// return saveFile(curFile);
+	// }
+}
+
+/// Save file as
+bool Editor::saveAs()
+{
+	QString fileName = QFileDialog::getSaveFileName(this);
+	if (fileName.isEmpty())
+		return false;
+
+	return saveProject(fileName);
 }
 
 /// Save a project as XML
-void Editor::SaveProject(QString x_file)
+bool Editor::saveProject(const QString& x_fileName)
 {
+	QFile file(x_fileName);
+	if (!file.open(QFile::WriteOnly | QFile::Text)) {
+		QMessageBox::warning(this, tr("Application"),
+				tr("Cannot write file %1:\n%2.")
+				.arg(x_fileName)
+				.arg(file.errorString()));
+		return false;
+	}
+
+	QTextStream out(&file);
+#ifndef QT_NO_CURSOR
+	QApplication::setOverrideCursor(Qt::WaitCursor);
+#endif
+	// out << textEdit->toPlainText();
+#ifndef QT_NO_CURSOR
+	QApplication::restoreOverrideCursor();
+#endif
+
+	// TODO setCurrentFile(x_fileName);
+	statusBar()->showMessage(tr("File saved"), 2000);
+	return true;
+}
+
+/// Print about
+void Editor::about()
+{
+	QMessageBox::about(this, tr("About Markus editor"),
+				    tr("<p>The <b>Markus</b> editor  "
+				    "<p><b>Author : Laurent Winkler </b></p>"));
+}
+
+/// Create actions
+void Editor::CreateActions()
+{
+	aboutAct = new QAction(tr("&About"), this);
+	connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
+	loadProjectAct = new QAction(tr("&Load project"), this);
+	connect(loadProjectAct, SIGNAL(triggered()), this, SLOT(loadProject()));
+	saveProjectAct = new QAction(tr("&Save project"), this);
+	connect(saveProjectAct, SIGNAL(triggered()), this, SLOT(save()));
+	saveProjectAsAct = new QAction(tr("Save project as"), this);
+	connect(saveProjectAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
+}
+
+/// Create menus
+void Editor::CreateMenus()
+{
+	fileMenu = new QMenu(tr("&File"), this);
+	fileMenu->addAction(loadProjectAct);
+	fileMenu->addAction(saveProjectAct);
+	fileMenu->addAction(saveProjectAsAct);
+	
+	
+	viewMenu = new QMenu(tr("&View"), this);
+	// viewMenu->addAction(viewDisplayOptionsAct);
+	// viewMenu->addAction(view1x1Act);
+	// viewMenu->addAction(view1x2Act);
+	// viewMenu->addAction(view2x2Act);
+	// viewMenu->addAction(view2x3Act);
+	// viewMenu->addAction(view3x3Act);
+	// viewMenu->addAction(view3x4Act);
+	// viewMenu->addAction(view4x4Act);
+	
+	helpMenu = new QMenu(tr("&Help"), this);
+	helpMenu->addAction(aboutAct);
+	
+	menuBar()->addMenu(fileMenu);
+	menuBar()->addMenu(viewMenu);
+	menuBar()->addMenu(helpMenu);
 }
