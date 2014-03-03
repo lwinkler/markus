@@ -50,8 +50,8 @@ if(Markus_NO_GUI)
 	add_definitions(-DMARKUS_NO_GUI)
 	set(DEPS bulk modules)
 else()
-	set(DEPS bulk gui modules)
-	include_directories(gui)
+	set(DEPS bulk gui editor modules)
+	include_directories(gui editor)
 endif()
 
 if(Markus_UNIT_TESTING)
@@ -62,7 +62,7 @@ endif()
 
 set(DEPS ${DEPS} ${DEPS} tinyxml log4cxx ${OpenCV_LIBS}) # double the dependencies to avoid linking error
 if(Markus_USE_QT5)
-	include_directories(${Qt5Widgets_INCLUDE_DIRS} ${Qt5WebKit_INCLUDE_DIRS})
+	include_directories(${Qt5Widgets_INCLUDE_DIRS} ${Qt5WebKit_INCLUDE_DIRS} ${Qt5WebKitWidgets_INCLUDE_DIRS})
 	set(DEPS ${DEPS} ${Qt5Widgets_LIBRARIES} ${Qt5WebKit_LIBRARIES} ${Qt5WebKitWidgets_LIBRARIES}) 
 	# Executables fail to build with Qt 5 in the default configuration
 	# without -fPIE. We add that here.
@@ -90,6 +90,7 @@ add_subdirectory(modules)
 add_subdirectory(tools)
 if(NOT Markus_NO_GUI)
 	add_subdirectory(gui)
+	add_subdirectory(editor)
 endif()
 if(Markus_UNIT_TESTING)
 	add_subdirectory(testing)

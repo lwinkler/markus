@@ -22,10 +22,9 @@
 -------------------------------------------------------------------------------------*/
 
 #include <QApplication>
-#include <QtWebKit>
-#include <QtWebKitWidgets/QWebView>
 
 #include "Manager.h"
+#include "Editor.h"
 #include "MkException.h"
 #include "version.h"
 
@@ -159,14 +158,7 @@ int main(int argc, char** argv)
 			case 'e':
 				{
 					QApplication app(argc, argv);
-					QWebView view;
-					view.show();
-					stringstream ss;
-
-					char pwd[256];
-					assert(getcwd(pwd, sizeof(pwd)) != NULL);
-					ss<<"file://"<<pwd<<"/editor.html";
-					view.setUrl(QUrl(ss.str().c_str()));
+					Editor editor;
 					return app.exec();
 				}
 				break;
