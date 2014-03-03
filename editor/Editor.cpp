@@ -41,7 +41,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QApplication>
-#include <QStatusBar>
+// #include <QStatusBar>
 
 using namespace std;
 
@@ -87,6 +87,7 @@ void Editor::loadProject()
 		QString fileName = QFileDialog::getOpenFileName(this);
 		if (!fileName.isEmpty())
 			cout<<"load"<<fileName.toStdString()<<endl; //loadFile(fileName);
+		m_currentProject = fileName;
 	}
 }
 
@@ -94,8 +95,7 @@ void Editor::loadProject()
 /// Check if the user wants to save its work
 bool Editor::maybeSave()
 {
-	/* TODO
-	if (textEdit->document()->isModified())
+	if (true)// textEdit->document()->isModified())
 	{
 		QMessageBox::StandardButton ret;
 		ret = QMessageBox::warning(this, tr("Application"),
@@ -107,21 +107,20 @@ bool Editor::maybeSave()
 		else if (ret == QMessageBox::Cancel)
 			return false;
 	}
-	*/
 	return true;
 }
 
 /// Save file
 bool Editor::save()
 {
-	if (true) // TODO curFile.isEmpty())
+	if (m_currentProject.isEmpty())
 	{
 		return saveAs();
 	}
-	// else
-	// {
-		// return saveFile(curFile);
-	// }
+	else
+	{
+		return saveProject(m_currentProject);
+	}
 }
 
 /// Save file as
@@ -156,7 +155,7 @@ bool Editor::saveProject(const QString& x_fileName)
 #endif
 
 	// TODO setCurrentFile(x_fileName);
-	statusBar()->showMessage(tr("File saved"), 2000);
+	// statusBar()->showMessage(tr("File saved"), 2000);
 	return true;
 }
 

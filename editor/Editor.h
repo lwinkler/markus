@@ -13,6 +13,7 @@ class Editor : public QMainWindow
 
 	private:
 		QWebView m_view;
+		QString m_currentProject;
 		QAction *aboutAct;
 		QAction *loadProjectAct;
 		QAction *saveProjectAct;
