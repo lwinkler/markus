@@ -21,6 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 #include <sstream>
+#include <fstream>
 #include <iostream>
 #include <unistd.h>
 #include <assert.h>
@@ -139,7 +140,8 @@ bool Editor::saveAs()
 bool Editor::saveProject(const QString& x_fileName)
 {
 	QFile file(x_fileName);
-	if (!file.open(QFile::WriteOnly | QFile::Text)) {
+	if (!file.open(QFile::WriteOnly | QFile::Text))
+	{
 		QMessageBox::warning(this, tr("Application"),
 				tr("Cannot write file %1:\n%2.")
 				.arg(x_fileName)
@@ -151,12 +153,13 @@ bool Editor::saveProject(const QString& x_fileName)
 #ifndef QT_NO_CURSOR
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 #endif
-	// out << textEdit->toPlainText();
+	std::ofstream fout(x_fileName.toStdString().c_str());
+	fout<<m_view.page()->mainFrame()->evaluateJavaScript("window.markusEditor.saveProject();").toString().toStdString()<<endl;
+	fout.close();
+	m_currentProject = x_fileName;
 #ifndef QT_NO_CURSOR
 	QApplication::restoreOverrideCursor();
 #endif
-
-	// TODO setCurrentFile(x_fileName);
 	// statusBar()->showMessage(tr("File saved"), 2000);
 	return true;
 }

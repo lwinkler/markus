@@ -366,7 +366,46 @@ var xmlProject = null;
 				xmlInstance.data('class', xmlModuleTypes[type].find('module'));
 				maxIdModules++;
 			}
+			//--------------------------------------------------------------------------------
+			// Delete the current modules and load a XML project file 
+			//--------------------------------------------------------------------------------
+			this.saveProject = function() { 
+				// Include position information in the xml
+				xmlProject.find('module').each(function(){
+					var window = $(this).data('gui');
+					var pos = window.offset();
+					$(this).find('uiobject').remove();
+					$('<uiobject/>', xmlProject).appendTo($(this))
+					.attr({
+						// type:   getModuleType($(this)),
+						x:      pos.left,
+						y:      pos.top,
+						width:  "0",
+						height: "0"
+					});
+				});
 
+				if (! window['XSLTProcessor'])
+				{
+					// Trasformation for IE
+					// Note: not tested
+					transformed = xml.transformNode(xmlProject);
+				}
+				else
+				{
+					// Transformation for non-IE
+					// var processor = new XSLTProcessor();
+					// processor.importStylesheet(xslt);
+					// var xmldom = processor.transformToDocument(xml);
+					var serializer = new XMLSerializer();
+					var transformed = serializer.serializeToString(xmlProject[0]);
+				}
+
+				// Write content in new window for saving project in browser
+				transformed = transformed.replace(/>[ ]*</g, '><').replace(/></g, '>\n<');
+				var win = window.open('data:text/xml,<?xml version="1.0" encoding="UTF-8"?>' + encodeURIComponent(transformed), 'Project', '', true)
+				return transformed;
+			};
 			//--------------------------------------------------------------------------------
 			// Delete the current modules and load a XML project file 
 			//--------------------------------------------------------------------------------
@@ -510,41 +549,7 @@ var xmlProject = null;
 					createNewModule(type);
 				});
 				// Create a div representing a new module
-				$("#downloadProject").click(function() {
-
-					// Include position information in the xml
-    					xmlProject.find('module').each(function(){
-						var window = $(this).data('gui');
-						var pos = window.offset();
-						$(this).find('uiobject').remove();
-						$('<uiobject/>', xmlProject).appendTo($(this))
-						.attr({
-							// type:   getModuleType($(this)),
-							x:      pos.left,
-							y:      pos.top,
-							width:  "0",
-							height: "0"
-						});
-					});
-
-					if (! window['XSLTProcessor'])
-					{
-						// Trasformation for IE
-						// Note: not tested
-						transformed = xml.transformNode(xmlProject);
-					}
-					else
-					{
-						// Transformation for non-IE
-						// var processor = new XSLTProcessor();
-						// processor.importStylesheet(xslt);
-						// var xmldom = processor.transformToDocument(xml);
-						var serializer = new XMLSerializer();
-						var transformed = serializer.serializeToString(xmlProject[0]);
-					}
-					transformed = transformed.replace(/>[ ]*</g, '><').replace(/></g, '>\r\n<');
-					var win = window.open('data:text/xml,<?xml version="1.0" encoding="UTF-8"?>' + encodeURIComponent(transformed), 'Project', '', true)
-				});
+				$("#downloadProject").click(this.saveProject);
 				$("#loadProjectFile").click(function (){
 					window.markusEditor.loadProjectFile($("#selectProjectFile").val());
 				});
