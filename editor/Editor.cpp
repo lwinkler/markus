@@ -86,8 +86,10 @@ void Editor::loadProject()
 	{
 		QString fileName = QFileDialog::getOpenFileName(this);
 		if (!fileName.isEmpty())
-			cout<<"load"<<fileName.toStdString()<<endl; //loadFile(fileName);
-		m_currentProject = fileName;
+		{
+			m_view.page()->mainFrame()->evaluateJavaScript("window.markusEditor.loadProjectFile(\"" + fileName + "\"); null");
+			m_currentProject = fileName;
+		}
 	}
 }
 

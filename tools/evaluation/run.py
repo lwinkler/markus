@@ -57,7 +57,7 @@ class Evaluation():
 
     def run(self):
         """ Run the evaluation """
-        self._run_markus()
+        # self._run_markus()
         self._copy_srt()
         self._run_analyse()
 
@@ -223,7 +223,7 @@ def main():
     # Verify the run path and create the dir
     if os.path.exists(run_path):
         print('The run path already exists')
-        exit(1)
+        #exit(1)
     else:
         os.makedirs(run_path)
 

@@ -4,9 +4,7 @@ var maxIdModules = 0;
 var xmlModuleTypes = [];
 var xmlProject = null;
 
-
 ;(function() {
-
 
 	// Declarations
 	var _initialised = false,
@@ -372,7 +370,7 @@ var xmlProject = null;
 			//--------------------------------------------------------------------------------
 			// Delete the current modules and load a XML project file 
 			//--------------------------------------------------------------------------------
-			function loadProjectFile(fileName) { 
+			this.loadProjectFile = function loadProjectFile(fileName) { 
 				if(fileName.search(".xml") != fileName.length - 4){
 					alert("Project file must be in .xml format");
 					return;
@@ -548,7 +546,7 @@ var xmlProject = null;
 					var win = window.open('data:text/xml,<?xml version="1.0" encoding="UTF-8"?>' + encodeURIComponent(transformed), 'Project', '', true)
 				});
 				$("#loadProjectFile").click(function (){
-					loadProjectFile($("#selectProjectFile").val());
+					window.markusEditor.loadProjectFile($("#selectProjectFile").val());
 				});
 				$("#deleteAll").click(function() {
 					if(confirm("Do you want to delete all existing modules ?"))
