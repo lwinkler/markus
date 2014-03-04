@@ -52,7 +52,7 @@ class Evaluation():
         """ Initalize the evaluation parameters """
         self.abs_project = os.path.abspath(project)
         self.abs_video = os.path.abspath(video)
-        self.eval_name = os.path.basename(video).split('_')[0]
+        self.eval_name = os.path.basename(video).split('.')[0]
         self.eval_path = os.path.join(run_path, self.eval_name)
 
     def run(self):

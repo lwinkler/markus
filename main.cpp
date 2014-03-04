@@ -149,7 +149,7 @@ int main(int argc, char** argv)
 				return 0;
 				break;
 			case 'v':
-				LOG_INFO(logger, "Markus version "<<VERSION_STRING);
+				LOG_INFO(logger, "Markus version "<<VERSION_STRING<<" compiled with Opencv "<<CV_VERSION);
 
 				return 0;
 			case 'd':

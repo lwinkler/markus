@@ -99,7 +99,7 @@ def generate_html(path, datas, dirname='analysis', filename='report.html'):
     row = TR(style='background: lightgray;')
     row <= TH('Statistics')
     for col in datas:
-        row <= TH(A(B(col[0]), href=os.path.join(col[0], dirname, filename)))
+        row <= TH(A(B(col[0].split('_')[0]), href=os.path.join(col[0], dirname, filename)))
     row <= TH('Overall')
     table <= row
     row = TR()
