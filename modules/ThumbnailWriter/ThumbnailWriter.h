@@ -55,7 +55,7 @@ public:
 	void Reset();
 private:
 	ThumbnailWriterParameterStructure m_param;
-	inline virtual const ThumbnailWriterParameterStructure& GetParameters() const {return m_param;};
+	inline virtual const ThumbnailWriterParameterStructure& GetParameters() const {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 protected:
 	cv::Mat m_input;

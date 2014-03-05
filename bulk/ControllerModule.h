@@ -33,7 +33,7 @@ class ControllerModule : public Controller
 {
 public:
 	ControllerModule(Module& rx_module);
-	~ControllerModule(){};
+	~ControllerModule(){}
 	virtual QWidget* CreateWidget();
 
 	Module  & module;

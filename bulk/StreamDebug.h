@@ -35,11 +35,11 @@ class StreamDebug : public Stream
 public:
 	StreamDebug(const std::string& x_name, cv::Mat& x_image, Module& rx_module, const std::string& rx_description);
 	~StreamDebug();
-	const cv::Mat& RefImage() const {return m_image;};
+	const cv::Mat& RefImage() const {return m_image;}
 	
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat& x_output) const;
-	inline virtual const std::string GetTypeString()const {return "Debug";};
+	inline virtual const std::string GetTypeString()const {return "Debug";}
 protected:
 	const cv::Mat& m_image;
 private:

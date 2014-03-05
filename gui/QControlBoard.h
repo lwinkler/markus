@@ -46,7 +46,7 @@ public:
 	// inline const std::string& GetDescription() const{return m_description;}
 	// inline std::vector<Controller*>& RefListControllers(){return m_controllers;}
 	// inline void AddController(Controller * x_ctrr){m_controllers.push_back(x_ctrr);}
-	virtual void Destroy(){};
+	virtual void Destroy(){}
 	void updateControl(Controller* x_control);
 
 protected:

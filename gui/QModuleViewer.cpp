@@ -259,7 +259,7 @@ void QModuleViewer::updateModuleNb(int x_index)
 {
 	Module* mod = NULL;
 
-	if(x_index < 0 || x_index >= (int) m_manager->GetModules().size())
+	if(x_index < 0 || x_index >= static_cast<int>(m_manager->GetModules().size()))
 	{
 		mod = m_manager->GetModules().at(0);
 		m_param.module = 0;
@@ -305,7 +305,7 @@ void QModuleViewer::updateStreamNb(int x_index)
 /// display the control with the given index
 void QModuleViewer::updateControlNb(int x_index)
 {
-	assert(x_index < (int) m_currentModule->GetControllersList().size());
+	assert(x_index < static_cast<int>(m_currentModule->GetControllersList().size()));
 	m_param.control = x_index;
 	CLEAN_DELETE(m_controlBoard);
 	if(x_index < 0)

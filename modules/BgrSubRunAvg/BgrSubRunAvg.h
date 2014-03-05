@@ -55,7 +55,7 @@ public:
 	void Reset();
 private:
 	BgrSubRunAvgParameterStructure m_param;
-	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;};
+	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 protected:
 	// Background subtraction	

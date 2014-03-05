@@ -31,11 +31,11 @@
 class Timer
 {
 public:
-	Timer(){Restart();};
+	Timer(){Restart();}
 	long GetMSecLong();
 	float GetSecFloat();
 	double GetSecDouble();
-	inline void Restart(){gettimeofday(&m_start, NULL);};
+	inline void Restart(){gettimeofday(&m_start, NULL);}
 
 protected:
 	timeval m_start;

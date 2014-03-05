@@ -103,6 +103,11 @@ target_link_libraries(markus ${DEPS})
 
 
 
+add_custom_target(lint
+	COMMENT "Check C++ lint rules"
+	COMMAND find . -name \"*.h\" -print -o -name \"*.cpp\" -print | xargs python tools/cpplint.py --filter=-whitespace,-legal,-build,-runtime/references,-runtime/explicit,-readability/todo,-readability/streams,-runtime/int
+)
+
 add_custom_target(update_modules_list
 	COMMENT "Update the list of modules"
 	COMMAND modules/AllModules.h.sh > modules/AllModules.h

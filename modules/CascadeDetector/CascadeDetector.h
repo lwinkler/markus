@@ -67,7 +67,7 @@ public:
 class DetectionThread : public QThread
 {
 public:
-	explicit DetectionThread(QObject* parent = 0) {m_timerThread = 0;};
+	explicit DetectionThread(QObject* parent = 0) {m_timerThread = 0;}
 	virtual ~DetectionThread()
 	{
 		exit();
@@ -84,7 +84,7 @@ public:
 	virtual void run();
 	
 	cv::CascadeClassifier m_cascade;
-	const std::vector<cv::Rect>& GetDetectedObjects() const{ return m_detected;};
+	const std::vector<cv::Rect>& GetDetectedObjects() const{ return m_detected;}
 	long long m_timerThread;
 
 protected:
@@ -109,7 +109,7 @@ public:
 	void Reset();
 private:
 	CascadeDetectorParameterStructure m_param;
-	inline virtual const CascadeDetectorParameterStructure& GetParameters() const { return m_param;};
+	inline virtual const CascadeDetectorParameterStructure& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 protected:
 	std::vector<Object> m_detectedObjects;
@@ -119,7 +119,7 @@ protected:
 	cv::Mat m_debug;
 #endif
 	DetectionThread m_thread;
-	virtual const QThread & GetRefThread(){return m_thread;};
+	virtual const QThread & GetRefThread(){return m_thread;}
 };
 
 #endif

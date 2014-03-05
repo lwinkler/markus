@@ -58,7 +58,7 @@ public:
 	static const std::string ExtensionFromFourcc(const std::string& x_fourcc);
 private:
 	VideoFileWriterParameterStructure m_param;
-	inline virtual const VideoFileWriterParameterStructure& GetParameters() const {return m_param;};
+	inline virtual const VideoFileWriterParameterStructure& GetParameters() const {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 protected:
 	cv::VideoWriter m_writer;

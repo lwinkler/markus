@@ -66,7 +66,7 @@ public:
 class HOGDetectionThread : public QThread
 {
 public:
-	explicit HOGDetectionThread(QObject* parent = 0) {m_timerThread = 0;};
+	explicit HOGDetectionThread(QObject* parent = 0) {m_timerThread = 0;}
 	virtual ~HOGDetectionThread()
 	{
 		exit();
@@ -83,7 +83,7 @@ public:
 	virtual void run();
 	
 	cv::HOGDescriptor m_hog;
-	const std::vector<cv::Rect>& GetDetectedObjects() const{ return m_detected;};
+	const std::vector<cv::Rect>& GetDetectedObjects() const{ return m_detected;}
 	long long m_timerThread;
 
 protected:
@@ -109,7 +109,7 @@ public:
 
 private:
 	HOGDetectorParameterStructure m_param;
-	inline virtual const HOGDetectorParameterStructure& GetParameters() const { return m_param;};
+	inline virtual const HOGDetectorParameterStructure& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 protected:
 	std::vector<Object> m_detectedObjects;
@@ -120,7 +120,7 @@ protected:
 #endif
 	
 	HOGDetectionThread m_thread;
-	virtual const QThread & GetRefThread(){return m_thread;};
+	virtual const QThread & GetRefThread(){return m_thread;}
 };
 
 #endif

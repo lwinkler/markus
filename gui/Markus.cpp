@@ -69,7 +69,7 @@ Markus::Markus(ConfigReader & rx_configReader, Manager& rx_manager)
 }
 
 
-void Markus::timerEvent(QTimerEvent*)
+void Markus::timerEvent(QTimerEvent* px_event)
 {
 	/*if(m_centralized)
 	{

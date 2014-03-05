@@ -79,7 +79,7 @@ public:
 	void Reset();
 private:
 	BgrSubMOGParameterStructure m_param;
-	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;};
+	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 protected:
 	cv::Mat m_input;

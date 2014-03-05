@@ -32,7 +32,7 @@ class QModuleTimer : public QTimer
 {
 public:
 	QModuleTimer(Module & x_module, double x_fps);
-	virtual void timerEvent(QTimerEvent *);
+	virtual void timerEvent(QTimerEvent * px_event);
 	void Reset(double x_fps);
 protected:
 	Module & m_module;

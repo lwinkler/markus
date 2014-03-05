@@ -58,7 +58,7 @@ public:
 	void Reset();
 private:
 	SegmenterContourParameterStructure m_param;
-	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;};
+	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;}
 	bool m_computeFitEllipse;
 	bool m_computeMinRect;
 	static log4cxx::LoggerPtr m_logger;

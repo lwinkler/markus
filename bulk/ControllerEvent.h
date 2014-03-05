@@ -33,7 +33,7 @@ class ControllerEvent : public Controller
 {
 public:
 	ControllerEvent(ClassifyEvents& rx_module);
-	~ControllerEvent(){};
+	~ControllerEvent(){}
 	virtual QWidget* CreateWidget();
 
 	ClassifyEvents  & module;

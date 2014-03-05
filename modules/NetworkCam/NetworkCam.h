@@ -52,12 +52,12 @@ public:
 	
 	void Capture();
 	virtual void Reset();
-	const std::string& GetName(){return m_name;};
+	const std::string& GetName(){return m_name;}
 	// virtual const cv::Mat * GetImage() const {return m_output;}
 	virtual double GetRecordingFps();
 private:
 	NetworkCamParameterStructure m_param;
-	inline virtual const NetworkCamParameterStructure& GetParameters() const {return m_param;};
+	inline virtual const NetworkCamParameterStructure& GetParameters() const {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 protected:
 	cv::VideoCapture m_capture;

@@ -33,12 +33,12 @@ class StreamState : public Stream
 public:
 	StreamState(const std::string& rx_name, bool& x_state, Module& rx_module, const std::string& rx_description);
 	~StreamState();
-	inline void SetState(bool x_state){m_state = x_state;};
-	inline bool GetState() const {return m_state;};
+	inline void SetState(bool x_state){m_state = x_state;}
+	inline bool GetState() const {return m_state;}
 	
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat& x_output) const;
-	inline virtual const std::string GetTypeString()const {return "State";};
+	inline virtual const std::string GetTypeString()const {return "State";}
 
 protected:
 	bool& m_state;
