@@ -30,6 +30,8 @@
 #include <QWebFrame>
 #include <QAction>
 #include "Editor.h"
+#include "MkException.h"
+#include "util.h"
 
 #include <QtWebKit>
 //#include <QtWebKitWidgets>
@@ -69,7 +71,7 @@ Editor::Editor(QWidget *parent)
 /// Adapt the DOM to the Qt environment
 void Editor::adaptDom(bool x_loadOk)
 {
-	assert(x_loadOk); // TODO Exception
+	assert(x_loadOk);
 	QWebFrame *frame = m_view.page()->mainFrame();
 	QWebElement document = frame->documentElement();
 
@@ -164,6 +166,24 @@ bool Editor::saveProject(const QString& x_fileName)
 	return true;
 }
 
+/// Update list of projects
+void Editor::updateProjects()
+{
+	if(!maybeSave())
+		return;
+	SYSTEM("make update_projects_list");
+	m_view.reload();
+}
+
+/// Update list of projects
+void Editor::updateModules()
+{
+	if(!maybeSave())
+		return;
+	SYSTEM("make update_modules_list");
+	m_view.reload();
+}
+
 /// Print about
 void Editor::about()
 {
@@ -183,6 +203,10 @@ void Editor::CreateActions()
 	connect(saveProjectAct, SIGNAL(triggered()), this, SLOT(save()));
 	saveProjectAsAct = new QAction(tr("Save project as"), this);
 	connect(saveProjectAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
+	updateProjectsAct = new QAction(tr("Update list of projects"), this);
+	connect(updateProjectsAct, SIGNAL(triggered()), this, SLOT(updateProjects()));
+	updateModulesAct = new QAction(tr("Update modules and recompile"), this);
+	connect(updateModulesAct, SIGNAL(triggered()), this, SLOT(updateModules()));
 }
 
 /// Create menus
@@ -192,6 +216,9 @@ void Editor::CreateMenus()
 	fileMenu->addAction(loadProjectAct);
 	fileMenu->addAction(saveProjectAct);
 	fileMenu->addAction(saveProjectAsAct);
+	fileMenu->addSeparator();
+	fileMenu->addAction(updateProjectsAct);
+	fileMenu->addAction(updateModulesAct);
 	
 	
 	viewMenu = new QMenu(tr("&View"), this);

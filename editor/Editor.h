@@ -18,6 +18,8 @@ class Editor : public QMainWindow
 		QAction *loadProjectAct;
 		QAction *saveProjectAct;
 		QAction *saveProjectAsAct;
+		QAction *updateProjectsAct;
+		QAction *updateModulesAct;
 
 		QMenu *fileMenu;
 		QMenu *viewMenu;
@@ -36,6 +38,8 @@ class Editor : public QMainWindow
 		bool save();
 		bool saveAs();
 		bool saveProject(const QString& x_fileName);
+		void updateProjects();
+		void updateModules();
 		void about();
 		bool maybeSave();
 };
