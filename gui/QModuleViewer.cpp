@@ -351,7 +351,7 @@ void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qimg)
 	const int & h = mat->rows;
 	const int & w = mat->cols;
 	const int & channels = mat->channels();
-	const char *data = (char*) mat->data;
+	const char *data = reinterpret_cast<const char*>(mat->data);
 
 	for (int y = 0; y < h; y++, data += mat->cols * mat->channels())
 	{

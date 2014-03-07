@@ -43,8 +43,8 @@ RandomEventGenerator::RandomEventGenerator(const ConfigReader& x_configReader):
 	AddOutputStream(1, new StreamImage("image", m_output, *this, "Test image"));
 
 	if(m_param.randomSeed == 0)
-		srand(time(NULL));
-	else srand(m_param.randomSeed);
+		m_seed = time(NULL);
+	else m_seed = m_param.randomSeed;
 }
 
 RandomEventGenerator::~RandomEventGenerator()
@@ -75,8 +75,10 @@ void RandomEventGenerator::Capture()
 		{
 			stringstream name;
 			name<<"feat"<<i;
-			obj.AddFeature(name.str(), static_cast<float>(rand()) / RAND_MAX);
+			obj.AddFeature(name.str(), static_cast<float>(rand_r(&m_seed)) / RAND_MAX);
 		}
+		// Wait to act consistently with other inputs
+		// usleep(1000000 / m_param.fps);
 		m_event.Raise("random", obj);
 
 		// Output an image in relation with the event

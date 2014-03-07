@@ -101,81 +101,82 @@ class TestModules : public CppUnit::TestFixture
 
 
 	/// Create random object
-	Object createRandomObject()
+	Object createRandomObject(unsigned int* xp_seed)
 	{
 		// std::cout<<m_image.size()<<std::endl;
 		assert(m_image.size() != cv::Size(0,0));
 		Object obj("test", cv::Rect(
-			cv::Point(rand() % m_image.cols, rand() % m_image.rows), 
-			cv::Point(rand() % m_image.cols, rand() % m_image.rows))
+			cv::Point(rand_r(xp_seed) % m_image.cols, rand_r(xp_seed) % m_image.rows), 
+			cv::Point(rand_r(xp_seed) % m_image.cols, rand_r(xp_seed) % m_image.rows))
 		);
-		int nb = rand() % 100;
+		int nb = rand_r(xp_seed) % 100;
 		for(int i = 0 ; i < nb ; i++)
 		{
 			std::stringstream name;
 			name<<"rand"<<i;
-			obj.AddFeature(name.str(), static_cast<float>(rand()) / RAND_MAX);
+			obj.AddFeature(name.str(), static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
 		}
-		obj.AddFeature("x", static_cast<float>(rand()) / RAND_MAX);
-		obj.AddFeature("y", static_cast<float>(rand()) / RAND_MAX);
-		obj.AddFeature("width", static_cast<float>(rand()) / RAND_MAX);
-		obj.AddFeature("height", static_cast<float>(rand()) / RAND_MAX);
-		obj.AddFeature("ellipse_angle", static_cast<float>(rand()) / RAND_MAX);
-		obj.AddFeature("ellipse_ratio", static_cast<float>(rand()) / RAND_MAX);
-		obj.AddFeature("feat0", static_cast<float>(rand()) / RAND_MAX);
-		obj.AddFeature("feat1", static_cast<float>(rand()) / RAND_MAX);
+		obj.AddFeature("x", static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
+		obj.AddFeature("y", static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
+		obj.AddFeature("width", static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
+		obj.AddFeature("height", static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
+		obj.AddFeature("ellipse_angle", static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
+		obj.AddFeature("ellipse_ratio", static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
+		obj.AddFeature("feat0", static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
+		obj.AddFeature("feat1", static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
 		return obj;
 	}
 
 	/// Randomize input values
-	void randomizeInputs()
+	void randomizeInputs(unsigned int* xp_seed)
 	{
+
 		// random event
 		m_event.Empty();
-		if(rand() < RAND_MAX /10)
+		if(rand_r(xp_seed) < RAND_MAX /10)
 		{
-			if(rand() < RAND_MAX /10)
+			if(rand_r(xp_seed) < RAND_MAX /10)
 			{
 				m_event.Raise("random");
 			}
 			else
 			{
-				m_event.Raise("random", createRandomObject());
+				m_event.Raise("random", createRandomObject(xp_seed));
 			}
 		}
 
 		// random objects
 		m_objects.clear();
-		int nb = rand() % 10;
+		int nb = rand_r(xp_seed) % 10;
 		for(int i = 0 ; i < nb ; i++)
 		{
-			m_objects.push_back(createRandomObject());
+			m_objects.push_back(createRandomObject(xp_seed));
 		}
 
 
 		// random state
-		if(rand() < RAND_MAX /10)
+		if(rand_r(xp_seed) < RAND_MAX /10)
 			m_state = !m_state;
 
 
 		// random image
 		m_image.setTo(0);
-		nb = rand() % 100;
+		nb = rand_r(xp_seed) % 100;
 		for ( int i = 0; i < nb; i++ )
 		{
 			cv::Point center;
-			center.x = rand() % m_image.cols;
-			center.y = rand() % m_image.rows;
+			center.x = rand_r(xp_seed) % m_image.cols;
+			center.y = rand_r(xp_seed) % m_image.rows;
 
 			cv::Size axes;
-			axes.width  = rand() % 200;
-			axes.height = rand() % 200;
+			axes.width  = rand_r(xp_seed) % 200;
+			axes.height = rand_r(xp_seed) % 200;
 
-			double angle = rand() % 180;
-			cv::Scalar randomColor(rand() % 255, rand() % 255, rand() % 255);
+			double angle = rand_r(xp_seed) % 180;
+			cv::Scalar randomColor(rand_r(xp_seed) % 255, rand_r(xp_seed) % 255, rand_r(xp_seed) % 255);
 
 			ellipse(m_image, center, axes, angle, angle - 100, angle + 200,
-					randomColor, (rand() % 10) - 1);
+					randomColor, (rand_r(xp_seed) % 10) - 1);
 		}
 	}
 
@@ -217,7 +218,7 @@ class TestModules : public CppUnit::TestFixture
 	}
 
 	/// Generate a random string value for the parameter
-	std::string GenerateValueFromRange(const std::string& x_range, const std::string& x_type)
+	std::string GenerateValueFromRange(const std::string& x_range, const std::string& x_type, unsigned int* xp_seed)
 	{
 		if(x_range == "")
 			return "";
@@ -228,11 +229,11 @@ class TestModules : public CppUnit::TestFixture
 			if (2 == sscanf(x_range.c_str(), "[%lf:%lf]", &min, &max))
 			{
 				if(x_type == "int")
-					ss<<static_cast<int>(min + rand() % static_cast<int>(max - min + 1));
+					ss<<static_cast<int>(min + rand_r(xp_seed) % static_cast<int>(max - min + 1));
 				else if(x_type == "bool")
-					ss<<(rand() % 2);
+					ss<<(rand_r(xp_seed) % 2);
 				else 
-					ss<<(min + rand() * (max - min) / RAND_MAX);
+					ss<<(min + rand_r(xp_seed) * (max - min) / RAND_MAX);
 			}
 			else assert(false);
 		
@@ -243,7 +244,7 @@ class TestModules : public CppUnit::TestFixture
 			std::vector<std::string> elems;
 			split(x_range, ',', elems);
 			assert(elems.size() > 0);
-			return elems.at(rand() % elems.size());
+			return elems.at(rand_r(xp_seed) % elems.size());
 		}
 	}
 
@@ -251,6 +252,7 @@ class TestModules : public CppUnit::TestFixture
 	void testInputs()
 	{
 		LOG_TEST(m_logger, "\n# Test different inputs");
+		unsigned int seed = 324234566;
 		
 		// Test on each type of module
 		for(std::vector<std::string>::const_iterator it1 = moduleTypes.begin() ; it1 != moduleTypes.end() ; it1++)
@@ -261,7 +263,7 @@ class TestModules : public CppUnit::TestFixture
 
 			for(int i = 0 ; i < 50 ; i++)
 			{
-				randomizeInputs();
+				randomizeInputs(&seed);
 				module->Process();
 			}
 			delete module;
@@ -272,6 +274,7 @@ class TestModules : public CppUnit::TestFixture
 	/// Call each controller of each module
 	void testControllers()
 	{
+		unsigned int seed = 324234566;
 		LOG_TEST(m_logger, "\n# Test all controllers");
 		
 		// Test on each type of module
@@ -285,7 +288,7 @@ class TestModules : public CppUnit::TestFixture
 				delete module;
 				continue;
 			}
-			randomizeInputs();
+			randomizeInputs(&seed);
 
 			for(std::map<std::string, Controller*>::const_iterator it2 = module->GetControllersList().begin() ; it2 != module->GetControllersList().end() ; it2++)
 			{
@@ -317,7 +320,7 @@ class TestModules : public CppUnit::TestFixture
 						for(int i = 0 ; i < 10 ; i++)
 						{
 							// For string type we cannot set random values
-							value = type == "string" ? defval : GenerateValueFromRange(range, type);
+							value = type == "string" ? defval : GenerateValueFromRange(range, type, &seed);
 							// std::cout<<"set "<<value<<std::endl;
 							it2->second->CallAction("Set", &value);
 

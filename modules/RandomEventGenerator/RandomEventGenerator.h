@@ -64,6 +64,7 @@ protected:
 	Event m_event;
 	cv::Mat m_output;
 	Timer m_frameTimer;
+	unsigned int m_seed;
 };
 
 #endif

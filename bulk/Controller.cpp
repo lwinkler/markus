@@ -39,7 +39,7 @@ Controller::~Controller()
 }
 
 /// find a controller in map by name
-const void Controller::CallAction(const std::string& x_name, std::string* xp_value)
+const void Controller::CallAction(const string& x_name, string* xp_value)
 {
 	map<string, const px_action>::const_iterator it = m_actions.find(x_name);
 	if(it == m_actions.end())
@@ -51,7 +51,7 @@ const void Controller::CallAction(const std::string& x_name, std::string* xp_val
 }
 
 
-void Controller::ListActions(std::vector<std::string>& xr_actions) const
+void Controller::ListActions(vector<string>& xr_actions) const
 {
 	for(map<string, const px_action>::const_iterator it = m_actions.begin() ; it != m_actions.end() ; it++)
 		xr_actions.push_back(it->first);

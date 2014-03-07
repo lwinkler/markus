@@ -260,7 +260,7 @@ string jsonify(const string& x_name, const string& x_value)
 }
 
 // Convert a string to json object
-string jsonify(const string& x_name, long long x_value)
+string jsonify(const string& x_name, long long x_value) // TODO(lwk): is this param ok to pass a timestamp ?
 {
 	stringstream ss;
 	ss<<"'"<<x_name<<"': "<<x_value;
