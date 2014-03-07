@@ -202,6 +202,14 @@ int main(int argc, char** argv)
 		}
 	}
 
+	// Init global variables and objects
+	if(outputDir != "")
+	{
+		Manager::OutputDir(outputDir);
+		string dir = outputDir + "/";
+		setenv("LOG_DIR", dir.c_str(), 1);
+	}
+
 	log4cxx::xml::DOMConfigurator::configure(logConfigFile);
 
 	if (optind == argc - 2) {
@@ -225,12 +233,6 @@ int main(int argc, char** argv)
 		return -1;
 	}
 	Manager::SetConfigFile(configFile);
-	if(outputDir != "")
-	{
-		Manager::OutputDir(outputDir);
-		string dir = outputDir + "/";
-		setenv("LOG_DIR", dir.c_str(), 1);
-	}
 
 	try
 	{
