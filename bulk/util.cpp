@@ -246,7 +246,7 @@ const string msToTimeStamp(TIME_STAMP x_ms)
 	int hours = t; 
 
 	char str[32];
-	sprintf(str, "%02d:%02d:%02d,%03d", hours, mins, secs, msecs);
+	snprintf(str, sizeof(str), "%02d:%02d:%02d,%03d", hours, mins, secs, msecs);
 
 	return string(str);
 }

@@ -43,15 +43,15 @@ QParameterSlider::QParameterSlider(double x_value, double x_min, double x_max, i
 	// Create Qt objects
 	m_boxLayout = new QBoxLayout(QBoxLayout::LeftToRight);
 	char str[16];
-	sprintf(m_format, "%%.%dlf", x_precision);
+	snprintf(m_format, sizeof(m_format), "%%.%dlf", x_precision);
 
 	m_lineEdit      = new QLineEdit();
-	sprintf(str, m_format, m_value);
+	snprintf(str, sizeof(str), m_format, m_value);
 	m_lineEdit->setText(str);
 	m_lineEdit->setStyleSheet("color: black; background-color: white");
 	m_boxLayout->addWidget(m_lineEdit);
 
-	sprintf(str, m_format, x_min);
+	snprintf(str, sizeof(str), m_format, x_min);
 	m_boxLayout->addWidget(new QLabel(str));
 
 	m_scrollBar 	= new QScrollBar(Qt::Horizontal);
@@ -61,7 +61,7 @@ QParameterSlider::QParameterSlider(double x_value, double x_min, double x_max, i
 	m_scrollBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 	m_boxLayout->addWidget(m_scrollBar);
 
-	sprintf(str, m_format, x_max);
+	snprintf(str, sizeof(str), m_format, x_max);
 	m_boxLayout->addWidget(new QLabel(str));
 
 	setLayout(m_boxLayout);
@@ -83,7 +83,7 @@ void QParameterSlider::SetValueFromSlider()
 {
 	m_value = static_cast<double>(m_scrollBar->value()) / m_divisionPerUnit;
 	char str[16];
-	sprintf(str, m_format, m_value);
+	snprintf(str, sizeof(str), m_format, m_value);
 	m_lineEdit->setText(str);
 }
 

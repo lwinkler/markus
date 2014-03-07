@@ -68,7 +68,7 @@ void usage()
 /// Specific thread dedicated to the reading of commands via stdin
 void *send_commands(void *x_void_ptr)
 {
-	Manager *pManager = (Manager *)x_void_ptr;
+	Manager *pManager = reinterpret_cast<Manager*>(x_void_ptr);
 	static log4cxx::LoggerPtr logger(log4cxx::Logger::getLogger("Module"));
 	assert(pManager != NULL);
 	string input;

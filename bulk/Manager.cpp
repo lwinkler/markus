@@ -403,8 +403,8 @@ const string& Manager::OutputDir(const string& x_outputDir)
 			else
 				m_outputDir = x_outputDir;
 
-			if(m_configFile == "")
-				throw MkException("Config file not set in Manager. You need to specify it with Manager::SetConfigFile(...).", LOC);
+			// if(m_configFile == "")
+				// throw MkException("Config file not set in Manager. You need to specify it with Manager::SetConfigFile(...).", LOC);
 			short trial = 0;
 			string tmp = m_outputDir;
 
@@ -430,11 +430,12 @@ const string& Manager::OutputDir(const string& x_outputDir)
 			// note: use ln with atgs sfn to override existing link
 			SYSTEM("ln -sfn \"" + m_outputDir + "\" out_latest");
 			SYSTEM("tools/version.sh > " + m_outputDir + "/version.txt");
-			SYSTEM("cp " + m_configFile + " " + m_outputDir);
+			if(m_configFile != "")
+				SYSTEM("cp " + m_configFile + " " + m_outputDir);
 		}
 		catch(exception& e)
 		{
-			LOG_WARN(m_logger, "Exception in Manager::OutputDir" << e.what());
+			LOG_WARN(m_logger, "Exception in Manager::OutputDir: " << e.what());
 		}
 	}
 	return m_outputDir;
