@@ -208,6 +208,7 @@ int main(int argc, char** argv)
 		configFile = argv[argc - 2];
 		stringstream ss;
 		ss<<"Input.file="<<argv[argc - 1];
+		parameters.push_back(ss.str());
 		parameters.push_back("Input.class=VideoFileReader");
 	}
 	else if (optind == argc - 1) {
