@@ -25,6 +25,7 @@
 #include "StreamImage.h"
 #include "StreamDebug.h"
 #include "StreamState.h"
+#include "StreamEvent.h"
 
 #include <iostream>
 #include <cstdio>
@@ -50,6 +51,7 @@ MotionDetector::MotionDetector(const ConfigReader& x_configReader)
 	// Init output images
 	AddInputStream(0, new StreamImage("input", m_input, *this, 	"Video input"));
 	AddOutputStream(0, new StreamState("motion", m_state,  *this, 	"Motion is detected"));
+	AddOutputStream(1, new StreamEvent("motion", m_event,  *this, 	"Motion is detected"));
 
 #ifdef MARKUS_DEBUG_STREAMS
 	m_debug = Mat(Size(m_param.width, m_param.height), CV_8UC3);
@@ -76,6 +78,8 @@ void MotionDetector::ProcessFrame()
 	split(m_input, channels);
 	double val = 0;
 
+	m_event.Empty();
+
 	for(int i = 0 ; i < m_input.channels() ; i++)
 	{
 		Scalar m = mean(channels[i]);
@@ -83,7 +87,10 @@ void MotionDetector::ProcessFrame()
 		val += sum(m)[i];
 	}
 	val /= m_input.channels();
+	bool oldState = m_state;
 	m_state = (val >= m_param.motionThres);
+	if(m_state == true && oldState == false)
+		m_event.Raise("motion");
 
 #ifdef MARKUS_DEBUG_STREAMS
 	// Debug image: moving plot displaying threshold and current value

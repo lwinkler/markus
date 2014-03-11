@@ -1,21 +1,5 @@
 <application name="VideoFileReader" description="" cyclelimit="-1" gui="">
-  <module name="VideoFileReader" machineurl="localhost" id="0">
-    <parameters>
-      <param name="class">UsbCam</param>
-      <param name="width">640</param>
-      <param name="height">480</param>
-      <param name="type">CV_8UC3</param>
-      <param name="fps">10</param>
-      <!--param name="url">http://root:admin@192.168.5.100/mjpg/1/video.mjpg</param-->
-    </parameters>
-    <inputs />
-    <outputs>
-      <output id="0" />
-      <output id="1" />
-    </outputs>
-    <display x="17" y="88" width="150" height="75" />
-    <uiobject type="" x="0" y="0" width="0" height="0" />
-  </module>
+  
   <module name="BgrSubRunAvg" machineurl="localhost" id="1">
     <parameters>
       <param name="class">BgrSubRunAvg</param>
@@ -27,47 +11,59 @@
       <param name="foreground_thres">0.1</param>
     </parameters>
     <inputs>
-      <input id="0" moduleid="0" outputid="0" />
+      <input id="0" moduleid="8" outputid="0"/>
     </inputs>
     <outputs>
-      <output id="0" />
-      <output id="1" />
+      <output id="0"/>
+      <output id="1"/>
     </outputs>
-    <display x="263" y="54" width="150" height="75" />
-    <uiobject type="" x="0" y="0" width="0" height="0" />
-  </module>
-  <module name="MotionDetector" machineurl="localhost" id="2">
-    <parameters>
-      <param name="class">MotionDetector</param>
-      <param name="width">320</param>
-      <param name="height">240</param>
-      <param name="type">CV_8UC1</param>
-      <param name="fps">1000</param>
-      <param name="motion_thres">0.01</param>
-    </parameters>
-    <inputs>
-      <input id="0" moduleid="1" outputid="0" />
-    </inputs>
-    <outputs>
-      <output id="0" />
-    </outputs>
-    <display x="263" y="54" width="150" height="75" />
-    <uiobject type="" x="0" y="0" width="0" height="0" />
-  </module>
-  <module name="LogState" machineurl="localhost" id="3">
-    <parameters>
-      <param name="class">LogState</param>
-      <param name="width">640</param>
-      <param name="height">480</param>
-      <param name="type">CV_8UC1</param>
-      <param name="fps">1000</param>
-    </parameters>
-    <inputs>
-      <input id="0" moduleid="2" outputid="0" />
-    </inputs>
-    <outputs>
-    </outputs>
-    <display x="263" y="54" width="150" height="75" />
-    <uiobject type="" x="0" y="0" width="0" height="0" />
-  </module>
+    <display x="263" y="54" width="150" height="75"/>
+    
+  
+
+
+<uiobject x="792" y="240" width="0" height="0"/>
+</module>
+  
+  
+<module id="4" name="MotionDetector4">
+<inputs>
+<input id="0" outputid="0" moduleid="1"/>
+</inputs>
+<outputs>
+<output id="0"/>
+<output id="1"/>
+</outputs>
+<parameters>
+<param name="class">MotionDetector</param>
+</parameters>
+
+
+<uiobject x="1003" y="237" width="0" height="0"/>
+</module>
+<module id="6" name="LogEvent6">
+<inputs>
+<input id="0" outputid="1" moduleid="4"/>
+<input id="1" outputid="0" moduleid="8"/>
+</inputs>
+<outputs/>
+<parameters>
+<param name="class">LogEvent</param>
+</parameters>
+
+
+<uiobject x="1196" y="358" width="0" height="0"/>
+</module>
+
+<module id="8" name="Input">
+<inputs/>
+<outputs>
+<output id="0"/>
+</outputs>
+<parameters>
+<param name="class">NetworkCam</param>
+<param name="url">rtsp://root:admin@192.168.1.200/axis-media/media.amp?videocodec=h264&amp;resolution=320x240&amp;fps=8&amp;compression=30&amp;tcp</param>
+</parameters>
+<uiobject x="588" y="360" width="0" height="0"/>
+</module>
 </application>

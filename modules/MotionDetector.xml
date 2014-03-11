@@ -55,5 +55,10 @@
 			<name>motion</name>
 			<description>Motion is detected</description>
 		</output>
+		<output id="1">
+			<type>Event</type>
+			<name>motion</name>
+			<description>Motion is detected</description>
+		</output>
 	</outputs>
 </module>

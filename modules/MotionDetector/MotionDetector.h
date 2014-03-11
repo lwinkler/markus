@@ -26,6 +26,7 @@
 
 #include "Module.h"
 #include "Parameter.h"
+#include "Event.h"
 // #include "Timer.h"
 
 
@@ -69,6 +70,7 @@ protected:
 #endif
 
 	bool m_state;
+	Event m_event;
 
 	static const cv::Scalar m_colorPlotBack;
 	static const cv::Scalar m_colorPlotValue;

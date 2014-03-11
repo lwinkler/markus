@@ -71,11 +71,10 @@ void LogEvent::Reset()
 void LogEvent::ProcessFrame()
 {
 	if(m_event.IsRaised())
-	//if(m_state != m_oldState)
 	{
-		LOG_DEBUG(m_logger, "event change");
 		// Log the change in event
 		WriteEvent();
+		LOG_EVENT(m_logger, m_event.GetLabel()); 
 		if(m_saveImage)
 			SaveImage();
 		m_subId++;

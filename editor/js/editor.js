@@ -504,7 +504,9 @@ var xmlProject = null;
 				});
 				
 				// Show parameters
+				// note: list the parameters of the module template since the instance may not have all params
 				var parameters = div.find("#parameters").empty();
+				var type = xml.find("parameters > param[name='class']").text();
 				var classParameters  = $(xmlModuleTypes[type]).find("parameters");
 				classParameters.find("parameters > param").each(function(el){
 					var cl = $(this); // $(this).data('class');
