@@ -50,8 +50,9 @@ ConfigReader::ConfigReader(const std::string& x_fileName, bool x_allowCreation)
 		delete mp_doc;
 		if(x_allowCreation)
 		{
-			ConfigReader conf("config_empty.xml"); // TODO: Use a specific empty file ?
-			conf.SaveToFile(x_fileName);
+			createEmtpyConfigFile(x_fileName);
+			// ConfigReader conf("/tmp/config_empty.xml");
+			// conf.SaveToFile(x_fileName);
 			mp_doc = new TiXmlDocument(x_fileName);
 			assert(mp_doc->LoadFile());
 		}

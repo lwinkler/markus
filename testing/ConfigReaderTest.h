@@ -52,7 +52,8 @@ public:
 	void setUp()
 	{
 		m_conf1 = new ConfigReader("testing/config1.xml");
-		m_conf2 = new ConfigReader("config_empty.xml");
+		createEmtpyConfigFile("/tmp/config_empty.xml");
+		m_conf2 = new ConfigReader("/tmp/config_empty.xml");
 	}
 	void tearDown()
 	{
@@ -96,7 +97,7 @@ public:
 	void testGenerate()
 	{
 		LOG_TEST(m_logger, "# Test the generation of configurations");
-		ConfigReader appConf = m_conf2->RefSubConfig("application");
+		ConfigReader appConf = m_conf2->RefSubConfig("application", "", true);
 		appConf.RefSubConfig("aaa", "nameX", true)
 			.RefSubConfig("bbb", "nameY", true)
 			.RefSubConfig("ccc", "nameZ", true).SetValue("someValue");

@@ -282,3 +282,12 @@ void logEvent(log4cxx::LoggerPtr& x_logger, const string& x_name, TIME_STAMP x_t
 		<< x_extraInfo
 		<<"}");
 }
+
+// Create an empty config file
+void createEmtpyConfigFile(const std::string& x_fileName)
+{
+	ofstream of(x_fileName.c_str());
+	of<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"<<endl;
+	of<<"<!-- Markus XML configuration file -->"<<endl;
+	of.close();
+}

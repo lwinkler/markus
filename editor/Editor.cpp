@@ -38,6 +38,7 @@
 #include <QWebView>
 
 #include <QLabel>
+#include <QTextStream>
 #include <QMenu>
 #include <QMenuBar>
 #include <QAction>

@@ -357,13 +357,15 @@ void Manager::Export()
 		for(vector<string>::const_iterator it = moduleTypes.begin() ; it != moduleTypes.end() ; it++)
 		{
 			string file("modules/" + *it + ".xml");
-			ofstream os(file.c_str());
-			os<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"<<endl;
-			ConfigReader config("config_empty.xml");
-			ConfigReader moduleConfig = config.RefSubConfig("application", "").RefSubConfig("module", *it, true);
+			createEmtpyConfigFile("/tmp/config_empty.xml");
+			ConfigReader config("/tmp/config_empty.xml");
+			ConfigReader moduleConfig = config.RefSubConfig("application", "", true).RefSubConfig("module", *it, true);
 			moduleConfig.RefSubConfig("parameters", "", true).RefSubConfig("param", "class", true).SetValue(*it);
 
 			Module* module = m_factory.CreateModule(*it, moduleConfig);
+
+			ofstream os(file.c_str());
+			os<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"<<endl;
 			module->Export(os, 0);
 			delete module;
 			os.close();

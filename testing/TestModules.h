@@ -65,7 +65,8 @@ class TestModules : public CppUnit::TestFixture
 	void setUp()
 	{
 		m_factory.ListModules(moduleTypes);
-		mp_config = new ConfigReader("config_empty.xml");
+		createEmtpyConfigFile("/tmp/config_empty.xml");
+		mp_config = new ConfigReader("/tmp/config_empty.xml");
 		addModuleToConfig("VideoFileReader", *mp_config)
 			.RefSubConfig("parameters", "", true)
 			.RefSubConfig("param", "fps", true).SetValue("22");
@@ -82,7 +83,7 @@ class TestModules : public CppUnit::TestFixture
 
 	ConfigReader addModuleToConfig(const std::string& rx_type, ConfigReader& xr_config)
 	{
-		ConfigReader moduleConfig =  xr_config.RefSubConfig("application", "")
+		ConfigReader moduleConfig =  xr_config.RefSubConfig("application", "", true)
 			.RefSubConfig("module", rx_type + "0", true);
 		moduleConfig.RefSubConfig("parameters", "", true)
 			.RefSubConfig("param", "class", true)
