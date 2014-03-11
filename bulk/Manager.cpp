@@ -102,9 +102,10 @@ Manager::~Manager()
 		{
 			SYSTEM("cp markus.log " + m_outputDir + "/markus.copy.log");
 		}
-		catch(...) // TODO: Implement no throw equivalent ?
-		{}
-		// SYSTEM("cp markus " + m_outputDir);
+		catch(...)
+		{
+			LOG_WARN(m_logger, "Error at the copy of markus.log");	
+		}
 	}
 }
 
@@ -278,19 +279,35 @@ void Manager::SendCommand(const std::string& x_command, std::string x_value)
 	split(x_command, '.', elems);
 	if(elems.size() != 3)
 		throw MkException("Command must be in format \"module.controller.command\"", LOC);
-	
+
 	if(elems.at(0) == "manager")
 	{
-		// LockForWrite();
-		FindController(elems.at(1))->CallAction(elems.at(2), &x_value);
-		// Unlock();
+		try
+		{
+			m_lock.lockForWrite();
+			FindController(elems.at(1))->CallAction(elems.at(2), &x_value);
+			m_lock.unlock();
+		}
+		catch(...)
+		{
+			m_lock.unlock();
+			throw;
+		}
 	}
 	else
 	{
 		Module& module(RefModuleByName(elems.at(0)));
-		module.LockForWrite();
-		module.FindController(elems.at(1))->CallAction(elems.at(2), &x_value);
-		module.Unlock();
+		try
+		{
+			module.LockForWrite();
+			module.FindController(elems.at(1))->CallAction(elems.at(2), &x_value);
+			module.Unlock();
+		}
+		catch(...)
+		{
+			module.Unlock();
+			throw;
+		}
 	}
 	LOG_INFO(m_logger, "Command "<<x_command<<" returned value "<<x_value);
 }

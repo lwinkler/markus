@@ -69,7 +69,7 @@ public:
 
 protected:
 	const std::string m_name;
-	int m_id; // TODO see if we remove
+	int m_id;
 	const int m_width;
 	const int m_height;
 	Module& mr_module;

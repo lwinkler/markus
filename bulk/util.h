@@ -67,7 +67,7 @@ std::vector<std::string> &split(const std::string &s, char delim, std::vector<st
 const std::string timeStamp();
 const std::string msToTimeStamp(TIME_STAMP x_ms);
 std::string jsonify(const std::string& x_name, const std::string& x_value);
-std::string jsonify(const std::string& x_name, long long x_value);
+std::string jsonify(const std::string& x_name, TIME_STAMP x_value);
 void logEvent(log4cxx::LoggerPtr& x_logger, const std::string& x_name, TIME_STAMP x_timeStamp, const std::string& x_extraInfo);
 void createEmtpyConfigFile(const std::string& x_fileName);
 

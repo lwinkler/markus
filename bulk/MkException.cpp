@@ -68,3 +68,7 @@ EndOfStreamException::EndOfStreamException(const std::string& x_descr, const std
 ParameterException::ParameterException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
 	MkException(MK_EXCEPTION_PARAMETER, "ParameterException: " + x_descr, x_position)
 {}
+
+FeatureNotFoundException::FeatureNotFoundException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
+	MkException(MK_FEAT_NOT_FOUND_PARAMETER, "FeatureNotFoundException: " + x_descr, x_position)
+{}

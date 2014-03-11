@@ -78,6 +78,9 @@ void setControlledValue(Controller* xp_ctr, string* xp_value)
 {
 	ControllerParameter* ctr = dynamic_cast<ControllerParameter*>(xp_ctr);
 	assert(ctr != NULL);
+	string oldValue = ctr->param.GetValueString();
+	ParameterConfigType configType = ctr->param.GetConfigurationSource();
+
 	if(xp_value != NULL)
 	{
 		ctr->param.SetValue(*xp_value, PARAMCONF_CMD);
@@ -90,7 +93,11 @@ void setControlledValue(Controller* xp_ctr, string* xp_value)
 		ctr->param.SetValue(ctr->GetValueFromWidget(), PARAMCONF_GUI);
 #endif
 	}
-	assert(ctr->param.CheckRange()); // TODO throw
+	if(!ctr->param.CheckRange())
+	{
+		ctr->param.SetValue(oldValue, configType);
+		throw MkException("Parameter " + ctr->param.GetName() + " is out of range", LOC);
+	}
 }
 
 /// Display the current value of the controlled object

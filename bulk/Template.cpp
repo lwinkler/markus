@@ -27,6 +27,7 @@ using namespace std;
 #define POW2(x) (x) * (x)
 
 int Template::m_counter = 0;
+log4cxx::LoggerPtr Template::m_logger(log4cxx::Logger::getLogger("Module"));
 
 
 Template::Template()
@@ -118,8 +119,9 @@ void Template::UpdateFeatures(double x_alpha, TIME_STAMP m_currentTimeStamp)
 			{
 				it->second.Update(m_lastMatchingObject->GetFeature(it->first).value, x_alpha);
 			}
-			catch(MkException&) // TODO specific exception
+			catch(FeatureNotFoundException& e)
 			{
+				LOG_WARN(m_logger, "Exception in UpdateFeatures: " << e.what());
 			}
 		}
 		m_lastSeen = m_currentTimeStamp;

@@ -59,6 +59,7 @@ class Template
 		Object * m_lastMatchingObject;
 
 	private:
+		static log4cxx::LoggerPtr m_logger;
 		int m_num;
 		static int m_counter; // Counter to attribute ids
 		std::map <std::string, Feature> m_feats;

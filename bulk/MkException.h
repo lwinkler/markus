@@ -16,11 +16,12 @@ class Parameter;
 enum MkExceptionCode
 {
 	// initial value for exception codes
-	MK_EXCEPTION_FIRST       = 1000,
-	MK_EXCEPTION_NORMAL      = 1010,
-	MK_EXCEPTION_UNKNOWN     = 1011,
-	MK_EXCEPTION_ENDOFSTREAM = 1012,
-	MK_EXCEPTION_PARAMETER   = 1013,
+	MK_EXCEPTION_FIRST            = 1000,
+	MK_EXCEPTION_NORMAL           = 1010,
+	MK_EXCEPTION_UNKNOWN          = 1011,
+	MK_EXCEPTION_ENDOFSTREAM      = 1012,
+	MK_EXCEPTION_PARAMETER        = 1013,
+	MK_FEAT_NOT_FOUND_PARAMETER   = 1014,
 
 	// last code since unix can only return codes from 0 to 126
 	MK_EXCEPTION_LAST        = 1126  
@@ -61,8 +62,10 @@ class ParameterException : public MkException {
 		ParameterException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
 };
 
-/*class UnknownException : public MkException {
+/// Exception that occurs when a video file ends
+class FeatureNotFoundException : public MkException {
 	public:
-		UnknownException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
-};*/
+		FeatureNotFoundException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
+};
+
 #endif
