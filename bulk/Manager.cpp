@@ -46,7 +46,7 @@ using namespace std;
 
 log4cxx::LoggerPtr Manager::m_logger(log4cxx::Logger::getLogger("Manager"));
 
-string Manager::m_configFile;
+// string Manager::m_configFile;
 string Manager::m_outputDir;
 FactoryModules Manager::m_factory;
 
@@ -435,7 +435,11 @@ string Manager::Version()
 }
 
 /// Returns a directory that will contain all outputs
-const string& Manager::OutputDir(const string& x_outputDir)
+///
+/// @param  x_outputDir
+/// @param  x_configFile Optional: name of the config file to copy into dir
+/// @return name of the output dir
+const string& Manager::OutputDir(const string& x_outputDir, const string& x_configFile)
 {
 	if(m_outputDir.size() == 0)
 	{
@@ -446,8 +450,6 @@ const string& Manager::OutputDir(const string& x_outputDir)
 			else
 				m_outputDir = x_outputDir;
 
-			// if(m_configFile == "")
-				// throw MkException("Config file not set in Manager. You need to specify it with Manager::SetConfigFile(...).", LOC);
 			short trial = 0;
 			string tmp = m_outputDir;
 
@@ -474,8 +476,8 @@ const string& Manager::OutputDir(const string& x_outputDir)
 			SYSTEM("ln -sfn \"" + m_outputDir + "\" out_latest");
 
 			// Copy config to output dir
-			if(m_configFile != "")
-				SYSTEM("cp " + m_configFile + " " + m_outputDir);
+			if(x_configFile != "")
+				SYSTEM("cp " + x_configFile + " " + m_outputDir);
 		}
 		catch(exception& e)
 		{

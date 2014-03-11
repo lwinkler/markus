@@ -45,7 +45,11 @@ bool run_tests();
 
 void usage()
 {
-	printf("Usage : markus <options> <configuration.xml> \n");
+	printf("Usage : markus <options> <configuration.xml> <video_file> \n");
+	printf("\n");
+	printf(" configuration.xml     The configuration of the application describing the different modules\n");
+	printf(" video_file (opt.)     A video file to use as input. (assuming the input module is named \"Input\")\n");
+	printf("\n");
 	printf("options:\n");
 	printf(" -h  --help            Print this help        \n");
 	printf(" -v  --version         Print version information\n");
@@ -205,16 +209,6 @@ int main(int argc, char** argv)
 		}
 	}
 
-	// Init global variables and objects
-	if(outputDir != "")
-	{
-		Manager::OutputDir(outputDir);
-		string dir = outputDir + "/";
-		setenv("LOG_DIR", dir.c_str(), 1);
-	}
-
-	log4cxx::xml::DOMConfigurator::configure(logConfigFile);
-
 	if (optind == argc - 2) {
 		configFile = argv[argc - 2];
 		stringstream ss;
@@ -235,7 +229,16 @@ int main(int argc, char** argv)
 		usage();
 		return -1;
 	}
-	Manager::SetConfigFile(configFile);
+
+	// Init global variables and objects
+	if(outputDir != "")
+	{
+		outputDir = Manager::OutputDir(outputDir, configFile);
+		string dir = outputDir + "/";
+		setenv("LOG_DIR", dir.c_str(), 1);
+	}
+
+	log4cxx::xml::DOMConfigurator::configure(logConfigFile);
 
 	try
 	{

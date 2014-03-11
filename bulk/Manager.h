@@ -74,13 +74,13 @@ public:
 	void PauseInputs(bool x_pause);
 	bool EndOfAllStreams() const;
 	static std::string Version();
-	static const std::string& OutputDir(const std::string& x_outputDir = "");
-	static inline void SetConfigFile(const std::string& x_configFile)
+	static const std::string& OutputDir(const std::string& x_outputDir = "", const std::string& x_configFile = "");
+	/*static inline void SetConfigFile(const std::string& x_configFile)
 	{
 		assert(m_configFile.size() == 0);
 		m_configFile = x_configFile;
-	}
-	static inline const std::string& GetConfigFile(){return m_configFile;}
+	}*/
+	// static inline const std::string& GetConfigFile(){return m_configFile;}
 	static inline void ListModules(std::vector<std::string>& xr_types) {m_factory.ListModules(xr_types);}
 	void UpdateConfig();
 
@@ -101,7 +101,7 @@ private:
 
 	long long m_frameCount;
 	static log4cxx::LoggerPtr m_logger;
-	static std::string m_configFile;
+	// static std::string m_configFile;
 	static std::string m_outputDir;
 	static FactoryModules m_factory;
 
