@@ -60,4 +60,24 @@ protected:
 	std::string m_name;
 	std::string m_type;
 };
+
+/// Class representing a controllable object (e.g. Module or Manager)
+class Controllable
+{
+	public:
+		Controllable(){};
+		~Controllable()
+		{
+			for(std::map<std::string, Controller* >::iterator it = m_controls.begin() ; it != m_controls.end() ; it++)
+				delete(it->second);
+		}
+		const std::map<std::string, Controller*>& GetControllersList() const {return m_controls;}
+		Controller* FindController(const std::string& x_name) const;
+		inline void AddController(Controller* xp_ctr){m_controls.insert(make_pair(xp_ctr->GetName(), xp_ctr));};
+		inline bool HasNoControllers()const{return m_controls.size() == 0;};
+
+	private:
+		std::map<std::string, Controller*> m_controls;
+};
+	
 #endif

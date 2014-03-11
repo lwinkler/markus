@@ -289,7 +289,6 @@ int main(int argc, char** argv)
 			LOG_ERROR(Manager::Logger(), "Error joining thread");
 			return -1;
 		}*/
-		logEvent(logger, "start", 0, jsonify("pid", getpid()));
 
 		if(centralized)
 		{
@@ -329,6 +328,12 @@ int main(int argc, char** argv)
 		// Write the modified params in config and save
 		manager.UpdateConfig();
 		mainConfig.SaveToFile("last_config.xml");
+	}
+	catch(MkException& e)
+	{
+		// TODO: Try to print the full stack trace of exceptions
+		LOG_ERROR(logger, "(Markus exception " << e.GetCode() << "): " << e.what());
+		returnValue = e.GetCode() - MK_EXCEPTION_FIRST;
 	}
 	catch(cv::Exception& e)
 	{

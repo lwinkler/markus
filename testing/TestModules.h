@@ -143,6 +143,8 @@ class TestModules : public CppUnit::TestFixture
 			features = "x,y,width,height";
 		else if(x_moduleType == "FilterPython")
 			x_module->FindController("features")->CallAction("Get", &features);
+		else if(x_moduleType == "Intrusion")
+			features = "x,y";
 		else if(x_moduleType == "TrackerByFeatures")
 			x_module->FindController("features")->CallAction("Get", &features);
 

@@ -229,9 +229,14 @@ bool Manager::Process()
 			// test if all inputs are over
 			if(EndOfAllStreams())
 			{
+				// TODO: test what happens if the stream of a camera is cut
 				LOG_INFO(m_logger, "End of all video streams : Manager::Process");
 				continueFlag = false;
 			}
+		}
+		catch(MkException& e)
+		{
+			LOG_ERROR(m_logger, "(Markus exception " << e.GetCode() << "): " << e.what());
 		}
 		catch(std::exception& e)
 		{
@@ -279,7 +284,6 @@ void Manager::SendCommand(const std::string& x_command, std::string x_value)
 		module.Unlock();
 	}
 	LOG_INFO(m_logger, "Command "<<x_command<<" returned value "<<x_value);
-	
 }
 
 

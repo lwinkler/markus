@@ -86,17 +86,16 @@ void Module::Reset()
 	const std::vector<Parameter*>& list = param.GetList();
 
 	// This must be done only once to avoid troubles in the GUI
-	if(m_controls.size() == 0)
+	if(HasNoControllers())
 	{
 		// Add module controller
-		Controller* ctr = new ControllerModule(*this);
-		m_controls.insert(std::make_pair(ctr->GetName(), ctr));
+		AddController(new ControllerModule(*this));
 
 		for(vector<Parameter*>::const_iterator it = list.begin(); it != list.end(); it++)
 		{
 			if((*it)->IsLocked())
 				continue;
-			ctr = NULL;
+			Controller* ctr = NULL;
 			switch((*it)->GetType())
 			{
 				case PARAM_BOOL:
@@ -121,7 +120,8 @@ void Module::Reset()
 			if(ctr == NULL)
 				throw MkException("Controller creation failed", LOC);
 			// else m_controls.push_back(ctr);
-			else m_controls.insert(make_pair(ctr->GetName(), ctr));
+			// else m_controls.insert(make_pair(ctr->GetName(), ctr));
+			else AddController(ctr);
 		}
 	}
 }
@@ -182,11 +182,6 @@ Module::~Module()
 	for(std::map<int, Stream* >::iterator it = m_debugStreams.begin() ; it != m_debugStreams.end() ; it++)
 		delete(it->second);
 #endif
-#ifndef MARKUS_NO_GUI
-	for(std::map<string, Controller* >::iterator it = m_controls.begin() ; it != m_controls.end() ; it++)
-		delete(it->second);
-#endif
-
 	if(m_moduleTimer)
 		delete(m_moduleTimer);
 }
@@ -408,16 +403,4 @@ void Module::AddDebugStream(int x_id, Stream* xp_stream)
 		throw MkException("Two streams with same id", LOC);
 	m_debugStreams.insert(make_pair(x_id, xp_stream));
 }
-
-/// find a controller in map by name
-Controller* Module::FindController(const std::string& x_name) const
-{
-	map<string, Controller*>::const_iterator it = m_controls.find(x_name);
-	if(it == m_controls.end())
-		throw MkException("Cannot find controller " + x_name + " in module", LOC);
-
-	// Call the function pointer associated with the action
-	return it->second;
-}
-
 

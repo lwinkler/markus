@@ -12,14 +12,31 @@
 
 class Parameter;
 
+// Note: Exception codes correspond with return values (+1000)
+enum MkExceptionCode
+{
+	// initial value for exception codes
+	MK_EXCEPTION_FIRST       = 1000,
+	MK_EXCEPTION_NORMAL      = 1010,
+	MK_EXCEPTION_UNKNOWN     = 1011,
+	MK_EXCEPTION_ENDOFSTREAM = 1012,
+	MK_EXCEPTION_PARAMETER   = 1013,
+
+	// last code since unix can only return codes from 0 to 126
+	MK_EXCEPTION_LAST        = 1126  
+};
+
 class MkException : public std::exception {
 	public:
 		MkException(const std::string& x_description="Exception occured", const std::string& x_position="", const std::string& x_function="");
+		MkException(MkExceptionCode x_code, const std::string& x_description="Exception occured", const std::string& x_position="", const std::string& x_function="");
 		~MkException() throw();
 		const char* what() const throw();
+		inline MkExceptionCode GetCode(){return m_code;};
 
 	protected:
 		std::string m_description;
+		MkExceptionCode m_code;
 };
 
 /*class ProcessingException : public MkException {

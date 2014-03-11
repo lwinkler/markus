@@ -56,3 +56,16 @@ void Controller::ListActions(vector<string>& xr_actions) const
 	for(map<string, const px_action>::const_iterator it = m_actions.begin() ; it != m_actions.end() ; it++)
 		xr_actions.push_back(it->first);
 }
+
+/// find a controller in map by name
+Controller* Controllable::FindController(const std::string& x_name) const
+{
+	map<string, Controller*>::const_iterator it = m_controls.find(x_name);
+	if(it == m_controls.end())
+		throw MkException("Cannot find controller " + x_name + " in module", LOC);
+
+	// Call the function pointer associated with the action
+	return it->second;
+}
+
+

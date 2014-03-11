@@ -3,28 +3,43 @@
 
 using namespace std;
 
-MkException::MkException(const std::string& x_description, const std::string& x_position, const std::string& x_function)
+// Write the description of an exception
+string writeDescription(const std::string& x_description, const std::string& x_position, const std::string& x_function)
 {
+	string description;
 	if (x_position == "")
 	{
-		m_description = x_description + " [position unknown]";
+		description = x_description + " [position unknown]";
 	}
 	else
 	{
 		const char * basename = strrchr(x_position.c_str(), '/');
 		if(basename == NULL)
-			m_description = x_description + " [" + x_position;
+			description = x_description + " [" + x_position;
 		else 
-			m_description = x_description + " [" + (basename + 1);
+			description = x_description + " [" + (basename + 1);
 	}
 	if (x_function == "")
 	{
-		m_description += "]";
+		description += "]";
 	}
 	else
 	{
-		m_description += " in " + x_function + "]";
+		description += " in " + x_function + "]";
 	}
+	return description;
+}
+
+MkException::MkException(const std::string& x_description, const std::string& x_position, const std::string& x_function)
+{
+	m_description = writeDescription(x_description, x_position, x_function);
+	m_code = MK_EXCEPTION_UNKNOWN;
+}
+
+MkException::MkException(MkExceptionCode x_code, const std::string& x_description, const std::string& x_position, const std::string& x_function)
+{
+	m_description = writeDescription(x_description, x_position, x_function);
+	m_code = x_code;
 }
 
 MkException::~MkException() throw(){
@@ -47,9 +62,9 @@ const char* MkException::what() const throw()
 // {}
 
 EndOfStreamException::EndOfStreamException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
-	MkException("EndOfStreamException: " + x_descr, x_position)
+	MkException(MK_EXCEPTION_ENDOFSTREAM, "EndOfStreamException: " + x_descr, x_position)
 {}
 
 ParameterException::ParameterException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
-	MkException("ParameterException: " + x_descr, x_position)
+	MkException(MK_EXCEPTION_PARAMETER, "ParameterException: " + x_descr, x_position)
 {}

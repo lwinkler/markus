@@ -26,6 +26,7 @@
 
 #include "ConfigReader.h"
 #include "Parameter.h"
+#include "Controller.h"
 #include <QReadWriteLock>
 
 #include <log4cxx/logger.h>
@@ -37,7 +38,6 @@
 
 
 class Stream;
-class Controller;
 class QModuleTimer;
 
 class ModuleParameterStructure : public ParameterStructure
@@ -72,7 +72,7 @@ public:
 	std::string objClass;
 };
 
-class Module : public Configurable
+class Module : public Configurable, public Controllable
 {
 public:
 	Module(const ConfigReader& x_confReader);
@@ -94,9 +94,6 @@ public:
 	void AddDebugStream(int x_id, Stream* xp_stream);
 
 
-	const std::map<std::string, Controller*>& GetControllersList() const {return m_controls;}
-	Controller* FindController(const std::string& x_name) const;
-	
 	inline int GetWidth() const          {return GetParameters().width;}
 	inline int GetHeight() const         {return GetParameters().height;}
 	inline int GetType() const           {return GetParameters().type;}
@@ -143,7 +140,6 @@ protected:
 	std::map<int, Stream *> m_outputStreams;
 	std::map<int, Stream *> m_debugStreams;	
 
-	std::map<std::string, Controller*> m_controls;
 	std::string m_name;
 	std::string m_description; 
 	int m_id;

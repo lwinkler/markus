@@ -27,11 +27,14 @@
 #include <QReadWriteLock>
 
 #include "ConfigReader.h"
+#include "Controller.h"
 #include "Input.h"
 #include "Module.h"
 #include "Timer.h"
 #include "FactoryModules.h"
 
+
+class Controller;
 
 /// Parameter class
 
@@ -48,7 +51,7 @@ public:
 
 /// Class for managing all modules
 
-class Manager : public Configurable
+class Manager : public Configurable, public Controllable
 {
 public:
 	Manager(const ConfigReader& x_configReader, bool x_centralized);
@@ -80,6 +83,9 @@ public:
 	static inline void ListModules(std::vector<std::string>& xr_types) {m_factory.ListModules(xr_types);}
 	void UpdateConfig();
 
+	const std::map<std::string, Controller*>& GetControllersList() const {return m_controls;}
+	Controller* FindController(const std::string& x_name) const;
+
 private:
 	ManagerParameter m_param;
 	inline virtual const ParameterStructure& GetParameters() const {return m_param;}
@@ -93,6 +99,7 @@ private:
 	
 	std::vector<Module *> m_modules;
 	std::vector<Input  *> m_inputs;
+	std::map<std::string, Controller*> m_controls;
 
 	long long m_frameCount;
 	static log4cxx::LoggerPtr m_logger;

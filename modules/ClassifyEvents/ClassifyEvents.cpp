@@ -37,9 +37,8 @@ void ClassifyEvents::Reset()
 	Module::Reset();
 #ifndef MARKUS_NO_GUI
 	// Add a new control to play forward and rewind
-	Controller* ctr = new ControllerEvent(*this);
-	m_controls.insert(std::make_pair(ctr->GetName(), ctr));
-	//m_controls.push_back(new ControllerEvent(*this));
+	if(HasNoControllers())
+		AddController(new ControllerEvent(*this));
 #endif
 }
 
