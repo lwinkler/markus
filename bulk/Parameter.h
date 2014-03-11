@@ -329,7 +329,7 @@ public:
 	void SetFromConfig();
 	void UpdateConfig() const;
 	void SetValueToDefault();
-	void CheckRange() const;
+	void CheckRange(bool x_checkRelated) const;
 	void PrintParameters() const;
 	//void SetValueByName(const std::string& x_name, const std::string& x_value, ParameterConfigType x_configType = PARAMCONF_UNKNOWN);
 	const Parameter & GetParameterByName(const std::string& x_name) const;

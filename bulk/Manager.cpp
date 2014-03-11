@@ -26,6 +26,7 @@
 #include "Input.h"
 #include "Stream.h"
 #include "MkException.h"
+#include "ControllerManager.h"
 
 #include "util.h"
 
@@ -58,6 +59,7 @@ Manager::Manager(const ConfigReader& x_configReader, bool x_centralized) :
 	LOG_INFO(m_logger, "Create object Manager");
 	m_frameCount = 0;
 	m_isConnected = false;
+	m_continueFlag = true;
 	
 	m_inputs.clear();
 	m_modules.clear();
@@ -83,7 +85,7 @@ Manager::Manager(const ConfigReader& x_configReader, bool x_centralized) :
 
 Manager::~Manager()
 {
-	PrintTimers();
+	PrintStatistics();
 
 
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
@@ -191,6 +193,10 @@ void Manager::Reset()
 		(*it)->SetProcessByTimer(!m_centralized);
 		(*it)->Reset();
 	}
+	if(HasNoControllers())
+	{
+		AddController(new ControllerManager(*this));
+	}
 }
 
 /// Process all modules
@@ -210,7 +216,6 @@ bool Manager::Process()
 	}
 	Timer ti;
 	
-	bool continueFlag = true;
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 	{
 		try
@@ -231,7 +236,7 @@ bool Manager::Process()
 			{
 				// TODO: test what happens if the stream of a camera is cut
 				LOG_INFO(m_logger, "End of all video streams : Manager::Process");
-				continueFlag = false;
+				m_continueFlag = false;
 			}
 		}
 		catch(MkException& e)
@@ -260,10 +265,10 @@ bool Manager::Process()
 	m_frameCount++;
 	if(m_frameCount % 100 == 0)
 	{
-		PrintTimers();
+		PrintStatistics();
 	}
 	m_lock.unlock();
-	return continueFlag;
+	return m_continueFlag;
 }
 
 /// Send a command
@@ -275,7 +280,11 @@ void Manager::SendCommand(const std::string& x_command, std::string x_value)
 		throw MkException("Command must be in format \"module.controller.command\"", LOC);
 	
 	if(elems.at(0) == "manager")
-		;	// manager.GetControlList(); // TODO
+	{
+		// LockForWrite();
+		FindController(elems.at(1))->CallAction(elems.at(2), &x_value);
+		// Unlock();
+	}
 	else
 	{
 		Module& module(RefModuleByName(elems.at(0)));
@@ -289,7 +298,7 @@ void Manager::SendCommand(const std::string& x_command, std::string x_value)
 
 /// Print the results of timings
 
-void Manager::PrintTimers()
+void Manager::PrintStatistics()
 {
 	LOG_INFO(m_logger, "Manager: "<<m_frameCount<<" frames processed in "<<m_timerProcessing<<" ms ("<<  (1000.0 * m_frameCount) / m_timerProcessing<<" frames/s)");
 	// LOG_INFO("input convertion "                  <<m_timerConvertion<<" ms ("<<(1000.0 * m_frameCount) / m_timerConvertion<<" frames/s)");

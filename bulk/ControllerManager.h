@@ -21,21 +21,21 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef CONTROLLER_MODULE_H
-#define CONTROLLER_MODULE_H
+#ifndef CONTROLLER_MANAGER_H
+#define CONTROLLER_MANAGER_H
 
 #include "Controller.h"
 
-class Module;
+class Manager;
 
 /// Control class for an event classifier
-class ControllerModule : public Controller
+class ControllerManager : public Controller
 {
 public:
-	ControllerModule(Module& rx_module);
-	~ControllerModule(){}
+	ControllerManager(Manager& rx_module);
+	~ControllerManager(){}
 	virtual QWidget* CreateWidget();
 
-	Module  & module;
+	Manager  & manager;
 };
 #endif

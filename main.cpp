@@ -301,7 +301,7 @@ int main(int argc, char** argv)
 				// nothing 
 			}
 
-			returnValue = 0;
+			returnValue = MK_EXCEPTION_NORMAL - MK_EXCEPTION_FIRST;
 		}
 		else
 		{

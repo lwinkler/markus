@@ -34,8 +34,6 @@
 #include "FactoryModules.h"
 
 
-class Controller;
-
 /// Parameter class
 
 class ManagerParameter : public ParameterStructure
@@ -70,21 +68,20 @@ public:
 	
 	void Connect();
 	void Export();
-	void PrintTimers();
+	void PrintStatistics();
 	void Pause(bool x_pause);
+	inline void Quit(){m_continueFlag = false;}; // TODO: Manager must be thread safe
 	void PauseInputs(bool x_pause);
 	bool EndOfAllStreams() const;
 	static const std::string& OutputDir(const std::string& x_outputDir = "");
-	static inline void SetConfigFile(const std::string& x_configFile){
+	static inline void SetConfigFile(const std::string& x_configFile)
+	{
 		assert(m_configFile.size() == 0);
 		m_configFile = x_configFile;
 	}
 	static inline const std::string& GetConfigFile(){return m_configFile;}
 	static inline void ListModules(std::vector<std::string>& xr_types) {m_factory.ListModules(xr_types);}
 	void UpdateConfig();
-
-	const std::map<std::string, Controller*>& GetControllersList() const {return m_controls;}
-	Controller* FindController(const std::string& x_name) const;
 
 private:
 	ManagerParameter m_param;
@@ -94,12 +91,12 @@ private:
 	bool m_isConnected;
 	// long long m_timerConvertion;
 	long long m_timerProcessing;
+	bool m_continueFlag;
 
 	//clock_t m_timeLastProcess;
 	
 	std::vector<Module *> m_modules;
 	std::vector<Input  *> m_inputs;
-	std::map<std::string, Controller*> m_controls;
 
 	long long m_frameCount;
 	static log4cxx::LoggerPtr m_logger;

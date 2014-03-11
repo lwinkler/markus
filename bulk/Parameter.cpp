@@ -71,7 +71,7 @@ void ParameterStructure::Init()
 	
 	// LOG_INFO("Parameters for "<<m_moduleName<<" initialized.");
 	// PrintParameters(); // Global::log.stream(LOG_INFO));
-	// CheckRange();
+	CheckRange(false);
 }
 
 /// Set the value from xml configuration 
@@ -162,26 +162,29 @@ void ParameterStructure::SetValueToDefault()
 
 /// Check that the parameter values are in range [min;max]
 
-void ParameterStructure::CheckRange() const
+void ParameterStructure::CheckRange(bool x_checkRelated) const
 {
-	// Check that all parameters in config are related to the module
-	ConfigReader conf = m_configReader; // .GetSubConfig("parameters");
-	if(conf.IsEmpty())
-		return;
-	conf = conf.GetSubConfig("param");
-	while(!conf.IsEmpty())
+	if(x_checkRelated)
 	{
-		string name = conf.GetAttribute("name");
+		// Check that all parameters in config are related to the module
+		ConfigReader conf = m_configReader; // .GetSubConfig("parameters");
+		if(conf.IsEmpty())
+			return;
+		conf = conf.GetSubConfig("param");
+		while(!conf.IsEmpty())
+		{
+			string name = conf.GetAttribute("name");
 
-		try
-		{
-			GetParameterByName(name);
+			try
+			{
+				GetParameterByName(name);
+			}
+			catch(ParameterException& e)
+			{
+				LOG_WARN(m_logger, e.what());
+			}
+			conf = conf.NextSubConfig("param");
 		}
-		catch(ParameterException& e)
-		{
-			LOG_WARN(m_logger, e.what());
-		}
-		conf = conf.NextSubConfig("param");
 	}
 
 

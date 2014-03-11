@@ -64,7 +64,7 @@ void Module::Reset()
 	LOG_INFO(m_logger, "Reseting module "<<GetName());
 	const ModuleParameterStructure& param(GetParameters());
 	param.PrintParameters();
-	param.CheckRange();
+	param.CheckRange(true);
 
 	// Add the module timer (only works with QT)
 	if(param.autoProcess && m_processByTimer)
