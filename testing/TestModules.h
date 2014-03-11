@@ -101,7 +101,7 @@ class TestModules : public CppUnit::TestFixture
 
 
 	/// Create random object
-	Object createRandomObject(unsigned int* xp_seed)
+	Object createRandomObject(unsigned int* xp_seed, const std::string& x_featureNames)
 	{
 		// std::cout<<m_image.size()<<std::endl;
 		assert(m_image.size() != cv::Size(0,0));
@@ -109,6 +109,18 @@ class TestModules : public CppUnit::TestFixture
 			cv::Point(rand_r(xp_seed) % m_image.cols, rand_r(xp_seed) % m_image.rows), 
 			cv::Point(rand_r(xp_seed) % m_image.cols, rand_r(xp_seed) % m_image.rows))
 		);
+
+		if(x_featureNames != "")
+		{
+			// If a list of features is specified
+			std::vector<std::string> feats;
+			split(x_featureNames, ',', feats);
+			for(std::vector<std::string>::const_iterator it = feats.begin() ; it != feats.end() ; it++)
+			{
+				obj.AddFeature(*it, static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
+			}
+		}
+
 		int nb = rand_r(xp_seed) % 100;
 		for(int i = 0 ; i < nb ; i++)
 		{
@@ -116,20 +128,23 @@ class TestModules : public CppUnit::TestFixture
 			name<<"rand"<<i;
 			obj.AddFeature(name.str(), static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
 		}
-		obj.AddFeature("x", static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
-		obj.AddFeature("y", static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
-		obj.AddFeature("width", static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
-		obj.AddFeature("height", static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
-		obj.AddFeature("ellipse_angle", static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
-		obj.AddFeature("ellipse_ratio", static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
-		obj.AddFeature("feat0", static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
-		obj.AddFeature("feat1", static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
 		return obj;
 	}
 
 	/// Randomize input values
-	void randomizeInputs(unsigned int* xp_seed)
+	void randomizeInputs(const Module* x_module, const std::string& x_moduleType, unsigned int* xp_seed)
 	{
+		std::string features = "";
+
+		// Some modules require a specific set of features in input
+		if(x_moduleType == "FallDetection")
+			features = "x,y,ellipse_angle,ellipse_ratio";
+		else if(x_moduleType == "FilterObjects")
+			features = "x,y,width,height";
+		else if(x_moduleType == "FilterPython")
+			x_module->FindController("features")->CallAction("Get", &features);
+		else if(x_moduleType == "TrackerByFeatures")
+			x_module->FindController("features")->CallAction("Get", &features);
 
 		// random event
 		m_event.Empty();
@@ -141,7 +156,7 @@ class TestModules : public CppUnit::TestFixture
 			}
 			else
 			{
-				m_event.Raise("random", createRandomObject(xp_seed));
+				m_event.Raise("random", createRandomObject(xp_seed, features));
 			}
 		}
 
@@ -150,7 +165,7 @@ class TestModules : public CppUnit::TestFixture
 		int nb = rand_r(xp_seed) % 10;
 		for(int i = 0 ; i < nb ; i++)
 		{
-			m_objects.push_back(createRandomObject(xp_seed));
+			m_objects.push_back(createRandomObject(xp_seed, features));
 		}
 
 
@@ -260,10 +275,11 @@ class TestModules : public CppUnit::TestFixture
 			LOG_TEST(m_logger, "## on module "<<*it1);
 
 			Module* module = createAndConnectModule(*it1);
+			std::string features = "";
 
 			for(int i = 0 ; i < 50 ; i++)
 			{
-				randomizeInputs(&seed);
+				randomizeInputs(module, *it1, &seed);
 				module->Process();
 			}
 			delete module;
@@ -288,7 +304,7 @@ class TestModules : public CppUnit::TestFixture
 				delete module;
 				continue;
 			}
-			randomizeInputs(&seed);
+			randomizeInputs(module, *it1, &seed);
 
 			for(std::map<std::string, Controller*>::const_iterator it2 = module->GetControllersList().begin() ; it2 != module->GetControllersList().end() ; it2++)
 			{
