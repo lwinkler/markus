@@ -25,7 +25,6 @@
 
 #include "Manager.h"
 #include "MkException.h"
-#include "version.h"
 
 #ifndef MARKUS_NO_GUI
 #include "Editor.h"
@@ -149,8 +148,7 @@ int main(int argc, char** argv)
 				return 0;
 				break;
 			case 'v':
-				LOG_INFO(logger, "Markus version "<<VERSION_STRING<<" compiled with Opencv "<<CV_VERSION);
-
+				LOG_INFO(logger, Manager::Version());
 				return 0;
 			case 'd':
 				describe = true;
@@ -244,6 +242,7 @@ int main(int argc, char** argv)
 #ifndef MARKUS_NO_GUI
 		MarkusApplication app(argc, argv);
 #endif
+		LOG_INFO(logger, Manager::Version());
 		ConfigReader mainConfig(configFile);
 		mainConfig.Validate();
 		ConfigReader appConfig = mainConfig.GetSubConfig("application");

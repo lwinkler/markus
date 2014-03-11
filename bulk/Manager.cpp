@@ -29,12 +29,12 @@
 #include "ControllerManager.h"
 
 #include "util.h"
+#include "version.h"
 
 using namespace std;
 
 #include "Controller.h"
 
-	
 #if defined( WIN32 ) && defined( TUNE )
 	#include <crtdbg.h>
 	_CrtMemState startMemState;
@@ -404,6 +404,17 @@ Module& Manager::RefModuleByName(const string& x_name) const
 	// return NULL;
 }
 
+// Return a string containing the version of the executable
+string Manager::Version()
+{
+	stringstream ss;
+	ss<<"Markus version "<<VERSION_STRING
+		<<", compiled with Opencv "<<CV_VERSION
+		<< ", vp-detection modules version "<<VERSION_STRING2
+		<< ", built on "<<VERSION_BUILD_HOST;
+	return ss.str();
+}
+
 /// Returns a directory that will contain all outputs
 const string& Manager::OutputDir(const string& x_outputDir)
 {
@@ -442,11 +453,8 @@ const string& Manager::OutputDir(const string& x_outputDir)
 			LOG_INFO(m_logger, "Creating directory "<<m_outputDir<<" and symbolic link out_latest");
 			// note: use ln with atgs sfn to override existing link
 			SYSTEM("ln -sfn \"" + m_outputDir + "\" out_latest");
-			try
-			{
-				SYSTEM("tools/version.sh > " + m_outputDir + "/version.txt"); // TODO: reenable this
-			}
-			catch(...){}
+
+			// Copy config to output dir
 			if(m_configFile != "")
 				SYSTEM("cp " + m_configFile + " " + m_outputDir);
 		}

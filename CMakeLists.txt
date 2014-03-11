@@ -129,12 +129,16 @@ add_custom_target(update_projects_list
 
 find_package(Git)
 if(GIT_FOUND)
-	execute_process(COMMAND ${GIT_EXECUTABLE} describe --all --long RESULT_VARIABLE res_var OUTPUT_VARIABLE GIT_COM_ID )
+	execute_process(COMMAND ${GIT_EXECUTABLE} describe --long --tags --dirty RESULT_VARIABLE res_var OUTPUT_VARIABLE GIT_COM_ID )
+	execute_process(COMMAND ${GIT_EXECUTABLE} describe --long --tags --dirty RESULT_VARIABLE res_var OUTPUT_VARIABLE GIT_COM_ID2 WORKING_DIRECTORY vp-detection )
+	execute_process(COMMAND uname -a OUTPUT_VARIABLE GIT_BUILD_HOST )
 	if( NOT ${res_var} EQUAL 0 )
 		set( GIT_COMMIT_ID "git commit id unknown")
 		message( WARNING "Git failed (not a repo, or no tags). Build will not contain git revision info." )
 	endif()
 	string( REPLACE "\n" "" GIT_COMMIT_ID ${GIT_COM_ID} )
+	string( REPLACE "\n" "" GIT_COMMIT_ID2 ${GIT_COM_ID2} )
+	string( REPLACE "\n" "" GIT_BUILD_HOST ${GIT_BUILD_HOST} )
 else()
 	set( GIT_COMMIT_ID "unknown (git not found!)")
 	message( WARNING "Git not found. Build will not contain git revision info." )
@@ -144,6 +148,8 @@ set( vstring "//version.h - written by cmake. changes will be lost!\n"
 	"#ifndef MARKUS_VERSION_H\n"
 	"#define MARKUS_VERSION_H\n"
 	"const char * VERSION_STRING = \"${GIT_COMMIT_ID}\"\;\n"
+	"const char * VERSION_STRING2 = \"${GIT_COMMIT_ID2}\"\;\n"
+	"const char * VERSION_BUILD_HOST = \"${GIT_BUILD_HOST}\"\;\n"
 	"#endif")
 
 file(WRITE version.h.txt ${vstring} )

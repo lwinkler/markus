@@ -73,6 +73,7 @@ public:
 	inline void Quit(){m_continueFlag = false;}; // TODO: Manager must be thread safe
 	void PauseInputs(bool x_pause);
 	bool EndOfAllStreams() const;
+	static std::string Version();
 	static const std::string& OutputDir(const std::string& x_outputDir = "");
 	static inline void SetConfigFile(const std::string& x_configFile)
 	{
