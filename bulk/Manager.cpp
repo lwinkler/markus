@@ -442,7 +442,11 @@ const string& Manager::OutputDir(const string& x_outputDir)
 			LOG_INFO(m_logger, "Creating directory "<<m_outputDir<<" and symbolic link out_latest");
 			// note: use ln with atgs sfn to override existing link
 			SYSTEM("ln -sfn \"" + m_outputDir + "\" out_latest");
-			SYSTEM("tools/version.sh > " + m_outputDir + "/version.txt");
+			try
+			{
+				SYSTEM("tools/version.sh > " + m_outputDir + "/version.txt"); // TODO: reenable this
+			}
+			catch(...){}
 			if(m_configFile != "")
 				SYSTEM("cp " + m_configFile + " " + m_outputDir);
 		}
