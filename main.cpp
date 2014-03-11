@@ -24,11 +24,11 @@
 #include <QApplication>
 
 #include "Manager.h"
-#include "Editor.h"
 #include "MkException.h"
 #include "version.h"
 
 #ifndef MARKUS_NO_GUI
+#include "Editor.h"
 #include "Markus.h"
 #include "MarkusApplication.h"
 #endif
@@ -157,9 +157,14 @@ int main(int argc, char** argv)
 				break;
 			case 'e':
 				{
+#ifndef MARKUS_NO_GUI
 					QApplication app(argc, argv);
 					Editor editor;
 					return app.exec();
+#else
+					LOG_ERROR(logger, "To launch the editor Markus must be compiled with GUI");
+					return -1;
+#endif
 				}
 				break;
 			case 'c':
