@@ -290,12 +290,6 @@ int main(int argc, char** argv)
 			LOG_ERROR(logger, "Error creating thread");
 			return -1;
 		}
-		/* wait for the second thread to finish */
-		/*if(useStdin && pthread_join(command_thread, NULL)) {
-
-			LOG_ERROR(Manager::Logger(), "Error joining thread");
-			return -1;
-		}*/
 
 		if(centralized)
 		{
