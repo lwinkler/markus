@@ -56,7 +56,7 @@ endif()
 
 if(Markus_UNIT_TESTING)
 	add_definitions(-DMARKUS_UNIT_TESTING)
-	set(DEPS ${DEPS} testing cppunit)
+	set(DEPS ${DEPS} cppunit)
 	include_directories(testing)
 endif()
 

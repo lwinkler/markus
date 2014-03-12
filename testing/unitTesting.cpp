@@ -28,7 +28,7 @@
 
 
 
-bool run_tests()
+int main(int argc, char **argv)
 {
 	CppUnit::TextUi::TestRunner runner;
 	SYSTEM("rm -rf testing/out");
