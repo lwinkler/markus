@@ -107,6 +107,10 @@ void SegmenterContour::ProcessFrame()
 
 			Object obj(m_param.objectLabel, rect);
 
+			// Extract moments
+			Moments mom = moments(contours[i]);
+			double m00_scaled = mom.m00/(obj.width*obj.height);
+
 			// Add the possible features
 			for(vector<string>::const_iterator it = m_featureNames.begin() ; it != m_featureNames.end() ; it++)
 			{
@@ -145,6 +149,22 @@ void SegmenterContour::ProcessFrame()
 				else if(it->compare("ellipse_ratio") == 0)
 				{
 					obj.AddFeature("ellipse_ratio", static_cast<double>(minEllipse.size.width) / minEllipse.size.height);
+				}
+				else if(it->compare("moment_00") == 0)
+				{
+					obj.AddFeature("moment_00", m00_scaled);
+				}
+				else if(it->compare("moment_11") == 0)
+				{
+					obj.AddFeature("moment_11", mom.mu11/pow(m00_scaled, 2));
+				}
+				else if(it->compare("moment_02") == 0)
+				{
+					obj.AddFeature("moment_02", mom.mu02/pow(m00_scaled, 2));
+				}
+				else if(it->compare("moment_20") == 0)
+				{
+					obj.AddFeature("moment_20", mom.mu20/pow(m00_scaled, 2));
 				}
 			}
 
