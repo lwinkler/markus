@@ -41,8 +41,6 @@ using namespace std;
 
 
 
-bool run_tests();
-
 void usage()
 {
 	printf("Usage : markus <options> <configuration.xml> <video_file> \n");
@@ -58,7 +56,6 @@ void usage()
 	printf(" -c  --centralized     Module processing function is called from the manager (instead of decentralized timers)\n");
 	printf(" -i  --stdin           Read commands from stdin\n");
 	printf(" -n  --no-gui          Run process without gui\n");
-	printf(" -t  --run-tests       Run unit tests (if enabled)\n");
 	printf(" -l  --log-conf <log4cxx_config>.xml\n");
 	printf("                       Set logging mode\n");
 	printf(" -o  --output-dir directory\n");
@@ -136,7 +133,6 @@ int main(int argc, char** argv)
 		{"centralized", 0, 0, 'c'},
 		{"stdin",       0, 0, 'i'},
 		{"no-gui",      0, 0, 'n'},
-		{"run-tests",   0, 0, 't'},
 		{"log-conf",    1, 0, 'l'},
 		{"output_dir",  1, 0, 'o'},
 		{"parameter",   1, 0, 'p'},
@@ -144,7 +140,7 @@ int main(int argc, char** argv)
 	};
 	int c;
 	int option_index = 0;
-	while ((c = getopt_long(argc, argv, "hvdecintl:o:p:", long_options, &option_index)) != -1)
+	while ((c = getopt_long(argc, argv, "hvdecinl:o:p:", long_options, &option_index)) != -1)
 	{
 		switch (c) {
 			case 'h':
@@ -177,15 +173,6 @@ int main(int argc, char** argv)
 				break;
 			case 'n':
 				nogui = true;
-				break;
-			case 't':
-#ifdef MARKUS_UNIT_TESTING
-				LOG_INFO(logger, "Running test suite");
-				return run_tests();
-#else
-				LOG_ERROR(logger, "Unit test must be enabled at compilation");
-				return -1;
-#endif
 				break;
 			case 'l':
 				logConfigFile = optarg;

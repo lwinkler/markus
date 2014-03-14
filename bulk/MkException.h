@@ -33,7 +33,7 @@ class MkException : public std::exception {
 		MkException(MkExceptionCode x_code, const std::string& x_description="Exception occured", const std::string& x_position="", const std::string& x_function="");
 		~MkException() throw();
 		const char* what() const throw();
-		inline MkExceptionCode GetCode(){return m_code;};
+		inline MkExceptionCode GetCode(){return m_code;}
 
 	protected:
 		std::string m_description;

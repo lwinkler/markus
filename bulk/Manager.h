@@ -70,7 +70,7 @@ public:
 	void Export();
 	void PrintStatistics();
 	void Pause(bool x_pause);
-	inline void Quit(){m_continueFlag = false;};
+	inline void Quit(){m_continueFlag = false;}
 	void PauseInputs(bool x_pause);
 	bool EndOfAllStreams() const;
 	static std::string Version();

@@ -46,7 +46,6 @@ using namespace std;
 
 log4cxx::LoggerPtr Manager::m_logger(log4cxx::Logger::getLogger("Manager"));
 
-// string Manager::m_configFile;
 string Manager::m_outputDir;
 FactoryModules Manager::m_factory;
 
@@ -450,7 +449,7 @@ const string& Manager::OutputDir(const string& x_outputDir, const string& x_conf
 			else
 				m_outputDir = x_outputDir;
 
-			short trial = 0;
+			uchar trial = 0;
 			string tmp = m_outputDir;
 
 			// Try to create the output dir, if it fails, try changing the name

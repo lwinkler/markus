@@ -65,7 +65,7 @@ protected:
 class Controllable
 {
 	public:
-		Controllable(){};
+		Controllable(){}
 		~Controllable()
 		{
 			for(std::map<std::string, Controller* >::iterator it = m_controls.begin() ; it != m_controls.end() ; it++)
@@ -73,8 +73,8 @@ class Controllable
 		}
 		const std::map<std::string, Controller*>& GetControllersList() const {return m_controls;}
 		Controller* FindController(const std::string& x_name) const;
-		inline void AddController(Controller* xp_ctr){m_controls.insert(make_pair(xp_ctr->GetName(), xp_ctr));};
-		inline bool HasNoControllers()const{return m_controls.size() == 0;};
+		inline void AddController(Controller* xp_ctr){m_controls.insert(make_pair(xp_ctr->GetName(), xp_ctr));}
+		inline bool HasNoControllers()const{return m_controls.size() == 0;}
 
 	private:
 		std::map<std::string, Controller*> m_controls;

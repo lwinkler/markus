@@ -89,8 +89,6 @@ public:
 protected:
 	float m_scaleFactor;
 	cv::Mat m_smallImg;
-	// int m_minNeighbors;
-	// int m_minSide;
 	
 	std::vector<cv::Rect> m_detected;
 };
