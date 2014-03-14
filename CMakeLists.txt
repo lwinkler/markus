@@ -11,6 +11,7 @@ set(Markus_UNIT_TESTING    false   CACHE BOOL "Enable unit testing")
 # Required packages
 find_package(OpenCV REQUIRED)
 find_package(CURL QUIET)
+find_package(PythonLibs 2 QUIET)
 
 find_library(CPPUNIT_LIBS cppunit)
 find_library(LOG4CXX_LIBS log4cxx)
@@ -21,6 +22,9 @@ if("${CURL_LIBRARIES}" STREQUAL "")
 endif()
 if("${CPPUNIT_LIBS}" STREQUAL "")
 	message(WARNING "CppUnit library not found on your system")
+endif()
+if("${PYTHON_LIBRARIES}" STREQUAL "")
+	message(WARNING "Python library not found on your system")
 endif()
 if("${LOG4CXX_LIBS}" STREQUAL "")
 	message(FATAL_ERROR "Log4CXX library not found on your system")
@@ -43,10 +47,6 @@ set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g -DMARKUS_DEBUG_STREAMS")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS_DEBUG  "-O2 -g -DMARKUS_DEBUG_STREAMS")
 
-if(Markus_USE_PYTHON_LIBS)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMARKUS_USE_PYTHON") # TODO Python must be set as optional lib
-endif()
-
 # Tell CMake to run moc when necessary:
 set(CMAKE_AUTOMOC ON)
 # As moc files are generated in the binary dir, tell CMake
@@ -54,6 +54,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 
+include_directories(${PYTHON_INCLUDE_DIRS})
 include_directories(bulk modules)
 
 
@@ -74,7 +75,7 @@ if(Markus_UNIT_TESTING)
 	include_directories(testing)
 endif()
 
-set(DEPS ${DEPS} ${DEPS} ${TINYXML_LIBS} ${LOG4CXX_LIBS} ${OpenCV_LIBS} ${CURL_LIBRARIES}) # double the dependencies to avoid linking error
+set(DEPS ${DEPS} ${DEPS} ${TINYXML_LIBS} ${LOG4CXX_LIBS} ${OpenCV_LIBS} ${PYTHON_LIBRARIES} ${CURL_LIBRARIES}) # double the dependencies to avoid linking error
 if(Markus_USE_QT5)
 	include_directories(${Qt5Widgets_INCLUDE_DIRS} ${Qt5WebKit_INCLUDE_DIRS} ${Qt5WebKitWidgets_INCLUDE_DIRS})
 	set(DEPS ${DEPS} ${Qt5Widgets_LIBRARIES} ${Qt5WebKit_LIBRARIES} ${Qt5WebKitWidgets_LIBRARIES}) 
@@ -89,12 +90,6 @@ endif()
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR})
 
-## Python libs
-if(Markus_USE_PYTHON_LIBS)
-	find_package(PythonLibs 2 REQUIRED)
-	include_directories(${PYTHON_INCLUDE_DIRS})
-	set(DEPS ${DEPS} ${PYTHON_LIBRARIES} )
-endif()
 
 
 #-------------------------------------------------------------------------------- 
