@@ -70,7 +70,7 @@ endif()
 
 if(Markus_UNIT_TESTING)
 	add_definitions(-DMARKUS_UNIT_TESTING)
-	set(DEPS ${DEPS} testing ${CPPUNIT_LIBS})
+	set(DEPS ${DEPS} ${CPPUNIT_LIBS})
 	include_directories(testing)
 endif()
 
