@@ -10,9 +10,25 @@ set(Markus_UNIT_TESTING    false   CACHE BOOL "Enable unit testing")
 
 # Required packages
 find_package(OpenCV REQUIRED)
-# find_package(tinyxml REQUIRED) # TODO: How to add this dependancy ?
-# find_package(log4cxx REQUIRED) # TODO: How to add this dependancy ?
-# find_package(CppUnit REQUIRED)
+find_package(CURL QUIET)
+
+find_library(CPPUNIT_LIBS cppunit)
+find_library(LOG4CXX_LIBS log4cxx)
+find_library(TINYXML_LIBS tinyxml)
+
+if("${CURL_LIBRARIES}" STREQUAL "")
+	message(WARNING "Curl library not found on your system")
+endif()
+if("${CPPUNIT_LIBS}" STREQUAL "")
+	message(WARNING "CppUnit library not found on your system")
+endif()
+if("${LOG4CXX_LIBS}" STREQUAL "")
+	message(FATAL_ERROR "Log4CXX library not found on your system")
+endif()
+if("${TINYXML_LIBS}" STREQUAL "")
+	message(FATAL_ERROR "TinyXML library not found on your system")
+endif()
+
 if(Markus_USE_QT5)
 	find_package(Qt5Widgets REQUIRED)
 	find_package(Qt5WebKit REQUIRED)
@@ -26,11 +42,9 @@ set(CMAKE_CXX_FLAGS "-Wall")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g -DMARKUS_DEBUG_STREAMS")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS_DEBUG  "-O2 -g -DMARKUS_DEBUG_STREAMS")
-# set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
-# set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-# set(CMAKE_CXX_FLAGS_DEBUG  "-O3 -g")
+
 if(Markus_USE_PYTHON_LIBS)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMARKUS_USE_PYTHON")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMARKUS_USE_PYTHON") # TODO Python must be set as optional lib
 endif()
 
 # Tell CMake to run moc when necessary:
@@ -56,11 +70,11 @@ endif()
 
 if(Markus_UNIT_TESTING)
 	add_definitions(-DMARKUS_UNIT_TESTING)
-	set(DEPS ${DEPS} testing cppunit)
+	set(DEPS ${DEPS} testing ${CPPUNIT_LIBS})
 	include_directories(testing)
 endif()
 
-set(DEPS ${DEPS} ${DEPS} tinyxml log4cxx ${OpenCV_LIBS}) # double the dependencies to avoid linking error
+set(DEPS ${DEPS} ${DEPS} ${TINYXML_LIBS} ${LOG4CXX_LIBS} ${OpenCV_LIBS} ${CURL_LIBRARIES}) # double the dependencies to avoid linking error
 if(Markus_USE_QT5)
 	include_directories(${Qt5Widgets_INCLUDE_DIRS} ${Qt5WebKit_INCLUDE_DIRS} ${Qt5WebKitWidgets_INCLUDE_DIRS})
 	set(DEPS ${DEPS} ${Qt5Widgets_LIBRARIES} ${Qt5WebKit_LIBRARIES} ${Qt5WebKitWidgets_LIBRARIES}) 
@@ -68,7 +82,7 @@ if(Markus_USE_QT5)
 	# without -fPIE. We add that here.
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS} ${Qt5WebKit_EXECUTABLE_COMPILE_FLAGS}")
 	add_definitions(${Qt5Widgets_DEFINITIONS} ${Qt5WebKit_DEFINITIONS})
-ELSE()
+else()
 	include_directories(${QT_INCLUDES})
 	set(DEPS ${DEPS} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTWEBKIT_LIBRARY} )
 endif()
