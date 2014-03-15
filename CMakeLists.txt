@@ -5,7 +5,6 @@ cmake_minimum_required(VERSION 2.6)
 set(CMAKE_BUILD_TYPE       "Debug" CACHE BOOL "Mode of compilation")
 set(Markus_NO_GUI          false   CACHE BOOL "Compile Markus without a graphical user interface")
 set(Markus_USE_QT5         false   CACHE BOOL "Use QT 5 instead of 4")
-set(Markus_USE_PYTHON_LIBS false   CACHE BOOL "Compile with Python libs: only used in some modules")
 
 # Required packages
 find_package(OpenCV REQUIRED)

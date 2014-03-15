@@ -35,12 +35,14 @@ public:
 	VideoFileReaderParameterStructure(const ConfigReader& x_confReader) : 
 	InputParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterString("file", 	"in/input.mp4", 	&file,	"Name of the video file to read, with path"));
+		m_list.push_back(new ParameterString("file",  "in/input.mp4", &file, "Name of the video file to read, with path"));
+		m_list.push_back(new ParameterBool("loop",    0, 0, 1,        &loop, "Loop on file"));
 		ParameterStructure::Init();
 	}
 
 public:
 	std::string file;
+	bool loop;
 };
 
 class VideoFileReader : public Input

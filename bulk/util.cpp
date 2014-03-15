@@ -100,7 +100,7 @@ void adjustSize(const Mat& im_in, Mat& im_out)
 {
 	if(!im_in.cols || !im_in.rows)
 	{
-		throw MkException("Module input image has width of height with zero value", LOC);
+		throw MkException("Module input image has width or height with zero value", LOC);
 	}
 	else
 	{
