@@ -43,8 +43,9 @@ Then enable compilation with Qt5 in the menu.
 	- *Qt Creator* : a full IDE for C++ and QT (package qtcreator)
 	- *Python*: for some modules (package python-dev)
 	- *CppUnit** : To run the unit test (package libcppunit-dev)
+	- *Curl*: To use an input camera with call to a specific webservice
 
-	sudo apt-get install cmake-qt-gui cmake-curses-gui qtcreator python-dev libcppunit-dev
+	sudo apt-get install cmake-qt-gui cmake-curses-gui qtcreator python-dev libcppunit-dev libcurl4-openssl-dev
 
 ### Compile OpenCV from sources
 Alternatively you can compile OpenCV from sources. Do not forget to install the depandencies with apt-get build-dep first:
