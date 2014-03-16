@@ -34,6 +34,7 @@ void validate(Controller* xp_ctr, string* xp_value)
 	ControllerEvent* ctr = dynamic_cast<ControllerEvent*>(xp_ctr);
 	assert(ctr != NULL);
 	ctr->module.ValidateLastEvent();
+	ctr->module.PopEvent();
 }
 
 void invalidate(Controller* xp_ctr, string* xp_value)
@@ -41,6 +42,7 @@ void invalidate(Controller* xp_ctr, string* xp_value)
 	ControllerEvent* ctr = dynamic_cast<ControllerEvent*>(xp_ctr);
 	assert(ctr != NULL);
 	ctr->module.InvalidateLastEvent();
+	ctr->module.PopEvent();
 }
 
 ControllerEvent::ControllerEvent(ClassifyEvents& rx_module) :

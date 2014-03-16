@@ -38,11 +38,15 @@ public:
 	virtual void InvalidateLastEvent();
 	virtual void ValidateLastEvent();
 	virtual float PredictEventValidity(const Event& x_event);
+	void PushEvent();
+	void PopEvent();
 	
 protected:
 
 	Event m_eventIn;
 	Event m_eventOut;
+	std::list<Event> m_events;
+	Event m_eventToValidate;
 
 private:
 	ClassifyEventsParameterStructure m_param;

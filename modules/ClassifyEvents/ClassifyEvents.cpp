@@ -25,7 +25,7 @@ ClassifyEvents::ClassifyEvents(const ConfigReader& x_configReader) :
 	AddInputStream(0, new StreamEvent( "events",   m_eventIn,  *this, "Incoming events"));
 
 	AddOutputStream(0, new StreamEvent("filtered", m_eventOut, *this, "Filtered events"));
-	AddOutputStream(1, new StreamEvent("last_event", m_eventIn, *this, "Event awaiting user feedback"));
+	AddOutputStream(1, new StreamEvent("last_event", m_eventToValidate, *this, "Event awaiting user feedback"));
 }
 
 ClassifyEvents::~ClassifyEvents(void )
@@ -35,11 +35,9 @@ ClassifyEvents::~ClassifyEvents(void )
 void ClassifyEvents::Reset()
 {
 	Module::Reset();
-#ifndef MARKUS_NO_GUI
 	// Add a new control to play forward and rewind
-	if(HasNoControllers())
+	// if(HasNoControllers()) // TODO: find a way to create this once only !
 		AddController(new ControllerEvent(*this));
-#endif
 }
 
 void ClassifyEvents::ProcessFrame()
@@ -51,9 +49,29 @@ void ClassifyEvents::ProcessFrame()
 	float result = PredictEventValidity(m_eventIn);
 	m_eventIn.AddFeature("valid", result);
 
+	PushEvent();
+
 	// Output the event if the prob > 0.5
 	if(result > m_param.validityThres)
 		m_eventOut = m_eventIn;
+}
+
+void ClassifyEvents::PushEvent()
+{
+	if(m_eventToValidate.IsRaised())
+		m_events.push_back(m_eventIn);	
+	else
+		m_eventToValidate = m_eventIn;
+}
+
+void ClassifyEvents::PopEvent()
+{
+	if(m_events.size() != 0)
+	{
+		m_eventToValidate = m_events.front();
+		m_events.pop_front();
+	}
+
 }
 
 // ---------------------------------------------------------------------------------
