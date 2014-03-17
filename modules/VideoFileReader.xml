@@ -41,6 +41,11 @@
 			<value default="in/input.mp4">in/input.mp4</value>
 			<description>Name of the video file to read, with path</description>
 		</param>
+		<param name="loop">
+			<type>bool</type>
+			<value min="0" max="1" default="0">0</value>
+			<description>Loop on file</description>
+		</param>
 	</parameters>
 	<inputs>
 	</inputs>
