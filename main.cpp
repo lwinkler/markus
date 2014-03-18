@@ -226,6 +226,7 @@ int main(int argc, char** argv)
 	}
 
 	log4cxx::xml::DOMConfigurator::configure(logConfigFile);
+	logEvent(logger, "start", 0, jsonify("pid", getpid()));
 
 	try
 	{
