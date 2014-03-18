@@ -25,11 +25,11 @@
 
 #include "Manager.h"
 #include "MkException.h"
+#include "Event.h"
 
 #ifndef MARKUS_NO_GUI
 #include "Editor.h"
 #include "Markus.h"
-#include "Event.h"
 #include "MarkusApplication.h"
 #endif
 
