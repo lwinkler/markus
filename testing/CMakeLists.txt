@@ -9,6 +9,8 @@ endif()
 #)
 
 
-add_executable(unitTesting unitTesting.cpp)
-target_link_libraries(unitTesting ${DEPS} ${CPPUNIT_LIBS})
+if(NOT "${CPPUNIT_LIBS}" STREQUAL "")
+	add_executable(unitTesting unitTesting.cpp)
+	target_link_libraries(unitTesting ${DEPS} ${CPPUNIT_LIBS})
+endif()
 
