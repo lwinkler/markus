@@ -29,6 +29,7 @@
 #include <fstream>
 #include <log4cxx/logger.h>
 
+
 /// this file contains some usefull functions and methods
 
 #define POW2(x) (x) * (x)
@@ -47,7 +48,7 @@
 #define LOG_WARN  LOG4CXX_WARN
 #define LOG_INFO  LOG4CXX_INFO
 #define LOG_DEBUG LOG4CXX_DEBUG
-#define LOG_EVENT(logger, descriptor)   LOG4CXX_WARN((logger), "@notif@ EVENT" << " " << descriptor )
+#define LOG_EVENT(logger, descriptor)   LOG4CXX_WARN((logger), "@notif@ EVENT" << " " << descriptor ) // TODO Maybe remove this
 
 #define SYSTEM(x) {std::string cmd; cmd = (x);\
 	if(system(cmd.c_str())) {\
@@ -66,9 +67,9 @@ std::vector<std::string> &split(const std::string &s, char delim, std::vector<st
 
 const std::string timeStamp();
 const std::string msToTimeStamp(TIME_STAMP x_ms);
+TIME_STAMP getAbsTimeMs();
 std::string jsonify(const std::string& x_name, const std::string& x_value);
 std::string jsonify(const std::string& x_name, TIME_STAMP x_value);
-void logEvent(log4cxx::LoggerPtr& x_logger, const std::string& x_name, TIME_STAMP x_timeStamp, const std::string& x_extraInfo);
 void createEmtpyConfigFile(const std::string& x_fileName);
 
 

@@ -38,8 +38,8 @@ class Event
 		Event();
 		~Event();
 		void Empty();
-		void Raise(const std::string x_label);
-		void Raise(const std::string x_label, const Object& m_object);
+		void Raise(const std::string x_label, TIME_STAMP x_absTimeEvent = 0);
+		void Raise(const std::string x_label, const Object& m_object, TIME_STAMP x_absTimeEvent = 0);
 		inline bool IsRaised() {return m_label != "";}
 		inline const std::string& GetLabel(){return m_label;}
 		inline const Object& GetObject() const {return m_object;}
@@ -53,10 +53,13 @@ class Event
 		{
 			return m_object.GetFeature(x_name);
 		}
+		void Notify(const std::string& x_extraInfo = "");
 
 	protected:
 		std::string m_label;
 		Object m_object;
+		TIME_STAMP m_absTimeEvent; // Abs time of the event (given by current date)
+
 	private:
 		static log4cxx::LoggerPtr m_logger;
 };

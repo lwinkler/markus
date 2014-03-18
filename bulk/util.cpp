@@ -251,6 +251,15 @@ const string msToTimeStamp(TIME_STAMP x_ms)
 	return string(str);
 }
 
+
+// Return an absolute timestamp in miliseconds. Absolute timestamps are based on processor time and are used on server side
+TIME_STAMP getAbsTimeMs()
+{
+	struct timeval tp;
+	gettimeofday(&tp, NULL);
+	return tp.tv_sec * 1000 + tp.tv_usec / 1000;
+}
+
 // Convert a string to json object
 string jsonify(const string& x_name, const string& x_value)
 {
@@ -268,20 +277,6 @@ string jsonify(const string& x_name, TIME_STAMP x_value)
 }
 
 
-// Log an event and notify the parent process
-void logEvent(log4cxx::LoggerPtr& x_logger, const string& x_name, TIME_STAMP x_timeStamp, const string& x_extraInfo)
-{
-	struct timeval tp;
-
-	gettimeofday(&tp, NULL);
-
-	LOG_WARN(x_logger, "@notif@ EVENT {"
-		<< jsonify("name", x_name) <<", "
-		<< jsonify("date_event", x_timeStamp) <<", "
-		<< jsonify("date_notif", tp.tv_sec * 1000 + tp.tv_usec / 1000) <<", "
-		<< x_extraInfo
-		<<"}");
-}
 
 // Create an empty config file
 void createEmtpyConfigFile(const std::string& x_fileName)

@@ -24,6 +24,7 @@
 #include "GroundTruthReader.h"
 #include "StreamImage.h"
 #include "StreamState.h"
+#include "util.h"
 
 using namespace std;
 using namespace cv;

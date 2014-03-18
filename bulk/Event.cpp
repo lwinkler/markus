@@ -45,8 +45,9 @@ void Event::Empty()
 }
 
 /// Raise an event with a set of features
-void Event::Raise(const string x_label, const Object& x_object)
+void Event::Raise(const string x_label, const Object& x_object, TIME_STAMP x_absTimeEvent)
 {
+	m_absTimeEvent = x_absTimeEvent;
 	if(IsRaised())
 		LOG_WARN(m_logger, "The same event is raised several times. Older events are overriden");
 	m_label       = x_label;
@@ -54,10 +55,28 @@ void Event::Raise(const string x_label, const Object& x_object)
 }
 
 /// Raise an event without features
-void Event::Raise(const string x_label)
+void Event::Raise(const string x_label, TIME_STAMP x_absTimeEvent)
 {
+	m_absTimeEvent = x_absTimeEvent;
 	if(IsRaised())
 		LOG_WARN(m_logger, "The same event is raised several times. Older events are overriden");
 	m_label = x_label;
 	m_object = Object("empty");
+}
+
+
+
+// Log an event and notify the parent process
+void Event::Notify(const string& x_extraInfo)
+{
+	stringstream extra;
+	if(x_extraInfo != "")
+		extra<<", "<<x_extraInfo;
+
+	LOG_WARN(m_logger, "@notif@ EVENT {"
+		<< jsonify("name", GetLabel()) <<", "
+		<< jsonify("date_event",  m_absTimeEvent == 0 ? getAbsTimeMs() : m_absTimeEvent) <<", "
+		<< jsonify("date_notif", getAbsTimeMs())
+		<< extra.str()
+		<< "}");
 }

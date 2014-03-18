@@ -29,6 +29,7 @@
 #ifndef MARKUS_NO_GUI
 #include "Editor.h"
 #include "Markus.h"
+#include "Event.h"
 #include "MarkusApplication.h"
 #endif
 
@@ -226,7 +227,11 @@ int main(int argc, char** argv)
 	}
 
 	log4cxx::xml::DOMConfigurator::configure(logConfigFile);
-	logEvent(logger, "start", 0, jsonify("pid", getpid()));
+
+	// Raise a start event. The utility of this is simply to notify a parent process
+	Event ev;
+	ev.Raise("start");
+	ev.Notify(jsonify("pid", getpid()));
 
 	try
 	{

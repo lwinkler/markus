@@ -74,7 +74,8 @@ void LogEvent::ProcessFrame()
 	{
 		// Log the change in event
 		WriteEvent();
-		LOG_EVENT(m_logger, m_event.GetLabel()); 
+		// LOG_EVENT(m_logger, m_event.GetLabel()); 
+		m_event.Notify("");
 		if(m_saveImage)
 			SaveImage();
 		m_subId++;
