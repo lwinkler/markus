@@ -105,7 +105,7 @@ void Editor::loadProject()
 /// Check if the user wants to save its work
 bool Editor::maybeSave()
 {
-	if (true)// textEdit->document()->isModified())
+	if(m_view.page()->mainFrame()->evaluateJavaScript("window.markusEditor.hasChanged();").toBool())
 	{
 		QMessageBox::StandardButton ret;
 		ret = QMessageBox::warning(this, tr("Application"),

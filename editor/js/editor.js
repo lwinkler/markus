@@ -1,4 +1,5 @@
 // Global objects
+"use strict";
 
 var maxIdModules = 0;
 var xmlModuleTypes = [];
@@ -93,6 +94,7 @@ var xmlProject = null;
 					// 	return false;
 					xmlInput.attr('outputid', xmlOutput.attr('id'));
 					xmlInput.attr('moduleid', xmlOutput.parent().parent().attr('id'));
+					hasChanges = true;
 
 					return true;
 				},				
@@ -119,10 +121,14 @@ var xmlProject = null;
 					// 	return false;
 					xmlInput.removeAttr('outputid');
 					xmlInput.removeAttr('moduleid');
+					hasChanges = true;
 					return true;
 				},
 				dropOptions : dropOptions
 			};
+
+			var hasChanges = false; // Has unsaved changes
+			var parseXml = null;
 			//================================================================================
 			// Functions and utilities
 			//================================================================================
@@ -145,6 +151,7 @@ var xmlProject = null;
 					},
 					error: function(e) { console.log("Error : Failed to load " + fileName + " status:" + e.status)}
 				});
+				hasChanges = false;
 				return target;
 			}
 
@@ -183,6 +190,7 @@ var xmlProject = null;
 
 				$('#detail').hide();
 				$('#explanation').show();
+				hasChanges = false;
 			}
 			//--------------------------------------------------------------------------------
 			// Create a window to visualize the module with jsPlumb
@@ -365,6 +373,13 @@ var xmlProject = null;
 				var newWindow = createModuleWindow(xmlInstance, id);
 				xmlInstance.data('class', xmlModuleTypes[type].find('module'));
 				maxIdModules++;
+				hasChanges = true;
+			}
+			//--------------------------------------------------------------------------------
+			// Delete the current modules and load a XML project file 
+			//--------------------------------------------------------------------------------
+			this.hasChanged = function() { 
+				return hasChanges;
 			}
 			//--------------------------------------------------------------------------------
 			// Delete the current modules and load a XML project file 
@@ -404,6 +419,8 @@ var xmlProject = null;
 				// Write content in new window for saving project in browser
 				transformed = transformed.replace(/>[ ]*</g, '><').replace(/></g, '>\n<');
 				var win = window.open('data:text/xml,<?xml version="1.0" encoding="UTF-8"?>' + encodeURIComponent(transformed), 'Project', '', true)
+				hasChanges = false;
+
 				return transformed;
 			};
 			//--------------------------------------------------------------------------------
@@ -448,7 +465,7 @@ var xmlProject = null;
 					$(this).data('class', xmlModuleTypes[type].find('module'));
 
 					// create the window representing the module
-					index = parseInt($(this).attr('id'));
+					var index = parseInt($(this).attr('id'));
 					createModuleWindow($(this), index, $(this).find('uiobject'));
 					// console.log(index + " " + maxIdModules)
 					if(index >= maxIdModules)
@@ -471,6 +488,7 @@ var xmlProject = null;
 						}
 					});
 				});
+				hasChanges = false;
 			}
 			//--------------------------------------------------------------------------------
 			// Display the details of a module in the right panel
@@ -553,7 +571,8 @@ var xmlProject = null;
 				// Create a div representing a new module
 				$("#downloadProject").click(this.saveProject);
 				$("#loadProjectFile").click(function (){
-					window.markusEditor.loadProjectFile($("#selectProjectFile").val());
+					if(!window.markusEditor.hasChanged() || confirm("Do you want to load a project and lose the current changes ?"))
+						window.markusEditor.loadProjectFile($("#selectProjectFile").val());
 				});
 				$("#deleteAll").click(function() {
 					if(confirm("Do you want to delete all existing modules ?"))
