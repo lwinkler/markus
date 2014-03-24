@@ -30,6 +30,7 @@
 #include <QWebFrame>
 #include <QAction>
 #include "Editor.h"
+#include "QWebPage2.h"
 #include "MkException.h"
 #include "util.h"
 
@@ -51,6 +52,9 @@ using namespace std;
 
 Editor::Editor(QWidget *parent)
 {
+	QWebPage2* page = new QWebPage2();
+	m_view.setPage(page);
+
 	setWindowState(Qt::WindowMaximized);
 	setCentralWidget(&m_view);
 	// m_view.show();
