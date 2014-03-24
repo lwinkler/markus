@@ -264,7 +264,7 @@ TIME_STAMP getAbsTimeMs()
 string jsonify(const string& x_name, const string& x_value)
 {
 	stringstream ss;
-	ss<<"'"<<x_name<<"': '"<<x_value<<"'";
+	ss<<"\""<<x_name<<"\": \""<<x_value<<"\"";
 	return ss.str();
 }
 
@@ -272,7 +272,7 @@ string jsonify(const string& x_name, const string& x_value)
 string jsonify(const string& x_name, TIME_STAMP x_value)
 {
 	stringstream ss;
-	ss<<"'"<<x_name<<"': "<<x_value;
+	ss<<"\""<<x_name<<"\": "<<x_value;
 	return ss.str();
 }
 

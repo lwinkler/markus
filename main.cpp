@@ -89,7 +89,6 @@ void *send_commands(void *x_void_ptr)
 				else throw MkException("Command must have one or two elements", LOC);
 				LOG_INFO(logger, "Send command: "<<elems.at(0)<<" \""<<value<<"\"");
 				pManager->SendCommand(elems.at(0), value);
-				cin.clear();
 			}
 			// else cout<<"Getline failed"<<endl;
 		}
@@ -102,6 +101,7 @@ void *send_commands(void *x_void_ptr)
 			LOG_ERROR(logger, "Cannot execute command");
 		}
 		// usleep(1000000);
+		cin.clear();
 	}
 
 	return NULL;

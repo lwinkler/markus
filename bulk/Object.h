@@ -54,7 +54,7 @@ class Object
 		{
 			std::map <std::string, Feature>::const_iterator it = m_feats.find(x_name);
 			if(it == m_feats.end())
-				throw FeatureNotFoundException("Feature " + x_name + " is inexistant", LOC);
+				throw FeatureNotFoundException("Feature " + x_name + " does not exist", LOC);
 			return it->second;
 		}
 		// inline void SetFeatureByName(const std::string& x_name, double x_value) {m_feats.find(x_name)->second = Feature();}

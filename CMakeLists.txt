@@ -11,16 +11,11 @@ find_package(OpenCV REQUIRED)
 find_package(CURL QUIET)
 find_package(PythonLibs 2 QUIET)
 
-find_library(CPPUNIT_LIBS cppunit)
 find_library(LOG4CXX_LIBS log4cxx)
 find_library(TINYXML_LIBS tinyxml)
 
 if("${CURL_LIBRARIES}" STREQUAL "")
 	message(WARNING "Curl library not found on your system. Some modules may not compile.")
-endif()
-if("${CPPUNIT_LIBS}" STREQUAL "CPPUNIT_LIBS-NOTFOUND")
-	message(WARNING "CppUnit library not found on your system. Unit tests will not be added to the project.")
-	set(CPPUNIT_LIBS "")
 endif()
 if("${PYTHON_LIBRARIES}" STREQUAL "")
 	message(WARNING "Python library not found on your system. Some modules may not compile.")
@@ -69,7 +64,7 @@ else()
 endif()
 
 
-set(DEPS ${DEPS} ${DEPS} ${TINYXML_LIBS} ${LOG4CXX_LIBS} ${OpenCV_LIBS} ${PYTHON_LIBRARIES} ${CURL_LIBRARIES} ${CPPUNIT_LIBS}) # double the dependencies to avoid linking error
+set(DEPS ${DEPS} ${DEPS} ${TINYXML_LIBS} ${LOG4CXX_LIBS} ${OpenCV_LIBS} ${PYTHON_LIBRARIES} ${CURL_LIBRARIES} ) # double the dependencies to avoid linking error
 if(Markus_USE_QT5)
 	include_directories(${Qt5Widgets_INCLUDE_DIRS} ${Qt5WebKit_INCLUDE_DIRS} ${Qt5WebKitWidgets_INCLUDE_DIRS})
 	set(DEPS ${DEPS} ${Qt5Widgets_LIBRARIES} ${Qt5WebKit_LIBRARIES} ${Qt5WebKitWidgets_LIBRARIES}) 
@@ -95,9 +90,7 @@ if(NOT Markus_NO_GUI)
 	add_subdirectory(gui)
 	add_subdirectory(editor)
 endif()
-if(NOT "${CPPUNIT_LIBS}" STREQUAL "")
-	add_subdirectory(testing)
-endif()
+add_subdirectory(testing)
 
 
 add_executable(markus ${markus_SRCS})
