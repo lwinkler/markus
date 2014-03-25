@@ -86,8 +86,8 @@ void Event::Notify(const string& x_extraInfo, bool x_isProcessEvent)
 		LOG_WARN(m_logger, "@notif@ EVENT {"
 				<< jsonify("label", GetLabel()) <<", "
 				<< jsonify("dateEvent",  m_absTimeEvent == 0 ? getAbsTimeMs() : m_absTimeEvent) <<", "
-				<< jsonify("dateNotif", getAbsTimeMs())
-				<< jsonify("validity", 1.0)
+				<< jsonify("dateNotif", getAbsTimeMs()) <<", "
+				<< jsonify("validity", 1.0) // TODO: add a formatter for floats
 				<< extra.str()
 				<< "}");
 	}
