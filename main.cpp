@@ -228,10 +228,10 @@ int main(int argc, char** argv)
 
 	log4cxx::xml::DOMConfigurator::configure(logConfigFile);
 
-	// Raise a start event. The utility of this is simply to notify a parent process
+	// Raise a start event. We simply use this to notify a parent process
 	Event ev;
-	ev.Raise("start");
-	ev.Notify(jsonify("pid", getpid()));
+	ev.Raise("started");
+	ev.Notify(jsonify("pid", getpid()), true);
 
 	try
 	{
@@ -295,6 +295,9 @@ int main(int argc, char** argv)
 				// nothing 
 			}
 
+			Event ev;
+			ev.Raise("stopped");
+			ev.Notify("", true);
 			returnValue = MK_EXCEPTION_NORMAL - MK_EXCEPTION_FIRST;
 		}
 		else

@@ -53,7 +53,7 @@ class Event
 		{
 			return m_object.GetFeature(x_name);
 		}
-		void Notify(const std::string& x_extraInfo = "");
+		void Notify(const std::string& x_extraInfo = "", bool x_isProcessEvent=false);
 
 	protected:
 		std::string m_label;

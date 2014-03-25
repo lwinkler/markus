@@ -67,16 +67,28 @@ void Event::Raise(const string x_label, TIME_STAMP x_absTimeEvent)
 
 
 // Log an event and notify the parent process
-void Event::Notify(const string& x_extraInfo)
+void Event::Notify(const string& x_extraInfo, bool x_isProcessEvent)
 {
 	stringstream extra;
 	if(x_extraInfo != "")
-		extra<<", "<<x_extraInfo;
+		extra<<", \"attrs\": {"<<x_extraInfo<<"}";
 
-	LOG_WARN(m_logger, "@notif@ EVENT {"
-		<< jsonify("name", GetLabel()) <<", "
-		<< jsonify("date_event",  m_absTimeEvent == 0 ? getAbsTimeMs() : m_absTimeEvent) <<", "
-		<< jsonify("date_notif", getAbsTimeMs())
-		<< extra.str()
-		<< "}");
+	if(x_isProcessEvent)
+	{
+		LOG_WARN(m_logger, "@notif@ PROCESS {"
+				<< jsonify("label", GetLabel()) <<", "
+				<< jsonify("date_notif", getAbsTimeMs())
+				<< extra.str()
+				<< "}");
+	}
+	else
+	{
+		LOG_WARN(m_logger, "@notif@ EVENT {"
+				<< jsonify("label", GetLabel()) <<", "
+				<< jsonify("date_event",  m_absTimeEvent == 0 ? getAbsTimeMs() : m_absTimeEvent) <<", "
+				<< jsonify("date_notif", getAbsTimeMs())
+				<< extra.str()
+				<< "}");
+	}
+
 }
