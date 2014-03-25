@@ -24,11 +24,33 @@
 #include "NetworkCam.h"
 // #include "util.h"
 #include "StreamImage.h"
+#include <errno.h>
+
+#define TIMEOUT 3 // 3 sec timeout
 
 using namespace std;
 using namespace cv;
 
 log4cxx::LoggerPtr NetworkCam::m_logger(log4cxx::Logger::getLogger("NetworkCam"));
+
+struct struct_thread
+{
+	VideoCapture* capture = NULL;
+	sem_t* sem = NULL;
+	bool ret;
+};
+
+
+/// Specific thread dedicated to the reading of commands via stdin
+void *grab_thread(void *x_void_ptr)
+{
+	struct_thread* pst = reinterpret_cast<struct_thread*>(x_void_ptr);
+	pst->ret = pst->capture->grab();
+	sem_post(pst->sem);
+
+	return NULL;
+}
+
 
 NetworkCam::NetworkCam(const ConfigReader& x_configReader): 
 	Input(x_configReader),
@@ -55,7 +77,7 @@ void NetworkCam::Reset()
 	e.g. "http://user:pass@cam_address:8081/cgi/mjpg/mjpg.cgi?.mjpg" 
 	"rtsp://cam_address:554/live.sdp" rtsp://<servername>/axis-media/media.amp */
 	if(m_param.url.size() == 0)
-		m_capture.open("in/input.mp4");
+		m_capture.open("in/input.mp4"); // TODO: may be better to throw an exception !
 	else m_capture.open(m_param.url);
 	
 	if(! m_capture.isOpened())
@@ -76,18 +98,53 @@ void NetworkCam::Reset()
 	m_frameTimer.Restart();
 }
 
+bool NetworkCam::Grab()
+{
+	// Create a second thread to check if disconnected
+	pthread_t thread;
+	struct timespec my_timeout;
+	struct timeval now;
+	gettimeofday(&now,NULL);
+	my_timeout.tv_sec  = now.tv_sec + TIMEOUT;
+	my_timeout.tv_nsec = now.tv_usec * 1000;
+
+	// create thread
+	struct_thread st;
+	st.capture = &m_capture;
+	st.sem     = &m_semTimeout;
+	pthread_create(&thread, NULL, grab_thread, &st);
+	int ret = sem_timedwait(&m_semTimeout, &my_timeout);
+
+	if (ret==-1 && errno==ETIMEDOUT)
+	{
+		LOG_WARN(m_logger, "Timeout while grabbing stream. Camera may be disconnected.");
+		pthread_cancel(thread);
+		m_capture.release();
+		// pthread_join(thread,NULL);
+
+		return false;
+	}
+	else
+	{
+		pthread_join(thread,NULL);
+		return st.ret;
+	}
+}
+
 void NetworkCam::Capture()
 {
+
 	while(true)
 	{
-		if(m_capture.grab() == 0)
+		if(Grab() != true)
 		{
 			LOG_WARN(m_logger, "Grab failure while reading stream, try to reopen in NetworkCam::Capture");
+			sleep(3);
 			Reset();
-			if(m_capture.grab() == 0)
+			if(Grab() != true)
 			{
 				m_endOfStream = true;
-				Pause(true);
+				// Pause(true); // TODO: Keep this ?
 				throw MkException("Capture failed on network camera", LOC);
 			}
 		}
@@ -99,13 +156,11 @@ void NetworkCam::Capture()
 		// note: we use the time stamp of the modules since the official time stamp of the camera
 		//    has a strange behavior
 		m_currentTimeStamp = m_frameTimer.GetMSecLong();
-		// cout<<m_capture.get(CV_CAP_PROP_POS_MSEC)<<endl;
 
 		// only break out of the loop once we fulfill the fps criterion
 		if(m_param.fps == 0 || (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps > 1000)
 			break;
 	}
-	// cout<<m_currentTimeStamp<<" - "<<m_lastTimeStamp<<endl;
 
 	LOG_DEBUG(m_logger, "NetworkCam: Capture time: "<<m_currentTimeStamp);
 	// SetTimeStampToOutputs(m_currentTimeStamp);

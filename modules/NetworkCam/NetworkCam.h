@@ -25,6 +25,7 @@
 #define INPUT_NETWORKCAM_H
 
 #include <opencv2/highgui/highgui.hpp>
+#include <semaphore.h>
 
 #include "Input.h"
 #include "Timer.h"
@@ -38,7 +39,7 @@ public:
 	{
 		m_list.push_back(new ParameterString("url", 	"", 	&url,	"Network address of the camera (e.g. http://root:admin@192.168.3.62/mjpg/1/video.mjpg"));
 		ParameterStructure::Init();
-	};
+	}
 
 public:
 	std::string url;
@@ -56,6 +57,7 @@ public:
 	// virtual const cv::Mat * GetImage() const {return m_output;}
 	virtual double GetRecordingFps();
 private:
+	bool Grab();
 	NetworkCamParameterStructure m_param;
 	inline virtual const NetworkCamParameterStructure& GetParameters() const {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
@@ -65,6 +67,7 @@ protected:
 	TIME_STAMP m_timeStamp;
 	void GetProperties();
 	Timer m_frameTimer;
+	sem_t m_semTimeout;
 };
 
 #endif

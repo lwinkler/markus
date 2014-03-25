@@ -42,7 +42,13 @@ using namespace std;
 	_CrtMemState endMemState;
 #endif
 
-#define STORE_EXCEPTION(stream) {stringstream ss; ss<<stream; m_jsonLastException = ss.str();}
+#define STORE_EXCEPTION_AND_NOTIFY(stream) {\
+	if(m_hasRecovered){\
+		stringstream ss; ss<<stream; m_jsonLastException = ss.str();\
+		NotifyMonitoring("exception", m_jsonLastException);\
+	}\
+	recover = m_hasRecovered = false;\
+}
 
 using namespace std;
 
@@ -218,6 +224,7 @@ bool Manager::Process()
 		return true;
 	}
 	Timer ti;
+	bool recover = true;
 	
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 	{
@@ -228,15 +235,13 @@ bool Manager::Process()
 		}
 		catch(EndOfStreamException& e)
 		{
-			m_hasRecovered = false;
-			STORE_EXCEPTION(
+			STORE_EXCEPTION_AND_NOTIFY(
 				jsonify("type", "EndOfStream")       << ", " <<
 				jsonify("module", (*it)->GetName())  << ", " <<
 				jsonify("code", e.GetCode())         << ", " <<
 				jsonify("dateNotif", getAbsTimeMs()) << ", " <<
 				jsonify("description", e.what())
 			);
-			NotifyMonitoring("exception", m_jsonLastException);
 				
 			LOG_INFO(m_logger, (*it)->GetName() << ": Exception raised (EndOfStream) : " << e.what());
 
@@ -250,67 +255,60 @@ bool Manager::Process()
 		}
 		catch(MkException& e)
 		{
-			m_hasRecovered = false;
-			STORE_EXCEPTION(
+			STORE_EXCEPTION_AND_NOTIFY(
 				jsonify("type", "MkException")       << ", " <<
 				jsonify("module", (*it)->GetName())  << ", " <<
 				jsonify("code", e.GetCode())         << ", " <<
 				jsonify("dateNotif", getAbsTimeMs()) << ", " <<
 				jsonify("description", e.what())
 			);
-			NotifyMonitoring("exception", m_jsonLastException);
 			LOG_ERROR(m_logger, "(Markus exception " << e.GetCode() << "): " << e.what());
 		}
 		catch(std::exception& e)
 		{
-			m_hasRecovered = false;
-			STORE_EXCEPTION(
+			STORE_EXCEPTION_AND_NOTIFY(
 				jsonify("type", "std::exception") << ", " <<
 				jsonify("module", (*it)->GetName()) << ", " <<
 				jsonify("dateNotif", getAbsTimeMs()) << ", " <<
 				jsonify("description", e.what())
 			);
-			NotifyMonitoring("exception", m_jsonLastException);
 			LOG_ERROR(m_logger, (*it)->GetName() << ": Exception raised (std::exception): " << e.what());
 		}
 		catch(std::string str)
 		{
-			m_hasRecovered = false;
-			STORE_EXCEPTION(
+			STORE_EXCEPTION_AND_NOTIFY(
 				jsonify("type", "string") << ", " <<
 				jsonify("module", (*it)->GetName()) << ", " <<
 				jsonify("dateNotif", getAbsTimeMs()) << ", " <<
 				jsonify("description", str)
 			);
-			NotifyMonitoring("exception", m_jsonLastException);
 			LOG_ERROR(m_logger, (*it)->GetName() << ": Exception raised (string): " << str);
 		}
 		catch(const char* str)
 		{
-			m_hasRecovered = false;
-			STORE_EXCEPTION(
+			STORE_EXCEPTION_AND_NOTIFY(
 				jsonify("type", "const char*") << ", " <<
 				jsonify("module", (*it)->GetName()) << ", " <<
 				jsonify("dateNotif", getAbsTimeMs()) << ", " <<
 				jsonify("description", str)
 			);
-			NotifyMonitoring("exception", m_jsonLastException);
 			LOG_ERROR(m_logger, (*it)->GetName() << ": Exception raised (const char*): " << str);
 		}
 		catch(...)
 		{
-			m_hasRecovered = false;
-			STORE_EXCEPTION(
+			STORE_EXCEPTION_AND_NOTIFY(
 				jsonify("type", "Unknown")           << ", " <<
 				jsonify("module", (*it)->GetName())  << ", " <<
 				jsonify("dateNotif", getAbsTimeMs())
 			);
-			NotifyMonitoring("exception", m_jsonLastException);
 			LOG_ERROR(m_logger, (*it)->GetName() << ": Unknown exception raised");
 		}
 	}
 
-	m_hasRecovered = true;
+	// If a full processing cycle has been made without exception, 
+	// we consider that the manager has recovered from exceptions
+	if(recover)
+		m_hasRecovered = true;
 	m_timerProcessing += ti.GetMSecLong();
 	m_frameCount++;
 	if(m_frameCount % 100 == 0)
