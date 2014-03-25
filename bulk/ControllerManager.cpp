@@ -65,6 +65,13 @@ void printStatisticsManager(Controller* xp_ctr, string* xp_value)
 	ctr->manager.PrintStatistics();
 }
 
+void statusManager(Controller* xp_ctr, string* xp_value)
+{
+	ControllerManager* ctr = dynamic_cast<ControllerManager*>(xp_ctr);
+	assert(ctr != NULL);
+	ctr->manager.Status();
+}
+
 
 ControllerManager::ControllerManager(Manager& rx_manager) :
 	Controller("manager", "manager"),
@@ -75,6 +82,7 @@ ControllerManager::ControllerManager(Manager& rx_manager) :
 	m_actions.insert(std::make_pair("Pause",           &pauseManager));
 	m_actions.insert(std::make_pair("Unpause",         &unpauseManager));
 	m_actions.insert(std::make_pair("PrintStatistics", &printStatisticsManager));
+	m_actions.insert(std::make_pair("Status",          &statusManager));
 }
 
 QWidget* ControllerManager::CreateWidget()

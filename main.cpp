@@ -107,14 +107,6 @@ void *send_commands(void *x_void_ptr)
 	return NULL;
 }
 
-/// Notify the parent process that something happened
-void notifyParent(const string& x_label, const string& x_extra = "")
-{
-	/// Raise an event. We simply use this to notify a parent process
-	Event ev;
-	ev.Raise(x_label);
-		ev.Notify(x_extra, true);
-}
 
 int main(int argc, char** argv)
 {
@@ -238,7 +230,7 @@ int main(int argc, char** argv)
 	log4cxx::xml::DOMConfigurator::configure(logConfigFile);
 
 	// Notify the parent process (for monitoring purposes)
-	notifyParent("started", jsonify("pid", getpid()));
+	Manager::NotifyMonitoring("started", jsonify("pid", getpid()));
 
 	try
 	{
@@ -302,7 +294,7 @@ int main(int argc, char** argv)
 				// nothing 
 			}
 
-			notifyParent("stopped");
+			Manager::NotifyMonitoring("stopped");
 			returnValue = MK_EXCEPTION_NORMAL - MK_EXCEPTION_FIRST;
 		}
 		else

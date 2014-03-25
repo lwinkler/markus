@@ -71,9 +71,11 @@ public:
 	void PrintStatistics();
 	void Pause(bool x_pause);
 	inline void Quit(){m_continueFlag = false;}
+	void Status() const;
 	void PauseInputs(bool x_pause);
 	bool EndOfAllStreams() const;
 	static std::string Version();
+	static void NotifyMonitoring(const std::string& x_label, const std::string& x_extra = "");
 	static const std::string& OutputDir(const std::string& x_outputDir = "", const std::string& x_configFile = "");
 	/*static inline void SetConfigFile(const std::string& x_configFile)
 	{
@@ -84,7 +86,7 @@ public:
 	static inline void ListModules(std::vector<std::string>& xr_types) {m_factory.ListModules(xr_types);}
 	void UpdateConfig();
 
-private:
+protected:
 	ManagerParameter m_param;
 	inline virtual const ParameterStructure& GetParameters() const {return m_param;}
 
@@ -92,7 +94,9 @@ private:
 	bool m_isConnected;
 	// long long m_timerConvertion;
 	long long m_timerProcessing;
-	bool m_continueFlag;
+	bool m_continueFlag; // Flag that is used to notify the manager of a Quit command, only working if centralized
+	bool m_hasRecovered; // Flag to test if all modules have recovered from the last exception, only working if centralized
+	std::string m_jsonLastException; // Field to store the last exception
 
 	//clock_t m_timeLastProcess;
 	

@@ -25,6 +25,7 @@
 #include "Module.h"
 #include "Input.h"
 #include "Stream.h"
+#include "Event.h"
 #include "MkException.h"
 #include "ControllerManager.h"
 
@@ -41,6 +42,7 @@ using namespace std;
 	_CrtMemState endMemState;
 #endif
 
+#define STORE_EXCEPTION(stream) {stringstream ss; ss<<stream; m_jsonLastException = ss.str();}
 
 using namespace std;
 
@@ -197,6 +199,7 @@ void Manager::Reset()
 	{
 		AddController(new ControllerManager(*this));
 	}
+	m_hasRecovered = true;
 }
 
 /// Process all modules
@@ -223,12 +226,18 @@ bool Manager::Process()
 			if((*it)->IsAutoProcessed())
 				(*it)->Process();
 		}
-		/*catch(cv::Exception& e)
-		{
-			LOG_ERROR(m_logger, (*it)->GetName() << ": Exception raised (std::exception) : " << e.what());
-		}*/
 		catch(EndOfStreamException& e)
 		{
+			m_hasRecovered = false;
+			STORE_EXCEPTION(
+				jsonify("type", "EndOfStream")       << ", " <<
+				jsonify("module", (*it)->GetName())  << ", " <<
+				jsonify("code", e.GetCode())         << ", " <<
+				jsonify("dateNotif", getAbsTimeMs()) << ", " <<
+				jsonify("description", e.what())
+			);
+			NotifyMonitoring("exception", m_jsonLastException);
+				
 			LOG_INFO(m_logger, (*it)->GetName() << ": Exception raised (EndOfStream) : " << e.what());
 
 			// test if all inputs are over
@@ -241,26 +250,67 @@ bool Manager::Process()
 		}
 		catch(MkException& e)
 		{
+			m_hasRecovered = false;
+			STORE_EXCEPTION(
+				jsonify("type", "MkException")       << ", " <<
+				jsonify("module", (*it)->GetName())  << ", " <<
+				jsonify("code", e.GetCode())         << ", " <<
+				jsonify("dateNotif", getAbsTimeMs()) << ", " <<
+				jsonify("description", e.what())
+			);
+			NotifyMonitoring("exception", m_jsonLastException);
 			LOG_ERROR(m_logger, "(Markus exception " << e.GetCode() << "): " << e.what());
 		}
 		catch(std::exception& e)
 		{
+			m_hasRecovered = false;
+			STORE_EXCEPTION(
+				jsonify("type", "std::exception") << ", " <<
+				jsonify("module", (*it)->GetName()) << ", " <<
+				jsonify("dateNotif", getAbsTimeMs()) << ", " <<
+				jsonify("description", e.what())
+			);
+			NotifyMonitoring("exception", m_jsonLastException);
 			LOG_ERROR(m_logger, (*it)->GetName() << ": Exception raised (std::exception): " << e.what());
 		}
 		catch(std::string str)
 		{
+			m_hasRecovered = false;
+			STORE_EXCEPTION(
+				jsonify("type", "string") << ", " <<
+				jsonify("module", (*it)->GetName()) << ", " <<
+				jsonify("dateNotif", getAbsTimeMs()) << ", " <<
+				jsonify("description", str)
+			);
+			NotifyMonitoring("exception", m_jsonLastException);
 			LOG_ERROR(m_logger, (*it)->GetName() << ": Exception raised (string): " << str);
 		}
 		catch(const char* str)
 		{
+			m_hasRecovered = false;
+			STORE_EXCEPTION(
+				jsonify("type", "const char*") << ", " <<
+				jsonify("module", (*it)->GetName()) << ", " <<
+				jsonify("dateNotif", getAbsTimeMs()) << ", " <<
+				jsonify("description", str)
+			);
+			NotifyMonitoring("exception", m_jsonLastException);
 			LOG_ERROR(m_logger, (*it)->GetName() << ": Exception raised (const char*): " << str);
 		}
 		catch(...)
 		{
+			m_hasRecovered = false;
+			STORE_EXCEPTION(
+				jsonify("type", "Unknown")           << ", " <<
+				jsonify("module", (*it)->GetName())  << ", " <<
+				jsonify("dateNotif", getAbsTimeMs())
+			);
+			NotifyMonitoring("exception", m_jsonLastException);
 			LOG_ERROR(m_logger, (*it)->GetName() << ": Unknown exception raised");
 		}
 	}
 
+	m_hasRecovered = true;
 	m_timerProcessing += ti.GetMSecLong();
 	m_frameCount++;
 	if(m_frameCount % 100 == 0)
@@ -434,6 +484,25 @@ string Manager::Version()
 		<< ", vp-detection modules version "<<VERSION_STRING2
 		<< ", built on "<<VERSION_BUILD_HOST;
 	return ss.str();
+}
+
+/// Notify the parent process that something happened
+void Manager::NotifyMonitoring(const string& x_label, const string& x_extra)
+{
+	/// Raise an event. We simply use this to notify a parent process
+	Event ev;
+	ev.Raise(x_label);
+		ev.Notify(x_extra, true);
+}
+
+void Manager::Status() const
+{
+	stringstream ss;
+	ss<<jsonify("recovered", m_hasRecovered);
+
+	if(m_jsonLastException != "")
+		ss<<", "<<m_jsonLastException; // TODO: recovery date
+	NotifyMonitoring("status", ss.str());
 }
 
 /// Returns a directory that will contain all outputs
