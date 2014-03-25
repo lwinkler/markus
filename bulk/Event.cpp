@@ -77,7 +77,7 @@ void Event::Notify(const string& x_extraInfo, bool x_isProcessEvent)
 	{
 		LOG_WARN(m_logger, "@notif@ PROCESS {"
 				<< jsonify("label", GetLabel()) <<", "
-				<< jsonify("date_notif", getAbsTimeMs())
+				<< jsonify("dateNotif", getAbsTimeMs())
 				<< extra.str()
 				<< "}");
 	}
@@ -85,8 +85,9 @@ void Event::Notify(const string& x_extraInfo, bool x_isProcessEvent)
 	{
 		LOG_WARN(m_logger, "@notif@ EVENT {"
 				<< jsonify("label", GetLabel()) <<", "
-				<< jsonify("date_event",  m_absTimeEvent == 0 ? getAbsTimeMs() : m_absTimeEvent) <<", "
-				<< jsonify("date_notif", getAbsTimeMs())
+				<< jsonify("dateEvent",  m_absTimeEvent == 0 ? getAbsTimeMs() : m_absTimeEvent) <<", "
+				<< jsonify("dateNotif", getAbsTimeMs())
+				<< jsonify("validity", 1.0)
 				<< extra.str()
 				<< "}");
 	}
