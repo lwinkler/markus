@@ -35,8 +35,8 @@ log4cxx::LoggerPtr NetworkCam::m_logger(log4cxx::Logger::getLogger("NetworkCam")
 
 struct struct_thread
 {
-	VideoCapture* capture = NULL;
-	sem_t* sem = NULL;
+	VideoCapture* capture;
+	sem_t* sem;
 	bool ret;
 };
 
