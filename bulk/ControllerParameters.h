@@ -42,6 +42,18 @@ public:
 	virtual void SetWidgetValue(const std::string& x_value) = 0;
 	virtual std::string GetValueFromWidget() = 0;
 
+	// Controllers
+	void GetType(std::string* xp_value);
+	void GetRange(std::string* xp_value);
+	void SetControlledValue(std::string* xp_value);
+	void GetCurrent(std::string* xp_value);
+	void GetDefault(std::string* xp_value);
+
+	typedef void (ControllerParameter::*action)(std::string*);
+	DECLARE_CALL_ACTION(action);
+
+protected:
+	std::map<std::string, const action> m_actions;
 	Parameter& param;
 };
 

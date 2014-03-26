@@ -39,32 +39,11 @@ Controller::~Controller()
 }
 
 /// find a controller in map by name
-const void Controller::CallAction(const string& x_name, string* xp_value)
-{
-	map<string, const px_action>::const_iterator it = m_actions.find(x_name);
-	if(it == m_actions.end())
-		throw MkException("Cannot find action in controller", LOC);
-
-	// Call the function pointer associated with the action
-	// cout<<(it->first)<<endl;
-	(*(it->second))(this, xp_value);
-}
-
-
-void Controller::ListActions(vector<string>& xr_actions) const
-{
-	for(map<string, const px_action>::const_iterator it = m_actions.begin() ; it != m_actions.end() ; it++)
-		xr_actions.push_back(it->first);
-}
-
-/// find a controller in map by name
 Controller* Controllable::FindController(const std::string& x_name) const
 {
 	map<string, Controller*>::const_iterator it = m_controls.find(x_name);
 	if(it == m_controls.end())
 		throw MkException("Cannot find controller " + x_name + " in controls list", LOC);
-
-	// Call the function pointer associated with the action
 	return it->second;
 }
 

@@ -36,6 +36,20 @@ public:
 	~ControllerManager(){}
 	virtual QWidget* CreateWidget();
 
+
+	typedef void (ControllerManager::*action)(std::string*);
+	DECLARE_CALL_ACTION(action);
+
+	// Controls
+	void Reset(std::string* xp_value);
+	void Quit(std::string* xp_value);
+	void Pause(std::string* xp_value);
+	void Unpause(std::string* xp_value);
+	void PrintStatistics(std::string* xp_value);
+	void Status(std::string* xp_value);
+
+protected:
+	std::map<std::string, const action> m_actions;
 	Manager  & manager;
 };
 #endif

@@ -37,7 +37,15 @@ public:
 	~InputStreamControl();
 	virtual QWidget* CreateWidget();
 
-// protected:
+	typedef void (InputStreamControl::*action)(std::string*);
+	DECLARE_CALL_ACTION(action);
+
+	// Controllers
+	void SetCursor(std::string* xp_value);
+	void GetCursor(std::string* xp_value);
+
+protected:
+	std::map<std::string, const action> m_actions;
 	QParameterSlider * parameterSlider;
 	VideoFileReader  & module;
 };

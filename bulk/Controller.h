@@ -37,9 +37,19 @@
 class Module;
 class QWidget;
 
-// Pointer to a void method
-class Controller;
-typedef void (*px_action)(Controller*, std::string*);
+#define DECLARE_CALL_ACTION(action) \
+const void CallAction(const std::string& x_name, std::string* xp_value)\
+{\
+	std::map<std::string, const action>::const_iterator it = m_actions.find(x_name);\
+	if(it == m_actions.end())\
+		throw MkException("Cannot find action in controller", LOC);\
+	(this->*(it->second))(xp_value);\
+}\
+void ListActions(std::vector<std::string>& xr_actions) const\
+{\
+	for(std::map<std::string, const action>::const_iterator it = m_actions.begin() ; it != m_actions.end() ; it++)\
+		xr_actions.push_back(it->first);\
+}
 
 class Controller
 {
@@ -50,13 +60,13 @@ public:
 	virtual QWidget* CreateWidget() = 0;
 	const std::string& GetName() {return m_name;}
 	// const std::map<std::string, const px_action>& GetActions() {return m_actions;}
-	void ListActions(std::vector<std::string>& xr_actions) const;
-	const void CallAction(const std::string& x_name, std::string* xp_value);
 	const std::string& GetType(){return m_type;}
+	virtual void ListActions(std::vector<std::string>& xr_actions) const = 0;
+	virtual const void CallAction(const std::string& x_name, std::string* xp_value) = 0;
 	
 protected:
 	// QWidget * m_widget;
-	std::map<std::string, const px_action> m_actions;
+	// std::map<std::string, const px_action> m_actions;
 	std::string m_name;
 	std::string m_type;
 };
@@ -74,7 +84,7 @@ class Controllable
 		const std::map<std::string, Controller*>& GetControllersList() const {return m_controls;}
 		Controller* FindController(const std::string& x_name) const;
 		inline void AddController(Controller* xp_ctr){m_controls.insert(make_pair(xp_ctr->GetName(), xp_ctr));}
-		inline bool HasNoControllers()const{return m_controls.size() == 0;}
+		inline bool HasNoControllers()const{return m_controls.size() == 0;} // TODO: Check otherwise
 
 	private:
 		std::map<std::string, Controller*> m_controls;

@@ -29,47 +29,35 @@ using namespace std;
 
 /*--------------------------------------------------------------------------------*/
 
-void resetManager(Controller* xp_ctr, string* xp_value)
+void ControllerManager::Reset(string* xp_value)
 {
-	ControllerManager* ctr = dynamic_cast<ControllerManager*>(xp_ctr);
-	assert(ctr != NULL);
-	ctr->manager.Reset();
+	manager.Reset();
 }
 
-void pauseManager(Controller* xp_ctr, string* xp_value)
+void ControllerManager::Pause(string* xp_value)
 {
-	ControllerManager* ctr = dynamic_cast<ControllerManager*>(xp_ctr);
-	assert(ctr != NULL);
-	ctr->manager.Pause(true);
+	manager.Pause(true);
 }
 
-void quitManager(Controller* xp_ctr, string* xp_value)
+void ControllerManager::Quit(string* xp_value)
 {
-	ControllerManager* ctr = dynamic_cast<ControllerManager*>(xp_ctr);
-	assert(ctr != NULL);
-	ctr->manager.Quit();
+	manager.Quit();
 }
 
 
-void unpauseManager(Controller* xp_ctr, string* xp_value)
+void ControllerManager::Unpause(string* xp_value)
 {
-	ControllerManager* ctr = dynamic_cast<ControllerManager*>(xp_ctr);
-	assert(ctr != NULL);
-	ctr->manager.Pause(false);
+	manager.Pause(false);
 }
 
-void printStatisticsManager(Controller* xp_ctr, string* xp_value)
+void ControllerManager::PrintStatistics(string* xp_value)
 {
-	ControllerManager* ctr = dynamic_cast<ControllerManager*>(xp_ctr);
-	assert(ctr != NULL);
-	ctr->manager.PrintStatistics();
+	manager.PrintStatistics();
 }
 
-void statusManager(Controller* xp_ctr, string* xp_value)
+void ControllerManager::Status(string* xp_value)
 {
-	ControllerManager* ctr = dynamic_cast<ControllerManager*>(xp_ctr);
-	assert(ctr != NULL);
-	ctr->manager.Status();
+	manager.Status();
 }
 
 
@@ -77,12 +65,12 @@ ControllerManager::ControllerManager(Manager& rx_manager) :
 	Controller("manager", "manager"),
 	manager(rx_manager)
 {
-	m_actions.insert(std::make_pair("Reset",           &resetManager));
-	m_actions.insert(std::make_pair("Quit",            &quitManager));
-	m_actions.insert(std::make_pair("Pause",           &pauseManager));
-	m_actions.insert(std::make_pair("Unpause",         &unpauseManager));
-	m_actions.insert(std::make_pair("PrintStatistics", &printStatisticsManager));
-	m_actions.insert(std::make_pair("Status",          &statusManager));
+	m_actions.insert(std::make_pair("Reset",           &ControllerManager::Reset));
+	m_actions.insert(std::make_pair("Quit",            &ControllerManager::Quit));
+	m_actions.insert(std::make_pair("Pause",           &ControllerManager::Pause));
+	m_actions.insert(std::make_pair("Unpause",         &ControllerManager::Unpause));
+	m_actions.insert(std::make_pair("PrintStatistics", &ControllerManager::PrintStatistics));
+	m_actions.insert(std::make_pair("Status",          &ControllerManager::Status));
 }
 
 QWidget* ControllerManager::CreateWidget()

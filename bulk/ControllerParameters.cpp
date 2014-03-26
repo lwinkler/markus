@@ -40,13 +40,11 @@ using namespace std;
 #define PRECISION_DOUBLE 2
 
 /// Display the type of the parameter
-void getType(Controller* xp_ctr, string* xp_value)
+void ControllerParameter::GetType(string* xp_value)
 {
-	ControllerParameter* ctr = dynamic_cast<ControllerParameter*>(xp_ctr);
-	assert(ctr != NULL);
 	if(xp_value != NULL)
 	{
-		*xp_value = ctr->param.GetTypeString();
+		*xp_value = param.GetTypeString();
 		return;
 	}
 #ifdef MARKUS_NO_GUI
@@ -57,13 +55,11 @@ void getType(Controller* xp_ctr, string* xp_value)
 }
 
 /// Display the range string of the parameter
-void getRange(Controller* xp_ctr, string* xp_value)
+void ControllerParameter::GetRange(string* xp_value)
 {
-	ControllerParameter* ctr = dynamic_cast<ControllerParameter*>(xp_ctr);
-	assert(ctr != NULL);
 	if(xp_value != NULL)
 	{
-		*xp_value = ctr->param.GetRange();
+		*xp_value = param.GetRange();
 		return;
 	}
 #ifdef MARKUS_NO_GUI
@@ -74,65 +70,59 @@ void getRange(Controller* xp_ctr, string* xp_value)
 }
 
 /// Set the controlled value (e.g. parameter) to the value on control
-void setControlledValue(Controller* xp_ctr, string* xp_value)
+void ControllerParameter::SetControlledValue(string* xp_value)
 {
-	ControllerParameter* ctr = dynamic_cast<ControllerParameter*>(xp_ctr);
-	assert(ctr != NULL);
-	string oldValue = ctr->param.GetValueString();
-	ParameterConfigType configType = ctr->param.GetConfigurationSource();
+	string oldValue = param.GetValueString();
+	ParameterConfigType configType = param.GetConfigurationSource();
 
 	if(xp_value != NULL)
 	{
-		ctr->param.SetValue(*xp_value, PARAMCONF_CMD);
+		param.SetValue(*xp_value, PARAMCONF_CMD);
 	}
 	else
 	{
 #ifdef MARKUS_NO_GUI
 		assert(false);
 #else
-		ctr->param.SetValue(ctr->GetValueFromWidget(), PARAMCONF_GUI);
+		param.SetValue(GetValueFromWidget(), PARAMCONF_GUI);
 #endif
 	}
-	if(!ctr->param.CheckRange())
+	if(!param.CheckRange())
 	{
-		ctr->param.SetValue(oldValue, configType);
-		throw MkException("Parameter " + ctr->param.GetName() + " is out of range", LOC);
+		param.SetValue(oldValue, configType);
+		throw MkException("Parameter " + param.GetName() + " is out of range", LOC);
 	}
 }
 
 /// Display the current value of the controlled object
-void getCurrent(Controller* xp_ctr, string* xp_value)
+void ControllerParameter::GetCurrent(string* xp_value)
 {
-	ControllerParameter* ctr = dynamic_cast<ControllerParameter*>(xp_ctr);
-	assert(ctr != NULL);
 	if(xp_value != NULL)
 	{
 		stringstream ss;
-		ss<<ctr->param.GetValueString();
+		ss<<param.GetValueString();
 		*xp_value = ss.str();
 		return;
 	}
 #ifdef MARKUS_NO_GUI
 	assert(false);
 #else
-	ctr->SetWidgetValue(ctr->param.GetValueString());
+	SetWidgetValue(param.GetValueString());
 #endif
 }
 
 /// Display the default value of the controlled object
-void getDefault(Controller* xp_ctr, string* xp_value)
+void ControllerParameter::GetDefault(string* xp_value)
 {
-	ControllerParameter* ctr = dynamic_cast<ControllerParameter*>(xp_ctr);
-	assert(ctr != NULL);
 	if(xp_value != NULL)
 	{
-		*xp_value = ctr->param.GetDefaultString();
+		*xp_value = param.GetDefaultString();
 		return;
 	}
 #ifdef MARKUS_NO_GUI
 	assert(false);
 #else
-	ctr->SetWidgetValue(ctr->param.GetDefaultString());
+	SetWidgetValue(param.GetDefaultString());
 #endif
 }
 
@@ -141,11 +131,11 @@ ControllerParameter::ControllerParameter(Parameter& x_param):
 	Controller(x_param.GetName(), "parameter"),
 	param(x_param)
 {
-	m_actions.insert(std::make_pair("GetType", &getType));
-	m_actions.insert(std::make_pair("GetRange", &getRange));
-	m_actions.insert(std::make_pair("Set", &setControlledValue));
-	m_actions.insert(std::make_pair("Get", &getCurrent));
-	m_actions.insert(std::make_pair("GetDefault", &getDefault));
+	m_actions.insert(std::make_pair("GetType",    &ControllerParameter::GetType));
+	m_actions.insert(std::make_pair("GetRange",   &ControllerParameter::GetRange));
+	m_actions.insert(std::make_pair("Set",        &ControllerParameter::SetControlledValue));
+	m_actions.insert(std::make_pair("Get",        &ControllerParameter::GetCurrent));
+	m_actions.insert(std::make_pair("GetDefault", &ControllerParameter::GetDefault));
 }
 
 

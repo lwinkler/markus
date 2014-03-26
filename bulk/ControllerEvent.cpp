@@ -29,28 +29,24 @@ using namespace std;
 
 /*--------------------------------------------------------------------------------*/
 
-void validate(Controller* xp_ctr, string* xp_value)
+void ControllerEvent::Validate(string* xp_value)
 {
-	ControllerEvent* ctr = dynamic_cast<ControllerEvent*>(xp_ctr);
-	assert(ctr != NULL);
-	ctr->module.ValidateLastEvent();
-	ctr->module.PopEvent();
+	module.ValidateLastEvent();
+	module.PopEvent();
 }
 
-void invalidate(Controller* xp_ctr, string* xp_value)
+void ControllerEvent::Invalidate(string* xp_value)
 {
-	ControllerEvent* ctr = dynamic_cast<ControllerEvent*>(xp_ctr);
-	assert(ctr != NULL);
-	ctr->module.InvalidateLastEvent();
-	ctr->module.PopEvent();
+	module.InvalidateLastEvent();
+	module.PopEvent();
 }
 
 ControllerEvent::ControllerEvent(ClassifyEvents& rx_module) :
 	Controller("event", "event"),
 	module(rx_module)
 {
-	m_actions.insert(std::make_pair("Validate",   &validate));
-	m_actions.insert(std::make_pair("Invalidate", &invalidate));
+	m_actions.insert(std::make_pair("Validate",   &ControllerEvent::Validate));
+	m_actions.insert(std::make_pair("Invalidate", &ControllerEvent::Invalidate));
 }
 
 QWidget* ControllerEvent::CreateWidget()

@@ -36,6 +36,15 @@ public:
 	~ControllerEvent(){}
 	virtual QWidget* CreateWidget();
 
+	// Controls
+	void Validate(std::string* xp_value);
+	void Invalidate(std::string* xp_value);
+
+	typedef void (ControllerEvent::*action)(std::string*);
+	DECLARE_CALL_ACTION(action);
+
+protected:
+	std::map<std::string, const action> m_actions;
 	ClassifyEvents  & module;
 };
 #endif

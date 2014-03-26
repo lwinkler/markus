@@ -29,32 +29,24 @@ using namespace std;
 
 /*--------------------------------------------------------------------------------*/
 
-void reset(Controller* xp_ctr, string* xp_value)
+void ControllerModule::Reset(string* xp_value)
 {
-	ControllerModule* ctr = dynamic_cast<ControllerModule*>(xp_ctr);
-	assert(ctr != NULL);
-	ctr->module.Reset();
+	module.Reset();
 }
 
-void pauseModule(Controller* xp_ctr, string* xp_value)
+void ControllerModule::Pause(string* xp_value)
 {
-	ControllerModule* ctr = dynamic_cast<ControllerModule*>(xp_ctr);
-	assert(ctr != NULL);
-	ctr->module.Pause(true);
+	module.Pause(true);
 }
 
-void unpauseModule(Controller* xp_ctr, string* xp_value)
+void ControllerModule::Unpause(string* xp_value)
 {
-	ControllerModule* ctr = dynamic_cast<ControllerModule*>(xp_ctr);
-	assert(ctr != NULL);
-	ctr->module.Pause(false);
+	module.Pause(false);
 }
 
-void printStatistics(Controller* xp_ctr, string* xp_value)
+void ControllerModule::PrintStatistics(string* xp_value)
 {
-	ControllerModule* ctr = dynamic_cast<ControllerModule*>(xp_ctr);
-	assert(ctr != NULL);
-	ctr->module.PrintStatistics();
+	module.PrintStatistics();
 }
 
 
@@ -62,10 +54,10 @@ ControllerModule::ControllerModule(Module& rx_module) :
 	Controller("module", "module"),
 	module(rx_module)
 {
-	m_actions.insert(std::make_pair("Reset",           &reset));
-	m_actions.insert(std::make_pair("Pause",           &pauseModule));
-	m_actions.insert(std::make_pair("Unpause",         &unpauseModule));
-	m_actions.insert(std::make_pair("PrintStatistics", &printStatistics));
+	m_actions.insert(std::make_pair("Reset",           &ControllerModule::Reset));
+	m_actions.insert(std::make_pair("Pause",           &ControllerModule::Pause));
+	m_actions.insert(std::make_pair("Unpause",         &ControllerModule::Unpause));
+	m_actions.insert(std::make_pair("PrintStatistics", &ControllerModule::PrintStatistics));
 }
 
 QWidget* ControllerModule::CreateWidget()

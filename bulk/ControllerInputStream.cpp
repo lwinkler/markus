@@ -30,29 +30,25 @@
 
 using namespace std;
 
-void setCursor(Controller* xp_ctr, string* xp_value)
+void InputStreamControl::SetCursor(string* xp_value)
 {
-	InputStreamControl* ctr = dynamic_cast<InputStreamControl*>(xp_ctr);
-	assert(ctr != NULL);
 	if(xp_value != NULL)
-		ctr->module.SetMsec(PSTR2FLOAT(xp_value));
+		module.SetMsec(PSTR2FLOAT(xp_value));
 #ifndef MARKUS_NO_GUI
-	else ctr->module.SetMsec(ctr->parameterSlider->GetValue());
+	else module.SetMsec(parameterSlider->GetValue());
 #else
 	else throw MkException("This function can only be called with a GUI or along with a string pointer for input/output", LOC);
 #endif
 }
 
-void getCursor(Controller* xp_ctr, string* xp_value)
+void InputStreamControl::GetCursor(string* xp_value)
 {
-	InputStreamControl* ctr = dynamic_cast<InputStreamControl*>(xp_ctr);
-	assert(ctr != NULL);
 	if(xp_value != NULL)
 	{
-		FLOAT2PSTR(ctr->module.GetMsec(), xp_value);
+		FLOAT2PSTR(module.GetMsec(), xp_value);
 	}
 #ifndef MARKUS_NO_GUI
-	else ctr->parameterSlider->SetValue(ctr->module.GetMsec());
+	else parameterSlider->SetValue(module.GetMsec());
 #else
 	else throw MkException("This function can only be called with a GUI or along with a string pointer for input/output", LOC);
 #endif
@@ -62,8 +58,8 @@ InputStreamControl::InputStreamControl(VideoFileReader& rx_module) :
 	Controller("reader", "inputStream"),
 	module(rx_module)
 {
-	m_actions.insert(std::make_pair("Get", &getCursor));
-	m_actions.insert(std::make_pair("Set", &setCursor));
+	m_actions.insert(std::make_pair("Get", &InputStreamControl::GetCursor));
+	m_actions.insert(std::make_pair("Set", &InputStreamControl::SetCursor));
 }
 
 InputStreamControl::~InputStreamControl()

@@ -25,6 +25,7 @@
 #define CONTROLLER_MODULE_H
 
 #include "Controller.h"
+class ControllerModule;
 
 class Module;
 
@@ -35,7 +36,18 @@ public:
 	ControllerModule(Module& rx_module);
 	~ControllerModule(){}
 	virtual QWidget* CreateWidget();
+	
+	// Controls
+	void Reset(std::string* xp_value);
+	void Pause(std::string* xp_value);
+	void Unpause(std::string* xp_value);
+	void PrintStatistics(std::string* xp_value);
 
+	typedef void (ControllerModule::*action)(std::string*);
+	DECLARE_CALL_ACTION(action);
+
+protected:
+	std::map<std::string, const action> m_actions;
 	Module  & module;
 };
 #endif
