@@ -39,6 +39,7 @@ public:
 
 	typedef void (ControllerManager::*action)(std::string*);
 	DECLARE_CALL_ACTION(action);
+	DECLARE_LIST_ACTION(action);
 
 	// Controls
 	void Reset(std::string* xp_value);

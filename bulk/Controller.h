@@ -37,6 +37,8 @@
 class Module;
 class QWidget;
 
+// Use macros to declare members of Controller childs, not the cleanest thing but you are free to try to 
+// improve on this
 #define DECLARE_CALL_ACTION(action) \
 const void CallAction(const std::string& x_name, std::string* xp_value)\
 {\
@@ -44,7 +46,8 @@ const void CallAction(const std::string& x_name, std::string* xp_value)\
 	if(it == m_actions.end())\
 		throw MkException("Cannot find action in controller", LOC);\
 	(this->*(it->second))(xp_value);\
-}\
+}
+#define DECLARE_LIST_ACTION(action) \
 void ListActions(std::vector<std::string>& xr_actions) const\
 {\
 	for(std::map<std::string, const action>::const_iterator it = m_actions.begin() ; it != m_actions.end() ; it++)\
@@ -65,11 +68,10 @@ public:
 	virtual const void CallAction(const std::string& x_name, std::string* xp_value) = 0;
 	
 protected:
-	// QWidget * m_widget;
-	// std::map<std::string, const px_action> m_actions;
 	std::string m_name;
 	std::string m_type;
 };
+
 
 /// Class representing a controllable object (e.g. Module or Manager)
 class Controllable

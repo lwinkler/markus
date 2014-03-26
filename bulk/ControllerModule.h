@@ -45,6 +45,7 @@ public:
 
 	typedef void (ControllerModule::*action)(std::string*);
 	DECLARE_CALL_ACTION(action);
+	DECLARE_LIST_ACTION(action);
 
 protected:
 	std::map<std::string, const action> m_actions;

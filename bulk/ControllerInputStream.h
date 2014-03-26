@@ -39,6 +39,7 @@ public:
 
 	typedef void (InputStreamControl::*action)(std::string*);
 	DECLARE_CALL_ACTION(action);
+	DECLARE_LIST_ACTION(action);
 
 	// Controllers
 	void SetCursor(std::string* xp_value);
