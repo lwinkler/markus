@@ -35,7 +35,6 @@ Controller::Controller(const string& x_name, const string& x_type) :
 
 Controller::~Controller()
 {
-	// if(m_widget != NULL) delete m_widget; // no need to delete
 }
 
 /// find a controller in map by name
