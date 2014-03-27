@@ -536,6 +536,11 @@ def arguments_parser():
                         action='store_true',
                         help='don\' try to open the browser')
 
+    # Do not run markus again, only reevaluate results
+    parser.add_argument('--results-only',
+                        action='store_true',
+                        help='recalculate the results only, do not run markus, should only be used on a pre-existant result')
+
     return parser.parse_args()
 
 

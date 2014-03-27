@@ -57,7 +57,8 @@ class Evaluation():
 
     def run(self):
         """ Run the evaluation """
-        self._run_markus()
+        if not args.results_only:
+		self._run_markus()
         self._copy_srt()
         self._run_analyse()
 
@@ -103,7 +104,8 @@ class Evaluation():
                 '-t', str(args.tolerance),
                 '-i',
                 '--html',
-                '--no-browser']
+                '--no-browser',
+                '--results-only']
 
         if args.uncompromising:
             cmd += ['-u']
@@ -187,7 +189,12 @@ def arguments_parser():
     # No browser
     parser.add_argument('--no-browser',
                         action='store_true',
-                        help='don\' try to open the browser')
+                        help='don\'t try to open the browser')
+
+    # Do not run markus again, only reevaluate results
+    parser.add_argument('--results-only',
+                        action='store_true',
+                        help='recalculate the results only, do not run markus, should only be used on a pre-existant result')
 
     return parser.parse_args()
 
@@ -222,9 +229,13 @@ def main():
 
     # Verify the run path and create the dir
     if os.path.exists(run_path):
-        print('The run path already exists')
-        exit(1)
+        if not args.results_only:
+		print('The run path already exists')
+		exit(1)
     else:
+        if args.results_only:
+		print('--results-only can only be used on a pre-existing directory')
+		exit(1)
         os.makedirs(run_path)
 
     # Get the video names
