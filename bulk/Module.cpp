@@ -86,43 +86,39 @@ void Module::Reset()
 	const std::vector<Parameter*>& list = param.GetList();
 
 	// This must be done only once to avoid troubles in the GUI
-	if(HasNoControllers())
-	{
-		// Add module controller
+	// Add module controller
+	if(FindController("module") == NULL)
 		AddController(new ControllerModule(*this));
 
-		for(vector<Parameter*>::const_iterator it = list.begin(); it != list.end(); it++)
+	for(vector<Parameter*>::const_iterator it = list.begin(); it != list.end(); it++)
+	{
+		if((*it)->IsLocked() || FindController((*it)->GetName()) != NULL)
+			continue;
+		Controller* ctr = NULL;
+		switch((*it)->GetType())
 		{
-			if((*it)->IsLocked())
-				continue;
-			Controller* ctr = NULL;
-			switch((*it)->GetType())
-			{
-				case PARAM_BOOL:
-					ctr = new ControllerBool(*dynamic_cast<ParameterBool*>(*it));
-					break;
-				case PARAM_DOUBLE:
-					ctr = new ControllerDouble(*dynamic_cast<ParameterDouble*>(*it));
-					break;
-				case PARAM_FLOAT:
-					ctr = new ControllerFloat(*dynamic_cast<ParameterFloat*>(*it));
-					break;
-				case PARAM_IMAGE_TYPE:
-					ctr = new ControllerEnum(*dynamic_cast<ParameterEnum*>(*it)); 
-					break;
-				case PARAM_INT:
-					ctr = new ControllerInt(*dynamic_cast<ParameterInt*>(*it));
-					break;
-				case PARAM_STR:
-					ctr = new ControllerString(*dynamic_cast<ParameterString*>(*it));
-					break;
-			}
-			if(ctr == NULL)
-				throw MkException("Controller creation failed", LOC);
-			// else m_controls.push_back(ctr);
-			// else m_controls.insert(make_pair(ctr->GetName(), ctr));
-			else AddController(ctr);
+			case PARAM_BOOL:
+				ctr = new ControllerBool(*dynamic_cast<ParameterBool*>(*it));
+				break;
+			case PARAM_DOUBLE:
+				ctr = new ControllerDouble(*dynamic_cast<ParameterDouble*>(*it));
+				break;
+			case PARAM_FLOAT:
+				ctr = new ControllerFloat(*dynamic_cast<ParameterFloat*>(*it));
+				break;
+			case PARAM_IMAGE_TYPE:
+				ctr = new ControllerEnum(*dynamic_cast<ParameterEnum*>(*it)); 
+				break;
+			case PARAM_INT:
+				ctr = new ControllerInt(*dynamic_cast<ParameterInt*>(*it));
+				break;
+			case PARAM_STR:
+				ctr = new ControllerString(*dynamic_cast<ParameterString*>(*it));
+				break;
 		}
+		if(ctr == NULL)
+			throw MkException("Controller creation failed", LOC);
+		else AddController(ctr);
 	}
 }
 

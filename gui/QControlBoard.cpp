@@ -107,14 +107,6 @@ void QControlBoard::callAction()
 {
 	QPushButton* button = dynamic_cast<QPushButton*>(sender());
 	assert(button != NULL);
-	/*map<string, const px_action>::const_iterator it = mp_currentControl->GetActions().find(button->text().toStdString());
-	if(it == mp_currentControl->GetActions().end())
-		throw MkException("Cannot find action in controller " + button->text().toStdString(), LOC);
-	*/
-
-	// Call the function pointer associated with the action
-	//(*(it->second))(mp_currentControl, NULL);
-
 
 	m_currentModule.LockForWrite();
 	// LOG_DEBUG(Manager::Logger(), "Call control on module "<<m_currentModule.GetName());

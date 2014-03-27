@@ -201,7 +201,7 @@ void Manager::Reset()
 		(*it)->SetProcessByTimer(!m_centralized);
 		(*it)->Reset();
 	}
-	if(HasNoControllers())
+	if(FindController("manager") == NULL)
 	{
 		AddController(new ControllerManager(*this));
 	}

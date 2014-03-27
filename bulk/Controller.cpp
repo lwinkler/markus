@@ -37,12 +37,14 @@ Controller::~Controller()
 {
 }
 
-/// find a controller in map by name
+/// Find a controller in map by name
+/// @return Pointer to controller or NULL if not found
+///
 Controller* Controllable::FindController(const std::string& x_name) const
 {
 	map<string, Controller*>::const_iterator it = m_controls.find(x_name);
 	if(it == m_controls.end())
-		throw MkException("Cannot find controller " + x_name + " in controls list", LOC);
+		return NULL; // throw MkException("Cannot find controller " + x_name + " in controls list", LOC);
 	return it->second;
 }
 
