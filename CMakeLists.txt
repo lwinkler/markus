@@ -8,6 +8,7 @@ set(Markus_USE_QT5         false   CACHE BOOL "Use QT 5 instead of 4")
 
 # Required packages
 find_package(OpenCV REQUIRED)
+find_package(Threads REQUIRED)
 find_package(CURL QUIET)
 find_package(PythonLibs 2 QUIET)
 
@@ -64,7 +65,7 @@ else()
 endif()
 
 
-set(DEPS ${DEPS} ${DEPS} ${TINYXML_LIBS} ${LOG4CXX_LIBS} ${OpenCV_LIBS} ${PYTHON_LIBRARIES} ${CURL_LIBRARIES} ) # double the dependencies to avoid linking error
+set(DEPS ${DEPS} ${DEPS} ${TINYXML_LIBS} ${LOG4CXX_LIBS} ${OpenCV_LIBS} ${PYTHON_LIBRARIES} ${CURL_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT}) # double the dependencies to avoid linking error
 if(Markus_USE_QT5)
 	include_directories(${Qt5Widgets_INCLUDE_DIRS} ${Qt5WebKit_INCLUDE_DIRS} ${Qt5WebKitWidgets_INCLUDE_DIRS})
 	set(DEPS ${DEPS} ${Qt5Widgets_LIBRARIES} ${Qt5WebKit_LIBRARIES} ${Qt5WebKitWidgets_LIBRARIES}) 
