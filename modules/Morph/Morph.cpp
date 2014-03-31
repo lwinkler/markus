@@ -60,5 +60,5 @@ void Morph::Reset()
 
 void Morph::ProcessFrame()
 {
-	morphologyEx(m_input, m_output, m_param.oper, m_element);
+	morphologyEx(m_input, m_output, m_param.oper, m_element, Point(-1,-1), m_param.iterations);
 };
