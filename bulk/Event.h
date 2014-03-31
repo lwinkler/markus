@@ -40,8 +40,8 @@ class Event
 		void Empty();
 		void Raise(const std::string x_label, TIME_STAMP x_absTimeEvent = 0);
 		void Raise(const std::string x_label, const Object& m_object, TIME_STAMP x_absTimeEvent = 0);
-		inline bool IsRaised() {return m_label != "";}
-		inline const std::string& GetLabel(){return m_label;}
+		inline bool IsRaised() const {return m_label != "";}
+		inline const std::string& GetLabel() const{return m_label;}
 		inline const Object& GetObject() const {return m_object;}
 		inline Object& RefObject() {return m_object;}
 		inline void SetObject(const Object& x_object){m_object = x_object;}

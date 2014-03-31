@@ -70,6 +70,7 @@ protected:
 	virtual void ProcessFrame();
 	void WriteEvent();
 	void SaveImage();
+	bool IsInputProcessed() const;
 
 	Event m_event;
 	long int m_subId;

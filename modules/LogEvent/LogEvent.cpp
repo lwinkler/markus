@@ -131,3 +131,13 @@ void LogEvent::SaveImage()
 	ss2 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetLabel() << "_global." << m_param.extension;
 	imwrite(ss2.str(), m_input);
 }
+
+/// Overwrite this function to process only the input for frames with an event
+///	this is a small hack to speed up the time spent processing the inputs
+/// 	there are two reason why we want to process: either the event is raised or the previous frame had a raised event
+bool LogEvent::IsInputProcessed() const
+{
+	const StreamEvent* pStream =  dynamic_cast<StreamEvent*>(&m_inputStreams.at(0)->RefConnected());
+	assert(pStream != NULL);
+	return m_event.IsRaised() || pStream->GetEvent().IsRaised();
+}

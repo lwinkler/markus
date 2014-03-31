@@ -519,7 +519,7 @@ const string& Manager::OutputDir(const string& x_outputDir, const string& x_conf
 			else
 				m_outputDir = x_outputDir;
 
-			uchar trial = 0;
+			short trial = 0; // Must NOT be a char to avoid concatenation problems!
 			string tmp = m_outputDir;
 
 			// Try to create the output dir, if it fails, try changing the name
