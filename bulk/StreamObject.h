@@ -39,6 +39,7 @@ public:
 	~StreamObject();
 	void Clear() {m_objects.clear();}
 	void AddObject(const Object& x_obj) {m_objects.push_back(x_obj);}
+	const std::vector<Object>& GetObjects() const {return m_objects;}
 
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat& x_output) const;
