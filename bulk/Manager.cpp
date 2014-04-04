@@ -540,13 +540,19 @@ const string& Manager::OutputDir(const string& x_outputDir, const string& x_conf
 						throw MkException("Cannot create output directory", LOC);
 				}
 			}
-			LOG_INFO(m_logger, "Creating directory "<<m_outputDir<<" and symbolic link out_latest");
-			// note: use ln with atgs sfn to override existing link
-			SYSTEM("ln -sfn \"" + m_outputDir + "\" out_latest");
-
 			// Copy config to output dir
-			if(x_configFile != "")
+			if(x_configFile == "")
+			{
+				LOG_INFO(m_logger, "Creating directory "<<m_outputDir<<" and symbolic link out_latest");
+				// note: use ln with args sfn to override existing link
+				SYSTEM("ln -sfn \"" + m_outputDir + "\" out_latest");
+			}
+			else
+			{
+				// Copy config file to output directory
+				LOG_INFO(m_logger, "Creating directory "<<m_outputDir);
 				SYSTEM("cp " + x_configFile + " " + m_outputDir);
+			}
 		}
 		catch(exception& e)
 		{
