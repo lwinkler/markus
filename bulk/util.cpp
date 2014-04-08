@@ -209,7 +209,8 @@ Scalar colorFromId(int x_id)
 
 
 /* Split a string separated by a character*/
-vector<string> &split(const string &s, char delim, vector<string> &elems) {
+vector<string> &split(const string &s, char delim, vector<string> &elems)
+{
 	stringstream ss(s);
 	string item;
 	elems.clear();
@@ -221,16 +222,16 @@ vector<string> &split(const string &s, char delim, vector<string> &elems) {
 
 
 /// Return a time stamp in a string format
-const string timeStamp(){
-
-
+const string timeStamp()
+{
 	time_t rawtime;
 	time(&rawtime);
 	const tm* timeinfo = localtime (&rawtime);
 
-	char dd[20] ;
+	char dd[20];
 	strftime(dd, sizeof(dd), "%Y%m%d_%T", timeinfo);
-	return dd;
+
+	return string(dd);
 }
 
 /// Convert a time in miliseconds to a time stamp (format used in subtitle files)

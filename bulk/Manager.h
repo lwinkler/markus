@@ -84,6 +84,7 @@ public:
 	}*/
 	// static inline const std::string& GetConfigFile(){return m_configFile;}
 	static inline void ListModules(std::vector<std::string>& xr_types) {m_factory.ListModules(xr_types);}
+	void WriteStateToDirectory(const std::string& x_directory) const;
 	void UpdateConfig();
 
 protected:

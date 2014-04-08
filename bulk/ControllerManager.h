@@ -48,6 +48,7 @@ public:
 	void Unpause(std::string* xp_value);
 	void PrintStatistics(std::string* xp_value);
 	void Status(std::string* xp_value);
+	void WriteStateTodirectory(std::string* xp_value);
 
 protected:
 	std::map<std::string, const action> m_actions;

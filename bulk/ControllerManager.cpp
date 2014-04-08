@@ -60,6 +60,10 @@ void ControllerManager::Status(string* xp_value)
 	manager.Status();
 }
 
+void ControllerManager::WriteStateTodirectory(std::string* xp_value)
+{
+	manager.WriteStateToDirectory(Manager::OutputDir() + "/state_" + timeStamp());
+}
 
 ControllerManager::ControllerManager(Manager& rx_manager) :
 	Controller("manager", "manager"),

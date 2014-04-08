@@ -42,13 +42,15 @@ public:
 	inline const std::string& GetDescription() const {return m_description;}
 	virtual const std::string GetTypeString() const = 0;
 	virtual void RenderTo(cv::Mat& x_output) const  = 0;
+	virtual void WriteToDirectory(const std::string x_directory) const = 0;
 	virtual void Connect(Stream *x_stream);
 	virtual void ConvertInput() = 0;
 	void Export(std::ostream& rx_os, int x_indentation, bool x_isInput);
 	inline void LockModuleForRead(){mr_module.LockForRead();}
 	inline void UnLockModule(){mr_module.Unlock();}
 	inline bool IsConnected() const {return m_connected != NULL;}
-	inline Module& RefModule(){return mr_module;}
+	inline const Module& GetModule() const {return mr_module;}
+	inline Module& RefModule(){return mr_module;} // TODO: Is this necessary ? 
 	inline Stream& RefConnected()
 	{
 		if(m_connected == NULL)

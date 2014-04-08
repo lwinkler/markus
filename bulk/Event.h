@@ -32,6 +32,8 @@
  *  \brief Class representing a event (e.g. Ponctual moment in time where an intrusion occurs)
  *
  */
+class Event;
+
 class Event
 {
 	public:
@@ -54,6 +56,7 @@ class Event
 			return m_object.GetFeature(x_name);
 		}
 		void Notify(const std::string& x_extraInfo = "", bool x_isProcessEvent=false);
+		void Serialize(std::ofstream& x_out);
 
 	protected:
 		std::string m_label;

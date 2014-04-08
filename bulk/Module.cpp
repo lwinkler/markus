@@ -326,11 +326,25 @@ Stream& Module::RefOutputStreamById(int x_id)
 	return *(it->second);
 }
 
+/// Print all statistics related to the module
 void Module::PrintStatistics() const
 {
 	LOG_INFO(m_logger, "Module "<<GetName()<<" : "<<m_countProcessedFrames<<" frames processed (tproc="<<
 		m_timerProcessing<<"ms, tconv="<<m_timerConvertion<<"ms, twait="<<
 		m_timerWaiting<<"ms), "<< (m_countProcessedFrames * 1000.0 / (m_timerProcessing + m_timerConvertion + m_timerWaiting))<<" fps");
+}
+
+/// Dump the last inputs and outputs to disk
+void Module::WriteStateToDirectory(const string& x_directory) const
+{
+	// string dir = OutputDir() + "/dump_" + timeStamp();
+	
+	// Dump inputs
+	for(map<int, Stream*>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
+	{
+		if(it->second->IsConnected())
+			it->second->WriteToDirectory(x_directory);
+	}
 }
 
 /// Check that all inputs are ready (they are connected to a working module)

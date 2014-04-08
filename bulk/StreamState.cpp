@@ -60,3 +60,12 @@ void StreamState::RenderTo(Mat& x_output) const
 	x_output.setTo(Scalar(255 * m_state, 255 * m_state, 255 * m_state));
 }
 
+/// Write the stream content to a directory
+void StreamState::WriteToDirectory(const std::string x_directory) const
+{
+	ofstream of;
+	string fileName = x_directory + "/" + GetModule().GetName() + "." + GetName() + ".state.txt";
+	of.open(fileName.c_str());
+	of << (m_state ? "1" : "0") << endl;
+	of.close();
+}

@@ -103,6 +103,7 @@ public:
 	
 	inline void AddDependingModule (Module & x_module){m_modulesDepending.push_back(&x_module);}
 	virtual void PrintStatistics() const;
+	void WriteStateToDirectory(const std::string& x_directory) const;
 	
 	virtual inline bool IsInput() {return false;}
 	void Export(std::ostream& rx_os, int x_indentation);

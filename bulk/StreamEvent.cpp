@@ -77,3 +77,12 @@ void StreamEvent::RenderTo(Mat& x_output) const
 	else x_output.setTo(0);
 }
 
+/// Write the stream content to a directory
+void StreamEvent::WriteToDirectory(const std::string x_directory) const
+{
+	ofstream of;
+	string fileName = x_directory + "/" + GetModule().GetName() + "." + GetName() + ".event.txt";
+	of.open(fileName.c_str());
+	m_event.Serialize(of);
+	of.close();
+}

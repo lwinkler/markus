@@ -54,4 +54,11 @@ void StreamDebug::RenderTo(cv::Mat& x_output) const
 	m_image.copyTo(x_output);
 }
 
+/// Write the stream content to a directory
+void StreamDebug::WriteToDirectory(const std::string x_directory) const
+{
+	// TODO
+	
+}
+
 #endif

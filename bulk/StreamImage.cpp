@@ -65,6 +65,13 @@ void StreamImage::RenderTo(Mat& x_output) const
 	m_image.copyTo(x_output);
 }
 
+/// Write the stream content to a directory
+void StreamImage::WriteToDirectory(const std::string x_directory) const
+{
+	string fileName = x_directory + "/" + GetModule().GetName() + "." + GetName() + ".image.png";
+	imwrite(fileName, m_image);
+}
+
 void StreamImage::Connect(Stream* x_stream)
 {
 	m_connected = x_stream;

@@ -46,6 +46,12 @@ Object::Object(const string& x_name, const cv::Rect& x_rect) :
 
 Object::~Object(){}
 
+void Object::Serialize(ofstream& out)
+{
+	out << "object" <<endl; // TODO	
+}
+
+
 /// Draw an object on an image (for visualization)
 void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 {

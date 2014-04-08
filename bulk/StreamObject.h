@@ -43,6 +43,7 @@ public:
 
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat& x_output) const;
+	virtual void WriteToDirectory(const std::string x_directory) const;
 	inline virtual const std::string GetTypeString()const {return "Objects";}
 	double GetFeatureValue(const std::vector<Feature>& x_vect, const char* x_name);
 

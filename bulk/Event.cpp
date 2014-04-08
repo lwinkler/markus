@@ -36,6 +36,10 @@ Event::Event() :
 
 Event::~Event(){}
 
+void Event::Serialize(ofstream& out)
+{
+	out << "{}" << endl; // TODO
+}
 
 /// Empty the event: must be called on each frame process to avoid raising multiple events
 void Event::Empty()

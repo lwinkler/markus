@@ -572,3 +572,9 @@ void Manager::UpdateConfig()
 	Configurable::UpdateConfig();
 }
 
+/// Write all states to disk
+void Manager::WriteStateToDirectory(const std::string& x_directory) const
+{
+	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+		(*it)->WriteStateToDirectory(x_directory);
+}
