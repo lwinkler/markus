@@ -64,13 +64,17 @@ private:
 protected:
 	virtual void ProcessFrame();
 
+	// input
 	cv::Mat m_input;
+
+	// output
+	bool m_state;
+	Event m_event;
+
+	// debug
 #ifdef MARKUS_DEBUG_STREAMS
 	cv::Mat m_debug;
 #endif
-
-	bool m_state;
-	Event m_event;
 
 	static const cv::Scalar m_colorPlotBack;
 	static const cv::Scalar m_colorPlotValue;

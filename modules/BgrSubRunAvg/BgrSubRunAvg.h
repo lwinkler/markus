@@ -58,15 +58,19 @@ private:
 	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 protected:
-	// Background subtraction	
+	// input
 	cv::Mat m_input;
+
+	// output
 	cv::Mat m_background;
 	cv::Mat m_foreground;
-	cv::Mat m_foreground_tmp;
-	bool m_emptyBackgroundSubtractor;
 
-	cv::Mat * m_tmp1;
-	cv::Mat * m_tmp2;
+	// temporary
+	cv::Mat m_foreground_tmp;
+
+	// state variables
+	bool m_emptyBackgroundSubtractor;
+	cv::Mat * m_accumulator;
 };
 
 

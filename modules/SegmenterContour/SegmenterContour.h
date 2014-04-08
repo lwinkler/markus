@@ -65,13 +65,17 @@ private:
 
 protected:
 	
-	// for streams
+	// input
 	cv::Mat m_input;
 
+	// output
 	std::vector<Object> m_regions;
+
+	// temporary
 	std::vector<std::string> m_featureNames;
 	// StreamObject* m_outputObjectStream;
 
+	// debug
 #ifdef MARKUS_DEBUG_STREAMS
 	cv::RNG m_rng;
 	cv::Mat m_debug;

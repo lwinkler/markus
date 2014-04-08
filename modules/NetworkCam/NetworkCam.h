@@ -62,12 +62,17 @@ private:
 	inline virtual const NetworkCamParameterStructure& GetParameters() const {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 protected:
-	cv::VideoCapture m_capture;
+
+	// output
 	cv::Mat m_output;
-	TIME_STAMP m_timeStamp;
-	void GetProperties();
+
+	// temporary
+	cv::VideoCapture m_capture;
 	Timer m_frameTimer;
 	sem_t m_semTimeout;
+	// TIME_STAMP m_timeStamp;
+
+	void GetProperties();
 };
 
 #endif

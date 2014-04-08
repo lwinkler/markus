@@ -66,11 +66,14 @@ private:
 	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 protected:
+	
+	// input
 	std::vector <Object> m_objectsIn;
-	std::vector <Object> m_objectsOut;
-	// StreamObject* m_inputObjectStream;
-	// StreamObject* m_outputObjectStream;
 
+	// output
+	std::vector <Object> m_objectsOut;
+
+	// debug
 #ifdef MARKUS_DEBUG_STREAMS
 	cv::Mat m_debug;
 #endif

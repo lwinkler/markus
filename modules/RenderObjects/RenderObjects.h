@@ -54,14 +54,16 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
-	// for streams
+	// input
 	cv::Mat m_imageInput;
-	cv::Mat m_imageOutput;
 	std::vector<Object> m_objectInput1;
 	std::vector<Object> m_objectInput2;
 	std::vector<Object> m_objectInput3;
 	std::vector<Object> m_objectInput4;
 	std::vector<Object> m_objectInput5;
+
+	// output
+	cv::Mat m_imageOutput;
 };
 
 

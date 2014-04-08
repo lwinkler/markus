@@ -47,9 +47,7 @@ public:
 		// m_list.push_back(new ParameterInt("minNeighbors", 2, 1, 100, 	&minNeighbors,	"Minimum numbers of neighbors (higher: less sensitive)")); // Note : Seems to be a bug with minNeighbors = 1 with most filters
 		m_list.push_back(new ParameterInt("min_side", 0, 0, 200, 		&minSide,	"Minimum size of the detected object"));
 		m_list.push_back(new ParameterFloat("scale_factor", 1.2, 1, 2, 	&scaleFactor,	"Scale factor for scanning (higher: less sensitive)"));
-		// m_list.push_back(new ParameterString("filterFile", "modules/HOGDetector/lbpcascade_frontalface.xml",  &filterFile,
 														// "File with filter data of the detected object"));
-		// m_list.push_back(new ParameterString("color", "(255,255,255)",		&color,	"Color to draw the output"));
 		m_list.push_back(new ParameterString("object_label", "hog", 			&objectLabel,	"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
 		
 		ParameterStructure::Init();
@@ -58,8 +56,6 @@ public:
 	// int minNeighbors;
 	int minSide;
 	float scaleFactor;
-	// std::string filterFile;
-	// std::string color;
 	std::string objectLabel;
 };
 
@@ -110,13 +106,20 @@ private:
 	inline virtual const HOGDetectorParameterStructure& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 protected:
-	std::vector<Object> m_detectedObjects;
+
+	// input
 	cv::Mat m_input;
 	cv::Mat m_lastInput; // This is used by the thread
+
+	// output
+	std::vector<Object> m_detectedObjects;
+
+	// debug
 #ifdef MARKUS_DEBUG_STREAMS
 	cv::Mat m_debug;
 #endif
 	
+	// thread
 	HOGDetectionThread m_thread;
 	virtual const QThread & GetRefThread(){return m_thread;}
 };

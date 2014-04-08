@@ -55,17 +55,21 @@ public:
 	
 	virtual void ProcessFrame();
 	void Reset();
+
 private:
 	MorphParameterStructure m_param;
 	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 protected:
+	
+	// input
 	cv::Mat m_input;
-	cv::Mat m_output;
-	cv::Mat m_element;
 
-	// Background subtraction	
-	cv::Mat m_foreground;
+	// output
+	cv::Mat m_output;
+
+	// temporary
+	cv::Mat m_element;
 };
 
 

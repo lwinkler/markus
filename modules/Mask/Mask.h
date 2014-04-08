@@ -53,8 +53,12 @@ private:
 	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 protected:
+
+	// input
 	cv::Mat m_input;
 	cv::Mat m_mask;
+
+	// output
 	cv::Mat m_output;
 };
 

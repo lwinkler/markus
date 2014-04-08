@@ -68,6 +68,8 @@ void LogObjects::Reset()
 void LogObjects::ProcessFrame()
 {
 	ofstream outputFile;
+
+	// Note: we open the file at each iteration. This is ok for debug uses but should be improved // TODO
 	outputFile.open (m_fileName.c_str(), ios::app);
 	
 	// Log time stamp

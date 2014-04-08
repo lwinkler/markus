@@ -56,11 +56,17 @@ private:
 	inline virtual const GroundTruthReaderParameterStructure& GetParameters() const {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 protected:
+
+	// input (and output)
 	cv::Mat m_input;
+
+	// ouput
 	bool m_state;
+
+	// state // TODO: if reseted the module must be able to go to the right subtitle line 
 	bool m_stateSub;
-	std::ifstream m_srtFile;
 	int m_num;
+	std::ifstream m_srtFile;
 	std::string m_srtStart;
 	std::string m_srtEnd;
 };

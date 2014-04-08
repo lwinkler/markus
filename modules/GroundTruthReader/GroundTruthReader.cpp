@@ -112,7 +112,7 @@ void GroundTruthReader::ProcessFrame()
 
 			getline(m_srtFile, line); // end of line: must be empty
 			if(line.size() != 0)
-				throw MkException("Subtitle format error", LOC);
+				throw MkException("Subtitle format error. There must be an empty line after subtitle.", LOC);
 			getline(m_srtFile, line);
 
 			while(line.size() != 0)

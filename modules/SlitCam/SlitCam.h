@@ -64,10 +64,15 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 protected:
 	virtual void ProcessFrame();
-	int m_position;
 
+	// input
 	cv::Mat m_input;
+
+	// output
 	cv::Mat m_output;
+
+	// state
+	int m_position;
 };
 
 #endif

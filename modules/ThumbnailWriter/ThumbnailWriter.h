@@ -24,7 +24,6 @@
 #ifndef THUMBNAIL_WRITER_H
 #define THUMBNAIL_WRITER_H
 
-// #include <opencv2/highgui/highgui.hpp>
 #include <Module.h>
 #include <StreamObject.h>
 
@@ -53,13 +52,18 @@ public:
 	
 	virtual void ProcessFrame();
 	void Reset();
+
 private:
 	ThumbnailWriterParameterStructure m_param;
 	inline virtual const ThumbnailWriterParameterStructure& GetParameters() const {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
+
 protected:
+	// input
 	cv::Mat m_input;
 	std::vector <Object> m_objectsIn;
+
+	// temporary
 	std::string m_folderName;
 };
 

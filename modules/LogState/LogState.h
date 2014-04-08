@@ -56,22 +56,24 @@ public:
 	void Reset();
 	virtual void ProcessFrame();
 
+private:
+	LogStateParameterStructure m_param;
+	inline virtual const LogStateParameterStructure& GetParameters() const { return m_param;}
+	static log4cxx::LoggerPtr m_logger;
+
 protected:
 	void WriteState();
 
-
+	// input
 	bool m_state;
+
+	// state
 	bool m_oldState;
 	long int m_subId;
 	std::string m_startTime;
 	std::string m_endTime;
 	std::string m_srtFileName;
 	std::ofstream m_file;
-
-private:
-	LogStateParameterStructure m_param;
-	inline virtual const LogStateParameterStructure& GetParameters() const { return m_param;}
-	static log4cxx::LoggerPtr m_logger;
 };
 
 #endif

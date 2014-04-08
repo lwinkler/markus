@@ -75,12 +75,16 @@ protected:
 	const Template * MatchObject(const Object& x_obj)const;
 	int MatchTemplate(Template& x_temp);
 
-	std::list <Template> m_templates;
+	// input and output
 	std::vector <Object> m_objects;
-	std::vector <std::string>    m_featureNames;
-	StreamObject* m_inputObjectStream;
-	StreamObject* m_outputObjectStream;
 
+	// state
+	std::list <Template> m_templates;
+
+	// temporary
+	std::vector <std::string>    m_featureNames;
+
+	// debug
 #ifdef MARKUS_DEBUG_STREAMS
 	cv::Mat m_debug;
 #endif

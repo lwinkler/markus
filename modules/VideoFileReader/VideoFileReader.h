@@ -64,15 +64,20 @@ public:
 	int GetMaxMsec();
 	int GetMaxFrame();
 	virtual double GetRecordingFps();
+
 private:
 	VideoFileReaderParameterStructure m_param;
 	inline virtual const VideoFileReaderParameterStructure& GetParameters() const {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
+
 protected:
-	cv::VideoCapture m_capture;
-	cv::Mat m_output;
-	// int m_fps;
 	void GetProperties();
+
+	// output
+	cv::Mat m_output;
+
+	// temporary
+	cv::VideoCapture m_capture;
 };
 
 #endif

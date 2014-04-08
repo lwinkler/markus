@@ -55,15 +55,22 @@ public:
 	void Capture();
 	virtual void Reset();
 	const std::string& GetName(){return m_name;}
+
 private:
 	RandomEventGeneratorParameterStructure m_param;
 	inline virtual const RandomEventGeneratorParameterStructure& GetParameters() const {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
+
 protected:
-	TIME_STAMP m_timeStamp;
+	// output
 	Event m_event;
 	cv::Mat m_output;
+
+	// temporary
 	Timer m_frameTimer;
+	// TIME_STAMP m_timeStamp;
+
+	// state
 	unsigned int m_seed;
 };
 

@@ -43,10 +43,15 @@ public:
 	
 protected:
 
+	// input
 	Event m_eventIn;
+
+	// output
 	Event m_eventOut;
-	std::list<Event> m_events;
 	Event m_eventToValidate;
+
+	// state variables
+	std::list<Event> m_events;
 
 private:
 	ClassifyEventsParameterStructure m_param;

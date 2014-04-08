@@ -58,7 +58,7 @@ NetworkCam::NetworkCam(const ConfigReader& x_configReader):
 	m_output(Size(m_param.width, m_param.height), m_param.type)  // Note: sizes will be overridden !
 {
 	m_description = "Module to acquire a video stream from a network camera";
-	m_timeStamp = TIME_STAMP_INITIAL;
+	// m_timeStamp = TIME_STAMP_INITIAL;
 	
 	AddOutputStream(0, new StreamImage("input", m_output, *this, 		"Video stream of the camera"));
 }

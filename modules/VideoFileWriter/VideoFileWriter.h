@@ -56,14 +56,18 @@ public:
 	virtual void ProcessFrame();
 	void Reset();
 	static const std::string ExtensionFromFourcc(const std::string& x_fourcc);
+
 private:
 	VideoFileWriterParameterStructure m_param;
 	inline virtual const VideoFileWriterParameterStructure& GetParameters() const {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
+
 protected:
-	cv::VideoWriter m_writer;
+	// input
 	cv::Mat m_input;
-	
+
+	// temporary // TODO: Check that the file is not rewritten after a Reset. Maybe start a new file
+	cv::VideoWriter m_writer;
 };
 
 #endif

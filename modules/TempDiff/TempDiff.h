@@ -55,13 +55,19 @@ private:
 	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 protected:
-	// Temporal differencing
+	// input
 	cv::Mat m_input;
-	cv::Mat m_output;
-	cv::Mat m_lastImg;
+
+	// output
+	// cv::Mat m_output;
 	cv::Mat m_temporalDiff;
-	cv::Mat* m_tmp;
+
+	// state
+	cv::Mat m_lastImg;
 	bool m_emptyTemporalDiff;
+
+	// temporary
+	cv::Mat* m_tmp;
 };
 
 

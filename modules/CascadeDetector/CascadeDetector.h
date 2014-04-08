@@ -60,7 +60,6 @@ public:
 	int minSide;
 	float scaleFactor;
 	std::string filterFile;
-	// std::string color;
 	std::string objectLabel;
 };
 
@@ -101,7 +100,6 @@ class CascadeDetector : public ModuleAsync
 public:
 	CascadeDetector(const ConfigReader& x_configReader);
 	~CascadeDetector(void);
-	//void CreateParamWindow();
 	
 	virtual void LaunchThread();
 	virtual void NormalProcess();
@@ -112,12 +110,19 @@ private:
 	inline virtual const CascadeDetectorParameterStructure& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 protected:
-	std::vector<Object> m_detectedObjects;
+	// input
 	cv::Mat m_input;
 	cv::Mat m_lastInput;
+
+	// output
+	std::vector<Object> m_detectedObjects;
+
+	// debug
 #ifdef MARKUS_DEBUG_STREAMS
 	cv::Mat m_debug;
 #endif
+	
+	// thread
 	DetectionThread m_thread;
 	virtual const QThread & GetRefThread(){return m_thread;}
 };

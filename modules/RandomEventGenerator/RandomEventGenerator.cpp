@@ -37,7 +37,7 @@ RandomEventGenerator::RandomEventGenerator(const ConfigReader& x_configReader):
 	m_output(Size(m_param.width, m_param.height), m_param.type)  // Note: sizes will be overridden !
 {
 	m_description = "Generate events with random features at each step";
-	m_timeStamp = TIME_STAMP_INITIAL;
+	// m_timeStamp = TIME_STAMP_INITIAL;
 	
 	AddOutputStream(0, new StreamEvent("event", m_event, *this,  "Event generated"));
 	AddOutputStream(1, new StreamImage("image", m_output, *this, "Test image"));

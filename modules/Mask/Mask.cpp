@@ -59,7 +59,6 @@ void Mask::Reset()
 
 void Mask::ProcessFrame()
 {
-	// m_input->mul(*m_mask);
 	threshold(m_mask, m_mask, 128, 255, THRESH_BINARY_INV);
 	m_input.copyTo(m_output, m_mask);
 	// cvAnd(m_input, m_mask, m_output);

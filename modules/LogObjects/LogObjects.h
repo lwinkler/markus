@@ -45,22 +45,24 @@ public:
 
 class LogObjects : public Module
 {
-protected:
-	virtual void ProcessFrame();
-	std::string m_fileName;
-
-	std::vector <Object> m_objectsIn;
-
 public:
 	LogObjects(const ConfigReader& x_configReader);
 	~LogObjects(void);
 	void Reset();
 
-
 private:
 	LogObjectsParameterStructure m_param;
 	inline virtual const LogObjectsParameterStructure& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
+
+protected:
+	virtual void ProcessFrame();
+
+	// input
+	std::vector <Object> m_objectsIn;
+
+	// temporary
+	std::string m_fileName;
 };
 
 #endif

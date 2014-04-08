@@ -36,9 +36,9 @@ TempDiff::TempDiff(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader),
 	m_input(Size(m_param.width, m_param.height), m_param.type),
-	m_output(Size(m_param.width, m_param.height), m_param.type),
-	m_lastImg(Size(m_param.width, m_param.height), m_param.type),
-	m_temporalDiff(Size(m_param.width, m_param.height), CV_8UC1)
+	m_temporalDiff(Size(m_param.width, m_param.height), CV_8UC1),
+	// m_output(Size(m_param.width, m_param.height), m_param.type),
+	m_lastImg(Size(m_param.width, m_param.height), m_param.type)
 {
 	m_description = "Perform temporal differencing: compare frame with previous frame by subtraction";
 	m_tmp = NULL;

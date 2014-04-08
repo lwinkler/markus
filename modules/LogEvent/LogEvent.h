@@ -72,13 +72,18 @@ protected:
 	void SaveImage();
 	bool IsInputProcessed() const;
 
+	// input
 	Event m_event;
-	long int m_subId;
-	std::string m_srtFileName;
 	cv::Mat m_input;
-	std::ofstream m_file;
+
+	// state // TODO: compute automatically this and check that there is no influence if a reset happens
+	long int m_subId;
+
+	// temporary
 	bool m_saveImage;
 	std::string m_folderName;
+	std::string m_srtFileName;
+	std::ofstream m_file;
 };
 
 #endif

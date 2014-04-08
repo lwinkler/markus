@@ -39,8 +39,7 @@ BgrSubRunAvg::BgrSubRunAvg(const ConfigReader& x_configReader) :
 	m_foreground(Size(m_param.width, m_param.height), m_param.type),
 	m_foreground_tmp(Size(m_param.width, m_param.height), m_param.type)
 {
-	m_tmp1 = new Mat();
-	m_tmp2 = NULL;
+	m_accumulator = new Mat();
 	m_description = "Perform a background subtraction using a running average";
 	
 	AddInputStream(0, new StreamImage("input",             m_input, *this,   "Video input"));
@@ -54,8 +53,7 @@ BgrSubRunAvg::BgrSubRunAvg(const ConfigReader& x_configReader) :
 
 BgrSubRunAvg::~BgrSubRunAvg()
 {
-	delete(m_tmp1);
-	delete(m_tmp2);
+	delete(m_accumulator);
 }
 
 void BgrSubRunAvg::Reset()
@@ -68,16 +66,16 @@ void BgrSubRunAvg::ProcessFrame()
 {
 	// cout<<"input "<<m_input->size()<<" "<<m_input->depth();
 	// cout<<"backgr "<<m_background->size()<<" "<<m_background->depth();
-	if(m_emptyBackgroundSubtractor) {
-		//m_input->copyTo(*m_background);
-		// accumulateWeighted(*m_input, *m_background, 1);
+	if(m_emptyBackgroundSubtractor)
+	{
 		m_emptyBackgroundSubtractor = false;
-		m_input.convertTo(*m_tmp1, CV_32F);
+		m_input.convertTo(*m_accumulator, CV_32F);
 		m_input.copyTo(m_background);
 	}
+
 	// Main part of the program
-	accumulateWeighted(m_input, *m_tmp1, m_param.backgroundAlpha);
-	m_tmp1->convertTo(m_background, m_background.depth());
+	accumulateWeighted(m_input, *m_accumulator, m_param.backgroundAlpha);
+	m_accumulator->convertTo(m_background, m_background.depth());
 	absdiff(m_input, m_background, m_foreground_tmp);
 	threshold(m_foreground_tmp, m_foreground, m_param.foregroundThres * 255, 255, cv::THRESH_BINARY);
 };

@@ -59,11 +59,15 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
-	cv::VideoCapture m_capture;
-	cv::Mat m_output;
-	TIME_STAMP m_timeStamp;
-	Timer m_frameTimer;
 	void GetProperties();
+
+	// output
+	cv::Mat m_output;
+
+	// temporary
+	cv::VideoCapture m_capture;
+	// TIME_STAMP m_timeStamp;
+	Timer m_frameTimer;
 };
 
 #endif
