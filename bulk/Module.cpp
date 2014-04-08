@@ -345,6 +345,18 @@ void Module::WriteStateToDirectory(const string& x_directory) const
 		if(it->second->IsConnected())
 			it->second->WriteToDirectory(x_directory);
 	}
+	// Dump outputs
+	for(map<int, Stream*>::const_iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
+	{
+		if(it->second->IsConnected())
+			it->second->WriteToDirectory(x_directory);
+	}
+	// Dump debugs
+	for(map<int, Stream*>::const_iterator it = m_debugStreams.begin() ; it != m_debugStreams.end() ; it++)
+	{
+		if(it->second->IsConnected())
+			it->second->WriteToDirectory(x_directory);
+	}
 }
 
 /// Check that all inputs are ready (they are connected to a working module)

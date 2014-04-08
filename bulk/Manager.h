@@ -54,7 +54,7 @@ class Manager : public Configurable, public Controllable
 public:
 	Manager(const ConfigReader& x_configReader, bool x_centralized);
 	~Manager();
-	void Reset();
+	void Reset(bool x_resetInputs = true);
 	bool Process();
 	void SendCommand(const std::string& x_command, std::string x_value);
 	// const std::vector<Input*> & GetInputList()  const {return m_inputs; };

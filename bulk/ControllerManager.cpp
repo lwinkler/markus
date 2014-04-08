@@ -34,6 +34,11 @@ void ControllerManager::Reset(string* xp_value)
 	manager.Reset();
 }
 
+void ControllerManager::ResetExceptInputs(string* xp_value)
+{
+	manager.Reset(false);
+}
+
 void ControllerManager::Pause(string* xp_value)
 {
 	manager.Pause(true);
@@ -60,7 +65,7 @@ void ControllerManager::Status(string* xp_value)
 	manager.Status();
 }
 
-void ControllerManager::WriteStateTodirectory(std::string* xp_value)
+void ControllerManager::WriteStateToDirectory(std::string* xp_value)
 {
 	manager.WriteStateToDirectory(Manager::OutputDir() + "/state_" + timeStamp());
 }
@@ -69,12 +74,14 @@ ControllerManager::ControllerManager(Manager& rx_manager) :
 	Controller("manager", "manager"),
 	manager(rx_manager)
 {
-	m_actions.insert(std::make_pair("Reset",           &ControllerManager::Reset));
-	m_actions.insert(std::make_pair("Quit",            &ControllerManager::Quit));
-	m_actions.insert(std::make_pair("Pause",           &ControllerManager::Pause));
-	m_actions.insert(std::make_pair("Unpause",         &ControllerManager::Unpause));
-	m_actions.insert(std::make_pair("PrintStatistics", &ControllerManager::PrintStatistics));
-	m_actions.insert(std::make_pair("Status",          &ControllerManager::Status));
+	m_actions.insert(std::make_pair("Reset",              &ControllerManager::Reset));
+	m_actions.insert(std::make_pair("ResetExceptInputs",  &ControllerManager::ResetExceptInputs));
+	m_actions.insert(std::make_pair("Quit",               &ControllerManager::Quit));
+	m_actions.insert(std::make_pair("Pause",              &ControllerManager::Pause));
+	m_actions.insert(std::make_pair("Unpause",            &ControllerManager::Unpause));
+	m_actions.insert(std::make_pair("PrintStatistics",    &ControllerManager::PrintStatistics));
+	m_actions.insert(std::make_pair("Status",             &ControllerManager::Status));
+	m_actions.insert(std::make_pair("WriteStateToDir",    &ControllerManager::WriteStateToDirectory));
 }
 
 QWidget* ControllerManager::CreateWidget()

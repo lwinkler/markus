@@ -189,7 +189,10 @@ void Manager::Connect()
 }
 
 /// Reset the manager: must be called externally after initialization
-void Manager::Reset()
+///
+/// @param x_resetInput Also reset input modules (true by default)
+///
+void Manager::Reset(bool x_resetInputs)
 {
 	// Reset timers
 	// m_timerConvertion = 0;
@@ -198,8 +201,11 @@ void Manager::Reset()
 	// Reset all modules (to set the module timer)
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 	{
-		(*it)->SetProcessByTimer(!m_centralized);
-		(*it)->Reset();
+		if(x_resetInputs || !(*it)->IsInput())
+		{
+			(*it)->SetProcessByTimer(!m_centralized);
+			(*it)->Reset();
+		}
 	}
 	if(FindController("manager") == NULL)
 	{
@@ -575,6 +581,7 @@ void Manager::UpdateConfig()
 /// Write all states to disk
 void Manager::WriteStateToDirectory(const std::string& x_directory) const
 {
+	SYSTEM("mkdir -p " + x_directory)
 	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
 		(*it)->WriteStateToDirectory(x_directory);
 }

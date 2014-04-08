@@ -75,8 +75,7 @@ private:
 	void timerEvent(QTimerEvent*);
 	void resizeEvent(QResizeEvent*);
 	
-	void createActions();
-	void createMenus();
+	void createActionsAndMenus();
 	
 	QLabel *createLabel(const QString &text);
 	
@@ -84,21 +83,6 @@ private:
 	QGridLayout m_mainLayout;
 	std::vector<QModuleViewer *> m_moduleViewer;
 	
-	QAction *exitAct;
-	QAction *viewDisplayOptionsAct;
-	QAction *view1x1Act;
-	QAction *view1x2Act;
-	QAction *view2x2Act;
-	QAction *view2x3Act;
-	QAction *view3x3Act;
-	QAction *view3x4Act;
-	QAction *view4x4Act;
-	QAction *aboutAct;
-	QAction *aboutQtAct;
-	
-	QMenu *fileMenu;
-	QMenu *viewMenu;
-	QMenu *helpMenu;
 	
 private slots:
 	void about();
@@ -110,6 +94,7 @@ private slots:
 	void view3x3();
 	void view3x4();
 	void view4x4();
+	void callManagerCommand();
 
 };
 

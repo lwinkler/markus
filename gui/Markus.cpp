@@ -61,8 +61,7 @@ Markus::Markus(ConfigReader & rx_configReader, Manager& rx_manager)
 	m_mainWidget.setLayout(&m_mainLayout);
 	setCentralWidget(&m_mainWidget);
 
-	createActions();
-	createMenus();
+	createActionsAndMenus();
 	resizeEvent(NULL);
 
 	setWindowTitle(tr("Markus"));
@@ -119,48 +118,46 @@ void Markus::about()
 
 
 //---------------------------------------------------------------------------------------------------- 
-// Create actions for menus
+// Create actions and menus
 //---------------------------------------------------------------------------------------------------- 
-void Markus::createActions()
+void Markus::createActionsAndMenus()
 {
-	exitAct = new QAction(tr("E&xit"), this);
+	// Action for file menu
+	QAction* exitAct = new QAction(tr("E&xit"), this);
 	exitAct->setShortcut(tr("Ctrl+Q"));
 	connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
 	
-	aboutAct = new QAction(tr("&About"), this);
-	connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
-	
-	viewDisplayOptionsAct = new QAction(tr("Show display options"), this);
+	// Actions for view menu
+	QAction* viewDisplayOptionsAct = new QAction(tr("Show display options"), this);
 	viewDisplayOptionsAct->setCheckable(true);
 	connect(viewDisplayOptionsAct, SIGNAL(triggered(bool)), this, SLOT(viewDisplayOptions(bool)));
-	view1x1Act = new QAction(tr("View 1x1"), this);
+	QAction* view1x1Act = new QAction(tr("View 1x1"), this);
 	connect(view1x1Act, SIGNAL(triggered()), this, SLOT(view1x1()));
-	view1x2Act = new QAction(tr("View 2x1"), this);
+	QAction* view1x2Act = new QAction(tr("View 2x1"), this);
 	connect(view1x2Act, SIGNAL(triggered()), this, SLOT(view1x2()));
-	view2x2Act = new QAction(tr("View 2x2"), this);
+	QAction* view2x2Act = new QAction(tr("View 2x2"), this);
 	connect(view2x2Act, SIGNAL(triggered()), this, SLOT(view2x2()));
-	view2x3Act = new QAction(tr("View 2x3"), this);
+	QAction* view2x3Act = new QAction(tr("View 2x3"), this);
 	connect(view2x3Act, SIGNAL(triggered()), this, SLOT(view2x3()));
-	view3x3Act = new QAction(tr("View 3x3"), this);
+	QAction* view3x3Act = new QAction(tr("View 3x3"), this);
 	connect(view3x3Act, SIGNAL(triggered()), this, SLOT(view3x3()));
-	view3x4Act = new QAction(tr("View 3x4"), this);
+	QAction* view3x4Act = new QAction(tr("View 3x4"), this);
 	connect(view3x4Act, SIGNAL(triggered()), this, SLOT(view3x4()));
-	view4x4Act = new QAction(tr("View 4x4"), this);
+	QAction* view4x4Act = new QAction(tr("View 4x4"), this);
 	connect(view4x4Act, SIGNAL(triggered()), this, SLOT(view4x4()));
-}
 
-//---------------------------------------------------------------------------------------------------- 
-// Create the menus themselves
-//---------------------------------------------------------------------------------------------------- 
-void Markus::createMenus()
-{
-	fileMenu = new QMenu(tr("&File"), this);
-	//fileMenu->addAction(cleanAct);
+
+	// Action for help menu
+	QAction* aboutAct = new QAction(tr("&About"), this);
+	connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
+	
+	// File Menu
+	QMenu* fileMenu = new QMenu(tr("&File"), this);
 	fileMenu->addSeparator();
 	fileMenu->addAction(exitAct);
 	
-	
-	viewMenu = new QMenu(tr("&View"), this);
+	// View menu
+	QMenu* viewMenu = new QMenu(tr("&View"), this);
 	viewMenu->addAction(viewDisplayOptionsAct);
 	viewMenu->addAction(view1x1Act);
 	viewMenu->addAction(view1x2Act);
@@ -170,11 +167,27 @@ void Markus::createMenus()
 	viewMenu->addAction(view3x4Act);
 	viewMenu->addAction(view4x4Act);
 	
-	helpMenu = new QMenu(tr("&Help"), this);
+	// Manager menu
+	QMenu* managerMenu = new QMenu(tr("&Manager"), this);
+
+	// Action for manager menu
+	//    list all commands available in the manager controller
+	vector<std::string> actions;
+	m_manager.FindController("manager")->ListActions(actions);
+	for(vector<std::string>::const_iterator it = actions.begin() ; it != actions.end() ; it++)
+	{
+		QAction* action = new QAction(it->c_str(), this);
+		connect(action, SIGNAL(triggered()), this, SLOT(callManagerCommand()));
+		managerMenu->addAction(action);
+	}
+
+	// Help menu
+	QMenu* helpMenu = new QMenu(tr("&Help"), this);
 	helpMenu->addAction(aboutAct);
 	
 	menuBar()->addMenu(fileMenu);
 	menuBar()->addMenu(viewMenu);
+	menuBar()->addMenu(managerMenu);
 	menuBar()->addMenu(helpMenu);
 }
 
@@ -236,6 +249,13 @@ void Markus::view4x4()
 	resizeEvent(NULL);
 }
 
+void Markus::callManagerCommand()
+{
+	QAction* action = dynamic_cast<QAction*>(sender());
+	assert(action != NULL);
+
+	m_manager.SendCommand("manager.manager." + string(action->text().toStdString()), "");
+}
 
 void Markus::resizeEvent(QResizeEvent* event)
 {
