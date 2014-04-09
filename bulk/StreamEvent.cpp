@@ -81,8 +81,6 @@ void StreamEvent::RenderTo(Mat& x_output) const
 /// @param x_dir Input directory (for images)
 void StreamEvent::Serialize(std::ostream& x_out, const string& x_dir) const
 {
-	// string fileName = x_directory + "/" + GetModule().GetName() + "." + GetName() + ".event.txt";
-	// TODO
 	m_event.Serialize(x_out, x_dir);
 }
 

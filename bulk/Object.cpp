@@ -53,8 +53,12 @@ Object::~Object(){}
 void Object::Serialize(std::ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
-	root["name"]  = m_name;
-	root["id"]    = m_id;
+	root["id"]     = m_id;
+	root["name"]   = m_name;
+	root["x"]      = posX;
+	root["y"]      = posY;
+	root["width"]  = width;
+	root["height"] = height;
 	for(map <std::string, Feature>::const_iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
 		root["features"][it->first] = it->second.value; // TODO What about other measures ?
 

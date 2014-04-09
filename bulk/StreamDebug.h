@@ -42,9 +42,11 @@ public:
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 	inline virtual const std::string GetTypeString()const {return "Debug";}
+
 protected:
 	const cv::Mat& m_image;
 private:
+
 	StreamDebug& operator=(const StreamDebug&);
 	StreamDebug(const StreamDebug&);
 };

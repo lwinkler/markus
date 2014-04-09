@@ -71,11 +71,12 @@ class Object : public Serializable
 		//Scalar m_color;
 		//Object(const Object&);
 		//Object& operator = (const Object&);
+
 	public:
 		double posX;
 		double posY;
 		double width;
 		double height;
-		int isMatched;
+		int isMatched; // TODO: do we keep this ?
 };
 #endif

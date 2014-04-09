@@ -65,11 +65,7 @@ void StreamState::RenderTo(Mat& x_output) const
 /// @param x_dir Input directory (for images)
 void StreamState::Serialize(std::ostream& x_out, const string& x_dir) const
 {
-	ofstream of;
-	string fileName = x_dir+ "/" + GetModule().GetName() + "." + GetName() + ".state.txt";
-	of.open(fileName.c_str());
-	of << (m_state ? "1" : "0") << endl;
-	of.close();
+	x_out << (m_state ? "1" : "0") << endl;
 }
 /// Deserialize the stream from JSON
 /// @param x_in Input stream

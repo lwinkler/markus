@@ -340,7 +340,7 @@ void Module::WriteStateToDirectory(const string& x_directory) const
 	// string dir = OutputDir() + "/dump_" + timeStamp();
 	
 	// Dump inputs
-	string fileName = x_directory + "/" + GetName() + ".module.txt";
+	string fileName = x_directory + "/" + GetName() + ".module.json";
 	ofstream of;
 	of.open(fileName.c_str());
 	for(map<int, Stream*>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)

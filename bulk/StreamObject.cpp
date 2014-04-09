@@ -32,9 +32,7 @@ using namespace cv;
 
 StreamObject::StreamObject(const string& rx_name, vector<Object>& xr_objects, Module& rx_module, const string& rx_description):
 	Stream(rx_name, rx_module, rx_description),
-	m_objects(xr_objects),
-	// m_color(cvScalar(255, 255, 255)),
-	m_isColorSet(false)
+	m_objects(xr_objects)
 {}
 
 StreamObject::~StreamObject()
@@ -87,7 +85,6 @@ void StreamObject::RenderTo(Mat& x_output) const
 /// @param x_dir Input directory (for images)
 void StreamObject::Serialize(std::ostream& x_out, const string& x_dir) const
 {
-	// TODO
 	Json::Value root;
 	int cpt = 0;
 

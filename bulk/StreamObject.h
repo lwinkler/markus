@@ -50,8 +50,6 @@ public:
 
 protected:
 	std::vector<Object> & m_objects;
-	// cv::Scalar m_color;
-	bool m_isColorSet;
 
 private:
 	StreamObject& operator=(const StreamObject&);

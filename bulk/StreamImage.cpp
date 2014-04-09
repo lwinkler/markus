@@ -70,7 +70,6 @@ void StreamImage::RenderTo(Mat& x_output) const
 /// @param x_dir Input directory (for images)
 void StreamImage::Serialize(std::ostream& x_out, const string& x_dir) const
 {
-	// string fileName = x_directory + "/" + GetModule().GetName() + "." + GetName() + ".event.txt";
 	// TODO
 	string fileName = x_dir+ "/" + GetModule().GetName() + "." + GetName() + ".image.png";
 	imwrite(fileName, m_image);
