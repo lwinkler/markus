@@ -21,6 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 #include "Object.h"
+#include <jsoncpp/json/writer.h>
 
 using namespace cv;
 using namespace std;
@@ -46,9 +47,17 @@ Object::Object(const string& x_name, const cv::Rect& x_rect) :
 
 Object::~Object(){}
 
-void Object::Serialize(ofstream& out)
+/// Serialize the object to stdout in JSON
+stringstream& Object::Serialize(stringstream& out)
 {
-	out << "object" <<endl; // TODO	
+	Json::Value root;
+	root["name"]  = m_name;
+	root["id"]    = m_id;
+	for(map <std::string, Feature>::const_iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
+		root["features"][it->first] = it->second.value; // TODO What about other measures ?
+
+	out << root;
+	return out;
 }
 
 

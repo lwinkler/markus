@@ -14,6 +14,7 @@ find_package(PythonLibs 2 QUIET)
 
 find_library(LOG4CXX_LIBS log4cxx)
 find_library(TINYXML_LIBS tinyxml)
+find_library(JSONCPP_LIBS jsoncpp)
 
 if("${CURL_LIBRARIES}" STREQUAL "")
 	message(WARNING "Curl library not found on your system. Some modules may not compile.")
@@ -26,6 +27,9 @@ if("${LOG4CXX_LIBS}" STREQUAL "")
 endif()
 if("${TINYXML_LIBS}" STREQUAL "")
 	message(FATAL_ERROR "TinyXML library not found on your system")
+endif()
+if("${JSONCPP_LIBS}" STREQUAL "")
+	message(FATAL_ERROR "JsonCpp library not found on your system")
 endif()
 
 if(Markus_USE_QT5)
@@ -65,7 +69,7 @@ else()
 endif()
 
 
-set(DEPS ${DEPS} ${DEPS} ${TINYXML_LIBS} ${LOG4CXX_LIBS} ${OpenCV_LIBS} ${PYTHON_LIBRARIES} ${CURL_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT}) # double the dependencies to avoid linking error
+set(DEPS ${DEPS} ${DEPS} ${TINYXML_LIBS} ${JSONCPP_LIBS} ${LOG4CXX_LIBS} ${OpenCV_LIBS} ${PYTHON_LIBRARIES} ${CURL_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT}) # double the dependencies to avoid linking error
 if(Markus_USE_QT5)
 	include_directories(${Qt5Widgets_INCLUDE_DIRS} ${Qt5WebKit_INCLUDE_DIRS} ${Qt5WebKitWidgets_INCLUDE_DIRS})
 	set(DEPS ${DEPS} ${Qt5Widgets_LIBRARIES} ${Qt5WebKit_LIBRARIES} ${Qt5WebKitWidgets_LIBRARIES}) 

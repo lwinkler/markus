@@ -56,7 +56,7 @@ class Event
 			return m_object.GetFeature(x_name);
 		}
 		void Notify(const std::string& x_extraInfo = "", bool x_isProcessEvent=false);
-		void Serialize(std::ofstream& x_out);
+		std::stringstream& Serialize(std::stringstream& x_out);
 
 	protected:
 		std::string m_label;

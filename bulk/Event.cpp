@@ -23,6 +23,9 @@
 #include "Event.h"
 #include "Object.h"
 #include "Manager.h"
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
+
 
 using namespace cv;
 using namespace std;
@@ -36,9 +39,22 @@ Event::Event() :
 
 Event::~Event(){}
 
-void Event::Serialize(ofstream& out)
+
+// Serialize event to stdout in JSON
+stringstream& Event::Serialize(stringstream& out)
 {
-	out << "{}" << endl; // TODO
+	Json::Value root;
+	if(!IsRaised())
+	{
+		root["label"]  = m_label; // TODO rename label ?
+		if(m_object.GetName() != "empty")
+		{
+			stringstream ss;
+			root["object"] = m_object.Serialize(ss).str(); // >> root["object"]; // m_object.Serialize2(out); // >> root["object"];
+		}
+	}
+	out << root;
+	return out;
 }
 
 /// Empty the event: must be called on each frame process to avoid raising multiple events
