@@ -81,8 +81,8 @@ class Serializable
 		Serializable(){}
 		virtual ~Serializable(){}
 
-		virtual void Serialize(std::ostream& stream) const = 0;
-		virtual void Deserialize(std::istream& stream) = 0;
+		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const = 0;
+		virtual void Deserialize(std::istream& stream, const std::string& x_dir) = 0;
 };
 
 #endif

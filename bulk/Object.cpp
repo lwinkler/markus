@@ -48,7 +48,9 @@ Object::Object(const string& x_name, const cv::Rect& x_rect) :
 Object::~Object(){}
 
 /// Serialize the object to stdout in JSON
-void Object::Serialize(std::ostream& x_out) const
+/// @param x_out Output stream
+/// @param x_dir Output directory (for images)
+void Object::Serialize(std::ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 	root["name"]  = m_name;
@@ -60,7 +62,9 @@ void Object::Serialize(std::ostream& x_out) const
 }
 
 // Deserialize the object
-void Object::Deserialize(std::istream& x_in)
+/// @param x_in Input stream
+/// @param x_dir Input directory (for images)
+void Object::Deserialize(std::istream& x_in, const string& x_dir)
 {
 	// TODO
 }

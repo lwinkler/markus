@@ -60,12 +60,21 @@ void StreamState::RenderTo(Mat& x_output) const
 	x_output.setTo(Scalar(255 * m_state, 255 * m_state, 255 * m_state));
 }
 
-/// Write the stream content to a directory
-void StreamState::WriteToDirectory(const std::string x_directory) const
+/// Serialize the stream content to a directory
+/// @param x_in Input stream
+/// @param x_dir Input directory (for images)
+void StreamState::Serialize(std::ostream& x_out, const string& x_dir) const
 {
 	ofstream of;
-	string fileName = x_directory + "/" + GetModule().GetName() + "." + GetName() + ".state.txt";
+	string fileName = x_dir+ "/" + GetModule().GetName() + "." + GetName() + ".state.txt";
 	of.open(fileName.c_str());
 	of << (m_state ? "1" : "0") << endl;
 	of.close();
+}
+/// Deserialize the stream from JSON
+/// @param x_in Input stream
+/// @param x_dir Input directory (for images)
+void StreamState::Deserialize(std::istream& x_in, const string& x_dir)
+{
+	// TODO
 }

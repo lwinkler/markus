@@ -77,13 +77,19 @@ void StreamEvent::RenderTo(Mat& x_output) const
 }
 
 /// Write the stream content to a directory
-void StreamEvent::WriteToDirectory(const std::string x_directory) const
+/// @param x_in Input stream
+/// @param x_dir Input directory (for images)
+void StreamEvent::Serialize(std::ostream& x_out, const string& x_dir) const
 {
-	ofstream of;
-	string fileName = x_directory + "/" + GetModule().GetName() + "." + GetName() + ".event.txt";
-	of.open(fileName.c_str());
-	stringstream ss;
-	m_event.Serialize(ss);
-	of << ss.str();
-	of.close();
+	// string fileName = x_directory + "/" + GetModule().GetName() + "." + GetName() + ".event.txt";
+	// TODO
+	m_event.Serialize(x_out, x_dir);
+}
+
+/// Deserialize the event stream from JSON
+/// @param x_in Input stream
+/// @param x_dir Input directory (for images)
+void StreamEvent::Deserialize(std::istream& x_in, const string& x_dir)
+{
+	// TODO
 }

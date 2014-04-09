@@ -82,22 +82,29 @@ void StreamObject::RenderTo(Mat& x_output) const
 }
 
 
-/// Write the stream content to a directory
-void StreamObject::WriteToDirectory(const std::string x_directory) const
+/// Serialize the stream content to a directory
+/// @param x_in Input stream
+/// @param x_dir Input directory (for images)
+void StreamObject::Serialize(std::ostream& x_out, const string& x_dir) const
 {
-	ofstream of;
-	string fileName = x_directory + "/" + GetModule().GetName() + "." + GetName() + ".objects.txt";
-	of.open(fileName.c_str());
+	// TODO
 	Json::Value root;
 	int cpt = 0;
 
 	for(vector<Object>::const_iterator it1 = m_objects.begin() ; it1 != m_objects.end() ; it1++)
 	{
 		stringstream ss;
-		it1->Serialize(ss);
+		it1->Serialize(ss, x_dir);
 		ss >> root["objects"][cpt];
 		cpt++;
 	}
-	of << root;
-	of.close();
+	x_out << root;
+}
+
+/// Deserialize the stream from JSON
+/// @param x_in Input stream
+/// @param x_dir Input directory (for images)
+void StreamObject::Deserialize(std::istream& x_in, const string& x_dir)
+{
+	// TODO
 }

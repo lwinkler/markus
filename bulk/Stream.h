@@ -29,7 +29,7 @@
 
 /// This is the parent class for all streams (input and output of data)
 
-class Stream
+class Stream : public Serializable
 {
 public:
 	Stream(const std::string& x_name, Module& rx_module, const std::string& rx_description);
@@ -42,9 +42,10 @@ public:
 	inline const std::string& GetDescription() const {return m_description;}
 	virtual const std::string GetTypeString() const = 0;
 	virtual void RenderTo(cv::Mat& x_output) const  = 0;
-	virtual void WriteToDirectory(const std::string x_directory) const = 0;
 	virtual void Connect(Stream *x_stream);
 	virtual void ConvertInput() = 0;
+	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const = 0;
+	virtual void Deserialize(std::istream& stream, const std::string& x_dir) = 0;
 	void Export(std::ostream& rx_os, int x_indentation, bool x_isInput);
 	inline void LockModuleForRead(){mr_module.LockForRead();}
 	inline void UnLockModule(){mr_module.Unlock();}

@@ -37,7 +37,8 @@ public:
 	
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat& x_output) const;
-	virtual void WriteToDirectory(const std::string x_directory) const;
+	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
+	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 	inline virtual const std::string GetTypeString()const {return "Image";}
 	const cv::Mat& GetImage() const {return m_image;}
 	void Connect(Stream * x_stream);

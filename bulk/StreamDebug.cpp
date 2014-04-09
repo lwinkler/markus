@@ -54,11 +54,21 @@ void StreamDebug::RenderTo(cv::Mat& x_output) const
 	m_image.copyTo(x_output);
 }
 
-/// Write the stream content to a directory
-void StreamDebug::WriteToDirectory(const std::string x_directory) const
+/// Serialize the stream content to a directory
+/// @param x_in Input stream
+/// @param x_dir Input directory (for images)
+void StreamDebug::Serialize(std::ostream& x_out, const string& x_dir) const
+{
+	// string fileName = x_directory + "/" + GetModule().GetName() + "." + GetName() + ".event.txt";
+	// TODO
+}
+
+/// Deserialize the stream from JSON
+/// @param x_in Input stream
+/// @param x_dir Input directory (for images)
+void StreamDebug::Deserialize(std::istream& x_in, const string& x_dir)
 {
 	// TODO
-	
 }
 
 #endif

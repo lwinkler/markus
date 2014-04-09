@@ -340,23 +340,27 @@ void Module::WriteStateToDirectory(const string& x_directory) const
 	// string dir = OutputDir() + "/dump_" + timeStamp();
 	
 	// Dump inputs
+	string fileName = x_directory + "/" + GetName() + ".module.txt";
+	ofstream of;
+	of.open(fileName.c_str());
 	for(map<int, Stream*>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
 	{
 		if(it->second->IsConnected())
-			it->second->WriteToDirectory(x_directory);
+			it->second->Serialize(of, x_directory);
 	}
 	// Dump outputs
 	for(map<int, Stream*>::const_iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
 	{
 		if(it->second->IsConnected())
-			it->second->WriteToDirectory(x_directory);
+			it->second->Serialize(of, x_directory);
 	}
 	// Dump debugs
 	for(map<int, Stream*>::const_iterator it = m_debugStreams.begin() ; it != m_debugStreams.end() ; it++)
 	{
 		if(it->second->IsConnected())
-			it->second->WriteToDirectory(x_directory);
+			it->second->Serialize(of, x_directory);
 	}
+	of.close();
 }
 
 /// Check that all inputs are ready (they are connected to a working module)

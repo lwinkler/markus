@@ -65,11 +65,23 @@ void StreamImage::RenderTo(Mat& x_output) const
 	m_image.copyTo(x_output);
 }
 
-/// Write the stream content to a directory
-void StreamImage::WriteToDirectory(const std::string x_directory) const
+/// Serialize the stream content to a directory
+/// @param x_in Input stream
+/// @param x_dir Input directory (for images)
+void StreamImage::Serialize(std::ostream& x_out, const string& x_dir) const
 {
-	string fileName = x_directory + "/" + GetModule().GetName() + "." + GetName() + ".image.png";
+	// string fileName = x_directory + "/" + GetModule().GetName() + "." + GetName() + ".event.txt";
+	// TODO
+	string fileName = x_dir+ "/" + GetModule().GetName() + "." + GetName() + ".image.png";
 	imwrite(fileName, m_image);
+}
+
+/// Deserialize the stream from JSON
+/// @param x_in Input stream
+/// @param x_dir Input directory (for images)
+void StreamImage::Deserialize(std::istream& x_in, const string& x_dir)
+{
+	// TODO
 }
 
 void StreamImage::Connect(Stream* x_stream)

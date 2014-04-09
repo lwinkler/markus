@@ -42,8 +42,10 @@ Event::Event() :
 Event::~Event(){}
 
 
-// Serialize event from JSON
-void Event::Serialize(std::ostream& x_out) const
+/// Serialize event from JSON
+/// @param x_out Output stream
+/// @param x_dir Output directory (for images)
+void Event::Serialize(std::ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 	if(IsRaised())
@@ -52,7 +54,7 @@ void Event::Serialize(std::ostream& x_out) const
 		if(m_object.GetName() != "empty")
 		{
 			stringstream ss;
-			m_object.Serialize(ss);
+			m_object.Serialize(ss, x_dir);
 			ss >> root["object"];
 		}
 	}
@@ -60,7 +62,9 @@ void Event::Serialize(std::ostream& x_out) const
 }
 
 /// Deserialize the event from JSON
-void Event::Deserialize(std::istream& x_in)
+/// @param x_in Input stream
+/// @param x_dir Input directory (for images)
+void Event::Deserialize(std::istream& x_in, const string& x_dir)
 {
 	// TODO
 	// Note that a null JSON means that the event was not raised
@@ -115,7 +119,7 @@ void Event::Notify(const string& x_extraInfo, bool x_isProcessEvent)
 		assert(x_extraInfo == "");
 		m_absTimeNotif = getAbsTimeMs();
 		stringstream ss;
-		Serialize(ss);
+		Serialize(ss, ""); // TODO set output dir
 		LOG_WARN(m_logger, "@notif EVENT " << ss.str());
 		/*
 		LOG_WARN(m_logger, "@notif@ EVENT {"
