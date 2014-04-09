@@ -22,8 +22,10 @@
 -------------------------------------------------------------------------------------*/
 
 #include "StreamImage.h"
-#include <iostream>
 #include "util.h"
+#include <iostream>
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
 
 using namespace std;
 using namespace cv;
@@ -70,9 +72,12 @@ void StreamImage::RenderTo(Mat& x_output) const
 /// @param x_dir Input directory (for images)
 void StreamImage::Serialize(std::ostream& x_out, const string& x_dir) const
 {
-	// TODO
-	string fileName = x_dir+ "/" + GetModule().GetName() + "." + GetName() + ".image.png";
+	string fileName = x_dir + "/" + GetModule().GetName() + "." + GetName() + ".png";
 	imwrite(fileName, m_image);
+	Json::Value root;
+	stringstream ss;
+	root["file"] = fileName;
+	x_out << root;
 }
 
 /// Deserialize the stream from JSON

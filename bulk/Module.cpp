@@ -32,6 +32,8 @@
 
 #include "ControllerModule.h"
 #include "ControllerParameters.h"
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
 
 using namespace std;
 
@@ -334,33 +336,53 @@ void Module::PrintStatistics() const
 		m_timerWaiting<<"ms), "<< (m_countProcessedFrames * 1000.0 / (m_timerProcessing + m_timerConvertion + m_timerWaiting))<<" fps");
 }
 
-/// Dump the last inputs and outputs to disk
-void Module::WriteStateToDirectory(const string& x_directory) const
+/// Serialize the stream content to a directory
+/// @param x_in  Input stream
+/// @param x_dir Input directory (for images)
+void Module::Serialize(std::ostream& x_out, const string& x_dir) const
 {
-	// string dir = OutputDir() + "/dump_" + timeStamp();
-	
+	Json::Value root;
+
+	root["id"]                   = m_id;
+	root["name"]                 = m_name;
+	root["pause"]                = m_pause;
+	root["timerConvertion"]      = m_timerConvertion;
+	root["timerProcessing"]      = m_timerProcessing;
+	root["timerWaiting"]         = m_timerWaiting;
+	root["countProcessedFrames"] = m_countProcessedFrames;
+
 	// Dump inputs
-	string fileName = x_directory + "/" + GetName() + ".module.json";
-	ofstream of;
-	of.open(fileName.c_str());
 	for(map<int, Stream*>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
 	{
-		if(it->second->IsConnected())
-			it->second->Serialize(of, x_directory);
+		stringstream ss;
+		it->second->Serialize(ss, x_dir);
+		ss >> root["inputs"][it->first];
 	}
 	// Dump outputs
 	for(map<int, Stream*>::const_iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
 	{
-		if(it->second->IsConnected())
-			it->second->Serialize(of, x_directory);
+		stringstream ss;
+		it->second->Serialize(ss, x_dir);
+		ss >> root["outputs"][it->first];
 	}
+#ifdef MARKUS_DEBUG_STREAMS
 	// Dump debugs
 	for(map<int, Stream*>::const_iterator it = m_debugStreams.begin() ; it != m_debugStreams.end() ; it++)
 	{
-		if(it->second->IsConnected())
-			it->second->Serialize(of, x_directory);
+		stringstream ss;
+		it->second->Serialize(ss, x_dir);
+		ss >> root["debugs"][it->first];
 	}
-	of.close();
+#endif
+	x_out << root;
+}
+
+/// Deserialize the module from JSON
+/// @param x_in  Input stream
+/// @param x_dir Input directory (for images)
+void Module::Deserialize(std::istream& x_in, const string& x_dir)
+{
+	// TODO
 }
 
 /// Check that all inputs are ready (they are connected to a working module)

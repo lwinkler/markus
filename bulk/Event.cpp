@@ -48,9 +48,13 @@ Event::~Event(){}
 void Event::Serialize(std::ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
+	root["raised"] = IsRaised();
+
 	if(IsRaised())
 	{
 		root["label"]  = m_label; // TODO rename label ?
+		root["dateEvent"] = m_absTimeEvent;
+		root["dateNotif"] = m_absTimeNotif;
 		if(m_object.GetName() != "empty")
 		{
 			stringstream ss;

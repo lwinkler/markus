@@ -581,7 +581,13 @@ void Manager::UpdateConfig()
 /// Write all states to disk
 void Manager::WriteStateToDirectory(const std::string& x_directory) const
 {
-	SYSTEM("mkdir -p " + x_directory)
+	SYSTEM("mkdir -p " + x_directory);
 	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
-		(*it)->WriteStateToDirectory(x_directory);
+	{
+		string fileName = x_directory + "/" + (*it)->GetName() + ".json";
+		ofstream of;
+		of.open(fileName.c_str());
+		(*it)->Serialize(of, x_directory);
+		of.close();
+	}
 }

@@ -21,8 +21,10 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "StreamDebug.h"
 #ifdef MARKUS_DEBUG_STREAMS
+#include "StreamDebug.h"
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
 
 using namespace std;
 
@@ -59,8 +61,12 @@ void StreamDebug::RenderTo(cv::Mat& x_output) const
 /// @param x_dir Input directory (for images)
 void StreamDebug::Serialize(std::ostream& x_out, const string& x_dir) const
 {
-	// string fileName = x_directory + "/" + GetModule().GetName() + "." + GetName() + ".event.txt";
-	// TODO
+	string fileName = x_dir + "/" + GetModule().GetName() + "." + GetName() + ".png";
+	imwrite(fileName, m_image);
+	Json::Value root;
+	stringstream ss;
+	root["file"] = fileName;
+	x_out << root;
 }
 
 /// Deserialize the stream from JSON

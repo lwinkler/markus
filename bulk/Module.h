@@ -72,7 +72,7 @@ public:
 	std::string objClass;
 };
 
-class Module : public Configurable, public Controllable
+class Module : public Configurable, public Controllable, public Serializable
 {
 public:
 	Module(const ConfigReader& x_confReader);
@@ -103,7 +103,8 @@ public:
 	
 	inline void AddDependingModule (Module & x_module){m_modulesDepending.push_back(&x_module);}
 	virtual void PrintStatistics() const;
-	void WriteStateToDirectory(const std::string& x_directory) const;
+	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
+	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 	
 	virtual inline bool IsInput() {return false;}
 	void Export(std::ostream& rx_os, int x_indentation);
