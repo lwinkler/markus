@@ -48,7 +48,7 @@ Object::Object(const string& x_name, const cv::Rect& x_rect) :
 Object::~Object(){}
 
 /// Serialize the object to stdout in JSON
-void Object::Serialize(std::ostream& x_out)
+void Object::Serialize(std::ostream& x_out) const
 {
 	Json::Value root;
 	root["name"]  = m_name;

@@ -81,6 +81,7 @@ void LogObjects::ProcessFrame()
 		// outputFile<<it1->GetName()<<it1->GetId()<<endl;
 		for(map<string, Feature>::const_iterator it2 = it1->GetFeatures().begin() ; it2 != it1->GetFeatures().end() ; it2++)
 		{
+			// TODO : use Serialize method
 			const Feature & feat = it2->second;
 			outputFile<<m_currentTimeStamp<<SEP
 				<<it1->GetName()<<it1->GetId()<<SEP

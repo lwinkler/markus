@@ -74,6 +74,7 @@ void StreamImage::WriteToDirectory(const std::string x_directory) const
 
 void StreamImage::Connect(Stream* x_stream)
 {
+	// TODO: Why do we rewrite this function ? 
 	m_connected = x_stream;
 	if(m_connected == NULL)
 		return;
@@ -81,7 +82,7 @@ void StreamImage::Connect(Stream* x_stream)
 	if(tmp == NULL)
 	{
 		m_connected = NULL;
-		throw MkException("Input stram cannot be connected probably because it is not of type StreamImage", LOC);
+		throw MkException("Input stream cannot be connected probably because it is not of type StreamImage", LOC);
 	}
 	m_img_input = &tmp->RefImage();
 }

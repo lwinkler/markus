@@ -56,13 +56,14 @@ class Event : public Serializable
 			return m_object.GetFeature(x_name);
 		}
 		void Notify(const std::string& x_extraInfo = "", bool x_isProcessEvent=false);
-		virtual void Serialize(std::ostream& x_out);
+		virtual void Serialize(std::ostream& x_out) const;
 		virtual void Deserialize(std::istream& x_in);
 
 	protected:
 		std::string m_label;
 		Object m_object;
 		TIME_STAMP m_absTimeEvent; // Abs time of the event (given by current date)
+		TIME_STAMP m_absTimeNotif; // Abs time of the event at notification of parent process
 
 	private:
 		static log4cxx::LoggerPtr m_logger;

@@ -66,7 +66,6 @@ void StreamEvent::ConvertInput()
 }
 
 /// Render : to display the event
-
 void StreamEvent::RenderTo(Mat& x_output) const
 {
 	if(m_event.IsRaised())

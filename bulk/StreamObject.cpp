@@ -23,6 +23,8 @@
 
 #include "StreamObject.h"
 #include "util.h"
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
 
 using namespace std;
 using namespace cv;
@@ -86,8 +88,16 @@ void StreamObject::WriteToDirectory(const std::string x_directory) const
 	ofstream of;
 	string fileName = x_directory + "/" + GetModule().GetName() + "." + GetName() + ".objects.txt";
 	of.open(fileName.c_str());
-	stringstream ss;
-	m_objects.at(0).Serialize(ss); // TODO: Serialize all objects
-	of << ss.str();
+	Json::Value root;
+	int cpt = 0;
+
+	for(vector<Object>::const_iterator it1 = m_objects.begin() ; it1 != m_objects.end() ; it1++)
+	{
+		stringstream ss;
+		it1->Serialize(ss);
+		ss >> root["objects"][cpt];
+		cpt++;
+	}
+	of << root;
 	of.close();
 }

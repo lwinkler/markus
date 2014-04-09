@@ -35,13 +35,15 @@ log4cxx::LoggerPtr Event::m_logger(log4cxx::Logger::getLogger("Event"));
 Event::Event() :
 	m_object("empty")
 {
+	m_absTimeEvent = 0;
+	m_absTimeNotif = 0;
 }
 
 Event::~Event(){}
 
 
 // Serialize event from JSON
-void Event::Serialize(std::ostream& x_out)
+void Event::Serialize(std::ostream& x_out) const
 {
 	Json::Value root;
 	if(IsRaised())
@@ -110,6 +112,12 @@ void Event::Notify(const string& x_extraInfo, bool x_isProcessEvent)
 	}
 	else
 	{
+		assert(x_extraInfo == "");
+		m_absTimeNotif = getAbsTimeMs();
+		stringstream ss;
+		Serialize(ss);
+		LOG_WARN(m_logger, "@notif EVENT " << ss.str());
+		/*
 		LOG_WARN(m_logger, "@notif@ EVENT {"
 				<< jsonify("label", GetLabel()) <<", "
 				<< jsonify("dateEvent",  m_absTimeEvent == 0 ? getAbsTimeMs() : m_absTimeEvent) <<", "
@@ -117,6 +125,7 @@ void Event::Notify(const string& x_extraInfo, bool x_isProcessEvent)
 				<< jsonify("validity", 1.0) // TODO: add a formatter for floats
 				<< extra.str()
 				<< "}");
+		*/
 	}
 
 }

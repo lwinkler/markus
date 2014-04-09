@@ -61,7 +61,7 @@ class Object : public Serializable
 		void SetFeatures(const std::map<std::string, Feature>& x_feats){m_feats = x_feats;}
 		inline cv::Rect Rect() const {return cv::Rect(posX - width / 2, posY - height / 2, width, height);}
 		void RenderTo(cv::Mat& x_output, const cv::Scalar& x_color) const;
-		virtual void Serialize(std::ostream& x_out);
+		virtual void Serialize(std::ostream& x_out) const;
 		virtual void Deserialize(std::istream& x_in);
 
 	private:
