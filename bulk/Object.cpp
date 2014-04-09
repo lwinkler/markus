@@ -48,7 +48,7 @@ Object::Object(const string& x_name, const cv::Rect& x_rect) :
 Object::~Object(){}
 
 /// Serialize the object to stdout in JSON
-stringstream& Object::Serialize(stringstream& out)
+void Object::Serialize(std::ostream& x_out)
 {
 	Json::Value root;
 	root["name"]  = m_name;
@@ -56,8 +56,13 @@ stringstream& Object::Serialize(stringstream& out)
 	for(map <std::string, Feature>::const_iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
 		root["features"][it->first] = it->second.value; // TODO What about other measures ?
 
-	out << root;
-	return out;
+	x_out << root;
+}
+
+// Deserialize the object
+void Object::Deserialize(std::istream& x_in)
+{
+	// TODO
 }
 
 

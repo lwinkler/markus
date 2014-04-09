@@ -40,21 +40,28 @@ Event::Event() :
 Event::~Event(){}
 
 
-// Serialize event to stdout in JSON
-stringstream& Event::Serialize(stringstream& out)
+// Serialize event from JSON
+void Event::Serialize(std::ostream& x_out)
 {
 	Json::Value root;
-	if(!IsRaised())
+	if(IsRaised())
 	{
 		root["label"]  = m_label; // TODO rename label ?
 		if(m_object.GetName() != "empty")
 		{
 			stringstream ss;
-			root["object"] = m_object.Serialize(ss).str(); // >> root["object"]; // m_object.Serialize2(out); // >> root["object"];
+			m_object.Serialize(ss);
+			ss >> root["object"];
 		}
 	}
-	out << root;
-	return out;
+	x_out << root;
+}
+
+/// Deserialize the event from JSON
+void Event::Deserialize(std::istream& x_in)
+{
+	// TODO
+	// Note that a null JSON means that the event was not raised
 }
 
 /// Empty the event: must be called on each frame process to avoid raising multiple events

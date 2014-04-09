@@ -84,6 +84,7 @@ void StreamEvent::WriteToDirectory(const std::string x_directory) const
 	string fileName = x_directory + "/" + GetModule().GetName() + "." + GetName() + ".event.txt";
 	of.open(fileName.c_str());
 	stringstream ss;
-	of << m_event.Serialize(ss).str();
+	m_event.Serialize(ss);
+	of << ss.str();
 	of.close();
 }

@@ -75,7 +75,10 @@ void LogEvent::ProcessFrame()
 		// Log the change in event
 		WriteEvent();
 		// LOG_EVENT(m_logger, m_event.GetLabel()); 
-		m_event.Notify("");
+		// m_event.Notify(""); // TODO: re-enable or clean this
+		stringstream ss;
+		m_event.Serialize(ss);
+		LOG_WARN(m_logger, "@notif@ EVENT AAA " << ss.str());
 		if(m_saveImage)
 			SaveImage();
 		m_subId++;

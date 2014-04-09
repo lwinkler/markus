@@ -87,6 +87,7 @@ void StreamObject::WriteToDirectory(const std::string x_directory) const
 	string fileName = x_directory + "/" + GetModule().GetName() + "." + GetName() + ".objects.txt";
 	of.open(fileName.c_str());
 	stringstream ss;
-	of << m_objects.at(0).Serialize(ss).str(); // TODO: Serialize all objects
+	m_objects.at(0).Serialize(ss); // TODO: Serialize all objects
+	of << ss.str();
 	of.close();
 }

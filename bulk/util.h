@@ -73,4 +73,16 @@ std::string jsonify(const std::string& x_name, TIME_STAMP x_value);
 void createEmtpyConfigFile(const std::string& x_fileName);
 
 
+/// Class for all serializable objects
+
+class Serializable
+{
+	public:
+		Serializable(){}
+		virtual ~Serializable(){}
+
+		virtual void Serialize(std::ostream& stream) = 0;
+		virtual void Deserialize(std::istream& stream) = 0;
+};
+
 #endif
