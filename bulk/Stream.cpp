@@ -23,6 +23,8 @@
 
 #include "Stream.h"
 #include "Module.h"
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
 
 using namespace std;
 
@@ -65,3 +67,28 @@ void Stream::Connect(Stream* x_stream)
 	m_connected = x_stream;
 }
 
+/// Serialize the stream content to a directory
+/// @param x_in Input stream
+/// @param x_dir Input directory (for images)
+void Stream::Serialize(std::ostream& x_out, const string& x_dir) const
+{
+	Json::Value root;
+	root["name"]        = m_name;
+	root["id"]          = m_id;
+	root["type"]        = GetTypeString();
+	root["width"]       = m_width;
+	root["height"]      = m_height;
+	root["description"] = m_description;
+	root["timeStamp"]   = m_timeStamp;
+	root["connected"]   = IsReady();
+	root["ready"]       = m_isReady;
+	x_out << root;
+}
+
+/// Deserialize the stream from JSON
+/// @param x_in Input stream
+/// @param x_dir Input directory (for images)
+void Stream::Deserialize(std::istream& x_in, const string& x_dir)
+{
+	// TODO
+}

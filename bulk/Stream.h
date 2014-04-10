@@ -44,8 +44,8 @@ public:
 	virtual void RenderTo(cv::Mat& x_output) const  = 0;
 	virtual void Connect(Stream *x_stream);
 	virtual void ConvertInput() = 0;
-	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const = 0;
-	virtual void Deserialize(std::istream& stream, const std::string& x_dir) = 0;
+	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
+	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 	void Export(std::ostream& rx_os, int x_indentation, bool x_isInput);
 	inline void LockModuleForRead(){mr_module.LockForRead();}
 	inline void UnLockModule(){mr_module.Unlock();}
@@ -67,7 +67,7 @@ public:
 			throw MkException("Stream " + GetName() + " is not connected", LOC);
 		return m_connected->GetTimeStamp();
 	}
-	inline bool IsReady(){return m_isReady;}
+	inline bool IsReady() const {return m_isReady;}
 	inline void SetAsReady(){m_isReady = true;}
 
 protected:

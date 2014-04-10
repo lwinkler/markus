@@ -232,7 +232,7 @@ ParameterImageType::ParameterImageType(const std::string& x_name, int x_default,
 	ParameterEnum(x_name, x_default, xp_value, x_description)
 {
 	// Init static type vector once
-	if(ParameterImageType::m_map_enum.size() == 0)
+	if(ParameterImageType::m_map_enum.size() == 0) // TODO : Should be statically initialized
 	{
 		m_map_enum["CV_8UC1"] = CV_8UC1;
 		m_map_enum["CV_8UC2"] = CV_8UC2;

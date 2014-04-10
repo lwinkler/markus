@@ -24,6 +24,8 @@
 #include "StreamEvent.h"
 #include "util.h"
 #include "Manager.h"
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
 
 using namespace std;
 using namespace cv;
@@ -81,7 +83,14 @@ void StreamEvent::RenderTo(Mat& x_output) const
 /// @param x_dir Input directory (for images)
 void StreamEvent::Serialize(std::ostream& x_out, const string& x_dir) const
 {
-	m_event.Serialize(x_out, x_dir);
+	Json::Value root;
+	stringstream ss;
+	Stream::Serialize(ss, x_dir);
+	ss >> root;
+	ss.clear();
+	m_event.Serialize(ss, x_dir);
+	ss >> root["event"];
+	x_out << root;
 }
 
 /// Deserialize the event stream from JSON

@@ -57,12 +57,7 @@ public:
 	void Reset(bool x_resetInputs = true);
 	bool Process();
 	void SendCommand(const std::string& x_command, std::string x_value);
-	// const std::vector<Input*> & GetInputList()  const {return m_inputs; };
 	const std::vector<Module*>& GetModules() const {return m_modules; }
-
-	//std::vector<Input*> & GetInputListVar()  {return m_inputs; };
-	//std::vector<Module*>& RefModules() {return m_modules; }
-	
 	Module& RefModuleById(int x_id) const;
 	Module& RefModuleByName(const std::string& x_name) const;
 	
@@ -77,12 +72,6 @@ public:
 	static std::string Version();
 	static void NotifyMonitoring(const std::string& x_label, const std::string& x_extra = "");
 	static const std::string& OutputDir(const std::string& x_outputDir = "", const std::string& x_configFile = "");
-	/*static inline void SetConfigFile(const std::string& x_configFile)
-	{
-		assert(m_configFile.size() == 0);
-		m_configFile = x_configFile;
-	}*/
-	// static inline const std::string& GetConfigFile(){return m_configFile;}
 	static inline void ListModules(std::vector<std::string>& xr_types) {m_factory.ListModules(xr_types);}
 	void WriteStateToDirectory(const std::string& x_directory) const;
 	void UpdateConfig();
@@ -99,14 +88,11 @@ protected:
 	bool m_hasRecovered; // Flag to test if all modules have recovered from the last exception, only working if centralized
 	std::string m_jsonLastException; // Field to store the last exception
 
-	//clock_t m_timeLastProcess;
-	
 	std::vector<Module *> m_modules;
 	std::vector<Input  *> m_inputs;
 
 	long long m_frameCount;
 	static log4cxx::LoggerPtr m_logger;
-	// static std::string m_configFile;
 	static std::string m_outputDir;
 	static FactoryModules m_factory;
 

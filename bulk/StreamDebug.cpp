@@ -61,11 +61,16 @@ void StreamDebug::RenderTo(cv::Mat& x_output) const
 /// @param x_dir Input directory (for images)
 void StreamDebug::Serialize(std::ostream& x_out, const string& x_dir) const
 {
-	string fileName = x_dir + "/" + GetModule().GetName() + "." + GetName() + ".png";
-	imwrite(fileName, m_image);
 	Json::Value root;
 	stringstream ss;
-	root["file"] = fileName;
+	Stream::Serialize(ss, x_dir);
+	ss >> root;
+	string fileName = x_dir + "/" + GetModule().GetName() + "." + GetName() + ".png";
+	imwrite(fileName, m_image);
+	root["image"]["file"]   = fileName;
+	root["image"]["type"]   = m_image.type();
+	root["image"]["width"]  = m_image.cols;
+	root["image"]["height"] = m_image.rows;
 	x_out << root;
 }
 

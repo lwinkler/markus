@@ -86,11 +86,16 @@ void StreamObject::RenderTo(Mat& x_output) const
 void StreamObject::Serialize(std::ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
+	stringstream ss;
+	Stream::Serialize(ss, x_dir);
+	ss >> root;
 	int cpt = 0;
 
+	if(m_objects.size() == 0)
+		root["objects"] = Json::Value(Json::arrayValue); // Empty array
 	for(vector<Object>::const_iterator it1 = m_objects.begin() ; it1 != m_objects.end() ; it1++)
 	{
-		stringstream ss;
+		ss.clear();
 		it1->Serialize(ss, x_dir);
 		ss >> root["objects"][cpt];
 		cpt++;
