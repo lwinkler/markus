@@ -68,7 +68,7 @@ void StreamDebug::Serialize(std::ostream& x_out, const string& x_dir) const
 	string fileName = x_dir + "/" + GetModule().GetName() + "." + GetName() + ".png";
 	imwrite(fileName, m_image);
 	root["image"]["file"]   = fileName;
-	root["image"]["type"]   = m_image.type();
+	root["image"]["type"]   = ParameterImageType::ReverseEnum.at(m_image.type());
 	root["image"]["width"]  = m_image.cols;
 	root["image"]["height"] = m_image.rows;
 	x_out << root;

@@ -427,7 +427,6 @@ void Module::SetAsReady()
 /// Add an input stream
 void Module::AddInputStream(int x_id, Stream* xp_stream)
 {
-	// m_inputStreams.push_back(xp_stream);
 	xp_stream->SetId(x_id);
 	if(m_inputStreams.find(x_id) != m_inputStreams.end())
 		throw MkException("Two streams with same id", LOC);

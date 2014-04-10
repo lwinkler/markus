@@ -254,12 +254,12 @@ public:
 	void SetDefault(const std::string& rx_value);
 	inline int GetDefault() const {return m_default;}
 	inline int GetValue() const{return *mp_value;}
-	inline std::string GetValueString() const {return Int2Str(*mp_value);}
-	inline std::string GetDefaultString() const{return Int2Str(m_default);}
+	inline std::string GetValueString() const {return GetReverseEnum().at(*mp_value);}
+	inline std::string GetDefaultString() const{return GetReverseEnum().at(m_default);}
 	inline std::string GetRange() const
 	{
 		std::stringstream ss; 
-		for(std::map<std::string,int>::const_iterator it = RefEnum().begin() ; it != RefEnum().end() ; it++)
+		for(std::map<std::string,int>::const_iterator it = GetEnum().begin() ; it != GetEnum().end() ; it++)
 			ss<<it->first<<",";
 		return ss.str();
 	}
@@ -274,26 +274,9 @@ public:
 	}
 	inline const ParameterType GetType() const {return PARAM_IMAGE_TYPE;}
 	virtual const std::string GetTypeString() const = 0;
-	
-	virtual void Export(std::ostream& rx_os, int x_indentation) = 0;
-
-	virtual int Str2Int(const std::string& x) const
-	{
-		std::map<std::string, int>::const_iterator found = RefEnum().find(x);
-		if(found != RefEnum().end())
-			return found->second;
-		else return -1;
-	}
-	virtual const std::string Int2Str(int x) const
-	{
-		static const std::string unknown = "(unknown enum value)";
-		for(std::map<std::string, int>::const_iterator it = RefEnum().begin() ; it != RefEnum().end() ; it++)
-			if(it->second == x)
-				return(it->first);
-		return unknown;
-	}
-	
-	virtual const std::map<std::string,int>& RefEnum() const = 0;
+	virtual void Export(std::ostream& rx_os, int x_indentation);
+	virtual const std::map<std::string, int>& GetEnum() const = 0;
+	virtual const std::map<int, std::string>& GetReverseEnum() const = 0;
 	
 protected:
 
@@ -306,16 +289,18 @@ class ParameterImageType : public ParameterEnum
 public:
 	ParameterImageType(const std::string& x_name, int x_default, int * xp_value, const std::string x_description);
 	~ParameterImageType(){}
-	void Export(std::ostream& rx_os, int x_indentation);
+	// void Export(std::ostream& rx_os, int x_indentation);
 
 	// Conversion methods
 	inline const std::string GetTypeString() const {return "imageType";}
-	//virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN) = 0;
-	//virtual void SetDefault(const std::string& rx_value);
-	const std::map<std::string,int> & RefEnum() const {return m_map_enum;}
+	const std::map<std::string, int> & GetEnum() const {return Enum;}
+	const std::map<int, std::string> & GetReverseEnum() const {return ReverseEnum;}
+	static std::map<std::string, int> CreateMap();
+	static std::map<int, std::string> CreateReverseMap();
 
-private:
-	static std::map<std::string,int>  m_map_enum;
+	// static attributes
+	const static std::map<std::string, int> Enum;
+	const static std::map<int, std::string> ReverseEnum;
 };
 
 /// Represents a set of parameters for a configurable objects

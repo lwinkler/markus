@@ -324,7 +324,7 @@ QWidget* ControllerEnum::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
 	comboBox = new QComboBox;
-	for(std::map<std::string, int>::const_iterator it = m_param2.RefEnum().begin() ; it != m_param2.RefEnum().end() ; it++)
+	for(std::map<std::string, int>::const_iterator it = m_param2.GetEnum().begin() ; it != m_param2.GetEnum().end() ; it++)
 	{
 		comboBox->addItem(it->first.c_str(), it->second);
 	}
@@ -348,7 +348,7 @@ void ControllerEnum::SetWidgetValue(const std::string& x_value)
 std::string ControllerEnum::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return m_param2.Int2Str(comboBox->itemData(comboBox->currentIndex()).toInt());
+	return m_param2.GetReverseEnum().at(comboBox->itemData(comboBox->currentIndex()).toInt());
 #else
 	assert(false);
 	return "";
