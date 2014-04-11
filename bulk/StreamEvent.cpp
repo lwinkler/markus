@@ -75,7 +75,7 @@ void StreamEvent::RenderTo(Mat& x_output) const
 		x_output.setTo(Scalar(255, 255, 255));
 		m_event.RefObject().RenderTo(x_output, Scalar(255, 0, 0));
 	}
-	else x_output.setTo(0);
+	// else x_output.setTo(0);
 }
 
 /// Write the stream content to a directory

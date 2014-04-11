@@ -34,22 +34,22 @@
 class Feature
 {
 	public:
-		Feature(double value);
+		Feature(float value);
 		Feature(const Feature&);
 		Feature& operator = (const Feature&);
 		~Feature();
 		
-		void Update(double x_currentValue, double x_alpha);
+		void Update(float x_currentValue, double x_alpha);
 
 		
 	public:
 		// The different values of the feature
-		double value;
-		double mean;
-		double sqVariance;
-		double initial;
-		double min;
-		double max;
+		float value;
+		float mean;
+		float sqVariance;
+		float initial;
+		float min;
+		float max;
 		int    nbSamples;
 };
 

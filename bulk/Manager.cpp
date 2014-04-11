@@ -590,4 +590,5 @@ void Manager::WriteStateToDirectory(const std::string& x_directory) const
 		(*it)->Serialize(of, x_directory);
 		of.close();
 	}
+	LOG_INFO(m_logger, "Written state of the manager and all modules to " << x_directory);
 }

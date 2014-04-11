@@ -26,7 +26,7 @@
 
 using namespace std;
 
-Feature::Feature(double x_value)
+Feature::Feature(float x_value)
 {
 	value      = x_value;
 	sqVariance = 0.01;
@@ -68,7 +68,7 @@ Feature::~Feature(){}
  *
  * This function can be used to keep a feature up to date in a dynamic way (similar to a running average)
  */
-void Feature::Update(double x_currentValue, double x_alpha)
+void Feature::Update(float x_currentValue, double x_alpha)
 {
 	value      = x_currentValue;
 	mean       = mean * (1.0 - x_alpha) + x_currentValue * x_alpha;
