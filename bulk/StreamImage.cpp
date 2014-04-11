@@ -77,7 +77,7 @@ void StreamImage::Serialize(std::ostream& x_out, const string& x_dir) const
 	Stream::Serialize(ss, x_dir);
 	ss >> root;
 	ss.clear();
-	string fileName = x_dir + "/" + GetModule().GetName() + "." + GetName() + ".png";
+	string fileName = x_dir + "/" + GetModule().GetName() + "." + GetName() + ".jpg";
 	imwrite(fileName, m_image);
 	root["image"]["file"]   = fileName;
 	root["image"]["type"]   = ParameterImageType::ReverseEnum.at(m_image.type());
