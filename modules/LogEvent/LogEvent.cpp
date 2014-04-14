@@ -72,12 +72,16 @@ void LogEvent::ProcessFrame()
 {
 	if(m_event.IsRaised())
 	{
+		vector<string> imageFiles;
 		// Log the change in event
 		WriteEvent();
 		// LOG_EVENT(m_logger, m_event.GetLabel()); 
-		m_event.Notify("");
 		if(m_saveImage)
-			SaveImage();
+			SaveImage(imageFiles);
+		// TODO why does this compile ?? m_event.Notify("false");
+		for(vector<string>::const_iterator it = imageFiles.begin() ; it != imageFiles.end() ; it++)
+			m_event.AddExternalInfo("image", *it);
+		m_event.Notify();
 		m_subId++;
 	}
 }
@@ -116,7 +120,7 @@ void LogEvent::WriteEvent()
 }
 
 /// Save related images
-void LogEvent::SaveImage()
+void LogEvent::SaveImage(vector<string>& x_imageFiles)
 {
 	const Object& obj(m_event.GetObject());
 	if(obj.width > 0 && obj.height > 0)
@@ -125,12 +129,13 @@ void LogEvent::SaveImage()
 		ss1 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetLabel() << "_" << obj.GetName()<< obj.GetId() << "." << m_param.extension;
 		// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
 		imwrite(ss1.str(), (m_input)(obj.Rect()));
-		//ss1.flush();
+		x_imageFiles.push_back(ss1.str());
 	}
 
 	std::stringstream ss2;
 	ss2 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetLabel() << "_global." << m_param.extension;
 	imwrite(ss2.str(), m_input);
+	x_imageFiles.push_back(ss2.str());
 }
 
 /// Overwrite this function to process only the input for frames with an event

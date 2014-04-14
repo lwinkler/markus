@@ -26,6 +26,8 @@
 
 #include "util.h"
 #include "Object.h"
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
 
 
 /*! \class Event
@@ -55,15 +57,20 @@ class Event : public Serializable
 		{
 			return m_object.GetFeature(x_name);
 		}
-		void Notify(const std::string& x_extraInfo = "", bool x_isProcessEvent=false);
+		void Notify(bool x_isProcessEvent=false);
 		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 		virtual void Deserialize(std::istream& stream, const std::string& x_dir);
+		inline void AddExternalInfo(const std::string& x_label, const std::string& x_value){m_externalInfo[x_label] = x_value;}
+		inline void AddExternalInfo(const std::string& x_label, double x_value){m_externalInfo[x_label] = x_value;}
+		inline void AddExternalInfo(const std::string& x_label, int x_value){m_externalInfo[x_label] = x_value;}
+		inline void AddExternalInfo(const std::string& x_label, unsigned long long x_value){m_externalInfo[x_label] = x_value;}
 
 	protected:
 		std::string m_label;
 		Object m_object;
 		TIME_STAMP m_absTimeEvent; // Abs time of the event (given by current date)
 		TIME_STAMP m_absTimeNotif; // Abs time of the event at notification of parent process
+		Json::Value m_externalInfo;
 
 	private:
 		static log4cxx::LoggerPtr m_logger;

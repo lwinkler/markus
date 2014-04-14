@@ -230,7 +230,10 @@ int main(int argc, char** argv)
 	log4cxx::xml::DOMConfigurator::configure(logConfigFile);
 
 	// Notify the parent process (for monitoring purposes)
-	Manager::NotifyMonitoring("started", jsonify("pid", getpid()));
+	Event ev;
+	ev.AddExternalInfo("pid", getpid());
+	ev.Raise("started");
+	ev.Notify(true);
 
 	try
 	{
@@ -294,7 +297,9 @@ int main(int argc, char** argv)
 				// nothing 
 			}
 
-			Manager::NotifyMonitoring("stopped");
+			Event ev;
+			ev.Raise("stopped");
+			ev.Notify(true);
 			returnValue = MK_EXCEPTION_NORMAL - MK_EXCEPTION_FIRST;
 		}
 		else

@@ -69,7 +69,7 @@ private:
 protected:
 	virtual void ProcessFrame();
 	void WriteEvent();
-	void SaveImage();
+	void SaveImage(std::vector<std::string>& x_imageFiles);
 	bool IsInputProcessed() const;
 
 	// input

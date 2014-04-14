@@ -23,8 +23,6 @@
 #include "Event.h"
 #include "Object.h"
 #include "Manager.h"
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
 
 
 using namespace cv;
@@ -94,7 +92,7 @@ void Event::Raise(const string x_label, const Object& x_object, TIME_STAMP x_abs
 /// Raise an event without features
 void Event::Raise(const string x_label, TIME_STAMP x_absTimeEvent)
 {
-	m_absTimeEvent = x_absTimeEvent;
+	m_absTimeEvent = x_absTimeEvent == 0 ? getAbsTimeMs() : x_absTimeEvent;
 	if(IsRaised())
 		LOG_WARN(m_logger, "The same event is raised several times. Older events are overriden");
 	m_label = x_label;
@@ -104,36 +102,27 @@ void Event::Raise(const string x_label, TIME_STAMP x_absTimeEvent)
 
 
 // Log an event and notify the parent process
-void Event::Notify(const string& x_extraInfo, bool x_isProcessEvent)
+void Event::Notify(bool x_isProcessEvent)
 {
-	stringstream extra;
-	if(x_extraInfo != "")
-		extra<<", \"attrs\": {"<<x_extraInfo<<"}";
+	m_absTimeNotif = getAbsTimeMs();
+	Json::Value root;
+
+	stringstream ss;
+	Serialize(ss, "");
+	ss >> root;
 
 	if(x_isProcessEvent)
 	{
-		LOG_WARN(m_logger, "@notif@ PROCESS {"
-				<< jsonify("label", GetLabel()) <<", "
-				<< jsonify("dateNotif", getAbsTimeMs())
-				<< extra.str()
-				<< "}");
+		// This is only a process event. Only used to notify the parent process
+		// root["label"]     = GetLabel();
+		// root["dateNotif"] = getAbsTimeMs();
+		// if(x_extraInfo != "")
+			// root["external"] = x_extraInfo;
+		LOG_WARN(m_logger, "@notif@ PROCESS " << root);
 	}
 	else
 	{
-		assert(x_extraInfo == "");
-		m_absTimeNotif = getAbsTimeMs();
-		stringstream ss;
-		Serialize(ss, ""); // TODO set output dir
-		LOG_WARN(m_logger, "@notif EVENT " << ss.str());
-		/*
-		LOG_WARN(m_logger, "@notif@ EVENT {"
-				<< jsonify("label", GetLabel()) <<", "
-				<< jsonify("dateEvent",  m_absTimeEvent == 0 ? getAbsTimeMs() : m_absTimeEvent) <<", "
-				<< jsonify("dateNotif", getAbsTimeMs()) <<", "
-				<< jsonify("validity", 1.0) // TODO: add a formatter for floats
-				<< extra.str()
-				<< "}");
-		*/
+		LOG_WARN(m_logger, "@notif EVENT " << root);
 	}
 
 }

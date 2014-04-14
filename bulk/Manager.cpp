@@ -45,7 +45,7 @@ using namespace std;
 #define STORE_EXCEPTION_AND_NOTIFY(stream) {\
 	if(m_hasRecovered){\
 		stringstream ss; ss<<stream; m_jsonLastException = ss.str();\
-		NotifyMonitoring("exception", m_jsonLastException);\
+		NotifyMonitoring("exception" /*, TODO: Fix this m_jsonLastException*/);\
 	}\
 	recover = m_hasRecovered = false;\
 }
@@ -241,13 +241,19 @@ bool Manager::Process()
 		}
 		catch(EndOfStreamException& e)
 		{
-			STORE_EXCEPTION_AND_NOTIFY(
-				jsonify("type", "EndOfStream")       << ", " <<
-				jsonify("module", (*it)->GetName())  << ", " <<
-				jsonify("code", e.GetCode())         << ", " <<
-				jsonify("dateNotif", getAbsTimeMs()) << ", " <<
-				jsonify("description", e.what())
-			);
+			if(m_hasRecovered)
+			{
+				// TODO stringstream ss; ss<<stream; m_jsonLastException = ss.str();
+				Event ev;
+				ev.AddExternalInfo("type", "EndOfStream");
+				ev.AddExternalInfo("module", (*it)->GetName());
+				ev.AddExternalInfo("code", e.GetCode());
+				ev.AddExternalInfo("dateNotif", getAbsTimeMs());
+				ev.AddExternalInfo("description", e.what());
+				ev.Raise("exception");
+				ev.Notify(true);
+			}
+			recover = m_hasRecovered = false;\
 				
 			LOG_INFO(m_logger, (*it)->GetName() << ": Exception raised (EndOfStream) : " << e.what());
 
@@ -261,6 +267,7 @@ bool Manager::Process()
 		}
 		catch(MkException& e)
 		{
+			/*
 			STORE_EXCEPTION_AND_NOTIFY(
 				jsonify("type", "MkException")       << ", " <<
 				jsonify("module", (*it)->GetName())  << ", " <<
@@ -268,45 +275,55 @@ bool Manager::Process()
 				jsonify("dateNotif", getAbsTimeMs()) << ", " <<
 				jsonify("description", e.what())
 			);
+			*/
 			LOG_ERROR(m_logger, "(Markus exception " << e.GetCode() << "): " << e.what());
 		}
 		catch(std::exception& e)
 		{
+			/* TODO restore this
 			STORE_EXCEPTION_AND_NOTIFY(
 				jsonify("type", "std::exception") << ", " <<
 				jsonify("module", (*it)->GetName()) << ", " <<
 				jsonify("dateNotif", getAbsTimeMs()) << ", " <<
 				jsonify("description", e.what())
 			);
+			*/
+
 			LOG_ERROR(m_logger, (*it)->GetName() << ": Exception raised (std::exception): " << e.what());
 		}
 		catch(std::string str)
 		{
+			/*
 			STORE_EXCEPTION_AND_NOTIFY(
 				jsonify("type", "string") << ", " <<
 				jsonify("module", (*it)->GetName()) << ", " <<
 				jsonify("dateNotif", getAbsTimeMs()) << ", " <<
 				jsonify("description", str)
 			);
+			*/
 			LOG_ERROR(m_logger, (*it)->GetName() << ": Exception raised (string): " << str);
 		}
 		catch(const char* str)
 		{
+			/*
 			STORE_EXCEPTION_AND_NOTIFY(
 				jsonify("type", "const char*") << ", " <<
 				jsonify("module", (*it)->GetName()) << ", " <<
 				jsonify("dateNotif", getAbsTimeMs()) << ", " <<
 				jsonify("description", str)
 			);
+			*/
 			LOG_ERROR(m_logger, (*it)->GetName() << ": Exception raised (const char*): " << str);
 		}
 		catch(...)
 		{
+			/*
 			STORE_EXCEPTION_AND_NOTIFY(
 				jsonify("type", "Unknown")           << ", " <<
 				jsonify("module", (*it)->GetName())  << ", " <<
 				jsonify("dateNotif", getAbsTimeMs())
 			);
+			*/
 			LOG_ERROR(m_logger, (*it)->GetName() << ": Unknown exception raised");
 		}
 	}
@@ -491,13 +508,21 @@ string Manager::Version()
 }
 
 /// Notify the parent process that something happened
-void Manager::NotifyMonitoring(const string& x_label, const string& x_extra)
+/*
+void Manager::NotifyMonitoring(const string& x_label)
 {
 	/// Raise an event. We simply use this to notify a parent process
 	Event ev;
+	if(x_label == "started")
+	{
+		stringstream ss;
+		ss << getpid();
+		ev.AddExternalInfo("pid", ss.str());
+	}
 	ev.Raise(x_label);
-		ev.Notify(x_extra, true);
+	ev.Notify(x_extra, true);
 }
+*/
 
 void Manager::Status() const
 {
@@ -506,7 +531,11 @@ void Manager::Status() const
 
 	if(m_jsonLastException != "")
 		ss<<", "<<m_jsonLastException; // TODO: recovery date
-	NotifyMonitoring("status", ss.str());
+	// NotifyMonitoring("status", ss.str());
+	Event evt;
+	evt.Raise("status");
+	evt.AddExternalInfo("exception", m_jsonLastException);
+	evt.Notify(true);
 }
 
 /// Returns a directory that will contain all outputs
