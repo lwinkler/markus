@@ -23,10 +23,10 @@
 
 #include "util.h"
 #include "Manager.h"
-#include <iostream>
-
-#include <opencv2/highgui/highgui.hpp>
 #include "MkException.h"
+#include <iostream>
+#include <fstream>
+#include <opencv2/highgui/highgui.hpp>
 
 using namespace std;
 using namespace cv;

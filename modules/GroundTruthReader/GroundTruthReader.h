@@ -25,6 +25,7 @@
 #define INPUT_GROUNDTRUTH_READER_H
 
 #include "Module.h"
+#include <fstream>
 
 
 class GroundTruthReaderParameterStructure : public ModuleParameterStructure

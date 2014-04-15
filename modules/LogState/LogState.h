@@ -27,6 +27,7 @@
 #include "Module.h"
 #include "Parameter.h"
 #include "Timer.h"
+#include <fstream>
 
 
 /*! \class LogState

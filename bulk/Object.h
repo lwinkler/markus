@@ -24,10 +24,8 @@
 #ifndef MKOBJECT_H
 #define MKOBJECT_H
 
-// #include <list>
-// #include <vector>
-
-#include "util.h"
+#include <opencv2/opencv.hpp>
+#include "define.h"
 #include "Feature.h"
 #include "MkException.h"
 

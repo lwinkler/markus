@@ -23,6 +23,7 @@
 
 #include "Mask.h"
 #include "StreamImage.h"
+#include <opencv2/opencv.hpp>
 
 // for debug
 // #include "util.h"

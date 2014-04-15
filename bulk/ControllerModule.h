@@ -25,8 +25,8 @@
 #define CONTROLLER_MODULE_H
 
 #include "Controller.h"
-class ControllerModule;
 
+class ControllerModule;
 class Module;
 
 /// Control class for an event classifier

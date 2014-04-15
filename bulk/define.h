@@ -21,27 +21,33 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef UTIL_H
-#define UTIL_H
+#ifndef DEFINE_H
+#define DEFINE_H
 
-#include <opencv2/opencv.hpp>
-#include "define.h"
+/// this file contains some usefull functions and methods
+
+#define POW2(x) (x) * (x)
+#define DIST(x, y) sqrt((x) * (x) + (y) * (y))
+#define DIFF_REL(f) ((f).value - (f).mean) * ((f).value - (f).mean) / (f).sqVariance
+#define CLEAN_DELETE(x) if((x) != NULL){delete((x));(x) = NULL;}
 
 
-/// this file contains some usefull functions and methods. To be included in .cpp files
-void adjust(const cv::Mat& im_in, cv::Mat& im_out, cv::Mat*& tmp1, cv::Mat*& tmp2);
-void adjustSize(const cv::Mat& im_in, cv::Mat& im_out);
-void adjustChannels(const cv::Mat& im_in, cv::Mat& im_out);
+// time stamp: use for all time stamps on frames in [ms]
+#define TIME_STAMP unsigned long long
+#define TIME_STAMP_INITIAL 0
+#define TIME_STAMP_MIN -100000 // for initialization as well
 
-cv::Scalar colorFromStr(std::string x_str);
-cv::Scalar colorFromId(int x_id);
+// Logging functions
+#define LOG_ERROR LOG4CXX_ERROR
+#define LOG_WARN  LOG4CXX_WARN
+#define LOG_INFO  LOG4CXX_INFO
+#define LOG_DEBUG LOG4CXX_DEBUG
+#define LOG_EVENT(logger, descriptor)   LOG4CXX_WARN((logger), "@notif@ EVENT" << " " << descriptor ) // TODO Maybe remove this
 
-std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems);
-
-const std::string timeStamp();
-const std::string msToTimeStamp(TIME_STAMP x_ms);
-TIME_STAMP getAbsTimeMs();
-void createEmtpyConfigFile(const std::string& x_fileName);
-
+#define SYSTEM(x) {std::string cmd; cmd = (x);\
+	if(system(cmd.c_str())) {\
+	std::stringstream ss;\
+	ss<<"Execution of command failed: "<<cmd;\
+	throw MkException(ss.str(), LOC);}}
 
 #endif

@@ -23,9 +23,6 @@
 #ifndef MK_FEATURE_H
 #define MK_FEATURE_H
 
-#include <string>
-#include <vector>
-
 /*! \class Feature
  *  \brief Class representing a feature of a template/region
  *

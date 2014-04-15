@@ -26,6 +26,7 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/TestCase.h>
 #include <cppunit/TestCaller.h>
+#include <log4cxx/logger.h>
 #include "ConfigReader.h"
 #include "util.h"
 #include "MkException.h"

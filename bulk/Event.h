@@ -24,10 +24,11 @@
 #ifndef MKEVENT_H
 #define MKEVENT_H
 
-#include "util.h"
+#include "define.h"
 #include "Object.h"
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/writer.h>
+#include <log4cxx/logger.h>
 
 
 /*! \class Event

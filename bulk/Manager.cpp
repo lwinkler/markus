@@ -32,6 +32,8 @@
 #include "util.h"
 #include "version.h"
 
+#include <fstream>
+
 using namespace std;
 
 #include "Controller.h"

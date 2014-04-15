@@ -27,6 +27,7 @@
 #include "Module.h"
 #include "Event.h"
 #include "Timer.h"
+#include <fstream>
 
 
 /*! \class LogEvent

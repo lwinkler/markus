@@ -21,6 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
+#include <log4cxx/logger.h>
 #include "Object.h"
 
 /*! \class Template

@@ -23,6 +23,7 @@
 #include "Event.h"
 #include "Object.h"
 #include "Manager.h"
+#include "util.h"
 
 
 using namespace cv;

@@ -21,6 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 #include "Object.h"
+#include "util.h"
 #include <jsoncpp/json/writer.h>
 
 using namespace cv;

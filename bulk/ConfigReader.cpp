@@ -24,6 +24,8 @@
 #include "ConfigReader.h"
 #include "Module.h"
 #include "Manager.h"
+#include "util.h"
+#include <tinyxml.h>
 
 using namespace std;
 

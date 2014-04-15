@@ -24,6 +24,7 @@
 #include "TrackerByFeatures.h"
 #include "StreamObject.h"
 #include "StreamDebug.h"
+#include "util.h"
 
 // for debug
 // #include "util.h"

@@ -28,9 +28,8 @@
 #include "Parameter.h"
 #include "Controller.h"
 #include <QReadWriteLock>
-
 #include <log4cxx/logger.h>
-#include <log4cxx/xml/domconfigurator.h>
+#include <opencv2/core/core.hpp>
 
 #define MAX_WIDTH  6400
 #define MAX_HEIGHT 4800

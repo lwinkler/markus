@@ -24,9 +24,7 @@
 #ifndef CONFIGREADER_H
 #define CONFIGREADER_H
 
-#include <tinyxml.h>
 #include <string>
-#include <vector>
 
 
 class Module;
@@ -34,6 +32,8 @@ class ParameterStructure;
 
 /// Class to read a config file
 
+class TiXmlNode;
+class TiXmlDocument;
 class ConfigReader
 {
 public:

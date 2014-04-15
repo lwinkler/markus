@@ -26,6 +26,7 @@
 #include "Manager.h"
 #include "MkException.h"
 #include "Event.h"
+#include "util.h"
 
 #ifndef MARKUS_NO_GUI
 #include "Editor.h"
@@ -34,6 +35,7 @@
 #endif
 
 #include <iostream>
+#include <cstdio>
 #include <log4cxx/xml/domconfigurator.h>
 #include <getopt.h>    /* for getopt_long; standard getopt is in unistd.h */
 

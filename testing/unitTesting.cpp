@@ -21,6 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 #include <cppunit/ui/text/TestRunner.h>
+#include <log4cxx/xml/domconfigurator.h>
 #include "ConfigReaderTest.h"
 #include "TestProjects.h"
 #include "TestModules.h"
