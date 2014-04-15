@@ -24,8 +24,8 @@
 #ifndef THUMBNAIL_WRITER_H
 #define THUMBNAIL_WRITER_H
 
-#include <Module.h>
-#include <StreamObject.h>
+#include "Module.h"
+#include "StreamObject.h"
 
 
 

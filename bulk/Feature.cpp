@@ -24,7 +24,6 @@
 
 #define POW2(x) (x) * (x)
 
-using namespace std;
 
 Feature::Feature(float x_value)
 {

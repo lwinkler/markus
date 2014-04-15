@@ -24,7 +24,7 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include <opencv2/opencv.hpp>
+#include <opencv2/core/core.hpp>
 #include "define.h"
 
 

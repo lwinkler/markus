@@ -24,10 +24,10 @@
 #ifndef PARAMETER_H
 #define PARAMETER_H
 
-#include <log4cxx/logger.h>
 #include "define.h"
 #include "ConfigReader.h"
 #include "MkException.h"
+#include <log4cxx/logger.h>
 
 enum ParameterType
 {
