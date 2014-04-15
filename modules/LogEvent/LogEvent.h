@@ -75,13 +75,15 @@ protected:
 
 	// input
 	Event m_event;
-	cv::Mat m_input;
+	cv::Mat m_inputIm1;
+	cv::Mat m_inputIm2;
 
 	// state // TODO: compute automatically this and check that there is no influence if a reset happens
 	long int m_subId;
 
 	// temporary
-	bool m_saveImage;
+	bool m_saveImage1;
+	bool m_saveImage2;
 	std::string m_folderName;
 	std::string m_srtFileName;
 	std::ofstream m_file;

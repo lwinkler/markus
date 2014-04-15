@@ -36,15 +36,18 @@ log4cxx::LoggerPtr LogEvent::m_logger(log4cxx::Logger::getLogger("LogEvent"));
 
 LogEvent::LogEvent(const ConfigReader& x_configReader) 
 	 : Module(x_configReader), m_param(x_configReader),
-	m_input(Size(m_param.width, m_param.height), m_param.type)
+	m_inputIm1(Size(m_param.width, m_param.height), m_param.type), // TODO: There should be an input array
+	m_inputIm2(Size(m_param.width, m_param.height), m_param.type)
 {
 	m_description = "This module takes an event as input and logs it to .srt file";
 
 	// Init input images
 	AddInputStream(0, new StreamEvent("event", m_event, *this, "Input event to be logged"));
-	AddInputStream(1, new StreamImage("image", m_input, *this, "Video input for image extraction"));
+	AddInputStream(1, new StreamImage("image1", m_inputIm1, *this, "Video input for image extraction"));
+	AddInputStream(2, new StreamImage("image2", m_inputIm2, *this, "Second video input for image extraction"));
 
-	m_saveImage = false;
+	m_saveImage1 = false;
+	m_saveImage2 = false;
 }
 
 LogEvent::~LogEvent(void)
@@ -62,7 +65,8 @@ void LogEvent::Reset()
 	m_file.open (m_srtFileName.c_str(), std::ios_base::app);
 	if(! m_file.is_open())
 		throw MkException("Impossible to open file " + m_srtFileName, LOC);
-	m_saveImage = m_inputStreams.at(1)->IsConnected();
+	m_saveImage1 = m_inputStreams.at(1)->IsConnected();
+	m_saveImage2 = m_inputStreams.at(2)->IsConnected();
 
 	m_folderName  = Manager::OutputDir() + "/" + m_param.folder + "/"; 
 	SYSTEM("mkdir -p " + m_folderName);
@@ -75,8 +79,7 @@ void LogEvent::ProcessFrame()
 		// Log the change in event
 		WriteEvent();
 		// LOG_EVENT(m_logger, m_event.GetLabel()); 
-		if(m_saveImage)
-			SaveImage(m_event);
+		SaveImage(m_event);
 		m_event.Notify();
 		m_subId++;
 	}
@@ -119,20 +122,42 @@ void LogEvent::WriteEvent()
 void LogEvent::SaveImage(Event& x_event)
 {
 	const Object& obj(m_event.GetObject());
-	if(obj.width > 0 && obj.height > 0)
+
+	if(m_saveImage1)
 	{
 		std::stringstream ss1;
-		ss1 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetLabel() << "_" << obj.GetName()<< obj.GetId() << "." << m_param.extension;
-		// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
-		Mat img = (m_input)(obj.Rect());
-		imwrite(ss1.str(), img);
-		AddExternalImage(img, m_event.GetLabel(), ss1.str(), x_event);
+		ss1 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetLabel() << "_global_1." << m_param.extension;
+		imwrite(ss1.str(), m_inputIm1);
+		AddExternalImage(m_inputIm1, m_event.GetLabel() + "_global_1", ss1.str(), x_event);
+
+		if(obj.width > 0 && obj.height > 0)
+		{
+			std::stringstream ss2;
+			ss2 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetLabel() << "_" << obj.GetName()<< obj.GetId() << "_1" << "." << m_param.extension;
+			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
+			Mat img = (m_inputIm1)(obj.Rect());
+			imwrite(ss2.str(), img);
+			AddExternalImage(img, m_event.GetLabel() + "_1", ss2.str(), x_event);
+		}
 	}
 
-	std::stringstream ss2;
-	ss2 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetLabel() << "_global." << m_param.extension;
-	imwrite(ss2.str(), m_input);
-	AddExternalImage(m_input, m_event.GetLabel() + "_global", ss2.str(), x_event);
+	if(m_saveImage2)
+	{
+		std::stringstream ss1;
+		ss1 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetLabel() << "_global_2." << m_param.extension;
+		imwrite(ss1.str(), m_inputIm2);
+		AddExternalImage(m_inputIm2, m_event.GetLabel() + "_global_2", ss1.str(), x_event);
+
+		if(obj.width > 0 && obj.height > 0)
+		{
+			std::stringstream ss2;
+			ss2 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetLabel() << "_" << obj.GetName()<< obj.GetId() << "_2" << "." << m_param.extension;
+			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
+			Mat img = (m_inputIm2)(obj.Rect());
+			imwrite(ss2.str(), img);
+			AddExternalImage(img, m_event.GetLabel() + "_2", ss2.str(), x_event);
+		}
+	}
 }
 
 /// Store the extra information necessary along with the event

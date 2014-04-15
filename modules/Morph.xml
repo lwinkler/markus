@@ -51,6 +51,11 @@
 			<value min="3" max="100" default="5">5</value>
 			<description>Size of the element</description>
 		</param>
+		<param name="iterations">
+			<type>int</type>
+			<value min="1" max="10" default="1">1</value>
+			<description>Number of times the operation is applied to the image</description>
+		</param>
 	</parameters>
 	<inputs>
 		<input id="0">
