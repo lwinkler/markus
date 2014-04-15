@@ -35,6 +35,7 @@ Event::Event() :
 {
 	m_absTimeEvent = 0;
 	m_absTimeNotif = 0;
+	m_externalInfo.clear();
 }
 
 Event::~Event(){}
@@ -77,6 +78,7 @@ void Event::Empty()
 {
 	m_label = "";
 	m_object = Object("empty");
+	m_externalInfo.clear();
 }
 
 /// Raise an event with a set of features
@@ -110,6 +112,8 @@ void Event::Notify(bool x_isProcessEvent)
 	stringstream ss;
 	Serialize(ss, "");
 	ss >> root;
+
+	root["external"] = m_externalInfo;
 
 	if(x_isProcessEvent)
 	{

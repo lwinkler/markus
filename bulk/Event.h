@@ -60,10 +60,12 @@ class Event : public Serializable
 		void Notify(bool x_isProcessEvent=false);
 		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 		virtual void Deserialize(std::istream& stream, const std::string& x_dir);
+
 		inline void AddExternalInfo(const std::string& x_label, const std::string& x_value){m_externalInfo[x_label] = x_value;}
 		inline void AddExternalInfo(const std::string& x_label, double x_value){m_externalInfo[x_label] = x_value;}
 		inline void AddExternalInfo(const std::string& x_label, int x_value){m_externalInfo[x_label] = x_value;}
 		inline void AddExternalInfo(const std::string& x_label, unsigned long long x_value){m_externalInfo[x_label] = x_value;}
+		inline void AddExternalInfo(const std::string& x_label, std::istream& x_in){x_in >> m_externalInfo[x_label];}
 
 	protected:
 		std::string m_label;

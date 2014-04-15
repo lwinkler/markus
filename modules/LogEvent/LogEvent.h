@@ -69,8 +69,9 @@ private:
 protected:
 	virtual void ProcessFrame();
 	void WriteEvent();
-	void SaveImage(std::vector<std::string>& x_imageFiles);
+	void SaveImage(Event& x_event);
 	bool IsInputProcessed() const;
+	void AddExternalImage(const cv::Mat& x_image, const std::string& x_name, const std::string& x_file, Event& x_event);
 
 	// input
 	Event m_event;

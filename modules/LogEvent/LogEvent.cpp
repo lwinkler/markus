@@ -72,15 +72,11 @@ void LogEvent::ProcessFrame()
 {
 	if(m_event.IsRaised())
 	{
-		vector<string> imageFiles;
 		// Log the change in event
 		WriteEvent();
 		// LOG_EVENT(m_logger, m_event.GetLabel()); 
 		if(m_saveImage)
-			SaveImage(imageFiles);
-		// TODO why does this compile ?? m_event.Notify("false");
-		for(vector<string>::const_iterator it = imageFiles.begin() ; it != imageFiles.end() ; it++)
-			m_event.AddExternalInfo("image", *it);
+			SaveImage(m_event);
 		m_event.Notify();
 		m_subId++;
 	}
@@ -120,7 +116,7 @@ void LogEvent::WriteEvent()
 }
 
 /// Save related images
-void LogEvent::SaveImage(vector<string>& x_imageFiles)
+void LogEvent::SaveImage(Event& x_event)
 {
 	const Object& obj(m_event.GetObject());
 	if(obj.width > 0 && obj.height > 0)
@@ -128,15 +124,30 @@ void LogEvent::SaveImage(vector<string>& x_imageFiles)
 		std::stringstream ss1;
 		ss1 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetLabel() << "_" << obj.GetName()<< obj.GetId() << "." << m_param.extension;
 		// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
-		imwrite(ss1.str(), (m_input)(obj.Rect()));
-		x_imageFiles.push_back(ss1.str());
+		Mat img = (m_input)(obj.Rect());
+		imwrite(ss1.str(), img);
+		AddExternalImage(img, m_event.GetLabel(), ss1.str(), x_event);
 	}
 
 	std::stringstream ss2;
 	ss2 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetLabel() << "_global." << m_param.extension;
 	imwrite(ss2.str(), m_input);
-	x_imageFiles.push_back(ss2.str());
+	AddExternalImage(m_input, m_event.GetLabel() + "_global", ss2.str(), x_event);
 }
+
+/// Store the extra information necessary along with the event
+void LogEvent::AddExternalImage(const Mat& x_image, const std::string& x_name, const std::string& x_file, Event& x_event) // TODO: See if we move this in Event
+{
+	Json::Value root;
+	root["file"]   = x_file;
+	root["type"]   = x_image.type() == CV_8UC3 ? "image_color" : "image"; // ParameterImageType::ReverseEnum.at(x_image.type()); // TODO: Valid this
+	root["width"]  = x_image.cols;
+	root["height"] = x_image.rows;
+	stringstream ss;
+	ss << root;
+	x_event.AddExternalInfo(x_name, ss);
+}
+
 
 /// Overwrite this function to process only the input for frames with an event
 ///	this is a small hack to speed up the time spent processing the inputs
