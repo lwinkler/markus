@@ -79,6 +79,7 @@ public:
 protected:
 	ManagerParameter m_param;
 	inline virtual const ParameterStructure& GetParameters() const {return m_param;}
+	void NotifyException(const MkException& x_exeption);
 
 	bool m_centralized;
 	bool m_isConnected;
@@ -86,7 +87,7 @@ protected:
 	long long m_timerProcessing;
 	bool m_continueFlag; // Flag that is used to notify the manager of a Quit command, only working if centralized
 	bool m_hasRecovered; // Flag to test if all modules have recovered from the last exception, only working if centralized
-	std::string m_jsonLastException; // Field to store the last exception
+	MkException m_lastException; // Field to store the last exception
 
 	std::vector<Module *> m_modules;
 	std::vector<Input  *> m_inputs;

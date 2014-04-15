@@ -1,5 +1,7 @@
 #include "MkException.h"
 #include "Parameter.h"
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
 
 using namespace std;
 
@@ -72,3 +74,23 @@ ParameterException::ParameterException(const std::string& x_descr, const std::st
 FeatureNotFoundException::FeatureNotFoundException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
 	MkException(MK_FEAT_NOT_FOUND_PARAMETER, "FeatureNotFoundException: " + x_descr, x_position)
 {}
+
+/// Serialize exception to JSON
+/// @param x_out Output stream
+/// @param x_dir Output directory (for images)
+void MkException::Serialize(std::ostream& x_out, const string& x_dir) const
+{
+	Json::Value root;
+	root["description"] = m_description;
+	root["code"] = m_code;
+	x_out << root;
+}
+
+/// Deserialize the event from JSON
+/// @param x_in Input stream
+/// @param x_dir Input directory (for images)
+void MkException::Deserialize(std::istream& x_in, const string& x_dir)
+{
+	// TODO
+	// Note that a null JSON means that the event was not raised
+}

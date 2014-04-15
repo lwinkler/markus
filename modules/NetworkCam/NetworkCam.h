@@ -54,7 +54,6 @@ public:
 	void Capture();
 	virtual void Reset();
 	const std::string& GetName(){return m_name;}
-	// virtual const cv::Mat * GetImage() const {return m_output;}
 	virtual double GetRecordingFps();
 private:
 	bool Grab();
@@ -62,6 +61,7 @@ private:
 	inline virtual const NetworkCamParameterStructure& GetParameters() const {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 protected:
+	void GetProperties();
 
 	// output
 	cv::Mat m_output;
@@ -70,9 +70,6 @@ protected:
 	cv::VideoCapture m_capture;
 	Timer m_frameTimer;
 	sem_t m_semTimeout;
-	// TIME_STAMP m_timeStamp;
-
-	void GetProperties();
 };
 
 #endif

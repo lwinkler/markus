@@ -24,7 +24,8 @@
 #ifndef PARAMETER_H
 #define PARAMETER_H
 
-#include "util.h"
+#include "util.h" // TODO: create a define.h for headers
+#include <log4cxx/logger.h>
 #include "ConfigReader.h"
 #include "MkException.h"
 

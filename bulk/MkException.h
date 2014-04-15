@@ -3,6 +3,7 @@
 
 #include <exception>
 #include <string>
+#include "Serializable.h"
 
 #define S1(x) #x
 #define S2(x) S1(x)
@@ -22,18 +23,21 @@ enum MkExceptionCode
 	MK_EXCEPTION_ENDOFSTREAM      = 1012,
 	MK_EXCEPTION_PARAMETER        = 1013,
 	MK_FEAT_NOT_FOUND_PARAMETER   = 1014,
+	MK_FEAT_STD_EXCEPTION         = 1015,
 
 	// last code since unix can only return codes from 0 to 126
 	MK_EXCEPTION_LAST        = 1126  
 };
 
-class MkException : public std::exception {
+class MkException : public std::exception, public Serializable {
 	public:
 		MkException(const std::string& x_description="Exception occured", const std::string& x_position="", const std::string& x_function="");
 		MkException(MkExceptionCode x_code, const std::string& x_description="Exception occured", const std::string& x_position="", const std::string& x_function="");
 		~MkException() throw();
 		const char* what() const throw();
 		inline MkExceptionCode GetCode(){return m_code;}
+		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
+		virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 
 	protected:
 		std::string m_description;

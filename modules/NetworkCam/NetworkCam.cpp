@@ -22,7 +22,6 @@
 -------------------------------------------------------------------------------------*/
 
 #include "NetworkCam.h"
-// #include "util.h"
 #include "StreamImage.h"
 #include <errno.h>
 
@@ -42,7 +41,7 @@ struct struct_thread
 
 
 /// Specific thread dedicated to the reading of commands via stdin
-void *grab_thread(void *x_void_ptr)
+void *grab_thread_nc(void *x_void_ptr)
 {
 	struct_thread* pst = reinterpret_cast<struct_thread*>(x_void_ptr);
 	pst->ret = pst->capture->grab();
@@ -58,7 +57,6 @@ NetworkCam::NetworkCam(const ConfigReader& x_configReader):
 	m_output(Size(m_param.width, m_param.height), m_param.type)  // Note: sizes will be overridden !
 {
 	m_description = "Module to acquire a video stream from a network camera";
-	// m_timeStamp = TIME_STAMP_INITIAL;
 	
 	AddOutputStream(0, new StreamImage("input", m_output, *this, 		"Video stream of the camera"));
 }
@@ -76,9 +74,9 @@ void NetworkCam::Reset()
 	/* it may be an address of an mjpeg stream, 
 	e.g. "http://user:pass@cam_address:8081/cgi/mjpg/mjpg.cgi?.mjpg" 
 	"rtsp://cam_address:554/live.sdp" rtsp://<servername>/axis-media/media.amp */
-	if(m_param.url.size() == 0)
-		m_capture.open("in/input.mp4"); // TODO: may be better to throw an exception !
-	else m_capture.open(m_param.url);
+	// if(m_param.url.size() == 0)
+	//	m_capture.open("in/input.mp4"); // TODO: may be better to throw an exception !
+	m_capture.open(m_param.url);
 	
 	if(! m_capture.isOpened())
 	{
@@ -112,7 +110,7 @@ bool NetworkCam::Grab()
 	struct_thread st;
 	st.capture = &m_capture;
 	st.sem     = &m_semTimeout;
-	pthread_create(&thread, NULL, grab_thread, &st);
+	pthread_create(&thread, NULL, grab_thread_nc, &st);
 	int ret = sem_timedwait(&m_semTimeout, &my_timeout);
 
 	if (ret==-1 && errno==ETIMEDOUT)
@@ -144,7 +142,6 @@ void NetworkCam::Capture()
 			if(Grab() != true)
 			{
 				m_endOfStream = true;
-				// Pause(true); // TODO: Keep this ?
 				throw MkException("Capture failed on network camera", LOC);
 			}
 		}

@@ -42,14 +42,6 @@ using namespace std;
 	_CrtMemState endMemState;
 #endif
 
-#define STORE_EXCEPTION_AND_NOTIFY(stream) {\
-	if(m_hasRecovered){\
-		stringstream ss; ss<<stream; m_jsonLastException = ss.str();\
-		NotifyMonitoring("exception" /*, TODO: Fix this m_jsonLastException*/);\
-	}\
-	recover = m_hasRecovered = false;\
-}
-
 using namespace std;
 
 log4cxx::LoggerPtr Manager::m_logger(log4cxx::Logger::getLogger("Manager"));
@@ -61,7 +53,8 @@ FactoryModules Manager::m_factory;
 Manager::Manager(const ConfigReader& x_configReader, bool x_centralized) : 
 	Configurable(x_configReader),
 	m_param(m_configReader),
-	m_centralized(x_centralized)
+	m_centralized(x_centralized),
+	m_lastException(MK_EXCEPTION_NORMAL, "No exception were thrown", "", "")
 {
 	LOG_INFO(m_logger, "Create object Manager");
 	m_frameCount = 0;
@@ -243,17 +236,11 @@ bool Manager::Process()
 		{
 			if(m_hasRecovered)
 			{
-				// TODO stringstream ss; ss<<stream; m_jsonLastException = ss.str();
-				Event ev;
-				ev.AddExternalInfo("type", "EndOfStream");
-				ev.AddExternalInfo("module", (*it)->GetName());
-				ev.AddExternalInfo("code", e.GetCode());
-				ev.AddExternalInfo("dateNotif", getAbsTimeMs());
-				ev.AddExternalInfo("description", e.what());
-				ev.Raise("exception");
-				ev.Notify(true);
+				// This exception happens after a recovery, keep it!
+				m_lastException = e;
+				NotifyException(m_lastException);
 			}
-			recover = m_hasRecovered = false;\
+			recover = m_hasRecovered = false;
 				
 			LOG_INFO(m_logger, (*it)->GetName() << ": Exception raised (EndOfStream) : " << e.what());
 
@@ -267,63 +254,56 @@ bool Manager::Process()
 		}
 		catch(MkException& e)
 		{
-			/*
-			STORE_EXCEPTION_AND_NOTIFY(
-				jsonify("type", "MkException")       << ", " <<
-				jsonify("module", (*it)->GetName())  << ", " <<
-				jsonify("code", e.GetCode())         << ", " <<
-				jsonify("dateNotif", getAbsTimeMs()) << ", " <<
-				jsonify("description", e.what())
-			);
-			*/
+			if(m_hasRecovered)
+			{
+				// This exception happens after a recovery, keep it!
+				m_lastException = e;
+				NotifyException(m_lastException);
+			}
+			recover = m_hasRecovered = false;
 			LOG_ERROR(m_logger, "(Markus exception " << e.GetCode() << "): " << e.what());
 		}
 		catch(std::exception& e)
 		{
-			/* TODO restore this
-			STORE_EXCEPTION_AND_NOTIFY(
-				jsonify("type", "std::exception") << ", " <<
-				jsonify("module", (*it)->GetName()) << ", " <<
-				jsonify("dateNotif", getAbsTimeMs()) << ", " <<
-				jsonify("description", e.what())
-			);
-			*/
-
+			if(m_hasRecovered)
+			{
+				// This exception happens after a recovery, keep it!
+				m_lastException = MkException(MK_FEAT_STD_EXCEPTION, (*it)->GetName() + " :" + string(e.what()), LOC);
+				NotifyException(m_lastException);
+			}
 			LOG_ERROR(m_logger, (*it)->GetName() << ": Exception raised (std::exception): " << e.what());
 		}
 		catch(std::string str)
 		{
-			/*
-			STORE_EXCEPTION_AND_NOTIFY(
-				jsonify("type", "string") << ", " <<
-				jsonify("module", (*it)->GetName()) << ", " <<
-				jsonify("dateNotif", getAbsTimeMs()) << ", " <<
-				jsonify("description", str)
-			);
-			*/
+			if(m_hasRecovered)
+			{
+				// This exception happens after a recovery, keep it!
+				m_lastException = MkException(MK_FEAT_STD_EXCEPTION, (*it)->GetName() + " :" + string(str), LOC);
+				NotifyException(m_lastException);
+			}
+			recover = m_hasRecovered = false;
 			LOG_ERROR(m_logger, (*it)->GetName() << ": Exception raised (string): " << str);
 		}
 		catch(const char* str)
 		{
-			/*
-			STORE_EXCEPTION_AND_NOTIFY(
-				jsonify("type", "const char*") << ", " <<
-				jsonify("module", (*it)->GetName()) << ", " <<
-				jsonify("dateNotif", getAbsTimeMs()) << ", " <<
-				jsonify("description", str)
-			);
-			*/
+			if(m_hasRecovered)
+			{
+				// This exception happens after a recovery, keep it!
+				m_lastException = MkException(MK_FEAT_STD_EXCEPTION, (*it)->GetName() + " :" + string(str), LOC);
+				NotifyException(m_lastException);
+			}
+			recover = m_hasRecovered = false;
 			LOG_ERROR(m_logger, (*it)->GetName() << ": Exception raised (const char*): " << str);
 		}
 		catch(...)
 		{
-			/*
-			STORE_EXCEPTION_AND_NOTIFY(
-				jsonify("type", "Unknown")           << ", " <<
-				jsonify("module", (*it)->GetName())  << ", " <<
-				jsonify("dateNotif", getAbsTimeMs())
-			);
-			*/
+			if(m_hasRecovered)
+			{
+				// This exception happens after a recovery, keep it!
+				m_lastException = MkException(MK_FEAT_STD_EXCEPTION, (*it)->GetName() + ": Unknown", LOC);
+				NotifyException(m_lastException);
+			}
+			recover = m_hasRecovered = false;
 			LOG_ERROR(m_logger, (*it)->GetName() << ": Unknown exception raised");
 		}
 	}
@@ -527,14 +507,15 @@ void Manager::NotifyMonitoring(const string& x_label)
 void Manager::Status() const
 {
 	stringstream ss;
-	ss<<jsonify("recovered", m_hasRecovered);
-
-	if(m_jsonLastException != "")
-		ss<<", "<<m_jsonLastException; // TODO: recovery date
-	// NotifyMonitoring("status", ss.str());
+	m_lastException.Serialize(ss, "");
+	Json::Value root;
+	ss >> root;
+	root["recovered"] = m_hasRecovered;
 	Event evt;
 	evt.Raise("status");
-	evt.AddExternalInfo("exception", m_jsonLastException);
+	ss.clear();
+	ss << root;
+	evt.AddExternalInfo("exception", ss);
 	evt.Notify(true);
 }
 
@@ -620,4 +601,15 @@ void Manager::WriteStateToDirectory(const std::string& x_directory) const
 		of.close();
 	}
 	LOG_INFO(m_logger, "Written state of the manager and all modules to " << x_directory);
+}
+
+
+void Manager::NotifyException(const MkException& x_exception)
+{
+	stringstream ss;
+	x_exception.Serialize(ss, "");
+	Event ev;
+	ev.AddExternalInfo("exception", ss);
+	ev.Raise("exception");
+	ev.Notify(true);
 }
