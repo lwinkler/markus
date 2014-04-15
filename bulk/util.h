@@ -68,8 +68,6 @@ std::vector<std::string> &split(const std::string &s, char delim, std::vector<st
 const std::string timeStamp();
 const std::string msToTimeStamp(TIME_STAMP x_ms);
 TIME_STAMP getAbsTimeMs();
-std::string jsonify(const std::string& x_name, const std::string& x_value);
-std::string jsonify(const std::string& x_name, TIME_STAMP x_value);
 void createEmtpyConfigFile(const std::string& x_fileName);
 
 

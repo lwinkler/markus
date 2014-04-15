@@ -305,7 +305,6 @@ void QModuleViewer::updateStreamNb(int x_index)
 /// display the control with the given index
 void QModuleViewer::updateControlNb(int x_index)
 {
-	assert(x_index < static_cast<int>(m_currentModule->GetControllersList().size()));
 	m_param.control = x_index;
 	CLEAN_DELETE(m_controlBoard);
 	if(x_index < 0)
@@ -313,15 +312,21 @@ void QModuleViewer::updateControlNb(int x_index)
 	m_controlBoard = new QControlBoard(*m_currentModule, this);
 	mp_mainLayout->addWidget(m_controlBoard, 0);
 	map<string, Controller*>::const_iterator it = m_currentModule->GetControllersList().begin();
-	try
+	unsigned int cpt = static_cast<unsigned int>(x_index);
+
+	if(x_index >= 0 && cpt < m_currentModule->GetControllersList().size())
 	{
-		advance(it, x_index);
-		m_controlBoard->updateControl(it->second);
+		try
+		{
+			advance(it, x_index);
+			m_controlBoard->updateControl(it->second);
+		}
+		catch(...)
+		{
+			m_param.control = -1;
+		}
 	}
-	catch(...)
-	{
-		m_param.control = -1;
-	}
+	else m_param.control = -1;
 }
 
 void QModuleViewer::updateStream(Stream * x_outputStream)
