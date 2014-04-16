@@ -316,7 +316,7 @@ bool Manager::Process()
 		m_hasRecovered = true;
 	m_timerProcessing += ti.GetMSecLong();
 	m_frameCount++;
-	if(m_frameCount % 100 == 0)
+	if(m_frameCount % 100 == 0 && m_logger->isDebugEnabled())
 	{
 		PrintStatistics();
 	}

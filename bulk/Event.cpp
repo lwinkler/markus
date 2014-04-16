@@ -116,6 +116,8 @@ void Event::Notify(bool x_isProcessEvent)
 
 	root["external"] = m_externalInfo;
 
+	Json::FastWriter writer;
+
 	if(x_isProcessEvent)
 	{
 		// This is only a process event. Only used to notify the parent process
@@ -123,11 +125,11 @@ void Event::Notify(bool x_isProcessEvent)
 		// root["dateNotif"] = getAbsTimeMs();
 		// if(x_extraInfo != "")
 			// root["external"] = x_extraInfo;
-		LOG_WARN(m_logger, "@notif@ PROCESS " << root);
+		LOG_WARN(m_logger, "@notif@ PROCESS " << writer.write(root));
 	}
 	else
 	{
-		LOG_WARN(m_logger, "@notif EVENT " << root);
+		LOG_WARN(m_logger, "@notif EVENT " << writer.write(root));
 	}
 
 }

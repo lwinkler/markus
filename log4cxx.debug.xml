@@ -15,30 +15,23 @@
       <!-- Preserve messages in a local file -->
       <!-- ================================= -->
       <!-- A time/date based rolling appender -->
-      <appender name="FILE" class="org.jboss.logging.appender.RollingFileAppender">
-            <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
-            <param name="File" value="${LOG_DIR}markus.log"/>
-            <param name="Append" value="false"/>
-            <param name="MaxFileSize" value="5Mb"/>
-            <param name="MaxBackupIndex" value="50"/>
-            <layout class="org.apache.log4j.PatternLayout">
-                  <!-- The default pattern: Date Priority [Category] Message\n -->
- 
-                  <param name="ConversionPattern" value="%d [%t] %-5p [%c] %m%n"/>
-
-                  <!-- The full pattern: Date MS Priority [Category] (Thread:NDC) Message\n
-         <param name="ConversionPattern" value="%d %-5r %-5p [%c] (%t:%x) %m%n"/>
-          -->
-            </layout>
-      </appender>
+    <appender name="FILE" class="org.apache.log4j.RollingFileAppender">
+        <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
+        <param name="file" value="${LOG_DIR}markus.log"/>
+        <param name="append" value="true"/>
+        <param name="MaxFileSize" value="10MB"/>
+        <param name="MaxBackupIndex" value="5"/>
+        <layout class="org.apache.log4j.PatternLayout">
+                 <param name="ConversionPattern" value="%d [%t] %-5p [%c] %m%n"/>
+        </layout>
+    </appender>
       <!-- ============================== -->
       <!-- Append messages to the console -->
       <!-- ============================== -->
       <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
             <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
             <param name="Target" value="System.out"/>
-            <param name="Threshold" value="DEBUG"/>
-            <layout class="org.apache.log4j.PatternLayout">
+             <layout class="org.apache.log4j.PatternLayout">
                   <!-- The default pattern: Date Priority [Category] Message\n -->
  
                   <param name="ConversionPattern" value="%d [%t] %-5p [%c] %m%n"/>
