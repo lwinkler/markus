@@ -119,7 +119,18 @@ run with the default configuration as defined by config.xml:
 or run any example application present in the project/ folder:
 
 e.g. : 
+
 	./markus project/FourCascades.xml
+
+Edit projects
+-------------
+The XML application files (sucha as project/FourCascades.xml) can be edited by using the command
+
+	./markus -e
+
+Or through a web browser (Firefox or Chrome are supported)
+
+	http://<markus_dir>/editor.html
 
 
 Troubleshooting
