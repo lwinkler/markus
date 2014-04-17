@@ -48,7 +48,7 @@
       <!-- Setup the Root category -->
       <!-- ======================= -->
       <root>
-            <priority value="INFO"/>
+            <priority value="WARN"/>
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="FILE"/>
       </root>
