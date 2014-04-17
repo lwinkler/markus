@@ -129,7 +129,7 @@ void Event::Notify(bool x_isProcessEvent)
 	}
 	else
 	{
-		LOG_WARN(m_logger, "@notif EVENT " << writer.write(root));
+		LOG_WARN(m_logger, "@notif@ EVENT " << writer.write(root));
 	}
 
 }
