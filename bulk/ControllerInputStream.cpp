@@ -30,6 +30,11 @@
 
 using namespace std;
 
+/**
+* @brief Command: Set the value of the cursor to the given position in ms
+*
+* @param xp_value
+*/
 void InputStreamControl::SetCursor(string* xp_value)
 {
 	if(xp_value != NULL)
@@ -41,6 +46,11 @@ void InputStreamControl::SetCursor(string* xp_value)
 #endif
 }
 
+/**
+* @brief Command: Get the position of the cursor in ms
+*
+* @param xp_value
+*/
 void InputStreamControl::GetCursor(string* xp_value)
 {
 	if(xp_value != NULL)

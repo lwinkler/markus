@@ -29,12 +29,22 @@ using namespace std;
 
 /*--------------------------------------------------------------------------------*/
 
+/**
+* @brief Command: Consider the last event as valid
+*
+* @param xp_value
+*/
 void ControllerEvent::Validate(string* xp_value)
 {
 	module.ValidateLastEvent();
 	module.PopEvent();
 }
 
+/**
+* @brief Command: Consider the last event as invalid
+*
+* @param xp_value
+*/
 void ControllerEvent::Invalidate(string* xp_value)
 {
 	module.InvalidateLastEvent();

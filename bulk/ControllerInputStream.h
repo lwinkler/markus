@@ -29,7 +29,9 @@
 class VideoFileReader;
 class QParameterSlider;
 
-/// Control class for an input
+/**
+* @brief Control class for an input of type VideoFileReader
+*/
 class InputStreamControl : public Controller
 {
 public:

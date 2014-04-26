@@ -28,7 +28,9 @@
 
 class ClassifyEvents;
 
-/// Control class for an event classifier
+/**
+* @brief Control class for an event classifier
+*/
 class ControllerEvent : public Controller
 {
 public:
