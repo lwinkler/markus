@@ -30,12 +30,6 @@
 #include <fstream>
 
 
-/*! \class LogEvent
- *  \brief Class containing methods/attributes of a slit camera
- *
- */
-
-
 class LogEventParameterStructure : public ModuleParameterStructure
 {
 	
@@ -57,6 +51,9 @@ public:
 	std::string folder;
 };
 
+/**
+* @brief Module implementing a logger of event (to an output directory)
+*/
 class LogEvent : public Module
 {
 public:

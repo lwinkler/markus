@@ -55,6 +55,9 @@ void ListActions(std::vector<std::string>& xr_actions) const\
 		xr_actions.push_back(it->first);\
 }
 
+/**
+* @brief A class to send commands to a controllable object (module, parameter, ...)
+*/
 class Controller
 {
 public:
@@ -63,8 +66,7 @@ public:
 
 	virtual QWidget* CreateWidget() = 0;
 	const std::string& GetName() {return m_name;}
-	// const std::map<std::string, const px_action>& GetActions() {return m_actions;}
-	const std::string& GetType(){return m_type;}
+	const std::string& GetType(){return m_type;}  // TODO: Type must be set in sub class !
 	virtual void ListActions(std::vector<std::string>& xr_actions) const = 0;
 	virtual const void CallAction(const std::string& x_name, std::string* xp_value) = 0;
 	
@@ -74,7 +76,9 @@ protected:
 };
 
 
-/// Class representing a controllable object (e.g. Module or Manager)
+/**
+* @brief Class representing a controllable object (e.g. Module or Manager)
+*/
 class Controllable
 {
 	public:

@@ -29,19 +29,21 @@
 
 using namespace std;
 
-/// Reads the configuration file with tinyxml
 
-
-/// Configurable: parent class for all configurable classes
-
-/// Save the parameters values to the config object, ready to be written to disk
+/**
+* @brief Save the parameters values to the config object, ready to be written to disk
+*/
 void Configurable::UpdateConfig()
 {
 	GetParameters().UpdateConfig();
 }
 
-/// Constructor : config based on a configuration file
-
+/**
+* @brief Constructor
+*
+* @param x_fileName      Name of the XML file with relative path
+* @param x_allowCreation Allow the creation of a new file if unexistant
+*/
 ConfigReader::ConfigReader(const std::string& x_fileName, bool x_allowCreation)
 {
 	m_isOriginal = true;
@@ -53,8 +55,6 @@ ConfigReader::ConfigReader(const std::string& x_fileName, bool x_allowCreation)
 		if(x_allowCreation)
 		{
 			createEmtpyConfigFile(x_fileName);
-			// ConfigReader conf("/tmp/config_empty.xml");
-			// conf.SaveToFile(x_fileName);
 			mp_doc = new TiXmlDocument(x_fileName);
 			assert(mp_doc->LoadFile());
 		}
@@ -64,8 +64,12 @@ ConfigReader::ConfigReader(const std::string& x_fileName, bool x_allowCreation)
 	mp_node = mp_doc;
 }
 
-/// Constructor : config based on another config objects
 
+/**
+* @brief Constructor for a class based on a sub-node (used internally)
+*
+* @param xp_node
+*/
 ConfigReader::ConfigReader(TiXmlNode * xp_node)
 {
 	m_isOriginal = false;
@@ -80,8 +84,14 @@ ConfigReader::~ConfigReader()
 	mp_node = NULL;
 }
 
-/// Return a config objects that points to the sub element of configuration
-
+/**
+* @brief Return a config objects that points to the sub element of configuration
+*
+* @param x_objectType The type of the sub element (= XML balise)
+* @param x_objectName The name of the sub element (= attribute "name")
+*
+* @return config object
+*/
 ConfigReader ConfigReader::GetSubConfig(const std::string& x_objectType, string x_objectName) const
 {
 	if(IsEmpty())
@@ -99,8 +109,15 @@ ConfigReader ConfigReader::GetSubConfig(const std::string& x_objectType, string 
 	return ConfigReader(newNode);
 }
 
-/// Return a config objects that points to the sub element of configuration (non-constant)
-
+/**
+* @brief Return a config objects that points to the sub element of configuration (non-constant)
+*
+* @param x_objectType The type of the sub element (= XML balise)
+* @param x_objectName The name of the sub element (= attribute "name")
+* @param x_allowCreation Allow to create the node in XML if inexistant
+*
+* @return config object
+*/
 ConfigReader ConfigReader::RefSubConfig(const std::string& x_objectType, string x_objectName, bool x_allowCreation)
 {
 	if(IsEmpty())
@@ -127,8 +144,14 @@ ConfigReader ConfigReader::RefSubConfig(const std::string& x_objectType, string 
 	return ConfigReader(newNode);
 }
 
-/// Return a sub element that points to the next sub element of the configuration
-
+/**
+* @brief Return a sub element that points to the next sub element of the configuration
+*
+* @param x_objectName The name of the sub element (= attribute "name")
+* @param x_allowCreation Allow to create the node in XML if inexistant
+*
+* @return config object
+*/
 ConfigReader ConfigReader::NextSubConfig(const std::string& x_objectType, string x_objectName) const
 {
 	if(IsEmpty())
@@ -146,8 +169,13 @@ ConfigReader ConfigReader::NextSubConfig(const std::string& x_objectType, string
 	return ConfigReader(newNode);
 }
 
-/// Return the attribute (as string) for one element
-
+/**
+* @brief Return the attribute (as string) for one element
+*
+* @param x_attributeName Name of the attribute
+*
+* @return Config object
+*/
 const string ConfigReader::GetAttribute(const std::string& x_attributeName) const
 {
 	if(IsEmpty())
@@ -164,8 +192,12 @@ const string ConfigReader::GetAttribute(const std::string& x_attributeName) cons
 		return *str;
 }
 
-/// Set the attribute for one element
-
+/**
+* @brief Set the attribute for one element
+*
+* @param x_attributeName Name of the attribute
+* @param x_value         Value to set
+*/
 void ConfigReader::SetAttribute(const std::string& x_attributeName, string x_value)
 {
 	if(IsEmpty())
@@ -177,8 +209,11 @@ void ConfigReader::SetAttribute(const std::string& x_attributeName, string x_val
 	element->SetAttribute("name", x_value);
 }
 
-/// Return the value (as string) for one element
-
+/**
+* @brief Return the value (as string) for one element
+*
+* @return value
+*/
 const string ConfigReader::GetValue() const
 {
 	if(IsEmpty())
@@ -191,7 +226,11 @@ const string ConfigReader::GetValue() const
 		return str;
 }
 
-/// Set the value as string
+/**
+* @brief Set the value as string
+*
+* @param x_value Value to set
+*/
 void ConfigReader::SetValue(const std::string& x_value)
 {
 	if(IsEmpty())
@@ -200,7 +239,11 @@ void ConfigReader::SetValue(const std::string& x_value)
 	mp_node->LinkEndChild(new TiXmlText(x_value)); //ToText();
 }
 
-/// Save the config as an xml file
+/**
+* @brief Save the config as an xml file
+*
+* @param x_file Name of the file with relative path
+*/
 void ConfigReader::SaveToFile(const std::string& x_file) const
 {
 	if(!mp_doc)
@@ -208,7 +251,9 @@ void ConfigReader::SaveToFile(const std::string& x_file) const
 	mp_doc->SaveFile(x_file);
 }
 
-/// Validate that the configuration is valid
+/**
+* @brief Validate that the configuration is valid
+*/
 void ConfigReader::Validate() const
 {
 	ConfigReader appConf = GetSubConfig("application");
@@ -240,7 +285,14 @@ void ConfigReader::Validate() const
 	}
 }
 
-/// Check that an id is unique: for validation purpose
+/**
+* @brief Check that an id is unique: for validation purpose
+*
+* @param x_group      Group (e.g. inputs, parameters, ...)
+* @param x_type       Type (e.g. input)
+* @param x_idLabel    Label
+* @param x_moduleName Name of the module
+*/
 void ConfigReader::CheckUniquenessOfId(const string& x_group, const string& x_type, const string& x_idLabel, const string& x_moduleName) const
 {
 	// Check that input streams are unique

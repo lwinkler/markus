@@ -27,14 +27,6 @@
 #include "Module.h"
 #include "Parameter.h"
 #include "Event.h"
-// #include "Timer.h"
-
-
-/*! \class MotionDetector
- *  \brief Class containing methods/attributes of a slit camera
- *
- */
-
 
 class MotionDetectorParameterStructure : public ModuleParameterStructure
 {
@@ -51,6 +43,9 @@ public:
 	float motionThres;
 };
 
+/**
+* @brief Module implementing a motion detector
+*/
 class MotionDetector : public Module
 {
 public:

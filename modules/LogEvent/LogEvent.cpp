@@ -175,7 +175,7 @@ void LogEvent::AddExternalImage(const Mat& x_image, const std::string& x_name, c
 
 
 /// Overwrite this function to process only the input for frames with an event
-///	this is a small hack to speed up the time spent processing the inputs
+///	this is a trick to speed up the time spent processing the inputs
 /// 	there are two reason why we want to process: either the event is raised or the previous frame had a raised event
 bool LogEvent::IsInputProcessed() const
 {

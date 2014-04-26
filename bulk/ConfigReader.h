@@ -30,10 +30,12 @@
 class Module;
 class ParameterStructure;
 
-/// Class to read a config file
-
 class TiXmlNode;
 class TiXmlDocument;
+
+/**
+* @brief Class used to manipulate configuration files
+*/
 class ConfigReader
 {
 public:
@@ -59,8 +61,10 @@ private:
 	TiXmlDocument * mp_doc;
 };
 
-/// Class for a configurable object (containing parameters)
 
+/**
+* @brief Parent class for all configurable objects (containing parameters)
+*/
 class Configurable
 {
 public:
@@ -70,7 +74,6 @@ public:
 
 private:
 	virtual const ParameterStructure & GetParameters() const = 0;
-
 protected:
 	ConfigReader m_configReader;
 };

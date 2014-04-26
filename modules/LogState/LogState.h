@@ -30,12 +30,6 @@
 #include <fstream>
 
 
-/*! \class LogState
- *  \brief Class containing methods/attributes of a slit camera
- *
- */
-
-
 class LogStateParameterStructure : public ModuleParameterStructure
 {
 	
@@ -49,6 +43,9 @@ public:
 	std::string file;
 };
 
+/**
+* @brief Module used to log a state to an output file
+*/
 class LogState : public Module
 {
 public:
