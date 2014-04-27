@@ -29,21 +29,41 @@ using namespace std;
 
 /*--------------------------------------------------------------------------------*/
 
+/**
+* @brief Command: Reset the module
+*
+* @param xp_value unused
+*/
 void ControllerModule::Reset(string* xp_value)
 {
 	module.Reset();
 }
 
+/**
+* @brief Pause the module
+*
+* @param xp_value unused
+*/
 void ControllerModule::Pause(string* xp_value)
 {
 	module.Pause(true);
 }
 
+/**
+* @brief Unpause the module
+*
+* @param xp_value unused
+*/
 void ControllerModule::Unpause(string* xp_value)
 {
 	module.Pause(false);
 }
 
+/**
+* @brief Print the statistics related to processing time
+*
+* @param xp_value unused
+*/
 void ControllerModule::PrintStatistics(string* xp_value)
 {
 	module.PrintStatistics();

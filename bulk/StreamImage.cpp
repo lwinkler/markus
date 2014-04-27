@@ -31,7 +31,7 @@
 using namespace std;
 using namespace cv;
 
-StreamImage::StreamImage(const std::string& x_name, Mat& x_image, Module& rx_module, const string& rx_description) : 
+StreamImage::StreamImage(const std::string& x_name, cv::Mat& x_image, Module& rx_module, const string& rx_description) : 
 	Stream(x_name, rx_module, rx_description),
 	m_image(x_image)
 {

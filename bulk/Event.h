@@ -59,8 +59,8 @@ class Event : public Serializable
 			return m_object.GetFeature(x_name);
 		}
 		void Notify(bool x_isProcessEvent=false);
-		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
-		virtual void Deserialize(std::istream& stream, const std::string& x_dir);
+		virtual void Serialize(std::ostream& stream x_out, const std::string& x_dir) const;
+		virtual void Deserialize(std::istream& stream x_in, const std::string& x_dir);
 
 		inline void AddExternalInfo(const std::string& x_label, const std::string& x_value){m_externalInfo[x_label] = x_value;}
 		inline void AddExternalInfo(const std::string& x_label, double x_value){m_externalInfo[x_label] = x_value;}

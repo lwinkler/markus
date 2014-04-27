@@ -39,7 +39,11 @@ using namespace std;
 
 #define PRECISION_DOUBLE 2
 
-/// Display the type of the parameter
+/**
+* @brief Command: Display the type of the parameter
+*
+* @param xp_value Output type
+*/
 void ControllerParameter::GetType(string* xp_value)
 {
 	if(xp_value != NULL)
@@ -54,7 +58,11 @@ void ControllerParameter::GetType(string* xp_value)
 #endif
 }
 
-/// Display the range string of the parameter
+/**
+* @brief Command: Display the range string of the parameter
+*
+* @param xp_value Output range
+*/
 void ControllerParameter::GetRange(string* xp_value)
 {
 	if(xp_value != NULL)
@@ -69,7 +77,11 @@ void ControllerParameter::GetRange(string* xp_value)
 #endif
 }
 
-/// Set the controlled value (e.g. parameter) to the value on control
+/**
+* @brief Command: Set the controlled value (e.g. parameter) to the value on control
+*
+* @param xp_value Output value if the pointer is not null
+*/
 void ControllerParameter::SetControlledValue(string* xp_value)
 {
 	string oldValue = param.GetValueString();
@@ -94,7 +106,11 @@ void ControllerParameter::SetControlledValue(string* xp_value)
 	}
 }
 
-/// Display the current value of the controlled object
+/**
+* @brief Command: Display the current value of the controlled object
+*
+* @param xp_value Output value if the pointer is not null
+*/
 void ControllerParameter::GetCurrent(string* xp_value)
 {
 	if(xp_value != NULL)
@@ -111,7 +127,11 @@ void ControllerParameter::GetCurrent(string* xp_value)
 #endif
 }
 
-/// Display the default value of the controlled object
+/**
+* @brief Command: Display the default value of the controlled object
+*
+* @param xp_value Output value if the pointer is not null
+*/
 void ControllerParameter::GetDefault(string* xp_value)
 {
 	if(xp_value != NULL)

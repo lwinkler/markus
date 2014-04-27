@@ -29,7 +29,7 @@
 class ControllerModule;
 class Module;
 
-/// Control class for an event classifier
+/// Control class for a module
 class ControllerModule : public Controller
 {
 public:
