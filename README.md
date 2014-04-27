@@ -191,10 +191,3 @@ A module will only process one frame if a set of conditions is met. Mainly there
 
 Time values are given by a time stamp that is linked with the input stream. They match the time at which the frame was extracted by a module of the Input class.
 
-
-
-
-
-
-
-test	
