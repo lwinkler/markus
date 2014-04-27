@@ -111,7 +111,9 @@ Manager::~Manager()
 	}
 }
 
-/// Connect the different modules
+/**
+* @brief Connect the different modules
+*/
 void Manager::Connect()
 {
 	if(m_isConnected)
@@ -141,7 +143,7 @@ void Manager::Connect()
 				{
 					int outputModuleId    = atoi(tmp1.c_str());
 					int outputId          = atoi(tmp2.c_str());
-					Stream& inputStream  = module.RefInputStreamById(inputId);
+					Stream& inputStream  = module.RefInputStreamById(inputId); // TODO avoid this and use a connect method
 					Stream& outputStream = RefModuleById(outputModuleId).RefOutputStreamById(outputId);
 
 					// Connect input and output streams
@@ -183,10 +185,11 @@ void Manager::Connect()
 	m_isConnected = true;	
 }
 
-/// Reset the manager: must be called externally after initialization
-///
-/// @param x_resetInput Also reset input modules (true by default)
-///
+/**
+* @brief Reset the manager: must be called externally after initialization
+*
+* @param x_resetInputs Also reset input modules (true by default)
+*/
 void Manager::Reset(bool x_resetInputs)
 {
 	// Reset timers
@@ -209,8 +212,11 @@ void Manager::Reset(bool x_resetInputs)
 	m_hasRecovered = true;
 }
 
-/// Process all modules
-
+/**
+* @brief All modules process one frame
+*
+* @return False if the processing must be stopped
+*/
 bool Manager::Process()
 {
 	if(!m_isConnected)
@@ -327,13 +333,18 @@ bool Manager::Process()
 	return m_continueFlag;
 }
 
-/// Send a command
+/**
+* @brief Send a command
+*
+* @param x_command Command in format "module.controller.Command"
+* @param x_value   Value used as input/output
+*/
 void Manager::SendCommand(const std::string& x_command, std::string x_value)
 {
 	vector<string> elems;
 	split(x_command, '.', elems);
 	if(elems.size() != 3)
-		throw MkException("Command must be in format \"module.controller.command\"", LOC);
+		throw MkException("Command must be in format \"module.controller.Command\"", LOC);
 
 	if(elems.at(0) == "manager")
 	{
@@ -367,9 +378,9 @@ void Manager::SendCommand(const std::string& x_command, std::string x_value)
 	LOG_INFO(m_logger, "Command "<<x_command<<" returned value "<<x_value);
 }
 
-
-/// Print the results of timings
-
+/**
+* @brief Print the results of timings
+*/
 void Manager::PrintStatistics()
 {
 	LOG_INFO(m_logger, "Manager: "<<m_frameCount<<" frames processed in "<<m_timerProcessing<<" ms ("<<  (1000.0 * m_frameCount) / m_timerProcessing<<" frames/s)");
@@ -385,7 +396,11 @@ void Manager::PrintStatistics()
 	}
 }
 
-/// Pause all modules
+/**
+* @brief Pause all modules
+*
+* @param x_pause Set or unset pause
+*/
 void Manager::Pause(bool x_pause)
 {
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)	
@@ -394,7 +409,11 @@ void Manager::Pause(bool x_pause)
 	}
 }
 
-/// Pause all inputs
+/**
+* @brief Pause all inputs
+*
+* @param x_pause Set or unset pause
+*/
 void Manager::PauseInputs(bool x_pause)
 {
 	for(vector<Input*>::iterator it = m_inputs.begin() ; it != m_inputs.end() ; it++)	
@@ -404,8 +423,11 @@ void Manager::PauseInputs(bool x_pause)
 }
 
 
-/// Check if end of all input streams
-
+/**
+* @brief Check if end of all input streams
+*
+* @return True if all streams have ended
+*/
 bool Manager::EndOfAllStreams() const
 {
 	bool endOfStreams = true;
@@ -417,8 +439,9 @@ bool Manager::EndOfAllStreams() const
 	return endOfStreams;
 }
 
-/// Export current configuration to xml: this is used to create the XML files to describe each module
-
+/**
+* @brief Export current configuration to xml: this is used to create the XML files to describe each module
+*/
 void Manager::Export()
 {
 	try
@@ -478,7 +501,11 @@ Module& Manager::RefModuleByName(const string& x_name) const
 	// return NULL;
 }
 
-// Return a string containing the version of the executable
+/**
+* @brief Return a string containing the version of the executable
+*
+* @return Version
+*/
 string Manager::Version()
 {
 	stringstream ss;
@@ -489,23 +516,9 @@ string Manager::Version()
 	return ss.str();
 }
 
-/// Notify the parent process that something happened
-/*
-void Manager::NotifyMonitoring(const string& x_label)
-{
-	/// Raise an event. We simply use this to notify a parent process
-	Event ev;
-	if(x_label == "started")
-	{
-		stringstream ss;
-		ss << getpid();
-		ev.AddExternalInfo("pid", ss.str());
-	}
-	ev.Raise(x_label);
-	ev.Notify(x_extra, true);
-}
+/**
+* @brief Log the status of the application (last exception)
 */
-
 void Manager::Status() const
 {
 	stringstream ss;
@@ -521,11 +534,14 @@ void Manager::Status() const
 	evt.Notify(true);
 }
 
-/// Returns a directory that will contain all outputs
-///
-/// @param  x_outputDir
-/// @param  x_configFile Optional: name of the config file to copy into dir
-/// @return name of the output dir
+/**
+* @brief Return a directory that will contain all outputs files and logs. The dir is created at the first call of this method.
+*
+* @param x_outputDir  Name and path to the dir, if empty, the name is generated automatically
+* @param x_configFile Optional: name of the config file to copy into dir
+*
+* @return Name of the output dir
+*/
 const string& Manager::OutputDir(const string& x_outputDir, const string& x_configFile)
 {
 	if(m_outputDir.size() == 0)
@@ -580,8 +596,9 @@ const string& Manager::OutputDir(const string& x_outputDir, const string& x_conf
 	return m_outputDir;
 }
 
-/// Save the configuration of manager and modules to file
-
+/**
+* @brief Save the configuration of manager and modules to file
+*/
 void Manager::UpdateConfig()
 {
 	// Set all config ready to be saved
@@ -590,7 +607,11 @@ void Manager::UpdateConfig()
 	Configurable::UpdateConfig();
 }
 
-/// Write all states to disk
+/**
+* @brief Write the states of all modules to disk
+*
+* @param x_directory Output directory
+*/
 void Manager::WriteStateToDirectory(const std::string& x_directory) const
 {
 	SYSTEM("mkdir -p " + x_directory);
@@ -606,6 +627,11 @@ void Manager::WriteStateToDirectory(const std::string& x_directory) const
 }
 
 
+/**
+* @brief Notify the parent process of an exception
+*
+* @param x_exception Exception to be notified
+*/
 void Manager::NotifyException(const MkException& x_exception)
 {
 	stringstream ss;

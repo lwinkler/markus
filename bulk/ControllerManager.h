@@ -28,14 +28,15 @@
 
 class Manager;
 
-/// Control class for an event classifier
+/**
+* @brief Control class for the manager
+*/
 class ControllerManager : public Controller
 {
 public:
 	ControllerManager(Manager& rx_module);
 	~ControllerManager(){}
 	virtual QWidget* CreateWidget();
-
 
 	typedef void (ControllerManager::*action)(std::string*);
 	DECLARE_CALL_ACTION(action);

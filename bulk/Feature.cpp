@@ -38,7 +38,6 @@ Feature::Feature(float x_value)
 
 Feature::Feature(const Feature& f)
 {
-	//strcpy(m_name, f.GetName());
 	value      = f.value;
 	sqVariance = f.sqVariance;
 	mean       = f.mean;
@@ -63,10 +62,12 @@ Feature&  Feature::operator = (const Feature& f)
 
 Feature::~Feature(){}
 
-/* Update a feature from the current value
- *
- * This function can be used to keep a feature up to date in a dynamic way (similar to a running average)
- */
+/**
+* @brief Keep a feature up to date in a dynamic way (similar to a running average)
+*
+* @param x_currentValue Value to use for updating
+* @param x_alpha        Alpha coefficient for running average
+*/
 void Feature::Update(float x_currentValue, double x_alpha)
 {
 	value      = x_currentValue;

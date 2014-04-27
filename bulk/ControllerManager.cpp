@@ -30,42 +30,82 @@ using namespace std;
 
 /*--------------------------------------------------------------------------------*/
 
+/**
+* @brief Command: Reset the manager
+*
+* @param xp_value unused
+*/
 void ControllerManager::Reset(string* xp_value)
 {
 	manager.Reset();
 }
 
+/**
+* @brief Command: Reset all the modules except inputs
+*
+* @param xp_value unused
+*/
 void ControllerManager::ResetExceptInputs(string* xp_value)
 {
 	manager.Reset(false);
 }
 
+/**
+* @brief Command: Pause all the modules
+*
+* @param xp_value unused
+*/
 void ControllerManager::Pause(string* xp_value)
 {
 	manager.Pause(true);
 }
 
+/**
+* @brief Command: Stop all processing and quit (only working if centralized)
+*
+* @param xp_value unused
+*/
 void ControllerManager::Quit(string* xp_value)
 {
 	manager.Quit();
 }
 
 
+/**
+* @brief Command: Unpause all the modules
+*
+* @param xp_value
+*/
 void ControllerManager::Unpause(string* xp_value)
 {
 	manager.Pause(false);
 }
 
+/**
+* @brief Commands: Print statistics related to the modules processing
+*
+* @param xp_value unused
+*/
 void ControllerManager::PrintStatistics(string* xp_value)
 {
 	manager.PrintStatistics();
 }
 
+/**
+* @brief Command: Outputs the status (last exceptions)
+*
+* @param xp_value unused
+*/
 void ControllerManager::Status(string* xp_value)
 {
 	manager.Status();
 }
 
+/**
+* @brief Command: Write the state of all the modules to the output directory
+*
+* @param xp_value unused
+*/
 void ControllerManager::WriteStateToDirectory(std::string* xp_value)
 {
 	manager.WriteStateToDirectory(Manager::OutputDir() + "/state_" + timeStamp());

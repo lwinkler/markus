@@ -42,8 +42,9 @@ ModuleAsync::ModuleAsync(const ConfigReader& x_configReader) :
 	m_countFramesThread 	= 0;
 };
 
-/// Process one frame
-
+/**
+* @brief Process one frame
+*/
 void ModuleAsync::ProcessFrame()
 {
 	if(m_inputStreams.size() < 1)
@@ -76,11 +77,9 @@ void ModuleAsync::ProcessFrame()
 	NormalProcess();
 }
 
-
-ModuleAsync::~ModuleAsync()
-{
-}
-
+/**
+* @brief Print statistics related to the module
+*/
 void ModuleAsync::PrintStatistics() const
 {
 	Module::PrintStatistics();

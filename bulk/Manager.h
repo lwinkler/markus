@@ -34,8 +34,6 @@
 #include "FactoryModules.h"
 
 
-/// Parameter class
-
 class ManagerParameter : public ParameterStructure
 {
 public:
@@ -47,8 +45,9 @@ public:
 	// std::string mode; // unused
 };
 
-/// Class for managing all modules
-
+/**
+* @brief The manager handles all modules
+*/
 class Manager : public Configurable, public Controllable
 {
 public:
@@ -58,8 +57,6 @@ public:
 	bool Process();
 	void SendCommand(const std::string& x_command, std::string x_value);
 	const std::vector<Module*>& GetModules() const {return m_modules; }
-	Module& RefModuleById(int x_id) const;
-	Module& RefModuleByName(const std::string& x_name) const;
 	
 	void Connect();
 	void Export();
@@ -77,10 +74,12 @@ public:
 	void UpdateConfig();
 
 protected:
-	ManagerParameter m_param;
+	Module& RefModuleById(int x_id) const;
+	Module& RefModuleByName(const std::string& x_name) const;
 	inline virtual const ParameterStructure& GetParameters() const {return m_param;}
 	void NotifyException(const MkException& x_exeption);
 
+	ManagerParameter m_param;
 	bool m_centralized;
 	bool m_isConnected;
 	// long long m_timerConvertion;

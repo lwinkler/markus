@@ -6,7 +6,15 @@
 
 using namespace std;
 
-// Write the description of an exception
+/**
+* @brief Format and write the description of an exception
+*
+* @param x_description Description
+* @param x_position    Position
+* @param x_function    Function of method
+*
+* @return Description
+*/
 string writeDescription(const std::string& x_description, const std::string& x_position, const std::string& x_function)
 {
 	string description;
@@ -49,20 +57,17 @@ MkException::~MkException() throw(){
 }
 
 
+/**
+* @brief Redefinition of the virtual method of std::exception
+*
+* @return Description
+*/
 const char* MkException::what() const throw()
 {
 	return m_description.c_str();
 }
 
 
-
-// ProcessingException::ProcessingException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
-	// MkException("ProcessingValueException: " + x_descr, x_position)
-// {}
-
-// FileNotFoundException::FileNotFoundException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
-	// MkException("FileException: " + x_descr, x_position)
-// {}
 
 EndOfStreamException::EndOfStreamException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
 	MkException(MK_EXCEPTION_ENDOFSTREAM, "EndOfStreamException: " + x_descr, x_position)
@@ -76,9 +81,12 @@ FeatureNotFoundException::FeatureNotFoundException(const std::string& x_descr, c
 	MkException(MK_FEAT_NOT_FOUND_PARAMETER, "FeatureNotFoundException: " + x_descr, x_position)
 {}
 
-/// Serialize exception to JSON
-/// @param x_out Output stream
-/// @param x_dir Output directory (for images)
+/**
+* @brief Serialize exception to JSON
+*
+* @param x_out Output stream
+* @param x_dir Output directory (for images)
+*/
 void MkException::Serialize(std::ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
@@ -87,9 +95,12 @@ void MkException::Serialize(std::ostream& x_out, const string& x_dir) const
 	x_out << root;
 }
 
-/// Deserialize the event from JSON
-/// @param x_in Input stream
-/// @param x_dir Input directory (for images)
+/**
+* @brief Deserialize the event from JSON
+*
+* @param x_in
+* @param x_dir
+*/
 void MkException::Deserialize(std::istream& x_in, const string& x_dir)
 {
 	// TODO

@@ -147,8 +147,8 @@ ConfigReader ConfigReader::RefSubConfig(const std::string& x_objectType, string 
 /**
 * @brief Return a sub element that points to the next sub element of the configuration
 *
+* @param x_objectType The type of the sub element (= XML balise)
 * @param x_objectName The name of the sub element (= attribute "name")
-* @param x_allowCreation Allow to create the node in XML if inexistant
 *
 * @return config object
 */

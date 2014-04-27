@@ -23,11 +23,9 @@
 #ifndef MK_FEATURE_H
 #define MK_FEATURE_H
 
-/*! \class Feature
- *  \brief Class representing a feature of a template/region
- *
- * e.g. area, perimeter, length, ...
- */
+/**
+* @brief Class representing a feature of a template/region. (e.g. area, perimeter, length, ...)
+*/
 class Feature
 {
 	public:
@@ -37,7 +35,6 @@ class Feature
 		~Feature();
 		
 		void Update(float x_currentValue, double x_alpha);
-
 		
 	public:
 		// The different values of the feature

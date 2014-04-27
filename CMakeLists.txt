@@ -103,6 +103,11 @@ target_link_libraries(markus ${DEPS})
 
 
 
+add_custom_target(doc
+	COMMENT "Build the project documentation"
+	COMMAND doxygen
+)
+
 
 add_custom_target(lint
 	COMMENT "Check C++ lint rules"

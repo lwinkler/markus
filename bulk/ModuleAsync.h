@@ -27,8 +27,9 @@
 #include "Module.h"
 #include <QThread>
 
-/// This class represents a parent module that can process data asynchronously (in a separate thread)
-
+/**
+* @brief This class represents a parent module that can process data asynchronously (in a separate thread)
+*/
 class ModuleAsyncParameterStructure : public ModuleParameterStructure
 {
 public:
@@ -46,7 +47,7 @@ class ModuleAsync : public Module
 {
 public:
 	ModuleAsync(const ConfigReader& x_confReader);
-	virtual ~ModuleAsync();
+	// virtual ~ModuleAsync();
 	
 	virtual void ProcessFrame();
 	

@@ -13,7 +13,9 @@
 
 class Parameter;
 
-// Note: Exception codes correspond with return values (+1000)
+/**
+* @brief Exception codes: correspond with return values (+1000)
+*/
 enum MkExceptionCode
 {
 	// initial value for exception codes
@@ -29,6 +31,9 @@ enum MkExceptionCode
 	MK_EXCEPTION_LAST        = 1126  
 };
 
+/**
+* @brief Exception class
+*/
 class MkException : public std::exception, public Serializable {
 	public:
 		MkException(const std::string& x_description="Exception occured", const std::string& x_position="", const std::string& x_function="");
@@ -54,19 +59,25 @@ class FileNotFoundException : public MkException {
 		FileNotFoundException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
 };*/
 
-/// Exception that occurs when a video file ends
+/**
+* @brief Exception thrown when a video file ends
+*/
 class EndOfStreamException : public MkException {
 	public:
 		EndOfStreamException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
 };
 
-/// Exception that occurs when a video file ends
+/**
+* @brief Exception thrown when a parameter has an incorrect value
+*/
 class ParameterException : public MkException {
 	public:
 		ParameterException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
 };
 
-/// Exception that occurs when a video file ends
+/**
+* @brief Exception thrown when a feature is not found in Object
+*/
 class FeatureNotFoundException : public MkException {
 	public:
 		FeatureNotFoundException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");

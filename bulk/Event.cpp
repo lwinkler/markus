@@ -42,7 +42,7 @@ Event::Event() :
 Event::~Event(){}
 
 
-/// Serialize event from JSON
+/// @brief Serialize event from JSON
 /// @param x_out Output stream
 /// @param x_dir Output directory (for images)
 void Event::Serialize(std::ostream& x_out, const string& x_dir) const
@@ -65,7 +65,7 @@ void Event::Serialize(std::ostream& x_out, const string& x_dir) const
 	x_out << root;
 }
 
-/// Deserialize the event from JSON
+/// @brief Deserialize the event from JSON
 /// @param x_in Input stream
 /// @param x_dir Input directory (for images)
 void Event::Deserialize(std::istream& x_in, const string& x_dir)

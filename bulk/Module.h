@@ -71,6 +71,9 @@ public:
 	std::string objClass;
 };
 
+/**
+* @brief Class representing a module. A module is a node of the application, it processes streams
+*/
 class Module : public Configurable, public Controllable, public Serializable
 {
 public:

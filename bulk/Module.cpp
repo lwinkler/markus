@@ -60,6 +60,24 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_moduleTimer = NULL;
 }
 
+Module::~Module()
+{
+	// Delete all streams
+	for(std::map<int, Stream* >::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
+		delete(it->second);
+	for(std::map<int, Stream* >::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
+		delete(it->second);
+#ifdef MARKUS_DEBUG_STREAMS
+	for(std::map<int, Stream* >::iterator it = m_debugStreams.begin() ; it != m_debugStreams.end() ; it++)
+		delete(it->second);
+#endif
+	if(m_moduleTimer)
+		delete(m_moduleTimer);
+}
+
+/**
+* @brief Reset the module. Parameters value are set to default
+*/
 void Module::Reset()
 {
 	// Lock the parameters that cannot be changed
@@ -124,14 +142,21 @@ void Module::Reset()
 	}
 }
 
+/**
+* @brief Pause the module and stop the processing
+*
+* @param x_pause Pause on/off
+*/
 void Module::Pause(bool x_pause)
 {
 	m_pause = x_pause;
 }
 
-
-/// Return the fps that can be used to recording. This value is special as it depends from preceeding modules. 
-
+/**
+* @brief Return the fps that can be used to recording. This value is special as it depends from preceeding modules.
+*
+* @return fps
+*/
 double Module::GetRecordingFps()
 {
 	double fps = GetParameters().fps;
@@ -169,21 +194,9 @@ double Module::GetRecordingFps()
 
 }
 
-Module::~Module()
-{
-	// Delete all streams
-	for(std::map<int, Stream* >::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
-		delete(it->second);
-	for(std::map<int, Stream* >::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
-		delete(it->second);
-#ifdef MARKUS_DEBUG_STREAMS
-	for(std::map<int, Stream* >::iterator it = m_debugStreams.begin() ; it != m_debugStreams.end() ; it++)
-		delete(it->second);
-#endif
-	if(m_moduleTimer)
-		delete(m_moduleTimer);
-}
-
+/**
+* @brief Process one frame
+*/
 void Module::Process()
 {
 	m_lock.lockForWrite();
@@ -271,9 +284,12 @@ void Module::Process()
 	m_lock.unlock();
 }
 
-
-/// Describe the module with name, parameters, inputs, outputs to an output stream (in xml)
-
+/**
+* @brief Describe the module with name, parameters, inputs, outputs to an output stream (in xml)
+*
+* @param rx_os         Output stream
+* @param x_indentation Number of tabs in indentation
+*/
 void Module::Export(ostream& rx_os, int x_indentation)
 {
 	string tabs(x_indentation, '\t');
@@ -298,7 +314,6 @@ void Module::Export(ostream& rx_os, int x_indentation)
 	rx_os<<tabs<<"</module>"<<endl;
 }
 
-/// Get a stream by its id
 Stream& Module::RefInputStreamById(int x_id)
 {
 	//for(vector<Stream *>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
@@ -314,7 +329,6 @@ Stream& Module::RefInputStreamById(int x_id)
 	return *(it->second);
 }
 
-/// Get a stream by its id
 Stream& Module::RefOutputStreamById(int x_id)
 {
 	map<int, Stream*>::iterator it = m_outputStreams.find(x_id);
@@ -328,7 +342,9 @@ Stream& Module::RefOutputStreamById(int x_id)
 	return *(it->second);
 }
 
-/// Print all statistics related to the module
+/**
+* @brief Print all statistics related to the module
+*/
 void Module::PrintStatistics() const
 {
 	LOG_INFO(m_logger, "Module "<<GetName()<<" : "<<m_countProcessedFrames<<" frames processed (tproc="<<
@@ -336,9 +352,12 @@ void Module::PrintStatistics() const
 		m_timerWaiting<<"ms), "<< (m_countProcessedFrames * 1000.0 / (m_timerProcessing + m_timerConvertion + m_timerWaiting))<<" fps");
 }
 
-/// Serialize the stream content to a directory
-/// @param x_in  Input stream
-/// @param x_dir Input directory (for images)
+/**
+* @brief Serialize the stream content to a directory
+*
+* @param x_out Output stream
+* @param x_dir Directory (for images)
+*/
 void Module::Serialize(std::ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
@@ -377,15 +396,22 @@ void Module::Serialize(std::ostream& x_out, const string& x_dir) const
 	x_out << root;
 }
 
-/// Deserialize the module from JSON
-/// @param x_in  Input stream
-/// @param x_dir Input directory (for images)
+/**
+* @brief Deserialize the module from JSON 
+*
+* @param x_in  Input stream
+* @param x_dir Input dir (for images)
+*/
 void Module::Deserialize(std::istream& x_in, const string& x_dir)
 {
 	// TODO
 }
 
-/// Check that all inputs are ready (they are connected to a working module)
+/**
+* @brief Check that all inputs are ready (they are connected to a working module)
+*
+* @return True if all are ready
+*/
 bool Module::AllInputsAreReady() const
 {
 	for(map<int, Stream*>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
@@ -396,7 +422,12 @@ bool Module::AllInputsAreReady() const
 	return true;
 }
 
-/// Return a reference to the master module
+/**
+* @brief Return a reference to the master module. The master module is the preceeding module that is 
+ 	 responsible for calling the process method
+*
+* @return The master module
+*/
 const Module& Module::GetMasterModule()
 {
 	for(map<int, Stream*>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
@@ -413,7 +444,9 @@ const Module& Module::GetMasterModule()
 	throw MkException("Module must have at least one input connected or have auto_process=1", LOC);
 }
 
-/// Set as ready (and all inputs too)
+/**
+* @brief Set as ready (and all inputs too)
+*/
 void Module::SetAsReady()
 {
 	m_isReady = true;
@@ -424,7 +457,12 @@ void Module::SetAsReady()
 }
 
 
-/// Add an input stream
+/**
+* @brief Add an input stream
+*
+* @param x_id      id
+* @param xp_stream stream
+*/
 void Module::AddInputStream(int x_id, Stream* xp_stream)
 {
 	xp_stream->SetId(x_id);
@@ -433,7 +471,13 @@ void Module::AddInputStream(int x_id, Stream* xp_stream)
 	m_inputStreams.insert(make_pair(x_id, xp_stream));
 }
 
-/// Add an input stream
+/// Add an output stream
+/**
+* @brief Add a debug stream
+*
+* @param x_id      id
+* @param xp_stream stream
+*/
 void Module::AddOutputStream(int x_id, Stream* xp_stream)
 {
 	xp_stream->SetId(x_id);
@@ -442,7 +486,12 @@ void Module::AddOutputStream(int x_id, Stream* xp_stream)
 	m_outputStreams.insert(make_pair(x_id, xp_stream));
 }
 
-/// Add an input stream
+/**
+* @brief Add a debug stream
+*
+* @param x_id      id
+* @param xp_stream stream
+*/
 void Module::AddDebugStream(int x_id, Stream* xp_stream)
 {
 	xp_stream->SetId(x_id);
