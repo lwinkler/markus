@@ -45,8 +45,13 @@ Stream::~Stream()
 {
 }
 
-/// Write current configuration of stream as an xml output 
-
+/**
+* @brief Write description as XML of stream for module description
+*
+* @param rx_os         Output stream
+* @param x_indentation Number of tabs for indentation
+* @param x_isInput     Is an input
+*/
 void Stream::Export(ostream& rx_os, int x_indentation, bool x_isInput)
 {
 	string tabs(x_indentation , '\t');
@@ -62,6 +67,11 @@ void Stream::Export(ostream& rx_os, int x_indentation, bool x_isInput)
 }
 
 
+/**
+* @brief Connect an input with an output
+*
+* @param x_stream Output stream to connect to
+*/
 void Stream::Connect(Stream* x_stream)
 {
 	m_connected = x_stream;

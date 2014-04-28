@@ -80,11 +80,14 @@ Template::~Template()
 	
 }
 
-
-/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-/* Compare a candidate region with the template */
-/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-
+/**
+* @brief Compare a candidate object with the template 
+*
+* @param x_obj      Object for comparison
+* @param x_features Vector of features to compare
+*
+* @return 
+*/
 double Template::CompareWithObject(const Object& x_obj, const vector<string>& x_features) const
 {
 	double sum = 0;
@@ -105,10 +108,12 @@ double Template::CompareWithObject(const Object& x_obj, const vector<string>& x_
 	return sqrt(sum) / x_features.size();
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-/* Update the template's features */
-/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-
+/**
+* @brief Update the template's features
+*
+* @param x_alpha            Alpha coefficient for lowpass filter
+* @param m_currentTimeStamp Current time
+*/
 void Template::UpdateFeatures(double x_alpha, TIME_STAMP m_currentTimeStamp)
 {
 	if(m_lastMatchingObject != NULL)
@@ -128,10 +133,14 @@ void Template::UpdateFeatures(double x_alpha, TIME_STAMP m_currentTimeStamp)
 	}
 	
 }
-/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-/* This template needs to be cleaned */
-/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 
+/**
+* @brief This template needs to be cleaned
+*
+* @param x_cleaningTimeStamp Time at which the template should be cleaned
+*
+* @return true if it needs to be cleaned
+*/
 bool Template::NeedCleaning(TIME_STAMP x_cleaningTimeStamp)
 {
 	int tmp = m_lastSeen - x_cleaningTimeStamp; // note: this condition would not resist an overflow

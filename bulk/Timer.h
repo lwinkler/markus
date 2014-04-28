@@ -24,10 +24,10 @@
 #ifndef MK_TIMER_H
 #define MK_TIMER_H
 
-//#include <time.h>
 #include <sys/time.h>
 #include <unistd.h>
 
+/// Timer class used for benchmarking
 class Timer
 {
 public:
