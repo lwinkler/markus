@@ -78,9 +78,6 @@ void StreamEvent::RenderTo(Mat& x_output) const
 	// else x_output.setTo(0);
 }
 
-/// Write the stream content to a directory
-/// @param x_in Input stream
-/// @param x_dir Input directory (for images)
 void StreamEvent::Serialize(std::ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
@@ -93,9 +90,6 @@ void StreamEvent::Serialize(std::ostream& x_out, const string& x_dir) const
 	x_out << root;
 }
 
-/// Deserialize the event stream from JSON
-/// @param x_in Input stream
-/// @param x_dir Input directory (for images)
 void StreamEvent::Deserialize(std::istream& x_in, const string& x_dir)
 {
 	// TODO

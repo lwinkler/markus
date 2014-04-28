@@ -29,9 +29,6 @@
 
 using namespace std;
 
-/// This class represents a debug stream, a stream that is only used to help the user 
-/// it can typically be used to show what is happening inside a detection module
-
 StreamDebug::StreamDebug(const std::string& x_name, cv::Mat& x_image, Module& rx_module, const string& rx_description) : 
 	Stream(x_name, rx_module, rx_description),
 	m_image(x_image)
@@ -57,9 +54,6 @@ void StreamDebug::RenderTo(cv::Mat& x_output) const
 	m_image.copyTo(x_output);
 }
 
-/// Serialize the stream content to a directory
-/// @param x_in Input stream
-/// @param x_dir Input directory (for images)
 void StreamDebug::Serialize(std::ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
@@ -75,9 +69,6 @@ void StreamDebug::Serialize(std::ostream& x_out, const string& x_dir) const
 	x_out << root;
 }
 
-/// Deserialize the stream from JSON
-/// @param x_in Input stream
-/// @param x_dir Input directory (for images)
 void StreamDebug::Deserialize(std::istream& x_in, const string& x_dir)
 {
 	// TODO

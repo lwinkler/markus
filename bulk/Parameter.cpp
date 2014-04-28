@@ -45,7 +45,6 @@ template<> const string ParameterT<float>::m_typeStr  = "float";
 template<> const string ParameterT<double>::m_typeStr = "double";
 
 
-/// Parent for all parameter structures
 ParameterStructure::ParameterStructure(const ConfigReader& x_configReader):
 	m_configReader(x_configReader.GetSubConfig("parameters")),
 	m_moduleName(x_configReader.GetAttribute("name"))
@@ -60,8 +59,9 @@ ParameterStructure::~ParameterStructure()
 	m_list.clear();
 }
 
-/// Initialize the parameter structure with the value from default or xml configuration
-
+/**
+* @brief Initialize the parameter structure with the value from default or xml configuration
+*/
 void ParameterStructure::Init()
 {
 	// Read config file
@@ -75,8 +75,9 @@ void ParameterStructure::Init()
 	CheckRange(false);
 }
 
-/// Set the value from xml configuration 
-
+/**
+* @brief Set the value from xml configuration
+*/
 void ParameterStructure::SetFromConfig()
 {
 	ConfigReader conf = m_configReader; // .GetSubConfig("parameters");
@@ -104,8 +105,9 @@ void ParameterStructure::SetFromConfig()
 	}
 }
 
-/// Save all values and prepare xml configuration for writing
-
+/**
+* @brief Save all values and prepare xml configuration for writing
+*/
 void ParameterStructure::UpdateConfig() const
 {
 	// assert(!m_configReader.IsEmpty());
@@ -120,8 +122,13 @@ void ParameterStructure::UpdateConfig() const
 	}
 }
 
-
-/// Get the parameter by name
+/**
+* @brief Get the parameter by name
+*
+* @param x_name Name
+*
+* @return parameter
+*/
 const Parameter& ParameterStructure::GetParameterByName(const string& x_name) const
 {
 	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
@@ -135,7 +142,13 @@ const Parameter& ParameterStructure::GetParameterByName(const string& x_name) co
 	throw ParameterException("Parameter not found in module " + m_moduleName + ": " + x_name, LOC);
 }
 
-/// Get the reference to a parameter by name
+/**
+* @brief Get the reference to a parameter by name
+*
+* @param x_name Name
+*
+* @return parameter
+*/
 Parameter& ParameterStructure::RefParameterByName(const string& x_name)
 {
 	for(vector<Parameter*>::iterator it = m_list.begin(); it != m_list.end(); it++)
@@ -150,8 +163,9 @@ Parameter& ParameterStructure::RefParameterByName(const string& x_name)
 }
 
 
-/// Set the hard default value
-
+/**
+* @brief Set the value of the parameter to default
+*/
 void ParameterStructure::SetValueToDefault()
 {
 	for(vector<Parameter*>::iterator it = m_list.begin(); it != m_list.end(); it++)
@@ -161,8 +175,11 @@ void ParameterStructure::SetValueToDefault()
 	}
 }
 
-/// Check that the parameter values are in range [min;max]
-
+/**
+* @brief  Check that the parameter values are in range [min;max] and throw an exception if not
+*
+* @param x_checkRelated Check that all parameters in config are related to the module
+*/
 void ParameterStructure::CheckRange(bool x_checkRelated) const
 {
 	if(x_checkRelated)
@@ -202,8 +219,9 @@ void ParameterStructure::CheckRange(bool x_checkRelated) const
 	}
 }
 
-/// Print parameters to stdout with details
-
+/**
+* @brief Print parameters to logs with details
+*/
 void ParameterStructure::PrintParameters() const
 {
 	stringstream ss;
@@ -217,6 +235,12 @@ void ParameterStructure::PrintParameters() const
 }
 
 
+/**
+* @brief Export the parameter for module description
+*
+* @param rx_os         Output stream
+* @param x_indentation Number of tabs for indentation
+*/
 void ParameterEnum::Export(ostream& rx_os, int x_indentation)
 {
 	string tabs(x_indentation, '\t');
@@ -229,7 +253,11 @@ void ParameterEnum::Export(ostream& rx_os, int x_indentation)
 	rx_os<<tabs<<"</param>"<<endl;
 }
 
-/// Static function used statically for map initialization
+/**
+* @brief Static function used for map initialization
+*
+* @return map
+*/
 map<string,int> ParameterImageType::CreateMap()
 {
 	map<string, int> map1;
@@ -271,6 +299,11 @@ map<string,int> ParameterImageType::CreateMap()
 	return map1;
 }
 
+/**
+* @brief Create a reverse map. Used internally
+*
+* @return map
+*/
 map<int,string> ParameterImageType::CreateReverseMap()
 {
 	const map<string, int> map1 = CreateMap();
@@ -286,6 +319,12 @@ ParameterImageType::ParameterImageType(const string& x_name, int x_default, int 
 {
 }
 
+/**
+* @brief Set the value of the parameter
+*
+* @param rx_value   String containing the value
+* @param x_confType Source of the configuration (default, xml, GUI, ...)
+*/
 void ParameterEnum::SetValue(const string& rx_value, ParameterConfigType x_confType)
 {
 	if(m_isLocked) 
@@ -294,6 +333,12 @@ void ParameterEnum::SetValue(const string& rx_value, ParameterConfigType x_confT
 	m_confSource = x_confType;
 }
 
+/**
+* @brief Set the value of the parameter
+*
+* @param rx_value   Integer containing the value
+* @param x_confType Source of the configuration (default, xml, GUI, ...)
+*/
 void ParameterEnum::SetValue(int rx_value, ParameterConfigType x_confType)
 {
 	if(m_isLocked) 
@@ -303,16 +348,31 @@ void ParameterEnum::SetValue(int rx_value, ParameterConfigType x_confType)
 }
 
 
+/**
+* @brief Set the default value 
+*
+* @param rx_value Value to set
+*/
 void ParameterEnum::SetDefault(const string& rx_value)
 {
 	m_default = GetEnum().at(rx_value);
 }
 
+/**
+* @brief Check that the parameter value is in range
+*
+* @return true if valid
+*/
 bool ParameterEnum::CheckRange() const
 {
 	return true;
 }
 
+/**
+* @brief Print the parameter with default value and range
+*
+* @param os Output stream
+*/
 void ParameterEnum::Print(ostream& os) const
 {
 	os<<m_name<<" = "<<GetReverseEnum().at(GetValue())<<" ["<<GetValue()<<"] ("<<configType[m_confSource]<<"); ";

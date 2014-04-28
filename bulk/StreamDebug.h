@@ -28,7 +28,8 @@
 
 #include "Stream.h"
 
-/// This class represents a stream that is only used for debug
+/// This class represents a debug stream, a stream that is only used to help the user 
+/// it can typically be used to show what is happening inside a detection module
 
 class StreamDebug : public Stream
 {

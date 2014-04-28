@@ -52,7 +52,7 @@ enum ParameterConfigType
 
 static const char configType[PARAMCONF_SIZE][16] = {"unset", "def", "xml", "gui", "cmd", "unk"};
 
-
+/// Class representing a generic parameter for use in a module
 class Parameter
 {
 public:
@@ -96,6 +96,7 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 };
 
+/// Template for all parameters with numerical values
 template<class T> class ParameterT : public Parameter
 {
 public:
@@ -181,7 +182,7 @@ private:
 };
 
 
-// for string type param
+/// Parameter of type string
 class ParameterString : public Parameter
 {
 public:
@@ -242,7 +243,7 @@ private:
 	std::string* mp_value;
 };
 
-
+/// Parameter of type enum
 class ParameterEnum : public Parameter
 {
 public:
@@ -305,7 +306,6 @@ public:
 };
 
 /// Represents a set of parameters for a configurable objects
-
 class ParameterStructure
 {
 public:
@@ -331,12 +331,13 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 };
 
+/// Parameter of type integer
 typedef ParameterT<int> 	ParameterInt;
+/// Parameter of type double
 typedef ParameterT<double> 	ParameterDouble;
+/// Parameter of type float
 typedef ParameterT<float> 	ParameterFloat;
+/// Parameter of type boolean
 typedef ParameterT<bool> 	ParameterBool;
-
-
-
 
 #endif

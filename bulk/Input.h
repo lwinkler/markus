@@ -39,9 +39,7 @@ public:
 	}
 };
 
-/**
-* @brief Class representing an module used for input (camera, video file, network stream, ...)
-*/
+/// Class representing an module used for input (camera, video file, network stream, ...)
 class Input : public Module
 {
 public:

@@ -31,13 +31,21 @@ FactoryModules::FactoryModules()
 	registerAllModules(*this);	
 }
 
-Module * FactoryModules::CreateModule(const std::string& x_name, const ConfigReader& x_config)
+/**
+* @brief Create a module of given type
+*
+* @param x_type   Type of the module as string
+* @param x_config Relative path and name of the configuration file of the module
+*
+* @return 
+*/
+Module * FactoryModules::CreateModule(const std::string& x_type, const ConfigReader& x_config)
 {
-	ModuleRegistry::iterator it = m_register.find(x_name);
+	ModuleRegistry::iterator it = m_register.find(x_type);
 
 	if (it == m_register.end())
 	{
-		throw MkException("Cannot find a constructor for module of type " + x_name, LOC);
+		throw MkException("Cannot find a constructor for module of type " + x_type, LOC);
 	}
 
 	CreateModuleFunc func = it->second;
@@ -45,6 +53,11 @@ Module * FactoryModules::CreateModule(const std::string& x_name, const ConfigRea
 }
 
 
+/**
+* @brief List all modules
+*
+* @param xr_types Output: The list of modules is added to this vector
+*/
 void FactoryModules::ListModules(vector<string>& xr_types) const
 {
 	for(ModuleRegistry::const_iterator it = m_register.begin() ; it != m_register.end() ; it++)

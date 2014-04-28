@@ -28,13 +28,15 @@
 
 class Module;
 
+/// A timer associated with a module (for auto processing, mostly used in input modules)
 class QModuleTimer : public QTimer
 {
 public:
 	QModuleTimer(Module & x_module, double x_fps);
-	virtual void timerEvent(QTimerEvent * px_event);
 	void Reset(double x_fps);
+
 protected:
+	virtual void timerEvent(QTimerEvent * px_event);
 	Module & m_module;
 };
 

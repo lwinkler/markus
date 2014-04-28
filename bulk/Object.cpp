@@ -48,9 +48,6 @@ Object::Object(const string& x_name, const cv::Rect& x_rect) :
 
 Object::~Object(){}
 
-/// Serialize the object to stdout in JSON
-/// @param x_out Output stream
-/// @param x_dir Output directory (for images)
 void Object::Serialize(std::ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
@@ -66,28 +63,23 @@ void Object::Serialize(std::ostream& x_out, const string& x_dir) const
 	x_out << root;
 }
 
-// Deserialize the object
-/// @param x_in Input stream
-/// @param x_dir Input directory (for images)
 void Object::Deserialize(std::istream& x_in, const string& x_dir)
 {
 	// TODO
 }
 
 
-/// Draw an object on an image (for visualization)
+/**
+* @brief Draw an object on an image (for visualization)
+*
+* @param x_output Image to draw the object on
+* @param x_color  Color to use
+*/
 void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 {
 	//Rect rect = it1->GetRect();
 	Point p1(posX - width / 2, posY - height / 2);
 	Point p2(posX + width / 2, posY + height / 2);
-
-	/*float scale = static_cast<float>(xp_output->cols) / width;
-	p1.x = p1.x * scale;
-	p2.x = p2.x * scale;
-	scale = static_cast<float>(xp_output->rows) / height;
-	p1.y = p1.y * scale;
-	p2.y = p2.y * scale;*/
 
 	// Draw the rectangle in the input image
 	// if id is present, draw to the equivalent color

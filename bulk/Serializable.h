@@ -33,8 +33,20 @@ class Serializable
 		Serializable(){}
 		virtual ~Serializable(){}
 
-		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const = 0;
-		virtual void Deserialize(std::istream& stream, const std::string& x_dir) = 0;
+		/**
+		* @brief Serialize the stream content to JSON
+		*
+		* @param x_in Input stream
+		* @param x_dir  Input directory (for images)
+		*/
+		virtual void Serialize(std::ostream& x_in, const std::string& x_dir) const = 0;
+		/**
+		* @brief  Deserialize the stream from JSON
+		*
+		* @param x_out  Input stream
+		* @param x_dir  Input directory (for images)
+		*/
+		virtual void Deserialize(std::istream& x_out, const std::string& x_dir) = 0;
 };
 
 #endif

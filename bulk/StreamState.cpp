@@ -60,17 +60,12 @@ void StreamState::RenderTo(Mat& x_output) const
 	x_output.setTo(Scalar(255 * m_state, 255 * m_state, 255 * m_state));
 }
 
-/// Serialize the stream content to a directory
-/// @param x_in Input stream
-/// @param x_dir Input directory (for images)
 void StreamState::Serialize(std::ostream& x_out, const string& x_dir) const
 {
 	Stream::Serialize(x_out, x_dir);
 	x_out << (m_state ? "1" : "0") << endl;
 }
-/// Deserialize the stream from JSON
-/// @param x_in Input stream
-/// @param x_dir Input directory (for images)
+
 void StreamState::Deserialize(std::istream& x_in, const string& x_dir)
 {
 	// TODO

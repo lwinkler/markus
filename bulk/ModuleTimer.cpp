@@ -34,6 +34,11 @@ QModuleTimer::QModuleTimer(Module& x_module, double x_fps)
 	Reset(x_fps);
 }
 
+/**
+* @brief Reset the timer
+*
+* @param x_fps The frame per second to be set
+*/
 void QModuleTimer::Reset(double x_fps)
 {
 	double delay = 1000.0 / 100;

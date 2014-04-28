@@ -67,9 +67,6 @@ void Stream::Connect(Stream* x_stream)
 	m_connected = x_stream;
 }
 
-/// Serialize the stream content to a directory
-/// @param x_in Input stream
-/// @param x_dir Input directory (for images)
 void Stream::Serialize(std::ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
@@ -85,9 +82,6 @@ void Stream::Serialize(std::ostream& x_out, const string& x_dir) const
 	x_out << root;
 }
 
-/// Deserialize the stream from JSON
-/// @param x_in Input stream
-/// @param x_dir Input directory (for images)
 void Stream::Deserialize(std::istream& x_in, const string& x_dir)
 {
 	// TODO

@@ -30,15 +30,14 @@
 #include <map>
 #include <string>
 
+
+
 /// This class is a factory for modules: it creates a module of each type as specified by a string
-
-typedef Module* (*CreateModuleFunc)(const ConfigReader& x_config);
-typedef std::map<std::string, CreateModuleFunc> ModuleRegistry;
-template<class T> Module* createModule(const ConfigReader& x_config) {return new T(x_config);}
-
 class FactoryModules
 {
-
+	typedef Module* (*CreateModuleFunc)(const ConfigReader& x_config);
+	typedef std::map<std::string, CreateModuleFunc> ModuleRegistry;
+	template<class T> static Module* createModule(const ConfigReader& x_config) {return new T(x_config);}
 
 public:
 	FactoryModules();
@@ -47,7 +46,7 @@ public:
 		CreateModuleFunc func = createModule<T>;
 		m_register.insert(ModuleRegistry::value_type(name, func));
 	}
-	Module * CreateModule(const std::string& name, const ConfigReader& x_config);
+	Module * CreateModule(const std::string& x_type, const ConfigReader& x_config);
 	void RegisterAllModules();
 	void ListModules(std::vector<std::string>& xr_types) const;
 

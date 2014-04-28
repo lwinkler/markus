@@ -30,9 +30,11 @@
 #include "MkException.h"
 
 /*! \class Object
- *  \brief Class representing a region (or blob)
+ *  \brief Class representing an extracted object (or blob)
  *
- *  These regions are the area that are obtained after background subtraction and segmentation
+ *  Examples of objects 
+ *  - blob obtained after background subtraction and segmentation
+ *  - face detected with a sliding window algorithm
  */
 class Object : public Serializable
 {

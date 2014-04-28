@@ -31,12 +31,9 @@
 #include <log4cxx/logger.h>
 
 
-/*! \class Event
- *  \brief Class representing a event (e.g. Ponctual moment in time where an intrusion occurs)
- *
- */
 class Event;
 
+/// Class representing a event (e.g. Ponctual moment in time where an intrusion occurs)
 class Event : public Serializable
 {
 	public:
@@ -59,8 +56,8 @@ class Event : public Serializable
 			return m_object.GetFeature(x_name);
 		}
 		void Notify(bool x_isProcessEvent=false);
-		virtual void Serialize(std::ostream& stream x_out, const std::string& x_dir) const;
-		virtual void Deserialize(std::istream& stream x_in, const std::string& x_dir);
+		virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const;
+		virtual void Deserialize(std::istream& x_in, const std::string& x_dir);
 
 		inline void AddExternalInfo(const std::string& x_label, const std::string& x_value){m_externalInfo[x_label] = x_value;}
 		inline void AddExternalInfo(const std::string& x_label, double x_value){m_externalInfo[x_label] = x_value;}
@@ -71,8 +68,10 @@ class Event : public Serializable
 	protected:
 		std::string m_label;
 		Object m_object;
-		TIME_STAMP m_absTimeEvent; // Abs time of the event (given by current date)
-		TIME_STAMP m_absTimeNotif; // Abs time of the event at notification of parent process
+		/// Abs time of the event (given by current date)
+		TIME_STAMP m_absTimeEvent;
+		/// Abs time of the event at notification of parent process
+		TIME_STAMP m_absTimeNotif;
 		Json::Value m_externalInfo;
 
 	private:

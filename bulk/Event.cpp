@@ -42,9 +42,6 @@ Event::Event() :
 Event::~Event(){}
 
 
-/// @brief Serialize event from JSON
-/// @param x_out Output stream
-/// @param x_dir Output directory (for images)
 void Event::Serialize(std::ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
@@ -65,16 +62,15 @@ void Event::Serialize(std::ostream& x_out, const string& x_dir) const
 	x_out << root;
 }
 
-/// @brief Deserialize the event from JSON
-/// @param x_in Input stream
-/// @param x_dir Input directory (for images)
 void Event::Deserialize(std::istream& x_in, const string& x_dir)
 {
 	// TODO
 	// Note that a null JSON means that the event was not raised
 }
 
-/// Empty the event: must be called on each frame process to avoid raising multiple events
+/**
+* @brief Empty the event: must be called on each frame process to avoid raising multiple events
+*/
 void Event::Empty()
 {
 	m_label = "";
@@ -82,7 +78,13 @@ void Event::Empty()
 	m_externalInfo.clear();
 }
 
-/// Raise an event with a set of features
+/**
+* @brief Raise an event with a set of features
+*
+* @param x_label        Label of the event (e.g. "motion", "intrusion")
+* @param x_object       An object linked with the event. The features of the object will be used as the features of the event.
+* @param x_absTimeEvent Optional: The time at which the event started. Use this field if events are raised with a delay.
+*/
 void Event::Raise(const string x_label, const Object& x_object, TIME_STAMP x_absTimeEvent)
 {
 	m_absTimeEvent = x_absTimeEvent;
@@ -92,7 +94,12 @@ void Event::Raise(const string x_label, const Object& x_object, TIME_STAMP x_abs
 	m_object      = x_object;
 }
 
-/// Raise an event without features
+/**
+* @brief Raise an event without features
+*
+* @param x_label        Label of the event (e.g. "motion", "intrusion")
+* @param x_absTimeEvent Optional: The time at which the event started. Use this field if events are raised with a delay.
+*/
 void Event::Raise(const string x_label, TIME_STAMP x_absTimeEvent)
 {
 	m_absTimeEvent = x_absTimeEvent == 0 ? getAbsTimeMs() : x_absTimeEvent;
@@ -104,7 +111,11 @@ void Event::Raise(const string x_label, TIME_STAMP x_absTimeEvent)
 
 
 
-// Log an event and notify the parent process
+/**
+* @brief Log an event and notify the parent process
+*
+* @param x_isProcessEvent If true, this indicates that the event is linked with processing and not analytics (e.g. for process events: "started", "stopped", "exception", "status")
+*/
 void Event::Notify(bool x_isProcessEvent)
 {
 	m_absTimeNotif = getAbsTimeMs();
