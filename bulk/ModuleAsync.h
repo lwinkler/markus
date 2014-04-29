@@ -27,9 +27,6 @@
 #include "Module.h"
 #include <QThread>
 
-/**
-* @brief This class represents a parent module that can process data asynchronously (in a separate thread)
-*/
 class ModuleAsyncParameterStructure : public ModuleParameterStructure
 {
 public:
@@ -43,6 +40,7 @@ public:
 	double detectionFps;
 };
 
+/// This class represents a parent module that can process data asynchronously (in a separate thread)
 class ModuleAsync : public Module
 {
 public:

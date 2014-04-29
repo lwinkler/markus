@@ -55,12 +55,14 @@ public:
 	int nbRows;
 };
 
-class Markus : public QMainWindow, public Configurable
+/**
+* @brief The QT window of the main window of the GUI
+*/
+class MarkusWindow : public QMainWindow, public Configurable
 {
 Q_OBJECT
 public:
-	Markus(ConfigReader& rx_configReader, Manager& rx_manager);
-	virtual ~Markus();
+	MarkusWindow(ConfigReader& rx_configReader, Manager& rx_manager);
         void UpdateConfig();
 private:
 	// ConfigReader& m_configReader;

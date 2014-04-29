@@ -44,7 +44,7 @@ using namespace std;
 // Main constructor
 //---------------------------------------------------------------------------------------------------- 
 
-Markus::Markus(ConfigReader & rx_configReader, Manager& rx_manager)
+MarkusWindow::MarkusWindow(ConfigReader & rx_configReader, Manager& rx_manager)
 	: Configurable(rx_configReader),
  	m_param(rx_configReader),
 	m_manager(rx_manager)
@@ -68,7 +68,7 @@ Markus::Markus(ConfigReader & rx_configReader, Manager& rx_manager)
 }
 
 
-void Markus::timerEvent(QTimerEvent* px_event)
+void MarkusWindow::timerEvent(QTimerEvent* px_event)
 {
 	/*if(m_centralized)
 	{
@@ -82,18 +82,14 @@ void Markus::timerEvent(QTimerEvent* px_event)
 	//update();
 }
 
-Markus::~Markus()
-{
-}
-
-void Markus::UpdateConfig()
+void MarkusWindow::UpdateConfig()
 {
 	for(vector<QModuleViewer *>::iterator it = m_moduleViewer.begin() ; it != m_moduleViewer.end() ; it++)
 		(*it)->UpdateConfig();
 	Configurable::UpdateConfig();
 }
 
-QLabel *Markus::createLabel(const QString &text)
+QLabel *MarkusWindow::createLabel(const QString &text)
 {
 	QLabel *label = new QLabel(text);
 	label->setAlignment(Qt::AlignCenter);
@@ -106,7 +102,7 @@ QLabel *Markus::createLabel(const QString &text)
 //---------------------------------------------------------------------------------------------------- 
 // Print about text
 //---------------------------------------------------------------------------------------------------- 
-void Markus::about()
+void MarkusWindow::about()
 {
 	QMessageBox::about(this, tr("About Image Viewer"),
 				    tr("<p>The <b>Markus</b> image processing environment lets "
@@ -120,7 +116,7 @@ void Markus::about()
 //---------------------------------------------------------------------------------------------------- 
 // Create actions and menus
 //---------------------------------------------------------------------------------------------------- 
-void Markus::createActionsAndMenus()
+void MarkusWindow::createActionsAndMenus()
 {
 	// Action for file menu
 	QAction* exitAct = new QAction(tr("E&xit"), this);
@@ -191,7 +187,7 @@ void Markus::createActionsAndMenus()
 	menuBar()->addMenu(helpMenu);
 }
 
-void Markus::viewDisplayOptions(bool x_isChecked)
+void MarkusWindow::viewDisplayOptions(bool x_isChecked)
 {
 	int size = m_moduleViewer.size();
 	for(int ind = 0 ; ind < size; ind++)
@@ -200,56 +196,56 @@ void Markus::viewDisplayOptions(bool x_isChecked)
 	}
 }
 
-void Markus::view1x1()
+void MarkusWindow::view1x1()
 {
 	m_param.nbRows = 1;
 	m_param.nbCols = 1;
 	resizeEvent(NULL);
 }
 
-void Markus::view1x2()
+void MarkusWindow::view1x2()
 {
 	m_param.nbRows = 1;
 	m_param.nbCols = 2;
 	resizeEvent(NULL);
 }
 
-void Markus::view2x2()
+void MarkusWindow::view2x2()
 {
 	m_param.nbRows = 2;
 	m_param.nbCols = 2;
 	resizeEvent(NULL);
 }
 
-void Markus::view2x3()
+void MarkusWindow::view2x3()
 {
 	m_param.nbRows = 2;
 	m_param.nbCols = 3;
 	resizeEvent(NULL);
 }
 
-void Markus::view3x3()
+void MarkusWindow::view3x3()
 {
 	m_param.nbRows = 3;
 	m_param.nbCols = 3;
 	resizeEvent(NULL);
 }
 
-void Markus::view3x4()
+void MarkusWindow::view3x4()
 {
 	m_param.nbRows = 3;
 	m_param.nbCols = 4;
 	resizeEvent(NULL);
 }
 
-void Markus::view4x4()
+void MarkusWindow::view4x4()
 {
 	m_param.nbRows = 4;
 	m_param.nbCols = 4;
 	resizeEvent(NULL);
 }
 
-void Markus::callManagerCommand()
+void MarkusWindow::callManagerCommand()
 {
 	QAction* action = dynamic_cast<QAction*>(sender());
 	assert(action != NULL);
@@ -257,7 +253,7 @@ void Markus::callManagerCommand()
 	m_manager.SendCommand("manager.manager." + string(action->text().toStdString()), "");
 }
 
-void Markus::resizeEvent(QResizeEvent* event)
+void MarkusWindow::resizeEvent(QResizeEvent* event)
 {
 	// hide all modules
 	int size = m_moduleViewer.size();

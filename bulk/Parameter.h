@@ -286,6 +286,7 @@ protected:
 	int* mp_value;
 };
 
+/// Parameter for the type of an OpenCV image
 class ParameterImageType : public ParameterEnum
 {
 public:

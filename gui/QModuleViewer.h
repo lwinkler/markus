@@ -63,6 +63,7 @@ public:
 	bool displayOptions;
 };
 
+/// Class used to display one module in a widget
 class QModuleViewer : public QWidget, public Configurable
 {
 	Q_OBJECT

@@ -35,6 +35,7 @@ class Module;
 class QGroupBox;
 class QHBoxLayout;
 
+/// QT widget to display one controller
 class QControlBoard : public QWidget 
 {
 	Q_OBJECT

@@ -64,10 +64,24 @@ public:
 	Controller(const std::string& x_name, const std::string& x_type);
 	virtual ~Controller();
 
+	/// Create a QT Widget for this controller
 	virtual QWidget* CreateWidget() = 0;
 	const std::string& GetName() {return m_name;}
 	const std::string& GetType(){return m_type;}  // TODO: Type must be set in sub class !
+
+	/**
+	* @brief List all actions
+	*
+	* @param xr_actions output
+	*/
 	virtual void ListActions(std::vector<std::string>& xr_actions) const = 0;
+
+	/**
+	* @brief Call an action of the controller
+	*
+	* @param x_name   Action
+	* @param xp_value Input/Output of the action (Ignored if NULL)
+	*/
 	virtual const void CallAction(const std::string& x_name, std::string* xp_value) = 0;
 	
 protected:

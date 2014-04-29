@@ -55,7 +55,7 @@ public:
 
 protected:
 	std::map<std::string, const action> m_actions;
-	Parameter& param;
+	Parameter& m_param;
 };
 
 /// Control class for an integer parameter
@@ -68,7 +68,7 @@ public:
 	virtual std::string GetValueFromWidget();
 
 protected:
-	QParameterSlider * parameterSlider;
+	QParameterSlider * m_parameterSlider;
 	ParameterInt& m_param2;
 };
 
@@ -83,7 +83,7 @@ public:
 	virtual std::string GetValueFromWidget();
 
 protected:
-	QParameterSlider * parameterSlider;
+	QParameterSlider * m_parameterSlider;
 	ParameterDouble& m_param2;
 };
 
@@ -97,7 +97,7 @@ public:
 	virtual std::string GetValueFromWidget();
 
 protected:
-	QParameterSlider * parameterSlider;
+	QParameterSlider * m_parameterSlider;
 	ParameterFloat   & m_param2;
 };
 
@@ -111,7 +111,7 @@ public:
 	virtual std::string GetValueFromWidget();
 
 protected:
-	QCheckBox     * checkBox;
+	QCheckBox     * m_checkBox;
 	ParameterBool & m_param2;
 };
 
@@ -125,7 +125,7 @@ public:
 	virtual std::string GetValueFromWidget();
 
 protected:
-	QLineEdit  * lineEdit;
+	QLineEdit       * m_lineEdit;
 	ParameterString & m_param2;
 };
 

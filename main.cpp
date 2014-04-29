@@ -311,7 +311,7 @@ int main(int argc, char** argv)
 			ConfigReader guiConfig = mainGuiConfig.RefSubConfig("gui", configFile, true);
 			guiConfig.RefSubConfig("parameters", "", true);
 
-			Markus gui(guiConfig, manager);
+			MarkusWindow gui(guiConfig, manager);
 			gui.setWindowTitle("Markus");
 			if(!nogui)
 				gui.show();
