@@ -549,31 +549,37 @@ const string& Manager::OutputDir(const string& x_outputDir, const string& x_conf
 		try
 		{
 			if(x_outputDir == "")
-				m_outputDir = "out_" + timeStamp();
-			else
-				m_outputDir = x_outputDir;
-
-			short trial = 0; // Must NOT be a char to avoid concatenation problems!
-			string tmp = m_outputDir;
-
-			// Try to create the output dir, if it fails, try changing the name
-			while(trial < 250)
 			{
-				try
+				m_outputDir = "out_" + timeStamp();
+				short trial = 0; // Must NOT be a char to avoid concatenation problems!
+				string tmp = m_outputDir;
+
+				// Try to create the output dir, if it fails, try changing the name
+				while(trial < 250)
 				{
-					SYSTEM("mkdir \"" + m_outputDir + "\"");
-					trial = 250;
-				}
-				catch(...)
-				{
-					stringstream ss;
-					trial++;
-					ss<<tmp<<"_"<<trial;
-					m_outputDir = ss.str();
-					if(trial == 250)
-						throw MkException("Cannot create output directory", LOC);
+					try
+					{
+						SYSTEM("mkdir \"" + m_outputDir + "\"");
+						trial = 250;
+					}
+					catch(...)
+					{
+						stringstream ss;
+						trial++;
+						ss<<tmp<<"_"<<trial;
+						m_outputDir = ss.str();
+						if(trial == 250)
+							throw MkException("Cannot create output directory", LOC);
+					}
 				}
 			}
+			else
+			{
+				// If the name is specified do not check if the direcory exists
+				m_outputDir = x_outputDir;
+				SYSTEM("mkdir -p \"" + m_outputDir + "\"");
+			}
+
 			// Copy config to output dir
 			if(x_configFile == "")
 			{
