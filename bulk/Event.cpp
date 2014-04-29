@@ -87,7 +87,7 @@ void Event::Empty()
 */
 void Event::Raise(const string x_label, const Object& x_object, TIME_STAMP x_absTimeEvent)
 {
-	m_absTimeEvent = x_absTimeEvent;
+	m_absTimeEvent = x_absTimeEvent == 0 ? getAbsTimeMs() : x_absTimeEvent;
 	if(IsRaised())
 		LOG_WARN(m_logger, "The same event is raised several times. Older events are overriden");
 	m_label       = x_label;
@@ -128,19 +128,18 @@ void Event::Notify(bool x_isProcessEvent)
 	root["external"] = m_externalInfo;
 
 	Json::FastWriter writer;
+	string tmp = writer.write(root);
+	tmp.erase(std::remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
 
 	if(x_isProcessEvent)
 	{
 		// This is only a process event. Only used to notify the parent process
-		// root["label"]     = GetLabel();
-		// root["dateNotif"] = getAbsTimeMs();
-		// if(x_extraInfo != "")
-			// root["external"] = x_extraInfo;
-		LOG_WARN(m_logger, "@notif@ PROCESS " << writer.write(root));
+
+		LOG_WARN(m_logger, "@notif@ PROCESS " << tmp);
 	}
 	else
 	{
-		LOG_WARN(m_logger, "@notif@ EVENT " << writer.write(root));
+		LOG_WARN(m_logger, "@notif@ EVENT " << tmp);
 	}
 
 }
