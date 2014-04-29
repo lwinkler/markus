@@ -136,6 +136,7 @@ void Event::Notify(bool x_isProcessEvent)
 		// root["dateNotif"] = getAbsTimeMs();
 		// if(x_extraInfo != "")
 			// root["external"] = x_extraInfo;
+			// TODO remove \n
 		LOG_WARN(m_logger, "@notif@ PROCESS " << writer.write(root));
 	}
 	else

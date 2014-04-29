@@ -42,7 +42,7 @@
 #define LOG_WARN  LOG4CXX_WARN
 #define LOG_INFO  LOG4CXX_INFO
 #define LOG_DEBUG LOG4CXX_DEBUG
-#define LOG_EVENT(logger, descriptor)   LOG4CXX_WARN((logger), "@notif@ EVENT" << " " << descriptor ) // TODO Maybe remove this
+// #define LOG_EVENT(logger, descriptor)   LOG4CXX_WARN((logger), "@notif@ EVENT" << " " << descriptor ) // TODO Maybe remove this
 
 #define SYSTEM(x) {std::string cmd; cmd = (x);\
 	if(system(cmd.c_str())) {\
