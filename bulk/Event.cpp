@@ -128,20 +128,18 @@ void Event::Notify(bool x_isProcessEvent)
 	root["external"] = m_externalInfo;
 
 	Json::FastWriter writer;
+	string tmp = writer.write(root);
+	tmp.erase(std::remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
 
 	if(x_isProcessEvent)
 	{
 		// This is only a process event. Only used to notify the parent process
-		// root["label"]     = GetLabel();
-		// root["dateNotif"] = getAbsTimeMs();
-		// if(x_extraInfo != "")
-			// root["external"] = x_extraInfo;
-			// TODO remove \n
-		LOG_WARN(m_logger, "@notif@ PROCESS " << writer.write(root));
+
+		LOG_WARN(m_logger, "@notif@ PROCESS " << tmp);
 	}
 	else
 	{
-		LOG_WARN(m_logger, "@notif@ EVENT " << writer.write(root));
+		LOG_WARN(m_logger, "@notif@ EVENT " << tmp);
 	}
 
 }
