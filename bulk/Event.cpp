@@ -87,7 +87,7 @@ void Event::Empty()
 */
 void Event::Raise(const string x_label, const Object& x_object, TIME_STAMP x_absTimeEvent)
 {
-	m_absTimeEvent = x_absTimeEvent;
+	m_absTimeEvent = x_absTimeEvent == 0 ? getAbsTimeMs() : x_absTimeEvent;
 	if(IsRaised())
 		LOG_WARN(m_logger, "The same event is raised several times. Older events are overriden");
 	m_label       = x_label;
