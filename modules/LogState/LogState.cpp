@@ -34,8 +34,6 @@ log4cxx::LoggerPtr LogState::m_logger(log4cxx::Logger::getLogger("LogState"));
 LogState::LogState(const ConfigReader& x_configReader) 
 	 : Module(x_configReader), m_param(x_configReader)
 {
-	m_description = "This module takes a state as input and logs it to .srt file";
-	
 	// Init input images
 	AddInputStream(0, new StreamState("input", m_state, *this, 	"Input state to be logged"));
 }

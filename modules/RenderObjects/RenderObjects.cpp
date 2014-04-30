@@ -35,8 +35,6 @@ RenderObjects::RenderObjects(const ConfigReader& x_configReader) :
 	m_imageInput(Size(m_param.width, m_param.height), m_param.type),
 	m_imageOutput(Size(m_param.width, m_param.height), m_param.type)
 {
-	m_description = "Output video stream with additional object streams.";
-	
 	AddInputStream(0, new StreamImage( "input", m_imageInput, *this,	"Input video stream"));
 	AddInputStream(1, new StreamObject("input", m_objectInput1, *this,	"Object stream 1"));
 	AddInputStream(2, new StreamObject("input", m_objectInput2, *this,	"Object stream 1"));

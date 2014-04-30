@@ -47,11 +47,15 @@ public:
 	std::string fourcc;
 };
 
+/**
+* @brief Write output to a video file
+*/
 class VideoFileWriter : public Module
 {
 public:
 	VideoFileWriter(const ConfigReader& x_confReader);
 	~VideoFileWriter();
+	virtual const std::string& GetDescription() const {static std::string descr = "Write output to a video file"; return descr;}
 	
 	virtual void ProcessFrame();
 	void Reset();

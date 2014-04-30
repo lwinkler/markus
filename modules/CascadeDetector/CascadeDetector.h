@@ -95,11 +95,15 @@ protected:
 	std::vector<cv::Rect> m_detected;
 };
 
+/**
+* @brief Detect objects from a video stream using a cascade filter (c.f. Haar patterns)
+*/
 class CascadeDetector : public ModuleAsync
 {
 public:
 	CascadeDetector(const ConfigReader& x_configReader);
 	~CascadeDetector(void);
+	virtual const std::string& GetDescription() const {static std::string descr = "Detect objects from a video stream using a cascade filter (c.f. Haar patterns)"; return descr;}
 	
 	virtual void LaunchThread();
 	virtual void NormalProcess();

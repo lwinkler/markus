@@ -27,11 +27,15 @@ public:
 };
 
 
-class ClassifyEvents : public Module
+/**
+* @brief Filter events based on user feedback
+*/
+class ClassifyEvents : public Module // TODO: Should probably be in dir bulk/
 {
 public:
 	ClassifyEvents(const ConfigReader& x_configReader);
 	~ClassifyEvents();
+	virtual const std::string& GetDescription() const {static std::string descr = "Filter events based on user feedback"; return descr;}
 	
 	virtual void ProcessFrame();
 	void Reset();

@@ -85,7 +85,7 @@ public:
 	void Process();
 
 	const std::string& GetName() const{return m_name;}
-	const std::string& GetDescription() const{return m_description;}
+	virtual const std::string& GetDescription() const = 0; // {return m_description;}
 	int GetId() const {return m_id;}
 
 	const std::map<int, Stream*>& GetInputStreamList() const {return m_inputStreams;}
@@ -98,7 +98,7 @@ public:
 
 	inline int GetWidth() const          {return GetParameters().width;}
 	inline int GetHeight() const         {return GetParameters().height;}
-	inline int GetType() const           {return GetParameters().type;}
+	inline int GetImageType() const      {return GetParameters().type;}
 	inline double GetFps() const         {return GetParameters().fps;}
 	inline bool IsAutoProcessed() const  {return GetParameters().autoProcess;}
 	virtual double GetRecordingFps();
@@ -145,7 +145,7 @@ protected:
 	std::map<int, Stream *> m_debugStreams;	
 
 	std::string m_name;
-	std::string m_description; 
+	// std::string m_description; 
 	int m_id;
 	std::vector<Module *> m_modulesDepending;
 	QModuleTimer * m_moduleTimer;

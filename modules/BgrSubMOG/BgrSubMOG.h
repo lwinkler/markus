@@ -69,11 +69,15 @@ public:
 	double learningRate;
 };
 
+/**
+* @brief Perform background subtraction via Mixtures Of Gaussians (OpenCV MOG1)
+*/
 class BgrSubMOG : public Module
 {
 public:
 	BgrSubMOG(const ConfigReader& x_configReader);
 	~BgrSubMOG();
+	virtual const std::string& GetDescription() const {static std::string descr = "Perform background subtraction via Mixtures Of Gaussians (OpenCV MOG1)"; return descr;}
 	
 	virtual void ProcessFrame();
 	void Reset();

@@ -38,8 +38,6 @@ FilterObjects::FilterObjects(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader)
 {
-	m_description = "Filter the input objects based on different criterion";
-
 	AddInputStream(0, new StreamObject("input", 	m_objectsIn, *this,	"Incoming objects"));
 
 	AddOutputStream(0, new StreamObject("filtered",  m_objectsOut, *this,	"Filtered objects objects"));

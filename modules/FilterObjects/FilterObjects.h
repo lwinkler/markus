@@ -53,11 +53,15 @@ public:
 	int    maxObjectsNb;
 };
 
+/**
+* @brief Filter the input objects based on different criterion
+*/
 class FilterObjects : public Module
 {
 public:
 	FilterObjects(const ConfigReader& x_configReader);
 	~FilterObjects();
+	virtual const std::string& GetDescription() const {static std::string descr = "Filter the input objects based on different criterion"; return descr;}
 	
 	virtual void ProcessFrame();
 	void Reset();

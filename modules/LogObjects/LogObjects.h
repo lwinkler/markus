@@ -43,11 +43,16 @@ public:
 	std::string file;
 };
 
+/**
+* @brief Read a stream of objects and log data to a text file
+*/
 class LogObjects : public Module
 {
 public:
 	LogObjects(const ConfigReader& x_configReader);
 	~LogObjects(void);
+	virtual const std::string& GetDescription() const {static std::string descr = "Read a stream of objects and log data to a text file"; return descr;}
+	
 	void Reset();
 
 private:

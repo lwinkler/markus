@@ -54,11 +54,15 @@ public:
 	std::string features;
 };
 
+/**
+* @brief Track objects by matching a set of features (typically x,y,width andci height)
+*/
 class TrackerByFeatures : public Module
 {
 public:
 	TrackerByFeatures(const ConfigReader& x_configReader);
 	~TrackerByFeatures();
+	virtual const std::string& GetDescription() const {static std::string descr = "Track objects by matching a set of features (typically x,y,width andci height)"; return descr;}
 	
 	virtual void ProcessFrame();
 	void Reset();

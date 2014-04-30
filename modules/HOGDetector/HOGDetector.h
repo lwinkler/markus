@@ -89,12 +89,15 @@ protected:
 	std::vector<cv::Rect> m_detected;
 };
 
+/**
+* @brief Detect objects from a video stream using a HOG descriptor
+*/
 class HOGDetector : public ModuleAsync
 {
 public:
 	HOGDetector(const ConfigReader& x_configReader);
 	~HOGDetector(void);
-	//void CreateParamWindow();
+	virtual const std::string& GetDescription() const {static std::string descr = "Detect objects from a video stream using a HOG descriptor"; return descr;}
 	
 	virtual void LaunchThread();
 	virtual void NormalProcess();

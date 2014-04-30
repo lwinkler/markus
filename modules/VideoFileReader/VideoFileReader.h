@@ -45,11 +45,15 @@ public:
 	bool loop;
 };
 
+/**
+* @brief Read video stream from a video file
+*/
 class VideoFileReader : public Input
 {
 public:
 	VideoFileReader(const ConfigReader& x_confReader);
 	~VideoFileReader();
+	virtual const std::string& GetDescription() const {static std::string descr = "Read video stream from a video file"; return descr;}
 	
 	void Capture();
         void Reset();

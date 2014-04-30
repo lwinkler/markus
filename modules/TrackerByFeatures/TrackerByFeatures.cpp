@@ -40,8 +40,6 @@ TrackerByFeatures::TrackerByFeatures(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader)
 {
-	m_description = "Track objects by matching a set of features (typically x,y,width and height)";
-
 	AddInputStream(0, new StreamObject("input",      m_objects, *this,       "Input objects"));
 
 	AddOutputStream(0, new StreamObject("tracker", m_objects, *this, "Tracked objects"));

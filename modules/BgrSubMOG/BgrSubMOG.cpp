@@ -41,7 +41,6 @@ BgrSubMOG::BgrSubMOG(const ConfigReader& x_configReader) :
 	m_background(Size(m_param.width, m_param.height), m_param.type)
 {
 	mp_mog = NULL;
-	m_description = "Perform background subtraction via Mixtures Of Gaussians";
 	
 	AddInputStream(0, new StreamImage("input",       m_input,      *this,   "Video input"));
 

@@ -46,8 +46,6 @@ MotionDetector::MotionDetector(const ConfigReader& x_configReader)
 	: Module(x_configReader), m_param(x_configReader),
 	m_input(Size(m_param.width, m_param.height), m_param.type)
 {
-	m_description = "This module analyse an image where pixel value represents movement and outputs a state (motion or not)";
-	
 	// Init output images
 	AddInputStream(0, new StreamImage("input", m_input, *this, 	"Video input"));
 	AddOutputStream(0, new StreamState("motion", m_state,  *this, 	"Motion is detected"));

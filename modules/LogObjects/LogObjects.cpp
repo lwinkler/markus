@@ -43,8 +43,6 @@ log4cxx::LoggerPtr LogObjects::m_logger(log4cxx::Logger::getLogger("LogObjects")
 LogObjects::LogObjects(const ConfigReader& x_configReader) 
 	 : Module(x_configReader), m_param(x_configReader)
 {
-	m_description = "This module takes a stream of objects as inputs and logs data to a text file";
-	
 	// Init input streams
 	AddInputStream(0, new StreamObject("input",      m_objectsIn, *this,     "Incoming objects"));
 }

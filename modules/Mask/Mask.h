@@ -40,11 +40,16 @@ public:
 	};
 };
 
+/**
+* @brief Apply a binary mask to an image input
+*/
 class Mask : public Module
 {
 public:
 	Mask(const ConfigReader& x_configReader);
 	~Mask();
+	virtual const std::string& GetDescription() const {static std::string descr = "Apply a binary mask to an image input"; return descr;}
+
 	
 	virtual void ProcessFrame();
 	void Reset();

@@ -43,11 +43,15 @@ public:
 	int num;
 };
 
+/**
+* @brief Read video stream from an enbedded or USB camera
+*/
 class UsbCam : public Input
 {
 public:
 	UsbCam(const ConfigReader& x_confReader);
 	~UsbCam();
+	virtual const std::string& GetDescription() const {static std::string descr = "Read video stream from an enbedded or USB camera"; return descr;}
 	
 	void Capture();
 	virtual void Reset();

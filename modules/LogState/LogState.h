@@ -44,13 +44,15 @@ public:
 };
 
 /**
-* @brief Module used to log a state to an output file
+* @brief Read a state stream and log it to .srt file
 */
 class LogState : public Module
 {
 public:
 	LogState(const ConfigReader& x_configReader);
 	~LogState(void);
+	virtual const std::string& GetDescription() const {static std::string descr = "Read a state stream and log it to .srt file"; return descr;}
+	
 	void Reset();
 	virtual void ProcessFrame();
 

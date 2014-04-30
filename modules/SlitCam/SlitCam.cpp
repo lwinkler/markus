@@ -39,7 +39,6 @@ SlitCam::SlitCam(const ConfigReader& x_configReader):
 	m_input(Size(m_param.width, m_param.height), m_param.type),
 	m_output(Size(m_param.width, m_param.height), m_param.type)
 {
-	m_description = "A simple example module that mimics a slit camera (or linear camera). The camera input is a range of pixels in the middle of the image.";
 	m_position = 0;
 	
 	// Init output images

@@ -52,13 +52,15 @@ public:
 };
 
 /**
-* @brief Module implementing a logger of event (to an output directory)
+* @brief Read an event and log it to .srt file
 */
 class LogEvent : public Module
 {
 public:
 	LogEvent(const ConfigReader& x_configReader);
 	~LogEvent(void);
+	virtual const std::string& GetDescription() const {static std::string descr = "Read an event and log it to .srt file"; return descr;}
+
 	void Reset();
 private:
 	inline virtual const LogEventParameterStructure& GetParameters() const { return m_param;}

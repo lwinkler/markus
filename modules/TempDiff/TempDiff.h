@@ -34,19 +34,19 @@ class TempDiffParameterStructure : public ModuleParameterStructure
 public:
 	TempDiffParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-		// m_list.push_back(new ParameterFloat(0, "background_alpha",	0.02, 	PARAM_FLOAT, 0, 1,	&backgroundAlpha,	"Defines the speed at which the background adapts"));
-		// RefParameterByName("type").SetDefault("CV_32FC3");
-
 		ParameterStructure::Init();
 	};
-	//float backgroundAlpha;
 };
 
+/**
+* @brief Perform temporal differencing: compare frame with previous frame by subtraction
+*/
 class TempDiff : public Module
 {
 public:
 	TempDiff(const ConfigReader& x_configReader);
 	~TempDiff();
+	virtual const std::string& GetDescription() const {static std::string descr = "Perform temporal differencing: compare frame with previous frame by subtraction"; return descr;}
 	
 	virtual void ProcessFrame();
 	void Reset();

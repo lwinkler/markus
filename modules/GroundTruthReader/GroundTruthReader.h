@@ -44,11 +44,15 @@ public:
 	std::string pattern;
 };
 
+/**
+* @brief Read a ground truth file
+*/
 class GroundTruthReader : public Module
 {
 public:
 	GroundTruthReader(const ConfigReader& x_confReader);
 	~GroundTruthReader();
+	virtual const std::string& GetDescription() const {static std::string descr = "Read a ground truth file"; return descr;}
 	
 	void ProcessFrame();
 	void Reset();

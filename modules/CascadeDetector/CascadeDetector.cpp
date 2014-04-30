@@ -48,7 +48,6 @@ CascadeDetector::CascadeDetector(const ConfigReader& x_configReader)
 	// Init output images
 	if(! m_thread.m_cascade.load( m_param.filterFile ) || m_thread.m_cascade.empty())
 		throw MkException("Impossible to load cascade filter " + m_param.filterFile, LOC);
-	m_description = "Detect objects from a video stream using a cascade filter (c.f. Haar patterns).";
 
 	AddInputStream(0, new StreamImage("input", m_input, *this, 		"Video input")); 
 

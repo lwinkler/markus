@@ -41,7 +41,6 @@ BgrSubRunAvg::BgrSubRunAvg(const ConfigReader& x_configReader) :
 	m_foreground_tmp(Size(m_param.width, m_param.height), m_param.type)
 {
 	m_accumulator = new Mat();
-	m_description = "Perform a background subtraction using a running average";
 	
 	AddInputStream(0, new StreamImage("input",             m_input, *this,   "Video input"));
 

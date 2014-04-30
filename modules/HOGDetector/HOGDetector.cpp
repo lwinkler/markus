@@ -40,10 +40,6 @@ HOGDetector::HOGDetector(const ConfigReader& x_configReader)
 	m_input(Size(m_param.width, m_param.height), m_param.type),
 	m_lastInput(Size(m_param.width, m_param.height), m_param.type)
 {
-	// Init output images
-
-	m_description = "Detect objects from a video stream using a HOG descriptor";
-
 	AddInputStream(0, new StreamImage("input", m_input, *this, 		"Video input")); 
 
 	AddOutputStream(0, new StreamObject("detected", m_detectedObjects, /*colorFromStr(m_param.color),*/ *this,	"Detected objects"));

@@ -40,7 +40,6 @@ TempDiff::TempDiff(const ConfigReader& x_configReader) :
 	// m_output(Size(m_param.width, m_param.height), m_param.type),
 	m_lastImg(Size(m_param.width, m_param.height), m_param.type)
 {
-	m_description = "Perform temporal differencing: compare frame with previous frame by subtraction";
 	m_tmp = NULL;
 	
 	AddInputStream(0, new StreamImage("input", m_input, *this,             "Video input"));

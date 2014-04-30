@@ -48,11 +48,15 @@ public:
 	std::string features;
 };
 
+/**
+* @brief Segments a binary image and outputs a stream of objects (with OpenCV contour) and extracts their features (position, width and height)
+*/
 class SegmenterContour : public Module
 {
 public:
 	SegmenterContour(const ConfigReader& x_configReader);
 	~SegmenterContour();
+	virtual const std::string& GetDescription() const {static std::string descr = "Segments a binary image and outputs a stream of objects (with OpenCV contour) and extracts their features (position, width and height)"; return descr;}
 	
 	virtual void ProcessFrame();
 	void Reset();

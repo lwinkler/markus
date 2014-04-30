@@ -45,11 +45,15 @@ public:
 	std::string url;
 };
 
+/**
+* @brief Read video stream from a network camera
+*/
 class NetworkCam : public Input
 {
 public:
 	NetworkCam(const ConfigReader& x_confReader);
 	~NetworkCam();
+	virtual const std::string& GetDescription() const {static std::string descr = "Read video stream from a network camera"; return descr;}
 	
 	void Capture();
 	virtual void Reset();

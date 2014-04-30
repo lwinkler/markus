@@ -39,11 +39,15 @@ public:
 	};
 };
 
+/**
+* @brief Output video stream with additional object streams
+*/
 class RenderObjects : public Module
 {
 public:
 	RenderObjects(const ConfigReader& x_configReader);
 	~RenderObjects();
+	virtual const std::string& GetDescription() const {static std::string descr = "Output video stream with additional object streams"; return descr;}
 	
 	void Reset();
 	virtual void ProcessFrame();

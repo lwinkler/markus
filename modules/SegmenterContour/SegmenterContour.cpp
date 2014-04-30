@@ -39,8 +39,6 @@ SegmenterContour::SegmenterContour(const ConfigReader& x_configReader) :
 	m_param(x_configReader),
 	m_input(Size(m_param.width, m_param.height), m_param.type)
 {
-	m_description = "Segments a binary image and outputs a stream of objects (with OpenCV contour) and extracts their features (position, width and height)"; // TODO: Description should be a method
-
 	// Initialize inputs and outputs streams
 	AddInputStream(0, new StreamImage("input", m_input, *this,	"Input binary stream"));
 

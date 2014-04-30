@@ -20,8 +20,6 @@ ClassifyEvents::ClassifyEvents(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader)
 {
-	m_description = "Filter events based on user feedback";
-
 	AddInputStream(0, new StreamEvent( "events",   m_eventIn,  *this, "Incoming events"));
 
 	AddOutputStream(0, new StreamEvent("filtered", m_eventOut, *this, "Filtered events"));

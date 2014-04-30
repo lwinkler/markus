@@ -44,13 +44,15 @@ public:
 };
 
 /**
-* @brief Module implementing a motion detector
+* @brief Detect motion from an image where pixel value represents motion
 */
 class MotionDetector : public Module
 {
 public:
 	MotionDetector(const ConfigReader& x_configReader);
 	~MotionDetector(void);
+	virtual const std::string& GetDescription() const {static std::string descr = "Detect motion from an image where pixel value represents motion"; return descr;}
+	
 	void Reset();
 private:
 	MotionDetectorParameterStructure m_param;

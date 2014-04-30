@@ -39,8 +39,6 @@ LogEvent::LogEvent(const ConfigReader& x_configReader)
 	m_inputIm1(Size(m_param.width, m_param.height), m_param.type), // TODO: There should be an input array
 	m_inputIm2(Size(m_param.width, m_param.height), m_param.type)
 {
-	m_description = "This module takes an event as input and logs it to .srt file";
-
 	// Init input images
 	AddInputStream(0, new StreamEvent("event", m_event, *this, "Input event to be logged"));
 	AddInputStream(1, new StreamImage("image1", m_inputIm1, *this, "Video input for image extraction"));

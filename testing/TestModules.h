@@ -204,7 +204,7 @@ class TestModules : public CppUnit::TestFixture
 		ConfigReader moduleConfig = addModuleToConfig(x_type, *mp_config);
 		mp_config->SaveToFile("testing/tmp.xml");
 		Module* module = m_factory.CreateModule(x_type, moduleConfig);
-		m_image = cv::Mat(module->GetHeight(), module->GetWidth(), module->GetType());
+		m_image = cv::Mat(module->GetHeight(), module->GetWidth(), module->GetImageType());
 
 		const std::map<int, Stream*> inputs  = module->GetInputStreamList();
 		

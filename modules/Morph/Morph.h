@@ -47,11 +47,17 @@ public:
 	int iterations;
 };
 
+/**
+* @brief Apply a morphological operator to an image
+*/
 class Morph : public Module
 {
 public:
 	Morph(const ConfigReader& x_configReader);
 	~Morph();
+	virtual const std::string& GetDescription() const {static std::string descr = "Apply a morphological operator to an image"; return descr;}
+
+	
 	
 	virtual void ProcessFrame();
 	void Reset();
