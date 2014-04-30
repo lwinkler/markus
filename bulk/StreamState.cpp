@@ -46,7 +46,7 @@ void StreamState::ConvertInput()
 	if(m_connected == NULL) return;
 	
 	// Copy time stamp to output
-	m_timeStamp = RefConnected().GetTimeStamp();
+	m_timeStamp = GetConnected().GetTimeStamp();
 
 	const StreamState * pstream = dynamic_cast<const StreamState*>(m_connected);
 	if(pstream == NULL) return;

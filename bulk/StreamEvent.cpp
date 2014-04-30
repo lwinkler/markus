@@ -50,7 +50,7 @@ void StreamEvent::ConvertInput()
 	if(m_connected == NULL) return;
 	
 	// Copy time stamp to output
-	m_timeStamp = RefConnected().GetTimeStamp();
+	m_timeStamp = GetConnected().GetTimeStamp();
 
 	const StreamEvent * pstream = dynamic_cast<const StreamEvent*>(m_connected);
 	if(pstream == NULL) return;

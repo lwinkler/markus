@@ -157,7 +157,7 @@ void Module::Pause(bool x_pause)
 *
 * @return fps
 */
-double Module::GetRecordingFps()
+double Module::GetRecordingFps() const
 {
 	double fps = GetParameters().fps;
 	bool autop = GetParameters().autoProcess;
@@ -180,15 +180,15 @@ double Module::GetRecordingFps()
 			Stream * stream = m_inputStreams.at(0);
 			if(stream == NULL)
 				throw MkException("First stream is null", LOC);
-			stream = &(stream->RefConnected());
+			stream = &(stream->GetConnected());
 			if(stream == NULL)
 				throw MkException("Connected stream is null in Module::GetRecordingFps", LOC);
-			return stream->RefModule().GetRecordingFps();
+			return stream->GetModule().GetRecordingFps();
 		}
 		else
 		{
 			// estimate the fps to the min of input and current
-			return MIN(fps, m_inputStreams.at(0)->RefConnected().RefModule().GetRecordingFps());
+			return MIN(fps, m_inputStreams.at(0)->GetConnected().GetModule().GetRecordingFps());
 		}
 	}
 
@@ -416,7 +416,7 @@ bool Module::AllInputsAreReady() const
 {
 	for(map<int, Stream*>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
 	{
-		if(it->second->IsConnected() && !it->second->RefConnected().IsReady())
+		if(it->second->IsConnected() && !it->second->GetConnected().IsReady())
 			return false;
 	}
 	return true;
@@ -428,13 +428,13 @@ bool Module::AllInputsAreReady() const
 *
 * @return The master module
 */
-const Module& Module::GetMasterModule()
+const Module& Module::GetMasterModule() const
 {
 	for(map<int, Stream*>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
 	{
 		if(it->second->IsConnected())
 		{
-			Module& preceding = it->second->RefConnected().RefModule();
+			const Module& preceding = it->second->GetConnected().GetModule();
 			if(preceding.IsAutoProcessed())
 				return preceding;
 			else

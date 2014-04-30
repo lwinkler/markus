@@ -102,7 +102,7 @@ public:
 	inline int GetImageType() const      {return GetParameters().type;}
 	inline double GetFps() const         {return GetParameters().fps;}
 	inline bool IsAutoProcessed() const  {return GetParameters().autoProcess;}
-	virtual double GetRecordingFps();
+	virtual double GetRecordingFps() const;
 	
 	inline void AddDependingModule (Module & x_module){m_modulesDepending.push_back(&x_module);}
 	virtual void PrintStatistics() const;
@@ -120,7 +120,7 @@ public:
 	void SetAsReady();
 	void SetProcessByTimer(bool x_proc) {m_processByTimer = x_proc;}
 	bool AllInputsAreReady() const;
-	const Module& GetMasterModule();
+	const Module& GetMasterModule() const;
 	
 protected:
 

@@ -53,7 +53,7 @@ void StreamImage::ConvertInput()
 	// Copy time stamp to output
 	if(m_connected != NULL)
 	{
-		m_timeStamp = RefConnected().GetTimeStamp();
+		m_timeStamp = GetConnected().GetTimeStamp();
 		adjust(*m_img_input, m_image, mp_img_tmp1, mp_img_tmp2);
 	}
 	else
