@@ -101,5 +101,5 @@ void StreamImage::Connect(Stream* x_stream)
 		m_connected = NULL;
 		throw MkException("Input stream cannot be connected probably because it is not of type StreamImage", LOC);
 	}
-	m_img_input = &tmp->RefImage();
+	m_img_input = &tmp->GetImage();
 }
