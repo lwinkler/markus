@@ -85,7 +85,8 @@ public:
 	void Process();
 
 	const std::string& GetName() const{return m_name;}
-	virtual const std::string& GetDescription() const = 0; // {return m_description;}
+	virtual const std::string& GetClass() const = 0;
+	virtual const std::string& GetDescription() const = 0;
 	int GetId() const {return m_id;}
 
 	const std::map<int, Stream*>& GetInputStreamList() const {return m_inputStreams;}
@@ -145,7 +146,6 @@ protected:
 	std::map<int, Stream *> m_debugStreams;	
 
 	std::string m_name;
-	// std::string m_description; 
 	int m_id;
 	std::vector<Module *> m_modulesDepending;
 	QModuleTimer * m_moduleTimer;

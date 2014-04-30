@@ -97,6 +97,7 @@ class HOGDetector : public ModuleAsync
 public:
 	HOGDetector(const ConfigReader& x_configReader);
 	~HOGDetector(void);
+	virtual const std::string& GetClass() const {static std::string cl = "HOGDetector"; return cl;}
 	virtual const std::string& GetDescription() const {static std::string descr = "Detect objects from a video stream using a HOG descriptor"; return descr;}
 	
 	virtual void LaunchThread();

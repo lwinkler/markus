@@ -51,6 +51,7 @@ class LogState : public Module
 public:
 	LogState(const ConfigReader& x_configReader);
 	~LogState(void);
+	virtual const std::string& GetClass() const {static std::string cl = "LogState"; return cl;}
 	virtual const std::string& GetDescription() const {static std::string descr = "Read a state stream and log it to .srt file"; return descr;}
 	
 	void Reset();

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="RenderObjects" description="Output video stream with additional object streams.">
+<module name="RenderObjects" description="Output video stream with additional object streams">
 	<parameters>
 		<param name="class">
 			<type>string</type>

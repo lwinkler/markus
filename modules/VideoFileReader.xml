@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="VideoFileReader" description="Input from a video file.">
+<module name="VideoFileReader" description="Read video stream from a video file">
 	<parameters>
 		<param name="class">
 			<type>string</type>

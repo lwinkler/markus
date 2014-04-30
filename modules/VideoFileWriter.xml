@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="VideoFileWriter" description="Write output to a video file.">
+<module name="VideoFileWriter" description="Write output to a video file">
 	<parameters>
 		<param name="class">
 			<type>string</type>

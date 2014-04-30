@@ -53,6 +53,7 @@ class BgrSubRunAvg : public Module
 public:
 	BgrSubRunAvg(const ConfigReader& x_configReader);
 	~BgrSubRunAvg();
+	virtual const std::string& GetClass() const {static std::string cl = "BgrSubRunAvg"; return cl;}
 	virtual const std::string& GetDescription() const {static std::string descr = "Perform a background subtraction using a running average"; return descr;}
 	
 	virtual void ProcessFrame();

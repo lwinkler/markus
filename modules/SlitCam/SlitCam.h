@@ -60,6 +60,7 @@ class SlitCam : public Module
 public:
 	SlitCam(const ConfigReader& x_configReader);
 	~SlitCam(void);
+	virtual const std::string& GetClass() const {static std::string cl = "SlitCam"; return cl;}
 	virtual const std::string& GetDescription() const {static std::string descr = "A simple example module that mimics a slit camera (or linear camera). The camera input is a range of pixels in the middle of the image."; return descr;}
 	void Reset();
 private:

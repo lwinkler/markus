@@ -61,6 +61,7 @@ class FilterObjects : public Module
 public:
 	FilterObjects(const ConfigReader& x_configReader);
 	~FilterObjects();
+	virtual const std::string& GetClass() const {static std::string cl = "FilterObjects"; return cl;}
 	virtual const std::string& GetDescription() const {static std::string descr = "Filter the input objects based on different criterion"; return descr;}
 	
 	virtual void ProcessFrame();

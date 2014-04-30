@@ -52,6 +52,7 @@ class GroundTruthReader : public Module
 public:
 	GroundTruthReader(const ConfigReader& x_confReader);
 	~GroundTruthReader();
+	virtual const std::string& GetClass() const {static std::string cl = "GroundTruthReader"; return cl;}
 	virtual const std::string& GetDescription() const {static std::string descr = "Read a ground truth file"; return descr;}
 	
 	void ProcessFrame();
