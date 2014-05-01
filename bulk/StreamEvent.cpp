@@ -50,7 +50,7 @@ void StreamEvent::ConvertInput()
 	if(m_connected == NULL) return;
 	
 	// Copy time stamp to output
-	m_timeStamp = RefConnected().GetTimeStamp();
+	m_timeStamp = GetConnected().GetTimeStamp();
 
 	const StreamEvent * pstream = dynamic_cast<const StreamEvent*>(m_connected);
 	if(pstream == NULL) return;
@@ -58,13 +58,9 @@ void StreamEvent::ConvertInput()
 
 	if(! m_event.IsRaised()) return;
 
-	Object& obj(m_event.RefObject());
-	double ratioX = static_cast<double>(m_width) / pstream->GetInputWidth();
-	double ratioY = static_cast<double>(m_height) / pstream->GetInputHeight();
-	obj.posX   *= ratioX;
-	obj.posY   *= ratioY;
-	obj.width  *= ratioX;
-	obj.height *= ratioY;
+	double ratioX = static_cast<double>(m_width) / pstream->GetWidth();
+	double ratioY = static_cast<double>(m_height) / pstream->GetHeight();
+	m_event.ScaleObject(ratioX, ratioY);
 }
 
 /// Render : to display the event
@@ -73,7 +69,7 @@ void StreamEvent::RenderTo(Mat& x_output) const
 	if(m_event.IsRaised())
 	{
 		x_output.setTo(Scalar(255, 255, 255));
-		m_event.RefObject().RenderTo(x_output, Scalar(255, 0, 0));
+		m_event.GetObject().RenderTo(x_output, Scalar(255, 0, 0));
 	}
 	// else x_output.setTo(0);
 }

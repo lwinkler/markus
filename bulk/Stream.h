@@ -37,8 +37,8 @@ public:
 	inline const std::string& GetName() const {return m_name;}
 	inline int GetId() const {return m_id;}
 	inline void SetId(int x_id) {m_id = x_id;} // id should disappear at term
-	inline int GetInputWidth() const {return m_width;}
-	inline int GetInputHeight() const {return m_height;}
+	inline int GetWidth() const {return m_width;}
+	inline int GetHeight() const {return m_height;}
 	inline const std::string& GetDescription() const {return m_description;}
 	virtual const std::string GetTypeString() const = 0;
 	virtual void RenderTo(cv::Mat& x_output) const  = 0;
