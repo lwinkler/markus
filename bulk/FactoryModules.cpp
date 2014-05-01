@@ -49,7 +49,9 @@ Module * FactoryModules::CreateModule(const std::string& x_type, const ConfigRea
 	}
 
 	CreateModuleFunc func = it->second;
-	return func(x_config);
+	Module* pmod = func(x_config);
+	assert(pmod->GetClass() == x_type);
+	return pmod;
 }
 
 

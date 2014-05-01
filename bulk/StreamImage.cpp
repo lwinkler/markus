@@ -53,7 +53,7 @@ void StreamImage::ConvertInput()
 	// Copy time stamp to output
 	if(m_connected != NULL)
 	{
-		m_timeStamp = RefConnected().GetTimeStamp();
+		m_timeStamp = GetConnected().GetTimeStamp();
 		adjust(*m_img_input, m_image, mp_img_tmp1, mp_img_tmp2);
 	}
 	else
@@ -101,5 +101,5 @@ void StreamImage::Connect(Stream* x_stream)
 		m_connected = NULL;
 		throw MkException("Input stream cannot be connected probably because it is not of type StreamImage", LOC);
 	}
-	m_img_input = &tmp->RefImage();
+	m_img_input = &tmp->GetImage();
 }

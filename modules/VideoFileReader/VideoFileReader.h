@@ -53,6 +53,7 @@ class VideoFileReader : public Input
 public:
 	VideoFileReader(const ConfigReader& x_confReader);
 	~VideoFileReader();
+	virtual const std::string& GetClass() const {static std::string cl = "VideoFileReader"; return cl;}
 	virtual const std::string& GetDescription() const {static std::string descr = "Read video stream from a video file"; return descr;}
 	
 	void Capture();

@@ -47,6 +47,7 @@ class RenderObjects : public Module
 public:
 	RenderObjects(const ConfigReader& x_configReader);
 	~RenderObjects();
+	virtual const std::string& GetClass() const {static std::string cl = "RenderObjects"; return cl;}
 	virtual const std::string& GetDescription() const {static std::string descr = "Output video stream with additional object streams"; return descr;}
 	
 	void Reset();

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="MotionDetector" description="This module analyse an image where pixel value represents movement and outputs a state (motion or not)">
+<module name="MotionDetector" description="Detect motion from an image where pixel value represents motion">
 	<parameters>
 		<param name="class">
 			<type>string</type>

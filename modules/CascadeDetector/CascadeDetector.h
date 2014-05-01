@@ -103,6 +103,7 @@ class CascadeDetector : public ModuleAsync
 public:
 	CascadeDetector(const ConfigReader& x_configReader);
 	~CascadeDetector(void);
+	virtual const std::string& GetClass() const {static std::string cl = "CascadeDetector"; return cl;}
 	virtual const std::string& GetDescription() const {static std::string descr = "Detect objects from a video stream using a cascade filter (c.f. Haar patterns)"; return descr;}
 	
 	virtual void LaunchThread();

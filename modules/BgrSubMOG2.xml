@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="BgrSubMOG2" description="Perform background subtraction via Mixtures Of Gaussians">
+<module name="BgrSubMOG2" description="Perform background subtraction via Mixtures Of Gaussians (OpenCV MOG2)">
 	<parameters>
 		<param name="class">
 			<type>string</type>

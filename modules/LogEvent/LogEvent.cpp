@@ -177,7 +177,7 @@ void LogEvent::AddExternalImage(const Mat& x_image, const std::string& x_name, c
 /// 	there are two reason why we want to process: either the event is raised or the previous frame had a raised event
 bool LogEvent::IsInputProcessed() const
 {
-	const StreamEvent* pStream =  dynamic_cast<StreamEvent*>(&m_inputStreams.at(0)->RefConnected());
+	const StreamEvent* pStream =  dynamic_cast<const StreamEvent*>(&m_inputStreams.at(0)->GetConnected());
 	assert(pStream != NULL);
 	return m_event.IsRaised() || pStream->GetEvent().IsRaised();
 }

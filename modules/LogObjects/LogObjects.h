@@ -51,6 +51,7 @@ class LogObjects : public Module
 public:
 	LogObjects(const ConfigReader& x_configReader);
 	~LogObjects(void);
+	virtual const std::string& GetClass() const {static std::string cl = "LogObjects"; return cl;}
 	virtual const std::string& GetDescription() const {static std::string descr = "Read a stream of objects and log data to a text file"; return descr;}
 	
 	void Reset();

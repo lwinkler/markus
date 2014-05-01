@@ -33,7 +33,6 @@ class StreamImage : public Stream
 public:
 	StreamImage(const std::string& x_name, cv::Mat& x_image, Module& rx_module, const std::string& rx_description);
 	~StreamImage();
-	const cv::Mat& RefImage() const {return m_image;}
 	
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat& x_output) const;

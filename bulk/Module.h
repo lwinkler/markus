@@ -85,7 +85,8 @@ public:
 	void Process();
 
 	const std::string& GetName() const{return m_name;}
-	virtual const std::string& GetDescription() const = 0; // {return m_description;}
+	virtual const std::string& GetClass() const = 0;
+	virtual const std::string& GetDescription() const = 0;
 	int GetId() const {return m_id;}
 
 	const std::map<int, Stream*>& GetInputStreamList() const {return m_inputStreams;}
@@ -101,7 +102,7 @@ public:
 	inline int GetImageType() const      {return GetParameters().type;}
 	inline double GetFps() const         {return GetParameters().fps;}
 	inline bool IsAutoProcessed() const  {return GetParameters().autoProcess;}
-	virtual double GetRecordingFps();
+	virtual double GetRecordingFps() const;
 	
 	inline void AddDependingModule (Module & x_module){m_modulesDepending.push_back(&x_module);}
 	virtual void PrintStatistics() const;
@@ -110,7 +111,7 @@ public:
 	
 	virtual inline bool IsInput() {return false;}
 	void Export(std::ostream& rx_os, int x_indentation);
-	Stream& RefInputStreamById(int x_id);
+	Stream& RefInputStreamById(int x_id);  //TODO : Keep Ref ?
 	Stream& RefOutputStreamById(int x_id);
 	inline void LockForRead(){m_lock.lockForRead();}
 	inline void LockForWrite(){m_lock.lockForWrite();}
@@ -119,7 +120,7 @@ public:
 	void SetAsReady();
 	void SetProcessByTimer(bool x_proc) {m_processByTimer = x_proc;}
 	bool AllInputsAreReady() const;
-	const Module& GetMasterModule();
+	const Module& GetMasterModule() const;
 	
 protected:
 
@@ -145,7 +146,6 @@ protected:
 	std::map<int, Stream *> m_debugStreams;	
 
 	std::string m_name;
-	// std::string m_description; 
 	int m_id;
 	std::vector<Module *> m_modulesDepending;
 	QModuleTimer * m_moduleTimer;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="RandomEventGenerator" description="Generate events with random features at each step">
+<module name="RandomEventGenerator" description="Generate an event with random features at each step">
 	<parameters>
 		<param name="class">
 			<type>string</type>
