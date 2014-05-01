@@ -75,8 +75,8 @@ def video_info(video):
         return None
 
     try:
-        # Run ffprob to get info
-        ff = subprocess.Popen(['ffprobe', video], stderr=subprocess.PIPE)
+        # Run avprobe to get info. Note: This replaces ffprobe 
+        ff = subprocess.Popen(['avprobe', video], stderr=subprocess.PIPE)
         # Get back results
         ffout = str(ff.communicate())
         # Search the duration in the output
