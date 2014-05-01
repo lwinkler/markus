@@ -50,7 +50,7 @@ void StreamEvent::ConvertInput()
 	if(m_connected == NULL) return;
 	
 	// Copy time stamp to output
-	m_timeStamp = RefConnected().GetTimeStamp();
+	m_timeStamp = GetConnected().GetTimeStamp();
 
 	const StreamEvent * pstream = dynamic_cast<const StreamEvent*>(m_connected);
 	if(pstream == NULL) return;
@@ -69,7 +69,7 @@ void StreamEvent::RenderTo(Mat& x_output) const
 	if(m_event.IsRaised())
 	{
 		x_output.setTo(Scalar(255, 255, 255));
-		m_event.RefObject().RenderTo(x_output, Scalar(255, 0, 0));
+		m_event.GetObject().RenderTo(x_output, Scalar(255, 0, 0));
 	}
 	// else x_output.setTo(0);
 }
