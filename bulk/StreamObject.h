@@ -52,8 +52,7 @@ protected:
 	std::vector<Object> & m_objects;
 
 private:
-	StreamObject& operator=(const StreamObject&);
-	StreamObject(const StreamObject&);
+	DISABLE_COPY(StreamObject)
 };
 
 #endif

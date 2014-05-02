@@ -46,10 +46,9 @@ public:
 
 protected:
 	const cv::Mat& m_image;
-private:
 
-	StreamDebug& operator=(const StreamDebug&);
-	StreamDebug(const StreamDebug&);
+private:
+	DISABLE_COPY(StreamDebug)
 };
 
 #endif

@@ -48,8 +48,7 @@ protected:
 	Event& m_event;
 
 private:
-	StreamEvent& operator=(const StreamEvent&);
-	StreamEvent(const StreamEvent&);
+	DISABLE_COPY(StreamEvent)
 };
 
 #endif
