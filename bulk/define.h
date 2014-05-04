@@ -24,13 +24,17 @@
 #ifndef DEFINE_H
 #define DEFINE_H
 
-/// this file contains some usefull functions and methods
+/// @file this file contains some usefull functions and methods
 
 #define POW2(x) (x) * (x)
 #define DIST(x, y) sqrt((x) * (x) + (y) * (y))
 #define DIFF_REL(f) ((f).value - (f).mean) * ((f).value - (f).mean) / (f).sqVariance
 #define CLEAN_DELETE(x) if((x) != NULL){delete((x));(x) = NULL;}
 
+/// Disable copy constructor
+#define DISABLE_COPY(Class) \
+Class(const Class &); \
+Class &operator=(const Class &);
 
 // time stamp: use for all time stamps on frames in [ms]
 #define TIME_STAMP unsigned long long

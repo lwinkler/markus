@@ -52,8 +52,8 @@ void StreamObject::ConvertInput()
 	const StreamObject * pstream = dynamic_cast<const StreamObject*>(m_connected);
 	if(pstream == NULL) return;
 	std::vector<Object> rectsTarget = pstream->m_objects;
-	double ratioX = static_cast<double>(m_width) / pstream->GetInputWidth();
-	double ratioY = static_cast<double>(m_height) / pstream->GetInputHeight();
+	double ratioX = static_cast<double>(m_width) / pstream->GetWidth();
+	double ratioY = static_cast<double>(m_height) / pstream->GetHeight();
 
 	m_objects.clear();
 	for(vector<Object>::const_iterator it = rectsTarget.begin() ; it != rectsTarget.end() ; it++)

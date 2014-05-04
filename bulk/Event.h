@@ -70,6 +70,7 @@ class Event : public Serializable
 		inline void AddExternalInfo(const std::string& x_label, int x_value){m_externalInfo[x_label] = x_value;}
 		inline void AddExternalInfo(const std::string& x_label, unsigned long long x_value){m_externalInfo[x_label] = x_value;}
 		inline void AddExternalInfo(const std::string& x_label, std::istream& x_in){x_in >> m_externalInfo[x_label];}
+		inline void AddExternalFile(const std::string& x_label, const std::string& x_file){m_externalInfo["files"][x_label] = x_file;}
 
 	protected:
 		std::string m_label;

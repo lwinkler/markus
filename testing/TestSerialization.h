@@ -20,16 +20,19 @@
 *    You should have received a copy of the GNU Lesser General Public License
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
-#ifndef TEST_PROJECTS_H
-#define TEST_PROJECTS_H
+#ifndef TEST_SERIALIZATION_H
+#define TEST_SERIALIZATION_H
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/TestCase.h>
 #include <cppunit/TestCaller.h>
+#include <sstream>
 
 #include "util.h"
 #include "MkException.h"
-#include "Manager.h"
+#include "Serializable.h"
+
+// #include "StreamObject.h"
 
 #define LOG_TEST(logger, str) {\
 	std::cout<<str<<std::endl;\
@@ -37,10 +40,37 @@
 }
 
 
-/// Unit testing class by choosing a set of test projects
+/// Test class for serialization
+class TestObject : public Serializable
+{
+public:
+	TestObject()
+	{
+		m_int = 333;
+	}
+	virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const
+	{
+		Json::Value root;
+		root["int1"] = m_int;
+		// Serialize("int1", m_int, root, x_dir);
+		x_out << root;
+	}
+	virtual void Deserialize(std::istream& x_in, const std::string& x_dir)
+	{
+		Json::Value root;
+		x_in >> root;
+		m_int = root["int1"].asInt();
+
+	}
+	
+protected:
+	int m_int;
+};
+
+/// Unit testing class for serializable classes
 
 
-class TestProjects : public CppUnit::TestFixture
+class TestSerialization : public CppUnit::TestFixture
 {
 	private:
 		static log4cxx::LoggerPtr m_logger;
@@ -55,39 +85,27 @@ class TestProjects : public CppUnit::TestFixture
 	{
 	}
 
-	void runConfig(const std::string& x_configFile)
+	/// Test the serialization of one class
+	void testSerialization(Serializable& obj, const std::string& name)
 	{
-		LOG_TEST(m_logger, "## Unit test with configuration "<<x_configFile);
-		ConfigReader mainConfig(x_configFile);
-		mainConfig.Validate();
-		ConfigReader appConfig = mainConfig.GetSubConfig("application");
-		CPPUNIT_ASSERT(!appConfig.IsEmpty());
-		Manager manager(appConfig, true);
-		manager.Connect();
-		manager.Reset();
-
-		for(int i = 0 ; i < 10 ; i++)
-			if(!manager.Process())
-				break;
+		std::stringstream ss;
+		obj.Serialize(ss, "tmp/serialize_" + name);
+		std::cout<<ss.str()<<std::endl;
 	}
 
-	/// Run different existing configs
-	void testSync()
+
+	void testSerialization1()
 	{
-		LOG_TEST(m_logger, "\n# Unit test with different test projects");
-		runConfig("testing/projects/sync_test1.xml");
-		runConfig("testing/projects/sync_test2.xml");
-		runConfig("testing/projects/sync_test3.xml");
-		runConfig("testing/projects/sync_test4.xml");
-		runConfig("testing/projects/FaceAndTracker.xml");
+		TestObject obj;
+		testSerialization(obj, "testObject");
 	}
 
 	static CppUnit::Test *suite()
 	{
-		CppUnit::TestSuite *suiteOfTests = new CppUnit::TestSuite("TestProjects");
-		suiteOfTests->addTest(new CppUnit::TestCaller<TestProjects>("testSync", &TestProjects::testSync));
+		CppUnit::TestSuite *suiteOfTests = new CppUnit::TestSuite("TestSerialization");
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestSerialization>("testSerialization1", &TestSerialization::testSerialization1));
 		return suiteOfTests;
 	}
 };
-log4cxx::LoggerPtr TestProjects::m_logger(log4cxx::Logger::getLogger("TestProjects"));
+log4cxx::LoggerPtr TestSerialization::m_logger(log4cxx::Logger::getLogger("TestSerialization"));
 #endif

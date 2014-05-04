@@ -110,7 +110,6 @@ class Controllable
 			assert(m_controls.find(xp_ctr->GetName()) == m_controls.end());
 			m_controls.insert(make_pair(xp_ctr->GetName(), xp_ctr));
 		}
-		// inline bool HasNoControllers()const{return m_controls.size() == 0;} // TODO: Check otherwise
 
 	private:
 		std::map<std::string, Controller*> m_controls;

@@ -25,6 +25,7 @@
 #include "ConfigReaderTest.h"
 #include "TestProjects.h"
 #include "TestModules.h"
+#include "TestSerialization.h"
 
 
 
@@ -36,9 +37,10 @@ int main(int argc, char **argv)
 	Manager::OutputDir("testing/out");
 	log4cxx::xml::DOMConfigurator::configure("testing/log4cxx.xml");
 
-	runner.addTest(ConfigReaderTest::suite());
-	runner.addTest(TestProjects::suite());
-	runner.addTest(TestModules::suite());
+	// TODO runner.addTest(ConfigReaderTest::suite());
+	// TODO runner.addTest(TestProjects::suite());
+	// TODO runner.addTest(TestModules::suite());
+	runner.addTest(TestSerialization::suite());
 	runner.run();
 
 	return 0;

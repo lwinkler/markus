@@ -125,8 +125,7 @@ void LogEvent::SaveImage(Event& x_event)
 	{
 		std::stringstream ss1;
 		ss1 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetLabel() << "_global_1." << m_param.extension;
-		imwrite(ss1.str(), m_inputIm1);
-		AddExternalImage(m_inputIm1, m_event.GetLabel() + "_global_1", ss1.str(), x_event);
+		AddExternalImage(m_inputIm1, m_event.GetLabel() + "_global_1", ss1.str(), x_event); // TODO: Give a proper name in parameter
 
 		if(obj.width > 0 && obj.height > 0)
 		{
@@ -134,8 +133,7 @@ void LogEvent::SaveImage(Event& x_event)
 			ss2 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetLabel() << "_" << obj.GetName()<< obj.GetId() << "_1" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
 			Mat img = (m_inputIm1)(obj.Rect());
-			imwrite(ss2.str(), img);
-			AddExternalImage(img, m_event.GetLabel() + "_1", ss2.str(), x_event);
+			AddExternalImage((m_inputIm1)(obj.Rect()), m_event.GetLabel() + "_1", ss2.str(), x_event);
 		}
 	}
 
@@ -143,7 +141,6 @@ void LogEvent::SaveImage(Event& x_event)
 	{
 		std::stringstream ss1;
 		ss1 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetLabel() << "_global_2." << m_param.extension;
-		imwrite(ss1.str(), m_inputIm2);
 		AddExternalImage(m_inputIm2, m_event.GetLabel() + "_global_2", ss1.str(), x_event);
 
 		if(obj.width > 0 && obj.height > 0)
@@ -152,23 +149,16 @@ void LogEvent::SaveImage(Event& x_event)
 			ss2 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetLabel() << "_" << obj.GetName()<< obj.GetId() << "_2" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
 			Mat img = (m_inputIm2)(obj.Rect());
-			imwrite(ss2.str(), img);
 			AddExternalImage(img, m_event.GetLabel() + "_2", ss2.str(), x_event);
 		}
 	}
 }
 
 /// Store the extra information necessary along with the event
-void LogEvent::AddExternalImage(const Mat& x_image, const std::string& x_name, const std::string& x_file, Event& x_event) // TODO: See if we move this in Event
+void LogEvent::AddExternalImage(const Mat& x_image, const std::string& x_name, const std::string& x_file, Event& x_event)
 {
-	Json::Value root;
-	root["file"]   = x_file;
-	root["type"]   = x_image.type() == CV_8UC3 ? "image_color" : "image"; // ParameterImageType::ReverseEnum.at(x_image.type()); // TODO: Valid this
-	root["width"]  = x_image.cols;
-	root["height"] = x_image.rows;
-	stringstream ss;
-	ss << root;
-	x_event.AddExternalInfo(x_name, ss);
+	imwrite(x_file, x_image);
+	x_event.AddExternalFile(x_name, x_file);
 }
 
 

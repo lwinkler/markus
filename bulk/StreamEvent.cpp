@@ -58,8 +58,8 @@ void StreamEvent::ConvertInput()
 
 	if(! m_event.IsRaised()) return;
 
-	double ratioX = static_cast<double>(m_width) / pstream->GetInputWidth();
-	double ratioY = static_cast<double>(m_height) / pstream->GetInputHeight();
+	double ratioX = static_cast<double>(m_width) / pstream->GetWidth();
+	double ratioY = static_cast<double>(m_height) / pstream->GetHeight();
 	m_event.ScaleObject(ratioX, ratioY);
 }
 
