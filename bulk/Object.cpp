@@ -23,6 +23,7 @@
 #include "Object.h"
 #include "util.h"
 #include <jsoncpp/json/writer.h>
+#include <jsoncpp/json/reader.h>
 
 using namespace cv;
 using namespace std;
@@ -57,6 +58,7 @@ void Object::Serialize(std::ostream& x_out, const string& x_dir) const
 	root["y"]      = posY;
 	root["width"]  = width;
 	root["height"] = height;
+
 	for(map <std::string, Feature>::const_iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
 		root["features"][it->first] = it->second.value; // TODO What about other measures ?
 
@@ -65,7 +67,20 @@ void Object::Serialize(std::ostream& x_out, const string& x_dir) const
 
 void Object::Deserialize(std::istream& x_in, const string& x_dir)
 {
-	// TODO
+	Json::Value root;
+	x_in >> root;
+
+	m_id   = root["id"].asInt();
+	m_name = root["name"].asString();
+	posX   = root["x"].asDouble();
+	posY   = root["y"].asDouble();
+	width  = root["width"].asDouble();
+	height = root["height"].asDouble();
+
+	m_feats.clear();
+	Json::Value::Members members = root["features"].getMemberNames();
+	for(Json::Value::Members::const_iterator it = members.begin() ; it != members.end() ; it++)
+		AddFeature(*it, root[*it].asFloat());
 }
 
 

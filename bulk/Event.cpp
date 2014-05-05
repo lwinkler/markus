@@ -58,14 +58,34 @@ void Event::Serialize(std::ostream& x_out, const string& x_dir) const
 			m_object.Serialize(ss, x_dir);
 			ss >> root["object"];
 		}
+		else root["object"];
 	}
 	x_out << root;
 }
 
 void Event::Deserialize(std::istream& x_in, const string& x_dir)
 {
-	// TODO
 	// Note that a null JSON means that the event was not raised
+	Json::Value root;
+	x_in >> root;
+	bool raised = root["raised"].asBool();
+	if(raised)
+	{
+		m_label = root["label"].asString();
+		m_absTimeEvent = root["dateEvent"].asInt64();
+		m_absTimeNotif = root["dateNotif"].asInt64();
+
+		if(!root["object"].isNull())
+		{
+			stringstream ss;
+			ss << root["object"];
+			m_object.Deserialize(ss, x_dir);
+		}
+	}
+	else
+	{
+		m_label = "";
+	}
 }
 
 /**

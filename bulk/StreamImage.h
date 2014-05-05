@@ -48,8 +48,7 @@ protected:
 	cv::Mat * mp_img_tmp2;
 
 private:
-	StreamImage& operator=(const StreamImage&);
-	StreamImage(const StreamImage&);
+	DISABLE_COPY(StreamImage)
 };
 
 #endif

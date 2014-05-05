@@ -1,0 +1,16 @@
+
+{
+	"dateEvent" : 1399308502411,
+	"dateNotif" : 3453434522221,
+	"label" : "ggg",
+	"object" : 
+	{
+		"height" : 0.550,
+		"id" : 333,
+		"name" : "test_serialize",
+		"width" : 0.70,
+		"x" : 0.40,
+		"y" : 0.60
+	},
+	"raised" : true
+}

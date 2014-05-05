@@ -311,8 +311,8 @@ bool compareFiles(const std::string& x_file1, const std::string& x_file2)
 	{
 		if(!getline(file2, line2))
 			return false;
-		// if(line1 != line2)
-			// return false;
+		if(line1 != line2)
+			return false;
 	}
 	if(getline(file1, line2))
 		return false;

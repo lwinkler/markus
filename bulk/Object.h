@@ -48,7 +48,7 @@ class Object : public Serializable
 		inline void SetId(int x_id){m_id = x_id;}
 
 		inline void AddFeature(std::string x_name, const Feature& x_feat) {m_feats.insert(std::make_pair(x_name, x_feat));}
-		inline void AddFeature(std::string x_name, double x_value) {m_feats.insert(std::make_pair(x_name, Feature(x_value)));}
+		inline void AddFeature(std::string x_name, double x_value) {m_feats.insert(std::make_pair(x_name, Feature(x_value)));} //TODO : should be float !!
 		inline const std::map <std::string, Feature>& GetFeatures() const {return m_feats;}
 		inline const Feature& GetFeature(const std::string& x_name) const
 		{

@@ -46,8 +46,7 @@ protected:
 	bool& m_state;
 
 private:
-	StreamState& operator=(const StreamState&);
-	StreamState(const StreamState&);
+	DISABLE_COPY(StreamState)
 };
 
 #endif

@@ -26,6 +26,8 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/TestCase.h>
 #include <cppunit/TestCaller.h>
+#include <jsoncpp/json/writer.h>
+#include <jsoncpp/json/reader.h>
 #include <sstream>
 
 #include "util.h"
@@ -51,6 +53,8 @@ public:
 		m_float  = 55.1233234;
 		m_double = 34.444;
 		m_string = "test_string";
+
+		m_obj.AddFeature("some_feat", 46.30);
 	}
 	virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const
 	{
@@ -66,7 +70,7 @@ public:
 	}
 	virtual void Deserialize(std::istream& x_in, const std::string& x_dir)
 	{
-        Json::Value root;
+		Json::Value root;
 		x_in >> root;
 		m_int = root["int1"].asInt();
 		m_float = root["float1"].asFloat();
@@ -103,11 +107,12 @@ class TestSerialization : public CppUnit::TestFixture
 	{
 	}
 
-	/// Test the serialization of one class
+	/// Test the serialization of one serializable class
 	void testSerialization(Serializable& obj, const std::string& name)
 	{
 		std::string fileName1 = "testing/tmp/serialize1_" + name + ".json";
 		std::string fileName2 = "testing/tmp/serialize2_" + name + ".json";
+		std::string fileName3 = "testing/serialize/" + name + ".json";
 		std::string dir = "testing/tmp/serialize_" + name;
 		SYSTEM("mkdir -p " + dir);
 		LOG_TEST(m_logger, "Test serialization of "<<name);
@@ -118,28 +123,37 @@ class TestSerialization : public CppUnit::TestFixture
 		LOG_TEST(m_logger, "Test deserialization and serialization of "<<name);
 		// std::stringstream ss2;
 
-		std::ifstream inf(fileName1.c_str());
+		std::ifstream inf(fileName3.c_str());
+		CPPUNIT_ASSERT(inf.is_open());
 		obj.Deserialize(inf, dir);
 		std::ofstream of2(fileName2.c_str());
 		obj.Serialize(of2, dir);
 
 		// Compare with the initial config
-        inf.close();
-        of2.close();
-        CPPUNIT_ASSERT(compareFiles(fileName1, fileName2));
+		inf.close();
+		of2.close();
+		CPPUNIT_ASSERT(compareFiles(fileName2, fileName3));
 	}
 
 
 	void testSerialization1()
 	{
+		// TODO: There is a problem of inprecision with floating points. See how we handle this !
 		TestObject obj1;
-        // testSerialization(obj1, "testObject");
-		Event evt;
-		testSerialization(evt, "testEvent1");
-		evt.Raise("fff");
-		testSerialization(evt, "testEvent2");
+		testSerialization(obj1, "TestObject");
+
 		Object obj2("test");
-		testSerialization(obj2, "testObject2");
+		obj2.AddFeature("feat1", 77);
+		obj2.AddFeature("feat2", 3453.444e-123);
+		testSerialization(obj2, "Object");
+
+		Event evt1;
+		testSerialization(evt1, "Event1");
+		evt1.Raise("fff");
+		testSerialization(evt1, "Event2");
+		Event evt2;
+		evt2.Raise("ggg", obj2);
+		testSerialization(evt2, "Event3");
 		/*
 		cv::Mat image;
 		StreamImage stream1("streamImage", image, module, "A stream of image");

@@ -103,6 +103,8 @@ void MkException::Serialize(std::ostream& x_out, const string& x_dir) const
 */
 void MkException::Deserialize(std::istream& x_in, const string& x_dir)
 {
-	// TODO
-	// Note that a null JSON means that the event was not raised
+	Json::Value root;
+	x_in >> root;
+	m_description = root["description"].asString();
+	m_code        = static_cast<MkExceptionCode>(root["code"].asInt());
 }
