@@ -61,17 +61,20 @@ void StreamDebug::Serialize(std::ostream& x_out, const string& x_dir) const
 	Stream::Serialize(ss, x_dir);
 	ss >> root;
 	string fileName = x_dir + "/" + GetModule().GetName() + "." + GetName() + ".jpg";
-	imwrite(fileName, m_image);
-	root["image"]["file"]   = fileName;
-	root["image"]["type"]   = ParameterImageType::ReverseEnum.at(m_image.type());
-	root["image"]["width"]  = m_image.cols;
-	root["image"]["height"] = m_image.rows;
+	cv::imwrite(fileName, m_image);
+	root["image"] = fileName;
 	x_out << root;
 }
 
 void StreamDebug::Deserialize(std::istream& x_in, const string& x_dir)
 {
-	// TODO
+	Stream::Deserialize(x_in, x_dir);
+
+	Json::Value root;
+	x_in >> root;
+
+	string fileName = root["image"].asString();
+	m_image = cv::imread(fileName);
 }
 
 #endif

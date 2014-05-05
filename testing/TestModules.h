@@ -77,8 +77,8 @@ class TestModules : public CppUnit::TestFixture
 	}
 	void tearDown()
 	{
-		delete mp_config;
 		delete mp_fakeInput;
+		delete mp_config;
 	}
 
 	ConfigReader addModuleToConfig(const std::string& rx_type, ConfigReader& xr_config)

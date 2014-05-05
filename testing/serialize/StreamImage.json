@@ -1,0 +1,13 @@
+
+{
+	"connected" : false,
+	"description" : "a description of image stream",
+	"height" : 480,
+	"id" : 0,
+	"image" : "testing/tmp/serialize_StreamImage/Module0.streamImage.jpg",
+	"name" : "img",
+	"ready" : true,
+	"timeStamp" : 4345345,
+	"type" : "Image",
+	"width" : 640
+}

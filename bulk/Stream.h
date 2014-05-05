@@ -77,12 +77,12 @@ public:
 	inline void SetAsReady(){m_isReady = true;}
 
 protected:
-	const std::string m_name;
+	std::string m_name;
 	int m_id;
-	const int m_width;
-	const int m_height;
+	int m_width;
+	int m_height;
 	Module& mr_module;
-	const std::string m_description;
+	std::string m_description;
 	TIME_STAMP m_timeStamp;
 	
 	Stream * m_connected;

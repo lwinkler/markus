@@ -1,0 +1,10 @@
+    <module name="Module0" id="0">
+        <parameters>
+            <param name="class">VideoFileReader</param>
+            <param name="fps">22</param>
+        </parameters>
+        <inputs />
+        <outputs>
+            <output id="0" />
+        </outputs>
+    </module>

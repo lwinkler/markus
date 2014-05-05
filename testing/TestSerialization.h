@@ -96,15 +96,26 @@ class TestSerialization : public CppUnit::TestFixture
 {
 	private:
 		static log4cxx::LoggerPtr m_logger;
+		FactoryModules m_factory;
+		Module* mp_fakeInput;
+		ConfigReader* mp_config;
 	public:
 	/*void runTest()
 	{
 	}*/
 	void setUp()
 	{
+		createEmtpyConfigFile("/tmp/config_empty.xml");
+		mp_config = new ConfigReader("testing/serialize/module.xml");
+		mp_fakeInput = m_factory.CreateModule("VideoFileReader", mp_config->GetSubConfig("module"));
+		// note: we need a fake module to create the input streams
+		mp_fakeInput->SetAsReady();
+		mp_fakeInput->Reset();
 	}
 	void tearDown()
 	{
+		delete mp_fakeInput;
+		delete mp_config;
 	}
 
 	/// Test the serialization of one serializable class
@@ -154,11 +165,12 @@ class TestSerialization : public CppUnit::TestFixture
 		Event evt2;
 		evt2.Raise("ggg", obj2);
 		testSerialization(evt2, "Event3");
-		/*
-		cv::Mat image;
-		StreamImage stream1("streamImage", image, module, "A stream of image");
-		testSerialization(stream1, "streamImage");
+		cv::Mat image(cv::Size(640, 480), CV_8U);
 
+		StreamImage stream1("streamImage", image, *mp_fakeInput, "A stream of image");
+		testSerialization(stream1, "StreamImage");
+
+		/*
 		StreamObject stream2;
 		testSerialization(stream2, "streamObject");
 		StreamState stream3;
@@ -171,6 +183,7 @@ class TestSerialization : public CppUnit::TestFixture
 		// TODO: test the serialization of modules
 		MkException excep;
 		testSerialization(excep, "MkException");
+
 	}
 
 	static CppUnit::Test *suite()

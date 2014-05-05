@@ -94,5 +94,19 @@ void Stream::Serialize(std::ostream& x_out, const string& x_dir) const
 
 void Stream::Deserialize(std::istream& x_in, const string& x_dir)
 {
-	// TODO
+	Json::Value root;
+	x_in >> root;
+
+	m_id   = root["id"].asInt();
+	m_name = root["name"].asString();
+	m_id   = root["id"].asInt();
+	if(root["type"].asString() != GetTypeString())
+		throw MkException("Stream must have the right type before serializing", LOC);
+	m_width       = root["width"].asDouble();
+	m_height      = root["height"].asDouble();
+	m_description = root["description"].asString();
+	m_timeStamp   = root["timeStamp"].asInt64();
+	if(root["connected"] != IsConnected())
+		throw MkException("Stream must have the same connection state before serializing", LOC);
+	m_isReady = root["ready"].asBool();
 }

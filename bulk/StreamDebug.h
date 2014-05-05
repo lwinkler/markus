@@ -45,7 +45,7 @@ public:
 	inline virtual const std::string GetTypeString()const {return "Debug";}
 
 protected:
-	const cv::Mat& m_image;
+	cv::Mat& m_image;
 
 private:
 	DISABLE_COPY(StreamDebug)

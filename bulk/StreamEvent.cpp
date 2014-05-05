@@ -88,5 +88,12 @@ void StreamEvent::Serialize(std::ostream& x_out, const string& x_dir) const
 
 void StreamEvent::Deserialize(std::istream& x_in, const string& x_dir)
 {
-	// TODO
+	Stream::Deserialize(x_in, x_dir);
+
+	Json::Value root;
+	x_in >> root;
+
+	stringstream ss;
+	ss << root["event"];
+	m_event.Serialize(ss, x_dir);
 }

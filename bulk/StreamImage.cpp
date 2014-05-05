@@ -76,17 +76,26 @@ void StreamImage::Serialize(std::ostream& x_out, const string& x_dir) const
 	ss >> root;
 	ss.clear();
 	string fileName = x_dir + "/" + GetModule().GetName() + "." + GetName() + ".jpg";
-	imwrite(fileName, m_image);
-	root["image"]["file"]   = fileName;
-	root["image"]["type"]   = ParameterImageType::ReverseEnum.at(m_image.type());
-	root["image"]["width"]  = m_image.cols;
-	root["image"]["height"] = m_image.rows;
+	cv::imwrite(fileName, m_image);
+	root["image"] = fileName;
+	x_out << root;
 	x_out << root;
 }
 
 void StreamImage::Deserialize(std::istream& x_in, const string& x_dir)
 {
-	// TODO
+	string str;
+	copy(istreambuf_iterator<char>(x_in), istreambuf_iterator<char>(), back_inserter(str));
+	stringstream ss;
+	ss << str;
+	cout<<"AASDF"<<str<<endl;
+	Stream::Deserialize(ss, x_dir);
+
+	Json::Value root;
+	root = str;
+
+	string fileName = root["image"].asString();
+	m_image = cv::imread(fileName);
 }
 
 void StreamImage::Connect(Stream* x_stream)
