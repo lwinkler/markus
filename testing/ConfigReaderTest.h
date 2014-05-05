@@ -91,7 +91,7 @@ public:
 
 		// Compare with the initial config
 		// note: this is kind of hackish ... can you find a better way :-)
-		SYSTEM("diff testing/config1.xml testing/tmp/config1_copy.xml | xargs -i{} ERROR_non_identical_files");
+		CPPUNIT_ASSERT(compareFiles("testing/config1.xml", "testing/tmp/config1_copy.xml"));
 	}
 
 	/// Generate a config from an empty file and test

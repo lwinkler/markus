@@ -290,3 +290,31 @@ void createEmtpyConfigFile(const std::string& x_fileName)
 	of<<"<!-- Markus XML configuration file -->"<<endl;
 	of.close();
 }
+
+
+/**
+* @brief Compare 2 files
+*
+* @param x_file1 File 1
+* @param x_file2 File 2
+*
+* @return true if files are identical
+*/
+bool compareFiles(const std::string& x_file1, const std::string& x_file2)
+{
+	ifstream file1(x_file1.c_str());
+	ifstream file2(x_file2.c_str());
+	string line1;
+	string line2;
+
+	while(getline(file1, line1))
+	{
+		if(!getline(file2, line2))
+			return false;
+		// if(line1 != line2)
+			// return false;
+	}
+	if(getline(file1, line2))
+		return false;
+	return true;
+}

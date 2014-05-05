@@ -36,17 +36,17 @@ class Serializable
 		/**
 		* @brief Serialize the stream content to JSON
 		*
-		* @param x_in Input stream
-		* @param x_dir  Input directory (for images)
+		* @param x_out Output stream
+		* @param x_dir Output directory (for images)
 		*/
-		virtual void Serialize(std::ostream& x_in, const std::string& x_dir) const = 0;
+		virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const = 0;
 		/**
 		* @brief  Deserialize the stream from JSON
 		*
-		* @param x_out  Input stream
+		* @param x_in   Input stream
 		* @param x_dir  Input directory (for images)
 		*/
-		virtual void Deserialize(std::istream& x_out, const std::string& x_dir) = 0;
+		virtual void Deserialize(std::istream& x_in, const std::string& x_dir) = 0;
 };
 
 #endif

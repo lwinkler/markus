@@ -42,6 +42,7 @@ const std::string timeStamp();
 const std::string msToTimeStamp(TIME_STAMP x_ms);
 TIME_STAMP getAbsTimeMs();
 void createEmtpyConfigFile(const std::string& x_fileName);
+bool compareFiles(const std::string& x_file1, const std::string& x_file2);
 
 
 #endif
