@@ -40,7 +40,7 @@ public:
 	inline int GetWidth() const {return m_width;}
 	inline int GetHeight() const {return m_height;}
 	inline const std::string& GetDescription() const {return m_description;}
-	virtual const std::string GetTypeString() const = 0;
+	virtual const std::string& GetTypeString() const = 0;
 	virtual void RenderTo(cv::Mat& x_output) const  = 0;
 	virtual void Connect(Stream *x_stream);
 	virtual void ConvertInput() = 0;

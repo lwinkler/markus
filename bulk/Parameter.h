@@ -68,8 +68,8 @@ public:
 	virtual void SetDefault(const std::string& x_value) = 0;
 	// virtual const void* GetValue() const = 0;
 	inline const std::string& GetName() const {return m_name;}
-	virtual const ParameterType GetType() const = 0;
-	virtual const std::string GetTypeString() const = 0;
+	virtual const ParameterType& GetType() const = 0;
+	virtual const std::string& GetTypeString() const = 0;
 	inline const std::string& GetDescription() const {return m_description;}
 	inline const ParameterConfigType& GetConfigurationSource() const {return m_confSource;}
 	virtual void SetValueToDefault() = 0;
@@ -109,8 +109,8 @@ public:
 	inline std::string GetValueString() const {std::stringstream ss; ss<<*mp_value; return ss.str();}
 	inline std::string GetDefaultString() const{std::stringstream ss; ss<<m_default; return ss.str();}
 	inline std::string GetRange() const{std::stringstream ss; ss<<"["<<m_min<<":"<<m_max<<"]"; return ss.str();}
-	inline const ParameterType GetType() const {return m_type;}
-	inline const std::string GetTypeString() const{return m_typeStr;}
+	inline const ParameterType& GetType() const {return m_type;}
+	inline const std::string& GetTypeString() const{return m_typeStr;}
 	inline const T GetDefault() const {return m_default;}
 	inline const T GetMin() const {return m_min;}
 	inline const T GetMax() const{return m_max;}
@@ -234,8 +234,8 @@ public:
 		tabs = std::string(x_tabs, '\t');
 		rx_os<<tabs<<"</param>"<<std::endl;
 	}
-	inline const ParameterType GetType() const {return PARAM_STR;}
-	inline const std::string GetTypeString() const {return "string";}
+	inline const ParameterType& GetType() const {const static ParameterType s = PARAM_STR; return s;}
+	inline const std::string& GetTypeString() const {const static std::string s = "string"; return s;}
 
 	inline const std::string& GetDefault(){return m_default;}
 private:
@@ -274,8 +274,8 @@ public:
 		*mp_value = m_default;
 		m_confSource = PARAMCONF_DEF;
 	}
-	inline const ParameterType GetType() const {return PARAM_IMAGE_TYPE;}
-	virtual const std::string GetTypeString() const = 0;
+	inline const ParameterType& GetType() const {const static ParameterType s = PARAM_IMAGE_TYPE; return s;}
+	virtual const std::string& GetTypeString() const = 0;
 	virtual void Export(std::ostream& rx_os, int x_indentation);
 	virtual const std::map<std::string, int>& GetEnum() const = 0;
 	virtual const std::map<int, std::string>& GetReverseEnum() const = 0;
@@ -295,7 +295,7 @@ public:
 	// void Export(std::ostream& rx_os, int x_indentation);
 
 	// Conversion methods
-	inline const std::string GetTypeString() const {return "imageType";}
+	inline const std::string& GetTypeString() const {const static std::string s = "imageType"; return s;}
 	const std::map<std::string, int> & GetEnum() const {return Enum;}
 	const std::map<int, std::string> & GetReverseEnum() const {return ReverseEnum;}
 	static std::map<std::string, int> CreateMap();

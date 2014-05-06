@@ -41,7 +41,7 @@ class QWidget;
 // Use macros to declare members of Controller childs, not the cleanest thing but you are free to try to 
 // improve on this
 #define DECLARE_CALL_ACTION(action) \
-const void CallAction(const std::string& x_name, std::string* xp_value)\
+void CallAction(const std::string& x_name, std::string* xp_value)\
 {\
 	std::map<std::string, const action>::const_iterator it = m_actions.find(x_name);\
 	if(it == m_actions.end())\
@@ -82,7 +82,7 @@ public:
 	* @param x_name   Action
 	* @param xp_value Input/Output of the action (Ignored if NULL)
 	*/
-	virtual const void CallAction(const std::string& x_name, std::string* xp_value) = 0;
+	virtual void CallAction(const std::string& x_name, std::string* xp_value) = 0;
 	
 protected:
 	std::string m_name;

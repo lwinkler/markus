@@ -51,7 +51,7 @@ class Template
 				throw MkException("Feature is inexistant", LOC);
 			return it->second;
 		}
-		inline const void SetFeatures(const std::map <std::string, Feature>& x_feats) {m_feats = x_feats;}
+		inline void SetFeatures(const std::map <std::string, Feature>& x_feats) {m_feats = x_feats;}
 		inline const std::map <std::string, Feature>& GetFeatures() const{ return m_feats;}
 		// inline const std::list <Object>& GetMatchingObjects() const{ return m_matchingObjects;}
 		inline int GetNum() const {return m_num;}
