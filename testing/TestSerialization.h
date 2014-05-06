@@ -126,7 +126,7 @@ class TestSerialization : public CppUnit::TestFixture
 		std::string fileName1 = "testing/tmp/serialize1_" + name + ".json";
 		std::string fileName2 = "testing/tmp/serialize2_" + name + ".json";
 		std::string fileName3 = "testing/serialize/" + name + ".json";
-		std::string dir = "testing/tmp/serialize_" + name;
+		std::string dir = "testing/serialize/image";
 		SYSTEM("mkdir -p " + dir);
 		LOG_TEST(m_logger, "Test serialization of "<<name);
 		std::ofstream of1(fileName1.c_str());
@@ -190,9 +190,11 @@ class TestSerialization : public CppUnit::TestFixture
 		testSerialization(stream5, "StreamDebug");
 #endif
 
-		// TODO: test the serialization of modules
 		MkException excep;
 		testSerialization(excep, "MkException");
+
+		// TODO: test the serialization of modules
+		testSerialization(*mp_fakeInput, "Module");
 
 	}
 

@@ -404,7 +404,50 @@ void Module::Serialize(std::ostream& x_out, const string& x_dir) const
 */
 void Module::Deserialize(std::istream& x_in, const string& x_dir)
 {
-	// TODO
+	Json::Value root;
+	x_in >> root;
+
+	m_id                   = root["id"].asInt();
+	m_name                 = root["name"].asString();
+	m_pause                = root["pause"].asBool();
+	m_timerConvertion      = root["timerConvertion"].asInt64();
+	m_timerProcessing      = root["timerProcessing"].asInt64();
+	m_timerWaiting         = root["timerWaiting"].asInt64();
+	m_countProcessedFrames = root["countProcessedFrames"].asInt64();
+
+	stringstream ss;
+
+	// read inputs
+	unsigned int size1 = root["inputs"].size();
+	assert(size1 == m_inputStreams.size());
+	for(unsigned int i = 0 ; i < size1 ; i++)
+	{
+		ss.clear();
+		ss << root["inputs"][i];
+		m_inputStreams[i]->Deserialize(ss, x_dir);
+	}
+
+	// read outputs
+	size1 = root["outputs"].size();
+	assert(size1 == m_outputStreams.size());
+	for(unsigned int i = 0 ; i < size1 ; i++)
+	{
+		ss.clear();
+		ss << root["outputs"][i];
+		m_outputStreams[i]->Deserialize(ss, x_dir);
+	}
+
+#ifdef MARKUS_DEBUG_STREAMS
+	// read debug streams
+	size1 = root["debugs"].size();
+	assert(size1 == m_debugStreams.size());
+	for(unsigned int i = 0 ; i < size1 ; i++)
+	{
+		ss.clear();
+		ss << root["debugs"][i];
+		m_debugStreams[i]->Deserialize(ss, x_dir);
+	}
+#endif
 }
 
 /**

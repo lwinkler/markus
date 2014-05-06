@@ -4,7 +4,7 @@
 	"description" : "a description of image stream",
 	"height" : 24,
 	"id" : 0,
-	"image" : "testing/tmp/serialize_StreamImage/Module0.img.jpg",
+	"image" : "testing/serialize/image/Module0.img.jpg",
 	"name" : "img",
 	"ready" : true,
 	"timeStamp" : 4345345,

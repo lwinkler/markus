@@ -76,6 +76,8 @@ void StreamDebug::Deserialize(std::istream& x_in, const string& x_dir)
 
 	string fileName = root["image"].asString();
 	m_image = cv::imread(fileName);
+    if(m_image.empty())
+        throw MkException("Cannot open serialized image from file " + fileName, LOC);
 }
 
 #endif
