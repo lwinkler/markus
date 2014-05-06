@@ -6,7 +6,7 @@
 	{
 		"dateEvent" : 12341244444444,
 		"dateNotif" : 2234234232432,
-		"label" : "oooooh_label_bleu",
+		"eventName" : "oooooh_label_bleu",
 		"object" : 
 		{
 			"height" : 0.5600000000000001,

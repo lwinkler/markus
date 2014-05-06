@@ -2,7 +2,7 @@
 {
 	"dateEvent" : 1399345442429,
 	"dateNotif" : 3453434522221,
-	"label" : "label_to_serialize2",
+	"eventName" : "event_name_to_serialize2",
 	"object" : 
 	{
 		"features" : 

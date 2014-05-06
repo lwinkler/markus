@@ -49,7 +49,7 @@ void Event::Serialize(std::ostream& x_out, const string& x_dir) const
 
 	if(IsRaised())
 	{
-		root["label"]  = m_label; // TODO rename label ?
+		root["eventName"]  = m_eventName;
 		root["dateEvent"] = m_absTimeEvent;
 		root["dateNotif"] = m_absTimeNotif;
 		if(m_object.GetName() != "empty")
@@ -71,7 +71,7 @@ void Event::Deserialize(std::istream& x_in, const string& x_dir)
 	bool raised = root["raised"].asBool();
 	if(raised)
 	{
-		m_label = root["label"].asString();
+		m_eventName = root["eventName"].asString();
 		m_absTimeEvent = root["dateEvent"].asInt64();
 		m_absTimeNotif = root["dateNotif"].asInt64();
 
@@ -84,7 +84,7 @@ void Event::Deserialize(std::istream& x_in, const string& x_dir)
 	}
 	else
 	{
-		m_label = "";
+		m_eventName = "";
 		m_absTimeEvent = 0;
 		m_absTimeNotif = 0;
 		m_object = Object("empty");
@@ -96,7 +96,7 @@ void Event::Deserialize(std::istream& x_in, const string& x_dir)
 */
 void Event::Empty()
 {
-	m_label = "";
+	m_eventName = "";
 	m_object = Object("empty");
 	m_externalInfo.clear();
 }
@@ -104,31 +104,31 @@ void Event::Empty()
 /**
 * @brief Raise an event with a set of features
 *
-* @param x_label        Label of the event (e.g. "motion", "intrusion")
+* @param x_eventName    Name of the event (e.g. "motion", "intrusion")
 * @param x_object       An object linked with the event. The features of the object will be used as the features of the event.
 * @param x_absTimeEvent Optional: The time at which the event started. Use this field if events are raised with a delay.
 */
-void Event::Raise(const string x_label, const Object& x_object, TIME_STAMP x_absTimeEvent)
+void Event::Raise(const string x_eventName, const Object& x_object, TIME_STAMP x_absTimeEvent)
 {
 	m_absTimeEvent = x_absTimeEvent == 0 ? getAbsTimeMs() : x_absTimeEvent;
 	if(IsRaised())
 		LOG_WARN(m_logger, "The same event is raised several times. Older events are overriden");
-	m_label       = x_label;
+	m_eventName       = x_eventName;
 	m_object      = x_object;
 }
 
 /**
 * @brief Raise an event without features
 *
-* @param x_label        Label of the event (e.g. "motion", "intrusion")
+* @param x_eventName    Name of the event (e.g. "motion", "intrusion")
 * @param x_absTimeEvent Optional: The time at which the event started. Use this field if events are raised with a delay.
 */
-void Event::Raise(const string x_label, TIME_STAMP x_absTimeEvent)
+void Event::Raise(const string x_eventName, TIME_STAMP x_absTimeEvent)
 {
 	m_absTimeEvent = x_absTimeEvent == 0 ? getAbsTimeMs() : x_absTimeEvent;
 	if(IsRaised())
 		LOG_WARN(m_logger, "The same event is raised several times. Older events are overriden");
-	m_label = x_label;
+	m_eventName = x_eventName;
 	m_object = Object("empty");
 }
 

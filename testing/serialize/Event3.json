@@ -2,7 +2,7 @@
 {
 	"dateEvent" : 1399308502411,
 	"dateNotif" : 3453434522221,
-	"label" : "ggg",
+	"eventName" : "EventName",
 	"object" : 
 	{
 		"height" : 0.550,

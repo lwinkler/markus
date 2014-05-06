@@ -67,7 +67,7 @@ public:
 	void PauseInputs(bool x_pause);
 	bool EndOfAllStreams() const;
 	static std::string Version();
-	static void NotifyMonitoring(const std::string& x_label);
+	static void NotifyMonitoring(const std::string& x_eventName);
 	static const std::string& OutputDir(const std::string& x_outputDir = "", const std::string& x_configFile = "");
 	static inline void ListModules(std::vector<std::string>& xr_types) {m_factory.ListModules(xr_types);}
 	void WriteStateToDirectory(const std::string& x_directory) const;

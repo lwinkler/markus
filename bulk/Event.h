@@ -40,10 +40,10 @@ class Event : public Serializable
 		Event();
 		~Event();
 		void Empty();
-		void Raise(const std::string x_label, TIME_STAMP x_absTimeEvent = 0);
-		void Raise(const std::string x_label, const Object& m_object, TIME_STAMP x_absTimeEvent = 0);
-		inline bool IsRaised() const {return m_label != "";}
-		inline const std::string& GetLabel() const{return m_label;}
+		void Raise(const std::string x_eventName, TIME_STAMP x_absTimeEvent = 0);
+		void Raise(const std::string x_eventName, const Object& m_object, TIME_STAMP x_absTimeEvent = 0);
+		inline bool IsRaised() const {return m_eventName != "";}
+		inline const std::string& GetEventName() const{return m_eventName;}
 		inline const Object& GetObject() const {return m_object;}
 		inline void AddFeatureToObject(std::string x_name, const Feature& x_feat) {m_object.AddFeature(x_name, x_feat);}
 		inline void ScaleObject(double x_ratioX, double x_ratioY) {
@@ -53,7 +53,7 @@ class Event : public Serializable
 			m_object.height *= x_ratioY;
 		}
 		inline void SetObject(const Object& x_object){m_object = x_object;}
-		// inline const std::string& GetObjectLabel(){return m_objectLabel;};
+		// inline const std::string& GetObjectEventName(){return m_objectEventName;};
 
 		inline void AddFeature(std::string x_name, double x_value) {m_object.AddFeature(x_name, x_value);}
 		inline const std::map <std::string, Feature>& GetFeatures() const {return m_object.GetFeatures();}
@@ -65,15 +65,15 @@ class Event : public Serializable
 		virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const;
 		virtual void Deserialize(std::istream& x_in, const std::string& x_dir);
 
-		inline void AddExternalInfo(const std::string& x_label, const std::string& x_value){m_externalInfo[x_label] = x_value;}
-		inline void AddExternalInfo(const std::string& x_label, double x_value){m_externalInfo[x_label] = x_value;}
-		inline void AddExternalInfo(const std::string& x_label, int x_value){m_externalInfo[x_label] = x_value;}
-		inline void AddExternalInfo(const std::string& x_label, unsigned long long x_value){m_externalInfo[x_label] = x_value;}
-		inline void AddExternalInfo(const std::string& x_label, std::istream& x_in){x_in >> m_externalInfo[x_label];}
-		inline void AddExternalFile(const std::string& x_label, const std::string& x_file){m_externalInfo["files"][x_label] = x_file;}
+		inline void AddExternalInfo(const std::string& x_eventName, const std::string& x_value){m_externalInfo[x_eventName] = x_value;}
+		inline void AddExternalInfo(const std::string& x_eventName, double x_value){m_externalInfo[x_eventName] = x_value;}
+		inline void AddExternalInfo(const std::string& x_eventName, int x_value){m_externalInfo[x_eventName] = x_value;}
+		inline void AddExternalInfo(const std::string& x_eventName, unsigned long long x_value){m_externalInfo[x_eventName] = x_value;}
+		inline void AddExternalInfo(const std::string& x_eventName, std::istream& x_in){x_in >> m_externalInfo[x_eventName];}
+		inline void AddExternalFile(const std::string& x_eventName, const std::string& x_file){m_externalInfo["files"][x_eventName] = x_file;}
 
 	protected:
-		std::string m_label;
+		std::string m_eventName;
 		Object m_object;
 		/// Abs time of the event (given by current date)
 		TIME_STAMP m_absTimeEvent;
