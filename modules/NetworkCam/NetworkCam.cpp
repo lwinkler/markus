@@ -78,7 +78,7 @@ void NetworkCam::Reset()
 	
 	if(! m_capture.isOpened())
 	{
-		throw MkException("Error : Network cannot open url : " + m_param.url, LOC);
+		throw MkException("Error : Network error, cannot open url : " + m_param.url, LOC);
 	}
 
 	// Apparently you cannot set width and height. We try anyway

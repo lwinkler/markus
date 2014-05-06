@@ -133,20 +133,25 @@ class TestModules : public CppUnit::TestFixture
 	}
 
 	/// Randomize input values
-	void randomizeInputs(const Module* x_module, const std::string& x_moduleType, unsigned int* xp_seed)
+	void randomizeInputs(const Module* x_module, const std::string& x_moduleClass, unsigned int* xp_seed)
 	{
+		assert(x_module->GetClass() == x_moduleClass);
 		std::string features = "";
 
 		// Some modules require a specific set of features in input
-		if(x_moduleType == "FallDetection")
+		if(x_moduleClass == "FallDetection")
 			features = "x,y,ellipse_angle,ellipse_ratio";
-		else if(x_moduleType == "FilterObjects")
+		else if(x_moduleClass == "FilterObjects")
 			features = "x,y,width,height";
-		else if(x_moduleType == "FilterPython")
-			x_module->FindController("features")->CallAction("Get", &features);
-		else if(x_moduleType == "Intrusion")
+		else if(x_moduleClass == "FilterPython")
+		{
+			Controller* ctr = x_module->FindController("features");
+			assert(ctr != NULL);
+			ctr->CallAction("Get", &features);
+		}
+		else if(x_moduleClass == "Intrusion")
 			features = "x,y";
-		else if(x_moduleType == "TrackerByFeatures")
+		else if(x_moduleClass == "TrackerByFeatures")
 			x_module->FindController("features")->CallAction("Get", &features);
 
 		// random event
@@ -230,6 +235,12 @@ class TestModules : public CppUnit::TestFixture
 			CPPUNIT_ASSERT(outputStream != NULL);
 			CPPUNIT_ASSERT(inputStream.IsConnected());
 		}
+		// It makes no sense to test inputs if input source is missing
+		if(module->IsInput())
+		{
+			delete module;
+			return NULL;
+		}
 		module->SetAsReady();
 		module->Reset();
 		return module;
@@ -278,14 +289,15 @@ class TestModules : public CppUnit::TestFixture
 			LOG_TEST(m_logger, "## on module "<<*it1);
 
 			Module* module = createAndConnectModule(*it1);
-			std::string features = "";
-
-			for(int i = 0 ; i < 50 ; i++)
+			if(module != NULL)
 			{
-				randomizeInputs(module, *it1, &seed);
-				module->Process();
+				for(int i = 0 ; i < 50 ; i++)
+				{
+					randomizeInputs(module, *it1, &seed);
+					module->Process();
+				}
+				delete module;
 			}
-			delete module;
 		}
 	}
 
@@ -302,11 +314,9 @@ class TestModules : public CppUnit::TestFixture
 			LOG_TEST(m_logger, "# on module "<<*it1);
 
 			Module* module = createAndConnectModule(*it1);
-			if(module->IsInput())
-			{
-				delete module;
+			if(module == NULL)
 				continue;
-			}
+
 			randomizeInputs(module, *it1, &seed);
 
 			for(std::map<std::string, Controller*>::const_iterator it2 = module->GetControllersList().begin() ; it2 != module->GetControllersList().end() ; it2++)
@@ -378,7 +388,7 @@ class TestModules : public CppUnit::TestFixture
 	static CppUnit::Test *suite()
 	{
 		CppUnit::TestSuite *suiteOfTests = new CppUnit::TestSuite("TestModules");
-		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testInputs", &TestModules::testInputs));
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testInputs", &TestModules::testInputs)); // TODO
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testControllers", &TestModules::testControllers));
 		return suiteOfTests;
 	}

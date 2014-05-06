@@ -48,7 +48,7 @@ class Object : public Serializable
 		inline void SetId(int x_id){m_id = x_id;}
 
 		inline void AddFeature(std::string x_name, const Feature& x_feat) {m_feats.insert(std::make_pair(x_name, x_feat));}
-		inline void AddFeature(std::string x_name, double x_value) {m_feats.insert(std::make_pair(x_name, Feature(x_value)));} //TODO : should be float !!
+		inline void AddFeature(std::string x_name, float x_value) {m_feats.insert(std::make_pair(x_name, Feature(x_value)));}
 		inline const std::map <std::string, Feature>& GetFeatures() const {return m_feats;}
 		inline const Feature& GetFeature(const std::string& x_name) const
 		{
@@ -57,7 +57,7 @@ class Object : public Serializable
 				throw FeatureNotFoundException("Feature " + x_name + " does not exist", LOC);
 			return it->second;
 		}
-		// inline void SetFeatureByName(const std::string& x_name, double x_value) {m_feats.find(x_name)->second = Feature();}
+		// inline void SetFeatureByName(const std::string& x_name, float x_value) {m_feats.find(x_name)->second = Feature();}
 		void SetFeatures(const std::map<std::string, Feature>& x_feats){m_feats = x_feats;}
 		inline cv::Rect Rect() const {return cv::Rect(posX - width / 2, posY - height / 2, width, height);}
 		void RenderTo(cv::Mat& x_output, const cv::Scalar& x_color) const;

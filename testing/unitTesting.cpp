@@ -35,12 +35,13 @@ int main(int argc, char **argv)
 	CppUnit::TextUi::TestRunner runner;
 	SYSTEM("rm -rf testing/out");
 	SYSTEM("rm -rf testing/tmp");
+	SYSTEM("mkdir -p testing/tmp");
 	Manager::OutputDir("testing/out");
 	log4cxx::xml::DOMConfigurator::configure("testing/log4cxx.xml");
 
-	// TODO runner.addTest(ConfigReaderTest::suite());
-	// TODO runner.addTest(TestProjects::suite());
-	// TODO runner.addTest(TestModules::suite());
+	runner.addTest(ConfigReaderTest::suite());
+	runner.addTest(TestProjects::suite());
+	runner.addTest(TestModules::suite());
 	runner.addTest(TestSerialization::suite());
 	runner.run();
 

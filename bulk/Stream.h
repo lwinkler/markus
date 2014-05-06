@@ -51,13 +51,6 @@ public:
 	inline void UnLockModule(){mr_module.Unlock();}
 	inline bool IsConnected() const {return m_connected != NULL;}
 	inline const Module& GetModule() const {return mr_module;}
-	//inline Module& RefModule(){return mr_module;} // TODO: Is this necessary ? 
-	/* inline Stream& RefConnected()
-	{
-		if(m_connected == NULL)
-			throw MkException("Stream " + GetName() + " is not connected", LOC);
-		return *m_connected;
-	} */
 	inline Stream& GetConnected() const
 	{
 		if(m_connected == NULL)
@@ -67,7 +60,7 @@ public:
 
 	inline TIME_STAMP GetTimeStamp() const             {return m_timeStamp;}
 	inline void   SetTimeStamp(TIME_STAMP x_timeStamp) {m_timeStamp = x_timeStamp;}
-	inline double GetTimeStampConnected() const
+	inline TIME_STAMP GetTimeStampConnected() const
 	{
 		if(m_connected == NULL)
 			throw MkException("Stream " + GetName() + " is not connected", LOC);
