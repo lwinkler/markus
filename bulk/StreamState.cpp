@@ -23,6 +23,8 @@
 
 #include "StreamState.h"
 #include "util.h"
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
 
 using namespace std;
 using namespace cv;
@@ -62,11 +64,20 @@ void StreamState::RenderTo(Mat& x_output) const
 
 void StreamState::Serialize(std::ostream& x_out, const string& x_dir) const
 {
-	Stream::Serialize(x_out, x_dir);
-	x_out << (m_state ? "1" : "0") << endl;
+	Json::Value root;
+	stringstream ss;
+	Stream::Serialize(ss, x_dir);
+	ss >> root;
+	root["state"] = m_state;
 }
 
 void StreamState::Deserialize(std::istream& x_in, const string& x_dir)
 {
-	// TODO
+	Json::Value root;
+	x_in >> root;  // note: copy first for local use
+	stringstream ss;
+	ss << root;
+	Stream::Deserialize(ss, x_dir);
+
+	m_state = root["state"].asBool();
 }

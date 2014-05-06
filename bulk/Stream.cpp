@@ -87,7 +87,7 @@ void Stream::Serialize(std::ostream& x_out, const string& x_dir) const
 	root["height"]      = m_height;
 	root["description"] = m_description;
 	root["timeStamp"]   = m_timeStamp;
-	root["connected"]   = IsReady();
+	root["connected"]   = IsConnected();
 	root["ready"]       = m_isReady;
 	x_out << root;
 }
@@ -107,6 +107,6 @@ void Stream::Deserialize(std::istream& x_in, const string& x_dir)
 	m_description = root["description"].asString();
 	m_timeStamp   = root["timeStamp"].asInt64();
 	if(root["connected"] != IsConnected())
-		throw MkException("Stream must have the same connection state before serializing", LOC);
+		throw MkException("Stream must have the same connection state before deserializing", LOC);
 	m_isReady = root["ready"].asBool();
 }

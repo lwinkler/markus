@@ -34,6 +34,7 @@ int main(int argc, char **argv)
 {
 	CppUnit::TextUi::TestRunner runner;
 	SYSTEM("rm -rf testing/out");
+	SYSTEM("rm -rf testing/tmp");
 	Manager::OutputDir("testing/out");
 	log4cxx::xml::DOMConfigurator::configure("testing/log4cxx.xml");
 

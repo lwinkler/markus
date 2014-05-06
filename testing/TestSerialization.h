@@ -34,7 +34,9 @@
 #include "MkException.h"
 #include "Serializable.h"
 
+#include "StreamImage.h"
 #include "StreamObject.h"
+#include "StreamDebug.h"
 
 #define LOG_TEST(logger, str) {\
 	std::cout<<str<<std::endl;\
@@ -165,10 +167,14 @@ class TestSerialization : public CppUnit::TestFixture
 		Event evt2;
 		evt2.Raise("ggg", obj2);
 		testSerialization(evt2, "Event3");
-		cv::Mat image(cv::Size(640, 480), CV_8U);
 
-		StreamImage stream1("streamImage", image, *mp_fakeInput, "A stream of image");
+		cv::Mat image1(cv::Size(640, 480), CV_8U);
+		StreamImage stream1("streamImage", image1, *mp_fakeInput, "A stream of image");
 		testSerialization(stream1, "StreamImage");
+
+		cv::Mat image2(cv::Size(640, 480), CV_8U);
+		StreamDebug stream5("streamDebug", image2, *mp_fakeInput, "A stream of debug");
+		testSerialization(stream5, "StreamDebug");
 
 		/*
 		StreamObject stream2;
@@ -177,8 +183,6 @@ class TestSerialization : public CppUnit::TestFixture
 		testSerialization(stream3, "streamState");
 		StreamEvent stream4;
 		testSerialization(stream4, "streamEvent");
-		StreamDebug stream5;
-		testSerialization(stream5, "streamDebug");
 		*/
 		// TODO: test the serialization of modules
 		MkException excep;

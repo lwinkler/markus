@@ -88,12 +88,12 @@ void StreamEvent::Serialize(std::ostream& x_out, const string& x_dir) const
 
 void StreamEvent::Deserialize(std::istream& x_in, const string& x_dir)
 {
-	Stream::Deserialize(x_in, x_dir);
-
 	Json::Value root;
-	x_in >> root;
-
+	x_in >> root;  // note: copy first for local use
 	stringstream ss;
+	ss << root;
+	Stream::Deserialize(ss, x_dir);
+
 	ss << root["event"];
 	m_event.Serialize(ss, x_dir);
 }

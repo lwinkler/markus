@@ -33,6 +33,7 @@ StreamDebug::StreamDebug(const std::string& x_name, cv::Mat& x_image, Module& rx
 	Stream(x_name, rx_module, rx_description),
 	m_image(x_image)
 {
+	cout<<x_image.cols << "==" << rx_module.GetWidth()<<endl;
 	assert(x_image.cols == rx_module.GetWidth() && x_image.rows == rx_module.GetHeight());
 }
 
@@ -68,10 +69,11 @@ void StreamDebug::Serialize(std::ostream& x_out, const string& x_dir) const
 
 void StreamDebug::Deserialize(std::istream& x_in, const string& x_dir)
 {
-	Stream::Deserialize(x_in, x_dir);
-
 	Json::Value root;
-	x_in >> root;
+	x_in >> root;  // note: copy first for local use
+	stringstream ss;
+	ss << root;
+	Stream::Deserialize(ss, x_dir);
 
 	string fileName = root["image"].asString();
 	m_image = cv::imread(fileName);

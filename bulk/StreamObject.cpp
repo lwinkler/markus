@@ -90,6 +90,8 @@ void StreamObject::Serialize(std::ostream& x_out, const string& x_dir) const
 
 	if(m_objects.size() == 0)
 		root["objects"] = Json::Value(Json::arrayValue); // Empty array
+
+	// Serialize vector of objects
 	for(vector<Object>::const_iterator it1 = m_objects.begin() ; it1 != m_objects.end() ; it1++)
 	{
 		ss.clear();
@@ -102,5 +104,19 @@ void StreamObject::Serialize(std::ostream& x_out, const string& x_dir) const
 
 void StreamObject::Deserialize(std::istream& x_in, const string& x_dir)
 {
-	// TODO
+	Json::Value root;
+	x_in >> root;  // note: copy first for local use
+	stringstream ss;
+	ss << root;
+	Stream::Deserialize(ss, x_dir);
+
+	Json::Value::Members members = root["objects"].getMemberNames();
+	Clear();
+	for(Json::Value::Members::const_iterator it = members.begin() ; it != members.end() ; it++)
+	{
+		Object obj("empty");
+		AddObject(obj);
+		ss << root["object"][*it];
+		m_objects.back().Deserialize(ss, x_dir);
+	}
 }

@@ -79,20 +79,15 @@ void StreamImage::Serialize(std::ostream& x_out, const string& x_dir) const
 	cv::imwrite(fileName, m_image);
 	root["image"] = fileName;
 	x_out << root;
-	x_out << root;
 }
 
 void StreamImage::Deserialize(std::istream& x_in, const string& x_dir)
 {
-	string str;
-	copy(istreambuf_iterator<char>(x_in), istreambuf_iterator<char>(), back_inserter(str));
-	stringstream ss;
-	ss << str;
-	cout<<"AASDF"<<str<<endl;
-	Stream::Deserialize(ss, x_dir);
-
 	Json::Value root;
-	root = str;
+	x_in >> root;  // note: copy first for local use
+	stringstream ss;
+	ss << root;
+	Stream::Deserialize(ss, x_dir);
 
 	string fileName = root["image"].asString();
 	m_image = cv::imread(fileName);

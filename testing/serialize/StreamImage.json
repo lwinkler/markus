@@ -2,12 +2,12 @@
 {
 	"connected" : false,
 	"description" : "a description of image stream",
-	"height" : 480,
+	"height" : 24,
 	"id" : 0,
-	"image" : "testing/tmp/serialize_StreamImage/Module0.streamImage.jpg",
+	"image" : "testing/tmp/serialize_StreamImage/Module0.img.jpg",
 	"name" : "img",
 	"ready" : true,
 	"timeStamp" : 4345345,
 	"type" : "Image",
-	"width" : 640
+	"width" : 32
 }
