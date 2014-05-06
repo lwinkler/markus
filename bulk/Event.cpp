@@ -59,6 +59,7 @@ void Event::Serialize(std::ostream& x_out, const string& x_dir) const
 			ss >> root["object"];
 		}
 		else root["object"] = Json::Value(Json::nullValue); // Null
+		root["external"] = m_externalInfo;
 	}
 	x_out << root;
 }
@@ -81,6 +82,12 @@ void Event::Deserialize(std::istream& x_in, const string& x_dir)
 			ss << root["object"];
 			m_object.Deserialize(ss, x_dir);
 		}
+
+		// Deserialize files
+		Json::Value::Members members = root["external"].getMemberNames();
+		m_externalInfo.clear();
+		for(Json::Value::Members::const_iterator it = members.begin() ; it != members.end() ; it++)
+			m_externalInfo[*it] = root["external"][*it];
 	}
 	else
 	{
@@ -88,6 +95,7 @@ void Event::Deserialize(std::istream& x_in, const string& x_dir)
 		m_absTimeEvent = 0;
 		m_absTimeNotif = 0;
 		m_object = Object("empty");
+		m_externalInfo.clear();
 	}
 }
 

@@ -3,6 +3,16 @@
 	"dateEvent" : 1399308502411,
 	"dateNotif" : 3453434522221,
 	"eventName" : "EventName",
+	"external" : 
+	{
+		"name" : "Some external data with no specific structure",
+		"obj" : 
+		{
+			"ewwww" : [ 1, 2, 3, 4 ],
+			"more" : "fun"
+		},
+		"sadfs" : 324
+	},
 	"object" : 
 	{
 		"height" : 0.550,

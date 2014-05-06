@@ -162,10 +162,10 @@ class TestSerialization : public CppUnit::TestFixture
 
 		Event evt1;
 		testSerialization(evt1, "Event1");
-		evt1.Raise("fff");
+		evt1.Raise("name1");
 		testSerialization(evt1, "Event2");
 		Event evt2;
-		evt2.Raise("ggg", obj2);
+		evt2.Raise("name2", obj2);
 		testSerialization(evt2, "Event3");
 
 		cv::Mat image1(cv::Size(640, 480), CV_8U);

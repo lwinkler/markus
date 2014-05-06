@@ -7,6 +7,29 @@
 		"dateEvent" : 12341244444444,
 		"dateNotif" : 2234234232432,
 		"eventName" : "oooooh_label_bleu",
+		"external" : 
+		{
+			"objects" : 
+			[
+				
+				{
+					"ewwww" : [ 1, 2, 3, 4 ],
+					"more" : "fun"
+				},
+				
+				{
+					"ewwww" : [ 1, 2, 4 ],
+					"more" : "fun"
+				},
+				
+				{
+					"ewwww" : [ 1, 3, 4 ],
+					"more" : "no more!"
+				}
+			],
+			"other_name" : "Some external data with no specific structure",
+			"sadfs" : 324
+		},
 		"object" : 
 		{
 			"height" : 0.5600000000000001,

@@ -43,7 +43,11 @@ int main(int argc, char **argv)
 	runner.addTest(TestProjects::suite());
 	runner.addTest(TestModules::suite());
 	runner.addTest(TestSerialization::suite());
-	runner.run();
+
+	if(argc <= 1)
+		runner.run();
+	else
+		runner.run(argv[1]);
 
 	return 0;
 }
