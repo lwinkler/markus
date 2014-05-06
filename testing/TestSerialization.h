@@ -184,9 +184,11 @@ class TestSerialization : public CppUnit::TestFixture
 		StreamEvent stream4("streamEvent", evt2, *mp_fakeInput, "A stream of event");
 		testSerialization(stream4, "StreamEvent");
 
+#ifdef MARKUS_DEBUG_STREAMS
 		cv::Mat image2(cv::Size(640, 480), CV_8U);
 		StreamDebug stream5("streamDebug", image2, *mp_fakeInput, "A stream of debug");
 		testSerialization(stream5, "StreamDebug");
+#endif
 
 		// TODO: test the serialization of modules
 		MkException excep;

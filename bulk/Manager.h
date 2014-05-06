@@ -72,6 +72,8 @@ public:
 	static inline void ListModules(std::vector<std::string>& xr_types) {m_factory.ListModules(xr_types);}
 	void WriteStateToDirectory(const std::string& x_directory) const;
 	void UpdateConfig();
+	inline static void SetApplicationName(const std::string& x_applicationName){m_applicationName = x_applicationName;}
+	inline static const std::string& GetApplicationName(){return m_applicationName;}
 
 protected:
 	Module& RefModuleById(int x_id) const;
@@ -92,6 +94,7 @@ protected:
 	std::vector<Input  *> m_inputs;
 
 	long long m_frameCount;
+	static std::string m_applicationName;
 	static log4cxx::LoggerPtr m_logger;
 	static std::string m_outputDir;
 	static FactoryModules m_factory;

@@ -29,6 +29,9 @@
 using namespace cv;
 using namespace std;
 
+
+#define COPY_AND_CHECK(target, src) target=src; if((target).isNull() || (target) == "") {throw MkException("Element of exported event is invalid", LOC);}
+
 log4cxx::LoggerPtr Event::m_logger(log4cxx::Logger::getLogger("Event"));
 
 Event::Event() :
@@ -151,26 +154,38 @@ void Event::Notify(bool x_isProcessEvent)
 {
 	m_absTimeNotif = getAbsTimeMs();
 	Json::Value root;
+	string level = "EVENT";
 
 	stringstream ss;
 	Serialize(ss, "");
 	ss >> root;
 
 	root["external"] = m_externalInfo;
-
-	Json::FastWriter writer;
-	string tmp = writer.write(root);
-	tmp.erase(std::remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
+	
+	// export the event to our specific format
+	Json::Value out;
+	COPY_AND_CHECK(out["dateEvent"]          , root["dateEvent"]);
+	COPY_AND_CHECK(out["dateNotif"]          , root["dateNotif"]);
+	COPY_AND_CHECK(out["applicationName"]    , Manager::GetApplicationName());
+	COPY_AND_CHECK(out["applicationVersion"] , Manager::Version());
+	COPY_AND_CHECK(out["eventName"]          , root["eventName"]);
 
 	if(x_isProcessEvent)
 	{
 		// This is only a process event. Only used to notify the parent process
-
-		LOG_WARN(m_logger, "@notif@ PROCESS " << tmp);
+		COPY_AND_CHECK(out["attrs"] , root["external"]);
+		level = "PROCESS";
 	}
 	else
 	{
-		LOG_WARN(m_logger, "@notif@ EVENT " << tmp);
+		COPY_AND_CHECK(out["files"]      , root["external"]["files"]);
+		COPY_AND_CHECK(out["objects"][0] , root["object"]);
 	}
 
+	// Notify via stdout
+	Json::FastWriter writer;
+	string tmp = writer.write(out);
+	tmp.erase(std::remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
+
+	LOG_WARN(m_logger, "@notif@ " << level << " " << tmp);
 }

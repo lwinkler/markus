@@ -200,14 +200,16 @@ int main(int argc, char** argv)
 		}
 	}
 
-	if (optind == argc - 2) {
+	if (optind == argc - 2)
+	{
 		configFile = argv[argc - 2];
 		stringstream ss;
 		ss<<"Input.file="<<argv[argc - 1];
 		parameters.push_back(ss.str());
 		parameters.push_back("Input.class=VideoFileReader");
 	}
-	else if (optind == argc - 1) {
+	else if (optind == argc - 1)
+	{
 		configFile = argv[argc - 1];
 	}
 	else if(optind == argc)
@@ -222,6 +224,7 @@ int main(int argc, char** argv)
 	}
 
 	// Init global variables and objects
+	Manager::SetApplicationName(configFile);
 	if(outputDir != "")
 	{
 		outputDir = Manager::OutputDir(outputDir, configFile);

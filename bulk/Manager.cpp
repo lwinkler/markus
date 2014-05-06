@@ -49,6 +49,7 @@ using namespace std;
 log4cxx::LoggerPtr Manager::m_logger(log4cxx::Logger::getLogger("Manager"));
 
 string Manager::m_outputDir;
+string Manager::m_applicationName;
 FactoryModules Manager::m_factory;
 
 
