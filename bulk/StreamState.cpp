@@ -69,6 +69,7 @@ void StreamState::Serialize(std::ostream& x_out, const string& x_dir) const
 	Stream::Serialize(ss, x_dir);
 	ss >> root;
 	root["state"] = m_state;
+    x_out << root;
 }
 
 void StreamState::Deserialize(std::istream& x_in, const string& x_dir)

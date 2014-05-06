@@ -1,0 +1,43 @@
+
+{
+	"connected" : false,
+	"description" : "Another description for a stream of objects",
+	"height" : 24,
+	"id" : 0,
+	"name" : "streamObject",
+	"objects" : 
+	[
+		
+		{
+			"features" : 
+			{
+				"featA" : 2342.0,
+				"featB" : 111.0
+			},
+			"height" : 0.550,
+			"id" : 333,
+			"name" : "test_serialize1",
+			"width" : 0.70,
+			"x" : 0.40,
+			"y" : 0.60
+		},
+		
+		{
+			"features" : 
+			{
+				"featA" : 2.0,
+				"featB" : 1231.102050781250
+			},
+			"height" : 0.50,
+			"id" : 33,
+			"name" : "test_serialize2",
+			"width" : 0.730,
+			"x" : 0.430,
+			"y" : 0.620
+		}
+	],
+	"ready" : true,
+	"timeStamp" : 213412313333123,
+	"type" : "Objects",
+	"width" : 32
+}

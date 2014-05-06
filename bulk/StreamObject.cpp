@@ -110,13 +110,13 @@ void StreamObject::Deserialize(std::istream& x_in, const string& x_dir)
 	ss << root;
 	Stream::Deserialize(ss, x_dir);
 
-	Json::Value::Members members = root["objects"].getMemberNames();
 	Clear();
-	for(Json::Value::Members::const_iterator it = members.begin() ; it != members.end() ; it++)
+	for(unsigned int i = 0 ; i < root["objects"].size() ; i++)
 	{
+		ss.clear();
 		Object obj("empty");
 		AddObject(obj);
-		ss << root["object"][*it];
+		ss << root["objects"][i];
 		m_objects.back().Deserialize(ss, x_dir);
 	}
 }

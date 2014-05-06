@@ -1,0 +1,28 @@
+
+{
+	"connected" : false,
+	"description" : "Another description for a stream of event",
+	"event" : 
+	{
+		"dateEvent" : 12341244444444,
+		"dateNotif" : 2234234232432,
+		"label" : "oooooh_label_bleu",
+		"object" : 
+		{
+			"height" : 0.5600000000000001,
+			"id" : 442243,
+			"name" : "test_serialize2",
+			"width" : 0.50,
+			"x" : 0.60,
+			"y" : 0.30
+		},
+		"raised" : true
+	},
+	"height" : 24,
+	"id" : 0,
+	"name" : "streamEventA",
+	"ready" : true,
+	"timeStamp" : 12341244444444,
+	"type" : "Event",
+	"width" : 32
+}

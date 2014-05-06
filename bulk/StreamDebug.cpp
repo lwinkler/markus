@@ -33,7 +33,6 @@ StreamDebug::StreamDebug(const std::string& x_name, cv::Mat& x_image, Module& rx
 	Stream(x_name, rx_module, rx_description),
 	m_image(x_image)
 {
-	cout<<x_image.cols << "==" << rx_module.GetWidth()<<endl;
 	assert(x_image.cols == rx_module.GetWidth() && x_image.rows == rx_module.GetHeight());
 }
 

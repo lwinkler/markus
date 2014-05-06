@@ -172,18 +172,22 @@ class TestSerialization : public CppUnit::TestFixture
 		StreamImage stream1("streamImage", image1, *mp_fakeInput, "A stream of image");
 		testSerialization(stream1, "StreamImage");
 
+		std::vector<Object> objects;
+		StreamObject stream2("streamObject", objects, *mp_fakeInput, "A stream of objects");
+		stream2.AddObject(obj2);
+		testSerialization(stream2, "StreamObject");
+
+		bool state;
+		StreamState stream3("streamState", state, *mp_fakeInput, "A stream of state");
+		testSerialization(stream3, "StreamState");
+
+		StreamEvent stream4("streamEvent", evt2, *mp_fakeInput, "A stream of event");
+		testSerialization(stream4, "StreamEvent");
+
 		cv::Mat image2(cv::Size(640, 480), CV_8U);
 		StreamDebug stream5("streamDebug", image2, *mp_fakeInput, "A stream of debug");
 		testSerialization(stream5, "StreamDebug");
 
-		/*
-		StreamObject stream2;
-		testSerialization(stream2, "streamObject");
-		StreamState stream3;
-		testSerialization(stream3, "streamState");
-		StreamEvent stream4;
-		testSerialization(stream4, "streamEvent");
-		*/
 		// TODO: test the serialization of modules
 		MkException excep;
 		testSerialization(excep, "MkException");

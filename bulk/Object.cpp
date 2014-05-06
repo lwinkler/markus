@@ -80,7 +80,7 @@ void Object::Deserialize(std::istream& x_in, const string& x_dir)
 	m_feats.clear();
 	Json::Value::Members members = root["features"].getMemberNames();
 	for(Json::Value::Members::const_iterator it = members.begin() ; it != members.end() ; it++)
-		AddFeature(*it, root[*it].asFloat());
+		AddFeature(*it, root["features"][*it].asFloat());
 }
 
 

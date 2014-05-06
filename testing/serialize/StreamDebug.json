@@ -1,0 +1,13 @@
+
+{
+	"connected" : false,
+	"description" : "Another description for a stream of debug",
+	"height" : 32,
+	"id" : 0,
+	"image" : "testing/tmp/serialize_StreamDebug/Module0.streamDebugA.jpg",
+	"name" : "streamDebugA",
+	"ready" : true,
+	"timeStamp" : 1399367541,
+	"type" : "Debug",
+	"width" : 24
+}

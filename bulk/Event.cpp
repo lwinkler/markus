@@ -58,7 +58,7 @@ void Event::Serialize(std::ostream& x_out, const string& x_dir) const
 			m_object.Serialize(ss, x_dir);
 			ss >> root["object"];
 		}
-		else root["object"];
+		else root["object"] = Json::Value(Json::nullValue); // Null
 	}
 	x_out << root;
 }
@@ -85,6 +85,9 @@ void Event::Deserialize(std::istream& x_in, const string& x_dir)
 	else
 	{
 		m_label = "";
+		m_absTimeEvent = 0;
+		m_absTimeNotif = 0;
+		m_object = Object("empty");
 	}
 }
 

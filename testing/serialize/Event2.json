@@ -2,7 +2,20 @@
 {
 	"dateEvent" : 1399345442429,
 	"dateNotif" : 3453434522221,
-	"label" : "label_to_serialize",
-	"object" : null,
+	"label" : "label_to_serialize2",
+	"object" : 
+	{
+		"features" : 
+		{
+			"feat1" : 77.0,
+			"feat2" : 0.0
+		},
+		"height" : 0.0,
+		"id" : -1,
+		"name" : "test",
+		"width" : 0.0,
+		"x" : 0.0,
+		"y" : 0.0
+	},
 	"raised" : true
 }

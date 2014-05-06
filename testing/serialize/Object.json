@@ -1,5 +1,10 @@
 
 {
+	"features" : 
+	{
+		"featA" : 2342.0,
+		"featB" : 111.0
+	},
 	"height" : 0.550,
 	"id" : 333,
 	"name" : "test_serialize",
