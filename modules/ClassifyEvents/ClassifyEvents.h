@@ -35,8 +35,8 @@ class ClassifyEvents : public Module // TODO: Should probably be in dir bulk/
 public:
 	ClassifyEvents(const ConfigReader& x_configReader);
 	~ClassifyEvents();
-	virtual const std::string& GetClass() const {static std::string cl = "ClassifyEvents"; return cl;}
-	virtual const std::string& GetDescription() const {static std::string descr = "Filter events based on user feedback"; return descr;}
+	MKCLASS("ClassifyEvents")
+	MKDESCR("Filter events based on user feedback")
 	
 	virtual void ProcessFrame();
 	void Reset();

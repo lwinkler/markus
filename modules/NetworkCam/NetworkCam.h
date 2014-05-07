@@ -53,8 +53,8 @@ class NetworkCam : public Input
 public:
 	NetworkCam(const ConfigReader& x_confReader);
 	~NetworkCam();
-	virtual const std::string& GetClass() const {static std::string cl = "NetworkCam"; return cl;}
-	virtual const std::string& GetDescription() const {static std::string descr = "Read video stream from a network camera"; return descr;}
+	MKCLASS("NetworkCam")
+	MKDESCR("Read video stream from a network camera")
 	
 	void Capture();
 	virtual void Reset();

@@ -51,8 +51,8 @@ class UsbCam : public Input
 public:
 	UsbCam(const ConfigReader& x_confReader);
 	~UsbCam();
-	virtual const std::string& GetClass() const {static std::string cl = "UsbCam"; return cl;}
-	virtual const std::string& GetDescription() const {static std::string descr = "Read video stream from an enbedded or USB camera"; return descr;}
+	MKCLASS("UsbCam")
+	MKDESCR("Read video stream from an enbedded or USB camera")
 	
 	void Capture();
 	virtual void Reset();

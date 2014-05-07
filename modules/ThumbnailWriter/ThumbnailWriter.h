@@ -49,8 +49,8 @@ class ThumbnailWriter : public Module
 public:
 	ThumbnailWriter(const ConfigReader& x_confReader);
 	~ThumbnailWriter();
-	virtual const std::string& GetClass() const {static std::string cl = "ThumbnailWriter"; return cl;}
-	virtual const std::string& GetDescription() const {static std::string descr = "Write an object stream as separate images in a folder."; return descr;}
+	MKCLASS("ThumbnailWriter")
+	MKDESCR("Write an object stream as separate images in a folder.")
 	
 	virtual void ProcessFrame();
 	void Reset();

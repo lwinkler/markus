@@ -77,8 +77,8 @@ class BgrSubMOG : public Module
 public:
 	BgrSubMOG(const ConfigReader& x_configReader);
 	~BgrSubMOG();
-	virtual const std::string& GetClass() const {static std::string cl = "BgrSubMOG"; return cl;}
-	virtual const std::string& GetDescription() const {static std::string descr = "Perform background subtraction via Mixtures Of Gaussians (OpenCV MOG1)"; return descr;}
+	MKCLASS("BgrSubMOG")
+	MKDESCR("Perform background subtraction via Mixtures Of Gaussians (OpenCV MOG1)")
 	
 	virtual void ProcessFrame();
 	void Reset();

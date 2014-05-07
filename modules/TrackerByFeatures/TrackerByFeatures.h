@@ -62,8 +62,8 @@ class TrackerByFeatures : public Module
 public:
 	TrackerByFeatures(const ConfigReader& x_configReader);
 	~TrackerByFeatures();
-	virtual const std::string& GetClass() const {static std::string cl = "TrackerByFeatures"; return cl;}
-	virtual const std::string& GetDescription() const {static std::string descr = "Track objects by matching a set of features (typically x,y,width andci height)"; return descr;}
+	MKCLASS("TrackerByFeatures")
+	MKDESCR("Track objects by matching a set of features (typically x,y,width andci height)")
 	
 	virtual void ProcessFrame();
 	void Reset();

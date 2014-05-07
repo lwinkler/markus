@@ -128,6 +128,11 @@ add_custom_target(update_projects_list
 	COMMAND editor/js/all_projects.js.sh > editor/js/all_projects.js
 )
 
+add_custom_target(tests
+	COMMENT "Launch the set of unit tests"
+	COMMAND testing/unitTesting
+)
+
 #-------------------------------------------------------------------------------- 
 #create a pretty commit id using git
 #uses 'git describe --tags', so tags are required in the repo

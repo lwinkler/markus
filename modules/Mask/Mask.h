@@ -48,8 +48,8 @@ class Mask : public Module
 public:
 	Mask(const ConfigReader& x_configReader);
 	~Mask();
-	virtual const std::string& GetClass() const {static std::string cl = "Mask"; return cl;}
-	virtual const std::string& GetDescription() const {static std::string descr = "Apply a binary mask to an image input"; return descr;}
+	MKCLASS("Mask")
+	MKDESCR("Apply a binary mask to an image input")
 
 	
 	virtual void ProcessFrame();

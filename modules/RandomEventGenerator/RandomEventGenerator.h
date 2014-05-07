@@ -54,8 +54,8 @@ class RandomEventGenerator : public Input
 public:
 	RandomEventGenerator(const ConfigReader& x_confReader);
 	~RandomEventGenerator();
-	virtual const std::string& GetClass() const {static std::string cl = "RandomEventGenerator"; return cl;}
-	virtual const std::string& GetDescription() const {static std::string descr = "Generate an event with random features at each step"; return descr;}
+	MKCLASS("RandomEventGenerator")
+	MKDESCR("Generate an event with random features at each step")
 	
 	void Capture();
 	virtual void Reset();

@@ -55,8 +55,8 @@ class Morph : public Module
 public:
 	Morph(const ConfigReader& x_configReader);
 	~Morph();
-	virtual const std::string& GetClass() const {static std::string cl = "Morph"; return cl;}
-	virtual const std::string& GetDescription() const {static std::string descr = "Apply a morphological operator to an image"; return descr;}
+	MKCLASS("Morph")
+	MKDESCR("Apply a morphological operator to an image")
 
 	
 	

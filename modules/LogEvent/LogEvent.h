@@ -59,8 +59,8 @@ class LogEvent : public Module
 public:
 	LogEvent(const ConfigReader& x_configReader);
 	~LogEvent(void);
-	virtual const std::string& GetClass() const {static std::string cl = "LogEvent"; return cl;}
-	virtual const std::string& GetDescription() const {static std::string descr = "Read an event and log it to .srt file"; return descr;}
+	MKCLASS("LogEvent")
+	MKDESCR("Read an event and log it to .srt file")
 
 	void Reset();
 private:

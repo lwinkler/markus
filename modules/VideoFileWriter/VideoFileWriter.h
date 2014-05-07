@@ -55,8 +55,8 @@ class VideoFileWriter : public Module
 public:
 	VideoFileWriter(const ConfigReader& x_confReader);
 	~VideoFileWriter();
-	virtual const std::string& GetClass() const {static std::string cl = "VideoFileWriter"; return cl;}
-	virtual const std::string& GetDescription() const {static std::string descr = "Write output to a video file"; return descr;}
+	MKCLASS("VideoFileWriter")
+	MKDESCR("Write output to a video file")
 	
 	virtual void ProcessFrame();
 	void Reset();

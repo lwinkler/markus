@@ -46,8 +46,8 @@ class TempDiff : public Module
 public:
 	TempDiff(const ConfigReader& x_configReader);
 	~TempDiff();
-	virtual const std::string& GetClass() const {static std::string cl = "TempDiff"; return cl;}
-	virtual const std::string& GetDescription() const {static std::string descr = "Perform temporal differencing: compare frame with previous frame by subtraction"; return descr;}
+	MKCLASS("TempDiff")
+	MKDESCR("Perform temporal differencing: compare frame with previous frame by subtraction")
 	
 	virtual void ProcessFrame();
 	void Reset();
