@@ -3,7 +3,6 @@
 	"connected" : false,
 	"description" : "Another description for a stream of state",
 	"height" : 24,
-	"id" : 0,
 	"name" : "streamStateA",
 	"ready" : true,
 	"state" : true,

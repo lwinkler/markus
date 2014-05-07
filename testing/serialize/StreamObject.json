@@ -3,7 +3,6 @@
 	"connected" : false,
 	"description" : "Another description for a stream of objects",
 	"height" : 24,
-	"id" : 0,
 	"name" : "streamObject",
 	"objects" : 
 	[

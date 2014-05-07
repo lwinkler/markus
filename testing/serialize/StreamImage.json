@@ -3,7 +3,6 @@
 	"connected" : false,
 	"description" : "a description of image stream",
 	"height" : 24,
-	"id" : 0,
 	"image" : "testing/serialize/image/Module0.img.jpg",
 	"name" : "img",
 	"ready" : true,

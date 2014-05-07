@@ -303,12 +303,12 @@ void Module::Export(ostream& rx_os, int x_indentation)
 
 	rx_os<<tabs<<"<inputs>"<<endl;
 	for(map<int, Stream*>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
-		it->second->Export(rx_os, x_indentation + 2, true);
+		it->second->Export(rx_os, it->first, x_indentation + 2, true);
 	rx_os<<tabs<<"</inputs>"<<endl;
 
 	rx_os<<tabs<<"<outputs>"<<endl;
 	for(map<int, Stream*>::const_iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; it++)
-		it->second->Export(rx_os, x_indentation + 2, false);
+		it->second->Export(rx_os, it->first, x_indentation + 2, false);
 	rx_os<<tabs<<"</outputs>"<<endl;
 	tabs = string(x_indentation, '\t');
 	rx_os<<tabs<<"</module>"<<endl;
@@ -508,7 +508,7 @@ void Module::SetAsReady()
 */
 void Module::AddInputStream(int x_id, Stream* xp_stream)
 {
-	xp_stream->SetId(x_id);
+	// xp_stream->SetId(x_id);
 	if(m_inputStreams.find(x_id) != m_inputStreams.end())
 		throw MkException("Two streams with same id", LOC);
 	m_inputStreams.insert(make_pair(x_id, xp_stream));
@@ -523,7 +523,7 @@ void Module::AddInputStream(int x_id, Stream* xp_stream)
 */
 void Module::AddOutputStream(int x_id, Stream* xp_stream)
 {
-	xp_stream->SetId(x_id);
+	// xp_stream->SetId(x_id);
 	if(m_outputStreams.find(x_id) != m_outputStreams.end())
 		throw MkException("Two streams with same id", LOC);
 	m_outputStreams.insert(make_pair(x_id, xp_stream));
@@ -537,7 +537,7 @@ void Module::AddOutputStream(int x_id, Stream* xp_stream)
 */
 void Module::AddDebugStream(int x_id, Stream* xp_stream)
 {
-	xp_stream->SetId(x_id);
+	// xp_stream->SetId(x_id);
 	if(m_debugStreams.find(x_id) != m_debugStreams.end())
 		throw MkException("Two streams with same id", LOC);
 	m_debugStreams.insert(make_pair(x_id, xp_stream));

@@ -3,7 +3,6 @@
 	"connected" : false,
 	"description" : "Another description for a stream of debug",
 	"height" : 32,
-	"id" : 0,
 	"image" : "testing/serialize/image/Module0.img.jpg",
 	"name" : "img",
 	"ready" : true,

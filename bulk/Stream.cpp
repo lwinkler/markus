@@ -30,7 +30,7 @@ using namespace std;
 
 Stream::Stream(const std::string& x_name, Module& rx_module, const string& rx_description) :
 	m_name(x_name),
-	m_id(0),
+	// m_id(0),
 	m_width(rx_module.GetWidth()),
 	m_height(rx_module.GetHeight()),
 	mr_module(rx_module),
@@ -52,12 +52,12 @@ Stream::~Stream()
 * @param x_indentation Number of tabs for indentation
 * @param x_isInput     Is an input
 */
-void Stream::Export(ostream& rx_os, int x_indentation, bool x_isInput)
+void Stream::Export(ostream& rx_os, int x_id, int x_indentation, bool x_isInput)
 {
 	string tabs(x_indentation , '\t');
 	string inout = "output";
 	if(x_isInput) inout = "input";
-	rx_os<<tabs<<"<"<<inout<<" id=\""<<m_id<<"\">"<<endl;
+	rx_os<<tabs<<"<"<<inout<<" id=\""<<x_id<<"\">"<<endl;
 	tabs = std::string(x_indentation + 1, '\t');
 	rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<endl;
 	rx_os<<tabs<<"<name>"<<m_name<<"</name>"<<endl;
@@ -81,7 +81,7 @@ void Stream::Serialize(std::ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 	root["name"]        = m_name;
-	root["id"]          = m_id;
+	// root["id"]          = m_id;
 	root["type"]        = GetTypeString();
 	root["width"]       = m_width;
 	root["height"]      = m_height;
@@ -97,9 +97,9 @@ void Stream::Deserialize(std::istream& x_in, const string& x_dir)
 	Json::Value root;
 	x_in >> root;
 
-	m_id   = root["id"].asInt();
 	m_name = root["name"].asString();
-	m_id   = root["id"].asInt();
+	// if(m_id   != root["id"].asInt())
+		// throw MkException("Stream must have the right id before serializing", LOC);
 	if(root["type"].asString() != GetTypeString())
 		throw MkException("Stream must have the right type before serializing", LOC);
 	m_width       = root["width"].asDouble();

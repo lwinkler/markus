@@ -35,8 +35,8 @@ public:
 	Stream(const std::string& x_name, Module& rx_module, const std::string& rx_description);
 	virtual ~Stream();
 	inline const std::string& GetName() const {return m_name;}
-	inline int GetId() const {return m_id;}
-	inline void SetId(int x_id) {m_id = x_id;} // id should disappear at term
+	// inline int GetId() const {return m_id;}
+	// inline void SetId(int x_id) {m_id = x_id;} // id should disappear at term
 	inline int GetWidth() const {return m_width;}
 	inline int GetHeight() const {return m_height;}
 	inline const std::string& GetDescription() const {return m_description;}
@@ -46,7 +46,7 @@ public:
 	virtual void ConvertInput() = 0;
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
-	void Export(std::ostream& rx_os, int x_indentation, bool x_isInput);
+	void Export(std::ostream& rx_os, int x_id, int x_indentation, bool x_isInput);
 	inline void LockModuleForRead(){mr_module.LockForRead();}
 	inline void UnLockModule(){mr_module.Unlock();}
 	inline bool IsConnected() const {return m_connected != NULL;}
@@ -71,7 +71,7 @@ public:
 
 protected:
 	std::string m_name;
-	int m_id;
+	// const int m_id;
 	int m_width;
 	int m_height;
 	Module& mr_module;
