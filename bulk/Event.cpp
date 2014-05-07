@@ -30,6 +30,7 @@ using namespace cv;
 using namespace std;
 
 
+#define COPY(target, src) target=src
 #define COPY_AND_CHECK(target, src) target=src; if((target).isNull() || (target) == "") {throw MkException("Element of exported event is invalid", LOC);}
 
 log4cxx::LoggerPtr Event::m_logger(log4cxx::Logger::getLogger("Event"));
@@ -179,7 +180,7 @@ void Event::Notify(bool x_isProcessEvent)
 	else
 	{
 		COPY_AND_CHECK(out["files"]      , root["external"]["files"]);
-		COPY_AND_CHECK(out["objects"][0] , root["object"]);
+		COPY(out["objects"][0] , root["object"]);
 	}
 
 	// Notify via stdout
