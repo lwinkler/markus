@@ -36,13 +36,15 @@ class StreamDebug : public Stream
 public:
 	StreamDebug(const std::string& x_name, cv::Mat& x_image, Module& rx_module, const std::string& rx_description);
 	~StreamDebug();
+	MKCLASS("StreamDebug")
+	MKTYPE("Debug")
+
 	const cv::Mat& GetImage() const {return m_image;}
 	
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat& x_output) const;
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
-	inline virtual const std::string& GetTypeString()const {const static std::string s = "StreamDebug"; return s;}
 
 protected:
 	cv::Mat& m_image;

@@ -37,6 +37,9 @@ class StreamObject : public Stream
 public:
 	StreamObject(const std::string& rx_name, std::vector<Object>& r_rects, Module& rx_module, const std::string& rx_description);
 	~StreamObject();
+	MKCLASS("StreamObjects")
+	MKTYPE("Objects")
+
 	inline void Clear() {m_objects.clear();}
 	inline void AddObject(const Object& x_obj) {m_objects.push_back(x_obj);}
 	inline const std::vector<Object>& GetObjects() const {return m_objects;}
@@ -45,7 +48,6 @@ public:
 	virtual void RenderTo(cv::Mat& x_output) const;
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
-	inline virtual const std::string& GetTypeString()const {const static std::string s = "StreamObjects"; return s;}
 	double GetFeatureValue(const std::vector<Feature>& x_vect, const char* x_name);
 
 protected:

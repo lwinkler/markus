@@ -59,7 +59,7 @@ void Stream::Export(ostream& rx_os, int x_id, int x_indentation, bool x_isInput)
 	if(x_isInput) inout = "input";
 	rx_os<<tabs<<"<"<<inout<<" id=\""<<x_id<<"\">"<<endl;
 	tabs = std::string(x_indentation + 1, '\t');
-	rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<endl;
+	rx_os<<tabs<<"<type>"<<GetType()<<"</type>"<<endl;
 	rx_os<<tabs<<"<name>"<<m_name<<"</name>"<<endl;
 	rx_os<<tabs<<"<description>"<<GetDescription()<<"</description>"<<endl;
 	tabs = std::string(x_indentation, '\t');
@@ -82,7 +82,7 @@ void Stream::Serialize(std::ostream& x_out, const string& x_dir) const
 	Json::Value root;
 	root["name"]        = m_name;
 	// root["id"]          = m_id;
-	root["type"]        = GetTypeString();
+	root["type"]        = GetType();
 	root["width"]       = m_width;
 	root["height"]      = m_height;
 	root["description"] = m_description;
@@ -100,7 +100,7 @@ void Stream::Deserialize(std::istream& x_in, const string& x_dir)
 	m_name = root["name"].asString();
 	// if(m_id   != root["id"].asInt())
 		// throw MkException("Stream must have the right id before serializing", LOC);
-	if(root["type"].asString() != GetTypeString())
+	if(root["type"].asString() != GetType())
 		throw MkException("Stream must have the right type before serializing", LOC);
 	m_width       = root["width"].asDouble();
 	m_height      = root["height"].asDouble();

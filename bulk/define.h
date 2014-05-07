@@ -31,6 +31,11 @@
 #define DIFF_REL(f) ((f).value - (f).mean) * ((f).value - (f).mean) / (f).sqVariance
 #define CLEAN_DELETE(x) if((x) != NULL){delete((x));(x) = NULL;}
 
+/// Macro to define the Class of an object (for method GetClass)
+#define MKCLASS(cl) inline virtual const std::string& GetClass() const {const static std::string s = cl; return s;}
+/// Macro to define the Type of an object (for method GetType)
+#define MKTYPE(cl) inline virtual const std::string& GetType() const {const static std::string s = cl; return s;}
+
 /// Disable copy constructor
 #define DISABLE_COPY(Class) \
 Class(const Class &); \

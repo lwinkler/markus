@@ -38,7 +38,8 @@ class ControllerParameter : public Controller
 {
 public:
 	ControllerParameter(Parameter& x_param);
-	inline virtual const std::string& GetType() const {const static std::string s = "ControllerParameter"; return s;} // TODO rename ?
+	MKCLASS("ControllerParameter")
+
 	virtual QWidget* CreateWidget() = 0;
 	virtual void SetWidgetValue(const std::string& x_value) = 0;
 	virtual std::string GetValueFromWidget() = 0;

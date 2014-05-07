@@ -33,6 +33,9 @@ class StreamState : public Stream
 public:
 	StreamState(const std::string& rx_name, bool& x_state, Module& rx_module, const std::string& rx_description);
 	~StreamState();
+	MKCLASS("StreamState")
+	MKTYPE("State")
+
 	inline void SetState(bool x_state){m_state = x_state;}
 	inline bool GetState() const {return m_state;}
 	
@@ -40,7 +43,6 @@ public:
 	virtual void RenderTo(cv::Mat& x_output) const;
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
-	inline virtual const std::string& GetTypeString()const {const static std::string s = "StreamState"; return s;}
 
 protected:
 	bool& m_state;

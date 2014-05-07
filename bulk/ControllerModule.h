@@ -35,7 +35,8 @@ class ControllerModule : public Controller
 public:
 	ControllerModule(Module& rx_module);
 	~ControllerModule(){}
-	inline virtual const std::string& GetType() const {const static std::string s = "ControllerModule"; return s;}
+	MKCLASS("ControllerModule")
+
 	virtual QWidget* CreateWidget();
 	
 	// Controls

@@ -34,6 +34,8 @@ class StreamEvent : public Stream
 public:
 	StreamEvent(const std::string& rx_name, Event& x_event, Module& rx_module, const std::string& rx_description);
 	~StreamEvent();
+	MKCLASS("StreamEvent")
+	MKTYPE("Event")
 	inline void SetEvent(const Event& x_event){m_event = x_event;}
 	inline const Event& GetEvent() const {return m_event;}
 	
@@ -41,8 +43,6 @@ public:
 	virtual void RenderTo(cv::Mat& x_output) const;
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
-	inline virtual const std::string& GetTypeString() const {const static std::string s = "StreamEvent"; return s;}
-
 
 protected:
 	Event& m_event;

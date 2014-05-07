@@ -33,12 +33,13 @@ class StreamImage : public Stream
 public:
 	StreamImage(const std::string& x_name, cv::Mat& x_image, Module& rx_module, const std::string& rx_description);
 	~StreamImage();
+	MKCLASS("StreamImage")
+	MKTYPE("Image")
 	
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat& x_output) const;
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
-	inline virtual const std::string& GetTypeString() const {const static std::string s = "StreamImage"; return s;}
 	const cv::Mat& GetImage() const {return m_image;}
 	void Connect(Stream * x_stream);
 protected:

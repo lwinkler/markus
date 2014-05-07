@@ -67,7 +67,7 @@ public:
 	/// Create a QT Widget for this controller
 	virtual QWidget* CreateWidget() = 0;
 	const std::string& GetName() const {return m_name;}
-	virtual const std::string& GetType() const = 0;
+	virtual const std::string& GetClass() const = 0;
 
 	/**
 	* @brief List all actions

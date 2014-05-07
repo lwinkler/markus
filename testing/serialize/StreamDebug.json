@@ -7,6 +7,6 @@
 	"name" : "img",
 	"ready" : true,
 	"timeStamp" : 1399367541,
-	"type" : "StreamDebug",
+	"type" : "Debug",
 	"width" : 24
 }

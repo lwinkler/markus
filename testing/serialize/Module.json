@@ -14,7 +14,7 @@
 			"name" : "img",
 			"ready" : false,
 			"timeStamp" : 23422423424234,
-			"type" : "StreamImage",
+			"type" : "Image",
 			"width" : 32
 		}
 	],

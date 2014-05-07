@@ -34,13 +34,15 @@ class Stream : public Serializable
 public:
 	Stream(const std::string& x_name, Module& rx_module, const std::string& rx_description);
 	virtual ~Stream();
+
+	virtual const std::string& GetClass() const = 0;
+	virtual const std::string& GetType() const = 0;
 	inline const std::string& GetName() const {return m_name;}
 	// inline int GetId() const {return m_id;}
 	// inline void SetId(int x_id) {m_id = x_id;} // id should disappear at term
 	inline int GetWidth() const {return m_width;}
 	inline int GetHeight() const {return m_height;}
 	inline const std::string& GetDescription() const {return m_description;}
-	virtual const std::string& GetTypeString() const = 0;
 	virtual void RenderTo(cv::Mat& x_output) const  = 0;
 	virtual void Connect(Stream *x_stream);
 	virtual void ConvertInput() = 0;

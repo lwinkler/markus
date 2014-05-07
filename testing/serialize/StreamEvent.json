@@ -45,6 +45,6 @@
 	"name" : "streamEventA",
 	"ready" : true,
 	"timeStamp" : 12341244444444,
-	"type" : "StreamEvent",
+	"type" : "Event",
 	"width" : 32
 }

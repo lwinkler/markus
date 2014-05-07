@@ -214,13 +214,13 @@ class TestModules : public CppUnit::TestFixture
 			Stream& inputStream = module->RefInputStreamById(it2->first);
 			Stream* outputStream = NULL;
 
-			if(it2->second->GetTypeString() == "StreamImage")
+			if(it2->second->GetClass() == "StreamImage")
 				outputStream = new StreamImage("test", m_image, *mp_fakeInput, "Test input");
-			else if(it2->second->GetTypeString() == "StreamObjects")
+			else if(it2->second->GetClass() == "StreamObjects")
 				outputStream = new StreamObject("test", m_objects, *mp_fakeInput, "Test input");
-			else if(it2->second->GetTypeString() == "StreamState")
+			else if(it2->second->GetClass() == "StreamState")
 				outputStream = new StreamState("test", m_state, *mp_fakeInput, "Test input");
-			else if(it2->second->GetTypeString() == "StreamEvent")
+			else if(it2->second->GetClass() == "StreamEvent")
 				outputStream = new StreamEvent("test", m_event, *mp_fakeInput, "Test input");
 			else
 			{
@@ -316,11 +316,11 @@ class TestModules : public CppUnit::TestFixture
 
 			for(std::map<std::string, Controller*>::const_iterator it2 = module->GetControllersList().begin() ; it2 != module->GetControllersList().end() ; it2++)
 			{
-				LOG_INFO(m_logger, "## on controller "<<it2->first<<" of type "<<it2->second->GetType());
+				LOG_INFO(m_logger, "## on controller "<<it2->first<<" of class "<<it2->second->GetClass());
 				std::vector<std::string> actions;
 				it2->second->ListActions(actions);
 
-                if(it2->second->GetType() == "ControllerParameter")
+				if(it2->second->GetClass() == "ControllerParameter")
 				{
 					// Do not test input modules: to many errors
 					// if(!module->IsInput())
