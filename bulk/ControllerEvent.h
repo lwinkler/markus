@@ -36,6 +36,7 @@ class ControllerEvent : public Controller
 public:
 	ControllerEvent(ClassifyEvents& rx_module);
 	~ControllerEvent(){}
+	inline virtual const std::string& GetType() const {const static std::string s = "ControllerEvent"; return s;}
 	virtual QWidget* CreateWidget();
 
 	// Controls

@@ -32,14 +32,15 @@ class QParameterSlider;
 /**
 * @brief Control class for an input of type VideoFileReader
 */
-class InputStreamControl : public Controller
+class ControllerInputStream : public Controller // TODO rename
 {
 public:
-	InputStreamControl(VideoFileReader& rx_module);
-	~InputStreamControl();
+	ControllerInputStream(VideoFileReader& rx_module);
+	~ControllerInputStream();
+	inline virtual const std::string& GetType() const {const static std::string s = "ControllerInputStream"; return s;}
 	virtual QWidget* CreateWidget();
 
-	typedef void (InputStreamControl::*action)(std::string*);
+	typedef void (ControllerInputStream::*action)(std::string*);
 	DECLARE_CALL_ACTION(action);
 	DECLARE_LIST_ACTION(action);
 

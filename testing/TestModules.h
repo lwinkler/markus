@@ -35,11 +35,6 @@
 #include "StreamState.h"
 #include "MkException.h"
 
-#define LOG_TEST(logger, str) {\
-	std::cout<<str<<std::endl;\
-	LOG_INFO((logger), str);\
-}
-
 
 /// Unit testing class for ConfigReader class
 
@@ -325,7 +320,7 @@ class TestModules : public CppUnit::TestFixture
 				std::vector<std::string> actions;
 				it2->second->ListActions(actions);
 
-				if(it2->second->GetType() == "parameter")
+                if(it2->second->GetType() == "ControllerParameter")
 				{
 					// Do not test input modules: to many errors
 					// if(!module->IsInput())

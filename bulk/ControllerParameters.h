@@ -38,12 +38,13 @@ class ControllerParameter : public Controller
 {
 public:
 	ControllerParameter(Parameter& x_param);
+	inline virtual const std::string& GetType() const {const static std::string s = "ControllerParameter"; return s;} // TODO rename ?
 	virtual QWidget* CreateWidget() = 0;
 	virtual void SetWidgetValue(const std::string& x_value) = 0;
 	virtual std::string GetValueFromWidget() = 0;
 
 	// Controllers
-	void GetType(std::string* xp_value);
+	void GetParameterType(std::string* xp_value);
 	void GetRange(std::string* xp_value);
 	void SetControlledValue(std::string* xp_value);
 	void GetCurrent(std::string* xp_value);

@@ -61,13 +61,13 @@ void ListActions(std::vector<std::string>& xr_actions) const\
 class Controller
 {
 public:
-	Controller(const std::string& x_name, const std::string& x_type);
+	Controller(const std::string& x_name);
 	virtual ~Controller();
 
 	/// Create a QT Widget for this controller
 	virtual QWidget* CreateWidget() = 0;
-	const std::string& GetName() {return m_name;}
-	const std::string& GetType(){return m_type;}  // TODO: Type must be set in sub class !
+	const std::string& GetName() const {return m_name;}
+	virtual const std::string& GetType() const = 0;
 
 	/**
 	* @brief List all actions
@@ -86,7 +86,6 @@ public:
 	
 protected:
 	std::string m_name;
-	std::string m_type;
 };
 
 

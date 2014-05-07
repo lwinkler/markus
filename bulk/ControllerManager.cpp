@@ -112,7 +112,7 @@ void ControllerManager::WriteStateToDirectory(std::string* xp_value)
 }
 
 ControllerManager::ControllerManager(Manager& rx_manager) :
-	Controller("manager", "manager"),
+	Controller("manager"),
 	manager(rx_manager)
 {
 	m_actions.insert(std::make_pair("Reset",              &ControllerManager::Reset));

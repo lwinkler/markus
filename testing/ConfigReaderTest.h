@@ -31,12 +31,6 @@
 #include "util.h"
 #include "MkException.h"
 
-#define LOG_TEST(logger, str) {\
-	std::cout<<str<<std::endl;\
-	LOG_INFO((logger), str);\
-}
-
-
 /// Unit testing class for ConfigReader class
 
 class ConfigReaderTest : public CppUnit::TestFixture

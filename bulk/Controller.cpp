@@ -26,9 +26,8 @@
 using namespace std;
 
 
-Controller::Controller(const string& x_name, const string& x_type) :
-	m_name(x_name),
-	m_type(x_type)
+Controller::Controller(const string& x_name) :
+	m_name(x_name)
 {
 }
 

@@ -71,7 +71,7 @@ void ControllerModule::PrintStatistics(string* xp_value)
 
 
 ControllerModule::ControllerModule(Module& rx_module) :
-	Controller("module", "module"),
+	Controller("module"),
 	module(rx_module)
 {
 	m_actions.insert(std::make_pair("Reset",           &ControllerModule::Reset));

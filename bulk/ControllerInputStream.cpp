@@ -35,7 +35,7 @@ using namespace std;
 *
 * @param xp_value
 */
-void InputStreamControl::SetCursor(string* xp_value)
+void ControllerInputStream::SetCursor(string* xp_value)
 {
 	if(xp_value != NULL)
 		module.SetMsec(PSTR2FLOAT(xp_value));
@@ -51,7 +51,7 @@ void InputStreamControl::SetCursor(string* xp_value)
 *
 * @param xp_value
 */
-void InputStreamControl::GetCursor(string* xp_value)
+void ControllerInputStream::GetCursor(string* xp_value)
 {
 	if(xp_value != NULL)
 	{
@@ -64,19 +64,19 @@ void InputStreamControl::GetCursor(string* xp_value)
 #endif
 }
 
-InputStreamControl::InputStreamControl(VideoFileReader& rx_module) :
-	Controller("reader", "inputStream"),
+ControllerInputStream::ControllerInputStream(VideoFileReader& rx_module) :
+	Controller("reader"),
 	module(rx_module)
 {
-	m_actions.insert(std::make_pair("Get", &InputStreamControl::GetCursor));
-	m_actions.insert(std::make_pair("Set", &InputStreamControl::SetCursor));
+	m_actions.insert(std::make_pair("Get", &ControllerInputStream::GetCursor));
+	m_actions.insert(std::make_pair("Set", &ControllerInputStream::SetCursor));
 }
 
-InputStreamControl::~InputStreamControl()
+ControllerInputStream::~ControllerInputStream()
 {
 }
 
-QWidget* InputStreamControl::CreateWidget()
+QWidget* ControllerInputStream::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
 	return parameterSlider = new QParameterSlider(0, 0, module.GetMaxMsec(), 0);

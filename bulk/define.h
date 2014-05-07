@@ -46,7 +46,12 @@ Class &operator=(const Class &);
 #define LOG_WARN  LOG4CXX_WARN
 #define LOG_INFO  LOG4CXX_INFO
 #define LOG_DEBUG LOG4CXX_DEBUG
-// #define LOG_EVENT(logger, descriptor)   LOG4CXX_WARN((logger), "@notif@ EVENT" << " " << descriptor ) // TODO Maybe remove this
+
+// Log function for tests only
+#define LOG_TEST(logger, str) {\
+	std::cout<<str<<std::endl;\
+	LOG_INFO((logger), str);\
+}
 
 #define SYSTEM(x) {std::string cmd; cmd = (x);\
 	if(system(cmd.c_str())) {\

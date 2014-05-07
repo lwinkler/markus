@@ -31,11 +31,6 @@
 #include "MkException.h"
 #include "Manager.h"
 
-#define LOG_TEST(logger, str) {\
-	std::cout<<str<<std::endl;\
-	LOG_INFO((logger), str);\
-}
-
 
 /// Unit testing class by choosing a set of test projects
 

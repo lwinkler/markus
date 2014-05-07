@@ -36,6 +36,7 @@ class ControllerManager : public Controller
 public:
 	ControllerManager(Manager& rx_module);
 	~ControllerManager(){}
+	inline virtual const std::string& GetType() const {const static std::string s = "ControllerManager"; return s;}
 	virtual QWidget* CreateWidget();
 
 	typedef void (ControllerManager::*action)(std::string*);

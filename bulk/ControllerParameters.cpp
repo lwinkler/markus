@@ -44,7 +44,7 @@ using namespace std;
 *
 * @param xp_value Output type
 */
-void ControllerParameter::GetType(string* xp_value)
+void ControllerParameter::GetParameterType(string* xp_value)
 {
 	if(xp_value != NULL)
 	{
@@ -148,10 +148,10 @@ void ControllerParameter::GetDefault(string* xp_value)
 
 
 ControllerParameter::ControllerParameter(Parameter& x_param):
-	Controller(x_param.GetName(), "parameter"),
+	Controller(x_param.GetName()),
 	m_param(x_param)
 {
-	m_actions.insert(std::make_pair("GetType",    &ControllerParameter::GetType));
+	m_actions.insert(std::make_pair("GetType",    &ControllerParameter::GetParameterType));
 	m_actions.insert(std::make_pair("GetRange",   &ControllerParameter::GetRange));
 	m_actions.insert(std::make_pair("Set",        &ControllerParameter::SetControlledValue));
 	m_actions.insert(std::make_pair("Get",        &ControllerParameter::GetCurrent));
