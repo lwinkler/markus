@@ -7,6 +7,6 @@
 	"ready" : true,
 	"state" : true,
 	"timeStamp" : 23423422234234,
-	"type" : "State",
+	"type" : "StreamState",
 	"width" : 32
 }

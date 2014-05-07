@@ -214,13 +214,13 @@ class TestModules : public CppUnit::TestFixture
 			Stream& inputStream = module->RefInputStreamById(it2->first);
 			Stream* outputStream = NULL;
 
-			if(it2->second->GetTypeString() == "Image")
+			if(it2->second->GetTypeString() == "StreamImage")
 				outputStream = new StreamImage("test", m_image, *mp_fakeInput, "Test input");
-			else if(it2->second->GetTypeString() == "Objects")
+			else if(it2->second->GetTypeString() == "StreamObjects")
 				outputStream = new StreamObject("test", m_objects, *mp_fakeInput, "Test input");
-			else if(it2->second->GetTypeString() == "State")
+			else if(it2->second->GetTypeString() == "StreamState")
 				outputStream = new StreamState("test", m_state, *mp_fakeInput, "Test input");
-			else if(it2->second->GetTypeString() == "Event")
+			else if(it2->second->GetTypeString() == "StreamEvent")
 				outputStream = new StreamEvent("test", m_event, *mp_fakeInput, "Test input");
 			else
 			{
