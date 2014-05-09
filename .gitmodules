@@ -1,3 +1,3 @@
-#[submodule "vp-detection"]
-	#path = vp-detection
-	#url = git@github.com:softcom-technologies/vp-detection.git
+[submodule "vp-detection"]
+	path = vp-detection
+	url = git@github.com:softcom-technologies/vp-detection.git
