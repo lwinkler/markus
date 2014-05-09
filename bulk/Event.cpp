@@ -168,7 +168,7 @@ void Event::Notify(bool x_isProcessEvent)
 	COPY_AND_CHECK(out["dateEvent"]          , root["dateEvent"]);
 	COPY_AND_CHECK(out["dateNotif"]          , root["dateNotif"]);
 	COPY_AND_CHECK(out["applicationName"]    , Manager::GetApplicationName());
-	COPY_AND_CHECK(out["applicationVersion"] , Manager::Version());
+	COPY_AND_CHECK(out["applicationVersion"] , Manager::Version(false));
 	COPY_AND_CHECK(out["eventName"]          , root["eventName"]);
 
 	if(x_isProcessEvent)

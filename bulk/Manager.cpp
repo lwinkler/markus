@@ -505,15 +505,21 @@ Module& Manager::RefModuleByName(const string& x_name) const
 /**
 * @brief Return a string containing the version of the executable
 *
+* @param x_full Return the full info string with info on host
+*
 * @return Version
 */
-string Manager::Version()
+string Manager::Version(bool x_full)
 {
 	stringstream ss;
-	ss<<"Markus version "<<VERSION_STRING
-		<<", compiled with Opencv "<<CV_VERSION
-		<< ", vp-detection modules version "<<VERSION_STRING2
-		<< ", built on "<<VERSION_BUILD_HOST;
+	if(x_full)
+		ss<<"Markus version "<<VERSION_STRING
+			<<", compiled with Opencv "<<CV_VERSION
+			<< ", vp-detection modules version "<<VERSION_STRING2
+			<< ", built on "<<VERSION_BUILD_HOST;
+	else
+		ss<<VERSION_STRING<<","<<VERSION_STRING2;
+
 	return ss.str();
 }
 

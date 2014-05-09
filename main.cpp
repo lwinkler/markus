@@ -152,7 +152,7 @@ int main(int argc, char** argv)
 				return 0;
 				break;
 			case 'v':
-				LOG_INFO(logger, Manager::Version());
+				LOG_INFO(logger, Manager::Version(true));
 				return 0;
 			case 'd':
 				describe = true;
@@ -245,7 +245,7 @@ int main(int argc, char** argv)
 #ifndef MARKUS_NO_GUI
 		MarkusApplication app(argc, argv);
 #endif
-		LOG_INFO(logger, Manager::Version());
+		LOG_INFO(logger, Manager::Version(true));
 		ConfigReader mainConfig(configFile);
 		mainConfig.Validate();
 		ConfigReader appConfig = mainConfig.GetSubConfig("application");
