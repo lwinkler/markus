@@ -49,7 +49,7 @@ using namespace std;
 log4cxx::LoggerPtr Manager::m_logger(log4cxx::Logger::getLogger("Manager"));
 
 string Manager::m_outputDir;
-string Manager::m_applicationName;
+string Manager::m_applicationName = "unset";
 FactoryModules Manager::m_factory;
 
 
@@ -66,6 +66,8 @@ Manager::Manager(const ConfigReader& x_configReader, bool x_centralized) :
 	
 	m_inputs.clear();
 	m_modules.clear();
+
+	m_applicationName = m_configReader.GetAttribute("name");
 	
 	// Read the configuration of each module
 	ConfigReader moduleConfig = m_configReader.GetSubConfig("module");

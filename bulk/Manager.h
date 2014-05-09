@@ -72,7 +72,6 @@ public:
 	static inline void ListModules(std::vector<std::string>& xr_types) {m_factory.ListModules(xr_types);}
 	void WriteStateToDirectory(const std::string& x_directory) const;
 	void UpdateConfig();
-	inline static void SetApplicationName(const std::string& x_applicationName){m_applicationName = x_applicationName;}
 	inline static const std::string& GetApplicationName(){return m_applicationName;}
 
 protected:

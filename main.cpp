@@ -224,7 +224,6 @@ int main(int argc, char** argv)
 	}
 
 	// Init global variables and objects
-	Manager::SetApplicationName(configFile);
 	if(outputDir != "")
 	{
 		outputDir = Manager::OutputDir(outputDir, configFile);
@@ -233,12 +232,6 @@ int main(int argc, char** argv)
 	}
 
 	log4cxx::xml::DOMConfigurator::configure(logConfigFile);
-
-	// Notify the parent process (for monitoring purposes)
-	Event ev;
-	ev.AddExternalInfo("pid", getpid());
-	ev.Raise("started");
-	ev.Notify(true);
 
 	try
 	{
@@ -290,6 +283,13 @@ int main(int argc, char** argv)
 			LOG_ERROR(logger, "Error creating thread");
 			return -1;
 		}
+
+		// Notify the parent process (for monitoring purposes)
+		Event ev;
+		ev.AddExternalInfo("pid", getpid());
+		ev.Raise("started");
+		ev.Notify(true);
+
 
 		if(centralized)
 		{

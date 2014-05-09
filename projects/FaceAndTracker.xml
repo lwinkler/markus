@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<application name="FaceAndTracker" description="" cyclelimit="-1" gui="">
+<application name="FaceAndTracker" description="">
 <module name="Input" machineurl="localhost" id="0">
 <parameters>
 <param name="class">UsbCam</param>
