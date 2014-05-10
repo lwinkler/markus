@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <application name="ObjectTracker" description="">
-  <module name="UsbCam" machineurl="localhost" id="0">
+  <module name="UsbCam" id="0">
     <parameters>
       <param name="class">UsbCam</param>
       <param name="width">640</param>
@@ -17,7 +17,7 @@
     
   <uiobject x="493" y="238" width="0" height="0"/>
 </module>
-  <module name="RenderObjects" machineurl="localhost" id="1">
+  <module name="RenderObjects" id="1">
     <parameters>
       <param name="class">RenderObjects</param>
       <param name="width">640</param>
@@ -39,7 +39,7 @@
     
   <uiobject x="1316" y="270" width="0" height="0"/>
 </module>
-  <module name="BgrSubRunAvg" machineurl="localhost" id="2">
+  <module name="BgrSubRunAvg" id="2">
     <parameters>
       <param name="class">BgrSubRunAvg</param>
       <param name="width">640</param>
@@ -61,7 +61,7 @@
     
   <uiobject x="688" y="314" width="0" height="0"/>
 </module>
-  <module name="TrackerByFeatures" machineurl="localhost" id="3">
+  <module name="TrackerByFeatures" id="3">
     <parameters>
       <param name="class">TrackerByFeatures</param>
       <param name="width">640</param>
@@ -79,7 +79,7 @@
     
   <uiobject x="1127" y="311" width="0" height="0"/>
 </module>
-  <module name="SegmenterBlob" machineurl="localhost" id="4">
+  <module name="SegmenterBlob" id="4">
     <parameters>
       <param name="class">SegmenterBlob</param>
       <param name="width">640</param>
