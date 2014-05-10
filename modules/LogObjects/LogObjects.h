@@ -27,6 +27,7 @@
 #include "Module.h"
 #include "Parameter.h"
 #include "StreamObject.h"
+#include <fstream>
 
 
 
@@ -68,7 +69,9 @@ protected:
 	std::vector <Object> m_objectsIn;
 
 	// temporary
-	std::string m_fileName;
+	std::string   m_fileName;
+	std::ofstream m_outputFile;
+
 };
 
 #endif
