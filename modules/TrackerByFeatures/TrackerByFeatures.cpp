@@ -282,7 +282,6 @@ void TrackerByFeatures::DetectNewTemplates()
 
 				if(bestTemplate != NULL)
 				{
-					// TODO: Manage cases where x is absent
 					// See if the object might have splitted
 					try
 					{

@@ -47,6 +47,11 @@ public:
 
 /**
 * @brief Read video stream from a network camera
+
+	the url parameter may be an address of an http or rtsp stream
+	e.g. http://user:pass@cam_address:8081/cgi/mjpg/mjpg.cgi?.mjpg
+	     rtsp://cam_address:554/live.sdp
+	     rtsp://<servername>/axis-media/media.amp
 */
 class NetworkCam : public Input
 {
