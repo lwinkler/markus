@@ -14,7 +14,6 @@ StreamState.cpp
 Object.cpp
 Event.cpp
 Feature.cpp
-Template.cpp
 util.cpp
 ConfigReader.cpp
 Timer.cpp
