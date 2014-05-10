@@ -111,7 +111,7 @@ public:
 	
 	virtual inline bool IsInput() {return false;}
 	void Export(std::ostream& rx_os, int x_indentation);
-	Stream& RefInputStreamById(int x_id);  //TODO : Keep Ref ?
+	Stream& RefInputStreamById(int x_id); 
 	Stream& RefOutputStreamById(int x_id);
 	inline void LockForRead(){m_lock.lockForRead();}
 	inline void LockForWrite(){m_lock.lockForWrite();}

@@ -77,6 +77,5 @@ class Object : public Serializable
 		double posY;
 		double width;
 		double height;
-		int isMatched; // TODO: do we keep this ?
 };
 #endif

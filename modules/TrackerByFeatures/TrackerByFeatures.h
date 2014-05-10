@@ -87,7 +87,8 @@ protected:
 	std::list <Template> m_templates;
 
 	// temporary
-	std::vector <std::string>    m_featureNames;
+	std::vector <std::string> m_featureNames;
+	std::map<Object*, bool>   m_matched;
 
 	// debug
 #ifdef MARKUS_DEBUG_STREAMS
