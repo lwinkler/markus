@@ -146,7 +146,7 @@ void Manager::Connect()
 				{
 					int outputModuleId    = atoi(tmp1.c_str());
 					int outputId          = atoi(tmp2.c_str());
-					Stream& inputStream  = module.RefInputStreamById(inputId); // TODO avoid this and use a connect method
+					Stream& inputStream  = module.RefInputStreamById(inputId);
 					Stream& outputStream = RefModuleById(outputModuleId).RefOutputStreamById(outputId);
 
 					// Connect input and output streams

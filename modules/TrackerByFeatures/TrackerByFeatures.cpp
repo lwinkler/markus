@@ -206,8 +206,8 @@ void TrackerByFeatures::UpdateTemplates()
 #ifdef MARKUS_DEBUG_STREAMS
 		// draw template (if position is available)
 		try{
-			double x = it1->GetFeature("x").mean * m_param.width; //diagonal;
-			double y = it1->GetFeature("y").mean * m_param.height; // diagonal;
+			double x = it1->GetFeature("x").mean * diagonal;
+			double y = it1->GetFeature("y").mean * diagonal;
 			// double w = it1->GetFeature("width").value * diagonal;
 			// double h = it1->GetFeature("height").value * diagonal;
 			Point p(x, y);

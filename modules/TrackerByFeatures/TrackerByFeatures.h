@@ -63,7 +63,7 @@ public:
 	TrackerByFeatures(const ConfigReader& x_configReader);
 	~TrackerByFeatures();
 	MKCLASS("TrackerByFeatures")
-	MKDESCR("Track objects by matching a set of features (typically x,y,width andci height)")
+	MKDESCR("Track objects by matching a set of features (typically x,y,width and height)")
 	
 	virtual void ProcessFrame();
 	void Reset();

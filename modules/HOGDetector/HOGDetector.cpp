@@ -90,15 +90,16 @@ void HOGDetector::NormalProcess()
 /// Copy the results from the thread to the module
 void HOGDetector::CopyResults()
 {
+	const double diagonal = sqrt(m_param.width * m_param.width + m_param.height * m_param.height);
 	m_detectedObjects.clear();
 	for(std::vector<Rect>::const_iterator it = m_thread.GetDetectedObjects().begin() ; it != m_thread.GetDetectedObjects().end() ; it++)
 	{
 		Object obj(m_param.objectLabel, *it);
 
-		obj.AddFeature("x"      , obj.posX   / m_param.width);
-		obj.AddFeature("y"      , obj.posY   / m_param.height);
-		obj.AddFeature("width"  , obj.width  / m_param.width);
-		obj.AddFeature("height" , obj.height / m_param.height);
+		obj.AddFeature("x"      , obj.posX   / diagonal);
+		obj.AddFeature("y"      , obj.posY   / diagonal);
+		obj.AddFeature("width"  , obj.width  / diagonal);
+		obj.AddFeature("height" , obj.height / diagonal);
 
 		m_detectedObjects.push_back(obj);
 	}
