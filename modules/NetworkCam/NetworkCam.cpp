@@ -183,5 +183,9 @@ void NetworkCam::GetProperties()
 
 double NetworkCam::GetRecordingFps()
 {
-	return 8; //  m_capture.get(CV_CAP_PROP_FPS);	// TODO remove hack
+	// Normally this value should be given by m_capture.get(CV_CAP_PROP_FPS);
+	// but generally the info is not contained inside the stream and CV_CAP_PROP_FPS
+	// always equals 1000
+	double fps = m_capture.get(CV_CAP_PROP_FPS);
+	return fps == 1000.0 ? 8 : fps;
 }

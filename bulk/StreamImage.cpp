@@ -23,7 +23,7 @@
 
 #include "StreamImage.h"
 #include "util.h"
-#include <iostream>
+// #include <iostream>
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/writer.h>
 #include <opencv2/opencv.hpp>
