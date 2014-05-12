@@ -24,6 +24,7 @@
 #include "Object.h"
 #include "Manager.h"
 #include "util.h"
+#include <cstdio>
 
 
 using namespace cv;
@@ -179,8 +180,18 @@ void Event::Notify(bool x_isProcessEvent)
 	}
 	else
 	{
-		COPY_AND_CHECK(out["files"]      , root["external"]["files"]);
-		COPY(out["objects"][0] , root["object"]);
+		COPY_AND_CHECK(out["files"]       , root["external"]["files"]);
+
+		Json::Value& outObj = out["objects"][0];
+		Json::Value& inObj  = root["object"];
+		stringstream ss;
+		ss<<inObj["name"].asString()<<inObj["id"].asInt();
+		COPY_AND_CHECK(outObj["objectId"] , ss.str());
+		COPY_AND_CHECK(outObj["x"]        , inObj["x"]);
+		COPY_AND_CHECK(outObj["y"]        , inObj["y"]);
+		COPY_AND_CHECK(outObj["width"]    , inObj["width"]);
+		COPY_AND_CHECK(outObj["height"]   , inObj["height"]);
+		COPY_AND_CHECK(outObj["features"] , inObj["features"]);
 	}
 
 	// Notify via stdout

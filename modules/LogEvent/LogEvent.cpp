@@ -125,7 +125,7 @@ void LogEvent::SaveImage(Event& x_event)
 	{
 		std::stringstream ss1;
 		ss1 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_1." << m_param.extension;
-		AddExternalImage(m_inputIm1, m_event.GetEventName() + "_global_1", ss1.str(), x_event); // TODO: Give a proper name in parameter
+		AddExternalImage(m_inputIm1, "GlobalImage", ss1.str(), x_event);
 
 		if(obj.width > 0 && obj.height > 0)
 		{
@@ -133,7 +133,7 @@ void LogEvent::SaveImage(Event& x_event)
 			ss2 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_1" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
 			Mat img = (m_inputIm1)(obj.Rect());
-			AddExternalImage((m_inputIm1)(obj.Rect()), m_event.GetEventName() + "_1", ss2.str(), x_event);
+			AddExternalImage((m_inputIm1)(obj.Rect()), "Image", ss2.str(), x_event);
 		}
 	}
 
@@ -141,7 +141,7 @@ void LogEvent::SaveImage(Event& x_event)
 	{
 		std::stringstream ss1;
 		ss1 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_2." << m_param.extension;
-		AddExternalImage(m_inputIm2, m_event.GetEventName() + "_global_2", ss1.str(), x_event);
+		AddExternalImage(m_inputIm2, "GlobalMask", ss1.str(), x_event);
 
 		if(obj.width > 0 && obj.height > 0)
 		{
@@ -149,7 +149,7 @@ void LogEvent::SaveImage(Event& x_event)
 			ss2 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_2" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
 			Mat img = (m_inputIm2)(obj.Rect());
-			AddExternalImage(img, m_event.GetEventName() + "_2", ss2.str(), x_event);
+			AddExternalImage(img, "Mask", ss2.str(), x_event);
 		}
 	}
 }
