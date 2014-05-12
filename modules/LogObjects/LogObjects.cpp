@@ -26,9 +26,6 @@
 #include "util.h"
 #include "Manager.h"
 
-// #include <opencv2/highgui/highgui.hpp>
-// #include <iostream>
-// #include <cstdio>
 #include <ctime>
 
 #define SEP "\t"

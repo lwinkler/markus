@@ -38,10 +38,9 @@ BgrSubRunAvg::BgrSubRunAvg(const ConfigReader& x_configReader) :
 	m_input(Size(m_param.width, m_param.height), m_param.type),
 	m_background(Size(m_param.width, m_param.height), m_param.type),
 	m_foreground(Size(m_param.width, m_param.height), m_param.type),
-	m_foreground_tmp(Size(m_param.width, m_param.height), m_param.type)
+	m_foreground_tmp(Size(m_param.width, m_param.height), m_param.type),
+	m_accumulator()
 {
-	m_accumulator = new Mat();
-	
 	AddInputStream(0, new StreamImage("input",             m_input, *this,   "Video input"));
 
 	AddOutputStream(0, new StreamImage("foreground", m_foreground,*this,      "Foreground"));
@@ -53,7 +52,6 @@ BgrSubRunAvg::BgrSubRunAvg(const ConfigReader& x_configReader) :
 
 BgrSubRunAvg::~BgrSubRunAvg()
 {
-	delete(m_accumulator);
 }
 
 void BgrSubRunAvg::Reset()
@@ -69,13 +67,13 @@ void BgrSubRunAvg::ProcessFrame()
 	if(m_emptyBackgroundSubtractor)
 	{
 		m_emptyBackgroundSubtractor = false;
-		m_input.convertTo(*m_accumulator, CV_32F);
+		m_input.convertTo(m_accumulator, CV_32F);
 		m_input.copyTo(m_background);
 	}
 
 	// Main part of the program
-	accumulateWeighted(m_input, *m_accumulator, m_param.backgroundAlpha);
-	m_accumulator->convertTo(m_background, m_background.depth());
+	accumulateWeighted(m_input, m_accumulator, m_param.backgroundAlpha);
+	m_accumulator.convertTo(m_background, m_background.depth());
 	absdiff(m_input, m_background, m_foreground_tmp);
 	threshold(m_foreground_tmp, m_foreground, m_param.foregroundThres * 255, 255, cv::THRESH_BINARY);
 };

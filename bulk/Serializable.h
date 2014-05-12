@@ -29,27 +29,43 @@
 
 class Serializable
 {
-	public:
-		Serializable(){}
-		virtual ~Serializable(){}
+public:
+	Serializable(){}
+	virtual ~Serializable(){}
 
-		/**
-		* @brief Serialize the stream content to JSON
-		*
-		* @param x_out Output stream
-		* @param x_dir Output directory (for images)
-		*/
-		virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const = 0;
-		/**
-		* @brief  Deserialize the stream from JSON
-		*
-		* @param x_in   Input stream
-		* @param x_dir  Input directory (for images)
-		*/
-		virtual void Deserialize(std::istream& x_in, const std::string& x_dir) = 0;
+	/**
+	* @brief Serialize the stream content to JSON
+	*
+	* @param x_out Output stream
+	* @param x_dir Output directory (for images)
+	*/
+	virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const = 0;
+	/**
+	* @brief  Deserialize the stream from JSON
+	*
+	* @param x_in   Input stream
+	* @param x_dir  Input directory (for images)
+	*/
+	virtual void Deserialize(std::istream& x_in, const std::string& x_dir) = 0;
 
-
-		inline friend std::ostream& operator<< (std::ostream& x_out, const Serializable& x_obj){x_obj.Serialize(x_out, "");};
+	/**
+	* @brief Redefinition of the output stream operator <<
+	*
+	* @param x_out Output stream
+	* @param x_obj Object to serialize
+	*
+	* @return output stream
+	*/
+	inline friend std::ostream& operator<< (std::ostream& x_out, const Serializable& x_obj){x_obj.Serialize(x_out, "");};
+	/**
+	* @brief Redefinition of the input stream operator <<
+	*
+	* @param x_in  Input stream
+	* @param x_obj Object to deserialize
+	*
+	* @return input stream
+	*/
+	inline friend std::istream& operator>> (std::istream& x_in, Serializable& x_obj){x_obj.Deserialize(x_in, "");};
 };
 
 #endif

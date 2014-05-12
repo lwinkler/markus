@@ -75,7 +75,7 @@ protected:
 
 	// state variables
 	bool m_emptyBackgroundSubtractor;
-	cv::Mat * m_accumulator;
+	cv::Mat m_accumulator;
 };
 
 

@@ -25,10 +25,6 @@
 #include "StreamObject.h"
 #include "StreamDebug.h"
 
-// for debug
-// #include "util.h"
-// #define POW2(x) (x) * (x)
-
 using namespace std;
 using namespace cv;
 

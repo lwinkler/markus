@@ -89,10 +89,10 @@ void StreamImage::Deserialize(std::istream& x_in, const string& x_dir)
 	ss << root;
 	Stream::Deserialize(ss, x_dir);
 
-    string fileName = root["image"].asString();
-    m_image = cv::imread(fileName);
-    if(m_image.empty())
-        throw MkException("Cannot open serialized image from file " + fileName, LOC);
+	string fileName = root["image"].asString();
+	m_image = cv::imread(fileName);
+	if(m_image.empty())
+		throw MkException("Cannot open serialized image from file " + fileName, LOC);
 }
 
 void StreamImage::Connect(Stream* x_stream)
