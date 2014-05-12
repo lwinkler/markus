@@ -47,6 +47,9 @@ class Serializable
 		* @param x_dir  Input directory (for images)
 		*/
 		virtual void Deserialize(std::istream& x_in, const std::string& x_dir) = 0;
+
+
+		inline friend std::ostream& operator<< (std::ostream& x_out, const Serializable& x_obj){x_obj.Serialize(x_out, "");};
 };
 
 #endif
