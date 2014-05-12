@@ -41,8 +41,8 @@ LogEvent::LogEvent(const ConfigReader& x_configReader)
 {
 	// Init input images
 	AddInputStream(0, new StreamEvent("event", m_event, *this, "Input event to be logged"));
-	AddInputStream(1, new StreamImage("image", m_inputIm1, *this, "Video input for image extraction"));
-	AddInputStream(2, new StreamImage("mask" , m_inputIm2, *this, "Second video input for image extraction"));
+	AddInputStream(1, new StreamImage("image", m_inputIm1, *this, "Video input for image extraction (optional)"));
+	AddInputStream(2, new StreamImage("mask" , m_inputIm2, *this, "Binary mask for image extraction (optional)"));
 
 	m_saveImage1 = false;
 	m_saveImage2 = false;

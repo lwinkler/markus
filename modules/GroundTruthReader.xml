@@ -56,11 +56,6 @@
 	</inputs>
 	<outputs>
 		<output id="0">
-			<type>Image</type>
-			<name>input</name>
-			<description>Copy of the input stream</description>
-		</output>
-		<output id="1">
 			<type>State</type>
 			<name>state</name>
 			<description>State read from the annotation file</description>

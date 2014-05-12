@@ -3,5 +3,5 @@
 
 
 echo "var availableModulesNames = ["
-find modules*/  -maxdepth 2 -mindepth 2 -name "*.cpp" -exec basename {} \; | sort | sed s/\.cpp//g | sed "s/modules\/.*\/\(.*\)\.cpp/\1/g" | awk {'print "\""$1"\","'}
+find modules*/ -mindepth 1 -type d | grep -v CMakeFiles | sort | xargs -i{} basename {} | awk {'print "\""$1"\","'}
 echo "];"

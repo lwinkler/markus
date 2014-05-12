@@ -54,7 +54,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 
 include_directories(${PYTHON_INCLUDE_DIRS})
-include_directories(bulk modules)
+include_directories(bulk modules modules2)
 
 
 set(markus_SRCS main.cpp)
