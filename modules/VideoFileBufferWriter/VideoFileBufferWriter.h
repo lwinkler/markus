@@ -21,47 +21,41 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef INPUT_VIDEOFILEWRITER_H
-#define INPUT_VIDEOFILEWRITER_H
+#ifndef INPUT_VIDEOFILEBUFFERWRITER_H
+#define INPUT_VIDEOFILEBUFFERWRITER_H
 
 #include <opencv2/highgui/highgui.hpp>
-#include "Module.h"
+#include "modules/VideoFileWriter/VideoFileWriter.h"
 
 
 
 
 /**
-* @brief Write output to a video file
+* @brief Write output to a buffer and exports it if an evenement occurs
 */
-class VideoFileWriter : public Module
+class VideoFileBufferWriter : public VideoFileWriter
 {
 public:
-	class Parameters : public ModuleParameterStructure
+	class Parameters : public VideoFileWriter::Parameters
 	{
 	public:
 		Parameters(const ConfigReader& x_confReader) : 
-		ModuleParameterStructure(x_confReader)
+		VideoFileWriter::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterString("file", 	  "output", 	     &file,      "Name of the video file to write, with path"));
-			m_list.push_back(new ParameterString("fourcc", 	  "MJPG", 	     &fourcc,    "Four character code, determines the format. PIM1, MJPG, MP42, DIV3, DIVX, U263, I263, FLV1"));
-			RefParameterByName("type").SetDefault("CV_8UC3");
-			Init(); // TODO: Keep this ?
-			RefParameterByName("type").Lock();
+			m_list.push_back(new ParameterDouble("buffer_time", 120, 0, 600, &bufferTime,  "Length of one buffer block of video [s]"));
+			m_list.push_back(new ParameterInt("nb_buffers",       0, 0,  10, &nbBuffers,   "Number of buffers blocks to keep before recording"));
 			Init();
 		};
-
-		std::string file;
-		std::string fourcc;
+		double bufferTime;
+		int nbBuffers;
 	};
 
-	VideoFileWriter(const ConfigReader& x_confReader);
-	~VideoFileWriter();
-	MKCLASS("VideoFileWriter")
-	MKDESCR("Write output to a video file")
+	VideoFileBufferWriter(const ConfigReader& x_confReader);
+	MKCLASS("VideoFileBufferWriter")
+	MKDESCR("Write output to a buffer and exports it if an evenement occurs")
 	
 	virtual void ProcessFrame();
 	void Reset();
-	static const std::string ExtensionFromFourcc(const std::string& x_fourcc);
 
 private:
 	Parameters m_param;
@@ -70,13 +64,12 @@ private:
 
 protected:
 	// input
-	cv::Mat m_input;
+	bool m_trigger;
 
 	// state
-	int m_index; // Nb of the file to avoid erasing after a reset
+	bool m_buffering;
 
 	// temporary
-	cv::VideoWriter m_writer;
 };
 
 #endif

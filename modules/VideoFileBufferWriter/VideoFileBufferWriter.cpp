@@ -21,39 +21,29 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "VideoFileWriter.h"
-#include "StreamImage.h"
+#include "VideoFileBufferWriter.h"
+#include "StreamState.h"
 #include "util.h"
 #include "Manager.h"
 
 using namespace std;
 using namespace cv;
 
-log4cxx::LoggerPtr VideoFileWriter::m_logger(log4cxx::Logger::getLogger("VideoFileWriter"));
+log4cxx::LoggerPtr VideoFileBufferWriter::m_logger(log4cxx::Logger::getLogger("VideoFileBufferWriter"));
 
-VideoFileWriter::VideoFileWriter(const ConfigReader& x_configReader): 
-	Module(x_configReader),
-	m_param(x_configReader),
-	m_input(Size(m_param.width, m_param.height), m_param.type)
+VideoFileBufferWriter::VideoFileBufferWriter(const ConfigReader& x_configReader): 
+	VideoFileWriter(x_configReader),
+	m_param(x_configReader)
 {
-	AddInputStream(0, new StreamImage("input", m_input, *this,   "Video input"));
-	m_index = 0;
+	// AddInputStream(0, new StreamImage("input", m_input, *this,   "Video input"));
+	AddInputStream(1, new StreamState("trigger", m_trigger, *this,  "Trigger to start/stop of the recording (e.g. motion)"));
 }
 
-VideoFileWriter::~VideoFileWriter()
-{
-	// cout<<"Release FileWriter"<<endl;
-	// m_writer.release();
-}
 
-void VideoFileWriter::Reset()
+void VideoFileBufferWriter::Reset()
 {
-	Module::Reset();
-	if(!m_writer.isOpened())
-		m_writer.release();
-	// m_writer.release();
 	if(m_param.fourcc.size() != 4)
-		throw MkException("Error in parameter: fourcc must have 4 characters in VideoFileWriter::Reset", LOC);
+		throw MkException("Error in parameter: fourcc must have 4 characters in VideoFileBufferWriter::Reset", LOC);
 	const char * s = m_param.fourcc.c_str();
 	// The color flag seem to be supported on Windows only
 	// http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videowriter-videowriter
@@ -72,45 +62,23 @@ void VideoFileWriter::Reset()
 	catch(exception& e)
 	{
 		// This may happen if the module is not connected
-		LOG_WARN(m_logger, "Impossible to acquire the fps value for recording in VideoFileWriter::Reset. Set to default value " << fps << ". Reason: " << e.what());	
+		LOG_WARN(m_logger, "Impossible to acquire the fps value for recording in VideoFileBufferWriter::Reset. Set to default value " << fps << ". Reason: " << e.what());	
 	}
 
+	// cout<<"Opening "<<filename<<endl;
 	LOG_DEBUG(m_logger, "Start recording file "<<filename<<" with fps="<<fps<<" and size "<<m_param.width<<"x"<<m_param.height);
 	m_writer.open(filename, CV_FOURCC(s[0], s[1], s[2], s[3]), fps, Size(m_param.width, m_param.height), isColor);
 	if(!m_writer.isOpened())
 	{
-		throw MkException("Failed to open output video file in VideoFileWriter::Reset", LOC);
+		throw MkException("Failed to open output video file in VideoFileBufferWriter::Reset", LOC);
 	}
+	m_buffering = false;
 }
 
-void VideoFileWriter::ProcessFrame()
+void VideoFileBufferWriter::ProcessFrame()
 {
-	// cout << "write frame " << m_input->cols << "x" << m_input->rows << endl;
-	// m_writer << *m_input;
-	m_writer.write(m_input);
+	if(!m_buffering && m_index)
+		;
+	// m_writer.write(m_input);
 }
 
-
-const string VideoFileWriter::ExtensionFromFourcc(const string& x_fourcc) 
-{
-	if(x_fourcc.compare("PIM1") == 0)
-		return "PIM1.mpeg";
-	if(x_fourcc.compare("MJPG") == 0)
-		return "MJPG.avi";
-	if(x_fourcc.compare("MP42") == 0)
-		return "MP42.avi";
-	if(x_fourcc.compare("DIV3") == 0)
-		return "DIV3.avi";
-	if(x_fourcc.compare("DIVX") == 0)
-		return "DIVX.avi";
-	if(x_fourcc.compare("H263") == 0)
-		return "h263.avi";
-	if(x_fourcc.compare("I263") == 0) // note: seems not to be working
-		return "I263.avi";
-	if(x_fourcc.compare("FLV1") == 0) 
-		return "flv1.avi";
-	
-	LOG_WARN(m_logger, "Unknown fourcc code, cannot find a matching extension in VideoFileWriter::ExtensionFromFourcc");
-
-	return "avi";
-}
