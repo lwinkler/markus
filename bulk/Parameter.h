@@ -27,7 +27,13 @@
 #include "define.h"
 #include "ConfigReader.h"
 #include "MkException.h"
+#include <jsoncpp/json/writer.h>
+#include <jsoncpp/json/reader.h>
+#include "Calibration.h"
 #include <log4cxx/logger.h>
+#include <stdio.h>
+#include <iostream>
+
 
 enum ParameterType
 {
@@ -36,6 +42,7 @@ enum ParameterType
 	PARAM_DOUBLE,
 	PARAM_BOOL,
 	PARAM_STR,
+	PARAM_OBJECT_HEIGHT,
 	PARAM_IMAGE_TYPE
 };
 
@@ -181,6 +188,144 @@ private:
 	static const std::string m_typeStr;
 };
 
+/*class Calibration : Serializable {
+public:
+	Calibration(){}
+	int xf;
+	int yf;
+	int heigthf;
+	int xb;
+	int yb;
+	int heigthb;
+	void Serialize(std::ostream& x_out, const std::string& x_dir ="") const
+	{
+		Json::Value root;
+
+		root["xf"] = xf;
+		root["yf"] = yf;
+		root["heigthf"] = heigthf;
+		root["xb"] = xb;
+		root["yb"] = yb;
+		root["heigthb"] = heigthb;
+
+		x_out << root;
+	}
+
+	void Deserialize(std::istream& x_in, const std::string& x_dir ="")
+	{
+		Json::Value root;
+		x_in >> root;
+		xf = root["xf"].asInt();
+		yf = root["yf"].asInt();
+		heigthf = root["heigthf"].asInt();
+		xb = root["xb"].asInt();
+		yb = root["yb"].asInt();
+		heigthb = root["heigthb"].asInt();
+	}
+
+	inline Calibration operator=(Calibration a) {
+			xf=a.xf;
+			yf=a.yf;
+			heigthf = a.heigthf;
+			xb=a.xb;
+			yb=a.yb;
+			heigthb = a.heigthb;
+
+			return a;
+	}
+
+};*/
+
+class ParameterObjectHeigth : public Parameter
+{
+
+
+
+public:
+	ParameterObjectHeigth(const std::string& x_name, Calibration * x_default, Calibration * x_min, Calibration * x_max, Calibration * xp_value, const std::string& x_description) :
+		Parameter(x_name, x_description),
+		m_default(*x_default),
+		m_min(),
+		m_max()
+		//m_min(x_min),
+		//m_max(x_max),
+		//mp_value(&xp_value)
+	{
+		mp_value = xp_value;
+
+	}
+	inline std::string GetValueString() const {std::stringstream ss; mp_value->Serialize(ss,""); return ss.str();}
+	inline std::string GetDefaultString() const{std::stringstream ss; m_default.Serialize(ss,""); return ss.str();}
+	inline std::string GetRange() const{/*std::stringstream ss; ss<<"["<<m_min<<":"<<m_max<<"]"; return ss.str();*/ return "";}
+	inline const ParameterType GetType() const {return PARAM_OBJECT_HEIGHT;}
+    inline const std::string GetTypeString() const {return "objectHeigth";}
+	inline const Calibration& GetDefault() const {return m_default;}
+	//inline const int GetMin() const {return m_min;}
+	//inline const int GetMax() const{return m_max;}
+
+	inline void SetValue(const Calibration& x_value, ParameterConfigType x_confType)
+	{
+		if(m_isLocked)
+			throw MkException("You tried to set the value of a locked parameter.", LOC);
+		*mp_value = x_value;
+		m_confSource = x_confType;
+	}
+
+	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/)
+	{
+		if(m_isLocked)
+			throw MkException("You tried to set the value of a locked parameter.", LOC);
+		std::istringstream istr(rx_value);
+		mp_value->Deserialize(istr, ""); // atof is sensible to locale format and may use , as a separator
+		m_confSource = x_confType;
+	}
+	virtual void SetDefault(const std::string& rx_value)
+	{
+		std::istringstream istr(rx_value);
+		m_default.Deserialize(istr); // atof is sensible to locale format and may use , as a separator
+	}
+	const Calibration& GetValue() const
+	{
+		return *mp_value;
+	}
+	virtual bool CheckRange() const
+	{
+		//int value = GetValue();
+		//return (value <= m_max && value >= m_min);
+		return true;
+	}
+	virtual void Print(std::ostream& os) const
+	{
+		//os<<m_name<<" = "<<GetValue()<<" ["<<m_min<<":"<<m_max<<"] ("<<configType[m_confSource]<<"); ";
+	}
+	virtual void SetValueToDefault()
+	{
+		if(m_isLocked)
+			throw MkException("You tried to set the value of a locked parameter.", LOC);
+		*mp_value = m_default;
+		m_confSource = PARAMCONF_DEF;
+	}
+	virtual void Export(std::ostream& rx_os, int x_indentation)
+	{
+		/*
+		std::string tabs(x_indentation, '\t');
+		rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<std::endl;
+		tabs = std::string(x_indentation + 1, '\t');
+		rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<std::endl;
+		rx_os<<tabs<<"<value min=\""<<m_min<<"\" max=\""<<m_max<<"\" default=\""<<m_default<<"\">"<<GetValue()<<"</value>"<<std::endl;
+		rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<std::endl;
+		tabs = std::string(x_indentation, '\t');
+		rx_os<<tabs<<"</param>"<<std::endl;
+		*/
+	}
+
+
+	Calibration m_default;
+	const Calibration m_min;
+	const Calibration m_max;
+private:
+	Calibration* mp_value;
+};
 
 /// Parameter of type string
 class ParameterString : public Parameter
@@ -331,6 +476,7 @@ protected:
 private:
 	static log4cxx::LoggerPtr m_logger;
 };
+
 
 /// Parameter of type integer
 typedef ParameterT<int> 	ParameterInt;

@@ -31,6 +31,7 @@ using namespace std;
 #include <QLineEdit>
 #include <QCheckBox>
 #include <QComboBox>
+#include <iostream>
 
 #ifndef MARKUS_NO_GUI
 #include "QParameterSlider.h"
@@ -332,7 +333,70 @@ std::string ControllerString::GetValueFromWidget()
 #endif
 }
 /*------------------------------------------------------------------------------------------------*/
+ControllerObjectHeight::ControllerObjectHeight(ParameterObjectHeigth& x_param):
+	ControllerParameter(x_param),
+	m_param2(x_param)
+{
+}
 
+QWidget* ControllerObjectHeight::CreateWidget()
+{
+#ifndef MARKUS_NO_GUI
+
+	QBoxLayout * mainLayout = new QBoxLayout(QBoxLayout::TopToBottom);
+	widget = new QWidget();
+
+	slider_xb =new QParameterSlider(m_param2.GetValue().xb, 0, 20, 0,widget);
+	slider_yb = new QParameterSlider(m_param2.GetValue().yb, 0, 20, 0,widget);
+	slider_heigthb = new QParameterSlider(m_param2.GetValue().heigthb, 0, 20, 0,widget);
+	slider_xf = new QParameterSlider(m_param2.GetValue().xf, 0, 20, 0,widget);
+	slider_yf = new QParameterSlider(m_param2.GetValue().yf, 0, 20, 0,widget);
+	slider_heigthf = new QParameterSlider(m_param2.GetValue().heigthf, 0, 20, 0,widget);
+
+	mainLayout->addWidget(slider_xb,0);
+	mainLayout->addWidget(slider_yb,1);
+	mainLayout->addWidget(slider_heigthb,2);
+	mainLayout->addWidget(slider_xf,3);
+	mainLayout->addWidget(slider_yf,4);
+	mainLayout->addWidget(slider_heigthf,5);
+	widget->setLayout(mainLayout);
+
+	return widget;
+#else
+	return NULL;
+#endif
+}
+
+
+void ControllerObjectHeight::SetWidgetValue(const std::string& x_value)
+{
+#ifndef MARKUS_NO_GUI
+	//parameterSlider->SetValue(atoi(x_value.c_str()));
+#endif
+}
+
+std::string ControllerObjectHeight::GetValueFromWidget()
+{
+#ifndef MARKUS_NO_GUI
+	stringstream ss;
+	Calibration object;
+	object.xb = slider_xb->GetValue();
+	object.yb = slider_yb->GetValue();
+	object.heigthb = slider_heigthb->GetValue();
+	object.xf = slider_xf->GetValue();
+	object.yf = slider_yf->GetValue();
+	object.heigthb = slider_heigthb->GetValue();
+	object.Serialize(ss);
+
+	//ss<<parameterSlider->GetValue();
+	return ss.str();
+#else
+	assert(false);
+	return "";
+#endif
+}
+
+/*------------------------------------------------------------------------------------------------*/
 ControllerEnum::ControllerEnum(ParameterEnum& x_param):
 	ControllerParameter(x_param),
 	m_param2(x_param)

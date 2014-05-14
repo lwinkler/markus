@@ -132,6 +132,9 @@ void Module::Reset()
 			case PARAM_INT:
 				ctr = new ControllerInt(*dynamic_cast<ParameterInt*>(*it));
 				break;
+			case PARAM_OBJECT_HEIGHT:
+				ctr = new ControllerObjectHeight(*dynamic_cast<ParameterObjectHeigth*>(*it));
+				break;
 			case PARAM_STR:
 				ctr = new ControllerString(*dynamic_cast<ParameterString*>(*it));
 				break;

@@ -21,33 +21,35 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef SERIALIZABLE_H
-#define SERIALIZABLE_H
+#include "Calibration.h"
+#include "jsoncpp/json/reader.h"
+#include "jsoncpp/json/writer.h"
 
-#include <iostream>
 
-/// Class for all serializable objects
+using namespace std;
 
-class Serializable
+void Calibration::Serialize(std::ostream& x_out, const std::string& x_dir) const
 {
-	public:
-		Serializable(){}
-		virtual ~Serializable(){}
+	Json::Value root;
 
-		/**
-		* @brief Serialize the stream content to JSON
-		*
-		* @param x_out Output stream
-		* @param x_dir Output directory (for images)
-		*/
-		virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const = 0;
-		/**
-		* @brief  Deserialize the stream from JSON
-		*
-		* @param x_in   Input stream
-		* @param x_dir  Input directory (for images)
-		*/
-		virtual void Deserialize(std::istream& x_in, const std::string& x_dir) = 0;
-};
+	root["xf"] = xf;
+	root["yf"] = yf;
+	root["heigthf"] = heigthf;
+	root["xb"] = xb;
+	root["yb"] = yb;
+	root["heigthb"] = heigthb;
 
-#endif
+	x_out << root;
+}
+
+void Calibration::Deserialize(std::istream& x_in, const std::string& x_dir)
+{
+	Json::Value root;
+	x_in >> root;
+	xf = root["xf"].asInt();
+	yf = root["yf"].asInt();
+	heigthf = root["heigthf"].asInt();
+	xb = root["xb"].asInt();
+	yb = root["yb"].asInt();
+	heigthb = root["heigthb"].asInt();
+}

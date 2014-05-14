@@ -131,6 +131,27 @@ protected:
 	ParameterString & m_param2;
 };
 
+/// Control class for a object height parameter
+class ControllerObjectHeight : public ControllerParameter
+{
+public:
+    ControllerObjectHeight(ParameterObjectHeigth & x_param);
+	virtual QWidget* CreateWidget();
+	virtual void SetWidgetValue(const std::string& x_value);
+	virtual std::string GetValueFromWidget();
+
+protected:
+    //QPainter * parameterLine;
+    ParameterObjectHeigth & m_param2;
+    QWidget * widget;
+	QParameterSlider * slider_xb;
+	QParameterSlider * slider_yb;
+	QParameterSlider * slider_heigthb;
+	QParameterSlider * slider_xf;
+	QParameterSlider * slider_yf;
+	QParameterSlider * slider_heigthf;
+};
+
 
 /// Control class for a enum parameter
 class ControllerEnum : public ControllerParameter

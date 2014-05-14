@@ -21,33 +21,23 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef SERIALIZABLE_H
-#define SERIALIZABLE_H
+#ifndef CALIBRATION_H
+#define CALIBRATION_H
 
-#include <iostream>
+#include "Serializable.h"
 
-/// Class for all serializable objects
-
-class Serializable
+class Calibration : public Serializable
 {
-	public:
-		Serializable(){}
-		virtual ~Serializable(){}
-
-		/**
-		* @brief Serialize the stream content to JSON
-		*
-		* @param x_out Output stream
-		* @param x_dir Output directory (for images)
-		*/
-		virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const = 0;
-		/**
-		* @brief  Deserialize the stream from JSON
-		*
-		* @param x_in   Input stream
-		* @param x_dir  Input directory (for images)
-		*/
-		virtual void Deserialize(std::istream& x_in, const std::string& x_dir) = 0;
+public:	
+	int xf;
+	int yf;
+	int heigthf;
+	int xb;
+	int yb;
+	int heigthb;
+	void Serialize(std::ostream& x_out, const std::string& x_dir ="") const;
+	void Deserialize(std::istream& x_in, const std::string& x_dir ="");
 };
+
 
 #endif
