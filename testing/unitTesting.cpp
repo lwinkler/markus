@@ -37,7 +37,6 @@ int main(int argc, char **argv)
 	SYSTEM("rm -rf testing/tmp");
 	SYSTEM("mkdir -p testing/tmp");
 	Manager::OutputDir("testing/out");
-	Manager::SetApplicationName("testing");
 	log4cxx::xml::DOMConfigurator::configure("testing/log4cxx.xml");
 
 	runner.addTest(ConfigReaderTest::suite());

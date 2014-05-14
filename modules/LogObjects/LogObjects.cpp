@@ -26,10 +26,9 @@
 #include "util.h"
 #include "Manager.h"
 
-#include <opencv2/highgui/highgui.hpp>
-#include <iostream>
-#include <fstream>
-#include <cstdio>
+// #include <opencv2/highgui/highgui.hpp>
+// #include <iostream>
+// #include <cstdio>
 #include <ctime>
 
 #define SEP "\t"
@@ -50,6 +49,8 @@ LogObjects::LogObjects(const ConfigReader& x_configReader)
 LogObjects::~LogObjects(void)
 {
 	// delete(m_input);
+	if(m_outputFile.is_open())
+		m_outputFile.close();
 }
 
 void LogObjects::Reset()
@@ -57,31 +58,28 @@ void LogObjects::Reset()
 	Module::Reset();
 
 	m_fileName = Manager::OutputDir() + "/" + m_param.file + ".txt";
-	ofstream outputFile;
-	outputFile.open (m_fileName.c_str(), ios::out);
-	outputFile<<"time"<<SEP<<"object"<<SEP<<"feature"<<SEP<<"value"<<SEP<<"mean"<<SEP<<"sqVariance"<<SEP<<"initial"<<SEP<<"min"<<SEP<<"max"<<SEP<<"nbSamples"<<endl;
-	outputFile.close();
+	if(m_outputFile.is_open())
+		m_outputFile.close();
+	m_outputFile.open (m_fileName.c_str(), fstream::app|fstream::out);
+	m_outputFile<<"time"<<SEP<<"object"<<SEP<<"feature"<<SEP<<"value"<<SEP<<"mean"<<SEP<<"sqVariance"<<SEP<<"initial"<<SEP<<"min"<<SEP<<"max"<<SEP<<"nbSamples"<<endl;
 }
 
 void LogObjects::ProcessFrame()
 {
-	ofstream outputFile;
-
-	// Note: we open the file at each iteration. This is ok for debug uses but should be improved // TODO
-	outputFile.open (m_fileName.c_str(), ios::app);
-	
 	// Log time stamp
-	// outputFile<<"## "<<m_currentTimeStamp<<endl;
+	// m_outputFile<<"## "<<m_currentTimeStamp<<endl;
 
 	// Log each feature of every object into a text file
 	for(vector<Object>::const_iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; it1++)
 	{
-		// outputFile<<it1->GetName()<<it1->GetId()<<endl;
+		// it1->Serialize(m_outputFile, "");
+		// continue;
+		// m_outputFile<<it1->GetName()<<it1->GetId()<<endl;
 		for(map<string, Feature>::const_iterator it2 = it1->GetFeatures().begin() ; it2 != it1->GetFeatures().end() ; it2++)
 		{
 			// TODO : use Serialize method
 			const Feature & feat = it2->second;
-			outputFile<<m_currentTimeStamp<<SEP
+			m_outputFile<<m_currentTimeStamp<<SEP
 				<<it1->GetName()<<it1->GetId()<<SEP
 				<<it2->first<<SEP
 				<<feat.value<<SEP
@@ -92,8 +90,7 @@ void LogObjects::ProcessFrame()
 				<<feat.max<<SEP
 				<<feat.nbSamples<<endl;
 		}
-		outputFile<<endl;
+		m_outputFile<<endl;
 	}
-	outputFile.close();
 }
 

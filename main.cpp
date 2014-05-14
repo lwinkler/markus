@@ -152,7 +152,7 @@ int main(int argc, char** argv)
 				return 0;
 				break;
 			case 'v':
-				LOG_INFO(logger, Manager::Version());
+				LOG_INFO(logger, Manager::Version(true));
 				return 0;
 			case 'd':
 				describe = true;
@@ -224,7 +224,6 @@ int main(int argc, char** argv)
 	}
 
 	// Init global variables and objects
-	Manager::SetApplicationName(configFile);
 	if(outputDir != "")
 	{
 		outputDir = Manager::OutputDir(outputDir, configFile);
@@ -234,18 +233,12 @@ int main(int argc, char** argv)
 
 	log4cxx::xml::DOMConfigurator::configure(logConfigFile);
 
-	// Notify the parent process (for monitoring purposes)
-	Event ev;
-	ev.AddExternalInfo("pid", getpid());
-	ev.Raise("started");
-	ev.Notify(true);
-
 	try
 	{
 #ifndef MARKUS_NO_GUI
 		MarkusApplication app(argc, argv);
 #endif
-		LOG_INFO(logger, Manager::Version());
+		LOG_INFO(logger, Manager::Version(true));
 		ConfigReader mainConfig(configFile);
 		mainConfig.Validate();
 		ConfigReader appConfig = mainConfig.GetSubConfig("application");
@@ -290,6 +283,13 @@ int main(int argc, char** argv)
 			LOG_ERROR(logger, "Error creating thread");
 			return -1;
 		}
+
+		// Notify the parent process (for monitoring purposes)
+		Event ev;
+		ev.AddExternalInfo("pid", getpid());
+		ev.Raise("started");
+		ev.Notify(true);
+
 
 		if(centralized)
 		{

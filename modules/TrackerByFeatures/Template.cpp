@@ -94,7 +94,7 @@ double Template::CompareWithObject(const Object& x_obj, const vector<string>& x_
 	//cout<<"m_feats.size() ="<<m_feats.size()<<endl;
 	//assert(m_feats.size() >= x_obj.GetFeatures().size());
 	if(m_feats.size() <= 0)
-		throw MkException("Feature vector of Template canot be empty", LOC);
+		throw MkException("Feature vector of Template cannot be empty", LOC);
 	
 	for (vector<string>::const_iterator it = x_features.begin() ; it != x_features.end() ; it++)
 	{

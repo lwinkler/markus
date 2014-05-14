@@ -1,6 +1,6 @@
-<application name="VideoFileReader" description="" cyclelimit="-1" gui="">
+<application name="MotionDetector">
   
-  <module name="BgrSubRunAvg" machineurl="localhost" id="1">
+  <module name="BgrSubRunAvg" id="1">
     <parameters>
       <param name="class">BgrSubRunAvg</param>
       <param name="width">320</param>

@@ -24,7 +24,7 @@
 #define MK_FEATURE_H
 
 /**
-* @brief Class representing a feature of a template/region. (e.g. area, perimeter, length, ...)
+* @brief Class representing a feature of a template/object. (e.g. area, perimeter, length, ...)
 */
 class Feature
 {

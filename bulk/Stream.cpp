@@ -91,6 +91,8 @@ void Stream::Serialize(std::ostream& x_out, const string& x_dir) const
 	root["ready"]       = m_isReady;
 	x_out << root;
 }
+// TODO: Bug if streams are named with a gap in ids : e.g. 0 and 2
+
 
 void Stream::Deserialize(std::istream& x_in, const string& x_dir)
 {

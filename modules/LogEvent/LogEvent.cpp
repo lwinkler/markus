@@ -41,8 +41,8 @@ LogEvent::LogEvent(const ConfigReader& x_configReader)
 {
 	// Init input images
 	AddInputStream(0, new StreamEvent("event", m_event, *this, "Input event to be logged"));
-	AddInputStream(1, new StreamImage("image1", m_inputIm1, *this, "Video input for image extraction"));
-	AddInputStream(2, new StreamImage("image2", m_inputIm2, *this, "Second video input for image extraction"));
+	AddInputStream(1, new StreamImage("image", m_inputIm1, *this, "Video input for image extraction (optional)"));
+	AddInputStream(2, new StreamImage("mask" , m_inputIm2, *this, "Binary mask for image extraction (optional)"));
 
 	m_saveImage1 = false;
 	m_saveImage2 = false;
@@ -125,7 +125,7 @@ void LogEvent::SaveImage(Event& x_event)
 	{
 		std::stringstream ss1;
 		ss1 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_1." << m_param.extension;
-		AddExternalImage(m_inputIm1, m_event.GetEventName() + "_global_1", ss1.str(), x_event); // TODO: Give a proper name in parameter
+		AddExternalImage(m_inputIm1, "globalImage", ss1.str(), x_event);
 
 		if(obj.width > 0 && obj.height > 0)
 		{
@@ -133,7 +133,7 @@ void LogEvent::SaveImage(Event& x_event)
 			ss2 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_1" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
 			Mat img = (m_inputIm1)(obj.Rect());
-			AddExternalImage((m_inputIm1)(obj.Rect()), m_event.GetEventName() + "_1", ss2.str(), x_event);
+			AddExternalImage((m_inputIm1)(obj.Rect()), "objectImage", ss2.str(), x_event);
 		}
 	}
 
@@ -141,7 +141,7 @@ void LogEvent::SaveImage(Event& x_event)
 	{
 		std::stringstream ss1;
 		ss1 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_2." << m_param.extension;
-		AddExternalImage(m_inputIm2, m_event.GetEventName() + "_global_2", ss1.str(), x_event);
+		AddExternalImage(m_inputIm2, "globalMask", ss1.str(), x_event);
 
 		if(obj.width > 0 && obj.height > 0)
 		{
@@ -149,7 +149,7 @@ void LogEvent::SaveImage(Event& x_event)
 			ss2 << m_folderName << m_subId << "_" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_2" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
 			Mat img = (m_inputIm2)(obj.Rect());
-			AddExternalImage(img, m_event.GetEventName() + "_2", ss2.str(), x_event);
+			AddExternalImage(img, "objectMask", ss2.str(), x_event);
 		}
 	}
 }

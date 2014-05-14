@@ -21,8 +21,8 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef OUTPUT_STREAM_H
-#define OUTPUT_STREAM_H
+#ifndef STREAM_H
+#define STREAM_H
 
 #include "Module.h"
 

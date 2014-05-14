@@ -156,7 +156,7 @@ void Module::Pause(bool x_pause)
 }
 
 /**
-* @brief Return the fps that can be used to recording. This value is special as it depends from preceeding modules.
+* @brief Return the fps that can be used for recording. This value is special as it depends from preceeding modules.
 *
 * @return fps
 */

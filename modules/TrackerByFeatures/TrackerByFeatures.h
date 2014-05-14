@@ -63,7 +63,7 @@ public:
 	TrackerByFeatures(const ConfigReader& x_configReader);
 	~TrackerByFeatures();
 	MKCLASS("TrackerByFeatures")
-	MKDESCR("Track objects by matching a set of features (typically x,y,width andci height)")
+	MKDESCR("Track objects by matching a set of features (typically x,y,width and height)")
 	
 	virtual void ProcessFrame();
 	void Reset();
@@ -87,7 +87,8 @@ protected:
 	std::list <Template> m_templates;
 
 	// temporary
-	std::vector <std::string>    m_featureNames;
+	std::vector <std::string> m_featureNames;
+	std::map<Object*, bool>   m_matched;
 
 	// debug
 #ifdef MARKUS_DEBUG_STREAMS

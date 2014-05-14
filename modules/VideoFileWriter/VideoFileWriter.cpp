@@ -37,6 +37,7 @@ VideoFileWriter::VideoFileWriter(const ConfigReader& x_configReader):
 	m_input(Size(m_param.width, m_param.height), m_param.type)
 {
 	AddInputStream(0, new StreamImage("input", m_input, *this,   "Video input"));
+	m_index = 0;
 }
 
 VideoFileWriter::~VideoFileWriter()
@@ -57,7 +58,9 @@ void VideoFileWriter::Reset()
 	bool isColor = true;
  	assert(m_param.type == CV_8UC3);
 
-	const string filename = Manager::OutputDir() + "/" + m_param.file  + "." + ExtensionFromFourcc(m_param.fourcc);
+	stringstream ss;
+	ss << Manager::OutputDir() << "/" << m_param.file  << "." << m_index++ << "." << ExtensionFromFourcc(m_param.fourcc);
+	const string filename = ss.str();
 	double fps = 12;
 	
 	try

@@ -24,10 +24,10 @@
 #include "util.h"
 #include "Manager.h"
 #include "MkException.h"
-#include <iostream>
 #include <fstream>
+#include <cstdio>
 #include <opencv2/opencv.hpp>
-#include <opencv2/highgui/highgui.hpp>
+// #include <opencv2/highgui/highgui.hpp>
 
 using namespace std;
 using namespace cv;

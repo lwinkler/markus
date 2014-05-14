@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <application name="FaceAndTracker" description="" cyclelimit="-1" gui="">
-<module name="Input" machineurl="localhost" id="0">
+<module name="Input" id="0">
 <parameters>
 <param name="class">VideoFileReader</param>
 </parameters>
@@ -12,7 +12,7 @@
 <display x="0" y="53" width="150" height="75"/>
 <uiobject type="" x="243" y="261" width="0" height="0"/>
 </module>
-<module name="CascadeDetector" machineurl="localhost" id="1">
+<module name="CascadeDetector" id="1">
 <parameters>
 <param name="class">CascadeDetector</param>
 <param name="width">64</param>
@@ -30,7 +30,7 @@
 <display x="263" y="54" width="150" height="75"/>
 <uiobject type="" x="454" y="333" width="0" height="0"/>
 </module>
-<module name="TrackerByFeatures" machineurl="localhost" id="2">
+<module name="TrackerByFeatures" id="2">
 <parameters>
 <param name="class">TrackerByFeatures</param>
 </parameters>
@@ -43,7 +43,7 @@
 <display x="542" y="51" width="150" height="75"/>
 <uiobject type="" x="662" y="333" width="0" height="0"/>
 </module>
-<module name="RenderObjects" machineurl="localhost" id="3">
+<module name="RenderObjects" id="3">
 <parameters>
 <param name="class">RenderObjects</param>
 <param name="width">64</param>

@@ -69,11 +69,6 @@ void NetworkCam::Reset()
 	m_capture.release();
 
 	//open the video stream and make sure it's opened
-	/* it may be an address of an mjpeg stream, 
-	e.g. "http://user:pass@cam_address:8081/cgi/mjpg/mjpg.cgi?.mjpg" 
-	"rtsp://cam_address:554/live.sdp" rtsp://<servername>/axis-media/media.amp */
-	// if(m_param.url.size() == 0)
-	//	m_capture.open("in/input.mp4"); // TODO: may be better to throw an exception !
 	m_capture.open(m_param.url);
 	
 	if(! m_capture.isOpened())
@@ -158,7 +153,6 @@ void NetworkCam::Capture()
 	}
 
 	LOG_DEBUG(m_logger, "NetworkCam: Capture time: "<<m_currentTimeStamp);
-	// SetTimeStampToOutputs(m_currentTimeStamp);
 }
 
 void NetworkCam::GetProperties()
@@ -189,5 +183,9 @@ void NetworkCam::GetProperties()
 
 double NetworkCam::GetRecordingFps()
 {
-	return 8; //  m_capture.get(CV_CAP_PROP_FPS);	// TODO remove hack
+	// Normally this value should be given by m_capture.get(CV_CAP_PROP_FPS);
+	// but generally the info is not contained inside the stream and CV_CAP_PROP_FPS
+	// always equals 1000
+	double fps = m_capture.get(CV_CAP_PROP_FPS);
+	return fps == 1000.0 ? 8 : fps;
 }

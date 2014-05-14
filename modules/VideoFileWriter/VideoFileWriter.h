@@ -71,7 +71,10 @@ protected:
 	// input
 	cv::Mat m_input;
 
-	// temporary // TODO: Check that the file is not rewritten after a Reset. Maybe start a new file
+	// state
+	int m_index; // Nb of the file to avoid erasing after a reset
+
+	// temporary
 	cv::VideoWriter m_writer;
 };
 

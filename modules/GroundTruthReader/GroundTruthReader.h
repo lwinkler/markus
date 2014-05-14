@@ -58,8 +58,9 @@ public:
 	void ProcessFrame();
 	void Reset();
 private:
-	GroundTruthReaderParameterStructure m_param;
 	inline virtual const GroundTruthReaderParameterStructure& GetParameters() const {return m_param;}
+	void ReadNextSubtitle();
+	GroundTruthReaderParameterStructure m_param;
 	static log4cxx::LoggerPtr m_logger;
 protected:
 
@@ -69,9 +70,15 @@ protected:
 	// ouput
 	bool m_state;
 
-	// state // TODO: if reseted the module must be able to go to the right subtitle line 
+#ifdef MARKUS_DEBUG_STREAMS
+	// debug
+	cv::Mat m_debug;
+#endif
+
+	// temp
 	bool m_stateSub;
 	int m_num;
+	std::string m_subText;
 	std::ifstream m_srtFile;
 	std::string m_srtStart;
 	std::string m_srtEnd;

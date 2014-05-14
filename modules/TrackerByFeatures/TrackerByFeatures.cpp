@@ -28,7 +28,7 @@
 
 // for debug
 // #include "util.h"
-#define MAX_NB_TEMPLATES 128
+#define MAX_NB_TEMPLATES 256
 
 using namespace std;
 using namespace cv;
@@ -79,10 +79,11 @@ void TrackerByFeatures::ProcessFrame()
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 void TrackerByFeatures::MatchTemplates()
 {
-	for(vector<Object>::iterator it2 = m_objects.begin() ; it2 != m_objects.end(); it2++ )
+	/*for(vector<Object>::iterator it2 = m_objects.begin() ; it2 != m_objects.end(); it2++ )
 	{
 		it2->isMatched = 0;
-	}
+	}*/
+	m_matched.clear();
 
 	// Try to match each objects with a template
 	for(list<Template>::iterator it1 = m_templates.begin() ; it1 != m_templates.end(); it1++ )
@@ -133,7 +134,8 @@ int TrackerByFeatures::MatchTemplate(Template& x_temp)
 		bestObject->SetId(x_temp.GetNum()); // Set id of object
 		// x_temp.m_matchingObjects.push_back(m_objects[bestObject]);
 		x_temp.m_lastMatchingObject = bestObject;
-		bestObject->isMatched = 1;
+		m_matched[bestObject] = true;
+		//bestObject->isMatched = 1;
 
 		return 1;
 	}
@@ -204,8 +206,8 @@ void TrackerByFeatures::UpdateTemplates()
 #ifdef MARKUS_DEBUG_STREAMS
 		// draw template (if position is available)
 		try{
-			double x = it1->GetFeature("x").value * diagonal;
-			double y = it1->GetFeature("y").value * diagonal;
+			double x = it1->GetFeature("x").mean * diagonal;
+			double y = it1->GetFeature("y").mean * diagonal;
 			// double w = it1->GetFeature("width").value * diagonal;
 			// double h = it1->GetFeature("height").value * diagonal;
 			Point p(x, y);
@@ -247,12 +249,12 @@ void TrackerByFeatures::DetectNewTemplates()
 	int cpt = 0;
 	for(vector<Object>::iterator it2 = m_objects.begin() ; it2 != m_objects.end(); it2++ )
 	{
-		if(!it2->isMatched)
+		if(!m_matched[&(*it2)])
 		{
 			if(m_templates.size() >= MAX_NB_TEMPLATES)
 			{
 				LOG_WARN(m_logger, "Too many templates created in TrackerByFeatures::DetectNewTemplates");
-				return;
+				// return; // Note: not a fatal error
 			}
 
 			Template template1(*it2);
@@ -280,7 +282,7 @@ void TrackerByFeatures::DetectNewTemplates()
 
 				if(bestTemplate != NULL)
 				{
-					// TODO: Manage cases where x is absent
+					// See if the object might have splitted
 					try
 					{
 						double xt = bestTemplate->GetFeature("x").value;
