@@ -50,7 +50,8 @@ Module * FactoryModules::CreateModule(const std::string& x_type, const ConfigRea
 
 	CreateModuleFunc func = it->second;
 	Module* pmod = func(x_config);
-	assert(pmod->GetClass() == x_type);
+	if(pmod->GetClass() != x_type)
+		throw MkException("Module \"" + x_type + "\" must have the same name as its class \"" + pmod->GetClass() + "\"", LOC);
 	return pmod;
 }
 
