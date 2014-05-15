@@ -247,7 +247,10 @@ public:
 	}
 	virtual void Print(std::ostream& os) const
 	{
-		//os<<m_name<<" = "<<GetValue()<<" ["<<m_min<<":"<<m_max<<"] ("<<configType[m_confSource]<<"); ";
+		os<<m_name<<" : x = "<< mp_value->x
+				  <<", y = "<< mp_value->y
+				  <<", heigth = "<< mp_value->heigth
+				  <<" ("<<configType[m_confSource]<<"); ";
 	}
 	virtual void SetValueToDefault()
 	{
@@ -258,16 +261,18 @@ public:
 	}
 	virtual void Export(std::ostream& rx_os, int x_indentation)
 	{
-		/*
 		std::string tabs(x_indentation, '\t');
 		rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<std::endl;
 		tabs = std::string(x_indentation + 1, '\t');
 		rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<std::endl;
-		rx_os<<tabs<<"<value min=\""<<m_min<<"\" max=\""<<m_max<<"\" default=\""<<m_default<<"\">"<<GetValue()<<"</value>"<<std::endl;
+		std::stringstream ss; m_default.Serialize(ss,"");
+		rx_os<<tabs<<"<value default=\""<<ss.str()<<"\">";
+		ss.str("");
+		mp_value->Serialize(ss,"");
+		rx_os<<ss.str()<<"</value>"<<std::endl;
 		rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<std::endl;
 		tabs = std::string(x_indentation, '\t');
 		rx_os<<tabs<<"</param>"<<std::endl;
-		*/
 	}
 
 

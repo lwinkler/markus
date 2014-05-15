@@ -379,7 +379,6 @@ std::string ControllerObjectHeight::GetValueFromWidget()
 	object.heigth = slider_heigth->GetValue();
 	object.Serialize(ss);
 
-	//ss<<parameterSlider->GetValue();
 	return ss.str();
 #else
 	assert(false);
