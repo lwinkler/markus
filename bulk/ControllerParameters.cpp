@@ -346,19 +346,13 @@ QWidget* ControllerObjectHeight::CreateWidget()
 	QBoxLayout * mainLayout = new QBoxLayout(QBoxLayout::TopToBottom);
 	widget = new QWidget();
 
-	slider_xb =new QParameterSlider(m_param2.GetValue().xb, 0, 20, 0,widget);
-	slider_yb = new QParameterSlider(m_param2.GetValue().yb, 0, 20, 0,widget);
-	slider_heigthb = new QParameterSlider(m_param2.GetValue().heigthb, 0, 20, 0,widget);
-	slider_xf = new QParameterSlider(m_param2.GetValue().xf, 0, 20, 0,widget);
-	slider_yf = new QParameterSlider(m_param2.GetValue().yf, 0, 20, 0,widget);
-	slider_heigthf = new QParameterSlider(m_param2.GetValue().heigthf, 0, 20, 0,widget);
+	slider_x =new QParameterSlider(m_param2.GetValue().x, 0, 1, PRECISION_DOUBLE,widget);
+	slider_y = new QParameterSlider(m_param2.GetValue().y, 0, 1, PRECISION_DOUBLE,widget);
+	slider_heigth = new QParameterSlider(m_param2.GetValue().heigth, 0, 1, PRECISION_DOUBLE,widget);
 
-	mainLayout->addWidget(slider_xb,0);
-	mainLayout->addWidget(slider_yb,1);
-	mainLayout->addWidget(slider_heigthb,2);
-	mainLayout->addWidget(slider_xf,3);
-	mainLayout->addWidget(slider_yf,4);
-	mainLayout->addWidget(slider_heigthf,5);
+	mainLayout->addWidget(slider_x,0);
+	mainLayout->addWidget(slider_y,1);
+	mainLayout->addWidget(slider_heigth,2);
 	widget->setLayout(mainLayout);
 
 	return widget;
@@ -379,13 +373,10 @@ std::string ControllerObjectHeight::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	stringstream ss;
-	Calibration object;
-	object.xb = slider_xb->GetValue();
-	object.yb = slider_yb->GetValue();
-	object.heigthb = slider_heigthb->GetValue();
-	object.xf = slider_xf->GetValue();
-	object.yf = slider_yf->GetValue();
-	object.heigthb = slider_heigthb->GetValue();
+	CalibrationByHeigth object;
+	object.x = slider_x->GetValue();
+	object.y = slider_y->GetValue();
+	object.heigth = slider_heigth->GetValue();
 	object.Serialize(ss);
 
 	//ss<<parameterSlider->GetValue();

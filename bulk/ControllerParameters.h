@@ -144,12 +144,9 @@ protected:
     //QPainter * parameterLine;
     ParameterObjectHeigth & m_param2;
     QWidget * widget;
-	QParameterSlider * slider_xb;
-	QParameterSlider * slider_yb;
-	QParameterSlider * slider_heigthb;
-	QParameterSlider * slider_xf;
-	QParameterSlider * slider_yf;
-	QParameterSlider * slider_heigthf;
+	QParameterSlider * slider_x;
+	QParameterSlider * slider_y;
+	QParameterSlider * slider_heigth;
 };
 
 

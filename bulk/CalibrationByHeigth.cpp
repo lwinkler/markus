@@ -21,35 +21,41 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "Calibration.h"
+#include "CalibrationByHeigth.h"
 #include "jsoncpp/json/reader.h"
 #include "jsoncpp/json/writer.h"
 
 
 using namespace std;
 
-void Calibration::Serialize(std::ostream& x_out, const std::string& x_dir) const
+CalibrationByHeigth::CalibrationByHeigth(){
+
+}
+
+CalibrationByHeigth::CalibrationByHeigth(float x_value, float y_value, float heigth_value)
+{
+	x = x_value;
+	y = y_value;
+	heigth = heigth_value;
+}
+
+void CalibrationByHeigth::Serialize(std::ostream& x_out, const std::string& x_dir) const
 {
 	Json::Value root;
 
-	root["xf"] = xf;
-	root["yf"] = yf;
-	root["heigthf"] = heigthf;
-	root["xb"] = xb;
-	root["yb"] = yb;
-	root["heigthb"] = heigthb;
+	root["x"] = x;
+	root["y"] = y;
+	root["heigth"] = heigth;
+
 
 	x_out << root;
 }
 
-void Calibration::Deserialize(std::istream& x_in, const std::string& x_dir)
+void CalibrationByHeigth::Deserialize(std::istream& x_in, const std::string& x_dir)
 {
 	Json::Value root;
 	x_in >> root;
-	xf = root["xf"].asInt();
-	yf = root["yf"].asInt();
-	heigthf = root["heigthf"].asInt();
-	xb = root["xb"].asInt();
-	yb = root["yb"].asInt();
-	heigthb = root["heigthb"].asInt();
+	x = root["x"].asFloat();
+	y = root["y"].asFloat();
+	heigth = root["heigth"].asFloat();
 }

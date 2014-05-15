@@ -29,7 +29,7 @@
 #include "MkException.h"
 #include <jsoncpp/json/writer.h>
 #include <jsoncpp/json/reader.h>
-#include "Calibration.h"
+#include "CalibrationByHeigth.h"
 #include <log4cxx/logger.h>
 #include <stdio.h>
 #include <iostream>
@@ -188,82 +188,30 @@ private:
 	static const std::string m_typeStr;
 };
 
-/*class Calibration : Serializable {
-public:
-	Calibration(){}
-	int xf;
-	int yf;
-	int heigthf;
-	int xb;
-	int yb;
-	int heigthb;
-	void Serialize(std::ostream& x_out, const std::string& x_dir ="") const
-	{
-		Json::Value root;
-
-		root["xf"] = xf;
-		root["yf"] = yf;
-		root["heigthf"] = heigthf;
-		root["xb"] = xb;
-		root["yb"] = yb;
-		root["heigthb"] = heigthb;
-
-		x_out << root;
-	}
-
-	void Deserialize(std::istream& x_in, const std::string& x_dir ="")
-	{
-		Json::Value root;
-		x_in >> root;
-		xf = root["xf"].asInt();
-		yf = root["yf"].asInt();
-		heigthf = root["heigthf"].asInt();
-		xb = root["xb"].asInt();
-		yb = root["yb"].asInt();
-		heigthb = root["heigthb"].asInt();
-	}
-
-	inline Calibration operator=(Calibration a) {
-			xf=a.xf;
-			yf=a.yf;
-			heigthf = a.heigthf;
-			xb=a.xb;
-			yb=a.yb;
-			heigthb = a.heigthb;
-
-			return a;
-	}
-
-};*/
-
 class ParameterObjectHeigth : public Parameter
 {
+public:
+	static CalibrationByHeigth DefaultFg; // (0.1,0.1,0.5);
+	static CalibrationByHeigth DefaultBg; // (0.1,0.1,0.5);
 
 
 
 public:
-	ParameterObjectHeigth(const std::string& x_name, Calibration * x_default, Calibration * x_min, Calibration * x_max, Calibration * xp_value, const std::string& x_description) :
+	ParameterObjectHeigth(const std::string& x_name, const CalibrationByHeigth& x_default, CalibrationByHeigth * xp_value, const std::string& x_description) :
 		Parameter(x_name, x_description),
-		m_default(*x_default),
-		m_min(),
-		m_max()
-		//m_min(x_min),
-		//m_max(x_max),
-		//mp_value(&xp_value)
+		m_default(x_default),
+		mp_value(xp_value)
 	{
-		mp_value = xp_value;
-
 	}
 	inline std::string GetValueString() const {std::stringstream ss; mp_value->Serialize(ss,""); return ss.str();}
 	inline std::string GetDefaultString() const{std::stringstream ss; m_default.Serialize(ss,""); return ss.str();}
-	inline std::string GetRange() const{/*std::stringstream ss; ss<<"["<<m_min<<":"<<m_max<<"]"; return ss.str();*/ return "";}
-	inline const ParameterType GetType() const {return PARAM_OBJECT_HEIGHT;}
-    inline const std::string GetTypeString() const {return "objectHeigth";}
-	inline const Calibration& GetDefault() const {return m_default;}
-	//inline const int GetMin() const {return m_min;}
-	//inline const int GetMax() const{return m_max;}
+	inline std::string GetRange() const{/*std::stringstream ss; ss<<"["<<m_min<<":"<<m_max<<"]"; return ss.str();*/ return "";}	
+	inline const ParameterType& GetType() const {const static ParameterType s = PARAM_OBJECT_HEIGHT; return s;}
+	inline const std::string& GetTypeString() const {const static std::string s = "objectHeigth"; return s;}
+	inline const CalibrationByHeigth& GetDefault() const {
+		return m_default;}
 
-	inline void SetValue(const Calibration& x_value, ParameterConfigType x_confType)
+	inline void SetValue(const CalibrationByHeigth& x_value, ParameterConfigType x_confType)
 	{
 		if(m_isLocked)
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
@@ -284,15 +232,18 @@ public:
 		std::istringstream istr(rx_value);
 		m_default.Deserialize(istr); // atof is sensible to locale format and may use , as a separator
 	}
-	const Calibration& GetValue() const
+	const CalibrationByHeigth& GetValue() const
 	{
 		return *mp_value;
 	}
 	virtual bool CheckRange() const
 	{
-		//int value = GetValue();
-		//return (value <= m_max && value >= m_min);
-		return true;
+		CalibrationByHeigth object = GetValue();
+		return ((object.x <= 1 && object.x >= 0) &&
+		(object.y <= 1 && object.y >= 0) &&
+		(object.heigth <= 1 && object.heigth >= 0));
+
+
 	}
 	virtual void Print(std::ostream& os) const
 	{
@@ -320,11 +271,9 @@ public:
 	}
 
 
-	Calibration m_default;
-	const Calibration m_min;
-	const Calibration m_max;
+	CalibrationByHeigth m_default;
 private:
-	Calibration* mp_value;
+	CalibrationByHeigth* mp_value;
 };
 
 /// Parameter of type string
