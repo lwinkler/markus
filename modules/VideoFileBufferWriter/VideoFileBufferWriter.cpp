@@ -37,10 +37,20 @@ VideoFileBufferWriter::VideoFileBufferWriter(const ConfigReader& x_configReader)
 {
 	// AddInputStream(0, new StreamImage("input", m_input, *this,   "Video input"));
 	AddInputStream(1, new StreamState("trigger", m_trigger, *this,  "Trigger to start/stop of the recording (e.g. motion)"));
+
+	m_buffering = false;
+	m_timeBufferFull = 0;
 }
 
-
 void VideoFileBufferWriter::Reset()
+{
+	Module::Reset();
+	m_buffering = false;
+	m_buffer.clear();
+	m_timeBufferFull = 0;
+}
+
+void VideoFileBufferWriter::OpenNewFile()
 {
 	if(m_param.fourcc.size() != 4)
 		throw MkException("Error in parameter: fourcc must have 4 characters in VideoFileBufferWriter::Reset", LOC);
@@ -72,13 +82,61 @@ void VideoFileBufferWriter::Reset()
 	{
 		throw MkException("Failed to open output video file in VideoFileBufferWriter::Reset", LOC);
 	}
-	m_buffering = false;
+
 }
 
 void VideoFileBufferWriter::ProcessFrame()
 {
-	if(!m_buffering && m_index)
-		;
-	// m_writer.write(m_input);
+	if(!m_trigger)
+	{
+		if(!m_buffering)
+		{
+			m_writer.release();
+			m_buffering = true;
+			// Save the time stamp
+			m_timeBufferFull = m_currentTimeStamp + m_param.bufferDuration * 1000;
+			m_currentFrame = m_buffer.begin();
+		}
+		AddImageToBuffer();
+	}
+	else
+	{
+		if(m_buffering)
+		{
+			OpenNewFile();
+
+			// write buffer to file
+			// TODO if(m_currentTimeStamp > m_timeBufferFull)
+			{
+				for(list<Mat>::iterator it = m_buffer.begin() ; it != m_buffer.end() ; it++)
+				{
+					m_writer.write(*it);
+					it->release();
+				}
+			}
+
+			m_buffer.clear();
+			m_buffering = false;
+		}
+		m_writer.write(m_input);
+	}
 }
 
+
+void VideoFileBufferWriter::AddImageToBuffer()
+{
+	if(m_currentTimeStamp > m_timeBufferFull)
+	{
+		assert(m_buffer.size() > 0);
+		m_input.copyTo(*m_currentFrame);
+		m_currentFrame++;
+		if(m_currentFrame == m_buffer.end())
+			m_currentFrame = m_buffer.begin();
+	}
+	else
+	{
+		Mat im;
+		m_buffer.push_back(im);
+		m_currentFrame = m_buffer.begin(); // TODO remove
+	}
+}

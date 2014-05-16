@@ -25,6 +25,8 @@
 #define INPUT_VIDEOFILEBUFFERWRITER_H
 
 #include <opencv2/highgui/highgui.hpp>
+#include <list>
+
 #include "modules/VideoFileWriter/VideoFileWriter.h"
 
 
@@ -42,11 +44,11 @@ public:
 		Parameters(const ConfigReader& x_confReader) : 
 		VideoFileWriter::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterDouble("buffer_time", 120, 0, 600, &bufferTime,  "Length of one buffer block of video [s]"));
-			m_list.push_back(new ParameterInt("nb_buffers",       0, 0,  10, &nbBuffers,   "Number of buffers blocks to keep before recording"));
+			m_list.push_back(new ParameterDouble("buffer_duration", 120, 0, 600, &bufferDuration, "Length of one buffer block of video [s]"));
+			m_list.push_back(new ParameterInt("nb_buffers",           0, 0,  10, &nbBuffers,      "Number of buffers blocks to keep before recording"));
 			Init();
 		};
-		double bufferTime;
+		double bufferDuration;
 		int nbBuffers;
 	};
 
@@ -55,7 +57,9 @@ public:
 	MKDESCR("Write output to a buffer and exports it if an evenement occurs")
 	
 	virtual void ProcessFrame();
-	void Reset();
+	virtual void Reset();
+	void AddImageToBuffer();
+	void OpenNewFile();
 
 private:
 	Parameters m_param;
@@ -70,6 +74,9 @@ protected:
 	bool m_buffering;
 
 	// temporary
+	std::list<cv::Mat> m_buffer;
+	std::list<cv::Mat>::iterator m_currentFrame;
+	TIME_STAMP m_timeBufferFull;
 };
 
 #endif
