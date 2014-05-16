@@ -133,24 +133,24 @@ protected:
 };
 
 /// Control class for a object height parameter
-class ControllerObjectHeight : public ControllerParameter
+class ControllerCalibrationByHeight : public ControllerParameter
 {
 public:
-    ControllerObjectHeight(ParameterObjectHeigth & x_param);
+	ControllerCalibrationByHeight(ParameterCalibrationByHeight & x_param);
 	virtual QWidget* CreateWidget();
 	virtual void SetWidgetValue(const std::string& x_value);
 	virtual std::string GetValueFromWidget();
 
 protected:
     //QPainter * parameterLine;
-    ParameterObjectHeigth & m_param2;
+	ParameterCalibrationByHeight & m_param2;
     QWidget * widget;
-	QParameterSlider * slider_x;
-	QParameterSlider * slider_y;
-	QParameterSlider * slider_heigth;
-	QLabel* lab_x;
-	QLabel* lab_y;
-	QLabel* lab_heigth ;
+	QParameterSlider * mp_sliderX;
+	QParameterSlider * mp_sliderY;
+	QParameterSlider * mp_sliderHeigth;
+	QLabel* mp_labX;
+	QLabel* mp_labY;
+	QLabel* mp_labHeigth ;
 };
 
 

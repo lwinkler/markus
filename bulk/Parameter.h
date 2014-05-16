@@ -27,13 +27,8 @@
 #include "define.h"
 #include "ConfigReader.h"
 #include "MkException.h"
-#include <jsoncpp/json/writer.h>
-#include <jsoncpp/json/reader.h>
-#include "CalibrationByHeigth.h"
+#include "CalibrationByHeight.h"
 #include <log4cxx/logger.h>
-#include <stdio.h>
-#include <iostream>
-
 
 enum ParameterType
 {
@@ -188,16 +183,15 @@ private:
 	static const std::string m_typeStr;
 };
 
-class ParameterObjectHeigth : public Parameter
+class ParameterCalibrationByHeight : public Parameter
 {
 public:
-	static CalibrationByHeigth DefaultFg; // (0.1,0.1,0.5);
-	static CalibrationByHeigth DefaultBg; // (0.1,0.1,0.5);
-
+	static CalibrationByHeight DefaultFg;
+	static CalibrationByHeight DefaultBg;
 
 
 public:
-	ParameterObjectHeigth(const std::string& x_name, const CalibrationByHeigth& x_default, CalibrationByHeigth * xp_value, const std::string& x_description) :
+	ParameterCalibrationByHeight(const std::string& x_name, const CalibrationByHeight& x_default, CalibrationByHeight * xp_value, const std::string& x_description) :
 		Parameter(x_name, x_description),
 		m_default(x_default),
 		mp_value(xp_value)
@@ -208,10 +202,10 @@ public:
 	inline std::string GetRange() const{/*std::stringstream ss; ss<<"["<<m_min<<":"<<m_max<<"]"; return ss.str();*/ return "";}	
 	inline const ParameterType& GetType() const {const static ParameterType s = PARAM_OBJECT_HEIGHT; return s;}
 	inline const std::string& GetTypeString() const {const static std::string s = "objectHeigth"; return s;}
-	inline const CalibrationByHeigth& GetDefault() const {
+	inline const CalibrationByHeight& GetDefault() const {
 		return m_default;}
 
-	inline void SetValue(const CalibrationByHeigth& x_value, ParameterConfigType x_confType)
+	inline void SetValue(const CalibrationByHeight& x_value, ParameterConfigType x_confType)
 	{
 		if(m_isLocked)
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
@@ -232,18 +226,16 @@ public:
 		std::istringstream istr(rx_value);
 		m_default.Deserialize(istr); // atof is sensible to locale format and may use , as a separator
 	}
-	const CalibrationByHeigth& GetValue() const
+	const CalibrationByHeight& GetValue() const
 	{
 		return *mp_value;
 	}
 	virtual bool CheckRange() const
 	{
-		CalibrationByHeigth object = GetValue();
+		CalibrationByHeight object = GetValue();
 		return ((object.x <= 1 && object.x >= 0) &&
 		(object.y <= 1 && object.y >= 0) &&
 		(object.heigth <= 1 && object.heigth >= 0));
-
-
 	}
 	virtual void Print(std::ostream& os) const
 	{
@@ -273,9 +265,9 @@ public:
 	}
 
 
-	CalibrationByHeigth m_default;
 private:
-	CalibrationByHeigth* mp_value;
+	CalibrationByHeight m_default;
+	CalibrationByHeight* mp_value;
 };
 
 /// Parameter of type string
@@ -427,7 +419,6 @@ protected:
 private:
 	static log4cxx::LoggerPtr m_logger;
 };
-
 
 /// Parameter of type integer
 typedef ParameterT<int> 	ParameterInt;

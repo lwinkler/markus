@@ -38,7 +38,6 @@
 
 class Stream;
 class QModuleTimer;
-class ParameterStructure;
 
 class ModuleParameterStructure : public ParameterStructure
 {

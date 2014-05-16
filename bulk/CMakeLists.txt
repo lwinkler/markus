@@ -27,6 +27,6 @@ ControllerManager.cpp
 ControllerEvent.cpp
 FactoryModules.cpp
 Serializable.cpp
-CalibrationByHeigth.cpp
+CalibrationByHeight.cpp
 )
 
