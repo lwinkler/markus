@@ -343,16 +343,22 @@ QWidget* ControllerObjectHeight::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
 
-	QBoxLayout * mainLayout = new QBoxLayout(QBoxLayout::TopToBottom);
+	QGridLayout * mainLayout = new QGridLayout();
 	widget = new QWidget();
 
-	slider_x =new QParameterSlider(m_param2.GetValue().x, 0, 1, PRECISION_DOUBLE,widget);
+	slider_x = new QParameterSlider(m_param2.GetValue().x, 0, 1, PRECISION_DOUBLE,widget);
 	slider_y = new QParameterSlider(m_param2.GetValue().y, 0, 1, PRECISION_DOUBLE,widget);
 	slider_heigth = new QParameterSlider(m_param2.GetValue().heigth, 0, 1, PRECISION_DOUBLE,widget);
+	lab_x = new QLabel("x");
+	lab_y = new QLabel("y");
+	lab_heigth = new QLabel("heigth");
 
-	mainLayout->addWidget(slider_x,0);
-	mainLayout->addWidget(slider_y,1);
-	mainLayout->addWidget(slider_heigth,2);
+	mainLayout->addWidget(lab_x, 0, 0);
+	mainLayout->addWidget(slider_x,0,1);
+	mainLayout->addWidget(lab_y, 1, 0);
+	mainLayout->addWidget(slider_y,1,1);
+	mainLayout->addWidget(lab_heigth, 2, 0);
+	mainLayout->addWidget(slider_heigth,2,1);
 	widget->setLayout(mainLayout);
 
 	return widget;

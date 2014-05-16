@@ -32,6 +32,7 @@ class QParameterSlider;
 class QCheckBox;
 class QLineEdit;
 class QComboBox;
+class QLabel;
 
 /// Control class for any parameter
 class ControllerParameter : public Controller
@@ -147,6 +148,9 @@ protected:
 	QParameterSlider * slider_x;
 	QParameterSlider * slider_y;
 	QParameterSlider * slider_heigth;
+	QLabel* lab_x;
+	QLabel* lab_y;
+	QLabel* lab_heigth ;
 };
 
 

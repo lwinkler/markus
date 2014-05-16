@@ -265,7 +265,7 @@ public:
 		rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<std::endl;
 		tabs = std::string(x_indentation + 1, '\t');
 		rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<std::endl;
-		rx_os<<tabs<<"<value default=\""<<m_default.SerializeToString()<<"\">";
+		rx_os<<tabs<<"<value default=\'"<<m_default.SerializeToString()<<"\'>";
 		rx_os<<mp_value->SerializeToString()<<"</value>"<<std::endl;
 		rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<std::endl;
 		tabs = std::string(x_indentation, '\t');
