@@ -365,7 +365,12 @@ QWidget* ControllerObjectHeight::CreateWidget()
 void ControllerObjectHeight::SetWidgetValue(const std::string& x_value)
 {
 #ifndef MARKUS_NO_GUI
-	//parameterSlider->SetValue(atoi(x_value.c_str()));
+	CalibrationByHeigth object;
+	istringstream str(x_value);
+	object.Deserialize(str);
+	slider_x->SetValue(object.x);
+	slider_y->SetValue(object.y);
+	slider_heigth->SetValue(object.heigth);
 #endif
 }
 
