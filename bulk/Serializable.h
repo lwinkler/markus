@@ -49,8 +49,9 @@ class Serializable
 		*/
 		virtual void Deserialize(std::istream& x_in, const std::string& x_dir) = 0;
 
+		std::string SerializeToString(const std::string& x_dir = "") const;
 
-		inline friend std::ostream& operator<< (std::ostream& x_out, const Serializable& x_obj){x_obj.Serialize(x_out, "");};
+		inline friend std::ostream& operator<< (std::ostream& x_out, const Serializable& x_obj){x_obj.Serialize(x_out, ""); return x_out;};
 };
 
 #endif
