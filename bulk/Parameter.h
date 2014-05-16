@@ -197,7 +197,13 @@ public:
 		mp_value(xp_value)
 	{
 	}
-	inline std::string GetValueString() const {std::stringstream ss; mp_value->Serialize(ss,""); return ss.str();}
+	inline std::string GetValueString() const {
+		if (mp_value->x == 0 && mp_value->y == 0 && mp_value->heigth == 0)
+			return "";
+		std::stringstream ss;
+		mp_value->Serialize(ss,"");
+		return ss.str();
+	}
 	inline std::string GetDefaultString() const{std::stringstream ss; m_default.Serialize(ss,""); return ss.str();}
 	inline std::string GetRange() const{/*std::stringstream ss; ss<<"["<<m_min<<":"<<m_max<<"]"; return ss.str();*/ return "";}	
 	inline const ParameterType& GetType() const {const static ParameterType s = PARAM_OBJECT_HEIGHT; return s;}
@@ -218,6 +224,14 @@ public:
 		if(m_isLocked)
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		std::istringstream istr(rx_value);
+		if(rx_value == "")	// This case happens with unit testing
+		{
+			mp_value->x = 0;
+			mp_value->y = 0;
+			mp_value->heigth = 0;
+			return;
+		}
+
 		mp_value->Deserialize(istr, ""); // atof is sensible to locale format and may use , as a separator
 		m_confSource = x_confType;
 	}
