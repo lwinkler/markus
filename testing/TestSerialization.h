@@ -37,6 +37,7 @@
 #include "StreamImage.h"
 #include "StreamObject.h"
 #include "StreamDebug.h"
+#include "CalibrationByHeight.h"
 
 
 /// Test class for serialization
@@ -188,6 +189,12 @@ class TestSerialization : public CppUnit::TestFixture
 
 		MkException excep;
 		testSerialization(excep, "MkException");
+
+		CalibrationByHeight calib1;
+		testSerialization(calib1, "CalibrationByHeight1");
+
+		CalibrationByHeight calib2(0.33, 0.6, 0.25);
+		testSerialization(calib2, "CalibrationByHeight2");
 
 		// TODO: test the serialization of all modules
 		std::cout<<mp_fakeInput->GetClass()<<std::endl;

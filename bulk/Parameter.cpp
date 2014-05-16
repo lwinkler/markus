@@ -44,6 +44,9 @@ template<> const string ParameterT<int>::m_typeStr    = "int";
 template<> const string ParameterT<float>::m_typeStr  = "float";
 template<> const string ParameterT<double>::m_typeStr = "double";
 
+CalibrationByHeight ParameterCalibrationByHeight::DefaultFg = CalibrationByHeight(0.2,0.9,0.3);
+CalibrationByHeight ParameterCalibrationByHeight::DefaultBg = CalibrationByHeight(0.1,0.4,0.1);
+
 
 ParameterStructure::ParameterStructure(const ConfigReader& x_configReader):
 	m_configReader(x_configReader.GetSubConfig("parameters")),

@@ -32,6 +32,7 @@ class QParameterSlider;
 class QCheckBox;
 class QLineEdit;
 class QComboBox;
+class QLabel;
 
 /// Control class for any parameter
 class ControllerParameter : public Controller
@@ -129,6 +130,27 @@ public:
 protected:
 	QLineEdit       * m_lineEdit;
 	ParameterString & m_param2;
+};
+
+/// Control class for a object height parameter
+class ControllerCalibrationByHeight : public ControllerParameter
+{
+public:
+	ControllerCalibrationByHeight(ParameterCalibrationByHeight & x_param);
+	virtual QWidget* CreateWidget();
+	virtual void SetWidgetValue(const std::string& x_value);
+	virtual std::string GetValueFromWidget();
+
+protected:
+    //QPainter * parameterLine;
+	ParameterCalibrationByHeight & m_param2;
+    QWidget * widget;
+	QParameterSlider * mp_sliderX;
+	QParameterSlider * mp_sliderY;
+	QParameterSlider * mp_sliderHeigth;
+	QLabel* mp_labX;
+	QLabel* mp_labY;
+	QLabel* mp_labHeigth ;
 };
 
 
