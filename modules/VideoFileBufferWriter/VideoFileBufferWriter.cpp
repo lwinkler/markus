@@ -91,11 +91,13 @@ void VideoFileBufferWriter::ProcessFrame()
 	{
 		if(!m_buffering)
 		{
+			// Start buffering
 			m_writer.release();
 			m_buffering = true;
 			// Save the time stamp
 			m_timeBufferFull = m_currentTimeStamp + m_param.bufferDuration * 1000;
 			m_currentFrame = m_buffer.begin();
+			cout<<"ici"<<endl;
 		}
 		AddImageToBuffer();
 	}
@@ -106,10 +108,29 @@ void VideoFileBufferWriter::ProcessFrame()
 			OpenNewFile();
 
 			// write buffer to file
-			// TODO if(m_currentTimeStamp > m_timeBufferFull)
+			cout<<(m_currentTimeStamp > m_timeBufferFull)<<"Full"<<endl;
+			if(m_currentTimeStamp > m_timeBufferFull)
+			{
+				list<Mat>::iterator it = m_currentFrame;
+				while(true)
+				{
+					cout<<"la"<<endl;
+					it++;
+					if(it == m_buffer.end())
+						it = m_buffer.begin();
+
+					m_writer.write(*it);
+					it->release();
+					it++;
+					if(it == m_currentFrame)
+						break;
+				}
+			}
+			else
 			{
 				for(list<Mat>::iterator it = m_buffer.begin() ; it != m_buffer.end() ; it++)
 				{
+					cout<<"write"<<endl;
 					m_writer.write(*it);
 					it->release();
 				}
@@ -118,7 +139,7 @@ void VideoFileBufferWriter::ProcessFrame()
 			m_buffer.clear();
 			m_buffering = false;
 		}
-		m_writer.write(m_input);
+		// m_writer.write(m_input);
 	}
 }
 
@@ -127,8 +148,9 @@ void VideoFileBufferWriter::AddImageToBuffer()
 {
 	if(m_currentTimeStamp > m_timeBufferFull)
 	{
+		cout<<"buffering"<<endl;
 		assert(m_buffer.size() > 0);
-		m_input.copyTo(*m_currentFrame);
+		m_input.copyTo(*m_buffer.begin());
 		m_currentFrame++;
 		if(m_currentFrame == m_buffer.end())
 			m_currentFrame = m_buffer.begin();
@@ -137,6 +159,8 @@ void VideoFileBufferWriter::AddImageToBuffer()
 	{
 		Mat im;
 		m_buffer.push_back(im);
-		m_currentFrame = m_buffer.begin(); // TODO remove
+		m_input.copyTo(m_buffer.back());
+		m_currentFrame = m_buffer.begin(); // TODO remove ?
+		cout<<(void*)&*m_currentFrame<<endl;
 	}
 }

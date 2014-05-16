@@ -24,6 +24,7 @@
 #ifndef SERIALIZABLE_H
 #define SERIALIZABLE_H
 
+#include <iostream>
 
 /// Class for all serializable objects
 
@@ -47,6 +48,8 @@ class Serializable
 		* @param x_dir  Input directory (for images)
 		*/
 		virtual void Deserialize(std::istream& x_in, const std::string& x_dir) = 0;
+
+		std::string SerializeToString(const std::string& x_dir = "") const;
 
 	/**
 	* @brief Redefinition of the output stream operator <<
