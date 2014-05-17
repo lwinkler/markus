@@ -77,6 +77,7 @@ protected:
 	std::list<cv::Mat> m_buffer;
 	std::list<cv::Mat>::iterator m_currentFrame;
 	TIME_STAMP m_timeBufferFull;
+	bool m_bufferFull;
 };
 
 #endif
