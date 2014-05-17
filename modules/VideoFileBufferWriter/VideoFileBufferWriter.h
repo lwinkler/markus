@@ -28,6 +28,7 @@
 #include <list>
 
 #include "modules/VideoFileWriter/VideoFileWriter.h"
+#include "Event.h"
 
 
 
@@ -54,7 +55,7 @@ public:
 
 	VideoFileBufferWriter(const ConfigReader& x_confReader);
 	MKCLASS("VideoFileBufferWriter")
-	MKDESCR("Write output to a buffer and exports it if an evenement occurs")
+	MKDESCR("Write output to a buffer and export it if an evenement occurs")
 	
 	virtual void ProcessFrame();
 	virtual void Reset();
@@ -70,8 +71,12 @@ protected:
 	// input
 	bool m_trigger;
 
+	// output and input
+	Event m_event;
+
 	// state
 	bool m_buffering;
+	std::string m_fileName;
 
 	// temporary
 	std::list<cv::Mat> m_buffer;

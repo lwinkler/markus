@@ -23,6 +23,7 @@
 
 #include "VideoFileBufferWriter.h"
 #include "StreamState.h"
+#include "StreamEvent.h"
 #include "util.h"
 #include "Manager.h"
 
@@ -37,6 +38,9 @@ VideoFileBufferWriter::VideoFileBufferWriter(const ConfigReader& x_configReader)
 {
 	// AddInputStream(0, new StreamImage("input", m_input, *this,   "Video input"));
 	AddInputStream(1, new StreamState("trigger", m_trigger, *this,  "Trigger to start/stop of the recording (e.g. motion)"));
+	AddInputStream(2, new StreamEvent("event", m_event,     *this,  "Event to which the record will be linked"));
+
+	AddOutputStream(0, new StreamEvent("event", m_event,    *this,  "Event to which the record will be linked"));
 
 	m_buffering = false;
 	m_bufferFull = false;
@@ -51,6 +55,7 @@ void VideoFileBufferWriter::Reset()
 	m_buffering  = false;
 	m_bufferFull = false;
 	m_currentFrame = m_buffer.end(); // Set to an invalid value
+	m_fileName = "";
 }
 
 void VideoFileBufferWriter::OpenNewFile()
@@ -65,7 +70,7 @@ void VideoFileBufferWriter::OpenNewFile()
 
 	stringstream ss;
 	ss << Manager::OutputDir() << "/" << m_param.file  << "." << m_index++ << "." << ExtensionFromFourcc(m_param.fourcc);
-	const string filename = ss.str();
+	m_fileName = ss.str();
 	double fps = 12;
 	
 	try
@@ -78,8 +83,8 @@ void VideoFileBufferWriter::OpenNewFile()
 		LOG_WARN(m_logger, "Impossible to acquire the fps value for recording in VideoFileBufferWriter::Reset. Set to default value " << fps << ". Reason: " << e.what());	
 	}
 
-	LOG_DEBUG(m_logger, "Start recording file "<<filename<<" with fps="<<fps<<" and size "<<m_param.width<<"x"<<m_param.height);
-	m_writer.open(filename, CV_FOURCC(s[0], s[1], s[2], s[3]), fps, Size(m_param.width, m_param.height), isColor);
+	LOG_DEBUG(m_logger, "Start recording file "<<m_fileName<<" with fps="<<fps<<" and size "<<m_param.width<<"x"<<m_param.height);
+	m_writer.open(m_fileName, CV_FOURCC(s[0], s[1], s[2], s[3]), fps, Size(m_param.width, m_param.height), isColor);
 	if(!m_writer.isOpened())
 	{
 		throw MkException("Failed to open output video file in VideoFileBufferWriter::Reset", LOC);
@@ -134,6 +139,10 @@ void VideoFileBufferWriter::ProcessFrame()
 		}
 		m_writer.write(m_input);
 	}
+
+	// Add the file to the event
+	if(m_event.IsRaised())
+		m_event.AddExternalFile("record", m_fileName);
 }
 
 

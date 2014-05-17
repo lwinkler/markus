@@ -27,8 +27,8 @@
 #include "StreamState.h"
 #include "StreamEvent.h"
 
-#include <iostream>
-#include <cstdio>
+// #include <iostream>
+// #include <cstdio>
 #include <opencv2/highgui/highgui.hpp>
 
 
