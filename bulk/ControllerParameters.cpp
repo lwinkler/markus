@@ -39,6 +39,8 @@ using namespace std;
 
 #define PRECISION_DOUBLE 2
 
+log4cxx::LoggerPtr ControllerParameter::m_logger(log4cxx::Logger::getLogger("ControllerParameter"));
+
 /**
 * @brief Command: Display the type of the parameter
 *
@@ -54,7 +56,7 @@ void ControllerParameter::GetParameterType(string* xp_value)
 #ifdef MARKUS_NO_GUI
 	assert(false);
 #else
-	// TODO ctr->SetWidgetValue(ctr->param.GetDefaultString());
+	LOG_INFO(m_logger, "Parameter type is \"" + m_param.GetTypeString() + "\"");
 #endif
 }
 
@@ -73,7 +75,7 @@ void ControllerParameter::GetRange(string* xp_value)
 #ifdef MARKUS_NO_GUI
 	assert(false);
 #else
-	// TODO ctr->SetWidgetValue(ctr->param.GetDefaultString());
+	LOG_INFO(m_logger, "Parameter range is \"" + m_param.GetRange() + "\"");
 #endif
 }
 

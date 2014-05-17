@@ -53,6 +53,7 @@ Class &operator=(const Class &);
 #define LOG_WARN  LOG4CXX_WARN
 #define LOG_INFO  LOG4CXX_INFO
 #define LOG_DEBUG LOG4CXX_DEBUG
+#define LOG_TRACE LOG4CXX_TRACE
 
 // Log function for tests only
 #define LOG_TEST(logger, str) {\

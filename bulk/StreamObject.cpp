@@ -50,7 +50,8 @@ void StreamObject::ConvertInput()
 	m_timeStamp = GetConnected().GetTimeStamp();
 
 	const StreamObject * pstream = dynamic_cast<const StreamObject*>(m_connected);
-	if(pstream == NULL) return;
+	if(pstream == NULL) 
+		throw MkException("Stream of objects " + GetName() + " is not correctly connected", LOC);
 	std::vector<Object> rectsTarget = pstream->m_objects;
 	double ratioX = static_cast<double>(m_width) / pstream->GetWidth();
 	double ratioY = static_cast<double>(m_height) / pstream->GetHeight();

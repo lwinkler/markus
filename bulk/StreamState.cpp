@@ -51,7 +51,8 @@ void StreamState::ConvertInput()
 	m_timeStamp = GetConnected().GetTimeStamp();
 
 	const StreamState * pstream = dynamic_cast<const StreamState*>(m_connected);
-	if(pstream == NULL) return;
+	if(pstream == NULL) 
+		throw MkException("Stream of state " + GetName() + " is not correctly connected", LOC);
 	m_state = pstream->GetState();
 }
 
@@ -69,7 +70,7 @@ void StreamState::Serialize(std::ostream& x_out, const string& x_dir) const
 	Stream::Serialize(ss, x_dir);
 	ss >> root;
 	root["state"] = m_state;
-    x_out << root;
+	x_out << root;
 }
 
 void StreamState::Deserialize(std::istream& x_in, const string& x_dir)

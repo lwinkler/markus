@@ -131,7 +131,6 @@ void Template::UpdateFeatures(double x_alpha, TIME_STAMP m_currentTimeStamp)
 		}
 		m_lastSeen = m_currentTimeStamp;
 	}
-	
 }
 
 /**

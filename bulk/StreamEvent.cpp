@@ -53,7 +53,8 @@ void StreamEvent::ConvertInput()
 	m_timeStamp = GetConnected().GetTimeStamp();
 
 	const StreamEvent * pstream = dynamic_cast<const StreamEvent*>(m_connected);
-	if(pstream == NULL) return;
+	if(pstream == NULL) 
+		throw MkException("Stream of event " + GetName() + " is not correctly connected", LOC);
 	m_event = pstream->GetEvent();
 
 	if(! m_event.IsRaised()) return;

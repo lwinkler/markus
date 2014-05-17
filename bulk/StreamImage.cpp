@@ -97,7 +97,7 @@ void StreamImage::Deserialize(std::istream& x_in, const string& x_dir)
 
 void StreamImage::Connect(Stream* x_stream)
 {
-	// TODO: Why do we rewrite this function ? 
+	// This method was rewritten to avoid a dynamic cast at each ConvertInput
 	m_connected = x_stream;
 	if(m_connected == NULL)
 		return;

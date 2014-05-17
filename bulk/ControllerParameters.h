@@ -59,6 +59,8 @@ public:
 protected:
 	std::map<std::string, const action> m_actions;
 	Parameter& m_param;
+private:
+	static log4cxx::LoggerPtr m_logger;
 };
 
 /// Control class for an integer parameter
