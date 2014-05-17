@@ -21,10 +21,22 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "Parameter.h"
+#include "ParameterCalibrationByHeight.h"
 
 using namespace std;
 
-// Static variables
-log4cxx::LoggerPtr Parameter::m_logger(log4cxx::Logger::getLogger("Parameter"));
+CalibrationByHeight ParameterCalibrationByHeight::DefaultFg = CalibrationByHeight(0.2,0.9,0.3);
+CalibrationByHeight ParameterCalibrationByHeight::DefaultBg = CalibrationByHeight(0.1,0.4,0.1);
 
+void ParameterCalibrationByHeight::Export(std::ostream& rx_os, int x_indentation)
+{
+	std::string tabs(x_indentation, '\t');
+	rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<std::endl;
+	tabs = std::string(x_indentation + 1, '\t');
+	rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<std::endl;
+	rx_os<<tabs<<"<value default=\'"<<m_default.SerializeToString()<<"\'>";
+	rx_os<<mp_value->SerializeToString()<<"</value>"<<std::endl;
+	rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<std::endl;
+	tabs = std::string(x_indentation, '\t');
+	rx_os<<tabs<<"</param>"<<std::endl;
+}

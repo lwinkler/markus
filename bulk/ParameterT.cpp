@@ -21,10 +21,18 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "Parameter.h"
+#include "ParameterNum.h"
 
 using namespace std;
 
 // Static variables
-log4cxx::LoggerPtr Parameter::m_logger(log4cxx::Logger::getLogger("Parameter"));
+template<> const ParameterType ParameterNum<bool>::m_type   = PARAM_BOOL;
+template<> const ParameterType ParameterNum<int>::m_type    = PARAM_INT;
+template<> const ParameterType ParameterNum<float>::m_type  = PARAM_FLOAT;
+template<> const ParameterType ParameterNum<double>::m_type = PARAM_DOUBLE;
+
+template<> const string ParameterNum<bool>::m_typeStr   = "bool";
+template<> const string ParameterNum<int>::m_typeStr    = "int";
+template<> const string ParameterNum<float>::m_typeStr  = "float";
+template<> const string ParameterNum<double>::m_typeStr = "double";
 

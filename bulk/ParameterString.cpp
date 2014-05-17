@@ -21,10 +21,18 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "Parameter.h"
+#include "ParameterString.h"
 
 using namespace std;
 
-// Static variables
-log4cxx::LoggerPtr Parameter::m_logger(log4cxx::Logger::getLogger("Parameter"));
-
+void ParameterString::Export(std::ostream& rx_os, int x_tabs)
+{
+	std::string tabs(x_tabs, '\t');
+	rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<std::endl;
+	tabs = std::string(x_tabs + 1, '\t');
+	rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<std::endl;
+	rx_os<<tabs<<"<value default=\""<<m_default<<"\">"<<GetValue()<<"</value>"<<std::endl;
+	rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<std::endl;
+	tabs = std::string(x_tabs, '\t');
+	rx_os<<tabs<<"</param>"<<std::endl;
+}

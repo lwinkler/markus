@@ -8,6 +8,8 @@ Parameter.cpp
 ParameterEnum.cpp
 ParameterStructure.cpp
 ParameterNum.cpp
+ParameterString.cpp
+ParameterCalibrationByHeight.cpp
 Stream.cpp
 StreamImage.cpp
 StreamDebug.cpp
