@@ -37,7 +37,7 @@ public:
 	{
 		m_list.push_back(new ParameterString("folder"     , "thumbs" , &folder    , "Name of the folder to create, with path"));
 		m_list.push_back(new ParameterString("extension"  , "jpg"        , &extension , "Extension of the thumbnails. Determines the output format."));
-		ParameterStructure::Init();
+		Init();
 	};
 
 	std::string folder;

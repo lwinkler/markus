@@ -36,7 +36,7 @@ class MaskParameterStructure : public ModuleParameterStructure
 public:
 	MaskParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-		ParameterStructure::Init();
+		Init();
 	};
 };
 

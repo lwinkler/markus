@@ -38,7 +38,7 @@ public:
 	InputParameterStructure(x_confReader)
 	{
 		m_list.push_back(new ParameterString("url", 	"", 	&url,	"Network address of the camera (e.g. http://root:admin@192.168.3.62/mjpg/1/video.mjpg"));
-		ParameterStructure::Init();
+		Init();
 	}
 
 public:

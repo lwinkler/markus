@@ -36,7 +36,7 @@ public:
 	{
 		m_list.push_back(new ParameterString("file", 	"in/input.srt", &file,    "Name of the video file to read, with path"));
 		m_list.push_back(new ParameterString("pattern",	"state_1",      &pattern, "Pattern to search in text. If this is found the state is set to 1"));
-		ParameterStructure::Init();
+		Init();
 	};
 
 public:

@@ -39,7 +39,7 @@ public:
 		ModuleParameterStructure(x_confReader)
 	{
 		m_list.push_back(new ParameterString("file", 	  "objects", 	     &file,      "Name of the .srt file without extension"));
-		ParameterStructure::Init();
+		Init();
 	}
 	std::string file;
 };

@@ -36,13 +36,13 @@ public:
 	ParameterEnum(const std::string& x_name, int x_default, int * xp_value, const std::string x_description):
 		Parameter(x_name, x_description),
 		m_default(x_default),
-		mp_value(xp_value){}
+		mr_value(*xp_value){}
 	void SetValue(const std::string& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/);
 	void SetValue(int rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/);
 	void SetDefault(const std::string& rx_value);
 	inline int GetDefault() const {return m_default;}
-	inline int GetValue() const{return *mp_value;}
-	inline std::string GetValueString() const {return GetReverseEnum().at(*mp_value);}
+	inline int GetValue() const{return mr_value;}
+	inline std::string GetValueString() const {return GetReverseEnum().at(mr_value);}
 	inline std::string GetDefaultString() const{return GetReverseEnum().at(m_default);}
 	inline std::string GetRange() const
 	{
@@ -57,7 +57,7 @@ public:
 	{
 		if(m_isLocked) 
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
-		*mp_value = m_default;
+		mr_value = m_default;
 		m_confSource = PARAMCONF_DEF;
 	}
 	inline const ParameterType& GetType() const {const static ParameterType s = PARAM_IMAGE_TYPE; return s;}
@@ -69,7 +69,7 @@ public:
 protected:
 
 	int m_default;
-	int* mp_value;
+	int& mr_value;
 };
 
 /// Parameter for the type of an OpenCV image

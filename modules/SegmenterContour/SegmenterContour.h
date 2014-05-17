@@ -39,7 +39,7 @@ public:
 		m_list.push_back(new ParameterString("object_label",         "object",             &objectLabel,"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
 		m_list.push_back(new ParameterString("features",     "x,y,width,height",           &features,   "List of features to extract, separated with ',' possible: x,y,width,height,area,ellipse_{angle,ratio,width,height}, moment_{00,11,20,02}"));
 		
-		ParameterStructure::Init();
+		Init();
 	};
 	
 	std::string objectLabel;

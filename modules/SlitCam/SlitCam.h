@@ -46,7 +46,7 @@ public:
 		// Set default value of module parameter (re-definition)
 		RefParameterByName("type").SetDefault("CV_8UC3");
 
-		ParameterStructure::Init();
+		Init();
 	}
 	
 	int aperture;

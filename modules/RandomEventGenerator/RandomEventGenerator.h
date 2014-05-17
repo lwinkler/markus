@@ -38,7 +38,7 @@ public:
 		m_list.push_back(new ParameterInt("random_seed", 	0, 	0, 	INT_MAX, &randomSeed,	"Seed for random generator: 0 means seed is generated from timer"));
 		RefParameterByName("type").SetDefault("CV_8UC3");
 		RefParameterByName("fps").SetDefault("0.2");
-		ParameterStructure::Init();
+		Init();
 	}
 
 public:

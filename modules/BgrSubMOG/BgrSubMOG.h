@@ -59,7 +59,7 @@ public:
 
 		// RefParameterByName("history").Lock();
 
-		ParameterStructure::Init();
+		Init();
 	};
 	int history;
 	int nmixtures;

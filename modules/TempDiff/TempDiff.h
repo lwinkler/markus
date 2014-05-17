@@ -34,7 +34,7 @@ class TempDiffParameterStructure : public ModuleParameterStructure
 public:
 	TempDiffParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
-		ParameterStructure::Init();
+		Init();
 	};
 };
 

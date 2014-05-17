@@ -39,7 +39,7 @@ public:
 
 		RefParameterByName("type").SetDefault("CV_32FC3");
 
-		ParameterStructure::Init();
+		Init();
 	};
 	float backgroundAlpha;
 	float foregroundThres;

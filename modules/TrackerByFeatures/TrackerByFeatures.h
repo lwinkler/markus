@@ -44,7 +44,7 @@ public:
 		m_list.push_back(new ParameterBool  ("handle_split"            , 0   , 0    , 1      , &handleSplit             , "Handle the splitting of one object into multiple objects."));
 
 
-		ParameterStructure::Init();
+		Init();
 	}
 	double maxMatchingDistance;
 	double timeDisappear;

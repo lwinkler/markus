@@ -43,7 +43,7 @@ public:
 		m_list.push_back(new ParameterString("extension"  , "jpg"   , &extension   , "Extension of the thumbnails. Determines the output format."));
 
 		RefParameterByName("type").SetDefault("CV_8UC3");
-		ParameterStructure::Init();
+		Init();
 	}
 	std::string file;
 	double duration;

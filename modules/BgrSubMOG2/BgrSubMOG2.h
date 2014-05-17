@@ -58,7 +58,7 @@ public:
 		RefParameterByName("type").SetDefault("CV_8UC3");
 
 
-		ParameterStructure::Init();
+		Init();
 	};
 	int history;
 	float varThres;

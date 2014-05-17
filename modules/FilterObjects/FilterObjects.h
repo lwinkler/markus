@@ -42,7 +42,7 @@ public:
 		m_list.push_back(new ParameterDouble("max_obj_width"  , 1.0, 0, 1,    &maxObjectWidth , "Maximum width to accept an object"));
 		m_list.push_back(new ParameterDouble("max_obj_height" , 1.0, 0, 1,    &maxObjectHeight, "Maximum hdight to accept an object"));
 
-		ParameterStructure::Init();
+		Init();
 	}
 	double minTravelDist;
 	double minBorderDist;

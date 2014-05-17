@@ -37,8 +37,8 @@ public:
 		m_default(x_default),
 		m_min(x_min),
 		m_max(x_max),
-		mp_value(xp_value){}
-	inline std::string GetValueString() const {std::stringstream ss; ss<<*mp_value; return ss.str();}
+		mr_value(*xp_value){}
+	inline std::string GetValueString() const {std::stringstream ss; ss<<mr_value; return ss.str();}
 	inline std::string GetDefaultString() const{std::stringstream ss; ss<<m_default; return ss.str();}
 	inline std::string GetRange() const{std::stringstream ss; ss<<"["<<m_min<<":"<<m_max<<"]"; return ss.str();}
 	inline const ParameterType& GetType() const {return m_type;}
@@ -52,19 +52,19 @@ public:
 		if(m_isLocked) 
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		std::istringstream istr(rx_value);
-		istr >> *mp_value; // atof is sensible to locale format and may use , as a separator
+		istr >> mr_value; // atof is sensible to locale format and may use , as a separator
 		m_confSource = x_confType;
 	}
 	inline void SetValue(T x_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
 	{
 		if(m_isLocked) 
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
-		*mp_value = x_value;
+		mr_value = x_value;
 		m_confSource = x_confType;
 	}
 	/*virtual void SetValue(const void * px_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
 	{	
-		*mp_value = *static_cast<const T*>(px_value);
+		mr_value = *static_cast<const T*>(px_value);
 		m_confSource = x_confType;
 	};*/
 	virtual void SetDefault(const std::string& rx_value)
@@ -74,7 +74,7 @@ public:
 	}
 	virtual T GetValue() const
 	{
-		return *mp_value;
+		return mr_value;
 	}
 	virtual bool CheckRange() const
 	{
@@ -89,7 +89,7 @@ public:
 	{
 		if(m_isLocked) 
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
-		*mp_value = m_default;
+		mr_value = m_default;
 		m_confSource = PARAMCONF_DEF;
 	}
 	virtual void Export(std::ostream& rx_os, int x_indentation)
@@ -108,7 +108,7 @@ public:
 	const T m_min;
 	const T m_max;
 private:
-	T* mp_value;
+	T& mr_value;
 	static const ParameterType m_type;
 	static const std::string m_typeStr;
 };

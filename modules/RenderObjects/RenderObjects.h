@@ -35,7 +35,7 @@ public:
 	RenderObjectsParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
 	{
 		RefParameterByName("type").SetDefault("CV_8UC3");
-		ParameterStructure::Init();
+		Init();
 	};
 };
 

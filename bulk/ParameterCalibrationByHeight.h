@@ -29,6 +29,7 @@
 #include "CalibrationByHeight.h"
 
 /// Parameter for special 3D calibration objects
+// TODO: Maybe transform into a general class for serializable params
 class ParameterCalibrationByHeight : public Parameter
 {
 public:
@@ -40,14 +41,14 @@ public:
 	ParameterCalibrationByHeight(const std::string& x_name, const CalibrationByHeight& x_default, CalibrationByHeight * xp_value, const std::string& x_description) :
 		Parameter(x_name, x_description),
 		m_default(x_default),
-		mp_value(xp_value)
+		mr_value(*xp_value)
 	{
 	}
 	inline std::string GetValueString() const {
-		if (mp_value->x == 0 && mp_value->y == 0 && mp_value->heigth == 0)
+		if (mr_value.x == 0 && mr_value.y == 0 && mr_value.heigth == 0)
 			return "";
 		std::stringstream ss;
-		mp_value->Serialize(ss,"");
+		mr_value.Serialize(ss,"");
 		return ss.str();
 	}
 	inline std::string GetDefaultString() const{std::stringstream ss; m_default.Serialize(ss,""); return ss.str();}
@@ -61,7 +62,7 @@ public:
 	{
 		if(m_isLocked)
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
-		*mp_value = x_value;
+		mr_value = x_value;
 		m_confSource = x_confType;
 	}
 
@@ -72,13 +73,13 @@ public:
 		std::istringstream istr(rx_value);
 		if(rx_value == "")	// This case happens with unit testing
 		{
-			mp_value->x = 0;
-			mp_value->y = 0;
-			mp_value->heigth = 0;
+			mr_value.x = 0;
+			mr_value.y = 0;
+			mr_value.heigth = 0;
 			return;
 		}
 
-		mp_value->Deserialize(istr, ""); // atof is sensible to locale format and may use , as a separator
+		mr_value.Deserialize(istr, ""); // atof is sensible to locale format and may use , as a separator
 		m_confSource = x_confType;
 	}
 	virtual void SetDefault(const std::string& rx_value)
@@ -88,7 +89,7 @@ public:
 	}
 	const CalibrationByHeight& GetValue() const
 	{
-		return *mp_value;
+		return mr_value;
 	}
 	virtual bool CheckRange() const
 	{
@@ -99,23 +100,23 @@ public:
 	}
 	virtual void Print(std::ostream& os) const
 	{
-		os<<m_name<<" : x = "<< mp_value->x
-				  <<", y = "<< mp_value->y
-				  <<", heigth = "<< mp_value->heigth
+		os<<m_name<<" : x = "<< mr_value.x
+				  <<", y = "<< mr_value.y
+				  <<", heigth = "<< mr_value.heigth
 				  <<" ("<<configType[m_confSource]<<"); ";
 	}
 	virtual void SetValueToDefault()
 	{
 		if(m_isLocked)
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
-		*mp_value = m_default;
+		mr_value = m_default;
 		m_confSource = PARAMCONF_DEF;
 	}
 	virtual void Export(std::ostream& rx_os, int x_indentation);
 
 private:
 	CalibrationByHeight m_default;
-	CalibrationByHeight* mp_value;
+	CalibrationByHeight& mr_value;
 };
 
 
