@@ -25,7 +25,6 @@
 #define PARAMETER_H
 
 #include "define.h"
-#include "ConfigReader.h"
 #include "MkException.h"
 #include "CalibrationByHeight.h"
 #include <log4cxx/logger.h>
@@ -98,91 +97,7 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 };
 
-/// Template for all parameters with numerical values
-template<class T> class ParameterT : public Parameter
-{
-public:
-	ParameterT(const std::string& x_name, T x_default, T x_min, T x_max, T * xp_value, const std::string& x_description) : 
-		Parameter(x_name, x_description),
-		m_default(x_default),
-		m_min(x_min),
-		m_max(x_max),
-		mp_value(xp_value){}
-	inline std::string GetValueString() const {std::stringstream ss; ss<<*mp_value; return ss.str();}
-	inline std::string GetDefaultString() const{std::stringstream ss; ss<<m_default; return ss.str();}
-	inline std::string GetRange() const{std::stringstream ss; ss<<"["<<m_min<<":"<<m_max<<"]"; return ss.str();}
-	inline const ParameterType& GetType() const {return m_type;}
-	inline const std::string& GetTypeString() const{return m_typeStr;}
-	inline const T GetDefault() const {return m_default;}
-	inline const T GetMin() const {return m_min;}
-	inline const T GetMax() const{return m_max;}
-	
-	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
-	{
-		if(m_isLocked) 
-			throw MkException("You tried to set the value of a locked parameter.", LOC);
-		std::istringstream istr(rx_value);
-		istr >> *mp_value; // atof is sensible to locale format and may use , as a separator
-		m_confSource = x_confType;
-	}
-	inline void SetValue(T x_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
-	{
-		if(m_isLocked) 
-			throw MkException("You tried to set the value of a locked parameter.", LOC);
-		*mp_value = x_value;
-		m_confSource = x_confType;
-	}
-	/*virtual void SetValue(const void * px_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
-	{	
-		*mp_value = *static_cast<const T*>(px_value);
-		m_confSource = x_confType;
-	};*/
-	virtual void SetDefault(const std::string& rx_value)
-	{	
-		std::istringstream istr(rx_value);
-		istr >> m_default; // atof is sensible to locale format and may use , as a separator
-	}
-	virtual T GetValue() const
-	{
-		return *mp_value;
-	}
-	virtual bool CheckRange() const
-	{
-		T value = GetValue();
-		return (value <= m_max && value >= m_min);
-	}
-	virtual void Print(std::ostream& os) const 
-	{
-		os<<m_name<<" = "<<GetValue()<<" ["<<m_min<<":"<<m_max<<"] ("<<configType[m_confSource]<<"); ";
-	}
-	virtual void SetValueToDefault()
-	{
-		if(m_isLocked) 
-			throw MkException("You tried to set the value of a locked parameter.", LOC);
-		*mp_value = m_default;
-		m_confSource = PARAMCONF_DEF;
-	}
-	virtual void Export(std::ostream& rx_os, int x_indentation)
-	{
-		std::string tabs(x_indentation, '\t');
-		rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<std::endl;
-		tabs = std::string(x_indentation + 1, '\t');
-		rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<std::endl;
-		rx_os<<tabs<<"<value min=\""<<m_min<<"\" max=\""<<m_max<<"\" default=\""<<m_default<<"\">"<<GetValue()<<"</value>"<<std::endl;
-		rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<std::endl;
-		tabs = std::string(x_indentation, '\t');
-		rx_os<<tabs<<"</param>"<<std::endl;
-	}
-	
-	T m_default;
-	const T m_min;
-	const T m_max;
-private:
-	T* mp_value;
-	static const ParameterType m_type;
-	static const std::string m_typeStr;
-};
-
+/// Parameter for special 3D calibration objects
 class ParameterCalibrationByHeight : public Parameter
 {
 public:
@@ -344,103 +259,5 @@ private:
 	std::string m_default;
 	std::string* mp_value;
 };
-
-/// Parameter of type enum
-class ParameterEnum : public Parameter
-{
-public:
-	ParameterEnum(const std::string& x_name, int x_default, int * xp_value, const std::string x_description):
-		Parameter(x_name, x_description),
-		m_default(x_default),
-		mp_value(xp_value){}
-	void SetValue(const std::string& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/);
-	void SetValue(int rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/);
-	void SetDefault(const std::string& rx_value);
-	inline int GetDefault() const {return m_default;}
-	inline int GetValue() const{return *mp_value;}
-	inline std::string GetValueString() const {return GetReverseEnum().at(*mp_value);}
-	inline std::string GetDefaultString() const{return GetReverseEnum().at(m_default);}
-	inline std::string GetRange() const
-	{
-		std::stringstream ss; 
-		for(std::map<std::string,int>::const_iterator it = GetEnum().begin() ; it != GetEnum().end() ; it++)
-			ss<<it->first<<",";
-		return ss.str();
-	}
-	virtual bool CheckRange() const;
-	virtual void Print(std::ostream& os) const;
-	virtual void SetValueToDefault()
-	{
-		if(m_isLocked) 
-			throw MkException("You tried to set the value of a locked parameter.", LOC);
-		*mp_value = m_default;
-		m_confSource = PARAMCONF_DEF;
-	}
-	inline const ParameterType& GetType() const {const static ParameterType s = PARAM_IMAGE_TYPE; return s;}
-	virtual const std::string& GetTypeString() const = 0;
-	virtual void Export(std::ostream& rx_os, int x_indentation);
-	virtual const std::map<std::string, int>& GetEnum() const = 0;
-	virtual const std::map<int, std::string>& GetReverseEnum() const = 0;
-	
-protected:
-
-	int m_default;
-	int* mp_value;
-};
-
-/// Parameter for the type of an OpenCV image
-class ParameterImageType : public ParameterEnum
-{
-public:
-	ParameterImageType(const std::string& x_name, int x_default, int * xp_value, const std::string x_description);
-	~ParameterImageType(){}
-	// void Export(std::ostream& rx_os, int x_indentation);
-
-	// Conversion methods
-	inline const std::string& GetTypeString() const {const static std::string s = "imageType"; return s;}
-	const std::map<std::string, int> & GetEnum() const {return Enum;}
-	const std::map<int, std::string> & GetReverseEnum() const {return ReverseEnum;}
-	static std::map<std::string, int> CreateMap();
-	static std::map<int, std::string> CreateReverseMap();
-
-	// static attributes
-	const static std::map<std::string, int> Enum;
-	const static std::map<int, std::string> ReverseEnum;
-};
-
-/// Represents a set of parameters for a configurable objects
-class ParameterStructure
-{
-public:
-	ParameterStructure(const ConfigReader& x_configReader);
-	~ParameterStructure();
-	void Init();
-	void SetFromConfig();
-	void UpdateConfig() const;
-	void SetValueToDefault();
-	void CheckRange(bool x_checkRelated) const;
-	void PrintParameters() const;
-	//void SetValueByName(const std::string& x_name, const std::string& x_value, ParameterConfigType x_configType = PARAMCONF_UNKNOWN);
-	const Parameter & GetParameterByName(const std::string& x_name) const;
-	const std::vector<Parameter*>& GetList() const {return m_list;}
-	
-protected:
-	std::vector<Parameter*> m_list;
-	const ConfigReader m_configReader; // Warning this still contains reference to the tinyxml config!
-	std::string m_moduleName;
-	bool m_writeAllParamsToConfig;
-	Parameter & RefParameterByName(const std::string& x_name);
-private:
-	static log4cxx::LoggerPtr m_logger;
-};
-
-/// Parameter of type integer
-typedef ParameterT<int> 	ParameterInt;
-/// Parameter of type double
-typedef ParameterT<double> 	ParameterDouble;
-/// Parameter of type float
-typedef ParameterT<float> 	ParameterFloat;
-/// Parameter of type boolean
-typedef ParameterT<bool> 	ParameterBool;
 
 #endif

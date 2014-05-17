@@ -25,6 +25,8 @@
 #define CONTROLLER_PARAMETERS_H
 
 #include "Parameter.h"
+#include "ParameterNum.h"
+#include "ParameterEnum.h"
 #include "Controller.h"
 
 

@@ -5,6 +5,9 @@ ModuleAsync.cpp
 Manager.cpp
 Input.cpp
 Parameter.cpp
+ParameterEnum.cpp
+ParameterStructure.cpp
+ParameterNum.cpp
 Stream.cpp
 StreamImage.cpp
 StreamDebug.cpp

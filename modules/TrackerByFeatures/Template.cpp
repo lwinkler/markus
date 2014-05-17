@@ -126,7 +126,8 @@ void Template::UpdateFeatures(double x_alpha, TIME_STAMP m_currentTimeStamp)
 			}
 			catch(FeatureNotFoundException& e)
 			{
-				LOG_WARN(m_logger, "Exception in UpdateFeatures: " << e.what());
+				// Note: info level only to avoid polluting unit test logs
+				LOG_INFO(m_logger, "Exception in UpdateFeatures: " << e.what());
 			}
 		}
 		m_lastSeen = m_currentTimeStamp;

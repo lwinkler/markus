@@ -25,7 +25,9 @@
 #define MODULE_H
 
 #include "ConfigReader.h"
-#include "Parameter.h"
+#include "ParameterStructure.h"
+#include "ParameterEnum.h"
+#include "ParameterNum.h"
 #include "Controller.h"
 #include <QReadWriteLock>
 #include <log4cxx/logger.h>

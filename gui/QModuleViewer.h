@@ -30,7 +30,7 @@
 #include <QImage>
 #include <QPainter>
 #include "QControlBoard.h"
-#include "Parameter.h"
+#include "Module.h"
 
 class Manager;
 class Module;
