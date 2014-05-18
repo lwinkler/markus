@@ -35,7 +35,8 @@ public:
 	ParameterEnum(const std::string& x_name, int x_default, int * xp_value, const std::string x_description):
 		Parameter(x_name, x_description),
 		m_default(x_default),
-		mr_value(*xp_value){}
+		mr_value(*xp_value),
+		m_allowAllValues(true){}
 	void SetValue(const std::string& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/);
 	void SetValue(int rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/);
 	void SetDefault(const std::string& rx_value);
@@ -43,13 +44,9 @@ public:
 	inline int GetValue() const{return mr_value;}
 	inline std::string GetValueString() const {return GetReverseEnum().at(mr_value);}
 	inline std::string GetDefaultString() const{return GetReverseEnum().at(m_default);}
-	inline std::string GetRange() const
-	{
-		std::stringstream ss; 
-		for(std::map<std::string,int>::const_iterator it = GetEnum().begin() ; it != GetEnum().end() ; it++)
-			ss<<it->first<<",";
-		return ss.str();
-	}
+	std::string GetRange() const;
+	inline void AllowAllValues(bool x_allow){m_allowAllValues = x_allow;}
+	inline void AllowValue(const std::string& x_value, bool x_allow){m_allowedValues[GetEnum().at(x_value)] = x_allow;}
 	virtual bool CheckRange() const;
 	virtual void Print(std::ostream& os) const;
 	virtual void SetValueToDefault()
@@ -66,6 +63,8 @@ public:
 	virtual const std::map<int, std::string>& GetReverseEnum() const = 0;
 	
 protected:
+	bool m_allowAllValues;
+	std::map<int, bool> m_allowedValues;
 
 	int m_default;
 	int& mr_value;

@@ -92,7 +92,32 @@ void ParameterEnum::SetDefault(const string& rx_value)
 */
 bool ParameterEnum::CheckRange() const
 {
-	return true;
+	map<int,bool>::const_iterator it = m_allowedValues.find(mr_value);
+	if(it != m_allowedValues.end())
+		return it->second;
+	else
+		return m_allowAllValues;
+}
+
+/**
+* @brief Print the range of possible values
+*
+* @return Range as a string
+*/
+std::string ParameterEnum::GetRange() const
+{
+	std::stringstream ss; 
+	for(std::map<std::string,int>::const_iterator it1 = GetEnum().begin() ; it1 != GetEnum().end() ; it1++)
+	{
+		map<int,bool>::const_iterator it2 = m_allowedValues.find(mr_value);
+		if(it2 != m_allowedValues.end())
+			if(it2->second)
+				ss<<it1->first<<",";
+		else
+			if(m_allowAllValues)
+				ss<<it1->first<<",";
+	}
+	return ss.str();
 }
 
 /**

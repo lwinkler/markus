@@ -41,7 +41,7 @@ public:
 	const std::map<std::string, int> & GetEnum() const {return Enum;}
 	const std::map<int, std::string> & GetReverseEnum() const {return ReverseEnum;}
 	static std::map<std::string, int> CreateMap();
-	static std::map<int, std::string> CreateReverseMap();
+	static std::map<int, std::string> CreateReverseMap(const std::map<std::string, int>& x_map);
 
 	// static attributes
 	const static std::map<std::string, int> Enum;

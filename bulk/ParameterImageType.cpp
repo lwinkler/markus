@@ -28,7 +28,7 @@ using namespace std;
 
 // Static variables
 const map<string, int>  ParameterImageType::Enum        = ParameterImageType::CreateMap();
-const map<int, string>  ParameterImageType::ReverseEnum = ParameterImageType::CreateReverseMap();
+const map<int, string>  ParameterImageType::ReverseEnum = ParameterImageType::CreateReverseMap(ParameterImageType::Enum);
 
 
 /**
@@ -82,11 +82,11 @@ map<string,int> ParameterImageType::CreateMap()
 *
 * @return map
 */
-map<int,string> ParameterImageType::CreateReverseMap()
+map<int,string> ParameterImageType::CreateReverseMap(const map<string, int>& x_map)
 {
-	const map<string, int> map1 = CreateMap();
+	//const map<string, int> map1 = CreateMap();
 	map<int, string> out;
-	for(map<string, int>::const_iterator it = map1.begin() ; it != map1.end() ; it++)
+	for(map<string, int>::const_iterator it = x_map.begin() ; it != x_map.end() ; it++)
 		out[it->second] = it->first;
 
 	return out;
