@@ -26,7 +26,7 @@
 
 #include "ConfigReader.h"
 #include "ParameterStructure.h"
-#include "ParameterEnum.h"
+#include "ParameterImageType.h"
 #include "ParameterNum.h"
 #include "ParameterString.h"
 #include "Controller.h"

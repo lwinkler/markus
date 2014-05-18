@@ -27,7 +27,6 @@
 #include "define.h"
 #include "Parameter.h"
 #include "MkException.h"
-#include <log4cxx/logger.h>
 
 /// Parameter of type enum
 class ParameterEnum : public Parameter
@@ -72,23 +71,4 @@ protected:
 	int& mr_value;
 };
 
-/// Parameter for the type of an OpenCV image
-class ParameterImageType : public ParameterEnum
-{
-public:
-	ParameterImageType(const std::string& x_name, int x_default, int * xp_value, const std::string x_description);
-	~ParameterImageType(){}
-	// void Export(std::ostream& rx_os, int x_indentation);
-
-	// Conversion methods
-	inline const std::string& GetTypeString() const {const static std::string s = "imageType"; return s;}
-	const std::map<std::string, int> & GetEnum() const {return Enum;}
-	const std::map<int, std::string> & GetReverseEnum() const {return ReverseEnum;}
-	static std::map<std::string, int> CreateMap();
-	static std::map<int, std::string> CreateReverseMap();
-
-	// static attributes
-	const static std::map<std::string, int> Enum;
-	const static std::map<int, std::string> ReverseEnum;
-};
 #endif

@@ -6,6 +6,7 @@ Manager.cpp
 Input.cpp
 Parameter.cpp
 ParameterEnum.cpp
+ParameterImageType.cpp
 ParameterStructure.cpp
 ParameterNum.cpp
 ParameterString.cpp
