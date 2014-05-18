@@ -54,7 +54,7 @@ public:
 	inline std::string GetDefaultString() const{std::stringstream ss; m_default.Serialize(ss,""); return ss.str();}
 	inline std::string GetRange() const{/*std::stringstream ss; ss<<"["<<m_min<<":"<<m_max<<"]"; return ss.str();*/ return "";}	
 	inline const ParameterType& GetType() const {const static ParameterType s = PARAM_OBJECT_HEIGHT; return s;}
-	inline const std::string& GetTypeString() const {const static std::string s = "objectHeigth"; return s;}
+	inline const std::string& GetTypeString() const {const static std::string s = "calibrationByHeight"; return s;}
 	inline const CalibrationByHeight& GetDefault() const {
 		return m_default;}
 

@@ -118,7 +118,7 @@ class TestModules : public CppUnit::TestFixture
 		}
 
 		int nb = rand_r(xp_seed) % 100;
-		for(int i = 0 ; i < nb ; i++)
+		for(int i = 0 ; i < nb + 1 ; i++) // TODO notify event does not accept empty features, remove +1
 		{
 			std::stringstream name;
 			name<<"rand"<<i;
@@ -242,33 +242,47 @@ class TestModules : public CppUnit::TestFixture
 	}
 
 	/// Generate a random string value for the parameter
-	std::string GenerateValueFromRange(const std::string& x_range, const std::string& x_type, unsigned int* xp_seed)
+	void GenerateValueFromRange(std::vector<std::string>& rx_values, const std::string& x_range, const std::string& x_type, unsigned int* xp_seed)
 	{
-		if(x_range == "")
-			return "";
-		else if(x_range.at(0) == '[')
+		LOG_DEBUG(m_logger, "Generate values for param of type "<<x_type<<" in range "<<x_range);
+		rx_values.clear();
+		// if(x_range == "")
+			// return "";
+		if(x_type == "calibrationByHeight")
+			return; // TODO
+		if(x_type == "bool")
 		{
-			std::stringstream ss;
-			double min = 0, max = 0;
-			if (2 == sscanf(x_range.c_str(), "[%lf:%lf]", &min, &max))
+			rx_values.push_back("0");
+			rx_values.push_back("1");
+			return;
+		}
+		CPPUNIT_ASSERT(x_type != "string");
+		CPPUNIT_ASSERT(x_range.size() > 0);
+		CPPUNIT_ASSERT(x_range.at(0) == '[');
+		CPPUNIT_ASSERT(x_range.at(x_range.size() - 1) == ']');
+
+		double min = 0, max = 0;
+		if (2 == sscanf(x_range.c_str(), "[%lf:%lf]", &min, &max))
+		{
+			for(int i = 0 ; i < 100 ; i++)
 			{
+				std::stringstream ss;
+				// Generate 100 random values
+				// TODO: used values in range, non-random
 				if(x_type == "int")
 					ss<<static_cast<int>(min + rand_r(xp_seed) % static_cast<int>(max - min + 1));
-				else if(x_type == "bool")
-					ss<<(rand_r(xp_seed) % 2);
 				else 
 					ss<<(min + rand_r(xp_seed) * (max - min) / RAND_MAX);
 			}
-			else assert(false);
-		
-			return ss.str();
 		}
 		else
 		{
-			std::vector<std::string> elems;
-			split(x_range, ',', elems);
-			assert(elems.size() > 0);
-			return elems.at(rand_r(xp_seed) % elems.size());
+			split(x_range.substr(1, x_range.size() - 2), ',', rx_values);
+			// Remove last element if empty, due to an extra comma
+			CPPUNIT_ASSERT(rx_values.size() > 0);
+			if(rx_values.back() == "")
+				rx_values.pop_back();
+			assert(rx_values.size() > 0);
 		}
 	}
 
@@ -322,42 +336,42 @@ class TestModules : public CppUnit::TestFixture
 
 				if(it2->second->GetClass() == "ControllerParameter")
 				{
-					// Do not test input modules: to many errors
-					// if(!module->IsInput())
+					// Test specific for controllers of type parameter
+					std::string type, range, defval, newValue;
+					assert(actions.size() == 5); // If not you need to write one more test
+
+					type = "0";
+					it2->second->CallAction("GetType", &type);
+					LOG_INFO(m_logger, "###  "<<it2->first<<".GetType returned "<<type);
+
+					range = "0";
+					it2->second->CallAction("GetRange", &range);
+					LOG_INFO(m_logger, "###  "<<it2->first<<".GetRange returned "<<range);
+
+					defval = "0";
+					it2->second->CallAction("GetDefault", &defval);
+					LOG_INFO(m_logger, "###  "<<it2->first<<".GetDefault returned "<<defval);
+
+					std::vector<std::string> values;
+					if(type  == "string")
+						values.push_back(defval);
+					else GenerateValueFromRange(values, range, type, &seed);
+
+					for(std::vector<std::string>::iterator it = values.begin() ; it != values.end() ; it++)
 					{
-						// Test specific for controllers of type parameter
-						std::string type, range, value, defval, newValue;
-						assert(actions.size() == 5); // If not you need to write one more test
+						// For string type we cannot set random values
+						// std::cout<<"set "<<value<<std::endl;
+						it2->second->CallAction("Set", &(*it));
 
-						type = "0";
-						it2->second->CallAction("GetType", &type);
-						LOG_INFO(m_logger, "###  "<<it2->first<<".GetType returned "<<type);
+						newValue = "0";
+						it2->second->CallAction("Get", &newValue);
 
-						range = "0";
-						it2->second->CallAction("GetRange", &range);
-						LOG_INFO(m_logger, "###  "<<it2->first<<".GetRange returned "<<range);
+						CPPUNIT_ASSERT_MESSAGE("Value set must be returned by get", *it == newValue);
 
-						defval = "0";
-						it2->second->CallAction("GetDefault", &defval);
-						LOG_INFO(m_logger, "###  "<<it2->first<<".GetDefault returned "<<defval);
-
-						for(int i = 0 ; i < 10 ; i++)
-						{
-							// For string type we cannot set random values
-							value = type == "string" ? defval : GenerateValueFromRange(range, type, &seed);
-							// std::cout<<"set "<<value<<std::endl;
-							it2->second->CallAction("Set", &value);
-
-							newValue = "0";
-							it2->second->CallAction("Get", &newValue);
-
-							CPPUNIT_ASSERT_MESSAGE("Value set must be returned by get", value == newValue);
-
-							for(int i = 0 ; i < 3 ; i++)
-								module->Process();
-						}
-						LOG_INFO(m_logger, "###  "<<it2->first<<".Set returned "<<value);
-						LOG_INFO(m_logger, "###  "<<it2->first<<".Get returned "<<newValue);
+						for(int i = 0 ; i < 3 ; i++)
+							module->Process();
+						LOG_DEBUG(m_logger, "###  "<<it2->first<<".Set returned "<<*it);
+						LOG_DEBUG(m_logger, "###  "<<it2->first<<".Get returned "<<newValue);
 					}
 				}
 				else
@@ -383,7 +397,7 @@ class TestModules : public CppUnit::TestFixture
 	static CppUnit::Test *suite()
 	{
 		CppUnit::TestSuite *suiteOfTests = new CppUnit::TestSuite("TestModules");
-		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testInputs", &TestModules::testInputs)); // TODO
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testInputs", &TestModules::testInputs));
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testControllers", &TestModules::testControllers));
 		return suiteOfTests;
 	}
