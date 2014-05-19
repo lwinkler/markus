@@ -3,7 +3,7 @@
 	<parameters>
 		<param name="class">
 			<type>string</type>
-			<value default=""></value>
+			<value default="">VideoFileWriter</value>
 			<description>Class of the module (define the module's function)</description>
 		</param>
 		<param name="width">

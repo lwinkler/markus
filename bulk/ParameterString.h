@@ -39,6 +39,7 @@ public:
 	{
 		if(m_isLocked) 
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
+		mr_value = rx_value;
 		m_confSource = x_confType;
 	}
 	virtual void SetDefault(const std::string& x_value)

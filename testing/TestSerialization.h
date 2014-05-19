@@ -103,7 +103,7 @@ class TestSerialization : public CppUnit::TestFixture
 	}*/
 	void setUp()
 	{
-		createEmtpyConfigFile("/tmp/config_empty.xml");
+		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigReader("testing/serialize/module.xml");
 		mp_fakeInput = m_factory.CreateModule("VideoFileReader", mp_config->GetSubConfig("module"));
 		std::cout<<mp_fakeInput->GetClass()<<std::endl;
