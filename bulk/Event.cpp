@@ -177,7 +177,10 @@ void Event::Notify(bool x_isProcessEvent)
 	if(x_isProcessEvent)
 	{
 		// This is only a process event. Only used to notify the parent process
-		COPY_AND_CHECK(out["attrs"] , root["external"]);
+		out["attrs"] = root["external"];
+		// note: attrs can be empty, create an empty vector
+		if(out["attrs"].isNull())
+			out["attrs"] = Json::Value(Json::arrayValue);
 		level = "PROCESS";
 	}
 	else
