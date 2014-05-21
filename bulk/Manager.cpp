@@ -455,7 +455,7 @@ void Manager::Export()
 		for(vector<string>::const_iterator it = moduleTypes.begin() ; it != moduleTypes.end() ; it++)
 		{
 			string file("modules/" + *it + ".xml");
-			createEmtpyConfigFile("/tmp/config_empty.xml");
+			createEmptyConfigFile("/tmp/config_empty.xml");
 			ConfigReader config("/tmp/config_empty.xml");
 			ConfigReader moduleConfig = config.RefSubConfig("application", "", true).RefSubConfig("module", *it, true);
 			moduleConfig.RefSubConfig("parameters", "", true).RefSubConfig("param", "class", true).SetValue(*it);

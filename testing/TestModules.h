@@ -60,7 +60,7 @@ class TestModules : public CppUnit::TestFixture
 	void setUp()
 	{
 		m_factory.ListModules(moduleTypes);
-		createEmtpyConfigFile("/tmp/config_empty.xml");
+		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigReader("/tmp/config_empty.xml");
 		addModuleToConfig("VideoFileReader", *mp_config)
 			.RefSubConfig("parameters", "", true)

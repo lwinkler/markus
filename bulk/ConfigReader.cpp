@@ -54,7 +54,7 @@ ConfigReader::ConfigReader(const std::string& x_fileName, bool x_allowCreation)
 		delete mp_doc;
 		if(x_allowCreation)
 		{
-			createEmtpyConfigFile(x_fileName);
+			createEmptyConfigFile(x_fileName);
 			mp_doc = new TiXmlDocument(x_fileName);
 			assert(mp_doc->LoadFile());
 		}

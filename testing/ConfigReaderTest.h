@@ -47,7 +47,7 @@ public:
 	void setUp()
 	{
 		m_conf1 = new ConfigReader("testing/config1.xml");
-		createEmtpyConfigFile("/tmp/config_empty.xml");
+		createEmptyConfigFile("/tmp/config_empty.xml");
 		m_conf2 = new ConfigReader("/tmp/config_empty.xml");
 	}
 	void tearDown()
