@@ -65,9 +65,7 @@ public:
 	virtual ~Parameter(){}
 		
 	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) = 0;
-	//virtual void SetValue(const void* x_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN) = 0;
 	virtual void SetDefault(const std::string& x_value) = 0;
-	// virtual const void* GetValue() const = 0;
 	inline const std::string& GetName() const {return m_name;}
 	virtual const ParameterType& GetType() const = 0;
 	virtual const std::string& GetTypeString() const = 0;

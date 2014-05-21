@@ -45,13 +45,13 @@ public:
 	{	
 		m_default = x_value;
 	}
-	virtual std::string GetValue() const
+	const std::string& GetValue() const
 	{
 		return mr_value;
 	}
-	inline std::string GetValueString() const {return mr_value;}
-	inline std::string GetDefaultString() const {return m_default;}
-	inline std::string GetRange() const{return "";}
+	inline virtual std::string GetValueString() const {return mr_value;}
+	inline virtual std::string GetDefaultString() const {return m_default;}
+	inline virtual std::string GetRange() const{return "";}
 	inline virtual bool CheckRange() const
 	{
 		return true;
