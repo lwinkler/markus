@@ -25,7 +25,7 @@
 #define INPUT_GROUNDTRUTH_READER_H
 
 #include "Module.h"
-#include <fstream>
+#include "AnnotationFileReader.h"
 
 
 class GroundTruthReaderParameterStructure : public ModuleParameterStructure
@@ -59,9 +59,9 @@ public:
 	void Reset();
 private:
 	inline virtual const GroundTruthReaderParameterStructure& GetParameters() const {return m_param;}
-	void ReadNextSubtitle();
 	GroundTruthReaderParameterStructure m_param;
 	static log4cxx::LoggerPtr m_logger;
+
 protected:
 
 	// input (and output)
@@ -76,12 +76,7 @@ protected:
 #endif
 
 	// temp
-	bool m_stateSub;
-	int m_num;
-	std::string m_subText;
-	std::ifstream m_srtFile;
-	std::string m_srtStart;
-	std::string m_srtEnd;
+	AnnotationFileReader* mp_annotationReader;
 };
 
 #endif

@@ -54,7 +54,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 
 include_directories(${PYTHON_INCLUDE_DIRS})
-include_directories(bulk modules modules2)
+include_directories(util bulk modules modules2)
 
 
 set(markus_SRCS main.cpp)
@@ -62,9 +62,9 @@ set(markus_SRCS main.cpp)
 #-------------------------------------------------------------------------------- 
 if(Markus_NO_GUI)
 	add_definitions(-DMARKUS_NO_GUI)
-	set(DEPS bulk modules)
+	set(DEPS util bulk modules)
 else()
-	set(DEPS bulk gui editor modules)
+	set(DEPS util bulk gui editor modules)
 	include_directories(gui editor)
 endif()
 
@@ -88,6 +88,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR})
 
 #-------------------------------------------------------------------------------- 
 
+add_subdirectory(util)
 add_subdirectory(bulk)
 add_subdirectory(modules)
 add_subdirectory(tools)
@@ -166,4 +167,4 @@ set( vstring "//version.h - written by cmake. changes will be lost!\n"
 file(WRITE version.h.txt ${vstring} )
 # copy the file to the final header only if the version changes
 # reduces needless rebuilds
-execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different version.h.txt ${CMAKE_CURRENT_BINARY_DIR}/bulk/version.h)
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different version.h.txt ${CMAKE_CURRENT_BINARY_DIR}/util/version.h)
