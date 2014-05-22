@@ -94,7 +94,7 @@ void VideoFileReader::Capture()
 				m_endOfStream = true;
 				//std::exception e;
 				Pause(true);
-				throw EndOfStreamException("Capture failed in VideoFileReader::Capture.", LOC);
+				throw EndOfStreamException("Capture of next frame failed", LOC);
 			}
 		}
 

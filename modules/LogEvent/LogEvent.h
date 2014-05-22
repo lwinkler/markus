@@ -27,7 +27,7 @@
 #include "Module.h"
 #include "Event.h"
 #include "Timer.h"
-#include <fstream>
+#include "AnnotationFileWriter.h"
 
 
 class LogEventParameterStructure : public ModuleParameterStructure
@@ -63,31 +63,30 @@ public:
 	MKDESCR("Read an event and log it to .srt file")
 
 	void Reset();
+
 private:
 	inline virtual const LogEventParameterStructure& GetParameters() const { return m_param;}
 	LogEventParameterStructure m_param;
 	static log4cxx::LoggerPtr m_logger;
+
 protected:
 	virtual void ProcessFrame();
-	void WriteEvent();
 	void SaveImage(Event& x_event);
 	bool IsInputProcessed() const;
 	void AddExternalImage(const cv::Mat& x_image, const std::string& x_name, const std::string& x_file, Event& x_event);
+	void WriteEvent();
 
 	// input
 	Event m_event;
 	cv::Mat m_inputIm1;
 	cv::Mat m_inputIm2;
 
-	// state // TODO: compute automatically this and check that there is no influence if a reset happens
-	long int m_subId;
-
 	// temporary
 	bool m_saveImage1;
 	bool m_saveImage2;
 	std::string m_folderName;
 	std::string m_srtFileName;
-	std::ofstream m_file;
+	AnnotationFileWriter* mp_annotationWriter;
 };
 
 #endif
