@@ -59,15 +59,15 @@ void LogEvent::Reset()
 	Module::Reset();
 	m_event.Empty();
 	
-	m_srtFileName = Manager::OutputDir() + "/" + m_param.file + ".srt"; // TODO: should probably be contained in file
+	string srtFileName = Manager::OutputDir() + "/" + m_param.file;
 	CLEAN_DELETE(mp_annotationWriter);
 	mp_annotationWriter = new AnnotationFileWriter();
-	mp_annotationWriter->Open(m_param.file);
+	mp_annotationWriter->Open(srtFileName);
 	m_saveImage1 = m_inputStreams.at(1)->IsConnected();
 	m_saveImage2 = m_inputStreams.at(2)->IsConnected();
 
-	m_folderName  = Manager::OutputDir() + "/" + m_param.folder + "/"; 
-	SYSTEM("mkdir -p " + m_folderName);
+	m_folder  = Manager::OutputDir() + "/" + m_param.folder + "/"; 
+	SYSTEM("mkdir -p " + m_folder);
 }
 
 void LogEvent::ProcessFrame()
@@ -88,6 +88,7 @@ void LogEvent::WriteEvent()
 	stringstream ss;
 
 	// Log event label
+	/* The old way
 	ss<<m_event.GetEventName()<<endl;
 
 	// Log event features with values
@@ -107,7 +108,9 @@ void LogEvent::WriteEvent()
 			<<feat.min<<SEP
 			<<feat.max<<SEP
 			<<feat.nbSamples<<endl;
-	}
+	}*/
+	ss<<"\"event\":";
+	m_event.Serialize(ss, m_folder);
 	mp_annotationWriter->WriteAnnotation(m_currentTimeStamp, m_currentTimeStamp + 1000 * m_param.duration, ss);
 }
 
@@ -119,13 +122,13 @@ void LogEvent::SaveImage(Event& x_event)
 	if(m_saveImage1)
 	{
 		std::stringstream ss1;
-		ss1 << m_folderName << "_" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_1." << m_param.extension;
+		ss1 << m_folder << "_" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_1." << m_param.extension;
 		AddExternalImage(m_inputIm1, "globalImage", ss1.str(), x_event);
 
 		if(obj.width > 0 && obj.height > 0)
 		{
 			std::stringstream ss2;
-			ss2 << m_folderName << "_" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_1" << "." << m_param.extension;
+			ss2 << m_folder << "_" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_1" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
 			Mat img = (m_inputIm1)(obj.Rect());
 			AddExternalImage((m_inputIm1)(obj.Rect()), "objectImage", ss2.str(), x_event);
@@ -135,13 +138,13 @@ void LogEvent::SaveImage(Event& x_event)
 	if(m_saveImage2)
 	{
 		std::stringstream ss1;
-		ss1 << m_folderName << "_" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_2." << m_param.extension;
+		ss1 << m_folder << "_" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_2." << m_param.extension;
 		AddExternalImage(m_inputIm2, "globalMask", ss1.str(), x_event);
 
 		if(obj.width > 0 && obj.height > 0)
 		{
 			std::stringstream ss2;
-			ss2 << m_folderName << "_" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_2" << "." << m_param.extension;
+			ss2 << m_folder << "_" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_2" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
 			Mat img = (m_inputIm2)(obj.Rect());
 			AddExternalImage(img, "objectMask", ss2.str(), x_event);

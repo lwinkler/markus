@@ -38,7 +38,7 @@ public:
 		ModuleParameterStructure(x_confReader)
 	{
 		m_list.push_back(new ParameterString("file"       , "event" , &file        , "Name of the .srt file without extension"));
-		m_list.push_back(new ParameterDouble("time"       , 0       , 0, 600 , &duration , "Duration of the event for logging in .srt file"));
+		m_list.push_back(new ParameterDouble("duration"   , 5, 0, 600 , &duration , "Duration of the event for logging in .srt file"));
 		m_list.push_back(new ParameterString("folder_name", "events_img" , &folder    , "Name of the folder to create for images"));
 		m_list.push_back(new ParameterString("extension"  , "jpg"   , &extension   , "Extension of the thumbnails. Determines the output format."));
 
@@ -84,8 +84,7 @@ protected:
 	// temporary
 	bool m_saveImage1;
 	bool m_saveImage2;
-	std::string m_folderName;
-	std::string m_srtFileName;
+	std::string m_folder;
 	AnnotationFileWriter* mp_annotationWriter;
 };
 

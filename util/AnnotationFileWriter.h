@@ -39,7 +39,7 @@ public:
 	~AnnotationFileWriter();
 	
 	void Open(const std::string& x_file);
-	void WriteAnnotation(TIME_STAMP x_start, TIME_STAMP x_end, std::istream& x_in);
+	void WriteAnnotation(TIME_STAMP x_start, TIME_STAMP x_end, std::stringstream& x_in);
 
 private:
 	static log4cxx::LoggerPtr m_logger;
