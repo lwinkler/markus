@@ -79,16 +79,11 @@
     
   <uiobject x="1127" y="311" width="0" height="0"/>
 </module>
-  <module name="SegmenterBlob" id="4">
+  <module name="SegmenterContour" id="4">
     <parameters>
-      <param name="class">SegmenterBlob</param>
+      <param name="class">SegmenterContour</param>
       <param name="width">640</param>
       <param name="height">480</param>
-      <param name="type">CV_8UC1</param>
-      <param name="fps">10</param>
-      <param name="object_label">object</param>
-      <param name="min_width">4</param>
-      <param name="min_height">4</param>
     </parameters>
     <inputs>
       <input id="0" moduleid="2" outputid="0"/>

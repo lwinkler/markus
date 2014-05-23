@@ -40,6 +40,7 @@ public:
 	
 	void Open(const std::string& x_file);
 	bool ReadNextAnnotation(std::string& rx_subText);
+	TIME_STAMP GetCurrentTimeStamp();
 	std::string ReadAnnotationForTimeStamp(TIME_STAMP x_current);
 
 private:
@@ -47,7 +48,6 @@ private:
 
 protected:
 	int m_num;
-	std::string m_subText;
 	std::ifstream m_srtFile;
 	std::string m_srtStart;
 	std::string m_srtEnd;

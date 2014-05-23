@@ -67,11 +67,11 @@ void AnnotationFileWriter::WriteAnnotation(TIME_STAMP x_start, TIME_STAMP x_end,
 {
 	string startTime = msToTimeStamp(x_start);
 	string endTime   = msToTimeStamp(x_end);
+	LOG_DEBUG(m_logger, "Write annotation to file");
 
 	m_file<<m_subId<<endl;
 	m_file<<startTime<<" --> "<<endTime<<endl;
-
-	m_file<<x_in.str();
+	m_file<<x_in.str()<<endl;
 	m_file<<endl;
 	m_subId++;
 }

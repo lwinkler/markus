@@ -85,14 +85,16 @@ AnnotationFileReader::~AnnotationFileReader()
 		m_srtFile.close();
 }
 
+TIME_STAMP AnnotationFileReader::GetCurrentTimeStamp()
+{
+	return timeStampToMs(m_srtStart);
+}
+
 void AnnotationFileReader::Open(const std::string& x_file)
 {
-	// m_srtStart = msToTimeStamp(0);
-	// m_srtEnd   = msToTimeStamp(0);
 	m_num      = -1;
 	m_srtStart = msToTimeStamp(0);
 	m_srtEnd   = msToTimeStamp(0);
-	m_subText  = "";
 
 	LOG_DEBUG(m_logger, "Open anotation file: "<<x_file);
 
@@ -149,20 +151,20 @@ bool AnnotationFileReader::ReadNextAnnotation(string& rx_subText)
 			throw MkException("Subtitle format error. There must be an empty line after subtitle.", LOC);
 		safeGetline(m_srtFile, line);
 
-		m_subText = "";
+		rx_subText = "";
 		while(line.size() != 0)
 		{
-			m_subText += line + " ";
+			rx_subText += line + " ";
 			safeGetline(m_srtFile, line);
 			if(! m_srtFile.good())
 				throw MkException("End of file in AnnotationFileReader", LOC);
 		}
-		LOG_DEBUG(m_logger, "Read next sub: "<<m_subText);
+		LOG_DEBUG(m_logger, "Read next sub: "<<rx_subText);
 	}
 	catch(MkException& e)
 	{
 		LOG_ERROR(m_logger, "Exception while reading .srt file in AnnotationFileReader: " << e.what()); 
-		m_subText = "";
+		rx_subText = "";
 		return false;
 	}
 }
@@ -170,10 +172,10 @@ bool AnnotationFileReader::ReadNextAnnotation(string& rx_subText)
 
 string AnnotationFileReader::ReadAnnotationForTimeStamp(TIME_STAMP x_current)
 {
+	string text;
 	if(! m_srtFile.good())
 	{
 		LOG_DEBUG(m_logger, "End of subtitle file");
-		m_subText = "";
 		return "";
 	}
 	
@@ -181,11 +183,11 @@ string AnnotationFileReader::ReadAnnotationForTimeStamp(TIME_STAMP x_current)
 
 	while(current > m_srtEnd)
 	{
-		bool ret = ReadNextAnnotation(m_subText);
+		bool ret = ReadNextAnnotation(text);
 		if(!ret)
 			break;
 	}
 	if(current >= m_srtStart && current <= m_srtEnd)
-		return m_subText;
+		return text;
 	else return "";
 }

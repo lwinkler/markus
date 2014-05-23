@@ -64,7 +64,7 @@ void Event::Serialize(std::ostream& x_out, const string& x_dir) const
 			ss >> root["object"];
 		}
 		else root["object"] = Json::Value(Json::nullValue); // Null
-		root["external"] = m_externalInfo;
+		root["external"] = m_externalInfo; // TODO: Bug with this copy
 	}
 	x_out << root;
 }

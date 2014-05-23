@@ -85,6 +85,7 @@ void LogEvent::ProcessFrame()
 /// Write the subtitle in log file
 void LogEvent::WriteEvent()
 {
+	LOG_DEBUG(m_logger, "Write event to log file");
 	stringstream ss;
 
 	// Log event label
@@ -109,8 +110,9 @@ void LogEvent::WriteEvent()
 			<<feat.max<<SEP
 			<<feat.nbSamples<<endl;
 	}*/
-	ss<<"\"event\":";
-	m_event.Serialize(ss, m_folder);
+	// ss<<"\"event\":";
+	ss<<m_event.SerializeToString(m_folder);
+	cout<<"BB "<<m_event.SerializeToString()<<"BB\n";
 	mp_annotationWriter->WriteAnnotation(m_currentTimeStamp, m_currentTimeStamp + 1000 * m_param.duration, ss);
 }
 
@@ -122,13 +124,13 @@ void LogEvent::SaveImage(Event& x_event)
 	if(m_saveImage1)
 	{
 		std::stringstream ss1;
-		ss1 << m_folder << "_" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_1." << m_param.extension;
+		ss1 << m_folder << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_1." << m_param.extension;
 		AddExternalImage(m_inputIm1, "globalImage", ss1.str(), x_event);
 
 		if(obj.width > 0 && obj.height > 0)
 		{
 			std::stringstream ss2;
-			ss2 << m_folder << "_" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_1" << "." << m_param.extension;
+			ss2 << m_folder << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_1" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
 			Mat img = (m_inputIm1)(obj.Rect());
 			AddExternalImage((m_inputIm1)(obj.Rect()), "objectImage", ss2.str(), x_event);
@@ -138,13 +140,13 @@ void LogEvent::SaveImage(Event& x_event)
 	if(m_saveImage2)
 	{
 		std::stringstream ss1;
-		ss1 << m_folder << "_" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_2." << m_param.extension;
+		ss1 << m_folder << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_2." << m_param.extension;
 		AddExternalImage(m_inputIm2, "globalMask", ss1.str(), x_event);
 
 		if(obj.width > 0 && obj.height > 0)
 		{
 			std::stringstream ss2;
-			ss2 << m_folder << "_" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_2" << "." << m_param.extension;
+			ss2 << m_folder << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_2" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
 			Mat img = (m_inputIm2)(obj.Rect());
 			AddExternalImage(img, "objectMask", ss2.str(), x_event);

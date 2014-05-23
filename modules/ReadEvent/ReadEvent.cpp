@@ -62,7 +62,7 @@ void ReadEvent::Reset()
 	mp_annotationReader->Open(m_param.file);
 }
 
-void ReadEvent::ProcessFrame()
+void ReadEvent::Capture()
 {
 	string text;
 	if(!mp_annotationReader->ReadNextAnnotation(text))
@@ -71,10 +71,10 @@ void ReadEvent::ProcessFrame()
 		Pause(true);
 		throw EndOfStreamException("Cannot read next annotation", LOC);
 	}
-	//TODO m_currentTimeStamp = m_capture.get(CV_CAP_PROP_POS_MSEC);
-	stringstream ss;
-	ss<<text;
+	m_currentTimeStamp = mp_annotationReader->GetCurrentTimeStamp();
+	istringstream ss(text);
 	m_event.Deserialize(ss, m_param.folder);
+	assert(m_event.IsRaised());
 }
 
 /// Save related images

@@ -37,10 +37,10 @@ public:
 	LogEventParameterStructure(const ConfigReader& x_confReader) : 
 		ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterString("file"       , "event" , &file        , "Name of the .srt file without extension"));
-		m_list.push_back(new ParameterDouble("duration"   , 5, 0, 600 , &duration , "Duration of the event for logging in .srt file"));
-		m_list.push_back(new ParameterString("folder_name", "events_img" , &folder    , "Name of the folder to create for images"));
-		m_list.push_back(new ParameterString("extension"  , "jpg"   , &extension   , "Extension of the thumbnails. Determines the output format."));
+		m_list.push_back(new ParameterString("file"        , "event.srt"  , &file      , "Name of the .srt file without extension"));
+		m_list.push_back(new ParameterDouble("duration"    , 5, 0, 600    , &duration  , "Duration of the event for logging in .srt file"));
+		m_list.push_back(new ParameterString("folder_name" , "events_img" , &folder    , "Name of the folder to create for images"));
+		m_list.push_back(new ParameterString("extension"   , "jpg"        , &extension , "Extension of the thumbnails. Determines the output format."));
 
 		RefParameterByName("type").SetDefault("CV_8UC3");
 		Init();

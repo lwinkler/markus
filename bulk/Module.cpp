@@ -226,6 +226,8 @@ void Module::Process()
 		else if(! param.autoProcess)
 			throw MkException("Module must have at least one input or have parameter auto_process=true", LOC);
 
+		// TODO if(m_currentTimeStamp == m_lastTimeStamp)
+			// TODO LOG_WARN(m_logger, "Timestamp are not increasing correctly");
 		if(param.autoProcess || (param.fps == 0 && m_currentTimeStamp != m_lastTimeStamp) || (m_currentTimeStamp - m_lastTimeStamp) * param.fps > 1000)
 		{
 			// Process this frame

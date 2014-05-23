@@ -36,8 +36,8 @@ public:
 	ReadEventParameterStructure(const ConfigReader& x_confReader) : 
 		InputParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterString("file"        , "event"      , &file      , "Name of the .srt file without extension"));
-		m_list.push_back(new ParameterString("folder_name" , "events_img" , &folder    , "Name of the folder to create for images"));
+		m_list.push_back(new ParameterString("file"        , "in/event.srt", &file      , "Name of the .srt file without extension"));
+		m_list.push_back(new ParameterString("folder_name" , "events_img"  , &folder    , "Name of the folder to create for images"));
 
 		RefParameterByName("type").SetDefault("CV_8UC3"); // This will probably be ignored
 		Init();
@@ -64,7 +64,7 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
-	virtual void ProcessFrame();
+	virtual void Capture();
 
 	// input
 	Event m_event;
