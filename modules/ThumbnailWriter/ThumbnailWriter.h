@@ -35,8 +35,8 @@ public:
 	ThumbnailWriterParameterStructure(const ConfigReader& x_confReader) : 
 	ModuleParameterStructure(x_confReader)
 	{
-		m_list.push_back(new ParameterString("folder"     , "thumbs" , &folder    , "Name of the folder to create, with path"));
-		m_list.push_back(new ParameterString("extension"  , "jpg"        , &extension , "Extension of the thumbnails. Determines the output format."));
+		m_list.push_back(new ParameterString("folder"    , "thumbs" , &folder    , "Name of the folder to create with path. Use %{feature} to separate by feature"));
+		m_list.push_back(new ParameterString("extension" , "jpg"    , &extension , "Extension of the thumbnails. Determines the output format."));
 		Init();
 	};
 
@@ -64,9 +64,6 @@ protected:
 	// input
 	cv::Mat m_input;
 	std::vector <Object> m_objectsIn;
-
-	// temporary
-	std::string m_folderName;
 };
 
 #endif

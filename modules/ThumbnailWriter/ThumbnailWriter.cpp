@@ -46,11 +46,37 @@ ThumbnailWriter::~ThumbnailWriter()
 {
 }
 
+
+bool replaceExpr(string& rx_name, const map<string,Feature>& x_features)
+{
+	string::iterator beg = std::find(rx_name.begin(), rx_name.end(), '$');
+	if(beg >= rx_name.end() - 1 || *(beg + 1) != '{')
+		return false;
+	string::iterator end = std::find(beg, rx_name.end(), '}');
+	if(end >= rx_name.end())
+		return false;
+	string pattern(beg + 2, end);
+
+	map <std::string, Feature>::const_iterator it = x_features.find(pattern);
+	if(it == x_features.end())
+		rx_name.replace(beg, end + 1, "unknown");
+	else
+	{
+		// Replace the regexp with the feature value (rounded)
+		stringstream ss;
+		ss<<"class_"<<static_cast<int>(it->second.value);
+		rx_name.replace(beg, end + 1, ss.str());
+	}
+
+	return true;
+}
+
+
 void ThumbnailWriter::Reset()
 {
 	Module::Reset();
-	m_folderName  = Manager::OutputDir() + "/" + m_param.folder + "/"; 
-	SYSTEM("mkdir -p " + m_folderName);
+	// m_folderName  = Manager::OutputDir() + "/" + m_param.folder + "/"; 
+	// SYSTEM("mkdir -p " + m_folderName);
 }
 
 void ThumbnailWriter::ProcessFrame()
@@ -58,25 +84,32 @@ void ThumbnailWriter::ProcessFrame()
 	int cpt = 0;
 	for(vector<Object>::const_iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; it1++)
 	{
+		// folder name 
+		string folderName = Manager::OutputDir() + "/" + m_param.folder + "/"; 
+		while(replaceExpr(folderName, it1->GetFeatures()))
+			;
+
+
 		// Save features to .json
 		std::stringstream ss2;
-		ss2 << m_folderName << m_currentTimeStamp << "_" << it1->GetName()<< it1->GetId() << "_" << cpt << ".json";
+		ss2 << folderName << m_currentTimeStamp << "_" << it1->GetName()<< it1->GetId() << "_" << cpt << ".json";
 		ofstream of(ss2.str().c_str());
 		if(!of.is_open())
 		{
-			SYSTEM("mkdir -p " + m_folderName)
+			SYSTEM("mkdir -p " + folderName)
 			of.open(ss2.str().c_str());
 			if(!of.is_open())
 				throw MkException("Impossible to create file " + ss2.str(), LOC);
 		}
 		LOG_DEBUG(m_logger, "Write object to " << ss2.str());
-		it1->Serialize(of, m_folderName);
+		it1->Serialize(of, folderName);
 		of.close();
+
 
 		// For each object save a thumbnail
 		const Rect &rect(it1->Rect());
 		std::stringstream ss1;
-		ss1 << m_folderName << m_currentTimeStamp << "_" << it1->GetName()<< it1->GetId() << "_" << cpt << "." << m_param.extension;
+		ss1 << folderName << m_currentTimeStamp << "_" << it1->GetName()<< it1->GetId() << "_" << cpt << "." << m_param.extension;
 		imwrite(ss1.str(), (m_input)(rect));
 
 		cpt++;
