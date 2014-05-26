@@ -25,7 +25,6 @@
 #define LOG_OBJECTS_H
 
 #include "Module.h"
-#include "Parameter.h"
 #include "StreamObject.h"
 #include <fstream>
 
@@ -53,8 +52,9 @@ public:
 	LogObjects(const ConfigReader& x_configReader);
 	~LogObjects(void);
 	MKCLASS("LogObjects")
-	MKDESCR("Read a stream of objects and log data to a text file")
+	MKDESCR("Read a stream of objects and log data to a .json file")
 	
+	virtual void ProcessFrame();
 	void Reset();
 
 private:
@@ -63,7 +63,6 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
-	virtual void ProcessFrame();
 
 	// input
 	std::vector <Object> m_objectsIn;
@@ -71,7 +70,6 @@ protected:
 	// temporary
 	std::string   m_fileName;
 	std::ofstream m_outputFile;
-
 };
 
 #endif

@@ -26,6 +26,7 @@
 #include "util.h"
 #include "Manager.h"
 #include <opencv2/highgui/highgui.hpp>
+#include <fstream>
 
 using namespace std;
 using namespace cv;
@@ -54,14 +55,30 @@ void ThumbnailWriter::Reset()
 
 void ThumbnailWriter::ProcessFrame()
 {
-	// For each object save a thumbnail
 	int cpt = 0;
 	for(vector<Object>::const_iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; it1++)
 	{
+		// Save features to .json
+		std::stringstream ss2;
+		ss2 << m_folderName << m_currentTimeStamp << "_" << it1->GetName()<< it1->GetId() << "_" << cpt << ".json";
+		ofstream of(ss2.str().c_str());
+		if(!of.is_open())
+		{
+			SYSTEM("mkdir -p " + m_folderName)
+			of.open(ss2.str().c_str());
+			if(!of.is_open())
+				throw MkException("Impossible to create file " + ss2.str(), LOC);
+		}
+		LOG_DEBUG(m_logger, "Write object to " << ss2.str());
+		it1->Serialize(of, m_folderName);
+		of.close();
+
+		// For each object save a thumbnail
 		const Rect &rect(it1->Rect());
-		std::stringstream ss;
-		ss << m_folderName << m_currentTimeStamp << "_" << it1->GetName()<< it1->GetId() << "_" << cpt << "." << m_param.extension;
-		imwrite(ss.str(), (m_input)(rect));
+		std::stringstream ss1;
+		ss1 << m_folderName << m_currentTimeStamp << "_" << it1->GetName()<< it1->GetId() << "_" << cpt << "." << m_param.extension;
+		imwrite(ss1.str(), (m_input)(rect));
+
 		cpt++;
 	}
 }

@@ -1,0 +1,25 @@
+<application name="CustomProject">
+<module id="0" name="RandomEventGenerator0">
+<inputs/>
+<outputs>
+<output id="0"/>
+<output id="1"/>
+</outputs>
+<parameters>
+<param name="class">RandomEventGenerator</param>
+</parameters>
+<uiobject x="500" y="300" width="0" height="0"/>
+</module>
+<module id="1" name="LogEvent1">
+<inputs>
+<input id="0" outputid="0" moduleid="0"/>
+<input id="1" outputid="1" moduleid="0"/>
+<input id="2"/>
+</inputs>
+<outputs/>
+<parameters>
+<param name="class">LogEvent</param>
+</parameters>
+<uiobject x="767" y="389" width="0" height="0"/>
+</module>
+</application>

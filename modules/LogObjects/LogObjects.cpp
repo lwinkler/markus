@@ -58,11 +58,12 @@ void LogObjects::Reset()
 	if(m_outputFile.is_open())
 		m_outputFile.close();
 	m_outputFile.open (m_fileName.c_str(), fstream::app|fstream::out);
-	m_outputFile<<"time"<<SEP<<"object"<<SEP<<"feature"<<SEP<<"value"<<SEP<<"mean"<<SEP<<"sqVariance"<<SEP<<"initial"<<SEP<<"min"<<SEP<<"max"<<SEP<<"nbSamples"<<endl;
+	// m_outputFile<<"time"<<SEP<<"object"<<SEP<<"feature"<<SEP<<"value"<<SEP<<"mean"<<SEP<<"sqVariance"<<SEP<<"initial"<<SEP<<"min"<<SEP<<"max"<<SEP<<"nbSamples"<<endl;
 }
 
 void LogObjects::ProcessFrame()
 {
+	/* The old way, unused
 	// Log time stamp
 	// m_outputFile<<"## "<<m_currentTimeStamp<<endl;
 
@@ -88,6 +89,17 @@ void LogObjects::ProcessFrame()
 				<<feat.nbSamples<<endl;
 		}
 		m_outputFile<<endl;
+	}
+	*/
+	if(m_objectsIn.size() > 0)
+	{
+		m_outputFile<<"\"frame_"<<m_currentTimeStamp<<"\": ["<<endl;
+		for(vector<Object>::const_iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; it1++)
+		{
+			m_outputFile<<"\""<<it1->GetName()<<it1->GetId()<<"\": ";
+			m_outputFile<<it1->SerializeToString("")<<", "<<endl;
+		}
+		m_outputFile<<"]"<<endl;
 	}
 }
 
