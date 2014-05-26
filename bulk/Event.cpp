@@ -64,7 +64,7 @@ void Event::Serialize(std::ostream& x_out, const string& x_dir) const
 			ss >> root["object"];
 		}
 		else root["object"] = Json::Value(Json::nullValue); // Null
-		root["external"] = m_externalInfo; // TODO: Bug with this copy
+		root["external"] = m_externalInfo;
 	}
 	x_out << root;
 }
@@ -164,7 +164,7 @@ void Event::Notify(bool x_isProcessEvent)
 
 	LOG_DEBUG(m_logger, "Notify event:" << *this);
 
-	root["external"] = m_externalInfo;
+	// root["external"] = m_externalInfo;
 	
 	// export the event to our specific format
 	Json::Value out;

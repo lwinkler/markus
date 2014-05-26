@@ -75,9 +75,9 @@ void LogEvent::ProcessFrame()
 	if(m_event.IsRaised())
 	{
 		// Log the change in event
+		SaveImage(m_event);
 		WriteEvent();
 		// LOG_EVENT(m_logger, m_event.GetEventName()); 
-		SaveImage(m_event);
 		m_event.Notify();
 	}
 }
@@ -112,7 +112,6 @@ void LogEvent::WriteEvent()
 	}*/
 	// ss<<"\"event\":";
 	ss<<m_event.SerializeToString(m_folder);
-	cout<<"BB "<<m_event.SerializeToString()<<"BB\n";
 	mp_annotationWriter->WriteAnnotation(m_currentTimeStamp, m_currentTimeStamp + 1000 * m_param.duration, ss);
 }
 
@@ -158,6 +157,7 @@ void LogEvent::SaveImage(Event& x_event)
 void LogEvent::AddExternalImage(const Mat& x_image, const std::string& x_name, const std::string& x_file, Event& x_event)
 {
 	imwrite(x_file, x_image);
+	LOG_DEBUG(m_logger, "Add external file to event " << x_name << ": " << x_file);
 	x_event.AddExternalFile(x_name, x_file);
 }
 

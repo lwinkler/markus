@@ -33,6 +33,8 @@
 #include "version.h"
 
 #include <fstream>
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
 
 using namespace std;
 
