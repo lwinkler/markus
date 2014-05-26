@@ -21,54 +21,51 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef LOG_OBJECTS_H
-#define LOG_OBJECTS_H
+#ifndef EVENT_TO_OBJECTS_H
+#define EVENT_TO_OBJECTS_H
 
 #include "Module.h"
-#include "StreamObject.h"
-#include <fstream>
+#include "Event.h"
+#include "Object.h"
 
 
 /**
-* @brief Read a stream of objects and log data to a text file
+* @brief Read an event and log it to .srt file
 */
-class LogObjects : public Module
+class EventToObjects : public Module
 {
-	
-public:
-	class Parameters : public Module::Parameters
+	class Parameters : public ModuleParameterStructure
 	{
 		public:
-		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
-	{
-		m_list.push_back(new ParameterString("file", 	  "objects", 	     &file,      "Name of the .srt file without extension"));
-		Init();
-	}
-	std::string file;
-};
+			Parameters(const ConfigReader& x_confReader) : 
+				ModuleParameterStructure(x_confReader)
+		{
+			Init();
+		}
+	};
 
-	LogObjects(const ConfigReader& x_configReader);
-	~LogObjects(void);
-	MKCLASS("LogObjects")
-	MKDESCR("Read a stream of objects and log data to a text file")
-	
+public:
+	EventToObjects(const ConfigReader& x_configReader);
+	~EventToObjects(void);
+	MKCLASS("EventToObjects")
+	MKDESCR("Transform a stream of events into a stream of objects")
+
 	virtual void ProcessFrame();
 	void Reset();
 
 private:
-	LogObjectsParameterStructure m_param;
-	inline virtual const LogObjectsParameterStructure& GetParameters() const { return m_param;}
+	inline virtual const Parameters& GetParameters() const { return m_param;}
+	Parameters m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	virtual bool IsInputProcessed() const;
 
 	// input
-	std::vector <Object> m_objectsIn;
+	Event m_event;
 
-	// temporary
-	std::string   m_fileName;
-	std::ofstream m_outputFile;
-
+	// output
+	std::vector<Object> m_objects;
 };
 
 #endif

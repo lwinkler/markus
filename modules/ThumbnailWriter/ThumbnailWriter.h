@@ -41,7 +41,7 @@ public:
 		public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterString("folder"     , "thumbs" , &folder    , "Name of the folder to create, with path"));
+			m_list.push_back(new ParameterString("folder"    , "thumbs" , &folder    , "Name of the folder to create with path. Use %{feature} to separate by feature"));
 			m_list.push_back(new ParameterString("extension"  , "jpg"        , &extension , "Extension of the thumbnails. Determines the output format."));
 			Init();
 		};

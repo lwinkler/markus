@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -26,13 +26,14 @@
 #include "StreamEvent.h"
 #include "util.h"
 #include "Manager.h"
+#include <stdio.h>
 
 using namespace std;
 using namespace cv;
 
 log4cxx::LoggerPtr VideoFileBufferWriter::m_logger(log4cxx::Logger::getLogger("VideoFileBufferWriter"));
 
-VideoFileBufferWriter::VideoFileBufferWriter(const ConfigReader& x_configReader): 
+VideoFileBufferWriter::VideoFileBufferWriter(const ConfigReader& x_configReader):
 	VideoFileWriter(x_configReader),
 	m_param(x_configReader)
 {
@@ -43,8 +44,20 @@ VideoFileBufferWriter::VideoFileBufferWriter(const ConfigReader& x_configReader)
 	AddOutputStream(0, new StreamEvent("event", m_event,    *this,  "Event to which the record will be linked"));
 
 	m_buffering = false;
+	m_eraseFile  = false;
 	m_bufferFull = false;
 	m_timeBufferFull = 0;
+}
+
+VideoFileBufferWriter::~VideoFileBufferWriter(void)
+{
+	// clean current file before close if necessary
+	if (m_eraseFile)
+	{
+		LOG_DEBUG(m_logger, "Delete file file "<<m_fileName);
+		if (remove(m_fileName.c_str()) != 0)
+			LOG_WARN(m_logger, "Error deleting temporary video file named " << m_fileName);
+	}
 }
 
 void VideoFileBufferWriter::Reset()
@@ -53,6 +66,7 @@ void VideoFileBufferWriter::Reset()
 	m_buffer.clear();
 	m_timeBufferFull = 0;
 	m_buffering  = false;
+	m_eraseFile  = false;
 	m_bufferFull = false;
 	m_currentFrame = m_buffer.end(); // Set to an invalid value
 	m_fileName = "";
@@ -66,13 +80,13 @@ void VideoFileBufferWriter::OpenNewFile()
 	// The color flag seem to be supported on Windows only
 	// http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videowriter-videowriter
 	bool isColor = true;
- 	assert(m_param.type == CV_8UC3);
+	assert(m_param.type == CV_8UC3);
 
 	stringstream ss;
 	ss << Manager::OutputDir() << "/" << m_param.file  << "." << m_index++ << "." << ExtensionFromFourcc(m_param.fourcc);
 	m_fileName = ss.str();
 	double fps = 12;
-	
+
 	try
 	{
 		fps = GetRecordingFps();
@@ -80,7 +94,7 @@ void VideoFileBufferWriter::OpenNewFile()
 	catch(exception& e)
 	{
 		// This may happen if the module is not connected
-		LOG_WARN(m_logger, "Impossible to acquire the fps value for recording in VideoFileBufferWriter::Reset. Set to default value " << fps << ". Reason: " << e.what());	
+		LOG_WARN(m_logger, "Impossible to acquire the fps value for recording in VideoFileBufferWriter::Reset. Set to default value " << fps << ". Reason: " << e.what());
 	}
 
 	LOG_DEBUG(m_logger, "Start recording file "<<m_fileName<<" with fps="<<fps<<" and size "<<m_param.width<<"x"<<m_param.height);
@@ -110,7 +124,16 @@ void VideoFileBufferWriter::ProcessFrame()
 	{
 		if(m_buffering)
 		{
+			// clean old file
+			if (m_eraseFile)
+			{
+				LOG_DEBUG(m_logger, "Delete file file "<<m_fileName);
+				if (remove(m_fileName.c_str()) != 0)
+					LOG_WARN(m_logger, "Error deleting temporary video file named " << m_fileName);
+			}
+
 			OpenNewFile();
+			m_eraseFile = true;
 
 			// write buffer to file
 
@@ -120,7 +143,7 @@ void VideoFileBufferWriter::ProcessFrame()
 			{
 				bufferBegin = m_buffer.begin();
 				bufferEnd   = m_buffer.end();
-				
+
 			}
 			list<Mat>::iterator it = bufferBegin;
 			while(true)
@@ -142,7 +165,10 @@ void VideoFileBufferWriter::ProcessFrame()
 
 	// Add the file to the event
 	if(m_event.IsRaised())
+	{
 		m_event.AddExternalFile("record", m_fileName);
+		m_eraseFile = false;
+	}
 }
 
 

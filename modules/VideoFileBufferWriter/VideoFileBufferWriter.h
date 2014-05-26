@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -42,7 +42,7 @@ public:
 	class Parameters : public VideoFileWriter::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : 
+		Parameters(const ConfigReader& x_confReader) :
 		VideoFileWriter::Parameters(x_confReader)
 		{
 			m_list.push_back(new ParameterDouble("buffer_duration", 120, 0, 600, &bufferDuration, "Length of one buffer block of video [s]"));
@@ -54,6 +54,7 @@ public:
 	};
 
 	VideoFileBufferWriter(const ConfigReader& x_confReader);
+	~VideoFileBufferWriter();
 	MKCLASS("VideoFileBufferWriter")
 	MKDESCR("Write output to a buffer and export it if an evenement occurs")
 	
@@ -76,6 +77,7 @@ protected:
 
 	// state
 	bool m_buffering;
+	bool m_eraseFile;
 	std::string m_fileName;
 
 	// temporary
