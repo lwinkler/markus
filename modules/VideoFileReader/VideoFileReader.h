@@ -29,21 +29,6 @@
 #include "Input.h"
 
 
-class VideoFileReaderParameterStructure : public InputParameterStructure
-{
-public:
-	VideoFileReaderParameterStructure(const ConfigReader& x_confReader) : 
-	InputParameterStructure(x_confReader)
-	{
-		m_list.push_back(new ParameterString("file",  "in/input.mp4", &file, "Name of the video file to read, with path"));
-		m_list.push_back(new ParameterBool("loop",    0, 0, 1,        &loop, "Loop on file"));
-		Init();
-	}
-
-public:
-	std::string file;
-	bool loop;
-};
 
 /**
 * @brief Read video stream from a video file
@@ -51,6 +36,22 @@ public:
 class VideoFileReader : public Input
 {
 public:
+	class Parameters : public Input::Parameters
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : 
+		Input::Parameters(x_confReader)
+		{
+			m_list.push_back(new ParameterString("file",  "in/input.mp4", &file, "Name of the video file to read, with path"));
+			m_list.push_back(new ParameterBool("loop",    0, 0, 1,        &loop, "Loop on file"));
+			Init();
+		}
+
+	public:
+		std::string file;
+		bool loop;
+	};
+
 	VideoFileReader(const ConfigReader& x_confReader);
 	~VideoFileReader();
 	MKCLASS("VideoFileReader")
@@ -71,8 +72,8 @@ public:
 	virtual double GetRecordingFps();
 
 private:
-	VideoFileReaderParameterStructure m_param;
-	inline virtual const VideoFileReaderParameterStructure& GetParameters() const {return m_param;}
+	Parameters m_param;
+	inline virtual const Parameters& GetParameters() const {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

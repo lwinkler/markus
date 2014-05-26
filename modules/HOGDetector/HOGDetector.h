@@ -37,27 +37,6 @@
  */
 
 
-class HOGDetectorParameterStructure : public ModuleAsyncParameterStructure
-{
-	
-public:
-	HOGDetectorParameterStructure(const ConfigReader& x_confReader) : 
-		ModuleAsyncParameterStructure(x_confReader)
-	{
-		// m_list.push_back(new ParameterInt("minNeighbors", 2, 1, 100, 	&minNeighbors,	"Minimum numbers of neighbors (higher: less sensitive)")); // Note : Seems to be a bug with minNeighbors = 1 with most filters
-		m_list.push_back(new ParameterInt("min_side", 0, 0, 200, 		&minSide,	"Minimum size of the detected object"));
-		m_list.push_back(new ParameterFloat("scale_factor", 1.2, 1, 2, 	&scaleFactor,	"Scale factor for scanning (higher: less sensitive)"));
-														// "File with filter data of the detected object"));
-		m_list.push_back(new ParameterString("object_label", "hog", 			&objectLabel,	"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
-		
-		Init();
-	};
-	
-	// int minNeighbors;
-	int minSide;
-	float scaleFactor;
-	std::string objectLabel;
-};
 
 class HOGDetectionThread : public QThread
 {
@@ -95,6 +74,26 @@ protected:
 class HOGDetector : public ModuleAsync
 {
 public:
+	class Parameters : public ModuleAsync::Parameters
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : ModuleAsync::Parameters(x_confReader)
+		{
+			// m_list.push_back(new ParameterInt("minNeighbors", 2, 1, 100, 	&minNeighbors,	"Minimum numbers of neighbors (higher: less sensitive)")); // Note : Seems to be a bug with minNeighbors = 1 with most filters
+			m_list.push_back(new ParameterInt("min_side", 0, 0, 200, 		&minSide,	"Minimum size of the detected object"));
+			m_list.push_back(new ParameterFloat("scale_factor", 1.2, 1, 2, 	&scaleFactor,	"Scale factor for scanning (higher: less sensitive)"));
+															// "File with filter data of the detected object"));
+			m_list.push_back(new ParameterString("object_label", "hog", 			&objectLabel,	"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
+			
+			Init();
+		};
+		
+		// int minNeighbors;
+		int minSide;
+		float scaleFactor;
+		std::string objectLabel;
+	};
+
 	HOGDetector(const ConfigReader& x_configReader);
 	~HOGDetector(void);
 	MKCLASS("HOGDetector")
@@ -106,8 +105,8 @@ public:
 	void Reset();
 
 private:
-	HOGDetectorParameterStructure m_param;
-	inline virtual const HOGDetectorParameterStructure& GetParameters() const { return m_param;}
+	Parameters m_param;
+	inline virtual const Parameters& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 protected:
 

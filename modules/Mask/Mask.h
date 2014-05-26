@@ -28,36 +28,34 @@
 #include "opencv2/video/background_segm.hpp"
 
 
-class ConfigReader;
-
-
-class MaskParameterStructure : public ModuleParameterStructure
-{
-public:
-	MaskParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
-	{
-		Init();
-	};
-};
-
 /**
 * @brief Apply a binary mask to an image input
 */
 class Mask : public Module
 {
 public:
+	class Parameters : public Module::Parameters
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		{
+			Init();
+		};
+	};
+
 	Mask(const ConfigReader& x_configReader);
 	~Mask();
 	MKCLASS("Mask")
 	MKDESCR("Apply a binary mask to an image input")
-
 	
 	virtual void ProcessFrame();
 	void Reset();
+
 private:
-	MaskParameterStructure m_param;
-	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;}
+	Parameters m_param;
+	inline virtual const Parameters& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
+
 protected:
 
 	// input

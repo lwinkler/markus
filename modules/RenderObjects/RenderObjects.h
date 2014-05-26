@@ -29,22 +29,22 @@
 class ConfigReader;
 class Object;
 
-class RenderObjectsParameterStructure : public ModuleParameterStructure
-{
-public:
-	RenderObjectsParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
-	{
-		RefParameterByName("type").SetDefault("CV_8UC3");
-		Init();
-	};
-};
-
 /**
 * @brief Output video stream with additional object streams
 */
 class RenderObjects : public Module
 {
 public:
+	class Parameters : public Module::Parameters
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		{
+			RefParameterByName("type").SetDefault("CV_8UC3");
+			Init();
+		};
+	};
+
 	RenderObjects(const ConfigReader& x_configReader);
 	~RenderObjects();
 	MKCLASS("RenderObjects")
@@ -54,8 +54,8 @@ public:
 	virtual void ProcessFrame();
 
 private:
-	RenderObjectsParameterStructure m_param;
-	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;}
+	Parameters m_param;
+	inline virtual const Module::Parameters& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

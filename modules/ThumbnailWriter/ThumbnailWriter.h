@@ -29,35 +29,37 @@
 
 
 
-class ThumbnailWriterParameterStructure : public ModuleParameterStructure
-{
-public:
-	ThumbnailWriterParameterStructure(const ConfigReader& x_confReader) : 
-	ModuleParameterStructure(x_confReader)
-	{
-		m_list.push_back(new ParameterString("folder"     , "thumbs" , &folder    , "Name of the folder to create, with path"));
-		m_list.push_back(new ParameterString("extension"  , "jpg"        , &extension , "Extension of the thumbnails. Determines the output format."));
-		Init();
-	};
 
-	std::string folder;
-	std::string extension;
-};
-
+/**
+* @brief Write all objects as a collection of images (thumbnails)
+*/
 class ThumbnailWriter : public Module
 {
 public:
+	class Parameters : public Module::Parameters
+	{
+		public:
+		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		{
+			m_list.push_back(new ParameterString("folder"     , "thumbs" , &folder    , "Name of the folder to create, with path"));
+			m_list.push_back(new ParameterString("extension"  , "jpg"        , &extension , "Extension of the thumbnails. Determines the output format."));
+			Init();
+		};
+		std::string folder;
+		std::string extension;
+	};
+
 	ThumbnailWriter(const ConfigReader& x_confReader);
 	~ThumbnailWriter();
 	MKCLASS("ThumbnailWriter")
-	MKDESCR("Write an object stream as separate images in a folder.")
+	MKDESCR("Write all objects as a collection of images (thumbnails)")
 	
 	virtual void ProcessFrame();
 	void Reset();
 
 private:
-	ThumbnailWriterParameterStructure m_param;
-	inline virtual const ThumbnailWriterParameterStructure& GetParameters() const {return m_param;}
+	Parameters m_param;
+	inline virtual const Parameters& GetParameters() const {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

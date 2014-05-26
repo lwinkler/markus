@@ -30,18 +30,6 @@
 #include <fstream>
 
 
-class LogStateParameterStructure : public ModuleParameterStructure
-{
-	
-public:
-	LogStateParameterStructure(const ConfigReader& x_confReader) : 
-		ModuleParameterStructure(x_confReader)
-	{
-		m_list.push_back(new ParameterString("file", 	  "state", 	     &file,      "Name of the .srt file without extension"));
-		Init();
-	}
-	std::string file;
-};
 
 /**
 * @brief Read a state stream and log it to .srt file
@@ -49,6 +37,18 @@ public:
 class LogState : public Module
 {
 public:
+	class Parameters : public Module::Parameters
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : 
+		Module::Parameters(x_confReader)
+		{
+			m_list.push_back(new ParameterString("file", 	  "state", 	     &file,      "Name of the .srt file without extension"));
+			Init();
+		}
+		std::string file;
+	};
+
 	LogState(const ConfigReader& x_configReader);
 	~LogState(void);
 	MKCLASS("LogState")
@@ -58,8 +58,8 @@ public:
 	virtual void ProcessFrame();
 
 private:
-	LogStateParameterStructure m_param;
-	inline virtual const LogStateParameterStructure& GetParameters() const { return m_param;}
+	Parameters m_param;
+	inline virtual const Parameters& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

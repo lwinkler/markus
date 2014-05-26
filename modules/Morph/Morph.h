@@ -29,23 +29,6 @@
 class ConfigReader;
 
 
-class MorphParameterStructure : public ModuleParameterStructure
-{
-public:
-	MorphParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
-	{
-		m_list.push_back(new ParameterInt("operator",    0,   0, 6,    &oper,       "Morphological operator: ERODE=0,DILATE=1,OPEN=2,CLOSE=3,GRADIENT=4,TOPHAT=5,BLACKHAT=6"));
-		m_list.push_back(new ParameterInt("element",     2,   0, 2,    &element,    "Morphological element: RECT=0, CROSS=1, ELLIPSE=2"));
-		m_list.push_back(new ParameterInt("kernel_size", 5,   3, 100,  &kernelSize, "Size of the element"));
-		m_list.push_back(new ParameterInt("iterations",  1,   1, 10,   &iterations, "Number of times the operation is applied to the image"));
-
-		Init();
-	};
-	int oper;
-	int element;
-	int kernelSize;
-	int iterations;
-};
 
 /**
 * @brief Apply a morphological operator to an image
@@ -53,19 +36,35 @@ public:
 class Morph : public Module
 {
 public:
+	class Parameters : public Module::Parameters
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		{
+			m_list.push_back(new ParameterInt("operator",    0,   0, 6,    &oper,       "Morphological operator: ERODE=0,DILATE=1,OPEN=2,CLOSE=3,GRADIENT=4,TOPHAT=5,BLACKHAT=6"));
+			m_list.push_back(new ParameterInt("element",     2,   0, 2,    &element,    "Morphological element: RECT=0, CROSS=1, ELLIPSE=2"));
+			m_list.push_back(new ParameterInt("kernel_size", 5,   3, 100,  &kernelSize, "Size of the element"));
+			m_list.push_back(new ParameterInt("iterations",  1,   1, 10,   &iterations, "Number of times the operation is applied to the image"));
+
+			Init();
+		};
+		int oper;
+		int element;
+		int kernelSize;
+		int iterations;
+	};
+
 	Morph(const ConfigReader& x_configReader);
 	~Morph();
 	MKCLASS("Morph")
 	MKDESCR("Apply a morphological operator to an image")
-
-	
 	
 	virtual void ProcessFrame();
 	void Reset();
 
 private:
-	MorphParameterStructure m_param;
-	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;}
+	Parameters m_param;
+	inline virtual const Parameters& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 protected:
 	

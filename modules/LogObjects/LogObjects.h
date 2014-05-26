@@ -30,48 +30,43 @@
 #include <fstream>
 
 
-
-class LogObjectsParameterStructure : public ModuleParameterStructure
-{
-	
-public:
-	LogObjectsParameterStructure(const ConfigReader& x_confReader) : 
-		ModuleParameterStructure(x_confReader)
-	{
-		m_list.push_back(new ParameterString("file", 	  "objects", 	     &file,      "Name of the .srt file without extension"));
-		Init();
-	}
-	std::string file;
-};
-
 /**
 * @brief Read a stream of objects and log data to a text file
 */
 class LogObjects : public Module
 {
 public:
+	class Parameters : public Module::Parameters
+	{
+		public:
+		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		{
+			m_list.push_back(new ParameterString("file", 	  "objects", 	     &file,      "Name of the .srt file without extension"));
+			Init();
+		}
+		std::string file;
+	};
+
 	LogObjects(const ConfigReader& x_configReader);
 	~LogObjects(void);
 	MKCLASS("LogObjects")
 	MKDESCR("Read a stream of objects and log data to a text file")
 	
+	virtual void ProcessFrame();
 	void Reset();
 
 private:
-	LogObjectsParameterStructure m_param;
-	inline virtual const LogObjectsParameterStructure& GetParameters() const { return m_param;}
+	Parameters m_param;
+	inline virtual const Parameters& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
-	virtual void ProcessFrame();
-
 	// input
 	std::vector <Object> m_objectsIn;
 
 	// temporary
 	std::string   m_fileName;
 	std::ofstream m_outputFile;
-
 };
 
 #endif

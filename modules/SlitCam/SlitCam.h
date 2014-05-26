@@ -28,47 +28,42 @@
 #include "Parameter.h"
 
 
-/*! \class SlitCam
- *  \brief Class containing methods/attributes of a slit camera
- *
- */
-
-
-class SlitCamParameterStructure : public ModuleParameterStructure
-{
-	
-public:
-	SlitCamParameterStructure(const ConfigReader& x_confReader) : 
-		ModuleParameterStructure(x_confReader)
-	{
-		m_list.push_back(new ParameterInt("aperture", 1, 1, 10, &aperture,	"Size of the aperture of the camera"));
-		
-		// Set default value of module parameter (re-definition)
-		RefParameterByName("type").SetDefault("CV_8UC3");
-
-		Init();
-	}
-	
-	int aperture;
-};
-
 /**
 * @brief A simple example module that mimics a slit camera (or linear camera). The camera input is a range of pixels in the middle of the image.
 */
 class SlitCam : public Module
 {
 public:
+	class Parameters : public Module::Parameters
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : 
+			Module::Parameters(x_confReader)
+		{
+			m_list.push_back(new ParameterInt("aperture", 1, 1, 10, &aperture,	"Size of the aperture of the camera"));
+			
+			// Set default value of module parameter (re-definition)
+			RefParameterByName("type").SetDefault("CV_8UC3");
+
+			Init();
+		}
+		
+		int aperture;
+	};
+
 	SlitCam(const ConfigReader& x_configReader);
 	~SlitCam(void);
 	MKCLASS("SlitCam")
 	MKDESCR("A simple example module that mimics a slit camera (or linear camera). The camera input is a range of pixels in the middle of the image.")
-	void Reset();
-private:
-	SlitCamParameterStructure m_param;
-	inline virtual const SlitCamParameterStructure& GetParameters() const { return m_param;}
-	static log4cxx::LoggerPtr m_logger;
-protected:
 	virtual void ProcessFrame();
+	void Reset();
+
+private:
+	Parameters m_param;
+	inline virtual const Parameters& GetParameters() const { return m_param;}
+	static log4cxx::LoggerPtr m_logger;
+
+protected:
 
 	// input
 	cv::Mat m_input;

@@ -27,23 +27,24 @@
 #include "Module.h"
 #include <QThread>
 
-class ModuleAsyncParameterStructure : public ModuleParameterStructure
-{
-public:
-	ModuleAsyncParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
-	{
-		m_list.push_back(new ParameterDouble("detection_fps", 	10, 	0, 	1000,		&detectionFps,	"Frames per seconds for the asynchronous detection (normally smaller that module)"));
-		Init();
-	};
-
-public:
-	double detectionFps;
-};
 
 /// This class represents a parent module that can process data asynchronously (in a separate thread)
 class ModuleAsync : public Module
 {
 public:
+	class Parameters : public Module::Parameters
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		{
+			m_list.push_back(new ParameterDouble("detection_fps", 	10, 	0, 	1000,		&detectionFps,	"Frames per seconds for the asynchronous detection (normally smaller that module)"));
+			Init();
+		};
+
+	public:
+		double detectionFps;
+	};
+
 	ModuleAsync(const ConfigReader& x_confReader);
 	// virtual ~ModuleAsync();
 	
@@ -65,7 +66,7 @@ protected:
 	virtual void PrintStatistics() const;
 	
 private:
-	virtual const ModuleAsyncParameterStructure & GetParameters() const = 0;
+	virtual const Parameters & GetParameters() const = 0;
 	static log4cxx::LoggerPtr m_logger;
 };
 

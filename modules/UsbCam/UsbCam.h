@@ -29,19 +29,6 @@
 #include "Input.h"
 #include "Timer.h"
 
-class UsbCamParameterStructure : public InputParameterStructure
-{
-public:
-	UsbCamParameterStructure(const ConfigReader& x_confReader) : 
-	InputParameterStructure(x_confReader)
-	{
-		m_list.push_back(new ParameterInt("num", 	-1, 	-1, 	2,	&num,	"Number of the USB camera (usually 0 or 1)"));
-		Init();
-	}
-
-public:
-	int num;
-};
 
 /**
 * @brief Read video stream from an enbedded or USB camera
@@ -49,6 +36,20 @@ public:
 class UsbCam : public Input
 {
 public:
+	class Parameters : public Input::Parameters
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : 
+		Input::Parameters(x_confReader)
+		{
+			m_list.push_back(new ParameterInt("num", 	-1, 	-1, 	2,	&num,	"Number of the USB camera (usually 0 or 1)"));
+			Init();
+		}
+
+	public:
+		int num;
+	};
+
 	UsbCam(const ConfigReader& x_confReader);
 	~UsbCam();
 	MKCLASS("UsbCam")
@@ -59,8 +60,8 @@ public:
 	const std::string& GetName(){return m_name;}
 
 private:
-	UsbCamParameterStructure m_param;
-	inline virtual const UsbCamParameterStructure& GetParameters() const {return m_param;}
+	Parameters m_param;
+	inline virtual const Parameters& GetParameters() const {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

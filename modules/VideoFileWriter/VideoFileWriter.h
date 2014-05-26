@@ -36,11 +36,11 @@
 class VideoFileWriter : public Module
 {
 public:
-	class Parameters : public ModuleParameterStructure
+	class Parameters : public Module::Parameters
 	{
 	public:
 		Parameters(const ConfigReader& x_confReader) : 
-		ModuleParameterStructure(x_confReader)
+		Module::Parameters(x_confReader)
 		{
 			m_list.push_back(new ParameterString("file", 	  "output", 	     &file,      "Name of the video file to write, with path"));
 			m_list.push_back(new ParameterString("fourcc", 	  "MJPG", 	     &fourcc,    "Four character code, determines the format. PIM1, MJPG, MP42, DIV3, DIVX, U263, I263, FLV1"));

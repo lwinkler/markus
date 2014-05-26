@@ -40,40 +40,38 @@ static const float defaultVarMin2 = 4.0f;
 */
 
 
-class ConfigReader;
-
-
-class BgrSubMOGParameterStructure : public ModuleParameterStructure
-{
-public:
-	BgrSubMOGParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
-	{
-		// This parameters should not change
-		m_list.push_back(new ParameterInt   ("history",          200,    1,   10000,     &history,         "Length of the history"));
-		m_list.push_back(new ParameterInt   ("nmixtures",          5,    1,      10,     &nmixtures,       "Number of Gaussian mixtures"));
-		m_list.push_back(new ParameterDouble("background_ratio", 0.7,    0,       1,     &backgroundRatio, "Background ratio"));
-		m_list.push_back(new ParameterDouble("noise_sigma",       15,    0,    1000,     &noiseSigma,      "noise strength"));
-		m_list.push_back(new ParameterDouble("learning_rate",     -1,    -1,       1,     &learningRate,    "Learning rate of the model"));
-
-		//m_list.push_back(new ParameterFloat("foreground_thres", 	0.2, 	0, 1,	&foregroundThres,	"Threshold to accept a pixel as foreground"));
-
-		// RefParameterByName("history").Lock();
-
-		Init();
-	};
-	int history;
-	int nmixtures;
-	double backgroundRatio;
-	double noiseSigma;
-
-	double learningRate;
-};
 
 /**
 * @brief Perform background subtraction via Mixtures Of Gaussians (OpenCV MOG1)
 */
 class BgrSubMOG : public Module
 {
+	class Parameters : public Module::Parameters
+	{
+		public:
+			Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		{
+			// This parameters should not change
+			m_list.push_back(new ParameterInt   ("history",          200,    1,   10000,     &history,         "Length of the history"));
+			m_list.push_back(new ParameterInt   ("nmixtures",          5,    1,      10,     &nmixtures,       "Number of Gaussian mixtures"));
+			m_list.push_back(new ParameterDouble("background_ratio", 0.7,    0,       1,     &backgroundRatio, "Background ratio"));
+			m_list.push_back(new ParameterDouble("noise_sigma",       15,    0,    1000,     &noiseSigma,      "noise strength"));
+			m_list.push_back(new ParameterDouble("learning_rate",     -1,    -1,       1,     &learningRate,    "Learning rate of the model"));
+
+			//m_list.push_back(new ParameterFloat("foreground_thres", 	0.2, 	0, 1,	&foregroundThres,	"Threshold to accept a pixel as foreground"));
+
+			// RefParameterByName("history").Lock();
+
+			Init();
+		};
+			int history;
+			int nmixtures;
+			double backgroundRatio;
+			double noiseSigma;
+
+			double learningRate;
+	};
+
 public:
 	BgrSubMOG(const ConfigReader& x_configReader);
 	~BgrSubMOG();
@@ -83,8 +81,8 @@ public:
 	virtual void ProcessFrame();
 	void Reset();
 private:
-	BgrSubMOGParameterStructure m_param;
-	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;}
+	Parameters m_param;
+	inline virtual const Parameters& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 protected:
 	// input

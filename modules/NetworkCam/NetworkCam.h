@@ -31,19 +31,6 @@
 #include "Timer.h"
 
 
-class NetworkCamParameterStructure : public InputParameterStructure
-{
-public:
-	NetworkCamParameterStructure(const ConfigReader& x_confReader) : 
-	InputParameterStructure(x_confReader)
-	{
-		m_list.push_back(new ParameterString("url", 	"", 	&url,	"Network address of the camera (e.g. http://root:admin@192.168.3.62/mjpg/1/video.mjpg"));
-		Init();
-	}
-
-public:
-	std::string url;
-};
 
 /**
 * @brief Read video stream from a network camera
@@ -56,6 +43,20 @@ public:
 class NetworkCam : public Input
 {
 public:
+	class Parameters : public Input::Parameters
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : 
+		Input::Parameters(x_confReader)
+		{
+			m_list.push_back(new ParameterString("url", "", &url, "Network address of the camera (e.g. http://root:admin@192.168.3.62/mjpg/1/video.mjpg"));
+			Init();
+		}
+
+	public:
+		std::string url;
+	};
+
 	NetworkCam(const ConfigReader& x_confReader);
 	~NetworkCam();
 	MKCLASS("NetworkCam")
@@ -65,11 +66,13 @@ public:
 	virtual void Reset();
 	const std::string& GetName(){return m_name;}
 	virtual double GetRecordingFps();
+
 private:
 	bool Grab();
-	NetworkCamParameterStructure m_param;
-	inline virtual const NetworkCamParameterStructure& GetParameters() const {return m_param;}
+	Parameters m_param;
+	inline virtual const Parameters& GetParameters() const {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
+
 protected:
 	void GetProperties();
 

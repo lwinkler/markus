@@ -28,20 +28,6 @@
 #include "Parameter.h"
 #include "Event.h"
 
-class MotionDetectorParameterStructure : public ModuleParameterStructure
-{
-	
-public:
-	MotionDetectorParameterStructure(const ConfigReader& x_confReader) : 
-		ModuleParameterStructure(x_confReader)
-	{
-		m_list.push_back(new ParameterFloat("motion_thres", 0.1, 0, 1, &motionThres,	"Threshold for motion analysis"));
-
-		Init();
-	}
-	
-	float motionThres;
-};
 
 /**
 * @brief Detect motion from an image where pixel value represents motion
@@ -49,19 +35,34 @@ public:
 class MotionDetector : public Module
 {
 public:
+	class Parameters : public Module::Parameters
+	{
+		
+	public:
+		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		{
+			m_list.push_back(new ParameterFloat("motion_thres", 0.1, 0, 1, &motionThres,	"Threshold for motion analysis"));
+
+			Init();
+		}
+		
+		float motionThres;
+	};
+
 	MotionDetector(const ConfigReader& x_configReader);
 	~MotionDetector(void);
 	MKCLASS("MotionDetector")
 	MKDESCR("Detect motion from an image where pixel value represents motion")
 	
-	void Reset();
-private:
-	MotionDetectorParameterStructure m_param;
-	inline virtual const MotionDetectorParameterStructure& GetParameters() const { return m_param;}
-	static log4cxx::LoggerPtr m_logger;
-protected:
 	virtual void ProcessFrame();
+	void Reset();
 
+private:
+	Parameters m_param;
+	inline virtual const Parameters& GetParameters() const { return m_param;}
+	static log4cxx::LoggerPtr m_logger;
+
+protected:
 	// input
 	cv::Mat m_input;
 

@@ -40,39 +40,34 @@ static const float defaultVarMin2 = 4.0f;
 */
 
 
-class ConfigReader;
-
-
-class BgrSubMOG2ParameterStructure : public ModuleParameterStructure
-{
-public:
-	BgrSubMOG2ParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
-	{
-
-		// This parameters should not change
-		m_list.push_back(new ParameterInt  ("history",	500, 	1, 10000,	&history,	"Length of the history"));
-		m_list.push_back(new ParameterFloat("var_thres",	16, 	1, 255,	&varThres,	"Threshold on the squared Mahalanobis distance to decide whether it is well described by the background model (selectivity of background) "));
-		m_list.push_back(new ParameterBool  ("b_shadow_detection",	false, 	0, 1, &bShadowDetection,	"Enable shadow detection"));
-		m_list.push_back(new ParameterDouble("learning_rate",	-1, 	-1, 1, &learningRate,	"Learning rate of the model"));
-
-		RefParameterByName("type").SetDefault("CV_8UC3");
-
-
-		Init();
-	};
-	int history;
-	float varThres;
-	bool bShadowDetection;
-
-	double learningRate;
-};
-
 /**
 * @brief Perform background subtraction via Mixtures Of Gaussians (OpenCV MOG2)
 */
 class BgrSubMOG2 : public Module
 {
 public:
+	class Parameters : public Module::Parameters
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		{
+
+			// This parameters should not change
+			m_list.push_back(new ParameterInt  ("history",	500, 	1, 10000,	&history,	"Length of the history"));
+			m_list.push_back(new ParameterFloat("var_thres",	16, 	1, 255,	&varThres,	"Threshold on the squared Mahalanobis distance to decide whether it is well described by the background model (selectivity of background) "));
+			m_list.push_back(new ParameterBool  ("b_shadow_detection",	false, 	0, 1, &bShadowDetection,	"Enable shadow detection"));
+			m_list.push_back(new ParameterDouble("learning_rate",	-1, 	-1, 1, &learningRate,	"Learning rate of the model"));
+
+			RefParameterByName("type").SetDefault("CV_8UC3");
+
+			Init();
+		};
+		int history;
+		float varThres;
+		bool bShadowDetection;
+		double learningRate;
+	};
+
 	BgrSubMOG2(const ConfigReader& x_configReader);
 	~BgrSubMOG2();
 	MKCLASS("BgrSubMOG2")
@@ -81,9 +76,10 @@ public:
 	virtual void ProcessFrame();
 	void Reset();
 private:
-	BgrSubMOG2ParameterStructure m_param;
-	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;}
+	Parameters m_param;
+	inline virtual const Parameters& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
+
 protected:
 	// input
 	cv::Mat m_input;

@@ -15,24 +15,23 @@
 
 class ConfigReader;
 
-class ClassifyEventsParameterStructure : public ModuleParameterStructure
-{
-public:
-	ClassifyEventsParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
-	{
-		m_list.push_back(new ParameterDouble("validity_thres", 0.5, 0, 1, &validityThres, "Decision threshold to consider an event as valid [0 to 1]"));
-		Init();
-	}
-	double validityThres;
-};
-
-
 /**
 * @brief Filter events based on user feedback
 */
 class ClassifyEvents : public Module // TODO: Should probably be in dir bulk/
 {
 public:
+	class Parameters : public Module::Parameters
+	{
+		public:
+			Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		{
+			m_list.push_back(new ParameterDouble("validity_thres", 0.5, 0, 1, &validityThres, "Decision threshold to consider an event as valid [0 to 1]"));
+			Init();
+		}
+			double validityThres;
+	};
+
 	ClassifyEvents(const ConfigReader& x_configReader);
 	~ClassifyEvents();
 	MKCLASS("ClassifyEvents")
@@ -59,8 +58,8 @@ protected:
 	std::list<Event> m_events;
 
 private:
-	ClassifyEventsParameterStructure m_param;
-	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;}
+	Parameters m_param;
+	inline virtual const Parameters& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 };
 

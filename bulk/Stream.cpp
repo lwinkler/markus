@@ -49,6 +49,7 @@ Stream::~Stream()
 * @brief Write description as XML of stream for module description
 *
 * @param rx_os         Output stream
+* @param x_id          Id of stream
 * @param x_indentation Number of tabs for indentation
 * @param x_isInput     Is an input
 */

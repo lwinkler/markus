@@ -28,28 +28,28 @@
 #include "AnnotationFileReader.h"
 
 
-class GroundTruthReaderParameterStructure : public ModuleParameterStructure
-{
-public:
-	GroundTruthReaderParameterStructure(const ConfigReader& x_confReader) : 
-	ModuleParameterStructure(x_confReader)
-	{
-		m_list.push_back(new ParameterString("file", 	"in/input.srt", &file,    "Name of the video file to read, with path"));
-		m_list.push_back(new ParameterString("pattern",	"state_1",      &pattern, "Pattern to search in text. If this is found the state is set to 1"));
-		Init();
-	};
-
-public:
-	std::string file;
-	std::string pattern;
-};
-
 /**
 * @brief Read a ground truth file
 */
 class GroundTruthReader : public Module
 {
 public:
+	class Parameters : public Module::Parameters
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : 
+		Module::Parameters(x_confReader)
+		{
+			m_list.push_back(new ParameterString("file", 	"in/input.srt", &file,    "Name of the video file to read, with path"));
+			m_list.push_back(new ParameterString("pattern",	"state_1",      &pattern, "Pattern to search in text. If this is found the state is set to 1"));
+			Init();
+		};
+
+	public:
+		std::string file;
+		std::string pattern;
+	};
+
 	GroundTruthReader(const ConfigReader& x_confReader);
 	~GroundTruthReader();
 	MKCLASS("GroundTruthReader")
@@ -58,8 +58,8 @@ public:
 	void ProcessFrame();
 	void Reset();
 private:
-	inline virtual const GroundTruthReaderParameterStructure& GetParameters() const {return m_param;}
-	GroundTruthReaderParameterStructure m_param;
+	inline virtual const Parameters& GetParameters() const {return m_param;}
+	Parameters m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

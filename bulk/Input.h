@@ -28,38 +28,34 @@
 #include "Parameter.h"
 #include "Module.h"
 
-class InputParameterStructure : public ModuleParameterStructure
-{
-public:
-	InputParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
-	{
-		RefParameterByName("auto_process").SetDefault("1"); // Input must be in real time otherwise they are never called
-		Init();
-		RefParameterByName("auto_process").Lock();
-	}
-};
-
 /// Class representing an module used for input (camera, video file, network stream, ...)
 class Input : public Module
 {
 public:
+	class Parameters : public Module::Parameters
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		{
+			RefParameterByName("auto_process").SetDefault("1"); // Input must be in real time otherwise they are never called
+			Init();
+			RefParameterByName("auto_process").Lock();
+		}
+	};
+
 	Input(const ConfigReader& x_confReader);
 	~Input();
 	
 	virtual void Capture() = 0;
 	inline const std::string& GetName()const {return m_name;}
-	// virtual const cv::Mat * GetImage() const = 0;
-
 	inline bool   IsEndOfStream() const {return m_endOfStream;}
-
 	inline void ProcessFrame() {Capture();}
-
 	virtual inline bool IsInput() {return true;}
+
 private:
-	virtual const InputParameterStructure& GetParameters() const = 0;
+	virtual const Parameters& GetParameters() const = 0;
 
 protected:
-	// const std::string m_name;
 	bool m_endOfStream;
 };
 

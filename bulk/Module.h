@@ -42,44 +42,44 @@
 class Stream;
 class QModuleTimer;
 
-class ModuleParameterStructure : public ParameterStructure
-{
-public:
-	ModuleParameterStructure(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
-	{
-		m_list.push_back(new ParameterString("class", 		"", 					&objClass,	"Class of the module (define the module's function)"));
-		m_list.push_back(new ParameterInt("width", 	640, 	1, MAX_WIDTH,		&width,		"Width of the input"));
-		m_list.push_back(new ParameterInt("height", 	480, 	1, MAX_HEIGHT,		&height,	"Height of the input"));
-		m_list.push_back(new ParameterImageType("type", 	CV_8UC1, 				&type,		"Format of the input image"));
-		m_list.push_back(new ParameterBool("auto_process",  0, 	0, 	1,		&autoProcess,	"If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream"));
-		m_list.push_back(new ParameterBool("allow_unsync_input",  0, 0, 	1,		&allowUnsyncInput, "If yes the module accepts that its input can be on a different time stamp. Only relevant if the module has many inputs. Use at your own risks."));
-		m_list.push_back(new ParameterDouble("fps", 	 0, 	0, 	1000,		&fps,		"Frames per seconds (processing speed)"));
-
-		Init();
-		RefParameterByName("class").Lock();
-		RefParameterByName("width").Lock();
-		RefParameterByName("height").Lock();
-		// RefParameterByName("type").Lock();
-		// RefParameterByName("auto_process").Lock();
-		// RefParameterByName("allow_unsync_input").Lock();
-	}
-
-public:
-	int width;
-	int height;
-	int type;
-	bool autoProcess;
-	bool allowUnsyncInput;
-	double fps;
-	std::string objClass;
-};
-
 /**
 * @brief Class representing a module. A module is a node of the application, it processes streams
 */
 class Module : public Configurable, public Controllable, public Serializable
 {
 public:
+	class Parameters : public ParameterStructure
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
+		{
+			m_list.push_back(new ParameterString("class", 		"", 					&objClass,	"Class of the module (define the module's function)"));
+			m_list.push_back(new ParameterInt("width", 	640, 	1, MAX_WIDTH,		&width,		"Width of the input"));
+			m_list.push_back(new ParameterInt("height", 	480, 	1, MAX_HEIGHT,		&height,	"Height of the input"));
+			m_list.push_back(new ParameterImageType("type", 	CV_8UC1, 				&type,		"Format of the input image"));
+			m_list.push_back(new ParameterBool("auto_process",  0, 	0, 	1,		&autoProcess,	"If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream"));
+			m_list.push_back(new ParameterBool("allow_unsync_input",  0, 0, 	1,		&allowUnsyncInput, "If yes the module accepts that its input can be on a different time stamp. Only relevant if the module has many inputs. Use at your own risks."));
+			m_list.push_back(new ParameterDouble("fps", 	 0, 	0, 	1000,		&fps,		"Frames per seconds (processing speed)"));
+
+			Init();
+			RefParameterByName("class").Lock();
+			RefParameterByName("width").Lock();
+			RefParameterByName("height").Lock();
+			// RefParameterByName("type").Lock();
+			// RefParameterByName("auto_process").Lock();
+			// RefParameterByName("allow_unsync_input").Lock();
+		}
+
+	public:
+		int width;
+		int height;
+		int type;
+		bool autoProcess;
+		bool allowUnsyncInput;
+		double fps;
+		std::string objClass;
+	};
+
 	Module(const ConfigReader& x_confReader);
 	virtual ~Module();
 	
@@ -155,7 +155,7 @@ protected:
 	QReadWriteLock m_lock;
 
 private:
-	virtual const ModuleParameterStructure & GetParameters() const = 0;
+	virtual const Parameters & GetParameters() const = 0;
 	static log4cxx::LoggerPtr m_logger;
 };
 

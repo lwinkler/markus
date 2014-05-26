@@ -39,21 +39,6 @@ class Manager;
 class ConfigReader;
 class QModuleTimer;
 
-class MarkusParameterStructure : public ParameterStructure
-{
-public:
-	MarkusParameterStructure(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
-	{
-		// m_list.push_back(new ParameterString("module", "", &module, "Module to display"));
-		m_list.push_back(new ParameterInt("nb_cols", 1, 1, 4, &nbCols, "Number of columns for display"));
-		m_list.push_back(new ParameterInt("nb_rows", 1, 1, 4, &nbRows, "Number of rows for display"));
-
-		Init();
-		m_writeAllParamsToConfig = true;
-	}
-	int nbCols;
-	int nbRows;
-};
 
 /**
 * @brief The QT window of the main window of the GUI
@@ -62,12 +47,28 @@ class MarkusWindow : public QMainWindow, public Configurable
 {
 Q_OBJECT
 public:
+	class Parameters : public ParameterStructure
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
+		{
+			// m_list.push_back(new ParameterString("module", "", &module, "Module to display"));
+			m_list.push_back(new ParameterInt("nb_cols", 1, 1, 4, &nbCols, "Number of columns for display"));
+			m_list.push_back(new ParameterInt("nb_rows", 1, 1, 4, &nbRows, "Number of rows for display"));
+
+			Init();
+			m_writeAllParamsToConfig = true;
+		}
+		int nbCols;
+		int nbRows;
+	};
+
 	MarkusWindow(ConfigReader& rx_configReader, Manager& rx_manager);
         void UpdateConfig();
 private:
 	// ConfigReader& m_configReader;
-	MarkusParameterStructure m_param;
-        inline const MarkusParameterStructure& GetParameters() const{return m_param;}
+	Parameters m_param;
+        inline const Parameters& GetParameters() const{return m_param;}
 
 	Manager& m_manager;
 	

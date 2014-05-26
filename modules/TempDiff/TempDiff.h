@@ -29,21 +29,21 @@
 class ConfigReader;
 
 
-class TempDiffParameterStructure : public ModuleParameterStructure
-{
-public:
-	TempDiffParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
-	{
-		Init();
-	};
-};
-
 /**
 * @brief Perform temporal differencing: compare frame with previous frame by subtraction
 */
 class TempDiff : public Module
 {
 public:
+	class Parameters : public Module::Parameters
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		{
+			Init();
+		};
+	};
+
 	TempDiff(const ConfigReader& x_configReader);
 	~TempDiff();
 	MKCLASS("TempDiff")
@@ -51,16 +51,17 @@ public:
 	
 	virtual void ProcessFrame();
 	void Reset();
+
 private:
-	TempDiffParameterStructure m_param;
-	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;}
+	Parameters m_param;
+	inline virtual const Module::Parameters& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
+
 protected:
 	// input
 	cv::Mat m_input;
 
 	// output
-	// cv::Mat m_output;
 	cv::Mat m_temporalDiff;
 
 	// state

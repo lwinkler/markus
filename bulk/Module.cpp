@@ -82,7 +82,7 @@ void Module::Reset()
 {
 	// Lock the parameters that cannot be changed
 	LOG_INFO(m_logger, "Reseting module "<<GetName());
-	const ModuleParameterStructure& param(GetParameters());
+	const Parameters& param(GetParameters());
 	param.PrintParameters();
 	param.CheckRange(true);
 
@@ -213,7 +213,7 @@ void Module::Process()
 		if(!m_isReady)
 			throw MkException("Module must be ready before processing", LOC);
 
-		const ModuleParameterStructure& param = GetParameters();
+		const Parameters& param = GetParameters();
 
 		// Timestamp of the module is given by the input stream
 		m_currentTimeStamp = 0;

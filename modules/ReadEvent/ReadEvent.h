@@ -29,38 +29,37 @@
 #include "AnnotationFileReader.h"
 
 
-class ReadEventParameterStructure : public InputParameterStructure
-{
-	
-public:
-	ReadEventParameterStructure(const ConfigReader& x_confReader) : 
-		InputParameterStructure(x_confReader)
-	{
-		m_list.push_back(new ParameterString("file"        , "in/event.srt", &file      , "Name of the .srt file without extension"));
-		m_list.push_back(new ParameterString("folder_name" , "events_img"  , &folder    , "Name of the folder to create for images"));
-
-		RefParameterByName("type").SetDefault("CV_8UC3"); // This will probably be ignored
-		Init();
-	}
-	std::string file;
-	std::string folder;
-};
-
 /**
 * @brief Read an event from an annotation file
 */
 class ReadEvent : public Input
 {
 public:
+	class Parameters : public Input::Parameters
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : Input::Parameters(x_confReader)
+		{
+			m_list.push_back(new ParameterString("file"        , "in/event.srt", &file      , "Name of the .srt file without extension"));
+			m_list.push_back(new ParameterString("folder_name" , "events_img"  , &folder    , "Name of the folder to create for images"));
+
+			RefParameterByName("type").SetDefault("CV_8UC3"); // This will probably be ignored
+			Init();
+		}
+		std::string file;
+		std::string folder;
+	};
+
 	ReadEvent(const ConfigReader& x_configReader);
 	~ReadEvent(void);
 	MKCLASS("ReadEvent")
 	MKDESCR("Read an event from an annotation file")
 
 	void Reset();
+
 private:
-	inline virtual const ReadEventParameterStructure& GetParameters() const { return m_param;}
-	ReadEventParameterStructure m_param;
+	inline virtual const Parameters& GetParameters() const { return m_param;}
+	Parameters m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

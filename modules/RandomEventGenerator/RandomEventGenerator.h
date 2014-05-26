@@ -28,29 +28,28 @@
 #include "Event.h"
 #include "Timer.h"
 
-class RandomEventGeneratorParameterStructure : public InputParameterStructure
-{
-public:
-	RandomEventGeneratorParameterStructure(const ConfigReader& x_confReader) : 
-	InputParameterStructure(x_confReader)
-	{
-		m_list.push_back(new ParameterInt("nb_features", 	4, 	0, 	1000,	 &nbFeatures,	"Number of features per event"));
-		m_list.push_back(new ParameterInt("random_seed", 	0, 	0, 	INT_MAX, &randomSeed,	"Seed for random generator: 0 means seed is generated from timer"));
-		RefParameterByName("type").SetDefault("CV_8UC3");
-		RefParameterByName("fps").SetDefault("0.2");
-		Init();
-	}
-
-public:
-	int nbFeatures;
-	int randomSeed;
-};
-
 /**
 * @brief Generate an event with random features at each step
 */
 class RandomEventGenerator : public Input
 {
+	class Parameters : public Input::Parameters
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : Input::Parameters(x_confReader)
+		{
+			m_list.push_back(new ParameterInt("nb_features", 	4, 	0, 	1000,	 &nbFeatures,	"Number of features per event"));
+			m_list.push_back(new ParameterInt("random_seed", 	0, 	0, 	INT_MAX, &randomSeed,	"Seed for random generator: 0 means seed is generated from timer"));
+			RefParameterByName("type").SetDefault("CV_8UC3");
+			RefParameterByName("fps").SetDefault("0.2");
+			Init();
+		}
+
+	public:
+		int nbFeatures;
+		int randomSeed;
+	};
+
 public:
 	RandomEventGenerator(const ConfigReader& x_confReader);
 	~RandomEventGenerator();
@@ -62,8 +61,8 @@ public:
 	const std::string& GetName(){return m_name;}
 
 private:
-	RandomEventGeneratorParameterStructure m_param;
-	inline virtual const RandomEventGeneratorParameterStructure& GetParameters() const {return m_param;}
+	Parameters m_param;
+	inline virtual const Parameters& GetParameters() const {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

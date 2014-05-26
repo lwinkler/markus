@@ -30,26 +30,6 @@
 #include "AnnotationFileWriter.h"
 
 
-class LogEventParameterStructure : public ModuleParameterStructure
-{
-	
-public:
-	LogEventParameterStructure(const ConfigReader& x_confReader) : 
-		ModuleParameterStructure(x_confReader)
-	{
-		m_list.push_back(new ParameterString("file"        , "event.srt"  , &file      , "Name of the .srt file without extension"));
-		m_list.push_back(new ParameterDouble("duration"    , 5, 0, 600    , &duration  , "Duration of the event for logging in .srt file"));
-		m_list.push_back(new ParameterString("folder_name" , "events_img" , &folder    , "Name of the folder to create for images"));
-		m_list.push_back(new ParameterString("extension"   , "jpg"        , &extension , "Extension of the thumbnails. Determines the output format."));
-
-		RefParameterByName("type").SetDefault("CV_8UC3");
-		Init();
-	}
-	std::string file;
-	double duration;
-	std::string extension;
-	std::string folder;
-};
 
 /**
 * @brief Read an event and log it to .srt file
@@ -57,20 +37,40 @@ public:
 class LogEvent : public Module
 {
 public:
+	class Parameters : public Module::Parameters
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : 
+			Module::Parameters(x_confReader)
+		{
+			m_list.push_back(new ParameterString("file"        , "event.srt"  , &file      , "Name of the .srt file without extension"));
+			m_list.push_back(new ParameterDouble("duration"    , 5, 0, 600    , &duration  , "Duration of the event for logging in .srt file"));
+			m_list.push_back(new ParameterString("folder_name" , "events_img" , &folder    , "Name of the folder to create for images"));
+			m_list.push_back(new ParameterString("extension"   , "jpg"        , &extension , "Extension of the thumbnails. Determines the output format."));
+
+			RefParameterByName("type").SetDefault("CV_8UC3");
+			Init();
+		}
+		std::string file;
+		double duration;
+		std::string extension;
+		std::string folder;
+	};
+
 	LogEvent(const ConfigReader& x_configReader);
 	~LogEvent(void);
 	MKCLASS("LogEvent")
 	MKDESCR("Read an event and log it to .srt file")
 
+	virtual void ProcessFrame();
 	void Reset();
 
 private:
-	inline virtual const LogEventParameterStructure& GetParameters() const { return m_param;}
-	LogEventParameterStructure m_param;
+	inline virtual const Parameters& GetParameters() const { return m_param;}
+	Parameters m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
-	virtual void ProcessFrame();
 	void SaveImage(Event& x_event);
 	bool IsInputProcessed() const;
 	void AddExternalImage(const cv::Mat& x_image, const std::string& x_name, const std::string& x_file, Event& x_event);

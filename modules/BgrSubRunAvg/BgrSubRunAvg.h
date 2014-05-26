@@ -26,24 +26,6 @@
 
 #include "Module.h"
 
-class ConfigReader;
-
-
-class BgrSubRunAvgParameterStructure : public ModuleParameterStructure
-{
-public:
-	BgrSubRunAvgParameterStructure(const ConfigReader& x_confReader) : ModuleParameterStructure(x_confReader)
-	{
-		m_list.push_back(new ParameterFloat("background_alpha",	0.02, 	0, 1,	&backgroundAlpha,	"Defines the speed at which the background adapts"));
-		m_list.push_back(new ParameterFloat("foreground_thres", 	0.2, 	0, 1,	&foregroundThres,	"Threshold to accept a pixel as foreground"));
-
-		RefParameterByName("type").SetDefault("CV_32FC3");
-
-		Init();
-	};
-	float backgroundAlpha;
-	float foregroundThres;
-};
 
 /**
 * @brief Perform a background subtraction using a running average
@@ -51,6 +33,22 @@ public:
 class BgrSubRunAvg : public Module
 {
 public:
+	class Parameters : public Module::Parameters
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		{
+			m_list.push_back(new ParameterFloat("background_alpha",	0.02, 	0, 1,	&backgroundAlpha,	"Defines the speed at which the background adapts"));
+			m_list.push_back(new ParameterFloat("foreground_thres", 	0.2, 	0, 1,	&foregroundThres,	"Threshold to accept a pixel as foreground"));
+
+			RefParameterByName("type").SetDefault("CV_32FC3");
+
+			Init();
+		};
+		float backgroundAlpha;
+		float foregroundThres;
+	};
+
 	BgrSubRunAvg(const ConfigReader& x_configReader);
 	~BgrSubRunAvg();
 	MKCLASS("BgrSubRunAvg")
@@ -58,10 +56,12 @@ public:
 	
 	virtual void ProcessFrame();
 	void Reset();
+
 private:
-	BgrSubRunAvgParameterStructure m_param;
-	inline virtual const ModuleParameterStructure& GetParameters() const { return m_param;}
+	Parameters m_param;
+	inline virtual const Parameters& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
+
 protected:
 	// input
 	cv::Mat m_input;
