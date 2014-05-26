@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="ThumbnailWriter" description="Write an object stream as separate images in a folder.">
+<module name="EventToObjects" description="Transform a stream of events into a stream of objects">
 	<parameters>
 		<param name="class">
 			<type>string</type>
-			<value default="">ThumbnailWriter</value>
+			<value default="">EventToObjects</value>
 			<description>Class of the module (define the module's function)</description>
 		</param>
 		<param name="width">
@@ -36,29 +36,19 @@
 			<value min="0" max="1000" default="0">0</value>
 			<description>Frames per seconds (processing speed)</description>
 		</param>
-		<param name="folder">
-			<type>string</type>
-			<value default="thumbs">thumbs</value>
-			<description>Name of the folder to create with path. Use %{feature} to separate by feature</description>
-		</param>
-		<param name="extension">
-			<type>string</type>
-			<value default="jpg">jpg</value>
-			<description>Extension of the thumbnails. Determines the output format.</description>
-		</param>
 	</parameters>
 	<inputs>
 		<input id="0">
-			<type>Image</type>
-			<name>input</name>
-			<description>Video input</description>
-		</input>
-		<input id="1">
-			<type>Objects</type>
-			<name>objects</name>
-			<description>Incoming objects</description>
+			<type>Event</type>
+			<name>event</name>
+			<description>Input event</description>
 		</input>
 	</inputs>
 	<outputs>
+		<output id="0">
+			<type>Objects</type>
+			<name>objects</name>
+			<description>Output objects</description>
+		</output>
 	</outputs>
 </module>
