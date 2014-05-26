@@ -3,7 +3,19 @@
 	"dateEvent" : 1399345442429,
 	"dateNotif" : 3453434522221,
 	"eventName" : "event_name_to_serialize2",
-	"external" : null,
+	"external" : 
+	{
+		"attributes" : 
+		{
+			"attr1" : "val1",
+			"attr2" : "val2"
+		},
+		"files" : 
+		{
+			"file1" : "path1",
+			"file2" : "path2"
+		}
+	},
 	"object" : 
 	{
 		"features" : 

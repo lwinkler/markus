@@ -65,6 +65,8 @@ void usage()
 	printf("                       Set the name of the output directory\n");
 	printf(" -p  --parameter \"moduleName.paramName=value\"\n");
 	printf("                       Override the value of one parameter\n");
+	printf(" -x  --xml extra_config.xml\n");
+	printf("                       Override some parameters in an extra XML file\n");
 }
 
 
@@ -125,6 +127,7 @@ int main(int argc, char** argv)
 	string logConfigFile = "log4cxx.xml";
 	string outputDir     = "";
 	vector<string> parameters;
+	vector<string> extraConfig;
 
 	// Read arguments
 
@@ -140,11 +143,12 @@ int main(int argc, char** argv)
 		{"log-conf",    1, 0, 'l'},
 		{"output_dir",  1, 0, 'o'},
 		{"parameter",   1, 0, 'p'},
+		{"xml",         1, 0, 'x'},
 		{NULL, 0, NULL, 0}
 	};
 	int c;
 	int option_index = 0;
-	while ((c = getopt_long(argc, argv, "hvdecinl:o:p:", long_options, &option_index)) != -1)
+	while ((c = getopt_long(argc, argv, "hvdecinl:o:p:x:", long_options, &option_index)) != -1)
 	{
 		switch (c) {
 			case 'h':
@@ -186,6 +190,9 @@ int main(int argc, char** argv)
 				break;
 			case 'p':
 				parameters.push_back(optarg);
+				break;
+			case 'x':
+				extraConfig.push_back(optarg);
 				break;
 			case ':': // missing argument
 				LOG_ERROR(logger, "--"<<long_options[::optopt].name<<": an argument is required");
@@ -243,6 +250,28 @@ int main(int argc, char** argv)
 		mainConfig.Validate();
 		ConfigReader appConfig = mainConfig.GetSubConfig("application");
 		assert(!appConfig.IsEmpty());
+
+		// Set values of parameters if an extra config is used
+		for(vector<string>::const_iterator it1 = extraConfig.begin() ; it1 != extraConfig.end() ; it1++)
+		{
+			// open tbhe config
+			ConfigReader extra(*it1);
+			ConfigReader moduleConfig = extra.GetSubConfig("application").GetSubConfig("module");
+			while(!moduleConfig.IsEmpty())
+			{
+				if(!moduleConfig.GetSubConfig("parameters").IsEmpty())
+				{
+					ConfigReader paramConfig = moduleConfig.GetSubConfig("parameters").GetSubConfig("param");
+					while(!paramConfig.IsEmpty())
+					{
+						// Override parameter
+						appConfig.RefSubConfig("module", moduleConfig.GetAttribute("name")).RefSubConfig("parameters").RefSubConfig("param", paramConfig.GetAttribute("name"), true).SetValue(paramConfig.GetValue());
+						paramConfig = paramConfig.NextSubConfig("param");
+					}
+				}
+				moduleConfig = moduleConfig.NextSubConfig("module");
+			}
+		}
 
 		// Set values of parameters if set from command line
 		for(vector<string>::const_iterator it = parameters.begin() ; it != parameters.end() ; it++)

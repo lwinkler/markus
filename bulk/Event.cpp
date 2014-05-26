@@ -164,7 +164,7 @@ void Event::Notify(bool x_isProcessEvent)
 
 	LOG_DEBUG(m_logger, "Notify event:" << *this);
 
-	root["external"] = m_externalInfo;
+	// root["external"] = m_externalInfo;
 	
 	// export the event to our specific format
 	Json::Value out;

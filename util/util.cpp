@@ -253,6 +253,18 @@ const string msToTimeStamp(TIME_STAMP x_ms)
 	return string(str);
 }
 
+/// Convert a time stamp (format used in subtitle files) to a time in ms
+TIME_STAMP timeStampToMs(const string& x_timeStamp)
+{
+	int hours, mins, secs, msecs;
+	sscanf(x_timeStamp.c_str(), "%02d:%02d:%02d,%03d", &hours, &mins, &secs, &msecs);
+	TIME_STAMP t = msecs;
+	t += secs *    1000; 
+	t += mins *   60000; 
+	t += hours * 360000; 
+	return t;
+}
+
 
 // Return an absolute timestamp in miliseconds. Absolute timestamps are based on processor time and are used on server side
 TIME_STAMP getAbsTimeMs()

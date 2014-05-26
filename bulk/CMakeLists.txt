@@ -20,7 +20,6 @@ StreamState.cpp
 Object.cpp
 Event.cpp
 Feature.cpp
-util.cpp
 ConfigReader.cpp
 Timer.cpp
 ModuleTimer.cpp
