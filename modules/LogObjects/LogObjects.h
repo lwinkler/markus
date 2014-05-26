@@ -38,14 +38,14 @@ class LogObjects : public Module
 public:
 	class Parameters : public Module::Parameters
 	{
-		public:
+	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
-	{
-		m_list.push_back(new ParameterString("file", 	  "objects", 	     &file,      "Name of the .srt file without extension"));
-		Init();
-	}
-	std::string file;
-};
+		{
+			m_list.push_back(new ParameterString("file", 	  "objects", 	     &file,      "Name of the .srt file without extension"));
+			Init();
+		}
+		std::string file;
+	};
 
 	LogObjects(const ConfigReader& x_configReader);
 	~LogObjects(void);
@@ -56,8 +56,8 @@ public:
 	void Reset();
 
 private:
-	LogObjectsParameterStructure m_param;
-	inline virtual const LogObjectsParameterStructure& GetParameters() const { return m_param;}
+	Parameters m_param;
+	inline virtual const Parameters& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
