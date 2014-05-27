@@ -71,7 +71,6 @@ void QControlBoard::updateControl(Controller* x_control)
 	mp_currentControl = x_control;
 
 	// Create the control buttons
-	// TODO: remove buttons and delete widgets
 	vector<string> actions;
 	mp_currentControl->ListActions(actions);
 	for(vector<string>::const_iterator it = actions.begin() ; it != actions.end() ; it++)
