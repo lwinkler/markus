@@ -71,6 +71,7 @@ void GroundTruthReader::ProcessFrame()
 
 	// Interpret the current state
 	string text = mp_annotationReader->ReadAnnotationForTimeStamp(m_currentTimeStamp);
+	LOG_DEBUG(m_logger, "Read annotation \"" + text + "\" for time stamp "<<m_currentTimeStamp);
 	if(text != "")
 	{
 		m_state = text.find(m_param.pattern) != string::npos; // TODO: Improve this with regexp
