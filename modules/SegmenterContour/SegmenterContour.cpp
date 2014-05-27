@@ -165,6 +165,7 @@ void SegmenterContour::ProcessFrame()
 				{
 					obj.AddFeature("moment_20", mom.mu20/pow(m00_scaled, 2));
 				}
+				// TODO: Tests with hu moments
 			}
 
 #ifdef MARKUS_DEBUG_STREAMS
