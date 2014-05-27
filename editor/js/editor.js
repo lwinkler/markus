@@ -500,9 +500,10 @@ var xmlProject = null;
 
 				// Module description
 				var module = div.find("#module").empty();
-				var cl1 = xml.data('class');
+				var type = xml.find('parameters > param[name=class]').text();
+				var cl1 = $(xmlModuleTypes[type]);
 				// module.append('<ul>')
-				module.append('<li><b>Name: </b>' + cl1.attr('name') + '</li>')
+				module.append('<li><b>Type: </b>'  + type + '</li>')
 				.append('<li><b>Description: </b>' + cl1.attr('description') + '</li>')
 				// .append('</ul>');
 
@@ -526,16 +527,26 @@ var xmlProject = null;
 				var parameters = div.find("#parameters").empty();
 				var type = xml.find("parameters > param[name='class']").text();
 				var classParameters  = $(xmlModuleTypes[type]).find("parameters");
+
+				// create header for the table of parameters
+				parameters.append('<table>')
+					.append('<tr><th>Name</th><th>Type</th><th>Value</th><th>Default</th></tr>');
+
 				classParameters.find("parameters > param").each(function(el){
 					var cl = $(this); // $(this).data('class');
 					var value = xml.find("parameters > param[name=" + cl.attr('name') + "]");
 					if(value.length <= 0)
 						value = '';
 					else
-						value = ' = ' + value.text();
+						value = value.text();
 
-					parameters.append('<p>' + cl.attr('name') + value + ' (' + cl.find('value').text() + ", " + cl.find('type').text() + ')' + ': ' + cl.find('description').text() + '</p>');
+					parameters.append('<tr>')
+						.append('<td><b title="' + cl.find('description').text() + '">' + cl.attr('name') + '</b></td><td>' 
+						+ cl.find('type').text() + '</td><td>' + value + '</td><td>' 
+						+ cl.find('value').text() + '</td>')
+						.append('</tr>');
 				});
+				parameters.append('</table>');
 			}
 
 
