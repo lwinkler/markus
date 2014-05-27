@@ -47,7 +47,36 @@ Object::Object(const string& x_name, const cv::Rect& x_rect) :
 	height   = x_rect.height;
 }
 
-Object::~Object(){}
+Object::Object(const Object & x_obj)
+{
+	m_name = x_obj.GetName();
+	m_id = x_obj.GetId();
+	posX = x_obj.posX;
+	posY = x_obj.posY;
+	width = x_obj.width;
+	height = x_obj.height;
+	for(map<string, Feature*>::const_iterator it = x_obj.GetFeatures().begin() ; it != x_obj.GetFeatures().end() ; it++)
+		m_feats[it->first] = new Feature(*it->second);
+}
+
+Object& Object::operator=(const Object & x_obj)
+{
+	m_name = x_obj.GetName();
+	m_id = x_obj.GetId();
+	posX = x_obj.posX;
+	posY = x_obj.posY;
+	width = x_obj.width;
+	height = x_obj.height;
+	for(map<string, Feature*>::const_iterator it = x_obj.GetFeatures().begin() ; it != x_obj.GetFeatures().end() ; it++)
+		m_feats[it->first] = new Feature(*it->second);
+	return *this;
+}
+
+Object::~Object()
+{
+	for(map <std::string, Feature*>::const_iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
+		delete(it->second);
+}
 
 void Object::Serialize(std::ostream& x_out, const string& x_dir) const
 {
@@ -59,8 +88,8 @@ void Object::Serialize(std::ostream& x_out, const string& x_dir) const
 	root["width"]  = width;
 	root["height"] = height;
 
-	for(map <std::string, Feature>::const_iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
-		root["features"][it->first] = it->second.value; // TODO What about other measures ?
+	for(map <std::string, Feature*>::const_iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
+		root["features"][it->first] = it->second->value; // TODO What about other measures ?
 
 	x_out << root;
 }
@@ -123,12 +152,12 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 	// Print features and values
 	pText.x += 2;
 	int i = 0;
-	for(map<string, Feature>::const_iterator it2 = GetFeatures().begin() ; it2 != GetFeatures().end() ; it2++)
+	for(map<string, Feature*>::const_iterator it2 = GetFeatures().begin() ; it2 != GetFeatures().end() ; it2++)
 	{
 		//try
 		{
 			ostringstream text;
-			text<<it2->first<<"="<<it2->second.value;
+			text<<it2->first<<"="<<it2->second->value;
 			pText.y += 7;
 			putText(x_output, text.str(), pText,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
 			i++;

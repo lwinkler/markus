@@ -56,7 +56,7 @@ class Event : public Serializable
 		// inline const std::string& GetObjectEventName(){return m_objectEventName;};
 
 		inline void AddFeature(std::string x_name, double x_value) {m_object.AddFeature(x_name, x_value);}
-		inline const std::map <std::string, Feature>& GetFeatures() const {return m_object.GetFeatures();}
+		inline const std::map <std::string, Feature*>& GetFeatures() const {return m_object.GetFeatures();}
 		inline const Feature& GetFeature(const std::string& x_name) const
 		{
 			return m_object.GetFeature(x_name);
