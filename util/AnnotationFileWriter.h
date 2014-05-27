@@ -45,7 +45,7 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
-	long int m_subId;
+	int m_subId;
 	std::ofstream m_file;
 };
 

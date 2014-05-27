@@ -562,7 +562,7 @@ const string& Manager::OutputDir(const string& x_outputDir, const string& x_conf
 			if(x_outputDir == "")
 			{
 				m_outputDir = "out_" + timeStamp();
-				short trial = 0; // Must NOT be a char to avoid concatenation problems!
+				int16_t trial = 0; // Must NOT be a char to avoid concatenation problems!
 				string tmp = m_outputDir;
 
 				// Try to create the output dir, if it fails, try changing the name

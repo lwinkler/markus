@@ -70,7 +70,7 @@ protected:
 
 	// state
 	bool m_oldState;
-	long int m_subId;
+	int m_subId;
 	std::string m_startTime;
 	std::string m_endTime;
 	std::string m_srtFileName;
