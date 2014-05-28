@@ -108,8 +108,8 @@ void SegmenterContour::ProcessFrame()
 			// Extract moments
 			Moments mom = moments(contours[i]);
 			double m00_scaled = mom.m00;
-            double hu[7];
-            HuMoments(mom,hu);
+			double hu[7];
+			HuMoments(mom,hu);
 
 
 			// Add the possible features
@@ -139,10 +139,14 @@ void SegmenterContour::ProcessFrame()
 				{
 					obj.AddFeature("ellipse_angle", minEllipse.angle / 180.0); // 180 is the max possible angle
 				}
-                else if(it->compare("ellipse_cos") == 0)
-                {
-                    obj.AddFeature("ellipse_cos", cos(minEllipse.angle * M_PI / 180.0));
-                }
+				else if(it->compare("ellipse_cos") == 0)
+				{
+					obj.AddFeature("ellipse_cos", cos(minEllipse.angle * M_PI / 180.0)); // [-1..1]
+				}
+				else if(it->compare("ellipse_sin") == 0)
+				{
+					obj.AddFeature("ellipse_sin", sin(minEllipse.angle * M_PI / 180.0)); // [0..1]
+				}
 				else if(it->compare("ellipse_width") == 0)
 				{
 					obj.AddFeature("ellipse_width", static_cast<double>(minEllipse.size.width) / diagonal);
@@ -171,34 +175,34 @@ void SegmenterContour::ProcessFrame()
 				{
 					obj.AddFeature("moment_20", mom.mu20/pow(m00_scaled, 2));
 				}
-                else if(it->compare("hu_moment_1") == 0)
-                {
-                    obj.AddFeature("hu_moment_1", hu[0]);
-                }
-                else if(it->compare("hu_moment_2") == 0)
-                {
-                    obj.AddFeature("hu_moment_2", hu[1]);
-                }
-                else if(it->compare("hu_moment_3") == 0)
-                {
-                    obj.AddFeature("hu_moment_3", hu[2]);
-                }
-                else if(it->compare("hu_moment_4") == 0)
-                {
-                    obj.AddFeature("hu_moment_4", hu[3]);
-                }
-                else if(it->compare("hu_moment_5") == 0)
-                {
-                    obj.AddFeature("hu_moment_5", hu[4]);
-                }
-                else if(it->compare("hu_moment_6") == 0)
-                {
-                    obj.AddFeature("hu_moment_6", hu[5]);
-                }
-                else if(it->compare("hu_moment_7") == 0)
-                {
-                    obj.AddFeature("hu_moment_7", hu[6]);
-                }
+				else if(it->compare("hu_moment_1") == 0)
+				{
+					obj.AddFeature("hu_moment_1", hu[0]);
+				}
+				else if(it->compare("hu_moment_2") == 0)
+				{
+					obj.AddFeature("hu_moment_2", hu[1]);
+				}
+				else if(it->compare("hu_moment_3") == 0)
+				{
+					obj.AddFeature("hu_moment_3", hu[2]);
+				}
+				else if(it->compare("hu_moment_4") == 0)
+				{
+					obj.AddFeature("hu_moment_4", hu[3]);
+				}
+				else if(it->compare("hu_moment_5") == 0)
+				{
+					obj.AddFeature("hu_moment_5", hu[4]);
+				}
+				else if(it->compare("hu_moment_6") == 0)
+				{
+					obj.AddFeature("hu_moment_6", hu[5]);
+				}
+				else if(it->compare("hu_moment_7") == 0)
+				{
+					obj.AddFeature("hu_moment_7", hu[6]);
+				}
 			}
 
 #ifdef MARKUS_DEBUG_STREAMS
