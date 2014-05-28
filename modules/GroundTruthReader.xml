@@ -53,12 +53,27 @@
 			<name>input</name>
 			<description>Video input</description>
 		</input>
+		<input id="1">
+			<type>Objects</type>
+			<name>input object</name>
+			<description>Incoming objects</description>
+		</input>
 	</inputs>
 	<outputs>
 		<output id="0">
 			<type>State</type>
 			<name>state</name>
 			<description>State read from the annotation file</description>
+		</output>
+		<output id="1">
+			<type>Objects</type>
+			<name>output object</name>
+			<description>Outcoming objects</description>
+		</output>
+		<output id="2">
+			<type>Event</type>
+			<name>change_gt</name>
+			<description>State of ground truth changed</description>
 		</output>
 	</outputs>
 </module>

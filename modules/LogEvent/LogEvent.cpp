@@ -93,7 +93,6 @@ void LogEvent::WriteEvent()
 	ss<<m_event.GetEventName()<<endl;
 
 	// Log event features with values
-	// TODO use Serialize method
 	if(m_event.GetFeatures().size() != 0)
 		ss<<"time"<<SEP<<"object"<<SEP<<"feature"<<SEP<<"value"<<SEP<<"mean"<<SEP<<"sqVariance"<<SEP<<"initial"<<SEP<<"min"<<SEP<<"max"<<SEP<<"nbSamples"<<endl;
 	for(map<string, Feature>::const_iterator it2 = m_event.GetFeatures().begin() ; it2 != m_event.GetFeatures().end() ; it2++)
