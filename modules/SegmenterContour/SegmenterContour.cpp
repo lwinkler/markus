@@ -62,6 +62,19 @@ void SegmenterContour::Reset()
 {
 	Module::Reset();
 	split(m_param.features, ',', m_featureNames);
+	computeMoment = false;
+	computeHuMoment = false;
+
+	for(vector<string>::const_iterator it = m_featureNames.begin() ; it != m_featureNames.end() ; it++)
+	{
+		if (!computeMoment)
+			computeMoment = (it->find("moment") != string::npos);
+
+		if (!computeHuMoment && (computeHuMoment  = (it->find("hu_moment") != string::npos)))
+		{
+			break;
+		}
+	}
 }
 
 void SegmenterContour::ProcessFrame()
@@ -105,11 +118,19 @@ void SegmenterContour::ProcessFrame()
 
 			Object obj(m_param.objectLabel, rect);
 
-			// Extract moments
-			Moments mom = moments(contours[i]);
-			double m00_scaled = mom.m00;
+			// Extract moments only if necessary
+			Moments mom;
+			double m00_scaled;
 			double hu[7];
-			HuMoments(mom,hu);
+
+			if (computeMoment)
+			{
+				mom = moments(contours[i]);
+				m00_scaled = mom.m00;
+
+				if (computeHuMoment)	// if computeHuMoment is true, computeMoment is already true
+					HuMoments(mom,hu);
+			}
 
 
 			// Add the possible features
