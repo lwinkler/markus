@@ -534,17 +534,26 @@ var xmlProject = null;
 
 				classParameters.find("parameters > param").each(function(el){
 					var cl = $(this); // $(this).data('class');
-					var value = xml.find("parameters > param[name=" + cl.attr('name') + "]");
-					if(value.length <= 0)
-						value = '';
-					else
-						value = value.text();
+					if(cl.attr('name') != "class"){
+						var value = xml.find("parameters > param[name=" + cl.attr('name') + "]");
+						if(value.length <= 0)
+							value = '';
+						else
+							value = value.text();
 
-					parameters.append('<tr>')
-						.append('<td><b title="' + cl.find('description').text() + '">' + cl.attr('name') + '</b></td><td>' 
-						+ cl.find('type').text() + '</td><td>' + value + '</td><td>' 
-						+ cl.find('value').text() + '</td>')
-						.append('</tr>');
+						parameters.append('<tr>')
+							.append('<td><b title="' + cl.find('description').text() + '">' + cl.attr('name') + '</b></td><td>' 
+							+ cl.find('type').text() 
+							+ '</td><td><input id="val_' + cl.attr('name') + '" type="text" value="' + value + '" size=10/></td><td>' 
+							+ cl.find('value').text() + '</td>')
+							.append('</tr>');
+						$('#val_' + cl.attr('name')).change(function(el){
+							// The value of the parameter has been set
+							$('<param/>', xmlProject).appendTo(xml.find("parameters"))
+								.attr("name", cl.attr('name'))
+								.text($(this).val());
+						});
+					}
 				});
 				parameters.append('</table>');
 			}
