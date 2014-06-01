@@ -541,14 +541,20 @@ var xmlProject = null;
 						else
 							value = value.text();
 
+						// Add param to table for display
 						parameters.append('<tr>')
 							.append('<td><b title="' + cl.find('description').text() + '">' + cl.attr('name') + '</b></td><td>' 
 							+ cl.find('type').text() 
 							+ '</td><td><input id="val_' + cl.attr('name') + '" type="text" value="' + value + '" size=10/></td><td>' 
 							+ cl.find('value').text() + '</td>')
 							.append('</tr>');
-						$('#val_' + cl.attr('name')).change(function(el){
+						$('#val_' + cl.attr('name')).keyup(function(el){
+							// note: we use keyup instead of change because the event is not sent for the last input
 							// The value of the parameter has been set
+							// 	add the parameter and value to the config to save
+							var node = xml.find('parameters > param[name="' + cl.attr('name') + '"]');
+							if(node)
+								node.remove();
 							$('<param/>', xmlProject).appendTo(xml.find("parameters"))
 								.attr("name", cl.attr('name'))
 								.text($(this).val());
