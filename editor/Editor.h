@@ -14,6 +14,7 @@ class Editor : public QMainWindow
 	private:
 		QWebView m_view;
 		QString m_currentProject;
+		std::string m_projectToLoad;
 		QAction *aboutAct;
 		QAction *loadProjectAct;
 		QAction *saveProjectAct;
@@ -29,7 +30,7 @@ class Editor : public QMainWindow
 		void CreateMenus();
 
 	public:
-		Editor(QWidget *parent = 0);
+		Editor(const std::string& x_project = "", QWidget *parent = 0);
 		void setUrl(const QUrl &url);
 
 	public slots:

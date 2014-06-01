@@ -50,7 +50,8 @@
 
 using namespace std;
 
-Editor::Editor(QWidget *parent)
+Editor::Editor(const string& x_project, QWidget *parent) :
+	m_projectToLoad(x_project)
 {
 	QWebPage2* page = new QWebPage2();
 	m_view.setPage(page);
@@ -85,6 +86,15 @@ void Editor::adaptDom(bool x_loadOk)
 
 	foreach (QWebElement element, elements)
 		element.setAttribute("disabled", "disabled");
+
+	// if a project is select load it
+	QString fileName(m_projectToLoad.c_str());
+	if (!fileName.isEmpty())
+	{
+		cout<<"Open "<<m_projectToLoad<<endl;
+		m_view.page()->mainFrame()->evaluateJavaScript("window.markusEditor.loadProjectFile(\"" + fileName + "\"); null");
+		m_currentProject = fileName;
+	}
 }
 
 /// Load an XML project file
