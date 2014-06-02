@@ -112,6 +112,7 @@ void Module::Reset()
 
 	for(vector<Parameter*>::const_iterator it = list.begin(); it != list.end(); it++)
 	{
+		// Do not add param if locked or already present
 		if((*it)->IsLocked() || FindController((*it)->GetName()) != NULL)
 			continue;
 		Controller* ctr = NULL;

@@ -242,8 +242,9 @@ class TestModules : public CppUnit::TestFixture
 	}
 
 	/// Generate a random string value for the parameter
-	void GenerateValueFromRange(std::vector<std::string>& rx_values, const std::string& x_range, const std::string& x_type, unsigned int* xp_seed)
+	void GenerateValueFromRange(std::vector<std::string>& rx_values, const std::string& x_range, const std::string& x_type)
 	{
+		static const int nbSamples = 20;
 		LOG_DEBUG(m_logger, "Generate values for param of type "<<x_type<<" in range "<<x_range);
 		rx_values.clear();
 		// if(x_range == "")
@@ -264,15 +265,37 @@ class TestModules : public CppUnit::TestFixture
 		double min = 0, max = 0;
 		if (2 == sscanf(x_range.c_str(), "[%lf:%lf]", &min, &max))
 		{
-			for(int i = 0 ; i < 100 ; i++)
+			if(x_type == "int" && max - min <= nbSamples)
 			{
-				std::stringstream ss;
-				// Generate 100 random values
-				// TODO: used values in range, non-random
-				if(x_type == "int")
-					ss<<static_cast<int>(min + rand_r(xp_seed) % static_cast<int>(max - min + 1));
-				else 
-					ss<<(min + rand_r(xp_seed) * (max - min) / RAND_MAX);
+				for(int i = min ; i <= max ; i++)
+				{
+					std::stringstream ss;
+					ss<<i;
+					rx_values.push_back(ss.str());
+					// rx_values.push_back(static_cast<int>(min + static_cast<int>(i/nbSamples) % static_cast<int>(max - min + 1)));
+				}
+			}
+			else if(x_type == "int")
+			{
+				// nbSamples values in range
+				double incr = static_cast<double>(max - min) / nbSamples;
+				for(int i = 0 ; i <= nbSamples ; i++)
+				{
+					std::stringstream ss;
+					ss<<static_cast<int>(min + i * incr);
+					rx_values.push_back(ss.str());
+				}
+			}
+			else 
+			{
+				// nbSamples values in range
+				double incr = static_cast<double>(max - min) / nbSamples;
+				for(int i = 0 ; i <= nbSamples ; i++)
+				{
+					std::stringstream ss;
+					ss<<(min + i * incr);
+					rx_values.push_back(ss.str());
+				}
 			}
 		}
 		else
@@ -328,6 +351,7 @@ class TestModules : public CppUnit::TestFixture
 
 			randomizeInputs(module, *it1, &seed);
 
+			// Test on all controllers of the module
 			for(std::map<std::string, Controller*>::const_iterator it2 = module->GetControllersList().begin() ; it2 != module->GetControllersList().end() ; it2++)
 			{
 				LOG_INFO(m_logger, "## on controller "<<it2->first<<" of class "<<it2->second->GetClass());
@@ -355,7 +379,7 @@ class TestModules : public CppUnit::TestFixture
 					std::vector<std::string> values;
 					if(type  == "string")
 						values.push_back(defval);
-					else GenerateValueFromRange(values, range, type, &seed);
+					else GenerateValueFromRange(values, range, type);
 
 					for(std::vector<std::string>::iterator it = values.begin() ; it != values.end() ; it++)
 					{
@@ -368,11 +392,13 @@ class TestModules : public CppUnit::TestFixture
 
 						CPPUNIT_ASSERT_MESSAGE("Value set must be returned by get", *it == newValue);
 
+						module->Reset();
 						for(int i = 0 ; i < 3 ; i++)
 							module->Process();
 						LOG_DEBUG(m_logger, "###  "<<it2->first<<".Set returned "<<*it);
 						LOG_DEBUG(m_logger, "###  "<<it2->first<<".Get returned "<<newValue);
 					}
+					it2->second->CallAction("Set", &defval);
 				}
 				else
 				{
@@ -387,6 +413,45 @@ class TestModules : public CppUnit::TestFixture
 						for(int i = 0 ; i < 3 ; i++) module->Process();
 					}
 				}
+			}
+
+			delete module;
+		}
+	}
+
+	/// Call each controller of each module
+	void testParameters()
+	{
+		unsigned int seed = 324223426;
+		LOG_TEST(m_logger, "\n# Test all parameters");
+		
+		// Test on each type of module
+		for(std::vector<std::string>::const_iterator it1 = moduleTypes.begin() ; it1 != moduleTypes.end() ; it1++)
+		{
+			LOG_TEST(m_logger, "# on module "<<*it1);
+
+			Module* module = createAndConnectModule(*it1);
+			if(module == NULL)
+				continue;
+
+			randomizeInputs(module, *it1, &seed);
+
+			// Test on all controllers of the module
+			for(std::vector<Parameter*>::const_iterator it2 = module->GetParameters().GetList().begin() ; it2 != module->GetParameters().GetList().end() ; it2++)
+			{
+				// Create a second module with the parameter value (in case it is locked)
+				// we already have tested the other parameters with controllers
+				if(!(*it2)->IsLocked() || module->IsInput())
+					continue;
+				LOG_INFO(m_logger, "## on parameter "<<(*it2)->GetName()<<" of type "<<(*it2)->GetType());
+
+				ConfigReader moduleConfig = addModuleToConfig(module->GetClass(), *mp_config);
+				moduleConfig.RefSubConfig("parameters").RefSubConfig("param", module->GetName()).SetValue(""); // TODO
+				Module* module2 = m_factory.CreateModule(module->GetClass(), moduleConfig);
+				module2->SetAsReady();
+				module2->Reset();
+				for(int i = 0 ; i < 3 ; i++)
+					module2->Process();
 			}
 
 			delete module;

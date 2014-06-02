@@ -54,13 +54,13 @@ BgrSubMOG::BgrSubMOG(const ConfigReader& x_configReader) :
 
 BgrSubMOG::~BgrSubMOG()
 {
+	CLEAN_DELETE(mp_mog);
 }
 
 void BgrSubMOG::Reset()
 {
 	Module::Reset();
-	if(mp_mog == NULL)
-		delete mp_mog;
+	CLEAN_DELETE(mp_mog);
 	mp_mog = new BackgroundSubtractorMOG(m_param.history, m_param.nmixtures, m_param.backgroundRatio, m_param.noiseSigma);
 	mp_mog->initialize(m_input.size(), m_input.type());
 }
