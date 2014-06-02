@@ -48,8 +48,8 @@ class BgrSubMOG : public Module
 {
 	class Parameters : public Module::Parameters
 	{
-		public:
-			Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+	public:
+		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
 			// This parameters should not change
 			m_list.push_back(new ParameterInt   ("history",          200,    1,   10000,     &history,         "Length of the history"));
@@ -58,18 +58,14 @@ class BgrSubMOG : public Module
 			m_list.push_back(new ParameterDouble("noise_sigma",       15,    0,    1000,     &noiseSigma,      "noise strength"));
 			m_list.push_back(new ParameterDouble("learning_rate",     -1,    -1,       1,     &learningRate,    "Learning rate of the model"));
 
-			//m_list.push_back(new ParameterFloat("foreground_thres", 	0.2, 	0, 1,	&foregroundThres,	"Threshold to accept a pixel as foreground"));
-
-			// RefParameterByName("history").Lock();
-
 			Init();
 		};
-			int history;
-			int nmixtures;
-			double backgroundRatio;
-			double noiseSigma;
+		int history;
+		int nmixtures;
+		double backgroundRatio;
+		double noiseSigma;
 
-			double learningRate;
+		double learningRate;
 	};
 
 public:

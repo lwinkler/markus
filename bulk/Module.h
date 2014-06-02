@@ -65,7 +65,7 @@ public:
 			RefParameterByName("class").Lock();
 			RefParameterByName("width").Lock();
 			RefParameterByName("height").Lock();
-			// RefParameterByName("type").Lock();
+			// RefParameterByName("type").Lock(); // TODO: Enable this ?
 			// RefParameterByName("auto_process").Lock();
 			// RefParameterByName("allow_unsync_input").Lock();
 		}
@@ -91,6 +91,7 @@ public:
 	virtual const std::string& GetClass() const = 0;
 	virtual const std::string& GetDescription() const = 0;
 	int GetId() const {return m_id;}
+	virtual const Parameters & GetParameters() const = 0;
 
 	const std::map<int, Stream*>& GetInputStreamList() const {return m_inputStreams;}
 	const std::map<int, Stream*>& GetOutputStreamList() const {return m_outputStreams;}
@@ -155,7 +156,6 @@ protected:
 	QReadWriteLock m_lock;
 
 private:
-	virtual const Parameters & GetParameters() const = 0;
 	static log4cxx::LoggerPtr m_logger;
 };
 
