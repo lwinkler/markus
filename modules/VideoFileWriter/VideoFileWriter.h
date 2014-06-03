@@ -45,9 +45,9 @@ public:
 			m_list.push_back(new ParameterString("file", 	  "output", 	     &file,      "Name of the video file to write, with path"));
 			m_list.push_back(new ParameterString("fourcc", 	  "MJPG", 	     &fourcc,    "Four character code, determines the format. PIM1, MJPG, MP42, DIV3, DIVX, U263, I263, FLV1"));
 			RefParameterByName("type").SetDefault("CV_8UC3");
-			//ParameterImageType& ptype(dynamic_cast<ParameterImageType&>(RefParameterByName("type")));
-			//ptype.AllowAllValues(false);
-			//ptype.AllowValue("CV_8UC3", true);
+			ParameterImageType& ptype(dynamic_cast<ParameterImageType&>(RefParameterByName("type"))); // TODO implement SetRange at parameter level
+			ptype.AllowAllValues(false);
+			ptype.AllowValue("CV_8UC3", true);
 			Init(); // TODO: Keep this ?
 			RefParameterByName("type").Lock();
 			Init();
