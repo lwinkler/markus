@@ -53,18 +53,21 @@ class TestModules : public CppUnit::TestFixture
 		bool m_state;
 		Event m_event;
 		std::vector<Object> m_objects;
+		int m_cpt;
 	public:
 	void runTest()
 	{
 	}
 	void setUp()
 	{
+		m_cpt = 0;
 		m_factory.ListModules(moduleTypes);
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigReader("/tmp/config_empty.xml");
 		addModuleToConfig("VideoFileReader", *mp_config)
 			.RefSubConfig("parameters", "", true)
 			.RefSubConfig("param", "fps", true).SetValue("22");
+		mp_config->RefSubConfig("application").SetAttribute("name", "unitTest");
 		mp_fakeInput = m_factory.CreateModule("VideoFileReader", mp_config->GetSubConfig("application").GetSubConfig("module", "VideoFileReader0"));
 		// note: we need a fake module to create the input streams
 		mp_fakeInput->SetAsReady();
@@ -92,6 +95,9 @@ class TestModules : public CppUnit::TestFixture
 		moduleConfig.RefSubConfig("inputs", "", true);
 		moduleConfig.RefSubConfig("outputs", "", true);
 		moduleConfig.SetAttribute("name", rx_type + "0");
+		std::stringstream ss;
+		ss<<m_cpt++;
+		moduleConfig.SetAttribute("id", ss.str());
 		return moduleConfig;
 	}
 
@@ -202,6 +208,7 @@ class TestModules : public CppUnit::TestFixture
 	/// Create module and make it ready to process
 	Module* createAndConnectModule(const std::string& x_type, const std::map<std::string, std::string>* xp_parameters = NULL)
 	{
+		LOG_DEBUG(m_logger, "Create and connect module of class "<<x_type);
 		ConfigReader moduleConfig = addModuleToConfig(x_type, *mp_config);
 
 		// Add parameters to override to the config
@@ -209,11 +216,16 @@ class TestModules : public CppUnit::TestFixture
 			for(std::map<std::string, std::string>::const_iterator it = xp_parameters->begin() ; it != xp_parameters->end() ; it++)
 				moduleConfig.RefSubConfig("parameters").RefSubConfig("param", it->first, true).SetValue(it->second);
 
-		mp_config->SaveToFile("testing/tmp.xml");
+		mp_config->SaveToFile("testing/tmp/tmp.xml");
 		Module* module = m_factory.CreateModule(x_type, moduleConfig);
 		m_image = cv::Mat(module->GetHeight(), module->GetWidth(), module->GetImageType());
 
 		const std::map<int, Stream*> inputs  = module->GetInputStreamList();
+
+		// delete(mp_fakeInput);
+		// mp_fakeInput = m_factory.CreateModule("VideoFileReader", mp_config->GetSubConfig("application").GetSubConfig("module", "VideoFileReader0"));
+		// mp_fakeInput->SetAsReady();
+		// mp_fakeInput->Reset();
 		
 		// Create custom streams to feed each input of the module
 		for(std::map<int, Stream*>::const_iterator it2 = inputs.begin() ; it2 != inputs.end() ; it2++)
@@ -441,6 +453,9 @@ class TestModules : public CppUnit::TestFixture
 			if(module == NULL)
 				continue;
 
+			std::string lastParam = "";
+			std::string lastDefault = "";
+
 			// Test on all controllers of the module
 			for(std::vector<Parameter*>::const_iterator it2 = module->GetParameters().GetList().begin() ; it2 != module->GetParameters().GetList().end() ; it2++)
 			{
@@ -462,20 +477,21 @@ class TestModules : public CppUnit::TestFixture
 				{
 					// For each value
 					std::map<std::string, std::string> params;
-					LOG_DEBUG(m_logger, "Set param "<<(*it2)->GetName()<<" = "<<*it3);
+					LOG_DEBUG(m_logger, "Set param "<<(*it2)->GetName()<<" = "<<*it3<<" and "<<lastParam<<" = "<<lastDefault);
 					params[(*it2)->GetName()] = *it3;
+					params[lastParam] = lastDefault;
 
 					Module* module2 = createAndConnectModule(*it1, &params);
+					CPPUNIT_ASSERT(module2 != NULL);
 					randomizeInputs(module2, *it1, &seed);
 
-					CPPUNIT_ASSERT(module2 != NULL);
-
-					module2->Reset();
 					for(int i = 0 ; i < 3 ; i++)
 						module2->Process();
 
 					delete module2;
 				}
+				lastParam = (*it2)->GetName();
+				lastDefault = (*it2)->GetDefaultString();
 			}
 			delete module;
 		}

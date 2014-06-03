@@ -206,7 +206,7 @@ void ConfigReader::SetAttribute(const std::string& x_attributeName, string x_val
 	if(element == NULL)
 		throw MkException("Impossible to find attribute " + x_attributeName + " in ConfigReader" , LOC);
 
-	element->SetAttribute("name", x_value);
+	element->SetAttribute(x_attributeName, x_value);
 }
 
 /**
