@@ -52,6 +52,7 @@ protected:
 	std::string m_moduleName;
 	bool m_writeAllParamsToConfig;
 	Parameter & RefParameterByName(const std::string& x_name);
+
 private:
 	static log4cxx::LoggerPtr m_logger;
 };

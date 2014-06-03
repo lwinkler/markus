@@ -28,6 +28,8 @@
 #include "MkException.h"
 #include "Parameter.h"
 
+std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems);
+
 /// Template for all parameters with numerical values
 template<class T> class ParameterNum : public Parameter
 {
@@ -41,6 +43,18 @@ public:
 	inline std::string GetValueString() const {std::stringstream ss; ss<<mr_value; return ss.str();}
 	inline std::string GetDefaultString() const{std::stringstream ss; ss<<m_default; return ss.str();}
 	inline std::string GetRange() const{std::stringstream ss; ss<<"["<<m_min<<":"<<m_max<<"]"; return ss.str();}
+	inline virtual void SetRange(const std::string& x_range)
+	{
+		std::vector<std::string> values;
+		if(x_range.substr(0, 1) != "[" || x_range.substr(x_range.size() - 1, 1) != "]")
+			throw MkException("Error in range " + x_range, LOC);
+		split(x_range.substr(1, x_range.size() - 2), ':', values);
+		if(values.size() != 2)
+			throw MkException("Error in range", LOC);
+		std::stringstream ss;
+		ss<<values.at(0);
+		ss>>m_min;
+	}
 	inline const ParameterType& GetType() const {return m_type;}
 	inline const std::string& GetTypeString() const{return m_typeStr;}
 	inline const T GetDefault() const {return m_default;}
@@ -105,8 +119,8 @@ public:
 	}
 	
 	T m_default;
-	const T m_min;
-	const T m_max;
+	T m_min;
+	T m_max;
 private:
 	T& mr_value;
 	static const ParameterType m_type;

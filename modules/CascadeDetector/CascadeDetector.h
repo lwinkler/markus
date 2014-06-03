@@ -90,6 +90,7 @@ public:
 			// m_list.push_back(new ParameterString("color", "(255,255,255)",		&color,	"Color to draw the output"));
 			m_list.push_back(new ParameterString("object_label", "casc", 			&objectLabel,	"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
 			
+			RefParameterByName("type").SetRange("[CV_8UC1]");
 			RefParameterByName("type").SetDefault("CV_8UC1");
 			RefParameterByName("type").Lock();
 			Init();

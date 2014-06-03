@@ -500,9 +500,9 @@ class TestModules : public CppUnit::TestFixture
 	static CppUnit::Test *suite()
 	{
 		CppUnit::TestSuite *suiteOfTests = new CppUnit::TestSuite("TestModules");
-		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testInputs", &TestModules::testInputs));
-		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testControllers", &TestModules::testControllers));
-		// TODO suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testParameters", &TestModules::testParameters));
+		// suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testInputs", &TestModules::testInputs));
+		// suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testControllers", &TestModules::testControllers));
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testParameters", &TestModules::testParameters));
 		return suiteOfTests;
 	}
 };
