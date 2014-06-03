@@ -178,6 +178,7 @@ class TestModules : public CppUnit::TestFixture
 
 
 		// random image
+		m_image = cv::Mat(x_module->GetHeight(), x_module->GetWidth(), x_module->GetImageType());
 		m_image.setTo(0);
 		nb = rand_r(xp_seed) % 100;
 		for ( int i = 0; i < nb; i++ )
@@ -199,9 +200,15 @@ class TestModules : public CppUnit::TestFixture
 	}
 
 	/// Create module and make it ready to process
-	Module* createAndConnectModule(const std::string& x_type)
+	Module* createAndConnectModule(const std::string& x_type, const std::map<std::string, std::string>* xp_parameters = NULL)
 	{
 		ConfigReader moduleConfig = addModuleToConfig(x_type, *mp_config);
+
+		// Add parameters to override to the config
+		if(xp_parameters != NULL)
+			for(std::map<std::string, std::string>::const_iterator it = xp_parameters->begin() ; it != xp_parameters->end() ; it++)
+				moduleConfig.RefSubConfig("parameters").RefSubConfig("param", it->first, true).SetValue(it->second);
+
 		mp_config->SaveToFile("testing/tmp.xml");
 		Module* module = m_factory.CreateModule(x_type, moduleConfig);
 		m_image = cv::Mat(module->GetHeight(), module->GetWidth(), module->GetImageType());
@@ -419,7 +426,8 @@ class TestModules : public CppUnit::TestFixture
 		}
 	}
 
-	/// Call each controller of each module
+	/// All parameters that were locked need to be tested
+	/// 	we generate a new module for each parameter
 	void testParameters()
 	{
 		unsigned int seed = 324223426;
@@ -429,34 +437,48 @@ class TestModules : public CppUnit::TestFixture
 		for(std::vector<std::string>::const_iterator it1 = moduleTypes.begin() ; it1 != moduleTypes.end() ; it1++)
 		{
 			LOG_TEST(m_logger, "# on module "<<*it1);
-
 			Module* module = createAndConnectModule(*it1);
 			if(module == NULL)
 				continue;
-
-			randomizeInputs(module, *it1, &seed);
 
 			// Test on all controllers of the module
 			for(std::vector<Parameter*>::const_iterator it2 = module->GetParameters().GetList().begin() ; it2 != module->GetParameters().GetList().end() ; it2++)
 			{
 				// Create a second module with the parameter value (in case it is locked)
 				// we already have tested the other parameters with controllers
-				if(!(*it2)->IsLocked() || module->IsInput())
+				if(!(*it2)->IsLocked())
 					continue;
-				LOG_INFO(m_logger, "## on parameter "<<(*it2)->GetName()<<" of type "<<(*it2)->GetType());
 
-				ConfigReader moduleConfig = addModuleToConfig(module->GetClass(), *mp_config);
-				moduleConfig.RefSubConfig("parameters").RefSubConfig("param", module->GetName()).SetValue(""); // TODO
-				Module* module2 = m_factory.CreateModule(module->GetClass(), moduleConfig);
-				module2->SetAsReady();
-				module2->Reset();
-				for(int i = 0 ; i < 3 ; i++)
-					module2->Process();
+				LOG_INFO(m_logger, "## on parameter "<<(*it2)->GetName()<<" of type "<<(*it2)->GetTypeString());
+
+				// Generate a new module with each value for locked parameter
+				std::vector<std::string> values;
+
+				if((*it2)->GetTypeString()  == "string")
+					continue; // values.push_back(defval);
+				else GenerateValueFromRange(values, (*it2)->GetRange(), (*it2)->GetTypeString());
+
+				for(std::vector<std::string>::iterator it3 = values.begin() ; it3 != values.end() ; it3++)
+				{
+					// For each value
+					std::map<std::string, std::string> params;
+					LOG_DEBUG(m_logger, "Set param "<<(*it2)->GetName()<<" = "<<*it3);
+					params[(*it2)->GetName()] = *it3;
+
+					Module* module2 = createAndConnectModule(*it1, &params);
+					randomizeInputs(module2, *it1, &seed);
+
+					CPPUNIT_ASSERT(module2 != NULL);
+
+					module2->Reset();
+					for(int i = 0 ; i < 3 ; i++)
+						module2->Process();
+
+					delete module2;
+				}
 			}
-
 			delete module;
 		}
-		// TODO test locked parameters too
 	}
 
 	static CppUnit::Test *suite()
@@ -464,6 +486,7 @@ class TestModules : public CppUnit::TestFixture
 		CppUnit::TestSuite *suiteOfTests = new CppUnit::TestSuite("TestModules");
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testInputs", &TestModules::testInputs));
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testControllers", &TestModules::testControllers));
+		// TODO suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testParameters", &TestModules::testParameters));
 		return suiteOfTests;
 	}
 };
