@@ -22,6 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ParameterEnum.h"
+#include "util.h"
 
 using namespace std;
 
@@ -138,3 +139,25 @@ void ParameterEnum::Print(ostream& os) const
 	os<<m_name<<" = "<<GetReverseEnum().at(GetValue())<<" ["<<GetValue()<<"] ("<<configType[m_confSource]<<"); ";
 }
 
+/**
+* @brief Set the range of acceptable values
+*
+* @param x_range Range in the form "[val1,val2,val3]"
+*/
+void ParameterEnum::SetRange(const string& x_range)
+{
+	vector<string> values;
+	if(x_range.substr(0, 1) != "[" || x_range.substr(x_range.size() - 1, 1) != "]")
+		throw MkException("Error in range " + x_range, LOC);
+	split(x_range.substr(1, x_range.size() - 2), ',', values);
+	// Remove last element if empty, due to an extra comma
+	assert(values.size() > 0);
+	if(values.back() == "")
+		values.pop_back();
+	assert(values.size() > 0);
+
+	AllowAllValues(false);
+	m_allowedValues.clear();
+	for(vector<string>::const_iterator it = values.begin() ; it != values.end() ; it++)
+		AllowValue(*it, true);
+}
