@@ -289,7 +289,7 @@ def statistics(evaluation, video=None):
 def format_report(stats):
     """Display the statistics"""
 
-    # Search for lenght of longest string
+    # Search for length of longest string
     maxlen = max([len(name) for name in stats])
 
     # Prepare resulting string

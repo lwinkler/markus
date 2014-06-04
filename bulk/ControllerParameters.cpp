@@ -349,17 +349,17 @@ QWidget* ControllerCalibrationByHeight::CreateWidget()
 
 	mp_sliderX = new QParameterSlider(m_param2.GetValue().x, 0, 1, PRECISION_DOUBLE,widget);
 	mp_sliderY = new QParameterSlider(m_param2.GetValue().y, 0, 1, PRECISION_DOUBLE,widget);
-	mp_sliderHeigth = new QParameterSlider(m_param2.GetValue().heigth, 0, 1, PRECISION_DOUBLE,widget);
+	mp_sliderHeight = new QParameterSlider(m_param2.GetValue().height, 0, 1, PRECISION_DOUBLE,widget);
 	mp_labX = new QLabel("x");
 	mp_labY = new QLabel("y");
-	mp_labHeigth = new QLabel("heigth");
+	mp_labHeight = new QLabel("height");
 
 	mainLayout->addWidget(mp_labX, 0, 0);
 	mainLayout->addWidget(mp_sliderX,0,1);
 	mainLayout->addWidget(mp_labY, 1, 0);
 	mainLayout->addWidget(mp_sliderY,1,1);
-	mainLayout->addWidget(mp_labHeigth, 2, 0);
-	mainLayout->addWidget(mp_sliderHeigth,2,1);
+	mainLayout->addWidget(mp_labHeight, 2, 0);
+	mainLayout->addWidget(mp_sliderHeight,2,1);
 	widget->setLayout(mainLayout);
 
 	return widget;
@@ -377,7 +377,7 @@ void ControllerCalibrationByHeight::SetWidgetValue(const std::string& x_value)
 	object.Deserialize(str);
 	mp_sliderX->SetValue(object.x);
 	mp_sliderY->SetValue(object.y);
-	mp_sliderHeigth->SetValue(object.heigth);
+	mp_sliderHeight->SetValue(object.height);
 #endif
 }
 
@@ -388,7 +388,7 @@ std::string ControllerCalibrationByHeight::GetValueFromWidget()
 	CalibrationByHeight object;
 	object.x = mp_sliderX->GetValue();
 	object.y = mp_sliderY->GetValue();
-	object.heigth = mp_sliderHeigth->GetValue();
+	object.height = mp_sliderHeight->GetValue();
 	object.Serialize(ss);
 
 	return ss.str();

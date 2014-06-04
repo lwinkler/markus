@@ -1,0 +1,5 @@
+<param name="param_imageType">
+	<type>imageType</type>
+	<value default="CV_8UC2">CV_8UC2</value>
+	<description>Parameter of type imageType</description>
+</param>
