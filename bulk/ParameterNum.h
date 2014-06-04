@@ -85,6 +85,7 @@ public:
 	{	
 		std::istringstream istr(rx_value);
 		istr >> m_default; // atof is sensible to locale format and may use , as a separator
+		m_confSource = PARAMCONF_DEF;
 	}
 	virtual T GetValue() const
 	{
