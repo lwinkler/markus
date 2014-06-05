@@ -108,14 +108,17 @@ public:
 	MKCLASS("CascadeDetector")
 	MKDESCR("Detect objects from a video stream using a cascade filter (c.f. Haar patterns)")
 	
+	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void LaunchThread();
 	virtual void NormalProcess();
 	virtual void CopyResults();
 	void Reset();
+
 private:
+	inline virtual Parameters & RefParameters() {return m_param;}
 	Parameters m_param;
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
+
 protected:
 	// input
 	cv::Mat m_input;

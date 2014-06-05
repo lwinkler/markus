@@ -57,10 +57,12 @@ public:
 	MKCLASS("GroundTruthReader")
 	MKDESCR("Read a ground truth file")
 	
+	inline virtual const Parameters& GetParameters() const {return m_param;}
 	void ProcessFrame();
 	void Reset();
+
 private:
-	inline virtual const Parameters& GetParameters() const {return m_param;}
+	inline virtual Parameters & RefParameters() {return m_param;}
 	Parameters m_param;
 	static log4cxx::LoggerPtr m_logger;
 	bool m_oldState;

@@ -58,11 +58,13 @@ public:
 	MKCLASS("SegmenterContour")
 	MKDESCR("Segments a binary image and outputs a stream of objects (with OpenCV contour) and extracts their features (position, width and height)")
 	
+	inline virtual const Parameters& GetParameters() const {return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
+
 private:
+	inline virtual Parameters & RefParameters() {return m_param;}
 	Parameters m_param;
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	bool m_computeFitEllipse;
 	bool m_computeMinRect;
 	static log4cxx::LoggerPtr m_logger;

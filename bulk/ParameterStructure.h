@@ -45,6 +45,7 @@ public:
 	//void SetValueByName(const std::string& x_name, const std::string& x_value, ParameterConfigType x_configType = PARAMCONF_UNKNOWN);
 	const Parameter & GetParameterByName(const std::string& x_name) const;
 	const std::vector<Parameter*>& GetList() const {return m_list;}
+	void LockParameterByName(const std::string& x_name) {RefParameterByName(x_name).Lock();}
 	
 protected:
 	std::vector<Parameter*> m_list;

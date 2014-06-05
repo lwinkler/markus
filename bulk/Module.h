@@ -62,12 +62,7 @@ public:
 			m_list.push_back(new ParameterDouble("fps", 	 0, 	0, 	1000,		&fps,		"Frames per seconds (processing speed)"));
 
 			Init();
-			RefParameterByName("class").Lock();
-			RefParameterByName("width").Lock();
-			RefParameterByName("height").Lock();
-			// RefParameterByName("type").Lock(); // TODO: Enable this ?
-			// RefParameterByName("auto_process").Lock();
-			// RefParameterByName("allow_unsync_input").Lock();
+			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3]");
 		}
 
 	public:
@@ -127,6 +122,7 @@ public:
 	const Module& GetMasterModule() const;
 	
 protected:
+	virtual Parameters & RefParameters() = 0;
 
 	// for benchmarking
 	long long m_timerConvertion;

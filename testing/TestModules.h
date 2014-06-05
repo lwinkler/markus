@@ -464,7 +464,7 @@ class TestModules : public CppUnit::TestFixture
 				if(!(*it2)->IsLocked())
 					continue;
 
-				LOG_INFO(m_logger, "## on parameter "<<(*it2)->GetName()<<" of type "<<(*it2)->GetTypeString());
+				LOG_INFO(m_logger, "## on parameter "<<(*it2)->GetName()<<" of type "<<(*it2)->GetTypeString()<<" on range "<<(*it2)->GetRange());
 
 				// Generate a new module with each value for locked parameter
 				std::vector<std::string> values;

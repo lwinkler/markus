@@ -69,6 +69,7 @@ private:
 	// ConfigReader& m_configReader;
 	Parameters m_param;
         inline const Parameters& GetParameters() const{return m_param;}
+        inline Parameters& RefParameters() {return m_param;}
 
 	Manager& m_manager;
 	
