@@ -85,6 +85,9 @@ public:
 															// "File with filter data of the detected object"));
 			m_list.push_back(new ParameterString("object_label", "hog", 			&objectLabel,	"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
 			
+			RefParameterByName("width").SetRange("[320:6400]");
+			RefParameterByName("height").SetRange("[240:4800]");
+			RefParameterByName("type").SetRange("[CV_8UC1]");
 			Init();
 		};
 		
