@@ -108,8 +108,8 @@ class TestModules : public CppUnit::TestFixture
 		// std::cout<<m_image.size()<<std::endl;
 		assert(m_image.size() != cv::Size(0,0));
 		Object obj("test", cv::Rect(
-			cv::Point(rand_r(xp_seed) % m_image.cols, rand_r(xp_seed) % m_image.rows), 
-			cv::Point(rand_r(xp_seed) % m_image.cols, rand_r(xp_seed) % m_image.rows))
+			cv::Point(rand_r(xp_seed) % mp_fakeInput->GetWidth(), rand_r(xp_seed) % mp_fakeInput->GetHeight()), 
+			cv::Point(rand_r(xp_seed) % mp_fakeInput->GetWidth(), rand_r(xp_seed) % mp_fakeInput->GetHeight()))
 		);
 
 		if(x_featureNames != "")
@@ -261,9 +261,8 @@ class TestModules : public CppUnit::TestFixture
 	}
 
 	/// Generate a random string value for the parameter
-	void GenerateValueFromRange(std::vector<std::string>& rx_values, const std::string& x_range, const std::string& x_type)
+	void GenerateValueFromRange(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range, const std::string& x_type)
 	{
-		static const int nbSamples = 20;
 		LOG_DEBUG(m_logger, "Generate values for param of type "<<x_type<<" in range "<<x_range);
 		rx_values.clear();
 		// if(x_range == "")
@@ -284,21 +283,21 @@ class TestModules : public CppUnit::TestFixture
 		double min = 0, max = 0;
 		if (2 == sscanf(x_range.c_str(), "[%lf:%lf]", &min, &max))
 		{
-			if(x_type == "int" && max - min <= nbSamples)
+			if(x_type == "int" && max - min <= x_nbSamples)
 			{
 				for(int i = min ; i <= max ; i++)
 				{
 					std::stringstream ss;
 					ss<<i;
 					rx_values.push_back(ss.str());
-					// rx_values.push_back(static_cast<int>(min + static_cast<int>(i/nbSamples) % static_cast<int>(max - min + 1)));
+					// rx_values.push_back(static_cast<int>(min + static_cast<int>(i/x_nbSamples) % static_cast<int>(max - min + 1)));
 				}
 			}
 			else if(x_type == "int")
 			{
-				// nbSamples values in range
-				double incr = static_cast<double>(max - min) / nbSamples;
-				for(int i = 0 ; i <= nbSamples ; i++)
+				// x_nbSamples values in range
+				double incr = static_cast<double>(max - min) / x_nbSamples;
+				for(int i = 0 ; i <= x_nbSamples ; i++)
 				{
 					std::stringstream ss;
 					ss<<static_cast<int>(min + i * incr);
@@ -307,9 +306,9 @@ class TestModules : public CppUnit::TestFixture
 			}
 			else 
 			{
-				// nbSamples values in range
-				double incr = static_cast<double>(max - min) / nbSamples;
-				for(int i = 0 ; i <= nbSamples ; i++)
+				// x_nbSamples values in range
+				double incr = static_cast<double>(max - min) / x_nbSamples;
+				for(int i = 0 ; i <= x_nbSamples ; i++)
 				{
 					std::stringstream ss;
 					ss<<(min + i * incr);
@@ -398,7 +397,7 @@ class TestModules : public CppUnit::TestFixture
 					std::vector<std::string> values;
 					if(type  == "string")
 						values.push_back(defval);
-					else GenerateValueFromRange(values, range, type);
+					else GenerateValueFromRange(20, values, range, type);
 
 					for(std::vector<std::string>::iterator it = values.begin() ; it != values.end() ; it++)
 					{
@@ -471,7 +470,7 @@ class TestModules : public CppUnit::TestFixture
 
 				if((*it2)->GetTypeString()  == "string")
 					continue; // values.push_back(defval);
-				else GenerateValueFromRange(values, (*it2)->GetRange(), (*it2)->GetTypeString());
+				else GenerateValueFromRange(10, values, (*it2)->GetRange(), (*it2)->GetTypeString());
 
 				for(std::vector<std::string>::iterator it3 = values.begin() ; it3 != values.end() ; it3++)
 				{
@@ -500,8 +499,8 @@ class TestModules : public CppUnit::TestFixture
 	static CppUnit::Test *suite()
 	{
 		CppUnit::TestSuite *suiteOfTests = new CppUnit::TestSuite("TestModules");
-		// suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testInputs", &TestModules::testInputs));
-		// suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testControllers", &TestModules::testControllers));
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testInputs", &TestModules::testInputs));
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testControllers", &TestModules::testControllers));
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testParameters", &TestModules::testParameters));
 		return suiteOfTests;
 	}

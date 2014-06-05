@@ -62,7 +62,6 @@ public:
 			m_list.push_back(new ParameterDouble("fps", 	 0, 	0, 	1000,		&fps,		"Frames per seconds (processing speed)"));
 
 			Init();
-			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3]");
 		}
 
 	public:
