@@ -62,11 +62,12 @@ public:
 	MKCLASS("LogEvent")
 	MKDESCR("Read an event and log it to .srt file")
 
+	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
 
 private:
-	inline virtual const Parameters& GetParameters() const { return m_param;}
+	inline virtual Parameters & RefParameters() {return m_param;}
 	Parameters m_param;
 	static log4cxx::LoggerPtr m_logger;
 

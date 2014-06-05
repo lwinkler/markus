@@ -60,14 +60,15 @@ public:
 	MKCLASS("VideoFileBufferWriter")
 	MKDESCR("Write output to a buffer and export it if an evenement occurs")
 	
+	inline virtual const Parameters& GetParameters() const {return m_param;}
 	virtual void ProcessFrame();
 	virtual void Reset();
 	void AddImageToBuffer();
 	void OpenNewFile();
 
 private:
+	inline virtual Parameters & RefParameters() {return m_param;}
 	Parameters m_param;
-	inline virtual const Parameters& GetParameters() const {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

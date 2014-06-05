@@ -34,23 +34,23 @@
 #include "FactoryModules.h"
 
 
-class ManagerParameter : public ParameterStructure
-{
-public:
-	ManagerParameter(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
-	{
-		// m_list.push_back(new ParameterString("mode",	"", 	&mode, 	"Mode"));
-		ParameterStructure::Init();
-	}
-	// std::string mode; // unused
-};
-
 /**
 * @brief The manager handles all modules
 */
 class Manager : public Configurable, public Controllable
 {
 public:
+	class Parameters : public ParameterStructure
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
+		{
+			// m_list.push_back(new ParameterString("mode",	"", 	&mode, 	"Mode"));
+			ParameterStructure::Init();
+		}
+		// std::string mode; // unused
+	};
+
 	Manager(const ConfigReader& x_configReader, bool x_centralized);
 	~Manager();
 	void Reset(bool x_resetInputs = true);
@@ -80,7 +80,6 @@ protected:
 	inline virtual const ParameterStructure& GetParameters() const {return m_param;}
 	void NotifyException(const MkException& x_exeption);
 
-	ManagerParameter m_param;
 	bool m_centralized;
 	bool m_isConnected;
 	// long long m_timerConvertion;
@@ -100,5 +99,9 @@ protected:
 
 protected:
 	QReadWriteLock m_lock;
+
+private:
+        inline ParameterStructure& RefParameters() {return m_param;}
+	Parameters m_param;
 };
 #endif

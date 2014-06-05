@@ -59,12 +59,13 @@ public:
 	MKCLASS("Morph")
 	MKDESCR("Apply a morphological operator to an image")
 	
+	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
 
 private:
+	inline virtual Parameters & RefParameters() {return m_param;}
 	Parameters m_param;
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 protected:
 	

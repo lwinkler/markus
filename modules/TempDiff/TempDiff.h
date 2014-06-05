@@ -49,12 +49,13 @@ public:
 	MKCLASS("TempDiff")
 	MKDESCR("Perform temporal differencing: compare frame with previous frame by subtraction")
 	
+	inline virtual const Module::Parameters& GetParameters() const { return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
 
 private:
+	inline virtual Parameters & RefParameters() {return m_param;}
 	Parameters m_param;
-	inline virtual const Module::Parameters& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
