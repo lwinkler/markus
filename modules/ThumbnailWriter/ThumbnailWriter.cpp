@@ -36,10 +36,12 @@ log4cxx::LoggerPtr ThumbnailWriter::m_logger(log4cxx::Logger::getLogger("Thumbna
 ThumbnailWriter::ThumbnailWriter(const ConfigReader& x_configReader): 
 	Module(x_configReader),
 	m_param(x_configReader),
-	m_input(Size(m_param.width, m_param.height), m_param.type)
+	m_input(Size(m_param.width, m_param.height), m_param.type),
+	m_input2(Size(m_param.width, m_param.height), m_param.type)
 {
 	AddInputStream(0, new StreamImage( "input", m_input, *this,   "Video input"));
 	AddInputStream(1, new StreamObject("objects", m_objectsIn, *this,     "Incoming objects"));
+	AddInputStream(2, new StreamImage( "input2", m_input2, *this,   "Binary mask"));
 }
 
 ThumbnailWriter::~ThumbnailWriter()
@@ -111,6 +113,14 @@ void ThumbnailWriter::ProcessFrame()
 		std::stringstream ss1;
 		ss1 << folderName << m_currentTimeStamp << "_" << it1->GetName()<< it1->GetId() << "_" << cpt << "." << m_param.extension;
 		imwrite(ss1.str(), (m_input)(rect));
+
+		// For each object save a thumbnail
+		if(m_inputStreams.at(2)->IsConnected())
+		{
+			std::stringstream ss2;
+			ss2 << folderName << m_currentTimeStamp << "_" << it1->GetName()<< it1->GetId() << "_" << cpt << "_mask." << m_param.extension;
+			imwrite(ss2.str(), (m_input2)(rect));
+		}
 
 		cpt++;
 	}
