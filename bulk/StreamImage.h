@@ -50,6 +50,7 @@ protected:
 
 private:
 	DISABLE_COPY(StreamImage)
+	static log4cxx::LoggerPtr m_logger;
 };
 
 #endif

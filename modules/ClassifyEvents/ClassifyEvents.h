@@ -37,6 +37,7 @@ public:
 	MKCLASS("ClassifyEvents")
 	MKDESCR("Filter events based on user feedback")
 	
+	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
 	virtual void InvalidateLastEvent();
@@ -58,8 +59,8 @@ protected:
 	std::list<Event> m_events;
 
 private:
+	inline virtual Parameters & RefParameters() {return m_param;}
 	Parameters m_param;
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 };
 

@@ -48,7 +48,7 @@
 		</param>
 		<param name="kernel_size">
 			<type>int</type>
-			<value min="3" max="100" default="5">5</value>
+			<value min="3" max="30" default="5">5</value>
 			<description>Size of the element</description>
 		</param>
 		<param name="iterations">

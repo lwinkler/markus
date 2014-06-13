@@ -85,6 +85,7 @@ public:
 	virtual std::string GetValueString() const = 0;
 	virtual std::string GetDefaultString() const = 0;
 	virtual std::string GetRange() const = 0;
+	virtual void SetRange(const std::string& x_range) = 0;
 
 protected:	
 	const std::string m_name;

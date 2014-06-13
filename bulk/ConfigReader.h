@@ -73,9 +73,11 @@ public:
 	Configurable(const ConfigReader& x_confReader) : m_configReader(x_confReader){}
 	~Configurable(){}
 	virtual void UpdateConfig();
+	virtual const ParameterStructure & GetParameters() const = 0;
 
 private:
-	virtual const ParameterStructure & GetParameters() const = 0;
+	virtual ParameterStructure & RefParameters() = 0;
+
 protected:
 	ConfigReader m_configReader;
 };

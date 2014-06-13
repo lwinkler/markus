@@ -47,6 +47,8 @@ public:
 		{
 			m_list.push_back(new ParameterDouble("buffer_duration", 120, 0, 600, &bufferDuration, "Length of one buffer block of video [s]"));
 			m_list.push_back(new ParameterInt("nb_buffers",           0, 0,  10, &nbBuffers,      "Number of buffers blocks to keep before recording"));
+			RefParameterByName("type").SetDefault("CV_8UC3");
+			RefParameterByName("type").SetRange("[CV_8UC3]");
 			Init();
 		};
 		double bufferDuration;
@@ -58,14 +60,15 @@ public:
 	MKCLASS("VideoFileBufferWriter")
 	MKDESCR("Write output to a buffer and export it if an evenement occurs")
 	
+	inline virtual const Parameters& GetParameters() const {return m_param;}
 	virtual void ProcessFrame();
 	virtual void Reset();
 	void AddImageToBuffer();
 	void OpenNewFile();
 
 private:
+	inline virtual Parameters & RefParameters() {return m_param;}
 	Parameters m_param;
-	inline virtual const Parameters& GetParameters() const {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

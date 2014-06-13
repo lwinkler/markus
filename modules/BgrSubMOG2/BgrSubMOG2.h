@@ -59,6 +59,7 @@ public:
 			m_list.push_back(new ParameterDouble("learning_rate",	-1, 	-1, 1, &learningRate,	"Learning rate of the model"));
 
 			RefParameterByName("type").SetDefault("CV_8UC3");
+			RefParameterByName("type").SetRange("[CV_8UC3]");
 
 			Init();
 		};
@@ -73,11 +74,13 @@ public:
 	MKCLASS("BgrSubMOG2")
 	MKDESCR("Perform background subtraction via Mixtures Of Gaussians (OpenCV MOG2)")
 	
+	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
+
 private:
+	inline virtual Parameters & RefParameters() {return m_param;}
 	Parameters m_param;
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

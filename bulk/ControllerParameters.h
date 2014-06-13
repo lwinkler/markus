@@ -153,10 +153,10 @@ protected:
     QWidget * widget;
 	QParameterSlider * mp_sliderX;
 	QParameterSlider * mp_sliderY;
-	QParameterSlider * mp_sliderHeigth;
+	QParameterSlider * mp_sliderHeight;
 	QLabel* mp_labX;
 	QLabel* mp_labY;
-	QLabel* mp_labHeigth ;
+	QLabel* mp_labHeight ;
 };
 
 

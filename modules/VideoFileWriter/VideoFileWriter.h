@@ -44,12 +44,11 @@ public:
 		{
 			m_list.push_back(new ParameterString("file", 	  "output", 	     &file,      "Name of the video file to write, with path"));
 			m_list.push_back(new ParameterString("fourcc", 	  "MJPG", 	     &fourcc,    "Four character code, determines the format. PIM1, MJPG, MP42, DIV3, DIVX, U263, I263, FLV1"));
+
+			RefParameterByName("width").SetRange("[32:6400]");
+			RefParameterByName("height").SetRange("[24:4800]");
 			RefParameterByName("type").SetDefault("CV_8UC3");
-			//ParameterImageType& ptype(dynamic_cast<ParameterImageType&>(RefParameterByName("type")));
-			//ptype.AllowAllValues(false);
-			//ptype.AllowValue("CV_8UC3", true);
-			Init(); // TODO: Keep this ?
-			RefParameterByName("type").Lock();
+			RefParameterByName("type").SetRange("[CV_8UC3]");
 			Init();
 		};
 
@@ -62,13 +61,14 @@ public:
 	MKCLASS("VideoFileWriter")
 	MKDESCR("Write output to a video file")
 	
+	inline virtual const Parameters& GetParameters() const {return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
 	static const std::string ExtensionFromFourcc(const std::string& x_fourcc);
 
 private:
+	inline virtual Parameters & RefParameters() {return m_param;}
 	Parameters m_param;
-	inline virtual const Parameters& GetParameters() const {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

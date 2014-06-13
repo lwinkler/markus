@@ -42,7 +42,8 @@ public:
 		{
 			m_list.push_back(new ParameterInt("aperture", 1, 1, 10, &aperture,	"Size of the aperture of the camera"));
 			
-			// Set default value of module parameter (re-definition)
+			RefParameterByName("width").SetRange("[20:6400]");
+			RefParameterByName("height").SetRange("[20:4800]");
 			RefParameterByName("type").SetDefault("CV_8UC3");
 
 			Init();
@@ -55,12 +56,13 @@ public:
 	~SlitCam(void);
 	MKCLASS("SlitCam")
 	MKDESCR("A simple example module that mimics a slit camera (or linear camera). The camera input is a range of pixels in the middle of the image.")
+	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
 
 private:
+	inline virtual Parameters & RefParameters() {return m_param;}
 	Parameters m_param;
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

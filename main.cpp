@@ -165,7 +165,10 @@ int main(int argc, char** argv)
 				{
 #ifndef MARKUS_NO_GUI
 					QApplication app(argc, argv);
-					Editor editor;
+					string projectFile = "";
+					if(argc > 2)
+						projectFile = argv[2];
+					Editor editor(projectFile);
 					return app.exec();
 #else
 					LOG_ERROR(logger, "To launch the editor Markus must be compiled with GUI");
@@ -207,6 +210,7 @@ int main(int argc, char** argv)
 		}
 	}
 
+	// Handle other arguments
 	if (optind == argc - 2)
 	{
 		configFile = argv[argc - 2];

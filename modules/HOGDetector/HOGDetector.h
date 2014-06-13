@@ -85,6 +85,9 @@ public:
 															// "File with filter data of the detected object"));
 			m_list.push_back(new ParameterString("object_label", "hog", 			&objectLabel,	"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
 			
+			RefParameterByName("width").SetRange("[320:6400]");
+			RefParameterByName("height").SetRange("[240:4800]");
+			RefParameterByName("type").SetRange("[CV_8UC1]");
 			Init();
 		};
 		
@@ -99,6 +102,7 @@ public:
 	MKCLASS("HOGDetector")
 	MKDESCR("Detect objects from a video stream using a HOG descriptor")
 	
+	inline virtual const Parameters& GetParameters() const {return m_param;}
 	virtual void LaunchThread();
 	virtual void NormalProcess();
 	virtual void CopyResults();
@@ -106,8 +110,9 @@ public:
 
 private:
 	Parameters m_param;
-	inline virtual const Parameters& GetParameters() const { return m_param;}
+	inline virtual Parameters & RefParameters() {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
+
 protected:
 
 	// input

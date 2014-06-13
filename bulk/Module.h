@@ -62,12 +62,6 @@ public:
 			m_list.push_back(new ParameterDouble("fps", 	 0, 	0, 	1000,		&fps,		"Frames per seconds (processing speed)"));
 
 			Init();
-			RefParameterByName("class").Lock();
-			RefParameterByName("width").Lock();
-			RefParameterByName("height").Lock();
-			// RefParameterByName("type").Lock();
-			// RefParameterByName("auto_process").Lock();
-			// RefParameterByName("allow_unsync_input").Lock();
 		}
 
 	public:
@@ -91,6 +85,7 @@ public:
 	virtual const std::string& GetClass() const = 0;
 	virtual const std::string& GetDescription() const = 0;
 	int GetId() const {return m_id;}
+	virtual const Parameters & GetParameters() const = 0;
 
 	const std::map<int, Stream*>& GetInputStreamList() const {return m_inputStreams;}
 	const std::map<int, Stream*>& GetOutputStreamList() const {return m_outputStreams;}
@@ -126,6 +121,7 @@ public:
 	const Module& GetMasterModule() const;
 	
 protected:
+	virtual Parameters & RefParameters() = 0;
 
 	// for benchmarking
 	long long m_timerConvertion;
@@ -155,7 +151,6 @@ protected:
 	QReadWriteLock m_lock;
 
 private:
-	virtual const Parameters & GetParameters() const = 0;
 	static log4cxx::LoggerPtr m_logger;
 };
 
