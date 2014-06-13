@@ -69,6 +69,8 @@ private:
 	bool m_computeFitEllipse;
 	bool m_computeMinRect;
 	static log4cxx::LoggerPtr m_logger;
+	bool computeMoment;
+	bool computeHuMoment;
 
 protected:
 	
