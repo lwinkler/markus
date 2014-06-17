@@ -98,10 +98,6 @@ public:
 		(object.y <= 1 && object.y >= 0) &&
 		(object.height <= 1 && object.height >= 0));
 	}
-	virtual void Print(std::ostream& os) const
-	{
-		os<<m_name<<" : "<< mr_value.SerializeToString()  <<" ("<<configType[m_confSource]<<"); ";
-	}
 	virtual void SetValueToDefault()
 	{
 		if(m_isLocked)
