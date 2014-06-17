@@ -67,7 +67,12 @@ void GroundTruthReader::Reset()
 	m_oldState = false;
 
 	CLEAN_DELETE(mp_annotationReader);
-	mp_annotationReader = new AnnotationFileReader();
+	m_assFile = (m_param.file.substr(m_param.file.find_last_of(".") + 1) == "ass");
+	if(m_assFile)
+		mp_annotationReader = new AnnotationAssFileReader();
+	else
+		mp_annotationReader = new AnnotationSrtFileReader();
+
 	mp_annotationReader->Open(m_param.file);
 }
 
@@ -93,9 +98,56 @@ void GroundTruthReader::ProcessFrame()
 	}
 
 	// annotate stream objects
-	for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
+	Rect refObj = mp_annotationReader->getBox();
+
+	if (m_assFile && refObj.width > 0)	// rectangle can be absent from ass
 	{
-		it->AddFeature("gt",m_state);
+
+		// enlarge the bounding box
+		refObj.x -= m_param.distance / 2;
+		refObj.y -= m_param.distance / 2;
+		refObj.width += m_param.distance;
+		refObj.height += m_param.distance;
+
+		Rect lcRefObj = Rect(refObj.x, refObj.y, m_param.distance, m_param.distance);
+
+#ifdef MARKUS_DEBUG_STREAMS
+		if (text != "")
+			rectangle(m_debug,refObj,Scalar( 205, 205, 205));
+#endif
+
+		for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
+		{
+			// test bounding rectangle only if necessary
+			if (m_state)
+			{
+				Rect obj = it->Rect();				
+
+				if (lcRefObj.contains(Point (obj.x,obj.y)) && refObj.area() >= obj.area())
+				{
+					it->AddFeature("gt",m_state);
+#ifdef MARKUS_DEBUG_STREAMS
+					rectangle(m_debug,obj,Scalar( 0, 255, 0));
+#endif
+				}
+				else
+				{
+					it->AddFeature("gt",false);
+#ifdef MARKUS_DEBUG_STREAMS
+					rectangle(m_debug,obj,Scalar( 255, 255, 0));
+#endif
+				}
+			}
+			else
+				it->AddFeature("gt",m_state);
+		}
+	}
+	else
+	{
+		for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
+		{
+			it->AddFeature("gt",m_state);
+		}
 	}
 
 	if (m_oldState != m_state)

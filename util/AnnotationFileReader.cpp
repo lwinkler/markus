@@ -41,7 +41,7 @@ log4cxx::LoggerPtr AnnotationFileReader::m_logger(log4cxx::Logger::getLogger("An
 *
 * @return 
 */
-std::istream& safeGetline(std::istream& is, std::string& t)
+std::istream& AnnotationFileReader::safeGetline(std::istream& is, std::string& t)
 {
 	t.clear();
 
@@ -193,4 +193,8 @@ string AnnotationFileReader::ReadAnnotationForTimeStamp(TIME_STAMP x_current)
 	if(current >= m_srtStart && current <= m_srtEnd)
 		return m_text;
 	else return "";
+}
+
+cv::Rect& AnnotationFileReader::getBox()
+{
 }
