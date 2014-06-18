@@ -41,7 +41,7 @@ log4cxx::LoggerPtr AnnotationFileReader::m_logger(log4cxx::Logger::getLogger("An
 *
 * @return 
 */
-std::istream& AnnotationFileReader::safeGetline(std::istream& is, std::string& t)
+std::istream& AnnotationFileReader::SafeGetline(std::istream& is, std::string& t)
 {
 	t.clear();
 
@@ -147,16 +147,16 @@ bool AnnotationFileReader::ReadNextAnnotation(string& rx_subText)
 			throw MkException("Subtitle format error: must contain '-->'", LOC);
 		m_srtFile >> m_srtEnd;
 
-		safeGetline(m_srtFile, line); // end of line: must be empty
+		SafeGetline(m_srtFile, line); // end of line: must be empty
 		if(! line.empty())
 			throw MkException("Subtitle format error. There must be an empty line after subtitle.", LOC);
-		safeGetline(m_srtFile, line);
+		SafeGetline(m_srtFile, line);
 
 		rx_subText = "";
 		while(line.size() != 0)
 		{
 			rx_subText += line + " ";
-			safeGetline(m_srtFile, line);
+			SafeGetline(m_srtFile, line);
 			if(! m_srtFile.good())
 				throw MkException("End of file in AnnotationFileReader", LOC);
 		}
@@ -195,6 +195,7 @@ string AnnotationFileReader::ReadAnnotationForTimeStamp(TIME_STAMP x_current)
 	else return "";
 }
 
-cv::Rect& AnnotationFileReader::getBox()
+cv::Rect AnnotationFileReader::GetBox()
 {
+	return Rect();
 }

@@ -31,7 +31,7 @@
 
 
 /**
-* @brief Read an annotation file (in .srt format)
+* @brief Read an annotation file
 */
 class AnnotationFileReader
 {
@@ -43,10 +43,10 @@ public:
 	TIME_STAMP GetCurrentTimeStamp();
 	virtual bool ReadNextAnnotation(std::string& rx_subText);
 	virtual std::string ReadAnnotationForTimeStamp(TIME_STAMP x_current);
-	virtual cv::Rect &getBox();
+	virtual cv::Rect GetBox();
 
 protected:
-	std::istream& safeGetline(std::istream& is, std::string& t);
+	std::istream& SafeGetline(std::istream& is, std::string& t);
 
 private:
 	static log4cxx::LoggerPtr m_logger;

@@ -98,7 +98,7 @@ void GroundTruthReader::ProcessFrame()
 	}
 
 	// annotate stream objects
-	Rect refObj = mp_annotationReader->getBox();
+	Rect refObj = mp_annotationReader->GetBox();
 
 	if (m_assFile && refObj.width > 0)	// rectangle can be absent from ass
 	{
