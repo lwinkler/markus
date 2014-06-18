@@ -30,7 +30,7 @@ fi
 
 read -r -p "Do you want to compile ? [y/N] " response
 if [[ $response =~ ^[Yy]$ ]] ; then
-	cmake .
+	cmake . -DCMAKE_BUILD_TYPE=Release -DMarkus_NO_GUI=ON
 	make clean
 	make -j9 update_modules_list
 	make update_projects_list
