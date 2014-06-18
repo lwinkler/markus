@@ -67,6 +67,12 @@ Object& Object::operator=(const Object & x_obj)
 	posY = x_obj.posY;
 	width = x_obj.width;
 	height = x_obj.height;
+
+	// Delete all feats
+	for(map <std::string, Feature*>::const_iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
+		delete(it->second);
+	m_feats.clear();
+
 	for(map<string, Feature*>::const_iterator it = x_obj.GetFeatures().begin() ; it != x_obj.GetFeatures().end() ; it++)
 		m_feats[it->first] = new Feature(*it->second);
 	return *this;

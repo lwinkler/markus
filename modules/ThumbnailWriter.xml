@@ -58,11 +58,6 @@
 			<name>objects</name>
 			<description>Incoming objects</description>
 		</input>
-		<input id="2">
-			<type>Image</type>
-			<name>input2</name>
-			<description>Binary mask</description>
-		</input>
 	</inputs>
 	<outputs>
 	</outputs>

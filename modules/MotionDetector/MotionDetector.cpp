@@ -107,13 +107,13 @@ void MotionDetector::ProcessFrame()
 	roi.width  = m_debug.cols - 1;
 	roi.height = m_debug.rows;
 
-	Mat crop;
-	crop = (m_debug)(roi);
+	// Mat crop;
+	Mat crop = (m_debug)(roi);
 
 	// Move the left boundary to the right
 	//*m_debug = Scalar::all(0);
 	m_debug.adjustROI(0, 0, 0, -1);
-	crop.copyTo(m_debug); // TODO: warning valgrind : Source and destination overlap in memcpy
+	crop.copyTo(m_debug); // TODO: warning valgrind : Source and destination overlap in memcpy. Is this fixed ?
 	m_debug.adjustROI(0, 0, 0, 1);
 #endif
 }

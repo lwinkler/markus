@@ -29,6 +29,7 @@
 #include "TestParameters.h"
 
 
+using namespace std;
 
 
 int main(int argc, char **argv)
@@ -46,10 +47,17 @@ int main(int argc, char **argv)
 	runner.addTest(TestSerialization::suite());
 	runner.addTest(TestParameters::suite());
 
-	if(argc <= 1)
-		runner.run();
-	else
-		runner.run(argv[1]);
+	try
+	{
+		if(argc <= 1)
+			runner.run();
+		else
+			runner.run(argv[1]);
+	}
+	catch(exception& e)
+	{
+		cout<<"Error running tests: "<<e.what()<<endl;
+	}
 
 	return 0;
 }
