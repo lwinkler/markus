@@ -248,7 +248,6 @@ void QModuleViewer::updateModule(Module * x_module)
 	}
 	this->setContextMenuPolicy(Qt::ActionsContextMenu);
 
-	// Should we display options ? // TODO not working
 	// actionShowDisplayMenu->setChecked(m_param.displayOptions);
 	showDisplayOptions(m_param.displayOptions);
 	updateControlNb(m_param.control);

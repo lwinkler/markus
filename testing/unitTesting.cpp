@@ -26,6 +26,7 @@
 #include "TestProjects.h"
 #include "TestModules.h"
 #include "TestSerialization.h"
+#include "TestParameters.h"
 
 
 
@@ -43,6 +44,7 @@ int main(int argc, char **argv)
 	runner.addTest(TestProjects::suite());
 	runner.addTest(TestModules::suite());
 	runner.addTest(TestSerialization::suite());
+	runner.addTest(TestParameters::suite());
 
 	if(argc <= 1)
 		runner.run();

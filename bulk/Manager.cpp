@@ -471,9 +471,9 @@ void Manager::Export()
 			os.close();
 		}
 	}
-	catch(...)
+	catch(MkException& e)
 	{
-		LOG_WARN(m_logger, "Exception in Manager::Export");
+		LOG_WARN(m_logger, "Exception in Manager::Export: "<<e.what());
 	}
 }
 

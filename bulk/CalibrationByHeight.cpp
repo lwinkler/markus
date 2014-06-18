@@ -32,14 +32,14 @@ CalibrationByHeight::CalibrationByHeight()
 {
 	x = 0.0;
 	y = 0.0;
-	heigth = 0.0;
+	height = 0.0;
 }
 
-CalibrationByHeight::CalibrationByHeight(double x_value, double y_value, double heigth_value)
+CalibrationByHeight::CalibrationByHeight(double x_value_x, double x_value_y, double x_height)
 {
-	x = x_value;
-	y = y_value;
-	heigth = heigth_value;
+	x = x_value_x;
+	y = x_value_y;
+	height = x_height;
 }
 
 void CalibrationByHeight::Serialize(std::ostream& x_out, const std::string& x_dir) const
@@ -48,7 +48,7 @@ void CalibrationByHeight::Serialize(std::ostream& x_out, const std::string& x_di
 
 	root["x"] = x;
 	root["y"] = y;
-	root["heigth"] = heigth;
+	root["height"] = height;
 
 
 	x_out << root;
@@ -60,5 +60,5 @@ void CalibrationByHeight::Deserialize(std::istream& x_in, const std::string& x_d
 	x_in >> root;
 	x = root["x"].asFloat();
 	y = root["y"].asFloat();
-	heigth = root["heigth"].asFloat();
+	height = root["height"].asFloat();
 }

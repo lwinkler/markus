@@ -45,6 +45,7 @@ public:
 	inline std::string GetValueString() const {return GetReverseEnum().at(mr_value);}
 	inline std::string GetDefaultString() const{return GetReverseEnum().at(m_default);}
 	std::string GetRange() const;
+	virtual void SetRange(const std::string& x_range);
 	inline void AllowAllValues(bool x_allow){m_allowAllValues = x_allow;}
 	inline void AllowValue(const std::string& x_value, bool x_allow){m_allowedValues[GetEnum().at(x_value)] = x_allow;}
 	virtual bool CheckRange() const;

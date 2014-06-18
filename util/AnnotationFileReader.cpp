@@ -93,10 +93,11 @@ TIME_STAMP AnnotationFileReader::GetCurrentTimeStamp()
 void AnnotationFileReader::Open(const std::string& x_file)
 {
 	m_num      = -1;
+	m_text     = "";
 	m_srtStart = msToTimeStamp(0);
 	m_srtEnd   = msToTimeStamp(0);
 
-	LOG_DEBUG(m_logger, "Open anotation file: "<<x_file);
+	LOG_DEBUG(m_logger, "Open annotation file: "<<x_file);
 
 	if(m_srtFile.is_open())
 		m_srtFile.close();
@@ -165,6 +166,8 @@ bool AnnotationFileReader::ReadNextAnnotation(string& rx_subText)
 	{
 		LOG_ERROR(m_logger, "Exception while reading .srt file in AnnotationFileReader: " << e.what()); 
 		rx_subText = "";
+		m_srtStart = msToTimeStamp(0);
+		m_srtEnd   = msToTimeStamp(0);
 		return false;
 	}
 }
@@ -172,7 +175,6 @@ bool AnnotationFileReader::ReadNextAnnotation(string& rx_subText)
 
 string AnnotationFileReader::ReadAnnotationForTimeStamp(TIME_STAMP x_current)
 {
-	string text;
 	if(! m_srtFile.good())
 	{
 		LOG_DEBUG(m_logger, "End of subtitle file");
@@ -183,11 +185,12 @@ string AnnotationFileReader::ReadAnnotationForTimeStamp(TIME_STAMP x_current)
 
 	while(current > m_srtEnd)
 	{
-		bool ret = ReadNextAnnotation(text);
+		bool ret = ReadNextAnnotation(m_text);
 		if(!ret)
 			break;
 	}
+	// LOG_DEBUG(m_logger, "Check that time "<<current<<" is between "<<m_srtStart<<" and "<<m_srtEnd<<" "<<(current >= m_srtStart && current <= m_srtEnd));
 	if(current >= m_srtStart && current <= m_srtEnd)
-		return text;
+		return m_text;
 	else return "";
 }

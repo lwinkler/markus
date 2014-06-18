@@ -55,13 +55,14 @@ public:
 	MKCLASS("UsbCam")
 	MKDESCR("Read video stream from an enbedded or USB camera")
 	
+	inline virtual const Parameters& GetParameters() const {return m_param;}
 	void Capture();
 	virtual void Reset();
 	const std::string& GetName(){return m_name;}
 
 private:
+	inline virtual Parameters & RefParameters() {return m_param;}
 	Parameters m_param;
-	inline virtual const Parameters& GetParameters() const {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

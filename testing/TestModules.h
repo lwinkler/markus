@@ -53,18 +53,21 @@ class TestModules : public CppUnit::TestFixture
 		bool m_state;
 		Event m_event;
 		std::vector<Object> m_objects;
+		int m_cpt;
 	public:
 	void runTest()
 	{
 	}
 	void setUp()
 	{
+		m_cpt = 0;
 		m_factory.ListModules(moduleTypes);
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigReader("/tmp/config_empty.xml");
 		addModuleToConfig("VideoFileReader", *mp_config)
 			.RefSubConfig("parameters", "", true)
 			.RefSubConfig("param", "fps", true).SetValue("22");
+		mp_config->RefSubConfig("application").SetAttribute("name", "unitTest");
 		mp_fakeInput = m_factory.CreateModule("VideoFileReader", mp_config->GetSubConfig("application").GetSubConfig("module", "VideoFileReader0"));
 		// note: we need a fake module to create the input streams
 		mp_fakeInput->SetAsReady();
@@ -92,6 +95,9 @@ class TestModules : public CppUnit::TestFixture
 		moduleConfig.RefSubConfig("inputs", "", true);
 		moduleConfig.RefSubConfig("outputs", "", true);
 		moduleConfig.SetAttribute("name", rx_type + "0");
+		std::stringstream ss;
+		ss<<m_cpt++;
+		moduleConfig.SetAttribute("id", ss.str());
 		return moduleConfig;
 	}
 
@@ -102,8 +108,8 @@ class TestModules : public CppUnit::TestFixture
 		// std::cout<<m_image.size()<<std::endl;
 		assert(m_image.size() != cv::Size(0,0));
 		Object obj("test", cv::Rect(
-			cv::Point(rand_r(xp_seed) % m_image.cols, rand_r(xp_seed) % m_image.rows), 
-			cv::Point(rand_r(xp_seed) % m_image.cols, rand_r(xp_seed) % m_image.rows))
+			cv::Point(rand_r(xp_seed) % mp_fakeInput->GetWidth(), rand_r(xp_seed) % mp_fakeInput->GetHeight()), 
+			cv::Point(rand_r(xp_seed) % mp_fakeInput->GetWidth(), rand_r(xp_seed) % mp_fakeInput->GetHeight()))
 		);
 
 		if(x_featureNames != "")
@@ -178,6 +184,7 @@ class TestModules : public CppUnit::TestFixture
 
 
 		// random image
+		m_image = cv::Mat(x_module->GetHeight(), x_module->GetWidth(), x_module->GetImageType());
 		m_image.setTo(0);
 		nb = rand_r(xp_seed) % 100;
 		for ( int i = 0; i < nb; i++ )
@@ -199,14 +206,26 @@ class TestModules : public CppUnit::TestFixture
 	}
 
 	/// Create module and make it ready to process
-	Module* createAndConnectModule(const std::string& x_type)
+	Module* createAndConnectModule(const std::string& x_type, const std::map<std::string, std::string>* xp_parameters = NULL)
 	{
+		LOG_DEBUG(m_logger, "Create and connect module of class "<<x_type);
 		ConfigReader moduleConfig = addModuleToConfig(x_type, *mp_config);
-		mp_config->SaveToFile("testing/tmp.xml");
+
+		// Add parameters to override to the config
+		if(xp_parameters != NULL)
+			for(std::map<std::string, std::string>::const_iterator it = xp_parameters->begin() ; it != xp_parameters->end() ; it++)
+				moduleConfig.RefSubConfig("parameters").RefSubConfig("param", it->first, true).SetValue(it->second);
+
+		mp_config->SaveToFile("testing/tmp/tmp.xml");
 		Module* module = m_factory.CreateModule(x_type, moduleConfig);
 		m_image = cv::Mat(module->GetHeight(), module->GetWidth(), module->GetImageType());
 
 		const std::map<int, Stream*> inputs  = module->GetInputStreamList();
+
+		// delete(mp_fakeInput);
+		// mp_fakeInput = m_factory.CreateModule("VideoFileReader", mp_config->GetSubConfig("application").GetSubConfig("module", "VideoFileReader0"));
+		// mp_fakeInput->SetAsReady();
+		// mp_fakeInput->Reset();
 		
 		// Create custom streams to feed each input of the module
 		for(std::map<int, Stream*>::const_iterator it2 = inputs.begin() ; it2 != inputs.end() ; it2++)
@@ -242,7 +261,7 @@ class TestModules : public CppUnit::TestFixture
 	}
 
 	/// Generate a random string value for the parameter
-	void GenerateValueFromRange(std::vector<std::string>& rx_values, const std::string& x_range, const std::string& x_type, unsigned int* xp_seed)
+	void GenerateValueFromRange(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range, const std::string& x_type)
 	{
 		LOG_DEBUG(m_logger, "Generate values for param of type "<<x_type<<" in range "<<x_range);
 		rx_values.clear();
@@ -264,15 +283,37 @@ class TestModules : public CppUnit::TestFixture
 		double min = 0, max = 0;
 		if (2 == sscanf(x_range.c_str(), "[%lf:%lf]", &min, &max))
 		{
-			for(int i = 0 ; i < 100 ; i++)
+			if(x_type == "int" && max - min <= x_nbSamples)
 			{
-				std::stringstream ss;
-				// Generate 100 random values
-				// TODO: used values in range, non-random
-				if(x_type == "int")
-					ss<<static_cast<int>(min + rand_r(xp_seed) % static_cast<int>(max - min + 1));
-				else 
-					ss<<(min + rand_r(xp_seed) * (max - min) / RAND_MAX);
+				for(int i = min ; i <= max ; i++)
+				{
+					std::stringstream ss;
+					ss<<i;
+					rx_values.push_back(ss.str());
+					// rx_values.push_back(static_cast<int>(min + static_cast<int>(i/x_nbSamples) % static_cast<int>(max - min + 1)));
+				}
+			}
+			else if(x_type == "int")
+			{
+				// x_nbSamples values in range
+				double incr = static_cast<double>(max - min) / x_nbSamples;
+				for(int i = 0 ; i <= x_nbSamples ; i++)
+				{
+					std::stringstream ss;
+					ss<<static_cast<int>(min + i * incr);
+					rx_values.push_back(ss.str());
+				}
+			}
+			else 
+			{
+				// x_nbSamples values in range
+				double incr = static_cast<double>(max - min) / x_nbSamples;
+				for(int i = 0 ; i <= x_nbSamples ; i++)
+				{
+					std::stringstream ss;
+					ss<<(min + i * incr);
+					rx_values.push_back(ss.str());
+				}
 			}
 		}
 		else
@@ -328,6 +369,7 @@ class TestModules : public CppUnit::TestFixture
 
 			randomizeInputs(module, *it1, &seed);
 
+			// Test on all controllers of the module
 			for(std::map<std::string, Controller*>::const_iterator it2 = module->GetControllersList().begin() ; it2 != module->GetControllersList().end() ; it2++)
 			{
 				LOG_INFO(m_logger, "## on controller "<<it2->first<<" of class "<<it2->second->GetClass());
@@ -355,7 +397,7 @@ class TestModules : public CppUnit::TestFixture
 					std::vector<std::string> values;
 					if(type  == "string")
 						values.push_back(defval);
-					else GenerateValueFromRange(values, range, type, &seed);
+					else GenerateValueFromRange(20, values, range, type);
 
 					for(std::vector<std::string>::iterator it = values.begin() ; it != values.end() ; it++)
 					{
@@ -368,11 +410,13 @@ class TestModules : public CppUnit::TestFixture
 
 						CPPUNIT_ASSERT_MESSAGE("Value set must be returned by get", *it == newValue);
 
+						module->Reset();
 						for(int i = 0 ; i < 3 ; i++)
 							module->Process();
 						LOG_DEBUG(m_logger, "###  "<<it2->first<<".Set returned "<<*it);
 						LOG_DEBUG(m_logger, "###  "<<it2->first<<".Get returned "<<newValue);
 					}
+					it2->second->CallAction("Set", &defval);
 				}
 				else
 				{
@@ -391,7 +435,65 @@ class TestModules : public CppUnit::TestFixture
 
 			delete module;
 		}
-		// TODO test locked parameters too
+	}
+
+	/// All parameters that were locked need to be tested
+	/// 	we generate a new module for each parameter
+	void testParameters()
+	{
+		unsigned int seed = 324223426;
+		LOG_TEST(m_logger, "\n# Test all parameters");
+		
+		// Test on each type of module
+		for(std::vector<std::string>::const_iterator it1 = moduleTypes.begin() ; it1 != moduleTypes.end() ; it1++)
+		{
+			LOG_TEST(m_logger, "# on module "<<*it1);
+			Module* module = createAndConnectModule(*it1);
+			if(module == NULL)
+				continue;
+
+			std::string lastParam = "";
+			std::string lastDefault = "";
+
+			// Test on all controllers of the module
+			for(std::vector<Parameter*>::const_iterator it2 = module->GetParameters().GetList().begin() ; it2 != module->GetParameters().GetList().end() ; it2++)
+			{
+				// Create a second module with the parameter value (in case it is locked)
+				// we already have tested the other parameters with controllers
+				if(!(*it2)->IsLocked())
+					continue;
+
+				LOG_INFO(m_logger, "## on parameter "<<(*it2)->GetName()<<" of type "<<(*it2)->GetTypeString()<<" on range "<<(*it2)->GetRange());
+
+				// Generate a new module with each value for locked parameter
+				std::vector<std::string> values;
+
+				if((*it2)->GetTypeString()  == "string")
+					continue; // values.push_back(defval);
+				else GenerateValueFromRange(10, values, (*it2)->GetRange(), (*it2)->GetTypeString());
+
+				for(std::vector<std::string>::iterator it3 = values.begin() ; it3 != values.end() ; it3++)
+				{
+					// For each value
+					std::map<std::string, std::string> params;
+					LOG_DEBUG(m_logger, "Set param "<<(*it2)->GetName()<<" = "<<*it3<<" and "<<lastParam<<" = "<<lastDefault);
+					params[(*it2)->GetName()] = *it3;
+					params[lastParam] = lastDefault;
+
+					Module* module2 = createAndConnectModule(*it1, &params);
+					CPPUNIT_ASSERT(module2 != NULL);
+					randomizeInputs(module2, *it1, &seed);
+
+					for(int i = 0 ; i < 3 ; i++)
+						module2->Process();
+
+					delete module2;
+				}
+				lastParam = (*it2)->GetName();
+				lastDefault = (*it2)->GetDefaultString();
+			}
+			delete module;
+		}
 	}
 
 	static CppUnit::Test *suite()
@@ -399,6 +501,7 @@ class TestModules : public CppUnit::TestFixture
 		CppUnit::TestSuite *suiteOfTests = new CppUnit::TestSuite("TestModules");
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testInputs", &TestModules::testInputs));
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testControllers", &TestModules::testControllers));
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testParameters", &TestModules::testParameters));
 		return suiteOfTests;
 	}
 };

@@ -1,0 +1,5 @@
+<param name="param_string">
+	<type>string</type>
+	<value default="legal">legal</value>
+	<description>Parameter of type string</description>
+</param>

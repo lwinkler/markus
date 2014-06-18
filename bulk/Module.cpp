@@ -80,8 +80,16 @@ Module::~Module()
 */
 void Module::Reset()
 {
-	// Lock the parameters that cannot be changed
 	LOG_INFO(m_logger, "Reseting module "<<GetName());
+
+	// Lock the parameters that cannot be changed
+	RefParameters().LockParameterByName("class");
+	RefParameters().LockParameterByName("width");
+	RefParameters().LockParameterByName("height");
+	RefParameters().LockParameterByName("type");
+	RefParameters().LockParameterByName("auto_process");
+	RefParameters().LockParameterByName("allow_unsync_input");
+
 	const Parameters& param(GetParameters());
 	param.PrintParameters();
 	param.CheckRange(true);
@@ -112,6 +120,7 @@ void Module::Reset()
 
 	for(vector<Parameter*>::const_iterator it = list.begin(); it != list.end(); it++)
 	{
+		// Do not add param if locked or already present
 		if((*it)->IsLocked() || FindController((*it)->GetName()) != NULL)
 			continue;
 		Controller* ctr = NULL;

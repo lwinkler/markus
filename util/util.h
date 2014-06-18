@@ -44,6 +44,7 @@ TIME_STAMP timeStampToMs(const std::string& x_timeStamp);
 TIME_STAMP getAbsTimeMs();
 void createEmptyConfigFile(const std::string& x_fileName);
 bool compareFiles(const std::string& x_file1, const std::string& x_file2);
+std::string getFileContents(const std::string& x_filename);
 
 
 #endif

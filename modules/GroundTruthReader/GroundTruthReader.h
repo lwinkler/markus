@@ -25,7 +25,9 @@
 #define INPUT_GROUNDTRUTH_READER_H
 
 #include "Module.h"
+#include "StreamObject.h"
 #include "AnnotationFileReader.h"
+#include "Event.h"
 
 
 /**
@@ -55,20 +57,25 @@ public:
 	MKCLASS("GroundTruthReader")
 	MKDESCR("Read a ground truth file")
 	
+	inline virtual const Parameters& GetParameters() const {return m_param;}
 	void ProcessFrame();
 	void Reset();
+
 private:
-	inline virtual const Parameters& GetParameters() const {return m_param;}
+	inline virtual Parameters & RefParameters() {return m_param;}
 	Parameters m_param;
 	static log4cxx::LoggerPtr m_logger;
+	bool m_oldState;
 
 protected:
 
 	// input (and output)
 	cv::Mat m_input;
+	std::vector <Object> m_objects;
 
 	// ouput
 	bool m_state;
+	Event m_event;
 
 #ifdef MARKUS_DEBUG_STREAMS
 	// debug

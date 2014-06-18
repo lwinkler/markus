@@ -62,15 +62,16 @@ public:
 	MKCLASS("NetworkCam")
 	MKDESCR("Read video stream from a network camera")
 	
+	inline virtual const Parameters& GetParameters() const {return m_param;}
 	void Capture();
 	virtual void Reset();
 	const std::string& GetName(){return m_name;}
 	virtual double GetRecordingFps();
 
 private:
+	inline virtual Parameters & RefParameters() {return m_param;}
 	bool Grab();
 	Parameters m_param;
-	inline virtual const Parameters& GetParameters() const {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

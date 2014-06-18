@@ -31,11 +31,14 @@
 using namespace std;
 using namespace cv;
 
+log4cxx::LoggerPtr StreamImage::m_logger(log4cxx::Logger::getLogger("Module"));
+
 StreamImage::StreamImage(const std::string& x_name, cv::Mat& x_image, Module& rx_module, const string& rx_description) : 
 	Stream(x_name, rx_module, rx_description),
 	m_image(x_image)
 {
-	assert(x_image.cols == rx_module.GetWidth() && x_image.rows == rx_module.GetHeight());
+	LOG_DEBUG(m_logger, "Create image "<<x_image.cols<<"x"<<x_image.rows<<" for module "<<rx_module.GetName()<<" of size "<<rx_module.GetWidth()<<"x"<<rx_module.GetHeight());
+	// assert(x_image.cols == rx_module.GetWidth() && x_image.rows == rx_module.GetHeight()); // Disable this for unit tests
 	mp_img_tmp1 = NULL; // To convert the input
 	mp_img_tmp2 = NULL;
 	m_img_input = NULL;

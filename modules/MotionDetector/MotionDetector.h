@@ -43,6 +43,8 @@ public:
 		{
 			m_list.push_back(new ParameterFloat("motion_thres", 0.1, 0, 1, &motionThres,	"Threshold for motion analysis"));
 
+			RefParameterByName("width").SetRange("[32:6400]");
+			RefParameterByName("height").SetRange("[24:4800]");
 			Init();
 		}
 		
@@ -54,12 +56,13 @@ public:
 	MKCLASS("MotionDetector")
 	MKDESCR("Detect motion from an image where pixel value represents motion")
 	
+	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
 
 private:
+	inline virtual Parameters & RefParameters() {return m_param;}
 	Parameters m_param;
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

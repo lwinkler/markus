@@ -50,8 +50,10 @@ def _parse_lines(lines):
 
         # Transform it to time
         time = Time(text=time_text, sep_ms=',')
-
-        ident = int(lines[i + 3].strip().split('\t')[0])
+        
+        # Changed this line to extract ident from the timestamp of the subtitle
+        # ident = int(lines[i + 3].strip().split('\t')[0])
+        ident = time.milis
 
         # Prepare the event
         event = Event(id=ident, time=time)

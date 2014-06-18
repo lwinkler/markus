@@ -43,6 +43,8 @@ public:
 		{
 			m_list.push_back(new ParameterString("folder"    , "thumbs" , &folder    , "Name of the folder to create with path. Use %{feature} to separate by feature"));
 			m_list.push_back(new ParameterString("extension"  , "jpg"        , &extension , "Extension of the thumbnails. Determines the output format."));
+
+			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3,CV_32FC1,CV_32FC3]");
 			Init();
 		};
 		std::string folder;
@@ -54,17 +56,19 @@ public:
 	MKCLASS("ThumbnailWriter")
 	MKDESCR("Write all objects as a collection of images (thumbnails)")
 	
+	inline virtual const Parameters& GetParameters() const {return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
 
 private:
+	inline virtual Parameters & RefParameters() {return m_param;}
 	Parameters m_param;
-	inline virtual const Parameters& GetParameters() const {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
 	// input
 	cv::Mat m_input;
+	cv::Mat m_input2;
 	std::vector <Object> m_objectsIn;
 
 	// temporary

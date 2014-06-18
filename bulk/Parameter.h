@@ -61,7 +61,8 @@ public:
 		m_name(x_name),
 		m_confSource(PARAMCONF_UNSET),
 		m_description(x_description),
-		m_isLocked(false){}
+		m_isLocked(false),
+		m_isHidden(false){}
 	virtual ~Parameter(){}
 		
 	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) = 0;
@@ -72,7 +73,10 @@ public:
 	inline const std::string& GetDescription() const {return m_description;}
 	inline const ParameterConfigType& GetConfigurationSource() const {return m_confSource;}
 	virtual void SetValueToDefault() = 0;
-	virtual void Print(std::ostream& os) const = 0;
+	virtual void Print(std::ostream& os) const 
+	{
+		os<<m_name<<"=\""<<GetValueString()<<"\" ("<<configType[m_confSource]<<"); ";
+	}
 	virtual bool CheckRange() const = 0;
 	virtual void Export(std::ostream& rx_os, int x_indentation) = 0;
 	inline void Lock()
@@ -80,17 +84,21 @@ public:
 		m_isLocked = true;
 	}
 	inline bool IsLocked() const {return m_isLocked;}
+	inline void Hide() {m_isHidden = true;}
+	inline bool IsHidden() const {return m_isHidden;}
 
 	// For controllers and actions
 	virtual std::string GetValueString() const = 0;
 	virtual std::string GetDefaultString() const = 0;
 	virtual std::string GetRange() const = 0;
+	virtual void SetRange(const std::string& x_range) = 0;
 
 protected:	
 	const std::string m_name;
 	ParameterConfigType m_confSource;
 	const std::string m_description;
 	bool m_isLocked;
+	bool m_isHidden;
 private:
 	static log4cxx::LoggerPtr m_logger;
 };

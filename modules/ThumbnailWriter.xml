@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="ThumbnailWriter" description="Write an object stream as separate images in a folder.">
+<module name="ThumbnailWriter" description="Write all objects as a collection of images (thumbnails)">
 	<parameters>
 		<param name="class">
 			<type>string</type>
@@ -57,6 +57,11 @@
 			<type>Objects</type>
 			<name>objects</name>
 			<description>Incoming objects</description>
+		</input>
+		<input id="2">
+			<type>Image</type>
+			<name>input2</name>
+			<description>Binary mask</description>
 		</input>
 	</inputs>
 	<outputs>

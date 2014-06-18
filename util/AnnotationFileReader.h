@@ -48,6 +48,7 @@ private:
 
 protected:
 	int m_num;
+	std::string m_text;
 	std::ifstream m_srtFile;
 	std::string m_srtStart;
 	std::string m_srtEnd;

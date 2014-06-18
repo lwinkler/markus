@@ -46,20 +46,14 @@ public:
 	{	
 		m_default = x_value;
 	}
-	const std::string& GetValue() const
-	{
-		return mr_value;
-	}
+	inline const std::string& GetValue() const{return mr_value;}
 	inline virtual std::string GetValueString() const {return mr_value;}
 	inline virtual std::string GetDefaultString() const {return m_default;}
 	inline virtual std::string GetRange() const{return "";}
+	inline virtual void SetRange(const std::string& x_range){};
 	inline virtual bool CheckRange() const
 	{
 		return true;
-	}
-	virtual void Print(std::ostream& os) const 
-	{
-		os<<m_name<<" = "<<GetValue()<<" ("<<configType[m_confSource]<<"); ";
 	}
 	virtual void SetValueToDefault()
 	{

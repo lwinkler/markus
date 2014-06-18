@@ -56,13 +56,13 @@ BgrSubMOG2::BgrSubMOG2(const ConfigReader& x_configReader) :
 
 BgrSubMOG2::~BgrSubMOG2()
 {
+	CLEAN_DELETE(mp_mog2);
 }
 
 void BgrSubMOG2::Reset()
 {
 	Module::Reset();
-	if(mp_mog2 != NULL)
-		delete(mp_mog2);
+	CLEAN_DELETE(mp_mog2);
 	mp_mog2 = new BackgroundSubtractorMOG2(m_param.history, m_param.varThres, m_param.bShadowDetection);
 	mp_mog2->initialize(m_input.size(), m_input.type());
 }

@@ -55,10 +55,11 @@ public:
 	MKCLASS("ReadEvent")
 	MKDESCR("Read an event from an annotation file")
 
+	inline virtual const Parameters& GetParameters() const { return m_param;}
 	void Reset();
 
 private:
-	inline virtual const Parameters& GetParameters() const { return m_param;}
+	inline virtual Parameters & RefParameters() {return m_param;}
 	Parameters m_param;
 	static log4cxx::LoggerPtr m_logger;
 

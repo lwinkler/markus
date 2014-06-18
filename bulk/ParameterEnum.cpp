@@ -22,6 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ParameterEnum.h"
+#include "util.h"
 
 using namespace std;
 
@@ -104,15 +105,15 @@ bool ParameterEnum::CheckRange() const
 *
 * @return Range as a string
 */
-std::string ParameterEnum::GetRange() const
+string ParameterEnum::GetRange() const
 {
-	std::stringstream ss; 
+	stringstream ss; 
 	ss<<"[";
-	for(std::map<std::string,int>::const_iterator it1 = GetEnum().begin() ; it1 != GetEnum().end() ; it1++)
+	for(map<string,int>::const_iterator it1 = GetEnum().begin() ; it1 != GetEnum().end() ; it1++)
 	{
 		// If a value is specified in allowed values we respect this
 		// otherwise look at m_allowAllValues
-		map<int,bool>::const_iterator it2 = m_allowedValues.find(mr_value);
+		map<int,bool>::const_iterator it2 = m_allowedValues.find(it1->second);
 		if(it2 != m_allowedValues.end())
 		{
 			if(it2->second)
@@ -135,6 +136,30 @@ std::string ParameterEnum::GetRange() const
 */
 void ParameterEnum::Print(ostream& os) const
 {
-	os<<m_name<<" = "<<GetReverseEnum().at(GetValue())<<" ["<<GetValue()<<"] ("<<configType[m_confSource]<<"); ";
+	os<<m_name<<"="<<GetReverseEnum().at(GetValue())<<" ("<<GetValue()<<") ("<<configType[m_confSource]<<"); ";
 }
 
+/**
+* @brief Set the range of acceptable values
+*
+* @param x_range Range in the form "[val1,val2,val3]"
+*/
+void ParameterEnum::SetRange(const string& x_range)
+{
+	vector<string> values;
+	if(x_range.substr(0, 1) != "[" || x_range.substr(x_range.size() - 1, 1) != "]")
+		throw MkException("Error in range " + x_range, LOC);
+	split(x_range.substr(1, x_range.size() - 2), ',', values);
+	// Remove last element if empty, due to an extra comma
+	assert(values.size() > 0);
+	if(values.back() == "")
+		values.pop_back();
+	assert(values.size() > 0);
+
+	AllowAllValues(false);
+	m_allowedValues.clear();
+	for(vector<string>::const_iterator it = values.begin() ; it != values.end() ; it++)
+	{
+		AllowValue(*it, true);
+	}
+}

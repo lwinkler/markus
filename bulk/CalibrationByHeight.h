@@ -21,8 +21,8 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef CALIBRATION_BY_HEIGTH_H
-#define CALIBRATION_BY_HEIGTH_H
+#ifndef CALIBRATION_BY_HEIGHT_H
+#define CALIBRATION_BY_HEIGHT_H
 
 #include "Serializable.h"
 
@@ -31,13 +31,13 @@ class CalibrationByHeight : public Serializable
 public:	
 
 	CalibrationByHeight();
-	CalibrationByHeight(double x, double y, double heigth);
+	CalibrationByHeight(double x_value_x, double x_value_y, double x_height);
 	void Serialize(std::ostream& x_out, const std::string& x_dir ="") const;
 	void Deserialize(std::istream& x_in, const std::string& x_dir ="");
 
 	double x;
 	double y;
-	double heigth;
+	double height;
 };
 
 

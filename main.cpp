@@ -165,7 +165,10 @@ int main(int argc, char** argv)
 				{
 #ifndef MARKUS_NO_GUI
 					QApplication app(argc, argv);
-					Editor editor;
+					string projectFile = "";
+					if(argc > 2)
+						projectFile = argv[2];
+					Editor editor(projectFile);
 					return app.exec();
 #else
 					LOG_ERROR(logger, "To launch the editor Markus must be compiled with GUI");
@@ -207,6 +210,7 @@ int main(int argc, char** argv)
 		}
 	}
 
+	// Handle other arguments
 	if (optind == argc - 2)
 	{
 		configFile = argv[argc - 2];
@@ -254,22 +258,32 @@ int main(int argc, char** argv)
 		// Set values of parameters if an extra config is used
 		for(vector<string>::const_iterator it1 = extraConfig.begin() ; it1 != extraConfig.end() ; it1++)
 		{
-			// open tbhe config
-			ConfigReader extra(*it1);
-			ConfigReader moduleConfig = extra.GetSubConfig("application").GetSubConfig("module");
-			while(!moduleConfig.IsEmpty())
+			try
 			{
-				if(!moduleConfig.GetSubConfig("parameters").IsEmpty())
+				// open tbhe config
+				ConfigReader extra(*it1);
+				ConfigReader moduleConfig = extra.GetSubConfig("application").GetSubConfig("module");
+				while(!moduleConfig.IsEmpty())
 				{
-					ConfigReader paramConfig = moduleConfig.GetSubConfig("parameters").GetSubConfig("param");
-					while(!paramConfig.IsEmpty())
+					if(!moduleConfig.GetSubConfig("parameters").IsEmpty())
 					{
-						// Override parameter
-						appConfig.RefSubConfig("module", moduleConfig.GetAttribute("name")).RefSubConfig("parameters").RefSubConfig("param", paramConfig.GetAttribute("name"), true).SetValue(paramConfig.GetValue());
-						paramConfig = paramConfig.NextSubConfig("param");
+						ConfigReader paramConfig = moduleConfig.GetSubConfig("parameters").GetSubConfig("param");
+						while(!paramConfig.IsEmpty())
+						{
+							// Override parameter
+							appConfig.RefSubConfig("module", moduleConfig.GetAttribute("name"))
+								.RefSubConfig("parameters").RefSubConfig("param", paramConfig.GetAttribute("name"), true)
+								.SetValue(paramConfig.GetValue());
+							paramConfig = paramConfig.NextSubConfig("param");
+						}
 					}
+					moduleConfig = moduleConfig.NextSubConfig("module");
 				}
-				moduleConfig = moduleConfig.NextSubConfig("module");
+			}
+			catch(MkException& e)
+			{
+				LOG_WARN(logger, "Cannot read parameters from extra config \""<<*it1<<"\": "<<e.what());
+				
 			}
 		}
 

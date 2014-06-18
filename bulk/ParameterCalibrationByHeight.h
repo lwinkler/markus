@@ -46,14 +46,13 @@ public:
 	}
 	inline std::string GetValueString() const
 	{
-		if (mr_value.x == 0 && mr_value.y == 0 && mr_value.heigth == 0)
-			return "";
-		std::stringstream ss;
-		mr_value.Serialize(ss,"");
-		return ss.str();
+		if (mr_value.x == 0 && mr_value.y == 0 && mr_value.height == 0)
+			return ""; // Note: this is for testing purpose
+		return mr_value.SerializeToString();
 	}
 	inline std::string GetDefaultString() const{std::stringstream ss; m_default.Serialize(ss,""); return ss.str();}
 	inline std::string GetRange() const{/*std::stringstream ss; ss<<"["<<m_min<<":"<<m_max<<"]"; return ss.str();*/ return "";}
+	inline virtual void SetRange(const std::string& x_range){};
 	inline const ParameterType& GetType() const {const static ParameterType s = PARAM_OBJECT_HEIGHT; return s;}
 	inline const std::string& GetTypeString() const {const static std::string s = "calibrationByHeight"; return s;}
 	inline const CalibrationByHeight& GetDefault() const {
@@ -76,7 +75,7 @@ public:
 		{
 			mr_value.x = 0;
 			mr_value.y = 0;
-			mr_value.heigth = 0;
+			mr_value.height = 0;
 			return;
 		}
 
@@ -97,14 +96,7 @@ public:
 		CalibrationByHeight object = GetValue();
 		return ((object.x <= 1 && object.x >= 0) &&
 		(object.y <= 1 && object.y >= 0) &&
-		(object.heigth <= 1 && object.heigth >= 0));
-	}
-	virtual void Print(std::ostream& os) const
-	{
-		os<<m_name<<" : x = "<< mr_value.x
-				  <<", y = "<< mr_value.y
-				  <<", heigth = "<< mr_value.heigth
-				  <<" ("<<configType[m_confSource]<<"); ";
+		(object.height <= 1 && object.height >= 0));
 	}
 	virtual void SetValueToDefault()
 	{

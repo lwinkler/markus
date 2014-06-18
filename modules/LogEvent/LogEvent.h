@@ -49,6 +49,7 @@ public:
 			m_list.push_back(new ParameterString("extension"   , "jpg"        , &extension , "Extension of the thumbnails. Determines the output format."));
 
 			RefParameterByName("type").SetDefault("CV_8UC3");
+			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3]");
 			Init();
 		}
 		std::string file;
@@ -62,11 +63,12 @@ public:
 	MKCLASS("LogEvent")
 	MKDESCR("Read an event and log it to .srt file")
 
+	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
 
 private:
-	inline virtual const Parameters& GetParameters() const { return m_param;}
+	inline virtual Parameters & RefParameters() {return m_param;}
 	Parameters m_param;
 	static log4cxx::LoggerPtr m_logger;
 

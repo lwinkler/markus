@@ -54,7 +54,7 @@
 		<param name="features">
 			<type>string</type>
 			<value default="x,y,width,height">x,y,width,height</value>
-			<description>List of features to extract, separated with ',' possible: x,y,width,height,area,ellipse_{angle,ratio,width,height}, moment_{00,11,20,02}</description>
+			<description>List of features to extract, separated with ',' possible: x,y,width,height,area,ellipse_{angle,cos,sin,ratio,width,height}, moment_{00,11,20,02}, hu_moment_{1-7}</description>
 		</param>
 	</parameters>
 	<inputs>
