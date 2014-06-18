@@ -130,6 +130,16 @@ string ParameterEnum::GetRange() const
 }
 
 /**
+* @brief Print the parameter with default value and range
+*
+* @param os Output stream
+*/
+void ParameterEnum::Print(ostream& os) const
+{
+	os<<m_name<<" = "<<GetReverseEnum().at(GetValue())<<" ["<<GetValue()<<"] ("<<configType[m_confSource]<<"); ";
+}
+
+/**
 * @brief Set the range of acceptable values
 *
 * @param x_range Range in the form "[val1,val2,val3]"

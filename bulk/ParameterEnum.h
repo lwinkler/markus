@@ -49,6 +49,7 @@ public:
 	inline void AllowAllValues(bool x_allow){m_allowAllValues = x_allow;}
 	inline void AllowValue(const std::string& x_value, bool x_allow){m_allowedValues[GetEnum().at(x_value)] = x_allow;}
 	virtual bool CheckRange() const;
+	virtual void Print(std::ostream& os) const;
 	virtual void SetValueToDefault()
 	{
 		if(m_isLocked) 

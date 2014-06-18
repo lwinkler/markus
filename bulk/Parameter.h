@@ -75,7 +75,7 @@ public:
 	virtual void SetValueToDefault() = 0;
 	virtual void Print(std::ostream& os) const 
 	{
-		os<<m_name<<"="<<GetValueString()<<" ("<<configType[m_confSource]<<"); ";
+		os<<m_name<<"=\""<<GetValueString()<<"\" ("<<configType[m_confSource]<<"); ";
 	}
 	virtual bool CheckRange() const = 0;
 	virtual void Export(std::ostream& rx_os, int x_indentation) = 0;
