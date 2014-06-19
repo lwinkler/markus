@@ -118,11 +118,11 @@ void Template::UpdateFeatures(double x_alpha, TIME_STAMP m_currentTimeStamp)
 {
 	if(m_lastMatchingObject != NULL)
 	{
-		for (map<string,Feature*>::iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
+		for (map<string,FeaturePtr>::iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
 		{
 			try
 			{
-				it->second->Update(m_lastMatchingObject->GetFeature(it->first).value, x_alpha);
+				it->second.Update(m_lastMatchingObject->GetFeature(it->first).value, x_alpha);
 			}
 			catch(FeatureNotFoundException& e)
 			{

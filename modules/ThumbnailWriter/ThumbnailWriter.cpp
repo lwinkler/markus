@@ -47,7 +47,7 @@ ThumbnailWriter::~ThumbnailWriter()
 }
 
 
-bool replaceExpr(string& rx_name, const map<string,Feature*>& x_features)
+bool replaceExpr(string& rx_name, const map<string,FeaturePtr>& x_features)
 {
 	string::iterator beg = std::find(rx_name.begin(), rx_name.end(), '$');
 	if(beg >= rx_name.end() - 1 || *(beg + 1) != '{')
@@ -57,14 +57,14 @@ bool replaceExpr(string& rx_name, const map<string,Feature*>& x_features)
 		return false;
 	string pattern(beg + 2, end);
 
-	map <std::string, Feature*>::const_iterator it = x_features.find(pattern);
+	map <std::string, FeaturePtr>::const_iterator it = x_features.find(pattern);
 	if(it == x_features.end())
 		rx_name.replace(beg, end + 1, "unknown");
 	else
 	{
 		// Replace the regexp with the feature value (rounded)
 		stringstream ss;
-		ss<<static_cast<int>(it->second->value);
+		ss<<static_cast<int>((*it->second).value);
 		rx_name.replace(beg, end + 1, ss.str());
 	}
 

@@ -46,13 +46,13 @@ class Template
 		inline void AddFeature(std::string x_name, double x_value) {m_feats.insert(std::make_pair(x_name, new Feature(x_value)));}
 		inline const Feature& GetFeature(const std::string& x_name) const
 		{
-			std::map <std::string, Feature*>::const_iterator it = m_feats.find(x_name);
+			std::map <std::string, FeaturePtr>::const_iterator it = m_feats.find(x_name);
 			if(it == m_feats.end())
 				throw MkException("Feature is inexistant", LOC);
 			return *it->second;
 		}
-		inline void SetFeatures(const std::map <std::string, Feature*>& x_feats) {m_feats = x_feats;}
-		inline const std::map <std::string, Feature*>& GetFeatures() const{ return m_feats;}
+		inline void SetFeatures(const std::map <std::string, FeaturePtr>& x_feats) {m_feats = x_feats;}
+		inline const std::map <std::string, FeaturePtr>& GetFeatures() const{ return m_feats;}
 		// inline const std::list <Object>& GetMatchingObjects() const{ return m_matchingObjects;}
 		inline int GetNum() const {return m_num;}
 		
@@ -63,6 +63,6 @@ class Template
 		static log4cxx::LoggerPtr m_logger;
 		int m_num;
 		static int m_counter; // Counter to attribute ids
-		std::map <std::string, Feature*> m_feats;
+		std::map <std::string, FeaturePtr> m_feats;
 		TIME_STAMP m_lastSeen;
 };

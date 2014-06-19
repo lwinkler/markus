@@ -23,6 +23,9 @@
 #ifndef MK_FEATURE_H
 #define MK_FEATURE_H
 
+#include <map>
+#include <string>
+
 /**
 * @brief Class representing a feature of a template/object. (e.g. area, perimeter, length, ...)
 */
@@ -47,5 +50,20 @@ class Feature
 		int    nbSamples;
 };
 
+class FeaturePtr
+{
+	public:
+		//FeaturePtr() : mp_feat (NULL){}
+		FeaturePtr(Feature* x_feat) : mp_feat(x_feat){}
+		FeaturePtr(const FeaturePtr& x_feat) : mp_feat(new Feature(*x_feat)) {}
+		~FeaturePtr(){delete mp_feat;}
+		inline FeaturePtr& operator = (const FeaturePtr& x_feat){*mp_feat = *x_feat;}
+		
+		inline void Update(float x_currentValue, double x_alpha){mp_feat->Update(x_currentValue, x_alpha);}
+		const Feature& operator* () const {return *mp_feat;}
+
+	protected:
+		Feature* const mp_feat;
+};
 
 #endif
