@@ -206,6 +206,7 @@ void TrackerByFeatures::UpdateTemplates()
 #ifdef MARKUS_DEBUG_STREAMS
 		// draw template (if position is available)
 		try{
+			/* TODO
 			double x = it1->GetFeature("x").mean * diagonal;
 			double y = it1->GetFeature("y").mean * diagonal;
 			// double w = it1->GetFeature("width").value * diagonal;
@@ -214,6 +215,7 @@ void TrackerByFeatures::UpdateTemplates()
 			// Size s(w * m_param.width / 2, h * m_param.height / 2);
 			// ellipse(*m_debug, p, s, 0, 0, 360, colorFromId(it1->GetNum()));
 			circle(m_debug, p, 4, colorFromId(it1->GetNum()));
+			*/
 		}
 		catch(...){}
 #endif
@@ -285,6 +287,7 @@ void TrackerByFeatures::DetectNewTemplates()
 					// See if the object might have splitted
 					try
 					{
+						/* TODO
 						double xt = bestTemplate->GetFeature("x").value;
 						double yt = bestTemplate->GetFeature("y").value;
 						double wt = bestTemplate->GetFeature("width").value;
@@ -299,6 +302,7 @@ void TrackerByFeatures::DetectNewTemplates()
 							// Copy the template to the object (but not the id)
 							template1.SetFeatures(bestTemplate->GetFeatures());
 						}
+						*/
 					}
 					catch(...){}
 				}

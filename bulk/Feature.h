@@ -25,6 +25,7 @@
 
 #include <map>
 #include <string>
+#include "define.h"
 
 /**
 * @brief Class representing a feature of a template/object. (e.g. area, perimeter, length, ...)
@@ -32,14 +33,46 @@
 class Feature
 {
 	public:
-		Feature(float value);
-		Feature(const Feature&);
-		Feature& operator = (const Feature&);
-		~Feature();
+		Feature(){}
+		virtual ~Feature(){};
+		// Feature(const Feature&);
+		// Feature& operator = (const Feature&);
+		
+		virtual void Update(float x_currentValue, double x_alpha) = 0;
+		virtual Feature* CreateCopy() const = 0;
+
+	private:
+		DISABLE_COPY(Feature)
+};
+
+class FeaturePtr
+{
+	public:
+		FeaturePtr(Feature* x_feat) : mp_feat(x_feat){}
+		FeaturePtr(const FeaturePtr& x_feat) : mp_feat((*x_feat).CreateCopy()) {}
+		~FeaturePtr(){delete mp_feat;}
+		FeaturePtr& operator = (const FeaturePtr& x_feat){delete(mp_feat); mp_feat = (*x_feat).CreateCopy();}
+		inline const Feature& operator* () const {return *mp_feat;}
+		
+		inline virtual void Update(float x_currentValue, double x_alpha){mp_feat->Update(x_currentValue, x_alpha);}
+
+	protected:
+		Feature* mp_feat;
+};
+
+/**
+* @brief Class representing a feature in the form of a float value
+*/
+class FeatureFloat : public Feature
+{
+	public:
+		FeatureFloat(float value);
+		FeatureFloat(const FeatureFloat&);
+		FeatureFloat& operator = (const FeatureFloat&);
+		Feature* CreateCopy() const{return new FeatureFloat(*this);}
 		
 		void Update(float x_currentValue, double x_alpha);
 		
-	public:
 		// The different values of the feature
 		float value;
 		float mean;
@@ -49,20 +82,4 @@ class Feature
 		float max;
 		int    nbSamples;
 };
-
-class FeaturePtr
-{
-	public:
-		FeaturePtr(Feature* x_feat) : mp_feat(x_feat){}
-		FeaturePtr(const FeaturePtr& x_feat) : mp_feat(new Feature(*x_feat)) {}
-		~FeaturePtr(){delete mp_feat;}
-		inline FeaturePtr& operator = (const FeaturePtr& x_feat){*mp_feat = *x_feat;}
-		inline const Feature& operator* () const {return *mp_feat;}
-		
-		inline void Update(float x_currentValue, double x_alpha){mp_feat->Update(x_currentValue, x_alpha);}
-
-	protected:
-		Feature* const mp_feat;
-};
-
 #endif

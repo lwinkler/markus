@@ -55,8 +55,9 @@ Object::Object(const Object & x_obj)
 	posY = x_obj.posY;
 	width = x_obj.width;
 	height = x_obj.height;
-	for(map<string, FeaturePtr>::const_iterator it = x_obj.GetFeatures().begin() ; it != x_obj.GetFeatures().end() ; it++)
-		m_feats.insert(std::make_pair(it->first, FeaturePtr(new Feature(*it->second))));
+	// for(map<string, FeaturePtr>::const_iterator it = x_obj.GetFeatures().begin() ; it != x_obj.GetFeatures().end() ; it++)
+		// m_feats.insert(std::make_pair(it->first, new FeatureFloat(*it->second)));
+	m_feats = x_obj.GetFeatures();
 }
 
 Object& Object::operator=(const Object & x_obj)
@@ -70,8 +71,9 @@ Object& Object::operator=(const Object & x_obj)
 
 	m_feats.clear();
 
-	for(map<string, FeaturePtr>::const_iterator it = x_obj.GetFeatures().begin() ; it != x_obj.GetFeatures().end() ; it++)
-		m_feats.insert(std::make_pair(it->first, FeaturePtr(new Feature(*it->second))));
+	// for(map<string, FeaturePtr>::const_iterator it = x_obj.GetFeatures().begin() ; it != x_obj.GetFeatures().end() ; it++)
+		// m_feats.insert(std::make_pair(it->first, FeaturePtr(new Feature(*it->second))));
+	m_feats = x_obj.GetFeatures();
 	return *this;
 }
 
@@ -90,8 +92,9 @@ void Object::Serialize(std::ostream& x_out, const string& x_dir) const
 	root["width"]  = width;
 	root["height"] = height;
 
-	for(map <std::string, FeaturePtr>::const_iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
-		root["features"][it->first] = (*it->second).value; // TODO What about other measures ?
+	// TODO
+	// for(map <std::string, FeaturePtr>::const_iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
+		// root["features"][it->first] = (*it->second).value; // TODO What about other measures ?
 
 	x_out << root;
 }
@@ -159,7 +162,7 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 		//try
 		{
 			ostringstream text;
-			text<<it2->first<<"="<<(*it2->second).value;
+			// TODO text<<it2->first<<"="<<(*it2->second).value;
 			pText.y += 7;
 			putText(x_output, text.str(), pText,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
 			i++;

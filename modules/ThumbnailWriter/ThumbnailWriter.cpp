@@ -59,12 +59,15 @@ bool replaceExpr(string& rx_name, const map<string,FeaturePtr>& x_features)
 
 	map <std::string, FeaturePtr>::const_iterator it = x_features.find(pattern);
 	if(it == x_features.end())
+	{
 		rx_name.replace(beg, end + 1, "unknown");
+	}
 	else
 	{
+		const FeatureFloat& ff = dynamic_cast<const FeatureFloat&>(*it->second); 
 		// Replace the regexp with the feature value (rounded)
 		stringstream ss;
-		ss<<static_cast<int>((*it->second).value);
+		ss<<static_cast<int>(ff.value);
 		rx_name.replace(beg, end + 1, ss.str());
 	}
 

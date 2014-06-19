@@ -80,6 +80,8 @@ void RandomEventGenerator::Capture()
 
 		// Output an image in relation with the event
 		int x = m_param.width / 2, y = m_param.width / 2, r = m_param.width / 4,  c = 0, l = -1;
+		/*
+		TODO
 		if(m_param.nbFeatures > 0)
 			x = obj.GetFeature("feat0").value * m_param.width;
 		if(m_param.nbFeatures > 1)
@@ -90,6 +92,7 @@ void RandomEventGenerator::Capture()
 			c = obj.GetFeature("feat3").value * 255;
 		if(m_param.nbFeatures > 4)
 			l = obj.GetFeature("feat4").value * 5 + 1;
+		*/
 		circle(m_output, Point(x, y), r, Scalar(100, c, 255 - c), l);
 
 		LOG_DEBUG(m_logger, "RandomEventGenerator: Capture time: "<<m_frameTimer.GetMSecLong());

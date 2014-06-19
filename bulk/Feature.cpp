@@ -25,7 +25,8 @@
 #define POW2(x) (x) * (x)
 
 
-Feature::Feature(float x_value)
+FeatureFloat::FeatureFloat(float x_value)
+	: Feature()
 {
 	value      = x_value;
 	sqVariance = 0.01;
@@ -36,7 +37,8 @@ Feature::Feature(float x_value)
 	nbSamples  = 1;
 }
 
-Feature::Feature(const Feature& f)
+FeatureFloat::FeatureFloat(const FeatureFloat& f)
+	: Feature()
 {
 	value      = f.value;
 	sqVariance = f.sqVariance;
@@ -47,7 +49,7 @@ Feature::Feature(const Feature& f)
 	nbSamples  = f.nbSamples;
 }
 
-Feature&  Feature::operator = (const Feature& f)
+FeatureFloat&  FeatureFloat::operator = (const FeatureFloat& f)
 {
 	value      = f.value;
 	sqVariance = f.sqVariance;
@@ -60,15 +62,13 @@ Feature&  Feature::operator = (const Feature& f)
 	return *this;
 }
 
-Feature::~Feature(){}
-
 /**
 * @brief Keep a feature up to date in a dynamic way (similar to a running average)
 *
 * @param x_currentValue Value to use for updating
 * @param x_alpha        Alpha coefficient for running average
 */
-void Feature::Update(float x_currentValue, double x_alpha)
+void FeatureFloat::Update(float x_currentValue, double x_alpha)
 {
 	value      = x_currentValue;
 	mean       = mean * (1.0 - x_alpha) + x_currentValue * x_alpha;

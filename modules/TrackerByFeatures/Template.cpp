@@ -98,12 +98,14 @@ double Template::CompareWithObject(const Object& x_obj, const vector<string>& x_
 	
 	for (vector<string>::const_iterator it = x_features.begin() ; it != x_features.end() ; it++)
 	{
+		/* TODO
 		const Feature & f1(GetFeature(*it));
 		const Feature & f2(x_obj.GetFeature(*it));
 		sum += POW2(f1.value - f2.value) 
 			/ POW2(f1.sqVariance); // TODO: See if sqVariance has a reasonable value !!
 		// sum += POW2(f1.mean - f2.value) 
 			// / POW2(f1.sqVariance);
+		*/
 	}
 	return sqrt(sum) / x_features.size();
 }
@@ -122,7 +124,7 @@ void Template::UpdateFeatures(double x_alpha, TIME_STAMP m_currentTimeStamp)
 		{
 			try
 			{
-				it->second.Update(m_lastMatchingObject->GetFeature(it->first).value, x_alpha);
+				// TODO it->second.Update(m_lastMatchingObject->GetFeature(it->first).value, x_alpha);
 			}
 			catch(FeatureNotFoundException& e)
 			{

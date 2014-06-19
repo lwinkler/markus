@@ -69,10 +69,10 @@ void FilterObjects::ProcessFrame()
 	{
 		bool valid = true;
 		const Rect &rect(it->Rect());
-		const Feature& posX   = it->GetFeature("x");
-		const Feature& posY   = it->GetFeature("y");
-		const Feature& width  = it->GetFeature("width");
-		const Feature& height = it->GetFeature("height");
+		const FeatureFloat& posX   = dynamic_cast<const FeatureFloat&>(it->GetFeature("x"));
+		const FeatureFloat& posY   = dynamic_cast<const FeatureFloat&>(it->GetFeature("y"));
+		const FeatureFloat& width  = dynamic_cast<const FeatureFloat&>(it->GetFeature("width"));
+		const FeatureFloat& height = dynamic_cast<const FeatureFloat&>(it->GetFeature("height"));
 		// const Feature& distance = it->GetFeatureByName("distance", featureNames);
 
 		if(	(m_param.minObjectWidth > 0 && width.value < m_param.minObjectWidth) ||
