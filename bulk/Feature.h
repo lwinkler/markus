@@ -38,11 +38,8 @@ class Feature
 		// Feature(const Feature&);
 		// Feature& operator = (const Feature&);
 		
-		virtual void Update(float x_currentValue, double x_alpha) = 0;
+		// virtual void Update(float x_currentValue, double x_alpha) = 0;
 		virtual Feature* CreateCopy() const = 0;
-
-	private:
-		DISABLE_COPY(Feature)
 };
 
 class FeaturePtr
@@ -54,7 +51,7 @@ class FeaturePtr
 		FeaturePtr& operator = (const FeaturePtr& x_feat){delete(mp_feat); mp_feat = (*x_feat).CreateCopy();}
 		inline const Feature& operator* () const {return *mp_feat;}
 		
-		inline virtual void Update(float x_currentValue, double x_alpha){mp_feat->Update(x_currentValue, x_alpha);}
+		//inline virtual void Update(float x_currentValue, double x_alpha){mp_feat->Update(x_currentValue, x_alpha);}
 
 	protected:
 		Feature* mp_feat;
@@ -66,20 +63,12 @@ class FeaturePtr
 class FeatureFloat : public Feature
 {
 	public:
-		FeatureFloat(float value);
-		FeatureFloat(const FeatureFloat&);
-		FeatureFloat& operator = (const FeatureFloat&);
+		FeatureFloat(float x_value);
 		Feature* CreateCopy() const{return new FeatureFloat(*this);}
 		
-		void Update(float x_currentValue, double x_alpha);
+		// void Update(float x_currentValue, double x_alpha);
 		
 		// The different values of the feature
 		float value;
-		float mean;
-		float sqVariance;
-		float initial;
-		float min;
-		float max;
-		int    nbSamples;
 };
 #endif

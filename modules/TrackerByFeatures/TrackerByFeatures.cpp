@@ -199,14 +199,13 @@ void TrackerByFeatures::UpdateTemplates()
 
 			// Update the template and copy to the object
 			it1->UpdateFeatures(m_param.alpha, m_currentTimeStamp);
-			it1->m_lastMatchingObject->SetFeatures(it1->GetFeatures());
+			// it1->m_lastMatchingObject->SetFeatures(it1->GetFeatures()); // Note: not needed TODO: Add stdev on demand
 			it1->m_lastMatchingObject = NULL;
 		}
 
 #ifdef MARKUS_DEBUG_STREAMS
 		// draw template (if position is available)
 		try{
-			/* TODO
 			double x = it1->GetFeature("x").mean * diagonal;
 			double y = it1->GetFeature("y").mean * diagonal;
 			// double w = it1->GetFeature("width").value * diagonal;
@@ -215,7 +214,6 @@ void TrackerByFeatures::UpdateTemplates()
 			// Size s(w * m_param.width / 2, h * m_param.height / 2);
 			// ellipse(*m_debug, p, s, 0, 0, 360, colorFromId(it1->GetNum()));
 			circle(m_debug, p, 4, colorFromId(it1->GetNum()));
-			*/
 		}
 		catch(...){}
 #endif

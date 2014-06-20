@@ -84,10 +84,13 @@ void FilterObjects::ProcessFrame()
 		}
 
 		// cout<<POW2(posX.value - posX.initial) + POW2(posY.value - posY.initial)<<" >= "<<POW2(m_param.minDist)<<endl;
+		/*
+		TODO
 		if(pow(posX.value - posX.initial, 2) + pow(posY.value - posY.initial, 2) < sqDist)
 		{
 			valid = false;
 		}
+		*/
 		// If the object touches the border, do not valid
 		//	value is set to 2 = 1 + 1 so that we avoid rounding errors
 		if(m_param.minBorderDist > 0)
@@ -103,7 +106,9 @@ void FilterObjects::ProcessFrame()
 			m_objectsOut.push_back(*it);
 #ifdef MARKUS_DEBUG_STREAMS
 		rectangle(m_debug, rect, valid ? Green : Gray, 1, 8);
+		/* TODO
 		line(m_debug, Point(posX.initial * diagonal, posY.initial * diagonal), Point(posX.value * diagonal, posY.value * diagonal), valid ? Green : Gray, 1, 8);
+		*/
 #endif
 	}
 	// Max number of objects criterion

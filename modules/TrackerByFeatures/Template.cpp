@@ -29,11 +29,22 @@ using namespace std;
 int Template::m_counter = 0;
 log4cxx::LoggerPtr Template::m_logger(log4cxx::Logger::getLogger("Module"));
 
+void copyFeaturesToTemplate(const map<string, FeaturePtr>& x_source, map<string, FeatureFloatInTime>& xr_dest)
+{
+	xr_dest.clear();
+	for(map<string,FeaturePtr>::const_iterator it = x_source.begin() ; it != x_source.end() ; it++)
+	{
+		const FeatureFloat* const ff = dynamic_cast<const FeatureFloat* const>(&*it->second);
+		// Skip all other features
+		if(ff == NULL)
+			continue;
+		xr_dest.insert(std::make_pair(it->first, FeatureFloatInTime(*ff)));
+	}
+}
 
 Template::Template()
 {
 	m_num = m_counter;
-	// m_bestMatchingObject = -1;
 	m_lastMatchingObject = NULL;
 	m_lastSeen = TIME_STAMP_MIN;
 
@@ -45,18 +56,14 @@ Template::Template(const Template& t)
 	m_num = t.GetNum();
 	m_lastMatchingObject = t.m_lastMatchingObject;
 	m_feats = t.GetFeatures();
-
-	// m_bestMatchingObject = -1;
 	m_lastSeen = TIME_STAMP_MIN;
-
 }
 
 Template::Template(const Object& x_obj)
 {
 	m_num = m_counter;
 	m_counter++;
-	m_feats = x_obj.GetFeatures();
-	// m_bestMatchingObject = -1;
+	copyFeaturesToTemplate(x_obj.GetFeatures(), m_feats);
 	m_lastMatchingObject = NULL; // &x_obj;
 	m_lastSeen = TIME_STAMP_MIN;
 
@@ -68,8 +75,6 @@ Template& Template::operator = (const Template& t)
 	m_num = t.GetNum();
 	m_lastMatchingObject = t.m_lastMatchingObject;
 	m_feats = t.GetFeatures();
-	
-	// m_bestMatchingObject = -1;
 	m_lastSeen = t.m_lastSeen;// ::m_timeDisappear;
 
 	return *this;
@@ -98,14 +103,12 @@ double Template::CompareWithObject(const Object& x_obj, const vector<string>& x_
 	
 	for (vector<string>::const_iterator it = x_features.begin() ; it != x_features.end() ; it++)
 	{
-		/* TODO
-		const Feature & f1(GetFeature(*it));
-		const Feature & f2(x_obj.GetFeature(*it));
+		const FeatureFloatInTime& f1(GetFeature(*it));
+		const FeatureFloat& f2(dynamic_cast<const FeatureFloat &>(x_obj.GetFeature(*it)));
 		sum += POW2(f1.value - f2.value) 
 			/ POW2(f1.sqVariance); // TODO: See if sqVariance has a reasonable value !!
 		// sum += POW2(f1.mean - f2.value) 
 			// / POW2(f1.sqVariance);
-		*/
 	}
 	return sqrt(sum) / x_features.size();
 }
@@ -120,11 +123,11 @@ void Template::UpdateFeatures(double x_alpha, TIME_STAMP m_currentTimeStamp)
 {
 	if(m_lastMatchingObject != NULL)
 	{
-		for (map<string,FeaturePtr>::iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
+		for (map<string,FeatureFloatInTime>::iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
 		{
 			try
 			{
-				// TODO it->second.Update(m_lastMatchingObject->GetFeature(it->first).value, x_alpha);
+				it->second.Update(m_lastMatchingObject->GetFeature(it->first), x_alpha);
 			}
 			catch(FeatureNotFoundException& e)
 			{
@@ -147,4 +150,34 @@ bool Template::NeedCleaning(TIME_STAMP x_cleaningTimeStamp)
 {
 	int tmp = m_lastSeen - x_cleaningTimeStamp; // note: this condition would not resist an overflow
 	return tmp < 0;
+}
+
+FeatureFloatInTime::FeatureFloatInTime(const FeatureFloat& x_feat)
+	: FeatureFloat(x_feat)
+{
+	sqVariance = 0.01;
+	mean       = value;
+	initial    = value;
+	min        = value;
+	max        = value;
+	nbSamples  = 1;
+}
+
+/**
+* @brief Keep a feature up to date in a dynamic way (similar to a running average)
+*
+* @param x_currentValue Value to use for updating
+* @param x_alpha        Alpha coefficient for running average
+*/
+void FeatureFloatInTime::Update(const Feature& x_feat, double x_alpha)
+{
+	const FeatureFloat& ff(dynamic_cast<const FeatureFloat&>(x_feat));
+	value      = ff.value;
+	mean       = mean * (1.0 - x_alpha) + value * x_alpha;
+	sqVariance = sqVariance * (1.0 - x_alpha) + POW2(ff.value - mean) * x_alpha;
+	if(ff.value < min)
+		min        = ff.value;
+	if(ff.value > max)
+		max        = ff.value;
+	nbSamples++;
 }
