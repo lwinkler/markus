@@ -55,8 +55,8 @@ class FeaturePtr : public Serializable
 		inline const Feature& operator* () const {return *mp_feat;}
 		
 		//inline virtual void Update(float x_currentValue, double x_alpha){mp_feat->Update(x_currentValue, x_alpha);}
-		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const{mp_feat->Serialize(stream, x_dir);}
-		virtual void Deserialize(std::istream& stream, const std::string& x_dir) {mp_feat->Deserialize(stream, x_dir);}
+		inline virtual void Serialize(std::ostream& stream, const std::string& x_dir) const{mp_feat->Serialize(stream, x_dir);}
+		inline virtual void Deserialize(std::istream& stream, const std::string& x_dir) {mp_feat->Deserialize(stream, x_dir);}
 
 	protected:
 		Feature* mp_feat;

@@ -24,6 +24,7 @@
 #include "util.h"
 #include <jsoncpp/json/writer.h>
 #include <jsoncpp/json/reader.h>
+#include <boost/lexical_cast.hpp>
 
 using namespace cv;
 using namespace std;
@@ -96,7 +97,17 @@ void Object::Serialize(std::ostream& x_out, const string& x_dir) const
 	{
 		stringstream ss;
 		it->second.Serialize(ss, x_dir);
-		root["features"][it->first] = ss.str();
+
+		try 
+		{
+			// TODO: Check via type ?
+			root["features"][it->first] = boost::lexical_cast<double>(ss.str());
+		}
+		catch(...)
+		{
+			// oops, not a number 
+			root["features"][it->first] = ss.str();
+		}
 	}
 
 	x_out << root;
@@ -117,7 +128,10 @@ void Object::Deserialize(std::istream& x_in, const string& x_dir)
 	m_feats.clear();
 	Json::Value::Members members = root["features"].getMemberNames();
 	for(Json::Value::Members::const_iterator it = members.begin() ; it != members.end() ; it++)
+	{
+		// TODO: JsonCpp has a bug for serializing floats !
 		AddFeature(*it, root["features"][*it].asFloat());
+	}
 }
 
 
