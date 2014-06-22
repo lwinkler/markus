@@ -26,11 +26,12 @@
 #include <map>
 #include <string>
 #include "define.h"
+#include "Serializable.h"
 
 /**
 * @brief Class representing a feature of a template/object. (e.g. area, perimeter, length, ...)
 */
-class Feature
+class Feature : public Serializable
 {
 	public:
 		Feature(){}
@@ -40,9 +41,11 @@ class Feature
 		
 		// virtual void Update(float x_currentValue, double x_alpha) = 0;
 		virtual Feature* CreateCopy() const = 0;
+		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const = 0;
+		virtual void Deserialize(std::istream& stream, const std::string& x_dir) = 0;
 };
 
-class FeaturePtr
+class FeaturePtr : public Serializable
 {
 	public:
 		FeaturePtr(Feature* x_feat) : mp_feat(x_feat){}
@@ -52,6 +55,8 @@ class FeaturePtr
 		inline const Feature& operator* () const {return *mp_feat;}
 		
 		//inline virtual void Update(float x_currentValue, double x_alpha){mp_feat->Update(x_currentValue, x_alpha);}
+		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const{mp_feat->Serialize(stream, x_dir);}
+		virtual void Deserialize(std::istream& stream, const std::string& x_dir) {mp_feat->Deserialize(stream, x_dir);}
 
 	protected:
 		Feature* mp_feat;
@@ -65,10 +70,10 @@ class FeatureFloat : public Feature
 	public:
 		FeatureFloat(float x_value);
 		Feature* CreateCopy() const{return new FeatureFloat(*this);}
+		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
+		virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 		
-		// void Update(float x_currentValue, double x_alpha);
-		
-		// The different values of the feature
+		// The value of the feature
 		float value;
 };
 #endif

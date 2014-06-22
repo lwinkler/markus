@@ -22,8 +22,7 @@
 -------------------------------------------------------------------------------------*/
 #include "Feature.h"
 
-#define POW2(x) (x) * (x)
-
+using namespace std;
 
 FeatureFloat::FeatureFloat(float x_value)
 	: Feature()
@@ -39,23 +38,12 @@ FeatureFloat::FeatureFloat(float x_value)
 	*/
 }
 
-
-/**
-* @brief Keep a feature up to date in a dynamic way (similar to a running average)
-*
-* @param x_currentValue Value to use for updating
-* @param x_alpha        Alpha coefficient for running average
-*/
-/*
-void FeatureFloat::Update(float x_currentValue, double x_alpha)
+void FeatureFloat::Serialize(ostream& x_out, const string& x_dir) const
 {
-	value      = x_currentValue;
-	mean       = mean * (1.0 - x_alpha) + x_currentValue * x_alpha;
-	sqVariance = sqVariance * (1.0 - x_alpha) + POW2(x_currentValue - mean) * x_alpha;
-	if(x_currentValue < min)
-		min        = x_currentValue;
-	if(x_currentValue > max)
-		max        = x_currentValue;
-	nbSamples++;
+	x_out << value;
 }
-*/
+
+void FeatureFloat::Deserialize(istream& x_in, const string& x_dir)
+{
+	x_in >> value;
+}

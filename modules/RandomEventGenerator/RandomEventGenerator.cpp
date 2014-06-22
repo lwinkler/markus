@@ -80,19 +80,16 @@ void RandomEventGenerator::Capture()
 
 		// Output an image in relation with the event
 		int x = m_param.width / 2, y = m_param.width / 2, r = m_param.width / 4,  c = 0, l = -1;
-		/*
-		TODO
 		if(m_param.nbFeatures > 0)
-			x = obj.GetFeature("feat0").value * m_param.width;
+			x = dynamic_cast<const FeatureFloat&>(obj.GetFeature("feat0")).value * m_param.width;
 		if(m_param.nbFeatures > 1)
-			y = obj.GetFeature("feat1").value * m_param.height;
+			y = dynamic_cast<const FeatureFloat&>(obj.GetFeature("feat1")).value * m_param.height;
 		if(m_param.nbFeatures > 2)
-			r = obj.GetFeature("feat2").value * m_param.width / 4;
+			r = dynamic_cast<const FeatureFloat&>(obj.GetFeature("feat2")).value * m_param.width / 4;
 		if(m_param.nbFeatures > 3)
-			c = obj.GetFeature("feat3").value * 255;
+			c = dynamic_cast<const FeatureFloat&>(obj.GetFeature("feat3")).value * 255;
 		if(m_param.nbFeatures > 4)
-			l = obj.GetFeature("feat4").value * 5 + 1;
-		*/
+			l = dynamic_cast<const FeatureFloat&>(obj.GetFeature("feat4")).value * 5 + 1;
 		circle(m_output, Point(x, y), r, Scalar(100, c, 255 - c), l);
 
 		LOG_DEBUG(m_logger, "RandomEventGenerator: Capture time: "<<m_frameTimer.GetMSecLong());

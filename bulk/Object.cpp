@@ -92,9 +92,12 @@ void Object::Serialize(std::ostream& x_out, const string& x_dir) const
 	root["width"]  = width;
 	root["height"] = height;
 
-	// TODO
-	// for(map <std::string, FeaturePtr>::const_iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
-		// root["features"][it->first] = (*it->second).value; // TODO What about other measures ?
+	for(map <std::string, FeaturePtr>::const_iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
+	{
+		stringstream ss;
+		it->second.Serialize(ss, x_dir);
+		root["features"][it->first] = ss.str();
+	}
 
 	x_out << root;
 }
@@ -162,7 +165,7 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 		//try
 		{
 			ostringstream text;
-			// TODO text<<it2->first<<"="<<(*it2->second).value;
+			text << it2->first << "=" << *it2->second;
 			pText.y += 7;
 			putText(x_output, text.str(), pText,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
 			i++;
