@@ -19,7 +19,8 @@ StreamObject.cpp
 StreamState.cpp
 Object.cpp
 Event.cpp
-Feature.cpp
+FeatureFloat.cpp
+FeatureFloatInTime.cpp
 ConfigReader.cpp
 Timer.cpp
 ModuleTimer.cpp

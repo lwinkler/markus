@@ -24,6 +24,7 @@
 #include "FilterObjects.h"
 #include "StreamObject.h"
 #include "StreamDebug.h"
+#include "FeatureFloatInTime.h"
 
 using namespace std;
 using namespace cv;
@@ -69,8 +70,8 @@ void FilterObjects::ProcessFrame()
 	{
 		bool valid = true;
 		const Rect &rect(it->Rect());
-		const FeatureFloat& posX   = dynamic_cast<const FeatureFloat&>(it->GetFeature("x"));
-		const FeatureFloat& posY   = dynamic_cast<const FeatureFloat&>(it->GetFeature("y"));
+		const FeatureFloatInTime* posX   = dynamic_cast<const FeatureFloatInTime*>(&it->GetFeature("x"));
+		const FeatureFloatInTime* posY   = dynamic_cast<const FeatureFloatInTime*>(&it->GetFeature("y"));
 		const FeatureFloat& width  = dynamic_cast<const FeatureFloat&>(it->GetFeature("width"));
 		const FeatureFloat& height = dynamic_cast<const FeatureFloat&>(it->GetFeature("height"));
 		// const Feature& distance = it->GetFeatureByName("distance", featureNames);
@@ -84,13 +85,15 @@ void FilterObjects::ProcessFrame()
 		}
 
 		// cout<<POW2(posX.value - posX.initial) + POW2(posY.value - posY.initial)<<" >= "<<POW2(m_param.minDist)<<endl;
-		/*
-		TODO
-		if(pow(posX.value - posX.initial, 2) + pow(posY.value - posY.initial, 2) < sqDist)
+		if(sqDist > 0)
 		{
-			valid = false;
+			if(posX == NULL || posY == NULL)
+				throw MkException("Can only compute distance if the object is tracked. A tracker must be present uphill.", LOC);
+			if(pow(posX->value - posX->initial, 2) + pow(posY->value - posY->initial, 2) < sqDist)
+			{
+				valid = false;
+			}
 		}
-		*/
 		// If the object touches the border, do not valid
 		//	value is set to 2 = 1 + 1 so that we avoid rounding errors
 		if(m_param.minBorderDist > 0)
@@ -106,9 +109,8 @@ void FilterObjects::ProcessFrame()
 			m_objectsOut.push_back(*it);
 #ifdef MARKUS_DEBUG_STREAMS
 		rectangle(m_debug, rect, valid ? Green : Gray, 1, 8);
-		/* TODO
-		line(m_debug, Point(posX.initial * diagonal, posY.initial * diagonal), Point(posX.value * diagonal, posY.value * diagonal), valid ? Green : Gray, 1, 8);
-		*/
+		if(posX != NULL && posY != NULL)
+			line(m_debug, Point(posX->initial * diagonal, posY->initial * diagonal), Point(posX->value * diagonal, posY->value * diagonal), valid ? Green : Gray, 1, 8);
 #endif
 	}
 	// Max number of objects criterion

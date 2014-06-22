@@ -23,21 +23,8 @@
 
 #include <log4cxx/logger.h>
 #include "Object.h"
+#include "FeatureFloatInTime.h"
 
-
-class FeatureFloatInTime : public FeatureFloat
-{
-	public:
-	FeatureFloatInTime(const FeatureFloat& x_feat);
-	void Update(const Feature& x_feat, double x_alpha);
-
-	float mean;
-	float sqVariance;
-	float initial;
-	float min;
-	float max;
-	int   nbSamples;
-};
 
 /*! \class Template
  *  \brief Class representing an object template

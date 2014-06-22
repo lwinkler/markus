@@ -20,30 +20,23 @@
 *    You should have received a copy of the GNU Lesser General Public License
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
+#ifndef MK_FEATURE_FLOAT_H
+#define MK_FEATURE_FLOAT_H
+
 #include "Feature.h"
 
-using namespace std;
-
-FeatureFloat::FeatureFloat(float x_value)
-	: Feature()
+/**
+* @brief Class representing a feature in the form of a float value
+*/
+class FeatureFloat : public Feature
 {
-	value      = x_value;
-	/*
-	sqVariance = 0.01;
-	mean       = x_value;
-	initial    = x_value;
-	min        = x_value;
-	max        = x_value;
-	nbSamples  = 1;
-	*/
-}
-
-void FeatureFloat::Serialize(ostream& x_out, const string& x_dir) const
-{
-	x_out << value;
-}
-
-void FeatureFloat::Deserialize(istream& x_in, const string& x_dir)
-{
-	x_in >> value;
-}
+	public:
+		FeatureFloat(float x_value);
+		Feature* CreateCopy() const{return new FeatureFloat(*this);}
+		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
+		virtual void Deserialize(std::istream& stream, const std::string& x_dir);
+		
+		// The value of the feature
+		float value;
+};
+#endif

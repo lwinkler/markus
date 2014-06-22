@@ -61,19 +61,4 @@ class FeaturePtr : public Serializable
 	protected:
 		Feature* mp_feat;
 };
-
-/**
-* @brief Class representing a feature in the form of a float value
-*/
-class FeatureFloat : public Feature
-{
-	public:
-		FeatureFloat(float x_value);
-		Feature* CreateCopy() const{return new FeatureFloat(*this);}
-		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
-		virtual void Deserialize(std::istream& stream, const std::string& x_dir);
-		
-		// The value of the feature
-		float value;
-};
 #endif
