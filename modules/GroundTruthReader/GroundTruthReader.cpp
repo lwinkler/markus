@@ -140,7 +140,7 @@ void GroundTruthReader::ProcessFrame()
 						}
 						else
 						{
-							it->AddFeature("gt",false);
+							it->AddFeature("gt", (float)false);
 	#ifdef MARKUS_DEBUG_STREAMS
 							rectangle(m_debug,obj,Scalar( 255, 255, 0));
 		#endif

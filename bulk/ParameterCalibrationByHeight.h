@@ -75,7 +75,7 @@ public:
 		{
 			mr_value.x = 0;
 			mr_value.y = 0;
-			mr_value.heigth = 0;
+			mr_value.height = 0;
 			return;
 		}
 
