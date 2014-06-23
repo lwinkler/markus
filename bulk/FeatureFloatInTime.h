@@ -27,9 +27,12 @@
 
 class FeatureFloatInTime : public FeatureFloat
 {
-	public:
+public:
 	FeatureFloatInTime(const FeatureFloat& x_feat);
+	Feature* CreateCopy() const{return new FeatureFloatInTime(*this);}
 	void Update(const Feature& x_feat, double x_alpha);
+	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
+	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 
 	float mean;
 	float sqVariance;

@@ -54,11 +54,10 @@ class Template
 			return it->second;
 		}
 		inline void SetFeatures(const std::map <std::string, FeatureFloatInTime>& x_feats) {m_feats = x_feats;}
-		inline const std::map <std::string, FeatureFloatInTime> GetFeatures() const{ return m_feats;}
+		inline const std::map <std::string, FeatureFloatInTime>& GetFeatures() const{ return m_feats;}
 		// inline const std::list <Object>& GetMatchingObjects() const{ return m_matchingObjects;}
 		inline int GetNum() const {return m_num;}
 		
-		// std::list <Object> m_matchingObjects;
 		Object * m_lastMatchingObject;
 
 	private:

@@ -96,7 +96,7 @@ void Object::Serialize(std::ostream& x_out, const string& x_dir) const
 	for(map <std::string, FeaturePtr>::const_iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
 	{
 		stringstream ss;
-		it->second.Serialize(ss, x_dir);
+		it->second->Serialize(ss, x_dir);
 
 		try 
 		{

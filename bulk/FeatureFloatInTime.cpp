@@ -21,6 +21,10 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 #include "FeatureFloatInTime.h"
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
+
+using namespace std;
 
 FeatureFloatInTime::FeatureFloatInTime(const FeatureFloat& x_feat)
 	: FeatureFloat(x_feat)
@@ -50,4 +54,30 @@ void FeatureFloatInTime::Update(const Feature& x_feat, double x_alpha)
 	if(ff.value > max)
 		max        = ff.value;
 	nbSamples++;
+}
+
+void FeatureFloatInTime::Serialize(std::ostream& x_out, const string& x_dir) const
+{
+	Json::Value root;
+	root["value"]      = value;
+	root["mean"]       = mean;
+	root["sqVariance"] = sqVariance;
+	root["initial"]    = initial;
+	root["min"]        = min;
+	root["max"]        = max;
+	root["nbSamples"]  = nbSamples;
+	x_out << root;
+}
+
+void FeatureFloatInTime::Deserialize(std::istream& x_in, const string& x_dir)
+{
+	Json::Value root;
+	x_in >> root;
+	value      = root["value"].asFloat();
+	mean       = root["mean"].asFloat();
+	sqVariance = root["sqVariance"].asFloat();
+	initial    = root["initial"].asFloat();
+	min        = root["min"].asFloat();
+	max        = root["max"].asFloat();
+	nbSamples  = root["nbSamples"].asInt();
 }

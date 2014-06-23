@@ -64,6 +64,7 @@ Template::Template(const Object& x_obj)
 	m_num = m_counter;
 	m_counter++;
 	copyFeaturesToTemplate(x_obj.GetFeatures(), m_feats);
+	cout<<m_feats.find("ellipse_ratio")->second.SerializeToString()<<"ASDFSAFD\n";
 	m_lastMatchingObject = NULL; // &x_obj;
 	m_lastSeen = TIME_STAMP_MIN;
 

@@ -70,8 +70,8 @@ void FilterObjects::ProcessFrame()
 	{
 		bool valid = true;
 		const Rect &rect(it->Rect());
-		const FeatureFloatInTime* posX   = dynamic_cast<const FeatureFloatInTime*>(&it->GetFeature("x"));
-		const FeatureFloatInTime* posY   = dynamic_cast<const FeatureFloatInTime*>(&it->GetFeature("y"));
+		const FeatureFloatInTime* posX = NULL;
+		const FeatureFloatInTime* posY = NULL;
 		const FeatureFloat& width  = dynamic_cast<const FeatureFloat&>(it->GetFeature("width"));
 		const FeatureFloat& height = dynamic_cast<const FeatureFloat&>(it->GetFeature("height"));
 		// const Feature& distance = it->GetFeatureByName("distance", featureNames);
@@ -87,6 +87,9 @@ void FilterObjects::ProcessFrame()
 		// cout<<POW2(posX.value - posX.initial) + POW2(posY.value - posY.initial)<<" >= "<<POW2(m_param.minDist)<<endl;
 		if(sqDist > 0)
 		{
+			cout<<it->GetFeature("x");
+			posX = dynamic_cast<const FeatureFloatInTime*>(&it->GetFeature("x"));
+			posY = dynamic_cast<const FeatureFloatInTime*>(&it->GetFeature("y"));
 			if(posX == NULL || posY == NULL)
 				throw MkException("Can only compute distance if the object is tracked. A tracker must be present uphill.", LOC);
 			if(pow(posX->value - posX->initial, 2) + pow(posY->value - posY->initial, 2) < sqDist)

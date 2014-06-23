@@ -200,6 +200,14 @@ void TrackerByFeatures::UpdateTemplates()
 			// Update the template and copy to the object
 			it1->UpdateFeatures(m_param.alpha, m_currentTimeStamp);
 			// it1->m_lastMatchingObject->SetFeatures(it1->GetFeatures()); // Note: not needed TODO: Add stdev on demand
+
+			// Replace features with FeatureFloatInTime
+			for(map<string,FeatureFloatInTime>::const_iterator it2 = it1->GetFeatures().begin() ; it2 != it1->GetFeatures().end() ; it2++)
+			{
+				it1->m_lastMatchingObject->AddFeature(it2->first, it2->second.CreateCopy());
+				LOG_DEBUG(m_logger, "Add FeatureInTime "<<it2->first<<"= "<<it1->GetFeatures().find(it2->first)->second);
+			}
+
 			it1->m_lastMatchingObject = NULL;
 		}
 
@@ -310,6 +318,7 @@ void TrackerByFeatures::DetectNewTemplates()
 			m_templates.push_back(template1);
 			//cout<<"Added template "<<t.GetNum()<<endl;
 			it2->SetId(template1.GetNum());
+			//TODO it2->SetFeatures(template1.GetFeatures());
 			cpt++;
 		}
 	}

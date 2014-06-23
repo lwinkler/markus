@@ -45,18 +45,18 @@ class Feature : public Serializable
 		virtual void Deserialize(std::istream& stream, const std::string& x_dir) = 0;
 };
 
-class FeaturePtr : public Serializable
+class FeaturePtr // : public Serializable
 {
 	public:
 		FeaturePtr(Feature* x_feat) : mp_feat(x_feat){}
 		FeaturePtr(const FeaturePtr& x_feat) : mp_feat((*x_feat).CreateCopy()) {}
 		~FeaturePtr(){delete mp_feat;}
 		FeaturePtr& operator = (const FeaturePtr& x_feat){delete(mp_feat); mp_feat = (*x_feat).CreateCopy();}
-		inline const Feature& operator* () const {return *mp_feat;}
+		inline const Feature& operator*  () const {return *mp_feat;}
+		inline const Feature* operator-> () const {return mp_feat;}
 		
-		//inline virtual void Update(float x_currentValue, double x_alpha){mp_feat->Update(x_currentValue, x_alpha);}
-		inline virtual void Serialize(std::ostream& stream, const std::string& x_dir) const{mp_feat->Serialize(stream, x_dir);}
-		inline virtual void Deserialize(std::istream& stream, const std::string& x_dir) {mp_feat->Deserialize(stream, x_dir);}
+		// inline virtual void Serialize(std::ostream& stream, const std::string& x_dir) const{mp_feat->Serialize(stream, x_dir);}
+		// inline virtual void Deserialize(std::istream& stream, const std::string& x_dir) {mp_feat->Deserialize(stream, x_dir);}
 
 	protected:
 		Feature* mp_feat;
