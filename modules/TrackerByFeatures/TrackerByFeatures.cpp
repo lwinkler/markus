@@ -205,7 +205,6 @@ void TrackerByFeatures::UpdateTemplates()
 			for(map<string,FeatureFloatInTime>::const_iterator it2 = it1->GetFeatures().begin() ; it2 != it1->GetFeatures().end() ; it2++)
 			{
 				it1->m_lastMatchingObject->AddFeature(it2->first, it2->second.CreateCopy());
-				LOG_DEBUG(m_logger, "Add FeatureInTime "<<it2->first<<"= "<<it1->GetFeatures().find(it2->first)->second);
 			}
 
 			it1->m_lastMatchingObject = NULL;
@@ -318,7 +317,12 @@ void TrackerByFeatures::DetectNewTemplates()
 			m_templates.push_back(template1);
 			//cout<<"Added template "<<t.GetNum()<<endl;
 			it2->SetId(template1.GetNum());
-			//TODO it2->SetFeatures(template1.GetFeatures());
+
+			// Copy features
+			for(map<string,FeatureFloatInTime>::const_iterator it3 = template1.GetFeatures().begin() ; it3 != template1.GetFeatures().end() ; it3++)
+			{
+				it2->AddFeature(it3->first, it3->second.CreateCopy());
+			}
 			cpt++;
 		}
 	}
