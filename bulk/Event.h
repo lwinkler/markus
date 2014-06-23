@@ -45,7 +45,7 @@ class Event : public Serializable
 		inline bool IsRaised() const {return m_eventName != "";}
 		inline const std::string& GetEventName() const{return m_eventName;}
 		inline const Object& GetObject() const {return m_object;}
-		inline void AddFeatureToObject(std::string x_name, Feature* x_feat) {m_object.AddFeature(x_name, x_feat);}
+		inline void AddFeature(std::string x_name, Feature* x_feat) {m_object.AddFeature(x_name, x_feat);}
 		inline void ScaleObject(double x_ratioX, double x_ratioY) {
 			m_object.posX   *= x_ratioX;
 			m_object.posY   *= x_ratioY;
