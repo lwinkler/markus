@@ -90,6 +90,11 @@ TIME_STAMP AnnotationFileReader::GetCurrentTimeStamp()
 	return timeStampToMs(m_srtStart);
 }
 
+TIME_STAMP AnnotationFileReader::GetEndTimeStamp()
+{
+	return timeStampToMs(m_srtEnd);
+}
+
 void AnnotationFileReader::Open(const std::string& x_file)
 {
 	m_num      = -1;

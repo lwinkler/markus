@@ -41,6 +41,7 @@ public:
 	
 	virtual void Open(const std::string& x_file);
 	TIME_STAMP GetCurrentTimeStamp();
+	TIME_STAMP GetEndTimeStamp();
 	virtual bool ReadNextAnnotation(std::string& rx_subText);
 	virtual std::string ReadAnnotationForTimeStamp(TIME_STAMP x_current);
 	virtual cv::Rect GetBox();
