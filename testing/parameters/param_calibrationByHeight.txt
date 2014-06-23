@@ -1,1 +1,1 @@
-param_calibrationByHeight : {"height":0.0,"x":1.0,"y":0.0} (def); 
+param_calibrationByHeight="{"height":0.0,"x":1.0,"y":0.0}" (def); 

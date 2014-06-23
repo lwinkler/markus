@@ -200,6 +200,7 @@ class TestSerialization : public CppUnit::TestFixture
 		std::cout<<mp_fakeInput->GetClass()<<std::endl;
 		testSerialization(*mp_fakeInput, "Module");
 
+		// TODO: test the serialization of features
 	}
 
 	static CppUnit::Test *suite()

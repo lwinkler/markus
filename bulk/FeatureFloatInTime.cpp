@@ -20,47 +20,18 @@
 *    You should have received a copy of the GNU Lesser General Public License
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
-#include "Feature.h"
+#include "FeatureFloatInTime.h"
 
-#define POW2(x) (x) * (x)
-
-
-Feature::Feature(float x_value)
+FeatureFloatInTime::FeatureFloatInTime(const FeatureFloat& x_feat)
+	: FeatureFloat(x_feat)
 {
-	value      = x_value;
 	sqVariance = 0.01;
-	mean       = x_value;
-	initial    = x_value;
-	min        = x_value;
-	max        = x_value;
+	mean       = value;
+	initial    = value;
+	min        = value;
+	max        = value;
 	nbSamples  = 1;
 }
-
-Feature::Feature(const Feature& f)
-{
-	value      = f.value;
-	sqVariance = f.sqVariance;
-	mean       = f.mean;
-	initial    = f.initial;
-	min        = f.min;
-	max        = f.max;
-	nbSamples  = f.nbSamples;
-}
-
-Feature&  Feature::operator = (const Feature& f)
-{
-	value      = f.value;
-	sqVariance = f.sqVariance;
-	mean       = f.mean;
-	initial    = f.initial;
-	min        = f.min;
-	max        = f.max;
-	nbSamples  = f.nbSamples;
-
-	return *this;
-}
-
-Feature::~Feature(){}
 
 /**
 * @brief Keep a feature up to date in a dynamic way (similar to a running average)
@@ -68,14 +39,15 @@ Feature::~Feature(){}
 * @param x_currentValue Value to use for updating
 * @param x_alpha        Alpha coefficient for running average
 */
-void Feature::Update(float x_currentValue, double x_alpha)
+void FeatureFloatInTime::Update(const Feature& x_feat, double x_alpha)
 {
-	value      = x_currentValue;
-	mean       = mean * (1.0 - x_alpha) + x_currentValue * x_alpha;
-	sqVariance = sqVariance * (1.0 - x_alpha) + POW2(x_currentValue - mean) * x_alpha;
-	if(x_currentValue < min)
-		min        = x_currentValue;
-	if(x_currentValue > max)
-		max        = x_currentValue;
+	const FeatureFloat& ff(dynamic_cast<const FeatureFloat&>(x_feat));
+	value      = ff.value;
+	mean       = mean * (1.0 - x_alpha) + value * x_alpha;
+	sqVariance = sqVariance * (1.0 - x_alpha) + POW2(ff.value - mean) * x_alpha;
+	if(ff.value < min)
+		min        = ff.value;
+	if(ff.value > max)
+		max        = ff.value;
 	nbSamples++;
 }

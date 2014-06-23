@@ -1,1 +1,1 @@
-param_double = 1e+44 [1e+33:1e+99] (def); 
+param_double=1e+44 [1e+33:1e+99] (def); 

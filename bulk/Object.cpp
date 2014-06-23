@@ -24,6 +24,7 @@
 #include "util.h"
 #include <jsoncpp/json/writer.h>
 #include <jsoncpp/json/reader.h>
+#include <boost/lexical_cast.hpp>
 
 using namespace cv;
 using namespace std;
@@ -47,7 +48,40 @@ Object::Object(const string& x_name, const cv::Rect& x_rect) :
 	height   = x_rect.height;
 }
 
-Object::~Object(){}
+Object::Object(const Object & x_obj)
+{
+	m_name = x_obj.GetName();
+	m_id = x_obj.GetId();
+	posX = x_obj.posX;
+	posY = x_obj.posY;
+	width = x_obj.width;
+	height = x_obj.height;
+	// for(map<string, FeaturePtr>::const_iterator it = x_obj.GetFeatures().begin() ; it != x_obj.GetFeatures().end() ; it++)
+		// m_feats.insert(std::make_pair(it->first, new FeatureFloat(*it->second)));
+	m_feats = x_obj.GetFeatures();
+}
+
+Object& Object::operator=(const Object & x_obj)
+{
+	m_name = x_obj.GetName();
+	m_id = x_obj.GetId();
+	posX = x_obj.posX;
+	posY = x_obj.posY;
+	width = x_obj.width;
+	height = x_obj.height;
+
+	m_feats.clear();
+
+	// for(map<string, FeaturePtr>::const_iterator it = x_obj.GetFeatures().begin() ; it != x_obj.GetFeatures().end() ; it++)
+		// m_feats.insert(std::make_pair(it->first, FeaturePtr(new Feature(*it->second))));
+	m_feats = x_obj.GetFeatures();
+	return *this;
+}
+
+Object::~Object()
+{
+	m_feats.clear();
+}
 
 void Object::Serialize(std::ostream& x_out, const string& x_dir) const
 {
@@ -59,8 +93,22 @@ void Object::Serialize(std::ostream& x_out, const string& x_dir) const
 	root["width"]  = width;
 	root["height"] = height;
 
-	for(map <std::string, Feature>::const_iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
-		root["features"][it->first] = it->second.value; // TODO What about other measures ?
+	for(map <std::string, FeaturePtr>::const_iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
+	{
+		stringstream ss;
+		it->second.Serialize(ss, x_dir);
+
+		try 
+		{
+			// TODO: Check via type ?
+			root["features"][it->first] = boost::lexical_cast<double>(ss.str());
+		}
+		catch(...)
+		{
+			// oops, not a number 
+			root["features"][it->first] = ss.str();
+		}
+	}
 
 	x_out << root;
 }
@@ -80,7 +128,10 @@ void Object::Deserialize(std::istream& x_in, const string& x_dir)
 	m_feats.clear();
 	Json::Value::Members members = root["features"].getMemberNames();
 	for(Json::Value::Members::const_iterator it = members.begin() ; it != members.end() ; it++)
+	{
+		// TODO: JsonCpp has a bug for serializing floats !
 		AddFeature(*it, root["features"][*it].asFloat());
+	}
 }
 
 
@@ -123,12 +174,12 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 	// Print features and values
 	pText.x += 2;
 	int i = 0;
-	for(map<string, Feature>::const_iterator it2 = GetFeatures().begin() ; it2 != GetFeatures().end() ; it2++)
+	for(map<string, FeaturePtr>::const_iterator it2 = GetFeatures().begin() ; it2 != GetFeatures().end() ; it2++)
 	{
 		//try
 		{
 			ostringstream text;
-			text<<it2->first<<"="<<it2->second.value;
+			text << it2->first << "=" << *it2->second;
 			pText.y += 7;
 			putText(x_output, text.str(), pText,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
 			i++;

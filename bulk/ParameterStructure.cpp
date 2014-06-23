@@ -214,7 +214,8 @@ void ParameterStructure::PrintParameters() const
 	// string confType = "";
 	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
 	{
-		(*it)->Print(ss);
+		if(!(*it)->IsHidden())
+			(*it)->Print(ss);
 	}
 	if(m_list.size() > 0)
 		LOG_INFO(m_logger, ss.str());
