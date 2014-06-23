@@ -98,7 +98,7 @@ if [[ $response =~ ^[Yy]$ ]] ; then
 
 	# fall
 
-	TARGET=fall_${MARKUS_TAG}
+	TARGET=fall_v${MARKUS_TAG}
 	rm -rf ${TARGET}
 	mkdir ${TARGET}
 	scp -r markus projects2/FallDetectionFromVP.xml modules2/FilterPython/vignettes log4cxx.min.xml ${TARGET}
@@ -108,7 +108,7 @@ if [[ $response =~ ^[Yy]$ ]] ; then
 
 	# motion
 
-	TARGET=motion_${MARKUS_TAG}
+	TARGET=motion_v${MARKUS_TAG}
 	rm -rf ${TARGET}
 	mkdir ${TARGET}
 	scp -r markus projects2/MotionDetectorFromVP.xml log4cxx.min.xml ${TARGET}
