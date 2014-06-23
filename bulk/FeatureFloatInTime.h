@@ -21,40 +21,21 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef STREAM_OBJECT_H
-#define STREAM_OBJECT_H
-
-#include "Stream.h"
+#include <log4cxx/logger.h>
 #include "Object.h"
 
-#define DEFAULT_STREAM_COLOR cv::Scalar(255, 255, 255)
 
-
-/// Stream in the form of located objects
-
-class StreamObject : public Stream
+class FeatureFloatInTime : public FeatureFloat
 {
-public:
-	StreamObject(const std::string& rx_name, std::vector<Object>& r_rects, Module& rx_module, const std::string& rx_description);
-	~StreamObject();
-	MKCLASS("StreamObjects")
-	MKTYPE("Objects")
+	public:
+	FeatureFloatInTime(const FeatureFloat& x_feat);
+	void Update(const Feature& x_feat, double x_alpha);
 
-	inline void Clear() {m_objects.clear();}
-	inline void AddObject(const Object& x_obj) {m_objects.push_back(x_obj);}
-	inline const std::vector<Object>& GetObjects() const {return m_objects;}
-
-	virtual void ConvertInput();
-	virtual void RenderTo(cv::Mat& x_output) const;
-	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
-	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
-	// double GetFeatureValue(const std::vector<Feature>& x_vect, const char* x_name);
-
-protected:
-	std::vector<Object> & m_objects;
-
-private:
-	DISABLE_COPY(StreamObject)
+	float mean;
+	float sqVariance;
+	float initial;
+	float min;
+	float max;
+	int   nbSamples;
 };
 
-#endif

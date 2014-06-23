@@ -1,1 +1,1 @@
-param_imageType = CV_8UC2 [8] (def); 
+param_imageType=CV_8UC2 (8) (def); 

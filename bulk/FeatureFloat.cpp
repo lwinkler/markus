@@ -20,44 +20,30 @@
 *    You should have received a copy of the GNU Lesser General Public License
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
-#include <cppunit/ui/text/TestRunner.h>
-#include <log4cxx/xml/domconfigurator.h>
-#include "ConfigReaderTest.h"
-#include "TestProjects.h"
-#include "TestModules.h"
-#include "TestSerialization.h"
-#include "TestParameters.h"
-
+#include "FeatureFloat.h"
 
 using namespace std;
 
-
-int main(int argc, char **argv)
+FeatureFloat::FeatureFloat(float x_value)
+	: Feature()
 {
-	CppUnit::TextUi::TestRunner runner;
-	SYSTEM("rm -rf testing/out");
-	SYSTEM("rm -rf testing/tmp");
-	SYSTEM("mkdir -p testing/tmp");
-	Manager::OutputDir("testing/out");
-	log4cxx::xml::DOMConfigurator::configure("testing/log4cxx.xml");
+	value      = x_value;
+	/*
+	sqVariance = 0.01;
+	mean       = x_value;
+	initial    = x_value;
+	min        = x_value;
+	max        = x_value;
+	nbSamples  = 1;
+	*/
+}
 
-	runner.addTest(ConfigReaderTest::suite());
-	runner.addTest(TestProjects::suite());
-	runner.addTest(TestModules::suite());
-	runner.addTest(TestSerialization::suite());
-	runner.addTest(TestParameters::suite());
+void FeatureFloat::Serialize(ostream& x_out, const string& x_dir) const
+{
+	x_out << value;
+}
 
-	try
-	{
-		if(argc <= 1)
-			runner.run();
-		else
-			runner.run(argv[1]);
-	}
-	catch(exception& e)
-	{
-		cout<<"Error running tests: "<<e.what()<<endl;
-	}
-
-	return 0;
+void FeatureFloat::Deserialize(istream& x_in, const string& x_dir)
+{
+	x_in >> value;
 }

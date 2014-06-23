@@ -68,3 +68,4 @@ Class &operator=(const Class &);
 	throw MkException(ss.str(), LOC);}}
 
 #endif
+

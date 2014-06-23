@@ -199,7 +199,7 @@ void TrackerByFeatures::UpdateTemplates()
 
 			// Update the template and copy to the object
 			it1->UpdateFeatures(m_param.alpha, m_currentTimeStamp);
-			it1->m_lastMatchingObject->SetFeatures(it1->GetFeatures());
+			// it1->m_lastMatchingObject->SetFeatures(it1->GetFeatures()); // Note: not needed TODO: Add stdev on demand
 			it1->m_lastMatchingObject = NULL;
 		}
 
@@ -285,6 +285,7 @@ void TrackerByFeatures::DetectNewTemplates()
 					// See if the object might have splitted
 					try
 					{
+						/* TODO
 						double xt = bestTemplate->GetFeature("x").value;
 						double yt = bestTemplate->GetFeature("y").value;
 						double wt = bestTemplate->GetFeature("width").value;
@@ -299,6 +300,7 @@ void TrackerByFeatures::DetectNewTemplates()
 							// Copy the template to the object (but not the id)
 							template1.SetFeatures(bestTemplate->GetFeatures());
 						}
+						*/
 					}
 					catch(...){}
 				}

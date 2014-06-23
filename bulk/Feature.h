@@ -23,29 +23,42 @@
 #ifndef MK_FEATURE_H
 #define MK_FEATURE_H
 
+#include <map>
+#include <string>
+#include "define.h"
+#include "Serializable.h"
+
 /**
 * @brief Class representing a feature of a template/object. (e.g. area, perimeter, length, ...)
 */
-class Feature
+class Feature : public Serializable
 {
 	public:
-		Feature(float value);
-		Feature(const Feature&);
-		Feature& operator = (const Feature&);
-		~Feature();
+		Feature(){}
+		virtual ~Feature(){};
+		// Feature(const Feature&);
+		// Feature& operator = (const Feature&);
 		
-		void Update(float x_currentValue, double x_alpha);
-		
-	public:
-		// The different values of the feature
-		float value;
-		float mean;
-		float sqVariance;
-		float initial;
-		float min;
-		float max;
-		int    nbSamples;
+		// virtual void Update(float x_currentValue, double x_alpha) = 0;
+		virtual Feature* CreateCopy() const = 0;
+		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const = 0;
+		virtual void Deserialize(std::istream& stream, const std::string& x_dir) = 0;
 };
 
+class FeaturePtr : public Serializable
+{
+	public:
+		FeaturePtr(Feature* x_feat) : mp_feat(x_feat){}
+		FeaturePtr(const FeaturePtr& x_feat) : mp_feat((*x_feat).CreateCopy()) {}
+		~FeaturePtr(){delete mp_feat;}
+		FeaturePtr& operator = (const FeaturePtr& x_feat){delete(mp_feat); mp_feat = (*x_feat).CreateCopy();}
+		inline const Feature& operator* () const {return *mp_feat;}
+		
+		//inline virtual void Update(float x_currentValue, double x_alpha){mp_feat->Update(x_currentValue, x_alpha);}
+		inline virtual void Serialize(std::ostream& stream, const std::string& x_dir) const{mp_feat->Serialize(stream, x_dir);}
+		inline virtual void Deserialize(std::istream& stream, const std::string& x_dir) {mp_feat->Deserialize(stream, x_dir);}
 
+	protected:
+		Feature* mp_feat;
+};
 #endif

@@ -136,7 +136,7 @@ string ParameterEnum::GetRange() const
 */
 void ParameterEnum::Print(ostream& os) const
 {
-	os<<m_name<<" = "<<GetReverseEnum().at(GetValue())<<" ["<<GetValue()<<"] ("<<configType[m_confSource]<<"); ";
+	os<<m_name<<"="<<GetReverseEnum().at(GetValue())<<" ("<<GetValue()<<") ("<<configType[m_confSource]<<"); ";
 }
 
 /**

@@ -330,3 +330,28 @@ bool compareFiles(const std::string& x_file1, const std::string& x_file2)
 		return false;
 	return true;
 }
+
+/**
+* @brief Return the content of a file
+*
+* @param filename
+*
+* @return 
+*/
+string getFileContents(const string& x_fileName)
+{
+	ifstream in(x_fileName.c_str(), ios::in | ios::binary);
+	if (in)
+	{
+		string contents;
+		in.seekg(0, ios::end);
+		contents.resize(in.tellg());
+		in.seekg(0, ios::beg);
+		in.read(&contents[0], contents.size());
+		in.close();
+		return contents;
+	}
+	else throw MkException("Cannot open file " + x_fileName, LOC);
+}
+
+
