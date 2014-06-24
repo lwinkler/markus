@@ -49,8 +49,22 @@ class Object : public Serializable
 		inline int GetId() const {return m_id;}
 		inline void SetId(int x_id){m_id = x_id;}
 
-		inline void AddFeature(std::string x_name, Feature* xp_feat) {m_feats.insert(std::make_pair(x_name, xp_feat));}
-		inline void AddFeature(std::string x_name, float x_value) {m_feats.insert(std::make_pair(x_name, new FeatureFloat(x_value)));}
+		inline void AddFeature(std::string x_name, Feature* xp_feat)
+		{
+			std::map <std::string, FeaturePtr>::iterator it = m_feats.find(x_name);
+			if(it != m_feats.end())
+				m_feats.erase(it);
+				
+			m_feats.insert(std::make_pair(x_name, xp_feat));
+		}
+		inline void AddFeature(std::string x_name, float x_value)
+		{
+			std::map <std::string, FeaturePtr>::iterator it = m_feats.find(x_name);
+			if(it != m_feats.end())
+				m_feats.erase(it);
+
+			m_feats.insert(std::make_pair(x_name, new FeatureFloat(x_value)));
+		}
 		inline const std::map <std::string, FeaturePtr>& GetFeatures() const {return m_feats;}
 		inline const Feature& GetFeature(const std::string& x_name) const
 		{
