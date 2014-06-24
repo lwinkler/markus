@@ -32,7 +32,7 @@
  *  A template is what allows to track an Object, through different frames. A set of Templates is typically
  * used inside a Tracker.
  */
-// TODO: INherit from object
+// TODO: Maybe inherit from object
 class Template
 {
 	public:

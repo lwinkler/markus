@@ -106,9 +106,7 @@ double Template::CompareWithObject(const Object& x_obj, const vector<string>& x_
 		const FeatureFloatInTime& f1(GetFeature(*it));
 		const FeatureFloat&       f2(dynamic_cast<const FeatureFloat &>(x_obj.GetFeature(*it)));
 		sum += POW2(f1.value - f2.value) 
-			/ POW2(f1.sqVariance); // TODO: See if sqVariance has a reasonable value !!
-		// sum += POW2(f1.mean - f2.value) 
-			// / POW2(f1.sqVariance);
+			/ POW2(f1.sqVariance);
 	}
 	return sqrt(sum) / x_features.size();
 }

@@ -203,7 +203,7 @@ void TrackerByFeatures::UpdateTemplates()
 #endif
 		if(it1->m_lastMatchingObject != NULL)
 		{
-			// Add two extra features: distance and speed
+			// Add two extra features: distance and speed /// TODO
 			// const Feature& x = it1->m_lastMatchingObject->GetFeature("x");
 			// const Feature& y = it1->m_lastMatchingObject->GetFeature("y");
 
@@ -216,8 +216,6 @@ void TrackerByFeatures::UpdateTemplates()
 
 			// Update the template and copy to the object
 			it1->UpdateFeatures(m_param.alpha, m_currentTimeStamp);
-			// it1->m_lastMatchingObject->SetFeatures(it1->GetFeatures()); // Note: not needed TODO: Add stdev on demand
-
 			it1->m_lastMatchingObject = NULL;
 		}
 
