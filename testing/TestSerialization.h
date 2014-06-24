@@ -39,6 +39,7 @@
 #include "StreamDebug.h"
 #include "CalibrationByHeight.h"
 
+#include "FeatureFloatInTime.h"
 
 /// Test class for serialization
 class TestObject : public Serializable
@@ -200,7 +201,11 @@ class TestSerialization : public CppUnit::TestFixture
 		std::cout<<mp_fakeInput->GetClass()<<std::endl;
 		testSerialization(*mp_fakeInput, "Module");
 
-		// TODO: test the serialization of features
+		FeatureFloat ff(0.93);
+		testSerialization(ff, "FeatureFloat");
+
+		FeatureFloatInTime ffit(0.93);
+		testSerialization(ffit, "FeatureFloatInTime");
 	}
 
 	static CppUnit::Test *suite()

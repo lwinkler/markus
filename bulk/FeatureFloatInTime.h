@@ -20,6 +20,8 @@
 *    You should have received a copy of the GNU Lesser General Public License
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
+#ifndef MK_FEATURE_FLOAT_IN_TIME_H
+#define MK_FEATURE_FLOAT_IN_TIME_H
 
 #include <log4cxx/logger.h>
 #include "Object.h"
@@ -42,3 +44,4 @@ public:
 	int   nbSamples;
 };
 
+#endif
