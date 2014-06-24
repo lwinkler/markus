@@ -107,7 +107,6 @@ class TestSerialization : public CppUnit::TestFixture
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigReader("testing/serialize/module.xml");
 		mp_fakeInput = m_factory.CreateModule("VideoFileReader", mp_config->GetSubConfig("module"));
-		std::cout<<mp_fakeInput->GetClass()<<std::endl;
 		// note: we need a fake module to create the input streams
 		mp_fakeInput->SetAsReady();
 		mp_fakeInput->Reset();
@@ -198,7 +197,6 @@ class TestSerialization : public CppUnit::TestFixture
 		testSerialization(calib2, "CalibrationByHeight2");
 
 		// TODO: test the serialization of all modules
-		std::cout<<mp_fakeInput->GetClass()<<std::endl;
 		testSerialization(*mp_fakeInput, "Module");
 
 		FeatureFloat ff(0.93);

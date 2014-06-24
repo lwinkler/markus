@@ -87,7 +87,6 @@ void FilterObjects::ProcessFrame()
 		// cout<<POW2(posX.value - posX.initial) + POW2(posY.value - posY.initial)<<" >= "<<POW2(m_param.minDist)<<endl;
 		if(sqDist > 0)
 		{
-			cout<<it->GetFeature("x");
 			posX = dynamic_cast<const FeatureFloatInTime*>(&it->GetFeature("x"));
 			posY = dynamic_cast<const FeatureFloatInTime*>(&it->GetFeature("y"));
 			if(posX == NULL || posY == NULL)
