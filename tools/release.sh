@@ -26,7 +26,7 @@ MARKUS_TAG=$2
 read -r -p "Do you want to clone the Markus repository to a fresh directory ./markus_$MARKUS_RELEASE ? [y/N] " response
 if [[ $response =~ ^[Yy]$ ]] ; then
 	git clone git@github.com:lwinkler/markus.git markus_$MARKUS_RELEASE
-	cd markus_$MARKUS_RELEASE
+	cd markus_v$MARKUS_RELEASE
 
 	
 	read -r -p "Do you want to clone the vp-detection repository ? [y/N] " response
@@ -48,8 +48,10 @@ if [[ $response =~ ^[Yy]$ ]] ; then
 	cd ..
 else
 	git checkout $MARKUS_RELEASE
+	git pull
 	cd vp-detection
 	git checkout $MARKUS_RELEASE
+	git pull
 	cd ..
 fi
 
