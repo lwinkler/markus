@@ -46,7 +46,6 @@ public:
 		{
 			m_list.push_back(new ParameterString("file", 	"in/input.srt", &file,    "Name of the video file to read, with path"));
 			m_list.push_back(new ParameterString("pattern",	"state_1",      &pattern, "Pattern to search in text. If this is found the state is set to 1"));
-			m_list.push_back(new ParameterInt("keep duration",10, 0, 600,		&keepDuration, "duration during module keep gt information after the action"));
 			m_list.push_back(new ParameterInt("distance", 20, 0, 100,		&distance, "distance between real object and ROI in ass file"));
 			Init();
 		};
@@ -54,7 +53,6 @@ public:
 	public:
 		std::string file;
 		std::string pattern;
-		int keepDuration;
 		int distance;
 	};
 
@@ -73,7 +71,7 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 	bool m_oldState;
 	bool m_assFile;
-	std::map<int,TIME_STAMP> trackedObj;
+	std::vector<int> trackedObj;
 
 protected:
 

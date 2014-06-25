@@ -65,6 +65,7 @@ void GroundTruthReader::Reset()
 	Module::Reset();
 	m_state    = false;
 	m_oldState = false;
+	trackedObj.clear();
 
 	CLEAN_DELETE(mp_annotationReader);
 	m_assFile = (m_param.file.substr(m_param.file.find_last_of(".") + 1) == "ass");
@@ -97,97 +98,70 @@ void GroundTruthReader::ProcessFrame()
 #endif
 	}
 
-	// annotate stream objects
 	Rect refObj = mp_annotationReader->GetBox();
-
-	// Ass file
-	if (m_assFile)
-	{
-		if (refObj.width > 0) // rectangle can be absent from ass
-		{
-
-			// enlarge the bounding box
-			refObj.x -= m_param.distance / 2;
-			refObj.y -= m_param.distance / 2;
-			refObj.width += m_param.distance;
-			refObj.height += m_param.distance;
-
-			// middle of bounding box
-			Rect centerRefObj = Rect(refObj.x+((refObj.width - m_param.distance) / 2) , refObj.y+ ((refObj.height - m_param.distance) / 2), m_param.distance, m_param.distance);
-
-#ifdef MARKUS_DEBUG_STREAMS
-			if (text != "")
-				rectangle(m_debug,refObj,Scalar( 205, 205, 205));
-#endif
-
-			for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
-			{
-				// if object is known, don't process it
-				if (trackedObj.find(it->GetId()) == trackedObj.end())
-				{
-					// test bounding rectangle only if necessary
-					if (m_state)
-					{
-						Rect obj = it->Rect();
-						// if middle of rect is in middle of bounding box and area is smaller than reference bounding box
-						if (centerRefObj.contains(Point (obj.x+obj.width/2,obj.y+obj.height/2)) && refObj.area() >= obj.area())
-						{
-							it->AddFeature("gt",m_state);
-							trackedObj.insert(std::pair<int,TIME_STAMP>(mp_annotationReader->GetEndTimeStamp(),it->GetId()));
-	#ifdef MARKUS_DEBUG_STREAMS
-							rectangle(m_debug,obj,Scalar( 0, 255, 0));
-	#endif
-						}
-						else
-						{
-							it->AddFeature("gt", (float)false);
-	#ifdef MARKUS_DEBUG_STREAMS
-							rectangle(m_debug,obj,Scalar( 255, 255, 0));
-		#endif
-						}
-					}
-					else
-						it->AddFeature("gt",m_state);
-				}
-			}
-		}
-		// ass file without bounding box
-		else
-		{
-			for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
-			{
-				// edit only objects not already raised
-				if (trackedObj.find(it->GetId())==trackedObj.end())
-					it->AddFeature("gt",m_state);
-			}
-		}
-	}
-	// srt file
-	else
-	{
-		for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
-		{
-			it->AddFeature("gt",m_state);
-		}
-	}
-
-
 
 	if (m_oldState != m_state)
 	{
+		// Raise an alarm
 		m_event.Raise("Ground Truth changed");
 		m_oldState = m_state;
 
-		if (m_assFile)
+		// Update tracked object
+		if (m_state)
 		{
-			// use this event to clean the map
-			map<int,TIME_STAMP>::iterator pos;
-			// erase invalidate iterator, pos-incrementation is a trick
-			for ( pos = trackedObj.begin(); pos != trackedObj.end();)
-				if(pos->second < m_currentTimeStamp - m_param.keepDuration*1000)
-					trackedObj.erase(pos++);
-				else
-					pos++;
+
+			if (m_assFile && refObj.width > 0) // rectangle can be absent from ass
+			{
+				// enlarge the bounding box
+				refObj.x -= m_param.distance / 2;
+				refObj.y -= m_param.distance / 2;
+				refObj.width += m_param.distance;
+				refObj.height += m_param.distance;
+
+				// middle of bounding box
+				Rect centerRefObj = Rect(refObj.x+((refObj.width - m_param.distance) / 2) , refObj.y+ ((refObj.height - m_param.distance) / 2), m_param.distance, m_param.distance);
+
+#ifdef MARKUS_DEBUG_STREAMS
+				if (text != "")
+					rectangle(m_debug,refObj,Scalar( 255, 0, 0));
+#endif
+
+				for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
+				{
+					Rect objRect = it->Rect();
+					if (centerRefObj.contains(Point (objRect.x+objRect.width/2,objRect.y+objRect.height/2)) && refObj.area() >= objRect.area()) // middle of rect is in middle of bounding box and area is smaller than reference bounding box
+					{
+						trackedObj.push_back(it->GetId());
+						LOG_DEBUG(m_logger, "Object "<< it->GetId()<<" is tracked until "<<mp_annotationReader->GetEndTimeStamp());
+					}
+				}
+			}
 		}
+		else
+			trackedObj.clear();
 	}
+
+	for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
+	{
+		// ass file with rect in subtitle
+		if (m_assFile && refObj.width > 0)
+		{
+			// gt = 1 only if object has been detected in roi
+			if (find (trackedObj.begin(), trackedObj.end(), it->GetId()) != trackedObj.end())
+				it->AddFeature("gt",(float)true);
+			else
+				it->AddFeature("gt",(float)false);
+
+		}
+		else
+			it->AddFeature("gt",m_state);
+
+#ifdef MARKUS_DEBUG_STREAMS
+		if (dynamic_cast<const FeatureFloat&> (it->GetFeature("gt")).value > 0)
+			rectangle(m_debug,it->Rect(),Scalar( 0, 255, 0));
+		else
+			rectangle(m_debug,it->Rect(),Scalar(100, 100, 100));
+#endif
+	}
+
 }
