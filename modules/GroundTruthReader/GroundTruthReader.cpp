@@ -70,7 +70,11 @@ void GroundTruthReader::Reset()
 	CLEAN_DELETE(mp_annotationReader);
 	m_assFile = (m_param.file.substr(m_param.file.find_last_of(".") + 1) == "ass");
 	if(m_assFile)
+	{
 		mp_annotationReader = new AnnotationAssFileReader();
+		const double diagonal = sqrt(m_param.width * m_param.width + m_param.height * m_param.height);
+		distanceRefObject = diagonal * m_param.distance;
+	}
 	else
 		mp_annotationReader = new AnnotationSrtFileReader();
 
@@ -98,8 +102,6 @@ void GroundTruthReader::ProcessFrame()
 #endif
 	}
 
-	Rect refObj = mp_annotationReader->GetBox();
-
 	if (m_oldState != m_state)
 	{
 		// Raise an alarm
@@ -107,25 +109,19 @@ void GroundTruthReader::ProcessFrame()
 		m_oldState = m_state;
 
 		// Update tracked object
-		if (m_state)
+		if (m_state && m_assFile)
 		{
-
-			if (m_assFile && refObj.width > 0) // rectangle can be absent from ass
+			Rect refObj = mp_annotationReader->GetBox();
+			if (refObj.width > 0) // rectangle can be absent from ass
 			{
 				// enlarge the bounding box
-				refObj.x -= m_param.distance / 2;
-				refObj.y -= m_param.distance / 2;
-				refObj.width += m_param.distance;
-				refObj.height += m_param.distance;
+				refObj.x -= distanceRefObject / 2;
+				refObj.y -= distanceRefObject / 2;
+				refObj.width += distanceRefObject;
+				refObj.height += distanceRefObject;
 
 				// middle of bounding box
-				Rect centerRefObj = Rect(refObj.x+((refObj.width - m_param.distance) / 2) , refObj.y+ ((refObj.height - m_param.distance) / 2), m_param.distance, m_param.distance);
-
-#ifdef MARKUS_DEBUG_STREAMS
-				if (text != "")
-					rectangle(m_debug,refObj,Scalar( 255, 0, 0));
-#endif
-
+				Rect centerRefObj = Rect(refObj.x+((refObj.width - distanceRefObject) / 2) , refObj.y+ ((refObj.height - distanceRefObject) / 2), distanceRefObject, distanceRefObject);
 				for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
 				{
 					Rect objRect = it->Rect();
@@ -140,6 +136,24 @@ void GroundTruthReader::ProcessFrame()
 		else
 			trackedObj.clear();
 	}
+
+// display the ROI in srt
+#ifdef MARKUS_DEBUG_STREAMS
+	Rect refObj = mp_annotationReader->GetBox();
+	if (m_assFile && refObj.width > 0 && text != "")
+	{
+		// enlarge the bounding box
+		refObj.x -= distanceRefObject / 2;
+		refObj.y -= distanceRefObject / 2;
+		refObj.width += distanceRefObject;
+		refObj.height += distanceRefObject;
+
+		Rect centerRefObj = Rect(refObj.x+((refObj.width - distanceRefObject) / 2) , refObj.y+ ((refObj.height - distanceRefObject) / 2), distanceRefObject, distanceRefObject);
+
+		rectangle(m_debug,refObj,Scalar( 255, 0, 0));
+		rectangle(m_debug,centerRefObj,Scalar( 200, 100, 100));
+	}
+#endif
 
 	for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
 	{
@@ -158,9 +172,15 @@ void GroundTruthReader::ProcessFrame()
 
 #ifdef MARKUS_DEBUG_STREAMS
 		if (dynamic_cast<const FeatureFloat&> (it->GetFeature("gt")).value > 0)
+		{
 			rectangle(m_debug,it->Rect(),Scalar( 0, 255, 0));
+			circle(m_debug,Point(it->posX,it->posY),2,Scalar(0,255,0));
+		}
 		else
+		{
 			rectangle(m_debug,it->Rect(),Scalar(100, 100, 100));
+			circle(m_debug,Point(it->posX,it->posY),2,Scalar(100, 100, 100));
+		}
 #endif
 	}
 
