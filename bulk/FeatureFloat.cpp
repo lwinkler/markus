@@ -20,62 +20,30 @@
 *    You should have received a copy of the GNU Lesser General Public License
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
-#include "Feature.h"
+#include "FeatureFloat.h"
 
-#define POW2(x) (x) * (x)
+using namespace std;
 
-
-Feature::Feature(float x_value)
+FeatureFloat::FeatureFloat(float x_value)
+	: Feature()
 {
 	value      = x_value;
+	/*
 	sqVariance = 0.01;
 	mean       = x_value;
 	initial    = x_value;
 	min        = x_value;
 	max        = x_value;
 	nbSamples  = 1;
+	*/
 }
 
-Feature::Feature(const Feature& f)
+void FeatureFloat::Serialize(ostream& x_out, const string& x_dir) const
 {
-	value      = f.value;
-	sqVariance = f.sqVariance;
-	mean       = f.mean;
-	initial    = f.initial;
-	min        = f.min;
-	max        = f.max;
-	nbSamples  = f.nbSamples;
+	x_out << value;
 }
 
-Feature&  Feature::operator = (const Feature& f)
+void FeatureFloat::Deserialize(istream& x_in, const string& x_dir)
 {
-	value      = f.value;
-	sqVariance = f.sqVariance;
-	mean       = f.mean;
-	initial    = f.initial;
-	min        = f.min;
-	max        = f.max;
-	nbSamples  = f.nbSamples;
-
-	return *this;
-}
-
-Feature::~Feature(){}
-
-/**
-* @brief Keep a feature up to date in a dynamic way (similar to a running average)
-*
-* @param x_currentValue Value to use for updating
-* @param x_alpha        Alpha coefficient for running average
-*/
-void Feature::Update(float x_currentValue, double x_alpha)
-{
-	value      = x_currentValue;
-	mean       = mean * (1.0 - x_alpha) + x_currentValue * x_alpha;
-	sqVariance = sqVariance * (1.0 - x_alpha) + POW2(x_currentValue - mean) * x_alpha;
-	if(x_currentValue < min)
-		min        = x_currentValue;
-	if(x_currentValue > max)
-		max        = x_currentValue;
-	nbSamples++;
+	x_in >> value;
 }

@@ -34,6 +34,7 @@
 #include "StreamImage.h"
 #include "StreamState.h"
 #include "MkException.h"
+#include "FeatureFloatInTime.h"
 
 
 /// Unit testing class for ConfigReader class
@@ -103,7 +104,7 @@ class TestModules : public CppUnit::TestFixture
 
 
 	/// Create random object
-	Object createRandomObject(unsigned int* xp_seed, const std::string& x_featureNames)
+	Object createRandomObject(unsigned int* xp_seed, const std::map<std::string,std::string>& x_features)
 	{
 		// std::cout<<m_image.size()<<std::endl;
 		assert(m_image.size() != cv::Size(0,0));
@@ -112,19 +113,32 @@ class TestModules : public CppUnit::TestFixture
 			cv::Point(rand_r(xp_seed) % mp_fakeInput->GetWidth(), rand_r(xp_seed) % mp_fakeInput->GetHeight()))
 		);
 
-		if(x_featureNames != "")
+		// If a list of features is specified
+		for(std::map<std::string,std::string>::const_iterator it = x_features.begin() ; it != x_features.end() ; it++)
 		{
-			// If a list of features is specified
-			std::vector<std::string> feats;
-			split(x_featureNames, ',', feats);
-			for(std::vector<std::string>::const_iterator it = feats.begin() ; it != feats.end() ; it++)
+			// create a feature of the desired type
+			if(it->second == "FeatureFloat")
+				obj.AddFeature(it->first, new FeatureFloat(static_cast<float>(rand_r(xp_seed)) / RAND_MAX));
+			else if(it->second == "FeatureFloatInTime")
 			{
-				obj.AddFeature(*it, static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
+				// Create a float feature and update
+				double alpha = static_cast<float>(rand_r(xp_seed)) / RAND_MAX;
+				FeatureFloat ff(static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
+				FeatureFloatInTime ffit(ff);
+				for(int i = rand_r(xp_seed) % 20 ; i != 0 ; i--)
+				{
+					ff = FeatureFloat(static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
+					ffit.Update(ff, alpha);
+				}
+				obj.AddFeature(it->first, ffit.CreateCopy());
 			}
+			else
+				CPPUNIT_ASSERT(false);
 		}
 
 		int nb = rand_r(xp_seed) % 100;
-		for(int i = 0 ; i < nb + 1 ; i++) // TODO notify event does not accept empty features, remove +1
+		// note: notify event does not accept empty features, so we add 1
+		for(int i = 0 ; i < nb + 1 ; i++)
 		{
 			std::stringstream name;
 			name<<"rand"<<i;
@@ -137,23 +151,39 @@ class TestModules : public CppUnit::TestFixture
 	void randomizeInputs(const Module* x_module, const std::string& x_moduleClass, unsigned int* xp_seed)
 	{
 		assert(x_module->GetClass() == x_moduleClass);
-		std::string features = "";
+		std::map<std::string,std::string> features;
 
 		// Some modules require a specific set of features in input
 		if(x_moduleClass == "FallDetection")
-			features = "x,y,ellipse_angle,ellipse_ratio";
+		{
+			features["x"]             = "FeatureFloat";
+			features["y"]             = "FeatureFloat";
+			features["ellipse_angle"] = "FeatureFloat";
+			features["ellipse_ratio"] = "FeatureFloat";
+		}
 		else if(x_moduleClass == "FilterObjects")
-			features = "x,y,width,height";
-		else if(x_moduleClass == "FilterPython")
+		{
+			features["x"]      = "FeatureFloatInTime";
+			features["y"]      = "FeatureFloatInTime";
+			features["width"]  = "FeatureFloat";
+			features["height"] = "FeatureFloat";
+		}
+		else if(x_moduleClass == "FilterPython" || x_moduleClass == "TrackerByFeatures")
 		{
 			Controller* ctr = x_module->FindController("features");
 			assert(ctr != NULL);
-			ctr->CallAction("Get", &features);
+			std::string str;
+			std::vector<std::string> feats;
+			ctr->CallAction("Get", &str);
+			split(str, ',', feats);
+			for(std::vector<std::string>::const_iterator it = feats.begin() ; it != feats.end() ; it++)
+				features[*it] = "FeatureFloat";
 		}
 		else if(x_moduleClass == "Intrusion")
-			features = "x,y";
-		else if(x_moduleClass == "TrackerByFeatures")
-			x_module->FindController("features")->CallAction("Get", &features);
+		{
+			features["x"] = "FeatureFloat";
+			features["y"] = "FeatureFloat";
+		}
 
 		// random event
 		m_event.Empty();

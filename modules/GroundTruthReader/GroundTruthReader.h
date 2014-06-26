@@ -26,8 +26,10 @@
 
 #include "Module.h"
 #include "StreamObject.h"
-#include "AnnotationFileReader.h"
+#include "AnnotationAssFileReader.h"
+#include "AnnotationSrtFileReader.h"
 #include "Event.h"
+
 
 
 /**
@@ -44,12 +46,14 @@ public:
 		{
 			m_list.push_back(new ParameterString("file", 	"in/input.srt", &file,    "Name of the video file to read, with path"));
 			m_list.push_back(new ParameterString("pattern",	"state_1",      &pattern, "Pattern to search in text. If this is found the state is set to 1"));
+			m_list.push_back(new ParameterDouble("distance", 0.1, 0, 1,		&distance, "distance between real object and ROI in ass file in pourcentage of image diagonal"));
 			Init();
 		};
 
 	public:
 		std::string file;
 		std::string pattern;
+		double distance;
 	};
 
 	GroundTruthReader(const ConfigReader& x_confReader);
@@ -66,6 +70,9 @@ private:
 	Parameters m_param;
 	static log4cxx::LoggerPtr m_logger;
 	bool m_oldState;
+	bool m_assFile;
+	std::vector<int> trackedObj;
+	int distanceRefObject;
 
 protected:
 

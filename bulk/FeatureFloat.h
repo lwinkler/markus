@@ -20,44 +20,23 @@
 *    You should have received a copy of the GNU Lesser General Public License
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
-#include <cppunit/ui/text/TestRunner.h>
-#include <log4cxx/xml/domconfigurator.h>
-#include "ConfigReaderTest.h"
-#include "TestProjects.h"
-#include "TestModules.h"
-#include "TestSerialization.h"
-#include "TestParameters.h"
+#ifndef MK_FEATURE_FLOAT_H
+#define MK_FEATURE_FLOAT_H
 
+#include "Feature.h"
 
-using namespace std;
-
-
-int main(int argc, char **argv)
+/**
+* @brief Class representing a feature in the form of a float value
+*/
+class FeatureFloat : public Feature
 {
-	CppUnit::TextUi::TestRunner runner;
-	SYSTEM("rm -rf testing/out");
-	SYSTEM("rm -rf testing/tmp");
-	SYSTEM("mkdir -p testing/tmp");
-	Manager::OutputDir("testing/out");
-	log4cxx::xml::DOMConfigurator::configure("testing/log4cxx.xml");
-
-	runner.addTest(ConfigReaderTest::suite());
-	runner.addTest(TestProjects::suite());
-	runner.addTest(TestModules::suite());
-	runner.addTest(TestSerialization::suite());
-	runner.addTest(TestParameters::suite());
-
-	try
-	{
-		if(argc <= 1)
-			runner.run();
-		else
-			runner.run(argv[1]);
-	}
-	catch(exception& e)
-	{
-		cout<<"Error running tests: "<<e.what()<<endl;
-	}
-
-	return 0;
-}
+	public:
+		FeatureFloat(float x_value);
+		Feature* CreateCopy() const{return new FeatureFloat(*this);}
+		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
+		virtual void Deserialize(std::istream& stream, const std::string& x_dir);
+		
+		// The value of the feature
+		float value;
+};
+#endif

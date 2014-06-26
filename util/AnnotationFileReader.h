@@ -27,10 +27,11 @@
 #include <fstream>
 #include <log4cxx/logger.h>
 #include "define.h"
+#include "Module.h"
 
 
 /**
-* @brief Read an annotation file (in .srt format)
+* @brief Read an annotation file
 */
 class AnnotationFileReader
 {
@@ -38,10 +39,15 @@ public:
 	AnnotationFileReader();
 	~AnnotationFileReader();
 	
-	void Open(const std::string& x_file);
-	bool ReadNextAnnotation(std::string& rx_subText);
+	virtual void Open(const std::string& x_file);
 	TIME_STAMP GetCurrentTimeStamp();
-	std::string ReadAnnotationForTimeStamp(TIME_STAMP x_current);
+	TIME_STAMP GetEndTimeStamp();
+	virtual bool ReadNextAnnotation(std::string& rx_subText);
+	virtual std::string ReadAnnotationForTimeStamp(TIME_STAMP x_current);
+	virtual cv::Rect GetBox();
+
+protected:
+	std::istream& SafeGetline(std::istream& is, std::string& t);
 
 private:
 	static log4cxx::LoggerPtr m_logger;

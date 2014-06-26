@@ -21,40 +21,37 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef STREAM_OBJECT_H
-#define STREAM_OBJECT_H
+#ifndef ANNOTATION_ASS_FILE_READER_H
+#define ANNOTATION_ASS_FILE_READER_H
 
-#include "Stream.h"
-#include "Object.h"
+#include <fstream>
+#include <log4cxx/logger.h>
+#include "define.h"
+#include "AnnotationFileReader.h"
 
-#define DEFAULT_STREAM_COLOR cv::Scalar(255, 255, 255)
-
-
-/// Stream in the form of located objects
-
-class StreamObject : public Stream
+/**
+* @brief Read an annotation file (in .ass format)
+*/
+class AnnotationAssFileReader : public AnnotationFileReader
 {
 public:
-	StreamObject(const std::string& rx_name, std::vector<Object>& r_rects, Module& rx_module, const std::string& rx_description);
-	~StreamObject();
-	MKCLASS("StreamObjects")
-	MKTYPE("Objects")
-
-	inline void Clear() {m_objects.clear();}
-	inline void AddObject(const Object& x_obj) {m_objects.push_back(x_obj);}
-	inline const std::vector<Object>& GetObjects() const {return m_objects;}
-
-	virtual void ConvertInput();
-	virtual void RenderTo(cv::Mat& x_output) const;
-	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
-	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
-	// double GetFeatureValue(const std::vector<Feature>& x_vect, const char* x_name);
-
-protected:
-	std::vector<Object> & m_objects;
+	AnnotationAssFileReader();
+	~AnnotationAssFileReader();
+	bool ReadNextAnnotation(std::string& rx_subText);
+	void Open(const std::string& x_file);
+	cv::Rect GetBox();
 
 private:
-	DISABLE_COPY(StreamObject)
+	static log4cxx::LoggerPtr m_logger;
+	void ReadSrt(const std::string srt);
+	void InitReading();
+	void FormatTimestamp(std::string& rx_timeText);
+	int m_idxStart;
+	int m_idxEnd;
+	int m_idxText;
+	cv::Rect m_boudingBox;
+	std::string m_srt;
+
 };
 
 #endif

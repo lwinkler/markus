@@ -292,6 +292,7 @@ void Module::Process()
 	}
 	catch(...)
 	{
+		LOG_ERROR(m_logger, "Exception in module " << GetName());
 		m_lock.unlock();
 		throw;
 	}

@@ -35,6 +35,22 @@ using namespace cv;
 
 log4cxx::LoggerPtr TrackerByFeatures::m_logger(log4cxx::Logger::getLogger("TrackerByFeatures"));
 
+/**
+* @brief Update an object with the information contained in the template (features and id)
+*
+* @param x_temp Template
+* @param x_obj  Object
+*/
+void updateObjectFromTemplate(const Template& x_temp, Object& x_obj)
+{
+	x_obj.SetId(x_temp.GetNum());
+
+	// Copy features
+	for(map<string,FeatureFloatInTime>::const_iterator it3 = x_temp.GetFeatures().begin() ; it3 != x_temp.GetFeatures().end() ; it3++)
+	{
+		x_obj.AddFeature(it3->first, it3->second.CreateCopy());
+	}
+}
 
 TrackerByFeatures::TrackerByFeatures(const ConfigReader& x_configReader) :
 	Module(x_configReader),
@@ -71,7 +87,6 @@ void TrackerByFeatures::ProcessFrame()
 	CleanTemplates();
 	DetectNewTemplates();
 	UpdateTemplates();
-
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -130,8 +145,10 @@ int TrackerByFeatures::MatchTemplate(Template& x_temp)
 				return 0;
 		}
 		// x_temp.m_bestMatchingObject = bestObject;
+
 		LOG_DEBUG(m_logger, "Template "<<x_temp.GetNum()<<" matched with object "<<bestObject->GetId()<<" dist="<<bestDist);
-		bestObject->SetId(x_temp.GetNum()); // Set id of object
+		updateObjectFromTemplate(x_temp, *bestObject);
+
 		// x_temp.m_matchingObjects.push_back(m_objects[bestObject]);
 		x_temp.m_lastMatchingObject = bestObject;
 		m_matched[bestObject] = true;
@@ -186,7 +203,7 @@ void TrackerByFeatures::UpdateTemplates()
 #endif
 		if(it1->m_lastMatchingObject != NULL)
 		{
-			// Add two extra features: distance and speed
+			// Add two extra features: distance and speed /// TODO
 			// const Feature& x = it1->m_lastMatchingObject->GetFeature("x");
 			// const Feature& y = it1->m_lastMatchingObject->GetFeature("y");
 
@@ -199,7 +216,6 @@ void TrackerByFeatures::UpdateTemplates()
 
 			// Update the template and copy to the object
 			it1->UpdateFeatures(m_param.alpha, m_currentTimeStamp);
-			it1->m_lastMatchingObject->SetFeatures(it1->GetFeatures());
 			it1->m_lastMatchingObject = NULL;
 		}
 
@@ -285,6 +301,7 @@ void TrackerByFeatures::DetectNewTemplates()
 					// See if the object might have splitted
 					try
 					{
+						/* TODO
 						double xt = bestTemplate->GetFeature("x").value;
 						double yt = bestTemplate->GetFeature("y").value;
 						double wt = bestTemplate->GetFeature("width").value;
@@ -299,6 +316,7 @@ void TrackerByFeatures::DetectNewTemplates()
 							// Copy the template to the object (but not the id)
 							template1.SetFeatures(bestTemplate->GetFeatures());
 						}
+						*/
 					}
 					catch(...){}
 				}
@@ -307,7 +325,7 @@ void TrackerByFeatures::DetectNewTemplates()
 			template1.m_lastMatchingObject = &(*it2);
 			m_templates.push_back(template1);
 			//cout<<"Added template "<<t.GetNum()<<endl;
-			it2->SetId(template1.GetNum());
+			updateObjectFromTemplate(template1, *it2);
 			cpt++;
 		}
 	}
