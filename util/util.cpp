@@ -223,7 +223,7 @@ vector<string> &split(const string &s, char delim, vector<string> &elems)
 
 
 /// Return a time stamp in a string format
-const string timeStamp()
+const string timeStamp(bool x_addRandomString)
 {
 	time_t rawtime;
 	time(&rawtime);
@@ -232,7 +232,14 @@ const string timeStamp()
 	char dd[20];
 	strftime(dd, sizeof(dd), "%Y%m%d_%T", timeinfo);
 
-	return string(dd);
+	if(x_addRandomString)
+	{
+		stringstream ss;
+		unsigned int seed = time(NULL);
+		ss<<dd<<"_"<<rand_r(&seed);
+		return ss.str();
+	}
+	else return string(dd);
 }
 
 /// Convert a time in miliseconds to a time stamp (format used in subtitle files)
