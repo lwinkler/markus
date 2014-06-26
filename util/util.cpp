@@ -223,7 +223,7 @@ vector<string> &split(const string &s, char delim, vector<string> &elems)
 
 
 /// Return a time stamp in a string format
-const string timeStamp(bool x_addRandomString)
+const string timeStamp(int x_pid)
 {
 	time_t rawtime;
 	time(&rawtime);
@@ -232,11 +232,10 @@ const string timeStamp(bool x_addRandomString)
 	char dd[20];
 	strftime(dd, sizeof(dd), "%Y%m%d_%T", timeinfo);
 
-	if(x_addRandomString)
+	if(x_pid != 0)
 	{
 		stringstream ss;
-		unsigned int seed = time(NULL);
-		ss<<dd<<"_"<<rand_r(&seed);
+		ss<<dd<<"_"<<x_pid;
 		return ss.str();
 	}
 	else return string(dd);

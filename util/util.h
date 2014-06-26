@@ -38,7 +38,7 @@ cv::Scalar colorFromId(int x_id);
 
 std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems);
 
-const std::string timeStamp(bool x_addRandomString = false);
+const std::string timeStamp(int x_pid = 0);
 const std::string msToTimeStamp(TIME_STAMP x_ms);
 TIME_STAMP timeStampToMs(const std::string& x_timeStamp);
 TIME_STAMP getAbsTimeMs();
