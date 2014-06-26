@@ -3,9 +3,13 @@
 
 
 function deploy {
-	read -r -p "Do you want to deploy "$TARGET" ? [y/N] " response
+	read -r -p "Do you want to deploy "$TARGET" on quality ? [y/N] " response
 	if [[ $response =~ ^[Yy]$ ]] ; then
 		scp -r ${TARGET} vp@smartaid.quality:~
+	fi
+
+	read -r -p "Do you want to release "$TARGET" ? [y/N] " response
+	if [[ $response =~ ^[Yy]$ ]] ; then
 		scp -r ${TARGET} /mnt/releases/Morphean/VideoAID
 	fi
 }
@@ -89,31 +93,36 @@ fi
 
 echo "Check version of executable:"
 ./markus -v
+read -r -p "Is the version number correct ? [y/N] " response
+if [[ $response =~ ^[Nn]$ ]] ; then
+	echo "Please fix the version number."
+	exit
+fi
+
 
 read -r -p "Do you want to run unit tests ? [y/N] " response
 if [[ $response =~ ^[Yy]$ ]] ; then
 	make tests
 fi
 
-read -r -p "Do you want to release version "$MARKUS_TAG" ? [y/N] " response
-if [[ $response =~ ^[Yy]$ ]] ; then
+# Release all kinds of detectors
 
-	# fall
+# fall
 
-	TARGET=fall_v${MARKUS_TAG}
-	rm -rf ${TARGET}
-	mkdir ${TARGET}
-	scp -r markus projects2/FallDetectionFromVP.xml modules2/FilterPython/vignettes log4cxx.min.xml ${TARGET}
+TARGET=fall_v${MARKUS_TAG}
+rm -rf ${TARGET}
+mkdir ${TARGET}
+scp -r markus projects2/FallDetectionFromVP.xml modules2/FilterPython/vignettes log4cxx.min.xml ${TARGET}
 
-	deploy
+deploy
 
 
-	# motion
+# motion
 
-	TARGET=motion_v${MARKUS_TAG}
-	rm -rf ${TARGET}
-	mkdir ${TARGET}
-	scp -r markus projects2/MotionDetectorFromVP.xml log4cxx.min.xml ${TARGET}
+TARGET=motion_v${MARKUS_TAG}
+rm -rf ${TARGET}
+mkdir ${TARGET}
+scp -r markus projects2/MotionDetectorFromVP.xml log4cxx.min.xml ${TARGET}
 
-	deploy
-fi
+deploy
+
