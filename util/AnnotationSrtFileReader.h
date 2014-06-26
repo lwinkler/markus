@@ -21,43 +21,28 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef ANNOTATION_FILE_READER_H
-#define ANNOTATION_FILE_READER_H
+#ifndef ANNOTATION_SRT_FILE_READER_H
+#define ANNOTATION_SRT_FILE_READER_H
 
 #include <fstream>
 #include <log4cxx/logger.h>
 #include "define.h"
-#include "Module.h"
+#include "AnnotationFileReader.h"
 
 
 /**
-* @brief Read an annotation file
+* @brief Read an annotation file (in .srt format)
 */
-class AnnotationFileReader
+class AnnotationSrtFileReader : public AnnotationFileReader
 {
 public:
-	AnnotationFileReader();
-	~AnnotationFileReader();
-	
-	virtual void Open(const std::string& x_file);
-	TIME_STAMP GetCurrentTimeStamp();
-	TIME_STAMP GetEndTimeStamp();
-	virtual bool ReadNextAnnotation(std::string& rx_subText);
-	virtual std::string ReadAnnotationForTimeStamp(TIME_STAMP x_current);
-	virtual cv::Rect GetBox();
-
-protected:
-	std::istream& SafeGetline(std::istream& is, std::string& t);
+	AnnotationSrtFileReader();
+	~AnnotationSrtFileReader();
+	bool ReadNextAnnotation(std::string& rx_subText);
 
 private:
 	static log4cxx::LoggerPtr m_logger;
 
-protected:
-	int m_num;
-	std::string m_text;
-	std::ifstream m_srtFile;
-	std::string m_srtStart;
-	std::string m_srtEnd;
 };
 
 #endif

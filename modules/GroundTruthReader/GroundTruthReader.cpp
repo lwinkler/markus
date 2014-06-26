@@ -65,9 +65,19 @@ void GroundTruthReader::Reset()
 	Module::Reset();
 	m_state    = false;
 	m_oldState = false;
+	trackedObj.clear();
 
 	CLEAN_DELETE(mp_annotationReader);
-	mp_annotationReader = new AnnotationFileReader();
+	m_assFile = (m_param.file.substr(m_param.file.find_last_of(".") + 1) == "ass");
+	if(m_assFile)
+	{
+		mp_annotationReader = new AnnotationAssFileReader();
+		const double diagonal = sqrt(m_param.width * m_param.width + m_param.height * m_param.height);
+		distanceRefObject = diagonal * m_param.distance;
+	}
+	else
+		mp_annotationReader = new AnnotationSrtFileReader();
+
 	mp_annotationReader->Open(m_param.file);
 }
 
@@ -92,15 +102,86 @@ void GroundTruthReader::ProcessFrame()
 #endif
 	}
 
-	// annotate stream objects
-	for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
-	{
-		it->AddFeature("gt",m_state);
-	}
-
 	if (m_oldState != m_state)
 	{
+		// Raise an alarm
 		m_event.Raise("Ground Truth changed");
 		m_oldState = m_state;
+
+		// Update tracked object
+		if (m_state && m_assFile)
+		{
+			Rect refObj = mp_annotationReader->GetBox();
+			if (refObj.width > 0) // rectangle can be absent from ass
+			{
+				// enlarge the bounding box
+				refObj.x -= distanceRefObject / 2;
+				refObj.y -= distanceRefObject / 2;
+				refObj.width += distanceRefObject;
+				refObj.height += distanceRefObject;
+
+				// middle of bounding box
+				Rect centerRefObj = Rect(refObj.x+((refObj.width - distanceRefObject) / 2) , refObj.y+ ((refObj.height - distanceRefObject) / 2), distanceRefObject, distanceRefObject);
+				for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
+				{
+					Rect objRect = it->Rect();
+					if (centerRefObj.contains(Point (objRect.x+objRect.width/2,objRect.y+objRect.height/2)) && refObj.area() >= objRect.area()) // middle of rect is in middle of bounding box and area is smaller than reference bounding box
+					{
+						trackedObj.push_back(it->GetId());
+						LOG_DEBUG(m_logger, "Object "<< it->GetId()<<" is tracked until "<<mp_annotationReader->GetEndTimeStamp());
+					}
+				}
+			}
+		}
+		else
+			trackedObj.clear();
 	}
+
+// display the ROI in srt
+#ifdef MARKUS_DEBUG_STREAMS
+	Rect refObj = mp_annotationReader->GetBox();
+	if (m_assFile && refObj.width > 0 && text != "")
+	{
+		// enlarge the bounding box
+		refObj.x -= distanceRefObject / 2;
+		refObj.y -= distanceRefObject / 2;
+		refObj.width += distanceRefObject;
+		refObj.height += distanceRefObject;
+
+		Rect centerRefObj = Rect(refObj.x+((refObj.width - distanceRefObject) / 2) , refObj.y+ ((refObj.height - distanceRefObject) / 2), distanceRefObject, distanceRefObject);
+
+		rectangle(m_debug,refObj,Scalar( 255, 0, 0));
+		rectangle(m_debug,centerRefObj,Scalar( 200, 100, 100));
+	}
+#endif
+
+	for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
+	{
+		// ass file with rect in subtitle
+		if (m_assFile && refObj.width > 0)
+		{
+			// gt = 1 only if object has been detected in roi
+			if (find (trackedObj.begin(), trackedObj.end(), it->GetId()) != trackedObj.end())
+				it->AddFeature("gt",(float)true);
+			else
+				it->AddFeature("gt",(float)false);
+
+		}
+		else
+			it->AddFeature("gt",m_state);
+
+#ifdef MARKUS_DEBUG_STREAMS
+		if (dynamic_cast<const FeatureFloat&> (it->GetFeature("gt")).value > 0)
+		{
+			rectangle(m_debug,it->Rect(),Scalar( 0, 255, 0));
+			circle(m_debug,Point(it->posX,it->posY),2,Scalar(0,255,0));
+		}
+		else
+		{
+			rectangle(m_debug,it->Rect(),Scalar(100, 100, 100));
+			circle(m_debug,Point(it->posX,it->posY),2,Scalar(100, 100, 100));
+		}
+#endif
+	}
+
 }

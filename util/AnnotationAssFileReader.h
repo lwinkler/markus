@@ -21,43 +21,37 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef ANNOTATION_FILE_READER_H
-#define ANNOTATION_FILE_READER_H
+#ifndef ANNOTATION_ASS_FILE_READER_H
+#define ANNOTATION_ASS_FILE_READER_H
 
 #include <fstream>
 #include <log4cxx/logger.h>
 #include "define.h"
-#include "Module.h"
-
+#include "AnnotationFileReader.h"
 
 /**
-* @brief Read an annotation file
+* @brief Read an annotation file (in .ass format)
 */
-class AnnotationFileReader
+class AnnotationAssFileReader : public AnnotationFileReader
 {
 public:
-	AnnotationFileReader();
-	~AnnotationFileReader();
-	
-	virtual void Open(const std::string& x_file);
-	TIME_STAMP GetCurrentTimeStamp();
-	TIME_STAMP GetEndTimeStamp();
-	virtual bool ReadNextAnnotation(std::string& rx_subText);
-	virtual std::string ReadAnnotationForTimeStamp(TIME_STAMP x_current);
-	virtual cv::Rect GetBox();
-
-protected:
-	std::istream& SafeGetline(std::istream& is, std::string& t);
+	AnnotationAssFileReader();
+	~AnnotationAssFileReader();
+	bool ReadNextAnnotation(std::string& rx_subText);
+	void Open(const std::string& x_file);
+	cv::Rect GetBox();
 
 private:
 	static log4cxx::LoggerPtr m_logger;
+	void ReadSrt(const std::string srt);
+	void InitReading();
+	void FormatTimestamp(std::string& rx_timeText);
+	int m_idxStart;
+	int m_idxEnd;
+	int m_idxText;
+	cv::Rect m_boudingBox;
+	std::string m_srt;
 
-protected:
-	int m_num;
-	std::string m_text;
-	std::ifstream m_srtFile;
-	std::string m_srtStart;
-	std::string m_srtEnd;
 };
 
 #endif
