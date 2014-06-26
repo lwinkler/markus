@@ -27,9 +27,9 @@ MARKUS_TAG=$2
 # Quit on the first error
 
 # Preparation
-read -r -p "Do you want to clone the Markus repository to a fresh directory ./markus_$MARKUS_RELEASE ? [y/N] " response
+read -r -p "Do you want to clone the Markus repository to a fresh directory ./markus_v$MARKUS_RELEASE ? [y/N] " response
 if [[ $response =~ ^[Yy]$ ]] ; then
-	git clone git@github.com:lwinkler/markus.git markus_$MARKUS_RELEASE
+	git clone git@github.com:lwinkler/markus.git markus_v$MARKUS_RELEASE
 	cd markus_v$MARKUS_RELEASE
 
 	
