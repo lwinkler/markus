@@ -20,6 +20,7 @@ StreamState.cpp
 Object.cpp
 Event.cpp
 FeatureFloat.cpp
+FeatureString.cpp
 FeatureFloatInTime.cpp
 ConfigReader.cpp
 Timer.cpp

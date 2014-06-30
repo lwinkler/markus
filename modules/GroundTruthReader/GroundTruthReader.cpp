@@ -94,7 +94,8 @@ void GroundTruthReader::ProcessFrame()
 	LOG_DEBUG(m_logger, "Read annotation \"" + text + "\" for time stamp "<<m_currentTimeStamp);
 	if(text != "")
 	{
-		m_state = text.find(m_param.pattern) != string::npos; // TODO: Improve this with regexp
+		// looking to match a part of pattern
+		m_state = m_param.pattern.find(text) != string::npos; // TODO: Improve this with regexp
 
 #ifdef MARKUS_DEBUG_STREAMS
 		Scalar color = m_state ? Scalar(0, 255, 0) : Scalar(0, 0, 255); 
@@ -162,13 +163,22 @@ void GroundTruthReader::ProcessFrame()
 		{
 			// gt = 1 only if object has been detected in roi
 			if (find (trackedObj.begin(), trackedObj.end(), it->GetId()) != trackedObj.end())
+			{
 				it->AddFeature("gt",(float)true);
+				it->AddFeature("label",text);
+			}
 			else
+			{
 				it->AddFeature("gt",(float)false);
+				it->AddFeature("label","");
+			}
 
 		}
 		else
+		{
 			it->AddFeature("gt",m_state);
+			it->AddFeature("label",text);
+		}
 
 #ifdef MARKUS_DEBUG_STREAMS
 		if (dynamic_cast<const FeatureFloat&> (it->GetFeature("gt")).value > 0)
