@@ -37,7 +37,9 @@ const string headerEndTime = "End";
 const string headerSubText = "Text";
 const char separator = ',';
 
-AnnotationAssFileReader::AnnotationAssFileReader()
+AnnotationAssFileReader::AnnotationAssFileReader(int x_width, int x_height):
+	m_inputWidth(x_width),
+	m_inputHeight(x_height)
 {
 }
 
@@ -80,8 +82,11 @@ void AnnotationAssFileReader::ReadSrt(const std::string srt)
 		getline(stream, word, separator);
 		rect[i] = atoi(word.c_str());
 	}
+	Point p1(rect[0] * m_widthProportion,rect[1] * m_heightProportion);
+	Point p2(rect[2] * m_widthProportion,rect[3] * m_heightProportion);
 	// save the rect
-	m_boudingBox = Rect(Point(rect[0],rect[1]),Point(rect[2],rect[3]));
+	m_boudingBox = Rect(p1,p2);
+
 	// looking for "}", stop at end of the line, save the text
 	start = srt.find("}",end);
 	if (start != string::npos && start+1 <= srt.size())
@@ -90,6 +95,10 @@ void AnnotationAssFileReader::ReadSrt(const std::string srt)
 void AnnotationAssFileReader::InitReading()
 {
 	string line;
+
+	// looking for resolution
+	ReadResolution();	// Warning: this function modify the ifstream, looking for a best solution
+
 	// looking for srt header
 	while(line.compare("[Events]") != 0)
 	{
@@ -204,3 +213,27 @@ void AnnotationAssFileReader::FormatTimestamp(string& rx_timeText)
 		rx_timeText = "0" + rx_timeText;
 }
 
+void AnnotationAssFileReader::ReadResolution()
+{
+	string line;
+	while(line.find("PlayResX") != 0)
+	{
+		SafeGetline(m_srtFile, line);
+		if(! m_srtFile.good())
+			throw MkException("Subtitle format error: must contain 'PlayResX'", LOC);
+	}
+	string::size_type start = line.find_last_of(":");
+	if (start == string::npos)
+		throw MkException("Subtitle format error: must contain 'PlayResX : value'", LOC);
+	int width = atoi((line.substr(start+1)).c_str());
+	SafeGetline(m_srtFile, line);
+	if (line.find("PlayResY") == string::npos)
+		throw MkException("Subtitle format error: must contain 'PlayResY'", LOC);
+	start = line.find_last_of(":");
+	if (start == string::npos)
+		throw MkException("Subtitle format error: must contain 'PlayResY : value'", LOC);
+	int height = atoi((line.substr(start+1)).c_str());
+
+	m_widthProportion = (double)m_inputWidth/(double)width;
+	m_heightProportion = (double)m_inputHeight/(double)height;
+}

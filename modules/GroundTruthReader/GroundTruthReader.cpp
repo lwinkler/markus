@@ -71,7 +71,7 @@ void GroundTruthReader::Reset()
 	m_assFile = (m_param.file.substr(m_param.file.find_last_of(".") + 1) == "ass");
 	if(m_assFile)
 	{
-		mp_annotationReader = new AnnotationAssFileReader();
+		mp_annotationReader = new AnnotationAssFileReader(m_param.width,m_param.height);
 		const double diagonal = sqrt(m_param.width * m_param.width + m_param.height * m_param.height);
 		distanceRefObject = diagonal * m_param.distance;
 	}

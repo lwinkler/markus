@@ -35,22 +35,31 @@
 class AnnotationAssFileReader : public AnnotationFileReader
 {
 public:
-	AnnotationAssFileReader();
+	AnnotationAssFileReader(int x_width, int x_height);
 	~AnnotationAssFileReader();
 	bool ReadNextAnnotation(std::string& rx_subText);
 	void Open(const std::string& x_file);
 	cv::Rect GetBox();
+
+protected:
+	double m_widthProportion;
+	double m_heightProportion;
 
 private:
 	static log4cxx::LoggerPtr m_logger;
 	void ReadSrt(const std::string srt);
 	void InitReading();
 	void FormatTimestamp(std::string& rx_timeText);
+	void ReadResolution();
 	int m_idxStart;
 	int m_idxEnd;
 	int m_idxText;
+	int m_inputWidth;
+	int m_inputHeight;
 	cv::Rect m_boudingBox;
 	std::string m_srt;
+
+
 
 };
 
