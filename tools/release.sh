@@ -10,7 +10,7 @@ function deploy {
 
 	read -r -p "Do you want to release "$TARGET" ? [y/N] " response
 	if [[ $response =~ ^[Yy]$ ]] ; then
-		scp -r ${TARGET} /mnt/releases/Morphean/VideoAID
+		scp -r ${TARGET} /mnt/releases/Morphean/VideoAID/markus
 	fi
 }
 
