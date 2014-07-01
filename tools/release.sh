@@ -112,7 +112,7 @@ fi
 TARGET=fall_v${MARKUS_TAG}
 rm -rf ${TARGET}
 mkdir ${TARGET}
-scp -r markus projects2/FallDetectionFromVP.xml modules2/FilterPython/vignettes log4cxx.min.xml ${TARGET}
+scp -r markus projects2/FallDetectionFromVP.xml modules2/FilterPython/vignettes log4cxx.min.xml projects2/Calibration ${TARGET}
 
 deploy
 
