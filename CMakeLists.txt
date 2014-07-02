@@ -134,6 +134,13 @@ add_custom_target(tests
 	COMMAND testing/unitTesting
 )
 
+add_custom_target(indent
+	COMMENT "Indent all files by following the standart"
+	COMMAND astyle "\\*.cpp" -r --style=allman --indent=tab
+	COMMAND astyle "\\*.h" -r   --style=allman --indent=tab
+)
+
+
 #-------------------------------------------------------------------------------- 
 #create a pretty commit id using git
 #uses 'git describe --tags', so tags are required in the repo
