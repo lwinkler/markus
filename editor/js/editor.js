@@ -580,8 +580,15 @@ var xmlProject = null;
 					// Add the module for module creation
 					$("#selectModule").append('<option value=' + availableModulesNames[i] + '>' + availableModulesNames[i] + '</option>');
 
-					// Load the matching xml file
-					xmlModuleTypes[type] = $(loadXML("modules/" + availableModulesNames[i] + ".xml")).find("module");
+					try
+					{
+						// Load the matching xml file
+						xmlModuleTypes[type] = $(loadXML("modules/" + availableModulesNames[i] + ".xml")).find("module");
+					}
+					catch(err)
+					{
+						console.log("Error reading modules/" + availableModulesNames[i] + ".xml: " + err);
+					}
 				}
 				
 				// Populate select projects with existing projects
