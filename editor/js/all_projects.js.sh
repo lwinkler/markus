@@ -3,6 +3,6 @@
 
 
 echo "var availableProjectsNames = ["
-find projects*/  -name "*.xml" | sort | awk {'print "\""$1"\","'}
+find projects*/ -maxdepth 1  -name "*.xml" | sort | awk {'print "\""$1"\","'}
 find testing/projects*/  -name "*.xml" | sort | awk {'print "\""$1"\","'}
 echo "];"

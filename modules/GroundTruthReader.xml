@@ -44,7 +44,12 @@
 		<param name="pattern">
 			<type>string</type>
 			<value default="state_1">state_1</value>
-			<description>Pattern to search in text. If this is found the state is set to 1</description>
+			<description>Pattern to search in text. If this is found the state is equal to the text</description>
+		</param>
+		<param name="distance">
+			<type>double</type>
+			<value min="0" max="1" default="0.1">0.1</value>
+			<description>distance between real object and ROI in ass file in pourcentage of image diagonal</description>
 		</param>
 	</parameters>
 	<inputs>

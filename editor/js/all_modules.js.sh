@@ -3,5 +3,5 @@
 
 
 echo "var availableModulesNames = ["
-find modules*/ -mindepth 1 -type d | grep -v CMakeFiles | sort | xargs -i{} basename {} | awk {'print "\""$1"\","'}
+find modules*/ -mindepth 1 -maxdepth 1 -type d | grep -v CMakeFiles | sort | xargs -i{} basename {} | awk {'print "\""$1"\","'}
 echo "];"
