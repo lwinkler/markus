@@ -69,15 +69,13 @@ if [[ $response =~ ^[Yy]$ ]] ; then
 	cd ..
 else
 	if [[ `git describe --tag` != $MARKUS_TAG ]]; then
-		echo "Error: Markus repo must be on tag $MARKUS_TAG and not"
+		echo "Warning: Markus repo must be on tag $MARKUS_TAG and not"
 		git describe --tag
-		exit
 	fi
 	cd vp-detection
 	if [[ `git describe --tag` != $MARKUS_TAG ]]; then
-		echo "Error: vp-detection repo must be on tag $MARKUS_TAG and not"
+		echo "Warning: vp-detection repo must be on tag $MARKUS_TAG and not"
 		git describe --tag
-		exit
 	fi
 	cd ..
 fi
