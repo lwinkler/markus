@@ -31,12 +31,12 @@
 class FeatureVectorFloat : public Feature
 {
 	public:
-		FeatureVectorFloat(std::vector <float> value_init);
+		FeatureVectorFloat(std::vector <float> x_values);
 		Feature* CreateCopy() const{return new FeatureVectorFloat(*this);}
 		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 		virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 		
 		// The value of the feature
-		std::vector<float> value;
+		std::vector<float> values;
 };
 #endif

@@ -24,18 +24,10 @@
 
 using namespace std;
 
-FeatureVectorFloat::FeatureVectorFloat(vector<float> value_init)
+FeatureVectorFloat::FeatureVectorFloat(vector<float> x_values)
 	: Feature()
 {
-	value      = value_init;
-	/*
-	sqVariance = 0.01;
-	mean       = x_value;
-	initial    = x_value;
-	min        = x_value;
-	max        = x_value;
-	nbSamples  = 1;
-	*/
+	values = x_values;
 }
 
 void FeatureVectorFloat::Serialize(ostream& x_out, const string& x_dir) const
