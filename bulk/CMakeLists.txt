@@ -22,6 +22,9 @@ Event.cpp
 FeatureFloat.cpp
 FeatureString.cpp
 FeatureFloatInTime.cpp
+FeatureKeyPoints.cpp
+FeatureString.cpp
+FeatureVectorFloat.cpp
 ConfigReader.cpp
 Timer.cpp
 ModuleTimer.cpp
