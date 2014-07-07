@@ -232,7 +232,7 @@ bool Manager::Process()
 
 	if(!m_lock.tryLockForWrite())
 	{
-		LOG_WARN(m_logger, "Manager too slow !");
+		// LOG_WARN(m_logger, "Manager too slow !"); // Note: this happens every time
 		return true;
 	}
 	Timer ti;

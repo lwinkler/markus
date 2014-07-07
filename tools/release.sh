@@ -10,7 +10,7 @@ function deploy {
 
 	read -r -p "Do you want to release "$TARGET" ? [y/N] " response
 	if [[ $response =~ ^[Yy]$ ]] ; then
-		scp -r ${TARGET} /mnt/releases/Morphean/VideoAID
+		scp -r ${TARGET} /mnt/releases/Morphean/VideoAID/markus
 	fi
 }
 
@@ -69,15 +69,13 @@ if [[ $response =~ ^[Yy]$ ]] ; then
 	cd ..
 else
 	if [[ `git describe --tag` != $MARKUS_TAG ]]; then
-		echo "Error: Markus repo must be on tag $MARKUS_TAG and not"
+		echo "Warning: Markus repo must be on tag $MARKUS_TAG and not"
 		git describe --tag
-		exit
 	fi
 	cd vp-detection
 	if [[ `git describe --tag` != $MARKUS_TAG ]]; then
-		echo "Error: vp-detection repo must be on tag $MARKUS_TAG and not"
+		echo "Warning: vp-detection repo must be on tag $MARKUS_TAG and not"
 		git describe --tag
-		exit
 	fi
 	cd ..
 fi
@@ -112,7 +110,7 @@ fi
 TARGET=fall_v${MARKUS_TAG}
 rm -rf ${TARGET}
 mkdir ${TARGET}
-scp -r markus projects2/FallDetectionFromVP.xml modules2/FilterPython/vignettes log4cxx.min.xml ${TARGET}
+scp -r markus projects2/FallDetectionFromVP.xml modules2/FilterPython/vignettes log4cxx.min.xml projects2/Calibration ${TARGET}
 
 deploy
 
