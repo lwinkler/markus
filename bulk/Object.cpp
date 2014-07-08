@@ -154,7 +154,7 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 
 	// Draw the rectangle in the input image
 	// if id is present, draw to the equivalent color
-#ifndef MARKUS_DEBUG_STREAMS
+#ifndef MARKUS_DEBUG_STREAMS_AAAA // TODO: We should find another way to display features
 	rectangle(x_output, p1, p2, Scalar(20,0,230), 3, 8, 0 );
 #else
 	Scalar color = x_color;
