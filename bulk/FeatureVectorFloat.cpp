@@ -21,6 +21,8 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 #include "FeatureVectorFloat.h"
+#include "MkException.h"
+#include "util.h"
 
 using namespace std;
 
@@ -32,10 +34,39 @@ FeatureVectorFloat::FeatureVectorFloat(vector<float> x_values)
 
 void FeatureVectorFloat::Serialize(ostream& x_out, const string& x_dir) const
 {
-	//TODO add some serialize code here
+	if(values.size() == 0)
+	{
+		x_out<<"[]";
+		return;
+	}
+
+	x_out << "[";
+	vector<float>::const_iterator it = values.begin();
+	while(it != values.end() - 1)
+	{
+		x_out << *it << ",";
+		it++;
+	}
+	x_out << *it << "]";
 }
 
 void FeatureVectorFloat::Deserialize(istream& x_in, const string& x_dir)
 {
-	//TODO add some deserialize code here
+	string tmp;
+	vector<string> valuesStr;
+	x_in >> tmp;
+
+	if(tmp.substr(0, 1) != "[" || tmp.substr(tmp.size() - 1, 1) != "]")
+		throw MkException("Error in deserialization for value: " + tmp, LOC);
+	split(tmp.substr(1, tmp.size() - 2), ',', valuesStr);
+
+	// Remove last element if empty, due to an extra comma
+	assert(values.size() > 0);
+	if(valuesStr.back() == "")
+		values.pop_back();
+	assert(values.size() > 0);
+
+	values.clear();
+	for(vector<string>::const_iterator it = valuesStr.begin() ; it != valuesStr.end() ; it++)
+		values.push_back(atof(it->c_str()));
 }

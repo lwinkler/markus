@@ -20,7 +20,9 @@
 *    You should have received a copy of the GNU Lesser General Public License
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
-#include "FeatureKeyPoints.h"
+#include "FeatureKeyPoint.h"
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
 
 using namespace std;
 using namespace cv;
@@ -33,10 +35,30 @@ FeatureKeyPoint::FeatureKeyPoint(const KeyPoint&  x_keypoint)
 
 void FeatureKeyPoint::Serialize(ostream& x_out, const string& x_dir) const
 {
-	//TODO : add some serialize code here
+	Json::Value root;
+	root["angle"] = keypoint.angle;
+	root["classId"] = keypoint.class_id;
+	root["octave"] = keypoint.octave;
+	root["x"] = keypoint.pt.x;
+	root["y"] = keypoint.pt.y;
+	root["response"] = keypoint.response;
+	root["size"] = keypoint.size;
+
+	Json::FastWriter writer;
+	string tmp = writer.write(root);
+	tmp.erase(std::remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
+	x_out<<tmp;
 }
 
 void FeatureKeyPoint::Deserialize(istream& x_in, const string& x_dir)
 {
-	//TODO : add some deserialize code here
+	Json::Value root;
+	x_in >> root;
+	keypoint.angle = root["angle"].asFloat();
+	keypoint.class_id = root["classId"].asInt();
+	keypoint.octave = root["octave"].asInt();
+	keypoint.pt.x = root["x"].asFloat();
+	keypoint.pt.y = root["y"].asFloat();
+	keypoint.response = root["response"].asFloat();
+	keypoint.size = root["size"].asFloat();
 }

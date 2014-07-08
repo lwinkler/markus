@@ -97,6 +97,7 @@ void Object::Serialize(std::ostream& x_out, const string& x_dir) const
 	{
 		stringstream ss;
 		it->second->Serialize(ss, x_dir);
+		cout<<ss.str()<<endl;
 
 		try 
 		{
@@ -106,7 +107,10 @@ void Object::Serialize(std::ostream& x_out, const string& x_dir) const
 		catch(...)
 		{
 			// oops, not a number 
-			root["features"][it->first] = ss.str();
+			if(ss.str() != "" && ss.str()[0] == '{')
+				ss >> root["features"][it->first];
+			else
+				root["features"][it->first] = ss.str();
 		}
 	}
 
@@ -130,6 +134,7 @@ void Object::Deserialize(std::istream& x_in, const string& x_dir)
 	for(Json::Value::Members::const_iterator it = members.begin() ; it != members.end() ; it++)
 	{
 		// TODO: JsonCpp has a bug for serializing floats !
+		// TODO: Find a hack to serialize/deserialize all kinds of features
 		AddFeature(*it, root["features"][*it].asFloat());
 	}
 }

@@ -40,6 +40,8 @@
 #include "CalibrationByHeight.h"
 
 #include "FeatureFloatInTime.h"
+#include "FeatureVectorFloat.h"
+#include "FeatureKeyPoint.h"
 
 /// Test class for serialization
 class TestObject : public Serializable
@@ -148,13 +150,26 @@ class TestSerialization : public CppUnit::TestFixture
 
 	void testSerialization1()
 	{
+		// Values for testing
+		std::vector<float> myVect;
+		myVect.push_back(33.66);
+		myVect.push_back(1e4);
+		myVect.push_back(0.000234);
+		cv::KeyPoint kp;
+
 		// TODO: There is a problem of inprecision with floating points. See how we handle this !
 		TestObject obj1;
 		testSerialization(obj1, "TestObject");
 
+
 		Object obj2("test");
 		obj2.AddFeature("feat1", 77);
 		obj2.AddFeature("feat2", 3453.444e-123);
+		obj2.AddFeature("ff", new FeatureFloat(0.93));
+		obj2.AddFeature("ffif", new FeatureFloatInTime(0.132));
+		obj2.AddFeature("fstr", new FeatureString("someString"));
+		obj2.AddFeature("fvf", new FeatureVectorFloat(myVect));
+		obj2.AddFeature("fkp", new FeatureKeyPoint(kp));
 		testSerialization(obj2, "Object");
 
 		Event evt1;
@@ -204,6 +219,15 @@ class TestSerialization : public CppUnit::TestFixture
 
 		FeatureFloatInTime ffit(0.93);
 		testSerialization(ffit, "FeatureFloatInTime");
+
+		FeatureString fstr("mystring");
+		testSerialization(fstr, "FeatureString");
+
+		FeatureVectorFloat fvf(myVect);
+		testSerialization(fvf, "FeatureVectorFloat");
+
+		FeatureKeyPoint fkp(kp);
+		testSerialization(fkp, "FeatureKeyPoint");
 	}
 
 	static CppUnit::Test *suite()

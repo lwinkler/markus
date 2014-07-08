@@ -28,14 +28,6 @@ FeatureFloat::FeatureFloat(float x_value)
 	: Feature()
 {
 	value      = x_value;
-	/*
-	sqVariance = 0.01;
-	mean       = x_value;
-	initial    = x_value;
-	min        = x_value;
-	max        = x_value;
-	nbSamples  = 1;
-	*/
 }
 
 void FeatureFloat::Serialize(ostream& x_out, const string& x_dir) const

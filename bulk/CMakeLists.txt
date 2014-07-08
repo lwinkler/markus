@@ -22,7 +22,7 @@ Event.cpp
 FeatureFloat.cpp
 FeatureString.cpp
 FeatureFloatInTime.cpp
-FeatureKeyPoints.cpp
+FeatureKeyPoint.cpp
 FeatureString.cpp
 FeatureVectorFloat.cpp
 ConfigReader.cpp
