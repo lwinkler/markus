@@ -35,6 +35,7 @@
 class QParameterSlider;
 class QCheckBox;
 class QLineEdit;
+class QTextEdit;
 class QComboBox;
 class QLabel;
 
@@ -174,5 +175,19 @@ protected:
 	ParameterEnum & m_param2;
 };
 
+
+/// Control class for a json parameter
+class ControllerText : public ControllerParameter
+{
+public:
+	ControllerText(Parameter& x_param);
+	virtual QWidget* CreateWidget();
+	virtual void SetWidgetValue(const std::string& x_value);
+	virtual std::string GetValueFromWidget();
+
+protected:
+	QTextEdit * m_textEdit;
+	Parameter & m_param2;
+};
 
 #endif

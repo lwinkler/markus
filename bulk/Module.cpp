@@ -147,6 +147,8 @@ void Module::Reset()
 			case PARAM_STR:
 				ctr = new ControllerString(*dynamic_cast<ParameterString*>(*it));
 				break;
+			case PARAM_GENERIC:
+				ctr = new ControllerText(*dynamic_cast<Parameter*>(*it));
 		}
 		if(ctr == NULL)
 			throw MkException("Controller creation failed", LOC);

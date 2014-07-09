@@ -29,6 +29,7 @@ using namespace std;
 #include <QBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QTextEdit>
 #include <QCheckBox>
 #include <QComboBox>
 
@@ -442,3 +443,36 @@ std::string ControllerEnum::GetValueFromWidget()
 }
 
 /*------------------------------------------------------------------------------------------------*/
+ControllerText::ControllerText(Parameter& x_param):
+	ControllerParameter(x_param),
+	m_param2(x_param)
+{
+}
+
+QWidget* ControllerText::CreateWidget()
+{
+#ifndef MARKUS_NO_GUI
+	m_textEdit = new QTextEdit();
+	m_textEdit->setStyleSheet("color: black; background-color: white");
+	m_textEdit->setText(m_param2.GetValueString().c_str());
+	return m_textEdit;
+#else
+	return NULL;
+#endif
+}
+void ControllerText::SetWidgetValue(const std::string& x_value)
+{
+#ifndef MARKUS_NO_GUI
+	m_textEdit->setText(x_value.c_str());
+#endif
+}
+
+std::string ControllerText::GetValueFromWidget()
+{
+#ifndef MARKUS_NO_GUI
+	return m_textEdit->toPlainText().toStdString();
+#else
+	assert(false);
+	return "";
+#endif
+}

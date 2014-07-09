@@ -11,6 +11,8 @@ ParameterStructure.cpp
 ParameterNum.cpp
 ParameterString.cpp
 ParameterCalibrationByHeight.cpp
+ParameterPolygon.cpp
+Polygon.cpp
 Stream.cpp
 StreamImage.cpp
 StreamDebug.cpp

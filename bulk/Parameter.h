@@ -37,7 +37,8 @@ enum ParameterType
 	PARAM_BOOL,
 	PARAM_STR,
 	PARAM_OBJECT_HEIGHT,
-	PARAM_IMAGE_TYPE
+	PARAM_IMAGE_TYPE,
+	PARAM_GENERIC
 };
 
 enum ParameterConfigType
