@@ -20,22 +20,23 @@
 *    You should have received a copy of the GNU Lesser General Public License
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
-#include "FeatureFloat.h"
+#ifndef MK_FEATURE_KEYPOINT_H
+#define MK_FEATURE_KEYPOINT_H
 
-using namespace std;
-
-FeatureFloat::FeatureFloat(float x_value)
-	: Feature()
+#include "Feature.h"
+#include "opencv2/features2d/features2d.hpp"
+/**
+* @brief Class representing a feature in the form of a KeyPoint (See OpenCV documentation for structure)
+*/
+class FeatureKeyPoint : public Feature
 {
-	value      = x_value;
-}
-
-void FeatureFloat::Serialize(ostream& x_out, const string& x_dir) const
-{
-	x_out << value;
-}
-
-void FeatureFloat::Deserialize(istream& x_in, const string& x_dir)
-{
-	x_in >> value;
-}
+	public:
+		FeatureKeyPoint(const cv::KeyPoint& x_keypoint);
+		Feature* CreateCopy() const{return new FeatureKeyPoint(*this);}
+		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
+		virtual void Deserialize(std::istream& stream, const std::string& x_dir);
+		
+		// The keypoint contained in the feature
+		cv::KeyPoint keypoint;
+};
+#endif

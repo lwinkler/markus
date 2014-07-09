@@ -126,6 +126,7 @@ void Template::UpdateFeatures(double x_alpha, TIME_STAMP m_currentTimeStamp)
 			try
 			{
 				it->second.Update(m_lastMatchingObject->GetFeature(it->first), x_alpha);
+				LOG_DEBUG(m_logger, "Update feature "<<it->first<<" of template  mean: "<<it->second.mean<<", init: "<<it->second.initial<<", current value: "<<it->second.value);
 			}
 			catch(FeatureNotFoundException& e)
 			{

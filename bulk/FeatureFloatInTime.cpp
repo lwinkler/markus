@@ -66,7 +66,11 @@ void FeatureFloatInTime::Serialize(std::ostream& x_out, const string& x_dir) con
 	root["min"]        = min;
 	root["max"]        = max;
 	root["nbSamples"]  = nbSamples;
-	x_out << root;
+
+	Json::FastWriter writer;
+	string tmp = writer.write(root);
+	tmp.erase(std::remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
+	x_out<<tmp;
 }
 
 void FeatureFloatInTime::Deserialize(std::istream& x_in, const string& x_dir)

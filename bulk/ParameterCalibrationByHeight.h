@@ -93,7 +93,7 @@ public:
 	}
 	virtual bool CheckRange() const
 	{
-		CalibrationByHeight object = GetValue();
+		const CalibrationByHeight& object = GetValue();
 		return ((object.x <= 1 && object.x >= 0) &&
 		(object.y <= 1 && object.y >= 0) &&
 		(object.height <= 1 && object.height >= 0));

@@ -77,9 +77,11 @@ protected:
 	void MatchTemplates();
 	void CleanTemplates();
 	void DetectNewTemplates();
+	void Match();
+	void UpdateObjects();
 	void UpdateTemplates();
-	const Template * MatchObject(const Object& x_obj)const;
-	int MatchTemplate(Template& x_temp);
+	Template * MatchObject(const Object& x_obj);
+	Object* MatchTemplate(Template& x_temp);
 
 	// input and output
 	std::vector <Object> m_objects;
@@ -89,7 +91,7 @@ protected:
 
 	// temporary
 	std::vector <std::string> m_featureNames;
-	std::map<Object*, bool>   m_matched;
+	std::map<Object*, Template*>   m_matched;
 
 	// debug
 #ifdef MARKUS_DEBUG_STREAMS
