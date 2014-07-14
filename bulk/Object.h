@@ -28,6 +28,7 @@
 #include "define.h"
 #include "FeatureFloat.h"
 #include "FeatureString.h"
+#include "FactoryFeatures.h"
 #include "MkException.h"
 
 /*! \class Object
@@ -89,10 +90,11 @@ class Object : public Serializable
 		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 		virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 
-	private:
+	protected:
 		std::string m_name;
 		int m_id;
 		std::map <std::string, FeaturePtr> m_feats;
+		static FactoryFeatures m_factoryFeatures;
 
 	public:
 		double posX;

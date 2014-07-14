@@ -20,23 +20,21 @@
 *    You should have received a copy of the GNU Lesser General Public License
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
-#ifndef MK_FEATURE_FLOAT_H
-#define MK_FEATURE_FLOAT_H
+#ifndef ALL_FEATURES_H
+#define ALL_FEATURES_H
 
-#include "Feature.h"
+#include "FeatureFloat.h"
+#include "FeatureFloatInTime.h"
+#include "FeatureVectorFloat.h"
+#include "FeatureString.h"
+#include "FeatureKeyPoint.h"
 
-/**
-* @brief Class representing a feature in the form of a float value
-*/
-class FeatureFloat : public Feature
+void registerAllFeatures(FactoryFeatures& x_fact)
 {
-	public:
-		FeatureFloat(float x_value = 0.0);
-		Feature* CreateCopy() const{return new FeatureFloat(*this);}
-		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
-		virtual void Deserialize(std::istream& stream, const std::string& x_dir);
-		
-		// The value of the feature
-		float value;
-};
+	x_fact.RegisterFeature<FeatureFloat>("FeatureFloat"); 
+	x_fact.RegisterFeature<FeatureFloatInTime>("FeatureFloatInTime"); 
+	x_fact.RegisterFeature<FeatureVectorFloat>("FeatureVectorFloat"); 
+	x_fact.RegisterFeature<FeatureString>("FeatureString"); 
+	x_fact.RegisterFeature<FeatureKeyPoint>("FeatureKeyPoint"); 
+}
 #endif

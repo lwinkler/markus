@@ -31,7 +31,7 @@
 class FeatureString : public Feature
 {
 	public:
-		FeatureString(std::string x_value);
+		FeatureString(std::string x_value = "");
 		Feature* CreateCopy() const{return new FeatureString(*this);}
 		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 		virtual void Deserialize(std::istream& stream, const std::string& x_dir);

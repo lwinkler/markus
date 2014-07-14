@@ -70,6 +70,22 @@ public:
 	* @return input stream
 	*/
 	inline friend std::istream& operator>> (std::istream& x_in, Serializable& x_obj){x_obj.Deserialize(x_in, ""); return x_in;}
+
+	/**
+	* @brief Extract the signature (name of all subfields)
+	*
+	* @return input signature
+	*/
+	std::string Signature() const;
+
+	/**
+	* @brief Extract the signature (name of all subfields). Static function
+	*
+	* @param x_serial Serialized object
+	*
+	* @return input signature
+	*/
+	static std::string signature(std::istream& x_in);
 };
 
 #endif

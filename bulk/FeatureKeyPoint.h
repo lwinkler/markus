@@ -31,7 +31,7 @@
 class FeatureKeyPoint : public Feature
 {
 	public:
-		FeatureKeyPoint(const cv::KeyPoint& x_keypoint);
+		FeatureKeyPoint(const cv::KeyPoint& x_keypoint = cv::KeyPoint());
 		Feature* CreateCopy() const{return new FeatureKeyPoint(*this);}
 		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 		virtual void Deserialize(std::istream& stream, const std::string& x_dir);

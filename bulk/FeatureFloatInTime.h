@@ -30,7 +30,7 @@
 class FeatureFloatInTime : public FeatureFloat
 {
 public:
-	FeatureFloatInTime(const FeatureFloat& x_feat);
+	FeatureFloatInTime(const FeatureFloat& x_feat = FeatureFloat());
 	Feature* CreateCopy() const{return new FeatureFloatInTime(*this);}
 	void Update(const Feature& x_feat, double x_alpha);
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;

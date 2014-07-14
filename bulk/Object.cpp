@@ -29,6 +29,8 @@
 using namespace cv;
 using namespace std;
 
+FactoryFeatures Object::m_factoryFeatures;
+
 Object::Object(const string& x_name) :
 	m_name(x_name),
 	m_id(-1),
@@ -130,12 +132,14 @@ void Object::Deserialize(std::istream& x_in, const string& x_dir)
 	height = root["height"].asDouble();
 
 	m_feats.clear();
-	Json::Value::Members members = root["features"].getMemberNames();
-	for(Json::Value::Members::const_iterator it = members.begin() ; it != members.end() ; it++)
+	Json::Value::Members members1 = root["features"].getMemberNames();
+	for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; it1++)
 	{
 		// TODO: JsonCpp has a bug for serializing floats !
-		// TODO: Find a hack to serialize/deserialize all kinds of features
-		AddFeature(*it, root["features"][*it].asFloat());
+		stringstream ss;
+		ss << root;
+		string signature = Serializable::signature(ss);
+		AddFeature(*it1, m_factoryFeatures.CreateFeatureFromSignature(signature));
 	}
 }
 

@@ -31,7 +31,7 @@
 class FeatureVectorFloat : public Feature
 {
 	public:
-		FeatureVectorFloat(std::vector <float> x_values);
+		FeatureVectorFloat(std::vector <float> x_values = std::vector<float>(0));
 		Feature* CreateCopy() const{return new FeatureVectorFloat(*this);}
 		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 		virtual void Deserialize(std::istream& stream, const std::string& x_dir);

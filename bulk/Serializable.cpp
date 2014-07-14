@@ -41,3 +41,45 @@ string Serializable::SerializeToString(const string& x_dir) const
 	tmp.erase(std::remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
 	return tmp;
 }
+
+string Serializable::Signature() const
+{
+	stringstream ss;
+	Serialize(ss, "");
+	return Serializable::signature(ss);
+}
+
+string Serializable::signature(std::istream& x_in)
+{
+	Json::Value root;
+	x_in >> root;
+	stringstream signature;
+
+	try
+	{
+		float f = root.asFloat();
+		return "%%f";
+	}
+	catch(...){}
+	try
+	{
+		string s = root.asString();
+		return "%%s";
+	}
+	catch(...){}
+	try
+	{
+		float f = root.get("", 0).asFloat();
+		return "[%%f]";
+	}
+	catch(...){}
+
+
+	Json::Value::Members members1 = root.getMemberNames();
+	for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; it1++)
+	{
+		// Loop over sub members
+		signature << *it1 << ",";
+	}
+	return signature.str();
+}
