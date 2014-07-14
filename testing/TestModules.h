@@ -63,6 +63,10 @@ class TestModules : public CppUnit::TestFixture
 	{
 		m_cpt = 0;
 		m_factory.ListModules(moduleTypes);
+
+		// Modules to blacklist // TODO: This should of course not happen in the long term
+		moduleTypes.erase(std::remove(vec.begin(), vec.end(), "LFC_SVM"), vec.end());
+
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigReader("/tmp/config_empty.xml");
 		addModuleToConfig("VideoFileReader", *mp_config)
