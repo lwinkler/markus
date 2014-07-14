@@ -138,9 +138,10 @@ void GroundTruthReader::ProcessFrame()
 			trackedObj.clear();
 	}
 
-// display the ROI in srt
-#ifdef MARKUS_DEBUG_STREAMS
+	// display the ROI in srt
 	Rect refObj = mp_annotationReader->GetBox();
+	
+#ifdef MARKUS_DEBUG_STREAMS
 	if (m_assFile && refObj.width > 0 && text != "")
 	{
 		// enlarge the bounding box

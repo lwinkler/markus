@@ -54,17 +54,15 @@ void FeatureVectorFloat::Deserialize(istream& x_in, const string& x_dir)
 {
 	string tmp;
 	vector<string> valuesStr;
-	x_in >> tmp;
+	getline(x_in, tmp);
 
 	if(tmp.substr(0, 1) != "[" || tmp.substr(tmp.size() - 1, 1) != "]")
 		throw MkException("Error in deserialization for value: " + tmp, LOC);
 	split(tmp.substr(1, tmp.size() - 2), ',', valuesStr);
 
 	// Remove last element if empty, due to an extra comma
-	assert(values.size() > 0);
 	if(valuesStr.back() == "")
 		values.pop_back();
-	assert(values.size() > 0);
 
 	values.clear();
 	for(vector<string>::const_iterator it = valuesStr.begin() ; it != valuesStr.end() ; it++)

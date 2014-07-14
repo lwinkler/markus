@@ -1,11 +1,12 @@
+
 {
 	"features" : 
 	{
-		"featA" : 2342.0,
-		"featB" : 111.0,
+		"featA" : 2342,
+		"featB" : 111,
 		"xff" : 0.640,
 		"xfstr" : "someOtherString",
-		"xfvf" : [234.46,353455,0.04355]
+		"xfvf" : [ 234.460, 353455, 0.043550 ]
 	},
 	"height" : 0.550,
 	"id" : 333,

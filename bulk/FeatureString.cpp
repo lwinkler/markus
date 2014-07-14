@@ -32,10 +32,14 @@ FeatureString::FeatureString(string x_value)
 
 void FeatureString::Serialize(ostream& x_out, const string& x_dir) const
 {
-	x_out << value;
+	x_out << "\"" << value << "\"";
 }
 
 void FeatureString::Deserialize(istream& x_in, const string& x_dir)
 {
 	x_in >> value;
+	//assert(value.front() == '"');
+	//assert(value.back() == '"');
+	value.erase( 0, 1 ); // erase the first character
+	value.erase( value.size() - 1 ); // erase the last character
 }

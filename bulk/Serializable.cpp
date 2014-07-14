@@ -26,9 +26,66 @@
 
 #include <opencv2/opencv.hpp>
 #include "Serializable.h"
+#include "MkException.h"
 
 
 using namespace std;
+
+string signatureJSONValue(const Json::Value &x_val)
+{
+	if( x_val.isString() )
+		return "%s";
+		/*
+	else if( x_val.isBool() )
+		return "%b";
+	else if( x_val.isInt() )
+		return "%d";
+	else if( x_val.isUInt() )
+		return "%u";
+		*/
+	else if( x_val.isNumeric() )
+		return "%f";
+	else if( x_val.isArray() )
+		assert(false);
+	else 
+	{
+		cout << x_val;
+		throw MkException("Unknown type in JSON ", LOC);
+	}
+	return "";
+}
+
+string signatureJSONTree(const Json::Value &x_root, unsigned short x_depth) 
+{
+	x_depth += 1;
+	// cout<<" {type=["<<x_root.type()<<"], size="<<x_root.size()<<"}"<<endl; 
+
+	string result;
+
+	if(x_root.isArray())
+	{
+		return "[]";
+	}
+	else if(x_root.isObject())
+	{
+		// printf("\n");
+		for(Json::ValueIterator itr = x_root.begin() ; itr != x_root.end() ; itr++)
+		{
+			result += "\"";
+			result += itr.memberName();
+			result += "\":";
+			result += "{";
+			result += signatureJSONTree(*itr, x_depth); 
+			result += "},";
+		}
+		return result;
+	}
+	else
+	{
+		result += signatureJSONValue(x_root);
+	}
+	return result;
+}
 
 string Serializable::SerializeToString(const string& x_dir) const
 {
@@ -45,14 +102,18 @@ string Serializable::SerializeToString(const string& x_dir) const
 string Serializable::Signature() const
 {
 	stringstream ss;
-	Serialize(ss, "");
+	ss<<SerializeToString();
 	return Serializable::signature(ss);
 }
 
 string Serializable::signature(std::istream& x_in)
 {
+
 	Json::Value root;
 	x_in >> root;
+	return signatureJSONTree(root, 0);
+
+	/*
 	stringstream signature;
 
 	try
@@ -82,4 +143,5 @@ string Serializable::signature(std::istream& x_in)
 		signature << *it1 << ",";
 	}
 	return signature.str();
+	*/
 }

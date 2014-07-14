@@ -99,21 +99,7 @@ void Object::Serialize(std::ostream& x_out, const string& x_dir) const
 	{
 		stringstream ss;
 		it->second->Serialize(ss, x_dir);
-		cout<<ss.str()<<endl;
-
-		try 
-		{
-			// TODO: Check via type ?
-			root["features"][it->first] = boost::lexical_cast<double>(ss.str());
-		}
-		catch(...)
-		{
-			// oops, not a number 
-			if(ss.str() != "" && ss.str()[0] == '{')
-				ss >> root["features"][it->first];
-			else
-				root["features"][it->first] = ss.str();
-		}
+		ss >> root["features"][it->first];
 	}
 
 	x_out << root;
@@ -133,13 +119,19 @@ void Object::Deserialize(std::istream& x_in, const string& x_dir)
 
 	m_feats.clear();
 	Json::Value::Members members1 = root["features"].getMemberNames();
+		// TODO: JsonCpp has a bug for serializing floats !
 	for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; it1++)
 	{
-		// TODO: JsonCpp has a bug for serializing floats !
+		// Extract the signature of the feature:
+		//     this allows us to recognize the type of feature
 		stringstream ss;
-		ss << root;
+		ss << root["features"][*it1];
 		string signature = Serializable::signature(ss);
-		AddFeature(*it1, m_factoryFeatures.CreateFeatureFromSignature(signature));
+		Feature* feat = m_factoryFeatures.CreateFeatureFromSignature(signature);
+		stringstream ss2;
+		ss2 << root["features"][*it1];
+		feat->Deserialize(ss2, x_dir);
+		AddFeature(*it1, feat);
 	}
 }
 

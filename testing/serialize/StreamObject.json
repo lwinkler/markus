@@ -10,8 +10,8 @@
 		{
 			"features" : 
 			{
-				"featA" : 2342.0,
-				"featB" : 111.0
+				"featA" : 2342,
+				"featB" : 111
 			},
 			"height" : 0.550,
 			"id" : 333,
@@ -24,7 +24,7 @@
 		{
 			"features" : 
 			{
-				"featA" : 2.0,
+				"featA" : 2,
 				"featB" : 1231.10
 			},
 			"height" : 0.50,
