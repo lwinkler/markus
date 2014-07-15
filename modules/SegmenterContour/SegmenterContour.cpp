@@ -62,15 +62,15 @@ void SegmenterContour::Reset()
 {
 	Module::Reset();
 	split(m_param.features, ',', m_featureNames);
-	computeMoment = false;
-	computeHuMoment = false;
+	m_computeMoment = false;
+	m_computeHuMoment = false;
 
 	for(vector<string>::const_iterator it = m_featureNames.begin() ; it != m_featureNames.end() ; it++)
 	{
-		if (!computeMoment)
-			computeMoment = (it->find("moment") != string::npos);
+		if (!m_computeMoment)
+			m_computeMoment = (it->find("moment") != string::npos);
 
-		if (!computeHuMoment && (computeHuMoment  = (it->find("hu_moment") != string::npos)))
+		if (!m_computeHuMoment && (m_computeHuMoment  = (it->find("hu_moment") != string::npos)))
 		{
 			break;
 		}
@@ -123,12 +123,12 @@ void SegmenterContour::ProcessFrame()
 			double m00_scaled;
 			double hu[7];
 
-			if (computeMoment)
+			if (m_computeMoment)
 			{
 				mom = moments(contours[i]);
 				m00_scaled = mom.m00;
 
-				if (computeHuMoment)	// if computeHuMoment is true, computeMoment is already true
+				if (m_computeHuMoment)	// if computeHuMoment is true, computeMoment is already true
 					HuMoments(mom,hu);
 			}
 
@@ -226,11 +226,9 @@ void SegmenterContour::ProcessFrame()
 				}
 				else if(it->compare("solidity")==0)
 				{
-					double objArea = contourArea(contours[i]);
 					vector<Point> ptConvexHull;
 					convexHull(contours[i],ptConvexHull);
-					double hullArea = contourArea(ptConvexHull);
-					obj.AddFeature("solidity", objArea/hullArea);
+					obj.AddFeature("solidity", contourArea(contours[i]) / contourArea(ptConvexHull));
 				}
 			}
 

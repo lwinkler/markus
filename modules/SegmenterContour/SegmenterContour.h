@@ -66,11 +66,7 @@ public:
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
 	Parameters m_param;
-	bool m_computeFitEllipse;
-	bool m_computeMinRect;
 	static log4cxx::LoggerPtr m_logger;
-	bool computeMoment;
-	bool computeHuMoment;
 
 protected:
 	
@@ -82,6 +78,10 @@ protected:
 
 	// temporary
 	std::vector<std::string> m_featureNames;
+	bool m_computeFitEllipse;
+	bool m_computeMinRect;
+	bool m_computeMoment;
+	bool m_computeHuMoment;
 
 	// debug
 #ifdef MARKUS_DEBUG_STREAMS
