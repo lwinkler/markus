@@ -80,6 +80,11 @@ void TrackerByFeatures::Reset()
 
 void TrackerByFeatures::ProcessFrame()
 {
+	cout<<"start\n";
+	//compute each object to find point of interest
+	for(vector<Object>::iterator it1 = m_objects.begin() ; it1 != m_objects.end() ; it1++){
+		cout<<"in"<<it1->GetId()<<endl;
+	}
 #ifdef MARKUS_DEBUG_STREAMS
 	m_debug.setTo(0);
 #endif
@@ -88,6 +93,9 @@ void TrackerByFeatures::ProcessFrame()
 	CleanTemplates();
 	DetectNewTemplates();
 	UpdateObjects();
+	for(vector<Object>::iterator it1 = m_objects.begin() ; it1 != m_objects.end() ; it1++){
+		cout<<"out"<<it1->GetId()<<endl;
+	}
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -113,9 +121,9 @@ void TrackerByFeatures::Match()
 
 		if(m_param.symetricMatch)
 		{
-			const Object* bestObject = MatchTemplate(*bestTemplate);
+			Object* bestObject = MatchTemplate(*bestTemplate);
 			// assert(bestTemplate != NULL);
-			if(bestTemplate == NULL || bestObject->GetId() != it1->GetId())
+			if(bestObject == NULL || bestObject != reinterpret_cast<Object*>(it1))
 				continue;
 		}
 
@@ -348,6 +356,7 @@ void TrackerByFeatures::DetectNewTemplates()
 			m_matched[&(*it2)] = newTemp;
 			//cout<<"Added template "<<t.GetNum()<<endl;
 			updateObjectFromTemplate(*newTemp, *it2);
+			LOG_DEBUG(m_logger, "Added new template " << it2->GetId());
 			cpt++;
 		}
 	}

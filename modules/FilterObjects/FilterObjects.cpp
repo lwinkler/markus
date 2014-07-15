@@ -56,6 +56,11 @@ void FilterObjects::Reset()
 
 void FilterObjects::ProcessFrame()
 {
+	cout<<"start\n";
+	//compute each object to find point of interest
+	for(vector<Object>::iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; it1++){
+		cout<<"filterobj"<<it1->GetId()<<endl;
+	}
 #ifdef MARKUS_DEBUG_STREAMS
 	static const Scalar Green = Scalar(0, 255, 33);
 	static const Scalar Gray  = Scalar(200, 200, 200);

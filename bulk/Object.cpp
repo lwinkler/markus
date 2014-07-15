@@ -45,6 +45,7 @@ Object::Object(const string& x_name) :
 Object::Object(const string& x_name, const cv::Rect& x_rect) :
         m_name(x_name)
 {
+	m_id     = -1;
 	posX 	 = x_rect.x + x_rect.width / 2;
 	posY 	 = x_rect.y + x_rect.height / 2;
 	width	 = x_rect.width;
@@ -225,6 +226,6 @@ void Object::Intersect(const cv::Mat& x_image)
 		height	 = br.y - tl.y;
 		posX 	 = tl.x + width / 2;
 		posY 	 = tl.y + height / 2;
-	cout<<"out "<<posX<<" "<<posY<<" "<<width<<" "<<height<<endl;
+		// cout<<"out "<<posX<<" "<<posY<<" "<<width<<" "<<height<<endl;
 	}
 }
