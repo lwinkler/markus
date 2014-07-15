@@ -80,22 +80,14 @@ void TrackerByFeatures::Reset()
 
 void TrackerByFeatures::ProcessFrame()
 {
-	cout<<"start\n";
-	//compute each object to find point of interest
-	for(vector<Object>::iterator it1 = m_objects.begin() ; it1 != m_objects.end() ; it1++){
-		cout<<"in"<<it1->GetId()<<endl;
-	}
 #ifdef MARKUS_DEBUG_STREAMS
 	m_debug.setTo(0);
 #endif
 	Match();
 	UpdateTemplates();
-	CleanTemplates();
 	DetectNewTemplates();
 	UpdateObjects();
-	for(vector<Object>::iterator it1 = m_objects.begin() ; it1 != m_objects.end() ; it1++){
-		cout<<"out"<<it1->GetId()<<endl;
-	}
+	CleanTemplates();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -123,7 +115,7 @@ void TrackerByFeatures::Match()
 		{
 			Object* bestObject = MatchTemplate(*bestTemplate);
 			// assert(bestTemplate != NULL);
-			if(bestObject == NULL || bestObject != reinterpret_cast<Object*>(it1))
+			if(bestObject == NULL || bestObject != reinterpret_cast<Object*>(&*it1))
 				continue;
 		}
 
