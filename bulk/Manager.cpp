@@ -141,18 +141,26 @@ void Manager::Connect()
 			ConfigReader inputConfig = conf.GetSubConfig("input");
 			while(! inputConfig.IsEmpty())
 			{
-				int inputId        = atoi(inputConfig.GetAttribute("id").c_str());
-				const string& tmp1 = inputConfig.GetAttribute("moduleid");
-				const string& tmp2 = inputConfig.GetAttribute("outputid");
-				if(tmp1 != "" && tmp2 != "")
+				try
 				{
-					int outputModuleId    = atoi(tmp1.c_str());
-					int outputId          = atoi(tmp2.c_str());
-					Stream& inputStream  = module.RefInputStreamById(inputId);
-					Stream& outputStream = RefModuleById(outputModuleId).RefOutputStreamById(outputId);
+					int inputId        = atoi(inputConfig.GetAttribute("id").c_str());
+					const string& tmp1 = inputConfig.GetAttribute("moduleid");
+					const string& tmp2 = inputConfig.GetAttribute("outputid");
+					if(tmp1 != "" && tmp2 != "")
+					{
+						int outputModuleId    = atoi(tmp1.c_str());
+						int outputId          = atoi(tmp2.c_str());
+						Stream& inputStream  = module.RefInputStreamById(inputId);
+						Stream& outputStream = RefModuleById(outputModuleId).RefOutputStreamById(outputId);
 
-					// Connect input and output streams
-					inputStream.Connect(&outputStream);
+						// Connect input and output streams
+						inputStream.Connect(&outputStream);
+					}
+				}
+				catch(MkException& e)
+				{
+					LOG_ERROR(m_logger, "Cannot connect input "<<inputConfig.GetAttribute("id")<<" of module "<<module.GetName());
+					throw;
 				}
 				inputConfig = inputConfig.NextSubConfig("input");
 			}
