@@ -224,6 +224,14 @@ void SegmenterContour::ProcessFrame()
 				{
 					obj.AddFeature("hu_moment_7", hu[6]);
 				}
+				else if(it->compare("solidity")==0)
+				{
+					double objArea = contourArea(contours[i]);
+					vector<Point> ptConvexHull;
+					convexHull(contours[i],ptConvexHull);
+					double hullArea = contourArea(ptConvexHull);
+					obj.AddFeature("solidity", objArea/hullArea);
+				}
 			}
 
 #ifdef MARKUS_DEBUG_STREAMS
