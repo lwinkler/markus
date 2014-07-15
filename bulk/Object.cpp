@@ -22,6 +22,7 @@
 -------------------------------------------------------------------------------------*/
 #include "Object.h"
 #include "util.h"
+#include "define.h"
 #include <jsoncpp/json/writer.h>
 #include <jsoncpp/json/reader.h>
 #include <boost/lexical_cast.hpp>
@@ -188,4 +189,42 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 		//catch(...){}
 	}
 #endif
+}
+
+/**
+* @brief Intersect the object with an image. Used to check that objects are valid
+*
+* @param x_image Image
+*
+* @return Intersected object
+*/
+
+void Object::Intersect(const cv::Mat& x_image)
+{
+	// cout<<"in "<<posX<<" "<<posY<<" "<<width<<" "<<height<<endl;
+	if(posX - width / 2 < 0 || posY - height / 2 < 0 
+		|| posX + width / 2 >= x_image.cols || posY + height / 2 >= x_image.rows)
+	{
+		// LOG_DEBUG(m_logger, "Correcting object " + GetName());
+		cv::Rect rect = Rect();
+		cv::Point tl = rect.tl();
+		cv::Point br = rect.br();
+		
+		tl.x = MAX(0, tl.x);
+		tl.x = MIN(x_image.cols - 1, tl.x);
+		tl.y = MAX(0, tl.y);
+		tl.y = MIN(x_image.rows - 1, tl.y);
+
+		br.x = MAX(0, br.x);
+		br.x = MIN(x_image.cols - 1, br.x);
+		br.y = MAX(0, br.y);
+		br.y = MIN(x_image.rows - 1, br.y);
+
+		// recomput object boundaries
+		width	 = br.x - tl.x;
+		height	 = br.y - tl.y;
+		posX 	 = tl.x + width / 2;
+		posY 	 = tl.y + height / 2;
+	cout<<"out "<<posX<<" "<<posY<<" "<<width<<" "<<height<<endl;
+	}
 }

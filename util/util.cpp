@@ -360,4 +360,3 @@ string getFileContents(const string& x_fileName)
 	else throw MkException("Cannot open file " + x_fileName, LOC);
 }
 
-

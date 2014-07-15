@@ -65,7 +65,7 @@ class TestModules : public CppUnit::TestFixture
 		m_factory.ListModules(moduleTypes);
 
 		// Modules to blacklist // TODO: This should of course not happen in the long term
-		moduleTypes.erase(std::remove(vec.begin(), vec.end(), "LFC_SVM"), vec.end());
+		moduleTypes.erase(std::remove(moduleTypes.begin(), moduleTypes.end(), "LFC_SVM"), moduleTypes.end());
 
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigReader("/tmp/config_empty.xml");
