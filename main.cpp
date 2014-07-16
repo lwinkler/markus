@@ -298,7 +298,10 @@ int main(int argc, char** argv)
 				split(param, '.', path);
 				if(path.size() != 2)
 					throw MkException("Parameter set in command line must be in format 'module.parameter'", LOC);
-				appConfig.RefSubConfig("module", path[0]).RefSubConfig("parameters").RefSubConfig("param", path[1], true).SetValue(value);
+				if(path[0] == "manager")
+					appConfig.RefSubConfig("parameters", "", true).RefSubConfig("param", path[1], true).SetValue(value);
+				else
+					appConfig.RefSubConfig("module", path[0]).RefSubConfig("parameters").RefSubConfig("param", path[1], true).SetValue(value);
 				// manager.GetModuleByName(path[0])->GetParameters().RefParameterByName(path[1]).SetValue(value, PARAMCONF_CMD);
 			}
 			catch(std::exception& e)

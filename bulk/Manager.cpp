@@ -103,15 +103,43 @@ Manager::~Manager()
 		LOG_INFO(m_logger, "Results written to directory "<<m_outputDir);
 
 	/// Do the final operations on the static class
-	if(m_outputDir.size() != 0 && getenv("LOG_DIR") == NULL)
+	if(m_outputDir.size() != 0)
 	{
-		try
+		if(getenv("LOG_DIR") == NULL)
 		{
-			SYSTEM("cp markus.log " + m_outputDir + "/markus.copy.log");
+			try
+			{
+				SYSTEM("cp markus.log " + m_outputDir + "/markus.copy.log");
+			}
+			catch(...)
+			{
+				LOG_WARN(m_logger, "Error at the copy of markus.log");	
+			}
 		}
-		catch(...)
+
+		// Copy the directory for archiving if needed
+		if(m_param.autoClean)
 		{
-			LOG_WARN(m_logger, "Error at the copy of markus.log");	
+			if(m_param.archiveDir != "")
+			{
+				LOG_INFO(m_logger, "Working directory moved to " + m_param.archiveDir);
+				SYSTEM("mkdir -p " + m_param.archiveDir);
+				SYSTEM("mv " + m_outputDir + " " + m_param.archiveDir + "/");
+			}
+			else 
+			{
+				LOG_INFO(m_logger, "Working directory deleted");
+				SYSTEM("rm -rf " + m_outputDir);
+			}
+		}
+		else
+		{
+			if(m_param.archiveDir != "")
+			{
+				LOG_INFO(m_logger, "Working directory copied to " + m_param.archiveDir);
+				SYSTEM("mkdir -p " + m_param.archiveDir);
+				SYSTEM("cp -r " + m_outputDir + " " + m_param.archiveDir);
+			}
 		}
 	}
 }
