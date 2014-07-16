@@ -260,7 +260,7 @@ int main(int argc, char** argv)
 		{
 			try
 			{
-				// open tbhe config
+				// open the config
 				ConfigReader extra(*it1);
 				ConfigReader moduleConfig = extra.GetSubConfig("application").GetSubConfig("module");
 				while(!moduleConfig.IsEmpty())

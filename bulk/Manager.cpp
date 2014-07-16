@@ -332,7 +332,7 @@ bool Manager::Process()
 		PrintStatistics();
 	}
 	m_lock.unlock();
-	if(m_frameCount % 20 == 0)
+	//if(m_frameCount % 20 == 0)
 		usleep(20); // This keeps the manager unlocked to allow the sending of commands // TODO find a cleaner way
 
 	return m_continueFlag;
