@@ -36,6 +36,7 @@
 #include "MkException.h"
 #include "FeatureFloatInTime.h"
 
+#define BLACKLIST(x) moduleTypes.erase(std::remove(moduleTypes.begin(), moduleTypes.end(), (x)), moduleTypes.end());
 
 /// Unit testing class for ConfigReader class
 
@@ -64,8 +65,9 @@ class TestModules : public CppUnit::TestFixture
 		m_cpt = 0;
 		m_factory.ListModules(moduleTypes);
 
-		// Modules to blacklist // TODO: This should of course not happen in the long term
-		moduleTypes.erase(std::remove(moduleTypes.begin(), moduleTypes.end(), "LFC_SVM"), moduleTypes.end());
+		// Modules to blacklist // TODO: This should of course contain any module in the long term
+		BLACKLIST("LFC_SVM");
+		BLACKLIST("ExtractHOGFeatures");
 
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigReader("/tmp/config_empty.xml");
