@@ -56,6 +56,8 @@ class TestProjects : public CppUnit::TestFixture
 		ConfigReader mainConfig(x_configFile);
 		mainConfig.Validate();
 		ConfigReader appConfig = mainConfig.GetSubConfig("application");
+		// Note: Added this to avoid deleting the output directory // TODO: Output dir should not be static probably
+		appConfig.RefSubConfig("parameters", "", true).RefSubConfig("param", "auto_clean", true).SetValue("0");
 		CPPUNIT_ASSERT(!appConfig.IsEmpty());
 		Manager manager(appConfig, true);
 		manager.Connect();

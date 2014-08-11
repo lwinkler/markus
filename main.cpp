@@ -293,7 +293,15 @@ int main(int argc, char** argv)
 			try
 			{
 				string param = it->substr(0, it->find("="));
+				// remove quote if necessary
+				if (*(param.begin()) == '\'')
+					param = param.substr(1,param.length());
+
 				string value = it->substr(it->find("=") + 1);
+				// remove quote if necessary
+				if (*(value.rbegin()) == '\'')
+					value = value.substr(0,value.length()-1);
+
 				vector<string> path;
 				split(param, '.', path);
 				if(path.size() != 2)
