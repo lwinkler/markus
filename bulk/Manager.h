@@ -45,7 +45,7 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
 		{
-			m_list.push_back(new ParameterBool("auto_clean", 1, 0, 1, &autoClean, "Automatically clean the temporary directory when the application closes"));
+			m_list.push_back(new ParameterBool("auto_clean", 0, 0, 1, &autoClean, "Automatically clean the temporary directory when the application closes"));
 			m_list.push_back(new ParameterString("archive_dir", "",  &archiveDir, "If specified the data is copied inside this directory for archive"));
 			ParameterStructure::Init();
 		}
