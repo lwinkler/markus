@@ -183,6 +183,7 @@ void adjustChannels(const Mat& im_in, Mat& im_out)
 	else throw MkException("Error in adjustChannels", LOC);
 }
 
+/* Return an OpenCV color from a "(b,g,r)" string */
 Scalar colorFromStr(string x_str)
 {
 	int pos1 = 0;

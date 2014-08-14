@@ -59,7 +59,7 @@ ConfigReader::ConfigReader(const std::string& x_fileName, bool x_allowCreation)
 			assert(mp_doc->LoadFile());
 		}
 		else
-			throw MkException("Could not load test file '" + x_fileName + "'. Error='" + mp_doc->ErrorDesc() + "'. Exiting.", LOC);
+			throw MkException("Could not load file as XML '" + x_fileName + "'. Error='" + mp_doc->ErrorDesc() + "'. Exiting.", LOC);
 	}
 	mp_node = mp_doc;
 }

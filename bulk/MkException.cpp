@@ -78,7 +78,11 @@ ParameterException::ParameterException(const std::string& x_descr, const std::st
 {}
 
 FeatureNotFoundException::FeatureNotFoundException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
-	MkException(MK_FEAT_NOT_FOUND_PARAMETER, "FeatureNotFoundException: " + x_descr, x_position)
+	MkException(MK_EXCEPTION_FEAT_NOT_FOUND, "FeatureNotFoundException: " + x_descr, x_position)
+{}
+
+WebServiceException::WebServiceException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
+	MkException(MK_EXCEPTION_WEBSERVICE, "WebServiceException: " + x_descr, x_position)
 {}
 
 /**

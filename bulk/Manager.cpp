@@ -317,7 +317,7 @@ bool Manager::Process()
 			if(m_hasRecovered)
 			{
 				// This exception happens after a recovery, keep it!
-				m_lastException = MkException(MK_FEAT_STD_EXCEPTION, (*it)->GetName() + " :" + string(e.what()), LOC);
+				m_lastException = MkException(MK_EXCEPTION_UNKNOWN, (*it)->GetName() + " :" + string(e.what()), LOC);
 				NotifyException(m_lastException);
 			}
 			LOG_ERROR(m_logger, (*it)->GetName() << ": Exception raised (std::exception): " << e.what());
@@ -327,7 +327,7 @@ bool Manager::Process()
 			if(m_hasRecovered)
 			{
 				// This exception happens after a recovery, keep it!
-				m_lastException = MkException(MK_FEAT_STD_EXCEPTION, (*it)->GetName() + " :" + string(str), LOC);
+				m_lastException = MkException(MK_EXCEPTION_UNKNOWN, (*it)->GetName() + " :" + string(str), LOC);
 				NotifyException(m_lastException);
 			}
 			recover = m_hasRecovered = false;
@@ -338,7 +338,7 @@ bool Manager::Process()
 			if(m_hasRecovered)
 			{
 				// This exception happens after a recovery, keep it!
-				m_lastException = MkException(MK_FEAT_STD_EXCEPTION, (*it)->GetName() + " :" + string(str), LOC);
+				m_lastException = MkException(MK_EXCEPTION_UNKNOWN, (*it)->GetName() + " :" + string(str), LOC);
 				NotifyException(m_lastException);
 			}
 			recover = m_hasRecovered = false;
@@ -349,7 +349,7 @@ bool Manager::Process()
 			if(m_hasRecovered)
 			{
 				// This exception happens after a recovery, keep it!
-				m_lastException = MkException(MK_FEAT_STD_EXCEPTION, (*it)->GetName() + ": Unknown", LOC);
+				m_lastException = MkException(MK_EXCEPTION_UNKNOWN, (*it)->GetName() + ": Unknown", LOC);
 				NotifyException(m_lastException);
 			}
 			recover = m_hasRecovered = false;
