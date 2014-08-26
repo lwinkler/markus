@@ -72,6 +72,10 @@ class Evaluation():
                '-pInput.file=' + self.abs_video,
                '-o' + self.eval_path]
 
+        if args.verbose:
+            print "Execute command: "
+            print cmd
+
         # Run the command
         markus = subprocess.Popen(cmd)
         markus.communicate()
@@ -109,6 +113,10 @@ class Evaluation():
 
         if args.uncompromising:
             cmd += ['-u']
+
+        if args.verbose:
+            print "Execute command: "
+            print cmd
 
         # Run the command
         analyse = subprocess.Popen(cmd)
@@ -150,6 +158,12 @@ def arguments_parser():
     parser.add_argument('VIDEO_DIR',
                         type=str,
                         help='the path to the videos directory')
+
+    # verbose
+    parser.add_argument('-v',
+                        action='store_true',
+                        dest='verbose',
+                        help='verbose: print more information while executing')
 
     # set file
     parser.add_argument('-s',

@@ -228,6 +228,7 @@ void Manager::Reset(bool x_resetInputs)
 	// Reset timers
 	// m_timerConvertion = 0;
 	m_timerProcessing = 0;
+	GetParameters().PrintParameters();
 
 	// Reset all modules (to set the module timer)
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
