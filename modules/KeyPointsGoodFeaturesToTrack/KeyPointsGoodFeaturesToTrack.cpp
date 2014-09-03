@@ -20,7 +20,7 @@
  *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
  -------------------------------------------------------------------------------------*/
 
-#include "KeyPointsFAST.h"
+#include "KeyPointsGoodFeaturesToTrack.h"
 #include "StreamImage.h"
 #include "StreamDebug.h"
 #include "StreamObject.h"
@@ -34,9 +34,9 @@
 using namespace cv;
 using namespace std;
 
-log4cxx::LoggerPtr KeyPointsFAST::m_logger(log4cxx::Logger::getLogger("KeyPointsFAST"));
+log4cxx::LoggerPtr KeyPointsGoodFeaturesToTrack::m_logger(log4cxx::Logger::getLogger("KeyPointsGoodFeaturesToTrack"));
 
-KeyPointsFAST::KeyPointsFAST(const ConfigReader& x_configReader) :
+KeyPointsGoodFeaturesToTrack::KeyPointsGoodFeaturesToTrack(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader),
 	m_input(Size(m_param.width, m_param.height), m_param.type)
@@ -55,25 +55,23 @@ KeyPointsFAST::KeyPointsFAST(const ConfigReader& x_configReader) :
 };
 
 
-KeyPointsFAST::~KeyPointsFAST()
+KeyPointsGoodFeaturesToTrack::~KeyPointsGoodFeaturesToTrack()
 {
 	CLEAN_DELETE(m_detector);
 }
 
-void KeyPointsFAST::Reset()
+void KeyPointsGoodFeaturesToTrack::Reset()
 {
-	// TODO remove
-	vector<string> algos;
-	Algorithm::getList(algos);
-
-	for(vector<string>::iterator it = algos.begin() ; it != algos.end() ; it++)
-		cout<<*it<<endl;
-
-
 	Module::Reset();
 	CLEAN_DELETE(m_detector);
-        m_detector = new FastFeatureDetector(m_param.threshold, m_param.nonMaxSuppression);
-        // m_detector = Algorithm::create<Feature2D>("Feature2D.FAST");
+        m_detector = new GoodFeaturesToTrackDetector(
+		m_param.maxCorners,
+		m_param.qualityLevel,
+		m_param.minDistance,
+		m_param.blockSize,
+		m_param.useHarrisDetector,
+		m_param.k);
+
 	if(m_detector == NULL && m_detector->empty())
 		throw MkException("Cannot create detector", LOC);
 
@@ -87,7 +85,7 @@ void KeyPointsFAST::Reset()
 
 /**
  */
-void KeyPointsFAST::ProcessFrame()
+void KeyPointsGoodFeaturesToTrack::ProcessFrame()
 {
 #ifdef MARKUS_DEBUG_STREAMS
 		m_input.copyTo(m_debug);
