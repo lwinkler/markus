@@ -67,13 +67,18 @@ void ExtractKeyPoints::Reset()
 {
 	Module::Reset();
 	CLEAN_DELETE(m_detector);
-	m_detector = FeatureDetector::create(m_param.keyPointType);
+	cout<<"Create feature detector of type "<<m_param.keyPointType<<endl;
+	m_detector = FeatureDetector::create("FAST");
+        // m_detector = new FastFeatureDetector(10);
 	if(m_detector == NULL && m_detector->empty())
 		throw MkException("Cannot create detector", LOC);
 
 	// If the object input is not connected: extract on whole image
-	if(m_objectsIn.size() == 0)
-		m_objectsIn.push_back(Object("screen", Rect(0, 0, m_input.cols, m_input.rows)));
+        if(!m_inputStreams.at(1)->IsConnected())
+	{
+		LOG_INFO(m_logger, "Object input not connected, use the whole image");
+        	m_objectsIn.push_back(Object("screen", Rect(0, 0, m_input.cols, m_input.rows)));
+	}
 }
 
 /**
@@ -89,12 +94,11 @@ void ExtractKeyPoints::ProcessFrame()
 		//compute point of interest and add it to m_objectsOut
 		//strange error (ASSERT : 0<=roi.x&&0<=roi.width&&roi.x+roi.width<=m_input.cols&&0<=roi.y&&0<=roi.height&&roi.y+roi.height<=m_input.rows)
 		//this cause unit test fail
-		// Mat subImage(m_input, it1->Rect());    
+		Mat subImage(m_input, it1->Rect());    
 		vector<KeyPoint> pointsOfInterest;
 
-cout<<"ici\n";
-		m_detector->detect(m_input, pointsOfInterest);
-cout<<"ici2\n";
+		m_detector->detect(subImage, pointsOfInterest);
+
 		//Mat subImage(m_input,it1->Rect());    
 		//m_detector->detect(subImage, pointsOfInterest);
 
