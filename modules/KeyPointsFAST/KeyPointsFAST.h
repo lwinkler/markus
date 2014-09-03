@@ -32,7 +32,7 @@
 /**
 * @brief Extract different types of keypoints
 */
-class ExtractKeyPoints : public Module
+class KeyPointsFAST : public Module
 {
 public:
 	class Parameters : public Module::Parameters
@@ -40,19 +40,19 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterString("keypoint_type", "FAST", &keyPointType,"Type of keypoint"));
+			m_list.push_back(new ParameterInt("threshold", 10, 0, INT_MAX, &threshold,"Threshold"));
 
 			// RefParameterByName("type").SetDefault("CV_8UC3");
 			// RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3]");
 
 			Init();
 		};
-		std::string keyPointType;
+		int threshold;
 	};
 
-	ExtractKeyPoints(const ConfigReader& x_configReader);
-	~ExtractKeyPoints();
-	MKCLASS("ExtractKeyPoints")
+	KeyPointsFAST(const ConfigReader& x_configReader);
+	~KeyPointsFAST();
+	MKCLASS("KeyPointsFAST")
 	MKDESCR("Extract different types of keypoints from image")
 	
 	inline virtual const Parameters& GetParameters() const { return m_param;}
@@ -78,7 +78,7 @@ protected:
 	cv::FeatureDetector *m_detector;
 
 #ifdef MARKUS_DEBUG_STREAMS
-	// cv::RNG m_rng;
+	//cv::RNG m_rng;
 	cv::Mat m_debug;
 #endif
 };

@@ -23,7 +23,7 @@
 // TODO Headers !!
 
 #include <iostream>
-#include "ExtractKeyPoints.h"
+#include "KeyPointsFAST.h"
 #include "StreamImage.h"
 #include "StreamDebug.h"
 #include "StreamObject.h"
@@ -37,9 +37,9 @@
 using namespace cv;
 using namespace std;
 
-log4cxx::LoggerPtr ExtractKeyPoints::m_logger(log4cxx::Logger::getLogger("ExtractKeyPoints"));
+log4cxx::LoggerPtr KeyPointsFAST::m_logger(log4cxx::Logger::getLogger("KeyPointsFAST"));
 
-ExtractKeyPoints::ExtractKeyPoints(const ConfigReader& x_configReader) :
+KeyPointsFAST::KeyPointsFAST(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader),
 	m_input(Size(m_param.width, m_param.height), m_param.type)
@@ -58,18 +58,25 @@ ExtractKeyPoints::ExtractKeyPoints(const ConfigReader& x_configReader) :
 };
 
 
-ExtractKeyPoints::~ExtractKeyPoints()
+KeyPointsFAST::~KeyPointsFAST()
 {
 	CLEAN_DELETE(m_detector);
 }
 
-void ExtractKeyPoints::Reset()
+void KeyPointsFAST::Reset()
 {
+	// TODO remove
+	vector<string> algos;
+	Algorithm::getList(algos);
+
+	for(vector<string>::iterator it = algos.begin() ; it != algos.end() ; it++)
+		cout<<*it<<endl;
+
+
 	Module::Reset();
 	CLEAN_DELETE(m_detector);
-	cout<<"Create feature detector of type "<<m_param.keyPointType<<endl;
-	m_detector = FeatureDetector::create("FAST");
-        // m_detector = new FastFeatureDetector(10);
+        m_detector = new FastFeatureDetector(m_param.threshold);
+        // m_detector = Algorithm::create<Feature2D>("Feature2D.FAST");
 	if(m_detector == NULL && m_detector->empty())
 		throw MkException("Cannot create detector", LOC);
 
@@ -83,8 +90,11 @@ void ExtractKeyPoints::Reset()
 
 /**
  */
-void ExtractKeyPoints::ProcessFrame()
+void KeyPointsFAST::ProcessFrame()
 {
+#ifdef MARKUS_DEBUG_STREAMS
+		m_input.copyTo(m_debug);
+#endif
 	//compute each object to find point of interest
 	m_objectsOut.clear();
 	for(vector<Object>::iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; it1++)
@@ -108,8 +118,8 @@ void ExtractKeyPoints::ProcessFrame()
 			Object obj("keypoint");
 			obj.posX = it2->pt.x + it1->posX - it1->width /2 - 5;
 			obj.posY = it2->pt.y + it1->posY - it1->height/2 - 5;
-			obj.width  = 10;
-			obj.height = 10; // TODO: use the scale to set the size of the object
+			obj.width  = it2->size;
+			obj.height = it2->size; // TODO: use the scale to set the size of the object
 			obj.Intersect(m_input);
 			obj.SetId(it1->GetId()); // TODO: Keep this ?
 			obj.AddFeature("keypoint", new FeatureKeyPoint(*it2));
@@ -118,20 +128,18 @@ void ExtractKeyPoints::ProcessFrame()
 		}
 
 #ifdef MARKUS_DEBUG_STREAMS
-/*
-		// cvtColor(m_input, m_debug, CV_GRAY2RGB);
-		m_input.copyTo(m_debug); // TODO : Fix?
+		// Scalar color = Scalar(22, 88, 255);
+		// drawKeypoints(m_debug, pointsOfInterest, m_debug, color);
 
-		float x_top_left = it1->posX-it1->width/2;
-		float y_top_left = it1->posY-it1->height/2;
-		for (size_t j = 0; j < pointsOfInterest.size(); j++) {
-			KeyPoint elem = pointsOfInterest[j];
-			float x_pos = x_top_left+elem.pt.x;
-			float y_pos = y_top_left+elem.pt.y;
-			Scalar color = Scalar(m_rng.uniform(0, 255), m_rng.uniform(0,255), m_rng.uniform(0,255));
-			circle(m_debug, Point(x_pos,y_pos), 3,color);
+		for(vector<KeyPoint>::const_iterator it2 = pointsOfInterest.begin() ; it2 != pointsOfInterest.end() ; it2++)
+		{
+			Scalar color = Scalar(22, 88, 255 * it2->response);
+			circle(m_debug, it2->pt, 3, Scalar(0, 55, 0));
+			line(m_debug, it2->pt, Point(
+				it2->pt.x + it2->octave * cos(it2->angle / 360 * 2 * M_PI), 
+				it2->pt.y - it2->octave * sin(it2->angle / 360 * 2 * M_PI)
+			), color);
 		}
-		*/
 #endif        
 		//NOTE : a param could decide if we compute descriptor to avoid useless computation 
 	}
