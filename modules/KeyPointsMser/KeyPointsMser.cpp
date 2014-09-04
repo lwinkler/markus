@@ -50,7 +50,6 @@ void KeyPointsMser::Reset()
 	ModuleKeyPoints::Reset();
 	CLEAN_DELETE(mp_detector);
         mp_detector = new MserFeatureDetector(
-        /*
 		m_param.delta,
 		m_param.minArea,
 		m_param.maxArea,
@@ -60,7 +59,6 @@ void KeyPointsMser::Reset()
 		m_param.areaThreshold,
 		m_param.minMargin,
 		m_param.edgeBlurSize
-		*/
         );
 	if(mp_detector == NULL && mp_detector->empty())
 		throw MkException("Cannot create detector", LOC);
