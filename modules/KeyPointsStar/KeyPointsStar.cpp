@@ -20,7 +20,7 @@
  *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
  -------------------------------------------------------------------------------------*/
 
-#include "KeyPointsFAST.h"
+#include "KeyPointsStar.h"
 #include "StreamImage.h"
 #include "StreamDebug.h"
 #include "StreamObject.h"
@@ -32,25 +32,30 @@
 using namespace cv;
 using namespace std;
 
-log4cxx::LoggerPtr KeyPointsFAST::m_logger(log4cxx::Logger::getLogger("KeyPointsFAST"));
+log4cxx::LoggerPtr KeyPointsStar::m_logger(log4cxx::Logger::getLogger("KeyPointsStar"));
 
-KeyPointsFAST::KeyPointsFAST(const ConfigReader& x_configReader) :
+KeyPointsStar::KeyPointsStar(const ConfigReader& x_configReader) :
 	ModuleKeyPoints(x_configReader),
 	m_param(x_configReader)
 {
 };
 
 
-KeyPointsFAST::~KeyPointsFAST()
+KeyPointsStar::~KeyPointsStar()
 {
 }
 
-void KeyPointsFAST::Reset()
+void KeyPointsStar::Reset()
 {
 	ModuleKeyPoints::Reset();
 	CLEAN_DELETE(mp_detector);
-        mp_detector = new FastFeatureDetector(m_param.threshold, m_param.nonMaxSuppression);
-        // mp_detector = Algorithm::create<Feature2D>("Feature2D.FAST");
+        mp_detector = new StarFeatureDetector(
+		m_param.maxSize,
+		m_param.responseThreshold,
+		m_param.lineThresholdProjected,
+		m_param.lineThresholdBinarized,
+		m_param.suppressNonmaxSize
+        );
 	if(mp_detector == NULL && mp_detector->empty())
 		throw MkException("Cannot create detector", LOC);
 }

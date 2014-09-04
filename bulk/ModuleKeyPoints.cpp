@@ -41,8 +41,8 @@ ModuleKeyPoints::ModuleKeyPoints(const ConfigReader& x_configReader) :
 {
 	mp_detector = NULL;
 
-	AddInputStream(0, new StreamImage("input",  m_input, *this,   "Video input"));
-	AddInputStream(1, new StreamObject("input", m_objectsIn, *this,	"Incoming objects"));
+	AddInputStream(0, new StreamImage("image",  m_input, *this,   "Video input"));
+	AddInputStream(1, new StreamObject("objects", m_objectsIn, *this,	"Incoming objects"));
 
 	AddOutputStream(0, new StreamObject("output", m_objectsOut, *this,	"List of tracked object with KeyPoint and features"));
 
@@ -117,9 +117,10 @@ void ModuleKeyPoints::ProcessFrame()
 		}
 
 #ifdef MARKUS_DEBUG_STREAMS
-		// Scalar color = Scalar(22, 88, 255);
-		// drawKeypoints(m_debug, pointsOfInterest, m_debug, color);
+		Scalar color = Scalar(22, 88, 255);
+		drawKeypoints(m_debug, pointsOfInterest, m_debug, color);
 
+/*
 		for(vector<KeyPoint>::const_iterator it2 = pointsOfInterest.begin() ; it2 != pointsOfInterest.end() ; it2++)
 		{
 			Scalar color = Scalar(22, 88, 255 * it2->response);
@@ -129,6 +130,7 @@ void ModuleKeyPoints::ProcessFrame()
 				it2->pt.y - (5 + it2->octave) * sin(it2->angle / 360.0 * 2.0 * M_PI)
 			), color);
 		}
+		*/
 #endif        
 		//NOTE : a param could decide if we compute descriptor to avoid useless computation 
 	}

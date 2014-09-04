@@ -21,8 +21,8 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef KEYPOINTS_GOODFEATURESTOTRACK_H
-#define KEYPOINTS_GOODFEATURESTOTRACK_H
+#ifndef KEYPOINTS_DENSE_H
+#define KEYPOINTS_DENSE_H
 
 #include "ModuleKeyPoints.h"
 #include "StreamObject.h"
@@ -32,7 +32,7 @@
 /**
 * @brief Extract different types of keypoints
 */
-class KeyPointsGoodFeaturesToTrack : public ModuleKeyPoints
+class KeyPointsDense : public ModuleKeyPoints
 {
 public:
 	class Parameters : public ModuleKeyPoints::Parameters
@@ -40,27 +40,30 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : ModuleKeyPoints::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterInt("max_corners", 1000, 0, INT_MAX, &maxCorners, "Maximum number of corners to return. If there are more corners than are found, the strongest of them is returned."));
-			m_list.push_back(new ParameterDouble("quality_level", 0.01, 0, 1, &qualityLevel,"Parameter characterizing the minimal accepted quality of image corners."));
-			m_list.push_back(new ParameterDouble("min_dist", 1, 0, MAX_WIDTH, &minDistance,"Minimum possible Euclidean distance between the returned corners"));
-			m_list.push_back(new ParameterInt("block_size", 3, 1, MAX_WIDTH, &blockSize,"Size of an average block for computing a derivative covariation matrix over each pixel neighborhood"));
-			m_list.push_back(new ParameterBool("use_harris_detector", 0, 0, 1, &useHarrisDetector,"Parameter indicating whether to use a Harris detector"));
-			m_list.push_back(new ParameterDouble("k", 0.04, 0, 1, &k,"Free parameter of the Harris detector"));
+			m_list.push_back(new ParameterFloat("init_feature_scale", 1,   1, 255, &initFeatureScale, ""));
+			m_list.push_back(new ParameterInt("feature_scale_levels", 1,   1, 100, &featureScaleLevels, "Number of levels of scaling"));
+			m_list.push_back(new ParameterFloat("feature_scale_mul" , 0.1, 0, 1, &featureScaleMul, "Multiplication factor between each level"));
+			m_list.push_back(new ParameterInt("init_xy_step",         6  , 1, 255, &initXyStep, ""));
+			m_list.push_back(new ParameterInt("init_img_bound",       0  , 0, 255, &initImgBound, ""));
+			m_list.push_back(new ParameterBool("vary_xy_step_with_scale",   1, 0, 1, &varyXyStepWithScale, "The grid node size is multiplied if true"));
+			m_list.push_back(new ParameterBool("vary_img_bound_with_scale", 0, 0, 1, &varyImgBoundWithScale, "Size of image boundary is multiplied if true"));
+
 
 			Init();
 		};
-		int maxCorners;
-		double qualityLevel;
-		double minDistance;
-		int blockSize;
-		bool useHarrisDetector;
-		double k;
+		float initFeatureScale;
+		int featureScaleLevels;
+		float featureScaleMul;
+		int initXyStep;
+		int initImgBound;
+		bool varyXyStepWithScale;
+		bool varyImgBoundWithScale;
 	};
 
-	KeyPointsGoodFeaturesToTrack(const ConfigReader& x_configReader);
-	~KeyPointsGoodFeaturesToTrack();
-	MKCLASS("KeyPointsGoodFeaturesToTrack")
-	MKDESCR("Extract keypoints of type GoodFeaturesToTrack on image")
+	KeyPointsDense(const ConfigReader& x_configReader);
+	~KeyPointsDense();
+	MKCLASS("KeyPointsDense")
+	MKDESCR("Extract key points of type Dense")
 	
 	inline virtual const Parameters& GetParameters() const { return m_param;}
 	void Reset();

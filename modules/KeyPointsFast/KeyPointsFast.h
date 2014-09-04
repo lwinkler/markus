@@ -21,8 +21,8 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef KEYPOINTS_FAST_H
-#define KEYPOINTS_FAST_H
+#ifndef KEYPOINTS_Fast_H
+#define KEYPOINTS_Fast_H
 
 #include "ModuleKeyPoints.h"
 #include "StreamObject.h"
@@ -32,7 +32,7 @@
 /**
 * @brief Extract different types of keypoints
 */
-class KeyPointsFAST : public ModuleKeyPoints
+class KeyPointsFast : public ModuleKeyPoints
 {
 public:
 	class Parameters : public ModuleKeyPoints::Parameters
@@ -49,10 +49,10 @@ public:
 		// type – one of the three neighborhoods as defined in the paper: FastFeatureDetector::TYPE_9_16, FastFeatureDetector::TYPE_7_12, FastFeatureDetector::TYPE_5_8
 	};
 
-	KeyPointsFAST(const ConfigReader& x_configReader);
-	~KeyPointsFAST();
-	MKCLASS("KeyPointsFAST")
-	MKDESCR("Extract different types of keypoints from image")
+	KeyPointsFast(const ConfigReader& x_configReader);
+	~KeyPointsFast();
+	MKCLASS("KeyPointsFast")
+	MKDESCR("Extract keypoints of type FAST")
 	
 	inline virtual const Parameters& GetParameters() const { return m_param;}
 	void Reset();
