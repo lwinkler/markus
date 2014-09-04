@@ -2,6 +2,7 @@
 add_library(bulk
 Module.cpp
 ModuleAsync.cpp
+ModuleKeyPoints.cpp
 Manager.cpp
 Input.cpp
 Parameter.cpp

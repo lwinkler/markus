@@ -21,40 +21,37 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef KEYPOINTS_FAST_H
-#define KEYPOINTS_FAST_H
+#ifndef MODULE_KEYPOINTS_H
+#define MODULE_KEYPOINTS_H
 
-#include "ModuleKeyPoints.h"
+#include "Module.h"
 #include "StreamObject.h"
 
 
 
 /**
-* @brief Extract different types of keypoints
+* @brief This class is a parent class for all module of keypoint extraction
+* http://docs.opencv.org/modules/features2d/doc/common_interfaces_of_feature_detectors.html
 */
-class KeyPointsFAST : public ModuleKeyPoints
+class ModuleKeyPoints : public Module
 {
 public:
-	class Parameters : public ModuleKeyPoints::Parameters
+	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : ModuleKeyPoints::Parameters(x_confReader)
+		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterInt("threshold", 10, 0, 255, &threshold,"Threshold"));
-			m_list.push_back(new ParameterBool("non_max_suppression", 0, 0, 1, &nonMaxSuppression,"if true, non-maximum suppression is applied to detected corners"));
 			Init();
 		};
-		int threshold;
-		bool nonMaxSuppression;
-		// type – one of the three neighborhoods as defined in the paper: FastFeatureDetector::TYPE_9_16, FastFeatureDetector::TYPE_7_12, FastFeatureDetector::TYPE_5_8
 	};
 
-	KeyPointsFAST(const ConfigReader& x_configReader);
-	~KeyPointsFAST();
-	MKCLASS("KeyPointsFAST")
-	MKDESCR("Extract different types of keypoints from image")
+	ModuleKeyPoints(const ConfigReader& x_configReader);
+	~ModuleKeyPoints();
+	// MKCLASS("ModuleKeyPoints")
+	// MKDESCR("Extract different types of keyPoints from image")
 	
 	inline virtual const Parameters& GetParameters() const { return m_param;}
+	virtual void ProcessFrame();
 	void Reset();
 
 private:
@@ -63,6 +60,19 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	// input
+	cv::Mat m_input;
+	std::vector <Object> m_objectsIn;
+
+	// output
+	std::vector <Object> m_objectsOut;
+
+	// state variables
+	cv::FeatureDetector* mp_detector;
+
+#ifdef MARKUS_DEBUG_STREAMS
+	cv::Mat m_debug;
+#endif
 };
 
 
