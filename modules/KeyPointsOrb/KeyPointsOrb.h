@@ -21,8 +21,8 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef KEYPOINTS_BRISK_H
-#define KEYPOINTS_BRISK_H
+#ifndef KEYPOINTS_ORB_H
+#define KEYPOINTS_ORB_H
 
 #include "ModuleKeyPoints.h"
 #include "StreamObject.h"
@@ -32,7 +32,7 @@
 /**
 * @brief Extract different types of keypoints
 */
-class KeyPointsBrisk : public ModuleKeyPoints
+class KeyPointsOrb : public ModuleKeyPoints
 {
 public:
 	class Parameters : public ModuleKeyPoints::Parameters
@@ -40,21 +40,29 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : ModuleKeyPoints::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterInt("threshold"       , 30 , 1 , 255 , &threshold    , ""));
-			m_list.push_back(new ParameterInt("octaves"         , 3  , 1 , 100 , &octaves      , ""));
-			m_list.push_back(new ParameterFloat("pattern_scale" , 1  , 0 , 10  , &patternScale , ""));
+			m_list.push_back(new ParameterInt("nb_features"    , 500 , 1 , 1000 , &nbFeatures    , ""));
+			m_list.push_back(new ParameterFloat("scale_factor" , 1.2 , 1 , 2    , &scaleFactor   , ""));
+			m_list.push_back(new ParameterInt("nb_levels"      , 8   , 1 , 100  , &nbLevels      , ""));
+			m_list.push_back(new ParameterInt("edge_threshold" , 31  , 1 , 100  , &edgeThreshold , ""));
+			m_list.push_back(new ParameterInt("first_level"    , 0   , 0 , 100  , &firstLevel    , ""));
+			m_list.push_back(new ParameterInt("wta_k"          , 2   , 0 , 100  , &wta_k         , ""));
 
 			Init();
 		};
-		int threshold;
-		int octaves;
-		float patternScale;
+		int nbFeatures;
+		float scaleFactor;
+		int nbLevels;
+		int edgeThreshold;
+		int firstLevel;
+		int wta_k;
+		// int scoreType=ORB::HARRIS_SCORE;
+		// int patchSize=31 =~ edgeThreshold
 	};
 
-	KeyPointsBrisk(const ConfigReader& x_configReader);
-	~KeyPointsBrisk();
-	MKCLASS("KeyPointsBrisk")
-	MKDESCR("Extract key points of type Brisk")
+	KeyPointsOrb(const ConfigReader& x_configReader);
+	~KeyPointsOrb();
+	MKCLASS("KeyPointsOrb")
+	MKDESCR("Extract key points of type Orb")
 	
 	inline virtual const Parameters& GetParameters() const { return m_param;}
 	void Reset();

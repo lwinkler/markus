@@ -9,7 +9,8 @@
             <param name="fps">5</param>
         </parameters>
         
-    <uiobject x="500" y="300" width="0" height="0"/>
+    
+<uiobject x="500" y="300" width="0" height="0"/>
 </module>
     <module id="3" name="KeyPointsFast3">
         <inputs>
@@ -23,7 +24,8 @@
             <param name="class">KeyPointsFast</param>
         </parameters>
         
-    <uiobject x="913" y="163" width="0" height="0"/>
+    
+<uiobject x="913" y="163" width="0" height="0"/>
 </module>
     <module id="4" name="KeyPointsGoodFeaturesToTrack4">
         <inputs>
@@ -37,7 +39,8 @@
             <param name="class">KeyPointsGoodFeaturesToTrack</param>
         </parameters>
         
-    <uiobject x="917" y="267" width="0" height="0"/>
+    
+<uiobject x="917" y="267" width="0" height="0"/>
 </module>
     <module id="6" name="KeyPointsDense6">
         <inputs>
@@ -52,7 +55,8 @@
             <param name="init_xy_step">30</param>
         </parameters>
         
-    <uiobject x="916" y="373" width="0" height="0"/>
+    
+<uiobject x="916" y="373" width="0" height="0"/>
 </module>
     <module id="7" name="KeyPointsStar7">
         <inputs>
@@ -66,7 +70,8 @@
             <param name="class">KeyPointsStar</param>
         </parameters>
         
-    <uiobject x="915" y="481" width="0" height="0"/>
+    
+<uiobject x="915" y="481" width="0" height="0"/>
 </module>
     <module id="8" name="KeyPointsMser8">
         <inputs>
@@ -81,7 +86,8 @@
             <!--param name="type">CV_8UC3</param-->
         </parameters>
         
-    <uiobject x="916" y="593" width="0" height="0"/>
+    
+<uiobject x="916" y="593" width="0" height="0"/>
 </module>
 <module id="9" name="KeyPointsBrisk9">
 <inputs>
@@ -94,6 +100,20 @@
 <parameters>
 <param name="class">KeyPointsBrisk</param>
 </parameters>
-<uiobject x="916" y="705" width="0" height="0"/>
+
+<uiobject x="1123" y="162" width="0" height="0"/>
+</module>
+<module id="10" name="KeyPointsOrb10">
+<inputs>
+<input id="0" outputid="0" moduleid="0"/>
+<input id="1"/>
+</inputs>
+<outputs>
+<output id="0"/>
+</outputs>
+<parameters>
+<param name="class">KeyPointsOrb</param>
+</parameters>
+<uiobject x="1123" y="274" width="0" height="0"/>
 </module>
 </application>
