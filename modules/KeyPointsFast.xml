@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="Logger" description="This module takes a state as input and logs it to .srt file">
+<module name="KeyPointsFast" description="Extract keypoints of type FAST">
 	<parameters>
 		<param name="class">
 			<type>string</type>
-			<value default="">Logger</value>
+			<value default="">KeyPointsFast</value>
 			<description>Class of the module (define the module's function)</description>
 		</param>
 		<param name="width">
@@ -17,7 +17,7 @@
 			<description>Height of the input</description>
 		</param>
 		<param name="type">
-			<type>image type</type>
+			<type>imageType</type>
 			<value default="CV_8UC1">CV_8UC1</value>
 			<description>Format of the input image</description>
 		</param>
@@ -26,24 +26,44 @@
 			<value min="0" max="1" default="0">0</value>
 			<description>If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream</description>
 		</param>
+		<param name="allow_unsync_input">
+			<type>bool</type>
+			<value min="0" max="1" default="0">0</value>
+			<description>If yes the module accepts that its input can be on a different time stamp. Only relevant if the module has many inputs. Use at your own risks.</description>
+		</param>
 		<param name="fps">
 			<type>double</type>
 			<value min="0" max="1000" default="0">0</value>
 			<description>Frames per seconds (processing speed)</description>
 		</param>
-		<param name="file">
-			<type>string</type>
-			<value default="state">state</value>
-			<description>Name of the .srt file without extension</description>
+		<param name="threshold">
+			<type>int</type>
+			<value min="0" max="255" default="10">10</value>
+			<description>Threshold</description>
+		</param>
+		<param name="non_max_suppression">
+			<type>bool</type>
+			<value min="0" max="1" default="0">0</value>
+			<description>if true, non-maximum suppression is applied to detected corners</description>
 		</param>
 	</parameters>
 	<inputs>
 		<input id="0">
-			<type>State</type>
-			<name>input</name>
-			<description>Input state to be logged</description>
+			<type>Image</type>
+			<name>image</name>
+			<description>Video input</description>
+		</input>
+		<input id="1">
+			<type>Objects</type>
+			<name>objects</name>
+			<description>Incoming objects</description>
 		</input>
 	</inputs>
 	<outputs>
+		<output id="0">
+			<type>Objects</type>
+			<name>output</name>
+			<description>List of tracked object with KeyPoint and features</description>
+		</output>
 	</outputs>
 </module>

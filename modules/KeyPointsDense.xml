@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="SegmenterBlob" description="Segments a binary image and outputs a stream of objects (from segmented blobs) with their features (position, width and height)">
+<module name="KeyPointsDense" description="Extract key points of type Dense">
 	<parameters>
 		<param name="class">
 			<type>string</type>
-			<value default="">SegmenterBlob</value>
+			<value default="">KeyPointsDense</value>
 			<description>Class of the module (define the module's function)</description>
 		</param>
 		<param name="width">
@@ -17,7 +17,7 @@
 			<description>Height of the input</description>
 		</param>
 		<param name="type">
-			<type>image type</type>
+			<type>imageType</type>
 			<value default="CV_8UC1">CV_8UC1</value>
 			<description>Format of the input image</description>
 		</param>
@@ -36,34 +36,59 @@
 			<value min="0" max="1000" default="0">0</value>
 			<description>Frames per seconds (processing speed)</description>
 		</param>
-		<param name="object_label">
-			<type>string</type>
-			<value default="object">object</value>
-			<description>Label to be applied to the objects detected by the cascade filter (e.g. face)</description>
+		<param name="init_feature_scale">
+			<type>float</type>
+			<value min="1" max="255" default="1">1</value>
+			<description></description>
 		</param>
-		<param name="min_width">
+		<param name="feature_scale_levels">
 			<type>int</type>
-			<value min="0" max="6400" default="0">0</value>
-			<description>Minimal width of an object to segment.</description>
+			<value min="1" max="100" default="1">1</value>
+			<description>Number of levels of scaling</description>
 		</param>
-		<param name="min_height">
+		<param name="feature_scale_mul">
+			<type>float</type>
+			<value min="0" max="1" default="0.1">0.1</value>
+			<description>Multiplication factor between each level</description>
+		</param>
+		<param name="init_xy_step">
 			<type>int</type>
-			<value min="0" max="4800" default="0">0</value>
-			<description>Minimal height of an object to segment.</description>
+			<value min="1" max="255" default="6">6</value>
+			<description></description>
+		</param>
+		<param name="init_img_bound">
+			<type>int</type>
+			<value min="0" max="255" default="0">0</value>
+			<description></description>
+		</param>
+		<param name="vary_xy_step_with_scale">
+			<type>bool</type>
+			<value min="0" max="1" default="1">1</value>
+			<description>The grid node size is multiplied if true</description>
+		</param>
+		<param name="vary_img_bound_with_scale">
+			<type>bool</type>
+			<value min="0" max="1" default="0">0</value>
+			<description>Size of image boundary is multiplied if true</description>
 		</param>
 	</parameters>
 	<inputs>
 		<input id="0">
 			<type>Image</type>
-			<name>input</name>
-			<description>Input binary stream</description>
+			<name>image</name>
+			<description>Video input</description>
+		</input>
+		<input id="1">
+			<type>Objects</type>
+			<name>objects</name>
+			<description>Incoming objects</description>
 		</input>
 	</inputs>
 	<outputs>
 		<output id="0">
 			<type>Objects</type>
-			<name>segmented</name>
-			<description>Segmented objects</description>
+			<name>output</name>
+			<description>List of tracked object with KeyPoint and features</description>
 		</output>
 	</outputs>
 </module>
