@@ -24,12 +24,12 @@ public:
 	class Parameters : public Module::Parameters
 	{
 		public:
-			Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
 			m_list.push_back(new ParameterDouble("validity_thres", 0.5, 0, 1, &validityThres, "Decision threshold to consider an event as valid [0 to 1]"));
 			Init();
 		}
-			double validityThres;
+		double validityThres;
 	};
 
 	ClassifyEvents(const ConfigReader& x_configReader);
@@ -49,14 +49,17 @@ public:
 protected:
 
 	// input
-	Event m_eventIn;
+	Event   m_eventIn;
+	cv::Mat m_imageIn;
 
 	// output
-	Event m_eventOut;
-	Event m_eventToValidate;
+	Event   m_eventOut;
+	Event   m_eventToValidate;
+	cv::Mat m_imageToValidate;
 
 	// state variables
 	std::list<Event> m_events;
+	std::list<cv::Mat>   m_images;
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}

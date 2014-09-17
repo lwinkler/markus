@@ -8,6 +8,8 @@
 
 #include "ClassifyEvents.h"
 #include "StreamEvent.h"
+#include "StreamImage.h"
+#include "StreamDebug.h"
 #include "ControllerEvent.h"
 
 
@@ -20,10 +22,18 @@ ClassifyEvents::ClassifyEvents(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader)
 {
+	m_imageIn         = Mat(Size(m_param.width, m_param.height), m_param.type);
+	m_imageToValidate = Mat(Size(m_param.width, m_param.height), m_param.type);
 	AddInputStream(0, new StreamEvent( "events",   m_eventIn,  *this, "Incoming events"));
+	AddInputStream(1, new StreamImage( "image" ,   m_imageIn,  *this, "Image associated with the event (for display)"));
 
 	AddOutputStream(0, new StreamEvent("filtered", m_eventOut, *this, "Filtered events"));
 	AddOutputStream(1, new StreamEvent("last_event", m_eventToValidate, *this, "Event awaiting user feedback"));
+
+#ifdef MARKUS_DEBUG_STREAMS
+	m_imageToValidate = Mat(Size(m_param.width, m_param.height), CV_8UC3);
+	AddDebugStream(0, new StreamDebug("last_event_im", m_imageToValidate, *this, "Image corresponding to the last event"));
+#endif
 }
 
 ClassifyEvents::~ClassifyEvents(void )
@@ -56,20 +66,40 @@ void ClassifyEvents::ProcessFrame()
 
 void ClassifyEvents::PushEvent()
 {
-	if(m_eventToValidate.IsRaised())
+	if(true)// if(m_eventToValidate.IsRaised())
+	{
 		m_events.push_back(m_eventIn);	
-	else
+		m_images.push_back(m_imageIn);	
 		m_eventToValidate = m_eventIn;
+		m_imageIn.copyTo(m_imageToValidate);
+	}
+	else
+	{
+		// m_eventToValidate = m_eventIn;
+		// m_imageToValidate = m_imageIn;
+	}
 }
 
 void ClassifyEvents::PopEvent()
 {
 	if(m_events.size() != 0)
 	{
-		m_eventToValidate = m_events.front();
 		m_events.pop_front();
+		// m_images.pop_front();
+		if(m_events.size() != 0)
+		{
+			assert(m_images.size() != 0);
+			m_images.front().copyTo(m_imageToValidate);
+			m_eventToValidate = m_events.front();
+		}
+		else
+		{
+			// There is no more events in the list: empty
+			m_imageToValidate.setTo(0);
+			m_eventToValidate.Empty();
+		}
 	}
-
+	else LOG_WARN(m_logger, "Cannot call PopEvent, event list is empty");
 }
 
 // ---------------------------------------------------------------------------------
