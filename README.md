@@ -41,7 +41,8 @@ Then enable compilation with Qt5 in the menu.
 ### Other dependencies
 	- *CMake GUI* : to set the compilation flags visually (packages cmake-curses-gui or cmake-qt-gui)
 	- *Qt Creator* : a full IDE for C++ and QT (package qtcreator)
-	- *Python*: for some modules (package python-dev  python-opencv python-sklearn python-skimage)
+	- *Python*: for some modules (package python-dev  python-opencv python-sklearn python-skimage python-pip)
+		- *Python deps*: sudo pip install xmltodict
 	- *CppUnit** : To run the unit test (package libcppunit-dev)
 	- *Curl*: To use an input camera with call to a specific webservice
 	- *Avtools*: Video manipulation tools to use the benchmark of test

@@ -60,11 +60,10 @@ ModuleKeyPoints::~ModuleKeyPoints()
 
 void ModuleKeyPoints::Reset()
 {
-	// TODO remove
 	vector<string> algos;
 	Algorithm::getList(algos);
-	for(vector<string>::iterator it = algos.begin() ; it != algos.end() ; it++)
-		cout<<*it<<endl;
+	// for(vector<string>::iterator it = algos.begin() ; it != algos.end() ; it++)
+	//	cout<<*it<<endl;
 
 	Module::Reset();
 
@@ -87,6 +86,9 @@ void ModuleKeyPoints::ProcessFrame()
 	m_objectsOut.clear();
 	for(vector<Object>::iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; it1++)
 	{
+		if(it1->width <= 8 || it1->height <= 8)
+			continue;
+
 		it1->Intersect(m_input);
 
 		//compute point of interest and add it to m_objectsOut

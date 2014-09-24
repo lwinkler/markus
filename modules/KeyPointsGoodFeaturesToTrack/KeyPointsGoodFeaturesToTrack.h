@@ -40,9 +40,9 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : ModuleKeyPoints::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterInt("max_corners", 1000, 0, INT_MAX, &maxCorners, "Maximum number of corners to return. If there are more corners than are found, the strongest of them is returned."));
-			m_list.push_back(new ParameterDouble("quality_level", 0.01, 0, 1, &qualityLevel,"Parameter characterizing the minimal accepted quality of image corners."));
-			m_list.push_back(new ParameterDouble("min_dist", 1, 0, MAX_WIDTH, &minDistance,"Minimum possible Euclidean distance between the returned corners"));
+			m_list.push_back(new ParameterInt("max_corners", 1000, 1, INT_MAX, &maxCorners, "Maximum number of corners to return. If there are more corners than are found, the strongest of them is returned."));
+			m_list.push_back(new ParameterDouble("quality_level", 0.01, 0.01, 1, &qualityLevel,"Parameter characterizing the minimal accepted quality of image corners."));
+			m_list.push_back(new ParameterDouble("min_dist", 1, 1, MAX_WIDTH, &minDistance,"Minimum possible Euclidean distance between the returned corners"));
 			m_list.push_back(new ParameterInt("block_size", 3, 1, MAX_WIDTH, &blockSize,"Size of an average block for computing a derivative covariation matrix over each pixel neighborhood"));
 			m_list.push_back(new ParameterBool("use_harris_detector", 0, 0, 1, &useHarrisDetector,"Parameter indicating whether to use a Harris detector"));
 			m_list.push_back(new ParameterDouble("k", 0.04, 0, 1, &k,"Free parameter of the Harris detector"));

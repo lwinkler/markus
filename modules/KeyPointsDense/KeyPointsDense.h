@@ -41,7 +41,8 @@ public:
 		Parameters(const ConfigReader& x_confReader) : ModuleKeyPoints::Parameters(x_confReader)
 		{
 			m_list.push_back(new ParameterFloat("init_feature_scale", 1,   1, 255, &initFeatureScale, ""));
-			m_list.push_back(new ParameterInt("feature_scale_levels", 1,   1, 100, &featureScaleLevels, "Number of levels of scaling"));
+			// Note: feature_scale_levels is memory consuming. Limited to 2 for unit testing purposes
+			m_list.push_back(new ParameterInt("feature_scale_levels", 1,   1, 2, &featureScaleLevels, "Number of levels of scaling"));
 			m_list.push_back(new ParameterFloat("feature_scale_mul" , 0.1, 0, 1, &featureScaleMul, "Multiplication factor between each level"));
 			m_list.push_back(new ParameterInt("init_xy_step",         6  , 1, 255, &initXyStep, ""));
 			m_list.push_back(new ParameterInt("init_img_bound",       0  , 0, 255, &initImgBound, ""));

@@ -41,6 +41,7 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
+			RefParameterByName("type").SetRange("[CV_8UC1]");
 			Init();
 		};
 	};

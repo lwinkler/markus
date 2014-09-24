@@ -41,10 +41,10 @@ public:
 		Parameters(const ConfigReader& x_confReader) : ModuleKeyPoints::Parameters(x_confReader)
 		{
 			m_list.push_back(new ParameterInt("nb_features"    , 500 , 1 , 1000 , &nbFeatures    , ""));
-			m_list.push_back(new ParameterFloat("scale_factor" , 1.2 , 1 , 2    , &scaleFactor   , ""));
-			m_list.push_back(new ParameterInt("nb_levels"      , 8   , 1 , 100  , &nbLevels      , ""));
-			m_list.push_back(new ParameterInt("edge_threshold" , 31  , 1 , 100  , &edgeThreshold , ""));
-			m_list.push_back(new ParameterInt("first_level"    , 0   , 0 , 100  , &firstLevel    , ""));
+			m_list.push_back(new ParameterFloat("scale_factor" , 1.2 , 1 , 1.2  , &scaleFactor   , ""));
+			m_list.push_back(new ParameterInt("nb_levels"      , 8   , 1 , 10   , &nbLevels      , ""));
+			m_list.push_back(new ParameterInt("edge_threshold" , 31  , 2 , 100  , &edgeThreshold , ""));
+			m_list.push_back(new ParameterInt("first_level"    , 0   , 0 , 10   , &firstLevel    , ""));
 			m_list.push_back(new ParameterInt("wta_k"          , 2   , 0 , 100  , &wta_k         , ""));
 
 			Init();
