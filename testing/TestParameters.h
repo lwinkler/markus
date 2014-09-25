@@ -40,7 +40,6 @@ class TestParameters : public CppUnit::TestFixture
 	protected:
 		std::vector<std::string> moduleTypes;
 		FactoryModules m_factory;
-		Module* mp_fakeInput;
 		ConfigReader* mp_config;
 
 		// Objects for streams

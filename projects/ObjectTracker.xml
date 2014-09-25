@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <application name="ObjectTracker" description="">
-  <module name="UsbCam" id="0">
+  <module name="Input" id="0">
     <parameters>
       <param name="class">UsbCam</param>
       <param name="width">640</param>
@@ -42,8 +42,8 @@
   <module name="BgrSubRunAvg" id="2">
     <parameters>
       <param name="class">BgrSubRunAvg</param>
-      <param name="width">640</param>
-      <param name="height">480</param>
+      <param name="width">64</param>
+      <param name="height">48</param>
       <param name="type">CV_8UC3</param>
       <param name="fps">1</param>
       <param name="background_alpha">0.01</param>

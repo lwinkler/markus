@@ -1,6 +1,8 @@
 // Global objects
 "use strict";
 
+// TODO: The connection from input to output are not deleted if input is deleted
+
 var maxIdModules = 0;
 var xmlModuleTypes = [];
 var xmlProject = null;
