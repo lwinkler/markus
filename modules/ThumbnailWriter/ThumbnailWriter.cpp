@@ -110,7 +110,14 @@ void ThumbnailWriter::ProcessFrame()
 
 
 		// For each object save a thumbnail
-		const Rect &rect(it1->Rect());
+		it1->Intersect(m_input);
+		const Rect rect(it1->Rect());
+		/*if(rect.x < 0 || rect.y < 0 || rect.x + rect.width >= GetWidth() || rect.y + rect.height >= GetHeight())
+		{
+			LOG_WARN(m_logger, "Object is larger than the base image");
+			rect = it1->Rect();
+			continue;
+		}*/
 		std::stringstream ss1;
 		ss1 << folderName << m_currentTimeStamp << "_" << it1->GetName()<< it1->GetId() << "_" << cpt << "." << m_param.extension;
 		imwrite(ss1.str(), (m_input)(rect));

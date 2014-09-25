@@ -68,6 +68,7 @@ class TestModules : public CppUnit::TestFixture
 		// Modules to blacklist // TODO: This should of course contain any module in the long term
 		BLACKLIST("LFC_SVM");
 		BLACKLIST("ExtractHOGFeatures");
+		BLACKLIST("KeyPointsBrisk");
 
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigReader("/tmp/config_empty.xml");

@@ -221,7 +221,7 @@ void Object::Intersect(const cv::Mat& x_image)
 		br.y = MAX(0, br.y);
 		br.y = MIN(x_image.rows - 1, br.y);
 
-		// recomput object boundaries
+		// recompute object boundaries
 		width	 = br.x - tl.x;
 		height	 = br.y - tl.y;
 		posX 	 = tl.x + width / 2;
