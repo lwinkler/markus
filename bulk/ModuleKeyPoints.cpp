@@ -87,7 +87,10 @@ void ModuleKeyPoints::ProcessFrame()
 	for(vector<Object>::iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; it1++)
 	{
 		if(it1->width <= 8 || it1->height <= 8)
+		{
+			LOG_WARN(m_logger, "Object has insufficient size");
 			continue;
+		}
 
 		it1->Intersect(m_input);
 
