@@ -113,7 +113,7 @@ class TestTrackerByFeatures : public CppUnit::TestFixture
 	{
 		// Connect streams
 		int cpt = 0;
-		unsigned int seed = 324234566;
+		unsigned int seed = 324234766;
 		Stream* outputStream0 = new StreamObject("test", m_objectsIn, *mp_module, "Test input");
 		Stream* inputStream2 = new StreamObject("test", m_objectsOut, *mp_module, "Test output");
 		CPPUNIT_ASSERT(outputStream0 != NULL);
@@ -125,9 +125,9 @@ class TestTrackerByFeatures : public CppUnit::TestFixture
 
 		for(int i = 0 ; i < 100 ; i++)
 		{
-
 			if(i % 10 == 0)
 			{
+				// Add an object to track
 				m_objectsIn.push_back(Object("test"));
 				m_objectsIn.back().AddFeature("gt_id",  new FeatureFloat(cpt));
 				m_objectsIn.back().AddFeature("x",      new FeatureFloat(static_cast<float>(rand_r(&seed)) / RAND_MAX));
@@ -136,11 +136,20 @@ class TestTrackerByFeatures : public CppUnit::TestFixture
 				m_objectsIn.back().AddFeature("height", new FeatureFloat(static_cast<float>(rand_r(&seed)) / RAND_MAX));
 				cpt++;
 			}
-
-			// Add random to features
-			for(std::vector<Object>::iterator it = m_objectsOut.begin() ; it != m_objectsOut.end() ; it++)
+			if(i > 30 && i % 10 == 0)
 			{
-				it->AddFeature("x", dynamic_cast<const FeatureFloat&>(it->GetFeature("x")).value + static_cast<float>(rand_r(&seed)) / RAND_MAX - 0.5);
+				// Remove an object
+				m_objectsIn.erase (m_objectsIn.begin());
+			}
+
+			// Add random changes to features
+			for(std::vector<Object>::iterator it = m_objectsIn.begin() ; it != m_objectsIn.end() ; it++)
+			{
+				float fact = 0.05;
+				it->AddFeature("x",      dynamic_cast<const FeatureFloat&>(it->GetFeature("x")).value      + (static_cast<float>(rand_r(&seed)) / RAND_MAX - 0.5) * fact);
+				it->AddFeature("y",      dynamic_cast<const FeatureFloat&>(it->GetFeature("y")).value      + (static_cast<float>(rand_r(&seed)) / RAND_MAX - 0.5) * fact);
+				it->AddFeature("width",  dynamic_cast<const FeatureFloat&>(it->GetFeature("width")).value  + (static_cast<float>(rand_r(&seed)) / RAND_MAX - 0.5) * fact);
+				it->AddFeature("height", dynamic_cast<const FeatureFloat&>(it->GetFeature("height")).value + (static_cast<float>(rand_r(&seed)) / RAND_MAX - 0.5) * fact);
 			}
 
 			// Call Process
@@ -152,7 +161,7 @@ class TestTrackerByFeatures : public CppUnit::TestFixture
 			// Verify that the ids are as expected
 			for(std::vector<Object>::const_iterator it = m_objectsOut.begin() ; it != m_objectsOut.end() ; it++)
 			{
-				std::cout<<it->GetId()<<" == "<<dynamic_cast<const FeatureFloat&>(it->GetFeature("gt_id")).value<<std::endl;
+				// std::cout<<it->GetId()<<" == "<<dynamic_cast<const FeatureFloat&>(it->GetFeature("gt_id")).value<<std::endl;
 				CPPUNIT_ASSERT(it->GetId() == dynamic_cast<const FeatureFloat&>(it->GetFeature("gt_id")).value);
 			}
 		}

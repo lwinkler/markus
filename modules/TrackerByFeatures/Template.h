@@ -37,7 +37,7 @@ class Template
 {
 	public:
 		Template();
-		Template(const Object&);
+		Template(const Object& x_obj, TIME_STAMP x_currentTimeStamp);
 		Template(const Template&);
 		Template& operator = (const Template&);
 		~Template();
@@ -60,11 +60,11 @@ class Template
 		inline int GetNum() const {return m_num;}
 		
 		Object * m_lastMatchingObject;
+		TIME_STAMP m_lastSeen;
 
 	private:
 		static log4cxx::LoggerPtr m_logger;
 		int m_num;
 		static int m_counter; // Counter to attribute ids
 		std::map <std::string, FeatureFloatInTime> m_feats;
-		TIME_STAMP m_lastSeen;
 };

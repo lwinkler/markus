@@ -43,7 +43,7 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterDouble("max_matching_distance"   , 0.4 , 0    , 100    , &maxMatchingDistance     , "Tolerance of the tracker."));
+			m_list.push_back(new ParameterDouble("max_matching_distance"   , 0.1 , 0    , 100    , &maxMatchingDistance     , "Tolerance of the tracker."));
 			m_list.push_back(new ParameterDouble("time_disappear"          , 1.0 , 0    , 300    , &timeDisappear           , "Time before disappearence of an object [s]"));
 			m_list.push_back(new ParameterBool  ("symetric_match"          , true, 0    , 1      , &symetricMatch           , "Each match between objects and templates must be symetrical"));
 			m_list.push_back(new ParameterString("features"                , "x,y,width,height"  , &features                , "List of features to use for tracking (only scalar values, must be present in objects to track)"));

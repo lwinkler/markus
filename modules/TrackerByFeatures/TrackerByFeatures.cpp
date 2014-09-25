@@ -48,8 +48,8 @@ void updateObjectFromTemplate(const Template& x_temp, Object& x_obj)
 	// Copy features
 	for(map<string,FeatureFloatInTime>::const_iterator it3 = x_temp.GetFeatures().begin() ; it3 != x_temp.GetFeatures().end() ; it3++)
 	{
-		cout<<"name "<<it3->first<<endl;
-		cout<<"name "<<it3->second.SerializeToString()<<endl;
+		// cout<<"name "<<it3->first<<endl;
+		// cout<<"name "<<it3->second.SerializeToString()<<endl;
 		x_obj.AddFeature(it3->first, it3->second.CreateCopy());
 	}
 }
@@ -82,15 +82,14 @@ void TrackerByFeatures::Reset()
 
 void TrackerByFeatures::ProcessFrame()
 {
-	cout<<"Process\n";
 #ifdef MARKUS_DEBUG_STREAMS
 	m_debug.setTo(0);
 #endif
 	MatchTemplates();
-	CleanTemplates();
-	DetectNewTemplates();
 	UpdateTemplates();
+	DetectNewTemplates();
 	UpdateObjects();
+	CleanTemplates();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -136,12 +135,15 @@ void TrackerByFeatures::MatchTemplates()
 
 void TrackerByFeatures::UpdateObjects()
 {
-	cout<<"Objects"<<m_objects.size()<<endl;
 	for(vector<Object>::iterator it1 = m_objects.begin() ; it1 != m_objects.end(); it1++)
 	{
 		std::map<Object*, Template*>::iterator it = m_matched.find(&*it1);
 		assert(it != m_matched.end());
 		updateObjectFromTemplate(*it->second, *it1);
+#ifdef MARKUS_DEBUG_STREAMS
+		// Draw matching object
+		rectangle(m_debug, it1->Rect(), colorFromId(it1->GetId()));
+#endif
 	}
 }
 
@@ -228,17 +230,11 @@ const Template * TrackerByFeatures::MatchObject(const Object& x_obj)const
 void TrackerByFeatures::UpdateTemplates()
 {
 #ifdef MARKUS_DEBUG_STREAMS
-	const double diagonal = sqrt(m_param.width * m_param.width + m_param.height * m_param.height);
 #endif
 
 	for(list<Template>::iterator it1= m_templates.begin() ; it1 != m_templates.end(); it1++ )
 	{
 		// cout<<"Update template "<<it1->GetNum()<<endl;
-#ifdef MARKUS_DEBUG_STREAMS
-		// Draw matching object
-		if(it1->m_lastMatchingObject != NULL)
-			rectangle(m_debug, it1->m_lastMatchingObject->Rect(), colorFromId(it1->GetNum()));
-#endif
 		if(it1->m_lastMatchingObject != NULL)
 		{
 			// Add two extra features: distance and speed /// TODO
@@ -257,7 +253,21 @@ void TrackerByFeatures::UpdateTemplates()
 			// it1->m_lastMatchingObject->SetFeatures(it1->GetFeatures());
 			it1->m_lastMatchingObject = NULL;
 		}
+	}
+}
 
+/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
+/* CleanTemplates */
+/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
+void TrackerByFeatures::CleanTemplates()
+{
+	int cptCleaned = 0;
+	int cptTotal = 0;
+	const double diagonal = sqrt(m_param.width * m_param.width + m_param.height * m_param.height);
+	TIME_STAMP timeStampClean = m_currentTimeStamp - m_param.timeDisappear * 1000;
+
+	for(list<Template>::iterator it1 = m_templates.begin() ; it1 != m_templates.end(); it1++ )
+	{
 #ifdef MARKUS_DEBUG_STREAMS
 		// draw template (if position is available)
 		try{
@@ -272,19 +282,6 @@ void TrackerByFeatures::UpdateTemplates()
 		}
 		catch(...){}
 #endif
-	}
-}
-
-/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-/* CleanTemplates */
-/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-void TrackerByFeatures::CleanTemplates()
-{
-	int cptCleaned = 0;
-	int cptTotal = 0;
-	TIME_STAMP timeStampClean = m_currentTimeStamp - m_param.timeDisappear * 1000;
-	for(list<Template>::iterator it1 = m_templates.begin() ; it1 != m_templates.end(); it1++ )
-	{
 		if(it1->NeedCleaning(timeStampClean))
 		{
 			it1 = m_templates.erase(it1);
@@ -313,7 +310,7 @@ void TrackerByFeatures::DetectNewTemplates()
 				// return; // Note: not a fatal error
 			}
 
-			Template template1(*it2);
+			Template template1(*it2, m_currentTimeStamp);
 			// if(bestDist <= m_param.maxMatchingDistance && bestTemplate != NULL)
 
 			// note: We may want to inherit this class and create an AdvancedTracker !

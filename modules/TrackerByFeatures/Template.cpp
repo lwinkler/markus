@@ -56,16 +56,16 @@ Template::Template(const Template& t)
 	m_num = t.GetNum();
 	m_lastMatchingObject = t.m_lastMatchingObject;
 	m_feats = t.GetFeatures();
-	m_lastSeen = TIME_STAMP_MIN;
+	m_lastSeen = t.m_lastSeen;
 }
 
-Template::Template(const Object& x_obj)
+Template::Template(const Object& x_obj, TIME_STAMP x_currentTimeStamp)
 {
 	m_num = m_counter;
 	m_counter++;
 	copyFeaturesToTemplate(x_obj.GetFeatures(), m_feats);
 	m_lastMatchingObject = NULL; // &x_obj;
-	m_lastSeen = TIME_STAMP_MIN;
+	m_lastSeen = x_currentTimeStamp;
 
 	//cout<<"Object "<<x_obj.GetNum()<<" is used to create template "<<m_num<<" with "<<x_obj.GetFeatures().size()<<" features"<<endl;
 }
