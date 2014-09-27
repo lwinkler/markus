@@ -22,7 +22,6 @@ StreamObject.cpp
 StreamState.cpp
 Object.cpp
 Event.cpp
-FeatureFloat.cpp
 FeatureString.cpp
 FeatureFloatInTime.cpp
 FeatureKeyPoint.cpp

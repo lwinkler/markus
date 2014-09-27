@@ -20,23 +20,28 @@
 *    You should have received a copy of the GNU Lesser General Public License
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
-#ifndef MK_FEATURE_FLOAT_H
-#define MK_FEATURE_FLOAT_H
+#ifndef MK_FEATURE_NUM_H
+#define MK_FEATURE_NUM_H
 
 #include "Feature.h"
 
 /**
-* @brief Class representing a feature in the form of a float value
+* @brief Class representing a feature template 
 */
-class FeatureFloat : public Feature
+template<class T> class FeatureNum : public Feature
 {
 	public:
-		FeatureFloat(float x_value = 0.0);
-		Feature* CreateCopy() const{return new FeatureFloat(*this);}
-		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
-		virtual void Deserialize(std::istream& stream, const std::string& x_dir);
+		FeatureNum(T x_value = 0.0){ value = x_value;}
+		Feature* CreateCopy() const{return new FeatureNum(*this);}
+		virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const{ x_out << value; }
+		virtual void Deserialize(std::istream& x_in, const std::string& x_dir){ x_in >> value;}
 		
 		// The value of the feature
-		float value;
+		T value;
 };
+
+
+typedef FeatureNum<float> FeatureFloat;
+typedef FeatureNum<int>	  FeatureInt;
+
 #endif

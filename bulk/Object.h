@@ -26,7 +26,7 @@
 
 #include <opencv2/opencv.hpp>
 #include "define.h"
-#include "FeatureFloat.h"
+#include "FeatureNum.h"
 #include "FeatureString.h"
 #include "FactoryFeatures.h"
 #include "MkException.h"
