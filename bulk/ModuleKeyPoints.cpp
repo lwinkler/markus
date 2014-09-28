@@ -117,7 +117,7 @@ void ModuleKeyPoints::ProcessFrame()
 			obj.Intersect(m_input);
 			// obj.SetId(it1->GetId()); // TODO: Keep this ?
 			obj.AddFeature("keypoint", new FeatureKeyPoint(*it2));
-			obj.AddFeature("parent", new FeatureFloat(it1->GetId())); // TODO: Feature int
+			obj.AddFeature("parent", new FeatureInt(it1->GetId()));
 			m_objectsOut.push_back(obj);
 		}
 

@@ -37,7 +37,7 @@ class TestTrackerByFeatures : public CppUnit::TestFixture
 	private:
 		static log4cxx::LoggerPtr m_logger;
 	protected:
-		Module* mp_module;
+		TrackerByFeatures* mp_module;
 		Module* mp_fakeInput;
 		Module* mp_fakeOutput;
 		ConfigReader* mp_config;
@@ -55,9 +55,10 @@ class TestTrackerByFeatures : public CppUnit::TestFixture
 		m_cpt = 0;
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigReader("/tmp/config_empty.xml");
-		addModuleToConfig("TrackerByFeatures", *mp_config)
-			.RefSubConfig("parameters", "", true)
-			.RefSubConfig("param", "fps", true).SetValue("22");
+		ConfigReader params = addModuleToConfig("TrackerByFeatures", *mp_config)
+			.RefSubConfig("parameters", "", true);
+		params.RefSubConfig("param", "fps", true).SetValue("22");
+		params.RefSubConfig("param", "max_matching_distance", true).SetValue("0.05");
 		// mp_config->RefSubConfig("application", "", true).SetAttribute("name", "unitTest");
 
 		mp_module = new TrackerByFeatures(mp_config->GetSubConfig("application").GetSubConfig("module", "TrackerByFeatures0"));
@@ -113,7 +114,7 @@ class TestTrackerByFeatures : public CppUnit::TestFixture
 	{
 		// Connect streams
 		int cpt = 0;
-		unsigned int seed = 324234766;
+		unsigned int seed = 3452352345;
 		Stream* outputStream0 = new StreamObject("test", m_objectsIn, *mp_module, "Test input");
 		Stream* inputStream2 = new StreamObject("test", m_objectsOut, *mp_module, "Test output");
 		CPPUNIT_ASSERT(outputStream0 != NULL);
@@ -129,7 +130,7 @@ class TestTrackerByFeatures : public CppUnit::TestFixture
 			{
 				// Add an object to track
 				m_objectsIn.push_back(Object("test"));
-				m_objectsIn.back().AddFeature("gt_id",  new FeatureFloat(cpt));
+				m_objectsIn.back().AddFeature("gt_id",  new FeatureInt(cpt));
 				m_objectsIn.back().AddFeature("x",      new FeatureFloat(static_cast<float>(rand_r(&seed)) / RAND_MAX));
 				m_objectsIn.back().AddFeature("y",      new FeatureFloat(static_cast<float>(rand_r(&seed)) / RAND_MAX));
 				m_objectsIn.back().AddFeature("width",  new FeatureFloat(static_cast<float>(rand_r(&seed)) / RAND_MAX));
@@ -145,7 +146,7 @@ class TestTrackerByFeatures : public CppUnit::TestFixture
 			// Add random changes to features
 			for(std::vector<Object>::iterator it = m_objectsIn.begin() ; it != m_objectsIn.end() ; it++)
 			{
-				float fact = 0.05;
+				float fact = 0.05 * mp_module->GetParameters().maxMatchingDistance;
 				it->AddFeature("x",      dynamic_cast<const FeatureFloat&>(it->GetFeature("x")).value      + (static_cast<float>(rand_r(&seed)) / RAND_MAX - 0.5) * fact);
 				it->AddFeature("y",      dynamic_cast<const FeatureFloat&>(it->GetFeature("y")).value      + (static_cast<float>(rand_r(&seed)) / RAND_MAX - 0.5) * fact);
 				it->AddFeature("width",  dynamic_cast<const FeatureFloat&>(it->GetFeature("width")).value  + (static_cast<float>(rand_r(&seed)) / RAND_MAX - 0.5) * fact);
@@ -161,8 +162,8 @@ class TestTrackerByFeatures : public CppUnit::TestFixture
 			// Verify that the ids are as expected
 			for(std::vector<Object>::const_iterator it = m_objectsOut.begin() ; it != m_objectsOut.end() ; it++)
 			{
-				// std::cout<<it->GetId()<<" == "<<dynamic_cast<const FeatureFloat&>(it->GetFeature("gt_id")).value<<std::endl;
-				CPPUNIT_ASSERT(it->GetId() == dynamic_cast<const FeatureFloat&>(it->GetFeature("gt_id")).value);
+				// std::cout<<it->GetId()<<" == "<<dynamic_cast<const FeatureInt&>(it->GetFeature("gt_id")).value<<std::endl;
+				CPPUNIT_ASSERT(it->GetId() == dynamic_cast<const FeatureInt&>(it->GetFeature("gt_id")).value);
 			}
 		}
 
