@@ -36,6 +36,11 @@
 			<value min="0" max="1000" default="0">0</value>
 			<description>Frames per seconds (processing speed)</description>
 		</param>
+		<param name="descriptor">
+			<type>string</type>
+			<value default=""></value>
+			<description>The keypoint descriptor: SIFT, SURF, ORB, BRIEF or Opponent. Leave empty for none.</description>
+		</param>
 		<param name="threshold">
 			<type>int</type>
 			<value min="0" max="255" default="10">10</value>

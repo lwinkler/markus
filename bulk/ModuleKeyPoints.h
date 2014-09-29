@@ -41,9 +41,12 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
+			m_list.push_back(new ParameterString("descriptor", "", &descriptor, "The keypoint descriptor: ORB, BRIEF or Opponent. Leave empty for none.")); // TODO: It seems that only the original descriptor works
+
 			RefParameterByName("type").SetRange("[CV_8UC1]");
 			Init();
 		};
+		std::string descriptor;
 	};
 
 	ModuleKeyPoints(const ConfigReader& x_configReader);
@@ -69,7 +72,8 @@ protected:
 	std::vector <Object> m_objectsOut;
 
 	// state variables
-	cv::FeatureDetector* mp_detector;
+	cv::FeatureDetector     * mp_detector;
+	cv::DescriptorExtractor * mp_extractor;
 
 #ifdef MARKUS_DEBUG_STREAMS
 	cv::Mat m_debug;

@@ -25,6 +25,7 @@
 #include "StreamDebug.h"
 #include "StreamObject.h"
 #include "FeatureKeyPoint.h"
+#include "FeatureVectorFloat.h"
 
 //for debug
 #include "util.h"
@@ -39,7 +40,8 @@ ModuleKeyPoints::ModuleKeyPoints(const ConfigReader& x_configReader) :
 	m_param(x_configReader),
 	m_input(Size(m_param.width, m_param.height), m_param.type)
 {
-	mp_detector = NULL;
+	mp_detector  = NULL;
+	mp_extractor = NULL;
 
 	AddInputStream(0, new StreamImage("image",  m_input, *this,   "Video input"));
 	AddInputStream(1, new StreamObject("objects", m_objectsIn, *this,	"Incoming objects"));
@@ -56,6 +58,7 @@ ModuleKeyPoints::ModuleKeyPoints(const ConfigReader& x_configReader) :
 ModuleKeyPoints::~ModuleKeyPoints()
 {
 	CLEAN_DELETE(mp_detector);
+	CLEAN_DELETE(mp_extractor);
 }
 
 void ModuleKeyPoints::Reset()
@@ -72,6 +75,14 @@ void ModuleKeyPoints::Reset()
 	{
 		LOG_INFO(m_logger, "Object input not connected, use the whole image");
         	m_objectsIn.push_back(Object("screen", Rect(0, 0, m_input.cols, m_input.rows)));
+	}
+
+	CLEAN_DELETE(mp_extractor);
+	if(m_param.descriptor != "")
+	{
+		mp_extractor = DescriptorExtractor::create(m_param.descriptor); // new OrbDescriptorExtractor();
+		if(mp_extractor == NULL || mp_extractor->empty())
+			throw(MkException("Cannot create key points descriptor extractor", LOC));
 	}
 }
 
@@ -101,9 +112,17 @@ void ModuleKeyPoints::ProcessFrame()
 		vector<KeyPoint> pointsOfInterest;
 
 		mp_detector->detect(subImage, pointsOfInterest);
+		Mat descriptors;
+		if(mp_extractor != NULL)
+		{
+			mp_extractor->compute(m_input, pointsOfInterest, descriptors);
+			assert(descriptors.rows == (int)pointsOfInterest.size());
+		}
 
 		//Mat subImage(m_input,it1->Rect());    
 		//mp_detector->detect(subImage, pointsOfInterest);
+
+		int i = 0;
 
 		// For each keypoint create an output object
 		for(vector<KeyPoint>::const_iterator it2 = pointsOfInterest.begin() ; it2 != pointsOfInterest.end() ; it2++)
@@ -118,6 +137,17 @@ void ModuleKeyPoints::ProcessFrame()
 			// obj.SetId(it1->GetId()); // TODO: Keep this ?
 			obj.AddFeature("keypoint", new FeatureKeyPoint(*it2));
 			obj.AddFeature("parent", new FeatureInt(it1->GetId()));
+
+			// Add descriptor
+			if(mp_extractor != NULL)
+			{
+				vector<float> descr;
+				for(int j = 0 ; j < descriptors.cols ; j++)
+					descr.push_back(descriptors.at<float>(i, j));
+				obj.AddFeature("descriptor", new FeatureVectorFloat(descr));
+				// TODO: There is a bug in JSON when logging these features
+			}
+
 			m_objectsOut.push_back(obj);
 		}
 
