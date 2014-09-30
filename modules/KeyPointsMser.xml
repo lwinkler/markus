@@ -39,7 +39,7 @@
 		<param name="descriptor">
 			<type>string</type>
 			<value default=""></value>
-			<description>The keypoint descriptor: SIFT, SURF, ORB, BRIEF or Opponent. Leave empty for none.</description>
+			<description>The keypoint descriptor: ORB, BRIEF or Opponent. Leave empty for none.</description>
 		</param>
 		<param name="delta">
 			<type>int</type>
