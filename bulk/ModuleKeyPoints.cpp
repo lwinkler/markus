@@ -41,7 +41,7 @@ ModuleKeyPoints::ModuleKeyPoints(const ConfigReader& x_configReader) :
 	m_input(Size(m_param.width, m_param.height), m_param.type)
 {
 	mp_detector  = NULL;
-	mp_extractor = NULL;
+	mp_descriptor = NULL;
 
 	AddInputStream(0, new StreamImage("image",  m_input, *this,   "Video input"));
 	AddInputStream(1, new StreamObject("objects", m_objectsIn, *this,	"Incoming objects"));
@@ -58,7 +58,7 @@ ModuleKeyPoints::ModuleKeyPoints(const ConfigReader& x_configReader) :
 ModuleKeyPoints::~ModuleKeyPoints()
 {
 	CLEAN_DELETE(mp_detector);
-	CLEAN_DELETE(mp_extractor);
+	CLEAN_DELETE(mp_descriptor);
 }
 
 void ModuleKeyPoints::Reset()
@@ -77,11 +77,11 @@ void ModuleKeyPoints::Reset()
         	m_objectsIn.push_back(Object("screen", Rect(0, 0, m_input.cols, m_input.rows)));
 	}
 
-	CLEAN_DELETE(mp_extractor);
+	CLEAN_DELETE(mp_descriptor);
 	if(m_param.descriptor != "")
 	{
-		mp_extractor = DescriptorExtractor::create(m_param.descriptor); // new OrbDescriptorExtractor();
-		if(mp_extractor == NULL || mp_extractor->empty())
+		mp_descriptor = /*DescriptorExtractor::create(m_param.descriptor); */ new OrbDescriptorExtractor(); // TODO: Should probably be in the child module
+		if(mp_descriptor == NULL || mp_descriptor->empty())
 			throw(MkException("Cannot create key points descriptor extractor", LOC));
 	}
 }
@@ -113,9 +113,9 @@ void ModuleKeyPoints::ProcessFrame()
 
 		mp_detector->detect(subImage, pointsOfInterest);
 		Mat descriptors;
-		if(mp_extractor != NULL)
+		if(mp_descriptor != NULL)
 		{
-			mp_extractor->compute(m_input, pointsOfInterest, descriptors);
+			mp_descriptor->compute(m_input, pointsOfInterest, descriptors);
 			assert(descriptors.rows == (int)pointsOfInterest.size());
 		}
 
@@ -138,17 +138,21 @@ void ModuleKeyPoints::ProcessFrame()
 			obj.AddFeature("keypoint", new FeatureKeyPoint(*it2));
 			obj.AddFeature("parent", new FeatureInt(it1->GetId()));
 
-			// Add descriptor
-			if(mp_extractor != NULL)
+			if(mp_descriptor != NULL)
 			{
-				vector<float> descr;
-				for(int j = 0 ; j < descriptors.cols ; j++)
-					descr.push_back(descriptors.at<float>(i, j));
-				obj.AddFeature("descriptor", new FeatureVectorFloat(descr));
+				// Add descriptor
+				if(descriptors.type() != CV_32FC1)
+				{
+					descriptors.convertTo(descriptors, CV_32FC1);
+				}
+				vector<float> vect(descriptors.cols, 0);
+				descriptors.row(i).copyTo(vect);
+				obj.AddFeature("descriptor", new FeatureVectorFloat(vect));
 				// TODO: There is a bug in JSON when logging these features
 			}
 
 			m_objectsOut.push_back(obj);
+			i++;
 		}
 
 #ifdef MARKUS_DEBUG_STREAMS

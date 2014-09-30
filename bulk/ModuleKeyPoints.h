@@ -73,7 +73,7 @@ protected:
 
 	// state variables
 	cv::FeatureDetector     * mp_detector;
-	cv::DescriptorExtractor * mp_extractor;
+	cv::DescriptorExtractor * mp_descriptor;
 
 #ifdef MARKUS_DEBUG_STREAMS
 	cv::Mat m_debug;

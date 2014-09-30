@@ -25,6 +25,7 @@
 #define MKOBJECT_H
 
 #include <opencv2/opencv.hpp>
+#include <log4cxx/logger.h>
 #include "define.h"
 #include "FeatureNum.h"
 #include "FeatureString.h"
@@ -96,6 +97,8 @@ class Object : public Serializable
 		int m_id;
 		std::map <std::string, FeaturePtr> m_feats;
 		static FactoryFeatures m_factoryFeatures;
+	private:
+		static log4cxx::LoggerPtr m_logger;
 
 	public:
 		double posX;

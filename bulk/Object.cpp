@@ -30,6 +30,8 @@
 using namespace cv;
 using namespace std;
 
+log4cxx::LoggerPtr Object::m_logger(log4cxx::Logger::getLogger("Object"));
+
 FactoryFeatures Object::m_factoryFeatures;
 
 Object::Object(const string& x_name) :
@@ -174,23 +176,24 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 	}
 	rectangle(x_output, p1, p2, color, 1, 8, 0 );
 
-	// Print features and values
-	/* Print features is deactivated for speed purposes
-	pText.x += 2;
-	int i = 0;
-	for(map<string, FeaturePtr>::const_iterator it2 = GetFeatures().begin() ; it2 != GetFeatures().end() ; it2++)
+	// Print features and values: Only if debug enabled in log
+	if(m_logger->isDebugEnabled())
 	{
-		//try
+		pText.x += 2;
+		int i = 0;
+		for(map<string, FeaturePtr>::const_iterator it2 = GetFeatures().begin() ; it2 != GetFeatures().end() ; it2++)
 		{
-			ostringstream text;
-			text << it2->first << "=" << *it2->second;
-			pText.y += 7;
-			putText(x_output, text.str(), pText,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
-			i++;
+			//try
+			{
+				ostringstream text;
+				text << it2->first << "=" << *it2->second;
+				pText.y += 7;
+				putText(x_output, text.str(), pText,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
+				i++;
+			}
+			//catch(...){}
 		}
-		//catch(...){}
 	}
-	*/
 #endif
 }
 
