@@ -152,7 +152,7 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 
 	// Draw the rectangle in the input image
 	// if id is present, draw to the equivalent color
-#ifndef MARKUS_DEBUG_STREAMS// _AAAA // TODO: We should find another way to display features
+#ifndef MARKUS_DEBUG_STREAMS
 	rectangle(x_output, p1, p2, Scalar(20,0,230), 3, 8, 0 );
 #else
 	Scalar color = x_color;
@@ -175,6 +175,7 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 	rectangle(x_output, p1, p2, color, 1, 8, 0 );
 
 	// Print features and values
+	/* Print features is deactivated for speed purposes
 	pText.x += 2;
 	int i = 0;
 	for(map<string, FeaturePtr>::const_iterator it2 = GetFeatures().begin() ; it2 != GetFeatures().end() ; it2++)
@@ -189,6 +190,7 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 		}
 		//catch(...){}
 	}
+	*/
 #endif
 }
 
