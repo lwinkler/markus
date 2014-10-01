@@ -165,6 +165,11 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 		color = colorFromId(GetId());
 		ostringstream text;
 		text<<GetName()<<" "<<GetId();
+		try
+		{
+			text<<" "<<dynamic_cast<const FeatureString&>(GetFeature("class")).value;
+		}
+		catch(FeatureNotFoundException &e){}
 		pText.y -= 3;
 		putText(x_output, text.str(), pText,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
 	}

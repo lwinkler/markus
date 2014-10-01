@@ -2,6 +2,7 @@
 "use strict";
 
 // TODO: The connection from input to output are not deleted if input is deleted
+// TODO: Remove parameters if the field is empty in gui
 
 var maxIdModules = 0;
 var xmlModuleTypes = [];
