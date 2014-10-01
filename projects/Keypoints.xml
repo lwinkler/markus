@@ -10,6 +10,13 @@
         </parameters>
         
     
+
+
+
+
+
+
+
 <uiobject x="500" y="300" width="0" height="0"/>
 </module>
     <module id="3" name="KeyPointsFast3">
@@ -25,6 +32,13 @@
         </parameters>
         
     
+
+
+
+
+
+
+
 <uiobject x="913" y="163" width="0" height="0"/>
 </module>
     <module id="4" name="KeyPointsGoodFeaturesToTrack4">
@@ -40,6 +54,13 @@
         </parameters>
         
     
+
+
+
+
+
+
+
 <uiobject x="917" y="267" width="0" height="0"/>
 </module>
     <module id="6" name="KeyPointsDense6">
@@ -56,6 +77,13 @@
         </parameters>
         
     
+
+
+
+
+
+
+
 <uiobject x="916" y="373" width="0" height="0"/>
 </module>
     <module id="7" name="KeyPointsStar7">
@@ -71,6 +99,13 @@
         </parameters>
         
     
+
+
+
+
+
+
+
 <uiobject x="915" y="481" width="0" height="0"/>
 </module>
     <module id="8" name="KeyPointsMser8">
@@ -87,6 +122,13 @@
         </parameters>
         
     
+
+
+
+
+
+
+
 <uiobject x="916" y="593" width="0" height="0"/>
 </module>
 <module id="9" name="KeyPointsBrisk9">
@@ -101,7 +143,14 @@
 <param name="class">KeyPointsBrisk</param>
 </parameters>
 
-<uiobject x="1123" y="162" width="0" height="0"/>
+
+
+
+
+
+
+
+<uiobject x="1118" y="275" width="0" height="0"/>
 </module>
 <module id="10" name="KeyPointsOrb10">
 <inputs>
@@ -113,7 +162,37 @@
 </outputs>
 <parameters>
 <param name="class">KeyPointsOrb</param>
+
+<param name="nb_features">100</param>
 </parameters>
-<uiobject x="1123" y="274" width="0" height="0"/>
+
+
+
+
+
+
+
+<uiobject x="1116" y="377" width="0" height="0"/>
+</module>
+
+<module id="11" name="OpticalFlowKeyPoints11">
+<inputs>
+<input id="0" outputid="0" moduleid="0"/>
+<input id="1" outputid="0" moduleid="10"/>
+</inputs>
+<outputs>
+<output id="0"/>
+</outputs>
+<parameters>
+<param name="class">OpticalFlowKeyPoints</param>
+
+
+<param name="max_level">7</param>
+<param name="win_side">40</param>
+</parameters>
+
+
+
+<uiobject x="1312" y="368" width="0" height="0"/>
 </module>
 </application>
