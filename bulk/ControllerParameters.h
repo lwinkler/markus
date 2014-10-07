@@ -140,6 +140,20 @@ protected:
 };
 
 /// Control class for a object height parameter
+class ControllerSerializable : public ControllerParameter
+{
+public:
+	ControllerSerializable(ParameterSerializable & x_param);
+	virtual QWidget* CreateWidget();
+	virtual void SetWidgetValue(const std::string& x_value);
+	virtual std::string GetValueFromWidget();
+
+protected:
+	QLineEdit             * m_lineEdit;
+	ParameterSerializable & m_param2;
+};
+
+/// Control class for a object height parameter
 class ControllerCalibrationByHeight : public ControllerParameter
 {
 public:

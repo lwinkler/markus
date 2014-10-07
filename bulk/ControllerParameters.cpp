@@ -99,7 +99,14 @@ void ControllerParameter::SetControlledValue(string* xp_value)
 #ifdef MARKUS_NO_GUI
 		assert(false);
 #else
-		m_param.SetValue(GetValueFromWidget(), PARAMCONF_GUI);
+		try
+		{
+			m_param.SetValue(GetValueFromWidget(), PARAMCONF_GUI);
+		}
+		catch(...)
+		{
+			LOG_ERROR(m_logger, "Error setting value of parameter from widget");
+		}
 #endif
 	}
 	if(!m_param.CheckRange())
@@ -334,6 +341,46 @@ std::string ControllerString::GetValueFromWidget()
 	return "";
 #endif
 }
+
+/*------------------------------------------------------------------------------------------------*/
+ControllerSerializable::ControllerSerializable(ParameterSerializable& x_param):
+	ControllerParameter(x_param),
+	m_param2(x_param)
+{
+}
+
+QWidget* ControllerSerializable::CreateWidget() // TODO: Keep this ?
+{
+#ifndef MARKUS_NO_GUI
+	m_lineEdit = new QLineEdit();
+	m_lineEdit->setStyleSheet("color: black; background-color: white");
+	m_lineEdit->setText(m_param2.GetValueString().c_str());
+	return m_lineEdit;
+#else
+	return NULL;
+#endif
+}
+
+
+void ControllerSerializable::SetWidgetValue(const std::string& x_value)
+{
+#ifndef MARKUS_NO_GUI
+	m_lineEdit->setText(x_value.c_str());
+#else
+	assert(false);
+	return "";
+#endif
+}
+
+std::string ControllerSerializable::GetValueFromWidget()
+{
+#ifndef MARKUS_NO_GUI
+	return m_lineEdit->text().toStdString();
+#else
+	assert(false);
+	return "";
+#endif
+}
 /*------------------------------------------------------------------------------------------------*/
 ControllerCalibrationByHeight::ControllerCalibrationByHeight(ParameterSerializable& x_param):
 	ControllerParameter(x_param),
@@ -341,7 +388,7 @@ ControllerCalibrationByHeight::ControllerCalibrationByHeight(ParameterSerializab
 {
 }
 
-QWidget* ControllerCalibrationByHeight::CreateWidget()
+QWidget* ControllerCalibrationByHeight::CreateWidget() // TODO: Keep this class ?
 {
 #ifndef MARKUS_NO_GUI
 

@@ -83,6 +83,7 @@ public:
 	}
 	virtual bool CheckRange() const
 	{
+		// TODO: Maybe implement this in some way
 		return true;
 	}
 	virtual void SetValueToDefault()

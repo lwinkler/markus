@@ -142,6 +142,10 @@ void Module::Reset()
 				ctr = new ControllerInt(*dynamic_cast<ParameterInt*>(*it));
 				break;
 			case PARAM_SERIALIZABLE:
+				ctr = new ControllerSerializable(*dynamic_cast<ParameterSerializable*>(*it));
+				break;
+			case PARAM_OBJECT_HEIGHT:
+				// Note: This controls a CalibrationByHeight object. Althought it sees it as a ParameterSerializable object with x,y and height attributes
 				ctr = new ControllerCalibrationByHeight(*dynamic_cast<ParameterSerializable*>(*it));
 				break;
 			case PARAM_STR:
