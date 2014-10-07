@@ -28,7 +28,7 @@
 #include "ParameterNum.h"
 #include "ParameterEnum.h"
 #include "ParameterString.h"
-#include "ParameterCalibrationByHeight.h"
+#include "ParameterSerializable.h"
 #include "Controller.h"
 
 
@@ -143,15 +143,15 @@ protected:
 class ControllerCalibrationByHeight : public ControllerParameter
 {
 public:
-	ControllerCalibrationByHeight(ParameterCalibrationByHeight & x_param);
+	ControllerCalibrationByHeight(ParameterSerializable & x_param);
 	virtual QWidget* CreateWidget();
 	virtual void SetWidgetValue(const std::string& x_value);
 	virtual std::string GetValueFromWidget();
 
 protected:
-    //QPainter * parameterLine;
-	ParameterCalibrationByHeight & m_param2;
-    QWidget * widget;
+	//QPainter * parameterLine;
+	ParameterSerializable & m_param2;
+	QWidget * widget;
 	QParameterSlider * mp_sliderX;
 	QParameterSlider * mp_sliderY;
 	QParameterSlider * mp_sliderHeight;

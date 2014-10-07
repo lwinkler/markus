@@ -335,7 +335,7 @@ std::string ControllerString::GetValueFromWidget()
 #endif
 }
 /*------------------------------------------------------------------------------------------------*/
-ControllerCalibrationByHeight::ControllerCalibrationByHeight(ParameterCalibrationByHeight& x_param):
+ControllerCalibrationByHeight::ControllerCalibrationByHeight(ParameterSerializable& x_param):
 	ControllerParameter(x_param),
 	m_param2(x_param)
 {
@@ -347,10 +347,14 @@ QWidget* ControllerCalibrationByHeight::CreateWidget()
 
 	QGridLayout * mainLayout = new QGridLayout();
 	widget = new QWidget();
+	CalibrationByHeight calib;
+	stringstream ss;
+	ss << m_param2.GetValue();
+	calib.Deserialize(ss, "");
 
-	mp_sliderX = new QParameterSlider(m_param2.GetValue().x, 0, 1, PRECISION_DOUBLE,widget);
-	mp_sliderY = new QParameterSlider(m_param2.GetValue().y, 0, 1, PRECISION_DOUBLE,widget);
-	mp_sliderHeight = new QParameterSlider(m_param2.GetValue().height, 0, 1, PRECISION_DOUBLE,widget);
+	mp_sliderX = new QParameterSlider(calib.x, 0, 1, PRECISION_DOUBLE,widget);
+	mp_sliderY = new QParameterSlider(calib.y, 0, 1, PRECISION_DOUBLE,widget);
+	mp_sliderHeight = new QParameterSlider(calib.height, 0, 1, PRECISION_DOUBLE,widget);
 	mp_labX = new QLabel("x");
 	mp_labY = new QLabel("y");
 	mp_labHeight = new QLabel("height");

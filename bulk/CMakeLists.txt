@@ -11,7 +11,6 @@ ParameterImageType.cpp
 ParameterStructure.cpp
 ParameterNum.cpp
 ParameterString.cpp
-ParameterCalibrationByHeight.cpp
 ParameterSerializable.cpp
 ParameterPolygon.cpp
 Polygon.cpp

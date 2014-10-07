@@ -27,7 +27,7 @@
 #include <cppunit/TestCase.h>
 #include <cppunit/TestCaller.h>
 #include "Parameter.h"
-#include "ParameterCalibrationByHeight.h"
+#include "ParameterSerializable.h"
 #include "MkException.h"
 
 
@@ -122,10 +122,13 @@ class TestParameters : public CppUnit::TestFixture
 		paramImageType.SetRange("[CV_8UC1,CV_8UC2,CV_8UC3]");
 		testParameter(paramImageType, "CV_8UC2", "CV_32SC1");
 
-		LOG_TEST(m_logger, "Test ParameterCalibrationByHeight");
-		CalibrationByHeight myCalibrationByHeight =  ParameterCalibrationByHeight::DefaultBg;
-		ParameterCalibrationByHeight paramCalibrationByHeight("param_calibrationByHeight",  ParameterCalibrationByHeight::DefaultFg, &myCalibrationByHeight, "Parameter of type CalibrationByHeight");
+		LOG_TEST(m_logger, "Test ParameterSerializable");
+		CalibrationByHeight myCalibrationByHeight;
+		ParameterSerializable paramCalibrationByHeight("param_calibrationByHeight",  "{\"height\":0.6,\"x\":0.3,\"y\":0.6}", &myCalibrationByHeight, "Parameter of type CalibrationByHeight");
 		testParameter(paramCalibrationByHeight, "{\"height\":0.0,\"x\":1.0,\"y\":0.0}","{\"x\":1, \"y\":0, \n \"height\":1.5}");
+
+
+		// TODO: Tests calibration model ?
 	}
 
 	static CppUnit::Test *suite()
