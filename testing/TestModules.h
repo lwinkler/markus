@@ -35,6 +35,7 @@
 #include "StreamState.h"
 #include "MkException.h"
 #include "FeatureFloatInTime.h"
+#include "FeatureVectorFloat.h"
 
 #define BLACKLIST(x) moduleTypes.erase(std::remove(moduleTypes.begin(), moduleTypes.end(), (x)), moduleTypes.end());
 
@@ -68,6 +69,7 @@ class TestModules : public CppUnit::TestFixture
 		// Modules to blacklist // TODO: This should of course contain any module in the long term
 		BLACKLIST("LFC_SVM");
 		BLACKLIST("ExtractHOGFeatures");
+		BLACKLIST("ExtractHOFFeatures");
 		BLACKLIST("KeyPointsBrisk");
 
 		createEmptyConfigFile("/tmp/config_empty.xml");
@@ -126,6 +128,14 @@ class TestModules : public CppUnit::TestFixture
 			// create a feature of the desired type
 			if(it->second == "FeatureFloat")
 				obj.AddFeature(it->first, new FeatureFloat(static_cast<float>(rand_r(xp_seed)) / RAND_MAX));
+			else if(it->second == "FeatureVectorFloat")
+			{
+				std::vector<float> vect;
+				int limit = rand_r(xp_seed) % 100;
+				for(int i = 0 ; i < limit ; i++)
+					vect.push_back(static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
+				obj.AddFeature(it->first, new FeatureVectorFloat(vect));
+			}
 			else if(it->second == "FeatureFloatInTime")
 			{
 				// Create a float feature and update
@@ -190,6 +200,18 @@ class TestModules : public CppUnit::TestFixture
 		{
 			features["x"] = "FeatureFloat";
 			features["y"] = "FeatureFloat";
+		}
+		else if(x_moduleClass == "ClassifyEventsBagOfWords")
+		{
+			features["descriptor"] = "FeatureVectorFloat";
+		}
+		else if(x_moduleClass == "ClassifyEventsKnn")
+		{
+			features["descriptor"] = "FeatureVectorFloat";
+		}
+		else if(x_moduleClass == "ExtractHOFFeatures")
+		{
+			features["descriptor"] = "FeatureVectorFloat";
 		}
 
 		// random event
