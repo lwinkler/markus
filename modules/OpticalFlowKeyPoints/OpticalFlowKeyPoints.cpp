@@ -97,7 +97,7 @@ void OpticalFlowKeyPoints::ProcessFrame()
 
 #ifdef MARKUS_DEBUG_STREAMS
 		//draw a line between this to point to show the OF of these points
-		cvtColor(m_input, m_debug, CV_GRAY2RGB);
+		adjustChannels(m_input, m_debug);
 		int cpt = 0;
 		for(size_t i = 0 ; i < status.size() ; i++)
 		{

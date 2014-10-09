@@ -66,7 +66,7 @@ class TestModules : public CppUnit::TestFixture
 		m_cpt = 0;
 		m_factory.ListModules(moduleTypes);
 
-		// Modules to blacklist // TODO: This should of course contain any module in the long term
+		// Modules to blacklist // TODO: This should of course not contain any module in the long term
 		BLACKLIST("LFC_SVM");
 		BLACKLIST("ExtractHOGFeatures");
 		BLACKLIST("ExtractHOFFeatures");
@@ -131,7 +131,7 @@ class TestModules : public CppUnit::TestFixture
 			else if(it->second == "FeatureVectorFloat")
 			{
 				std::vector<float> vect;
-				int limit = rand_r(xp_seed) % 100;
+				int limit = 10; //  rand_r(xp_seed) % 100;
 				for(int i = 0 ; i < limit ; i++)
 					vect.push_back(static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
 				obj.AddFeature(it->first, new FeatureVectorFloat(vect));
@@ -208,6 +208,14 @@ class TestModules : public CppUnit::TestFixture
 		else if(x_moduleClass == "ClassifyEventsKnn")
 		{
 			features["descriptor"] = "FeatureVectorFloat";
+			Controller* ctr = x_module->FindController("features");
+			assert(ctr != NULL);
+			std::string str;
+			std::vector<std::string> feats;
+			ctr->CallAction("Get", &str);
+			split(str, ',', feats);
+			for(std::vector<std::string>::const_iterator it = feats.begin() ; it != feats.end() ; it++)
+				features[*it] = "FeatureFloat";
 		}
 		else if(x_moduleClass == "ExtractHOFFeatures")
 		{
