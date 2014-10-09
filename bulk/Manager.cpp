@@ -371,7 +371,7 @@ bool Manager::Process()
 	//if(m_frameCount % 20 == 0)
 		usleep(20); // This keeps the manager unlocked to allow the sending of commands // TODO find a cleaner way
 
-	return m_continueFlag;
+	return m_continueFlag && (m_param.nbFrames == 0 || m_param.nbFrames != m_frameCount);
 }
 
 /**

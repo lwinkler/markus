@@ -47,10 +47,12 @@ public:
 		{
 			m_list.push_back(new ParameterBool("auto_clean", 0, 0, 1, &autoClean, "Automatically clean the temporary directory when the application closes"));
 			m_list.push_back(new ParameterString("archive_dir", "",  &archiveDir, "If specified the data is copied inside this directory for archive"));
+			m_list.push_back(new ParameterInt("nb_frames", 0, 0, INT_MAX,  &nbFrames, "Number of frames to process. 0 for infinite. Only works in centralized mode"));
 			ParameterStructure::Init();
 		}
 		bool autoClean;
 		std::string archiveDir;
+		int nbFrames;
 	};
 
 	Manager(const ConfigReader& x_configReader, bool x_centralized);
