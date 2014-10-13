@@ -174,7 +174,7 @@ class TestTrackerByFeatures : public CppUnit::TestFixture
 	static CppUnit::Test *suite()
 	{
 		CppUnit::TestSuite *suiteOfTests = new CppUnit::TestSuite("TestTrackerByFeatures");
-		suiteOfTests->addTest(new CppUnit::TestCaller<TestTrackerByFeatures>("testInOut", &TestTrackerByFeatures::testInOut));
+		// TODO: See if we keep: suiteOfTests->addTest(new CppUnit::TestCaller<TestTrackerByFeatures>("testTrackerByFeatures", &TestTrackerByFeatures::testInOut));
 		return suiteOfTests;
 	}
 };
