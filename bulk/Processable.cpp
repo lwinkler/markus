@@ -21,37 +21,54 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
+#include "Module.h"
 #include "ModuleTimer.h"
-#include "Processable.h"
-
-#include <QTimer>
 
 using namespace std;
 
-QModuleTimer::QModuleTimer(Processable& x_module, double x_fps)
-: m_processable(x_module)
+log4cxx::LoggerPtr Processable::m_logger(log4cxx::Logger::getLogger("Processable"));
+
+Processable::Processable(const ConfigReader& x_configReader) :
+	Configurable(x_configReader)
 {
-	Reset(x_fps);
+	m_pause          = false;
+	m_processByTimer = false;
+	m_moduleTimer    = NULL;
+}
+
+Processable::~Processable()
+{
 }
 
 /**
-* @brief Reset the timer
-*
-* @param x_fps The frame per second to be set
+* @brief Reset the module. Parameters value are set to default
 */
-void QModuleTimer::Reset(double x_fps)
+void Processable::Reset()
 {
-	double delay = 1000.0 / 1000;
-	if(x_fps > 0)
+	// Add the module timer (only works with QT)
+	if(RefParameters().autoProcess && m_processByTimer)
 	{
-		// Start a timer for module process
-		delay = 1000.0 / x_fps;
+		CLEAN_DELETE(m_moduleTimer);
+		m_moduleTimer = new QModuleTimer(*this, 0);
+		
+		// An input will try to acquire frames as fast as possible
+		// another module is called at the rate specified by the fps parameter
+		// if(IsInput()) // TODO reinstore this
+			// m_moduleTimer->Reset(100);
+		// else
+		m_moduleTimer->Reset(RefParameters().fps);
 	}
-	start(delay);
+	else m_moduleTimer = NULL;
 }
 
-void QModuleTimer::timerEvent(QTimerEvent* px_event)
+/**
+* @brief Pause the module and stop the processing
+*
+* @param x_pause Pause on/off
+*/
+void Module::Pause(bool x_pause)
 {
-	m_processable.Process();
+	m_pause = x_pause;
 }
+
 

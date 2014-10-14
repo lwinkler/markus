@@ -40,7 +40,7 @@ using namespace std;
 log4cxx::LoggerPtr Module::m_logger(log4cxx::Logger::getLogger("Module"));
 
 Module::Module(const ConfigReader& x_configReader) :
-	Configurable(x_configReader),
+	Processable(x_configReader),
 	m_name(x_configReader.GetAttribute("name"))
 {
 	m_id	= atoi(x_configReader.GetAttribute("id").c_str());
@@ -54,7 +54,6 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_currentTimeStamp     = TIME_STAMP_INITIAL;
 	m_pause                = false;
 	m_isReady              = false;
-	m_processByTimer       = false;
 	m_unsyncWarning        = true;
 
 	m_moduleTimer = NULL;
@@ -80,6 +79,7 @@ Module::~Module()
 */
 void Module::Reset()
 {
+	Processable::Reset();
 	LOG_INFO(m_logger, "Reseting module "<<GetName());
 
 	// Lock the parameters that cannot be changed
@@ -94,20 +94,6 @@ void Module::Reset()
 	param.PrintParameters();
 	param.CheckRange(true);
 
-	// Add the module timer (only works with QT)
-	if(param.autoProcess && m_processByTimer)
-	{
-		CLEAN_DELETE(m_moduleTimer);
-		m_moduleTimer = new QModuleTimer(*this, 0);
-		
-		// An input will try to acquire frames as fast as possible
-		// another module is called at the rate specified by the fps parameter
-		if(IsInput())
-			m_moduleTimer->Reset(100);
-		else
-			m_moduleTimer->Reset(param.fps);
-	}
-	else m_moduleTimer = NULL;
 	// param.PrintParameters(); // Do not print 2x at startup
 
 	// Add controls for parameters' change
@@ -158,16 +144,6 @@ void Module::Reset()
 			throw MkException("Controller creation failed", LOC);
 		else AddController(ctr);
 	}
-}
-
-/**
-* @brief Pause the module and stop the processing
-*
-* @param x_pause Pause on/off
-*/
-void Module::Pause(bool x_pause)
-{
-	m_pause = x_pause;
 }
 
 /**
