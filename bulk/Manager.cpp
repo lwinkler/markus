@@ -244,6 +244,7 @@ void Manager::Reset(bool x_resetInputs)
 		{
 			// If manager is in autoprocess, modules must not be
 			(*it)->AllowAutoProcess(!m_param.autoProcess);
+			(*it)->SetRealTime(!m_param.fast);
 			(*it)->Reset();
 		}
 	}

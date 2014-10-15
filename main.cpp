@@ -59,6 +59,7 @@ void usage()
 	printf(" -c  --centralized     Module processing function is called from the manager (instead of decentralized timers)\n");
 	printf(" -i  --stdin           Read commands from stdin\n");
 	printf(" -n  --no-gui          Run process without gui\n");
+	printf(" -f  --fast            Fast, no real-time input\n");
 	printf(" -l  --log-conf <log4cxx_config>.xml\n");
 	printf("                       Set logging mode\n");
 	printf(" -o  --output-dir directory\n");
@@ -120,6 +121,7 @@ int main(int argc, char** argv)
 	bool describe    = false;
 	bool nogui       = false;
 	bool centralized = false;
+	bool fast        = false;
 	bool useStdin    = false;
 	int returnValue  = -1;
 
@@ -138,6 +140,7 @@ int main(int argc, char** argv)
 		{"describe",    0, 0, 'd'},
 		{"editor",      0, 0, 'e'},
 		{"centralized", 0, 0, 'c'},
+		{"fast",        0, 0, 'f'},
 		{"stdin",       0, 0, 'i'},
 		{"no-gui",      0, 0, 'n'},
 		{"log-conf",    1, 0, 'l'},
@@ -148,7 +151,7 @@ int main(int argc, char** argv)
 	};
 	int c;
 	int option_index = 0;
-	while ((c = getopt_long(argc, argv, "hvdecinl:o:p:x:", long_options, &option_index)) != -1)
+	while ((c = getopt_long(argc, argv, "hvdecfinl:o:p:x:", long_options, &option_index)) != -1)
 	{
 		switch (c) {
 			case 'h':
@@ -178,6 +181,9 @@ int main(int argc, char** argv)
 				break;
 			case 'c':
 				centralized = true;
+				break;
+			case 'f':
+				fast = true;
 				break;
 			case 'i':
 				useStdin = true;
@@ -320,6 +326,7 @@ int main(int argc, char** argv)
 		}
 		// Override parameter auto_process with centralized
 		appConfig.RefSubConfig("parameters", "", true).RefSubConfig("param", "auto_process", true).SetValue(centralized ? "1" : "0");
+		appConfig.RefSubConfig("parameters", "", true).RefSubConfig("param", "fast", true).SetValue(fast ? "1" : "0");
 		Manager manager(appConfig);
 
 		if(describe) 

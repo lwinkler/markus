@@ -60,7 +60,8 @@ public:
 	virtual void Reset();
 	void Pause(bool x_pause);
 	virtual bool Process() = 0;
-	void AllowAutoProcess(bool x_proc) {m_allowAutoProcess = x_proc;}
+	inline void AllowAutoProcess(bool x_proc) {m_allowAutoProcess = x_proc;}
+	inline void SetRealTime(bool x_realTime) {m_realTime  = x_realTime;}
 
 	
 protected:
@@ -68,6 +69,7 @@ protected:
 
 	bool m_pause;
 	bool m_allowAutoProcess;
+	bool m_realTime;
 	QModuleTimer * m_moduleTimer;
 	QReadWriteLock m_lock;
 

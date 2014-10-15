@@ -33,6 +33,7 @@ Processable::Processable(const ConfigReader& x_configReader) :
 {
 	m_pause            = false;
 	m_allowAutoProcess = true;
+	m_realTime         = true;
 	m_moduleTimer      = NULL;
 }
 
@@ -54,10 +55,11 @@ void Processable::Reset()
 		
 		// An input will try to acquire frames as fast as possible
 		// another module is called at the rate specified by the fps parameter
-		// if(IsInput()) // TODO reinstore this
-			// m_moduleTimer->Reset(100);
-		// else
-		m_moduleTimer->Reset(RefParameters().fps);
+		if(! m_realTime)
+			m_moduleTimer->Reset(100);
+		else
+			m_moduleTimer->Reset(RefParameters().fps);
+		LOG_DEBUG(m_logger, "Reseting auto-processed module with real-time="<<m_realTime<<" and fps="<<RefParameters().fps);
 	}
 	else m_moduleTimer = NULL;
 }
@@ -67,7 +69,7 @@ void Processable::Reset()
 *
 * @param x_pause Pause on/off
 */
-void Module::Pause(bool x_pause)
+void Processable::Pause(bool x_pause)
 {
 	m_pause = x_pause;
 }
