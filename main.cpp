@@ -318,7 +318,9 @@ int main(int argc, char** argv)
 				throw MkException("Cannot parse command line parameter", LOC);
 			}
 		}
-		Manager manager(appConfig, centralized);
+		// Override parameter auto_process with centralized
+		appConfig.RefSubConfig("parameters", "", true).RefSubConfig("param", "auto_process", true).SetValue(centralized ? "1" : "0");
+		Manager manager(appConfig);
 
 		if(describe) 
 		{
@@ -339,26 +341,26 @@ int main(int argc, char** argv)
 		}
 
 		// Notify the parent process (for monitoring purposes)
-		Event ev;
-		ev.AddExternalInfo("pid", getpid());
-		ev.Raise("started");
-		ev.Notify(true);
 
 
-		if(centralized)
+		if(nogui)
 		{
-			if(!nogui)
-				LOG_WARN(logger, "GUI is not shown if you use --centralized option. To avoid this message use --no-gui option.");
 			// No gui. launch the process directly
-			// so far we cannot launch the process in a decentralized manner (with a timer on each module)
+			// note: so far we cannot launch the process in a decentralized manner (with a timer on each module)
+
+			Event ev1;
+			ev1.AddExternalInfo("pid", getpid());
+			ev1.Raise("started");
+			ev1.Notify(true);
+
 			while(manager.Process())
 			{
 				// nothing 
 			}
 
-			Event ev;
-			ev.Raise("stopped");
-			ev.Notify(true);
+			Event ev2;
+			ev2.Raise("stopped");
+			ev2.Notify(true);
 			returnValue = MK_EXCEPTION_NORMAL - MK_EXCEPTION_FIRST;
 		}
 		else

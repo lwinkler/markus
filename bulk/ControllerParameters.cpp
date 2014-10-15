@@ -368,7 +368,7 @@ void ControllerSerializable::SetWidgetValue(const std::string& x_value)
 	m_lineEdit->setText(x_value.c_str());
 #else
 	assert(false);
-	return "";
+	return;
 #endif
 }
 

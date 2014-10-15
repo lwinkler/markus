@@ -69,8 +69,7 @@ public:
 	virtual ~Module();
 	
 	virtual void Reset();
-	void Pause(bool x_pause);
-	void Process();
+	bool Process();
 
 	const std::string& GetName() const{return m_name;}
 	virtual const std::string& GetClass() const = 0;

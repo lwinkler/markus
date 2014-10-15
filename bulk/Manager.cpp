@@ -55,10 +55,9 @@ string Manager::m_applicationName = "unset";
 FactoryModules Manager::m_factory;
 
 
-Manager::Manager(const ConfigReader& x_configReader, bool x_centralized) : 
-	Configurable(x_configReader),
+Manager::Manager(const ConfigReader& x_configReader) : 
+	Processable(x_configReader),
 	m_param(m_configReader),
-	m_centralized(x_centralized),
 	m_lastException(MK_EXCEPTION_NORMAL, "No exception were thrown", "", "")
 {
 	LOG_INFO(m_logger, "Create object Manager");
@@ -149,6 +148,7 @@ Manager::~Manager()
 */
 void Manager::Connect()
 {
+	Processable::Reset();
 	if(m_isConnected)
 		throw MkException("Manager can only connect modules once", LOC);
 	
@@ -242,7 +242,8 @@ void Manager::Reset(bool x_resetInputs)
 	{
 		if(x_resetInputs || !(*it)->IsInput())
 		{
-			(*it)->SetProcessByTimer(!m_centralized);
+			// If manager is in autoprocess, modules must not be
+			(*it)->AllowAutoProcess(!m_param.autoProcess);
 			(*it)->Reset();
 		}
 	}
@@ -263,12 +264,14 @@ bool Manager::Process()
 	if(!m_isConnected)
 		throw MkException("Modules must be connected before processing", LOC);
 
-	// If methods are not called in a centralized way, we will rely on timers on each module
-	assert(m_centralized);
-
 	if(!m_lock.tryLockForWrite())
 	{
 		// LOG_WARN(m_logger, "Manager too slow !"); // Note: this happens every time
+		return true;
+	}
+	if(m_pause)
+	{
+		m_lock.unlock();
 		return true;
 	}
 	Timer ti;

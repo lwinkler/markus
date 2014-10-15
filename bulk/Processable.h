@@ -59,15 +59,15 @@ public:
 	
 	virtual void Reset();
 	void Pause(bool x_pause);
-	virtual void Process() = 0;
-	void SetProcessByTimer(bool x_proc) {m_processByTimer = x_proc;}
+	virtual bool Process() = 0;
+	void AllowAutoProcess(bool x_proc) {m_allowAutoProcess = x_proc;}
 
 	
 protected:
 	virtual Parameters & RefParameters() = 0;
 
 	bool m_pause;
-	bool m_processByTimer;
+	bool m_allowAutoProcess;
 	QModuleTimer * m_moduleTimer;
 	QReadWriteLock m_lock;
 

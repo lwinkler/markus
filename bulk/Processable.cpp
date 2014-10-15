@@ -31,13 +31,14 @@ log4cxx::LoggerPtr Processable::m_logger(log4cxx::Logger::getLogger("Processable
 Processable::Processable(const ConfigReader& x_configReader) :
 	Configurable(x_configReader)
 {
-	m_pause          = false;
-	m_processByTimer = false;
-	m_moduleTimer    = NULL;
+	m_pause            = false;
+	m_allowAutoProcess = true;
+	m_moduleTimer      = NULL;
 }
 
 Processable::~Processable()
 {
+	CLEAN_DELETE(m_moduleTimer);
 }
 
 /**
@@ -46,7 +47,7 @@ Processable::~Processable()
 void Processable::Reset()
 {
 	// Add the module timer (only works with QT)
-	if(RefParameters().autoProcess && m_processByTimer)
+	if(RefParameters().autoProcess && m_allowAutoProcess)
 	{
 		CLEAN_DELETE(m_moduleTimer);
 		m_moduleTimer = new QModuleTimer(*this, 0);

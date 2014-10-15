@@ -52,11 +52,8 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_countProcessedFrames = 0;
 	m_lastTimeStamp        = TIME_STAMP_MIN;
 	m_currentTimeStamp     = TIME_STAMP_INITIAL;
-	m_pause                = false;
 	m_isReady              = false;
 	m_unsyncWarning        = true;
-
-	m_moduleTimer = NULL;
 }
 
 Module::~Module()
@@ -70,8 +67,6 @@ Module::~Module()
 	for(std::map<int, Stream* >::iterator it = m_debugStreams.begin() ; it != m_debugStreams.end() ; it++)
 		delete(it->second);
 #endif
-	if(m_moduleTimer)
-		delete(m_moduleTimer);
 }
 
 /**
@@ -191,13 +186,13 @@ double Module::GetRecordingFps() const
 /**
 * @brief Process one frame
 */
-void Module::Process()
+bool Module::Process()
 {
 	m_lock.lockForWrite();
 	if(m_pause)
 	{
 		m_lock.unlock();
-		return;
+		return true;
 	}
 	try
 	{
@@ -279,6 +274,7 @@ void Module::Process()
 		throw;
 	}
 	m_lock.unlock();
+	return true;
 }
 
 /**
