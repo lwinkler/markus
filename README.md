@@ -50,7 +50,7 @@ Then enable compilation with Qt5 in the menu.
 
 	sudo apt-get install cmake-qt-gui cmake-curses-gui qtcreator python-dev libcppunit-dev libcurl4-openssl-dev python-opencv python-sklearn python-skimage libav-tools  python-pymongo python-gridfs
 
-### Compile OpenCV from sources
+### Compile OpenCV from sources (not recommended)
 Alternatively you can compile OpenCV from sources. Do not forget to install the depandencies with apt-get build-dep first:
 	
 	sudo apt-get build-dep libcv-dev
@@ -98,42 +98,58 @@ First compilation commands:
 	cmake .
 	make clean
 	make update_modules_list
-	make
 
 Then simply use 'make' as for any other projects. 
 
+Getting started
+===============
+Editor
+------
+You will get a good idea of the Markus philosophy and its modular way of thinking by opening one of the projects via the project editor:
+
+	./markus -e projects/FourCascades.xml
+
+or
+
+	./markus -e projects/ObjectTracker.xml
+
+Get a look at the different projects in the project direcory. You will see different classes of modules that are linked together. The links represent streams.
+
+	- **Green links**: Video streams
+	- **Blue links** : Streams of objects
+	- **Red streams**: Streams of events
+	- **Yellow streams** : Streams of states (True/False)
+
+GUI
+---
+The GUI lets you visualize the work of the different modules in the project. You can see the content of each stream:
+
+	./markus  projects/ObjectTracker.xml in/input.mp4 -p Input.loop=1
+
+Then via the GUI menu, select:
+	
+	View > View 2x2
+
+Then pick different modules and streams to be visualized.
+
+### Note on video inputs
+By convension each project should contain one module named "Input". If a video file is specified in command line this module will be overrided and the video file will be used as input.
+
+E.g. This will use the USB camera of your laptop as input (as specified in the project XML)
+
+	./markus projects/FourCascades.xml
+
+This will use input.mp4 as input
+
+	./markus projects/FourCascades.xml in/input.mp4
+
 Adding new modules
 ------------------
-Add a NewModule directory and NewModule.xml in modules/
-then
+Add a NewModule directory in modules/. You can use other modules as example  
+then:
 
 	cmake .
-	make clean
 	make update_modules_list
-	make
-
-To run:
--------
-
-run with the default configuration as defined by config.xml:
-
-	./markus 
-
-or run any example application present in the project/ folder:
-
-e.g. : 
-
-	./markus project/FourCascades.xml
-
-Edit projects
--------------
-The XML application files (sucha as project/FourCascades.xml) can be edited by using the command
-
-	./markus -e
-
-Or through a web browser (Firefox or Chrome are supported)
-
-	http://<markus_dir>/editor.html
 
 
 Troubleshooting
