@@ -40,7 +40,7 @@ using namespace std;
 log4cxx::LoggerPtr Module::m_logger(log4cxx::Logger::getLogger("Module"));
 
 Module::Module(const ConfigReader& x_configReader) :
-	Configurable(x_configReader),
+	Processable(x_configReader),
 	m_name(x_configReader.GetAttribute("name"))
 {
 	m_id	= atoi(x_configReader.GetAttribute("id").c_str());
@@ -52,12 +52,8 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_countProcessedFrames = 0;
 	m_lastTimeStamp        = TIME_STAMP_MIN;
 	m_currentTimeStamp     = TIME_STAMP_INITIAL;
-	m_pause                = false;
 	m_isReady              = false;
-	m_processByTimer       = false;
 	m_unsyncWarning        = true;
-
-	m_moduleTimer = NULL;
 }
 
 Module::~Module()
@@ -71,8 +67,6 @@ Module::~Module()
 	for(std::map<int, Stream* >::iterator it = m_debugStreams.begin() ; it != m_debugStreams.end() ; it++)
 		delete(it->second);
 #endif
-	if(m_moduleTimer)
-		delete(m_moduleTimer);
 }
 
 /**
@@ -80,6 +74,7 @@ Module::~Module()
 */
 void Module::Reset()
 {
+	Processable::Reset();
 	LOG_INFO(m_logger, "Reseting module "<<GetName());
 
 	// Lock the parameters that cannot be changed
@@ -94,20 +89,6 @@ void Module::Reset()
 	param.PrintParameters();
 	param.CheckRange(true);
 
-	// Add the module timer (only works with QT)
-	if(param.autoProcess && m_processByTimer)
-	{
-		CLEAN_DELETE(m_moduleTimer);
-		m_moduleTimer = new QModuleTimer(*this, 0);
-		
-		// An input will try to acquire frames as fast as possible
-		// another module is called at the rate specified by the fps parameter
-		if(IsInput())
-			m_moduleTimer->Reset(100);
-		else
-			m_moduleTimer->Reset(param.fps);
-	}
-	else m_moduleTimer = NULL;
 	// param.PrintParameters(); // Do not print 2x at startup
 
 	// Add controls for parameters' change
@@ -161,16 +142,6 @@ void Module::Reset()
 }
 
 /**
-* @brief Pause the module and stop the processing
-*
-* @param x_pause Pause on/off
-*/
-void Module::Pause(bool x_pause)
-{
-	m_pause = x_pause;
-}
-
-/**
 * @brief Return the fps that can be used for recording. This value is special as it depends from preceeding modules.
 *
 * @return fps
@@ -215,13 +186,13 @@ double Module::GetRecordingFps() const
 /**
 * @brief Process one frame
 */
-void Module::Process()
+bool Module::Process()
 {
 	m_lock.lockForWrite();
 	if(m_pause)
 	{
 		m_lock.unlock();
-		return;
+		return true;
 	}
 	try
 	{
@@ -303,6 +274,7 @@ void Module::Process()
 		throw;
 	}
 	m_lock.unlock();
+	return true;
 }
 
 /**

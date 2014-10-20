@@ -37,28 +37,30 @@
 /**
 * @brief The manager handles all modules
 */
-class Manager : public Configurable, public Controllable
+class Manager : public Processable, public Controllable
 {
 public:
-	class Parameters : public ParameterStructure
+	class Parameters : public Processable::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
+		Parameters(const ConfigReader& x_confReader) : Processable::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterBool("auto_clean", 0, 0, 1, &autoClean, "Automatically clean the temporary directory when the application closes"));
-			m_list.push_back(new ParameterString("archive_dir", "",  &archiveDir, "If specified the data is copied inside this directory for archive"));
-			m_list.push_back(new ParameterInt("nb_frames", 0, 0, INT_MAX,  &nbFrames, "Number of frames to process. 0 for infinite. Only works in centralized mode"));
+			m_list.push_back(new ParameterBool("auto_clean", 0, 0, 1,     &autoClean, "Automatically clean the temporary directory when the application closes"));
+			m_list.push_back(new ParameterBool("fast", 0, 0, 1,           &fast, "Run as fast as possible: Inputs are not in real-time"));
+			m_list.push_back(new ParameterString("archive_dir", "",       &archiveDir, "If specified the data is copied inside this directory for archive"));
+			m_list.push_back(new ParameterInt("nb_frames", 0, 0, INT_MAX, &nbFrames, "Number of frames to process. 0 for infinite. Only works in centralized mode"));
 			ParameterStructure::Init();
 		}
 		bool autoClean;
+		bool fast;
 		std::string archiveDir;
 		int nbFrames;
 	};
 
-	Manager(const ConfigReader& x_configReader, bool x_centralized);
+	Manager(const ConfigReader& x_configReader);
 	~Manager();
-	void Reset(bool x_resetInputs = true);
-	bool Process();
+	virtual void Reset(bool x_resetInputs = true);
+	virtual bool Process();
 	void SendCommand(const std::string& x_command, std::string x_value);
 	const std::vector<Module*>& GetModules() const {return m_modules; }
 	
@@ -81,10 +83,9 @@ public:
 protected:
 	Module& RefModuleById(int x_id) const;
 	Module& RefModuleByName(const std::string& x_name) const;
-	inline virtual const ParameterStructure& GetParameters() const {return m_param;}
+	inline virtual const Parameters& GetParameters() const {return m_param;}
 	void NotifyException(const MkException& x_exeption);
 
-	bool m_centralized;
 	bool m_isConnected;
 	// long long m_timerConvertion;
 	long long m_timerProcessing;
@@ -105,7 +106,7 @@ protected:
 	QReadWriteLock m_lock;
 
 private:
-        inline ParameterStructure& RefParameters() {return m_param;}
+        inline Parameters& RefParameters() {return m_param;}
 	Parameters m_param;
 };
 #endif

@@ -22,16 +22,16 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ModuleTimer.h"
-#include "Module.h"
+#include "Processable.h"
 
 #include <QTimer>
 
 using namespace std;
 
-QModuleTimer::QModuleTimer(Module& x_module, double x_fps)
-: m_module(x_module)
+QModuleTimer::QModuleTimer(Processable& x_module)
+: m_processable(x_module)
 {
-	Reset(x_fps);
+	// Reset(x_fps);
 }
 
 /**
@@ -41,7 +41,7 @@ QModuleTimer::QModuleTimer(Module& x_module, double x_fps)
 */
 void QModuleTimer::Reset(double x_fps)
 {
-	double delay = 1000.0 / 100;
+	double delay = 1000.0 / 1000;
 	if(x_fps > 0)
 	{
 		// Start a timer for module process
@@ -52,6 +52,6 @@ void QModuleTimer::Reset(double x_fps)
 
 void QModuleTimer::timerEvent(QTimerEvent* px_event)
 {
-	m_module.Process();
+	m_processable.Process();
 }
 
