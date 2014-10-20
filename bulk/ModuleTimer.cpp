@@ -28,10 +28,10 @@
 
 using namespace std;
 
-QModuleTimer::QModuleTimer(Processable& x_module, double x_fps)
+QModuleTimer::QModuleTimer(Processable& x_module)
 : m_processable(x_module)
 {
-	Reset(x_fps);
+	// Reset(x_fps);
 }
 
 /**

@@ -28,6 +28,7 @@
 #include "Event.h"
 #include "MkException.h"
 #include "ControllerManager.h"
+#include "Controller.h"
 
 #include "util.h"
 #include "version.h"
@@ -36,15 +37,6 @@
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/writer.h>
 
-using namespace std;
-
-#include "Controller.h"
-
-#if defined( WIN32 ) && defined( TUNE )
-	#include <crtdbg.h>
-	_CrtMemState startMemState;
-	_CrtMemState endMemState;
-#endif
 
 using namespace std;
 

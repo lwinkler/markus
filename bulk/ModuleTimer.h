@@ -32,7 +32,7 @@ class Processable;
 class QModuleTimer : public QTimer
 {
 public:
-	QModuleTimer(Processable & x_module, double x_fps);
+	QModuleTimer(Processable & x_module);
 	void Reset(double x_fps);
 
 protected:

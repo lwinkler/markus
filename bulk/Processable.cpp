@@ -51,14 +51,12 @@ void Processable::Reset()
 	if(RefParameters().autoProcess && m_allowAutoProcess)
 	{
 		CLEAN_DELETE(m_moduleTimer);
-		m_moduleTimer = new QModuleTimer(*this, 0);
+		m_moduleTimer = new QModuleTimer(*this);
 		
-		// An input will try to acquire frames as fast as possible
-		// another module is called at the rate specified by the fps parameter
-		if(! m_realTime)
-			m_moduleTimer->Reset(100);
-		else
-			m_moduleTimer->Reset(RefParameters().fps);
+		// Set a timer for all modules in auto-process (= called at a regular frame rate)
+		// all other are called as "slaves" of other modules
+		// If not real-time, a module will try to acquire frames as fast as possible
+		m_moduleTimer->Reset(m_realTime ? RefParameters().fps : 0);
 		LOG_DEBUG(m_logger, "Reseting auto-processed module with real-time="<<m_realTime<<" and fps="<<RefParameters().fps);
 	}
 	else m_moduleTimer = NULL;

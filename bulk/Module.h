@@ -69,7 +69,7 @@ public:
 	virtual ~Module();
 	
 	virtual void Reset();
-	bool Process();
+	virtual bool Process();
 
 	const std::string& GetName() const{return m_name;}
 	virtual const std::string& GetClass() const = 0;
@@ -134,7 +134,6 @@ protected:
 	std::string m_name;
 	int m_id;
 	std::vector<Module *> m_modulesDepending;
-	QModuleTimer * m_moduleTimer;
 
 private:
 	static log4cxx::LoggerPtr m_logger;

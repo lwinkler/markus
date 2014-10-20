@@ -62,7 +62,6 @@ public:
 	virtual bool Process() = 0;
 	inline void AllowAutoProcess(bool x_proc) {m_allowAutoProcess = x_proc;}
 	inline void SetRealTime(bool x_realTime) {m_realTime  = x_realTime;}
-
 	
 protected:
 	virtual Parameters & RefParameters() = 0;
