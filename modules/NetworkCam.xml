@@ -3,7 +3,7 @@
 	<parameters>
 		<param name="auto_process">
 			<type>bool</type>
-			<value min="0" max="1" default="1">1</value>
+			<value min="1" max="1" default="1">1</value>
 			<description>If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream</description>
 		</param>
 		<param name="allow_unsync_input">
