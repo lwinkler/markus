@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
  *
  *    MARKUS : a manager for video analysis modules
- * 
+ *
  *    author : Loïc Monney <loic.monney@hefr.ch>
- * 
- * 
+ *
+ *
  *    This file is part of Markus.
  *
  *    Markus is free software: you can redistribute it and/or modify
@@ -28,8 +28,8 @@
 #include "ParameterNum.h"
 
 /**
- * @brief Compare the two input videos and compute the dissimilarity of them for all the sequence.
- * When processing, the module throws an exception as soon as the dissimilarity of all already processed frames exceeds the given threshold.
+ * @brief Compare the two input videos and compute the dissimilarity of them for each image.
+ * When processing, the module logs an exception as soon as the dissimilarity exceeds the given threshold.
  */
 class CompareVideo : public Module {
 
@@ -40,8 +40,10 @@ class CompareVideo : public Module {
 			public:
 				Parameters(const ConfigReader &x_confReader) : Module::Parameters(x_confReader) {
 
-					m_list.push_back(new ParameterFloat("threshold", 0.1, 0, 100, &threshold, "Dissimilarity threshold for all the sequence"));
+					m_list.push_back(new ParameterFloat("threshold", 0.01, 0, 1, &threshold, "Dissimilarity threshold for all the sequence"));
 
+					RefParameterByName("auto_process").SetDefault("1");
+					RefParameterByName("allow_unsync_input").SetDefault("1");
 					RefParameterByName("type").SetDefault("CV_8UC3");
 					RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3]");
 
@@ -60,9 +62,6 @@ class CompareVideo : public Module {
 
 		/* Reset current state of this module */
 		void Reset();
-
-		/* Compare the two images and return the amount of pixels that are different */
-		long ComputeDissimilarity(const cv::Mat& A, const cv::Mat& B);
 
 		MKCLASS("CompareVideo");
 		MKDESCR("Compare the two input videos and compute the dissimilarity of them for all the sequence");
@@ -86,9 +85,14 @@ class CompareVideo : public Module {
 		cv::Mat m_video1;
 		cv::Mat m_video2;
 
+		// output
+#ifdef MARKUS_DEBUG_STREAMS
+		cv::Mat m_video1_out;
+		cv::Mat m_video2_out;
+#endif
+
 		// state variables
-		long m_allErrors;
-		long m_frameCount;
+		long long m_frameCount;
 };
 
 #endif
