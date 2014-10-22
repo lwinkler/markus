@@ -30,7 +30,7 @@ FeatureString::FeatureString(string x_value)
 	value      = x_value;
 }
 
-double FeatureString::Compare2(const Feature& x_feature)
+double FeatureString::Compare2(const Feature& x_feature) const
 {
 	const FeatureString& feat(dynamic_cast<const FeatureString&>(x_feature));
 	return value != feat.value;

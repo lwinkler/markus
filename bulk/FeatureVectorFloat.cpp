@@ -33,7 +33,7 @@ FeatureVectorFloat::FeatureVectorFloat(vector<float> x_values)
 }
 
 // TODO: Test feature comparison
-double FeatureVectorFloat::Compare2(const Feature& x_feature)
+double FeatureVectorFloat::Compare2(const Feature& x_feature) const
 {
 	const FeatureVectorFloat& feat(dynamic_cast<const FeatureVectorFloat&>(x_feature));
 	double sum = 0;

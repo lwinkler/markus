@@ -33,7 +33,7 @@ FeatureKeyPoint::FeatureKeyPoint(const KeyPoint&  x_keypoint)
 	keypoint = x_keypoint;
 }
 
-double FeatureKeyPoint::Compare2(const Feature& x_feature)
+double FeatureKeyPoint::Compare2(const Feature& x_feature) const
 {
 	const KeyPoint& kp(dynamic_cast<const FeatureKeyPoint&>(x_feature).keypoint);
 	return !(keypoint.angle == kp.angle

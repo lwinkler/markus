@@ -33,7 +33,7 @@ template<class T> class FeatureNum : public Feature
 	public:
 		FeatureNum(T x_value = 0.0){ value = x_value;}
 		Feature* CreateCopy() const{return new FeatureNum(*this);}
-		inline virtual double Compare2(const Feature& x_feature)
+		inline virtual double Compare2(const Feature& x_feature) const
 		{
 			const FeatureNum<T>& feat(dynamic_cast<const FeatureNum<T>&>(x_feature));
 			return POW2(value - feat.value);
