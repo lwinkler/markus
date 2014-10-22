@@ -62,6 +62,13 @@ void CompareObjects::ProcessFrame()
 	// Compare the list of objects
 	for(vector<Object>::const_iterator it1 = m_objects1.begin() ; it1 != m_objects1.end() ; it1++,it2++)
 	{
+		// Check that names and ids match
+		if(it1->GetName() != it2->GetName())
+			LOG_ERROR(m_logger, "Object "<<it1->GetName()<<" do not match with "<<it2->GetName());
+		if(it1->GetId() != it2->GetId())
+			LOG_ERROR(m_logger, "Object "<<it1->GetName()<<it1->GetId()<<" do not match with "<<it2->GetName()<<it2->GetId());
+		
+
 		// Sum the differences for each object
 		double sum = 0;
 		int cpt = 0;
@@ -73,14 +80,16 @@ void CompareObjects::ProcessFrame()
 			// If dissimilarity is higher or equal to one, raise an error anyway. 
 			// This means that features are too different
 			if(val >= 1)
-				LOG_ERROR(m_logger, "Feature "<<itfeat->first<<"of object "<<it1->GetName()<<it1->GetId()<<" is too high");
+				LOG_ERROR(m_logger, "Feature "<<itfeat->first<<" dissimilarty of object "<<it1->GetName()<<it1->GetId()<<" is too high: "<<val);
+			LOG_DEBUG(m_logger, "Feature "<<itfeat->first<<" dissimilarity of object "<<it1->GetName()<<it1->GetId()<<"="<<val);
 			sum += val;
 			cpt++;
 		}
 		sum = sqrt(sum) / cpt;
 
 		if(sum > m_param.threshold)
-			LOG_ERROR(m_logger, "Object "<<it1->GetName()<<it1->GetId()<<" dissimilarity is higher that threshold "<<sum<<" > "<<m_param.threshold);
+			LOG_ERROR(m_logger, "Object "<<it1->GetName()<<it1->GetId()<<" dissimilarity is higher that threshold: "<<sum<<" > "<<m_param.threshold);
+		LOG_DEBUG(m_logger, "Object "<<it1->GetName()<<it1->GetId()<<" dissimilarity="<<sum);
 	}
 }
 
