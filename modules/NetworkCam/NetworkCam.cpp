@@ -57,6 +57,7 @@ NetworkCam::NetworkCam(const ConfigReader& x_configReader):
 	m_output(Size(m_param.width, m_param.height), m_param.type)  // Note: sizes will be overridden !
 {
 	AddOutputStream(0, new StreamImage("input", m_output, *this, 		"Video stream of the camera"));
+	m_isUnitTestingEnabled = false; // disable since it is not always possible to find a network camera
 }
 
 NetworkCam::~NetworkCam()

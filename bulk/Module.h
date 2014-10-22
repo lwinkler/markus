@@ -108,6 +108,7 @@ public:
 	void SetAsReady();
 	bool AllInputsAreReady() const;
 	const Module& GetMasterModule() const;
+	inline bool IsUnitTestingEnabled() const {return m_isUnitTestingEnabled;}
 	
 protected:
 	virtual Parameters & RefParameters() = 0;
@@ -117,6 +118,9 @@ protected:
 	long long m_timerProcessing;
 	long long m_timerWaiting;
 	long long m_countProcessedFrames;
+
+	// for testing
+	bool m_isUnitTestingEnabled;
 
 	TIME_STAMP m_lastTimeStamp;     // time stamp of the lastly processed input
 	TIME_STAMP m_currentTimeStamp;  // time stamp of the current input

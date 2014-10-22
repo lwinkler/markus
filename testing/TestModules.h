@@ -37,7 +37,7 @@
 #include "FeatureFloatInTime.h"
 #include "FeatureVectorFloat.h"
 
-#define BLACKLIST(x) moduleTypes.erase(std::remove(moduleTypes.begin(), moduleTypes.end(), (x)), moduleTypes.end());
+// #define BLACKLIST(x) m_moduleTypes.erase(std::remove(m_moduleTypes.begin(), m_moduleTypes.end(), (x)), m_moduleTypes.end());
 
 /// Unit testing class for ConfigReader class
 
@@ -46,7 +46,7 @@ class TestModules : public CppUnit::TestFixture
 	private:
 		static log4cxx::LoggerPtr m_logger;
 	protected:
-		std::vector<std::string> moduleTypes;
+		std::vector<std::string> m_moduleTypes;
 		FactoryModules m_factory;
 		Module* mp_fakeInput;
 		ConfigReader* mp_config;
@@ -64,13 +64,13 @@ class TestModules : public CppUnit::TestFixture
 	void setUp()
 	{
 		m_cpt = 0;
-		m_factory.ListModules(moduleTypes);
+		m_factory.ListModules(m_moduleTypes);
 
 		// Modules to blacklist // TODO: This should of course not contain any module in the long term
-		BLACKLIST("LFC_SVM");
-		BLACKLIST("ExtractHOGFeatures");
-		BLACKLIST("ExtractHOFFeatures");
-		BLACKLIST("KeyPointsBrisk");
+		// BLACKLIST("LFC_SVM");
+		// BLACKLIST("ExtractHOGFeatures");
+		// BLACKLIST("ExtractHOFFeatures");
+		// BLACKLIST("KeyPointsBrisk");
 
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigReader("/tmp/config_empty.xml");
@@ -79,6 +79,7 @@ class TestModules : public CppUnit::TestFixture
 			.RefSubConfig("param", "fps", true).SetValue("22");
 		mp_config->RefSubConfig("application").SetAttribute("name", "unitTest");
 		mp_fakeInput = m_factory.CreateModule("VideoFileReader", mp_config->GetSubConfig("application").GetSubConfig("module", "VideoFileReader0"));
+		mp_fakeInput->AllowAutoProcess(false);
 		// note: we need a fake module to create the input streams
 		mp_fakeInput->SetAsReady();
 		mp_fakeInput->Reset();
@@ -93,18 +94,16 @@ class TestModules : public CppUnit::TestFixture
 	{
 		ConfigReader moduleConfig =  xr_config.RefSubConfig("application", "", true)
 			.RefSubConfig("module", rx_type + "0", true);
-		moduleConfig.RefSubConfig("parameters", "", true)
-			.RefSubConfig("param", "class", true)
-			.SetValue(rx_type);
-		moduleConfig.RefSubConfig("parameters", "", true)
-			.RefSubConfig("param", "auto_process", true)
-			.SetValue("1");
-		moduleConfig.RefSubConfig("parameters", "", true)
-			.RefSubConfig("param", "fps", true)
-			.SetValue("123");
+		ConfigReader paramConfig  = moduleConfig.RefSubConfig("parameters", "", true);
+
+		paramConfig.RefSubConfig("param" , "class"        , true).SetValue(rx_type);
+		// paramConfig.RefSubConfig("param" , "auto_process" , true).SetValue("0");
+		paramConfig.RefSubConfig("param" , "fps"          , true).SetValue("123");
+
 		moduleConfig.RefSubConfig("inputs", "", true);
 		moduleConfig.RefSubConfig("outputs", "", true);
 		moduleConfig.SetAttribute("name", rx_type + "0");
+
 		std::stringstream ss;
 		ss<<m_cpt++;
 		moduleConfig.SetAttribute("id", ss.str());
@@ -285,6 +284,7 @@ class TestModules : public CppUnit::TestFixture
 
 		mp_config->SaveToFile("testing/tmp/tmp.xml");
 		Module* module = m_factory.CreateModule(x_type, moduleConfig);
+		module->AllowAutoProcess(false);
 		m_image = cv::Mat(module->GetHeight(), module->GetWidth(), module->GetImageType());
 
 		const std::map<int, Stream*> inputs  = module->GetInputStreamList();
@@ -316,14 +316,9 @@ class TestModules : public CppUnit::TestFixture
 			CPPUNIT_ASSERT(outputStream != NULL);
 			CPPUNIT_ASSERT(inputStream.IsConnected());
 		}
-		// It makes no sense to test inputs if input source is missing
-		if(module->IsInput())
-		{
-			delete module;
-			return NULL;
-		}
 		module->SetAsReady();
-		module->Reset();
+		if(module->IsUnitTestingEnabled())
+			module->Reset();
 		return module;
 	}
 
@@ -336,12 +331,7 @@ class TestModules : public CppUnit::TestFixture
 			// return "";
 		if(x_type == "calibrationByHeight")
 			return; // TODO
-		if(x_type == "bool")
-		{
-			rx_values.push_back("0");
-			rx_values.push_back("1");
-			return;
-		}
+
 		CPPUNIT_ASSERT(x_type != "string");
 		CPPUNIT_ASSERT(x_range.size() > 0);
 		CPPUNIT_ASSERT(x_range.at(0) == '[');
@@ -360,7 +350,7 @@ class TestModules : public CppUnit::TestFixture
 					// rx_values.push_back(static_cast<int>(min + static_cast<int>(i/x_nbSamples) % static_cast<int>(max - min + 1)));
 				}
 			}
-			else if(x_type == "int")
+			else if(x_type == "int" || x_type == "bool")
 			{
 				// x_nbSamples values in range
 				double incr = static_cast<double>(max - min) / x_nbSamples;
@@ -401,20 +391,19 @@ class TestModules : public CppUnit::TestFixture
 		unsigned int seed = 324234566;
 		
 		// Test on each type of module
-		for(std::vector<std::string>::const_iterator it1 = moduleTypes.begin() ; it1 != moduleTypes.end() ; it1++)
+		for(std::vector<std::string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; it1++)
 		{
-			LOG_TEST(m_logger, "## on module "<<*it1);
-
 			Module* module = createAndConnectModule(*it1);
-			if(module != NULL)
+			if(module->IsUnitTestingEnabled())
 			{
+				LOG_TEST(m_logger, "## on module "<<*it1);
 				for(int i = 0 ; i < 50 ; i++)
 				{
 					randomizeInputs(module, *it1, &seed);
 					module->Process();
 				}
-				delete module;
 			}
+			delete module;
 		}
 	}
 
@@ -426,13 +415,16 @@ class TestModules : public CppUnit::TestFixture
 		LOG_TEST(m_logger, "\n# Test all controllers");
 		
 		// Test on each type of module
-		for(std::vector<std::string>::const_iterator it1 = moduleTypes.begin() ; it1 != moduleTypes.end() ; it1++)
+		for(std::vector<std::string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; it1++)
 		{
 			LOG_TEST(m_logger, "# on module "<<*it1);
-
 			Module* module = createAndConnectModule(*it1);
-			if(module == NULL)
+			if(!module->IsUnitTestingEnabled())
+			{
+				LOG_TEST(m_logger, "--> unit testing disabled on "<<*it1);
+				delete module;
 				continue;
+			}
 
 			randomizeInputs(module, *it1, &seed);
 
@@ -512,12 +504,15 @@ class TestModules : public CppUnit::TestFixture
 		LOG_TEST(m_logger, "\n# Test all parameters");
 		
 		// Test on each type of module
-		for(std::vector<std::string>::const_iterator it1 = moduleTypes.begin() ; it1 != moduleTypes.end() ; it1++)
+		for(std::vector<std::string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; it1++)
 		{
-			LOG_TEST(m_logger, "# on module "<<*it1);
 			Module* module = createAndConnectModule(*it1);
-			if(module == NULL)
+			if(!module->IsUnitTestingEnabled())
+			{
+				delete module;
 				continue;
+			}
+			LOG_TEST(m_logger, "# on module "<<*it1);
 
 			std::string lastParam = "";
 			std::string lastDefault = "";
@@ -548,7 +543,7 @@ class TestModules : public CppUnit::TestFixture
 					params[lastParam] = lastDefault;
 
 					Module* module2 = createAndConnectModule(*it1, &params);
-					CPPUNIT_ASSERT(module2 != NULL);
+					CPPUNIT_ASSERT(module2->IsUnitTestingEnabled());
 					randomizeInputs(module2, *it1, &seed);
 
 					for(int i = 0 ; i < 3 ; i++)

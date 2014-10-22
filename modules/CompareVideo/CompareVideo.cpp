@@ -92,7 +92,7 @@ void CompareVideo::ProcessFrame()
 	double e = (double) sum / ((m_video1.elemSize1() * 256) - 1);
 
 	/* Log */
-	cout << "Frame[" << m_frameCount << "]: error = " << e << " (" << e * 100 << "%)" << endl;
+	// cout << "Frame[" << m_frameCount << "]: error = " << e << " (" << e * 100 << "%)" << endl; // TODO: Use logging functions LOG_INFO
 
 	/* Exception when exceeds threshold */
 	if (e > m_param.threshold)

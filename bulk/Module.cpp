@@ -54,6 +54,7 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_currentTimeStamp     = TIME_STAMP_INITIAL;
 	m_isReady              = false;
 	m_unsyncWarning        = true;
+	m_isUnitTestingEnabled = true;
 }
 
 Module::~Module()
