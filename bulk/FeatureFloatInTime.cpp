@@ -56,6 +56,12 @@ void FeatureFloatInTime::Update(const Feature& x_feat, double x_alpha)
 	nbSamples++;
 }
 
+double FeatureFloatInTime::Compare2(const Feature& x_feature)
+{
+	const FeatureFloat& feat(dynamic_cast<const FeatureFloat&>(x_feature));
+	return POW2(value - feat.value) / POW2(sqVariance);
+}
+
 void FeatureFloatInTime::Serialize(std::ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;

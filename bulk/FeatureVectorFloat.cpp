@@ -32,6 +32,24 @@ FeatureVectorFloat::FeatureVectorFloat(vector<float> x_values)
 	values = x_values;
 }
 
+// TODO: Test feature comparison
+double FeatureVectorFloat::Compare2(const Feature& x_feature)
+{
+	const FeatureVectorFloat& feat(dynamic_cast<const FeatureVectorFloat&>(x_feature));
+	double sum = 0;
+	if(values.size() != feat.values.size())
+		return 1;
+		// throw MkException("Size error while comparing FeatureVectorFloats", LOC);
+
+	vector<float>::const_iterator it2 = feat.values.begin();
+	for(vector<float>::const_iterator it1 = values.begin() ; it1 != values.end() ; it1++, it2++)
+	{
+		sum += POW2(*it1 - *it2);
+	}
+	return sum / POW2(values.size());
+}
+
+
 void FeatureVectorFloat::Serialize(ostream& x_out, const string& x_dir) const
 {
 	if(values.size() == 0)

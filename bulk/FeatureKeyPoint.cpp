@@ -33,6 +33,18 @@ FeatureKeyPoint::FeatureKeyPoint(const KeyPoint&  x_keypoint)
 	keypoint = x_keypoint;
 }
 
+double FeatureKeyPoint::Compare2(const Feature& x_feature)
+{
+	const KeyPoint& kp(dynamic_cast<const FeatureKeyPoint&>(x_feature).keypoint);
+	return !(keypoint.angle == kp.angle
+		&& keypoint.class_id == kp.class_id
+		&& keypoint.octave == kp.octave
+		&& keypoint.pt == kp.pt
+		&& keypoint.response == kp.response
+		&& keypoint.size == kp.size);
+}
+
+
 void FeatureKeyPoint::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;

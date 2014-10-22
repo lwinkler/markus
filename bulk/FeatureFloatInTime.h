@@ -33,6 +33,7 @@ public:
 	FeatureFloatInTime(const FeatureFloat& x_feat = FeatureFloat());
 	Feature* CreateCopy() const{return new FeatureFloatInTime(*this);}
 	void Update(const Feature& x_feat, double x_alpha);
+	virtual double Compare2(const Feature& x_feature);
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 
