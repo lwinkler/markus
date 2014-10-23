@@ -33,7 +33,7 @@
 
 
 
-/// This class is a factory for modules: it creates a module of each type as specified by a string
+/// This class is a factory for features: it creates a feature of each type as specified by a string
 class FactoryFeatures
 {
 	typedef Feature* (*CreateFeatureFunc)();
@@ -48,6 +48,7 @@ public:
 		m_register.insert(FeatureRegistry::value_type(x_name, func));
 		// TODO: Check that this does not already exist
 
+		// Temporrily create a feature to get its signature
 		Feature* feat = func();
 
 		// std::cout<<"Register "<<feat->Signature()<<std::endl;

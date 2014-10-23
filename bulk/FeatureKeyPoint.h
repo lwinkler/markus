@@ -34,6 +34,7 @@ class FeatureKeyPoint : public Feature
 		FeatureKeyPoint(const cv::KeyPoint& x_keypoint = cv::KeyPoint());
 		Feature* CreateCopy() const{return new FeatureKeyPoint(*this);}
 		virtual double Compare2(const Feature& x_feature) const;
+		virtual void Randomize(unsigned int& xr_seed, const std::string& x_param);
 		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 		virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 		

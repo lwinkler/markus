@@ -21,6 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 #include "FeatureFloatInTime.h"
+#include "FeatureNum.h"
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/writer.h>
 
@@ -60,6 +61,18 @@ double FeatureFloatInTime::Compare2(const Feature& x_feature) const
 {
 	const FeatureFloat& feat(dynamic_cast<const FeatureFloat&>(x_feature));
 	return POW2(value - feat.value) / POW2(sqVariance);
+}
+
+void FeatureFloatInTime::Randomize(unsigned int& xr_seed, const std::string& x_param)
+{
+	// Create a float feature and update
+	double alpha = static_cast<float>(rand_r(&xr_seed)) / RAND_MAX;
+	FeatureFloat ff;
+	for(int i = rand_r(&xr_seed) % 20 ; i != 0 ; i--)
+	{
+		ff.Randomize(xr_seed, "");
+		Update(ff, alpha);
+	}
 }
 
 void FeatureFloatInTime::Serialize(std::ostream& x_out, const string& x_dir) const

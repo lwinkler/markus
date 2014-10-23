@@ -47,7 +47,8 @@ class TestModules : public CppUnit::TestFixture
 		static log4cxx::LoggerPtr m_logger;
 	protected:
 		std::vector<std::string> m_moduleTypes;
-		FactoryModules m_factory;
+		FactoryModules  m_factoryModules;
+		FactoryFeatures m_factoryFeatures;
 		Module* mp_fakeInput;
 		ConfigReader* mp_config;
 
@@ -64,7 +65,7 @@ class TestModules : public CppUnit::TestFixture
 	void setUp()
 	{
 		m_cpt = 0;
-		m_factory.ListModules(m_moduleTypes);
+		m_factoryModules.ListModules(m_moduleTypes);
 
 		// Modules to blacklist // TODO: This should of course not contain any module in the long term
 		// BLACKLIST("LFC_SVM");
@@ -78,7 +79,7 @@ class TestModules : public CppUnit::TestFixture
 			.RefSubConfig("parameters", "", true)
 			.RefSubConfig("param", "fps", true).SetValue("22");
 		mp_config->RefSubConfig("application").SetAttribute("name", "unitTest");
-		mp_fakeInput = m_factory.CreateModule("VideoFileReader", mp_config->GetSubConfig("application").GetSubConfig("module", "VideoFileReader0"));
+		mp_fakeInput = m_factoryModules.CreateModule("VideoFileReader", mp_config->GetSubConfig("application").GetSubConfig("module", "VideoFileReader0"));
 		mp_fakeInput->AllowAutoProcess(false);
 		// note: we need a fake module to create the input streams
 		mp_fakeInput->SetAsReady();
@@ -124,32 +125,21 @@ class TestModules : public CppUnit::TestFixture
 		// If a list of features is specified
 		for(std::map<std::string,std::string>::const_iterator it = x_features.begin() ; it != x_features.end() ; it++)
 		{
+			Feature* feat = m_factoryFeatures.CreateFeature(it->second);
+			feat->Randomize(*xp_seed, "");
+			obj.AddFeature(it->first, feat);
 			// create a feature of the desired type
+			/*
 			if(it->second == "FeatureFloat")
-				obj.AddFeature(it->first, new FeatureFloat(static_cast<float>(rand_r(xp_seed)) / RAND_MAX));
 			else if(it->second == "FeatureVectorFloat")
 			{
-				std::vector<float> vect;
-				int limit = 10; //  rand_r(xp_seed) % 100;
-				for(int i = 0 ; i < limit ; i++)
-					vect.push_back(static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
-				obj.AddFeature(it->first, new FeatureVectorFloat(vect));
 			}
 			else if(it->second == "FeatureFloatInTime")
 			{
-				// Create a float feature and update
-				double alpha = static_cast<float>(rand_r(xp_seed)) / RAND_MAX;
-				FeatureFloat ff(static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
-				FeatureFloatInTime ffit(ff);
-				for(int i = rand_r(xp_seed) % 20 ; i != 0 ; i--)
-				{
-					ff = FeatureFloat(static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
-					ffit.Update(ff, alpha);
-				}
-				obj.AddFeature(it->first, ffit.CreateCopy());
 			}
 			else
 				CPPUNIT_ASSERT(false);
+				*/
 		}
 
 		int nb = rand_r(xp_seed) % 100;
@@ -283,14 +273,14 @@ class TestModules : public CppUnit::TestFixture
 				moduleConfig.RefSubConfig("parameters").RefSubConfig("param", it->first, true).SetValue(it->second);
 
 		mp_config->SaveToFile("testing/tmp/tmp.xml");
-		Module* module = m_factory.CreateModule(x_type, moduleConfig);
+		Module* module = m_factoryModules.CreateModule(x_type, moduleConfig);
 		module->AllowAutoProcess(false);
 		m_image = cv::Mat(module->GetHeight(), module->GetWidth(), module->GetImageType());
 
 		const std::map<int, Stream*> inputs  = module->GetInputStreamList();
 
 		// delete(mp_fakeInput);
-		// mp_fakeInput = m_factory.CreateModule("VideoFileReader", mp_config->GetSubConfig("application").GetSubConfig("module", "VideoFileReader0"));
+		// mp_fakeInput = m_factoryModules.CreateModule("VideoFileReader", mp_config->GetSubConfig("application").GetSubConfig("module", "VideoFileReader0"));
 		// mp_fakeInput->SetAsReady();
 		// mp_fakeInput->Reset();
 		

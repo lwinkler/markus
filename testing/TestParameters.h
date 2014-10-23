@@ -39,7 +39,7 @@ class TestParameters : public CppUnit::TestFixture
 		static log4cxx::LoggerPtr m_logger;
 	protected:
 		std::vector<std::string> moduleTypes;
-		FactoryModules m_factory;
+		// FactoryModules m_factory;
 		ConfigReader* mp_config;
 
 		// Objects for streams
