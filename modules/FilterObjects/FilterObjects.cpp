@@ -36,7 +36,11 @@ FilterObjects::FilterObjects(const ConfigReader& x_configReader) :
 	m_param(x_configReader)
 {
 	AddInputStream(0, new StreamObject("input", 	m_objectsIn, *this,	"Incoming objects", 
-		"[\"x\":{\"type\":\"FeatureFloat\"},\"y\":{\"type\":\"FeatureFloat\",\"width\":{\"type\":\"FeatureFloat\"},\"height\":{\"type\":\"FeatureFloat\"}]"));
+		"{\"features\":{"
+		"\"x\":{\"type\":\"FeatureFloat\"},"
+		"\"y\":{\"type\":\"FeatureFloat\"},"
+		"\"width\":{\"type\":\"FeatureFloat\"},"
+		"\"height\":{\"type\":\"FeatureFloat\"}}}"));
 
 	AddOutputStream(0, new StreamObject("filtered",  m_objectsOut, *this,	"Filtered objects objects"));
 #ifdef MARKUS_DEBUG_STREAMS

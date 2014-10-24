@@ -111,70 +111,6 @@ class TestModules : public CppUnit::TestFixture
 		return moduleConfig;
 	}
 
-
-	/// Randomize input values
-	void randomizeInputs(Module* xp_module, const std::string& x_moduleClass, unsigned int& xr_seed)
-	{
-		assert(xp_module->GetClass() == x_moduleClass);
-		std::map<std::string,std::string> features;
-
-		// Some modules require a specific set of features in input
-		if(x_moduleClass == "FallDetection")
-		{
-			features["x"]             = "FeatureFloat";
-			features["y"]             = "FeatureFloat";
-			features["ellipse_angle"] = "FeatureFloat";
-			features["ellipse_ratio"] = "FeatureFloat";
-		}
-		else if(x_moduleClass == "FilterObjects")
-		{
-			features["x"]      = "FeatureFloatInTime";
-			features["y"]      = "FeatureFloatInTime";
-			features["width"]  = "FeatureFloat";
-			features["height"] = "FeatureFloat";
-		}
-		else if(x_moduleClass == "FilterPython" || x_moduleClass == "TrackerByFeatures")
-		{
-			Controller* ctr = xp_module->FindController("features");
-			assert(ctr != NULL);
-			std::string str;
-			std::vector<std::string> feats;
-			ctr->CallAction("Get", &str);
-			split(str, ',', feats);
-			for(std::vector<std::string>::const_iterator it = feats.begin() ; it != feats.end() ; it++)
-				features[*it] = "FeatureFloat";
-		}
-		else if(x_moduleClass == "Intrusion")
-		{
-			features["x"] = "FeatureFloat";
-			features["y"] = "FeatureFloat";
-		}
-		else if(x_moduleClass == "ClassifyEventsBagOfWords")
-		{
-			features["descriptor"] = "FeatureVectorFloat";
-		}
-		else if(x_moduleClass == "ClassifyEventsKnn")
-		{
-			features["descriptor"] = "FeatureVectorFloat";
-			Controller* ctr = xp_module->FindController("features");
-			assert(ctr != NULL);
-			std::string str;
-			std::vector<std::string> feats;
-			ctr->CallAction("Get", &str);
-			split(str, ',', feats);
-			for(std::vector<std::string>::const_iterator it = feats.begin() ; it != feats.end() ; it++)
-				features[*it] = "FeatureFloat";
-		}
-		else if(x_moduleClass == "ExtractHOFFeatures")
-		{
-			features["descriptor"] = "FeatureVectorFloat";
-		}
-
-
-		// random stream
-		xp_module->RandomizeInputs(xr_seed);
-	}
-
 	/// Create module and make it ready to process
 	Module* createAndConnectModule(const std::string& x_type, const std::map<std::string, std::string>* xp_parameters = NULL)
 	{
@@ -293,7 +229,7 @@ class TestModules : public CppUnit::TestFixture
 	{
 		LOG_TEST(m_logger, "\n# Test different inputs");
 		unsigned int seed = 324234566;
-		
+
 		// Test on each type of module
 		for(std::vector<std::string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; it1++)
 		{
@@ -303,7 +239,7 @@ class TestModules : public CppUnit::TestFixture
 				LOG_TEST(m_logger, "## on module "<<*it1);
 				for(int i = 0 ; i < 50 ; i++)
 				{
-					randomizeInputs(module, *it1, seed);
+					module->RandomizeInputs(seed);
 					module->Process();
 				}
 			}
@@ -330,7 +266,7 @@ class TestModules : public CppUnit::TestFixture
 				continue;
 			}
 
-			randomizeInputs(module, *it1, seed);
+			module->RandomizeInputs(seed);
 
 			// Test on all controllers of the module
 			for(std::map<std::string, Controller*>::const_iterator it2 = module->GetControllersList().begin() ; it2 != module->GetControllersList().end() ; it2++)
@@ -448,7 +384,7 @@ class TestModules : public CppUnit::TestFixture
 
 					Module* module2 = createAndConnectModule(*it1, &params);
 					CPPUNIT_ASSERT(module2->IsUnitTestingEnabled());
-					randomizeInputs(module2, *it1, seed);
+					module2->RandomizeInputs(seed);
 
 					for(int i = 0 ; i < 3 ; i++)
 						module2->Process();

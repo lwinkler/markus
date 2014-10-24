@@ -105,6 +105,8 @@ void Object::Serialize(std::ostream& x_out, const string& x_dir) const
 		it->second->Serialize(ss, x_dir);
 		ss >> root["features"][it->first];
 	}
+	if(m_feats.size() == 0)
+		root["features"] = Json::Value::null;
 
 	x_out << root;
 }
@@ -243,19 +245,27 @@ void Object::Intersect(const Mat& x_image)
 /// Randomize the content of the object
 void Object::Randomize(unsigned int& xr_seed, const std::string& xr_requirement, const Size& xr_size)
 {
-	Object obj("test", cv::Rect(
+	Object("test", cv::Rect(
 		Point(rand_r(&xr_seed) % xr_size.width, rand_r(&xr_seed) % xr_size.height), 
 		Point(rand_r(&xr_seed) % xr_size.width, rand_r(&xr_seed) % xr_size.height))
 	);
 	m_feats.clear();
 
-	Json::Value req(xr_requirement);
-	for (int i = 0; i < (int) req.size(); i++)
+	Json::Value root;
+	Json::Reader reader;
+	if(reader.parse(xr_requirement, root, false))
 	{
-		cout<<req[i].get("type", "").asString()<<"AASS"<<endl;
-		Feature* feat = m_factoryFeatures.CreateFeature(req[i].get("type", "unnamed").asString());
-		feat->Randomize(xr_seed, req[i].asString());
-		obj.AddFeature(req[i].asString(), feat);
+		Json::Value req = root["features"];
+		if(!req.isNull())
+		{
+			Json::Value::Members members1 = req.getMemberNames();
+			for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; it1++)
+			{
+				Feature* feat = m_factoryFeatures.CreateFeature(req[*it1]["type"].asString());
+				feat->Randomize(xr_seed, "");
+				AddFeature(*it1, feat);
+			}
+		}
 	}
 
 	int nb = rand_r(&xr_seed) % 100;
@@ -264,6 +274,7 @@ void Object::Randomize(unsigned int& xr_seed, const std::string& xr_requirement,
 	{
 		std::stringstream name;
 		name<<"rand"<<i;
-		obj.AddFeature(name.str(), static_cast<float>(rand_r(&xr_seed)) / RAND_MAX);
+		AddFeature(name.str(), static_cast<float>(rand_r(&xr_seed)) / RAND_MAX);
 	}
+	LOG_DEBUG(m_logger, "Generate random object with requirements:"<<xr_requirement<<" --> "<<*this);
 }
