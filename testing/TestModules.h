@@ -112,51 +112,10 @@ class TestModules : public CppUnit::TestFixture
 	}
 
 
-	/// Create random object
-	Object createRandomObject(unsigned int* xp_seed, const std::map<std::string,std::string>& x_features)
-	{
-		// std::cout<<m_image.size()<<std::endl;
-		assert(m_image.size() != cv::Size(0,0));
-		Object obj("test", cv::Rect(
-			cv::Point(rand_r(xp_seed) % mp_fakeInput->GetWidth(), rand_r(xp_seed) % mp_fakeInput->GetHeight()), 
-			cv::Point(rand_r(xp_seed) % mp_fakeInput->GetWidth(), rand_r(xp_seed) % mp_fakeInput->GetHeight()))
-		);
-
-		// If a list of features is specified
-		for(std::map<std::string,std::string>::const_iterator it = x_features.begin() ; it != x_features.end() ; it++)
-		{
-			Feature* feat = m_factoryFeatures.CreateFeature(it->second);
-			feat->Randomize(*xp_seed, "");
-			obj.AddFeature(it->first, feat);
-			// create a feature of the desired type
-			/*
-			if(it->second == "FeatureFloat")
-			else if(it->second == "FeatureVectorFloat")
-			{
-			}
-			else if(it->second == "FeatureFloatInTime")
-			{
-			}
-			else
-				CPPUNIT_ASSERT(false);
-				*/
-		}
-
-		int nb = rand_r(xp_seed) % 100;
-		// note: notify event does not accept empty features, so we add 1
-		for(int i = 0 ; i < nb + 1 ; i++)
-		{
-			std::stringstream name;
-			name<<"rand"<<i;
-			obj.AddFeature(name.str(), static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
-		}
-		return obj;
-	}
-
 	/// Randomize input values
-	void randomizeInputs(const Module* x_module, const std::string& x_moduleClass, unsigned int* xp_seed)
+	void randomizeInputs(Module* xp_module, const std::string& x_moduleClass, unsigned int& xr_seed)
 	{
-		assert(x_module->GetClass() == x_moduleClass);
+		assert(xp_module->GetClass() == x_moduleClass);
 		std::map<std::string,std::string> features;
 
 		// Some modules require a specific set of features in input
@@ -176,7 +135,7 @@ class TestModules : public CppUnit::TestFixture
 		}
 		else if(x_moduleClass == "FilterPython" || x_moduleClass == "TrackerByFeatures")
 		{
-			Controller* ctr = x_module->FindController("features");
+			Controller* ctr = xp_module->FindController("features");
 			assert(ctr != NULL);
 			std::string str;
 			std::vector<std::string> feats;
@@ -197,7 +156,7 @@ class TestModules : public CppUnit::TestFixture
 		else if(x_moduleClass == "ClassifyEventsKnn")
 		{
 			features["descriptor"] = "FeatureVectorFloat";
-			Controller* ctr = x_module->FindController("features");
+			Controller* ctr = xp_module->FindController("features");
 			assert(ctr != NULL);
 			std::string str;
 			std::vector<std::string> feats;
@@ -211,54 +170,9 @@ class TestModules : public CppUnit::TestFixture
 			features["descriptor"] = "FeatureVectorFloat";
 		}
 
-		// random event
-		m_event.Empty();
-		if(rand_r(xp_seed) < RAND_MAX /10)
-		{
-			if(rand_r(xp_seed) < RAND_MAX /10)
-			{
-				m_event.Raise("random");
-			}
-			else
-			{
-				m_event.Raise("random", createRandomObject(xp_seed, features));
-			}
-		}
 
-		// random objects
-		m_objects.clear();
-		int nb = rand_r(xp_seed) % 10;
-		for(int i = 0 ; i < nb ; i++)
-		{
-			m_objects.push_back(createRandomObject(xp_seed, features));
-		}
-
-
-		// random state
-		if(rand_r(xp_seed) < RAND_MAX /10)
-			m_state = !m_state;
-
-
-		// random image
-		m_image = cv::Mat(x_module->GetHeight(), x_module->GetWidth(), x_module->GetImageType());
-		m_image.setTo(0);
-		nb = rand_r(xp_seed) % 100;
-		for ( int i = 0; i < nb; i++ )
-		{
-			cv::Point center;
-			center.x = rand_r(xp_seed) % m_image.cols;
-			center.y = rand_r(xp_seed) % m_image.rows;
-
-			cv::Size axes;
-			axes.width  = rand_r(xp_seed) % 200;
-			axes.height = rand_r(xp_seed) % 200;
-
-			double angle = rand_r(xp_seed) % 180;
-			cv::Scalar randomColor(rand_r(xp_seed) % 255, rand_r(xp_seed) % 255, rand_r(xp_seed) % 255);
-
-			ellipse(m_image, center, axes, angle, angle - 100, angle + 200,
-					randomColor, (rand_r(xp_seed) % 10) - 1);
-		}
+		// random stream
+		xp_module->RandomizeInputs(xr_seed);
 	}
 
 	/// Create module and make it ready to process
@@ -389,7 +303,7 @@ class TestModules : public CppUnit::TestFixture
 				LOG_TEST(m_logger, "## on module "<<*it1);
 				for(int i = 0 ; i < 50 ; i++)
 				{
-					randomizeInputs(module, *it1, &seed);
+					randomizeInputs(module, *it1, seed);
 					module->Process();
 				}
 			}
@@ -416,7 +330,7 @@ class TestModules : public CppUnit::TestFixture
 				continue;
 			}
 
-			randomizeInputs(module, *it1, &seed);
+			randomizeInputs(module, *it1, seed);
 
 			// Test on all controllers of the module
 			for(std::map<std::string, Controller*>::const_iterator it2 = module->GetControllersList().begin() ; it2 != module->GetControllersList().end() ; it2++)
@@ -534,7 +448,7 @@ class TestModules : public CppUnit::TestFixture
 
 					Module* module2 = createAndConnectModule(*it1, &params);
 					CPPUNIT_ASSERT(module2->IsUnitTestingEnabled());
-					randomizeInputs(module2, *it1, &seed);
+					randomizeInputs(module2, *it1, seed);
 
 					for(int i = 0 ; i < 3 ; i++)
 						module2->Process();

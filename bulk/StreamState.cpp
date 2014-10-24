@@ -63,6 +63,14 @@ void StreamState::RenderTo(Mat& x_output) const
 	x_output.setTo(Scalar(255 * m_state, 255 * m_state, 255 * m_state));
 }
 
+/// Randomize the content of the stream
+void StreamState::Randomize(unsigned int& xr_seed)
+{
+	// random state
+	if(rand_r(&xr_seed) < RAND_MAX / 10)
+		m_state = !m_state;
+}
+
 void StreamState::Serialize(std::ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;

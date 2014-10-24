@@ -71,6 +71,31 @@ void StreamImage::RenderTo(Mat& x_output) const
 	m_image.copyTo(x_output);
 }
 
+/// Randomize the content of the stream
+void StreamImage::Randomize(unsigned int& xr_seed)
+{
+	// random image
+	m_image = cv::Mat(m_image.size(), m_image.type());
+	m_image.setTo(0);
+	int nb = rand_r(&xr_seed) % 100;
+	for ( int i = 0; i < nb; i++ )
+	{
+		cv::Point center;
+		center.x = rand_r(&xr_seed) % m_image.cols;
+		center.y = rand_r(&xr_seed) % m_image.rows;
+
+		cv::Size axes;
+		axes.width  = rand_r(&xr_seed) % 200;
+		axes.height = rand_r(&xr_seed) % 200;
+
+		double angle = rand_r(&xr_seed) % 180;
+		cv::Scalar randomColor(rand_r(&xr_seed) % 255, rand_r(&xr_seed) % 255, rand_r(&xr_seed) % 255);
+
+		ellipse(m_image, center, axes, angle, angle - 100, angle + 200,
+				randomColor, (rand_r(&xr_seed) % 10) - 1);
+	}
+}
+
 void StreamImage::Serialize(std::ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;

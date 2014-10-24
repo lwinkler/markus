@@ -91,6 +91,7 @@ class Object : public Serializable
 		inline cv::Point Center() const {return cv::Point(posX, posY);}
 		void RenderTo(cv::Mat& x_output, const cv::Scalar& x_color) const;
 		void Intersect(const cv::Mat& x_image);
+		virtual void Randomize(unsigned int& xr_seed, const std::string& x_requirement, const cv::Size& xr_size);
 		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 		virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 

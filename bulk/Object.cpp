@@ -27,8 +27,8 @@
 #include <jsoncpp/json/reader.h>
 #include <boost/lexical_cast.hpp>
 
-using namespace cv;
 using namespace std;
+using namespace cv;
 
 log4cxx::LoggerPtr Object::m_logger(log4cxx::Logger::getLogger("Object"));
 
@@ -210,16 +210,16 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 * @return Intersected object
 */
 
-void Object::Intersect(const cv::Mat& x_image)
+void Object::Intersect(const Mat& x_image)
 {
 	// cout<<"in "<<posX<<" "<<posY<<" "<<width<<" "<<height<<endl;
 	if(posX - width / 2 < 0 || posY - height / 2 < 0 
 		|| posX + width / 2 >= x_image.cols || posY + height / 2 >= x_image.rows)
 	{
 		// LOG_DEBUG(m_logger, "Correcting object " + GetName());
-		cv::Rect rect = Rect();
-		cv::Point tl = rect.tl();
-		cv::Point br = rect.br();
+		cv::Rect rect;
+		Point tl = rect.tl();
+		Point br = rect.br();
 		
 		tl.x = MAX(0, tl.x);
 		tl.x = MIN(x_image.cols - 1, tl.x);
@@ -237,5 +237,33 @@ void Object::Intersect(const cv::Mat& x_image)
 		posX 	 = tl.x + width / 2;
 		posY 	 = tl.y + height / 2;
 		// cout<<"out "<<posX<<" "<<posY<<" "<<width<<" "<<height<<endl;
+	}
+}
+
+/// Randomize the content of the object
+void Object::Randomize(unsigned int& xr_seed, const std::string& xr_requirement, const Size& xr_size)
+{
+	Object obj("test", cv::Rect(
+		Point(rand_r(&xr_seed) % xr_size.width, rand_r(&xr_seed) % xr_size.height), 
+		Point(rand_r(&xr_seed) % xr_size.width, rand_r(&xr_seed) % xr_size.height))
+	);
+	m_feats.clear();
+
+	Json::Value req(xr_requirement);
+	for (int i = 0; i < (int) req.size(); i++)
+	{
+		cout<<req[i].get("type", "").asString()<<"AASS"<<endl;
+		Feature* feat = m_factoryFeatures.CreateFeature(req[i].get("type", "unnamed").asString());
+		feat->Randomize(xr_seed, req[i].asString());
+		obj.AddFeature(req[i].asString(), feat);
+	}
+
+	int nb = rand_r(&xr_seed) % 100;
+	// note: notify event does not accept empty features, so we add 1
+	for(int i = 0 ; i < nb + 1 ; i++)
+	{
+		std::stringstream name;
+		name<<"rand"<<i;
+		obj.AddFeature(name.str(), static_cast<float>(rand_r(&xr_seed)) / RAND_MAX);
 	}
 }
