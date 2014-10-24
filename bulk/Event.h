@@ -62,6 +62,7 @@ class Event : public Serializable
 			return m_object.GetFeature(x_name);
 		}
 		void Notify(bool x_isProcessEvent=false);
+		virtual void Randomize(unsigned int& xr_seed, const std::string& x_requirement, const cv::Size& x_size);
 		virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const;
 		virtual void Deserialize(std::istream& x_in, const std::string& x_dir);
 

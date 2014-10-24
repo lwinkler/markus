@@ -68,20 +68,7 @@ void StreamEvent::ConvertInput()
 void StreamEvent::Randomize(unsigned int& xr_seed)
 {
 	// random event
-	m_event.Empty();
-	if(rand_r(&xr_seed) < RAND_MAX /10)
-	{
-		if(rand_r(&xr_seed) < RAND_MAX /10)
-		{
-			m_event.Raise("random");
-		}
-		else
-		{
-			Object obj("random");
-			obj.Randomize(xr_seed, m_requirement, GetSize());
-			m_event.Raise("random", obj); 
-		}
-	}
+	m_event.Randomize(xr_seed, m_requirement, GetSize());
 }
 
 /// Render : to display the event
