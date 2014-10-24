@@ -134,7 +134,6 @@ void ModuleKeyPoints::ProcessFrame()
 			obj.width  = it2->size;
 			obj.height = it2->size;
 			obj.Intersect(m_input);
-			// obj.SetId(it1->GetId()); // TODO: Keep this ?
 			obj.AddFeature("keypoint", new FeatureKeyPoint(*it2));
 			obj.AddFeature("parent", new FeatureInt(it1->GetId()));
 

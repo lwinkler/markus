@@ -349,7 +349,7 @@ ControllerSerializable::ControllerSerializable(ParameterSerializable& x_param):
 {
 }
 
-QWidget* ControllerSerializable::CreateWidget() // TODO: Keep this ?
+QWidget* ControllerSerializable::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
 	m_lineEdit = new QLineEdit();

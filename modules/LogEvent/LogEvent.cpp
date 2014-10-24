@@ -36,7 +36,7 @@ log4cxx::LoggerPtr LogEvent::m_logger(log4cxx::Logger::getLogger("LogEvent"));
 
 LogEvent::LogEvent(const ConfigReader& x_configReader) 
 	 : Module(x_configReader), m_param(x_configReader),
-	m_inputIm1(Size(m_param.width, m_param.height), m_param.type), // TODO: There should be an input array
+	m_inputIm1(Size(m_param.width, m_param.height), m_param.type),
 	m_inputIm2(Size(m_param.width, m_param.height), m_param.type)
 {
 	// Init input images
