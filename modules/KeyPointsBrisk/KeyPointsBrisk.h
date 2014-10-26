@@ -44,6 +44,10 @@ public:
 			m_list.push_back(new ParameterInt("octaves"         , 3  , 1 , 100 , &octaves      , ""));
 			m_list.push_back(new ParameterFloat("pattern_scale" , 1  , 0 , 10  , &patternScale , ""));
 
+			// Limit size to accelerate unit tests
+			RefParameterByName("width").SetRange("[1:1280]");
+			RefParameterByName("height").SetRange("[1:960]");
+
 			Init();
 		};
 		int threshold;

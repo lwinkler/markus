@@ -210,18 +210,31 @@ Scalar colorFromId(int x_id)
 }
 
 
-/* Split a string separated by a character*/
+/// Split a string separated by a character
 vector<string> &split(const string &s, char delim, vector<string> &elems)
 {
 	stringstream ss(s);
 	string item;
 	elems.clear();
-	while (getline(ss, item, delim)) {
+	while (getline(ss, item, delim))
+	{
 		elems.push_back(item);
 	}
 	return elems; // Return an input parameter so the reference is valid !
 }
 
+/// join strings
+string join(const vector<string> &elems, char delim)
+{
+	if(elems.size() == 0)
+		return "";
+	stringstream ss;
+	vector<string>::const_iterator it = elems.begin();
+	for( ; it != elems.end() - 1 ; it++)
+		ss << *it << delim;
+	ss << *it;
+	return ss.str();
+}
 
 /// Return a time stamp in a string format
 const string timeStamp(int x_pid)
@@ -302,7 +315,7 @@ string jsonify(const string& x_name, TIME_STAMP x_value)
 
 
 // Create an empty config file
-void createEmptyConfigFile(const std::string& x_fileName)
+void createEmptyConfigFile(const string& x_fileName)
 {
 	ofstream of(x_fileName.c_str());
 	of<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"<<endl;
@@ -319,7 +332,7 @@ void createEmptyConfigFile(const std::string& x_fileName)
 *
 * @return true if files are identical
 */
-bool compareFiles(const std::string& x_file1, const std::string& x_file2)
+bool compareFiles(const string& x_file1, const string& x_file2)
 {
 	ifstream file1(x_file1.c_str());
 	ifstream file2(x_file2.c_str());
