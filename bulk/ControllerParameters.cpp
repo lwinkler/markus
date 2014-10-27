@@ -388,7 +388,7 @@ ControllerCalibrationByHeight::ControllerCalibrationByHeight(ParameterSerializab
 {
 }
 
-QWidget* ControllerCalibrationByHeight::CreateWidget() // TODO: Keep this class ?
+QWidget* ControllerCalibrationByHeight::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
 

@@ -21,7 +21,6 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 #include "FeatureString.h"
-#include "assert.h" // TODO remove
 
 using namespace std;
 
@@ -39,8 +38,7 @@ double FeatureString::Compare2(const Feature& x_feature) const
 
 void FeatureString::Randomize(unsigned int& xr_seed, const std::string& x_param)
 {
-	// TODO
-	assert(false);
+	value = "random_string";
 }
 
 void FeatureString::Serialize(ostream& x_out, const string& x_dir) const

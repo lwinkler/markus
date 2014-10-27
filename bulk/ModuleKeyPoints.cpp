@@ -140,7 +140,6 @@ void ModuleKeyPoints::ProcessFrame()
 				vector<float> vect(descriptors.cols, 0);
 				descriptors.row(i).copyTo(vect);
 				obj.AddFeature("descriptor", new FeatureVectorFloat(vect));
-				// TODO: There is a bug in JSON when logging these features
 			}
 
 			m_objectsOut.push_back(obj);
