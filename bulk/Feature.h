@@ -35,7 +35,7 @@ class Feature : public Serializable
 {
 	public:
 		Feature(){}
-		virtual ~Feature(){};
+		virtual ~Feature(){}
 		virtual Feature* CreateCopy() const = 0;
 		virtual double Compare2(const Feature& x_feature) const = 0;
 		virtual void Randomize(unsigned int& xr_seed, const std::string& x_param) = 0;

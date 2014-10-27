@@ -165,19 +165,19 @@ void GroundTruthReader::ProcessFrame()
 			// gt = 1 only if object has been detected in roi
 			if (find (trackedObj.begin(), trackedObj.end(), it->GetId()) != trackedObj.end())
 			{
-				it->AddFeature("gt",(float)true);
+				it->AddFeature("gt", 1.0);
 				it->AddFeature("label",text);
 			}
 			else
 			{
-				it->AddFeature("gt",(float)false);
+				it->AddFeature("gt", 0.0);
 				it->AddFeature("label","");
 			}
 
 		}
 		else
 		{
-			it->AddFeature("gt",m_state);
+			it->AddFeature("gt", static_cast<float>(m_state));
 			it->AddFeature("label",text);
 		}
 

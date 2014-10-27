@@ -49,7 +49,7 @@ public:
 	}
 	inline std::string GetDefaultString() const{std::stringstream ss; m_default.Serialize(ss,""); return ss.str();}
 	inline std::string GetRange() const{return "";}
-	inline virtual void SetRange(const std::string& x_range){};
+	inline virtual void SetRange(const std::string& x_range){}
 	inline const ParameterType& GetType() const {const static ParameterType s = PARAM_GENERIC; return s;}
 	inline const std::string& GetTypeString() const {const static std::string s = "Polygon"; return s;}
 	inline const Polygon& GetDefault() const {

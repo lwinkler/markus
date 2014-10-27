@@ -73,7 +73,7 @@ public:
 	inline bool IsReady() const {return m_isReady;}
 	inline void SetAsReady(){m_isReady = true;}
 	inline const std::string& GetRequirement(){return m_requirement;}
-	inline void SetRequirement(const std::string& x_requirement){m_requirement = x_requirement;};
+	inline void SetRequirement(const std::string& x_requirement){m_requirement = x_requirement;}
 
 protected:
 	std::string m_name;

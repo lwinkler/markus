@@ -109,7 +109,7 @@ void ModuleKeyPoints::ProcessFrame()
 		if(mp_descriptor != NULL)
 		{
 			mp_descriptor->compute(m_input, pointsOfInterest, descriptors);
-			assert(descriptors.rows == (int)pointsOfInterest.size());
+			assert(descriptors.rows == static_cast<int>(pointsOfInterest.size()));
 		}
 
 		//Mat subImage(m_input,it1->Rect());    
