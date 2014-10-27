@@ -70,13 +70,6 @@ void ModuleKeyPoints::Reset()
 
 	Module::Reset();
 
-	// If the object input is not connected: extract on whole image
-        if(!m_inputStreams.at(1)->IsConnected())
-	{
-		LOG_INFO(m_logger, "Object input not connected, use the whole image");
-        	m_objectsIn.push_back(Object("screen", Rect(0, 0, m_input.cols, m_input.rows)));
-	}
-
 	CLEAN_DELETE(mp_descriptor);
 	if(m_param.descriptor != "")
 	{
@@ -99,7 +92,7 @@ void ModuleKeyPoints::ProcessFrame()
 	{
 		if(it1->width <= 8 || it1->height <= 8)
 		{
-			LOG_WARN(m_logger, "Object has insufficient size");
+			LOG_WARN(m_logger, "Object has insufficient size: "<<it1->width<<"x"<<it1->height);
 			continue;
 		}
 

@@ -215,14 +215,15 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 void Object::Intersect(const Mat& x_image)
 {
 	// cout<<"in "<<posX<<" "<<posY<<" "<<width<<" "<<height<<endl;
-	if(posX - width / 2 < 0 || posY - height / 2 < 0 
-		|| posX + width / 2 >= x_image.cols || posY + height / 2 >= x_image.rows)
+	const cv::Rect& rect(Rect());
+	Point tl = rect.tl();
+	Point br = rect.br();
+
+	if(tl.x < 0 || tl.y < 0 
+		|| br.x > x_image.cols || br.y > x_image.rows)
 	{
-		// LOG_DEBUG(m_logger, "Correcting object " + GetName());
-		cv::Rect rect;
-		Point tl = rect.tl();
-		Point br = rect.br();
-		
+		LOG_DEBUG(m_logger, "Correcting object " + GetName());
+
 		tl.x = MAX(0, tl.x);
 		tl.x = MIN(x_image.cols - 1, tl.x);
 		tl.y = MAX(0, tl.y);
@@ -234,8 +235,8 @@ void Object::Intersect(const Mat& x_image)
 		br.y = MIN(x_image.rows - 1, br.y);
 
 		// recompute object boundaries
-		width	 = br.x - tl.x;
-		height	 = br.y - tl.y;
+		width	 = br.x - tl.x + 1;
+		height	 = br.y - tl.y + 1;
 		posX 	 = tl.x + width / 2;
 		posY 	 = tl.y + height / 2;
 		// cout<<"out "<<posX<<" "<<posY<<" "<<width<<" "<<height<<endl;

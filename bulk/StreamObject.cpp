@@ -44,7 +44,13 @@ StreamObject::~StreamObject()
 
 void StreamObject::ConvertInput()
 {
-	if(m_connected == NULL) return;
+	if(m_connected == NULL)
+	{
+		// LOG_DEBUG(m_logger, "Object input not connected, use the whole image");
+		m_objects.clear();
+		m_objects.push_back(Object("screen", Rect(0, 0, GetWidth(), GetHeight())));
+		return;
+	}
 
 	// Copy time stamp to output
 	m_timeStamp = GetConnected().GetTimeStamp();
