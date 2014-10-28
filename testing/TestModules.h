@@ -239,16 +239,17 @@ class TestModules : public CppUnit::TestFixture
 		// Test on each type of module
 		for(std::vector<std::string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; it1++)
 		{
+			LOG_TEST(m_logger, "## on module "<<*it1);
 			Module* module = createAndConnectModule(*it1);
 			if(module->IsUnitTestingEnabled())
 			{
-				LOG_TEST(m_logger, "## on module "<<*it1);
 				for(int i = 0 ; i < 50 ; i++)
 				{
 					randomizeInputs(seed);
 					module->Process();
 				}
 			}
+			else LOG_TEST(m_logger, "--> unit testing disabled on "<<*it1);
 			delete module;
 		}
 	}

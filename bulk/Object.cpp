@@ -254,7 +254,8 @@ void Object::Randomize(unsigned int& xr_seed, const std::string& xr_requirement,
 		Json::Value root;
 		Json::Reader reader;
 		// cout<<xr_requirement<<endl;
-		assert(reader.parse(xr_requirement, root, false));
+		if(!reader.parse(xr_requirement, root, false))
+			throw MkException("Error parsing requirement: " + xr_requirement, LOC);
 		Json::Value req = root["features"];
 		if(!req.isNull())
 		{
