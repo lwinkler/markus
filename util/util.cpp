@@ -224,15 +224,21 @@ vector<string> &split(const string &s, char delim, vector<string> &elems)
 }
 
 /// join strings
-string join(const vector<string> &elems, char delim)
+string join(const vector<string> &elems, char delim, const string& format)
 {
 	if(elems.size() == 0)
 		return "";
 	stringstream ss;
 	vector<string>::const_iterator it = elems.begin();
+	char buffer[256];
 	for( ; it != elems.end() - 1 ; it++)
-		ss << *it << delim;
-	ss << *it;
+	{
+		snprintf(buffer, sizeof(buffer), format.c_str(), it->c_str());
+		ss << buffer << delim;
+	}
+	snprintf(buffer, sizeof(buffer), format.c_str(), it->c_str());
+	ss << buffer;
+
 	return ss.str();
 }
 

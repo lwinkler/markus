@@ -53,6 +53,7 @@ class TestModules : public CppUnit::TestFixture
 		ConfigReader* mp_config;
 
 		// Objects for streams
+		std::vector<Stream*> m_streams;
 		cv::Mat m_image; // (module->GetHeight(), module->GetWidth(), module->GetType());
 		bool m_state;
 		Event m_event;
@@ -66,12 +67,6 @@ class TestModules : public CppUnit::TestFixture
 	{
 		m_cpt = 0;
 		m_factoryModules.ListModules(m_moduleTypes);
-
-		// Modules to blacklist // TODO: This should of course not contain any module in the long term
-		// BLACKLIST("LFC_SVM");
-		// BLACKLIST("ExtractHOGFeatures");
-		// BLACKLIST("ExtractHOFFeatures");
-		// BLACKLIST("KeyPointsBrisk");
 
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigReader("/tmp/config_empty.xml");
@@ -87,6 +82,9 @@ class TestModules : public CppUnit::TestFixture
 	}
 	void tearDown()
 	{
+		for(std::vector<Stream*>::iterator it = m_streams.begin() ; it != m_streams.end() ; it++)
+			delete *it;
+		m_streams.clear();
 		delete mp_fakeInput;
 		delete mp_config;
 	}
@@ -143,7 +141,7 @@ class TestModules : public CppUnit::TestFixture
 			if(it2->second->GetClass() == "StreamImage")
 				outputStream = new StreamImage("test", m_image, *mp_fakeInput, "Test input");
 			else if(it2->second->GetClass() == "StreamObjects")
-				outputStream = new StreamObject("test", m_objects, *mp_fakeInput, "Test input");
+				outputStream = new StreamObject("test", m_objects, *mp_fakeInput, "Test input", it2->second->GetRequirement());
 			else if(it2->second->GetClass() == "StreamState")
 				outputStream = new StreamState("test", m_state, *mp_fakeInput, "Test input");
 			else if(it2->second->GetClass() == "StreamEvent")
@@ -155,11 +153,19 @@ class TestModules : public CppUnit::TestFixture
 			inputStream.Connect(outputStream);
 			CPPUNIT_ASSERT(outputStream != NULL);
 			CPPUNIT_ASSERT(inputStream.IsConnected());
+			m_streams.push_back(outputStream);
 		}
 		module->SetAsReady();
 		if(module->IsUnitTestingEnabled())
 			module->Reset();
 		return module;
+	}
+
+	/// Randomize all inputs 
+	void randomizeInputs(unsigned int& xr_seed)
+	{
+		for(std::vector<Stream*>::iterator it = m_streams.begin() ; it != m_streams.end() ; it++)
+			(*it)->Randomize(xr_seed);
 	}
 
 	/// Generate a random string value for the parameter
@@ -239,7 +245,7 @@ class TestModules : public CppUnit::TestFixture
 				LOG_TEST(m_logger, "## on module "<<*it1);
 				for(int i = 0 ; i < 50 ; i++)
 				{
-					module->RandomizeInputs(seed);
+					randomizeInputs(seed);
 					module->Process();
 				}
 			}
@@ -266,7 +272,7 @@ class TestModules : public CppUnit::TestFixture
 				continue;
 			}
 
-			module->RandomizeInputs(seed);
+			randomizeInputs(seed);
 
 			// Test on all controllers of the module
 			for(std::map<std::string, Controller*>::const_iterator it2 = module->GetControllersList().begin() ; it2 != module->GetControllersList().end() ; it2++)
@@ -384,7 +390,7 @@ class TestModules : public CppUnit::TestFixture
 
 					Module* module2 = createAndConnectModule(*it1, &params);
 					CPPUNIT_ASSERT(module2->IsUnitTestingEnabled());
-					module2->RandomizeInputs(seed);
+					randomizeInputs(seed);
 
 					for(int i = 0 ; i < 3 ; i++)
 						module2->Process();

@@ -48,10 +48,7 @@ Object::Object(const string& x_name, const cv::Rect& x_rect) :
         m_name(x_name)
 {
 	m_id     = -1;
-	posX 	 = x_rect.x + x_rect.width / 2;
-	posY 	 = x_rect.y + x_rect.height / 2;
-	width	 = x_rect.width;
-	height   = x_rect.height;
+	SetRect(x_rect);
 }
 
 Object::Object(const Object & x_obj)
@@ -246,16 +243,18 @@ void Object::Intersect(const Mat& x_image)
 /// Randomize the content of the object
 void Object::Randomize(unsigned int& xr_seed, const std::string& xr_requirement, const Size& xr_size)
 {
-	Object("test", cv::Rect(
+	SetRect(cv::Rect(
 		Point(rand_r(&xr_seed) % xr_size.width, rand_r(&xr_seed) % xr_size.height), 
 		Point(rand_r(&xr_seed) % xr_size.width, rand_r(&xr_seed) % xr_size.height))
 	);
 	m_feats.clear();
 
-	Json::Value root;
-	Json::Reader reader;
-	if(reader.parse(xr_requirement, root, false))
+	if(xr_requirement != "")
 	{
+		Json::Value root;
+		Json::Reader reader;
+		// cout<<xr_requirement<<endl;
+		assert(reader.parse(xr_requirement, root, false));
 		Json::Value req = root["features"];
 		if(!req.isNull())
 		{
