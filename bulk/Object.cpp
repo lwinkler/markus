@@ -257,15 +257,14 @@ void Object::Randomize(unsigned int& xr_seed, const std::string& xr_requirement,
 		if(!reader.parse(xr_requirement, root, false))
 			throw MkException("Error parsing requirement: " + xr_requirement, LOC);
 		Json::Value req = root["features"];
-		if(!req.isNull())
+		if(req.isNull())
+			throw MkException("Error parsing features of requirement: " + xr_requirement, LOC);
+		Json::Value::Members members1 = req.getMemberNames();
+		for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; it1++)
 		{
-			Json::Value::Members members1 = req.getMemberNames();
-			for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; it1++)
-			{
-				Feature* feat = m_factoryFeatures.CreateFeature(req[*it1]["type"].asString());
-				feat->Randomize(xr_seed, "");
-				AddFeature(*it1, feat);
-			}
+			Feature* feat = m_factoryFeatures.CreateFeature(req[*it1]["type"].asString());
+			feat->Randomize(xr_seed, "");
+			AddFeature(*it1, feat);
 		}
 	}
 
@@ -277,5 +276,5 @@ void Object::Randomize(unsigned int& xr_seed, const std::string& xr_requirement,
 		name<<"rand"<<i;
 		AddFeature(name.str(), static_cast<float>(rand_r(&xr_seed)) / RAND_MAX);
 	}
-	LOG_DEBUG(m_logger, "Generate random object with requirements:\""<<xr_requirement<<"\" --> "<<this->SerializeToString());
+	// LOG_DEBUG(m_logger, "Generate random object with requirements:\""<<xr_requirement<<"\" --> "<<this->SerializeToString());
 }

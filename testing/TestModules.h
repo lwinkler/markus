@@ -53,7 +53,6 @@ class TestModules : public CppUnit::TestFixture
 		ConfigReader* mp_config;
 
 		// Objects for streams
-		std::vector<Stream*> m_streams;
 		cv::Mat m_image; // (module->GetHeight(), module->GetWidth(), module->GetType());
 		bool m_state;
 		Event m_event;
@@ -82,9 +81,6 @@ class TestModules : public CppUnit::TestFixture
 	}
 	void tearDown()
 	{
-		for(std::vector<Stream*>::iterator it = m_streams.begin() ; it != m_streams.end() ; it++)
-			delete *it;
-		m_streams.clear();
 		delete mp_fakeInput;
 		delete mp_config;
 	}
@@ -153,19 +149,11 @@ class TestModules : public CppUnit::TestFixture
 			inputStream.Connect(outputStream);
 			CPPUNIT_ASSERT(outputStream != NULL);
 			CPPUNIT_ASSERT(inputStream.IsConnected());
-			m_streams.push_back(outputStream);
 		}
 		module->SetAsReady();
 		if(module->IsUnitTestingEnabled())
 			module->Reset();
 		return module;
-	}
-
-	/// Randomize all inputs 
-	void randomizeInputs(unsigned int& xr_seed)
-	{
-		for(std::vector<Stream*>::iterator it = m_streams.begin() ; it != m_streams.end() ; it++)
-			(*it)->Randomize(xr_seed);
 	}
 
 	/// Generate a random string value for the parameter
@@ -244,10 +232,7 @@ class TestModules : public CppUnit::TestFixture
 			if(module->IsUnitTestingEnabled())
 			{
 				for(int i = 0 ; i < 50 ; i++)
-				{
-					randomizeInputs(seed);
-					module->Process();
-				}
+					module->ProcessRandomInput(seed);
 			}
 			else LOG_TEST(m_logger, "--> unit testing disabled on "<<*it1);
 			delete module;
@@ -272,8 +257,6 @@ class TestModules : public CppUnit::TestFixture
 				delete module;
 				continue;
 			}
-
-			randomizeInputs(seed);
 
 			// Test on all controllers of the module
 			for(std::map<std::string, Controller*>::const_iterator it2 = module->GetControllersList().begin() ; it2 != module->GetControllersList().end() ; it2++)
@@ -304,7 +287,7 @@ class TestModules : public CppUnit::TestFixture
 					if(type  == "string")
 						values.push_back(defval);
 					else GenerateValueFromRange(20, values, range, type);
-
+  
 					for(std::vector<std::string>::iterator it = values.begin() ; it != values.end() ; it++)
 					{
 						// For string type we cannot set random values
@@ -318,7 +301,7 @@ class TestModules : public CppUnit::TestFixture
 
 						module->Reset();
 						for(int i = 0 ; i < 3 ; i++)
-							module->Process();
+							module->ProcessRandomInput(seed);
 						LOG_DEBUG(m_logger, "###  "<<it2->first<<".Set returned "<<*it);
 						LOG_DEBUG(m_logger, "###  "<<it2->first<<".Get returned "<<newValue);
 					}
@@ -334,7 +317,8 @@ class TestModules : public CppUnit::TestFixture
 						LOG_INFO(m_logger, "###  "<<it2->first<<"."<<*it3<<" returned "<<value);
 						// module->Unlock();
 
-						for(int i = 0 ; i < 3 ; i++) module->Process();
+						for(int i = 0 ; i < 3 ; i++)
+							module->ProcessRandomInput(seed);
 					}
 				}
 			}
@@ -391,10 +375,9 @@ class TestModules : public CppUnit::TestFixture
 
 					Module* module2 = createAndConnectModule(*it1, &params);
 					CPPUNIT_ASSERT(module2->IsUnitTestingEnabled());
-					randomizeInputs(seed);
 
 					for(int i = 0 ; i < 3 ; i++)
-						module2->Process();
+						module2->ProcessRandomInput(seed);
 
 					delete module2;
 				}
