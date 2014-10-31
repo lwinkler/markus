@@ -37,8 +37,8 @@ FilterObjects::FilterObjects(const ConfigReader& x_configReader) :
 {
 	AddInputStream(0, new StreamObject("input", 	m_objectsIn, *this,	"Incoming objects", 
 		"{\"features\":{"
-		"\"x\":{\"type\":\"FeatureFloat\"},"
-		"\"y\":{\"type\":\"FeatureFloat\"},"
+		"\"x\":{\"type\":\"FeatureFloatInTime\"},"
+		"\"y\":{\"type\":\"FeatureFloatInTime\"},"
 		"\"width\":{\"type\":\"FeatureFloat\"},"
 		"\"height\":{\"type\":\"FeatureFloat\"}}}"));
 

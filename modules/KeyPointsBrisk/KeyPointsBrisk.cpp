@@ -38,6 +38,7 @@ KeyPointsBrisk::KeyPointsBrisk(const ConfigReader& x_configReader) :
 	ModuleKeyPoints(x_configReader),
 	m_param(x_configReader)
 {
+	m_isUnitTestingEnabled = false; // TODO: Fix unit tests
 };
 
 

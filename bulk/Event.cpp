@@ -51,7 +51,7 @@ void Event::Randomize(unsigned int& xr_seed, const string& x_requirement, const 
 {
 	// random event
 	Empty();
-	if(x_requirement != "" || rand_r(&xr_seed) < RAND_MAX /10)
+	if(x_requirement != "" || rand_r(&xr_seed) < RAND_MAX /10) // TODO: reqs: object: features: ... ?
 	{
 		if(rand_r(&xr_seed) < RAND_MAX /10)
 		{

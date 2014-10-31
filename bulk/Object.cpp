@@ -241,7 +241,7 @@ void Object::Intersect(const Mat& x_image)
 }
 
 /// Randomize the content of the object
-void Object::Randomize(unsigned int& xr_seed, const std::string& xr_requirement, const Size& xr_size)
+void Object::Randomize(unsigned int& xr_seed, const std::string& x_requirement, const Size& xr_size)
 {
 	SetRect(cv::Rect(
 		Point(rand_r(&xr_seed) % xr_size.width, rand_r(&xr_seed) % xr_size.height), 
@@ -249,16 +249,16 @@ void Object::Randomize(unsigned int& xr_seed, const std::string& xr_requirement,
 	);
 	m_feats.clear();
 
-	if(xr_requirement != "")
+	if(x_requirement != "")
 	{
 		Json::Value root;
 		Json::Reader reader;
-		// cout<<xr_requirement<<endl;
-		if(!reader.parse(xr_requirement, root, false))
-			throw MkException("Error parsing requirement: " + xr_requirement, LOC);
+		// cout<<x_requirement<<endl;
+		if(!reader.parse(x_requirement, root, false))
+			throw MkException("Error parsing requirement: " + x_requirement, LOC);
 		Json::Value req = root["features"];
 		if(req.isNull())
-			throw MkException("Error parsing features of requirement: " + xr_requirement, LOC);
+			throw MkException("Error parsing features in requirement: " + x_requirement, LOC);
 		Json::Value::Members members1 = req.getMemberNames();
 		for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; it1++)
 		{
@@ -276,5 +276,5 @@ void Object::Randomize(unsigned int& xr_seed, const std::string& xr_requirement,
 		name<<"rand"<<i;
 		AddFeature(name.str(), static_cast<float>(rand_r(&xr_seed)) / RAND_MAX);
 	}
-	LOG_DEBUG(m_logger, "Generate random object with requirements:\""<<xr_requirement<<"\" --> "<<this->SerializeToString());
+	LOG_DEBUG(m_logger, "Generate random object with requirements:\""<<x_requirement<<"\" --> "<<this->SerializeToString());
 }
