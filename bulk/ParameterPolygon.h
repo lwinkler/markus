@@ -21,6 +21,8 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
+// TODO: Unit test this
+
 #ifndef PARAMETER_POLYGON_H
 #define PARAMETER_POLYGON_H
 
@@ -87,7 +89,7 @@ public:
 	}
 	virtual bool CheckRange() const
 	{
-		return (true);
+		return true;
 	}
 	virtual void SetValueToDefault()
 	{

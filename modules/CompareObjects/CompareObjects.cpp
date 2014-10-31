@@ -74,16 +74,23 @@ void CompareObjects::ProcessFrame()
 		int cpt = 0;
 		for(map<string, FeaturePtr>::const_iterator itfeat = it1->GetFeatures().begin() ; itfeat != it1->GetFeatures().end() ; itfeat++)
 		{
-			const Feature& feat(it2->GetFeature(itfeat->first));
-			double val = itfeat->second->Compare2(feat);
+			try
+			{
+				const Feature& feat(it2->GetFeature(itfeat->first));
+				double val = itfeat->second->Compare2(feat);
 
-			// If dissimilarity is higher or equal to one, raise an error anyway. 
-			// This means that features are too different
-			if(val >= 1)
-				LOG_ERROR(m_logger, "Feature "<<itfeat->first<<" dissimilarty of object "<<it1->GetName()<<it1->GetId()<<" is too high: "<<val);
-			LOG_DEBUG(m_logger, "Feature "<<itfeat->first<<" dissimilarity of object "<<it1->GetName()<<it1->GetId()<<"="<<val);
-			sum += val;
-			cpt++;
+				// If dissimilarity is higher or equal to one, raise an error anyway. 
+				// This means that features are too different
+				if(val >= 1)
+					LOG_ERROR(m_logger, "Feature "<<itfeat->first<<" dissimilarty of object "<<it1->GetName()<<it1->GetId()<<" is too high: "<<val);
+				LOG_DEBUG(m_logger, "Feature "<<itfeat->first<<" dissimilarity of object "<<it1->GetName()<<it1->GetId()<<"="<<val);
+				sum += val;
+				cpt++;
+			}
+			catch(FeatureNotFoundException& e)
+			{
+				LOG_ERROR(m_logger, "Feature "<<itfeat->first<<" not found on second object");
+			}
 		}
 		sum = sqrt(sum) / cpt;
 

@@ -294,6 +294,17 @@ class TestModules : public CppUnit::TestFixture
 						// std::cout<<"set "<<value<<std::endl;
 						it2->second->CallAction("Set", &(*it));
 
+						// Test if the config is globally still valid
+						try
+						{
+							module->CheckParameterRange();
+						}
+						catch(ParameterException& e)
+						{
+							LOG_INFO(m_logger, "Cannot set parameter, reason: "<<e.what());
+							continue;
+						}
+
 						newValue = "0";
 						it2->second->CallAction("Get", &newValue);
 

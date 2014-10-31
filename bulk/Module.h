@@ -109,6 +109,7 @@ public:
 	void SetAsReady();
 	bool AllInputsAreReady() const;
 	const Module& GetMasterModule() const;
+	inline void CheckParameterRange(){GetParameters().CheckRange(false);}
 	inline bool IsUnitTestingEnabled() const {return m_isUnitTestingEnabled;}
 	
 protected:
