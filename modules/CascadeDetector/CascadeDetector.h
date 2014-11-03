@@ -96,7 +96,6 @@ public:
 			RefParameterByName("width").SetRange("[1:1280]");
 			RefParameterByName("height").SetRange("[1:960]");
 
-			RefParameterByName("type").Lock();
 			Init();
 		}
 		

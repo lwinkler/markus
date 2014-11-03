@@ -121,7 +121,7 @@ class TestModules : public CppUnit::TestFixture
 		module->AllowAutoProcess(false);
 		m_image = cv::Mat(module->GetHeight(), module->GetWidth(), module->GetImageType());
 
-		const std::map<int, Stream*> inputs  = module->GetInputStreamList();
+		const std::map<int, Stream*> & inputs(module->GetInputStreamList());
 
 		// delete(mp_fakeInput);
 		// mp_fakeInput = m_factoryModules.CreateModule("VideoFileReader", mp_config->GetSubConfig("application").GetSubConfig("module", "VideoFileReader0"));
@@ -174,7 +174,7 @@ class TestModules : public CppUnit::TestFixture
 		double min = 0, max = 0;
 		if (2 == sscanf(x_range.c_str(), "[%lf:%lf]", &min, &max))
 		{
-			if(x_type == "int" && max - min <= x_nbSamples)
+			if((x_type == "int" || x_type == "bool") && max - min + 1 <= x_nbSamples)
 			{
 				for(int i = min ; i <= max ; i++)
 				{
@@ -186,9 +186,8 @@ class TestModules : public CppUnit::TestFixture
 			}
 			else if(x_type == "int" || x_type == "bool")
 			{
-				// x_nbSamples values in range
-				double incr = static_cast<double>(max - min) / x_nbSamples;
-				for(int i = 0 ; i <= x_nbSamples ; i++)
+				double incr = x_nbSamples <= 1 ? 0 : (max - min) / (x_nbSamples - 1);
+				for(int i = 0 ; i < x_nbSamples ; i++)
 				{
 					std::stringstream ss;
 					ss<<static_cast<int>(min + i * incr);

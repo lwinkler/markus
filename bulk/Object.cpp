@@ -276,5 +276,5 @@ void Object::Randomize(unsigned int& xr_seed, const std::string& x_requirement, 
 		name<<"rand"<<i;
 		AddFeature(name.str(), static_cast<float>(rand_r(&xr_seed)) / RAND_MAX);
 	}
-	LOG_DEBUG(m_logger, "Generate random object with requirements:\""<<x_requirement<<"\" --> "<<this->SerializeToString());
+	// LOG_DEBUG(m_logger, "Generate random object with requirements:\""<<x_requirement<<"\" --> "<<this->SerializeToString());
 }
