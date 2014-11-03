@@ -73,7 +73,7 @@ protected:
         std::vector <Object> m_keyPointsIn;
 
 	// output
-	std::vector <Object> m_keyPointsOut;
+	// std::vector <Object> m_keyPointsOut;
 
         //last img used to compute OF
         cv::Mat                  m_lastImg;

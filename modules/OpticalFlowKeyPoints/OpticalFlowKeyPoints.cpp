@@ -44,7 +44,7 @@ OpticalFlowKeyPoints::OpticalFlowKeyPoints(const ConfigReader& x_configReader) :
 	AddInputStream(0, new StreamImage("image",       m_input,        *this,   "Video input"));
 	AddInputStream(1, new StreamObject("keypoints",  m_keyPointsIn,  *this,   "List of key points"));
 
-	AddOutputStream(0, new StreamObject("keypoints", m_keyPointsOut, *this,   "List of key points with optical flow"));
+	AddOutputStream(0, new StreamObject("keypoints", m_keyPointsIn,  *this,   "List of key points with optical flow")); // TODO: Add optical flow or matching keypoint to the output
 
 #ifdef MARKUS_DEBUG_STREAMS
 	m_debug = Mat(Size(m_param.width, m_param.height), CV_8UC3);
@@ -66,7 +66,7 @@ void OpticalFlowKeyPoints::Reset()
 
 void OpticalFlowKeyPoints::ProcessFrame()
 {
-	static const TermCriteria termcrit(CV_TERMCRIT_ITER|CV_TERMCRIT_EPS, 20, 0.03);
+	// static const TermCriteria termcrit(CV_TERMCRIT_ITER|CV_TERMCRIT_EPS, 20, 0.03);
 	static const Size subPixWinSize(10,10);
 
 	if(m_keyPointsIn.size() == 0)
@@ -93,7 +93,14 @@ void OpticalFlowKeyPoints::ProcessFrame()
 		vector<float> err;
 		// cornerSubPix(m_input, pointsIn, subPixWinSize, Size(-1,-1), termcrit);
 		vector<Point2f> pointsOut;
-		calcOpticalFlowPyrLK(m_lastImg, m_input, m_lastPoints, pointsOut, status, err, Size(m_param.winSide, m_param.winSide), m_param.maxLevel);
+
+		// match points of the old point list with the current image
+		// the matching keypoints correspond with the old points !
+		// calcOpticalFlowPyrLK(m_lastImg, m_input, m_lastPoints, pointsOut, status, err, Size(m_param.winSide, m_param.winSide), m_param.maxLevel);
+		
+		// match points of the current point list with the old image
+		// in some way we compute optical flow in reverse: we inverted previous and next lists of points compared to standard usage
+		calcOpticalFlowPyrLK(m_input, m_lastImg, pointsIn, pointsOut, status, err, Size(m_param.winSide, m_param.winSide), m_param.maxLevel);
 
 #ifdef MARKUS_DEBUG_STREAMS
 		//draw a line between this to point to show the OF of these points
@@ -104,7 +111,8 @@ void OpticalFlowKeyPoints::ProcessFrame()
 			if(status[i] == 1)
 			{
 				//point have been found draw it in green
-				line(m_debug, m_lastPoints[i], pointsIn[i], Scalar(12, 233, 0));
+				line(m_debug, pointsIn[i], pointsOut[i], Scalar(12, 233, 0));
+				ellipse(m_debug, RotatedRect(pointsIn[i], Size(3, 3), 0), Scalar(33, 233, 0));
 				cpt++;
 			}
 		}
