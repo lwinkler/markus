@@ -40,6 +40,7 @@ FactoryModules.cpp
 FactoryFeatures.cpp
 Serializable.cpp
 CalibrationByHeight.cpp
+CalibrationByModel.cpp
 Processable.cpp
 )
 
