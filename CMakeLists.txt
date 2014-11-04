@@ -6,6 +6,10 @@ set(CMAKE_BUILD_TYPE       "Debug" CACHE BOOL "Mode of compilation")
 set(Markus_NO_GUI          false   CACHE BOOL "Compile Markus without a graphical user interface")
 set(Markus_USE_QT5         false   CACHE BOOL "Use QT 5 instead of 4")
 
+add_definitions(
+	-std=c++11 # Add compilation for C++ 2011: Used for module SubSENSE
+)
+
 # Required packages
 find_package(OpenCV REQUIRED)
 find_package(Threads REQUIRED)
