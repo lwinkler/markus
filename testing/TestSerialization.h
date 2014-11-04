@@ -38,6 +38,7 @@
 #include "StreamObject.h"
 #include "StreamDebug.h"
 #include "CalibrationByHeight.h"
+#include "CalibrationByModel.h"
 
 #include "FeatureFloatInTime.h"
 #include "FeatureVectorFloat.h"
@@ -145,6 +146,7 @@ class TestSerialization : public CppUnit::TestFixture
 		inf.close();
 		of2.close();
 		CPPUNIT_ASSERT(compareFiles(fileName2, fileName3));
+		if(!compareFiles(fileName2, fileName3))std::cout<<name<<std::endl;
 	}
 
 
@@ -210,6 +212,12 @@ class TestSerialization : public CppUnit::TestFixture
 
 		CalibrationByHeight calib2(0.33, 0.6, 0.25);
 		testSerialization(calib2, "CalibrationByHeight2");
+		
+		CalibrationByModel calibModel1;
+		testSerialization(calibModel1,"CalibrationByModel1");
+		
+		CalibrationByModel calibModel2(2404.2260764154521, -1.2035892526534258, 137.47118203741616,240.0, 480 , 640);
+		testSerialization(calibModel2,"CalibrationByModel2");
 
 		// TODO: test the serialization of all modules
 		testSerialization(*mp_fakeInput, "Module");

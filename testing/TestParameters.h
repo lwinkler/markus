@@ -122,12 +122,19 @@ class TestParameters : public CppUnit::TestFixture
 		paramImageType.SetRange("[CV_8UC1,CV_8UC2,CV_8UC3]");
 		testParameter(paramImageType, "CV_8UC2", "CV_32SC1");
 
-		LOG_TEST(m_logger, "Test ParameterSerializable");
+		LOG_TEST(m_logger, "Test ParameterSerializable - CalibrationByHeight");
 		CalibrationByHeight myCalibrationByHeight;
 		ParameterSerializable paramCalibrationByHeight("param_calibrationByHeight",  "{\"height\":0.6,\"x\":0.3,\"y\":0.6}", &myCalibrationByHeight, "Parameter of type CalibrationByHeight");
 		testParameter(paramCalibrationByHeight, "{\"height\":0.0,\"x\":1.0,\"y\":0.0}", "") ; // TODO: For now there is no range check ,"{\"x\":1, \"y\":0, \n \"height\":1.5}");
 
 
+		LOG_TEST(m_logger, "Test ParameterSerializable - CalibrationByModel");
+		std::string json_data = "{\"camera_height\":2404.226076415452,\"focal\":240.0,\"height_model\":480,\"roll\":137.4711820374162,\"width_model\":640,\"yaw\":-1.203589252653426}";
+		std::string json_data2 = "{\"camera_height\":7000.52453240,\"focal\":910.0,\"height_model\":287,\"roll\":-10.650,\"width_model\":384,\"yaw\":-35.30}";
+
+		CalibrationByModel myCalibrationByModel;
+		ParameterSerializable paramCalibrationByModel("param_calibrationByModel",  json_data2, &myCalibrationByModel, "Parameter of type CalibrationByModel");
+		testParameter(paramCalibrationByModel, json_data, "") ;
 		// TODO: Tests calibration model ?
 	}
 
