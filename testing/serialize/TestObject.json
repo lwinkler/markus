@@ -5,6 +5,7 @@
 	"int1" : 555,
 	"object" : 
 	{
+		"features" : null,
 		"height" : 0.0,
 		"id" : 0,
 		"name" : "",

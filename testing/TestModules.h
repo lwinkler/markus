@@ -47,7 +47,8 @@ class TestModules : public CppUnit::TestFixture
 		static log4cxx::LoggerPtr m_logger;
 	protected:
 		std::vector<std::string> m_moduleTypes;
-		FactoryModules m_factory;
+		FactoryModules  m_factoryModules;
+		FactoryFeatures m_factoryFeatures;
 		Module* mp_fakeInput;
 		ConfigReader* mp_config;
 
@@ -64,13 +65,7 @@ class TestModules : public CppUnit::TestFixture
 	void setUp()
 	{
 		m_cpt = 0;
-		m_factory.ListModules(m_moduleTypes);
-
-		// Modules to blacklist // TODO: This should of course not contain any module in the long term
-		// BLACKLIST("LFC_SVM");
-		// BLACKLIST("ExtractHOGFeatures");
-		// BLACKLIST("ExtractHOFFeatures");
-		// BLACKLIST("KeyPointsBrisk");
+		m_factoryModules.ListModules(m_moduleTypes);
 
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigReader("/tmp/config_empty.xml");
@@ -78,7 +73,7 @@ class TestModules : public CppUnit::TestFixture
 			.RefSubConfig("parameters", "", true)
 			.RefSubConfig("param", "fps", true).SetValue("22");
 		mp_config->RefSubConfig("application").SetAttribute("name", "unitTest");
-		mp_fakeInput = m_factory.CreateModule("VideoFileReader", mp_config->GetSubConfig("application").GetSubConfig("module", "VideoFileReader0"));
+		mp_fakeInput = m_factoryModules.CreateModule("VideoFileReader", mp_config->GetSubConfig("application").GetSubConfig("module", "VideoFileReader0"));
 		mp_fakeInput->AllowAutoProcess(false);
 		// note: we need a fake module to create the input streams
 		mp_fakeInput->SetAsReady();
@@ -110,167 +105,6 @@ class TestModules : public CppUnit::TestFixture
 		return moduleConfig;
 	}
 
-
-	/// Create random object
-	Object createRandomObject(unsigned int* xp_seed, const std::map<std::string,std::string>& x_features)
-	{
-		// std::cout<<m_image.size()<<std::endl;
-		assert(m_image.size() != cv::Size(0,0));
-		Object obj("test", cv::Rect(
-			cv::Point(rand_r(xp_seed) % mp_fakeInput->GetWidth(), rand_r(xp_seed) % mp_fakeInput->GetHeight()), 
-			cv::Point(rand_r(xp_seed) % mp_fakeInput->GetWidth(), rand_r(xp_seed) % mp_fakeInput->GetHeight()))
-		);
-
-		// If a list of features is specified
-		for(std::map<std::string,std::string>::const_iterator it = x_features.begin() ; it != x_features.end() ; it++)
-		{
-			// create a feature of the desired type
-			if(it->second == "FeatureFloat")
-				obj.AddFeature(it->first, new FeatureFloat(static_cast<float>(rand_r(xp_seed)) / RAND_MAX));
-			else if(it->second == "FeatureVectorFloat")
-			{
-				std::vector<float> vect;
-				int limit = 10; //  rand_r(xp_seed) % 100;
-				for(int i = 0 ; i < limit ; i++)
-					vect.push_back(static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
-				obj.AddFeature(it->first, new FeatureVectorFloat(vect));
-			}
-			else if(it->second == "FeatureFloatInTime")
-			{
-				// Create a float feature and update
-				double alpha = static_cast<float>(rand_r(xp_seed)) / RAND_MAX;
-				FeatureFloat ff(static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
-				FeatureFloatInTime ffit(ff);
-				for(int i = rand_r(xp_seed) % 20 ; i != 0 ; i--)
-				{
-					ff = FeatureFloat(static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
-					ffit.Update(ff, alpha);
-				}
-				obj.AddFeature(it->first, ffit.CreateCopy());
-			}
-			else
-				CPPUNIT_ASSERT(false);
-		}
-
-		int nb = rand_r(xp_seed) % 100;
-		// note: notify event does not accept empty features, so we add 1
-		for(int i = 0 ; i < nb + 1 ; i++)
-		{
-			std::stringstream name;
-			name<<"rand"<<i;
-			obj.AddFeature(name.str(), static_cast<float>(rand_r(xp_seed)) / RAND_MAX);
-		}
-		return obj;
-	}
-
-	/// Randomize input values
-	void randomizeInputs(const Module* x_module, const std::string& x_moduleClass, unsigned int* xp_seed)
-	{
-		assert(x_module->GetClass() == x_moduleClass);
-		std::map<std::string,std::string> features;
-
-		// Some modules require a specific set of features in input
-		if(x_moduleClass == "FallDetection")
-		{
-			features["x"]             = "FeatureFloat";
-			features["y"]             = "FeatureFloat";
-			features["ellipse_angle"] = "FeatureFloat";
-			features["ellipse_ratio"] = "FeatureFloat";
-		}
-		else if(x_moduleClass == "FilterObjects")
-		{
-			features["x"]      = "FeatureFloatInTime";
-			features["y"]      = "FeatureFloatInTime";
-			features["width"]  = "FeatureFloat";
-			features["height"] = "FeatureFloat";
-		}
-		else if(x_moduleClass == "FilterPython" || x_moduleClass == "TrackerByFeatures")
-		{
-			Controller* ctr = x_module->FindController("features");
-			assert(ctr != NULL);
-			std::string str;
-			std::vector<std::string> feats;
-			ctr->CallAction("Get", &str);
-			split(str, ',', feats);
-			for(std::vector<std::string>::const_iterator it = feats.begin() ; it != feats.end() ; it++)
-				features[*it] = "FeatureFloat";
-		}
-		else if(x_moduleClass == "Intrusion")
-		{
-			features["x"] = "FeatureFloat";
-			features["y"] = "FeatureFloat";
-		}
-		else if(x_moduleClass == "ClassifyEventsBagOfWords")
-		{
-			features["descriptor"] = "FeatureVectorFloat";
-		}
-		else if(x_moduleClass == "ClassifyEventsKnn")
-		{
-			features["descriptor"] = "FeatureVectorFloat";
-			Controller* ctr = x_module->FindController("features");
-			assert(ctr != NULL);
-			std::string str;
-			std::vector<std::string> feats;
-			ctr->CallAction("Get", &str);
-			split(str, ',', feats);
-			for(std::vector<std::string>::const_iterator it = feats.begin() ; it != feats.end() ; it++)
-				features[*it] = "FeatureFloat";
-		}
-		else if(x_moduleClass == "ExtractHOFFeatures")
-		{
-			features["descriptor"] = "FeatureVectorFloat";
-		}
-
-		// random event
-		m_event.Empty();
-		if(rand_r(xp_seed) < RAND_MAX /10)
-		{
-			if(rand_r(xp_seed) < RAND_MAX /10)
-			{
-				m_event.Raise("random");
-			}
-			else
-			{
-				m_event.Raise("random", createRandomObject(xp_seed, features));
-			}
-		}
-
-		// random objects
-		m_objects.clear();
-		int nb = rand_r(xp_seed) % 10;
-		for(int i = 0 ; i < nb ; i++)
-		{
-			m_objects.push_back(createRandomObject(xp_seed, features));
-		}
-
-
-		// random state
-		if(rand_r(xp_seed) < RAND_MAX /10)
-			m_state = !m_state;
-
-
-		// random image
-		m_image = cv::Mat(x_module->GetHeight(), x_module->GetWidth(), x_module->GetImageType());
-		m_image.setTo(0);
-		nb = rand_r(xp_seed) % 100;
-		for ( int i = 0; i < nb; i++ )
-		{
-			cv::Point center;
-			center.x = rand_r(xp_seed) % m_image.cols;
-			center.y = rand_r(xp_seed) % m_image.rows;
-
-			cv::Size axes;
-			axes.width  = rand_r(xp_seed) % 200;
-			axes.height = rand_r(xp_seed) % 200;
-
-			double angle = rand_r(xp_seed) % 180;
-			cv::Scalar randomColor(rand_r(xp_seed) % 255, rand_r(xp_seed) % 255, rand_r(xp_seed) % 255);
-
-			ellipse(m_image, center, axes, angle, angle - 100, angle + 200,
-					randomColor, (rand_r(xp_seed) % 10) - 1);
-		}
-	}
-
 	/// Create module and make it ready to process
 	Module* createAndConnectModule(const std::string& x_type, const std::map<std::string, std::string>* xp_parameters = NULL)
 	{
@@ -283,14 +117,14 @@ class TestModules : public CppUnit::TestFixture
 				moduleConfig.RefSubConfig("parameters").RefSubConfig("param", it->first, true).SetValue(it->second);
 
 		mp_config->SaveToFile("testing/tmp/tmp.xml");
-		Module* module = m_factory.CreateModule(x_type, moduleConfig);
+		Module* module = m_factoryModules.CreateModule(x_type, moduleConfig);
 		module->AllowAutoProcess(false);
 		m_image = cv::Mat(module->GetHeight(), module->GetWidth(), module->GetImageType());
 
-		const std::map<int, Stream*> inputs  = module->GetInputStreamList();
+		const std::map<int, Stream*> & inputs(module->GetInputStreamList());
 
 		// delete(mp_fakeInput);
-		// mp_fakeInput = m_factory.CreateModule("VideoFileReader", mp_config->GetSubConfig("application").GetSubConfig("module", "VideoFileReader0"));
+		// mp_fakeInput = m_factoryModules.CreateModule("VideoFileReader", mp_config->GetSubConfig("application").GetSubConfig("module", "VideoFileReader0"));
 		// mp_fakeInput->SetAsReady();
 		// mp_fakeInput->Reset();
 		
@@ -303,7 +137,7 @@ class TestModules : public CppUnit::TestFixture
 			if(it2->second->GetClass() == "StreamImage")
 				outputStream = new StreamImage("test", m_image, *mp_fakeInput, "Test input");
 			else if(it2->second->GetClass() == "StreamObjects")
-				outputStream = new StreamObject("test", m_objects, *mp_fakeInput, "Test input");
+				outputStream = new StreamObject("test", m_objects, *mp_fakeInput, "Test input", it2->second->GetRequirement());
 			else if(it2->second->GetClass() == "StreamState")
 				outputStream = new StreamState("test", m_state, *mp_fakeInput, "Test input");
 			else if(it2->second->GetClass() == "StreamEvent")
@@ -340,7 +174,7 @@ class TestModules : public CppUnit::TestFixture
 		double min = 0, max = 0;
 		if (2 == sscanf(x_range.c_str(), "[%lf:%lf]", &min, &max))
 		{
-			if(x_type == "int" && max - min <= x_nbSamples)
+			if((x_type == "int" || x_type == "bool") && max - min + 1 <= x_nbSamples)
 			{
 				for(int i = min ; i <= max ; i++)
 				{
@@ -352,9 +186,8 @@ class TestModules : public CppUnit::TestFixture
 			}
 			else if(x_type == "int" || x_type == "bool")
 			{
-				// x_nbSamples values in range
-				double incr = static_cast<double>(max - min) / x_nbSamples;
-				for(int i = 0 ; i <= x_nbSamples ; i++)
+				double incr = x_nbSamples <= 1 ? 0 : (max - min) / (x_nbSamples - 1);
+				for(int i = 0 ; i < x_nbSamples ; i++)
 				{
 					std::stringstream ss;
 					ss<<static_cast<int>(min + i * incr);
@@ -389,20 +222,18 @@ class TestModules : public CppUnit::TestFixture
 	{
 		LOG_TEST(m_logger, "\n# Test different inputs");
 		unsigned int seed = 324234566;
-		
+
 		// Test on each type of module
 		for(std::vector<std::string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; it1++)
 		{
+			LOG_TEST(m_logger, "## on module "<<*it1);
 			Module* module = createAndConnectModule(*it1);
 			if(module->IsUnitTestingEnabled())
 			{
-				LOG_TEST(m_logger, "## on module "<<*it1);
 				for(int i = 0 ; i < 50 ; i++)
-				{
-					randomizeInputs(module, *it1, &seed);
-					module->Process();
-				}
+					module->ProcessRandomInput(seed);
 			}
+			else LOG_TEST(m_logger, "--> unit testing disabled on "<<*it1);
 			delete module;
 		}
 	}
@@ -425,8 +256,6 @@ class TestModules : public CppUnit::TestFixture
 				delete module;
 				continue;
 			}
-
-			randomizeInputs(module, *it1, &seed);
 
 			// Test on all controllers of the module
 			for(std::map<std::string, Controller*>::const_iterator it2 = module->GetControllersList().begin() ; it2 != module->GetControllersList().end() ; it2++)
@@ -457,12 +286,23 @@ class TestModules : public CppUnit::TestFixture
 					if(type  == "string")
 						values.push_back(defval);
 					else GenerateValueFromRange(20, values, range, type);
-
+  
 					for(std::vector<std::string>::iterator it = values.begin() ; it != values.end() ; it++)
 					{
 						// For string type we cannot set random values
 						// std::cout<<"set "<<value<<std::endl;
 						it2->second->CallAction("Set", &(*it));
+
+						// Test if the config is globally still valid
+						try
+						{
+							module->CheckParameterRange();
+						}
+						catch(ParameterException& e)
+						{
+							LOG_INFO(m_logger, "Cannot set parameter, reason: "<<e.what());
+							continue;
+						}
 
 						newValue = "0";
 						it2->second->CallAction("Get", &newValue);
@@ -471,7 +311,7 @@ class TestModules : public CppUnit::TestFixture
 
 						module->Reset();
 						for(int i = 0 ; i < 3 ; i++)
-							module->Process();
+							module->ProcessRandomInput(seed);
 						LOG_DEBUG(m_logger, "###  "<<it2->first<<".Set returned "<<*it);
 						LOG_DEBUG(m_logger, "###  "<<it2->first<<".Get returned "<<newValue);
 					}
@@ -487,7 +327,8 @@ class TestModules : public CppUnit::TestFixture
 						LOG_INFO(m_logger, "###  "<<it2->first<<"."<<*it3<<" returned "<<value);
 						// module->Unlock();
 
-						for(int i = 0 ; i < 3 ; i++) module->Process();
+						for(int i = 0 ; i < 3 ; i++)
+							module->ProcessRandomInput(seed);
 					}
 				}
 			}
@@ -544,10 +385,9 @@ class TestModules : public CppUnit::TestFixture
 
 					Module* module2 = createAndConnectModule(*it1, &params);
 					CPPUNIT_ASSERT(module2->IsUnitTestingEnabled());
-					randomizeInputs(module2, *it1, &seed);
 
 					for(int i = 0 ; i < 3 ; i++)
-						module2->Process();
+						module2->ProcessRandomInput(seed);
 
 					delete module2;
 				}

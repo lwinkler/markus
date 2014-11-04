@@ -44,6 +44,10 @@ double FeatureKeyPoint::Compare2(const Feature& x_feature) const
 		&& keypoint.size == kp.size);
 }
 
+void FeatureKeyPoint::Randomize(unsigned int& xr_seed, const std::string& x_param)
+{
+	assert(false); // TODO
+}
 
 void FeatureKeyPoint::Serialize(ostream& x_out, const string& x_dir) const
 {

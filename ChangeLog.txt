@@ -1,3 +1,0 @@
-Known problems
-==============
-- In editor. There is a bug if you try to connect a module with many inputs, such as RenderObjects. You will need to re-open the editor since the next module will ont load.

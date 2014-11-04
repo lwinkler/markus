@@ -50,7 +50,7 @@ public:
 	inline virtual std::string GetValueString() const {return mr_value;}
 	inline virtual std::string GetDefaultString() const {return m_default;}
 	inline virtual std::string GetRange() const{return "";}
-	inline virtual void SetRange(const std::string& x_range){};
+	inline virtual void SetRange(const std::string& x_range){}
 	inline virtual bool CheckRange() const
 	{
 		return true;

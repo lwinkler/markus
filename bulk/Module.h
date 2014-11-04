@@ -80,6 +80,7 @@ public:
 	const std::map<int, Stream*>& GetInputStreamList() const {return m_inputStreams;}
 	const std::map<int, Stream*>& GetOutputStreamList() const {return m_outputStreams;}
 	const std::map<int, Stream*>& GetDebugStreamList() const {return m_debugStreams;}
+	void ProcessRandomInput(unsigned int& xr_seed);  /// For unit testing
 	void AddInputStream(int x_id, Stream* xp_stream);
 	void AddOutputStream(int x_id, Stream* xp_stream);
 	void AddDebugStream(int x_id, Stream* xp_stream);
@@ -108,6 +109,7 @@ public:
 	void SetAsReady();
 	bool AllInputsAreReady() const;
 	const Module& GetMasterModule() const;
+	inline void CheckParameterRange(){GetParameters().CheckRange(false);}
 	inline bool IsUnitTestingEnabled() const {return m_isUnitTestingEnabled;}
 	
 protected:

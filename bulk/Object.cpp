@@ -27,8 +27,8 @@
 #include <jsoncpp/json/reader.h>
 #include <boost/lexical_cast.hpp>
 
-using namespace cv;
 using namespace std;
+using namespace cv;
 
 log4cxx::LoggerPtr Object::m_logger(log4cxx::Logger::getLogger("Object"));
 
@@ -48,10 +48,7 @@ Object::Object(const string& x_name, const cv::Rect& x_rect) :
         m_name(x_name)
 {
 	m_id     = -1;
-	posX 	 = x_rect.x + x_rect.width / 2;
-	posY 	 = x_rect.y + x_rect.height / 2;
-	width	 = x_rect.width;
-	height   = x_rect.height;
+	SetRect(x_rect);
 }
 
 Object::Object(const Object & x_obj)
@@ -105,6 +102,8 @@ void Object::Serialize(std::ostream& x_out, const string& x_dir) const
 		it->second->Serialize(ss, x_dir);
 		ss >> root["features"][it->first];
 	}
+	if(m_feats.size() == 0)
+		root["features"] = Json::Value::null;
 
 	x_out << root;
 }
@@ -210,17 +209,18 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 * @return Intersected object
 */
 
-void Object::Intersect(const cv::Mat& x_image)
+void Object::Intersect(const Mat& x_image)
 {
 	// cout<<"in "<<posX<<" "<<posY<<" "<<width<<" "<<height<<endl;
-	if(posX - width / 2 < 0 || posY - height / 2 < 0 
-		|| posX + width / 2 >= x_image.cols || posY + height / 2 >= x_image.rows)
+	const cv::Rect& rect(Rect());
+	Point tl = rect.tl();
+	Point br = rect.br();
+
+	if(tl.x < 0 || tl.y < 0 
+		|| br.x > x_image.cols || br.y > x_image.rows)
 	{
-		// LOG_DEBUG(m_logger, "Correcting object " + GetName());
-		cv::Rect rect = Rect();
-		cv::Point tl = rect.tl();
-		cv::Point br = rect.br();
-		
+		LOG_DEBUG(m_logger, "Correcting object " + GetName());
+
 		tl.x = MAX(0, tl.x);
 		tl.x = MIN(x_image.cols - 1, tl.x);
 		tl.y = MAX(0, tl.y);
@@ -232,10 +232,49 @@ void Object::Intersect(const cv::Mat& x_image)
 		br.y = MIN(x_image.rows - 1, br.y);
 
 		// recompute object boundaries
-		width	 = br.x - tl.x;
-		height	 = br.y - tl.y;
+		width	 = br.x - tl.x + 1;
+		height	 = br.y - tl.y + 1;
 		posX 	 = tl.x + width / 2;
 		posY 	 = tl.y + height / 2;
 		// cout<<"out "<<posX<<" "<<posY<<" "<<width<<" "<<height<<endl;
 	}
+}
+
+/// Randomize the content of the object
+void Object::Randomize(unsigned int& xr_seed, const std::string& x_requirement, const Size& xr_size)
+{
+	SetRect(cv::Rect(
+		Point(rand_r(&xr_seed) % xr_size.width, rand_r(&xr_seed) % xr_size.height), 
+		Point(rand_r(&xr_seed) % xr_size.width, rand_r(&xr_seed) % xr_size.height))
+	);
+	m_feats.clear();
+
+	if(x_requirement != "")
+	{
+		Json::Value root;
+		Json::Reader reader;
+		// cout<<x_requirement<<endl;
+		if(!reader.parse(x_requirement, root, false))
+			throw MkException("Error parsing requirement: " + x_requirement, LOC);
+		Json::Value req = root["features"];
+		if(req.isNull())
+			throw MkException("Error parsing features in requirement: " + x_requirement, LOC);
+		Json::Value::Members members1 = req.getMemberNames();
+		for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; it1++)
+		{
+			Feature* feat = m_factoryFeatures.CreateFeature(req[*it1]["type"].asString());
+			feat->Randomize(xr_seed, "");
+			AddFeature(*it1, feat);
+		}
+	}
+
+	int nb = rand_r(&xr_seed) % 100;
+	// note: notify event does not accept empty features, so we add 1
+	for(int i = 0 ; i < nb + 1 ; i++)
+	{
+		std::stringstream name;
+		name<<"rand"<<i;
+		AddFeature(name.str(), static_cast<float>(rand_r(&xr_seed)) / RAND_MAX);
+	}
+	// LOG_DEBUG(m_logger, "Generate random object with requirements:\""<<x_requirement<<"\" --> "<<this->SerializeToString());
 }

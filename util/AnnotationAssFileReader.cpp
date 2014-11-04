@@ -32,10 +32,10 @@ using namespace cv;
 
 log4cxx::LoggerPtr AnnotationAssFileReader::m_logger(log4cxx::Logger::getLogger("AnnotationAssFileReader"));
 
-const string headerStartTime = "Start";
-const string headerEndTime = "End";
-const string headerSubText = "Text";
-const char separator = ',';
+const string AnnotationAssFileReader::headerStartTime = "Start";
+const string AnnotationAssFileReader::headerEndTime = "End";
+const string AnnotationAssFileReader::headerSubText = "Text";
+const char   AnnotationAssFileReader::separator = ',';
 
 AnnotationAssFileReader::AnnotationAssFileReader(int x_width, int x_height):
 	m_inputWidth(x_width),
@@ -234,6 +234,6 @@ void AnnotationAssFileReader::ReadResolution()
 		throw MkException("Subtitle format error: must contain 'PlayResY : value'", LOC);
 	int height = atoi((line.substr(start+1)).c_str());
 
-	m_widthProportion = (double)m_inputWidth/(double)width;
-	m_heightProportion = (double)m_inputHeight/(double)height;
+	m_widthProportion  = static_cast<double>(m_inputWidth)  / width;
+	m_heightProportion = static_cast<double>(m_inputHeight) / height;
 }

@@ -152,6 +152,7 @@ Parameter& ParameterStructure::RefParameterByName(const string& x_name)
 /**
 * @brief Set the value of the parameter to default
 */
+// TODO: Check that all parameters are always initialized
 void ParameterStructure::SetValueToDefault()
 {
 	for(vector<Parameter*>::iterator it = m_list.begin(); it != m_list.end(); it++)

@@ -64,6 +64,13 @@ void StreamEvent::ConvertInput()
 	m_event.ScaleObject(ratioX, ratioY);
 }
 
+/// Randomize the content of the stream
+void StreamEvent::Randomize(unsigned int& xr_seed)
+{
+	// random event
+	m_event.Randomize(xr_seed, m_requirement, GetSize());
+}
+
 /// Render : to display the event
 void StreamEvent::RenderTo(Mat& x_output) const
 {

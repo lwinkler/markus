@@ -70,13 +70,6 @@ void ModuleKeyPoints::Reset()
 
 	Module::Reset();
 
-	// If the object input is not connected: extract on whole image
-        if(!m_inputStreams.at(1)->IsConnected())
-	{
-		LOG_INFO(m_logger, "Object input not connected, use the whole image");
-        	m_objectsIn.push_back(Object("screen", Rect(0, 0, m_input.cols, m_input.rows)));
-	}
-
 	CLEAN_DELETE(mp_descriptor);
 	if(m_param.descriptor != "")
 	{
@@ -99,7 +92,7 @@ void ModuleKeyPoints::ProcessFrame()
 	{
 		if(it1->width <= 8 || it1->height <= 8)
 		{
-			LOG_WARN(m_logger, "Object has insufficient size");
+			LOG_WARN(m_logger, "Object has insufficient size: "<<it1->width<<"x"<<it1->height);
 			continue;
 		}
 
@@ -116,7 +109,7 @@ void ModuleKeyPoints::ProcessFrame()
 		if(mp_descriptor != NULL)
 		{
 			mp_descriptor->compute(m_input, pointsOfInterest, descriptors);
-			assert(descriptors.rows == (int)pointsOfInterest.size());
+			assert(descriptors.rows == static_cast<int>(pointsOfInterest.size()));
 		}
 
 		//Mat subImage(m_input,it1->Rect());    
@@ -134,7 +127,6 @@ void ModuleKeyPoints::ProcessFrame()
 			obj.width  = it2->size;
 			obj.height = it2->size;
 			obj.Intersect(m_input);
-			// obj.SetId(it1->GetId()); // TODO: Keep this ?
 			obj.AddFeature("keypoint", new FeatureKeyPoint(*it2));
 			obj.AddFeature("parent", new FeatureInt(it1->GetId()));
 
@@ -148,7 +140,6 @@ void ModuleKeyPoints::ProcessFrame()
 				vector<float> vect(descriptors.cols, 0);
 				descriptors.row(i).copyTo(vect);
 				obj.AddFeature("descriptor", new FeatureVectorFloat(vect));
-				// TODO: There is a bug in JSON when logging these features
 			}
 
 			m_objectsOut.push_back(obj);

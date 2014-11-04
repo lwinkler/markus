@@ -49,8 +49,7 @@ Feature * FactoryFeatures::CreateFeature(const std::string& x_type)
 
 	CreateFeatureFunc func = it->second;
 	Feature* pmod = func();
-	// if(pmod->GetClass() != x_type)
-		// throw MkException("Feature \"" + x_type + "\" must have the same name as its class \"" + pmod->GetClass() + "\"", LOC);
+
 	return pmod;
 }
 

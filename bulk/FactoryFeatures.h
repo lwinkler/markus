@@ -30,10 +30,11 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <assert.h>
 
 
 
-/// This class is a factory for modules: it creates a module of each type as specified by a string
+/// This class is a factory for features: it creates a feature of each type as specified by a string
 class FactoryFeatures
 {
 	typedef Feature* (*CreateFeatureFunc)();
@@ -45,13 +46,14 @@ public:
 	template<class T> void RegisterFeature(const std::string& x_name)
 	{
 		CreateFeatureFunc func = createFeature<T>;
+		assert(m_register.find(x_name) == m_register.end());
 		m_register.insert(FeatureRegistry::value_type(x_name, func));
-		// TODO: Check that this does not already exist
 
+		// Temporrily create a feature to get its signature
 		Feature* feat = func();
 
 		// std::cout<<"Register "<<feat->Signature()<<std::endl;
-		// TODO: Check that this does not already exist
+		assert(m_registerBySignature.find(x_name) == m_registerBySignature.end());
 		m_registerBySignature.insert(FeatureRegistry::value_type(feat->Signature(), func));
 		delete feat;
 	}

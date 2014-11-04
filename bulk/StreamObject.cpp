@@ -30,8 +30,8 @@ using namespace std;
 using namespace cv;
 
 
-StreamObject::StreamObject(const string& rx_name, vector<Object>& xr_objects, Module& rx_module, const string& rx_description):
-	Stream(rx_name, rx_module, rx_description),
+StreamObject::StreamObject(const string& rx_name, vector<Object>& xr_objects, Module& rx_module, const string& rx_description, const string& rx_requirement):
+	Stream(rx_name, rx_module, rx_description, rx_requirement),
 	m_objects(xr_objects)
 {}
 
@@ -44,7 +44,13 @@ StreamObject::~StreamObject()
 
 void StreamObject::ConvertInput()
 {
-	if(m_connected == NULL) return;
+	if(m_connected == NULL)
+	{
+		// LOG_DEBUG(m_logger, "Object input not connected, use the whole image");
+		m_objects.clear();
+		m_objects.push_back(Object("screen", Rect(0, 0, GetWidth(), GetHeight())));
+		return;
+	}
 
 	// Copy time stamp to output
 	m_timeStamp = GetConnected().GetTimeStamp();
@@ -80,6 +86,18 @@ void StreamObject::RenderTo(Mat& x_output) const
 	}
 }
 
+/// Randomize the content of the stream
+void StreamObject::Randomize(unsigned int& xr_seed)
+{
+	m_objects.clear();
+	int nb = rand_r(&xr_seed) % 10;
+	for(int i = 0 ; i < nb ; i++)
+	{
+		Object obj("random");
+		obj.Randomize(xr_seed, m_requirement, Size(GetWidth(), GetHeight()));
+		m_objects.push_back(obj);
+	}
+}
 
 void StreamObject::Serialize(std::ostream& x_out, const string& x_dir) const
 {
