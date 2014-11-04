@@ -51,7 +51,7 @@ class Template
 		{
 			std::map <std::string, FeatureFloatInTime>::const_iterator it = m_feats.find(x_name);
 			if(it == m_feats.end())
-				throw MkException("Feature is inexistant", LOC);
+				throw MkException("Feature is non-existant", LOC);
 			return it->second;
 		}
 		inline void SetFeatures(const std::map <std::string, FeatureFloatInTime>& x_feats) {m_feats = x_feats;}

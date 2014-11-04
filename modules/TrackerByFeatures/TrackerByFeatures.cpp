@@ -58,9 +58,15 @@ TrackerByFeatures::TrackerByFeatures(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader)
 {
-	AddInputStream(0, new StreamObject("input",      m_objects, *this,       "Input objects"));
+	// Features required in input
+	vector<string> feats;
+	split(m_param.features, ',', feats);
+	stringstream ss;
+	ss << "{\"features\":{" << join(feats, ',', "\"%s\":{\"type\":\"FeatureFloat\"}") << "}}";
 
-	AddOutputStream(0, new StreamObject("tracker", m_objects, *this, "Tracked objects"));
+	AddInputStream(0, new StreamObject("input",      m_objects, *this, "Input objects", ss.str()));
+
+	AddOutputStream(0, new StreamObject("tracker",   m_objects, *this, "Tracked objects"));
 
 #ifdef MARKUS_DEBUG_STREAMS
 	m_debug = Mat(Size(m_param.width, m_param.height), CV_8UC3);

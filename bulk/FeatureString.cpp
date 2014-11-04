@@ -36,6 +36,11 @@ double FeatureString::Compare2(const Feature& x_feature) const
 	return value != feat.value;
 }
 
+void FeatureString::Randomize(unsigned int& xr_seed, const std::string& x_param)
+{
+	value = "random_string";
+}
+
 void FeatureString::Serialize(ostream& x_out, const string& x_dir) const
 {
 	x_out << "\"" << value << "\"";

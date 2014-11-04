@@ -381,7 +381,7 @@ int main(int argc, char** argv)
 			gui.setWindowTitle("Markus");
 			if(!nogui)
 				gui.show();
-			returnValue = app.exec(); // TODO: Manage case where centralized with GUI
+			returnValue = app.exec();
 
 			// write the modified params in config and save
 			gui.UpdateConfig();

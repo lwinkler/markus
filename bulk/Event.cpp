@@ -46,6 +46,25 @@ Event::Event() :
 
 Event::~Event(){}
 
+/// Randomize the content of the event
+void Event::Randomize(unsigned int& xr_seed, const string& x_requirement, const Size& x_size)
+{
+	// random event
+	Empty();
+	if(x_requirement != "" || rand_r(&xr_seed) < RAND_MAX /10) // TODO: reqs: object: features: ... ?
+	{
+		if(rand_r(&xr_seed) < RAND_MAX /10)
+		{
+			Raise("random");
+		}
+		else
+		{
+			Object obj("random");
+			obj.Randomize(xr_seed, x_requirement, x_size);
+			Raise("random", obj); 
+		}
+	}
+}
 
 void Event::Serialize(std::ostream& x_out, const string& x_dir) const
 {

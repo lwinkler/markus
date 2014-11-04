@@ -35,7 +35,7 @@
 class StreamObject : public Stream
 {
 public:
-	StreamObject(const std::string& rx_name, std::vector<Object>& r_rects, Module& rx_module, const std::string& rx_description);
+	StreamObject(const std::string& rx_name, std::vector<Object>& r_rects, Module& rx_module, const std::string& rx_description, const std::string& rx_requirement = "");
 	~StreamObject();
 	MKCLASS("StreamObjects")
 	MKTYPE("Objects")
@@ -46,6 +46,7 @@ public:
 
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat& x_output) const;
+	virtual void Randomize(unsigned int& xr_seed);
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 	// double GetFeatureValue(const std::vector<Feature>& x_vect, const char* x_name);

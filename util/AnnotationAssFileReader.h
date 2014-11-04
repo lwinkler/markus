@@ -45,6 +45,11 @@ protected:
 	double m_widthProportion;
 	double m_heightProportion;
 
+	static const std::string headerStartTime;
+	static const std::string headerEndTime;
+	static const std::string headerSubText;
+	static const char separator;
+
 private:
 	static log4cxx::LoggerPtr m_logger;
 	void ReadSrt(const std::string srt);

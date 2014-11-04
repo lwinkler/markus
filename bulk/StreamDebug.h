@@ -43,6 +43,7 @@ public:
 	
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat& x_output) const;
+	virtual void Randomize(unsigned int& xr_seed){}
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 

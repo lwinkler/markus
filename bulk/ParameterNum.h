@@ -51,9 +51,12 @@ public:
 		split(x_range.substr(1, x_range.size() - 2), ':', values);
 		if(values.size() != 2)
 			throw MkException("Error in range", LOC);
-		std::stringstream ss;
-		ss<<values.at(0);
-		ss>>m_min;
+		std::stringstream ss1;
+		ss1<<values.at(0);
+		ss1>>m_min;
+		std::stringstream ss2;
+		ss2<<values.at(1);
+		ss2>>m_max;
 	}
 	inline const ParameterType& GetType() const {return m_type;}
 	inline const std::string& GetTypeString() const{return m_typeStr;}

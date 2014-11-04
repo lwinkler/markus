@@ -21,6 +21,8 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
+// TODO: Unit test this
+
 #ifndef PARAMETER_POLYGON_H
 #define PARAMETER_POLYGON_H
 
@@ -49,7 +51,7 @@ public:
 	}
 	inline std::string GetDefaultString() const{std::stringstream ss; m_default.Serialize(ss,""); return ss.str();}
 	inline std::string GetRange() const{return "";}
-	inline virtual void SetRange(const std::string& x_range){};
+	inline virtual void SetRange(const std::string& x_range){}
 	inline const ParameterType& GetType() const {const static ParameterType s = PARAM_GENERIC; return s;}
 	inline const std::string& GetTypeString() const {const static std::string s = "Polygon"; return s;}
 	inline const Polygon& GetDefault() const {
@@ -87,7 +89,7 @@ public:
 	}
 	virtual bool CheckRange() const
 	{
-		return (true);
+		return true;
 	}
 	virtual void SetValueToDefault()
 	{

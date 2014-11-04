@@ -537,3 +537,15 @@ void Module::AddDebugStream(int x_id, Stream* xp_stream)
 	m_debugStreams.insert(make_pair(x_id, xp_stream));
 }
 
+/**
+* @brief Randomize all inputs and process (unit testing only)
+*
+* @param xr_seed      Seed for randomization
+*/
+// TODO: Add an ifdef for unit tests
+void Module::ProcessRandomInput(unsigned int& xr_seed)
+{ 
+	for(std::map<int, Stream* >::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
+		it->second->Randomize(xr_seed);
+	ProcessFrame();
+};

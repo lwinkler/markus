@@ -87,10 +87,18 @@ class Object : public Serializable
 		// inline void SetFeatureByName(const std::string& x_name, float x_value) {m_feats.find(x_name)->second = Feature();}
 		void SetFeatures(const std::map<std::string, FeaturePtr>& x_feats){m_feats = x_feats;}
 		inline cv::Rect Rect() const {return cv::Rect(posX - width / 2, posY - height / 2, width, height);}
+		inline void SetRect(const cv::Rect& x_rect)
+		{
+			width  = x_rect.width;
+			height = x_rect.height;
+			posX   = x_rect.tl().x + width / 2;
+			posY   = x_rect.tl().y + height / 2;
+		}
 		inline cv::Point TopLeft() const {return cv::Point(posX - width / 2, posY - height / 2);}
 		inline cv::Point Center() const {return cv::Point(posX, posY);}
 		void RenderTo(cv::Mat& x_output, const cv::Scalar& x_color) const;
 		void Intersect(const cv::Mat& x_image);
+		virtual void Randomize(unsigned int& xr_seed, const std::string& x_requirement, const cv::Size& xr_size);
 		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 		virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 

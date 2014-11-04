@@ -32,6 +32,7 @@
 void registerAllFeatures(FactoryFeatures& x_fact)
 {
 	x_fact.RegisterFeature<FeatureFloat>("FeatureFloat"); 
+	x_fact.RegisterFeature<FeatureInt>("FeatureInt"); 
 	x_fact.RegisterFeature<FeatureFloatInTime>("FeatureFloatInTime"); 
 	x_fact.RegisterFeature<FeatureVectorFloat>("FeatureVectorFloat"); 
 	x_fact.RegisterFeature<FeatureString>("FeatureString"); 
