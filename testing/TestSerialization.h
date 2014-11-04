@@ -146,7 +146,6 @@ class TestSerialization : public CppUnit::TestFixture
 		inf.close();
 		of2.close();
 		CPPUNIT_ASSERT(compareFiles(fileName2, fileName3));
-		if(!compareFiles(fileName2, fileName3))std::cout<<name<<std::endl;
 	}
 
 
