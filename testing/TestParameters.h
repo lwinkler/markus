@@ -145,7 +145,7 @@ class TestParameters : public CppUnit::TestFixture
 
 		CalibrationByModel myCalibrationByModel;
 		ParameterSerializable paramCalibrationByModel("param_calibrationByModel",  json_data2, &myCalibrationByModel, "Parameter of type CalibrationByModel");
-		testParameter(paramCalibrationByModel, json_data, "") ;
+		testParameter(paramCalibrationByModel, json_data,"", "") ;
 		// TODO: Tests calibration model ?
 	}
 
