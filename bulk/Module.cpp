@@ -545,7 +545,13 @@ void Module::AddDebugStream(int x_id, Stream* xp_stream)
 // TODO: Add an ifdef for unit tests
 void Module::ProcessRandomInput(unsigned int& xr_seed)
 { 
+	unsigned int lastseed = xr_seed;
 	for(std::map<int, Stream* >::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; it++)
+	{
+		// note: we use this trick to generate similar inputs
+		// this avoids many errors while unit testing comparison modules
+		xr_seed = lastseed;
 		it->second->Randomize(xr_seed);
+	}
 	ProcessFrame();
 };

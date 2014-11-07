@@ -72,13 +72,17 @@ void CompareVideo::ProcessFrame()
 #endif
 
 	/* Check size of images */
-	assert(
+	if(!(
 		m_video1.rows > 0 &&
 		m_video1.cols > 0 &&
 		m_video1.rows == m_video2.rows &&
 		m_video1.cols == m_video2.cols &&
 		m_video1.channels() == m_video2.channels()
-	);
+	))
+	{
+		LOG_ERROR(m_logger, "Incoming videos must have the same format");
+		return;
+	}
 
 	/* Compute dissimilarity */
 	Mat temp;
@@ -89,10 +93,10 @@ void CompareVideo::ProcessFrame()
 	{
 		sum += rgb[c];
 	}
-	double e = (double) sum / ((m_video1.elemSize1() * 256) - 1);
+	double e = static_cast<double>(sum) / ((m_video1.elemSize1() * 256) - 1);
 
 	/* Log */
-	// cout << "Frame[" << m_frameCount << "]: error = " << e << " (" << e * 100 << "%)" << endl; // TODO: Use logging functions LOG_INFO
+	LOG_DEBUG(m_logger, "Frame[" << m_frameCount << "]: error = " << e << " (" << e * 100 << "%)");
 
 	/* Exception when exceeds threshold */
 	if (e > m_param.threshold)

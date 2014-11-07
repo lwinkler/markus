@@ -42,10 +42,10 @@ class CompareVideo : public Module {
 
 					m_list.push_back(new ParameterFloat("threshold", 0.01, 0, 1, &threshold, "Dissimilarity threshold for all the sequence"));
 
-					RefParameterByName("auto_process").SetDefault("1");
+					// RefParameterByName("auto_process").SetDefault("1");
 					RefParameterByName("allow_unsync_input").SetDefault("1");
-					RefParameterByName("type").SetDefault("CV_8UC3");
-					RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3]");
+					// RefParameterByName("type").SetDefault("CV_8UC3");
+					// RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3]");
 
 					Init();
 				};
