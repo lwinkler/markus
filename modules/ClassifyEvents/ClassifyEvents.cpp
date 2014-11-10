@@ -82,13 +82,13 @@ void ClassifyEvents::PushEvent()
 
 void ClassifyEvents::PopEvent()
 {
-	if(m_events.size() != 0)
+	if(!m_events.empty())
 	{
 		m_events.pop_front();
 		// m_images.pop_front();
-		if(m_events.size() != 0)
+		if(!m_events.empty())
 		{
-			assert(m_images.size() != 0);
+			assert(! m_images.empty());
 			m_images.front().copyTo(m_imageToValidate);
 			m_eventToValidate = m_events.front();
 		}

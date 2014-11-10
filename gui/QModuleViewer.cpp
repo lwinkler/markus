@@ -238,7 +238,7 @@ void QModuleViewer::updateModule(Module * x_module)
 		this->addAction(actionShowControl);
 		cpt++;
 	}
-	if(ctrs.size() > 0)
+	if(!ctrs.empty())
 	{
 		QAction * actionShowControl = new QAction("Hide all controls", this);
 		QSignalMapper * signalMapper = new QSignalMapper(this);

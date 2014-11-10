@@ -93,7 +93,7 @@ void LogObjects::ProcessFrame()
 	if(m_objectsIn.size() > 0)
 	{
 		m_outputFile<<"\"frame_"<<m_currentTimeStamp<<"\": ["<<endl;
-		for(vector<Object>::const_iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; it1++)
+		for(vector<Object>::const_iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; ++it1)
 		{
 			m_outputFile<<"\""<<it1->GetName()<<it1->GetId()<<"\": ";
 			m_outputFile<<it1->SerializeToString("")<<", "<<endl;

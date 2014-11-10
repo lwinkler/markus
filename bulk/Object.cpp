@@ -123,7 +123,7 @@ void Object::Deserialize(std::istream& x_in, const string& x_dir)
 	m_feats.clear();
 	Json::Value::Members members1 = root["features"].getMemberNames();
 		// TODO: JsonCpp has a bug for serializing floats !
-	for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; it1++)
+	for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; ++it1)
 	{
 		// Extract the signature of the feature:
 		//     this allows us to recognize the type of feature

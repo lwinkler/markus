@@ -204,7 +204,7 @@ bool Module::Process()
 
 		// Timestamp of the module is given by the input stream
 		m_currentTimeStamp = 0;
-		if(m_inputStreams.size() >= 1)
+		if(!m_inputStreams.empty())
 		{
 			// m_inputStreams[0]->LockModuleForRead();
 			m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected(); // TODO: should we lock module here ?

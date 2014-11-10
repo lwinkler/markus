@@ -60,7 +60,7 @@ void CompareObjects::ProcessFrame()
 	vector<Object>::const_iterator it2 = m_objects2.begin();
 
 	// Compare the list of objects
-	for(vector<Object>::const_iterator it1 = m_objects1.begin() ; it1 != m_objects1.end() ; it1++,it2++)
+	for(vector<Object>::const_iterator it1 = m_objects1.begin() ; it1 != m_objects1.end() ; ++it1, ++it2)
 	{
 		// Check that names and ids match
 		if(it1->GetName() != it2->GetName())
@@ -72,7 +72,7 @@ void CompareObjects::ProcessFrame()
 		// Sum the differences for each object
 		double sum = 0;
 		int cpt = 0;
-		for(map<string, FeaturePtr>::const_iterator itfeat = it1->GetFeatures().begin() ; itfeat != it1->GetFeatures().end() ; itfeat++)
+		for(map<string, FeaturePtr>::const_iterator itfeat = it1->GetFeatures().begin() ; itfeat != it1->GetFeatures().end() ; ++itfeat)
 		{
 			try
 			{

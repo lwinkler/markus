@@ -111,28 +111,35 @@ Manager::~Manager()
 		}
 
 		// Copy the directory for archiving if needed
-		if(m_param.autoClean)
+		try
 		{
-			if(m_param.archiveDir != "")
+			if(m_param.autoClean)
 			{
-				LOG_INFO(m_logger, "Working directory moved to " + m_param.archiveDir);
-				SYSTEM("mkdir -p " + m_param.archiveDir);
-				SYSTEM("mv " + m_outputDir + " " + m_param.archiveDir + "/");
+				if(m_param.archiveDir != "")
+				{
+					LOG_INFO(m_logger, "Working directory moved to " + m_param.archiveDir);
+					SYSTEM("mkdir -p " + m_param.archiveDir);
+					SYSTEM("mv " + m_outputDir + " " + m_param.archiveDir + "/");
+				}
+				else 
+				{
+					LOG_INFO(m_logger, "Working directory deleted");
+					SYSTEM("rm -rf " + m_outputDir);
+				}
 			}
-			else 
+			else
 			{
-				LOG_INFO(m_logger, "Working directory deleted");
-				SYSTEM("rm -rf " + m_outputDir);
+				if(m_param.archiveDir != "")
+				{
+					LOG_INFO(m_logger, "Working directory copied to " + m_param.archiveDir);
+					SYSTEM("mkdir -p " + m_param.archiveDir);
+					SYSTEM("cp -r " + m_outputDir + " " + m_param.archiveDir);
+				}
 			}
 		}
-		else
+		catch(MkException &e)
 		{
-			if(m_param.archiveDir != "")
-			{
-				LOG_INFO(m_logger, "Working directory copied to " + m_param.archiveDir);
-				SYSTEM("mkdir -p " + m_param.archiveDir);
-				SYSTEM("cp -r " + m_outputDir + " " + m_param.archiveDir);
-			}
+			LOG_ERROR(m_logger, "Exception thrown while archiving: " << e.what());
 		}
 	}
 }

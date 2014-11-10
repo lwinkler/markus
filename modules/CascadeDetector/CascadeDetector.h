@@ -40,7 +40,13 @@
 class DetectionThread : public QThread
 {
 public:
-	explicit DetectionThread(QObject* parent = 0) {m_timerThread = 0;}
+	explicit DetectionThread(QObject* parent = 0)
+	{
+		m_timerThread = 0;
+		m_scaleFactor = 0;
+		m_minNeighbors = 0;
+		m_minSide = 0;
+	}
 	virtual ~DetectionThread()
 	{
 		exit();

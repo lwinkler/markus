@@ -150,7 +150,7 @@ void VideoFileBufferWriter::ProcessFrame()
 			{
 				m_writer.write(*it);
 				it->release();
-				it++;
+				++it;
 				if(it == bufferEnd)
 					break;
 				if(it == m_buffer.end())
@@ -183,10 +183,10 @@ void VideoFileBufferWriter::AddImageToBuffer()
 	if(m_bufferFull)
 	{
 		// Buffer is full. Use a circular buffer
-		assert(m_buffer.size() > 0);
+		assert(!m_buffer.empty());
 		m_input.copyTo(*m_currentFrame);
 
-		m_currentFrame++;
+		++m_currentFrame;
 		if(m_currentFrame == m_buffer.end())
 			m_currentFrame = m_buffer.begin();
 	}

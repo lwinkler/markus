@@ -79,7 +79,7 @@ void HOGDetector::NormalProcess()
 #ifdef MARKUS_DEBUG_STREAMS
 	m_lastInput.copyTo(m_debug);
 
-	for(vector<Object>::const_iterator it = m_detectedObjects.begin() ; it != m_detectedObjects.end() ; it++)
+	for(vector<Object>::const_iterator it = m_detectedObjects.begin() ; it != m_detectedObjects.end() ; ++it)
 	{
 		// Draw the rectangle in the input image
 		rectangle(m_debug, it->Rect(), Scalar(255, 0, 33), 1, 8, 0 );
@@ -92,7 +92,7 @@ void HOGDetector::CopyResults()
 {
 	const double diagonal = sqrt(m_param.width * m_param.width + m_param.height * m_param.height);
 	m_detectedObjects.clear();
-	for(std::vector<Rect>::const_iterator it = m_thread.GetDetectedObjects().begin() ; it != m_thread.GetDetectedObjects().end() ; it++)
+	for(std::vector<Rect>::const_iterator it = m_thread.GetDetectedObjects().begin() ; it != m_thread.GetDetectedObjects().end() ; ++it)
 	{
 		Object obj(m_param.objectLabel, *it);
 

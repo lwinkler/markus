@@ -46,7 +46,7 @@ void updateObjectFromTemplate(const Template& x_temp, Object& x_obj)
 	x_obj.SetId(x_temp.GetNum());
 
 	// Copy features
-	for(map<string,FeatureFloatInTime>::const_iterator it3 = x_temp.GetFeatures().begin() ; it3 != x_temp.GetFeatures().end() ; it3++)
+	for(map<string,FeatureFloatInTime>::const_iterator it3 = x_temp.GetFeatures().begin() ; it3 != x_temp.GetFeatures().end() ; ++it3)
 	{
 		// cout<<"name "<<it3->first<<endl;
 		// cout<<"name "<<it3->second.SerializeToString()<<endl;
@@ -106,7 +106,7 @@ void TrackerByFeatures::MatchTemplates()
 	m_matched.clear();
 
 	// Try to match each objects with a template
-	for(list<Template>::iterator it1 = m_templates.begin() ; it1 != m_templates.end(); it1++ )
+	for(list<Template>::iterator it1 = m_templates.begin() ; it1 != m_templates.end(); ++it1)
 	{
 		// it1->m_bestMatchingObject = -1;
 		it1->m_lastMatchingObject = NULL;
@@ -141,7 +141,7 @@ void TrackerByFeatures::MatchTemplates()
 
 void TrackerByFeatures::UpdateObjects()
 {
-	for(vector<Object>::iterator it1 = m_objects.begin() ; it1 != m_objects.end(); it1++)
+	for(vector<Object>::iterator it1 = m_objects.begin() ; it1 != m_objects.end(); ++it1)
 	{
 		std::map<Object*, Template*>::iterator it = m_matched.find(&*it1);
 		assert(it != m_matched.end());
@@ -165,7 +165,7 @@ Object* TrackerByFeatures::MatchTemplate(Template& x_temp)
 
 	LOG_DEBUG(m_logger, "Comparing template "<<x_temp.GetNum()<<" with "<<m_objects.size()<<" objects");
 
-	for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
+	for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; ++it)
 	{
 		// Add empty features for distance and speed
 		double dist = x_temp.CompareWithObject(*it, m_featureNames);
@@ -213,7 +213,7 @@ const Template * TrackerByFeatures::MatchObject(const Object& x_obj)const
 
 	//cout<<"Comparing template "<<m_num<<" with "<<x_regs.size()<<" objects"<<endl;
 
-	for(list<Template>::const_iterator it1 = m_templates.begin() ; it1 != m_templates.end(); it1++ )
+	for(list<Template>::const_iterator it1 = m_templates.begin() ; it1 != m_templates.end(); ++it1)
 	{
 		// cout<<"Match template "<<it1->GetNum()<<endl;
 		double dist = it1->CompareWithObject(x_obj, m_featureNames);
@@ -238,7 +238,7 @@ void TrackerByFeatures::UpdateTemplates()
 #ifdef MARKUS_DEBUG_STREAMS
 #endif
 
-	for(list<Template>::iterator it1= m_templates.begin() ; it1 != m_templates.end(); it1++ )
+	for(list<Template>::iterator it1= m_templates.begin() ; it1 != m_templates.end(); ++it1)
 	{
 		// cout<<"Update template "<<it1->GetNum()<<endl;
 		if(it1->m_lastMatchingObject != NULL)
@@ -272,7 +272,7 @@ void TrackerByFeatures::CleanTemplates()
 	const double diagonal = sqrt(m_param.width * m_param.width + m_param.height * m_param.height);
 	TIME_STAMP timeStampClean = m_currentTimeStamp - m_param.timeDisappear * 1000;
 
-	for(list<Template>::iterator it1 = m_templates.begin() ; it1 != m_templates.end(); it1++ )
+	for(list<Template>::iterator it1 = m_templates.begin() ; it1 != m_templates.end(); ++it1)
 	{
 #ifdef MARKUS_DEBUG_STREAMS
 		// draw template (if position is available)
@@ -305,7 +305,7 @@ void TrackerByFeatures::DetectNewTemplates()
 {
 	// If objects not matched, add a template
 	int cpt = 0;
-	for(vector<Object>::iterator it2 = m_objects.begin() ; it2 != m_objects.end(); it2++ )
+	for(vector<Object>::iterator it2 = m_objects.begin() ; it2 != m_objects.end(); ++it2)
 	{
 		map<Object*, Template*>::iterator it3 = m_matched.find(&(*it2));
 		if(it3 == m_matched.end() || it3->second == NULL)
@@ -328,7 +328,7 @@ void TrackerByFeatures::DetectNewTemplates()
 
 				LOG_DEBUG(m_logger, "New object. Detect if the new object similar to another template ");
 
-				for(list<Template>::iterator it3 = m_templates.begin() ; it3 != m_templates.end() ; it3++)
+				for(list<Template>::iterator it3 = m_templates.begin() ; it3 != m_templates.end() ; ++it3)
 				{
 					// Add empty features for distance and speed
 					double dist = it3->CompareWithObject(*it2, m_featureNames);

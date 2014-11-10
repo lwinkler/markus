@@ -32,7 +32,7 @@ log4cxx::LoggerPtr Template::m_logger(log4cxx::Logger::getLogger("Module"));
 void copyFeaturesToTemplate(const map<string, FeaturePtr>& x_source, map<string, FeatureFloatInTime>& xr_dest)
 {
 	xr_dest.clear();
-	for(map<string,FeaturePtr>::const_iterator it = x_source.begin() ; it != x_source.end() ; it++)
+	for(map<string,FeaturePtr>::const_iterator it = x_source.begin() ; it != x_source.end() ; ++it)
 	{
 		const FeatureFloat* const ff = dynamic_cast<const FeatureFloat* const>(&*it->second);
 		// Skip all other features
@@ -98,10 +98,10 @@ double Template::CompareWithObject(const Object& x_obj, const vector<string>& x_
 	double sum = 0;
 	//cout<<"m_feats.size() ="<<m_feats.size()<<endl;
 	//assert(m_feats.size() >= x_obj.GetFeatures().size());
-	if(m_feats.size() <= 0)
+	if(m_feats.empty())
 		throw MkException("Feature vector of Template cannot be empty", LOC);
 	
-	for (vector<string>::const_iterator it = x_features.begin() ; it != x_features.end() ; it++)
+	for (vector<string>::const_iterator it = x_features.begin() ; it != x_features.end() ; ++it)
 	{
 		const FeatureFloatInTime& f1(GetFeature(*it));
 		const FeatureFloat&       f2(dynamic_cast<const FeatureFloat &>(x_obj.GetFeature(*it)));
@@ -121,7 +121,7 @@ void Template::UpdateFeatures(double x_alpha, TIME_STAMP m_currentTimeStamp)
 {
 	if(m_lastMatchingObject != NULL)
 	{
-		for (map<string,FeatureFloatInTime>::iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
+		for (map<string,FeatureFloatInTime>::iterator it = m_feats.begin() ; it != m_feats.end() ; ++it)
 		{
 			try
 			{

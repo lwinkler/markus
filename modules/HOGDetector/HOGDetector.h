@@ -41,7 +41,7 @@
 class HOGDetectionThread : public QThread
 {
 public:
-	explicit HOGDetectionThread(QObject* parent = 0) {m_timerThread = 0;}
+	explicit HOGDetectionThread(QObject* parent = 0) {m_timerThread = 0; m_scaleFactor = 0;}
 	virtual ~HOGDetectionThread()
 	{
 		exit();

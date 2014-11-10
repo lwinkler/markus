@@ -65,7 +65,7 @@ void SegmenterContour::Reset()
 	m_computeMoment = false;
 	m_computeHuMoment = false;
 
-	for(vector<string>::const_iterator it = m_featureNames.begin() ; it != m_featureNames.end() ; it++)
+	for(vector<string>::const_iterator it = m_featureNames.begin() ; it != m_featureNames.end() ; ++it)
 	{
 		if (!m_computeMoment)
 			m_computeMoment = (it->find("moment") != string::npos);
@@ -134,7 +134,7 @@ void SegmenterContour::ProcessFrame()
 
 
 			// Add the possible features
-			for(vector<string>::const_iterator it = m_featureNames.begin() ; it != m_featureNames.end() ; it++)
+			for(vector<string>::const_iterator it = m_featureNames.begin() ; it != m_featureNames.end() ; ++it)
 			{
 				if(it->compare("x") == 0)
 				{

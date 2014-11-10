@@ -123,7 +123,7 @@ void GroundTruthReader::ProcessFrame()
 
 				// middle of bounding box
 				Rect centerRefObj = Rect(refObj.x+((refObj.width - distanceRefObject) / 2) , refObj.y+ ((refObj.height - distanceRefObject) / 2), distanceRefObject, distanceRefObject);
-				for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
+				for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; ++it)
 				{
 					Rect objRect = it->Rect();
 					if (centerRefObj.contains(Point (objRect.x+objRect.width/2,objRect.y+objRect.height/2)) && refObj.area() >= objRect.area()) // middle of rect is in middle of bounding box and area is smaller than reference bounding box
@@ -157,7 +157,7 @@ void GroundTruthReader::ProcessFrame()
 	}
 #endif
 
-	for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; it++)
+	for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; ++it)
 	{
 		// ass file with rect in subtitle
 		if (m_assFile && refObj.width > 0)

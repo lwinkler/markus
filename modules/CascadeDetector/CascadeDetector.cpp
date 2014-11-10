@@ -86,7 +86,7 @@ void CascadeDetector::NormalProcess()
 #ifdef MARKUS_DEBUG_STREAMS
 	cvtColor(m_lastInput, m_debug, CV_GRAY2RGB);
 
-	for(vector<Object>::const_iterator it = m_detectedObjects.begin() ; it != m_detectedObjects.end() ; it++)
+	for(vector<Object>::const_iterator it = m_detectedObjects.begin() ; it != m_detectedObjects.end() ; ++it)
 	{
 		// Draw the rectangle in the input image
 		rectangle(m_debug, it->Rect(), Scalar(255, 0, 23)/*colorFromStr(m_param.color)*/, 1, 8, 0 );
@@ -98,7 +98,7 @@ void CascadeDetector::CopyResults()
 {
 	m_detectedObjects.clear();
 	const double diagonal = sqrt(m_param.width * m_param.width + m_param.height * m_param.height);
-	for(std::vector<Rect>::const_iterator it = m_thread.GetDetectedObjects().begin() ; it != m_thread.GetDetectedObjects().end() ; it++)
+	for(std::vector<Rect>::const_iterator it = m_thread.GetDetectedObjects().begin() ; it != m_thread.GetDetectedObjects().end() ; ++it)
 	{
 		Object obj(m_param.objectLabel, *it);
 
