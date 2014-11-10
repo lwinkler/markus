@@ -52,8 +52,8 @@ Object::Object(const string& x_name, const cv::Rect& x_rect) :
 }
 
 Object::Object(const Object & x_obj)
+: m_name(x_obj.GetName())
 {
-	m_name = x_obj.GetName();
 	m_id = x_obj.GetId();
 	posX = x_obj.posX;
 	posY = x_obj.posY;

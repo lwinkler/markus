@@ -113,7 +113,7 @@ class TestModules : public CppUnit::TestFixture
 
 		// Add parameters to override to the config
 		if(xp_parameters != NULL)
-			for(std::map<std::string, std::string>::const_iterator it = xp_parameters->begin() ; it != xp_parameters->end() ; it++)
+			for(std::map<std::string, std::string>::const_iterator it = xp_parameters->begin() ; it != xp_parameters->end() ; ++it)
 				moduleConfig.RefSubConfig("parameters").RefSubConfig("param", it->first, true).SetValue(it->second);
 
 		mp_config->SaveToFile("testing/tmp/tmp.xml");
@@ -129,7 +129,7 @@ class TestModules : public CppUnit::TestFixture
 		// mp_fakeInput->Reset();
 		
 		// Create custom streams to feed each input of the module
-		for(std::map<int, Stream*>::const_iterator it2 = inputs.begin() ; it2 != inputs.end() ; it2++)
+		for(std::map<int, Stream*>::const_iterator it2 = inputs.begin() ; it2 != inputs.end() ; ++it2)
 		{
 			Stream& inputStream = module->RefInputStreamById(it2->first);
 			Stream* outputStream = NULL;
@@ -224,7 +224,7 @@ class TestModules : public CppUnit::TestFixture
 		unsigned int seed = 324234566;
 
 		// Test on each type of module
-		for(std::vector<std::string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; it1++)
+		for(std::vector<std::string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; ++it1)
 		{
 			LOG_TEST(m_logger, "## on module "<<*it1);
 			Module* module = createAndConnectModule(*it1);
@@ -246,7 +246,7 @@ class TestModules : public CppUnit::TestFixture
 		LOG_TEST(m_logger, "\n# Test all controllers");
 		
 		// Test on each type of module
-		for(std::vector<std::string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; it1++)
+		for(std::vector<std::string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; ++it1)
 		{
 			LOG_TEST(m_logger, "# on module "<<*it1);
 			Module* module = createAndConnectModule(*it1);
@@ -258,7 +258,7 @@ class TestModules : public CppUnit::TestFixture
 			}
 
 			// Test on all controllers of the module
-			for(std::map<std::string, Controller*>::const_iterator it2 = module->GetControllersList().begin() ; it2 != module->GetControllersList().end() ; it2++)
+			for(std::map<std::string, Controller*>::const_iterator it2 = module->GetControllersList().begin() ; it2 != module->GetControllersList().end() ; ++it2)
 			{
 				LOG_INFO(m_logger, "## on controller "<<it2->first<<" of class "<<it2->second->GetClass());
 				std::vector<std::string> actions;
@@ -287,7 +287,7 @@ class TestModules : public CppUnit::TestFixture
 						values.push_back(defval);
 					else GenerateValueFromRange(20, values, range, type);
   
-					for(std::vector<std::string>::iterator it = values.begin() ; it != values.end() ; it++)
+					for(std::vector<std::string>::iterator it = values.begin() ; it != values.end() ; ++it)
 					{
 						// For string type we cannot set random values
 						// std::cout<<"set "<<value<<std::endl;
@@ -319,7 +319,7 @@ class TestModules : public CppUnit::TestFixture
 				}
 				else
 				{
-					for(std::vector<std::string>::const_iterator it3 = actions.begin() ; it3 != actions.end() ; it3++)
+					for(std::vector<std::string>::const_iterator it3 = actions.begin() ; it3 != actions.end() ; ++it3)
 					{
 						std::string value = "0";
 						// module->LockForWrite();
@@ -345,7 +345,7 @@ class TestModules : public CppUnit::TestFixture
 		LOG_TEST(m_logger, "\n# Test all parameters");
 		
 		// Test on each type of module
-		for(std::vector<std::string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; it1++)
+		for(std::vector<std::string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; ++it1)
 		{
 			Module* module = createAndConnectModule(*it1);
 			if(!module->IsUnitTestingEnabled())
@@ -359,7 +359,7 @@ class TestModules : public CppUnit::TestFixture
 			std::string lastDefault = "";
 
 			// Test on all controllers of the module
-			for(std::vector<Parameter*>::const_iterator it2 = module->GetParameters().GetList().begin() ; it2 != module->GetParameters().GetList().end() ; it2++)
+			for(std::vector<Parameter*>::const_iterator it2 = module->GetParameters().GetList().begin() ; it2 != module->GetParameters().GetList().end() ; ++it2)
 			{
 				// Create a second module with the parameter value (in case it is locked)
 				// we already have tested the other parameters with controllers
@@ -375,7 +375,7 @@ class TestModules : public CppUnit::TestFixture
 					continue; // values.push_back(defval);
 				else GenerateValueFromRange(10, values, (*it2)->GetRange(), (*it2)->GetTypeString());
 
-				for(std::vector<std::string>::iterator it3 = values.begin() ; it3 != values.end() ; it3++)
+				for(std::vector<std::string>::iterator it3 = values.begin() ; it3 != values.end() ; ++it3)
 				{
 					// For each value
 					std::map<std::string, std::string> params;

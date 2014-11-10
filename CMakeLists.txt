@@ -45,7 +45,7 @@ ELSE()
 	find_package(Qt4 REQUIRED)
 endif()
 
-set(CMAKE_CXX_FLAGS "-Wextra")
+set(CMAKE_CXX_FLAGS "-Wextra -Wno-unused-parameter -Wno-deprecated-register")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -g")
 set(CMAKE_CXX_FLAGS_DEBUG  "-O2 -g -DMARKUS_DEBUG_STREAMS")

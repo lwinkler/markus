@@ -49,12 +49,12 @@ class TestObject : public Serializable
 {
 public:
 	TestObject()
-	: m_obj("test object")
+	: m_obj("test object"),
+	  m_string("test_string")
 	{
 		m_int    = 333;
 		m_float  = 55.1233234;
 		m_double = 34.444;
-		m_string = "test_string";
 
 		m_obj.AddFeature("some_feat", 46.30);
 	}
@@ -96,15 +96,16 @@ protected:
 
 class TestSerialization : public CppUnit::TestFixture
 {
-	private:
+public:
+	TestSerialization(){}
+
+private:
 		static log4cxx::LoggerPtr m_logger;
 		FactoryModules m_factory;
 		Module* mp_fakeInput;
 		ConfigReader* mp_config;
-	public:
-	/*void runTest()
-	{
-	}*/
+
+public:
 	void setUp()
 	{
 		createEmptyConfigFile("/tmp/config_empty.xml");

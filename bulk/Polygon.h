@@ -33,7 +33,7 @@ class Polygon : public Serializable
 public:
 
 	Polygon();
-	Polygon(std::vector<cv::Point> x_value);
+	Polygon(const std::vector<cv::Point>& x_value);
 	void Serialize(std::ostream& x_out, const std::string& x_dir ="") const;
 	void Deserialize(std::istream& x_in, const std::string& x_dir ="");
 

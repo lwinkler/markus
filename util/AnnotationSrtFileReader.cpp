@@ -102,6 +102,7 @@ bool AnnotationSrtFileReader::ReadNextAnnotation(string& rx_subText)
 		m_srtEnd   = msToTimeStamp(0);
 		return false;
 	}
+	return true;
 }
 
 

@@ -31,7 +31,7 @@
 class FeatureVectorFloat : public Feature
 {
 	public:
-		FeatureVectorFloat(std::vector <float> x_values = std::vector<float>(0));
+		FeatureVectorFloat(const std::vector <float>& x_values = std::vector<float>(0));
 		Feature* CreateCopy() const{return new FeatureVectorFloat(*this);}
 		virtual double Compare2(const Feature& x_feature) const;
 		virtual void Randomize(unsigned int& xr_seed, const std::string& x_param);

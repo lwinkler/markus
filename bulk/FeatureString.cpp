@@ -24,10 +24,10 @@
 
 using namespace std;
 
-FeatureString::FeatureString(string x_value)
-	: Feature()
+FeatureString::FeatureString(const string& x_value)
+	: Feature(),
+	value(x_value)
 {
-	value      = x_value;
 }
 
 double FeatureString::Compare2(const Feature& x_feature) const

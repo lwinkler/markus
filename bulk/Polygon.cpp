@@ -34,12 +34,12 @@ Polygon::Polygon()
 	m_value.push_back(Point(0.0,0.0));
 }
 
-Polygon::Polygon(vector<cv::Point> x_value)
+Polygon::Polygon(const vector<Point>& x_value)
+: m_value(x_value)
 {
-	m_value = x_value;
 }
 
-void Polygon::Serialize(std::ostream& x_out, const std::string& x_dir) const
+void Polygon::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 	Json::Value vect;
@@ -54,7 +54,7 @@ void Polygon::Serialize(std::ostream& x_out, const std::string& x_dir) const
 	x_out << root;
 }
 
-void Polygon::Deserialize(std::istream& x_in, const std::string& x_dir)
+void Polygon::Deserialize(istream& x_in, const string& x_dir)
 {
 	m_value.clear();
 	Json::Value root;

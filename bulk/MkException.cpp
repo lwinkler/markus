@@ -42,14 +42,14 @@ string writeDescription(const std::string& x_description, const std::string& x_p
 }
 
 MkException::MkException(const std::string& x_description, const std::string& x_position, const std::string& x_function)
+: m_description(writeDescription(x_description, x_position, x_function))
 {
-	m_description = writeDescription(x_description, x_position, x_function);
 	m_code = MK_EXCEPTION_UNKNOWN;
 }
 
 MkException::MkException(MkExceptionCode x_code, const std::string& x_description, const std::string& x_position, const std::string& x_function)
+: m_description(writeDescription(x_description, x_position, x_function))
 {
-	m_description = writeDescription(x_description, x_position, x_function);
 	m_code = x_code;
 }
 

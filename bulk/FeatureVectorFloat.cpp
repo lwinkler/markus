@@ -26,10 +26,10 @@
 
 using namespace std;
 
-FeatureVectorFloat::FeatureVectorFloat(vector<float> x_values)
-	: Feature()
+FeatureVectorFloat::FeatureVectorFloat(const vector<float>& x_values)
+	: Feature(),
+	values(x_values)
 {
-	values = x_values;
 }
 
 // TODO: Test feature comparison

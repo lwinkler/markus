@@ -31,7 +31,7 @@
 class FeatureString : public Feature
 {
 	public:
-		FeatureString(std::string x_value = "");
+		FeatureString(const std::string& x_value = "");
 		Feature* CreateCopy() const{return new FeatureString(*this);}
 		virtual double Compare2(const Feature& x_feature) const;
 		virtual void Randomize(unsigned int& xr_seed, const std::string& x_param);

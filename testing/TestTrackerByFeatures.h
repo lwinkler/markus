@@ -144,7 +144,7 @@ class TestTrackerByFeatures : public CppUnit::TestFixture
 			}
 
 			// Add random changes to features
-			for(std::vector<Object>::iterator it = m_objectsIn.begin() ; it != m_objectsIn.end() ; it++)
+			for(std::vector<Object>::iterator it = m_objectsIn.begin() ; it != m_objectsIn.end() ; ++it)
 			{
 				float fact = 0.05 * mp_module->GetParameters().maxMatchingDistance;
 				it->AddFeature("x",      dynamic_cast<const FeatureFloat&>(it->GetFeature("x")).value      + (static_cast<float>(rand_r(&seed)) / RAND_MAX - 0.5) * fact);
@@ -160,7 +160,7 @@ class TestTrackerByFeatures : public CppUnit::TestFixture
 			CPPUNIT_ASSERT(m_objectsIn.size() == m_objectsOut.size());
 
 			// Verify that the ids are as expected
-			for(std::vector<Object>::const_iterator it = m_objectsOut.begin() ; it != m_objectsOut.end() ; it++)
+			for(std::vector<Object>::const_iterator it = m_objectsOut.begin() ; it != m_objectsOut.end() ; ++it)
 			{
 				// std::cout<<it->GetId()<<" == "<<dynamic_cast<const FeatureInt&>(it->GetFeature("gt_id")).value<<std::endl;
 				CPPUNIT_ASSERT(it->GetId() == dynamic_cast<const FeatureInt&>(it->GetFeature("gt_id")).value);
