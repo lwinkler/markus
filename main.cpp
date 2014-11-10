@@ -262,7 +262,7 @@ int main(int argc, char** argv)
 		assert(!appConfig.IsEmpty());
 
 		// Set values of parameters if an extra config is used
-		for(vector<string>::const_iterator it1 = extraConfig.begin() ; it1 != extraConfig.end() ; it1++)
+		for(vector<string>::const_iterator it1 = extraConfig.begin() ; it1 != extraConfig.end() ; ++it1)
 		{
 			try
 			{
@@ -294,7 +294,7 @@ int main(int argc, char** argv)
 		}
 
 		// Set values of parameters if set from command line
-		for(vector<string>::const_iterator it = parameters.begin() ; it != parameters.end() ; it++)
+		for(vector<string>::const_iterator it = parameters.begin() ; it != parameters.end() ; ++it)
 		{
 			try
 			{
@@ -412,7 +412,7 @@ int main(int argc, char** argv)
 		LOG_ERROR(logger, "Exception (std::exception): " << e.what() );
 		returnValue = -1;
 	}
-	catch(std::string str)
+	catch(std::string& str)
 	{
 		LOG_ERROR(logger, "Exception (string): " << str );
 		returnValue = -1;

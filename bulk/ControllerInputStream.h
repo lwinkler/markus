@@ -51,7 +51,7 @@ public:
 
 protected:
 	std::map<std::string, const action> m_actions;
-	QParameterSlider * parameterSlider;
-	VideoFileReader  & module;
+	QParameterSlider * m_parameterSlider;
+	VideoFileReader  & m_module;
 };
 #endif

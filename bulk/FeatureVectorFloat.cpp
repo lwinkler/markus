@@ -42,7 +42,7 @@ double FeatureVectorFloat::Compare2(const Feature& x_feature) const
 		// throw MkException("Size error while comparing FeatureVectorFloats", LOC);
 
 	vector<float>::const_iterator it2 = feat.values.begin();
-	for(vector<float>::const_iterator it1 = values.begin() ; it1 != values.end() ; it1++, it2++)
+	for(vector<float>::const_iterator it1 = values.begin() ; it1 != values.end() ; ++it1, ++it2)
 	{
 		sum += POW2(*it1 - *it2);
 	}
@@ -71,7 +71,7 @@ void FeatureVectorFloat::Serialize(ostream& x_out, const string& x_dir) const
 	while(it != values.end() - 1)
 	{
 		x_out << *it << ",";
-		it++;
+		++it;
 	}
 	x_out << *it << "]";
 }
@@ -91,6 +91,6 @@ void FeatureVectorFloat::Deserialize(istream& x_in, const string& x_dir)
 		values.pop_back();
 
 	values.clear();
-	for(vector<string>::const_iterator it = valuesStr.begin() ; it != valuesStr.end() ; it++)
+	for(vector<string>::const_iterator it = valuesStr.begin() ; it != valuesStr.end() ; ++it)
 		values.push_back(atof(it->c_str()));
 }

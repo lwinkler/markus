@@ -63,6 +63,6 @@ Module * FactoryModules::CreateModule(const std::string& x_type, const ConfigRea
 */
 void FactoryModules::ListModules(vector<string>& xr_types) const
 {
-	for(ModuleRegistry::const_iterator it = m_register.begin() ; it != m_register.end() ; it++)
+	for(ModuleRegistry::const_iterator it = m_register.begin() ; it != m_register.end() ; ++it)
 		xr_types.push_back(it->first);
 }

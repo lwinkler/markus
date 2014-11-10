@@ -84,7 +84,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, ConfigReader& x_configRea
 	layoutCombos->addWidget(lab1, 0, 0);
 	mp_comboModules->clear();
 	int ind = 0;
-	for(std::vector<Module*>::const_iterator it = x_manager->GetModules().begin(); it != x_manager->GetModules().end(); it++)
+	for(std::vector<Module*>::const_iterator it = x_manager->GetModules().begin(); it != x_manager->GetModules().end(); ++it)
 		mp_comboModules->addItem((*it)->GetName().c_str(), ind++);
 	layoutCombos->addWidget(mp_comboModules, 0, 1);
 	if(m_param.module > 0 && m_param.module < mp_comboModules->count())
@@ -194,11 +194,11 @@ void QModuleViewer::updateModule(Module * x_module)
 	CLEAN_DELETE(m_controlBoard);
 
 	int cpt = 0;
-	for(map<int, Stream*>::const_iterator it = m_currentModule->GetOutputStreamList().begin(); it != m_currentModule->GetOutputStreamList().end(); it++)
+	for(map<int, Stream*>::const_iterator it = m_currentModule->GetOutputStreamList().begin(); it != m_currentModule->GetOutputStreamList().end(); ++it)
 	{
 		mp_comboStreams->addItem(it->second->GetName().c_str(), cpt++);
 	}
-	for(map<int, Stream*>::const_iterator it = m_currentModule->GetDebugStreamList().begin(); it != m_currentModule->GetDebugStreamList().end(); it++)
+	for(map<int, Stream*>::const_iterator it = m_currentModule->GetDebugStreamList().begin(); it != m_currentModule->GetDebugStreamList().end(); ++it)
 	{
 		mp_comboStreams->addItem(it->second->GetName().c_str(), cpt++);
 	}
@@ -210,7 +210,7 @@ void QModuleViewer::updateModule(Module * x_module)
 
 	// Empty the action menu (different for each module)
 	QList<QAction *> actions = this->actions();
-	for(QList<QAction*>::iterator it = actions.begin() ; it != actions.end() ; it++)
+	for(QList<QAction*>::iterator it = actions.begin() ; it != actions.end() ; ++it)
 		this->removeAction(*it);
 
 	// Set context menus
@@ -225,7 +225,7 @@ void QModuleViewer::updateModule(Module * x_module)
 	const map<string, Controller*>& ctrs = m_currentModule->GetControllersList();
 	cpt = 0;
 
-	for(map<string, Controller*>::const_iterator it = ctrs.begin() ; it != ctrs.end() ; it++)
+	for(map<string, Controller*>::const_iterator it = ctrs.begin() ; it != ctrs.end() ; ++it)
 	{
 		// Add an action for each control associated with the module
 		string name = string("Control ") + (it->second)->GetName();

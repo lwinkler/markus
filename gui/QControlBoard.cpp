@@ -42,6 +42,7 @@ QControlBoard::QControlBoard(Module& x_module, QWidget *parent):
 
 	// Create the group with settings buttons	
 	mp_buttonLayout = new QHBoxLayout;
+	mp_currentControl = NULL;
 
 	mp_gbButtons->setLayout(mp_buttonLayout);
 	mainLayout->addWidget(mp_gbControls, 0);
@@ -73,7 +74,7 @@ void QControlBoard::updateControl(Controller* x_control)
 	// Create the control buttons
 	vector<string> actions;
 	mp_currentControl->ListActions(actions);
-	for(vector<string>::const_iterator it = actions.begin() ; it != actions.end() ; it++)
+	for(vector<string>::const_iterator it = actions.begin() ; it != actions.end() ; ++it)
 	{
 		// note : names must match between buttons and actions
 		QPushButton* button = new QPushButton(it->c_str());

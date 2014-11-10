@@ -108,7 +108,7 @@ bool ParameterEnum::CheckRange() const
 string ParameterEnum::GetRange() const
 {
 	vector<string> result;
-	for(map<string,int>::const_iterator it1 = GetEnum().begin() ; it1 != GetEnum().end() ; it1++)
+	for(map<string,int>::const_iterator it1 = GetEnum().begin() ; it1 != GetEnum().end() ; ++it1)
 	{
 		// If a value is specified in allowed values we respect this
 		// otherwise look at m_allowAllValues
@@ -156,7 +156,7 @@ void ParameterEnum::SetRange(const string& x_range)
 
 	AllowAllValues(false);
 	m_allowedValues.clear();
-	for(vector<string>::const_iterator it = values.begin() ; it != values.end() ; it++)
+	for(vector<string>::const_iterator it = values.begin() ; it != values.end() ; ++it)
 	{
 		AllowValue(*it, true);
 	}

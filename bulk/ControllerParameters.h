@@ -78,7 +78,7 @@ public:
 	virtual std::string GetValueFromWidget();
 
 protected:
-	QParameterSlider * m_parameterSlider;
+	QParameterSlider * mp_parameterSlider;
 	ParameterInt& m_param2;
 };
 
@@ -93,8 +93,8 @@ public:
 	virtual std::string GetValueFromWidget();
 
 protected:
-	QParameterSlider * m_parameterSlider;
-	ParameterDouble& m_param2;
+	QParameterSlider * mp_parameterSlider;
+	ParameterDouble  & m_param2;
 };
 
 /// Control class for a float parameter
@@ -107,7 +107,7 @@ public:
 	virtual std::string GetValueFromWidget();
 
 protected:
-	QParameterSlider * m_parameterSlider;
+	QParameterSlider * mp_parameterSlider;
 	ParameterFloat   & m_param2;
 };
 
@@ -121,7 +121,7 @@ public:
 	virtual std::string GetValueFromWidget();
 
 protected:
-	QCheckBox     * m_checkBox;
+	QCheckBox     * mp_checkBox;
 	ParameterBool & m_param2;
 };
 
@@ -135,7 +135,7 @@ public:
 	virtual std::string GetValueFromWidget();
 
 protected:
-	QLineEdit       * m_lineEdit;
+	QLineEdit       * mp_lineEdit;
 	ParameterString & m_param2;
 };
 
@@ -149,7 +149,7 @@ public:
 	virtual std::string GetValueFromWidget();
 
 protected:
-	QLineEdit             * m_lineEdit;
+	QLineEdit             * mp_lineEdit;
 	ParameterSerializable & m_param2;
 };
 
@@ -165,7 +165,7 @@ public:
 protected:
 	//QPainter * parameterLine;
 	ParameterSerializable & m_param2;
-	QWidget * widget;
+	QWidget * mp_widget;
 	QParameterSlider * mp_sliderX;
 	QParameterSlider * mp_sliderY;
 	QParameterSlider * mp_sliderHeight;
@@ -185,7 +185,7 @@ public:
 	virtual std::string GetValueFromWidget();
 
 protected:
-	QComboBox     * comboBox;
+	QComboBox     * mp_comboBox;
 	ParameterEnum & m_param2;
 };
 
@@ -200,7 +200,7 @@ public:
 	virtual std::string GetValueFromWidget();
 
 protected:
-	QTextEdit * m_textEdit;
+	QTextEdit * mp_textEdit;
 	Parameter & m_param2;
 };
 

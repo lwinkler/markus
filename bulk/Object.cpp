@@ -59,7 +59,7 @@ Object::Object(const Object & x_obj)
 	posY = x_obj.posY;
 	width = x_obj.width;
 	height = x_obj.height;
-	// for(map<string, FeaturePtr>::const_iterator it = x_obj.GetFeatures().begin() ; it != x_obj.GetFeatures().end() ; it++)
+	// for(map<string, FeaturePtr>::const_iterator it = x_obj.GetFeatures().begin() ; it != x_obj.GetFeatures().end() ; ++it)
 		// m_feats.insert(std::make_pair(it->first, new FeatureFloat(*it->second)));
 	m_feats = x_obj.GetFeatures();
 }
@@ -75,7 +75,7 @@ Object& Object::operator=(const Object & x_obj)
 
 	m_feats.clear();
 
-	// for(map<string, FeaturePtr>::const_iterator it = x_obj.GetFeatures().begin() ; it != x_obj.GetFeatures().end() ; it++)
+	// for(map<string, FeaturePtr>::const_iterator it = x_obj.GetFeatures().begin() ; it != x_obj.GetFeatures().end() ; ++it)
 		// m_feats.insert(std::make_pair(it->first, FeaturePtr(new Feature(*it->second))));
 	m_feats = x_obj.GetFeatures();
 	return *this;
@@ -96,13 +96,13 @@ void Object::Serialize(std::ostream& x_out, const string& x_dir) const
 	root["width"]  = width;
 	root["height"] = height;
 
-	for(map <std::string, FeaturePtr>::const_iterator it = m_feats.begin() ; it != m_feats.end() ; it++)
+	for(map <std::string, FeaturePtr>::const_iterator it = m_feats.begin() ; it != m_feats.end() ; ++it)
 	{
 		stringstream ss;
 		it->second->Serialize(ss, x_dir);
 		ss >> root["features"][it->first];
 	}
-	if(m_feats.size() == 0)
+	if(m_feats.empty())
 		root["features"] = Json::Value::null;
 
 	x_out << root;
@@ -185,7 +185,7 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 	{
 		pText.x += 2;
 		int i = 0;
-		for(map<string, FeaturePtr>::const_iterator it2 = GetFeatures().begin() ; it2 != GetFeatures().end() ; it2++)
+		for(map<string, FeaturePtr>::const_iterator it2 = GetFeatures().begin() ; it2 != GetFeatures().end() ; ++it2)
 		{
 			//try
 			{
@@ -260,7 +260,7 @@ void Object::Randomize(unsigned int& xr_seed, const std::string& x_requirement, 
 		if(req.isNull())
 			throw MkException("Error parsing features in requirement: " + x_requirement, LOC);
 		Json::Value::Members members1 = req.getMemberNames();
-		for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; it1++)
+		for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; ++it1)
 		{
 			Feature* feat = m_factoryFeatures.CreateFeature(req[*it1]["type"].asString());
 			feat->Randomize(xr_seed, "");

@@ -32,7 +32,7 @@
 class ParameterEnum : public Parameter
 {
 public:
-	ParameterEnum(const std::string& x_name, int x_default, int * xp_value, const std::string x_description):
+	ParameterEnum(const std::string& x_name, int x_default, int * xp_value, const std::string& x_description):
 		Parameter(x_name, x_description),
 		m_default(x_default),
 		mr_value(*xp_value),

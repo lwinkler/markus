@@ -110,7 +110,7 @@ void Event::Deserialize(std::istream& x_in, const string& x_dir)
 		// Deserialize files
 		Json::Value::Members members = root["external"].getMemberNames();
 		m_externalInfo.clear();
-		for(Json::Value::Members::const_iterator it = members.begin() ; it != members.end() ; it++)
+		for(Json::Value::Members::const_iterator it = members.begin() ; it != members.end() ; ++it)
 			m_externalInfo[*it] = root["external"][*it];
 	}
 	else
@@ -140,7 +140,7 @@ void Event::Empty()
 * @param x_object       An object linked with the event. The features of the object will be used as the features of the event.
 * @param x_absTimeEvent Optional: The time at which the event started. Use this field if events are raised with a delay.
 */
-void Event::Raise(const string x_eventName, const Object& x_object, TIME_STAMP x_absTimeEvent)
+void Event::Raise(const string& x_eventName, const Object& x_object, TIME_STAMP x_absTimeEvent)
 {
 	m_absTimeEvent = x_absTimeEvent == 0 ? getAbsTimeMs() : x_absTimeEvent;
 	if(IsRaised())
@@ -155,7 +155,7 @@ void Event::Raise(const string x_eventName, const Object& x_object, TIME_STAMP x
 * @param x_eventName    Name of the event (e.g. "motion", "intrusion")
 * @param x_absTimeEvent Optional: The time at which the event started. Use this field if events are raised with a delay.
 */
-void Event::Raise(const string x_eventName, TIME_STAMP x_absTimeEvent)
+void Event::Raise(const string& x_eventName, TIME_STAMP x_absTimeEvent)
 {
 	m_absTimeEvent = x_absTimeEvent == 0 ? getAbsTimeMs() : x_absTimeEvent;
 	if(IsRaised())

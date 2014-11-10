@@ -40,7 +40,7 @@ ParameterStructure::ParameterStructure(const ConfigReader& x_configReader):
 
 ParameterStructure::~ParameterStructure()
 {
-	for(vector<Parameter* >::iterator it = m_list.begin() ; it != m_list.end() ; it++)
+	for(vector<Parameter* >::iterator it = m_list.begin() ; it != m_list.end() ; ++it)
 		delete(*it);
 	m_list.clear();
 }
@@ -99,7 +99,7 @@ void ParameterStructure::UpdateConfig() const
 	// assert(!m_configReader.IsEmpty());
 	ConfigReader conf = m_configReader;
 	
-	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
+	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); ++it)
 	{
 		if(m_writeAllParamsToConfig || (*it)->GetConfigurationSource() != PARAMCONF_DEF)
 		{
@@ -117,7 +117,7 @@ void ParameterStructure::UpdateConfig() const
 */
 const Parameter& ParameterStructure::GetParameterByName(const string& x_name) const
 {
-	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
+	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); ++it)
 	{
 		if((*it)->GetName().compare(x_name) == 0)
 		{
@@ -137,7 +137,7 @@ const Parameter& ParameterStructure::GetParameterByName(const string& x_name) co
 */
 Parameter& ParameterStructure::RefParameterByName(const string& x_name)
 {
-	for(vector<Parameter*>::iterator it = m_list.begin(); it != m_list.end(); it++)
+	for(vector<Parameter*>::iterator it = m_list.begin(); it != m_list.end(); ++it)
 	{
 		if((*it)->GetName().compare(x_name) == 0)
 		{
@@ -155,7 +155,7 @@ Parameter& ParameterStructure::RefParameterByName(const string& x_name)
 // TODO: Check that all parameters are always initialized
 void ParameterStructure::SetValueToDefault()
 {
-	for(vector<Parameter*>::iterator it = m_list.begin(); it != m_list.end(); it++)
+	for(vector<Parameter*>::iterator it = m_list.begin(); it != m_list.end(); ++it)
 	{
 		if(!(*it)->IsLocked())
 			(*it)->SetValueToDefault();
@@ -194,7 +194,7 @@ void ParameterStructure::CheckRange(bool x_checkRelated) const
 
 
 	// Check that each parameter's value is within range
-	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
+	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); ++it)
 	{
 		if(!(*it)->CheckRange())
 		{
@@ -213,7 +213,7 @@ void ParameterStructure::PrintParameters() const
 {
 	stringstream ss;
 	// string confType = "";
-	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); it++)
+	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); ++it)
 	{
 		if(!(*it)->IsHidden())
 			(*it)->Print(ss);

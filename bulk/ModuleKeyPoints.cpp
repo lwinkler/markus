@@ -88,7 +88,7 @@ void ModuleKeyPoints::ProcessFrame()
 #endif
 	//compute each object to find point of interest
 	m_objectsOut.clear();
-	for(vector<Object>::iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; it1++)
+	for(vector<Object>::iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; ++it1)
 	{
 		if(it1->width <= 8 || it1->height <= 8)
 		{
@@ -118,7 +118,7 @@ void ModuleKeyPoints::ProcessFrame()
 		int i = 0;
 
 		// For each keypoint create an output object
-		for(vector<KeyPoint>::const_iterator it2 = pointsOfInterest.begin() ; it2 != pointsOfInterest.end() ; it2++)
+		for(vector<KeyPoint>::const_iterator it2 = pointsOfInterest.begin() ; it2 != pointsOfInterest.end() ; ++it2)
 		{
 			// Create object from keypoint
 			Object obj("keypoint");
@@ -150,7 +150,7 @@ void ModuleKeyPoints::ProcessFrame()
 		// Scalar color = Scalar(22, 88, 255);
 		// drawKeypoints(m_debug, pointsOfInterest, m_debug, color);
 
-		for(vector<KeyPoint>::const_iterator it2 = pointsOfInterest.begin() ; it2 != pointsOfInterest.end() ; it2++)
+		for(vector<KeyPoint>::const_iterator it2 = pointsOfInterest.begin() ; it2 != pointsOfInterest.end() ; ++it2)
 		{
 			Scalar color = Scalar(22, 88, it2->response);
 			circle(m_debug, it2->pt, it2->size, color);

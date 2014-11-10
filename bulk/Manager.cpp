@@ -56,6 +56,8 @@ Manager::Manager(const ConfigReader& x_configReader) :
 	m_frameCount = 0;
 	m_isConnected = false;
 	m_continueFlag = true;
+	m_hasRecovered = true;
+	m_timerProcessing = 0;
 	
 	m_inputs.clear();
 	m_modules.clear();
@@ -86,7 +88,7 @@ Manager::~Manager()
 	PrintStatistics();
 
 
-	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
 		delete *it;
 
 	// Write final infos
@@ -196,7 +198,7 @@ void Manager::Connect()
 	{
 		changed = false;
 		ready = true;
-		for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+		for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
 		{
 			if(!(*it)->IsReady())
 			{
@@ -230,7 +232,7 @@ void Manager::Reset(bool x_resetInputs)
 	m_timerProcessing = 0;
 
 	// Reset all modules (to set the module timer)
-	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
 	{
 		if(x_resetInputs || !(*it)->IsInput())
 		{
@@ -270,7 +272,7 @@ bool Manager::Process()
 	Timer ti;
 	bool recover = true;
 	
-	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
 	{
 		try
 		{
@@ -308,7 +310,7 @@ bool Manager::Process()
 			recover = m_hasRecovered = false;
 			LOG_ERROR(m_logger, "(Markus exception " << e.GetCode() << "): " << e.what());
 		}
-		catch(std::exception& e)
+		catch(exception& e)
 		{
 			if(m_hasRecovered)
 			{
@@ -318,7 +320,7 @@ bool Manager::Process()
 			}
 			LOG_ERROR(m_logger, (*it)->GetName() << ": Exception raised (std::exception): " << e.what());
 		}
-		catch(std::string str)
+		catch(string& str)
 		{
 			if(m_hasRecovered)
 			{
@@ -376,7 +378,7 @@ bool Manager::Process()
 * @param x_command Command in format "module.controller.Command"
 * @param x_value   Value used as input/output
 */
-void Manager::SendCommand(const std::string& x_command, std::string x_value)
+void Manager::SendCommand(const string& x_command, string x_value)
 {
 	vector<string> elems;
 	split(x_command, '.', elems);
@@ -425,7 +427,7 @@ void Manager::PrintStatistics()
 	// LOG_INFO("Total time "<< m_timerProcessing + m_timerConvertion<<" ms ("<<     (1000.0 * m_frameCount) /(m_timerProcessing + m_timerConvertion)<<" frames/s)");
 
 	int cpt = 0;
-	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
 	{
 		// LOG_INFO(cpt<<": ");
 		(*it)->PrintStatistics();
@@ -440,7 +442,7 @@ void Manager::PrintStatistics()
 */
 void Manager::Pause(bool x_pause)
 {
-	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)	
+	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)	
 	{
 		(*it)->Pause(x_pause);	
 	}
@@ -453,7 +455,7 @@ void Manager::Pause(bool x_pause)
 */
 void Manager::PauseInputs(bool x_pause)
 {
-	for(vector<Input*>::iterator it = m_inputs.begin() ; it != m_inputs.end() ; it++)	
+	for(vector<Input*>::iterator it = m_inputs.begin() ; it != m_inputs.end() ; ++it)	
 	{
 		(*it)->Pause(x_pause);	
 	}
@@ -468,7 +470,7 @@ void Manager::PauseInputs(bool x_pause)
 bool Manager::EndOfAllStreams() const
 {
 	bool endOfStreams = true;
-	for(vector<Input*>::const_iterator it1 = m_inputs.begin() ; it1 != m_inputs.end() ; it1++)
+	for(vector<Input*>::const_iterator it1 = m_inputs.begin() ; it1 != m_inputs.end() ; ++it1)
 	{
 		if(!(*it1)->IsEndOfStream())
 			endOfStreams = false;
@@ -486,7 +488,7 @@ void Manager::Export()
 		SYSTEM("mkdir -p modules");
 		vector<string> moduleTypes;
 		m_factory.ListModules(moduleTypes);
-		for(vector<string>::const_iterator it = moduleTypes.begin() ; it != moduleTypes.end() ; it++)
+		for(vector<string>::const_iterator it = moduleTypes.begin() ; it != moduleTypes.end() ; ++it)
 		{
 			string file("modules/" + *it + ".xml");
 			createEmptyConfigFile("/tmp/config_empty.xml");
@@ -513,7 +515,7 @@ Module& Manager::RefModuleById(int x_id) const
 {
 	Module* module = NULL;
 	int found = 0;
-	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
 		if((*it)->GetId() == x_id) 
 		{
 			module = *it;
@@ -531,7 +533,7 @@ Module& Manager::RefModuleById(int x_id) const
 
 Module& Manager::RefModuleByName(const string& x_name) const
 {
-	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
 		if((*it)->GetName() == x_name) 
 			return **it;
 	throw MkException("Cannot find module " + x_name, LOC);
@@ -653,7 +655,7 @@ const string& Manager::OutputDir(const string& x_outputDir, const string& x_conf
 void Manager::UpdateConfig()
 {
 	// Set all config ready to be saved
-	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
 		(*it)->UpdateConfig();
 	Configurable::UpdateConfig();
 }
@@ -663,10 +665,10 @@ void Manager::UpdateConfig()
 *
 * @param x_directory Output directory
 */
-void Manager::WriteStateToDirectory(const std::string& x_directory) const
+void Manager::WriteStateToDirectory(const string& x_directory) const
 {
 	SYSTEM("mkdir -p " + x_directory);
-	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; it++)
+	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
 	{
 		string fileName = x_directory + "/" + (*it)->GetName() + ".json";
 		ofstream of;

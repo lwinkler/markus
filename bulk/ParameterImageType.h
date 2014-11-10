@@ -32,7 +32,7 @@
 class ParameterImageType : public ParameterEnum
 {
 public:
-	ParameterImageType(const std::string& x_name, int x_default, int * xp_value, const std::string x_description);
+	ParameterImageType(const std::string& x_name, int x_default, int * xp_value, const std::string& x_description);
 	~ParameterImageType(){}
 	// void Export(std::ostream& rx_os, int x_indentation);
 

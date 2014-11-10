@@ -63,7 +63,7 @@ void StreamObject::ConvertInput()
 	double ratioY = static_cast<double>(m_height) / pstream->GetHeight();
 
 	m_objects.clear();
-	for(vector<Object>::const_iterator it = rectsTarget.begin() ; it != rectsTarget.end() ; it++)
+	for(vector<Object>::const_iterator it = rectsTarget.begin() ; it != rectsTarget.end() ; ++it)
 	{
 		m_objects.push_back(*it);
 		Object& obj(m_objects[m_objects.size() - 1]);
@@ -80,7 +80,7 @@ void StreamObject::RenderTo(Mat& x_output) const
 {
 	if(x_output.cols != m_width || x_output.rows != m_height)
 		throw MkException("Cannot render, image must have the same size as the stream", LOC);
-	for(vector<Object>::const_iterator it1 = m_objects.begin() ; it1 != m_objects.end() ; it1++)
+	for(vector<Object>::const_iterator it1 = m_objects.begin() ; it1 != m_objects.end() ; ++it1)
 	{
 		it1->RenderTo(x_output, DEFAULT_STREAM_COLOR);
 	}
@@ -111,7 +111,7 @@ void StreamObject::Serialize(std::ostream& x_out, const string& x_dir) const
 		root["objects"] = Json::Value(Json::arrayValue); // Empty array
 
 	// Serialize vector of objects
-	for(vector<Object>::const_iterator it1 = m_objects.begin() ; it1 != m_objects.end() ; it1++)
+	for(vector<Object>::const_iterator it1 = m_objects.begin() ; it1 != m_objects.end() ; ++it1)
 	{
 		ss.clear();
 		it1->Serialize(ss, x_dir);

@@ -51,7 +51,7 @@ void CallAction(const std::string& x_name, std::string* xp_value)\
 #define DECLARE_LIST_ACTION(action) \
 void ListActions(std::vector<std::string>& xr_actions) const\
 {\
-	for(std::map<std::string, const action>::const_iterator it = m_actions.begin() ; it != m_actions.end() ; it++)\
+	for(std::map<std::string, const action>::const_iterator it = m_actions.begin() ; it != m_actions.end() ; ++it)\
 		xr_actions.push_back(it->first);\
 }
 
@@ -98,7 +98,7 @@ class Controllable
 		Controllable(){}
 		~Controllable()
 		{
-			for(std::map<std::string, Controller* >::iterator it = m_controls.begin() ; it != m_controls.end() ; it++)
+			for(std::map<std::string, Controller* >::iterator it = m_controls.begin() ; it != m_controls.end() ; ++it)
 				delete(it->second);
 		}
 		const std::map<std::string, Controller*>& GetControllersList() const {return m_controls;}

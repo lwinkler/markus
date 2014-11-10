@@ -38,9 +38,9 @@ using namespace std;
 void ControllerInputStream::SetCursor(string* xp_value)
 {
 	if(xp_value != NULL)
-		module.SetMsec(PSTR2FLOAT(xp_value));
+		m_module.SetMsec(PSTR2FLOAT(xp_value));
 #ifndef MARKUS_NO_GUI
-	else module.SetMsec(parameterSlider->GetValue());
+	else m_module.SetMsec(m_parameterSlider->GetValue());
 #else
 	else throw MkException("This function can only be called with a GUI or along with a string pointer for input/output", LOC);
 #endif
@@ -55,10 +55,10 @@ void ControllerInputStream::GetCursor(string* xp_value)
 {
 	if(xp_value != NULL)
 	{
-		FLOAT2PSTR(module.GetMsec(), xp_value);
+		FLOAT2PSTR(m_module.GetMsec(), xp_value);
 	}
 #ifndef MARKUS_NO_GUI
-	else parameterSlider->SetValue(module.GetMsec());
+	else m_parameterSlider->SetValue(m_module.GetMsec());
 #else
 	else throw MkException("This function can only be called with a GUI or along with a string pointer for input/output", LOC);
 #endif
@@ -66,10 +66,11 @@ void ControllerInputStream::GetCursor(string* xp_value)
 
 ControllerInputStream::ControllerInputStream(VideoFileReader& rx_module) :
 	Controller("reader"),
-	module(rx_module)
+	m_module(rx_module)
 {
 	m_actions.insert(std::make_pair("Get", &ControllerInputStream::GetCursor));
 	m_actions.insert(std::make_pair("Set", &ControllerInputStream::SetCursor));
+	m_parameterSlider = NULL;
 }
 
 ControllerInputStream::~ControllerInputStream()
@@ -79,7 +80,7 @@ ControllerInputStream::~ControllerInputStream()
 QWidget* ControllerInputStream::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return parameterSlider = new QParameterSlider(0, 0, module.GetMaxMsec(), 0);
+	return m_parameterSlider = new QParameterSlider(0, 0, m_module.GetMaxMsec(), 0);
 #else
 	return NULL;
 #endif

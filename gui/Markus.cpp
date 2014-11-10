@@ -84,7 +84,7 @@ void MarkusWindow::timerEvent(QTimerEvent* px_event)
 
 void MarkusWindow::UpdateConfig()
 {
-	for(vector<QModuleViewer *>::iterator it = m_moduleViewer.begin() ; it != m_moduleViewer.end() ; it++)
+	for(vector<QModuleViewer *>::iterator it = m_moduleViewer.begin() ; it != m_moduleViewer.end() ; ++it)
 		(*it)->UpdateConfig();
 	Configurable::UpdateConfig();
 }
@@ -170,7 +170,7 @@ void MarkusWindow::createActionsAndMenus()
 	//    list all commands available in the manager controller
 	vector<std::string> actions;
 	m_manager.FindController("manager")->ListActions(actions);
-	for(vector<std::string>::const_iterator it = actions.begin() ; it != actions.end() ; it++)
+	for(vector<std::string>::const_iterator it = actions.begin() ; it != actions.end() ; ++it)
 	{
 		QAction* action = new QAction(it->c_str(), this);
 		connect(action, SIGNAL(triggered()), this, SLOT(callManagerCommand()));

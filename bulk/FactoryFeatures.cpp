@@ -83,6 +83,6 @@ Feature * FactoryFeatures::CreateFeatureFromSignature(const std::string& x_signa
 */
 void FactoryFeatures::ListFeatures(vector<string>& xr_types) const
 {
-	for(FeatureRegistry::const_iterator it = m_register.begin() ; it != m_register.end() ; it++)
+	for(FeatureRegistry::const_iterator it = m_register.begin() ; it != m_register.end() ; ++it)
 		xr_types.push_back(it->first);
 }

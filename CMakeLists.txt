@@ -115,8 +115,13 @@ add_custom_target(doc
 
 
 add_custom_target(lint
-	COMMENT "Check C++ lint rules"
+	COMMENT "Check C++ lint rules with the lint tool provided by Google"
 	COMMAND find . -name \"*.h\" -print -o -name \"*.cpp\" -print | xargs tools/cpplint.py --filter=-whitespace,-legal,-build,-runtime/references,-runtime/explicit,-readability/todo,-readability/streams,-readability/function
+)
+
+add_custom_target(check
+	COMMENT "Check C++ code statically with cppcheck"
+	COMMAND cppcheck . --force --enable=all
 )
 
 add_custom_target(update_modules_list
