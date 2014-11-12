@@ -66,10 +66,6 @@ void CompareVideo::Reset()
 
 void CompareVideo::ProcessFrame()
 {
-#ifdef MARKUS_DEBUG_STREAMS
-	m_video1_out = m_video1;
-	m_video2_out = m_video2;
-#endif
 
 	/* Check size of images */
 	if(!(
@@ -87,13 +83,23 @@ void CompareVideo::ProcessFrame()
 	/* Compute dissimilarity */
 	Mat temp;
 	absdiff(m_video1, m_video2, temp);
+#ifdef MARKUS_DEBUG_STREAMS
+	m_video1_out = m_video1 - m_video2;
+	m_video2_out = temp;
+#endif
 	Scalar rgb = mean(temp); // compute a mean for each channel (from 1 to 4)
-	int sum = 0;
-	for(int c = m_video1.channels() - 1; c > 0 ; c--)
+	double sum = 0;
+	for(int c = 0; c < m_video1.channels(); c++)
 	{
 		sum += rgb[c];
 	}
-	double e = static_cast<double>(sum) / ((m_video1.elemSize1() * 256) - 1);
+
+	/*
+	 * divide by m_video1.channels(): number of channels
+	 * divide by 255: divide by max value for a channel --> get a number between 0..1 (require CV_8xCx)
+	 */
+	double e = static_cast<double>(sum) / (m_video1.channels() * 255);
+	// cout<<rgb<<" "<<sum<<" "<<e<<endl;
 
 	/* Log */
 	LOG_DEBUG(m_logger, "Frame[" << m_frameCount << "]: error = " << e << " (" << e * 100 << "%)");
@@ -101,7 +107,7 @@ void CompareVideo::ProcessFrame()
 	/* Exception when exceeds threshold */
 	if (e > m_param.threshold)
 	{
-		LOG_ERROR(m_logger, e << " > " << m_param.threshold << "!");
+		LOG_ERROR(m_logger, "Frame[" << m_frameCount << "]: " << e << " > " << m_param.threshold << "!");
 	}
 
 	m_frameCount++;
