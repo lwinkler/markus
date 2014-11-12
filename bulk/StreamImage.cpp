@@ -123,12 +123,14 @@ void StreamImage::Deserialize(std::istream& x_in, const string& x_dir)
 		throw MkException("Cannot open serialized image from file " + fileName, LOC);
 }
 
-void StreamImage::Connect(Stream* x_stream)
+void StreamImage::Connect(Stream* x_stream, bool x_bothWays)
 {
 	// This method was rewritten to avoid a dynamic cast at each ConvertInput
+	assert(x_stream != NULL);
 	m_connected = x_stream;
-	if(m_connected == NULL)
-		return;
+	if(x_bothWays)
+		x_stream->Connect(this, false);
+
 	const StreamImage* tmp = dynamic_cast<const StreamImage*>(m_connected);
 	if(tmp == NULL)
 	{

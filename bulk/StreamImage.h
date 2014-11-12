@@ -42,7 +42,7 @@ public:
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 	virtual void Randomize(unsigned int& xr_seed);
 	const cv::Mat& GetImage() const {return m_image;}
-	void Connect(Stream * x_stream);
+	void Connect(Stream * x_stream, bool x_bothWays = true);
 protected:
 	cv::Mat& m_image;
 	const cv::Mat* m_img_input;

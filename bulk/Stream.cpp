@@ -74,9 +74,12 @@ void Stream::Export(ostream& rx_os, int x_id, int x_indentation, bool x_isInput)
 *
 * @param x_stream Output stream to connect to
 */
-void Stream::Connect(Stream* x_stream)
+void Stream::Connect(Stream* x_stream, bool x_bothWays)
 {
+	assert(x_stream != NULL);
 	m_connected = x_stream;
+	if(x_bothWays)
+		x_stream->Connect(this, false);
 }
 
 void Stream::Serialize(std::ostream& x_out, const string& x_dir) const
