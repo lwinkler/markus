@@ -172,7 +172,7 @@ class TestModules : public CppUnit::TestFixture
 		CPPUNIT_ASSERT(x_range.at(x_range.size() - 1) == ']');
 
 		double min = 0, max = 0;
-		if (2 == sscanf(x_range.c_str(), "[%lf:%lf]", &min, &max))
+		if (2 == sscanf(x_range.c_str(), "[%16lf:%16lf]", &min, &max))
 		{
 			if((x_type == "int" || x_type == "bool") && max - min + 1 <= x_nbSamples)
 			{
