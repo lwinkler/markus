@@ -161,3 +161,28 @@ void ParameterEnum::SetRange(const string& x_range)
 		AllowValue(*it, true);
 	}
 }
+
+/**
+ * @brief Generate values in range
+ *
+ * @param x_nbSamples Number of valuew to generate
+ * @param rx_values Output
+ * @param x_range      Range (if empty take parameter range)
+ *
+ */
+void ParameterEnum::GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range) const
+{
+	string range = x_range == "" ? GetRange() : x_range;
+	rx_values.clear();
+	split(range.substr(1, range.size() - 2), ',', rx_values);
+
+	// Remove last element if empty, due to an extra comma
+	if(rx_values.empty())
+		throw MkException("Value array is empty, range= " + range, LOC);
+	if(rx_values.back() == "")
+	{
+		rx_values.pop_back();
+		if(rx_values.empty())
+			throw MkException("Value array is empty, range= " + range, LOC);
+	}
+}

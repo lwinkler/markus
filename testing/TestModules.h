@@ -156,67 +156,6 @@ class TestModules : public CppUnit::TestFixture
 		return module;
 	}
 
-	/// Generate a random string value for the parameter
-	void GenerateValueFromRange(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range, const std::string& x_type)
-	{
-		LOG_DEBUG(m_logger, "Generate values for param of type "<<x_type<<" in range "<<x_range);
-		rx_values.clear();
-		// if(x_range == "")
-			// return "";
-		if(x_type == "calibrationByHeight")
-			return; // TODO
-
-		CPPUNIT_ASSERT(x_type != "string");
-		CPPUNIT_ASSERT(x_range.size() > 0);
-		CPPUNIT_ASSERT(x_range.at(0) == '[');
-		CPPUNIT_ASSERT(x_range.at(x_range.size() - 1) == ']');
-
-		double min = 0, max = 0;
-		if (2 == sscanf(x_range.c_str(), "[%16lf:%16lf]", &min, &max))
-		{
-			if((x_type == "int" || x_type == "bool") && max - min + 1 <= x_nbSamples)
-			{
-				for(int i = min ; i <= max ; i++)
-				{
-					std::stringstream ss;
-					ss<<i;
-					rx_values.push_back(ss.str());
-					// rx_values.push_back(static_cast<int>(min + static_cast<int>(i/x_nbSamples) % static_cast<int>(max - min + 1)));
-				}
-			}
-			else if(x_type == "int" || x_type == "bool")
-			{
-				double incr = x_nbSamples <= 1 ? 0 : (max - min) / (x_nbSamples - 1);
-				for(int i = 0 ; i < x_nbSamples ; i++)
-				{
-					std::stringstream ss;
-					ss<<static_cast<int>(min + i * incr);
-					rx_values.push_back(ss.str());
-				}
-			}
-			else 
-			{
-				// x_nbSamples values in range
-				double incr = static_cast<double>(max - min) / x_nbSamples;
-				for(int i = 0 ; i <= x_nbSamples ; i++)
-				{
-					std::stringstream ss;
-					ss<<(min + i * incr);
-					rx_values.push_back(ss.str());
-				}
-			}
-		}
-		else
-		{
-			split(x_range.substr(1, x_range.size() - 2), ',', rx_values);
-			// Remove last element if empty, due to an extra comma
-			CPPUNIT_ASSERT(rx_values.size() > 0);
-			if(rx_values.back() == "")
-				rx_values.pop_back();
-			assert(rx_values.size() > 0);
-		}
-	}
-
 	/// Run the modules with different inputs generated randomly
 	void testInputs()
 	{
@@ -283,9 +222,8 @@ class TestModules : public CppUnit::TestFixture
 					LOG_INFO(m_logger, "###  "<<it2->first<<".GetDefault returned "<<defval);
 
 					std::vector<std::string> values;
-					if(type  == "string")
-						values.push_back(defval);
-					else GenerateValueFromRange(20, values, range, type);
+					LOG_DEBUG(m_logger, "Generate values for param of type "<<type<<" in range "<<range);
+					module->GetParameters().GetParameterByName(it2->first).GenerateValues(20, values, range);
   
 					for(std::vector<std::string>::iterator it = values.begin() ; it != values.end() ; ++it)
 					{
@@ -371,9 +309,8 @@ class TestModules : public CppUnit::TestFixture
 				// Generate a new module with each value for locked parameter
 				std::vector<std::string> values;
 
-				if((*it2)->GetTypeString()  == "string")
-					continue; // values.push_back(defval);
-				else GenerateValueFromRange(10, values, (*it2)->GetRange(), (*it2)->GetTypeString());
+				LOG_DEBUG(m_logger, "Generate values for param of type "<<(*it2)->GetTypeString()<<" in range "<<(*it2)->GetRange());
+				(*it2)->GenerateValues(10, values);
 
 				for(std::vector<std::string>::iterator it3 = values.begin() ; it3 != values.end() ; ++it3)
 				{

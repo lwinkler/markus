@@ -22,6 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ParameterString.h"
+#include "util.h"
 
 using namespace std;
 
@@ -35,4 +36,26 @@ void ParameterString::Export(std::ostream& rx_os, int x_tabs)
 	rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<std::endl;
 	tabs = std::string(x_tabs, '\t');
 	rx_os<<tabs<<"</param>"<<std::endl;
+}
+
+/**
+ * @brief Generate values in range
+ *
+ * @param x_nbSamples Number of valuew to generate
+ * @param rx_values    Output
+ * @param x_range      Range (if empty take parameter range)
+ *
+ */
+void ParameterString::GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range) const
+{
+	// TODO string range = x_range == "" ? GetRange() : x_range;
+	rx_values.clear();
+	rx_values.push_back(m_default); // TODO : probably use requirements
+	/*
+	split(range.substr(1, range.size() - 2), ',', rx_values);
+	if(rx_values.back() == "")
+		rx_values.pop_back();
+	if(rx_values.empty())
+		throw MkException("Value array is empty, range= " + range, LOC);
+		*/
 }

@@ -39,3 +39,28 @@ void ParameterPolygon::Export(std::ostream& rx_os, int x_indentation)
 	tabs = std::string(x_indentation, '\t');
 	rx_os<<tabs<<"</param>"<<std::endl;
 }
+
+/**
+ * @brief Generate values in range
+ *
+ * @param x_nbSamples Number of valuew to generate
+ * @param rx_values Output
+ * @param x_range      Range (if empty take parameter range)
+ *
+ */
+void ParameterPolygon::GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range) const
+{
+	// string range = x_range == "" ? GetRange() : x_range;
+	rx_values.clear();
+	// throw MkException("Method is not implemented", LOC);
+
+	/*
+	split(x_range.substr(1, x_range.size() - 2), ',', rx_values);
+
+	// Remove last element if empty, due to an extra comma
+	CPPUNIT_ASSERT(rx_values.size() > 0);
+	if(rx_values.back() == "")
+		rx_values.pop_back();
+	assert(rx_values.size() > 0);
+	*/
+}

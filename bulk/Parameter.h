@@ -80,6 +80,7 @@ public:
 		os<<m_name<<"=\""<<GetValueString()<<"\" ("<<configType[m_confSource]<<"); ";
 	}
 	virtual bool CheckRange() const = 0;
+	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const = 0;
 	virtual void Export(std::ostream& rx_os, int x_indentation) = 0;
 	inline void Lock()
 	{

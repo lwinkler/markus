@@ -99,6 +99,50 @@ public:
 		T value = GetValue();
 		return (value <= m_max && value >= m_min);
 	}
+	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range) const
+	{
+		std::string range = x_range == "" ? GetRange() : x_range;
+		const ParameterType& type = GetType();
+		rx_values.clear();
+		double min = 0;
+		double max = 0;
+
+		if(2 != sscanf(range.c_str(), "[%16lf:%16lf]", &min, &max))
+			throw MkException("Error with range " + range, LOC);
+		if((type == PARAM_INT || type == PARAM_BOOL) && max - min + 1 <= x_nbSamples)
+		{
+			for(int i = min ; i <= max ; i++)
+			{
+				std::stringstream ss;
+				ss<<i;
+				rx_values.push_back(ss.str());
+				// rx_values.push_back(static_cast<int>(min + static_cast<int>(i/x_nbSamples) % static_cast<int>(max - min + 1)));
+			}
+		}
+		else if(type == PARAM_INT || type == PARAM_BOOL)
+		{
+			double incr = x_nbSamples <= 1 ? 0 : (max - min) / (x_nbSamples - 1);
+			for(int i = 0 ; i < x_nbSamples ; i++)
+			{
+				std::stringstream ss;
+				ss<<static_cast<int>(min + i * incr);
+				rx_values.push_back(ss.str());
+			}
+		}
+		else 
+		{
+			// x_nbSamples values in range
+			double incr = static_cast<double>(max - min) / x_nbSamples;
+			for(int i = 0 ; i <= x_nbSamples ; i++)
+			{
+				std::stringstream ss;
+				ss<<(min + i * incr);
+				rx_values.push_back(ss.str());
+			}
+		}
+		if(rx_values.empty())
+			throw MkException("Value array is empty, range= " + range, LOC);
+	}
 	virtual void Print(std::ostream& os) const 
 	{
 		os<<m_name<<"="<<GetValue()<<" ["<<m_min<<":"<<m_max<<"] ("<<configType[m_confSource]<<"); ";

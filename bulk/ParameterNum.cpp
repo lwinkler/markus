@@ -36,3 +36,11 @@ template<> const string ParameterNum<int>::m_typeStr    = "int";
 template<> const string ParameterNum<float>::m_typeStr  = "float";
 template<> const string ParameterNum<double>::m_typeStr = "double";
 
+/**
+ * @brief Generate valuew in range
+ *
+ * @param x_nbSamples Number of valuew to generate
+ * @param rx_values Output
+ * @param x_range      Range (if empty take parameter range)
+ *
+ */

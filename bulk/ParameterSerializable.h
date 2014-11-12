@@ -86,6 +86,7 @@ public:
 		// TODO: Maybe implement this in some way
 		return true;
 	}
+	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const;
 	virtual void SetValueToDefault()
 	{
 		if(m_isLocked)
