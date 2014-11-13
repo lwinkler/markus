@@ -26,12 +26,14 @@
 
 #include "define.h"
 #include "Object.h"
+#include "Context.h"
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/writer.h>
 #include <log4cxx/logger.h>
 
 
 class Event;
+class Module;
 
 /// Class representing a event (e.g. Ponctual moment in time where an intrusion occurs)
 class Event : public Serializable
@@ -61,7 +63,7 @@ class Event : public Serializable
 		{
 			return m_object.GetFeature(x_name);
 		}
-		void Notify(bool x_isProcessEvent=false);
+		void Notify(const Context& x_contextbool, bool x_isProcessEvent=false);
 		virtual void Randomize(unsigned int& xr_seed, const std::string& x_requirement, const cv::Size& x_size);
 		virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const;
 		virtual void Deserialize(std::istream& x_in, const std::string& x_dir);

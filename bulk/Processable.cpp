@@ -56,6 +56,7 @@ void Processable::Reset()
 		// Set a timer for all modules in auto-process (= called at a regular frame rate)
 		// all other are called as "slaves" of other modules
 		// If not real-time, a module will try to acquire frames as fast as possible
+		// this is usefull for a VideoFileReader input when we work offline
 		m_moduleTimer->Reset(m_realTime ? RefParameters().fps : 0);
 		LOG_DEBUG(m_logger, "Reseting auto-processed module with real-time="<<m_realTime<<" and fps="<<RefParameters().fps);
 	}

@@ -171,7 +171,7 @@ void Event::Raise(const string& x_eventName, TIME_STAMP x_absTimeEvent)
 *
 * @param x_isProcessEvent If true, this indicates that the event is linked with processing and not analytics (e.g. for process events: "started", "stopped", "exception", "status")
 */
-void Event::Notify(bool x_isProcessEvent)
+void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 {
 	m_absTimeNotif = getAbsTimeMs();
 	Json::Value root;
@@ -189,7 +189,7 @@ void Event::Notify(bool x_isProcessEvent)
 	Json::Value out;
 	COPY_AND_CHECK(out["dateEvent"]          , root["dateEvent"]);
 	COPY_AND_CHECK(out["dateNotif"]          , root["dateNotif"]);
-	COPY_AND_CHECK(out["applicationName"]    , Manager::GetApplicationName());
+	COPY_AND_CHECK(out["applicationName"]    , x_context.GetApplicationName());
 	COPY_AND_CHECK(out["applicationVersion"] , Manager::Version(false));
 	COPY_AND_CHECK(out["eventName"]          , root["eventName"]);
 

@@ -106,7 +106,7 @@ class Object : public Serializable
 		std::string m_name;
 		int m_id;
 		std::map <std::string, FeaturePtr> m_feats;
-		static FactoryFeatures m_factoryFeatures;
+		static const FactoryFeatures m_factoryFeatures;
 	private:
 		static log4cxx::LoggerPtr m_logger;
 

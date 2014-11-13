@@ -68,7 +68,7 @@ protected:
 
 	bool m_pause;
 	bool m_allowAutoProcess;
-	bool m_realTime;
+	bool m_realTime;         /// Process in real-time: if true, the module processes as fast as possible
 	QModuleTimer * m_moduleTimer;
 	QReadWriteLock m_lock;
 

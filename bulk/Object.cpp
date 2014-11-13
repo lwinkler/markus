@@ -32,7 +32,7 @@ using namespace cv;
 
 log4cxx::LoggerPtr Object::m_logger(log4cxx::Logger::getLogger("Object"));
 
-FactoryFeatures Object::m_factoryFeatures;
+FactoryFeatures const Object::m_factoryFeatures;
 
 Object::Object(const string& x_name) :
 	m_name(x_name),

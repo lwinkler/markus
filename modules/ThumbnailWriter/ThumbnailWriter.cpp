@@ -88,7 +88,7 @@ void ThumbnailWriter::ProcessFrame()
 	for(vector<Object>::iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; ++it1)
 	{
 		// folder name 
-		string folderName = Manager::OutputDir() + "/" + m_param.folder + "/"; 
+		string folderName = m_context.GetOutputDir() + "/" + m_param.folder + "/"; 
 		while(replaceExpr(folderName, it1->GetFeatures()))
 			;
 

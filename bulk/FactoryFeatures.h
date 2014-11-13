@@ -57,8 +57,8 @@ public:
 		m_registerBySignature.insert(FeatureRegistry::value_type(feat->Signature(), func));
 		delete feat;
 	}
-	Feature * CreateFeature(const std::string& x_type);
-	Feature * CreateFeatureFromSignature(const std::string& x_type);
+	Feature * CreateFeature(const std::string& x_type) const;
+	Feature * CreateFeatureFromSignature(const std::string& x_type) const;
 	void RegisterAllFeatures();
 	void ListFeatures(std::vector<std::string>& xr_types) const;
 

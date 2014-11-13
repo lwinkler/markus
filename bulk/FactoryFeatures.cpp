@@ -38,9 +38,9 @@ FactoryFeatures::FactoryFeatures()
 *
 * @return 
 */
-Feature * FactoryFeatures::CreateFeature(const std::string& x_type)
+Feature * FactoryFeatures::CreateFeature(const std::string& x_type) const
 {
-	FeatureRegistry::iterator it = m_register.find(x_type);
+	FeatureRegistry::const_iterator it = m_register.find(x_type);
 
 	if (it == m_register.end())
 	{
@@ -60,9 +60,9 @@ Feature * FactoryFeatures::CreateFeature(const std::string& x_type)
 *
 * @return 
 */
-Feature * FactoryFeatures::CreateFeatureFromSignature(const std::string& x_signature)
+Feature * FactoryFeatures::CreateFeatureFromSignature(const std::string& x_signature) const
 {
-	FeatureRegistry::iterator it = m_registerBySignature.find(x_signature);
+	FeatureRegistry::const_iterator it = m_registerBySignature.find(x_signature);
 
 	if (it == m_registerBySignature.end())
 	{

@@ -42,9 +42,7 @@ using namespace std;
 
 log4cxx::LoggerPtr Manager::m_logger(log4cxx::Logger::getLogger("Manager"));
 
-string Manager::m_outputDir;
-string Manager::m_applicationName = "unset";
-FactoryModules Manager::m_factory;
+const FactoryModules Manager::m_factory;
 
 
 Manager::Manager(const ConfigReader& x_configReader) : 
@@ -62,8 +60,6 @@ Manager::Manager(const ConfigReader& x_configReader) :
 	m_inputs.clear();
 	m_modules.clear();
 
-	m_applicationName = m_configReader.GetAttribute("name");
-	
 	// Read the configuration of each module
 	ConfigReader moduleConfig = m_configReader.GetSubConfig("module");
 	
@@ -86,23 +82,21 @@ Manager::Manager(const ConfigReader& x_configReader) :
 Manager::~Manager()
 {
 	PrintStatistics();
+	const string& outputDir = m_context.GetOutputDir();
 
 
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
 		delete *it;
 
-	// Write final infos
-	if(m_outputDir.size() != 0)
-		LOG_INFO(m_logger, "Results written to directory "<<m_outputDir);
-
 	/// Do the final operations on the static class
-	if(m_outputDir.size() != 0)
+	if(!m_context.GetOutputDir().empty()) // TODO: Check if created
 	{
+		LOG_INFO(m_logger, "Results written to directory "<<outputDir);
 		if(getenv("LOG_DIR") == NULL)
 		{
 			try
 			{
-				SYSTEM("cp markus.log " + m_outputDir + "/markus.copy.log");
+				SYSTEM("cp markus.log " + outputDir + "/markus.copy.log");
 			}
 			catch(...)
 			{
@@ -119,12 +113,12 @@ Manager::~Manager()
 				{
 					LOG_INFO(m_logger, "Working directory moved to " + m_param.archiveDir);
 					SYSTEM("mkdir -p " + m_param.archiveDir);
-					SYSTEM("mv " + m_outputDir + " " + m_param.archiveDir + "/");
+					SYSTEM("mv " + outputDir + " " + m_param.archiveDir + "/");
 				}
 				else 
 				{
 					LOG_INFO(m_logger, "Working directory deleted");
-					SYSTEM("rm -rf " + m_outputDir);
+					SYSTEM("rm -rf " + outputDir);
 				}
 			}
 			else
@@ -133,7 +127,7 @@ Manager::~Manager()
 				{
 					LOG_INFO(m_logger, "Working directory copied to " + m_param.archiveDir);
 					SYSTEM("mkdir -p " + m_param.archiveDir);
-					SYSTEM("cp -r " + m_outputDir + " " + m_param.archiveDir);
+					SYSTEM("cp -r " + outputDir + " " + m_param.archiveDir);
 				}
 			}
 		}
@@ -583,7 +577,7 @@ void Manager::Status() const
 	ss.clear();
 	ss << root;
 	evt.AddExternalInfo("exception", ss);
-	evt.Notify(true);
+	evt.Notify(m_context, true);
 }
 
 /**
@@ -594,66 +588,64 @@ void Manager::Status() const
 *
 * @return Name of the output dir
 */
-const string& Manager::OutputDir(const string& x_outputDir, const string& x_configFile)
+string Manager::CreateOutputDir(const string& x_outputDir, const string& x_configFile)
 {
-	if(m_outputDir.size() == 0)
+	string outputDir;
+	try
 	{
-		try
+		if(x_outputDir == "")
 		{
-			if(x_outputDir == "")
-			{
-				m_outputDir = "out_" + timeStamp();
-				int16_t trial = 0; // Must NOT be a char to avoid concatenation problems!
-				string tmp = m_outputDir;
+			outputDir = "out_" + timeStamp();
+			int16_t trial = 0; // Must NOT be a char to avoid concatenation problems!
+			string tmp = outputDir;
 
-				// Try to create the output dir, if it fails, try changing the name
-				while(trial < 250)
+			// Try to create the output dir, if it fails, try changing the name
+			while(trial < 250)
+			{
+				try
 				{
-					try
-					{
-						SYSTEM("mkdir \"" + m_outputDir + "\"");
-						trial = 250;
-					}
-					catch(...)
-					{
-						stringstream ss;
-						trial++;
-						ss<<tmp<<"_"<<trial;
-						m_outputDir = ss.str();
-						if(trial == 250)
-							throw MkException("Cannot create output directory", LOC);
-					}
+					SYSTEM("mkdir \"" + outputDir + "\"");
+					trial = 250;
+				}
+				catch(...)
+				{
+					stringstream ss;
+					trial++;
+					ss<<tmp<<"_"<<trial;
+					outputDir = ss.str();
+					if(trial == 250)
+						throw MkException("Cannot create output directory", LOC);
 				}
 			}
-			else
-			{
-				// If the name is specified do not check if the direcory exists
-				m_outputDir = x_outputDir;
-				SYSTEM("mkdir -p \"" + m_outputDir + "\"");
-			}
-
-			// Copy config to output dir
-			if(x_configFile == "")
-			{
-				// note: do not log as logger may not be initialized
-				// LOG_INFO(m_logger, "Creating directory "<<m_outputDir<<" and symbolic link out_latest");
-				// note: use ln with args sfn to override existing link
-				SYSTEM("ln -sfn \"" + m_outputDir + "\" out_latest");
-			}
-			else
-			{
-				// note: do not log as logger may not be initialized
-				// Copy config file to output directory
-				// LOG_INFO(m_logger, "Creating directory "<<m_outputDir);
-				SYSTEM("cp " + x_configFile + " " + m_outputDir);
-			}
 		}
-		catch(exception& e)
+		else
 		{
-			LOG_WARN(m_logger, "Exception in Manager::OutputDir: " << e.what());
+			// If the name is specified do not check if the direcory exists
+			outputDir = x_outputDir;
+			SYSTEM("mkdir -p \"" + outputDir + "\"");
+		}
+
+		// Copy config to output dir
+		if(x_configFile == "")
+		{
+			// note: do not log as logger may not be initialized
+			// LOG_INFO(m_logger, "Creating directory "<<outputDir<<" and symbolic link out_latest");
+			// note: use ln with args sfn to override existing link
+			SYSTEM("ln -sfn \"" + outputDir + "\" out_latest");
+		}
+		else
+		{
+			// note: do not log as logger may not be initialized
+			// Copy config file to output directory
+			// LOG_INFO(m_logger, "Creating directory "<<outputDir);
+			SYSTEM("cp " + x_configFile + " " + outputDir);
 		}
 	}
-	return m_outputDir;
+	catch(exception& e)
+	{
+		LOG_WARN(m_logger, "Exception in Manager::OutputDir: " << e.what());
+	}
+	return outputDir;
 }
 
 /**
@@ -674,16 +666,17 @@ void Manager::UpdateConfig()
 */
 void Manager::WriteStateToDirectory(const string& x_directory) const
 {
-	SYSTEM("mkdir -p " + x_directory);
+	string directory = m_context.GetOutputDir() + "/" + x_directory;
+	SYSTEM("mkdir -p " + directory);
 	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
 	{
-		string fileName = x_directory + "/" + (*it)->GetName() + ".json";
+		string fileName = directory + "/" + (*it)->GetName() + ".json";
 		ofstream of;
 		of.open(fileName.c_str());
-		(*it)->Serialize(of, x_directory);
+		(*it)->Serialize(of, directory);
 		of.close();
 	}
-	LOG_INFO(m_logger, "Written state of the manager and all modules to " << x_directory);
+	LOG_INFO(m_logger, "Written state of the manager and all modules to " << directory);
 }
 
 
@@ -699,5 +692,5 @@ void Manager::NotifyException(const MkException& x_exception)
 	Event ev;
 	ev.AddExternalInfo("exception", ss);
 	ev.Raise("exception");
-	ev.Notify(true);
+	ev.Notify(m_context, true);
 }

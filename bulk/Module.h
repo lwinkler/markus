@@ -29,6 +29,7 @@
 #include "ParameterString.h"
 #include "Controller.h"
 #include "Processable.h"
+#include "Context.h"
 #include <log4cxx/logger.h>
 #include <opencv2/core/core.hpp>
 
@@ -93,8 +94,9 @@ public:
 	inline bool IsAutoProcessed() const  {return GetParameters().autoProcess;}
 	virtual double GetRecordingFps() const;
 	
-	inline void AddDependingModule (Module & x_module){m_modulesDepending.push_back(&x_module);}
+	inline void AddDependingModule (Module & x_module){m_modulesDepending.push_back(&x_module);} /// Add a module to the list: depending modules are called when processing is complete
 	virtual void PrintStatistics() const;
+	void SetContext(const Context& x_context){m_context = x_context;}
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 	
@@ -114,6 +116,9 @@ public:
 	
 protected:
 	virtual Parameters & RefParameters() = 0;
+
+	// context given by Manager (output directory, ...)
+	Context m_context;
 
 	// for benchmarking
 	long long m_timerConvertion;

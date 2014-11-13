@@ -46,7 +46,7 @@ public:
 		CreateModuleFunc func = createModule<T>;
 		m_register.insert(ModuleRegistry::value_type(name, func));
 	}
-	Module * CreateModule(const std::string& x_type, const ConfigReader& x_config);
+	Module * CreateModule(const std::string& x_type, const ConfigReader& x_config) const;
 	void RegisterAllModules();
 	void ListModules(std::vector<std::string>& xr_types) const;
 

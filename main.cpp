@@ -243,7 +243,7 @@ int main(int argc, char** argv)
 	// Init global variables and objects
 	if(outputDir != "")
 	{
-		outputDir = Manager::OutputDir(outputDir, configFile);
+		outputDir = Manager::CreateOutputDir(outputDir, configFile);
 		string dir = outputDir + "/";
 		setenv("LOG_DIR", dir.c_str(), 1);
 	}
@@ -327,7 +327,11 @@ int main(int argc, char** argv)
 		// Override parameter auto_process with centralized
 		appConfig.RefSubConfig("parameters", "", true).RefSubConfig("param", "auto_process", true).SetValue(centralized ? "1" : "0");
 		appConfig.RefSubConfig("parameters", "", true).RefSubConfig("param", "fast", true).SetValue(fast ? "1" : "0");
+
+		// Set manager and context
 		Manager manager(appConfig);
+		Context context(appConfig.GetAttribute("name"), outputDir);
+		manager.SetContext(context);
 
 		if(describe) 
 		{
@@ -358,7 +362,7 @@ int main(int argc, char** argv)
 			Event ev1;
 			ev1.AddExternalInfo("pid", getpid());
 			ev1.Raise("started");
-			ev1.Notify(true);
+			ev1.Notify(context, true);
 
 			while(manager.Process())
 			{
@@ -367,7 +371,7 @@ int main(int argc, char** argv)
 
 			Event ev2;
 			ev2.Raise("stopped");
-			ev2.Notify(true);
+			ev2.Notify(context, true);
 			returnValue = MK_EXCEPTION_NORMAL - MK_EXCEPTION_FIRST;
 		}
 		else

@@ -54,7 +54,7 @@ void LogObjects::Reset()
 {
 	Module::Reset();
 
-	m_fileName = Manager::OutputDir() + "/" + m_param.file + ".txt";
+	m_fileName = m_context.GetOutputDir() + "/" + m_param.file + ".txt";
 	if(m_outputFile.is_open())
 		m_outputFile.close();
 	m_outputFile.open (m_fileName.c_str(), fstream::app|fstream::out);

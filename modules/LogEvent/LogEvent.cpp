@@ -59,14 +59,14 @@ void LogEvent::Reset()
 	Module::Reset();
 	m_event.Empty();
 	
-	string srtFileName = Manager::OutputDir() + "/" + m_param.file;
+	string srtFileName = m_context.GetOutputDir() + "/" + m_param.file;
 	CLEAN_DELETE(mp_annotationWriter);
 	mp_annotationWriter = new AnnotationFileWriter();
 	mp_annotationWriter->Open(srtFileName);
 	m_saveImage1 = m_inputStreams.at(1)->IsConnected();
 	m_saveImage2 = m_inputStreams.at(2)->IsConnected();
 
-	m_folder  = Manager::OutputDir() + "/" + m_param.folder + "/"; 
+	m_folder  = m_context.GetOutputDir() + "/" + m_param.folder + "/"; 
 	SYSTEM("mkdir -p " + m_folder);
 }
 
@@ -78,7 +78,7 @@ void LogEvent::ProcessFrame()
 		SaveImage(m_event);
 		WriteEvent();
 		// LOG_EVENT(m_logger, m_event.GetEventName()); 
-		m_event.Notify();
+		m_event.Notify(m_context);
 	}
 }
 
