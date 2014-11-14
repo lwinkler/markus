@@ -9,13 +9,11 @@
 <outputs/>
 <parameters>
 <param name="class">CompareVideo</param>
-<param name="threshold">0</param>
+
+<param name="width">160</param>
+<param name="height">120</param>
+<param name="threshold">0.01</param>
 </parameters>
-
-
-
-
-
 
 
 <uiobject x="957" y="342" width="0" height="0"/>
@@ -32,12 +30,9 @@
 <param name="auto_process"/>
 <param name="fps"/>
 <param name="file">in/input.mp4</param>
+<param name="width">160</param>
+<param name="height">120</param>
 </parameters>
-
-
-
-
-
 
 
 <uiobject x="524" y="221" width="0" height="0"/>
@@ -53,17 +48,10 @@
 <param name="class">VideoFileReader</param>
 <param name="auto_process"/>
 <param name="fps"/>
-
-
-
-
-<param name="file">output.0.MP42.avi</param>
+<param name="width">160</param>
+<param name="height">120</param>
+<param name="file">modules/BgrSubMOG2/in.foreground.MP42.avi</param>
 </parameters>
-
-
-
-
-
 
 
 <uiobject x="525" y="395" width="0" height="0"/>
@@ -85,17 +73,9 @@
 <param name="auto_process"/>
 <param name="fps"/>
 <param name="learning_rate">0.0001</param>
+<param name="width">160</param>
+<param name="height">120</param>
 </parameters>
-
-
-
-
-
-
-
-
-
-
 
 
 <uiobject x="757" y="219" width="0" height="0"/>
@@ -109,9 +89,10 @@
 <parameters>
 <param name="class">VideoFileWriter</param>
 <param name="fourcc">MP42</param>
+<param name="width">160</param>
+<param name="height">120</param>
+<param name="file">foreground</param>
 </parameters>
-
-
 
 
 <uiobject x="1120" y="174" width="0" height="0"/>
