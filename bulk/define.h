@@ -67,5 +67,8 @@ Class &operator=(const Class &);
 	ss<<"Execution of command failed: "<<cmd;\
 	throw MkException(ss.str(), LOC);}}
 
+// This function is not implemented (yet)
+#define NON_EXISTANT assert(false)
+
 #endif
 

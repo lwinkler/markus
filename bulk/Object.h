@@ -27,9 +27,9 @@
 #include <opencv2/opencv.hpp>
 #include <log4cxx/logger.h>
 #include "define.h"
+#include "FactoryFeatures.h"
 #include "FeatureNum.h"
 #include "FeatureString.h"
-#include "FactoryFeatures.h"
 #include "MkException.h"
 
 /*! \class Object
@@ -60,6 +60,7 @@ class Object : public Serializable
 				
 			m_feats.insert(std::make_pair(x_name, xp_feat));
 		}
+		// TODO: See if used
 		inline void AddFeature(std::string x_name, float x_value)
 		{
 			std::map <std::string, FeaturePtr>::iterator it = m_feats.find(x_name);
@@ -68,6 +69,7 @@ class Object : public Serializable
 
 			m_feats.insert(std::make_pair(x_name, new FeatureFloat(x_value)));
 		}
+		/*
 		inline void AddFeature(std::string x_name, std::string x_value)
 		{
 			std::map <std::string, FeaturePtr>::iterator it = m_feats.find(x_name);
@@ -76,6 +78,7 @@ class Object : public Serializable
 
 			m_feats.insert(std::make_pair(x_name, new FeatureString(x_value)));
 		}
+		*/
 		inline const std::map <std::string, FeaturePtr>& GetFeatures() const {return m_feats;}
 		inline const Feature& GetFeature(const std::string& x_name) const
 		{

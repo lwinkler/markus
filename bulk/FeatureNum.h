@@ -25,16 +25,11 @@
 
 #include "Feature.h"
 #include "feature_util.h"
-#include <cstdlib>
 
 
-
-/* -------------------------------------------------------------------------------- */
-
+// Definitions
 typedef FeatureT<float>   FeatureFloat;
 typedef FeatureT<int>	  FeatureInt;
-typedef FeatureT<cv::KeyPoint>	  FeatureKeyPoint;
-typedef FeatureT<cv::Point3f>	  FeaturePoint3f;
 
 
 #endif

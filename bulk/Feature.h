@@ -26,9 +26,8 @@
 #include <map>
 #include <string>
 #include "define.h"
-#include "Serializable.h"
-#include "MkException.h" // TODO : move fct in cpp ?
 #include "feature_util.h"
+#include "Serializable.h"
 
 /**
 * @brief Class representing a feature of a template/object. (e.g. area, perimeter, length, ...)
