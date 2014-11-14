@@ -24,6 +24,9 @@
 #ifndef CONTEXT_H
 #define CONTEXT_H
 
+#include <string>
+#include "MkException.h"
+
 /**
 * @brief All informations that must be known by modules concerning application run-time
 */
@@ -32,26 +35,18 @@ class Context
 {
 	public:
 		Context() : m_isset(false){}
-		Context(const std::string& x_applicationName, const std::string& x_outputDir) : 
-			m_isset(true),
-			m_applicationName (x_applicationName),
-			m_outputDir       (x_outputDir) {}
-		Context &operator = (const Context &x_context)
-		{
-			if(m_isset)
-				throw MkException("Context must be set only once", LOC);
-			m_applicationName = x_context.GetApplicationName();
-			m_outputDir       = x_context.GetOutputDir();
-			m_isset           = true;
-			return *this;
-		}
-		inline const std::string& GetOutputDir() const {Check(); return m_outputDir;}
+		Context(const std::string& x_configFile, const std::string& x_applicationName, const std::string& x_outputDir);
+		Context &operator = (const Context &x_context);
+		static std::string Version(bool x_full);
+		inline const std::string& GetOutputDir() const {Check(); if(m_outputDir.empty())throw MkException("Output dir has not been created", LOC); return m_outputDir;}
 		inline const std::string& GetApplicationName() const {Check(); return m_applicationName;}
 
 	protected:
+		std::string CreateOutputDir(const std::string& x_outputDir = "");
 		inline void Check() const {if(!m_isset)throw MkException("Module and Manager context must be set after initialization (with SetContext)", LOC);}
 		std::string m_applicationName;
 		std::string m_outputDir;
+		std::string m_configFile; // TODO: initialize
 		bool m_isset;
 
 	private:

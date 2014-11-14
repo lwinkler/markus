@@ -4,6 +4,7 @@ Module.cpp
 ModuleAsync.cpp
 ModuleKeyPoints.cpp
 Manager.cpp
+Context.cpp
 Input.cpp
 Parameter.cpp
 ParameterEnum.cpp

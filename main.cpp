@@ -159,7 +159,7 @@ int main(int argc, char** argv)
 				return 0;
 				break;
 			case 'v':
-				LOG_INFO(logger, Manager::Version(true));
+				LOG_INFO(logger, Context::Version(true));
 				return 0;
 			case 'd':
 				describe = true;
@@ -240,26 +240,27 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
-	// Init global variables and objects
-	if(outputDir != "")
-	{
-		outputDir = Manager::CreateOutputDir(outputDir, configFile);
-		string dir = outputDir + "/";
-		setenv("LOG_DIR", dir.c_str(), 1);
-	}
-
-	log4cxx::xml::DOMConfigurator::configure(logConfigFile);
-
 	try
 	{
-#ifndef MARKUS_NO_GUI
-		MarkusApplication app(argc, argv);
-#endif
-		LOG_INFO(logger, Manager::Version(true));
+		LOG_INFO(logger, Context::Version(true));
 		ConfigReader mainConfig(configFile);
 		mainConfig.Validate();
 		ConfigReader appConfig = mainConfig.GetSubConfig("application");
 		assert(!appConfig.IsEmpty());
+
+		// Init global variables and objects
+		Context context("", appConfig.GetAttribute("name"), outputDir);
+		if(outputDir != "")
+		{
+			string dir = outputDir + "/";
+			setenv("LOG_DIR", dir.c_str(), 1);
+		}
+
+		log4cxx::xml::DOMConfigurator::configure(logConfigFile);
+
+#ifndef MARKUS_NO_GUI
+		MarkusApplication app(argc, argv);
+#endif
 
 		// Set values of parameters if an extra config is used
 		for(vector<string>::const_iterator it1 = extraConfig.begin() ; it1 != extraConfig.end() ; ++it1)
@@ -330,7 +331,6 @@ int main(int argc, char** argv)
 
 		// Set manager and context
 		Manager manager(appConfig);
-		Context context(appConfig.GetAttribute("name"), outputDir);
 		manager.SetContext(context);
 
 		if(describe) 

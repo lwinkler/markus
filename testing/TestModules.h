@@ -43,6 +43,11 @@
 
 class TestModules : public CppUnit::TestFixture
 {
+	public:
+		TestModules()
+		: mp_fakeInput(NULL),
+		  mp_config(NULL),
+		  mp_context(NULL){}
 	private:
 		static log4cxx::LoggerPtr m_logger;
 	protected:
@@ -51,6 +56,7 @@ class TestModules : public CppUnit::TestFixture
 		FactoryFeatures m_factoryFeatures;
 		Module* mp_fakeInput;
 		ConfigReader* mp_config;
+		Context* mp_context;
 
 		// Objects for streams
 		cv::Mat m_image; // (module->GetHeight(), module->GetWidth(), module->GetType());
@@ -67,6 +73,7 @@ class TestModules : public CppUnit::TestFixture
 		m_cpt = 0;
 		m_factoryModules.ListModules(m_moduleTypes);
 
+		mp_context = new Context("", "TestModule", "testing/out");
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigReader("/tmp/config_empty.xml");
 		addModuleToConfig("VideoFileReader", *mp_config)
@@ -81,8 +88,9 @@ class TestModules : public CppUnit::TestFixture
 	}
 	void tearDown()
 	{
-		delete mp_fakeInput;
-		delete mp_config;
+		CLEAN_DELETE(mp_fakeInput);
+		CLEAN_DELETE(mp_config);
+		CLEAN_DELETE(mp_context);
 	}
 
 	ConfigReader addModuleToConfig(const std::string& rx_type, ConfigReader& xr_config)
@@ -118,6 +126,7 @@ class TestModules : public CppUnit::TestFixture
 
 		mp_config->SaveToFile("testing/tmp/tmp.xml");
 		Module* module = m_factoryModules.CreateModule(x_type, moduleConfig);
+		module->SetContext(*mp_context);
 		module->AllowAutoProcess(false);
 		m_image = cv::Mat(module->GetHeight(), module->GetWidth(), module->GetImageType());
 

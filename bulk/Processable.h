@@ -27,6 +27,7 @@
 #include "ConfigReader.h"
 #include "ParameterStructure.h"
 #include "ParameterNum.h"
+#include "Context.h"
 #include <QReadWriteLock>
 #include <log4cxx/logger.h>
 
@@ -62,6 +63,7 @@ public:
 	virtual bool Process() = 0;
 	inline void AllowAutoProcess(bool x_proc) {m_allowAutoProcess = x_proc;}
 	inline void SetRealTime(bool x_realTime) {m_realTime  = x_realTime;}
+	inline virtual void SetContext(const Context& x_context){m_context = x_context;}
 	
 protected:
 	virtual Parameters & RefParameters() = 0;
@@ -71,6 +73,8 @@ protected:
 	bool m_realTime;         /// Process in real-time: if true, the module processes as fast as possible
 	QModuleTimer * m_moduleTimer;
 	QReadWriteLock m_lock;
+
+	Context m_context; /// context given by Manager (output directory, ...)
 
 private:
 	static log4cxx::LoggerPtr m_logger;

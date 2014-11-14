@@ -31,7 +31,6 @@
 #include "Controller.h"
 
 #include "util.h"
-#include "version.h"
 
 #include <fstream>
 #include <jsoncpp/json/reader.h>
@@ -82,14 +81,14 @@ Manager::Manager(const ConfigReader& x_configReader) :
 Manager::~Manager()
 {
 	PrintStatistics();
-	const string& outputDir = m_context.GetOutputDir();
 
 
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
 		delete *it;
 
 	/// Do the final operations on the static class
-	if(!m_context.GetOutputDir().empty()) // TODO: Check if created
+	const string& outputDir = m_context.GetOutputDir();
+	if(!outputDir.empty())
 	{
 		LOG_INFO(m_logger, "Results written to directory "<<outputDir);
 		if(getenv("LOG_DIR") == NULL)
@@ -560,26 +559,6 @@ Module& Manager::RefModuleByName(const string& x_name) const
 	// return NULL;
 }
 
-/**
-* @brief Return a string containing the version of the executable
-*
-* @param x_full Return the full info string with info on host
-*
-* @return Version
-*/
-string Manager::Version(bool x_full)
-{
-	stringstream ss;
-	if(x_full)
-		ss<<"Markus version "<<VERSION_STRING
-			<<", compiled with Opencv "<<CV_VERSION
-			<< ", vp-detection modules version "<<VERSION_STRING2
-			<< ", built on "<<VERSION_BUILD_HOST;
-	else
-		ss<<VERSION_STRING<<","<<VERSION_STRING2;
-
-	return ss.str();
-}
 
 /**
 * @brief Log the status of the application (last exception)

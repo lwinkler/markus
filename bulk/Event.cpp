@@ -22,7 +22,6 @@
 -------------------------------------------------------------------------------------*/
 #include "Event.h"
 #include "Object.h"
-#include "Manager.h"
 #include "util.h"
 #include <cstdio>
 
@@ -190,7 +189,7 @@ void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 	COPY_AND_CHECK(out["dateEvent"]          , root["dateEvent"]);
 	COPY_AND_CHECK(out["dateNotif"]          , root["dateNotif"]);
 	COPY_AND_CHECK(out["applicationName"]    , x_context.GetApplicationName());
-	COPY_AND_CHECK(out["applicationVersion"] , Manager::Version(false));
+	COPY_AND_CHECK(out["applicationVersion"] , x_context.Version(false));
 	COPY_AND_CHECK(out["eventName"]          , root["eventName"]);
 
 	if(x_isProcessEvent)
