@@ -95,22 +95,19 @@ string Context::CreateOutputDir(const string& x_outputDir)
 			SYSTEM("mkdir -p \"" + outputDir + "\"");
 		}
 
-cout<<__LINE__<<m_configFile<<endl;
 		// Copy config to output dir
 		if(m_configFile.empty())
 		{
-cout<<__LINE__<<endl;
 			// note: do not log as logger may not be initialized
-			cerr<<"Creating directory "<<outputDir<<" and symbolic link out_latest"<<endl;
+			// cout<<"Creating directory "<<outputDir<<" and symbolic link out_latest"<<endl;
 			// note: use ln with args sfn to override existing link
 			SYSTEM("ln -sfn \"" + outputDir + "\" out_latest");
 		}
 		else
 		{
-cout<<__LINE__<<endl;
 			// note: do not log as logger may not be initialized
 			// Copy config file to output directory
-			cerr<<"Creating directory "<<outputDir<<endl;
+			// cout<<"Creating directory "<<outputDir<<endl;
 			SYSTEM("cp " + m_configFile + " " + outputDir);
 		}
 	}
