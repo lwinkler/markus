@@ -52,7 +52,7 @@ double FeatureVectorFloat::Compare2(const Feature& x_feature) const
 void FeatureVectorFloat::Randomize(unsigned int& xr_seed, const std::string& x_param)
 {
 	values.clear();
-	int limit = 10; //  rand_r(xp_seed) % 100;
+	int limit = 10; // TODO: randomize this:  rand_r(xp_seed) % 100;
 	for(int i = 0 ; i < limit ; i++)
 		values.push_back(static_cast<float>(rand_r(&xr_seed)) / RAND_MAX);
 }

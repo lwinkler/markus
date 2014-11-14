@@ -74,7 +74,7 @@ Manager::Manager(const ConfigReader& x_configReader) :
 		// Add to inputs if an input
 		m_modules.push_back(tmp1);
 		if(tmp1->IsInput())
-			m_inputs.push_back(dynamic_cast<Input* >(tmp1));
+			m_inputs.push_back(tmp1);
 		moduleConfig = moduleConfig.NextSubConfig("module");
 	}
 }
@@ -143,6 +143,8 @@ Manager::~Manager()
 */
 void Manager::Connect()
 {
+	bool centralized = m_param.autoProcess;
+
 	Processable::Reset();
 	if(m_isConnected)
 		throw MkException("Manager can only connect modules once", LOC);
@@ -154,9 +156,12 @@ void Manager::Connect()
 	{
 		int moduleId = atoi(moduleConfig.GetAttribute("id").c_str());
 		Module& module = RefModuleById(moduleId);
+
+		// If the module is automatically processed: set as ready
 		if(module.IsAutoProcessed())
 			module.SetAsReady();
 
+		// For each module
 		// Read conections of inputs
 		ConfigReader conf = moduleConfig.GetSubConfig("inputs");
 		if(!conf.IsEmpty())
@@ -164,6 +169,7 @@ void Manager::Connect()
 			ConfigReader inputConfig = conf.GetSubConfig("input");
 			while(! inputConfig.IsEmpty())
 			{
+				// Check if connected to our previous module
 				try
 				{
 					int inputId        = atoi(inputConfig.GetAttribute("id").c_str());
@@ -195,6 +201,8 @@ void Manager::Connect()
 	//    the master module is the module responsible to call the Process method
 	bool changed = true;
 	bool ready = true;
+	vector<Module*> newOrder = m_inputs;
+
 	while(changed)
 	{
 		changed = false;
@@ -206,15 +214,24 @@ void Manager::Connect()
 				ready = false;
 				if((*it)->AllInputsAreReady())
 				{
-					Module& master = RefModuleByName((*it)->GetMasterModule().GetName());
 					(*it)->SetAsReady();
-					master.AddDependingModule(**it);
+					if(centralized)
+						newOrder.push_back(*it);
+					else
+					{
+						Module& master = RefModuleByName((*it)->GetMasterModule().GetName());
+						master.AddDependingModule(**it);
+					}
 					// cout<<"Set module "<<depending->GetName()<<" as ready"<<endl;
 					changed = true;
 				}
 			}
 		}
 	}
+	// If centralized reorder the module list
+	if(centralized)
+		m_modules = newOrder;
+	
 	if(! ready)
 		throw MkException("Not all modules can be assigned to a master. There is probably a problem with the connections between modules.", LOC);
 	
@@ -248,6 +265,8 @@ void Manager::Reset(bool x_resetInputs)
 		AddController(new ControllerManager(*this));
 	}
 	m_hasRecovered = true;
+	m_continueFlag = true;
+	m_frameCount = 0;
 }
 
 /**
@@ -277,8 +296,9 @@ bool Manager::Process()
 	{
 		try
 		{
-			if((*it)->IsAutoProcessed())
-				(*it)->Process();
+			// if((*it)->IsAutoProcessed())
+			// Note: Since we are in centralized mode, all modules are called directly from the master
+			(*it)->Process();
 		}
 		catch(EndOfStreamException& e)
 		{
@@ -443,10 +463,9 @@ void Manager::PrintStatistics()
 */
 void Manager::Pause(bool x_pause)
 {
+	Processable::Pause(x_pause);
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)	
-	{
 		(*it)->Pause(x_pause);	
-	}
 }
 
 /**
@@ -456,7 +475,7 @@ void Manager::Pause(bool x_pause)
 */
 void Manager::PauseInputs(bool x_pause)
 {
-	for(vector<Input*>::iterator it = m_inputs.begin() ; it != m_inputs.end() ; ++it)	
+	for(vector<Module*>::iterator it = m_inputs.begin() ; it != m_inputs.end() ; ++it)	
 	{
 		(*it)->Pause(x_pause);	
 	}
@@ -471,9 +490,9 @@ void Manager::PauseInputs(bool x_pause)
 bool Manager::EndOfAllStreams() const
 {
 	bool endOfStreams = true;
-	for(vector<Input*>::const_iterator it1 = m_inputs.begin() ; it1 != m_inputs.end() ; ++it1)
+	for(vector<Module*>::const_iterator it1 = m_inputs.begin() ; it1 != m_inputs.end() ; ++it1)
 	{
-		if(!(*it1)->IsEndOfStream())
+		if(!dynamic_cast<Input*>(*it1)->IsEndOfStream())
 			endOfStreams = false;
 	}
 	return endOfStreams;

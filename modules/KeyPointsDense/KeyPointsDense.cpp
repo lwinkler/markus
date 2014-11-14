@@ -24,7 +24,7 @@
 #include "StreamImage.h"
 #include "StreamDebug.h"
 #include "StreamObject.h"
-#include "FeatureKeyPoint.h"
+#include "FeatureOpenCv.h"
 
 //for debug
 #include "util.h"

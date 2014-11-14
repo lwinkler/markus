@@ -166,19 +166,19 @@ void GroundTruthReader::ProcessFrame()
 			if (find (trackedObj.begin(), trackedObj.end(), it->GetId()) != trackedObj.end())
 			{
 				it->AddFeature("gt", 1.0);
-				it->AddFeature("label",text);
+				it->AddFeature("label", new FeatureString(text));
 			}
 			else
 			{
 				it->AddFeature("gt", 0.0);
-				it->AddFeature("label","");
+				it->AddFeature("label", new FeatureString(""));
 			}
 
 		}
 		else
 		{
 			it->AddFeature("gt", static_cast<float>(m_state));
-			it->AddFeature("label",text);
+			it->AddFeature("label", new FeatureString(text));
 		}
 
 #ifdef MARKUS_DEBUG_STREAMS

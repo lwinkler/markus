@@ -42,7 +42,7 @@
 
 #include "FeatureFloatInTime.h"
 #include "FeatureVectorFloat.h"
-#include "FeatureKeyPoint.h"
+#include "FeatureOpenCv.h"
 
 /// Test class for serialization
 class TestObject : public Serializable
@@ -129,7 +129,7 @@ public:
 		std::string fileName3 = "testing/serialize/" + name + ".json";
 		std::string dir = "testing/serialize/image";
 		SYSTEM("mkdir -p " + dir);
-		LOG_TEST(m_logger, "Test serialization of "<<name);
+		LOG_TEST(m_logger, "Test serialization of "<<name<<" = "<<obj.SerializeToString());
 		std::ofstream of1(fileName1.c_str());
 		obj.Serialize(of1, dir);
 		of1.close();
@@ -158,6 +158,7 @@ public:
 		myVect.push_back(1e4);
 		myVect.push_back(0.000234);
 		cv::KeyPoint kp;
+		cv::Point3f pt3f(33, 134.5, 1e4);
 
 		// TODO: There is a problem of inprecision with floating points. See how we handle this !
 		TestObject obj1;
@@ -168,10 +169,12 @@ public:
 		obj2.AddFeature("feat1", 77);
 		obj2.AddFeature("feat2", 3453.444e-123);
 		obj2.AddFeature("ff", new FeatureFloat(0.93));
+		obj2.AddFeature("ff", new FeatureInt(93));
 		obj2.AddFeature("ffif", new FeatureFloatInTime(0.132));
 		obj2.AddFeature("fstr", new FeatureString("someString"));
 		obj2.AddFeature("fvf", new FeatureVectorFloat(myVect));
 		obj2.AddFeature("fkp", new FeatureKeyPoint(kp));
+		obj2.AddFeature("fp3f", new FeaturePoint3f(pt3f));
 		testSerialization(obj2, "Object");
 
 		Event evt1;
@@ -236,6 +239,9 @@ public:
 
 		FeatureKeyPoint fkp(kp);
 		testSerialization(fkp, "FeatureKeyPoint");
+
+		FeaturePoint3f fpt3f(pt3f);
+		testSerialization(fpt3f, "FeaturePoint3f");
 	}
 
 	static CppUnit::Test *suite()

@@ -24,7 +24,7 @@ Object.cpp
 Event.cpp
 FeatureString.cpp
 FeatureFloatInTime.cpp
-FeatureKeyPoint.cpp
+FeatureOpenCv.cpp
 FeatureString.cpp
 FeatureVectorFloat.cpp
 ConfigReader.cpp

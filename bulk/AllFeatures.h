@@ -27,7 +27,7 @@
 #include "FeatureFloatInTime.h"
 #include "FeatureVectorFloat.h"
 #include "FeatureString.h"
-#include "FeatureKeyPoint.h"
+#include "FeatureOpenCv.h"
 
 void registerAllFeatures(FactoryFeatures& x_fact)
 {
@@ -37,5 +37,6 @@ void registerAllFeatures(FactoryFeatures& x_fact)
 	x_fact.RegisterFeature<FeatureVectorFloat>("FeatureVectorFloat"); 
 	x_fact.RegisterFeature<FeatureString>("FeatureString"); 
 	x_fact.RegisterFeature<FeatureKeyPoint>("FeatureKeyPoint"); 
+	x_fact.RegisterFeature<FeaturePoint3f>("FeaturePoint3f"); 
 }
 #endif
