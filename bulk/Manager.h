@@ -30,7 +30,6 @@
 #include "Controller.h"
 #include "Timer.h"
 #include "FactoryModules.h"
-#include "Context.h"
 
 
 class Input;
@@ -73,16 +72,13 @@ public:
 	void Status() const;
 	void PauseInputs(bool x_pause);
 	bool EndOfAllStreams() const;
-	static std::string Version(bool x_full);
-	// static void NotifyMonitoring(const std::string& x_eventName);
 	static std::string CreateOutputDir(const std::string& x_outputDir = "", const std::string& x_configFile = "");
 	static inline void ListModules(std::vector<std::string>& xr_types) {m_factory.ListModules(xr_types);}
 	void WriteStateToDirectory(const std::string& x_directory) const;
 	void UpdateConfig();
-	// inline static const std::string& GetApplicationName(){return m_applicationName;}
-	inline void SetContext(const Context& x_context)
+	inline virtual void SetContext(const Context& x_context)
 	{
-		m_context = x_context;
+		Processable::SetContext(x_context);
 		for(std::vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
 			(*it)->SetContext(x_context);
 	}
@@ -99,7 +95,6 @@ protected:
 	bool m_continueFlag;           // Flag that is used to notify the manager of a Quit command, only working if centralized
 	bool m_hasRecovered;           // Flag to test if all modules have recovered from the last exception, only working if centralized
 	MkException m_lastException;   // Field to store the last exception
-	Context m_context;    // Context of the running program
 
 	std::vector<Module *> m_modules;
 	std::vector<Input  *> m_inputs;

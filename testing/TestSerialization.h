@@ -97,7 +97,9 @@ protected:
 class TestSerialization : public CppUnit::TestFixture
 {
 public:
-	TestSerialization(){}
+	TestSerialization() 
+	 : mp_fakeInput(NULL),
+	   mp_config(NULL){}
 
 private:
 		static log4cxx::LoggerPtr m_logger;
@@ -117,8 +119,8 @@ public:
 	}
 	void tearDown()
 	{
-		delete mp_fakeInput;
-		delete mp_config;
+		CLEAN_DELETE(mp_fakeInput);
+		CLEAN_DELETE(mp_config);
 	}
 
 	/// Test the serialization of one serializable class

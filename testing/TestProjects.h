@@ -61,7 +61,7 @@ class TestProjects : public CppUnit::TestFixture
 		appConfig.RefSubConfig("parameters", "", true).RefSubConfig("param", "auto_process", true).SetValue("1");
 		CPPUNIT_ASSERT(!appConfig.IsEmpty());
 		Manager manager(appConfig);
-		Context context("TestProjects", "testing");
+		Context context("", "TestProjects", "testing/out");
 		manager.SetContext(context);
 		manager.AllowAutoProcess(false);
 		manager.Connect();

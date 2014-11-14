@@ -33,7 +33,6 @@
 
 
 class Event;
-class Module;
 
 /// Class representing a event (e.g. Ponctual moment in time where an intrusion occurs)
 class Event : public Serializable
