@@ -70,6 +70,12 @@ void Processable::Reset()
 void Processable::Pause(bool x_pause)
 {
 	m_pause = x_pause;
+	if(m_moduleTimer == NULL)
+		return;
+	if(x_pause)
+		m_moduleTimer->stop();
+	else
+		m_moduleTimer->start();
 }
 
 

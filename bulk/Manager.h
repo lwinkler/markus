@@ -67,7 +67,7 @@ public:
 	void Connect();
 	void Export();
 	void PrintStatistics();
-	void Pause(bool x_pause);
+	virtual void Pause(bool x_pause);
 	inline void Quit(){m_continueFlag = false;}
 	void Status() const;
 	void PauseInputs(bool x_pause);
@@ -94,7 +94,7 @@ protected:
 	MkException m_lastException; // Field to store the last exception
 
 	std::vector<Module *> m_modules;
-	std::vector<Input  *> m_inputs;
+	std::vector<Module  *> m_inputs;
 
 	long long m_frameCount;
 	static std::string m_applicationName;

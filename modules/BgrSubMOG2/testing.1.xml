@@ -1,0 +1,119 @@
+<application name="CustomProject">
+
+
+<module id="0" name="CompareVideo0">
+<inputs>
+<input id="0" outputid="0" moduleid="4"/>
+<input id="1" outputid="0" moduleid="2"/>
+</inputs>
+<outputs/>
+<parameters>
+<param name="class">CompareVideo</param>
+<param name="threshold">0</param>
+</parameters>
+
+
+
+
+
+
+
+<uiobject x="957" y="342" width="0" height="0"/>
+</module>
+
+
+<module id="1" name="VideoFileReader1">
+<inputs/>
+<outputs>
+<output id="0"/>
+</outputs>
+<parameters>
+<param name="class">VideoFileReader</param>
+<param name="auto_process"/>
+<param name="fps"/>
+<param name="file">in/input.mp4</param>
+</parameters>
+
+
+
+
+
+
+
+<uiobject x="524" y="221" width="0" height="0"/>
+</module>
+
+
+<module id="2" name="VideoFileReader2">
+<inputs/>
+<outputs>
+<output id="0"/>
+</outputs>
+<parameters>
+<param name="class">VideoFileReader</param>
+<param name="auto_process"/>
+<param name="fps"/>
+
+
+
+
+<param name="file">output.0.MP42.avi</param>
+</parameters>
+
+
+
+
+
+
+
+<uiobject x="525" y="395" width="0" height="0"/>
+</module>
+
+
+<module id="4" name="BgrSubMOG24">
+<inputs>
+<input id="0" outputid="0" moduleid="1"/>
+</inputs>
+<outputs>
+<output id="0"/>
+<output id="1"/>
+<output id="2"/>
+<output id="3"/>
+</outputs>
+<parameters>
+<param name="class">BgrSubMOG2</param>
+<param name="auto_process"/>
+<param name="fps"/>
+<param name="learning_rate">0.0001</param>
+</parameters>
+
+
+
+
+
+
+
+
+
+
+
+
+<uiobject x="757" y="219" width="0" height="0"/>
+</module>
+
+<module id="5" name="VideoFileWriter5">
+<inputs>
+<input id="0" outputid="0" moduleid="4"/>
+</inputs>
+<outputs/>
+<parameters>
+<param name="class">VideoFileWriter</param>
+<param name="fourcc">MP42</param>
+</parameters>
+
+
+
+
+<uiobject x="1120" y="174" width="0" height="0"/>
+</module>
+</application>

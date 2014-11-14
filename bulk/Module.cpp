@@ -461,7 +461,7 @@ bool Module::AllInputsAreReady() const
 
 /**
 * @brief Return a reference to the master module. The master module is the preceeding module that is 
- 	 responsible for calling the process method
+ 	 responsible for calling the process method. The first connected input determines what module is master.
 *
 * @return The master module
 */

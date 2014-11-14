@@ -52,6 +52,7 @@ void QModuleTimer::Reset(double x_fps)
 
 void QModuleTimer::timerEvent(QTimerEvent* px_event)
 {
-	m_processable.Process();
+	if(!m_processable.Process())
+		stop();
 }
 
