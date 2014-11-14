@@ -52,7 +52,7 @@ inline double compareSquared(const cv::KeyPoint& x_1, const cv::KeyPoint& x_2)
 		&& x_1.response == x_2.response
 		&& x_1.size     == x_2.size);
 }
-inline void randomize(cv::KeyPoint& xr_val, unsigned int& xr_seed) {NON_EXISTANT;}
+void randomize(cv::KeyPoint& xr_val, unsigned int& xr_seed);
 
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features of type Point3f
@@ -60,7 +60,7 @@ inline void randomize(cv::KeyPoint& xr_val, unsigned int& xr_seed) {NON_EXISTANT
 // std::ostream& operator<< (std::ostream& x_out, const cv::Point3f& x_val);
 std::istream& operator>> (std::istream& x_in,  cv::Point3f& xr_val);
 inline double compareSquared(const cv::Point3f& x_1, const cv::Point3f& x_2){return x_1 != x_2;}
-inline void randomize(cv::Point3f& xr_val, unsigned int& xr_seed){NON_EXISTANT;}
+void randomize(cv::Point3f& xr_val, unsigned int& xr_seed);
 
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features of type float

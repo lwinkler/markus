@@ -69,6 +69,17 @@ istream& operator>> (istream& x_in,  cv::KeyPoint& xr_val)
 	xr_val.response = root["response"].asFloat();
 	xr_val.size = root["size"].asFloat();
 }
+
+void randomize(KeyPoint& xr_val, unsigned int& xr_seed)
+{
+	randomize(xr_val.angle, xr_seed);
+	randomize(xr_val.class_id, xr_seed);
+	randomize(xr_val.octave, xr_seed);
+	randomize(xr_val.pt.x, xr_seed);
+	randomize(xr_val.pt.y, xr_seed);
+	randomize(xr_val.response, xr_seed);
+	randomize(xr_val.size, xr_seed);
+}
 /* -------------------------------------------------------------------------------- */
 istream& operator>> (istream& x_in,  cv::Point3f& xr_val)
 {
@@ -78,5 +89,12 @@ istream& operator>> (istream& x_in,  cv::Point3f& xr_val)
 	return x_in; // TODO: Check that all streams are returned
 	else throw MkException("Error in format", LOC);
 
+}
+
+void randomize(cv::Point3f& xr_val, unsigned int& xr_seed)
+{
+	randomize(xr_val.x, xr_seed);
+	randomize(xr_val.y, xr_seed);
+	randomize(xr_val.z, xr_seed);
 }
 /* -------------------------------------------------------------------------------- */

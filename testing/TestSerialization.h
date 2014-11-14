@@ -103,7 +103,8 @@ public:
 
 private:
 		static log4cxx::LoggerPtr m_logger;
-		FactoryModules m_factory;
+		FactoryModules m_factoryModules;
+		FactoryFeatures m_factoryFeatures;
 		Module* mp_fakeInput;
 		ConfigReader* mp_config;
 
@@ -112,7 +113,7 @@ public:
 	{
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigReader("testing/serialize/module.xml");
-		mp_fakeInput = m_factory.CreateModule("VideoFileReader", mp_config->GetSubConfig("module"));
+		mp_fakeInput = m_factoryModules.CreateModule("VideoFileReader", mp_config->GetSubConfig("module"));
 		// note: we need a fake module to create the input streams
 		mp_fakeInput->SetAsReady();
 		mp_fakeInput->Reset();
@@ -244,6 +245,17 @@ public:
 
 		FeaturePoint3f fpt3f(pt3f);
 		testSerialization(fpt3f, "FeaturePoint3f");
+
+		std::vector<std::string> listFeatures;
+		m_factoryFeatures.ListFeatures(listFeatures);
+		unsigned int seed = 242343332;
+		for(std::vector<std::string>::const_iterator it = listFeatures.begin() ; it != listFeatures.end() ; it++)
+		{
+			Feature* feat = m_factoryFeatures.CreateFeature(*it);
+			feat->Randomize(seed, "");
+			testSerialization(*feat, *it);
+			delete(feat);
+		}
 	}
 
 	static CppUnit::Test *suite()
