@@ -24,15 +24,18 @@
 #define MK_FEATURE_KEYPOINT_H
 
 #include "Feature.h"
+#include "FeatureNum.h"
 #include "opencv2/features2d/features2d.hpp"
+
 /**
 * @brief Class representing a feature in the form of a KeyPoint (See OpenCV documentation for structure)
 */
-class FeatureKeyPoint : public Feature
+/*
+template<>class FeatureT<cv::KeyPoint> : public Feature
 {
 	public:
-		FeatureKeyPoint(const cv::KeyPoint& x_keypoint = cv::KeyPoint());
-		Feature* CreateCopy() const{return new FeatureKeyPoint(*this);}
+		FeatureT(const cv::KeyPoint& x_keypoint = cv::KeyPoint());
+		Feature* CreateCopy() const{return new FeatureT<cv::KeyPoint>(*this);}
 		virtual double Compare2(const Feature& x_feature) const;
 		virtual void Randomize(unsigned int& xr_seed, const std::string& x_param);
 		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
@@ -41,4 +44,10 @@ class FeatureKeyPoint : public Feature
 		// The keypoint contained in the feature
 		cv::KeyPoint keypoint;
 };
+
+
+		template<> void FeatureT<cv::Point3f>::Deserialize(std::istream& x_in, const std::string& x_dir);
+typedef FeatureT<cv::KeyPoint> FeatureKeyPoint;
+typedef FeatureT<cv::Point3f> FeaturePoint3f;
+*/
 #endif

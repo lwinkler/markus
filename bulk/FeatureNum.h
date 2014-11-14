@@ -24,34 +24,17 @@
 #define MK_FEATURE_NUM_H
 
 #include "Feature.h"
+#include "feature_util.h"
 #include <cstdlib>
 
-/**
-* @brief Class representing a feature template 
-*/
-template<class T> class FeatureNum : public Feature
-{
-	public:
-		FeatureNum(T x_value = 0.0){ value = x_value;}
-		Feature* CreateCopy() const{return new FeatureNum(*this);}
-		inline virtual double Compare2(const Feature& x_feature) const
-		{
-			const FeatureNum<T>& feat(dynamic_cast<const FeatureNum<T>&>(x_feature));
-			return POW2(value - feat.value);
-		}
-		virtual void Randomize(unsigned int& xr_seed, const std::string& x_param)
-		{
-			value = static_cast<float>(rand_r(&xr_seed)) / RAND_MAX;
-		}
-		virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const{ x_out << value; }
-		virtual void Deserialize(std::istream& x_in, const std::string& x_dir){ x_in >> value;}
-		
-		// The value of the feature
-		T value;
-};
 
 
-typedef FeatureNum<float> FeatureFloat;
-typedef FeatureNum<int>	  FeatureInt;
+/* -------------------------------------------------------------------------------- */
+
+typedef FeatureT<float>   FeatureFloat;
+typedef FeatureT<int>	  FeatureInt;
+typedef FeatureT<cv::KeyPoint>	  FeatureKeyPoint;
+typedef FeatureT<cv::Point3f>	  FeaturePoint3f;
+
 
 #endif

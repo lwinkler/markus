@@ -20,22 +20,23 @@
 *    You should have received a copy of the GNU Lesser General Public License
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
-#include "FeatureKeyPoint.h"
+/*
+#include "FeatureOpenCv.h"
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/writer.h>
 
 using namespace std;
 using namespace cv;
 
-FeatureKeyPoint::FeatureKeyPoint(const KeyPoint&  x_keypoint)
+FeatureT<KeyPoint>::FeatureT(const KeyPoint&  x_keypoint)
 	: Feature()
 {
 	keypoint = x_keypoint;
 }
 
-double FeatureKeyPoint::Compare2(const Feature& x_feature) const
+double FeatureT<KeyPoint>::Compare2(const Feature& x_feature) const
 {
-	const KeyPoint& kp(dynamic_cast<const FeatureKeyPoint&>(x_feature).keypoint);
+	const KeyPoint& kp(dynamic_cast<const FeatureT<KeyPoint>&>(x_feature).keypoint);
 	return !(keypoint.angle == kp.angle
 		&& keypoint.class_id == kp.class_id
 		&& keypoint.octave == kp.octave
@@ -44,12 +45,12 @@ double FeatureKeyPoint::Compare2(const Feature& x_feature) const
 		&& keypoint.size == kp.size);
 }
 
-void FeatureKeyPoint::Randomize(unsigned int& xr_seed, const std::string& x_param)
+void FeatureT<KeyPoint>::Randomize(unsigned int& xr_seed, const std::string& x_param)
 {
 	assert(false); // TODO
 }
 
-void FeatureKeyPoint::Serialize(ostream& x_out, const string& x_dir) const
+void FeatureT<KeyPoint>::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 	root["angle"] = keypoint.angle;
@@ -66,7 +67,9 @@ void FeatureKeyPoint::Serialize(ostream& x_out, const string& x_dir) const
 	x_out<<tmp;
 }
 
-void FeatureKeyPoint::Deserialize(istream& x_in, const string& x_dir)
+template<> void FeatureT<Point3f>::Deserialize(istream& x_in, const string& x_dir){}
+
+void FeatureT<KeyPoint>::Deserialize(istream& x_in, const string& x_dir)
 {
 	Json::Value root;
 	x_in >> root;
@@ -78,3 +81,4 @@ void FeatureKeyPoint::Deserialize(istream& x_in, const string& x_dir)
 	keypoint.response = root["response"].asFloat();
 	keypoint.size = root["size"].asFloat();
 }
+*/
