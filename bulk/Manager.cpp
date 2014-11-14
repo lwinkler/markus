@@ -271,6 +271,8 @@ void Manager::Reset(bool x_resetInputs)
 		AddController(new ControllerManager(*this));
 	}
 	m_hasRecovered = true;
+	m_continueFlag = true;
+	m_frameCount = 0;
 }
 
 /**
