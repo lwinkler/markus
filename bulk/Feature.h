@@ -26,7 +26,6 @@
 #include <map>
 #include <string>
 #include "define.h"
-#include "feature_util.h"
 #include "Serializable.h"
 
 /**
@@ -61,28 +60,4 @@ class FeaturePtr // : public Serializable
 		Feature* mp_feat;
 };
 
-/**
-* @brief Class representing a feature template. This can be used to create new templates
-*/
-template<class T> class FeatureT : public Feature
-{
-	public:
-		FeatureT(){}
-		FeatureT(T x_value){ value = x_value;}
-		Feature* CreateCopy() const{return new FeatureT(*this);}
-		inline virtual double Compare2(const Feature& x_feature) const
-		{
-			const FeatureT<T>& feat(dynamic_cast<const FeatureT<T>&>(x_feature));
-			return compareSquared(value, feat.value);
-		}
-		inline void Randomize(unsigned int& xr_seed, const std::string& x_param)
-		{
-			randomize(value, xr_seed);
-		}
-		virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const{ x_out << value; }
-		virtual void Deserialize(std::istream& x_in, const std::string& x_dir){ x_in >> value;}
-		
-		// The value of the feature
-		T value;
-};
 #endif

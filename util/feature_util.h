@@ -27,7 +27,6 @@
 #include <opencv2/features2d/features2d.hpp>
 #include "define.h"
 
-#define NON_EXISTANT assert(false)
 
 /** @brief This file contains some usefull functions for features and serialization. These are used by the FeatureT template.
  operator << is the stream operator for serialization
