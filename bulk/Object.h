@@ -29,7 +29,7 @@
 #include "define.h"
 #include "FactoryFeatures.h"
 #include "FeatureNum.h"
-#include "FeatureString.h"
+// #include "FeatureString.h"
 #include "MkException.h"
 
 /*! \class Object

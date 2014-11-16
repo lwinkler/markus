@@ -23,6 +23,7 @@
 #include "Object.h"
 #include "util.h"
 #include "define.h"
+#include "FeatureString.h"
 #include <jsoncpp/json/writer.h>
 #include <jsoncpp/json/reader.h>
 #include <boost/lexical_cast.hpp>

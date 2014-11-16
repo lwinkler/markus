@@ -55,6 +55,7 @@ ostream& operator<< (ostream& x_out, const cv::KeyPoint& x_val)
 	string tmp = writer.write(root);
 	tmp.erase(remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
 	x_out<<tmp;
+	return x_out;
 }
 
 istream& operator>> (istream& x_in,  cv::KeyPoint& xr_val)
@@ -68,6 +69,7 @@ istream& operator>> (istream& x_in,  cv::KeyPoint& xr_val)
 	xr_val.pt.y = root["y"].asFloat();
 	xr_val.response = root["response"].asFloat();
 	xr_val.size = root["size"].asFloat();
+	return x_in;
 }
 
 void randomize(KeyPoint& xr_val, unsigned int& xr_seed)
@@ -88,7 +90,7 @@ istream& operator>> (istream& x_in,  cv::Point3f& xr_val)
 	         >> get_char<','> >> xr_val.z >> get_char<']'>)
 	return x_in; // TODO: Check that all streams are returned
 	else throw MkException("Error in format", LOC);
-
+	return x_in;
 }
 
 void randomize(cv::Point3f& xr_val, unsigned int& xr_seed)

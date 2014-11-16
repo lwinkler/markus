@@ -41,6 +41,7 @@
 #include "CalibrationByModel.h"
 
 #include "FeatureFloatInTime.h"
+#include "FeatureString.h"
 #include "FeatureVectorFloat.h"
 #include "FeatureOpenCv.h"
 

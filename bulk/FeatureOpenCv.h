@@ -25,6 +25,7 @@
 
 #include "opencv2/features2d/features2d.hpp"
 #include "feature_util.h"
+#include "FeatureT.h"
 
 /**
 * @brief This file contains all features (templates) that come from OpenCV classes
