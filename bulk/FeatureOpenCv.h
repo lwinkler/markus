@@ -35,4 +35,5 @@
 // Definitions
 typedef FeatureT<cv::KeyPoint>	  FeatureKeyPoint;
 typedef FeatureT<cv::Point3f>	  FeaturePoint3f;
+// typedef FeatureT<cv::Mat>	  FeatureMat;
 #endif

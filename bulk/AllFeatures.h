@@ -37,5 +37,6 @@ void registerAllFeatures(FactoryFeatures& x_fact)
 	x_fact.RegisterFeature<FeatureString>("FeatureString"); 
 	x_fact.RegisterFeature<FeatureKeyPoint>("FeatureKeyPoint"); 
 	x_fact.RegisterFeature<FeaturePoint3f>("FeaturePoint3f"); 
+	// x_fact.RegisterFeature<FeatureMat>("FeatureMat"); // Experimental
 }
 #endif

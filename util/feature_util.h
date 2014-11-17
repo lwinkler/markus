@@ -76,6 +76,15 @@ inline double compareSquared(const cv::Point3f& x_1, const cv::Point3f& x_2){ret
 void randomize(cv::Point3f& xr_val, unsigned int& xr_seed);
 
 /* -------------------------------------------------------------------------------- */
+// Template specialization for features of type Mat
+
+std::ostream& serialize(std::ostream& x_out, const cv::Mat& x_value);
+std::istream& deserialize(std::istream& x_in,  cv::Mat& xr_value);
+
+double compareSquared(const cv::Mat& x_1, const cv::Mat& x_2);
+void randomize(cv::Mat& xr_val, unsigned int& xr_seed);
+
+/* -------------------------------------------------------------------------------- */
 // Template specialization for features of type float
 
 inline std::ostream& serialize(std::ostream& x_out, float x_value)   { x_out << x_value;  return x_out; }
