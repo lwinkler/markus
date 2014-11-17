@@ -250,7 +250,7 @@ public:
 		std::vector<std::string> listFeatures;
 		m_factoryFeatures.ListFeatures(listFeatures);
 		unsigned int seed = 242343332;
-		for(std::vector<std::string>::const_iterator it = listFeatures.begin() ; it != listFeatures.end() ; it++)
+		for(std::vector<std::string>::const_iterator it = listFeatures.begin() ; it != listFeatures.end() ; ++it)
 		{
 			Feature* feat = m_factoryFeatures.CreateFeature(*it);
 			feat->Randomize(seed, "");

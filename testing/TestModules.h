@@ -47,7 +47,9 @@ class TestModules : public CppUnit::TestFixture
 		TestModules()
 		: mp_fakeInput(NULL),
 		  mp_config(NULL),
-		  mp_context(NULL){}
+		  mp_context(NULL),
+		  m_state(false),
+		  m_cpt(0){}
 	private:
 		static log4cxx::LoggerPtr m_logger;
 	protected:
