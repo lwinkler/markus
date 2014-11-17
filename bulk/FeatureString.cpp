@@ -21,6 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 #include "FeatureString.h"
+#include "feature_util.h"
 
 using namespace std;
 
@@ -48,9 +49,8 @@ void FeatureString::Serialize(ostream& x_out, const string& x_dir) const
 
 void FeatureString::Deserialize(istream& x_in, const string& x_dir)
 {
-	x_in >> value;
+	x_in >> get_char<'"'> >> value;
 	//assert(value.front() == '"');
 	//assert(value.back() == '"');
-	value.erase( 0, 1 ); // erase the first character
-	value.erase( value.size() - 1 ); // erase the last character
+	value.erase( value.size() - 1 ); // erase the last character. Should be "
 }

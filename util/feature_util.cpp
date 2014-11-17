@@ -29,16 +29,6 @@
 using namespace std;
 using namespace cv;
 
-template <char Expect>
-std::istream& get_char(std::istream& in)
-{
-	char c;
-	if (in >> c && c != Expect) {
-		throw MkException("Error in format", LOC);
-	}
-	return in;
-}
-
 /* -------------------------------------------------------------------------------- */
 ostream& operator<< (ostream& x_out, const cv::KeyPoint& x_val)
 {

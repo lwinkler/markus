@@ -26,6 +26,7 @@
 
 #include <opencv2/features2d/features2d.hpp>
 #include "define.h"
+#include "MkException.h"
 
 
 /** @brief This file contains some usefull functions for features and serialization. These are used by the FeatureT template.
@@ -36,6 +37,19 @@
  
  If a function is commented this probably means that the default operator for the class is used
 */
+
+/* -------------------------------------------------------------------------------- */
+// Acquire a char from stream and verify
+template <char Expect>
+inline std::istream& get_char(std::istream& in)
+{
+	char c;
+	if (in >> c && c != Expect) {
+		throw MkException("Error in format", LOC);
+	}
+	return in;
+}
+
 
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features of type KeyPoint
