@@ -23,11 +23,9 @@ StreamObject.cpp
 StreamState.cpp
 Object.cpp
 Event.cpp
-FeatureString.cpp
 FeatureFloatInTime.cpp
 FeatureOpenCv.cpp
-FeatureString.cpp
-FeatureVectorFloat.cpp
+FeatureVector.cpp
 ConfigReader.cpp
 ModuleTimer.cpp
 MkException.cpp

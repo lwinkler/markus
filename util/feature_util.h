@@ -50,12 +50,11 @@ inline std::istream& get_char(std::istream& in)
 	return in;
 }
 
-
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features of type KeyPoint
 
-std::ostream& operator<< (std::ostream& x_out, const cv::KeyPoint& x_val);
-std::istream& operator>> (std::istream& x_in,  cv::KeyPoint& xr_val);
+std::ostream& serialize(std::ostream& x_out, const cv::KeyPoint& x_val);
+std::istream& deserialize(std::istream& x_in,  cv::KeyPoint& xr_val);
 inline double compareSquared(const cv::KeyPoint& x_1, const cv::KeyPoint& x_2)
 {
 	return !(x_1.angle      == x_2.angle
@@ -70,13 +69,17 @@ void randomize(cv::KeyPoint& xr_val, unsigned int& xr_seed);
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features of type Point3f
 
-// std::ostream& operator<< (std::ostream& x_out, const cv::Point3f& x_val);
-std::istream& operator>> (std::istream& x_in,  cv::Point3f& xr_val);
+inline std::ostream& serialize(std::ostream& x_out, const cv::Point3f& x_value) { x_out << x_value;  return x_out; }
+std::istream& deserialize(std::istream& x_in,  cv::Point3f& xr_value);
+
 inline double compareSquared(const cv::Point3f& x_1, const cv::Point3f& x_2){return x_1 != x_2;}
 void randomize(cv::Point3f& xr_val, unsigned int& xr_seed);
 
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features of type float
+
+inline std::ostream& serialize(std::ostream& x_out, float x_value)   { x_out << x_value;  return x_out; }
+inline std::istream& deserialize(std::istream& x_in, float& xr_value){ x_in  >> xr_value; return x_in;  }
 
 inline double compareSquared(float x_1, float x_2)
 {
@@ -91,6 +94,9 @@ inline void randomize(float& xr_val, unsigned int& xr_seed)
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features of type int
 
+inline std::ostream& serialize(std::ostream& x_out, int x_value)   { x_out << x_value;  return x_out; }
+inline std::istream& deserialize(std::istream& x_in, int& xr_value){ x_in  >> xr_value; return x_in; }
+
 inline double compareSquared(int x_1, int x_2)
 {
 	return POW2(x_1 - x_2);
@@ -99,6 +105,27 @@ inline double compareSquared(int x_1, int x_2)
 inline void randomize(int& xr_val, unsigned int& xr_seed)
 {
 	xr_val = rand_r(&xr_seed) % 1000;
+}
+
+/* -------------------------------------------------------------------------------- */
+// Template specialization for features of type string
+
+inline std::ostream& serialize(std::ostream& x_out, const std::string& x_value) { x_out << '"' << x_value << '"'; return x_out;}
+inline std::istream& deserialize(std::istream& x_in, std::string& xr_value)
+{
+	x_in >> get_char<'"'> >> xr_value;
+	xr_value.erase( xr_value.size() - 1 ); // erase the last character. Should be "
+	return x_in;
+}
+
+inline double compareSquared(const std::string& x_1, const std::string& x_2)
+{
+	return x_1 != x_2;
+}
+
+inline void randomize(std::string& xr_val, unsigned int& xr_seed)
+{
+	xr_val = "random_str"; // TODO
 }
 
 

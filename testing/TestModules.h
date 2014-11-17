@@ -35,7 +35,7 @@
 #include "StreamState.h"
 #include "MkException.h"
 #include "FeatureFloatInTime.h"
-#include "FeatureVectorFloat.h"
+#include "FeatureVector.h"
 
 // #define BLACKLIST(x) m_moduleTypes.erase(std::remove(m_moduleTypes.begin(), m_moduleTypes.end(), (x)), m_moduleTypes.end());
 

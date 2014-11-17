@@ -28,8 +28,7 @@
 #include <log4cxx/logger.h>
 #include "define.h"
 #include "FactoryFeatures.h"
-#include "FeatureNum.h"
- #include "FeatureString.h" // TODO remove
+#include "FeatureStd.h"
 #include "MkException.h"
 
 /*! \class Object

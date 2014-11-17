@@ -25,7 +25,7 @@
 #include "StreamDebug.h"
 #include "StreamObject.h"
 #include "FeatureOpenCv.h"
-#include "FeatureVectorFloat.h"
+#include "FeatureVector.h"
 
 //for debug
 #include "util.h"

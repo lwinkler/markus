@@ -44,8 +44,8 @@ template<class T> class FeatureT : public Feature
 		{
 			randomize(value, xr_seed);
 		}
-		virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const{ x_out << value; }
-		virtual void Deserialize(std::istream& x_in, const std::string& x_dir){ x_in >> value;}
+		inline virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const{ serialize(x_out, value); }
+		inline virtual void Deserialize(std::istream& x_in, const std::string& x_dir){ deserialize(x_in, value);}
 		
 		// The value of the feature
 		T value;

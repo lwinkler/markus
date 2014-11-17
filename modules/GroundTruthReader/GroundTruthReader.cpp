@@ -27,7 +27,7 @@
 #include "StreamState.h"
 #include "StreamEvent.h"
 #include "StreamDebug.h"
-#include "FeatureString.h"
+#include "FeatureStd.h"
 #include "util.h"
 
 using namespace std;

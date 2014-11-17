@@ -23,10 +23,9 @@
 #ifndef ALL_FEATURES_H
 #define ALL_FEATURES_H
 
-#include "FeatureNum.h"
+#include "FeatureStd.h"
 #include "FeatureFloatInTime.h"
-#include "FeatureVectorFloat.h"
-#include "FeatureString.h"
+#include "FeatureVector.h"
 #include "FeatureOpenCv.h"
 
 void registerAllFeatures(FactoryFeatures& x_fact)

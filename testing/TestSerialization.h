@@ -40,9 +40,9 @@
 #include "CalibrationByHeight.h"
 #include "CalibrationByModel.h"
 
+#include "FeatureStd.h"
 #include "FeatureFloatInTime.h"
-#include "FeatureString.h"
-#include "FeatureVectorFloat.h"
+#include "FeatureVector.h"
 #include "FeatureOpenCv.h"
 
 /// Test class for serialization

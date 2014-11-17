@@ -30,7 +30,7 @@ using namespace std;
 using namespace cv;
 
 /* -------------------------------------------------------------------------------- */
-ostream& operator<< (ostream& x_out, const cv::KeyPoint& x_val)
+ostream& serialize(ostream& x_out, const cv::KeyPoint& x_val)
 {
 	Json::Value root;
 	root["angle"] = x_val.angle;
@@ -48,7 +48,7 @@ ostream& operator<< (ostream& x_out, const cv::KeyPoint& x_val)
 	return x_out;
 }
 
-istream& operator>> (istream& x_in,  cv::KeyPoint& xr_val)
+istream& deserialize(istream& x_in,  cv::KeyPoint& xr_val)
 {
 	Json::Value root;
 	x_in >> root;
@@ -73,7 +73,7 @@ void randomize(KeyPoint& xr_val, unsigned int& xr_seed)
 	randomize(xr_val.size, xr_seed);
 }
 /* -------------------------------------------------------------------------------- */
-istream& operator>> (istream& x_in,  cv::Point3f& xr_val)
+istream& deserialize(istream& x_in,  cv::Point3f& xr_val)
 {
 	if(x_in >> get_char<'['> >> xr_val.x
 	         >> get_char<','> >> xr_val.y

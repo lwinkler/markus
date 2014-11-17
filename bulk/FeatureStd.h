@@ -20,25 +20,17 @@
 *    You should have received a copy of the GNU Lesser General Public License
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
-#ifndef MK_FEATURE_STRING_H
-#define MK_FEATURE_STRING_H
+#ifndef MK_FEATURE_NUM_H
+#define MK_FEATURE_NUM_H
 
-#include "Feature.h"
+#include "FeatureT.h"
+#include "feature_util.h"
 
-/**
-* @brief Class representing a feature in the form of a string value
-*/
-class FeatureString : public Feature
-{
-	public:
-		FeatureString(const std::string& x_value = "");
-		Feature* CreateCopy() const{return new FeatureString(*this);}
-		virtual double CompareSquared(const Feature& x_feature) const;
-		virtual void Randomize(unsigned int& xr_seed, const std::string& x_param);
-		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
-		virtual void Deserialize(std::istream& stream, const std::string& x_dir);
-		
-		// The value of the feature
-		std::string value;
-};
+
+// Definitions
+typedef FeatureT<float>       FeatureFloat;
+typedef FeatureT<int>	      FeatureInt;
+typedef FeatureT<std::string> FeatureString;
+
+
 #endif

@@ -91,11 +91,16 @@ template<class T> class FeatureVectorT : public Feature
 
 			// Remove last element if empty, due to an extra comma
 			if(valuesStr.back() == "")
-				values.pop_back();
+				valuesStr.pop_back();
 
-			values.clear();
-			for(std::vector<std::string>::const_iterator it = valuesStr.begin() ; it != valuesStr.end() ; ++it)
-				values.push_back(atof(it->c_str()));
+			values.resize(valuesStr.size());
+			int i = 0;
+			for(std::vector<std::string>::const_iterator it = valuesStr.begin() ; it != valuesStr.end() ; ++it, ++i)
+			{
+				std::stringstream ss;
+				ss << *it;
+				deserialize(ss, values[i]);
+			}
 		}
 		
 		// The value of the feature
