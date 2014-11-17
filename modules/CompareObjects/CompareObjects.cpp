@@ -77,7 +77,7 @@ void CompareObjects::ProcessFrame()
 			try
 			{
 				const Feature& feat(it2->GetFeature(itfeat->first));
-				double val = itfeat->second->Compare2(feat);
+				double val = itfeat->second->CompareSquared(feat);
 
 				// If dissimilarity is higher or equal to one, raise an error anyway. 
 				// This means that features are too different

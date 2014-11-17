@@ -33,7 +33,7 @@ public:
 	FeatureFloatInTime(const FeatureFloat& x_feat = FeatureFloat());
 	Feature* CreateCopy() const{return new FeatureFloatInTime(*this);}
 	void Update(const Feature& x_feat, double x_alpha);
-	virtual double Compare2(const Feature& x_feature) const;
+	virtual double CompareSquared(const Feature& x_feature) const;
 	virtual void Randomize(unsigned int& xr_seed, const std::string& x_param);
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);

@@ -33,7 +33,7 @@ class FeatureString : public Feature
 	public:
 		FeatureString(const std::string& x_value = "");
 		Feature* CreateCopy() const{return new FeatureString(*this);}
-		virtual double Compare2(const Feature& x_feature) const;
+		virtual double CompareSquared(const Feature& x_feature) const;
 		virtual void Randomize(unsigned int& xr_seed, const std::string& x_param);
 		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 		virtual void Deserialize(std::istream& stream, const std::string& x_dir);
