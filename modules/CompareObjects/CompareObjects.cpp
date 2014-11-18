@@ -72,10 +72,12 @@ void CompareObjects::ProcessFrame()
 		// Sum the differences for each object
 		double sum = 0;
 		int cpt = 0;
+		cout<<"obj ";it1->Serialize(cout, "");
 		for(map<string, FeaturePtr>::const_iterator itfeat = it1->GetFeatures().begin() ; itfeat != it1->GetFeatures().end() ; ++itfeat)
 		{
 			try
 			{
+				
 				const Feature& feat(it2->GetFeature(itfeat->first));
 				double val = itfeat->second->CompareSquared(feat);
 

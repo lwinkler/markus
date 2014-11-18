@@ -38,7 +38,7 @@
 		</param>
 		<param name="file">
 			<type>string</type>
-			<value default="objects">objects</value>
+			<value default="objects.srt">objects.srt</value>
 			<description>Name of the .srt file without extension</description>
 		</param>
 	</parameters>

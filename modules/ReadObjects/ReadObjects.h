@@ -21,42 +21,43 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef LOG_OBJECTS_H
-#define LOG_OBJECTS_H
+#ifndef READ_OBJECTS_H
+#define READ_OBJECTS_H
 
-#include "Module.h"
+#include "Input.h"
 #include "StreamObject.h"
 #include <fstream>
-#include "AnnotationFileWriter.h"
+#include "AnnotationFileReader.h"
 
 
 /**
 * @brief Read a stream of objects and log data to a text file
 */
-class LogObjects : public Module
+class ReadObjects : public Input
 {
 	
 public:
-	class Parameters : public Module::Parameters
+	class Parameters : public Input::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		Parameters(const ConfigReader& x_confReader) : Input::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterString("file", 	  "objects.srt", 	     &file,      "Name of the .srt file without extension"));
-			//m_list.push_back(new ParameterString("folder_name" , "events_img" , &folder    , "Name of the folder to create for images"));
+			m_list.push_back(new ParameterString("file"        , "in/events.srt", &file      , "Name of the .srt file without extension"));
+			m_list.push_back(new ParameterString("folder_name" , "events_img"  , &folder    , "Name of the folder to create for images"));
+
+			RefParameterByName("type").SetDefault("CV_8UC3"); // This will probably be ignored
 			Init();
 		}
 		std::string file;
-		//std::string folder;
+		std::string folder;
 	};
 
-	LogObjects(const ConfigReader& x_configReader);
-	~LogObjects(void);
-	MKCLASS("LogObjects")
-	MKDESCR("Read a stream of objects and log data to a text file")
-	
+	ReadObjects(const ConfigReader& x_configReader);
+	~ReadObjects(void);
+	MKCLASS("ReadObjects")
+	MKDESCR("Read an object from an annotation file")
+
 	inline virtual const Parameters& GetParameters() const { return m_param;}
-	virtual void ProcessFrame();
 	void Reset();
 
 private:
@@ -65,14 +66,18 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
-	void WriteObjects();
-	// input
-	std::vector <Object> m_objectsIn;
+
+	virtual void Capture();
+
+	// ouput
+	std::vector<Object> m_ObjectOut;
 
 	// temporary
-	std::string   m_folder;
-	std::ofstream m_outputFile;
-	AnnotationFileWriter* mp_annotationWriter;
+	AnnotationFileReader* mp_annotationReader;
+	std::string text;
+	TIME_STAMP currentTimeStampTmp;
+	bool firstAnnotation;
+
 };
 
 #endif

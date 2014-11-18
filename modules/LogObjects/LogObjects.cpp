@@ -26,10 +26,9 @@
 #include "util.h"
 #include "Manager.h"
 
-#include <ctime>
+//#include <ctime>
 
 #define SEP "\t"
-
 
 using namespace std;
 using namespace cv;
@@ -41,23 +40,26 @@ LogObjects::LogObjects(const ConfigReader& x_configReader)
 {
 	// Init input streams
 	AddInputStream(0, new StreamObject("input",      m_objectsIn, *this,     "Incoming objects"));
+	mp_annotationWriter = NULL;
 }
 
 LogObjects::~LogObjects(void)
 {
-	// delete(m_input);
-	if(m_outputFile.is_open())
-		m_outputFile.close();
+	CLEAN_DELETE(mp_annotationWriter);
 }
 
 void LogObjects::Reset()
 {
 	Module::Reset();
+	//m_objectsIn.Empty();
+	
+	string srtFileName = m_context.GetOutputDir() + "/" + m_param.file;
+	CLEAN_DELETE(mp_annotationWriter);
+	mp_annotationWriter = new AnnotationFileWriter();
+	mp_annotationWriter->Open(srtFileName);
 
-	m_fileName = m_context.GetOutputDir() + "/" + m_param.file + ".txt";
-	if(m_outputFile.is_open())
-		m_outputFile.close();
-	m_outputFile.open (m_fileName.c_str(), fstream::app|fstream::out);
+	// m_folder  = m_context.GetOutputDir() + "/" + m_param.folder + "/"; 
+	// SYSTEM("mkdir -p " + m_folder);
 	// m_outputFile<<"time"<<SEP<<"object"<<SEP<<"feature"<<SEP<<"value"<<SEP<<"mean"<<SEP<<"sqVariance"<<SEP<<"initial"<<SEP<<"min"<<SEP<<"max"<<SEP<<"nbSamples"<<endl;
 }
 
@@ -90,6 +92,7 @@ void LogObjects::ProcessFrame()
 		m_outputFile<<endl;
 	}
 	*/
+/*
 	if(m_objectsIn.size() > 0)
 	{
 		m_outputFile<<"\"frame_"<<m_currentTimeStamp<<"\": ["<<endl;
@@ -100,5 +103,23 @@ void LogObjects::ProcessFrame()
 		}
 		m_outputFile<<"]"<<endl;
 	}
+*/
+	if(m_objectsIn.size()!=0)WriteObjects();
+}
+
+/// Write the subtitle in log file
+void LogObjects::WriteObjects()
+{
+	LOG_DEBUG(m_logger, "Write object to log file");
+	// Log event label
+	// ss<<"\"event\":";
+	//for(vector<Object>::const_iterator it = m_objectsIn.begin() ; it != m_objectsIn.end() ; it++)
+	stringstream ss;
+	//const StreamObject* stream = dynamic_cast<const StreamObject*>(m_inputStreams.at(0));
+	ss<<m_inputStreams.at(0)->SerializeToString("");
+	mp_annotationWriter->WriteAnnotation(m_currentTimeStamp, m_currentTimeStamp, ss); //TODO duration replaced by a magic number 5
+	
+	//cout<<"test"<<endl;
+	
 }
 
