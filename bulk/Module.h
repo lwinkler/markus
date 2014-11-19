@@ -94,7 +94,7 @@ public:
 	virtual double GetRecordingFps() const;
 	
 	inline void AddDependingModule (Module & x_module){m_modulesDepending.push_back(&x_module);} /// Add a module to the list: depending modules are called when processing is complete
-	virtual void PrintStatistics(ConfigReader& xr_result) const;
+	virtual void PrintStatistics(ConfigReader& xr_xmlResult) const;
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 	

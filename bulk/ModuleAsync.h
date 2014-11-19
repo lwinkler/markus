@@ -63,7 +63,7 @@ protected:
 	virtual void LaunchThread() = 0;
 	virtual void NormalProcess() = 0;
 	virtual void CopyResults() = 0;
-	virtual void PrintStatistics(ConfigReader& xr_result) const;
+	virtual void PrintStatistics(ConfigReader& xr_xmlResult) const;
 	
 private:
 	virtual const Parameters & GetParameters() const = 0;

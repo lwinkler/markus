@@ -455,8 +455,7 @@ void Manager::PrintStatistics()
 	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
 	{
 		// LOG_INFO(cpt<<": ");
-		ConfigReader perfModule = conf.RefSubConfig("module", (*it)->GetName(), true);
-		(*it)->PrintStatistics(perfModule);
+		(*it)->PrintStatistics(conf);
 		cpt++;
 	}
 	performanceSummary.SaveToFile(perfFileName);

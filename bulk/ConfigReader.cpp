@@ -127,9 +127,10 @@ ConfigReader ConfigReader::RefSubConfig(const std::string& x_objectType, string 
 	
 	if(x_objectName.compare(""))
 	{
-		while(newNode != NULL && x_objectName.compare(newNode->ToElement()->Attribute("name")))
+		const char* name = NULL;
+		while(newNode != NULL && ((name = newNode->ToElement()->Attribute("name")) == NULL || x_objectName.compare(name)))
 		{
-			newNode = newNode->NextSibling(x_objectType);
+			newNode = newNode->NextSibling(x_objectType); // TODO: add breaks
 		}
 	}
 	if(newNode == NULL && x_allowCreation)

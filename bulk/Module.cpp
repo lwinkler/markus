@@ -346,11 +346,13 @@ void Module::PrintStatistics(ConfigReader& xr_xmlResult) const
 		m_timerProcessing<<"ms, tconv="<<m_timerConvertion<<"ms, twait="<<
 		m_timerWaiting<<"ms), "<< fps <<" fps");
 
-	xr_xmlResult.RefSubConfig("nb_frames", "", true).SetValue(m_countProcessedFrames);
-	xr_xmlResult.RefSubConfig("timer", "processing", true).SetValue(m_timerProcessing);
-	xr_xmlResult.RefSubConfig("timer", "conversion", true).SetValue(m_timerConvertion);
-	xr_xmlResult.RefSubConfig("timer", "waiting", true).SetValue(m_timerWaiting);
-	xr_xmlResult.RefSubConfig("fps", "", true).SetValue(fps);
+	// Write perf to output XML
+	ConfigReader perfModule = xr_xmlResult.RefSubConfig("module", GetName(), true);
+	perfModule.RefSubConfig("nb_frames", "", true).SetValue(m_countProcessedFrames);
+	perfModule.RefSubConfig("timer", "processing", true).SetValue(m_timerProcessing);
+	perfModule.RefSubConfig("timer", "conversion", true).SetValue(m_timerConvertion);
+	perfModule.RefSubConfig("timer", "waiting", true).SetValue(m_timerWaiting);
+	perfModule.RefSubConfig("fps", "", true).SetValue(fps);
 }
 
 /**
