@@ -447,9 +447,9 @@ void Manager::PrintStatistics()
 	// LOG_INFO("Total time "<< m_timerProcessing + m_timerConvertion<<" ms ("<<     (1000.0 * m_frameCount) /(m_timerProcessing + m_timerConvertion)<<" frames/s)");
 
 	// Create an XML file to summarize CPU usage
-	string perfFileName = m_context.GetOutputDir() + "/performance.xml";
-	ConfigReader performanceSummary(perfFileName, true);
-	ConfigReader conf = performanceSummary.RefSubConfig("performance", "", true);
+	string benchFileName = m_context.GetOutputDir() + "/benchmark.xml";
+	ConfigReader benchSummary(benchFileName, true);
+	ConfigReader conf = benchSummary.RefSubConfig("benchmark", "", true);
 
 	int cpt = 0;
 	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
@@ -458,7 +458,7 @@ void Manager::PrintStatistics()
 		(*it)->PrintStatistics(conf);
 		cpt++;
 	}
-	performanceSummary.SaveToFile(perfFileName);
+	benchSummary.SaveToFile(benchFileName);
 }
 
 /**
