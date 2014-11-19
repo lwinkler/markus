@@ -64,6 +64,7 @@ public:
 	inline void AllowAutoProcess(bool x_proc) {m_allowAutoProcess = x_proc;}
 	inline void SetRealTime(bool x_realTime) {m_realTime  = x_realTime;}
 	inline virtual void SetContext(const Context& x_context){m_context = x_context;}
+	inline virtual const Context& GetContext() const {return m_context;}
 	
 protected:
 	virtual Parameters & RefParameters() = 0;

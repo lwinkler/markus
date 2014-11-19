@@ -80,8 +80,8 @@ void ModuleAsync::ProcessFrame()
 /**
 * @brief Print statistics related to the module
 */
-void ModuleAsync::PrintStatistics() const
+void ModuleAsync::PrintStatistics(ConfigReader& xr_result) const
 {
-	Module::PrintStatistics();
+	Module::PrintStatistics(xr_result);
 	LOG_INFO(m_logger, "\t" << m_countFramesThread<<" frames processed asynchronously in "<<m_timerThread<<"ms ("<<m_countFramesThread / (m_timerThread * 0.001)<<" fps)");
 }

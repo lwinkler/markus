@@ -66,7 +66,10 @@ void ControllerModule::Unpause(string* xp_value)
 */
 void ControllerModule::PrintStatistics(string* xp_value)
 {
-	module.PrintStatistics();
+	string perfFileName = module.GetContext().GetOutputDir() + "/" + module.GetName() + ".performance.xml";
+	ConfigReader summary(perfFileName, true);
+	module.PrintStatistics(summary);
+	summary.SaveToFile(perfFileName);
 }
 
 
