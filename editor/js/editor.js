@@ -455,6 +455,7 @@ var xmlProject = null;
 
 				xmlProject.find('module').each(function(){
 					var type = getModuleType($(this));
+					console.log("Adding module " + $(this).attr('name') + " of type " + type);
 
 					$(this).find('inputs > input').each(function(){
 						$(this).data('class', xmlModuleTypes[type].find('inputs > input[id="' + $(this).attr('id') + '"]'));
