@@ -52,8 +52,8 @@ public:
 		// Temporrily create a feature to get its signature
 		Feature* feat = func();
 
-		// std::cout<<"Register "<<feat->Signature()<<std::endl;
-		assert(m_registerBySignature.find(x_name) == m_registerBySignature.end());
+		// std::cout<<"Register "<<x_name<<" "<<feat->Signature()<<" value="<<*feat<<std::endl;
+		assert(m_registerBySignature.find(feat->Signature()) == m_registerBySignature.end());
 		m_registerBySignature.insert(FeatureRegistry::value_type(feat->Signature(), func));
 		delete feat;
 	}

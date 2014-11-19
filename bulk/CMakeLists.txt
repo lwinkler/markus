@@ -13,7 +13,6 @@ ParameterStructure.cpp
 ParameterNum.cpp
 ParameterString.cpp
 ParameterSerializable.cpp
-ParameterPolygon.cpp
 Polygon.cpp
 Stream.cpp
 StreamImage.cpp

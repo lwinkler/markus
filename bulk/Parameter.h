@@ -26,7 +26,6 @@
 
 #include "define.h"
 #include "MkException.h"
-#include "CalibrationByHeight.h"
 #include <log4cxx/logger.h>
 
 enum ParameterType
@@ -38,8 +37,7 @@ enum ParameterType
 	PARAM_STR,
 	PARAM_SERIALIZABLE,
 	PARAM_OBJECT_HEIGHT,
-	PARAM_IMAGE_TYPE,
-	PARAM_GENERIC
+	PARAM_IMAGE_TYPE
 };
 
 enum ParameterConfigType

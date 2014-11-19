@@ -66,7 +66,10 @@ void ControllerModule::Unpause(string* xp_value)
 */
 void ControllerModule::PrintStatistics(string* xp_value)
 {
-	module.PrintStatistics();
+	string benchFileName = module.GetContext().GetOutputDir() + "/" + module.GetName() + ".benchmark.xml";
+	ConfigReader summary(benchFileName, true);
+	module.PrintStatistics(summary);
+	summary.SaveToFile(benchFileName);
 }
 
 

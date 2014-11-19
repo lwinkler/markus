@@ -446,13 +446,19 @@ void Manager::PrintStatistics()
 	// LOG_INFO("input convertion "                  <<m_timerConvertion<<" ms ("<<(1000.0 * m_frameCount) / m_timerConvertion<<" frames/s)");
 	// LOG_INFO("Total time "<< m_timerProcessing + m_timerConvertion<<" ms ("<<     (1000.0 * m_frameCount) /(m_timerProcessing + m_timerConvertion)<<" frames/s)");
 
+	// Create an XML file to summarize CPU usage
+	string benchFileName = m_context.GetOutputDir() + "/benchmark.xml";
+	ConfigReader benchSummary(benchFileName, true);
+	ConfigReader conf = benchSummary.RefSubConfig("benchmark", "", true);
+
 	int cpt = 0;
 	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
 	{
 		// LOG_INFO(cpt<<": ");
-		(*it)->PrintStatistics();
+		(*it)->PrintStatistics(conf);
 		cpt++;
 	}
+	benchSummary.SaveToFile(benchFileName);
 }
 
 /**

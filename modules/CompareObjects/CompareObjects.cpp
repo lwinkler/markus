@@ -79,6 +79,7 @@ void CompareObjects::ProcessFrame()
 			{
 				
 				const Feature& feat(it2->GetFeature(itfeat->first));
+				// cout<<"compare "<<*itfeat->second<<" to "<<feat<<endl;
 				double val = itfeat->second->CompareSquared(feat);
 
 				// If dissimilarity is higher or equal to one, raise an error anyway. 

@@ -25,6 +25,7 @@
 #define CONFIGREADER_H
 
 #include <string>
+#include <sstream>
 
 
 class Module;
@@ -49,6 +50,12 @@ public:
 	inline bool IsEmpty() const{return mp_doc == NULL && mp_node == NULL;}
 	const std::string GetValue() const;
 	void SetValue(const std::string& x_value);
+	template<typename T> inline void SetValue(const T& x_value)
+	{
+		std::stringstream ss;
+		ss << x_value;
+		SetValue(ss.str());
+	}
 	const std::string GetAttribute(const std::string& x_attributeName) const;
 	void SetAttribute(const std::string& x_attributeName, std::string x_value);
 	void SaveToFile(const std::string& x_file) const;

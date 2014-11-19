@@ -127,14 +127,17 @@ void Module::Reset()
 				ctr = new ControllerSerializable(*dynamic_cast<ParameterSerializable*>(*it));
 				break;
 			case PARAM_OBJECT_HEIGHT:
-				// Note: This controls a CalibrationByHeight object. Althought it sees it as a ParameterSerializable object with x,y and height attributes
+				// Note: This controls a CalibrationByHeight object. Althought it sees it as a ParameterSerializable, 
+				// it adds specific controls for x,y and height attributes
 				ctr = new ControllerCalibrationByHeight(*dynamic_cast<ParameterSerializable*>(*it));
 				break;
 			case PARAM_STR:
 				ctr = new ControllerString(*dynamic_cast<ParameterString*>(*it));
 				break;
-			case PARAM_GENERIC:
-				ctr = new ControllerText(*dynamic_cast<Parameter*>(*it));
+			// case PARAM_GENERIC:
+				// ctr = new ControllerText(*dynamic_cast<Parameter*>(*it));
+			default:
+				assert(false);
 		}
 		if(ctr == NULL)
 			throw MkException("Controller creation failed", LOC);
@@ -339,11 +342,20 @@ Stream& Module::RefOutputStreamById(int x_id)
 /**
 * @brief Print all statistics related to the module
 */
-void Module::PrintStatistics() const
+void Module::PrintStatistics(ConfigReader& xr_xmlResult) const
 {
+	double fps = (m_countProcessedFrames * 1000.0 / (m_timerProcessing + m_timerConvertion + m_timerWaiting));
 	LOG_INFO(m_logger, "Module "<<GetName()<<" : "<<m_countProcessedFrames<<" frames processed (tproc="<<
 		m_timerProcessing<<"ms, tconv="<<m_timerConvertion<<"ms, twait="<<
-		m_timerWaiting<<"ms), "<< (m_countProcessedFrames * 1000.0 / (m_timerProcessing + m_timerConvertion + m_timerWaiting))<<" fps");
+		m_timerWaiting<<"ms), "<< fps <<" fps");
+
+	// Write perf to output XML
+	ConfigReader perfModule = xr_xmlResult.RefSubConfig("module", GetName(), true);
+	perfModule.RefSubConfig("nb_frames", "", true).SetValue(m_countProcessedFrames);
+	perfModule.RefSubConfig("timer", "processing", true).SetValue(m_timerProcessing);
+	perfModule.RefSubConfig("timer", "conversion", true).SetValue(m_timerConvertion);
+	perfModule.RefSubConfig("timer", "waiting", true).SetValue(m_timerWaiting);
+	perfModule.RefSubConfig("fps", "", true).SetValue(fps);
 }
 
 /**
