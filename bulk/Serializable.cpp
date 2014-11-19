@@ -43,6 +43,9 @@ string signatureJSONValue(const Json::Value &x_val)
 	else if( x_val.isUInt() )
 		return "%u";
 		*/
+	// Note: the differienciation between different types of num values is ambiguous:
+	// e.g. a float can be a round number so its signature might be %d when deserialized
+	// so we keep %f as the only possibility
 	else if( x_val.isNumeric() )
 		return "%f";
 	else if( x_val.isArray() )
@@ -74,9 +77,15 @@ string signatureJSONTree(const Json::Value &x_root, unsigned short x_depth)
 			result += "\"";
 			result += itr.memberName();
 			result += "\":";
-			result += "{";
-			result += signatureJSONTree(*itr, x_depth); 
-			result += "},";
+			if((*itr).isObject())
+			{
+
+				result += "{";
+				result += signatureJSONTree(*itr, x_depth); 
+				result += "},";
+			}
+			else
+				result += signatureJSONTree(*itr, x_depth); 
 		}
 		return result;
 	}
@@ -108,40 +117,7 @@ string Serializable::Signature() const
 
 string Serializable::signature(std::istream& x_in)
 {
-
 	Json::Value root;
 	x_in >> root;
 	return signatureJSONTree(root, 0);
-
-	/*
-	stringstream signature;
-
-	try
-	{
-		float f = root.asFloat();
-		return "%%f";
-	}
-	catch(...){}
-	try
-	{
-		string s = root.asString();
-		return "%%s";
-	}
-	catch(...){}
-	try
-	{
-		float f = root.get("", 0).asFloat();
-		return "[%%f]";
-	}
-	catch(...){}
-
-
-	Json::Value::Members members1 = root.getMemberNames();
-	for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; it1++)
-	{
-		// Loop over sub members
-		signature << *it1 << ",";
-	}
-	return signature.str();
-	*/
 }

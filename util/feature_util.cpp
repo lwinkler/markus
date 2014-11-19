@@ -73,11 +73,27 @@ void randomize(KeyPoint& xr_val, unsigned int& xr_seed)
 	randomize(xr_val.size, xr_seed);
 }
 /* -------------------------------------------------------------------------------- */
+ostream& serialize(ostream& x_out, const cv::Point3f& x_val)
+{
+	Json::Value root;
+	root["x"] = x_val.x;
+	root["y"] = x_val.y;
+	root["z"] = x_val.z;
+
+	Json::FastWriter writer;
+	string tmp = writer.write(root);
+	tmp.erase(remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
+	x_out<<tmp;
+	return x_out;
+}
+
 istream& deserialize(istream& x_in,  Point3f& xr_val)
 {
-	x_in >> get_char<'['> >> xr_val.x
-	         >> get_char<','> >> xr_val.y
-	         >> get_char<','> >> xr_val.z >> get_char<']'>;
+	Json::Value root;
+	x_in >> root;
+	xr_val.x    = root["x"].asFloat();
+	xr_val.y    = root["y"].asFloat();
+	xr_val.z    = root["z"].asFloat();
 	return x_in; // TODO: Check that all streams are returned
 }
 
@@ -88,8 +104,9 @@ void randomize(Point3f& xr_val, unsigned int& xr_seed)
 	randomize(xr_val.z, xr_seed);
 }
 /* -------------------------------------------------------------------------------- */
+// TODO: Support for FeatureMat is only partially implemented
 
-std::ostream& serialize(std::ostream& x_out, const Mat& x_value)
+ostream& serialize(ostream& x_out, const Mat& x_value)
 {
 	assert(x_value.type() == CV_8UC1); // Only type supported so far
 	x_out << "\"rows\":"   << x_value.rows;
