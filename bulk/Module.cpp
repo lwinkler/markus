@@ -339,11 +339,18 @@ Stream& Module::RefOutputStreamById(int x_id)
 /**
 * @brief Print all statistics related to the module
 */
-void Module::PrintStatistics() const
+void Module::PrintStatistics(ConfigReader& xr_xmlResult) const
 {
+	double fps = (m_countProcessedFrames * 1000.0 / (m_timerProcessing + m_timerConvertion + m_timerWaiting));
 	LOG_INFO(m_logger, "Module "<<GetName()<<" : "<<m_countProcessedFrames<<" frames processed (tproc="<<
 		m_timerProcessing<<"ms, tconv="<<m_timerConvertion<<"ms, twait="<<
-		m_timerWaiting<<"ms), "<< (m_countProcessedFrames * 1000.0 / (m_timerProcessing + m_timerConvertion + m_timerWaiting))<<" fps");
+		m_timerWaiting<<"ms), "<< fps <<" fps");
+
+	xr_xmlResult.RefSubConfig("nb_frames", "", true).SetValue(m_countProcessedFrames);
+	xr_xmlResult.RefSubConfig("timer", "processing", true).SetValue(m_timerProcessing);
+	xr_xmlResult.RefSubConfig("timer", "conversion", true).SetValue(m_timerConvertion);
+	xr_xmlResult.RefSubConfig("timer", "waiting", true).SetValue(m_timerWaiting);
+	xr_xmlResult.RefSubConfig("fps", "", true).SetValue(fps);
 }
 
 /**

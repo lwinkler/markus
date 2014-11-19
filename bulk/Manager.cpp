@@ -446,13 +446,20 @@ void Manager::PrintStatistics()
 	// LOG_INFO("input convertion "                  <<m_timerConvertion<<" ms ("<<(1000.0 * m_frameCount) / m_timerConvertion<<" frames/s)");
 	// LOG_INFO("Total time "<< m_timerProcessing + m_timerConvertion<<" ms ("<<     (1000.0 * m_frameCount) /(m_timerProcessing + m_timerConvertion)<<" frames/s)");
 
+	// Create an XML file to summarize CPU usage
+	string perfFileName = m_context.GetOutputDir() + "/performance.xml";
+	ConfigReader performanceSummary(perfFileName, true);
+	ConfigReader conf = performanceSummary.RefSubConfig("performance", "", true);
+
 	int cpt = 0;
 	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
 	{
 		// LOG_INFO(cpt<<": ");
-		(*it)->PrintStatistics();
+		ConfigReader perfModule = conf.RefSubConfig("module", (*it)->GetName(), true);
+		(*it)->PrintStatistics(perfModule);
 		cpt++;
 	}
+	performanceSummary.SaveToFile(perfFileName);
 }
 
 /**
