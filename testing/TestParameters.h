@@ -149,10 +149,10 @@ class TestParameters : public CppUnit::TestFixture
 		ParameterSerializable paramCalibrationByModel("param_calibrationByModel",  json_data2, &myCalibrationByModel, "Parameter of type CalibrationByModel");
 		testParameter(paramCalibrationByModel, json_data,"", "") ;
 
-		LOG_TEST(m_logger, "Test ParameterSerializable - Polygon");
-		Polygon myPolygon;
-		ParameterSerializable paramPolygon("param_polygon",  "{}", &myCalibrationByModel, "Parameter of type Polygon"); // TODO
-		testParameter(paramPolygon, "", "", "") ;
+		// LOG_TEST(m_logger, "Test ParameterSerializable - Polygon");
+		// Polygon myPolygon;
+		// ParameterSerializable paramPolygon("param_polygon",  "{}", &myPolygon, "Parameter of type Polygon"); // TODO
+		// testParameter(paramPolygon, "", "", "") ;
 	}
 
 	static CppUnit::Test *suite()

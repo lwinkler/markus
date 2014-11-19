@@ -32,10 +32,10 @@ using namespace cv;
 
 Polygon::Polygon()
 {
-	// points.push_back(Point(0.0,0.0));
+	// points.push_back(Point2f(0.0,0.0));
 }
 
-Polygon::Polygon(const vector<Point>& x_value)
+Polygon::Polygon(const vector<Point2f>& x_value)
 : points(x_value)
 {
 }
@@ -45,14 +45,23 @@ Polygon::Polygon(const vector<Point>& x_value)
 */
 void Polygon::DrawMask(cv::Mat& xr_target, const cv::Scalar& x_color)
 {
+	if(points.empty())
+		return;
 	const int npoints = points.size();
 	double diag = diagonal(xr_target);
-	vector<Point> scaledPts = points;
+	vector<Point> scaledPts;
+	vector<Point2f>::const_iterator itpts = points.begin();
+	scaledPts.resize(points.size());
 	for(vector<Point>::iterator it = scaledPts.begin() ; it != scaledPts.end() ; it++)
-		*it *= diag;
+	{
+		*it  = *itpts * diag;
+	cout<<*it<<"ADSF"<<endl;
+		itpts++;
+	}
 
-	const Point* ppts = scaledPts.data();
-	fillPoly(xr_target, &ppts, &npoints, 1, x_color);
+	const Point* ppts[1];
+	ppts[0] = scaledPts.data();
+	fillPoly(xr_target, ppts, &npoints, 1, x_color);
 }
 
 void Polygon::Serialize(ostream& x_out, const string& x_dir) const
@@ -78,7 +87,8 @@ void Polygon::Deserialize(istream& x_in, const string& x_dir)
 	const Json::Value array = root["points"];
 	for(unsigned int point_id=0; point_id<array.size();++point_id)
 	{
-		Point p(array[point_id][0].asFloat(),array[point_id][1].asFloat());
+		Point2f p(array[point_id][0].asDouble(),array[point_id][1].asDouble());
+		cout<<p<<endl;
 		points.push_back(p);
 	}
 }

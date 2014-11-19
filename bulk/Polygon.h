@@ -33,12 +33,12 @@ class Polygon : public Serializable
 public:
 
 	Polygon();
-	Polygon(const std::vector<cv::Point>& x_value);
+	Polygon(const std::vector<cv::Point2f>& x_value);
 	void DrawMask(cv::Mat& xr_target, const cv::Scalar& x_color);
 	virtual void Serialize(std::ostream& x_out, const std::string& x_dir ="") const;
 	virtual void Deserialize(std::istream& x_in, const std::string& x_dir ="");
 
-	std::vector<cv::Point> points;
+	std::vector<cv::Point2f> points;
 };
 
 
