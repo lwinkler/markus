@@ -127,14 +127,17 @@ void Module::Reset()
 				ctr = new ControllerSerializable(*dynamic_cast<ParameterSerializable*>(*it));
 				break;
 			case PARAM_OBJECT_HEIGHT:
-				// Note: This controls a CalibrationByHeight object. Althought it sees it as a ParameterSerializable object with x,y and height attributes
+				// Note: This controls a CalibrationByHeight object. Althought it sees it as a ParameterSerializable, 
+				// it adds specific controls for x,y and height attributes
 				ctr = new ControllerCalibrationByHeight(*dynamic_cast<ParameterSerializable*>(*it));
 				break;
 			case PARAM_STR:
 				ctr = new ControllerString(*dynamic_cast<ParameterString*>(*it));
 				break;
-			case PARAM_GENERIC:
-				ctr = new ControllerText(*dynamic_cast<Parameter*>(*it));
+			// case PARAM_GENERIC:
+				// ctr = new ControllerText(*dynamic_cast<Parameter*>(*it));
+			default:
+				assert(false);
 		}
 		if(ctr == NULL)
 			throw MkException("Controller creation failed", LOC);

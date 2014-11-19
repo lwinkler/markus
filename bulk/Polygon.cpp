@@ -22,6 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "Polygon.h"
+#include "util.h"
 #include "jsoncpp/json/reader.h"
 #include "jsoncpp/json/writer.h"
 
@@ -31,23 +32,38 @@ using namespace cv;
 
 Polygon::Polygon()
 {
-	m_value.push_back(Point(0.0,0.0));
+	// points.push_back(Point(0.0,0.0));
 }
 
 Polygon::Polygon(const vector<Point>& x_value)
-: m_value(x_value)
+: points(x_value)
 {
+}
+
+/**
+* @brief Draw the mask corresponding with the polygon on target mat
+*/
+void Polygon::DrawMask(cv::Mat& xr_target, const cv::Scalar& x_color)
+{
+	const int npoints = points.size();
+	double diag = diagonal(xr_target);
+	vector<Point> scaledPts = points;
+	for(vector<Point>::iterator it = scaledPts.begin() ; it != scaledPts.end() ; it++)
+		*it *= diag;
+
+	const Point* ppts = scaledPts.data();
+	fillPoly(xr_target, &ppts, &npoints, 1, x_color);
 }
 
 void Polygon::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 	Json::Value vect;
-	for (uint i=0;i<m_value.size();i++)
+	for (size_t i=0;i<points.size();i++)
 	{
 		Json::Value point;
-		point.append(Json::Value(m_value[i].x));
-		point.append(Json::Value(m_value[i].y));
+		point.append(Json::Value(points[i].x));
+		point.append(Json::Value(points[i].y));
 		vect.append(point);
 	}
 	root["points"] = vect;
@@ -56,13 +72,13 @@ void Polygon::Serialize(ostream& x_out, const string& x_dir) const
 
 void Polygon::Deserialize(istream& x_in, const string& x_dir)
 {
-	m_value.clear();
+	points.clear();
 	Json::Value root;
 	x_in >> root;
 	const Json::Value array = root["points"];
 	for(unsigned int point_id=0; point_id<array.size();++point_id)
 	{
 		Point p(array[point_id][0].asFloat(),array[point_id][1].asFloat());
-		m_value.push_back(p);
+		points.push_back(p);
 	}
 }

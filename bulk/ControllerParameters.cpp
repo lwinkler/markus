@@ -22,6 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ControllerParameters.h"
+#include "CalibrationByHeight.h"
 
 using namespace std;
 
