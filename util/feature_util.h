@@ -41,13 +41,26 @@
 /* -------------------------------------------------------------------------------- */
 // Acquire a char from stream and verify
 template <char Expect>
-inline std::istream& get_char(std::istream& in)
+inline std::istream& get_char(std::istream& x_in)
 {
 	char c;
-	if (in >> c && c != Expect) {
+	if (x_in >> c && c != Expect) {
 		throw MkException("Error in format", LOC);
 	}
-	return in;
+	return x_in;
+}
+
+/* -------------------------------------------------------------------------------- */
+// Acquire a string from stream and verify
+inline std::istream& get_string(std::istream& x_in, const std::string& x_str)
+{
+	char str[x_str.size() + 1];
+	x_in.get(str, x_str.size() + 1);
+	// std::cout<<">>>"<<x_str<<" "<<str<<std::endl;
+	if(x_str != str)
+		throw MkException("Error in format", LOC);
+	
+	return x_in;
 }
 
 /* -------------------------------------------------------------------------------- */
@@ -69,7 +82,7 @@ void randomize(cv::KeyPoint& xr_val, unsigned int& xr_seed);
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features of type Point3f
 
-inline std::ostream& serialize(std::ostream& x_out, const cv::Point3f& x_value) { x_out << x_value;  return x_out; }
+std::ostream& serialize(std::ostream& x_out, const cv::Point3f& x_value);
 std::istream& deserialize(std::istream& x_in,  cv::Point3f& xr_value);
 
 inline double compareSquared(const cv::Point3f& x_1, const cv::Point3f& x_2){return x_1 != x_2;}
@@ -103,8 +116,15 @@ inline void randomize(float& xr_val, unsigned int& xr_seed)
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features of type int
 
-inline std::ostream& serialize(std::ostream& x_out, int x_value)   { x_out << x_value;  return x_out; }
-inline std::istream& deserialize(std::istream& x_in, int& xr_value){ x_in  >> xr_value; return x_in; }
+inline std::ostream& serialize(std::ostream& x_out, int x_value)   { x_out << "{\"valueInt\":" << x_value << "}";  return x_out; }
+inline std::istream& deserialize(std::istream& x_in, int& xr_value)
+{
+	// Note: we must serialize integer features differently than float to avoid having the same signature
+	// this is due to the fact that the serialization does not store the type of the feature
+	get_string(x_in, "{\"valueInt\":");
+	x_in >> xr_value; // >> get_char<'}'>;
+	return x_in;
+}
 
 inline double compareSquared(int x_1, int x_2)
 {
