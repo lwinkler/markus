@@ -133,12 +133,11 @@ public:
 		std::string fileName3 = "testing/serialize/" + name + ".json";
 		std::string dir = "testing/serialize/image";
 		SYSTEM("mkdir -p " + dir);
-		LOG_TEST(m_logger, "Test serialization of "<<name<<" = "<<obj.SerializeToString());
+		LOG_TEST(m_logger, "Test serialization of "<<name<<" = "<<obj.SerializeToString() << " with signature = " << obj.Signature());
 		std::ofstream of1(fileName1.c_str());
 		obj.Serialize(of1, dir);
 		of1.close();
 
-		LOG_TEST(m_logger, "Test deserialization and serialization of "<<name);
 		// std::stringstream ss2;
 
 		std::ifstream inf(fileName3.c_str());
