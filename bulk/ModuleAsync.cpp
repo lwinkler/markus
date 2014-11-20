@@ -80,8 +80,14 @@ void ModuleAsync::ProcessFrame()
 /**
 * @brief Print statistics related to the module
 */
-void ModuleAsync::PrintStatistics() const
+void ModuleAsync::PrintStatistics(ConfigReader& xr_xmlResult) const
 {
-	Module::PrintStatistics();
-	LOG_INFO(m_logger, "\t" << m_countFramesThread<<" frames processed asynchronously in "<<m_timerThread<<"ms ("<<m_countFramesThread / (m_timerThread * 0.001)<<" fps)");
+	Module::PrintStatistics(xr_xmlResult);
+	double fps = m_countFramesThread / (m_timerThread * 0.001);
+	LOG_INFO(m_logger, "\t" << m_countFramesThread<<" frames processed asynchronously in "<<m_timerThread<<"ms ("<< fps <<" fps)");
+
+	ConfigReader perfModule = xr_xmlResult.RefSubConfig("module", GetName(), false);
+	perfModule.RefSubConfig("nb_frames", "thread", true).SetValue(m_countFramesThread);
+	perfModule.RefSubConfig("timer", "thread", true).SetValue(m_timerThread);
+	perfModule.RefSubConfig("fps", "thread", true).SetValue(fps);
 }

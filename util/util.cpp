@@ -380,3 +380,14 @@ string getFileContents(const string& x_fileName)
 	else throw MkException("Cannot open file " + x_fileName, LOC);
 }
 
+/**
+* @brief Return the diagonal of an image
+*
+* @param x_image
+*
+* @return 
+*/
+double diagonal(const cv::Mat& x_image)
+{
+	return sqrt(POW2(x_image.cols) + POW2(x_image.rows));
+}

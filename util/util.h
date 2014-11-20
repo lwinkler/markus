@@ -46,5 +46,6 @@ TIME_STAMP getAbsTimeMs();
 void createEmptyConfigFile(const std::string& x_fileName);
 bool compareFiles(const std::string& x_file1, const std::string& x_file2);
 std::string getFileContents(const std::string& x_filename);
+double diagonal(const cv::Mat& x_image);
 
 #endif
