@@ -55,7 +55,7 @@ template<class T> class FeatureVectorT : public Feature
 			}
 			return sum / POW2(values.size());
 		}
-		inline void Randomize(unsigned int& xr_seed, const std::string& x_param)
+		inline virtual void Randomize(unsigned int& xr_seed, const std::string& x_param)
 		{
 			values.resize(10);
 			for(typename std::vector<T>::iterator it1 = values.begin() ; it1 != values.end() ; ++it1)

@@ -80,6 +80,15 @@ inline double compareSquared(const cv::KeyPoint& x_1, const cv::KeyPoint& x_2)
 void randomize(cv::KeyPoint& xr_val, unsigned int& xr_seed);
 
 /* -------------------------------------------------------------------------------- */
+// Template specialization for features of type Point2f
+
+std::ostream& serialize(std::ostream& x_out, const cv::Point2f& x_value);
+std::istream& deserialize(std::istream& x_in,  cv::Point2f& xr_value);
+
+inline double compareSquared(const cv::Point2f& x_1, const cv::Point2f& x_2){return x_1 != x_2;}
+void randomize(cv::Point2f& xr_val, unsigned int& xr_seed);
+
+/* -------------------------------------------------------------------------------- */
 // Template specialization for features of type Point3f
 
 std::ostream& serialize(std::ostream& x_out, const cv::Point3f& x_value);

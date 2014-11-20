@@ -66,6 +66,9 @@ void Polygon::DrawMask(cv::Mat& xr_target, const cv::Scalar& x_color)
 
 void Polygon::Serialize(ostream& x_out, const string& x_dir) const
 {
+	// x_out<<"{\"points\":";
+	// serialize(x_out, points);
+	// cout<<"}";
 	Json::Value root;
 	Json::Value vect;
 	for (size_t i=0;i<points.size();i++)

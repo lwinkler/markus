@@ -73,6 +73,35 @@ void randomize(KeyPoint& xr_val, unsigned int& xr_seed)
 	randomize(xr_val.size, xr_seed);
 }
 /* -------------------------------------------------------------------------------- */
+ostream& serialize(ostream& x_out, const cv::Point2f& x_val)
+{
+	Json::Value root;
+	root["x"] = x_val.x;
+	root["y"] = x_val.y;
+
+	Json::FastWriter writer;
+	string tmp = writer.write(root);
+	tmp.erase(remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
+	x_out<<tmp;
+	return x_out;
+}
+
+istream& deserialize(istream& x_in,  Point2f& xr_val)
+{
+	Json::Value root;
+	x_in >> root;
+	xr_val.x    = root["x"].asFloat();
+	xr_val.y    = root["y"].asFloat();
+	return x_in;
+}
+
+void randomize(Point2f& xr_val, unsigned int& xr_seed)
+{
+	randomize(xr_val.x, xr_seed);
+	randomize(xr_val.y, xr_seed);
+}
+
+/* -------------------------------------------------------------------------------- */
 ostream& serialize(ostream& x_out, const cv::Point3f& x_val)
 {
 	Json::Value root;
@@ -94,7 +123,7 @@ istream& deserialize(istream& x_in,  Point3f& xr_val)
 	xr_val.x    = root["x"].asFloat();
 	xr_val.y    = root["y"].asFloat();
 	xr_val.z    = root["z"].asFloat();
-	return x_in; // TODO: Check that all streams are returned
+	return x_in;
 }
 
 void randomize(Point3f& xr_val, unsigned int& xr_seed)

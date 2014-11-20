@@ -161,6 +161,7 @@ public:
 		myVect.push_back(1e4);
 		myVect.push_back(0.000234);
 		cv::KeyPoint kp;
+		cv::Point2f pt2f(33.5, 1e-4);
 		cv::Point3f pt3f(33, 134.5, 1e4);
 
 		// TODO: There is a problem of inprecision with floating points. See how we handle this !
@@ -177,6 +178,7 @@ public:
 		obj2.AddFeature("fstr", new FeatureString("someString"));
 		obj2.AddFeature("fvf", new FeatureVectorFloat(myVect));
 		obj2.AddFeature("fkp", new FeatureKeyPoint(kp));
+		obj2.AddFeature("fp2f", new FeaturePoint2f(pt2f));
 		obj2.AddFeature("fp3f", new FeaturePoint3f(pt3f));
 		testSerialization(obj2, "Object");
 
@@ -242,6 +244,9 @@ public:
 
 		FeatureKeyPoint fkp(kp);
 		testSerialization(fkp, "FeatureKeyPoint");
+
+		FeaturePoint2f fpt2f(pt2f);
+		testSerialization(fpt2f, "FeaturePoint2f");
 
 		FeaturePoint3f fpt3f(pt3f);
 		testSerialization(fpt3f, "FeaturePoint3f");
