@@ -170,7 +170,7 @@ void ParameterEnum::SetRange(const string& x_range)
  * @param x_range      Range (if empty take parameter range)
  *
  */
-void ParameterEnum::GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range) const
+void ParameterEnum::GenerateValues(int x_nbSamples, vector<string>& rx_values, const string& x_range) const
 {
 	string range = x_range == "" ? GetRange() : x_range;
 	rx_values.clear();

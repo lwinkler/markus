@@ -39,7 +39,7 @@ FactoryModules::FactoryModules()
 *
 * @return 
 */
-Module * FactoryModules::CreateModule(const std::string& x_type, const ConfigReader& x_config) const
+Module * FactoryModules::CreateModule(const string& x_type, const ConfigReader& x_config) const
 {
 	ModuleRegistry::const_iterator it = m_register.find(x_type);
 

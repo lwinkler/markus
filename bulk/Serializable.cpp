@@ -104,7 +104,7 @@ string Serializable::SerializeToString(const string& x_dir) const
 	ss >> root;
 	Json::FastWriter writer;
 	string tmp = writer.write(root);
-	tmp.erase(std::remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
+	tmp.erase(remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
 	return tmp;
 }
 
@@ -115,7 +115,7 @@ string Serializable::Signature() const
 	return Serializable::signature(ss);
 }
 
-string Serializable::signature(std::istream& x_in)
+string Serializable::signature(istream& x_in)
 {
 	Json::Value root;
 	x_in >> root;

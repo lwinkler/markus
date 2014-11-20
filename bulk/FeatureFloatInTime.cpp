@@ -63,7 +63,7 @@ double FeatureFloatInTime::CompareSquared(const Feature& x_feature) const
 	return POW2(value - feat.value) / POW2(sqVariance);
 }
 
-void FeatureFloatInTime::Randomize(unsigned int& xr_seed, const std::string& x_param)
+void FeatureFloatInTime::Randomize(unsigned int& xr_seed, const string& x_param)
 {
 	// Create a float feature and update
 	double alpha = static_cast<float>(rand_r(&xr_seed)) / RAND_MAX;
@@ -75,7 +75,7 @@ void FeatureFloatInTime::Randomize(unsigned int& xr_seed, const std::string& x_p
 	}
 }
 
-void FeatureFloatInTime::Serialize(std::ostream& x_out, const string& x_dir) const
+void FeatureFloatInTime::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 	root["value"]      = value;
@@ -88,11 +88,11 @@ void FeatureFloatInTime::Serialize(std::ostream& x_out, const string& x_dir) con
 
 	Json::FastWriter writer;
 	string tmp = writer.write(root);
-	tmp.erase(std::remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
+	tmp.erase(remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
 	x_out<<tmp;
 }
 
-void FeatureFloatInTime::Deserialize(std::istream& x_in, const string& x_dir)
+void FeatureFloatInTime::Deserialize(istream& x_in, const string& x_dir)
 {
 	Json::Value root;
 	x_in >> root;

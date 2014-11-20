@@ -41,7 +41,7 @@ log4cxx::LoggerPtr AnnotationFileReader::m_logger(log4cxx::Logger::getLogger("An
 *
 * @return 
 */
-std::istream& AnnotationFileReader::SafeGetline(std::istream& is, std::string& t)
+istream& AnnotationFileReader::SafeGetline(istream& is, string& t)
 {
 	t.clear();
 
@@ -51,8 +51,8 @@ std::istream& AnnotationFileReader::SafeGetline(std::istream& is, std::string& t
 	// The sentry object performs various tasks,
 	// such as thread synchronization and updating the stream state.
 
-	std::istream::sentry se(is, true);
-	std::streambuf* sb = is.rdbuf();
+	istream::sentry se(is, true);
+	streambuf* sb = is.rdbuf();
 
 	for(;;)
 	{
@@ -67,7 +67,7 @@ std::istream& AnnotationFileReader::SafeGetline(std::istream& is, std::string& t
 			case EOF:
 				// Also handle the case when the last line has no line ending
 				if(t.empty())
-					is.setstate(std::ios::eofbit);
+					is.setstate(ios::eofbit);
 				return is;
 			default:
 				t += static_cast<char>(c);
@@ -95,7 +95,7 @@ TIME_STAMP AnnotationFileReader::GetEndTimeStamp()
 	return timeStampToMs(m_srtEnd);
 }
 
-void AnnotationFileReader::Open(const std::string& x_file)
+void AnnotationFileReader::Open(const string& x_file)
 {
 	m_num      = -1;
 	m_text     = "";
@@ -106,7 +106,7 @@ void AnnotationFileReader::Open(const std::string& x_file)
 
 	if(m_srtFile.is_open())
 		m_srtFile.close();
-	m_srtFile.open(x_file.c_str(), std::ifstream::in);
+	m_srtFile.open(x_file.c_str(), ifstream::in);
 	
 	if(! m_srtFile.is_open())
 	{
@@ -201,7 +201,7 @@ string AnnotationFileReader::ReadAnnotationForTimeStamp(TIME_STAMP x_current)
 	else return "";
 }
 
-cv::Rect AnnotationFileReader::GetBox()
+Rect AnnotationFileReader::GetBox()
 {
 	return Rect();
 }

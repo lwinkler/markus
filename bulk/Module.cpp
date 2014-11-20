@@ -60,12 +60,12 @@ Module::Module(const ConfigReader& x_configReader) :
 Module::~Module()
 {
 	// Delete all streams
-	for(std::map<int, Stream* >::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; ++it)
+	for(map<int, Stream* >::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; ++it)
 		delete(it->second);
-	for(std::map<int, Stream* >::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; ++it)
+	for(map<int, Stream* >::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; ++it)
 		delete(it->second);
 #ifdef MARKUS_DEBUG_STREAMS
-	for(std::map<int, Stream* >::iterator it = m_debugStreams.begin() ; it != m_debugStreams.end() ; ++it)
+	for(map<int, Stream* >::iterator it = m_debugStreams.begin() ; it != m_debugStreams.end() ; ++it)
 		delete(it->second);
 #endif
 }
@@ -93,7 +93,7 @@ void Module::Reset()
 	// param.PrintParameters(); // Do not print 2x at startup
 
 	// Add controls for parameters' change
-	const std::vector<Parameter*>& list = param.GetList();
+	const vector<Parameter*>& list = param.GetList();
 
 	// This must be done only once to avoid troubles in the GUI
 	// Add module controller
@@ -364,7 +364,7 @@ void Module::PrintStatistics(ConfigReader& xr_xmlResult) const
 * @param x_out Output stream
 * @param x_dir Directory (for images)
 */
-void Module::Serialize(std::ostream& x_out, const string& x_dir) const
+void Module::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 
@@ -408,7 +408,7 @@ void Module::Serialize(std::ostream& x_out, const string& x_dir) const
 * @param x_in  Input stream
 * @param x_dir Input dir (for images)
 */
-void Module::Deserialize(std::istream& x_in, const string& x_dir)
+void Module::Deserialize(istream& x_in, const string& x_dir)
 {
 	Json::Value root;
 	x_in >> root;
@@ -558,7 +558,7 @@ void Module::AddDebugStream(int x_id, Stream* xp_stream)
 void Module::ProcessRandomInput(unsigned int& xr_seed)
 { 
 	unsigned int lastseed = xr_seed;
-	for(std::map<int, Stream* >::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; ++it)
+	for(map<int, Stream* >::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; ++it)
 	{
 		// note: we use this trick to generate similar inputs
 		// this avoids many errors while unit testing comparison modules

@@ -26,17 +26,17 @@
 using namespace std;
 
 
-void ParameterSerializable::Export(std::ostream& rx_os, int x_indentation)
+void ParameterSerializable::Export(ostream& rx_os, int x_indentation)
 {
-	std::string tabs(x_indentation, '\t');
-	rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<std::endl;
-	tabs = std::string(x_indentation + 1, '\t');
-	rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<std::endl;
+	string tabs(x_indentation, '\t');
+	rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<endl;
+	tabs = string(x_indentation + 1, '\t');
+	rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<endl;
 	rx_os<<tabs<<"<value default=\'"<<m_default<<"\'>";
-	rx_os<<mr_value.SerializeToString()<<"</value>"<<std::endl;
-	rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<std::endl;
-	tabs = std::string(x_indentation, '\t');
-	rx_os<<tabs<<"</param>"<<std::endl;
+	rx_os<<mr_value.SerializeToString()<<"</value>"<<endl;
+	rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<endl;
+	tabs = string(x_indentation, '\t');
+	rx_os<<tabs<<"</param>"<<endl;
 }
 
 /**
@@ -47,7 +47,7 @@ void ParameterSerializable::Export(std::ostream& rx_os, int x_indentation)
  * @param x_range      Range (if empty take parameter range)
  *
  */
-void ParameterSerializable::GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range) const
+void ParameterSerializable::GenerateValues(int x_nbSamples, vector<string>& rx_values, const string& x_range) const
 {
 	// string range = x_range == "" ? GetRange() : x_range;
 	rx_values.clear();

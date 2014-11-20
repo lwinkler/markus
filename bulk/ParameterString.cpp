@@ -26,16 +26,16 @@
 
 using namespace std;
 
-void ParameterString::Export(std::ostream& rx_os, int x_tabs)
+void ParameterString::Export(ostream& rx_os, int x_tabs)
 {
-	std::string tabs(x_tabs, '\t');
-	rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<std::endl;
-	tabs = std::string(x_tabs + 1, '\t');
-	rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<std::endl;
-	rx_os<<tabs<<"<value default=\""<<m_default<<"\">"<<GetValue()<<"</value>"<<std::endl;
-	rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<std::endl;
-	tabs = std::string(x_tabs, '\t');
-	rx_os<<tabs<<"</param>"<<std::endl;
+	string tabs(x_tabs, '\t');
+	rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<endl;
+	tabs = string(x_tabs + 1, '\t');
+	rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<endl;
+	rx_os<<tabs<<"<value default=\""<<m_default<<"\">"<<GetValue()<<"</value>"<<endl;
+	rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<endl;
+	tabs = string(x_tabs, '\t');
+	rx_os<<tabs<<"</param>"<<endl;
 }
 
 /**
@@ -46,7 +46,7 @@ void ParameterString::Export(std::ostream& rx_os, int x_tabs)
  * @param x_range      Range (if empty take parameter range)
  *
  */
-void ParameterString::GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range) const
+void ParameterString::GenerateValues(int x_nbSamples, vector<string>& rx_values, const string& x_range) const
 {
 	// TODO string range = x_range == "" ? GetRange() : x_range;
 	rx_values.clear();

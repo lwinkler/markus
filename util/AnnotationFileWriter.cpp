@@ -43,7 +43,7 @@ AnnotationFileWriter::~AnnotationFileWriter()
 		m_file.close();
 }
 
-void AnnotationFileWriter::Open(const std::string& x_file)
+void AnnotationFileWriter::Open(const string& x_file)
 {
 	// m_srtStart = msToTimeStamp(0);
 	// m_srtEnd   = msToTimeStamp(0);
@@ -53,7 +53,7 @@ void AnnotationFileWriter::Open(const std::string& x_file)
 
 	if(m_file.is_open())
 		m_file.close();
-	m_file.open(x_file.c_str(), std::ios_base::app);
+	m_file.open(x_file.c_str(), ios_base::app);
 	
 	if(! m_file.is_open())
 	{
@@ -63,7 +63,7 @@ void AnnotationFileWriter::Open(const std::string& x_file)
 
 
 /// Write the subtitle in log file
-void AnnotationFileWriter::WriteAnnotation(TIME_STAMP x_start, TIME_STAMP x_end, std::stringstream& x_in)
+void AnnotationFileWriter::WriteAnnotation(TIME_STAMP x_start, TIME_STAMP x_end, stringstream& x_in)
 {
 	string startTime = msToTimeStamp(x_start);
 	string endTime   = msToTimeStamp(x_end);

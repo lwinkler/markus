@@ -168,9 +168,9 @@ void MarkusWindow::createActionsAndMenus()
 
 	// Action for manager menu
 	//    list all commands available in the manager controller
-	vector<std::string> actions;
+	vector<string> actions;
 	m_manager.FindController("manager")->ListActions(actions);
-	for(vector<std::string>::const_iterator it = actions.begin() ; it != actions.end() ; ++it)
+	for(vector<string>::const_iterator it = actions.begin() ; it != actions.end() ; ++it)
 	{
 		QAction* action = new QAction(it->c_str(), this);
 		connect(action, SIGNAL(triggered()), this, SLOT(callManagerCommand()));

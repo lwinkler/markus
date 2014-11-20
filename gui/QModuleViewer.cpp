@@ -84,7 +84,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, ConfigReader& x_configRea
 	layoutCombos->addWidget(lab1, 0, 0);
 	mp_comboModules->clear();
 	int ind = 0;
-	for(std::vector<Module*>::const_iterator it = x_manager->GetModules().begin(); it != x_manager->GetModules().end(); ++it)
+	for(vector<Module*>::const_iterator it = x_manager->GetModules().begin(); it != x_manager->GetModules().end(); ++it)
 		mp_comboModules->addItem((*it)->GetName().c_str(), ind++);
 	layoutCombos->addWidget(mp_comboModules, 0, 1);
 	if(m_param.module > 0 && m_param.module < mp_comboModules->count())

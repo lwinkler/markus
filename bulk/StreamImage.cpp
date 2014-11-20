@@ -33,7 +33,7 @@ using namespace cv;
 
 log4cxx::LoggerPtr StreamImage::m_logger(log4cxx::Logger::getLogger("Module"));
 
-StreamImage::StreamImage(const std::string& x_name, cv::Mat& x_image, Module& rx_module, const string& rx_description) : 
+StreamImage::StreamImage(const string& x_name, Mat& x_image, Module& rx_module, const string& rx_description) : 
 	Stream(x_name, rx_module, rx_description),
 	m_image(x_image)
 {
@@ -75,28 +75,28 @@ void StreamImage::RenderTo(Mat& x_output) const
 void StreamImage::Randomize(unsigned int& xr_seed)
 {
 	// random image
-	m_image = cv::Mat(m_image.size(), m_image.type());
+	m_image = Mat(m_image.size(), m_image.type());
 	m_image.setTo(0);
 	int nb = rand_r(&xr_seed) % 100;
 	for ( int i = 0; i < nb; i++ )
 	{
-		cv::Point center;
+		Point center;
 		center.x = rand_r(&xr_seed) % m_image.cols;
 		center.y = rand_r(&xr_seed) % m_image.rows;
 
-		cv::Size axes;
+		Size axes;
 		axes.width  = rand_r(&xr_seed) % 200;
 		axes.height = rand_r(&xr_seed) % 200;
 
 		double angle = rand_r(&xr_seed) % 180;
-		cv::Scalar randomColor(rand_r(&xr_seed) % 255, rand_r(&xr_seed) % 255, rand_r(&xr_seed) % 255);
+		Scalar randomColor(rand_r(&xr_seed) % 255, rand_r(&xr_seed) % 255, rand_r(&xr_seed) % 255);
 
 		ellipse(m_image, center, axes, angle, angle - 100, angle + 200,
 				randomColor, (rand_r(&xr_seed) % 10) - 1);
 	}
 }
 
-void StreamImage::Serialize(std::ostream& x_out, const string& x_dir) const
+void StreamImage::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 	stringstream ss;
@@ -104,12 +104,12 @@ void StreamImage::Serialize(std::ostream& x_out, const string& x_dir) const
 	ss >> root;
 	ss.clear();
 	string fileName = x_dir + "/" + GetModule().GetName() + "." + GetName() + ".jpg";
-	cv::imwrite(fileName, m_image);
+	imwrite(fileName, m_image);
 	root["image"] = fileName;
 	x_out << root;
 }
 
-void StreamImage::Deserialize(std::istream& x_in, const string& x_dir)
+void StreamImage::Deserialize(istream& x_in, const string& x_dir)
 {
 	Json::Value root;
 	x_in >> root;  // note: copy first for local use
@@ -118,7 +118,7 @@ void StreamImage::Deserialize(std::istream& x_in, const string& x_dir)
 	Stream::Deserialize(ss, x_dir);
 
 	string fileName = root["image"].asString();
-	m_image = cv::imread(fileName);
+	m_image = imread(fileName);
 	if(m_image.empty())
 		throw MkException("Cannot open serialized image from file " + fileName, LOC);
 }

@@ -387,7 +387,7 @@ string getFileContents(const string& x_fileName)
 *
 * @return 
 */
-double diagonal(const cv::Mat& x_image)
+double diagonal(const Mat& x_image)
 {
 	return sqrt(POW2(x_image.cols) + POW2(x_image.rows));
 }

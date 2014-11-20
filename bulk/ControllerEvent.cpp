@@ -55,8 +55,8 @@ ControllerEvent::ControllerEvent(ClassifyEvents& rx_module) :
 	Controller("event"),
 	module(rx_module)
 {
-	m_actions.insert(std::make_pair("Validate",   &ControllerEvent::Validate));
-	m_actions.insert(std::make_pair("Invalidate", &ControllerEvent::Invalidate));
+	m_actions.insert(make_pair("Validate",   &ControllerEvent::Validate));
+	m_actions.insert(make_pair("Invalidate", &ControllerEvent::Invalidate));
 }
 
 QWidget* ControllerEvent::CreateWidget()

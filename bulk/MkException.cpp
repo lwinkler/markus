@@ -15,7 +15,7 @@ using namespace std;
 *
 * @return Description
 */
-string writeDescription(const std::string& x_description, const std::string& x_position, const std::string& x_function)
+string writeDescription(const string& x_description, const string& x_position, const string& x_function)
 {
 	string description;
 	if (x_position == "")
@@ -41,13 +41,13 @@ string writeDescription(const std::string& x_description, const std::string& x_p
 	return description;
 }
 
-MkException::MkException(const std::string& x_description, const std::string& x_position, const std::string& x_function)
+MkException::MkException(const string& x_description, const string& x_position, const string& x_function)
 : m_description(writeDescription(x_description, x_position, x_function))
 {
 	m_code = MK_EXCEPTION_UNKNOWN;
 }
 
-MkException::MkException(MkExceptionCode x_code, const std::string& x_description, const std::string& x_position, const std::string& x_function)
+MkException::MkException(MkExceptionCode x_code, const string& x_description, const string& x_position, const string& x_function)
 : m_description(writeDescription(x_description, x_position, x_function))
 {
 	m_code = x_code;
@@ -69,19 +69,19 @@ const char* MkException::what() const throw()
 
 
 
-EndOfStreamException::EndOfStreamException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
+EndOfStreamException::EndOfStreamException(const string& x_descr, const string& x_position, const string& x_function) : 
 	MkException(MK_EXCEPTION_ENDOFSTREAM, "EndOfStreamException: " + x_descr, x_position)
 {}
 
-ParameterException::ParameterException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
+ParameterException::ParameterException(const string& x_descr, const string& x_position, const string& x_function) : 
 	MkException(MK_EXCEPTION_PARAMETER, "ParameterException: " + x_descr, x_position)
 {}
 
-FeatureNotFoundException::FeatureNotFoundException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
+FeatureNotFoundException::FeatureNotFoundException(const string& x_descr, const string& x_position, const string& x_function) : 
 	MkException(MK_EXCEPTION_FEAT_NOT_FOUND, "FeatureNotFoundException: " + x_descr, x_position)
 {}
 
-WebServiceException::WebServiceException(const std::string& x_descr, const std::string& x_position, const std::string& x_function) : 
+WebServiceException::WebServiceException(const string& x_descr, const string& x_position, const string& x_function) : 
 	MkException(MK_EXCEPTION_WEBSERVICE, "WebServiceException: " + x_descr, x_position)
 {}
 
@@ -91,7 +91,7 @@ WebServiceException::WebServiceException(const std::string& x_descr, const std::
 * @param x_out Output stream
 * @param x_dir Output directory (for images)
 */
-void MkException::Serialize(std::ostream& x_out, const string& x_dir) const
+void MkException::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 	root["description"] = m_description;
@@ -105,7 +105,7 @@ void MkException::Serialize(std::ostream& x_out, const string& x_dir) const
 * @param x_in
 * @param x_dir
 */
-void MkException::Deserialize(std::istream& x_in, const string& x_dir)
+void MkException::Deserialize(istream& x_in, const string& x_dir)
 {
 	Json::Value root;
 	x_in >> root;

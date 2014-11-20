@@ -44,7 +44,7 @@ Polygon::Polygon(const vector<Point2f>& x_value)
 /**
 * @brief Draw the mask corresponding with the polygon on target mat
 */
-void Polygon::DrawMask(cv::Mat& xr_target, const cv::Scalar& x_color)
+void Polygon::DrawMask(Mat& xr_target, const Scalar& x_color)
 {
 	if(points.empty())
 		return;

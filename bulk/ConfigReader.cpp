@@ -44,7 +44,7 @@ void Configurable::UpdateConfig()
 * @param x_fileName      Name of the XML file with relative path
 * @param x_allowCreation Allow the creation of a new file if unexistant
 */
-ConfigReader::ConfigReader(const std::string& x_fileName, bool x_allowCreation)
+ConfigReader::ConfigReader(const string& x_fileName, bool x_allowCreation)
 {
 	m_isOriginal = true;
 	mp_doc = NULL; // Initialize to null as there can be an error in construction
@@ -92,7 +92,7 @@ ConfigReader::~ConfigReader()
 *
 * @return config object
 */
-ConfigReader ConfigReader::GetSubConfig(const std::string& x_objectType, string x_objectName) const
+ConfigReader ConfigReader::GetSubConfig(const string& x_objectType, string x_objectName) const
 {
 	if(IsEmpty())
 		throw MkException("Impossible to find node " + x_objectType + " in ConfigReader with name \"" + x_objectName + "\"" , LOC);
@@ -118,7 +118,7 @@ ConfigReader ConfigReader::GetSubConfig(const std::string& x_objectType, string 
 *
 * @return config object
 */
-ConfigReader ConfigReader::RefSubConfig(const std::string& x_objectType, string x_objectName, bool x_allowCreation)
+ConfigReader ConfigReader::RefSubConfig(const string& x_objectType, string x_objectName, bool x_allowCreation)
 {
 	if(IsEmpty())
 		throw MkException("Impossible to find node " + x_objectType + " in ConfigReader with name \"" + x_objectName + "\"" , LOC);
@@ -153,7 +153,7 @@ ConfigReader ConfigReader::RefSubConfig(const std::string& x_objectType, string 
 *
 * @return config object
 */
-ConfigReader ConfigReader::NextSubConfig(const std::string& x_objectType, string x_objectName) const
+ConfigReader ConfigReader::NextSubConfig(const string& x_objectType, string x_objectName) const
 {
 	if(IsEmpty())
 		throw MkException("Impossible to find node " + x_objectType + " in ConfigReader with name \"" + x_objectName + "\"" , LOC);
@@ -177,7 +177,7 @@ ConfigReader ConfigReader::NextSubConfig(const std::string& x_objectType, string
 *
 * @return Config object
 */
-const string ConfigReader::GetAttribute(const std::string& x_attributeName) const
+const string ConfigReader::GetAttribute(const string& x_attributeName) const
 {
 	if(IsEmpty())
 		throw MkException("Impossible to find attribute " + x_attributeName + " in ConfigReader" , LOC);
@@ -199,7 +199,7 @@ const string ConfigReader::GetAttribute(const std::string& x_attributeName) cons
 * @param x_attributeName Name of the attribute
 * @param x_value         Value to set
 */
-void ConfigReader::SetAttribute(const std::string& x_attributeName, string x_value)
+void ConfigReader::SetAttribute(const string& x_attributeName, string x_value)
 {
 	if(IsEmpty())
 		throw MkException("Impossible to find attribute " + x_attributeName + " in ConfigReader" , LOC);
@@ -232,7 +232,7 @@ const string ConfigReader::GetValue() const
 *
 * @param x_value Value to set
 */
-void ConfigReader::SetValue(const std::string& x_value)
+void ConfigReader::SetValue(const string& x_value)
 {
 	if(IsEmpty())
 		throw MkException("Impossible to find node" , LOC);
@@ -245,7 +245,7 @@ void ConfigReader::SetValue(const std::string& x_value)
 *
 * @param x_file Name of the file with relative path
 */
-void ConfigReader::SaveToFile(const std::string& x_file) const
+void ConfigReader::SaveToFile(const string& x_file) const
 {
 	if(!mp_doc)
 		throw MkException("Can only save global config to file", LOC);
@@ -260,8 +260,8 @@ void ConfigReader::Validate() const
 	ConfigReader appConf = GetSubConfig("application");
 	if(appConf.IsEmpty())
 		throw MkException("Configuration must contain <application> subconfiguration", LOC);
-	std::map<string,bool> moduleIds;
-	std::map<string,bool> moduleNames;
+	map<string,bool> moduleIds;
+	map<string,bool> moduleNames;
 	ConfigReader conf = appConf.GetSubConfig("module");
 	
 	while(!conf.IsEmpty())
@@ -297,7 +297,7 @@ void ConfigReader::Validate() const
 void ConfigReader::CheckUniquenessOfId(const string& x_group, const string& x_type, const string& x_idLabel, const string& x_moduleName) const
 {
 	// Check that input streams are unique
-	std::map<string,bool> ids;
+	map<string,bool> ids;
 	ConfigReader conf = GetSubConfig(x_group);
 	if(conf.IsEmpty())
 		return;

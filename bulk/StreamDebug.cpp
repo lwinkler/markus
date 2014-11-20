@@ -28,8 +28,9 @@
 #include <opencv2/opencv.hpp>
 
 using namespace std;
+using namespace cv;
 
-StreamDebug::StreamDebug(const std::string& x_name, cv::Mat& x_image, Module& rx_module, const string& rx_description) : 
+StreamDebug::StreamDebug(const string& x_name, Mat& x_image, Module& rx_module, const string& rx_description) : 
 	Stream(x_name, rx_module, rx_description),
 	m_image(x_image)
 {
@@ -49,24 +50,24 @@ void StreamDebug::ConvertInput()
 }
 
 /// Draw the stream on an image
-void StreamDebug::RenderTo(cv::Mat& x_output) const
+void StreamDebug::RenderTo(Mat& x_output) const
 {
 	m_image.copyTo(x_output);
 }
 
-void StreamDebug::Serialize(std::ostream& x_out, const string& x_dir) const
+void StreamDebug::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 	stringstream ss;
 	Stream::Serialize(ss, x_dir);
 	ss >> root;
 	string fileName = x_dir + "/" + GetModule().GetName() + "." + GetName() + ".jpg";
-	cv::imwrite(fileName, m_image);
+	imwrite(fileName, m_image);
 	root["image"] = fileName;
 	x_out << root;
 }
 
-void StreamDebug::Deserialize(std::istream& x_in, const string& x_dir)
+void StreamDebug::Deserialize(istream& x_in, const string& x_dir)
 {
 	Json::Value root;
 	x_in >> root;  // note: copy first for local use
@@ -75,7 +76,7 @@ void StreamDebug::Deserialize(std::istream& x_in, const string& x_dir)
 	Stream::Deserialize(ss, x_dir);
 
 	string fileName = root["image"].asString();
-	m_image = cv::imread(fileName);
+	m_image = imread(fileName);
     if(m_image.empty())
         throw MkException("Cannot open serialized image from file " + fileName, LOC);
 }

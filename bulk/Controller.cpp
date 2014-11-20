@@ -43,7 +43,7 @@ Controller::~Controller()
 *
 * @return Pointer to controller or NULL if not found
 */
-Controller* Controllable::FindController(const std::string& x_name) const
+Controller* Controllable::FindController(const string& x_name) const
 {
 	map<string, Controller*>::const_iterator it = m_controls.find(x_name);
 	if(it == m_controls.end())

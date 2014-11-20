@@ -71,7 +71,7 @@ void randomize(KeyPoint& xr_val, unsigned int& xr_seed)
 	randomize(xr_val.size, xr_seed);
 }
 /* -------------------------------------------------------------------------------- */
-ostream& serialize(ostream& x_out, const cv::Point2f& x_val)
+ostream& serialize(ostream& x_out, const Point2f& x_val)
 {
 	Json::Value root;
 	root["x"] = x_val.x;
@@ -100,7 +100,7 @@ void randomize(Point2f& xr_val, unsigned int& xr_seed)
 }
 
 /* -------------------------------------------------------------------------------- */
-ostream& serialize(ostream& x_out, const cv::Point3f& x_val)
+ostream& serialize(ostream& x_out, const Point3f& x_val)
 {
 	Json::Value root;
 	root["x"] = x_val.x;

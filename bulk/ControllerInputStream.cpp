@@ -68,8 +68,8 @@ ControllerInputStream::ControllerInputStream(VideoFileReader& rx_module) :
 	Controller("reader"),
 	m_module(rx_module)
 {
-	m_actions.insert(std::make_pair("Get", &ControllerInputStream::GetCursor));
-	m_actions.insert(std::make_pair("Set", &ControllerInputStream::SetCursor));
+	m_actions.insert(make_pair("Get", &ControllerInputStream::GetCursor));
+	m_actions.insert(make_pair("Set", &ControllerInputStream::SetCursor));
 	m_parameterSlider = NULL;
 }
 
