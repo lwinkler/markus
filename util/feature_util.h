@@ -139,7 +139,8 @@ inline std::istream& deserialize(std::istream& x_in, int& xr_value)
 
 inline double compareSquared(int x_1, int x_2)
 {
-	return POW2(x_1 - x_2);
+	// Cast to double to avoid overflows
+	return POW2(static_cast<double>(x_1) - x_2);
 }
 
 inline void randomize(int& xr_val, unsigned int& xr_seed)

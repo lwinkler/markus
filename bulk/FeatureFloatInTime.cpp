@@ -60,6 +60,7 @@ void FeatureFloatInTime::Update(const Feature& x_feat, double x_alpha)
 double FeatureFloatInTime::CompareSquared(const Feature& x_feature) const
 {
 	const FeatureFloat& feat(dynamic_cast<const FeatureFloat&>(x_feature));
+	// cout<<value<<" "<<feat.value<<" "<<sqVariance;
 	return POW2(value - feat.value) / POW2(sqVariance);
 }
 
