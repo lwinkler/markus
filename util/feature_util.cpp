@@ -21,8 +21,6 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
 #include "feature_util.h"
 #include "MkException.h"
 

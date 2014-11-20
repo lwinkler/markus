@@ -39,6 +39,7 @@
 #include "StreamDebug.h"
 #include "CalibrationByHeight.h"
 #include "CalibrationByModel.h"
+#include "Polygon.h"
 
 #include "FeatureStd.h"
 #include "FeatureFloatInTime.h"
@@ -227,9 +228,17 @@ public:
 		CalibrationByModel calibModel2(2404.2260764154521, -1.2035892526534258, 137.47118203741616,240.0, 480 , 640);
 		testSerialization(calibModel2,"CalibrationByModel2");
 
+		std::vector<cv::Point2f> pts;
+		pts.push_back(cv::Point2f(34.4, 34));
+		pts.push_back(cv::Point2f(3.4, -455.5));
+		pts.push_back(cv::Point2f(344, 0.34));
+		Polygon polygon1(pts);
+		testSerialization(polygon1,"Polygon");
+
 		// TODO: test the serialization of all modules
 		testSerialization(*mp_fakeInput, "Module");
 
+		// Serialize all features
 		FeatureFloat ff(0.93);
 		testSerialization(ff, "FeatureFloat");
 

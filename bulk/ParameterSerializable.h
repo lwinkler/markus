@@ -67,6 +67,7 @@ public:
 			// TODO mr_value.x = 0;
 			// mr_value.y = 0;
 			// mr_value.height = 0;
+			m_confSource = x_confType;
 			return;
 		}
 

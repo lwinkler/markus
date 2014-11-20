@@ -23,6 +23,7 @@
 
 #include "Polygon.h"
 #include "util.h"
+#include "feature_util.h"
 #include "jsoncpp/json/reader.h"
 #include "jsoncpp/json/writer.h"
 
@@ -66,32 +67,16 @@ void Polygon::DrawMask(cv::Mat& xr_target, const cv::Scalar& x_color)
 
 void Polygon::Serialize(ostream& x_out, const string& x_dir) const
 {
-	// x_out<<"{\"points\":";
-	// serialize(x_out, points);
-	// cout<<"}";
-	Json::Value root;
-	Json::Value vect;
-	for (size_t i=0;i<points.size();i++)
-	{
-		Json::Value point;
-		point.append(Json::Value(points[i].x));
-		point.append(Json::Value(points[i].y));
-		vect.append(point);
-	}
-	root["points"] = vect;
-	x_out << root;
+	x_out<<"{\"points\":";
+	serialize(x_out, points);
+	x_out<<"}";
 }
 
 void Polygon::Deserialize(istream& x_in, const string& x_dir)
 {
-	points.clear();
 	Json::Value root;
 	x_in >> root;
-	const Json::Value array = root["points"];
-	for(unsigned int point_id=0; point_id<array.size();++point_id)
-	{
-		Point2f p(array[point_id][0].asDouble(),array[point_id][1].asDouble());
-		cout<<p<<endl;
-		points.push_back(p);
-	}
+	stringstream ss;
+	ss << root["points"];
+	deserialize(ss, points);
 }
