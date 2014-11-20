@@ -169,6 +169,12 @@ inline void randomize(std::string& xr_val, unsigned int& xr_seed)
 }
 
 /* -------------------------------------------------------------------------------- */
+// Serialization function for class serializable
+
+inline std::ostream& serialize(std::ostream& x_out, const Serializable& x_value) { x_value.Serialize(x_out, ""); return x_out;}
+inline std::istream& deserialize(std::istream& x_in, Serializable& xr_value) {xr_value.Deserialize(x_in, ""); return x_in;}
+
+/* -------------------------------------------------------------------------------- */
 // Template specialization for features in vectors (must be at the end)
 
 template<class T>std::ostream& serialize(std::ostream& x_out, const std::vector<T>& x_val)
