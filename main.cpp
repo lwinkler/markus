@@ -35,6 +35,7 @@
 #endif
 
 #include <iostream>
+#include <fstream>
 #include <cstdio>
 #include <log4cxx/xml/domconfigurator.h>
 #include <getopt.h>    /* for getopt_long; standard getopt is in unistd.h */
@@ -114,6 +115,7 @@ void *send_commands(void *x_void_ptr)
 
 struct arguments
 {
+	/*
 	arguments()
 	{
 		describe    = false;
@@ -126,11 +128,14 @@ struct arguments
 		logConfigFile = "log4cxx.xml";
 		outputDir     = "";
 	}
+	*/
 	bool describe    = false;
 	bool nogui       = false;
 	bool centralized = false;
 	bool fast        = false;
 	bool useStdin    = false;
+	bool editor      = false;
+	bool simulation  = false;
 
 	string configFile    = "config.xml";
 	string logConfigFile = "log4cxx.xml";
@@ -147,6 +152,7 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 		{"version",     0, 0, 'v'},
 		{"describe",    0, 0, 'd'},
 		{"editor",      0, 0, 'e'},
+		{"simulation",  0, 0, 's'},
 		{"centralized", 0, 0, 'c'},
 		{"fast",        0, 0, 'f'},
 		{"stdin",       0, 0, 'i'},
@@ -159,7 +165,7 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 	};
 	int c;
 	int option_index = 0;
-	while ((c = getopt_long(argc, argv, "hvdecfinl:o:p:x:", long_options, &option_index)) != -1)
+	while ((c = getopt_long(argc, argv, "hvdescfinl:o:p:x:", long_options, &option_index)) != -1)
 	{
 		switch (c) {
 			case 'h':
@@ -173,20 +179,10 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 				args.describe = true;
 				break;
 			case 'e':
-				{
-#ifndef MARKUS_NO_GUI
-					QApplication app(argc, argv);
-					string projectFile = "";
-					if(argc > 2)
-						projectFile = argv[2];
-					Editor editor(projectFile);
-					app.exec();
-					exit(1); // TODO: See what to do here
-#else
-					LOG_ERROR(logger, "To launch the editor Markus must be compiled with GUI");
-					return -1;
-#endif
-				}
+				args.editor = true;
+				break;
+			case 's':
+				args.simulation = true;
 				break;
 			case 'c':
 				args.centralized = true;
@@ -302,6 +298,91 @@ void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, 
 	}
 }
 
+void launchEditor(int argc, char** argv)
+{
+#ifndef MARKUS_NO_GUI
+	QApplication app(argc, argv);
+	string projectFile = "";
+	if(argc > 2)
+		projectFile = argv[2];
+	Editor editor(projectFile);
+	app.exec();
+	exit(1); // TODO: See what to do here
+#else
+	LOG_ERROR(logger, "To launch the editor Markus must be compiled with GUI");
+	exit(-1);
+#endif
+}
+
+
+/// Generate a simulation ready to be launched
+bool generateSimulation(ConfigReader& mainConfig, log4cxx::LoggerPtr& logger)
+{
+	string outputDir = "simulation_" + timeStamp();
+	SYSTEM("mkdir -p " + outputDir);
+	SYSTEM("ln -sfn " + outputDir + " simulation_latest");
+	stringstream  allTargets;
+	stringstream targets;
+
+	for(int i = 0 ; i < 3 ; i++)
+	{
+		stringstream subdir;
+		subdir << outputDir << "/subdir" << i;
+		stringstream xmlProjName;
+		xmlProjName << subdir.rdbuf() << "_ready/proj" << i << ".xml";
+		// ConfigReader xmlProject(xmlProjName.str(), true);
+
+/*
+		ConfigReader initialConf = mainConfig.GefSubConfig("application");
+
+		// Loop on each module
+		ConfigReader moduleConfig = initialConf.GetSubConfig("module");
+		while(! moduleConfig.IsEmpty())
+		{
+			// Read parameters
+			if( moduleConfig.GetSubConfig("parameters").IsEmpty()) 
+				throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name"), LOC);
+			string moduleType = moduleConfig.GetSubConfig("parameters").GetSubConfig("param", "class").GetValue();
+			string moduleType = moduleConfig.GetSubConfig("parameters").GetSubConfig("param", "class").GetValue();
+
+			// Add to inputs if an input
+			m_modules.push_back(tmp1);
+			if(tmp1->IsInput())
+				m_inputs.push_back(tmp1);
+			moduleConfig = moduleConfig.NextSubConfig("module");
+		}
+		*/
+		allTargets << subdir.str() << " ";
+		targets << subdir.str() << ":" << endl;
+		targets << "\t" << "./markus -ncf " << xmlProjName.str() << " -o " << subdir.str() << "_ready" << endl;
+		targets << "\t" << "mv " << subdir.str() << "_ready " << subdir.str() << endl;
+		targets << endl;
+
+
+		SYSTEM("mkdir -p " + subdir.str() + "_ready");
+		mainConfig.SaveToFile(xmlProjName.str());
+	}
+
+	// Generate a MakeFile for the simulation
+	string makefile = outputDir + "/simulation.make";
+	ofstream of(makefile.c_str());
+
+	// generate all: ...
+	of << "# Makefile for Markus simulation" << endl << endl;
+	of << "OUTDIR := " << outputDir << endl;
+	of << endl;
+	of << "all: ";
+	of << allTargets.rdbuf();
+	of << endl << endl;
+	// generate each target
+	of << targets.rdbuf();
+	of << endl;
+	of.close();
+	
+	LOG_INFO(logger, "Simulation generated in directory " << outputDir);
+	LOG_INFO(logger, "Launch with: make -f " << makefile << " -j4");
+	return 1;
+}
 
 int main(int argc, char** argv)
 {
@@ -315,7 +396,8 @@ int main(int argc, char** argv)
 	if(processArguments(argc, argv, args, logger) < 1)
 		return -1;
 
-
+	if(args.editor)
+		launchEditor(argc, argv);
 
 	try
 	{
@@ -340,6 +422,10 @@ int main(int argc, char** argv)
 #endif
 
 		overrideConfig(appConfig, args.extraConfig, args.parameters, logger);
+
+		if(args.simulation)
+			return generateSimulation(mainConfig, logger);
+			
 
 		// Override parameter auto_process with centralized
 		appConfig.RefSubConfig("parameters", "", true).RefSubConfig("param", "auto_process", true).SetValue(args.centralized ? "1" : "0");

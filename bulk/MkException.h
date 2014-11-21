@@ -20,7 +20,7 @@ enum MkExceptionCode
 {
 	// initial value for exception codes
 	MK_EXCEPTION_FIRST            = 1000,
-	MK_EXCEPTION_NORMAL           = 1010,
+	MK_EXCEPTION_NORMAL           = 1000, // normal exec must return 100 - 1000 = 0 for simulations
 	MK_EXCEPTION_UNKNOWN          = 1011,
 	MK_EXCEPTION_ENDOFSTREAM      = 1012,
 	MK_EXCEPTION_PARAMETER        = 1013,

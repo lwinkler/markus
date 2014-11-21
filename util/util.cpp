@@ -250,7 +250,7 @@ const string timeStamp(int x_pid)
 	const tm* timeinfo = localtime (&rawtime);
 
 	char dd[20];
-	strftime(dd, sizeof(dd), "%Y%m%d_%T", timeinfo);
+	strftime(dd, sizeof(dd), "%Y%m%d_%H%M%S", timeinfo);
 
 	if(x_pid != 0)
 	{

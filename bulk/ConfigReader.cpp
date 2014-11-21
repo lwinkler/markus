@@ -249,7 +249,8 @@ void ConfigReader::SaveToFile(const string& x_file) const
 {
 	if(!mp_doc)
 		throw MkException("Can only save global config to file", LOC);
-	mp_doc->SaveFile(x_file);
+	if(!mp_doc->SaveFile(x_file))
+		throw MkException("Error saving to file " + x_file, LOC);
 }
 
 /**
