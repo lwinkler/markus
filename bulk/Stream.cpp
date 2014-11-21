@@ -106,6 +106,7 @@ void Stream::Deserialize(istream& x_in, const string& x_dir)
 	m_name = root["name"].asString();
 	// if(m_id   != root["id"].asInt())
 		// throw MkException("Stream must have the right id before serializing", LOC);
+	// cout<<root["type"].asString()<<" != "<<GetType()<<endl;
 	if(root["type"].asString() != GetType())
 		throw MkException("Stream must have the right type before serializing", LOC);
 	m_width       = root["width"].asDouble();

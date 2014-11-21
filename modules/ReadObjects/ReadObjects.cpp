@@ -24,6 +24,7 @@
 #include "ReadObjects.h"
 #include "StreamState.h"
 #include "util.h"
+#include "feature_util.h"
 #include "Manager.h"
 
 #include <ctime>
@@ -73,7 +74,8 @@ void ReadObjects::Capture()
 	}
 	m_currentTimeStamp = mp_annotationReader->GetCurrentTimeStamp();
 	istringstream ss(text);
-	m_outputStreams.at(0)->Deserialize(ss,m_param.folder);
+	// m_outputStreams.at(0)->Deserialize(ss,m_param.folder);
+	deserialize(ss, m_ObjectOut);
 	//m_ObjectOut.Deserialize(ss, m_param.folder);
 	//m_ObjectOut.push_back(obj);
 }

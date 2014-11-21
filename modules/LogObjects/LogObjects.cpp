@@ -24,6 +24,7 @@
 #include "LogObjects.h"
 #include "StreamState.h"
 #include "util.h"
+#include "feature_util.h"
 #include "Manager.h"
 
 //#include <ctime>
@@ -104,11 +105,12 @@ void LogObjects::ProcessFrame()
 		m_outputFile<<"]"<<endl;
 	}
 */
-	if(m_objectsIn.size()!=0)WriteObjects();
+	// if(m_objectsIn.size()!=0)
+	WriteObjects();
 }
 
 /// Write the subtitle in log file
-void LogObjects::WriteObjects()
+void LogObjects::WriteObjects() // TODO: Clean up this file
 {
 	LOG_DEBUG(m_logger, "Write object to log file");
 	// Log event label
@@ -116,7 +118,8 @@ void LogObjects::WriteObjects()
 	//for(vector<Object>::const_iterator it = m_objectsIn.begin() ; it != m_objectsIn.end() ; it++)
 	stringstream ss;
 	//const StreamObject* stream = dynamic_cast<const StreamObject*>(m_inputStreams.at(0));
-	ss<<m_inputStreams.at(0)->SerializeToString("");
+	// ss<<m_inputStreams.at(0)->SerializeToString("");
+	serialize(ss, m_objectsIn);
 	mp_annotationWriter->WriteAnnotation(m_currentTimeStamp, m_currentTimeStamp, ss); //TODO duration replaced by a magic number 5
 	
 	//cout<<"test"<<endl;
