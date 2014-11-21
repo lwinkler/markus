@@ -115,20 +115,6 @@ void *send_commands(void *x_void_ptr)
 
 struct arguments
 {
-	/*
-	arguments()
-	{
-		describe    = false;
-		nogui       = false;
-		centralized = false;
-		fast        = false;
-		useStdin    = false;
-
-		configFile    = "config.xml";
-		logConfigFile = "log4cxx.xml";
-		outputDir     = "";
-	}
-	*/
 	bool describe    = false;
 	bool nogui       = false;
 	bool centralized = false;
@@ -321,6 +307,7 @@ bool generateSimulation(ConfigReader& mainConfig, log4cxx::LoggerPtr& logger)
 	string outputDir = "simulation_" + timeStamp();
 	SYSTEM("mkdir -p " + outputDir);
 	SYSTEM("ln -sfn " + outputDir + " simulation_latest");
+	mainConfig.SaveToFile("simulation_latest/Simulation.xml");
 	stringstream  allTargets;
 	stringstream targets;
 
@@ -328,8 +315,12 @@ bool generateSimulation(ConfigReader& mainConfig, log4cxx::LoggerPtr& logger)
 	{
 		stringstream subdir;
 		subdir << outputDir << "/subdir" << i;
+		stringstream subdir2;
+		subdir2 << "$(OUTDIR)" << "/subdir" << i;
 		stringstream xmlProjName;
-		xmlProjName << subdir.rdbuf() << "_ready/proj" << i << ".xml";
+		xmlProjName << subdir.str() << "_ready/proj" << i << ".xml";
+		stringstream xmlProjName2;
+		xmlProjName2 << subdir2.str() << "_ready/proj" << i << ".xml";
 		// ConfigReader xmlProject(xmlProjName.str(), true);
 
 /*
@@ -352,10 +343,11 @@ bool generateSimulation(ConfigReader& mainConfig, log4cxx::LoggerPtr& logger)
 			moduleConfig = moduleConfig.NextSubConfig("module");
 		}
 		*/
-		allTargets << subdir.str() << " ";
-		targets << subdir.str() << ":" << endl;
-		targets << "\t" << "./markus -ncf " << xmlProjName.str() << " -o " << subdir.str() << "_ready" << endl;
-		targets << "\t" << "mv " << subdir.str() << "_ready " << subdir.str() << endl;
+		allTargets << subdir2.str() << " ";
+		targets << subdir2.str() << ":" << endl;
+		targets << "\t" << "cp -r " << subdir2.str() << "_ready " << subdir2.str() << "_run" << endl;
+		targets << "\t" << "./markus -ncf " << xmlProjName.str() << " -o " << subdir2.str() << "_run" << endl;
+		targets << "\t" << "mv " << subdir2.str() << "_run " << subdir2.str() << endl;
 		targets << endl;
 
 
