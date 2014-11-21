@@ -314,3 +314,33 @@ void ConfigReader::CheckUniquenessOfId(const string& x_group, const string& x_ty
 	}
 }
 
+/**
+* @brief Apply extra XML config to modify the initial config (used with option -x)
+*
+* @param xr_extraConfig Extra config to use for overriding
+*
+* @return 
+*/
+
+void ConfigReader::OverrideWith(const ConfigReader& x_extraConfig)
+{
+	// TODO unit test
+	// TODO this function should be more generic
+	ConfigReader moduleConfig = x_extraConfig.GetSubConfig("application").GetSubConfig("module");
+	while(!moduleConfig.IsEmpty())
+	{
+		if(!moduleConfig.GetSubConfig("parameters").IsEmpty())
+		{
+			ConfigReader paramConfig = moduleConfig.GetSubConfig("parameters").GetSubConfig("param");
+			while(!paramConfig.IsEmpty())
+			{
+				// Override parameter
+				RefSubConfig("module", moduleConfig.GetAttribute("name"))
+					.RefSubConfig("parameters").RefSubConfig("param", paramConfig.GetAttribute("name"), true)
+					.SetValue(paramConfig.GetValue());
+				paramConfig = paramConfig.NextSubConfig("param");
+			}
+		}
+		moduleConfig = moduleConfig.NextSubConfig("module");
+	}
+}
