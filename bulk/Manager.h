@@ -63,6 +63,7 @@ public:
 	virtual bool Process();
 	void SendCommand(const std::string& x_command, std::string x_value);
 	const std::vector<Module*>& GetModules() const {return m_modules; }
+	inline const Module& GetModuleByName(const std::string& x_name) const {return RefModuleByName(x_name);};
 	
 	void Connect();
 	void Export();

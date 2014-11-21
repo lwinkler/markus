@@ -302,8 +302,9 @@ void launchEditor(int argc, char** argv)
 
 
 /// Generate a simulation ready to be launched
-bool generateSimulation(ConfigReader& mainConfig, log4cxx::LoggerPtr& logger)
+bool generateSimulation(ConfigReader& mainConfig, const Context& context, log4cxx::LoggerPtr& logger)
 {
+	cout<<__LINE__<<endl;
 	string outputDir = "simulation_" + timeStamp();
 	SYSTEM("mkdir -p " + outputDir);
 	SYSTEM("ln -sfn " + outputDir + " simulation_latest");
@@ -311,48 +312,69 @@ bool generateSimulation(ConfigReader& mainConfig, log4cxx::LoggerPtr& logger)
 	stringstream  allTargets;
 	stringstream targets;
 
-	for(int i = 0 ; i < 3 ; i++)
+	Manager manager(mainConfig.GetSubConfig("application"));
+	manager.SetContext(context);
+
+	ConfigReader simulationConf = mainConfig.RefSubConfig("simulation", "", true);
+	ConfigReader varConf = simulationConf.RefSubConfig("variations", "", true).GetSubConfig("var");
+
+	while(! varConf.IsEmpty())
 	{
-		stringstream subdir;
-		subdir << outputDir << "/subdir" << i;
-		stringstream subdir2;
-		subdir2 << "$(OUTDIR)" << "/subdir" << i;
-		stringstream xmlProjName;
-		xmlProjName << subdir.str() << "_ready/proj" << i << ".xml";
-		stringstream xmlProjName2;
-		xmlProjName2 << subdir2.str() << "_ready/proj" << i << ".xml";
-		// ConfigReader xmlProject(xmlProjName.str(), true);
-
-/*
-		ConfigReader initialConf = mainConfig.GefSubConfig("application");
-
-		// Loop on each module
-		ConfigReader moduleConfig = initialConf.GetSubConfig("module");
-		while(! moduleConfig.IsEmpty())
+		// Retrieve args from config
+		string moduleName = varConf.GetAttribute("module");
+		string paramName  = varConf.GetAttribute("param");
+		ConfigReader target = mainConfig.RefSubConfig("application").RefSubConfig("module", moduleName).RefSubConfig("parameters").RefSubConfig("param", paramName);
+		string range = "";
+		int nb       = 100;
+		try
 		{
-			// Read parameters
-			if( moduleConfig.GetSubConfig("parameters").IsEmpty()) 
-				throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name"), LOC);
-			string moduleType = moduleConfig.GetSubConfig("parameters").GetSubConfig("param", "class").GetValue();
-			string moduleType = moduleConfig.GetSubConfig("parameters").GetSubConfig("param", "class").GetValue();
-
-			// Add to inputs if an input
-			m_modules.push_back(tmp1);
-			if(tmp1->IsInput())
-				m_inputs.push_back(tmp1);
-			moduleConfig = moduleConfig.NextSubConfig("module");
+			range  = varConf.GetAttribute("range");
 		}
-		*/
-		allTargets << subdir2.str() << " ";
-		targets << subdir2.str() << ":" << endl;
-		targets << "\t" << "cp -r " << subdir2.str() << "_ready " << subdir2.str() << "_run" << endl;
-		targets << "\t" << "./markus -ncf " << xmlProjName.str() << " -o " << subdir2.str() << "_run" << endl;
-		targets << "\t" << "mv " << subdir2.str() << "_run " << subdir2.str() << endl;
-		targets << endl;
+		catch(MkException& e){}
+		try
+		{
+			nb = atof(varConf.GetAttribute("nb").c_str());
+		}
+		catch(MkException& e){}
+
+		const Parameter& param = manager.GetModuleByName(moduleName).GetParameters().GetParameterByName(paramName);
+		vector<string> values;
+		param.GenerateValues(nb, values, range);
+
+		// Generate a config for each variation
+		int i = 0;
+		string originalValue = target.GetValue();
+		for(vector<string>::const_iterator it = values.begin() ; it != values.end() ; it++)
+		{
+			string variationName = paramName + "_" + *it;
+			stringstream subdir;
+			subdir << outputDir << "/simul" << i;
+			stringstream subdir2;
+			subdir2 << "$(OUTDIR)" << "/simul" << i;;
+			stringstream xmlProjName;
+			xmlProjName << subdir.str()   << "_ready/" << variationName << ".xml";
+			stringstream xmlProjName2;
+			xmlProjName2 << subdir2.str() << "_ready/" << variationName << ".xml";
+
+			// Change value of param
+			target.SetValue(*it);
+
+			// Generate entries for makefile
+			allTargets << subdir2.str() << " ";
+			targets << subdir2.str() << ":" << endl;
+			targets << "\t" << "rm -rf " << subdir2.str() << "_run" << endl;
+			targets << "\t" << "cp -r " << subdir2.str() << "_ready " << subdir2.str() << "_run" << endl;
+			targets << "\t" << "./markus -ncf " << xmlProjName.str() << " -o " << subdir2.str() << "_run" << endl;
+			targets << "\t" << "mv " << subdir2.str() << "_run " << subdir2.str() << endl;
+			targets << endl;
 
 
-		SYSTEM("mkdir -p " + subdir.str() + "_ready");
-		mainConfig.SaveToFile(xmlProjName.str());
+			SYSTEM("mkdir -p " + subdir.str() + "_ready");
+			mainConfig.SaveToFile(xmlProjName.str());
+			i++;
+		}
+		target.SetValue(originalValue);
+		varConf = varConf.NextSubConfig("var");
 	}
 
 	// Generate a MakeFile for the simulation
@@ -416,7 +438,7 @@ int main(int argc, char** argv)
 		overrideConfig(appConfig, args.extraConfig, args.parameters, logger);
 
 		if(args.simulation)
-			return generateSimulation(mainConfig, logger);
+			return generateSimulation(mainConfig, context, logger);
 			
 
 		// Override parameter auto_process with centralized

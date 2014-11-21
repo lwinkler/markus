@@ -33,7 +33,7 @@ log4cxx::LoggerPtr ParameterStructure::m_logger(log4cxx::Logger::getLogger("Para
 
 ParameterStructure::ParameterStructure(const ConfigReader& x_configReader):
 	m_configReader(x_configReader.GetSubConfig("parameters")),
-	m_moduleName(x_configReader.GetAttribute("name"))
+	m_moduleName(x_configReader.GetAttribute("name")) // TODO : constructors must never throw
 {
 	m_writeAllParamsToConfig = false;
 }

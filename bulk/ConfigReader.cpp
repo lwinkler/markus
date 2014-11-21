@@ -118,7 +118,7 @@ ConfigReader ConfigReader::GetSubConfig(const string& x_objectType, string x_obj
 *
 * @return config object
 */
-ConfigReader ConfigReader::RefSubConfig(const string& x_objectType, string x_objectName, bool x_allowCreation)
+ConfigReader ConfigReader::RefSubConfig(const string& x_objectType, string x_objectName, bool x_allowCreation) // TODO const& for all
 {
 	if(IsEmpty())
 		throw MkException("Impossible to find node " + x_objectType + " in ConfigReader with name \"" + x_objectName + "\"" , LOC);
@@ -250,7 +250,7 @@ void ConfigReader::SaveToFile(const string& x_file) const
 	if(!mp_doc)
 		throw MkException("Can only save global config to file", LOC);
 	if(!mp_doc->SaveFile(x_file))
-		throw MkException("Error saving to file " + x_file, LOC);
+		throw MkException("Error saving to file ", LOC);
 }
 
 /**
