@@ -38,7 +38,6 @@ template<class T> class FeatureT : public Feature
 		inline virtual double CompareSquared(const Feature& x_feature) const
 		{
 		    
-			std::cout<<x_feature.SerializeToString("")<<std::endl;
 			const FeatureT<T>& feat(dynamic_cast<const FeatureT<T>&>(x_feature));
 			return compareSquared(value, feat.value);
 		}
