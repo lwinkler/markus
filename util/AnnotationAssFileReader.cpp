@@ -47,7 +47,7 @@ AnnotationAssFileReader::~AnnotationAssFileReader()
 {
 }
 
-void AnnotationAssFileReader::Open(const std::string& x_file)
+void AnnotationAssFileReader::Open(const string& x_file)
 {
 	AnnotationFileReader::Open(x_file);
 	InitReading();
@@ -59,7 +59,7 @@ Rect AnnotationAssFileReader::GetBox()
 	return m_boudingBox;
 }
 
-void AnnotationAssFileReader::ReadSrt(const std::string srt)
+void AnnotationAssFileReader::ReadSrt(const string srt)
 {
 	// {\clip(136,313,274,458)}fall
 

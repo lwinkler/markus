@@ -170,7 +170,7 @@ bool Editor::saveProject(const QString& x_fileName)
 #ifndef QT_NO_CURSOR
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 #endif
-	std::ofstream fout(x_fileName.toStdString().c_str());
+	ofstream fout(x_fileName.toStdString().c_str());
 	fout<<m_view.page()->mainFrame()->evaluateJavaScript("window.markusEditor.saveProject();").toString().toStdString()<<endl;
 	fout.close();
 	m_currentProject = x_fileName;

@@ -78,6 +78,7 @@ public:
 	*/
 	std::string Signature() const;
 
+protected:
 	/**
 	* @brief Extract the signature (name of all subfields). Static function
 	*

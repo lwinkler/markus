@@ -71,7 +71,7 @@ void StreamState::Randomize(unsigned int& xr_seed)
 		m_state = !m_state;
 }
 
-void StreamState::Serialize(std::ostream& x_out, const string& x_dir) const
+void StreamState::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 	stringstream ss;
@@ -81,7 +81,7 @@ void StreamState::Serialize(std::ostream& x_out, const string& x_dir) const
 	x_out << root;
 }
 
-void StreamState::Deserialize(std::istream& x_in, const string& x_dir)
+void StreamState::Deserialize(istream& x_in, const string& x_dir)
 {
 	Json::Value root;
 	x_in >> root;  // note: copy first for local use

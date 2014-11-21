@@ -26,6 +26,7 @@
 #include "TestProjects.h"
 #include "TestModules.h"
 #include "TestSerialization.h"
+#include "TestFeatures.h"
 #include "TestParameters.h"
 #include "TestTrackerByFeatures.h"
 
@@ -45,6 +46,7 @@ int main(int argc, char **argv)
 	runner.addTest(TestProjects::suite());
 	runner.addTest(TestModules::suite());
 	runner.addTest(TestSerialization::suite());
+	runner.addTest(TestFeatures::suite());
 	runner.addTest(TestParameters::suite());
 	runner.addTest(TestTrackerByFeatures::suite());
 

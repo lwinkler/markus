@@ -44,6 +44,7 @@ Object::Object(const string& x_name) :
 {
 };
 
+// note: we must use cv::Rect in this file since Rect() is a method
 Object::Object(const string& x_name, const cv::Rect& x_rect) :
         m_name(x_name)
 {
@@ -60,7 +61,7 @@ Object::Object(const Object & x_obj)
 	width = x_obj.width;
 	height = x_obj.height;
 	// for(map<string, FeaturePtr>::const_iterator it = x_obj.GetFeatures().begin() ; it != x_obj.GetFeatures().end() ; ++it)
-		// m_feats.insert(std::make_pair(it->first, new FeatureFloat(*it->second)));
+		// m_feats.insert(make_pair(it->first, new FeatureFloat(*it->second)));
 	m_feats = x_obj.GetFeatures();
 }
 
@@ -76,7 +77,7 @@ Object& Object::operator=(const Object & x_obj)
 	m_feats.clear();
 
 	// for(map<string, FeaturePtr>::const_iterator it = x_obj.GetFeatures().begin() ; it != x_obj.GetFeatures().end() ; ++it)
-		// m_feats.insert(std::make_pair(it->first, FeaturePtr(new Feature(*it->second))));
+		// m_feats.insert(make_pair(it->first, FeaturePtr(new Feature(*it->second))));
 	m_feats = x_obj.GetFeatures();
 	return *this;
 }
@@ -86,7 +87,7 @@ Object::~Object()
 	m_feats.clear();
 }
 
-void Object::Serialize(std::ostream& x_out, const string& x_dir) const
+void Object::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 	root["id"]     = m_id;
@@ -96,7 +97,7 @@ void Object::Serialize(std::ostream& x_out, const string& x_dir) const
 	root["width"]  = width;
 	root["height"] = height;
 
-	for(map <std::string, FeaturePtr>::const_iterator it = m_feats.begin() ; it != m_feats.end() ; ++it)
+	for(map <string, FeaturePtr>::const_iterator it = m_feats.begin() ; it != m_feats.end() ; ++it)
 	{
 		stringstream ss;
 		it->second->Serialize(ss, x_dir);
@@ -108,7 +109,7 @@ void Object::Serialize(std::ostream& x_out, const string& x_dir) const
 	x_out << root;
 }
 
-void Object::Deserialize(std::istream& x_in, const string& x_dir)
+void Object::Deserialize(istream& x_in, const string& x_dir)
 {
 	Json::Value root;
 	x_in >> root;
@@ -241,7 +242,7 @@ void Object::Intersect(const Mat& x_image)
 }
 
 /// Randomize the content of the object
-void Object::Randomize(unsigned int& xr_seed, const std::string& x_requirement, const Size& xr_size)
+void Object::Randomize(unsigned int& xr_seed, const string& x_requirement, const Size& xr_size)
 {
 	SetRect(cv::Rect(
 		Point(rand_r(&xr_seed) % xr_size.width, rand_r(&xr_seed) % xr_size.height), 
@@ -272,7 +273,7 @@ void Object::Randomize(unsigned int& xr_seed, const std::string& x_requirement, 
 	// note: notify event does not accept empty features, so we add 1
 	for(int i = 0 ; i < nb + 1 ; i++)
 	{
-		std::stringstream name;
+		stringstream name;
 		name<<"rand"<<i;
 		AddFeature(name.str(), static_cast<float>(rand_r(&xr_seed)) / RAND_MAX);
 	}

@@ -65,7 +65,7 @@ void Event::Randomize(unsigned int& xr_seed, const string& x_requirement, const 
 	}
 }
 
-void Event::Serialize(std::ostream& x_out, const string& x_dir) const
+void Event::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 	root["raised"] = IsRaised();
@@ -87,7 +87,7 @@ void Event::Serialize(std::ostream& x_out, const string& x_dir) const
 	x_out << root;
 }
 
-void Event::Deserialize(std::istream& x_in, const string& x_dir)
+void Event::Deserialize(istream& x_in, const string& x_dir)
 {
 	// Note that a null JSON means that the event was not raised
 	Json::Value root;
@@ -223,7 +223,7 @@ void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 	// Notify via stdout
 	Json::FastWriter writer;
 	string tmp = writer.write(out);
-	tmp.erase(std::remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
+	tmp.erase(remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
 
 	LOG_WARN(m_logger, "@notif@ " << level << " " << tmp);
 }

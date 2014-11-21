@@ -82,7 +82,7 @@ void StreamEvent::RenderTo(Mat& x_output) const
 	// else x_output.setTo(0);
 }
 
-void StreamEvent::Serialize(std::ostream& x_out, const string& x_dir) const
+void StreamEvent::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 	stringstream ss;
@@ -94,7 +94,7 @@ void StreamEvent::Serialize(std::ostream& x_out, const string& x_dir) const
 	x_out << root;
 }
 
-void StreamEvent::Deserialize(std::istream& x_in, const string& x_dir)
+void StreamEvent::Deserialize(istream& x_in, const string& x_dir)
 {
 	Json::Value root;
 	x_in >> root;  // note: copy first for local use

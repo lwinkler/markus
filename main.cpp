@@ -35,6 +35,7 @@
 #endif
 
 #include <iostream>
+#include <fstream>
 #include <cstdio>
 #include <log4cxx/xml/domconfigurator.h>
 #include <getopt.h>    /* for getopt_long; standard getopt is in unistd.h */
@@ -112,33 +113,32 @@ void *send_commands(void *x_void_ptr)
 	return NULL;
 }
 
-
-int main(int argc, char** argv)
+struct arguments
 {
-	// Load XML configuration file using DOMConfigurator
-	log4cxx::LoggerPtr logger(log4cxx::Logger::getLogger("main"));
-
 	bool describe    = false;
 	bool nogui       = false;
 	bool centralized = false;
 	bool fast        = false;
 	bool useStdin    = false;
-	int returnValue  = -1;
+	bool editor      = false;
+	bool simulation  = false;
 
 	string configFile    = "config.xml";
 	string logConfigFile = "log4cxx.xml";
 	string outputDir     = "";
 	vector<string> parameters;
 	vector<string> extraConfig;
+};
 
-	// Read arguments
-
-	//int digit_optind = 0;
+/// Process arguments from command line
+int processArguments(int argc, char** argv, struct arguments& args, log4cxx::LoggerPtr& logger)
+{
 	static struct option long_options[] = {
 		{"help",        0, 0, 'h'},
 		{"version",     0, 0, 'v'},
 		{"describe",    0, 0, 'd'},
 		{"editor",      0, 0, 'e'},
+		{"simulation",  0, 0, 's'},
 		{"centralized", 0, 0, 'c'},
 		{"fast",        0, 0, 'f'},
 		{"stdin",       0, 0, 'i'},
@@ -151,7 +151,7 @@ int main(int argc, char** argv)
 	};
 	int c;
 	int option_index = 0;
-	while ((c = getopt_long(argc, argv, "hvdecfinl:o:p:x:", long_options, &option_index)) != -1)
+	while ((c = getopt_long(argc, argv, "hvdescfinl:o:p:x:", long_options, &option_index)) != -1)
 	{
 		switch (c) {
 			case 'h':
@@ -162,46 +162,37 @@ int main(int argc, char** argv)
 				LOG_INFO(logger, Context::Version(true));
 				return 0;
 			case 'd':
-				describe = true;
+				args.describe = true;
 				break;
 			case 'e':
-				{
-#ifndef MARKUS_NO_GUI
-					QApplication app(argc, argv);
-					string projectFile = "";
-					if(argc > 2)
-						projectFile = argv[2];
-					Editor editor(projectFile);
-					return app.exec();
-#else
-					LOG_ERROR(logger, "To launch the editor Markus must be compiled with GUI");
-					return -1;
-#endif
-				}
+				args.editor = true;
+				break;
+			case 's':
+				args.simulation = true;
 				break;
 			case 'c':
-				centralized = true;
+				args.centralized = true;
 				break;
 			case 'f':
-				fast = true;
+				args.fast = true;
 				break;
 			case 'i':
-				useStdin = true;
+				args.useStdin = true;
 				break;
 			case 'n':
-				nogui = true;
+				args.nogui = true;
 				break;
 			case 'l':
-				logConfigFile = optarg;
+				args.logConfigFile = optarg;
 				break;
 			case 'o':
-				outputDir = optarg;
+				args.outputDir = optarg;
 				break;
 			case 'p':
-				parameters.push_back(optarg);
+				args.parameters.push_back(optarg);
 				break;
 			case 'x':
-				extraConfig.push_back(optarg);
+				args.extraConfig.push_back(optarg);
 				break;
 			case ':': // missing argument
 				LOG_ERROR(logger, "--"<<long_options[::optopt].name<<": an argument is required");
@@ -219,19 +210,19 @@ int main(int argc, char** argv)
 	// Handle other arguments
 	if (optind == argc - 2)
 	{
-		configFile = argv[argc - 2];
+		args.configFile = argv[argc - 2];
 		stringstream ss;
 		ss<<"Input.file="<<argv[argc - 1];
-		parameters.push_back(ss.str());
-		parameters.push_back("Input.class=VideoFileReader");
+		args.parameters.push_back(ss.str());
+		args.parameters.push_back("Input.class=VideoFileReader");
 	}
 	else if (optind == argc - 1)
 	{
-		configFile = argv[argc - 1];
+		args.configFile = argv[argc - 1];
 	}
 	else if(optind == argc)
 	{
-		LOG_INFO(logger, "Using default configuration file "<<configFile);
+		LOG_INFO(logger, "Using default configuration file "<<args.configFile);
 	}
 	else 
 	{
@@ -239,101 +230,204 @@ int main(int argc, char** argv)
 		usage();
 		return -1;
 	}
+	return 1;
+}
+
+/// Override the initial config with extra config files and argument set parameters
+void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, const vector<string>& parameters, log4cxx::LoggerPtr& logger)
+{
+	// Override values of parameters if an extra config is used
+	for(vector<string>::const_iterator it1 = extraConfig.begin() ; it1 != extraConfig.end() ; ++it1)
+	{
+		try
+		{
+			// open the config and override the initial config
+			ConfigReader extra(*it1);
+			appConfig.OverrideWith(extra);
+		}
+		catch(MkException& e)
+		{
+			LOG_WARN(logger, "Cannot read parameters from extra config \""<<*it1<<"\": "<<e.what());
+		}
+	}
+
+	// Set values of parameters if set from command line
+	for(vector<string>::const_iterator it = parameters.begin() ; it != parameters.end() ; ++it)
+	{
+		try
+		{
+			string param = it->substr(0, it->find("="));
+			// remove quote if necessary
+			if (*(param.begin()) == '\'')
+				param = param.substr(1,param.length());
+
+			string value = it->substr(it->find("=") + 1);
+			// remove quote if necessary
+			if (*(value.rbegin()) == '\'')
+				value = value.substr(0,value.length()-1);
+
+			vector<string> path;
+			split(param, '.', path);
+			if(path.size() != 2)
+				throw MkException("Parameter set in command line must be in format 'module.parameter'", LOC);
+			if(path[0] == "manager")
+				appConfig.RefSubConfig("parameters", "", true).RefSubConfig("param", path[1], true).SetValue(value);
+			else
+				appConfig.RefSubConfig("module", path[0]).RefSubConfig("parameters").RefSubConfig("param", path[1], true).SetValue(value);
+			// manager.GetModuleByName(path[0])->GetParameters().RefParameterByName(path[1]).SetValue(value, PARAMCONF_CMD);
+		}
+		catch(std::exception& e)
+		{
+			LOG_ERROR(logger, "Cannot parse command line parameter "<<*it<<": "<<e.what());
+			throw MkException("Cannot parse command line parameter", LOC);
+		}
+	}
+}
+
+void launchEditor(int argc, char** argv)
+{
+#ifndef MARKUS_NO_GUI
+	QApplication app(argc, argv);
+	string projectFile = "";
+	if(argc > 2)
+		projectFile = argv[2];
+	Editor editor(projectFile);
+	app.exec();
+	exit(1); // TODO: See what to do here
+#else
+	LOG_ERROR(logger, "To launch the editor Markus must be compiled with GUI");
+	exit(-1);
+#endif
+}
+
+
+/// Generate a simulation ready to be launched
+bool generateSimulation(ConfigReader& mainConfig, log4cxx::LoggerPtr& logger)
+{
+	string outputDir = "simulation_" + timeStamp();
+	SYSTEM("mkdir -p " + outputDir);
+	SYSTEM("ln -sfn " + outputDir + " simulation_latest");
+	mainConfig.SaveToFile("simulation_latest/Simulation.xml");
+	stringstream  allTargets;
+	stringstream targets;
+
+	for(int i = 0 ; i < 3 ; i++)
+	{
+		stringstream subdir;
+		subdir << outputDir << "/subdir" << i;
+		stringstream subdir2;
+		subdir2 << "$(OUTDIR)" << "/subdir" << i;
+		stringstream xmlProjName;
+		xmlProjName << subdir.str() << "_ready/proj" << i << ".xml";
+		stringstream xmlProjName2;
+		xmlProjName2 << subdir2.str() << "_ready/proj" << i << ".xml";
+		// ConfigReader xmlProject(xmlProjName.str(), true);
+
+/*
+		ConfigReader initialConf = mainConfig.GefSubConfig("application");
+
+		// Loop on each module
+		ConfigReader moduleConfig = initialConf.GetSubConfig("module");
+		while(! moduleConfig.IsEmpty())
+		{
+			// Read parameters
+			if( moduleConfig.GetSubConfig("parameters").IsEmpty()) 
+				throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name"), LOC);
+			string moduleType = moduleConfig.GetSubConfig("parameters").GetSubConfig("param", "class").GetValue();
+			string moduleType = moduleConfig.GetSubConfig("parameters").GetSubConfig("param", "class").GetValue();
+
+			// Add to inputs if an input
+			m_modules.push_back(tmp1);
+			if(tmp1->IsInput())
+				m_inputs.push_back(tmp1);
+			moduleConfig = moduleConfig.NextSubConfig("module");
+		}
+		*/
+		allTargets << subdir2.str() << " ";
+		targets << subdir2.str() << ":" << endl;
+		targets << "\t" << "cp -r " << subdir2.str() << "_ready " << subdir2.str() << "_run" << endl;
+		targets << "\t" << "./markus -ncf " << xmlProjName.str() << " -o " << subdir2.str() << "_run" << endl;
+		targets << "\t" << "mv " << subdir2.str() << "_run " << subdir2.str() << endl;
+		targets << endl;
+
+
+		SYSTEM("mkdir -p " + subdir.str() + "_ready");
+		mainConfig.SaveToFile(xmlProjName.str());
+	}
+
+	// Generate a MakeFile for the simulation
+	string makefile = outputDir + "/simulation.make";
+	ofstream of(makefile.c_str());
+
+	// generate all: ...
+	of << "# Makefile for Markus simulation" << endl << endl;
+	of << "OUTDIR := " << outputDir << endl;
+	of << endl;
+	of << "all: ";
+	of << allTargets.rdbuf();
+	of << endl << endl;
+	// generate each target
+	of << targets.rdbuf();
+	of << endl;
+	of.close();
+	
+	LOG_INFO(logger, "Simulation generated in directory " << outputDir);
+	LOG_INFO(logger, "Launch with: make -f " << makefile << " -j4");
+	return 1;
+}
+
+int main(int argc, char** argv)
+{
+	// Load XML configuration file using DOMConfigurator
+	log4cxx::LoggerPtr logger(log4cxx::Logger::getLogger("main"));
+	int returnValue  = -1;
+
+
+	// Read arguments
+	struct arguments args;
+	if(processArguments(argc, argv, args, logger) < 1)
+		return -1;
+
+	if(args.editor)
+		launchEditor(argc, argv);
 
 	try
 	{
 		LOG_INFO(logger, Context::Version(true));
-		ConfigReader mainConfig(configFile);
+		ConfigReader mainConfig(args.configFile);
 		mainConfig.Validate();
 		ConfigReader appConfig = mainConfig.GetSubConfig("application");
 		assert(!appConfig.IsEmpty());
 
 		// Init global variables and objects
-		Context context("", appConfig.GetAttribute("name"), outputDir);
-		if(outputDir != "")
+		Context context("", appConfig.GetAttribute("name"), args.outputDir);
+		if(args.outputDir != "")
 		{
-			string dir = outputDir + "/";
+			string dir = args.outputDir + "/";
 			setenv("LOG_DIR", dir.c_str(), 1);
 		}
 
-		log4cxx::xml::DOMConfigurator::configure(logConfigFile);
+		log4cxx::xml::DOMConfigurator::configure(args.logConfigFile);
 
 #ifndef MARKUS_NO_GUI
 		MarkusApplication app(argc, argv);
 #endif
 
-		// Set values of parameters if an extra config is used
-		for(vector<string>::const_iterator it1 = extraConfig.begin() ; it1 != extraConfig.end() ; ++it1)
-		{
-			try
-			{
-				// open the config
-				ConfigReader extra(*it1);
-				ConfigReader moduleConfig = extra.GetSubConfig("application").GetSubConfig("module");
-				while(!moduleConfig.IsEmpty())
-				{
-					if(!moduleConfig.GetSubConfig("parameters").IsEmpty())
-					{
-						ConfigReader paramConfig = moduleConfig.GetSubConfig("parameters").GetSubConfig("param");
-						while(!paramConfig.IsEmpty())
-						{
-							// Override parameter
-							appConfig.RefSubConfig("module", moduleConfig.GetAttribute("name"))
-								.RefSubConfig("parameters").RefSubConfig("param", paramConfig.GetAttribute("name"), true)
-								.SetValue(paramConfig.GetValue());
-							paramConfig = paramConfig.NextSubConfig("param");
-						}
-					}
-					moduleConfig = moduleConfig.NextSubConfig("module");
-				}
-			}
-			catch(MkException& e)
-			{
-				LOG_WARN(logger, "Cannot read parameters from extra config \""<<*it1<<"\": "<<e.what());
-				
-			}
-		}
+		overrideConfig(appConfig, args.extraConfig, args.parameters, logger);
 
-		// Set values of parameters if set from command line
-		for(vector<string>::const_iterator it = parameters.begin() ; it != parameters.end() ; ++it)
-		{
-			try
-			{
-				string param = it->substr(0, it->find("="));
-				// remove quote if necessary
-				if (*(param.begin()) == '\'')
-					param = param.substr(1,param.length());
+		if(args.simulation)
+			return generateSimulation(mainConfig, logger);
+			
 
-				string value = it->substr(it->find("=") + 1);
-				// remove quote if necessary
-				if (*(value.rbegin()) == '\'')
-					value = value.substr(0,value.length()-1);
-
-				vector<string> path;
-				split(param, '.', path);
-				if(path.size() != 2)
-					throw MkException("Parameter set in command line must be in format 'module.parameter'", LOC);
-				if(path[0] == "manager")
-					appConfig.RefSubConfig("parameters", "", true).RefSubConfig("param", path[1], true).SetValue(value);
-				else
-					appConfig.RefSubConfig("module", path[0]).RefSubConfig("parameters").RefSubConfig("param", path[1], true).SetValue(value);
-				// manager.GetModuleByName(path[0])->GetParameters().RefParameterByName(path[1]).SetValue(value, PARAMCONF_CMD);
-			}
-			catch(std::exception& e)
-			{
-				LOG_ERROR(logger, "Cannot parse command line parameter "<<*it<<": "<<e.what());
-				throw MkException("Cannot parse command line parameter", LOC);
-			}
-		}
 		// Override parameter auto_process with centralized
-		appConfig.RefSubConfig("parameters", "", true).RefSubConfig("param", "auto_process", true).SetValue(centralized ? "1" : "0");
-		appConfig.RefSubConfig("parameters", "", true).RefSubConfig("param", "fast", true).SetValue(fast ? "1" : "0");
+		appConfig.RefSubConfig("parameters", "", true).RefSubConfig("param", "auto_process", true).SetValue(args.centralized ? "1" : "0");
+		appConfig.RefSubConfig("parameters", "", true).RefSubConfig("param", "fast", true).SetValue(args.fast ? "1" : "0");
 
 		// Set manager and context
 		Manager manager(appConfig);
 		manager.SetContext(context);
 
-		if(describe) 
+		if(args.describe) 
 		{
 			manager.Export();
 			return 0;
@@ -345,7 +439,7 @@ int main(int argc, char** argv)
 
 		/// Create a separate thread to read the commands from stdin
 		pthread_t command_thread;
-		if(useStdin && pthread_create(&command_thread, NULL, send_commands, &manager))
+		if(args.useStdin && pthread_create(&command_thread, NULL, send_commands, &manager))
 		{
 			LOG_ERROR(logger, "Error creating thread");
 			return -1;
@@ -354,7 +448,7 @@ int main(int argc, char** argv)
 		// Notify the parent process (for monitoring purposes)
 
 
-		if(nogui)
+		if(args.nogui)
 		{
 			// No gui. launch the process directly
 			// note: so far we cannot launch the process in a decentralized manner (with a timer on each module)
@@ -378,12 +472,12 @@ int main(int argc, char** argv)
 		{
 #ifndef MARKUS_NO_GUI
 			ConfigReader mainGuiConfig("gui.xml", true);
-			ConfigReader guiConfig = mainGuiConfig.RefSubConfig("gui", configFile, true);
+			ConfigReader guiConfig = mainGuiConfig.RefSubConfig("gui", args.configFile, true);
 			guiConfig.RefSubConfig("parameters", "", true);
 
 			MarkusWindow gui(guiConfig, manager);
 			gui.setWindowTitle("Markus");
-			if(!nogui)
+			if(!args.nogui)
 				gui.show();
 			returnValue = app.exec();
 

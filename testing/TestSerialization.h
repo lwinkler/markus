@@ -39,6 +39,7 @@
 #include "StreamDebug.h"
 #include "CalibrationByHeight.h"
 #include "CalibrationByModel.h"
+#include "Polygon.h"
 
 #include "FeatureStd.h"
 #include "FeatureFloatInTime.h"
@@ -133,12 +134,11 @@ public:
 		std::string fileName3 = "testing/serialize/" + name + ".json";
 		std::string dir = "testing/serialize/image";
 		SYSTEM("mkdir -p " + dir);
-		LOG_TEST(m_logger, "Test serialization of "<<name<<" = "<<obj.SerializeToString());
+		LOG_TEST(m_logger, "Test serialization of "<<name<<" = "<<obj.SerializeToString() << " with signature = " << obj.Signature());
 		std::ofstream of1(fileName1.c_str());
 		obj.Serialize(of1, dir);
 		of1.close();
 
-		LOG_TEST(m_logger, "Test deserialization and serialization of "<<name);
 		// std::stringstream ss2;
 
 		std::ifstream inf(fileName3.c_str());
@@ -162,6 +162,7 @@ public:
 		myVect.push_back(1e4);
 		myVect.push_back(0.000234);
 		cv::KeyPoint kp;
+		cv::Point2f pt2f(33.5, 1e-4);
 		cv::Point3f pt3f(33, 134.5, 1e4);
 
 		// TODO: There is a problem of inprecision with floating points. See how we handle this !
@@ -178,6 +179,7 @@ public:
 		obj2.AddFeature("fstr", new FeatureString("someString"));
 		obj2.AddFeature("fvf", new FeatureVectorFloat(myVect));
 		obj2.AddFeature("fkp", new FeatureKeyPoint(kp));
+		obj2.AddFeature("fp2f", new FeaturePoint2f(pt2f));
 		obj2.AddFeature("fp3f", new FeaturePoint3f(pt3f));
 		testSerialization(obj2, "Object");
 
@@ -226,9 +228,17 @@ public:
 		CalibrationByModel calibModel2(2404.2260764154521, -1.2035892526534258, 137.47118203741616,240.0, 480 , 640);
 		testSerialization(calibModel2,"CalibrationByModel2");
 
+		std::vector<cv::Point2f> pts;
+		pts.push_back(cv::Point2f(34.4, 34));
+		pts.push_back(cv::Point2f(3.4, -455.5));
+		pts.push_back(cv::Point2f(344, 0.34));
+		Polygon polygon1(pts);
+		testSerialization(polygon1,"Polygon");
+
 		// TODO: test the serialization of all modules
 		testSerialization(*mp_fakeInput, "Module");
 
+		// Serialize all features
 		FeatureFloat ff(0.93);
 		testSerialization(ff, "FeatureFloat");
 
@@ -243,6 +253,9 @@ public:
 
 		FeatureKeyPoint fkp(kp);
 		testSerialization(fkp, "FeatureKeyPoint");
+
+		FeaturePoint2f fpt2f(pt2f);
+		testSerialization(fpt2f, "FeaturePoint2f");
 
 		FeaturePoint3f fpt3f(pt3f);
 		testSerialization(fpt3f, "FeaturePoint3f");

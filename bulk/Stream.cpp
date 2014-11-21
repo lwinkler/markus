@@ -28,7 +28,7 @@
 
 using namespace std;
 
-Stream::Stream(const std::string& x_name, Module& rx_module, const string& rx_description, const string& rx_requirement) :
+Stream::Stream(const string& x_name, Module& rx_module, const string& rx_description, const string& rx_requirement) :
 	m_name(x_name),
 	// m_id(0),
 	m_width(rx_module.GetWidth()),
@@ -60,11 +60,11 @@ void Stream::Export(ostream& rx_os, int x_id, int x_indentation, bool x_isInput)
 	string inout = "output";
 	if(x_isInput) inout = "input";
 	rx_os<<tabs<<"<"<<inout<<" id=\""<<x_id<<"\">"<<endl;
-	tabs = std::string(x_indentation + 1, '\t');
+	tabs = string(x_indentation + 1, '\t');
 	rx_os<<tabs<<"<type>"<<GetType()<<"</type>"<<endl;
 	rx_os<<tabs<<"<name>"<<m_name<<"</name>"<<endl;
 	rx_os<<tabs<<"<description>"<<GetDescription()<<"</description>"<<endl;
-	tabs = std::string(x_indentation, '\t');
+	tabs = string(x_indentation, '\t');
 	rx_os<<tabs<<"</"<<inout<<">"<<endl;
 }
 
@@ -82,7 +82,7 @@ void Stream::Connect(Stream* x_stream, bool x_bothWays)
 		x_stream->Connect(this, false);
 }
 
-void Stream::Serialize(std::ostream& x_out, const string& x_dir) const
+void Stream::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 	root["name"]        = m_name;
@@ -98,7 +98,7 @@ void Stream::Serialize(std::ostream& x_out, const string& x_dir) const
 }
 
 
-void Stream::Deserialize(std::istream& x_in, const string& x_dir)
+void Stream::Deserialize(istream& x_in, const string& x_dir)
 {
 	Json::Value root;
 	x_in >> root;

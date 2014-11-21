@@ -62,6 +62,7 @@ public:
 	void Validate() const;
 	/// Redefinition of == operator
 	inline bool operator == (const ConfigReader &a){return a.mp_node == mp_node;}
+	void OverrideWith(const ConfigReader& xr_extraConfig);
 
 private:
 	void CheckUniquenessOfId(const std::string& x_group, const std::string& x_type, const std::string& x_idLabel, const std::string& x_moduleName) const;

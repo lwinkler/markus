@@ -77,10 +77,10 @@ ControllerModule::ControllerModule(Module& rx_module) :
 	Controller("module"),
 	module(rx_module)
 {
-	m_actions.insert(std::make_pair("Reset",           &ControllerModule::Reset));
-	m_actions.insert(std::make_pair("Pause",           &ControllerModule::Pause));
-	m_actions.insert(std::make_pair("Unpause",         &ControllerModule::Unpause));
-	m_actions.insert(std::make_pair("PrintStatistics", &ControllerModule::PrintStatistics));
+	m_actions.insert(make_pair("Reset",           &ControllerModule::Reset));
+	m_actions.insert(make_pair("Pause",           &ControllerModule::Pause));
+	m_actions.insert(make_pair("Unpause",         &ControllerModule::Unpause));
+	m_actions.insert(make_pair("PrintStatistics", &ControllerModule::PrintStatistics));
 }
 
 QWidget* ControllerModule::CreateWidget()

@@ -29,8 +29,9 @@
 #include "Parameter.h"
 #include "ParameterSerializable.h"
 #include "MkException.h"
-#include "Polygon.h"
 #include "CalibrationByHeight.h"
+#include "CalibrationByModel.h"
+#include "Polygon.h"
 
 
 /// Unit testing class for ConfigReader class
@@ -147,12 +148,12 @@ class TestParameters : public CppUnit::TestFixture
 
 		CalibrationByModel myCalibrationByModel;
 		ParameterSerializable paramCalibrationByModel("param_calibrationByModel",  json_data2, &myCalibrationByModel, "Parameter of type CalibrationByModel");
-		testParameter(paramCalibrationByModel, json_data,"", "") ;
+		testParameter(paramCalibrationByModel, json_data, "", "") ;
 
-		// LOG_TEST(m_logger, "Test ParameterSerializable - Polygon");
-		// Polygon myPolygon;
-		// ParameterSerializable paramPolygon("param_polygon",  "{}", &myPolygon, "Parameter of type Polygon"); // TODO
-		// testParameter(paramPolygon, "", "", "") ;
+		LOG_TEST(m_logger, "Test ParameterSerializable - Polygon");
+		Polygon myPolygon;
+		ParameterSerializable paramPolygon("param_polygon",  "{\"points\":[]}", &myPolygon, "Parameter of type Polygon"); // TODO
+		testParameter(paramPolygon, "{\"points\":[{\"x\":54.0,\"y\":53.50},{\"x\":3454.0,\"y\":53.50},{\"x\":54.0,\"y\":53.50},{\"x\":5.0,\"y\":0.50}]}", "", "") ;
 	}
 
 	static CppUnit::Test *suite()

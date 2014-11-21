@@ -25,6 +25,8 @@
 #define FEATURE_UTIL_H
 
 #include <opencv2/features2d/features2d.hpp>
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
 #include "define.h"
 #include "MkException.h"
 
@@ -80,6 +82,15 @@ inline double compareSquared(const cv::KeyPoint& x_1, const cv::KeyPoint& x_2)
 void randomize(cv::KeyPoint& xr_val, unsigned int& xr_seed);
 
 /* -------------------------------------------------------------------------------- */
+// Template specialization for features of type Point2f
+
+std::ostream& serialize(std::ostream& x_out, const cv::Point2f& x_value);
+std::istream& deserialize(std::istream& x_in,  cv::Point2f& xr_value);
+
+inline double compareSquared(const cv::Point2f& x_1, const cv::Point2f& x_2){return x_1 != x_2;}
+void randomize(cv::Point2f& xr_val, unsigned int& xr_seed);
+
+/* -------------------------------------------------------------------------------- */
 // Template specialization for features of type Point3f
 
 std::ostream& serialize(std::ostream& x_out, const cv::Point3f& x_value);
@@ -128,7 +139,8 @@ inline std::istream& deserialize(std::istream& x_in, int& xr_value)
 
 inline double compareSquared(int x_1, int x_2)
 {
-	return POW2(x_1 - x_2);
+	// Cast to double to avoid overflows
+	return POW2(static_cast<double>(x_1) - x_2);
 }
 
 inline void randomize(int& xr_val, unsigned int& xr_seed)
@@ -155,6 +167,76 @@ inline double compareSquared(const std::string& x_1, const std::string& x_2)
 inline void randomize(std::string& xr_val, unsigned int& xr_seed)
 {
 	xr_val = "random_str"; // TODO
+}
+
+/* -------------------------------------------------------------------------------- */
+// Serialization function for class serializable
+
+inline std::ostream& serialize(std::ostream& x_out, const Serializable& x_value) { x_value.Serialize(x_out, ""); return x_out;}
+inline std::istream& deserialize(std::istream& x_in, Serializable& xr_value) {xr_value.Deserialize(x_in, ""); return x_in;}
+
+/* -------------------------------------------------------------------------------- */
+// Template specialization for features in vectors (must be at the end)
+
+template<class T>std::ostream& serialize(std::ostream& x_out, const std::vector<T>& x_val)
+{
+	if(x_val.size() == 0)
+	{
+		x_out<<"[]";
+		return x_out;
+	}
+
+	x_out << "[";
+	typename std::vector<T>::const_iterator it = x_val.begin();
+	while(it != x_val.end() - 1)
+	{
+		serialize(x_out,*it);
+		x_out << ",";
+		++it;
+	}
+	serialize(x_out,*it);
+	x_out << "]";
+	return x_out;
+}
+
+template<class T>std::istream& deserialize(std::istream& x_in,  std::vector<T>& xr_val)
+{
+	Json::Value root;
+	x_in >> root;  // note: copy first for local use
+	assert(root.isArray());
+
+	xr_val.clear();
+	xr_val.resize(root.size());
+	for(unsigned int i = 0 ; i < root.size() ; i++)
+	{
+		std::stringstream ss;
+		ss << root[i];
+		deserialize(ss, xr_val[i]);
+	}
+
+	return x_in;
+}
+
+template<class T> double compareSquared(const std::vector<T>& x_1, const std::vector<T>& x_2)
+{
+	double sum = 0;
+	if(x_1.size() != x_2.size())
+		return 1;
+	// throw MkException("Size error while comparing FeatureVectorFloats", LOC);
+
+	typename std::vector<T>::const_iterator it2 = x_2.begin();
+	for(typename std::vector<T>::const_iterator it1 = x_1.begin() ; it1 != x_1.end() ; ++it1, ++it2)
+	{
+		sum += compareSquared(*it1, *it2);
+	}
+	return sum / POW2(x_1.size());
+}
+
+template<class T>void randomize(std::vector<T>& xr_val, unsigned int& xr_seed)
+{
+	xr_val.resize(10);
+	for(typename std::vector<T>::iterator it1 = xr_val.begin() ; it1 != xr_val.end() ; ++it1)
+		randomize(*it1, xr_seed);
 }
 
 

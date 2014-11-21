@@ -162,11 +162,11 @@ ControllerParameter::ControllerParameter(Parameter& x_param):
 	Controller(x_param.GetName()),
 	m_param(x_param)
 {
-	m_actions.insert(std::make_pair("GetType",    &ControllerParameter::GetParameterType));
-	m_actions.insert(std::make_pair("GetRange",   &ControllerParameter::GetRange));
-	m_actions.insert(std::make_pair("Set",        &ControllerParameter::SetControlledValue));
-	m_actions.insert(std::make_pair("Get",        &ControllerParameter::GetCurrent));
-	m_actions.insert(std::make_pair("GetDefault", &ControllerParameter::GetDefault));
+	m_actions.insert(make_pair("GetType",    &ControllerParameter::GetParameterType));
+	m_actions.insert(make_pair("GetRange",   &ControllerParameter::GetRange));
+	m_actions.insert(make_pair("Set",        &ControllerParameter::SetControlledValue));
+	m_actions.insert(make_pair("Get",        &ControllerParameter::GetCurrent));
+	m_actions.insert(make_pair("GetDefault", &ControllerParameter::GetDefault));
 }
 
 
@@ -189,14 +189,14 @@ QWidget* ControllerInt::CreateWidget()
 }
 
 
-void ControllerInt::SetWidgetValue(const std::string& x_value)
+void ControllerInt::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
 	mp_parameterSlider->SetValue(atoi(x_value.c_str()));
 #endif
 }
 
-std::string ControllerInt::GetValueFromWidget()
+string ControllerInt::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	stringstream ss;
@@ -222,14 +222,14 @@ QWidget* ControllerDouble::CreateWidget()
 	return NULL;
 #endif
 }
-void ControllerDouble::SetWidgetValue(const std::string& x_value)
+void ControllerDouble::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
 	mp_parameterSlider->SetValue(atof(x_value.c_str()));
 #endif
 }
 
-std::string ControllerDouble::GetValueFromWidget()
+string ControllerDouble::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	stringstream ss;
@@ -259,14 +259,14 @@ QWidget* ControllerFloat::CreateWidget()
 #endif
 }
 
-void ControllerFloat::SetWidgetValue(const std::string& x_value)
+void ControllerFloat::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
 	mp_parameterSlider->SetValue(atof(x_value.c_str()));
 #endif
 }
 
-std::string ControllerFloat::GetValueFromWidget()
+string ControllerFloat::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	stringstream ss;
@@ -296,14 +296,14 @@ QWidget* ControllerBool::CreateWidget()
 #endif
 }
 
-void ControllerBool::SetWidgetValue(const std::string& x_value)
+void ControllerBool::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
 	mp_checkBox->setChecked(x_value == "1");
 #endif
 }
 
-std::string ControllerBool::GetValueFromWidget()
+string ControllerBool::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	return mp_checkBox->isChecked() ? "1" : "0";
@@ -331,14 +331,14 @@ QWidget* ControllerString::CreateWidget()
 	return NULL;
 #endif
 }
-void ControllerString::SetWidgetValue(const std::string& x_value)
+void ControllerString::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
 	mp_lineEdit->setText(x_value.c_str());
 #endif
 }
 
-std::string ControllerString::GetValueFromWidget()
+string ControllerString::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	return mp_lineEdit->text().toStdString();
@@ -369,7 +369,7 @@ QWidget* ControllerSerializable::CreateWidget()
 }
 
 
-void ControllerSerializable::SetWidgetValue(const std::string& x_value)
+void ControllerSerializable::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
 	mp_lineEdit->setText(x_value.c_str());
@@ -379,7 +379,7 @@ void ControllerSerializable::SetWidgetValue(const std::string& x_value)
 #endif
 }
 
-std::string ControllerSerializable::GetValueFromWidget()
+string ControllerSerializable::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	return mp_lineEdit->text().toStdString();
@@ -435,7 +435,7 @@ QWidget* ControllerCalibrationByHeight::CreateWidget()
 }
 
 
-void ControllerCalibrationByHeight::SetWidgetValue(const std::string& x_value)
+void ControllerCalibrationByHeight::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
 	CalibrationByHeight object;
@@ -447,7 +447,7 @@ void ControllerCalibrationByHeight::SetWidgetValue(const std::string& x_value)
 #endif
 }
 
-std::string ControllerCalibrationByHeight::GetValueFromWidget()
+string ControllerCalibrationByHeight::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	stringstream ss;
@@ -477,7 +477,7 @@ QWidget* ControllerEnum::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
 	mp_comboBox = new QComboBox;
-	for(std::map<std::string, int>::const_iterator it = m_param2.GetEnum().begin() ; it != m_param2.GetEnum().end() ; ++it)
+	for(map<string, int>::const_iterator it = m_param2.GetEnum().begin() ; it != m_param2.GetEnum().end() ; ++it)
 	{
 		mp_comboBox->addItem(it->first.c_str(), it->second);
 	}
@@ -490,7 +490,7 @@ QWidget* ControllerEnum::CreateWidget()
 #endif
 }
 
-void ControllerEnum::SetWidgetValue(const std::string& x_value)
+void ControllerEnum::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
 	int index = mp_comboBox->findData(m_param2.GetValue());
@@ -498,7 +498,7 @@ void ControllerEnum::SetWidgetValue(const std::string& x_value)
 #endif
 }
 
-std::string ControllerEnum::GetValueFromWidget()
+string ControllerEnum::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	return m_param2.GetReverseEnum().at(mp_comboBox->itemData(mp_comboBox->currentIndex()).toInt());
@@ -527,14 +527,14 @@ QWidget* ControllerText::CreateWidget()
 	return NULL;
 #endif
 }
-void ControllerText::SetWidgetValue(const std::string& x_value)
+void ControllerText::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
 	mp_textEdit->setText(x_value.c_str());
 #endif
 }
 
-std::string ControllerText::GetValueFromWidget()
+string ControllerText::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	return mp_textEdit->toPlainText().toStdString();

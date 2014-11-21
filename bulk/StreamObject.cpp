@@ -58,7 +58,7 @@ void StreamObject::ConvertInput()
 	const StreamObject * pstream = dynamic_cast<const StreamObject*>(m_connected);
 	if(pstream == NULL) 
 		throw MkException("Stream of objects " + GetName() + " is not correctly connected", LOC);
-	std::vector<Object> rectsTarget = pstream->m_objects;
+	vector<Object> rectsTarget = pstream->m_objects;
 	double ratioX = static_cast<double>(m_width) / pstream->GetWidth();
 	double ratioY = static_cast<double>(m_height) / pstream->GetHeight();
 
@@ -99,7 +99,7 @@ void StreamObject::Randomize(unsigned int& xr_seed)
 	}
 }
 
-void StreamObject::Serialize(std::ostream& x_out, const string& x_dir) const
+void StreamObject::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 	stringstream ss;
@@ -121,7 +121,7 @@ void StreamObject::Serialize(std::ostream& x_out, const string& x_dir) const
 	x_out << root;
 }
 
-void StreamObject::Deserialize(std::istream& x_in, const string& x_dir)
+void StreamObject::Deserialize(istream& x_in, const string& x_dir)
 {
 	Json::Value root;
 	x_in >> root;  // note: copy first for local use

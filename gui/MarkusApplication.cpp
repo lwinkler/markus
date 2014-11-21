@@ -26,8 +26,6 @@
 #include "Manager.h"
 #include <opencv2/opencv.hpp>
 
-using namespace std;
-
 log4cxx::LoggerPtr MarkusApplication::m_logger(log4cxx::Logger::getLogger("MarkusApplication"));
 
 MarkusApplication::MarkusApplication(int &argc, char ** argv) : QApplication(argc, argv){}
