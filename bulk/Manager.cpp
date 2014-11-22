@@ -442,6 +442,7 @@ void Manager::SendCommand(const string& x_command, string x_value)
 */
 void Manager::PrintStatistics()
 {
+	double fps = (m_frameCount * 1000.0 / (m_timerProcessing));
 	LOG_INFO(m_logger, "Manager: "<<m_frameCount<<" frames processed in "<<m_timerProcessing<<" ms ("<<  (1000.0 * m_frameCount) / m_timerProcessing<<" frames/s)");
 	// LOG_INFO("input convertion "                  <<m_timerConvertion<<" ms ("<<(1000.0 * m_frameCount) / m_timerConvertion<<" frames/s)");
 	// LOG_INFO("Total time "<< m_timerProcessing + m_timerConvertion<<" ms ("<<     (1000.0 * m_frameCount) /(m_timerProcessing + m_timerConvertion)<<" frames/s)");
@@ -451,12 +452,18 @@ void Manager::PrintStatistics()
 	ConfigReader benchSummary(benchFileName, true);
 	ConfigReader conf = benchSummary.RefSubConfig("benchmark", "", true);
 
-	int cpt = 0;
+
+	// Write perf to output XML
+	ConfigReader perfModule = conf.RefSubConfig("manager", "", true);
+	perfModule.RefSubConfig("nb_frames", "", true).SetValue(m_frameCount);
+	perfModule.RefSubConfig("timer", "processing", true).SetValue(m_timerProcessing);
+	perfModule.RefSubConfig("fps", "", true).SetValue(fps);
+
+	// Call for each module
 	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
 	{
 		// LOG_INFO(cpt<<": ");
 		(*it)->PrintStatistics(conf);
-		cpt++;
 	}
 	benchSummary.SaveToFile(benchFileName);
 }

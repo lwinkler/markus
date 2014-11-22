@@ -69,7 +69,6 @@ void UsbCam::Reset()
 
 
 	m_frameTimer.Restart();
-	cout<<"Reset"<<endl;
 }
 
 void UsbCam::Capture()

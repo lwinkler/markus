@@ -35,6 +35,7 @@
 #endif
 
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <cstdio>
 #include <log4cxx/xml/domconfigurator.h>
@@ -57,6 +58,8 @@ void usage()
 	printf(" -v  --version         Print version information\n");
 	printf(" -d  --describe        Create a description of all modules in XML format inside module/ directory. For development purpose.\n");
 	printf(" -e  --editor          Launch the module editor. \n");
+	printf(" -S  --simulation      Prepare a full simultion based on a *.sim.xml file\n");
+	printf("                       Override some parameters in an extra XML file\n");
 	printf(" -c  --centralized     Module processing function is called from the manager (instead of decentralized timers)\n");
 	printf(" -i  --stdin           Read commands from stdin\n");
 	printf(" -n  --no-gui          Run process without gui\n");
@@ -138,7 +141,7 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 		{"version",     0, 0, 'v'},
 		{"describe",    0, 0, 'd'},
 		{"editor",      0, 0, 'e'},
-		{"simulation",  0, 0, 's'},
+		{"simulation",  0, 0, 'S'},
 		{"centralized", 0, 0, 'c'},
 		{"fast",        0, 0, 'f'},
 		{"stdin",       0, 0, 'i'},
@@ -149,9 +152,9 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 		{"xml",         1, 0, 'x'},
 		{NULL, 0, NULL, 0}
 	};
-	int c;
+	char c;
 	int option_index = 0;
-	while ((c = getopt_long(argc, argv, "hvdescfinl:o:p:x:", long_options, &option_index)) != -1)
+	while ((c = getopt_long(argc, argv, "hvdeScfinl:o:p:x:", long_options, &option_index)) != -1)
 	{
 		switch (c) {
 			case 'h':
@@ -167,7 +170,7 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 			case 'e':
 				args.editor = true;
 				break;
-			case 's':
+			case 'S':
 				args.simulation = true;
 				break;
 			case 'c':
@@ -304,7 +307,6 @@ void launchEditor(int argc, char** argv)
 /// Generate a simulation ready to be launched
 bool generateSimulation(ConfigReader& mainConfig, const Context& context, log4cxx::LoggerPtr& logger)
 {
-	cout<<__LINE__<<endl;
 	string outputDir = "simulation_" + timeStamp();
 	SYSTEM("mkdir -p " + outputDir);
 	SYSTEM("ln -sfn " + outputDir + " simulation_latest");
@@ -315,8 +317,8 @@ bool generateSimulation(ConfigReader& mainConfig, const Context& context, log4cx
 	Manager manager(mainConfig.GetSubConfig("application"));
 	manager.SetContext(context);
 
-	ConfigReader simulationConf = mainConfig.RefSubConfig("simulation", "", true);
-	ConfigReader varConf = simulationConf.RefSubConfig("variations", "", true).GetSubConfig("var");
+	ConfigReader varConf = mainConfig.RefSubConfig("application")
+	      .RefSubConfig("variations", "", true).GetSubConfig("var");
 
 	while(! varConf.IsEmpty())
 	{
@@ -346,30 +348,32 @@ bool generateSimulation(ConfigReader& mainConfig, const Context& context, log4cx
 		string originalValue = target.GetValue();
 		for(vector<string>::const_iterator it = values.begin() ; it != values.end() ; it++)
 		{
-			string variationName = paramName + "_" + *it;
-			stringstream subdir;
-			subdir << outputDir << "/simul" << i;
-			stringstream subdir2;
-			subdir2 << "$(OUTDIR)" << "/simul" << i;;
-			stringstream xmlProjName;
-			xmlProjName << subdir.str()   << "_ready/" << variationName << ".xml";
-			stringstream xmlProjName2;
-			xmlProjName2 << subdir2.str() << "_ready/" << variationName << ".xml";
+			SYSTEM("mkdir -p " + outputDir + "/ready");
+			SYSTEM("mkdir -p " + outputDir + "/running");
+			SYSTEM("mkdir -p " + outputDir + "/results");
+			string variationName = paramName + "-" + *it;
 
 			// Change value of param
 			target.SetValue(*it);
 
 			// Generate entries for makefile
-			allTargets << subdir2.str() << " ";
-			targets << subdir2.str() << ":" << endl;
-			targets << "\t" << "rm -rf " << subdir2.str() << "_run" << endl;
-			targets << "\t" << "cp -r " << subdir2.str() << "_ready " << subdir2.str() << "_run" << endl;
-			targets << "\t" << "./markus -ncf " << xmlProjName.str() << " -o " << subdir2.str() << "_run" << endl;
-			targets << "\t" << "mv " << subdir2.str() << "_run " << subdir2.str() << endl;
+			stringstream sd;
+			sd << "simul" << setfill('0') << setw(6) << i;
+			allTargets << "$(OUTDIR)/results/" <<  sd.str() << " ";
+			targets << "$(OUTDIR)/results/" << sd.str() << ":" << endl;
+			// targets << "\t" << "mkdir -p $(OUTDIR)/results/"  << sd.str() << endl;
+			targets << "\t" << "rm -rf $(OUTDIR)/running/"  << sd.str() << 
+			               " && cp -r $(OUTDIR)/ready/" << sd.str() << " $(OUTDIR)/running/" << sd.str() << endl;
+			targets << "\t" << "$(EXE) $(PARAMS) $(OUTDIR)/running/" << sd.str() << "/" << variationName << ".xml -o $(OUTDIR)/running/"  << sd.str() << endl;
+			targets << "\t" << "mv $(OUTDIR)/running/" << sd.str() << " $(OUTDIR)/results/" << endl;
 			targets << endl;
 
-
-			SYSTEM("mkdir -p " + subdir.str() + "_ready");
+			// Create ready/... directory that describes the simulation
+			stringstream subdir;
+			subdir << outputDir << "/ready/" << sd.str();
+			stringstream xmlProjName;
+			xmlProjName << subdir.str() << "/" << variationName << ".xml";
+			SYSTEM("mkdir -p " + subdir.str());
 			mainConfig.SaveToFile(xmlProjName.str());
 			i++;
 		}
@@ -383,7 +387,9 @@ bool generateSimulation(ConfigReader& mainConfig, const Context& context, log4cx
 
 	// generate all: ...
 	of << "# Makefile for Markus simulation" << endl << endl;
-	of << "OUTDIR := " << outputDir << endl;
+	of << "OUTDIR :=" << outputDir << endl;
+	of << "EXE :=./markus" << endl;
+	of << "PARAMS :=-ncf" << endl;
 	of << endl;
 	of << "all: ";
 	of << allTargets.rdbuf();
@@ -416,7 +422,7 @@ int main(int argc, char** argv)
 	try
 	{
 		LOG_INFO(logger, Context::Version(true));
-		ConfigReader mainConfig(args.configFile);
+		ConfigReader mainConfig(args.configFile); // TODO: segfault if file non-existant. Fix
 		mainConfig.Validate();
 		ConfigReader appConfig = mainConfig.GetSubConfig("application");
 		assert(!appConfig.IsEmpty());
