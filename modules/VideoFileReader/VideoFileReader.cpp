@@ -78,7 +78,10 @@ void VideoFileReader::Capture()
 {
 	while(true)
 	{
-		if(m_capture.grab() == 0)
+		// Note: checking for frame position instead of letting grab fail saves a lot of time for h264
+		// especially for parallel processing
+		if(m_capture.get(CV_CAP_PROP_POS_FRAMES) >= m_capture.get(CV_CAP_PROP_FRAME_COUNT) 
+		 || m_capture.grab() == 0)
 		{
 			if(m_param.loop)
 			{
