@@ -303,6 +303,7 @@ void launchEditor(int argc, char** argv)
 #endif
 }
 
+/// Add targets lines for inclusion in Makefile
 void addSimulationEntry(const string& x_variationName, const string& x_outputDir, const ConfigReader& x_mainConfig, ostream& xr_allTargets, ostream& xr_targets, int& xr_cpt)
 {
 	// Generate entries for makefile
@@ -327,6 +328,48 @@ void addSimulationEntry(const string& x_variationName, const string& x_outputDir
 	xr_cpt++;
 }
 
+/// Add variation to simulation
+void addVariation(Manager& xr_manager, const ConfigReader& x_varConf, const string& x_outputDir, ConfigReader& xr_mainConfig, ostream& xr_allTargets, ostream& xr_targets, int& xr_cpt)
+{
+	ConfigReader varConf = x_varConf;
+	while(! varConf.IsEmpty())
+	{
+		// Retrieve args from config
+		string moduleName = varConf.GetAttribute("module");
+		string paramName  = varConf.GetAttribute("param");
+		ConfigReader target = xr_mainConfig.RefSubConfig("application").RefSubConfig("module", moduleName).RefSubConfig("parameters").RefSubConfig("param", paramName);
+		string range = "";
+		int nb       = 100;
+		try
+		{
+			range  = varConf.GetAttribute("range");
+		}
+		catch(MkException& e){}
+		try
+		{
+			nb = atof(varConf.GetAttribute("nb").c_str());
+		}
+		catch(MkException& e){}
+
+		const Parameter& param = xr_manager.GetModuleByName(moduleName).GetParameters().GetParameterByName(paramName);
+		vector<string> values;
+		param.GenerateValues(nb, values, range);
+
+		// Generate a config for each variation
+		string originalValue = target.GetValue();
+		for(vector<string>::const_iterator it = values.begin() ; it != values.end() ; it++)
+		{
+			string variationName = paramName + "-" + *it;
+
+			// Change value of param
+			target.SetValue(*it);
+			addSimulationEntry(variationName, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
+		}
+		target.SetValue(originalValue);
+		varConf = varConf.NextSubConfig("var");
+	}
+}
+
 
 /// Generate a simulation ready to be launched
 bool generateSimulation(ConfigReader& mainConfig, const Context& context, log4cxx::LoggerPtr& logger)
@@ -347,43 +390,8 @@ bool generateSimulation(ConfigReader& mainConfig, const Context& context, log4cx
 	ConfigReader varConf = mainConfig.RefSubConfig("application")
 	      .RefSubConfig("variations", "", true).GetSubConfig("var");
 
-	while(! varConf.IsEmpty())
-	{
-		// Retrieve args from config
-		string moduleName = varConf.GetAttribute("module");
-		string paramName  = varConf.GetAttribute("param");
-		ConfigReader target = mainConfig.RefSubConfig("application").RefSubConfig("module", moduleName).RefSubConfig("parameters").RefSubConfig("param", paramName);
-		string range = "";
-		int nb       = 100;
-		try
-		{
-			range  = varConf.GetAttribute("range");
-		}
-		catch(MkException& e){}
-		try
-		{
-			nb = atof(varConf.GetAttribute("nb").c_str());
-		}
-		catch(MkException& e){}
-
-		const Parameter& param = manager.GetModuleByName(moduleName).GetParameters().GetParameterByName(paramName);
-		vector<string> values;
-		param.GenerateValues(nb, values, range);
-
-		// Generate a config for each variation
-		int cpt = 0;
-		string originalValue = target.GetValue();
-		for(vector<string>::const_iterator it = values.begin() ; it != values.end() ; it++)
-		{
-			string variationName = paramName + "-" + *it;
-
-			// Change value of param
-			target.SetValue(*it);
-			addSimulationEntry(variationName, outputDir, mainConfig, allTargets, targets, cpt);
-		}
-		target.SetValue(originalValue);
-		varConf = varConf.NextSubConfig("var");
-	}
+	int cpt = 0;
+	addVariation(manager, varConf, outputDir, mainConfig, allTargets, targets, cpt);
 
 	// Generate a MakeFile for the simulation
 	string makefile = outputDir + "/simulation.make";
