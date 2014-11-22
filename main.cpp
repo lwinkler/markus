@@ -303,6 +303,30 @@ void launchEditor(int argc, char** argv)
 #endif
 }
 
+void addSimulationEntry(const string& x_variationName, const string& x_outputDir, const ConfigReader& x_mainConfig, ostream& xr_allTargets, ostream& xr_targets, int& xr_cpt)
+{
+	// Generate entries for makefile
+	stringstream sd;
+	sd << "simul" << setfill('0') << setw(6) << xr_cpt;
+	xr_allTargets << "$(OUTDIR)/results/" <<  sd.str() << " ";
+	xr_targets << "$(OUTDIR)/results/" << sd.str() << ":" << endl;
+	// xr_targets << "\t" << "mkdir -p $(OUTDIR)/results/"  << sd.str() << endl;
+	xr_targets << "\t" << "rm -rf $(OUTDIR)/running/"  << sd.str() << 
+		" && cp -r $(OUTDIR)/ready/" << sd.str() << " $(OUTDIR)/running/" << sd.str() << endl;
+	xr_targets << "\t" << "$(EXE) $(PARAMS) $(OUTDIR)/running/" << sd.str() << "/" << x_variationName << ".xml -o $(OUTDIR)/running/"  << sd.str() << endl;
+	xr_targets << "\t" << "mv $(OUTDIR)/running/" << sd.str() << " $(OUTDIR)/results/" << endl;
+	xr_targets << endl;
+
+	// Create ready/... directory that describes the simulation
+	stringstream subdir;
+	subdir << x_outputDir << "/ready/" << sd.str();
+	stringstream xmlProjName;
+	xmlProjName << subdir.str() << "/" << x_variationName << ".xml";
+	SYSTEM("mkdir -p " + subdir.str());
+	x_mainConfig.SaveToFile(xmlProjName.str());
+	xr_cpt++;
+}
+
 
 /// Generate a simulation ready to be launched
 bool generateSimulation(ConfigReader& mainConfig, const Context& context, log4cxx::LoggerPtr& logger)
@@ -311,6 +335,9 @@ bool generateSimulation(ConfigReader& mainConfig, const Context& context, log4cx
 	SYSTEM("mkdir -p " + outputDir);
 	SYSTEM("ln -sfn " + outputDir + " simulation_latest");
 	mainConfig.SaveToFile("simulation_latest/Simulation.xml");
+	SYSTEM("mkdir -p " + outputDir + "/ready");
+	SYSTEM("mkdir -p " + outputDir + "/running");
+	SYSTEM("mkdir -p " + outputDir + "/results");
 	stringstream  allTargets;
 	stringstream targets;
 
@@ -344,38 +371,15 @@ bool generateSimulation(ConfigReader& mainConfig, const Context& context, log4cx
 		param.GenerateValues(nb, values, range);
 
 		// Generate a config for each variation
-		int i = 0;
+		int cpt = 0;
 		string originalValue = target.GetValue();
 		for(vector<string>::const_iterator it = values.begin() ; it != values.end() ; it++)
 		{
-			SYSTEM("mkdir -p " + outputDir + "/ready");
-			SYSTEM("mkdir -p " + outputDir + "/running");
-			SYSTEM("mkdir -p " + outputDir + "/results");
 			string variationName = paramName + "-" + *it;
 
 			// Change value of param
 			target.SetValue(*it);
-
-			// Generate entries for makefile
-			stringstream sd;
-			sd << "simul" << setfill('0') << setw(6) << i;
-			allTargets << "$(OUTDIR)/results/" <<  sd.str() << " ";
-			targets << "$(OUTDIR)/results/" << sd.str() << ":" << endl;
-			// targets << "\t" << "mkdir -p $(OUTDIR)/results/"  << sd.str() << endl;
-			targets << "\t" << "rm -rf $(OUTDIR)/running/"  << sd.str() << 
-			               " && cp -r $(OUTDIR)/ready/" << sd.str() << " $(OUTDIR)/running/" << sd.str() << endl;
-			targets << "\t" << "$(EXE) $(PARAMS) $(OUTDIR)/running/" << sd.str() << "/" << variationName << ".xml -o $(OUTDIR)/running/"  << sd.str() << endl;
-			targets << "\t" << "mv $(OUTDIR)/running/" << sd.str() << " $(OUTDIR)/results/" << endl;
-			targets << endl;
-
-			// Create ready/... directory that describes the simulation
-			stringstream subdir;
-			subdir << outputDir << "/ready/" << sd.str();
-			stringstream xmlProjName;
-			xmlProjName << subdir.str() << "/" << variationName << ".xml";
-			SYSTEM("mkdir -p " + subdir.str());
-			mainConfig.SaveToFile(xmlProjName.str());
-			i++;
+			addSimulationEntry(variationName, outputDir, mainConfig, allTargets, targets, cpt);
 		}
 		target.SetValue(originalValue);
 		varConf = varConf.NextSubConfig("var");
