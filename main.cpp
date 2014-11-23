@@ -329,7 +329,7 @@ void addSimulationEntry(const string& x_variationName, const string& x_outputDir
 }
 
 /// Add variation to simulation
-void addVariation(string x_variationName, Manager& xr_manager, const ConfigReader& x_varConf, const string& x_outputDir, ConfigReader& xr_mainConfig, ostream& xr_allTargets, ostream& xr_targets, int& xr_cpt)
+void addVariations(string x_variationName, Manager& xr_manager, const ConfigReader& x_varConf, const string& x_outputDir, ConfigReader& xr_mainConfig, ostream& xr_allTargets, ostream& xr_targets, int& xr_cpt)
 {
 	ConfigReader varConf = x_varConf;
 	while(! varConf.IsEmpty())
@@ -367,11 +367,11 @@ void addVariation(string x_variationName, Manager& xr_manager, const ConfigReade
 
 			// Change value of param
 			target.SetValue(*it);
-			ConfigReader subConf = x_varConf.GetSubConfig("var");
+			ConfigReader subConf = varConf.GetSubConfig("var");
 			if(subConf.IsEmpty())
 				addSimulationEntry(variationName, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
 			else
-				addVariation(variationName, xr_manager, subConf, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
+				addVariations(variationName, xr_manager, subConf, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
 
 		}
 		target.SetValue(originalValue);
@@ -400,7 +400,7 @@ bool generateSimulation(ConfigReader& mainConfig, const Context& context, log4cx
 	      .RefSubConfig("variations", "", true).GetSubConfig("var");
 
 	int cpt = 0;
-	addVariation("", manager, varConf, outputDir, mainConfig, allTargets, targets, cpt);
+	addVariations("", manager, varConf, outputDir, mainConfig, allTargets, targets, cpt);
 
 	// Generate a MakeFile for the simulation
 	string makefile = outputDir + "/simulation.make";
