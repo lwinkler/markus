@@ -335,46 +335,112 @@ void addVariations(string x_variationName, Manager& xr_manager, const ConfigRead
 	while(! varConf.IsEmpty())
 	{
 		// Retrieve args from config
-		string moduleName = varConf.GetAttribute("module");
-		string paramName  = varConf.GetAttribute("param");
-		ConfigReader target = xr_mainConfig.RefSubConfig("application").RefSubConfig("module", moduleName).RefSubConfig("parameters").RefSubConfig("param", paramName);
-		string range = "";
-		int nb       = 100;
+		vector<string> moduleNames;
+		vector<string> paramNames;
 		try
 		{
-			range  = varConf.GetAttribute("range");
+			split(varConf.GetAttribute("modules"), ',', moduleNames);
 		}
-		catch(MkException& e){}
+		catch(MkException& e)
+		{}
+		if(moduleNames.empty())
+			moduleNames.push_back(varConf.GetAttribute("module"));
+
 		try
 		{
-			nb = atof(varConf.GetAttribute("nb").c_str());
+			split(varConf.GetAttribute("parameters"), ',', paramNames);
 		}
-		catch(MkException& e){}
-
-		const Parameter& param = xr_manager.GetModuleByName(moduleName).GetParameters().GetParameterByName(paramName);
-		vector<string> values;
-		param.GenerateValues(nb, values, range);
-
-		// Generate a config for each variation
-		string originalValue = target.GetValue();
-		for(vector<string>::const_iterator it = values.begin() ; it != values.end() ; it++)
+		catch(MkException& e)
 		{
-			string variationName;
-			if(x_variationName == "")
-				variationName = paramName + "-" + *it;
-			else
-				variationName = x_variationName + "_" + paramName + "-" + *it;
-
-			// Change value of param
-			target.SetValue(*it);
-			ConfigReader subConf = varConf.GetSubConfig("var");
-			if(subConf.IsEmpty())
-				addSimulationEntry(variationName, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
-			else
-				addVariations(variationName, xr_manager, subConf, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
-
 		}
-		target.SetValue(originalValue);
+		if(paramNames.empty())
+			paramNames.push_back(varConf.GetAttribute("param"));
+		if(moduleNames.size() != 1 && moduleNames.size() != paramNames.size())
+			throw MkException("Modules and parameters must have the same size in <var> or modules must only contain one module", LOC);
+
+		// Get all targets to be varied in config
+		vector<ConfigReader*> targets;
+		targets.resize(paramNames.size());
+		vector<string> originalValues;
+		originalValues.resize(paramNames.size());
+		auto ittar = targets.begin();
+		auto itmod = moduleNames.begin();
+		auto itval = originalValues.begin();
+		for(string itpar : paramNames)
+		{
+			*ittar = new ConfigReader(xr_mainConfig.RefSubConfig("application").RefSubConfig("module", *itmod).RefSubConfig("parameters").RefSubConfig("param", itpar));
+			*itval = (*ittar)->GetValue();
+			ittar++;
+			itval++;
+			if(moduleNames.size() > 1)
+				itmod++;
+		}
+
+
+		string file;
+		try
+		{
+			file = varConf.GetAttribute("file");
+		}
+		catch(MkException& e)
+		{}
+
+		if(file != "")
+		{
+			// set values of parameters by file
+			// TODO
+		}
+		else
+		{
+			// Set values by using range information
+			if(paramNames.size() > 1)
+				throw MkException("To set more than one parameter variation, use an external file with file=...", LOC);
+			// default values. Empty range means that the prog uses the default range of the param
+			string range = "";
+			int nb       = 100;
+			try
+			{
+				range  = varConf.GetAttribute("range");
+			}
+			catch(MkException& e){}
+			try
+			{
+				nb = atof(varConf.GetAttribute("nb").c_str());
+			}
+			catch(MkException& e){}
+
+			const Parameter& param = xr_manager.GetModuleByName(moduleNames.at(0)).GetParameters().GetParameterByName(paramNames.at(0));
+			vector<string> values;
+			param.GenerateValues(nb, values, range);
+
+			// Generate a config for each variation
+			for(vector<string>::const_iterator it = values.begin() ; it != values.end() ; it++)
+			{
+				string variationName;
+				if(x_variationName == "")
+					variationName = paramNames.at(0) + "-" + *it;
+				else
+					variationName = x_variationName + "_" + paramNames.at(0) + "-" + *it;
+
+				// Change value of param
+				targets.at(0)->SetValue(*it);
+				ConfigReader subConf = varConf.GetSubConfig("var");
+				if(subConf.IsEmpty())
+					addSimulationEntry(variationName, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
+				else
+					addVariations(variationName, xr_manager, subConf, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
+
+			}
+		}
+
+		// Set the target back to its original value and delete config obj
+		itval = originalValues.begin();
+		for(ConfigReader* target : targets)
+		{
+			target->SetValue(*itval);
+			delete target;
+			itval++;
+		}
 		varConf = varConf.NextSubConfig("var");
 	}
 }
