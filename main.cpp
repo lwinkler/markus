@@ -329,7 +329,7 @@ void addSimulationEntry(const string& x_variationName, const string& x_outputDir
 }
 
 /// Add variation to simulation
-void addVariation(Manager& xr_manager, const ConfigReader& x_varConf, const string& x_outputDir, ConfigReader& xr_mainConfig, ostream& xr_allTargets, ostream& xr_targets, int& xr_cpt)
+void addVariation(string x_variationName, Manager& xr_manager, const ConfigReader& x_varConf, const string& x_outputDir, ConfigReader& xr_mainConfig, ostream& xr_allTargets, ostream& xr_targets, int& xr_cpt)
 {
 	ConfigReader varConf = x_varConf;
 	while(! varConf.IsEmpty())
@@ -359,11 +359,20 @@ void addVariation(Manager& xr_manager, const ConfigReader& x_varConf, const stri
 		string originalValue = target.GetValue();
 		for(vector<string>::const_iterator it = values.begin() ; it != values.end() ; it++)
 		{
-			string variationName = paramName + "-" + *it;
+			string variationName;
+			if(x_variationName == "")
+				variationName = paramName + "-" + *it;
+			else
+				variationName = x_variationName + "_" + paramName + "-" + *it;
 
 			// Change value of param
 			target.SetValue(*it);
-			addSimulationEntry(variationName, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
+			ConfigReader subConf = x_varConf.GetSubConfig("var");
+			if(subConf.IsEmpty())
+				addSimulationEntry(variationName, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
+			else
+				addVariation(variationName, xr_manager, subConf, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
+
 		}
 		target.SetValue(originalValue);
 		varConf = varConf.NextSubConfig("var");
@@ -391,7 +400,7 @@ bool generateSimulation(ConfigReader& mainConfig, const Context& context, log4cx
 	      .RefSubConfig("variations", "", true).GetSubConfig("var");
 
 	int cpt = 0;
-	addVariation(manager, varConf, outputDir, mainConfig, allTargets, targets, cpt);
+	addVariation("", manager, varConf, outputDir, mainConfig, allTargets, targets, cpt);
 
 	// Generate a MakeFile for the simulation
 	string makefile = outputDir + "/simulation.make";
