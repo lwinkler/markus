@@ -61,7 +61,7 @@ include_directories(${PYTHON_INCLUDE_DIRS})
 include_directories(util bulk modules modules2)
 
 
-set(markus_SRCS main.cpp)
+set(markus_SRCS main.cpp simulation.cpp)
 
 #-------------------------------------------------------------------------------- 
 if(Markus_NO_GUI)
