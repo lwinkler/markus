@@ -28,6 +28,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <jsoncpp/json/reader.h>
 
 using namespace std;
 
@@ -117,14 +118,34 @@ void addVariations(string x_variationName, Manager& xr_manager, const ConfigRead
 
 		if(file != "")
 		{
-			// set values of parameters by file
-			// TODO
+			// set values of parameters by using a JSON file
+			SYSTEM("cp " + file + " " + x_outputDir);
+			ifstream ifs;
+			ifs.open(file);
+			Json::Value root;
+			ifs >> root;
+			if(root.isArray())
+				throw MkException("Range file in JSON must contain an array", LOC);
+
+/*
+			Json::Value::iterator itr = root.begin();
+			while (itr != root.end())
+			{
+				Json::Value single = (*itr);
+				string value = single["key1"];
+				Json::Value::iterator itr2 = root.begin();
+				while (itr != root.end())
+				{
+				}
+			}
+			*/
+			ifs.close();
 		}
 		else
 		{
-			// Set values by using range information
+			// Set values by using range information provided in XML
 			if(paramNames.size() > 1)
-				throw MkException("To set more than one parameter variation, use an external file with file=...", LOC);
+				throw MkException("To set more than one parameter variation, use an external file with option file=...", LOC);
 			// default values. Empty range means that the prog uses the default range of the param
 			string range = "";
 			int nb       = 100;
@@ -159,7 +180,6 @@ void addVariations(string x_variationName, Manager& xr_manager, const ConfigRead
 					addSimulationEntry(variationName, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
 				else
 					addVariations(variationName, xr_manager, subConf, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
-
 			}
 		}
 
