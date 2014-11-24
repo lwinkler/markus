@@ -39,7 +39,8 @@ void addSimulationEntry(const string& x_variationName, const string& x_outputDir
 {
 	// Generate entries for makefile
 	stringstream sd;
-	sd << "simul" << setfill('0') << setw(6) << xr_cpt;
+	// sd << "simul" << setfill('0') << setw(6) << xr_cpt;
+	sd << x_variationName;
 	xr_allTargets << "$(OUTDIR)/results/" <<  sd.str() << " ";
 	xr_targets << "$(OUTDIR)/results/" << sd.str() << ":" << endl;
 	// xr_targets << "\t" << "mkdir -p $(OUTDIR)/results/"  << sd.str() << endl;
@@ -82,8 +83,7 @@ void addVariations(string x_variationName, Manager& xr_manager, const ConfigRead
 			split(varConf.GetAttribute("parameters"), ',', paramNames);
 		}
 		catch(MkException& e)
-		{
-		}
+		{}
 		if(paramNames.empty())
 			paramNames.push_back(varConf.GetAttribute("param"));
 		if(moduleNames.size() != 1 && moduleNames.size() != paramNames.size())
@@ -124,21 +124,35 @@ void addVariations(string x_variationName, Manager& xr_manager, const ConfigRead
 			ifs.open(file);
 			Json::Value root;
 			ifs >> root;
-			if(root.isArray())
-				throw MkException("Range file in JSON must contain an array", LOC);
-
-/*
-			Json::Value::iterator itr = root.begin();
-			while (itr != root.end())
+			Json::Value::Members members1 = root.getMemberNames();
+			for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; ++it1)
 			{
-				Json::Value single = (*itr);
-				string value = single["key1"];
-				Json::Value::iterator itr2 = root.begin();
-				while (itr != root.end())
+				if(!root[*it1].isArray())
+					throw MkException("Range " + *it1 +  " in JSON must contain an array", LOC);
+				if(root[*it1].size() != targets.size())
+					throw MkException("Range " + *it1 +  " in JSON must have the same size as parameters to variate", LOC);
+
+				for(unsigned int i = 0 ; i < root[*it1].size() ; i++)
 				{
+					Json::Value value = root[*it1][i];
+					// cout<<value.asString()<<endl;
+					targets.at(i)->SetValue(value.asString());
 				}
+
+				// find a name
+				string variationName;
+				if(x_variationName == "")
+					variationName = *it1;
+				else
+					variationName = x_variationName + "_" + *it1;
+
+				// Change value of param
+				ConfigReader subConf = varConf.GetSubConfig("var");
+				if(subConf.IsEmpty())
+					addSimulationEntry(variationName, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
+				else
+					addVariations(variationName, xr_manager, subConf, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
 			}
-			*/
 			ifs.close();
 		}
 		else
