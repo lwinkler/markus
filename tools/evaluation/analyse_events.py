@@ -41,7 +41,7 @@ Evaluation = namedtuple('Evaluation',
 Video = namedtuple('Video', 'duration')
 
 # Truth tuple
-Truth = namedtuple('Truth', 'id begin end match_begin match_end is_fall')
+Truth = namedtuple('Truth', 'id begin end match_begin match_end is_valid')
 
 # Global arguments, will be overwriten an runtime
 args = None
@@ -58,14 +58,15 @@ def is_tool(name):
     return True
 
 
-def is_fall(text):
+def is_valid(text):
     """ Function to check if a subtitle is a fall """
-    if text[0:4] == 'anor':
-        return True
-    elif text[0:4] == 'norm':
-        return False
-    else:
-        return None
+    return args.EVENT_NAME in text
+    # if text[0:4] == 'anor':
+        # return True
+    # elif text[0:4] == 'norm':
+        # return False
+    # else:
+        # return None
 
 
 def video_info(video):
@@ -154,7 +155,7 @@ def read_truths(file_path):
     for entry in entries:
 
         # Look if this is a fall
-        fall = is_fall(entry.text)
+        fall = is_valid(entry.text)
 
         # If is is garbage skip
         if not fall or fall is None:
@@ -169,7 +170,7 @@ def read_truths(file_path):
                             end=entry.end,
                             match_begin=match_begin,
                             match_end=match_end,
-                            is_fall=fall))
+                            is_valid=fall))
 
     return truths
 
@@ -491,6 +492,13 @@ def arguments_parser():
                         type=str,
                         default=None,
                         help='the video file')
+
+    # Event name
+    parser.add_argument('-e',
+                        dest='EVENT_NAME',
+                        type=str,
+                        default="anor",
+                        help='the name of the event to match')
 
     # Delay
     parser.add_argument('-d',

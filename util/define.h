@@ -61,10 +61,10 @@ Class &operator=(const Class &);
 	LOG_INFO((logger), str);\
 }
 
-#define SYSTEM(x) {std::string cmd; cmd = (x);\
-	if(system(cmd.c_str())) {\
+#define SYSTEM(x) {std::string Xcmd; Xcmd = (x);\
+	if(system(Xcmd.c_str())) {\
 	std::stringstream ss;\
-	ss<<"Execution of command failed: "<<cmd;\
+	ss<<"Execution of command failed: "<<Xcmd;\
 	throw MkException(ss.str(), LOC);}}
 
 // This function is not implemented (yet)

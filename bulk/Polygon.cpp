@@ -56,7 +56,6 @@ void Polygon::DrawMask(Mat& xr_target, const Scalar& x_color)
 	for(vector<Point>::iterator it = scaledPts.begin() ; it != scaledPts.end() ; it++)
 	{
 		*it  = *itpts * diag;
-	cout<<*it<<"ADSF"<<endl;
 		itpts++;
 	}
 

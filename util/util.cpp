@@ -391,3 +391,16 @@ double diagonal(const Mat& x_image)
 {
 	return sqrt(POW2(x_image.cols) + POW2(x_image.rows));
 }
+
+/**
+* @brief Return the base name of a file (= the name of the file without directory)
+*
+* @param x_pathName
+*
+* @return 
+*/
+std::string basename(const std::string& x_pathName )
+{
+	int lastindex = x_pathName.find_last_of("."); 
+	return x_pathName.substr(0, lastindex);
+}

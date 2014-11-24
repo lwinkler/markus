@@ -52,6 +52,7 @@ LogEvent::LogEvent(const ConfigReader& x_configReader)
 LogEvent::~LogEvent(void)
 {
 	CLEAN_DELETE(mp_annotationWriter);
+	CompareWithGroundTruth();
 }
 
 void LogEvent::Reset()
@@ -158,6 +159,36 @@ void LogEvent::AddExternalImage(const Mat& x_image, const std::string& x_name, c
 	imwrite(x_file, x_image);
 	LOG_DEBUG(m_logger, "Add external file to event " << x_name << ": " << x_file);
 	x_event.AddExternalFile(x_name, x_file);
+}
+
+/// Compare the events previously detected with the ground truth file
+void LogEvent::CompareWithGroundTruth()
+{
+	if(m_param.gtEvent.empty())
+		return;
+	try
+	{
+		string outDir = m_context.GetOutputDir() + "/evaluation";
+		SYSTEM("mkdir -p " + outDir);
+		if(!m_param.gtFile.empty())
+			SYSTEM("cp " + basename(m_param.gtFile) + " " + outDir);
+		stringstream cmd;
+		cmd<<"tools/evaluation/analyse_events.py " << m_context.GetOutputDir() << "/" << m_param.file;
+		// if(m_param.gtFile != "")
+		cmd<< " " << outDir << "/" << basename(m_param.gtFile);
+		cmd<< " --html --no-browser -o " << outDir;
+		if(m_param.gtVideo != "")
+			cmd<<"-i -V "<<m_param.gtVideo;
+		cmd<<" -e "<<m_param.gtEvent;
+		LOG_DEBUG(m_logger, "Execute cmd: " + cmd.str());
+		SYSTEM(cmd.str());
+	}
+	catch(MkException& e)
+	{
+		stringstream ss;
+		ss<<"Error while comparing to ground truth: "<<e.what();
+		LOG_ERROR(m_logger, ss.str());
+	}
 }
 
 
