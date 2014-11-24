@@ -31,10 +31,10 @@ using namespace std;
 /// @brief: This file contains all the functions needed to prepare an optimization and variate parameters of the config
 
 /// Add targets lines for inclusion in Makefile
-void addSimulationEntry(const std::string& x_variationName, const std::string& x_outputDir, const ConfigReader& x_mainConfig, ostream& xr_allTargets, ostream& xr_targets, int& xr_cpt);
+void addSimulationEntry(const std::vector<std::string>& x_variationName, const std::string& x_outputDir, const ConfigReader& x_mainConfig, ostream& xr_allTargets, ostream& xr_targets, int& xr_cpt);
 
 /// Add variation to simulation
-void addVariations(std::string x_variationName, Manager& xr_manager, const ConfigReader& x_varConf, const std::string& x_outputDir, ConfigReader& xr_mainConfig, ostream& xr_allTargets, ostream& xr_targets, int& xr_cpt);
+void addVariations(std::vector<std::string>& x_variationName, Manager& xr_manager, const ConfigReader& x_varConf, const std::string& x_outputDir, ConfigReader& xr_mainConfig, ostream& xr_allTargets, ostream& xr_targets, int& xr_cpt);
 
 
 /// Generate a simulation ready to be launched

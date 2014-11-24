@@ -35,18 +35,19 @@ using namespace std;
 /// @brief: This file contains all the functions needed to prepare an optimization and variate parameters of the config
 
 /// Add targets lines for inclusion in Makefile
-void addSimulationEntry(const string& x_variationName, const string& x_outputDir, const ConfigReader& x_mainConfig, ostream& xr_allTargets, ostream& xr_targets, int& xr_cpt)
+void addSimulationEntry(const vector<string>& x_variationNames, const string& x_outputDir, const ConfigReader& x_mainConfig, ostream& xr_allTargets, ostream& xr_targets, int& xr_cpt)
 {
 	// Generate entries for makefile
 	stringstream sd;
 	// sd << "simul" << setfill('0') << setw(6) << xr_cpt;
-	sd << x_variationName;
+	string name = join(x_variationNames, '_');
+	sd << name;
 	xr_allTargets << "$(OUTDIR)/results/" <<  sd.str() << " ";
 	xr_targets << "$(OUTDIR)/results/" << sd.str() << ":" << endl;
 	// xr_targets << "\t" << "mkdir -p $(OUTDIR)/results/"  << sd.str() << endl;
 	xr_targets << "\t" << "rm -rf $(OUTDIR)/running/"  << sd.str() << 
 		" && cp -r $(OUTDIR)/ready/" << sd.str() << " $(OUTDIR)/running/" << sd.str() << endl;
-	xr_targets << "\t" << "$(EXE) $(PARAMS) $(OUTDIR)/running/" << sd.str() << "/" << x_variationName << ".xml -o $(OUTDIR)/running/"  << sd.str() << endl;
+	xr_targets << "\t" << "$(EXE) $(PARAMS) $(OUTDIR)/running/" << sd.str() << "/" << name << ".xml -o $(OUTDIR)/running/"  << sd.str() << endl;
 	xr_targets << "\t" << "mv $(OUTDIR)/running/" << sd.str() << " $(OUTDIR)/results/" << endl;
 	xr_targets << endl;
 
@@ -54,14 +55,26 @@ void addSimulationEntry(const string& x_variationName, const string& x_outputDir
 	stringstream subdir;
 	subdir << x_outputDir << "/ready/" << sd.str();
 	stringstream xmlProjName;
-	xmlProjName << subdir.str() << "/" << x_variationName << ".xml";
+	xmlProjName << subdir.str() << "/" << name << ".xml";
 	SYSTEM("mkdir -p " + subdir.str());
 	x_mainConfig.SaveToFile(xmlProjName.str());
+
+	// Last but not least:
+	// Register the different variations for summaries
+	// This will allow to aggregate the results
+	for(vector<string>::const_iterator it = x_variationNames.begin() ; it != x_variationNames.end() ; it++)
+	{
+		string fileName = x_outputDir + "/" + *it + ".txt";
+		ofstream ofs(fileName.c_str(), ios_base::app);
+		ofs << x_outputDir << "/results/" << name << "/evaluation" << endl;
+		ofs.close();
+	}
+
 	xr_cpt++;
 }
 
 /// Add variation to simulation
-void addVariations(string x_variationName, Manager& xr_manager, const ConfigReader& x_varConf, const string& x_outputDir, ConfigReader& xr_mainConfig, ostream& xr_allTargets, ostream& xr_targets, int& xr_cpt)
+void addVariations(vector<string>& xr_variationNames, Manager& xr_manager, const ConfigReader& x_varConf, const string& x_outputDir, ConfigReader& xr_mainConfig, ostream& xr_allTargets, ostream& xr_targets, int& xr_cpt)
 {
 	ConfigReader varConf = x_varConf;
 	while(! varConf.IsEmpty())
@@ -139,19 +152,17 @@ void addVariations(string x_variationName, Manager& xr_manager, const ConfigRead
 					targets.at(i)->SetValue(value.asString());
 				}
 
-				// find a name
-				string variationName;
-				if(x_variationName == "")
-					variationName = *it1;
-				else
-					variationName = x_variationName + "_" + *it1;
+				// add a name
+				// TODO: in the future maybe use a hash
+				xr_variationNames.push_back(*it1);
 
 				// Change value of param
 				ConfigReader subConf = varConf.GetSubConfig("var");
 				if(subConf.IsEmpty())
-					addSimulationEntry(variationName, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
+					addSimulationEntry(xr_variationNames, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
 				else
-					addVariations(variationName, xr_manager, subConf, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
+					addVariations(xr_variationNames, xr_manager, subConf, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
+				xr_variationNames.pop_back();
 			}
 			ifs.close();
 		}
@@ -181,19 +192,16 @@ void addVariations(string x_variationName, Manager& xr_manager, const ConfigRead
 			// Generate a config for each variation
 			for(vector<string>::const_iterator it = values.begin() ; it != values.end() ; it++)
 			{
-				string variationName;
-				if(x_variationName == "")
-					variationName = paramNames.at(0) + "-" + *it;
-				else
-					variationName = x_variationName + "_" + paramNames.at(0) + "-" + *it;
+				xr_variationNames.push_back(paramNames.at(0) + "-" + *it);
 
 				// Change value of param
 				targets.at(0)->SetValue(*it);
 				ConfigReader subConf = varConf.GetSubConfig("var");
 				if(subConf.IsEmpty())
-					addSimulationEntry(variationName, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
+					addSimulationEntry(xr_variationNames, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
 				else
-					addVariations(variationName, xr_manager, subConf, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
+					addVariations(xr_variationNames, xr_manager, subConf, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
+				xr_variationNames.pop_back();
 			}
 		}
 
@@ -230,7 +238,8 @@ bool generateSimulation(ConfigReader& mainConfig, const Context& context, log4cx
 	      .RefSubConfig("variations", "", true).GetSubConfig("var");
 
 	int cpt = 0;
-	addVariations("", manager, varConf, outputDir, mainConfig, allTargets, targets, cpt);
+	vector<string> variationNames;
+	addVariations(variationNames, manager, varConf, outputDir, mainConfig, allTargets, targets, cpt);
 
 	// Generate a MakeFile for the simulation
 	string makefile = outputDir + "/simulation.make";
