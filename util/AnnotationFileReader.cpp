@@ -169,7 +169,7 @@ bool AnnotationFileReader::ReadNextAnnotation(string& rx_subText)
 	}
 	catch(MkException& e)
 	{
-		LOG_ERROR(m_logger, "Exception while reading .srt file in AnnotationFileReader: " << e.what()); 
+		LOG_WARN(m_logger, "Exception while reading .srt file in AnnotationFileReader: " << e.what()); 
 		rx_subText = "";
 		m_srtStart = msToTimeStamp(0);
 		m_srtEnd   = msToTimeStamp(0);

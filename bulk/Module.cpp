@@ -273,7 +273,7 @@ bool Module::Process()
 	}
 	catch(...)
 	{
-		LOG_ERROR(m_logger, "Exception in module " << GetName());
+		LOG_WARN(m_logger, "Exception in module " << GetName());
 		m_lock.unlock();
 		throw;
 	}

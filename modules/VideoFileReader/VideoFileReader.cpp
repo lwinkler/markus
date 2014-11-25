@@ -109,10 +109,10 @@ void VideoFileReader::Capture()
 		if(m_param.fps == 0 || (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps > 1000)
 			break;
 	}
-	if(m_countProcessedFrames % 1000 == 0)
+	if(m_countProcessedFrames % 1000 == 0 && m_countProcessedFrames != 0)
 	{
 		stringstream ss;
-		ss << m_capture.get(CV_CAP_PROP_POS_FRAMES) * 100.0 / m_capture.get(CV_CAP_PROP_FRAME_COUNT) << "%:"
+		ss << static_cast<int>(m_capture.get(CV_CAP_PROP_POS_FRAMES) * 100.0 / m_capture.get(CV_CAP_PROP_FRAME_COUNT)) << "%:"
 		   << m_countProcessedFrames << " frames processed";
 		LOG_INFO(m_logger, ss.str());
 	}
