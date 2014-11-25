@@ -171,14 +171,14 @@ void LogEvent::CompareWithGroundTruth()
 		string outDir = m_context.GetOutputDir() + "/evaluation";
 		SYSTEM("mkdir -p " + outDir);
 		if(!m_param.gtFile.empty())
-			SYSTEM("cp " + basename(m_param.gtFile) + " " + outDir);
+			SYSTEM("cp " + m_param.gtFile + " " + outDir);
 		stringstream cmd;
 		cmd<<"tools/evaluation/analyse_events.py " << m_context.GetOutputDir() << "/" << m_param.file;
 		// if(m_param.gtFile != "")
 		cmd<< " " << outDir << "/" << basename(m_param.gtFile);
 		cmd<< " --html --no-browser -o " << outDir;
 		if(m_param.gtVideo != "")
-			cmd<<"-i -V "<<m_param.gtVideo;
+			cmd<<" -i -V "<<m_param.gtVideo;
 		cmd<<" -e "<<m_param.gtEvent;
 		LOG_DEBUG(m_logger, "Execute cmd: " + cmd.str());
 		SYSTEM(cmd.str());

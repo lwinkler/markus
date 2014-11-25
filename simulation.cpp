@@ -29,6 +29,7 @@
 #include <iomanip>
 #include <fstream>
 #include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
 
 using namespace std;
 
@@ -41,6 +42,7 @@ void addSimulationEntry(const vector<string>& x_variationNames, const string& x_
 	stringstream sd;
 	// sd << "simul" << setfill('0') << setw(6) << xr_cpt;
 	string name = join(x_variationNames, '_');
+	cout << "Add entry for variation " << name << endl;
 	sd << name;
 	xr_allTargets << "$(OUTDIR)/results/" <<  sd.str() << " ";
 	xr_targets << "$(OUTDIR)/results/" << sd.str() << ":" << endl;
@@ -112,7 +114,8 @@ void addVariations(vector<string>& xr_variationNames, Manager& xr_manager, const
 		auto itval = originalValues.begin();
 		for(string itpar : paramNames)
 		{
-			*ittar = new ConfigReader(xr_mainConfig.RefSubConfig("application").RefSubConfig("module", *itmod).RefSubConfig("parameters").RefSubConfig("param", itpar));
+			cout << "param:"<< *itmod << ":" << itpar << endl;
+			*ittar = new ConfigReader(xr_mainConfig.RefSubConfig("application").RefSubConfig("module", *itmod).RefSubConfig("parameters").RefSubConfig("param", itpar, true));
 			*itval = (*ittar)->GetValue();
 			ittar++;
 			itval++;
@@ -147,9 +150,18 @@ void addVariations(vector<string>& xr_variationNames, Manager& xr_manager, const
 
 				for(unsigned int i = 0 ; i < root[*it1].size() ; i++)
 				{
-					Json::Value value = root[*it1][i];
+					Json::Value jvalue = root[*it1][i];
 					// cout<<value.asString()<<endl;
-					targets.at(i)->SetValue(value.asString());
+					try
+					{
+						targets.at(i)->SetValue(jvalue.asString());
+					}
+					catch(...)
+					{
+						stringstream ss1;
+						ss1 << jvalue;
+						targets.at(i)->SetValue(ss1.str());
+					}
 				}
 
 				// add a name

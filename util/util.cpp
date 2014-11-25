@@ -401,6 +401,6 @@ double diagonal(const Mat& x_image)
 */
 std::string basename(const std::string& x_pathName )
 {
-	int lastindex = x_pathName.find_last_of("."); 
-	return x_pathName.substr(0, lastindex);
+	int lastindex = x_pathName.find_last_of("/"); 
+	return x_pathName.substr(lastindex + 1);
 }
