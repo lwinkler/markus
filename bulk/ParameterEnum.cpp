@@ -138,6 +138,21 @@ void ParameterEnum::Print(ostream& os) const
 }
 
 /**
+* @brief Create a reverse map. Used internally
+*
+* @return map
+*/
+map<int,string> ParameterEnum::CreateReverseMap(const map<string, int>& x_map)
+{
+	//const map<string, int> map1 = CreateMap();
+	map<int, string> out;
+	for(map<string, int>::const_iterator it = x_map.begin() ; it != x_map.end() ; ++it)
+		out[it->second] = it->first;
+
+	return out;
+}
+
+/**
 * @brief Set the range of acceptable values
 *
 * @param x_range Range in the form "[val1,val2,val3]"

@@ -65,6 +65,8 @@ public:
 	virtual const std::map<int, std::string>& GetReverseEnum() const = 0;
 	
 protected:
+	static std::map<int, std::string> CreateReverseMap(const std::map<std::string, int>& x_map);
+
 	bool m_allowAllValues;
 	std::map<int, bool> m_allowedValues;
 

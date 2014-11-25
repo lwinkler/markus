@@ -77,20 +77,6 @@ map<string,int> ParameterImageType::CreateMap()
 	return map1;
 }
 
-/**
-* @brief Create a reverse map. Used internally
-*
-* @return map
-*/
-map<int,string> ParameterImageType::CreateReverseMap(const map<string, int>& x_map)
-{
-	//const map<string, int> map1 = CreateMap();
-	map<int, string> out;
-	for(map<string, int>::const_iterator it = x_map.begin() ; it != x_map.end() ; ++it)
-		out[it->second] = it->first;
-
-	return out;
-}
 
 ParameterImageType::ParameterImageType(const string& x_name, int x_default, int * xp_value, const string& x_description) :
 	ParameterEnum(x_name, x_default, xp_value, x_description)
