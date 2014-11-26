@@ -56,7 +56,7 @@ def _parse_lines(lines):
 
     # Check input
     if len(lines) == 0:
-        return False
+        return []
 
     # Prepare results array
     entries = []

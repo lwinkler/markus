@@ -68,7 +68,7 @@ void addSimulationEntry(const vector<string>& x_variationNames, const string& x_
 	{
 		string fileName = x_outputDir + "/" + *it + ".txt";
 		ofstream ofs(fileName.c_str(), ios_base::app);
-		ofs << x_outputDir << "/results/" << name << "/evaluation" << endl;
+		ofs << x_outputDir << "/results/" << name << "/analysis" << endl;
 		ofs.close();
 	}
 

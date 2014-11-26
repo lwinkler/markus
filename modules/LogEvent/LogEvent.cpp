@@ -182,6 +182,12 @@ void LogEvent::CompareWithGroundTruth()
 		cmd<<" -e "<<m_param.gtEvent;
 		LOG_DEBUG(m_logger, "Execute cmd: " + cmd.str());
 		SYSTEM(cmd.str());
+
+		// Save command for later use
+		string fileName = m_context.GetOutputDir() + "/eval.sh";
+		ofstream ofs(fileName.c_str(), ios_base::app);
+		ofs << cmd.str();
+		ofs.close();
 	}
 	catch(MkException& e)
 	{

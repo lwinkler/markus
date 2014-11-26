@@ -106,7 +106,7 @@ def extract_images(events, truths, video, out='out'):
 
     # The function to extract a precise image
     def extract(kind, time, name):
-        subprocess.Popen([cmd, '-ss', str(time), '-i', str(video),
+        subprocess.call([cmd, '-ss', str(time), '-i', str(video),
                          '-frames:v', '1',
                          os.path.join(path, str(kind) + '_' + str(name) +
                                       '.jpg'), '-y'], stderr=subprocess.PIPE)
@@ -314,7 +314,7 @@ def video_thumbnail(video, path):
     else:
         cmd = 'ffmpeg'
 
-    subprocess.Popen([cmd, '-i', str(video), '-frames:v', '1',
+    subprocess.call([cmd, '-i', str(video), '-frames:v', '1',
                      os.path.join(path, 'thumbnail.jpg'), '-y'],
                      stderr=subprocess.PIPE)
 
