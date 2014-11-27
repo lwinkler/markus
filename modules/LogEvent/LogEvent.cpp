@@ -168,7 +168,7 @@ void LogEvent::CompareWithGroundTruth()
 		return;
 	try
 	{
-		string outDir = m_context.GetOutputDir() + "/evaluation";
+		string outDir = m_context.GetOutputDir() + "/analysis";
 		SYSTEM("mkdir -p " + outDir);
 		if(!m_param.gtFile.empty())
 			SYSTEM("cp " + m_param.gtFile + " " + outDir);
