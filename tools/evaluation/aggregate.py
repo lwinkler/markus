@@ -21,8 +21,16 @@ from analyse_events import Evaluation, Video, statistics
 
 def list_analyses(path, dirname='analysis', checkname='evals.pkl'):
     """ Return the list of evaluations made successfully """
-    # Get all folders
-    evals = os.listdir(path)
+    if args.LIST_FILE:
+        evals = []
+        with open (args.LIST_FILE, "r") as myfile:
+            while 1:
+                line = myfile.readline()
+                if not line:break
+                evals += [line.replace('\n', '')]
+    else:
+        # Get all folders
+        evals = os.listdir(path)
 
     # Filter
     is_valid = lambda x: os.path.exists(os.path.join(path, x,
@@ -43,7 +51,7 @@ def read_analyses(path, analyses, dirname='analysis'):
         yield (a, evals, stats)
 
 
-def generate_html(path, datas, dirname='analysis', filename='report.html'):
+def generate_html(path, datas, dirname='analysis', filename='summary.html'):
     """ Generate an HTML report """
     # Prepare datas
     datas = sorted(list(datas))
@@ -99,7 +107,7 @@ def generate_html(path, datas, dirname='analysis', filename='report.html'):
     row = TR(style='background: lightgray;')
     row <= TH('Statistics')
     for col in datas:
-        row <= TH(A(B(col[0].split('_')[0]), href=os.path.join(col[0], dirname, filename)))
+        row <= TH(A(B(col[0].split('_')[0]), href=os.path.join(col[0], dirname, 'report.html')))
     row <= TH('Overall')
     table <= row
     row = TR()
@@ -151,6 +159,21 @@ def arguments_parser():
                         type=str,
                         help='the run path of a finished evaluation')
 
+
+    # No browser
+    parser.add_argument('-f',
+                        dest='LIST_FILE',
+                        type=str,
+                        default="",
+                        help='use a simple text file to list the directories to analyse')
+
+    # No browser
+    parser.add_argument('-o',
+                        dest='OUTPUT_FILE',
+                        type=str,
+                        default="summary.html",
+                        help='use a simple text file to list the directories to analyse')
+
     # No browser
     parser.add_argument('--no-browser',
                         action='store_true',
@@ -176,7 +199,7 @@ def main():
     datas = read_analyses(rpath, analyses)
 
     # Generate html report
-    generate_html(rpath, datas)
+    generate_html(rpath, datas, filename=args.OUTPUT_FILE)
 
 
 if __name__ == '__main__':

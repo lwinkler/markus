@@ -108,7 +108,7 @@ void adjustSize(const Mat& im_in, Mat& im_out)
 		if(im_in.cols == im_out.cols && im_in.rows == im_out.rows)
 			im_in.copyTo(im_out);
 		else
-			resize(im_in, im_out, im_out.size(), CV_INTER_NN);
+			resize(im_in, im_out, im_out.size(), CV_INTER_NN); // TODO: This is wrong see doc opencv
 	}
 }
 
