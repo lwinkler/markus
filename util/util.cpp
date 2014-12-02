@@ -27,7 +27,7 @@
 #include <fstream>
 #include <cstdio>
 #include <opencv2/opencv.hpp>
-// #include <opencv2/highgui/highgui.hpp>
+#include <execinfo.h>
 
 using namespace std;
 using namespace cv;
@@ -91,6 +91,29 @@ Scalar g_colorArray[] =
 	CV_RGB(255, 140, 0),
 	CV_RGB(175, 238, 238)
 };
+
+/// Handler for errors and exceptions: print full stack without symbols
+void printStack(int sig)
+{
+	static const int max_frames = 100;
+	void* addrlist[max_frames+1];
+	size_t size;
+	stringstream ss;
+
+	// print out all the frames to stderr
+	ss << "Error: signal " << sig <<endl;
+
+	// retrieve current stack addresses
+	size_t addrlen = backtrace(addrlist, sizeof(addrlist) / sizeof(void*));
+	FILE* pf = fopen("markus.error", "w");
+	int  fd = fileno(pf);
+
+	// Print stack trace (without symbols) to file and stderr
+	backtrace_symbols_fd(addrlist, addrlen, fd);
+	backtrace_symbols_fd(addrlist, addrlen, STDERR_FILENO);
+	fclose(pf);
+	exit(1);
+}
 
 
 

@@ -35,7 +35,9 @@
 #include "MarkusApplication.h"
 #endif
 
+#include <signal.h>
 #include <iostream>
+#include <fstream>
 #include <cstdio>
 #include <log4cxx/xml/domconfigurator.h>
 #include <getopt.h>    /* for getopt_long; standard getopt is in unistd.h */
@@ -72,7 +74,6 @@ void usage()
 	printf(" -x  --xml extra_config.xml\n");
 	printf("                       Override some parameters in an extra XML file\n");
 }
-
 
 /// Specific thread dedicated to the reading of commands via stdin
 void *send_commands(void *x_void_ptr)
@@ -295,7 +296,7 @@ void launchEditor(int argc, char** argv)
 		projectFile = argv[2];
 	Editor editor(projectFile);
 	app.exec();
-	exit(1); // TODO: See what to do here
+	exit(0);
 #else
 	LOG_ERROR(logger, "To launch the editor Markus must be compiled with GUI");
 	exit(-1);
@@ -305,6 +306,9 @@ void launchEditor(int argc, char** argv)
 
 int main(int argc, char** argv)
 {
+	// Install error handler
+	signal(SIGSEGV, printStack); // Segfault
+
 	// Load XML configuration file using DOMConfigurator
 	log4cxx::LoggerPtr logger(log4cxx::Logger::getLogger("main"));
 	int returnValue  = -1;
@@ -321,7 +325,7 @@ int main(int argc, char** argv)
 	try
 	{
 		LOG_INFO(logger, Context::Version(true));
-		ConfigReader mainConfig(args.configFile); // TODO: segfault if file non-existant. Fix
+		ConfigReader mainConfig(args.configFile);
 		mainConfig.Validate();
 		ConfigReader appConfig = mainConfig.GetSubConfig("application");
 		assert(!appConfig.IsEmpty());
