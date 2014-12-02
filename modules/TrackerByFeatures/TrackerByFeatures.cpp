@@ -269,7 +269,9 @@ void TrackerByFeatures::CleanTemplates()
 {
 	int cptCleaned = 0;
 	int cptTotal = 0;
+#ifdef MARKUS_DEBUG_STREAMS
 	const double diagonal = sqrt(m_param.width * m_param.width + m_param.height * m_param.height);
+#endif
 	TIME_STAMP timeStampClean = m_currentTimeStamp - m_param.timeDisappear * 1000;
 
 	for(list<Template>::iterator it1 = m_templates.begin() ; it1 != m_templates.end(); ++it1)

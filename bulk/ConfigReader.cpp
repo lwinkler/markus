@@ -92,7 +92,7 @@ ConfigReader::~ConfigReader()
 *
 * @return config object
 */
-ConfigReader ConfigReader::GetSubConfig(const string& x_objectType, string x_objectName) const
+ConfigReader ConfigReader::GetSubConfig(const string& x_objectType, const string& x_objectName) const
 {
 	if(IsEmpty())
 		throw MkException("Impossible to find node " + x_objectType + " in ConfigReader with name \"" + x_objectName + "\"" , LOC);
@@ -118,7 +118,7 @@ ConfigReader ConfigReader::GetSubConfig(const string& x_objectType, string x_obj
 *
 * @return config object
 */
-ConfigReader ConfigReader::RefSubConfig(const string& x_objectType, string x_objectName, bool x_allowCreation) // TODO const& for all
+ConfigReader ConfigReader::RefSubConfig(const string& x_objectType, const string& x_objectName, bool x_allowCreation)
 {
 	if(IsEmpty())
 		throw MkException("Impossible to find node " + x_objectType + " in ConfigReader with name \"" + x_objectName + "\"" , LOC);
@@ -153,7 +153,7 @@ ConfigReader ConfigReader::RefSubConfig(const string& x_objectType, string x_obj
 *
 * @return config object
 */
-ConfigReader ConfigReader::NextSubConfig(const string& x_objectType, string x_objectName) const
+ConfigReader ConfigReader::NextSubConfig(const string& x_objectType, const string& x_objectName) const
 {
 	if(IsEmpty())
 		throw MkException("Impossible to find node " + x_objectType + " in ConfigReader with name \"" + x_objectName + "\"" , LOC);
@@ -199,7 +199,7 @@ const string ConfigReader::GetAttribute(const string& x_attributeName) const
 * @param x_attributeName Name of the attribute
 * @param x_value         Value to set
 */
-void ConfigReader::SetAttribute(const string& x_attributeName, string x_value)
+void ConfigReader::SetAttribute(const string& x_attributeName, const string& x_value)
 {
 	if(IsEmpty())
 		throw MkException("Impossible to find attribute " + x_attributeName + " in ConfigReader" , LOC);

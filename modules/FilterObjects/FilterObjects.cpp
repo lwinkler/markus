@@ -78,8 +78,6 @@ void FilterObjects::ProcessFrame()
 		const Rect &rect(it->Rect());
 		const FeatureFloat& width  = dynamic_cast<const FeatureFloat&>(it->GetFeature("width"));
 		const FeatureFloat& height = dynamic_cast<const FeatureFloat&>(it->GetFeature("height"));
-		const FeatureFloatInTime* posX = NULL;
-		const FeatureFloatInTime* posY = NULL;
 		// const Feature& distance = it->GetFeatureByName("distance", featureNames);
 
 		if(	(m_param.minObjectWidth > 0 && width.value < m_param.minObjectWidth) ||
@@ -90,6 +88,8 @@ void FilterObjects::ProcessFrame()
 			valid = false;
 		}
 
+		const FeatureFloatInTime* posX = NULL;
+		const FeatureFloatInTime* posY = NULL;
 		// cout<<POW2(posX.value - posX.initial) + POW2(posY.value - posY.initial)<<" >= "<<POW2(m_param.minDist)<<endl;
 		if(sqDist > 0)
 		{

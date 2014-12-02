@@ -43,9 +43,9 @@ public:
 	ConfigReader(const std::string& x_fileName, bool x_allowCreation=false);
 	ConfigReader(TiXmlNode * xp_node);
 	~ConfigReader();
-	ConfigReader GetSubConfig(const std::string& x_objectType, std::string x_objectName = "") const;
-	ConfigReader RefSubConfig(const std::string& x_objectType, std::string x_objectName = "", bool x_allowCreation = false);
-	ConfigReader NextSubConfig(const std::string& x_objectType, std::string x_objectName = "") const;
+	ConfigReader GetSubConfig(const std::string& x_objectType, const std::string& x_objectName = "") const;
+	ConfigReader RefSubConfig(const std::string& x_objectType, const std::string& x_objectName = "", bool x_allowCreation = false);
+	ConfigReader NextSubConfig(const std::string& x_objectType, const std::string& x_objectName = "") const;
 	/// Check if the config object is empty
 	inline bool IsEmpty() const{return mp_doc == NULL && mp_node == NULL;}
 	const std::string GetValue() const;
@@ -57,7 +57,7 @@ public:
 		SetValue(ss.str());
 	}
 	const std::string GetAttribute(const std::string& x_attributeName) const;
-	void SetAttribute(const std::string& x_attributeName, std::string x_value);
+	void SetAttribute(const std::string& x_attributeName, const std::string& x_value);
 	void SaveToFile(const std::string& x_file) const;
 	void Validate() const;
 	/// Redefinition of == operator

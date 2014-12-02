@@ -52,7 +52,15 @@ class FeaturePtr // : public Serializable
 		FeaturePtr(Feature* x_feat) : mp_feat(x_feat){}
 		FeaturePtr(const FeaturePtr& x_feat) : mp_feat(x_feat->CreateCopy()) {}
 		~FeaturePtr(){delete mp_feat;}
-		FeaturePtr& operator = (const FeaturePtr& x_feat){delete(mp_feat); mp_feat = (*x_feat).CreateCopy(); return *this;}
+		FeaturePtr& operator = (const FeaturePtr& x_feat)
+		{
+			if(this != &x_feat)
+			{
+				delete(mp_feat); 
+				mp_feat = x_feat->CreateCopy();
+			}
+			return *this;
+		}
 		inline const Feature& operator*  () const {return *mp_feat;}
 		inline const Feature* operator-> () const {return mp_feat;}
 

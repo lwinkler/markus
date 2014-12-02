@@ -361,7 +361,7 @@ void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qimg)
 	{
 		for (int x = 0; x < w; x++)
 		{
-			char r = 0, g = 0, b = 0, a = 0;
+			char r = 0, g = 0, b = 0;
 			if (channels == 1)
 			{
 				r = data[x * channels];
@@ -377,7 +377,7 @@ void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qimg)
 			
 			if (channels == 4)
 			{
-				a = data[x * channels + 3];
+				char a = data[x * channels + 3];
 				qimg->setPixel(x, y, qRgba(r, g, b, a));
 			}
 			else
