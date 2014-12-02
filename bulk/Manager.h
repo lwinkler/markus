@@ -49,12 +49,14 @@ public:
 			m_list.push_back(new ParameterBool("fast", 0, 0, 1,           &fast, "Run as fast as possible: Inputs are not in real-time"));
 			m_list.push_back(new ParameterString("archive_dir", "",       &archiveDir, "If specified the data is copied inside this directory for archive"));
 			m_list.push_back(new ParameterInt("nb_frames", 0, 0, INT_MAX, &nbFrames, "Number of frames to process. 0 for infinite. Only works in centralized mode"));
+			m_list.push_back(new ParameterString("arguments", "",         &arguments, "Command-line arguments, for storage only"));
 			ParameterStructure::Init();
 		}
 		bool autoClean;
 		bool fast;
 		std::string archiveDir;
 		int nbFrames;
+		std::string arguments; // TODO: See what to do in normal case
 	};
 
 	Manager(const ConfigReader& x_configReader);
@@ -63,7 +65,7 @@ public:
 	virtual bool Process();
 	void SendCommand(const std::string& x_command, std::string x_value);
 	const std::vector<Module*>& GetModules() const {return m_modules; }
-	inline const Module& GetModuleByName(const std::string& x_name) const {return RefModuleByName(x_name);};
+	inline const Processable& GetModuleByName(const std::string& x_name) const {if(x_name == "manager") assert(false); else return RefModuleByName(x_name);};
 	
 	void Connect();
 	void Export();
@@ -83,11 +85,11 @@ public:
 		for(std::vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
 			(*it)->SetContext(x_context);
 	}
+	inline virtual const Parameters& GetParameters() const {return m_param;}
 
 protected:
 	Module& RefModuleById(int x_id) const;
 	Module& RefModuleByName(const std::string& x_name) const;
-	inline virtual const Parameters& GetParameters() const {return m_param;}
 	void NotifyException(const MkException& x_exeption);
 
 	bool m_isConnected;

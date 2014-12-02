@@ -44,12 +44,19 @@ void addSimulationEntry(const vector<string>& x_variationNames, const string& x_
 	string name = join(x_variationNames, '_');
 	cout << "Add entry for variation " << name << endl;
 	sd << name;
+	string arguments;
+	try
+	{
+		arguments = x_mainConfig.GetSubConfig("application").GetSubConfig("parameters").GetSubConfig("param", "arguments").GetValue();
+	}
+	catch(MkException &e){}
 	xr_allTargets << "$(OUTDIR)/results/" <<  sd.str() << " ";
 	xr_targets << "$(OUTDIR)/results/" << sd.str() << ":" << endl;
 	// xr_targets << "\t" << "mkdir -p $(OUTDIR)/results/"  << sd.str() << endl;
 	xr_targets << "\t" << "rm -rf $(OUTDIR)/running/"  << sd.str() << 
 		" && cp -r $(OUTDIR)/ready/" << sd.str() << " $(OUTDIR)/running/" << sd.str() << endl;
-	xr_targets << "\t" << "$(EXE) $(PARAMS) $(OUTDIR)/running/" << sd.str() << "/" << name << ".xml -o $(OUTDIR)/running/"  << sd.str() << endl;
+	xr_targets << "\t" << "$(EXE) $(PARAMS) $(OUTDIR)/running/" << sd.str() << "/" << name << ".xml -o $(OUTDIR)/running/" << sd.str() <<
+		" " << arguments << endl;
 	xr_targets << "\t" << "mv $(OUTDIR)/running/" << sd.str() << " $(OUTDIR)/results/" << endl;
 	xr_targets << endl;
 
@@ -115,7 +122,10 @@ void addVariations(vector<string>& xr_variationNames, Manager& xr_manager, const
 		for(string itpar : paramNames)
 		{
 			cout << "param:"<< *itmod << ":" << itpar << endl;
-			*ittar = new ConfigReader(xr_mainConfig.RefSubConfig("application").RefSubConfig("module", *itmod).RefSubConfig("parameters").RefSubConfig("param", itpar, true));
+			if(*itmod == "manager")
+				*ittar = new ConfigReader(xr_mainConfig.RefSubConfig("application").RefSubConfig("parameters", "", true).RefSubConfig("param", itpar, true));
+			else
+				*ittar = new ConfigReader(xr_mainConfig.RefSubConfig("application").RefSubConfig("module", *itmod).RefSubConfig("parameters", "", true).RefSubConfig("param", itpar, true));
 			*itval = (*ittar)->GetValue();
 			ittar++;
 			itval++;
@@ -197,7 +207,9 @@ void addVariations(vector<string>& xr_variationNames, Manager& xr_manager, const
 			}
 			catch(MkException& e){}
 
+cout<<moduleNames.at(0)<<endl;
 			const Parameter& param = xr_manager.GetModuleByName(moduleNames.at(0)).GetParameters().GetParameterByName(paramNames.at(0));
+			cout<<"asdfasf"<<endl;
 			vector<string> values;
 			param.GenerateValues(nb, values, range);
 
