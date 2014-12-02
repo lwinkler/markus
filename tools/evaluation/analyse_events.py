@@ -282,7 +282,7 @@ def statistics(evaluation, video=None):
         stats['Video related'] = ('-' * 20, '%s')
         stats['Video duration'] = (v.duration, '%s')
         stats['False alarm rate'] = (float(e.fp * 60 * 60 * 1000) /
-                                     v.duration.milis, '%.1f alarms/hour')
+                                     v.duration.milis, '%.3f alarms/hour')
 
     return stats
 
