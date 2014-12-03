@@ -351,7 +351,7 @@ int main(int argc, char** argv)
 		{
 			Simulation sim(mainConfig.GetSubConfig("application").GetSubConfig("variations"));
 			sim.Generate(mainConfig, context);
-			return true;
+			return 0;
 		}
 			
 

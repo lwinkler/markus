@@ -26,6 +26,7 @@
 
 #include "Manager.h"
 #include "ConfigReader.h"
+#include <sstream>
 
 using namespace std;
 
@@ -37,16 +38,24 @@ class Simulation : public Configurable
 public:
 	Simulation(const ConfigReader& x_configReader);
 	void Generate(ConfigReader& mainConfig, const Context& context);
+
 protected:
 	/// Add an entry in the Makefile
-	void AddSimulationEntry(const vector<string>& x_variationNames, const string& x_outputDir, const ConfigReader& x_mainConfig, ostream& xr_allTargets, ostream& xr_targets, int& xr_cpt);
+	void AddSimulationEntry(const vector<string>& x_variationNames, const ConfigReader& x_mainConfig);
 	/// Add variation to simulation
-	void AddVariations(std::vector<std::string>& x_variationName, Manager& xr_manager, const ConfigReader& x_varConf, const std::string& x_outputDir, ConfigReader& xr_mainConfig, ostream& xr_allTargets, ostream& xr_targets, int& xr_cpt);
+	void AddVariations(std::vector<std::string>& x_variationName, Manager& xr_manager, const ConfigReader& x_varConf, ConfigReader& xr_mainConfig);
 
 
 	/// Generate a simulation ready to be launched
 	bool GenerateSimulation(ConfigReader& mainConfig, const Context& context, log4cxx::LoggerPtr& logger);
 	virtual const ParameterStructure & GetParameters() const {return m_param;};
+
+	// Streams for generation of the simulation Makefile
+	std::stringstream m_allTargets;
+	std::stringstream m_targets;
+
+	const std::string m_outputDir;
+	int m_cpt;
 
 private:
 	static log4cxx::LoggerPtr m_logger;
