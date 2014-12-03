@@ -37,9 +37,10 @@ log4cxx::LoggerPtr Simulation::m_logger(log4cxx::Logger::getLogger("Simulation")
 
 
 
-Simulation::Simulation(const ConfigReader& x_configReader) :
+Simulation::Simulation(const ConfigReader& x_configReader, const Manager& x_manager) :
 	Configurable(x_configReader),
 	m_param(x_configReader),
+	m_manager(x_manager),
 	m_outputDir("simulation_" + timeStamp())
 {
 }
@@ -92,7 +93,7 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 }
 
 /// Add variation to simulation
-void Simulation::AddVariations(vector<string>& xr_variationNames, Manager& xr_manager, const ConfigReader& x_varConf, ConfigReader& xr_mainConfig)
+void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigReader& x_varConf, ConfigReader& xr_mainConfig)
 {
 	ConfigReader varConf = x_varConf;
 	while(! varConf.IsEmpty())
@@ -163,9 +164,9 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, Manager& xr_ma
 			for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; ++it1)
 			{
 				if(!root[*it1].isArray())
-					throw MkException("Range " + *it1 +  " in JSON must contain an array", LOC);
+					throw MkException("Range " + *it1 + " in JSON must contain an array", LOC);
 				if(root[*it1].size() != targets.size())
-					throw MkException("Range " + *it1 +  " in JSON must have the same size as parameters to variate", LOC);
+					throw MkException("Range " + *it1 + " in JSON must have the same size as parameters to variate", LOC);
 
 				for(unsigned int i = 0 ; i < root[*it1].size() ; i++)
 				{
@@ -192,7 +193,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, Manager& xr_ma
 				if(subConf.IsEmpty())
 					AddSimulationEntry(xr_variationNames, xr_mainConfig);
 				else
-					AddVariations(xr_variationNames, xr_manager, subConf, xr_mainConfig);
+					AddVariations(xr_variationNames, subConf, xr_mainConfig);
 				xr_variationNames.pop_back();
 			}
 			ifs.close();
@@ -207,7 +208,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, Manager& xr_ma
 			int nb       = 10;
 			try
 			{
-				range  = varConf.GetAttribute("range");
+				range = varConf.GetAttribute("range");
 			}
 			catch(MkException& e){}
 			// TODO: impl in class configreader
@@ -216,7 +217,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, Manager& xr_ma
 				nb = atof(str.c_str());
 
 			LOG_DEBUG(m_logger, "Variation for module " << moduleNames.at(0));
-			const Parameter& param = xr_manager.GetModuleByName(moduleNames.at(0)).GetParameters().GetParameterByName(paramNames.at(0));
+			const Parameter& param = m_manager.GetModuleByName(moduleNames.at(0)).GetParameters().GetParameterByName(paramNames.at(0));
 			vector<string> values;
 			param.GenerateValues(nb, values, range);
 
@@ -232,7 +233,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, Manager& xr_ma
 				if(subConf.IsEmpty())
 					AddSimulationEntry(xr_variationNames, xr_mainConfig);
 				else
-					AddVariations(xr_variationNames, xr_manager, subConf, xr_mainConfig);
+					AddVariations(xr_variationNames, subConf, xr_mainConfig);
 				xr_variationNames.pop_back();
 			}
 		}
@@ -251,7 +252,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, Manager& xr_ma
 
 
 /// Generate a simulation ready to be launched
-void Simulation::Generate(ConfigReader& mainConfig, const Context& context)
+void Simulation::Generate(ConfigReader& mainConfig)
 {
 	SYSTEM("mkdir -p " + m_outputDir);
 	SYSTEM("ln -sfn " + m_outputDir + " simulation_latest");
@@ -259,21 +260,15 @@ void Simulation::Generate(ConfigReader& mainConfig, const Context& context)
 	SYSTEM("mkdir -p " + m_outputDir + "/ready");
 	SYSTEM("mkdir -p " + m_outputDir + "/running");
 	SYSTEM("mkdir -p " + m_outputDir + "/results");
+
+	// Initialize members
 	m_allTargets.str("");
 	m_targets.str("");
 	m_cpt = 0;
 
-	{
-		// note: This {} exist only to change the order of logging
-		Manager manager(mainConfig.GetSubConfig("application"));
-		manager.SetContext(context);
-
-		ConfigReader varConf = m_configReader.GetSubConfig("var");
-
-		int cpt = 0;
-		vector<string> variationNames;
-		AddVariations(variationNames, manager, varConf, mainConfig);
-	}
+	ConfigReader varConf = m_configReader.GetSubConfig("var");
+	vector<string> variationNames;
+	AddVariations(variationNames, varConf, mainConfig);
 
 	// Generate a MakeFile for the simulation
 	string makefile = m_outputDir + "/simulation.make";

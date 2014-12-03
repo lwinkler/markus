@@ -36,30 +36,38 @@ using namespace std;
 class Simulation : public Configurable
 {
 public:
-	Simulation(const ConfigReader& x_configReader);
-	void Generate(ConfigReader& mainConfig, const Context& context);
+	class Parameters : public Processable::Parameters
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : Processable::Parameters(x_confReader)
+		{
+			ParameterStructure::Init();
+		}
+	};
+
+	Simulation(const ConfigReader& x_configReader, const Manager& x_manager);
+	void Generate(ConfigReader& mainConfig);
 
 protected:
 	/// Add an entry in the Makefile
 	void AddSimulationEntry(const vector<string>& x_variationNames, const ConfigReader& x_mainConfig);
+
 	/// Add variation to simulation
-	void AddVariations(std::vector<std::string>& x_variationName, Manager& xr_manager, const ConfigReader& x_varConf, ConfigReader& xr_mainConfig);
+	void AddVariations(std::vector<std::string>& x_variationNames, const ConfigReader& x_varConf, ConfigReader& xr_mainConfig);
 
-
-	/// Generate a simulation ready to be launched
-	bool GenerateSimulation(ConfigReader& mainConfig, const Context& context, log4cxx::LoggerPtr& logger);
 	virtual const ParameterStructure & GetParameters() const {return m_param;};
 
 	// Streams for generation of the simulation Makefile
 	std::stringstream m_allTargets;
 	std::stringstream m_targets;
 
+	const Manager& m_manager;
 	const std::string m_outputDir;
 	int m_cpt;
 
 private:
 	static log4cxx::LoggerPtr m_logger;
-	Manager::Parameters m_param; // note: to save time
-        inline Manager::Parameters& RefParameters() {return m_param;}
+	Parameters m_param; // note: to save time
+	inline Parameters& RefParameters() {return m_param;}
 };
 #endif
