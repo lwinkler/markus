@@ -188,7 +188,7 @@ const string ConfigReader::GetAttribute(const string& x_attributeName) const
 
 	const string * str = element->Attribute(x_attributeName);
 	if(str == NULL)
-		return "";
+		return ""; // TODO: throw ?
 	else
 		return *str;
 }

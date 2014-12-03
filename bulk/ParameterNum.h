@@ -133,6 +133,7 @@ public:
 		{
 			// x_nbSamples values in range
 			double incr = static_cast<double>(max - min) / x_nbSamples;
+			// std::cout << x_nbSamples << std::endl;
 			for(int i = 0 ; i <= x_nbSamples ; i++)
 			{
 				std::stringstream ss;

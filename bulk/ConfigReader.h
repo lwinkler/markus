@@ -42,7 +42,10 @@ class ConfigReader
 public:
 	ConfigReader(const std::string& x_fileName, bool x_allowCreation=false);
 	ConfigReader(TiXmlNode * xp_node);
+	ConfigReader(const ConfigReader& x_conf);
 	~ConfigReader();
+	ConfigReader& operator = (const ConfigReader& x_conf);
+
 	ConfigReader GetSubConfig(const std::string& x_objectType, const std::string& x_objectName = "") const;
 	ConfigReader RefSubConfig(const std::string& x_objectType, const std::string& x_objectName = "", bool x_allowCreation = false);
 	ConfigReader NextSubConfig(const std::string& x_objectType, const std::string& x_objectName = "") const;

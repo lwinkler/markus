@@ -209,11 +209,10 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, Manager& xr_ma
 				range  = varConf.GetAttribute("range");
 			}
 			catch(MkException& e){}
-			try
-			{
-				nb = atof(varConf.GetAttribute("nb").c_str());
-			}
-			catch(MkException& e){}
+			// TODO: impl in class configreader
+			string str = varConf.GetAttribute("nb");
+			if(str != "")
+				nb = atof(str.c_str());
 
 			LOG_DEBUG(m_logger, "Variation for module " << moduleNames.at(0));
 			const Parameter& param = xr_manager.GetModuleByName(moduleNames.at(0)).GetParameters().GetParameterByName(paramNames.at(0));
@@ -223,6 +222,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, Manager& xr_ma
 			// Generate a config for each variation
 			for(vector<string>::const_iterator it = values.begin() ; it != values.end() ; it++)
 			{
+				LOG_DEBUG(m_logger, "Value = " << *it);
 				xr_variationNames.push_back(paramNames.at(0) + "-" + *it);
 
 				// Change value of param

@@ -3,9 +3,9 @@
   
 <variations>
 <var modules="Input,LogEvent,TempDiff,LogEvent" parameters="file,gt_file,zone_forbidden,gt_video" file="tools/evaluation/sets/sztr_subset1.json"><!-- TODO: fix zone_forbidden -->
-<var module="MotionDetector" param="motion_thres" values="3" />
+<var module="MotionDetector" param="motion_thres" nb="3" />
 </var>
-<var module="TempDiff" param="fps" values="4" />
+<var module="TempDiff" param="fps" range="[1:10]" nb="4" />
 </variations>
   
   
