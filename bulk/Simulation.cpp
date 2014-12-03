@@ -39,7 +39,7 @@ log4cxx::LoggerPtr Simulation::m_logger(log4cxx::Logger::getLogger("Simulation")
 
 Simulation::Simulation(const ConfigReader& x_configReader) :
 	Configurable(x_configReader),
-	m_param(x_configReader.GetSubConfig("application")) // TODO: fix
+	m_param(x_configReader)
 {
 }
 
@@ -77,11 +77,11 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 	x_mainConfig.SaveToFile(xmlProjName.str());
 
 	// Last but not least:
-	// Register the different variations for summaries
+	// Register the different variations for summaries in .txt files
 	// This will allow to aggregate the results
-	for(vector<string>::const_iterator it = x_variationNames.begin() ; it != x_variationNames.end() ; it++)
+	for(auto it : x_variationNames)
 	{
-		string fileName = x_outputDir + "/" + *it + ".txt";
+		string fileName = x_outputDir + "/" + it + ".txt";
 		ofstream ofs(fileName.c_str(), ios_base::app);
 		ofs << name << endl;
 		ofs.close();
@@ -262,15 +262,17 @@ void Simulation::Generate(ConfigReader& mainConfig, const Context& context)
 	stringstream  allTargets;
 	stringstream targets;
 
-	Manager manager(mainConfig.GetSubConfig("application"));
-	manager.SetContext(context);
+	{
+		// note: This {} exist only to change the order of logging
+		Manager manager(mainConfig.GetSubConfig("application"));
+		manager.SetContext(context);
 
-	ConfigReader varConf = mainConfig.RefSubConfig("application")
-	      .RefSubConfig("variations", "", true).GetSubConfig("var");
+		ConfigReader varConf = m_configReader.GetSubConfig("var");
 
-	int cpt = 0;
-	vector<string> variationNames;
-	AddVariations(variationNames, manager, varConf, outputDir, mainConfig, allTargets, targets, cpt);
+		int cpt = 0;
+		vector<string> variationNames;
+		AddVariations(variationNames, manager, varConf, outputDir, mainConfig, allTargets, targets, cpt);
+	}
 
 	// Generate a MakeFile for the simulation
 	string makefile = outputDir + "/simulation.make";

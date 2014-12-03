@@ -44,7 +44,7 @@ public:
 	ConfigReader(TiXmlNode * xp_node);
 	ConfigReader(const ConfigReader& x_conf);
 	~ConfigReader();
-	ConfigReader& operator = (const ConfigReader& x_conf);
+	const ConfigReader& operator = (const ConfigReader& x_conf);
 
 	ConfigReader GetSubConfig(const std::string& x_objectType, const std::string& x_objectName = "") const;
 	ConfigReader RefSubConfig(const std::string& x_objectType, const std::string& x_objectName = "", bool x_allowCreation = false);

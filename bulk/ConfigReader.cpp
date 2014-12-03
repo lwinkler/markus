@@ -77,6 +77,21 @@ ConfigReader::ConfigReader(TiXmlNode * xp_node)
 	mp_node = xp_node;
 }
 
+ConfigReader::ConfigReader(const ConfigReader& x_conf)
+{
+	m_isOriginal = false;
+	mp_doc       = x_conf.mp_doc;
+	mp_node      = x_conf.mp_node;
+}
+
+const ConfigReader& ConfigReader::operator = (const ConfigReader& x_conf)
+{
+	m_isOriginal = false;
+	mp_doc       = x_conf.mp_doc;
+	mp_node      = x_conf.mp_node;
+	return *this;
+}
+
 ConfigReader::~ConfigReader()
 {
 	if(m_isOriginal)
