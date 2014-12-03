@@ -77,9 +77,8 @@ void CompareObjects::ProcessFrame()
 		{
 			try
 			{
-				
 				const Feature& feat(it2->GetFeature(itfeat->first));
-				// cout<<"compare "<<*itfeat->second<<" to "<<feat<<endl;
+				cout<<"compare feat "<<itfeat->first<<": "<<*itfeat->second<<" to "<<feat<<endl;
 				double val = itfeat->second->CompareSquared(feat);
 
 				// If dissimilarity is higher or equal to one, raise an error anyway. 
@@ -90,9 +89,9 @@ void CompareObjects::ProcessFrame()
 				sum += val;
 				cpt++;
 			}
-			catch(FeatureNotFoundException& e)
+			catch(exception& e)
 			{
-				LOG_ERROR(m_logger, "Feature "<<itfeat->first<<" not found on second object");
+				LOG_ERROR(m_logger, "Error at feature comparison: " << e.what());
 			}
 		}
 		sum = sqrt(sum) / cpt;

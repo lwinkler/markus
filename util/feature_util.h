@@ -132,8 +132,9 @@ inline std::istream& deserialize(std::istream& x_in, int& xr_value)
 {
 	// Note: we must serialize integer features differently than float to avoid having the same signature
 	// this is due to the fact that the serialization does not store the type of the feature
-	get_string(x_in, "{\"valueInt\":");
-	x_in >> xr_value; // >> get_char<'}'>;
+	Json::Value root;
+	x_in >> root;
+	xr_value = root["valueInt"].asInt();
 	return x_in;
 }
 
