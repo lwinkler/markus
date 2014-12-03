@@ -76,6 +76,7 @@ void ReadObjects::Capture()
 	istringstream ss(text);
 	// m_outputStreams.at(0)->Deserialize(ss,m_param.folder);
 	deserialize(ss, m_ObjectOut);
+	// LOG_DEBUG(m_logger, "Deserialized object: " << m_ObjectOut);
 	//m_ObjectOut.Deserialize(ss, m_param.folder);
 	//m_ObjectOut.push_back(obj);
 }
