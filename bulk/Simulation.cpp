@@ -98,24 +98,13 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 	ConfigReader varConf = x_varConf;
 	while(! varConf.IsEmpty())
 	{
-		// Retrieve args from config
+		// Read module and parameter attribute
 		vector<string> moduleNames;
-		vector<string> paramNames;
-		try
-		{
-			split(varConf.GetAttribute("modules"), ',', moduleNames);
-		}
-		catch(MkException& e)
-		{}
+		split(varConf.GetAttribute("modules", ""), ',', moduleNames);
 		if(moduleNames.empty())
 			moduleNames.push_back(varConf.GetAttribute("module"));
-
-		try
-		{
-			split(varConf.GetAttribute("parameters"), ',', paramNames);
-		}
-		catch(MkException& e)
-		{}
+		vector<string> paramNames;
+		split(varConf.GetAttribute("parameters", ""), ',', paramNames);
 		if(paramNames.empty())
 			paramNames.push_back(varConf.GetAttribute("param"));
 		if(moduleNames.size() != 1 && moduleNames.size() != paramNames.size())
@@ -145,12 +134,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 
 
 		string file;
-		try
-		{
-			file = varConf.GetAttribute("file");
-		}
-		catch(MkException& e)
-		{}
+		file = varConf.GetAttribute("file", "");
 
 		if(file != "")
 		{
@@ -204,17 +188,8 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 			if(paramNames.size() > 1)
 				throw MkException("To set more than one parameter variation, use an external file with option file=...", LOC);
 			// default values. Empty range means that the prog uses the default range of the param
-			string range = "";
-			int nb       = 10;
-			try
-			{
-				range = varConf.GetAttribute("range");
-			}
-			catch(MkException& e){}
-			// TODO: impl in class configreader
-			string str = varConf.GetAttribute("nb");
-			if(str != "")
-				nb = atof(str.c_str());
+			string range = varConf.GetAttribute("range", "");
+			int nb = atof(varConf.GetAttribute("nb", "10").c_str());
 
 			LOG_DEBUG(m_logger, "Variation for module " << moduleNames.at(0));
 			const Parameter& param = m_manager.GetModuleByName(moduleNames.at(0)).GetParameters().GetParameterByName(paramNames.at(0));

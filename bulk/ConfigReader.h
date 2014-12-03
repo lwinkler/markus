@@ -60,6 +60,7 @@ public:
 		SetValue(ss.str());
 	}
 	const std::string GetAttribute(const std::string& x_attributeName) const;
+	const std::string GetAttribute(const std::string& x_attributeName, const std::string& x_default) const;
 	void SetAttribute(const std::string& x_attributeName, const std::string& x_value);
 	void SaveToFile(const std::string& x_file) const;
 	void Validate() const;

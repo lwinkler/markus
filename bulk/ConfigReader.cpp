@@ -190,9 +190,35 @@ ConfigReader ConfigReader::NextSubConfig(const string& x_objectType, const strin
 *
 * @param x_attributeName Name of the attribute
 *
-* @return Config object
+* @return attribute
 */
 const string ConfigReader::GetAttribute(const string& x_attributeName) const
+{
+	if(IsEmpty())
+		throw MkException("Impossible to find attribute " + x_attributeName + " in ConfigReader, node is empty" , LOC);
+	TiXmlElement* element = mp_node->ToElement();
+	//string s(*element->Attribute(x_attributeName));
+	if(element == NULL)
+		throw MkException("Impossible to find node in ConfigReader", LOC);
+
+	const string * str = element->Attribute(x_attributeName);
+	if(str == NULL)
+		return ""; // TODO: throw exception and fix the rest of the code
+		// throw MkException("Attribute is unexistant", LOC);
+	else
+		return *str;
+}
+
+
+/**
+* @brief Return the attribute (as string) for one element
+*
+* @param x_attributeName Name of the attribute
+* @param x_default       Value to return if attribute is unexistant
+*
+* @return attribute
+*/
+const string ConfigReader::GetAttribute(const string& x_attributeName, const string& x_default) const
 {
 	if(IsEmpty())
 		throw MkException("Impossible to find attribute " + x_attributeName + " in ConfigReader" , LOC);
@@ -203,7 +229,7 @@ const string ConfigReader::GetAttribute(const string& x_attributeName) const
 
 	const string * str = element->Attribute(x_attributeName);
 	if(str == NULL)
-		return ""; // TODO: throw ?
+		return x_default;
 	else
 		return *str;
 }
