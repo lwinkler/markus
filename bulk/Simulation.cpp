@@ -23,7 +23,7 @@
 
 #include "MkException.h"
 #include "util.h"
-#include "simulation.h"
+#include "Simulation.h"
 
 #include <iostream>
 #include <iomanip>
@@ -33,16 +33,24 @@
 
 using namespace std;
 
-/// @brief: This file contains all the functions needed to prepare an optimization and variate parameters of the config
+log4cxx::LoggerPtr Simulation::m_logger(log4cxx::Logger::getLogger("Simulation"));
+
+
+
+Simulation::Simulation(const ConfigReader& x_configReader) :
+	Configurable(x_configReader),
+	m_param(x_configReader.GetSubConfig("application")) // TODO: fix
+{
+}
 
 /// Add targets lines for inclusion in Makefile
-void addSimulationEntry(const vector<string>& x_variationNames, const string& x_outputDir, const ConfigReader& x_mainConfig, ostream& xr_allTargets, ostream& xr_targets, int& xr_cpt)
+void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, const string& x_outputDir, const ConfigReader& x_mainConfig, ostream& xr_allTargets, ostream& xr_targets, int& xr_cpt)
 {
 	// Generate entries for makefile
 	stringstream sd;
 	// sd << "simul" << setfill('0') << setw(6) << xr_cpt;
 	string name = join(x_variationNames, '_');
-	cout << "Add entry for variation " << name << endl;
+	LOG_DEBUG(m_logger, "Add entry for variation " << name);
 	sd << name;
 	string arguments;
 	try
@@ -83,7 +91,7 @@ void addSimulationEntry(const vector<string>& x_variationNames, const string& x_
 }
 
 /// Add variation to simulation
-void addVariations(vector<string>& xr_variationNames, Manager& xr_manager, const ConfigReader& x_varConf, const string& x_outputDir, ConfigReader& xr_mainConfig, ostream& xr_allTargets, ostream& xr_targets, int& xr_cpt)
+void Simulation::AddVariations(vector<string>& xr_variationNames, Manager& xr_manager, const ConfigReader& x_varConf, const string& x_outputDir, ConfigReader& xr_mainConfig, ostream& xr_allTargets, ostream& xr_targets, int& xr_cpt)
 {
 	ConfigReader varConf = x_varConf;
 	while(! varConf.IsEmpty())
@@ -121,7 +129,7 @@ void addVariations(vector<string>& xr_variationNames, Manager& xr_manager, const
 		auto itval = originalValues.begin();
 		for(string itpar : paramNames)
 		{
-			cout << "param:"<< *itmod << ":" << itpar << endl;
+			LOG_DEBUG(m_logger, "Param:"<< *itmod << ":" << itpar);
 			if(*itmod == "manager")
 				*ittar = new ConfigReader(xr_mainConfig.RefSubConfig("application").RefSubConfig("parameters", "", true).RefSubConfig("param", itpar, true));
 			else
@@ -181,9 +189,9 @@ void addVariations(vector<string>& xr_variationNames, Manager& xr_manager, const
 				// Change value of param
 				ConfigReader subConf = varConf.GetSubConfig("var");
 				if(subConf.IsEmpty())
-					addSimulationEntry(xr_variationNames, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
+					AddSimulationEntry(xr_variationNames, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
 				else
-					addVariations(xr_variationNames, xr_manager, subConf, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
+					AddVariations(xr_variationNames, xr_manager, subConf, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
 				xr_variationNames.pop_back();
 			}
 			ifs.close();
@@ -207,9 +215,8 @@ void addVariations(vector<string>& xr_variationNames, Manager& xr_manager, const
 			}
 			catch(MkException& e){}
 
-cout<<moduleNames.at(0)<<endl;
+			LOG_DEBUG(m_logger, "Variation for module " << moduleNames.at(0));
 			const Parameter& param = xr_manager.GetModuleByName(moduleNames.at(0)).GetParameters().GetParameterByName(paramNames.at(0));
-			cout<<"asdfasf"<<endl;
 			vector<string> values;
 			param.GenerateValues(nb, values, range);
 
@@ -222,9 +229,9 @@ cout<<moduleNames.at(0)<<endl;
 				targets.at(0)->SetValue(*it);
 				ConfigReader subConf = varConf.GetSubConfig("var");
 				if(subConf.IsEmpty())
-					addSimulationEntry(xr_variationNames, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
+					AddSimulationEntry(xr_variationNames, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
 				else
-					addVariations(xr_variationNames, xr_manager, subConf, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
+					AddVariations(xr_variationNames, xr_manager, subConf, x_outputDir, xr_mainConfig, xr_allTargets, xr_targets, xr_cpt);
 				xr_variationNames.pop_back();
 			}
 		}
@@ -243,7 +250,7 @@ cout<<moduleNames.at(0)<<endl;
 
 
 /// Generate a simulation ready to be launched
-bool generateSimulation(ConfigReader& mainConfig, const Context& context, log4cxx::LoggerPtr& logger)
+void Simulation::Generate(ConfigReader& mainConfig, const Context& context)
 {
 	string outputDir = "simulation_" + timeStamp();
 	SYSTEM("mkdir -p " + outputDir);
@@ -263,7 +270,7 @@ bool generateSimulation(ConfigReader& mainConfig, const Context& context, log4cx
 
 	int cpt = 0;
 	vector<string> variationNames;
-	addVariations(variationNames, manager, varConf, outputDir, mainConfig, allTargets, targets, cpt);
+	AddVariations(variationNames, manager, varConf, outputDir, mainConfig, allTargets, targets, cpt);
 
 	// Generate a MakeFile for the simulation
 	string makefile = outputDir + "/simulation.make";
@@ -283,7 +290,6 @@ bool generateSimulation(ConfigReader& mainConfig, const Context& context, log4cx
 	of << endl;
 	of.close();
 	
-	LOG_INFO(logger, "Simulation generated in directory " << outputDir);
-	LOG_INFO(logger, "Launch with: make -f " << makefile << " -j4");
-	return 1;
+	LOG_INFO(m_logger, "Simulation generated in directory " << outputDir);
+	LOG_INFO(m_logger, "Launch with: make -f " << makefile << " -j4");
 }

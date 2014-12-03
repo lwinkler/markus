@@ -39,5 +39,6 @@ Serializable.cpp
 CalibrationByHeight.cpp
 CalibrationByModel.cpp
 Processable.cpp
+Simulation.cpp
 )
 

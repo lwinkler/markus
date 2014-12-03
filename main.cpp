@@ -27,7 +27,7 @@
 #include "MkException.h"
 #include "Event.h"
 #include "util.h"
-#include "simulation.h"
+#include "Simulation.h"
 
 #ifndef MARKUS_NO_GUI
 #include "Editor.h"
@@ -307,7 +307,8 @@ void launchEditor(int argc, char** argv)
 int main(int argc, char** argv)
 {
 	// Install error handler
-	signal(SIGSEGV, printStack); // Segfault
+	// Enabling this will handle segfault but will not create a nice core dump
+	// signal(SIGSEGV, printStack);
 
 	// Load XML configuration file using DOMConfigurator
 	log4cxx::LoggerPtr logger(log4cxx::Logger::getLogger("main"));
@@ -347,7 +348,11 @@ int main(int argc, char** argv)
 		overrideConfig(appConfig, args.extraConfig, args.parameters, logger);
 
 		if(args.simulation)
-			return generateSimulation(mainConfig, context, logger);
+		{
+			Simulation sim(mainConfig);
+			sim.Generate(mainConfig, context);
+			return true;
+		}
 			
 
 		// Override parameter auto_process with centralized
