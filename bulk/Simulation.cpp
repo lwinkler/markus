@@ -36,14 +36,22 @@ using namespace std;
 log4cxx::LoggerPtr Simulation::m_logger(log4cxx::Logger::getLogger("Simulation"));
 
 
+/// Function to return either a module or the manager from a config
+inline ConfigReader manOrMod(ConfigReader xr_mainConfig, const string& x_name)
+{
+	return x_name == "manager" ? xr_mainConfig.RefSubConfig("application") : xr_mainConfig.RefSubConfig("application").RefSubConfig("module", x_name);
+}
 
-Simulation::Simulation(const ConfigReader& x_configReader, const Manager& x_manager) :
+
+Simulation::Simulation(const ConfigReader& x_configReader, const Context& x_context) :
 	Configurable(x_configReader),
 	m_param(x_configReader),
-	m_manager(x_manager),
+	m_manager(x_configReader),
 	m_outputDir("simulation_" + timeStamp())
 {
+	m_manager.SetContext(x_context);
 }
+
 
 /// Add targets lines for inclusion in Makefile
 void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, const ConfigReader& x_mainConfig)
@@ -121,10 +129,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 		for(string itpar : paramNames)
 		{
 			LOG_DEBUG(m_logger, "Param:"<< *itmod << ":" << itpar);
-			if(*itmod == "manager")
-				*ittar = new ConfigReader(xr_mainConfig.RefSubConfig("application").RefSubConfig("parameters", "", true).RefSubConfig("param", itpar, true));
-			else
-				*ittar = new ConfigReader(xr_mainConfig.RefSubConfig("application").RefSubConfig("module", *itmod).RefSubConfig("parameters", "", true).RefSubConfig("param", itpar, true));
+			*ittar = new ConfigReader(manOrMod(xr_mainConfig, *itmod).RefSubConfig("parameters", "", true).RefSubConfig("param", itpar, true));
 			*itval = (*ittar)->GetValue();
 			ittar++;
 			itval++;
@@ -191,7 +196,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 			string range = varConf.GetAttribute("range", "");
 			int nb = atof(varConf.GetAttribute("nb", "10").c_str());
 
-			LOG_DEBUG(m_logger, "Variation for module " << moduleNames.at(0));
+			LOG_DEBUG(m_logger, "Variations for module " << moduleNames.at(0));
 			const Parameter& param = m_manager.GetModuleByName(moduleNames.at(0)).GetParameters().GetParameterByName(paramNames.at(0));
 			vector<string> values;
 			param.GenerateValues(nb, values, range);
@@ -241,7 +246,7 @@ void Simulation::Generate(ConfigReader& mainConfig)
 	m_targets.str("");
 	m_cpt = 0;
 
-	ConfigReader varConf = m_configReader.GetSubConfig("var");
+	ConfigReader varConf = m_configReader.GetSubConfig("variations").GetSubConfig("var");
 	vector<string> variationNames;
 	AddVariations(variationNames, varConf, mainConfig);
 
@@ -263,6 +268,6 @@ void Simulation::Generate(ConfigReader& mainConfig)
 	of << endl;
 	of.close();
 	
-	LOG_INFO(m_logger, "Simulation generated in directory " << m_outputDir);
+	LOG_INFO(m_logger, m_cpt << " simulations generated in directory " << m_outputDir);
 	LOG_INFO(m_logger, "Launch with: make -f " << makefile << " -j4");
 }

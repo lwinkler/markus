@@ -45,7 +45,7 @@ public:
 		}
 	};
 
-	Simulation(const ConfigReader& x_configReader, const Manager& x_manager);
+	Simulation(const ConfigReader& x_configReader, const Context& x_context);
 	void Generate(ConfigReader& mainConfig);
 
 protected:
@@ -61,7 +61,7 @@ protected:
 	std::stringstream m_allTargets;
 	std::stringstream m_targets;
 
-	const Manager& m_manager;
+	Manager m_manager;
 	const std::string m_outputDir;
 	int m_cpt;
 

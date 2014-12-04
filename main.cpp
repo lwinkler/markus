@@ -349,9 +349,7 @@ int main(int argc, char** argv)
 
 		if(args.simulation)
 		{
-			Manager manager(mainConfig.GetSubConfig("application"));
-			manager.SetContext(context);
-			Simulation sim(mainConfig.GetSubConfig("application").GetSubConfig("variations"), manager);
+			Simulation sim(mainConfig.GetSubConfig("application"), context);
 			sim.Generate(mainConfig);
 			return 0;
 		}
