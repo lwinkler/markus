@@ -65,7 +65,7 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 	string arguments;
 	try
 	{
-		arguments = x_mainConfig.GetSubConfig("application").GetSubConfig("parameters").GetSubConfig("param", "arguments").GetValue();
+		arguments = x_mainConfig.GetSubConfig("application").GetSubConfig("parameters").GetSubConfig("param", "name", "arguments").GetValue();
 	}
 	catch(MkException &e){}
 	m_allTargets << "$(OUTDIR)/results/" <<  sd.str() << " ";

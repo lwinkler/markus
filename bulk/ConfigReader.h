@@ -35,7 +35,10 @@ class TiXmlNode;
 class TiXmlDocument;
 
 /**
-* @brief Class used to manipulate configuration files
+* @brief       Class used to manipulate configuration files
+* @description A ConfigReader object is created from an XML file. It can browse the different tags of the file by creating sub config objects. Each sub config object is
+               a reference to the sub configuration. Not a copy.
+               This utility relies on TinyXml.
 */
 class ConfigReader
 {
@@ -46,9 +49,10 @@ public:
 	~ConfigReader();
 	const ConfigReader& operator = (const ConfigReader& x_conf);
 
-	ConfigReader GetSubConfig(const std::string& x_objectType, const std::string& x_objectName = "") const;
+	const ConfigReader GetSubConfig(const std::string& x_nodeName) const;
+	const ConfigReader GetSubConfig(const std::string& x_nodeName, const std::string& x_attrName, const std::string& x_attrValue) const;
 	ConfigReader RefSubConfig(const std::string& x_objectType, const std::string& x_objectName = "", bool x_allowCreation = false);
-	ConfigReader NextSubConfig(const std::string& x_objectType, const std::string& x_objectName = "") const;
+	ConfigReader NextSubConfig(const std::string& x_objectType, const std::string& x_attrName = "", const std::string& x_attrValue = "") const;
 	/// Check if the config object is empty
 	inline bool IsEmpty() const{return mp_doc == NULL && mp_node == NULL;}
 	const std::string GetValue() const;
@@ -67,6 +71,10 @@ public:
 	/// Redefinition of == operator
 	inline bool operator == (const ConfigReader &a){return a.mp_node == mp_node;}
 	void OverrideWith(const ConfigReader& xr_extraConfig);
+
+	// New access functions with JQuery-like syntax
+	const ConfigReader Find(const std::string& x_searchString) const;
+	ConfigReader    FindRef(const std::string& x_searchString, bool x_allowCreation = false);
 
 private:
 	void CheckUniquenessOfId(const std::string& x_group, const std::string& x_type, const std::string& x_idLabel, const std::string& x_moduleName) const;

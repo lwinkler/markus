@@ -40,6 +40,7 @@ private:
 protected:
 	ConfigReader* m_conf1;
 	ConfigReader* m_conf2;
+	ConfigReader* m_conf3;
 public:
 	void runTest()
 	{
@@ -49,11 +50,32 @@ public:
 		m_conf1 = new ConfigReader("testing/config1.xml");
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		m_conf2 = new ConfigReader("/tmp/config_empty.xml");
+		m_conf3 = new ConfigReader("/tmp/config_empty.xml");
 	}
 	void tearDown()
 	{
 		delete m_conf1;
 		delete m_conf2;
+		delete m_conf3;
+	}
+
+
+	/// Test new syntax
+	void testSyntax()
+	{
+		
+		ConfigReader conf(*m_conf3);
+		conf.RefSubConfig("t1", "", true).RefSubConfig("t2", "", true).RefSubConfig("t3", "bla", true).SetValue("333");
+		m_conf3->SaveToFile("testing/tmp/test3.xml");
+
+		CPPUNIT_ASSERT(!conf.Find("t1").IsEmpty());
+		CPPUNIT_ASSERT(!conf.Find("t1>t2").IsEmpty());
+		CPPUNIT_ASSERT(!conf.Find("t1>t2>t3[name=\"bla\"]").IsEmpty());
+		CPPUNIT_ASSERT( conf.Find("t1>t2>t3[name=\"bla\"]").GetValue() == "333");
+		
+		
+		
+		
 	}
 
 	/// Load and save a config file
@@ -62,19 +84,21 @@ public:
 		LOG_TEST(m_logger, "\n# Test the loading of configurations");
 
 		ConfigReader appConf = m_conf1->GetSubConfig("application");
-		ConfigReader module0conf = appConf.GetSubConfig("module", "Module0");
-		ConfigReader module1conf = appConf.GetSubConfig("module", "Module1");
-		CPPUNIT_ASSERT(module0conf == appConf.GetSubConfig("module", "Module0"));
+		ConfigReader module0conf = appConf.GetSubConfig("module", "name", "Module0");
+		ConfigReader module1conf = appConf.GetSubConfig("module", "name", "Module1");
+
+		// old access
+		CPPUNIT_ASSERT(module0conf == appConf.GetSubConfig("module", "name", "Module0"));
 		CPPUNIT_ASSERT(module1conf == module0conf.NextSubConfig("module"));
-		CPPUNIT_ASSERT(module1conf == module0conf.NextSubConfig("module", "Module1"));
+		CPPUNIT_ASSERT(module1conf == module0conf.NextSubConfig("module", "name", "Module1"));
 		CPPUNIT_ASSERT(module1conf.NextSubConfig("module").IsEmpty());
 		CPPUNIT_ASSERT(! module0conf.GetSubConfig("parameters").IsEmpty());
 
-		ConfigReader param1 = module0conf.GetSubConfig("parameters").GetSubConfig("param", "param_text");
+		ConfigReader param1 = module0conf.GetSubConfig("parameters").GetSubConfig("param", "name", "param_text");
 		CPPUNIT_ASSERT(param1.GetValue() == "SomeText");
-		ConfigReader param2 = module0conf.GetSubConfig("parameters").GetSubConfig("param", "param_int");
+		ConfigReader param2 = module0conf.GetSubConfig("parameters").GetSubConfig("param", "name", "param_int");
 		CPPUNIT_ASSERT(param2.GetValue() == "21");
-		ConfigReader param3 = module0conf.GetSubConfig("parameters").GetSubConfig("param", "param_float");
+		ConfigReader param3 = module0conf.GetSubConfig("parameters").GetSubConfig("param", "name", "param_float");
 		CPPUNIT_ASSERT(param3.GetValue() == "3.1415");
 
 		CPPUNIT_ASSERT(atoi(param1.GetAttribute("id").c_str()) == 0);
@@ -100,9 +124,9 @@ public:
 
 		ConfigReader generatedConf("testing/config_generated.xml");
 		CPPUNIT_ASSERT(generatedConf.GetSubConfig("application")
-				.GetSubConfig("aaa", "nameX")
-				.GetSubConfig("bbb", "nameY")
-				.GetSubConfig("ccc", "nameZ")
+				.GetSubConfig("aaa", "name", "nameX")
+				.GetSubConfig("bbb", "name", "nameY")
+				.GetSubConfig("ccc", "name", "nameZ")
 				.GetValue() == "someValue");
 	}
 
@@ -110,6 +134,7 @@ public:
 	static CppUnit::Test *suite()
 	{
 		CppUnit::TestSuite *suiteOfTests = new CppUnit::TestSuite("ConfigReaderTest");
+		suiteOfTests->addTest(new CppUnit::TestCaller<ConfigReaderTest>("testSyntax", &ConfigReaderTest::testSyntax));
 		suiteOfTests->addTest(new CppUnit::TestCaller<ConfigReaderTest>("testLoad", &ConfigReaderTest::testLoad));
 		suiteOfTests->addTest(new CppUnit::TestCaller<ConfigReaderTest>("testGenerate", &ConfigReaderTest::testGenerate));
 		return suiteOfTests;

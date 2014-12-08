@@ -102,23 +102,37 @@ ConfigReader::~ConfigReader()
 /**
 * @brief Return a config objects that points to the sub element of configuration
 *
-* @param x_objectType The type of the sub element (= XML balise)
-* @param x_objectName The name of the sub element (= attribute "name")
+* @param x_nodeName   The node name of the sub element (= XML tag)
 *
 * @return config object
 */
-ConfigReader ConfigReader::GetSubConfig(const string& x_objectType, const string& x_objectName) const
+const ConfigReader ConfigReader::GetSubConfig(const string& x_nodeName) const
 {
 	if(IsEmpty())
-		throw MkException("Impossible to find node " + x_objectType + " in ConfigReader with name \"" + x_objectName + "\"" , LOC);
-	TiXmlNode* newNode = mp_node->FirstChild(x_objectType);
+		throw MkException("Impossible to find node " + x_nodeName + " in ConfigReader", LOC);
+	TiXmlNode* newNode = mp_node->FirstChild(x_nodeName);
+	return ConfigReader(newNode);
+}
+
+
+/**
+* @brief Return a config objects that points to the sub element of configuration
+*
+* @param x_nodeName   The node name of the sub element (= XML tag)
+* @param x_attrName   The name of the sub element attribute
+* @param x_attrValue  The name of the sub element attribute value
+*
+* @return config object
+*/
+const ConfigReader ConfigReader::GetSubConfig(const string& x_nodeName, const string& x_attrName, const string& x_attrValue) const
+{
+	if(IsEmpty())
+		throw MkException("Impossible to find node " + x_nodeName + " in ConfigReader with name \"" + x_nodeName + "\"" , LOC);
+	TiXmlNode* newNode = mp_node->FirstChild(x_nodeName);
 	
-	if(x_objectName.compare(""))
+	while(newNode != NULL && newNode->ToElement()->Attribute(x_attrName.c_str()) != x_attrValue)
 	{
-		while(newNode != NULL && x_objectName.compare(newNode->ToElement()->Attribute("name")))
-		{
-			newNode = newNode->NextSibling(x_objectType);
-		}
+		newNode = newNode->NextSibling(x_nodeName);
 	}
 
 	return ConfigReader(newNode);
@@ -168,17 +182,17 @@ ConfigReader ConfigReader::RefSubConfig(const string& x_objectType, const string
 *
 * @return config object
 */
-ConfigReader ConfigReader::NextSubConfig(const string& x_objectType, const string& x_objectName) const
+ConfigReader ConfigReader::NextSubConfig(const string& x_nodeName, const string& x_attrName, const string& x_attrValue) const
 {
 	if(IsEmpty())
-		throw MkException("Impossible to find node " + x_objectType + " in ConfigReader with name \"" + x_objectName + "\"" , LOC);
-	TiXmlNode* newNode = mp_node->NextSibling(x_objectType);
+		throw MkException("Impossible to find node " + x_nodeName + " in ConfigReader with " + x_attrName + "\"" + x_attrValue + "\"" , LOC);
+	TiXmlNode* newNode = mp_node->NextSibling(x_nodeName);
 	
-	if(x_objectName.compare(""))
+	if(x_attrName != "")
 	{
-		while(newNode != NULL && x_objectName.compare(newNode->ToElement()->Attribute("name")))
+		while(newNode != NULL && x_attrValue != newNode->ToElement()->Attribute(x_attrName.c_str()))
 		{
-			newNode = newNode->NextSibling(x_objectType);
+			newNode = newNode->NextSibling(x_nodeName);
 		}
 	}
 	
@@ -385,4 +399,71 @@ void ConfigReader::OverrideWith(const ConfigReader& x_extraConfig)
 		}
 		moduleConfig = moduleConfig.NextSubConfig("module");
 	}
+}
+
+/**
+* @brief Find a sub config with a similar syntax as JQuery
+*
+* @return value
+*/
+const ConfigReader ConfigReader::Find(const string& x_searchString) const
+{
+	cout<<"Find "<<x_searchString<<endl;
+	if(x_searchString.empty())
+		return *this;
+
+	cout<<__LINE__<<x_searchString<<endl;
+	size_t pos1 = x_searchString.find('>');
+	ConfigReader conf1(*this);
+
+	// split search string according to >
+	string searchString1 = x_searchString;
+	string searchString2;
+	if(pos1 != string::npos)
+	{
+		searchString1 = x_searchString.substr(0, pos1);
+		searchString2 = x_searchString.substr(pos1 + 1);
+	}
+
+	size_t pos2 = searchString1.find('[');
+	if(pos2 == string::npos)
+		return GetSubConfig(searchString1).Find(searchString2);
+
+	// If we have a [...] part in search string
+	size_t pos3 = searchString1.find("=\"", pos2);
+	if(pos3 == string::npos)
+		throw MkException("Expecting a '=\"'");
+
+	size_t pos4 = searchString1.find("\"]", pos3);
+	if(pos4 == string::npos)
+		throw MkException("Expecting a '\"]'");
+
+	// Search subconfigs for the right one
+	string nodeName      = searchString1.substr(0, pos2);
+	string attrName      = searchString1.substr(pos2 + 1, pos3 - pos2 - 1);
+	string attrValue     = searchString1.substr(pos3 + 2, pos4 - pos3 - 2);
+	cout<<nodeName<<">"<<attrName<<"="<<attrValue<<endl;
+	assert(! GetSubConfig(nodeName, attrName, attrValue).IsEmpty());
+	return GetSubConfig(nodeName, attrName, attrValue).Find(searchString2);
+	/*
+	ConfigReader subConf = 
+	while(!moduleConfig.IsEmpty())
+	{
+		if(!moduleConfig.GetSubConfig("parameters").IsEmpty())
+		{
+			ConfigReader paramConfig = moduleConfig.GetSubConfig("parameters").GetSubConfig("param");
+			while(!paramConfig.IsEmpty())
+			{
+				// Override parameter
+				RefSubConfig("module", moduleConfig.GetAttribute("name"))
+					.RefSubConfig("parameters").RefSubConfig("param", paramConfig.GetAttribute("name"), true)
+					.SetValue(paramConfig.GetValue());
+				paramConfig = paramConfig.NextSubConfig("param");
+			}
+		}
+		moduleConfig = moduleConfig.NextSubConfig("module");
+	}
+
+	return GetSubConfig(searchString1.substr(pos1 + 1), searchString1.substr(pos2 + 2));
+	*/
 }

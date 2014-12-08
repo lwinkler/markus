@@ -67,7 +67,7 @@ Manager::Manager(const ConfigReader& x_configReader) :
 		// Read parameters
 		if( moduleConfig.GetSubConfig("parameters").IsEmpty()) 
 			throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name"), LOC);
-		string moduleType = moduleConfig.GetSubConfig("parameters").GetSubConfig("param", "class").GetValue();
+		string moduleType = moduleConfig.GetSubConfig("parameters").GetSubConfig("param", "name", "class").GetValue();
 		Module * tmp1 = m_factory.CreateModule(moduleType, moduleConfig);		
 		
 		// Add to inputs if an input

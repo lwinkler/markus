@@ -61,18 +61,18 @@ class TestTrackerByFeatures : public CppUnit::TestFixture
 		params.RefSubConfig("param", "max_matching_distance", true).SetValue("0.05");
 		// mp_config->RefSubConfig("application", "", true).SetAttribute("name", "unitTest");
 
-		mp_module = new TrackerByFeatures(mp_config->GetSubConfig("application").GetSubConfig("module", "TrackerByFeatures0"));
+		mp_module = new TrackerByFeatures(mp_config->GetSubConfig("application").GetSubConfig("module", "name", "TrackerByFeatures0"));
 		mp_module->SetAsReady();
 		mp_module->Reset();
 
 /*
 		// Fake input
-		mp_fakeInput = new TrackerByFeatures(mp_config->GetSubConfig("application").GetSubConfig("module", "VideoFileReader0"));
+		mp_fakeInput = new TrackerByFeatures(mp_config->GetSubConfig("application").GetSubConfig("module", "name", "VideoFileReader0"));
 		mp_fakeInput->SetAsReady();
 		mp_fakeInput->Reset();
 
 		// Fake output
-		mp_fakeOutput = m_factory.CreateModule("TrackerByFeatures", mp_config->GetSubConfig("application").GetSubConfig("module", "TrackerByFeatures"));
+		mp_fakeOutput = m_factory.CreateModule("TrackerByFeatures", mp_config->GetSubConfig("application").GetSubConfig("module", "name", "TrackerByFeatures"));
 		mp_fakeOutput->SetAsReady();
 		mp_fakeOutput->Reset();
 		*/

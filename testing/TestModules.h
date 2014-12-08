@@ -82,7 +82,7 @@ class TestModules : public CppUnit::TestFixture
 			.RefSubConfig("parameters", "", true)
 			.RefSubConfig("param", "fps", true).SetValue("22");
 		mp_config->RefSubConfig("application").SetAttribute("name", "unitTest");
-		mp_fakeInput = m_factoryModules.CreateModule("VideoFileReader", mp_config->GetSubConfig("application").GetSubConfig("module", "VideoFileReader0"));
+		mp_fakeInput = m_factoryModules.CreateModule("VideoFileReader", mp_config->GetSubConfig("application").GetSubConfig("module", "name", "VideoFileReader0"));
 		mp_fakeInput->AllowAutoProcess(false);
 		// note: we need a fake module to create the input streams
 		mp_fakeInput->SetAsReady();
