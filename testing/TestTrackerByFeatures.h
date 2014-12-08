@@ -56,9 +56,9 @@ class TestTrackerByFeatures : public CppUnit::TestFixture
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigReader("/tmp/config_empty.xml");
 		ConfigReader params = addModuleToConfig("TrackerByFeatures", *mp_config)
-			.RefSubConfig("parameters", "", true);
-		params.RefSubConfig("param", "fps", true).SetValue("22");
-		params.RefSubConfig("param", "max_matching_distance", true).SetValue("0.05");
+			.RefSubConfig("parameters", true);
+		params.RefSubConfig("param", "name", "fps", true).SetValue("22");
+		params.RefSubConfig("param", "name", "max_matching_distance", true).SetValue("0.05");
 		// mp_config->RefSubConfig("application", "", true).SetAttribute("name", "unitTest");
 
 		mp_module = new TrackerByFeatures(mp_config->GetSubConfig("application").GetSubConfig("module", "name", "TrackerByFeatures0"));
@@ -87,19 +87,19 @@ class TestTrackerByFeatures : public CppUnit::TestFixture
 
 	ConfigReader addModuleToConfig(const std::string& rx_type, ConfigReader& xr_config)
 	{
-		ConfigReader moduleConfig =  xr_config.RefSubConfig("application", "", true)
-			.RefSubConfig("module", rx_type + "0", true);
-		moduleConfig.RefSubConfig("parameters", "", true)
-			.RefSubConfig("param", "class", true)
+		ConfigReader moduleConfig =  xr_config.RefSubConfig("application", true)
+			.RefSubConfig("module", "name", rx_type + "0", true);
+		moduleConfig.RefSubConfig("parameters", true)
+			.RefSubConfig("param", "name", "class", true)
 			.SetValue(rx_type);
-		moduleConfig.RefSubConfig("parameters", "", true)
-			.RefSubConfig("param", "auto_process", true)
+		moduleConfig.RefSubConfig("parameters", true)
+			.RefSubConfig("param", "name", "auto_process", true)
 			.SetValue("1");
-		moduleConfig.RefSubConfig("parameters", "", true)
-			.RefSubConfig("param", "fps", true)
+		moduleConfig.RefSubConfig("parameters", true)
+			.RefSubConfig("param", "name", "fps", true)
 			.SetValue("123");
-		moduleConfig.RefSubConfig("inputs", "", true);
-		moduleConfig.RefSubConfig("outputs", "", true);
+		moduleConfig.RefSubConfig("inputs", true);
+		moduleConfig.RefSubConfig("outputs", true);
 		moduleConfig.SetAttribute("name", rx_type + "0");
 		std::stringstream ss;
 		ss<<m_cpt++;

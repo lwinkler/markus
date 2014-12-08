@@ -65,7 +65,7 @@ public:
 	{
 		
 		ConfigReader conf(*m_conf3);
-		conf.RefSubConfig("t1", "", true).RefSubConfig("t2", "", true).RefSubConfig("t3", "bla", true).SetValue("333");
+		conf.RefSubConfig("t1", true).RefSubConfig("t2", true).RefSubConfig("t3", "name", "bla", true).SetValue("333");
 		m_conf3->SaveToFile("testing/tmp/test3.xml");
 
 		CPPUNIT_ASSERT(!conf.Find("t1").IsEmpty());
@@ -116,10 +116,10 @@ public:
 	void testGenerate()
 	{
 		LOG_TEST(m_logger, "# Test the generation of configurations");
-		ConfigReader appConf = m_conf2->RefSubConfig("application", "", true);
-		appConf.RefSubConfig("aaa", "nameX", true)
-			.RefSubConfig("bbb", "nameY", true)
-			.RefSubConfig("ccc", "nameZ", true).SetValue("someValue");
+		ConfigReader appConf = m_conf2->RefSubConfig("application", true);
+		appConf.RefSubConfig("aaa", "name", "nameX", true)
+			.RefSubConfig("bbb", "name", "nameY", true)
+			.RefSubConfig("ccc", "name", "nameZ", true).SetValue("someValue");
 		m_conf2->SaveToFile("testing/config_generated.xml");
 
 		ConfigReader generatedConf("testing/config_generated.xml");

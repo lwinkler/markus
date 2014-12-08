@@ -119,6 +119,32 @@ const ConfigReader ConfigReader::GetSubConfig(const string& x_nodeName) const
 * @brief Return a config objects that points to the sub element of configuration
 *
 * @param x_nodeName   The node name of the sub element (= XML tag)
+* @param x_allowCreation Allow to create the node in XML if inexistant
+*
+* @return config object
+*/
+ConfigReader ConfigReader::RefSubConfig(const string& x_tagName, bool x_allowCreation)
+{
+	if(IsEmpty())
+		throw MkException("Impossible to find node " + x_tagName + " in ConfigReader" , LOC);
+
+	TiXmlNode* newNode = mp_node->FirstChild(x_tagName);
+	
+	if(newNode == NULL && x_allowCreation)
+	{ 
+		// Add a sub config element if not found
+		TiXmlElement* element = new TiXmlElement(x_tagName);
+		mp_node->LinkEndChild(element);
+		return ConfigReader(element);
+	}
+	return ConfigReader(newNode);
+}
+
+
+/**
+* @brief Return a config objects that points to the sub element of configuration
+*
+* @param x_nodeName   The node name of the sub element (= XML tag)
 * @param x_attrName   The name of the sub element attribute
 * @param x_attrValue  The name of the sub element attribute value
 *
@@ -141,33 +167,30 @@ const ConfigReader ConfigReader::GetSubConfig(const string& x_nodeName, const st
 /**
 * @brief Return a config objects that points to the sub element of configuration (non-constant)
 *
-* @param x_objectType The type of the sub element (= XML balise)
-* @param x_objectName The name of the sub element (= attribute "name")
+* @param x_tagName       The type of the sub element (= XML balise)
+* @param x_attrName      One attribute of the sub element to match
+* @param x_attrValue     The value of the sub element to match
 * @param x_allowCreation Allow to create the node in XML if inexistant
 *
 * @return config object
 */
-ConfigReader ConfigReader::RefSubConfig(const string& x_objectType, const string& x_objectName, bool x_allowCreation)
+ConfigReader ConfigReader::RefSubConfig(const string& x_tagName, const string& x_attrName, const string& x_attrValue, bool x_allowCreation)
 {
 	if(IsEmpty())
-		throw MkException("Impossible to find node " + x_objectType + " in ConfigReader with name \"" + x_objectName + "\"" , LOC);
+		throw MkException("Impossible to find node " + x_tagName + " in ConfigReader with name \"" + x_attrName + "\"" , LOC);
 
-	TiXmlNode* newNode = mp_node->FirstChild(x_objectType);
+	TiXmlNode* newNode = mp_node->FirstChild(x_tagName);
 	
-	if(x_objectName.compare(""))
+	const char* name = NULL;
+	while(newNode != NULL && ((name = newNode->ToElement()->Attribute("name")) == NULL || x_attrValue != name))
 	{
-		const char* name = NULL;
-		while(newNode != NULL && ((name = newNode->ToElement()->Attribute("name")) == NULL || x_objectName.compare(name)))
-		{
-			newNode = newNode->NextSibling(x_objectType); // TODO: add breaks
-		}
+		newNode = newNode->NextSibling(x_tagName);
 	}
 	if(newNode == NULL && x_allowCreation)
 	{ 
 		// Add a sub config element if not found
-		TiXmlElement* element = new TiXmlElement(x_objectType);
-		if(x_objectName.size())
-			element->SetAttribute("name", x_objectName);
+		TiXmlElement* element = new TiXmlElement(x_tagName);
+		element->SetAttribute(x_attrName, x_attrValue);
 		mp_node->LinkEndChild(element);
 		return ConfigReader(element);
 	}
@@ -177,7 +200,7 @@ ConfigReader ConfigReader::RefSubConfig(const string& x_objectType, const string
 /**
 * @brief Return a sub element that points to the next sub element of the configuration
 *
-* @param x_objectType The type of the sub element (= XML balise)
+* @param x_tagName The type of the sub element (= XML balise)
 * @param x_objectName The name of the sub element (= attribute "name")
 *
 * @return config object
@@ -391,8 +414,8 @@ void ConfigReader::OverrideWith(const ConfigReader& x_extraConfig)
 			while(!paramConfig.IsEmpty())
 			{
 				// Override parameter
-				RefSubConfig("module", moduleConfig.GetAttribute("name"))
-					.RefSubConfig("parameters").RefSubConfig("param", paramConfig.GetAttribute("name"), true)
+				RefSubConfig("module", "name", moduleConfig.GetAttribute("name"))
+					.RefSubConfig("parameters").RefSubConfig("param", "name", paramConfig.GetAttribute("name"), true)
 					.SetValue(paramConfig.GetValue());
 				paramConfig = paramConfig.NextSubConfig("param");
 			}
@@ -402,17 +425,17 @@ void ConfigReader::OverrideWith(const ConfigReader& x_extraConfig)
 }
 
 /**
-* @brief Find a sub config with a similar syntax as JQuery
+* @brief Find a sub config (with a similar syntax as JQuery)
 *
 * @return value
 */
 const ConfigReader ConfigReader::Find(const string& x_searchString) const
 {
-	cout<<"Find "<<x_searchString<<endl;
+	// cout<<"Find "<<x_searchString<<endl;
 	if(x_searchString.empty())
 		return *this;
 
-	cout<<__LINE__<<x_searchString<<endl;
+	// cout<<__LINE__<<x_searchString<<endl;
 	size_t pos1 = x_searchString.find('>');
 	ConfigReader conf1(*this);
 
@@ -442,28 +465,7 @@ const ConfigReader ConfigReader::Find(const string& x_searchString) const
 	string nodeName      = searchString1.substr(0, pos2);
 	string attrName      = searchString1.substr(pos2 + 1, pos3 - pos2 - 1);
 	string attrValue     = searchString1.substr(pos3 + 2, pos4 - pos3 - 2);
-	cout<<nodeName<<">"<<attrName<<"="<<attrValue<<endl;
-	assert(! GetSubConfig(nodeName, attrName, attrValue).IsEmpty());
-	return GetSubConfig(nodeName, attrName, attrValue).Find(searchString2);
-	/*
-	ConfigReader subConf = 
-	while(!moduleConfig.IsEmpty())
-	{
-		if(!moduleConfig.GetSubConfig("parameters").IsEmpty())
-		{
-			ConfigReader paramConfig = moduleConfig.GetSubConfig("parameters").GetSubConfig("param");
-			while(!paramConfig.IsEmpty())
-			{
-				// Override parameter
-				RefSubConfig("module", moduleConfig.GetAttribute("name"))
-					.RefSubConfig("parameters").RefSubConfig("param", paramConfig.GetAttribute("name"), true)
-					.SetValue(paramConfig.GetValue());
-				paramConfig = paramConfig.NextSubConfig("param");
-			}
-		}
-		moduleConfig = moduleConfig.NextSubConfig("module");
-	}
+	// cout<<nodeName<<">"<<attrName<<"="<<attrValue<<endl;
 
-	return GetSubConfig(searchString1.substr(pos1 + 1), searchString1.substr(pos2 + 2));
-	*/
+	return GetSubConfig(nodeName, attrName, attrValue).Find(searchString2);
 }

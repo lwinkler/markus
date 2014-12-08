@@ -103,7 +103,7 @@ void ParameterStructure::UpdateConfig() const
 	{
 		if(m_writeAllParamsToConfig || (*it)->GetConfigurationSource() != PARAMCONF_DEF)
 		{
-			conf.RefSubConfig("param", (*it)->GetName(), true).SetValue((*it)->GetValueString());
+			conf.RefSubConfig("param", "name", (*it)->GetName(), true).SetValue((*it)->GetValueString());
 		}
 	}
 }

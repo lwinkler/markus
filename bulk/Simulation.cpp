@@ -39,7 +39,7 @@ log4cxx::LoggerPtr Simulation::m_logger(log4cxx::Logger::getLogger("Simulation")
 /// Function to return either a module or the manager from a config
 inline ConfigReader manOrMod(ConfigReader xr_mainConfig, const string& x_name)
 {
-	return x_name == "manager" ? xr_mainConfig.RefSubConfig("application") : xr_mainConfig.RefSubConfig("application").RefSubConfig("module", x_name);
+	return x_name == "manager" ? xr_mainConfig.RefSubConfig("application") : xr_mainConfig.RefSubConfig("application").RefSubConfig("module", "name", x_name);
 }
 
 
@@ -129,7 +129,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 		for(string itpar : paramNames)
 		{
 			LOG_DEBUG(m_logger, "Param:"<< *itmod << ":" << itpar);
-			*ittar = new ConfigReader(manOrMod(xr_mainConfig, *itmod).RefSubConfig("parameters", "", true).RefSubConfig("param", itpar, true));
+			*ittar = new ConfigReader(manOrMod(xr_mainConfig, *itmod).RefSubConfig("parameters", true).RefSubConfig("param", "name", itpar, true));
 			*itval = (*ittar)->GetValue();
 			ittar++;
 			itval++;

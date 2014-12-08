@@ -450,14 +450,14 @@ void Manager::PrintStatistics()
 	// Create an XML file to summarize CPU usage
 	string benchFileName = m_context.GetOutputDir() + "/benchmark.xml";
 	ConfigReader benchSummary(benchFileName, true);
-	ConfigReader conf = benchSummary.RefSubConfig("benchmark", "", true);
+	ConfigReader conf = benchSummary.RefSubConfig("benchmark", true);
 
 
 	// Write perf to output XML
-	ConfigReader perfModule = conf.RefSubConfig("manager", "", true);
-	perfModule.RefSubConfig("nb_frames", "", true).SetValue(m_frameCount);
-	perfModule.RefSubConfig("timer", "processing", true).SetValue(m_timerProcessing);
-	perfModule.RefSubConfig("fps", "", true).SetValue(fps);
+	ConfigReader perfModule = conf.RefSubConfig("manager", true);
+	perfModule.RefSubConfig("nb_frames", true).SetValue(m_frameCount);
+	perfModule.RefSubConfig("timer", "name", "processing", true).SetValue(m_timerProcessing);
+	perfModule.RefSubConfig("fps", true).SetValue(fps);
 
 	// Call for each module
 	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
@@ -525,8 +525,8 @@ void Manager::Export()
 			string file("modules/" + *it + ".xml");
 			createEmptyConfigFile("/tmp/config_empty.xml");
 			ConfigReader config("/tmp/config_empty.xml");
-			ConfigReader moduleConfig = config.RefSubConfig("application", "", true).RefSubConfig("module", *it, true);
-			moduleConfig.RefSubConfig("parameters", "", true).RefSubConfig("param", "class", true).SetValue(*it);
+			ConfigReader moduleConfig = config.RefSubConfig("application", true).RefSubConfig("module", "name", *it, true);
+			moduleConfig.RefSubConfig("parameters", true).RefSubConfig("param", "name", "class", true).SetValue(*it);
 
 			Module* module = m_factory.CreateModule(*it, moduleConfig);
 

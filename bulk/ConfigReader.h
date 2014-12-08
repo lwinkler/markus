@@ -49,10 +49,13 @@ public:
 	~ConfigReader();
 	const ConfigReader& operator = (const ConfigReader& x_conf);
 
-	const ConfigReader GetSubConfig(const std::string& x_nodeName) const;
-	const ConfigReader GetSubConfig(const std::string& x_nodeName, const std::string& x_attrName, const std::string& x_attrValue) const;
-	ConfigReader RefSubConfig(const std::string& x_objectType, const std::string& x_objectName = "", bool x_allowCreation = false);
-	ConfigReader NextSubConfig(const std::string& x_objectType, const std::string& x_attrName = "", const std::string& x_attrValue = "") const;
+	// Method to access elements of the config
+	const ConfigReader GetSubConfig(const std::string& x_tagName) const;
+	const ConfigReader GetSubConfig(const std::string& x_tagName, const std::string& x_attrName, const std::string& x_attrValue) const;
+	ConfigReader RefSubConfig(const std::string& x_tagName, bool x_allowCreation = false);
+	ConfigReader RefSubConfig(const std::string& x_tagName, const std::string& x_attrName, const std::string& x_attrValue, bool x_allowCreation = false);
+	ConfigReader NextSubConfig(const std::string& x_tagName, const std::string& x_attrName = "", const std::string& x_attrValue = "") const;
+
 	/// Check if the config object is empty
 	inline bool IsEmpty() const{return mp_doc == NULL && mp_node == NULL;}
 	const std::string GetValue() const;
@@ -74,7 +77,7 @@ public:
 
 	// New access functions with JQuery-like syntax
 	const ConfigReader Find(const std::string& x_searchString) const;
-	ConfigReader    FindRef(const std::string& x_searchString, bool x_allowCreation = false);
+	inline ConfigReader    FindRef(const std::string& x_searchString, bool x_allowCreation = false);
 
 private:
 	void CheckUniquenessOfId(const std::string& x_group, const std::string& x_type, const std::string& x_idLabel, const std::string& x_moduleName) const;

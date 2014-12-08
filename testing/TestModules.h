@@ -79,8 +79,8 @@ class TestModules : public CppUnit::TestFixture
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigReader("/tmp/config_empty.xml");
 		addModuleToConfig("VideoFileReader", *mp_config)
-			.RefSubConfig("parameters", "", true)
-			.RefSubConfig("param", "fps", true).SetValue("22");
+			.RefSubConfig("parameters", true)
+			.RefSubConfig("param", "name", "fps", true).SetValue("22");
 		mp_config->RefSubConfig("application").SetAttribute("name", "unitTest");
 		mp_fakeInput = m_factoryModules.CreateModule("VideoFileReader", mp_config->GetSubConfig("application").GetSubConfig("module", "name", "VideoFileReader0"));
 		mp_fakeInput->AllowAutoProcess(false);
@@ -97,16 +97,16 @@ class TestModules : public CppUnit::TestFixture
 
 	ConfigReader addModuleToConfig(const std::string& rx_type, ConfigReader& xr_config)
 	{
-		ConfigReader moduleConfig =  xr_config.RefSubConfig("application", "", true)
-			.RefSubConfig("module", rx_type + "0", true);
-		ConfigReader paramConfig  = moduleConfig.RefSubConfig("parameters", "", true);
+		ConfigReader moduleConfig =  xr_config.RefSubConfig("application", true)
+			.RefSubConfig("module", "name", rx_type + "0", true);
+		ConfigReader paramConfig  = moduleConfig.RefSubConfig("parameters", true);
 
-		paramConfig.RefSubConfig("param" , "class"        , true).SetValue(rx_type);
+		paramConfig.RefSubConfig("param" , "name", "class", true).SetValue(rx_type);
 		// paramConfig.RefSubConfig("param" , "auto_process" , true).SetValue("0");
-		paramConfig.RefSubConfig("param" , "fps"          , true).SetValue("123");
+		paramConfig.RefSubConfig("param" , "name", "fps"  , true).SetValue("123");
 
-		moduleConfig.RefSubConfig("inputs", "", true);
-		moduleConfig.RefSubConfig("outputs", "", true);
+		moduleConfig.RefSubConfig("inputs", true);
+		moduleConfig.RefSubConfig("outputs", true);
 		moduleConfig.SetAttribute("name", rx_type + "0");
 
 		std::stringstream ss;
@@ -124,7 +124,7 @@ class TestModules : public CppUnit::TestFixture
 		// Add parameters to override to the config
 		if(xp_parameters != NULL)
 			for(std::map<std::string, std::string>::const_iterator it = xp_parameters->begin() ; it != xp_parameters->end() ; ++it)
-				moduleConfig.RefSubConfig("parameters").RefSubConfig("param", it->first, true).SetValue(it->second);
+				moduleConfig.RefSubConfig("parameters").RefSubConfig("param", "name", it->first, true).SetValue(it->second);
 
 		mp_config->SaveToFile("testing/tmp/tmp.xml");
 		Module* module = m_factoryModules.CreateModule(x_type, moduleConfig);
