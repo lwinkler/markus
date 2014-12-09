@@ -408,9 +408,8 @@ int main(int argc, char** argv)
 		{
 #ifndef MARKUS_NO_GUI
 			ConfigReader mainGuiConfig("gui.xml", true);
-			ConfigReader guiConfig = mainGuiConfig.RefSubConfig("gui", "name", args.configFile, true);
-			guiConfig.RefSubConfig("parameters", true);
-			mainGuiConfig.SaveToFile("ddd.xml");
+			ConfigReader guiConfig = mainGuiConfig.FindRef("gui[name=\"" + args.configFile + "\"]", true);
+			guiConfig.FindRef("parameters", true);
 
 			MarkusWindow gui(guiConfig, manager);
 			gui.setWindowTitle("Markus");

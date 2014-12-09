@@ -61,7 +61,7 @@ class TestTrackerByFeatures : public CppUnit::TestFixture
 		params.RefSubConfig("param", "name", "max_matching_distance", true).SetValue("0.05");
 		// mp_config->RefSubConfig("application", "", true).SetAttribute("name", "unitTest");
 
-		mp_module = new TrackerByFeatures(mp_config->GetSubConfig("application").GetSubConfig("module", "name", "TrackerByFeatures0"));
+		mp_module = new TrackerByFeatures(mp_config->Find("application>module[name=\"TrackerByFeatures0\"]"));
 		mp_module->SetAsReady();
 		mp_module->Reset();
 

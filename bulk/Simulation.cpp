@@ -39,7 +39,7 @@ log4cxx::LoggerPtr Simulation::m_logger(log4cxx::Logger::getLogger("Simulation")
 /// Function to return either a module or the manager from a config
 inline ConfigReader manOrMod(ConfigReader xr_mainConfig, const string& x_name)
 {
-	return x_name == "manager" ? xr_mainConfig.RefSubConfig("application") : xr_mainConfig.RefSubConfig("application").RefSubConfig("module", "name", x_name);
+	return x_name == "manager" ? xr_mainConfig.FindRef("application") : xr_mainConfig.FindRef("application>module[name=\"" + x_name + "\"]");
 }
 
 
@@ -65,7 +65,7 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 	string arguments;
 	try
 	{
-		arguments = x_mainConfig.GetSubConfig("application").GetSubConfig("parameters").GetSubConfig("param", "name", "arguments").GetValue();
+		arguments = x_mainConfig.Find("application>parameters>param[name=\"arguments\"]").GetValue();
 	}
 	catch(MkException &e){}
 	m_allTargets << "$(OUTDIR)/results/" <<  sd.str() << " ";
@@ -178,7 +178,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 				xr_variationNames.push_back(*it1);
 
 				// Change value of param
-				ConfigReader subConf = varConf.GetSubConfig("var");
+				ConfigReader subConf = varConf.Find("var");
 				if(subConf.IsEmpty())
 					AddSimulationEntry(xr_variationNames, xr_mainConfig);
 				else
@@ -209,7 +209,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 
 				// Change value of param
 				targets.at(0)->SetValue(*it);
-				ConfigReader subConf = varConf.GetSubConfig("var");
+				ConfigReader subConf = varConf.Find("var");
 				if(subConf.IsEmpty())
 					AddSimulationEntry(xr_variationNames, xr_mainConfig);
 				else
