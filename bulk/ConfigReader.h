@@ -25,6 +25,7 @@
 #define CONFIGREADER_H
 
 #include <string>
+#include <vector>
 #include <sstream>
 
 
@@ -78,6 +79,7 @@ public:
 	// New access functions with JQuery-like syntax
 	const ConfigReader Find(const std::string& x_searchString, bool x_fatal = false) const;
 	ConfigReader    FindRef(const std::string& x_searchString, bool x_allowCreation = false, bool x_fatal = false);
+	std::vector<ConfigReader> FindAll(const std::string& x_searchString, bool x_fatal = false) const;
 
 private:
 	void CheckUniquenessOfId(const std::string& x_group, const std::string& x_type, const std::string& x_idLabel, const std::string& x_moduleName) const;

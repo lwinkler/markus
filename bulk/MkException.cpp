@@ -85,19 +85,19 @@ const char* MkException::what() const throw()
 
 
 EndOfStreamException::EndOfStreamException(const string& x_descr, const string& x_position, const string& x_function) : 
-	MkException(MK_EXCEPTION_ENDOFSTREAM, "EndOfStreamException: " + x_descr, x_position)
+	MkException(MK_EXCEPTION_ENDOFSTREAM, "EndOfStreamException: " + x_descr, x_position, x_function)
 {}
 
 ParameterException::ParameterException(const string& x_descr, const string& x_position, const string& x_function) : 
-	MkException(MK_EXCEPTION_PARAMETER, "ParameterException: " + x_descr, x_position)
+	MkException(MK_EXCEPTION_PARAMETER, "ParameterException: " + x_descr, x_position, x_function)
 {}
 
 FeatureNotFoundException::FeatureNotFoundException(const string& x_descr, const string& x_position, const string& x_function) : 
-	MkException(MK_EXCEPTION_FEAT_NOT_FOUND, "FeatureNotFoundException: " + x_descr, x_position)
+	MkException(MK_EXCEPTION_FEAT_NOT_FOUND, "FeatureNotFoundException: " + x_descr, x_position, x_function)
 {}
 
 WebServiceException::WebServiceException(const string& x_descr, const string& x_position, const string& x_function) : 
-	MkException(MK_EXCEPTION_WEBSERVICE, "WebServiceException: " + x_descr, x_position)
+	MkException(MK_EXCEPTION_WEBSERVICE, "WebServiceException: " + x_descr, x_position, x_function)
 {}
 
 /**

@@ -213,7 +213,7 @@ public:
 		testSerialization(stream5, "StreamDebug");
 #endif
 
-		MkException excep;
+		MkException excep("test", LOC);
 		testSerialization(excep, "MkException");
 
 		CalibrationByHeight calib1;

@@ -46,7 +46,7 @@ StreamDebug::~StreamDebug()
 /// Convert the input: not used since no debug stream is connected
 void StreamDebug::ConvertInput()
 {
-	throw MkException("Stream of debug " + GetName() + " must never be connected");
+	throw MkException("Stream of debug " + GetName() + " must never be connected", LOC);
 }
 
 /// Draw the stream on an image

@@ -29,6 +29,44 @@
 using namespace std;
 
 
+/// split tag[name="bla"]>bloo into tag, name, bla and bloo
+void splitTagName(const string& x_searchString, string& xr_tagName, string& xr_attrName, string& xr_attrValue, string& xr_searchString2)
+{
+	size_t pos1 = x_searchString.find('>');
+
+	// split search string according to >
+	string searchString1 = x_searchString;
+	xr_searchString2 = "";
+	if(pos1 != string::npos)
+	{
+		searchString1 = x_searchString.substr(0, pos1);
+		xr_searchString2 = x_searchString.substr(pos1 + 1);
+	}
+
+	size_t pos2 = searchString1.find('[');
+	if(pos2 == string::npos)
+	{
+		xr_tagName   = searchString1;
+		xr_attrName  = "";
+		xr_attrValue = "";
+		return;
+	}
+
+	// If we have a [...] part in search string
+	size_t pos3 = searchString1.find("=\"", pos2);
+	if(pos3 == string::npos)
+		throw MkException("Expecting a '=\"'", LOC);
+
+	size_t pos4 = searchString1.find("\"]", pos3);
+	if(pos4 == string::npos)
+		throw MkException("Expecting a '\"]'", LOC);
+
+	// Search subconfigs for the right one
+	xr_tagName       = searchString1.substr(0, pos2);
+	xr_attrName      = searchString1.substr(pos2 + 1, pos3 - pos2 - 1);
+	xr_attrValue     = searchString1.substr(pos3 + 2, pos4 - pos3 - 2);
+}
+
 /**
 * @brief Save the parameters values to the config object, ready to be written to disk
 */
@@ -444,37 +482,13 @@ const ConfigReader ConfigReader::Find(const string& x_searchString, bool x_fatal
 		if(x_searchString.empty())
 			return *this;
 
-		size_t pos1 = x_searchString.find('>');
-		ConfigReader conf1(*this);
+		string tagName, attrName, attrValue, searchString2;
+		splitTagName(x_searchString, tagName, attrName, attrValue, searchString2);
 
-		// split search string according to >
-		string searchString1 = x_searchString;
-		string searchString2;
-		if(pos1 != string::npos)
-		{
-			searchString1 = x_searchString.substr(0, pos1);
-			searchString2 = x_searchString.substr(pos1 + 1);
-		}
-
-		size_t pos2 = searchString1.find('[');
-		if(pos2 == string::npos)
-			return GetSubConfig(searchString1).Find(searchString2);
-
-		// If we have a [...] part in search string
-		size_t pos3 = searchString1.find("=\"", pos2);
-		if(pos3 == string::npos)
-			throw MkException("Expecting a '=\"'");
-
-		size_t pos4 = searchString1.find("\"]", pos3);
-		if(pos4 == string::npos)
-			throw MkException("Expecting a '\"]'");
-
-		// Search subconfigs for the right one
-		string nodeName      = searchString1.substr(0, pos2);
-		string attrName      = searchString1.substr(pos2 + 1, pos3 - pos2 - 1);
-		string attrValue     = searchString1.substr(pos3 + 2, pos4 - pos3 - 2);
-
-		return GetSubConfig(nodeName, attrName, attrValue).Find(searchString2);
+		if(attrName == "")
+			return GetSubConfig(tagName).Find(searchString2);
+		else
+			return GetSubConfig(tagName, attrName, attrValue).Find(searchString2);
 	}
 	catch(...)
 	{
@@ -497,37 +511,72 @@ ConfigReader ConfigReader::FindRef(const string& x_searchString, bool x_allowCre
 		if(x_searchString.empty())
 			return *this;
 
-		size_t pos1 = x_searchString.find('>');
-		ConfigReader conf1(*this);
+		string tagName, attrName, attrValue, searchString2;
+		splitTagName(x_searchString, tagName, attrName, attrValue, searchString2);
+		
+		if(attrName == "")
+			return RefSubConfig(tagName, x_allowCreation).FindRef(searchString2, x_allowCreation);
+		else
+			return RefSubConfig(tagName, attrName, attrValue, x_allowCreation).FindRef(searchString2, x_allowCreation);
+	}
+	catch(...)
+	{
+		if(x_fatal)
+			fatal("Fatal exception while finding target " + x_searchString, LOC);
+		else throw;
+	}
+}
 
-		// split search string according to >
-		string searchString1 = x_searchString;
-		string searchString2;
-		if(pos1 != string::npos)
+
+/**
+* @brief Find all sub configs (with a similar syntax as JQuery)
+*
+* @param  x_searchString The search path with jquery-like syntax
+* @return A vector of configurations
+*/
+std::vector<ConfigReader> ConfigReader::FindAll(const std::string& x_searchString, bool x_fatal) const
+{
+	try
+	{
+		// If empty return node: for recurrent function
+		if(x_searchString.empty())
 		{
-			searchString1 = x_searchString.substr(0, pos1);
-			searchString2 = x_searchString.substr(pos1 + 1);
+			vector<ConfigReader> results;
+			results.push_back(*this);
+			return results;
 		}
 
-		size_t pos2 = searchString1.find('[');
-		if(pos2 == string::npos)
-			return RefSubConfig(searchString1, x_allowCreation).FindRef(searchString2, x_allowCreation);
+		string tagName, attrName, attrValue, searchString2;
+		splitTagName(x_searchString, tagName, attrName, attrValue, searchString2);
 
-		// If we have a [...] part in search string
-		size_t pos3 = searchString1.find("=\"", pos2);
-		if(pos3 == string::npos)
-			throw MkException("Expecting a '=\"'");
-
-		size_t pos4 = searchString1.find("\"]", pos3);
-		if(pos4 == string::npos)
-			throw MkException("Expecting a '\"]'");
-
-		// Search subconfigs for the right one
-		string nodeName      = searchString1.substr(0, pos2);
-		string attrName      = searchString1.substr(pos2 + 1, pos3 - pos2 - 1);
-		string attrValue     = searchString1.substr(pos3 + 2, pos4 - pos3 - 2);
-
-		return RefSubConfig(nodeName, attrName, attrValue, x_allowCreation).FindRef(searchString2, x_allowCreation);
+		if(searchString2 == "")
+		{
+			vector<ConfigReader> results;
+			if(attrName == "")
+			{
+				ConfigReader conf = GetSubConfig(tagName);
+				while(!conf.IsEmpty())
+				{
+					results.push_back(conf);
+					conf = conf.NextSubConfig(tagName);
+				}
+			}
+			else
+			{
+				ConfigReader conf = GetSubConfig(tagName, attrName, attrValue);
+				while(!conf.IsEmpty())
+				{
+					results.push_back(conf);
+					conf = conf.NextSubConfig(tagName, attrName, attrValue);
+				}
+			}
+			return results;
+		}
+		else
+			if(attrName == "")
+				return GetSubConfig(tagName).FindAll(searchString2);
+			else
+				return GetSubConfig(tagName, attrName, attrValue).FindAll(searchString2);
 	}
 	catch(...)
 	{
