@@ -106,7 +106,7 @@ ConfigReader::~ConfigReader()
 *
 * @return config object
 */
-ConfigReader ConfigReader::GetSubConfig(const string& x_tagName) const
+const ConfigReader ConfigReader::GetSubConfig(const string& x_tagName) const
 {
 	if(IsEmpty())
 		throw MkException("Impossible to find node " + x_tagName + " in ConfigReader", LOC);
@@ -150,7 +150,7 @@ ConfigReader ConfigReader::RefSubConfig(const string& x_tagName, bool x_allowCre
 *
 * @return config object
 */
-ConfigReader ConfigReader::GetSubConfig(const string& x_tagName, const string& x_attrName, const string& x_attrValue) const
+const ConfigReader ConfigReader::GetSubConfig(const string& x_tagName, const string& x_attrName, const string& x_attrValue) const
 {
 	if(IsEmpty())
 		throw MkException("Impossible to find node " + x_tagName + " in ConfigReader with name " + x_attrName + "=\"" + x_attrValue + "\"" , LOC);
@@ -430,7 +430,7 @@ void ConfigReader::OverrideWith(const ConfigReader& x_extraConfig)
 * @param  x_searchString The search path with jquery-like syntax
 * @return value
 */
-ConfigReader ConfigReader::Find(const string& x_searchString) const
+const ConfigReader ConfigReader::Find(const string& x_searchString) const
 {
 	if(x_searchString.empty())
 		return *this;

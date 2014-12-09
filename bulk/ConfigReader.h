@@ -50,8 +50,8 @@ public:
 	const ConfigReader& operator = (const ConfigReader& x_conf);
 
 	// Method to access elements of the config
-	ConfigReader GetSubConfig(const std::string& x_tagName) const;
-	ConfigReader GetSubConfig(const std::string& x_tagName, const std::string& x_attrName, const std::string& x_attrValue) const;
+	const ConfigReader GetSubConfig(const std::string& x_tagName) const;
+	const ConfigReader GetSubConfig(const std::string& x_tagName, const std::string& x_attrName, const std::string& x_attrValue) const;
 	ConfigReader RefSubConfig(const std::string& x_tagName, bool x_allowCreation = false);
 	ConfigReader RefSubConfig(const std::string& x_tagName, const std::string& x_attrName, const std::string& x_attrValue, bool x_allowCreation = false);
 	ConfigReader NextSubConfig(const std::string& x_tagName, const std::string& x_attrName = "", const std::string& x_attrValue = "") const;
@@ -76,7 +76,7 @@ public:
 	void OverrideWith(const ConfigReader& xr_extraConfig);
 
 	// New access functions with JQuery-like syntax
-	ConfigReader Find(const std::string& x_searchString) const;
+	const ConfigReader Find(const std::string& x_searchString) const;
 	ConfigReader    FindRef(const std::string& x_searchString, bool x_allowCreation = false);
 
 private:

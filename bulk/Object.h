@@ -59,7 +59,6 @@ class Object : public Serializable
 				
 			m_feats.insert(std::make_pair(x_name, xp_feat));
 		}
-		// TODO: See if used
 		inline void AddFeature(std::string x_name, float x_value)
 		{
 			std::map <std::string, FeaturePtr>::iterator it = m_feats.find(x_name);
