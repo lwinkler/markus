@@ -440,6 +440,7 @@ const ConfigReader ConfigReader::Find(const string& x_searchString, bool x_fatal
 {
 	try
 	{
+		// If empty return node: for recurrent function
 		if(x_searchString.empty())
 			return *this;
 

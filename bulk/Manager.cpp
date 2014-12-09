@@ -60,12 +60,12 @@ Manager::Manager(const ConfigReader& x_configReader) :
 	m_modules.clear();
 
 	// Read the configuration of each module
-	ConfigReader moduleConfig = m_configReader.GetSubConfig("module");
+	ConfigReader moduleConfig = m_configReader.Find("module", true);
 	
 	while(! moduleConfig.IsEmpty())
 	{
 		// Read parameters
-		if( moduleConfig.GetSubConfig("parameters").IsEmpty()) 
+		if(moduleConfig.Find("parameters", true).IsEmpty()) 
 			throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name"), LOC);
 		string moduleType = moduleConfig.Find("parameters>param[name=\"class\"]").GetValue();
 		Module * tmp1 = m_factory.CreateModule(moduleType, moduleConfig);		
@@ -74,7 +74,7 @@ Manager::Manager(const ConfigReader& x_configReader) :
 		m_modules.push_back(tmp1);
 		if(tmp1->IsInput())
 			m_inputs.push_back(tmp1);
-		moduleConfig = moduleConfig.NextSubConfig("module");
+		moduleConfig = moduleConfig.NextSubConfig("module"); // TODO: use vect of conf
 	}
 }
 
@@ -149,7 +149,7 @@ void Manager::Connect()
 		throw MkException("Manager can only connect modules once", LOC);
 	
 	// Connect input and output streams (re-read the config once since we need all modules to be connected)
-	ConfigReader moduleConfig = m_configReader.GetSubConfig("module");
+	ConfigReader moduleConfig = m_configReader.Find("module");
 	
 	while(! moduleConfig.IsEmpty())
 	{
@@ -450,14 +450,14 @@ void Manager::PrintStatistics()
 	// Create an XML file to summarize CPU usage
 	string benchFileName = m_context.GetOutputDir() + "/benchmark.xml";
 	ConfigReader benchSummary(benchFileName, true);
-	ConfigReader conf = benchSummary.RefSubConfig("benchmark", true);
+	ConfigReader conf = benchSummary.FindRef("benchmark", true);
 
 
 	// Write perf to output XML
-	ConfigReader perfModule = conf.RefSubConfig("manager", true);
-	perfModule.RefSubConfig("nb_frames", true).SetValue(m_frameCount);
-	perfModule.RefSubConfig("timer", "name", "processing", true).SetValue(m_timerProcessing);
-	perfModule.RefSubConfig("fps", true).SetValue(fps);
+	ConfigReader perfModule = conf.FindRef("manager", true);
+	perfModule.FindRef("nb_frames", true).SetValue(m_frameCount);
+	perfModule.FindRef("timer[name=\"processing\"]", true).SetValue(m_timerProcessing);
+	perfModule.FindRef("fps", true).SetValue(fps);
 
 	// Call for each module
 	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
@@ -525,8 +525,8 @@ void Manager::Export()
 			string file("modules/" + *it + ".xml");
 			createEmptyConfigFile("/tmp/config_empty.xml");
 			ConfigReader config("/tmp/config_empty.xml");
-			ConfigReader moduleConfig = config.RefSubConfig("application", true).RefSubConfig("module", "name", *it, true);
-			moduleConfig.RefSubConfig("parameters", true).RefSubConfig("param", "name", "class", true).SetValue(*it);
+			ConfigReader moduleConfig = config.FindRef("application>module[name=\"" + *it + "\"]", true);
+			moduleConfig.FindRef("parameters>param[name=\"class\"]", true).SetValue(*it);
 
 			Module* module = m_factory.CreateModule(*it, moduleConfig);
 

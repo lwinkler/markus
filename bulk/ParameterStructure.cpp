@@ -32,8 +32,8 @@ log4cxx::LoggerPtr ParameterStructure::m_logger(log4cxx::Logger::getLogger("Para
 
 
 ParameterStructure::ParameterStructure(const ConfigReader& x_configReader):
-	m_configReader(x_configReader.GetSubConfig("parameters")),
-	m_moduleName(x_configReader.GetAttribute("name")) // TODO : constructors must never throw
+	m_configReader(x_configReader.Find("parameters", true)),
+	m_moduleName(x_configReader.GetAttribute("name", "unnamed"))
 {
 	m_writeAllParamsToConfig = false;
 }
@@ -66,10 +66,10 @@ void ParameterStructure::Init()
 */
 void ParameterStructure::SetFromConfig()
 {
-	ConfigReader conf = m_configReader; // .GetSubConfig("parameters");
+	ConfigReader conf = m_configReader;
 	if(conf.IsEmpty())
 		return;
-	conf = conf.GetSubConfig("param");
+	conf = conf.Find("param");
 	while(!conf.IsEmpty())
 	{
 		string name = conf.GetAttribute("name");
@@ -103,7 +103,7 @@ void ParameterStructure::UpdateConfig() const
 	{
 		if(m_writeAllParamsToConfig || (*it)->GetConfigurationSource() != PARAMCONF_DEF)
 		{
-			conf.RefSubConfig("param", "name", (*it)->GetName(), true).SetValue((*it)->GetValueString());
+			conf.FindRef("param[name=\"" +(*it)->GetName() + "\"]", true).SetValue((*it)->GetValueString());
 		}
 	}
 }
@@ -172,10 +172,10 @@ void ParameterStructure::CheckRange(bool x_checkRelated) const
 	if(x_checkRelated)
 	{
 		// Check that all parameters in config are related to the module
-		ConfigReader conf = m_configReader; // .GetSubConfig("parameters");
+		ConfigReader conf = m_configReader;
 		if(conf.IsEmpty())
 			return;
-		conf = conf.GetSubConfig("param");
+		conf = conf.Find("param");
 		while(!conf.IsEmpty())
 		{
 			string name = conf.GetAttribute("name");
