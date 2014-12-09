@@ -192,7 +192,7 @@ void MarkusWindow::viewDisplayOptions(bool x_isChecked)
 	int size = m_moduleViewer.size();
 	for(int ind = 0 ; ind < size; ind++)
 	{
-		m_moduleViewer[ind]->showDisplayOptions(x_isChecked);
+		m_moduleViewer.at(ind)->showDisplayOptions(x_isChecked);
 	}
 }
 
@@ -259,9 +259,9 @@ void MarkusWindow::resizeEvent(QResizeEvent* event)
 	int size = m_moduleViewer.size();
 	for(int ind = 0 ; ind < size; ind++)
 	{
-		m_mainLayout.removeWidget(m_moduleViewer[ind]);
-		m_mainLayout.removeWidget(m_moduleViewer[ind]);
-		m_moduleViewer[ind]->hide();
+		m_mainLayout.removeWidget(m_moduleViewer.at(ind));
+		m_mainLayout.removeWidget(m_moduleViewer.at(ind));
+		m_moduleViewer.at(ind)->hide();
 	}
 	
 	// Add new module viewers
@@ -272,14 +272,14 @@ void MarkusWindow::resizeEvent(QResizeEvent* event)
 		ConfigReader conf = m_configReader.RefSubConfig("viewer", "name", ss.str(), true);
 		conf.RefSubConfig("parameters", true);
 		m_moduleViewer.push_back(new QModuleViewer(&m_manager, conf));
-		m_moduleViewer[ind]->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-		// m_moduleViewer[ind]->showDisplayOptions(true);
+		m_moduleViewer.at(ind)->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+		// m_moduleViewer.at(ind)->showDisplayOptions(true);
 	}
 	
 	// Remove extra modules
 	for(int ind = m_param.nbRows * m_param.nbCols ; ind < size ; ind++)
 	{
-		delete(m_moduleViewer[ind]);
+		delete(m_moduleViewer.at(ind));
 	}
 	m_moduleViewer.resize(m_param.nbRows * m_param.nbCols);
 
@@ -288,9 +288,9 @@ void MarkusWindow::resizeEvent(QResizeEvent* event)
 		for (int jj = 0; jj < m_param.nbCols; ++jj) 
 		{
 			int ind = ii * m_param.nbCols + jj;
-			m_mainLayout.addWidget(m_moduleViewer[ind], ii, jj);
-			m_moduleViewer[ind]->show();
-			//m_moduleViewer[ind]->toggleDisplayOptions(1);
+			m_mainLayout.addWidget(m_moduleViewer.at(ind), ii, jj);
+			m_moduleViewer.at(ind)->show();
+			//m_moduleViewer.at(ind)->toggleDisplayOptions(1);
 		}
 	}
 }

@@ -99,7 +99,6 @@ private slots:
 	void view3x4();
 	void view4x4();
 	void callManagerCommand();
-
 };
 
 

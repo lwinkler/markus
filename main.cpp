@@ -274,9 +274,9 @@ void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, 
 			if(path.size() != 2)
 				throw MkException("Parameter set in command line must be in format 'module.parameter'", LOC);
 			if(path[0] == "manager")
-				appConfig.RefSubConfig("parameters", true).RefSubConfig("param", "name", path[1], true).SetValue(value);
+				appConfig.FindRef("parameters>param[name=\"" + path[1] + "\"]", true).SetValue(value);
 			else
-				appConfig.RefSubConfig("module", "name", path[0]).RefSubConfig("parameters").RefSubConfig("param", "name", path[1], true).SetValue(value);
+				appConfig.FindRef("module[name=\"" + path[0] + "\"]>parameters>param[name=\"" + path[1] + "\"]", true).SetValue(value);
 			// manager.GetModuleByName(path[0])->GetParameters().RefParameterByName(path[1]).SetValue(value, PARAMCONF_CMD);
 		}
 		catch(std::exception& e)
@@ -356,8 +356,8 @@ int main(int argc, char** argv)
 			
 
 		// Override parameter auto_process with centralized
-		appConfig.RefSubConfig("parameters", true).RefSubConfig("param", "name", "auto_process", true).SetValue(args.centralized ? "1" : "0");
-		appConfig.RefSubConfig("parameters", true).RefSubConfig("param", "name", "fast", true).SetValue(args.fast ? "1" : "0");
+		appConfig.FindRef("parameters>param[name=\"auto_process\"]", true).SetValue(args.centralized ? "1" : "0");
+		appConfig.FindRef("parameters>param[name=\"fast\"]", true).SetValue(args.fast ? "1" : "0");
 
 		// Set manager and context
 		Manager manager(appConfig);
@@ -410,6 +410,7 @@ int main(int argc, char** argv)
 			ConfigReader mainGuiConfig("gui.xml", true);
 			ConfigReader guiConfig = mainGuiConfig.RefSubConfig("gui", "name", args.configFile, true);
 			guiConfig.RefSubConfig("parameters", true);
+			mainGuiConfig.SaveToFile("ddd.xml");
 
 			MarkusWindow gui(guiConfig, manager);
 			gui.setWindowTitle("Markus");

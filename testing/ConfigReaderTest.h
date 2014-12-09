@@ -41,6 +41,7 @@ protected:
 	ConfigReader* m_conf1;
 	ConfigReader* m_conf2;
 	ConfigReader* m_conf3;
+	ConfigReader* m_conf4;
 public:
 	void runTest()
 	{
@@ -51,31 +52,32 @@ public:
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		m_conf2 = new ConfigReader("/tmp/config_empty.xml");
 		m_conf3 = new ConfigReader("/tmp/config_empty.xml");
+		m_conf4 = new ConfigReader("/tmp/config_empty.xml");
 	}
 	void tearDown()
 	{
 		delete m_conf1;
 		delete m_conf2;
 		delete m_conf3;
+		delete m_conf4;
 	}
 
 
 	/// Test new syntax
 	void testSyntax()
 	{
-		
 		ConfigReader conf(*m_conf3);
 		conf.RefSubConfig("t1", true).RefSubConfig("t2", true).RefSubConfig("t3", "name", "bla", true).SetValue("333");
 		m_conf3->SaveToFile("testing/tmp/test3.xml");
+		conf = *m_conf4;
+		conf.FindRef("t1>t2>t3[name=\"bla\"]", true).SetValue("333");
+		m_conf4->SaveToFile("testing/tmp/test4.xml");
+		// TODO: Test that both files are similar
 
 		CPPUNIT_ASSERT(!conf.Find("t1").IsEmpty());
 		CPPUNIT_ASSERT(!conf.Find("t1>t2").IsEmpty());
 		CPPUNIT_ASSERT(!conf.Find("t1>t2>t3[name=\"bla\"]").IsEmpty());
 		CPPUNIT_ASSERT( conf.Find("t1>t2>t3[name=\"bla\"]").GetValue() == "333");
-		
-		
-		
-		
 	}
 
 	/// Load and save a config file
