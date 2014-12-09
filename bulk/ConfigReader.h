@@ -76,8 +76,8 @@ public:
 	void OverrideWith(const ConfigReader& xr_extraConfig);
 
 	// New access functions with JQuery-like syntax
-	const ConfigReader Find(const std::string& x_searchString) const;
-	ConfigReader    FindRef(const std::string& x_searchString, bool x_allowCreation = false);
+	const ConfigReader Find(const std::string& x_searchString, bool x_fatal = false) const;
+	ConfigReader    FindRef(const std::string& x_searchString, bool x_allowCreation = false, bool x_fatal = false);
 
 private:
 	void CheckUniquenessOfId(const std::string& x_group, const std::string& x_type, const std::string& x_idLabel, const std::string& x_moduleName) const;

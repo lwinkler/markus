@@ -41,6 +41,21 @@ string writeDescription(const string& x_description, const string& x_position, c
 	return description;
 }
 
+/**
+* @brief A fatal error. To be used when no exception can be thrown
+*
+* @param x_description Description
+* @param x_position    Position
+* @param x_function    Function of method
+*
+*/
+void fatal(const std::string& x_description, const std::string& x_position, const std::string& x_function)
+{
+	std::cerr<<"FATAL ERROR: "<<writeDescription(x_description, x_position, x_function)<<std::endl;
+	exit(1);
+}
+
+
 MkException::MkException(const string& x_description, const string& x_position, const string& x_function)
 : m_description(writeDescription(x_description, x_position, x_function))
 {

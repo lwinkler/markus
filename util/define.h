@@ -67,8 +67,9 @@ Class &operator=(const Class &);
 	ss<<"Execution of command failed: "<<Xcmd;\
 	throw MkException(ss.str(), LOC);}}
 
-// This function is not implemented (yet)
+// This means that a function is not implemented (yet)
 #define NON_EXISTANT assert(false)
+
 
 #endif
 

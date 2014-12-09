@@ -22,8 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ConfigReader.h"
-#include "Module.h"
-#include "Manager.h"
+#include "ParameterStructure.h"
 #include "util.h"
 #include <tinyxml.h>
 
@@ -43,25 +42,32 @@ void Configurable::UpdateConfig()
 *
 * @param x_fileName      Name of the XML file with relative path
 * @param x_allowCreation Allow the creation of a new file if unexistant
+* @param x_fatal         Errors cause the program to exit (to avoid throwing exceptions in constructors)
 */
 ConfigReader::ConfigReader(const string& x_fileName, bool x_allowCreation)
 {
-	m_isOriginal = true;
-	mp_doc = NULL; // Initialize to null as there can be an error in construction
-	mp_doc = new TiXmlDocument(x_fileName);
-	if (! mp_doc->LoadFile())
+	try
 	{
-		delete mp_doc;
-		if(x_allowCreation)
+		m_isOriginal = true;
+		mp_doc = NULL; // Initialize to null as there can be an error in construction
+		mp_doc = new TiXmlDocument(x_fileName);
+		if (! mp_doc->LoadFile())
 		{
-			createEmptyConfigFile(x_fileName);
-			mp_doc = new TiXmlDocument(x_fileName);
-			assert(mp_doc->LoadFile());
+			delete mp_doc;
+			if(x_allowCreation)
+			{
+				createEmptyConfigFile(x_fileName);
+				mp_doc = new TiXmlDocument(x_fileName);
+				assert(mp_doc->LoadFile());
+			}
+			else throw MkException("Could not load file as XML '" + x_fileName + "'. Error='" + mp_doc->ErrorDesc() + "'. Exiting.", LOC);
 		}
-		else
-			throw MkException("Could not load file as XML '" + x_fileName + "'. Error='" + mp_doc->ErrorDesc() + "'. Exiting.", LOC);
+		mp_node = mp_doc;
 	}
-	mp_node = mp_doc;
+	catch(...)
+	{
+		fatal("Fatal exception in constructor of ConfigReader", LOC);
+	}
 }
 
 
@@ -430,42 +436,51 @@ void ConfigReader::OverrideWith(const ConfigReader& x_extraConfig)
 * @param  x_searchString The search path with jquery-like syntax
 * @return value
 */
-const ConfigReader ConfigReader::Find(const string& x_searchString) const
+const ConfigReader ConfigReader::Find(const string& x_searchString, bool x_fatal) const
 {
-	if(x_searchString.empty())
-		return *this;
-
-	size_t pos1 = x_searchString.find('>');
-	ConfigReader conf1(*this);
-
-	// split search string according to >
-	string searchString1 = x_searchString;
-	string searchString2;
-	if(pos1 != string::npos)
+	try
 	{
-		searchString1 = x_searchString.substr(0, pos1);
-		searchString2 = x_searchString.substr(pos1 + 1);
+		if(x_searchString.empty())
+			return *this;
+
+		size_t pos1 = x_searchString.find('>');
+		ConfigReader conf1(*this);
+
+		// split search string according to >
+		string searchString1 = x_searchString;
+		string searchString2;
+		if(pos1 != string::npos)
+		{
+			searchString1 = x_searchString.substr(0, pos1);
+			searchString2 = x_searchString.substr(pos1 + 1);
+		}
+
+		size_t pos2 = searchString1.find('[');
+		if(pos2 == string::npos)
+			return GetSubConfig(searchString1).Find(searchString2);
+
+		// If we have a [...] part in search string
+		size_t pos3 = searchString1.find("=\"", pos2);
+		if(pos3 == string::npos)
+			throw MkException("Expecting a '=\"'");
+
+		size_t pos4 = searchString1.find("\"]", pos3);
+		if(pos4 == string::npos)
+			throw MkException("Expecting a '\"]'");
+
+		// Search subconfigs for the right one
+		string nodeName      = searchString1.substr(0, pos2);
+		string attrName      = searchString1.substr(pos2 + 1, pos3 - pos2 - 1);
+		string attrValue     = searchString1.substr(pos3 + 2, pos4 - pos3 - 2);
+
+		return GetSubConfig(nodeName, attrName, attrValue).Find(searchString2);
 	}
-
-	size_t pos2 = searchString1.find('[');
-	if(pos2 == string::npos)
-		return GetSubConfig(searchString1).Find(searchString2);
-
-	// If we have a [...] part in search string
-	size_t pos3 = searchString1.find("=\"", pos2);
-	if(pos3 == string::npos)
-		throw MkException("Expecting a '=\"'");
-
-	size_t pos4 = searchString1.find("\"]", pos3);
-	if(pos4 == string::npos)
-		throw MkException("Expecting a '\"]'");
-
-	// Search subconfigs for the right one
-	string nodeName      = searchString1.substr(0, pos2);
-	string attrName      = searchString1.substr(pos2 + 1, pos3 - pos2 - 1);
-	string attrValue     = searchString1.substr(pos3 + 2, pos4 - pos3 - 2);
-
-	return GetSubConfig(nodeName, attrName, attrValue).Find(searchString2);
+	catch(...)
+	{
+		if(x_fatal)
+			fatal("Fatal exception while finding target " + x_searchString, LOC);
+		else throw;
+	}
 }
 
 /**
@@ -474,40 +489,49 @@ const ConfigReader ConfigReader::Find(const string& x_searchString) const
 * @param  x_searchString The search path with jquery-like syntax
 * @return value
 */
-ConfigReader ConfigReader::FindRef(const string& x_searchString, bool x_allowCreation)
+ConfigReader ConfigReader::FindRef(const string& x_searchString, bool x_allowCreation, bool x_fatal)
 {
-	if(x_searchString.empty())
-		return *this;
-
-	size_t pos1 = x_searchString.find('>');
-	ConfigReader conf1(*this);
-
-	// split search string according to >
-	string searchString1 = x_searchString;
-	string searchString2;
-	if(pos1 != string::npos)
+	try
 	{
-		searchString1 = x_searchString.substr(0, pos1);
-		searchString2 = x_searchString.substr(pos1 + 1);
+		if(x_searchString.empty())
+			return *this;
+
+		size_t pos1 = x_searchString.find('>');
+		ConfigReader conf1(*this);
+
+		// split search string according to >
+		string searchString1 = x_searchString;
+		string searchString2;
+		if(pos1 != string::npos)
+		{
+			searchString1 = x_searchString.substr(0, pos1);
+			searchString2 = x_searchString.substr(pos1 + 1);
+		}
+
+		size_t pos2 = searchString1.find('[');
+		if(pos2 == string::npos)
+			return RefSubConfig(searchString1, x_allowCreation).FindRef(searchString2, x_allowCreation);
+
+		// If we have a [...] part in search string
+		size_t pos3 = searchString1.find("=\"", pos2);
+		if(pos3 == string::npos)
+			throw MkException("Expecting a '=\"'");
+
+		size_t pos4 = searchString1.find("\"]", pos3);
+		if(pos4 == string::npos)
+			throw MkException("Expecting a '\"]'");
+
+		// Search subconfigs for the right one
+		string nodeName      = searchString1.substr(0, pos2);
+		string attrName      = searchString1.substr(pos2 + 1, pos3 - pos2 - 1);
+		string attrValue     = searchString1.substr(pos3 + 2, pos4 - pos3 - 2);
+
+		return RefSubConfig(nodeName, attrName, attrValue, x_allowCreation).FindRef(searchString2, x_allowCreation);
 	}
-
-	size_t pos2 = searchString1.find('[');
-	if(pos2 == string::npos)
-		return RefSubConfig(searchString1, x_allowCreation).FindRef(searchString2, x_allowCreation);
-
-	// If we have a [...] part in search string
-	size_t pos3 = searchString1.find("=\"", pos2);
-	if(pos3 == string::npos)
-		throw MkException("Expecting a '=\"'");
-
-	size_t pos4 = searchString1.find("\"]", pos3);
-	if(pos4 == string::npos)
-		throw MkException("Expecting a '\"]'");
-
-	// Search subconfigs for the right one
-	string nodeName      = searchString1.substr(0, pos2);
-	string attrName      = searchString1.substr(pos2 + 1, pos3 - pos2 - 1);
-	string attrValue     = searchString1.substr(pos3 + 2, pos4 - pos3 - 2);
-
-	return RefSubConfig(nodeName, attrName, attrValue, x_allowCreation).FindRef(searchString2, x_allowCreation);
+	catch(...)
+	{
+		if(x_fatal)
+			fatal("Fatal exception while finding target " + x_searchString, LOC);
+		else throw;
+	}
 }

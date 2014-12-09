@@ -11,6 +11,8 @@
 #define LOC __FILE__ ":" S2(__LINE__), __FUNCTION__ 
 #define POSITION __FILE__ ":" S2(__LINE__)
 
+void fatal(const std::string& x_description, const std::string& x_position, const std::string& x_function);
+
 class Parameter;
 
 /**
