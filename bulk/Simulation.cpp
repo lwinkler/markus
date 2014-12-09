@@ -246,7 +246,7 @@ void Simulation::Generate(ConfigReader& mainConfig)
 	m_targets.str("");
 	m_cpt = 0;
 
-	ConfigReader varConf = m_configReader.GetSubConfig("variations").GetSubConfig("var");
+	ConfigReader varConf = m_configReader.Find("variations>var");
 	vector<string> variationNames;
 	AddVariations(variationNames, varConf, mainConfig);
 

@@ -162,10 +162,10 @@ void Manager::Connect()
 
 		// For each module
 		// Read conections of inputs
-		ConfigReader conf = moduleConfig.GetSubConfig("inputs");
+		ConfigReader conf = moduleConfig.Find("inputs");
 		if(!conf.IsEmpty())
 		{
-			ConfigReader inputConfig = conf.GetSubConfig("input");
+			ConfigReader inputConfig = conf.Find("input");
 			while(! inputConfig.IsEmpty())
 			{
 				// Check if connected to our previous module
