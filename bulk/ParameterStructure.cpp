@@ -66,13 +66,11 @@ void ParameterStructure::Init()
 */
 void ParameterStructure::SetFromConfig()
 {
-	ConfigReader conf = m_configReader;
-	if(conf.IsEmpty())
+	if(m_configReader.IsEmpty())
 		return;
-	conf = conf.Find("param");
-	while(!conf.IsEmpty())
+	for(auto conf : m_configReader.FindAll("param"))
 	{
-		string name = conf.GetAttribute("name");
+		string name  = conf.GetAttribute("name");
 		string value = conf.GetValue();
 		//SetValueByName(name, value, PARAMCONF_XML);
 
@@ -87,7 +85,6 @@ void ParameterStructure::SetFromConfig()
 			// note: do not output a warning, unused parameters are checked inside CheckRange
 			// LOG_WARN(m_logger, "Unknown parameter in configuration: "<<name<<" in module "<<m_moduleName);
 		}
-		conf = conf.NextSubConfig("param");
 	}
 }
 
@@ -172,14 +169,11 @@ void ParameterStructure::CheckRange(bool x_checkRelated) const
 	if(x_checkRelated)
 	{
 		// Check that all parameters in config are related to the module
-		ConfigReader conf = m_configReader;
-		if(conf.IsEmpty())
+		if(m_configReader.IsEmpty())
 			return;
-		conf = conf.Find("param");
-		while(!conf.IsEmpty())
+		for(auto conf : m_configReader.FindAll("param"))
 		{
 			string name = conf.GetAttribute("name");
-
 			try
 			{
 				GetParameterByName(name);
@@ -188,7 +182,6 @@ void ParameterStructure::CheckRange(bool x_checkRelated) const
 			{
 				LOG_WARN(m_logger, e.what());
 			}
-			conf = conf.NextSubConfig("param");
 		}
 	}
 

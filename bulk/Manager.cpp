@@ -59,10 +59,7 @@ Manager::Manager(const ConfigReader& x_configReader) :
 	m_inputs.clear();
 	m_modules.clear();
 
-	// Read the configuration of each module
-	ConfigReader moduleConfig = m_configReader.Find("module", true);
-	
-	while(! moduleConfig.IsEmpty())
+	for(auto moduleConfig : m_configReader.FindAll("module", true))
 	{
 		// Read parameters
 		if(moduleConfig.Find("parameters", true).IsEmpty()) 
@@ -74,7 +71,6 @@ Manager::Manager(const ConfigReader& x_configReader) :
 		m_modules.push_back(tmp1);
 		if(tmp1->IsInput())
 			m_inputs.push_back(tmp1);
-		moduleConfig = moduleConfig.NextSubConfig("module"); // TODO: use vect of conf
 	}
 }
 
@@ -149,9 +145,7 @@ void Manager::Connect()
 		throw MkException("Manager can only connect modules once", LOC);
 	
 	// Connect input and output streams (re-read the config once since we need all modules to be connected)
-	ConfigReader moduleConfig = m_configReader.Find("module");
-	
-	while(! moduleConfig.IsEmpty())
+	for(auto moduleConfig : m_configReader.FindAll("module"))
 	{
 		int moduleId = atoi(moduleConfig.GetAttribute("id").c_str());
 		Module& module = RefModuleById(moduleId);
@@ -162,38 +156,31 @@ void Manager::Connect()
 
 		// For each module
 		// Read conections of inputs
-		ConfigReader conf = moduleConfig.Find("inputs");
-		if(!conf.IsEmpty())
+		for(auto inputConfig : moduleConfig.Find("inputs").FindAll("input"))
 		{
-			ConfigReader inputConfig = conf.Find("input");
-			while(! inputConfig.IsEmpty())
+			// Check if connected to our previous module
+			try
 			{
-				// Check if connected to our previous module
-				try
+				int inputId        = atoi(inputConfig.GetAttribute("id").c_str());
+				const string& tmp1 = inputConfig.GetAttribute("moduleid");
+				const string& tmp2 = inputConfig.GetAttribute("outputid");
+				if(tmp1 != "" && tmp2 != "")
 				{
-					int inputId        = atoi(inputConfig.GetAttribute("id").c_str());
-					const string& tmp1 = inputConfig.GetAttribute("moduleid");
-					const string& tmp2 = inputConfig.GetAttribute("outputid");
-					if(tmp1 != "" && tmp2 != "")
-					{
-						int outputModuleId    = atoi(tmp1.c_str());
-						int outputId          = atoi(tmp2.c_str());
-						Stream& inputStream  = module.RefInputStreamById(inputId);
-						Stream& outputStream = RefModuleById(outputModuleId).RefOutputStreamById(outputId);
+					int outputModuleId    = atoi(tmp1.c_str());
+					int outputId          = atoi(tmp2.c_str());
+					Stream& inputStream  = module.RefInputStreamById(inputId);
+					Stream& outputStream = RefModuleById(outputModuleId).RefOutputStreamById(outputId);
 
-						// Connect input and output streams
-						inputStream.Connect(&outputStream);
-					}
+					// Connect input and output streams
+					inputStream.Connect(&outputStream);
 				}
-				catch(MkException& e)
-				{
-					LOG_ERROR(m_logger, "Cannot connect input "<<inputConfig.GetAttribute("id")<<" of module "<<module.GetName());
-					throw;
-				}
-				inputConfig = inputConfig.NextSubConfig("input");
+			}
+			catch(MkException& e)
+			{
+				LOG_ERROR(m_logger, "Cannot connect input "<<inputConfig.GetAttribute("id")<<" of module "<<module.GetName());
+				throw;
 			}
 		}
-		moduleConfig = moduleConfig.NextSubConfig("module");
 	}
 
 	// Set the master module for each module

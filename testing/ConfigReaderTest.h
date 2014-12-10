@@ -71,6 +71,7 @@ public:
 		m_conf3->SaveToFile("testing/tmp/test3.xml");
 		conf = *m_conf4;
 		conf.FindRef("t1>t2>t3[name=\"bla\"]", true).SetValue("333");
+		conf.FindRef("t1>t2>t3[name=\"blo\"]", true).SetValue("555");
 		m_conf4->SaveToFile("testing/tmp/test4.xml");
 		// TODO: Test that both files are similar
 
@@ -78,6 +79,9 @@ public:
 		CPPUNIT_ASSERT(!conf.Find("t1>t2").IsEmpty());
 		CPPUNIT_ASSERT(!conf.Find("t1>t2>t3[name=\"bla\"]").IsEmpty());
 		CPPUNIT_ASSERT( conf.Find("t1>t2>t3[name=\"bla\"]").GetValue() == "333");
+		CPPUNIT_ASSERT(conf.FindAll("t1>t2>t3[name=\"bla\"]").size() == 1);
+		CPPUNIT_ASSERT(conf.FindAll("t1>t2>t3").size() == 2);
+		CPPUNIT_ASSERT(conf.Find("t1>t2").FindAll("t3").size() == 2);
 	}
 
 	/// Load and save a config file
