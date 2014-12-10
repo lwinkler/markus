@@ -11,6 +11,8 @@
 #define LOC __FILE__ ":" S2(__LINE__), __FUNCTION__ 
 #define POSITION __FILE__ ":" S2(__LINE__)
 
+void fatal(const std::string& x_description, const std::string& x_position, const std::string& x_function);
+
 class Parameter;
 
 /**
@@ -37,8 +39,8 @@ enum MkExceptionCode
 */
 class MkException : public std::exception, public Serializable {
 	public:
-		MkException(const std::string& x_description="Exception occured", const std::string& x_position="", const std::string& x_function="");
-		MkException(MkExceptionCode x_code, const std::string& x_description="Exception occured", const std::string& x_position="", const std::string& x_function="");
+		MkException(const std::string& x_description, const std::string& x_position, const std::string& x_function);
+		MkException(MkExceptionCode x_code, const std::string& x_description, const std::string& x_position, const std::string& x_function);
 		~MkException() throw();
 		const char* what() const throw();
 		inline MkExceptionCode GetCode(){return m_code;}

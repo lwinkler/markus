@@ -103,8 +103,7 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 /// Add variation to simulation
 void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigReader& x_varConf, ConfigReader& xr_mainConfig)
 {
-	ConfigReader varConf = x_varConf;
-	while(! varConf.IsEmpty())
+	for(auto varConf : x_varConf.FindAll("var"))
 	{
 		// Read module and parameter attribute
 		vector<string> moduleNames;
@@ -129,7 +128,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 		for(string itpar : paramNames)
 		{
 			LOG_DEBUG(m_logger, "Param:"<< *itmod << ":" << itpar);
-			*ittar = new ConfigReader(manOrMod(xr_mainConfig, *itmod).RefSubConfig("parameters", true).RefSubConfig("param", "name", itpar, true));
+			*ittar = new ConfigReader(manOrMod(xr_mainConfig, *itmod).FindRef("parameters>param[name=\"" + itpar + "\"]", true));
 			*itval = (*ittar)->GetValue();
 			ittar++;
 			itval++;
@@ -182,7 +181,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 				if(subConf.IsEmpty())
 					AddSimulationEntry(xr_variationNames, xr_mainConfig);
 				else
-					AddVariations(xr_variationNames, subConf, xr_mainConfig);
+					AddVariations(xr_variationNames, varConf, xr_mainConfig);
 				xr_variationNames.pop_back();
 			}
 			ifs.close();
@@ -213,7 +212,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 				if(subConf.IsEmpty())
 					AddSimulationEntry(xr_variationNames, xr_mainConfig);
 				else
-					AddVariations(xr_variationNames, subConf, xr_mainConfig);
+					AddVariations(xr_variationNames, varConf, xr_mainConfig);
 				xr_variationNames.pop_back();
 			}
 		}
@@ -226,7 +225,6 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 			delete target;
 			itval++;
 		}
-		varConf = varConf.NextSubConfig("var");
 	}
 }
 
@@ -246,9 +244,8 @@ void Simulation::Generate(ConfigReader& mainConfig)
 	m_targets.str("");
 	m_cpt = 0;
 
-	ConfigReader varConf = m_configReader.GetSubConfig("variations").GetSubConfig("var");
 	vector<string> variationNames;
-	AddVariations(variationNames, varConf, mainConfig);
+	AddVariations(variationNames, m_configReader.Find("variations"), mainConfig);
 
 	// Generate a MakeFile for the simulation
 	string makefile = m_outputDir + "/simulation.make";

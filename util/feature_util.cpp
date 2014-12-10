@@ -147,9 +147,9 @@ ostream& serialize(ostream& x_out, const Mat& x_value)
 		x_out << "[";
 		int j = 0;
 		for( ; j < x_value.cols - 1 ; j++)
-			x_out << (int)x_value.at<uchar>(i,j,0) << ",";
+			x_out << static_cast<int>(x_value.at<uchar>(i,j,0)) << ",";
 		if(j == x_value.cols - 1)
-			x_out << (int)x_value.at<uchar>(i,j,0);
+			x_out << static_cast<int>(x_value.at<uchar>(i,j,0));
 
 		if(i == x_value.rows - 1)
 			x_out<<"]";

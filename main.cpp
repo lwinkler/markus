@@ -328,7 +328,7 @@ int main(int argc, char** argv)
 		LOG_INFO(logger, Context::Version(true));
 		ConfigReader mainConfig(args.configFile);
 		mainConfig.Validate();
-		ConfigReader appConfig = mainConfig.GetSubConfig("application");
+		ConfigReader appConfig = mainConfig.Find("application");
 		assert(!appConfig.IsEmpty());
 
 		// Init global variables and objects
@@ -349,7 +349,7 @@ int main(int argc, char** argv)
 
 		if(args.simulation)
 		{
-			Simulation sim(mainConfig.GetSubConfig("application"), context);
+			Simulation sim(mainConfig.Find("application"), context);
 			sim.Generate(mainConfig);
 			return 0;
 		}

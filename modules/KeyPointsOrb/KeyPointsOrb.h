@@ -44,7 +44,7 @@ public:
 			m_list.push_back(new ParameterFloat("scale_factor" , 1.2 , 1 , 1.2  , &scaleFactor   , ""));
 			m_list.push_back(new ParameterInt("nb_levels"      , 8   , 1 , 10   , &nbLevels      , ""));
 			m_list.push_back(new ParameterInt("edge_threshold" , 31  , 2 , 100  , &edgeThreshold , ""));
-			m_list.push_back(new ParameterInt("first_level"    , 0   , 0 , 10   , &firstLevel    , ""));
+			m_list.push_back(new ParameterInt("first_level"    , 0   , 0 , 5    , &firstLevel    , ""));
 			m_list.push_back(new ParameterInt("wta_k"          , 2   , 0 , 100  , &wta_k         , ""));
 
 			// Limit size to accelerate unit tests

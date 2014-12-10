@@ -22,13 +22,50 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ConfigReader.h"
-#include "Module.h"
-#include "Manager.h"
+#include "ParameterStructure.h"
 #include "util.h"
 #include <tinyxml.h>
 
 using namespace std;
 
+
+/// split tag[name="bla"]>bloo into tag, name, bla and bloo
+void splitTagName(const string& x_searchString, string& xr_tagName, string& xr_attrName, string& xr_attrValue, string& xr_searchString2)
+{
+	size_t pos1 = x_searchString.find('>');
+
+	// split search string according to >
+	string searchString1 = x_searchString;
+	xr_searchString2 = "";
+	if(pos1 != string::npos)
+	{
+		searchString1 = x_searchString.substr(0, pos1);
+		xr_searchString2 = x_searchString.substr(pos1 + 1);
+	}
+
+	size_t pos2 = searchString1.find('[');
+	if(pos2 == string::npos)
+	{
+		xr_tagName   = searchString1;
+		xr_attrName  = "";
+		xr_attrValue = "";
+		return;
+	}
+
+	// If we have a [...] part in search string
+	size_t pos3 = searchString1.find("=\"", pos2);
+	if(pos3 == string::npos)
+		throw MkException("Expecting a '=\"'", LOC);
+
+	size_t pos4 = searchString1.find("\"]", pos3);
+	if(pos4 == string::npos)
+		throw MkException("Expecting a '\"]'", LOC);
+
+	// Search subconfigs for the right one
+	xr_tagName       = searchString1.substr(0, pos2);
+	xr_attrName      = searchString1.substr(pos2 + 1, pos3 - pos2 - 1);
+	xr_attrValue     = searchString1.substr(pos3 + 2, pos4 - pos3 - 2);
+}
 
 /**
 * @brief Save the parameters values to the config object, ready to be written to disk
@@ -43,25 +80,32 @@ void Configurable::UpdateConfig()
 *
 * @param x_fileName      Name of the XML file with relative path
 * @param x_allowCreation Allow the creation of a new file if unexistant
+* @param x_fatal         Errors cause the program to exit (to avoid throwing exceptions in constructors)
 */
 ConfigReader::ConfigReader(const string& x_fileName, bool x_allowCreation)
 {
-	m_isOriginal = true;
-	mp_doc = NULL; // Initialize to null as there can be an error in construction
-	mp_doc = new TiXmlDocument(x_fileName);
-	if (! mp_doc->LoadFile())
+	try
 	{
-		delete mp_doc;
-		if(x_allowCreation)
+		m_isOriginal = true;
+		mp_doc = NULL; // Initialize to null as there can be an error in construction
+		mp_doc = new TiXmlDocument(x_fileName);
+		if (! mp_doc->LoadFile())
 		{
-			createEmptyConfigFile(x_fileName);
-			mp_doc = new TiXmlDocument(x_fileName);
-			assert(mp_doc->LoadFile());
+			delete mp_doc;
+			if(x_allowCreation)
+			{
+				createEmptyConfigFile(x_fileName);
+				mp_doc = new TiXmlDocument(x_fileName);
+				assert(mp_doc->LoadFile());
+			}
+			else throw MkException("Could not load file as XML '" + x_fileName + "'. Error='" + mp_doc->ErrorDesc() + "'. Exiting.", LOC);
 		}
-		else
-			throw MkException("Could not load file as XML '" + x_fileName + "'. Error='" + mp_doc->ErrorDesc() + "'. Exiting.", LOC);
+		mp_node = mp_doc;
 	}
-	mp_node = mp_doc;
+	catch(...)
+	{
+		fatal("Fatal exception in constructor of ConfigReader", LOC);
+	}
 }
 
 
@@ -156,6 +200,9 @@ const ConfigReader ConfigReader::GetSubConfig(const string& x_tagName, const str
 		throw MkException("Impossible to find node " + x_tagName + " in ConfigReader with name " + x_attrName + "=\"" + x_attrValue + "\"" , LOC);
 	TiXmlNode* newNode = mp_node->FirstChild(x_tagName);
 	
+	if(x_attrName == "")
+		return ConfigReader(newNode);
+
 	while(newNode != NULL && newNode->ToElement()->Attribute(x_attrName.c_str()) != x_attrValue)
 	{
 		newNode = newNode->NextSibling(x_tagName);
@@ -182,15 +229,17 @@ ConfigReader ConfigReader::RefSubConfig(const string& x_tagName, const string& x
 	TiXmlNode* newNode = mp_node->FirstChild(x_tagName);
 	
 	const char* name = NULL;
-	while(newNode != NULL && ((name = newNode->ToElement()->Attribute("name")) == NULL || x_attrValue != name))
-	{
-		newNode = newNode->NextSibling(x_tagName);
-	}
+	if(x_attrName != "")
+		while(newNode != NULL && ((name = newNode->ToElement()->Attribute("name")) == NULL || x_attrValue != name))
+		{
+			newNode = newNode->NextSibling(x_tagName);
+		}
 	if(newNode == NULL && x_allowCreation)
 	{ 
 		// Add a sub config element if not found
 		TiXmlElement* element = new TiXmlElement(x_tagName);
-		element->SetAttribute(x_attrName, x_attrValue);
+		if(x_attrName != "")
+			element->SetAttribute(x_attrName, x_attrValue);
 		mp_node->LinkEndChild(element);
 		return ConfigReader(element);
 	}
@@ -428,44 +477,31 @@ void ConfigReader::OverrideWith(const ConfigReader& x_extraConfig)
 * @brief Find a sub config (with a similar syntax as JQuery)
 *
 * @param  x_searchString The search path with jquery-like syntax
+* @param  x_fatal        All exceptions are fatal: close program
 * @return value
 */
-const ConfigReader ConfigReader::Find(const string& x_searchString) const
+const ConfigReader ConfigReader::Find(const string& x_searchString, bool x_fatal) const
 {
-	if(x_searchString.empty())
-		return *this;
-
-	size_t pos1 = x_searchString.find('>');
-	ConfigReader conf1(*this);
-
-	// split search string according to >
-	string searchString1 = x_searchString;
-	string searchString2;
-	if(pos1 != string::npos)
+	try
 	{
-		searchString1 = x_searchString.substr(0, pos1);
-		searchString2 = x_searchString.substr(pos1 + 1);
+		// If empty return node: for recurrent function
+		if(x_searchString.empty())
+			return *this;
+
+		string tagName, attrName, attrValue, searchString2;
+		splitTagName(x_searchString, tagName, attrName, attrValue, searchString2);
+
+		if(attrName == "")
+			return GetSubConfig(tagName).Find(searchString2);
+		else
+			return GetSubConfig(tagName, attrName, attrValue).Find(searchString2);
 	}
-
-	size_t pos2 = searchString1.find('[');
-	if(pos2 == string::npos)
-		return GetSubConfig(searchString1).Find(searchString2);
-
-	// If we have a [...] part in search string
-	size_t pos3 = searchString1.find("=\"", pos2);
-	if(pos3 == string::npos)
-		throw MkException("Expecting a '=\"'");
-
-	size_t pos4 = searchString1.find("\"]", pos3);
-	if(pos4 == string::npos)
-		throw MkException("Expecting a '\"]'");
-
-	// Search subconfigs for the right one
-	string nodeName      = searchString1.substr(0, pos2);
-	string attrName      = searchString1.substr(pos2 + 1, pos3 - pos2 - 1);
-	string attrValue     = searchString1.substr(pos3 + 2, pos4 - pos3 - 2);
-
-	return GetSubConfig(nodeName, attrName, attrValue).Find(searchString2);
+	catch(...)
+	{
+		if(x_fatal)
+			fatal("Fatal exception while finding target " + x_searchString, LOC);
+		else throw;
+	}
 }
 
 /**
@@ -474,40 +510,73 @@ const ConfigReader ConfigReader::Find(const string& x_searchString) const
 * @param  x_searchString The search path with jquery-like syntax
 * @return value
 */
-ConfigReader ConfigReader::FindRef(const string& x_searchString, bool x_allowCreation)
+ConfigReader ConfigReader::FindRef(const string& x_searchString, bool x_allowCreation, bool x_fatal)
 {
-	if(x_searchString.empty())
-		return *this;
-
-	size_t pos1 = x_searchString.find('>');
-	ConfigReader conf1(*this);
-
-	// split search string according to >
-	string searchString1 = x_searchString;
-	string searchString2;
-	if(pos1 != string::npos)
+	try
 	{
-		searchString1 = x_searchString.substr(0, pos1);
-		searchString2 = x_searchString.substr(pos1 + 1);
+		if(x_searchString.empty())
+			return *this;
+
+		string tagName, attrName, attrValue, searchString2;
+		splitTagName(x_searchString, tagName, attrName, attrValue, searchString2);
+		
+		if(attrName == "")
+			return RefSubConfig(tagName, x_allowCreation).FindRef(searchString2, x_allowCreation);
+		else
+			return RefSubConfig(tagName, attrName, attrValue, x_allowCreation).FindRef(searchString2, x_allowCreation);
 	}
+	catch(...)
+	{
+		if(x_fatal)
+			fatal("Fatal exception while finding target " + x_searchString, LOC);
+		else throw;
+	}
+}
 
-	size_t pos2 = searchString1.find('[');
-	if(pos2 == string::npos)
-		return RefSubConfig(searchString1, x_allowCreation).FindRef(searchString2, x_allowCreation);
 
-	// If we have a [...] part in search string
-	size_t pos3 = searchString1.find("=\"", pos2);
-	if(pos3 == string::npos)
-		throw MkException("Expecting a '=\"'");
+/**
+* @brief Find all sub configs (with a similar syntax as JQuery)
+*
+* @param  x_searchString The search path with jquery-like syntax
+* @param  x_fatal        All exceptions are fatal: close program
+* @return A vector of configurations
+*/
+vector<ConfigReader> ConfigReader::FindAll(const string& x_searchString, bool x_fatal) const
+{
+	try
+	{
+		// If empty return node: for recurrent function
+		if(x_searchString.empty())
+		{
+			vector<ConfigReader> results;
+			results.push_back(*this);
+			return results;
+		}
 
-	size_t pos4 = searchString1.find("\"]", pos3);
-	if(pos4 == string::npos)
-		throw MkException("Expecting a '\"]'");
+		string tagName, attrName, attrValue, searchString2;
+		splitTagName(x_searchString, tagName, attrName, attrValue, searchString2);
 
-	// Search subconfigs for the right one
-	string nodeName      = searchString1.substr(0, pos2);
-	string attrName      = searchString1.substr(pos2 + 1, pos3 - pos2 - 1);
-	string attrValue     = searchString1.substr(pos3 + 2, pos4 - pos3 - 2);
-
-	return RefSubConfig(nodeName, attrName, attrValue, x_allowCreation).FindRef(searchString2, x_allowCreation);
+		if(searchString2 == "")
+		{
+			vector<ConfigReader> results;
+			ConfigReader conf = GetSubConfig(tagName, attrName, attrValue);
+			while(!conf.IsEmpty())
+			{
+				results.push_back(conf);
+				conf = conf.NextSubConfig(tagName, attrName, attrValue);
+			}
+			return results;
+		}
+		else
+			if(attrName == "")
+				return GetSubConfig(tagName).FindAll(searchString2);
+			else
+				return GetSubConfig(tagName, attrName, attrValue).FindAll(searchString2);
+	}
+	catch(...)
+	{
+		if(x_fatal)
+			fatal("Fatal exception while finding target " + x_searchString, LOC);
+		else throw;
+	}
 }
