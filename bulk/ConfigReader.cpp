@@ -200,6 +200,9 @@ const ConfigReader ConfigReader::GetSubConfig(const string& x_tagName, const str
 		throw MkException("Impossible to find node " + x_tagName + " in ConfigReader with name " + x_attrName + "=\"" + x_attrValue + "\"" , LOC);
 	TiXmlNode* newNode = mp_node->FirstChild(x_tagName);
 	
+	if(x_attrName == "")
+		return ConfigReader(newNode);
+
 	while(newNode != NULL && newNode->ToElement()->Attribute(x_attrName.c_str()) != x_attrValue)
 	{
 		newNode = newNode->NextSibling(x_tagName);
@@ -226,15 +229,17 @@ ConfigReader ConfigReader::RefSubConfig(const string& x_tagName, const string& x
 	TiXmlNode* newNode = mp_node->FirstChild(x_tagName);
 	
 	const char* name = NULL;
-	while(newNode != NULL && ((name = newNode->ToElement()->Attribute("name")) == NULL || x_attrValue != name))
-	{
-		newNode = newNode->NextSibling(x_tagName);
-	}
+	if(x_attrName != "")
+		while(newNode != NULL && ((name = newNode->ToElement()->Attribute("name")) == NULL || x_attrValue != name))
+		{
+			newNode = newNode->NextSibling(x_tagName);
+		}
 	if(newNode == NULL && x_allowCreation)
 	{ 
 		// Add a sub config element if not found
 		TiXmlElement* element = new TiXmlElement(x_tagName);
-		element->SetAttribute(x_attrName, x_attrValue);
+		if(x_attrName != "")
+			element->SetAttribute(x_attrName, x_attrValue);
 		mp_node->LinkEndChild(element);
 		return ConfigReader(element);
 	}
@@ -472,6 +477,7 @@ void ConfigReader::OverrideWith(const ConfigReader& x_extraConfig)
 * @brief Find a sub config (with a similar syntax as JQuery)
 *
 * @param  x_searchString The search path with jquery-like syntax
+* @param  x_fatal        All exceptions are fatal: close program
 * @return value
 */
 const ConfigReader ConfigReader::Find(const string& x_searchString, bool x_fatal) const
@@ -532,9 +538,10 @@ ConfigReader ConfigReader::FindRef(const string& x_searchString, bool x_allowCre
 * @brief Find all sub configs (with a similar syntax as JQuery)
 *
 * @param  x_searchString The search path with jquery-like syntax
+* @param  x_fatal        All exceptions are fatal: close program
 * @return A vector of configurations
 */
-std::vector<ConfigReader> ConfigReader::FindAll(const std::string& x_searchString, bool x_fatal) const
+vector<ConfigReader> ConfigReader::FindAll(const string& x_searchString, bool x_fatal) const
 {
 	try
 	{
@@ -552,23 +559,11 @@ std::vector<ConfigReader> ConfigReader::FindAll(const std::string& x_searchStrin
 		if(searchString2 == "")
 		{
 			vector<ConfigReader> results;
-			if(attrName == "")
+			ConfigReader conf = GetSubConfig(tagName, attrName, attrValue);
+			while(!conf.IsEmpty())
 			{
-				ConfigReader conf = GetSubConfig(tagName);
-				while(!conf.IsEmpty())
-				{
-					results.push_back(conf);
-					conf = conf.NextSubConfig(tagName);
-				}
-			}
-			else
-			{
-				ConfigReader conf = GetSubConfig(tagName, attrName, attrValue);
-				while(!conf.IsEmpty())
-				{
-					results.push_back(conf);
-					conf = conf.NextSubConfig(tagName, attrName, attrValue);
-				}
+				results.push_back(conf);
+				conf = conf.NextSubConfig(tagName, attrName, attrValue);
 			}
 			return results;
 		}
