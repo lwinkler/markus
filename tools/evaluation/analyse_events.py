@@ -106,8 +106,9 @@ def extract_images(events, truths, video, out='out'):
 
     # The function to extract a precise image
     def extract(kind, time, name):
+	# note: force images to qvga 320x240 to reduce archive size
         subprocess.call([cmd, '-ss', str(time), '-i', str(video),
-                         '-frames:v', '1',
+                         '-frames:v', '1', '-s', 'qvga',
                          os.path.join(path, str(kind) + '_' + str(name) +
                                       '.jpg'), '-y'], stderr=subprocess.PIPE)
 
