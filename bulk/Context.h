@@ -46,7 +46,7 @@ class Context
 		inline void Check() const {if(!m_isset)throw MkException("Module and Manager context must be set after initialization (with SetContext)", LOC);}
 		std::string m_applicationName;
 		std::string m_outputDir;
-		std::string m_configFile; // TODO: initialize
+		std::string m_configFile;
 		bool m_isset;
 
 	private:

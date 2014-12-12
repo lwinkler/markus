@@ -45,8 +45,6 @@ UsbCam::~UsbCam()
 
 void UsbCam::Reset()
 {
-	// TODO: There is a bug if we reset this module through a command: This is due to the module that is reseted while the Capture thread has not finished --> 
-	// only happens if GUI is enabled
 	Module::Reset();
 
 	m_capture.release();
