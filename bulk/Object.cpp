@@ -26,13 +26,12 @@
 #include <jsoncpp/json/writer.h>
 #include <jsoncpp/json/reader.h>
 #include <boost/lexical_cast.hpp>
+#include "Factories.h"
 
 using namespace std;
 using namespace cv;
 
 log4cxx::LoggerPtr Object::m_logger(log4cxx::Logger::getLogger("Object"));
-
-FactoryFeatures const Object::m_factoryFeatures;
 
 Object::Object(const string& x_name) :
 	m_name(x_name),
@@ -124,6 +123,10 @@ void Object::Deserialize(istream& x_in, const string& x_dir)
 	m_feats.clear();
 	Json::Value::Members members1 = root["features"].getMemberNames();
 		// TODO: JsonCpp has a bug for serializing floats !
+
+	// Get an instance of the feature factory
+	const FactoryFeatures& factory(Factories::featuresFactory());
+	
 	for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; ++it1)
 	{
 		// Extract the signature of the feature:
@@ -131,7 +134,7 @@ void Object::Deserialize(istream& x_in, const string& x_dir)
 		stringstream ss;
 		ss << root["features"][*it1];
 		string signature = Serializable::signature(ss);
-		Feature* feat = m_factoryFeatures.CreateFeatureFromSignature(signature);
+		Feature* feat = factory.CreateFeatureFromSignature(signature);
 		stringstream ss2;
 		ss2 << root["features"][*it1];
 		feat->Deserialize(ss2, x_dir);
@@ -261,9 +264,12 @@ void Object::Randomize(unsigned int& xr_seed, const string& x_requirement, const
 		if(req.isNull())
 			throw MkException("Error parsing features in requirement: " + x_requirement, LOC);
 		Json::Value::Members members1 = req.getMemberNames();
+
+		// Get an instance of the feature factory
+		const FactoryFeatures& factory(Factories::featuresFactory());
 		for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; ++it1)
 		{
-			Feature* feat = m_factoryFeatures.CreateFeature(req[*it1]["type"].asString());
+			Feature* feat = factory.CreateFeature(req[*it1]["type"].asString());
 			feat->Randomize(xr_seed, "");
 			AddFeature(*it1, feat);
 		}

@@ -49,7 +49,7 @@ public:
 		assert(m_register.find(x_name) == m_register.end());
 		m_register.insert(FeatureRegistry::value_type(x_name, func));
 
-		// Temporrily create a feature to get its signature
+		// Temporarily create a feature to get its signature
 		Feature* feat = func();
 
 		// std::cout<<"Register "<<x_name<<" "<<feat->Signature()<<" value="<<*feat<<std::endl;
@@ -59,10 +59,10 @@ public:
 	}
 	Feature * CreateFeature(const std::string& x_type) const;
 	Feature * CreateFeatureFromSignature(const std::string& x_type) const;
-	void RegisterAllFeatures();
 	void ListFeatures(std::vector<std::string>& xr_types) const;
 
-protected:
+private:
+	DISABLE_COPY(FactoryFeatures)
 	FeatureRegistry m_register;
 	FeatureRegistry m_registerBySignature;
 };

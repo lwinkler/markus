@@ -27,7 +27,6 @@
 #include <opencv2/opencv.hpp>
 #include <log4cxx/logger.h>
 #include "define.h"
-#include "FactoryFeatures.h"
 #include "FeatureStd.h"
 #include "MkException.h"
 
@@ -107,7 +106,6 @@ class Object : public Serializable
 		std::string m_name;
 		int m_id;
 		std::map <std::string, FeaturePtr> m_feats;
-		static const FactoryFeatures m_factoryFeatures;
 	private:
 		static log4cxx::LoggerPtr m_logger;
 

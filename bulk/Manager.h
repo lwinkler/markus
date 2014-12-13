@@ -29,7 +29,7 @@
 #include "ConfigReader.h"
 #include "Controller.h"
 #include "Timer.h"
-#include "FactoryModules.h"
+#include "Factories.h"
 
 
 class Input;
@@ -76,7 +76,7 @@ public:
 	void PauseInputs(bool x_pause);
 	bool EndOfAllStreams() const;
 	static std::string CreateOutputDir(const std::string& x_outputDir = "", const std::string& x_configFile = "");
-	static inline void ListModules(std::vector<std::string>& xr_types) {m_factory.ListModules(xr_types);}
+	inline void ListModules(std::vector<std::string>& xr_types) {mr_moduleFactory.ListModules(xr_types);}
 	void WriteStateToDirectory(const std::string& x_directory) const;
 	void UpdateConfig();
 	inline virtual void SetContext(const Context& x_context)
@@ -104,7 +104,7 @@ protected:
 
 	long long m_frameCount;
 	static log4cxx::LoggerPtr m_logger;
-	static const FactoryModules m_factory;
+	const FactoryModules& mr_moduleFactory;
 
 protected:
 	QReadWriteLock m_lock;
