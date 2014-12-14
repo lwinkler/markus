@@ -28,6 +28,8 @@
 #include "Event.h"
 #include "util.h"
 #include "Simulation.h"
+#include "AllModules.h"
+// #include "AllFeatures.h"
 
 #ifndef MARKUS_NO_GUI
 #include "Editor.h"
@@ -358,6 +360,10 @@ int main(int argc, char** argv)
 		// Override parameter auto_process with centralized
 		appConfig.FindRef("parameters>param[name=\"auto_process\"]", true).SetValue(args.centralized ? "1" : "0");
 		appConfig.FindRef("parameters>param[name=\"fast\"]", true).SetValue(args.fast ? "1" : "0");
+
+		// Register all modules, features, ... in factories
+		registerAllModules(Factories::modulesFactory());
+		// registerAllFeatures(Factories::featuresFactory());
 
 		// Set manager and context
 		Manager manager(appConfig);

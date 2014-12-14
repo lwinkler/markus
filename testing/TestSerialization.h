@@ -101,12 +101,14 @@ class TestSerialization : public CppUnit::TestFixture
 public:
 	TestSerialization() 
 	 : mp_fakeInput(NULL),
-	   mp_config(NULL){}
+	 m_factoryModules(Factories::modulesFactory()),
+	 m_factoryFeatures(Factories::featuresFactory()),
+	 mp_config(NULL){}
 
 private:
 		static log4cxx::LoggerPtr m_logger;
-		FactoryModules m_factoryModules;
-		FactoryFeatures m_factoryFeatures;
+		const FactoryModules& m_factoryModules;
+		const FactoryFeatures& m_factoryFeatures;
 		Module* mp_fakeInput;
 		ConfigReader* mp_config;
 
@@ -115,7 +117,7 @@ public:
 	{
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigReader("testing/serialize/module.xml");
-		mp_fakeInput = m_factoryModules.CreateModule("VideoFileReader", mp_config->GetSubConfig("module"));
+		mp_fakeInput = m_factoryModules.Create("VideoFileReader", mp_config->GetSubConfig("module"));
 		// note: we need a fake module to create the input streams
 		mp_fakeInput->SetAsReady();
 		mp_fakeInput->Reset();

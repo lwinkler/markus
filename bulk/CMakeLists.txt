@@ -33,7 +33,6 @@ ControllerInputStream.cpp
 ControllerModule.cpp
 ControllerManager.cpp
 ControllerEvent.cpp
-FactoryModules.cpp
 FactoryFeatures.cpp
 Serializable.cpp
 CalibrationByHeight.cpp

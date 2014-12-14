@@ -24,8 +24,11 @@
 #ifndef FACTORIES_H
 #define FACTORIES_H
 
-#include <FactoryModules.h>
+#include <FactoryT.h>
 #include <FactoryFeatures.h>
+#include <ConfigReader.h>
+
+typedef FactoryT<Module, const ConfigReader&> FactoryModules;
 
 
 /// This class is a factory for modules: it creates a module of each type as specified by a string

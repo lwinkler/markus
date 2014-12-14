@@ -49,13 +49,15 @@ class TestModules : public CppUnit::TestFixture
 		  mp_config(NULL),
 		  mp_context(NULL),
 		  m_state(false),
+		  m_factoryModules(Factories::modulesFactory()),
+		  m_factoryFeatures(Factories::featuresFactory()),
 		  m_cpt(0){}
 	private:
 		static log4cxx::LoggerPtr m_logger;
 	protected:
 		std::vector<std::string> m_moduleTypes;
-		FactoryModules  m_factoryModules;
-		FactoryFeatures m_factoryFeatures;
+		const FactoryModules&  m_factoryModules;
+		const FactoryFeatures& m_factoryFeatures;
 		Module* mp_fakeInput;
 		ConfigReader* mp_config;
 		Context* mp_context;
@@ -73,7 +75,7 @@ class TestModules : public CppUnit::TestFixture
 	void setUp()
 	{
 		m_cpt = 0;
-		m_factoryModules.ListModules(m_moduleTypes);
+		m_factoryModules.List(m_moduleTypes);
 
 		mp_context = new Context("", "TestModule", "testing/out");
 		createEmptyConfigFile("/tmp/config_empty.xml");
@@ -82,7 +84,7 @@ class TestModules : public CppUnit::TestFixture
 			.RefSubConfig("parameters", true)
 			.RefSubConfig("param", "name", "fps", true).SetValue("22");
 		mp_config->RefSubConfig("application").SetAttribute("name", "unitTest");
-		mp_fakeInput = m_factoryModules.CreateModule("VideoFileReader", mp_config->Find("application>module[name=\"VideoFileReader0\"]"));
+		mp_fakeInput = m_factoryModules.Create("VideoFileReader", mp_config->Find("application>module[name=\"VideoFileReader0\"]"));
 		mp_fakeInput->AllowAutoProcess(false);
 		// note: we need a fake module to create the input streams
 		mp_fakeInput->SetAsReady();
@@ -127,7 +129,7 @@ class TestModules : public CppUnit::TestFixture
 				moduleConfig.RefSubConfig("parameters").RefSubConfig("param", "name", it->first, true).SetValue(it->second);
 
 		mp_config->SaveToFile("testing/tmp/tmp.xml");
-		Module* module = m_factoryModules.CreateModule(x_type, moduleConfig);
+		Module* module = m_factoryModules.Create(x_type, moduleConfig);
 		module->SetContext(*mp_context);
 		module->AllowAutoProcess(false);
 		m_image = cv::Mat(module->GetHeight(), module->GetWidth(), module->GetImageType());

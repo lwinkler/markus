@@ -63,7 +63,7 @@ Manager::Manager(const ConfigReader& x_configReader) :
 		if(moduleConfig.Find("parameters", true).IsEmpty()) 
 			throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name"), LOC);
 		string moduleType = moduleConfig.Find("parameters>param[name=\"class\"]").GetValue();
-		Module * tmp1 = mr_moduleFactory.CreateModule(moduleType, moduleConfig);		
+		Module * tmp1 = mr_moduleFactory.Create(moduleType, moduleConfig);		
 		
 		// Add to inputs if an input
 		m_modules.push_back(tmp1);
@@ -504,7 +504,7 @@ void Manager::Export()
 	{
 		SYSTEM("mkdir -p modules");
 		vector<string> moduleTypes;
-		mr_moduleFactory.ListModules(moduleTypes);
+		mr_moduleFactory.List(moduleTypes);
 		for(vector<string>::const_iterator it = moduleTypes.begin() ; it != moduleTypes.end() ; ++it)
 		{
 			string file("modules/" + *it + ".xml");
@@ -513,7 +513,7 @@ void Manager::Export()
 			ConfigReader moduleConfig = config.FindRef("application>module[name=\"" + *it + "\"]", true);
 			moduleConfig.FindRef("parameters>param[name=\"class\"]", true).SetValue(*it);
 
-			Module* module = mr_moduleFactory.CreateModule(*it, moduleConfig);
+			Module* module = mr_moduleFactory.Create(*it, moduleConfig);
 
 			ofstream os(file.c_str());
 			os<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"<<endl;

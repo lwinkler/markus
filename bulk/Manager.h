@@ -29,7 +29,10 @@
 #include "ConfigReader.h"
 #include "Controller.h"
 #include "Timer.h"
+#include "Processable.h"
 #include "Factories.h"
+#include "ParameterString.h"
+#include "Module.h"
 
 
 class Input;
@@ -76,7 +79,7 @@ public:
 	void PauseInputs(bool x_pause);
 	bool EndOfAllStreams() const;
 	static std::string CreateOutputDir(const std::string& x_outputDir = "", const std::string& x_configFile = "");
-	inline void ListModules(std::vector<std::string>& xr_types) {mr_moduleFactory.ListModules(xr_types);}
+	inline void ListModulesTypes(std::vector<std::string>& xr_types) {mr_moduleFactory.List(xr_types);}
 	void WriteStateToDirectory(const std::string& x_directory) const;
 	void UpdateConfig();
 	inline virtual void SetContext(const Context& x_context)

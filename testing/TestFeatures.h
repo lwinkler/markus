@@ -39,11 +39,13 @@
 class TestFeatures : public CppUnit::TestFixture
 {
 public:
-	TestFeatures(){}
+	TestFeatures() :
+		m_factoryFeatures(Factories::featuresFactory())
+	{}
 
 private:
 		static log4cxx::LoggerPtr m_logger;
-		FactoryFeatures m_factoryFeatures;
+		FactoryFeatures& m_factoryFeatures;
 
 public:
 	void setUp()

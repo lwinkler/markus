@@ -22,7 +22,11 @@
 -------------------------------------------------------------------------------------*/
 #include <cppunit/ui/text/TestRunner.h>
 #include <log4cxx/xml/domconfigurator.h>
+
+#include "Factories.h"
+#include "AllModules.h"
 #include "ConfigReaderTest.h"
+
 #include "TestProjects.h"
 #include "TestModules.h"
 #include "TestSerialization.h"
@@ -49,6 +53,8 @@ int main(int argc, char **argv)
 	runner.addTest(TestFeatures::suite());
 	runner.addTest(TestParameters::suite());
 	runner.addTest(TestTrackerByFeatures::suite());
+
+	registerAllModules(Factories::modulesFactory());
 
 	try
 	{
