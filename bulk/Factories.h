@@ -25,9 +25,10 @@
 #define FACTORIES_H
 
 #include <FactoryT.h>
-#include <ConfigReader.h>
-#include <Feature.h>
 
+class Feature;
+class Module;
+class ConfigReader;
 typedef FactoryT<Module,  const ConfigReader&> FactoryModules;
 typedef FactoryT<Feature> FactoryFeatures;
 
