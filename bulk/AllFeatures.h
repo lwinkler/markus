@@ -32,7 +32,6 @@
 #define REGISTER_FEATURE(child, type){\
 {\
 fact1.Register<child>(type);\
-printf("%s\n",type);;\
 Feature* pfeat = new child();\
 fact2.Register<child>(pfeat->Signature());\
 delete pfeat;\

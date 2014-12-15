@@ -331,7 +331,8 @@ class TestModules : public CppUnit::TestFixture
 					std::map<std::string, std::string> params;
 					LOG_DEBUG(m_logger, "Set param "<<(*it2)->GetName()<<" = "<<*it3<<" and "<<lastParam<<" = "<<lastDefault);
 					params[(*it2)->GetName()] = *it3;
-					params[lastParam] = lastDefault;
+					if(lastParam != "")
+						params[lastParam] = lastDefault;
 
 					Module* module2 = createAndConnectModule(*it1, &params);
 					CPPUNIT_ASSERT(module2->IsUnitTestingEnabled());

@@ -38,17 +38,15 @@ class CompareVideo : public Module {
 		class Parameters : public Module::Parameters {
 
 			public:
-				Parameters(const ConfigReader &x_confReader) : Module::Parameters(x_confReader) {
+				Parameters(const ConfigReader &x_confReader) : Module::Parameters(x_confReader)
+				{
 
-					m_list.push_back(new ParameterFloat("threshold", 0.01, 0, 1, &threshold, "Dissimilarity threshold for all the sequence"));
+					m_list.push_back(new ParameterFloat("threshold", 0.01, 0, 1, &threshold, "If the difference between one input frame and the othre is higher than this threshold then an error is logged"));
 
-					// RefParameterByName("auto_process").SetDefault("1");
-					RefParameterByName("allow_unsync_input").SetDefault("1");
-					// RefParameterByName("type").SetDefault("CV_8UC3");
-					// RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3]");
+					RefParameterByName("allow_unsync_input").SetDefault("1"); // TODO: check if needed
 
 					Init();
-				};
+				}
 
 				/* Dissimilarity threshold [0;100] */
 				float threshold;
