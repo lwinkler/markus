@@ -45,7 +45,7 @@ public:
 
 private:
 		static log4cxx::LoggerPtr m_logger;
-		FactoryFeatures& m_factoryFeatures;
+		const FactoryFeatures& m_factoryFeatures;
 
 public:
 	void setUp()
@@ -76,12 +76,12 @@ public:
 	void testSerialization1()
 	{
 		std::vector<std::string> listFeatures;
-		m_factoryFeatures.ListFeatures(listFeatures);
+		m_factoryFeatures.List(listFeatures);
 		unsigned int seed = 23456625;
 		for(std::vector<std::string>::const_iterator it = listFeatures.begin() ; it != listFeatures.end() ; ++it)
 		{
 			if(*it == "FeatureString") continue; // TODO: randomize strings
-			Feature* feat = m_factoryFeatures.CreateFeature(*it);
+			Feature* feat = m_factoryFeatures.Create(*it);
 			testFeature(*feat, *it, seed);
 			delete(feat);
 		}

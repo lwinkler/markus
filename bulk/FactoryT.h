@@ -44,6 +44,11 @@ public:
 	template<class T2> void Register(const std::string& name)
 	{
 		CreateObjectFunc func = createObject<T2>;
+		auto it = m_register.find(name);
+		if (it != m_register.end())
+		{
+			throw MkException("Cannot register two instances with the same name: " + name, LOC);
+		}
 		m_register.insert(typename FactoryT<T1, Args...>::Registry::value_type(name, func));
 	}
 

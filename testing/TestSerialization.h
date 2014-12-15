@@ -263,11 +263,11 @@ public:
 		testSerialization(fpt3f, "FeaturePoint3f");
 
 		std::vector<std::string> listFeatures;
-		m_factoryFeatures.ListFeatures(listFeatures);
+		m_factoryFeatures.List(listFeatures);
 		unsigned int seed = 242343332;
 		for(std::vector<std::string>::const_iterator it = listFeatures.begin() ; it != listFeatures.end() ; ++it)
 		{
-			Feature* feat = m_factoryFeatures.CreateFeature(*it);
+			Feature* feat = m_factoryFeatures.Create(*it);
 			feat->Randomize(seed, "");
 			testSerialization(*feat, *it);
 			delete(feat);

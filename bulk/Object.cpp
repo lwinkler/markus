@@ -125,7 +125,7 @@ void Object::Deserialize(istream& x_in, const string& x_dir)
 		// TODO: JsonCpp has a bug for serializing floats !
 
 	// Get an instance of the feature factory
-	const FactoryFeatures& factory(Factories::featuresFactory());
+	const FactoryFeatures& factory(Factories::featuresFactoryBySignature());
 	
 	for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; ++it1)
 	{
@@ -134,7 +134,7 @@ void Object::Deserialize(istream& x_in, const string& x_dir)
 		stringstream ss;
 		ss << root["features"][*it1];
 		string signature = Serializable::signature(ss);
-		Feature* feat = factory.CreateFeatureFromSignature(signature);
+		Feature* feat = factory.Create(signature);
 		stringstream ss2;
 		ss2 << root["features"][*it1];
 		feat->Deserialize(ss2, x_dir);
@@ -269,7 +269,7 @@ void Object::Randomize(unsigned int& xr_seed, const string& x_requirement, const
 		const FactoryFeatures& factory(Factories::featuresFactory());
 		for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; ++it1)
 		{
-			Feature* feat = factory.CreateFeature(req[*it1]["type"].asString());
+			Feature* feat = factory.Create(req[*it1]["type"].asString());
 			feat->Randomize(xr_seed, "");
 			AddFeature(*it1, feat);
 		}

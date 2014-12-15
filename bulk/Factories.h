@@ -25,10 +25,11 @@
 #define FACTORIES_H
 
 #include <FactoryT.h>
-#include <FactoryFeatures.h>
 #include <ConfigReader.h>
+#include <Feature.h>
 
-typedef FactoryT<Module, const ConfigReader&> FactoryModules;
+typedef FactoryT<Module,  const ConfigReader&> FactoryModules;
+typedef FactoryT<Feature> FactoryFeatures;
 
 
 /// This class is a factory for modules: it creates a module of each type as specified by a string
@@ -37,5 +38,6 @@ class Factories
 public:
 	inline static FactoryModules&  modulesFactory() {static FactoryModules factoryModules; return factoryModules;}
 	inline static FactoryFeatures& featuresFactory(){static FactoryFeatures factoryFeatures; return factoryFeatures;}
+	inline static FactoryFeatures& featuresFactoryBySignature(){static FactoryFeatures factoryFeatures; return factoryFeatures;}
 };
 #endif

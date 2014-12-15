@@ -29,7 +29,7 @@
 #include "util.h"
 #include "Simulation.h"
 #include "AllModules.h"
-// #include "AllFeatures.h"
+#include "AllFeatures.h"
 
 #ifndef MARKUS_NO_GUI
 #include "Editor.h"
@@ -363,7 +363,7 @@ int main(int argc, char** argv)
 
 		// Register all modules, features, ... in factories
 		registerAllModules(Factories::modulesFactory());
-		// registerAllFeatures(Factories::featuresFactory());
+		registerAllFeatures();
 
 		// Set manager and context
 		Manager manager(appConfig);

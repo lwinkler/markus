@@ -28,16 +28,29 @@
 #include "FeatureVector.h"
 #include "FeatureOpenCv.h"
 
-void registerAllFeatures(FactoryFeatures& x_fact)
+
+#define REGISTER_FEATURE(child, type){\
+{\
+fact1.Register<child>(type);\
+printf("%s\n",type);;\
+Feature* pfeat = new child();\
+fact2.Register<child>(pfeat->Signature());\
+delete pfeat;\
+}}
+
+void registerAllFeatures()
 {
-	x_fact.RegisterFeature<FeatureFloat>("FeatureFloat"); 
-	x_fact.RegisterFeature<FeatureInt>("FeatureInt"); 
-	x_fact.RegisterFeature<FeatureFloatInTime>("FeatureFloatInTime"); 
-	x_fact.RegisterFeature<FeatureVectorFloat>("FeatureVectorFloat"); 
-	x_fact.RegisterFeature<FeatureString>("FeatureString"); 
-	x_fact.RegisterFeature<FeatureKeyPoint>("FeatureKeyPoint"); 
-	x_fact.RegisterFeature<FeaturePoint2f>("FeaturePoint2f"); 
-	x_fact.RegisterFeature<FeaturePoint3f>("FeaturePoint3f"); 
-	// x_fact.RegisterFeature<FeatureMat>("FeatureMat"); // Experimental
+	FactoryFeatures& fact1(Factories::featuresFactory());
+	FactoryFeatures& fact2(Factories::featuresFactoryBySignature());
+
+	REGISTER_FEATURE(FeatureFloat, "FeatureFloat"); 
+	REGISTER_FEATURE(FeatureInt, "FeatureInt"); 
+	REGISTER_FEATURE(FeatureFloatInTime, "FeatureFloatInTime"); 
+	REGISTER_FEATURE(FeatureVectorFloat, "FeatureVectorFloat"); 
+	REGISTER_FEATURE(FeatureString, "FeatureString"); 
+	REGISTER_FEATURE(FeatureKeyPoint, "FeatureKeyPoint"); 
+	REGISTER_FEATURE(FeaturePoint2f, "FeaturePoint2f"); 
+	REGISTER_FEATURE(FeaturePoint3f, "FeaturePoint3f"); 
+	// REGISTER_FEATURE(FeatureMat, "FeatureMat"); // Experimental
 }
 #endif

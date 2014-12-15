@@ -25,6 +25,7 @@
 
 #include "Factories.h"
 #include "AllModules.h"
+#include "AllFeatures.h"
 #include "ConfigReaderTest.h"
 
 #include "TestProjects.h"
@@ -55,6 +56,7 @@ int main(int argc, char **argv)
 	runner.addTest(TestTrackerByFeatures::suite());
 
 	registerAllModules(Factories::modulesFactory());
+	registerAllFeatures();
 
 	try
 	{
