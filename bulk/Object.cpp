@@ -59,9 +59,7 @@ Object::Object(const Object & x_obj)
 	posY = x_obj.posY;
 	width = x_obj.width;
 	height = x_obj.height;
-	// for(map<string, FeaturePtr>::const_iterator it = x_obj.GetFeatures().begin() ; it != x_obj.GetFeatures().end() ; ++it)
-		// m_feats.insert(make_pair(it->first, new FeatureFloat(*it->second)));
-	m_feats = x_obj.GetFeatures();
+	m_feats = x_obj.m_feats;
 }
 
 Object& Object::operator=(const Object & x_obj)
@@ -73,11 +71,7 @@ Object& Object::operator=(const Object & x_obj)
 	width = x_obj.width;
 	height = x_obj.height;
 
-	m_feats.clear();
-
-	// for(map<string, FeaturePtr>::const_iterator it = x_obj.GetFeatures().begin() ; it != x_obj.GetFeatures().end() ; ++it)
-		// m_feats.insert(make_pair(it->first, FeaturePtr(new Feature(*it->second))));
-	m_feats = x_obj.GetFeatures();
+	m_feats = x_obj.m_feats;
 	return *this;
 }
 
@@ -189,7 +183,7 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 	{
 		pText.x += 2;
 		int i = 0;
-		for(map<string, FeaturePtr>::const_iterator it2 = GetFeatures().begin() ; it2 != GetFeatures().end() ; ++it2)
+		for(map<string, FeaturePtr>::const_iterator it2 = m_feats.begin() ; it2 != m_feats.end() ; ++it2)
 		{
 			//try
 			{

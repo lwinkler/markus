@@ -63,7 +63,7 @@
 		</param>
 		<param name="first_level">
 			<type>int</type>
-			<value min="0" max="10" default="0">0</value>
+			<value min="0" max="5" default="0">0</value>
 			<description></description>
 		</param>
 		<param name="wta_k">

@@ -66,16 +66,6 @@ class Object : public Serializable
 
 			m_feats.insert(std::make_pair(x_name, new FeatureFloat(x_value)));
 		}
-		/*
-		inline void AddFeature(std::string x_name, std::string x_value)
-		{
-			std::map <std::string, FeaturePtr>::iterator it = m_feats.find(x_name);
-			if(it != m_feats.end())
-				m_feats.erase(it);
-
-			m_feats.insert(std::make_pair(x_name, new FeatureString(x_value)));
-		}
-		*/
 		inline const std::map <std::string, FeaturePtr>& GetFeatures() const {return m_feats;}
 		inline const Feature& GetFeature(const std::string& x_name) const
 		{
