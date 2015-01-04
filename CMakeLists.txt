@@ -100,7 +100,7 @@ if(NOT Markus_NO_GUI)
 	add_subdirectory(gui)
 	add_subdirectory(editor)
 endif()
-add_subdirectory(testing)
+add_subdirectory(tests)
 
 
 add_executable(markus ${markus_SRCS})
@@ -121,7 +121,7 @@ add_custom_target(lint
 
 add_custom_target(check
 	COMMENT "Check C++ code statically with cppcheck"
-	COMMAND cppcheck bulk modules modules2 main.cpp editor gui tools testing --force --enable=all -q
+	COMMAND cppcheck bulk modules modules2 main.cpp editor gui tools tests --force --enable=all -q
 )
 
 add_custom_target(update_modules_list
@@ -140,13 +140,14 @@ add_custom_target(update_projects_list
 
 add_custom_target(tests
 	COMMENT "Launch the set of unit tests"
-	COMMAND +testing/unitTesting
+	COMMAND +tests/unitTests
 )
 
 add_custom_target(indent
 	COMMENT "Indent all files by following the standart"
 	COMMAND find . -name \"*.h\" -print -o -name \"*.cpp\" -print | xargs astyle -nToO
 )
+
 
 
 #-------------------------------------------------------------------------------- 
