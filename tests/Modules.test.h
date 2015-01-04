@@ -36,7 +36,9 @@
 #include "FeatureFloatInTime.h"
 #include "FeatureVector.h"
 
-// #define BLACKLIST(x) m_moduleTypes.erase(std::remove(m_moduleTypes.begin(), m_moduleTypes.end(), (x)), m_moduleTypes.end());
+using namespace std;
+
+// #define BLACKLIST(x) m_moduleTypes.erase(remove(m_moduleTypes.begin(), m_moduleTypes.end(), (x)), m_moduleTypes.end());
 
 /// Unit testing class for ConfigReader class
 class ModulesTestSuite : public CxxTest::TestSuite
@@ -53,7 +55,7 @@ class ModulesTestSuite : public CxxTest::TestSuite
 	private:
 		static log4cxx::LoggerPtr m_logger;
 	protected:
-		std::vector<std::string> m_moduleTypes;
+		vector<string> m_moduleTypes;
 		const FactoryModules&  m_factoryModules;
 		const FactoryFeatures& m_factoryFeatures;
 		Module* mp_fakeInput;
@@ -64,7 +66,7 @@ class ModulesTestSuite : public CxxTest::TestSuite
 		cv::Mat m_image;
 		bool m_state;
 		Event m_event;
-		std::vector<Object> m_objects;
+		vector<Object> m_objects;
 		int m_cpt;
 
 	public:
@@ -93,7 +95,7 @@ class ModulesTestSuite : public CxxTest::TestSuite
 		CLEAN_DELETE(mp_context);
 	}
 
-	ConfigReader addModuleToConfig(const std::string& rx_type, ConfigReader& xr_config)
+	ConfigReader addModuleToConfig(const string& rx_type, ConfigReader& xr_config)
 	{
 		ConfigReader moduleConfig =  xr_config.RefSubConfig("application", true)
 			.RefSubConfig("module", "name", rx_type + "0", true);
@@ -107,21 +109,21 @@ class ModulesTestSuite : public CxxTest::TestSuite
 		moduleConfig.RefSubConfig("outputs", true);
 		moduleConfig.SetAttribute("name", rx_type + "0");
 
-		std::stringstream ss;
+		stringstream ss;
 		ss<<m_cpt++;
 		moduleConfig.SetAttribute("id", ss.str());
 		return moduleConfig;
 	}
 
 	/// Create module and make it ready to process
-	Module* createAndConnectModule(const std::string& x_type, const std::map<std::string, std::string>* xp_parameters = NULL)
+	Module* createAndConnectModule(const string& x_type, const map<string, string>* xp_parameters = NULL)
 	{
 		LOG_DEBUG(m_logger, "Create and connect module of class "<<x_type);
 		ConfigReader moduleConfig = addModuleToConfig(x_type, *mp_config);
 
 		// Add parameters to override to the config
 		if(xp_parameters != NULL)
-			for(std::map<std::string, std::string>::const_iterator it = xp_parameters->begin() ; it != xp_parameters->end() ; ++it)
+			for(map<string, string>::const_iterator it = xp_parameters->begin() ; it != xp_parameters->end() ; ++it)
 				moduleConfig.RefSubConfig("parameters").RefSubConfig("param", "name", it->first, true).SetValue(it->second);
 
 		mp_config->SaveToFile("testing/tmp/tmp.xml");
@@ -130,7 +132,7 @@ class ModulesTestSuite : public CxxTest::TestSuite
 		module->AllowAutoProcess(false);
 		m_image = cv::Mat(module->GetHeight(), module->GetWidth(), module->GetImageType());
 
-		const std::map<int, Stream*> & inputs(module->GetInputStreamList());
+		const map<int, Stream*> & inputs(module->GetInputStreamList());
 
 		// delete(mp_fakeInput);
 		// mp_fakeInput = m_factoryModules.CreateModule("VideoFileReader", mp_config->GetSubConfig("application").GetSubConfig("module", "VideoFileReader0"));
@@ -138,7 +140,7 @@ class ModulesTestSuite : public CxxTest::TestSuite
 		// mp_fakeInput->Reset();
 		
 		// Create custom streams to feed each input of the module
-		for(std::map<int, Stream*>::const_iterator it2 = inputs.begin() ; it2 != inputs.end() ; ++it2)
+		for(map<int, Stream*>::const_iterator it2 = inputs.begin() ; it2 != inputs.end() ; ++it2)
 		{
 			Stream& inputStream = module->RefInputStreamById(it2->first);
 			Stream* outputStream = NULL;
@@ -172,7 +174,7 @@ class ModulesTestSuite : public CxxTest::TestSuite
 		unsigned int seed = 324234566;
 
 		// Test on each type of module
-		for(std::vector<std::string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; ++it1)
+		for(vector<string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; ++it1)
 		{
 			LOG_TEST(m_logger, "## on module "<<*it1);
 			Module* module = createAndConnectModule(*it1);
@@ -194,7 +196,7 @@ class ModulesTestSuite : public CxxTest::TestSuite
 		LOG_TEST(m_logger, "\n# Test all controllers");
 		
 		// Test on each type of module
-		for(std::vector<std::string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; ++it1)
+		for(vector<string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; ++it1)
 		{
 			LOG_TEST(m_logger, "# on module "<<*it1);
 			Module* module = createAndConnectModule(*it1);
@@ -206,16 +208,16 @@ class ModulesTestSuite : public CxxTest::TestSuite
 			}
 
 			// Test on all controllers of the module
-			for(std::map<std::string, Controller*>::const_iterator it2 = module->GetControllersList().begin() ; it2 != module->GetControllersList().end() ; ++it2)
+			for(map<string, Controller*>::const_iterator it2 = module->GetControllersList().begin() ; it2 != module->GetControllersList().end() ; ++it2)
 			{
 				LOG_INFO(m_logger, "## on controller "<<it2->first<<" of class "<<it2->second->GetClass());
-				std::vector<std::string> actions;
+				vector<string> actions;
 				it2->second->ListActions(actions);
 
 				if(it2->second->GetClass() == "ControllerParameter")
 				{
 					// Test specific for controllers of type parameter
-					std::string type, range, defval, newValue;
+					string type, range, defval, newValue;
 					assert(actions.size() == 5); // If not you need to write one more test
 
 					type = "0";
@@ -230,14 +232,14 @@ class ModulesTestSuite : public CxxTest::TestSuite
 					it2->second->CallAction("GetDefault", &defval);
 					LOG_INFO(m_logger, "###  "<<it2->first<<".GetDefault returned "<<defval);
 
-					std::vector<std::string> values;
+					vector<string> values;
 					LOG_DEBUG(m_logger, "Generate values for param of type "<<type<<" in range "<<range);
 					module->GetParameters().GetParameterByName(it2->first).GenerateValues(20, values, range);
   
-					for(std::vector<std::string>::iterator it = values.begin() ; it != values.end() ; ++it)
+					for(vector<string>::iterator it = values.begin() ; it != values.end() ; ++it)
 					{
 						// For string type we cannot set random values
-						// std::cout<<"set "<<value<<std::endl;
+						// cout<<"set "<<value<<endl;
 						it2->second->CallAction("Set", &(*it));
 
 						// Test if the config is globally still valid
@@ -266,9 +268,9 @@ class ModulesTestSuite : public CxxTest::TestSuite
 				}
 				else
 				{
-					for(std::vector<std::string>::const_iterator it3 = actions.begin() ; it3 != actions.end() ; ++it3)
+					for(vector<string>::const_iterator it3 = actions.begin() ; it3 != actions.end() ; ++it3)
 					{
-						std::string value = "0";
+						string value = "0";
 						// module->LockForWrite();
 						it2->second->CallAction(*it3, &value);
 						LOG_INFO(m_logger, "###  "<<it2->first<<"."<<*it3<<" returned "<<value);
@@ -292,7 +294,7 @@ class ModulesTestSuite : public CxxTest::TestSuite
 		LOG_TEST(m_logger, "\n# Test all parameters");
 		
 		// Test on each type of module
-		for(std::vector<std::string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; ++it1)
+		for(vector<string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; ++it1)
 		{
 			Module* module = createAndConnectModule(*it1);
 			if(!module->IsUnitTestingEnabled())
@@ -302,11 +304,11 @@ class ModulesTestSuite : public CxxTest::TestSuite
 			}
 			LOG_TEST(m_logger, "# on module "<<*it1);
 
-			std::string lastParam = "";
-			std::string lastDefault = "";
+			string lastParam = "";
+			string lastDefault = "";
 
 			// Test on all controllers of the module
-			for(std::vector<Parameter*>::const_iterator it2 = module->GetParameters().GetList().begin() ; it2 != module->GetParameters().GetList().end() ; ++it2)
+			for(vector<Parameter*>::const_iterator it2 = module->GetParameters().GetList().begin() ; it2 != module->GetParameters().GetList().end() ; ++it2)
 			{
 				// Create a second module with the parameter value (in case it is locked)
 				// we already have tested the other parameters with controllers
@@ -316,15 +318,15 @@ class ModulesTestSuite : public CxxTest::TestSuite
 				LOG_INFO(m_logger, "## on parameter "<<(*it2)->GetName()<<" of type "<<(*it2)->GetTypeString()<<" on range "<<(*it2)->GetRange());
 
 				// Generate a new module with each value for locked parameter
-				std::vector<std::string> values;
+				vector<string> values;
 
 				LOG_DEBUG(m_logger, "Generate values for param of type "<<(*it2)->GetTypeString()<<" in range "<<(*it2)->GetRange());
 				(*it2)->GenerateValues(10, values);
 
-				for(std::vector<std::string>::iterator it3 = values.begin() ; it3 != values.end() ; ++it3)
+				for(vector<string>::iterator it3 = values.begin() ; it3 != values.end() ; ++it3)
 				{
 					// For each value
-					std::map<std::string, std::string> params;
+					map<string, string> params;
 					LOG_DEBUG(m_logger, "Set param "<<(*it2)->GetName()<<" = "<<*it3<<" and "<<lastParam<<" = "<<lastDefault);
 					params[(*it2)->GetName()] = *it3;
 					if(lastParam != "")

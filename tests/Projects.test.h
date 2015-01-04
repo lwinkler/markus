@@ -23,14 +23,13 @@
 #ifndef TEST_PROJECTS_H
 #define TEST_PROJECTS_H
 
-#include <cppunit/TestFixture.h>
-#include <cppunit/TestCase.h>
-#include <cppunit/TestCaller.h>
+#include <cxxtest/TestSuite.h>
 
 #include "util.h"
 #include "MkException.h"
 #include "Manager.h"
 
+using namespace std;
 
 /// Unit testing class by choosing a set of test projects
 
@@ -48,7 +47,7 @@ public:
 	}
 
 protected:
-	void runConfig(const std::string& x_configFile)
+	void runConfig(const string& x_configFile)
 	{
 		LOG_TEST(m_logger, "## Unit test with configuration "<<x_configFile);
 		ConfigReader mainConfig(x_configFile);

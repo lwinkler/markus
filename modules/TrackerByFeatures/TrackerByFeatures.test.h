@@ -23,19 +23,19 @@
 #ifndef FEATURE_TRACKER_TEST_H
 #define FEATURE_TRACKER_TEST_H
 
-#include <cppunit/TestFixture.h>
-#include <cppunit/TestCase.h>
-#include <cppunit/TestCaller.h>
+#include <cxxtest/TestSuite.h>
 #include "modules/TrackerByFeatures/TrackerByFeatures.h"
 #include "MkException.h"
 
+using namespace std;
 
 /// Unit testing class for ConfigReader class
 
-class TestTrackerByFeatures : public CppUnit::TestFixture
+class TrackerByFeaturesTestSuite : public CxxTest::TestSuite
 {
 private:
 	static log4cxx::LoggerPtr m_logger;
+
 protected:
 	TrackerByFeatures* mp_module;
 	Module* mp_fakeInput;
@@ -43,13 +43,11 @@ protected:
 	ConfigReader* mp_config;
 
 	// Objects for streams
-	std::vector<Object> m_objectsIn;
-	std::vector<Object> m_objectsOut;
+	vector<Object> m_objectsIn;
+	vector<Object> m_objectsOut;
 	int m_cpt;
+
 public:
-	void runTest()
-	{
-	}
 
 	void setUp()
 	{
@@ -75,7 +73,8 @@ public:
 		delete mp_config;
 	}
 
-	ConfigReader addModuleToConfig(const std::string& rx_type, ConfigReader& xr_config)
+protected:
+	ConfigReader addModuleToConfig(const string& rx_type, ConfigReader& xr_config)
 	{
 		ConfigReader moduleConfig =  xr_config.RefSubConfig("application", true)
 			.RefSubConfig("module", "name", rx_type + "0", true);
@@ -91,12 +90,13 @@ public:
 		moduleConfig.RefSubConfig("inputs", true);
 		moduleConfig.RefSubConfig("outputs", true);
 		moduleConfig.SetAttribute("name", rx_type + "0");
-		std::stringstream ss;
+		stringstream ss;
 		ss<<m_cpt++;
 		moduleConfig.SetAttribute("id", ss.str());
 		return moduleConfig;
 	}
 
+public:
 	/**
 	* @brief Test all classes that inherit from Parameter
 	*/
@@ -107,8 +107,8 @@ public:
 		unsigned int seed = 3452352345;
 		Stream* outputStream0 = new StreamObject("test", m_objectsIn, *mp_module, "Test input");
 		Stream* inputStream2 = new StreamObject("test", m_objectsOut, *mp_module, "Test output");
-		CPPUNIT_ASSERT(outputStream0 != NULL);
-		CPPUNIT_ASSERT(inputStream2 != NULL);
+		TS_ASSERT(outputStream0 != NULL);
+		TS_ASSERT(inputStream2 != NULL);
 
 		mp_module->GetInputStreamList().at(0)->Connect(outputStream0);
 		inputStream2->Connect(mp_module->GetOutputStreamList().at(0));
@@ -134,7 +134,7 @@ public:
 			}
 
 			// Add random changes to features
-			for(std::vector<Object>::iterator it = m_objectsIn.begin() ; it != m_objectsIn.end() ; ++it)
+			for(vector<Object>::iterator it = m_objectsIn.begin() ; it != m_objectsIn.end() ; ++it)
 			{
 				float fact = 0.05 * mp_module->GetParameters().maxMatchingDistance;
 				it->AddFeature("x",      dynamic_cast<const FeatureFloat&>(it->GetFeature("x")).value      + (static_cast<float>(rand_r(&seed)) / RAND_MAX - 0.5) * fact);
@@ -147,26 +147,19 @@ public:
 			mp_module->Process();
 
 			inputStream2->ConvertInput();
-			CPPUNIT_ASSERT(m_objectsIn.size() == m_objectsOut.size());
+			TS_ASSERT(m_objectsIn.size() == m_objectsOut.size());
 
 			// Verify that the ids are as expected
-			for(std::vector<Object>::const_iterator it = m_objectsOut.begin() ; it != m_objectsOut.end() ; ++it)
+			for(vector<Object>::const_iterator it = m_objectsOut.begin() ; it != m_objectsOut.end() ; ++it)
 			{
-				// std::cout<<it->GetId()<<" == "<<dynamic_cast<const FeatureInt&>(it->GetFeature("gt_id")).value<<std::endl;
-				CPPUNIT_ASSERT(it->GetId() == dynamic_cast<const FeatureInt&>(it->GetFeature("gt_id")).value);
+				// cout<<it->GetId()<<" == "<<dynamic_cast<const FeatureInt&>(it->GetFeature("gt_id")).value<<endl;
+				TS_ASSERT(it->GetId() == dynamic_cast<const FeatureInt&>(it->GetFeature("gt_id")).value);
 			}
 		}
 
 		delete outputStream0;
 		delete inputStream2;
 	}
-
-	static CppUnit::Test *suite()
-	{
-		CppUnit::TestSuite *suiteOfTests = new CppUnit::TestSuite("TestTrackerByFeatures");
-		// TODO: See if we keep: suiteOfTests->addTest(new CppUnit::TestCaller<TestTrackerByFeatures>("testTrackerByFeatures", &TestTrackerByFeatures::testInOut));
-		return suiteOfTests;
-	}
 };
-log4cxx::LoggerPtr TestTrackerByFeatures::m_logger(log4cxx::Logger::getLogger("TestTrackerByFeatures"));
+log4cxx::LoggerPtr TrackerByFeaturesTestSuite::m_logger(log4cxx::Logger::getLogger("TrackerByFeaturesTestSuite"));
 #endif
