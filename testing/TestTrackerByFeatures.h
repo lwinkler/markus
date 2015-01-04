@@ -34,22 +34,23 @@
 
 class TestTrackerByFeatures : public CppUnit::TestFixture
 {
-	private:
-		static log4cxx::LoggerPtr m_logger;
-	protected:
-		TrackerByFeatures* mp_module;
-		Module* mp_fakeInput;
-		Module* mp_fakeOutput;
-		ConfigReader* mp_config;
+private:
+	static log4cxx::LoggerPtr m_logger;
+protected:
+	TrackerByFeatures* mp_module;
+	Module* mp_fakeInput;
+	Module* mp_fakeOutput;
+	ConfigReader* mp_config;
 
-		// Objects for streams
-		std::vector<Object> m_objectsIn;
-		std::vector<Object> m_objectsOut;
-		int m_cpt;
-	public:
+	// Objects for streams
+	std::vector<Object> m_objectsIn;
+	std::vector<Object> m_objectsOut;
+	int m_cpt;
+public:
 	void runTest()
 	{
 	}
+
 	void setUp()
 	{
 		m_cpt = 0;
@@ -64,19 +65,8 @@ class TestTrackerByFeatures : public CppUnit::TestFixture
 		mp_module = new TrackerByFeatures(mp_config->Find("application>module[name=\"TrackerByFeatures0\"]"));
 		mp_module->SetAsReady();
 		mp_module->Reset();
-
-/*
-		// Fake input
-		mp_fakeInput = new TrackerByFeatures(mp_config->GetSubConfig("application").GetSubConfig("module", "name", "VideoFileReader0"));
-		mp_fakeInput->SetAsReady();
-		mp_fakeInput->Reset();
-
-		// Fake output
-		mp_fakeOutput = m_factory.CreateModule("TrackerByFeatures", mp_config->GetSubConfig("application").GetSubConfig("module", "name", "TrackerByFeatures"));
-		mp_fakeOutput->SetAsReady();
-		mp_fakeOutput->Reset();
-		*/
 	}
+
 	void tearDown()
 	{
 		delete mp_module;

@@ -24,8 +24,6 @@
 #define TEST_SERIALIZATION_H
 
 #include <cxxtest/TestSuite.h>
-#include <jsoncpp/json/writer.h>
-#include <jsoncpp/json/reader.h>
 #include <sstream>
 
 #include "util.h"
@@ -113,6 +111,14 @@ private:
 	Module* mp_fakeInput;
 	ConfigReader* mp_config;
 
+	// Values for testing
+	cv::KeyPoint  m_kp;
+	cv::Point2f   m_pt2f;
+	cv::Point3f   m_pt3f;
+	vector<float> m_vect;
+	Object        m_obj2;
+	Event m_evt2;
+
 public:
 	void setUp()
 	{
@@ -122,6 +128,27 @@ public:
 		// note: we need a fake module to create the input streams
 		mp_fakeInput->SetAsReady();
 		mp_fakeInput->Reset();
+
+		m_vect.push_back(33.66);
+		m_vect.push_back(1e4);
+		m_vect.push_back(0.000234);
+
+		m_pt2f = cv::Point2f(33.5, 1e-4);
+		m_pt3f = cv::Point3f(33, 134.5, 1e4);
+
+		m_obj2 = Object("test");
+		m_obj2.AddFeature("feat1", 77);
+		m_obj2.AddFeature("feat2", 3453.444e-123);
+		m_obj2.AddFeature("ff", new FeatureFloat(0.93));
+		m_obj2.AddFeature("ff", new FeatureInt(93));
+		m_obj2.AddFeature("ffif", new FeatureFloatInTime(0.132));
+		m_obj2.AddFeature("fstr", new FeatureString("someString"));
+		m_obj2.AddFeature("fvf", new FeatureVectorFloat(m_vect));
+		m_obj2.AddFeature("fkp", new FeatureKeyPoint(m_kp));
+		m_obj2.AddFeature("fp2f", new FeaturePoint2f(m_pt2f));
+		m_obj2.AddFeature("fp3f", new FeaturePoint3f(m_pt3f));
+
+		m_evt2.Raise("name2", m_obj2);
 	}
 	void tearDown()
 	{
@@ -158,112 +185,150 @@ protected:
 	}
 
 public:
-	void testSerialization1()
+	void testTestObject()
 	{
-		// Values for testing
-		vector<float> myVect;
-		myVect.push_back(33.66);
-		myVect.push_back(1e4);
-		myVect.push_back(0.000234);
-		cv::KeyPoint kp;
-		cv::Point2f pt2f(33.5, 1e-4);
-		cv::Point3f pt3f(33, 134.5, 1e4);
 
 		// TODO: There is a problem of inprecision with floating points. See how we handle this !
 		TestObject obj1;
 		testSerialization(obj1, "TestObject");
+	}
 
+	void testObject()
+	{
+		testSerialization(m_obj2, "Object");
+	}
 
-		Object obj2("test");
-		obj2.AddFeature("feat1", 77);
-		obj2.AddFeature("feat2", 3453.444e-123);
-		obj2.AddFeature("ff", new FeatureFloat(0.93));
-		obj2.AddFeature("ff", new FeatureInt(93));
-		obj2.AddFeature("ffif", new FeatureFloatInTime(0.132));
-		obj2.AddFeature("fstr", new FeatureString("someString"));
-		obj2.AddFeature("fvf", new FeatureVectorFloat(myVect));
-		obj2.AddFeature("fkp", new FeatureKeyPoint(kp));
-		obj2.AddFeature("fp2f", new FeaturePoint2f(pt2f));
-		obj2.AddFeature("fp3f", new FeaturePoint3f(pt3f));
-		testSerialization(obj2, "Object");
-
+	void testEvent()
+	{
 		Event evt1;
 		testSerialization(evt1, "Event1");
 		evt1.Raise("name1");
 		testSerialization(evt1, "Event2");
-		Event evt2;
-		evt2.Raise("name2", obj2);
-		testSerialization(evt2, "Event3");
+		testSerialization(m_evt2, "Event3");
+	}
 
+	void testStreamImage()
+	{
 		cv::Mat image1(cv::Size(640, 480), CV_8U);
 		StreamImage stream1("streamImage", image1, *mp_fakeInput, "A stream of image");
 		testSerialization(stream1, "StreamImage");
+	}
 
+	void testStreamObject()
+	{
 		vector<Object> objects;
 		StreamObject stream2("streamObject", objects, *mp_fakeInput, "A stream of objects");
-		stream2.AddObject(obj2);
+		stream2.AddObject(m_obj2);
 		testSerialization(stream2, "StreamObject");
+	}
 
+	void testStreamState()
+	{
 		bool state;
 		StreamState stream3("streamState", state, *mp_fakeInput, "A stream of state");
 		testSerialization(stream3, "StreamState");
+	}
 
-		StreamEvent stream4("streamEvent", evt2, *mp_fakeInput, "A stream of event");
+	void testStreamEvent()
+	{
+		StreamEvent stream4("streamEvent", m_evt2, *mp_fakeInput, "A stream of event");
 		testSerialization(stream4, "StreamEvent");
+	}
 
+	void testStreamDebug()
+	{
 #ifdef MARKUS_DEBUG_STREAMS
 		cv::Mat image2(cv::Size(640, 480), CV_8U);
 		StreamDebug stream5("streamDebug", image2, *mp_fakeInput, "A stream of debug");
 		testSerialization(stream5, "StreamDebug");
 #endif
+	}
 
+	void testMkException()
+	{
 		MkException excep("test", LOC);
 		testSerialization(excep, "MkException");
+	}
 
+	void testCalibrationByHeight()
+	{
 		CalibrationByHeight calib1;
 		testSerialization(calib1, "CalibrationByHeight1");
 
 		CalibrationByHeight calib2(0.33, 0.6, 0.25);
 		testSerialization(calib2, "CalibrationByHeight2");
+	}
 		
+	void testCalibrationByModel()
+	{
 		CalibrationByModel calibModel1;
 		testSerialization(calibModel1,"CalibrationByModel1");
 		
 		CalibrationByModel calibModel2(2404.2260764154521, -1.2035892526534258, 137.47118203741616,240.0, 480 , 640);
 		testSerialization(calibModel2,"CalibrationByModel2");
+	}
 
+	void testPolygon()
+	{
 		vector<cv::Point2f> pts;
 		pts.push_back(cv::Point2f(34.4, 34));
 		pts.push_back(cv::Point2f(3.4, -455.5));
 		pts.push_back(cv::Point2f(344, 0.34));
 		Polygon polygon1(pts);
 		testSerialization(polygon1,"Polygon");
+	}
 
+	void testModule()
+	{
 		// TODO: test the serialization of all modules
 		testSerialization(*mp_fakeInput, "Module");
+	}
 
+	void testFeatureFloat()
+	{
 		// Serialize all features
 		FeatureFloat ff(0.93);
 		testSerialization(ff, "FeatureFloat");
+	}
 
+	void testFeatureFloatInTime()
+	{
 		FeatureFloatInTime ffit(0.93);
 		testSerialization(ffit, "FeatureFloatInTime");
+	}
 
+	void testFeatureString()
+	{
 		FeatureString fstr("mystring");
 		testSerialization(fstr, "FeatureString");
+	}
 
-		FeatureVectorFloat fvf(myVect);
+	void testFeatureVectorFloat()
+	{
+		FeatureVectorFloat fvf(m_vect);
 		testSerialization(fvf, "FeatureVectorFloat");
+	}
 
-		FeatureKeyPoint fkp(kp);
+	void testFeatureKeyPoint()
+	{
+		FeatureKeyPoint fkp(m_kp);
 		testSerialization(fkp, "FeatureKeyPoint");
+	}
 
-		FeaturePoint2f fpt2f(pt2f);
+	void testFeaturePoint2f()
+	{
+		FeaturePoint2f fpt2f(m_pt2f);
 		testSerialization(fpt2f, "FeaturePoint2f");
+	}
 
-		FeaturePoint3f fpt3f(pt3f);
+	void testFeaturePoint3f()
+	{
+		FeaturePoint3f fpt3f(m_pt3f);
 		testSerialization(fpt3f, "FeaturePoint3f");
+	}
 
+	void testFeatures()
+	{
 		vector<string> listFeatures;
 		m_factoryFeatures.List(listFeatures);
 		unsigned int seed = 242343332;

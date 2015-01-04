@@ -23,12 +23,11 @@
 #ifndef MODULES_TEST_H
 #define MODULES_TEST_H
 
-#include <cppunit/TestFixture.h>
-#include <cppunit/TestCase.h>
-#include <cppunit/TestCaller.h>
+#include <cxxtest/TestSuite.h>
 #include "Module.h"
 #include "Controller.h"
 #include "util.h"
+#include "Factories.h"
 #include "StreamEvent.h"
 #include "StreamObject.h"
 #include "StreamImage.h"
@@ -40,11 +39,10 @@
 // #define BLACKLIST(x) m_moduleTypes.erase(std::remove(m_moduleTypes.begin(), m_moduleTypes.end(), (x)), m_moduleTypes.end());
 
 /// Unit testing class for ConfigReader class
-
-class TestModules : public CppUnit::TestFixture
+class ModulesTestSuite : public CxxTest::TestSuite
 {
 	public:
-		TestModules()
+		ModulesTestSuite()
 		: mp_fakeInput(NULL),
 		  mp_config(NULL),
 		  mp_context(NULL),
@@ -63,15 +61,13 @@ class TestModules : public CppUnit::TestFixture
 		Context* mp_context;
 
 		// Objects for streams
-		cv::Mat m_image; // (module->GetHeight(), module->GetWidth(), module->GetType());
+		cv::Mat m_image;
 		bool m_state;
 		Event m_event;
 		std::vector<Object> m_objects;
 		int m_cpt;
+
 	public:
-	void runTest()
-	{
-	}
 	void setUp()
 	{
 		m_cpt = 0;
@@ -157,11 +153,11 @@ class TestModules : public CppUnit::TestFixture
 				outputStream = new StreamEvent("test", m_event, *mp_fakeInput, "Test input");
 			else
 			{
-				CPPUNIT_ASSERT_MESSAGE("Unknown input stream type", false);
+				TSM_ASSERT("Unknown input stream type", false);
 			}
 			inputStream.Connect(outputStream);
-			CPPUNIT_ASSERT(outputStream != NULL);
-			CPPUNIT_ASSERT(inputStream.IsConnected());
+			TS_ASSERT(outputStream != NULL);
+			TS_ASSERT(inputStream.IsConnected());
 		}
 		module->SetAsReady();
 		if(module->IsUnitTestingEnabled())
@@ -258,7 +254,7 @@ class TestModules : public CppUnit::TestFixture
 						newValue = "0";
 						it2->second->CallAction("Get", &newValue);
 
-						CPPUNIT_ASSERT_MESSAGE("Value set must be returned by get", *it == newValue);
+						TSM_ASSERT("Value set must be returned by get", *it == newValue);
 
 						module->Reset();
 						for(int i = 0 ; i < 3 ; i++)
@@ -335,7 +331,7 @@ class TestModules : public CppUnit::TestFixture
 						params[lastParam] = lastDefault;
 
 					Module* module2 = createAndConnectModule(*it1, &params);
-					CPPUNIT_ASSERT(module2->IsUnitTestingEnabled());
+					TS_ASSERT(module2->IsUnitTestingEnabled());
 
 					for(int i = 0 ; i < 3 ; i++)
 						module2->ProcessRandomInput(seed);
@@ -349,14 +345,16 @@ class TestModules : public CppUnit::TestFixture
 		}
 	}
 
+/*
 	static CppUnit::Test *suite()
 	{
-		CppUnit::TestSuite *suiteOfTests = new CppUnit::TestSuite("TestModules");
+		CppUnit::TestSuite *suiteOfTests = new CppUnit::TestSuite("ModulesTestSuite");
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testInputs", &TestModules::testInputs));
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testControllers", &TestModules::testControllers));
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testParameters", &TestModules::testParameters));
 		return suiteOfTests;
 	}
+	*/
 };
-log4cxx::LoggerPtr TestModules::m_logger(log4cxx::Logger::getLogger("TestModules"));
+log4cxx::LoggerPtr ModulesTestSuite::m_logger(log4cxx::Logger::getLogger("ModulesTestSuite"));
 #endif
