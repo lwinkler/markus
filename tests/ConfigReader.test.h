@@ -46,7 +46,7 @@ public:
 	{
 		// log4cxx::xml::DOMConfigurator::configure("tests/log4cxx.xml");
 
-		m_conf1 = new ConfigReader("testing/config1.xml");
+		m_conf1 = new ConfigReader("tests/config1.xml");
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		m_conf2 = new ConfigReader("/tmp/config_empty.xml");
 		m_conf3 = new ConfigReader("/tmp/config_empty.xml");
@@ -67,11 +67,11 @@ public:
 		LOG_TEST(m_logger, "\n# Test on the syntax of configurations");
 		ConfigReader conf(*m_conf3);
 		conf.RefSubConfig("t1", true).RefSubConfig("t2", true).RefSubConfig("t3", "name", "bla", true).SetValue("333");
-		m_conf3->SaveToFile("testing/tmp/test3.xml");
+		m_conf3->SaveToFile("tests/tmp/test3.xml");
 		conf = *m_conf4;
 		conf.FindRef("t1>t2>t3[name=\"bla\"]", true).SetValue("333");
 		conf.FindRef("t1>t2>t3[name=\"blo\"]", true).SetValue("555");
-		m_conf4->SaveToFile("testing/tmp/test4.xml");
+		m_conf4->SaveToFile("tests/tmp/test4.xml");
 		// TODO: Test that both files are similar
 
 		TS_ASSERT(!conf.Find("t1").IsEmpty());
@@ -109,12 +109,12 @@ public:
 		TS_ASSERT(atoi(param1.GetAttribute("id").c_str()) == 0);
 		TS_ASSERT(param1.GetAttribute("name") == "param_text");
 
-		m_conf1->SaveToFile("testing/tmp/config1_copy.xml");
+		m_conf1->SaveToFile("tests/tmp/config1_copy.xml");
 		m_conf1->Validate();
 
 		// Compare with the initial config
 		// note: this is kind of hackish ... can you find a better way :-)
-		TS_ASSERT(compareFiles("testing/config1.xml", "testing/tmp/config1_copy.xml"));
+		TS_ASSERT(compareFiles("tests/config1.xml", "tests/tmp/config1_copy.xml"));
 	}
 
 	/// Generate a config from an empty file and test
@@ -125,9 +125,9 @@ public:
 		appConf.RefSubConfig("aaa", "name", "nameX", true)
 			.RefSubConfig("bbb", "name", "nameY", true)
 			.RefSubConfig("ccc", "name", "nameZ", true).SetValue("someValue");
-		m_conf2->SaveToFile("testing/config_generated.xml");
+		m_conf2->SaveToFile("tests/config_generated.xml");
 
-		ConfigReader generatedConf("testing/config_generated.xml");
+		ConfigReader generatedConf("tests/config_generated.xml");
 		TS_ASSERT(generatedConf.GetSubConfig("application")
 				.GetSubConfig("aaa", "name", "nameX")
 				.GetSubConfig("bbb", "name", "nameY")

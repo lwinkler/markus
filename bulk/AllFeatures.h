@@ -23,6 +23,7 @@
 #ifndef ALL_FEATURES_H
 #define ALL_FEATURES_H
 
+#include "Factories.h"
 #include "FeatureStd.h"
 #include "FeatureFloatInTime.h"
 #include "FeatureVector.h"

@@ -10,7 +10,7 @@
 			"connected" : false,
 			"description" : "Another description for a video stream",
 			"height" : 24,
-			"image" : "testing/serialize/image/Module0.img.jpg",
+			"image" : "tests/serialize/image/Module0.img.jpg",
 			"name" : "img",
 			"ready" : false,
 			"timeStamp" : 23422423424234,

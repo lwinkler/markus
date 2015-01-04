@@ -24,6 +24,7 @@
 #define PARAMETERS_TEST_H
 
 #include <cxxtest/TestSuite.h>
+#include <fstream>
 
 #include "Parameter.h"
 #include "ParameterNum.h"
@@ -36,6 +37,7 @@
 #include "CalibrationByModel.h"
 #include "Polygon.h"
 
+using namespace std;
 
 /// Unit testing class for ConfigReader class
 
@@ -45,7 +47,7 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
-	void testParameter(Parameter& xr_param, const std::string& x_legalValue, const std::string& x_illegalValue, const std::string& x_testRange)
+	void testParameter(Parameter& xr_param, const string& x_legalValue, const string& x_illegalValue, const string& x_testRange)
 	{
 		xr_param.SetValue(x_legalValue, PARAMCONF_UNKNOWN);
 		TS_ASSERT(xr_param.CheckRange() == true);
@@ -59,26 +61,26 @@ protected:
 		xr_param.Lock();
 		TS_ASSERT(xr_param.IsLocked());
 
-		std::string fileName = "testing/tmp/" + xr_param.GetName() + ".xml";
-		std::ofstream of(fileName.c_str());
+		string fileName = "tests/tmp/" + xr_param.GetName() + ".xml";
+		ofstream of(fileName.c_str());
 		xr_param.Export(of, 0);
 		of.close();
-		TS_ASSERT(compareFiles(fileName, "testing/parameters/" + xr_param.GetName() + ".xml"));
+		TS_ASSERT(compareFiles(fileName, "tests/parameters/" + xr_param.GetName() + ".xml"));
 
-		fileName = "testing/tmp/" + xr_param.GetName() + ".txt";
+		fileName = "tests/tmp/" + xr_param.GetName() + ".txt";
 		of.open(fileName.c_str());
 		xr_param.Print(of);
 		of.close();
-		TS_ASSERT(compareFiles(fileName, "testing/parameters/" + xr_param.GetName() + ".txt"));
+		TS_ASSERT(compareFiles(fileName, "tests/parameters/" + xr_param.GetName() + ".txt"));
 
 		// test that the current range stays identical
-		std::string range = xr_param.GetRange();
+		string range = xr_param.GetRange();
 		xr_param.SetRange(range);
 		TS_ASSERT(xr_param.GetRange() == range);
 
 		// test that the test range stays identical
 		xr_param.SetRange(x_testRange);
-		// std::cout<<xr_param.GetRange()<<std::endl;
+		// cout<<xr_param.GetRange()<<endl;
 		TS_ASSERT(xr_param.GetRange() == x_testRange);
 	}
 
@@ -128,7 +130,7 @@ public:
 	void testParameterString()
 	{
 		LOG_TEST(m_logger, "Test ParameterString");
-		std::string myString = "value_current";
+		string myString = "value_current";
 		ParameterString paramString("param_string", "default_value", &myString, "Parameter of type string");
 		testParameter(paramString, "legal", "", "");
 	}
@@ -153,8 +155,8 @@ public:
 	void testParameterCalibrationByModel()
 	{
 		LOG_TEST(m_logger, "Test ParameterSerializable - CalibrationByModel");
-		std::string json_data = "{\"camera_height\":2404.226076415452,\"focal\":240.0,\"height_model\":480,\"roll\":137.4711820374162,\"width_model\":640,\"yaw\":-1.203589252653426}";
-		std::string json_data2 = "{\"camera_height\":7000.52453240,\"focal\":910.0,\"height_model\":287,\"roll\":-10.650,\"width_model\":384,\"yaw\":-35.30}";
+		string json_data = "{\"camera_height\":2404.226076415452,\"focal\":240.0,\"height_model\":480,\"roll\":137.4711820374162,\"width_model\":640,\"yaw\":-1.203589252653426}";
+		string json_data2 = "{\"camera_height\":7000.52453240,\"focal\":910.0,\"height_model\":287,\"roll\":-10.650,\"width_model\":384,\"yaw\":-35.30}";
 
 		CalibrationByModel myCalibrationByModel;
 		ParameterSerializable paramCalibrationByModel("param_calibrationByModel",  json_data2, &myCalibrationByModel, "Parameter of type CalibrationByModel");

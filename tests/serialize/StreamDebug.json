@@ -3,7 +3,7 @@
 	"connected" : false,
 	"description" : "Another description for a stream of debug",
 	"height" : 32,
-	"image" : "testing/serialize/image/Module0.img.jpg",
+	"image" : "tests/serialize/image/Module0.img.jpg",
 	"name" : "img",
 	"ready" : true,
 	"timeStamp" : 1399367541,

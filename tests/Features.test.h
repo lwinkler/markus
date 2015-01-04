@@ -26,9 +26,9 @@
 #include <cxxtest/TestSuite.h>
 // #include <log4cxx/xml/domconfigurator.h>
 
+#include "Global.test.h"
 #include "util.h"
 #include "Factories.h"
-#include "AllFeatures.h"
 #include "MkException.h"
 #include "FeatureStd.h"
 #include "FeatureFloatInTime.h"
@@ -72,7 +72,6 @@ protected:
 public:
 	void setUp()
 	{
-		registerAllFeatures();
 		// log4cxx::xml::DOMConfigurator::configure("tests/log4cxx.xml");
 	}
 	void tearDown()
