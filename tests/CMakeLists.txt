@@ -9,7 +9,7 @@ if(CXXTEST_FOUND)
 	add_custom_command(
 		OUTPUT unitTests.cpp
 		DEPENDS ${tests_src}
-		COMMAND cxxtestgen -o unitTests.cpp ${tests_src} --error-printer
+		COMMAND cxxtestgen -o unitTests.cpp ${tests_src} --xunit-printer
 	)
 else()
 	message(WARNING "CxxTest library not found on your system. Unit tests will not be added to the project.")

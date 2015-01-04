@@ -140,7 +140,7 @@ add_custom_target(update_projects_list
 
 add_custom_target(tests
 	COMMENT "Launch the set of unit tests"
-	COMMAND +tests/unitTests
+	COMMAND tests/unitTests
 )
 
 add_custom_target(indent
