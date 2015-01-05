@@ -38,10 +38,7 @@ RandomEventGenerator::RandomEventGenerator(const ConfigReader& x_configReader):
 {
 	AddOutputStream(0, new StreamEvent("event", m_event, *this,  "Event generated"));
 	AddOutputStream(1, new StreamImage("image", m_output, *this, "Test image"));
-
-	if(m_param.randomSeed == 0)
-		m_seed = time(NULL);
-	else m_seed = m_param.randomSeed;
+	m_seed = 0;
 }
 
 RandomEventGenerator::~RandomEventGenerator()
@@ -51,6 +48,9 @@ RandomEventGenerator::~RandomEventGenerator()
 void RandomEventGenerator::Reset()
 {
 	Module::Reset();
+	if(m_param.randomSeed == 0)
+		m_seed = time(NULL);
+	else m_seed = m_param.randomSeed;
 	m_event.Empty();
 	m_frameTimer.Restart();
 }
