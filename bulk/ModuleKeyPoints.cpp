@@ -99,9 +99,10 @@ void ModuleKeyPoints::ProcessFrame()
 		it1->Intersect(m_input);
 
 		//compute point of interest and add it to m_objectsOut
-		//strange error (ASSERT : 0<=roi.x&&0<=roi.width&&roi.x+roi.width<=m_input.cols&&0<=roi.y&&0<=roi.height&&roi.y+roi.height<=m_input.rows)
 		//this cause unit test fail
-		Mat subImage(m_input, it1->Rect());    
+		Mat subImage(m_input, it1->Rect());
+		assert(    0 <= it1->posX && 0 <= it1->width  && it1->posX + subImage.cols / 2 <= m_input.cols // TODO: Keep this ?
+			&& 0 <= it1->posY && 0 <= it1->height && it1->posY + subImage.rows / 2 <= m_input.rows);
 		vector<KeyPoint> pointsOfInterest;
 
 		mp_detector->detect(subImage, pointsOfInterest);
