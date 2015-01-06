@@ -44,7 +44,7 @@ ModuleKeyPoints::ModuleKeyPoints(const ConfigReader& x_configReader) :
 	mp_descriptor = NULL;
 
 	AddInputStream(0, new StreamImage("image",  m_input, *this,   "Video input"));
-	AddInputStream(1, new StreamObject("objects", m_objectsIn, *this,	"Incoming objects"));
+	AddInputStream(1, new StreamObject("objects", m_objectsIn, *this,	"Incoming objects", "{\"width\":{\"min\":8}, \"height\":{\"min\":8}}"));
 
 	AddOutputStream(0, new StreamObject("output", m_objectsOut, *this,	"List of tracked object with KeyPoint and features"));
 
@@ -90,7 +90,7 @@ void ModuleKeyPoints::ProcessFrame()
 	m_objectsOut.clear();
 	for(vector<Object>::iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; ++it1)
 	{
-		if(it1->width <= 8 || it1->height <= 8)
+		if(it1->width < 8 || it1->height < 8)
 		{
 			LOG_WARN(m_logger, "Object has insufficient size: "<<it1->width<<"x"<<it1->height);
 			continue;

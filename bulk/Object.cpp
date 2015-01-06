@@ -239,14 +239,30 @@ void Object::Intersect(const Mat& x_image)
 }
 
 /// Randomize the content of the object
-void Object::Randomize(unsigned int& xr_seed, const string& x_requirement, const Size& xr_size)
+void Object::Randomize(unsigned int& xr_seed, const string& x_requirement, const Size& x_size)
 {
 	SetRect(cv::Rect(
-		Point(rand_r(&xr_seed) % xr_size.width, rand_r(&xr_seed) % xr_size.height), 
-		Point(rand_r(&xr_seed) % xr_size.width, rand_r(&xr_seed) % xr_size.height))
+		Point(rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height),
+		Point(rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height))
 	);
-	m_feats.clear();
+	if(x_requirement != "")
+	{
+		Json::Value root;
+		Json::Reader reader;
+		if(!reader.parse(x_requirement, root, false))
+			throw MkException("Error parsing requirement: " + x_requirement, LOC);
+		int minWidth = root["width"].get("min", 0).asInt();
+		int maxWidth = root["width"].get("max", x_size.width).asInt();
+		int minHeight = root["height"].get("min", 0).asInt();
+		int maxHeight = root["height"].get("max", x_size.height).asInt();
+		width  = RANGE(width,  minWidth,  maxWidth);
+		height = RANGE(height, minHeight, maxHeight);
+		Mat bounds(x_size, CV_8UC1);
+		Intersect(bounds);
+	}
 
+	// Add features
+	m_feats.clear();
 	if(x_requirement != "")
 	{
 		Json::Value root;
@@ -255,17 +271,18 @@ void Object::Randomize(unsigned int& xr_seed, const string& x_requirement, const
 		if(!reader.parse(x_requirement, root, false))
 			throw MkException("Error parsing requirement: " + x_requirement, LOC);
 		Json::Value req = root["features"];
-		if(req.isNull())
-			throw MkException("Error parsing features in requirement: " + x_requirement, LOC);
-		Json::Value::Members members1 = req.getMemberNames();
-
-		// Get an instance of the feature factory
-		const FactoryFeatures& factory(Factories::featuresFactory());
-		for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; ++it1)
+		if(!req.isNull())
 		{
-			Feature* feat = factory.Create(req[*it1]["type"].asString());
-			feat->Randomize(xr_seed, "");
-			AddFeature(*it1, feat);
+			Json::Value::Members members1 = req.getMemberNames();
+
+			// Get an instance of the feature factory
+			const FactoryFeatures& factory(Factories::featuresFactory());
+			for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; ++it1)
+			{
+				Feature* feat = factory.Create(req[*it1]["type"].asString());
+				feat->Randomize(xr_seed, "");
+				AddFeature(*it1, feat);
+			}
 		}
 	}
 
