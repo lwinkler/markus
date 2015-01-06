@@ -26,7 +26,6 @@
 
 #include "Input.h"
 #include "Event.h"
-#include "Timer.h"
 
 /**
 * @brief Generate an event with random features at each step
@@ -41,7 +40,7 @@ class RandomEventGenerator : public Input
 			m_list.push_back(new ParameterInt("nb_features", 	4, 	0, 	1000,	 &nbFeatures,	"Number of features per event"));
 			m_list.push_back(new ParameterInt("random_seed", 	0, 	0, 	INT_MAX, &randomSeed,	"Seed for random generator: 0 means seed is generated from timer"));
 			RefParameterByName("type").SetDefault("CV_8UC3");
-			RefParameterByName("fps").SetDefault("0.2");
+			RefParameterByName("fps").SetDefault("5");
 			Init();
 		}
 
@@ -70,10 +69,6 @@ protected:
 	// output
 	Event m_event;
 	cv::Mat m_output;
-
-	// temporary
-	Timer m_frameTimer;
-	// TIME_STAMP m_timeStamp;
 
 	// state
 	unsigned int m_seed;

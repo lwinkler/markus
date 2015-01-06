@@ -24,6 +24,8 @@
 #include "RandomObjectsGenerator.h"
 #include "StreamObject.h"
 
+#include <unistd.h>
+
 using namespace std;
 using namespace cv;
 
@@ -50,7 +52,6 @@ void RandomObjectsGenerator::Reset()
 		m_seed = time(NULL);
 	else m_seed = m_param.randomSeed;
 	m_cpt = 0;
-	m_frameTimer.Restart();
 
 	m_objects.clear();
 	for(int i = 0 ; i < m_param.nbObjects ; i++)
@@ -64,10 +65,16 @@ void RandomObjectsGenerator::Reset()
 		m_objects.back().AddFeature("height", new FeatureFloat(static_cast<float>(rand_r(&m_seed)) / RAND_MAX / 2.0));
 		m_cpt++;
 	}
+	// We must initialize the last time stamp
+	m_lastTimeStamp = - 1000 / m_param.fps;
 }
 
 void RandomObjectsGenerator::Capture()
 {
+	// Wait to act consistently with other inputs
+	if(m_realTime)
+		usleep(1000000 / m_param.fps);
+	
 	const double diagonal = sqrt(m_param.width * m_param.width + m_param.height * m_param.height);
 	int i = rand_r(&m_seed) % 100;
 
@@ -103,5 +110,7 @@ void RandomObjectsGenerator::Capture()
 		it->width  = dynamic_cast<const FeatureFloat&>(it->GetFeature("width")).value * diagonal;
 		it->height = dynamic_cast<const FeatureFloat&>(it->GetFeature("height")).value * diagonal;
 	}
+	m_currentTimeStamp = m_lastTimeStamp + 1000 / m_param.fps;
+	LOG_DEBUG(m_logger, "RandomObjectsGenerator: Capture time: "<<m_currentTimeStamp);
 }
 

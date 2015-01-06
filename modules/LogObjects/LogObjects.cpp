@@ -52,7 +52,6 @@ LogObjects::~LogObjects(void)
 void LogObjects::Reset()
 {
 	Module::Reset();
-	//m_objectsIn.Empty();
 	
 	string srtFileName = m_context.GetOutputDir() + "/" + m_param.file;
 	CLEAN_DELETE(mp_annotationWriter);
@@ -66,63 +65,9 @@ void LogObjects::Reset()
 
 void LogObjects::ProcessFrame()
 {
-	/* The old way, unused
-	// Log time stamp
-	// m_outputFile<<"## "<<m_currentTimeStamp<<endl;
-
-	// Log each feature of every object into a text file
-	for(vector<Object>::const_iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; it1++)
-	{
-		// it1->Serialize(m_outputFile, "");
-		// continue;
-		// m_outputFile<<it1->GetName()<<it1->GetId()<<endl;
-		for(map<string, Feature>::const_iterator it2 = it1->GetFeatures().begin() ; it2 != it1->GetFeatures().end() ; it2++)
-		{
-			const Feature & feat = it2->second;
-			m_outputFile<<m_currentTimeStamp<<SEP
-				<<it1->GetName()<<it1->GetId()<<SEP
-				<<it2->first<<SEP
-				<<feat.value<<SEP
-				<<feat.mean<<SEP
-				<<feat.sqVariance<<SEP
-				<<feat.initial<<SEP
-				<<feat.min<<SEP
-				<<feat.max<<SEP
-				<<feat.nbSamples<<endl;
-		}
-		m_outputFile<<endl;
-	}
-	*/
-/*
-	if(m_objectsIn.size() > 0)
-	{
-		m_outputFile<<"\"frame_"<<m_currentTimeStamp<<"\": ["<<endl;
-		for(vector<Object>::const_iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; ++it1)
-		{
-			m_outputFile<<"\""<<it1->GetName()<<it1->GetId()<<"\": ";
-			m_outputFile<<it1->SerializeToString("")<<", "<<endl;
-		}
-		m_outputFile<<"]"<<endl;
-	}
-*/
-	// if(m_objectsIn.size()!=0)
-	WriteObjects();
-}
-
-/// Write the subtitle in log file
-void LogObjects::WriteObjects() // TODO: Clean up this file
-{
 	LOG_DEBUG(m_logger, "Write object to log file");
-	// Log event label
-	// ss<<"\"event\":";
-	//for(vector<Object>::const_iterator it = m_objectsIn.begin() ; it != m_objectsIn.end() ; it++)
 	stringstream ss;
-	//const StreamObject* stream = dynamic_cast<const StreamObject*>(m_inputStreams.at(0));
-	// ss<<m_inputStreams.at(0)->SerializeToString("");
 	serialize(ss, m_objectsIn);
-	mp_annotationWriter->WriteAnnotation(m_currentTimeStamp, m_currentTimeStamp, ss); //TODO duration replaced by a magic number 5
-	
-	//cout<<"test"<<endl;
-	
+	mp_annotationWriter->WriteAnnotation(m_currentTimeStamp, m_currentTimeStamp, ss);
 }
 

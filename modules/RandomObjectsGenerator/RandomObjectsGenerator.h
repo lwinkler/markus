@@ -26,7 +26,6 @@
 
 #include "Input.h"
 #include "Object.h"
-#include "Timer.h"
 
 /**
 * @brief Generate an object with random features at each step
@@ -42,7 +41,7 @@ class RandomObjectsGenerator : public Input
 			m_list.push_back(new ParameterInt("nb_features" , 4   , 0 , 1000    , &nbFeatures , "Number of features per event"));
 			m_list.push_back(new ParameterInt("random_seed" , 0   , 0 , INT_MAX , &randomSeed , "Seed for random generator: 0 means seed is generated from timer"));
 			m_list.push_back(new ParameterDouble("speed"    , .005, 0 , DBL_MAX , &speed ,      "Speed for the variation of object features"));
-			RefParameterByName("fps").SetDefault("0.2");
+			RefParameterByName("fps").SetDefault("5");
 			Init();
 		}
 
@@ -72,9 +71,6 @@ private:
 protected:
 	// output
 	std::vector<Object> m_objects;
-
-	// temporary
-	Timer m_frameTimer;
 
 	// state
 	unsigned int m_seed;

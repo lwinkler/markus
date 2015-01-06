@@ -65,7 +65,6 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
-	void WriteObjects();
 	// input
 	std::vector <Object> m_objectsIn;
 
