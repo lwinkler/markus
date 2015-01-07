@@ -73,7 +73,14 @@ class ModulesTestSuite : public CxxTest::TestSuite
 	void setUp()
 	{
 		m_cpt = 0;
-		m_factoryModules.List(m_moduleTypes);
+		char* tmp = getenv("MODULE_TO_TEST");
+		if(tmp != NULL)
+		{
+			m_moduleTypes.push_back(tmp);
+			TS_WARN("$MODULE_TO_TEST should only be used for development purposes.");
+		}
+		else
+			m_factoryModules.List(m_moduleTypes);
 
 		mp_context = new Context("", "TestModule", "testing/out");
 		createEmptyConfigFile("/tmp/config_empty.xml");
