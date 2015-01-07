@@ -215,25 +215,18 @@ void Object::Intersect(const Mat& x_image)
 	Point br = rect.br();
 
 	if(tl.x < 0 || tl.y < 0 
-		|| br.x > x_image.cols || br.y > x_image.rows)
+		|| br.x > x_image.cols - 1 || br.y > x_image.rows - 1)
 	{
 		LOG_DEBUG(m_logger, "Correcting object " + GetName());
 
-		tl.x = MAX(0, tl.x);
-		tl.x = MIN(x_image.cols - 1, tl.x);
-		tl.y = MAX(0, tl.y);
-		tl.y = MIN(x_image.rows - 1, tl.y);
+		tl.x = RANGE(tl.x, 0, x_image.cols - 1);
+		tl.y = RANGE(tl.y, 0, x_image.rows - 1);
 
-		br.x = MAX(0, br.x);
-		br.x = MIN(x_image.cols - 1, br.x);
-		br.y = MAX(0, br.y);
-		br.y = MIN(x_image.rows - 1, br.y);
+		br.x = RANGE(br.x, 0, x_image.cols - 1);
+		br.y = RANGE(br.y, 0, x_image.rows - 1);
 
 		// recompute object boundaries
-		width	 = br.x - tl.x + 1;
-		height	 = br.y - tl.y + 1;
-		posX 	 = tl.x + width / 2;
-		posY 	 = tl.y + height / 2;
+		SetRect(cv::Rect(tl, br));
 		// cout<<"out "<<posX<<" "<<posY<<" "<<width<<" "<<height<<endl;
 	}
 }

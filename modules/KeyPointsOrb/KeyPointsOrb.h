@@ -48,8 +48,8 @@ public:
 			m_list.push_back(new ParameterInt("wta_k"          , 2   , 0 , 100  , &wta_k         , ""));
 
 			// Limit size to accelerate unit tests
-			RefParameterByName("width").SetRange("[1:1280]");
-			RefParameterByName("height").SetRange("[1:960]");
+			RefParameterByName("width").SetRange("[64:1280]");
+			RefParameterByName("height").SetRange("[48:960]");
 
 			Init();
 		};

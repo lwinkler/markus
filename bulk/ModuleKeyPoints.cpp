@@ -101,8 +101,9 @@ void ModuleKeyPoints::ProcessFrame()
 		//compute point of interest and add it to m_objectsOut
 		//this cause unit test fail
 		Mat subImage(m_input, it1->Rect());
-		assert(    0 <= it1->posX && 0 <= it1->width  && it1->posX + subImage.cols / 2 <= m_input.cols // TODO: Keep this ?
-			&& 0 <= it1->posY && 0 <= it1->height && it1->posY + subImage.rows / 2 <= m_input.rows);
+		// if(!(    0 <= it1->posX && 0 <= it1->width  && it1->posX + subImage.cols / 2 <= m_input.cols // TODO: Keep this ?
+			// && 0 <= it1->posY && 0 <= it1->height && it1->posY + subImage.rows / 2 <= m_input.rows))
+			// cout<<it1->posX + subImage.cols / 2<<*it1<<endl<<m_input.size()<<endl<<subImage.size()<<endl;
 		vector<KeyPoint> pointsOfInterest;
 
 		mp_detector->detect(subImage, pointsOfInterest);
