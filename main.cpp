@@ -300,7 +300,7 @@ void launchEditor(int argc, char** argv)
 	app.exec();
 	exit(0);
 #else
-	LOG_ERROR(logger, "To launch the editor Markus must be compiled with GUI");
+	cerr<<"To launch the editor Markus must be compiled with GUI"<<endl;
 	exit(-1);
 #endif
 }
