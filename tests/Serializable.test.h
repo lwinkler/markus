@@ -25,6 +25,7 @@
 
 #include <cxxtest/TestSuite.h>
 #include <sstream>
+#include <fstream>
 
 #include "util.h"
 #include "MkException.h"
@@ -40,6 +41,7 @@
 #include "Polygon.h"
 #include "Event.h"
 
+#include "Factories.h"
 #include "FeatureStd.h"
 #include "FeatureFloatInTime.h"
 #include "FeatureVector.h"
