@@ -102,6 +102,10 @@ ConfigReader::ConfigReader(const string& x_fileName, bool x_allowCreation)
 		}
 		mp_node = mp_doc;
 	}
+	catch(exception& e)
+	{
+		fatal("Fatal exception in constructor of ConfigReader: " + string(e.what()), LOC);
+	}
 	catch(...)
 	{
 		fatal("Fatal exception in constructor of ConfigReader", LOC);

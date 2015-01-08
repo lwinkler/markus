@@ -20,37 +20,35 @@
 *    You should have received a copy of the GNU Lesser General Public License
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
-#ifndef ALL_FEATURES_H
-#define ALL_FEATURES_H
+#ifndef TEST_GLOBAL_H
+#define TEST_GLOBAL_H
+// #include <cxxtest/TestSuite.h>
+#include <cxxtest/GlobalFixture.h>
+#include <log4cxx/xml/domconfigurator.h>
 
-#include "Factories.h"
-#include "FeatureStd.h"
-#include "FeatureFloatInTime.h"
-#include "FeatureVector.h"
-#include "FeatureOpenCv.h"
+#include "AllFeatures.h"
+#include "AllModules.h"
 
-
-#define REGISTER_FEATURE(child, type){\
-{\
-fact1.Register<child>(type);\
-Feature* pfeat = new child();\
-fact2.Register<child>(pfeat->Signature());\
-delete pfeat;\
-}}
-
-void registerAllFeatures()
+//
+// Fixture1 counts its setUp()s and tearDown()s
+//
+class MarkusFixture : public CxxTest::GlobalFixture
 {
-	FactoryFeatures& fact1(Factories::featuresFactory());
-	FactoryFeatures& fact2(Factories::featuresFactoryBySignature());
+	public:
+	bool setUp() {return true;}
+	bool tearDown() {return true;}
+	bool setUpWorld()
+	{
+		registerAllFeatures();
+		registerAllModules(Factories::modulesFactory());
 
-	REGISTER_FEATURE(FeatureFloat, "FeatureFloat"); 
-	REGISTER_FEATURE(FeatureInt, "FeatureInt"); 
-	REGISTER_FEATURE(FeatureFloatInTime, "FeatureFloatInTime"); 
-	REGISTER_FEATURE(FeatureVectorFloat, "FeatureVectorFloat"); 
-	REGISTER_FEATURE(FeatureString, "FeatureString"); 
-	REGISTER_FEATURE(FeatureKeyPoint, "FeatureKeyPoint"); 
-	REGISTER_FEATURE(FeaturePoint2f, "FeaturePoint2f"); 
-	REGISTER_FEATURE(FeaturePoint3f, "FeaturePoint3f"); 
-	// REGISTER_FEATURE(FeatureMat, "FeatureMat"); // Experimental
-}
+		SYSTEM("rm -rf tests/out");
+		SYSTEM("rm -rf tests/tmp");
+		SYSTEM("mkdir -p tests/tmp");
+		log4cxx::xml::DOMConfigurator::configure("tests/log4cxx.xml");
+		return true;
+	}
+	bool tearDownWorld() {return true;}
+};
+static MarkusFixture g_globalFixture;
 #endif

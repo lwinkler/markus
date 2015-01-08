@@ -43,12 +43,12 @@ Then enable compilation with Qt5 in the menu.
 	- *Qt Creator* : a full IDE for C++ and QT (package qtcreator)
 	- *Python*: for some modules (package python-dev  python-opencv python-sklearn python-skimage python-pip)
 		- *Python deps*: sudo pip install xmltodict
-	- *CppUnit** : To run the unit test (package libcppunit-dev)
+	- *CxxTests** : To run the unit test
 	- *Curl*: To use an input camera with call to a specific webservice
 	- *Avtools*: Video manipulation tools to use the benchmark of test
 	- *PythonMongo and PythonGridfs*: Tools to interact with a Mongo database, for advanced use
 
-	sudo apt-get install cmake-qt-gui cmake-curses-gui qtcreator python-dev libcppunit-dev libcurl4-openssl-dev python-opencv python-sklearn python-skimage libav-tools  python-pymongo python-gridfs
+	sudo apt-get install cmake-qt-gui cmake-curses-gui qtcreator python-dev cxxtest libcurl4-openssl-dev python-opencv python-sklearn python-skimage libav-tools  python-pymongo python-gridfs
 
 ### Compile OpenCV from sources (not recommended)
 Alternatively you can compile OpenCV from sources. Do not forget to install the depandencies with apt-get build-dep first:

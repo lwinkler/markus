@@ -23,26 +23,22 @@
 #ifndef TEST_PROJECTS_H
 #define TEST_PROJECTS_H
 
-#include <cppunit/TestFixture.h>
-#include <cppunit/TestCase.h>
-#include <cppunit/TestCaller.h>
+#include <cxxtest/TestSuite.h>
 
 #include "util.h"
 #include "MkException.h"
 #include "Manager.h"
 
+using namespace std;
 
 /// Unit testing class by choosing a set of test projects
 
 
-class TestProjects : public CppUnit::TestFixture
+class ProjectsTestSuite : public CxxTest::TestSuite
 {
-	private:
-		static log4cxx::LoggerPtr m_logger;
-	public:
-	/*void runTest()
-	{
-	}*/
+private:
+	static log4cxx::LoggerPtr m_logger;
+public:
 	void setUp()
 	{
 	}
@@ -50,7 +46,8 @@ class TestProjects : public CppUnit::TestFixture
 	{
 	}
 
-	void runConfig(const std::string& x_configFile)
+protected:
+	void runConfig(const string& x_configFile)
 	{
 		LOG_TEST(m_logger, "## Unit test with configuration "<<x_configFile);
 		ConfigReader mainConfig(x_configFile);
@@ -59,9 +56,9 @@ class TestProjects : public CppUnit::TestFixture
 		// Note: Added this to avoid deleting the output directory // TODO: Output dir should not be static probably
 		appConfig.RefSubConfig("parameters", true).RefSubConfig("param", "name", "auto_clean", true).SetValue("0");
 		appConfig.RefSubConfig("parameters", true).RefSubConfig("param", "name", "auto_process", true).SetValue("1");
-		CPPUNIT_ASSERT(!appConfig.IsEmpty());
+		TS_ASSERT(!appConfig.IsEmpty());
 		Manager manager(appConfig);
-		Context context("", "TestProjects", "testing/out");
+		Context context("", "ProjectsTestSuite", "tests/out");
 		manager.SetContext(context);
 		manager.AllowAutoProcess(false);
 		manager.Connect();
@@ -72,23 +69,17 @@ class TestProjects : public CppUnit::TestFixture
 				break;
 	}
 
+public:
 	/// Run different existing configs
 	void testSync()
 	{
 		LOG_TEST(m_logger, "\n# Unit test with different test projects");
-		runConfig("testing/projects/sync_test1.xml");
-		runConfig("testing/projects/sync_test2.xml");
-		runConfig("testing/projects/sync_test3.xml");
-		runConfig("testing/projects/sync_test4.xml");
-		runConfig("testing/projects/FaceAndTracker.xml");
-	}
-
-	static CppUnit::Test *suite()
-	{
-		CppUnit::TestSuite *suiteOfTests = new CppUnit::TestSuite("TestProjects");
-		suiteOfTests->addTest(new CppUnit::TestCaller<TestProjects>("testSync", &TestProjects::testSync));
-		return suiteOfTests;
+		runConfig("tests/projects/sync_test1.xml");
+		runConfig("tests/projects/sync_test2.xml");
+		runConfig("tests/projects/sync_test3.xml");
+		runConfig("tests/projects/sync_test4.xml");
+		runConfig("tests/projects/FaceAndTracker.xml");
 	}
 };
-log4cxx::LoggerPtr TestProjects::m_logger(log4cxx::Logger::getLogger("TestProjects"));
+log4cxx::LoggerPtr ProjectsTestSuite::m_logger(log4cxx::Logger::getLogger("ProjectsTestSuite"));
 #endif

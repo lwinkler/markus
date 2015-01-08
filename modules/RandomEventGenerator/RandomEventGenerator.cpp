@@ -22,9 +22,10 @@
 -------------------------------------------------------------------------------------*/
 
 #include "RandomEventGenerator.h"
-// #include "util.h"
 #include "StreamEvent.h"
 #include "StreamImage.h"
+
+#include <unistd.h>
 
 using namespace std;
 using namespace cv;
@@ -38,10 +39,7 @@ RandomEventGenerator::RandomEventGenerator(const ConfigReader& x_configReader):
 {
 	AddOutputStream(0, new StreamEvent("event", m_event, *this,  "Event generated"));
 	AddOutputStream(1, new StreamImage("image", m_output, *this, "Test image"));
-
-	if(m_param.randomSeed == 0)
-		m_seed = time(NULL);
-	else m_seed = m_param.randomSeed;
+	m_seed = 0;
 }
 
 RandomEventGenerator::~RandomEventGenerator()
@@ -51,12 +49,21 @@ RandomEventGenerator::~RandomEventGenerator()
 void RandomEventGenerator::Reset()
 {
 	Module::Reset();
+	if(m_param.randomSeed == 0)
+		m_seed = time(NULL);
+	else m_seed = m_param.randomSeed;
 	m_event.Empty();
-	m_frameTimer.Restart();
+
+	// We must initialize the last time stamp
+	m_lastTimeStamp = - 1000 / m_param.fps;
 }
 
 void RandomEventGenerator::Capture()
 {
+	// Wait to act consistently with other inputs
+	if(m_realTime)
+		usleep(1000000 / m_param.fps);
+
 	m_event.Empty();
 	m_output.setTo(0);
 
@@ -74,9 +81,6 @@ void RandomEventGenerator::Capture()
 			name<<"feat"<<i;
 			obj.AddFeature(name.str(), static_cast<float>(rand_r(&m_seed)) / RAND_MAX);
 		}
-		// Wait to act consistently with other inputs
-		// usleep(1000000 / m_param.fps);
-		m_event.Raise("random", obj);
 
 		// Output an image in relation with the event
 		int x = m_param.width / 2, y = m_param.width / 2, r = m_param.width / 4,  c = 0, l = -1;
@@ -92,9 +96,9 @@ void RandomEventGenerator::Capture()
 			l = dynamic_cast<const FeatureFloat&>(obj.GetFeature("feat4")).value * 5 + 1;
 		circle(m_output, Point(x, y), r, Scalar(100, c, 255 - c), l);
 
-		LOG_DEBUG(m_logger, "RandomEventGenerator: Capture time: "<<m_frameTimer.GetMSecLong());
-		m_currentTimeStamp = m_frameTimer.GetMSecLong();
-		// SetTimeStampToOutputs(m_frameTimer.GetMSecLong());
+		m_event.Raise("random", obj);
 	}
+	m_currentTimeStamp = m_lastTimeStamp + 1000 / m_param.fps;
+	LOG_DEBUG(m_logger, "RandomObjectsGenerator: Capture time: "<<m_currentTimeStamp);
 }
 

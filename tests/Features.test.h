@@ -23,11 +23,12 @@
 #ifndef TEST_FEATURES_H
 #define TEST_FEATURES_H
 
-#include <cppunit/TestFixture.h>
-#include <cppunit/TestCase.h>
-#include <cppunit/TestCaller.h>
+#include <cxxtest/TestSuite.h>
+// #include <log4cxx/xml/domconfigurator.h>
 
+#include "Global.test.h"
 #include "util.h"
+#include "Factories.h"
 #include "MkException.h"
 #include "FeatureStd.h"
 #include "FeatureFloatInTime.h"
@@ -36,63 +37,63 @@
 
 /// Test class for serialization
 
-class TestFeatures : public CppUnit::TestFixture
+using namespace std;
+
+class FeatureTestSuite : public CxxTest::TestSuite
 {
 public:
-	TestFeatures() :
+	FeatureTestSuite() :
 		m_factoryFeatures(Factories::featuresFactory())
 	{}
 
 private:
-		static log4cxx::LoggerPtr m_logger;
-		const FactoryFeatures& m_factoryFeatures;
+	// static log4cxx::LoggerPtr m_logger;
+
+protected:
+	const FactoryFeatures& m_factoryFeatures;
+
+	/// Test the serialization of one serializable class
+	void testFeature(Feature& feat, const string& name, unsigned int& xr_seed)
+	{
+		// Initialize the feature with random value since int/floats are not initialized by default // TODO: maybe fix this
+		feat.Randomize(xr_seed, ""); 
+		TS_TRACE("Test feature of type " + name + " = " + feat.SerializeToString() + " with signature = " + feat.Signature());
+		Feature* copy = feat.CreateCopy();
+		// TS_TRACE("feat.CompareSquared(feat) = " + feat.CompareSquared(feat));
+		TS_ASSERT(feat.CompareSquared(feat) == 0);
+		TS_ASSERT(feat.CompareSquared(*copy) == 0);
+		copy->Randomize(xr_seed, "");
+		TS_TRACE("compare with "+copy->SerializeToString() + " with signature = " + feat.Signature());
+		// TS_TRACE("feat.CompareSquared(*copy) = " + feat.CompareSquared(*copy));
+		TS_ASSERT(feat.CompareSquared(*copy) > 0);
+		delete copy;
+	}
 
 public:
 	void setUp()
 	{
+		// log4cxx::xml::DOMConfigurator::configure("tests/log4cxx.xml");
 	}
 	void tearDown()
 	{
 	}
 
-	/// Test the serialization of one serializable class
-	void testFeature(Feature& feat, const std::string& name, unsigned int& xr_seed)
-	{
-		// Initialize the feature with random value since int/floats are not initialized by default // TODO: maybe fix this
-		feat.Randomize(xr_seed, ""); 
-		LOG_TEST(m_logger, "Test feature of type "<<name<<" = "<<feat.SerializeToString() << " with signature = " << feat.Signature());
-		Feature* copy = feat.CreateCopy();
-		LOG_DEBUG(m_logger, "feat.CompareSquared(feat) = " << feat.CompareSquared(feat));
-		CPPUNIT_ASSERT(feat.CompareSquared(feat) == 0);
-		CPPUNIT_ASSERT(feat.CompareSquared(*copy) == 0);
-		copy->Randomize(xr_seed, "");
-		LOG_TEST(m_logger, " compare with "<<copy->SerializeToString() << " with signature = " << feat.Signature());
-		LOG_DEBUG(m_logger, "feat.CompareSquared(*copy) = " << feat.CompareSquared(*copy));
-		CPPUNIT_ASSERT(feat.CompareSquared(*copy) > 0);
-		delete copy;
-	}
 
-
-	void testSerialization1()
+	void testSerialization()
 	{
-		std::vector<std::string> listFeatures;
+		TS_TRACE("Test the serialization of features");
+		vector<string> listFeatures;
 		m_factoryFeatures.List(listFeatures);
 		unsigned int seed = 23456625;
-		for(std::vector<std::string>::const_iterator it = listFeatures.begin() ; it != listFeatures.end() ; ++it)
+		for(vector<string>::const_iterator it = listFeatures.begin() ; it != listFeatures.end() ; ++it)
 		{
+			TS_TRACE("Test the serialization of feature "+*it);
 			if(*it == "FeatureString") continue; // TODO: randomize strings
 			Feature* feat = m_factoryFeatures.Create(*it);
 			testFeature(*feat, *it, seed);
 			delete(feat);
 		}
 	}
-
-	static CppUnit::Test *suite()
-	{
-		CppUnit::TestSuite *suiteOfTests = new CppUnit::TestSuite("TestFeatures");
-		suiteOfTests->addTest(new CppUnit::TestCaller<TestFeatures>("testSerialization1", &TestFeatures::testSerialization1));
-		return suiteOfTests;
-	}
 };
-log4cxx::LoggerPtr TestFeatures::m_logger(log4cxx::Logger::getLogger("TestFeatures"));
+// log4cxx::LoggerPtr FeatureTestSuite::m_logger(log4cxx::Logger::getLogger("FeatureTestSuite"));
 #endif

@@ -21,39 +21,42 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef RANDOM_EVENT_GENERATOR_H
-#define RANDOM_EVENT_GENERATOR_H
+#ifndef RANDOM_OBJECTS_GENERATOR_H
+#define RANDOM_OBJECTS_GENERATOR_H
 
 #include "Input.h"
-#include "Event.h"
+#include "Object.h"
 
 /**
-* @brief Generate an event with random features at each step
+* @brief Generate an object with random features at each step
 */
-class RandomEventGenerator : public Input
+class RandomObjectsGenerator : public Input
 {
 	class Parameters : public Input::Parameters
 	{
 	public:
 		Parameters(const ConfigReader& x_confReader) : Input::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterInt("nb_features", 	4, 	0, 	1000,	 &nbFeatures,	"Number of features per event"));
-			m_list.push_back(new ParameterInt("random_seed", 	0, 	0, 	INT_MAX, &randomSeed,	"Seed for random generator: 0 means seed is generated from timer"));
-			RefParameterByName("type").SetDefault("CV_8UC3");
+			m_list.push_back(new ParameterInt("nb_objects"  , 10  , 0 , 1000    , &nbObjects  , "Number of objects to generate per step"));
+			m_list.push_back(new ParameterInt("nb_features" , 4   , 0 , 1000    , &nbFeatures , "Number of features per event"));
+			m_list.push_back(new ParameterInt("random_seed" , 0   , 0 , INT_MAX , &randomSeed , "Seed for random generator: 0 means seed is generated from timer"));
+			m_list.push_back(new ParameterDouble("speed"    , .005, 0 , DBL_MAX , &speed ,      "Speed for the variation of object features"));
 			RefParameterByName("fps").SetDefault("5");
 			Init();
 		}
 
 	public:
+		int nbObjects;
 		int nbFeatures;
 		int randomSeed;
+		double speed;
 	};
 
 public:
-	RandomEventGenerator(const ConfigReader& x_confReader);
-	~RandomEventGenerator();
-	MKCLASS("RandomEventGenerator")
-	MKDESCR("Generate an event with random features at each step")
+	RandomObjectsGenerator(const ConfigReader& x_confReader);
+	~RandomObjectsGenerator();
+	MKCLASS("RandomObjectsGenerator")
+	MKDESCR("Generate an object with varying features at each step")
 	
 	inline virtual const Parameters& GetParameters() const {return m_param;}
 	void Capture();
@@ -67,11 +70,11 @@ private:
 
 protected:
 	// output
-	Event m_event;
-	cv::Mat m_output;
+	std::vector<Object> m_objects;
 
 	// state
 	unsigned int m_seed;
+	int m_cpt;
 };
 
 #endif

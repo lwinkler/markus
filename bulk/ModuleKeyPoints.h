@@ -44,6 +44,8 @@ public:
 			m_list.push_back(new ParameterString("descriptor", "", &descriptor, "The keypoint descriptor: ORB, BRIEF or Opponent. Leave empty for none.")); // TODO: It seems that only the original descriptor works
 
 			RefParameterByName("type").SetRange("[CV_8UC1]");
+			RefParameterByName("width").SetRange("[64:6400]");
+			RefParameterByName("height").SetRange("[48:4800]");
 			Init();
 		};
 		std::string descriptor;

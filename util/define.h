@@ -70,6 +70,7 @@ Class &operator=(const Class &);
 // This means that a function is not implemented (yet)
 #define NON_EXISTANT assert(false)
 
+#define RANGE(x, a, b) ((x) < (a) ? (a) : ((x) > (b) ? (b) : (x)))
 
 #endif
 

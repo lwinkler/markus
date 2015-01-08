@@ -215,38 +215,47 @@ void Object::Intersect(const Mat& x_image)
 	Point br = rect.br();
 
 	if(tl.x < 0 || tl.y < 0 
-		|| br.x > x_image.cols || br.y > x_image.rows)
+		|| br.x > x_image.cols - 1 || br.y > x_image.rows - 1)
 	{
 		LOG_DEBUG(m_logger, "Correcting object " + GetName());
 
-		tl.x = MAX(0, tl.x);
-		tl.x = MIN(x_image.cols - 1, tl.x);
-		tl.y = MAX(0, tl.y);
-		tl.y = MIN(x_image.rows - 1, tl.y);
+		tl.x = RANGE(tl.x, 0, x_image.cols - 1);
+		tl.y = RANGE(tl.y, 0, x_image.rows - 1);
 
-		br.x = MAX(0, br.x);
-		br.x = MIN(x_image.cols - 1, br.x);
-		br.y = MAX(0, br.y);
-		br.y = MIN(x_image.rows - 1, br.y);
+		br.x = RANGE(br.x, 0, x_image.cols - 1);
+		br.y = RANGE(br.y, 0, x_image.rows - 1);
 
 		// recompute object boundaries
-		width	 = br.x - tl.x + 1;
-		height	 = br.y - tl.y + 1;
-		posX 	 = tl.x + width / 2;
-		posY 	 = tl.y + height / 2;
+		SetRect(cv::Rect(tl, br));
 		// cout<<"out "<<posX<<" "<<posY<<" "<<width<<" "<<height<<endl;
 	}
 }
 
 /// Randomize the content of the object
-void Object::Randomize(unsigned int& xr_seed, const string& x_requirement, const Size& xr_size)
+void Object::Randomize(unsigned int& xr_seed, const string& x_requirement, const Size& x_size)
 {
 	SetRect(cv::Rect(
-		Point(rand_r(&xr_seed) % xr_size.width, rand_r(&xr_seed) % xr_size.height), 
-		Point(rand_r(&xr_seed) % xr_size.width, rand_r(&xr_seed) % xr_size.height))
+		Point(rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height),
+		Point(rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height))
 	);
-	m_feats.clear();
+	if(x_requirement != "")
+	{
+		Json::Value root;
+		Json::Reader reader;
+		if(!reader.parse(x_requirement, root, false))
+			throw MkException("Error parsing requirement: " + x_requirement, LOC);
+		int minWidth = root["width"].get("min", 0).asInt();
+		int maxWidth = root["width"].get("max", x_size.width).asInt();
+		int minHeight = root["height"].get("min", 0).asInt();
+		int maxHeight = root["height"].get("max", x_size.height).asInt();
+		width  = RANGE(width,  minWidth,  maxWidth);
+		height = RANGE(height, minHeight, maxHeight);
+		Mat bounds(x_size, CV_8UC1);
+		Intersect(bounds);
+	}
 
+	// Add features
+	m_feats.clear();
 	if(x_requirement != "")
 	{
 		Json::Value root;
@@ -255,17 +264,18 @@ void Object::Randomize(unsigned int& xr_seed, const string& x_requirement, const
 		if(!reader.parse(x_requirement, root, false))
 			throw MkException("Error parsing requirement: " + x_requirement, LOC);
 		Json::Value req = root["features"];
-		if(req.isNull())
-			throw MkException("Error parsing features in requirement: " + x_requirement, LOC);
-		Json::Value::Members members1 = req.getMemberNames();
-
-		// Get an instance of the feature factory
-		const FactoryFeatures& factory(Factories::featuresFactory());
-		for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; ++it1)
+		if(!req.isNull())
 		{
-			Feature* feat = factory.Create(req[*it1]["type"].asString());
-			feat->Randomize(xr_seed, "");
-			AddFeature(*it1, feat);
+			Json::Value::Members members1 = req.getMemberNames();
+
+			// Get an instance of the feature factory
+			const FactoryFeatures& factory(Factories::featuresFactory());
+			for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; ++it1)
+			{
+				Feature* feat = factory.Create(req[*it1]["type"].asString());
+				feat->Randomize(xr_seed, "");
+				AddFeature(*it1, feat);
+			}
 		}
 	}
 

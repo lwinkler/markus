@@ -44,7 +44,7 @@ ModuleKeyPoints::ModuleKeyPoints(const ConfigReader& x_configReader) :
 	mp_descriptor = NULL;
 
 	AddInputStream(0, new StreamImage("image",  m_input, *this,   "Video input"));
-	AddInputStream(1, new StreamObject("objects", m_objectsIn, *this,	"Incoming objects"));
+	AddInputStream(1, new StreamObject("objects", m_objectsIn, *this,	"Incoming objects", "{\"width\":{\"min\":8}, \"height\":{\"min\":8}}"));
 
 	AddOutputStream(0, new StreamObject("output", m_objectsOut, *this,	"List of tracked object with KeyPoint and features"));
 
@@ -90,7 +90,7 @@ void ModuleKeyPoints::ProcessFrame()
 	m_objectsOut.clear();
 	for(vector<Object>::iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; ++it1)
 	{
-		if(it1->width <= 8 || it1->height <= 8)
+		if(it1->width < 8 || it1->height < 8)
 		{
 			LOG_WARN(m_logger, "Object has insufficient size: "<<it1->width<<"x"<<it1->height);
 			continue;
@@ -99,9 +99,11 @@ void ModuleKeyPoints::ProcessFrame()
 		it1->Intersect(m_input);
 
 		//compute point of interest and add it to m_objectsOut
-		//strange error (ASSERT : 0<=roi.x&&0<=roi.width&&roi.x+roi.width<=m_input.cols&&0<=roi.y&&0<=roi.height&&roi.y+roi.height<=m_input.rows)
 		//this cause unit test fail
-		Mat subImage(m_input, it1->Rect());    
+		Mat subImage(m_input, it1->Rect());
+		// if(!(    0 <= it1->posX && 0 <= it1->width  && it1->posX + subImage.cols / 2 <= m_input.cols // TODO: Keep this ?
+			// && 0 <= it1->posY && 0 <= it1->height && it1->posY + subImage.rows / 2 <= m_input.rows))
+			// cout<<it1->posX + subImage.cols / 2<<*it1<<endl<<m_input.size()<<endl<<subImage.size()<<endl;
 		vector<KeyPoint> pointsOfInterest;
 
 		mp_detector->detect(subImage, pointsOfInterest);
