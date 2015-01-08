@@ -45,6 +45,8 @@
 #include "FeatureVector.h"
 #include "FeatureOpenCv.h"
 
+using namespace std;
+
 /// Test class for serialization
 class TestObject : public Serializable
 {

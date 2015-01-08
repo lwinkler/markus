@@ -40,6 +40,25 @@ using namespace std;
 
 // #define BLACKLIST(x) m_moduleTypes.erase(remove(m_moduleTypes.begin(), m_moduleTypes.end(), (x)), m_moduleTypes.end());
 
+#include <string>
+#include <iostream>
+#include <stdio.h>
+
+void exec(const string& x_cmd, vector<string>& xr_result)
+{
+	FILE* pipe = popen(x_cmd.c_str(), "r");
+	xr_result.clear();
+	if (!pipe)
+		throw MkException("Error at execution of command: " + x_cmd, LOC);
+	char buffer[128];
+	while(!feof(pipe))
+	{
+		if(fgets(buffer, 128, pipe) != NULL)
+			xr_result.push_back(buffer);
+	}
+	pclose(pipe);
+}
+
 /// Unit testing class for ConfigReader class
 class ModulesTestSuite : public CxxTest::TestSuite
 {
@@ -52,8 +71,6 @@ class ModulesTestSuite : public CxxTest::TestSuite
 		  m_factoryModules(Factories::modulesFactory()),
 		  m_factoryFeatures(Factories::featuresFactory()),
 		  m_cpt(0){}
-	private:
-		static log4cxx::LoggerPtr m_logger;
 	protected:
 		vector<string> m_moduleTypes;
 		const FactoryModules&  m_factoryModules;
@@ -125,7 +142,7 @@ class ModulesTestSuite : public CxxTest::TestSuite
 	/// Create module and make it ready to process
 	Module* createAndConnectModule(const string& x_type, const map<string, string>* xp_parameters = NULL)
 	{
-		LOG_DEBUG(m_logger, "Create and connect module of class "<<x_type);
+		TS_TRACE("Create and connect module of class " + x_type);
 		ConfigReader moduleConfig = addModuleToConfig(x_type, *mp_config);
 
 		// Add parameters to override to the config
@@ -177,20 +194,20 @@ class ModulesTestSuite : public CxxTest::TestSuite
 	/// Run the modules with different inputs generated randomly
 	void testInputs()
 	{
-		LOG_TEST(m_logger, "\n# Test different inputs");
+		// TS_TRACE("\n# Test different inputs");
 		unsigned int seed = 324234566;
 
 		// Test on each type of module
 		for(vector<string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; ++it1)
 		{
-			LOG_TEST(m_logger, "## on module "<<*it1);
+			TS_TRACE("## on module " + *it1);
 			Module* module = createAndConnectModule(*it1);
 			if(module->IsUnitTestingEnabled())
 			{
 				for(int i = 0 ; i < 50 ; i++)
 					module->ProcessRandomInput(seed);
 			}
-			else LOG_TEST(m_logger, "--> unit testing disabled on "<<*it1);
+			else TS_TRACE("--> unit testing disabled on " + *it1);
 			delete module;
 		}
 	}
@@ -200,16 +217,16 @@ class ModulesTestSuite : public CxxTest::TestSuite
 	void testControllers()
 	{
 		unsigned int seed = 324234566;
-		LOG_TEST(m_logger, "\n# Test all controllers");
+		// TS_TRACE("\n# Test all controllers");
 		
 		// Test on each type of module
 		for(vector<string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; ++it1)
 		{
-			LOG_TEST(m_logger, "# on module "<<*it1);
+			TS_TRACE("# on module " + *it1);
 			Module* module = createAndConnectModule(*it1);
 			if(!module->IsUnitTestingEnabled())
 			{
-				LOG_TEST(m_logger, "--> unit testing disabled on "<<*it1);
+				TS_TRACE("--> unit testing disabled on " + *it1);
 				delete module;
 				continue;
 			}
@@ -217,7 +234,7 @@ class ModulesTestSuite : public CxxTest::TestSuite
 			// Test on all controllers of the module
 			for(map<string, Controller*>::const_iterator it2 = module->GetControllersList().begin() ; it2 != module->GetControllersList().end() ; ++it2)
 			{
-				LOG_INFO(m_logger, "## on controller "<<it2->first<<" of class "<<it2->second->GetClass());
+				TS_TRACE("## on controller " + it2->first + " of class " + it2->second->GetClass());
 				vector<string> actions;
 				it2->second->ListActions(actions);
 
@@ -229,18 +246,18 @@ class ModulesTestSuite : public CxxTest::TestSuite
 
 					type = "0";
 					it2->second->CallAction("GetType", &type);
-					LOG_INFO(m_logger, "###  "<<it2->first<<".GetType returned "<<type);
+					TS_TRACE("###  " + it2->first + ".GetType returned " + type);
 
 					range = "0";
 					it2->second->CallAction("GetRange", &range);
-					LOG_INFO(m_logger, "###  "<<it2->first<<".GetRange returned "<<range);
+					TS_TRACE("###  " + it2->first + ".GetRange returned " + range);
 
 					defval = "0";
 					it2->second->CallAction("GetDefault", &defval);
-					LOG_INFO(m_logger, "###  "<<it2->first<<".GetDefault returned "<<defval);
+					TS_TRACE("###  " + it2->first + ".GetDefault returned " + defval);
 
 					vector<string> values;
-					LOG_DEBUG(m_logger, "Generate values for param of type "<<type<<" in range "<<range);
+					TS_TRACE("Generate values for param of type " + type + " in range " + range);
 					module->GetParameters().GetParameterByName(it2->first).GenerateValues(20, values, range);
   
 					for(vector<string>::iterator it = values.begin() ; it != values.end() ; ++it)
@@ -256,7 +273,7 @@ class ModulesTestSuite : public CxxTest::TestSuite
 						}
 						catch(ParameterException& e)
 						{
-							LOG_INFO(m_logger, "Cannot set parameter, reason: "<<e.what());
+							TS_TRACE("Cannot set parameter, reason: " + string(e.what()));
 							continue;
 						}
 
@@ -268,8 +285,8 @@ class ModulesTestSuite : public CxxTest::TestSuite
 						module->Reset();
 						for(int i = 0 ; i < 3 ; i++)
 							module->ProcessRandomInput(seed);
-						LOG_DEBUG(m_logger, "###  "<<it2->first<<".Set returned "<<*it);
-						LOG_DEBUG(m_logger, "###  "<<it2->first<<".Get returned "<<newValue);
+						TS_TRACE("###  " + it2->first + ".Set returned " + *it);
+						TS_TRACE("###  " + it2->first + ".Get returned " + newValue);
 					}
 					it2->second->CallAction("Set", &defval);
 				}
@@ -280,7 +297,7 @@ class ModulesTestSuite : public CxxTest::TestSuite
 						string value = "0";
 						// module->LockForWrite();
 						it2->second->CallAction(*it3, &value);
-						LOG_INFO(m_logger, "###  "<<it2->first<<"."<<*it3<<" returned "<<value);
+						TS_TRACE("###  " + it2->first + "." + *it3 + " returned " + value);
 						// module->Unlock();
 
 						for(int i = 0 ; i < 3 ; i++)
@@ -298,7 +315,7 @@ class ModulesTestSuite : public CxxTest::TestSuite
 	void testParameters()
 	{
 		unsigned int seed = 324223426;
-		LOG_TEST(m_logger, "\n# Test all parameters");
+		// TS_TRACE("\n# Test all parameters");
 		
 		// Test on each type of module
 		for(vector<string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; ++it1)
@@ -309,7 +326,7 @@ class ModulesTestSuite : public CxxTest::TestSuite
 				delete module;
 				continue;
 			}
-			LOG_TEST(m_logger, "# on module "<<*it1);
+			TS_TRACE("# on module " + *it1);
 
 			string lastParam = "";
 			string lastDefault = "";
@@ -322,19 +339,19 @@ class ModulesTestSuite : public CxxTest::TestSuite
 				if(!(*it2)->IsLocked())
 					continue;
 
-				LOG_INFO(m_logger, "## on parameter "<<(*it2)->GetName()<<" of type "<<(*it2)->GetTypeString()<<" on range "<<(*it2)->GetRange());
+				TS_TRACE("## on parameter " + (*it2)->GetName() + " of type " + (*it2)->GetTypeString() + " on range " + (*it2)->GetRange());
 
 				// Generate a new module with each value for locked parameter
 				vector<string> values;
 
-				LOG_DEBUG(m_logger, "Generate values for param of type "<<(*it2)->GetTypeString()<<" in range "<<(*it2)->GetRange());
+				TS_TRACE("Generate values for param of type " + (*it2)->GetTypeString() + " in range " + (*it2)->GetRange());
 				(*it2)->GenerateValues(10, values);
 
 				for(vector<string>::iterator it3 = values.begin() ; it3 != values.end() ; ++it3)
 				{
 					// For each value
 					map<string, string> params;
-					LOG_DEBUG(m_logger, "Set param "<<(*it2)->GetName()<<" = "<<*it3<<" and "<<lastParam<<" = "<<lastDefault);
+					TS_TRACE("Set param " + (*it2)->GetName() + " = " + *it3 + " and " + lastParam + " = " + lastDefault);
 					params[(*it2)->GetName()] = *it3;
 					if(lastParam != "")
 						params[lastParam] = lastDefault;
@@ -354,16 +371,20 @@ class ModulesTestSuite : public CxxTest::TestSuite
 		}
 	}
 
-/*
-	static CppUnit::Test *suite()
+
+	// Test by searching the XML files that were created specially to unit test one modules (ModuleX.test.xml)
+	void testBySpecificXmlProjects()
 	{
-		CppUnit::TestSuite *suiteOfTests = new CppUnit::TestSuite("ModulesTestSuite");
-		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testInputs", &TestModules::testInputs));
-		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testControllers", &TestModules::testControllers));
-		suiteOfTests->addTest(new CppUnit::TestCaller<TestModules>("testParameters", &TestModules::testParameters));
-		return suiteOfTests;
+		vector<string> result;
+		exec("find modules/ modules2/ -name \"testing*.xml\"", result);
+
+		for(auto elem : result)
+		{
+			// For each xml, execute the file with Markus executable
+			TS_TRACE("Testing XML project " + elem);
+			SYSTEM("./markus -ncf " + elem);
+		}
+		
 	}
-	*/
 };
-log4cxx::LoggerPtr ModulesTestSuite::m_logger(log4cxx::Logger::getLogger("ModulesTestSuite"));
 #endif
