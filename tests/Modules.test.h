@@ -53,8 +53,16 @@ void exec(const string& x_cmd, vector<string>& xr_result)
 	char buffer[128];
 	while(!feof(pipe))
 	{
+		// Append result to string vector
 		if(fgets(buffer, 128, pipe) != NULL)
-			xr_result.push_back(buffer);
+		{
+			xr_result.push_back(string(buffer));
+			// Remove last \n
+			if(! xr_result.back().empty() && xr_result.back().back() == '\n')
+				xr_result.back().pop_back();
+					if(xr_result.back().empty())
+						xr_result.pop_back();
+		}
 	}
 	pclose(pipe);
 }
@@ -375,14 +383,25 @@ class ModulesTestSuite : public CxxTest::TestSuite
 	// Test by searching the XML files that were created specially to unit test one modules (ModuleX.test.xml)
 	void testBySpecificXmlProjects()
 	{
-		vector<string> result;
-		exec("find modules/ modules2/ -name \"testing*.xml\"", result);
+		vector<string> result1;
+		exec("find modules/ modules2/ -name \"testing*.xml\"", result1);
 
-		for(auto elem : result)
+		for(auto elem : result1)
 		{
+			vector<string> result2;
 			// For each xml, execute the file with Markus executable
 			TS_TRACE("Testing XML project " + elem);
-			SYSTEM("./markus -ncf " + elem);
+			string outDir = "out_test_" + elem;
+			string cmd = "./markus -ncf " + elem + " -o " + outDir + " > /dev/null";
+			TS_TRACE("Execute " + cmd);
+			SYSTEM(cmd);
+			// gather possible errors and warnings
+			exec("cat " + outDir + "/markus.log | grep WARN", result2);
+			if(!result2.empty())
+				TS_WARN("Warning(s) found in " + outDir + "/markus.log");
+			exec("cat " + outDir + "/markus.log | grep ERROR", result2);
+			if(!result2.empty())
+				TS_FAIL("Error(s) found in " + outDir + "/markus.log");
 		}
 		
 	}

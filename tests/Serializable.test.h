@@ -164,6 +164,7 @@ protected:
 	/// Test the serialization of one serializable class
 	void testSerialization(Serializable& obj, const string& name)
 	{
+		TS_TRACE("Test the serialization of " + name);
 		string fileName1 = "tests/tmp/serialize1_" + name + ".json";
 		string fileName2 = "tests/tmp/serialize2_" + name + ".json";
 		string fileName3 = "tests/serialize/" + name + ".json";
