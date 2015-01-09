@@ -44,7 +44,7 @@ Module::Module(const ConfigReader& x_configReader) :
 	m_name(x_configReader.GetAttribute("name"))
 {
 	m_id	= atoi(x_configReader.GetAttribute("id").c_str());
-	LOG_INFO(m_logger, "Create object " << m_name);
+	LOG_INFO(m_logger, "Create module " << m_name);
 	
 	m_timerConvertion      = 0;
 	m_timerProcessing      = 0;

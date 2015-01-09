@@ -47,7 +47,7 @@ Manager::Manager(const ConfigReader& x_configReader) :
 	mr_moduleFactory(Factories::modulesFactory()),
 	m_lastException(MK_EXCEPTION_NORMAL, "No exception were thrown", "", "")
 {
-	LOG_INFO(m_logger, "Create object Manager");
+	LOG_INFO(m_logger, "Create manager");
 	m_frameCount = 0;
 	m_isConnected = false;
 	m_continueFlag = true;
