@@ -29,6 +29,7 @@
 #include <jsoncpp/json/writer.h>
 #include "define.h"
 #include "MkException.h"
+#include <boost/circular_buffer.hpp>
 
 
 /** @brief This file contains some usefull functions for features and serialization. These are used by the FeatureT template.
@@ -237,6 +238,70 @@ template<class T>void randomize(std::vector<T>& xr_val, unsigned int& xr_seed)
 {
 	xr_val.resize(10);
 	for(typename std::vector<T>::iterator it1 = xr_val.begin() ; it1 != xr_val.end() ; ++it1)
+		randomize(*it1, xr_seed);
+}
+
+/* -------------------------------------------------------------------------------- */
+// Template specialization for features in circular buffers
+
+template<class T>std::ostream& serialize(std::ostream& x_out, const boost::circular_buffer<T>& x_val)
+{
+	if(x_val.size() == 0)
+	{
+		x_out<<"[]";
+		return x_out;
+	}
+
+	x_out << "[";
+	typename boost::circular_buffer<T>::const_iterator it = x_val.begin();
+	while(it != x_val.end() - 1)
+	{
+		serialize(x_out,*it);
+		x_out << ",";
+		++it;
+	}
+	serialize(x_out,*it);
+	x_out << "]";
+	return x_out;
+}
+
+template<class T>std::istream& deserialize(std::istream& x_in,  boost::circular_buffer<T>& xr_val)
+{
+	Json::Value root;
+	x_in >> root;  // note: copy first for local use
+	assert(root.isArray());
+
+	xr_val.clear();
+	xr_val.resize(root.size());
+	for(unsigned int i = 0 ; i < root.size() ; i++)
+	{
+		std::stringstream ss;
+		ss << root[i];
+		deserialize(ss, xr_val[i]);
+	}
+
+	return x_in;
+}
+
+template<class T> double compareSquared(const boost::circular_buffer<T>& x_1, const boost::circular_buffer<T>& x_2)
+{
+	double sum = 0;
+	if(x_1.size() != x_2.size())
+		return 1;
+	// throw MkException("Size error while comparing FeatureVectorFloats", LOC);
+
+	typename boost::circular_buffer<T>::const_iterator it2 = x_2.begin();
+	for(typename boost::circular_buffer<T>::const_iterator it1 = x_1.begin() ; it1 != x_1.end() ; ++it1, ++it2)
+	{
+		sum += compareSquared(*it1, *it2);
+	}
+	return sum / POW2(x_1.size());
+}
+
+template<class T>void randomize(boost::circular_buffer<T>& xr_val, unsigned int& xr_seed)
+{
+	xr_val.resize(10);
+	for(typename boost::circular_buffer<T>::iterator it1 = xr_val.begin() ; it1 != xr_val.end() ; ++it1)
 		randomize(*it1, xr_seed);
 }
 
