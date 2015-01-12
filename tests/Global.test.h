@@ -22,9 +22,7 @@
 -------------------------------------------------------------------------------------*/
 #ifndef TEST_GLOBAL_H
 #define TEST_GLOBAL_H
-// #include <cxxtest/TestSuite.h>
 #include <cxxtest/GlobalFixture.h>
-#include <log4cxx/xml/domconfigurator.h>
 
 #include "AllFeatures.h"
 #include "AllModules.h"
@@ -45,7 +43,6 @@ class MarkusFixture : public CxxTest::GlobalFixture
 		SYSTEM("rm -rf tests/out");
 		SYSTEM("rm -rf tests/tmp");
 		SYSTEM("mkdir -p tests/tmp");
-		log4cxx::xml::DOMConfigurator::configure("tests/log4cxx.xml");
 		return true;
 	}
 	bool tearDownWorld() {return true;}

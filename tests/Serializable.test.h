@@ -108,8 +108,7 @@ public:
 	 m_factoryFeatures(Factories::featuresFactory()),
 	 mp_config(NULL){}
 
-private:
-	static log4cxx::LoggerPtr m_logger;
+protected:
 	const FactoryModules& m_factoryModules;
 	const FactoryFeatures& m_factoryFeatures;
 	Module* mp_fakeInput;
@@ -170,7 +169,7 @@ protected:
 		string fileName3 = "tests/serialize/" + name + ".json";
 		string dir = "tests/serialize/image";
 		SYSTEM("mkdir -p " + dir);
-		LOG_TEST(m_logger, "Test serialization of "<<name<<" = "<<obj.SerializeToString() << " with signature = " << obj.Signature());
+		TS_TRACE("Test serialization of " + name + " = " + obj.SerializeToString()  +  " with signature = "  +  obj.Signature());
 		ofstream of1(fileName1.c_str());
 		obj.Serialize(of1, dir);
 		of1.close();
@@ -346,5 +345,4 @@ public:
 		}
 	}
 };
-log4cxx::LoggerPtr SerializableTestSuite::m_logger(log4cxx::Logger::getLogger("SerializableTestSuite"));
 #endif

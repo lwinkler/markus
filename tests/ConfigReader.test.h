@@ -24,8 +24,6 @@
 #define TEST_CONFIGREADER_H
 
 #include <cxxtest/TestSuite.h>
-#include <log4cxx/xml/domconfigurator.h>
-
 #include "ConfigReader.h"
 #include "util.h"
 #include "MkException.h"
@@ -34,8 +32,6 @@ using namespace std;
 
 class ConfigReaderTestSuite : public CxxTest::TestSuite
 {
-private:
-	static log4cxx::LoggerPtr m_logger;
 protected:
 	ConfigReader* m_conf1;
 	ConfigReader* m_conf2;
@@ -44,8 +40,6 @@ protected:
 public:
 	void setUp()
 	{
-		// log4cxx::xml::DOMConfigurator::configure("tests/log4cxx.xml");
-
 		m_conf1 = new ConfigReader("tests/config1.xml");
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		m_conf2 = new ConfigReader("/tmp/config_empty.xml");
@@ -64,7 +58,7 @@ public:
 	/// Test new syntax
 	void testSyntax()
 	{
-		LOG_TEST(m_logger, "\n# Test on the syntax of configurations");
+		TS_TRACE("\n# Test on the syntax of configurations");
 		ConfigReader conf(*m_conf3);
 		conf.RefSubConfig("t1", true).RefSubConfig("t2", true).RefSubConfig("t3", "name", "bla", true).SetValue("333");
 		m_conf3->SaveToFile("tests/tmp/test3.xml");
@@ -86,7 +80,7 @@ public:
 	/// Load and save a config file
 	void testLoad()
 	{
-		LOG_TEST(m_logger, "\n# Test the loading of configurations");
+		TS_TRACE("\n# Test the loading of configurations");
 
 		ConfigReader appConf = m_conf1->GetSubConfig("application");
 		ConfigReader module0conf = appConf.GetSubConfig("module", "name", "Module0");
@@ -120,7 +114,7 @@ public:
 	/// Generate a config from an empty file and test
 	void testGenerate()
 	{
-		LOG_TEST(m_logger, "\n# Test the generation of configurations");
+		TS_TRACE("\n# Test the generation of configurations");
 		ConfigReader appConf = m_conf2->RefSubConfig("application", true);
 		appConf.RefSubConfig("aaa", "name", "nameX", true)
 			.RefSubConfig("bbb", "name", "nameY", true)
@@ -136,5 +130,4 @@ public:
 	}
 };
 
-log4cxx::LoggerPtr ConfigReaderTestSuite::m_logger(log4cxx::Logger::getLogger("ConfigReaderTestSuite"));
 #endif

@@ -43,9 +43,6 @@ using namespace std;
 
 class ParametersTestSuite : public CxxTest::TestSuite
 {
-private:
-	static log4cxx::LoggerPtr m_logger;
-
 protected:
 	void testParameter(Parameter& xr_param, const string& x_legalValue, const string& x_illegalValue, const string& x_testRange)
 	{
@@ -96,7 +93,7 @@ public:
 	*/
 	void testParameterBool()
 	{
-		LOG_TEST(m_logger, "Test ParameterBool");
+		TS_TRACE("Test ParameterBool");
 		bool myBool = true;
 		ParameterBool paramBool("param_bool", false, 0, 1, &myBool, "Parameter of type bool");
 		testParameter(paramBool, "1", "", "[0:0]");
@@ -105,7 +102,7 @@ public:
 
 	void testParameterInt()
 	{
-		LOG_TEST(m_logger, "Test ParameterInt");
+		TS_TRACE("Test ParameterInt");
 		int myInt = 3456;
 		ParameterInt paramInt("param_int", 12345, 32, 66000, &myInt, "Parameter of type int");
 		testParameter(paramInt, "433", "-1234", "[555:789]");
@@ -113,7 +110,7 @@ public:
 
 	void testParameterFloat()
 	{
-		LOG_TEST(m_logger, "Test ParameterFloat");
+		TS_TRACE("Test ParameterFloat");
 		float myFloat = 2.133e44;
 		ParameterFloat paramFloat("param_float", 234, - 10, 4.45e24, &myFloat, "Parameter of type float");
 		testParameter(paramFloat, "-0.5", "-400", "[666:60000]");
@@ -121,7 +118,7 @@ public:
 
 	void testParameterDouble()
 	{
-		LOG_TEST(m_logger, "Test ParameterDouble");
+		TS_TRACE("Test ParameterDouble");
 		double myDouble = 2.133e54;
 		ParameterDouble paramDouble("param_double", 120e33, 1e33, 1e99, &myDouble, "Parameter of type double");
 		testParameter(paramDouble, "1e+44", "-0", "[1e+44:1e+90]");
@@ -129,7 +126,7 @@ public:
 
 	void testParameterString()
 	{
-		LOG_TEST(m_logger, "Test ParameterString");
+		TS_TRACE("Test ParameterString");
 		string myString = "value_current";
 		ParameterString paramString("param_string", "default_value", &myString, "Parameter of type string");
 		testParameter(paramString, "legal", "", "");
@@ -137,7 +134,7 @@ public:
 
 	void testParameterImageType()
 	{
-		LOG_TEST(m_logger, "Test ParameterImageType");
+		TS_TRACE("Test ParameterImageType");
 		int myImageType = CV_8UC3;
 		ParameterImageType paramImageType("param_imageType", CV_8UC1, &myImageType, "Parameter of type imageType");
 		paramImageType.SetRange("[CV_8UC1,CV_8UC2,CV_8UC3]");
@@ -146,7 +143,7 @@ public:
 
 	void testParameterCalibrationByHeight()
 	{
-		LOG_TEST(m_logger, "Test ParameterSerializable - CalibrationByHeight");
+		TS_TRACE("Test ParameterSerializable - CalibrationByHeight");
 		CalibrationByHeight myCalibrationByHeight;
 		ParameterSerializable paramCalibrationByHeight("param_calibrationByHeight",  "{\"height\":0.6,\"x\":0.3,\"y\":0.6}", &myCalibrationByHeight, "Parameter of type CalibrationByHeight");
 		testParameter(paramCalibrationByHeight, "{\"height\":0.0,\"x\":1.0,\"y\":0.0}", "", "") ; // TODO: For now there is no range check ,"{\"x\":1, \"y\":0, \n \"height\":1.5}");
@@ -154,7 +151,7 @@ public:
 
 	void testParameterCalibrationByModel()
 	{
-		LOG_TEST(m_logger, "Test ParameterSerializable - CalibrationByModel");
+		TS_TRACE("Test ParameterSerializable - CalibrationByModel");
 		string json_data = "{\"camera_height\":2404.226076415452,\"focal\":240.0,\"height_model\":480,\"roll\":137.4711820374162,\"width_model\":640,\"yaw\":-1.203589252653426}";
 		string json_data2 = "{\"camera_height\":7000.52453240,\"focal\":910.0,\"height_model\":287,\"roll\":-10.650,\"width_model\":384,\"yaw\":-35.30}";
 
@@ -165,11 +162,10 @@ public:
 
 	void testParameterPolygon()
 	{
-		LOG_TEST(m_logger, "Test ParameterSerializable - Polygon");
+		TS_TRACE("Test ParameterSerializable - Polygon");
 		Polygon myPolygon;
 		ParameterSerializable paramPolygon("param_polygon",  "{\"points\":[]}", &myPolygon, "Parameter of type Polygon"); // TODO
 		testParameter(paramPolygon, "{\"points\":[{\"x\":54.0,\"y\":53.50},{\"x\":3454.0,\"y\":53.50},{\"x\":54.0,\"y\":53.50},{\"x\":5.0,\"y\":0.50}]}", "", "") ;
 	}
 };
-log4cxx::LoggerPtr ParametersTestSuite::m_logger(log4cxx::Logger::getLogger("ParametersTestSuite"));
 #endif
