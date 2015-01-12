@@ -25,6 +25,8 @@
 
 using namespace std;
 
+const char Parameter::configType[PARAMCONF_SIZE][16] = {"unset", "def", "xml", "gui", "cmd", "unk"};
+
 // Static variables
 log4cxx::LoggerPtr Parameter::m_logger(log4cxx::Logger::getLogger("Parameter"));
 
