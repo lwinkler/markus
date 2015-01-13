@@ -13,7 +13,7 @@
 		</param>
 		<param name="fps">
 			<type>double</type>
-			<value min="0" max="1000" default="0.2">0.2</value>
+			<value min="0" max="1000" default="5">5</value>
 			<description>Frames per seconds (processing speed)</description>
 		</param>
 		<param name="class">

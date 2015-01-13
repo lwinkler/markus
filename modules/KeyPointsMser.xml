@@ -23,12 +23,12 @@
 		</param>
 		<param name="width">
 			<type>int</type>
-			<value min="1" max="6400" default="640">640</value>
+			<value min="64" max="6400" default="640">640</value>
 			<description>Width of the input</description>
 		</param>
 		<param name="height">
 			<type>int</type>
-			<value min="1" max="4800" default="480">480</value>
+			<value min="48" max="4800" default="480">480</value>
 			<description>Height of the input</description>
 		</param>
 		<param name="type">

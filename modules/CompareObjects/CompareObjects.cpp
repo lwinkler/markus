@@ -64,9 +64,9 @@ void CompareObjects::ProcessFrame()
 	{
 		// Check that names and ids match
 		if(it1->GetName() != it2->GetName())
-			LOG_ERROR(m_logger, "Object "<<it1->GetName()<<" do not match with "<<it2->GetName());
+			LOG_ERROR(m_logger, "Object "<<it1->GetName()<<" does not match with "<<it2->GetName());
 		if(it1->GetId() != it2->GetId())
-			LOG_ERROR(m_logger, "Object "<<it1->GetName()<<it1->GetId()<<" do not match with "<<it2->GetName()<<it2->GetId());
+			LOG_ERROR(m_logger, "Object "<<it1->GetName()<<it1->GetId()<<" does not match with "<<it2->GetName()<<it2->GetId());
 		
 
 		// Sum the differences for each object

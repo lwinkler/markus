@@ -132,7 +132,7 @@ ConfigReader::ConfigReader(const ConfigReader& x_conf)
 	mp_node      = x_conf.mp_node;
 }
 
-const ConfigReader& ConfigReader::operator = (const ConfigReader& x_conf)
+ConfigReader& ConfigReader::operator = (const ConfigReader& x_conf)
 {
 	m_isOriginal = false;
 	mp_doc       = x_conf.mp_doc;
@@ -506,6 +506,8 @@ const ConfigReader ConfigReader::Find(const string& x_searchString, bool x_fatal
 			fatal("Fatal exception while finding target " + x_searchString, LOC);
 		else throw;
 	}
+	// return something to avoid compilation warnings
+	return *this;
 }
 
 /**
@@ -535,6 +537,8 @@ ConfigReader ConfigReader::FindRef(const string& x_searchString, bool x_allowCre
 			fatal("Fatal exception while finding target " + x_searchString, LOC);
 		else throw;
 	}
+	// return something to avoid compilation warnings
+	return *this;
 }
 
 
@@ -547,12 +551,13 @@ ConfigReader ConfigReader::FindRef(const string& x_searchString, bool x_allowCre
 */
 vector<ConfigReader> ConfigReader::FindAll(const string& x_searchString, bool x_fatal) const
 {
+	vector<ConfigReader> results;
+
 	try
 	{
 		// If empty return node: for recurrent function
 		if(x_searchString.empty())
 		{
-			vector<ConfigReader> results;
 			results.push_back(*this);
 			return results;
 		}
@@ -562,7 +567,6 @@ vector<ConfigReader> ConfigReader::FindAll(const string& x_searchString, bool x_
 
 		if(searchString2 == "")
 		{
-			vector<ConfigReader> results;
 			ConfigReader conf = GetSubConfig(tagName, attrName, attrValue);
 			while(!conf.IsEmpty())
 			{
@@ -583,4 +587,6 @@ vector<ConfigReader> ConfigReader::FindAll(const string& x_searchString, bool x_
 			fatal("Fatal exception while finding target " + x_searchString, LOC);
 		else throw;
 	}
+	// return something to avoid compilation warnings
+	return results;
 }

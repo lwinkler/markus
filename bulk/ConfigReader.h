@@ -48,7 +48,7 @@ public:
 	ConfigReader(TiXmlNode * xp_node);
 	ConfigReader(const ConfigReader& x_conf);
 	~ConfigReader();
-	const ConfigReader& operator = (const ConfigReader& x_conf);
+	ConfigReader& operator = (const ConfigReader& x_conf);
 
 	// Method to access elements of the config
 	const ConfigReader GetSubConfig(const std::string& x_tagName) const;

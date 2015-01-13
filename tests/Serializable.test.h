@@ -25,6 +25,7 @@
 
 #include <cxxtest/TestSuite.h>
 #include <sstream>
+#include <fstream>
 
 #include "util.h"
 #include "MkException.h"
@@ -40,10 +41,13 @@
 #include "Polygon.h"
 #include "Event.h"
 
+#include "Factories.h"
 #include "FeatureStd.h"
 #include "FeatureFloatInTime.h"
 #include "FeatureVector.h"
 #include "FeatureOpenCv.h"
+
+using namespace std;
 
 /// Test class for serialization
 class TestObject : public Serializable
@@ -160,6 +164,7 @@ protected:
 	/// Test the serialization of one serializable class
 	void testSerialization(Serializable& obj, const string& name)
 	{
+		TS_TRACE("Test the serialization of " + name);
 		string fileName1 = "tests/tmp/serialize1_" + name + ".json";
 		string fileName2 = "tests/tmp/serialize2_" + name + ".json";
 		string fileName3 = "tests/serialize/" + name + ".json";
