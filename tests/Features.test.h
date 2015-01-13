@@ -53,12 +53,12 @@ protected:
 		feat.Randomize(xr_seed, ""); 
 		TS_TRACE("Test feature of type " + name + " = " + feat.SerializeToString() + " with signature = " + feat.Signature());
 		Feature* copy = feat.CreateCopy();
-		// TS_TRACE("feat.CompareSquared(feat) = " + feat.CompareSquared(feat));
+		// cout << "feat.CompareSquared(feat) = " << feat.CompareSquared(feat) << endl;
 		TS_ASSERT(feat.CompareSquared(feat) == 0);
 		TS_ASSERT(feat.CompareSquared(*copy) == 0);
 		copy->Randomize(xr_seed, "");
 		TS_TRACE("compare with "+copy->SerializeToString() + " with signature = " + feat.Signature());
-		// TS_TRACE("feat.CompareSquared(*copy) = " + feat.CompareSquared(*copy));
+		// cout << "feat.CompareSquared(*copy) = " << feat.CompareSquared(*copy) << endl;
 		TS_ASSERT(feat.CompareSquared(*copy) > 0);
 		delete copy;
 	}
@@ -80,7 +80,7 @@ public:
 		unsigned int seed = 23456625;
 		for(vector<string>::const_iterator it = listFeatures.begin() ; it != listFeatures.end() ; ++it)
 		{
-			TS_TRACE("Test the serialization of feature "+*it);
+			TS_TRACE("Test the serialization of feature " + *it);
 			if(*it == "FeatureString") continue; // TODO: randomize strings
 			Feature* feat = m_factoryFeatures.Create(*it);
 			testFeature(*feat, *it, seed);

@@ -221,11 +221,13 @@ template<class T>std::istream& deserialize(std::istream& x_in,  std::vector<T>& 
 
 template<class T> double compareSquared(const std::vector<T>& x_1, const std::vector<T>& x_2)
 {
-	double sum = 0;
 	if(x_1.size() != x_2.size())
 		return 1;
+	if(x_1.empty())
+		return 0;
 	// throw MkException("Size error while comparing FeatureVectorFloats", LOC);
 
+	double sum = 0;
 	typename std::vector<T>::const_iterator it2 = x_2.begin();
 	for(typename std::vector<T>::const_iterator it1 = x_1.begin() ; it1 != x_1.end() ; ++it1, ++it2)
 	{
@@ -285,11 +287,13 @@ template<class T>std::istream& deserialize(std::istream& x_in,  boost::circular_
 
 template<class T> double compareSquared(const boost::circular_buffer<T>& x_1, const boost::circular_buffer<T>& x_2)
 {
-	double sum = 0;
 	if(x_1.size() != x_2.size())
 		return 1;
+	if(x_1.empty())
+		return 0;
 	// throw MkException("Size error while comparing FeatureVectorFloats", LOC);
 
+	double sum = 0;
 	typename boost::circular_buffer<T>::const_iterator it2 = x_2.begin();
 	for(typename boost::circular_buffer<T>::const_iterator it1 = x_1.begin() ; it1 != x_1.end() ; ++it1, ++it2)
 	{

@@ -37,7 +37,6 @@ template<class T> class FeatureT : public Feature
 		Feature* CreateCopy() const{return new FeatureT(*this);}
 		inline virtual double CompareSquared(const Feature& x_feature) const
 		{
-		    
 			const FeatureT<T>& feat(dynamic_cast<const FeatureT<T>&>(x_feature));
 			return compareSquared(value, feat.value);
 		}
