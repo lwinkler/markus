@@ -36,8 +36,6 @@ using namespace std;
 
 class ProjectsTestSuite : public CxxTest::TestSuite
 {
-private:
-	static log4cxx::LoggerPtr m_logger;
 public:
 	void setUp()
 	{
@@ -49,7 +47,7 @@ public:
 protected:
 	void runConfig(const string& x_configFile)
 	{
-		LOG_TEST(m_logger, "## Unit test with configuration "<<x_configFile);
+		TS_TRACE("## Unit test with configuration " + x_configFile);
 		ConfigReader mainConfig(x_configFile);
 		mainConfig.Validate();
 		ConfigReader appConfig = mainConfig.GetSubConfig("application");
@@ -73,7 +71,7 @@ public:
 	/// Run different existing configs
 	void testSync()
 	{
-		LOG_TEST(m_logger, "\n# Unit test with different test projects");
+		TS_TRACE("\n# Unit test with different test projects");
 		runConfig("tests/projects/sync_test1.xml");
 		runConfig("tests/projects/sync_test2.xml");
 		runConfig("tests/projects/sync_test3.xml");
@@ -81,5 +79,4 @@ public:
 		runConfig("tests/projects/FaceAndTracker.xml");
 	}
 };
-log4cxx::LoggerPtr ProjectsTestSuite::m_logger(log4cxx::Logger::getLogger("ProjectsTestSuite"));
 #endif

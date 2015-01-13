@@ -51,12 +51,13 @@ enum ParameterConfigType
 	PARAMCONF_SIZE
 };
 
-static const char configType[PARAMCONF_SIZE][16] = {"unset", "def", "xml", "gui", "cmd", "unk"};
 
 /// Class representing a generic parameter for use in a module
 class Parameter
 {
 public:
+	static const char configType[PARAMCONF_SIZE][16];
+
 	Parameter(const std::string& x_name, const std::string& x_description):
 		m_name(x_name),
 		m_confSource(PARAMCONF_UNSET),

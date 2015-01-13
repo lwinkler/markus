@@ -24,8 +24,6 @@
 #define TEST_FEATURES_H
 
 #include <cxxtest/TestSuite.h>
-// #include <log4cxx/xml/domconfigurator.h>
-
 #include "Global.test.h"
 #include "util.h"
 #include "Factories.h"
@@ -43,11 +41,7 @@ class FeatureTestSuite : public CxxTest::TestSuite
 {
 public:
 	FeatureTestSuite() :
-		m_factoryFeatures(Factories::featuresFactory())
-	{}
-
-private:
-	// static log4cxx::LoggerPtr m_logger;
+		m_factoryFeatures(Factories::featuresFactory()){}
 
 protected:
 	const FactoryFeatures& m_factoryFeatures;
@@ -72,7 +66,6 @@ protected:
 public:
 	void setUp()
 	{
-		// log4cxx::xml::DOMConfigurator::configure("tests/log4cxx.xml");
 	}
 	void tearDown()
 	{
@@ -95,5 +88,4 @@ public:
 		}
 	}
 };
-// log4cxx::LoggerPtr FeatureTestSuite::m_logger(log4cxx::Logger::getLogger("FeatureTestSuite"));
 #endif
