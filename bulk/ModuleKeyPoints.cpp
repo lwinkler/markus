@@ -100,7 +100,7 @@ void ModuleKeyPoints::ProcessFrame()
 
 		//compute point of interest and add it to m_objectsOut
 		//this cause unit test fail
-		Mat subImage(m_input, it1->Rect());
+		Mat subImage(m_input, it1->GetRect());
 		// if(!(    0 <= it1->posX && 0 <= it1->width  && it1->posX + subImage.cols / 2 <= m_input.cols // TODO: Keep this ?
 			// && 0 <= it1->posY && 0 <= it1->height && it1->posY + subImage.rows / 2 <= m_input.rows))
 			// cout<<it1->posX + subImage.cols / 2<<*it1<<endl<<m_input.size()<<endl<<subImage.size()<<endl;
@@ -114,7 +114,7 @@ void ModuleKeyPoints::ProcessFrame()
 			assert(descriptors.rows == static_cast<int>(pointsOfInterest.size()));
 		}
 
-		//Mat subImage(m_input,it1->Rect());    
+		//Mat subImage(m_input,it1->GetRect());
 		//mp_detector->detect(subImage, pointsOfInterest);
 
 		int i = 0;
@@ -122,10 +122,10 @@ void ModuleKeyPoints::ProcessFrame()
 		// For each keypoint create an output object
 		for(vector<KeyPoint>::const_iterator it2 = pointsOfInterest.begin() ; it2 != pointsOfInterest.end() ; ++it2)
 		{
-			// Create object from keypoint
+			// Create object from keypoint // TODO: Use specific functions
 			Object obj("keypoint");
-			obj.posX = it2->pt.x + it1->posX - it1->width /2 - 5;
-			obj.posY = it2->pt.y + it1->posY - it1->height/2 - 5;
+			obj.posX = it2->pt.x + it1->posX - it1->width  / 2; // - 5;
+			obj.posY = it2->pt.y + it1->posY - it1->height / 2; // - 5;
 			obj.width  = it2->size;
 			obj.height = it2->size;
 			obj.Intersect(m_input);

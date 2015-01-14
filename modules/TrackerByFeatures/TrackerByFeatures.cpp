@@ -148,7 +148,7 @@ void TrackerByFeatures::UpdateObjects()
 		updateObjectFromTemplate(*it->second, *it1);
 #ifdef MARKUS_DEBUG_STREAMS
 		// Draw matching object
-		rectangle(m_debug, it1->Rect(), colorFromId(it1->GetId()));
+		rectangle(m_debug, it1->GetRect(), colorFromId(it1->GetId()));
 #endif
 	}
 }

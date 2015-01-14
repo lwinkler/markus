@@ -111,7 +111,7 @@ void ThumbnailWriter::ProcessFrame()
 
 		// For each object save a thumbnail
 		it1->Intersect(m_input);
-		const Rect rect(it1->Rect());
+		const Rect rect(it1->GetRect());
 		/*if(rect.x < 0 || rect.y < 0 || rect.x + rect.width >= GetWidth() || rect.y + rect.height >= GetHeight())
 		{
 			LOG_WARN(m_logger, "Object is larger than the base image");

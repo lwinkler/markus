@@ -131,8 +131,8 @@ void LogEvent::SaveImage(Event& x_event)
 			std::stringstream ss2;
 			ss2 << m_folder << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_1" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
-			Mat img = (m_inputIm1)(obj.Rect());
-			AddExternalImage((m_inputIm1)(obj.Rect()), "objectImage", ss2.str(), x_event);
+			Mat img = (m_inputIm1)(obj.GetRect());
+			AddExternalImage((m_inputIm1)(obj.GetRect()), "objectImage", ss2.str(), x_event);
 		}
 	}
 
@@ -147,7 +147,7 @@ void LogEvent::SaveImage(Event& x_event)
 			std::stringstream ss2;
 			ss2 << m_folder << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_2" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
-			Mat img = (m_inputIm2)(obj.Rect());
+			Mat img = (m_inputIm2)(obj.GetRect());
 			AddExternalImage(img, "objectMask", ss2.str(), x_event);
 		}
 	}

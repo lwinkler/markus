@@ -210,7 +210,7 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 void Object::Intersect(const Mat& x_image)
 {
 	// cout<<"in "<<posX<<" "<<posY<<" "<<width<<" "<<height<<endl;
-	const cv::Rect& rect(Rect());
+	const cv::Rect& rect(GetRect());
 	Point tl = rect.tl();
 	Point br = rect.br();
 

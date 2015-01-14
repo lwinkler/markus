@@ -126,7 +126,7 @@ void GroundTruthReader::ProcessFrame()
 				Rect centerRefObj = Rect(refObj.x+((refObj.width - distanceRefObject) / 2) , refObj.y+ ((refObj.height - distanceRefObject) / 2), distanceRefObject, distanceRefObject);
 				for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; ++it)
 				{
-					Rect objRect = it->Rect();
+					Rect objRect = it->GetRect();
 					if (centerRefObj.contains(Point (objRect.x+objRect.width/2,objRect.y+objRect.height/2)) && refObj.area() >= objRect.area()) // middle of rect is in middle of bounding box and area is smaller than reference bounding box
 					{
 						trackedObj.push_back(it->GetId());
@@ -185,12 +185,12 @@ void GroundTruthReader::ProcessFrame()
 #ifdef MARKUS_DEBUG_STREAMS
 		if (dynamic_cast<const FeatureFloat&> (it->GetFeature("gt")).value > 0)
 		{
-			rectangle(m_debug,it->Rect(),Scalar( 0, 255, 0));
+			rectangle(m_debug,it->GetRect(),Scalar( 0, 255, 0));
 			circle(m_debug,Point(it->posX,it->posY),2,Scalar(0,255,0));
 		}
 		else
 		{
-			rectangle(m_debug,it->Rect(),Scalar(100, 100, 100));
+			rectangle(m_debug,it->GetRect(),Scalar(100, 100, 100));
 			circle(m_debug,Point(it->posX,it->posY),2,Scalar(100, 100, 100));
 		}
 #endif

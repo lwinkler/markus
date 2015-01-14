@@ -75,7 +75,7 @@ void FilterObjects::ProcessFrame()
 	for(vector<Object>::const_iterator it = m_objectsIn.begin() ; it != m_objectsIn.end() ; ++it)
 	{
 		bool valid = true;
-		const Rect &rect(it->Rect());
+		const Rect &rect(it->GetRect());
 		const FeatureFloat& width  = dynamic_cast<const FeatureFloat&>(it->GetFeature("width"));
 		const FeatureFloat& height = dynamic_cast<const FeatureFloat&>(it->GetFeature("height"));
 		// const Feature& distance = it->GetFeatureByName("distance", featureNames);
