@@ -49,5 +49,6 @@ std::string getFileContents(const std::string& x_filename);
 double diagonal(const cv::Mat& x_image);
 std::string basename(const std::string& x_pathName);
 void printStack(int sig);;
+void execute(const std::string& x_cmd, std::ostream& xr_stdout);
 
 #endif

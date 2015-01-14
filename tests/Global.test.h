@@ -23,20 +23,24 @@
 #ifndef TEST_GLOBAL_H
 #define TEST_GLOBAL_H
 #include <cxxtest/GlobalFixture.h>
+#include <log4cxx/xml/domconfigurator.h>
 
 #include "AllFeatures.h"
 #include "AllModules.h"
+
+using namespace std;
 
 //
 // Fixture1 counts its setUp()s and tearDown()s
 //
 class MarkusFixture : public CxxTest::GlobalFixture
 {
-	public:
+public:
 	bool setUp() {return true;}
 	bool tearDown() {return true;}
 	bool setUpWorld()
 	{
+		log4cxx::xml::DOMConfigurator::configure("tests/log4cxx.xml");
 		registerAllFeatures();
 		registerAllModules(Factories::modulesFactory());
 
@@ -45,7 +49,27 @@ class MarkusFixture : public CxxTest::GlobalFixture
 		SYSTEM("mkdir -p tests/tmp");
 		return true;
 	}
-	bool tearDownWorld() {return true;}
+	bool tearDownWorld()
+	{
+		stringstream ss1;
+		execute("cat tests/markus.log | grep WARN | grep -v EVENT", ss1);
+		int nWarn = std::count(std::istreambuf_iterator<char>(ss1), std::istreambuf_iterator<char>(), '\n');
+		if(nWarn > 0)
+		{
+			cout << "Found " << nWarn << " warnings in tests/markus.log" << endl;
+		}
+
+		stringstream ss3;
+		execute("cat tests/markus.log | grep ERROR", ss3);
+		return true;
+		int nErr = std::count(std::istreambuf_iterator<char>(ss3), std::istreambuf_iterator<char>(), '\n');
+		if(nErr > 0)
+		{
+			cout << "Found " << nErr << " errors in tests/markus.log" << endl;
+			return false;
+		}
+		return true;
+	}
 };
 static MarkusFixture g_globalFixture;
 #endif

@@ -427,3 +427,27 @@ std::string basename(const std::string& x_pathName )
 	int lastindex = x_pathName.find_last_of("/"); 
 	return x_pathName.substr(lastindex + 1);
 }
+
+/**
+* @brief Execute a command, keeping stdout
+*
+* @param x_cmd     Command to execute
+* @param xr_stdout Stream to store stdout
+*
+* @return number of lines in output
+*/
+void execute(const string& x_cmd, ostream& xr_stdout)
+{
+	FILE* pipe = popen(x_cmd.c_str(), "r");
+	if (!pipe)
+		throw MkException("Error at execution of command: " + x_cmd, LOC);
+	char buffer[256];
+
+	// Append result to ...
+	while(!feof(pipe))
+		if(fgets(buffer, sizeof(buffer), pipe) != NULL)
+		{
+			xr_stdout << buffer;
+		}
+	pclose(pipe);
+}
