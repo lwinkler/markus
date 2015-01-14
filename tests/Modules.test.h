@@ -107,7 +107,7 @@ class ModulesTestSuite : public CxxTest::TestSuite
 		else
 			m_factoryModules.List(m_moduleTypes);
 
-		mp_context = new Context("", "TestModule", "testing/out");
+		mp_context = new Context("", "TestModule", "tests/out");
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigReader("/tmp/config_empty.xml");
 		addModuleToConfig("VideoFileReader", *mp_config)
@@ -158,7 +158,7 @@ class ModulesTestSuite : public CxxTest::TestSuite
 			for(map<string, string>::const_iterator it = xp_parameters->begin() ; it != xp_parameters->end() ; ++it)
 				moduleConfig.RefSubConfig("parameters").RefSubConfig("param", "name", it->first, true).SetValue(it->second);
 
-		mp_config->SaveToFile("testing/tmp/tmp.xml");
+		mp_config->SaveToFile("tests/tmp/tmp.xml");
 		Module* module = m_factoryModules.Create(x_type, moduleConfig);
 		module->SetContext(*mp_context);
 		module->AllowAutoProcess(false);
