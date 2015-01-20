@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -278,7 +278,7 @@ void TrackerByFeatures::CleanTemplates()
 	{
 #ifdef MARKUS_DEBUG_STREAMS
 		// draw template (if position is available)
-		try{
+		try {
 			double x = it1->GetFeature("x").mean * diagonal;
 			double y = it1->GetFeature("y").mean * diagonal;
 			// double w = it1->GetFeature("width").value * diagonal;
@@ -288,7 +288,7 @@ void TrackerByFeatures::CleanTemplates()
 			// ellipse(*m_debug, p, s, 0, 0, 360, colorFromId(it1->GetNum()));
 			circle(m_debug, p, 4, colorFromId(it1->GetNum()));
 		}
-		catch(...){}
+		catch(...) {}
 #endif
 		if(it1->NeedCleaning(timeStampClean))
 		{
@@ -361,7 +361,7 @@ void TrackerByFeatures::DetectNewTemplates()
 							template1.SetFeatures(bestTemplate->GetFeatures());
 						}
 					}
-					catch(...){}
+					catch(...) {}
 				}
 			}
 

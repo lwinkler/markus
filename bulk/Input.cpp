@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -29,7 +29,7 @@
 using namespace std;
 
 
-Input::Input(const ConfigReader& x_configReader): 
+Input::Input(const ConfigReader& x_configReader):
 	Module(x_configReader)
 {
 	m_endOfStream = false;

@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -55,7 +55,7 @@ void ParameterEnum::Export(ostream& rx_os, int x_indentation)
 */
 void ParameterEnum::SetValue(const string& rx_value, ParameterConfigType x_confType)
 {
-	if(m_isLocked) 
+	if(m_isLocked)
 		throw ParameterException("You tried to set the value of a locked parameter.", LOC);
 	mr_value = GetEnum().at(rx_value);
 	m_confSource = x_confType;
@@ -69,7 +69,7 @@ void ParameterEnum::SetValue(const string& rx_value, ParameterConfigType x_confT
 */
 void ParameterEnum::SetValue(int rx_value, ParameterConfigType x_confType)
 {
-	if(m_isLocked) 
+	if(m_isLocked)
 		throw ParameterException("You tried to set the value of a locked parameter.", LOC);
 	mr_value = rx_value;
 	m_confSource = x_confType;
@@ -77,7 +77,7 @@ void ParameterEnum::SetValue(int rx_value, ParameterConfigType x_confType)
 
 
 /**
-* @brief Set the default value 
+* @brief Set the default value
 *
 * @param rx_value Value to set
 */

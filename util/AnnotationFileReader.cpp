@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -39,7 +39,7 @@ log4cxx::LoggerPtr AnnotationFileReader::m_logger(log4cxx::Logger::getLogger("An
 * @param is Input stream
 * @param t  Output string
 *
-* @return 
+* @return
 */
 istream& AnnotationFileReader::SafeGetline(istream& is, string& t)
 {
@@ -58,19 +58,19 @@ istream& AnnotationFileReader::SafeGetline(istream& is, string& t)
 	{
 		int c = sb->sbumpc();
 		switch (c) {
-			case '\n':
-				return is;
-			case '\r':
-				if(sb->sgetc() == '\n')
-					sb->sbumpc();
-				return is;
-			case EOF:
-				// Also handle the case when the last line has no line ending
-				if(t.empty())
-					is.setstate(ios::eofbit);
-				return is;
-			default:
-				t += static_cast<char>(c);
+		case '\n':
+			return is;
+		case '\r':
+			if(sb->sgetc() == '\n')
+				sb->sbumpc();
+			return is;
+		case EOF:
+			// Also handle the case when the last line has no line ending
+			if(t.empty())
+				is.setstate(ios::eofbit);
+			return is;
+		default:
+			t += static_cast<char>(c);
 		}
 	}
 }
@@ -107,7 +107,7 @@ void AnnotationFileReader::Open(const string& x_file)
 	if(m_srtFile.is_open())
 		m_srtFile.close();
 	m_srtFile.open(x_file.c_str(), ifstream::in);
-	
+
 	if(! m_srtFile.is_open())
 	{
 		throw MkException("Error : AnnotationFileReader cannot open file : " + x_file, LOC);
@@ -169,7 +169,7 @@ bool AnnotationFileReader::ReadNextAnnotation(string& rx_subText)
 	}
 	catch(MkException& e)
 	{
-		LOG_WARN(m_logger, "Exception while reading .srt file in AnnotationFileReader: " << e.what()); 
+		LOG_WARN(m_logger, "Exception while reading .srt file in AnnotationFileReader: " << e.what());
 		rx_subText = "";
 		m_srtStart = msToTimeStamp(0);
 		m_srtEnd   = msToTimeStamp(0);
@@ -186,7 +186,7 @@ string AnnotationFileReader::ReadAnnotationForTimeStamp(TIME_STAMP x_current)
 		LOG_DEBUG(m_logger, "End of subtitle file");
 		return "";
 	}
-	
+
 	string current = msToTimeStamp(x_current);
 
 	while(current > m_srtEnd)

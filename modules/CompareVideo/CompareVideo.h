@@ -33,64 +33,64 @@
  */
 class CompareVideo : public Module {
 
+public:
+
+	class Parameters : public Module::Parameters {
+
 	public:
+		Parameters(const ConfigReader &x_confReader) : Module::Parameters(x_confReader)
+		{
 
-		class Parameters : public Module::Parameters {
+			m_list.push_back(new ParameterFloat("threshold", 0.01, 0, 1, &threshold, "If the difference between one input frame and the othre is higher than this threshold then an error is logged"));
 
-			public:
-				Parameters(const ConfigReader &x_confReader) : Module::Parameters(x_confReader)
-				{
+			RefParameterByName("allow_unsync_input").SetDefault("1"); // TODO: check if needed
 
-					m_list.push_back(new ParameterFloat("threshold", 0.01, 0, 1, &threshold, "If the difference between one input frame and the othre is higher than this threshold then an error is logged"));
-
-					RefParameterByName("allow_unsync_input").SetDefault("1"); // TODO: check if needed
-
-					Init();
-				}
-
-				/* Dissimilarity threshold [0;100] */
-				float threshold;
-		};
-
-		/* Constructor */
-		CompareVideo(const ConfigReader &x_configReader);
-
-		/* Destructor */
-		~CompareVideo();
-
-		/* Reset current state of this module */
-		void Reset();
-
-		MKCLASS("CompareVideo");
-		MKDESCR("Compare the two input videos and compute the dissimilarity of them for all the sequence");
-
-		inline virtual const Parameters &GetParameters() const {
-			return m_param;
+			Init();
 		}
 
-		virtual void ProcessFrame();
+		/* Dissimilarity threshold [0;100] */
+		float threshold;
+	};
 
-	private:
-		inline virtual Parameters &RefParameters() {
-			return m_param;
-		}
+	/* Constructor */
+	CompareVideo(const ConfigReader &x_configReader);
 
-		Parameters m_param;
-		static log4cxx::LoggerPtr m_logger;
+	/* Destructor */
+	~CompareVideo();
 
-	protected:
-		// input
-		cv::Mat m_video1;
-		cv::Mat m_video2;
+	/* Reset current state of this module */
+	void Reset();
 
-		// output
+	MKCLASS("CompareVideo");
+	MKDESCR("Compare the two input videos and compute the dissimilarity of them for all the sequence");
+
+	inline virtual const Parameters &GetParameters() const {
+		return m_param;
+	}
+
+	virtual void ProcessFrame();
+
+private:
+	inline virtual Parameters &RefParameters() {
+		return m_param;
+	}
+
+	Parameters m_param;
+	static log4cxx::LoggerPtr m_logger;
+
+protected:
+	// input
+	cv::Mat m_video1;
+	cv::Mat m_video2;
+
+	// output
 #ifdef MARKUS_DEBUG_STREAMS
-		cv::Mat m_video1_out;
-		cv::Mat m_video2_out;
+	cv::Mat m_video1_out;
+	cv::Mat m_video2_out;
 #endif
 
-		// state variables
-		long long m_frameCount;
+	// state variables
+	long long m_frameCount;
 };
 
 #endif

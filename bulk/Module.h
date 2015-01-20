@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -67,11 +67,11 @@ public:
 
 	Module(const ConfigReader& x_confReader);
 	virtual ~Module();
-	
+
 	virtual void Reset();
 	virtual bool Process();
 
-	const std::string& GetName() const{return m_name;}
+	const std::string& GetName() const {return m_name;}
 	virtual const std::string& GetClass() const = 0;
 	virtual const std::string& GetDescription() const = 0;
 	int GetId() const {return m_id;}
@@ -92,26 +92,26 @@ public:
 	inline double GetFps() const         {return GetParameters().fps;}
 	inline bool IsAutoProcessed() const  {return GetParameters().autoProcess;}
 	virtual double GetRecordingFps() const;
-	
-	inline void AddDependingModule (Module & x_module){m_modulesDepending.push_back(&x_module);} /// Add a module to the list: depending modules are called when processing is complete
+
+	inline void AddDependingModule (Module & x_module) {m_modulesDepending.push_back(&x_module);} /// Add a module to the list: depending modules are called when processing is complete
 	virtual void PrintStatistics(ConfigReader& xr_result) const;
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
-	
+
 	virtual inline bool IsInput() {return false;}
 	void Export(std::ostream& rx_os, int x_indentation);
-	Stream& RefInputStreamById(int x_id); 
+	Stream& RefInputStreamById(int x_id);
 	Stream& RefOutputStreamById(int x_id);
-	inline void LockForRead(){m_lock.lockForRead();}
-	inline void LockForWrite(){m_lock.lockForWrite();}
-	inline void Unlock(){m_lock.unlock();}
-	inline bool IsReady(){return IsAutoProcessed() || m_isReady;}
+	inline void LockForRead() {m_lock.lockForRead();}
+	inline void LockForWrite() {m_lock.lockForWrite();}
+	inline void Unlock() {m_lock.unlock();}
+	inline bool IsReady() {return IsAutoProcessed() || m_isReady;}
 	void SetAsReady();
 	bool AllInputsAreReady() const;
 	const Module& GetMasterModule() const;
-	inline void CheckParameterRange(){GetParameters().CheckRange(false);}
+	inline void CheckParameterRange() {GetParameters().CheckRange(false);}
 	inline bool IsUnitTestingEnabled() const {return m_isUnitTestingEnabled;}
-	
+
 protected:
 	virtual Parameters & RefParameters() = 0;
 
@@ -128,14 +128,14 @@ protected:
 	TIME_STAMP m_currentTimeStamp;  // time stamp of the current input
 	bool m_isReady;
 	bool m_unsyncWarning;
-	
+
 	virtual void ProcessFrame() = 0;
 	inline virtual bool IsInputProcessed() const {return true;}
 
 	// Streams
 	std::map<int, Stream *> m_inputStreams;
 	std::map<int, Stream *> m_outputStreams;
-	std::map<int, Stream *> m_debugStreams;	
+	std::map<int, Stream *> m_debugStreams;
 
 	std::string m_name;
 	int m_id;

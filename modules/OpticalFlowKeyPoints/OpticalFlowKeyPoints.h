@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -57,7 +57,7 @@ public:
 	~OpticalFlowKeyPoints();
 	MKCLASS("OpticalFlowKeyPoints")
 	MKDESCR("Calculate optical flow for all key points")
-	
+
 	inline virtual const Parameters& GetParameters() const { return m_param;}
 	void Reset();
 	void ProcessFrame();
@@ -70,17 +70,17 @@ private:
 protected:
 	// input
 	cv::Mat m_input;
-        std::vector <Object> m_keyPointsIn;
+	std::vector <Object> m_keyPointsIn;
 
 	// output
 	// std::vector <Object> m_keyPointsOut;
 
-        //last img used to compute OF
-        cv::Mat                  m_lastImg;
-        std::vector<cv::Point2f> m_lastPoints;
+	//last img used to compute OF
+	cv::Mat                  m_lastImg;
+	std::vector<cv::Point2f> m_lastPoints;
 
 #ifdef MARKUS_DEBUG_STREAMS
-        cv::Mat m_debug;
+	cv::Mat m_debug;
 #endif
 };
 

@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -67,7 +67,7 @@ public:
 	~KeyPointsOrb();
 	MKCLASS("KeyPointsOrb")
 	MKDESCR("Extract key points of type Orb")
-	
+
 	inline virtual const Parameters& GetParameters() const { return m_param;}
 	void Reset();
 

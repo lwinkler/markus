@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -37,8 +37,8 @@ using namespace cv;
 
 log4cxx::LoggerPtr ReadObjects::m_logger(log4cxx::Logger::getLogger("ReadObjects"));
 
-ReadObjects::ReadObjects(const ConfigReader& x_configReader) 
-	 : Input(x_configReader), m_param(x_configReader)
+ReadObjects::ReadObjects(const ConfigReader& x_configReader)
+	: Input(x_configReader), m_param(x_configReader)
 {
 	// Init input streams
 	AddOutputStream(0, new StreamObject("object", m_ObjectOut, *this, "Output object read from file"));
@@ -55,11 +55,11 @@ void ReadObjects::Reset()
 {
 	Input::Reset();
 	//m_event.Empty();
-	
+
 	CLEAN_DELETE(mp_annotationReader);
 	mp_annotationReader = new AnnotationFileReader();
 	mp_annotationReader->Open(m_param.file);
-	
+
 	// m_outputFile<<"time"<<SEP<<"object"<<SEP<<"feature"<<SEP<<"value"<<SEP<<"mean"<<SEP<<"sqVariance"<<SEP<<"initial"<<SEP<<"min"<<SEP<<"max"<<SEP<<"nbSamples"<<endl;
 }
 

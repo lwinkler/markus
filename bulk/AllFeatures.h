@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -43,14 +43,14 @@ void registerAllFeatures()
 	FactoryFeatures& fact1(Factories::featuresFactory());
 	FactoryFeatures& fact2(Factories::featuresFactoryBySignature());
 
-	REGISTER_FEATURE(FeatureFloat, "FeatureFloat"); 
-	REGISTER_FEATURE(FeatureInt, "FeatureInt"); 
-	REGISTER_FEATURE(FeatureFloatInTime, "FeatureFloatInTime"); 
-	REGISTER_FEATURE(FeatureVectorFloat, "FeatureVectorFloat"); 
-	REGISTER_FEATURE(FeatureString, "FeatureString"); 
-	REGISTER_FEATURE(FeatureKeyPoint, "FeatureKeyPoint"); 
-	REGISTER_FEATURE(FeaturePoint2f, "FeaturePoint2f"); 
-	REGISTER_FEATURE(FeaturePoint3f, "FeaturePoint3f"); 
+	REGISTER_FEATURE(FeatureFloat, "FeatureFloat");
+	REGISTER_FEATURE(FeatureInt, "FeatureInt");
+	REGISTER_FEATURE(FeatureFloatInTime, "FeatureFloatInTime");
+	REGISTER_FEATURE(FeatureVectorFloat, "FeatureVectorFloat");
+	REGISTER_FEATURE(FeatureString, "FeatureString");
+	REGISTER_FEATURE(FeatureKeyPoint, "FeatureKeyPoint");
+	REGISTER_FEATURE(FeaturePoint2f, "FeaturePoint2f");
+	REGISTER_FEATURE(FeaturePoint3f, "FeaturePoint3f");
 	// REGISTER_FEATURE(FeatureMat, "FeatureMat"); // Experimental
 }
 #endif

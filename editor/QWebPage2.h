@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -28,9 +28,9 @@
 class QWebPage2 : public QWebPage
 {
 	Q_OBJECT
-	public:
-		QWebPage2(QObject * parent = 0 );
-	protected:
-		void javaScriptConsoleMessage(const QString& message, int lineNumber, const QString& sourceID);
+public:
+	QWebPage2(QObject * parent = 0 );
+protected:
+	void javaScriptConsoleMessage(const QString& message, int lineNumber, const QString& sourceID);
 };
 #endif

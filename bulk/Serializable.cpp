@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -35,14 +35,14 @@ string signatureJSONValue(const Json::Value &x_val)
 {
 	if( x_val.isString() )
 		return "%s";
-		/*
+	/*
 	else if( x_val.isBool() )
-		return "%b";
+	return "%b";
 	else if( x_val.isInt() )
-		return "%d";
+	return "%d";
 	else if( x_val.isUInt() )
-		return "%u";
-		*/
+	return "%u";
+	*/
 	// Note: the differienciation between different types of num values is ambiguous:
 	// e.g. a float can be a round number so its signature might be %d when deserialized
 	// so we keep %f as the only possibility
@@ -50,7 +50,7 @@ string signatureJSONValue(const Json::Value &x_val)
 		return "%f";
 	else if( x_val.isArray() )
 		assert(false);
-	else 
+	else
 	{
 		cout << x_val;
 		throw MkException("Unknown type in JSON ", LOC);
@@ -58,10 +58,10 @@ string signatureJSONValue(const Json::Value &x_val)
 	return "";
 }
 
-string signatureJSONTree(const Json::Value &x_root, unsigned short x_depth) 
+string signatureJSONTree(const Json::Value &x_root, unsigned short x_depth)
 {
 	x_depth += 1;
-	// cout<<" {type=["<<x_root.type()<<"], size="<<x_root.size()<<"}"<<endl; 
+	// cout<<" {type=["<<x_root.type()<<"], size="<<x_root.size()<<"}"<<endl;
 
 	string result;
 
@@ -81,11 +81,11 @@ string signatureJSONTree(const Json::Value &x_root, unsigned short x_depth)
 			{
 
 				result += "{";
-				result += signatureJSONTree(*itr, x_depth); 
+				result += signatureJSONTree(*itr, x_depth);
 				result += "},";
 			}
 			else
-				result += signatureJSONTree(*itr, x_depth); 
+				result += signatureJSONTree(*itr, x_depth);
 		}
 		return result;
 	}

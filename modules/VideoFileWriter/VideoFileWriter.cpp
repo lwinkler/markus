@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@ using namespace cv;
 
 log4cxx::LoggerPtr VideoFileWriter::m_logger(log4cxx::Logger::getLogger("VideoFileWriter"));
 
-VideoFileWriter::VideoFileWriter(const ConfigReader& x_configReader): 
+VideoFileWriter::VideoFileWriter(const ConfigReader& x_configReader):
 	Module(x_configReader),
 	m_param(x_configReader),
 	m_input(Size(m_param.width, m_param.height), m_param.type)
@@ -58,13 +58,13 @@ void VideoFileWriter::Reset()
 	// The color flag seem to be supported on Windows only
 	// http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videowriter-videowriter
 	bool isColor = true;
- 	assert(m_param.type == CV_8UC3);
+	assert(m_param.type == CV_8UC3);
 
 	stringstream ss;
 	ss << m_context.GetOutputDir() << "/" << m_param.file  << "." << m_index++ << "." << ExtensionFromFourcc(m_param.fourcc);
 	const string filename = ss.str();
 	double fps = 12;
-	
+
 	try
 	{
 		fps = GetRecordingFps();
@@ -72,7 +72,7 @@ void VideoFileWriter::Reset()
 	catch(exception& e)
 	{
 		// This may happen if the module is not connected
-		LOG_WARN(m_logger, "Impossible to acquire the fps value for recording in VideoFileWriter::Reset. Set to default value " << fps << ". Reason: " << e.what());	
+		LOG_WARN(m_logger, "Impossible to acquire the fps value for recording in VideoFileWriter::Reset. Set to default value " << fps << ". Reason: " << e.what());
 	}
 
 	LOG_DEBUG(m_logger, "Start recording file "<<filename<<" with fps="<<fps<<" and size "<<m_param.width<<"x"<<m_param.height);
@@ -91,7 +91,7 @@ void VideoFileWriter::ProcessFrame()
 }
 
 
-const string VideoFileWriter::ExtensionFromFourcc(const string& x_fourcc) 
+const string VideoFileWriter::ExtensionFromFourcc(const string& x_fourcc)
 {
 	if(x_fourcc.compare("PIM1") == 0)
 		return "PIM1.mpeg";
@@ -107,9 +107,9 @@ const string VideoFileWriter::ExtensionFromFourcc(const string& x_fourcc)
 		return "h263.avi";
 	if(x_fourcc.compare("I263") == 0) // note: seems not to be working
 		return "I263.avi";
-	if(x_fourcc.compare("FLV1") == 0) 
+	if(x_fourcc.compare("FLV1") == 0)
 		return "flv1.avi";
-	
+
 	LOG_WARN(m_logger, "Unknown fourcc code, cannot find a matching extension in VideoFileWriter::ExtensionFromFourcc");
 
 	return "avi";

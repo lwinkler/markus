@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
  *
  *    MARKUS : a manager for video analysis modules
- * 
+ *
  *    author : Laurent Winkler and Florian Rossier <florian.rossier@gmail.com>
- * 
- * 
+ *
+ *
  *    This file is part of Markus.
  *
  *    Markus is free software: you can redistribute it and/or modify
@@ -71,7 +71,7 @@ void OpticalFlowKeyPoints::ProcessFrame()
 
 	if(m_keyPointsIn.size() == 0)
 		return;
-		
+
 	// Convert all keypoints to a vector of Point2f
 	vector<Point2f> pointsIn;
 	for(vector<Object>::iterator itkp = m_keyPointsIn.begin() ; itkp != m_keyPointsIn.end() ; ++itkp)
@@ -97,7 +97,7 @@ void OpticalFlowKeyPoints::ProcessFrame()
 		// match points of the old point list with the current image
 		// the matching keypoints correspond with the old points !
 		// calcOpticalFlowPyrLK(m_lastImg, m_input, m_lastPoints, pointsOut, status, err, Size(m_param.winSide, m_param.winSide), m_param.maxLevel);
-		
+
 		// match points of the current point list with the old image
 		// in some way we compute optical flow in reverse: we inverted previous and next lists of points compared to standard usage
 		calcOpticalFlowPyrLK(m_input, m_lastImg, pointsIn, pointsOut, status, err, Size(m_param.winSide, m_param.winSide), m_param.maxLevel);

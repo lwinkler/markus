@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -67,14 +67,14 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 	{
 		arguments = x_mainConfig.Find("application>parameters>param[name=\"arguments\"]").GetValue();
 	}
-	catch(MkException &e){}
+	catch(MkException &e) {}
 	m_allTargets << "$(OUTDIR)/results/" <<  sd.str() << " ";
 	m_targets << "$(OUTDIR)/results/" << sd.str() << ":" << endl;
 	// xr_targets << "\t" << "mkdir -p $(OUTDIR)/results/"  << sd.str() << endl;
-	m_targets << "\t" << "rm -rf $(OUTDIR)/running/"  << sd.str() << 
-		" && cp -r $(OUTDIR)/ready/" << sd.str() << " $(OUTDIR)/running/" << sd.str() << endl;
+	m_targets << "\t" << "rm -rf $(OUTDIR)/running/"  << sd.str() <<
+			  " && cp -r $(OUTDIR)/ready/" << sd.str() << " $(OUTDIR)/running/" << sd.str() << endl;
 	m_targets << "\t" << "$(EXE) $(PARAMS) $(OUTDIR)/running/" << sd.str() << "/" << name << ".xml -o $(OUTDIR)/running/" << sd.str() <<
-		" " << arguments << endl;
+			  " " << arguments << endl;
 	m_targets << "\t" << "mv $(OUTDIR)/running/" << sd.str() << " $(OUTDIR)/results/" << endl;
 	m_targets << endl;
 
@@ -264,7 +264,7 @@ void Simulation::Generate(ConfigReader& mainConfig)
 	of << m_targets.rdbuf();
 	of << endl;
 	of.close();
-	
+
 	LOG_INFO(m_logger, m_cpt << " simulations generated in directory " << m_outputDir);
 	LOG_INFO(m_logger, "Launch with: make -f " << makefile << " -j4");
 }

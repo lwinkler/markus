@@ -1,8 +1,8 @@
 /*----------------------------------------------------------------------------------
 *
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is not part of Markus.
 -------------------------------------------------------------------------------------*/
 
@@ -23,7 +23,7 @@ class ClassifyEvents : public Module // TODO: Should probably be in dir bulk/
 public:
 	class Parameters : public Module::Parameters
 	{
-		public:
+	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
 			m_list.push_back(new ParameterDouble("validity_thres", 0.5, 0, 1, &validityThres, "Decision threshold to consider an event as valid [0 to 1]"));
@@ -36,7 +36,7 @@ public:
 	~ClassifyEvents();
 	MKCLASS("ClassifyEvents")
 	MKDESCR("Filter events based on user feedback")
-	
+
 	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
@@ -45,7 +45,7 @@ public:
 	virtual float PredictEventValidity(const Event& x_event);
 	void PushEvent();
 	void PopEvent();
-	
+
 protected:
 
 	// input

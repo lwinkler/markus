@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -38,7 +38,7 @@
 class Module;
 class QWidget;
 
-// Use macros to declare members of Controller childs, not the cleanest thing but you are free to try to 
+// Use macros to declare members of Controller childs, not the cleanest thing but you are free to try to
 // improve on this
 #define DECLARE_CALL_ACTION(action) \
 void CallAction(const std::string& x_name, std::string* xp_value)\
@@ -83,7 +83,7 @@ public:
 	* @param xp_value Input/Output of the action (Ignored if NULL)
 	*/
 	virtual void CallAction(const std::string& x_name, std::string* xp_value) = 0;
-	
+
 protected:
 	std::string m_name;
 };
@@ -94,24 +94,24 @@ protected:
 */
 class Controllable
 {
-	public:
-		Controllable(){}
-		~Controllable()
-		{
-			for(std::map<std::string, Controller* >::iterator it = m_controls.begin() ; it != m_controls.end() ; ++it)
-				delete(it->second);
-		}
-		const std::map<std::string, Controller*>& GetControllersList() const {return m_controls;}
-		Controller* FindController(const std::string& x_name) const;
-		inline void AddController(Controller* xp_ctr)
-		{
-			// check that we are not inserting 2x the same controller
-			assert(m_controls.find(xp_ctr->GetName()) == m_controls.end());
-			m_controls.insert(make_pair(xp_ctr->GetName(), xp_ctr));
-		}
+public:
+	Controllable() {}
+	~Controllable()
+	{
+		for(std::map<std::string, Controller* >::iterator it = m_controls.begin() ; it != m_controls.end() ; ++it)
+			delete(it->second);
+	}
+	const std::map<std::string, Controller*>& GetControllersList() const {return m_controls;}
+	Controller* FindController(const std::string& x_name) const;
+	inline void AddController(Controller* xp_ctr)
+	{
+		// check that we are not inserting 2x the same controller
+		assert(m_controls.find(xp_ctr->GetName()) == m_controls.end());
+		m_controls.insert(make_pair(xp_ctr->GetName(), xp_ctr));
+	}
 
-	private:
-		std::map<std::string, Controller*> m_controls;
+private:
+	std::map<std::string, Controller*> m_controls;
 };
-	
+
 #endif

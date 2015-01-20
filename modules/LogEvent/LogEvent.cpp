@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -34,10 +34,10 @@ using namespace cv;
 
 log4cxx::LoggerPtr LogEvent::m_logger(log4cxx::Logger::getLogger("LogEvent"));
 
-LogEvent::LogEvent(const ConfigReader& x_configReader) 
-	 : Module(x_configReader), m_param(x_configReader),
-	m_inputIm1(Size(m_param.width, m_param.height), m_param.type),
-	m_inputIm2(Size(m_param.width, m_param.height), m_param.type)
+LogEvent::LogEvent(const ConfigReader& x_configReader)
+	: Module(x_configReader), m_param(x_configReader),
+	  m_inputIm1(Size(m_param.width, m_param.height), m_param.type),
+	  m_inputIm2(Size(m_param.width, m_param.height), m_param.type)
 {
 	// Init input images
 	AddInputStream(0, new StreamEvent("event", m_event, *this, "Input event to be logged"));
@@ -59,7 +59,7 @@ void LogEvent::Reset()
 {
 	Module::Reset();
 	m_event.Empty();
-	
+
 	string srtFileName = m_context.GetOutputDir() + "/" + m_param.file;
 	CLEAN_DELETE(mp_annotationWriter);
 	mp_annotationWriter = new AnnotationFileWriter();
@@ -67,7 +67,7 @@ void LogEvent::Reset()
 	m_saveImage1 = m_inputStreams.at(1)->IsConnected();
 	m_saveImage2 = m_inputStreams.at(2)->IsConnected();
 
-	m_folder  = m_context.GetOutputDir() + "/" + m_param.folder + "/"; 
+	m_folder  = m_context.GetOutputDir() + "/" + m_param.folder + "/";
 	SYSTEM("mkdir -p " + m_folder);
 }
 
@@ -78,7 +78,7 @@ void LogEvent::ProcessFrame()
 		// Log the change in event
 		SaveImage(m_event);
 		WriteEvent();
-		// LOG_EVENT(m_logger, m_event.GetEventName()); 
+		// LOG_EVENT(m_logger, m_event.GetEventName());
 		m_event.Notify(m_context);
 	}
 }

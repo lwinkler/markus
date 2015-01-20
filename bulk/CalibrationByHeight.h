@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@
 
 class CalibrationByHeight : public Serializable
 {
-public:	
+public:
 
 	CalibrationByHeight();
 	CalibrationByHeight(double x_value_x, double x_value_y, double x_height);

@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -59,7 +59,7 @@ public:
 	~Morph();
 	MKCLASS("Morph")
 	MKDESCR("Apply a morphological operator to an image")
-	
+
 	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
@@ -69,7 +69,7 @@ private:
 	Parameters m_param;
 	static log4cxx::LoggerPtr m_logger;
 protected:
-	
+
 	// input
 	cv::Mat m_input;
 

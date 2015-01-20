@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -41,7 +41,7 @@ TempDiff::TempDiff(const ConfigReader& x_configReader) :
 	m_lastImg(Size(m_param.width, m_param.height), m_param.type)
 {
 	m_tmp = NULL;
-	
+
 	AddInputStream(0, new StreamImage("input", m_input, *this,             "Video input"));
 	AddOutputStream(0, new StreamImage("temp_diff", m_temporalDiff, *this, "Temporal difference"));
 }
@@ -62,17 +62,17 @@ void TempDiff::Reset()
 void TempDiff::ProcessFrame()
 {
 	// Main part of the program
-	if(m_emptyTemporalDiff) 
+	if(m_emptyTemporalDiff)
 	{
 		m_input.copyTo(m_lastImg);
 		m_emptyTemporalDiff = false;
 	}
-	else 
+	else
 	{
 		subtract(m_input, m_lastImg, *m_tmp);
 		absdiff(m_input,  m_lastImg, *m_tmp);
 		adjustChannels(*m_tmp, m_temporalDiff);
-		
+
 		m_input.copyTo(m_lastImg);
 	}
 };

@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -34,10 +34,10 @@ using namespace cv;
 
 log4cxx::LoggerPtr ReadEvent::m_logger(log4cxx::Logger::getLogger("ReadEvent"));
 
-ReadEvent::ReadEvent(const ConfigReader& x_configReader) 
-	 : Input(x_configReader), m_param(x_configReader),
-	m_outputIm1(Size(m_param.width, m_param.height), m_param.type),
-	m_outputIm2(Size(m_param.width, m_param.height), m_param.type)
+ReadEvent::ReadEvent(const ConfigReader& x_configReader)
+	: Input(x_configReader), m_param(x_configReader),
+	  m_outputIm1(Size(m_param.width, m_param.height), m_param.type),
+	  m_outputIm2(Size(m_param.width, m_param.height), m_param.type)
 {
 	// Init input images
 	AddOutputStream(0, new StreamEvent("event", m_event, *this, "Input event to be logged"));
@@ -56,7 +56,7 @@ void ReadEvent::Reset()
 {
 	Input::Reset();
 	m_event.Empty();
-	
+
 	CLEAN_DELETE(mp_annotationReader);
 	mp_annotationReader = new AnnotationFileReader();
 	mp_annotationReader->Open(m_param.file);

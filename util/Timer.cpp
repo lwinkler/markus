@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@ long int Timer::GetMSecLong()
 	timeval now;
 	//clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &now);
 	gettimeofday(&now, NULL); // TODO: use clock as in blog.habets.pp.se: gettimeofday should never be used to measure time
-	
+
 	long seconds  = now.tv_sec  - m_start.tv_sec;
 	long useconds = now.tv_usec - m_start.tv_usec;
 
@@ -42,7 +42,7 @@ double Timer::GetSecDouble()
 	//DIFF(m_start, now, temp);
 	long seconds  = now.tv_sec  - m_start.tv_sec;
 	long useconds = now.tv_usec - m_start.tv_usec;
-	
+
 	return seconds + useconds / 1000000.0;
 }
 
@@ -53,7 +53,7 @@ float Timer::GetSecFloat()
 	//DIFF(m_start, now, temp);
 	long seconds  = now.tv_sec  - m_start.tv_sec;
 	long useconds = now.tv_usec - m_start.tv_usec;
-	
+
 	return seconds + useconds / 1000000.0f;
 }
 

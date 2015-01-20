@@ -2,10 +2,10 @@
 
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -54,17 +54,17 @@ public:
 		//m_minSide 	= x_minSide;
 		m_scaleFactor 	= x_scaleFactor;
 	}
-	
+
 	virtual void run();
-	
+
 	cv::HOGDescriptor m_hog;
-	const std::vector<cv::Rect>& GetDetectedObjects() const{ return m_detected;}
+	const std::vector<cv::Rect>& GetDetectedObjects() const { return m_detected;}
 	long long m_timerThread;
 
 protected:
 	float m_scaleFactor;
 	cv::Mat m_smallImg;
-	
+
 	std::vector<cv::Rect> m_detected;
 };
 
@@ -82,16 +82,16 @@ public:
 			// m_list.push_back(new ParameterInt("minNeighbors", 2, 1, 100, 	&minNeighbors,	"Minimum numbers of neighbors (higher: less sensitive)")); // Note : Seems to be a bug with minNeighbors = 1 with most filters
 			m_list.push_back(new ParameterInt("min_side", 0, 0, 200, 		&minSide,	"Minimum size of the detected object"));
 			m_list.push_back(new ParameterFloat("scale_factor", 1.2, 1, 2, 	&scaleFactor,	"Scale factor for scanning (higher: less sensitive)"));
-															// "File with filter data of the detected object"));
+			// "File with filter data of the detected object"));
 			m_list.push_back(new ParameterString("object_label", "hog", 			&objectLabel,	"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
-			
+
 			// Limit size to accelerate unit tests
 			RefParameterByName("width").SetRange("[320:1280]");
 			RefParameterByName("height").SetRange("[240:960]");
 			RefParameterByName("type").SetRange("[CV_8UC1]");
 			Init();
 		};
-		
+
 		// int minNeighbors;
 		int minSide;
 		float scaleFactor;
@@ -102,7 +102,7 @@ public:
 	~HOGDetector(void);
 	MKCLASS("HOGDetector")
 	MKDESCR("Detect objects from a video stream using a HOG descriptor")
-	
+
 	inline virtual const Parameters& GetParameters() const {return m_param;}
 	virtual void LaunchThread();
 	virtual void NormalProcess();
@@ -127,10 +127,10 @@ protected:
 #ifdef MARKUS_DEBUG_STREAMS
 	cv::Mat m_debug;
 #endif
-	
+
 	// thread
 	HOGDetectionThread m_thread;
-	virtual const QThread & GetRefThread(){return m_thread;}
+	virtual const QThread & GetRefThread() {return m_thread;}
 };
 
 #endif

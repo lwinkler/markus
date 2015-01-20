@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -52,10 +52,10 @@ void ParameterStructure::Init()
 {
 	// Read config file
 	SetValueToDefault();
-	
+
 	// Read parameters from config
 	SetFromConfig();
-	
+
 	// LOG_INFO("Parameters for "<<m_moduleName<<" initialized.");
 	// PrintParameters(); // Global::log.stream(LOG_INFO));
 	CheckRange(false);
@@ -95,7 +95,7 @@ void ParameterStructure::UpdateConfig() const
 {
 	// assert(!m_configReader.IsEmpty());
 	ConfigReader conf = m_configReader;
-	
+
 	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); ++it)
 	{
 		if(m_writeAllParamsToConfig || (*it)->GetConfigurationSource() != PARAMCONF_DEF)
@@ -121,7 +121,7 @@ const Parameter& ParameterStructure::GetParameterByName(const string& x_name) co
 			return **it;
 		}
 	}
-	
+
 	throw ParameterException("Parameter not found in module " + m_moduleName + ": " + x_name, LOC);
 }
 
@@ -141,7 +141,7 @@ Parameter& ParameterStructure::RefParameterByName(const string& x_name)
 			return **it;
 		}
 	}
-	
+
 	throw ParameterException("Parameter not found in module " + m_moduleName + ": " + x_name, LOC);
 }
 

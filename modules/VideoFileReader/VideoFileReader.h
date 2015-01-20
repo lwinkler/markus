@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -39,8 +39,8 @@ public:
 	class Parameters : public Input::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : 
-		Input::Parameters(x_confReader)
+		Parameters(const ConfigReader& x_confReader) :
+			Input::Parameters(x_confReader)
 		{
 			m_list.push_back(new ParameterString("file",  "in/input.mp4", &file, "Name of the video file to read, with path"));
 			m_list.push_back(new ParameterBool("loop",    0, 0, 1,        &loop, "Loop on file"));
@@ -56,13 +56,13 @@ public:
 	~VideoFileReader();
 	MKCLASS("VideoFileReader")
 	MKDESCR("Read video stream from a video file")
-	
+
 	inline virtual const Parameters& GetParameters() const {return m_param;}
 	void Capture();
-        void Reset();
-	const std::string& GetName(){return m_name;}
+	void Reset();
+	const std::string& GetName() {return m_name;}
 	// const cv::Mat * GetImage() const {return m_output;}
-	
+
 	// Specific to file reader
 	void SetMsec(int x_msec);
 	void SetFrame(int x_frame);

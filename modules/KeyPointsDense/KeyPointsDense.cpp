@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
  *
  *    MARKUS : a manager for video analysis modules
- * 
+ *
  *    author : Laurent Winkler and Florian Rossier <florian.rossier@gmail.com>
- * 
- * 
+ *
+ *
  *    This file is part of Markus.
  *
  *    Markus is free software: you can redistribute it and/or modify
@@ -49,7 +49,7 @@ void KeyPointsDense::Reset()
 {
 	ModuleKeyPoints::Reset();
 	CLEAN_DELETE(mp_detector);
-        mp_detector = new DenseFeatureDetector(
+	mp_detector = new DenseFeatureDetector(
 		m_param.initFeatureScale,
 		m_param.featureScaleLevels,
 		m_param.featureScaleMul,
@@ -57,7 +57,7 @@ void KeyPointsDense::Reset()
 		m_param.initImgBound,
 		m_param.varyXyStepWithScale,
 		m_param.varyImgBoundWithScale
-        );
+	);
 	if(mp_detector == NULL && mp_detector->empty())
 		throw MkException("Cannot create detector", LOC);
 }

@@ -43,7 +43,7 @@ public:
 	{
 	public:
 		Parameters(const ConfigReader& x_confReader) :
-		VideoFileWriter::Parameters(x_confReader)
+			VideoFileWriter::Parameters(x_confReader)
 		{
 			m_list.push_back(new ParameterDouble("buffer_duration", 120, 0, 600, &bufferDuration, "Length of one buffer block of video [s]"));
 			m_list.push_back(new ParameterInt("nb_buffers",           0, 0,  10, &nbBuffers,      "Number of buffers blocks to keep before recording"));
@@ -59,7 +59,7 @@ public:
 	~VideoFileBufferWriter();
 	MKCLASS("VideoFileBufferWriter")
 	MKDESCR("Write output to a buffer and export it if an evenement occurs")
-	
+
 	inline virtual const Parameters& GetParameters() const {return m_param;}
 	virtual void ProcessFrame();
 	virtual void Reset();

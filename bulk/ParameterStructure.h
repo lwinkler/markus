@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -46,7 +46,7 @@ public:
 	const Parameter & GetParameterByName(const std::string& x_name) const;
 	const std::vector<Parameter*>& GetList() const {return m_list;}
 	void LockParameterByName(const std::string& x_name) {RefParameterByName(x_name).Lock();}
-	
+
 protected:
 	std::vector<Parameter*> m_list;
 	const ConfigReader m_configReader; // Warning this still contains reference to the tinyxml config!

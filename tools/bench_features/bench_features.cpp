@@ -44,7 +44,7 @@ Document document;
 void benchmark(void (*x_myFunc)(), const string& x_label)
 {
 	struct timeval timeStart,
-		       timeEnd;
+			timeEnd;
 	gettimeofday(&timeStart, NULL);
 
 	(*x_myFunc)();
@@ -52,9 +52,9 @@ void benchmark(void (*x_myFunc)(), const string& x_label)
 	gettimeofday(&timeEnd, NULL);
 
 	std::cout
-		<< ((timeEnd.tv_sec - timeStart.tv_sec) * 1000000 + timeEnd.tv_usec - timeStart.tv_usec)
-		<< " us to execute "<<x_label
-		<< std::endl;
+			<< ((timeEnd.tv_sec - timeStart.tv_sec) * 1000000 + timeEnd.tv_usec - timeStart.tv_usec)
+			<< " us to execute "<<x_label
+			<< std::endl;
 }
 
 // Generate data
@@ -172,8 +172,8 @@ void sumJsonCpp()
 
 void writeJsonCpp()
 {
-        Json::FastWriter writer;
-        ofstream of("jsoncpp.json");
+	Json::FastWriter writer;
+	ofstream of("jsoncpp.json");
 	string tmp = writer.write(root);
 	of << tmp;
 }
@@ -186,12 +186,12 @@ int main()
 	benchmark(loadPropertyTree, "Property tree load");
 	benchmark(sumPropertyTree, "Property tree sum");
 	benchmark(writePropertyTree, "Property tree write");
-	
-	
+
+
 	benchmark(loadRapidJSON, "RapidJSON load");
 	// benchmark(sumRapidJSON, "RapidJSON sum");
 	benchmark(writeRapidJSON, "RapidJSON write");
-	
+
 	benchmark(loadJsonCpp, "JsonCpp load");
 	benchmark(sumJsonCpp, "JsonCpp sum");
 	benchmark(writeJsonCpp, "JsonCpp write");

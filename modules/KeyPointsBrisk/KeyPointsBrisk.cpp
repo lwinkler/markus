@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
  *
  *    MARKUS : a manager for video analysis modules
- * 
+ *
  *    author : Laurent Winkler and Florian Rossier <florian.rossier@gmail.com>
- * 
- * 
+ *
+ *
  *    This file is part of Markus.
  *
  *    Markus is free software: you can redistribute it and/or modify
@@ -49,11 +49,11 @@ void KeyPointsBrisk::Reset()
 {
 	ModuleKeyPoints::Reset();
 	CLEAN_DELETE(mp_detector);
-        mp_detector = new BRISK(
+	mp_detector = new BRISK(
 		m_param.threshold,
 		m_param.octaves,
 		m_param.patternScale
-        );
+	);
 	if(mp_detector == NULL && mp_detector->empty())
 		throw MkException("Cannot create detector", LOC);
 }

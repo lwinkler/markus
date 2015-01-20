@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -40,7 +40,7 @@ template<class T1, typename... Args> class FactoryT
 	template<class T2> static T1* createObject(Args... args) {return new T2(args...);}
 
 public:
-	FactoryT(){}
+	FactoryT() {}
 	template<class T2> void Register(const std::string& name)
 	{
 		CreateObjectFunc func = createObject<T2>;
@@ -65,7 +65,7 @@ public:
 		CreateObjectFunc func = it->second;
 		T1* pmod = func(args...);
 		// if(pmod->GetClass() != x_type)
-			// throw MkException("Module \"" + x_type + "\" must have the same name as its class \"" + pmod->GetClass() + "\"", LOC);
+		// throw MkException("Module \"" + x_type + "\" must have the same name as its class \"" + pmod->GetClass() + "\"", LOC);
 		return pmod;
 	}
 	void List(std::vector<std::string>& xr_types) const

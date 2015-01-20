@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -42,9 +42,9 @@ const Scalar MotionDetector::m_colorPlotThres = cv::Scalar(0, 0, 0);
 
 log4cxx::LoggerPtr MotionDetector::m_logger(log4cxx::Logger::getLogger("MotionDetector"));
 
-MotionDetector::MotionDetector(const ConfigReader& x_configReader) 
+MotionDetector::MotionDetector(const ConfigReader& x_configReader)
 	: Module(x_configReader), m_param(x_configReader),
-	m_input(Size(m_param.width, m_param.height), m_param.type)
+	  m_input(Size(m_param.width, m_param.height), m_param.type)
 {
 	// Init output images
 	AddInputStream(0, new StreamImage("input", m_input, *this, 	"Video input"));
@@ -97,7 +97,7 @@ void MotionDetector::ProcessFrame()
 	col.setTo(m_colorPlotBack);
 	line(col, Point(0, m_debug.rows * (1 - val / 3 / m_param.motionThres)), Point(0, m_debug.cols - 1), m_colorPlotValue);
 	circle(col, Point(0, m_debug.rows * (1 - 0.333)),                         0, m_colorPlotThres, -1);
-	
+
 	// m_debug->row(m_debug->rows -1) = col.row(0);
 
 

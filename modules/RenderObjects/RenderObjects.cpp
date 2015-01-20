@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -41,7 +41,7 @@ RenderObjects::RenderObjects(const ConfigReader& x_configReader) :
 	AddInputStream(3, new StreamObject("input", m_objectInput3, *this,	"Object stream 1"));
 	AddInputStream(4, new StreamObject("input", m_objectInput4, *this,	"Object stream 1"));
 	AddInputStream(5, new StreamObject("input", m_objectInput5, *this,	"Object stream 1"));
-	
+
 	AddOutputStream(0, new StreamImage("output", m_imageOutput, *this,	"Output video stream"));
 }
 

@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
  *
  *    MARKUS : a manager for video analysis modules
- * 
+ *
  *    author : Laurent Winkler <lwinkler888@gmail.com>
- * 
- * 
+ *
+ *
  *    This file is part of Markus.
  *
  *    Markus is free software: you can redistribute it and/or modify
@@ -33,79 +33,79 @@
 /*! \class Object
  *  \brief Class representing an extracted object (or blob)
  *
- *  Examples of objects 
+ *  Examples of objects
  *  - blob obtained after background subtraction and segmentation
  *  - face detected with a sliding window algorithm
  */
 class Object : public Serializable
 {
-	public:
-		Object(const std::string & x_name = "unnamed");
-		Object(const std::string & x_name, const cv::Rect & x_rect);
-		~Object();
-		Object(const Object &);
-		Object& operator=(const Object &);
+public:
+	Object(const std::string & x_name = "unnamed");
+	Object(const std::string & x_name, const cv::Rect & x_rect);
+	~Object();
+	Object(const Object &);
+	Object& operator=(const Object &);
 
-		inline const std::string& GetName() const {return m_name;}
-		inline int GetId() const {return m_id;}
-		inline void SetId(int x_id){m_id = x_id;}
+	inline const std::string& GetName() const {return m_name;}
+	inline int GetId() const {return m_id;}
+	inline void SetId(int x_id) {m_id = x_id;}
 
-		inline void AddFeature(std::string x_name, Feature* xp_feat)
-		{
-			std::map <std::string, FeaturePtr>::iterator it = m_feats.find(x_name);
-			if(it != m_feats.end())
-				m_feats.erase(it);
-				
-			m_feats.insert(std::make_pair(x_name, xp_feat));
-		}
-		inline void AddFeature(std::string x_name, float x_value)
-		{
-			std::map <std::string, FeaturePtr>::iterator it = m_feats.find(x_name);
-			if(it != m_feats.end())
-				m_feats.erase(it);
+	inline void AddFeature(std::string x_name, Feature* xp_feat)
+	{
+		std::map <std::string, FeaturePtr>::iterator it = m_feats.find(x_name);
+		if(it != m_feats.end())
+			m_feats.erase(it);
 
-			m_feats.insert(std::make_pair(x_name, new FeatureFloat(x_value)));
-		}
-		inline const std::map <std::string, FeaturePtr>& GetFeatures() const {return m_feats;}
-		inline const Feature& GetFeature(const std::string& x_name) const
-		{
-			std::map <std::string, FeaturePtr>::const_iterator it = m_feats.find(x_name);
-			if(it == m_feats.end())
-				throw FeatureNotFoundException("Feature " + x_name + " does not exist", LOC);
-			return *it->second;
-		}
-		// inline void SetFeatureByName(const std::string& x_name, float x_value) {m_feats.find(x_name)->second = Feature();}
-		void SetFeatures(const std::map<std::string, FeaturePtr>& x_feats){m_feats = x_feats;}
+		m_feats.insert(std::make_pair(x_name, xp_feat));
+	}
+	inline void AddFeature(std::string x_name, float x_value)
+	{
+		std::map <std::string, FeaturePtr>::iterator it = m_feats.find(x_name);
+		if(it != m_feats.end())
+			m_feats.erase(it);
 
-		// Conversion functions for convenance
-		inline cv::Rect GetRect()  const {return cv::Rect(posX - width / 2, posY - height / 2, width, height);}
-		inline void SetRect(const cv::Rect& x_rect)
-		{
-			width  = x_rect.width;
-			height = x_rect.height;
-			posX   = x_rect.tl().x + width / 2;
-			posY   = x_rect.tl().y + height / 2;
-		}
-		inline cv::Point TopLeft() const {return cv::Point(posX - width / 2, posY - height / 2);}
-		inline cv::Point Center() const {return cv::Point(posX, posY);}
+		m_feats.insert(std::make_pair(x_name, new FeatureFloat(x_value)));
+	}
+	inline const std::map <std::string, FeaturePtr>& GetFeatures() const {return m_feats;}
+	inline const Feature& GetFeature(const std::string& x_name) const
+	{
+		std::map <std::string, FeaturePtr>::const_iterator it = m_feats.find(x_name);
+		if(it == m_feats.end())
+			throw FeatureNotFoundException("Feature " + x_name + " does not exist", LOC);
+		return *it->second;
+	}
+	// inline void SetFeatureByName(const std::string& x_name, float x_value) {m_feats.find(x_name)->second = Feature();}
+	void SetFeatures(const std::map<std::string, FeaturePtr>& x_feats) {m_feats = x_feats;}
 
-		void RenderTo(cv::Mat& x_output, const cv::Scalar& x_color) const;
-		void Intersect(const cv::Mat& x_image);
-		virtual void Randomize(unsigned int& xr_seed, const std::string& x_requirement, const cv::Size& xr_size);
-		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
-		virtual void Deserialize(std::istream& stream, const std::string& x_dir);
+	// Conversion functions for convenance
+	inline cv::Rect GetRect()  const {return cv::Rect(posX - width / 2, posY - height / 2, width, height);}
+	inline void SetRect(const cv::Rect& x_rect)
+	{
+		width  = x_rect.width;
+		height = x_rect.height;
+		posX   = x_rect.tl().x + width / 2;
+		posY   = x_rect.tl().y + height / 2;
+	}
+	inline cv::Point TopLeft() const {return cv::Point(posX - width / 2, posY - height / 2);}
+	inline cv::Point Center() const {return cv::Point(posX, posY);}
 
-	protected:
-		std::string m_name;
-		int m_id;
-		std::map <std::string, FeaturePtr> m_feats;
-	private:
-		static log4cxx::LoggerPtr m_logger;
+	void RenderTo(cv::Mat& x_output, const cv::Scalar& x_color) const;
+	void Intersect(const cv::Mat& x_image);
+	virtual void Randomize(unsigned int& xr_seed, const std::string& x_requirement, const cv::Size& xr_size);
+	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
+	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 
-	public:
-		double posX;
-		double posY;
-		double width;
-		double height;
+protected:
+	std::string m_name;
+	int m_id;
+	std::map <std::string, FeaturePtr> m_feats;
+private:
+	static log4cxx::LoggerPtr m_logger;
+
+public:
+	double posX;
+	double posY;
+	double width;
+	double height;
 };
 #endif

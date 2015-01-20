@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -52,7 +52,7 @@ void Processable::Reset()
 	{
 		CLEAN_DELETE(m_moduleTimer);
 		m_moduleTimer = new QModuleTimer(*this);
-		
+
 		// Set a timer for all modules in auto-process (= called at a regular frame rate)
 		// all other are called as "slaves" of other modules
 		// If not real-time, a module will try to acquire frames as fast as possible

@@ -10,13 +10,13 @@ using namespace cv;
 static void help()
 {
 	cout
-		<< "------------------------------------------------------------------------------" << endl
-		<< "This program shows how to write video files."                                   << endl
-		<< "You can extract the R or G or B color channel of the input video."              << endl
-		<< "Usage:"                                                                         << endl
-		<< "./video-write inputvideoName [ R | G | B] [Y | N]"                              << endl
-		<< "------------------------------------------------------------------------------" << endl
-		<< endl;
+			<< "------------------------------------------------------------------------------" << endl
+			<< "This program shows how to write video files."                                   << endl
+			<< "You can extract the R or G or B color channel of the input video."              << endl
+			<< "Usage:"                                                                         << endl
+			<< "./video-write inputvideoName [ R | G | B] [Y | N]"                              << endl
+			<< "------------------------------------------------------------------------------" << endl
+			<< endl;
 }
 
 int main(int argc, char *argv[])
@@ -44,7 +44,8 @@ int main(int argc, char *argv[])
 
 	// Transform from int to char via Bitwise operators
 	char EXT[] = {static_cast<char>(ex & 0XFF) , static_cast<char>((ex & 0XFF00) >> 8),
-				  static_cast<char>((ex & 0XFF0000) >> 16),static_cast<char>((ex & 0XFF000000) >> 24), 0};
+				  static_cast<char>((ex & 0XFF0000) >> 16),static_cast<char>((ex & 0XFF000000) >> 24), 0
+				 };
 
 	Size S = Size(static_cast<int>(inputVideo.get(CV_CAP_PROP_FRAME_WIDTH)),    // Acquire input size
 				  static_cast<int>(inputVideo.get(CV_CAP_PROP_FRAME_HEIGHT)));
@@ -85,10 +86,10 @@ int main(int argc, char *argv[])
 		for (int i =0; i < 3; ++i)
 			if (i != channel)
 				spl[i] = Mat::zeros(S, spl[0].type());
-	   merge(spl, res);
+		merge(spl, res);
 
-	   //outputVideo.write(res); //save or
-	   outputVideo << res;
+		//outputVideo.write(res); //save or
+		outputVideo << res;
 	}
 
 	cout << "Finished writing" << endl;

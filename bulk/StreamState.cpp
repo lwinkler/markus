@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@ using namespace std;
 using namespace cv;
 
 
-StreamState::StreamState(const string& x_name, bool& x_state, Module& rx_module, const string& rx_description) : 
+StreamState::StreamState(const string& x_name, bool& x_state, Module& rx_module, const string& rx_description) :
 	Stream(x_name, rx_module, rx_description),
 	m_state(x_state)
 {
@@ -46,12 +46,12 @@ StreamState::~StreamState()
 void StreamState::ConvertInput()
 {
 	if(m_connected == NULL) return;
-	
+
 	// Copy time stamp to output
 	m_timeStamp = GetConnected().GetTimeStamp();
 
 	const StreamState * pstream = dynamic_cast<const StreamState*>(m_connected);
-	if(pstream == NULL) 
+	if(pstream == NULL)
 		throw MkException("Stream of state " + GetName() + " is not correctly connected", LOC);
 	m_state = pstream->GetState();
 }

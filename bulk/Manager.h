@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -69,12 +69,12 @@ public:
 	void SendCommand(const std::string& x_command, std::string x_value);
 	const std::vector<Module*>& GetModules() const {return m_modules; }
 	inline const Processable& GetModuleByName(const std::string& x_name) const {if(x_name == "manager") assert(false); else return RefModuleByName(x_name);}
-	
+
 	void Connect();
 	void Export();
 	void PrintStatistics();
 	virtual void Pause(bool x_pause);
-	inline void Quit(){m_continueFlag = false;}
+	inline void Quit() {m_continueFlag = false;}
 	void Status() const;
 	void PauseInputs(bool x_pause);
 	bool EndOfAllStreams() const;
@@ -113,7 +113,7 @@ protected:
 	QReadWriteLock m_lock;
 
 private:
-        inline Parameters& RefParameters() {return m_param;}
+	inline Parameters& RefParameters() {return m_param;}
 	Parameters m_param;
 };
 #endif

@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -36,24 +36,24 @@ public:
 		Parameter(x_name, x_description),
 		m_default(x_default),
 		mr_value(*xp_value),
-		m_allowAllValues(true){}
+		m_allowAllValues(true) {}
 	void SetValue(const std::string& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/);
 	void SetValue(int rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/);
 	void SetDefault(const std::string& rx_value);
 	inline int GetDefault() const {return m_default;}
-	inline int GetValue() const{return mr_value;}
+	inline int GetValue() const {return mr_value;}
 	inline std::string GetValueString() const {return GetReverseEnum().at(mr_value);}
-	inline std::string GetDefaultString() const{return GetReverseEnum().at(m_default);}
+	inline std::string GetDefaultString() const {return GetReverseEnum().at(m_default);}
 	std::string GetRange() const;
 	virtual void SetRange(const std::string& x_range);
-	inline void AllowAllValues(bool x_allow){m_allowAllValues = x_allow;}
-	inline void AllowValue(const std::string& x_value, bool x_allow){m_allowedValues[GetEnum().at(x_value)] = x_allow;}
+	inline void AllowAllValues(bool x_allow) {m_allowAllValues = x_allow;}
+	inline void AllowValue(const std::string& x_value, bool x_allow) {m_allowedValues[GetEnum().at(x_value)] = x_allow;}
 	virtual bool CheckRange() const;
 	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const;
 	virtual void Print(std::ostream& os) const;
 	virtual void SetValueToDefault()
 	{
-		if(m_isLocked) 
+		if(m_isLocked)
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		mr_value = m_default;
 		m_confSource = PARAMCONF_DEF;
@@ -63,7 +63,7 @@ public:
 	virtual void Export(std::ostream& rx_os, int x_indentation);
 	virtual const std::map<std::string, int>& GetEnum() const = 0;
 	virtual const std::map<int, std::string>& GetReverseEnum() const = 0;
-	
+
 protected:
 	static std::map<int, std::string> CreateReverseMap(const std::map<std::string, int>& x_map);
 

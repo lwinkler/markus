@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -42,9 +42,9 @@ public:
 	{
 		return mr_value.SerializeToString();
 	}
-	inline std::string GetDefaultString() const{return m_default;}
-	inline std::string GetRange() const{return "";}
-	inline virtual void SetRange(const std::string& x_range){}
+	inline std::string GetDefaultString() const {return m_default;}
+	inline std::string GetRange() const {return "";}
+	inline virtual void SetRange(const std::string& x_range) {}
 	inline const ParameterType& GetType() const {const static ParameterType s = PARAM_SERIALIZABLE; return s;}
 	inline const std::string& GetTypeString() const {const static std::string s = "calibrationByHeight"; return s;}
 	// inline const Serializable& GetDefault() const {	return m_default;}

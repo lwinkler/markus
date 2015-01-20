@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -33,7 +33,7 @@ using namespace cv;
 
 log4cxx::LoggerPtr StreamImage::m_logger(log4cxx::Logger::getLogger("Module"));
 
-StreamImage::StreamImage(const string& x_name, Mat& x_image, Module& rx_module, const string& rx_description) : 
+StreamImage::StreamImage(const string& x_name, Mat& x_image, Module& rx_module, const string& rx_description) :
 	Stream(x_name, rx_module, rx_description),
 	m_image(x_image)
 {

@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -31,8 +31,8 @@ using namespace cv;
 
 log4cxx::LoggerPtr LogState::m_logger(log4cxx::Logger::getLogger("LogState"));
 
-LogState::LogState(const ConfigReader& x_configReader) 
-	 : Module(x_configReader), m_param(x_configReader)
+LogState::LogState(const ConfigReader& x_configReader)
+	: Module(x_configReader), m_param(x_configReader)
 {
 	// Init input images
 	AddInputStream(0, new StreamState("input", m_state, *this, 	"Input state to be logged"));
@@ -52,7 +52,7 @@ void LogState::Reset()
 	m_state = m_oldState = 0;
 	m_subId = 0;
 	m_startTime = "00:00:00,000";
-	
+
 	// write time stamp in log filename
 	/*time_t now = time(0);
 	struct tm tm_struct;

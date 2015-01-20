@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -37,7 +37,7 @@ class AnnotationFileWriter
 public:
 	AnnotationFileWriter();
 	~AnnotationFileWriter();
-	
+
 	void Open(const std::string& x_file);
 	void WriteAnnotation(TIME_STAMP x_start, TIME_STAMP x_end, std::stringstream& x_in);
 

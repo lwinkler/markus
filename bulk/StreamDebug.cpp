@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@
 using namespace std;
 using namespace cv;
 
-StreamDebug::StreamDebug(const string& x_name, Mat& x_image, Module& rx_module, const string& rx_description) : 
+StreamDebug::StreamDebug(const string& x_name, Mat& x_image, Module& rx_module, const string& rx_description) :
 	Stream(x_name, rx_module, rx_description),
 	m_image(x_image)
 {
@@ -77,8 +77,8 @@ void StreamDebug::Deserialize(istream& x_in, const string& x_dir)
 
 	string fileName = root["image"].asString();
 	m_image = imread(fileName);
-    if(m_image.empty())
-        throw MkException("Cannot open serialized image from file " + fileName, LOC);
+	if(m_image.empty())
+		throw MkException("Cannot open serialized image from file " + fileName, LOC);
 }
 
 #endif

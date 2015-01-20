@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -177,9 +177,9 @@ ConfigReader ConfigReader::RefSubConfig(const string& x_tagName, bool x_allowCre
 		throw MkException("Impossible to find node " + x_tagName + " in ConfigReader" , LOC);
 
 	TiXmlNode* newNode = mp_node->FirstChild(x_tagName);
-	
+
 	if(newNode == NULL && x_allowCreation)
-	{ 
+	{
 		// Add a sub config element if not found
 		TiXmlElement* element = new TiXmlElement(x_tagName);
 		mp_node->LinkEndChild(element);
@@ -203,7 +203,7 @@ const ConfigReader ConfigReader::GetSubConfig(const string& x_tagName, const str
 	if(IsEmpty())
 		throw MkException("Impossible to find node " + x_tagName + " in ConfigReader with name " + x_attrName + "=\"" + x_attrValue + "\"" , LOC);
 	TiXmlNode* newNode = mp_node->FirstChild(x_tagName);
-	
+
 	if(x_attrName == "")
 		return ConfigReader(newNode);
 
@@ -231,7 +231,7 @@ ConfigReader ConfigReader::RefSubConfig(const string& x_tagName, const string& x
 		throw MkException("Impossible to find node " + x_tagName + " in ConfigReader with name " + x_attrName + "=\"" + x_attrValue + "\"" , LOC);
 
 	TiXmlNode* newNode = mp_node->FirstChild(x_tagName);
-	
+
 	const char* name = NULL;
 	if(x_attrName != "")
 		while(newNode != NULL && ((name = newNode->ToElement()->Attribute("name")) == NULL || x_attrValue != name))
@@ -239,7 +239,7 @@ ConfigReader ConfigReader::RefSubConfig(const string& x_tagName, const string& x
 			newNode = newNode->NextSibling(x_tagName);
 		}
 	if(newNode == NULL && x_allowCreation)
-	{ 
+	{
 		// Add a sub config element if not found
 		TiXmlElement* element = new TiXmlElement(x_tagName);
 		if(x_attrName != "")
@@ -263,7 +263,7 @@ ConfigReader ConfigReader::NextSubConfig(const string& x_tagName, const string& 
 	if(IsEmpty())
 		throw MkException("Impossible to find node " + x_tagName + " in ConfigReader with " + x_attrName + "\"" + x_attrValue + "\"" , LOC);
 	TiXmlNode* newNode = mp_node->NextSibling(x_tagName);
-	
+
 	if(x_attrName != "")
 	{
 		while(newNode != NULL && x_attrValue != newNode->ToElement()->Attribute(x_attrName.c_str()))
@@ -271,7 +271,7 @@ ConfigReader ConfigReader::NextSubConfig(const string& x_tagName, const string& 
 			newNode = newNode->NextSibling(x_tagName);
 		}
 	}
-	
+
 	return ConfigReader(newNode);
 }
 
@@ -294,7 +294,7 @@ const string ConfigReader::GetAttribute(const string& x_attributeName) const
 	const string * str = element->Attribute(x_attributeName);
 	if(str == NULL)
 		return ""; // TODO: throw exception and fix the rest of the code
-		// throw MkException("Attribute is unexistant", LOC);
+	// throw MkException("Attribute is unexistant", LOC);
 	else
 		return *str;
 }
@@ -395,7 +395,7 @@ void ConfigReader::Validate() const
 	map<string,bool> moduleIds;
 	map<string,bool> moduleNames;
 	ConfigReader conf = appConf.GetSubConfig("module");
-	
+
 	while(!conf.IsEmpty())
 	{
 		string id = conf.GetAttribute("id");
@@ -451,7 +451,7 @@ void ConfigReader::CheckUniquenessOfId(const string& x_group, const string& x_ty
 *
 * @param xr_extraConfig Extra config to use for overriding
 *
-* @return 
+* @return
 */
 
 void ConfigReader::OverrideWith(const ConfigReader& x_extraConfig)
@@ -468,8 +468,8 @@ void ConfigReader::OverrideWith(const ConfigReader& x_extraConfig)
 			{
 				// Override parameter
 				RefSubConfig("module", "name", moduleConfig.GetAttribute("name"))
-					.RefSubConfig("parameters").RefSubConfig("param", "name", paramConfig.GetAttribute("name"), true)
-					.SetValue(paramConfig.GetValue());
+				.RefSubConfig("parameters").RefSubConfig("param", "name", paramConfig.GetAttribute("name"), true)
+				.SetValue(paramConfig.GetValue());
 				paramConfig = paramConfig.NextSubConfig("param");
 			}
 		}
@@ -525,7 +525,7 @@ ConfigReader ConfigReader::FindRef(const string& x_searchString, bool x_allowCre
 
 		string tagName, attrName, attrValue, searchString2;
 		splitTagName(x_searchString, tagName, attrName, attrValue, searchString2);
-		
+
 		if(attrName == "")
 			return RefSubConfig(tagName, x_allowCreation).FindRef(searchString2, x_allowCreation);
 		else
@@ -575,11 +575,10 @@ vector<ConfigReader> ConfigReader::FindAll(const string& x_searchString, bool x_
 			}
 			return results;
 		}
+		else if(attrName == "")
+			return GetSubConfig(tagName).FindAll(searchString2);
 		else
-			if(attrName == "")
-				return GetSubConfig(tagName).FindAll(searchString2);
-			else
-				return GetSubConfig(tagName, attrName, attrValue).FindAll(searchString2);
+			return GetSubConfig(tagName, attrName, attrValue).FindAll(searchString2);
 	}
 	catch(...)
 	{

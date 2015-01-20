@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -37,7 +37,7 @@
  operator >> is the stream operator for deserialization
  comparedSquared is used in feature comparison
  randomize is used mostly for testing
- 
+
  If a function is commented this probably means that the default operator for the class is used
 */
 
@@ -62,7 +62,7 @@ inline std::istream& get_string(std::istream& x_in, const std::string& x_str)
 	// std::cout<<">>>"<<x_str<<" "<<str<<std::endl;
 	if(x_str != str)
 		throw MkException("Error in format", LOC);
-	
+
 	return x_in;
 }
 
@@ -74,11 +74,11 @@ std::istream& deserialize(std::istream& x_in,  cv::KeyPoint& xr_val);
 inline double compareSquared(const cv::KeyPoint& x_1, const cv::KeyPoint& x_2)
 {
 	return !(x_1.angle      == x_2.angle
-		&& x_1.class_id == x_2.class_id
-		&& x_1.octave   == x_2.octave
-		&& x_1.pt       == x_2.pt
-		&& x_1.response == x_2.response
-		&& x_1.size     == x_2.size);
+			 && x_1.class_id == x_2.class_id
+			 && x_1.octave   == x_2.octave
+			 && x_1.pt       == x_2.pt
+			 && x_1.response == x_2.response
+			 && x_1.size     == x_2.size);
 }
 void randomize(cv::KeyPoint& xr_val, unsigned int& xr_seed);
 
@@ -88,7 +88,7 @@ void randomize(cv::KeyPoint& xr_val, unsigned int& xr_seed);
 std::ostream& serialize(std::ostream& x_out, const cv::Point2f& x_value);
 std::istream& deserialize(std::istream& x_in,  cv::Point2f& xr_value);
 
-inline double compareSquared(const cv::Point2f& x_1, const cv::Point2f& x_2){return x_1 != x_2;}
+inline double compareSquared(const cv::Point2f& x_1, const cv::Point2f& x_2) {return x_1 != x_2;}
 void randomize(cv::Point2f& xr_val, unsigned int& xr_seed);
 
 /* -------------------------------------------------------------------------------- */
@@ -97,7 +97,7 @@ void randomize(cv::Point2f& xr_val, unsigned int& xr_seed);
 std::ostream& serialize(std::ostream& x_out, const cv::Point3f& x_value);
 std::istream& deserialize(std::istream& x_in,  cv::Point3f& xr_value);
 
-inline double compareSquared(const cv::Point3f& x_1, const cv::Point3f& x_2){return x_1 != x_2;}
+inline double compareSquared(const cv::Point3f& x_1, const cv::Point3f& x_2) {return x_1 != x_2;}
 void randomize(cv::Point3f& xr_val, unsigned int& xr_seed);
 
 /* -------------------------------------------------------------------------------- */
@@ -113,7 +113,7 @@ void randomize(cv::Mat& xr_val, unsigned int& xr_seed);
 // Template specialization for features of type float
 
 inline std::ostream& serialize(std::ostream& x_out, float x_value)   { x_out << x_value;  return x_out; }
-inline std::istream& deserialize(std::istream& x_in, float& xr_value){ x_in  >> xr_value; return x_in;  }
+inline std::istream& deserialize(std::istream& x_in, float& xr_value) { x_in  >> xr_value; return x_in;  }
 
 inline double compareSquared(float x_1, float x_2)
 {

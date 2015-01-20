@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
  *
  *    MARKUS : a manager for video analysis modules
- * 
+ *
  *    author : Laurent Winkler and Florian Rossier <florian.rossier@gmail.com>
- * 
- * 
+ *
+ *
  *    This file is part of Markus.
  *
  *    Markus is free software: you can redistribute it and/or modify
@@ -49,8 +49,8 @@ void KeyPointsFast::Reset()
 {
 	ModuleKeyPoints::Reset();
 	CLEAN_DELETE(mp_detector);
-        mp_detector = new FastFeatureDetector(m_param.threshold, m_param.nonMaxSuppression);
-        // mp_detector = Algorithm::create<Feature2D>("Feature2D.Fast");
+	mp_detector = new FastFeatureDetector(m_param.threshold, m_param.nonMaxSuppression);
+	// mp_detector = Algorithm::create<Feature2D>("Feature2D.Fast");
 	if(mp_detector == NULL && mp_detector->empty())
 		throw MkException("Cannot create detector", LOC);
 }

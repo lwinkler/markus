@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -36,7 +36,7 @@ using namespace cv;
 log4cxx::LoggerPtr GroundTruthReader::m_logger(log4cxx::Logger::getLogger("GroundTruthReader"));
 
 
-GroundTruthReader::GroundTruthReader(const ConfigReader& x_configReader): 
+GroundTruthReader::GroundTruthReader(const ConfigReader& x_configReader):
 	Module(x_configReader),
 	m_param(x_configReader),
 	m_input(Size(m_param.width, m_param.height), m_param.type)
@@ -99,7 +99,7 @@ void GroundTruthReader::ProcessFrame()
 		m_state = m_param.pattern.find(text) != string::npos; // TODO: Improve this with regexp
 
 #ifdef MARKUS_DEBUG_STREAMS
-		Scalar color = m_state ? Scalar(0, 255, 0) : Scalar(0, 0, 255); 
+		Scalar color = m_state ? Scalar(0, 255, 0) : Scalar(0, 0, 255);
 		putText(m_debug, text, Point(40, 40),  FONT_HERSHEY_COMPLEX_SMALL, 0.8, color);
 #endif
 	}
@@ -141,7 +141,7 @@ void GroundTruthReader::ProcessFrame()
 
 	// display the ROI in srt
 	Rect refObj = mp_annotationReader->GetBox();
-	
+
 #ifdef MARKUS_DEBUG_STREAMS
 	if (m_assFile && refObj.width > 0 && text != "")
 	{

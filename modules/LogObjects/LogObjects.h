@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -35,7 +35,7 @@
 */
 class LogObjects : public Module
 {
-	
+
 public:
 	class Parameters : public Module::Parameters
 	{
@@ -54,7 +54,7 @@ public:
 	~LogObjects(void);
 	MKCLASS("LogObjects")
 	MKDESCR("Read a stream of objects and log data to a text file")
-	
+
 	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void ProcessFrame();
 	void Reset();

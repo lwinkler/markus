@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -46,8 +46,8 @@ public:
 	class Parameters : public Input::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : 
-		Input::Parameters(x_confReader)
+		Parameters(const ConfigReader& x_confReader) :
+			Input::Parameters(x_confReader)
 		{
 			m_list.push_back(new ParameterString("url", "", &url, "Network address of the camera (e.g. http://root:admin@192.168.3.62/mjpg/1/video.mjpg"));
 			Init();
@@ -61,11 +61,11 @@ public:
 	~NetworkCam();
 	MKCLASS("NetworkCam")
 	MKDESCR("Read video stream from a network camera")
-	
+
 	inline virtual const Parameters& GetParameters() const {return m_param;}
 	void Capture();
 	virtual void Reset();
-	const std::string& GetName(){return m_name;}
+	const std::string& GetName() {return m_name;}
 	virtual double GetRecordingFps();
 
 private:

@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -47,13 +47,13 @@ public:
 
 	ModuleAsync(const ConfigReader& x_confReader);
 	// virtual ~ModuleAsync();
-	
+
 	virtual void ProcessFrame();
-	
+
 protected:
 	TIME_STAMP m_timeStampLastThread;
 	bool m_resultsCopied;
-	
+
 	long long m_timerThread;
 	long long m_countFramesThread;
 
@@ -64,7 +64,7 @@ protected:
 	virtual void NormalProcess() = 0;
 	virtual void CopyResults() = 0;
 	virtual void PrintStatistics(ConfigReader& xr_result) const;
-	
+
 private:
 	virtual const Parameters & GetParameters() const = 0;
 	static log4cxx::LoggerPtr m_logger;

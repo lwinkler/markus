@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -31,11 +31,11 @@
 class Timer
 {
 public:
-	Timer(){Restart();}
+	Timer() {Restart();}
 	long GetMSecLong();
 	float GetSecFloat();
 	double GetSecDouble();
-	inline void Restart(){gettimeofday(&m_start, NULL);}
+	inline void Restart() {gettimeofday(&m_start, NULL);}
 
 protected:
 	timeval m_start;

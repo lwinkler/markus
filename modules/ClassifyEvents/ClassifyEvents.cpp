@@ -1,8 +1,8 @@
 /*----------------------------------------------------------------------------------
 *
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is not part of Markus.
 -------------------------------------------------------------------------------------*/
 
@@ -68,8 +68,8 @@ void ClassifyEvents::PushEvent()
 {
 	if(true)// if(m_eventToValidate.IsRaised())
 	{
-		m_events.push_back(m_eventIn);	
-		m_images.push_back(m_imageIn);	
+		m_events.push_back(m_eventIn);
+		m_images.push_back(m_imageIn);
 		m_eventToValidate = m_eventIn;
 		m_imageIn.copyTo(m_imageToValidate);
 	}

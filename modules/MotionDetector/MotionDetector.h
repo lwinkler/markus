@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -37,7 +37,7 @@ class MotionDetector : public Module
 public:
 	class Parameters : public Module::Parameters
 	{
-		
+
 	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
@@ -47,7 +47,7 @@ public:
 			RefParameterByName("height").SetRange("[24:4800]");
 			Init();
 		}
-		
+
 		float motionThres;
 	};
 
@@ -55,7 +55,7 @@ public:
 	~MotionDetector(void);
 	MKCLASS("MotionDetector")
 	MKDESCR("Detect motion from an image where pixel value represents motion")
-	
+
 	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void ProcessFrame();
 	void Reset();

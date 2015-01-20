@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -29,9 +29,9 @@ using namespace cv;
 
 log4cxx::LoggerPtr UsbCam::m_logger(log4cxx::Logger::getLogger("UsbCam"));
 
-UsbCam::UsbCam(const ConfigReader& x_configReader): 
+UsbCam::UsbCam(const ConfigReader& x_configReader):
 	Input(x_configReader),
- 	m_param(x_configReader),
+	m_param(x_configReader),
 	m_output(Size(m_param.width, m_param.height), m_param.type)  // Note: sizes will be overridden !
 {
 	// m_timeStamp = TIME_STAMP_INITIAL;
@@ -52,7 +52,7 @@ void UsbCam::Reset()
 
 	if(m_logger->isDebugEnabled())
 		GetProperties();
-	
+
 	if(! m_capture.isOpened())
 	{
 		throw MkException("Cannot open USB or local camera: check the value of the num parameter", LOC);
@@ -61,7 +61,7 @@ void UsbCam::Reset()
 	// Apparently you cannot set width and height. We try anyway
 	// m_capture.set(CV_CAP_PROP_FRAME_WIDTH,  m_param.width);
 	//m_capture.set(CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
-	
+
 	// note on the next line: the image will be overloaded but the properties are used to set the input ratio, the type is probably ignored
 	// m_output = Mat(Size(m_capture.get(CV_CAP_PROP_FRAME_WIDTH), m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)), m_param.type);
 
@@ -88,7 +88,7 @@ void UsbCam::Capture()
 		if(m_param.fps == 0 || (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps > 1000)
 			break;
 	}
-	
+
 	// cout<<"UsbCam capture image "<<m_output->cols<<"x"<<m_output->rows<<" time stamp "<<m_capture.get(CV_CAP_PROP_POS_MSEC) / 1000.0<< endl;
 
 	// time_t rawtime;
@@ -100,15 +100,15 @@ void UsbCam::Capture()
 void UsbCam::GetProperties()
 {
 	LOG_DEBUG(m_logger, "FRAME_WIDTH "<<m_capture.get(CV_CAP_PROP_FRAME_WIDTH)
-		<<" FRAME_HEIGHT "<<m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)
-		<<" MODE "<<m_capture.get(CV_CAP_PROP_MODE)
-		<<" BRIGHTNESS "<<m_capture.get(CV_CAP_PROP_BRIGHTNESS)
-		<<" CONTRAST "<<m_capture.get(CV_CAP_PROP_CONTRAST)
-		<<" SATURATION "<<m_capture.get(CV_CAP_PROP_SATURATION)
-		<<" HUE "<<m_capture.get(CV_CAP_PROP_HUE)
-		<<" GAIN "<<m_capture.get(CV_CAP_PROP_GAIN)
-		<<" EXPOSURE "<<m_capture.get(CV_CAP_PROP_EXPOSURE)
-		<<" CONVERT_RGB "<<m_capture.get(CV_CAP_PROP_CONVERT_RGB)
-	// 	<<" WHITE_BALANCE"<<m_capture.get(CV_CAP_PROP_WHITE_BALANCE)
-		<<" RECTIFICATION"<<m_capture.get(CV_CAP_PROP_RECTIFICATION));
+			  <<" FRAME_HEIGHT "<<m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)
+			  <<" MODE "<<m_capture.get(CV_CAP_PROP_MODE)
+			  <<" BRIGHTNESS "<<m_capture.get(CV_CAP_PROP_BRIGHTNESS)
+			  <<" CONTRAST "<<m_capture.get(CV_CAP_PROP_CONTRAST)
+			  <<" SATURATION "<<m_capture.get(CV_CAP_PROP_SATURATION)
+			  <<" HUE "<<m_capture.get(CV_CAP_PROP_HUE)
+			  <<" GAIN "<<m_capture.get(CV_CAP_PROP_GAIN)
+			  <<" EXPOSURE "<<m_capture.get(CV_CAP_PROP_EXPOSURE)
+			  <<" CONVERT_RGB "<<m_capture.get(CV_CAP_PROP_CONVERT_RGB)
+			  // 	<<" WHITE_BALANCE"<<m_capture.get(CV_CAP_PROP_WHITE_BALANCE)
+			  <<" RECTIFICATION"<<m_capture.get(CV_CAP_PROP_RECTIFICATION));
 }

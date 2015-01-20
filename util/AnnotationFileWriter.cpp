@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -54,7 +54,7 @@ void AnnotationFileWriter::Open(const string& x_file)
 	if(m_file.is_open())
 		m_file.close();
 	m_file.open(x_file.c_str(), ios_base::app);
-	
+
 	if(! m_file.is_open())
 	{
 		throw MkException("Error : AnnotationFileWriter cannot open file : " + x_file, LOC);

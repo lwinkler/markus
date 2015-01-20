@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -31,8 +31,8 @@ using namespace cv;
 
 log4cxx::LoggerPtr EventToObjects::m_logger(log4cxx::Logger::getLogger("EventToObjects"));
 
-EventToObjects::EventToObjects(const ConfigReader& x_configReader) 
-	 : Module(x_configReader), m_param(x_configReader)
+EventToObjects::EventToObjects(const ConfigReader& x_configReader)
+	: Module(x_configReader), m_param(x_configReader)
 {
 	AddInputStream(0, new StreamEvent("event", m_event, *this, "Input event"));
 

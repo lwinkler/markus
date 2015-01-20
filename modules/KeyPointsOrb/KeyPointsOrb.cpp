@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
  *
  *    MARKUS : a manager for video analysis modules
- * 
+ *
  *    author : Laurent Winkler and Florian Rossier <florian.rossier@gmail.com>
- * 
- * 
+ *
+ *
  *    This file is part of Markus.
  *
  *    Markus is free software: you can redistribute it and/or modify
@@ -49,7 +49,7 @@ void KeyPointsOrb::Reset()
 {
 	ModuleKeyPoints::Reset();
 	CLEAN_DELETE(mp_detector);
-        mp_detector = new ORB(
+	mp_detector = new ORB(
 		m_param.nbFeatures,
 		m_param.scaleFactor,
 		m_param.nbLevels,
@@ -58,7 +58,7 @@ void KeyPointsOrb::Reset()
 		m_param.wta_k,
 		ORB::HARRIS_SCORE,
 		m_param.edgeThreshold // Note: the 2 params should be roughly equivalent according to the doc
-        );
+	);
 	if(mp_detector == NULL && mp_detector->empty())
 		throw MkException("Cannot create detector", LOC);
 }

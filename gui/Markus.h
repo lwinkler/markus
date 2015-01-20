@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -45,7 +45,7 @@ class QModuleTimer;
 */
 class MarkusWindow : public QMainWindow, public Configurable
 {
-Q_OBJECT
+	Q_OBJECT
 public:
 	class Parameters : public ParameterStructure
 	{
@@ -64,30 +64,30 @@ public:
 	};
 
 	MarkusWindow(ConfigReader& rx_configReader, Manager& rx_manager);
-        void UpdateConfig();
+	void UpdateConfig();
 private:
 	// ConfigReader& m_configReader;
 	Parameters m_param;
-        inline const Parameters& GetParameters() const{return m_param;}
-        inline Parameters& RefParameters() {return m_param;}
+	inline const Parameters& GetParameters() const {return m_param;}
+	inline Parameters& RefParameters() {return m_param;}
 
 	Manager& m_manager;
-	
+
 	//std::vector<QModuleTimer *> m_moduleTimer;
-	
+
 	bool notify(QObject *receiver_, QEvent *event_);
 	void timerEvent(QTimerEvent*);
 	void resizeEvent(QResizeEvent*);
-	
+
 	void createActionsAndMenus();
-	
+
 	QLabel *createLabel(const QString &text);
-	
+
 	QWidget m_mainWidget;
 	QGridLayout m_mainLayout;
 	std::vector<QModuleViewer *> m_moduleViewer;
-	
-	
+
+
 private slots:
 	void about();
 	void viewDisplayOptions(bool x_isChecked);

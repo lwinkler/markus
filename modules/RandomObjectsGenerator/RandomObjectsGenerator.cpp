@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@ using namespace cv;
 
 log4cxx::LoggerPtr RandomObjectsGenerator::m_logger(log4cxx::Logger::getLogger("RandomObjectsGenerator"));
 
-RandomObjectsGenerator::RandomObjectsGenerator(const ConfigReader& x_configReader): 
+RandomObjectsGenerator::RandomObjectsGenerator(const ConfigReader& x_configReader):
 	Input(x_configReader),
 	m_param(x_configReader)
 {
@@ -74,7 +74,7 @@ void RandomObjectsGenerator::Capture()
 	// Wait to act consistently with other inputs
 	if(m_realTime)
 		usleep(1000000 / m_param.fps);
-	
+
 	const double diagonal = sqrt(m_param.width * m_param.width + m_param.height * m_param.height);
 	int i = rand_r(&m_seed) % 100;
 

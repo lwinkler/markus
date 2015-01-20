@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -43,7 +43,7 @@ Event::Event() :
 	m_externalInfo.clear();
 }
 
-Event::~Event(){}
+Event::~Event() {}
 
 /// Randomize the content of the event
 void Event::Randomize(unsigned int& xr_seed, const string& x_requirement, const Size& x_size)
@@ -60,7 +60,7 @@ void Event::Randomize(unsigned int& xr_seed, const string& x_requirement, const 
 		{
 			Object obj("random");
 			obj.Randomize(xr_seed, x_requirement, x_size);
-			Raise("random", obj); 
+			Raise("random", obj);
 		}
 	}
 }
@@ -183,7 +183,7 @@ void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 	LOG_DEBUG(m_logger, "Notify event:" << *this);
 
 	// root["external"] = m_externalInfo;
-	
+
 	// export the event to our specific format
 	Json::Value out;
 	COPY_AND_CHECK(out["dateEvent"]          , root["dateEvent"]);

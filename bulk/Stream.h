@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -51,8 +51,8 @@ public:
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 	void Export(std::ostream& rx_os, int x_id, int x_indentation, bool x_isInput);
-	inline void LockModuleForRead(){mr_module.LockForRead();}
-	inline void UnLockModule(){mr_module.Unlock();}
+	inline void LockModuleForRead() {mr_module.LockForRead();}
+	inline void UnLockModule() {mr_module.Unlock();}
 	inline bool IsConnected() const {return m_connected != NULL;}
 	inline const Module& GetModule() const {return mr_module;}
 	inline Stream& GetConnected() const
@@ -71,9 +71,9 @@ public:
 		return m_connected->GetTimeStamp();
 	}
 	inline bool IsReady() const {return m_isReady;}
-	inline void SetAsReady(){m_isReady = true;}
-	inline const std::string& GetRequirement(){return m_requirement;}
-	inline void SetRequirement(const std::string& x_requirement){m_requirement = x_requirement;}
+	inline void SetAsReady() {m_isReady = true;}
+	inline const std::string& GetRequirement() {return m_requirement;}
+	inline void SetRequirement(const std::string& x_requirement) {m_requirement = x_requirement;}
 
 protected:
 	std::string m_name;
@@ -83,11 +83,11 @@ protected:
 	Module& mr_module;
 	std::string m_description;
 	TIME_STAMP m_timeStamp;
-	
+
 	Stream * m_connected;
 	bool m_isReady;
 	std::string m_requirement;
-	
+
 private:
 	DISABLE_COPY(Stream)
 };

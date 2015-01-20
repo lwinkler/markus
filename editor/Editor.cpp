@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -85,7 +85,7 @@ void Editor::adaptDom(bool x_loadOk)
 	QWebElementCollection elements = document.findAll("#downloadProject");
 
 	foreach (QWebElement element, elements)
-		element.setAttribute("disabled", "disabled");
+	element.setAttribute("disabled", "disabled");
 
 	// if a project is select load it
 	QString fileName(m_projectToLoad.c_str());
@@ -119,9 +119,9 @@ bool Editor::maybeSave()
 	{
 		QMessageBox::StandardButton ret;
 		ret = QMessageBox::warning(this, tr("Application"),
-				tr("The project has been modified.\n"
-					"Do you want to save your changes?"),
-				QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+								   tr("The project has been modified.\n"
+									  "Do you want to save your changes?"),
+								   QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
 		if (ret == QMessageBox::Save)
 			return save();
 		else if (ret == QMessageBox::Cancel)
@@ -160,9 +160,9 @@ bool Editor::saveProject(const QString& x_fileName)
 	if (!file.open(QFile::WriteOnly | QFile::Text))
 	{
 		QMessageBox::warning(this, tr("Application"),
-				tr("Cannot write file %1:\n%2.")
-				.arg(x_fileName)
-				.arg(file.errorString()));
+							 tr("Cannot write file %1:\n%2.")
+							 .arg(x_fileName)
+							 .arg(file.errorString()));
 		return false;
 	}
 
@@ -203,8 +203,8 @@ void Editor::updateModules()
 void Editor::about()
 {
 	QMessageBox::about(this, tr("About Markus editor"),
-				    tr("<p>The <b>Markus</b> editor  "
-				    "<p><b>Author : Laurent Winkler </b></p>"));
+					   tr("<p>The <b>Markus</b> editor  "
+						  "<p><b>Author : Laurent Winkler </b></p>"));
 }
 
 /// Create actions
@@ -234,8 +234,8 @@ void Editor::CreateMenus()
 	fileMenu->addSeparator();
 	fileMenu->addAction(updateProjectsAct);
 	fileMenu->addAction(updateModulesAct);
-	
-	
+
+
 	viewMenu = new QMenu(tr("&View"), this);
 	// viewMenu->addAction(viewDisplayOptionsAct);
 	// viewMenu->addAction(view1x1Act);
@@ -245,10 +245,10 @@ void Editor::CreateMenus()
 	// viewMenu->addAction(view3x3Act);
 	// viewMenu->addAction(view3x4Act);
 	// viewMenu->addAction(view4x4Act);
-	
+
 	helpMenu = new QMenu(tr("&Help"), this);
 	helpMenu->addAction(aboutAct);
-	
+
 	menuBar()->addMenu(fileMenu);
 	menuBar()->addMenu(viewMenu);
 	menuBar()->addMenu(helpMenu);

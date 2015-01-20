@@ -34,14 +34,14 @@ using namespace std;
 log4cxx::LoggerPtr CompareVideo::m_logger(log4cxx::Logger::getLogger("CompareVideo"));
 
 CompareVideo::CompareVideo(const ConfigReader &x_configReader) :
-		Module(x_configReader),
-		m_param(x_configReader),
-		m_video1(Size(m_param.width, m_param.height), m_param.type),
-		m_video2(Size(m_param.width, m_param.height), m_param.type)
+	Module(x_configReader),
+	m_param(x_configReader),
+	m_video1(Size(m_param.width, m_param.height), m_param.type),
+	m_video2(Size(m_param.width, m_param.height), m_param.type)
 #ifdef MARKUS_DEBUG_STREAMS
-		,
-		m_video1_out(Size(m_param.width, m_param.height), m_param.type),
-		m_video2_out(Size(m_param.width, m_param.height), m_param.type)
+	,
+	m_video1_out(Size(m_param.width, m_param.height), m_param.type),
+	m_video2_out(Size(m_param.width, m_param.height), m_param.type)
 #endif
 {
 
@@ -69,12 +69,12 @@ void CompareVideo::ProcessFrame()
 
 	/* Check size of images */
 	if(!(
-		m_video1.rows > 0 &&
-		m_video1.cols > 0 &&
-		m_video1.rows == m_video2.rows &&
-		m_video1.cols == m_video2.cols &&
-		m_video1.channels() == m_video2.channels()
-	))
+				m_video1.rows > 0 &&
+				m_video1.cols > 0 &&
+				m_video1.rows == m_video2.rows &&
+				m_video1.cols == m_video2.cols &&
+				m_video1.channels() == m_video2.channels()
+			))
 	{
 		LOG_ERROR(m_logger, "Incoming videos must have the same format");
 		return;

@@ -27,7 +27,7 @@ string writeDescription(const string& x_description, const string& x_position, c
 		const char * basename = strrchr(x_position.c_str(), '/');
 		if(basename == NULL)
 			description = x_description + " [" + x_position;
-		else 
+		else
 			description = x_description + " [" + (basename + 1);
 	}
 	if (x_function == "")
@@ -57,18 +57,18 @@ void fatal(const std::string& x_description, const std::string& x_position, cons
 
 
 MkException::MkException(const string& x_description, const string& x_position, const string& x_function)
-: m_description(writeDescription(x_description, x_position, x_function))
+	: m_description(writeDescription(x_description, x_position, x_function))
 {
 	m_code = MK_EXCEPTION_UNKNOWN;
 }
 
 MkException::MkException(MkExceptionCode x_code, const string& x_description, const string& x_position, const string& x_function)
-: m_description(writeDescription(x_description, x_position, x_function))
+	: m_description(writeDescription(x_description, x_position, x_function))
 {
 	m_code = x_code;
 }
 
-MkException::~MkException() throw(){
+MkException::~MkException() throw() {
 }
 
 
@@ -84,19 +84,19 @@ const char* MkException::what() const throw()
 
 
 
-EndOfStreamException::EndOfStreamException(const string& x_descr, const string& x_position, const string& x_function) : 
+EndOfStreamException::EndOfStreamException(const string& x_descr, const string& x_position, const string& x_function) :
 	MkException(MK_EXCEPTION_ENDOFSTREAM, "EndOfStreamException: " + x_descr, x_position, x_function)
 {}
 
-ParameterException::ParameterException(const string& x_descr, const string& x_position, const string& x_function) : 
+ParameterException::ParameterException(const string& x_descr, const string& x_position, const string& x_function) :
 	MkException(MK_EXCEPTION_PARAMETER, "ParameterException: " + x_descr, x_position, x_function)
 {}
 
-FeatureNotFoundException::FeatureNotFoundException(const string& x_descr, const string& x_position, const string& x_function) : 
+FeatureNotFoundException::FeatureNotFoundException(const string& x_descr, const string& x_position, const string& x_function) :
 	MkException(MK_EXCEPTION_FEAT_NOT_FOUND, "FeatureNotFoundException: " + x_descr, x_position, x_function)
 {}
 
-WebServiceException::WebServiceException(const string& x_descr, const string& x_position, const string& x_function) : 
+WebServiceException::WebServiceException(const string& x_descr, const string& x_position, const string& x_function) :
 	MkException(MK_EXCEPTION_WEBSERVICE, "WebServiceException: " + x_descr, x_position, x_function)
 {}
 

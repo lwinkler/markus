@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -34,15 +34,15 @@ std::vector<std::string> &split(const std::string &s, char delim, std::vector<st
 template<class T> class ParameterNum : public Parameter
 {
 public:
-	ParameterNum(const std::string& x_name, T x_default, T x_min, T x_max, T * xp_value, const std::string& x_description) : 
+	ParameterNum(const std::string& x_name, T x_default, T x_min, T x_max, T * xp_value, const std::string& x_description) :
 		Parameter(x_name, x_description),
 		m_default(x_default),
 		m_min(x_min),
 		m_max(x_max),
-		mr_value(*xp_value){}
+		mr_value(*xp_value) {}
 	inline std::string GetValueString() const {std::stringstream ss; ss<<mr_value; return ss.str();}
-	inline std::string GetDefaultString() const{std::stringstream ss; ss<<m_default; return ss.str();}
-	inline std::string GetRange() const{std::stringstream ss; ss<<"["<<m_min<<":"<<m_max<<"]"; return ss.str();}
+	inline std::string GetDefaultString() const {std::stringstream ss; ss<<m_default; return ss.str();}
+	inline std::string GetRange() const {std::stringstream ss; ss<<"["<<m_min<<":"<<m_max<<"]"; return ss.str();}
 	inline virtual void SetRange(const std::string& x_range)
 	{
 		std::vector<std::string> values;
@@ -59,14 +59,14 @@ public:
 		ss2>>m_max;
 	}
 	inline const ParameterType& GetType() const {return m_type;}
-	inline const std::string& GetTypeString() const{return m_typeStr;}
+	inline const std::string& GetTypeString() const {return m_typeStr;}
 	inline const T GetDefault() const {return m_default;}
 	inline const T GetMin() const {return m_min;}
-	inline const T GetMax() const{return m_max;}
-	
+	inline const T GetMax() const {return m_max;}
+
 	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
 	{
-		if(m_isLocked) 
+		if(m_isLocked)
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		std::istringstream istr(rx_value);
 		istr >> mr_value; // atof is sensible to locale format and may use , as a separator
@@ -74,18 +74,18 @@ public:
 	}
 	inline void SetValue(T x_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
 	{
-		if(m_isLocked) 
+		if(m_isLocked)
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		mr_value = x_value;
 		m_confSource = x_confType;
 	}
 	/*virtual void SetValue(const void * px_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
-	{	
+	{
 		mr_value = *static_cast<const T*>(px_value);
 		m_confSource = x_confType;
 	};*/
 	virtual void SetDefault(const std::string& rx_value)
-	{	
+	{
 		std::istringstream istr(rx_value);
 		istr >> m_default; // atof is sensible to locale format and may use , as a separator
 		m_confSource = PARAMCONF_DEF;
@@ -129,7 +129,7 @@ public:
 				rx_values.push_back(ss.str());
 			}
 		}
-		else 
+		else
 		{
 			// x_nbSamples values in range
 			double incr = static_cast<double>(max - min) / (x_nbSamples - 1);
@@ -144,13 +144,13 @@ public:
 		if(rx_values.empty())
 			throw MkException("Value array is empty, range= " + range, LOC);
 	}
-	virtual void Print(std::ostream& os) const 
+	virtual void Print(std::ostream& os) const
 	{
 		os<<m_name<<"="<<GetValue()<<" ["<<m_min<<":"<<m_max<<"] ("<<configType[m_confSource]<<"); ";
 	}
 	virtual void SetValueToDefault()
 	{
-		if(m_isLocked) 
+		if(m_isLocked)
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		mr_value = m_default;
 		m_confSource = PARAMCONF_DEF;
@@ -166,7 +166,7 @@ public:
 		tabs = std::string(x_indentation, '\t');
 		rx_os<<tabs<<"</param>"<<std::endl;
 	}
-	
+
 	T m_default;
 	T m_min;
 	T m_max;

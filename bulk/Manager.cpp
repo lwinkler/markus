@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -41,7 +41,7 @@ using namespace std;
 
 log4cxx::LoggerPtr Manager::m_logger(log4cxx::Logger::getLogger("Manager"));
 
-Manager::Manager(const ConfigReader& x_configReader) : 
+Manager::Manager(const ConfigReader& x_configReader) :
 	Processable(x_configReader),
 	m_param(m_configReader),
 	mr_moduleFactory(Factories::modulesFactory()),
@@ -53,18 +53,18 @@ Manager::Manager(const ConfigReader& x_configReader) :
 	m_continueFlag = true;
 	m_hasRecovered = true;
 	m_timerProcessing = 0;
-	
+
 	m_inputs.clear();
 	m_modules.clear();
 
 	for(auto moduleConfig : m_configReader.FindAll("module", true))
 	{
 		// Read parameters
-		if(moduleConfig.Find("parameters", true).IsEmpty()) 
+		if(moduleConfig.Find("parameters", true).IsEmpty())
 			throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name"), LOC);
 		string moduleType = moduleConfig.Find("parameters>param[name=\"class\"]").GetValue();
-		Module * tmp1 = mr_moduleFactory.Create(moduleType, moduleConfig);		
-		
+		Module * tmp1 = mr_moduleFactory.Create(moduleType, moduleConfig);
+
 		// Add to inputs if an input
 		m_modules.push_back(tmp1);
 		if(tmp1->IsInput())
@@ -93,7 +93,7 @@ Manager::~Manager()
 			}
 			catch(...)
 			{
-				LOG_WARN(m_logger, "Error at the copy of markus.log");	
+				LOG_WARN(m_logger, "Error at the copy of markus.log");
 			}
 		}
 
@@ -108,7 +108,7 @@ Manager::~Manager()
 					SYSTEM("mkdir -p " + m_param.archiveDir);
 					SYSTEM("mv " + outputDir + " " + m_param.archiveDir + "/");
 				}
-				else 
+				else
 				{
 					LOG_INFO(m_logger, "Working directory deleted");
 					SYSTEM("rm -rf " + outputDir);
@@ -141,7 +141,7 @@ void Manager::Connect()
 	Processable::Reset();
 	if(m_isConnected)
 		throw MkException("Manager can only connect modules once", LOC);
-	
+
 	// Connect input and output streams (re-read the config once since we need all modules to be connected)
 	for(auto moduleConfig : m_configReader.FindAll("module"))
 	{
@@ -215,11 +215,11 @@ void Manager::Connect()
 	// If centralized reorder the module list
 	if(centralized)
 		m_modules = newOrder;
-	
+
 	if(! ready)
 		throw MkException("Not all modules can be assigned to a master. There is probably a problem with the connections between modules.", LOC);
-	
-	m_isConnected = true;	
+
+	m_isConnected = true;
 }
 
 /**
@@ -275,7 +275,7 @@ bool Manager::Process()
 	}
 	Timer ti;
 	bool recover = true;
-	
+
 	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
 	{
 		try
@@ -293,7 +293,7 @@ bool Manager::Process()
 				NotifyException(m_lastException);
 			}
 			recover = m_hasRecovered = false;
-				
+
 			LOG_INFO(m_logger, (*it)->GetName() << ": Exception raised (EndOfStream) : " << e.what());
 
 			// test if all inputs are over
@@ -360,7 +360,7 @@ bool Manager::Process()
 		}
 	}
 
-	// If a full processing cycle has been made without exception, 
+	// If a full processing cycle has been made without exception,
 	// we consider that the manager has recovered from exceptions
 	if(recover)
 		m_hasRecovered = true;
@@ -372,7 +372,7 @@ bool Manager::Process()
 	}
 	m_lock.unlock();
 	//if(m_frameCount % 20 == 0)
-		usleep(20); // This keeps the manager unlocked to allow the sending of commands // TODO find a cleaner way
+	usleep(20); // This keeps the manager unlocked to allow the sending of commands // TODO find a cleaner way
 
 	return m_continueFlag && (m_param.nbFrames == 0 || m_param.nbFrames != m_frameCount);
 }
@@ -461,8 +461,8 @@ void Manager::PrintStatistics()
 void Manager::Pause(bool x_pause)
 {
 	Processable::Pause(x_pause);
-	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)	
-		(*it)->Pause(x_pause);	
+	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
+		(*it)->Pause(x_pause);
 }
 
 /**
@@ -472,9 +472,9 @@ void Manager::Pause(bool x_pause)
 */
 void Manager::PauseInputs(bool x_pause)
 {
-	for(vector<Module*>::iterator it = m_inputs.begin() ; it != m_inputs.end() ; ++it)	
+	for(vector<Module*>::iterator it = m_inputs.begin() ; it != m_inputs.end() ; ++it)
 	{
-		(*it)->Pause(x_pause);	
+		(*it)->Pause(x_pause);
 	}
 }
 
@@ -533,7 +533,7 @@ Module& Manager::RefModuleById(int x_id) const
 	Module* module = NULL;
 	int found = 0;
 	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
-		if((*it)->GetId() == x_id) 
+		if((*it)->GetId() == x_id)
 		{
 			module = *it;
 			found++;
@@ -551,7 +551,7 @@ Module& Manager::RefModuleById(int x_id) const
 Module& Manager::RefModuleByName(const string& x_name) const
 {
 	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
-		if((*it)->GetName() == x_name) 
+		if((*it)->GetName() == x_name)
 			return **it;
 	throw MkException("Cannot find module " + x_name, LOC);
 	// return NULL;

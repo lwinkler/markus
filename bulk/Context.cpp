@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@
 
 using namespace std;
 
-Context::Context(const string& x_configFile, const string& x_applicationName, const string& x_outputDir) : 
+Context::Context(const string& x_configFile, const string& x_applicationName, const string& x_outputDir) :
 	m_isset(true),
 	m_applicationName (x_applicationName),
 	m_configFile (x_configFile)
@@ -130,9 +130,9 @@ string Context::Version(bool x_full)
 	stringstream ss;
 	if(x_full)
 		ss<<"Markus version "<<VERSION_STRING
-			<<", compiled with Opencv "<<CV_VERSION
-			<< ", vp-detection modules version "<<VERSION_STRING2
-			<< ", built on "<<VERSION_BUILD_HOST;
+		  <<", compiled with Opencv "<<CV_VERSION
+		  << ", vp-detection modules version "<<VERSION_STRING2
+		  << ", built on "<<VERSION_BUILD_HOST;
 	else
 		ss<<VERSION_STRING<<","<<VERSION_STRING2;
 

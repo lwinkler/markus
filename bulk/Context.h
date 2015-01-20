@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -33,23 +33,23 @@
 /// All informations that must be known by modules concerning application run-time
 class Context
 {
-	public:
-		Context() : m_isset(false){}
-		Context(const std::string& x_configFile, const std::string& x_applicationName, const std::string& x_outputDir);
-		Context &operator = (const Context &x_context);
-		static std::string Version(bool x_full);
-		inline const std::string& GetOutputDir() const {Check(); if(m_outputDir.empty())throw MkException("Output dir has not been created", LOC); return m_outputDir;}
-		inline const std::string& GetApplicationName() const {Check(); return m_applicationName;}
+public:
+	Context() : m_isset(false) {}
+	Context(const std::string& x_configFile, const std::string& x_applicationName, const std::string& x_outputDir);
+	Context &operator = (const Context &x_context);
+	static std::string Version(bool x_full);
+	inline const std::string& GetOutputDir() const {Check(); if(m_outputDir.empty())throw MkException("Output dir has not been created", LOC); return m_outputDir;}
+	inline const std::string& GetApplicationName() const {Check(); return m_applicationName;}
 
-	protected:
-		std::string CreateOutputDir(const std::string& x_outputDir = "");
-		inline void Check() const {if(!m_isset)throw MkException("Module and Manager context must be set after initialization (with SetContext)", LOC);}
-		std::string m_applicationName;
-		std::string m_outputDir;
-		std::string m_configFile;
-		bool m_isset;
+protected:
+	std::string CreateOutputDir(const std::string& x_outputDir = "");
+	inline void Check() const {if(!m_isset)throw MkException("Module and Manager context must be set after initialization (with SetContext)", LOC);}
+	std::string m_applicationName;
+	std::string m_outputDir;
+	std::string m_configFile;
+	bool m_isset;
 
-	private:
-		Context(const Context &);
+private:
+	Context(const Context &);
 };
 #endif

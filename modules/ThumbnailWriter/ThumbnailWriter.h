@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -38,7 +38,7 @@ class ThumbnailWriter : public Module
 public:
 	class Parameters : public Module::Parameters
 	{
-		public:
+	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
 			m_list.push_back(new ParameterString("folder"    , "thumbs" , &folder    , "Name of the folder to create with path. Use %{feature} to separate by feature"));
@@ -55,7 +55,7 @@ public:
 	~ThumbnailWriter();
 	MKCLASS("ThumbnailWriter")
 	MKDESCR("Write all objects as a collection of images (thumbnails)")
-	
+
 	inline virtual const Parameters& GetParameters() const {return m_param;}
 	virtual void ProcessFrame();
 	void Reset();

@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -54,8 +54,8 @@ class TestObject : public Serializable
 {
 public:
 	TestObject()
-	: m_obj("test object"),
-	  m_string("test_string")
+		: m_obj("test object"),
+		  m_string("test_string")
 	{
 		m_int    = 333;
 		m_float  = 55.1233234;
@@ -87,7 +87,7 @@ public:
 		ss << root["object"];
 		m_obj.Deserialize(ss, x_dir);
 	}
-	
+
 protected:
 	int m_int;
 	float m_float;
@@ -102,11 +102,11 @@ protected:
 class SerializableTestSuite : public CxxTest::TestSuite
 {
 public:
-	SerializableTestSuite() 
-	 : mp_fakeInput(NULL),
-	 m_factoryModules(Factories::modulesFactory()),
-	 m_factoryFeatures(Factories::featuresFactory()),
-	 mp_config(NULL){}
+	SerializableTestSuite()
+		: mp_fakeInput(NULL),
+		  m_factoryModules(Factories::modulesFactory()),
+		  m_factoryFeatures(Factories::featuresFactory()),
+		  mp_config(NULL) {}
 
 protected:
 	const FactoryModules& m_factoryModules;
@@ -262,12 +262,12 @@ public:
 		CalibrationByHeight calib2(0.33, 0.6, 0.25);
 		testSerialization(calib2, "CalibrationByHeight2");
 	}
-		
+
 	void testCalibrationByModel()
 	{
 		CalibrationByModel calibModel1;
 		testSerialization(calibModel1,"CalibrationByModel1");
-		
+
 		CalibrationByModel calibModel2(2404.2260764154521, -1.2035892526534258, 137.47118203741616,240.0, 480 , 640);
 		testSerialization(calibModel2,"CalibrationByModel2");
 	}

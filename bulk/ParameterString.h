@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -31,26 +31,26 @@
 class ParameterString : public Parameter
 {
 public:
-	ParameterString(const std::string& x_name, std::string x_default, std::string* xp_value, const std::string& x_description) : 
+	ParameterString(const std::string& x_name, std::string x_default, std::string* xp_value, const std::string& x_description) :
 		Parameter(x_name, x_description),
 		m_default(x_default),
-		mr_value(*xp_value){}
+		mr_value(*xp_value) {}
 	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/)
 	{
-		if(m_isLocked) 
+		if(m_isLocked)
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		mr_value = rx_value;
 		m_confSource = x_confType;
 	}
 	virtual void SetDefault(const std::string& x_value)
-	{	
+	{
 		m_default = x_value;
 	}
-	inline const std::string& GetValue() const{return mr_value;}
+	inline const std::string& GetValue() const {return mr_value;}
 	inline virtual std::string GetValueString() const {return mr_value;}
 	inline virtual std::string GetDefaultString() const {return m_default;}
-	inline virtual std::string GetRange() const{return "";}
-	inline virtual void SetRange(const std::string& x_range){}
+	inline virtual std::string GetRange() const {return "";}
+	inline virtual void SetRange(const std::string& x_range) {}
 	inline virtual bool CheckRange() const
 	{
 		return true;
@@ -58,7 +58,7 @@ public:
 	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const;
 	virtual void SetValueToDefault()
 	{
-		if(m_isLocked) 
+		if(m_isLocked)
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		mr_value = m_default;
 		m_confSource = PARAMCONF_DEF;
@@ -67,7 +67,7 @@ public:
 	inline const ParameterType& GetType() const {const static ParameterType s = PARAM_STR; return s;}
 	inline const std::string& GetTypeString() const {const static std::string s = "string"; return s;}
 
-	inline const std::string& GetDefault(){return m_default;}
+	inline const std::string& GetDefault() {return m_default;}
 private:
 	std::string m_default;
 	std::string& mr_value;

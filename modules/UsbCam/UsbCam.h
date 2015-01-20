@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -39,8 +39,8 @@ public:
 	class Parameters : public Input::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : 
-		Input::Parameters(x_confReader)
+		Parameters(const ConfigReader& x_confReader) :
+			Input::Parameters(x_confReader)
 		{
 			m_list.push_back(new ParameterInt("num", 	-1, 	-1, 	2,	&num,	"Number of the USB camera (usually 0 or 1)"));
 			Init();
@@ -54,11 +54,11 @@ public:
 	~UsbCam();
 	MKCLASS("UsbCam")
 	MKDESCR("Read video stream from an enbedded or USB camera")
-	
+
 	inline virtual const Parameters& GetParameters() const {return m_param;}
 	void Capture();
 	virtual void Reset();
-	const std::string& GetName(){return m_name;}
+	const std::string& GetName() {return m_name;}
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}

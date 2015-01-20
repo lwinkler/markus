@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -59,11 +59,11 @@ public:
 		m_minSide 	= x_minSide;
 		m_scaleFactor 	= x_scaleFactor;
 	}
-	
+
 	virtual void run();
-	
+
 	cv::CascadeClassifier m_cascade;
-	const std::vector<cv::Rect>& GetDetectedObjects() const{ return m_detected;}
+	const std::vector<cv::Rect>& GetDetectedObjects() const { return m_detected;}
 	long long m_timerThread;
 
 protected:
@@ -71,7 +71,7 @@ protected:
 	cv::Mat m_smallImg;
 	int m_minNeighbors;
 	int m_minSide;
-	
+
 	std::vector<cv::Rect> m_detected;
 };
 
@@ -83,19 +83,19 @@ class CascadeDetector : public ModuleAsync
 public:
 	class Parameters : public ModuleAsync::Parameters
 	{
-		
+
 	public:
-		Parameters(const ConfigReader& x_confReader) : 
+		Parameters(const ConfigReader& x_confReader) :
 			ModuleAsync::Parameters(x_confReader)
 		{
 			m_list.push_back(new ParameterInt("min_neighbors", 2, 1, 100, 	&minNeighbors,	"Minimum numbers of neighbors (higher: less sensitive)")); // Note : Seems to be a bug with minNeighbors = 1 with most filters
 			m_list.push_back(new ParameterInt("min_side", 0, 0, 200, 		&minSide,	"Minimum size of the detected object"));
 			m_list.push_back(new ParameterFloat("scale_factor", 1.2, 1, 2, 	&scaleFactor,	"Scale factor for scanning (higher: less sensitive)"));
 			m_list.push_back(new ParameterString("filter_file", "modules/CascadeDetector/lbpcascade_frontalface.xml",  &filterFile,
-															"File with filter data of the detected object"));
+												 "File with filter data of the detected object"));
 			// m_list.push_back(new ParameterString("color", "(255,255,255)",		&color,	"Color to draw the output"));
 			m_list.push_back(new ParameterString("object_label", "casc", 			&objectLabel,	"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
-			
+
 			RefParameterByName("type").SetRange("[CV_8UC1]");
 			RefParameterByName("type").SetDefault("CV_8UC1");
 			// Limit size to accelerate unit tests
@@ -104,7 +104,7 @@ public:
 
 			Init();
 		}
-		
+
 		int minNeighbors;
 		int minSide;
 		float scaleFactor;
@@ -116,7 +116,7 @@ public:
 	~CascadeDetector(void);
 	MKCLASS("CascadeDetector")
 	MKDESCR("Detect objects from a video stream using a cascade filter (c.f. Haar patterns)")
-	
+
 	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void LaunchThread();
 	virtual void NormalProcess();
@@ -140,10 +140,10 @@ protected:
 #ifdef MARKUS_DEBUG_STREAMS
 	cv::Mat m_debug;
 #endif
-	
+
 	// thread
 	DetectionThread m_thread;
-	virtual const QThread & GetRefThread(){return m_thread;}
+	virtual const QThread & GetRefThread() {return m_thread;}
 };
 
 #endif

@@ -8,7 +8,7 @@
 #define S1(x) #x
 #define S2(x) S1(x)
 // note: the next lines defines 2 parameters separated with a comma
-#define LOC __FILE__ ":" S2(__LINE__), __FUNCTION__ 
+#define LOC __FILE__ ":" S2(__LINE__), __FUNCTION__
 #define POSITION __FILE__ ":" S2(__LINE__)
 
 void fatal(const std::string& x_description, const std::string& x_position, const std::string& x_function);
@@ -31,25 +31,25 @@ enum MkExceptionCode
 	MK_EXCEPTION_WEBSERVICE       = 1015,
 
 	// last code since unix can only return codes from 0 to 126
-	MK_EXCEPTION_LAST        = 1126  
+	MK_EXCEPTION_LAST        = 1126
 };
 
 /**
 * @brief Exception class
 */
 class MkException : public std::exception, public Serializable {
-	public:
-		MkException(const std::string& x_description, const std::string& x_position, const std::string& x_function);
-		MkException(MkExceptionCode x_code, const std::string& x_description, const std::string& x_position, const std::string& x_function);
-		~MkException() throw();
-		const char* what() const throw();
-		inline MkExceptionCode GetCode(){return m_code;}
-		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
-		virtual void Deserialize(std::istream& stream, const std::string& x_dir);
+public:
+	MkException(const std::string& x_description, const std::string& x_position, const std::string& x_function);
+	MkException(MkExceptionCode x_code, const std::string& x_description, const std::string& x_position, const std::string& x_function);
+	~MkException() throw();
+	const char* what() const throw();
+	inline MkExceptionCode GetCode() {return m_code;}
+	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
+	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 
-	protected:
-		std::string m_description;
-		MkExceptionCode m_code;
+protected:
+	std::string m_description;
+	MkExceptionCode m_code;
 };
 
 /*class ProcessingException : public MkException {
@@ -66,32 +66,32 @@ class FileNotFoundException : public MkException {
 * @brief Exception thrown when a video file ends
 */
 class EndOfStreamException : public MkException {
-	public:
-		EndOfStreamException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
+public:
+	EndOfStreamException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
 };
 
 /**
 * @brief Exception thrown when a parameter has an incorrect value
 */
 class ParameterException : public MkException {
-	public:
-		ParameterException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
+public:
+	ParameterException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
 };
 
 /**
 * @brief Exception thrown when a feature is not found in Object
 */
 class FeatureNotFoundException : public MkException {
-	public:
-		FeatureNotFoundException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
+public:
+	FeatureNotFoundException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
 };
 
 /**
 * @brief Exception thrown by a web service
 */
 class WebServiceException : public MkException {
-	public:
-		WebServiceException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
+public:
+	WebServiceException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
 };
 
 #endif

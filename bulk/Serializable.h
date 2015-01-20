@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -31,8 +31,8 @@
 class Serializable
 {
 public:
-	Serializable(){}
-	virtual ~Serializable(){}
+	Serializable() {}
+	virtual ~Serializable() {}
 
 	/**
 	* @brief Serialize the stream content to JSON
@@ -59,7 +59,7 @@ public:
 	*
 	* @return output stream
 	*/
-	inline friend std::ostream& operator<< (std::ostream& x_out, const Serializable& x_obj){x_obj.Serialize(x_out, ""); return x_out;}
+	inline friend std::ostream& operator<< (std::ostream& x_out, const Serializable& x_obj) {x_obj.Serialize(x_out, ""); return x_out;}
 
 	/**
 	* @brief Redefinition of the input stream operator <<
@@ -69,7 +69,7 @@ public:
 	*
 	* @return input stream
 	*/
-	inline friend std::istream& operator>> (std::istream& x_in, Serializable& x_obj){x_obj.Deserialize(x_in, ""); return x_in;}
+	inline friend std::istream& operator>> (std::istream& x_in, Serializable& x_obj) {x_obj.Deserialize(x_in, ""); return x_in;}
 
 	/**
 	* @brief Extract the signature (name of all subfields)

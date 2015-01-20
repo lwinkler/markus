@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -36,13 +36,13 @@ class QGroupBox;
 class QHBoxLayout;
 
 /// QT widget to display one controller
-class QControlBoard : public QWidget 
+class QControlBoard : public QWidget
 {
 	Q_OBJECT
 public:
 	QControlBoard(Module& x_module, QWidget *parent = 0);
 	~QControlBoard();
-	virtual void Destroy(){}
+	virtual void Destroy() {}
 	void updateControl(Controller* x_control);
 
 protected:

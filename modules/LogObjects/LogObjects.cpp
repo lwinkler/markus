@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -36,8 +36,8 @@ using namespace cv;
 
 log4cxx::LoggerPtr LogObjects::m_logger(log4cxx::Logger::getLogger("LogObjects"));
 
-LogObjects::LogObjects(const ConfigReader& x_configReader) 
-	 : Module(x_configReader), m_param(x_configReader)
+LogObjects::LogObjects(const ConfigReader& x_configReader)
+	: Module(x_configReader), m_param(x_configReader)
 {
 	// Init input streams
 	AddInputStream(0, new StreamObject("input",      m_objectsIn, *this,     "Incoming objects"));
@@ -52,13 +52,13 @@ LogObjects::~LogObjects(void)
 void LogObjects::Reset()
 {
 	Module::Reset();
-	
+
 	string srtFileName = m_context.GetOutputDir() + "/" + m_param.file;
 	CLEAN_DELETE(mp_annotationWriter);
 	mp_annotationWriter = new AnnotationFileWriter();
 	mp_annotationWriter->Open(srtFileName);
 
-	// m_folder  = m_context.GetOutputDir() + "/" + m_param.folder + "/"; 
+	// m_folder  = m_context.GetOutputDir() + "/" + m_param.folder + "/";
 	// SYSTEM("mkdir -p " + m_folder);
 	// m_outputFile<<"time"<<SEP<<"object"<<SEP<<"feature"<<SEP<<"value"<<SEP<<"mean"<<SEP<<"sqVariance"<<SEP<<"initial"<<SEP<<"min"<<SEP<<"max"<<SEP<<"nbSamples"<<endl;
 }

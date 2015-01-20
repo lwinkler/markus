@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -82,16 +82,16 @@ Template& Template::operator = (const Template& t)
 
 Template::~Template()
 {
-	
+
 }
 
 /**
-* @brief Compare a candidate object with the template 
+* @brief Compare a candidate object with the template
 *
 * @param x_obj      Object for comparison
 * @param x_features Vector of features to compare
 *
-* @return 
+* @return
 */
 double Template::CompareWithObject(const Object& x_obj, const vector<string>& x_features) const
 {
@@ -100,13 +100,13 @@ double Template::CompareWithObject(const Object& x_obj, const vector<string>& x_
 	//assert(m_feats.size() >= x_obj.GetFeatures().size());
 	if(m_feats.empty())
 		throw MkException("Feature vector of Template cannot be empty", LOC);
-	
+
 	for (vector<string>::const_iterator it = x_features.begin() ; it != x_features.end() ; ++it)
 	{
 		const FeatureFloatInTime& f1(GetFeature(*it));
 		const FeatureFloat&       f2(dynamic_cast<const FeatureFloat &>(x_obj.GetFeature(*it)));
-		sum += POW2(f1.value - f2.value) 
-			/ POW2(f1.sqVariance);
+		sum += POW2(f1.value - f2.value)
+			   / POW2(f1.sqVariance);
 	}
 	return sqrt(sum) / x_features.size();
 }

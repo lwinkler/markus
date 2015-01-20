@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -39,17 +39,17 @@ using namespace cv;
 
 log4cxx::LoggerPtr CascadeDetector::m_logger(log4cxx::Logger::getLogger("CascadeDetector"));
 
-CascadeDetector::CascadeDetector(const ConfigReader& x_configReader) 
+CascadeDetector::CascadeDetector(const ConfigReader& x_configReader)
 	: ModuleAsync(x_configReader),
-	m_param(x_configReader),
-	m_input(Size(m_param.width, m_param.height), CV_8UC1),
-	m_lastInput(Size(m_param.width, m_param.height), m_param.type)
+	  m_param(x_configReader),
+	  m_input(Size(m_param.width, m_param.height), CV_8UC1),
+	  m_lastInput(Size(m_param.width, m_param.height), m_param.type)
 {
 	// Init output images
 	if(! m_thread.m_cascade.load( m_param.filterFile ) || m_thread.m_cascade.empty())
 		throw MkException("Impossible to load cascade filter " + m_param.filterFile, LOC);
 
-	AddInputStream(0, new StreamImage("input", m_input, *this, 		"Video input")); 
+	AddInputStream(0, new StreamImage("input", m_input, *this, 		"Video input"));
 
 	AddOutputStream(0, new StreamObject("detected", m_detectedObjects, *this,	"Detected objects"));
 #ifdef MARKUS_DEBUG_STREAMS
@@ -74,7 +74,7 @@ void CascadeDetector::LaunchThread()
 	m_input.copyTo(m_lastInput);
 	Mat smallImg(m_lastInput);
 	equalizeHist( smallImg, smallImg );
-	
+
 	// Launch a new Thread
 	m_thread.SetData(smallImg, m_param.minNeighbors, m_param.minSide, m_param.scaleFactor);
 	m_thread.start();
@@ -90,7 +90,7 @@ void CascadeDetector::NormalProcess()
 	{
 		// Draw the rectangle in the input image
 		rectangle(m_debug, it->GetRect(), Scalar(255, 0, 23)/*colorFromStr(m_param.color)*/, 1, 8, 0 );
-        }
+	}
 #endif
 }
 

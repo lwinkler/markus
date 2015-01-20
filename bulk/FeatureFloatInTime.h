@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@ class FeatureFloatInTime : public FeatureFloat
 {
 public:
 	FeatureFloatInTime(const FeatureFloat& x_feat = FeatureFloat());
-	Feature* CreateCopy() const{return new FeatureFloatInTime(*this);}
+	Feature* CreateCopy() const {return new FeatureFloatInTime(*this);}
 	void Update(const Feature& x_feat, double x_alpha);
 	virtual double CompareSquared(const Feature& x_feature) const;
 	virtual void Randomize(unsigned int& xr_seed, const std::string& x_param);

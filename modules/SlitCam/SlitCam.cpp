@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -34,16 +34,16 @@ using namespace cv;
 log4cxx::LoggerPtr SlitCam::m_logger(log4cxx::Logger::getLogger("SlitCam"));
 
 SlitCam::SlitCam(const ConfigReader& x_configReader):
-	Module(x_configReader), 
+	Module(x_configReader),
 	m_param(x_configReader),
 	m_input(Size(m_param.width, m_param.height), m_param.type),
 	m_output(Size(m_param.width, m_param.height), m_param.type)
 {
 	m_position = 0;
-	
+
 	// Init output images
 	AddInputStream(0, new StreamImage("input", m_input, *this, 	"Video input"));
-	
+
 	AddOutputStream(0, new StreamImage("slit",  m_output, *this, 	"Slit camera stream"));
 }
 

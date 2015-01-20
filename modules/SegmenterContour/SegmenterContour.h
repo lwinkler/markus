@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -58,7 +58,7 @@ public:
 	~SegmenterContour();
 	MKCLASS("SegmenterContour")
 	MKDESCR("Segments a binary image and outputs a stream of objects (with OpenCV contour) and extracts their features (position, width and height)")
-	
+
 	inline virtual const Parameters& GetParameters() const {return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
@@ -69,7 +69,7 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
-	
+
 	// input
 	cv::Mat m_input;
 

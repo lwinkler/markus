@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -48,10 +48,10 @@ using namespace cv;
 using namespace std;
 
 // Constructor
-QModuleViewer::QModuleViewer(const Manager* x_manager, ConfigReader& x_configReader, QWidget *parent) : 
+QModuleViewer::QModuleViewer(const Manager* x_manager, ConfigReader& x_configReader, QWidget *parent) :
 	QWidget(parent),
 	Configurable(x_configReader),
- 	m_param(x_configReader)
+	m_param(x_configReader)
 {
 	m_img_tmp1              = NULL; // Allocated on first conversion
 	m_img_tmp2              = NULL;
@@ -62,7 +62,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, ConfigReader& x_configRea
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	m_outputWidth  = 0.8 * width();
 	m_outputHeight = 0.8 * height();
-	
+
 	// Handlers for modules
 	assert(x_manager != NULL);
 	if(x_manager->GetModules().size() == 0)
@@ -70,7 +70,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, ConfigReader& x_configRea
 	m_manager 		= x_manager;
 	m_currentModule 	= *x_manager->GetModules().begin();
 	m_currentStream 	= m_currentModule->GetOutputStreamList().begin()->second;
-		
+
 	mp_comboModules 	= new QComboBox();
 	mp_comboStreams 	= new QComboBox();
 	mp_mainLayout 		= new QBoxLayout(QBoxLayout::TopToBottom);
@@ -89,7 +89,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, ConfigReader& x_configRea
 	layoutCombos->addWidget(mp_comboModules, 0, 1);
 	if(m_param.module > 0 && m_param.module < mp_comboModules->count())
 		mp_comboModules->setCurrentIndex(m_param.module);
-	
+
 	QLabel* lab2 = new QLabel(tr("Out stream"));
 	layoutCombos->addWidget(lab2, 1, 0);
 	this->updateModuleNb(m_param.module);
@@ -98,26 +98,26 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, ConfigReader& x_configRea
 	// Create the group with combo menus
 	mp_gbCombos->setLayout(layoutCombos);
 	mp_gbCombos->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-	
+
 	// add widgets to main layout
 	mp_mainLayout->addWidget(mp_gbCombos, 0);
 	// mp_mainLayout->addWidget(mp_gbButtons, 1);
 	mp_mainLayout->addWidget(mp_widEmpty, 1); // this is only for alignment
-	
+
 	setPalette(QPalette(QColor(20, 20, 20)));
 	setAutoFillBackground(true);
 
 	//update();
 	m_image = QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
-	
+
 	// set layout to main
 	setLayout(mp_mainLayout);
-	
+
 	connect(mp_comboModules, SIGNAL(activated(int)), this, SLOT(updateModuleNb(int) ));
 	connect(mp_comboStreams, SIGNAL(activated(int)), this, SLOT(updateStreamNb(int)));
 }
 
-QModuleViewer::~QModuleViewer(void) 
+QModuleViewer::~QModuleViewer(void)
 {
 	CLEAN_DELETE(m_img_original);
 	CLEAN_DELETE(m_img_output);
@@ -136,33 +136,33 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 	{
 		// Keep proportionality
 		double ratio = static_cast<double>(m_currentStream->GetHeight()) / m_currentStream->GetWidth();
-	
+
 		m_outputWidth  = e->size().width();
 		m_outputHeight = e->size().height();
-	
+
 		if(m_outputHeight >= m_outputWidth * ratio)
 		{
 			m_outputHeight = m_outputWidth * ratio;
 			m_offsetX = 0;
 			m_offsetY = (e->size().height() - m_outputHeight) / 2;
 		}
-		else 
+		else
 		{
 			m_outputWidth = m_outputHeight / ratio;
 			m_offsetX = (e->size().width() - m_outputWidth) / 2;
 			m_offsetY = 0;
 		}
-	
+
 		m_image =  QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
 	}
-	
+
 	CLEAN_DELETE(m_img_output);
 	CLEAN_DELETE(m_img_original);
 	CLEAN_DELETE(m_img_tmp1);
 	CLEAN_DELETE(m_img_tmp2);
 }
 
-void QModuleViewer::paintEvent(QPaintEvent * e) 
+void QModuleViewer::paintEvent(QPaintEvent * e)
 {
 	if(m_currentStream != NULL)
 	{
@@ -172,15 +172,15 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 		m_img_original->setTo(0);
 		if(m_img_output == NULL)
 			m_img_output = new Mat( Size(m_outputWidth, m_outputHeight), CV_8UC3);
-		
+
 		m_currentModule->LockForRead();
 		m_currentStream->RenderTo(*m_img_original);
 		m_currentModule->Unlock();
-		
+
 		adjust(*m_img_original, *m_img_output, m_img_tmp1, m_img_tmp2);
 
 		ConvertMat2QImage(m_img_output, &m_image);
-		
+
 		QPainter painter(this);
 		painter.drawImage(QRect(m_offsetX, m_offsetY, m_image.width(), m_image.height()), m_image);
 	}
@@ -202,7 +202,7 @@ void QModuleViewer::updateModule(Module * x_module)
 	{
 		mp_comboStreams->addItem(it->second->GetName().c_str(), cpt++);
 	}
-	
+
 	// Update the stream
 	updateStreamNb(m_param.stream);
 	if(m_param.stream > 0 && m_param.stream < mp_comboStreams->count())
@@ -374,7 +374,7 @@ void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qimg)
 				g = data[x * channels + 1];
 				b = data[x * channels];
 			}
-			
+
 			if (channels == 4)
 			{
 				char a = data[x * channels + 3];

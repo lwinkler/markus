@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -105,7 +105,7 @@ void Stream::Deserialize(istream& x_in, const string& x_dir)
 
 	m_name = root["name"].asString();
 	// if(m_id   != root["id"].asInt())
-		// throw MkException("Stream must have the right id before serializing", LOC);
+	// throw MkException("Stream must have the right id before serializing", LOC);
 	// cout<<root["type"].asString()<<" != "<<GetType()<<endl;
 	if(root["type"].asString() != GetType())
 		throw MkException("Stream must have the right type before serializing", LOC);

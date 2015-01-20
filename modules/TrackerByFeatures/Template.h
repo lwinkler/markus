@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -35,36 +35,36 @@
 // TODO: Maybe inherit from object
 class Template
 {
-	public:
-		Template();
-		Template(const Object& x_obj, TIME_STAMP x_currentTimeStamp);
-		Template(const Template&);
-		Template& operator = (const Template&);
-		~Template();
-		
-		double CompareWithObject(const Object& x_reg, const std::vector<std::string>& x_features) const;
-		void UpdateFeatures(double x_alpha, TIME_STAMP m_currentTimeStamp);
-		bool NeedCleaning(TIME_STAMP x_cleaningTimeStamp);
-		
-		inline void AddFeature(std::string x_name, double x_value) {m_feats.insert(std::make_pair(x_name, FeatureFloatInTime(x_value)));}
-		inline const FeatureFloatInTime& GetFeature(const std::string& x_name) const
-		{
-			std::map <std::string, FeatureFloatInTime>::const_iterator it = m_feats.find(x_name);
-			if(it == m_feats.end())
-				throw MkException("Feature is non-existant", LOC);
-			return it->second;
-		}
-		inline void SetFeatures(const std::map <std::string, FeatureFloatInTime>& x_feats) {m_feats = x_feats;}
-		inline const std::map <std::string, FeatureFloatInTime>& GetFeatures() const{ return m_feats;}
-		// inline const std::list <Object>& GetMatchingObjects() const{ return m_matchingObjects;}
-		inline int GetNum() const {return m_num;}
-		
-		Object * m_lastMatchingObject;
-		TIME_STAMP m_lastSeen;
+public:
+	Template();
+	Template(const Object& x_obj, TIME_STAMP x_currentTimeStamp);
+	Template(const Template&);
+	Template& operator = (const Template&);
+	~Template();
 
-	private:
-		static log4cxx::LoggerPtr m_logger;
-		int m_num;
-		static int m_counter; // Counter to attribute ids
-		std::map <std::string, FeatureFloatInTime> m_feats;
+	double CompareWithObject(const Object& x_reg, const std::vector<std::string>& x_features) const;
+	void UpdateFeatures(double x_alpha, TIME_STAMP m_currentTimeStamp);
+	bool NeedCleaning(TIME_STAMP x_cleaningTimeStamp);
+
+	inline void AddFeature(std::string x_name, double x_value) {m_feats.insert(std::make_pair(x_name, FeatureFloatInTime(x_value)));}
+	inline const FeatureFloatInTime& GetFeature(const std::string& x_name) const
+	{
+		std::map <std::string, FeatureFloatInTime>::const_iterator it = m_feats.find(x_name);
+		if(it == m_feats.end())
+			throw MkException("Feature is non-existant", LOC);
+		return it->second;
+	}
+	inline void SetFeatures(const std::map <std::string, FeatureFloatInTime>& x_feats) {m_feats = x_feats;}
+	inline const std::map <std::string, FeatureFloatInTime>& GetFeatures() const { return m_feats;}
+	// inline const std::list <Object>& GetMatchingObjects() const{ return m_matchingObjects;}
+	inline int GetNum() const {return m_num;}
+
+	Object * m_lastMatchingObject;
+	TIME_STAMP m_lastSeen;
+
+private:
+	static log4cxx::LoggerPtr m_logger;
+	int m_num;
+	static int m_counter; // Counter to attribute ids
+	std::map <std::string, FeatureFloatInTime> m_feats;
 };

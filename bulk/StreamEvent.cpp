@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -48,12 +48,12 @@ StreamEvent::~StreamEvent()
 void StreamEvent::ConvertInput()
 {
 	if(m_connected == NULL) return;
-	
+
 	// Copy time stamp to output
 	m_timeStamp = GetConnected().GetTimeStamp();
 
 	const StreamEvent * pstream = dynamic_cast<const StreamEvent*>(m_connected);
-	if(pstream == NULL) 
+	if(pstream == NULL)
 		throw MkException("Stream of event " + GetName() + " is not correctly connected", LOC);
 	m_event = pstream->GetEvent();
 

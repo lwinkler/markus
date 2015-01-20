@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -45,7 +45,7 @@ Module::Module(const ConfigReader& x_configReader) :
 {
 	m_id	= atoi(x_configReader.GetAttribute("id").c_str());
 	LOG_INFO(m_logger, "Create module " << m_name);
-	
+
 	m_timerConvertion      = 0;
 	m_timerProcessing      = 0;
 	m_timerWaiting         = 0;
@@ -108,36 +108,36 @@ void Module::Reset()
 		Controller* ctr = NULL;
 		switch((*it)->GetType())
 		{
-			case PARAM_BOOL:
-				ctr = new ControllerBool(*dynamic_cast<ParameterBool*>(*it));
-				break;
-			case PARAM_DOUBLE:
-				ctr = new ControllerDouble(*dynamic_cast<ParameterDouble*>(*it));
-				break;
-			case PARAM_FLOAT:
-				ctr = new ControllerFloat(*dynamic_cast<ParameterFloat*>(*it));
-				break;
-			case PARAM_IMAGE_TYPE:
-				ctr = new ControllerEnum(*dynamic_cast<ParameterEnum*>(*it)); 
-				break;
-			case PARAM_INT:
-				ctr = new ControllerInt(*dynamic_cast<ParameterInt*>(*it));
-				break;
-			case PARAM_SERIALIZABLE:
-				ctr = new ControllerSerializable(*dynamic_cast<ParameterSerializable*>(*it));
-				break;
-			case PARAM_OBJECT_HEIGHT:
-				// Note: This controls a CalibrationByHeight object. Althought it sees it as a ParameterSerializable, 
-				// it adds specific controls for x,y and height attributes
-				ctr = new ControllerCalibrationByHeight(*dynamic_cast<ParameterSerializable*>(*it));
-				break;
-			case PARAM_STR:
-				ctr = new ControllerString(*dynamic_cast<ParameterString*>(*it));
-				break;
+		case PARAM_BOOL:
+			ctr = new ControllerBool(*dynamic_cast<ParameterBool*>(*it));
+			break;
+		case PARAM_DOUBLE:
+			ctr = new ControllerDouble(*dynamic_cast<ParameterDouble*>(*it));
+			break;
+		case PARAM_FLOAT:
+			ctr = new ControllerFloat(*dynamic_cast<ParameterFloat*>(*it));
+			break;
+		case PARAM_IMAGE_TYPE:
+			ctr = new ControllerEnum(*dynamic_cast<ParameterEnum*>(*it));
+			break;
+		case PARAM_INT:
+			ctr = new ControllerInt(*dynamic_cast<ParameterInt*>(*it));
+			break;
+		case PARAM_SERIALIZABLE:
+			ctr = new ControllerSerializable(*dynamic_cast<ParameterSerializable*>(*it));
+			break;
+		case PARAM_OBJECT_HEIGHT:
+			// Note: This controls a CalibrationByHeight object. Althought it sees it as a ParameterSerializable,
+			// it adds specific controls for x,y and height attributes
+			ctr = new ControllerCalibrationByHeight(*dynamic_cast<ParameterSerializable*>(*it));
+			break;
+		case PARAM_STR:
+			ctr = new ControllerString(*dynamic_cast<ParameterString*>(*it));
+			break;
 			// case PARAM_GENERIC:
-				// ctr = new ControllerText(*dynamic_cast<Parameter*>(*it));
-			default:
-				assert(false);
+			// ctr = new ControllerText(*dynamic_cast<Parameter*>(*it));
+		default:
+			assert(false);
 		}
 		if(ctr == NULL)
 			throw MkException("Controller creation failed", LOC);
@@ -217,7 +217,7 @@ bool Module::Process()
 			throw MkException("Module must have at least one input or have parameter auto_process=true", LOC);
 
 		// TODO if(m_currentTimeStamp == m_lastTimeStamp)
-			// TODO LOG_WARN(m_logger, "Timestamp are not increasing correctly");
+		// TODO LOG_WARN(m_logger, "Timestamp are not increasing correctly");
 		if(param.autoProcess || (param.fps == 0 && m_currentTimeStamp != m_lastTimeStamp) || (m_currentTimeStamp - m_lastTimeStamp) * param.fps > 1000)
 		{
 			// Process this frame
@@ -314,7 +314,7 @@ void Module::Export(ostream& rx_os, int x_indentation)
 Stream& Module::RefInputStreamById(int x_id)
 {
 	//for(vector<Stream *>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; ++it)
-		//if((*it)->GetId() == x_id) return **it;
+	//if((*it)->GetId() == x_id) return **it;
 	map<int, Stream*>::iterator it = m_inputStreams.find(x_id);
 
 	if(it == m_inputStreams.end())
@@ -346,8 +346,8 @@ void Module::PrintStatistics(ConfigReader& xr_xmlResult) const
 {
 	double fps = (m_countProcessedFrames * 1000.0 / (m_timerProcessing + m_timerConvertion + m_timerWaiting));
 	LOG_INFO(m_logger, "Module "<<GetName()<<" : "<<m_countProcessedFrames<<" frames processed (tproc="<<
-		m_timerProcessing<<"ms, tconv="<<m_timerConvertion<<"ms, twait="<<
-		m_timerWaiting<<"ms), "<< fps <<" fps");
+			 m_timerProcessing<<"ms, tconv="<<m_timerConvertion<<"ms, twait="<<
+			 m_timerWaiting<<"ms), "<< fps <<" fps");
 
 	// Write perf to output XML
 	ConfigReader perfModule = xr_xmlResult.FindRef("module[name=\"" + GetName() + "\"]", true);
@@ -403,7 +403,7 @@ void Module::Serialize(ostream& x_out, const string& x_dir) const
 }
 
 /**
-* @brief Deserialize the module from JSON 
+* @brief Deserialize the module from JSON
 *
 * @param x_in  Input stream
 * @param x_dir Input dir (for images)
@@ -472,7 +472,7 @@ bool Module::AllInputsAreReady() const
 }
 
 /**
-* @brief Return a reference to the master module. The master module is the preceeding module that is 
+* @brief Return a reference to the master module. The master module is the preceeding module that is
  	 responsible for calling the process method. The first connected input determines what module is master.
 *
 * @return The master module
@@ -556,7 +556,7 @@ void Module::AddDebugStream(int x_id, Stream* xp_stream)
 */
 // TODO: Add an ifdef for unit tests
 void Module::ProcessRandomInput(unsigned int& xr_seed)
-{ 
+{
 	unsigned int lastseed = xr_seed;
 	for(map<int, Stream* >::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; ++it)
 	{

@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -35,12 +35,12 @@ FilterObjects::FilterObjects(const ConfigReader& x_configReader) :
 	Module(x_configReader),
 	m_param(x_configReader)
 {
-	AddInputStream(0, new StreamObject("input", 	m_objectsIn, *this,	"Incoming objects", 
-		"{\"features\":{"
-		"\"x\":{\"type\":\"FeatureFloatInTime\"},"
-		"\"y\":{\"type\":\"FeatureFloatInTime\"},"
-		"\"width\":{\"type\":\"FeatureFloat\"},"
-		"\"height\":{\"type\":\"FeatureFloat\"}}}"));
+	AddInputStream(0, new StreamObject("input", 	m_objectsIn, *this,	"Incoming objects",
+									   "{\"features\":{"
+									   "\"x\":{\"type\":\"FeatureFloatInTime\"},"
+									   "\"y\":{\"type\":\"FeatureFloatInTime\"},"
+									   "\"width\":{\"type\":\"FeatureFloat\"},"
+									   "\"height\":{\"type\":\"FeatureFloat\"}}}"));
 
 	AddOutputStream(0, new StreamObject("filtered",  m_objectsOut, *this,	"Filtered objects objects"));
 #ifdef MARKUS_DEBUG_STREAMS
@@ -81,9 +81,9 @@ void FilterObjects::ProcessFrame()
 		// const Feature& distance = it->GetFeatureByName("distance", featureNames);
 
 		if(	(m_param.minObjectWidth > 0 && width.value < m_param.minObjectWidth) ||
-			(m_param.maxObjectWidth < 1 && width.value > m_param.maxObjectWidth) ||
-			(m_param.minObjectHeight > 0 && height.value < m_param.minObjectHeight) ||
-			(m_param.maxObjectHeight < 1 && height.value > m_param.maxObjectHeight))
+				(m_param.maxObjectWidth < 1 && width.value > m_param.maxObjectWidth) ||
+				(m_param.minObjectHeight > 0 && height.value < m_param.minObjectHeight) ||
+				(m_param.maxObjectHeight < 1 && height.value > m_param.maxObjectHeight))
 		{
 			valid = false;
 		}
@@ -107,8 +107,8 @@ void FilterObjects::ProcessFrame()
 		if(m_param.minBorderDist > 0)
 		{
 			const double dist = m_param.minBorderDist * diagonal;
-			if(rect.x <= dist || rect.y <= dist 
-				|| m_param.width - rect.x - rect.width <= dist || m_param.height - rect.y - rect.height <= dist)
+			if(rect.x <= dist || rect.y <= dist
+					|| m_param.width - rect.x - rect.width <= dist || m_param.height - rect.y - rect.height <= dist)
 			{
 				valid = false;
 			}

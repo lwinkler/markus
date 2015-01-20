@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -40,7 +40,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : 
+		Parameters(const ConfigReader& x_confReader) :
 			Module::Parameters(x_confReader)
 		{
 			m_list.push_back(new ParameterString("file"        , "event.srt"  , &file      ,  "Name of the .srt file without extension"));

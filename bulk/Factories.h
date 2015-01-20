@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -38,7 +38,7 @@ class Factories
 {
 public:
 	inline static FactoryModules&  modulesFactory() {static FactoryModules factoryModules; return factoryModules;}
-	inline static FactoryFeatures& featuresFactory(){static FactoryFeatures factoryFeatures; return factoryFeatures;}
-	inline static FactoryFeatures& featuresFactoryBySignature(){static FactoryFeatures factoryFeatures; return factoryFeatures;}
+	inline static FactoryFeatures& featuresFactory() {static FactoryFeatures factoryFeatures; return factoryFeatures;}
+	inline static FactoryFeatures& featuresFactoryBySignature() {static FactoryFeatures factoryFeatures; return factoryFeatures;}
 };
 #endif

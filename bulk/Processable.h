@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -57,15 +57,15 @@ public:
 	};
 	Processable(const ConfigReader& x_confReader);
 	virtual ~Processable();
-	
+
 	virtual void Reset();
 	void Pause(bool x_pause);
 	virtual bool Process() = 0;
 	inline void AllowAutoProcess(bool x_proc) {m_allowAutoProcess = x_proc;}
 	inline void SetRealTime(bool x_realTime) {m_realTime  = x_realTime;}
-	inline virtual void SetContext(const Context& x_context){m_context = x_context;}
+	inline virtual void SetContext(const Context& x_context) {m_context = x_context;}
 	inline virtual const Context& GetContext() const {return m_context;}
-	
+
 protected:
 	virtual Parameters & RefParameters() = 0;
 

@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -63,9 +63,9 @@ public:
 		m_confSource(PARAMCONF_UNSET),
 		m_description(x_description),
 		m_isLocked(false),
-		m_isHidden(false){}
-	virtual ~Parameter(){}
-		
+		m_isHidden(false) {}
+	virtual ~Parameter() {}
+
 	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) = 0;
 	virtual void SetDefault(const std::string& x_value) = 0;
 	inline const std::string& GetName() const {return m_name;}
@@ -74,7 +74,7 @@ public:
 	inline const std::string& GetDescription() const {return m_description;}
 	inline const ParameterConfigType& GetConfigurationSource() const {return m_confSource;}
 	virtual void SetValueToDefault() = 0;
-	virtual void Print(std::ostream& os) const 
+	virtual void Print(std::ostream& os) const
 	{
 		os<<m_name<<"=\""<<GetValueString()<<"\" ("<<configType[m_confSource]<<"); ";
 	}
@@ -95,7 +95,7 @@ public:
 	virtual std::string GetRange() const = 0;
 	virtual void SetRange(const std::string& x_range) = 0;
 
-protected:	
+protected:
 	const std::string m_name;
 	ParameterConfigType m_confSource;
 	const std::string m_description;

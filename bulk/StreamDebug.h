@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@
 
 #include "Stream.h"
 
-/// This class represents a debug stream, a stream that is only used to help the user 
+/// This class represents a debug stream, a stream that is only used to help the user
 /// it can typically be used to show what is happening inside a detection module
 
 class StreamDebug : public Stream
@@ -40,10 +40,10 @@ public:
 	MKTYPE("Debug")
 
 	const cv::Mat& GetImage() const {return m_image;}
-	
+
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat& x_output) const;
-	virtual void Randomize(unsigned int& xr_seed){}
+	virtual void Randomize(unsigned int& xr_seed) {}
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 

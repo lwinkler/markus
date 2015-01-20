@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -74,17 +74,17 @@ public:
 	static void  ConvertMat2QImage(const cv::Mat *mat, QImage *qim);
 private:
 	QBoxLayout * mp_mainLayout;
-	
+
 	QImage m_image;
 	Module        * m_currentModule;
 	const Stream  * m_currentStream;
 	const Manager * m_manager;
-	
+
 	int m_outputWidth;
 	int m_outputHeight;
 	int m_offsetX;
 	int m_offsetY;
-	
+
 	void paintEvent(QPaintEvent *event);
 	virtual void resizeEvent(QResizeEvent * e);
 
@@ -101,8 +101,8 @@ private:
 
 	QControlBoard * m_controlBoard;
 	Parameters m_param;
-        inline const Parameters& GetParameters() const{return m_param;}
-        inline Parameters& RefParameters() {return m_param;}
+	inline const Parameters& GetParameters() const {return m_param;}
+	inline Parameters& RefParameters() {return m_param;}
 
 public slots:
 	void updateModuleNb(int x_index);

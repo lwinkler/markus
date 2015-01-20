@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -45,14 +45,14 @@ Object::Object(const string& x_name) :
 
 // note: we must use cv::Rect in this file since Rect() is a method
 Object::Object(const string& x_name, const cv::Rect& x_rect) :
-        m_name(x_name)
+	m_name(x_name)
 {
 	m_id     = -1;
 	SetRect(x_rect);
 }
 
 Object::Object(const Object & x_obj)
-: m_name(x_obj.GetName())
+	: m_name(x_obj.GetName())
 {
 	m_id = x_obj.GetId();
 	posX = x_obj.posX;
@@ -116,11 +116,11 @@ void Object::Deserialize(istream& x_in, const string& x_dir)
 
 	m_feats.clear();
 	Json::Value::Members members1 = root["features"].getMemberNames();
-		// TODO: JsonCpp has a bug for serializing floats !
+	// TODO: JsonCpp has a bug for serializing floats !
 
 	// Get an instance of the feature factory
 	const FactoryFeatures& factory(Factories::featuresFactoryBySignature());
-	
+
 	for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; ++it1)
 	{
 		// Extract the signature of the feature:
@@ -166,7 +166,7 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 		{
 			text<<" "<<dynamic_cast<const FeatureString&>(GetFeature("class")).value;
 		}
-		catch(FeatureNotFoundException &e){}
+		catch(FeatureNotFoundException &e) {}
 		pText.y -= 3;
 		putText(x_output, text.str(), pText,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
 	}
@@ -214,8 +214,8 @@ void Object::Intersect(const Mat& x_image)
 	Point tl = rect.tl();
 	Point br = rect.br();
 
-	if(tl.x < 0 || tl.y < 0 
-		|| br.x > x_image.cols - 1 || br.y > x_image.rows - 1)
+	if(tl.x < 0 || tl.y < 0
+			|| br.x > x_image.cols - 1 || br.y > x_image.rows - 1)
 	{
 		LOG_DEBUG(m_logger, "Correcting object " + GetName());
 
@@ -235,9 +235,9 @@ void Object::Intersect(const Mat& x_image)
 void Object::Randomize(unsigned int& xr_seed, const string& x_requirement, const Size& x_size)
 {
 	SetRect(cv::Rect(
-		Point(rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height),
-		Point(rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height))
-	);
+				Point(rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height),
+				Point(rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height))
+		   );
 	if(x_requirement != "")
 	{
 		Json::Value root;

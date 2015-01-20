@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -58,7 +58,7 @@ public:
 	ConfigReader NextSubConfig(const std::string& x_tagName, const std::string& x_attrName = "", const std::string& x_attrValue = "") const;
 
 	/// Check if the config object is empty
-	inline bool IsEmpty() const{return mp_doc == NULL && mp_node == NULL;}
+	inline bool IsEmpty() const {return mp_doc == NULL && mp_node == NULL;}
 	std::string GetValue() const;
 	void SetValue(const std::string& x_value);
 	template<typename T> inline void SetValue(const T& x_value)
@@ -73,7 +73,7 @@ public:
 	void SaveToFile(const std::string& x_file) const;
 	void Validate() const;
 	/// Redefinition of == operator
-	inline bool operator == (const ConfigReader &a){return a.mp_node == mp_node;}
+	inline bool operator == (const ConfigReader &a) {return a.mp_node == mp_node;}
 	void OverrideWith(const ConfigReader& xr_extraConfig);
 
 	// New access functions with JQuery-like syntax
@@ -95,8 +95,8 @@ private:
 class Configurable
 {
 public:
-	Configurable(const ConfigReader& x_confReader) : m_configReader(x_confReader){}
-	~Configurable(){}
+	Configurable(const ConfigReader& x_confReader) : m_configReader(x_confReader) {}
+	~Configurable() {}
 	virtual void UpdateConfig();
 	virtual const ParameterStructure & GetParameters() const = 0;
 

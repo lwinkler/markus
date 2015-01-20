@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -43,7 +43,7 @@ public:
 	FeatureTestSuite() :
 		m_factoryFeatures(Factories::featuresFactory()),
 		m_factoryFeaturesBySignature(Factories::featuresFactoryBySignature())
-		{}
+	{}
 
 protected:
 	const FactoryFeatures& m_factoryFeatures;
@@ -53,7 +53,7 @@ protected:
 	void testFeature(Feature& feat, const string& name, unsigned int& xr_seed)
 	{
 		// Initialize the feature with random value since int/floats are not initialized by default // TODO: maybe fix this
-		feat.Randomize(xr_seed, ""); 
+		feat.Randomize(xr_seed, "");
 		TS_TRACE("Test feature of type " + name + " = " + feat.SerializeToString() + " with signature = " + feat.Signature());
 		Feature* copy = feat.CreateCopy();
 		// cout << "feat.CompareSquared(feat) = " << feat.CompareSquared(feat) << endl;

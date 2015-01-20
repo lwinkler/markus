@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -33,14 +33,14 @@
 */
 class Feature : public Serializable
 {
-	public:
-		Feature(){}
-		virtual ~Feature(){}
-		virtual Feature* CreateCopy() const = 0;
-		virtual double CompareSquared(const Feature& x_feature) const = 0;
-		virtual void Randomize(unsigned int& xr_seed, const std::string& x_param) = 0;
-		virtual void Serialize(std::ostream& stream, const std::string& x_dir) const = 0;
-		virtual void Deserialize(std::istream& stream, const std::string& x_dir) = 0;
+public:
+	Feature() {}
+	virtual ~Feature() {}
+	virtual Feature* CreateCopy() const = 0;
+	virtual double CompareSquared(const Feature& x_feature) const = 0;
+	virtual void Randomize(unsigned int& xr_seed, const std::string& x_param) = 0;
+	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const = 0;
+	virtual void Deserialize(std::istream& stream, const std::string& x_dir) = 0;
 };
 
 /**
@@ -48,24 +48,24 @@ class Feature : public Serializable
 */
 class FeaturePtr // : public Serializable
 {
-	public:
-		FeaturePtr(Feature* x_feat) : mp_feat(x_feat){}
-		FeaturePtr(const FeaturePtr& x_feat) : mp_feat(x_feat->CreateCopy()) {}
-		~FeaturePtr(){delete mp_feat;}
-		FeaturePtr& operator = (const FeaturePtr& x_feat)
+public:
+	FeaturePtr(Feature* x_feat) : mp_feat(x_feat) {}
+	FeaturePtr(const FeaturePtr& x_feat) : mp_feat(x_feat->CreateCopy()) {}
+	~FeaturePtr() {delete mp_feat;}
+	FeaturePtr& operator = (const FeaturePtr& x_feat)
+	{
+		if(this != &x_feat)
 		{
-			if(this != &x_feat)
-			{
-				delete(mp_feat); 
-				mp_feat = x_feat->CreateCopy();
-			}
-			return *this;
+			delete(mp_feat);
+			mp_feat = x_feat->CreateCopy();
 		}
-		inline const Feature& operator*  () const {return *mp_feat;}
-		inline const Feature* operator-> () const {return mp_feat;}
+		return *this;
+	}
+	inline const Feature& operator*  () const {return *mp_feat;}
+	inline const Feature* operator-> () const {return mp_feat;}
 
-	protected:
-		Feature* mp_feat;
+protected:
+	Feature* mp_feat;
 };
 
 #endif

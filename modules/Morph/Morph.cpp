@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -42,7 +42,7 @@ Morph::Morph(const ConfigReader& x_configReader) :
 	AddInputStream(0, new StreamImage("input" , m_input , *this, "Video input"));
 
 	AddOutputStream(0, new StreamImage("output", m_output, *this,	"Output"));
-	
+
 	// Reset();
 }
 

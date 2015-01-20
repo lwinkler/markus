@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
  *
  *    MARKUS : a manager for video analysis modules
- * 
+ *
  *    Author : Florian Rossier <florian.rossier@gmail.com>
- * 
- * 
+ *
+ *
  *    This file is part of Markus.
  *
  *    Markus is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@
 #include "jsoncpp/json/writer.h"
 
 
-using namespace std; 
+using namespace std;
 
 CalibrationByModel::CalibrationByModel() {
 	camera_height = 0.0;
@@ -48,7 +48,7 @@ CalibrationByModel::CalibrationByModel(double camera_height, double yaw, double 
 }
 
 void CalibrationByModel::Serialize(std::ostream& x_out, const std::string& x_dir) const {
-	
+
 	Json::Value root;
 	root["camera_height"] = this->camera_height;
 	root["yaw"] = this->yaw;

@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -135,12 +135,12 @@ void adjustSize(const Mat& im_in, Mat& im_out)
 	}
 }
 
-/* Set image to the right depth 
+/* Set image to the right depth
  WARNING :: buffers tmp1 and tmp2 are only generated once so this method must be used only for one type of images  */
 
 void adjust(const Mat& im_in, Mat& im_out, Mat*& tmp1, Mat*& tmp2)
 {
-	
+
 	if(im_in.depth() == im_out.depth())
 	{
 		if(tmp1==NULL)
@@ -195,11 +195,11 @@ void adjustChannels(const Mat& im_in, Mat& im_out)
 	{
 		im_in.copyTo(im_out);
 	}
-	else if(im_in.channels() == 1 && im_out.channels() == 3) 
+	else if(im_in.channels() == 1 && im_out.channels() == 3)
 	{
 		cvtColor(im_in, im_out, CV_GRAY2RGB);
 	}
-	else if(im_in.channels() == 3 && im_out.channels() == 1) 
+	else if(im_in.channels() == 3 && im_out.channels() == 1)
 	{
 		cvtColor(im_in, im_out, CV_RGB2GRAY);
 	}
@@ -219,10 +219,10 @@ Scalar colorFromStr(string x_str)
 		pos3  = x_str.find(')', pos2 + 1);
 		if(!(pos1 && pos2 && pos3))
 			throw MkException("Error in colorFromStr", LOC);
-		
-		return Scalar(atoi(x_str.substr(1, pos1 - 1).c_str()), 
-				atoi(x_str.substr(pos1 + 1, pos2 - pos1 - 1).c_str()), 
-				atoi(x_str.substr(pos2 + 1, pos3 - pos2 - 1).c_str()));
+
+		return Scalar(atoi(x_str.substr(1, pos1 - 1).c_str()),
+					  atoi(x_str.substr(pos1 + 1, pos2 - pos1 - 1).c_str()),
+					  atoi(x_str.substr(pos2 + 1, pos3 - pos2 - 1).c_str()));
 	}
 	else return Scalar(0, 0, 0);
 }
@@ -290,11 +290,11 @@ const string msToTimeStamp(TIME_STAMP x_ms)
 	TIME_STAMP t = x_ms;
 	int msecs = t % 1000;
 	t /= 1000;
-	int secs = t % 60; 
+	int secs = t % 60;
 	t /= 60;
-	int mins = t % 60; 
+	int mins = t % 60;
 	t /= 60;
-	int hours = t; 
+	int hours = t;
 
 	char str[32];
 	snprintf(str, sizeof(str), "%02d:%02d:%02d,%03d", hours, mins, secs, msecs);
@@ -308,9 +308,9 @@ TIME_STAMP timeStampToMs(const string& x_timeStamp)
 	int hours, mins, secs, msecs;
 	sscanf(x_timeStamp.c_str(), "%02d:%02d:%02d,%03d", &hours, &mins, &secs, &msecs);
 	TIME_STAMP t = msecs;
-	t += secs *    1000; 
-	t += mins *   60000; 
-	t += hours * 360000; 
+	t += secs *    1000;
+	t += mins *   60000;
+	t += hours * 360000;
 	return t;
 }
 
@@ -385,7 +385,7 @@ bool compareFiles(const string& x_file1, const string& x_file2)
 *
 * @param filename
 *
-* @return 
+* @return
 */
 string getFileContents(const string& x_fileName)
 {
@@ -408,7 +408,7 @@ string getFileContents(const string& x_fileName)
 *
 * @param x_image
 *
-* @return 
+* @return
 */
 double diagonal(const Mat& x_image)
 {
@@ -420,11 +420,11 @@ double diagonal(const Mat& x_image)
 *
 * @param x_pathName
 *
-* @return 
+* @return
 */
 std::string basename(const std::string& x_pathName )
 {
-	int lastindex = x_pathName.find_last_of("/"); 
+	int lastindex = x_pathName.find_last_of("/");
 	return x_pathName.substr(lastindex + 1);
 }
 

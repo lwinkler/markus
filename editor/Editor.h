@@ -11,38 +11,38 @@ class Editor : public QMainWindow
 {
 	Q_OBJECT
 
-	private:
-		QWebView m_view;
-		QString m_currentProject;
-		std::string m_projectToLoad;
-		QAction *aboutAct;
-		QAction *loadProjectAct;
-		QAction *saveProjectAct;
-		QAction *saveProjectAsAct;
-		QAction *updateProjectsAct;
-		QAction *updateModulesAct;
+private:
+	QWebView m_view;
+	QString m_currentProject;
+	std::string m_projectToLoad;
+	QAction *aboutAct;
+	QAction *loadProjectAct;
+	QAction *saveProjectAct;
+	QAction *saveProjectAsAct;
+	QAction *updateProjectsAct;
+	QAction *updateModulesAct;
 
-		QMenu *fileMenu;
-		QMenu *viewMenu;
-		QMenu *helpMenu;
+	QMenu *fileMenu;
+	QMenu *viewMenu;
+	QMenu *helpMenu;
 
-		void CreateActions();
-		void CreateMenus();
+	void CreateActions();
+	void CreateMenus();
 
-	public:
-		Editor(const std::string& x_project = "", QWidget *parent = 0);
-		void setUrl(const QUrl &url);
+public:
+	Editor(const std::string& x_project = "", QWidget *parent = 0);
+	void setUrl(const QUrl &url);
 
-	public slots:
-		void adaptDom(bool x_loadOk);
-		void loadProject();
-		bool save();
-		bool saveAs();
-		bool saveProject(const QString& x_fileName);
-		void updateProjects();
-		void updateModules();
-		void about();
-		bool maybeSave();
+public slots:
+	void adaptDom(bool x_loadOk);
+	void loadProject();
+	bool save();
+	bool saveAs();
+	bool saveProject(const QString& x_fileName);
+	void updateProjects();
+	void updateModules();
+	void about();
+	bool maybeSave();
 };
 
 #endif

@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -36,9 +36,9 @@ public:
 	~StreamEvent();
 	MKCLASS("StreamEvent")
 	MKTYPE("Event")
-	inline void SetEvent(const Event& x_event){m_event = x_event;}
+	inline void SetEvent(const Event& x_event) {m_event = x_event;}
 	inline const Event& GetEvent() const {return m_event;}
-	
+
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat& x_output) const;
 	virtual void Randomize(unsigned int& xr_seed);

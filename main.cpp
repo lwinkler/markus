@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -159,56 +159,56 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 	while ((c = getopt_long(argc, argv, "hvdeScfinl:o:p:x:", long_options, &option_index)) != -1)
 	{
 		switch (c) {
-			case 'h':
-				usage();
-				return 0;
-				break;
-			case 'v':
-				LOG_INFO(logger, Context::Version(true));
-				return 0;
-			case 'd':
-				args.describe = true;
-				break;
-			case 'e':
-				args.editor = true;
-				break;
-			case 'S':
-				args.simulation = true;
-				break;
-			case 'c':
-				args.centralized = true;
-				break;
-			case 'f':
-				args.fast = true;
-				break;
-			case 'i':
-				args.useStdin = true;
-				break;
-			case 'n':
-				args.nogui = true;
-				break;
-			case 'l':
-				args.logConfigFile = optarg;
-				break;
-			case 'o':
-				args.outputDir = optarg;
-				break;
-			case 'p':
-				args.parameters.push_back(optarg);
-				break;
-			case 'x':
-				args.extraConfig.push_back(optarg);
-				break;
-			case ':': // missing argument
-				LOG_ERROR(logger, "--"<<long_options[::optopt].name<<": an argument is required");
-				return -1;
+		case 'h':
+			usage();
+			return 0;
+			break;
+		case 'v':
+			LOG_INFO(logger, Context::Version(true));
+			return 0;
+		case 'd':
+			args.describe = true;
+			break;
+		case 'e':
+			args.editor = true;
+			break;
+		case 'S':
+			args.simulation = true;
+			break;
+		case 'c':
+			args.centralized = true;
+			break;
+		case 'f':
+			args.fast = true;
+			break;
+		case 'i':
+			args.useStdin = true;
+			break;
+		case 'n':
+			args.nogui = true;
+			break;
+		case 'l':
+			args.logConfigFile = optarg;
+			break;
+		case 'o':
+			args.outputDir = optarg;
+			break;
+		case 'p':
+			args.parameters.push_back(optarg);
+			break;
+		case 'x':
+			args.extraConfig.push_back(optarg);
+			break;
+		case ':': // missing argument
+			LOG_ERROR(logger, "--"<<long_options[::optopt].name<<": an argument is required");
+			return -1;
 
-			case '?': // unknown option
-				LOG_ERROR(logger, argv[optind - 1]<<": unknown option");
-				return -1;
-			default:
-				LOG_ERROR(logger, "Unknown parameter "<<c);
-				return -1;
+		case '?': // unknown option
+			LOG_ERROR(logger, argv[optind - 1]<<": unknown option");
+			return -1;
+		default:
+			LOG_ERROR(logger, "Unknown parameter "<<c);
+			return -1;
 		}
 	}
 
@@ -229,7 +229,7 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 	{
 		LOG_INFO(logger, "Using default configuration file "<<args.configFile);
 	}
-	else 
+	else
 	{
 		LOG_ERROR(logger, "Invalid number of arguments "<<(argc - optind));
 		usage();
@@ -359,7 +359,7 @@ int main(int argc, char** argv)
 			sim.Generate(mainConfig);
 			return 0;
 		}
-			
+
 
 		// Override parameter auto_process with centralized
 		appConfig.FindRef("parameters>param[name=\"auto_process\"]", true).SetValue(args.centralized ? "1" : "0");
@@ -369,7 +369,7 @@ int main(int argc, char** argv)
 		Manager manager(appConfig);
 		manager.SetContext(context);
 
-		if(args.describe) 
+		if(args.describe)
 		{
 			manager.Export();
 			return 0;
@@ -402,7 +402,7 @@ int main(int argc, char** argv)
 
 			while(manager.Process())
 			{
-				// nothing 
+				// nothing
 			}
 
 			Event ev2;

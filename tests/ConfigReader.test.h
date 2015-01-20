@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -117,16 +117,16 @@ public:
 		TS_TRACE("\n# Test the generation of configurations");
 		ConfigReader appConf = m_conf2->RefSubConfig("application", true);
 		appConf.RefSubConfig("aaa", "name", "nameX", true)
-			.RefSubConfig("bbb", "name", "nameY", true)
-			.RefSubConfig("ccc", "name", "nameZ", true).SetValue("someValue");
+		.RefSubConfig("bbb", "name", "nameY", true)
+		.RefSubConfig("ccc", "name", "nameZ", true).SetValue("someValue");
 		m_conf2->SaveToFile("tests/config_generated.xml");
 
 		ConfigReader generatedConf("tests/config_generated.xml");
 		TS_ASSERT(generatedConf.GetSubConfig("application")
-				.GetSubConfig("aaa", "name", "nameX")
-				.GetSubConfig("bbb", "name", "nameY")
-				.GetSubConfig("ccc", "name", "nameZ")
-				.GetValue() == "someValue");
+				  .GetSubConfig("aaa", "name", "nameX")
+				  .GetSubConfig("bbb", "name", "nameY")
+				  .GetSubConfig("ccc", "name", "nameZ")
+				  .GetValue() == "someValue");
 	}
 };
 

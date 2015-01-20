@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -41,8 +41,8 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : 
-		Module::Parameters(x_confReader)
+		Parameters(const ConfigReader& x_confReader) :
+			Module::Parameters(x_confReader)
 		{
 			m_list.push_back(new ParameterString("file", 	"in/input.srt", &file,    "Name of the video file to read, with path"));
 			m_list.push_back(new ParameterString("pattern",	"state_1",      &pattern, "Pattern to search in text. If this is found the state is equal to the text"));
@@ -60,7 +60,7 @@ public:
 	~GroundTruthReader();
 	MKCLASS("GroundTruthReader")
 	MKDESCR("Read a ground truth file")
-	
+
 	inline virtual const Parameters& GetParameters() const {return m_param;}
 	void ProcessFrame();
 	void Reset();

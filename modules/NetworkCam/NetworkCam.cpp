@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -51,7 +51,7 @@ void *grab_thread_nc(void *x_void_ptr)
 }
 
 
-NetworkCam::NetworkCam(const ConfigReader& x_configReader): 
+NetworkCam::NetworkCam(const ConfigReader& x_configReader):
 	Input(x_configReader),
 	m_param(x_configReader),
 	m_output(Size(m_param.width, m_param.height), m_param.type)  // Note: sizes will be overridden !
@@ -71,7 +71,7 @@ void NetworkCam::Reset()
 
 	//open the video stream and make sure it's opened
 	m_capture.open(m_param.url);
-	
+
 	if(! m_capture.isOpened())
 	{
 		throw MkException("Error : Network error, cannot open url : " + m_param.url, LOC);
@@ -80,7 +80,7 @@ void NetworkCam::Reset()
 	// Apparently you cannot set width and height. We try anyway
 	m_capture.set(CV_CAP_PROP_FRAME_WIDTH,  m_param.width);
 	m_capture.set(CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
-	
+
 	if(m_logger->isDebugEnabled())
 		GetProperties();
 
@@ -141,7 +141,7 @@ void NetworkCam::Capture()
 		}
 
 		m_capture.retrieve(m_output);
-		
+
 		// cout<<"NetworkCam capture image "<<m_output->cols<<"x"<<m_output->rows<<" time stamp "<<m_capture.get(CV_CAP_PROP_POS_MSEC) / 1000.0<< endl;
 
 		// note: we use the time stamp of the modules since the official time stamp of the camera
@@ -161,25 +161,25 @@ void NetworkCam::GetProperties()
 	int cc = static_cast<int>(m_capture.get(CV_CAP_PROP_FOURCC));
 
 	LOG_DEBUG(m_logger, "POS_MSEC "<<m_capture.get(CV_CAP_PROP_POS_MSEC)
-		<<" POS_FRAMES "<<m_capture.get(CV_CAP_PROP_POS_FRAMES)
-		<<" POS_AVI_RATIO "<<m_capture.get(CV_CAP_PROP_POS_AVI_RATIO)
-		<<" FRAME_WIDTH "<<m_capture.get(CV_CAP_PROP_FRAME_WIDTH)
-		<<" FRAME_HEIGHT "<<m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)
-		<<" FPS "<<m_capture.get(CV_CAP_PROP_FPS)
-		<<" FOURCC "<< static_cast<char>(cc & 0XFF) << static_cast<char>((cc & 0XFF00) >> 8) 
-			<< static_cast<char>((cc & 0XFF0000) >> 16) << static_cast<char>((cc & 0XFF000000) >> 24) 
-		<<" FRAME_COUNT "<<m_capture.get(CV_CAP_PROP_FRAME_COUNT)
-		<<" FORMAT "<<m_capture.get(CV_CAP_PROP_FORMAT)
-		<<" MODE "<<m_capture.get(CV_CAP_PROP_MODE)
-		<<" BRIGHTNESS "<<m_capture.get(CV_CAP_PROP_BRIGHTNESS)
-		<<" CONTRAST "<<m_capture.get(CV_CAP_PROP_CONTRAST)
-		<<" SATURATION "<<m_capture.get(CV_CAP_PROP_SATURATION)
-		<<" HUE "<<m_capture.get(CV_CAP_PROP_HUE)
-		<<" GAIN "<<m_capture.get(CV_CAP_PROP_GAIN)
-		<<" EXPOSURE "<<m_capture.get(CV_CAP_PROP_EXPOSURE)
-		<<" CONVERT_RGB "<<m_capture.get(CV_CAP_PROP_CONVERT_RGB)
-	// 	<<" WHITE_BALANCE"<<m_capture.get(CV_CAP_PROP_WHITE_BALANCE)
-		<<" RECTIFICATION"<<m_capture.get(CV_CAP_PROP_RECTIFICATION));
+			  <<" POS_FRAMES "<<m_capture.get(CV_CAP_PROP_POS_FRAMES)
+			  <<" POS_AVI_RATIO "<<m_capture.get(CV_CAP_PROP_POS_AVI_RATIO)
+			  <<" FRAME_WIDTH "<<m_capture.get(CV_CAP_PROP_FRAME_WIDTH)
+			  <<" FRAME_HEIGHT "<<m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)
+			  <<" FPS "<<m_capture.get(CV_CAP_PROP_FPS)
+			  <<" FOURCC "<< static_cast<char>(cc & 0XFF) << static_cast<char>((cc & 0XFF00) >> 8)
+			  << static_cast<char>((cc & 0XFF0000) >> 16) << static_cast<char>((cc & 0XFF000000) >> 24)
+			  <<" FRAME_COUNT "<<m_capture.get(CV_CAP_PROP_FRAME_COUNT)
+			  <<" FORMAT "<<m_capture.get(CV_CAP_PROP_FORMAT)
+			  <<" MODE "<<m_capture.get(CV_CAP_PROP_MODE)
+			  <<" BRIGHTNESS "<<m_capture.get(CV_CAP_PROP_BRIGHTNESS)
+			  <<" CONTRAST "<<m_capture.get(CV_CAP_PROP_CONTRAST)
+			  <<" SATURATION "<<m_capture.get(CV_CAP_PROP_SATURATION)
+			  <<" HUE "<<m_capture.get(CV_CAP_PROP_HUE)
+			  <<" GAIN "<<m_capture.get(CV_CAP_PROP_GAIN)
+			  <<" EXPOSURE "<<m_capture.get(CV_CAP_PROP_EXPOSURE)
+			  <<" CONVERT_RGB "<<m_capture.get(CV_CAP_PROP_CONVERT_RGB)
+			  // 	<<" WHITE_BALANCE"<<m_capture.get(CV_CAP_PROP_WHITE_BALANCE)
+			  <<" RECTIFICATION"<<m_capture.get(CV_CAP_PROP_RECTIFICATION));
 }
 
 double NetworkCam::GetRecordingFps()

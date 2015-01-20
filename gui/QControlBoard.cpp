@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -32,7 +32,7 @@
 
 using namespace std;
 
-	 
+
 QControlBoard::QControlBoard(Module& x_module, QWidget *parent):
 	m_currentModule(x_module)
 {
@@ -40,7 +40,7 @@ QControlBoard::QControlBoard(Module& x_module, QWidget *parent):
 	mp_gbControls		= new QScrollArea;
 	mp_gbButtons		= new QGroupBox(tr("Actions"));
 
-	// Create the group with settings buttons	
+	// Create the group with settings buttons
 	mp_buttonLayout = new QHBoxLayout;
 	mp_currentControl = NULL;
 
@@ -54,14 +54,14 @@ QControlBoard::~QControlBoard()
 {
 	CLEAN_DELETE(mp_gbControls);
 	// for (vector<Controller*>::iterator it = m_controllers.begin() ; it != m_controllers.end() ; it++)
-		// delete *it;
+	// delete *it;
 }
 
 void QControlBoard::resizeEvent(QResizeEvent * e)
 {
 }
 
-void QControlBoard::paintEvent(QPaintEvent * e) 
+void QControlBoard::paintEvent(QPaintEvent * e)
 {
 }
 

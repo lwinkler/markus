@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -35,7 +35,7 @@ class ControllerEvent : public Controller
 {
 public:
 	ControllerEvent(ClassifyEvents& rx_module);
-	~ControllerEvent(){}
+	~ControllerEvent() {}
 	MKCLASS("ControllerEvent")
 
 	virtual QWidget* CreateWidget();

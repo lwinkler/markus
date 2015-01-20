@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -45,7 +45,7 @@ public:
 
 	Input(const ConfigReader& x_confReader);
 	~Input();
-	
+
 	virtual void Capture() = 0;
 	inline const std::string& GetName()const {return m_name;}
 	inline bool   IsEndOfStream() const {return m_endOfStream;}

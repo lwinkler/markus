@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
  *
  *    MARKUS : a manager for video analysis modules
- * 
+ *
  *    author : Loïc Monney <loic.monney@hefr.ch>
- * 
- * 
+ *
+ *
  *    This file is part of Markus.
  *
  *    Markus is free software: you can redistribute it and/or modify
@@ -33,54 +33,54 @@
  */
 class CompareObjects : public Module
 {
+public:
+	class Parameters : public Module::Parameters
+	{
+
 	public:
-		class Parameters : public Module::Parameters
+		Parameters(const ConfigReader &x_confReader) : Module::Parameters(x_confReader)
 		{
+			m_list.push_back(new ParameterFloat("threshold", 0.1, 0, 1, &threshold, "Dissimilarity threshold for all the sequence"));
 
-			public:
-				Parameters(const ConfigReader &x_confReader) : Module::Parameters(x_confReader)
-				{
-					m_list.push_back(new ParameterFloat("threshold", 0.1, 0, 1, &threshold, "Dissimilarity threshold for all the sequence"));
-
-					Init();
-				};
-
-				/* Dissimilarity threshold [0;100] */
-				float threshold;
+			Init();
 		};
 
-		/* Constructor */
-		CompareObjects(const ConfigReader &x_configReader);
+		/* Dissimilarity threshold [0;100] */
+		float threshold;
+	};
 
-		/* Destructor */
-		~CompareObjects();
+	/* Constructor */
+	CompareObjects(const ConfigReader &x_configReader);
 
-		/* Reset current state of this module */
-		void Reset();
+	/* Destructor */
+	~CompareObjects();
 
-		/* Compare the two images and return the amount of pixels that are different */
-		long ComputeDissimilarity(const cv::Mat& A, const cv::Mat& B);
+	/* Reset current state of this module */
+	void Reset();
 
-		MKCLASS("CompareObjects");
-		MKDESCR("Compare the two input objects streams and compute the dissimilarity of them for all the sequence");
+	/* Compare the two images and return the amount of pixels that are different */
+	long ComputeDissimilarity(const cv::Mat& A, const cv::Mat& B);
 
-		inline virtual const Parameters &GetParameters() const {return m_param;}
-		virtual void ProcessFrame();
+	MKCLASS("CompareObjects");
+	MKDESCR("Compare the two input objects streams and compute the dissimilarity of them for all the sequence");
 
-	private:
-		inline virtual Parameters &RefParameters() {return m_param;}
+	inline virtual const Parameters &GetParameters() const {return m_param;}
+	virtual void ProcessFrame();
 
-		Parameters m_param;
-		static log4cxx::LoggerPtr m_logger;
+private:
+	inline virtual Parameters &RefParameters() {return m_param;}
 
-	protected:
-		// input
-		std::vector<Object> m_objects1;
-		std::vector<Object> m_objects2;
+	Parameters m_param;
+	static log4cxx::LoggerPtr m_logger;
 
-		// state variables
-		// long m_allErrors;
-		// long m_frameCount;
+protected:
+	// input
+	std::vector<Object> m_objects1;
+	std::vector<Object> m_objects2;
+
+	// state variables
+	// long m_allErrors;
+	// long m_frameCount;
 };
 
 #endif

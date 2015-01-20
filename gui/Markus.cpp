@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -40,21 +40,21 @@
 
 using namespace std;
 
-//---------------------------------------------------------------------------------------------------- 
+//----------------------------------------------------------------------------------------------------
 // Main constructor
-//---------------------------------------------------------------------------------------------------- 
+//----------------------------------------------------------------------------------------------------
 
 MarkusWindow::MarkusWindow(ConfigReader & rx_configReader, Manager& rx_manager)
 	: Configurable(rx_configReader),
- 	m_param(rx_configReader),
-	m_manager(rx_manager)
+	  m_param(rx_configReader),
+	  m_manager(rx_manager)
 {
 	// Call to manager process each 10 ms
 	//if(!m_centralized)
 	startTimer(static_cast<int>(MARKUS_TIMER_S * 1000));  // 10 -> 0.01-second timer
 
 	setWindowState(Qt::WindowMaximized);
-	
+
 	//m_scroll.clear();
 	m_moduleViewer.clear();
 	//resizeEvent()();
@@ -78,7 +78,7 @@ void MarkusWindow::timerEvent(QTimerEvent* px_event)
 
 	for(int i = 0 ; i < m_param.nbCols * m_param.nbRows ; i++)
 		m_moduleViewer[i]->update();
-	
+
 	//update();
 }
 
@@ -99,30 +99,30 @@ QLabel *MarkusWindow::createLabel(const QString &text)
 }
 
 
-//---------------------------------------------------------------------------------------------------- 
+//----------------------------------------------------------------------------------------------------
 // Print about text
-//---------------------------------------------------------------------------------------------------- 
+//----------------------------------------------------------------------------------------------------
 void MarkusWindow::about()
 {
 	QMessageBox::about(this, tr("About Image Viewer"),
-				    tr("<p>The <b>Markus</b> image processing environment lets "
-				    "the user experiment with the different elements of computer "
-				    "vision.</p> "
-				    "<p><b>Author : Laurent Winkler</b></p>"));
+					   tr("<p>The <b>Markus</b> image processing environment lets "
+						  "the user experiment with the different elements of computer "
+						  "vision.</p> "
+						  "<p><b>Author : Laurent Winkler</b></p>"));
 }
 
 
 
-//---------------------------------------------------------------------------------------------------- 
+//----------------------------------------------------------------------------------------------------
 // Create actions and menus
-//---------------------------------------------------------------------------------------------------- 
+//----------------------------------------------------------------------------------------------------
 void MarkusWindow::createActionsAndMenus()
 {
 	// Action for file menu
 	QAction* exitAct = new QAction(tr("E&xit"), this);
 	exitAct->setShortcut(tr("Ctrl+Q"));
 	connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
-	
+
 	// Actions for view menu
 	QAction* viewDisplayOptionsAct = new QAction(tr("Show display options"), this);
 	viewDisplayOptionsAct->setCheckable(true);
@@ -146,12 +146,12 @@ void MarkusWindow::createActionsAndMenus()
 	// Action for help menu
 	QAction* aboutAct = new QAction(tr("&About"), this);
 	connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
-	
+
 	// File Menu
 	QMenu* fileMenu = new QMenu(tr("&File"), this);
 	fileMenu->addSeparator();
 	fileMenu->addAction(exitAct);
-	
+
 	// View menu
 	QMenu* viewMenu = new QMenu(tr("&View"), this);
 	viewMenu->addAction(viewDisplayOptionsAct);
@@ -162,7 +162,7 @@ void MarkusWindow::createActionsAndMenus()
 	viewMenu->addAction(view3x3Act);
 	viewMenu->addAction(view3x4Act);
 	viewMenu->addAction(view4x4Act);
-	
+
 	// Manager menu
 	QMenu* managerMenu = new QMenu(tr("&Manager"), this);
 
@@ -180,7 +180,7 @@ void MarkusWindow::createActionsAndMenus()
 	// Help menu
 	QMenu* helpMenu = new QMenu(tr("&Help"), this);
 	helpMenu->addAction(aboutAct);
-	
+
 	menuBar()->addMenu(fileMenu);
 	menuBar()->addMenu(viewMenu);
 	menuBar()->addMenu(managerMenu);
@@ -263,7 +263,7 @@ void MarkusWindow::resizeEvent(QResizeEvent* event)
 		m_mainLayout.removeWidget(m_moduleViewer.at(ind));
 		m_moduleViewer.at(ind)->hide();
 	}
-	
+
 	// Add new module viewers
 	for(int ind = size ; ind < m_param.nbRows * m_param.nbCols ; ind++)
 	{
@@ -275,7 +275,7 @@ void MarkusWindow::resizeEvent(QResizeEvent* event)
 		m_moduleViewer.at(ind)->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 		// m_moduleViewer.at(ind)->showDisplayOptions(true);
 	}
-	
+
 	// Remove extra modules
 	for(int ind = m_param.nbRows * m_param.nbCols ; ind < size ; ind++)
 	{
@@ -283,9 +283,9 @@ void MarkusWindow::resizeEvent(QResizeEvent* event)
 	}
 	m_moduleViewer.resize(m_param.nbRows * m_param.nbCols);
 
-	for (int ii = 0; ii < m_param.nbRows; ++ii) 
+	for (int ii = 0; ii < m_param.nbRows; ++ii)
 	{
-		for (int jj = 0; jj < m_param.nbCols; ++jj) 
+		for (int jj = 0; jj < m_param.nbCols; ++jj)
 		{
 			int ind = ii * m_param.nbCols + jj;
 			m_mainLayout.addWidget(m_moduleViewer.at(ind), ii, jj);

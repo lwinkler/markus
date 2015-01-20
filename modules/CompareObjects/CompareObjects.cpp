@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Loïc Monney <loic.monney@hefr.ch>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -67,7 +67,7 @@ void CompareObjects::ProcessFrame()
 			LOG_ERROR(m_logger, "Object "<<it1->GetName()<<" does not match with "<<it2->GetName());
 		if(it1->GetId() != it2->GetId())
 			LOG_ERROR(m_logger, "Object "<<it1->GetName()<<it1->GetId()<<" does not match with "<<it2->GetName()<<it2->GetId());
-		
+
 
 		// Sum the differences for each object
 		double sum = 0;
@@ -81,7 +81,7 @@ void CompareObjects::ProcessFrame()
 				// cout<<"compare feat "<<itfeat->first<<": "<<*itfeat->second<<" to "<<feat<<endl;
 				double val = itfeat->second->CompareSquared(feat);
 
-				// If dissimilarity is higher or equal to one, raise an error anyway. 
+				// If dissimilarity is higher or equal to one, raise an error anyway.
 				// This means that features are too different
 				if(val >= 1)
 					LOG_ERROR(m_logger, "Feature "<<itfeat->first<<" dissimilarty of object "<<it1->GetName()<<it1->GetId()<<" is too high: "<<val);

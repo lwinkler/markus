@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
  *
  *    MARKUS : a manager for video analysis modules
- * 
+ *
  *    author : Laurent Winkler and Florian Rossier <florian.rossier@gmail.com>
- * 
- * 
+ *
+ *
  *    This file is part of Markus.
  *
  *    Markus is free software: you can redistribute it and/or modify
@@ -102,8 +102,8 @@ void ModuleKeyPoints::ProcessFrame()
 		//this cause unit test fail
 		Mat subImage(m_input, it1->GetRect());
 		// if(!(    0 <= it1->posX && 0 <= it1->width  && it1->posX + subImage.cols / 2 <= m_input.cols // TODO: Keep this ?
-			// && 0 <= it1->posY && 0 <= it1->height && it1->posY + subImage.rows / 2 <= m_input.rows))
-			// cout<<it1->posX + subImage.cols / 2<<*it1<<endl<<m_input.size()<<endl<<subImage.size()<<endl;
+		// && 0 <= it1->posY && 0 <= it1->height && it1->posY + subImage.rows / 2 <= m_input.rows))
+		// cout<<it1->posX + subImage.cols / 2<<*it1<<endl<<m_input.size()<<endl<<subImage.size()<<endl;
 		vector<KeyPoint> pointsOfInterest;
 
 		mp_detector->detect(subImage, pointsOfInterest);
@@ -157,12 +157,12 @@ void ModuleKeyPoints::ProcessFrame()
 			Scalar color = Scalar(22, 88, it2->response);
 			circle(m_debug, it2->pt, it2->size, color);
 			line(m_debug, it2->pt, Point(
-				it2->pt.x + (5 + it2->octave) * cos(it2->angle / 360.0 * 2.0 * M_PI), 
-				it2->pt.y - (5 + it2->octave) * sin(it2->angle / 360.0 * 2.0 * M_PI)
-			), color);
+					 it2->pt.x + (5 + it2->octave) * cos(it2->angle / 360.0 * 2.0 * M_PI),
+					 it2->pt.y - (5 + it2->octave) * sin(it2->angle / 360.0 * 2.0 * M_PI)
+				 ), color);
 		}
-#endif        
-		//NOTE : a param could decide if we compute descriptor to avoid useless computation 
+#endif
+		//NOTE : a param could decide if we compute descriptor to avoid useless computation
 	}
 
 }

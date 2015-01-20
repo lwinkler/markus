@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -62,7 +62,7 @@ public:
 	~FilterObjects();
 	MKCLASS("FilterObjects")
 	MKDESCR("Filter the input objects based on different criterion")
-	
+
 	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
@@ -72,7 +72,7 @@ private:
 	Parameters m_param;
 	static log4cxx::LoggerPtr m_logger;
 protected:
-	
+
 	// input
 	std::vector <Object> m_objectsIn;
 

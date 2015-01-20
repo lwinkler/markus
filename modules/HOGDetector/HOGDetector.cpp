@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -35,12 +35,12 @@ using namespace cv;
 
 log4cxx::LoggerPtr HOGDetector::m_logger(log4cxx::Logger::getLogger("HOGDetector"));
 
-HOGDetector::HOGDetector(const ConfigReader& x_configReader) 
-	 : ModuleAsync(x_configReader), m_param(x_configReader),
-	m_input(Size(m_param.width, m_param.height), m_param.type),
-	m_lastInput(Size(m_param.width, m_param.height), m_param.type)
+HOGDetector::HOGDetector(const ConfigReader& x_configReader)
+	: ModuleAsync(x_configReader), m_param(x_configReader),
+	  m_input(Size(m_param.width, m_param.height), m_param.type),
+	  m_lastInput(Size(m_param.width, m_param.height), m_param.type)
 {
-	AddInputStream(0, new StreamImage("input", m_input, *this, 		"Video input")); 
+	AddInputStream(0, new StreamImage("input", m_input, *this, 		"Video input"));
 
 	AddOutputStream(0, new StreamObject("detected", m_detectedObjects, /*colorFromStr(m_param.color),*/ *this,	"Detected objects"));
 #ifdef MARKUS_DEBUG_STREAMS
@@ -67,7 +67,7 @@ void HOGDetector::LaunchThread()
 	m_input.copyTo(m_lastInput);
 	Mat smallImg(m_lastInput);
 	// equalizeHist( smallImg, smallImg );
-	
+
 	// Launch a new Thread
 	m_thread.SetData(smallImg, m_param.scaleFactor);
 	m_thread.start();
@@ -83,7 +83,7 @@ void HOGDetector::NormalProcess()
 	{
 		// Draw the rectangle in the input image
 		rectangle(m_debug, it->GetRect(), Scalar(255, 0, 33), 1, 8, 0 );
-        }
+	}
 #endif
 }
 
@@ -113,7 +113,7 @@ void HOGDetectionThread::run()
 	Timer ti;
 	m_detected.clear();
 	//if(m_scaleFactor == 1.00)
-		//m_hog.detect(m_smallImg, m_detected) // , 0, Size(8,8), Size(32,32));
+	//m_hog.detect(m_smallImg, m_detected) // , 0, Size(8,8), Size(32,32));
 	//else
 	m_hog.detectMultiScale(m_smallImg, m_detected, 0, Size(8,8), Size(32,32), m_scaleFactor, 2);
 

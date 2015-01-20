@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@
 
 /// This class is simply used to log of the webpage directly to the console output
 
-QWebPage2::QWebPage2(QObject *parent): QWebPage(parent){}
+QWebPage2::QWebPage2(QObject *parent): QWebPage(parent) {}
 
 void QWebPage2::javaScriptConsoleMessage(const QString& message, int lineNumber, const QString& sourceID)
 {

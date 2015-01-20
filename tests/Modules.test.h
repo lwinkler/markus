@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -60,8 +60,8 @@ void exec(const string& x_cmd, vector<string>& xr_result)
 			// Remove last \n
 			if(! xr_result.back().empty() && xr_result.back().back() == '\n')
 				xr_result.back().pop_back();
-					if(xr_result.back().empty())
-						xr_result.pop_back();
+			if(xr_result.back().empty())
+				xr_result.pop_back();
 		}
 	}
 	pclose(pipe);
@@ -70,31 +70,31 @@ void exec(const string& x_cmd, vector<string>& xr_result)
 /// Unit testing class for ConfigReader class
 class ModulesTestSuite : public CxxTest::TestSuite
 {
-	public:
-		ModulesTestSuite()
+public:
+	ModulesTestSuite()
 		: mp_fakeInput(NULL),
 		  mp_config(NULL),
 		  mp_context(NULL),
 		  m_state(false),
 		  m_factoryModules(Factories::modulesFactory()),
 		  m_factoryFeatures(Factories::featuresFactory()),
-		  m_cpt(0){}
-	protected:
-		vector<string> m_moduleTypes;
-		const FactoryModules&  m_factoryModules;
-		const FactoryFeatures& m_factoryFeatures;
-		Module* mp_fakeInput;
-		ConfigReader* mp_config;
-		Context* mp_context;
+		  m_cpt(0) {}
+protected:
+	vector<string> m_moduleTypes;
+	const FactoryModules&  m_factoryModules;
+	const FactoryFeatures& m_factoryFeatures;
+	Module* mp_fakeInput;
+	ConfigReader* mp_config;
+	Context* mp_context;
 
-		// Objects for streams
-		cv::Mat m_image;
-		bool m_state;
-		Event m_event;
-		vector<Object> m_objects;
-		int m_cpt;
+	// Objects for streams
+	cv::Mat m_image;
+	bool m_state;
+	Event m_event;
+	vector<Object> m_objects;
+	int m_cpt;
 
-	public:
+public:
 	void setUp()
 	{
 		m_cpt = 0;
@@ -111,8 +111,8 @@ class ModulesTestSuite : public CxxTest::TestSuite
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigReader("/tmp/config_empty.xml");
 		addModuleToConfig("VideoFileReader", *mp_config)
-			.RefSubConfig("parameters", true)
-			.RefSubConfig("param", "name", "fps", true).SetValue("22");
+		.RefSubConfig("parameters", true)
+		.RefSubConfig("param", "name", "fps", true).SetValue("22");
 		mp_config->RefSubConfig("application").SetAttribute("name", "unitTest");
 		mp_fakeInput = m_factoryModules.Create("VideoFileReader", mp_config->Find("application>module[name=\"VideoFileReader0\"]"));
 		mp_fakeInput->AllowAutoProcess(false);
@@ -130,7 +130,7 @@ class ModulesTestSuite : public CxxTest::TestSuite
 	ConfigReader addModuleToConfig(const string& rx_type, ConfigReader& xr_config)
 	{
 		ConfigReader moduleConfig =  xr_config.RefSubConfig("application", true)
-			.RefSubConfig("module", "name", rx_type + "0", true);
+									 .RefSubConfig("module", "name", rx_type + "0", true);
 		ConfigReader paramConfig  = moduleConfig.RefSubConfig("parameters", true);
 
 		paramConfig.RefSubConfig("param" , "name", "class", true).SetValue(rx_type);
@@ -170,7 +170,7 @@ class ModulesTestSuite : public CxxTest::TestSuite
 		// mp_fakeInput = m_factoryModules.CreateModule("VideoFileReader", mp_config->GetSubConfig("application").GetSubConfig("module", "VideoFileReader0"));
 		// mp_fakeInput->SetAsReady();
 		// mp_fakeInput->Reset();
-		
+
 		// Create custom streams to feed each input of the module
 		for(map<int, Stream*>::const_iterator it2 = inputs.begin() ; it2 != inputs.end() ; ++it2)
 		{
@@ -226,7 +226,7 @@ class ModulesTestSuite : public CxxTest::TestSuite
 	{
 		unsigned int seed = 324234566;
 		// TS_TRACE("\n# Test all controllers");
-		
+
 		// Test on each type of module
 		for(vector<string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; ++it1)
 		{
@@ -267,7 +267,7 @@ class ModulesTestSuite : public CxxTest::TestSuite
 					vector<string> values;
 					TS_TRACE("Generate values for param of type " + type + " in range " + range);
 					module->GetParameters().GetParameterByName(it2->first).GenerateValues(20, values, range);
-  
+
 					for(vector<string>::iterator it = values.begin() ; it != values.end() ; ++it)
 					{
 						// For string type we cannot set random values
@@ -324,7 +324,7 @@ class ModulesTestSuite : public CxxTest::TestSuite
 	{
 		unsigned int seed = 324223426;
 		// TS_TRACE("\n# Test all parameters");
-		
+
 		// Test on each type of module
 		for(vector<string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; ++it1)
 		{
@@ -403,7 +403,7 @@ class ModulesTestSuite : public CxxTest::TestSuite
 			if(!result2.empty())
 				TS_FAIL("Error(s) found in " + outDir + "/markus.log");
 		}
-		
+
 	}
 };
 #endif

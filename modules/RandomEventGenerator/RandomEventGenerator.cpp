@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -32,7 +32,7 @@ using namespace cv;
 
 log4cxx::LoggerPtr RandomEventGenerator::m_logger(log4cxx::Logger::getLogger("RandomEventGenerator"));
 
-RandomEventGenerator::RandomEventGenerator(const ConfigReader& x_configReader): 
+RandomEventGenerator::RandomEventGenerator(const ConfigReader& x_configReader):
 	Input(x_configReader),
 	m_param(x_configReader),
 	m_output(Size(m_param.width, m_param.height), m_param.type)  // Note: sizes will be overridden !

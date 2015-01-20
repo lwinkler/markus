@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    Author : Florian Rossier <florian.rossier@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -28,19 +28,19 @@
 
 class CalibrationByModel : public Serializable
 {
-public:	
+public:
 
 	CalibrationByModel();
 	CalibrationByModel(double camera_height, double yaw, double roll,double focal, int height_model, int width_model);
 	void Serialize(std::ostream& x_out, const std::string& x_dir ="") const;
-	void Deserialize(std::istream& x_in, const std::string& x_dir =""); 
-	
-        double camera_height; // in mm
-        double yaw; // in degree
-        double roll; // in degree
-        double focal; //un mm
-        int height_model; //in px
-        int width_model; //in px
+	void Deserialize(std::istream& x_in, const std::string& x_dir ="");
+
+	double camera_height; // in mm // TODO: Fix syntax
+	double yaw; // in degree
+	double roll; // in degree
+	double focal; //un mm
+	int height_model; //in px
+	int width_model; //in px
 };
 
 

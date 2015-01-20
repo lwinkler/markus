@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -37,29 +37,29 @@
 */
 template<class T> class FeatureVectorT : public Feature
 {
-	public:
-		FeatureVectorT(const std::vector<T>& x_values = std::vector<T>(0)) : values(x_values) {}
-		Feature* CreateCopy() const{return new FeatureVectorT<T>(*this);}
-		inline virtual double CompareSquared(const Feature& x_feature) const
-		{
-			const FeatureVectorT<T>& feat(dynamic_cast<const FeatureVectorT<T>&>(x_feature));
-			return compareSquared(values, feat.values);
-		}
-		inline virtual void Randomize(unsigned int& xr_seed, const std::string& x_param)
-		{
-			randomize(values, xr_seed);
-		}
-		inline virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const
-		{
-			serialize(x_out, values);
-		}
-		inline virtual void Deserialize(std::istream& x_in, const std::string& x_dir)
-		{
-			deserialize(x_in, values);
-		}
-		
-		// The value of the feature
-		std::vector<T> values;
+public:
+	FeatureVectorT(const std::vector<T>& x_values = std::vector<T>(0)) : values(x_values) {}
+	Feature* CreateCopy() const {return new FeatureVectorT<T>(*this);}
+	inline virtual double CompareSquared(const Feature& x_feature) const
+	{
+		const FeatureVectorT<T>& feat(dynamic_cast<const FeatureVectorT<T>&>(x_feature));
+		return compareSquared(values, feat.values);
+	}
+	inline virtual void Randomize(unsigned int& xr_seed, const std::string& x_param)
+	{
+		randomize(values, xr_seed);
+	}
+	inline virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const
+	{
+		serialize(x_out, values);
+	}
+	inline virtual void Deserialize(std::istream& x_in, const std::string& x_dir)
+	{
+		deserialize(x_in, values);
+	}
+
+	// The value of the feature
+	std::vector<T> values;
 };
 
 

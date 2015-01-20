@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -38,7 +38,7 @@ class AnnotationFileReader
 public:
 	AnnotationFileReader();
 	~AnnotationFileReader();
-	
+
 	virtual void Open(const std::string& x_file);
 	TIME_STAMP GetCurrentTimeStamp();
 	TIME_STAMP GetEndTimeStamp();

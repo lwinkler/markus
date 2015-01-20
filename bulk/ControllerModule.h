@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -34,11 +34,11 @@ class ControllerModule : public Controller
 {
 public:
 	ControllerModule(Module& rx_module);
-	~ControllerModule(){}
+	~ControllerModule() {}
 	MKCLASS("ControllerModule")
 
 	virtual QWidget* CreateWidget();
-	
+
 	// Controls
 	void Reset(std::string* xp_value);
 	void Pause(std::string* xp_value);

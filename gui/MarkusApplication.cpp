@@ -2,10 +2,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -28,13 +28,13 @@
 
 log4cxx::LoggerPtr MarkusApplication::m_logger(log4cxx::Logger::getLogger("MarkusApplication"));
 
-MarkusApplication::MarkusApplication(int &argc, char ** argv) : QApplication(argc, argv){}
+MarkusApplication::MarkusApplication(int &argc, char ** argv) : QApplication(argc, argv) {}
 // ~MarkusApplication();
 
 
-//---------------------------------------------------------------------------------------------------- 
+//----------------------------------------------------------------------------------------------------
 // Reimplement the notify function to manage exceptions
-//---------------------------------------------------------------------------------------------------- 
+//----------------------------------------------------------------------------------------------------
 bool MarkusApplication::notify(QObject *receiver_, QEvent *event_)
 {
 	try

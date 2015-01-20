@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------------------------
 *
 *    MARKUS : a manager for video analysis modules
-* 
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
-* 
-* 
+*
+*
 *    This file is part of Markus.
 *
 *    Markus is free software: you can redistribute it and/or modify
@@ -33,7 +33,7 @@ using namespace cv;
 
 log4cxx::LoggerPtr ThumbnailWriter::m_logger(log4cxx::Logger::getLogger("ThumbnailWriter"));
 
-ThumbnailWriter::ThumbnailWriter(const ConfigReader& x_configReader): 
+ThumbnailWriter::ThumbnailWriter(const ConfigReader& x_configReader):
 	Module(x_configReader),
 	m_param(x_configReader),
 	m_input(Size(m_param.width, m_param.height), m_param.type),
@@ -78,7 +78,7 @@ bool replaceExpr(string& rx_name, const map<string,FeaturePtr>& x_features)
 void ThumbnailWriter::Reset()
 {
 	Module::Reset();
-	// m_folderName  = Manager::OutputDir() + "/" + m_param.folder + "/"; 
+	// m_folderName  = Manager::OutputDir() + "/" + m_param.folder + "/";
 	// SYSTEM("mkdir -p " + m_folderName);
 }
 
@@ -87,8 +87,8 @@ void ThumbnailWriter::ProcessFrame()
 	int cpt = 0;
 	for(vector<Object>::iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; ++it1)
 	{
-		// folder name 
-		string folderName = m_context.GetOutputDir() + "/" + m_param.folder + "/"; 
+		// folder name
+		string folderName = m_context.GetOutputDir() + "/" + m_param.folder + "/";
 		while(replaceExpr(folderName, it1->GetFeatures()))
 			;
 
