@@ -41,10 +41,13 @@ class FeatureTestSuite : public CxxTest::TestSuite
 {
 public:
 	FeatureTestSuite() :
-		m_factoryFeatures(Factories::featuresFactory()){}
+		m_factoryFeatures(Factories::featuresFactory()),
+		m_factoryFeaturesBySignature(Factories::featuresFactoryBySignature())
+		{}
 
 protected:
 	const FactoryFeatures& m_factoryFeatures;
+	const FactoryFeatures& m_factoryFeaturesBySignature;
 
 	/// Test the serialization of one serializable class
 	void testFeature(Feature& feat, const string& name, unsigned int& xr_seed)
@@ -83,6 +86,28 @@ public:
 			TS_TRACE("Test the serialization of feature " + *it);
 			if(*it == "FeatureString") continue; // TODO: randomize strings
 			Feature* feat = m_factoryFeatures.Create(*it);
+			testFeature(*feat, *it, seed);
+			delete(feat);
+		}
+	}
+
+	void testSerializationCreateBySignature()
+	{
+		TS_TRACE("Test the serialization of features (creation by signature)");
+		vector<string> listFeatures;
+		m_factoryFeatures.List(listFeatures);
+		unsigned int seed = 23456644;
+		for(vector<string>::const_iterator it = listFeatures.begin() ; it != listFeatures.end() ; ++it)
+		{
+			TS_TRACE("Test the serialization of feature " + *it);
+			if(*it == "FeatureString") continue; // TODO: randomize strings
+			Feature* feat = m_factoryFeatures.Create(*it);
+
+			string signature = feat->Signature();
+			delete(feat);
+
+			// Generate feature by signature
+			feat = m_factoryFeaturesBySignature.Create(signature);
 			testFeature(*feat, *it, seed);
 			delete(feat);
 		}
