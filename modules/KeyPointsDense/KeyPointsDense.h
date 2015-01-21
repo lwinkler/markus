@@ -46,7 +46,7 @@ public:
 			m_list.push_back(new ParameterFloat("feature_scale_mul" , 0.1, 0, 1, &featureScaleMul, "Multiplication factor between each level"));
 			m_list.push_back(new ParameterInt("init_xy_step",         6  , 1, 255, &initXyStep, ""));
 			m_list.push_back(new ParameterInt("init_img_bound",       0  , 0, 255, &initImgBound, ""));
-			m_list.push_back(new ParameterBool("vary_xy_step_with_scale",   1, 0, 1, &varyXyStepWithScale, "The grid node size is multiplied if true"));
+			m_list.push_back(new ParameterBool("vary_xy_step_with_scale",   8, 0, 1, &varyXyStepWithScale, "The grid node size is multiplied if true"));
 			m_list.push_back(new ParameterBool("vary_img_bound_with_scale", 0, 0, 1, &varyImgBoundWithScale, "Size of image boundary is multiplied if true"));
 
 
