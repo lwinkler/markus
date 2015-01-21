@@ -28,7 +28,8 @@
 
 using namespace std;
 
-CalibrationByModel::CalibrationByModel() {
+CalibrationByModel::CalibrationByModel()
+{
 	camera_height = 0.0;
 	yaw = 0.0;
 	roll = 0.0;
@@ -38,7 +39,8 @@ CalibrationByModel::CalibrationByModel() {
 }
 
 
-CalibrationByModel::CalibrationByModel(double camera_height, double yaw, double roll,double focal, int height_model, int width_model) {
+CalibrationByModel::CalibrationByModel(double camera_height, double yaw, double roll,double focal, int height_model, int width_model)
+{
 	this->camera_height = camera_height;
 	this->yaw = yaw;
 	this->roll = roll;
@@ -47,7 +49,8 @@ CalibrationByModel::CalibrationByModel(double camera_height, double yaw, double 
 	this->width_model = width_model;
 }
 
-void CalibrationByModel::Serialize(std::ostream& x_out, const std::string& x_dir) const {
+void CalibrationByModel::Serialize(std::ostream& x_out, const std::string& x_dir) const
+{
 
 	Json::Value root;
 	root["camera_height"] = this->camera_height;
@@ -59,7 +62,8 @@ void CalibrationByModel::Serialize(std::ostream& x_out, const std::string& x_dir
 	x_out << root;
 }
 
-void CalibrationByModel::Deserialize(std::istream& x_in, const std::string& x_dir) {
+void CalibrationByModel::Deserialize(std::istream& x_in, const std::string& x_dir)
+{
 	Json::Value root;
 	x_in >> root;
 	camera_height = root["camera_height"].asDouble();

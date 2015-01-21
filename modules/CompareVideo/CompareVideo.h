@@ -31,11 +31,13 @@
  * @brief Compare the two input videos and compute the dissimilarity of them for each image.
  * When processing, the module logs an exception as soon as the dissimilarity exceeds the given threshold.
  */
-class CompareVideo : public Module {
+class CompareVideo : public Module
+{
 
 public:
 
-	class Parameters : public Module::Parameters {
+	class Parameters : public Module::Parameters
+	{
 
 	public:
 		Parameters(const ConfigReader &x_confReader) : Module::Parameters(x_confReader)
@@ -64,14 +66,16 @@ public:
 	MKCLASS("CompareVideo");
 	MKDESCR("Compare the two input videos and compute the dissimilarity of them for all the sequence");
 
-	inline virtual const Parameters &GetParameters() const {
+	inline virtual const Parameters &GetParameters() const
+	{
 		return m_param;
 	}
 
 	virtual void ProcessFrame();
 
 private:
-	inline virtual Parameters &RefParameters() {
+	inline virtual Parameters &RefParameters()
+	{
 		return m_param;
 	}
 

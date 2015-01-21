@@ -37,7 +37,8 @@ enum MkExceptionCode
 /**
 * @brief Exception class
 */
-class MkException : public std::exception, public Serializable {
+class MkException : public std::exception, public Serializable
+{
 public:
 	MkException(const std::string& x_description, const std::string& x_position, const std::string& x_function);
 	MkException(MkExceptionCode x_code, const std::string& x_description, const std::string& x_position, const std::string& x_function);
@@ -65,7 +66,8 @@ class FileNotFoundException : public MkException {
 /**
 * @brief Exception thrown when a video file ends
 */
-class EndOfStreamException : public MkException {
+class EndOfStreamException : public MkException
+{
 public:
 	EndOfStreamException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
 };
@@ -73,7 +75,8 @@ public:
 /**
 * @brief Exception thrown when a parameter has an incorrect value
 */
-class ParameterException : public MkException {
+class ParameterException : public MkException
+{
 public:
 	ParameterException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
 };
@@ -81,7 +84,8 @@ public:
 /**
 * @brief Exception thrown when a feature is not found in Object
 */
-class FeatureNotFoundException : public MkException {
+class FeatureNotFoundException : public MkException
+{
 public:
 	FeatureNotFoundException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
 };
@@ -89,7 +93,8 @@ public:
 /**
 * @brief Exception thrown by a web service
 */
-class WebServiceException : public MkException {
+class WebServiceException : public MkException
+{
 public:
 	WebServiceException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
 };

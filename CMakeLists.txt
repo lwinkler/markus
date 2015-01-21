@@ -145,7 +145,7 @@ add_custom_target(tests
 
 add_custom_target(indent
 	COMMENT "Indent all files by following the standart"
-	COMMAND find . -name \"*.h\" -print -o -name \"*.cpp\" -print | xargs astyle -nToO
+	COMMAND find . -name \"*.h\" -print -o -name \"*.cpp\" -print | xargs astyle -nToO --style=allman
 )
 
 

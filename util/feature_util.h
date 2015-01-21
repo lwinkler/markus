@@ -47,7 +47,8 @@ template <char Expect>
 inline std::istream& get_char(std::istream& x_in)
 {
 	char c;
-	if (x_in >> c && c != Expect) {
+	if (x_in >> c && c != Expect)
+	{
 		throw MkException("Error in format", LOC);
 	}
 	return x_in;

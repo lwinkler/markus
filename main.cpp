@@ -138,7 +138,8 @@ struct arguments
 /// Process arguments from command line
 int processArguments(int argc, char** argv, struct arguments& args, log4cxx::LoggerPtr& logger)
 {
-	static struct option long_options[] = {
+	static struct option long_options[] =
+	{
 		{"help",        0, 0, 'h'},
 		{"version",     0, 0, 'v'},
 		{"describe",    0, 0, 'd'},
@@ -158,7 +159,8 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 	int option_index = 0;
 	while ((c = getopt_long(argc, argv, "hvdeScfinl:o:p:x:", long_options, &option_index)) != -1)
 	{
-		switch (c) {
+		switch (c)
+		{
 		case 'h':
 			usage();
 			return 0;

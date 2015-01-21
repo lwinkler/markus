@@ -57,7 +57,8 @@ istream& AnnotationFileReader::SafeGetline(istream& is, string& t)
 	for(;;)
 	{
 		int c = sb->sbumpc();
-		switch (c) {
+		switch (c)
+		{
 		case '\n':
 			return is;
 		case '\r':

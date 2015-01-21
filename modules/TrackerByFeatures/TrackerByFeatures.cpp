@@ -278,7 +278,8 @@ void TrackerByFeatures::CleanTemplates()
 	{
 #ifdef MARKUS_DEBUG_STREAMS
 		// draw template (if position is available)
-		try {
+		try
+		{
 			double x = it1->GetFeature("x").mean * diagonal;
 			double y = it1->GetFeature("y").mean * diagonal;
 			// double w = it1->GetFeature("width").value * diagonal;

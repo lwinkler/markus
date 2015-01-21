@@ -68,7 +68,8 @@ MkException::MkException(MkExceptionCode x_code, const string& x_description, co
 	m_code = x_code;
 }
 
-MkException::~MkException() throw() {
+MkException::~MkException() throw()
+{
 }
 
 
