@@ -31,6 +31,7 @@
 enum ParameterType
 {
 	PARAM_INT,
+	PARAM_UINT,
 	PARAM_FLOAT,
 	PARAM_DOUBLE,
 	PARAM_BOOL,

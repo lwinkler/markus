@@ -1,0 +1,5 @@
+<param name="param_uint">
+	<type>unsigned int</type>
+	<value min="32" max="66000" default="433">433</value>
+	<description>Parameter of type unsigned int</description>
+</param>

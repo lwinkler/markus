@@ -113,7 +113,7 @@ void ControllerParameter::SetControlledValue(string* xp_value)
 	if(!m_param.CheckRange())
 	{
 		m_param.SetValue(oldValue, configType);
-		throw MkException("Parameter " + m_param.GetName() + " is out of range", LOC);
+		throw MkException("Parameter " + m_param.GetName() + "= " + *xp_value + " is out of range " + m_param.GetRange(), LOC);
 	}
 }
 
@@ -197,6 +197,44 @@ void ControllerInt::SetWidgetValue(const string& x_value)
 }
 
 string ControllerInt::GetValueFromWidget()
+{
+#ifndef MARKUS_NO_GUI
+	stringstream ss;
+	ss<<mp_parameterSlider->GetValue();
+	return ss.str();
+#else
+	assert(false);
+	return "";
+#endif
+}
+
+/*------------------------------------------------------------------------------------------------*/
+
+ControllerUInt::ControllerUInt(ParameterUInt& x_param):
+	ControllerParameter(x_param),
+	m_param2(x_param)
+{
+	mp_parameterSlider = NULL;
+}
+
+QWidget* ControllerUInt::CreateWidget()
+{
+#ifndef MARKUS_NO_GUI
+	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue(), m_param2.GetMin(), m_param2.GetMax(), 0);
+#else
+	return NULL;
+#endif
+}
+
+
+void ControllerUInt::SetWidgetValue(const string& x_value)
+{
+#ifndef MARKUS_NO_GUI
+	mp_parameterSlider->SetValue(atoi(x_value.c_str()));
+#endif
+}
+
+string ControllerUInt::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	stringstream ss;

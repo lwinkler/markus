@@ -123,6 +123,9 @@ void Module::Reset()
 		case PARAM_INT:
 			ctr = new ControllerInt(*dynamic_cast<ParameterInt*>(*it));
 			break;
+		case PARAM_UINT:
+			ctr = new ControllerUInt(*dynamic_cast<ParameterUInt*>(*it));
+			break;
 		case PARAM_SERIALIZABLE:
 			ctr = new ControllerSerializable(*dynamic_cast<ParameterSerializable*>(*it));
 			break;

@@ -28,6 +28,8 @@
 #include "MkException.h"
 #include "Parameter.h"
 
+#define EPSILON 1e-5
+
 std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems);
 
 /// Template for all parameters with numerical values
@@ -97,7 +99,7 @@ public:
 	virtual bool CheckRange() const
 	{
 		T value = GetValue();
-		return (value <= m_max && value >= m_min);
+		return (value <= m_max + EPSILON && value >= m_min - EPSILON);
 	}
 	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range) const
 	{
@@ -109,7 +111,7 @@ public:
 
 		if(2 != sscanf(range.c_str(), "[%16lf:%16lf]", &min, &max))
 			throw MkException("Error with range " + range, LOC);
-		if((type == PARAM_INT || type == PARAM_BOOL) && max - min + 1 <= x_nbSamples)
+		if((type == PARAM_UINT || type == PARAM_INT || type == PARAM_BOOL) && max - min + 1 <= x_nbSamples)
 		{
 			for(int i = min ; i <= max ; i++)
 			{
@@ -119,7 +121,7 @@ public:
 				// rx_values.push_back(static_cast<int>(min + static_cast<int>(i/x_nbSamples) % static_cast<int>(max - min + 1)));
 			}
 		}
-		else if(type == PARAM_INT || type == PARAM_BOOL)
+		else if(type == PARAM_UINT || type == PARAM_INT || type == PARAM_BOOL)
 		{
 			double incr = x_nbSamples <= 1 ? 0 : (max - min) / (x_nbSamples - 1);
 			for(int i = 0 ; i < x_nbSamples ; i++)
@@ -180,6 +182,8 @@ private:
 
 /// Parameter of type integer
 typedef ParameterNum<int> 	ParameterInt;
+/// Parameter of type unsigned integer
+typedef ParameterNum<unsigned int> ParameterUInt;
 /// Parameter of type double
 typedef ParameterNum<double> 	ParameterDouble;
 /// Parameter of type float

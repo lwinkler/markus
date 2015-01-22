@@ -26,15 +26,17 @@
 using namespace std;
 
 // Static variables
-template<> const ParameterType ParameterNum<bool>::m_type   = PARAM_BOOL;
-template<> const ParameterType ParameterNum<int>::m_type    = PARAM_INT;
-template<> const ParameterType ParameterNum<float>::m_type  = PARAM_FLOAT;
-template<> const ParameterType ParameterNum<double>::m_type = PARAM_DOUBLE;
+template<> const ParameterType ParameterNum<bool>::m_type         = PARAM_BOOL;
+template<> const ParameterType ParameterNum<int>::m_type          = PARAM_INT;
+template<> const ParameterType ParameterNum<unsigned int>::m_type = PARAM_UINT;
+template<> const ParameterType ParameterNum<float>::m_type        = PARAM_FLOAT;
+template<> const ParameterType ParameterNum<double>::m_type       = PARAM_DOUBLE;
 
-template<> const string ParameterNum<bool>::m_typeStr   = "bool";
-template<> const string ParameterNum<int>::m_typeStr    = "int";
-template<> const string ParameterNum<float>::m_typeStr  = "float";
-template<> const string ParameterNum<double>::m_typeStr = "double";
+template<> const string ParameterNum<bool>::m_typeStr         = "bool";
+template<> const string ParameterNum<unsigned int>::m_typeStr = "unsigned int";
+template<> const string ParameterNum<int>::m_typeStr          = "int";
+template<> const string ParameterNum<float>::m_typeStr        = "float";
+template<> const string ParameterNum<double>::m_typeStr       = "double";
 
 /**
  * @brief Generate valuew in range

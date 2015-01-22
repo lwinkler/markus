@@ -82,6 +82,20 @@ protected:
 	ParameterInt& m_param2;
 };
 
+/// Control class for an integer parameter
+class ControllerUInt : public ControllerParameter
+{
+public:
+	ControllerUInt(ParameterUInt & x_param);
+	virtual QWidget* CreateWidget();
+	virtual void SetWidgetValue(const std::string& x_value);
+	virtual std::string GetValueFromWidget();
+
+protected:
+	QParameterSlider * mp_parameterSlider;
+	ParameterUInt& m_param2;
+};
+
 
 /// Control class for a double parameter
 class ControllerDouble : public ControllerParameter

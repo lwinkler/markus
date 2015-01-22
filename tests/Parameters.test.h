@@ -108,6 +108,14 @@ public:
 		testParameter(paramInt, "433", "-1234", "[555:789]");
 	}
 
+	void testParameterUInt()
+	{
+		TS_TRACE("Test ParameterUInt");
+		unsigned int myInt = 3456;
+		ParameterUInt paramUInt("param_uint", 12345, 32, 66000, &myInt, "Parameter of type unsigned int");
+		testParameter(paramUInt, "433", "3", "[555:789]");
+	}
+
 	void testParameterFloat()
 	{
 		TS_TRACE("Test ParameterFloat");
