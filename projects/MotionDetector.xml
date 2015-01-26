@@ -20,8 +20,6 @@
     <display x="263" y="54" width="150" height="75"/>
     
   
-
-
 <uiobject x="792" y="240" width="0" height="0"/>
 </module>
   
@@ -37,8 +35,6 @@
 <parameters>
 <param name="class">MotionDetector</param>
 </parameters>
-
-
 <uiobject x="1003" y="237" width="0" height="0"/>
 </module>
 <module id="6" name="LogEvent6">
@@ -50,11 +46,8 @@
 <parameters>
 <param name="class">LogEvent</param>
 </parameters>
-
-
 <uiobject x="1196" y="358" width="0" height="0"/>
 </module>
-
 <module id="8" name="Input">
 <inputs/>
 <outputs>

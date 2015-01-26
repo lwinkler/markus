@@ -62,16 +62,6 @@
     <display x="472" y="238" width="150" height="75"/>
     
   
-
-
-
-
-
-
-
-
-
-
 <uiobject x="688" y="314" width="0" height="0"/>
 </module>
   <module name="TrackerByFeatures" id="3">
@@ -82,18 +72,7 @@
       <param name="type">CV_8UC1</param>
       
     
-
-
-
 <param name="time_disappear">5</param>
-
-
-
-
-
-
-
-
 <param name="fps"/>
 <param name="alpha">0.1</param>
 <param name="max_matching_distance"/>
@@ -107,16 +86,6 @@
     <display x="1007" y="238" width="150" height="75"/>
     
   
-
-
-
-
-
-
-
-
-
-
 <uiobject x="1126" y="311" width="0" height="0"/>
 </module>
   <module name="SegmenterContour" id="4">
@@ -138,16 +107,6 @@
     <display x="740" y="238" width="150" height="75"/>
     
   
-
-
-
-
-
-
-
-
-
-
 <uiobject x="901" y="308" width="0" height="0"/>
 </module>
 </application>

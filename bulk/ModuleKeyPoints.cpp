@@ -160,9 +160,9 @@ void ModuleKeyPoints::ProcessFrame()
 			Scalar color = Scalar(22, 88, elem.response);
 			circle(m_debug, point, elem.size, color);
 			line(m_debug, point, point + Point(
-				(5 + elem.octave) * cos(elem.angle / 360.0 * 2.0 * M_PI),
-				(5 + elem.octave) * sin(elem.angle / 360.0 * 2.0 * M_PI)
-			), color);
+					 (5 + elem.octave) * cos(elem.angle / 360.0 * 2.0 * M_PI),
+					 (5 + elem.octave) * sin(elem.angle / 360.0 * 2.0 * M_PI)
+				 ), color);
 		}
 #endif
 	}

@@ -12,9 +12,6 @@
 <param name="fps">0</param>
 <!--param name="file">in/input.mp4</param-->
 </parameters>
-
-
-
 <uiobject x="500" y="300" width="0" height="0"/>
 </module>
 <module id="1" name="BgrSubMOG21">
@@ -36,9 +33,6 @@
 <param name="b_shadow_detection">0</param>
 <param name="learning_rate">-1</param>
 </parameters>
-
-
-
 <uiobject x="700" y="300" width="0" height="0"/>
 </module>
 <module id="2" name="SegmenterContour2">
@@ -59,9 +53,6 @@
 <param name="object_label">object</param>
 <param name="features">x,y,width,height</param>
 </parameters>
-
-
-
 <uiobject x="900" y="300" width="0" height="0"/>
 </module>
 <module id="3" name="LogObjects3">
@@ -77,9 +68,6 @@
 <param name="fps">0</param>
 <param name="file">untracked</param>
 </parameters>
-
-
-
 <uiobject x="1075" y="459" width="0" height="0"/>
 </module>
 <module id="4" name="TrackerByFeatures4">
@@ -98,9 +86,6 @@
 <param name="features">x,y,width,height</param>
 <param name="alpha">0.1</param>
 </parameters>
-
-
-
 <uiobject x="1063" y="269" width="0" height="0"/>
 </module>
 <module id="5" name="LogObjects5">
@@ -116,9 +101,6 @@
 <param name="fps">0</param>
 <param name="file">tracked</param>
 </parameters>
-
-
-
 <uiobject x="1326" y="270" width="0" height="0"/>
 </module>
 <module id="6" name="ThumbnailWriter6">
@@ -131,8 +113,6 @@
 <parameters>
 <param name="class">ThumbnailWriter</param>
 </parameters>
-
-
 <uiobject x="1338" y="142" width="0" height="0"/>
 </module>
 </application>
