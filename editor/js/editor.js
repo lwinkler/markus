@@ -562,6 +562,10 @@ var xmlProject = null;
 							var node = xml.find('parameters > param[name="' + cl.attr('name') + '"]');
 							if(node)
 								node.remove();
+							if($(this).val() == ""){
+								console.log("Warning: parameter node is empty: suppressing " + cl.attr('name'));
+								return;
+							}
 							$('<param/>', xmlProject).appendTo(xml.find("parameters"))
 								.attr("name", cl.attr('name'))
 								.text($(this).val());
