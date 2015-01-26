@@ -146,7 +146,7 @@ add_custom_target(tests
 add_custom_target(indent
 	COMMENT "Indent all files by following the standart"
 	COMMAND find . -name \"*.h\" -print -o -name \"*.cpp\" -print | xargs astyle -nToO --style=allman
-	COMMAND find projects/ projects2/ -name \"*.xml\" -print | xargs -i{} xmlindent -wt {}
+	COMMAND find projects/ projects2/ -name \"*.xml\" -print | xargs -i{} echo xmlindent -wt {} | bash
 )
 
 
