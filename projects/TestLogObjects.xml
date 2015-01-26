@@ -1,118 +1,118 @@
 <application name="TestLogObjects">
-<module id="0" name="VideoFileReader0">
-<inputs/>
-<outputs>
-<output id="0"/>
-</outputs>
-<parameters>
-<param name="class">UsbCam</param>
-<param name="width">320</param>
-<param name="height">240</param>
-<param name="type">CV_8UC1</param>
-<param name="fps">0</param>
-<!--param name="file">in/input.mp4</param-->
-</parameters>
-<uiobject x="500" y="300" width="0" height="0"/>
-</module>
-<module id="1" name="BgrSubMOG21">
-<inputs>
-<input id="0" outputid="0" moduleid="0"/>
-</inputs>
-<outputs>
-<output id="0"/>
-<output id="1"/>
-</outputs>
-<parameters>
-<param name="class">BgrSubMOG2</param>
-<param name="width">320</param>
-<param name="height">240</param>
-<param name="type">CV_8UC3</param>
-<param name="fps">0</param>
-<param name="history">500</param>
-<param name="var_thres">16</param>
-<param name="b_shadow_detection">0</param>
-<param name="learning_rate">-1</param>
-</parameters>
-<uiobject x="700" y="300" width="0" height="0"/>
-</module>
-<module id="2" name="SegmenterContour2">
-<inputs>
-<input id="0" outputid="0" moduleid="1"/>
-</inputs>
-<outputs>
-<output id="0"/>
-</outputs>
-<parameters>
-<param name="class">SegmenterContour</param>
-<param name="width">320</param>
-<param name="height">240</param>
-<param name="type">CV_8UC1</param>
-<param name="fps">0</param>
-<param name="min_width">10</param>
-<param name="min_height">10</param>
-<param name="object_label">object</param>
-<param name="features">x,y,width,height</param>
-</parameters>
-<uiobject x="900" y="300" width="0" height="0"/>
-</module>
-<module id="3" name="LogObjects3">
-<inputs>
-<input id="0" outputid="0" moduleid="2"/>
-</inputs>
-<outputs/>
-<parameters>
-<param name="class">LogObjects</param>
-<param name="width">320</param>
-<param name="height">240</param>
-<param name="type">CV_8UC1</param>
-<param name="fps">0</param>
-<param name="file">untracked</param>
-</parameters>
-<uiobject x="1075" y="459" width="0" height="0"/>
-</module>
-<module id="4" name="TrackerByFeatures4">
-<inputs>
-<input id="0" outputid="0" moduleid="2"/>
-</inputs>
-<outputs>
-<output id="0"/>
-</outputs>
-<parameters>
-<param name="class">TrackerByFeatures</param>
-<param name="width">320</param>
-<param name="height">240</param>
-<param name="type">CV_8UC1</param>
-<param name="fps">0</param>
-<param name="features">x,y,width,height</param>
-<param name="alpha">0.1</param>
-</parameters>
-<uiobject x="1063" y="269" width="0" height="0"/>
-</module>
-<module id="5" name="LogObjects5">
-<inputs>
-<input id="0" outputid="0" moduleid="4"/>
-</inputs>
-<outputs/>
-<parameters>
-<param name="class">LogObjects</param>
-<param name="width">320</param>
-<param name="height">240</param>
-<param name="type">CV_8UC1</param>
-<param name="fps">0</param>
-<param name="file">tracked</param>
-</parameters>
-<uiobject x="1326" y="270" width="0" height="0"/>
-</module>
-<module id="6" name="ThumbnailWriter6">
-<inputs>
-<input id="0" outputid="0" moduleid="0"/>
-<input id="1" outputid="0" moduleid="4"/>
-<input id="2" outputid="0" moduleid="1"/>
-</inputs>
-<outputs/>
-<parameters>
-<param name="class">ThumbnailWriter</param>
-</parameters>
-<uiobject x="1338" y="142" width="0" height="0"/>
-</module>
+	<module id="0" name="VideoFileReader0">
+		<inputs/>
+		<outputs>
+			<output id="0"/>
+		</outputs>
+		<parameters>
+			<param name="class">UsbCam</param>
+			<param name="width">320</param>
+			<param name="height">240</param>
+			<param name="type">CV_8UC1</param>
+			<param name="fps">0</param>
+			<!--param name="file">in/input.mp4</param-->
+		</parameters>
+		<uiobject x="500" y="300" width="0" height="0"/>
+	</module>
+	<module id="1" name="BgrSubMOG21">
+		<inputs>
+			<input id="0" outputid="0" moduleid="0"/>
+		</inputs>
+		<outputs>
+			<output id="0"/>
+			<output id="1"/>
+		</outputs>
+		<parameters>
+			<param name="class">BgrSubMOG2</param>
+			<param name="width">320</param>
+			<param name="height">240</param>
+			<param name="type">CV_8UC3</param>
+			<param name="fps">0</param>
+			<param name="history">500</param>
+			<param name="var_thres">16</param>
+			<param name="b_shadow_detection">0</param>
+			<param name="learning_rate">-1</param>
+		</parameters>
+		<uiobject x="700" y="300" width="0" height="0"/>
+	</module>
+	<module id="2" name="SegmenterContour2">
+		<inputs>
+			<input id="0" outputid="0" moduleid="1"/>
+		</inputs>
+		<outputs>
+			<output id="0"/>
+		</outputs>
+		<parameters>
+			<param name="class">SegmenterContour</param>
+			<param name="width">320</param>
+			<param name="height">240</param>
+			<param name="type">CV_8UC1</param>
+			<param name="fps">0</param>
+			<param name="min_width">10</param>
+			<param name="min_height">10</param>
+			<param name="object_label">object</param>
+			<param name="features">x,y,width,height</param>
+		</parameters>
+		<uiobject x="900" y="300" width="0" height="0"/>
+	</module>
+	<module id="3" name="LogObjects3">
+		<inputs>
+			<input id="0" outputid="0" moduleid="2"/>
+		</inputs>
+		<outputs/>
+		<parameters>
+			<param name="class">LogObjects</param>
+			<param name="width">320</param>
+			<param name="height">240</param>
+			<param name="type">CV_8UC1</param>
+			<param name="fps">0</param>
+			<param name="file">untracked</param>
+		</parameters>
+		<uiobject x="1075" y="459" width="0" height="0"/>
+	</module>
+	<module id="4" name="TrackerByFeatures4">
+		<inputs>
+			<input id="0" outputid="0" moduleid="2"/>
+		</inputs>
+		<outputs>
+			<output id="0"/>
+		</outputs>
+		<parameters>
+			<param name="class">TrackerByFeatures</param>
+			<param name="width">320</param>
+			<param name="height">240</param>
+			<param name="type">CV_8UC1</param>
+			<param name="fps">0</param>
+			<param name="features">x,y,width,height</param>
+			<param name="alpha">0.1</param>
+		</parameters>
+		<uiobject x="1063" y="269" width="0" height="0"/>
+	</module>
+	<module id="5" name="LogObjects5">
+		<inputs>
+			<input id="0" outputid="0" moduleid="4"/>
+		</inputs>
+		<outputs/>
+		<parameters>
+			<param name="class">LogObjects</param>
+			<param name="width">320</param>
+			<param name="height">240</param>
+			<param name="type">CV_8UC1</param>
+			<param name="fps">0</param>
+			<param name="file">tracked</param>
+		</parameters>
+		<uiobject x="1326" y="270" width="0" height="0"/>
+	</module>
+	<module id="6" name="ThumbnailWriter6">
+		<inputs>
+			<input id="0" outputid="0" moduleid="0"/>
+			<input id="1" outputid="0" moduleid="4"/>
+			<input id="2" outputid="0" moduleid="1"/>
+		</inputs>
+		<outputs/>
+		<parameters>
+			<param name="class">ThumbnailWriter</param>
+		</parameters>
+		<uiobject x="1338" y="142" width="0" height="0"/>
+	</module>
 </application>
