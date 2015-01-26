@@ -33,6 +33,8 @@
 using namespace cv;
 using namespace std;
 
+//NOTE : a param could be used to decide if we compute descriptor to avoid useless computation
+
 log4cxx::LoggerPtr ModuleKeyPoints::m_logger(log4cxx::Logger::getLogger("ModuleKeyPoints"));
 
 ModuleKeyPoints::ModuleKeyPoints(const ConfigReader& x_configReader) :
@@ -152,17 +154,17 @@ void ModuleKeyPoints::ProcessFrame()
 		// Scalar color = Scalar(22, 88, 255);
 		// drawKeypoints(m_debug, pointsOfInterest, m_debug, color);
 
-		for(vector<KeyPoint>::const_iterator it2 = pointsOfInterest.begin() ; it2 != pointsOfInterest.end() ; ++it2)
+		for(const auto& elem : pointsOfInterest)
 		{
-			Scalar color = Scalar(22, 88, it2->response);
-			circle(m_debug, it2->pt, it2->size, color);
-			line(m_debug, it2->pt, Point(
-					 it2->pt.x + (5 + it2->octave) * cos(it2->angle / 360.0 * 2.0 * M_PI),
-					 it2->pt.y - (5 + it2->octave) * sin(it2->angle / 360.0 * 2.0 * M_PI)
-				 ), color);
+			Point point = Point(elem.pt.x, elem.pt.y) + it1->TopLeft();
+			Scalar color = Scalar(22, 88, elem.response);
+			circle(m_debug, point, elem.size, color);
+			line(m_debug, point, point + Point(
+				(5 + elem.octave) * cos(elem.angle / 360.0 * 2.0 * M_PI),
+				(5 + elem.octave) * sin(elem.angle / 360.0 * 2.0 * M_PI)
+			), color);
 		}
 #endif
-		//NOTE : a param could decide if we compute descriptor to avoid useless computation
 	}
 
 }
