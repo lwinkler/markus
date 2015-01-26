@@ -423,8 +423,9 @@ var xmlProject = null;
 				transformed = transformed
 					.replace(/>[ ]*</g, '><')
 					.replace(/></g, '>\n<')
-					.replace(/^\s*\n/gm, '') // remove empty lines that may have been added by appendTo and remove (above)
-					.replace(/<uiobject/g, '\t<uiobject'); // Dirty trick to keep a correct indentation
+					.replace(/^\s*\n/gm, '')              // remove empty lines that may have been added by appendTo and remove (above)
+					.replace(/<uiobject/g, '\t<uiobject') // Dirty trick to keep a correct indentation
+					.replace(/<\/module>/g, '\t</module>');    // Dirty trick to keep a correct indentation
 				var win = window.open('data:text/xml,<?xml version="1.0" encoding="UTF-8"?>' + encodeURIComponent(transformed), 'Project', '', true)
 				hasChanges = false;
 
