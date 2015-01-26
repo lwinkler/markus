@@ -420,7 +420,10 @@ var xmlProject = null;
 				}
 
 				// Write content in new window for saving project in browser
-				transformed = transformed.replace(/>[ ]*</g, '><').replace(/></g, '>\n<');
+				transformed = transformed
+					.replace(/>[ ]*</g, '><')
+					.replace(/></g, '>\n<')
+					.replace(/^\s*\n/gm, ''); // remove empty lines that may have been added by appendTo and remove (above)
 				var win = window.open('data:text/xml,<?xml version="1.0" encoding="UTF-8"?>' + encodeURIComponent(transformed), 'Project', '', true)
 				hasChanges = false;
 
