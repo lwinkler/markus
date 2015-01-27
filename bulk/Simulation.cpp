@@ -50,6 +50,7 @@ Simulation::Simulation(const ConfigReader& x_configReader, const Context& x_cont
 	m_outputDir("simulation_" + timeStamp())
 {
 	m_manager.SetContext(x_context);
+	m_cpt = 0;
 }
 
 
