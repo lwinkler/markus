@@ -162,7 +162,7 @@ double Module::GetRecordingFps() const
 	{
 		// If the module is autoprocessed then the FPS is determining
 		if(fps == 0)
-			throw MkException("FPS cannot be equal to zero", LOC);
+			throw MkException("FPS cannot be equal to zero in module " + GetName(), LOC);
 		return fps;
 	}
 	else

@@ -66,7 +66,7 @@ public:
 	void Capture();
 	virtual void Reset();
 	const std::string& GetName() {return m_name;}
-	virtual double GetRecordingFps();
+	virtual double GetRecordingFps() const override;
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
@@ -84,6 +84,7 @@ protected:
 	cv::VideoCapture m_capture;
 	Timer m_frameTimer;
 	sem_t m_semTimeout;
+	double m_recordingFps;
 };
 
 #endif

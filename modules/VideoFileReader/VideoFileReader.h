@@ -70,7 +70,7 @@ public:
 	int GetFrame();
 	int GetMaxMsec();
 	int GetMaxFrame();
-	virtual double GetRecordingFps();
+	virtual double GetRecordingFps() const override;
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
@@ -85,6 +85,7 @@ protected:
 
 	// temporary
 	cv::VideoCapture m_capture;
+	double m_recordingFps;
 };
 
 #endif

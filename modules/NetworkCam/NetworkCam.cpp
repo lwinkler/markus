@@ -58,6 +58,7 @@ NetworkCam::NetworkCam(const ConfigReader& x_configReader):
 {
 	AddOutputStream(0, new StreamImage("input", m_output, *this, 		"Video stream of the camera"));
 	m_isUnitTestingEnabled = false; // disable since it is not always possible to find a network camera
+	m_recordingFps = 0;
 }
 
 NetworkCam::~NetworkCam()
@@ -76,6 +77,12 @@ void NetworkCam::Reset()
 	{
 		throw MkException("Error : Network error, cannot open url : " + m_param.url, LOC);
 	}
+
+	// Normally this value should be given by m_capture.get(CV_CAP_PROP_FPS);
+	// but generally the info is not contained inside the stream and CV_CAP_PROP_FPS
+	// always equals 1000
+	m_recordingFps = m_capture.get(CV_CAP_PROP_FPS);
+	m_recordingFps = m_recordingFps == 1000.0 ? 8 : m_recordingFps;
 
 	// Apparently you cannot set width and height. We try anyway
 	m_capture.set(CV_CAP_PROP_FRAME_WIDTH,  m_param.width);
@@ -182,11 +189,7 @@ void NetworkCam::GetProperties()
 			  <<" RECTIFICATION"<<m_capture.get(CV_CAP_PROP_RECTIFICATION));
 }
 
-double NetworkCam::GetRecordingFps()
+double NetworkCam::GetRecordingFps() const
 {
-	// Normally this value should be given by m_capture.get(CV_CAP_PROP_FPS);
-	// but generally the info is not contained inside the stream and CV_CAP_PROP_FPS
-	// always equals 1000
-	double fps = m_capture.get(CV_CAP_PROP_FPS);
-	return fps == 1000.0 ? 8 : fps;
+	return m_recordingFps;
 }

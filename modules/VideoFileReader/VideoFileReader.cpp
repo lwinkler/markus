@@ -39,6 +39,7 @@ VideoFileReader::VideoFileReader(const ConfigReader& x_configReader):
 	m_output(Size(m_param.width, m_param.height), CV_8UC3) // Note: sizes will be overridden !
 {
 	AddOutputStream(0, new StreamImage("input", m_output, *this,	"Video stream"));
+	m_recordingFps = 0;
 }
 
 VideoFileReader::~VideoFileReader()
@@ -56,15 +57,15 @@ void VideoFileReader::Reset()
 
 	m_capture.release();
 	m_capture.open(m_param.file);
-	// m_fps     = m_capture.get(CV_CAP_PROP_FPS);
-
-	if(m_logger->isDebugEnabled())
-		GetProperties();
-
 	if(! m_capture.isOpened())
 	{
 		throw MkException("Error : VideoFileReader cannot open file : " + m_param.file, LOC);
 	}
+
+	m_recordingFps = m_capture.get(CV_CAP_PROP_FPS); // stored for later use
+
+	if(m_logger->isDebugEnabled())
+		GetProperties();
 
 	// Apparently you cannot set width and height. We try anyway
 	m_capture.set(CV_CAP_PROP_FRAME_WIDTH,  m_param.width);
@@ -184,7 +185,7 @@ int VideoFileReader::GetMaxFrame()
 }
 
 
-double VideoFileReader::GetRecordingFps()
+double VideoFileReader::GetRecordingFps() const
 {
-	return m_capture.get(CV_CAP_PROP_FPS);
+	return m_recordingFps;
 }
