@@ -146,9 +146,14 @@ map<int,string> ParameterEnum::CreateReverseMap(const map<string, int>& x_map)
 {
 	//const map<string, int> map1 = CreateMap();
 	map<int, string> out;
-	for(map<string, int>::const_iterator it = x_map.begin() ; it != x_map.end() ; ++it)
-		out[it->second] = it->first;
-
+	for(auto elem : x_map)
+	{
+		auto it = out.find(elem.second);
+		if(it == out.end())
+			out.insert(make_pair(elem.second, elem.first));
+		else 
+			fatal("ParameterEnum contains 2 entries with same value " + elem.first + " and " + it->second, LOC);
+	}
 	return out;
 }
 
