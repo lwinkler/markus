@@ -391,7 +391,7 @@ public:
 			vector<string> result2;
 			// For each xml, execute the file with Markus executable
 			TS_TRACE("Testing XML project " + elem);
-			string outDir = "out_test_" + elem;
+			string outDir = "out_test_" + basename(elem) + "_" + timeStamp();
 			string cmd = "./markus -ncf " + elem + " -o " + outDir + " > /dev/null";
 			TS_TRACE("Execute " + cmd);
 			SYSTEM(cmd);

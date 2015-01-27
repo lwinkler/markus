@@ -82,10 +82,11 @@ string signatureJSONTree(const Json::Value &x_root, unsigned short x_depth)
 
 				result += "{";
 				result += signatureJSONTree(*itr, x_depth);
-				result += "},";
+				result += "}";
 			}
 			else
 				result += signatureJSONTree(*itr, x_depth);
+			result += ",";
 		}
 		return result;
 	}
