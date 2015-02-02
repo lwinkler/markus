@@ -288,7 +288,7 @@ public:
 						newValue = "0";
 						it2->second->CallAction("Get", &newValue);
 
-						TSM_ASSERT("Value set must be returned by get", *it == newValue);
+						TSM_ASSERT("Value set must be returned by get: " + *it + "!=" + newValue, *it == newValue);
 
 						module->Reset();
 						for(int i = 0 ; i < 3 ; i++)
