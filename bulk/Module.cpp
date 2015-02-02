@@ -103,6 +103,7 @@ void Module::Reset()
 	for(vector<Parameter*>::const_iterator it = list.begin(); it != list.end(); ++it)
 	{
 		// Do not add param if locked or already present
+		// TODO: Suppress GetType() and use a CreateController method
 		if((*it)->IsLocked() || FindController((*it)->GetName()) != NULL)
 			continue;
 		Controller* ctr = NULL;
@@ -117,7 +118,7 @@ void Module::Reset()
 		case PARAM_FLOAT:
 			ctr = new ControllerFloat(*dynamic_cast<ParameterFloat*>(*it));
 			break;
-		case PARAM_IMAGE_TYPE:
+		case PARAM_ENUM:
 			ctr = new ControllerEnum(*dynamic_cast<ParameterEnum*>(*it));
 			break;
 		case PARAM_INT:

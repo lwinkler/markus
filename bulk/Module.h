@@ -71,7 +71,7 @@ public:
 	virtual void Reset();
 	virtual bool Process();
 
-	const std::string& GetName() const {return m_name;}
+	virtual const std::string& GetName() const {return m_name;}
 	virtual const std::string& GetClass() const = 0;
 	virtual const std::string& GetDescription() const = 0;
 	int GetId() const {return m_id;}

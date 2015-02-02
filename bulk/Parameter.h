@@ -38,7 +38,7 @@ enum ParameterType
 	PARAM_STR,
 	PARAM_SERIALIZABLE,
 	PARAM_OBJECT_HEIGHT,
-	PARAM_IMAGE_TYPE
+	PARAM_ENUM
 };
 
 enum ParameterConfigType

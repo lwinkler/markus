@@ -58,7 +58,7 @@ public:
 		mr_value = m_default;
 		m_confSource = PARAMCONF_DEF;
 	}
-	inline const ParameterType& GetType() const {const static ParameterType s = PARAM_IMAGE_TYPE; return s;}
+	inline const ParameterType& GetType() const {const static ParameterType s = PARAM_ENUM; return s;}
 	virtual const std::string& GetTypeString() const = 0;
 	virtual void Export(std::ostream& rx_os, int x_indentation);
 	virtual const std::map<std::string, int>& GetEnum() const = 0;
