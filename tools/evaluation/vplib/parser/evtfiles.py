@@ -11,7 +11,7 @@ import sys
 from vplib.time import Time
 from collections import namedtuple
 
-Event = namedtuple('Event', 'id time')
+Event = namedtuple('Event', 'id time time_end')
 
 
 def parse(file_path):
@@ -46,17 +46,17 @@ def _parse_lines(lines):
             continue
 
         # Get the first time text
-        time_text, _ = line.strip().split('-->')
+        time_text, time_end = line.strip().split('-->')
 
         # Transform it to time
         time = Time(text=time_text, sep_ms=',')
-        
+        time_end = Time(text=time_end, sep_ms=',')
         # Changed this line to extract ident from the timestamp of the subtitle
         # ident = int(lines[i + 3].strip().split('\t')[0])
         ident = time.milis
 
         # Prepare the event
-        event = Event(id=ident, time=time)
+        event = Event(id=ident, time=time, time_end=time_end)
 
         # Save the event
         events.append(event)
