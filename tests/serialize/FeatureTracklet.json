@@ -1,6 +1,6 @@
 
 {
-	"mErroneous" : false,
-	"mLength" : 0.0,
+	"erroneous" : false,
+	"length" : 0.0,
 	"pointList" : []
 }

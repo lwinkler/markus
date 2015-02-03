@@ -1,7 +1,7 @@
 
 {
-	"mErroneous" : false,
-	"mLength" : 0.0,
-	"mTotalLength" : 0.0,
-	"pointList" : []
+	"erroneous" : false,
+	"length" : 0.0,
+	"pointList" : [],
+	"totalLength" : 0.0
 }
