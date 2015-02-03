@@ -114,6 +114,7 @@ def extract_images(events, truths, video, out='out'):
 
     # Extract events
     for event in events:
+        # Note: We take the snapshot in the middle of the event
         extract('event', (event.time + event.time_end) / 2, event.id)
 
     # Extract ground truth
@@ -176,9 +177,15 @@ def read_truths(file_path):
     return truths
 
 
-def evaluate(events, truths, fid_fp, fid_fn, fid_tp):
+def evaluate(events, truths):
     """Evaluate the events on the ground truth"""
 
+    # We use text files to store false positives, false negatives and true positives
+    # TODO: In the future the generated files should respect an existing format. E.g. *.ass or *.csv or pickle
+    fid_fp = open(args.output + '/FP.txt','w')
+    fid_fn = open(args.output + '/FN.txt','w')
+    fid_tp = open(args.output + '/TP.txt','w')
+    
     # Variable to log event
     log = []
 
@@ -249,6 +256,9 @@ def evaluate(events, truths, fid_fp, fid_fn, fid_tp):
                          dups=dups,
                          det=total_det,
                          pos=len(truths))
+    fid_fp.close()
+    fid_fn.close()
+    fid_tp.close()
 
     return (results, log)
 
@@ -578,19 +588,7 @@ def main():
     truths = read_truths(args.TRUTH_FILE)
 
     # Evaluate the events regarding to the ground truth
-    print "Open some files"
-    filename_fp = '%s/FP.txt' % args.output
-    filename_fn = '%s/FN.txt' % args.output
-    filename_tp = '%s/TP.txt' % args.output
-    fid_fp = open(filename_fp,'w')
-    fid_fn = open(filename_fn,'w')
-    fid_tp = open(filename_tp,'w')
-    print "end open some files"
-    
-    evaluation, log = evaluate(events, truths, fid_fp, fid_fn, fid_tp)
-    fid_fp.close()
-    fid_fn.close()
-    fid_tp.close()
+    evaluation, log = evaluate(events, truths)
 
     # Get video info
     video = video_info(args.VIDEO_FILE)
