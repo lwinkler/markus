@@ -28,7 +28,7 @@ from vplib.parser import subrip
 from vplib.parser import evtfiles
 from collections import namedtuple, OrderedDict
 
-# Evaluation metrics
+# Evaluation metrics
 Evaluation = namedtuple('Evaluation',
                         'det '
                         'pos '
@@ -37,7 +37,7 @@ Evaluation = namedtuple('Evaluation',
                         'fn '
                         'dups ')
 
-# Video metrics
+# Video metrics
 Video = namedtuple('Video', 'duration')
 
 # Truth tuple
@@ -60,7 +60,7 @@ def is_tool(name):
 
 def is_valid(text):
     """ Function to check if a subtitle is a fall """
-    return args.EVENT_NAME in text
+    return args.EVENT_NAME.lower() in text.lower()
     # if text[0:4] == 'anor':
         # return True
     # elif text[0:4] == 'norm':
@@ -76,7 +76,7 @@ def video_info(video):
         return None
 
     try:
-        # Run avprobe to get info. Note: This replaces ffprobe 
+        # Run avprobe to get info. Note: This replaces ffprobe
         ff = subprocess.Popen(['avprobe', video], stderr=subprocess.PIPE)
         # Get back results
         ffout = str(ff.communicate())
@@ -94,7 +94,7 @@ def extract_images(events, truths, video, out='out'):
     if video is None:
         return
 
-    # Ensure directory is existing
+    # Ensure directory is existing
     path = os.path.join(out, 'images')
     if not os.path.exists(path):
         os.makedirs(path)
@@ -114,7 +114,8 @@ def extract_images(events, truths, video, out='out'):
 
     # Extract events
     for event in events:
-        extract('event', event.time, event.id)
+        # Note: We take the snapshot in the middle of the event
+        extract('event', (event.time + event.time_end) / 2, event.id)
 
     # Extract ground truth
     for truth in truths:
@@ -179,6 +180,12 @@ def read_truths(file_path):
 def evaluate(events, truths):
     """Evaluate the events on the ground truth"""
 
+    # We use text files to store false positives, false negatives and true positives
+    # TODO: In the future the generated files should respect an existing format. E.g. *.ass or *.csv or pickle
+    fid_fp = open(args.output + '/FP.txt','w')
+    fid_fn = open(args.output + '/FN.txt','w')
+    fid_tp = open(args.output + '/TP.txt','w')
+    
     # Variable to log event
     log = []
 
@@ -210,6 +217,9 @@ def evaluate(events, truths):
                 # Keep track of matched groun truth
                 match_gt = truth
 
+                #We write the matched event as a TP (even if it is a duplicate)
+                fid_tp.write('%s %s\n' % (event.time.milis, event.time_end.milis))
+
                 # If the ground truth is not matched yet
                 if not matched[i]:
                     good = True
@@ -227,11 +237,17 @@ def evaluate(events, truths):
             dups += 1
         elif good:
             tp += 1
+            #fid_tp.write('%s %s\n' % (event.time.milis, event.time_end.milis))
         else:
             fp += 1
+            fid_fp.write('%s %s\n' % (event.time.milis, event.time_end.milis))
 
     # Compute false negative
     fn = len(filter(lambda x: not x, matched))
+    fn_indices = [i for i in range(0,len(matched)) if matched[i]==False] #indicates which GT have not been matched to any event (they are thus False negatives)
+
+    for fn_index in fn_indices:
+        fid_fn.write('%s %s\n' % (truths[fn_index].begin.milis, truths[fn_index].end.milis))
 
     # Prepare evaluation results
     results = Evaluation(tp=tp,
@@ -240,6 +256,9 @@ def evaluate(events, truths):
                          dups=dups,
                          det=total_det,
                          pos=len(truths))
+    fid_fp.close()
+    fid_fn.close()
+    fid_tp.close()
 
     return (results, log)
 
@@ -300,7 +319,7 @@ def format_report(stats):
     # Iterate over each statistics
     for name in stats:
 
-        # Extract value and format
+        # Extract value and format
         (val, fmt) = stats[name]
 
         # Add it to resulting string
@@ -323,10 +342,10 @@ def video_thumbnail(video, path):
 def generate_html(stats, log, data, out='out', filename='report.html'):
     """ Generate an HTML report """
 
-    # Get datas
+    # Get data
     events, truths = data
 
-    # Create HEAD and BODY
+    # Create HEAD and BODY
     head = HEAD(TITLE('Report'))
     head <= SCRIPT(src='http://code.jquery.com/jquery-1.11.0.min.js')
     body = BODY(H1('Report'))
@@ -355,7 +374,7 @@ def generate_html(stats, log, data, out='out', filename='report.html'):
     table <= TR(TD(B('System info')) + TD(platform()))
     body <= table
 
-    # Statisticts section
+    # Statisticts section
     body <= H2('Statistics')
     body <= PRE(CODE(format_report(stats)),
                 style='background: lightgray; padding: 5px;')
