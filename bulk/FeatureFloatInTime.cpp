@@ -66,10 +66,12 @@ double FeatureFloatInTime::CompareSquared(const Feature& x_feature) const
 
 void FeatureFloatInTime::Randomize(unsigned int& xr_seed, const string& x_param)
 {
+	FeatureFloat::Randomize(xr_seed, "");
+
 	// Create a float feature and update
 	double alpha = static_cast<float>(rand_r(&xr_seed)) / RAND_MAX;
 	FeatureFloat ff;
-	for(int i = rand_r(&xr_seed) % 20 ; i != 0 ; i--)
+	for(int i = rand_r(&xr_seed) % 20 + 2 ; i != 0 ; i--)
 	{
 		ff.Randomize(xr_seed, "");
 		Update(ff, alpha);
