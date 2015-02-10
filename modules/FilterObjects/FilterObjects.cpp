@@ -113,6 +113,16 @@ void FilterObjects::ProcessFrame()
 				valid = false;
 			}
 		}
+
+		const FeatureFloat& custom = dynamic_cast<const FeatureFloat&>(it->GetFeature(m_param.customFeature));
+
+		if(	(m_param.minCustom > 0 && custom.value < m_param.minCustom) ||
+				(m_param.maxObjectWidth < FLT_MAX && width.value > m_param.maxCustom))
+		{
+			valid = false;
+		}
+
+		// Extract a custom feature and test value
 		if(valid)
 			m_objectsOut.push_back(*it);
 #ifdef MARKUS_DEBUG_STREAMS
