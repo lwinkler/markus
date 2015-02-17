@@ -102,10 +102,10 @@ void StreamImage::Serialize(ostream& x_out, const string& x_dir) const
 	stringstream ss;
 	Stream::Serialize(ss, x_dir);
 	ss >> root;
-	ss.clear();
-	string fileName = x_dir + "/" + GetModule().GetName() + "." + GetName() + ".jpg";
-	imwrite(fileName, m_image);
-	root["image"] = fileName;
+	stringstream fileName;
+	fileName << x_dir << "/" << GetModule().GetName() << "." << GetName() << "." << m_timeStamp << ".jpg";
+	imwrite(fileName.str(), m_image);
+	root["image"] = fileName.str();
 	x_out << root;
 }
 

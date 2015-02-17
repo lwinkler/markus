@@ -36,6 +36,11 @@
 			<value default="CV_8UC3">CV_8UC3</value>
 			<description>Format of the input image</description>
 		</param>
+		<param name="cached">
+			<type>cachedState</type>
+			<value default="NO_CACHE">NO_CACHE</value>
+			<description>Format of the input image</description>
+		</param>
 	</parameters>
 	<inputs>
 		<input id="0">

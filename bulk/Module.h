@@ -46,15 +46,35 @@ class QModuleTimer;
 class Module : public Processable, public Controllable, public Serializable
 {
 public:
+	/// Parameter enum class. Determines if the module is cached (its output is stored to avoid computation costs)
+	// TODO: See if a map can be used to simplify declaration in C++11
+	class ParameterCachedState : public ParameterEnum
+	{
+	public:
+		ParameterCachedState(const std::string& x_name, int x_default, int * xp_value, const std::string& x_description);
+		~ParameterCachedState() {}
+
+		// Conversion methods
+		inline const std::string& GetTypeString() const {const static std::string s = "cachedState"; return s;}
+		const std::map<std::string, int> & GetEnum() const {return Enum;} // TODO: Used ?
+		const std::map<int, std::string> & GetReverseEnum() const {return ReverseEnum;}
+		static std::map<std::string, int> CreateMap(); // TODO: private ?
+
+		// static attributes
+		const static std::map<std::string, int> Enum;
+		const static std::map<int, std::string> ReverseEnum;
+	};
+
 	class Parameters : public Processable::Parameters
 	{
 	public:
 		Parameters(const ConfigReader& x_confReader) : Processable::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterString("class", 		"", 					&objClass,	"Class of the module (define the module's function)"));
-			m_list.push_back(new ParameterInt("width", 	640, 	1, MAX_WIDTH,		&width,		"Width of the input"));
-			m_list.push_back(new ParameterInt("height", 	480, 	1, MAX_HEIGHT,		&height,	"Height of the input"));
-			m_list.push_back(new ParameterImageType("type", 	CV_8UC1, 				&type,		"Format of the input image"));
+			m_list.push_back(new ParameterString("class"       , ""      , &objClass , "Class of the module (define the module's function)"));
+			m_list.push_back(new ParameterInt("width"          , 640     , 1         , MAX_WIDTH , &width  , "Width of the input"));
+			m_list.push_back(new ParameterInt("height"         , 480     , 1         , MAX_HEIGHT, &height , "Height of the input"));
+			m_list.push_back(new ParameterImageType("type"     , CV_8UC1 , &type     , "Format of the input image"));
+			m_list.push_back(new ParameterCachedState("cached" , CV_8UC1 , &cached   , "Format of the input image"));
 
 			Init();
 		}
@@ -63,6 +83,7 @@ public:
 		int height;
 		int type;
 		std::string objClass;
+		int cached;
 	};
 
 	Module(const ConfigReader& x_confReader);
@@ -111,6 +132,9 @@ public:
 	const Module& GetMasterModule() const;
 	inline void CheckParameterRange() {GetParameters().CheckRange(false);}
 	inline bool IsUnitTestingEnabled() const {return m_isUnitTestingEnabled;}
+
+	void WriteToCache() const;
+	void ReadFromCache();
 
 protected:
 	virtual Parameters & RefParameters() = 0;

@@ -36,6 +36,11 @@
 			<value default="CV_8UC1">CV_8UC1</value>
 			<description>Format of the input image</description>
 		</param>
+		<param name="cached">
+			<type>cachedState</type>
+			<value default="NO_CACHE">NO_CACHE</value>
+			<description>Format of the input image</description>
+		</param>
 		<param name="motion_thres">
 			<type>float</type>
 			<value min="0" max="1" default="0.1">0.1</value>
