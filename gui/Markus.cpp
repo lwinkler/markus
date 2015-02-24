@@ -170,9 +170,17 @@ void MarkusWindow::createActionsAndMenus()
 	//    list all commands available in the manager controller
 	vector<string> actions;
 	m_manager.FindController("manager")->ListActions(actions);
-	for(vector<string>::const_iterator it = actions.begin() ; it != actions.end() ; ++it)
+	for(const auto& elem : actions)
 	{
-		QAction* action = new QAction(it->c_str(), this);
+		QAction* action = new QAction(elem.c_str(), this);
+		if(elem == "Pause")
+			action->setShortcut(QKeySequence("p"));
+		else if(elem == "Unpause")
+			action->setShortcut(QKeySequence("Shift+p"));
+		else if(elem == "Reset")
+			action->setShortcut(QKeySequence("Shift+r"));
+		else if(elem == "ResetExceptInputs")
+			action->setShortcut(QKeySequence("r"));
 		connect(action, SIGNAL(triggered()), this, SLOT(callManagerCommand()));
 		managerMenu->addAction(action);
 	}
