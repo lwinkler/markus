@@ -25,12 +25,15 @@
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/writer.h>
 
+#define INI_VARIANCE 0.01
+#define MIN_VARIANCE 0.0001
+
 using namespace std;
 
 FeatureFloatInTime::FeatureFloatInTime(const FeatureFloat& x_feat)
 	: FeatureFloat(x_feat)
 {
-	sqVariance = 0.01;
+	sqVariance = INI_VARIANCE;
 	mean       = value;
 	initial    = value;
 	min        = value;
@@ -50,6 +53,10 @@ void FeatureFloatInTime::Update(const Feature& x_feat, double x_alpha)
 	value      = ff.value;
 	mean       = mean * (1.0 - x_alpha) + value * x_alpha;
 	sqVariance = sqVariance * (1.0 - x_alpha) + POW2(ff.value - mean) * x_alpha;
+
+	// setting a min to the variance as a security
+	if(sqVariance < MIN_VARIANCE)
+		sqVariance = MIN_VARIANCE;
 	if(ff.value < min)
 		min        = ff.value;
 	if(ff.value > max)
@@ -60,7 +67,7 @@ void FeatureFloatInTime::Update(const Feature& x_feat, double x_alpha)
 double FeatureFloatInTime::CompareSquared(const Feature& x_feature) const
 {
 	const FeatureFloat& feat(dynamic_cast<const FeatureFloat&>(x_feature));
-	// cout<<value<<" "<<feat.value<<" "<<sqVariance;
+	// cout<<value<<" "<<feat.value<<" "<<" var:"<<sqVariance<<" --> "<<POW2(value - feat.value) / POW2(sqVariance)<<endl;
 	return POW2(value - feat.value) / POW2(sqVariance);
 }
 

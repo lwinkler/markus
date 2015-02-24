@@ -25,10 +25,6 @@
 #include "StreamImage.h"
 #include <opencv2/opencv.hpp>
 
-// for debug
-// #include "util.h"
-// #include <opencv2/highgui/highgui.hpp>
-
 using namespace cv;
 
 log4cxx::LoggerPtr Morph::m_logger(log4cxx::Logger::getLogger("Morph"));
@@ -42,8 +38,7 @@ Morph::Morph(const ConfigReader& x_configReader) :
 	AddInputStream(0, new StreamImage("input" , m_input , *this, "Video input"));
 
 	AddOutputStream(0, new StreamImage("output", m_output, *this,	"Output"));
-
-	// Reset();
+	AddOutputStream(1, new StreamImage("input", m_input, *this,	"Input"));
 }
 
 Morph::~Morph(void )

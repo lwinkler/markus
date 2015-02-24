@@ -103,11 +103,15 @@ double Template::CompareWithObject(const Object& x_obj, const vector<string>& x_
 
 	for (vector<string>::const_iterator it = x_features.begin() ; it != x_features.end() ; ++it)
 	{
+		/*
 		const FeatureFloatInTime& f1(GetFeature(*it));
 		const FeatureFloat&       f2(dynamic_cast<const FeatureFloat &>(x_obj.GetFeature(*it)));
 		sum += POW2(f1.value - f2.value)
 			   / POW2(f1.sqVariance);
+			   */
+		sum += GetFeature(*it).CompareSquared(x_obj.GetFeature(*it));
 	}
+	// cout<<sqrt(sum) / x_features.size()<<endl;
 	return sqrt(sum) / x_features.size();
 }
 
