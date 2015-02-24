@@ -132,6 +132,12 @@ Then via the GUI menu, select:
 
 Then pick different modules and streams to be visualized.
 
+A few useful tricks:
+* Left click on a stream lets you select different controls to send to the module: e.g. change the value of a parameter or set the position on a video file.
+* Double click on a stream prints info in logs based on cursor position: e.g. value of pixel or object.
+* The last GUI configuration for each XML is saved automatically.
+* A last_config.xml file is automatically created. It contains the last project with the modifications made during the run.
+
 ### Note on video inputs
 By convension each project should contain one module named "Input". If a video file is specified in command line this module will be overrided and the video file will be used as input.
 
