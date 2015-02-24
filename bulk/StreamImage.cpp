@@ -31,7 +31,7 @@
 using namespace std;
 using namespace cv;
 
-log4cxx::LoggerPtr StreamImage::m_logger(log4cxx::Logger::getLogger("Module"));
+log4cxx::LoggerPtr StreamImage::m_logger(log4cxx::Logger::getLogger("StreamImage"));
 
 StreamImage::StreamImage(const string& x_name, Mat& x_image, Module& rx_module, const string& rx_description) :
 	Stream(x_name, rx_module, rx_description),
@@ -69,6 +69,17 @@ void StreamImage::ConvertInput()
 void StreamImage::RenderTo(Mat& x_output) const
 {
 	m_image.copyTo(x_output);
+}
+
+/// Query : give info about cursor position
+void StreamImage::Query(int x_posX, int x_posY) const
+{
+	// check if out of bounds
+	if(x_posX < 0 || x_posY < 0 || x_posX >= GetWidth() || x_posY >= GetHeight())
+		return;
+	
+	Rect rect(x_posX, x_posY, 1, 1);
+	LOG_INFO(m_logger, "Pixel value at " << x_posX << "," << x_posY << " = " << m_image(rect));
 }
 
 /// Randomize the content of the stream

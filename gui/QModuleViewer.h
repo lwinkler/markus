@@ -72,6 +72,7 @@ public:
 	QModuleViewer(const Manager * x_manager, ConfigReader& x_configReader, QWidget *parent = 0);
 	virtual ~QModuleViewer();
 	static void  ConvertMat2QImage(const cv::Mat *mat, QImage *qim);
+	void mouseDoubleClickEvent(QMouseEvent * event);
 private:
 	QBoxLayout * mp_mainLayout;
 

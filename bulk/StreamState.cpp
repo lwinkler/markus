@@ -29,6 +29,7 @@
 using namespace std;
 using namespace cv;
 
+log4cxx::LoggerPtr StreamState::m_logger(log4cxx::Logger::getLogger("StreamState"));
 
 StreamState::StreamState(const string& x_name, bool& x_state, Module& rx_module, const string& rx_description) :
 	Stream(x_name, rx_module, rx_description),
@@ -61,6 +62,16 @@ void StreamState::ConvertInput()
 void StreamState::RenderTo(Mat& x_output) const
 {
 	x_output.setTo(Scalar(255 * m_state, 255 * m_state, 255 * m_state));
+}
+
+/// Query : give info about cursor position
+void StreamState::Query(int x_posX, int x_posY) const
+{
+	// check if out of bounds
+	if(x_posX < 0 || x_posY < 0 || x_posX >= GetWidth() || x_posY >= GetHeight())
+		return;
+	
+	LOG_INFO(m_logger, "State =" << static_cast<int>(m_state));
 }
 
 /// Randomize the content of the stream

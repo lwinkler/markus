@@ -41,6 +41,7 @@
 #include "Module.h"
 #include "util.h"
 #include "StreamImage.h"
+#include "StreamObject.h"
 #include "QControlBoard.h"
 #include "ControllerParameters.h"
 
@@ -225,6 +226,7 @@ void QModuleViewer::updateModule(Module * x_module)
 	const map<string, Controller*>& ctrs = m_currentModule->GetControllersList();
 	cpt = 0;
 
+	// Add option to right-click: controls
 	for(map<string, Controller*>::const_iterator it = ctrs.begin() ; it != ctrs.end() ; ++it)
 	{
 		// Add an action for each control associated with the module
@@ -238,13 +240,15 @@ void QModuleViewer::updateModule(Module * x_module)
 		this->addAction(actionShowControl);
 		cpt++;
 	}
-	if(!ctrs.empty())
+
+	if(cpt != 0)
 	{
 		QAction * actionShowControl = new QAction("Hide all controls", this);
 		QSignalMapper * signalMapper = new QSignalMapper(this);
 		signalMapper->setMapping(actionShowControl, cpt);
 		connect(actionShowControl, SIGNAL(triggered()), this, SLOT(updateControlNb()));
 		this->addAction(actionShowControl);
+		cpt++;
 	}
 	this->setContextMenuPolicy(Qt::ActionsContextMenu);
 
@@ -386,6 +390,17 @@ void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qimg)
 			}
 		}
 	}
+}
+
+// Display some info on stream (and position of cursor)
+void QModuleViewer::mouseDoubleClickEvent(QMouseEvent * event)
+{
+	if(m_currentStream == NULL)
+		return;
+	QPoint cursor = event->pos();
+	int x = (cursor.x() - m_offsetX) * m_currentStream->GetWidth() / m_image.width();
+	int y = (cursor.y() - m_offsetY) * m_currentStream->GetHeight() / m_image.height();
+	m_currentStream->Query(x, y);
 }
 
 // #include "QModuleViewer.moc"

@@ -27,7 +27,7 @@ using namespace std;
 #define POW2(x) (x) * (x)
 
 int Template::m_counter = 0;
-log4cxx::LoggerPtr Template::m_logger(log4cxx::Logger::getLogger("Module"));
+log4cxx::LoggerPtr Template::m_logger(log4cxx::Logger::getLogger("Template"));
 
 void copyFeaturesToTemplate(const map<string, FeaturePtr>& x_source, map<string, FeatureFloatInTime>& xr_dest)
 {

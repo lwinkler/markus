@@ -81,7 +81,7 @@ void usage()
 void *send_commands(void *x_void_ptr)
 {
 	Manager *pManager = reinterpret_cast<Manager*>(x_void_ptr);
-	static log4cxx::LoggerPtr logger(log4cxx::Logger::getLogger("Module"));
+	static log4cxx::LoggerPtr logger(log4cxx::Logger::getLogger("send_commands"));
 	assert(pManager != NULL);
 	string input;
 	vector<string> elems;

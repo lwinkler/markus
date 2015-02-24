@@ -28,6 +28,8 @@
 
 using namespace std;
 
+log4cxx::LoggerPtr Stream::m_logger(log4cxx::Logger::getLogger("Stream"));
+
 Stream::Stream(const string& x_name, Module& rx_module, const string& rx_description, const string& rx_requirement) :
 	m_name(x_name),
 	// m_id(0),

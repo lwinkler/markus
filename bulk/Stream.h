@@ -24,6 +24,7 @@
 #ifndef STREAM_H
 #define STREAM_H
 
+#include <log4cxx/logger.h>
 #include "Module.h"
 
 
@@ -44,7 +45,8 @@ public:
 	inline int GetHeight() const {return m_height;}
 	inline cv::Size GetSize() const {return cv::Size(m_width, m_height);}
 	inline const std::string& GetDescription() const {return m_description;}
-	virtual void RenderTo(cv::Mat& x_output) const  = 0;
+	virtual void RenderTo(cv::Mat& x_output) const = 0;
+	virtual void Query(int x_posX, int x_posY) const = 0;
 	virtual void Connect(Stream *x_stream, bool x_bothWays = true);
 	virtual void ConvertInput() = 0;
 	virtual void Randomize(unsigned int& xr_seed) = 0;
@@ -90,6 +92,7 @@ protected:
 
 private:
 	DISABLE_COPY(Stream)
+	static log4cxx::LoggerPtr m_logger;
 };
 
 #endif

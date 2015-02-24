@@ -29,6 +29,7 @@
 using namespace std;
 using namespace cv;
 
+log4cxx::LoggerPtr StreamObject::m_logger(log4cxx::Logger::getLogger("StreamObject"));
 
 StreamObject::StreamObject(const string& rx_name, vector<Object>& xr_objects, Module& rx_module, const string& rx_description, const string& rx_requirement):
 	Stream(rx_name, rx_module, rx_description, rx_requirement),
@@ -84,6 +85,21 @@ void StreamObject::RenderTo(Mat& x_output) const
 	{
 		it1->RenderTo(x_output, DEFAULT_STREAM_COLOR);
 	}
+}
+
+/// Query : give info about cursor position
+void StreamObject::Query(int x_posX, int x_posY) const
+{
+	// check if out of bounds
+	if(x_posX < 0 || x_posY < 0 || x_posX >= GetWidth() || x_posY >= GetHeight())
+		return;
+
+	Point pt(x_posX, x_posY);
+
+	for(const auto& elem : m_objects)
+		if(elem.GetRect().contains(pt))
+			LOG_INFO(m_logger, elem);
+	
 }
 
 /// Randomize the content of the stream

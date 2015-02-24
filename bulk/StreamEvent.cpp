@@ -30,6 +30,7 @@
 using namespace std;
 using namespace cv;
 
+log4cxx::LoggerPtr StreamEvent::m_logger(log4cxx::Logger::getLogger("StreamEvent"));
 
 StreamEvent::StreamEvent(const string& x_name, Event& x_event, Module& rx_module, const string& rx_description) :
 	Stream(x_name, rx_module, rx_description),
@@ -80,6 +81,16 @@ void StreamEvent::RenderTo(Mat& x_output) const
 		m_event.GetObject().RenderTo(x_output, Scalar(255, 0, 0));
 	}
 	// else x_output.setTo(0);
+}
+
+/// Query : give info about cursor position
+void StreamEvent::Query(int x_posX, int x_posY) const
+{
+	// check if out of bounds
+	if(x_posX < 0 || x_posY < 0 || x_posX >= GetWidth() || x_posY >= GetHeight())
+		return;
+	
+	LOG_ERROR(m_logger, "TODO");
 }
 
 void StreamEvent::Serialize(ostream& x_out, const string& x_dir) const
