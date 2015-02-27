@@ -80,7 +80,7 @@ protected:
 	void Match();
 	void UpdateObjects();
 	void UpdateTemplates();
-	const Template * MatchObject(const Object& x_obj)const;
+	const Template * MatchObject(Object& x_obj)const;
 	Object* MatchTemplate(Template& x_temp);
 
 	// input and output

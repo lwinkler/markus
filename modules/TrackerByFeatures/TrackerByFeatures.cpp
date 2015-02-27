@@ -25,6 +25,7 @@
 #include "StreamObject.h"
 #include "StreamDebug.h"
 #include "util.h"
+#include "FeatureVector.h"
 
 // for debug
 // #include "util.h"
@@ -110,7 +111,7 @@ void TrackerByFeatures::MatchTemplates()
 	{
 		// it1->m_bestMatchingObject = -1;
 		it1->m_lastMatchingObject = NULL;
-		MatchTemplate(*it1);
+		Object* bestObj = MatchTemplate(*it1);
 	}
 
 	/*for(vector<Object>::iterator it1 = m_objects.begin() ; it1 != m_objects.end(); it1++ )
@@ -183,7 +184,7 @@ Object* TrackerByFeatures::MatchTemplate(Template& x_temp)
 		{
 			const Template * bestTemplate = MatchObject(*bestObject);
 			assert(bestTemplate != NULL);
-			if(bestTemplate == NULL || bestTemplate->GetNum() != x_temp.GetNum())
+			if(bestTemplate->GetNum() != x_temp.GetNum())
 				return NULL;
 		}
 		// x_temp.m_bestMatchingObject = bestObject;
@@ -206,22 +207,52 @@ Object* TrackerByFeatures::MatchTemplate(Template& x_temp)
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 /// Match an object with the set of templates
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-const Template * TrackerByFeatures::MatchObject(const Object& x_obj)const
+const Template * TrackerByFeatures::MatchObject(Object& rx_obj)const
 {
 	double bestDist = DBL_MAX;
 	const Template* bestTemp = NULL;
+	vector<const Template*> closeTemplates;
 
 	//cout<<"Comparing template "<<m_num<<" with "<<x_regs.size()<<" objects"<<endl;
 
-	for(list<Template>::const_iterator it1 = m_templates.begin() ; it1 != m_templates.end(); ++it1)
+	for(const auto& temp : m_templates)
 	{
-		// cout<<"Match template "<<it1->GetNum()<<endl;
-		double dist = it1->CompareWithObject(x_obj, m_featureNames);
+		// cout<<"Match template "<<temp.GetNum()<<endl;
+		double dist = temp.CompareWithObject(rx_obj, m_featureNames);
 		//cout<<"dist ="<<dist;
+		if(dist <= m_param.maxMatchingDistance)
+			closeTemplates.push_back(&temp);
 		if(dist < bestDist)
 		{
 			bestDist = dist;
-			bestTemp = &(*it1);
+			bestTemp = &temp;
+		}
+	}
+	if(m_param.handleSplit && closeTemplates.size() > 1)
+	{
+		vector<int> merged;
+		for(const auto& temp : closeTemplates)
+		{
+			if(temp->GetNum() == bestTemp->GetNum())
+				continue;
+			double xt = temp->GetFeature("x").value;
+			double yt = temp->GetFeature("y").value;
+			double xo = dynamic_cast<const FeatureFloat&>(rx_obj.GetFeature("x")).value;
+			double yo = dynamic_cast<const FeatureFloat&>(rx_obj.GetFeature("y")).value;
+			double wo = dynamic_cast<const FeatureFloat&>(rx_obj.GetFeature("width")).value;
+			double ho = dynamic_cast<const FeatureFloat&>(rx_obj.GetFeature("height")).value;
+
+			// Condition for object merge
+			// note: so far the distance to consider a split is the double of w/2 . This is a security margin
+			if(abs(xo - xt) <= wo / 2 && abs(yo - yt) <= ho / 2)
+			{
+				merged.push_back(temp->GetNum());
+			}
+		}
+		if(!merged.empty())
+		{
+			rx_obj.AddFeature("merged", new FeatureVectorInt(merged));
+			LOG_DEBUG(m_logger, "Object merged with "<< merged.size() << " templates");
 		}
 	}
 	// TODO: Compensate matching distance and alpha param with time between frames
@@ -308,10 +339,10 @@ void TrackerByFeatures::DetectNewTemplates()
 {
 	// If objects not matched, add a template
 	int cpt = 0;
-	for(vector<Object>::iterator it2 = m_objects.begin() ; it2 != m_objects.end(); ++it2)
+	for(auto& obj : m_objects)
 	{
-		map<Object*, Template*>::iterator it3 = m_matched.find(&(*it2));
-		if(it3 == m_matched.end() || it3->second == NULL)
+		auto obj_matched = m_matched.find(&obj);
+		if(obj_matched == m_matched.end() || obj_matched->second == NULL)
 		{
 			if(m_templates.size() >= MAX_NB_TEMPLATES)
 			{
@@ -319,7 +350,8 @@ void TrackerByFeatures::DetectNewTemplates()
 				// return; // Note: not a fatal error
 			}
 
-			Template template1(*it2, m_currentTimeStamp);
+			// Create new template
+			Template template1(obj, m_currentTimeStamp);
 			// if(bestDist <= m_param.maxMatchingDistance && bestTemplate != NULL)
 
 			// note: We may want to inherit this class and create an AdvancedTracker !
@@ -331,14 +363,14 @@ void TrackerByFeatures::DetectNewTemplates()
 
 				LOG_DEBUG(m_logger, "New object. Detect if the new object similar to another template ");
 
-				for(list<Template>::iterator it3 = m_templates.begin() ; it3 != m_templates.end() ; ++it3)
+				for(const auto& temp : m_templates)
 				{
 					// Add empty features for distance and speed
-					double dist = it3->CompareWithObject(*it2, m_featureNames);
+					double dist = temp.CompareWithObject(obj, m_featureNames);
 					if(dist < bestDist)
 					{
 						bestDist     = dist;
-						bestTemplate = &(*it3);
+						bestTemplate = &temp;
 					}
 				}
 
@@ -351,28 +383,30 @@ void TrackerByFeatures::DetectNewTemplates()
 						double yt = bestTemplate->GetFeature("y").value;
 						double wt = bestTemplate->GetFeature("width").value;
 						double ht = bestTemplate->GetFeature("height").value;
-						double xo = dynamic_cast<const FeatureFloat&>(it2->GetFeature("x")).value;
-						double yo = dynamic_cast<const FeatureFloat&>(it2->GetFeature("y")).value;
+						double xo = dynamic_cast<const FeatureFloat&>(obj.GetFeature("x")).value;
+						double yo = dynamic_cast<const FeatureFloat&>(obj.GetFeature("y")).value;
 
 						// Condition for object split
 						// note: so far the distance to consider a split is the double of w/2 . This is a security margin
 						if(abs(xt - xo) <= wt / 2 && abs(yt - yo) <= ht / 2)
 						{
 							// Copy the template to the object (but not the id)
-							template1.SetFeatures(bestTemplate->GetFeatures());
+							// template1.SetFeatures(bestTemplate->GetFeatures());
+							obj.AddFeature("split", new FeatureInt(bestTemplate->GetNum()));
+							LOG_DEBUG(m_logger,"Objects split with "<<bestTemplate->GetNum());
 						}
 					}
 					catch(...) {}
 				}
 			}
 
-			template1.m_lastMatchingObject = &(*it2);
+			template1.m_lastMatchingObject = &obj;
 			m_templates.push_back(template1);
 			Template* newTemp = &m_templates.back();
-			m_matched[&(*it2)] = newTemp;
+			m_matched[&obj] = newTemp;
 			//cout<<"Added template "<<t.GetNum()<<endl;
-			// updateObjectFromTemplate(*newTemp, *it2);
-			LOG_DEBUG(m_logger, "Added new template " << it2->GetId());
+			// updateObjectFromTemplate(*newTemp, obj);
+			LOG_DEBUG(m_logger, "Added new template " << obj.GetId());
 			cpt++;
 		}
 	}
