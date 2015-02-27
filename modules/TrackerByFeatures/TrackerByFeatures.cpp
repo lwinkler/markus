@@ -211,7 +211,7 @@ const Template * TrackerByFeatures::MatchObject(Object& rx_obj)const
 {
 	double bestDist = DBL_MAX;
 	const Template* bestTemp = NULL;
-	vector<const Template*> closeTemplates;
+	vector<const Template*> unmatched;
 
 	//cout<<"Comparing template "<<m_num<<" with "<<x_regs.size()<<" objects"<<endl;
 
@@ -220,39 +220,46 @@ const Template * TrackerByFeatures::MatchObject(Object& rx_obj)const
 		// cout<<"Match template "<<temp.GetNum()<<endl;
 		double dist = temp.CompareWithObject(rx_obj, m_featureNames);
 		//cout<<"dist ="<<dist;
-		if(dist <= m_param.maxMatchingDistance)
-			closeTemplates.push_back(&temp);
+		if(temp.m_lastSeen != m_currentTimeStamp)
+			unmatched.push_back(&temp);
 		if(dist < bestDist)
 		{
 			bestDist = dist;
 			bestTemp = &temp;
 		}
 	}
-	if(m_param.handleSplit && closeTemplates.size() > 1)
+	if(m_param.handleSplit && unmatched.size() > 1)
 	{
-		vector<int> merged;
-		for(const auto& temp : closeTemplates)
+		try
 		{
-			if(temp->GetNum() == bestTemp->GetNum())
-				continue;
-			double xt = temp->GetFeature("x").value;
-			double yt = temp->GetFeature("y").value;
-			double xo = dynamic_cast<const FeatureFloat&>(rx_obj.GetFeature("x")).value;
-			double yo = dynamic_cast<const FeatureFloat&>(rx_obj.GetFeature("y")).value;
-			double wo = dynamic_cast<const FeatureFloat&>(rx_obj.GetFeature("width")).value;
-			double ho = dynamic_cast<const FeatureFloat&>(rx_obj.GetFeature("height")).value;
-
-			// Condition for object merge
-			// note: so far the distance to consider a split is the double of w/2 . This is a security margin
-			if(abs(xo - xt) <= wo / 2 && abs(yo - yt) <= ho / 2)
+			vector<int> merged;
+			for(const auto& temp : unmatched)
 			{
-				merged.push_back(temp->GetNum());
+				if(temp->GetNum() == bestTemp->GetNum())
+					continue;
+				double xt = temp->GetFeature("x").value;
+				double yt = temp->GetFeature("y").value;
+				double xo = dynamic_cast<const FeatureFloat&>(rx_obj.GetFeature("x")).value;
+				double yo = dynamic_cast<const FeatureFloat&>(rx_obj.GetFeature("y")).value;
+				double wo = dynamic_cast<const FeatureFloat&>(rx_obj.GetFeature("width")).value;
+				double ho = dynamic_cast<const FeatureFloat&>(rx_obj.GetFeature("height")).value;
+
+				// Condition for object merge
+				// note: so far the distance to consider a split is the double of w/2 . This is a security margin
+				if(abs(xo - xt) <= wo / 2 && abs(yo - yt) <= ho / 2)
+				{
+					merged.push_back(temp->GetNum());
+				}
+			}
+			if(!merged.empty())
+			{
+				rx_obj.AddFeature("merge", new FeatureVectorInt(merged));
+				LOG_DEBUG(m_logger, "Object merged with "<< merged.size() << " templates");
 			}
 		}
-		if(!merged.empty())
+		catch(exception& e) 
 		{
-			rx_obj.AddFeature("merged", new FeatureVectorInt(merged));
-			LOG_DEBUG(m_logger, "Object merged with "<< merged.size() << " templates");
+			LOG_WARN(m_logger, "Exception in merge: "<< e.what());
 		}
 	}
 	// TODO: Compensate matching distance and alpha param with time between frames
@@ -376,7 +383,7 @@ void TrackerByFeatures::DetectNewTemplates()
 
 				if(bestTemplate != NULL)
 				{
-					// See if the object might have splitted
+					// See if the object might have split
 					try
 					{
 						double xt = bestTemplate->GetFeature("x").value;
@@ -388,7 +395,7 @@ void TrackerByFeatures::DetectNewTemplates()
 
 						// Condition for object split
 						// note: so far the distance to consider a split is the double of w/2 . This is a security margin
-						if(abs(xt - xo) <= wt / 2 && abs(yt - yo) <= ht / 2)
+						if(abs(xt - xo) <= wt / 1 && abs(yt - yo) <= ht / 1)
 						{
 							// Copy the template to the object (but not the id)
 							// template1.SetFeatures(bestTemplate->GetFeatures());
@@ -396,7 +403,10 @@ void TrackerByFeatures::DetectNewTemplates()
 							LOG_DEBUG(m_logger,"Objects split with "<<bestTemplate->GetNum());
 						}
 					}
-					catch(...) {}
+					catch(exception& e) 
+					{
+						LOG_WARN(m_logger, "Exception in split: "<< e.what());
+					}
 				}
 			}
 

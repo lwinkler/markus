@@ -67,9 +67,13 @@ public:
 		m_feats.insert(std::make_pair(x_name, new FeatureFloat(x_value)));
 	}
 	inline const std::map <std::string, FeaturePtr>& GetFeatures() const {return m_feats;}
+	inline bool HasFeature(const std::string& x_name) const
+	{
+		return m_feats.find(x_name) != m_feats.end();
+	}
 	inline const Feature& GetFeature(const std::string& x_name) const
 	{
-		std::map <std::string, FeaturePtr>::const_iterator it = m_feats.find(x_name);
+		const auto it = m_feats.find(x_name);
 		if(it == m_feats.end())
 			throw FeatureNotFoundException("Feature " + x_name + " does not exist", LOC);
 		return *it->second;
