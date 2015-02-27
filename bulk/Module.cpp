@@ -149,7 +149,7 @@ void Module::Reset()
 		else AddController(ctr);
 	}
 
-	if(GetParameters().cached == 2)
+	if(GetParameters().cached == CachedState::WRITE_CACHE)
 		 SYSTEM("mkdir -p " + m_context.GetOutputDir() + "/cache/");
 }
 
@@ -249,7 +249,7 @@ bool Module::Process()
 
 			// note: Inputs must call ProcessFrame to set the time stamp
 			// TODO: There is no reason to cache input modules !
-			if(param.cached != 1 || IsInput())
+			if(param.cached < CachedState::READ_CACHE || IsInput())
 			{
 				// Read and convert inputs
 				if(IsInputProcessed())
@@ -271,7 +271,7 @@ bool Module::Process()
 
 				m_timerProcessing 	 += ti.GetMSecLong();
 			}
-			if(param.cached == 1)
+			if(param.cached == CachedState::READ_CACHE)
 			{
 				// TODO: check that module is not an input
 				ti.Restart();
@@ -284,7 +284,7 @@ bool Module::Process()
 				it->second->SetTimeStamp(m_currentTimeStamp);
 
 			// Write outputs to cache
-			if(param.cached == 2)
+			if(param.cached == CachedState::WRITE_CACHE)
 			{
 				WriteToCache();
 			}
@@ -585,6 +585,7 @@ void Module::WriteToCache() const
 	// Write output stream to cache
 	for(const auto &elem : m_outputStreams)
 	{
+		if(!elem.second->IsConnected()) continue;
 		string directory = m_context.GetOutputDir() + "/cache/";
 		stringstream fileName;
 		fileName << directory << GetName() << "." << elem.second->GetName() << "." << m_currentTimeStamp << ".json";
@@ -604,6 +605,7 @@ void Module::ReadFromCache()
 	// Read output stream from cache
 	for(auto elem : m_outputStreams)
 	{
+		if(!elem.second->IsConnected()) continue;
 		string directory = "cache/"; // TODO fix this m_context.GetOutputDir() + "/cache/";
 		stringstream fileName;
 		fileName << directory << GetName() << "." << elem.second->GetName() << "." << m_currentTimeStamp << ".json";
@@ -635,17 +637,14 @@ void Module::ProcessRandomInput(unsigned int& xr_seed)
 	ProcessFrame();
 };
 
-const map<string, int> Module::ParameterCachedState::Enum = Module::ParameterCachedState::CreateMap();
+const map<string, int> Module::ParameterCachedState::Enum = {
+	{"NO_CACHE", CachedState::NO_CACHE},
+	{"WRITE_CACHE", CachedState::WRITE_CACHE},
+	{"READ_CACHE", CachedState::READ_CACHE},
+	{"DISABLED", CachedState::DISABLED}
+};
 const map<int, string> Module::ParameterCachedState::ReverseEnum = Module::ParameterCachedState::CreateReverseMap(ParameterCachedState::Enum);
 
-map<string, int> Module::ParameterCachedState::CreateMap()
-{
-	map<string, int> map1;
-	map1["NO_CACHE"]    = 0;
-	map1["READ_CACHE"]  = 1;
-	map1["WRITE_CACHE"] = 2;
-	return map1;
-}
 
 Module::ParameterCachedState::ParameterCachedState(const string& x_name, int x_default, int * xp_value, const string& x_description) :
 	ParameterEnum(x_name, x_default, xp_value, x_description)

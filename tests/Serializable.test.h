@@ -239,15 +239,6 @@ public:
 		testSerialization(stream4, "StreamEvent");
 	}
 
-	void testStreamDebug()
-	{
-#ifdef MARKUS_DEBUG_STREAMS
-		cv::Mat image2(cv::Size(640, 480), CV_8U);
-		StreamDebug stream5("streamDebug", image2, *mp_fakeInput, "A stream of debug");
-		testSerialization(stream5, "StreamDebug");
-#endif
-	}
-
 	void testMkException()
 	{
 		MkException excep("test", LOC);

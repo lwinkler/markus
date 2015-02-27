@@ -47,7 +47,14 @@ class Module : public Processable, public Controllable, public Serializable
 {
 public:
 	/// Parameter enum class. Determines if the module is cached (its output is stored to avoid computation costs)
-	// TODO: See if a map can be used to simplify declaration in C++11
+	enum CachedState : char
+	{
+		NO_CACHE    = 0,
+		WRITE_CACHE = 1,
+		READ_CACHE  = 2,
+		DISABLED    = 3
+	};
+
 	class ParameterCachedState : public ParameterEnum
 	{
 	public:
