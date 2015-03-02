@@ -390,6 +390,8 @@ void Manager::SendCommand(const string& x_command, string x_value)
 	if(elems.size() != 3)
 		throw MkException("Command must be in format \"module.controller.Command\"", LOC);
 
+	// TODO: simplify code using: Module& module(elems.at(0) == "manager" ? dynamic_cast<Module&>(*this) : RefModuleByName(elems.at(0)));
+
 	if(elems.at(0) == "manager")
 	{
 		try
