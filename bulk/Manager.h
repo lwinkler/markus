@@ -30,12 +30,11 @@
 #include "Controller.h"
 #include "Timer.h"
 #include "Processable.h"
+#include "InterruptionManager.h"
 #include "Factories.h"
 #include "ParameterString.h"
 #include "Module.h"
 
-
-class Input;
 
 /**
 * @brief The manager handles all modules
@@ -108,8 +107,8 @@ protected:
 	long long m_frameCount;
 	static log4cxx::LoggerPtr m_logger;
 	const FactoryModules& mr_moduleFactory;
+	InterruptionManager& m_interruptionManager;
 
-protected:
 	QReadWriteLock m_lock;
 
 private:

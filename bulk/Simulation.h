@@ -28,18 +28,16 @@
 #include "ConfigReader.h"
 #include <sstream>
 
-using namespace std;
-
 /**
 * @brief This file contains all the functions needed to prepare an optimization and variate parameters of the config
 */
 class Simulation : public Configurable
 {
 public:
-	class Parameters : public Processable::Parameters
+	class Parameters : public ParameterStructure
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Processable::Parameters(x_confReader)
+		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
 		{
 			ParameterStructure::Init();
 		}
@@ -50,7 +48,7 @@ public:
 
 protected:
 	/// Add an entry in the Makefile
-	void AddSimulationEntry(const vector<string>& x_variationNames, const ConfigReader& x_mainConfig);
+	void AddSimulationEntry(const std::vector<std::string>& x_variationNames, const ConfigReader& x_mainConfig);
 
 	/// Add variation to simulation
 	void AddVariations(std::vector<std::string>& x_variationNames, const ConfigReader& x_varConf, ConfigReader& xr_mainConfig);

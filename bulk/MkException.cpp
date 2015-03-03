@@ -60,12 +60,14 @@ MkException::MkException(const string& x_description, const string& x_position, 
 	: m_description(writeDescription(x_description, x_position, x_function))
 {
 	m_code = MK_EXCEPTION_UNKNOWN;
+	m_name = "unknown";
 }
 
-MkException::MkException(MkExceptionCode x_code, const string& x_description, const string& x_position, const string& x_function)
+MkException::MkException(MkExceptionCode x_code, const std::string& x_name, const string& x_description, const string& x_position, const string& x_function)
 	: m_description(writeDescription(x_description, x_position, x_function))
 {
 	m_code = x_code;
+	m_name = x_name;
 }
 
 MkException::~MkException() throw()
@@ -86,19 +88,19 @@ const char* MkException::what() const throw()
 
 
 EndOfStreamException::EndOfStreamException(const string& x_descr, const string& x_position, const string& x_function) :
-	MkException(MK_EXCEPTION_ENDOFSTREAM, "EndOfStreamException: " + x_descr, x_position, x_function)
+	MkException(MK_EXCEPTION_ENDOFSTREAM, "end_of_stream", "EndOfStreamException: " + x_descr, x_position, x_function)
 {}
 
 ParameterException::ParameterException(const string& x_descr, const string& x_position, const string& x_function) :
-	MkException(MK_EXCEPTION_PARAMETER, "ParameterException: " + x_descr, x_position, x_function)
+	MkException(MK_EXCEPTION_PARAMETER, "parameter", "ParameterException: " + x_descr, x_position, x_function)
 {}
 
 FeatureNotFoundException::FeatureNotFoundException(const string& x_descr, const string& x_position, const string& x_function) :
-	MkException(MK_EXCEPTION_FEAT_NOT_FOUND, "FeatureNotFoundException: " + x_descr, x_position, x_function)
+	MkException(MK_EXCEPTION_FEAT_NOT_FOUND, "feature_not_found", "FeatureNotFoundException: " + x_descr, x_position, x_function)
 {}
 
 WebServiceException::WebServiceException(const string& x_descr, const string& x_position, const string& x_function) :
-	MkException(MK_EXCEPTION_WEBSERVICE, "WebServiceException: " + x_descr, x_position, x_function)
+	MkException(MK_EXCEPTION_WEBSERVICE, "web_service", "WebServiceException: " + x_descr, x_position, x_function)
 {}
 
 /**
@@ -112,6 +114,7 @@ void MkException::Serialize(ostream& x_out, const string& x_dir) const
 	Json::Value root;
 	root["description"] = m_description;
 	root["code"] = m_code;
+	root["name"] = m_name;
 	x_out << root;
 }
 
@@ -127,4 +130,5 @@ void MkException::Deserialize(istream& x_in, const string& x_dir)
 	x_in >> root;
 	m_description = root["description"].asString();
 	m_code        = static_cast<MkExceptionCode>(root["code"].asInt());
+	m_name        = root["name"].asString();
 }

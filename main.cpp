@@ -51,30 +51,32 @@ using namespace std;
 
 void usage()
 {
-	printf("Usage : markus <options> <configuration.xml> <video_file> \n");
-	printf("\n");
-	printf(" configuration.xml     The configuration of the application describing the different modules\n");
-	printf(" video_file (opt.)     A video file to use as input. (assuming the input module is named \"Input\")\n");
-	printf("\n");
-	printf("options:\n");
-	printf(" -h  --help            Print this help        \n");
-	printf(" -v  --version         Print version information\n");
-	printf(" -d  --describe        Create a description of all modules in XML format inside module/ directory. For development purpose.\n");
-	printf(" -e  --editor          Launch the module editor. \n");
-	printf(" -S  --simulation      Prepare a full simultion based on a *.sim.xml file\n");
-	printf("                       Override some parameters in an extra XML file\n");
-	printf(" -c  --centralized     Module processing function is called from the manager (instead of decentralized timers)\n");
-	printf(" -i  --stdin           Read commands from stdin\n");
-	printf(" -n  --no-gui          Run process without gui\n");
-	printf(" -f  --fast            Fast, no real-time input\n");
-	printf(" -l  --log-conf <log4cxx_config>.xml\n");
-	printf("                       Set logging mode\n");
-	printf(" -o  --output-dir directory\n");
-	printf("                       Set the name of the output directory\n");
-	printf(" -p  --parameter \"moduleName.paramName=value\"\n");
-	printf("                       Override the value of one parameter\n");
-	printf(" -x  --xml extra_config.xml\n");
-	printf("                       Override some parameters in an extra XML file\n");
+	printf(
+		"Usage : markus <options> <configuration.xml> <video_file> \n"
+		"\n"
+		" configuration.xml     The configuration of the application describing the different modules\n"
+		" video_file (opt.)     A video file to use as input. (assuming the input module is named \"Input\")\n"
+		"\n"
+		"options:\n"
+		" -h  --help            Print this help        \n"
+		" -v  --version         Print version information\n"
+		" -d  --describe        Create a description of all modules in XML format inside module/ directory. For development purpose.\n"
+		" -e  --editor          Launch the module editor. \n"
+		" -S  --simulation      Prepare a full simultion based on a *.sim.xml file\n"
+		"                       Override some parameters in an extra XML file\n"
+		" -c  --centralized     Module processing function is called from the manager (instead of decentralized timers)\n"
+		" -i  --stdin           Read commands from stdin\n"
+		" -n  --no-gui          Run process without gui\n"
+		" -f  --fast            Fast, no real-time input\n"
+		" -l  --log-conf <log4cxx_config>.xml\n"
+		"                       Set logging mode\n"
+		" -o  --output-dir directory\n"
+		"                       Set the name of the output directory\n"
+		" -p  --parameter \"moduleName.paramName=value\"\n"
+		"                       Override the value of one parameter\n"
+		" -x  --xml extra_config.xml\n"
+		"                       Override some parameters in an extra XML file\n"
+	);
 }
 
 /// Specific thread dedicated to the reading of commands via stdin

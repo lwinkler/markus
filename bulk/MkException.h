@@ -13,8 +13,6 @@
 
 void fatal(const std::string& x_description, const std::string& x_position, const std::string& x_function);
 
-class Parameter;
-
 /**
 * @brief Exception codes: correspond with return values (+1000)
 */
@@ -41,16 +39,18 @@ class MkException : public std::exception, public Serializable
 {
 public:
 	MkException(const std::string& x_description, const std::string& x_position, const std::string& x_function);
-	MkException(MkExceptionCode x_code, const std::string& x_description, const std::string& x_position, const std::string& x_function);
+	MkException(MkExceptionCode x_code, const std::string& x_name, const std::string& x_description, const std::string& x_position, const std::string& x_function);
 	~MkException() throw();
 	const char* what() const throw();
-	inline MkExceptionCode GetCode() {return m_code;}
+	inline MkExceptionCode GetCode() const {return m_code;}
+	inline const std::string& GetName() const {return m_name;}
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 
 protected:
 	std::string m_description;
-	MkExceptionCode m_code;
+	std::string m_name;     // For interruption calls
+	MkExceptionCode m_code; // For return value of main
 };
 
 /*class ProcessingException : public MkException {

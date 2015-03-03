@@ -23,6 +23,8 @@
 #include "Event.h"
 #include "Object.h"
 #include "util.h"
+#include "InterruptionManager.h"
+
 #include <cstdio>
 
 
@@ -156,6 +158,7 @@ void Event::Raise(const string& x_eventName, const Object& x_object, TIME_STAMP 
 */
 void Event::Raise(const string& x_eventName, TIME_STAMP x_absTimeEvent)
 {
+	InterruptionManager::GetInst().AddEvent("event." + x_eventName);// TODO keep this here ?
 	m_absTimeEvent = x_absTimeEvent == 0 ? getAbsTimeMs() : x_absTimeEvent;
 	if(IsRaised())
 		LOG_WARN(m_logger, "The same event is raised several times. Older events are overriden");

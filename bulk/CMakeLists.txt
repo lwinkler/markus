@@ -16,7 +16,6 @@ ParameterSerializable.cpp
 Polygon.cpp
 Stream.cpp
 StreamImage.cpp
-StreamDebug.cpp
 StreamEvent.cpp
 StreamObject.cpp
 StreamState.cpp
@@ -38,5 +37,6 @@ CalibrationByHeight.cpp
 CalibrationByModel.cpp
 Processable.cpp
 Simulation.cpp
+InterruptionManager.cpp
 )
 
