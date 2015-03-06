@@ -45,14 +45,14 @@ void InterruptionManager::Configure(const ConfigReader& x_config)
 	m_interruptions.clear();
 	for(auto config : x_config.FindAll("interruptions>interruption"))
 	{
-		Interruption inter(Command(config.GetAttribute("command"), config.GetAttribute("value")), -1);
-		try
-		{
-			inter.remaining = boost::lexical_cast<int>(config.GetAttribute("count"));
-		}
-		catch(...){}
-		m_interruptions[config.GetAttribute("event")].push_back(inter);
-		cout<<"Add interruption for "<<config.GetAttribute("event")<<" --> "<<config.GetAttribute("value")<<endl;
+		Interruption inter(Command(
+			config.GetAttribute("command"), 
+			config.GetAttribute("value", "")),
+			atoi(config.GetAttribute("nb", "-1").c_str())
+		);
+		string event = config.GetAttribute("event");
+		m_interruptions[event].push_back(inter);
+		cout<<"Add interruption for "<<event<<" --> "<<inter.command.name<<"="<<inter.command.value<<" "<<inter.remaining<<" times"<<endl;
 	}
 }
 
@@ -67,11 +67,14 @@ vector<Command> InterruptionManager::ReturnCommandsToSend()
 		if(it != m_interruptions.end()) // && it->second.remaining != 0)
 		{
 			// Add all command in this slot to Return vector and decrement
-			for(auto& interruption : it->second)
+			for(auto& inter : it->second)
 			{
-				commands.push_back(interruption.command);
-				if(interruption.remaining > 0)
-					interruption.remaining--;
+				if(inter.remaining == 0)
+					continue;
+				commands.push_back(inter.command);
+				if(inter.remaining > 0)
+					inter.remaining--;
+				cout<<"Return interruption for "<<event<<" --> "<<inter.command.name<<"="<<inter.command.value<<endl;
 			}
 		}
 	}

@@ -392,27 +392,20 @@ int main(int argc, char** argv)
 		}
 
 		// Notify the parent process (for monitoring purposes)
-
+		Event ev1;
+		ev1.AddExternalInfo("pid", getpid());
+		ev1.Raise("started");
+		ev1.Notify(context, true);
 
 		if(args.nogui)
 		{
 			// No gui. launch the process directly
 			// note: so far we cannot launch the process in a decentralized manner (with a timer on each module)
 
-			Event ev1;
-			ev1.AddExternalInfo("pid", getpid());
-			ev1.Raise("started");
-			ev1.Notify(context, true);
-
 			while(manager.Process())
 			{
 				// nothing
 			}
-
-			Event ev2;
-			ev2.Raise("stopped");
-			ev2.Notify(context, true);
-			returnValue = MK_EXCEPTION_NORMAL - MK_EXCEPTION_FIRST;
 		}
 		else
 		{
@@ -435,6 +428,11 @@ int main(int argc, char** argv)
 			returnValue = -1;
 #endif
 		}
+
+		Event ev2;
+		ev2.Raise("stopped");
+		ev2.Notify(context, true);
+		returnValue = MK_EXCEPTION_NORMAL - MK_EXCEPTION_FIRST;
 
 		// Write the modified params in config and save
 		manager.UpdateConfig();

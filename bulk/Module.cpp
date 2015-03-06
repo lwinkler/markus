@@ -91,53 +91,48 @@ void Module::Reset()
 	param.PrintParameters();
 	param.CheckRange(true);
 
-	// param.PrintParameters(); // Do not print 2x at startup
-
-	// Add controls for parameters' change
-	const vector<Parameter*>& list = param.GetList();
-
 	// This must be done only once to avoid troubles in the GUI
 	// Add module controller
 	if(FindController("module") == NULL)
 		AddController(new ControllerModule(*this));
 
-	for(vector<Parameter*>::const_iterator it = list.begin(); it != list.end(); ++it)
+	for(const auto& elem : param.GetList())
 	{
 		// Do not add param if locked or already present
 		// TODO: Suppress GetType() and use a CreateController method
-		if((*it)->IsLocked() || FindController((*it)->GetName()) != NULL)
+		if(elem->IsLocked() || FindController(elem->GetName()) != NULL)
 			continue;
 		Controller* ctr = NULL;
-		switch((*it)->GetType())
+		switch(elem->GetType())
 		{
 		case PARAM_BOOL:
-			ctr = new ControllerBool(*dynamic_cast<ParameterBool*>(*it));
+			ctr = new ControllerBool(*dynamic_cast<ParameterBool*>(elem));
 			break;
 		case PARAM_DOUBLE:
-			ctr = new ControllerDouble(*dynamic_cast<ParameterDouble*>(*it));
+			ctr = new ControllerDouble(*dynamic_cast<ParameterDouble*>(elem));
 			break;
 		case PARAM_FLOAT:
-			ctr = new ControllerFloat(*dynamic_cast<ParameterFloat*>(*it));
+			ctr = new ControllerFloat(*dynamic_cast<ParameterFloat*>(elem));
 			break;
 		case PARAM_ENUM:
-			ctr = new ControllerEnum(*dynamic_cast<ParameterEnum*>(*it));
+			ctr = new ControllerEnum(*dynamic_cast<ParameterEnum*>(elem));
 			break;
 		case PARAM_INT:
-			ctr = new ControllerInt(*dynamic_cast<ParameterInt*>(*it));
+			ctr = new ControllerInt(*dynamic_cast<ParameterInt*>(elem));
 			break;
 		case PARAM_UINT:
-			ctr = new ControllerUInt(*dynamic_cast<ParameterUInt*>(*it));
+			ctr = new ControllerUInt(*dynamic_cast<ParameterUInt*>(elem));
 			break;
 		case PARAM_SERIALIZABLE:
-			ctr = new ControllerSerializable(*dynamic_cast<ParameterSerializable*>(*it));
+			ctr = new ControllerSerializable(*dynamic_cast<ParameterSerializable*>(elem));
 			break;
 		case PARAM_OBJECT_HEIGHT:
 			// Note: This controls a CalibrationByHeight object. Althought it sees it as a ParameterSerializable,
 			// it adds specific controls for x,y and height attributes
-			ctr = new ControllerCalibrationByHeight(*dynamic_cast<ParameterSerializable*>(*it));
+			ctr = new ControllerCalibrationByHeight(*dynamic_cast<ParameterSerializable*>(elem));
 			break;
 		case PARAM_STR:
-			ctr = new ControllerString(*dynamic_cast<ParameterString*>(*it));
+			ctr = new ControllerString(*dynamic_cast<ParameterString*>(elem));
 			break;
 			// case PARAM_GENERIC:
 			// ctr = new ControllerText(*dynamic_cast<Parameter*>(*it));

@@ -45,7 +45,7 @@ void CallAction(const std::string& x_name, std::string* xp_value)\
 {\
 	std::map<std::string, const action>::const_iterator it = m_actions.find(x_name);\
 	if(it == m_actions.end())\
-		throw MkException("Cannot find action in controller", LOC);\
+		throw MkException("Cannot find action " + x_name + " in controller", LOC);\
 	(this->*(it->second))(xp_value);\
 }
 #define DECLARE_LIST_ACTION(action) \
