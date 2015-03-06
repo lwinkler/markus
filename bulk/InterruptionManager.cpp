@@ -43,6 +43,8 @@ InterruptionManager::InterruptionManager()
 void InterruptionManager::Configure(const ConfigReader& x_config)
 {
 	m_interruptions.clear();
+	if(x_config.FindAll("interruptions").size() == 0)
+		return;
 	for(auto config : x_config.FindAll("interruptions>interruption"))
 	{
 		Interruption inter(Command(
@@ -52,7 +54,7 @@ void InterruptionManager::Configure(const ConfigReader& x_config)
 		);
 		string event = config.GetAttribute("event");
 		m_interruptions[event].push_back(inter);
-		cout<<"Add interruption for "<<event<<" --> "<<inter.command.name<<"="<<inter.command.value<<" "<<inter.remaining<<" times"<<endl;
+		LOG_INFO(m_logger, "Add interruption for "<<event<<" --> "<<inter.command.name<<"="<<inter.command.value<<" "<<inter.remaining<<" times");
 	}
 }
 
@@ -74,7 +76,7 @@ vector<Command> InterruptionManager::ReturnCommandsToSend()
 				commands.push_back(inter.command);
 				if(inter.remaining > 0)
 					inter.remaining--;
-				cout<<"Return interruption for "<<event<<" --> "<<inter.command.name<<"="<<inter.command.value<<endl;
+				LOG_DEBUG(m_logger, "Return interruption for "<<event<<" --> "<<inter.command.name<<"="<<inter.command.value);
 			}
 		}
 	}
