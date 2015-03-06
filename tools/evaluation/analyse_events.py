@@ -523,9 +523,9 @@ def arguments_parser():
     # Delay
     parser.add_argument('-d',
                         dest='delay',
-                        default=10,
+                        default=5,
                         type=int,
-                        help='the delay to use, default=10s.')
+                        help='the delay to use, default=5s.')
 
     # Uncompromising
     parser.add_argument('-u',
@@ -562,7 +562,7 @@ def arguments_parser():
     # No browser
     parser.add_argument('--no-browser',
                         action='store_true',
-                        help='don\' try to open the browser')
+                        help='don\'t try to open the browser')
 
     # Do not run markus again, only reevaluate results
     parser.add_argument('--results-only',
