@@ -31,16 +31,16 @@ class CalibrationByModel : public Serializable
 public:
 
 	CalibrationByModel();
-	CalibrationByModel(double camera_height, double yaw, double roll,double focal, int height_model, int width_model);
+	CalibrationByModel(double x_camera_height, double x_yaw, double x_roll, double x_focal, int x_height_model, int x_width_model);
 	void Serialize(std::ostream& x_out, const std::string& x_dir ="") const;
 	void Deserialize(std::istream& x_in, const std::string& x_dir ="");
 
-	double camera_height; // in mm // TODO: Fix syntax
-	double yaw; // in degree
-	double roll; // in degree
-	double focal; //un mm
-	int height_model; //in px
-	int width_model; //in px
+	double camera_height; // in m
+	double yaw;           // in degree
+	double roll;          // in degree
+	double focal;         // un m
+	int height_model;     // in px
+	int width_model;      // in px
 };
 
 

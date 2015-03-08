@@ -52,7 +52,7 @@ public:
 		m_register.insert(typename FactoryT<T1, Args...>::Registry::value_type(name, func));
 	}
 
-	// Create a new instance
+	/// Create a new instance
 	T1 * Create(const std::string& x_type, Args... args) const
 	{
 		auto it = m_register.find(x_type);
@@ -68,6 +68,8 @@ public:
 		// throw MkException("Module \"" + x_type + "\" must have the same name as its class \"" + pmod->GetClass() + "\"", LOC);
 		return pmod;
 	}
+
+	/// List all available types registred
 	void List(std::vector<std::string>& xr_types) const
 	{
 		xr_types.clear();
