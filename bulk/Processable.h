@@ -66,6 +66,11 @@ public:
 	inline virtual void SetContext(const Context& x_context) {m_context = x_context;}
 	inline virtual const Context& GetContext() const {return m_context;}
 
+	inline void LockForRead() {m_lock.lockForRead();}
+	inline void LockForWrite() {m_lock.lockForWrite();}
+	inline void Unlock() {m_lock.unlock();}
+	inline bool TryLockForWrite() {return m_lock.tryLockForWrite();}
+
 protected:
 	virtual Parameters & RefParameters() = 0;
 
@@ -73,12 +78,12 @@ protected:
 	bool m_allowAutoProcess;
 	bool m_realTime;         /// Process in real-time: if true, the module processes as fast as possible
 	QModuleTimer * m_moduleTimer;
-	QReadWriteLock m_lock;
 
 	Context m_context; /// context given by Manager (output directory, ...)
 
 private:
 	static log4cxx::LoggerPtr m_logger;
+	QReadWriteLock m_lock;
 };
 
 #endif

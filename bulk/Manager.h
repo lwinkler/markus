@@ -109,8 +109,6 @@ protected:
 	const FactoryModules& mr_moduleFactory;
 	InterruptionManager& m_interruptionManager;
 
-	QReadWriteLock m_lock;
-
 private:
 	inline Parameters& RefParameters() {return m_param;}
 	Parameters m_param;

@@ -130,9 +130,6 @@ public:
 	void Export(std::ostream& rx_os, int x_indentation);
 	Stream& RefInputStreamById(int x_id);
 	Stream& RefOutputStreamById(int x_id);
-	inline void LockForRead() {m_lock.lockForRead();}
-	inline void LockForWrite() {m_lock.lockForWrite();}
-	inline void Unlock() {m_lock.unlock();}
 	inline bool IsReady() {return IsAutoProcessed() || m_isReady;}
 	void SetAsReady();
 	bool AllInputsAreReady() const;

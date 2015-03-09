@@ -82,6 +82,19 @@ void ControllerManager::Unpause(string* xp_value)
 }
 
 /**
+* @brief Command: Process one frame
+*
+* @param xp_value
+*/
+void ControllerManager::ProcessOne(string* xp_value)
+{
+	manager.Pause(false);
+	manager.Unlock();
+	manager.Process();
+	manager.Pause(true);
+}
+
+/**
 * @brief Commands: Print statistics related to the modules processing
 *
 * @param xp_value unused
@@ -120,6 +133,7 @@ ControllerManager::ControllerManager(Manager& rx_manager) :
 	m_actions.insert(make_pair("Quit",               &ControllerManager::Quit));
 	m_actions.insert(make_pair("Pause",              &ControllerManager::Pause));
 	m_actions.insert(make_pair("Unpause",            &ControllerManager::Unpause));
+	m_actions.insert(make_pair("ProcessOne",         &ControllerManager::ProcessOne));
 	m_actions.insert(make_pair("PrintStatistics",    &ControllerManager::PrintStatistics));
 	m_actions.insert(make_pair("Status",             &ControllerManager::Status));
 	m_actions.insert(make_pair("WriteStateToDir",    &ControllerManager::WriteStateToDirectory));

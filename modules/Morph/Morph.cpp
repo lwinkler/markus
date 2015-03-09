@@ -38,7 +38,7 @@ Morph::Morph(const ConfigReader& x_configReader) :
 	AddInputStream(0, new StreamImage("input" , m_input , *this, "Video input"));
 
 	AddOutputStream(0, new StreamImage("output", m_output, *this,	"Output"));
-	AddOutputStream(1, new StreamImage("input", m_input, *this,	"Input"));
+	AddOutputStream(1, new StreamImage("input", m_input, *this,	"Input")); // TODO: Remove this
 }
 
 Morph::~Morph(void )

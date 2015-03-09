@@ -181,6 +181,8 @@ void MarkusWindow::createActionsAndMenus()
 			action->setShortcut(QKeySequence("Shift+r"));
 		else if(elem == "ResetExceptInputs")
 			action->setShortcut(QKeySequence("r"));
+		else if(elem == "ProcessOne")
+			action->setShortcut(QKeySequence("o"));
 		connect(action, SIGNAL(triggered()), this, SLOT(callManagerCommand()));
 		managerMenu->addAction(action);
 	}

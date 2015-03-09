@@ -316,14 +316,14 @@ bool Manager::Process()
 	if(!m_isConnected)
 		throw MkException("Modules must be connected before processing", LOC);
 
-	if(!m_lock.tryLockForWrite())
+	if(!TryLockForWrite())
 	{
 		// LOG_WARN(m_logger, "Manager too slow !"); // Note: this happens every time
 		return true;
 	}
 	if(m_pause)
 	{
-		m_lock.unlock();
+		Unlock();
 		return true;
 	}
 	Timer ti;
@@ -425,7 +425,7 @@ bool Manager::Process()
 	{
 		PrintStatistics();
 	}
-	m_lock.unlock();
+	Unlock();
 	//if(m_frameCount % 20 == 0)
 	usleep(20); // This keeps the manager unlocked to allow the sending of commands // TODO find a cleaner way
 
@@ -465,7 +465,7 @@ void Manager::SendCommand(const string& x_command, string x_value)
 	{
 		try
 		{
-			m_lock.lockForWrite();
+			LockForWrite();
 			Controller* ctr = FindController(elems.at(1));
 			if(ctr == NULL)
 			{
@@ -475,11 +475,11 @@ void Manager::SendCommand(const string& x_command, string x_value)
 			{
 				ctr->CallAction(elems.at(2), &x_value);
 			}
-			m_lock.unlock();
+			Unlock();
 		}
 		catch(...)
 		{
-			m_lock.unlock();
+			Unlock();
 			throw;
 		}
 	}

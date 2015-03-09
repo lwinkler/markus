@@ -195,10 +195,10 @@ double Module::GetRecordingFps() const
 */
 bool Module::Process()
 {
-	m_lock.lockForWrite();
+	LockForWrite();
 	if(m_pause)
 	{
-		m_lock.unlock();
+		Unlock();
 		return true;
 	}
 	try
@@ -295,10 +295,10 @@ bool Module::Process()
 	catch(...)
 	{
 		LOG_WARN(m_logger, "Exception in module " << GetName());
-		m_lock.unlock();
+		Unlock();
 		throw;
 	}
-	m_lock.unlock();
+	Unlock();
 	return true;
 }
 
