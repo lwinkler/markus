@@ -34,6 +34,7 @@ log4cxx::LoggerPtr AnnotationFileWriter::m_logger(log4cxx::Logger::getLogger("An
 
 
 AnnotationFileWriter::AnnotationFileWriter()
+	: m_subId(0)
 {
 }
 

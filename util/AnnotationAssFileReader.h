@@ -52,7 +52,7 @@ protected:
 
 private:
 	static log4cxx::LoggerPtr m_logger;
-	void ReadSrt(const std::string srt);
+	void ReadSrt(const std::string& srt);
 	void InitReading();
 	void FormatTimestamp(std::string& rx_timeText);
 	void ReadResolution();

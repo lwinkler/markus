@@ -93,11 +93,11 @@ Scalar g_colorArray[] =
 };
 
 /// Handler for errors and exceptions: print full stack without symbols
+/*
 void printStack(int sig)
 {
 	static const int max_frames = 100;
 	void* addrlist[max_frames+1];
-	size_t size;
 	stringstream ss;
 
 	// print out all the frames to stderr
@@ -114,6 +114,7 @@ void printStack(int sig)
 	fclose(pf);
 	exit(1);
 }
+*/
 
 
 
@@ -209,14 +210,11 @@ void adjustChannels(const Mat& im_in, Mat& im_out)
 /* Return an OpenCV color from a "(b,g,r)" string */
 Scalar colorFromStr(string x_str)
 {
-	int pos1 = 0;
-	int pos2 = 0;
-	int pos3 = 0;
 	if(x_str[0] == '(')
 	{
-		pos1  = x_str.find(',', 1);
-		pos2  = x_str.find(',', pos1 + 1);
-		pos3  = x_str.find(')', pos2 + 1);
+		int pos1  = x_str.find(',', 1);
+		int pos2  = x_str.find(',', pos1 + 1);
+		int pos3  = x_str.find(')', pos2 + 1);
 		if(!(pos1 && pos2 && pos3))
 			throw MkException("Error in colorFromStr", LOC);
 

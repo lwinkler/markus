@@ -78,6 +78,7 @@ istream& AnnotationFileReader::SafeGetline(istream& is, string& t)
 
 AnnotationFileReader::AnnotationFileReader()
 {
+	m_num = 0;
 }
 
 AnnotationFileReader::~AnnotationFileReader()
@@ -125,7 +126,6 @@ bool AnnotationFileReader::ReadNextAnnotation(string& rx_subText)
 	}
 
 	string line, tmp;
-	int num = -1;
 	try
 	{
 		// Read next subtitle
@@ -139,7 +139,7 @@ bool AnnotationFileReader::ReadNextAnnotation(string& rx_subText)
 			if(! m_srtFile.good())
 				throw MkException("End of file in AnnotationFileReader", LOC);
 		}
-		num = atoi(line.c_str());
+		int num = atoi(line.c_str());
 		LOG_DEBUG(m_logger, "Subtitle nb "<<num);
 		if(num != m_num + 1)
 			LOG_WARN(m_logger, "Missing subtitle number "<<(m_num + 1));

@@ -55,19 +55,6 @@ inline std::istream& get_char(std::istream& x_in)
 }
 
 /* -------------------------------------------------------------------------------- */
-// Acquire a string from stream and verify
-inline std::istream& get_string(std::istream& x_in, const std::string& x_str)
-{
-	char str[x_str.size() + 1];
-	x_in.get(str, x_str.size() + 1);
-	// std::cout<<">>>"<<x_str<<" "<<str<<std::endl;
-	if(x_str != str)
-		throw MkException("Error in format", LOC);
-
-	return x_in;
-}
-
-/* -------------------------------------------------------------------------------- */
 // Template specialization for features of type KeyPoint
 
 std::ostream& serialize(std::ostream& x_out, const cv::KeyPoint& x_val);

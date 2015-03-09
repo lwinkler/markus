@@ -39,7 +39,12 @@ const char   AnnotationAssFileReader::separator = ',';
 
 AnnotationAssFileReader::AnnotationAssFileReader(int x_width, int x_height):
 	m_inputWidth(x_width),
-	m_inputHeight(x_height)
+	m_inputHeight(x_height),
+	m_widthProportion(0),
+	m_heightProportion(0),
+	m_idxStart(0),
+	m_idxEnd(0),
+	m_idxText(0)
 {
 }
 
@@ -59,7 +64,7 @@ Rect AnnotationAssFileReader::GetBox()
 	return m_boudingBox;
 }
 
-void AnnotationAssFileReader::ReadSrt(const string srt)
+void AnnotationAssFileReader::ReadSrt(const string& srt)
 {
 	// {\clip(136,313,274,458)}fall
 

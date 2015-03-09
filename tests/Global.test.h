@@ -61,7 +61,6 @@ public:
 
 		stringstream ss3;
 		execute("cat tests/markus.log | grep ERROR", ss3);
-		return true;
 		int nErr = std::count(std::istreambuf_iterator<char>(ss3), std::istreambuf_iterator<char>(), '\n');
 		if(nErr > 0)
 		{

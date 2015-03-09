@@ -56,7 +56,7 @@ public:
 	InterruptionManager();
 
 	// Singleton: InterruptionManager is instanciated here ! // TODO: Maybe make this into a module
-	static InterruptionManager& GetInst(){static InterruptionManager m; return m;};
+	static InterruptionManager& GetInst(){static InterruptionManager m; return m;}
 
 	inline void AddEvent(const std::string& x_name){m_events.push_back(x_name);}
 	inline void Reset()                            {m_events.clear(); m_interruptions.clear();}

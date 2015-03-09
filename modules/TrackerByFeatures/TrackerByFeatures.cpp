@@ -330,7 +330,7 @@ void TrackerByFeatures::DetectNewTemplates()
 			{
 				// Detect if the new object is similar to a template
 				double bestDist = DBL_MAX;
-				const Template * bestTemplate = NULL;
+				// const Template * bestTemplate = NULL;
 
 				LOG_DEBUG(m_logger, "New object. Detect if the new object similar to another template ");
 
@@ -341,7 +341,7 @@ void TrackerByFeatures::DetectNewTemplates()
 					if(dist < bestDist)
 					{
 						bestDist     = dist;
-						bestTemplate = &temp;
+						// bestTemplate = &temp;
 					}
 				}
 			}

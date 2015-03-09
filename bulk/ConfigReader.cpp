@@ -232,12 +232,14 @@ ConfigReader ConfigReader::RefSubConfig(const string& x_tagName, const string& x
 
 	TiXmlNode* newNode = mp_node->FirstChild(x_tagName);
 
-	const char* name = NULL;
 	if(x_attrName != "")
+	{
+		const char* name = NULL;
 		while(newNode != NULL && ((name = newNode->ToElement()->Attribute("name")) == NULL || x_attrValue != name))
 		{
 			newNode = newNode->NextSibling(x_tagName);
 		}
+	}
 	if(newNode == NULL && x_allowCreation)
 	{
 		// Add a sub config element if not found
