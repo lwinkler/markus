@@ -28,8 +28,6 @@
 #include "Event.h"
 #include "util.h"
 #include "Simulation.h"
-#include "AllModules.h"
-#include "AllFeatures.h"
 
 #ifndef MARKUS_NO_GUI
 #include "Editor.h"
@@ -332,8 +330,7 @@ int main(int argc, char** argv)
 	try
 	{
 		// Register all modules, features, ... in factories
-		registerAllModules(Factories::modulesFactory());
-		registerAllFeatures();
+		Factories::RegisterAll();
 
 		LOG_INFO(logger, Context::Version(true));
 		ConfigReader mainConfig(args.configFile);

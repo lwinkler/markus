@@ -20,16 +20,15 @@
 *    You should have received a copy of the GNU Lesser General Public License
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
-#ifndef ALL_FEATURES_H
-#define ALL_FEATURES_H
 
 #include "Factories.h"
+
+#include "AllModules.h"
+
 #include "FeatureStd.h"
 #include "FeatureFloatInTime.h"
 #include "FeatureVector.h"
 #include "FeatureOpenCv.h"
-
-
 #define REGISTER_FEATURE(child, type){\
 {\
 fact1.Register<child>(type);\
@@ -38,8 +37,20 @@ fact2.Register<child>(pfeat->Signature());\
 delete pfeat;\
 }}
 
-void registerAllFeatures()
+
+// Factories: The RegisterAll method will register all necessary creators
+
+
+using namespace std;
+
+// log4cxx::LoggerPtr Processable::m_logger(log4cxx::Logger::getLogger("Processable"));
+
+void Factories::RegisterAll()
 {
+	// All modules
+	registerAllModules(Factories::modulesFactory());
+
+	// All features
 	FactoryFeatures& fact1(Factories::featuresFactory());
 	FactoryFeatures& fact2(Factories::featuresFactoryBySignature());
 
@@ -53,4 +64,4 @@ void registerAllFeatures()
 	REGISTER_FEATURE(FeaturePoint3f, "FeaturePoint3f");
 	// REGISTER_FEATURE(FeatureMat, "FeatureMat"); // Experimental
 }
-#endif
+

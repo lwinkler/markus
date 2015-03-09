@@ -25,8 +25,7 @@
 #include <cxxtest/GlobalFixture.h>
 #include <log4cxx/xml/domconfigurator.h>
 
-#include "AllFeatures.h"
-#include "AllModules.h"
+#include "Factories.h"
 
 using namespace std;
 
@@ -41,8 +40,7 @@ public:
 	bool setUpWorld()
 	{
 		log4cxx::xml::DOMConfigurator::configure("tests/log4cxx.xml");
-		registerAllFeatures();
-		registerAllModules(Factories::modulesFactory());
+		Factories::RegisterAll();
 
 		SYSTEM("rm -rf tests/out");
 		SYSTEM("rm -rf tests/tmp");
