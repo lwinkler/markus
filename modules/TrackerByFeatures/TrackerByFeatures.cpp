@@ -93,11 +93,11 @@ void TrackerByFeatures::ProcessFrame()
 	m_debug.setTo(0);
 #endif
 	MatchTemplates();
+	CheckMergeSplit();    // before updating templates
 	UpdateTemplates();
 	DetectNewTemplates();
-	UpdateObjects();
+	UpdateObjects();      // after detecting new templates
 	CleanTemplates();
-	CheckMergeSplit();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -382,7 +382,7 @@ void TrackerByFeatures::CheckMergeSplit()
 		vector<int> merged;
 		for(const auto& ptemp : templates)
 		{
-			if(ptemp->GetNum() == obj.GetId())
+			if(ptemp == m_matched[&obj])
 				continue;
 
 			try
@@ -396,26 +396,31 @@ void TrackerByFeatures::CheckMergeSplit()
 				double wo = dynamic_cast<const FeatureFloat&>(obj.GetFeature("width")).value;
 				double ho = dynamic_cast<const FeatureFloat&>(obj.GetFeature("height")).value;
 
-				// Condition for object split
-				// note: so far the distance to consider a split is the double of w/2 . This is a security margin
-				if(abs(xt - xo) <= wt / 2 && abs(yt - yo) <= ht / 2)
+				if(wt + ht > wo + wt)
 				{
-					if(obj.HasFeature("split"))
+					// Condition for object split
+					// note: so far the distance to consider a split is the double of w/2 . This is a security margin
+					if(abs(xt - xo) <= wt / 2 && abs(yt - yo) <= ht / 2)
 					{
-						LOG_WARN(m_logger, "Object already has a split attribute.")
-					}
-					else
-					{
-						obj.AddFeature("split", new FeatureInt(ptemp->GetNum()));
-						LOG_DEBUG(m_logger,"Objects split with "<<ptemp->GetNum());
+						if(obj.HasFeature("split"))
+						{
+							LOG_WARN(m_logger, "Object already has a split attribute.")
+						}
+						else
+						{
+							obj.AddFeature("split", new FeatureInt(ptemp->GetNum()));
+							LOG_DEBUG(m_logger,"Objects split with "<<ptemp->GetNum());
+						}
 					}
 				}
-
-				// Condition for object merge
-				// note: so far the distance to consider a split is the double of w/2 . This is a security margin
-				if(abs(xo - xt) <= wo / 2 && abs(yo - yt) <= ho / 2)
+				else
 				{
-					merged.push_back(ptemp->GetNum());
+					// Condition for object merge
+					// note: so far the distance to consider a split is the double of w/2 . This is a security margin
+					if(abs(xo - xt) <= wo / 2 && abs(yo - yt) <= ho / 2)
+					{
+						merged.push_back(ptemp->GetNum());
+					}
 				}
 			}
 			catch(exception& e) 
