@@ -25,7 +25,7 @@ from platform import platform
 from vplib.time import Time
 from vplib.HTMLTags import *
 from vplib.parser import subrip
-from vplib.parser import evtfiles
+from vplib.parser import evtfiles # TODO: evtfile should probably be replaced by subrip
 from collections import namedtuple, OrderedDict
 
 # Evaluation metrics
@@ -58,15 +58,10 @@ def is_tool(name):
     return True
 
 
+# Compare with event name: fall, intrusion, ...
 def is_valid(text):
     """ Function to check if a subtitle is a fall """
     return args.EVENT_NAME.lower() in text.lower()
-    # if text[0:4] == 'anor':
-        # return True
-    # elif text[0:4] == 'norm':
-        # return False
-    # else:
-        # return None
 
 
 def video_info(video):
@@ -208,27 +203,36 @@ def evaluate(events, truths):
         good = False
         match_gt = None
 
+        min_time = 1e99
+        best_truth = None
+        best_i = -1
+
         # Search for a matching truth
         for i, truth in enumerate(truths):
+            dt = Math.abs(truth.begin - event.time)
+            if dt < min_time:
+                min_time = dt
+                best_truth = truth
+                best_i = i
 
-            # Test for matching
-            if event.time >= truth.match_begin and \
-               event.time <= truth.match_end:
-                # Keep track of matched groun truth
-                match_gt = truth
+        # Test for matching
+        if best_truth != None and event.time >= best_truth.match_begin and \
+            event.time <= best_truth.match_end:
+            # Keep track of matched groun truth
+            match_gt = best_truth
 
-                #We write the matched event as a TP (even if it is a duplicate)
-                fid_tp.write('%s %s\n' % (event.time.milis, event.time_end.milis))
+            #We write the matched event as a TP (even if it is a duplicate)
+            fid_tp.write('%s %s\n' % (event.time.milis, event.time_end.milis))
 
-                # If the ground truth is not matched yet
-                if not matched[i]:
-                    good = True
-                    matched[i] = True
-                    break
-                # Otherwise this is a duplicate
-                else:
-                    good = None
-                    break
+            # If the ground truth is not matched yet
+            if not matched[best_i]:
+                good = True
+                matched[best_i] = True
+                break
+            # Otherwise this is a duplicate
+            else:
+                good = None
+                break
 
         # Log event
         log.append((event, match_gt, good))

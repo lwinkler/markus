@@ -3,14 +3,10 @@ Markus:
 
 Markus is a program to create video detection applications. Its base philosophy is that an application can be separated into a set of simple modules. 
 
-Each module implements a simple function (pattern detection, object tracking, background subtraction ...).
+Each module implements a simple function (pattern detection, object tracking, background subtraction ...). Each module can have input an output streams of different types.
 
 Compilation for Linux
 ---------------------
-You will need to Install Opencv from sources (preferably). 
-	http://opencv.org/downloads.html
-
-Also Qt4 is needed.
 
 ### Dependancies
 In all cases you will need:
@@ -191,7 +187,7 @@ The values of the different parameters and the connections between modules is de
 
 Concepts:
 ---------
-- One module must be as simple as possible. If one module is too complex it must be split in two modules.
+- One module must be as simple as possible. If one module is too complex it must be split into two different modules.
 - In case of inheritance the list of parameters is inherited as well.
 
 

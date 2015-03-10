@@ -1,0 +1,48 @@
+0
+00:00:00,083 --> 00:00:00,083
+[
+{
+	"features" : 
+	{},
+	"height" : 1.0,
+	"id" : 0,
+	"name" : "patch",
+	"width" : 5.0,
+	"x" : 355.0,
+	"y" : 245.0
+}
+,
+{
+	"features" : 
+	{},
+	"height" : 1.0,
+	"id" : 0,
+	"name" : "patch",
+	"width" : 1.0,
+	"x" : 255.0,
+	"y" : 245.0
+}
+,
+{
+	"features" : 
+	{},
+	"height" : 1.0,
+	"id" : 0,
+	"name" : "patch",
+	"width" : 1.0,
+	"x" : 455.0,
+	"y" : 245.0
+}
+,
+{
+	"features" : 
+	{},
+	"height" : 1.0,
+	"id" : 0,
+	"name" : "patch",
+	"width" : 1.0,
+	"x" : 465.0,
+	"y" : 245.0
+}
+]
+

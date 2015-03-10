@@ -78,7 +78,7 @@
 		</param>
 		<param name="custom_feature">
 			<type>string</type>
-			<value default="height">height</value>
+			<value default=""></value>
 			<description>Name of a custom feature to test. Must be of type float</description>
 		</param>
 		<param name="min_custom">

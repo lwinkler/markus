@@ -75,5 +75,10 @@
 			<name>output</name>
 			<description>Output</description>
 		</output>
+		<output id="1">
+			<type>Image</type>
+			<name>input</name>
+			<description>Input</description>
+		</output>
 	</outputs>
 </module>
