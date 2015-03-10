@@ -209,16 +209,19 @@ def evaluate(events, truths):
 
         # Search for a matching truth
         for i, truth in enumerate(truths):
-            dt = Math.abs(truth.begin - event.time)
-            if dt < min_time:
+            dt = abs(truth.begin.milis - event.time.milis)
+            if dt <= min_time :
                 min_time = dt
                 best_truth = truth
                 best_i = i
 
         # Test for matching
-        if best_truth != None and event.time >= best_truth.match_begin and \
+        print event.time 
+        print  best_truth.match_end
+        if best_truth and event.time >= best_truth.match_begin and \
             event.time <= best_truth.match_end:
-            # Keep track of matched groun truth
+            print "matched"
+            # Keep track of matched ground truth
             match_gt = best_truth
 
             #We write the matched event as a TP (even if it is a duplicate)
