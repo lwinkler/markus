@@ -172,9 +172,9 @@ ControllerParameter::ControllerParameter(Parameter& x_param):
 
 /*------------------------------------------------------------------------------------------------*/
 
-ControllerInt::ControllerInt(ParameterInt& x_param):
+ControllerInt::ControllerInt(Parameter& x_param):
 	ControllerParameter(x_param),
-	m_param2(x_param)
+	m_param2(dynamic_cast<ParameterInt&>(x_param))
 {
 	mp_parameterSlider = NULL;
 }
@@ -210,9 +210,9 @@ string ControllerInt::GetValueFromWidget()
 
 /*------------------------------------------------------------------------------------------------*/
 
-ControllerUInt::ControllerUInt(ParameterUInt& x_param):
+ControllerUInt::ControllerUInt(Parameter& x_param):
 	ControllerParameter(x_param),
-	m_param2(x_param)
+	m_param2(dynamic_cast<ParameterUInt&>(x_param))
 {
 	mp_parameterSlider = NULL;
 }
@@ -246,9 +246,9 @@ string ControllerUInt::GetValueFromWidget()
 #endif
 }
 /*------------------------------------------------------------------------------------------------*/
-ControllerDouble::ControllerDouble(ParameterDouble& x_param):
+ControllerDouble::ControllerDouble(Parameter& x_param):
 	ControllerParameter(x_param),
-	m_param2(x_param)
+	m_param2(dynamic_cast<ParameterDouble&>(x_param))
 {
 	mp_parameterSlider = NULL;
 }
@@ -280,9 +280,9 @@ string ControllerDouble::GetValueFromWidget()
 }
 /*------------------------------------------------------------------------------------------------*/
 
-ControllerFloat::ControllerFloat(ParameterFloat& x_param):
+ControllerFloat::ControllerFloat(Parameter& x_param):
 	ControllerParameter(x_param),
-	m_param2(x_param)
+	m_param2(dynamic_cast<ParameterFloat&>(x_param))
 {
 	mp_parameterSlider = NULL;
 }
@@ -316,9 +316,9 @@ string ControllerFloat::GetValueFromWidget()
 #endif
 }
 /*------------------------------------------------------------------------------------------------*/
-ControllerBool::ControllerBool(ParameterBool& x_param):
+ControllerBool::ControllerBool(Parameter& x_param):
 	ControllerParameter(x_param),
-	m_param2(x_param)
+	m_param2(dynamic_cast<ParameterBool&>(x_param))
 {
 	mp_checkBox = NULL;
 }
@@ -351,9 +351,9 @@ string ControllerBool::GetValueFromWidget()
 #endif
 }
 /*------------------------------------------------------------------------------------------------*/
-ControllerString::ControllerString(ParameterString& x_param):
+ControllerString::ControllerString(Parameter& x_param):
 	ControllerParameter(x_param),
-	m_param2(x_param)
+	m_param2(dynamic_cast<ParameterString&>(x_param))
 {
 	mp_lineEdit = NULL;
 }
@@ -387,9 +387,9 @@ string ControllerString::GetValueFromWidget()
 }
 
 /*------------------------------------------------------------------------------------------------*/
-ControllerSerializable::ControllerSerializable(ParameterSerializable& x_param):
+ControllerSerializable::ControllerSerializable(Parameter& x_param):
 	ControllerParameter(x_param),
-	m_param2(x_param)
+	m_param2(dynamic_cast<ParameterSerializable&>(x_param))
 {
 	mp_lineEdit = NULL;
 }
@@ -427,9 +427,9 @@ string ControllerSerializable::GetValueFromWidget()
 #endif
 }
 /*------------------------------------------------------------------------------------------------*/
-ControllerCalibrationByHeight::ControllerCalibrationByHeight(ParameterSerializable& x_param):
+ControllerCalibrationByHeight::ControllerCalibrationByHeight(Parameter& x_param):
 	ControllerParameter(x_param),
-	m_param2(x_param)
+	m_param2(dynamic_cast<ParameterSerializable&>(x_param))
 {
 	mp_widget = NULL;
 	mp_sliderX = NULL;
@@ -503,9 +503,9 @@ string ControllerCalibrationByHeight::GetValueFromWidget()
 }
 
 /*------------------------------------------------------------------------------------------------*/
-ControllerEnum::ControllerEnum(ParameterEnum& x_param):
+ControllerEnum::ControllerEnum(Parameter& x_param):
 	ControllerParameter(x_param),
-	m_param2(x_param)
+	m_param2(dynamic_cast<ParameterEnum&>(x_param))
 {
 	mp_comboBox = NULL;
 }

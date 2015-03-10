@@ -28,21 +28,20 @@
 #include "define.h"
 
 #include <map>
-#include <string>
 #include <vector>
 
 
 
 /// This class is a template class for factories: a factory creates an instance of an object, the type of the object is specified as a string
-template<class T1, typename... Args> class FactoryT
+template<class T0, class T1, typename... Args> class FactoryT
 {
 	typedef T1* (*CreateObjectFunc)(Args... args);
-	typedef std::map<std::string, CreateObjectFunc> Registry;
+	typedef std::map<T0, CreateObjectFunc> Registry;
 	template<class T2> static T1* createObject(Args... args) {return new T2(args...);}
 
 public:
 	FactoryT() {}
-	template<class T2> void Register(const std::string& name)
+	template<class T2> void Register(const T0& name)
 	{
 		CreateObjectFunc func = createObject<T2>;
 		auto it = m_register.find(name);
@@ -50,11 +49,11 @@ public:
 		{
 			throw MkException("Cannot register two instances with the same name: " + name, LOC);
 		}
-		m_register.insert(typename FactoryT<T1, Args...>::Registry::value_type(name, func));
+		m_register.insert(typename FactoryT<T0, T1, Args...>::Registry::value_type(name, func));
 	}
 
 	/// Create a new instance
-	T1 * Create(const std::string& x_type, Args... args) const
+	T1 * Create(const T0& x_type, Args... args) const
 	{
 		auto it = m_register.find(x_type);
 
@@ -71,7 +70,7 @@ public:
 	}
 
 	/// List all available types registred
-	void List(std::vector<std::string>& xr_types) const
+	void List(std::vector<T0>& xr_types) const
 	{
 		xr_types.clear();
 		for(const auto it : m_register)

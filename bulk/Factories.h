@@ -24,22 +24,27 @@
 #ifndef FACTORIES_H
 #define FACTORIES_H
 
-#include <FactoryT.h>
+#include "FactoryT.h"
+#include "Parameter.h"
 
 class Feature;
 class Module;
 class ConfigReader;
-typedef FactoryT<Module,  const ConfigReader&> FactoryModules;
-typedef FactoryT<Feature> FactoryFeatures;
+class Controller;
+
+typedef FactoryT<std::string, Module, const ConfigReader&> FactoryModules;
+typedef FactoryT<std::string, Feature>                     FactoryFeatures;
+typedef FactoryT<ParameterType, Controller, Parameter&>                FactoryParameterController;
 
 
 /// This class is a factory for modules: it creates a module of each type as specified by a string
 class Factories
 {
 public:
-	inline static FactoryModules&  modulesFactory() {static FactoryModules factoryModules; return factoryModules;}
-	inline static FactoryFeatures& featuresFactory() {static FactoryFeatures factoryFeatures; return factoryFeatures;}
-	inline static FactoryFeatures& featuresFactoryBySignature() {static FactoryFeatures factoryFeatures; return factoryFeatures;}
+	inline static FactoryModules&    modulesFactory()                      {static FactoryModules factoryModules; return factoryModules;}
+	inline static FactoryFeatures&   featuresFactory()                     {static FactoryFeatures factoryFeatures; return factoryFeatures;}
+	inline static FactoryFeatures&   featuresFactoryBySignature()          {static FactoryFeatures factoryFeatures; return factoryFeatures;}
+	inline static FactoryParameterController& parameterControllerFactory() {static FactoryParameterController factoryControllers; return factoryControllers;}
 
 	static void RegisterAll();
 };

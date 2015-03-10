@@ -31,7 +31,7 @@
 
 
 #include "ControllerModule.h"
-#include "ControllerParameters.h"
+#include "Factories.h"
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/writer.h>
 #include <fstream>
@@ -102,43 +102,7 @@ void Module::Reset()
 		// TODO: Suppress GetType() and use a CreateController method
 		if(elem->IsLocked() || FindController(elem->GetName()) != NULL)
 			continue;
-		Controller* ctr = NULL;
-		switch(elem->GetType())
-		{
-		case PARAM_BOOL:
-			ctr = new ControllerBool(*dynamic_cast<ParameterBool*>(elem));
-			break;
-		case PARAM_DOUBLE:
-			ctr = new ControllerDouble(*dynamic_cast<ParameterDouble*>(elem));
-			break;
-		case PARAM_FLOAT:
-			ctr = new ControllerFloat(*dynamic_cast<ParameterFloat*>(elem));
-			break;
-		case PARAM_ENUM:
-			ctr = new ControllerEnum(*dynamic_cast<ParameterEnum*>(elem));
-			break;
-		case PARAM_INT:
-			ctr = new ControllerInt(*dynamic_cast<ParameterInt*>(elem));
-			break;
-		case PARAM_UINT:
-			ctr = new ControllerUInt(*dynamic_cast<ParameterUInt*>(elem));
-			break;
-		case PARAM_SERIALIZABLE:
-			ctr = new ControllerSerializable(*dynamic_cast<ParameterSerializable*>(elem));
-			break;
-		case PARAM_OBJECT_HEIGHT:
-			// Note: This controls a CalibrationByHeight object. Althought it sees it as a ParameterSerializable,
-			// it adds specific controls for x,y and height attributes
-			ctr = new ControllerCalibrationByHeight(*dynamic_cast<ParameterSerializable*>(elem));
-			break;
-		case PARAM_STR:
-			ctr = new ControllerString(*dynamic_cast<ParameterString*>(elem));
-			break;
-			// case PARAM_GENERIC:
-			// ctr = new ControllerText(*dynamic_cast<Parameter*>(*it));
-		default:
-			assert(false);
-		}
+		Controller* ctr = Factories::parameterControllerFactory().Create(elem->GetType(), *elem);
 		if(ctr == NULL)
 			throw MkException("Controller creation failed", LOC);
 		else AddController(ctr);

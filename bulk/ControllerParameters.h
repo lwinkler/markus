@@ -72,7 +72,7 @@ private:
 class ControllerInt : public ControllerParameter
 {
 public:
-	ControllerInt(ParameterInt & x_param);
+	ControllerInt(Parameter& x_param);
 	virtual QWidget* CreateWidget();
 	virtual void SetWidgetValue(const std::string& x_value);
 	virtual std::string GetValueFromWidget();
@@ -86,7 +86,7 @@ protected:
 class ControllerUInt : public ControllerParameter
 {
 public:
-	ControllerUInt(ParameterUInt & x_param);
+	ControllerUInt(Parameter& x_param);
 	virtual QWidget* CreateWidget();
 	virtual void SetWidgetValue(const std::string& x_value);
 	virtual std::string GetValueFromWidget();
@@ -101,7 +101,7 @@ protected:
 class ControllerDouble : public ControllerParameter
 {
 public:
-	ControllerDouble(ParameterDouble & x_param);
+	ControllerDouble(Parameter& x_param);
 	virtual QWidget* CreateWidget();
 	virtual void SetWidgetValue(const std::string& x_value);
 	virtual std::string GetValueFromWidget();
@@ -115,7 +115,7 @@ protected:
 class ControllerFloat : public ControllerParameter
 {
 public:
-	ControllerFloat(ParameterFloat & x_param);
+	ControllerFloat(Parameter& x_param);
 	virtual QWidget* CreateWidget();
 	virtual void SetWidgetValue(const std::string& x_value);
 	virtual std::string GetValueFromWidget();
@@ -129,7 +129,7 @@ protected:
 class ControllerBool : public ControllerParameter
 {
 public:
-	ControllerBool(ParameterBool & x_param);
+	ControllerBool(Parameter& x_param);
 	virtual QWidget* CreateWidget();
 	virtual void SetWidgetValue(const std::string& x_value);
 	virtual std::string GetValueFromWidget();
@@ -143,7 +143,7 @@ protected:
 class ControllerString : public ControllerParameter
 {
 public:
-	ControllerString(ParameterString & x_param);
+	ControllerString(Parameter& x_param);
 	virtual QWidget* CreateWidget();
 	virtual void SetWidgetValue(const std::string& x_value);
 	virtual std::string GetValueFromWidget();
@@ -157,7 +157,7 @@ protected:
 class ControllerSerializable : public ControllerParameter
 {
 public:
-	ControllerSerializable(ParameterSerializable & x_param);
+	ControllerSerializable(Parameter& x_param);
 	virtual QWidget* CreateWidget();
 	virtual void SetWidgetValue(const std::string& x_value);
 	virtual std::string GetValueFromWidget();
@@ -171,7 +171,7 @@ protected:
 class ControllerCalibrationByHeight : public ControllerParameter
 {
 public:
-	ControllerCalibrationByHeight(ParameterSerializable & x_param);
+	ControllerCalibrationByHeight(Parameter& x_param);
 	virtual QWidget* CreateWidget();
 	virtual void SetWidgetValue(const std::string& x_value);
 	virtual std::string GetValueFromWidget();
@@ -193,7 +193,7 @@ protected:
 class ControllerEnum : public ControllerParameter
 {
 public:
-	ControllerEnum(ParameterEnum & x_param);
+	ControllerEnum(Parameter& x_param);
 	virtual QWidget* CreateWidget();
 	virtual void SetWidgetValue(const std::string& x_value);
 	virtual std::string GetValueFromWidget();
