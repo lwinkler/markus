@@ -527,9 +527,9 @@ def arguments_parser():
     # Delay
     parser.add_argument('-d',
                         dest='delay',
-                        default=5,
+                        default=0,
                         type=int,
-                        help='the delay to use, default=5s.')
+                        help='the delay to use, default=0s.')
 
     # Uncompromising
     parser.add_argument('-u',
@@ -541,9 +541,9 @@ def arguments_parser():
     # Tolerance
     parser.add_argument('-t',
                         dest='tolerance',
-                        default=1,
+                        default=3,
                         type=int,
-                        help='tolerance time (e.g. falling time), default=1s.')
+                        help='tolerance time (e.g. falling time), default=3s.')
 
     # Images
     parser.add_argument('-i',
