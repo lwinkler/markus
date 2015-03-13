@@ -273,9 +273,9 @@ def statistics(evaluation, video=None):
 
     # Recall and precision based on measures of ilids
     recall_bias = 0.5
-    recall      = float(e.tp) / (e.tp + e.fn)
-    precision   = float(e.tp) / (e.tp + e.fp)
-    f1          = (recall_bias + 1) * recall * precision / (recall + recall_bias * precision)
+    recall      = 0 if e.tp + e.fn == 0 else float(e.tp) / (e.tp + e.fn)
+    precision   = 0 if e.tp + e.fp == 0 else float(e.tp) / (e.tp + e.fp)
+    f1          = 0 if recall + recall_bias * precision == 0 else (recall_bias + 1) * recall * precision / (recall + recall_bias * precision)
     stats['Recall']    = (recall    * 100, '%3.2f%%')
     stats['Precision'] = (precision * 100, '%3.2f%%')
     stats['F1 score']  = (f1 * 100, '%3.2f%%')
