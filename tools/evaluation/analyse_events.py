@@ -43,7 +43,7 @@ Video = namedtuple('Video', 'duration')
 # Truth tuple
 Truth = namedtuple('Truth', 'id begin end match_begin match_end is_valid')
 
-# Global arguments, will be overwriten an runtime
+# Global arguments, will be overwritten at runtime
 args = None
 
 
@@ -89,7 +89,7 @@ def extract_images(events, truths, video, out='out'):
     if video is None:
         return
 
-    # Ensure directory is existing
+    # Ensure directory exists
     path = os.path.join(out, 'images')
     if not os.path.exists(path):
         os.makedirs(path)
@@ -101,7 +101,7 @@ def extract_images(events, truths, video, out='out'):
 
     # The function to extract a precise image
     def extract(kind, time, name):
-	# note: force images to qvga 320x240 to reduce archive size
+        # note: force images to qvga 320x240 to reduce archive size
         subprocess.call([cmd, '-ss', str(time), '-i', str(video),
                          '-frames:v', '1', '-s', 'qvga',
                          os.path.join(path, str(kind) + '_' + str(name) +
@@ -182,92 +182,67 @@ def evaluate(events, truths):
     fid_tp = open(args.output + '/TP.txt','w')
     
     # Variable to log event
-    log = []
+    log_event = []
+    log_truth = []
 
     # Matched
-    matched = [False] * len(truths)
+    matched_events = dict()
+    matched_truths = dict()
 
     # Stats
-    total_det = 0
-    tp = 0
     fp = 0
     fn = 0
     dups = 0
+    inhib = 0
 
     # For each event
     for event in events:
-
-        # Increase total counter
-        total_det += 1
-
-        good = False
-        match_gt = None
-
-        min_time = 1e99
-        best_truth = None
-        best_i = -1
-
         # Search for a matching truth
         for i, truth in enumerate(truths):
-            dt = abs(truth.begin.milis - event.time.milis)
-            if dt <= min_time :
-                min_time = dt
-                best_truth = truth
-                best_i = i
 
-        # Test for matching
-        print event.time 
-        print  best_truth.match_end
-        if best_truth and event.time >= best_truth.match_begin and \
-            event.time <= best_truth.match_end:
-            print "matched"
-            # Keep track of matched ground truth
-            match_gt = best_truth
-
-            #We write the matched event as a TP (even if it is a duplicate)
-            fid_tp.write('%s %s\n' % (event.time.milis, event.time_end.milis))
-
-            # If the ground truth is not matched yet
-            if not matched[best_i]:
-                good = True
-                matched[best_i] = True
-                break
-            # Otherwise this is a duplicate
-            else:
-                good = None
-                break
+            # Test for matching
+            if event.time >= truth.match_begin and \
+               event.time <= truth.match_end:
+                # Keep track of matched ground truth
+                if event.id not in matched_events:
+                    matched_events[event.id] = []
+                else:
+                    dups += 1 # several events for one gt
+                if truth.id not in matched_truths:
+                    matched_truths[truth.id] = []
+                else:
+                    inhib += 1 # several gt for one event
+                matched_events[event.id].append(truth)
+                matched_truths[truth.id].append(event)
 
         # Log event
-        log.append((event, match_gt, good))
+        log_event.append((event, matched_events[event.id] if event.id in matched_events else [], event.id in matched_events))
 
-        if good is None:
-            dups += 1
-        elif good:
-            tp += 1
-            #fid_tp.write('%s %s\n' % (event.time.milis, event.time_end.milis))
-        else:
+        if not event.id in matched_events:
             fp += 1
             fid_fp.write('%s %s\n' % (event.time.milis, event.time_end.milis))
 
-    # Compute false negative
-    fn = len(filter(lambda x: not x, matched))
-    fn_indices = [i for i in range(0,len(matched)) if matched[i]==False] #indicates which GT have not been matched to any event (they are thus False negatives)
+    for truth in truths:
+        log_truth.append((truth, matched_truths[truth.id] if truth.id in matched_truths else [], truth.id in matched_truths))
+        if not truth.id in matched_truths:
+	    fid_fn.write('%s %s\n' % (truth.begin.milis, truth.end.milis))
+	    fn += 1
 
-    for fn_index in fn_indices:
-        fid_fn.write('%s %s\n' % (truths[fn_index].begin.milis, truths[fn_index].end.milis))
+    tp = len(matched_truths)
+    print "fp %d fn %d tp %d. dups %d inh %d" % (fp, fn, tp, dups, inhib)
 
     # Prepare evaluation results
     results = Evaluation(tp=tp,
                          fp=fp,
                          fn=fn,
                          dups=dups,
-                         det=total_det,
+                         det=len(events),
                          pos=len(truths))
     fid_fp.close()
     fid_fn.close()
     fid_tp.close()
 
-    return (results, log)
+    return (results, (log_event, log_truth))
 
 
 def statistics(evaluation, video=None):
@@ -346,11 +321,12 @@ def video_thumbnail(video, path):
                      stderr=subprocess.PIPE)
 
 
-def generate_html(stats, log, data, out='out', filename='report.html'):
+def generate_html(stats, logs, data, out='out', filename='report.html'):
     """ Generate an HTML report """
 
     # Get data
-    events, truths = data
+    events, truths       = data
+    log_event, log_truth = logs
 
     # Create HEAD and BODY
     head = HEAD(TITLE('Report'))
@@ -395,9 +371,9 @@ def generate_html(stats, log, data, out='out', filename='report.html'):
               value='Show thumbnails',
               onclick="$('.images').css('display', 'block');") + P()
     table = TABLE(border=1, style='border-collapse: collapse;')
-    table <= TR(TH('ID') + TH('Thumbnail') + TH('Time') + TH('Matched'),
+    table <= TR(TH('ID') + (TH('Thumbnail') if args.images else '') + TH('Time') + TH('Matched'),
                 style='background: lightgray;')
-    for (event, truth, good) in log:
+    for (event, matches, good) in log_event:
 
         if good is None:
             bg = "#FFF4D3"
@@ -417,11 +393,13 @@ def generate_html(stats, log, data, out='out', filename='report.html'):
         else:
             row <= TD(B(event.id))
         row <= TD(event.time)
-        if truth is not None and args.images:
-            row <= TD(A(truth.id,
-                        href="./images/truth_" + str(truth.id) + ".jpg"))
-        else:
-            row <= TD(truth.id if truth is not None else '')
+        cell = TD()
+        comma = ""
+        for match in matches:
+            cell <= comma
+            cell <= A(str(match.id), href="./images/truth_" + str(match.id) + ".jpg")
+            comma = ', '
+        row <= cell
         table <= row
     body <= table
 
@@ -430,23 +408,22 @@ def generate_html(stats, log, data, out='out', filename='report.html'):
     table = TABLE(border=1, style='border-collapse: collapse;')
     header = TR(style='background: lightgray;')
     header <= TH('ID')
-    header <= TH('Thumbnail')
+    if args.images:
+        header <= TH('Thumbnail')
     header <= TH('Matched')
     header <= TH('Begin')
     header <= TH('End')
     header <= TH('Match begin')
     header <= TH('Match end')
     table <= header
-    for truth in truths:
-        matches = [i.id for (i, t, g) in log if truth is not None and t is not
-                   None and truth.id == t.id]
+    for (truth, matches, good) in log_truth:
 
         if not matches:
             bg = "#FFD4D3"
-        elif len(matches) == 1:
-            bg = "#DCFFD3"
+        # elif len(matches) > 1:
+        #     bg = "#FFF4D3"
         else:
-            bg = "#FFF4D3"
+            bg = "#DCFFD3"
 
         row = TR(style='background: ' + bg + ';')
         if args.images:
@@ -462,7 +439,7 @@ def generate_html(stats, log, data, out='out', filename='report.html'):
         comma = ''
         for match in matches:
             cell <= comma
-            cell <= A(match, href="./images/event_" + str(match) + ".jpg")
+            cell <= A(str(match.id), href="./images/event_" + str(match.id) + ".jpg")
             comma = ', '
         row <= cell
         row <= TD(truth.begin, style='padding-left: 20px; '
@@ -530,9 +507,9 @@ def arguments_parser():
     # Delay
     parser.add_argument('-d',
                         dest='delay',
-                        default=5,
+                        default=0,
                         type=int,
-                        help='the delay to use, default=5s.')
+                        help='the delay to use, default=0s.')
 
     # Uncompromising
     parser.add_argument('-u',
@@ -595,7 +572,7 @@ def main():
     truths = read_truths(args.TRUTH_FILE)
 
     # Evaluate the events regarding to the ground truth
-    evaluation, log = evaluate(events, truths)
+    evaluation, logs = evaluate(events, truths)
 
     # Get video info
     video = video_info(args.VIDEO_FILE)
@@ -614,7 +591,7 @@ def main():
 
     # If an HTML report is desired
     if args.html:
-        generate_html(stats, log, (events, truths), out=args.output)
+        generate_html(stats, logs, (events, truths), out=args.output)
     # Otherwise
     else:
         # Print the report
