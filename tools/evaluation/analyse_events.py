@@ -530,9 +530,9 @@ def arguments_parser():
     # Tolerance
     parser.add_argument('-t',
                         dest='tolerance',
-                        default=1,
+                        default=3,
                         type=int,
-                        help='tolerance time (e.g. falling time), default=1s.')
+                        help='tolerance time (e.g. falling time), default=3s.')
 
     # Images
     parser.add_argument('-i',
