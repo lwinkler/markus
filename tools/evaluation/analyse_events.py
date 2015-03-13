@@ -271,13 +271,22 @@ def statistics(evaluation, video=None):
     else:
         stats['Detected'] = ('N/A', '%s')
 
-    if not e.tp == 0:
-        stats['Precision'] = (float(e.tp) / (e.tp + e.fp) * 100, '%3.2f%%')
-        stats['F1 score'] = (2 * float(e.tp) / (2 * e.tp + e.fp + e.fn) * 100,
-                                '%3.2f%%')
-    else:
-        stats['Precision'] = ('N/A', '%s')
-        stats['F1 score'] = ('N/A', '%s')
+    # Recall and precision based on measures of ilids
+    recall_bias = 0.5
+    recall      = float(e.tp) / (e.tp + e.fn)
+    precision   = float(e.tp) / (e.tp + e.fp)
+    f1          = (recall_bias + 1) * recall * precision / (recall + recall_bias * precision)
+    stats['Recall']    = (recall    * 100, '%3.2f%%')
+    stats['Precision'] = (precision * 100, '%3.2f%%')
+    stats['F1 score']  = (f1 * 100, '%3.2f%%')
+
+    # old measure used for fall detection
+    # if not e.tp == 0:
+    #     stats['Precision'] = (float(e.tp) / (e.tp + e.fp) * 100, '%3.2f%%')
+    #     stats['F1 score'] = (2 * float(e.tp) / (2 * e.tp + e.fp + e.fn) * 100,
+    # else:
+    #     stats['Precision'] = ('N/A', '%s')
+    #     stats['F1 score'] = ('N/A', '%s')
 
     # Video statistics
     if video is not None:
