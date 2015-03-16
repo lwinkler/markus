@@ -102,7 +102,21 @@ public:
 			delete(it->second);
 	}
 	const std::map<std::string, Controller*>& GetControllersList() const {return m_controls;}
-	Controller* FindController(const std::string& x_name) const;
+	Controller& FindController(const std::string& x_name) const;
+	/**
+	* @brief Find if controller exists by name
+	*
+	* @param x_name
+	*
+	* @return true or false
+	*/
+	inline bool HasController(const std::string& x_name) const{return m_controls.find(x_name) != m_controls.end();}
+	/**
+	* @brief Add a controller
+	*
+	* @param xp_ctr Controller pointer
+	*
+	*/
 	inline void AddController(Controller* xp_ctr)
 	{
 		// check that we are not inserting 2x the same controller

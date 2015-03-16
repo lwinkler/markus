@@ -41,14 +41,12 @@ Controller::~Controller()
 *
 * @param x_name
 *
-* @return Pointer to controller or NULL if not found
+* @return Reference to controller
 */
-Controller* Controllable::FindController(const string& x_name) const
+Controller& Controllable::FindController(const string& x_name) const
 {
 	map<string, Controller*>::const_iterator it = m_controls.find(x_name);
 	if(it == m_controls.end())
-		return NULL; // throw MkException("Cannot find controller " + x_name + " in controls list", LOC);
-	return it->second;
+		throw MkException("Cannot find controller " + x_name + " in controls list", LOC);
+	return *(it->second);
 }
-
-

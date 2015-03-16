@@ -169,7 +169,7 @@ void MarkusWindow::createActionsAndMenus()
 	// Action for manager menu
 	//    list all commands available in the manager controller
 	vector<string> actions;
-	m_manager.FindController("manager")->ListActions(actions);
+	m_manager.FindController("manager").ListActions(actions);
 	for(const auto& elem : actions)
 	{
 		QAction* action = new QAction(elem.c_str(), this);

@@ -44,7 +44,7 @@ void ClassifyEvents::Reset()
 {
 	Module::Reset();
 	// Add a new control to play forward and rewind
-	if(FindController("event") == NULL)
+	if(!HasController("event"))
 		AddController(new ControllerEvent(*this));
 }
 

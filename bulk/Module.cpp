@@ -93,14 +93,14 @@ void Module::Reset()
 
 	// This must be done only once to avoid troubles in the GUI
 	// Add module controller
-	if(FindController("module") == NULL)
+	if(!HasController("module"))
 		AddController(new ControllerModule(*this));
 
 	for(const auto& elem : param.GetList())
 	{
 		// Do not add param if locked or already present
 		// TODO: Suppress GetType() and use a CreateController method
-		if(elem->IsLocked() || FindController(elem->GetName()) != NULL)
+		if(elem->IsLocked() || HasController(elem->GetName()))
 			continue;
 		Controller* ctr = Factories::parameterControllerFactory().Create(elem->GetType(), *elem);
 		if(ctr == NULL)

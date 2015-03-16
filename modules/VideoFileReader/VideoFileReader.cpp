@@ -53,7 +53,7 @@ void VideoFileReader::Reset()
 	Module::Reset();
 #ifndef MARKUS_NO_GUI
 	// Add a new control to play forward and rewind
-	if(FindController("reader") == NULL)
+	if(!HasController("reader"))
 		AddController(new ControllerInputStream(*this));
 #endif
 

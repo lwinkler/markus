@@ -249,7 +249,7 @@ void Manager::Reset(bool x_resetInputs)
 			(*it)->Reset();
 		}
 	}
-	if(FindController("manager") == NULL)
+	if(!HasController("manager"))
 	{
 		AddController(new ControllerManager(*this));
 	}
@@ -257,8 +257,7 @@ void Manager::Reset(bool x_resetInputs)
 	for(const auto& elem : GetParameters().GetList())
 	{
 		// Do not add param if locked or already present
-		// TODO: Suppress GetType() and use a CreateController method
-		if(elem->IsLocked() || FindController(elem->GetName()) != NULL)
+		if(elem->IsLocked() || HasController(elem->GetName()))
 			continue;
 		Controller* ctr = Factories::parameterControllerFactory().Create(elem->GetType(), *elem);
 		if(ctr == NULL)
@@ -423,44 +422,17 @@ void Manager::SendCommand(const string& x_command, string x_value)
 	if(elems.size() != 3)
 		throw MkException("Command must be in format \"module.controller.Command\"", LOC);
 
-	// TODO: simplify code using: Module& module(elems.at(0) == "manager" ? dynamic_cast<Module&>(*this) : RefModuleByName(elems.at(0)));
-
-	if(elems.at(0) == "manager")
+	Module& module(elems.at(0) == "manager" ? dynamic_cast<Module&>(*this) : RefModuleByName(elems.at(0)));
+	try
 	{
-		try
-		{
-			LockForWrite();
-			Controller* ctr = FindController(elems.at(1));
-			if(ctr == NULL)
-			{
-				LOG_WARN(m_logger, "No controller found (in interruption): "<<elems.at(1));
-			}
-			else
-			{
-				ctr->CallAction(elems.at(2), &x_value);
-			}
-			Unlock();
-		}
-		catch(...)
-		{
-			Unlock();
-			throw;
-		}
+		module.LockForWrite();
+		module.FindController(elems.at(1)).CallAction(elems.at(2), &x_value);
+		module.Unlock();
 	}
-	else
+	catch(...)
 	{
-		Module& module(RefModuleByName(elems.at(0)));
-		try
-		{
-			module.LockForWrite();
-			module.FindController(elems.at(1))->CallAction(elems.at(2), &x_value);
-			module.Unlock();
-		}
-		catch(...)
-		{
-			module.Unlock();
-			throw;
-		}
+		module.Unlock();
+		throw;
 	}
 	LOG_INFO(m_logger, "Command "<<x_command<<" returned value "<<x_value);
 }
