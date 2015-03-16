@@ -88,9 +88,8 @@ public:
 
 		// old access
 		TS_ASSERT(module0conf == appConf.GetSubConfig("module", "name", "Module0"));
-		TS_ASSERT(module1conf == module0conf.NextSubConfig("module"));
-		TS_ASSERT(module1conf == module0conf.NextSubConfig("module", "name", "Module1"));
-		TS_ASSERT(module1conf.NextSubConfig("module").IsEmpty());
+		TS_ASSERT(module1conf == appConf.FindAll("module").at(1));
+		TS_ASSERT(module1conf == appConf.FindAll("module[name=\"Module1\"]").at(0));
 		TS_ASSERT(! module0conf.GetSubConfig("parameters").IsEmpty());
 
 		ConfigReader param1 = module0conf.GetSubConfig("parameters").GetSubConfig("param", "name", "param_text");

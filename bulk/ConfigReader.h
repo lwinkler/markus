@@ -55,7 +55,6 @@ public:
 	const ConfigReader GetSubConfig(const std::string& x_tagName, const std::string& x_attrName, const std::string& x_attrValue) const;
 	ConfigReader RefSubConfig(const std::string& x_tagName, bool x_allowCreation = false);
 	ConfigReader RefSubConfig(const std::string& x_tagName, const std::string& x_attrName, const std::string& x_attrValue, bool x_allowCreation = false);
-	ConfigReader NextSubConfig(const std::string& x_tagName, const std::string& x_attrName = "", const std::string& x_attrValue = "") const;
 
 	/// Check if the config object is empty
 	inline bool IsEmpty() const {return mp_doc == NULL && mp_node == NULL;}
@@ -82,6 +81,7 @@ public:
 	std::vector<ConfigReader> FindAll(const std::string& x_searchString, bool x_fatal = false) const;
 
 private:
+	ConfigReader NextSubConfig(const std::string& x_tagName, const std::string& x_attrName = "", const std::string& x_attrValue = "") const;
 	void CheckUniquenessOfId(const std::string& x_group, const std::string& x_type, const std::string& x_idLabel, const std::string& x_moduleName) const;
 	bool m_isOriginal;
 	TiXmlNode * mp_node;
