@@ -63,9 +63,11 @@ public:
 
 		// Conversion methods
 		inline const std::string& GetTypeString() const {const static std::string s = "cachedState"; return s;}
-		const std::map<std::string, int> & GetEnum() const {return Enum;} // TODO: Used ?
+		const std::map<std::string, int> & GetEnum() const {return Enum;}
 		const std::map<int, std::string> & GetReverseEnum() const {return ReverseEnum;}
-		static std::map<std::string, int> CreateMap(); // TODO: private ?
+
+	private:
+		static std::map<std::string, int> CreateMap();
 
 		// static attributes
 		const static std::map<std::string, int> Enum;

@@ -40,6 +40,8 @@ public:
 	inline const std::string& GetTypeString() const {const static std::string s = "imageType"; return s;}
 	const std::map<std::string, int> & GetEnum() const {return Enum;}
 	const std::map<int, std::string> & GetReverseEnum() const {return ReverseEnum;}
+
+private:
 	static std::map<std::string, int> CreateMap();
 
 	// static attributes
