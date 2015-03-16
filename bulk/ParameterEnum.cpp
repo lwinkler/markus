@@ -144,7 +144,6 @@ void ParameterEnum::Print(ostream& os) const
 */
 map<int,string> ParameterEnum::CreateReverseMap(const map<string, int>& x_map)
 {
-	//const map<string, int> map1 = CreateMap();
 	map<int, string> out;
 	for(auto elem : x_map)
 	{

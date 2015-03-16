@@ -596,15 +596,11 @@ void Module::ProcessRandomInput(unsigned int& xr_seed)
 	ProcessFrame();
 };
 
+/// Static members of ParameterCachedState
 const map<string, int> Module::ParameterCachedState::Enum = {
 	{"NO_CACHE", CachedState::NO_CACHE},
 	{"WRITE_CACHE", CachedState::WRITE_CACHE},
 	{"READ_CACHE", CachedState::READ_CACHE},
 	{"DISABLED", CachedState::DISABLED}
 };
-const map<int, string> Module::ParameterCachedState::ReverseEnum = Module::ParameterCachedState::CreateReverseMap(ParameterCachedState::Enum);
-
-
-Module::ParameterCachedState::ParameterCachedState(const string& x_name, int x_default, int * xp_value, const string& x_description) :
-	ParameterEnum(x_name, x_default, xp_value, x_description)
-{}
+const map<int, string> Module::ParameterCachedState::ReverseEnum = ParameterEnum::CreateReverseMap(ParameterCachedState::Enum);

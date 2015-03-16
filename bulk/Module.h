@@ -58,7 +58,8 @@ public:
 	class ParameterCachedState : public ParameterEnum
 	{
 	public:
-		ParameterCachedState(const std::string& x_name, int x_default, int * xp_value, const std::string& x_description);
+		ParameterCachedState(const std::string& x_name, int x_default, int * xp_value, const std::string& x_description)
+			: ParameterEnum(x_name, x_default, xp_value, x_description){}
 		~ParameterCachedState() {}
 
 		// Conversion methods
@@ -67,8 +68,6 @@ public:
 		const std::map<int, std::string> & GetReverseEnum() const {return ReverseEnum;}
 
 	private:
-		static std::map<std::string, int> CreateMap();
-
 		// static attributes
 		const static std::map<std::string, int> Enum;
 		const static std::map<int, std::string> ReverseEnum;
