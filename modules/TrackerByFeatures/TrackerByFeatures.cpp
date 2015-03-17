@@ -47,11 +47,11 @@ void updateObjectFromTemplate(const Template& x_temp, Object& x_obj)
 	x_obj.SetId(x_temp.GetNum());
 
 	// Copy features
-	for(map<string,FeatureFloatInTime>::const_iterator it3 = x_temp.GetFeatures().begin() ; it3 != x_temp.GetFeatures().end() ; ++it3)
+	for(const auto & elem : x_temp.GetFeatures())
 	{
 		// cout<<"name "<<it3->first<<endl;
 		// cout<<"name "<<it3->second.SerializeToString()<<endl;
-		x_obj.AddFeature(it3->first, it3->second.CreateCopy());
+		x_obj.AddFeature(elem.first, elem.second.CreateCopy());
 	}
 }
 
@@ -108,11 +108,11 @@ void TrackerByFeatures::MatchTemplates()
 	m_matched.clear();
 
 	// Try to match each objects with a template
-	for(list<Template>::iterator it1 = m_templates.begin() ; it1 != m_templates.end(); ++it1)
+	for(auto & elem : m_templates)
 	{
 		// it1->m_bestMatchingObject = -1;
-		it1->m_lastMatchingObject = NULL;
-		MatchTemplate(*it1);
+		elem.m_lastMatchingObject = nullptr;
+		MatchTemplate(elem);
 	}
 
 	/*for(vector<Object>::iterator it1 = m_objects.begin() ; it1 != m_objects.end(); it1++ )
@@ -143,14 +143,14 @@ void TrackerByFeatures::MatchTemplates()
 
 void TrackerByFeatures::UpdateObjects()
 {
-	for(vector<Object>::iterator it1 = m_objects.begin() ; it1 != m_objects.end(); ++it1)
+	for(auto & elem : m_objects)
 	{
-		std::map<Object*, Template*>::iterator it = m_matched.find(&*it1);
+		auto it = m_matched.find(&elem);
 		assert(it != m_matched.end());
-		updateObjectFromTemplate(*it->second, *it1);
+		updateObjectFromTemplate(*it->second, elem);
 #ifdef MARKUS_DEBUG_STREAMS
 		// Draw matching object
-		rectangle(m_debug, it1->GetRect(), colorFromId(it1->GetId()));
+		rectangle(m_debug, elem.GetRect(), colorFromId(elem.GetId()));
 #endif
 	}
 }
@@ -162,31 +162,31 @@ void TrackerByFeatures::UpdateObjects()
 Object* TrackerByFeatures::MatchTemplate(Template& x_temp)
 {
 	double bestDist = DBL_MAX;
-	Object* bestObject = NULL;
-	x_temp.m_lastMatchingObject = NULL;
+	Object* bestObject = nullptr;
+	x_temp.m_lastMatchingObject = nullptr;
 
 	LOG_DEBUG(m_logger, "Comparing template "<<x_temp.GetNum()<<" with "<<m_objects.size()<<" objects");
 
-	for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; ++it)
+	for(auto & elem : m_objects)
 	{
 		// Add empty features for distance and speed
-		double dist = x_temp.CompareWithObject(*it, m_featureNames);
+		double dist = x_temp.CompareWithObject(elem, m_featureNames);
 		if(dist < bestDist)
 		{
 			bestDist   = dist;
-			bestObject = &(*it);
+			bestObject = &(elem);
 		}
 	}
-	if(bestObject == NULL)
-		return NULL;
+	if(bestObject == nullptr)
+		return nullptr;
 	if(bestDist <= m_param.maxMatchingDistance)
 	{
 		if(m_param.symetricMatch)
 		{
 			const Template * bestTemplate = MatchObject(*bestObject);
-			assert(bestTemplate != NULL);
+			assert(bestTemplate != nullptr);
 			if(bestTemplate->GetNum() != x_temp.GetNum())
-				return NULL;
+				return nullptr;
 		}
 		// x_temp.m_bestMatchingObject = bestObject;
 		LOG_DEBUG(m_logger, "Template "<<x_temp.GetNum()<<" matched with object "<<bestObject->GetId()<<" dist="<<bestDist);
@@ -201,7 +201,7 @@ Object* TrackerByFeatures::MatchTemplate(Template& x_temp)
 	}
 	else
 	{
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -211,7 +211,7 @@ Object* TrackerByFeatures::MatchTemplate(Template& x_temp)
 const Template * TrackerByFeatures::MatchObject(const Object& x_obj)const
 {
 	double bestDist = DBL_MAX;
-	const Template* bestTemp = NULL;
+	const Template* bestTemp = nullptr;
 	
 	//cout<<"Comparing template "<<m_num<<" with "<<x_regs.size()<<" objects"<<endl;
 
@@ -229,7 +229,7 @@ const Template * TrackerByFeatures::MatchObject(const Object& x_obj)const
 	// TODO: Compensate matching distance and alpha param with time between frames
 	if(bestDist <= m_param.maxMatchingDistance)
 		return bestTemp;
-	else return NULL;
+	else return nullptr;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -240,10 +240,10 @@ void TrackerByFeatures::UpdateTemplates()
 #ifdef MARKUS_DEBUG_STREAMS
 #endif
 
-	for(list<Template>::iterator it1= m_templates.begin() ; it1 != m_templates.end(); ++it1)
+	for(auto & elem : m_templates)
 	{
 		// cout<<"Update template "<<it1->GetNum()<<endl;
-		if(it1->m_lastMatchingObject != NULL)
+		if(elem.m_lastMatchingObject != nullptr)
 		{
 			// Add two extra features: distance and speed /// TODO
 			// const Feature& x = it1->m_lastMatchingObject->GetFeature("x");
@@ -257,9 +257,9 @@ void TrackerByFeatures::UpdateTemplates()
 			// it1->m_lastMatchingObject->SetFeatureByName("speed_y", featureNames, y.value - y.mean);
 
 			// Update the template and copy to the object
-			it1->UpdateFeatures(m_param.alpha, m_currentTimeStamp);
+			elem.UpdateFeatures(m_param.alpha, m_currentTimeStamp);
 			// it1->m_lastMatchingObject->SetFeatures(it1->GetFeatures());
-			it1->m_lastMatchingObject = NULL;
+			elem.m_lastMatchingObject = nullptr;
 		}
 	}
 }
@@ -276,7 +276,7 @@ void TrackerByFeatures::CleanTemplates()
 #endif
 	TIME_STAMP timeStampClean = m_currentTimeStamp - m_param.timeDisappear * 1000;
 
-	for(list<Template>::iterator it1 = m_templates.begin() ; it1 != m_templates.end(); ++it1)
+	for(auto it1 = m_templates.begin() ; it1 != m_templates.end(); ++it1)
 	{
 #ifdef MARKUS_DEBUG_STREAMS
 		// draw template (if position is available)
@@ -313,7 +313,7 @@ void TrackerByFeatures::DetectNewTemplates()
 	for(auto& obj : m_objects)
 	{
 		auto obj_matched = m_matched.find(&obj);
-		if(obj_matched == m_matched.end() || obj_matched->second == NULL)
+		if(obj_matched == m_matched.end() || obj_matched->second == nullptr)
 		{
 			if(m_templates.size() >= MAX_NB_TEMPLATES)
 			{

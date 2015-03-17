@@ -60,7 +60,7 @@ void KeyPointsMser::Reset()
 		m_param.minMargin,
 		m_param.edgeBlurSize
 	);
-	if(mp_detector == NULL && mp_detector->empty())
+	if(mp_detector == nullptr && mp_detector->empty())
 		throw MkException("Cannot create detector", LOC);
 }
 

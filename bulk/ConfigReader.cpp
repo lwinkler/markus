@@ -181,7 +181,7 @@ ConfigReader ConfigReader::RefSubConfig(const string& x_tagName, bool x_allowCre
 	if(newNode == nullptr && x_allowCreation)
 	{
 		// Add a sub config element if not found
-		auto  element = new TiXmlElement(x_tagName);
+		auto   element = new TiXmlElement(x_tagName);
 		mp_node->LinkEndChild(element);
 		return ConfigReader(element);
 	}
@@ -243,7 +243,7 @@ ConfigReader ConfigReader::RefSubConfig(const string& x_tagName, const string& x
 	if(newNode == nullptr && x_allowCreation)
 	{
 		// Add a sub config element if not found
-		auto  element = new TiXmlElement(x_tagName);
+		auto   element = new TiXmlElement(x_tagName);
 		if(x_attrName != "")
 			element->SetAttribute(x_attrName, x_attrValue);
 		mp_node->LinkEndChild(element);

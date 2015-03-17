@@ -137,15 +137,15 @@ void VideoFileBufferWriter::ProcessFrame()
 
 			// write buffer to file
 
-			std::list<cv::Mat>::iterator bufferBegin = m_currentFrame;
-			std::list<cv::Mat>::iterator bufferEnd   = m_currentFrame;
+			auto bufferBegin = m_currentFrame;
+			auto bufferEnd   = m_currentFrame;
 			if(!m_bufferFull)
 			{
 				bufferBegin = m_buffer.begin();
 				bufferEnd   = m_buffer.end();
 
 			}
-			list<Mat>::iterator it = bufferBegin;
+			auto it = bufferBegin;
 			while(true)
 			{
 				m_writer.write(*it);

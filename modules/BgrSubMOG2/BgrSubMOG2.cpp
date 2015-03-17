@@ -39,7 +39,7 @@ BgrSubMOG2::BgrSubMOG2(const ConfigReader& x_configReader) :
 	m_background(Size(m_param.width, m_param.height), m_param.type),
 	m_foregroundWithShadows(Size(m_param.width, m_param.height), m_param.type)
 {
-	mp_mog2 = NULL;
+	mp_mog2 = nullptr;
 
 	// m_description = "Perform background subtraction via Mixtures Of Gaussians";
 

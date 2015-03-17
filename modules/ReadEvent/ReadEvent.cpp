@@ -44,7 +44,7 @@ ReadEvent::ReadEvent(const ConfigReader& x_configReader)
 	AddOutputStream(1, new StreamImage("image", m_outputIm1, *this, "Video output for image extraction (optional)"));
 	AddOutputStream(2, new StreamImage("mask" , m_outputIm2, *this, "Binary mask for image extraction (optional)"));
 
-	mp_annotationReader = NULL;
+	mp_annotationReader = nullptr;
 }
 
 ReadEvent::~ReadEvent(void)

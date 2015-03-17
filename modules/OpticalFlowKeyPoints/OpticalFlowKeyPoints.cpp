@@ -74,11 +74,11 @@ void OpticalFlowKeyPoints::ProcessFrame()
 
 	// Convert all keypoints to a vector of Point2f
 	vector<Point2f> pointsIn;
-	for(vector<Object>::iterator itkp = m_keyPointsIn.begin() ; itkp != m_keyPointsIn.end() ; ++itkp)
+	for(auto & elem : m_keyPointsIn)
 	{
 		// KeyPoint keypoint = dynamic_cast<const FeatureKeyPoint&>(itkp->GetFeature("keypoint")).keypoint;
 		// pointsIn.push_back(keypoint.pt);
-		pointsIn.push_back(Point2f(itkp->posX, itkp->posY)); // TODO Add to object class ?
+		pointsIn.push_back(Point2f(elem.posX, elem.posY)); // TODO Add to object class ?
 	}
 
 	// If just initialized

@@ -98,9 +98,9 @@ void CascadeDetector::CopyResults()
 {
 	m_detectedObjects.clear();
 	const double diagonal = sqrt(m_param.width * m_param.width + m_param.height * m_param.height);
-	for(std::vector<Rect>::const_iterator it = m_thread.GetDetectedObjects().begin() ; it != m_thread.GetDetectedObjects().end() ; ++it)
+	for(const auto & elem : m_thread.GetDetectedObjects())
 	{
-		Object obj(m_param.objectLabel, *it);
+		Object obj(m_param.objectLabel, elem);
 
 		obj.AddFeature("x"      , obj.posX   / diagonal);
 		obj.AddFeature("y"      , obj.posY   / diagonal);

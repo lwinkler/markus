@@ -40,7 +40,7 @@ TempDiff::TempDiff(const ConfigReader& x_configReader) :
 	// m_output(Size(m_param.width, m_param.height), m_param.type),
 	m_lastImg(Size(m_param.width, m_param.height), m_param.type)
 {
-	m_tmp = NULL;
+	m_tmp = nullptr;
 
 	AddInputStream(0, new StreamImage("input", m_input, *this,             "Video input"));
 	AddOutputStream(0, new StreamImage("temp_diff", m_temporalDiff, *this, "Temporal difference"));

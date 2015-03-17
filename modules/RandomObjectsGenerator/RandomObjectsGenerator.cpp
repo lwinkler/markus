@@ -49,7 +49,7 @@ void RandomObjectsGenerator::Reset()
 	Module::Reset();
 
 	if(m_param.randomSeed == 0)
-		m_seed = time(NULL);
+		m_seed = time(nullptr);
 	else m_seed = m_param.randomSeed;
 	m_cpt = 0;
 
@@ -98,17 +98,17 @@ void RandomObjectsGenerator::Capture()
 	}
 
 	// Add random changes to features
-	for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; ++it)
+	for(auto & elem : m_objects)
 	{
-		it->AddFeature("x",      dynamic_cast<const FeatureFloat&>(it->GetFeature("x")).value      + (static_cast<float>(rand_r(&m_seed)) / RAND_MAX - 0.5) * m_param.speed);
-		it->AddFeature("y",      dynamic_cast<const FeatureFloat&>(it->GetFeature("y")).value      + (static_cast<float>(rand_r(&m_seed)) / RAND_MAX - 0.5) * m_param.speed);
-		it->AddFeature("width",  dynamic_cast<const FeatureFloat&>(it->GetFeature("width")).value  + (static_cast<float>(rand_r(&m_seed)) / RAND_MAX - 0.5) * m_param.speed);
-		it->AddFeature("height", dynamic_cast<const FeatureFloat&>(it->GetFeature("height")).value + (static_cast<float>(rand_r(&m_seed)) / RAND_MAX - 0.5) * m_param.speed);
+		elem.AddFeature("x",      dynamic_cast<const FeatureFloat&>(elem.GetFeature("x")).value      + (static_cast<float>(rand_r(&m_seed)) / RAND_MAX - 0.5) * m_param.speed);
+		elem.AddFeature("y",      dynamic_cast<const FeatureFloat&>(elem.GetFeature("y")).value      + (static_cast<float>(rand_r(&m_seed)) / RAND_MAX - 0.5) * m_param.speed);
+		elem.AddFeature("width",  dynamic_cast<const FeatureFloat&>(elem.GetFeature("width")).value  + (static_cast<float>(rand_r(&m_seed)) / RAND_MAX - 0.5) * m_param.speed);
+		elem.AddFeature("height", dynamic_cast<const FeatureFloat&>(elem.GetFeature("height")).value + (static_cast<float>(rand_r(&m_seed)) / RAND_MAX - 0.5) * m_param.speed);
 
-		it->posX   = dynamic_cast<const FeatureFloat&>(it->GetFeature("x")).value * diagonal;
-		it->posY   = dynamic_cast<const FeatureFloat&>(it->GetFeature("y")).value * diagonal;
-		it->width  = dynamic_cast<const FeatureFloat&>(it->GetFeature("width")).value * diagonal;
-		it->height = dynamic_cast<const FeatureFloat&>(it->GetFeature("height")).value * diagonal;
+		elem.posX   = dynamic_cast<const FeatureFloat&>(elem.GetFeature("x")).value * diagonal;
+		elem.posY   = dynamic_cast<const FeatureFloat&>(elem.GetFeature("y")).value * diagonal;
+		elem.width  = dynamic_cast<const FeatureFloat&>(elem.GetFeature("width")).value * diagonal;
+		elem.height = dynamic_cast<const FeatureFloat&>(elem.GetFeature("height")).value * diagonal;
 	}
 	m_currentTimeStamp = m_lastTimeStamp + 1000 / m_param.fps;
 	LOG_DEBUG(m_logger, "RandomObjectsGenerator: Capture time: "<<m_currentTimeStamp);

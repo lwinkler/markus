@@ -32,20 +32,20 @@ log4cxx::LoggerPtr Template::m_logger(log4cxx::Logger::getLogger("Template"));
 void copyFeaturesToTemplate(const map<string, FeaturePtr>& x_source, map<string, FeatureFloatInTime>& xr_dest)
 {
 	xr_dest.clear();
-	for(map<string,FeaturePtr>::const_iterator it = x_source.begin() ; it != x_source.end() ; ++it)
+	for(const auto & elem : x_source)
 	{
-		const FeatureFloat* const ff = dynamic_cast<const FeatureFloat* const>(&*it->second);
+		const FeatureFloat* const ff = dynamic_cast<const FeatureFloat* const>(&*elem.second);
 		// Skip all other features
-		if(ff == NULL)
+		if(ff == nullptr)
 			continue;
-		xr_dest.insert(std::make_pair(it->first, FeatureFloatInTime(*ff)));
+		xr_dest.insert(std::make_pair(elem.first, FeatureFloatInTime(*ff)));
 	}
 }
 
 Template::Template()
 {
 	m_num = m_counter;
-	m_lastMatchingObject = NULL;
+	m_lastMatchingObject = nullptr;
 	m_lastSeen = TIME_STAMP_MIN;
 
 	m_counter++;
@@ -64,7 +64,7 @@ Template::Template(const Object& x_obj, TIME_STAMP x_currentTimeStamp)
 	m_num = m_counter;
 	m_counter++;
 	copyFeaturesToTemplate(x_obj.GetFeatures(), m_feats);
-	m_lastMatchingObject = NULL; // &x_obj;
+	m_lastMatchingObject = nullptr; // &x_obj;
 	m_lastSeen = x_currentTimeStamp;
 
 	//cout<<"Object "<<x_obj.GetNum()<<" is used to create template "<<m_num<<" with "<<x_obj.GetFeatures().size()<<" features"<<endl;
@@ -101,7 +101,7 @@ double Template::CompareWithObject(const Object& x_obj, const vector<string>& x_
 	if(m_feats.empty())
 		throw MkException("Feature vector of Template cannot be empty", LOC);
 
-	for (vector<string>::const_iterator it = x_features.begin() ; it != x_features.end() ; ++it)
+	for (const auto & x_feature : x_features)
 	{
 		/*
 		const FeatureFloatInTime& f1(GetFeature(*it));
@@ -109,7 +109,7 @@ double Template::CompareWithObject(const Object& x_obj, const vector<string>& x_
 		sum += POW2(f1.value - f2.value)
 			   / POW2(f1.sqVariance);
 			   */
-		sum += GetFeature(*it).CompareSquared(x_obj.GetFeature(*it));
+		sum += GetFeature(x_feature).CompareSquared(x_obj.GetFeature(x_feature));
 	}
 	// cout<<sqrt(sum) / x_features.size()<<endl;
 	return sqrt(sum) / x_features.size();
@@ -123,9 +123,9 @@ double Template::CompareWithObject(const Object& x_obj, const vector<string>& x_
 */
 void Template::UpdateFeatures(double x_alpha, TIME_STAMP m_currentTimeStamp)
 {
-	if(m_lastMatchingObject != NULL)
+	if(m_lastMatchingObject != nullptr)
 	{
-		for (map<string,FeatureFloatInTime>::iterator it = m_feats.begin() ; it != m_feats.end() ; ++it)
+		for (auto it = m_feats.begin() ; it != m_feats.end() ; ++it)
 		{
 			try
 			{

@@ -144,7 +144,7 @@ void adjust(const Mat& im_in, Mat& im_out, Mat*& tmp1, Mat*& tmp2)
 
 	if(im_in.depth() == im_out.depth())
 	{
-		if(tmp1==NULL)
+		if(tmp1==nullptr)
 		{
 			//cout<<"create image in adjust tmp1 depth "<<im_out->depth<<endl;
 			tmp1 = new Mat( Size(im_out.cols, im_out.rows), im_out.type());
@@ -155,12 +155,12 @@ void adjust(const Mat& im_in, Mat& im_out, Mat*& tmp1, Mat*& tmp2)
 	}
 	else
 	{
-		if(tmp1==NULL)
+		if(tmp1==nullptr)
 		{
 			//cout<<"create image in adjust IPL_DEPTH_32F tmp1"<<endl;
 			tmp1 = new Mat( Size(im_out.cols, im_out.rows), im_in.type());
 		}
-		if(tmp2==NULL)
+		if(tmp2==nullptr)
 		{
 			//cout<<"create image in adjust IPL_DEPTH_32F tmp2"<<endl;
 			tmp2 = new Mat( Size(im_out.cols, im_out.rows), CV_MAKE_TYPE(im_in.depth(), im_out.channels()));
@@ -250,7 +250,7 @@ string join(const vector<string> &elems, char delim, const string& format)
 	if(elems.size() == 0)
 		return "";
 	stringstream ss;
-	vector<string>::const_iterator it = elems.begin();
+	auto it = elems.begin();
 	char buffer[256];
 	for( ; it != elems.end() - 1 ; it++)
 	{
@@ -317,7 +317,7 @@ TIME_STAMP timeStampToMs(const string& x_timeStamp)
 TIME_STAMP getAbsTimeMs()
 {
 	struct timeval tp;
-	gettimeofday(&tp, NULL);
+	gettimeofday(&tp, nullptr);
 	return tp.tv_sec * 1000 + tp.tv_usec / 1000;
 }
 
@@ -443,7 +443,7 @@ void execute(const string& x_cmd, ostream& xr_stdout)
 
 	// Append result to ...
 	while(!feof(pipe))
-		if(fgets(buffer, sizeof(buffer), pipe) != NULL)
+		if(fgets(buffer, sizeof(buffer), pipe) != nullptr)
 		{
 			xr_stdout << buffer;
 		}

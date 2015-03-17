@@ -27,7 +27,7 @@ long int Timer::GetMSecLong()
 {
 	timeval now;
 	//clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &now);
-	gettimeofday(&now, NULL); // TODO: use clock as in blog.habets.pp.se: gettimeofday should never be used to measure time
+	gettimeofday(&now, nullptr); // TODO: use clock as in blog.habets.pp.se: gettimeofday should never be used to measure time
 
 	long seconds  = now.tv_sec  - m_start.tv_sec;
 	long useconds = now.tv_usec - m_start.tv_usec;
@@ -38,7 +38,7 @@ long int Timer::GetMSecLong()
 double Timer::GetSecDouble()
 {
 	timeval now;
-	gettimeofday(&now, NULL);
+	gettimeofday(&now, nullptr);
 	//DIFF(m_start, now, temp);
 	long seconds  = now.tv_sec  - m_start.tv_sec;
 	long useconds = now.tv_usec - m_start.tv_usec;
@@ -49,7 +49,7 @@ double Timer::GetSecDouble()
 float Timer::GetSecFloat()
 {
 	timeval now;
-	gettimeofday(&now, NULL);
+	gettimeofday(&now, nullptr);
 	//DIFF(m_start, now, temp);
 	long seconds  = now.tv_sec  - m_start.tv_sec;
 	long useconds = now.tv_usec - m_start.tv_usec;

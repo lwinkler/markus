@@ -50,7 +50,7 @@ void RandomEventGenerator::Reset()
 {
 	Module::Reset();
 	if(m_param.randomSeed == 0)
-		m_seed = time(NULL);
+		m_seed = time(nullptr);
 	else m_seed = m_param.randomSeed;
 	m_event.Empty();
 

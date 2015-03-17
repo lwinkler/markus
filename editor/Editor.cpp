@@ -53,7 +53,7 @@ using namespace std;
 Editor::Editor(const string& x_project, QWidget *parent) :
 	m_projectToLoad(x_project)
 {
-	QWebPage2* page = new QWebPage2();
+	auto  page = new QWebPage2();
 	m_view.setPage(page);
 
 	setWindowState(Qt::WindowMaximized);
@@ -62,7 +62,7 @@ Editor::Editor(const string& x_project, QWidget *parent) :
 	// setupUi(this);
 	stringstream ss;
 	char pwd[256];
-	assert(getcwd(pwd, sizeof(pwd)) != NULL);
+	assert(getcwd(pwd, sizeof(pwd)) != nullptr);
 	ss<<"file://"<<pwd<<"/editor.html";
 	m_view.load(QUrl(ss.str().c_str()));
 

@@ -444,7 +444,7 @@ QWidget* ControllerCalibrationByHeight::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
 
-	auto  mainLayout = new QGridLayout();
+	auto   mainLayout = new QGridLayout();
 	mp_widget = new QWidget();
 	CalibrationByHeight calib;
 	stringstream ss;
