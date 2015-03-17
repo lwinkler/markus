@@ -111,8 +111,8 @@ void Event::Deserialize(istream& x_in, const string& x_dir)
 		// Deserialize files
 		Json::Value::Members members = root["external"].getMemberNames();
 		m_externalInfo.clear();
-		for(Json::Value::Members::const_iterator it = members.begin() ; it != members.end() ; ++it)
-			m_externalInfo[*it] = root["external"][*it];
+		for(const auto& elem : members)
+			m_externalInfo[elem] = root["external"][elem];
 	}
 	else
 	{

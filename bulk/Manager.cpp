@@ -460,10 +460,10 @@ void Manager::PrintStatistics()
 	perfModule.FindRef("fps", true).SetValue(fps);
 
 	// Call for each module
-	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
+	for(const auto& module : m_modules)
 	{
 		// LOG_INFO(cpt<<": ");
-		(*it)->PrintStatistics(conf);
+		module->PrintStatistics(conf);
 	}
 	benchSummary.SaveToFile(benchFileName);
 }
@@ -520,15 +520,15 @@ void Manager::Export()
 		SYSTEM("mkdir -p modules");
 		vector<string> moduleTypes;
 		mr_moduleFactory.List(moduleTypes);
-		for(vector<string>::const_iterator it = moduleTypes.begin() ; it != moduleTypes.end() ; ++it)
+		for(const auto& moduleType : moduleTypes)
 		{
-			string file("modules/" + *it + ".xml");
+			string file("modules/" + moduleType + ".xml");
 			createEmptyConfigFile("/tmp/config_empty.xml");
 			ConfigReader config("/tmp/config_empty.xml");
-			ConfigReader moduleConfig = config.FindRef("application>module[name=\"" + *it + "\"]", true);
-			moduleConfig.FindRef("parameters>param[name=\"class\"]", true).SetValue(*it);
+			ConfigReader moduleConfig = config.FindRef("application>module[name=\"" + moduleType + "\"]", true);
+			moduleConfig.FindRef("parameters>param[name=\"class\"]", true).SetValue(moduleType);
 
-			Module* module = mr_moduleFactory.Create(*it, moduleConfig);
+			Module* module = mr_moduleFactory.Create(moduleType, moduleConfig);
 
 			ofstream os(file.c_str());
 			os<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"<<endl;

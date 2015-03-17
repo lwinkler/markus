@@ -102,7 +102,7 @@ protected:
 	MkException m_lastException;   // Field to store the last exception
 
 	std::vector<Module *> m_modules;
-	std::vector<Module  *> m_inputs;
+	std::vector<Module *> m_inputs;
 
 	long long m_frameCount;
 	static log4cxx::LoggerPtr m_logger;

@@ -122,16 +122,16 @@ void ModuleKeyPoints::ProcessFrame()
 		int i = 0;
 
 		// For each keypoint create an output object
-		for(vector<KeyPoint>::const_iterator it2 = pointsOfInterest.begin() ; it2 != pointsOfInterest.end() ; ++it2)
+		for(const auto& kp : pointsOfInterest)
 		{
 			// Create object from keypoint // TODO: Use specific functions
 			Object obj("keypoint");
-			obj.posX = it2->pt.x + it1->posX - it1->width  / 2; // - 5;
-			obj.posY = it2->pt.y + it1->posY - it1->height / 2; // - 5;
-			obj.width  = it2->size;
-			obj.height = it2->size;
+			obj.posX = kp.pt.x + it1->posX - it1->width  / 2; // - 5;
+			obj.posY = kp.pt.y + it1->posY - it1->height / 2; // - 5;
+			obj.width  = kp.size;
+			obj.height = kp.size;
 			obj.Intersect(m_input);
-			obj.AddFeature("keypoint", new FeatureKeyPoint(*it2));
+			obj.AddFeature("keypoint", new FeatureKeyPoint(kp));
 			obj.AddFeature("parent", new FeatureInt(it1->GetId()));
 
 			if(mp_descriptor != nullptr)
