@@ -46,13 +46,13 @@ StreamState::~StreamState()
 
 void StreamState::ConvertInput()
 {
-	if(m_connected == NULL) return;
+	if(m_connected == nullptr) return;
 
 	// Copy time stamp to output
 	m_timeStamp = GetConnected().GetTimeStamp();
 
 	const StreamState * pstream = dynamic_cast<const StreamState*>(m_connected);
-	if(pstream == NULL)
+	if(pstream == nullptr)
 		throw MkException("Stream of state " + GetName() + " is not correctly connected", LOC);
 	m_state = pstream->GetState();
 }

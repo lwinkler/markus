@@ -61,13 +61,13 @@ Module::Module(const ConfigReader& x_configReader) :
 Module::~Module()
 {
 	// Delete all streams
-	for(map<int, Stream* >::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; ++it)
-		delete(it->second);
-	for(map<int, Stream* >::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; ++it)
-		delete(it->second);
+	for(auto & elem : m_inputStreams)
+		delete(elem.second);
+	for(auto & elem : m_outputStreams)
+		delete(elem.second);
 #ifdef MARKUS_DEBUG_STREAMS
-	for(map<int, Stream* >::iterator it = m_debugStreams.begin() ; it != m_debugStreams.end() ; ++it)
-		delete(it->second);
+	for(auto & elem : m_debugStreams)
+		delete(elem.second);
 #endif
 }
 
@@ -103,7 +103,7 @@ void Module::Reset()
 		if(elem->IsLocked() || HasController(elem->GetName()))
 			continue;
 		Controller* ctr = Factories::parameterControllerFactory().Create(elem->GetType(), *elem);
-		if(ctr == NULL)
+		if(ctr == nullptr)
 			throw MkException("Controller creation failed", LOC);
 		else AddController(ctr);
 	}
@@ -138,10 +138,10 @@ double Module::GetRecordingFps() const
 		if(fps == 0)
 		{
 			Stream * stream = m_inputStreams.at(0);
-			if(stream == NULL)
+			if(stream == nullptr)
 				throw MkException("First stream is null", LOC);
 			stream = &(stream->GetConnected());
-			if(stream == NULL)
+			if(stream == nullptr)
 				throw MkException("Connected stream is null in Module::GetRecordingFps", LOC);
 			return stream->GetModule().GetRecordingFps();
 		}
@@ -213,12 +213,12 @@ bool Module::Process()
 				// Read and convert inputs
 				if(IsInputProcessed())
 				{
-					for(map<int, Stream*>::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; ++it)
+					for(auto & elem : m_inputStreams)
 					{
 						Timer ti2;
 						//(*it)->LockModuleForRead();
 						m_timerWaiting += ti2.GetMSecLong();
-						it->second->ConvertInput();
+						elem.second->ConvertInput();
 						//(*it)->UnLockModule();
 					}
 					//assert(m_currentTimeStamp == m_inputStreams[0]->GetTimeStamp());
@@ -239,8 +239,8 @@ bool Module::Process()
 			}
 
 			// Propagate time stamps to outputs
-			for(map<int, Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; ++it)
-				it->second->SetTimeStamp(m_currentTimeStamp);
+			for(auto & elem : m_outputStreams)
+				elem.second->SetTimeStamp(m_currentTimeStamp);
 
 			// Write outputs to cache
 			if(param.cached == CachedState::WRITE_CACHE)
@@ -249,8 +249,8 @@ bool Module::Process()
 			}
 
 			// Call depending modules (modules with fps = 0)
-			for(vector<Module*>::iterator it = m_modulesDepending.begin() ; it != m_modulesDepending.end() ; ++it)
-				(*it)->Process();
+			for(auto & elem : m_modulesDepending)
+				(elem)->Process();
 
 			m_countProcessedFrames++;
 			m_lastTimeStamp = m_currentTimeStamp;
@@ -279,8 +279,8 @@ void Module::Export(ostream& rx_os, int x_indentation)
 	rx_os<<tabs<<"<module name=\""<<m_name<<"\" description=\""<<GetDescription()<<"\">"<<endl;
 	tabs = string(x_indentation + 1, '\t');
 	rx_os<<tabs<<"<parameters>"<<endl;
-	for(vector<Parameter*>::const_iterator it = GetParameters().GetList().begin() ; it != GetParameters().GetList().end() ; ++it)
-		(*it)->Export(rx_os, x_indentation + 2);
+	for(const auto & elem : GetParameters().GetList())
+		(elem)->Export(rx_os, x_indentation + 2);
 	rx_os<<tabs<<"</parameters>"<<endl;
 
 	rx_os<<tabs<<"<inputs>"<<endl;
@@ -300,7 +300,7 @@ Stream& Module::RefInputStreamById(int x_id)
 {
 	//for(vector<Stream *>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; ++it)
 	//if((*it)->GetId() == x_id) return **it;
-	map<int, Stream*>::iterator it = m_inputStreams.find(x_id);
+	auto it = m_inputStreams.find(x_id);
 
 	if(it == m_inputStreams.end())
 	{
@@ -313,7 +313,7 @@ Stream& Module::RefInputStreamById(int x_id)
 
 Stream& Module::RefOutputStreamById(int x_id)
 {
-	map<int, Stream*>::iterator it = m_outputStreams.find(x_id);
+	auto it = m_outputStreams.find(x_id);
 
 	if(it == m_outputStreams.end())
 	{
@@ -362,26 +362,26 @@ void Module::Serialize(ostream& x_out, const string& x_dir) const
 	root["countProcessedFrames"] = m_countProcessedFrames;
 
 	// Dump inputs
-	for(map<int, Stream*>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; ++it)
+	for(const auto & elem : m_inputStreams)
 	{
 		stringstream ss;
-		it->second->Serialize(ss, x_dir);
-		ss >> root["inputs"][it->first];
+		elem.second->Serialize(ss, x_dir);
+		ss >> root["inputs"][elem.first];
 	}
 	// Dump outputs
-	for(map<int, Stream*>::const_iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; ++it)
+	for(const auto & elem : m_outputStreams)
 	{
 		stringstream ss;
-		it->second->Serialize(ss, x_dir);
-		ss >> root["outputs"][it->first];
+		elem.second->Serialize(ss, x_dir);
+		ss >> root["outputs"][elem.first];
 	}
 #ifdef MARKUS_DEBUG_STREAMS
 	// Dump debugs
-	for(map<int, Stream*>::const_iterator it = m_debugStreams.begin() ; it != m_debugStreams.end() ; ++it)
+	for(const auto & elem : m_debugStreams)
 	{
 		stringstream ss;
-		it->second->Serialize(ss, x_dir);
-		ss >> root["debugs"][it->first];
+		elem.second->Serialize(ss, x_dir);
+		ss >> root["debugs"][elem.first];
 	}
 #endif
 	x_out << root;
@@ -448,9 +448,9 @@ void Module::Deserialize(istream& x_in, const string& x_dir)
 */
 bool Module::AllInputsAreReady() const
 {
-	for(map<int, Stream*>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; ++it)
+	for(const auto & elem : m_inputStreams)
 	{
-		if(it->second->IsConnected() && !it->second->GetConnected().IsReady())
+		if(elem.second->IsConnected() && !elem.second->GetConnected().IsReady())
 			return false;
 	}
 	return true;
@@ -464,11 +464,11 @@ bool Module::AllInputsAreReady() const
 */
 const Module& Module::GetMasterModule() const
 {
-	for(map<int, Stream*>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; ++it)
+	for(const auto & elem : m_inputStreams)
 	{
-		if(it->second->IsConnected())
+		if(elem.second->IsConnected())
 		{
-			const Module& preceding = it->second->GetConnected().GetModule();
+			const Module& preceding = elem.second->GetConnected().GetModule();
 			if(preceding.IsAutoProcessed())
 				return preceding;
 			else
@@ -484,9 +484,9 @@ const Module& Module::GetMasterModule() const
 void Module::SetAsReady()
 {
 	m_isReady = true;
-	for(map<int, Stream*>::iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; ++it)
+	for(auto & elem : m_outputStreams)
 	{
-		it->second->SetAsReady();
+		elem.second->SetAsReady();
 	}
 }
 
@@ -586,12 +586,12 @@ void Module::ReadFromCache()
 void Module::ProcessRandomInput(unsigned int& xr_seed)
 {
 	unsigned int lastseed = xr_seed;
-	for(map<int, Stream* >::iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; ++it)
+	for(auto & elem : m_inputStreams)
 	{
 		// note: we use this trick to generate similar inputs
 		// this avoids many errors while unit testing comparison modules
 		xr_seed = lastseed;
-		it->second->Randomize(xr_seed);
+		elem.second->Randomize(xr_seed);
 	}
 	ProcessFrame();
 };

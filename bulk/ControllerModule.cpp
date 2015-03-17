@@ -85,5 +85,5 @@ ControllerModule::ControllerModule(Module& rx_module) :
 
 QWidget* ControllerModule::CreateWidget()
 {
-	return NULL;
+	return nullptr;
 }

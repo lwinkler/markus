@@ -50,7 +50,7 @@ log4cxx::LoggerPtr ControllerParameter::m_logger(log4cxx::Logger::getLogger("Con
 */
 void ControllerParameter::GetParameterType(string* xp_value)
 {
-	if(xp_value != NULL)
+	if(xp_value != nullptr)
 	{
 		*xp_value = m_param.GetTypeString();
 		return;
@@ -69,7 +69,7 @@ void ControllerParameter::GetParameterType(string* xp_value)
 */
 void ControllerParameter::GetRange(string* xp_value)
 {
-	if(xp_value != NULL)
+	if(xp_value != nullptr)
 	{
 		*xp_value = m_param.GetRange();
 		return;
@@ -91,7 +91,7 @@ void ControllerParameter::SetControlledValue(string* xp_value)
 	string oldValue = m_param.GetValueString();
 	ParameterConfigType configType = m_param.GetConfigurationSource();
 
-	if(xp_value != NULL)
+	if(xp_value != nullptr)
 	{
 		m_param.SetValue(*xp_value, PARAMCONF_CMD);
 	}
@@ -124,7 +124,7 @@ void ControllerParameter::SetControlledValue(string* xp_value)
 */
 void ControllerParameter::GetCurrent(string* xp_value)
 {
-	if(xp_value != NULL)
+	if(xp_value != nullptr)
 	{
 		stringstream ss;
 		ss<<m_param.GetValueString();
@@ -145,7 +145,7 @@ void ControllerParameter::GetCurrent(string* xp_value)
 */
 void ControllerParameter::GetDefault(string* xp_value)
 {
-	if(xp_value != NULL)
+	if(xp_value != nullptr)
 	{
 		*xp_value = m_param.GetDefaultString();
 		return;
@@ -176,7 +176,7 @@ ControllerInt::ControllerInt(Parameter& x_param):
 	ControllerParameter(x_param),
 	m_param2(dynamic_cast<ParameterInt&>(x_param))
 {
-	mp_parameterSlider = NULL;
+	mp_parameterSlider = nullptr;
 }
 
 QWidget* ControllerInt::CreateWidget()
@@ -214,7 +214,7 @@ ControllerUInt::ControllerUInt(Parameter& x_param):
 	ControllerParameter(x_param),
 	m_param2(dynamic_cast<ParameterUInt&>(x_param))
 {
-	mp_parameterSlider = NULL;
+	mp_parameterSlider = nullptr;
 }
 
 QWidget* ControllerUInt::CreateWidget()
@@ -250,7 +250,7 @@ ControllerDouble::ControllerDouble(Parameter& x_param):
 	ControllerParameter(x_param),
 	m_param2(dynamic_cast<ParameterDouble&>(x_param))
 {
-	mp_parameterSlider = NULL;
+	mp_parameterSlider = nullptr;
 }
 QWidget* ControllerDouble::CreateWidget()
 {
@@ -284,7 +284,7 @@ ControllerFloat::ControllerFloat(Parameter& x_param):
 	ControllerParameter(x_param),
 	m_param2(dynamic_cast<ParameterFloat&>(x_param))
 {
-	mp_parameterSlider = NULL;
+	mp_parameterSlider = nullptr;
 }
 
 
@@ -320,7 +320,7 @@ ControllerBool::ControllerBool(Parameter& x_param):
 	ControllerParameter(x_param),
 	m_param2(dynamic_cast<ParameterBool&>(x_param))
 {
-	mp_checkBox = NULL;
+	mp_checkBox = nullptr;
 }
 
 QWidget* ControllerBool::CreateWidget()
@@ -355,7 +355,7 @@ ControllerString::ControllerString(Parameter& x_param):
 	ControllerParameter(x_param),
 	m_param2(dynamic_cast<ParameterString&>(x_param))
 {
-	mp_lineEdit = NULL;
+	mp_lineEdit = nullptr;
 }
 
 QWidget* ControllerString::CreateWidget()
@@ -391,7 +391,7 @@ ControllerSerializable::ControllerSerializable(Parameter& x_param):
 	ControllerParameter(x_param),
 	m_param2(dynamic_cast<ParameterSerializable&>(x_param))
 {
-	mp_lineEdit = NULL;
+	mp_lineEdit = nullptr;
 }
 
 QWidget* ControllerSerializable::CreateWidget()
@@ -431,20 +431,20 @@ ControllerCalibrationByHeight::ControllerCalibrationByHeight(Parameter& x_param)
 	ControllerParameter(x_param),
 	m_param2(dynamic_cast<ParameterSerializable&>(x_param))
 {
-	mp_widget = NULL;
-	mp_sliderX = NULL;
-	mp_sliderY = NULL;
-	mp_sliderHeight = NULL;
-	mp_labX = NULL;
-	mp_labY = NULL;
-	mp_labHeight = NULL;
+	mp_widget = nullptr;
+	mp_sliderX = nullptr;
+	mp_sliderY = nullptr;
+	mp_sliderHeight = nullptr;
+	mp_labX = nullptr;
+	mp_labY = nullptr;
+	mp_labHeight = nullptr;
 }
 
 QWidget* ControllerCalibrationByHeight::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
 
-	QGridLayout * mainLayout = new QGridLayout();
+	auto  mainLayout = new QGridLayout();
 	mp_widget = new QWidget();
 	CalibrationByHeight calib;
 	stringstream ss;
@@ -507,7 +507,7 @@ ControllerEnum::ControllerEnum(Parameter& x_param):
 	ControllerParameter(x_param),
 	m_param2(dynamic_cast<ParameterEnum&>(x_param))
 {
-	mp_comboBox = NULL;
+	mp_comboBox = nullptr;
 }
 
 
@@ -515,9 +515,9 @@ QWidget* ControllerEnum::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
 	mp_comboBox = new QComboBox;
-	for(map<string, int>::const_iterator it = m_param2.GetEnum().begin() ; it != m_param2.GetEnum().end() ; ++it)
+	for(const auto & elem : m_param2.GetEnum())
 	{
-		mp_comboBox->addItem(it->first.c_str(), it->second);
+		mp_comboBox->addItem(elem.first.c_str(), elem.second);
 	}
 	int index = mp_comboBox->findData(m_param2.GetValue());
 	mp_comboBox->setCurrentIndex(index);
@@ -551,7 +551,7 @@ ControllerText::ControllerText(Parameter& x_param):
 	ControllerParameter(x_param),
 	m_param2(x_param)
 {
-	mp_textEdit = NULL;
+	mp_textEdit = nullptr;
 }
 
 QWidget* ControllerText::CreateWidget()

@@ -141,5 +141,5 @@ ControllerManager::ControllerManager(Manager& rx_manager) :
 
 QWidget* ControllerManager::CreateWidget()
 {
-	return NULL;
+	return nullptr;
 }

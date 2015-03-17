@@ -93,7 +93,7 @@ void ParameterEnum::SetDefault(const string& rx_value)
 */
 bool ParameterEnum::CheckRange() const
 {
-	map<int,bool>::const_iterator it = m_allowedValues.find(mr_value);
+	auto it = m_allowedValues.find(mr_value);
 	if(it != m_allowedValues.end())
 		return it->second;
 	else
@@ -108,20 +108,20 @@ bool ParameterEnum::CheckRange() const
 string ParameterEnum::GetRange() const
 {
 	vector<string> result;
-	for(map<string,int>::const_iterator it1 = GetEnum().begin() ; it1 != GetEnum().end() ; ++it1)
+	for(const auto & elem : GetEnum())
 	{
 		// If a value is specified in allowed values we respect this
 		// otherwise look at m_allowAllValues
-		map<int,bool>::const_iterator it2 = m_allowedValues.find(it1->second);
+		auto it2 = m_allowedValues.find(elem.second);
 		if(it2 != m_allowedValues.end())
 		{
 			if(it2->second)
-				result.push_back(it1->first);
+				result.push_back(elem.first);
 		}
 		else
 		{
 			if(m_allowAllValues)
-				result.push_back(it1->first);
+				result.push_back(elem.first);
 		}
 	}
 	return "[" + join(result, ',') + "]";

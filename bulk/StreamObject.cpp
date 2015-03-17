@@ -45,7 +45,7 @@ StreamObject::~StreamObject()
 
 void StreamObject::ConvertInput()
 {
-	if(m_connected == NULL)
+	if(m_connected == nullptr)
 	{
 		// LOG_DEBUG(m_logger, "Object input not connected, use the whole image");
 		m_objects.clear();
@@ -57,7 +57,7 @@ void StreamObject::ConvertInput()
 	m_timeStamp = GetConnected().GetTimeStamp();
 
 	const StreamObject * pstream = dynamic_cast<const StreamObject*>(m_connected);
-	if(pstream == NULL)
+	if(pstream == nullptr)
 		throw MkException("Stream of objects " + GetName() + " is not correctly connected", LOC);
 	vector<Object> rectsTarget = pstream->m_objects;
 	double ratioX = static_cast<double>(m_width) / pstream->GetWidth();
@@ -146,12 +146,12 @@ void StreamObject::Deserialize(istream& x_in, const string& x_dir)
 	Stream::Deserialize(ss, x_dir);
 
 	Clear();
-	for(unsigned int i = 0 ; i < root["objects"].size() ; i++)
+	for(auto & elem : root["objects"])
 	{
 		ss.clear();
 		Object obj("empty");
 		AddObject(obj);
-		ss << root["objects"][i];
+		ss << elem;
 		m_objects.back().Deserialize(ss, x_dir);
 	}
 }

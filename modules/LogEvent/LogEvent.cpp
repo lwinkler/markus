@@ -46,7 +46,7 @@ LogEvent::LogEvent(const ConfigReader& x_configReader)
 
 	m_saveImage1 = false;
 	m_saveImage2 = false;
-	mp_annotationWriter = NULL;
+	mp_annotationWriter = nullptr;
 }
 
 LogEvent::~LogEvent(void)
@@ -204,6 +204,6 @@ void LogEvent::CompareWithGroundTruth()
 bool LogEvent::IsInputProcessed() const
 {
 	const StreamEvent* pStream =  dynamic_cast<const StreamEvent*>(&m_inputStreams.at(0)->GetConnected());
-	assert(pStream != NULL);
+	assert(pStream != nullptr);
 	return m_event.IsRaised() || pStream->GetEvent().IsRaised();
 }

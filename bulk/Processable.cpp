@@ -34,7 +34,7 @@ Processable::Processable(const ConfigReader& x_configReader) :
 	m_pause            = false;
 	m_allowAutoProcess = true;
 	m_realTime         = true;
-	m_moduleTimer      = NULL;
+	m_moduleTimer      = nullptr;
 }
 
 Processable::~Processable()
@@ -60,7 +60,7 @@ void Processable::Reset()
 		m_moduleTimer->Reset(m_realTime ? RefParameters().fps : 0);
 		LOG_DEBUG(m_logger, "Reseting auto-processed module with real-time="<<m_realTime<<" and fps="<<RefParameters().fps);
 	}
-	else m_moduleTimer = NULL;
+	else m_moduleTimer = nullptr;
 }
 
 /**
@@ -71,7 +71,7 @@ void Processable::Reset()
 void Processable::Pause(bool x_pause)
 {
 	m_pause = x_pause;
-	if(m_moduleTimer == NULL)
+	if(m_moduleTimer == nullptr)
 		return;
 	if(x_pause)
 		m_moduleTimer->stop();

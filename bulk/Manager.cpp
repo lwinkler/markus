@@ -79,15 +79,15 @@ Manager::~Manager()
 	PrintStatistics();
 
 
-	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
-		delete *it;
+	for(auto & elem : m_modules)
+		delete elem;
 
 	/// Do the final operations on the static class
 	const string& outputDir = m_context.GetOutputDir();
 	if(!outputDir.empty())
 	{
 		LOG_INFO(m_logger, "Results written to directory "<<outputDir);
-		if(getenv("LOG_DIR") == NULL)
+		if(getenv("LOG_DIR") == nullptr)
 		{
 			try
 			{
@@ -194,20 +194,20 @@ void Manager::Connect()
 	{
 		changed = false;
 		ready = true;
-		for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
+		for(auto & elem : m_modules)
 		{
-			if(!(*it)->IsReady())
+			if(!(elem)->IsReady())
 			{
 				ready = false;
-				if((*it)->AllInputsAreReady())
+				if((elem)->AllInputsAreReady())
 				{
-					(*it)->SetAsReady();
+					(elem)->SetAsReady();
 					if(centralized)
-						newOrder.push_back(*it);
+						newOrder.push_back(elem);
 					else
 					{
-						Module& master = RefModuleByName((*it)->GetMasterModule().GetName());
-						master.AddDependingModule(**it);
+						Module& master = RefModuleByName((elem)->GetMasterModule().GetName());
+						master.AddDependingModule(*elem);
 					}
 					// cout<<"Set module "<<depending->GetName()<<" as ready"<<endl;
 					changed = true;
@@ -239,14 +239,14 @@ void Manager::Reset(bool x_resetInputs)
 	m_timerProcessing = 0;
 
 	// Reset all modules (to set the module timer)
-	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
+	for(auto & elem : m_modules)
 	{
-		if(x_resetInputs || !(*it)->IsInput())
+		if(x_resetInputs || !(elem)->IsInput())
 		{
 			// If manager is in autoprocess, modules must not be
-			(*it)->AllowAutoProcess(!m_param.autoProcess);
-			(*it)->SetRealTime(!m_param.fast);
-			(*it)->Reset();
+			(elem)->AllowAutoProcess(!m_param.autoProcess);
+			(elem)->SetRealTime(!m_param.fast);
+			(elem)->Reset();
 		}
 	}
 	if(!HasController("manager"))
@@ -260,7 +260,7 @@ void Manager::Reset(bool x_resetInputs)
 		if(elem->IsLocked() || HasController(elem->GetName()))
 			continue;
 		Controller* ctr = Factories::parameterControllerFactory().Create(elem->GetType(), *elem);
-		if(ctr == NULL)
+		if(ctr == nullptr)
 			throw MkException("Controller creation failed", LOC);
 		else AddController(ctr);
 	}
@@ -292,13 +292,13 @@ bool Manager::Process()
 	Timer ti;
 	bool recover = true;
 
-	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
+	for(auto & elem : m_modules)
 	{
 		try
 		{
 			// if((*it)->IsAutoProcessed())
 			// Note: Since we are in centralized mode, all modules are called directly from the master
-			(*it)->Process();
+			(elem)->Process();
 		}
 		catch(EndOfStreamException& e)
 		{
@@ -310,7 +310,7 @@ bool Manager::Process()
 			}
 			recover = m_hasRecovered = false;
 
-			LOG_INFO(m_logger, (*it)->GetName() << ": Exception raised (EndOfStream) : " << e.what());
+			LOG_INFO(m_logger, (elem)->GetName() << ": Exception raised (EndOfStream) : " << e.what());
 
 			// test if all inputs are over
 			if(EndOfAllStreams())
@@ -338,43 +338,43 @@ bool Manager::Process()
 			if(m_hasRecovered)
 			{
 				// This exception happens after a recovery, keep it!
-				m_lastException = MkException((*it)->GetName() + " :" + string(e.what()), LOC);
+				m_lastException = MkException((elem)->GetName() + " :" + string(e.what()), LOC);
 				NotifyException(m_lastException);
 			}
-			LOG_ERROR(m_logger, (*it)->GetName() << ": Exception raised (std::exception): " << e.what());
+			LOG_ERROR(m_logger, (elem)->GetName() << ": Exception raised (std::exception): " << e.what());
 		}
 		catch(string& str)
 		{
 			if(m_hasRecovered)
 			{
 				// This exception happens after a recovery, keep it!
-				m_lastException = MkException((*it)->GetName() + " :" + string(str), LOC);
+				m_lastException = MkException((elem)->GetName() + " :" + string(str), LOC);
 				NotifyException(m_lastException);
 			}
 			recover = m_hasRecovered = false;
-			LOG_ERROR(m_logger, (*it)->GetName() << ": Exception raised (string): " << str);
+			LOG_ERROR(m_logger, (elem)->GetName() << ": Exception raised (string): " << str);
 		}
 		catch(const char* str)
 		{
 			if(m_hasRecovered)
 			{
 				// This exception happens after a recovery, keep it!
-				m_lastException = MkException((*it)->GetName() + " :" + string(str), LOC);
+				m_lastException = MkException((elem)->GetName() + " :" + string(str), LOC);
 				NotifyException(m_lastException);
 			}
 			recover = m_hasRecovered = false;
-			LOG_ERROR(m_logger, (*it)->GetName() << ": Exception raised (const char*): " << str);
+			LOG_ERROR(m_logger, (elem)->GetName() << ": Exception raised (const char*): " << str);
 		}
 		catch(...)
 		{
 			if(m_hasRecovered)
 			{
 				// This exception happens after a recovery, keep it!
-				m_lastException = MkException((*it)->GetName() + ": Unknown", LOC);
+				m_lastException = MkException((elem)->GetName() + ": Unknown", LOC);
 				NotifyException(m_lastException);
 			}
 			recover = m_hasRecovered = false;
-			LOG_ERROR(m_logger, (*it)->GetName() << ": Unknown exception raised");
+			LOG_ERROR(m_logger, (elem)->GetName() << ": Unknown exception raised");
 		}
 	}
 
@@ -476,8 +476,8 @@ void Manager::PrintStatistics()
 void Manager::Pause(bool x_pause)
 {
 	Processable::Pause(x_pause);
-	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
-		(*it)->Pause(x_pause);
+	for(auto & elem : m_modules)
+		(elem)->Pause(x_pause);
 }
 
 /**
@@ -487,9 +487,9 @@ void Manager::Pause(bool x_pause)
 */
 void Manager::PauseInputs(bool x_pause)
 {
-	for(vector<Module*>::iterator it = m_inputs.begin() ; it != m_inputs.end() ; ++it)
+	for(auto & elem : m_inputs)
 	{
-		(*it)->Pause(x_pause);
+		(elem)->Pause(x_pause);
 	}
 }
 
@@ -502,9 +502,9 @@ void Manager::PauseInputs(bool x_pause)
 bool Manager::EndOfAllStreams() const
 {
 	bool endOfStreams = true;
-	for(vector<Module*>::const_iterator it1 = m_inputs.begin() ; it1 != m_inputs.end() ; ++it1)
+	for(const auto & elem : m_inputs)
 	{
-		if(!dynamic_cast<Input*>(*it1)->IsEndOfStream())
+		if(!dynamic_cast<Input*>(elem)->IsEndOfStream())
 			endOfStreams = false;
 	}
 	return endOfStreams;
@@ -545,12 +545,12 @@ void Manager::Export()
 
 Module& Manager::RefModuleById(int x_id) const
 {
-	Module* module = NULL;
+	Module* module = nullptr;
 	int found = 0;
-	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
-		if((*it)->GetId() == x_id)
+	for(const auto & elem : m_modules)
+		if((elem)->GetId() == x_id)
 		{
-			module = *it;
+			module = elem;
 			found++;
 		}
 	if(found == 1)
@@ -565,9 +565,9 @@ Module& Manager::RefModuleById(int x_id) const
 
 Module& Manager::RefModuleByName(const string& x_name) const
 {
-	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
-		if((*it)->GetName() == x_name)
-			return **it;
+	for(const auto & elem : m_modules)
+		if((elem)->GetName() == x_name)
+			return *elem;
 	throw MkException("Cannot find module " + x_name, LOC);
 	// return NULL;
 }
@@ -665,8 +665,8 @@ string Manager::CreateOutputDir(const string& x_outputDir, const string& x_confi
 void Manager::UpdateConfig()
 {
 	// Set all config ready to be saved
-	for(vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
-		(*it)->UpdateConfig();
+	for(auto & elem : m_modules)
+		(elem)->UpdateConfig();
 	Configurable::UpdateConfig();
 }
 
@@ -679,12 +679,12 @@ void Manager::WriteStateToDirectory(const string& x_directory) const
 {
 	string directory = m_context.GetOutputDir() + "/" + x_directory;
 	SYSTEM("mkdir -p " + directory);
-	for(vector<Module*>::const_iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
+	for(const auto & elem : m_modules)
 	{
-		string fileName = directory + "/" + (*it)->GetName() + ".json";
+		string fileName = directory + "/" + (elem)->GetName() + ".json";
 		ofstream of;
 		of.open(fileName.c_str());
-		(*it)->Serialize(of, directory);
+		(elem)->Serialize(of, directory);
 		of.close();
 	}
 	LOG_INFO(m_logger, "Written state of the manager and all modules to " << directory);

@@ -61,5 +61,5 @@ ControllerEvent::ControllerEvent(ClassifyEvents& rx_module) :
 
 QWidget* ControllerEvent::CreateWidget()
 {
-	return NULL;
+	return nullptr;
 }

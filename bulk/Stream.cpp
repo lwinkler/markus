@@ -39,7 +39,7 @@ Stream::Stream(const string& x_name, Module& rx_module, const string& rx_descrip
 	m_description(rx_description),
 	m_requirement(rx_requirement)
 {
-	m_connected = NULL;
+	m_connected = nullptr;
 	m_isReady = false;
 	m_timeStamp = TIME_STAMP_INITIAL;
 }
@@ -78,7 +78,7 @@ void Stream::Export(ostream& rx_os, int x_id, int x_indentation, bool x_isInput)
 */
 void Stream::Connect(Stream* x_stream, bool x_bothWays)
 {
-	assert(x_stream != NULL);
+	assert(x_stream != nullptr);
 	m_connected = x_stream;
 	if(x_bothWays)
 		x_stream->Connect(this, false);

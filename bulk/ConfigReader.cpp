@@ -87,7 +87,7 @@ ConfigReader::ConfigReader(const string& x_fileName, bool x_allowCreation)
 	try
 	{
 		m_isOriginal = true;
-		mp_doc = NULL; // Initialize to null as there can be an error in construction
+		mp_doc = nullptr; // Initialize to null as there can be an error in construction
 		mp_doc = new TiXmlDocument(x_fileName);
 		if (! mp_doc->LoadFile())
 		{
@@ -121,7 +121,7 @@ ConfigReader::ConfigReader(const string& x_fileName, bool x_allowCreation)
 ConfigReader::ConfigReader(TiXmlNode * xp_node)
 {
 	m_isOriginal = false;
-	mp_doc = NULL;
+	mp_doc = nullptr;
 	mp_node = xp_node;
 }
 
@@ -144,7 +144,7 @@ ConfigReader::~ConfigReader()
 {
 	if(m_isOriginal)
 		CLEAN_DELETE(mp_doc);
-	mp_node = NULL;
+	mp_node = nullptr;
 }
 
 /**
@@ -178,10 +178,10 @@ ConfigReader ConfigReader::RefSubConfig(const string& x_tagName, bool x_allowCre
 
 	TiXmlNode* newNode = mp_node->FirstChild(x_tagName);
 
-	if(newNode == NULL && x_allowCreation)
+	if(newNode == nullptr && x_allowCreation)
 	{
 		// Add a sub config element if not found
-		TiXmlElement* element = new TiXmlElement(x_tagName);
+		auto  element = new TiXmlElement(x_tagName);
 		mp_node->LinkEndChild(element);
 		return ConfigReader(element);
 	}
@@ -207,7 +207,7 @@ const ConfigReader ConfigReader::GetSubConfig(const string& x_tagName, const str
 	if(x_attrName == "")
 		return ConfigReader(newNode);
 
-	while(newNode != NULL && newNode->ToElement()->Attribute(x_attrName.c_str()) != x_attrValue)
+	while(newNode != nullptr && newNode->ToElement()->Attribute(x_attrName.c_str()) != x_attrValue)
 	{
 		newNode = newNode->NextSibling(x_tagName);
 	}
@@ -234,16 +234,16 @@ ConfigReader ConfigReader::RefSubConfig(const string& x_tagName, const string& x
 
 	if(x_attrName != "")
 	{
-		const char* name = NULL;
-		while(newNode != NULL && ((name = newNode->ToElement()->Attribute("name")) == NULL || x_attrValue != name))
+		const char* name = nullptr;
+		while(newNode != nullptr && ((name = newNode->ToElement()->Attribute("name")) == nullptr || x_attrValue != name))
 		{
 			newNode = newNode->NextSibling(x_tagName);
 		}
 	}
-	if(newNode == NULL && x_allowCreation)
+	if(newNode == nullptr && x_allowCreation)
 	{
 		// Add a sub config element if not found
-		TiXmlElement* element = new TiXmlElement(x_tagName);
+		auto  element = new TiXmlElement(x_tagName);
 		if(x_attrName != "")
 			element->SetAttribute(x_attrName, x_attrValue);
 		mp_node->LinkEndChild(element);
@@ -268,7 +268,7 @@ ConfigReader ConfigReader::NextSubConfig(const string& x_tagName, const string& 
 
 	if(x_attrName != "")
 	{
-		while(newNode != NULL && x_attrValue != newNode->ToElement()->Attribute(x_attrName.c_str()))
+		while(newNode != nullptr && x_attrValue != newNode->ToElement()->Attribute(x_attrName.c_str()))
 		{
 			newNode = newNode->NextSibling(x_tagName);
 		}
@@ -290,11 +290,11 @@ const string ConfigReader::GetAttribute(const string& x_attributeName) const
 		throw MkException("Impossible to find attribute " + x_attributeName + " in ConfigReader, node is empty" , LOC);
 	TiXmlElement* element = mp_node->ToElement();
 	//string s(*element->Attribute(x_attributeName));
-	if(element == NULL)
+	if(element == nullptr)
 		throw MkException("Impossible to find node in ConfigReader", LOC);
 
 	const string * str = element->Attribute(x_attributeName);
-	if(str == NULL)
+	if(str == nullptr)
 		return ""; // TODO: throw exception and fix the rest of the code
 	// throw MkException("Attribute is unexistant", LOC);
 	else
@@ -316,11 +316,11 @@ const string ConfigReader::GetAttribute(const string& x_attributeName, const str
 		throw MkException("Impossible to find attribute " + x_attributeName + " in ConfigReader" , LOC);
 	TiXmlElement* element = mp_node->ToElement();
 	//string s(*element->Attribute(x_attributeName));
-	if(element == NULL)
+	if(element == nullptr)
 		throw MkException("Impossible to find node in ConfigReader", LOC);
 
 	const string * str = element->Attribute(x_attributeName);
-	if(str == NULL)
+	if(str == nullptr)
 		return x_default;
 	else
 		return *str;
@@ -337,7 +337,7 @@ void ConfigReader::SetAttribute(const string& x_attributeName, const string& x_v
 	if(IsEmpty())
 		throw MkException("Impossible to find attribute " + x_attributeName + " in ConfigReader" , LOC);
 	TiXmlElement* element = mp_node->ToElement();
-	if(element == NULL)
+	if(element == nullptr)
 		throw MkException("Impossible to find attribute " + x_attributeName + " in ConfigReader" , LOC);
 
 	element->SetAttribute(x_attributeName, x_value);
@@ -354,7 +354,7 @@ string ConfigReader::GetValue() const
 		throw MkException("Impossible to find node" , LOC);
 	TiXmlElement* element = mp_node->ToElement();
 	const char * str = element->GetText();
-	if(str == NULL)
+	if(str == nullptr)
 		return "";
 	else
 		return str;

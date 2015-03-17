@@ -39,22 +39,22 @@ StreamImage::StreamImage(const string& x_name, Mat& x_image, Module& rx_module, 
 {
 	LOG_DEBUG(m_logger, "Create image "<<x_image.cols<<"x"<<x_image.rows<<" for module "<<rx_module.GetName()<<" of size "<<rx_module.GetWidth()<<"x"<<rx_module.GetHeight());
 	// assert(x_image.cols == rx_module.GetWidth() && x_image.rows == rx_module.GetHeight()); // Disable this for unit tests
-	mp_img_tmp1 = NULL; // To convert the input
-	mp_img_tmp2 = NULL;
-	m_img_input = NULL;
+	mp_img_tmp1 = nullptr; // To convert the input
+	mp_img_tmp2 = nullptr;
+	m_img_input = nullptr;
 }
 
 
 StreamImage::~StreamImage()
 {
-	if(mp_img_tmp1 != NULL) delete mp_img_tmp1;
-	if(mp_img_tmp2 != NULL) delete mp_img_tmp2;
+	if(mp_img_tmp1 != nullptr) delete mp_img_tmp1;
+	if(mp_img_tmp2 != nullptr) delete mp_img_tmp2;
 }
 
 void StreamImage::ConvertInput()
 {
 	// Copy time stamp to output
-	if(m_connected != NULL)
+	if(m_connected != nullptr)
 	{
 		m_timeStamp = GetConnected().GetTimeStamp();
 		adjust(*m_img_input, m_image, mp_img_tmp1, mp_img_tmp2);
@@ -137,15 +137,15 @@ void StreamImage::Deserialize(istream& x_in, const string& x_dir)
 void StreamImage::Connect(Stream* x_stream, bool x_bothWays)
 {
 	// This method was rewritten to avoid a dynamic cast at each ConvertInput
-	assert(x_stream != NULL);
+	assert(x_stream != nullptr);
 	m_connected = x_stream;
 	if(x_bothWays)
 		x_stream->Connect(this, false);
 
 	const StreamImage* tmp = dynamic_cast<const StreamImage*>(m_connected);
-	if(tmp == NULL)
+	if(tmp == nullptr)
 	{
-		m_connected = NULL;
+		m_connected = nullptr;
 		throw MkException("Input stream cannot be connected probably because it is not of type StreamImage", LOC);
 	}
 	m_img_input = &tmp->GetImage();

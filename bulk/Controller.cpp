@@ -45,7 +45,7 @@ Controller::~Controller()
 */
 Controller& Controllable::FindController(const string& x_name) const
 {
-	map<string, Controller*>::const_iterator it = m_controls.find(x_name);
+	auto it = m_controls.find(x_name);
 	if(it == m_controls.end())
 		throw MkException("Cannot find controller " + x_name + " in controls list", LOC);
 	return *(it->second);

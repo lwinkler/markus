@@ -53,9 +53,9 @@ void Polygon::DrawMask(Mat& xr_target, const Scalar& x_color)
 	vector<Point> scaledPts;
 	vector<Point2f>::const_iterator itpts = points.begin();
 	scaledPts.resize(points.size());
-	for(vector<Point>::iterator it = scaledPts.begin() ; it != scaledPts.end() ; ++it)
+	for(auto & scaledPt : scaledPts)
 	{
-		*it  = *itpts * diag;
+		scaledPt  = *itpts * diag;
 		++itpts;
 	}
 

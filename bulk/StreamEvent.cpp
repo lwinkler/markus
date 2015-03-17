@@ -48,13 +48,13 @@ StreamEvent::~StreamEvent()
 
 void StreamEvent::ConvertInput()
 {
-	if(m_connected == NULL) return;
+	if(m_connected == nullptr) return;
 
 	// Copy time stamp to output
 	m_timeStamp = GetConnected().GetTimeStamp();
 
 	const StreamEvent * pstream = dynamic_cast<const StreamEvent*>(m_connected);
-	if(pstream == NULL)
+	if(pstream == nullptr)
 		throw MkException("Stream of event " + GetName() + " is not correctly connected", LOC);
 	m_event = pstream->GetEvent();
 

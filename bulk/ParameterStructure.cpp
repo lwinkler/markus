@@ -40,8 +40,8 @@ ParameterStructure::ParameterStructure(const ConfigReader& x_configReader):
 
 ParameterStructure::~ParameterStructure()
 {
-	for(vector<Parameter* >::iterator it = m_list.begin() ; it != m_list.end() ; ++it)
-		delete(*it);
+	for(auto & elem : m_list)
+		delete(elem);
 	m_list.clear();
 }
 
@@ -96,11 +96,11 @@ void ParameterStructure::UpdateConfig() const
 	// assert(!m_configReader.IsEmpty());
 	ConfigReader conf = m_configReader;
 
-	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); ++it)
+	for(const auto & elem : m_list)
 	{
-		if(m_writeAllParamsToConfig || (*it)->GetConfigurationSource() != PARAMCONF_DEF)
+		if(m_writeAllParamsToConfig || (elem)->GetConfigurationSource() != PARAMCONF_DEF)
 		{
-			conf.FindRef("param[name=\"" +(*it)->GetName() + "\"]", true).SetValue((*it)->GetValueString());
+			conf.FindRef("param[name=\"" +(elem)->GetName() + "\"]", true).SetValue((elem)->GetValueString());
 		}
 	}
 }
@@ -114,11 +114,11 @@ void ParameterStructure::UpdateConfig() const
 */
 const Parameter& ParameterStructure::GetParameterByName(const string& x_name) const
 {
-	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); ++it)
+	for(const auto & elem : m_list)
 	{
-		if((*it)->GetName().compare(x_name) == 0)
+		if((elem)->GetName().compare(x_name) == 0)
 		{
-			return **it;
+			return *elem;
 		}
 	}
 
@@ -134,11 +134,11 @@ const Parameter& ParameterStructure::GetParameterByName(const string& x_name) co
 */
 Parameter& ParameterStructure::RefParameterByName(const string& x_name)
 {
-	for(vector<Parameter*>::iterator it = m_list.begin(); it != m_list.end(); ++it)
+	for(auto & elem : m_list)
 	{
-		if((*it)->GetName().compare(x_name) == 0)
+		if((elem)->GetName().compare(x_name) == 0)
 		{
-			return **it;
+			return *elem;
 		}
 	}
 
@@ -152,10 +152,10 @@ Parameter& ParameterStructure::RefParameterByName(const string& x_name)
 // TODO: Check that all parameters are always initialized
 void ParameterStructure::SetValueToDefault()
 {
-	for(vector<Parameter*>::iterator it = m_list.begin(); it != m_list.end(); ++it)
+	for(auto & elem : m_list)
 	{
-		if(!(*it)->IsLocked())
-			(*it)->SetValueToDefault();
+		if(!(elem)->IsLocked())
+			(elem)->SetValueToDefault();
 	}
 }
 
@@ -187,13 +187,13 @@ void ParameterStructure::CheckRange(bool x_checkRelated) const
 
 
 	// Check that each parameter's value is within range
-	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); ++it)
+	for(const auto & elem : m_list)
 	{
-		if(!(*it)->CheckRange())
+		if(!(elem)->CheckRange())
 		{
 			stringstream ss;
-			ss<<"Parameter "<<(*it)->GetName()<<" is out of range: ";
-			(*it)->Print(ss);
+			ss<<"Parameter "<<(elem)->GetName()<<" is out of range: ";
+			(elem)->Print(ss);
 			throw ParameterException(ss.str(), LOC);
 		}
 	}
@@ -206,10 +206,10 @@ void ParameterStructure::PrintParameters() const
 {
 	stringstream ss;
 	// string confType = "";
-	for(vector<Parameter*>::const_iterator it = m_list.begin(); it != m_list.end(); ++it)
+	for(const auto & elem : m_list)
 	{
-		if(!(*it)->IsHidden())
-			(*it)->Print(ss);
+		if(!(elem)->IsHidden())
+			(elem)->Print(ss);
 	}
 	if(m_list.size() > 0)
 		LOG_INFO(m_logger, ss.str());

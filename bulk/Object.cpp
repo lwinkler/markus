@@ -90,11 +90,11 @@ void Object::Serialize(ostream& x_out, const string& x_dir) const
 	root["width"]  = width;
 	root["height"] = height;
 
-	for(map <string, FeaturePtr>::const_iterator it = m_feats.begin() ; it != m_feats.end() ; ++it)
+	for(const auto & elem : m_feats)
 	{
 		stringstream ss;
-		it->second->Serialize(ss, x_dir);
-		ss >> root["features"][it->first];
+		elem.second->Serialize(ss, x_dir);
+		ss >> root["features"][elem.first];
 	}
 	if(m_feats.empty())
 		root["features"] = Json::Value::null;
@@ -183,12 +183,12 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 	{
 		pText.x += 2;
 		int i = 0;
-		for(map<string, FeaturePtr>::const_iterator it2 = m_feats.begin() ; it2 != m_feats.end() ; ++it2)
+		for(const auto & elem : m_feats)
 		{
 			//try
 			{
 				ostringstream text;
-				text << it2->first << "=" << *it2->second;
+				text << elem.first << "=" << *elem.second;
 				pText.y += 7;
 				putText(x_output, text.str(), pText,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
 				i++;

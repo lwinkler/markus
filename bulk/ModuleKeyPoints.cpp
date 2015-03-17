@@ -42,8 +42,8 @@ ModuleKeyPoints::ModuleKeyPoints(const ConfigReader& x_configReader) :
 	m_param(x_configReader),
 	m_input(Size(m_param.width, m_param.height), m_param.type)
 {
-	mp_detector  = NULL;
-	mp_descriptor = NULL;
+	mp_detector  = nullptr;
+	mp_descriptor = nullptr;
 
 	AddInputStream(0, new StreamImage("image",  m_input, *this,   "Video input"));
 	AddInputStream(1, new StreamObject("objects", m_objectsIn, *this,	"Incoming objects", "{\"width\":{\"min\":8}, \"height\":{\"min\":8}}"));
@@ -76,7 +76,7 @@ void ModuleKeyPoints::Reset()
 	if(m_param.descriptor != "")
 	{
 		mp_descriptor = /*DescriptorExtractor::create(m_param.descriptor); */ new OrbDescriptorExtractor(); // TODO: Should probably be in the child module
-		if(mp_descriptor == NULL || mp_descriptor->empty())
+		if(mp_descriptor == nullptr || mp_descriptor->empty())
 			throw(MkException("Cannot create key points descriptor extractor", LOC));
 	}
 }
@@ -90,7 +90,7 @@ void ModuleKeyPoints::ProcessFrame()
 #endif
 	//compute each object to find point of interest
 	m_objectsOut.clear();
-	for(vector<Object>::iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; ++it1)
+	for(auto it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; ++it1)
 	{
 		if(it1->width < 8 || it1->height < 8)
 		{
@@ -110,7 +110,7 @@ void ModuleKeyPoints::ProcessFrame()
 
 		mp_detector->detect(subImage, pointsOfInterest);
 		Mat descriptors;
-		if(mp_descriptor != NULL)
+		if(mp_descriptor != nullptr)
 		{
 			mp_descriptor->compute(m_input, pointsOfInterest, descriptors);
 			assert(descriptors.rows == static_cast<int>(pointsOfInterest.size()));
@@ -134,7 +134,7 @@ void ModuleKeyPoints::ProcessFrame()
 			obj.AddFeature("keypoint", new FeatureKeyPoint(*it2));
 			obj.AddFeature("parent", new FeatureInt(it1->GetId()));
 
-			if(mp_descriptor != NULL)
+			if(mp_descriptor != nullptr)
 			{
 				// Add descriptor
 				if(descriptors.type() != CV_32FC1)

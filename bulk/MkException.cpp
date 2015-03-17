@@ -25,7 +25,7 @@ string writeDescription(const string& x_description, const string& x_position, c
 	else
 	{
 		const char * basename = strrchr(x_position.c_str(), '/');
-		if(basename == NULL)
+		if(basename == nullptr)
 			description = x_description + " [" + x_position;
 		else
 			description = x_description + " [" + (basename + 1);

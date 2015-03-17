@@ -29,6 +29,7 @@
 
 #include <map>
 #include <vector>
+#include <sstream>
 
 
 
@@ -47,7 +48,9 @@ public:
 		auto it = m_register.find(name);
 		if (it != m_register.end())
 		{
-			throw MkException("Cannot register two instances with the same name: " + name, LOC);
+			std::stringstream ss;
+			ss << "Cannot register two instances with the same name: "<<name;
+			throw MkException(ss.str(), LOC);
 		}
 		m_register.insert(typename FactoryT<T0, T1, Args...>::Registry::value_type(name, func));
 	}
@@ -59,7 +62,9 @@ public:
 
 		if (it == m_register.end())
 		{
-			throw MkException("Cannot find a constructor for module of type " + x_type, LOC);
+			std::stringstream ss;
+			ss << "Cannot find a constructor for module of type "<<x_type;
+			throw MkException(ss.str(), LOC);
 		}
 
 		CreateObjectFunc func = it->second;

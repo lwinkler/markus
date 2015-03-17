@@ -37,7 +37,7 @@ using namespace std;
 */
 void ControllerInputStream::SetCursor(string* xp_value)
 {
-	if(xp_value != NULL)
+	if(xp_value != nullptr)
 		m_module.SetMsec(PSTR2FLOAT(xp_value));
 #ifndef MARKUS_NO_GUI
 	else m_module.SetMsec(m_parameterSlider->GetValue());
@@ -53,7 +53,7 @@ void ControllerInputStream::SetCursor(string* xp_value)
 */
 void ControllerInputStream::GetCursor(string* xp_value)
 {
-	if(xp_value != NULL)
+	if(xp_value != nullptr)
 	{
 		FLOAT2PSTR(m_module.GetMsec(), xp_value);
 	}
@@ -70,7 +70,7 @@ ControllerInputStream::ControllerInputStream(VideoFileReader& rx_module) :
 {
 	m_actions.insert(make_pair("Get", &ControllerInputStream::GetCursor));
 	m_actions.insert(make_pair("Set", &ControllerInputStream::SetCursor));
-	m_parameterSlider = NULL;
+	m_parameterSlider = nullptr;
 }
 
 ControllerInputStream::~ControllerInputStream()
