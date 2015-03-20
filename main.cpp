@@ -244,31 +244,31 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, const vector<string>& parameters, log4cxx::LoggerPtr& logger)
 {
 	// Override values of parameters if an extra config is used
-	for(vector<string>::const_iterator it1 = extraConfig.begin() ; it1 != extraConfig.end() ; ++it1)
+	for(const auto& elem1 : extraConfig)
 	{
 		try
 		{
 			// open the config and override the initial config
-			ConfigReader extra(*it1);
+			ConfigReader extra(elem1);
 			appConfig.OverrideWith(extra);
 		}
 		catch(MkException& e)
 		{
-			LOG_WARN(logger, "Cannot read parameters from extra config \""<<*it1<<"\": "<<e.what());
+			LOG_WARN(logger, "Cannot read parameters from extra config \""<<elem1<<"\": "<<e.what());
 		}
 	}
 
 	// Set values of parameters if set from command line
-	for(vector<string>::const_iterator it = parameters.begin() ; it != parameters.end() ; ++it)
+	for(const auto& elem : parameters)
 	{
 		try
 		{
-			string param = it->substr(0, it->find("="));
+			string param = elem.substr(0, elem.find("="));
 			// remove quote if necessary
 			if (*(param.begin()) == '\'')
 				param = param.substr(1,param.length());
 
-			string value = it->substr(it->find("=") + 1);
+			string value = elem.substr(elem.find("=") + 1);
 			// remove quote if necessary
 			if (*(value.rbegin()) == '\'')
 				value = value.substr(0,value.length()-1);
@@ -285,7 +285,7 @@ void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, 
 		}
 		catch(std::exception& e)
 		{
-			LOG_ERROR(logger, "Cannot parse command line parameter "<<*it<<": "<<e.what());
+			LOG_ERROR(logger, "Cannot parse command line parameter "<<elem<<": "<<e.what());
 			throw MkException("Cannot parse command line parameter", LOC);
 		}
 	}

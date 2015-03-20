@@ -81,9 +81,9 @@ void StreamObject::RenderTo(Mat& x_output) const
 {
 	if(x_output.cols != m_width || x_output.rows != m_height)
 		throw MkException("Cannot render, image must have the same size as the stream", LOC);
-	for(vector<Object>::const_iterator it1 = m_objects.begin() ; it1 != m_objects.end() ; ++it1)
+	for(const auto& elem : m_objects)
 	{
-		it1->RenderTo(x_output, DEFAULT_STREAM_COLOR);
+		elem.RenderTo(x_output, DEFAULT_STREAM_COLOR);
 	}
 }
 
@@ -127,10 +127,10 @@ void StreamObject::Serialize(ostream& x_out, const string& x_dir) const
 		root["objects"] = Json::Value(Json::arrayValue); // Empty array
 
 	// Serialize vector of objects
-	for(vector<Object>::const_iterator it1 = m_objects.begin() ; it1 != m_objects.end() ; ++it1)
+	for(const auto& elem : m_objects)
 	{
 		ss.clear();
-		it1->Serialize(ss, x_dir);
+		elem.Serialize(ss, x_dir);
 		ss >> root["objects"][cpt];
 		cpt++;
 	}

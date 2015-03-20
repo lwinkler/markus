@@ -175,9 +175,9 @@ void ParameterEnum::SetRange(const string& x_range)
 
 	AllowAllValues(false);
 	m_allowedValues.clear();
-	for(vector<string>::const_iterator it = values.begin() ; it != values.end() ; ++it)
+	for(const auto& elem : values)
 	{
-		AllowValue(*it, true);
+		AllowValue(elem, true);
 	}
 }
 

@@ -149,17 +149,16 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 			ifs.open(file);
 			Json::Value root;
 			ifs >> root;
-			Json::Value::Members members1 = root.getMemberNames();
-			for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; ++it1)
+			for(const auto& elem : root.getMemberNames())
 			{
-				if(!root[*it1].isArray())
-					throw MkException("Range " + *it1 + " in JSON must contain an array", LOC);
-				if(root[*it1].size() != targets.size())
-					throw MkException("Range " + *it1 + " in JSON must have the same size as parameters to variate", LOC);
+				if(!root[elem].isArray())
+					throw MkException("Range " + elem + " in JSON must contain an array", LOC);
+				if(root[elem].size() != targets.size())
+					throw MkException("Range " + elem + " in JSON must have the same size as parameters to variate", LOC);
 
-				for(unsigned int i = 0 ; i < root[*it1].size() ; i++)
+				for(unsigned int i = 0 ; i < root[elem].size() ; i++)
 				{
-					Json::Value jvalue = root[*it1][i];
+					Json::Value jvalue = root[elem][i];
 					// cout<<value.asString()<<endl;
 					try
 					{
@@ -175,7 +174,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 
 				// add a name
 				// TODO: in the future maybe use a hash
-				xr_variationNames.push_back(*it1);
+				xr_variationNames.push_back(elem);
 
 				// Change value of param
 				ConfigReader subConf = varConf.Find("var");
@@ -202,13 +201,13 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 			param.GenerateValues(nb, values, range);
 
 			// Generate a config for each variation
-			for(vector<string>::const_iterator it = values.begin() ; it != values.end() ; it++)
+			for(const auto& elem : values)
 			{
-				LOG_DEBUG(m_logger, "Value = " << *it);
-				xr_variationNames.push_back(paramNames.at(0) + "-" + *it);
+				LOG_DEBUG(m_logger, "Value = " << elem);
+				xr_variationNames.push_back(paramNames.at(0) + "-" + elem);
 
 				// Change value of param
-				targets.at(0)->SetValue(*it);
+				targets.at(0)->SetValue(elem);
 				ConfigReader subConf = varConf.Find("var");
 				if(subConf.IsEmpty())
 					AddSimulationEntry(xr_variationNames, xr_mainConfig);

@@ -115,24 +115,23 @@ void Object::Deserialize(istream& x_in, const string& x_dir)
 	height = root["height"].asDouble();
 
 	m_feats.clear();
-	Json::Value::Members members1 = root["features"].getMemberNames();
 	// TODO: JsonCpp has a bug for serializing floats !
 
 	// Get an instance of the feature factory
 	const FactoryFeatures& factory(Factories::featuresFactoryBySignature());
 
-	for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; ++it1)
+	for(const auto& elem : root["features"].getMemberNames())
 	{
 		// Extract the signature of the feature:
 		//     this allows us to recognize the type of feature
 		stringstream ss;
-		ss << root["features"][*it1];
+		ss << root["features"][elem];
 		string signature = Serializable::signature(ss);
 		Feature* feat = factory.Create(signature);
 		stringstream ss2;
-		ss2 << root["features"][*it1];
+		ss2 << root["features"][elem];
 		feat->Deserialize(ss2, x_dir);
-		AddFeature(*it1, feat);
+		AddFeature(elem, feat);
 	}
 }
 
@@ -266,15 +265,13 @@ void Object::Randomize(unsigned int& xr_seed, const string& x_requirement, const
 		Json::Value req = root["features"];
 		if(!req.isNull())
 		{
-			Json::Value::Members members1 = req.getMemberNames();
-
 			// Get an instance of the feature factory
 			const FactoryFeatures& factory(Factories::featuresFactory());
-			for(Json::Value::Members::const_iterator it1 = members1.begin() ; it1 != members1.end() ; ++it1)
+			for(const auto& elem : req.getMemberNames())
 			{
-				Feature* feat = factory.Create(req[*it1]["type"].asString());
+				Feature* feat = factory.Create(req[elem]["type"].asString());
 				feat->Randomize(xr_seed, "");
-				AddFeature(*it1, feat);
+				AddFeature(elem, feat);
 			}
 		}
 	}

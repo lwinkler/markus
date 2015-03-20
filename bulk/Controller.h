@@ -43,7 +43,7 @@ class QWidget;
 #define DECLARE_CALL_ACTION(action) \
 void CallAction(const std::string& x_name, std::string* xp_value)\
 {\
-	std::map<std::string, const action>::const_iterator it = m_actions.find(x_name);\
+	auto it = m_actions.find(x_name);\
 	if(it == m_actions.end())\
 		throw MkException("Cannot find action " + x_name + " in controller", LOC);\
 	(this->*(it->second))(xp_value);\
@@ -51,8 +51,8 @@ void CallAction(const std::string& x_name, std::string* xp_value)\
 #define DECLARE_LIST_ACTION(action) \
 void ListActions(std::vector<std::string>& xr_actions) const\
 {\
-	for(std::map<std::string, const action>::const_iterator it = m_actions.begin() ; it != m_actions.end() ; ++it)\
-		xr_actions.push_back(it->first);\
+	for(const auto& elem : m_actions)\
+		xr_actions.push_back(elem.first);\
 }
 
 /**
@@ -98,8 +98,8 @@ public:
 	Controllable() {}
 	~Controllable()
 	{
-		for(std::map<std::string, Controller* >::iterator it = m_controls.begin() ; it != m_controls.end() ; ++it)
-			delete(it->second);
+		for(auto & elem : m_controls)
+			delete(elem.second);
 	}
 	const std::map<std::string, Controller*>& GetControllersList() const {return m_controls;}
 	Controller& FindController(const std::string& x_name) const;

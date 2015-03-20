@@ -84,8 +84,8 @@ public:
 	inline virtual void SetContext(const Context& x_context)
 	{
 		Processable::SetContext(x_context);
-		for(std::vector<Module*>::iterator it = m_modules.begin() ; it != m_modules.end() ; ++it)
-			(*it)->SetContext(x_context);
+		for(auto& elem : m_modules)
+			elem->SetContext(x_context);
 	}
 	inline virtual const Parameters& GetParameters() const {return m_param;}
 

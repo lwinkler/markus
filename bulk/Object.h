@@ -52,7 +52,7 @@ public:
 
 	inline void AddFeature(std::string x_name, Feature* xp_feat)
 	{
-		std::map <std::string, FeaturePtr>::iterator it = m_feats.find(x_name);
+		auto it = m_feats.find(x_name);
 		if(it != m_feats.end())
 			m_feats.erase(it);
 
@@ -60,7 +60,7 @@ public:
 	}
 	inline void AddFeature(std::string x_name, float x_value)
 	{
-		std::map <std::string, FeaturePtr>::iterator it = m_feats.find(x_name);
+		auto it = m_feats.find(x_name);
 		if(it != m_feats.end())
 			m_feats.erase(it);
 

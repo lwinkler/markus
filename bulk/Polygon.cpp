@@ -51,7 +51,7 @@ void Polygon::DrawMask(Mat& xr_target, const Scalar& x_color)
 	const int npoints = points.size();
 	double diag = diagonal(xr_target);
 	vector<Point> scaledPts;
-	vector<Point2f>::const_iterator itpts = points.begin();
+	auto itpts = points.begin();
 	scaledPts.resize(points.size());
 	for(auto & scaledPt : scaledPts)
 	{

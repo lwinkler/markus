@@ -177,7 +177,7 @@ template<class T>std::ostream& serialize(std::ostream& x_out, const std::vector<
 	}
 
 	x_out << "[";
-	typename std::vector<T>::const_iterator it = x_val.begin();
+	auto it = x_val.begin();
 	while(it != x_val.end() - 1)
 	{
 		serialize(x_out,*it);
@@ -216,10 +216,11 @@ template<class T> double compareSquared(const std::vector<T>& x_1, const std::ve
 	// throw MkException("Size error while comparing FeatureVectorFloats", LOC);
 
 	double sum = 0;
-	typename std::vector<T>::const_iterator it2 = x_2.begin();
-	for(typename std::vector<T>::const_iterator it1 = x_1.begin() ; it1 != x_1.end() ; ++it1, ++it2)
+	auto it2 = x_2.begin();
+	for(const auto& elem1 : x_1)
 	{
-		sum += compareSquared(*it1, *it2);
+		sum += compareSquared(elem1, *it2);
+		++it2;
 	}
 	return sum / POW2(x_1.size());
 }
@@ -227,8 +228,8 @@ template<class T> double compareSquared(const std::vector<T>& x_1, const std::ve
 template<class T>void randomize(std::vector<T>& xr_val, unsigned int& xr_seed)
 {
 	xr_val.resize(10);
-	for(typename std::vector<T>::iterator it1 = xr_val.begin() ; it1 != xr_val.end() ; ++it1)
-		randomize(*it1, xr_seed);
+	for(auto& elem : xr_val)
+		randomize(elem, xr_seed);
 }
 
 /* -------------------------------------------------------------------------------- */
@@ -243,7 +244,7 @@ template<class T>std::ostream& serialize(std::ostream& x_out, const boost::circu
 	}
 
 	x_out << "[";
-	typename boost::circular_buffer<T>::const_iterator it = x_val.begin();
+	auto it = x_val.begin();
 	while(it != x_val.end() - 1)
 	{
 		serialize(x_out,*it);
@@ -282,10 +283,11 @@ template<class T> double compareSquared(const boost::circular_buffer<T>& x_1, co
 	// throw MkException("Size error while comparing FeatureVectorFloats", LOC);
 
 	double sum = 0;
-	typename boost::circular_buffer<T>::const_iterator it2 = x_2.begin();
-	for(typename boost::circular_buffer<T>::const_iterator it1 = x_1.begin() ; it1 != x_1.end() ; ++it1, ++it2)
+	auto it2 = x_2.begin();
+	for(const auto& elem1 : x_1)
 	{
-		sum += compareSquared(*it1, *it2);
+		sum += compareSquared(elem1, *it2);
+		++it2;
 	}
 	return sum / POW2(x_1.size());
 }
@@ -293,8 +295,8 @@ template<class T> double compareSquared(const boost::circular_buffer<T>& x_1, co
 template<class T>void randomize(boost::circular_buffer<T>& xr_val, unsigned int& xr_seed)
 {
 	xr_val.resize(10);
-	for(typename boost::circular_buffer<T>::iterator it1 = xr_val.begin() ; it1 != xr_val.end() ; ++it1)
-		randomize(*it1, xr_seed);
+	for(auto& elem : xr_val)
+		randomize(elem, xr_seed);
 }
 
 

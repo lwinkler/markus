@@ -284,13 +284,13 @@ void Module::Export(ostream& rx_os, int x_indentation)
 	rx_os<<tabs<<"</parameters>"<<endl;
 
 	rx_os<<tabs<<"<inputs>"<<endl;
-	for(map<int, Stream*>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; ++it)
-		it->second->Export(rx_os, it->first, x_indentation + 2, true);
+	for(const auto& elem : m_inputStreams)
+		elem.second->Export(rx_os, elem.first, x_indentation + 2, true);
 	rx_os<<tabs<<"</inputs>"<<endl;
 
 	rx_os<<tabs<<"<outputs>"<<endl;
-	for(map<int, Stream*>::const_iterator it = m_outputStreams.begin() ; it != m_outputStreams.end() ; ++it)
-		it->second->Export(rx_os, it->first, x_indentation + 2, false);
+	for(const auto& elem : m_outputStreams)
+		elem.second->Export(rx_os, elem.first, x_indentation + 2, false);
 	rx_os<<tabs<<"</outputs>"<<endl;
 	tabs = string(x_indentation, '\t');
 	rx_os<<tabs<<"</module>"<<endl;
@@ -298,8 +298,6 @@ void Module::Export(ostream& rx_os, int x_indentation)
 
 Stream& Module::RefInputStreamById(int x_id)
 {
-	//for(vector<Stream *>::const_iterator it = m_inputStreams.begin() ; it != m_inputStreams.end() ; ++it)
-	//if((*it)->GetId() == x_id) return **it;
 	auto it = m_inputStreams.find(x_id);
 
 	if(it == m_inputStreams.end())
