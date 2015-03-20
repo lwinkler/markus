@@ -164,7 +164,7 @@ void LogEvent::AddExternalImage(const Mat& x_image, const std::string& x_name, c
 /// Compare the events previously detected with the ground truth file
 void LogEvent::CompareWithGroundTruth()
 {
-	if(m_param.gtEvent.empty())
+	if(m_param.gtCommand.empty())
 		return;
 	try
 	{
@@ -173,13 +173,12 @@ void LogEvent::CompareWithGroundTruth()
 		if(!m_param.gtFile.empty())
 			SYSTEM("cp " + m_param.gtFile + " " + outDir);
 		stringstream cmd;
-		cmd<<"tools/evaluation/analyse_events.py " << m_context.GetOutputDir() << "/" << m_param.file;
+		cmd<< m_param.gtCommand << " " << m_context.GetOutputDir() << "/" << m_param.file;
 		// if(m_param.gtFile != "")
 		cmd<< " " << outDir << "/" << basename(m_param.gtFile);
 		cmd<< " --html --no-browser -o " << outDir;
 		if(m_param.gtVideo != "")
 			cmd<<" -i -V "<<m_param.gtVideo;
-		cmd<<" -e "<<m_param.gtEvent;
 		LOG_DEBUG(m_logger, "Execute cmd: " + cmd.str());
 		SYSTEM(cmd.str());
 

@@ -41,7 +41,7 @@ Evaluation = namedtuple('Evaluation',
 Video = namedtuple('Video', 'duration')
 
 # Truth tuple
-Truth = namedtuple('Truth', 'id begin end match_begin match_end is_valid')
+Truth = namedtuple('Truth', 'id begin end match_begin match_end is_valid text')
 
 # Global arguments, will be overwritten at runtime
 args = None
@@ -138,7 +138,6 @@ def read_events(file_path):
     """Read the events file"""
     return evtfiles.parse(file_path)
 
-
 def read_truths(file_path):
     """Read the ground truth file"""
 
@@ -167,6 +166,7 @@ def read_truths(file_path):
                             end=entry.end,
                             match_begin=match_begin,
                             match_end=match_end,
+                            text=entry.text.strip(' \t\n\r'),
                             is_valid=fall))
 
     return truths
@@ -273,9 +273,9 @@ def statistics(evaluation, video=None):
 
     # Recall and precision based on measures of ilids
     recall_bias = 0.5
-    recall      = float(e.tp) / (e.tp + e.fn)
-    precision   = float(e.tp) / (e.tp + e.fp)
-    f1          = (recall_bias + 1) * recall * precision / (recall + recall_bias * precision)
+    recall      = 0 if e.tp + e.fn == 0 else float(e.tp) / (e.tp + e.fn)
+    precision   = 0 if e.tp + e.fp == 0 else float(e.tp) / (e.tp + e.fp)
+    f1          = 0 if recall + recall_bias * precision == 0 else (recall_bias + 1) * recall * precision / (recall + recall_bias * precision)
     stats['Recall']    = (recall    * 100, '%3.2f%%')
     stats['Precision'] = (precision * 100, '%3.2f%%')
     stats['F1 score']  = (f1 * 100, '%3.2f%%')
@@ -424,6 +424,7 @@ def generate_html(stats, logs, data, out='out', filename='report.html'):
     header <= TH('End')
     header <= TH('Match begin')
     header <= TH('Match end')
+    header <= TH('Annotation')
     table <= header
     for (truth, matches, good) in log_truth:
 
@@ -458,6 +459,8 @@ def generate_html(stats, logs, data, out='out', filename='report.html'):
         row <= TD(truth.match_begin, style='padding-left: 20px; '
                   'padding-right: 20px')
         row <= TD(truth.match_end, style='padding-left: 20px; '
+                  'padding-right: 20px')
+        row <= TD(truth.text, style='padding-left: 20px; '
                   'padding-right: 20px')
         table <= row
     body <= table
@@ -530,9 +533,9 @@ def arguments_parser():
     # Tolerance
     parser.add_argument('-t',
                         dest='tolerance',
-                        default=1,
+                        default=3,
                         type=int,
-                        help='tolerance time (e.g. falling time), default=1s.')
+                        help='tolerance time (e.g. falling time), default=3s.')
 
     # Images
     parser.add_argument('-i',

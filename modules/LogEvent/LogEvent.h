@@ -48,8 +48,9 @@ public:
 			m_list.push_back(new ParameterString("folder_name" , "events_img" , &folder    ,  "Name of the folder to create for images"));
 			m_list.push_back(new ParameterString("extension"   , "jpg"        , &extension ,  "Extension of the thumbnails. Determines the output format."));
 
-			// The 3 gt_ parameters are only used for evaluation vs ground truth file
-			m_list.push_back(new ParameterString("gt_event"    , ""           , &gtEvent   ,  "Event name for comparison of events vs. ground truth files (e.g. intrusion, fall). If empty, no comparison will be made."));
+			// The 4 gt_ parameters are only used for evaluation vs ground truth file
+			m_list.push_back(new ParameterString("gt_command"  , "tools/evaluation/analyse_events.py -d 0 -t 8 -e intrusion", 
+			                                                                    &gtCommand ,  "The command to use for comparison with ground truth"));
 			m_list.push_back(new ParameterString("gt_file"     , ""           , &gtFile    ,  "Ground truth file name. If empty, the program will consider that the ground truth is empty."));
 			m_list.push_back(new ParameterString("gt_video"    , ""           , &gtVideo   ,  "Video file to use to create the ground truth."));
 
@@ -61,7 +62,7 @@ public:
 		double duration;
 		std::string extension;
 		std::string folder;
-		std::string gtEvent;
+		std::string gtCommand;
 		std::string gtFile;
 		std::string gtVideo;
 	};
