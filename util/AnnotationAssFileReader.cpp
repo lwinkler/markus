@@ -82,10 +82,10 @@ void AnnotationAssFileReader::ReadSrt(const string& srt)
 	stringstream stream(srt.substr(start+ 5,end));
 	int rect[4];
 	string word;
-	for (int i = 0; i < 4; i++)
+	for (auto & elem : rect)
 	{
 		getline(stream, word, separator);
-		rect[i] = atoi(word.c_str());
+		elem = atoi(word.c_str());
 	}
 	Point p1(rect[0] * m_widthProportion,rect[1] * m_heightProportion);
 	Point p2(rect[2] * m_widthProportion,rect[3] * m_heightProportion);

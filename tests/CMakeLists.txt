@@ -10,7 +10,7 @@ if(CXXTEST_FOUND)
 
 	add_custom_command(
 		OUTPUT unitTests.cpp
-		DEPENDS ${tests_src} ${tests_src2} ${tests_src3}
+		DEPENDS ${tests_src1} ${tests_src2} ${tests_src3}
 		COMMAND cxxtestgen -o unitTests.cpp ${tests_src1} ${tests_src2} ${tests_src3} --xunit-printer
 	)
 else()

@@ -54,18 +54,18 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, ConfigReader& x_configRea
 	Configurable(x_configReader),
 	m_param(x_configReader)
 {
-	m_img_tmp1              = NULL; // Allocated on first conversion
-	m_img_tmp2              = NULL;
-	m_img_output            = NULL;
-	m_img_original          = NULL;
-	m_controlBoard          = NULL;
+	m_img_tmp1              = nullptr; // Allocated on first conversion
+	m_img_tmp2              = nullptr;
+	m_img_output            = nullptr;
+	m_img_original          = nullptr;
+	m_controlBoard          = nullptr;
 
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	m_outputWidth  = 0.8 * width();
 	m_outputHeight = 0.8 * height();
 
 	// Handlers for modules
-	assert(x_manager != NULL);
+	assert(x_manager != nullptr);
 	if(x_manager->GetModules().size() == 0)
 		throw MkException("Module list cannot be empty", LOC);
 	m_manager 		= x_manager;
@@ -78,15 +78,15 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, ConfigReader& x_configRea
 	mp_gbCombos 		= new QGroupBox(tr("Display options"));
 	mp_widEmpty		= new QWidget();
 
-	QGridLayout * layoutCombos = new QGridLayout;
+	auto  layoutCombos = new QGridLayout;
 
 	// Fill the list of modules
 	QLabel* lab1 = new QLabel(tr("Module"));
 	layoutCombos->addWidget(lab1, 0, 0);
 	mp_comboModules->clear();
 	int ind = 0;
-	for(vector<Module*>::const_iterator it = x_manager->GetModules().begin(); it != x_manager->GetModules().end(); ++it)
-		mp_comboModules->addItem((*it)->GetName().c_str(), ind++);
+	for(const auto & elem : x_manager->GetModules())
+		mp_comboModules->addItem((elem)->GetName().c_str(), ind++);
 	layoutCombos->addWidget(mp_comboModules, 0, 1);
 	if(m_param.module > 0 && m_param.module < mp_comboModules->count())
 		mp_comboModules->setCurrentIndex(m_param.module);
@@ -133,7 +133,7 @@ QModuleViewer::~QModuleViewer(void)
 
 void QModuleViewer::resizeEvent(QResizeEvent * e)
 {
-	if(m_currentStream != NULL)
+	if(m_currentStream != nullptr)
 	{
 		// Keep proportionality
 		double ratio = static_cast<double>(m_currentStream->GetHeight()) / m_currentStream->GetWidth();
@@ -165,13 +165,13 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 
 void QModuleViewer::paintEvent(QPaintEvent * e)
 {
-	if(m_currentStream != NULL)
+	if(m_currentStream != nullptr)
 	{
 		// We paint the image from the stream
-		if(m_img_original == NULL)
+		if(m_img_original == nullptr)
 			m_img_original = new Mat( Size(m_currentStream->GetWidth(), m_currentStream->GetHeight()), CV_8UC3);
 		m_img_original->setTo(0);
-		if(m_img_output == NULL)
+		if(m_img_output == nullptr)
 			m_img_output = new Mat( Size(m_outputWidth, m_outputHeight), CV_8UC3);
 
 		m_currentModule->LockForRead();
@@ -195,13 +195,13 @@ void QModuleViewer::updateModule(Module * x_module)
 	CLEAN_DELETE(m_controlBoard);
 
 	int cpt = 0;
-	for(map<int, Stream*>::const_iterator it = m_currentModule->GetOutputStreamList().begin(); it != m_currentModule->GetOutputStreamList().end(); ++it)
+	for(const auto & elem : m_currentModule->GetOutputStreamList())
 	{
-		mp_comboStreams->addItem(it->second->GetName().c_str(), cpt++);
+		mp_comboStreams->addItem(elem.second->GetName().c_str(), cpt++);
 	}
-	for(map<int, Stream*>::const_iterator it = m_currentModule->GetDebugStreamList().begin(); it != m_currentModule->GetDebugStreamList().end(); ++it)
+	for(const auto & elem : m_currentModule->GetDebugStreamList())
 	{
-		mp_comboStreams->addItem(it->second->GetName().c_str(), cpt++);
+		mp_comboStreams->addItem(elem.second->GetName().c_str(), cpt++);
 	}
 
 	// Update the stream
@@ -211,8 +211,8 @@ void QModuleViewer::updateModule(Module * x_module)
 
 	// Empty the action menu (different for each module)
 	QList<QAction *> actions = this->actions();
-	for(QList<QAction*>::iterator it = actions.begin() ; it != actions.end() ; ++it)
-		this->removeAction(*it);
+	for(auto & action : actions)
+		this->removeAction(action);
 
 	// Set context menus
 	QAction * actionShowDisplayMenu = new QAction(tr("Show display options"), this);
@@ -227,12 +227,12 @@ void QModuleViewer::updateModule(Module * x_module)
 	cpt = 0;
 
 	// Add option to right-click: controls
-	for(map<string, Controller*>::const_iterator it = ctrs.begin() ; it != ctrs.end() ; ++it)
+	for(const auto & ctr : ctrs)
 	{
 		// Add an action for each control associated with the module
-		string name = string("Control ") + (it->second)->GetName();
+		string name = string("Control ") + (ctr.second)->GetName();
 		QAction * actionShowControl = new QAction(tr(name.c_str()), this);
-		QSignalMapper * signalMapper = new QSignalMapper(this);
+		auto  signalMapper = new QSignalMapper(this);
 		signalMapper->setMapping(actionShowControl, cpt);
 		//actionShowControl->setShortcut(tr("Ctrl+C"));
 		connect(actionShowControl, SIGNAL(triggered()), signalMapper, SLOT(map()));
@@ -244,7 +244,7 @@ void QModuleViewer::updateModule(Module * x_module)
 	if(cpt != 0)
 	{
 		QAction * actionShowControl = new QAction("Hide all controls", this);
-		QSignalMapper * signalMapper = new QSignalMapper(this);
+		auto  signalMapper = new QSignalMapper(this);
 		signalMapper->setMapping(actionShowControl, cpt);
 		connect(actionShowControl, SIGNAL(triggered()), this, SLOT(updateControlNb()));
 		this->addAction(actionShowControl);
@@ -260,7 +260,7 @@ void QModuleViewer::updateModule(Module * x_module)
 /// change the module being currently displayed (by index)
 void QModuleViewer::updateModuleNb(int x_index)
 {
-	Module* mod = NULL;
+	Module* mod = nullptr;
 
 	if(x_index < 0 || x_index >= static_cast<int>(m_manager->GetModules().size()))
 	{
@@ -279,7 +279,7 @@ void QModuleViewer::updateModuleNb(int x_index)
 void QModuleViewer::updateStreamNb(int x_index)
 {
 	unsigned int cpt = static_cast<unsigned int>(x_index);
-	Stream* stream = NULL;
+	Stream* stream = nullptr;
 
 	if(x_index >= 0 && cpt < m_currentModule->GetOutputStreamList().size())
 	{
@@ -314,7 +314,7 @@ void QModuleViewer::updateControlNb(int x_index)
 		return;
 	m_controlBoard = new QControlBoard(*m_currentModule, this);
 	mp_mainLayout->addWidget(m_controlBoard, 0);
-	map<string, Controller*>::const_iterator it = m_currentModule->GetControllersList().begin();
+	auto it = m_currentModule->GetControllersList().begin();
 	unsigned int cpt = static_cast<unsigned int>(x_index);
 
 	if(x_index >= 0 && cpt < m_currentModule->GetControllersList().size())
@@ -395,7 +395,7 @@ void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qimg)
 // Display some info on stream (and position of cursor)
 void QModuleViewer::mouseDoubleClickEvent(QMouseEvent * event)
 {
-	if(m_currentStream == NULL)
+	if(m_currentStream == nullptr)
 		return;
 	QPoint cursor = event->pos();
 	int x = (cursor.x() - m_offsetX) * m_currentStream->GetWidth() / m_image.width();

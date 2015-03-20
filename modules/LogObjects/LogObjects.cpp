@@ -41,7 +41,7 @@ LogObjects::LogObjects(const ConfigReader& x_configReader)
 {
 	// Init input streams
 	AddInputStream(0, new StreamObject("input",      m_objectsIn, *this,     "Incoming objects"));
-	mp_annotationWriter = NULL;
+	mp_annotationWriter = nullptr;
 }
 
 LogObjects::~LogObjects(void)

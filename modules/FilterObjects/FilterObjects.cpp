@@ -88,14 +88,14 @@ void FilterObjects::ProcessFrame()
 			valid = false;
 		}
 
-		const FeatureFloatInTime* posX = NULL;
-		const FeatureFloatInTime* posY = NULL;
+		const FeatureFloatInTime* posX = nullptr;
+		const FeatureFloatInTime* posY = nullptr;
 		// cout<<POW2(posX.value - posX.initial) + POW2(posY.value - posY.initial)<<" >= "<<POW2(m_param.minDist)<<endl;
 		if(sqDist > 0)
 		{
 			posX = dynamic_cast<const FeatureFloatInTime*>(&it->GetFeature("x"));
 			posY = dynamic_cast<const FeatureFloatInTime*>(&it->GetFeature("y"));
-			if(posX == NULL || posY == NULL)
+			if(posX == nullptr || posY == nullptr)
 				throw MkException("Can only compute distance if the object is tracked. A tracker must be present uphill.", LOC);
 			if(pow(posX->value - posX->initial, 2) + pow(posY->value - posY->initial, 2) < sqDist)
 			{
@@ -130,7 +130,7 @@ void FilterObjects::ProcessFrame()
 			m_objectsOut.push_back(*it);
 #ifdef MARKUS_DEBUG_STREAMS
 		rectangle(m_debug, rect, valid ? Green : Gray, 1, 8);
-		if(posX != NULL && posY != NULL)
+		if(posX != nullptr && posY != nullptr)
 			line(m_debug, Point(posX->initial * diagonal, posY->initial * diagonal), Point(posX->value * diagonal, posY->value * diagonal), valid ? Green : Gray, 1, 8);
 #endif
 	}

@@ -64,9 +64,9 @@ void StreamObject::ConvertInput()
 	double ratioY = static_cast<double>(m_height) / pstream->GetHeight();
 
 	m_objects.clear();
-	for(vector<Object>::const_iterator it = rectsTarget.begin() ; it != rectsTarget.end() ; ++it)
+	for(const auto& elem : rectsTarget)
 	{
-		m_objects.push_back(*it);
+		m_objects.push_back(elem);
 		Object& obj(m_objects[m_objects.size() - 1]);
 		obj.posX   *= ratioX;
 		obj.posY   *= ratioY;

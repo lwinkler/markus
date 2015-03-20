@@ -59,7 +59,7 @@ bool replaceExpr(string& rx_name, const map<string,FeaturePtr>& x_features)
 		return false;
 	string pattern(beg + 2, end);
 
-	map <std::string, FeaturePtr>::const_iterator it = x_features.find(pattern);
+	auto it = x_features.find(pattern);
 	if(it == x_features.end())
 	{
 		rx_name.replace(beg, end + 1, "unknown");
@@ -85,17 +85,17 @@ void ThumbnailWriter::Reset()
 void ThumbnailWriter::ProcessFrame()
 {
 	int cpt = 0;
-	for(vector<Object>::iterator it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; ++it1)
+	for(auto & elem : m_objectsIn)
 	{
 		// folder name
 		string folderName = m_context.GetOutputDir() + "/" + m_param.folder + "/";
-		while(replaceExpr(folderName, it1->GetFeatures()))
+		while(replaceExpr(folderName, elem.GetFeatures()))
 			;
 
 
 		// Save features to .json
 		std::stringstream ss2;
-		ss2 << folderName << m_currentTimeStamp << "_" << it1->GetName()<< it1->GetId() << "_" << cpt << ".json";
+		ss2 << folderName << m_currentTimeStamp << "_" << elem.GetName()<< elem.GetId() << "_" << cpt << ".json";
 		ofstream of(ss2.str().c_str());
 		if(!of.is_open())
 		{
@@ -105,13 +105,13 @@ void ThumbnailWriter::ProcessFrame()
 				throw MkException("Impossible to create file " + ss2.str(), LOC);
 		}
 		LOG_DEBUG(m_logger, "Write object to " << ss2.str());
-		it1->Serialize(of, folderName);
+		elem.Serialize(of, folderName);
 		of.close();
 
 
 		// For each object save a thumbnail
-		it1->Intersect(m_input);
-		const Rect rect(it1->GetRect());
+		elem.Intersect(m_input);
+		const Rect rect(elem.GetRect());
 		/*if(rect.x < 0 || rect.y < 0 || rect.x + rect.width >= GetWidth() || rect.y + rect.height >= GetHeight())
 		{
 			LOG_WARN(m_logger, "Object is larger than the base image");
@@ -119,14 +119,14 @@ void ThumbnailWriter::ProcessFrame()
 			continue;
 		}*/
 		std::stringstream ss1;
-		ss1 << folderName << m_currentTimeStamp << "_" << it1->GetName()<< it1->GetId() << "_" << cpt << "." << m_param.extension;
+		ss1 << folderName << m_currentTimeStamp << "_" << elem.GetName()<< elem.GetId() << "_" << cpt << "." << m_param.extension;
 		imwrite(ss1.str(), (m_input)(rect));
 
 		// For each object save a thumbnail
 		if(m_inputStreams.at(2)->IsConnected())
 		{
 			std::stringstream ss2;
-			ss2 << folderName << m_currentTimeStamp << "_" << it1->GetName()<< it1->GetId() << "_" << cpt << "_mask." << m_param.extension;
+			ss2 << folderName << m_currentTimeStamp << "_" << elem.GetName()<< elem.GetId() << "_" << cpt << "_mask." << m_param.extension;
 			imwrite(ss2.str(), (m_input2)(rect));
 		}
 

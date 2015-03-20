@@ -58,7 +58,7 @@ void KeyPointsDense::Reset()
 		m_param.varyXyStepWithScale,
 		m_param.varyImgBoundWithScale
 	);
-	if(mp_detector == NULL && mp_detector->empty())
+	if(mp_detector == nullptr && mp_detector->empty())
 		throw MkException("Cannot create detector", LOC);
 }
 

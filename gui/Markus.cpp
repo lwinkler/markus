@@ -62,7 +62,7 @@ MarkusWindow::MarkusWindow(ConfigReader & rx_configReader, Manager& rx_manager)
 	setCentralWidget(&m_mainWidget);
 
 	createActionsAndMenus();
-	resizeEvent(NULL);
+	resizeEvent(nullptr);
 
 	setWindowTitle(tr("Markus"));
 }
@@ -84,14 +84,14 @@ void MarkusWindow::timerEvent(QTimerEvent* px_event)
 
 void MarkusWindow::UpdateConfig()
 {
-	for(vector<QModuleViewer *>::iterator it = m_moduleViewer.begin() ; it != m_moduleViewer.end() ; ++it)
-		(*it)->UpdateConfig();
+	for(auto & elem : m_moduleViewer)
+		(elem)->UpdateConfig();
 	Configurable::UpdateConfig();
 }
 
 QLabel *MarkusWindow::createLabel(const QString &text)
 {
-	QLabel *label = new QLabel(text);
+	auto label = new QLabel(text);
 	label->setAlignment(Qt::AlignCenter);
 	label->setMargin(2);
 	label->setFrameStyle(QFrame::Box | QFrame::Sunken);
@@ -210,55 +210,55 @@ void MarkusWindow::view1x1()
 {
 	m_param.nbRows = 1;
 	m_param.nbCols = 1;
-	resizeEvent(NULL);
+	resizeEvent(nullptr);
 }
 
 void MarkusWindow::view1x2()
 {
 	m_param.nbRows = 1;
 	m_param.nbCols = 2;
-	resizeEvent(NULL);
+	resizeEvent(nullptr);
 }
 
 void MarkusWindow::view2x2()
 {
 	m_param.nbRows = 2;
 	m_param.nbCols = 2;
-	resizeEvent(NULL);
+	resizeEvent(nullptr);
 }
 
 void MarkusWindow::view2x3()
 {
 	m_param.nbRows = 2;
 	m_param.nbCols = 3;
-	resizeEvent(NULL);
+	resizeEvent(nullptr);
 }
 
 void MarkusWindow::view3x3()
 {
 	m_param.nbRows = 3;
 	m_param.nbCols = 3;
-	resizeEvent(NULL);
+	resizeEvent(nullptr);
 }
 
 void MarkusWindow::view3x4()
 {
 	m_param.nbRows = 3;
 	m_param.nbCols = 4;
-	resizeEvent(NULL);
+	resizeEvent(nullptr);
 }
 
 void MarkusWindow::view4x4()
 {
 	m_param.nbRows = 4;
 	m_param.nbCols = 4;
-	resizeEvent(NULL);
+	resizeEvent(nullptr);
 }
 
 void MarkusWindow::callManagerCommand()
 {
 	QAction* action = dynamic_cast<QAction*>(sender());
-	assert(action != NULL);
+	assert(action != nullptr);
 
 	m_manager.SendCommand("manager.manager." + string(action->text().toStdString()), "");
 }

@@ -40,7 +40,7 @@ BgrSubMOG::BgrSubMOG(const ConfigReader& x_configReader) :
 	m_foreground(Size(m_param.width, m_param.height), CV_8UC1),
 	m_background(Size(m_param.width, m_param.height), m_param.type)
 {
-	mp_mog = NULL;
+	mp_mog = nullptr;
 
 	AddInputStream(0, new StreamImage("input",       m_input,      *this,   "Video input"));
 

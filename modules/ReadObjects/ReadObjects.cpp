@@ -42,7 +42,7 @@ ReadObjects::ReadObjects(const ConfigReader& x_configReader)
 {
 	// Init input streams
 	AddOutputStream(0, new StreamObject("object", m_ObjectOut, *this, "Output object read from file"));
-	mp_annotationReader = NULL;
+	mp_annotationReader = nullptr;
 }
 
 ReadObjects::~ReadObjects(void)

@@ -36,13 +36,13 @@ using namespace std;
 QControlBoard::QControlBoard(Module& x_module, QWidget *parent):
 	m_currentModule(x_module)
 {
-	QBoxLayout * mainLayout = new QBoxLayout(QBoxLayout::TopToBottom);
+	auto  mainLayout = new QBoxLayout(QBoxLayout::TopToBottom);
 	mp_gbControls		= new QScrollArea;
 	mp_gbButtons		= new QGroupBox(tr("Actions"));
 
 	// Create the group with settings buttons
 	mp_buttonLayout = new QHBoxLayout;
-	mp_currentControl = NULL;
+	mp_currentControl = nullptr;
 
 	mp_gbButtons->setLayout(mp_buttonLayout);
 	mainLayout->addWidget(mp_gbControls, 0);
@@ -85,15 +85,15 @@ void QControlBoard::updateControl(Controller* x_control)
 
 	/// Create new control screen
 	mp_gbControls->setWidgetResizable(true);
-	QGridLayout * vbox = new QGridLayout;
+	auto  vbox = new QGridLayout;
 
 	QLabel * lab = new QLabel(x_control->GetName().c_str());
 	vbox->addWidget(lab, 0, 0);
 	QWidget* wid = x_control->CreateWidget();
-	if(wid != NULL)
+	if(wid != nullptr)
 		vbox->addWidget(wid, 0, 1);
 
-	QWidget *viewport = new QWidget;
+	auto viewport = new QWidget;
 	viewport->setLayout(vbox);
 	viewport->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 	mp_gbControls->setWidget(viewport);
@@ -106,10 +106,10 @@ void QControlBoard::updateControl(Controller* x_control)
 void QControlBoard::callAction()
 {
 	QPushButton* button = dynamic_cast<QPushButton*>(sender());
-	assert(button != NULL);
+	assert(button != nullptr);
 
 	m_currentModule.LockForWrite();
 	// LOG_DEBUG(Manager::Logger(), "Call control on module "<<m_currentModule.GetName());
-	mp_currentControl->CallAction(button->text().toStdString(), NULL);
+	mp_currentControl->CallAction(button->text().toStdString(), nullptr);
 	m_currentModule.Unlock();
 }

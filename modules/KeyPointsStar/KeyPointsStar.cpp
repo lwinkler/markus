@@ -56,7 +56,7 @@ void KeyPointsStar::Reset()
 		m_param.lineThresholdBinarized,
 		m_param.suppressNonmaxSize
 	);
-	if(mp_detector == NULL && mp_detector->empty())
+	if(mp_detector == nullptr && mp_detector->empty())
 		throw MkException("Cannot create detector", LOC);
 }
 

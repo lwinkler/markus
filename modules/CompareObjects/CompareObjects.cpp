@@ -73,7 +73,7 @@ void CompareObjects::ProcessFrame()
 		double sum = 0;
 		int cpt = 0;
 		//cout<<"obj ";it1->Serialize(cout, "");
-		for(map<string, FeaturePtr>::const_iterator itfeat = it1->GetFeatures().begin() ; itfeat != it1->GetFeatures().end() ; ++itfeat)
+		for(auto itfeat = it1->GetFeatures().begin() ; itfeat != it1->GetFeatures().end() ; ++itfeat)
 		{
 			try
 			{

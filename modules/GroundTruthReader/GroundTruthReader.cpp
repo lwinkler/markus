@@ -41,7 +41,7 @@ GroundTruthReader::GroundTruthReader(const ConfigReader& x_configReader):
 	m_param(x_configReader),
 	m_input(Size(m_param.width, m_param.height), m_param.type)
 {
-	mp_annotationReader = NULL;
+	mp_annotationReader = nullptr;
 	AddInputStream(0, new StreamImage("input",  m_input, *this, "Video input"));
 	AddInputStream(1, new StreamObject("input object",  m_objects, *this, "Incoming objects"));
 
@@ -124,7 +124,7 @@ void GroundTruthReader::ProcessFrame()
 
 				// middle of bounding box
 				Rect centerRefObj = Rect(refObj.x+((refObj.width - distanceRefObject) / 2) , refObj.y+ ((refObj.height - distanceRefObject) / 2), distanceRefObject, distanceRefObject);
-				for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; ++it)
+				for(auto it = m_objects.begin() ; it != m_objects.end() ; ++it)
 				{
 					Rect objRect = it->GetRect();
 					if (centerRefObj.contains(Point (objRect.x+objRect.width/2,objRect.y+objRect.height/2)) && refObj.area() >= objRect.area()) // middle of rect is in middle of bounding box and area is smaller than reference bounding box
@@ -158,40 +158,40 @@ void GroundTruthReader::ProcessFrame()
 	}
 #endif
 
-	for(vector<Object>::iterator it = m_objects.begin() ; it != m_objects.end() ; ++it)
+	for(auto & elem : m_objects)
 	{
 		// ass file with rect in subtitle
 		if (m_assFile && refObj.width > 0)
 		{
 			// gt = 1 only if object has been detected in roi
-			if (find (trackedObj.begin(), trackedObj.end(), it->GetId()) != trackedObj.end())
+			if (find (trackedObj.begin(), trackedObj.end(), elem.GetId()) != trackedObj.end())
 			{
-				it->AddFeature("gt", 1.0);
-				it->AddFeature("label", new FeatureString(text));
+				elem.AddFeature("gt", 1.0);
+				elem.AddFeature("label", new FeatureString(text));
 			}
 			else
 			{
-				it->AddFeature("gt", 0.0);
-				it->AddFeature("label", new FeatureString(""));
+				elem.AddFeature("gt", 0.0);
+				elem.AddFeature("label", new FeatureString(""));
 			}
 
 		}
 		else
 		{
-			it->AddFeature("gt", static_cast<float>(m_state));
-			it->AddFeature("label", new FeatureString(text));
+			elem.AddFeature("gt", static_cast<float>(m_state));
+			elem.AddFeature("label", new FeatureString(text));
 		}
 
 #ifdef MARKUS_DEBUG_STREAMS
-		if (dynamic_cast<const FeatureFloat&> (it->GetFeature("gt")).value > 0)
+		if (dynamic_cast<const FeatureFloat&> (elem.GetFeature("gt")).value > 0)
 		{
-			rectangle(m_debug,it->GetRect(),Scalar( 0, 255, 0));
-			circle(m_debug,Point(it->posX,it->posY),2,Scalar(0,255,0));
+			rectangle(m_debug,elem.GetRect(),Scalar( 0, 255, 0));
+			circle(m_debug,Point(elem.posX,elem.posY),2,Scalar(0,255,0));
 		}
 		else
 		{
-			rectangle(m_debug,it->GetRect(),Scalar(100, 100, 100));
-			circle(m_debug,Point(it->posX,it->posY),2,Scalar(100, 100, 100));
+			rectangle(m_debug,elem.GetRect(),Scalar(100, 100, 100));
+			circle(m_debug,Point(elem.posX,elem.posY),2,Scalar(100, 100, 100));
 		}
 #endif
 	}

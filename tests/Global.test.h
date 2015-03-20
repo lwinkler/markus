@@ -26,6 +26,7 @@
 #include <log4cxx/xml/domconfigurator.h>
 
 #include "Factories.h"
+#include "util.h"
 
 using namespace std;
 

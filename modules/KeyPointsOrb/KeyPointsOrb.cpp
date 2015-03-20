@@ -59,7 +59,7 @@ void KeyPointsOrb::Reset()
 		ORB::HARRIS_SCORE,
 		m_param.edgeThreshold // Note: the 2 params should be roughly equivalent according to the doc
 	);
-	if(mp_detector == NULL && mp_detector->empty())
+	if(mp_detector == nullptr && mp_detector->empty())
 		throw MkException("Cannot create detector", LOC);
 }
 

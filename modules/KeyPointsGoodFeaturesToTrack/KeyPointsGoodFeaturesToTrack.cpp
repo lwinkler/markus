@@ -57,7 +57,7 @@ void KeyPointsGoodFeaturesToTrack::Reset()
 		m_param.useHarrisDetector,
 		m_param.k);
 
-	if(mp_detector == NULL && mp_detector->empty())
+	if(mp_detector == nullptr && mp_detector->empty())
 		throw MkException("Cannot create detector", LOC);
 }
 

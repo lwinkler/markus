@@ -47,7 +47,7 @@ void *grab_thread_nc(void *x_void_ptr)
 	pst->ret = pst->capture->grab();
 	sem_post(pst->sem);
 
-	return NULL;
+	return nullptr;
 }
 
 
@@ -103,7 +103,7 @@ bool NetworkCam::Grab()
 	pthread_t thread;
 	struct timespec my_timeout;
 	struct timeval now;
-	gettimeofday(&now,NULL);
+	gettimeofday(&now,nullptr);
 	my_timeout.tv_sec  = now.tv_sec + TIMEOUT;
 	my_timeout.tv_nsec = now.tv_usec * 1000;
 
@@ -111,7 +111,7 @@ bool NetworkCam::Grab()
 	struct_thread st;
 	st.capture = &m_capture;
 	st.sem     = &m_semTimeout;
-	pthread_create(&thread, NULL, grab_thread_nc, &st);
+	pthread_create(&thread, nullptr, grab_thread_nc, &st);
 	int ret = sem_timedwait(&m_semTimeout, &my_timeout);
 
 	if (ret==-1 && errno==ETIMEDOUT)
@@ -125,7 +125,7 @@ bool NetworkCam::Grab()
 	}
 	else
 	{
-		pthread_join(thread,NULL);
+		pthread_join(thread,nullptr);
 		return st.ret;
 	}
 }
