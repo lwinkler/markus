@@ -56,5 +56,5 @@ class Time:
         return Time(milis=self.milis.__div__(other))
 
     def __repr__(self):
-        fmt = "%02d:%02d:%02d.%03d"
+        fmt = "%02d:%02d:%02d,%03d"
         return fmt % self.toTuple()

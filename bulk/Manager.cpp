@@ -422,16 +422,18 @@ void Manager::SendCommand(const string& x_command, string x_value)
 	if(elems.size() != 3)
 		throw MkException("Command must be in format \"module.controller.Command\"", LOC);
 
-	Module& module(elems.at(0) == "manager" ? dynamic_cast<Module&>(*this) : RefModuleByName(elems.at(0)));
+	// Note: We cast module/manager twice since we need functions from both parents
+	Controllable& contr  (elems.at(0) == "manager" ? dynamic_cast<Controllable&>(*this) : RefModuleByName(elems.at(0)));
+	Processable&  process(elems.at(0) == "manager" ? dynamic_cast<Processable&>(*this) : RefModuleByName(elems.at(0)));
 	try
 	{
-		module.LockForWrite();
-		module.FindController(elems.at(1)).CallAction(elems.at(2), &x_value);
-		module.Unlock();
+		process.LockForWrite();
+		contr.FindController(elems.at(1)).CallAction(elems.at(2), &x_value);
+		process.Unlock();
 	}
 	catch(...)
 	{
-		module.Unlock();
+		process.Unlock();
 		throw;
 	}
 	LOG_INFO(m_logger, "Command "<<x_command<<" returned value "<<x_value);
