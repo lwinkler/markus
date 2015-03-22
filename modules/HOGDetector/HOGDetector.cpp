@@ -79,10 +79,10 @@ void HOGDetector::NormalProcess()
 #ifdef MARKUS_DEBUG_STREAMS
 	m_lastInput.copyTo(m_debug);
 
-	for(vector<Object>::const_iterator it = m_detectedObjects.begin() ; it != m_detectedObjects.end() ; ++it)
+	for(const auto& elem : m_detectedObjects)
 	{
 		// Draw the rectangle in the input image
-		rectangle(m_debug, it->GetRect(), Scalar(255, 0, 33), 1, 8, 0 );
+		rectangle(m_debug, elem.GetRect(), Scalar(255, 0, 33), 1, 8, 0 );
 	}
 #endif
 }

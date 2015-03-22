@@ -51,10 +51,10 @@ ThumbnailWriter::~ThumbnailWriter()
 
 bool replaceExpr(string& rx_name, const map<string,FeaturePtr>& x_features)
 {
-	string::iterator beg = std::find(rx_name.begin(), rx_name.end(), '$');
+	auto beg = std::find(rx_name.begin(), rx_name.end(), '$');
 	if(beg >= rx_name.end() - 1 || *(beg + 1) != '{')
 		return false;
-	string::iterator end = std::find(beg, rx_name.end(), '}');
+	auto end = std::find(beg, rx_name.end(), '}');
 	if(end >= rx_name.end())
 		return false;
 	string pattern(beg + 2, end);

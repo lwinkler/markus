@@ -32,7 +32,6 @@
  *  A template is what allows to track an Object, through different frames. A set of Templates is typically
  * used inside a Tracker.
  */
-// TODO: Maybe inherit from object
 class Template
 {
 public:
@@ -49,7 +48,7 @@ public:
 	inline void AddFeature(std::string x_name, double x_value) {m_feats.insert(std::make_pair(x_name, FeatureFloatInTime(x_value)));}
 	inline const FeatureFloatInTime& GetFeature(const std::string& x_name) const
 	{
-		std::map <std::string, FeatureFloatInTime>::const_iterator it = m_feats.find(x_name);
+		auto it = m_feats.find(x_name);
 		if(it == m_feats.end())
 			throw MkException("Feature is non-existant", LOC);
 		return it->second;

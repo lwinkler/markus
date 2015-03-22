@@ -123,14 +123,18 @@ void GroundTruthReader::ProcessFrame()
 				refObj.height += distanceRefObject;
 
 				// middle of bounding box
-				Rect centerRefObj = Rect(refObj.x+((refObj.width - distanceRefObject) / 2) , refObj.y+ ((refObj.height - distanceRefObject) / 2), distanceRefObject, distanceRefObject);
-				for(auto it = m_objects.begin() ; it != m_objects.end() ; ++it)
+				Rect centerRefObj = Rect(
+					refObj.x + (refObj.width  - distanceRefObject) / 2, 
+					refObj.y + (refObj.height - distanceRefObject) / 2, 
+					distanceRefObject, distanceRefObject
+				);
+				for(const auto& obj : m_objects)
 				{
-					Rect objRect = it->GetRect();
+					Rect objRect = obj.GetRect();
 					if (centerRefObj.contains(Point (objRect.x+objRect.width/2,objRect.y+objRect.height/2)) && refObj.area() >= objRect.area()) // middle of rect is in middle of bounding box and area is smaller than reference bounding box
 					{
-						trackedObj.push_back(it->GetId());
-						LOG_DEBUG(m_logger, "Object "<< it->GetId()<<" is tracked until "<<mp_annotationReader->GetEndTimeStamp());
+						trackedObj.push_back(obj.GetId());
+						LOG_DEBUG(m_logger, "Object "<< obj.GetId()<<" is tracked until "<<mp_annotationReader->GetEndTimeStamp());
 					}
 				}
 			}

@@ -125,12 +125,12 @@ void Template::UpdateFeatures(double x_alpha, TIME_STAMP m_currentTimeStamp)
 {
 	if(m_lastMatchingObject != nullptr)
 	{
-		for (auto it = m_feats.begin() ; it != m_feats.end() ; ++it)
+		for (auto& feat : m_feats)
 		{
 			try
 			{
-				it->second.Update(m_lastMatchingObject->GetFeature(it->first), x_alpha);
-				LOG_DEBUG(m_logger, "Update feature "<<it->first<<" of template  mean: "<<it->second.mean<<", init: "<<it->second.initial<<", current value: "<<it->second.value);
+				feat.second.Update(m_lastMatchingObject->GetFeature(feat.first), x_alpha);
+				LOG_DEBUG(m_logger, "Update feature "<<feat.first<<" of template  mean: "<<feat.second.mean<<", init: "<<feat.second.initial<<", current value: "<<feat.second.value);
 			}
 			catch(FeatureNotFoundException& e)
 			{

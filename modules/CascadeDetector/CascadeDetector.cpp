@@ -86,10 +86,10 @@ void CascadeDetector::NormalProcess()
 #ifdef MARKUS_DEBUG_STREAMS
 	cvtColor(m_lastInput, m_debug, CV_GRAY2RGB);
 
-	for(vector<Object>::const_iterator it = m_detectedObjects.begin() ; it != m_detectedObjects.end() ; ++it)
+	for(const auto& obj : m_detectedObjects)
 	{
 		// Draw the rectangle in the input image
-		rectangle(m_debug, it->GetRect(), Scalar(255, 0, 23)/*colorFromStr(m_param.color)*/, 1, 8, 0 );
+		rectangle(m_debug, obj.GetRect(), Scalar(255, 0, 23)/*colorFromStr(m_param.color)*/, 1, 8, 0 );
 	}
 #endif
 }

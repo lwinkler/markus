@@ -90,22 +90,22 @@ void ModuleKeyPoints::ProcessFrame()
 #endif
 	//compute each object to find point of interest
 	m_objectsOut.clear();
-	for(auto it1 = m_objectsIn.begin() ; it1 != m_objectsIn.end() ; ++it1)
+	for(auto& obj1 : m_objectsIn)
 	{
-		if(it1->width < 8 || it1->height < 8)
+		if(obj1.width < 8 || obj1.height < 8)
 		{
-			LOG_WARN(m_logger, "Object has insufficient size: "<<it1->width<<"x"<<it1->height);
+			LOG_WARN(m_logger, "Object has insufficient size: "<<obj1.width<<"x"<<obj1.height);
 			continue;
 		}
 
-		it1->Intersect(m_input);
+		obj1.Intersect(m_input);
 
 		//compute point of interest and add it to m_objectsOut
 		//this cause unit test fail
-		Mat subImage(m_input, it1->GetRect());
-		// if(!(    0 <= it1->posX && 0 <= it1->width  && it1->posX + subImage.cols / 2 <= m_input.cols // TODO: Keep this ?
-		// && 0 <= it1->posY && 0 <= it1->height && it1->posY + subImage.rows / 2 <= m_input.rows))
-		// cout<<it1->posX + subImage.cols / 2<<*it1<<endl<<m_input.size()<<endl<<subImage.size()<<endl;
+		Mat subImage(m_input, obj1.GetRect());
+		// if(!(    0 <= obj1.posX && 0 <= obj1.width  && obj1.posX + subImage.cols / 2 <= m_input.cols // TODO: Keep this ?
+		// && 0 <= obj1.posY && 0 <= obj1.height && obj1.posY + subImage.rows / 2 <= m_input.rows))
+		// cout<<obj1.posX + subImage.cols / 2<<*obj1.endl<<m_input.size()<<endl<<subImage.size()<<endl;
 		vector<KeyPoint> pointsOfInterest;
 
 		mp_detector->detect(subImage, pointsOfInterest);
@@ -116,7 +116,7 @@ void ModuleKeyPoints::ProcessFrame()
 			assert(descriptors.rows == static_cast<int>(pointsOfInterest.size()));
 		}
 
-		//Mat subImage(m_input,it1->GetRect());
+		//Mat subImage(m_input,obj1.GetRect());
 		//mp_detector->detect(subImage, pointsOfInterest);
 
 		int i = 0;
@@ -126,13 +126,13 @@ void ModuleKeyPoints::ProcessFrame()
 		{
 			// Create object from keypoint // TODO: Use specific functions
 			Object obj("keypoint");
-			obj.posX = kp.pt.x + it1->posX - it1->width  / 2; // - 5;
-			obj.posY = kp.pt.y + it1->posY - it1->height / 2; // - 5;
+			obj.posX = kp.pt.x + obj1.posX - obj1.width  / 2; // - 5;
+			obj.posY = kp.pt.y + obj1.posY - obj1.height / 2; // - 5;
 			obj.width  = kp.size;
 			obj.height = kp.size;
 			obj.Intersect(m_input);
 			obj.AddFeature("keypoint", new FeatureKeyPoint(kp));
-			obj.AddFeature("parent", new FeatureInt(it1->GetId()));
+			obj.AddFeature("parent", new FeatureInt(obj1.GetId()));
 
 			if(mp_descriptor != nullptr)
 			{
@@ -156,7 +156,7 @@ void ModuleKeyPoints::ProcessFrame()
 
 		for(const auto& elem : pointsOfInterest)
 		{
-			Point point = Point(elem.pt.x, elem.pt.y) + it1->TopLeft();
+			Point point = Point(elem.pt.x, elem.pt.y) + obj1.TopLeft();
 			Scalar color = Scalar(22, 88, elem.response);
 			circle(m_debug, point, elem.size, color);
 			line(m_debug, point, point + Point(

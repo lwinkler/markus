@@ -72,13 +72,13 @@ void FilterObjects::ProcessFrame()
 
 	double sqDist = pow(m_param.minTravelDist, 2);
 	const double diagonal = sqrt(m_param.width * m_param.width + m_param.height * m_param.height);
-	for(vector<Object>::const_iterator it = m_objectsIn.begin() ; it != m_objectsIn.end() ; ++it)
+	for(const auto& elem : m_objectsIn)
 	{
 		bool valid = true;
-		const Rect &rect(it->GetRect());
-		const FeatureFloat& width  = dynamic_cast<const FeatureFloat&>(it->GetFeature("width"));
-		const FeatureFloat& height = dynamic_cast<const FeatureFloat&>(it->GetFeature("height"));
-		// const Feature& distance = it->GetFeatureByName("distance", featureNames);
+		const Rect &rect(elem.GetRect());
+		const FeatureFloat& width  = dynamic_cast<const FeatureFloat&>(elem.GetFeature("width"));
+		const FeatureFloat& height = dynamic_cast<const FeatureFloat&>(elem.GetFeature("height"));
+		// const Feature& distance = elem.GetFeatureByName("distance", featureNames);
 
 		if(	(m_param.minObjectWidth > 0 && width.value < m_param.minObjectWidth) ||
 				(m_param.maxObjectWidth < 1 && width.value > m_param.maxObjectWidth) ||
@@ -93,8 +93,8 @@ void FilterObjects::ProcessFrame()
 		// cout<<POW2(posX.value - posX.initial) + POW2(posY.value - posY.initial)<<" >= "<<POW2(m_param.minDist)<<endl;
 		if(sqDist > 0)
 		{
-			posX = dynamic_cast<const FeatureFloatInTime*>(&it->GetFeature("x"));
-			posY = dynamic_cast<const FeatureFloatInTime*>(&it->GetFeature("y"));
+			posX = dynamic_cast<const FeatureFloatInTime*>(&elem.GetFeature("x"));
+			posY = dynamic_cast<const FeatureFloatInTime*>(&elem.GetFeature("y"));
 			if(posX == nullptr || posY == nullptr)
 				throw MkException("Can only compute distance if the object is tracked. A tracker must be present uphill.", LOC);
 			if(pow(posX->value - posX->initial, 2) + pow(posY->value - posY->initial, 2) < sqDist)
@@ -116,7 +116,7 @@ void FilterObjects::ProcessFrame()
 
 		if(!m_param.customFeature.empty())
 		{
-			const FeatureFloat& custom = dynamic_cast<const FeatureFloat&>(it->GetFeature(m_param.customFeature));
+			const FeatureFloat& custom = dynamic_cast<const FeatureFloat&>(elem.GetFeature(m_param.customFeature));
 
 			if(	(m_param.minCustom > 0 && custom.value < m_param.minCustom) ||
 					(m_param.maxObjectWidth < FLT_MAX && width.value > m_param.maxCustom))
@@ -127,7 +127,7 @@ void FilterObjects::ProcessFrame()
 
 		// Extract a custom feature and test value
 		if(valid)
-			m_objectsOut.push_back(*it);
+			m_objectsOut.push_back(elem);
 #ifdef MARKUS_DEBUG_STREAMS
 		rectangle(m_debug, rect, valid ? Green : Gray, 1, 8);
 		if(posX != nullptr && posY != nullptr)
