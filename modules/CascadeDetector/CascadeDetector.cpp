@@ -98,7 +98,7 @@ void CascadeDetector::CopyResults()
 {
 	m_detectedObjects.clear();
 	const double diagonal = sqrt(m_param.width * m_param.width + m_param.height * m_param.height);
-	for(const auto & elem : m_thread.GetDetectedObjects())
+	for(const auto& elem : m_thread.GetDetectedObjects())
 	{
 		Object obj(m_param.objectLabel, elem);
 

@@ -162,7 +162,7 @@ void GroundTruthReader::ProcessFrame()
 	}
 #endif
 
-	for(auto & elem : m_objects)
+	for(auto& elem : m_objects)
 	{
 		// ass file with rect in subtitle
 		if (m_assFile && refObj.width > 0)

@@ -45,7 +45,7 @@ void InterruptionManager::Configure(const ConfigReader& x_config)
 	m_interruptions.clear();
 	if(x_config.FindAll("interruptions").size() == 0)
 		return;
-	for(auto config : x_config.FindAll("interruptions>interruption"))
+	for(const auto& config : x_config.FindAll("interruptions>interruption"))
 	{
 		Interruption inter(Command(
 			config.GetAttribute("command"), 

@@ -59,7 +59,7 @@ Manager::Manager(const ConfigReader& x_configReader) :
 	m_inputs.clear();
 	m_modules.clear();
 
-	for(auto moduleConfig : m_configReader.FindAll("module", true))
+	for(const auto& moduleConfig : m_configReader.FindAll("module", true))
 	{
 		// Read parameters
 		if(moduleConfig.Find("parameters", true).IsEmpty())
@@ -146,7 +146,7 @@ void Manager::Connect()
 		throw MkException("Manager can only connect modules once", LOC);
 
 	// Connect input and output streams (re-read the config once since we need all modules to be connected)
-	for(auto moduleConfig : m_configReader.FindAll("module"))
+	for(const auto& moduleConfig : m_configReader.FindAll("module"))
 	{
 		int moduleId = atoi(moduleConfig.GetAttribute("id").c_str());
 		Module& module = RefModuleById(moduleId);
@@ -157,7 +157,7 @@ void Manager::Connect()
 
 		// For each module
 		// Read conections of inputs
-		for(auto inputConfig : moduleConfig.Find("inputs").FindAll("input"))
+		for(const auto& inputConfig : moduleConfig.Find("inputs").FindAll("input"))
 		{
 			// Check if connected to our previous module
 			try
@@ -400,7 +400,7 @@ bool Manager::Process()
 		m_interruptionManager.AddEvent("event.stopped");
   
 	vector<Command> commands = m_interruptionManager.ReturnCommandsToSend();
-	for(auto command : commands)
+	for(const auto& command : commands)
 	{
 		SendCommand(command.name, command.value);
 		m_continueFlag = true;

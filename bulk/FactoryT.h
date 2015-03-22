@@ -78,7 +78,7 @@ public:
 	void List(std::vector<T0>& xr_types) const
 	{
 		xr_types.clear();
-		for(const auto it : m_register)
+		for(const auto& it : m_register)
 			xr_types.push_back(it.first);
 	}
 

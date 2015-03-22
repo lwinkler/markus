@@ -90,7 +90,7 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 	// Last but not least:
 	// Register the different variations for summaries in .txt files
 	// This will allow to aggregate the results
-	for(auto it : x_variationNames)
+	for(const auto& it : x_variationNames)
 	{
 		string fileName = m_outputDir + "/" + it + ".txt";
 		ofstream ofs(fileName.c_str(), ios_base::app);
@@ -104,7 +104,7 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 /// Add variation to simulation
 void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigReader& x_varConf, ConfigReader& xr_mainConfig)
 {
-	for(auto varConf : x_varConf.FindAll("var"))
+	for(const auto& varConf : x_varConf.FindAll("var"))
 	{
 		// Read module and parameter attribute
 		vector<string> moduleNames;

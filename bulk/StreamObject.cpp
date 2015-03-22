@@ -146,7 +146,7 @@ void StreamObject::Deserialize(istream& x_in, const string& x_dir)
 	Stream::Deserialize(ss, x_dir);
 
 	Clear();
-	for(auto & elem : root["objects"])
+	for(const auto & elem : root["objects"])
 	{
 		ss.clear();
 		Object obj("empty");

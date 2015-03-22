@@ -60,7 +60,7 @@ void CompareObjects::ProcessFrame()
 	vector<Object>::const_iterator itObj2 = m_objects2.begin();
 
 	// Compare the list of objects
-	for(const auto obj1 : m_objects1)
+	for(const auto& obj1 : m_objects1)
 	{
 		// Check that names and ids match
 		if(obj1.GetName() != itObj2->GetName())

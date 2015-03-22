@@ -560,7 +560,7 @@ void Module::WriteToCache() const
 void Module::ReadFromCache()
 {
 	// Read output stream from cache
-	for(auto elem : m_outputStreams)
+	for(auto& elem : m_outputStreams)
 	{
 		if(!elem.second->IsConnected()) continue;
 		string directory = "cache/"; // TODO fix this m_context.GetOutputDir() + "/cache/";

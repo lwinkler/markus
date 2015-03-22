@@ -68,7 +68,7 @@ void ParameterStructure::SetFromConfig()
 {
 	if(m_configReader.IsEmpty())
 		return;
-	for(auto conf : m_configReader.FindAll("param"))
+	for(const auto conf : m_configReader.FindAll("param"))
 	{
 		string name  = conf.GetAttribute("name");
 		string value = conf.GetValue();
@@ -134,9 +134,9 @@ const Parameter& ParameterStructure::GetParameterByName(const string& x_name) co
 */
 Parameter& ParameterStructure::RefParameterByName(const string& x_name)
 {
-	for(auto & elem : m_list)
+	for(const auto & elem : m_list)
 	{
-		if((elem)->GetName().compare(x_name) == 0)
+		if(elem->GetName() == x_name)
 		{
 			return *elem;
 		}
@@ -171,7 +171,7 @@ void ParameterStructure::CheckRange(bool x_checkRelated) const
 		// Check that all parameters in config are related to the module
 		if(m_configReader.IsEmpty())
 			return;
-		for(auto conf : m_configReader.FindAll("param"))
+		for(const auto& conf : m_configReader.FindAll("param"))
 		{
 			string name = conf.GetAttribute("name");
 			try

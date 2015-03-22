@@ -82,7 +82,7 @@ void AnnotationAssFileReader::ReadSrt(const string& srt)
 	stringstream stream(srt.substr(start+ 5,end));
 	int rect[4];
 	string word;
-	for (auto & elem : rect)
+	for (auto& elem : rect)
 	{
 		getline(stream, word, separator);
 		elem = atoi(word.c_str());

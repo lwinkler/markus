@@ -98,7 +98,7 @@ void RandomObjectsGenerator::Capture()
 	}
 
 	// Add random changes to features
-	for(auto & elem : m_objects)
+	for(auto& elem : m_objects)
 	{
 		elem.AddFeature("x",      dynamic_cast<const FeatureFloat&>(elem.GetFeature("x")).value      + (static_cast<float>(rand_r(&m_seed)) / RAND_MAX - 0.5) * m_param.speed);
 		elem.AddFeature("y",      dynamic_cast<const FeatureFloat&>(elem.GetFeature("y")).value      + (static_cast<float>(rand_r(&m_seed)) / RAND_MAX - 0.5) * m_param.speed);
