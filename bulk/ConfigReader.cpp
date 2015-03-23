@@ -188,18 +188,15 @@ const ConfigReader ConfigReader::GetSubConfigIgnoreNamespace(const string& x_tag
 		auto pos = tag.find(' ');
 		if(pos != string::npos)
 			tag = tag.substr(0, pos);
-		cout<<tag<<__LINE__<<x_tagName<<endl;
-
+		
 		// Strip everything before :
 		pos = tag.find(':');
 		if(pos != string::npos)
 			tag = tag.substr(pos + 1);
-		cout<<tag<<__LINE__<<endl;
-
+		
 		if(tag == x_tagName)
 			return ConfigReader(newNode);
-		cout<<tag<<__LINE__<<endl;
-
+		
 		newNode = mp_node->NextSibling();
 	}
 	return ConfigReader(newNode);
@@ -596,7 +593,6 @@ ConfigReader ConfigReader::FindRef(const string& x_searchString, bool x_allowCre
 */
 vector<ConfigReader> ConfigReader::FindAll(const string& x_searchString, bool x_fatal) const
 {
-	cout<<x_searchString<<"findalla\n";
 	vector<ConfigReader> results;
 
 	try
