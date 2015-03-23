@@ -68,7 +68,7 @@ void ParameterStructure::SetFromConfig()
 {
 	if(m_configReader.IsEmpty())
 		return;
-	for(const auto conf : m_configReader.FindAll("param"))
+	for(const auto& conf : m_configReader.FindAll("param"))
 	{
 		string name  = conf.GetAttribute("name");
 		string value = conf.GetValue();
