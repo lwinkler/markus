@@ -52,6 +52,7 @@ public:
 
 	// Method to access elements of the config
 	const ConfigReader GetSubConfig(const std::string& x_tagName) const;
+	const ConfigReader GetSubConfigIgnoreNamespace(const std::string& x_tagName) const;
 	const ConfigReader GetSubConfig(const std::string& x_tagName, const std::string& x_attrName, const std::string& x_attrValue) const;
 	ConfigReader RefSubConfig(const std::string& x_tagName, bool x_allowCreation = false);
 	ConfigReader RefSubConfig(const std::string& x_tagName, const std::string& x_attrName, const std::string& x_attrValue, bool x_allowCreation = false);
