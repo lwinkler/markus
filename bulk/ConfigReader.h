@@ -43,6 +43,7 @@ public:
 	ConfigReader(TiXmlNode * xp_node);
 	~ConfigReader();
 	ConfigReader GetSubConfig(const std::string& x_objectType, std::string x_objectName = "") const;
+	const ConfigReader GetSubConfigIgnoreNamespace(const std::string& x_tagName) const;
 	ConfigReader RefSubConfig(const std::string& x_objectType, std::string x_objectName = "", bool x_allowCreation = false);
 	ConfigReader NextSubConfig(const std::string& x_objectType, std::string x_objectName = "") const;
 	/// Check if the config object is empty

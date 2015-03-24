@@ -110,6 +110,48 @@ ConfigReader ConfigReader::GetSubConfig(const std::string& x_objectType, string 
 }
 
 /**
+ * @brief Return a config objects that points to the sub element of configuration (ignoring XML namespaces). Experimental
+ *
+ * Note: xml namespaces can be of different formats http://www.w3schools.com/xml/xml_namespaces.asp
+ *       We only account for the tag name. This can of course be done in a cleaner way by implementing libxml++. So far a bug is preventing this.
+ *
+ * Known bug: it seems that NextSibling only browse children nodes with one name and ignores others.
+ *
+ * @param x_tagName   The node name of the sub element (= XML tag)
+ *
+ * @return config object
+ */
+const ConfigReader ConfigReader::GetSubConfigIgnoreNamespace(const string& x_tagName) const
+{
+	if(IsEmpty())
+		throw MkException("Impossible to find node " + x_tagName + " in ConfigReader", LOC);
+	TiXmlNode* newNode = mp_node->FirstChild();
+
+	while(newNode != NULL && mp_node->Value() != x_tagName)
+	{
+		string tag(newNode->Value());
+
+		// Strip everything after first space
+		size_t pos = tag.find(' ');
+		if(pos != string::npos)
+			tag = tag.substr(0, pos);
+
+		// Strip everything before :
+		pos = tag.find(':');
+		if(pos != string::npos)
+			tag = tag.substr(pos + 1);
+
+		if(tag == x_tagName)
+			return ConfigReader(newNode);
+
+		newNode = mp_node->NextSibling();
+	}
+	return ConfigReader(newNode);
+}
+
+
+
+/**
 * @brief Return a config objects that points to the sub element of configuration (non-constant)
 *
 * @param x_objectType The type of the sub element (= XML balise)
