@@ -142,8 +142,6 @@ public:
 	void ReadFromCache();
 
 protected:
-	virtual Parameters & RefParameters() = 0;
-
 	// for benchmarking
 	long long m_timerConvertion;
 	long long m_timerProcessing;
@@ -171,6 +169,7 @@ protected:
 	std::vector<Module *> m_modulesDepending;
 
 private:
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 };
 

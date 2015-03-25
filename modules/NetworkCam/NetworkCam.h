@@ -69,7 +69,6 @@ public:
 	virtual double GetRecordingFps() const override;
 
 private:
-	inline virtual Parameters & RefParameters() {return m_param;}
 	bool Grab();
 	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;

@@ -229,7 +229,7 @@ def evaluate(events, truths):
 	    fn += 1
 
     tp = len(matched_truths)
-    print "fp %d fn %d tp %d. dups %d inh %d" % (fp, fn, tp, dups, inhib)
+    # print "fp %d fn %d tp %d. dups %d inh %d" % (fp, fn, tp, dups, inhib)
 
     # Prepare evaluation results
     results = Evaluation(tp=tp,

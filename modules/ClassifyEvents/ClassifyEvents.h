@@ -62,7 +62,6 @@ protected:
 	std::list<cv::Mat>   m_images;
 
 private:
-	inline virtual Parameters & RefParameters() {return m_param;}
 	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 };

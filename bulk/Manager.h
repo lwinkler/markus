@@ -113,7 +113,6 @@ protected:
 	InterruptionManager& m_interruptionManager;
 
 private:
-	inline Parameters& RefParameters() {return m_param;}
 	Parameters& m_param;
 };
 #endif

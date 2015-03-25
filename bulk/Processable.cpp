@@ -29,7 +29,8 @@ using namespace std;
 log4cxx::LoggerPtr Processable::m_logger(log4cxx::Logger::getLogger("Processable"));
 
 Processable::Processable(ParameterStructure& xr_params) :
-	Configurable(xr_params)
+	Configurable(xr_params),
+	m_param(dynamic_cast<Parameters&>(xr_params))
 {
 	m_pause            = false;
 	m_allowAutoProcess = true;
@@ -48,7 +49,7 @@ Processable::~Processable()
 void Processable::Reset()
 {
 	// Add the module timer (only works with QT)
-	if(RefParameters().autoProcess && m_allowAutoProcess)
+	if(m_param.autoProcess && m_allowAutoProcess)
 	{
 		CLEAN_DELETE(m_moduleTimer);
 		m_moduleTimer = new QModuleTimer(*this);
@@ -57,8 +58,8 @@ void Processable::Reset()
 		// all other are called as "slaves" of other modules
 		// If not real-time, a module will try to acquire frames as fast as possible
 		// this is usefull for a VideoFileReader input when we work offline
-		m_moduleTimer->Reset(m_realTime ? RefParameters().fps : 0);
-		LOG_DEBUG(m_logger, "Reseting auto-processed module with real-time="<<m_realTime<<" and fps="<<RefParameters().fps);
+		m_moduleTimer->Reset(m_realTime ? m_param.fps : 0);
+		LOG_DEBUG(m_logger, "Reseting auto-processed module with real-time="<<m_realTime<<" and fps="<<m_param.fps);
 	}
 	else m_moduleTimer = nullptr;
 }

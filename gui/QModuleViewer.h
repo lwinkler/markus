@@ -103,7 +103,6 @@ private:
 	QControlBoard * m_controlBoard;
 	Parameters& m_param;
 	inline const Parameters& GetParameters() const {return m_param;}
-	inline Parameters& RefParameters() {return m_param;}
 
 public slots:
 	void updateModuleNb(int x_index);

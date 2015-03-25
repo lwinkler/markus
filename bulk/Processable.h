@@ -72,8 +72,6 @@ public:
 	inline bool TryLockForWrite() {return m_lock.tryLockForWrite();}
 
 protected:
-	virtual Parameters & RefParameters() = 0;
-
 	bool m_pause;
 	bool m_allowAutoProcess;
 	bool m_realTime;         /// Process in real-time: if true, the module processes as fast as possible
@@ -82,6 +80,7 @@ protected:
 	Context m_context; /// context given by Manager (output directory, ...)
 
 private:
+	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 	QReadWriteLock m_lock;
 };

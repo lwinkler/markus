@@ -103,7 +103,6 @@ public:
 	virtual const ParameterStructure& GetParameters() const {return m_param;}
 
 private:
-	virtual ParameterStructure& RefParameters(){return m_param;}
 	ParameterStructure& m_param;
 	DISABLE_COPY(Configurable)
 };

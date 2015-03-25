@@ -66,6 +66,5 @@ protected:
 private:
 	static log4cxx::LoggerPtr m_logger;
 	Parameters& m_param; // note: to save time
-	inline Parameters& RefParameters() {return m_param;}
 };
 #endif

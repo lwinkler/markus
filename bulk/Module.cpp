@@ -40,11 +40,12 @@ using namespace std;
 
 log4cxx::LoggerPtr Module::m_logger(log4cxx::Logger::getLogger("Module"));
 
-Module::Module(ParameterStructure& x_param) :
-	Processable(x_param),
-	m_name(x_param.GetConfig().GetAttribute("name"))
+Module::Module(ParameterStructure& xr_params) :
+	Processable(xr_params),
+	m_param(dynamic_cast<Parameters&>(xr_params)),
+	m_name(xr_params.GetConfig().GetAttribute("name"))
 {
-	m_id	= atoi(x_param.GetConfig().GetAttribute("id").c_str());
+	m_id	= atoi(xr_params.GetConfig().GetAttribute("id").c_str());
 	LOG_INFO(m_logger, "Create module " << m_name);
 
 	m_timerConvertion      = 0;
@@ -80,12 +81,12 @@ void Module::Reset()
 	LOG_INFO(m_logger, "Reseting module "<<GetName());
 
 	// Lock the parameters that cannot be changed
-	RefParameters().LockParameterByName("class");
-	RefParameters().LockParameterByName("width");
-	RefParameters().LockParameterByName("height");
-	RefParameters().LockParameterByName("type");
-	RefParameters().LockParameterByName("auto_process");
-	RefParameters().LockParameterByName("allow_unsync_input");
+	m_param.LockParameterByName("class");
+	m_param.LockParameterByName("width");
+	m_param.LockParameterByName("height");
+	m_param.LockParameterByName("type");
+	m_param.LockParameterByName("auto_process");
+	m_param.LockParameterByName("allow_unsync_input");
 
 	const Parameters& param(GetParameters());
 	param.PrintParameters();

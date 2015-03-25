@@ -151,8 +151,8 @@ void ParameterStructure::SetValueToDefault()
 {
 	for(auto & elem : m_list)
 	{
-		if(!(elem)->IsLocked())
-			(elem)->SetValueToDefault();
+		if(!elem->IsLocked())
+			elem->SetValueToDefault();
 	}
 }
 
