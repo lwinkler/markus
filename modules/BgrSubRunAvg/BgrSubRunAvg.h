@@ -55,7 +55,6 @@ public:
 	MKCLASS("BgrSubRunAvg")
 	MKDESCR("Perform a background subtraction using a running average")
 
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
 

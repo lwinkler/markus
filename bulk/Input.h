@@ -52,9 +52,6 @@ public:
 	inline void ProcessFrame() {Capture();}
 	virtual inline bool IsInput() {return true;}
 
-private:
-	virtual const Parameters& GetParameters() const = 0;
-
 protected:
 	bool m_endOfStream;
 };

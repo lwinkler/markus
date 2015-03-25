@@ -104,7 +104,6 @@ public:
 	virtual const std::string& GetClass() const = 0;
 	virtual const std::string& GetDescription() const = 0;
 	int GetId() const {return m_id;}
-	virtual const Parameters & GetParameters() const = 0;
 
 	const std::map<int, Stream*>& GetInputStreamList() const {return m_inputStreams;}
 	const std::map<int, Stream*>& GetOutputStreamList() const {return m_outputStreams;}
@@ -115,11 +114,11 @@ public:
 	void AddDebugStream(int x_id, Stream* xp_stream);
 
 
-	inline int GetWidth() const          {return GetParameters().width;}
-	inline int GetHeight() const         {return GetParameters().height;}
-	inline int GetImageType() const      {return GetParameters().type;}
-	inline double GetFps() const         {return GetParameters().fps;}
-	inline bool IsAutoProcessed() const  {return GetParameters().autoProcess;}
+	inline int GetWidth() const          {return m_param.width;}
+	inline int GetHeight() const         {return m_param.height;}
+	inline int GetImageType() const      {return m_param.type;}
+	inline double GetFps() const         {return m_param.fps;}
+	inline bool IsAutoProcessed() const  {return m_param.autoProcess;}
 	virtual double GetRecordingFps() const;
 
 	inline void AddDependingModule (Module & x_module) {m_modulesDepending.push_back(&x_module);} /// Add a module to the list: depending modules are called when processing is complete
@@ -135,7 +134,7 @@ public:
 	void SetAsReady();
 	bool AllInputsAreReady() const;
 	const Module& GetMasterModule() const;
-	inline void CheckParameterRange() {GetParameters().CheckRange(false);}
+	inline void CheckParameterRange() {m_param.CheckRange(false);}
 	inline bool IsUnitTestingEnabled() const {return m_isUnitTestingEnabled;}
 
 	void WriteToCache() const;

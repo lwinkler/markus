@@ -262,7 +262,7 @@ void Manager::Reset(bool x_resetInputs)
 		AddController(new ControllerManager(*this));
 	}
 
-	for(const auto& elem : GetParameters().GetList())
+	for(const auto& elem : m_param.GetList())
 	{
 		// Do not add param if locked or already present
 		if(elem->IsLocked() || HasController(elem->GetName()))

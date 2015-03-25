@@ -75,7 +75,6 @@ public:
 	MKCLASS("BgrSubMOG")
 	MKDESCR("Perform background subtraction via Mixtures Of Gaussians (OpenCV MOG1)")
 
-	inline virtual const Parameters& GetParameters() const {return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
 

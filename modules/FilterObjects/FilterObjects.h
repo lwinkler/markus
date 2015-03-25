@@ -69,7 +69,6 @@ public:
 	MKCLASS("FilterObjects")
 	MKDESCR("Filter the input objects based on different criterion")
 
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
 

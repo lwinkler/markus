@@ -62,7 +62,6 @@ public:
 	MKCLASS("NetworkCam")
 	MKDESCR("Read video stream from a network camera")
 
-	inline virtual const Parameters& GetParameters() const {return m_param;}
 	void Capture();
 	virtual void Reset();
 	const std::string& GetName() {return m_name;}

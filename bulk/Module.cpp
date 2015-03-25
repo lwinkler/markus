@@ -88,16 +88,15 @@ void Module::Reset()
 	m_param.LockParameterByName("auto_process");
 	m_param.LockParameterByName("allow_unsync_input");
 
-	const Parameters& param(GetParameters());
-	param.PrintParameters();
-	param.CheckRange(true);
+	m_param.PrintParameters();
+	m_param.CheckRange(true);
 
 	// This must be done only once to avoid troubles in the GUI
 	// Add module controller
 	if(!HasController("module"))
 		AddController(new ControllerModule(*this));
 
-	for(const auto& elem : param.GetList())
+	for(const auto& elem : m_param.GetList())
 	{
 		// Do not add param if locked or already present
 		// TODO: Suppress GetType() and use a CreateController method
@@ -109,7 +108,7 @@ void Module::Reset()
 		else AddController(ctr);
 	}
 
-	if(GetParameters().cached == CachedState::WRITE_CACHE)
+	if(m_param.cached == CachedState::WRITE_CACHE)
 		 SYSTEM("mkdir -p " + m_context.GetOutputDir() + "/cache/");
 }
 
@@ -120,15 +119,12 @@ void Module::Reset()
 */
 double Module::GetRecordingFps() const
 {
-	double fps = GetParameters().fps;
-	bool autop = GetParameters().autoProcess;
-
-	if(autop)
+	if(m_param.autoProcess)
 	{
 		// If the module is autoprocessed then the FPS is determining
-		if(fps == 0)
+		if(m_param.fps == 0)
 			throw MkException("FPS cannot be equal to zero in module " + GetName(), LOC);
-		return fps;
+		return m_param.fps;
 	}
 	else
 	{
@@ -136,7 +132,7 @@ double Module::GetRecordingFps() const
 		// Note: we assume that the fps is given by the first stream in the module
 		if(m_inputStreams.empty())
 			throw MkException("This module must have at least one input stream", LOC);
-		if(fps == 0)
+		if(m_param.fps == 0)
 		{
 			Stream * stream = m_inputStreams.at(0);
 			if(stream == nullptr)
@@ -149,7 +145,7 @@ double Module::GetRecordingFps() const
 		else
 		{
 			// estimate the fps to the min of input and current
-			return MIN(fps, m_inputStreams.at(0)->GetConnected().GetModule().GetRecordingFps());
+			return MIN(m_param.fps, m_inputStreams.at(0)->GetConnected().GetModule().GetRecordingFps());
 		}
 	}
 
@@ -171,8 +167,6 @@ bool Module::Process()
 		if(!m_isReady)
 			throw MkException("Module must be ready before processing", LOC);
 
-		const Parameters& param = GetParameters();
-
 		// Timestamp of the module is given by the input stream
 		m_currentTimeStamp = 0;
 		if(!m_inputStreams.empty())
@@ -181,12 +175,12 @@ bool Module::Process()
 			m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected(); // TODO: should we lock module here ?
 			// m_inputStreams[0]->UnLockModule();
 		}
-		else if(! param.autoProcess)
+		else if(! m_param.autoProcess)
 			throw MkException("Module must have at least one input or have parameter auto_process=true", LOC);
 
 		// TODO if(m_currentTimeStamp == m_lastTimeStamp)
 		// TODO LOG_WARN(m_logger, "Timestamp are not increasing correctly");
-		if(param.autoProcess || (param.fps == 0 && m_currentTimeStamp != m_lastTimeStamp) || (m_currentTimeStamp - m_lastTimeStamp) * param.fps > 1000)
+		if(m_param.autoProcess || (m_param.fps == 0 && m_currentTimeStamp != m_lastTimeStamp) || (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps > 1000)
 		{
 			// Process this frame
 
@@ -196,7 +190,7 @@ bool Module::Process()
 			// cout<<GetName()<<" "<<m_currentTimeStamp<<" "<<m_lastTimeStamp<<endl;
 
 			// Check that all inputs are in sync
-			if(! param.allowUnsyncInput && m_unsyncWarning)
+			if(! m_param.allowUnsyncInput && m_unsyncWarning)
 				for(unsigned int i = 1 ; i < m_inputStreams.size() ; i++)
 				{
 					Stream& stream(*m_inputStreams.at(i));
@@ -209,7 +203,7 @@ bool Module::Process()
 
 			// note: Inputs must call ProcessFrame to set the time stamp
 			// TODO: There is no reason to cache input modules !
-			if(param.cached < CachedState::READ_CACHE || IsInput())
+			if(m_param.cached < CachedState::READ_CACHE || IsInput())
 			{
 				// Read and convert inputs
 				if(IsInputProcessed())
@@ -231,7 +225,7 @@ bool Module::Process()
 
 				m_timerProcessing 	 += ti.GetMSecLong();
 			}
-			if(param.cached == CachedState::READ_CACHE)
+			if(m_param.cached == CachedState::READ_CACHE)
 			{
 				// TODO: check that module is not an input
 				ti.Restart();
@@ -244,7 +238,7 @@ bool Module::Process()
 				elem.second->SetTimeStamp(m_currentTimeStamp);
 
 			// Write outputs to cache
-			if(param.cached == CachedState::WRITE_CACHE)
+			if(m_param.cached == CachedState::WRITE_CACHE)
 			{
 				WriteToCache();
 			}
@@ -280,7 +274,7 @@ void Module::Export(ostream& rx_os, int x_indentation)
 	rx_os<<tabs<<"<module name=\""<<m_name<<"\" description=\""<<GetDescription()<<"\">"<<endl;
 	tabs = string(x_indentation + 1, '\t');
 	rx_os<<tabs<<"<parameters>"<<endl;
-	for(const auto & elem : GetParameters().GetList())
+	for(const auto & elem : m_param.GetList())
 		(elem)->Export(rx_os, x_indentation + 2);
 	rx_os<<tabs<<"</parameters>"<<endl;
 

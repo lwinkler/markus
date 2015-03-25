@@ -60,7 +60,6 @@ public:
 	MKCLASS("KeyPointsStar")
 	MKDESCR("Extract key points of type Star")
 
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	void Reset();
 
 private:

@@ -68,7 +68,6 @@ public:
 	MKCLASS("KeyPointsMser")
 	MKDESCR("Extract key points of type Mser")
 
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	void Reset();
 
 private:

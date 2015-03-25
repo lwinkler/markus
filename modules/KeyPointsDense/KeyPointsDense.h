@@ -66,7 +66,6 @@ public:
 	MKCLASS("KeyPointsDense")
 	MKDESCR("Extract key points of type Dense")
 
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	void Reset();
 
 private:

@@ -58,7 +58,6 @@ public:
 	MKCLASS("OpticalFlowKeyPoints")
 	MKDESCR("Calculate optical flow for all key points")
 
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	void Reset();
 	void ProcessFrame();
 

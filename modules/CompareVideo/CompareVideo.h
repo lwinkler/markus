@@ -66,11 +66,6 @@ public:
 	MKCLASS("CompareVideo");
 	MKDESCR("Compare the two input videos and compute the dissimilarity of them for all the sequence");
 
-	inline virtual const Parameters &GetParameters() const
-	{
-		return m_param;
-	}
-
 	virtual void ProcessFrame();
 
 private:

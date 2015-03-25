@@ -49,7 +49,6 @@ public:
 	MKCLASS("EventToObjects")
 	MKDESCR("Transform a stream of events into a stream of objects")
 
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
 

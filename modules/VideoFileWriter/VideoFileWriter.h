@@ -61,7 +61,6 @@ public:
 	MKCLASS("VideoFileWriter")
 	MKDESCR("Write output to a video file")
 
-	inline virtual const Parameters& GetParameters() const {return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
 	static const std::string ExtensionFromFourcc(const std::string& x_fourcc);

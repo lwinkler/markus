@@ -50,7 +50,6 @@ public:
 	MKCLASS("RenderObjects")
 	MKDESCR("Output video stream with additional object streams")
 
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	void Reset();
 	virtual void ProcessFrame();
 

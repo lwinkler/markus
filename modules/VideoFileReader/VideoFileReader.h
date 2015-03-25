@@ -57,7 +57,6 @@ public:
 	MKCLASS("VideoFileReader")
 	MKDESCR("Read video stream from a video file")
 
-	inline virtual const Parameters& GetParameters() const {return m_param;}
 	void Capture();
 	void Reset();
 	const std::string& GetName() {return m_name;}

@@ -53,8 +53,6 @@ protected:
 	/// Add variation to simulation
 	void AddVariations(std::vector<std::string>& x_variationNames, const ConfigReader& x_varConf, ConfigReader& xr_mainConfig);
 
-	virtual const ParameterStructure & GetParameters() const {return m_param;}
-
 	// Streams for generation of the simulation Makefile
 	std::stringstream m_allTargets;
 	std::stringstream m_targets;

@@ -62,7 +62,6 @@ public:
 	MKCLASS("KeyPointsGoodFeaturesToTrack")
 	MKDESCR("Extract keypoints of type GoodFeaturesToTrack on image")
 
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	void Reset();
 
 private:

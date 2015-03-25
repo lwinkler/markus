@@ -87,7 +87,6 @@ public:
 		for(auto& elem : m_modules)
 			elem->SetContext(x_context);
 	}
-	inline virtual const Parameters& GetParameters() const {return m_param;}
 
 protected:
 	Module& RefModuleById(int x_id) const;

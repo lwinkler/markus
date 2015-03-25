@@ -55,7 +55,6 @@ public:
 	MKCLASS("LogObjects")
 	MKDESCR("Read a stream of objects and log data to a text file")
 
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
 

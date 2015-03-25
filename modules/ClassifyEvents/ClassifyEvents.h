@@ -37,7 +37,6 @@ public:
 	MKCLASS("ClassifyEvents")
 	MKDESCR("Filter events based on user feedback")
 
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
 	virtual void InvalidateLastEvent();

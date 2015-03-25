@@ -55,7 +55,6 @@ public:
 	MKCLASS("RandomEventGenerator")
 	MKDESCR("Generate an event with random features at each step")
 
-	inline virtual const Parameters& GetParameters() const {return m_param;}
 	void Capture();
 	virtual void Reset();
 	const std::string& GetName() {return m_name;}

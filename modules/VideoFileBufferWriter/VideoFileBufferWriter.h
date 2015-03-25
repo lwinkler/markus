@@ -60,7 +60,6 @@ public:
 	MKCLASS("VideoFileBufferWriter")
 	MKDESCR("Write output to a buffer and export it if an evenement occurs")
 
-	inline virtual const Parameters& GetParameters() const {return m_param;}
 	virtual void ProcessFrame();
 	virtual void Reset();
 	void AddImageToBuffer();

@@ -68,7 +68,6 @@ public:
 	MKCLASS("KeyPointsOrb")
 	MKDESCR("Extract key points of type Orb")
 
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	void Reset();
 
 private:

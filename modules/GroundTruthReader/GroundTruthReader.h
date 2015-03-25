@@ -61,7 +61,6 @@ public:
 	MKCLASS("GroundTruthReader")
 	MKDESCR("Read a ground truth file")
 
-	inline virtual const Parameters& GetParameters() const {return m_param;}
 	void ProcessFrame();
 	void Reset();
 

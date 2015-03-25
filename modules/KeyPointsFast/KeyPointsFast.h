@@ -54,7 +54,6 @@ public:
 	MKCLASS("KeyPointsFast")
 	MKDESCR("Extract keypoints of type FAST")
 
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	void Reset();
 
 private:

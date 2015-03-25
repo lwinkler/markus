@@ -54,7 +54,6 @@ public:
 	MKCLASS("LogState")
 	MKDESCR("Read a state stream and log it to .srt file")
 
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	void Reset();
 	virtual void ProcessFrame();
 

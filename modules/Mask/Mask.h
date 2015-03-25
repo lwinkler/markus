@@ -49,7 +49,6 @@ public:
 	MKCLASS("Mask")
 	MKDESCR("Apply a binary mask to an image input")
 
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
 

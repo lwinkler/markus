@@ -72,7 +72,6 @@ public:
 	MKCLASS("LogEvent")
 	MKDESCR("Read an event and log it to .srt file")
 
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
 

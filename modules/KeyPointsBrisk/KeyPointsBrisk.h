@@ -61,7 +61,6 @@ public:
 	MKCLASS("KeyPointsBrisk")
 	MKDESCR("Extract key points of type Brisk")
 
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	void Reset();
 
 private:

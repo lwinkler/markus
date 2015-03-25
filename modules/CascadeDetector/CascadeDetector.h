@@ -117,7 +117,6 @@ public:
 	MKCLASS("CascadeDetector")
 	MKDESCR("Detect objects from a video stream using a cascade filter (c.f. Haar patterns)")
 
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void LaunchThread();
 	virtual void NormalProcess();
 	virtual void CopyResults();

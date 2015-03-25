@@ -55,7 +55,6 @@ public:
 	MKCLASS("ReadEvent")
 	MKDESCR("Read an event from an annotation file")
 
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	void Reset();
 
 private:

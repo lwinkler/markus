@@ -33,7 +33,8 @@ using namespace std;
 log4cxx::LoggerPtr ModuleAsync::m_logger(log4cxx::Logger::getLogger("ModuleAsync"));
 
 ModuleAsync::ModuleAsync(ParameterStructure& xr_params) :
-	Module(xr_params)
+	Module(xr_params),
+	m_param(dynamic_cast<Parameters&>(xr_params))
 {
 	m_timeStampLastThread 	= TIME_STAMP_MIN;
 	m_resultsCopied 	= false;
@@ -59,7 +60,7 @@ void ModuleAsync::ProcessFrame()
 		m_resultsCopied = true;
 	}
 
-	if((m_currentTimeStamp - m_timeStampLastThread) * GetParameters().detectionFps >= 1000)
+	if((m_currentTimeStamp - m_timeStampLastThread) * m_param.detectionFps >= 1000)
 	{
 		if(!GetRefThread().isRunning())
 		{

@@ -56,7 +56,6 @@ public:
 	MKCLASS("MotionDetector")
 	MKDESCR("Detect motion from an image where pixel value represents motion")
 
-	inline virtual const Parameters& GetParameters() const { return m_param;}
 	virtual void ProcessFrame();
 	void Reset();
 

@@ -103,7 +103,6 @@ public:
 	MKCLASS("HOGDetector")
 	MKDESCR("Detect objects from a video stream using a HOG descriptor")
 
-	inline virtual const Parameters& GetParameters() const {return m_param;}
 	virtual void LaunchThread();
 	virtual void NormalProcess();
 	virtual void CopyResults();
