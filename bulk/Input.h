@@ -43,7 +43,7 @@ public:
 		}
 	};
 
-	Input(const ConfigReader& x_confReader);
+	Input(ParameterStructure& x_param);
 	~Input();
 
 	virtual void Capture() = 0;

@@ -32,6 +32,7 @@
 */
 class RandomEventGenerator : public Input
 {
+public:
 	class Parameters : public Input::Parameters
 	{
 	public:
@@ -49,8 +50,7 @@ class RandomEventGenerator : public Input
 		int randomSeed;
 	};
 
-public:
-	RandomEventGenerator(const ConfigReader& x_confReader);
+	RandomEventGenerator(ParameterStructure& xr_params);
 	~RandomEventGenerator();
 	MKCLASS("RandomEventGenerator")
 	MKDESCR("Generate an event with random features at each step")
@@ -62,7 +62,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

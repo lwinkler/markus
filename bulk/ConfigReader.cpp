@@ -68,14 +68,6 @@ void splitTagName(const string& x_searchString, string& xr_tagName, string& xr_a
 }
 
 /**
-* @brief Save the parameters values to the config object, ready to be written to disk
-*/
-void Configurable::UpdateConfig()
-{
-	GetParameters().UpdateConfig();
-}
-
-/**
 * @brief Constructor
 *
 * @param x_fileName      Name of the XML file with relative path

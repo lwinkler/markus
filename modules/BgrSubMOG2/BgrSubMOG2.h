@@ -69,7 +69,7 @@ public:
 		double learningRate;
 	};
 
-	BgrSubMOG2(const ConfigReader& x_configReader);
+	BgrSubMOG2(ParameterStructure& xr_params);
 	~BgrSubMOG2();
 	MKCLASS("BgrSubMOG2")
 	MKDESCR("Perform background subtraction via Mixtures Of Gaussians (OpenCV MOG2)")
@@ -80,7 +80,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

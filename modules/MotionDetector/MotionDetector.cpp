@@ -42,8 +42,8 @@ const Scalar MotionDetector::m_colorPlotThres = cv::Scalar(0, 0, 0);
 
 log4cxx::LoggerPtr MotionDetector::m_logger(log4cxx::Logger::getLogger("MotionDetector"));
 
-MotionDetector::MotionDetector(const ConfigReader& x_configReader)
-	: Module(x_configReader), m_param(x_configReader),
+MotionDetector::MotionDetector(ParameterStructure& xr_params)
+	: Module(xr_params), m_param(dynamic_cast<Parameters&>(xr_params)),
 	  m_input(Size(m_param.width, m_param.height), m_param.type)
 {
 	// Init output images

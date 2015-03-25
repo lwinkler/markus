@@ -54,7 +54,7 @@ public:
 		std::string features;
 	};
 
-	SegmenterContour(const ConfigReader& x_configReader);
+	SegmenterContour(ParameterStructure& xr_params);
 	~SegmenterContour();
 	MKCLASS("SegmenterContour")
 	MKDESCR("Segments a binary image and outputs a stream of objects (with OpenCV contour) and extracts their features (position, width and height)")
@@ -65,7 +65,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

@@ -63,7 +63,7 @@ public:
 		// int patchSize=31 =~ edgeThreshold
 	};
 
-	KeyPointsOrb(const ConfigReader& x_configReader);
+	KeyPointsOrb(ParameterStructure& xr_params);
 	~KeyPointsOrb();
 	MKCLASS("KeyPointsOrb")
 	MKDESCR("Extract key points of type Orb")
@@ -73,7 +73,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

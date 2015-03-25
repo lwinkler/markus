@@ -53,7 +53,7 @@ public:
 		// double minEigThreshold=1e-4
 	};
 
-	OpticalFlowKeyPoints(const ConfigReader& x_configReader);
+	OpticalFlowKeyPoints(ParameterStructure& x_configReader);
 	~OpticalFlowKeyPoints();
 	MKCLASS("OpticalFlowKeyPoints")
 	MKDESCR("Calculate optical flow for all key points")
@@ -64,7 +64,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

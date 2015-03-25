@@ -50,7 +50,7 @@ using namespace std;
 void Factories::RegisterAll()
 {
 	// All modules
-	registerAllModules(Factories::modulesFactory());
+	registerAllModules(Factories::modulesFactory(), Factories::parametersFactory());
 
 	// All features
 	FactoryFeatures& fact1(Factories::featuresFactory());

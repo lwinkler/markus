@@ -43,7 +43,7 @@ public:
 		}
 	};
 
-	Simulation(const ConfigReader& x_configReader, const Context& x_context);
+	Simulation(Parameters& xr_params, const Context& x_context);
 	void Generate(ConfigReader& mainConfig);
 
 protected:
@@ -65,7 +65,7 @@ protected:
 
 private:
 	static log4cxx::LoggerPtr m_logger;
-	Parameters m_param; // note: to save time
+	Parameters& m_param; // note: to save time
 	inline Parameters& RefParameters() {return m_param;}
 };
 #endif

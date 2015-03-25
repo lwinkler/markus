@@ -52,7 +52,7 @@ public:
 		int aperture;
 	};
 
-	SlitCam(const ConfigReader& x_configReader);
+	SlitCam(ParameterStructure& xr_params);
 	~SlitCam(void);
 	MKCLASS("SlitCam")
 	MKDESCR("A simple example module that mimics a slit camera (or linear camera). The camera input is a range of pixels in the middle of the image.")
@@ -62,7 +62,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

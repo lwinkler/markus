@@ -356,7 +356,8 @@ int main(int argc, char** argv)
 
 		if(args.simulation)
 		{
-			Simulation sim(mainConfig.Find("application"), context);
+			Simulation::Parameters parameters(mainConfig.Find("application"));
+			Simulation sim(parameters, context);
 			sim.Generate(mainConfig);
 			return 0;
 		}
@@ -367,7 +368,8 @@ int main(int argc, char** argv)
 		appConfig.FindRef("parameters>param[name=\"fast\"]", true).SetValue(args.fast ? "1" : "0");
 
 		// Set manager and context
-		Manager manager(appConfig);
+		Manager::Parameters parameters(appConfig);
+		Manager manager(parameters);
 		manager.SetContext(context);
 
 		if(args.describe)
@@ -411,7 +413,8 @@ int main(int argc, char** argv)
 			ConfigReader guiConfig = mainGuiConfig.FindRef("gui[name=\"" + args.configFile + "\"]", true);
 			guiConfig.FindRef("parameters", true);
 
-			MarkusWindow gui(guiConfig, manager);
+			MarkusWindow::Parameters parameters(guiConfig);
+			MarkusWindow gui(parameters, manager);
 			gui.setWindowTitle("Markus");
 			if(!args.nogui)
 				gui.show();

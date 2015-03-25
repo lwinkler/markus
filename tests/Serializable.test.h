@@ -104,14 +104,17 @@ class SerializableTestSuite : public CxxTest::TestSuite
 public:
 	SerializableTestSuite()
 		: mp_fakeInput(NULL),
+		  m_factoryParameters(Factories::parametersFactory()),
 		  m_factoryModules(Factories::modulesFactory()),
 		  m_factoryFeatures(Factories::featuresFactory()),
 		  mp_config(NULL) {}
 
 protected:
+	const FactoryParameters& m_factoryParameters;
 	const FactoryModules& m_factoryModules;
 	const FactoryFeatures& m_factoryFeatures;
 	Module* mp_fakeInput;
+	ParameterStructure* mp_fakeParams;
 	ConfigReader* mp_config;
 
 	// Values for testing
@@ -127,7 +130,8 @@ public:
 	{
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigReader("tests/serialize/module.xml");
-		mp_fakeInput = m_factoryModules.Create("VideoFileReader", mp_config->GetSubConfig("module"));
+		mp_fakeParams = m_factoryParameters.Create("VideoFileReader", mp_config->GetSubConfig("module"));
+		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeParams);
 		// note: we need a fake module to create the input streams
 		mp_fakeInput->SetAsReady();
 		mp_fakeInput->Reset();

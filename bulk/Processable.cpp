@@ -28,8 +28,8 @@ using namespace std;
 
 log4cxx::LoggerPtr Processable::m_logger(log4cxx::Logger::getLogger("Processable"));
 
-Processable::Processable(const ConfigReader& x_configReader) :
-	Configurable(x_configReader)
+Processable::Processable(ParameterStructure& xr_params) :
+	Configurable(xr_params)
 {
 	m_pause            = false;
 	m_allowAutoProcess = true;

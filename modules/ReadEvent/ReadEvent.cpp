@@ -34,8 +34,8 @@ using namespace cv;
 
 log4cxx::LoggerPtr ReadEvent::m_logger(log4cxx::Logger::getLogger("ReadEvent"));
 
-ReadEvent::ReadEvent(const ConfigReader& x_configReader)
-	: Input(x_configReader), m_param(x_configReader),
+ReadEvent::ReadEvent(ParameterStructure& xr_params)
+	: Input(xr_params), m_param(dynamic_cast<Parameters&>(xr_params)),
 	  m_outputIm1(Size(m_param.width, m_param.height), m_param.type),
 	  m_outputIm2(Size(m_param.width, m_param.height), m_param.type)
 {

@@ -46,6 +46,7 @@ static const float defaultVarMin2 = 4.0f;
 */
 class BgrSubMOG : public Module
 {
+public:
 	class Parameters : public Module::Parameters
 	{
 	public:
@@ -69,8 +70,7 @@ class BgrSubMOG : public Module
 		double learningRate;
 	};
 
-public:
-	BgrSubMOG(const ConfigReader& x_configReader);
+	BgrSubMOG(ParameterStructure& x_configReader);
 	~BgrSubMOG();
 	MKCLASS("BgrSubMOG")
 	MKDESCR("Perform background subtraction via Mixtures Of Gaussians (OpenCV MOG1)")
@@ -81,7 +81,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

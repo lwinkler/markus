@@ -98,7 +98,7 @@ public:
 		std::string objectLabel;
 	};
 
-	HOGDetector(const ConfigReader& x_configReader);
+	HOGDetector(ParameterStructure& xr_params);
 	~HOGDetector(void);
 	MKCLASS("HOGDetector")
 	MKDESCR("Detect objects from a video stream using a HOG descriptor")
@@ -110,7 +110,7 @@ public:
 	void Reset();
 
 private:
-	Parameters m_param;
+	Parameters& m_param;
 	inline virtual Parameters & RefParameters() {return m_param;}
 	static log4cxx::LoggerPtr m_logger;
 

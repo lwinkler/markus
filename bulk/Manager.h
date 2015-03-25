@@ -61,7 +61,7 @@ public:
 		std::string arguments; // TODO: See what to do in normal case
 	};
 
-	Manager(const ConfigReader& x_configReader);
+	Manager(ParameterStructure& x_configReader);
 	~Manager();
 	virtual void Reset(bool x_resetInputs = true);
 	virtual bool Process();
@@ -103,14 +103,17 @@ protected:
 
 	std::vector<Module *> m_modules;
 	std::vector<Module *> m_inputs;
+	std::vector<ParameterStructure *> m_parameters;
 
 	long long m_frameCount;
 	static log4cxx::LoggerPtr m_logger;
+	const FactoryParameters& mr_parametersFactory;
 	const FactoryModules& mr_moduleFactory;
+	const FactoryParameters& mr_parameterFactory;
 	InterruptionManager& m_interruptionManager;
 
 private:
 	inline Parameters& RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 };
 #endif

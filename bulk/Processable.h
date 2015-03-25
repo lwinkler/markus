@@ -55,7 +55,7 @@ public:
 		bool allowUnsyncInput;
 		double fps;
 	};
-	Processable(const ConfigReader& x_confReader);
+	Processable(ParameterStructure& xr_params);
 	virtual ~Processable();
 
 	virtual void Reset();

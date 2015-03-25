@@ -50,7 +50,7 @@ public:
 		std::string folder;
 	};
 
-	ReadEvent(const ConfigReader& x_configReader);
+	ReadEvent(ParameterStructure& xr_params);
 	~ReadEvent(void);
 	MKCLASS("ReadEvent")
 	MKDESCR("Read an event from an annotation file")
@@ -60,7 +60,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

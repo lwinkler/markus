@@ -52,7 +52,7 @@ public:
 		bool loop;
 	};
 
-	VideoFileReader(const ConfigReader& x_confReader);
+	VideoFileReader(ParameterStructure& xr_params);
 	~VideoFileReader();
 	MKCLASS("VideoFileReader")
 	MKDESCR("Read video stream from a video file")
@@ -74,7 +74,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

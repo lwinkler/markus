@@ -49,7 +49,7 @@ public:
 		std::string file;
 	};
 
-	LogState(const ConfigReader& x_configReader);
+	LogState(ParameterStructure& xr_params);
 	~LogState(void);
 	MKCLASS("LogState")
 	MKDESCR("Read a state stream and log it to .srt file")
@@ -60,7 +60,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

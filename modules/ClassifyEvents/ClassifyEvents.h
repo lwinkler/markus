@@ -32,7 +32,7 @@ public:
 		double validityThres;
 	};
 
-	ClassifyEvents(const ConfigReader& x_configReader);
+	ClassifyEvents(ParameterStructure& xr_params);
 	~ClassifyEvents();
 	MKCLASS("ClassifyEvents")
 	MKDESCR("Filter events based on user feedback")
@@ -63,7 +63,7 @@ protected:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 };
 

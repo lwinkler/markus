@@ -49,10 +49,10 @@ using namespace cv;
 using namespace std;
 
 // Constructor
-QModuleViewer::QModuleViewer(const Manager* x_manager, ConfigReader& x_configReader, QWidget *parent) :
+QModuleViewer::QModuleViewer(const Manager* x_manager, ParameterStructure& xr_params, QWidget *parent) :
 	QWidget(parent),
-	Configurable(x_configReader),
-	m_param(x_configReader)
+	Configurable(xr_params),
+	m_param(dynamic_cast<QModuleViewer::Parameters&>(xr_params))
 {
 	m_img_tmp1              = nullptr; // Allocated on first conversion
 	m_img_tmp2              = nullptr;

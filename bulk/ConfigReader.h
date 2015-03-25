@@ -96,16 +96,13 @@ private:
 class Configurable
 {
 public:
-	Configurable(const ConfigReader& x_confReader) : m_configReader(x_confReader) {}
+	Configurable(ParameterStructure& x_param) : m_param(x_param){}
 	~Configurable() {}
-	virtual void UpdateConfig();
-	virtual const ParameterStructure & GetParameters() const = 0;
+	virtual const ParameterStructure& GetParameters() const {return m_param;}
 
 private:
-	virtual ParameterStructure & RefParameters() = 0;
-
-protected:
-	ConfigReader m_configReader;
+	virtual ParameterStructure& RefParameters(){return m_param;}
+	ParameterStructure& m_param;
 };
 
 #endif

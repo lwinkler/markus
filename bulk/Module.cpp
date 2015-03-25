@@ -40,11 +40,11 @@ using namespace std;
 
 log4cxx::LoggerPtr Module::m_logger(log4cxx::Logger::getLogger("Module"));
 
-Module::Module(const ConfigReader& x_configReader) :
-	Processable(x_configReader),
-	m_name(x_configReader.GetAttribute("name"))
+Module::Module(ParameterStructure& x_param) :
+	Processable(x_param),
+	m_name(x_param.GetConfig().GetAttribute("name"))
 {
-	m_id	= atoi(x_configReader.GetAttribute("id").c_str());
+	m_id	= atoi(x_param.GetConfig().GetAttribute("id").c_str());
 	LOG_INFO(m_logger, "Create module " << m_name);
 
 	m_timerConvertion      = 0;

@@ -56,7 +56,7 @@ public:
 		float patternScale;
 	};
 
-	KeyPointsBrisk(const ConfigReader& x_configReader);
+	KeyPointsBrisk(ParameterStructure& xr_params);
 	~KeyPointsBrisk();
 	MKCLASS("KeyPointsBrisk")
 	MKDESCR("Extract key points of type Brisk")
@@ -66,7 +66,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

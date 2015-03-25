@@ -32,8 +32,8 @@ using namespace std;
 
 log4cxx::LoggerPtr ModuleAsync::m_logger(log4cxx::Logger::getLogger("ModuleAsync"));
 
-ModuleAsync::ModuleAsync(const ConfigReader& x_configReader) :
-	Module(x_configReader)
+ModuleAsync::ModuleAsync(ParameterStructure& xr_params) :
+	Module(xr_params)
 {
 	m_timeStampLastThread 	= TIME_STAMP_MIN;
 	m_resultsCopied 	= false;

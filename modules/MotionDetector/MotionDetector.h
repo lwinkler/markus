@@ -51,7 +51,7 @@ public:
 		float motionThres;
 	};
 
-	MotionDetector(const ConfigReader& x_configReader);
+	MotionDetector(ParameterStructure& xr_params);
 	~MotionDetector(void);
 	MKCLASS("MotionDetector")
 	MKDESCR("Detect motion from an image where pixel value represents motion")
@@ -62,7 +62,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

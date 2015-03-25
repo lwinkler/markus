@@ -51,7 +51,7 @@ public:
 		std::string extension;
 	};
 
-	ThumbnailWriter(const ConfigReader& x_confReader);
+	ThumbnailWriter(ParameterStructure& xr_params);
 	~ThumbnailWriter();
 	MKCLASS("ThumbnailWriter")
 	MKDESCR("Write all objects as a collection of images (thumbnails)")
@@ -62,7 +62,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

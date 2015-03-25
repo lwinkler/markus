@@ -55,7 +55,8 @@ protected:
 		appConfig.RefSubConfig("parameters", true).RefSubConfig("param", "name", "auto_clean", true).SetValue("0");
 		appConfig.RefSubConfig("parameters", true).RefSubConfig("param", "name", "auto_process", true).SetValue("1");
 		TS_ASSERT(!appConfig.IsEmpty());
-		Manager manager(appConfig);
+		Manager::Parameters params(appConfig);
+		Manager manager(params);
 		Context context("", "ProjectsTestSuite", "tests/out");
 		manager.SetContext(context);
 		manager.AllowAutoProcess(false);

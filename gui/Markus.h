@@ -63,13 +63,11 @@ public:
 		int nbRows;
 	};
 
-	MarkusWindow(ConfigReader& rx_configReader, Manager& rx_manager);
+	MarkusWindow(ParameterStructure& rx_param, Manager& rx_manager);
 	void UpdateConfig();
 private:
 	// ConfigReader& m_configReader;
-	Parameters m_param;
-	inline const Parameters& GetParameters() const {return m_param;}
-	inline Parameters& RefParameters() {return m_param;}
+	Parameters& m_param;
 
 	Manager& m_manager;
 

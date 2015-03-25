@@ -57,7 +57,7 @@ public:
 		std::string url;
 	};
 
-	NetworkCam(const ConfigReader& x_confReader);
+	NetworkCam(ParameterStructure& xr_params);
 	~NetworkCam();
 	MKCLASS("NetworkCam")
 	MKDESCR("Read video stream from a network camera")
@@ -71,7 +71,7 @@ public:
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
 	bool Grab();
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

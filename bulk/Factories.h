@@ -26,14 +26,16 @@
 
 #include "FactoryT.h"
 #include "Parameter.h"
+#include "ParameterStructure.h"
 
 class Feature;
 class Module;
 class ConfigReader;
 class Controller;
 
-typedef FactoryT<std::string, Module, const ConfigReader&> FactoryModules;
-typedef FactoryT<std::string, Feature>                     FactoryFeatures;
+typedef FactoryT<std::string, Module, ParameterStructure&>       FactoryModules;
+typedef FactoryT<std::string, ParameterStructure, const ConfigReader&> FactoryParameters;
+typedef FactoryT<std::string, Feature>                                 FactoryFeatures;
 typedef FactoryT<ParameterType, Controller, Parameter&>                FactoryParameterController;
 
 
@@ -41,9 +43,10 @@ typedef FactoryT<ParameterType, Controller, Parameter&>                FactoryPa
 class Factories
 {
 public:
-	inline static FactoryModules&    modulesFactory()                      {static FactoryModules factoryModules; return factoryModules;}
-	inline static FactoryFeatures&   featuresFactory()                     {static FactoryFeatures factoryFeatures; return factoryFeatures;}
-	inline static FactoryFeatures&   featuresFactoryBySignature()          {static FactoryFeatures factoryFeatures; return factoryFeatures;}
+	inline static FactoryParameters& parametersFactory()                   {static FactoryParameters FactoryParameters; return FactoryParameters;}
+	inline static FactoryModules&    modulesFactory()                      {static FactoryModules    factoryModules;    return factoryModules;}
+	inline static FactoryFeatures&   featuresFactory()                     {static FactoryFeatures   factoryFeatures;   return factoryFeatures;}
+	inline static FactoryFeatures&   featuresFactoryBySignature()          {static FactoryFeatures   factoryFeatures;   return factoryFeatures;}
 	inline static FactoryParameterController& parameterControllerFactory() {static FactoryParameterController factoryControllers; return factoryControllers;}
 
 	static void RegisterAll();

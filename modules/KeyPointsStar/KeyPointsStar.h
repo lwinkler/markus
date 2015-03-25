@@ -55,7 +55,7 @@ public:
 		int suppressNonmaxSize;
 	};
 
-	KeyPointsStar(const ConfigReader& x_configReader);
+	KeyPointsStar(ParameterStructure& xr_params);
 	~KeyPointsStar();
 	MKCLASS("KeyPointsStar")
 	MKDESCR("Extract key points of type Star")
@@ -65,7 +65,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

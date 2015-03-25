@@ -29,9 +29,9 @@ using namespace cv;
 
 log4cxx::LoggerPtr RenderObjects::m_logger(log4cxx::Logger::getLogger("RenderObjects"));
 
-RenderObjects::RenderObjects(const ConfigReader& x_configReader) :
-	Module(x_configReader),
-	m_param(x_configReader),
+RenderObjects::RenderObjects(ParameterStructure& xr_params) :
+	Module(xr_params),
+	m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_imageInput(Size(m_param.width, m_param.height), m_param.type),
 	m_imageOutput(Size(m_param.width, m_param.height), m_param.type)
 {

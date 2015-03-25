@@ -31,9 +31,9 @@ using namespace cv;
 
 log4cxx::LoggerPtr RandomObjectsGenerator::m_logger(log4cxx::Logger::getLogger("RandomObjectsGenerator"));
 
-RandomObjectsGenerator::RandomObjectsGenerator(const ConfigReader& x_configReader):
-	Input(x_configReader),
-	m_param(x_configReader)
+RandomObjectsGenerator::RandomObjectsGenerator(ParameterStructure& xr_params):
+	Input(xr_params),
+	m_param(dynamic_cast<Parameters&>(xr_params))
 {
 	AddOutputStream(0, new StreamObject("objects", m_objects, *this,  "Objects generated"));
 	m_seed = 0;

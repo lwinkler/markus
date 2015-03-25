@@ -44,7 +44,7 @@ public:
 		};
 	};
 
-	Mask(const ConfigReader& x_configReader);
+	Mask(ParameterStructure& xr_params);
 	~Mask();
 	MKCLASS("Mask")
 	MKDESCR("Apply a binary mask to an image input")
@@ -55,7 +55,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

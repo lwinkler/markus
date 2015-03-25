@@ -45,7 +45,7 @@ public:
 		};
 	};
 
-	RenderObjects(const ConfigReader& x_configReader);
+	RenderObjects(ParameterStructure& xr_params);
 	~RenderObjects();
 	MKCLASS("RenderObjects")
 	MKDESCR("Output video stream with additional object streams")
@@ -56,7 +56,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

@@ -112,7 +112,7 @@ public:
 		std::string objectLabel;
 	};
 
-	CascadeDetector(const ConfigReader& x_configReader);
+	CascadeDetector(ParameterStructure& xr_params);
 	~CascadeDetector(void);
 	MKCLASS("CascadeDetector")
 	MKDESCR("Detect objects from a video stream using a cascade filter (c.f. Haar patterns)")
@@ -125,7 +125,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

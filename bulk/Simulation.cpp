@@ -43,10 +43,10 @@ inline ConfigReader manOrMod(ConfigReader xr_mainConfig, const string& x_name)
 }
 
 
-Simulation::Simulation(const ConfigReader& x_configReader, const Context& x_context) :
-	Configurable(x_configReader),
-	m_param(x_configReader),
-	m_manager(x_configReader),
+Simulation::Simulation(Parameters& xr_params, const Context& x_context) :
+	Configurable(xr_params),
+	m_param(dynamic_cast<Parameters&>(xr_params)),
+	m_manager(xr_params),
 	m_outputDir("simulation_" + timeStamp())
 {
 	m_manager.SetContext(x_context);
@@ -245,7 +245,7 @@ void Simulation::Generate(ConfigReader& mainConfig)
 	m_cpt = 0;
 
 	vector<string> variationNames;
-	AddVariations(variationNames, m_configReader.Find("variations"), mainConfig);
+	AddVariations(variationNames, m_param.GetConfig().Find("variations"), mainConfig);
 
 	// Generate a MakeFile for the simulation
 	string makefile = m_outputDir + "/simulation.make";

@@ -94,7 +94,7 @@ public:
 		int cached;
 	};
 
-	Module(const ConfigReader& x_confReader);
+	Module(ParameterStructure& x_param);
 	virtual ~Module();
 
 	virtual void Reset();

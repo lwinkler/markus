@@ -63,7 +63,7 @@ public:
 		int edgeBlurSize;
 	};
 
-	KeyPointsMser(const ConfigReader& x_configReader);
+	KeyPointsMser(ParameterStructure& xr_params);
 	~KeyPointsMser();
 	MKCLASS("KeyPointsMser")
 	MKDESCR("Extract key points of type Mser")
@@ -73,7 +73,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

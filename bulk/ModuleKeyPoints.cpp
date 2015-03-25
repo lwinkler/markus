@@ -37,9 +37,9 @@ using namespace std;
 
 log4cxx::LoggerPtr ModuleKeyPoints::m_logger(log4cxx::Logger::getLogger("ModuleKeyPoints"));
 
-ModuleKeyPoints::ModuleKeyPoints(const ConfigReader& x_configReader) :
-	Module(x_configReader),
-	m_param(x_configReader),
+ModuleKeyPoints::ModuleKeyPoints(ParameterStructure& xr_params) :
+	Module(xr_params),
+	m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_input(Size(m_param.width, m_param.height), m_param.type)
 {
 	mp_detector  = nullptr;

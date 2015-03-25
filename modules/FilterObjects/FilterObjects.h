@@ -64,7 +64,7 @@ public:
 		double maxCustom;
 	};
 
-	FilterObjects(const ConfigReader& x_configReader);
+	FilterObjects(ParameterStructure& xr_params);
 	~FilterObjects();
 	MKCLASS("FilterObjects")
 	MKDESCR("Filter the input objects based on different criterion")
@@ -75,7 +75,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 protected:
 

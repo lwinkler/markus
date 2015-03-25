@@ -55,7 +55,7 @@ public:
 		int iterations;
 	};
 
-	Morph(const ConfigReader& x_configReader);
+	Morph(ParameterStructure& xr_params);
 	~Morph();
 	MKCLASS("Morph")
 	MKDESCR("Apply a morphological operator to an image")
@@ -66,7 +66,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 protected:
 

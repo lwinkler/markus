@@ -31,8 +31,8 @@ using namespace cv;
 
 log4cxx::LoggerPtr EventToObjects::m_logger(log4cxx::Logger::getLogger("EventToObjects"));
 
-EventToObjects::EventToObjects(const ConfigReader& x_configReader)
-	: Module(x_configReader), m_param(x_configReader)
+EventToObjects::EventToObjects(ParameterStructure& xr_params)
+	: Module(xr_params), m_param(dynamic_cast<Parameters&>(xr_params))
 {
 	AddInputStream(0, new StreamEvent("event", m_event, *this, "Input event"));
 

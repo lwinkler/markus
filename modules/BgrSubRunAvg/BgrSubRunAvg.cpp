@@ -32,9 +32,9 @@ using namespace std;
 
 log4cxx::LoggerPtr BgrSubRunAvg::m_logger(log4cxx::Logger::getLogger("BgrSubRunAvg"));
 
-BgrSubRunAvg::BgrSubRunAvg(const ConfigReader& x_configReader) :
-	Module(x_configReader),
-	m_param(x_configReader),
+BgrSubRunAvg::BgrSubRunAvg(ParameterStructure& xr_params) :
+	Module(xr_params),
+	m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_input(Size(m_param.width, m_param.height), m_param.type),
 	m_background(Size(m_param.width, m_param.height), m_param.type),
 	m_foreground(Size(m_param.width, m_param.height), m_param.type),

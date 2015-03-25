@@ -50,7 +50,7 @@ public:
 	};
 
 	/* Constructor */
-	CompareObjects(const ConfigReader &x_configReader);
+	CompareObjects(ParameterStructure& xr_params);
 
 	/* Destructor */
 	~CompareObjects();
@@ -70,7 +70,7 @@ public:
 private:
 	inline virtual Parameters &RefParameters() {return m_param;}
 
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

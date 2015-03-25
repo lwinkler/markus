@@ -37,8 +37,8 @@ using namespace cv;
 
 log4cxx::LoggerPtr ReadObjects::m_logger(log4cxx::Logger::getLogger("ReadObjects"));
 
-ReadObjects::ReadObjects(const ConfigReader& x_configReader)
-	: Input(x_configReader), m_param(x_configReader)
+ReadObjects::ReadObjects(ParameterStructure& xr_params)
+	: Input(xr_params), m_param(dynamic_cast<Parameters&>(xr_params))
 {
 	// Init input streams
 	AddOutputStream(0, new StreamObject("object", m_ObjectOut, *this, "Output object read from file"));

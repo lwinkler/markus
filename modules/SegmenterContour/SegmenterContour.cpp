@@ -34,9 +34,9 @@ using namespace cv;
 
 log4cxx::LoggerPtr SegmenterContour::m_logger(log4cxx::Logger::getLogger("SegmenterContour"));
 
-SegmenterContour::SegmenterContour(const ConfigReader& x_configReader) :
-	Module(x_configReader),
-	m_param(x_configReader),
+SegmenterContour::SegmenterContour(ParameterStructure& xr_params) :
+	Module(xr_params),
+	m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_input(Size(m_param.width, m_param.height), m_param.type)
 {
 	// Initialize inputs and outputs streams

@@ -51,7 +51,7 @@ public:
 		std::string descriptor;
 	};
 
-	ModuleKeyPoints(const ConfigReader& x_configReader);
+	ModuleKeyPoints(ParameterStructure& xr_params);
 	~ModuleKeyPoints();
 	// MKCLASS("ModuleKeyPoints")
 	// MKDESCR("Extract different types of keyPoints from image")
@@ -62,7 +62,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param; // TODO: This should not exist
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

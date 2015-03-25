@@ -50,7 +50,7 @@ public:
 		float foregroundThres;
 	};
 
-	BgrSubRunAvg(const ConfigReader& x_configReader);
+	BgrSubRunAvg(ParameterStructure& xr_params);
 	~BgrSubRunAvg();
 	MKCLASS("BgrSubRunAvg")
 	MKDESCR("Perform a background subtraction using a running average")
@@ -61,7 +61,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

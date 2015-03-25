@@ -44,9 +44,9 @@ using namespace std;
 // Main constructor
 //----------------------------------------------------------------------------------------------------
 
-MarkusWindow::MarkusWindow(ConfigReader & rx_configReader, Manager& rx_manager)
-	: Configurable(rx_configReader),
-	  m_param(rx_configReader),
+MarkusWindow::MarkusWindow(ParameterStructure& rx_param, Manager& rx_manager)
+	: Configurable(rx_param),
+	  m_param(dynamic_cast<MarkusWindow::Parameters&>(rx_param)),
 	  m_manager(rx_manager)
 {
 	// Call to manager process each 10 ms
@@ -85,8 +85,8 @@ void MarkusWindow::timerEvent(QTimerEvent* px_event)
 void MarkusWindow::UpdateConfig()
 {
 	for(auto & elem : m_moduleViewer)
-		(elem)->UpdateConfig();
-	Configurable::UpdateConfig();
+		elem->UpdateConfig();
+	m_param.UpdateConfig();
 }
 
 QLabel *MarkusWindow::createLabel(const QString &text)
@@ -279,11 +279,13 @@ void MarkusWindow::resizeEvent(QResizeEvent* event)
 	{
 		stringstream ss;
 		ss<<"viewer"<<ind;
+		/* TODO
 		ConfigReader conf = m_configReader.FindRef("viewer[name=\"" + ss.str() + "\"]", true);
 		conf.FindRef("parameters", true);
 		m_moduleViewer.push_back(new QModuleViewer(&m_manager, conf));
 		m_moduleViewer.at(ind)->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 		// m_moduleViewer.at(ind)->showDisplayOptions(true);
+		*/
 	}
 
 	// Remove extra modules

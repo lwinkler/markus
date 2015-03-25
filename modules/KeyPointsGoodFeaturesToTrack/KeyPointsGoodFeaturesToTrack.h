@@ -57,7 +57,7 @@ public:
 		double k;
 	};
 
-	KeyPointsGoodFeaturesToTrack(const ConfigReader& x_configReader);
+	KeyPointsGoodFeaturesToTrack(ParameterStructure& xr_params);
 	~KeyPointsGoodFeaturesToTrack();
 	MKCLASS("KeyPointsGoodFeaturesToTrack")
 	MKDESCR("Extract keypoints of type GoodFeaturesToTrack on image")
@@ -67,7 +67,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

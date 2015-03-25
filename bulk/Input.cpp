@@ -29,8 +29,8 @@
 using namespace std;
 
 
-Input::Input(const ConfigReader& x_configReader):
-	Module(x_configReader)
+Input::Input(ParameterStructure& xr_params):
+	Module(xr_params)
 {
 	m_endOfStream = false;
 }

@@ -50,7 +50,7 @@ public:
 		//std::string folder;
 	};
 
-	LogObjects(const ConfigReader& x_configReader);
+	LogObjects(ParameterStructure& xr_params);
 	~LogObjects(void);
 	MKCLASS("LogObjects")
 	MKDESCR("Read a stream of objects and log data to a text file")
@@ -61,7 +61,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

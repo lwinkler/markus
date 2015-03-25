@@ -50,7 +50,7 @@ public:
 		int num;
 	};
 
-	UsbCam(const ConfigReader& x_confReader);
+	UsbCam(ParameterStructure& xr_params);
 	~UsbCam();
 	MKCLASS("UsbCam")
 	MKDESCR("Read video stream from an enbedded or USB camera")
@@ -62,7 +62,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

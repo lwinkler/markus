@@ -34,6 +34,7 @@
 */
 class EventToObjects : public Module
 {
+public:
 	class Parameters : public Module::Parameters
 	{
 	public:
@@ -43,8 +44,7 @@ class EventToObjects : public Module
 		}
 	};
 
-public:
-	EventToObjects(const ConfigReader& x_configReader);
+	EventToObjects(ParameterStructure& xr_params);
 	~EventToObjects(void);
 	MKCLASS("EventToObjects")
 	MKDESCR("Transform a stream of events into a stream of objects")
@@ -55,7 +55,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

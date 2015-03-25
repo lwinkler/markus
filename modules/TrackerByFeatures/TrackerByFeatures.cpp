@@ -55,9 +55,9 @@ void updateObjectFromTemplate(const Template& x_temp, Object& x_obj)
 	}
 }
 
-TrackerByFeatures::TrackerByFeatures(const ConfigReader& x_configReader) :
-	Module(x_configReader),
-	m_param(x_configReader)
+TrackerByFeatures::TrackerByFeatures(ParameterStructure& xr_params) :
+	Module(xr_params),
+	m_param(dynamic_cast<Parameters&>(xr_params))
 {
 	// Features required in input
 	vector<string> feats;

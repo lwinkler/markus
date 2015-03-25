@@ -45,7 +45,7 @@ public:
 		double detectionFps;
 	};
 
-	ModuleAsync(const ConfigReader& x_confReader);
+	ModuleAsync(ParameterStructure& xr_params);
 	// virtual ~ModuleAsync();
 
 	virtual void ProcessFrame();

@@ -34,9 +34,9 @@ using namespace std;
 
 log4cxx::LoggerPtr KeyPointsBrisk::m_logger(log4cxx::Logger::getLogger("KeyPointsBrisk"));
 
-KeyPointsBrisk::KeyPointsBrisk(const ConfigReader& x_configReader) :
-	ModuleKeyPoints(x_configReader),
-	m_param(x_configReader)
+KeyPointsBrisk::KeyPointsBrisk(ParameterStructure& xr_params) :
+	ModuleKeyPoints(xr_params),
+	m_param(dynamic_cast<Parameters&>(xr_params))
 {
 };
 

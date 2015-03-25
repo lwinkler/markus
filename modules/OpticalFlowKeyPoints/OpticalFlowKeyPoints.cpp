@@ -36,9 +36,9 @@ using namespace std;
 
 log4cxx::LoggerPtr OpticalFlowKeyPoints::m_logger(log4cxx::Logger::getLogger("OpticalFlowKeyPoints"));
 
-OpticalFlowKeyPoints::OpticalFlowKeyPoints(const ConfigReader& x_configReader) :
-	Module(x_configReader),
-	m_param(x_configReader),
+OpticalFlowKeyPoints::OpticalFlowKeyPoints(ParameterStructure& xr_params) :
+	Module(xr_params),
+	m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_input(Size(m_param.width, m_param.height), m_param.type)
 {
 	AddInputStream(0, new StreamImage("image",       m_input,        *this,   "Video input"));

@@ -42,10 +42,12 @@ using namespace std;
 
 log4cxx::LoggerPtr Manager::m_logger(log4cxx::Logger::getLogger("Manager"));
 
-Manager::Manager(const ConfigReader& x_configReader) :
-	Processable(x_configReader),
-	m_param(m_configReader),
+Manager::Manager(ParameterStructure& xr_params) :
+	Processable(xr_params),
+	m_param(dynamic_cast<Parameters&>(xr_params)),
+	mr_parametersFactory(Factories::parametersFactory()),
 	mr_moduleFactory(Factories::modulesFactory()),
+	mr_parameterFactory(Factories::parametersFactory()),
 	m_lastException(MK_EXCEPTION_NORMAL, "normal", "No exception were thrown", "", ""),
 	m_interruptionManager(InterruptionManager::GetInst())
 {
@@ -58,17 +60,20 @@ Manager::Manager(const ConfigReader& x_configReader) :
 
 	m_inputs.clear();
 	m_modules.clear();
+	m_parameters.clear();
 
-	for(const auto& moduleConfig : m_configReader.FindAll("module", true))
+	for(const auto& moduleConfig : m_param.GetConfig().FindAll("module", true))
 	{
 		// Read parameters
 		if(moduleConfig.Find("parameters", true).IsEmpty())
 			throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name"), LOC);
 		string moduleType = moduleConfig.Find("parameters>param[name=\"class\"]").GetValue();
-		Module * tmp1 = mr_moduleFactory.Create(moduleType, moduleConfig);
+		ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, moduleConfig);
+		Module * tmp1 = mr_moduleFactory.Create(moduleType, *tmp2);
 
 		// Add to inputs if an input
 		m_modules.push_back(tmp1);
+		m_parameters.push_back(tmp2);
 		if(tmp1->IsInput())
 			m_inputs.push_back(tmp1);
 	}
@@ -80,6 +85,9 @@ Manager::~Manager()
 
 
 	for(auto & elem : m_modules)
+		delete elem;
+
+	for(auto & elem : m_parameters)
 		delete elem;
 
 	/// Do the final operations on the static class
@@ -146,7 +154,7 @@ void Manager::Connect()
 		throw MkException("Manager can only connect modules once", LOC);
 
 	// Connect input and output streams (re-read the config once since we need all modules to be connected)
-	for(const auto& moduleConfig : m_configReader.FindAll("module"))
+	for(const auto& moduleConfig : m_param.GetConfig().FindAll("module"))
 	{
 		int moduleId = atoi(moduleConfig.GetAttribute("id").c_str());
 		Module& module = RefModuleById(moduleId);
@@ -232,7 +240,7 @@ void Manager::Connect()
 */
 void Manager::Reset(bool x_resetInputs)
 {
-	m_interruptionManager.Configure(m_configReader);
+	m_interruptionManager.Configure(m_param.GetConfig());
 
 	// Reset timers
 	// m_timerConvertion = 0;
@@ -530,12 +538,14 @@ void Manager::Export()
 			ConfigReader moduleConfig = config.FindRef("application>module[name=\"" + moduleType + "\"]", true);
 			moduleConfig.FindRef("parameters>param[name=\"class\"]", true).SetValue(moduleType);
 
-			Module* module = mr_moduleFactory.Create(moduleType, moduleConfig);
+			ParameterStructure* parameters = mr_parameterFactory.Create(moduleType, moduleConfig);
+			Module* module = mr_moduleFactory.Create(moduleType, *parameters);
 
 			ofstream os(file.c_str());
 			os<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"<<endl;
 			module->Export(os, 0);
 			delete module;
+			delete parameters;
 			os.close();
 		}
 	}
@@ -667,9 +677,9 @@ string Manager::CreateOutputDir(const string& x_outputDir, const string& x_confi
 void Manager::UpdateConfig()
 {
 	// Set all config ready to be saved
-	for(auto & elem : m_modules)
-		(elem)->UpdateConfig();
-	Configurable::UpdateConfig();
+	for(auto & elem : m_parameters)
+		elem->UpdateConfig();
+	m_param.UpdateConfig();
 }
 
 /**

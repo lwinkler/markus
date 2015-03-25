@@ -61,7 +61,7 @@ public:
 		bool varyImgBoundWithScale;
 	};
 
-	KeyPointsDense(const ConfigReader& x_configReader);
+	KeyPointsDense(ParameterStructure& xr_params);
 	~KeyPointsDense();
 	MKCLASS("KeyPointsDense")
 	MKDESCR("Extract key points of type Dense")
@@ -71,7 +71,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

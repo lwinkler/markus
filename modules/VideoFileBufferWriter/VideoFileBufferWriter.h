@@ -55,7 +55,7 @@ public:
 		int nbBuffers;
 	};
 
-	VideoFileBufferWriter(const ConfigReader& x_confReader);
+	VideoFileBufferWriter(ParameterStructure& xr_params);
 	~VideoFileBufferWriter();
 	MKCLASS("VideoFileBufferWriter")
 	MKDESCR("Write output to a buffer and export it if an evenement occurs")
@@ -68,7 +68,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

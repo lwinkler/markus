@@ -67,7 +67,7 @@ public:
 		std::string gtVideo;
 	};
 
-	LogEvent(const ConfigReader& x_configReader);
+	LogEvent(ParameterStructure& xr_params);
 	~LogEvent(void);
 	MKCLASS("LogEvent")
 	MKDESCR("Read an event and log it to .srt file")
@@ -78,7 +78,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

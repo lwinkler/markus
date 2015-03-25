@@ -49,7 +49,7 @@ public:
 		// type – one of the three neighborhoods as defined in the paper: FastFeatureDetector::TYPE_9_16, FastFeatureDetector::TYPE_7_12, FastFeatureDetector::TYPE_5_8
 	};
 
-	KeyPointsFast(const ConfigReader& x_configReader);
+	KeyPointsFast(ParameterStructure& xr_params);
 	~KeyPointsFast();
 	MKCLASS("KeyPointsFast")
 	MKDESCR("Extract keypoints of type FAST")
@@ -59,7 +59,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

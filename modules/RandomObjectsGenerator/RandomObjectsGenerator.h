@@ -53,7 +53,7 @@ class RandomObjectsGenerator : public Input
 	};
 
 public:
-	RandomObjectsGenerator(const ConfigReader& x_confReader);
+	RandomObjectsGenerator(ParameterStructure& xr_params);
 	~RandomObjectsGenerator();
 	MKCLASS("RandomObjectsGenerator")
 	MKDESCR("Generate an object with varying features at each step")
@@ -65,7 +65,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

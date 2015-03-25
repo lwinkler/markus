@@ -31,9 +31,9 @@ using namespace cv;
 
 log4cxx::LoggerPtr VideoFileWriter::m_logger(log4cxx::Logger::getLogger("VideoFileWriter"));
 
-VideoFileWriter::VideoFileWriter(const ConfigReader& x_configReader):
-	Module(x_configReader),
-	m_param(x_configReader),
+VideoFileWriter::VideoFileWriter(ParameterStructure& xr_params):
+	Module(xr_params),
+	m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_input(Size(m_param.width, m_param.height), m_param.type)
 {
 	AddInputStream(0, new StreamImage("input", m_input, *this,   "Video input"));

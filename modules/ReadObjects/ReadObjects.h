@@ -54,7 +54,7 @@ public:
 		bool oneFrameOnly;
 	};
 
-	ReadObjects(const ConfigReader& x_configReader);
+	ReadObjects(ParameterStructure& xr_params);
 	~ReadObjects(void);
 	MKCLASS("ReadObjects")
 	MKDESCR("Read an object from an annotation file")
@@ -64,7 +64,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

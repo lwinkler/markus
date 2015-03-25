@@ -56,7 +56,7 @@ public:
 		std::string fourcc;
 	};
 
-	VideoFileWriter(const ConfigReader& x_confReader);
+	VideoFileWriter(ParameterStructure& xr_params);
 	~VideoFileWriter();
 	MKCLASS("VideoFileWriter")
 	MKDESCR("Write output to a video file")
@@ -68,7 +68,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

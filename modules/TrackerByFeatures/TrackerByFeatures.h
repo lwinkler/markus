@@ -60,7 +60,7 @@ public:
 		std::string features;
 	};
 
-	TrackerByFeatures(const ConfigReader& x_configReader);
+	TrackerByFeatures(ParameterStructure& xr_params);
 	~TrackerByFeatures();
 	MKCLASS("TrackerByFeatures")
 	MKDESCR("Track objects by matching a set of features (typically x,y,width and height)")
@@ -71,7 +71,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 protected:
 	void MatchTemplates();

@@ -31,9 +31,9 @@ using namespace cv;
 
 log4cxx::LoggerPtr FilterObjects::m_logger(log4cxx::Logger::getLogger("FilterObjects"));
 
-FilterObjects::FilterObjects(const ConfigReader& x_configReader) :
-	Module(x_configReader),
-	m_param(x_configReader)
+FilterObjects::FilterObjects(ParameterStructure& xr_params) :
+	Module(xr_params),
+	m_param(dynamic_cast<Parameters&>(xr_params))
 {
 	AddInputStream(0, new StreamObject("input", 	m_objectsIn, *this,	"Incoming objects",
 									   "{\"features\":{"

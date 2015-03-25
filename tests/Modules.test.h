@@ -41,6 +41,7 @@ using namespace std;
 // #define BLACKLIST(x) m_moduleTypes.erase(remove(m_moduleTypes.begin(), m_moduleTypes.end(), (x)), m_moduleTypes.end());
 
 #include <string>
+#include <tuple>
 #include <iostream>
 #include <stdio.h>
 
@@ -72,17 +73,21 @@ class ModulesTestSuite : public CxxTest::TestSuite
 {
 public:
 	ModulesTestSuite()
-		: mp_fakeInput(NULL),
+		: mp_fakeConfig(NULL),
+		  mp_fakeInput(NULL),
 		  mp_config(NULL),
 		  mp_context(NULL),
 		  m_state(false),
+		  m_factoryParameters(Factories::parametersFactory()),
 		  m_factoryModules(Factories::modulesFactory()),
 		  m_factoryFeatures(Factories::featuresFactory()),
 		  m_cpt(0) {}
 protected:
 	vector<string> m_moduleTypes;
+	const FactoryParameters&  m_factoryParameters;
 	const FactoryModules&  m_factoryModules;
 	const FactoryFeatures& m_factoryFeatures;
+	ParameterStructure* mp_fakeConfig;
 	Module* mp_fakeInput;
 	ConfigReader* mp_config;
 	Context* mp_context;
@@ -114,7 +119,8 @@ public:
 		.RefSubConfig("parameters", true)
 		.RefSubConfig("param", "name", "fps", true).SetValue("22");
 		mp_config->RefSubConfig("application").SetAttribute("name", "unitTest");
-		mp_fakeInput = m_factoryModules.Create("VideoFileReader", mp_config->Find("application>module[name=\"VideoFileReader0\"]"));
+		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", mp_config->Find("application>module[name=\"VideoFileReader0\"]"));
+		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeConfig);
 		mp_fakeInput->AllowAutoProcess(false);
 		// note: we need a fake module to create the input streams
 		mp_fakeInput->SetAsReady();
@@ -122,6 +128,7 @@ public:
 	}
 	void tearDown()
 	{
+		CLEAN_DELETE(mp_fakeConfig);
 		CLEAN_DELETE(mp_fakeInput);
 		CLEAN_DELETE(mp_config);
 		CLEAN_DELETE(mp_context);
@@ -148,7 +155,7 @@ public:
 	}
 
 	/// Create module and make it ready to process
-	Module* createAndConnectModule(const string& x_type, const map<string, string>* xp_parameters = NULL)
+	std::tuple<ParameterStructure*, Module*> createAndConnectModule(const string& x_type, const map<string, string>* xp_parameters = NULL)
 	{
 		TS_TRACE("Create and connect module of class " + x_type);
 		ConfigReader moduleConfig = addModuleToConfig(x_type, *mp_config);
@@ -159,7 +166,8 @@ public:
 				moduleConfig.RefSubConfig("parameters").RefSubConfig("param", "name", it->first, true).SetValue(it->second);
 
 		mp_config->SaveToFile("tests/tmp/tmp.xml");
-		Module* module = m_factoryModules.Create(x_type, moduleConfig);
+		ParameterStructure* parameters = m_factoryParameters.Create(x_type, moduleConfig);
+		Module* module                 = m_factoryModules.Create(x_type, *parameters);
 		module->SetContext(*mp_context);
 		module->AllowAutoProcess(false);
 		m_image = cv::Mat(module->GetHeight(), module->GetWidth(), module->GetImageType());
@@ -196,7 +204,8 @@ public:
 		module->SetAsReady();
 		if(module->IsUnitTestingEnabled())
 			module->Reset();
-		return module;
+
+		return std::make_tuple(parameters,module);
 	}
 
 	/// Run the modules with different inputs generated randomly
@@ -209,7 +218,9 @@ public:
 		for(vector<string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; ++it1)
 		{
 			TS_TRACE("## on module " + *it1);
-			Module* module = createAndConnectModule(*it1);
+			Module* module;
+			ParameterStructure* parameters;
+			std::tie(parameters, module) = createAndConnectModule(*it1);
 			if(module->IsUnitTestingEnabled())
 			{
 				for(int i = 0 ; i < 50 ; i++)
@@ -217,6 +228,7 @@ public:
 			}
 			else TS_TRACE("--> unit testing disabled on " + *it1);
 			delete module;
+			delete parameters;
 		}
 	}
 
@@ -231,11 +243,14 @@ public:
 		for(vector<string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; ++it1)
 		{
 			TS_TRACE("# on module " + *it1);
-			Module* module = createAndConnectModule(*it1);
+			Module* module;
+			ParameterStructure* parameters;
+			tie(parameters, module) = createAndConnectModule(*it1);
 			if(!module->IsUnitTestingEnabled())
 			{
 				TS_TRACE("--> unit testing disabled on " + *it1);
 				delete module;
+				delete parameters;
 				continue;
 			}
 
@@ -315,6 +330,7 @@ public:
 			}
 
 			delete module;
+			delete parameters;
 		}
 	}
 
@@ -328,10 +344,13 @@ public:
 		// Test on each type of module
 		for(vector<string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; ++it1)
 		{
-			Module* module = createAndConnectModule(*it1);
+			Module* module;
+			ParameterStructure* parameters;
+			std::tie(parameters, module) = createAndConnectModule(*it1);
 			if(!module->IsUnitTestingEnabled())
 			{
 				delete module;
+				delete parameters;
 				continue;
 			}
 			TS_TRACE("# on module " + *it1);
@@ -364,18 +383,22 @@ public:
 					if(lastParam != "")
 						params[lastParam] = lastDefault;
 
-					Module* module2 = createAndConnectModule(*it1, &params);
+					Module* module2;
+					ParameterStructure* parameters2;
+					std::tie(parameters2, module2) = createAndConnectModule(*it1, &params);
 					TS_ASSERT(module2->IsUnitTestingEnabled());
 
 					for(int i = 0 ; i < 3 ; i++)
 						module2->ProcessRandomInput(seed);
 
 					delete module2;
+					delete parameters2;
 				}
 				lastParam = (*it2)->GetName();
 				lastDefault = (*it2)->GetDefaultString();
 			}
 			delete module;
+			delete parameters;
 		}
 	}
 

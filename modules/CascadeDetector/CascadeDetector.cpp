@@ -39,9 +39,9 @@ using namespace cv;
 
 log4cxx::LoggerPtr CascadeDetector::m_logger(log4cxx::Logger::getLogger("CascadeDetector"));
 
-CascadeDetector::CascadeDetector(const ConfigReader& x_configReader)
-	: ModuleAsync(x_configReader),
-	  m_param(x_configReader),
+CascadeDetector::CascadeDetector(ParameterStructure& xr_params)
+	: ModuleAsync(xr_params),
+	  m_param(dynamic_cast<Parameters&>(xr_params)),
 	  m_input(Size(m_param.width, m_param.height), CV_8UC1),
 	  m_lastInput(Size(m_param.width, m_param.height), m_param.type)
 {

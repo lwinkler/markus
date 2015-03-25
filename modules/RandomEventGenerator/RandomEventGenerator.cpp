@@ -32,9 +32,9 @@ using namespace cv;
 
 log4cxx::LoggerPtr RandomEventGenerator::m_logger(log4cxx::Logger::getLogger("RandomEventGenerator"));
 
-RandomEventGenerator::RandomEventGenerator(const ConfigReader& x_configReader):
-	Input(x_configReader),
-	m_param(x_configReader),
+RandomEventGenerator::RandomEventGenerator(ParameterStructure& xr_params):
+	Input(xr_params),
+	m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_output(Size(m_param.width, m_param.height), m_param.type)  // Note: sizes will be overridden !
 {
 	AddOutputStream(0, new StreamEvent("event", m_event, *this,  "Event generated"));

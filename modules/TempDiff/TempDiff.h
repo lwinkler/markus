@@ -45,7 +45,7 @@ public:
 		};
 	};
 
-	TempDiff(const ConfigReader& x_configReader);
+	TempDiff(ParameterStructure& xr_params);
 	~TempDiff();
 	MKCLASS("TempDiff")
 	MKDESCR("Perform temporal differencing: compare frame with previous frame by subtraction")
@@ -56,7 +56,7 @@ public:
 
 private:
 	inline virtual Parameters & RefParameters() {return m_param;}
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

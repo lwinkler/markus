@@ -55,7 +55,7 @@ public:
 	};
 
 	/* Constructor */
-	CompareVideo(const ConfigReader &x_configReader);
+	CompareVideo(ParameterStructure& xr_params);
 
 	/* Destructor */
 	~CompareVideo();
@@ -79,7 +79,7 @@ private:
 		return m_param;
 	}
 
-	Parameters m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:

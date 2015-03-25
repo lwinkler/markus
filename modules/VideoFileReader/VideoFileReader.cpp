@@ -35,9 +35,9 @@ using namespace cv;
 
 log4cxx::LoggerPtr VideoFileReader::m_logger(log4cxx::Logger::getLogger("VideoFileReader"));
 
-VideoFileReader::VideoFileReader(const ConfigReader& x_configReader):
-	Input(x_configReader),
-	m_param(x_configReader),
+VideoFileReader::VideoFileReader(ParameterStructure& xr_params):
+	Input(xr_params),
+	m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_output(Size(m_param.width, m_param.height), CV_8UC3) // Note: sizes will be overridden !
 {
 	AddOutputStream(0, new StreamImage("input", m_output, *this,	"Video stream"));

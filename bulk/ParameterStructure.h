@@ -36,6 +36,7 @@ class ParameterStructure
 public:
 	ParameterStructure(const ConfigReader& x_configReader);
 	~ParameterStructure();
+	const ConfigReader& GetConfig() const {return m_configReader;}
 	void Init();
 	void SetFromConfig();
 	void UpdateConfig() const;

@@ -32,9 +32,9 @@ using namespace std;
 
 log4cxx::LoggerPtr CompareObjects::m_logger(log4cxx::Logger::getLogger("CompareObjects"));
 
-CompareObjects::CompareObjects(const ConfigReader &x_configReader) :
-	Module(x_configReader),
-	m_param(x_configReader)
+CompareObjects::CompareObjects(ParameterStructure &xr_params) :
+	Module(xr_params),
+	m_param(dynamic_cast<Parameters&>(xr_params))
 {
 	AddInputStream(0, new StreamObject("video1", m_objects1, *this, "Stream of objects 1"));
 	AddInputStream(1, new StreamObject("video2", m_objects2, *this, "Stream of objects 2"));
