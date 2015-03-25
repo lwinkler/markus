@@ -49,9 +49,10 @@ using namespace cv;
 using namespace std;
 
 // Constructor
-QModuleViewer::QModuleViewer(const Manager* x_manager, ParameterStructure& xr_params, QWidget *parent) :
+QModuleViewer::QModuleViewer(const Manager& xr_manager, ParameterStructure& xr_params, QWidget *parent) :
 	QWidget(parent),
 	Configurable(xr_params),
+	mr_manager(xr_manager),
 	m_param(dynamic_cast<QModuleViewer::Parameters&>(xr_params))
 {
 	m_img_tmp1              = nullptr; // Allocated on first conversion
@@ -65,11 +66,9 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, ParameterStructure& xr_pa
 	m_outputHeight = 0.8 * height();
 
 	// Handlers for modules
-	assert(x_manager != nullptr);
-	if(x_manager->GetModules().size() == 0)
+	if(xr_manager.GetModules().size() == 0)
 		throw MkException("Module list cannot be empty", LOC);
-	m_manager 		= x_manager;
-	m_currentModule 	= *x_manager->GetModules().begin();
+	m_currentModule 	= xr_manager.GetModules().front();
 	m_currentStream 	= m_currentModule->GetOutputStreamList().begin()->second;
 
 	mp_comboModules 	= new QComboBox();
@@ -85,7 +84,7 @@ QModuleViewer::QModuleViewer(const Manager* x_manager, ParameterStructure& xr_pa
 	layoutCombos->addWidget(lab1, 0, 0);
 	mp_comboModules->clear();
 	int ind = 0;
-	for(const auto & elem : x_manager->GetModules())
+	for(const auto & elem : xr_manager.GetModules())
 		mp_comboModules->addItem((elem)->GetName().c_str(), ind++);
 	layoutCombos->addWidget(mp_comboModules, 0, 1);
 	if(m_param.module > 0 && m_param.module < mp_comboModules->count())
@@ -262,14 +261,14 @@ void QModuleViewer::updateModuleNb(int x_index)
 {
 	Module* mod = nullptr;
 
-	if(x_index < 0 || x_index >= static_cast<int>(m_manager->GetModules().size()))
+	if(x_index < 0 || x_index >= static_cast<int>(mr_manager.GetModules().size()))
 	{
-		mod = m_manager->GetModules().at(0);
+		mod = mr_manager.GetModules().at(0);
 		m_param.module = 0;
 	}
 	else
 	{
-		mod = m_manager->GetModules().at(x_index);
+		mod = mr_manager.GetModules().at(x_index);
 		m_param.module = x_index;
 	}
 	updateModule(mod);
@@ -353,8 +352,11 @@ void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qimg)
 {
 
 	// So far only char images are supported
-	if(mat->type() != CV_8UC3 && mat->type() != CV_8UC3)
+	if(mat->type() != CV_8UC1 && mat->type() != CV_8UC3)
+	{
+		printf("Warning: unsupported image type to be displayed"); // TODO: LOG
 		return;
+	}
 
 	const int & h = mat->rows;
 	const int & w = mat->cols;

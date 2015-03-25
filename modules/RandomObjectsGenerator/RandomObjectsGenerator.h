@@ -32,6 +32,7 @@
 */
 class RandomObjectsGenerator : public Input
 {
+public:
 	class Parameters : public Input::Parameters
 	{
 	public:
@@ -52,7 +53,6 @@ class RandomObjectsGenerator : public Input
 		double speed;
 	};
 
-public:
 	RandomObjectsGenerator(ParameterStructure& xr_params);
 	~RandomObjectsGenerator();
 	MKCLASS("RandomObjectsGenerator")

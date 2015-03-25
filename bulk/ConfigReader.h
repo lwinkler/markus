@@ -28,6 +28,8 @@
 #include <vector>
 #include <sstream>
 
+#include "define.h"
+
 
 class Module;
 class ParameterStructure;
@@ -103,6 +105,7 @@ public:
 private:
 	virtual ParameterStructure& RefParameters(){return m_param;}
 	ParameterStructure& m_param;
+	DISABLE_COPY(Configurable)
 };
 
 #endif

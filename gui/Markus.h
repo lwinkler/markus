@@ -84,6 +84,8 @@ private:
 	QWidget m_mainWidget;
 	QGridLayout m_mainLayout;
 	std::vector<QModuleViewer *> m_moduleViewer;
+	std::vector<QModuleViewer::Parameters *>    m_paramsViewer;
+
 
 
 private slots:

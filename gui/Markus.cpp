@@ -56,6 +56,7 @@ MarkusWindow::MarkusWindow(ParameterStructure& rx_param, Manager& rx_manager)
 	setWindowState(Qt::WindowMaximized);
 
 	//m_scroll.clear();
+	m_paramsViewer.clear();
 	m_moduleViewer.clear();
 	//resizeEvent()();
 	m_mainWidget.setLayout(&m_mainLayout);
@@ -84,7 +85,7 @@ void MarkusWindow::timerEvent(QTimerEvent* px_event)
 
 void MarkusWindow::UpdateConfig()
 {
-	for(auto & elem : m_moduleViewer)
+	for(auto & elem : m_paramsViewer)
 		elem->UpdateConfig();
 	m_param.UpdateConfig();
 }
@@ -274,26 +275,27 @@ void MarkusWindow::resizeEvent(QResizeEvent* event)
 		m_moduleViewer.at(ind)->hide();
 	}
 
-	// Add new module viewers
+	// Add new module viewers to config
 	for(int ind = size ; ind < m_param.nbRows * m_param.nbCols ; ind++)
 	{
 		stringstream ss;
 		ss<<"viewer"<<ind;
-		/* TODO
-		ConfigReader conf = m_configReader.FindRef("viewer[name=\"" + ss.str() + "\"]", true);
+		ConfigReader conf = m_param.RefConfig().FindRef("viewer[name=\"" + ss.str() + "\"]", true);
 		conf.FindRef("parameters", true);
-		m_moduleViewer.push_back(new QModuleViewer(&m_manager, conf));
+		m_paramsViewer.push_back(new QModuleViewer::Parameters(conf));
+		m_moduleViewer.push_back(new QModuleViewer(m_manager, *m_paramsViewer.back()));
 		m_moduleViewer.at(ind)->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 		// m_moduleViewer.at(ind)->showDisplayOptions(true);
-		*/
 	}
 
 	// Remove extra modules
 	for(int ind = m_param.nbRows * m_param.nbCols ; ind < size ; ind++)
 	{
 		delete(m_moduleViewer.at(ind));
+		delete(m_paramsViewer.at(ind));
 	}
 	m_moduleViewer.resize(m_param.nbRows * m_param.nbCols);
+	m_paramsViewer.resize(m_param.nbRows * m_param.nbCols);
 
 	for (int ii = 0; ii < m_param.nbRows; ++ii)
 	{

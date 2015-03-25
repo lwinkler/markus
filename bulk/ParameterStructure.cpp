@@ -32,7 +32,7 @@ log4cxx::LoggerPtr ParameterStructure::m_logger(log4cxx::Logger::getLogger("Para
 
 
 ParameterStructure::ParameterStructure(const ConfigReader& x_configReader):
-	m_configReader(x_configReader.Find("parameters", true)),
+	m_configReader(x_configReader),
 	m_moduleName(x_configReader.GetAttribute("name", "unnamed"))
 {
 	m_writeAllParamsToConfig = false;
@@ -66,9 +66,7 @@ void ParameterStructure::Init()
 */
 void ParameterStructure::SetFromConfig()
 {
-	if(m_configReader.IsEmpty())
-		return;
-	for(const auto& conf : m_configReader.FindAll("param"))
+	for(const auto& conf : m_configReader.FindAll("parameters>param"))
 	{
 		string name  = conf.GetAttribute("name");
 		string value = conf.GetValue();
@@ -93,8 +91,7 @@ void ParameterStructure::SetFromConfig()
 */
 void ParameterStructure::UpdateConfig() const
 {
-	// assert(!m_configReader.IsEmpty());
-	ConfigReader conf = m_configReader;
+	ConfigReader conf = m_configReader.Find("parameters");
 
 	for(const auto & elem : m_list)
 	{
@@ -169,9 +166,9 @@ void ParameterStructure::CheckRange(bool x_checkRelated) const
 	if(x_checkRelated)
 	{
 		// Check that all parameters in config are related to the module
-		if(m_configReader.IsEmpty())
-			return;
-		for(const auto& conf : m_configReader.FindAll("param"))
+		// if(m_configReader.Find("parameters").IsEmpty())
+			// return;
+		for(const auto& conf : m_configReader.FindAll("parameters>param"))
 		{
 			string name = conf.GetAttribute("name");
 			try

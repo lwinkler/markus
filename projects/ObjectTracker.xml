@@ -50,7 +50,6 @@
 			
 			<param name="background_alpha">0.01</param>
 			<param name="foreground_thres">0.1</param>
-			<param name="foreground_filter_size">3</param>
 			<param name="fps"/>
 		</parameters>
 		<inputs>

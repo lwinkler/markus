@@ -69,18 +69,17 @@ public:
 		bool displayOptions;
 	};
 
-	QModuleViewer(const Manager * x_manager, ParameterStructure& xr_params, QWidget *parent = 0);
+	QModuleViewer(const Manager& x_manager, ParameterStructure& xr_params, QWidget *parent = 0);
 	virtual ~QModuleViewer();
 	static void  ConvertMat2QImage(const cv::Mat *mat, QImage *qim);
 	void mouseDoubleClickEvent(QMouseEvent * event);
-	void UpdateConfig(){m_param.UpdateConfig();}
 private:
 	QBoxLayout * mp_mainLayout;
 
 	QImage m_image;
 	Module        * m_currentModule;
 	const Stream  * m_currentStream;
-	const Manager * m_manager;
+	const Manager & mr_manager;
 
 	int m_outputWidth;
 	int m_outputHeight;

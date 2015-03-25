@@ -104,6 +104,7 @@ class SerializableTestSuite : public CxxTest::TestSuite
 public:
 	SerializableTestSuite()
 		: mp_fakeInput(NULL),
+		  mp_fakeParams(NULL),
 		  m_factoryParameters(Factories::parametersFactory()),
 		  m_factoryModules(Factories::modulesFactory()),
 		  m_factoryFeatures(Factories::featuresFactory()),

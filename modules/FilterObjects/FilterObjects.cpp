@@ -132,6 +132,9 @@ void FilterObjects::ProcessFrame()
 		rectangle(m_debug, rect, valid ? Green : Gray, 1, 8);
 		if(posX != nullptr && posY != nullptr)
 			line(m_debug, Point(posX->initial * diagonal, posY->initial * diagonal), Point(posX->value * diagonal, posY->value * diagonal), valid ? Green : Gray, 1, 8);
+#else
+		(void)posX;
+		(void)posY;
 #endif
 	}
 	// Max number of objects criterion
