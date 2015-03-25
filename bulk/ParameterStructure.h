@@ -57,6 +57,8 @@ protected:
 
 private:
 	static log4cxx::LoggerPtr m_logger;
+	// Note: Disable copies of parameters as a safety
+	DISABLE_COPY(ParameterStructure)
 };
 
 
