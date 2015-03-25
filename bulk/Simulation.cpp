@@ -46,7 +46,8 @@ inline ConfigReader manOrMod(ConfigReader xr_mainConfig, const string& x_name)
 Simulation::Simulation(Parameters& xr_params, const Context& x_context) :
 	Configurable(xr_params),
 	m_param(dynamic_cast<Parameters&>(xr_params)),
-	m_manager(xr_params),
+	m_managerParams(xr_params.GetConfig()),
+	m_manager(m_managerParams),
 	m_outputDir("simulation_" + timeStamp())
 {
 	m_manager.SetContext(x_context);
@@ -126,7 +127,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 		auto ittar = targets.begin();
 		auto itmod = moduleNames.begin();
 		auto itval = originalValues.begin();
-		for(string itpar : paramNames)
+		for(const auto& itpar : paramNames)
 		{
 			LOG_DEBUG(m_logger, "Param:"<< *itmod << ":" << itpar);
 			*ittar = new ConfigReader(manOrMod(xr_mainConfig, *itmod).FindRef("parameters>param[name=\"" + itpar + "\"]", true));

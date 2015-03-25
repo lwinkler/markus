@@ -57,6 +57,7 @@ protected:
 	std::stringstream m_allTargets;
 	std::stringstream m_targets;
 
+	Manager::Parameters m_managerParams;
 	Manager m_manager;
 	const std::string m_outputDir;
 	int m_cpt;
