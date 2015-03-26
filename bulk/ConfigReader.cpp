@@ -589,6 +589,10 @@ vector<ConfigReader> ConfigReader::FindAll(const string& x_searchString, bool x_
 
 	try
 	{
+		if(IsEmpty())
+		{
+			return results;
+		}
 		// If empty return node: for recurrent function
 		if(x_searchString.empty())
 		{
@@ -600,15 +604,7 @@ vector<ConfigReader> ConfigReader::FindAll(const string& x_searchString, bool x_
 		splitTagName(x_searchString, tagName, attrName, attrValue, searchString2);
 
 		if(searchString2 == "")
-		{
-			ConfigReader conf = GetSubConfig(tagName, attrName, attrValue);
-			while(!conf.IsEmpty())
-			{
-				results.push_back(conf);
-				conf = conf.NextSubConfig(tagName, attrName, attrValue);
-			}
-			return results;
-		}
+			return GetSubConfig(tagName, attrName, attrValue).FindAll(searchString2);
 		else if(attrName == "")
 			return GetSubConfig(tagName).FindAll(searchString2);
 		else
