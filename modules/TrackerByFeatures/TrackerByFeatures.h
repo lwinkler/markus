@@ -69,7 +69,7 @@ public:
 	void Reset();
 
 private:
-	Parameters& m_param;
+	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 protected:
 	void MatchTemplates();

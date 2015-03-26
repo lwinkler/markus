@@ -66,7 +66,7 @@ public:
 	static const std::string ExtensionFromFourcc(const std::string& x_fourcc);
 
 private:
-	Parameters& m_param;
+	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
