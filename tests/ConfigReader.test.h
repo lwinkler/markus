@@ -73,6 +73,7 @@ public:
 		TS_ASSERT(!conf.Find("t1>t2>t3[name=\"bla\"]").IsEmpty());
 		TS_ASSERT( conf.Find("t1>t2>t3[name=\"bla\"]").GetValue() == "333");
 		TS_ASSERT(conf.FindAll("t1>t2>t3[name=\"bla\"]").size() == 1);
+		std::cout<<conf.FindAll("t1>t2>t3").size()<<std::endl;
 		TS_ASSERT(conf.FindAll("t1>t2>t3").size() == 2);
 		TS_ASSERT(conf.Find("t1>t2").FindAll("t3").size() == 2);
 	}
