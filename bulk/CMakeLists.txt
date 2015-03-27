@@ -23,6 +23,7 @@ StreamState.cpp
 Object.cpp
 Event.cpp
 FeatureFloatInTime.cpp
+FeatureHistory.cpp
 FeatureVector.cpp
 ConfigReader.cpp
 ModuleTimer.cpp

@@ -44,6 +44,7 @@
 #include "Factories.h"
 #include "FeatureStd.h"
 #include "FeatureFloatInTime.h"
+#include "FeatureHistory.h"
 #include "FeatureVector.h"
 #include "FeatureOpenCv.h"
 
@@ -295,6 +296,14 @@ public:
 	{
 		FeatureFloatInTime ffit(0.93);
 		testSerialization(ffit, "FeatureFloatInTime");
+	}
+
+	void testFeatureHistory()
+	{
+		FeatureHistory ffh;
+		ffh.Update(123, FeatureFloat(0.87));
+		ffh.Update(223, FeatureFloat(0.97));
+		testSerialization(ffh, "FeatureHistory");
 	}
 
 	void testFeatureString()
