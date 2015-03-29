@@ -156,6 +156,11 @@ public:
 		m_obj2.AddFeature("fkp", new FeatureKeyPoint(m_kp));
 		m_obj2.AddFeature("fp2f", new FeaturePoint2f(m_pt2f));
 		m_obj2.AddFeature("fp3f", new FeaturePoint3f(m_pt3f));
+		FeatureHistory fh;
+		fh.Update(004, FeatureFloat(777));
+		fh.Update(005, FeatureFloat(0.5));
+		fh.Update(006, FeatureInt(5));
+		m_obj2.AddFeature("fh", fh.CreateCopy());
 
 		m_evt2.Raise("name2", m_obj2);
 	}

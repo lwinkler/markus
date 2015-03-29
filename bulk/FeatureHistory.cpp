@@ -79,11 +79,11 @@ void FeatureHistory::Serialize(ostream& x_out, const string& x_dir) const
 {
 	if(m_feats.size() == 0)
 	{
-		x_out<<"[]";
+		x_out<<"{\"history\":[]}";
 		return;
 	}
 
-	x_out << "[";
+	x_out << "{\"history\":[";
 	size_t i = 0;
 	for(const auto& elem : m_feats)
 	{
@@ -95,13 +95,14 @@ void FeatureHistory::Serialize(ostream& x_out, const string& x_dir) const
 			x_out << "},";
 		i++;
 	}
-	x_out << "]";
+	x_out << "]}";
 }
 
 void FeatureHistory::Deserialize(istream& x_in, const string& x_dir)
 {
-	Json::Value root;
-	x_in >> root;  // note: copy first for local use
+	Json::Value root0;
+	x_in >> root0;  // note: copy first for local use
+	Json::Value root = root0["history"];
 	assert(root.isArray());
 
 	m_feats.clear();

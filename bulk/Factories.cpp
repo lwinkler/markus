@@ -29,6 +29,7 @@
 #include "FeatureFloatInTime.h"
 #include "FeatureVector.h"
 #include "FeatureOpenCv.h"
+#include "FeatureHistory.h"
 #define REGISTER_FEATURE(child, type){\
 {\
 fact1.Register<child>(type);\
@@ -64,6 +65,7 @@ void Factories::RegisterAll()
 	REGISTER_FEATURE(FeatureKeyPoint, "FeatureKeyPoint");
 	REGISTER_FEATURE(FeaturePoint2f, "FeaturePoint2f");
 	REGISTER_FEATURE(FeaturePoint3f, "FeaturePoint3f");
+	REGISTER_FEATURE(FeatureHistory, "FeatureHistory");
 	// REGISTER_FEATURE(FeatureMat, "FeatureMat"); // Experimental
 
 	// All controllers
