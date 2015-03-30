@@ -127,7 +127,7 @@ const ConfigReader ConfigReader::GetSubConfigIgnoreNamespace(const string& x_tag
 		throw MkException("Impossible to find node " + x_tagName + " in ConfigReader", LOC);
 	TiXmlNode* newNode = mp_node->FirstChild();
 
-	while(newNode != NULL && mp_node->Value() != x_tagName)
+	while(newNode != NULL)
 	{
 		string tag(newNode->Value());
 
@@ -144,9 +144,9 @@ const ConfigReader ConfigReader::GetSubConfigIgnoreNamespace(const string& x_tag
 		if(tag == x_tagName)
 			return ConfigReader(newNode);
 
-		newNode = mp_node->NextSibling();
+		newNode = newNode->NextSibling();
 	}
-	return ConfigReader(newNode);
+	return ConfigReader(NULL);
 }
 
 
