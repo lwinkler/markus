@@ -12,7 +12,7 @@ from vplib.HTMLTags import *
 
 # Global arguments, will be overwritten at runtime
 args = None
-DEBUG = True
+DEBUG = False
 
 def arguments_parser():
 	""" Define the parser and parse arguments """
@@ -81,8 +81,8 @@ def error(line):
 def warning(line):
 	print('WARN: ' + line)
 
-def line(char):
-	print char * 80
+# def line(char):
+	# print char * 80
 
 def check(resp):
 	if resp['code'] != 200: 
@@ -178,7 +178,29 @@ def generateLogs(jobDetails, fields):
 			content <= DIV("<br/>".join(job[field]) + "<br/>")
 	return content
 
+def checkStatus(jobDetail, rules):
+	""" Check that the result of the job is valid, given a set of rules """
 
+	errors = []
+
+	for rule in rules:
+		if rule['contains']:
+			valid = False
+			for detail in jobDetail[rule['target']]:
+				if rule['text'] in detail:
+					valid = True
+					break
+		else:
+			valid = True
+			for detail in jobDetail[rule['target']]:
+				if rule['text'] in detail:
+					valid = False
+					break
+		if not valid:
+			errors.append(rule['name'])
+
+
+	return errors
 
 def main():
 	args = arguments_parser()
@@ -188,8 +210,7 @@ def main():
 	# Query jobs
 	[jobs] = getQuery(url + '/job', ['jobs'])
 
-	print "Found %d jobs: %s" % (len(jobs), jobs)
-	line('=')
+	print("Found %d jobs: %s" % (len(jobs), jobs))
 
 	jobDetails=[]
 
@@ -230,14 +251,33 @@ def main():
 			'logFile2':   markusLog,
 			'logFile2Start': lineStart2
 		})
+		print json.dumps(value, sort_keys=True, indent=4, separators=(',', ': '))
 
 	# sleep a few seconds to let the commands run
 	time.sleep(args.delay)
+
+	# A set of rules for the output of job description
+	rules = [
+		{'name': 'statusCode1', 'target': 'log1', 'contains': True, 'text': '"code":1010', 
+			'descr': 'JBoss must receive the status code 1010. Another value indicates that an exception was caught'},
+		{'name': 'statusCode2', 'target': 'log2', 'contains': True, 'text': '"code":1010',
+			'descr': 'Markus process must receive the status code 1010. Another value indicates that an exception was caught'},
+		{'name': 'cmdSent1', 'target': 'log2', 'contains': True, 'text': 'Command manager.manager.Status returned value', 
+			'descr': 'Markus process must receive and execute command "manager.manager.Status"'},
+		{'name': 'cmdSent2', 'target': 'log2', 'contains': True, 'text': 'Command manager.manager.PrintStatistics returned value', 
+			'descr': 'Markus process must receive and execute command "manager.manager.PrintStatistics"'},
+		{'name': 'processFrames', 'target': 'log2', 'contains': False, 'text': 'Manager: 0 frames processed', 
+			'descr': 'Markus process must have processed frames since last restart'}
+	]
 	
 	# Gather and append logs from JBoss and Markus
 	for job in jobDetails:
 		job['log1'] = appendLogFromLine(job['logFile1'], job['logFile1Start'])
 		job['log2'] = appendLogFromLine(job['logFile2'], job['logFile2Start'])
+		errors = checkStatus(job, rules)
+		job['status'] = 'ok' if len(errors)==0 else "errors: " + "<br/>".join(errors)
+		if not len(errors)==0:
+			print "Found errors in %s: %s" % (job, str(errors)) 
 
 	debug("generate report %s" % args.output)
 	# generate the report
@@ -250,7 +290,7 @@ def main():
 
 		# generate summary table
 		body <= H2("Job summary table")
-		body <= generateSummary(jobDetails, ['hash', 'cameraId', 'algorithmName', 'descr'])
+		body <= generateSummary(jobDetails, ['hash', 'cameraId', 'status', 'algorithmName', 'descr'])
 
 		# generate html containing logs
 		body <= H2("Details of each job")
