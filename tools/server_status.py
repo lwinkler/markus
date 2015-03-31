@@ -105,10 +105,10 @@ def appendLogFromLine(fname, nb_line):
 	with open(fname, "r") as f:
 		for line in f:
 			if i >= nb_line:
-				debug(line)
 				logBuffer.append(line)
 			i+=1
 
+	debug("append %d lines from %s" % (len(logBuffer), fname))
 	return logBuffer
 
 
@@ -149,18 +149,18 @@ def generateSummary(jobDetails, fields):
 	""" Generate a table containing the summary for each job """
 
 	table = TABLE(border=1, style='border-collapse: collapse;')
-	row = TR()
 
 	# gen header
+	row = TR()
 	for field in fields:
-		table <= TH(field)
+		row <= TH(field)
 	table <= row
 
-	row = TR()
 	# For each job: read the generated logs
 	for job in jobDetails:
+		row = TR()
 		for field in fields:
-			row <= TR(job[field])
+			row <= TD(job[field])
 		table <= row
 
 	return table
@@ -174,7 +174,8 @@ def generateLogs(jobDetails, fields):
 	for job in jobDetails:
 		content <= H3(job['hash'])
 		for field in fields:
-			content <= DIV("".join(job[field]))
+			content <= H4(field)
+			content <= DIV("<br/>".join(job[field]) + "<br/>")
 	return content
 
 
@@ -202,10 +203,10 @@ def main():
 		files  = glob.glob(expr)
 		if len(files) != 1:
 			warning('%d files found as %s: %s' % (len(files), expr, str(files)))
-			logFile = sorted(files)[len(files)-1]
-			print "Using file %s " % logFile 
-
-		markusLog = files[0]
+			markusLog = sorted(files)[len(files)-1]
+			warning("Using file %s " % markusLog)
+		else:
+			markusLog = files[0]
 		lineStart2 = lineCount(markusLog)
 
 		# Send command to read status
@@ -216,25 +217,27 @@ def main():
 		debug('Send command PrintStatistics')
 		postQuery(url + '/job/command/' + job, [], {'command':'manager.manager.PrintStatistics'})
 
+ 		debug(json.dumps(value, sort_keys=True, indent=4, separators=(',', ': ')))
+
 		jobDetails.append({
 			'hash' : job,
 			'cameraId': value[u'cameraId'],
 			'algorithmParams': value[u'algorithmParams'],
 			'algorithmName': value[u'algorithmName'],
-			# 'descr': value,
+			'descr': json.dumps(value, sort_keys=True, indent=4, separators=(',', ': ')),
 			'logFile1':   args.logJBoss,
 			'logFile1Start': lineStart1,
 			'logFile2':   markusLog,
 			'logFile2Start': lineStart2
 		})
+
+	# sleep a few seconds to let the commands run
+	time.sleep(args.delay)
 	
 	# Gather and append logs from JBoss and Markus
 	for job in jobDetails:
 		job['log1'] = appendLogFromLine(job['logFile1'], job['logFile1Start'])
 		job['log2'] = appendLogFromLine(job['logFile2'], job['logFile2Start'])
-
-	# sleep a few seconds to let the commands run
-	time.sleep(args.delay)
 
 	debug("generate report %s" % args.output)
 	# generate the report
@@ -247,7 +250,7 @@ def main():
 
 		# generate summary table
 		body <= H2("Job summary table")
-		body <= generateSummary(jobDetails, ['hash', 'cameraId', 'algorithmName'])
+		body <= generateSummary(jobDetails, ['hash', 'cameraId', 'algorithmName', 'descr'])
 
 		# generate html containing logs
 		body <= H2("Details of each job")
@@ -255,17 +258,7 @@ def main():
 
 		out.write(str(HTML(head + body)))
 
-		# For each job: print summaries
-		for job in jobDetails:
-			out.write("\nDetails of job XXX\n")
-			json.dump(job, out, sort_keys=True, indent=4, separators=(',', ': '))
-
-		line('=')
-
-		for job in jobDetails:
-			out.write("\nLogs of job XXX\n")
-			json.dump(job, out, sort_keys=True, indent=4, separators=(',', ': '))
-			line('-')
+		# json.dump(job, out, sort_keys=True, indent=4, separators=(',', ': '))
 
 if __name__ == "__main__":
 	main()
