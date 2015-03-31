@@ -1,5 +1,6 @@
 #! /usr/bin/python
 
+import os.path
 import requests
 import sys
 import json
@@ -224,7 +225,8 @@ def main():
 		files  = glob.glob(expr)
 		if len(files) != 1:
 			warning('%d files found as %s: %s' % (len(files), expr, str(files)))
-			markusLog = sorted(files)[len(files)-1]
+			files = sorted(files, key=lambda x: os.path.getmtime(x))
+			markusLog = files[len(files)-1]
 			warning("Using file %s " % markusLog)
 		else:
 			markusLog = files[0]
@@ -263,9 +265,9 @@ def main():
 		{'name': 'statusCode2', 'target': 'log2', 'contains': True, 'text': '"code":1010',
 			'descr': 'Markus process must receive the status code 1010. Another value indicates that an exception was caught'},
 		{'name': 'cmdSent1', 'target': 'log2', 'contains': True, 'text': 'Command manager.manager.Status returned value', 
-			'descr': 'Markus process must receive and execute command "manager.manager.Status"'},
+			'descr': 'Markus process must receive and execute command "Status"'},
 		{'name': 'cmdSent2', 'target': 'log2', 'contains': True, 'text': 'Command manager.manager.PrintStatistics returned value', 
-			'descr': 'Markus process must receive and execute command "manager.manager.PrintStatistics"'},
+			'descr': 'Markus process must receive and execute command "PrintStatistics"'},
 		{'name': 'processFrames', 'target': 'log2', 'contains': False, 'text': 'Manager: 0 frames processed', 
 			'descr': 'Markus process must have processed frames since last restart'}
 	]
@@ -277,7 +279,8 @@ def main():
 		errors = checkStatus(job, rules)
 		job['status'] = 'ok' if len(errors)==0 else "errors: " + "<br/>".join(errors)
 		if not len(errors)==0:
-			print "Found errors in %s: %s" % (job, str(errors)) 
+			print "Found errors with job %s: %s" % (job['hash'], str(errors)) 
+		job['errors'] = errors
 
 	debug("generate report %s" % args.output)
 	# generate the report
