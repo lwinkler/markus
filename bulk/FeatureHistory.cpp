@@ -71,7 +71,8 @@ void FeatureHistory::Randomize(unsigned int& xr_seed, const string& x_param)
 	for(int i = 0 ; i  < 100 ; i++)
 	{
 		FeatureFloat* feat = new FeatureFloat();
-		m_feats.insert(std::make_pair(i, feat));
+		feat->Randomize(xr_seed, "[0:1]");
+		m_feats.insert(std::make_pair(i * 1000, feat));
 	}
 }
 
