@@ -46,6 +46,7 @@ public:
 	Object(const Object &);
 	Object& operator=(const Object &);
 
+	inline void SetName(const std::string& x_name) {m_name = x_name;}
 	inline const std::string& GetName() const {return m_name;}
 	inline int GetId() const {return m_id;}
 	inline void SetId(int x_id) {m_id = x_id;}
