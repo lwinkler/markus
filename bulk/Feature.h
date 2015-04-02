@@ -61,8 +61,8 @@ public:
 		}
 		return *this;
 	}
-	inline const Feature& operator*  () const {return *mp_feat;}
-	inline const Feature* operator-> () const {return mp_feat;}
+	inline Feature& operator*  () const {return *mp_feat;}
+	inline Feature* operator-> () const {return mp_feat;}
 
 protected:
 	Feature* mp_feat;

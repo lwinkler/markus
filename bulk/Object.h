@@ -71,6 +71,13 @@ public:
 	{
 		return m_feats.find(x_name) != m_feats.end();
 	}
+	inline Feature& RefFeature(const std::string& x_name)
+	{
+		auto it = m_feats.find(x_name);
+		if(it == m_feats.end())
+			throw FeatureNotFoundException("Feature " + x_name + " does not exist", LOC);
+		return *it->second;
+	}
 	inline const Feature& GetFeature(const std::string& x_name) const
 	{
 		const auto it = m_feats.find(x_name);
