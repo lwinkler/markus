@@ -144,22 +144,29 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 
 		if(file != "")
 		{
+			// Reference to the value to use (in json file)
+			vector<string> refNames;
+			split(varConf.GetAttribute("references", ""), ',', refNames);
+			if(refNames.size() != paramNames.size())
+				throw MkException("References must have the same sizes as parameters", LOC);
+
 			// set values of parameters by using a JSON file
 			SYSTEM("cp " + file + " " + m_outputDir);
 			ifstream ifs;
 			ifs.open(file);
 			Json::Value root;
 			ifs >> root;
+
+			// For each set of parameters
 			for(const auto& elem : root.getMemberNames())
 			{
-				if(!root[elem].isArray())
-					throw MkException("Range " + elem + " in JSON must contain an array", LOC);
-				if(root[elem].size() != targets.size())
-					throw MkException("Range " + elem + " in JSON must have the same size as parameters to variate", LOC);
-
-				for(unsigned int i = 0 ; i < root[elem].size() ; i++)
+				int i = 0;
+				for(const auto& ref : refNames)
 				{
-					Json::Value jvalue = root[elem][i];
+					if(root[elem][ref].isNull())
+						throw MkException("No tag " + ref + " for " + elem, LOC);
+
+					Json::Value jvalue = root[elem][ref];
 					// cout<<value.asString()<<endl;
 					try
 					{
@@ -171,6 +178,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 						ss1 << jvalue;
 						targets.at(i)->SetValue(ss1.str());
 					}
+					i++;
 				}
 
 				// add a name
