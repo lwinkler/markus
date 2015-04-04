@@ -1,7 +1,7 @@
 <application name="ObjectTracker" description="">
 	<variations>
 		<var module="TrackerByFeatures" param="max_matching_distance" nb="2" range="[0:100]"/>
-		<var module="TrackerByFeatures" parameters="width,height" file="tools/evaluation/ranges/resolutions.json"/>
+		<var module="TrackerByFeatures" parameters="width,height" references="width,height" file="tools/evaluation/ranges/resolutions.json"/>
 	</variations>
 	<module name="Input" id="0">
 		<parameters>
