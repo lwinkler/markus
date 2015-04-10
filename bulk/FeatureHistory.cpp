@@ -40,45 +40,45 @@ using namespace std;
 */
 void FeatureHistory::Update(const TIME_STAMP& x_timeStamp, const Feature& x_feat)
 {
-	auto it = m_feats.find(x_timeStamp);
-	if(it != m_feats.end())
+	auto it = features.find(x_timeStamp);
+	if(it != features.end())
 		throw MkException("A feature already exists for this time stamp.", LOC);
 
-	m_feats.insert(std::make_pair(x_timeStamp, x_feat.CreateCopy()));
+	features.insert(std::make_pair(x_timeStamp, x_feat.CreateCopy()));
 }
 
 double FeatureHistory::CompareSquared(const Feature& x_feature) const
 {
 	const FeatureHistory& feat(dynamic_cast<const FeatureHistory&>(x_feature));
-	if(m_feats.size() != feat.m_feats.size())
+	if(features.size() != feat.features.size())
 		return 1;
-	if(m_feats.empty())
+	if(features.empty())
 		return 0;
 
-	auto it = feat.m_feats.begin();
+	auto it = feat.features.begin();
 	double sum = 0;
-	for(const auto& elem : m_feats)
+	for(const auto& elem : features)
 	{
 		sum += elem.second->CompareSquared(*it->second);
 		it++;
 	}
-	return sum / POW2(m_feats.size());
+	return sum / POW2(features.size());
 }
 
 void FeatureHistory::Randomize(unsigned int& xr_seed, const string& x_param)
 {
-	m_feats.clear();
+	features.clear();
 	for(int i = 0 ; i  < 100 ; i++)
 	{
 		FeatureFloat* feat = new FeatureFloat();
 		feat->Randomize(xr_seed, "[0:1]");
-		m_feats.insert(std::make_pair(i * 1000, feat));
+		features.insert(std::make_pair(i * 1000, feat));
 	}
 }
 
 void FeatureHistory::Serialize(ostream& x_out, const string& x_dir) const
 {
-	if(m_feats.size() == 0)
+	if(features.size() == 0)
 	{
 		x_out<<"{\"history\":[]}";
 		return;
@@ -86,11 +86,11 @@ void FeatureHistory::Serialize(ostream& x_out, const string& x_dir) const
 
 	x_out << "{\"history\":[";
 	size_t i = 0;
-	for(const auto& elem : m_feats)
+	for(const auto& elem : features)
 	{
 		x_out << "{\"time\":"<<elem.first<<",\"feature\":";
 		elem.second->Serialize(x_out, "");
-		if(i == m_feats.size() - 1)
+		if(i == features.size() - 1)
 			x_out << "}";
 		else
 			x_out << "},";
@@ -106,7 +106,7 @@ void FeatureHistory::Deserialize(istream& x_in, const string& x_dir)
 	Json::Value root = root0["history"];
 	assert(root.isArray());
 
-	m_feats.clear();
+	features.clear();
 	FactoryFeatures& factory(Factories::featuresFactoryBySignature());
 	for(unsigned int i = 0 ; i < root.size() ; i++)
 	{
@@ -117,6 +117,6 @@ void FeatureHistory::Deserialize(istream& x_in, const string& x_dir)
 		stringstream ss2;
 		ss2 << root[i]["feature"];
 		feat->Deserialize(ss2, x_dir);
-		m_feats.insert(std::make_pair(root[i]["time"].asInt(), feat));
+		features.insert(std::make_pair(root[i]["time"].asInt(), feat));
 	}
 }
