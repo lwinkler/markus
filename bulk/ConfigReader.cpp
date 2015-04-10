@@ -327,8 +327,7 @@ const string ConfigReader::GetAttribute(const string& x_attributeName) const
 
 	const string * str = element->Attribute(x_attributeName);
 	if(str == nullptr)
-		return ""; // TODO: throw exception and fix the rest of the code
-	// throw MkException("Attribute is unexistant", LOC);
+		throw MkException("Attribute " + x_attributeName + " is unexistant", LOC);
 	else
 		return *str;
 }
@@ -432,8 +431,8 @@ void ConfigReader::Validate() const
 
 	while(!conf.IsEmpty())
 	{
-		string id = conf.GetAttribute("id");
-		string name = conf.GetAttribute("name");
+		string id = conf.GetAttribute("id", "");
+		string name = conf.GetAttribute("name", "");
 		if(id == "")
 			throw MkException("Module " + name + " has no id", LOC);
 		if(name == "")
@@ -471,8 +470,6 @@ void ConfigReader::CheckUniquenessOfId(const string& x_group, const string& x_ty
 	while(!conf.IsEmpty())
 	{
 		string id = conf.GetAttribute(x_idLabel);
-		if(id == "")
-			throw MkException(x_type + " of module name=" + x_moduleName + " has no " + x_idLabel, LOC);
 		if(ids[id])
 			throw MkException(x_type + " with " + x_idLabel + "=" + id + " must be unique for module name=" + x_moduleName, LOC);
 		ids[id] = true;

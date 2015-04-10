@@ -66,7 +66,7 @@ Manager::Manager(ParameterStructure& xr_params) :
 	{
 		// Read parameters
 		if(moduleConfig.Find("parameters", true).IsEmpty())
-			throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name"), LOC);
+			throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name", "(unknown)"), LOC);
 		string moduleType = moduleConfig.Find("parameters>param[name=\"class\"]").GetValue();
 		ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, moduleConfig);
 		Module * tmp1 = mr_moduleFactory.Create(moduleType, *tmp2);
@@ -122,8 +122,8 @@ void Manager::Connect()
 			try
 			{
 				int inputId        = atoi(inputConfig.GetAttribute("id").c_str());
-				const string& tmp1 = inputConfig.GetAttribute("moduleid");
-				const string& tmp2 = inputConfig.GetAttribute("outputid");
+				const string& tmp1 = inputConfig.GetAttribute("moduleid", "");
+				const string& tmp2 = inputConfig.GetAttribute("outputid", "");
 				if(tmp1 != "" && tmp2 != "")
 				{
 					int outputModuleId    = atoi(tmp1.c_str());
@@ -137,7 +137,7 @@ void Manager::Connect()
 			}
 			catch(MkException& e)
 			{
-				LOG_ERROR(m_logger, "Cannot connect input "<<inputConfig.GetAttribute("id")<<" of module "<<module.GetName());
+				LOG_ERROR(m_logger, "Cannot connect input "<<inputConfig.GetAttribute("id", "(unknown)")<<" of module "<<module.GetName());
 				throw;
 			}
 		}
