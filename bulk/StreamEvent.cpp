@@ -86,11 +86,7 @@ void StreamEvent::RenderTo(Mat& x_output) const
 /// Query : give info about cursor position
 void StreamEvent::Query(int x_posX, int x_posY) const
 {
-	// check if out of bounds
-	if(x_posX < 0 || x_posY < 0 || x_posX >= GetWidth() || x_posY >= GetHeight())
-		return;
-	
-	LOG_ERROR(m_logger, "TODO");
+	LOG_INFO(m_logger, m_event);
 }
 
 void StreamEvent::Serialize(ostream& x_out, const string& x_dir) const

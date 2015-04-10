@@ -99,7 +99,6 @@ void Module::Reset()
 	for(const auto& elem : m_param.GetList())
 	{
 		// Do not add param if locked or already present
-		// TODO: Suppress GetType() and use a CreateController method
 		if(elem->IsLocked() || HasController(elem->GetName()))
 			continue;
 		Controller* ctr = Factories::parameterControllerFactory().Create(elem->GetType(), *elem);
@@ -109,7 +108,7 @@ void Module::Reset()
 	}
 
 	if(m_param.cached == CachedState::WRITE_CACHE)
-		 SYSTEM("mkdir -p " + m_context.GetOutputDir() + "/cache/");
+		 SYSTEM("mkdir -p " + GetContext().GetOutputDir() + "/cache/");
 }
 
 /**
@@ -538,7 +537,7 @@ void Module::WriteToCache() const
 	for(const auto &elem : m_outputStreams)
 	{
 		if(!elem.second->IsConnected()) continue;
-		string directory = m_context.GetOutputDir() + "/cache/";
+		string directory = GetContext().GetOutputDir() + "/cache/";
 		stringstream fileName;
 		fileName << directory << GetName() << "." << elem.second->GetName() << "." << m_currentTimeStamp << ".json";
 		ofstream of;
@@ -575,7 +574,6 @@ void Module::ReadFromCache()
 *
 * @param xr_seed      Seed for randomization
 */
-// TODO: Add an ifdef for unit tests
 void Module::ProcessRandomInput(unsigned int& xr_seed)
 {
 	unsigned int lastseed = xr_seed;

@@ -90,55 +90,6 @@ Manager::~Manager()
 	for(auto & elem : m_parameters)
 		delete elem;
 
-	/// Do the final operations on the static class
-	const string& outputDir = m_context.GetOutputDir();
-	if(!outputDir.empty())
-	{
-		LOG_INFO(m_logger, "Results written to directory "<<outputDir);
-		if(getenv("LOG_DIR") == nullptr)
-		{
-			try
-			{
-				SYSTEM("cp markus.log " + outputDir + "/markus.copy.log");
-			}
-			catch(...)
-			{
-				LOG_WARN(m_logger, "Error at the copy of markus.log");
-			}
-		}
-
-		// Copy the directory for archiving if needed
-		try
-		{
-			if(m_param.autoClean)
-			{
-				if(m_param.archiveDir != "")
-				{
-					LOG_INFO(m_logger, "Working directory moved to " + m_param.archiveDir);
-					SYSTEM("mkdir -p " + m_param.archiveDir);
-					SYSTEM("mv " + outputDir + " " + m_param.archiveDir + "/");
-				}
-				else
-				{
-					LOG_INFO(m_logger, "Working directory deleted");
-					SYSTEM("rm -rf " + outputDir);
-				}
-			}
-			else
-			{
-				if(m_param.archiveDir != "")
-				{
-					LOG_INFO(m_logger, "Working directory copied to " + m_param.archiveDir);
-					SYSTEM("mkdir -p " + m_param.archiveDir);
-					SYSTEM("cp -r " + outputDir + " " + m_param.archiveDir);
-				}
-			}
-		}
-		catch(MkException &e)
-		{
-			LOG_ERROR(m_logger, "Exception thrown while archiving: " << e.what());
-		}
-	}
 }
 
 /**
@@ -458,7 +409,7 @@ void Manager::PrintStatistics()
 	// LOG_INFO("Total time "<< m_timerProcessing + m_timerConvertion<<" ms ("<<     (1000.0 * m_frameCount) /(m_timerProcessing + m_timerConvertion)<<" frames/s)");
 
 	// Create an XML file to summarize CPU usage
-	string benchFileName = m_context.GetOutputDir() + "/benchmark.xml";
+	string benchFileName = GetContext().GetOutputDir() + "/benchmark.xml";
 	ConfigReader benchSummary(benchFileName, true);
 	ConfigReader conf = benchSummary.FindRef("benchmark", true);
 
@@ -600,7 +551,7 @@ void Manager::Status() const
 	ss.clear();
 	ss << root;
 	evt.AddExternalInfo("exception", ss);
-	evt.Notify(m_context, true);
+	evt.Notify(GetContext(), true);
 }
 
 /**
@@ -689,7 +640,7 @@ void Manager::UpdateConfig()
 */
 void Manager::WriteStateToDirectory(const string& x_directory) const
 {
-	string directory = m_context.GetOutputDir() + "/" + x_directory;
+	string directory = GetContext().GetOutputDir() + "/" + x_directory;
 	SYSTEM("mkdir -p " + directory);
 	for(const auto & elem : m_modules)
 	{
@@ -716,5 +667,5 @@ void Manager::NotifyException(const MkException& x_exception)
 	Event ev;
 	ev.AddExternalInfo("exception", ss);
 	ev.Raise("exception");
-	ev.Notify(m_context, true);
+	ev.Notify(GetContext(), true);
 }

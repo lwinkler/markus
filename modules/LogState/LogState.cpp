@@ -61,7 +61,7 @@ void LogState::Reset()
 	*/
 
 
-	m_srtFileName = m_context.GetOutputDir() + "/" + m_param.file + ".srt";
+	m_srtFileName = GetContext().GetOutputDir() + "/" + m_param.file + ".srt";
 	// cout<<"file"<<m_param.file<<endl;
 	// cout<<m_srtFileName<<endl;
 	m_file.close();

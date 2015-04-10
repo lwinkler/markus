@@ -90,6 +90,7 @@ protected:
 	ParameterStructure* mp_fakeConfig;
 	Module* mp_fakeInput;
 	ConfigReader* mp_config;
+	Context::Parameters* mp_contextParams;
 	Context* mp_context;
 
 	// Objects for streams
@@ -112,7 +113,6 @@ public:
 		else
 			m_factoryModules.List(m_moduleTypes);
 
-		mp_context = new Context("", "TestModule", "tests/out");
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigReader("/tmp/config_empty.xml");
 		addModuleToConfig("VideoFileReader", *mp_config)
@@ -125,6 +125,8 @@ public:
 		// note: we need a fake module to create the input streams
 		mp_fakeInput->SetAsReady();
 		mp_fakeInput->Reset();
+		mp_contextParams = new Context::Parameters(mp_config->Find("application")); // TODO: set context ?
+		mp_context = new Context(*mp_contextParams, "", "TestModule", "tests/out");
 	}
 	void tearDown()
 	{
@@ -132,6 +134,7 @@ public:
 		CLEAN_DELETE(mp_fakeInput);
 		CLEAN_DELETE(mp_config);
 		CLEAN_DELETE(mp_context);
+		CLEAN_DELETE(mp_contextParams);
 	}
 
 	ConfigReader addModuleToConfig(const string& rx_type, ConfigReader& xr_config)

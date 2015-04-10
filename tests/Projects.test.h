@@ -57,8 +57,6 @@ protected:
 		TS_ASSERT(!appConfig.IsEmpty());
 		Manager::Parameters params(appConfig);
 		Manager manager(params);
-		Context context("", "ProjectsTestSuite", "tests/out");
-		manager.SetContext(context);
 		manager.AllowAutoProcess(false);
 		manager.Connect();
 		manager.Reset();

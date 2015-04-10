@@ -53,7 +53,7 @@ void LogObjects::Reset()
 {
 	Module::Reset();
 
-	string srtFileName = m_context.GetOutputDir() + "/" + m_param.file;
+	string srtFileName = GetContext().GetOutputDir() + "/" + m_param.file;
 	CLEAN_DELETE(mp_annotationWriter);
 	mp_annotationWriter = new AnnotationFileWriter();
 	mp_annotationWriter->Open(srtFileName);

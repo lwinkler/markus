@@ -47,16 +47,12 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Processable::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterBool("auto_clean", 0, 0, 1,     &autoClean, "Automatically clean the temporary directory when the application closes"));
 			m_list.push_back(new ParameterBool("fast", 0, 0, 1,           &fast, "Run as fast as possible: Inputs are not in real-time"));
-			m_list.push_back(new ParameterString("archive_dir", "",       &archiveDir, "If specified the data is copied inside this directory for archive"));
 			m_list.push_back(new ParameterInt("nb_frames", 0, 0, INT_MAX, &nbFrames, "Number of frames to process. 0 for infinite. Only works in centralized mode"));
 			m_list.push_back(new ParameterString("arguments", "",         &arguments, "Command-line arguments, for storage only"));
 			ParameterStructure::Init();
 		}
-		bool autoClean;
 		bool fast;
-		std::string archiveDir;
 		int nbFrames;
 		std::string arguments; // TODO: See what to do in normal case
 	};
@@ -105,13 +101,13 @@ protected:
 	std::vector<ParameterStructure *> m_parameters;
 
 	long long m_frameCount;
-	static log4cxx::LoggerPtr m_logger;
 	const FactoryParameters& mr_parametersFactory;
 	const FactoryModules& mr_moduleFactory;
 	const FactoryParameters& mr_parameterFactory;
 	InterruptionManager& m_interruptionManager;
 
 private:
+	static log4cxx::LoggerPtr m_logger;
 	Parameters& m_param;
 };
 #endif

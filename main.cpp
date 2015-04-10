@@ -339,7 +339,8 @@ int main(int argc, char** argv)
 		assert(!appConfig.IsEmpty());
 
 		// Init global variables and objects
-		Context context("", appConfig.GetAttribute("name"), args.outputDir);
+		Context::Parameters contextParams(mainConfig.Find("application")); // TODO: set context ?
+		Context context(contextParams, "", appConfig.GetAttribute("name"), args.outputDir);
 		if(args.outputDir != "")
 		{
 			string dir = args.outputDir + "/";

@@ -31,22 +31,76 @@
 
 using namespace std;
 
-Context::Context(const string& x_configFile, const string& x_applicationName, const string& x_outputDir) :
-	m_isset(true),
+log4cxx::LoggerPtr Context::m_logger(log4cxx::Logger::getLogger("Context"));
+
+Context::Context(const ParameterStructure& xr_params, const string& x_configFile, const string& x_applicationName, const string& x_outputDir) : // TODO: all as params ?
 	m_applicationName (x_applicationName),
+	m_param(dynamic_cast<const Parameters&>(xr_params)),
 	m_configFile (x_configFile)
 {
 	m_outputDir = CreateOutputDir(x_outputDir);
-	// TODO : Remove empty dir in destructor
 }
 
-Context & Context::operator = (const Context &x_context)
+Context::~Context()
 {
-	if(m_isset)
-		throw MkException("Context can be set only once", LOC);
+	/// Do the final operations on the static class
+	const string& outputDir = GetOutputDir();
+	if(!outputDir.empty())
+	{
+		LOG_INFO(m_logger, "Results written to directory "<<outputDir);
+		if(getenv("LOG_DIR") == nullptr)
+		{
+			try
+			{
+				SYSTEM("cp markus.log " + outputDir + "/markus.copy.log");
+			}
+			catch(...)
+			{
+				LOG_WARN(m_logger, "Error at the copy of markus.log");
+			}
+		}
+
+		// Copy the directory for archiving if needed
+		try
+		{
+			if(m_param.autoClean)
+			{
+				if(m_param.archiveDir != "")
+				{
+					LOG_INFO(m_logger, "Working directory moved to " + m_param.archiveDir);
+					SYSTEM("mkdir -p " + m_param.archiveDir);
+					SYSTEM("mv " + outputDir + " " + m_param.archiveDir + "/");
+				}
+				else
+				{
+					LOG_INFO(m_logger, "Working directory deleted");
+					SYSTEM("rm -rf " + outputDir);
+				}
+			}
+			else
+			{
+				if(m_param.archiveDir != "")
+				{
+					LOG_INFO(m_logger, "Working directory copied to " + m_param.archiveDir);
+					SYSTEM("mkdir -p " + m_param.archiveDir);
+					SYSTEM("cp -r " + outputDir + " " + m_param.archiveDir);
+				}
+			}
+		}
+		catch(MkException &e)
+		{
+			LOG_ERROR(m_logger, "Exception thrown while archiving: " << e.what());
+		}
+	}
+
+	// Remove directory if empty, : is the null operation
+	SYSTEM("[ ! \"$(ls -A " + m_outputDir + ")\" ] && rm -r " + m_outputDir + "|| :");
+}
+
+Context & Context::operator = (const Context &x_context) // TODO: Remove this ?
+{
 	m_applicationName = x_context.GetApplicationName();
 	m_outputDir       = x_context.GetOutputDir();
-	m_isset           = true;
 	return *this;
 }
 

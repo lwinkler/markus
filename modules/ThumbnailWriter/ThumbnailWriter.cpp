@@ -88,7 +88,7 @@ void ThumbnailWriter::ProcessFrame()
 	for(auto & elem : m_objectsIn)
 	{
 		// folder name
-		string folderName = m_context.GetOutputDir() + "/" + m_param.folder + "/";
+		string folderName = GetContext().GetOutputDir() + "/" + m_param.folder + "/";
 		while(replaceExpr(folderName, elem.GetFeatures()))
 			;
 
