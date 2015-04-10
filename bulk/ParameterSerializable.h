@@ -64,9 +64,7 @@ public:
 		std::istringstream istr(rx_value);
 		if(rx_value == "")	// This case happens with unit testing
 		{
-			// TODO mr_value.x = 0;
-			// mr_value.y = 0;
-			// mr_value.height = 0;
+			LOG_WARN(m_logger, "Serializable parameter is set to empty string value");
 			m_confSource = x_confType;
 			return;
 		}
@@ -100,6 +98,7 @@ public:
 	virtual void Export(std::ostream& rx_os, int x_indentation);
 
 private:
+	static log4cxx::LoggerPtr m_logger;
 	std::string m_default;
 	Serializable& mr_value;
 };
