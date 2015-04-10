@@ -56,6 +56,7 @@ public:
 
 			RefParameterByName("type").SetDefault("CV_8UC3");
 			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3]");
+			RefParameterByName("extension").SetRange("[jpg,png]");
 			Init();
 		}
 		std::string file;

@@ -39,6 +39,30 @@ void ParameterString::Export(ostream& rx_os, int x_tabs)
 }
 
 /**
+* @brief Set the range of acceptable values
+*
+* @param x_range Range in the form "[val1,val2,val3]"
+*/
+void ParameterString::SetRange(const string& x_range)
+{
+	if(x_range.substr(0, 1) != "[" || x_range.substr(x_range.size() - 1, 1) != "]")
+		throw MkException("Error in range " + x_range, LOC);
+	split(x_range.substr(1, x_range.size() - 2), ',', m_valuesInRange);
+	// Remove last element if empty, due to an extra comma
+	if(!m_valuesInRange.empty() && m_valuesInRange.back() == "")
+		m_valuesInRange.pop_back();
+}
+
+/**
+* @brief Return the range of values
+*
+*/
+std::string ParameterString::GetRange() const
+{
+	return "[" + join(m_valuesInRange, ',') + "]";
+}
+
+/**
  * @brief Generate values in range
  *
  * @param x_nbSamples Number of valuew to generate
@@ -48,14 +72,13 @@ void ParameterString::Export(ostream& rx_os, int x_tabs)
  */
 void ParameterString::GenerateValues(int x_nbSamples, vector<string>& rx_values, const string& x_range) const
 {
-	// TODO string range = x_range == "" ? GetRange() : x_range;
-	rx_values.clear();
-	rx_values.push_back(m_default); // TODO : probably use requirements
-	/*
-	split(range.substr(1, range.size() - 2), ',', rx_values);
-	if(rx_values.back() == "")
-		rx_values.pop_back();
-	if(rx_values.empty())
-		throw MkException("Value array is empty, range= " + range, LOC);
-		*/
+	if(!x_range.empty())
+	{
+		rx_values.clear();
+		if(!x_range.empty())
+			split(x_range.substr(1, x_range.size() - 2), ',', rx_values);
+		else
+			rx_values.push_back(m_default);
+	}
+	else rx_values = m_valuesInRange;
 }

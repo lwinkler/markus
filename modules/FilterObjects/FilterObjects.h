@@ -50,6 +50,8 @@ public:
 			m_list.push_back(new ParameterDouble("min_custom"     , 0.0, 0, FLT_MAX    , &minCustom       , "Min value for the custom feature"));
 			m_list.push_back(new ParameterDouble("max_custom"     , FLT_MAX, 0, FLT_MAX, &maxCustom       , "Max value for the custom feature"));
 
+			RefParameterByName("custom_feature").SetRange("[x,y,width,height]");
+
 			Init();
 		}
 		double minTravelDist;

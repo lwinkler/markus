@@ -45,6 +45,8 @@ public:
 			m_list.push_back(new ParameterString("extension"  , "jpg"        , &extension , "Extension of the thumbnails. Determines the output format."));
 
 			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3,CV_32FC1,CV_32FC3]");
+			RefParameterByName("extension").SetRange("[jpg,png]");
+
 			Init();
 		};
 		std::string folder;

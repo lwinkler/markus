@@ -137,7 +137,7 @@ public:
 		TS_TRACE("Test ParameterString");
 		string myString = "value_current";
 		ParameterString paramString("param_string", "default_value", &myString, "Parameter of type string");
-		testParameter(paramString, "legal", "", "");
+		testParameter(paramString, "legal", "", "[]");
 	}
 
 	void testParameterImageType()

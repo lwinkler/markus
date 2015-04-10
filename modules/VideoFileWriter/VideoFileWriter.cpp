@@ -79,7 +79,7 @@ void VideoFileWriter::Reset()
 	m_writer.open(filename, CV_FOURCC(s[0], s[1], s[2], s[3]), fps, Size(m_param.width, m_param.height), isColor);
 	if(!m_writer.isOpened())
 	{
-		throw MkException("Failed to open output video file in VideoFileWriter::Reset", LOC);
+		throw MkException("Failed to open output video file " + filename + " in VideoFileWriter::Reset", LOC);
 	}
 }
 
