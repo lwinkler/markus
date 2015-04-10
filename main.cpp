@@ -339,8 +339,8 @@ int main(int argc, char** argv)
 		assert(!appConfig.IsEmpty());
 
 		// Init global variables and objects
-		Context::Parameters contextParams(mainConfig.Find("application")); // TODO: set context ?
-		Context context(contextParams, "", appConfig.GetAttribute("name"), args.outputDir);
+		Context::Parameters contextParams(mainConfig.Find("application"), args.configFile, appConfig.GetAttribute("name"), args.outputDir); // TODO: Manager inherits from Context ?
+		Context context(contextParams);
 		if(args.outputDir != "")
 		{
 			string dir = args.outputDir + "/";

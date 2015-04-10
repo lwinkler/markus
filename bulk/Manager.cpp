@@ -409,7 +409,8 @@ void Manager::PrintStatistics()
 	// LOG_INFO("Total time "<< m_timerProcessing + m_timerConvertion<<" ms ("<<     (1000.0 * m_frameCount) /(m_timerProcessing + m_timerConvertion)<<" frames/s)");
 
 	// Create an XML file to summarize CPU usage
-	string benchFileName = GetContext().GetOutputDir() + "/benchmark.xml";
+	//     if output dir is empty, write to /tmp
+	string benchFileName = ((IsContextSet() && !GetContext().IsOutputDirEmpty()) ? GetContext().GetOutputDir() : "/tmp") + "/benchmark.xml";
 	ConfigReader benchSummary(benchFileName, true);
 	ConfigReader conf = benchSummary.FindRef("benchmark", true);
 

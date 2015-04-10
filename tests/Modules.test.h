@@ -45,28 +45,6 @@ using namespace std;
 #include <iostream>
 #include <stdio.h>
 
-void exec(const string& x_cmd, vector<string>& xr_result)
-{
-	FILE* pipe = popen(x_cmd.c_str(), "r");
-	xr_result.clear();
-	if (!pipe)
-		throw MkException("Error at execution of command: " + x_cmd, LOC);
-	char buffer[128];
-	while(!feof(pipe))
-	{
-		// Append result to string vector
-		if(fgets(buffer, 128, pipe) != NULL)
-		{
-			xr_result.push_back(string(buffer));
-			// Remove last \n
-			if(! xr_result.back().empty() && xr_result.back().back() == '\n')
-				xr_result.back().pop_back();
-			if(xr_result.back().empty())
-				xr_result.pop_back();
-		}
-	}
-	pclose(pipe);
-}
 
 /// Unit testing class for ConfigReader class
 class ModulesTestSuite : public CxxTest::TestSuite
@@ -125,8 +103,8 @@ public:
 		// note: we need a fake module to create the input streams
 		mp_fakeInput->SetAsReady();
 		mp_fakeInput->Reset();
-		mp_contextParams = new Context::Parameters(mp_config->Find("application")); // TODO: set context ?
-		mp_context = new Context(*mp_contextParams, "", "TestModule", "tests/out");
+		mp_contextParams = new Context::Parameters(mp_config->Find("application"), "/tmp/config_empty.xml", "TestModule", "tests/out"); // TODO: set context ?
+		mp_context = new Context(*mp_contextParams);
 	}
 	void tearDown()
 	{
@@ -410,7 +388,7 @@ public:
 	void testBySpecificXmlProjects()
 	{
 		vector<string> result1;
-		exec("find modules/ modules2/ -name \"testing*.xml\"", result1);
+		execute("find modules/ modules2/ -name \"testing*.xml\"", result1);
 
 		for(auto elem : result1)
 		{
@@ -422,10 +400,10 @@ public:
 			TS_TRACE("Execute " + cmd);
 			SYSTEM(cmd);
 			// gather possible errors and warnings
-			exec("cat " + outDir + "/markus.log | grep WARN", result2);
+			execute("cat " + outDir + "/markus.log | grep WARN", result2);
 			if(!result2.empty())
 				TS_WARN("Warning(s) found in " + outDir + "/markus.log");
-			exec("cat " + outDir + "/markus.log | grep ERROR", result2);
+			execute("cat " + outDir + "/markus.log | grep ERROR", result2);
 			if(!result2.empty())
 				TS_FAIL("Error(s) found in " + outDir + "/markus.log");
 		}

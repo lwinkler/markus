@@ -449,3 +449,33 @@ void execute(const string& x_cmd, ostream& xr_stdout)
 		}
 	pclose(pipe);
 }
+/**
+* @brief Execute a command, keeping stdout
+*
+* @param x_cmd     Command to execute
+* @param xr_result Vector of strings to store output
+*
+* @return number of lines in output
+*/
+void execute(const string& x_cmd, vector<string>& xr_result)
+{
+	FILE* pipe = popen(x_cmd.c_str(), "r");
+	xr_result.clear();
+	if (!pipe)
+		throw MkException("Error at execution of command: " + x_cmd, LOC);
+	char buffer[128];
+	while(!feof(pipe))
+	{
+		// Append result to string vector
+		if(fgets(buffer, 128, pipe) != NULL)
+		{
+			xr_result.push_back(string(buffer));
+			// Remove last \n
+			if(! xr_result.back().empty() && xr_result.back().back() == '\n')
+				xr_result.back().pop_back();
+			if(xr_result.back().empty())
+				xr_result.pop_back();
+		}
+	}
+	pclose(pipe);
+}

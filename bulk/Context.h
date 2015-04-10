@@ -42,31 +42,40 @@ public:
 	class Parameters : public ParameterStructure
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
+		Parameters(const ConfigReader& x_confReader, const std::string& x_configFile, const std::string& x_applicationName, const std::string& x_outputDir) : ParameterStructure(x_confReader)
 		{
 			m_list.push_back(new ParameterBool("auto_clean", 0, 0, 1,     &autoClean, "Automatically clean the temporary directory when the application closes"));
 			m_list.push_back(new ParameterString("archive_dir", "",       &archiveDir, "If specified the data is copied inside this directory for archive"));
+			m_list.push_back(new ParameterString("config_file", "",       &configFile, "Name of the XML containing the configuration"));
+			m_list.push_back(new ParameterString("application_name", "",  &applicationName, "Name of the application. May also be set in the XML as attribute of <application>"));
+			m_list.push_back(new ParameterString("output_dir", "",        &outputDir, "Directory used to write results files of manager and modules. If empty a directory is created from the date"));
 			ParameterStructure::Init();
+
+			// Override values: must be set for each run
+			configFile      = x_configFile;
+			applicationName = x_applicationName;
+			outputDir       = x_outputDir;
 		}
 		bool autoClean;
 		std::string archiveDir;
+		std::string configFile;
+		std::string applicationName;
+		std::string outputDir;
 	};
 
 	~Context();
-	Context(const ParameterStructure& xr_params, const std::string& x_configFile, const std::string& x_applicationName, const std::string& x_outputDir);
-	Context &operator = (const Context &x_context);
+	Context(const ParameterStructure& xr_params);
 	static std::string Version(bool x_full);
 	inline const std::string& GetOutputDir() const {if(m_outputDir.empty())throw MkException("Output dir has not been created", LOC); return m_outputDir;}
-	inline const std::string& GetApplicationName() const {return m_applicationName;}
+	inline const std::string& GetApplicationName() const {return m_param.applicationName;}
+	bool IsOutputDirEmpty() const;
 
 protected:
 	std::string CreateOutputDir(const std::string& x_outputDir = "");
-	std::string m_applicationName;
 	std::string m_outputDir;
-	std::string m_configFile;
 
 private:
-	Context(const Context &);
+	DISABLE_COPY(Context)
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 };

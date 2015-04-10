@@ -33,77 +33,77 @@ using namespace std;
 
 log4cxx::LoggerPtr Context::m_logger(log4cxx::Logger::getLogger("Context"));
 
-Context::Context(const ParameterStructure& xr_params, const string& x_configFile, const string& x_applicationName, const string& x_outputDir) : // TODO: all as params ?
-	m_applicationName (x_applicationName),
-	m_param(dynamic_cast<const Parameters&>(xr_params)),
-	m_configFile (x_configFile)
+Context::Context(const ParameterStructure& xr_params) :
+	m_param(dynamic_cast<const Parameters&>(xr_params))
 {
-	m_outputDir = CreateOutputDir(x_outputDir);
+	m_outputDir = CreateOutputDir(m_param.outputDir);
 }
 
 Context::~Context()
 {
-	/// Do the final operations on the static class
-	const string& outputDir = GetOutputDir();
-	if(!outputDir.empty())
-	{
-		LOG_INFO(m_logger, "Results written to directory "<<outputDir);
-		if(getenv("LOG_DIR") == nullptr)
-		{
-			try
-			{
-				SYSTEM("cp markus.log " + outputDir + "/markus.copy.log");
-			}
-			catch(...)
-			{
-				LOG_WARN(m_logger, "Error at the copy of markus.log");
-			}
-		}
+	// check if dir is empty and was automatically generated (no -o option)
+	bool empty = m_param.outputDir.empty() && IsOutputDirEmpty();
 
-		// Copy the directory for archiving if needed
+	if(!empty)
+		LOG_INFO(m_logger, "Results written to directory "<<m_outputDir);
+
+	if(getenv("LOG_DIR") == nullptr && !empty)
+	{
 		try
 		{
-			if(m_param.autoClean)
-			{
-				if(m_param.archiveDir != "")
-				{
-					LOG_INFO(m_logger, "Working directory moved to " + m_param.archiveDir);
-					SYSTEM("mkdir -p " + m_param.archiveDir);
-					SYSTEM("mv " + outputDir + " " + m_param.archiveDir + "/");
-				}
-				else
-				{
-					LOG_INFO(m_logger, "Working directory deleted");
-					SYSTEM("rm -rf " + outputDir);
-				}
-			}
-			else
-			{
-				if(m_param.archiveDir != "")
-				{
-					LOG_INFO(m_logger, "Working directory copied to " + m_param.archiveDir);
-					SYSTEM("mkdir -p " + m_param.archiveDir);
-					SYSTEM("cp -r " + outputDir + " " + m_param.archiveDir);
-				}
-			}
+			SYSTEM("cp markus.log " + m_outputDir + "/markus.copy.log");
 		}
-		catch(MkException &e)
+		catch(...)
 		{
-			LOG_ERROR(m_logger, "Exception thrown while archiving: " << e.what());
+			LOG_WARN(m_logger, "Error at the copy of markus.log");
 		}
 	}
 
-	// Remove directory if empty, : is the null operation
-	SYSTEM("[ ! \"$(ls -A " + m_outputDir + ")\" ] && rm -r " + m_outputDir + "|| :");
+	// Copy the directory for archiving if needed
+	try
+	{
+		if(m_param.autoClean)
+		{
+			if(m_param.archiveDir != "")
+			{
+				LOG_INFO(m_logger, "Working directory moved to " + m_param.archiveDir);
+				SYSTEM("mkdir -p " + m_param.archiveDir);
+				SYSTEM("mv " + m_outputDir + " " + m_param.archiveDir + "/");
+			}
+			else
+			{
+				LOG_INFO(m_logger, "Working directory deleted");
+				SYSTEM("rm -rf " + m_outputDir);
+			}
+		}
+		else
+		{
+			if(m_param.archiveDir != "")
+			{
+				LOG_INFO(m_logger, "Working directory moved to " + m_param.archiveDir);
+				SYSTEM("mkdir -p " + m_param.archiveDir);
+				SYSTEM("mv " + m_outputDir + " " + m_param.archiveDir + "/");
+			}
+			else
+			{
+				// Remove directory if empty else copy XML config
+				if(empty)
+				{
+					LOG_INFO(m_logger, "Removing empty directory " << m_outputDir);
+					SYSTEM("rm -r " + m_outputDir);
+				}
+				else
+				{
+					SYSTEM("cp " + m_param.configFile + " " + m_outputDir);
+				}
+			}
+		}
+	}
+	catch(MkException &e)
+	{
+		LOG_ERROR(m_logger, "Exception thrown while archiving: " << e.what());
+	}
 }
-
-Context & Context::operator = (const Context &x_context) // TODO: Remove this ?
-{
-	m_applicationName = x_context.GetApplicationName();
-	m_outputDir       = x_context.GetOutputDir();
-	return *this;
-}
-
 
 /**
 * @brief Return a directory that will contain all outputs files and logs. The dir is created at the first call of this method.
@@ -119,7 +119,8 @@ string Context::CreateOutputDir(const string& x_outputDir)
 	{
 		if(x_outputDir == "")
 		{
-			outputDir = "out_" + timeStamp();
+			SYSTEM("mkdir -p out/");
+			outputDir = "out/out_" + timeStamp();
 			int16_t trial = 0; // Must NOT be a char to avoid concatenation problems!
 			string tmp = outputDir;
 
@@ -141,17 +142,7 @@ string Context::CreateOutputDir(const string& x_outputDir)
 						throw MkException("Cannot create output directory", LOC);
 				}
 			}
-		}
-		else
-		{
-			// If the name is specified do not check if the direcory exists
-			outputDir = x_outputDir;
-			SYSTEM("mkdir -p \"" + outputDir + "\"");
-		}
 
-		// Copy config to output dir
-		if(m_configFile.empty())
-		{
 			// note: do not log as logger may not be initialized
 			// cout<<"Creating directory "<<outputDir<<" and symbolic link out_latest"<<endl;
 			// note: use ln with args sfn to override existing link
@@ -159,10 +150,14 @@ string Context::CreateOutputDir(const string& x_outputDir)
 		}
 		else
 		{
+			// If the name is specified do not check if the direcory exists
+			outputDir = x_outputDir;
+			SYSTEM("mkdir -p \"" + outputDir + "\"");
+
 			// note: do not log as logger may not be initialized
 			// Copy config file to output directory
 			// cout<<"Creating directory "<<outputDir<<endl;
-			SYSTEM("cp " + m_configFile + " " + outputDir);
+			SYSTEM("cp " + m_param.configFile + " " + outputDir);
 		}
 	}
 	catch(exception& e)
@@ -170,6 +165,21 @@ string Context::CreateOutputDir(const string& x_outputDir)
 		cerr << "Exception in Context::CreateOutputDir: " << e.what() << endl;
 	}
 	return outputDir;
+}
+
+/**
+* @brief Return a string containing the version of the executable
+*
+* @param x_full Return the full info string with info on host
+*
+* @return Version
+*/
+bool Context::IsOutputDirEmpty() const
+{
+	vector<string> res;
+	execute("ls -A " + m_outputDir + " | wc -l", res);
+
+	return res.at(0) == "0";
 }
 
 /**
