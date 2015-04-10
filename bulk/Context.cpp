@@ -168,11 +168,9 @@ string Context::CreateOutputDir(const string& x_outputDir)
 }
 
 /**
-* @brief Return a string containing the version of the executable
+* @brief Return true if the output directory contains no file
 *
-* @param x_full Return the full info string with info on host
-*
-* @return Version
+* @return True if dir is empty
 */
 bool Context::IsOutputDirEmpty() const
 {

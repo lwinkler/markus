@@ -339,7 +339,8 @@ int main(int argc, char** argv)
 		assert(!appConfig.IsEmpty());
 
 		// Init global variables and objects
-		Context::Parameters contextParams(mainConfig.Find("application"), args.configFile, appConfig.GetAttribute("name"), args.outputDir); // TODO: Manager inherits from Context ?
+		// Context manages all call to system, files, ...
+		Context::Parameters contextParams(mainConfig.Find("application"), args.configFile, appConfig.GetAttribute("name"), args.outputDir);
 		Context context(contextParams);
 		if(args.outputDir != "")
 		{
@@ -363,13 +364,11 @@ int main(int argc, char** argv)
 			return 0;
 		}
 
-
-		// Override parameter auto_process with centralized
-		appConfig.FindRef("parameters>param[name=\"auto_process\"]", true).SetValue(args.centralized ? "1" : "0");
-		appConfig.FindRef("parameters>param[name=\"fast\"]", true).SetValue(args.fast ? "1" : "0");
-
 		// Set manager and context
 		Manager::Parameters parameters(appConfig);
+		// Override parameter auto_process with centralized
+		parameters.autoProcess = args.centralized;
+		parameters.fast = args.fast;
 		Manager manager(parameters);
 		manager.SetContext(context);
 

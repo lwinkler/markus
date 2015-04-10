@@ -33,9 +33,8 @@
 #include "ParameterNum.h"
 
 /**
-* @brief All informations that must be known by modules concerning application run-time
+* @brief All informations that must be known by modules concerning application run-time. Including access to file system.
 */
-/// All informations that must be known by modules concerning application run-time
 class Context
 {
 public:
