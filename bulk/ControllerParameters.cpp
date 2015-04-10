@@ -184,7 +184,7 @@ QWidget* ControllerInt::CreateWidget()
 #ifndef MARKUS_NO_GUI
 	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue(), m_param2.GetMin(), m_param2.GetMax(), 0);
 #else
-	return NULL;
+	return nullptr;
 #endif
 }
 
@@ -222,7 +222,7 @@ QWidget* ControllerUInt::CreateWidget()
 #ifndef MARKUS_NO_GUI
 	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue(), m_param2.GetMin(), m_param2.GetMax(), 0);
 #else
-	return NULL;
+	return nullptr;
 #endif
 }
 
@@ -257,7 +257,7 @@ QWidget* ControllerDouble::CreateWidget()
 #ifndef MARKUS_NO_GUI
 	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue(), m_param2.GetMin(), m_param2.GetMax(), PRECISION_DOUBLE);
 #else
-	return NULL;
+	return nullptr;
 #endif
 }
 void ControllerDouble::SetWidgetValue(const string& x_value)
@@ -293,7 +293,7 @@ QWidget* ControllerFloat::CreateWidget()
 #ifndef MARKUS_NO_GUI
 	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue(), m_param2.GetMin(), m_param2.GetMax(), PRECISION_DOUBLE);
 #else
-	return NULL;
+	return nullptr;
 #endif
 }
 
@@ -330,7 +330,7 @@ QWidget* ControllerBool::CreateWidget()
 	mp_checkBox->setChecked(m_param2.GetValue());
 	return mp_checkBox;
 #else
-	return NULL;
+	return nullptr;
 #endif
 }
 
@@ -366,7 +366,7 @@ QWidget* ControllerString::CreateWidget()
 	mp_lineEdit->setText(m_param2.GetValue().c_str());
 	return mp_lineEdit;
 #else
-	return NULL;
+	return nullptr;
 #endif
 }
 void ControllerString::SetWidgetValue(const string& x_value)
@@ -402,7 +402,7 @@ QWidget* ControllerSerializable::CreateWidget()
 	mp_lineEdit->setText(m_param2.GetValueString().c_str());
 	return mp_lineEdit;
 #else
-	return NULL;
+	return nullptr;
 #endif
 }
 
@@ -468,7 +468,7 @@ QWidget* ControllerCalibrationByHeight::CreateWidget()
 
 	return mp_widget;
 #else
-	return NULL;
+	return nullptr;
 #endif
 }
 
@@ -524,7 +524,7 @@ QWidget* ControllerEnum::CreateWidget()
 
 	return mp_comboBox;
 #else
-	return NULL;
+	return nullptr;
 #endif
 }
 
@@ -562,7 +562,7 @@ QWidget* ControllerText::CreateWidget()
 	mp_textEdit->setText(m_param2.GetValueString().c_str());
 	return mp_textEdit;
 #else
-	return NULL;
+	return nullptr;
 #endif
 }
 void ControllerText::SetWidgetValue(const string& x_value)

@@ -60,7 +60,7 @@ public:
 	ConfigReader RefSubConfig(const std::string& x_tagName, const std::string& x_attrName, const std::string& x_attrValue, bool x_allowCreation = false);
 
 	/// Check if the config object is empty
-	inline bool IsEmpty() const {return mp_doc == NULL && mp_node == NULL;}
+	inline bool IsEmpty() const {return mp_doc == nullptr && mp_node == nullptr;}
 	std::string GetValue() const;
 	void SetValue(const std::string& x_value);
 	template<typename T> inline void SetValue(const T& x_value)

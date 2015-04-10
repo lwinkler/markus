@@ -467,7 +467,7 @@ void execute(const string& x_cmd, vector<string>& xr_result)
 	while(!feof(pipe))
 	{
 		// Append result to string vector
-		if(fgets(buffer, 128, pipe) != NULL)
+		if(fgets(buffer, 128, pipe) != nullptr)
 		{
 			xr_result.push_back(string(buffer));
 			// Remove last \n

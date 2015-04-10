@@ -118,14 +118,14 @@ void TrackerByFeatures::MatchTemplates()
 	/*for(vector<Object>::iterator it1 = m_objects.begin() ; it1 != m_objects.end(); it1++ )
 	{
 		Template* bestTemplate = MatchObject(*it1);
-		if(bestTemplate == NULL)
+		if(bestTemplate == nullptr)
 			continue;
 
 		if(m_param.symetricMatch)
 		{
 			Object* bestObject = MatchTemplate(*bestTemplate);
-			// assert(bestTemplate != NULL);
-			if(bestObject == NULL || bestObject != reinterpret_cast<Object*>(&*it1))
+			// assert(bestTemplate != nullptr);
+			if(bestObject == nullptr || bestObject != reinterpret_cast<Object*>(&*it1))
 				continue;
 		}
 
@@ -323,14 +323,14 @@ void TrackerByFeatures::DetectNewTemplates()
 
 			// Create new template
 			Template template1(obj, m_currentTimeStamp);
-			// if(bestDist <= m_param.maxMatchingDistance && bestTemplate != NULL)
+			// if(bestDist <= m_param.maxMatchingDistance && bestTemplate != nullptr)
 
 			// note: We may want to inherit this class and create an AdvancedTracker !
 			if(m_param.handleSplit)
 			{
 				// Detect if the new object is similar to a template
 				double bestDist = DBL_MAX;
-				// const Template * bestTemplate = NULL;
+				// const Template * bestTemplate = nullptr;
 
 				LOG_DEBUG(m_logger, "New object. Detect if the new object similar to another template ");
 

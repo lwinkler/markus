@@ -82,7 +82,7 @@ void *send_commands(void *x_void_ptr)
 {
 	Manager *pManager = reinterpret_cast<Manager*>(x_void_ptr);
 	static log4cxx::LoggerPtr logger(log4cxx::Logger::getLogger("send_commands"));
-	assert(pManager != NULL);
+	assert(pManager != nullptr);
 	string input;
 	vector<string> elems;
 	string value;
@@ -115,7 +115,7 @@ void *send_commands(void *x_void_ptr)
 		cin.clear();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 struct arguments
@@ -153,7 +153,7 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 		{"output_dir",  1, 0, 'o'},
 		{"parameter",   1, 0, 'p'},
 		{"xml",         1, 0, 'x'},
-		{NULL, 0, NULL, 0}
+		{nullptr, 0, nullptr, 0}
 	};
 	char c;
 	int option_index = 0;
@@ -384,7 +384,7 @@ int main(int argc, char** argv)
 
 		/// Create a separate thread to read the commands from stdin
 		pthread_t command_thread;
-		if(args.useStdin && pthread_create(&command_thread, NULL, send_commands, &manager))
+		if(args.useStdin && pthread_create(&command_thread, nullptr, send_commands, &manager))
 		{
 			LOG_ERROR(logger, "Error creating thread");
 			return -1;

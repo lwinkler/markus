@@ -523,7 +523,6 @@ Module& Manager::RefModuleById(int x_id) const
 		throw MkException("Module not found", LOC);
 	else
 		throw MkException("more than one module with id ", LOC);
-	//return NULL;
 }
 
 
@@ -533,7 +532,6 @@ Module& Manager::RefModuleByName(const string& x_name) const
 		if((elem)->GetName() == x_name)
 			return *elem;
 	throw MkException("Cannot find module " + x_name, LOC);
-	// return NULL;
 }
 
 

@@ -119,7 +119,7 @@ bool NetworkCam::Grab()
 		LOG_WARN(m_logger, "Timeout while grabbing stream. Camera may be disconnected.");
 		pthread_cancel(thread);
 		m_capture.release();
-		// pthread_join(thread,NULL);
+		// pthread_join(thread,nullptr);
 
 		return false;
 	}
