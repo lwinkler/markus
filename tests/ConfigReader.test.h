@@ -66,14 +66,12 @@ public:
 		conf.FindRef("t1>t2>t3[name=\"bla\"]", true).SetValue("333");
 		conf.FindRef("t1>t2>t3[name=\"blo\"]", true).SetValue("555");
 		m_conf4->SaveToFile("tests/tmp/test4.xml");
-		// TODO: Test that both files are similar
 
 		TS_ASSERT(!conf.Find("t1").IsEmpty());
 		TS_ASSERT(!conf.Find("t1>t2").IsEmpty());
 		TS_ASSERT(!conf.Find("t1>t2>t3[name=\"bla\"]").IsEmpty());
 		TS_ASSERT( conf.Find("t1>t2>t3[name=\"bla\"]").GetValue() == "333");
 		TS_ASSERT(conf.FindAll("t1>t2>t3[name=\"bla\"]").size() == 1);
-		std::cout<<conf.FindAll("t1>t2>t3").size()<<std::endl;
 		TS_ASSERT(conf.FindAll("t1>t2>t3").size() == 2);
 		TS_ASSERT(conf.Find("t1>t2").FindAll("t3").size() == 2);
 	}
