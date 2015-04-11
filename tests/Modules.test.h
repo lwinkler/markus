@@ -103,7 +103,7 @@ public:
 		// note: we need a fake module to create the input streams
 		mp_fakeInput->SetAsReady();
 		mp_fakeInput->Reset();
-		mp_contextParams = new Context::Parameters(mp_config->Find("application"), "/tmp/config_empty.xml", "TestModule", "tests/out"); // TODO: set context ?
+		mp_contextParams = new Context::Parameters(mp_config->Find("application"), "/tmp/config_empty.xml", "TestModule", "tests/out");
 		mp_context = new Context(*mp_contextParams);
 	}
 	void tearDown()

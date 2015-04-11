@@ -52,8 +52,7 @@ protected:
 	/// Test the serialization of one serializable class
 	void testFeature(Feature& feat, const string& name, unsigned int& xr_seed)
 	{
-		// Initialize the feature with random value since int/floats are not initialized by default // TODO: maybe fix this
-		feat.Randomize(xr_seed, "");
+		// Note: features need to be initialized to 0 or similar value
 		TS_TRACE("Test feature of type " + name + " = " + feat.SerializeToString() + " with signature = " + feat.Signature());
 		Feature* copy = feat.CreateCopy();
 		// cout << "feat.CompareSquared(feat) = " << feat.CompareSquared(feat) << endl;

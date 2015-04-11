@@ -202,8 +202,6 @@ protected:
 public:
 	void testTestObject()
 	{
-
-		// TODO: There is a problem of inprecision with floating points. See how we handle this !
 		TestObject obj1;
 		testSerialization(obj1, "TestObject");
 	}
