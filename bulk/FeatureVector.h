@@ -65,7 +65,7 @@ public:
 
 // Definitions
 typedef FeatureVectorT<float>   FeatureVectorFloat;
-typedef FeatureVectorT<int>   FeatureVectorInt;     // TODO unit tests
+typedef FeatureVectorT<int>   FeatureVectorInt;
 
 
 #endif

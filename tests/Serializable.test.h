@@ -346,11 +346,11 @@ public:
 		vector<string> listFeatures;
 		m_factoryFeatures.List(listFeatures);
 		unsigned int seed = 242343332;
-		for(vector<string>::const_iterator it = listFeatures.begin() ; it != listFeatures.end() ; ++it)
+		for(const auto& elem : listFeatures)
 		{
-			Feature* feat = m_factoryFeatures.Create(*it);
+			Feature* feat = m_factoryFeatures.Create(elem);
 			feat->Randomize(seed, "");
-			testSerialization(*feat, *it);
+			testSerialization(*feat, elem);
 			delete(feat);
 		}
 	}

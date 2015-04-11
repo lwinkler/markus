@@ -82,7 +82,7 @@ public:
 	}
 	virtual bool CheckRange() const
 	{
-		// TODO: Maybe implement this in some way
+		// Note: so far it is not possible to check the range of serializable params
 		return true;
 	}
 	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const;

@@ -81,12 +81,11 @@ public:
 		vector<string> listFeatures;
 		m_factoryFeatures.List(listFeatures);
 		unsigned int seed = 23456625;
-		for(vector<string>::const_iterator it = listFeatures.begin() ; it != listFeatures.end() ; ++it)
+		for(const auto& elem : listFeatures)
 		{
-			TS_TRACE("Test the serialization of feature " + *it);
-			if(*it == "FeatureString") continue; // TODO: randomize strings
-			Feature* feat = m_factoryFeatures.Create(*it);
-			testFeature(*feat, *it, seed);
+			TS_TRACE("Test the serialization of feature " + elem);
+			Feature* feat = m_factoryFeatures.Create(elem);
+			testFeature(*feat, elem, seed);
 			delete(feat);
 		}
 	}
@@ -97,18 +96,17 @@ public:
 		vector<string> listFeatures;
 		m_factoryFeatures.List(listFeatures);
 		unsigned int seed = 23456644;
-		for(vector<string>::const_iterator it = listFeatures.begin() ; it != listFeatures.end() ; ++it)
+		for(const auto& elem : listFeatures)
 		{
-			TS_TRACE("Test the serialization of feature " + *it);
-			if(*it == "FeatureString") continue; // TODO: randomize strings
-			Feature* feat = m_factoryFeatures.Create(*it);
+			TS_TRACE("Test the serialization of feature " + elem);
+			Feature* feat = m_factoryFeatures.Create(elem);
 
 			string signature = feat->Signature();
 			delete(feat);
 
 			// Generate feature by signature
 			feat = m_factoryFeaturesBySignature.Create(signature);
-			testFeature(*feat, *it, seed);
+			testFeature(*feat, elem, seed);
 			delete(feat);
 		}
 	}
