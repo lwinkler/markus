@@ -249,7 +249,7 @@ void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, 
 		try
 		{
 			// open the config and override the initial config
-			ConfigReader extra(elem1);
+			ConfigFile extra(elem1);
 			appConfig.OverrideWith(extra);
 		}
 		catch(MkException& e)
@@ -333,7 +333,7 @@ int main(int argc, char** argv)
 		Factories::RegisterAll();
 
 		LOG_INFO(logger, Context::Version(true));
-		ConfigReader mainConfig(args.configFile);
+		ConfigFile mainConfig(args.configFile);
 		mainConfig.Validate();
 		ConfigReader appConfig = mainConfig.Find("application");
 		assert(!appConfig.IsEmpty());
@@ -409,7 +409,7 @@ int main(int argc, char** argv)
 		else
 		{
 #ifndef MARKUS_NO_GUI
-			ConfigReader mainGuiConfig("gui.xml", true);
+			ConfigFile mainGuiConfig("gui.xml", true);
 			ConfigReader guiConfig = mainGuiConfig.FindRef("gui[name=\"" + args.configFile + "\"]", true);
 			guiConfig.FindRef("parameters", true);
 

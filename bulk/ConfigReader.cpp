@@ -67,32 +67,26 @@ void splitTagName(const string& x_searchString, string& xr_tagName, string& xr_a
 	xr_attrValue     = searchString1.substr(pos3 + 2, pos4 - pos3 - 2);
 }
 
-/**
-* @brief Constructor
-*
-* @param x_fileName      Name of the XML file with relative path
-* @param x_allowCreation Allow the creation of a new file if unexistant
-* @param x_fatal         Errors cause the program to exit (to avoid throwing exceptions in constructors)
-*/
-ConfigReader::ConfigReader(const string& x_fileName, bool x_allowCreation)
+
+TiXmlDocument* createDoc(const std::string& x_fileName, bool x_allowCreation)
 {
+	TiXmlDocument* doc = nullptr;
 	try
 	{
-		m_isOriginal = true;
-		mp_doc = nullptr; // Initialize to null as there can be an error in construction
-		mp_doc = new TiXmlDocument(x_fileName);
-		if (! mp_doc->LoadFile())
+		doc = nullptr; // Initialize to null as there can be an error in construction
+		doc = new TiXmlDocument(x_fileName);
+		if (!doc->LoadFile())
 		{
-			delete mp_doc;
+			CLEAN_DELETE(doc);
 			if(x_allowCreation)
 			{
 				createEmptyConfigFile(x_fileName);
-				mp_doc = new TiXmlDocument(x_fileName);
-				assert(mp_doc->LoadFile());
+				doc = new TiXmlDocument(x_fileName);
+				assert(doc->LoadFile());
 			}
-			else throw MkException("Could not load file as XML '" + x_fileName + "'. Error='" + mp_doc->ErrorDesc() + "'. Exiting.", LOC);
+			else throw MkException("Could not load file as XML '" + x_fileName + "'. Error='" + doc->ErrorDesc() + "'. Exiting.", LOC);
 		}
-		mp_node = mp_doc;
+		return doc;
 	}
 	catch(exception& e)
 	{
@@ -104,39 +98,52 @@ ConfigReader::ConfigReader(const string& x_fileName, bool x_allowCreation)
 	}
 }
 
+/**
+* @brief Constructor
+*
+* @param x_fileName      Name of the XML file with relative path
+* @param x_allowCreation Allow the creation of a new file if unexistant
+*/
+ConfigFile::ConfigFile(const string& x_fileName, bool x_allowCreation) :
+	mp_doc(dynamic_cast<TiXmlDocument*>(mp_node)),
+	ConfigReader(createDoc(x_fileName, x_allowCreation))
+{
+	if(IsEmpty() || mp_doc == nullptr)
+		throw MkException("Initialize a ConfigReader to an empty config", LOC);
+}
+
+ConfigReader& ConfigReader::operator = (const ConfigReader& x_conf)
+{
+	mp_node      = x_conf.mp_node;
+	return *this;
+}
+
+ConfigFile::~ConfigFile()
+{
+	CLEAN_DELETE(mp_doc);
+}
+
 
 /**
 * @brief Constructor for a class based on a sub-node (used internally)
 *
 * @param xp_node
 */
-ConfigReader::ConfigReader(TiXmlNode * xp_node)
+ConfigReader::ConfigReader(TiXmlNode* xp_node) : 
+	mp_node(xp_node)
 {
-	m_isOriginal = false;
-	mp_doc = nullptr;
-	mp_node = xp_node;
 }
 
-ConfigReader::ConfigReader(const ConfigReader& x_conf)
+ConfigReader::ConfigReader(const ConfigReader& x_conf) : 
+	mp_node(x_conf.mp_node)
 {
-	m_isOriginal = false;
-	mp_doc       = x_conf.mp_doc;
-	mp_node      = x_conf.mp_node;
-}
-
-ConfigReader& ConfigReader::operator = (const ConfigReader& x_conf)
-{
-	m_isOriginal = false;
-	mp_doc       = x_conf.mp_doc;
-	mp_node      = x_conf.mp_node;
-	return *this;
+	if(IsEmpty())
+		throw MkException("Initialize a ConfigReader to an empty config", LOC);
 }
 
 ConfigReader::~ConfigReader()
 {
-	if(m_isOriginal)
-		CLEAN_DELETE(mp_doc);
-	mp_node = nullptr;
+	// ConfigReader is a reference: do not delete anything
 }
 
 /**
@@ -409,10 +416,8 @@ void ConfigReader::SetValue(const string& x_value)
 *
 * @param x_file Name of the file with relative path
 */
-void ConfigReader::SaveToFile(const string& x_file) const
+void ConfigFile::SaveToFile(const string& x_file) const
 {
-	if(!mp_doc)
-		throw MkException("Can only save global config to file", LOC);
 	if(!mp_doc->SaveFile(x_file))
 		throw MkException("Error saving to file " + x_file, LOC);
 }

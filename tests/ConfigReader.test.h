@@ -33,18 +33,18 @@ using namespace std;
 class ConfigReaderTestSuite : public CxxTest::TestSuite
 {
 protected:
-	ConfigReader* m_conf1;
-	ConfigReader* m_conf2;
-	ConfigReader* m_conf3;
-	ConfigReader* m_conf4;
+	ConfigFile* m_conf1;
+	ConfigFile* m_conf2;
+	ConfigFile* m_conf3;
+	ConfigFile* m_conf4;
 public:
 	void setUp()
 	{
-		m_conf1 = new ConfigReader("tests/config1.xml");
+		m_conf1 = new ConfigFile("tests/config1.xml");
 		createEmptyConfigFile("/tmp/config_empty.xml");
-		m_conf2 = new ConfigReader("/tmp/config_empty.xml");
-		m_conf3 = new ConfigReader("/tmp/config_empty.xml");
-		m_conf4 = new ConfigReader("/tmp/config_empty.xml");
+		m_conf2 = new ConfigFile("/tmp/config_empty.xml");
+		m_conf3 = new ConfigFile("/tmp/config_empty.xml");
+		m_conf4 = new ConfigFile("/tmp/config_empty.xml");
 	}
 	void tearDown()
 	{
@@ -62,18 +62,18 @@ public:
 		ConfigReader conf(*m_conf3);
 		conf.RefSubConfig("t1", true).RefSubConfig("t2", true).RefSubConfig("t3", "name", "bla", true).SetValue("333");
 		m_conf3->SaveToFile("tests/tmp/test3.xml");
-		conf = *m_conf4;
-		conf.FindRef("t1>t2>t3[name=\"bla\"]", true).SetValue("333");
-		conf.FindRef("t1>t2>t3[name=\"blo\"]", true).SetValue("555");
+		ConfigReader conf2(*m_conf4);
+		conf2.FindRef("t1>t2>t3[name=\"bla\"]", true).SetValue("333");
+		conf2.FindRef("t1>t2>t3[name=\"blo\"]", true).SetValue("555");
 		m_conf4->SaveToFile("tests/tmp/test4.xml");
 
-		TS_ASSERT(!conf.Find("t1").IsEmpty());
-		TS_ASSERT(!conf.Find("t1>t2").IsEmpty());
-		TS_ASSERT(!conf.Find("t1>t2>t3[name=\"bla\"]").IsEmpty());
-		TS_ASSERT( conf.Find("t1>t2>t3[name=\"bla\"]").GetValue() == "333");
-		TS_ASSERT(conf.FindAll("t1>t2>t3[name=\"bla\"]").size() == 1);
-		TS_ASSERT(conf.FindAll("t1>t2>t3").size() == 2);
-		TS_ASSERT(conf.Find("t1>t2").FindAll("t3").size() == 2);
+		TS_ASSERT(!conf2.Find("t1").IsEmpty());
+		TS_ASSERT(!conf2.Find("t1>t2").IsEmpty());
+		TS_ASSERT(!conf2.Find("t1>t2>t3[name=\"bla\"]").IsEmpty());
+		TS_ASSERT( conf2.Find("t1>t2>t3[name=\"bla\"]").GetValue() == "333");
+		TS_ASSERT(conf2.FindAll("t1>t2>t3[name=\"bla\"]").size() == 1);
+		TS_ASSERT(conf2.FindAll("t1>t2>t3").size() == 2);
+		TS_ASSERT(conf2.Find("t1>t2").FindAll("t3").size() == 2);
 	}
 
 	/// Load and save a config file
@@ -119,7 +119,7 @@ public:
 		.RefSubConfig("ccc", "name", "nameZ", true).SetValue("someValue");
 		m_conf2->SaveToFile("tests/config_generated.xml");
 
-		ConfigReader generatedConf("tests/config_generated.xml");
+		ConfigFile generatedConf("tests/config_generated.xml");
 		TS_ASSERT(generatedConf.GetSubConfig("application")
 				  .GetSubConfig("aaa", "name", "nameX")
 				  .GetSubConfig("bbb", "name", "nameY")

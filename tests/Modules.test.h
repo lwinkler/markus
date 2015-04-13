@@ -53,7 +53,7 @@ public:
 	ModulesTestSuite()
 		: mp_fakeConfig(NULL),
 		  mp_fakeInput(NULL),
-		  mp_config(NULL),
+		  mp_configFile(NULL),
 		  mp_context(NULL),
 		  m_state(false),
 		  m_factoryParameters(Factories::parametersFactory()),
@@ -67,7 +67,7 @@ protected:
 	const FactoryFeatures& m_factoryFeatures;
 	ParameterStructure* mp_fakeConfig;
 	Module* mp_fakeInput;
-	ConfigReader* mp_config;
+	ConfigFile* mp_configFile;
 	Context::Parameters* mp_contextParams;
 	Context* mp_context;
 
@@ -92,25 +92,25 @@ public:
 			m_factoryModules.List(m_moduleTypes);
 
 		createEmptyConfigFile("/tmp/config_empty.xml");
-		mp_config = new ConfigReader("/tmp/config_empty.xml");
-		addModuleToConfig("VideoFileReader", *mp_config)
+		mp_configFile = new ConfigFile("/tmp/config_empty.xml");
+		addModuleToConfig("VideoFileReader", *mp_configFile)
 		.RefSubConfig("parameters", true)
 		.RefSubConfig("param", "name", "fps", true).SetValue("22");
-		mp_config->RefSubConfig("application").SetAttribute("name", "unitTest");
-		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", mp_config->Find("application>module[name=\"VideoFileReader0\"]"));
+		mp_configFile->RefSubConfig("application").SetAttribute("name", "unitTest");
+		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", mp_configFile->Find("application>module[name=\"VideoFileReader0\"]"));
 		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeConfig);
 		mp_fakeInput->AllowAutoProcess(false);
 		// note: we need a fake module to create the input streams
 		mp_fakeInput->SetAsReady();
 		mp_fakeInput->Reset();
-		mp_contextParams = new Context::Parameters(mp_config->Find("application"), "/tmp/config_empty.xml", "TestModule", "tests/out");
+		mp_contextParams = new Context::Parameters(mp_configFile->Find("application"), "/tmp/config_empty.xml", "TestModule", "tests/out");
 		mp_context = new Context(*mp_contextParams);
 	}
 	void tearDown()
 	{
 		CLEAN_DELETE(mp_fakeConfig);
 		CLEAN_DELETE(mp_fakeInput);
-		CLEAN_DELETE(mp_config);
+		CLEAN_DELETE(mp_configFile);
 		CLEAN_DELETE(mp_context);
 		CLEAN_DELETE(mp_contextParams);
 	}
@@ -139,14 +139,14 @@ public:
 	std::tuple<ParameterStructure*, Module*> createAndConnectModule(const string& x_type, const map<string, string>* xp_parameters = NULL)
 	{
 		TS_TRACE("Create and connect module of class " + x_type);
-		ConfigReader moduleConfig = addModuleToConfig(x_type, *mp_config);
+		ConfigReader moduleConfig = addModuleToConfig(x_type, *mp_configFile);
 
 		// Add parameters to override to the config
 		if(xp_parameters != NULL)
 			for(const auto& elem : *xp_parameters)
 				moduleConfig.RefSubConfig("parameters").RefSubConfig("param", "name", elem.first, true).SetValue(elem.second);
 
-		mp_config->SaveToFile("tests/tmp/tmp.xml");
+		mp_configFile->SaveToFile("tests/tmp/tmp.xml");
 		ParameterStructure* parameters = m_factoryParameters.Create(x_type, moduleConfig);
 		Module* module                 = m_factoryModules.Create(x_type, *parameters);
 		module->SetContext(*mp_context);

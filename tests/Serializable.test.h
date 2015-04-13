@@ -117,7 +117,7 @@ protected:
 	const FactoryFeatures& m_factoryFeatures;
 	Module* mp_fakeInput;
 	ParameterStructure* mp_fakeParams;
-	ConfigReader* mp_config;
+	ConfigFile* mp_config;
 
 	// Values for testing
 	cv::KeyPoint  m_kp;
@@ -131,7 +131,7 @@ public:
 	void setUp()
 	{
 		createEmptyConfigFile("/tmp/config_empty.xml");
-		mp_config = new ConfigReader("tests/serialize/module.xml");
+		mp_config = new ConfigFile("tests/serialize/module.xml");
 		mp_fakeParams = m_factoryParameters.Create("VideoFileReader", mp_config->GetSubConfig("module"));
 		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeParams);
 		// note: we need a fake module to create the input streams

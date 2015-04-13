@@ -411,7 +411,7 @@ void Manager::PrintStatistics()
 	// Create an XML file to summarize CPU usage
 	//     if output dir is empty, write to /tmp
 	string benchFileName = ((IsContextSet() && !GetContext().IsOutputDirEmpty()) ? GetContext().GetOutputDir() : "/tmp") + "/benchmark.xml";
-	ConfigReader benchSummary(benchFileName, true);
+	ConfigFile benchSummary(benchFileName, true);
 	ConfigReader conf = benchSummary.FindRef("benchmark", true);
 
 
@@ -486,7 +486,7 @@ void Manager::Export()
 		{
 			string file("modules/" + moduleType + ".xml");
 			createEmptyConfigFile("/tmp/config_empty.xml");
-			ConfigReader config("/tmp/config_empty.xml");
+			ConfigFile config("/tmp/config_empty.xml");
 			ConfigReader moduleConfig = config.FindRef("application>module[name=\"" + moduleType + "\"]", true);
 			moduleConfig.FindRef("parameters>param[name=\"class\"]", true).SetValue(moduleType);
 

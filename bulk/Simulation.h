@@ -44,14 +44,14 @@ public:
 	};
 
 	Simulation(Parameters& xr_params, const Context& x_context);
-	void Generate(ConfigReader& mainConfig);
+	void Generate(ConfigFile& mainConfig);
 
 protected:
 	/// Add an entry in the Makefile
-	void AddSimulationEntry(const std::vector<std::string>& x_variationNames, const ConfigReader& x_mainConfig);
+	void AddSimulationEntry(const std::vector<std::string>& x_variationNames, const ConfigFile& x_mainConfig);
 
 	/// Add variation to simulation
-	void AddVariations(std::vector<std::string>& x_variationNames, const ConfigReader& x_varConf, ConfigReader& xr_mainConfig);
+	void AddVariations(std::vector<std::string>& x_variationNames, const ConfigReader& x_varConf, ConfigFile& xr_mainConfig);
 
 	// Streams for generation of the simulation Makefile
 	std::stringstream m_allTargets;

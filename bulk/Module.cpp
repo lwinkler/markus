@@ -329,7 +329,7 @@ void Module::PrintStatistics(ConfigReader& xr_xmlResult) const
 			 m_timerWaiting<<"ms), "<< fps <<" fps");
 
 	// Write perf to output XML
-	ConfigReader perfModule = xr_xmlResult.FindRef("module[name=\"" + GetName() + "\"]", true);
+	ConfigReader perfModule(xr_xmlResult.FindRef("module[name=\"" + GetName() + "\"]", true));
 	perfModule.FindRef("nb_frames", true).SetValue(m_countProcessedFrames);
 	perfModule.FindRef("timer[name=\"processing\"]", true).SetValue(m_timerProcessing);
 	perfModule.FindRef("timer[name=\"conversion\"]", true).SetValue(m_timerConvertion);

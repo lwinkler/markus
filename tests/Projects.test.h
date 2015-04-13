@@ -48,7 +48,7 @@ protected:
 	void runConfig(const string& x_configFile)
 	{
 		TS_TRACE("## Unit test with configuration " + x_configFile);
-		ConfigReader mainConfig(x_configFile);
+		ConfigFile mainConfig(x_configFile);
 		mainConfig.Validate();
 		ConfigReader appConfig = mainConfig.GetSubConfig("application");
 		// Note: Added this to avoid deleting the output directory
