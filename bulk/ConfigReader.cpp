@@ -137,8 +137,8 @@ ConfigReader::ConfigReader(TiXmlNode* xp_node) :
 ConfigReader::ConfigReader(const ConfigReader& x_conf) : 
 	mp_node(x_conf.mp_node)
 {
-	if(IsEmpty())
-		throw MkException("Initialize a ConfigReader to an empty config", LOC);
+	// if(IsEmpty())
+		// throw MkException("Initialize a ConfigReader to an empty config", LOC);
 }
 
 ConfigReader::~ConfigReader()
