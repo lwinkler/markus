@@ -194,8 +194,8 @@ def evaluate(events, truths):
     log_truth = []
 
     # Matched
-    matched_events = dict()
-    matched_truths = dict()
+    matched_events     = dict()
+    matched_truths     = dict()
 
     # Stats
     fp = 0
@@ -208,10 +208,11 @@ def evaluate(events, truths):
     for event in events:
         # Search for a matching truth
         for i, truth in enumerate(truths):
+            # Count as ambiguous
+            matched = event.time >= truth.match_begin and event.time <= truth.match_end
 
             # Test for matching
-            if event.time >= truth.match_begin and \
-               event.time <= truth.match_end:
+            if matched:
                 # Keep track of matched ground truth
                 if event.id not in matched_events:
                     matched_events[event.id] = []
@@ -221,8 +222,6 @@ def evaluate(events, truths):
                     matched_truths[truth.id] = []
                 else:
                     inhib += 1 # several gt for one event
-                if truth.is_ambiguous:
-                    ambs += 1
                 matched_events[event.id].append(truth)
                 matched_truths[truth.id].append(event)
 
@@ -233,13 +232,18 @@ def evaluate(events, truths):
             fp += 1
             fid_fp.write('%s %s\n' % (event.time.milis, event.time_end.milis))
 
+    tp = 0
     for truth in truths:
         log_truth.append((truth, matched_truths[truth.id] if truth.id in matched_truths else [], truth.id in matched_truths))
+        if truth.is_ambiguous:
+	    ambs += 1
+            continue
         if not truth.id in matched_truths:
 	    fid_fn.write('%s %s\n' % (truth.begin.milis, truth.end.milis))
 	    fn += 1
+        else:
+            tp += 1
 
-    tp = len(matched_truths)
     # print "fp %d fn %d tp %d. dups %d inh %d" % (fp, fn, tp, dups, inhib)
 
     # Prepare evaluation results
@@ -249,7 +253,7 @@ def evaluate(events, truths):
                          dups=dups,
                          ambs=ambs,
                          det=len(events),
-                         pos=len(truths))
+                         pos=len(truths) - ambs)
     fid_fp.close()
     fid_fn.close()
     fid_tp.close()
