@@ -35,13 +35,14 @@ Evaluation = namedtuple('Evaluation',
                         'tp '
                         'fp '
                         'fn '
-                        'dups ')
+                        'dups '
+                        'ambs ')
 
 # Video metrics
 Video = namedtuple('Video', 'duration')
 
 # Truth tuple
-Truth = namedtuple('Truth', 'id begin end match_begin match_end is_valid text')
+Truth = namedtuple('Truth', 'id begin end match_begin match_end is_valid is_ambiguous text')
 
 # Global arguments, will be overwritten at runtime
 args = None
@@ -60,8 +61,13 @@ def is_tool(name):
 
 # Compare with event name: fall, intrusion, ...
 def is_valid(text):
-    """ Function to check if a subtitle is a fall """
+    """ Function to check if a subtitle is an event """
     return args.EVENT_NAME.lower() in text.lower()
+
+# Check event name if ambiguous
+def is_ambiguous(text):
+    """ Function to check if a subtitle is a ambiguous """
+    return len(args.AMBIGUOUS) > 0 and args.AMBIGUOUS.lower() in text.lower()
 
 
 def video_info(video):
@@ -151,7 +157,8 @@ def read_truths(file_path):
     for entry in entries:
 
         # Look if this is a fall
-        fall = is_valid(entry.text)
+        fall      = is_valid(entry.text)
+        ambiguous = is_ambiguous(entry.text)
 
         # If is is garbage skip
         if not fall or fall is None:
@@ -167,7 +174,8 @@ def read_truths(file_path):
                             match_begin=match_begin,
                             match_end=match_end,
                             text=entry.text.strip(' \t\n\r'),
-                            is_valid=fall))
+                            is_valid=fall,
+                            is_ambiguous=ambiguous))
 
     return truths
 
@@ -193,6 +201,7 @@ def evaluate(events, truths):
     fp = 0
     fn = 0
     dups = 0
+    ambs = 0
     inhib = 0
 
     # For each event
@@ -212,6 +221,8 @@ def evaluate(events, truths):
                     matched_truths[truth.id] = []
                 else:
                     inhib += 1 # several gt for one event
+                if truth.is_ambiguous:
+                    ambs += 1
                 matched_events[event.id].append(truth)
                 matched_truths[truth.id].append(event)
 
@@ -236,6 +247,7 @@ def evaluate(events, truths):
                          fp=fp,
                          fn=fn,
                          dups=dups,
+                         ambs=ambs,
                          det=len(events),
                          pos=len(truths))
     fid_fp.close()
@@ -257,12 +269,13 @@ def statistics(evaluation, video=None):
 
     # Counters statistics
     stats['Counters'] = ('-' * 20, '%s')
-    stats['Total ground truth'] = (e.pos, '%2d')
-    stats['Total detected'] = (e.det, '%2d')
-    stats['Total correct detections'] = (e.tp, '%2d')
-    stats['Total false alarms'] = (e.fp, '%2d')
-    stats['Total missed'] = (e.fn, '%2d')
-    stats['Total duplicates'] = (e.dups, '%2d')
+    stats['Total ground truth'] = (e.pos, '%4d')
+    stats['Total detected'] = (e.det, '%4d')
+    stats['Total correct detections'] = (e.tp, '%4d')
+    stats['Total false alarms'] = (e.fp, '%4d')
+    stats['Total missed'] = (e.fn, '%4d')
+    stats['Total duplicates'] = (e.dups, '%4d')
+    stats['Total ambiguous']  = (e.ambs, '%4d')
 
     # Confusion matrix statistics
     stats['Statistics'] = ('-' * 20, '%s')
@@ -428,10 +441,10 @@ def generate_html(stats, logs, data, out='out', filename='report.html'):
     table <= header
     for (truth, matches, good) in log_truth:
 
-        if not matches:
+        if truth.is_ambiguous:
+            bg = "#FFF4D3"
+        elif not matches:
             bg = "#FFD4D3"
-        # elif len(matches) > 1:
-        #     bg = "#FFF4D3"
         else:
             bg = "#DCFFD3"
 
@@ -515,6 +528,14 @@ def arguments_parser():
                         type=str,
                         default="anor",
                         help='the name of the event to match')
+
+    # Event name
+    parser.add_argument('-a',
+                        dest='AMBIGUOUS',
+                        type=str,
+                        default="",
+                        help='the name of ambiguous events: not accounted in statistics')
+
 
     # Delay
     parser.add_argument('-d',

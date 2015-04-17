@@ -98,7 +98,8 @@ def generate_html(path, datas, dirname='analysis', filename='summary.html'):
             tot[k] += vars(e)[k]
     vid = Time()
     for _, _, s in datas:
-        vid += s['Video duration'][0]
+    	if 'Video duration' in s:
+		vid += s['Video duration'][0]
     total = statistics(Evaluation(**tot), Video(duration=vid))
 
     # Results section
