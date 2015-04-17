@@ -55,11 +55,11 @@ public:
 	void Export(std::ostream& rx_os, int x_id, int x_indentation, bool x_isInput);
 	inline void LockModuleForRead() {mr_module.LockForRead();}
 	inline void UnLockModule() {mr_module.Unlock();}
-	inline bool IsConnected() const {return m_connected != NULL;}
+	inline bool IsConnected() const {return m_connected != nullptr;}
 	inline const Module& GetModule() const {return mr_module;}
 	inline Stream& GetConnected() const
 	{
-		if(m_connected == NULL)
+		if(m_connected == nullptr)
 			throw MkException("Stream " + GetName() + " is not connected", LOC);
 		return *m_connected;
 	}
@@ -68,7 +68,7 @@ public:
 	inline void   SetTimeStamp(TIME_STAMP x_timeStamp) {m_timeStamp = x_timeStamp;}
 	inline TIME_STAMP GetTimeStampConnected() const
 	{
-		if(m_connected == NULL)
+		if(m_connected == nullptr)
 			throw MkException("Stream " + GetName() + " is not connected", LOC);
 		return m_connected->GetTimeStamp();
 	}

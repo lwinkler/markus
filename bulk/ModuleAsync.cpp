@@ -86,7 +86,7 @@ void ModuleAsync::PrintStatistics(ConfigReader& xr_xmlResult) const
 	double fps = m_countFramesThread / (m_timerThread * 0.001);
 	LOG_INFO(m_logger, "\t" << m_countFramesThread<<" frames processed asynchronously in "<<m_timerThread<<"ms ("<< fps <<" fps)");
 
-	ConfigReader perfModule = xr_xmlResult.FindRef("module[name=\"" + GetName() + "\"]", false);
+	ConfigReader perfModule(xr_xmlResult.FindRef("module[name=\"" + GetName() + "\"]", false));
 	perfModule.FindRef("nb_frames[name=\"thread\"]", true).SetValue(m_countFramesThread);
 	perfModule.FindRef("timer[name=\"thread\"]", true).SetValue(m_timerThread);
 	perfModule.FindRef("fps[name=\"thread\"]", true).SetValue(fps);

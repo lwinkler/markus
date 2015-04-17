@@ -177,7 +177,7 @@ istream& deserialize(istream& x_in,  Mat& xr_val)
 		for(int j = 0 ; j < xr_val.cols ; j++)
 		>> xr_val.at(i, j)
 	         >> get_char<','> >> xr_val.z >> get_char<']'>)
-	return x_in; // TODO: Check that all streams are returned
+	return x_in;
 	else throw MkException("Error in format", LOC);
 	*/
 	assert(false); // TODO

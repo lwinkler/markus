@@ -30,12 +30,13 @@ log4cxx::LoggerPtr Processable::m_logger(log4cxx::Logger::getLogger("Processable
 
 Processable::Processable(ParameterStructure& xr_params) :
 	Configurable(xr_params),
-	m_param(dynamic_cast<Parameters&>(xr_params))
+	m_param(dynamic_cast<const Parameters&>(xr_params))
 {
 	m_pause            = false;
 	m_allowAutoProcess = true;
 	m_realTime         = true;
 	m_moduleTimer      = nullptr;
+	mp_context         = nullptr;
 }
 
 Processable::~Processable()

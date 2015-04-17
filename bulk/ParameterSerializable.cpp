@@ -25,6 +25,7 @@
 
 using namespace std;
 
+log4cxx::LoggerPtr ParameterSerializable::m_logger(log4cxx::Logger::getLogger("ParameterSerializable"));
 
 void ParameterSerializable::Export(ostream& rx_os, int x_indentation)
 {

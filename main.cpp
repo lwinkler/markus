@@ -82,7 +82,7 @@ void *send_commands(void *x_void_ptr)
 {
 	Manager *pManager = reinterpret_cast<Manager*>(x_void_ptr);
 	static log4cxx::LoggerPtr logger(log4cxx::Logger::getLogger("send_commands"));
-	assert(pManager != NULL);
+	assert(pManager != nullptr);
 	string input;
 	vector<string> elems;
 	string value;
@@ -115,7 +115,7 @@ void *send_commands(void *x_void_ptr)
 		cin.clear();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 struct arguments
@@ -153,7 +153,7 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 		{"output_dir",  1, 0, 'o'},
 		{"parameter",   1, 0, 'p'},
 		{"xml",         1, 0, 'x'},
-		{NULL, 0, NULL, 0}
+		{nullptr, 0, nullptr, 0}
 	};
 	char c;
 	int option_index = 0;
@@ -249,7 +249,7 @@ void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, 
 		try
 		{
 			// open the config and override the initial config
-			ConfigReader extra(elem1);
+			ConfigFile extra(elem1);
 			appConfig.OverrideWith(extra);
 		}
 		catch(MkException& e)
@@ -333,13 +333,15 @@ int main(int argc, char** argv)
 		Factories::RegisterAll();
 
 		LOG_INFO(logger, Context::Version(true));
-		ConfigReader mainConfig(args.configFile);
+		ConfigFile mainConfig(args.configFile);
 		mainConfig.Validate();
 		ConfigReader appConfig = mainConfig.Find("application");
 		assert(!appConfig.IsEmpty());
 
 		// Init global variables and objects
-		Context context("", appConfig.GetAttribute("name"), args.outputDir);
+		// Context manages all call to system, files, ...
+		Context::Parameters contextParams(mainConfig.Find("application"), args.configFile, appConfig.GetAttribute("name"), args.outputDir);
+		Context context(contextParams);
 		if(args.outputDir != "")
 		{
 			string dir = args.outputDir + "/";
@@ -362,13 +364,11 @@ int main(int argc, char** argv)
 			return 0;
 		}
 
-
-		// Override parameter auto_process with centralized
-		appConfig.FindRef("parameters>param[name=\"auto_process\"]", true).SetValue(args.centralized ? "1" : "0");
-		appConfig.FindRef("parameters>param[name=\"fast\"]", true).SetValue(args.fast ? "1" : "0");
-
 		// Set manager and context
 		Manager::Parameters parameters(appConfig);
+		// Override parameter auto_process with centralized
+		parameters.autoProcess = args.centralized;
+		parameters.fast = args.fast;
 		Manager manager(parameters);
 		manager.SetContext(context);
 
@@ -384,7 +384,7 @@ int main(int argc, char** argv)
 
 		/// Create a separate thread to read the commands from stdin
 		pthread_t command_thread;
-		if(args.useStdin && pthread_create(&command_thread, NULL, send_commands, &manager))
+		if(args.useStdin && pthread_create(&command_thread, nullptr, send_commands, &manager))
 		{
 			LOG_ERROR(logger, "Error creating thread");
 			return -1;
@@ -409,7 +409,7 @@ int main(int argc, char** argv)
 		else
 		{
 #ifndef MARKUS_NO_GUI
-			ConfigReader mainGuiConfig("gui.xml", true);
+			ConfigFile mainGuiConfig("gui.xml", true);
 			ConfigReader guiConfig = mainGuiConfig.FindRef("gui[name=\"" + args.configFile + "\"]", true);
 			guiConfig.FindRef("parameters", true);
 

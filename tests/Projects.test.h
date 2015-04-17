@@ -48,17 +48,15 @@ protected:
 	void runConfig(const string& x_configFile)
 	{
 		TS_TRACE("## Unit test with configuration " + x_configFile);
-		ConfigReader mainConfig(x_configFile);
+		ConfigFile mainConfig(x_configFile);
 		mainConfig.Validate();
 		ConfigReader appConfig = mainConfig.GetSubConfig("application");
-		// Note: Added this to avoid deleting the output directory // TODO: Output dir should not be static probably
+		// Note: Added this to avoid deleting the output directory
 		appConfig.RefSubConfig("parameters", true).RefSubConfig("param", "name", "auto_clean", true).SetValue("0");
 		appConfig.RefSubConfig("parameters", true).RefSubConfig("param", "name", "auto_process", true).SetValue("1");
 		TS_ASSERT(!appConfig.IsEmpty());
 		Manager::Parameters params(appConfig);
 		Manager manager(params);
-		Context context("", "ProjectsTestSuite", "tests/out");
-		manager.SetContext(context);
 		manager.AllowAutoProcess(false);
 		manager.Connect();
 		manager.Reset();

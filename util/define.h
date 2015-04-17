@@ -29,7 +29,7 @@
 #define POW2(x) (x) * (x)
 #define DIST(x, y) sqrt((x) * (x) + (y) * (y))
 #define DIFF_REL(f) ((f).value - (f).mean) * ((f).value - (f).mean) / (f).sqVariance
-#define CLEAN_DELETE(x) if((x) != NULL){delete((x));(x) = NULL;}
+#define CLEAN_DELETE(x) if((x) != nullptr){delete((x));(x) = nullptr;}
 
 /// Macro to define the Class of an object (for method GetClass)
 #define MKCLASS(cl) inline virtual const std::string& GetClass() const {const static std::string s = cl; return s;}

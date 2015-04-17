@@ -82,6 +82,6 @@ QWidget* ControllerInputStream::CreateWidget()
 #ifndef MARKUS_NO_GUI
 	return m_parameterSlider = new QParameterSlider(0, 0, m_module.GetMaxMsec(), 0);
 #else
-	return NULL;
+	return nullptr;
 #endif
 }

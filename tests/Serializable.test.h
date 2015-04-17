@@ -117,7 +117,7 @@ protected:
 	const FactoryFeatures& m_factoryFeatures;
 	Module* mp_fakeInput;
 	ParameterStructure* mp_fakeParams;
-	ConfigReader* mp_config;
+	ConfigFile* mp_config;
 
 	// Values for testing
 	cv::KeyPoint  m_kp;
@@ -131,7 +131,7 @@ public:
 	void setUp()
 	{
 		createEmptyConfigFile("/tmp/config_empty.xml");
-		mp_config = new ConfigReader("tests/serialize/module.xml");
+		mp_config = new ConfigFile("tests/serialize/module.xml");
 		mp_fakeParams = m_factoryParameters.Create("VideoFileReader", mp_config->GetSubConfig("module"));
 		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeParams);
 		// note: we need a fake module to create the input streams
@@ -202,8 +202,6 @@ protected:
 public:
 	void testTestObject()
 	{
-
-		// TODO: There is a problem of inprecision with floating points. See how we handle this !
 		TestObject obj1;
 		testSerialization(obj1, "TestObject");
 	}
@@ -346,11 +344,11 @@ public:
 		vector<string> listFeatures;
 		m_factoryFeatures.List(listFeatures);
 		unsigned int seed = 242343332;
-		for(vector<string>::const_iterator it = listFeatures.begin() ; it != listFeatures.end() ; ++it)
+		for(const auto& elem : listFeatures)
 		{
-			Feature* feat = m_factoryFeatures.Create(*it);
+			Feature* feat = m_factoryFeatures.Create(elem);
 			feat->Randomize(seed, "");
-			testSerialization(*feat, *it);
+			testSerialization(*feat, elem);
 			delete(feat);
 		}
 	}

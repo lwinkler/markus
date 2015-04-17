@@ -49,8 +49,8 @@ public:
 	inline const std::string& GetValue() const {return mr_value;}
 	inline virtual std::string GetValueString() const {return mr_value;}
 	inline virtual std::string GetDefaultString() const {return m_default;}
-	inline virtual std::string GetRange() const {return "";}
-	inline virtual void SetRange(const std::string& x_range) {}
+	virtual std::string GetRange() const;
+	virtual void SetRange(const std::string& x_range);
 	inline virtual bool CheckRange() const
 	{
 		return true;
@@ -71,6 +71,7 @@ public:
 private:
 	std::string m_default;
 	std::string& mr_value;
+	std::vector<std::string> m_valuesInRange;
 };
 
 #endif

@@ -83,7 +83,7 @@ void VideoFileBufferWriter::OpenNewFile()
 	assert(m_param.type == CV_8UC3);
 
 	stringstream ss;
-	ss << m_context.GetOutputDir() << "/" << m_param.file  << "." << m_index++ << "." << ExtensionFromFourcc(m_param.fourcc);
+	ss << GetContext().GetOutputDir() << "/" << m_param.file  << "." << m_index++ << "." << ExtensionFromFourcc(m_param.fourcc);
 	m_fileName = ss.str();
 	double fps = 12;
 

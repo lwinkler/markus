@@ -60,14 +60,14 @@ void LogEvent::Reset()
 	Module::Reset();
 	m_event.Empty();
 
-	string srtFileName = m_context.GetOutputDir() + "/" + m_param.file;
+	string srtFileName = GetContext().GetOutputDir() + "/" + m_param.file;
 	CLEAN_DELETE(mp_annotationWriter);
 	mp_annotationWriter = new AnnotationFileWriter();
 	mp_annotationWriter->Open(srtFileName);
 	m_saveImage1 = m_inputStreams.at(1)->IsConnected();
 	m_saveImage2 = m_inputStreams.at(2)->IsConnected();
 
-	m_folder  = m_context.GetOutputDir() + "/" + m_param.folder + "/";
+	m_folder  = GetContext().GetOutputDir() + "/" + m_param.folder + "/";
 	SYSTEM("mkdir -p " + m_folder);
 }
 
@@ -79,7 +79,7 @@ void LogEvent::ProcessFrame()
 		SaveImage(m_event);
 		WriteEvent();
 		// LOG_EVENT(m_logger, m_event.GetEventName());
-		m_event.Notify(m_context);
+		m_event.Notify(GetContext());
 	}
 }
 
@@ -168,12 +168,12 @@ void LogEvent::CompareWithGroundTruth()
 		return;
 	try
 	{
-		string outDir = m_context.GetOutputDir() + "/analysis";
+		string outDir = GetContext().GetOutputDir() + "/analysis";
 		SYSTEM("mkdir -p " + outDir);
 		if(!m_param.gtFile.empty())
 			SYSTEM("cp " + m_param.gtFile + " " + outDir);
 		stringstream cmd;
-		cmd<< m_param.gtCommand << " " << m_context.GetOutputDir() << "/" << m_param.file;
+		cmd<< m_param.gtCommand << " " << GetContext().GetOutputDir() << "/" << m_param.file;
 		// if(m_param.gtFile != "")
 		cmd<< " " << outDir << "/" << basename(m_param.gtFile);
 		cmd<< " --html --no-browser -o " << outDir;
@@ -183,7 +183,7 @@ void LogEvent::CompareWithGroundTruth()
 		SYSTEM(cmd.str());
 
 		// Save command for later use
-		string fileName = m_context.GetOutputDir() + "/eval.sh";
+		string fileName = GetContext().GetOutputDir() + "/eval.sh";
 		ofstream ofs(fileName.c_str(), ios_base::app);
 		ofs << cmd.str();
 		ofs.close();

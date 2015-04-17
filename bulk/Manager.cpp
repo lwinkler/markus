@@ -66,7 +66,7 @@ Manager::Manager(ParameterStructure& xr_params) :
 	{
 		// Read parameters
 		if(moduleConfig.Find("parameters", true).IsEmpty())
-			throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name"), LOC);
+			throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name", "(unknown)"), LOC);
 		string moduleType = moduleConfig.Find("parameters>param[name=\"class\"]").GetValue();
 		ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, moduleConfig);
 		Module * tmp1 = mr_moduleFactory.Create(moduleType, *tmp2);
@@ -90,55 +90,6 @@ Manager::~Manager()
 	for(auto & elem : m_parameters)
 		delete elem;
 
-	/// Do the final operations on the static class
-	const string& outputDir = m_context.GetOutputDir();
-	if(!outputDir.empty())
-	{
-		LOG_INFO(m_logger, "Results written to directory "<<outputDir);
-		if(getenv("LOG_DIR") == nullptr)
-		{
-			try
-			{
-				SYSTEM("cp markus.log " + outputDir + "/markus.copy.log");
-			}
-			catch(...)
-			{
-				LOG_WARN(m_logger, "Error at the copy of markus.log");
-			}
-		}
-
-		// Copy the directory for archiving if needed
-		try
-		{
-			if(m_param.autoClean)
-			{
-				if(m_param.archiveDir != "")
-				{
-					LOG_INFO(m_logger, "Working directory moved to " + m_param.archiveDir);
-					SYSTEM("mkdir -p " + m_param.archiveDir);
-					SYSTEM("mv " + outputDir + " " + m_param.archiveDir + "/");
-				}
-				else
-				{
-					LOG_INFO(m_logger, "Working directory deleted");
-					SYSTEM("rm -rf " + outputDir);
-				}
-			}
-			else
-			{
-				if(m_param.archiveDir != "")
-				{
-					LOG_INFO(m_logger, "Working directory copied to " + m_param.archiveDir);
-					SYSTEM("mkdir -p " + m_param.archiveDir);
-					SYSTEM("cp -r " + outputDir + " " + m_param.archiveDir);
-				}
-			}
-		}
-		catch(MkException &e)
-		{
-			LOG_ERROR(m_logger, "Exception thrown while archiving: " << e.what());
-		}
-	}
 }
 
 /**
@@ -171,8 +122,8 @@ void Manager::Connect()
 			try
 			{
 				int inputId        = atoi(inputConfig.GetAttribute("id").c_str());
-				const string& tmp1 = inputConfig.GetAttribute("moduleid");
-				const string& tmp2 = inputConfig.GetAttribute("outputid");
+				const string& tmp1 = inputConfig.GetAttribute("moduleid", "");
+				const string& tmp2 = inputConfig.GetAttribute("outputid", "");
 				if(tmp1 != "" && tmp2 != "")
 				{
 					int outputModuleId    = atoi(tmp1.c_str());
@@ -186,7 +137,7 @@ void Manager::Connect()
 			}
 			catch(MkException& e)
 			{
-				LOG_ERROR(m_logger, "Cannot connect input "<<inputConfig.GetAttribute("id")<<" of module "<<module.GetName());
+				LOG_ERROR(m_logger, "Cannot connect input "<<inputConfig.GetAttribute("id", "(unknown)")<<" of module "<<module.GetName());
 				throw;
 			}
 		}
@@ -458,8 +409,9 @@ void Manager::PrintStatistics()
 	// LOG_INFO("Total time "<< m_timerProcessing + m_timerConvertion<<" ms ("<<     (1000.0 * m_frameCount) /(m_timerProcessing + m_timerConvertion)<<" frames/s)");
 
 	// Create an XML file to summarize CPU usage
-	string benchFileName = m_context.GetOutputDir() + "/benchmark.xml";
-	ConfigReader benchSummary(benchFileName, true);
+	//     if output dir is empty, write to /tmp
+	string benchFileName = ((IsContextSet() && !GetContext().IsOutputDirEmpty()) ? GetContext().GetOutputDir() : "/tmp") + "/benchmark.xml";
+	ConfigFile benchSummary(benchFileName, true);
 	ConfigReader conf = benchSummary.FindRef("benchmark", true);
 
 
@@ -534,7 +486,7 @@ void Manager::Export()
 		{
 			string file("modules/" + moduleType + ".xml");
 			createEmptyConfigFile("/tmp/config_empty.xml");
-			ConfigReader config("/tmp/config_empty.xml");
+			ConfigFile config("/tmp/config_empty.xml");
 			ConfigReader moduleConfig = config.FindRef("application>module[name=\"" + moduleType + "\"]", true);
 			moduleConfig.FindRef("parameters>param[name=\"class\"]", true).SetValue(moduleType);
 
@@ -571,7 +523,6 @@ Module& Manager::RefModuleById(int x_id) const
 		throw MkException("Module not found", LOC);
 	else
 		throw MkException("more than one module with id ", LOC);
-	//return NULL;
 }
 
 
@@ -581,7 +532,6 @@ Module& Manager::RefModuleByName(const string& x_name) const
 		if((elem)->GetName() == x_name)
 			return *elem;
 	throw MkException("Cannot find module " + x_name, LOC);
-	// return NULL;
 }
 
 
@@ -600,7 +550,7 @@ void Manager::Status() const
 	ss.clear();
 	ss << root;
 	evt.AddExternalInfo("exception", ss);
-	evt.Notify(m_context, true);
+	evt.Notify(GetContext(), true);
 }
 
 /**
@@ -689,7 +639,7 @@ void Manager::UpdateConfig()
 */
 void Manager::WriteStateToDirectory(const string& x_directory) const
 {
-	string directory = m_context.GetOutputDir() + "/" + x_directory;
+	string directory = GetContext().GetOutputDir() + "/" + x_directory;
 	SYSTEM("mkdir -p " + directory);
 	for(const auto & elem : m_modules)
 	{
@@ -716,5 +666,5 @@ void Manager::NotifyException(const MkException& x_exception)
 	Event ev;
 	ev.AddExternalInfo("exception", ss);
 	ev.Raise("exception");
-	ev.Notify(m_context, true);
+	ev.Notify(GetContext(), true);
 }

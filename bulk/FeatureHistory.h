@@ -38,7 +38,7 @@ public:
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 
-	std::map <TIME_STAMP, FeaturePtr> m_feats; // TODO rename
+	std::map <TIME_STAMP, FeaturePtr> features;
 };
 
 #endif

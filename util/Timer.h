@@ -35,7 +35,7 @@ public:
 	long GetMSecLong();
 	float GetSecFloat();
 	double GetSecDouble();
-	inline void Restart() {gettimeofday(&m_start, NULL);}
+	inline void Restart() {gettimeofday(&m_start, nullptr);}
 
 protected:
 	timeval m_start;

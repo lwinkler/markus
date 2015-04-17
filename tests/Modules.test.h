@@ -45,28 +45,6 @@ using namespace std;
 #include <iostream>
 #include <stdio.h>
 
-void exec(const string& x_cmd, vector<string>& xr_result)
-{
-	FILE* pipe = popen(x_cmd.c_str(), "r");
-	xr_result.clear();
-	if (!pipe)
-		throw MkException("Error at execution of command: " + x_cmd, LOC);
-	char buffer[128];
-	while(!feof(pipe))
-	{
-		// Append result to string vector
-		if(fgets(buffer, 128, pipe) != NULL)
-		{
-			xr_result.push_back(string(buffer));
-			// Remove last \n
-			if(! xr_result.back().empty() && xr_result.back().back() == '\n')
-				xr_result.back().pop_back();
-			if(xr_result.back().empty())
-				xr_result.pop_back();
-		}
-	}
-	pclose(pipe);
-}
 
 /// Unit testing class for ConfigReader class
 class ModulesTestSuite : public CxxTest::TestSuite
@@ -75,7 +53,7 @@ public:
 	ModulesTestSuite()
 		: mp_fakeConfig(NULL),
 		  mp_fakeInput(NULL),
-		  mp_config(NULL),
+		  mp_configFile(NULL),
 		  mp_context(NULL),
 		  m_state(false),
 		  m_factoryParameters(Factories::parametersFactory()),
@@ -89,7 +67,8 @@ protected:
 	const FactoryFeatures& m_factoryFeatures;
 	ParameterStructure* mp_fakeConfig;
 	Module* mp_fakeInput;
-	ConfigReader* mp_config;
+	ConfigFile* mp_configFile;
+	Context::Parameters* mp_contextParams;
 	Context* mp_context;
 
 	// Objects for streams
@@ -112,26 +91,28 @@ public:
 		else
 			m_factoryModules.List(m_moduleTypes);
 
-		mp_context = new Context("", "TestModule", "tests/out");
 		createEmptyConfigFile("/tmp/config_empty.xml");
-		mp_config = new ConfigReader("/tmp/config_empty.xml");
-		addModuleToConfig("VideoFileReader", *mp_config)
+		mp_configFile = new ConfigFile("/tmp/config_empty.xml");
+		addModuleToConfig("VideoFileReader", *mp_configFile)
 		.RefSubConfig("parameters", true)
 		.RefSubConfig("param", "name", "fps", true).SetValue("22");
-		mp_config->RefSubConfig("application").SetAttribute("name", "unitTest");
-		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", mp_config->Find("application>module[name=\"VideoFileReader0\"]"));
+		mp_configFile->RefSubConfig("application").SetAttribute("name", "unitTest");
+		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", mp_configFile->Find("application>module[name=\"VideoFileReader0\"]"));
 		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeConfig);
 		mp_fakeInput->AllowAutoProcess(false);
 		// note: we need a fake module to create the input streams
 		mp_fakeInput->SetAsReady();
 		mp_fakeInput->Reset();
+		mp_contextParams = new Context::Parameters(mp_configFile->Find("application"), "/tmp/config_empty.xml", "TestModule", "tests/out");
+		mp_context = new Context(*mp_contextParams);
 	}
 	void tearDown()
 	{
 		CLEAN_DELETE(mp_fakeConfig);
 		CLEAN_DELETE(mp_fakeInput);
-		CLEAN_DELETE(mp_config);
+		CLEAN_DELETE(mp_configFile);
 		CLEAN_DELETE(mp_context);
+		CLEAN_DELETE(mp_contextParams);
 	}
 
 	ConfigReader addModuleToConfig(const string& rx_type, ConfigReader& xr_config)
@@ -158,40 +139,33 @@ public:
 	std::tuple<ParameterStructure*, Module*> createAndConnectModule(const string& x_type, const map<string, string>* xp_parameters = NULL)
 	{
 		TS_TRACE("Create and connect module of class " + x_type);
-		ConfigReader moduleConfig = addModuleToConfig(x_type, *mp_config);
+		ConfigReader moduleConfig = addModuleToConfig(x_type, *mp_configFile);
 
 		// Add parameters to override to the config
 		if(xp_parameters != NULL)
-			for(map<string, string>::const_iterator it = xp_parameters->begin() ; it != xp_parameters->end() ; ++it)
-				moduleConfig.RefSubConfig("parameters").RefSubConfig("param", "name", it->first, true).SetValue(it->second);
+			for(const auto& elem : *xp_parameters)
+				moduleConfig.RefSubConfig("parameters").RefSubConfig("param", "name", elem.first, true).SetValue(elem.second);
 
-		mp_config->SaveToFile("tests/tmp/tmp.xml");
+		mp_configFile->SaveToFile("tests/tmp/tmp.xml");
 		ParameterStructure* parameters = m_factoryParameters.Create(x_type, moduleConfig);
 		Module* module                 = m_factoryModules.Create(x_type, *parameters);
 		module->SetContext(*mp_context);
 		module->AllowAutoProcess(false);
 		m_image = cv::Mat(module->GetHeight(), module->GetWidth(), module->GetImageType());
 
-		const map<int, Stream*> & inputs(module->GetInputStreamList());
-
-		// delete(mp_fakeInput);
-		// mp_fakeInput = m_factoryModules.CreateModule("VideoFileReader", mp_config->GetSubConfig("application").GetSubConfig("module", "VideoFileReader0"));
-		// mp_fakeInput->SetAsReady();
-		// mp_fakeInput->Reset();
-
 		// Create custom streams to feed each input of the module
-		for(map<int, Stream*>::const_iterator it2 = inputs.begin() ; it2 != inputs.end() ; ++it2)
+		for(const auto& elem : module->GetInputStreamList())
 		{
-			Stream& inputStream = module->RefInputStreamById(it2->first);
+			Stream& inputStream = module->RefInputStreamById(elem.first);
 			Stream* outputStream = NULL;
 
-			if(it2->second->GetClass() == "StreamImage")
+			if(elem.second->GetClass() == "StreamImage")
 				outputStream = new StreamImage("test", m_image, *mp_fakeInput, "Test input");
-			else if(it2->second->GetClass() == "StreamObjects")
-				outputStream = new StreamObject("test", m_objects, *mp_fakeInput, "Test input", it2->second->GetRequirement());
-			else if(it2->second->GetClass() == "StreamState")
+			else if(elem.second->GetClass() == "StreamObjects")
+				outputStream = new StreamObject("test", m_objects, *mp_fakeInput, "Test input", elem.second->GetRequirement());
+			else if(elem.second->GetClass() == "StreamState")
 				outputStream = new StreamState("test", m_state, *mp_fakeInput, "Test input");
-			else if(it2->second->GetClass() == "StreamEvent")
+			else if(elem.second->GetClass() == "StreamEvent")
 				outputStream = new StreamEvent("test", m_event, *mp_fakeInput, "Test input");
 			else
 			{
@@ -215,18 +189,18 @@ public:
 		unsigned int seed = 324234566;
 
 		// Test on each type of module
-		for(vector<string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; ++it1)
+		for(const auto& elem : m_moduleTypes)
 		{
-			TS_TRACE("## on module " + *it1);
+			TS_TRACE("## on module " + elem);
 			Module* module;
 			ParameterStructure* parameters;
-			std::tie(parameters, module) = createAndConnectModule(*it1);
+			std::tie(parameters, module) = createAndConnectModule(elem);
 			if(module->IsUnitTestingEnabled())
 			{
 				for(int i = 0 ; i < 50 ; i++)
 					module->ProcessRandomInput(seed);
 			}
-			else TS_TRACE("--> unit testing disabled on " + *it1);
+			else TS_TRACE("--> unit testing disabled on " + elem);
 			delete module;
 			delete parameters;
 		}
@@ -240,54 +214,54 @@ public:
 		// TS_TRACE("\n# Test all controllers");
 
 		// Test on each type of module
-		for(vector<string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; ++it1)
+		for(const auto& modType : m_moduleTypes)
 		{
-			TS_TRACE("# on module " + *it1);
+			TS_TRACE("# on module " + modType);
 			Module* module;
 			ParameterStructure* parameters;
-			tie(parameters, module) = createAndConnectModule(*it1);
+			tie(parameters, module) = createAndConnectModule(modType);
 			if(!module->IsUnitTestingEnabled())
 			{
-				TS_TRACE("--> unit testing disabled on " + *it1);
+				TS_TRACE("--> unit testing disabled on " + modType);
 				delete module;
 				delete parameters;
 				continue;
 			}
 
 			// Test on all controllers of the module
-			for(map<string, Controller*>::const_iterator it2 = module->GetControllersList().begin() ; it2 != module->GetControllersList().end() ; ++it2)
+			for(const auto& elemCtr : module->GetControllersList())
 			{
-				TS_TRACE("## on controller " + it2->first + " of class " + it2->second->GetClass());
+				TS_TRACE("## on controller " + elemCtr.first + " of class " + elemCtr.second->GetClass());
 				vector<string> actions;
-				it2->second->ListActions(actions);
+				elemCtr.second->ListActions(actions);
 
-				if(it2->second->GetClass() == "ControllerParameter")
+				if(elemCtr.second->GetClass() == "ControllerParameter")
 				{
 					// Test specific for controllers of type parameter
 					string type, range, defval, newValue;
 					assert(actions.size() == 5); // If not you need to write one more test
 
 					type = "0";
-					it2->second->CallAction("GetType", &type);
-					TS_TRACE("###  " + it2->first + ".GetType returned " + type);
+					elemCtr.second->CallAction("GetType", &type);
+					TS_TRACE("###  " + elemCtr.first + ".GetType returned " + type);
 
 					range = "0";
-					it2->second->CallAction("GetRange", &range);
-					TS_TRACE("###  " + it2->first + ".GetRange returned " + range);
+					elemCtr.second->CallAction("GetRange", &range);
+					TS_TRACE("###  " + elemCtr.first + ".GetRange returned " + range);
 
 					defval = "0";
-					it2->second->CallAction("GetDefault", &defval);
-					TS_TRACE("###  " + it2->first + ".GetDefault returned " + defval);
+					elemCtr.second->CallAction("GetDefault", &defval);
+					TS_TRACE("###  " + elemCtr.first + ".GetDefault returned " + defval);
 
 					vector<string> values;
 					TS_TRACE("Generate values for param of type " + type + " in range " + range);
-					module->GetParameters().GetParameterByName(it2->first).GenerateValues(20, values, range);
+					module->GetParameters().GetParameterByName(elemCtr.first).GenerateValues(20, values, range);
 
-					for(vector<string>::iterator it = values.begin() ; it != values.end() ; ++it)
+					for(auto& elemVal : values)
 					{
 						// For string type we cannot set random values
 						// cout<<"set "<<value<<endl;
-						it2->second->CallAction("Set", &(*it));
+						elemCtr.second->CallAction("Set", &elemVal);
 
 						// Test if the config is globally still valid
 						try
@@ -301,26 +275,26 @@ public:
 						}
 
 						newValue = "0";
-						it2->second->CallAction("Get", &newValue);
+						elemCtr.second->CallAction("Get", &newValue);
 
-						TSM_ASSERT("Value set must be returned by get: " + *it + "!=" + newValue, *it == newValue);
+						TSM_ASSERT("Value set must be returned by get: " + elemVal + "!=" + newValue, elemVal == newValue);
 
 						module->Reset();
 						for(int i = 0 ; i < 3 ; i++)
 							module->ProcessRandomInput(seed);
-						TS_TRACE("###  " + it2->first + ".Set returned " + *it);
-						TS_TRACE("###  " + it2->first + ".Get returned " + newValue);
+						TS_TRACE("###  " + elemCtr.first + ".Set returned " + elemVal);
+						TS_TRACE("###  " + elemCtr.first + ".Get returned " + newValue);
 					}
-					it2->second->CallAction("Set", &defval);
+					elemCtr.second->CallAction("Set", &defval);
 				}
 				else
 				{
-					for(vector<string>::const_iterator it3 = actions.begin() ; it3 != actions.end() ; ++it3)
+					for(const auto& elemAction : actions)
 					{
 						string value = "0";
 						// module->LockForWrite();
-						it2->second->CallAction(*it3, &value);
-						TS_TRACE("###  " + it2->first + "." + *it3 + " returned " + value);
+						elemCtr.second->CallAction(elemAction, &value);
+						TS_TRACE("###  " + elemCtr.first + "." + elemAction + " returned " + value);
 						// module->Unlock();
 
 						for(int i = 0 ; i < 3 ; i++)
@@ -342,50 +316,50 @@ public:
 		// TS_TRACE("\n# Test all parameters");
 
 		// Test on each type of module
-		for(vector<string>::const_iterator it1 = m_moduleTypes.begin() ; it1 != m_moduleTypes.end() ; ++it1)
+		for(const auto& modType : m_moduleTypes)
 		{
 			Module* module;
 			ParameterStructure* parameters;
-			std::tie(parameters, module) = createAndConnectModule(*it1);
+			std::tie(parameters, module) = createAndConnectModule(modType);
 			if(!module->IsUnitTestingEnabled())
 			{
 				delete module;
 				delete parameters;
 				continue;
 			}
-			TS_TRACE("# on module " + *it1);
+			TS_TRACE("# on module " + modType);
 
 			string lastParam = "";
 			string lastDefault = "";
 
 			// Test on all controllers of the module
-			for(vector<Parameter*>::const_iterator it2 = module->GetParameters().GetList().begin() ; it2 != module->GetParameters().GetList().end() ; ++it2)
+			for(const auto& elem : module->GetParameters().GetList())
 			{
 				// Create a second module with the parameter value (in case it is locked)
 				// we already have tested the other parameters with controllers
-				if(!(*it2)->IsLocked())
+				if(!elem->IsLocked())
 					continue;
 
-				TS_TRACE("## on parameter " + (*it2)->GetName() + " of type " + (*it2)->GetTypeString() + " on range " + (*it2)->GetRange());
+				TS_TRACE("## on parameter " + elem->GetName() + " of type " + elem->GetTypeString() + " on range " + elem->GetRange());
 
 				// Generate a new module with each value for locked parameter
 				vector<string> values;
 
-				TS_TRACE("Generate values for param of type " + (*it2)->GetTypeString() + " in range " + (*it2)->GetRange());
-				(*it2)->GenerateValues(10, values);
+				TS_TRACE("Generate values for param of type " + elem->GetTypeString() + " in range " + elem->GetRange());
+				elem->GenerateValues(10, values);
 
-				for(vector<string>::iterator it3 = values.begin() ; it3 != values.end() ; ++it3)
+				for(const auto& elemVal : values)
 				{
 					// For each value
 					map<string, string> params;
-					TS_TRACE("Set param " + (*it2)->GetName() + " = " + *it3 + " and " + lastParam + " = " + lastDefault);
-					params[(*it2)->GetName()] = *it3;
+					TS_TRACE("Set param " + elem->GetName() + " = " + elemVal + " and " + lastParam + " = " + lastDefault);
+					params[elem->GetName()] = elemVal;
 					if(lastParam != "")
 						params[lastParam] = lastDefault;
 
 					Module* module2;
 					ParameterStructure* parameters2;
-					std::tie(parameters2, module2) = createAndConnectModule(*it1, &params);
+					std::tie(parameters2, module2) = createAndConnectModule(modType, &params);
 					TS_ASSERT(module2->IsUnitTestingEnabled());
 
 					for(int i = 0 ; i < 3 ; i++)
@@ -394,8 +368,8 @@ public:
 					delete module2;
 					delete parameters2;
 				}
-				lastParam = (*it2)->GetName();
-				lastDefault = (*it2)->GetDefaultString();
+				lastParam = elem->GetName();
+				lastDefault = elem->GetDefaultString();
 			}
 			delete module;
 			delete parameters;
@@ -407,7 +381,7 @@ public:
 	void testBySpecificXmlProjects()
 	{
 		vector<string> result1;
-		exec("find modules/ modules2/ -name \"testing*.xml\"", result1);
+		execute("find modules/ modules2/ -name \"testing*.xml\"", result1);
 
 		for(auto elem : result1)
 		{
@@ -419,10 +393,10 @@ public:
 			TS_TRACE("Execute " + cmd);
 			SYSTEM(cmd);
 			// gather possible errors and warnings
-			exec("cat " + outDir + "/markus.log | grep WARN", result2);
+			execute("cat " + outDir + "/markus.log | grep WARN", result2);
 			if(!result2.empty())
 				TS_WARN("Warning(s) found in " + outDir + "/markus.log");
-			exec("cat " + outDir + "/markus.log | grep ERROR", result2);
+			execute("cat " + outDir + "/markus.log | grep ERROR", result2);
 			if(!result2.empty())
 				TS_FAIL("Error(s) found in " + outDir + "/markus.log");
 		}

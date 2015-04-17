@@ -61,7 +61,7 @@ void VideoFileWriter::Reset()
 	assert(m_param.type == CV_8UC3);
 
 	stringstream ss;
-	ss << m_context.GetOutputDir() << "/" << m_param.file  << "." << m_index++ << "." << ExtensionFromFourcc(m_param.fourcc);
+	ss << GetContext().GetOutputDir() << "/" << m_param.file  << "." << m_index++ << "." << ExtensionFromFourcc(m_param.fourcc);
 	const string filename = ss.str();
 	double fps = 12;
 
@@ -79,7 +79,7 @@ void VideoFileWriter::Reset()
 	m_writer.open(filename, CV_FOURCC(s[0], s[1], s[2], s[3]), fps, Size(m_param.width, m_param.height), isColor);
 	if(!m_writer.isOpened())
 	{
-		throw MkException("Failed to open output video file in VideoFileWriter::Reset", LOC);
+		throw MkException("Failed to open output video file " + filename + " in VideoFileWriter::Reset", LOC);
 	}
 }
 

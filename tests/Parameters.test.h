@@ -137,7 +137,7 @@ public:
 		TS_TRACE("Test ParameterString");
 		string myString = "value_current";
 		ParameterString paramString("param_string", "default_value", &myString, "Parameter of type string");
-		testParameter(paramString, "legal", "", "");
+		testParameter(paramString, "legal", "", "[]");
 	}
 
 	void testParameterImageType()
@@ -154,7 +154,7 @@ public:
 		TS_TRACE("Test ParameterSerializable - CalibrationByHeight");
 		CalibrationByHeight myCalibrationByHeight;
 		ParameterSerializable paramCalibrationByHeight("param_calibrationByHeight",  "{\"height\":0.6,\"x\":0.3,\"y\":0.6}", &myCalibrationByHeight, "Parameter of type CalibrationByHeight");
-		testParameter(paramCalibrationByHeight, "{\"height\":0.0,\"x\":1.0,\"y\":0.0}", "", "") ; // TODO: For now there is no range check ,"{\"x\":1, \"y\":0, \n \"height\":1.5}");
+		testParameter(paramCalibrationByHeight, "{\"height\":0.0,\"x\":1.0,\"y\":0.0}", "", "") ; // note: For now there is no range check ,"{\"x\":1, \"y\":0, \n \"height\":1.5}");
 	}
 
 	void testParameterCalibrationByModel()
@@ -172,7 +172,7 @@ public:
 	{
 		TS_TRACE("Test ParameterSerializable - Polygon");
 		Polygon myPolygon;
-		ParameterSerializable paramPolygon("param_polygon",  "{\"points\":[]}", &myPolygon, "Parameter of type Polygon"); // TODO
+		ParameterSerializable paramPolygon("param_polygon",  "{\"points\":[{{\"x\":5.0,\"y\":0.50},{\"x\":6.0,\"y\":5.50}}]}", &myPolygon, "Parameter of type Polygon");
 		testParameter(paramPolygon, "{\"points\":[{\"x\":54.0,\"y\":53.50},{\"x\":3454.0,\"y\":53.50},{\"x\":54.0,\"y\":53.50},{\"x\":5.0,\"y\":0.50}]}", "", "") ;
 	}
 };

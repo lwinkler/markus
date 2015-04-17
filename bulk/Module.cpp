@@ -99,7 +99,6 @@ void Module::Reset()
 	for(const auto& elem : m_param.GetList())
 	{
 		// Do not add param if locked or already present
-		// TODO: Suppress GetType() and use a CreateController method
 		if(elem->IsLocked() || HasController(elem->GetName()))
 			continue;
 		Controller* ctr = Factories::parameterControllerFactory().Create(elem->GetType(), *elem);
@@ -109,7 +108,7 @@ void Module::Reset()
 	}
 
 	if(m_param.cached == CachedState::WRITE_CACHE)
-		 SYSTEM("mkdir -p " + m_context.GetOutputDir() + "/cache/");
+		 SYSTEM("mkdir -p " + GetContext().GetOutputDir() + "/cache/");
 }
 
 /**
@@ -178,8 +177,10 @@ bool Module::Process()
 		else if(! m_param.autoProcess)
 			throw MkException("Module must have at least one input or have parameter auto_process=true", LOC);
 
-		// TODO if(m_currentTimeStamp == m_lastTimeStamp)
-		// TODO LOG_WARN(m_logger, "Timestamp are not increasing correctly");
+#ifdef MARKUS_DEBUG_STREAMS
+		if(m_currentTimeStamp == m_lastTimeStamp)
+			LOG_WARN(m_logger, "Timestamp are not increasing correctly");
+#endif
 		if(m_param.autoProcess || (m_param.fps == 0 && m_currentTimeStamp != m_lastTimeStamp) || (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps > 1000)
 		{
 			// Process this frame
@@ -328,7 +329,7 @@ void Module::PrintStatistics(ConfigReader& xr_xmlResult) const
 			 m_timerWaiting<<"ms), "<< fps <<" fps");
 
 	// Write perf to output XML
-	ConfigReader perfModule = xr_xmlResult.FindRef("module[name=\"" + GetName() + "\"]", true);
+	ConfigReader perfModule(xr_xmlResult.FindRef("module[name=\"" + GetName() + "\"]", true));
 	perfModule.FindRef("nb_frames", true).SetValue(m_countProcessedFrames);
 	perfModule.FindRef("timer[name=\"processing\"]", true).SetValue(m_timerProcessing);
 	perfModule.FindRef("timer[name=\"conversion\"]", true).SetValue(m_timerConvertion);
@@ -538,7 +539,7 @@ void Module::WriteToCache() const
 	for(const auto &elem : m_outputStreams)
 	{
 		if(!elem.second->IsConnected()) continue;
-		string directory = m_context.GetOutputDir() + "/cache/";
+		string directory = GetContext().GetOutputDir() + "/cache/";
 		stringstream fileName;
 		fileName << directory << GetName() << "." << elem.second->GetName() << "." << m_currentTimeStamp << ".json";
 		ofstream of;
@@ -575,7 +576,6 @@ void Module::ReadFromCache()
 *
 * @param xr_seed      Seed for randomization
 */
-// TODO: Add an ifdef for unit tests
 void Module::ProcessRandomInput(unsigned int& xr_seed)
 {
 	unsigned int lastseed = xr_seed;

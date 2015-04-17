@@ -37,20 +37,17 @@ class ParameterStructure;
 class TiXmlNode;
 class TiXmlDocument;
 
+
 /**
 * @brief       Class used to manipulate configuration files
-* @description A ConfigReader object is created from an XML file. It can browse the different tags of the file by creating sub config objects. Each sub config object is
-               a reference to the sub configuration. Not a copy.
+* @description A ConfigReader object is a reference to a sub part of a ConfigFile.
                This utility relies on TinyXml.
 */
 class ConfigReader
 {
 public:
-	ConfigReader(const std::string& x_fileName, bool x_allowCreation=false);
-	ConfigReader(TiXmlNode * xp_node);
 	ConfigReader(const ConfigReader& x_conf);
 	~ConfigReader();
-	ConfigReader& operator = (const ConfigReader& x_conf);
 
 	// Method to access elements of the config
 	const ConfigReader GetSubConfig(const std::string& x_tagName) const;
@@ -60,7 +57,7 @@ public:
 	ConfigReader RefSubConfig(const std::string& x_tagName, const std::string& x_attrName, const std::string& x_attrValue, bool x_allowCreation = false);
 
 	/// Check if the config object is empty
-	inline bool IsEmpty() const {return mp_doc == NULL && mp_node == NULL;}
+	inline bool IsEmpty() const {return mp_node == nullptr;}
 	std::string GetValue() const;
 	void SetValue(const std::string& x_value);
 	template<typename T> inline void SetValue(const T& x_value)
@@ -72,7 +69,6 @@ public:
 	const std::string GetAttribute(const std::string& x_attributeName) const;
 	const std::string GetAttribute(const std::string& x_attributeName, const std::string& x_default) const;
 	void SetAttribute(const std::string& x_attributeName, const std::string& x_value);
-	void SaveToFile(const std::string& x_file) const;
 	void Validate() const;
 	/// Redefinition of == operator
 	inline bool operator == (const ConfigReader &a) {return a.mp_node == mp_node;}
@@ -83,12 +79,30 @@ public:
 	ConfigReader    FindRef(const std::string& x_searchString, bool x_allowCreation = false, bool x_fatal = false);
 	std::vector<ConfigReader> FindAll(const std::string& x_searchString, bool x_fatal = false) const;
 
-private:
+protected:
+	ConfigReader(TiXmlNode* xp_node);
+	ConfigReader& operator = (const ConfigReader& x_conf);
 	ConfigReader NextSubConfig(const std::string& x_tagName, const std::string& x_attrName = "", const std::string& x_attrValue = "") const;
 	void CheckUniquenessOfId(const std::string& x_group, const std::string& x_type, const std::string& x_idLabel, const std::string& x_moduleName) const;
-	bool m_isOriginal;
-	TiXmlNode * mp_node;
-	TiXmlDocument * mp_doc;
+	TiXmlNode* mp_node;
+};
+
+/**
+* @brief       Class used to manipulate configuration files
+* @description A ConfigFile object is created from an XML file. It can browse the different tags of the file by creating sub config objects. Each sub config object is
+               a reference to the sub configuration. Not a copy.
+               This utility relies on TinyXml.
+*/
+class ConfigFile : public ConfigReader
+{
+public:
+	ConfigFile(const std::string& x_fileName, bool x_allowCreation=false);
+	~ConfigFile();
+	void SaveToFile(const std::string& x_file) const;
+
+private:
+	DISABLE_COPY(ConfigFile)
+	TiXmlDocument* mp_doc;
 };
 
 

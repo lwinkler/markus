@@ -56,7 +56,7 @@ Simulation::Simulation(Parameters& xr_params, const Context& x_context) :
 
 
 /// Add targets lines for inclusion in Makefile
-void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, const ConfigReader& x_mainConfig)
+void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, const ConfigFile& x_mainConfig)
 {
 	// Generate entries for makefile
 	stringstream sd;
@@ -103,7 +103,7 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 }
 
 /// Add variation to simulation
-void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigReader& x_varConf, ConfigReader& xr_mainConfig)
+void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigReader& x_varConf, ConfigFile& xr_mainConfig)
 {
 	for(const auto& varConf : x_varConf.FindAll("var"))
 	{
@@ -239,7 +239,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 
 
 /// Generate a simulation ready to be launched
-void Simulation::Generate(ConfigReader& mainConfig)
+void Simulation::Generate(ConfigFile& mainConfig)
 {
 	SYSTEM("mkdir -p " + m_outputDir);
 	SYSTEM("ln -sfn " + m_outputDir + " simulation_latest");

@@ -80,7 +80,7 @@ public:
 	* @brief Call an action of the controller
 	*
 	* @param x_name   Action
-	* @param xp_value Input/Output of the action (Ignored if NULL)
+	* @param xp_value Input/Output of the action (Ignored if null)
 	*/
 	virtual void CallAction(const std::string& x_name, std::string* xp_value) = 0;
 

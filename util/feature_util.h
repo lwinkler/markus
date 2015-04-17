@@ -156,7 +156,15 @@ inline double compareSquared(const std::string& x_1, const std::string& x_2)
 
 inline void randomize(std::string& xr_val, unsigned int& xr_seed)
 {
-	xr_val = "random_str"; // TODO
+	static const std::string alphanum =
+		"0123456789"
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+		"abcdefghijklmnopqrstuvwxyz";
+	int len = rand_r(&xr_seed) % 100;
+
+	xr_val = "";
+	for (int i = 0; i < len; ++i)
+		xr_val.push_back(alphanum[rand_r(&xr_seed) % (alphanum.size() - 1)]);
 }
 
 /* -------------------------------------------------------------------------------- */

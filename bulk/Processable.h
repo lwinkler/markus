@@ -44,9 +44,9 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
 		{
-			m_list.push_back(new ParameterBool("auto_process",  0, 	0, 	1,		&autoProcess,	"If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream"));
-			m_list.push_back(new ParameterBool("allow_unsync_input",  0, 0, 	1,		&allowUnsyncInput, "If yes the module accepts that its input can be on a different time stamp. Only relevant if the module has many inputs. Use at your own risks."));
-			m_list.push_back(new ParameterDouble("fps", 	 0, 	0, 	1000,		&fps,		"Frames per seconds (processing speed)"));
+			m_list.push_back(new ParameterBool("auto_process"       , 0 , 0 , 1    , &autoProcess      , "If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream"));
+			m_list.push_back(new ParameterBool("allow_unsync_input" , 0 , 0 , 1    , &allowUnsyncInput , "If yes the module accepts that its input can be on a different time stamp. Only relevant if the module has many inputs. Use at your own risks."));
+			m_list.push_back(new ParameterDouble("fps"              , 0 , 0 , 1000 , &fps              , "Frames per seconds (processing speed)"));
 
 			Init();
 		}
@@ -63,8 +63,9 @@ public:
 	virtual bool Process() = 0;
 	inline void AllowAutoProcess(bool x_proc) {m_allowAutoProcess = x_proc;}
 	inline void SetRealTime(bool x_realTime) {m_realTime  = x_realTime;}
-	inline virtual void SetContext(const Context& x_context) {m_context = x_context;}
-	inline virtual const Context& GetContext() const {return m_context;}
+	inline virtual void SetContext(const Context& x_context) {if(mp_context != nullptr) throw MkException("Context was already set", LOC); mp_context = &x_context;}
+	inline virtual const Context& GetContext() const {if(mp_context == nullptr) throw MkException("Context was not set", LOC); return *mp_context;}
+	inline bool IsContextSet() const{return mp_context != nullptr;}
 
 	inline void LockForRead() {m_lock.lockForRead();}
 	inline void LockForWrite() {m_lock.lockForWrite();}
@@ -77,11 +78,10 @@ protected:
 	bool m_realTime;         /// Process in real-time: if true, the module processes as fast as possible
 	QModuleTimer * m_moduleTimer;
 
-	Context m_context; /// context given by Manager (output directory, ...)
-
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
+	const Context* mp_context; /// context given by Manager (output directory, ...)
 	QReadWriteLock m_lock;
 };
 
