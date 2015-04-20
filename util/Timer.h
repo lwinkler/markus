@@ -24,21 +24,23 @@
 #ifndef MK_TIMER_H
 #define MK_TIMER_H
 
-#include <sys/time.h>
 #include <unistd.h>
+#include <opencv2/flann/timer.h>
 
 /// Timer class used for benchmarking
 class Timer
 {
 public:
-	Timer() {Restart();}
-	long GetMSecLong();
-	float GetSecFloat();
-	double GetSecDouble();
-	inline void Restart() {gettimeofday(&m_start, nullptr);}
+	Timer() {}
+	long GetMsLong() const;
+	double GetSecDouble() const;
+	inline void Reset(){m_timer.reset();};
+	inline void Start(){m_timer.start();}
+	inline void Stop(){m_timer.stop();}
+	inline void Add(const Timer& x_val){m_timer.value += x_val.GetSecDouble();}
 
 protected:
-	timeval m_start;
+	cvflann::StartStopTimer m_timer;
 };
 
 #endif

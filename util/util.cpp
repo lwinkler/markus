@@ -28,6 +28,7 @@
 #include <cstdio>
 #include <opencv2/opencv.hpp>
 #include <execinfo.h>
+#include <sys/time.h>
 
 using namespace std;
 using namespace cv;

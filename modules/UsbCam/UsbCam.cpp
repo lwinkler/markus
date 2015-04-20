@@ -23,6 +23,7 @@
 
 #include "UsbCam.h"
 #include "StreamImage.h"
+#include "util.h"
 
 using namespace std;
 using namespace cv;
@@ -64,9 +65,6 @@ void UsbCam::Reset()
 
 	// note on the next line: the image will be overloaded but the properties are used to set the input ratio, the type is probably ignored
 	// m_output = Mat(Size(m_capture.get(CV_CAP_PROP_FRAME_WIDTH), m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)), m_param.type);
-
-
-	m_frameTimer.Restart();
 }
 
 void UsbCam::Capture()
@@ -81,7 +79,7 @@ void UsbCam::Capture()
 		}
 
 		m_capture.retrieve(m_output);
-		m_currentTimeStamp = m_frameTimer.GetMSecLong();
+		m_currentTimeStamp = getAbsTimeMs(); // TODO: use real timer
 		// cout<<m_capture.get(CV_CAP_PROP_POS_MSEC)<<endl;
 
 		// only break out of the loop once we fulfill the fps criterion
@@ -93,7 +91,7 @@ void UsbCam::Capture()
 
 	// time_t rawtime;
 	// time(&rawtime);
-	LOG_DEBUG(m_logger, "UsbCam: Capture time: "<<m_frameTimer.GetMSecLong());
+	LOG_DEBUG(m_logger, "UsbCam: Capture time: "<< getAbsTimeMs());
 	// SetTimeStampToOutputs(m_currentTimeStamp);
 }
 

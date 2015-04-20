@@ -24,6 +24,8 @@
 #include "NetworkCam.h"
 #include "StreamImage.h"
 #include <errno.h>
+#include <sys/time.h>
+#include <util.h>
 
 #define TIMEOUT 3 // 3 sec timeout
 
@@ -93,8 +95,6 @@ void NetworkCam::Reset()
 
 	// note on the next line: the image will be overloaded but the properties are used to set the input ratio, the type is probably ignored
 	m_output = Mat(Size(m_capture.get(CV_CAP_PROP_FRAME_WIDTH), m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)), m_param.type);
-
-	m_frameTimer.Restart();
 }
 
 bool NetworkCam::Grab()
@@ -103,7 +103,7 @@ bool NetworkCam::Grab()
 	pthread_t thread;
 	struct timespec my_timeout;
 	struct timeval now;
-	gettimeofday(&now,nullptr);
+	gettimeofday(&now,nullptr); // TODO: use https://blog.habets.se/2010/09/gettimeofday-should-never-be-used-to-measure-time
 	my_timeout.tv_sec  = now.tv_sec + TIMEOUT;
 	my_timeout.tv_nsec = now.tv_usec * 1000;
 
@@ -153,7 +153,7 @@ void NetworkCam::Capture()
 
 		// note: we use the time stamp of the modules since the official time stamp of the camera
 		//    has a strange behavior
-		m_currentTimeStamp = m_frameTimer.GetMSecLong();
+		m_currentTimeStamp = getAbsTimeMs();
 
 		// only break out of the loop once we fulfill the fps criterion
 		if(m_param.fps == 0 || (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps > 1000)

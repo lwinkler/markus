@@ -103,21 +103,21 @@ void HOGDetector::CopyResults()
 
 		m_detectedObjects.push_back(obj);
 	}
-	m_timerThread += m_thread.m_timerThread;
+	m_timerThread.Add(m_thread.m_timerThread);
 	m_countFramesThread++;
 }
 
 /// Run the detection process inside the thread
 void HOGDetectionThread::run()
 {
-	Timer ti;
+	m_timerThread.Start();
 	m_detected.clear();
 	//if(m_scaleFactor == 1.00)
 	//m_hog.detect(m_smallImg, m_detected) // , 0, Size(8,8), Size(32,32));
 	//else
 	m_hog.detectMultiScale(m_smallImg, m_detected, 0, Size(8,8), Size(32,32), m_scaleFactor, 2);
 
-	m_timerThread = ti.GetMSecLong();
+	m_timerThread.Stop();
 }
 
 

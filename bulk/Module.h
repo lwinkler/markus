@@ -29,6 +29,7 @@
 #include "ParameterString.h"
 #include "Controller.h"
 #include "Processable.h"
+#include "Timer.h"
 #include <log4cxx/logger.h>
 #include <opencv2/core/core.hpp>
 
@@ -142,9 +143,9 @@ public:
 
 protected:
 	// for benchmarking
-	long long m_timerConvertion;
-	long long m_timerProcessing;
-	long long m_timerWaiting;
+	Timer m_timerConversion;
+	Timer m_timerProcessing;
+	Timer m_timerWaiting;
 	long long m_countProcessedFrames;
 
 	// for testing

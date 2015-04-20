@@ -21,40 +21,21 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 #include "Timer.h"
-#include <unistd.h>
 
-long int Timer::GetMSecLong()
+#include <iostream>
+
+using namespace std;
+
+long int Timer::GetMsLong() const
 {
-	timeval now;
-	//clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &now);
-	gettimeofday(&now, nullptr); // TODO: use clock as in blog.habets.pp.se: gettimeofday should never be used to measure time
+	long l = m_timer.value * 1000;
+	GetSecDouble();
+	return l;
 
-	long seconds  = now.tv_sec  - m_start.tv_sec;
-	long useconds = now.tv_usec - m_start.tv_usec;
-
-	return seconds * 1000 + useconds / 1000;
 }
 
-double Timer::GetSecDouble()
+double Timer::GetSecDouble() const
 {
-	timeval now;
-	gettimeofday(&now, nullptr);
-	//DIFF(m_start, now, temp);
-	long seconds  = now.tv_sec  - m_start.tv_sec;
-	long useconds = now.tv_usec - m_start.tv_usec;
-
-	return seconds + useconds / 1000000.0;
+	return m_timer.value;
 }
-
-float Timer::GetSecFloat()
-{
-	timeval now;
-	gettimeofday(&now, nullptr);
-	//DIFF(m_start, now, temp);
-	long seconds  = now.tv_sec  - m_start.tv_sec;
-	long useconds = now.tv_usec - m_start.tv_usec;
-
-	return seconds + useconds / 1000000.0f;
-}
-
 

@@ -80,7 +80,6 @@ protected:
 
 	// temporary
 	cv::VideoCapture m_capture;
-	Timer m_frameTimer;
 	sem_t m_semTimeout;
 	double m_recordingFps;
 };

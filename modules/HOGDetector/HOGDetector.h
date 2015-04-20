@@ -41,7 +41,7 @@
 class HOGDetectionThread : public QThread
 {
 public:
-	explicit HOGDetectionThread(QObject* parent = 0) {m_timerThread = 0; m_scaleFactor = 0;}
+	explicit HOGDetectionThread(QObject* parent = 0) {m_scaleFactor = 0;}
 	virtual ~HOGDetectionThread()
 	{
 		exit();
@@ -59,7 +59,7 @@ public:
 
 	cv::HOGDescriptor m_hog;
 	const std::vector<cv::Rect>& GetDetectedObjects() const { return m_detected;}
-	long long m_timerThread;
+	Timer m_timerThread;
 
 protected:
 	float m_scaleFactor;

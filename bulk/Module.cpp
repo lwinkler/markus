@@ -48,9 +48,6 @@ Module::Module(ParameterStructure& xr_params) :
 	m_id	= atoi(xr_params.GetConfig().GetAttribute("id").c_str());
 	LOG_INFO(m_logger, "Create module " << m_name);
 
-	m_timerConvertion      = 0;
-	m_timerProcessing      = 0;
-	m_timerWaiting         = 0;
 	m_countProcessedFrames = 0;
 	m_lastTimeStamp        = TIME_STAMP_MIN;
 	m_currentTimeStamp     = TIME_STAMP_INITIAL;
@@ -90,6 +87,10 @@ void Module::Reset()
 
 	m_param.PrintParameters();
 	m_param.CheckRange(true);
+
+	m_timerProcessing.Reset();
+	m_timerWaiting.Reset();
+	m_timerConversion.Reset();
 
 	// This must be done only once to avoid troubles in the GUI
 	// Add module controller
@@ -186,7 +187,7 @@ bool Module::Process()
 			// Process this frame
 
 			// Timer for benchmark
-			Timer ti;
+			m_timerConversion.Start();
 
 			// cout<<GetName()<<" "<<m_currentTimeStamp<<" "<<m_lastTimeStamp<<endl;
 
@@ -213,25 +214,25 @@ bool Module::Process()
 					{
 						Timer ti2;
 						//(*it)->LockModuleForRead();
-						m_timerWaiting += ti2.GetMSecLong();
+						// m_timerWaiting += ti2.GetMSecLong();
 						elem.second->ConvertInput();
 						//(*it)->UnLockModule();
 					}
 					//assert(m_currentTimeStamp == m_inputStreams[0]->GetTimeStamp());
 				}
-				m_timerConvertion 	+= ti.GetMSecLong();
-				ti.Restart();
+				m_timerConversion.Stop();
+				m_timerProcessing.Start();
 
 				ProcessFrame();
 
-				m_timerProcessing 	 += ti.GetMSecLong();
+				m_timerProcessing.Stop();
 			}
 			if(m_param.cached == CachedState::READ_CACHE)
 			{
 				// TODO: check that module is not an input
-				ti.Restart();
+				m_timerProcessing.Start();
 				ReadFromCache();
-				m_timerProcessing 	 += ti.GetMSecLong();
+				m_timerProcessing.Stop();
 			}
 
 			// Propagate time stamps to outputs
@@ -323,17 +324,17 @@ Stream& Module::RefOutputStreamById(int x_id)
 */
 void Module::PrintStatistics(ConfigReader& xr_xmlResult) const
 {
-	double fps = (m_countProcessedFrames * 1000.0 / (m_timerProcessing + m_timerConvertion + m_timerWaiting));
+	double fps = (m_countProcessedFrames / (m_timerProcessing.GetSecDouble() + m_timerConversion.GetSecDouble() + m_timerWaiting.GetSecDouble()));
 	LOG_INFO(m_logger, "Module "<<GetName()<<" : "<<m_countProcessedFrames<<" frames processed (tproc="<<
-			 m_timerProcessing<<"ms, tconv="<<m_timerConvertion<<"ms, twait="<<
-			 m_timerWaiting<<"ms), "<< fps <<" fps");
+			 m_timerProcessing.GetMsLong()<<"ms, tconv="<<m_timerConversion.GetMsLong()<<"ms, twait="<<
+			 m_timerWaiting.GetMsLong()<<"ms), "<< fps <<" fps");
 
 	// Write perf to output XML
 	ConfigReader perfModule(xr_xmlResult.FindRef("module[name=\"" + GetName() + "\"]", true));
 	perfModule.FindRef("nb_frames", true).SetValue(m_countProcessedFrames);
-	perfModule.FindRef("timer[name=\"processing\"]", true).SetValue(m_timerProcessing);
-	perfModule.FindRef("timer[name=\"conversion\"]", true).SetValue(m_timerConvertion);
-	perfModule.FindRef("timer[name=\"waiting\"]", true).SetValue(m_timerWaiting);
+	perfModule.FindRef("timer[name=\"processing\"]", true).SetValue(m_timerProcessing.GetMsLong());
+	perfModule.FindRef("timer[name=\"conversion\"]", true).SetValue(m_timerConversion.GetMsLong());
+	perfModule.FindRef("timer[name=\"waiting\"]", true).SetValue(m_timerWaiting.GetMsLong());
 	perfModule.FindRef("fps", true).SetValue(fps);
 }
 
@@ -350,9 +351,9 @@ void Module::Serialize(ostream& x_out, const string& x_dir) const
 	root["id"]                   = m_id;
 	root["name"]                 = m_name;
 	root["pause"]                = m_pause;
-	root["timerConvertion"]      = m_timerConvertion;
-	root["timerProcessing"]      = m_timerProcessing;
-	root["timerWaiting"]         = m_timerWaiting;
+	// root["timerConvertion"]      = m_timerConversion.GetMsLong();
+	// root["timerProcessing"]      = m_timerProcessing.GetMsLong();
+	// root["timerWaiting"]         = m_timerWaiting.GetMsLong();
 	root["countProcessedFrames"] = m_countProcessedFrames;
 
 	// Dump inputs
@@ -395,9 +396,12 @@ void Module::Deserialize(istream& x_in, const string& x_dir)
 	m_id                   = root["id"].asInt();
 	m_name                 = root["name"].asString();
 	m_pause                = root["pause"].asBool();
-	m_timerConvertion      = root["timerConvertion"].asInt64();
-	m_timerProcessing      = root["timerProcessing"].asInt64();
-	m_timerWaiting         = root["timerWaiting"].asInt64();
+	// m_timerConversion      = root["timerConvertion"].asInt64();
+	// m_timerProcessing      = root["timerProcessing"].asInt64();
+	// m_timerWaiting         = root["timerWaiting"].asInt64();
+	m_timerConversion.Reset();
+	m_timerProcessing.Reset();
+	m_timerWaiting.Reset();
 	m_countProcessedFrames = root["countProcessedFrames"].asInt64();
 
 	stringstream ss;

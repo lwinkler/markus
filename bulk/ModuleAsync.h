@@ -54,7 +54,7 @@ protected:
 	TIME_STAMP m_timeStampLastThread;
 	bool m_resultsCopied;
 
-	long long m_timerThread;
+	Timer m_timerThread; // note: will not be reseted
 	long long m_countFramesThread;
 
 	// For an async module, this method is used to check if we need to process the input

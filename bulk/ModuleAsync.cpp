@@ -38,7 +38,6 @@ ModuleAsync::ModuleAsync(ParameterStructure& xr_params) :
 {
 	m_timeStampLastThread 	= TIME_STAMP_MIN;
 	m_resultsCopied 	= false;
-	m_timerThread 		= 0;
 	m_countFramesThread 	= 0;
 };
 
@@ -83,11 +82,11 @@ void ModuleAsync::ProcessFrame()
 void ModuleAsync::PrintStatistics(ConfigReader& xr_xmlResult) const
 {
 	Module::PrintStatistics(xr_xmlResult);
-	double fps = m_countFramesThread / (m_timerThread * 0.001);
-	LOG_INFO(m_logger, "\t" << m_countFramesThread<<" frames processed asynchronously in "<<m_timerThread<<"ms ("<< fps <<" fps)");
+	double fps = m_countFramesThread / m_timerThread.GetSecDouble();
+	LOG_INFO(m_logger, "\t" << m_countFramesThread<<" frames processed asynchronously in "<<m_timerThread.GetMsLong()<<"ms ("<< fps <<" fps)");
 
 	ConfigReader perfModule(xr_xmlResult.FindRef("module[name=\"" + GetName() + "\"]", false));
 	perfModule.FindRef("nb_frames[name=\"thread\"]", true).SetValue(m_countFramesThread);
-	perfModule.FindRef("timer[name=\"thread\"]", true).SetValue(m_timerThread);
+	perfModule.FindRef("timer[name=\"thread\"]", true).SetValue(m_timerThread.GetMsLong());
 	perfModule.FindRef("fps[name=\"thread\"]", true).SetValue(fps);
 }

@@ -71,8 +71,6 @@ protected:
 
 	// temporary
 	cv::VideoCapture m_capture;
-	// TIME_STAMP m_timeStamp;
-	Timer m_frameTimer;
 };
 
 #endif

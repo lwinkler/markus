@@ -91,7 +91,7 @@ protected:
 
 	bool m_isConnected;
 	// long long m_timerConvertion;
-	long long m_timerProcessing;
+	Timer m_timerProcessing;
 	bool m_continueFlag;           // Flag that is used to notify the manager of a Quit command, only working if centralized
 	bool m_hasRecovered;           // Flag to test if all modules have recovered from the last exception, only working if centralized
 	MkException m_lastException;   // Field to store the last exception
