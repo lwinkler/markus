@@ -84,7 +84,7 @@ TiXmlDocument* createDoc(const std::string& x_fileName, bool x_allowCreation)
 				doc = new TiXmlDocument(x_fileName);
 				assert(doc->LoadFile());
 			}
-			else throw MkException("Could not load file as XML '" + x_fileName + "'. Error='" + doc->ErrorDesc() + "'. Exiting.", LOC);
+			else throw MkException("Could not load file as XML '" + x_fileName + "'. Error='" + (doc ? doc->ErrorDesc() : "") + "'. Exiting.", LOC);
 		}
 		return doc;
 	}
