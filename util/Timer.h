@@ -26,6 +26,8 @@
 
 #include <unistd.h>
 #include <opencv2/flann/timer.h>
+#include <iostream>
+#include <string>
 
 /// Timer class used for benchmarking
 class Timer
@@ -42,5 +44,16 @@ public:
 protected:
 	cvflann::StartStopTimer m_timer;
 };
+
+
+/// A simple timer with name. To use in benchmark
+class QuickTimer : public Timer
+{
+	public:
+	QuickTimer(const std::string& x_name){name = x_name;}
+	~QuickTimer(){std::cout<<"QuickTimer "<<name<< " has measured " << GetSecDouble() << "s" << std::endl; }
+	std::string name;
+};
+
 
 #endif
