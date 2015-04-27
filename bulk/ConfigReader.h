@@ -69,6 +69,12 @@ public:
 	const std::string GetAttribute(const std::string& x_attributeName) const;
 	const std::string GetAttribute(const std::string& x_attributeName, const std::string& x_default) const;
 	void SetAttribute(const std::string& x_attributeName, const std::string& x_value);
+	template<typename T> inline void SetAttribute(const std::string& x_attributeName, const T& x_value)
+	{
+		std::stringstream ss;
+		ss << x_value;
+		SetAttribute(x_attributeName, ss.str());
+	}
 	void Validate() const;
 	/// Redefinition of == operator
 	inline bool operator == (const ConfigReader &a) {return a.mp_node == mp_node;}
