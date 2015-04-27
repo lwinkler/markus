@@ -481,12 +481,14 @@ void Manager::Export()
 		SYSTEM("mkdir -p modules");
 		vector<string> moduleTypes;
 		mr_moduleFactory.List(moduleTypes);
+		int id = 0;
 		for(const auto& moduleType : moduleTypes)
 		{
 			string file("modules/" + moduleType + ".xml");
 			createEmptyConfigFile("/tmp/config_empty.xml");
 			ConfigFile config("/tmp/config_empty.xml");
 			ConfigReader moduleConfig = config.FindRef("application>module[name=\"" + moduleType + "\"]", true);
+			moduleConfig.SetAttribute("id", id);
 			moduleConfig.FindRef("parameters>param[name=\"class\"]", true).SetValue(moduleType);
 
 			ParameterStructure* parameters = mr_parameterFactory.Create(moduleType, moduleConfig);
@@ -498,6 +500,7 @@ void Manager::Export()
 			delete module;
 			delete parameters;
 			os.close();
+			id++;
 		}
 	}
 	catch(MkException& e)

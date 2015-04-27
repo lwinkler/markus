@@ -49,7 +49,7 @@ public:
 			m_list.push_back(new ParameterString("extension"   , "jpg"        , &extension ,  "Extension of the thumbnails. Determines the output format."));
 
 			// The 4 gt_ parameters are only used for evaluation vs ground truth file
-			m_list.push_back(new ParameterString("gt_command"  , "tools/evaluation/analyse_events.py -d 0 -t 8 -e intrusion", 
+			m_list.push_back(new ParameterString("gt_command"  , "tools/evaluation/analyse_events.py -d 0 -t 8 -e intrusion",  // TODO: Should be empty by default to avoid error messages
 			                                                                    &gtCommand ,  "The command to use for comparison with ground truth"));
 			m_list.push_back(new ParameterString("gt_file"     , ""           , &gtFile    ,  "Ground truth file name. If empty, the program will consider that the ground truth is empty."));
 			m_list.push_back(new ParameterString("gt_video"    , ""           , &gtVideo   ,  "Video file to use to create the ground truth."));
