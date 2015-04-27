@@ -1,25 +1,25 @@
 /*----------------------------------------------------------------------------------
-*
-*    MARKUS : a manager for video analysis modules
-*
-*    author : Laurent Winkler <lwinkler888@gmail.com>
-*
-*
-*    This file is part of Markus.
-*
-*    Markus is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Lesser General Public License as published by
-*    the Free Software Foundation, either version 3 of the License, or
-*    (at your option) any later version.
-*
-*    Markus is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Lesser General Public License for more details.
-*
-*    You should have received a copy of the GNU Lesser General Public License
-*    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
--------------------------------------------------------------------------------------*/
+ *
+ *    MARKUS : a manager for video analysis modules
+ *
+ *    author : Laurent Winkler <lwinkler888@gmail.com>
+ *
+ *
+ *    This file is part of Markus.
+ *
+ *    Markus is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Lesser General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    Markus is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Lesser General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Lesser General Public License
+ *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
+ -------------------------------------------------------------------------------------*/
 
 #ifndef MK_TIMER_H
 #define MK_TIMER_H
@@ -32,27 +32,28 @@
 /// Timer class used for benchmarking
 class Timer
 {
-public:
-	Timer() {}
-	long GetMsLong() const;
-	double GetSecDouble() const;
-	inline void Reset(){m_timer.reset();};
-	inline void Start(){m_timer.start();}
-	inline void Stop(){m_timer.stop();}
-	inline void Add(const Timer& x_val){m_timer.value += x_val.GetSecDouble();}
+	public:
+		Timer() : m_increments(0) {}
+		long GetMsLong() const;
+		double GetSecDouble() const;
+		inline void Reset(){m_timer.reset();m_increments=0;};
+		inline void Start(){m_timer.start(); m_increments++;}
+		inline void Stop(){m_timer.stop();}
+		inline void Add(const Timer& x_val){m_timer.value += x_val.GetSecDouble();}
 
-protected:
-	cvflann::StartStopTimer m_timer;
+	protected:
+		cvflann::StartStopTimer m_timer;
+		unsigned long m_increments;
 };
 
 
-/// A simple timer with name. To use in benchmark
+/// A simple timer with name. Can be used to simplify benchmarking
 class QuickTimer : public Timer
 {
 	public:
-	QuickTimer(const std::string& x_name){name = x_name;}
-	~QuickTimer(){std::cout<<"QuickTimer "<<name<< " has measured " << GetSecDouble() << "s" << std::endl; }
-	std::string name;
+		QuickTimer(const std::string& x_name){name = x_name;}
+		~QuickTimer(){std::cout<<"QuickTimer "<<name<< " has measured " << GetSecDouble() << "s in " << m_increments << " increments" << std::endl; }
+		std::string name;
 };
 
 
