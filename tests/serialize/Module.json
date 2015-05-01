@@ -18,8 +18,5 @@
 			"width" : 32
 		}
 	],
-	"pause" : true,
-	"timerConvertion" : 343453453453,
-	"timerProcessing" : 345345333555,
-	"timerWaiting" : 3453453333333
+	"pause" : true
 }

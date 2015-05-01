@@ -351,9 +351,9 @@ void Module::Serialize(ostream& x_out, const string& x_dir) const
 	root["id"]                   = m_id;
 	root["name"]                 = m_name;
 	root["pause"]                = m_pause;
-	// root["timerConvertion"]      = m_timerConversion.GetMsLong();
-	// root["timerProcessing"]      = m_timerProcessing.GetMsLong();
-	// root["timerWaiting"]         = m_timerWaiting.GetMsLong();
+	// root["timer_conversion"]      = m_timerConversion.GetMsLong();
+	// root["timer_processing"]      = m_timerProcessing.GetMsLong();
+	// root["timer_waiting"]         = m_timerWaiting.GetMsLong();
 	root["countProcessedFrames"] = m_countProcessedFrames;
 
 	// Dump inputs
@@ -396,9 +396,9 @@ void Module::Deserialize(istream& x_in, const string& x_dir)
 	m_id                   = root["id"].asInt();
 	m_name                 = root["name"].asString();
 	m_pause                = root["pause"].asBool();
-	// m_timerConversion      = root["timerConvertion"].asInt64();
-	// m_timerProcessing      = root["timerProcessing"].asInt64();
-	// m_timerWaiting         = root["timerWaiting"].asInt64();
+	// m_timerConversion      = root["timer_conversion"].asInt64();
+	// m_timerProcessing      = root["timer_processing"].asInt64();
+	// m_timerWaiting         = root["timer_waiting"].asInt64();
 	m_timerConversion.Reset();
 	m_timerProcessing.Reset();
 	m_timerWaiting.Reset();
