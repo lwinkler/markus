@@ -179,8 +179,8 @@ bool Module::Process()
 			throw MkException("Module must have at least one input or have parameter auto_process=true", LOC);
 
 #ifdef MARKUS_DEBUG_STREAMS
-		if(m_currentTimeStamp == m_lastTimeStamp)
-			LOG_WARN(m_logger, "Timestamp are not increasing correctly");
+		// if(m_currentTimeStamp == m_lastTimeStamp)
+			// LOG_WARN(m_logger, "Timestamp are not increasing correctly");
 #endif
 		if(m_param.autoProcess || (m_param.fps == 0 && m_currentTimeStamp != m_lastTimeStamp) || (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps > 1000)
 		{
