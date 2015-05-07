@@ -54,16 +54,16 @@ void LogObjects::Compress()
 {
 	if(!m_param.compress)
 		return;
-	string file = GetContext().GetOutputDir() + "/" + m_param.file;
-	LOG_INFO(m_logger, "Compress objects to " << file << ".tar.gz");
+	string tarFile = GetContext().GetOutputDir() + "/" + m_param.file + ".tar.bz";
+	LOG_INFO(m_logger, "Compress objects to " << tarFile);
 	try
 	{
-		SYSTEM("tar -cjf " + file + ".tar.bz " + file);
-		SYSTEM("rm -f " + file);
+		// Compress file and remove
+		SYSTEM("tar --remove-files -cjf " + tarFile + " -C " + GetContext().GetOutputDir() + " " + m_param.file);
 	}
 	catch(MkException& e)
 	{
-		LOG_ERROR(m_logger, "Error while compressingi objects");
+		LOG_ERROR(m_logger, "Error while compressing objects");
 	}
 }
 
