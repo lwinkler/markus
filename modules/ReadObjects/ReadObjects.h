@@ -53,6 +53,7 @@ public:
 		std::string folder;
 		bool oneFrameOnly;
 	};
+	inline virtual bool IsEndOfStream() const override {return m_param.oneFrameOnly || Input::IsEndOfStream();}
 
 	ReadObjects(ParameterStructure& xr_params);
 	~ReadObjects(void);
