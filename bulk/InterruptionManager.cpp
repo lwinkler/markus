@@ -54,7 +54,7 @@ void InterruptionManager::Configure(const ConfigReader& x_config)
 		);
 		string event = config.GetAttribute("event");
 		m_interruptions[event].push_back(inter);
-		LOG_INFO(m_logger, "Add interruption for "<<event<<" --> "<<inter.command.name<<"="<<inter.command.value<<" "<<inter.remaining<<" times");
+		LOG_INFO(m_logger, "Add interruption for "<<event<<" --> "<<inter.command.name<<"="<<inter.command.value<<" "<<inter.remaining<<" time(s)");
 	}
 }
 
@@ -80,6 +80,7 @@ vector<Command> InterruptionManager::ReturnCommandsToSend()
 			}
 		}
 	}
+	LOG_INFO(m_logger, "Returning " << commands.size() << " interruptions");
 	m_events.clear();
 	return commands;
 }

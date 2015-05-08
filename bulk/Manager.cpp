@@ -378,7 +378,7 @@ void Manager::SendCommand(const string& x_command, string x_value)
 	vector<string> elems;
 	split(x_command, '.', elems);
 	if(elems.size() != 3)
-		throw MkException("Command must be in format \"module.controller.Command\"", LOC);
+		throw MkException("Command must be in format \"module.controller.Command\": " + x_command, LOC);
 
 	// Note: We cast module/manager twice since we need functions from both parents
 	Controllable& contr  (elems.at(0) == "manager" ? dynamic_cast<Controllable&>(*this) : RefModuleByName(elems.at(0)));
