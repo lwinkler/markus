@@ -46,7 +46,25 @@ LogObjects::LogObjects(ParameterStructure& xr_params)
 
 LogObjects::~LogObjects(void)
 {
+	Compress();
 	CLEAN_DELETE(mp_annotationWriter);
+}
+
+void LogObjects::Compress()
+{
+	if(!m_param.compress)
+		return;
+	string tarFile = GetContext().GetOutputDir() + "/" + m_param.file + ".tar.bz";
+	LOG_INFO(m_logger, "Compress objects to " << tarFile);
+	try
+	{
+		// Compress file and remove
+		SYSTEM("tar --remove-files -cjf " + tarFile + " -C " + GetContext().GetOutputDir() + " " + m_param.file);
+	}
+	catch(MkException& e)
+	{
+		LOG_ERROR(m_logger, "Error while compressing objects");
+	}
 }
 
 void LogObjects::Reset()
