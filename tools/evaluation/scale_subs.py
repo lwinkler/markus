@@ -44,12 +44,19 @@ def arguments_parser():
                         type=str,
                         help='output .srt file')
 
-    # Delay
+    # Scaling ratio
     parser.add_argument('-r',
                         dest='ratio',
                         default=1,
                         type=float,
                         help='the time ratio to apply')
+
+    # Delay
+    parser.add_argument('-d',
+                        dest='delay',
+                        default=0,
+                        type=float,
+                        help='add a delay to the subtitles in seconds, before scaling')
 
     return parser.parse_args()
 
@@ -71,9 +78,11 @@ def main():
         # Scale the time of each subtitle
         b_stamp = "%s" % entry.begin
         b_time = Time(text=b_stamp, sep_ms=',')
+        b_time.milis += args.delay * 1000
         b_time.milis *= args.ratio
         e_stamp = "%s" % entry.end
         e_time = Time(text=e_stamp, sep_ms=',')
+        e_time.milis += args.delay * 1000
         e_time.milis *= args.ratio
         f.write('%d\n%s --> %s\n' % (entry.number, b_time, e_time))
         f.write('%s\n' % entry.text)
