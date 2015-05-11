@@ -54,7 +54,9 @@ void FastNlMeansDenoising::Reset()
 
 void FastNlMeansDenoising::ProcessFrame()
 {
-	fastNlMeansDenoising(m_input, m_output, m_param.h, m_param.templateWindowSize, m_param.searchWindowSize);
-	// fastNlMeansDenoisingColored(InputArray src, OutputArray dst, float h=3, float hColor=3, int templateWindowSize=7, int searchWindowSize=21 )
+	if(m_param.cielab)
+		fastNlMeansDenoisingColored(m_input, m_output, m_param.h, m_param.templateWindowSize, m_param.searchWindowSize);
+	else
+		fastNlMeansDenoising(m_input, m_output, m_param.h, m_param.templateWindowSize, m_param.searchWindowSize);
 }
 
