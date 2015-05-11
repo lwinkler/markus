@@ -80,7 +80,8 @@ vector<Command> InterruptionManager::ReturnCommandsToSend()
 			}
 		}
 	}
-	LOG_INFO(m_logger, "Returning " << commands.size() << " interruptions");
+	if(!commands.empty())
+		LOG_INFO(m_logger, "Returning " << commands.size() << " interruptions");
 	m_events.clear();
 	return commands;
 }
