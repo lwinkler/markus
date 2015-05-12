@@ -505,7 +505,8 @@ void Manager::Export()
 	}
 	catch(MkException& e)
 	{
-		LOG_WARN(m_logger, "Exception in Manager::Export: "<<e.what());
+		LOG_ERROR(m_logger, "Exception in Manager::Export: "<<e.what());
+		throw;
 	}
 }
 
