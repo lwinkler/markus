@@ -75,6 +75,21 @@ def arguments_parser():
 			type=int,
 			help='verbosity level of check (from 0 to 3)')
 
+	# Nb of jobs in error state before raising a warning
+	parser.add_argument('-w',
+			dest='warning',
+			default=0,
+			type=int,
+			help='Nb of jobs in error state before raising a warning')
+
+	# Nb of jobs in error state before raising a critical error
+	parser.add_argument('-c',
+			dest='critical',
+			default=2,
+			type=int,
+			help='Nb of jobs in error state before raising a critical error')
+
+
 	return parser.parse_args()
 
 def check(resp):
@@ -233,20 +248,24 @@ class VerifyJobs(nagiosplugin.Resource):
 		# Gather and append logs from JBoss and Markus
 		if len(self.jobDetails) == 0:
 			_log.warning("No jobs found")
-		metrics = []
+		nb_errors = 0
+		nb_jobs_errors = 0
 		for job in self.jobDetails:
 			job['log1'] = appendLogFromLine(job['logFile1'], job['logFile1Start'])
 			job['log2'] = appendLogFromLine(job['logFile2'], job['logFile2Start'])
 			errors = checkStatus(job, self.rules)
 			_log.debug("Found %d error(s) in job %s" %(len(errors), job['hash']))
 			job['status'] = 'ok' if len(errors)==0 else "errors: " + "<br/>".join(errors)
-			# if not len(errors)==0:
-				# _log.error("Found errors with job %s: %s" % (job['hash'], str(errors)))
 			job['errors'] = errors
-			metrics.append(nagiosplugin.Metric(job['hash'] + '_errors', value=len(errors), context='default', contextobj=job))
-		return metrics
+			if len(errors) > 0: 
+				nb_errors += len(errors)
+				nb_jobs_errors += 1
+				_log.debug("Found errors with job %s: %s" % (job['hash'], str(errors)))
 
-
+		return [
+			nagiosplugin.Metric('jobs', value=len(self.jobDetails)),
+			nagiosplugin.Metric('job_errors', value=nb_jobs_errors),
+			nagiosplugin.Metric('errors', value=nb_errors)]
 
 
 class VerifySummary(nagiosplugin.Summary):
@@ -266,10 +285,10 @@ class VerifySummary(nagiosplugin.Summary):
 		
 		for detail in self.jobDetails:
 			if len(detail['errors']):
-				log += "Job " + detail['hash'] + " has errors(" + ','.join(detail['errors']) + ')\n'
+				log += "Job " + detail['hash'] + " has errors(" + ', '.join(detail['errors']) + ')\n'
 		# log += "rules:\n" + str(self.rules)
 		generateReport(self.jobDetails, self.output)
-		return "Errors found:\n" + log
+		return log
 
 def main():
 
@@ -345,7 +364,9 @@ def main():
 	# Call check and explanation routines of nagios
 	check = nagiosplugin.Check(
 			VerifyJobs(args, rules, jobDetails),
-			nagiosplugin.ScalarContext('default', '0:0', None),
+			nagiosplugin.ScalarContext('jobs', fmt_metric="{value} jobs found"),
+			nagiosplugin.ScalarContext('errors', fmt_metric="{value} total errors in jobs"),
+			nagiosplugin.ScalarContext('job_errors', '0:%d' % args.warning, '0:%d' % args.critical, fmt_metric="{value} jobs raised errors"), # Levels for warning and critical
 			VerifySummary(rules, jobDetails, args.output))
 	check.main(verbose=args.verbose)
 
