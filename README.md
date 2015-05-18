@@ -9,7 +9,7 @@ Compilation for Linux
 ---------------------
 
 ### Dependancies
-In all cases you will need:
+In all cases you will need the following packages to compile Markus:
 	- *CMake*
 	- *Qt4*
 	- *OpenCV 2*
@@ -35,14 +35,17 @@ Markus can also be compiled with Qt5. The packages required for qt webkit are a 
 Then enable compilation with Qt5 in the menu.
 
 ### Other dependencies
+
+These libraries and utilities can be installed to create advanced modules:
 	- *CMake GUI* : to set the compilation flags visually (packages cmake-curses-gui or cmake-qt-gui)
 	- *Qt Creator* : a full IDE for C++ and QT (package qtcreator)
 	- *Python*: for some modules (package python-dev  python-opencv python-sklearn python-skimage python-pip)
 		- *Python deps*: sudo pip install xmltodict
+		- *Nagios plugin*: for monitoring: sudo pip install nagiosplugin
+		- *PythonMongo and PythonGridfs*: Tools to interact with a Mongo database, for advanced use
 	- *CxxTests** : To run the unit test
 	- *Curl*: To use an input camera with call to a specific webservice
 	- *Avtools*: Video manipulation tools to use the benchmark of test
-	- *PythonMongo and PythonGridfs*: Tools to interact with a Mongo database, for advanced use
 
 	sudo apt-get install cmake-qt-gui cmake-curses-gui qtcreator python-dev cxxtest libcurl4-openssl-dev python-opencv python-sklearn python-skimage libav-tools  python-pymongo python-gridfs
 

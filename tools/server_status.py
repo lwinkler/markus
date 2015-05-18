@@ -11,6 +11,8 @@ import argparse
 import vplib
 from vplib.HTMLTags import *
 
+import nagiosplugin
+
 # Global arguments, will be overwritten at runtime
 args = None
 DEBUG = False
