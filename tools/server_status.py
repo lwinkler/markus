@@ -12,10 +12,11 @@ import vplib
 from vplib.HTMLTags import *
 
 import nagiosplugin
+import logging
 
 # Global arguments, will be overwritten at runtime
 args = None
-DEBUG = False
+_log = logging.getLogger('nagiosplugin')
 
 def arguments_parser():
 	""" Define the parser and parse arguments """
@@ -26,10 +27,11 @@ def arguments_parser():
 
 	# Events file
 	# Output file
-	parser.add_argument('output',
+	parser.add_argument('-o',
+			dest='output',
 			type=str,
-			default='output.html',
-			help='html file to generate')
+			default='',
+			help='html file to generate, contains the details')
 
 	# Video file
 	parser.add_argument('-H',
@@ -52,13 +54,6 @@ def arguments_parser():
 			type=int,
 			help='delay in seconds to let the command complete')
 
-	# Debug: not working
-	# parser.add_argument('-D',
-			# dest='debug',
-			# default=0,
-			# type=int,
-			# help='print the debug log')
-
 	# JBoss logs
 	parser.add_argument('-J',
 			dest='logJBoss',
@@ -73,27 +68,22 @@ def arguments_parser():
 			type=str,
 			help='directory for the log files of Markus')
 
+	# Markus log directory
+	parser.add_argument('-V',
+			dest='verbose',
+			default=0,
+			type=int,
+			help='verbosity level of check (from 0 to 3)')
+
 	return parser.parse_args()
-
-def debug(line):
-	if DEBUG: print('DEBUG: ' + line)
-
-def error(line):
-	print('ERROR: ' + line)
-
-def warning(line):
-	print('WARN: ' + line)
-
-# def line(char):
-	# print char * 80
 
 def check(resp):
 	if resp['code'] != 200: 
-		error("Server did not return code 200")
-		print resp
+		_log.error("Server did not return code 200")
+		_log.error(resp)
 	elif resp['message'] != 'Success': 
-		error("Server did not return \"Success\"")
-		print resp
+		_log.error("Server did not return \"Success\"")
+		_log.error(resp)
 
 def lineCount(fname):
 	i=0
@@ -111,16 +101,16 @@ def appendLogFromLine(fname, nb_line):
 				logBuffer.append(line)
 			i+=1
 
-	debug("append %d lines from %s" % (len(logBuffer), fname))
+	_log.debug("append %d lines from %s" % (len(logBuffer), fname))
 	return logBuffer
 
 
 def getQuery(url, fields, data=''):
 	"""Send a GET query to the server"""
-	debug("query: " + url)
+	_log.debug("query: " + url)
 	response = requests.get(url, data=data)
 
-	debug("response:" + response.text)
+	_log.debug("response:" + response.text)
 	resp = json.loads(response.text)
 
 	check(resp)
@@ -133,11 +123,11 @@ def getQuery(url, fields, data=''):
 
 def postQuery(url, fields, params={}):
 	"""Send a POST query to the server"""
-	debug("query: " + url)
+	_log.debug("query: " + url)
 	headers = {u'content-type': u'application/x-www-form-urlencoded'}
 	response = requests.post(url, headers=headers, data=params)
 
-	debug("response:" + response.text)
+	_log.debug("response:" + response.text)
 	resp = json.loads(response.text)
 
 	check(resp)
@@ -181,7 +171,7 @@ def generateLogs(jobDetails, fields):
 			content <= DIV("<br/>".join(job[field]) + "<br/>")
 	return content
 
-def checkStatus(jobDetail, rules):
+def checkStatus(jobDetails, rules):
 	""" Check that the result of the job is valid, given a set of rules """
 
 	errors = []
@@ -189,13 +179,13 @@ def checkStatus(jobDetail, rules):
 	for rule in rules:
 		if rule['contains']:
 			valid = False
-			for detail in jobDetail[rule['target']]:
+			for detail in jobDetails[rule['target']]:
 				if rule['text'] in detail:
 					valid = True
 					break
 		else:
 			valid = True
-			for detail in jobDetail[rule['target']]:
+			for detail in jobDetails[rule['target']]:
 				if rule['text'] in detail:
 					valid = False
 					break
@@ -205,88 +195,11 @@ def checkStatus(jobDetail, rules):
 
 	return errors
 
-def main():
-	args = arguments_parser()
-
-	url = 'http://%s:%s/videoaid-ws' % (args.hostname, args.port)
-
-	# Query jobs
-	[jobs] = getQuery(url + '/job', ['jobs'])
-
-	print("Found %d jobs: %s" % (len(jobs), jobs))
-
-	jobDetails=[]
-
-	# For each job
-	for job in jobs:
-		# Print detail
-		[value] = getQuery(url + '/job/' + job, ['value'])
-
-		lineStart1 = lineCount(args.logJBoss)
-		expr = args.logDir + '/markus_*%s/markus.log' % job
-		files  = glob.glob(expr)
-		if len(files) != 1:
-			warning('%d files found as %s: %s' % (len(files), expr, str(files)))
-			files = sorted(files, key=lambda x: os.path.getmtime(x))
-			markusLog = files[len(files)-1]
-			warning("Using file %s " % markusLog)
-		else:
-			markusLog = files[0]
-		lineStart2 = lineCount(markusLog)
-
-		# Send command to read status
-		debug('Send command Status')
-		postQuery(url + '/job/command/' + job, [], {'command':'manager.manager.Status'})
-
-		# Send command to print statistics
-		debug('Send command PrintStatistics')
-		postQuery(url + '/job/command/' + job, [], {'command':'manager.manager.PrintStatistics'})
-
- 		debug(json.dumps(value, sort_keys=True, indent=4, separators=(',', ': ')))
-
-		jobDetails.append({
-			'hash' : job,
-			'cameraId': value[u'cameraId'],
-			'algorithmParams': value[u'algorithmParams'],
-			'algorithmName': value[u'algorithmName'],
-			'descr': json.dumps(value, sort_keys=True, indent=4, separators=(',', ': ')),
-			'logFile1':   args.logJBoss,
-			'logFile1Start': lineStart1,
-			'logFile2':   markusLog,
-			'logFile2Start': lineStart2
-		})
-		print json.dumps(value, sort_keys=True, indent=4, separators=(',', ': '))
-
-	# sleep a few seconds to let the commands run
-	time.sleep(args.delay)
-
-	# A set of rules for the output of job description
-	rules = [
-		{'name': 'statusCode1', 'target': 'log1', 'contains': True, 'text': '"code":1010', 
-			'descr': 'JBoss must receive the status code 1010. Another value indicates that an exception was caught'},
-		{'name': 'statusCode2', 'target': 'log2', 'contains': True, 'text': '"code":1010',
-			'descr': 'Markus process must receive the status code 1010. Another value indicates that an exception was caught'},
-		{'name': 'cmdSent1', 'target': 'log2', 'contains': True, 'text': 'Command manager.manager.Status returned value', 
-			'descr': 'Markus process must receive and execute command "Status"'},
-		{'name': 'cmdSent2', 'target': 'log2', 'contains': True, 'text': 'Command manager.manager.PrintStatistics returned value', 
-			'descr': 'Markus process must receive and execute command "PrintStatistics"'},
-		{'name': 'processFrames', 'target': 'log2', 'contains': False, 'text': 'Manager: 0 frames processed', 
-			'descr': 'Markus process must have processed frames since last restart'}
-	]
-	
-	# Gather and append logs from JBoss and Markus
-	for job in jobDetails:
-		job['log1'] = appendLogFromLine(job['logFile1'], job['logFile1Start'])
-		job['log2'] = appendLogFromLine(job['logFile2'], job['logFile2Start'])
-		errors = checkStatus(job, rules)
-		job['status'] = 'ok' if len(errors)==0 else "errors: " + "<br/>".join(errors)
-		if not len(errors)==0:
-			print "Found errors with job %s: %s" % (job['hash'], str(errors)) 
-		job['errors'] = errors
-
-	debug("generate report %s" % args.output)
-	# generate the report
-	with open(args.output, 'wt') as out:
+def generateReport(jobDetails, filename):
+	if filename == '':
+		return
+	# generate report
+	with open(filename, 'wt') as out:
 
 		# Create HEAD and BODY
 		head = HEAD(TITLE('Analytics server report'))
@@ -304,6 +217,140 @@ def main():
 		out.write(str(HTML(head + body)))
 
 		# json.dump(job, out, sort_keys=True, indent=4, separators=(',', ': '))
+
+class VerifyJobs(nagiosplugin.Resource):
+	""" Nagios class that checks the state of the jobs, based on: http://pythonhosted.org/nagiosplugin/tutorial/check_load.html"""
+
+	def __init__(self, args, rules, jobDetails):
+		self.args = args
+		self.rules = rules
+		self.jobDetails = jobDetails
+
+	# --------------------------------------------------------------------------------
+	def probe(self):
+		""" Send different commands to the running jobs """
+
+		# Gather and append logs from JBoss and Markus
+		if len(self.jobDetails) == 0:
+			_log.warning("No jobs found")
+		metrics = []
+		for job in self.jobDetails:
+			job['log1'] = appendLogFromLine(job['logFile1'], job['logFile1Start'])
+			job['log2'] = appendLogFromLine(job['logFile2'], job['logFile2Start'])
+			errors = checkStatus(job, self.rules)
+			_log.debug("Found %d error(s) in job %s" %(len(errors), job['hash']))
+			job['status'] = 'ok' if len(errors)==0 else "errors: " + "<br/>".join(errors)
+			# if not len(errors)==0:
+				# _log.error("Found errors with job %s: %s" % (job['hash'], str(errors)))
+			job['errors'] = errors
+			metrics.append(nagiosplugin.Metric(job['hash'] + '_errors', value=len(errors), context='default', contextobj=job))
+		return metrics
+
+
+
+
+class VerifySummary(nagiosplugin.Summary):
+	"""Present result of verification"""
+
+	def __init__(self, rules, jobDetails, output):
+		self.rules = rules
+		self.jobDetails = jobDetails
+		self.output = output
+
+	def ok(self, results):
+		generateReport(self.jobDetails, self.output)
+		return "No errors found in %d jobs" % len(self.jobDetails)
+
+	def problem(self, results):
+		log = ""
+		
+		for detail in self.jobDetails:
+			if len(detail['errors']):
+				log += "Job " + detail['hash'] + " has errors(" + ','.join(detail['errors']) + ')\n'
+		# log += "rules:\n" + str(self.rules)
+		generateReport(self.jobDetails, self.output)
+		return "Errors found:\n" + log
+
+def main():
+
+	# read args
+	args = arguments_parser()
+
+	url = 'http://%s:%s/videoaid-ws' % (args.hostname, args.port)
+
+	[jobs] = getQuery(url + '/job', ['jobs'])
+	jobDetails = []
+
+	_log.info("Found %d jobs: %s" % (len(jobs), jobs))
+
+	# For each job
+	for job in jobs:
+		# Print detail
+		[value] = getQuery(url + '/job/' + job, ['value'])
+
+		lineStart1 = lineCount(args.logJBoss)
+		expr = args.logDir + '/markus_*%s/markus.log' % job
+		files  = glob.glob(expr)
+		if len(files) != 1:
+			_log.warning('%d files found as %s: %s' % (len(files), expr, str(files)))
+			files = sorted(files, key=lambda x: os.path.getmtime(x))
+			markusLog = files[len(files)-1]
+			_log.warning("Using file %s " % markusLog)
+		else:
+			markusLog = files[0]
+		lineStart2 = lineCount(markusLog)
+
+		# Send command to read status
+		_log.debug('Send command Status')
+		postQuery(url + '/job/command/' + job, [], {'command':'manager.manager.Status'})
+
+		# Send command to print statistics
+		_log.debug('Send command PrintStatistics')
+		postQuery(url + '/job/command/' + job, [], {'command':'manager.manager.PrintStatistics'})
+
+		_log.debug(json.dumps(value, sort_keys=True, indent=4, separators=(',', ': ')))
+
+		jobDetails.append({
+			'hash' : job,
+			'cameraId': value[u'cameraId'],
+			'algorithmParams': value[u'algorithmParams'],
+			'algorithmName': value[u'algorithmName'],
+			'descr': json.dumps(value, sort_keys=True, indent=4, separators=(',', ': ')),
+			'logFile1':   args.logJBoss,
+			'logFile1Start': lineStart1,
+			'logFile2':   markusLog,
+			'logFile2Start': lineStart2
+		})
+		_log.info(json.dumps(value, sort_keys=True, indent=4, separators=(',', ': ')))
+
+
+	# sleep a few seconds to let the commands run
+	time.sleep(args.delay)
+
+	# A set of rules for the output of job description
+	rules = [
+		{'name': 'statusCode1', 'target': 'log1', 'contains': True, 'text': '"code":1010', 
+			'descr': 'JBoss must receive the status code 1010. Another value indicates that an exception was caught'},
+		{'name': 'statusCode2', 'target': 'log2', 'contains': True, 'text': '"code":1010',
+			'descr': 'Markus process must receive the status code 1010. Another value indicates that an exception was caught'},
+		{'name': 'cmdSent1', 'target': 'log2', 'contains': True, 'text': 'Command manager.manager.Status returned value', 
+			'descr': 'Markus process must receive and execute command "Status"'},
+		{'name': 'cmdSent2', 'target': 'log2', 'contains': True, 'text': 'Command manager.manager.PrintStatistics returned value', 
+			'descr': 'Markus process must receive and execute command "PrintStatistics"'},
+		{'name': 'processFrames', 'target': 'log2', 'contains': False, 'text': 'Manager: 0 frames processed', 
+			'descr': 'Markus process must have processed frames since last restart'}
+	]
+
+		
+	# Call check and explanation routines of nagios
+	check = nagiosplugin.Check(
+			VerifyJobs(args, rules, jobDetails),
+			nagiosplugin.ScalarContext('default', '0:0', None),
+			VerifySummary(rules, jobDetails, args.output))
+	check.main(verbose=args.verbose)
+
+
+
 
 if __name__ == "__main__":
 	main()
