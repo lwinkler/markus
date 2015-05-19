@@ -28,7 +28,7 @@
 #include "Parameter.h"
 #include "Serializable.h"
 
-/// Parameter for special 3D calibration objects
+/// Parameter for a variable of non-primary type but that can be serialized and deserialized to a JSON string
 class ParameterSerializable : public Parameter
 {
 public:
@@ -46,7 +46,7 @@ public:
 	inline std::string GetRange() const {return "";}
 	inline virtual void SetRange(const std::string& x_range) {}
 	inline const ParameterType& GetType() const {const static ParameterType s = PARAM_SERIALIZABLE; return s;}
-	inline const std::string& GetTypeString() const {const static std::string s = "calibrationByHeight"; return s;}
+	inline const std::string& GetTypeString() const {const static std::string s = "serializable"; return s;}
 	// inline const Serializable& GetDefault() const {	return m_default;}
 
 	inline void SetValue(const Serializable& x_value, ParameterConfigType x_confType)
