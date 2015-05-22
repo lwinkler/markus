@@ -450,6 +450,7 @@ void execute(const string& x_cmd, ostream& xr_stdout)
 		}
 	pclose(pipe);
 }
+
 /**
 * @brief Execute a command, keeping stdout
 *
@@ -479,4 +480,21 @@ void execute(const string& x_cmd, vector<string>& xr_result)
 		}
 	}
 	pclose(pipe);
+}
+
+/**
+* @brief Convert a string to a boolean value
+*
+* @param x_value     String value representing the boolean
+*
+* @return boolean value
+*/
+bool boolValue(const std::string& x_value)
+{
+	if(x_value.empty())
+		return false;
+	if(x_value == "true" || x_value == "True" || x_value == "TRUE" || x_value == "1")
+		return true;
+
+	throw MkException("Ambiguous value cannot be converted to bool: " + x_value, LOC);
 }

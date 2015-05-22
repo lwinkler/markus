@@ -51,5 +51,6 @@ std::string basename(const std::string& x_pathName);
 void printStack(int sig);;
 void execute(const std::string& x_cmd, std::ostream& xr_stdout);
 void execute(const std::string& x_cmd, std::vector<std::string>& xr_result);
+bool boolValue(const std::string& x_value);
 
 #endif

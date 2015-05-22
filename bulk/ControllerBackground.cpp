@@ -23,6 +23,7 @@
 
 #include "ControllerBackground.h"
 #include "BackgroundSubtraction.h"
+#include "util.h"
 
 using namespace std;
 
@@ -36,7 +37,7 @@ using namespace std;
 */
 void ControllerBackground::StartOnlineLearning(string* xp_value)
 {
-	module.StartOnlineLearning();
+	module.StartOnlineLearning(xp_value == nullptr ? false : boolValue(*xp_value));
 }
 
 ControllerBackground::ControllerBackground(BackgroundSubtraction& rx_module) :

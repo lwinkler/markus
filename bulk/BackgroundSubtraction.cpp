@@ -33,7 +33,10 @@ using namespace std;
 BackgroundSubtraction::BackgroundSubtraction(ParameterStructure& xr_params) : 
 	Module(xr_params),
 	m_param(dynamic_cast<Parameters&>(xr_params))
-{}
+{
+	m_onlineLearnTimeMs = 0;
+	m_cutOutput = true;
+}
 
 BackgroundSubtraction::~BackgroundSubtraction()
 {
@@ -42,9 +45,14 @@ BackgroundSubtraction::~BackgroundSubtraction()
 void BackgroundSubtraction::Reset()
 {
 	Module::Reset();
-	m_online_learn_time_ms = m_param.online_learn_time * 1000;
 
 	// Add a new control to play forward and rewind
 	if(!HasController("background"))
 		AddController(new ControllerBackground(*this));
+}
+
+void BackgroundSubtraction::StartOnlineLearning(bool x_cutOutput)
+{
+	m_cutOutput = x_cutOutput;
+	m_onlineLearnTimeMs = m_param.onlineLearnTime * 1000;
 }

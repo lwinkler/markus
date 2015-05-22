@@ -37,13 +37,13 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterDouble( "online_learn_time",            0.0,       0, 600,    &online_learn_time,            "learn the background on the first seconds of the video"));
-			m_list.push_back(new ParameterDouble( "online_learn_ratio",           5.0,       1, 100,    &online_learn_ratio,           "increase the learning rate by this ratio at initialization"));
+			m_list.push_back(new ParameterDouble( "online_learn_time",            0.0,       0, 600,    &onlineLearnTime,            "learn the background on the first seconds of the video"));
+			m_list.push_back(new ParameterDouble( "online_learn_ratio",           5.0,       1, 100,    &onlineLearnRatio,           "increase the learning rate by this ratio at initialization"));
 
 			Init();
 		}
-		double online_learn_time;
-		double online_learn_ratio;
+		double onlineLearnTime;
+		double onlineLearnRatio;
 	};
 
 	BackgroundSubtraction(ParameterStructure& xr_params);
@@ -51,10 +51,11 @@ public:
 
 	virtual void Reset() override;
 
-	inline void StartOnlineLearning(){m_online_learn_time_ms = m_param.online_learn_time * 1000;}
+	virtual void StartOnlineLearning(bool x_cutOutput);
 
 protected:
-	int m_online_learn_time_ms;
+	int  m_onlineLearnTimeMs;
+	bool m_cutOutput;
 
 private:
 	Parameters& m_param;
