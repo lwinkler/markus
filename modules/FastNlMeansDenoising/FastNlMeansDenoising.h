@@ -59,7 +59,7 @@ public:
 			Module::Parameters::CheckRange(x_checkRelated);
 			cv::Mat m(1,1, this->type);
 			if(cielab && m.channels() != 3)
-				throw MkException("Cielab color space is only for images with 3 channels", LOC);
+				throw ParameterException("Cielab color space is only for images with 3 channels", LOC);
 		}
 	};
 

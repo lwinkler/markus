@@ -216,95 +216,102 @@ public:
 		// Test on each type of module
 		for(const auto& modType : m_moduleTypes)
 		{
-			TS_TRACE("# on module " + modType);
-			Module* module;
-			ParameterStructure* parameters;
-			tie(parameters, module) = createAndConnectModule(modType);
-			if(!module->IsUnitTestingEnabled())
+			try
 			{
-				TS_TRACE("--> unit testing disabled on " + modType);
+				TS_TRACE("# on module " + modType);
+				Module* module;
+				ParameterStructure* parameters;
+				tie(parameters, module) = createAndConnectModule(modType);
+				if(!module->IsUnitTestingEnabled())
+				{
+					TS_TRACE("--> unit testing disabled on " + modType);
+					delete module;
+					delete parameters;
+					continue;
+				}
+
+				// Test on all controllers of the module
+				for(const auto& elemCtr : module->GetControllersList())
+				{
+					TS_TRACE("## on controller " + elemCtr.first + " of class " + elemCtr.second->GetClass());
+					vector<string> actions;
+					elemCtr.second->ListActions(actions);
+
+					if(elemCtr.second->GetClass() == "ControllerParameter")
+					{
+						// Test specific for controllers of type parameter
+						string type, range, defval, newValue;
+						assert(actions.size() == 5); // If not you need to write one more test
+
+						type = "0";
+						elemCtr.second->CallAction("GetType", &type);
+						TS_TRACE("###  " + elemCtr.first + ".GetType returned " + type);
+
+						range = "0";
+						elemCtr.second->CallAction("GetRange", &range);
+						TS_TRACE("###  " + elemCtr.first + ".GetRange returned " + range);
+
+						defval = "0";
+						elemCtr.second->CallAction("GetDefault", &defval);
+						TS_TRACE("###  " + elemCtr.first + ".GetDefault returned " + defval);
+
+						vector<string> values;
+						TS_TRACE("Generate values for param of type " + type + " in range " + range);
+						module->GetParameters().GetParameterByName(elemCtr.first).GenerateValues(20, values, range);
+
+						for(auto& elemVal : values)
+						{
+							// For string type we cannot set random values
+							// cout<<"set "<<value<<endl;
+							elemCtr.second->CallAction("Set", &elemVal);
+
+							// Test if the config is globally still valid
+							try
+							{
+								module->CheckParameterRange();
+							}
+							catch(ParameterException& e)
+							{
+								TS_TRACE("Cannot set parameter, reason: " + string(e.what()));
+								continue;
+							}
+
+							newValue = "0";
+							elemCtr.second->CallAction("Get", &newValue);
+
+							TSM_ASSERT("Value set must be returned by get: " + elemVal + "!=" + newValue, elemVal == newValue);
+
+							module->Reset();
+							for(int i = 0 ; i < 3 ; i++)
+								module->ProcessRandomInput(seed);
+							TS_TRACE("###  " + elemCtr.first + ".Set returned " + elemVal);
+							TS_TRACE("###  " + elemCtr.first + ".Get returned " + newValue);
+						}
+						elemCtr.second->CallAction("Set", &defval);
+					}
+					else
+					{
+						for(const auto& elemAction : actions)
+						{
+							string value = "0";
+							// module->LockForWrite();
+							elemCtr.second->CallAction(elemAction, &value);
+							TS_TRACE("###  " + elemCtr.first + "." + elemAction + " returned " + value);
+							// module->Unlock();
+
+							for(int i = 0 ; i < 3 ; i++)
+								module->ProcessRandomInput(seed);
+						}
+					}
+				}
+
 				delete module;
 				delete parameters;
-				continue;
 			}
-
-			// Test on all controllers of the module
-			for(const auto& elemCtr : module->GetControllersList())
+			catch(ParameterException &e)
 			{
-				TS_TRACE("## on controller " + elemCtr.first + " of class " + elemCtr.second->GetClass());
-				vector<string> actions;
-				elemCtr.second->ListActions(actions);
-
-				if(elemCtr.second->GetClass() == "ControllerParameter")
-				{
-					// Test specific for controllers of type parameter
-					string type, range, defval, newValue;
-					assert(actions.size() == 5); // If not you need to write one more test
-
-					type = "0";
-					elemCtr.second->CallAction("GetType", &type);
-					TS_TRACE("###  " + elemCtr.first + ".GetType returned " + type);
-
-					range = "0";
-					elemCtr.second->CallAction("GetRange", &range);
-					TS_TRACE("###  " + elemCtr.first + ".GetRange returned " + range);
-
-					defval = "0";
-					elemCtr.second->CallAction("GetDefault", &defval);
-					TS_TRACE("###  " + elemCtr.first + ".GetDefault returned " + defval);
-
-					vector<string> values;
-					TS_TRACE("Generate values for param of type " + type + " in range " + range);
-					module->GetParameters().GetParameterByName(elemCtr.first).GenerateValues(20, values, range);
-
-					for(auto& elemVal : values)
-					{
-						// For string type we cannot set random values
-						// cout<<"set "<<value<<endl;
-						elemCtr.second->CallAction("Set", &elemVal);
-
-						// Test if the config is globally still valid
-						try
-						{
-							module->CheckParameterRange();
-						}
-						catch(ParameterException& e)
-						{
-							TS_TRACE("Cannot set parameter, reason: " + string(e.what()));
-							continue;
-						}
-
-						newValue = "0";
-						elemCtr.second->CallAction("Get", &newValue);
-
-						TSM_ASSERT("Value set must be returned by get: " + elemVal + "!=" + newValue, elemVal == newValue);
-
-						module->Reset();
-						for(int i = 0 ; i < 3 ; i++)
-							module->ProcessRandomInput(seed);
-						TS_TRACE("###  " + elemCtr.first + ".Set returned " + elemVal);
-						TS_TRACE("###  " + elemCtr.first + ".Get returned " + newValue);
-					}
-					elemCtr.second->CallAction("Set", &defval);
-				}
-				else
-				{
-					for(const auto& elemAction : actions)
-					{
-						string value = "0";
-						// module->LockForWrite();
-						elemCtr.second->CallAction(elemAction, &value);
-						TS_TRACE("###  " + elemCtr.first + "." + elemAction + " returned " + value);
-						// module->Unlock();
-
-						for(int i = 0 ; i < 3 ; i++)
-							module->ProcessRandomInput(seed);
-					}
-				}
+				TS_TRACE("Parameter exception caught: " + std::string(e.what()));
 			}
-
-			delete module;
-			delete parameters;
 		}
 	}
 
