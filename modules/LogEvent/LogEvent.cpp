@@ -185,7 +185,7 @@ void LogEvent::CompareWithGroundTruth()
 		// Save command for later use
 		string fileName = GetContext().GetOutputDir() + "/eval.sh";
 		ofstream ofs(fileName.c_str(), ios_base::app);
-		ofs << cmd.str();
+		ofs << cmd.str() << endl;
 		ofs.close();
 	}
 	catch(MkException& e)

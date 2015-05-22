@@ -7,6 +7,7 @@ ModuleKeyPoints.cpp
 Manager.cpp
 Context.cpp
 Input.cpp
+BackgroundSubtraction.cpp
 Parameter.cpp
 ParameterEnum.cpp
 ParameterImageType.cpp
@@ -34,6 +35,7 @@ ControllerInputStream.cpp
 ControllerModule.cpp
 ControllerManager.cpp
 ControllerEvent.cpp
+ControllerBackground.cpp
 Serializable.cpp
 CalibrationByHeight.cpp
 CalibrationByModel.cpp
