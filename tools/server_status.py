@@ -101,11 +101,7 @@ def check(resp):
 		_log.error(resp)
 
 def lineCount(fname):
-	i=0
-	with open(fname) as f:
-		for i, l in enumerate(f):
-			pass
-	return i + 1
+	return sum(1 for line in open(fname))
 
 def appendLogFromLine(fname, nb_line):
 	i=0
