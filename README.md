@@ -215,3 +215,92 @@ A module will only process one frame if a set of conditions is met. Mainly there
 
 Time values are given by a time stamp that is linked with the input stream. They match the time at which the frame was extracted by a module of the Input class.
 
+
+Simulations (advanced)
+-----------
+Markus can also create create variations of an XML configuration. It can be used to:
+- Vary the resolution of certain modules
+- Vary the values of any parameter in an XML config
+- Use the same XML config on a list of videos
+
+### Definition in XML
+The variations can be specified directly in the XML config (see examples below) and can be used to generate a simulation directory with:
+
+	make -S projects/ObjectTracker.sim.xml
+
+	2015-05-29 10:54:12,199 [0x7f0c7389ea40] INFO  [Manager] Create manager
+	2015-05-29 10:54:12,199 [0x7f0c7389ea40] INFO  [Module] Create module Input
+	2015-05-29 10:54:12,199 [0x7f0c7389ea40] INFO  [Module] Create module RenderObjects
+	2015-05-29 10:54:12,199 [0x7f0c7389ea40] INFO  [Module] Create module BgrSubRunAvg
+	2015-05-29 10:54:12,199 [0x7f0c7389ea40] INFO  [Module] Create module TrackerByFeatures
+	2015-05-29 10:54:12,200 [0x7f0c7389ea40] INFO  [Module] Create module SegmenterContour
+	2015-05-29 10:54:12,241 [0x7f0c7389ea40] INFO  [Simulation] 5 simulations generated in directory simulation_20150529_105412
+	2015-05-29 10:54:12,241 [0x7f0c7389ea40] INFO  [Simulation] Launch with: make -f simulation_20150529_105412/simulation.make -j4
+	2015-05-29 10:54:12,241 [0x7f0c7389ea40] INFO  [Manager] Manager: 0 frames processed in 0 ms (-nan frames/s)
+	2015-05-29 10:54:12,245 [0x7f0c7389ea40] INFO  [Module] Module Input : 0 frames processed (tproc=0ms, tconv=0ms, twait=0ms), -nan fps
+	2015-05-29 10:54:12,245 [0x7f0c7389ea40] INFO  [Module] Module RenderObjects : 0 frames processed (tproc=0ms, tconv=0ms, twait=0ms), -nan fps
+	2015-05-29 10:54:12,246 [0x7f0c7389ea40] INFO  [Module] Module BgrSubRunAvg : 0 frames processed (tproc=0ms, tconv=0ms, twait=0ms), -nan fps
+	2015-05-29 10:54:12,246 [0x7f0c7389ea40] INFO  [Module] Module TrackerByFeatures : 0 frames processed (tproc=0ms, tconv=0ms, twait=0ms), -nan fps
+	2015-05-29 10:54:12,246 [0x7f0c7389ea40] INFO  [Module] Module SegmenterContour : 0 frames processed (tproc=0ms, tconv=0ms, twait=0ms), -nan fps
+	2015-05-29 10:54:12,258 [0x7f0c7389ea40] INFO  [Context] Removing empty directory out/out_20150529_105412
+
+
+#### Example 1
+Here we have a simulation with 2 variations. The first variation changes the value of max_matching_distance in TrackerByFeatures (10 values are chosen in range 0 to 100) and the second changes the resoultion based on the JSON file *tools/evaluation/ranges/resolutions.json* (3 different resolutions).
+
+	<application name="ObjectTracker" description="">
+		<variations>
+			<var module="TrackerByFeatures" param="max_matching_distance" nb="10 range="[0:100]"/>
+			<var module="TrackerByFeatures" parameters="width,height" references="width,height" file="tools/evaluation/ranges/resolutions.json"/>
+		</variations>
+		<module name="Input" id="0">
+		...
+
+The result is a simulation directory containing 30 different run of markus.
+
+#### Example 2
+Here we have a simulation with 1 variation. It changes the video file to use (as specified in the JSON file) as well as other parameters (LogEvent.gt_file,manager.arguments,LogEvent.gt_video):
+
+Notes:
+- *manager.arguments* can add extra arguments to the markus command: here we use it to override part of the config (-x SZTR100.xml) with an XML config related to the video.
+- Unlike example 1 this will only generate one run of markus per video. This is one single variation, not 2.
+
+	<variations>
+	<var modules="Input,LogEvent,manager,LogEvent" parameters="file,gt_file,arguments,gt_video" references="video,annotation,arguments,video" file="my_videos.json">
+	</var>
+	</variations>
+
+*my_video.json*:
+
+	{
+		"SZTRA101a01": {
+			"video": "videos/ilids_SterileZone/SZTR/video/SZTRA101a01.mov.mkv",
+				"annotation": "video-annotations/ilids_SterileZone/SZTR/video/SZTRA101a01.srt",
+				"arguments": "-x video-annotations/ilids_SterileZone/SZTR/video/SZTR100.xml"
+		},
+
+		"SZTRA101a02": {
+			"video": "videos/ilids_SterileZone/SZTR/video/SZTRA101a02.mov.mkv",
+			"annotation": "video-annotations/ilids_SterileZone/SZTR/video/SZTRA101a02.srt",
+			"arguments": "-x video-annotations/ilids_SterileZone/SZTR/video/SZTR100.xml"
+		},
+		...
+	}
+
+### Running a simulation
+he simulation directory contains all files needed to run the different variations as well as a makefile. A simulation can be run with:
+
+	make -f simulation_20141202_143429/simulation.make -j4
+
+Where the -j argument passed to make specifies the number of simultaneous process to run. This should match the number of cores.
+
+### Aggregating results
+To get aggregated results (summaries of different variation runs on the same html) you can use different scripts available with Markus.To aggregate all the results:
+
+	tools/evaluation/aggregate.py simulation_20141202_143429/results/
+
+To aggregate results with respect to one variation of one parameter you may use the .txt files that are automatically generated in your simulation directory. They contain a list of parameter variations to aggregate. They may be in the agr/ directory.
+
+E.g. You have configured a variation on each video file of one set that contains one variation of the resolution (small and medium). Then use this command to aggregate all results that were made with a small resolution.
+
+	tools/evaluation/aggregate.py simulation_20141128_170932/results -f simulation_20141128_170932/small.txt -o small.html
