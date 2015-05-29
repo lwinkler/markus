@@ -53,6 +53,6 @@ void BackgroundSubtraction::Reset()
 
 void BackgroundSubtraction::StartOnlineLearning(bool x_cutOutput)
 {
-	m_cutOutput = x_cutOutput;
+	m_cutOutput = x_cutOutput; // TODO: privatize members
 	m_onlineLearnTimeMs = m_param.onlineLearnTime * 1000;
 }

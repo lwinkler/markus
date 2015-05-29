@@ -203,7 +203,7 @@ void adjustChannels(const Mat& im_in, Mat& im_out)
 	}
 	else if(im_in.channels() == 3 && im_out.channels() == 1)
 	{
-		cvtColor(im_in, im_out, CV_RGB2GRAY);
+		cvtColor(im_in, im_out, CV_RGB2GRAY); // TODO: probably use BGR!!
 	}
 	else throw MkException("Error in adjustChannels", LOC);
 }
