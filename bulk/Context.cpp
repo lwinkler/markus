@@ -94,7 +94,8 @@ Context::~Context()
 				}
 				else
 				{
-					SYSTEM("cp " + m_param.configFile + " " + m_outputDir);
+					// note: -n means to avoid an error message if we copy a file to itself (happens with markus -o ...)
+					SYSTEM("cp -n " + m_param.configFile + " " + m_outputDir);
 				}
 			}
 		}
