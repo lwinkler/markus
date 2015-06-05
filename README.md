@@ -226,7 +226,7 @@ Markus can also create create variations of an XML configuration. It can be used
 ### Definition in XML
 The variations can be specified directly in the XML config (see examples below) and can be used to generate a simulation directory with:
 
-	make -S projects/ObjectTracker.sim.xml
+	./markus -S projects/ObjectTracker.sim.xml
 
 	2015-05-29 10:54:12,199 [0x7f0c7389ea40] INFO  [Manager] Create manager
 	2015-05-29 10:54:12,199 [0x7f0c7389ea40] INFO  [Module] Create module Input
