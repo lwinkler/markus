@@ -495,6 +495,8 @@ bool boolValue(const std::string& x_value)
 		return false;
 	if(x_value == "true" || x_value == "True" || x_value == "TRUE" || x_value == "1")
 		return true;
+	if(x_value == "false" || x_value == "False" || x_value == "FALSE" || x_value == "0")
+		return false;
 
 	throw MkException("Ambiguous value cannot be converted to bool: " + x_value, LOC);
 }
