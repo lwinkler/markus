@@ -471,6 +471,10 @@ int main(int argc, char** argv)
 	}
 
 
+	// For benchmark only: this line should have no effect in no QuickTimer is used
+	QuickTimer::PrintTimers();
+
+
 	return returnValue;
 }
 

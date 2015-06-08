@@ -74,3 +74,11 @@ Class &operator=(const Class &);
 
 #endif
 
+// Code to pass the current position in code via POS (used in exceptions and timers)
+#define S1(x) #x
+#define S2(x) S1(x)
+// note: the next lines defines 2 parameters separated with a comma
+#define LOC __FILE__ ":" S2(__LINE__), __FUNCTION__
+#define POSITION __FILE__ ":" S2(__LINE__)
+
+
