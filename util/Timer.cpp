@@ -55,7 +55,7 @@ QuickTimer::QuickTimer(const std::string& x_description, const std::string& x_po
 
 void QuickTimer::PrintTimers()
 {
-#ifndef NDEBUG
+#ifndef MARKUS_DEBUG_STREAMS
 	if(!ms_timers.empty())
 		cout << "WARNING: Please remove all QuickTimers for a release version" << endl;
 #endif
