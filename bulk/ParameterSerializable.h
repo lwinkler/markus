@@ -27,6 +27,7 @@
 #include "define.h"
 #include "Parameter.h"
 #include "Serializable.h"
+#include <log4cxx/logger.h>
 
 /// Parameter for a variable of non-primary type but that can be serialized and deserialized to a JSON string
 class ParameterSerializable : public Parameter

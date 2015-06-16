@@ -26,6 +26,7 @@
 
 #include "define.h"
 #include "Parameter.h"
+#include <log4cxx/logger.h>
 
 /// Parameter of type string
 class ParameterString : public Parameter
@@ -72,6 +73,7 @@ private:
 	std::string m_default;
 	std::string& mr_value;
 	std::vector<std::string> m_valuesInRange;
+	static log4cxx::LoggerPtr m_logger;
 };
 
 #endif

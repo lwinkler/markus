@@ -27,6 +27,7 @@
 #include "define.h"
 #include "Parameter.h"
 #include "MkException.h"
+#include <log4cxx/logger.h>
 
 /// Parameter of type enum
 class ParameterEnum : public Parameter
@@ -72,6 +73,8 @@ protected:
 
 	int m_default;
 	int& mr_value;
+private:
+	static log4cxx::LoggerPtr m_logger;
 };
 
 #endif
