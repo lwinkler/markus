@@ -63,7 +63,7 @@ public:
 		if (it == m_register.end())
 		{
 			std::stringstream ss;
-			ss << "Cannot find a constructor for module of type "<<x_type;
+			ss << "Cannot find a constructor for object of type "<<x_type;
 			throw MkException(ss.str(), LOC);
 		}
 

@@ -27,6 +27,7 @@
 #include "define.h"
 #include "MkException.h"
 #include "Parameter.h"
+#include <log4cxx/logger.h>
 
 #define EPSILON 1e-5
 
@@ -176,6 +177,7 @@ private:
 	T& mr_value;
 	static const ParameterType m_type;
 	static const std::string m_typeStr;
+	static log4cxx::LoggerPtr m_logger;
 };
 
 

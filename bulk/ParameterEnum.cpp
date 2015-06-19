@@ -26,6 +26,9 @@
 
 using namespace std;
 
+// Static variables 
+log4cxx::LoggerPtr ParameterEnum::m_logger(log4cxx::Logger::getLogger("ParameterEnum"));
+
 
 /**
 * @brief Export the parameter for module description
@@ -134,7 +137,15 @@ string ParameterEnum::GetRange() const
 */
 void ParameterEnum::Print(ostream& os) const
 {
-	os<<m_name<<"="<<GetReverseEnum().at(GetValue())<<" ("<<GetValue()<<") ("<<configType[m_confSource]<<"); ";
+	try
+	{
+		os<<m_name<<"="<<GetReverseEnum().at(GetValue())<<" ("<<GetValue()<<") ("<<configType[m_confSource]<<"); ";
+	}
+	catch(exception &e)
+	{
+		LOG_WARN(m_logger, "Exception while printing " << m_name << " with value " << GetValue());
+		throw MkException("Exception with parameter " + m_name + ": " + string(e.what()), LOC);
+	}
 }
 
 /**

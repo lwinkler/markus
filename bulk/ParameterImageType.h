@@ -26,6 +26,7 @@
 
 #include "define.h"
 #include "ParameterEnum.h"
+#include <log4cxx/logger.h>
 
 
 /// Parameter for the type of an OpenCV image
@@ -46,5 +47,6 @@ private:
 	// static attributes
 	const static std::map<std::string, int> Enum;
 	const static std::map<int, std::string> ReverseEnum;
+	static log4cxx::LoggerPtr m_logger;
 };
 #endif
