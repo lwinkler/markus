@@ -28,6 +28,7 @@
 #include <opencv2/flann/timer.h>
 #include <iostream>
 #include <string>
+#include <map>
 
 /// Timer class used for benchmarking
 class Timer
@@ -40,6 +41,7 @@ class Timer
 		inline void Start(){m_timer.start(); m_increments++;}
 		inline void Stop(){m_timer.stop();}
 		inline void Add(const Timer& x_val){m_timer.value += x_val.GetSecDouble();}
+		inline void Print() const;
 
 	protected:
 		cvflann::StartStopTimer m_timer;
@@ -48,12 +50,17 @@ class Timer
 
 
 /// A simple timer with name. Can be used to simplify benchmarking
-class QuickTimer : public Timer
+class QuickTimer
 {
 	public:
-		QuickTimer(const std::string& x_name){name = x_name;}
-		~QuickTimer(){std::cout<<"QuickTimer "<<name<< " has measured " << GetSecDouble() << "s in " << m_increments << " increments" << std::endl; }
-		std::string name;
+		QuickTimer(const std::string& x_description, const std::string& x_position, const std::string& x_function);
+		~QuickTimer(){ms_timers[m_name].Stop();}
+
+		static void PrintTimers();
+
+	private:
+		const std::string m_name;
+		static std::map<std::string, Timer> ms_timers;
 };
 
 

@@ -199,11 +199,11 @@ void adjustChannels(const Mat& im_in, Mat& im_out)
 	}
 	else if(im_in.channels() == 1 && im_out.channels() == 3)
 	{
-		cvtColor(im_in, im_out, CV_GRAY2RGB);
+		cvtColor(im_in, im_out, CV_GRAY2BGR);
 	}
 	else if(im_in.channels() == 3 && im_out.channels() == 1)
 	{
-		cvtColor(im_in, im_out, CV_RGB2GRAY); // TODO: probably use BGR!!
+		cvtColor(im_in, im_out, CV_BGR2GRAY); // TODO: probably use BGR!! check that no problem arises
 	}
 	else throw MkException("Error in adjustChannels", LOC);
 }

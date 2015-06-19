@@ -73,9 +73,10 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 	m_allTargets << "$(OUTDIR)/results/" <<  sd.str() << " ";
 	m_targets << "$(OUTDIR)/results/" << sd.str() << ":" << endl;
 	// xr_targets << "\t" << "mkdir -p $(OUTDIR)/results/"  << sd.str() << endl;
-	m_targets << "\t" << "rm -rf $(OUTDIR)/running/"  << sd.str() <<
-			  " && cp -r $(OUTDIR)/ready/" << sd.str() << " $(OUTDIR)/running/" << sd.str() << endl;
-	m_targets << "\t" << "$(EXE) $(PARAMS) $(OUTDIR)/running/" << sd.str() << "/" << name << ".xml -o $(OUTDIR)/running/" << sd.str() <<
+	m_targets << "\t" << "rm -rf $(OUTDIR)/running/*"  << sd.str() << endl;
+	// commented and added /* on the above line: do we really need to copy this ?
+	// " && cp -r $(OUTDIR)/ready/" << sd.str() << " $(OUTDIR)/running/" << sd.str() << endl;
+	m_targets << "\t" << "$(EXE) $(PARAMS) $(OUTDIR)/ready/" << sd.str() << "/" << name << ".xml -o $(OUTDIR)/running/" << sd.str() <<
 			  " " << arguments << endl;
 	m_targets << "\t" << "mv $(OUTDIR)/running/" << sd.str() << " $(OUTDIR)/results/" << endl;
 	m_targets << endl;
