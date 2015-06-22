@@ -35,7 +35,8 @@ Evaluation = namedtuple('Evaluation',
                         'tp '
                         'fp '
                         'fn '
-                        'dups '
+                        'dup_ev '
+                        'dup_gt '
                         'ambs ')
 
 # Video metrics
@@ -200,12 +201,13 @@ def evaluate(events, truths):
     # Stats
     fp = 0
     fn = 0
-    dups = 0
+    ndup_ev = 0
     ambs = 0
-    inhib = 0
+    ndup_gt = 0
 
     # For each event
     for event in events:
+        evt_dup = False
         # Search for a matching truth
         for i, truth in enumerate(truths):
             # Count as ambiguous
@@ -217,16 +219,17 @@ def evaluate(events, truths):
                 if event.id not in matched_events:
                     matched_events[event.id] = []
                 else:
-                    dups += 1 # several events for one gt
+                    ndup_gt += 1 # several gt for one event
                 if truth.id not in matched_truths:
                     matched_truths[truth.id] = []
                 else:
-                    inhib += 1 # several gt for one event
+                    ndup_ev += 1 # several event for one gt
+                    evt_dup = True
                 matched_events[event.id].append(truth)
                 matched_truths[truth.id].append(event)
 
         # Log event
-        log_event.append((event, matched_events[event.id] if event.id in matched_events else [], event.id in matched_events))
+        log_event.append((event, matched_events[event.id] if event.id in matched_events else [], event.id in matched_events, evt_dup))
 
         if not event.id in matched_events:
             fp += 1
@@ -244,14 +247,15 @@ def evaluate(events, truths):
         else:
             tp += 1
 
-    # print "fp %d fn %d tp %d. dups %d inh %d" % (fp, fn, tp, dups, inhib)
+    print "fp %d fn %d tp %d. dup_ev %d dup_gt %d" % (fp, fn, tp, ndup_ev, ndup_gt)
 
     # Prepare evaluation results
     results = Evaluation(tp=tp,
                          fp=fp,
                          fn=fn,
-                         dups=dups,
+                         dup_ev=ndup_ev,
                          ambs=ambs,
+                         dup_gt=ndup_gt,
                          det=len(events),
                          pos=len(truths) - ambs)
     fid_fp.close()
@@ -278,7 +282,8 @@ def statistics(evaluation, video=None):
     stats['Total correct detections'] = (e.tp, '%4d')
     stats['Total false alarms'] = (e.fp, '%4d')
     stats['Total missed'] = (e.fn, '%4d')
-    stats['Total duplicates'] = (e.dups, '%4d')
+    stats['Total duplicated events'] = (e.dup_ev, '%4d')
+    stats['Total duplicated gt'] = (e.dup_gt, '%4d')
     stats['Total ambiguous']  = (e.ambs, '%4d')
 
     # Confusion matrix statistics
@@ -399,9 +404,9 @@ def generate_html(stats, logs, data, out='out', filename='report.html'):
     table = TABLE(border=1, style='border-collapse: collapse;')
     table <= TR(TH('ID') + (TH('Thumbnail') if args.images else '') + TH('Time') + TH('Matched'),
                 style='background: lightgray;')
-    for (event, matches, good) in log_event:
+    for (event, matches, good, evt_dup) in log_event:
 
-        if good is None:
+        if evt_dup:
             bg = "#FFF4D3"
         elif good:
             bg = "#DCFFD3"
