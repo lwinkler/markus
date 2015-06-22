@@ -131,9 +131,19 @@ void adjustSize(const Mat& im_in, Mat& im_out)
 	else
 	{
 		if(im_in.cols == im_out.cols && im_in.rows == im_out.rows)
+		{
 			im_in.copyTo(im_out);
+		}
+		else if(im_in.cols >= im_out.cols)
+		{
+			// note: Maybe one day, parametrize the interpolation method
+			// resize(im_in, im_out, im_out.size(), 0, 0, CV_INTER_AREA); // TODO for LM: See if we gain on detection with this line
+			resize(im_in, im_out, im_out.size(), 0, 0, CV_INTER_AREA);
+		}
 		else
-			resize(im_in, im_out, im_out.size(), 0, 0, CV_INTER_LINEAR); // TODO: Maybe one day, parametrize the interpolation method
+		{
+			resize(im_in, im_out, im_out.size(), 0, 0, CV_INTER_LINEAR);
+		}
 	}
 }
 
@@ -145,14 +155,7 @@ void adjust(const Mat& im_in, Mat& im_out, Mat*& tmp1, Mat*& tmp2)
 
 	if(im_in.depth() == im_out.depth())
 	{
-		if(tmp1==nullptr)
-		{
-			//cout<<"create image in adjust tmp1 depth "<<im_out->depth<<endl;
-			tmp1 = new Mat( Size(im_out.cols, im_out.rows), im_out.type());
-		}
-		adjustSize(im_in, *tmp1);
-		adjustChannels(*tmp1, im_out);
-
+		adjustSizeAndChannels(im_in, im_out, tmp1);
 	}
 	else
 	{
@@ -169,16 +172,13 @@ void adjust(const Mat& im_in, Mat& im_out, Mat*& tmp1, Mat*& tmp2)
 
 		if(im_in.depth() == CV_8U && im_out.depth() == CV_32F)
 		{
-			adjustSize(im_in, *tmp1);
-			adjustChannels(*tmp1, *tmp2);
+			adjustSizeAndChannels(im_in, *tmp2, tmp1);
 			//convertByte2Float(tmp2, im_out);
 			tmp2->convertTo(im_out, im_out.type(), 1.0 / 255);
 		}
 		else if(im_in.depth() == CV_32F && im_out.depth() == CV_8U)
 		{
-			adjustSize(im_in, *tmp1);
-			adjustChannels(*tmp1, *tmp2);
-
+			adjustSizeAndChannels(im_in, *tmp2, tmp1);
 			//convertFloat2Byte(tmp2, im_out);
 			tmp2->convertTo(im_out, im_out.type(), 255);
 		}
@@ -187,6 +187,35 @@ void adjust(const Mat& im_in, Mat& im_out, Mat*& tmp1, Mat*& tmp2)
 			throw MkException("Cannot convert format", LOC);
 		}
 	}
+}
+
+/* Set image to the right size and channel numbers */
+
+void adjustSizeAndChannels(const Mat& im_in, Mat& im_out, Mat*& tmp1)
+{
+	if(im_in.channels() == im_out.channels())
+	{
+		adjustSize(im_in, im_out);
+		return;
+	}
+#if 0
+	if(tmp1==nullptr)
+	{
+		//cout<<"create image in adjust tmp1 depth "<<im_out->depth<<endl;
+		tmp1 = new Mat( Size(im_in.cols, im_in.rows), im_out.type());
+	}
+	adjustChannels(im_in, *tmp1);
+	adjustSize(*tmp1, im_out);
+#else
+	// note: this version seems faster
+	if(tmp1==nullptr)
+	{
+		//cout<<"create image in adjust tmp1 depth "<<im_out->depth<<endl;
+		tmp1 = new Mat( Size(im_out.cols, im_out.rows), im_out.type());
+	}
+	adjustSize(im_in, *tmp1);
+	adjustChannels(*tmp1, im_out);
+#endif
 }
 
 /* Set the image to the right number of channels */

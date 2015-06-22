@@ -56,6 +56,7 @@ void StreamImage::ConvertInput()
 	// Copy time stamp to output
 	if(m_connected != nullptr)
 	{
+		// TODO: Maybe one day we could cache the images to avoid converting 2x to the same resolution
 		m_timeStamp = GetConnected().GetTimeStamp();
 		adjust(*m_img_input, m_image, mp_img_tmp1, mp_img_tmp2);
 	}
