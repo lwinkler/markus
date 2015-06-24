@@ -109,10 +109,19 @@ def extract_images(events, truths, video, out='out'):
     # The function to extract a precise image
     def extract(kind, time, name):
         # note: force images to qvga 320x240 to reduce archive size
-        subprocess.call([cmd, '-ss', str(time), '-i', str(video),
+        str_time = str(time).replace(',','.')  # note: avoid ","
+        subprocess.call([cmd, '-ss', str_time, '-i', str(video),
                          '-frames:v', '1', '-s', 'qvga',
                          os.path.join(path, str(kind) + '_' + str(name) +
                                       '.jpg'), '-y'], stderr=subprocess.PIPE)
+
+        # We have a problem with precision of snapshots in time: this happens due to reencoded videos and
+        # due to the "-s qvga" parameters
+        # This version solves the problem for some videos but is much slower
+        # target   = os.path.join(path, str(kind) + '_' + str(name) + '.jpg')
+        # subprocess.call([cmd, '-ss', str_time, '-i', str(video),
+        #                  '-frames:v', '1', target, '-y'], stderr=subprocess.PIPE)
+        # subprocess.call(['convert', target, '-resize' ,'320x240', target])
 
     # Extract events
     for event in events:
@@ -247,7 +256,7 @@ def evaluate(events, truths):
         else:
             tp += 1
 
-    print "fp %d fn %d tp %d. dup_ev %d dup_gt %d" % (fp, fn, tp, ndup_ev, ndup_gt)
+    # print "fp %d fn %d tp %d. dup_ev %d dup_gt %d" % (fp, fn, tp, ndup_ev, ndup_gt)
 
     # Prepare evaluation results
     results = Evaluation(tp=tp,
