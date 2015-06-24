@@ -224,6 +224,7 @@ def evaluate(events, truths):
 
             # Test for matching
             if matched:
+	        fid_tp.write('%s %s\n' % (event.time.milis, event.time_end.milis))
                 # Keep track of matched ground truth
                 if event.id not in matched_events:
                     matched_events[event.id] = []
