@@ -70,15 +70,15 @@ void StreamImage::ConvertInput()
 			{
 				// note: Maybe one day, parametrize the interpolation method
 				// resize(im_in, im_out, im_out.size(), 0, 0, CV_INTER_AREA); // TODO for LM: See if we gain on detection with this line
-				resize(*corrected, buf_out->image, m_image.size(), 0, 0, CV_INTER_AREA);
+				resize(*corrected, buf_out->image, m_image.size(), 0, 0, CV_INTER_LINEAR);
 			}
 			else
 			{
 				resize(*corrected, buf_out->image, m_image.size(), 0, 0, CV_INTER_LINEAR);
 			}
+			buf_out->timeStamp = ts;
 		}
 		corrected = &buf_out->image;
-		buf_out->timeStamp = ts;
 	}
 
 	if(corrected->channels() != m_image.channels())
@@ -96,9 +96,9 @@ void StreamImage::ConvertInput()
 				cvtColor(*corrected, buf_out->image, CV_BGR2GRAY);
 			}
 			else throw MkException("Cannot convert channels", LOC);
+			buf_out->timeStamp = ts;
 		}
 		corrected = &buf_out->image;
-		buf_out->timeStamp = ts;
 	}
 
 	if(corrected->depth() != m_image.depth())
@@ -116,9 +116,9 @@ void StreamImage::ConvertInput()
 				corrected->convertTo(buf_out->image, m_image.type(), 255);
 			}
 			else throw MkException("Cannot convert depth", LOC);
+			buf_out->timeStamp = ts;
 		}
 		corrected = &buf_out->image;
-		buf_out->timeStamp = ts;
 	}
 
 	// Copy the correct image to output
