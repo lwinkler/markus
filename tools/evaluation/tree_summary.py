@@ -86,6 +86,7 @@ def build_stats(child_videos, videos, images, out):
 			duration += videos[dname]['stats']['Video duration'][0]
 			nb += 1
 		else:
+			print "Missing results for: %s" % dname
 			if not args.no_levels_list:
 				out <= SPAN("** " + dname, style='font-style: italic')
 		
