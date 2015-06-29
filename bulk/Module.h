@@ -137,6 +137,8 @@ public:
 	const Module& GetMasterModule() const;
 	inline void CheckParameterRange() {m_param.CheckRange(false);}
 	inline bool IsUnitTestingEnabled() const {return m_isUnitTestingEnabled;}
+	inline TIME_STAMP GetCurrentTimeStamp() const {return m_currentTimeStamp;}
+	inline TIME_STAMP GetLastTimeStamp()    const {return m_lastTimeStamp;}
 
 	void WriteToCache() const;
 	void ReadFromCache();

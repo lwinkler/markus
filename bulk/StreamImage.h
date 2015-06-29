@@ -25,9 +25,18 @@
 #define STREAM_IMAGE_H
 
 #include "Stream.h"
+#include <map>
+
+/// Structure used to keep the time stamp along with a buffer image (to speed up conversion)
+struct BufferImage
+{
+	BufferImage() : timeStamp(TIME_STAMP_MIN) {}
+	TIME_STAMP timeStamp;
+	cv::Mat    image;
+};
+
 
 /// Class for a stream of images (or video) used for input and output
-
 class StreamImage : public Stream
 {
 public:
@@ -44,11 +53,18 @@ public:
 	virtual void Randomize(unsigned int& xr_seed);
 	const cv::Mat& GetImage() const {return m_image;}
 	void Connect(Stream * x_stream, bool x_bothWays = true);
+
 protected:
+	static std::string createResolutionString(const cv::Size x_size, int x_depth, int x_channels)
+	{
+		std::stringstream ss;
+		ss << x_size.width << "x" << x_size.height << "_" << x_depth << "_" << x_channels;
+		return ss.str();
+	}
 	cv::Mat& m_image;
 	const cv::Mat* m_img_input;
-	cv::Mat * mp_img_tmp1; // To convert the input
-	cv::Mat * mp_img_tmp2;
+
+	std::map<std::string, BufferImage> m_buffers;
 
 private:
 	DISABLE_COPY(StreamImage)
