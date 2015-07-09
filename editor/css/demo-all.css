@@ -59,7 +59,6 @@ body {
 #sidebar {		 
 	width: 420px;
 	font-size: 12px;
-	position: fixed;
 	left: 20px;
 	top: 90px;
 }
@@ -72,7 +71,7 @@ body {
 #detail {
 	text-align: left;
 	padding: 10px;
-	display: none;
+	display: block;
 }
 
 
