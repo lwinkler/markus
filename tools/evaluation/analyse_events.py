@@ -20,12 +20,12 @@ import vplib
 import pickle
 import argparse
 import subprocess
+import json
 from time import strftime, localtime
 from platform import platform
 from vplib.time import Time
 from vplib.HTMLTags import *
 from vplib.parser import subrip
-from vplib.parser import evtfiles # TODO: evtfile should probably be replaced by subrip
 from collections import namedtuple, OrderedDict
 
 # Evaluation metrics
@@ -44,6 +44,9 @@ Video = namedtuple('Video', 'duration')
 
 # Truth tuple
 Truth = namedtuple('Truth', 'id begin end match_begin match_end is_valid is_ambiguous text')
+
+# Event tuple
+Event = namedtuple('Event', 'id begin end image_file')
 
 # Global arguments, will be overwritten at runtime
 args = None
@@ -91,7 +94,7 @@ def video_info(video):
 
 
 def extract_images(events, truths, video, out='out'):
-    """ Extract thubmnails images of events and ground truths """
+    """ Extract thumbnails images of events and ground truths """
     # If no video
     if video is None:
         return
@@ -126,7 +129,8 @@ def extract_images(events, truths, video, out='out'):
     # Extract events
     for event in events:
         # Note: We take the snapshot in the middle of the event
-        extract('event', (event.time + event.time_end) / 2, event.id)
+        if event.image_file == "./images/event_" + str(event.id) + ".jpg":
+		extract('event', (event.begin + event.begin) / 2, event.id)
 
     # Extract ground truth
     for truth in truths:
@@ -152,7 +156,35 @@ def match_times(begin, end):
 
 def read_events(file_path):
     """Read the events file"""
-    return evtfiles.parse(file_path)
+    # previous version: return evtfiles.parse(file_path)
+    entries = subrip.parse(file_path)
+
+    # Prepare the events array
+    events = []
+
+    # Parse each subtitle
+    for entry in entries:
+
+        # Match times
+        match_begin, match_end = match_times(entry.begin, entry.end)
+        ident = entry.begin.milis
+
+	if args.VIDEO_FILE:
+		# By default we set the path of an image to be extracted from video
+		image_file = "./images/event_" + str(ident) + ".jpg"
+	else:
+		image_file = ""
+
+        try:
+            # Detect if an image exists already
+            detail = json.loads(entry.text)
+	    image_file = 'events_img/' + os.path.basename(detail['external']['files']['globalImage'])
+	except:
+	    print "Cannot find image for event at %s" % entry.begin
+
+        events.append(Event(id=ident, begin=entry.begin, end=entry.end, image_file=image_file))
+
+    return events
 
 def read_truths(file_path):
     """Read the ground truth file"""
@@ -220,11 +252,11 @@ def evaluate(events, truths):
         # Search for a matching truth
         for i, truth in enumerate(truths):
             # Count as ambiguous
-            matched = event.time >= truth.match_begin and event.time <= truth.match_end
+            matched = event.begin >= truth.match_begin and event.begin <= truth.match_end
 
             # Test for matching
             if matched:
-	        fid_tp.write('%s %s\n' % (event.time.milis, event.time_end.milis))
+	        fid_tp.write('%s %s\n' % (event.begin.milis, event.end.milis))
                 # Keep track of matched ground truth
                 if event.id not in matched_events:
                     matched_events[event.id] = []
@@ -243,7 +275,7 @@ def evaluate(events, truths):
 
         if not event.id in matched_events:
             fp += 1
-            fid_fp.write('%s %s\n' % (event.time.milis, event.time_end.milis))
+            fid_fp.write('%s %s\n' % (event.begin.milis, event.end.milis))
 
     tp = 0
     for truth in truths:
@@ -424,16 +456,15 @@ def generate_html(stats, logs, data, out='out', filename='report.html'):
             bg = "#FFD4D3"
 
         row = TR(style='background: ' + bg + ';')
-        if args.images:
+        if event.image_file:
             row <= TD(A(B(event.id),
-                        href="./images/event_" + str(event.id) + ".jpg"))
-            row <= TD(CENTER(IMG(src="./images/event_" + str(event.id) +
-                                 ".jpg",
+                        href=event.image_file))
+            row <= TD(CENTER(IMG(src=event.image_file,
                                  width='100',
                                  CLASS='images')))
         else:
             row <= TD(B(event.id))
-        row <= TD(event.time)
+        row <= TD(event.begin)
         cell = TD()
         comma = ""
         for match in matches:
@@ -481,7 +512,7 @@ def generate_html(stats, logs, data, out='out', filename='report.html'):
         comma = ''
         for match in matches:
             cell <= comma
-            cell <= A(str(match.id), href="./images/event_" + str(match.id) + ".jpg")
+            cell <= A(str(match.id), href=event.image_file)
             comma = ', '
         row <= cell
         row <= TD(truth.begin, style='padding-left: 20px; '
