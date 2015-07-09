@@ -39,30 +39,90 @@ StreamImage::StreamImage(const string& x_name, Mat& x_image, Module& rx_module, 
 {
 	LOG_DEBUG(m_logger, "Create image "<<x_image.cols<<"x"<<x_image.rows<<" for module "<<rx_module.GetName()<<" of size "<<rx_module.GetWidth()<<"x"<<rx_module.GetHeight());
 	// assert(x_image.cols == rx_module.GetWidth() && x_image.rows == rx_module.GetHeight()); // Disable this for unit tests
-	mp_img_tmp1 = nullptr; // To convert the input
-	mp_img_tmp2 = nullptr;
 	m_img_input = nullptr;
 }
 
 
 StreamImage::~StreamImage()
 {
-	if(mp_img_tmp1 != nullptr) delete mp_img_tmp1;
-	if(mp_img_tmp2 != nullptr) delete mp_img_tmp2;
 }
 
+// Convert an input (image from a different module) to the correct resolution into m_image. This method keeps a map containing all temporary image in case they are needed later
 void StreamImage::ConvertInput()
 {
 	// Copy time stamp to output
-	if(m_connected != nullptr)
-	{
-		m_timeStamp = GetConnected().GetTimeStamp();
-		adjust(*m_img_input, m_image, mp_img_tmp1, mp_img_tmp2);
-	}
-	else
+	if(m_connected == nullptr)
 	{
 		m_image.setTo(0);
+		return;
 	}
+
+	const Mat* corrected = m_img_input;
+	TIME_STAMP ts = mr_module.GetCurrentTimeStamp();
+
+	if(corrected->cols != m_image.cols || corrected->rows != m_image.rows)
+	{
+		// Create a corrected image to the right size
+		BufferImage* buf_out = &m_buffers[createResolutionString(m_image.size(), corrected->depth(), corrected->channels())];
+		if(buf_out->timeStamp != ts)
+		{
+			if(corrected->cols >= m_image.cols)
+			{
+				// note: Maybe one day, parametrize the interpolation method
+				// resize(im_in, im_out, im_out.size(), 0, 0, CV_INTER_AREA); // TODO for LM: See if we gain on detection with this line
+				resize(*corrected, buf_out->image, m_image.size(), 0, 0, CV_INTER_LINEAR);
+			}
+			else
+			{
+				resize(*corrected, buf_out->image, m_image.size(), 0, 0, CV_INTER_LINEAR);
+			}
+			buf_out->timeStamp = ts;
+		}
+		corrected = &buf_out->image;
+	}
+
+	if(corrected->channels() != m_image.channels())
+	{
+		// Create a corrected image to the right number of channels
+		BufferImage* buf_out = &m_buffers[createResolutionString(m_image.size(), corrected->depth(), m_image.channels())];
+		if(buf_out->timeStamp != ts)
+		{
+			if(corrected->channels() == 1 && m_image.channels() == 3)
+			{
+				cvtColor(*corrected, buf_out->image, CV_GRAY2BGR);
+			}
+			else if(corrected->channels() == 3 && m_image.channels() == 1)
+			{
+				cvtColor(*corrected, buf_out->image, CV_BGR2GRAY);
+			}
+			else throw MkException("Cannot convert channels", LOC);
+			buf_out->timeStamp = ts;
+		}
+		corrected = &buf_out->image;
+	}
+
+	if(corrected->depth() != m_image.depth())
+	{
+		// Create a corrected image with the correct depth
+		BufferImage* buf_out = &m_buffers[createResolutionString(m_image.size(), m_image.depth(), m_image.channels())];
+		if(buf_out->timeStamp != ts)
+		{
+			if(corrected->depth() == CV_8U && m_image.depth() == CV_32F)
+			{
+				corrected->convertTo(buf_out->image, m_image.type(), 1.0 / 255);
+			}
+			else if(corrected->depth() == CV_32F && m_image.depth() == CV_8U)
+			{
+				corrected->convertTo(buf_out->image, m_image.type(), 255);
+			}
+			else throw MkException("Cannot convert depth", LOC);
+			buf_out->timeStamp = ts;
+		}
+		corrected = &buf_out->image;
+	}
+
+	// Copy the correct image to output
+	corrected->copyTo(m_image);
 }
 
 

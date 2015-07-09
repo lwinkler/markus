@@ -30,6 +30,7 @@
 
 /// this file contains some usefull functions and methods. To be included in .cpp files
 void adjust(const cv::Mat& im_in, cv::Mat& im_out, cv::Mat*& tmp1, cv::Mat*& tmp2);
+void adjustSizeAndChannels(const cv::Mat& im_in, cv::Mat& im_out, cv::Mat*& tmp1);
 void adjustSize(const cv::Mat& im_in, cv::Mat& im_out);
 void adjustChannels(const cv::Mat& im_in, cv::Mat& im_out);
 
