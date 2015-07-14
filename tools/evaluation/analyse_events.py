@@ -178,7 +178,7 @@ def read_events(file_path):
         try:
             # Detect if an image exists already
             detail = json.loads(entry.text)
-	    image_file = 'events_img/' + os.path.basename(detail['external']['files']['globalImage'])
+	    image_file = '../events_img/' + os.path.basename(detail['external']['files']['globalImage'])
 	except:
 	    print "Cannot find image for event at %s" % entry.begin
 
