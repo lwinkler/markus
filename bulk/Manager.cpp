@@ -354,7 +354,7 @@ bool Manager::Process()
 	m_continueFlag = m_continueFlag && (m_param.nbFrames == 0 || m_param.nbFrames != m_frameCount);
 
 	// note: we need send an event to stay in the loop
-	if(!m_continueFlag)
+	if(!m_continueFlag && m_param.autoProcess)
 		m_interruptionManager.AddEvent("event.stopped");
   
 	vector<Command> commands = m_interruptionManager.ReturnCommandsToSend();

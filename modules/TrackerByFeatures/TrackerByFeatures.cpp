@@ -410,6 +410,7 @@ void TrackerByFeatures::CheckMergeSplit()
 						{
 							obj.AddFeature("split", new FeatureInt(ptemp->GetNum()));
 							LOG_DEBUG(m_logger,"Objects split with "<<ptemp->GetNum());
+							// cout << "Objects split with "<<ptemp->GetNum() << endl;
 						}
 					}
 				}
@@ -420,6 +421,7 @@ void TrackerByFeatures::CheckMergeSplit()
 					if(abs(xo - xt) <= wo / 2 && abs(yo - yt) <= ho / 2)
 					{
 						merged.push_back(ptemp->GetNum());
+						LOG_DEBUG(m_logger,"Objects merged with "<<ptemp->GetNum());
 					}
 				}
 			}
