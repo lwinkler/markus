@@ -130,7 +130,7 @@ def extract_images(events, truths, video, out='out'):
 	for event in events:
 		# Note: We take the snapshot in the middle of the event
 		if event.image_file == "./images/event_" + str(event.id) + ".jpg":
-		extract('event', (event.begin + event.begin) / 2, event.id)
+			extract('event', (event.begin + event.begin) / 2, event.id)
 
 	# Extract ground truth
 	for truth in truths:
@@ -169,18 +169,18 @@ def read_events(file_path):
 		match_begin, match_end = match_times(entry.begin, entry.end)
 		ident = entry.begin.milis
 
-	if args.VIDEO_FILE:
-		# By default we set the path of an image to be extracted from video
-		image_file = "./images/event_" + str(ident) + ".jpg"
-	else:
-		image_file = ""
+		if args.VIDEO_FILE:
+			# By default we set the path of an image to be extracted from video
+			image_file = "./images/event_" + str(ident) + ".jpg"
+		else:
+			image_file = ""
 
 		try:
 			# Detect if an image exists already
 			detail = json.loads(entry.text)
-		image_file = '../events_img/' + os.path.basename(detail['external']['files']['globalImage'])
-	except:
-		print "Cannot find image for event at %s" % entry.begin
+			image_file = '../events_img/' + os.path.basename(detail['external']['files']['globalImage'])
+		except:
+			print "Cannot find image for event at %s" % entry.begin
 
 		events.append(Event(id=ident, begin=entry.begin, end=entry.end, image_file=image_file))
 
@@ -256,7 +256,7 @@ def evaluate(events, truths):
 
 			# Test for matching
 			if matched:
-			fid_tp.write('%s %s\n' % (event.begin.milis, event.end.milis))
+				fid_tp.write('%s %s\n' % (event.begin.milis, event.end.milis))
 				# Keep track of matched ground truth
 				if event.id not in matched_events:
 					matched_events[event.id] = []
@@ -281,11 +281,11 @@ def evaluate(events, truths):
 	for truth in truths:
 		log_truth.append((truth, matched_truths[truth.id] if truth.id in matched_truths else [], truth.id in matched_truths))
 		if truth.is_ambiguous:
-		ambs += 1
+			ambs += 1
 			continue
 		if not truth.id in matched_truths:
-		fid_fn.write('%s %s\n' % (truth.begin.milis, truth.end.milis))
-		fn += 1
+			fid_fn.write('%s %s\n' % (truth.begin.milis, truth.end.milis))
+			fn += 1
 		else:
 			tp += 1
 
