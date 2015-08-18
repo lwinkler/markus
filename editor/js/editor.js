@@ -585,8 +585,8 @@ var xmlProject = null;
 
 
 			if (!_initialised) {
-				for(var category in availableModuleNames) {
-					var modules = availableModuleNames[category];
+				for(var category in availableCategories) {
+					var modules = availableCategories[category];
 
 					// Create a dropdown for this category
 					$('#render').append('&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;' + category + ': <select id="menu_module_' + category + '"/>')

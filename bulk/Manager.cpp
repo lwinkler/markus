@@ -478,12 +478,19 @@ void Manager::Export()
 {
 	try
 	{
+		map<string,vector<string>> categories;
+
+
 		SYSTEM("mkdir -p modules");
 		vector<string> moduleTypes;
 		mr_moduleFactory.List(moduleTypes);
 		int id = 0;
 		for(const auto& moduleType : moduleTypes)
 		{
+			// Append to the category
+			categories[string("AAA") + moduleType[0]].push_back(moduleType); // TODO categories
+			categories["all"].push_back(moduleType);
+
 			createEmptyConfigFile("/tmp/config_empty.xml");
 			ConfigFile config("/tmp/config_empty.xml");
 			ConfigReader moduleConfig = config.FindRef("application>module[name=\"" + moduleType + "\"]", true);
@@ -502,6 +509,26 @@ void Manager::Export()
 			os.close();
 			id++;
 		}
+
+		// Generate the js file containing the categories
+		ofstream of("editor/js/all_categories.js");
+		of << "var availableCategories = {";
+		char comma1 = ' ';
+
+		for(const auto& categ : categories)
+		{
+			of << comma1 << endl << "\"" << categ.first << "\": [";
+			comma1 = ',';
+			char comma2 = ' ';
+			for(const auto& mod : categ.second)
+			{
+				of << comma2 << "\"" << mod << "\"";
+				comma2 = ',';
+			}
+			of << "]";
+		}
+		of << endl << "}" << endl;
+		of.close();
 	}
 	catch(MkException& e)
 	{
