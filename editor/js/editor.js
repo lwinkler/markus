@@ -585,22 +585,34 @@ var xmlProject = null;
 
 
 			if (!_initialised) {
+				for(var category in availableModuleNames) {
+					var modules = availableModuleNames[category];
 
-				// Populate select modules with existing modules
-				for(var i = 0 ; i < availableModulesNames.length ; i++) {
-					var type = availableModulesNames[i];
+					// Create a dropdown for this category
+					$('#render').append('&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;' + category + ': <select id="menu_module_' + category + '"/>')
+						.append('<button id="menu_module_' + category + '_create">Create</button>');
+					// Create a div representing a new module
+					$('#menu_module_' + category + '_create').attr("category", category).click(function() {
+						var type = $('#menu_module_' + $(this).attr('category')).val();
+						createNewModule(type);
+					});
 
-					// Add the module for module creation
-					$("#selectModule").append('<option value=' + availableModulesNames[i] + '>' + availableModulesNames[i] + '</option>');
+					// Populate select modules with existing modules
+					for(var i = 0 ; i < modules.length ; i++) {
+						var mod = modules[i];
 
-					try
-					{
-						// Load the matching xml file
-						xmlModuleTypes[type] = $(loadXML("modules/" + availableModulesNames[i] + ".xml")).find("module");
-					}
-					catch(err)
-					{
-						console.log("Error reading modules/" + availableModulesNames[i] + ".xml: " + err);
+						// Add the module for module creation
+						$('#menu_module_' + category).append('<option value=' + mod + '>' + mod + '</option>');
+
+						try
+						{
+							// Load the matching xml file
+							xmlModuleTypes[mod] = $(loadXML("editor/modules/" + mod + ".xml")).find("module");
+						}
+						catch(err)
+						{
+							console.log("Error reading editor/modules/" + mod + ".xml: " + err);
+						}
 					}
 				}
 				
@@ -609,11 +621,6 @@ var xmlProject = null;
 					$("#selectProjectFile").append('<option value=' + availableProjectsNames[i] + '>' + availableProjectsNames[i] + '</option>');
 				}
 				
-				// Create a div representing a new module
-				$("#createModule").click(function() {
-					var type = $("#selectModule").val();
-					createNewModule(type);
-				});
 				// Create a div representing a new module
 				$("#downloadProject").click(this.saveProject);
 				$("#loadProjectFile").click(function (){
