@@ -69,7 +69,7 @@ void VideoFileReader::Reset()
 	if(m_logger->isDebugEnabled())
 		GetProperties();
 
-	// Apparently you cannot set width and height. We try anyway
+	// Apparently you cannot set width and height. We try anyway // TODO: Maybe suppress width/heights params for this module
 	m_capture.set(CV_CAP_PROP_FRAME_WIDTH,  m_param.width);
 	m_capture.set(CV_CAP_PROP_FRAME_HEIGHT, m_param.height);
 

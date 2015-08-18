@@ -46,13 +46,13 @@ public:
 			VideoFileWriter::Parameters(x_confReader)
 		{
 			m_list.push_back(new ParameterDouble("buffer_duration", 120, 0, 600, &bufferDuration, "Length of one buffer block of video [s]"));
-			m_list.push_back(new ParameterInt("nb_buffers",           0, 0,  10, &nbBuffers,      "Number of buffers blocks to keep before recording"));
+			// m_list.push_back(new ParameterInt("nb_buffers",           0, 0,  10, &nbBuffers,      "Number of buffers blocks to keep before recording"));
 			RefParameterByName("type").SetDefault("CV_8UC3");
 			RefParameterByName("type").SetRange("[CV_8UC3]");
 			Init();
 		};
 		double bufferDuration;
-		int nbBuffers;
+		// int nbBuffers;
 	};
 
 	VideoFileBufferWriter(ParameterStructure& xr_params);
