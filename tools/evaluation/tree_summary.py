@@ -5,8 +5,8 @@
 Summaries the results of a simulation in a tree view (HTML)
 
 Example:
-    To analyse an events file with its ground truth:
-        $ python ./tools/evaluation/tree_summary.py [--no-levels-list] video-annotations/categories.xml simulation_20152514_225544
+	To analyse an events file with its ground truth:
+		$ python ./tools/evaluation/tree_summary.py [--no-levels-list] video-annotations/categories.xml simulation_20152514_225544
 
 Created 2015-04-10 Loïc Monney
 """
@@ -20,46 +20,46 @@ from vplib.HTMLTags import *
 from vplib.time import Time
 from xml.dom import minidom
 from analyse_events import Evaluation, Video, statistics
-    
+	
 def arguments_parser():
-    """ Define the parser and parse arguments """
+	""" Define the parser and parse arguments """
 
-    # Main parser
-    parser = argparse.ArgumentParser(description='Build result tree', version=vplib.__version__)
+	# Main parser
+	parser = argparse.ArgumentParser(description='Build result tree', version=vplib.__version__)
 
-    # Events file
-    parser.add_argument('INPUT_FILE',
-                        type=str,
-                        help='the file containing the tree')
-    
-    # Events file
-    parser.add_argument('DIRECTORY',
-                        type=str,
-                        help='the directory containing the evaluation results')
-                        
-    # Events file
-    parser.add_argument('-o',
-    			dest='OUTPUT_HTML',
-                        default='evaluation-tree.html',
-                        type=str,
-                        help='the output html file')
+	# Events file
+	parser.add_argument('INPUT_FILE',
+		type=str,
+		help='the file containing the tree')
+	
+	# Events file
+	parser.add_argument('DIRECTORY',
+		type=str,
+		help='the directory containing the evaluation results')
+						
+	# Events file
+	parser.add_argument('-o',
+		dest='OUTPUT_HTML',
+		default='evaluation-tree.html',
+		type=str,
+		help='the output html file')
 
-    # Disable liste of movies
-    parser.add_argument('--no-levels-list',
-                        action='store_true',
-                        help='don\'t add the list of movies for each levels')
-                        
-    return parser.parse_args()
+	# Disable liste of movies
+	parser.add_argument('--no-levels-list',
+		action='store_true',
+		help='don\'t add the list of movies for each levels')
+						
+	return parser.parse_args()
 
 def getText(nodelist):
-    """ Get the text contained in a XML node """
-    
-    rc = []
-    for node in nodelist.childNodes:
-        if node.nodeType == node.TEXT_NODE:
-            rc.append(node.data)
-    return ''.join(rc)
-    
+	""" Get the text contained in a XML node """
+	
+	rc = []
+	for node in nodelist.childNodes:
+		if node.nodeType == node.TEXT_NODE:
+			rc.append(node.data)
+	return ''.join(rc)
+	
 def build_stats(child_videos, videos, images, out):
 	""" Compute the stats for the given tree level """
 	
@@ -139,8 +139,8 @@ def main():
 
 	# Parse the arguments
 	args = arguments_parser()
-    
-    	# Load the stats of all listed videos
+	
+		# Load the stats of all listed videos
 	xmldoc = minidom.parse(args.INPUT_FILE)
 	videos = xmldoc.getElementsByTagName('video')
 	videos_stats = dict();
@@ -166,4 +166,4 @@ def main():
 	
 
 if __name__ == "__main__":
-    main()
+	main()
