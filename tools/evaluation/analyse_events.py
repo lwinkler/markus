@@ -319,14 +319,14 @@ def statistics(evaluation, video=None):
 
     # Counters statistics
     stats['Counters'] = ('-' * 20, '%s')
-    stats['Total ground truth'] = (e.pos, '%4d')
-    stats['Total detected'] = (e.det, '%4d')
-    stats['Total correct detections'] = (e.tp, '%4d')
-    stats['Total false alarms'] = (e.fp, '%4d')
-    stats['Total missed'] = (e.fn, '%4d')
-    stats['Total duplicated events'] = (e.dup_ev, '%4d')
-    stats['Total duplicated gt'] = (e.dup_gt, '%4d')
-    stats['Total ambiguous']  = (e.ambs, '%4d')
+    stats['Events'] = (e.pos, '%4d')
+    stats['Detected'] = (e.det, '%4d')
+    stats['Correct detections'] = (e.tp, '%4d')
+    stats['False alarms'] = (e.fp, '%4d')
+    stats['Missed detections'] = (e.fn, '%4d')
+    stats['Duplicated detections'] = (e.dup_ev, '%4d')
+    stats['Duplicated gt'] = (e.dup_gt, '%4d')
+    stats['Ambiguous']  = (e.ambs, '%4d')
 
     # Confusion matrix statistics
     stats['Statistics'] = ('-' * 20, '%s')
