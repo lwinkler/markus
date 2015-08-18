@@ -179,14 +179,15 @@ void LogEvent::CompareWithGroundTruth()
 		cmd<< " --html --no-browser -o " << outDir;
 		if(m_param.gtVideo != "")
 			cmd<<" -i -V "<<m_param.gtVideo;
-		LOG_DEBUG(m_logger, "Execute cmd: " + cmd.str());
-		SYSTEM(cmd.str());
 
 		// Save command for later use
 		string fileName = GetContext().GetOutputDir() + "/eval.sh";
 		ofstream ofs(fileName.c_str(), ios_base::app);
 		ofs << cmd.str() << endl;
 		ofs.close();
+
+		LOG_DEBUG(m_logger, "Execute cmd: " + cmd.str());
+		SYSTEM(cmd.str());
 	}
 	catch(MkException& e)
 	{

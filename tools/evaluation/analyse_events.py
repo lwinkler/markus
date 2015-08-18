@@ -320,7 +320,7 @@ def statistics(evaluation, video=None):
 	# Counters statistics
 	stats['Counters'] = ('-' * 20, '%s')
 	stats['Events'] = (e.pos, '%4d')
-	stats['Detected'] = (e.det, '%4d')
+	stats['Detections'] = (e.det, '%4d')
 	stats['Correct detections'] = (e.tp, '%4d')
 	stats['False alarms'] = (e.fp, '%4d')
 	stats['Missed detections'] = (e.fn, '%4d')
