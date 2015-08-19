@@ -58,6 +58,7 @@ public:
 	KeyPointsStar(ParameterStructure& xr_params);
 	~KeyPointsStar();
 	MKCLASS("KeyPointsStar")
+	MKCATEG("KeyPoints")
 	MKDESCR("Extract key points of type Star")
 
 	void Reset();

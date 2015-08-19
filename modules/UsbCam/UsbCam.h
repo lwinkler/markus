@@ -53,6 +53,7 @@ public:
 	UsbCam(ParameterStructure& xr_params);
 	~UsbCam();
 	MKCLASS("UsbCam")
+	MKCATEG("Input")
 	MKDESCR("Read video stream from an enbedded or USB camera")
 
 	void Capture();

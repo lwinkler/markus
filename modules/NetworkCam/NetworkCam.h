@@ -60,6 +60,7 @@ public:
 	NetworkCam(ParameterStructure& xr_params);
 	~NetworkCam();
 	MKCLASS("NetworkCam")
+	MKCATEG("Input")
 	MKDESCR("Read video stream from a network camera")
 
 	void Capture();

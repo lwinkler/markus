@@ -52,6 +52,7 @@ public:
 	LogState(ParameterStructure& xr_params);
 	~LogState(void);
 	MKCLASS("LogState")
+	MKCATEG("Output")
 	MKDESCR("Read a state stream and log it to .srt file")
 
 	void Reset();

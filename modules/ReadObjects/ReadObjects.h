@@ -58,6 +58,7 @@ public:
 	ReadObjects(ParameterStructure& xr_params);
 	~ReadObjects(void);
 	MKCLASS("ReadObjects")
+	MKCATEG("Input")
 	MKDESCR("Read an object from an annotation file")
 
 	void Reset();

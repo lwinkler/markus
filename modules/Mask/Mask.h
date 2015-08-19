@@ -47,6 +47,7 @@ public:
 	Mask(ParameterStructure& xr_params);
 	~Mask();
 	MKCLASS("Mask")
+	MKCATEG("Image")
 	MKDESCR("Apply a binary mask to an image input")
 
 	virtual void ProcessFrame();

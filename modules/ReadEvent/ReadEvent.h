@@ -53,6 +53,7 @@ public:
 	ReadEvent(ParameterStructure& xr_params);
 	~ReadEvent(void);
 	MKCLASS("ReadEvent")
+	MKCATEG("Input")
 	MKDESCR("Read an event from an annotation file")
 
 	void Reset();

@@ -56,6 +56,7 @@ public:
 	ThumbnailWriter(ParameterStructure& xr_params);
 	~ThumbnailWriter();
 	MKCLASS("ThumbnailWriter")
+	MKCATEG("Output")
 	MKDESCR("Write all objects as a collection of images (thumbnails)")
 
 	virtual void ProcessFrame();

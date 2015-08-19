@@ -56,6 +56,7 @@ public:
 	RandomObjectsGenerator(ParameterStructure& xr_params);
 	~RandomObjectsGenerator();
 	MKCLASS("RandomObjectsGenerator")
+	MKCATEG("Input")
 	MKDESCR("Generate an object with varying features at each step")
 
 	void Capture();

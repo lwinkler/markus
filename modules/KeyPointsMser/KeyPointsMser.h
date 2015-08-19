@@ -66,6 +66,7 @@ public:
 	KeyPointsMser(ParameterStructure& xr_params);
 	~KeyPointsMser();
 	MKCLASS("KeyPointsMser")
+	MKCATEG("KeyPoints")
 	MKDESCR("Extract key points of type Mser")
 
 	void Reset();

@@ -66,6 +66,7 @@ public:
 	FastNlMeansDenoising(ParameterStructure& xr_params);
 	~FastNlMeansDenoising();
 	MKCLASS("FastNlMeansDenoising")
+	MKCATEG("Image")
 	MKDESCR("Perform image denoising using Non-local Means Denoising algorithm, for gaussian noise")
 
 	virtual void ProcessFrame();

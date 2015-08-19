@@ -60,6 +60,7 @@ public:
 	KeyPointsGoodFeaturesToTrack(ParameterStructure& xr_params);
 	~KeyPointsGoodFeaturesToTrack();
 	MKCLASS("KeyPointsGoodFeaturesToTrack")
+	MKCATEG("KeyPoints")
 	MKDESCR("Extract keypoints of type GoodFeaturesToTrack on image")
 
 	void Reset();

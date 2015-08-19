@@ -53,6 +53,7 @@ public:
 
 	ObjectsToEvent(ParameterStructure& xr_params);
 	MKCLASS("ObjectsToEvent")
+	MKCATEG("Conversion")
 	MKDESCR("Count objects and raise an event and state if a condition is reached")
 
 	virtual void ProcessFrame();

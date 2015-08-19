@@ -35,6 +35,8 @@
 #define MKCLASS(cl) inline virtual const std::string& GetClass() const {const static std::string s = cl; return s;}
 /// Macro to define the Type of an object (for method GetType)
 #define MKTYPE(cl) inline virtual const std::string& GetType() const {const static std::string s = cl; return s;}
+/// Macro to define the Category of an object (for method GetCategory)
+#define MKCATEG(cl) inline virtual const std::string& GetCategory() const {const static std::string s = cl; return s;}
 /// Macro to define the Description of an object (for method GetDescription)
 #define MKDESCR(cl) inline virtual const std::string& GetDescription() const {const static std::string s = cl; return s;}
 

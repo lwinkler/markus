@@ -59,6 +59,7 @@ public:
 	GroundTruthReader(ParameterStructure& x_confReader);
 	~GroundTruthReader();
 	MKCLASS("GroundTruthReader")
+	MKCATEG("Input")
 	MKDESCR("Read a ground truth file")
 
 	void ProcessFrame();

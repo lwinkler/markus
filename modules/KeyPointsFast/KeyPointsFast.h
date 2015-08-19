@@ -52,6 +52,7 @@ public:
 	KeyPointsFast(ParameterStructure& xr_params);
 	~KeyPointsFast();
 	MKCLASS("KeyPointsFast")
+	MKCATEG("KeyPoints")
 	MKDESCR("Extract keypoints of type FAST")
 
 	void Reset();

@@ -47,6 +47,7 @@ public:
 	EventToObjects(ParameterStructure& xr_params);
 	~EventToObjects(void);
 	MKCLASS("EventToObjects")
+	MKCATEG("Conversion")
 	MKDESCR("Transform a stream of events into a stream of objects")
 
 	virtual void ProcessFrame();

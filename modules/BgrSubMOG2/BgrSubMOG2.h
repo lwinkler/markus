@@ -72,6 +72,7 @@ public:
 	BgrSubMOG2(ParameterStructure& xr_params);
 	~BgrSubMOG2();
 	MKCLASS("BgrSubMOG2")
+	MKCATEG("BackgroundSubtraction")
 	MKDESCR("Perform background subtraction via Mixtures Of Gaussians (OpenCV MOG2)")
 
 	virtual void ProcessFrame();

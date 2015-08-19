@@ -62,6 +62,7 @@ public:
 	VideoFileWriter(ParameterStructure& xr_params);
 	~VideoFileWriter();
 	MKCLASS("VideoFileWriter")
+	MKCATEG("Output")
 	MKDESCR("Write output to a video file")
 
 	virtual void ProcessFrame();

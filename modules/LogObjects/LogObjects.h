@@ -55,6 +55,7 @@ public:
 	LogObjects(ParameterStructure& xr_params);
 	~LogObjects(void);
 	MKCLASS("LogObjects")
+	MKCATEG("Output")
 	MKDESCR("Read a stream of objects and log data to a text file")
 
 	virtual void ProcessFrame();

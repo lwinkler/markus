@@ -59,6 +59,7 @@ public:
 	KeyPointsBrisk(ParameterStructure& xr_params);
 	~KeyPointsBrisk();
 	MKCLASS("KeyPointsBrisk")
+	MKCATEG("KeyPoints")
 	MKDESCR("Extract key points of type Brisk")
 
 	void Reset();

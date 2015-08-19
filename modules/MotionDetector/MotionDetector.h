@@ -54,6 +54,7 @@ public:
 	MotionDetector(ParameterStructure& xr_params);
 	~MotionDetector(void);
 	MKCLASS("MotionDetector")
+	MKCATEG("EventDetector")
 	MKDESCR("Detect motion from an image where pixel value represents motion")
 
 	virtual void ProcessFrame();

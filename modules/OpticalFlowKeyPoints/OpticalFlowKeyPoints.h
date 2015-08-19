@@ -56,6 +56,7 @@ public:
 	OpticalFlowKeyPoints(ParameterStructure& x_configReader);
 	~OpticalFlowKeyPoints();
 	MKCLASS("OpticalFlowKeyPoints")
+	MKCATEG("KeyPoints")
 	MKDESCR("Calculate optical flow for all key points")
 
 	void Reset();

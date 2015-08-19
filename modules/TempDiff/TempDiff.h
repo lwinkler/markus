@@ -48,6 +48,7 @@ public:
 	TempDiff(ParameterStructure& xr_params);
 	~TempDiff();
 	MKCLASS("TempDiff")
+	MKCATEG("Image")
 	MKDESCR("Perform temporal differencing: compare frame with previous frame by subtraction")
 
 	virtual void ProcessFrame();
@@ -69,7 +70,7 @@ protected:
 	bool m_emptyTemporalDiff;
 
 	// temporary
-	cv::Mat* m_tmp;
+	cv::Mat* m_tmp; //TODO no pointer needed
 };
 
 

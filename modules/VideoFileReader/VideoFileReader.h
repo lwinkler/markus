@@ -55,6 +55,7 @@ public:
 	VideoFileReader(ParameterStructure& xr_params);
 	~VideoFileReader();
 	MKCLASS("VideoFileReader")
+	MKCATEG("Input")
 	MKDESCR("Read video stream from a video file")
 
 	void Capture();

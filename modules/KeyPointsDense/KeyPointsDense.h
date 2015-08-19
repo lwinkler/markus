@@ -64,6 +64,7 @@ public:
 	KeyPointsDense(ParameterStructure& xr_params);
 	~KeyPointsDense();
 	MKCLASS("KeyPointsDense")
+	MKCATEG("KeyPoints")
 	MKDESCR("Extract key points of type Dense")
 
 	void Reset();

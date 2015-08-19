@@ -53,6 +53,7 @@ public:
 	BgrSubRunAvg(ParameterStructure& xr_params);
 	~BgrSubRunAvg();
 	MKCLASS("BgrSubRunAvg")
+	MKCATEG("BackgroundSubtraction")
 	MKDESCR("Perform a background subtraction using a running average")
 
 	virtual void ProcessFrame();

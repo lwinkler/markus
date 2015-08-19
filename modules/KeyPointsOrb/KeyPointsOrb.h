@@ -66,6 +66,7 @@ public:
 	KeyPointsOrb(ParameterStructure& xr_params);
 	~KeyPointsOrb();
 	MKCLASS("KeyPointsOrb")
+	MKCATEG("KeyPoints")
 	MKDESCR("Extract key points of type Orb")
 
 	void Reset();

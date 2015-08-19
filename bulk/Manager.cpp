@@ -487,10 +487,6 @@ void Manager::Export()
 		int id = 0;
 		for(const auto& moduleType : moduleTypes)
 		{
-			// Append to the category
-			categories[string("AAA") + moduleType[0]].push_back(moduleType); // TODO categories
-			categories["all"].push_back(moduleType);
-
 			createEmptyConfigFile("/tmp/config_empty.xml");
 			ConfigFile config("/tmp/config_empty.xml");
 			ConfigReader moduleConfig = config.FindRef("application>module[name=\"" + moduleType + "\"]", true);
@@ -500,6 +496,11 @@ void Manager::Export()
 			ParameterStructure* parameters = mr_parameterFactory.Create(moduleType, moduleConfig);
 			Module* module = mr_moduleFactory.Create(moduleType, *parameters);
 
+			// Append to the category
+			categories[module->GetCategory()].push_back(moduleType);
+			categories["all"].push_back(moduleType);
+
+			// Create the specific XML
 			string file("editor/modules/" + moduleType + ".xml");
 			ofstream os(file.c_str());
 			os<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"<<endl;

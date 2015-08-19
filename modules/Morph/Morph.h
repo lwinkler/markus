@@ -58,6 +58,7 @@ public:
 	Morph(ParameterStructure& xr_params);
 	~Morph();
 	MKCLASS("Morph")
+	MKCATEG("Image")
 	MKDESCR("Apply a morphological operator to an image")
 
 	virtual void ProcessFrame();
