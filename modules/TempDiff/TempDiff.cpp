@@ -40,22 +40,14 @@ TempDiff::TempDiff(ParameterStructure& xr_params) :
 	// m_output(Size(m_param.width, m_param.height), m_param.type),
 	m_lastImg(Size(m_param.width, m_param.height), m_param.type)
 {
-	m_tmp = nullptr;
-
 	AddInputStream(0, new StreamImage("input", m_input, *this,             "Video input"));
 	AddOutputStream(0, new StreamImage("temp_diff", m_temporalDiff, *this, "Temporal difference"));
-}
-
-TempDiff::~TempDiff(void )
-{
-	CLEAN_DELETE(m_tmp);
 }
 
 void TempDiff::Reset()
 {
 	Module::Reset();
-	CLEAN_DELETE(m_tmp);
-	m_tmp = new Mat(Size(m_input.cols, m_input.rows), m_input.depth(), m_input.channels());
+	m_tmp = Mat(Size(m_input.cols, m_input.rows), m_input.depth(), m_input.channels());
 	m_emptyTemporalDiff = true;
 }
 
@@ -69,9 +61,9 @@ void TempDiff::ProcessFrame()
 	}
 	else
 	{
-		subtract(m_input, m_lastImg, *m_tmp);
-		absdiff(m_input,  m_lastImg, *m_tmp);
-		adjustChannels(*m_tmp, m_temporalDiff);
+		subtract(m_input, m_lastImg, m_tmp);
+		absdiff(m_input,  m_lastImg, m_tmp);
+		adjustChannels(m_tmp, m_temporalDiff);
 
 		m_input.copyTo(m_lastImg);
 	}
