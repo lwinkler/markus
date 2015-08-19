@@ -69,7 +69,8 @@ def build_stats(child_videos, videos, images, out):
 		"tp": 0,
 		"fp": 0,
 		"fn": 0,
-		"dups": 0,
+		"dup_ev": 0,
+		"dup_gt": 0,
 		"ambs": 0,
 	}
 	nb = 0
