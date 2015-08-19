@@ -50,79 +50,88 @@ StreamImage::~StreamImage()
 // Convert an input (image from a different module) to the correct resolution into m_image. This method keeps a map containing all temporary image in case they are needed later
 void StreamImage::ConvertInput()
 {
-	// Copy time stamp to output
 	if(m_connected == nullptr)
 	{
 		m_image.setTo(0);
 		return;
 	}
 
-	const Mat* corrected = m_img_input;
+	mp_connectedImage->ConvertToOutput(mr_module.GetCurrentTimeStamp(), m_image);
+}
+
+// Convert to an output (from the input) to take advantage of the buffer
+void StreamImage::ConvertToOutput(TIME_STAMP x_ts, cv::Mat& xr_output)
+{
+	const Mat* corrected = &m_image;
 	TIME_STAMP ts = mr_module.GetCurrentTimeStamp();
 
-	if(corrected->cols != m_image.cols || corrected->rows != m_image.rows)
+	if(corrected->cols != xr_output.cols || corrected->rows != xr_output.rows)
 	{
 		// Create a corrected image to the right size
-		BufferImage* buf_out = &m_buffers[createResolutionString(m_image.size(), corrected->depth(), corrected->channels())];
-		if(buf_out->timeStamp != ts)
+		BufferImage* buf_out = &m_buffers[createResolutionString(xr_output.size(), corrected->depth(), corrected->channels())];
+		if(buf_out->timeStamp != x_ts)
 		{
-			if(corrected->cols >= m_image.cols)
+#ifdef MK_AREA_SCALING
+			// note: Maybe one day, parametrize the interpolation method
+			//       This method is more CPU intensive and has not shown better results so far
+			if(corrected->cols >= xr_output.cols)
 			{
-				// note: Maybe one day, parametrize the interpolation method
-				// resize(im_in, im_out, im_out.size(), 0, 0, CV_INTER_AREA); // TODO for LM: See if we gain on detection with this line
-				resize(*corrected, buf_out->image, m_image.size(), 0, 0, CV_INTER_LINEAR);
+				resize(*corrected, buf_out->image, xr_output.size(), 0, 0, CV_INTER_AREA);
 			}
 			else
 			{
-				resize(*corrected, buf_out->image, m_image.size(), 0, 0, CV_INTER_LINEAR);
+				resize(*corrected, buf_out->image, xr_output.size(), 0, 0, CV_INTER_LINEAR);
 			}
-			buf_out->timeStamp = ts;
+#else
+			resize(*corrected, buf_out->image, xr_output.size(), 0, 0, CV_INTER_LINEAR);
+#endif
+			buf_out->timeStamp = x_ts;
 		}
 		corrected = &buf_out->image;
 	}
 
-	if(corrected->channels() != m_image.channels())
+	if(corrected->channels() != xr_output.channels())
 	{
 		// Create a corrected image to the right number of channels
-		BufferImage* buf_out = &m_buffers[createResolutionString(m_image.size(), corrected->depth(), m_image.channels())];
-		if(buf_out->timeStamp != ts)
+		BufferImage* buf_out = &m_buffers[createResolutionString(xr_output.size(), corrected->depth(), xr_output.channels())];
+		if(buf_out->timeStamp != x_ts)
 		{
-			if(corrected->channels() == 1 && m_image.channels() == 3)
+			if(corrected->channels() == 1 && xr_output.channels() == 3)
 			{
 				cvtColor(*corrected, buf_out->image, CV_GRAY2BGR);
 			}
-			else if(corrected->channels() == 3 && m_image.channels() == 1)
+			else if(corrected->channels() == 3 && xr_output.channels() == 1)
 			{
 				cvtColor(*corrected, buf_out->image, CV_BGR2GRAY);
 			}
 			else throw MkException("Cannot convert channels", LOC);
-			buf_out->timeStamp = ts;
+			buf_out->timeStamp = x_ts;
 		}
 		corrected = &buf_out->image;
 	}
 
-	if(corrected->depth() != m_image.depth())
+	if(corrected->depth() != xr_output.depth())
 	{
 		// Create a corrected image with the correct depth
-		BufferImage* buf_out = &m_buffers[createResolutionString(m_image.size(), m_image.depth(), m_image.channels())];
-		if(buf_out->timeStamp != ts)
+		BufferImage* buf_out = &m_buffers[createResolutionString(xr_output.size(), xr_output.depth(), xr_output.channels())];
+		if(buf_out->timeStamp != x_ts)
 		{
-			if(corrected->depth() == CV_8U && m_image.depth() == CV_32F)
+			if(corrected->depth() == CV_8U && xr_output.depth() == CV_32F)
 			{
-				corrected->convertTo(buf_out->image, m_image.type(), 1.0 / 255);
+				corrected->convertTo(buf_out->image, xr_output.type(), 1.0 / 255);
 			}
-			else if(corrected->depth() == CV_32F && m_image.depth() == CV_8U)
+			else if(corrected->depth() == CV_32F && xr_output.depth() == CV_8U)
 			{
-				corrected->convertTo(buf_out->image, m_image.type(), 255);
+				corrected->convertTo(buf_out->image, xr_output.type(), 255);
 			}
 			else throw MkException("Cannot convert depth", LOC);
-			buf_out->timeStamp = ts;
+			buf_out->timeStamp = x_ts;
 		}
 		corrected = &buf_out->image;
 	}
 
 	// Copy the correct image to output
-	corrected->copyTo(m_image);
+	corrected->copyTo(xr_output);
 }
 
 
@@ -202,11 +211,11 @@ void StreamImage::Connect(Stream* x_stream, bool x_bothWays)
 	if(x_bothWays)
 		x_stream->Connect(this, false);
 
-	const StreamImage* tmp = dynamic_cast<const StreamImage*>(m_connected);
-	if(tmp == nullptr)
+	mp_connectedImage = dynamic_cast<StreamImage*>(m_connected);
+	if(mp_connectedImage == nullptr)
 	{
 		m_connected = nullptr;
 		throw MkException("Input stream cannot be connected probably because it is not of type StreamImage", LOC);
 	}
-	m_img_input = &tmp->GetImage();
+	m_img_input = &mp_connectedImage->GetImage();
 }
