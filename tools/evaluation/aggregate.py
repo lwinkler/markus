@@ -95,84 +95,86 @@ def generate_html(path, datas, dirname='analysis', filename='summary.html'):
 				tot[k] = 0
 			tot[k] += vars(e)[k]
 	vid = Time()
+
 	for _, _, s in datas:
 		if 'Video duration' in s:
 			vid += s['Video duration'][0]
 	total = statistics(Evaluation(**tot), Video(duration=vid))
 
-	'''
-	# Results section (alternative code: vertical, not fully working)
-	# header
+	# Results
 	body <= H2('Results')
 	table = TABLE(border=1, style='border-collapse: collapse;')
 	row = TR(style='background: lightgray;')
-	row <= TH('Statistics')
-	for k in first[2]:
-		row <= TH(k)
-	table <= row
 
-	# Totals
-	row = TH('Overall')
-	row <= TD()
-	for k in first[2]:
-		if k in total:
-			v, f = total[k]
-		if f == '%s' and str(v) == '-' * 20:
-			row <= TD("")
-		else:
-		row <= TD(f % v)
-	table <= row
-
-	# Detail
-	for col, _, s in datas:
-		row = TR()
-		row <= TH(A(B(col.split('_')[0]), href=os.path.join(col, dirname, 'report.html')))
-		row <= TD(IMG(src=os.path.join(col, dirname, 'thumbnail.jpg'), width=60))
+	if args.vertical:
+		# Results section (alternative code: vertical layout, can be used for printing or with diff command)
+		# header
+		row <= TH('Statistics')
+		row <= TH('')
 		for k in first[2]:
-			# row <= TD(B(k))
-			v, f = s[k]
+			row <= TH(k)
+		table <= row
+
+		# Totals
+		row = TH('Overall')
+		row <= TD()
+		for k in first[2]:
+			if k in total:
+				v, f = total[k]
 			if f == '%s' and str(v) == '-' * 20:
 				row <= TD("")
 			else:
 				row <= TD(f % v)
 		table <= row
-		'''
 
-	# Results section
-	body <= H2('Results')
-	table = TABLE(border=1, style='border-collapse: collapse;')
-	row = TR(style='background: lightgray;')
-	row <= TH('Statistics')
-	row <= TH('Overall')
-	for col in datas:
-		row <= TH(A(B(col[0].split('_')[0]), href=os.path.join(col[0], dirname, 'report.html')))
-	table <= row
-	row = TR()
-	row <= TD('')
-	row <= TD('')
-	for col in datas:
-		row <= TD(IMG(src=os.path.join(col[0], dirname, 'thumbnail.jpg'),
-					  width=120))
-	table <= row
+		# Detail
+		for col, _, s in datas:
+			row = TR()
+			row <= TH(A(B(col.split('_')[0]), href=os.path.join(col, dirname, 'report.html')))
+			row <= TD(IMG(src=os.path.join(col, dirname, 'thumbnail.jpg'), width=60))
+			for k in first[2]:
+				# row <= TD(B(k))
+				v, f = s[k]
+				if f == '%s' and str(v) == '-' * 20:
+					row <= TD("")
+				else:
+					row <= TD(f % v)
+			table <= row
+	else:
 
-	for k in first[2]:
-		row = TR()
-		row <= TD(B(k))
-		# Total
-		if k in total:
-			v, f = total[k]
-			if f == '%s' and str(v) == '-' * 20:
-				row <= TD('')
-			else:
-				row <= TD(f % v)
-		else:
-			row <= TD('N/A')
-		# Statistics of each video
-		for _, _, s in datas:
-			v, f = s[k]
-			row <= TD(f % v)
-
+		# Results section
+		row <= TH('Statistics')
+		row <= TH('Overall')
+		for col in datas:
+			row <= TH(A(B(col[0].split('_')[0]), href=os.path.join(col[0], dirname, 'report.html')))
 		table <= row
+		row = TR()
+		row <= TD('')
+		row <= TD('')
+		for col in datas:
+			row <= TD(IMG(src=os.path.join(col[0], dirname, 'thumbnail.jpg'),
+						  width=120))
+		table <= row
+
+		for k in first[2]:
+			row = TR()
+			row <= TD(B(k))
+			# Total
+			if k in total:
+				v, f = total[k]
+				if f == '%s' and str(v) == '-' * 20:
+					row <= TD('')
+				else:
+					row <= TD(f % v)
+			else:
+				row <= TD('N/A')
+			# Statistics of each video
+			for _, _, s in datas:
+				v, f = s[k]
+				row <= TD(f % v)
+
+			table <= row
+
 	body <= table
 
 	# Get file path
@@ -220,6 +222,11 @@ def arguments_parser():
 	parser.add_argument('--no-browser',
 		action='store_true',
 		help='don\' try to open the browser')
+
+	# Vertical layout (for diffs)
+	parser.add_argument('--vertical',
+		action='store_true',
+		help='Use a vertical layout for the table')
 
 	return parser.parse_args()
 
