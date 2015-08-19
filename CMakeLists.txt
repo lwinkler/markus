@@ -41,7 +41,7 @@ if(Markus_USE_QT5)
 	find_package(Qt5WebKit REQUIRED)
 	find_package(Qt5WebKitWidgets REQUIRED)
 	# find_package(Qt5Core REQUIRED) # already found via Qt5Widgets
-ELSE()
+else()
 	find_package(Qt4 REQUIRED)
 endif()
 

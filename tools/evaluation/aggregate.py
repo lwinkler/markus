@@ -89,6 +89,13 @@ def generate_html(path, datas, dirname='analysis', filename='summary.html'):
 	# Compute total
 	tot = dict()
 	first = datas[0]
+
+	# Force which field is displayed
+	if args.fields:
+		field_names = args.fields.split(',')
+	else:
+		field_names = first[2]
+
 	for k in vars(first[1]):
 		for _, e, _ in datas:
 			if not k in tot:
@@ -111,20 +118,20 @@ def generate_html(path, datas, dirname='analysis', filename='summary.html'):
 		# header
 		row <= TH('Statistics')
 		row <= TH('')
-		for k in first[2]:
+		for k in field_names:
 			row <= TH(k)
 		table <= row
 
 		# Totals
 		row = TH('Overall')
 		row <= TD()
-		for k in first[2]:
+		for k in field_names:
 			if k in total:
 				v, f = total[k]
-			if f == '%s' and str(v) == '-' * 20:
-				row <= TD("")
-			else:
-				row <= TD(f % v)
+				if f == '%s' and str(v) == '-' * 20:
+					row <= TD("")
+				else:
+					row <= TD(f % v)
 		table <= row
 
 		# Detail
@@ -132,7 +139,7 @@ def generate_html(path, datas, dirname='analysis', filename='summary.html'):
 			row = TR()
 			row <= TH(A(B(col.split('_')[0]), href=os.path.join(col, dirname, 'report.html')))
 			row <= TD(IMG(src=os.path.join(col, dirname, 'thumbnail.jpg'), width=60))
-			for k in first[2]:
+			for k in field_names:
 				# row <= TD(B(k))
 				v, f = s[k]
 				if f == '%s' and str(v) == '-' * 20:
@@ -156,7 +163,7 @@ def generate_html(path, datas, dirname='analysis', filename='summary.html'):
 						  width=120))
 		table <= row
 
-		for k in first[2]:
+		for k in field_names:
 			row = TR()
 			row <= TD(B(k))
 			# Total
@@ -227,6 +234,14 @@ def arguments_parser():
 	parser.add_argument('--vertical',
 		action='store_true',
 		help='Use a vertical layout for the table')
+
+	# No browser
+	parser.add_argument('--fields',
+		dest='fields',
+		type=str,
+		default="",
+		help='Specify which fields must be displayed (e.g. "Missed detections,False alarms")')
+
 
 	return parser.parse_args()
 
