@@ -40,9 +40,9 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterUInt(  "min_object"  ,     0, 0, 1000,   &minObjectsNb  , "Min number of objects"));
-			m_list.push_back(new ParameterUInt(  "max_object"  ,  1000, 0, 1000,   &maxObjectsNb  , "Max number of objects"));
-			m_list.push_back(new ParameterString("event_name"  ,  "count_reached", &eventName     , "Name of the event"));
+			m_list.push_back(new ParameterUInt(  "min_object"  ,        0, 0, INT_MAX, &minObjectsNb  , "Min number of objects"));
+			m_list.push_back(new ParameterUInt(  "max_object"  ,  INT_MAX, 0, INT_MAX, &maxObjectsNb  , "Max number of objects"));
+			m_list.push_back(new ParameterString("event_name"  ,  "count_reached"    , &eventName     , "Name of the event"));
 
 			Init();
 		}
@@ -62,6 +62,7 @@ public:
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
+
 protected:
 
 	// input
