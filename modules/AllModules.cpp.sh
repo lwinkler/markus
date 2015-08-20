@@ -5,9 +5,6 @@
 
 echo "// WARNING: This file is generated automatically !!"
 
-echo "#ifndef ALL_MODULES_H"
-echo "#define ALL_MODULES_H"
-
 
 find modules*/ -mindepth 1 -maxdepth 1 -type d | grep -v CMakeFiles | sort | xargs -i{} basename {} | awk {'print "#include \""$1"/"$1".h\""'}
 
@@ -19,4 +16,3 @@ find modules*/ -mindepth 1 -maxdepth 1 -type d | grep -v CMakeFiles | sort | xar
 
 echo }
 
-echo "#endif"

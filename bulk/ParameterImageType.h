@@ -36,7 +36,6 @@ public:
 	ParameterImageType(const std::string& x_name, int x_default, int * xp_value, const std::string& x_description)
 		: ParameterEnum(x_name, x_default, xp_value, x_description){}
 	~ParameterImageType() {}
-	// void Export(std::ostream& rx_os, int x_indentation);
 
 	// Conversion methods
 	inline const std::string& GetTypeString() const {const static std::string s = "imageType"; return s;}

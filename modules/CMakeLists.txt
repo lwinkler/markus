@@ -6,6 +6,7 @@ file(GLOB modules_src
 
 add_library(modules
 ${modules_src}
+AllModules.cpp
 )
 
 

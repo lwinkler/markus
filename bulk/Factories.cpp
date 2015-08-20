@@ -23,8 +23,6 @@
 
 #include "Factories.h"
 
-#include "AllModules.h"
-
 #include "FeatureStd.h"
 #include "FeatureFloatInTime.h"
 #include "FeatureVector.h"
@@ -47,6 +45,9 @@ delete pfeat;\
 using namespace std;
 
 // log4cxx::LoggerPtr Processable::m_logger(log4cxx::Logger::getLogger("Processable"));
+
+// This method is implemented in AllModules.cpp (generated automatically)
+void registerAllModules(FactoryModules& x_fact1, FactoryParameters& x_fact2);
 
 void Factories::RegisterAll()
 {

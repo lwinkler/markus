@@ -126,7 +126,7 @@ add_custom_target(check
 
 add_custom_target(update_modules_list
 	COMMENT "Update the list of modules"
-	COMMAND modules/AllModules.h.sh > modules/AllModules.h
+	COMMAND modules/AllModules.cpp.sh > modules/AllModules.cpp
 #	COMMAND make clean
 	COMMAND +make
 	COMMAND ./markus -d
