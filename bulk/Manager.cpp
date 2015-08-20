@@ -474,7 +474,7 @@ bool Manager::EndOfAllStreams() const
 /**
 * @brief Export current configuration to xml: this is used to create the XML and JSON files to describe each module
 */
-void Manager::CreateEditorFiles(const string& x_fileName) // TODO : Remove all Export methods
+void Manager::CreateEditorFiles(const string& x_fileName)
 {
 	try
 	{

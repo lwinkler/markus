@@ -63,7 +63,6 @@ protected:
 	}
 	void ConvertToOutput(TIME_STAMP x_ts, cv::Mat& xr_output);
 	cv::Mat& m_image;
-	const cv::Mat* m_img_input; // TODO : keep this ?
 	StreamImage* mp_connectedImage;
 
 	std::map<std::string, BufferImage> m_buffers;

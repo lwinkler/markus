@@ -172,7 +172,7 @@ bool Module::Process()
 		if(!m_inputStreams.empty())
 		{
 			// m_inputStreams[0]->LockModuleForRead();
-			m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected(); // TODO: should we lock module here ?
+			m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected();
 			// m_inputStreams[0]->UnLockModule();
 		}
 		else if(! m_param.autoProcess)
@@ -229,7 +229,7 @@ bool Module::Process()
 			}
 			if(m_param.cached == CachedState::READ_CACHE)
 			{
-				// TODO: check that module is not an input
+				assert(!IsInput());
 				m_timerProcessing.Start();
 				ReadFromCache();
 				m_timerProcessing.Stop();

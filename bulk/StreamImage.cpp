@@ -39,7 +39,6 @@ StreamImage::StreamImage(const string& x_name, Mat& x_image, Module& rx_module, 
 {
 	LOG_DEBUG(m_logger, "Create image "<<x_image.cols<<"x"<<x_image.rows<<" for module "<<rx_module.GetName()<<" of size "<<rx_module.GetWidth()<<"x"<<rx_module.GetHeight());
 	// assert(x_image.cols == rx_module.GetWidth() && x_image.rows == rx_module.GetHeight()); // Disable this for unit tests
-	m_img_input = nullptr;
 }
 
 
@@ -217,5 +216,4 @@ void StreamImage::Connect(Stream* x_stream, bool x_bothWays)
 		m_connected = nullptr;
 		throw MkException("Input stream cannot be connected probably because it is not of type StreamImage", LOC);
 	}
-	m_img_input = &mp_connectedImage->GetImage();
 }

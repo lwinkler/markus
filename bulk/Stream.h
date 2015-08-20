@@ -25,6 +25,7 @@
 #define STREAM_H
 
 #include <log4cxx/logger.h>
+#include <atomic>
 #include "Module.h"
 
 
@@ -84,7 +85,7 @@ protected:
 	int m_height;
 	Module& mr_module;
 	std::string m_description;
-	TIME_STAMP m_timeStamp;
+	std::atomic<TIME_STAMP> m_timeStamp;
 
 	Stream * m_connected;
 	bool m_isReady;

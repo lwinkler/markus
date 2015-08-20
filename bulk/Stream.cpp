@@ -93,7 +93,7 @@ void Stream::Serialize(ostream& x_out, const string& x_dir) const
 	root["width"]       = m_width;
 	root["height"]      = m_height;
 	root["description"] = m_description;
-	root["timeStamp"]   = m_timeStamp;
+	root["timeStamp"]   = m_timeStamp.load();
 	root["connected"]   = IsConnected();
 	root["ready"]       = m_isReady;
 	x_out << root;
