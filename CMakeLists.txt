@@ -127,7 +127,6 @@ add_custom_target(check
 add_custom_target(update_modules_list
 	COMMENT "Update the list of modules"
 	COMMAND modules/AllModules.h.sh > modules/AllModules.h
-	COMMAND editor/js/all_modules.js.sh > editor/js/all_modules.js
 #	COMMAND make clean
 	COMMAND +make
 	COMMAND ./markus -d

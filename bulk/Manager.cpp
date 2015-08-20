@@ -472,19 +472,22 @@ bool Manager::EndOfAllStreams() const
 }
 
 /**
-* @brief Export current configuration to xml: this is used to create the XML files to describe each module
+* @brief Export current configuration to xml: this is used to create the XML and JSON files to describe each module
 */
-void Manager::Export()
+void Manager::CreateEditorFiles(const string& x_fileName) // TODO : Remove all Export methods
 {
 	try
 	{
 		map<string,vector<string>> categories;
-
+		ofstream of(x_fileName);
+		of << "// This file contain the list of modules and modules categories. Generated automatically and used by the editor" << endl;
+		of << "var availableModules = [";
 
 		SYSTEM("mkdir -p modules");
 		vector<string> moduleTypes;
 		mr_moduleFactory.List(moduleTypes);
 		int id = 0;
+		char comma1 = ' ';
 		for(const auto& moduleType : moduleTypes)
 		{
 			createEmptyConfigFile("/tmp/config_empty.xml");
@@ -495,6 +498,9 @@ void Manager::Export()
 
 			ParameterStructure* parameters = mr_parameterFactory.Create(moduleType, moduleConfig);
 			Module* module = mr_moduleFactory.Create(moduleType, *parameters);
+
+			of << comma1 << endl << "\"" << moduleType << "\"";
+			comma1 = ',';
 
 			// Append to the category
 			categories[module->GetCategory()].push_back(moduleType);
@@ -512,9 +518,8 @@ void Manager::Export()
 		}
 
 		// Generate the js file containing the categories
-		ofstream of("editor/js/all_categories.js");
-		of << "var availableCategories = {";
-		char comma1 = ' ';
+		of << endl << "];" << endl << endl << "var availableCategories = {";
+		comma1 = ' ';
 
 		for(const auto& categ : categories)
 		{
@@ -528,7 +533,7 @@ void Manager::Export()
 			}
 			of << "]";
 		}
-		of << endl << "}" << endl;
+		of << endl << "};" << endl;
 		of.close();
 	}
 	catch(MkException& e)

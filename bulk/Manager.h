@@ -66,7 +66,7 @@ public:
 	inline const Processable& GetModuleByName(const std::string& x_name) const {if(x_name == "manager") assert(false); else return RefModuleByName(x_name);}
 
 	void Connect();
-	void Export();
+	void CreateEditorFiles(const std::string& x_fileName);
 	void PrintStatistics();
 	virtual void Pause(bool x_pause);
 	inline void Quit() {m_continueFlag = false;}

@@ -374,7 +374,7 @@ int main(int argc, char** argv)
 
 		if(args.describe)
 		{
-			manager.Export();
+			manager.CreateEditorFiles("editor/js/all_modules.js");
 			return 0;
 		}
 
