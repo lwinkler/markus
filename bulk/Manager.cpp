@@ -479,15 +479,12 @@ void Manager::CreateEditorFiles(const string& x_fileName) // TODO : Remove all E
 	try
 	{
 		map<string,vector<string>> categories;
-		ofstream of(x_fileName);
-		of << "// This file contain the list of modules and modules categories. Generated automatically and used by the editor" << endl;
-		of << "var availableModules = [";
+		Json::Value modules_json;
 
 		SYSTEM("mkdir -p modules");
 		vector<string> moduleTypes;
 		mr_moduleFactory.List(moduleTypes);
 		int id = 0;
-		char comma1 = ' ';
 		for(const auto& moduleType : moduleTypes)
 		{
 			createEmptyConfigFile("/tmp/config_empty.xml");
@@ -499,8 +496,7 @@ void Manager::CreateEditorFiles(const string& x_fileName) // TODO : Remove all E
 			ParameterStructure* parameters = mr_parameterFactory.Create(moduleType, moduleConfig);
 			Module* module = mr_moduleFactory.Create(moduleType, *parameters);
 
-			of << comma1 << endl << "\"" << moduleType << "\"";
-			comma1 = ',';
+			modules_json.append(moduleType);
 
 			// Append to the category
 			categories[module->GetCategory()].push_back(moduleType);
@@ -518,22 +514,19 @@ void Manager::CreateEditorFiles(const string& x_fileName) // TODO : Remove all E
 		}
 
 		// Generate the js file containing the categories
-		of << endl << "];" << endl << endl << "var availableCategories = {";
-		comma1 = ' ';
 
+		Json::Value categories_json;
 		for(const auto& categ : categories)
 		{
-			of << comma1 << endl << "\"" << categ.first << "\": [";
-			comma1 = ',';
-			char comma2 = ' ';
 			for(const auto& mod : categ.second)
 			{
-				of << comma2 << "\"" << mod << "\"";
-				comma2 = ',';
+				categories_json[categ.first].append(mod);
 			}
-			of << "]";
 		}
-		of << endl << "};" << endl;
+		ofstream of(x_fileName);
+		of << "// This file contain the list of modules and modules categories. Generated automatically and used by the editor" << endl;
+		of << "var availableCategories = " << categories_json << ";" << endl << endl;
+		of << "var availableModules = "    << modules_json    << ";" << endl << endl;
 		of.close();
 	}
 	catch(MkException& e)
