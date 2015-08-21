@@ -26,6 +26,7 @@
 
 #include "Stream.h"
 #include "feature_util.h"
+#include "cvplot.h"
 #include <sstream>
 
 /// Class for a stream of images (or video) used for input and output
@@ -37,7 +38,7 @@ public:
 		Stream(x_name, rx_module, x_description),
 		m_scalar(rx_scalar) {}
 	virtual const std::string& GetClass() const {return m_class;}
-	MKTYPE("Scalar")
+	MKTYPE("template")
 
 	virtual void ConvertInput()
 	{
@@ -50,7 +51,19 @@ public:
 		m_timeStamp = GetConnected().GetTimeStamp();
 		m_scalar = dynamic_cast<const StreamNum*>(m_connected)->GetScalar();
 	}
-	virtual void RenderTo(cv::Mat& x_output) const {}
+	virtual void RenderTo(cv::Mat& x_output) const
+	{
+		x_output.setTo(255);
+		CvPlot::Figure fig("test");
+		std::vector<float> pb = {1,1,1,1,4,4,4,22,2,21,1};
+		CvPlot::Series s(pb);
+		s.SetColor(cv::Scalar(22,0,255), false);
+		fig.Add(s);
+		fig.Initialize();
+		fig.DrawAxis(x_output);
+		fig.DrawPlots(x_output);
+		fig.DrawLabels(x_output, x_output.cols - 100, 10);
+	}
 	virtual void Query(int x_posX, int x_posY) const
 	{
 		LOG_INFO(m_logger, "TODO");
