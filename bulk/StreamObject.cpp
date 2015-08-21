@@ -31,8 +31,8 @@ using namespace cv;
 
 log4cxx::LoggerPtr StreamObject::m_logger(log4cxx::Logger::getLogger("StreamObject"));
 
-StreamObject::StreamObject(const string& rx_name, vector<Object>& xr_objects, Module& rx_module, const string& rx_description, const string& rx_requirement):
-	Stream(rx_name, rx_module, rx_description, rx_requirement),
+StreamObject::StreamObject(const string& x_name, vector<Object>& xr_objects, Module& rx_module, const string& x_description, const string& rx_requirement):
+	Stream(x_name, rx_module, x_description, rx_requirement),
 	m_objects(xr_objects)
 {}
 

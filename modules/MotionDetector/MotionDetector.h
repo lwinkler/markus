@@ -69,8 +69,9 @@ protected:
 	cv::Mat m_input;
 
 	// output
-	bool m_state;
-	Event m_event;
+	bool   m_state;
+	Event  m_event;
+	double m_value;
 
 	// debug
 #ifdef MARKUS_DEBUG_STREAMS

@@ -114,6 +114,23 @@ inline void randomize(float& xr_val, unsigned int& xr_seed)
 }
 
 /* -------------------------------------------------------------------------------- */
+// Template specialization for features of type double
+
+inline std::ostream& serialize(std::ostream& x_out, double x_value)   { x_out << x_value;  return x_out; }
+inline std::istream& deserialize(std::istream& x_in, double& xr_value) { x_in  >> xr_value; return x_in;  }
+
+inline double compareSquared(double x_1, double x_2)
+{
+	return POW2(x_1 - x_2);
+}
+
+inline void randomize(double& xr_val, unsigned int& xr_seed)
+{
+	xr_val = static_cast<double>(rand_r(&xr_seed)) / RAND_MAX;
+}
+
+
+/* -------------------------------------------------------------------------------- */
 // Template specialization for features of type int
 
 inline std::ostream& serialize(std::ostream& x_out, int x_value)   { x_out << "{\"valueInt\":" << x_value << "}";  return x_out; }

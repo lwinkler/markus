@@ -26,9 +26,8 @@
 #include "StreamDebug.h"
 #include "StreamState.h"
 #include "StreamEvent.h"
+#include "StreamNum.h"
 
-// #include <iostream>
-// #include <cstdio>
 #include <opencv2/highgui/highgui.hpp>
 
 
@@ -50,6 +49,7 @@ MotionDetector::MotionDetector(ParameterStructure& xr_params)
 	AddInputStream(0, new StreamImage("input", m_input, *this, 	"Video input"));
 	AddOutputStream(0, new StreamState("motion", m_state,  *this, 	"Motion is detected"));
 	AddOutputStream(1, new StreamEvent("motion", m_event,  *this, 	"Motion is detected"));
+	AddOutputStream(2, new StreamNum<double>("value", m_value,  *this, 	"Scalar representing the motion level"));
 
 #ifdef MARKUS_DEBUG_STREAMS
 	m_debug = Mat(Size(m_param.width, m_param.height), CV_8UC3);
@@ -74,7 +74,7 @@ void MotionDetector::ProcessFrame()
 {
 	vector<Mat> channels;
 	split(m_input, channels);
-	double val = 0;
+	m_value = 0;
 
 	m_event.Empty();
 
@@ -82,11 +82,11 @@ void MotionDetector::ProcessFrame()
 	{
 		Scalar m = mean(channels[i]);
 		m /= 255.0;
-		val += sum(m)[i];
+		m_value += sum(m)[i];
 	}
-	val /= m_input.channels();
+	m_value /= m_input.channels();
 	bool oldState = m_state;
-	m_state = (val >= m_param.motionThres);
+	m_state = (m_value >= m_param.motionThres);
 	if(m_state == true && oldState == false)
 		m_event.Raise("motion");
 
@@ -95,7 +95,7 @@ void MotionDetector::ProcessFrame()
 	// Mat col(m_debug->rows, 1, CV_8UC3);
 	Mat col = m_debug.col(m_debug.cols - 1); // (*m_debug)(Rect(m_debug->cols - 1 / 2, 0, 1, m_debug->rows));
 	col.setTo(m_colorPlotBack);
-	line(col, Point(0, m_debug.rows * (1 - val / 3 / m_param.motionThres)), Point(0, m_debug.cols - 1), m_colorPlotValue);
+	line(col, Point(0, m_debug.rows * (1 - m_value / 3 / m_param.motionThres)), Point(0, m_debug.cols - 1), m_colorPlotValue);
 	circle(col, Point(0, m_debug.rows * (1 - 0.333)),                         0, m_colorPlotThres, -1);
 
 	// m_debug->row(m_debug->rows -1) = col.row(0);

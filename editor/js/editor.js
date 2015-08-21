@@ -72,11 +72,11 @@ var xmlProject = null;
 			var colorDefault = "#316b31";
 			
 			var pointsColor = {
-				Image: "#316b31",	
+				Image:   "#316b31",	
 				Objects: "#00f",	
-				Debug: "#09098e",
-				State: "#cd7f32",
-				Event: "#df0101"
+				State:   "#cd7f32",
+				Event:   "#df0101",
+				Scalar:  "#09098e"
 			};
 
 

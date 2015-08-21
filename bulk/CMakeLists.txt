@@ -21,6 +21,7 @@ StreamImage.cpp
 StreamEvent.cpp
 StreamObject.cpp
 StreamState.cpp
+StreamNum.cpp
 Object.cpp
 Event.cpp
 FeatureFloatInTime.cpp
