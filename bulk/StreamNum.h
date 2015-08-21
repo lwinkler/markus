@@ -36,7 +36,7 @@ public:
 	StreamNum(const std::string& x_name, T& rx_scalar, Module& rx_module, const std::string& x_description) :
 		Stream(x_name, rx_module, x_description),
 		m_scalar(rx_scalar) {}
-	MKCLASS("StreamNum")
+	virtual const std::string& GetClass() const {return m_class;}
 	MKTYPE("Scalar")
 
 	virtual void ConvertInput()
@@ -79,6 +79,7 @@ public:
 
 protected:
 	T& m_scalar;
+	static const std::string m_class;
 
 private:
 	DISABLE_COPY(StreamNum)

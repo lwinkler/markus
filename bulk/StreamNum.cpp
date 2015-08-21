@@ -31,3 +31,9 @@ template<> log4cxx::LoggerPtr StreamNum<int>::m_logger(log4cxx::Logger::getLogge
 template<> log4cxx::LoggerPtr StreamNum<unsigned int>::m_logger(log4cxx::Logger::getLogger("StreamNum<unsigned int>"));
 template<> log4cxx::LoggerPtr StreamNum<float>::m_logger(log4cxx::Logger::getLogger("StreamNum<float>"));
 template<> log4cxx::LoggerPtr StreamNum<double>::m_logger(log4cxx::Logger::getLogger("StreamNum<double>"));
+
+template<> const string StreamNum<bool>::m_class   = "StreamNum<bool>";
+template<> const string StreamNum<int>::m_class    = "StreamNum<int>";
+template<> const string StreamNum<uint>::m_class   = "StreamNum<uint>";
+template<> const string StreamNum<float>::m_class  = "StreamNum<float>";
+template<> const string StreamNum<double>::m_class = "StreamNum<double>";

@@ -63,7 +63,7 @@ Editor::Editor(const string& x_project, QWidget *parent) :
 	stringstream ss;
 	char pwd[256];
 	assert(getcwd(pwd, sizeof(pwd)) != nullptr);
-	ss<<"file://"<<pwd<<"/editor/editor.html";
+	ss<<"file://"<<pwd<<"/editor.html";
 	m_view.load(QUrl(ss.str().c_str()));
 
 	connect(&m_view, SIGNAL(loadFinished(bool)), this, SLOT(adaptDom(bool)));

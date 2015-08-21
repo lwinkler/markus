@@ -116,8 +116,16 @@ inline void randomize(float& xr_val, unsigned int& xr_seed)
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features of type double
 
-inline std::ostream& serialize(std::ostream& x_out, double x_value)   { x_out << x_value;  return x_out; }
-inline std::istream& deserialize(std::istream& x_in, double& xr_value) { x_in  >> xr_value; return x_in;  }
+inline std::ostream& serialize(std::ostream& x_out, double x_value)   { x_out << "{\"valueDouble\":" << x_value << "}";  return x_out; }
+inline std::istream& deserialize(std::istream& x_in, double& xr_value)
+{
+	// Note: we must serialize integer features differently than float to avoid having the same signature
+	// this is due to the fact that the serialization does not store the type of the feature
+	Json::Value root;
+	x_in >> root;
+	xr_value = root["valueDouble"].asDouble();
+	return x_in;
+}
 
 inline double compareSquared(double x_1, double x_2)
 {
@@ -154,6 +162,30 @@ inline void randomize(int& xr_val, unsigned int& xr_seed)
 {
 	xr_val = rand_r(&xr_seed) % 1000;
 }
+
+/* -------------------------------------------------------------------------------- */
+// Template specialization for features of type bool
+
+inline std::ostream& serialize(std::ostream& x_out, bool x_value)   { x_out << "{\"valueBool\":" << x_value << "}";  return x_out; }
+inline std::istream& deserialize(std::istream& x_in, bool& xr_value)
+{
+	Json::Value root;
+	x_in >> root;
+	xr_value = root["valueBool"].asBool();
+	return x_in;
+}
+
+inline double compareSquared(bool x_1, bool x_2)
+{
+	// Cast to double to avoid overflows
+	return POW2(static_cast<double>(x_1) - x_2);
+}
+
+inline void randomize(bool& xr_val, unsigned int& xr_seed)
+{
+	xr_val = rand_r(&xr_seed) % 2;
+}
+
 
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features of type string

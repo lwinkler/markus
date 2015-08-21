@@ -607,11 +607,11 @@ var xmlProject = null;
 						try
 						{
 							// Load the matching xml file
-							xmlModuleTypes[mod] = $(loadXML("modules/" + mod + ".xml")).find("module");
+							xmlModuleTypes[mod] = $(loadXML("editor/modules/" + mod + ".xml")).find("module");
 						}
 						catch(err)
 						{
-							console.log("Error reading modules/" + mod + ".xml: " + err);
+							console.log("Error reading editor/modules/" + mod + ".xml: " + err);
 						}
 					}
 				}

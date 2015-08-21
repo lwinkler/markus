@@ -32,6 +32,7 @@
 #include "StreamObject.h"
 #include "StreamImage.h"
 #include "StreamState.h"
+#include "StreamNum.h"
 #include "MkException.h"
 #include "FeatureFloatInTime.h"
 #include "FeatureVector.h"
@@ -75,6 +76,11 @@ protected:
 	cv::Mat m_image;
 	bool m_state;
 	Event m_event;
+	float  m_float;
+	double m_double;
+	int    m_int;
+	uint   m_uint;
+	bool   m_bool;
 	vector<Object> m_objects;
 	int m_cpt;
 
@@ -167,6 +173,16 @@ public:
 				outputStream = new StreamState("test", m_state, *mp_fakeInput, "Test input");
 			else if(elem.second->GetClass() == "StreamEvent")
 				outputStream = new StreamEvent("test", m_event, *mp_fakeInput, "Test input");
+			else if(elem.second->GetClass() == "StreamNum<float>")
+				outputStream = new StreamNum<float>("test", m_float, *mp_fakeInput, "Test input");
+			else if(elem.second->GetClass() == "StreamNum<double>")
+				outputStream = new StreamNum<double>("test", m_double, *mp_fakeInput, "Test input");
+			else if(elem.second->GetClass() == "StreamNum<int>")
+				outputStream = new StreamNum<int>("test", m_int, *mp_fakeInput, "Test input");
+			// else if(elem.second->GetClass() == "StreamNum<unsigned int>")
+				// outputStream = new StreamNum<uint>("test", m_uint, *mp_fakeInput, "Test input");
+			else if(elem.second->GetClass() == "StreamNum<bool>")
+				outputStream = new StreamNum<bool>("test", m_bool, *mp_fakeInput, "Test input");
 			else
 			{
 				TSM_ASSERT("Unknown input stream type", false);
