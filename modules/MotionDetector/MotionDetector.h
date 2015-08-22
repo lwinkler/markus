@@ -27,7 +27,7 @@
 #include "Module.h"
 #include "Parameter.h"
 #include "Event.h"
-
+#include "StreamNum.h"
 
 /**
 * @brief Detect motion from an image where pixel value represents motion
@@ -72,6 +72,9 @@ protected:
 	bool   m_state;
 	Event  m_event;
 	double m_value;
+
+	// temp
+	StreamNum<double>* mp_streamValues;
 
 	// debug
 #ifdef MARKUS_DEBUG_STREAMS

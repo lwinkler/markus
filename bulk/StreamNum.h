@@ -28,6 +28,9 @@
 #include "feature_util.h"
 #include "cvplot.h"
 #include <sstream>
+#include <boost/circular_buffer.hpp>
+
+#define PLOT_LENGTH 50
 
 /// Class for a stream of images (or video) used for input and output
 template<typename T>
@@ -36,6 +39,7 @@ class StreamNum : public Stream
 public:
 	StreamNum(const std::string& x_name, T& rx_scalar, Module& rx_module, const std::string& x_description) :
 		Stream(x_name, rx_module, x_description),
+		m_scalars(PLOT_LENGTH),
 		m_scalar(rx_scalar) {}
 	virtual const std::string& GetClass() const {return m_class;}
 	MKTYPE("template")
@@ -51,12 +55,16 @@ public:
 		m_timeStamp = GetConnected().GetTimeStamp();
 		m_scalar = dynamic_cast<const StreamNum*>(m_connected)->GetScalar();
 	}
+	/// Method to be called at the end of each step to store the last point for the plot
+	inline void Store(){m_scalars.push_back(m_scalar);}
 	virtual void RenderTo(cv::Mat& x_output) const
 	{
+		std::vector<float> pts;
+		for(auto elem : m_scalars)
+			pts.push_back(elem);
 		x_output.setTo(255);
 		CvPlot::Figure fig("test");
-		std::vector<float> pb = {1,1,1,1,4,4,4,22,2,21,1};
-		CvPlot::Series s(pb);
+		CvPlot::Series s(pts);
 		s.SetColor(cv::Scalar(22,0,255), false);
 		fig.Add(s);
 		fig.Initialize();
@@ -92,6 +100,8 @@ public:
 
 protected:
 	T& m_scalar;
+	// circular buffer for plot rendering
+	boost::circular_buffer<float> m_scalars;
 	static const std::string m_class;
 
 private:

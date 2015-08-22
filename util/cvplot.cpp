@@ -7,15 +7,9 @@ using namespace cv;
 namespace CvPlot
 {
 
-//  use anonymous namespace to hide global variables.
-namespace
-{
-	const Scalar CV_BLACK = CV_RGB(0,0,0);
-	const Scalar CV_WHITE = CV_RGB(255,255,255);
-	const Scalar CV_GREY = CV_RGB(150,150,150);
-
-	// PlotManager pm;
-}
+const Scalar CV_BLACK = CV_RGB(0,0,0);
+const Scalar CV_WHITE = CV_RGB(255,255,255);
+const Scalar CV_GREY = CV_RGB(150,150,150);
 
 
 Series::Series(const vector<float>& rx_data) : data(rx_data)
@@ -126,44 +120,25 @@ void Figure::Initialize()
 Scalar Figure::GetAutoColor()
 {
 	// 	change color for each curve.
-	Scalar col;
-	printf("%d\n", color_index);
+	static const std::vector<Scalar> colors = {
+		CV_RGB(200,200,200),	// grey
+		CV_RGB(60,60,255),	// light-blue
+		CV_RGB(60,255,60),	// light-green
+		CV_RGB(255,60,40),	// light-red
+		CV_RGB(0,210,210),	// blue-green
+		CV_RGB(180,210,0),	// red-green
+		CV_RGB(210,0,180),	// red-blue
+		CV_RGB(0,0,185),	// dark-blue
+		CV_RGB(0,185,0),	// dark-green
+		CV_RGB(185,0,0) 	// dark-red
+	};
 
-	switch (color_index)
+	if(color_index <= 0 || color_index >= colors.size())
 	{
-	case 1:
-		col = CV_RGB(60,60,255);	// light-blue
-		break;
-	case 2:
-		col = CV_RGB(60,255,60);	// light-green
-		break;
-	case 3:	
-		col = CV_RGB(255,60,40);	// light-red
-		break;
-	case 4:
-		col = CV_RGB(0,210,210);	// blue-green
-		break;
-	case 5:
-		col = CV_RGB(180,210,0);	// red-green
-		break;
-	case 6:
-		col = CV_RGB(210,0,180);	// red-blue
-		break;
-	case 7:
-		col = CV_RGB(0,0,185);		// dark-blue
-		break;
-	case 8:
-		col = CV_RGB(0,185,0);		// dark-green
-		break;
-	case 9:
-		col = CV_RGB(185,0,0);		// dark-red
-		break;
-	default:
-		col =  CV_RGB(200,200,200);	// grey
 		color_index = 0;
+		return colors.at(0);
 	}
-	color_index++;
-	return col;
+	return colors.at(color_index++);
 }
 
 void Figure::DrawAxis(Mat& output)

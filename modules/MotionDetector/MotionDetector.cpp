@@ -49,7 +49,8 @@ MotionDetector::MotionDetector(ParameterStructure& xr_params)
 	AddInputStream(0, new StreamImage("input", m_input, *this, 	"Video input"));
 	AddOutputStream(0, new StreamState("motion", m_state,  *this, 	"Motion is detected"));
 	AddOutputStream(1, new StreamEvent("motion", m_event,  *this, 	"Motion is detected"));
-	AddOutputStream(2, new StreamNum<double>("value", m_value,  *this, 	"Scalar representing the motion level"));
+	mp_streamValues = new StreamNum<double>("value", m_value,  *this,      "Scalar representing the motion level");
+	AddOutputStream(2, mp_streamValues);
 
 #ifdef MARKUS_DEBUG_STREAMS
 	m_debug = Mat(Size(m_param.width, m_param.height), CV_8UC3);
@@ -89,8 +90,11 @@ void MotionDetector::ProcessFrame()
 	m_state = (m_value >= m_param.motionThres);
 	if(m_state == true && oldState == false)
 		m_event.Raise("motion");
+	
 
 #ifdef MARKUS_DEBUG_STREAMS
+	mp_streamValues->Store();
+
 	// Debug image: moving plot displaying threshold and current value
 	// Mat col(m_debug->rows, 1, CV_8UC3);
 	Mat col = m_debug.col(m_debug.cols - 1); // (*m_debug)(Rect(m_debug->cols - 1 / 2, 0, 1, m_debug->rows));

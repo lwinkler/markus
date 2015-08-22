@@ -90,7 +90,7 @@ namespace CvPlot
 		float x_scale;
 
 		// automatically change color for each curve
-		int color_index;
+		size_t color_index;
 
 	public:
 		Figure(const std::string name);
