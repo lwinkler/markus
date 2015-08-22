@@ -32,16 +32,15 @@ log4cxx::LoggerPtr Stream::m_logger(log4cxx::Logger::getLogger("Stream"));
 
 Stream::Stream(const string& x_name, Module& rx_module, const string& rx_description, const string& rx_requirement) :
 	m_name(x_name),
-	// m_id(0),
 	m_width(rx_module.GetWidth()),
 	m_height(rx_module.GetHeight()),
 	mr_module(rx_module),
 	m_description(rx_description),
-	m_requirement(rx_requirement)
+	m_requirement(rx_requirement),
+	m_timeStamp(TIME_STAMP_INITIAL),
+	m_connected(nullptr),
+	m_isReady(false)
 {
-	m_connected = nullptr;
-	m_isReady = false;
-	m_timeStamp = TIME_STAMP_INITIAL;
 }
 
 Stream::~Stream()

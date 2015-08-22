@@ -33,7 +33,7 @@ void Series::SetColor(Scalar x_color, bool x_auto_color)
 	auto_color = x_auto_color;
 }
 
-Figure::Figure(const string name)
+Figure::Figure(const string& name)
 {
 	figure_name = name;
 
@@ -51,11 +51,6 @@ Figure::Figure(const string name)
 
 Figure::~Figure()
 {
-}
-
-string Figure::GetFigureName()
-{
-	return figure_name;
 }
 
 Series* Figure::Add(const Series &s)
@@ -112,9 +107,9 @@ void Figure::Initialize()
 
 	x_scale = 1.0f;
 	if (x_max - x_min > 1)
-		x_scale = (float)(figure_size.width - border_size * 2) / (x_max - x_min);
+		x_scale = static_cast<float>(figure_size.width - border_size * 2) / (x_max - x_min);
 
-	y_scale = (float)(figure_size.height - border_size * 2) / y_range;
+	y_scale = static_cast<float>(figure_size.height - border_size * 2) / y_range;
 }
 
 Scalar Figure::GetAutoColor()
@@ -133,7 +128,7 @@ Scalar Figure::GetAutoColor()
 		CV_RGB(185,0,0) 	// dark-red
 	};
 
-	if(color_index <= 0 || color_index >= colors.size())
+	if(color_index >= colors.size())
 	{
 		color_index = 0;
 		return colors.at(0);
@@ -149,7 +144,7 @@ void Figure::DrawAxis(Mat& output)
 
 	// size of graph
 	int gh = h - bs * 2;
-	int gw = w - bs * 2;
+	// int gw = w - bs * 2;
 
 	// draw the horizontal and vertical axis
 	// let x, y axies cross at zero if possible.
@@ -196,7 +191,7 @@ void Figure::DrawPlots(Mat &output)
 {
 	int bs = border_size;		
 	int h = figure_size.height;
-	int w = figure_size.width;
+	// int w = figure_size.width;
 
 	// draw the curves
 	for (auto &plot : plots)
@@ -224,7 +219,8 @@ void Figure::DrawPlots(Mat &output)
 void Figure::DrawLabels(Mat &output, int posx, int posy)
 {
 	// character size
-	int chw = 6, chh = 8;
+	// int chw = 6;
+	int chh = 8;
 
 	for (const auto &plot : plots)
 	{
@@ -234,7 +230,7 @@ void Figure::DrawLabels(Mat &output, int posx, int posy)
 		{
 			line(output, Point(posx, posy - chh / 2), Point(posx + 15, posy - chh / 2), plot.color, 2, CV_AA);
 			putText(output, lbl.c_str(), Point(posx + 20, posy), CV_FONT_HERSHEY_PLAIN, 0.6, text_color, 1, CV_AA);
-			posy += int(chh * 1.5);
+			posy += static_cast<int>(chh * 1.5);
 		}
 	}
 }
@@ -387,4 +383,4 @@ void plot(const string figure_name, const short* p, int count, int step,
 		  int R, int G, int B);
 
 */
-};
+}; // namespace CvPlot

@@ -93,10 +93,10 @@ namespace CvPlot
 		size_t color_index;
 
 	public:
-		Figure(const std::string name);
+		Figure(const std::string& name);
 		~Figure();
 
-		std::string GetFigureName();
+		inline std::string GetFigureName() const {return figure_name;}
 		Series* Add(const Series &s);
 		void Clear();
 		void DrawLabels(cv::Mat &output, int posx, int posy);
@@ -141,9 +141,9 @@ namespace CvPlot
 	// handle different data types; static mathods;
 
 	template<typename T>
-	void plot(const std::string figure_name, const T* p, int count, int step = 1,
+	void plot(const std::string& figure_name, const T* p, int count, int step = 1,
 			  int R = -1, int G = -1, int B = -1);
-	void clear(const std::string figure_name);
+	void clear(const std::string& figure_name);
 
 	void label(std::string lbl);
 

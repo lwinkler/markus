@@ -37,7 +37,7 @@ class Timer
 		Timer() : m_increments(0) {}
 		long GetMsLong() const;
 		double GetSecDouble() const;
-		inline void Reset(){m_timer.reset();m_increments=0;};
+		inline void Reset(){m_timer.reset();m_increments=0;}
 		inline void Start(){m_timer.start(); m_increments++;}
 		inline void Stop(){m_timer.stop();}
 		inline void Add(const Timer& x_val){m_timer.value += x_val.GetSecDouble();}

@@ -78,7 +78,7 @@ void FeatureHistory::Randomize(unsigned int& xr_seed, const string& x_param)
 
 void FeatureHistory::Serialize(ostream& x_out, const string& x_dir) const
 {
-	if(features.size() == 0)
+	if(features.empty())
 	{
 		x_out<<"{\"history\":[]}";
 		return;
