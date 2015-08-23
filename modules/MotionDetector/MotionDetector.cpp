@@ -43,7 +43,8 @@ log4cxx::LoggerPtr MotionDetector::m_logger(log4cxx::Logger::getLogger("MotionDe
 
 MotionDetector::MotionDetector(ParameterStructure& xr_params)
 	: Module(xr_params), m_param(dynamic_cast<Parameters&>(xr_params)),
-	  m_input(Size(m_param.width, m_param.height), m_param.type)
+	  m_input(Size(m_param.width, m_param.height), m_param.type),
+	  m_value(0)
 {
 	// Init output images
 	AddInputStream(0, new StreamImage("input", m_input, *this, 	"Video input"));

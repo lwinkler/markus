@@ -76,7 +76,11 @@ var xmlProject = null;
 				Objects: "#00f",	
 				State:   "#cd7f32",
 				Event:   "#df0101",
-				Scalar:  "#09098e"
+				NumBool:    "#09098e",
+				NumDouble:  "#09098e",
+				NumInt:     "#09098e",
+				NumUInt:    "#09098e",
+				NumFloat:   "#09098e"
 			};
 
 
