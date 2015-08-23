@@ -74,7 +74,7 @@ public:
 	}
 	virtual void Query(int x_posX, int x_posY) const
 	{
-		LOG_INFO(m_logger, "TODO");
+		LOG_INFO(m_logger, "value = " << m_scalar);
 	}
 	virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const
 	{

@@ -43,8 +43,8 @@ Figure::Figure(const string& name)
 	axis_color = CV_BLACK;
 	text_color = CV_BLACK;
 
-	figure_size = cvSize(600, 200);
-	border_size = 30;
+	figure_size = cvSize(640, 200);
+	border_size = 20;
 
 	plots.reserve(10);
 }
@@ -68,7 +68,7 @@ void Figure::Initialize()
 {
 	color_index = 0;
 
-	// size of the figure
+	// size of the figure: set a minimal size
 	if (figure_size.width <= border_size * 2 + 100)
 		figure_size.width = border_size * 2 + 100;
 	if (figure_size.height <= border_size * 2 + 200)
@@ -106,7 +106,7 @@ void Figure::Initialize()
 	}
 
 	x_scale = 1.0f;
-	if (x_max - x_min > 1)
+	if (x_max - x_min > 0)
 		x_scale = static_cast<float>(figure_size.width - border_size * 2) / (x_max - x_min);
 
 	y_scale = static_cast<float>(figure_size.height - border_size * 2) / y_range;
@@ -138,12 +138,12 @@ Scalar Figure::GetAutoColor()
 
 void Figure::DrawAxis(Mat& output)
 {
-	int bs = border_size;		
-	int h = figure_size.height;
-	int w = figure_size.width;
+	const int bs = border_size;		
+	const int h = figure_size.height;
+	const int w = figure_size.width;
 
 	// size of graph
-	int gh = h - bs * 2;
+	const int gh = h - bs * 2;
 	// int gw = w - bs * 2;
 
 	// draw the horizontal and vertical axis
@@ -164,18 +164,18 @@ void Figure::DrawAxis(Mat& output)
 	// y max
 	if ((y_max - y_ref) > 0.05 * (y_max - y_min))
 	{
-		snprintf(text, sizeof(text)-1, "%.1f", y_max);
+		snprintf(text, sizeof(text)-1, "%.4f", y_max);
 		putText(output, text, Point(bs / 5, bs - chh / 2), CV_FONT_HERSHEY_PLAIN, 0.6, text_color, 1, CV_AA);
 	}
 	// y min
 	if ((y_ref - y_min) > 0.05 * (y_max - y_min))
 	{
-		snprintf(text, sizeof(text)-1, "%.1f", y_min);
+		snprintf(text, sizeof(text)-1, "%.4f", y_min);
 		putText(output, text, Point(bs / 5, h - bs + chh), CV_FONT_HERSHEY_PLAIN, 0.6, text_color, 1, CV_AA);
 	}
 
 	// x axis
-	snprintf(text, sizeof(text)-1, "%.1f", y_ref);
+	snprintf(text, sizeof(text)-1, "%.4f", y_ref);
 	putText(output, text, Point(bs / 5, x_axis_pos + chh / 2), CV_FONT_HERSHEY_PLAIN, 0.6, text_color, 1, CV_AA);
 
 	// Write the scale of the x axis
