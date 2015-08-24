@@ -25,6 +25,7 @@
 #include "StreamObject.h"
 #include "StreamImage.h"
 
+using namespace std;
 using namespace cv;
 
 log4cxx::LoggerPtr FeatureToValue::m_logger(log4cxx::Logger::getLogger("FeatureToValue"));
@@ -34,7 +35,9 @@ FeatureToValue::FeatureToValue(ParameterStructure& xr_params) :
 	m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_value(0)
 {
-	AddInputStream(0, new StreamObject("input", m_objectInput, *this, "Input object stream"));
+	AddInputStream(0, new StreamObject("input", m_objectInput, *this, "Incoming objects",
+									   "{\"features\":{"
+									   "\"" + m_param.feature + "\":{\"type\":\"FeatureFloat\"}}}"));
 
 	mp_streamValues = new StreamNum<double>("value", m_value,  *this, "Scalar representing the motion level");
 	AddOutputStream(0, mp_streamValues);
@@ -59,7 +62,7 @@ void FeatureToValue::ProcessFrame()
 	else
 	{
 		const Object* largest = nullptr;
-		double maxSize = DBL_MIN;
+		double maxSize = -1000;
 		for(const auto& elem : m_objectInput)
 		{
 			double s = elem.width * elem.height;
@@ -69,6 +72,7 @@ void FeatureToValue::ProcessFrame()
 				largest = &elem;
 			}
 		}
+		assert(largest != nullptr);
 		m_value = dynamic_cast<const FeatureFloat&>(largest->GetFeature(m_param.feature)).value;
 	}
 
