@@ -96,6 +96,8 @@ TiXmlDocument* createDoc(const std::string& x_fileName, bool x_allowCreation)
 	{
 		fatal("Fatal exception in constructor of ConfigReader", LOC);
 	}
+	// note: avoid a compiler warning
+	return nullptr;
 }
 
 /**

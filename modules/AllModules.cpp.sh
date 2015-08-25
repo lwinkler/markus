@@ -5,6 +5,9 @@
 
 echo "// WARNING: This file is generated automatically !!"
 
+echo
+echo "#include \"Factories.h\""
+echo
 
 find $1/modules*/ -mindepth 1 -maxdepth 1 -type d | grep -v CMakeFiles | sort | xargs -i{} basename {} | awk {'print "#include \""$1"/"$1".h\""'}
 
