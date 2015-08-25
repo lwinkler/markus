@@ -65,6 +65,7 @@ public:
 
 // Definitions
 typedef FeatureVectorT<float>   FeatureVectorFloat;
+// note: FeatureVectorInt cannot be used: so far the signature of this feature is the same as FeatureVectorFloat // TODO fix or suppress these
 typedef FeatureVectorT<int>   FeatureVectorInt;
 
 

@@ -125,15 +125,13 @@ add_custom_target(check
 )
 
 add_custom_target(update_modules_list
-	COMMENT "Update the list of modules"
-	COMMAND modules/AllModules.cpp.sh > modules/AllModules.cpp
-#	COMMAND make clean
-	COMMAND +make
+	COMMENT "Update the list of modules for the editor"
 	COMMAND ./markus -d
+	DEPENDS  markus
 )
 
 add_custom_target(update_projects_list
-	COMMENT "Update the list of projects"
+	COMMENT "Update the list of projects for the editor"
 	COMMAND editor/js/all_projects.js.sh > editor/js/all_projects.js
 )
 

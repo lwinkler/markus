@@ -160,16 +160,16 @@ then:
 Troubleshooting
 ===============
 
-AllModules.h is missing or a module is unknown
------------------------------------------------
+AllModules.cpp is missing or a module is unknown
+------------------------------------------------
 Possible error messages:
 
 	ERROR [main] Exception raised (string) : Module type unknown : <some_module>
 
-Solution: You need to regenerate the list of modules simply run 
+Solution: You need to regenerate the list of modules. Simply run 
 
+	cmake .
 	make update_module_list
-	make
 
 
 FindOpenCV.cmake is missing
