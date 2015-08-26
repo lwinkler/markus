@@ -48,6 +48,8 @@ StreamEvent::~StreamEvent()
 
 void StreamEvent::ConvertInput()
 {
+	m_event.Empty(); // TODO : rename this method
+
 	if(m_connected == nullptr) return;
 
 	// Copy time stamp to output

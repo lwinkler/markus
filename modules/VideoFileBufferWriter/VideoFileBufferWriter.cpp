@@ -58,6 +58,7 @@ void VideoFileBufferWriter::Reset()
 {
 	Module::Reset();
 	CloseFile();
+	m_buffer.clear();
 }
 
 void VideoFileBufferWriter::CloseFile()
@@ -74,7 +75,6 @@ void VideoFileBufferWriter::CloseFile()
 	m_recording  = false;
 	m_eraseFile  = true;
 	m_fileName   = "";
-	m_buffer.clear();
 }
 
 void VideoFileBufferWriter::OpenNewFile()
@@ -114,11 +114,16 @@ void VideoFileBufferWriter::OpenNewFile()
 void VideoFileBufferWriter::ProcessFrame()
 {
 	LOG_DEBUG(m_logger, "Recording=" << m_recording << " until " << m_endOfRecord << " trigger=" << m_trigger);
+
+	// We are always buffering
+	m_buffer.push_back(Mat());
+	m_input.copyTo(m_buffer.back());
+
 	if(m_recording)
 	{
 		m_writer.write(m_input);
 
-		if(m_trigger)
+		if(m_trigger || m_event.IsRaised())
 			m_endOfRecord = m_currentTimeStamp + m_param.bufferDurationAfter * 1000;
 
 		// We are recording (motion) to disk
@@ -130,16 +135,14 @@ void VideoFileBufferWriter::ProcessFrame()
 	}
 	else
 	{
-		// We are buffering
-		m_buffer.push_back(Mat());
-		m_input.copyTo(m_buffer.back());
-		if(m_trigger)
+		// If there is motion or if an event occurs, start recording
+		if(m_trigger || m_event.IsRaised())
 		{
 			// Write the buffer to disk
 			OpenNewFile();
+			LOG_DEBUG(m_logger, "Open " + m_fileName + " and add " + to_string(m_buffer.size()) + " frames");
 			for(const auto& frame : m_buffer)
 				m_writer.write(frame);
-			m_buffer.clear();
 			m_endOfRecord = m_currentTimeStamp + m_param.bufferDurationAfter * 1000;
 			m_recording = true;
 		}
