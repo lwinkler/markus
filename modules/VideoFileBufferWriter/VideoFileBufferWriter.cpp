@@ -35,7 +35,8 @@ log4cxx::LoggerPtr VideoFileBufferWriter::m_logger(log4cxx::Logger::getLogger("V
 
 VideoFileBufferWriter::VideoFileBufferWriter(ParameterStructure& xr_params):
 	VideoFileWriter(xr_params),
-	m_param(dynamic_cast<Parameters&>(xr_params))
+	m_param(dynamic_cast<Parameters&>(xr_params)),
+	m_buffer(m_param.bufferFramesBefore)   // TODO: should we lock this parameter
 {
 	// AddInputStream(0, new StreamImage("input", m_input, *this,   "Video input"));
 	AddInputStream(1, new StreamState("trigger", m_trigger, *this,  "Trigger to start/stop of the recording (e.g. motion)"));
@@ -43,33 +44,37 @@ VideoFileBufferWriter::VideoFileBufferWriter(ParameterStructure& xr_params):
 
 	AddOutputStream(0, new StreamEvent("event", m_event,    *this,  "Event to which the record will be linked"));
 
-	m_buffering = false;
+	m_recording = false;
 	m_eraseFile  = false;
-	m_bufferFull = false;
-	m_timeBufferFull = 0;
+	m_endOfRecord = 0;
 }
 
 VideoFileBufferWriter::~VideoFileBufferWriter(void)
 {
-	// clean current file before close if necessary
+	CloseFile();
+}
+
+void VideoFileBufferWriter::Reset()
+{
+	Module::Reset();
+	CloseFile();
+}
+
+void VideoFileBufferWriter::CloseFile()
+{
+	// finalize
+	if(!m_writer.isOpened())
+		m_writer.release();
 	if (m_eraseFile)
 	{
 		LOG_DEBUG(m_logger, "Delete file file "<<m_fileName);
 		if (remove(m_fileName.c_str()) != 0)
 			LOG_WARN(m_logger, "Error deleting temporary video file named " << m_fileName);
 	}
-}
-
-void VideoFileBufferWriter::Reset()
-{
-	Module::Reset();
+	m_recording  = false;
+	m_eraseFile  = true;
+	m_fileName   = "";
 	m_buffer.clear();
-	m_timeBufferFull = 0;
-	m_buffering  = false;
-	m_eraseFile  = false;
-	m_bufferFull = false;
-	m_currentFrame = m_buffer.end(); // Set to an invalid value
-	m_fileName = "";
 }
 
 void VideoFileBufferWriter::OpenNewFile()
@@ -108,59 +113,36 @@ void VideoFileBufferWriter::OpenNewFile()
 
 void VideoFileBufferWriter::ProcessFrame()
 {
-	if(!m_trigger)
+	LOG_DEBUG(m_logger, "Recording=" << m_recording << " until " << m_endOfRecord << " trigger=" << m_trigger);
+	if(m_recording)
 	{
-		if(!m_buffering)
+		m_writer.write(m_input);
+
+		if(m_trigger)
+			m_endOfRecord = m_currentTimeStamp + m_param.bufferDurationAfter * 1000;
+
+		// We are recording (motion) to disk
+		if(m_currentTimeStamp >= m_endOfRecord)
 		{
-			// Start buffering
-			m_writer.release();
-			m_buffering = true;
-			// Save the time stamp
-			m_timeBufferFull = m_currentTimeStamp + m_param.bufferDuration * 1000;
+			CloseFile();
+			m_recording = false;
 		}
-		AddImageToBuffer();
 	}
 	else
 	{
-		if(m_buffering)
+		// We are buffering
+		m_buffer.push_back(Mat());
+		m_input.copyTo(m_buffer.back());
+		if(m_trigger)
 		{
-			// clean old file
-			if (m_eraseFile)
-			{
-				LOG_DEBUG(m_logger, "Delete file file "<<m_fileName);
-				if (remove(m_fileName.c_str()) != 0)
-					LOG_WARN(m_logger, "Error deleting temporary video file named " << m_fileName);
-			}
-
+			// Write the buffer to disk
 			OpenNewFile();
-			m_eraseFile = true;
-
-			// write buffer to file
-
-			auto bufferBegin = m_currentFrame;
-			auto bufferEnd   = m_currentFrame;
-			if(!m_bufferFull)
-			{
-				bufferBegin = m_buffer.begin();
-				bufferEnd   = m_buffer.end();
-
-			}
-			auto it = bufferBegin;
-			while(true)
-			{
-				m_writer.write(*it);
-				it->release();
-				++it;
-				if(it == bufferEnd)
-					break;
-				if(it == m_buffer.end())
-					it = m_buffer.begin();
-			}
+			for(const auto& frame : m_buffer)
+				m_writer.write(frame);
 			m_buffer.clear();
-			m_buffering = false;
-			m_bufferFull = false;
+			m_endOfRecord = m_currentTimeStamp + m_param.bufferDurationAfter * 1000;
+			m_recording = true;
 		}
-		m_writer.write(m_input);
 	}
 
 	// Add the file to the event
@@ -171,30 +153,3 @@ void VideoFileBufferWriter::ProcessFrame()
 	}
 }
 
-
-void VideoFileBufferWriter::AddImageToBuffer()
-{
-	if(m_currentTimeStamp > m_timeBufferFull)
-	{
-		m_bufferFull = true;
-		LOG4CXX_DEBUG(m_logger, "Buffer contains "<<m_buffer.size()<<" frames.");
-	}
-
-	if(m_bufferFull)
-	{
-		// Buffer is full. Use a circular buffer
-		assert(!m_buffer.empty());
-		m_input.copyTo(*m_currentFrame);
-
-		++m_currentFrame;
-		if(m_currentFrame == m_buffer.end())
-			m_currentFrame = m_buffer.begin();
-	}
-	else
-	{
-		Mat im;
-		m_buffer.push_back(im);
-		m_input.copyTo(m_buffer.back());
-		m_currentFrame = m_buffer.begin();
-	}
-}
