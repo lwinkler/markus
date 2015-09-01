@@ -152,6 +152,7 @@ void VideoFileBufferWriter::ProcessFrame()
 	if(m_event.IsRaised())
 	{
 		m_event.AddExternalFile("record", m_fileName);
+		LOG_DEBUG(m_logger, "Add external record to event: " << m_fileName);
 		m_eraseFile = false;
 	}
 }
