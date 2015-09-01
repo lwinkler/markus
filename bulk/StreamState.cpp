@@ -46,7 +46,11 @@ StreamState::~StreamState()
 
 void StreamState::ConvertInput()
 {
-	if(m_connected == nullptr) return;
+	if(m_connected == nullptr)
+	{
+		m_state = false;
+		return;
+	}
 
 	// Copy time stamp to output
 	m_timeStamp = GetConnected().GetTimeStamp();

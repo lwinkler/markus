@@ -24,13 +24,11 @@
 #ifndef INPUT_VIDEOFILEBUFFERWRITER_H
 #define INPUT_VIDEOFILEBUFFERWRITER_H
 
-#include <opencv2/highgui/highgui.hpp>
-#include <list>
-
 #include "modules/VideoFileWriter/VideoFileWriter.h"
 #include "Event.h"
 
-
+#include <opencv2/highgui/highgui.hpp>
+#include <boost/circular_buffer.hpp>
 
 
 /**
@@ -45,14 +43,15 @@ public:
 		Parameters(const ConfigReader& x_confReader) :
 			VideoFileWriter::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterDouble("buffer_duration", 120, 0, 600, &bufferDuration, "Length of one buffer block of video [s]"));
-			// m_list.push_back(new ParameterInt("nb_buffers",           0, 0,  10, &nbBuffers,      "Number of buffers blocks to keep before recording"));
+			m_list.push_back(new ParameterInt   ("buffer_frames_before" , 1200, 0, 10000, &bufferFramesBefore, "Length of video buffer before activity [frames]"));
+			m_list.push_back(new ParameterDouble("buffer_duration_after", 120, 0, 600, &bufferDurationAfter  , "Length of video buffer after activity [s]. If possible this should be longer than the duration before next event."));
+
 			RefParameterByName("type").SetDefault("CV_8UC3");
 			RefParameterByName("type").SetRange("[CV_8UC3]");
 			Init();
 		};
-		double bufferDuration;
-		// int nbBuffers;
+		int    bufferFramesBefore;
+		double bufferDurationAfter;
 	};
 
 	VideoFileBufferWriter(ParameterStructure& xr_params);
@@ -65,6 +64,7 @@ public:
 	virtual void Reset();
 	void AddImageToBuffer();
 	void OpenNewFile();
+	void CloseFile();
 
 private:
 	const Parameters& m_param;
@@ -78,15 +78,13 @@ protected:
 	Event m_event;
 
 	// state
-	bool m_buffering;
+	bool m_recording;
 	bool m_eraseFile;
 	std::string m_fileName;
 
 	// temporary
-	std::list<cv::Mat> m_buffer;
-	std::list<cv::Mat>::iterator m_currentFrame;
-	TIME_STAMP m_timeBufferFull;
-	bool m_bufferFull;
+	boost::circular_buffer<cv::Mat> m_buffer;
+	TIME_STAMP m_endOfRecord;;
 };
 
 #endif

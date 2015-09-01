@@ -190,5 +190,7 @@ int VideoFileReader::GetMaxFrame()
 
 double VideoFileReader::GetRecordingFps() const
 {
-	return m_recordingFps;
+	if(m_param.fps == 0)
+		return m_recordingFps;
+	return MIN(m_param.fps, m_recordingFps);
 }
