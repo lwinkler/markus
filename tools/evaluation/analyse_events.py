@@ -65,7 +65,22 @@ def is_tool(name):
 
 # Compare with event name: fall, intrusion, ...
 def is_valid(text):
-	""" Function to check if a subtitle is an event """
+	""" Function to check if a subtitle is an event
+
+	Syntaxe (convention):
+		eventName1 [eventName2...][: comment]
+
+	Examples:
+		intrusion
+		intrusion: this is a normal intrusion with a dummy comment
+		intrusion ambiguous
+		foobar: this is not an intrusion
+	"""
+
+	# Extract only the event names
+	if ":" in text:
+		text = (text.split(":"))[0]
+
 	return args.EVENT_NAME.lower() in text.lower()
 
 # Check event name if ambiguous
