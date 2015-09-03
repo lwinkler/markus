@@ -100,7 +100,7 @@ protected:
 	std::vector<Module *> m_inputs;
 	std::vector<ParameterStructure *> m_parameters;
 
-	long long m_frameCount;
+	int64_t m_frameCount;
 	const FactoryParameters& mr_parametersFactory;
 	const FactoryModules& mr_moduleFactory;
 	const FactoryParameters& mr_parameterFactory;

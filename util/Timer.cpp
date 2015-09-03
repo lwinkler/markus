@@ -29,9 +29,9 @@ using namespace std;
 
 std::map<std::string, Timer> QuickTimer::ms_timers;
 
-long int Timer::GetMsLong() const
+int64_t Timer::GetMsLong() const
 {
-	long l = m_timer.value * 1000;
+	int64_t l = m_timer.value * 1000;
 	GetSecDouble();
 	return l;
 

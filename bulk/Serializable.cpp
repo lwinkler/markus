@@ -58,7 +58,7 @@ string signatureJSONValue(const Json::Value &x_val)
 	return "";
 }
 
-string signatureJSONTree(const Json::Value &x_root, unsigned short x_depth)
+string signatureJSONTree(const Json::Value &x_root, int x_depth)
 {
 	x_depth += 1;
 	// cout<<" {type=["<<x_root.type()<<"], size="<<x_root.size()<<"}"<<endl;

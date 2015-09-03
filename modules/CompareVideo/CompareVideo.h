@@ -84,7 +84,7 @@ protected:
 #endif
 
 	// state variables
-	long long m_frameCount;
+	int64_t m_frameCount;
 };
 
 #endif

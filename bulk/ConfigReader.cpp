@@ -70,10 +70,9 @@ void splitTagName(const string& x_searchString, string& xr_tagName, string& xr_a
 
 TiXmlDocument* createDoc(const std::string& x_fileName, bool x_allowCreation)
 {
-	TiXmlDocument* doc = nullptr;
 	try
 	{
-		doc = nullptr; // Initialize to null as there can be an error in construction
+		TiXmlDocument* doc = nullptr; // Initialize to null as there can be an error in construction
 		doc = new TiXmlDocument(x_fileName);
 		if (!doc->LoadFile())
 		{

@@ -35,7 +35,7 @@ class Timer
 {
 	public:
 		Timer() : m_increments(0) {}
-		long GetMsLong() const;
+		int64_t GetMsLong() const;
 		double GetSecDouble() const;
 		inline void Reset(){m_timer.reset();m_increments=0;}
 		inline void Start(){m_timer.start(); m_increments++;}
@@ -45,7 +45,7 @@ class Timer
 
 	protected:
 		cvflann::StartStopTimer m_timer;
-		unsigned long m_increments;
+		uint64_t m_increments;
 };
 
 

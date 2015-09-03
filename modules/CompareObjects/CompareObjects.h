@@ -59,7 +59,7 @@ public:
 	void Reset();
 
 	/* Compare the two images and return the amount of pixels that are different */
-	long ComputeDissimilarity(const cv::Mat& A, const cv::Mat& B);
+	int64_t ComputeDissimilarity(const cv::Mat& A, const cv::Mat& B);
 
 	MKCLASS("CompareObjects");
 	MKDESCR("Compare the two input objects streams and compute the dissimilarity of them for all the sequence");

@@ -55,7 +55,7 @@ protected:
 	bool m_resultsCopied;
 
 	Timer m_timerThread; // note: will not be reseted
-	long long m_countFramesThread;
+	int64_t m_countFramesThread;
 
 	// For an async module, this method is used to check if we need to process the input
 	inline virtual bool IsInputProcessed() const {return (m_currentTimeStamp - m_timeStampLastThread) * m_param.detectionFps >= 1000;}
