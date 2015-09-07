@@ -49,6 +49,7 @@ void KeyPointsDense::Reset()
 {
 	ModuleKeyPoints::Reset();
 	CLEAN_DELETE(mp_detector);
+	/* TODO HACK
 	mp_detector = new DenseFeatureDetector(
 		m_param.initFeatureScale,
 		m_param.featureScaleLevels,
@@ -58,6 +59,7 @@ void KeyPointsDense::Reset()
 		m_param.varyXyStepWithScale,
 		m_param.varyImgBoundWithScale
 	);
+	*/
 	if(mp_detector == nullptr && mp_detector->empty())
 		throw MkException("Cannot create detector", LOC);
 }

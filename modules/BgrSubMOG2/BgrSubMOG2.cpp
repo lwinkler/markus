@@ -63,13 +63,13 @@ void BgrSubMOG2::Reset()
 {
 	Module::Reset();
 	CLEAN_DELETE(mp_mog2);
-	mp_mog2 = new BackgroundSubtractorMOG2(m_param.history, m_param.varThres, m_param.bShadowDetection);
-	mp_mog2->initialize(m_input.size(), m_input.type());
+	// TODO HACK mp_mog2 = new BackgroundSubtractorMOG2(m_param.history, m_param.varThres, m_param.bShadowDetection);
+	// TODO HACK mp_mog2->initialize(m_input.size(), m_input.type());
 }
 
 void BgrSubMOG2::ProcessFrame()
 {
-	mp_mog2->operator ()(m_input, m_foregroundWithShadows, m_param.learningRate);
+	mp_mog2->apply(m_input, m_foregroundWithShadows, m_param.learningRate);
 	mp_mog2->getBackgroundImage(m_background);
 
 	// Threshold shadows (value=128) to 0

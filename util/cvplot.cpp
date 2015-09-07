@@ -2,6 +2,7 @@
 
 #include "cvplot.h"
 
+using namespace std;
 using namespace cv;
 
 namespace CvPlot

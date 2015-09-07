@@ -13,6 +13,8 @@
 #include "Event.h"
 #include "StreamObject.h"
 
+#include <list>
+
 class ConfigReader;
 
 /**

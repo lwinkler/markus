@@ -49,6 +49,7 @@ void KeyPointsGoodFeaturesToTrack::Reset()
 {
 	ModuleKeyPoints::Reset();
 	CLEAN_DELETE(mp_detector);
+	/* TODO HACK
 	mp_detector = new GoodFeaturesToTrackDetector(
 		m_param.maxCorners,
 		m_param.qualityLevel,
@@ -56,6 +57,7 @@ void KeyPointsGoodFeaturesToTrack::Reset()
 		m_param.blockSize,
 		m_param.useHarrisDetector,
 		m_param.k);
+	*/
 
 	if(mp_detector == nullptr && mp_detector->empty())
 		throw MkException("Cannot create detector", LOC);

@@ -49,6 +49,7 @@ void KeyPointsOrb::Reset()
 {
 	ModuleKeyPoints::Reset();
 	CLEAN_DELETE(mp_detector);
+	/* TODO HACK
 	mp_detector = new ORB(
 		m_param.nbFeatures,
 		m_param.scaleFactor,
@@ -59,6 +60,7 @@ void KeyPointsOrb::Reset()
 		ORB::HARRIS_SCORE,
 		m_param.edgeThreshold // Note: the 2 params should be roughly equivalent according to the doc
 	);
+	*/
 	if(mp_detector == nullptr && mp_detector->empty())
 		throw MkException("Cannot create detector", LOC);
 }

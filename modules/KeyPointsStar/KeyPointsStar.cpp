@@ -49,6 +49,7 @@ void KeyPointsStar::Reset()
 {
 	ModuleKeyPoints::Reset();
 	CLEAN_DELETE(mp_detector);
+	/* TODO HACK
 	mp_detector = new StarFeatureDetector(
 		m_param.maxSize,
 		m_param.responseThreshold,
@@ -56,6 +57,7 @@ void KeyPointsStar::Reset()
 		m_param.lineThresholdBinarized,
 		m_param.suppressNonmaxSize
 	);
+	*/
 	if(mp_detector == nullptr && mp_detector->empty())
 		throw MkException("Cannot create detector", LOC);
 }

@@ -84,10 +84,15 @@ For compilation use the following flags.
         -DWITH_XINE=OFF \
         -DBUILD_TESTS=OFF \
         -DCMAKE_SKIP_RPATH=ON \
-        -DWITH_CUDA=OFF
+        -DWITH_CUDA=OFF \
+        ..
 
         make
         sudo make install
+
+Side note: Installation of OpenCV 3 here: TODO: clarify
+
+	http://rodrigoberriel.com/2014/10/installing-opencv-3-0-0-on-ubuntu-14-04/
 
 
 

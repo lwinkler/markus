@@ -49,11 +49,13 @@ void KeyPointsBrisk::Reset()
 {
 	ModuleKeyPoints::Reset();
 	CLEAN_DELETE(mp_detector);
+	/* TODO HACK
 	mp_detector = new BRISK(
 		m_param.threshold,
 		m_param.octaves,
 		m_param.patternScale
 	);
+	*/
 	if(mp_detector == nullptr && mp_detector->empty())
 		throw MkException("Cannot create detector", LOC);
 }
