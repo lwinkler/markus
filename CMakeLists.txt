@@ -56,11 +56,10 @@ set(CMAKE_AUTOMOC ON)
 # to always look for includes there:
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-# Search all directory named modules...
+# Search all directory named modules... (note: we need to preserve the order)
 file(GLOB modules_tmp
-    "modules2*" "modules3*" "modules4"
+    "modules" "modules2*" "modules3*" "modules4"
 )
-list(APPEND modules_dirs "modules")
 foreach(iter IN LISTS modules_tmp)
 	get_filename_component(ext1  ${iter} EXT)
 	get_filename_component(name1 ${iter} NAME_WE)
