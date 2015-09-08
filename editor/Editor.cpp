@@ -218,9 +218,9 @@ void Editor::CreateActions()
 	connect(saveProjectAct, SIGNAL(triggered()), this, SLOT(save()));
 	saveProjectAsAct = new QAction(tr("Save project as"), this);
 	connect(saveProjectAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
-	updateProjectsAct = new QAction(tr("Update list of projects"), this);
+	updateProjectsAct = new QAction(tr("Update the list of projects"), this);
 	connect(updateProjectsAct, SIGNAL(triggered()), this, SLOT(updateProjects()));
-	updateModulesAct = new QAction(tr("Update modules and recompile"), this);
+	updateModulesAct = new QAction(tr("Update the list of modules"), this);
 	connect(updateModulesAct, SIGNAL(triggered()), this, SLOT(updateModules()));
 }
 

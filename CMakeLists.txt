@@ -65,7 +65,7 @@ foreach(iter IN LISTS modules_tmp)
 	get_filename_component(name1 ${iter} NAME_WE)
 	list(APPEND modules_dirs "${name1}${ext1}")
 endforeach(iter)
-message("Looking for modules in ${modules_dirs}")
+# message("Looking for modules in ${modules_dirs}")
 
 include_directories(${PYTHON_INCLUDE_DIRS})
 include_directories(util bulk ${modules_dirs})
