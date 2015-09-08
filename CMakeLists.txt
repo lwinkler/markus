@@ -56,9 +56,20 @@ set(CMAKE_AUTOMOC ON)
 # to always look for includes there:
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+# Search all directory named modules...
+file(GLOB modules_tmp
+    "modules2*" "modules3*" "modules4"
+)
+list(APPEND modules_dirs "modules")
+foreach(iter IN LISTS modules_tmp)
+	get_filename_component(ext1  ${iter} EXT)
+	get_filename_component(name1 ${iter} NAME_WE)
+	list(APPEND modules_dirs "${name1}${ext1}")
+endforeach(iter)
+message("Looking for modules in ${modules_dirs}")
 
 include_directories(${PYTHON_INCLUDE_DIRS})
-include_directories(util bulk modules modules2)
+include_directories(util bulk ${modules_dirs})
 
 
 set(markus_SRCS main.cpp)
@@ -66,9 +77,9 @@ set(markus_SRCS main.cpp)
 #-------------------------------------------------------------------------------- 
 if(Markus_NO_GUI)
 	add_definitions(-DMARKUS_NO_GUI)
-	set(DEPS util bulk modules)
+	set(DEPS util bulk ${modules_dirs})
 else()
-	set(DEPS util bulk gui editor modules)
+	set(DEPS util bulk gui editor ${modules_dirs})
 	include_directories(gui editor)
 endif()
 
@@ -94,7 +105,9 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_subdirectory(util)
 add_subdirectory(bulk)
-add_subdirectory(modules)
+foreach(iter IN LISTS modules_dirs)
+	add_subdirectory(${iter})
+endforeach(iter)
 add_subdirectory(tools)
 if(NOT Markus_NO_GUI)
 	add_subdirectory(gui)
@@ -116,12 +129,12 @@ add_custom_target(doc
 
 add_custom_target(lint
 	COMMENT "Check C++ lint rules with the lint tool provided by Google"
-	COMMAND find bulk modules/ modules2/ util tests main.cpp editor gui -name \"*.h\" -print -o -name \"*.cpp\" ! -name \"moc_*.cpp\" -print | xargs tools/cpplint.py --filter=-whitespace,-legal,-build,-runtime/references,-runtime/explicit,-readability/todo,-readability/streams,-readability/function
+	COMMAND find -L bulk ${modules_dirs} util tests main.cpp editor gui -name \"*.h\" -print -o -name \"*.cpp\" ! -name \"moc_*.cpp\" -print | xargs tools/cpplint.py --filter=-whitespace,-legal,-build,-runtime/references,-runtime/explicit,-readability/todo,-readability/streams,-readability/function
 )
 
 add_custom_target(check
 	COMMENT "Check C++ code statically with cppcheck"
-	COMMAND cppcheck bulk modules/ modules2/ util tests main.cpp editor gui --force --enable=all -q
+	COMMAND cppcheck bulk ${modules_dirs} util tests main.cpp editor gui --force --enable=all -q
 )
 
 add_custom_target(update_modules_list
@@ -142,12 +155,12 @@ add_custom_target(tests
 
 add_custom_target(indent
 	COMMENT "Indent all files by following the standart"
-	COMMAND find . -name \"*.h\" -print -o -name \"*.cpp\" -print | xargs astyle -nToO --style=allman
+	COMMAND find -L . -name \"*.h\" -print -o -name \"*.cpp\" -print | xargs astyle -nToO --style=allman
 )
 
 add_custom_target(xmlindent
 	COMMENT "Indent all files by following the standart"
-	COMMAND find projects/ projects2/ -name \"*.xml\" -print | xargs -i{} xmlindent -wt {}
+	COMMAND find -L projects/ projects2/ -name \"*.xml\" -print | xargs -i{} xmlindent -wt {}
 )
 
 #-------------------------------------------------------------------------------- 
