@@ -1,0 +1,57 @@
+diff --git a/modules/highgui/src/cap_ffmpeg_impl.hpp b/modules/highgui/src/cap_ffmpeg_impl.hpp
+index 2b18559..9c5fae8 100644
+--- a/modules/highgui/src/cap_ffmpeg_impl.hpp
++++ b/modules/highgui/src/cap_ffmpeg_impl.hpp
+@@ -45,6 +45,8 @@
+ #include <algorithm>
+ #include <limits>
+ 
++#define CALC_FFMPEG_VERSION(a,b,c) ( a<<16 | b<<8 | c )
++
+ #if defined _MSC_VER && _MSC_VER >= 1200
+ #pragma warning( disable: 4244 4510 4512 4610 )
+ #endif
+@@ -61,6 +63,10 @@ extern "C" {
+ 
+ #include <libavutil/mathematics.h>
+ 
++#if LIBAVUTIL_BUILD > CALC_FFMPEG_VERSION(51,11,0)
++  #include <libavutil/opt.h>
++#endif
++
+ #ifdef WIN32
+   #define HAVE_FFMPEG_SWSCALE 1
+   #include <libavcodec/avcodec.h>
+@@ -260,6 +266,10 @@ struct CvCapture_FFMPEG
+    and so the filename is needed to reopen the file on backward seeking.
+ */
+     char              * filename;
++
++#if LIBAVFORMAT_BUILD >= CALC_FFMPEG_VERSION(52, 111, 0)
++    AVDictionary *dict;
++#endif
+ };
+ 
+ void CvCapture_FFMPEG::init()
+@@ -280,6 +290,10 @@ void CvCapture_FFMPEG::init()
+     avcodec = 0;
+     frame_number = 0;
+     eps_zero = 0.000025;
++
++#if LIBAVFORMAT_BUILD >= CALC_FFMPEG_VERSION(52, 111, 0)
++    dict = NULL;
++#endif
+ }
+ 
+ 
+@@ -535,7 +549,9 @@ bool CvCapture_FFMPEG::open( const char* _filename )
+     close();
+ 
+ #if LIBAVFORMAT_BUILD >= CALC_FFMPEG_VERSION(52, 111, 0)
+-    int err = avformat_open_input(&ic, _filename, NULL, NULL);
++    av_dict_set(&dict, "rtsp_transport", "tcp", 0);
++    printf("FORCE rtsp_transport to tcp\n");
++    int err = avformat_open_input(&ic, _filename, NULL, &dict);
+ #else
+     int err = av_open_input_file(&ic, _filename, NULL, 0, NULL);
+ #endif

@@ -89,6 +89,7 @@ For compilation use the following flags.
         make
         sudo make install
 
+**Important** : To force the rtsp streams to use TCP you need to apply the patch in patch_tcp.diff to opencv sources (will not be needed anymore for OpenCV 3.0)
 
 
 ###  Compilation
