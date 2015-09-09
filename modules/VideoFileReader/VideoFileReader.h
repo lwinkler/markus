@@ -60,7 +60,6 @@ public:
 
 	void Capture();
 	void Reset();
-	const std::string& GetName() {return m_name;}
 	// const cv::Mat * GetImage() const {return m_output;}
 
 	// Specific to file reader

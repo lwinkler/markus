@@ -50,7 +50,7 @@ index 2b18559..9c5fae8 100644
  #if LIBAVFORMAT_BUILD >= CALC_FFMPEG_VERSION(52, 111, 0)
 -    int err = avformat_open_input(&ic, _filename, NULL, NULL);
 +    av_dict_set(&dict, "rtsp_transport", "tcp", 0);
-+    printf("FORCE rtsp_transport to tcp\n");
++    
 +    int err = avformat_open_input(&ic, _filename, NULL, &dict);
  #else
      int err = av_open_input_file(&ic, _filename, NULL, 0, NULL);

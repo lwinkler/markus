@@ -65,7 +65,6 @@ public:
 
 	void Capture();
 	virtual void Reset();
-	const std::string& GetName() {return m_name;}
 	virtual double GetRecordingFps() const override;
 
 private:

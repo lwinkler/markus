@@ -89,6 +89,8 @@ For compilation use the following flags.
         make
         sudo make install
 
+You can select which version of OpenCV to use with ccmake (OpenCV_DIR=/usr/local/share/OpenCV)
+
 **Important** : To force the rtsp streams to use TCP you need to apply the patch in patch_tcp.diff to opencv sources (will not be needed anymore for OpenCV 3.0)
 
 

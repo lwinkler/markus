@@ -73,7 +73,7 @@ void VideoFileBufferWriter::CloseFile()
 			LOG_WARN(m_logger, "Error deleting temporary video file named " << m_fileName);
 	}
 	m_recording  = false;
-	m_eraseFile  = true;
+	m_eraseFile  = !m_param.keepAllRecordings;
 	m_fileName   = "";
 }
 

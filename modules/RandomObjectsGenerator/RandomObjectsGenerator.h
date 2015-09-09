@@ -61,7 +61,6 @@ public:
 
 	void Capture();
 	virtual void Reset();
-	const std::string& GetName() {return m_name;}
 
 private:
 	const Parameters& m_param;
