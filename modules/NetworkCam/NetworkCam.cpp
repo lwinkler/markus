@@ -84,7 +84,7 @@ void NetworkCam::Reset()
 	// but generally the info is not contained inside the stream and CV_CAP_PROP_FPS
 	// always equals 1000
 	m_recordingFps = m_capture.get(CV_CAP_PROP_FPS);
-	m_recordingFps = m_recordingFps == 1000.0 ? 8 : m_recordingFps;
+	m_recordingFps = (m_recordingFps == 1000.0 || m_recordingFps != m_recordingFps /*Nan*/) ? 8 : m_recordingFps;
 
 	// Apparently you cannot set width and height. We try anyway
 	m_capture.set(CV_CAP_PROP_FRAME_WIDTH,  m_param.width);
