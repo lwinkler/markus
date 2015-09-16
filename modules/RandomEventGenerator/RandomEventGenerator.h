@@ -40,6 +40,7 @@ public:
 		{
 			m_list.push_back(new ParameterInt("nb_features", 	4, 	0, 	1000,	 &nbFeatures,	"Number of features per event"));
 			m_list.push_back(new ParameterInt("random_seed", 	0, 	0, 	INT_MAX, &randomSeed,	"Seed for random generator: 0 means seed is generated from timer"));
+			m_list.push_back(new ParameterDouble("time_interval", 	0, 	0, 	DBL_MAX, &timeInterval,	"Time interval between events [s]"));
 			RefParameterByName("type").SetDefault("CV_8UC3");
 			RefParameterByName("fps").SetDefault("5");
 			Init();
@@ -48,6 +49,7 @@ public:
 	public:
 		int nbFeatures;
 		int randomSeed;
+		double timeInterval;
 	};
 
 	RandomEventGenerator(ParameterStructure& xr_params);
@@ -70,6 +72,7 @@ protected:
 
 	// state
 	unsigned int m_seed;
+	TIME_STAMP   m_timeNextEvent;
 };
 
 #endif

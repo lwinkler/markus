@@ -40,6 +40,7 @@ RandomEventGenerator::RandomEventGenerator(ParameterStructure& xr_params):
 	AddOutputStream(0, new StreamEvent("event", m_event, *this,  "Event generated"));
 	AddOutputStream(1, new StreamImage("image", m_output, *this, "Test image"));
 	m_seed = 0;
+	m_timeNextEvent = 0;
 }
 
 RandomEventGenerator::~RandomEventGenerator()
@@ -56,6 +57,7 @@ void RandomEventGenerator::Reset()
 
 	// We must initialize the last time stamp
 	m_lastTimeStamp = - 1000 / m_param.fps;
+	m_timeNextEvent = 0;
 }
 
 void RandomEventGenerator::Capture()
@@ -66,39 +68,43 @@ void RandomEventGenerator::Capture()
 
 	m_event.Empty();
 	m_output.setTo(0);
-
-	// Generate an event with an associated object
-	if(m_param.nbFeatures == 0)
-	{
-		m_event.Raise("random");
-	}
-	else
-	{
-		Object obj("test");
-		for(int i = 0 ; i < m_param.nbFeatures ; i++)
-		{
-			stringstream name;
-			name<<"feat"<<i;
-			obj.AddFeature(name.str(), static_cast<float>(rand_r(&m_seed)) / RAND_MAX);
-		}
-
-		// Output an image in relation with the event
-		int x = m_param.width / 2, y = m_param.width / 2, r = m_param.width / 4,  c = 0, l = -1;
-		if(m_param.nbFeatures > 0)
-			x = dynamic_cast<const FeatureFloat&>(obj.GetFeature("feat0")).value * m_param.width;
-		if(m_param.nbFeatures > 1)
-			y = dynamic_cast<const FeatureFloat&>(obj.GetFeature("feat1")).value * m_param.height;
-		if(m_param.nbFeatures > 2)
-			r = dynamic_cast<const FeatureFloat&>(obj.GetFeature("feat2")).value * m_param.width / 4;
-		if(m_param.nbFeatures > 3)
-			c = dynamic_cast<const FeatureFloat&>(obj.GetFeature("feat3")).value * 255;
-		if(m_param.nbFeatures > 4)
-			l = dynamic_cast<const FeatureFloat&>(obj.GetFeature("feat4")).value * 5 + 1;
-		circle(m_output, Point(x, y), r, Scalar(100, c, 255 - c), l);
-
-		m_event.Raise("random", obj);
-	}
 	m_currentTimeStamp = m_lastTimeStamp + 1000 / m_param.fps;
+
+	if(m_timeNextEvent <= m_currentTimeStamp)
+	{
+		// Generate an event with an associated object
+		if(m_param.nbFeatures == 0)
+		{
+			m_event.Raise("random");
+		}
+		else
+		{
+			Object obj("test");
+			for(int i = 0 ; i < m_param.nbFeatures ; i++)
+			{
+				stringstream name;
+				name<<"feat"<<i;
+				obj.AddFeature(name.str(), static_cast<float>(rand_r(&m_seed)) / RAND_MAX);
+			}
+
+			// Output an image in relation with the event
+			int x = m_param.width / 2, y = m_param.width / 2, r = m_param.width / 4,  c = 0, l = -1;
+			if(m_param.nbFeatures > 0)
+				x = dynamic_cast<const FeatureFloat&>(obj.GetFeature("feat0")).value * m_param.width;
+			if(m_param.nbFeatures > 1)
+				y = dynamic_cast<const FeatureFloat&>(obj.GetFeature("feat1")).value * m_param.height;
+			if(m_param.nbFeatures > 2)
+				r = dynamic_cast<const FeatureFloat&>(obj.GetFeature("feat2")).value * m_param.width / 4;
+			if(m_param.nbFeatures > 3)
+				c = dynamic_cast<const FeatureFloat&>(obj.GetFeature("feat3")).value * 255;
+			if(m_param.nbFeatures > 4)
+				l = dynamic_cast<const FeatureFloat&>(obj.GetFeature("feat4")).value * 5 + 1;
+			circle(m_output, Point(x, y), r, Scalar(100, c, 255 - c), l);
+
+			m_event.Raise("random", obj);
+		}
+		m_timeNextEvent = m_currentTimeStamp + m_param.timeInterval * 1000;
+	}
 	LOG_DEBUG(m_logger, "RandomObjectsGenerator: Capture time: "<<m_currentTimeStamp);
 }
 
