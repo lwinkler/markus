@@ -1,5 +1,5 @@
 <param name="param_calibrationByModel">
 	<type>serializable</type>
-	<value default='{"camera_height":2404.226076415452,"focal":240.0,"height_model":480,"roll":137.4711820374162,"width_model":640,"yaw":-1.203589252653426}'>{"camera_height":2404.226076415452,"focal":240.0,"height_model":480,"roll":137.4711820374162,"width_model":640,"yaw":-1.203589252653426}</value>
+	<value default='{"height":2404.226076415452,"focal":240.0,"nrows":480,"roll":137.4711820374162,"ncols":640,"yaw":-1.203589252653426}'>{"height":2404.226076415452,"focal":240.0,"nrows":480,"roll":137.4711820374162,"ncols":640,"yaw":-1.203589252653426}</value>
 	<description>Parameter of type CalibrationByModel</description>
 </param>

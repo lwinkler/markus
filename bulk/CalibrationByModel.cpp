@@ -34,8 +34,8 @@ CalibrationByModel::CalibrationByModel()
 	yaw           = 0.0;
 	roll          = 0.0;
 	focal         = 0.0;
-	height_model  = 0;
-	width_model   = 0;
+	nrows         = 0;
+	ncols         = 0;
 }
 
 
@@ -45,20 +45,20 @@ CalibrationByModel::CalibrationByModel(double x_camera_height, double x_yaw, dou
 	yaw           = x_yaw;
 	roll          = x_roll;
 	focal         = x_focal;
-	height_model  = x_height_model;
-	width_model   = x_width_model;
+	nrows         = x_height_model;
+	ncols         = x_width_model;
 }
 
 void CalibrationByModel::Serialize(std::ostream& x_out, const std::string& x_dir) const
 {
 
 	Json::Value root;
-	root["camera_height"] = camera_height;
+	root["height"] = camera_height;
 	root["yaw"]           = yaw;
 	root["roll"]          = roll;
 	root["focal"]         = focal;
-	root["height_model"]  = height_model;
-	root["width_model"]   = width_model;
+	root["nrows"]         = nrows;
+	root["ncols"]         = ncols;
 	x_out << root;
 }
 
@@ -66,10 +66,10 @@ void CalibrationByModel::Deserialize(std::istream& x_in, const std::string& x_di
 {
 	Json::Value root;
 	x_in >> root;
-	camera_height = root["camera_height"].asDouble();
+	camera_height = root["height"].asDouble(); // TODO: Deserialization SHOULD always check if the value exists
 	yaw           = root["yaw"].asDouble();
 	roll          = root["roll"].asDouble();
 	focal         = root["focal"].asDouble();
-	height_model  = root["height_model"].asInt();
-	width_model   = root["width_model"].asInt();
+	nrows         = root["nrows"].asInt();
+	ncols         = root["ncols"].asInt();
 }

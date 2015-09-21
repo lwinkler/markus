@@ -39,8 +39,8 @@ public:
 	double yaw;           // in degree
 	double roll;          // in degree
 	double focal;         // un m
-	int height_model;     // in px
-	int width_model;      // in px
+	int ncols;            // in px
+	int nrows;            // in px
 };
 
 

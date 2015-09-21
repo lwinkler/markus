@@ -160,8 +160,8 @@ public:
 	void testParameterCalibrationByModel()
 	{
 		TS_TRACE("Test ParameterSerializable - CalibrationByModel");
-		string json_data = "{\"camera_height\":2404.226076415452,\"focal\":240.0,\"height_model\":480,\"roll\":137.4711820374162,\"width_model\":640,\"yaw\":-1.203589252653426}";
-		string json_data2 = "{\"camera_height\":7000.52453240,\"focal\":910.0,\"height_model\":287,\"roll\":-10.650,\"width_model\":384,\"yaw\":-35.30}";
+		string json_data = "{\"height\":2404.226076415452,\"focal\":240.0,\"nrows\":480,\"roll\":137.4711820374162,\"ncols\":640,\"yaw\":-1.203589252653426}";
+		string json_data2 = "{\"height\":7000.52453240,\"focal\":910.0,\"nrows\":287,\"roll\":-10.650,\"ncols\":384,\"yaw\":-35.30}";
 
 		CalibrationByModel myCalibrationByModel;
 		ParameterSerializable paramCalibrationByModel("param_calibrationByModel",  json_data2, &myCalibrationByModel, "Parameter of type CalibrationByModel");
