@@ -130,6 +130,9 @@ void FilterObjects::ProcessFrame()
 			m_objectsOut.push_back(elem);
 #ifdef MARKUS_DEBUG_STREAMS
 		rectangle(m_debug, rect, valid ? Green : Gray, 1, 8);
+		// note: we recompute since this may or may not have been done
+		posX = dynamic_cast<const FeatureFloatInTime*>(&elem.GetFeature("x"));
+		posY = dynamic_cast<const FeatureFloatInTime*>(&elem.GetFeature("y"));
 		if(posX != nullptr && posY != nullptr)
 			line(m_debug, Point(posX->initial * diagonal, posY->initial * diagonal), Point(posX->value * diagonal, posY->value * diagonal), valid ? Green : Gray, 1, 8);
 #else
@@ -140,6 +143,7 @@ void FilterObjects::ProcessFrame()
 	// Max number of objects criterion
 	if(m_param.maxObjectsNb >= 0 && m_objectsOut.size() > static_cast<unsigned int>(m_param.maxObjectsNb))
 		m_objectsOut.clear();
+
 
 }
 
