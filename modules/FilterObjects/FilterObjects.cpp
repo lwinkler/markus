@@ -126,7 +126,7 @@ void FilterObjects::ProcessFrame()
 					valid = false;
 				}
 			}
-			catch(bad_cast& e)
+			catch(MkException& e)
 			{
 				LOG_DEBUG(m_logger, "Feature " << m_param.customFeature << " is unexistant: " << e.what());
 				valid = false;
