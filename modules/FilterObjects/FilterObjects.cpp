@@ -116,11 +116,19 @@ void FilterObjects::ProcessFrame()
 
 		if(!m_param.customFeature.empty())
 		{
-			const FeatureFloat& custom = dynamic_cast<const FeatureFloat&>(elem.GetFeature(m_param.customFeature));
-
-			if(	(m_param.minCustom > 0 && custom.value < m_param.minCustom) ||
-					(m_param.maxObjectWidth < FLT_MAX && width.value > m_param.maxCustom))
+			try
 			{
+				const FeatureFloat& custom = dynamic_cast<const FeatureFloat&>(elem.GetFeature(m_param.customFeature));
+
+				if(	(m_param.minCustom > 0 && custom.value < m_param.minCustom) ||
+						(m_param.maxObjectWidth < FLT_MAX && width.value > m_param.maxCustom))
+				{
+					valid = false;
+				}
+			}
+			catch(bad_cast& e)
+			{
+				LOG_DEBUG(m_logger, "Feature " << m_param.customFeature << " is unexistant: " << e.what());
 				valid = false;
 			}
 		}
