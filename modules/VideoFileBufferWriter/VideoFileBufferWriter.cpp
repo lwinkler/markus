@@ -138,16 +138,14 @@ void VideoFileBufferWriter::ProcessFrame()
 	if(m_recording)
 	{
 		m_mutex.lock();
-		if(m_buffer2.empty())
+		if(!m_threadIsWorking)
 		{
 			// Thread is complete: write directly
-			assert(!m_threadIsWorking);
 			m_writer.write(m_input);
 		}
 		else
 		{
 			// Thread is working: add to buffer
-			assert(m_threadIsWorking);
 			if(m_buffer2.size() == m_buffer2.max_size())
 				LOG_ERROR(m_logger, "Buffer is not being written fast enough to disk, loosing frames");
 			m_buffer2.push_back();
@@ -182,13 +180,14 @@ void VideoFileBufferWriter::ProcessFrame()
 			assert(!m_buffer1.empty());
 			assert(!m_buffer2.empty());
 			LOG_DEBUG(m_logger, "Starting thread");
+
 			std::thread t([this]()
 			{
-				m_threadIsWorking = true;
 				// start new thread
 				while(true)
 				{
 					m_mutex.lock();
+					m_threadIsWorking = true;
 					if(m_buffer2.empty())
 					{
 						m_mutex.unlock();
