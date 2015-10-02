@@ -495,6 +495,7 @@ void ConfigReader::OverrideWith(const ConfigReader& x_extraConfig)
 {
 	// TODO unit test
 	// TODO this function should be more generic
+	/*
 	ConfigReader moduleConfig = x_extraConfig.GetSubConfig("application").GetSubConfig("module");
 	while(!moduleConfig.IsEmpty())
 	{
@@ -511,6 +512,26 @@ void ConfigReader::OverrideWith(const ConfigReader& x_extraConfig)
 			}
 		}
 		moduleConfig = moduleConfig.NextSubConfig("module");
+	}
+	*/
+
+	for(const auto& conf1 : x_extraConfig.GetSubConfig("application").FindAll("module"))
+	{
+		if(!conf1.GetSubConfig("parameters").IsEmpty())
+		{
+			for(const auto& conf2 : conf1.GetSubConfig("parameters").FindAll("param"))
+			{
+				if(GetSubConfig("module", "name", conf1.GetAttribute("name")).IsEmpty())
+				{
+					// LOG_WARN(m_logger, "Module " << conf1.GetAttribute("name") << " cannot be overriden since it does not exist in the current config");
+					continue;
+				}
+				// Override parameter
+				RefSubConfig("module", "name", conf1.GetAttribute("name"))
+				.RefSubConfig("parameters").RefSubConfig("param", "name", conf2.GetAttribute("name"), true)
+				.SetValue(conf2.GetValue());
+			}
+		}
 	}
 }
 
