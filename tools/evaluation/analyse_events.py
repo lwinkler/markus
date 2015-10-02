@@ -242,9 +242,12 @@ def evaluate(events, truths):
 
 	# We use text files to store false positives, false negatives and true positives
 	# TODO: In the future the generated files should respect an existing format. E.g. *.ass or *.csv or pickle
+	#   - the 3 first lines were added by Alexandre Heili for his scripts
+	#   - the 4th line was added by Florian Rossier
 	fid_fp = open(args.output + '/FP.txt','w')
 	fid_fn = open(args.output + '/FN.txt','w')
 	fid_tp = open(args.output + '/TP.txt','w')
+	fid_gt = open(args.output + '/GT.txt','w') 
 	
 	# Variable to log event
 	log_event = []
@@ -284,13 +287,15 @@ def evaluate(events, truths):
 					evt_dup = True
 				matched_events[event.id].append(truth)
 				matched_truths[truth.id].append(event)
-
+		if event.id in matched_events:
+            		fid_gt.write('1\n') # this is a true event mark it with 1
 		# Log event
 		log_event.append((event, matched_events[event.id] if event.id in matched_events else [], event.id in matched_events, evt_dup))
 
 		if not event.id in matched_events:
 			fp += 1
 			fid_fp.write('%s %s\n' % (event.begin.milis, event.end.milis))
+			fid_gt.write('0\n') #false positive event mark it with 0
 
 	tp = 0
 	for truth in truths:
@@ -318,6 +323,7 @@ def evaluate(events, truths):
 	fid_fp.close()
 	fid_fn.close()
 	fid_tp.close()
+	fid_gt.close()
 
 	return (results, (log_event, log_truth))
 
