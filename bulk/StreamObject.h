@@ -48,8 +48,8 @@ public:
 	virtual void RenderTo(cv::Mat& x_output) const;
 	virtual void Query(int x_posX, int x_posY) const;
 	virtual void Randomize(unsigned int& xr_seed);
-	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
-	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
+	virtual void Serialize(MkJson& stream, const std::string& x_dir) const;
+	virtual void Deserialize(MkJson& stream, const std::string& x_dir);
 	// double GetFeatureValue(const std::vector<Feature>& x_vect, const char* x_name);
 
 protected:

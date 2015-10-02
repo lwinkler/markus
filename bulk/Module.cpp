@@ -344,42 +344,33 @@ void Module::PrintStatistics(ConfigReader& xr_xmlResult) const
 * @param x_out Output stream
 * @param x_dir Directory (for images)
 */
-void Module::Serialize(ostream& x_out, const string& x_dir) const
+void Module::Serialize(MkJson& xr_out, const string& x_dir) const
 {
-	Json::Value root;
-
-	root["id"]                   = m_id;
-	root["name"]                 = m_name;
-	root["pause"]                = m_pause;
-	// root["timer_conversion"]      = m_timerConversion.GetMsLong();
-	// root["timer_processing"]      = m_timerProcessing.GetMsLong();
-	// root["timer_waiting"]         = m_timerWaiting.GetMsLong();
-	root["countProcessedFrames"] = m_countProcessedFrames;
+	xr_out["id"]                   = m_id;
+	xr_out["name"]                 = m_name;
+	xr_out["pause"]                = m_pause;
+	// xr_out["timer_conversion"]      = m_timerConversion.GetMsLong();
+	// xr_out["timer_processing"]      = m_timerProcessing.GetMsLong();
+	// xr_out["timer_waiting"]         = m_timerWaiting.GetMsLong();
+	xr_out["countProcessedFrames"] = m_countProcessedFrames;
 
 	// Dump inputs
 	for(const auto & elem : m_inputStreams)
 	{
-		stringstream ss;
-		elem.second->Serialize(ss, x_dir);
-		ss >> root["inputs"][elem.first];
+		elem.second->Serialize(xr_out["inputs"].Create(elem.first), x_dir);
 	}
 	// Dump outputs
 	for(const auto & elem : m_outputStreams)
 	{
-		stringstream ss;
-		elem.second->Serialize(ss, x_dir);
-		ss >> root["outputs"][elem.first];
+		elem.second->Serialize(xr_out["outputs"].Create(elem.first), x_dir);
 	}
 #ifdef MARKUS_DEBUG_STREAMS
 	// Dump debugs
 	for(const auto & elem : m_debugStreams)
 	{
-		stringstream ss;
-		elem.second->Serialize(ss, x_dir);
-		ss >> root["debugs"][elem.first];
+		elem.second->Serialize(xr_out["debugs"].Create(elem.first), x_dir);
 	}
 #endif
-	x_out << root;
 }
 
 /**
@@ -388,53 +379,42 @@ void Module::Serialize(ostream& x_out, const string& x_dir) const
 * @param x_in  Input stream
 * @param x_dir Input dir (for images)
 */
-void Module::Deserialize(istream& x_in, const string& x_dir)
+void Module::Deserialize(MkJson& xr_in, const string& x_dir)
 {
-	Json::Value root;
-	x_in >> root;
-
-	m_id                   = root["id"].asInt();
-	m_name                 = root["name"].asString();
-	m_pause                = root["pause"].asBool();
-	// m_timerConversion      = root["timer_conversion"].asInt64();
-	// m_timerProcessing      = root["timer_processing"].asInt64();
-	// m_timerWaiting         = root["timer_waiting"].asInt64();
+	m_id                   = xr_in["id"].AsInt();
+	m_name                 = xr_in["name"].AsString();
+	m_pause                = xr_in["pause"].AsBool();
+	// m_timerConversion      = xr_in["timer_conversion"].AsInt64();
+	// m_timerProcessing      = xr_in["timer_processing"].AsInt64();
+	// m_timerWaiting         = xr_in["timer_waiting"].AsInt64();
 	m_timerConversion.Reset();
 	m_timerProcessing.Reset();
 	m_timerWaiting.Reset();
-	m_countProcessedFrames = root["countProcessedFrames"].asInt64();
-
-	stringstream ss;
+	m_countProcessedFrames = xr_in["countProcessedFrames"].AsInt64();
 
 	// read inputs
-	unsigned int size1 = root["inputs"].size();
+	unsigned int size1 = xr_in["inputs"].Size();
 	assert(size1 == m_inputStreams.size());
 	for(unsigned int i = 0 ; i < size1 ; i++)
 	{
-		ss.clear();
-		ss << root["inputs"][i];
-		m_inputStreams[i]->Deserialize(ss, x_dir);
+		m_inputStreams[i]->Deserialize(xr_in["inputs"][i], x_dir);
 	}
 
 	// read outputs
-	size1 = root["outputs"].size();
+	size1 = xr_in["outputs"].Size();
 	assert(size1 == m_outputStreams.size());
 	for(unsigned int i = 0 ; i < size1 ; i++)
 	{
-		ss.clear();
-		ss << root["outputs"][i];
-		m_outputStreams[i]->Deserialize(ss, x_dir);
+		m_outputStreams[i]->Deserialize(xr_in["outputs"][i], x_dir);
 	}
 
 #ifdef MARKUS_DEBUG_STREAMS
 	// read debug streams
-	size1 = root["debugs"].size();
+	size1 = xr_in["debugs"].Size();
 	assert(size1 == m_debugStreams.size());
 	for(unsigned int i = 0 ; i < size1 ; i++)
 	{
-		ss.clear();
-		ss << root["debugs"][i];
-		m_debugStreams[i]->Deserialize(ss, x_dir);
+		m_debugStreams[i]->Deserialize(xr_in["debugs"][i], x_dir);
 	}
 #endif
 }

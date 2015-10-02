@@ -76,24 +76,15 @@ public:
 	{
 		LOG_INFO(m_logger, "value = " << m_scalar);
 	}
-	virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const
+	virtual void Serialize(MkJson& xr_out, const std::string& x_dir) const
 	{
-		Json::Value root;
-		std::stringstream ss;
-		Stream::Serialize(ss, x_dir);
-
-		ss >> root;
-		root["value"] = m_scalar;
-		x_out << root;
+		Stream::Serialize(xr_out, x_dir);
+		xr_out["value"] = m_scalar;
 	}
-	virtual void Deserialize(std::istream& x_in, const std::string& x_dir)
+	virtual void Deserialize(MkJson& xr_in, const std::string& x_dir)
 	{
-		Json::Value root;
-		x_in >> root;  // note: copy first for local use
-		std::stringstream ss;
-		ss << root;
-		Stream::Deserialize(ss, x_dir);
-		m_scalar = root["value"].asDouble();
+		Stream::Deserialize(xr_in, x_dir);
+		m_scalar = xr_in["value"].AsDouble();
 	}
 	virtual void Randomize(unsigned int& xr_seed){randomize(m_scalar, xr_seed);}
 	const T& GetScalar() const {return m_scalar;}

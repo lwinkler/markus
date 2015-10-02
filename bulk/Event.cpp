@@ -67,29 +67,25 @@ void Event::Randomize(unsigned int& xr_seed, const string& x_requirement, const 
 	}
 }
 
-void Event::Serialize(ostream& x_out, const string& x_dir) const
+void Event::Serialize(MkJson& xr_out, const string& x_dir) const
 {
-	Json::Value root;
-	root["raised"] = IsRaised();
+	xr_out["raised"] = IsRaised();
 
 	if(IsRaised())
 	{
-		root["eventName"]  = m_eventName;
-		root["dateEvent"] = m_absTimeEvent;
-		root["dateNotif"] = m_absTimeNotif;
+		xr_out["eventName"] = m_eventName;
+		xr_out["dateEvent"] = m_absTimeEvent;
+		xr_out["dateNotif"] = m_absTimeNotif;
 		if(m_object.GetName() != "empty")
 		{
-			stringstream ss;
-			m_object.Serialize(ss, x_dir);
-			ss >> root["object"];
+			m_object.Serialize(xr_out.Create("object"), x_dir);
 		}
-		else root["object"] = Json::Value(Json::nullValue); // Null
-		root["external"] = m_externalInfo;
+		else xr_out["object"] = MkJson::emptyArray();
+		xr_out["external"]    = m_externalInfo;
 	}
-	x_out << root;
 }
 
-void Event::Deserialize(istream& x_in, const string& x_dir)
+void Event::Deserialize(MkJson& xr_in, const string& x_dir)
 {
 	// Note that a null JSON means that the event was not raised
 	Json::Value root;

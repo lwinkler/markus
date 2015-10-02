@@ -115,29 +115,24 @@ void StreamObject::Randomize(unsigned int& xr_seed)
 	}
 }
 
-void StreamObject::Serialize(ostream& x_out, const string& x_dir) const
+void StreamObject::Serialize(MkJson& xr_out, const string& x_dir) const
 {
-	Json::Value root;
-	stringstream ss;
-	Stream::Serialize(ss, x_dir);
-	ss >> root;
+	Stream::Serialize(xr_out, x_dir);
 	int cpt = 0;
 
 	if(m_objects.size() == 0)
-		root["objects"] = Json::Value(Json::arrayValue); // Empty array
+		root["objects"] = MkJson::emptyArray();
 
 	// Serialize vector of objects
 	for(const auto& elem : m_objects)
 	{
-		ss.clear();
-		elem.Serialize(ss, x_dir);
-		ss >> root["objects"][cpt];
-		cpt++;
+		MkJson root;
+		elem.Serialize(root, x_dir);
+		ss >> root["objects"].append(root);
 	}
-	x_out << root;
 }
 
-void StreamObject::Deserialize(istream& x_in, const string& x_dir)
+void StreamObject::Deserialize(MkJson& x_in, const string& x_dir)
 {
 	Json::Value root;
 	x_in >> root;  // note: copy first for local use

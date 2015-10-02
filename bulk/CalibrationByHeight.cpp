@@ -22,8 +22,6 @@
 -------------------------------------------------------------------------------------*/
 
 #include "CalibrationByHeight.h"
-#include "jsoncpp/json/reader.h"
-#include "jsoncpp/json/writer.h"
 
 
 using namespace std;
@@ -42,23 +40,16 @@ CalibrationByHeight::CalibrationByHeight(double x_value_x, double x_value_y, dou
 	height = x_height;
 }
 
-void CalibrationByHeight::Serialize(ostream& x_out, const string& x_dir) const
+void CalibrationByHeight::Serialize(MkJson& xr_out, const string& x_dir) const
 {
-	Json::Value root;
-
-	root["x"] = x;
-	root["y"] = y;
-	root["height"] = height;
-
-
-	x_out << root;
+	xr_out["x"] = x;
+	xr_out["y"] = y;
+	xr_out["height"] = height;
 }
 
-void CalibrationByHeight::Deserialize(istream& x_in, const string& x_dir)
+void CalibrationByHeight::Deserialize(istream& xr_in, const string& x_dir)
 {
-	Json::Value root;
-	x_in >> root;
-	x = root["x"].asFloat();
-	y = root["y"].asFloat();
-	height = root["height"].asFloat();
+	x = xr_in["x"].AsFloat();
+	y = xr_in["y"].AsFloat();
+	height = xr_in["height"].AsFloat();
 }

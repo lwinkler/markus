@@ -125,8 +125,8 @@ public:
 
 	inline void AddDependingModule (Module & x_module) {m_modulesDepending.push_back(&x_module);} /// Add a module to the list: depending modules are called when processing is complete
 	virtual void PrintStatistics(ConfigReader& xr_result) const;
-	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
-	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
+	virtual void Serialize(MkJson& stream, const std::string& x_dir) const;
+	virtual void Deserialize(MkJson& stream, const std::string& x_dir);
 
 	virtual inline bool IsInput() {return false;}
 	void Export(std::ostream& rx_os, int x_indentation);

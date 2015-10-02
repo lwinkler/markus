@@ -44,8 +44,8 @@ public:
 	{
 		randomize(value, xr_seed);
 	}
-	inline virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const { serialize(x_out, value); }
-	inline virtual void Deserialize(std::istream& x_in, const std::string& x_dir) { deserialize(x_in, value);}
+	inline virtual void Serialize(MkJson& x_out, const std::string& x_dir) const { /* TODO serialize(x_out, value); */}
+	inline virtual void Deserialize(MkJson& x_in, const std::string& x_dir) {/* TODO  deserialize(x_in, value);*/}
 
 	// The value of the feature
 	T value;

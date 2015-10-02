@@ -39,8 +39,6 @@ public:
 	virtual Feature* CreateCopy() const = 0;
 	virtual double CompareSquared(const Feature& x_feature) const = 0;
 	virtual void Randomize(unsigned int& xr_seed, const std::string& x_param) = 0;
-	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const = 0;
-	virtual void Deserialize(std::istream& stream, const std::string& x_dir) = 0;
 };
 
 /**

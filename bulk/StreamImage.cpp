@@ -175,28 +175,20 @@ void StreamImage::Randomize(unsigned int& xr_seed)
 	}
 }
 
-void StreamImage::Serialize(ostream& x_out, const string& x_dir) const
+void StreamImage::Serialize(MkJson& xr_out, const string& x_dir) const
 {
-	Json::Value root;
-	stringstream ss;
-	Stream::Serialize(ss, x_dir);
-	ss >> root;
+	Stream::Serialize(xr_out, x_dir);
 	stringstream fileName;
 	fileName << x_dir << "/" << GetModule().GetName() << "." << GetName() << "." << m_timeStamp << ".jpg";
 	imwrite(fileName.str(), m_image);
-	root["image"] = fileName.str();
-	x_out << root;
+	xr_out["image"] = fileName.str();
 }
 
-void StreamImage::Deserialize(istream& x_in, const string& x_dir)
+void StreamImage::Deserialize(MkJson& xr_in, const string& x_dir)
 {
-	Json::Value root;
-	x_in >> root;  // note: copy first for local use
-	stringstream ss;
-	ss << root;
-	Stream::Deserialize(ss, x_dir);
+	Stream::Deserialize(xr_in, x_dir);
 
-	string fileName = root["image"].asString();
+	string fileName = xr_in["image"].AsString();
 	m_image = imread(fileName);
 	if(m_image.empty())
 		throw MkException("Cannot open serialized image from file " + fileName, LOC);

@@ -80,39 +80,31 @@ Object::~Object()
 	m_feats.clear();
 }
 
-void Object::Serialize(ostream& x_out, const string& x_dir) const
+void Object::Serialize(MkJson& xr_out, const string& x_dir) const
 {
-	Json::Value root;
-	root["id"]     = m_id;
-	root["name"]   = m_name;
-	root["x"]      = posX;
-	root["y"]      = posY;
-	root["width"]  = width;
-	root["height"] = height;
+	xr_out["id"]     = m_id;
+	xr_out["name"]   = m_name;
+	xr_out["x"]      = posX;
+	xr_out["y"]      = posY;
+	xr_out["width"]  = width;
+	xr_out["height"] = height;
 
 	for(const auto & elem : m_feats)
 	{
-		stringstream ss;
-		elem.second->Serialize(ss, x_dir);
-		ss >> root["features"][elem.first];
+		elem.second->Serialize(xr_out["features"].create(elem.first), x_dir);
 	}
 	if(m_feats.empty())
-		root["features"] = Json::Value::null;
-
-	x_out << root;
+		xr_out["features"] = MkJson::emptyArray();
 }
 
-void Object::Deserialize(istream& x_in, const string& x_dir)
+void Object::Deserialize(MkJson& xr_in, const string& x_dir)
 {
-	Json::Value root;
-	x_in >> root;
-
-	m_id   = root["id"].asInt();
-	m_name = root["name"].asString();
-	posX   = root["x"].asDouble();
-	posY   = root["y"].asDouble();
-	width  = root["width"].asDouble();
-	height = root["height"].asDouble();
+	m_id   = xr_in["id"].asInt();
+	m_name = xr_in["name"].asString();
+	posX   = xr_in["x"].asDouble();
+	posY   = xr_in["y"].asDouble();
+	width  = xr_in["width"].asDouble();
+	height = xr_in["height"].asDouble();
 
 	m_feats.clear();
 	// TODO: JsonCpp has a bug for serializing floats !
@@ -120,19 +112,21 @@ void Object::Deserialize(istream& x_in, const string& x_dir)
 	// Get an instance of the feature factory
 	const FactoryFeatures& factory(Factories::featuresFactoryBySignature());
 
-	for(const auto& elem : root["features"].getMemberNames())
+/* TODO
+	for(const auto& elem : xr_in["features"].getMemberNames())
 	{
 		// Extract the signature of the feature:
 		//     this allows us to recognize the type of feature
 		stringstream ss;
-		ss << root["features"][elem];
+		ss << xr_in["features"][elem];
 		string signature = Serializable::signature(ss);
 		Feature* feat = factory.Create(signature);
 		stringstream ss2;
-		ss2 << root["features"][elem];
+		ss2 << xr_in["features"][elem];
 		feat->Deserialize(ss2, x_dir);
 		AddFeature(elem, feat);
 	}
+	*/
 }
 
 

@@ -83,38 +83,33 @@ void Stream::Connect(Stream* x_stream, bool x_bothWays)
 		x_stream->Connect(this, false);
 }
 
-void Stream::Serialize(ostream& x_out, const string& x_dir) const
+void Stream::Serialize(MkJson& xr_out, const string& x_dir) const
 {
-	Json::Value root;
-	root["name"]        = m_name;
-	// root["id"]          = m_id;
-	root["type"]        = GetType();
-	root["width"]       = m_width;
-	root["height"]      = m_height;
-	root["description"] = m_description;
-	root["timeStamp"]   = m_timeStamp.load();
-	root["connected"]   = IsConnected();
-	root["ready"]       = m_isReady;
-	x_out << root;
+	xr_out["name"]        = m_name;
+	// xr_out["id"]          = m_id;
+	xr_out["type"]        = GetType();
+	xr_out["width"]       = m_width;
+	xr_out["height"]      = m_height;
+	xr_out["description"] = m_description;
+	xr_out["timeStamp"]   = m_timeStamp.load();
+	xr_out["connected"]   = IsConnected();
+	xr_out["ready"]       = m_isReady;
 }
 
 
-void Stream::Deserialize(istream& x_in, const string& x_dir)
+void Stream::Deserialize(MkJson& xr_in, const string& x_dir)
 {
-	Json::Value root;
-	x_in >> root;
-
-	m_name = root["name"].asString();
-	// if(m_id   != root["id"].asInt())
+	m_name = xr_in["name"].AsString();
+	// if(m_id   != xr_in["id"].AsInt())
 	// throw MkException("Stream must have the right id before serializing", LOC);
-	// cout<<root["type"].asString()<<" != "<<GetType()<<endl;
-	if(root["type"].asString() != GetType())
+	// cout<<xr_in["type"].AsString()<<" != "<<GetType()<<endl;
+	if(xr_in["type"].AsString() != GetType())
 		throw MkException("Stream must have the right type before serializing", LOC);
-	m_width       = root["width"].asDouble();
-	m_height      = root["height"].asDouble();
-	m_description = root["description"].asString();
-	m_timeStamp   = root["timeStamp"].asInt64();
-	if(root["connected"] != IsConnected())
+	m_width       = xr_in["width"].AsDouble();
+	m_height      = xr_in["height"].AsDouble();
+	m_description = xr_in["description"].AsString();
+	m_timeStamp   = xr_in["timeStamp"].AsInt64();
+	if(xr_in["connected"] != IsConnected())
 		throw MkException("Stream must have the same connection state before deserializing", LOC);
-	m_isReady = root["ready"].asBool();
+	m_isReady = xr_in["ready"].AsBool();
 }

@@ -76,30 +76,21 @@ void FeatureHistory::Randomize(unsigned int& xr_seed, const string& x_param)
 	}
 }
 
-void FeatureHistory::Serialize(ostream& x_out, const string& x_dir) const
+void FeatureHistory::Serialize(MkJson& xr_out, const string& x_dir) const
 {
 	if(features.empty())
-	{
-		x_out<<"{\"history\":[]}";
-		return;
-	}
+		xr_out["history"] = MkJson::emptyArray();
 
-	x_out << "{\"history\":[";
-	size_t i = 0;
 	for(const auto& elem : features)
 	{
-		x_out << "{\"time\":"<<elem.first<<",\"feature\":";
-		elem.second->Serialize(x_out, "");
-		if(i == features.size() - 1)
-			x_out << "}";
-		else
-			x_out << "},";
-		i++;
+		MkJson root;
+		root["time"] = elem.first;
+		root["feature"] = elem.second;
+		xr_out["history"].Append(root);
 	}
-	x_out << "]}";
 }
 
-void FeatureHistory::Deserialize(istream& x_in, const string& x_dir)
+void FeatureHistory::Deserialize(MkJson& x_in, const string& x_dir)
 {
 	Json::Value root0;
 	x_in >> root0;  // note: copy first for local use

@@ -109,13 +109,11 @@ WebServiceException::WebServiceException(const string& x_descr, const string& x_
 * @param x_out Output stream
 * @param x_dir Output directory (for images)
 */
-void MkException::Serialize(ostream& x_out, const string& x_dir) const
+void MkException::Serialize(MkJson& x_out, const string& x_dir) const
 {
-	Json::Value root;
 	root["description"] = m_description;
 	root["code"] = m_code;
 	root["name"] = m_name;
-	x_out << root;
 }
 
 /**
@@ -124,10 +122,8 @@ void MkException::Serialize(ostream& x_out, const string& x_dir) const
 * @param x_in
 * @param x_dir
 */
-void MkException::Deserialize(istream& x_in, const string& x_dir)
+void MkException::Deserialize(MkJson& x_in, const string& x_dir)
 {
-	Json::Value root;
-	x_in >> root;
 	m_description = root["description"].asString();
 	m_code        = static_cast<MkExceptionCode>(root["code"].asInt());
 	m_name        = root["name"].asString();
