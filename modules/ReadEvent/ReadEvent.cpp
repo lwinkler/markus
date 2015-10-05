@@ -73,7 +73,7 @@ void ReadEvent::Capture()
 	}
 	m_currentTimeStamp = mp_annotationReader->GetCurrentTimeStamp();
 	istringstream ss(text);
-	m_event.Deserialize(ss, m_param.folder);
+	m_event.Deserialize1(ss, m_param.folder);
 	assert(m_event.IsRaised());
 }
 

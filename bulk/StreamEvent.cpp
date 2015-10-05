@@ -91,13 +91,13 @@ void StreamEvent::Query(int x_posX, int x_posY) const
 	LOG_INFO(m_logger, m_event);
 }
 
-void StreamEvent::Serialize(MkJson xr_out, const string& x_dir) const
+void StreamEvent::Serialize(MkJson& xr_out, const string& x_dir) const
 {
 	Stream::Serialize(xr_out, x_dir);
 	m_event.Serialize(xr_out.Create("event"), x_dir);
 }
 
-void StreamEvent::Deserialize(MkJson xr_in, const string& x_dir)
+void StreamEvent::Deserialize(MkJson& xr_in, const string& x_dir)
 {
 	Stream::Deserialize(xr_in, x_dir);
 	m_event.Deserialize(xr_in["event"], x_dir);

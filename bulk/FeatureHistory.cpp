@@ -76,7 +76,7 @@ void FeatureHistory::Randomize(unsigned int& xr_seed, const string& x_param)
 	}
 }
 
-void FeatureHistory::Serialize(MkJson xr_out, const string& x_dir) const
+void FeatureHistory::Serialize(MkJson& xr_out, const string& x_dir) const
 {
 	if(features.empty())
 		xr_out["history"] = MkJson::emptyArray();
@@ -90,7 +90,7 @@ void FeatureHistory::Serialize(MkJson xr_out, const string& x_dir) const
 	}
 }
 
-void FeatureHistory::Deserialize(MkJson xr_in, const string& x_dir)
+void FeatureHistory::Deserialize(MkJson& xr_in, const string& x_dir)
 {
 	features.clear();
 	FactoryFeatures& factory(Factories::featuresFactoryBySignature());

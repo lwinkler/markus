@@ -67,7 +67,7 @@ void Event::Randomize(unsigned int& xr_seed, const string& x_requirement, const 
 	}
 }
 
-void Event::Serialize(MkJson xr_out, const string& x_dir) const
+void Event::Serialize(MkJson& xr_out, const string& x_dir) const
 {
 	xr_out["raised"] = IsRaised();
 
@@ -85,7 +85,7 @@ void Event::Serialize(MkJson xr_out, const string& x_dir) const
 	}
 }
 
-void Event::Deserialize(MkJson xr_in, const string& x_dir)
+void Event::Deserialize(MkJson& xr_in, const string& x_dir)
 {
 	// Note that a null JSON means that the event was not raised
 	bool raised = xr_in["raised"].AsBool();

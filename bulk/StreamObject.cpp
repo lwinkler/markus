@@ -115,7 +115,7 @@ void StreamObject::Randomize(unsigned int& xr_seed)
 	}
 }
 
-void StreamObject::Serialize(MkJson xr_out, const string& x_dir) const
+void StreamObject::Serialize(MkJson& xr_out, const string& x_dir) const
 {
 	Stream::Serialize(xr_out, x_dir);
 	int cpt = 0;
@@ -132,7 +132,7 @@ void StreamObject::Serialize(MkJson xr_out, const string& x_dir) const
 	}
 }
 
-void StreamObject::Deserialize(MkJson xr_in, const string& x_dir)
+void StreamObject::Deserialize(MkJson& xr_in, const string& x_dir)
 {
 	Stream::Deserialize(xr_in, x_dir);
 

@@ -104,8 +104,8 @@ public:
 	void RenderTo(cv::Mat& x_output, const cv::Scalar& x_color) const;
 	void Intersect(const cv::Mat& x_image);
 	virtual void Randomize(unsigned int& xr_seed, const std::string& x_requirement, const cv::Size& xr_size);
-	virtual void Serialize(MkJson stream, const std::string& x_dir) const;
-	virtual void Deserialize(MkJson stream, const std::string& x_dir);
+	virtual void Serialize(MkJson& stream, const std::string& x_dir) const;
+	virtual void Deserialize(MkJson& stream, const std::string& x_dir);
 
 protected:
 	std::string m_name;

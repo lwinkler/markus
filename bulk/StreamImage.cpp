@@ -175,7 +175,7 @@ void StreamImage::Randomize(unsigned int& xr_seed)
 	}
 }
 
-void StreamImage::Serialize(MkJson xr_out, const string& x_dir) const
+void StreamImage::Serialize(MkJson& xr_out, const string& x_dir) const
 {
 	Stream::Serialize(xr_out, x_dir);
 	stringstream fileName;
@@ -184,7 +184,7 @@ void StreamImage::Serialize(MkJson xr_out, const string& x_dir) const
 	xr_out["image"] = fileName.str();
 }
 
-void StreamImage::Deserialize(MkJson xr_in, const string& x_dir)
+void StreamImage::Deserialize(MkJson& xr_in, const string& x_dir)
 {
 	Stream::Deserialize(xr_in, x_dir);
 

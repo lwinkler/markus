@@ -76,12 +76,12 @@ public:
 	{
 		LOG_INFO(m_logger, "value = " << m_scalar);
 	}
-	virtual void Serialize(MkJson xr_out, const std::string& x_dir) const
+	virtual void Serialize(MkJson& xr_out, const std::string& x_dir) const
 	{
 		Stream::Serialize(xr_out, x_dir);
 		xr_out["value"] = m_scalar;
 	}
-	virtual void Deserialize(MkJson xr_in, const std::string& x_dir)
+	virtual void Deserialize(MkJson& xr_in, const std::string& x_dir)
 	{
 		Stream::Deserialize(xr_in, x_dir);
 		m_scalar = xr_in["value"].AsDouble();

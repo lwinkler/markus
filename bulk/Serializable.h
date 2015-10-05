@@ -54,7 +54,7 @@ public:
 	* @param xr_out Serialization object
 	* @param x_dir Output directory (for images)
 	*/
-	virtual void Serialize(MkJson xr_out, const std::string& x_dir) const = 0;
+	virtual void Serialize(MkJson& xr_out, const std::string& x_dir) const = 0;
 
 	/**
 	* @brief  Deserialize the stream from JSON
@@ -75,7 +75,7 @@ public:
 	* @param x_in   Serialization object
 	* @param x_dir  Input directory (for images)
 	*/
-	virtual void Deserialize(MkJson x_in, const std::string& x_dir) = 0;
+	virtual void Deserialize(MkJson& x_in, const std::string& x_dir) = 0;
 
 	std::string SerializeToString(const std::string& x_dir = "") const;
 

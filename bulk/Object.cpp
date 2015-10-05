@@ -80,7 +80,7 @@ Object::~Object()
 	m_feats.clear();
 }
 
-void Object::Serialize(MkJson xr_out, const string& x_dir) const
+void Object::Serialize(MkJson& xr_out, const string& x_dir) const
 {
 	xr_out["id"]     = m_id;
 	xr_out["name"]   = m_name;
@@ -97,7 +97,7 @@ void Object::Serialize(MkJson xr_out, const string& x_dir) const
 		xr_out["features"] = MkJson::emptyArray();
 }
 
-void Object::Deserialize(MkJson xr_in, const string& x_dir)
+void Object::Deserialize(MkJson& xr_in, const string& x_dir)
 {
 	m_id   = xr_in["id"].AsInt();
 	m_name = xr_in["name"].AsString();
@@ -112,8 +112,7 @@ void Object::Deserialize(MkJson xr_in, const string& x_dir)
 	// Get an instance of the feature factory
 	const FactoryFeatures& factory(Factories::featuresFactoryBySignature());
 
-/* TODO
-	for(const auto& elem : xr_in["features"].getMemberNames())
+	for(const auto& elem : xr_in["features"].GetMemberNames())
 	{
 		// Extract the signature of the feature:
 		//     this allows us to recognize the type of feature
@@ -121,12 +120,9 @@ void Object::Deserialize(MkJson xr_in, const string& x_dir)
 		ss << xr_in["features"][elem];
 		string signature = Serializable::signature(ss);
 		Feature* feat = factory.Create(signature);
-		stringstream ss2;
-		ss2 << xr_in["features"][elem];
-		feat->Deserialize(ss2, x_dir);
+		feat->Deserialize(xr_in["features"][elem], x_dir);
 		AddFeature(elem, feat);
 	}
-	*/
 }
 
 

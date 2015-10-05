@@ -344,7 +344,7 @@ void Module::PrintStatistics(ConfigReader& xr_xmlResult) const
 * @param x_out Output stream
 * @param x_dir Directory (for images)
 */
-void Module::Serialize(MkJson xr_out, const string& x_dir) const
+void Module::Serialize(MkJson& xr_out, const string& x_dir) const
 {
 	xr_out["id"]                   = m_id;
 	xr_out["name"]                 = m_name;
@@ -379,7 +379,7 @@ void Module::Serialize(MkJson xr_out, const string& x_dir) const
 * @param x_in  Input stream
 * @param x_dir Input dir (for images)
 */
-void Module::Deserialize(MkJson xr_in, const string& x_dir)
+void Module::Deserialize(MkJson& xr_in, const string& x_dir)
 {
 	m_id                   = xr_in["id"].AsInt();
 	m_name                 = xr_in["name"].AsString();

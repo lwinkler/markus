@@ -64,14 +64,8 @@ public:
 	}
 	void Notify(const Context& x_contextbool, bool x_isProcessEvent=false);
 	virtual void Randomize(unsigned int& xr_seed, const std::string& x_requirement, const cv::Size& x_size);
-	virtual void Serialize(MkJson xr_out, const std::string& x_dir) const;
-	inline void Deserialize(std::istream& x_in, const std::string& x_dir) // TODO remove
-	{
-		MkJson root;
-		x_in >> root;
-		Deserialize(root, x_dir);
-	}
-	virtual void Deserialize(MkJson xr_in, const std::string& x_dir);
+	virtual void Serialize(MkJson& xr_out, const std::string& x_dir) const;
+	virtual void Deserialize(MkJson& xr_in, const std::string& x_dir);
 
 	inline void AddExternalInfo(const std::string& x_label, const std::string& x_value) {m_externalInfo[x_label] = x_value;}
 	inline void AddExternalInfo(const std::string& x_label, double x_value) {m_externalInfo[x_label] = x_value;}

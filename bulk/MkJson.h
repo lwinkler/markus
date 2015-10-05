@@ -26,6 +26,7 @@
 
 #include "jsoncpp/json/reader.h"
 #include "jsoncpp/json/writer.h"
+#include <memory>
 
 
 class MkJson;
@@ -33,28 +34,33 @@ class MkJson;
 class MkJson
 {
 	public:
-		inline MkJson(){};
-		MkJson(Json::Value xr_root) : m_root(xr_root) {}; // should be used by static members only
+		inline MkJson() {};
+		MkJson(Json::Value xr_root) : mp_root(&xr_root) {}; // should be used by static members only
+		MkJson(const MkJson& x) : mp_root(x.mp_root.get()){};
+		~MkJson(){};
 		MkJson operator [] (const std::string& x_str);
 		MkJson operator [] (int x_index);
-		inline MkJson operator = (double x_value) {m_root = x_value; return *this;}
-		inline MkJson operator = (const std::string& x_value) {m_root = x_value; return *this;}
+		// inline MkJson& operator = (const MkJson& x){ mp_root(&x.mp_root) {}
+		inline MkJson& operator = (double x_value) {*mp_root = x_value; return *this;}
+		inline MkJson& operator = (const std::string& x_value) {*mp_root = x_value; return *this;}
+		inline MkJson& operator=(const MkJson& x) {} // TODO
 
-		inline void Append(const MkJson& x_obj){} // TODO
-		inline void Clear(){m_root.clear();}
+		inline void Append(const MkJson& x_obj); // TODO {(*this)[mp_root->size()] = *(x_obj.mp_root);}
+		inline void Clear(){mp_root->clear();}
 
-		inline friend std::ostream& operator<< (std::ostream& xr_out, const MkJson& x_obj) {xr_out << x_obj.m_root; return xr_out;}
-		inline friend std::istream& operator>> (std::istream& xr_in, MkJson& x_obj) {xr_in >> x_obj.m_root; return xr_in;}
+		inline friend std::ostream& operator<< (std::ostream& xr_out, const MkJson& x_obj) {xr_out << *(x_obj.mp_root); return xr_out;}
+		inline friend std::istream& operator>> (std::istream& xr_in, MkJson& x_obj) {xr_in >> *(x_obj.mp_root); return xr_in;}
 
-		inline float AsFloat() const {return m_root.asFloat();} // TODO: Use asDouble when possible
-		inline double AsDouble() const {return m_root.asDouble();} // TODO: Use asDouble when possible
-		inline std::string AsString() const {return m_root.asString();} 
-		inline int AsInt() const {return m_root.asInt();} 
-		inline bool AsBool() const {return m_root.asBool();} 
-		inline int64_t AsInt64() const {return m_root.asInt64();} 
+		inline float AsFloat() const {return mp_root->asFloat();} // TODO: Use asDouble when possible
+		inline double AsDouble() const {return mp_root->asDouble();} // TODO: Use asDouble when possible
+		inline std::string AsString() const {return mp_root->asString();} 
+		inline int AsInt() const {return mp_root->asInt();} 
+		inline bool AsBool() const {return mp_root->asBool();} 
+		inline int64_t AsInt64() const {return mp_root->asInt64();} 
 
-		inline size_t Size() const {return m_root.size();}  // TODO: Check if array
-		inline size_t IsNull() const {return m_root.isNull();}
+		inline std::vector<std::string> GetMemberNames() const {return mp_root->getMemberNames();}
+		inline size_t Size() const {return mp_root->size();}  // TODO: Check if array
+		inline size_t IsNull() const {return mp_root->isNull();}
 
 		MkJson Create(const std::string& x_str);
 		MkJson Create(int x_index);
@@ -64,7 +70,8 @@ class MkJson
 
 
 	protected:
-		Json::Value m_root;
+
+		std::unique_ptr<Json::Value> mp_root;
 };
 
 

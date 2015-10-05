@@ -39,8 +39,8 @@ public:
 	const char* what() const throw();
 	inline MkExceptionCode GetCode() const {return m_code;}
 	inline const std::string& GetName() const {return m_name;}
-	virtual void Serialize(MkJson stream, const std::string& x_dir) const;
-	virtual void Deserialize(MkJson stream, const std::string& x_dir);
+	virtual void Serialize(MkJson& stream, const std::string& x_dir) const;
+	virtual void Deserialize(MkJson& stream, const std::string& x_dir);
 
 protected:
 	std::string m_description;

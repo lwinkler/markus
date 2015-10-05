@@ -83,7 +83,7 @@ void Stream::Connect(Stream* x_stream, bool x_bothWays)
 		x_stream->Connect(this, false);
 }
 
-void Stream::Serialize(MkJson xr_out, const string& x_dir) const
+void Stream::Serialize(MkJson& xr_out, const string& x_dir) const
 {
 	xr_out["name"]        = m_name;
 	// xr_out["id"]          = m_id;
@@ -97,7 +97,7 @@ void Stream::Serialize(MkJson xr_out, const string& x_dir) const
 }
 
 
-void Stream::Deserialize(MkJson xr_in, const string& x_dir)
+void Stream::Deserialize(MkJson& xr_in, const string& x_dir)
 {
 	m_name = xr_in["name"].AsString();
 	// if(m_id   != xr_in["id"].AsInt())

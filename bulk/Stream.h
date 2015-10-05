@@ -51,8 +51,8 @@ public:
 	virtual void Connect(Stream *x_stream, bool x_bothWays = true);
 	virtual void ConvertInput() = 0;
 	virtual void Randomize(unsigned int& xr_seed) = 0;
-	virtual void Serialize(MkJson stream, const std::string& x_dir) const;
-	virtual void Deserialize(MkJson stream, const std::string& x_dir);
+	virtual void Serialize(MkJson& stream, const std::string& x_dir) const;
+	virtual void Deserialize(MkJson& stream, const std::string& x_dir);
 	void Export(std::ostream& rx_os, int x_id, int x_indentation, bool x_isInput);
 	inline void LockModuleForRead() {mr_module.LockForRead();}
 	inline void UnLockModule() {mr_module.Unlock();}

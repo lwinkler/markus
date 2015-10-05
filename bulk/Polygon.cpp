@@ -24,8 +24,6 @@
 #include "Polygon.h"
 #include "util.h"
 #include "feature_util.h"
-#include "jsoncpp/json/reader.h"
-#include "jsoncpp/json/writer.h"
 
 
 using namespace std;
@@ -64,12 +62,18 @@ void Polygon::DrawMask(Mat& xr_target, const Scalar& x_color) const
 	fillPoly(xr_target, ppts, &npoints, 1, x_color);
 }
 
-void Polygon::Serialize(MkJson xr_out, const string& x_dir) const
+void Polygon::Serialize(MkJson& xr_out, const string& x_dir) const
 {
-	// TODO serialize(xr_out.Create("points"), points);
+	stringstream ss; //TODO: Maybe one day use MkJson directly in serialize
+	serialize(ss, points);
+	MkJson root; // (xr_out.Create("points"));
+	ss >> root;
+	xr_out.Create("points") = root;
 }
 
-void Polygon::Deserialize(MkJson xr_in, const string& x_dir)
+void Polygon::Deserialize(MkJson& xr_in, const string& x_dir)
 {
-	// TODO deserialize(xr_in["points"], points);
+	stringstream ss;
+	ss << xr_in["points"];
+	deserialize(ss, points);
 }

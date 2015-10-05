@@ -40,14 +40,14 @@ CalibrationByHeight::CalibrationByHeight(double x_value_x, double x_value_y, dou
 	height = x_height;
 }
 
-void CalibrationByHeight::Serialize(MkJson xr_out, const string& x_dir) const
+void CalibrationByHeight::Serialize(MkJson& xr_out, const string& x_dir) const
 {
 	xr_out["x"] = x;
 	xr_out["y"] = y;
 	xr_out["height"] = height;
 }
 
-void CalibrationByHeight::Deserialize(MkJson xr_in, const string& x_dir)
+void CalibrationByHeight::Deserialize(MkJson& xr_in, const string& x_dir)
 {
 	x = xr_in["x"].AsFloat();
 	y = xr_in["y"].AsFloat();

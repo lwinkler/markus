@@ -64,7 +64,7 @@ public:
 
 		m_obj.AddFeature("some_feat", 46.30);
 	}
-	virtual void Serialize(MkJson xr_out, const string& x_dir) const
+	virtual void Serialize(ostream& x_out, const string& x_dir) const
 	{
 		xr_out["int1"] = m_int;
 		xr_out["float1"] = m_float;
@@ -72,7 +72,7 @@ public:
 		xr_out["string1"] = m_string;
 		m_obj.Serialize(xr_out["object"], x_dir);
 	}
-	virtual void Deserialize(MkJson xr_in, const string& x_dir)
+	virtual void Deserialize(istream& x_in, const string& x_dir)
 	{
 		m_int = xr_in["int1"].AsInt();
 		m_float = xr_in["float1"].AsFloat();
