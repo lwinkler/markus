@@ -120,33 +120,27 @@ void StreamObject::Serialize(MkJson& xr_out, const string& x_dir) const
 	Stream::Serialize(xr_out, x_dir);
 	int cpt = 0;
 
-	if(m_objects.size() == 0)
-		root["objects"] = MkJson::emptyArray();
+	if(m_objects.empty())
+		xr_out["objects"] = MkJson::emptyArray();
 
 	// Serialize vector of objects
 	for(const auto& elem : m_objects)
 	{
 		MkJson root;
 		elem.Serialize(root, x_dir);
-		ss >> root["objects"].append(root);
+		xr_out.Create("objects").Append(root);
 	}
 }
 
-void StreamObject::Deserialize(MkJson& x_in, const string& x_dir)
+void StreamObject::Deserialize(MkJson& xr_in, const string& x_dir)
 {
-	Json::Value root;
-	x_in >> root;  // note: copy first for local use
-	stringstream ss;
-	ss << root;
-	Stream::Deserialize(ss, x_dir);
+	Stream::Deserialize(xr_in, x_dir);
 
 	Clear();
-	for(const auto & elem : root["objects"])
+	for(size_t i = 0 ; i < xr_in["objects"].Size() ; i++)
 	{
-		ss.clear();
 		Object obj("empty");
 		AddObject(obj);
-		ss << elem;
-		m_objects.back().Deserialize(ss, x_dir);
+		m_objects.back().Deserialize(xr_in[i], x_dir);
 	}
 }

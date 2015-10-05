@@ -528,7 +528,7 @@ void Module::WriteToCache() const
 		fileName << directory << GetName() << "." << elem.second->GetName() << "." << m_currentTimeStamp << ".json";
 		ofstream of;
 		of.open(fileName.str().c_str());
-		elem.second->Serialize(of, directory);
+		elem.second->Serialize1(of, directory);
 		of.close();
 	}
 }
@@ -550,7 +550,7 @@ void Module::ReadFromCache()
 		ifs.open(fileName.str().c_str());
 		if(!ifs.good()) // TODO: Check that all files are open correctly !!
 			throw MkException("Error while reading from stream cache: " + fileName.str(), LOC);
-		elem.second->Deserialize(ifs, directory);
+		elem.second->Deserialize1(ifs, directory);
 		ifs.close();
 	}
 }

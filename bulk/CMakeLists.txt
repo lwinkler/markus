@@ -30,6 +30,7 @@ FeatureVector.cpp
 ConfigReader.cpp
 ModuleTimer.cpp
 MkException.cpp
+MkJson.cpp
 Controller.cpp
 ControllerParameters.cpp
 ControllerInputStream.cpp

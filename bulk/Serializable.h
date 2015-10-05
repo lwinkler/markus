@@ -41,7 +41,7 @@ public:
 	* @param xr_out Output stream
 	* @param x_dir Output directory (for images)
 	*/
-	inline void Serialize(std::ostream& xr_out, const std::string& x_dir) const
+	inline void Serialize1(std::ostream& xr_out, const std::string& x_dir) const // TODO
 	{
 		MkJson root;
 		Serialize(root, x_dir);
@@ -62,7 +62,7 @@ public:
 	* @param x_in   Input stream
 	* @param x_dir  Input directory (for images)
 	*/
-	inline void Deserialize(std::istream& x_in, const std::string& x_dir)
+	inline void Deserialize1(std::istream& x_in, const std::string& x_dir) // TODO rename
 	{
 		MkJson root;
 		x_in >> root;
@@ -87,7 +87,7 @@ public:
 	*
 	* @return output stream
 	*/
-	inline friend std::ostream& operator << (std::ostream& x_out, const Serializable& x_obj) {x_obj.Serialize(x_out, ""); return x_out;}
+	inline friend std::ostream& operator << (std::ostream& x_out, const Serializable& x_obj) {x_obj.Serialize1(x_out, ""); return x_out;}
 
 	/**
 	* @brief Redefinition of the input stream operator <<
@@ -97,7 +97,7 @@ public:
 	*
 	* @return input stream
 	*/
-	inline friend std::istream& operator>> (std::istream& x_in, Serializable& x_obj) {x_obj.Deserialize(x_in, ""); return x_in;}
+	inline friend std::istream& operator>> (std::istream& x_in, Serializable& x_obj) {x_obj.Deserialize1(x_in, ""); return x_in;}
 
 	/**
 	* @brief Extract the signature (name of all subfields)

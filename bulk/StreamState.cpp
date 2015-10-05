@@ -90,7 +90,7 @@ void StreamState::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 	stringstream ss;
-	Stream::Serialize(ss, x_dir);
+	Stream::Serialize1(ss, x_dir);
 	ss >> root;
 	root["state"] = m_state;
 	x_out << root;
@@ -102,7 +102,7 @@ void StreamState::Deserialize(istream& x_in, const string& x_dir)
 	x_in >> root;  // note: copy first for local use
 	stringstream ss;
 	ss << root;
-	Stream::Deserialize(ss, x_dir);
+	Stream::Deserialize1(ss, x_dir);
 
 	m_state = root["state"].asBool();
 }

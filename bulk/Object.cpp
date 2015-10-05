@@ -91,7 +91,7 @@ void Object::Serialize(MkJson& xr_out, const string& x_dir) const
 
 	for(const auto & elem : m_feats)
 	{
-		elem.second->Serialize(xr_out["features"].create(elem.first), x_dir);
+		elem.second->Serialize(xr_out["features"].Create(elem.first), x_dir);
 	}
 	if(m_feats.empty())
 		xr_out["features"] = MkJson::emptyArray();
@@ -99,12 +99,12 @@ void Object::Serialize(MkJson& xr_out, const string& x_dir) const
 
 void Object::Deserialize(MkJson& xr_in, const string& x_dir)
 {
-	m_id   = xr_in["id"].asInt();
-	m_name = xr_in["name"].asString();
-	posX   = xr_in["x"].asDouble();
-	posY   = xr_in["y"].asDouble();
-	width  = xr_in["width"].asDouble();
-	height = xr_in["height"].asDouble();
+	m_id   = xr_in["id"].AsInt();
+	m_name = xr_in["name"].AsString();
+	posX   = xr_in["x"].AsDouble();
+	posY   = xr_in["y"].AsDouble();
+	width  = xr_in["width"].AsDouble();
+	height = xr_in["height"].AsDouble();
 
 	m_feats.clear();
 	// TODO: JsonCpp has a bug for serializing floats !

@@ -91,28 +91,14 @@ void StreamEvent::Query(int x_posX, int x_posY) const
 	LOG_INFO(m_logger, m_event);
 }
 
-void StreamEvent::Serialize(ostream& x_out, const string& x_dir) const
+void StreamEvent::Serialize(MkJson& xr_out, const string& x_dir) const
 {
-	Json::Value root;
-	stringstream ss;
-	Stream::Serialize(ss, x_dir);
-	ss >> root;
-	ss.clear();
-	m_event.Serialize(ss, x_dir);
-	ss >> root["event"];
-	x_out << root;
+	Stream::Serialize(xr_out, x_dir);
+	m_event.Serialize(xr_out.Create("event"), x_dir);
 }
 
-void StreamEvent::Deserialize(istream& x_in, const string& x_dir)
+void StreamEvent::Deserialize(MkJson& xr_in, const string& x_dir)
 {
-	Json::Value root;
-	x_in >> root;  // note: copy first for local use
-
-	stringstream ss;
-	ss << root;
-	Stream::Deserialize(ss, x_dir);
-
-	ss.clear();
-	ss << root["event"];
-	m_event.Deserialize(ss, x_dir);
+	Stream::Deserialize(xr_in, x_dir);
+	m_event.Deserialize(xr_in["event"], x_dir);
 }

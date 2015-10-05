@@ -34,12 +34,13 @@ class MkJson
 {
 	public:
 		inline MkJson(){};
-		inline MkJson& operator [] (const std::string& x_str); //  {return MkJson(m_root[x_str]);}
-		inline MkJson& operator [] (int x_index); //  {return MkJson(m_root[x_str]);}
-		inline MkJson& operator = (double x_value) {m_root = x_value; return *this;}
-		inline MkJson& operator = (const std::string& x_value) {m_root = x_value; return *this;}
+		MkJson operator [] (const std::string& x_str);
+		MkJson operator [] (int x_index);
+		inline MkJson operator = (double x_value) {m_root = x_value; return *this;}
+		inline MkJson operator = (const std::string& x_value) {m_root = x_value; return *this;}
 
 		inline void Append(const MkJson& x_obj){} // TODO
+		inline void Clear(){m_root.clear();}
 
 		inline friend std::ostream& operator<< (std::ostream& xr_out, const MkJson& x_obj) {xr_out << x_obj.m_root; return xr_out;}
 		inline friend std::istream& operator>> (std::istream& xr_in, MkJson& x_obj) {xr_in >> x_obj.m_root; return xr_in;}
@@ -52,10 +53,13 @@ class MkJson
 		inline int64_t AsInt64() const {return m_root.asInt64();} 
 
 		inline size_t Size() const {return m_root.size();}  // TODO: Check if array
-		inline MkJson& Create(const std::string& x_str); //  {return MkJson(m_root[x_str]);}
-		inline MkJson& Create(int x_index); //  {return MkJson(m_root[x_str]);} // TODO: This should not really exist
+		inline size_t IsNull() const {return m_root.isNull();}
 
-		inline static MkJson emptyArray(); // TODO {return MkJson(Json::Value(Json::arrayValue));}
+		MkJson& Create(const std::string& x_str);
+		MkJson& Create(int x_index);
+
+		static MkJson emptyArray();
+		static MkJson nullValue();
 	private:
 		MkJson(Json::Value& xr_root) : m_root(xr_root) {};
 

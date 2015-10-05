@@ -109,7 +109,7 @@ void Stream::Deserialize(MkJson& xr_in, const string& x_dir)
 	m_height      = xr_in["height"].AsDouble();
 	m_description = xr_in["description"].AsString();
 	m_timeStamp   = xr_in["timeStamp"].AsInt64();
-	if(xr_in["connected"] != IsConnected())
+	if(xr_in["connected"].AsBool() != IsConnected())
 		throw MkException("Stream must have the same connection state before deserializing", LOC);
 	m_isReady = xr_in["ready"].AsBool();
 }

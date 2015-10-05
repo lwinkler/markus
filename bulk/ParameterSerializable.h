@@ -70,7 +70,7 @@ public:
 			return;
 		}
 
-		mr_value.Deserialize(istr, ""); // atof is sensible to locale format and may use , as a separator
+		mr_value.Deserialize1(istr, ""); // atof is sensible to locale format and may use , as a separator
 		m_confSource = x_confType;
 	}
 	virtual void SetDefault(const std::string& rx_value)
@@ -93,7 +93,7 @@ public:
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		std::stringstream ss;
 		ss << m_default;
-		mr_value.Deserialize(ss, "");
+		mr_value.Deserialize1(ss, "");
 		m_confSource = PARAMCONF_DEF;
 	}
 	virtual void Export(std::ostream& rx_os, int x_indentation);

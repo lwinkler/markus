@@ -570,7 +570,7 @@ Module& Manager::RefModuleByName(const string& x_name) const
 void Manager::Status() const
 {
 	stringstream ss;
-	m_lastException.Serialize(ss, "");
+	m_lastException.Serialize1(ss, "");
 	Json::Value root;
 	ss >> root;
 	root["recovered"] = m_hasRecovered;
@@ -675,7 +675,7 @@ void Manager::WriteStateToDirectory(const string& x_directory) const
 		string fileName = directory + "/" + (elem)->GetName() + ".json";
 		ofstream of;
 		of.open(fileName.c_str());
-		(elem)->Serialize(of, directory);
+		(elem)->Serialize1(of, directory);
 		of.close();
 	}
 	LOG_INFO(m_logger, "Written state of the manager and all modules to " << directory);
@@ -691,7 +691,7 @@ void Manager::NotifyException(const MkException& x_exception)
 {
 	InterruptionManager::GetInst().AddEvent("exception." + x_exception.GetName());// TODO keep this here ?
 	stringstream ss;
-	x_exception.Serialize(ss, "");
+	x_exception.Serialize1(ss, "");
 	Event ev;
 	ev.AddExternalInfo("exception", ss);
 	ev.Raise("exception");

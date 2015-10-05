@@ -47,7 +47,7 @@ void CalibrationByHeight::Serialize(MkJson& xr_out, const string& x_dir) const
 	xr_out["height"] = height;
 }
 
-void CalibrationByHeight::Deserialize(istream& xr_in, const string& x_dir)
+void CalibrationByHeight::Deserialize(MkJson& xr_in, const string& x_dir)
 {
 	x = xr_in["x"].AsFloat();
 	y = xr_in["y"].AsFloat();

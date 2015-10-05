@@ -85,29 +85,21 @@ void FeatureHistory::Serialize(MkJson& xr_out, const string& x_dir) const
 	{
 		MkJson root;
 		root["time"] = elem.first;
-		root["feature"] = elem.second;
+		root["feature"] = elem.second.Serialize(root.create("feature"));
 		xr_out["history"].Append(root);
 	}
 }
 
-void FeatureHistory::Deserialize(MkJson& x_in, const string& x_dir)
+void FeatureHistory::Deserialize(MkJson& xr_in, const string& x_dir)
 {
-	Json::Value root0;
-	x_in >> root0;  // note: copy first for local use
-	Json::Value root = root0["history"];
-	assert(root.isArray());
-
 	features.clear();
 	FactoryFeatures& factory(Factories::featuresFactoryBySignature());
-	for(unsigned int i = 0 ; i < root.size() ; i++)
+	for(unsigned int i = 0 ; i < xr_in.Size() ; i++)
 	{
-		stringstream ss;
-		ss << root[i]["feature"];
+		ss << xr_in[i]["feature"];
 		string signature = Serializable::signature(ss);
 		Feature* feat = factory.Create(signature);
-		stringstream ss2;
-		ss2 << root[i]["feature"];
-		feat->Deserialize(ss2, x_dir);
-		features.insert(std::make_pair(root[i]["time"].asInt(), feat));
+		feat->Deserialize(root[i]["feature"]);
+		features.insert(std::make_pair(xr_in[i]["time"].AsInt(), feat));
 	}
 }

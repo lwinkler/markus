@@ -449,7 +449,7 @@ QWidget* ControllerCalibrationByHeight::CreateWidget()
 	CalibrationByHeight calib;
 	stringstream ss;
 	ss << m_param2.GetValue();
-	calib.Deserialize(ss, "");
+	calib.Deserialize1(ss, "");
 
 	mp_sliderX = new QParameterSlider(calib.x, 0, 1, PRECISION_DOUBLE,mp_widget);
 	mp_sliderY = new QParameterSlider(calib.y, 0, 1, PRECISION_DOUBLE,mp_widget);
@@ -478,7 +478,7 @@ void ControllerCalibrationByHeight::SetWidgetValue(const string& x_value)
 #ifndef MARKUS_NO_GUI
 	CalibrationByHeight object;
 	istringstream str(x_value);
-	object.Deserialize(str);
+	object.Deserialize1(str);
 	mp_sliderX->SetValue(object.x);
 	mp_sliderY->SetValue(object.y);
 	mp_sliderHeight->SetValue(object.height);

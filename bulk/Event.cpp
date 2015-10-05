@@ -42,7 +42,7 @@ Event::Event() :
 {
 	m_absTimeEvent = 0;
 	m_absTimeNotif = 0;
-	m_externalInfo.clear();
+	m_externalInfo.Clear();
 }
 
 Event::~Event() {}
@@ -80,7 +80,7 @@ void Event::Serialize(MkJson& xr_out, const string& x_dir) const
 		{
 			m_object.Serialize(xr_out.Create("object"), x_dir);
 		}
-		else xr_out["object"] = MkJson::emptyArray();
+		else xr_out["object"] = MkJson::nullValue();
 		xr_out["external"]    = m_externalInfo;
 	}
 }
@@ -88,27 +88,26 @@ void Event::Serialize(MkJson& xr_out, const string& x_dir) const
 void Event::Deserialize(MkJson& xr_in, const string& x_dir)
 {
 	// Note that a null JSON means that the event was not raised
-	Json::Value root;
-	x_in >> root;
-	bool raised = root["raised"].asBool();
+	bool raised = xr_in["raised"].AsBool();
 	if(raised)
 	{
-		m_eventName = root["eventName"].asString();
-		m_absTimeEvent = root["dateEvent"].asInt64();
-		m_absTimeNotif = root["dateNotif"].asInt64();
+		m_eventName = xr_in["eventName"].AsString();
+		m_absTimeEvent = xr_in["dateEvent"].AsInt64();
+		m_absTimeNotif = xr_in["dateNotif"].AsInt64();
 
-		if(!root["object"].isNull())
+		if(!xr_in["object"].IsNull())
 		{
-			stringstream ss;
-			ss << root["object"];
-			m_object.Deserialize(ss, x_dir);
+			m_object.Deserialize(xr_in["object"], x_dir);
 		}
 
 		// Deserialize files
-		Json::Value::Members members = root["external"].getMemberNames();
-		m_externalInfo.clear();
+		m_externalInfo = xr_in["external"];
+		/*
+		Json::Value::Members members = xr_in["external"].getMemberNames();
+		m_externalInfo.Clear();
 		for(const auto& elem : members)
-			m_externalInfo[elem] = root["external"][elem];
+			m_externalInfo[elem] = xr_in["external"][elem];
+			*/
 	}
 	else
 	{
@@ -116,7 +115,7 @@ void Event::Deserialize(MkJson& xr_in, const string& x_dir)
 		m_absTimeEvent = 0;
 		m_absTimeNotif = 0;
 		m_object = Object("empty");
-		m_externalInfo.clear();
+		m_externalInfo.Clear();
 	}
 }
 
@@ -127,7 +126,7 @@ void Event::Empty()
 {
 	m_eventName = "";
 	m_object = Object("empty");
-	m_externalInfo.clear();
+	m_externalInfo.Clear();
 }
 
 /**
