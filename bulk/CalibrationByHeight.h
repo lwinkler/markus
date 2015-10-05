@@ -32,8 +32,8 @@ public:
 
 	CalibrationByHeight();
 	CalibrationByHeight(double x_value_x, double x_value_y, double x_height);
-	void Serialize(MkJson& x_out, const std::string& x_dir ="") const;
-	void Deserialize(MkJson& x_in, const std::string& x_dir ="");
+	void Serialize(MkJson x_out, const std::string& x_dir ="") const;
+	void Deserialize(MkJson x_in, const std::string& x_dir ="");
 
 	double x;
 	double y;

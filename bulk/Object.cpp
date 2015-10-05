@@ -80,7 +80,7 @@ Object::~Object()
 	m_feats.clear();
 }
 
-void Object::Serialize(MkJson& xr_out, const string& x_dir) const
+void Object::Serialize(MkJson xr_out, const string& x_dir) const
 {
 	xr_out["id"]     = m_id;
 	xr_out["name"]   = m_name;
@@ -97,7 +97,7 @@ void Object::Serialize(MkJson& xr_out, const string& x_dir) const
 		xr_out["features"] = MkJson::emptyArray();
 }
 
-void Object::Deserialize(MkJson& xr_in, const string& x_dir)
+void Object::Deserialize(MkJson xr_in, const string& x_dir)
 {
 	m_id   = xr_in["id"].AsInt();
 	m_name = xr_in["name"].AsString();

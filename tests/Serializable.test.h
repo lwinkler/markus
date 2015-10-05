@@ -64,29 +64,21 @@ public:
 
 		m_obj.AddFeature("some_feat", 46.30);
 	}
-	virtual void Serialize(ostream& x_out, const string& x_dir) const
+	virtual void Serialize(MkJson xr_out, const string& x_dir) const
 	{
-		Json::Value root;
-		root["int1"] = m_int;
-		root["float1"] = m_float;
-		root["double1"] = m_double;
-		root["string1"] = m_string;
-		stringstream ss;
-		m_obj.Serialize(ss, x_dir);
-		ss >> root["object"];
-		x_out << root;
+		xr_out["int1"] = m_int;
+		xr_out["float1"] = m_float;
+		xr_out["double1"] = m_double;
+		xr_out["string1"] = m_string;
+		m_obj.Serialize(xr_out["object"], x_dir);
 	}
-	virtual void Deserialize(istream& x_in, const string& x_dir)
+	virtual void Deserialize(MkJson xr_in, const string& x_dir)
 	{
-		Json::Value root;
-		x_in >> root;
-		m_int = root["int1"].asInt();
-		m_float = root["float1"].asFloat();
-		m_double = root["double1"].asDouble();
-		m_string = root["string1"].asString();
-		stringstream ss;
-		ss << root["object"];
-		m_obj.Deserialize(ss, x_dir);
+		m_int = xr_in["int1"].AsInt();
+		m_float = xr_in["float1"].AsFloat();
+		m_double = xr_in["double1"].AsDouble();
+		m_string = xr_in["string1"].AsString();
+		m_obj.Deserialize(xr_in["object"], x_dir);
 	}
 
 protected:
@@ -182,16 +174,16 @@ protected:
 		SYSTEM("mkdir -p " + dir);
 		TS_TRACE("Test serialization of " + name + " = " + obj.SerializeToString()  +  " with signature = "  +  obj.Signature());
 		ofstream of1(fileName1.c_str());
-		obj.Serialize(of1, dir);
+		obj.Serialize1(of1, dir);
 		of1.close();
 
 		// stringstream ss2;
 
 		ifstream inf(fileName3.c_str());
 		TS_ASSERT(inf.is_open());
-		obj.Deserialize(inf, dir);
+		obj.Deserialize1(inf, dir);
 		ofstream of2(fileName2.c_str());
-		obj.Serialize(of2, dir);
+		obj.Serialize1(of2, dir);
 
 		// Compare with the initial config
 		inf.close();

@@ -100,7 +100,7 @@ string signatureJSONTree(const Json::Value &x_root, int x_depth)
 string Serializable::SerializeToString(const string& x_dir) const
 {
 	stringstream ss;
-	Serialize(ss, x_dir);
+	Serialize1(ss, x_dir);
 	Json::Value root;
 	ss >> root;
 	Json::FastWriter writer;

@@ -33,7 +33,7 @@ using namespace std;
 
 
 #define COPY(target, src) target=src
-#define COPY_AND_CHECK(target, src) target=src; if((target).isNull() || (target) == "") {throw MkException("Element of exported event is invalid", LOC);}
+#define COPY_AND_CHECK(target, src) target=src; if((target).IsNull() || (target).AsString() == "") {throw MkException("Element of exported event is invalid", LOC);}
 
 log4cxx::LoggerPtr Event::m_logger(log4cxx::Logger::getLogger("Event"));
 
@@ -67,7 +67,7 @@ void Event::Randomize(unsigned int& xr_seed, const string& x_requirement, const 
 	}
 }
 
-void Event::Serialize(MkJson& xr_out, const string& x_dir) const
+void Event::Serialize(MkJson xr_out, const string& x_dir) const
 {
 	xr_out["raised"] = IsRaised();
 
@@ -85,7 +85,7 @@ void Event::Serialize(MkJson& xr_out, const string& x_dir) const
 	}
 }
 
-void Event::Deserialize(MkJson& xr_in, const string& x_dir)
+void Event::Deserialize(MkJson xr_in, const string& x_dir)
 {
 	// Note that a null JSON means that the event was not raised
 	bool raised = xr_in["raised"].AsBool();
@@ -171,19 +171,17 @@ void Event::Raise(const string& x_eventName, TIME_STAMP x_absTimeEvent)
 void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 {
 	m_absTimeNotif = getAbsTimeMs();
-	Json::Value root;
 	string level = "EVENT";
 
-	stringstream ss;
-	Serialize(ss, "");
-	ss >> root;
+	MkJson root;
+	Serialize(root, "");
 
 	LOG_DEBUG(m_logger, "Notify event:" << *this);
 
 	// root["external"] = m_externalInfo;
 
 	// export the event to our specific format
-	Json::Value out;
+	MkJson out;
 	COPY_AND_CHECK(out["dateEvent"]          , root["dateEvent"]);
 	COPY_AND_CHECK(out["dateNotif"]          , root["dateNotif"]);
 	COPY_AND_CHECK(out["applicationName"]    , x_context.GetApplicationName());
@@ -195,8 +193,8 @@ void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 		// This is only a process event. Only used to notify the parent process
 		out["attrs"] = root["external"];
 		// note: attrs can be empty, create an empty vector
-		if(out["attrs"].isNull())
-			out["attrs"] = Json::Value(Json::arrayValue);
+		if(out["attrs"].IsNull())
+			out["attrs"] = MkJson::emptyArray();
 		level = "PROCESS";
 	}
 	else
@@ -205,10 +203,10 @@ void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 
 		if(m_object.GetName() != "empty")
 		{
-			Json::Value& outObj = out["objects"][0];
-			Json::Value& inObj  = root["object"];
+			MkJson outObj = out["objects"][0];
+			MkJson inObj  = root["object"];
 			stringstream ss;
-			ss<<inObj["name"].asString()<<inObj["id"].asInt();
+			ss<<inObj["name"].AsString()<<inObj["id"].AsInt();
 			COPY_AND_CHECK(outObj["objectId"] , ss.str());
 			COPY_AND_CHECK(outObj["x"]        , inObj["x"]);
 			COPY_AND_CHECK(outObj["y"]        , inObj["y"]);
@@ -219,9 +217,11 @@ void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 	}
 
 	// Notify via stdout
+	/* TODO
 	Json::FastWriter writer;
 	string tmp = writer.write(out);
 	tmp.erase(remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
 
 	LOG_WARN(m_logger, "@notif@ " << level << " " << tmp);
+	*/
 }

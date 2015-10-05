@@ -76,7 +76,7 @@ void FeatureHistory::Randomize(unsigned int& xr_seed, const string& x_param)
 	}
 }
 
-void FeatureHistory::Serialize(MkJson& xr_out, const string& x_dir) const
+void FeatureHistory::Serialize(MkJson xr_out, const string& x_dir) const
 {
 	if(features.empty())
 		xr_out["history"] = MkJson::emptyArray();
@@ -85,21 +85,22 @@ void FeatureHistory::Serialize(MkJson& xr_out, const string& x_dir) const
 	{
 		MkJson root;
 		root["time"] = elem.first;
-		root["feature"] = elem.second.Serialize(root.create("feature"));
+		elem.second->Serialize(root.Create("feature"), x_dir);
 		xr_out["history"].Append(root);
 	}
 }
 
-void FeatureHistory::Deserialize(MkJson& xr_in, const string& x_dir)
+void FeatureHistory::Deserialize(MkJson xr_in, const string& x_dir)
 {
 	features.clear();
 	FactoryFeatures& factory(Factories::featuresFactoryBySignature());
 	for(unsigned int i = 0 ; i < xr_in.Size() ; i++)
 	{
+		stringstream ss;
 		ss << xr_in[i]["feature"];
 		string signature = Serializable::signature(ss);
 		Feature* feat = factory.Create(signature);
-		feat->Deserialize(root[i]["feature"]);
+		feat->Deserialize(xr_in[i]["feature"], x_dir);
 		features.insert(std::make_pair(xr_in[i]["time"].AsInt(), feat));
 	}
 }

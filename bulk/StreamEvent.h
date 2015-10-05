@@ -43,8 +43,8 @@ public:
 	virtual void RenderTo(cv::Mat& x_output) const;
 	virtual void Query(int x_posX, int x_posY) const;
 	virtual void Randomize(unsigned int& xr_seed);
-	virtual void Serialize(MkJson& stream, const std::string& x_dir) const;
-	virtual void Deserialize(MkJson& stream, const std::string& x_dir);
+	virtual void Serialize(MkJson stream, const std::string& x_dir) const;
+	virtual void Deserialize(MkJson stream, const std::string& x_dir);
 
 protected:
 	Event& m_event;

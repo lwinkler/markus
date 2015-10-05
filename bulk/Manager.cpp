@@ -569,16 +569,12 @@ Module& Manager::RefModuleByName(const string& x_name) const
 */
 void Manager::Status() const
 {
-	stringstream ss;
-	m_lastException.Serialize1(ss, "");
-	Json::Value root;
-	ss >> root;
+	MkJson root;
+	m_lastException.Serialize(root, "");
 	root["recovered"] = m_hasRecovered;
 	Event evt;
 	evt.Raise("status");
-	ss.clear();
-	ss << root;
-	evt.AddExternalInfo("exception", ss);
+	evt.AddExternalInfo("exception", root);
 	evt.Notify(GetContext(), true);
 }
 
@@ -690,10 +686,10 @@ void Manager::WriteStateToDirectory(const string& x_directory) const
 void Manager::NotifyException(const MkException& x_exception)
 {
 	InterruptionManager::GetInst().AddEvent("exception." + x_exception.GetName());// TODO keep this here ?
-	stringstream ss;
-	x_exception.Serialize1(ss, "");
+	MkJson root;
+	x_exception.Serialize(root, "");
 	Event ev;
-	ev.AddExternalInfo("exception", ss);
+	ev.AddExternalInfo("exception", root);
 	ev.Raise("exception");
 	ev.Notify(GetContext(), true);
 }

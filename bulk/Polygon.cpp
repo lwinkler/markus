@@ -64,18 +64,12 @@ void Polygon::DrawMask(Mat& xr_target, const Scalar& x_color) const
 	fillPoly(xr_target, ppts, &npoints, 1, x_color);
 }
 
-void Polygon::Serialize(ostream& x_out, const string& x_dir) const
+void Polygon::Serialize(MkJson xr_out, const string& x_dir) const
 {
-	x_out<<"{\"points\":";
-	serialize(x_out, points);
-	x_out<<"}";
+	// TODO serialize(xr_out.Create("points"), points);
 }
 
-void Polygon::Deserialize(istream& x_in, const string& x_dir)
+void Polygon::Deserialize(MkJson xr_in, const string& x_dir)
 {
-	Json::Value root;
-	x_in >> root;
-	stringstream ss;
-	ss << root["points"];
-	deserialize(ss, points);
+	// TODO deserialize(xr_in["points"], points);
 }

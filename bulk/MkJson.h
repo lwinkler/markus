@@ -34,6 +34,7 @@ class MkJson
 {
 	public:
 		inline MkJson(){};
+		MkJson(Json::Value xr_root) : m_root(xr_root) {}; // should be used by static members only
 		MkJson operator [] (const std::string& x_str);
 		MkJson operator [] (int x_index);
 		inline MkJson operator = (double x_value) {m_root = x_value; return *this;}
@@ -55,13 +56,11 @@ class MkJson
 		inline size_t Size() const {return m_root.size();}  // TODO: Check if array
 		inline size_t IsNull() const {return m_root.isNull();}
 
-		MkJson& Create(const std::string& x_str);
-		MkJson& Create(int x_index);
+		MkJson Create(const std::string& x_str);
+		MkJson Create(int x_index);
 
 		static MkJson emptyArray();
 		static MkJson nullValue();
-	private:
-		MkJson(Json::Value& xr_root) : m_root(xr_root) {};
 
 
 	protected:

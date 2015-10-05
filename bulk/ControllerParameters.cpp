@@ -478,7 +478,7 @@ void ControllerCalibrationByHeight::SetWidgetValue(const string& x_value)
 #ifndef MARKUS_NO_GUI
 	CalibrationByHeight object;
 	istringstream str(x_value);
-	object.Deserialize1(str);
+	object.Deserialize1(str, "");
 	mp_sliderX->SetValue(object.x);
 	mp_sliderY->SetValue(object.y);
 	mp_sliderHeight->SetValue(object.height);
@@ -493,7 +493,7 @@ string ControllerCalibrationByHeight::GetValueFromWidget()
 	object.x = mp_sliderX->GetValue();
 	object.y = mp_sliderY->GetValue();
 	object.height = mp_sliderHeight->GetValue();
-	object.Serialize(ss);
+	object.Serialize1(ss, "");
 
 	return ss.str();
 #else

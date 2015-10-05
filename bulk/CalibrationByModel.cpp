@@ -49,27 +49,22 @@ CalibrationByModel::CalibrationByModel(double x_camera_height, double x_yaw, dou
 	ncols         = x_width_model;
 }
 
-void CalibrationByModel::Serialize(std::ostream& x_out, const std::string& x_dir) const
+void CalibrationByModel::Serialize(MkJson xr_out, const std::string& x_dir) const
 {
-
-	Json::Value root;
-	root["height"] = camera_height;
-	root["yaw"]           = yaw;
-	root["roll"]          = roll;
-	root["focal"]         = focal;
-	root["nrows"]         = nrows;
-	root["ncols"]         = ncols;
-	x_out << root;
+	xr_out["height"] = camera_height;
+	xr_out["yaw"]           = yaw;
+	xr_out["roll"]          = roll;
+	xr_out["focal"]         = focal;
+	xr_out["nrows"]         = nrows;
+	xr_out["ncols"]         = ncols;
 }
 
-void CalibrationByModel::Deserialize(std::istream& x_in, const std::string& x_dir)
+void CalibrationByModel::Deserialize(MkJson xr_in, const std::string& x_dir)
 {
-	Json::Value root;
-	x_in >> root;
-	camera_height = root["height"].asDouble(); // TODO: Deserialization SHOULD always check if the value exists
-	yaw           = root["yaw"].asDouble();
-	roll          = root["roll"].asDouble();
-	focal         = root["focal"].asDouble();
-	nrows         = root["nrows"].asInt();
-	ncols         = root["ncols"].asInt();
+	camera_height = xr_in["height"].AsDouble(); // TODO: Deserialization SHOULD always check if the value exists
+	yaw           = xr_in["yaw"].AsDouble();
+	roll          = xr_in["roll"].AsDouble();
+	focal         = xr_in["focal"].AsDouble();
+	nrows         = xr_in["nrows"].AsInt();
+	ncols         = xr_in["ncols"].AsInt();
 }

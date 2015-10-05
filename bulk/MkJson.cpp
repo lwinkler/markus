@@ -8,7 +8,7 @@ MkJson MkJson::operator [] (const std::string& x_str)
 
 MkJson MkJson::operator [] (int x_index)
 {
-	return MkJson(m_root[x_str]);
+	return MkJson(m_root[x_index]);
 }
 
 MkJson MkJson::Create(const std::string& x_str)
@@ -18,15 +18,15 @@ MkJson MkJson::Create(const std::string& x_str)
 
 MkJson MkJson::Create(int x_index)
 {
-	return MkJson(m_root[x_str]);
+	return MkJson(m_root[x_index]);
 }
 
-static MkJson emptyArray()
+MkJson MkJson::emptyArray()
 {
 	return MkJson(Json::Value(Json::arrayValue));
 }
 
-static MkJson nullValue()
+MkJson MkJson::nullValue()
 {
 	return MkJson(Json::Value(Json::nullValue));
 }
