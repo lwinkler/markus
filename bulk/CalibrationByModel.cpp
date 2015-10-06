@@ -49,7 +49,7 @@ CalibrationByModel::CalibrationByModel(double x_camera_height, double x_yaw, dou
 	ncols         = x_width_model;
 }
 
-void CalibrationByModel::Serialize(MkJson& xr_out, const std::string& x_dir) const
+void CalibrationByModel::Serialize(MkJson xr_out, const std::string& x_dir) const
 {
 	xr_out["height"] = camera_height;
 	xr_out["yaw"]           = yaw;
@@ -59,7 +59,7 @@ void CalibrationByModel::Serialize(MkJson& xr_out, const std::string& x_dir) con
 	xr_out["ncols"]         = ncols;
 }
 
-void CalibrationByModel::Deserialize(MkJson& xr_in, const std::string& x_dir)
+void CalibrationByModel::Deserialize(MkJson xr_in, const std::string& x_dir)
 {
 	camera_height = xr_in["height"].AsDouble(); // TODO: Deserialization SHOULD always check if the value exists
 	yaw           = xr_in["yaw"].AsDouble();

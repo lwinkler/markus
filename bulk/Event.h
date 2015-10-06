@@ -64,14 +64,14 @@ public:
 	}
 	void Notify(const Context& x_contextbool, bool x_isProcessEvent=false);
 	virtual void Randomize(unsigned int& xr_seed, const std::string& x_requirement, const cv::Size& x_size);
-	virtual void Serialize(MkJson& xr_out, const std::string& x_dir) const;
-	virtual void Deserialize(MkJson& xr_in, const std::string& x_dir);
+	virtual void Serialize(MkJson xr_out, const std::string& x_dir) const;
+	virtual void Deserialize(MkJson xr_in, const std::string& x_dir);
 
 	inline void AddExternalInfo(const std::string& x_label, const std::string& x_value) {m_externalInfo[x_label] = x_value;}
 	inline void AddExternalInfo(const std::string& x_label, double x_value) {m_externalInfo[x_label] = x_value;}
 	inline void AddExternalInfo(const std::string& x_label, int x_value) {m_externalInfo[x_label] = x_value;}
 	inline void AddExternalInfo(const std::string& x_label, unsigned long long x_value) {m_externalInfo[x_label] = x_value;}
-	inline void AddExternalInfo(const std::string& x_label, MkJson xr_in) {m_externalInfo[x_label] = xr_in;}
+	inline void AddExternalInfo(const std::string& x_label, MkJson_ xr_in) {m_externalInfo[x_label] = xr_in;}
 	inline void AddExternalFile(const std::string& x_label, const std::string& x_file) {m_externalInfo["files"][x_label] = x_file;}
 
 protected:
@@ -81,7 +81,7 @@ protected:
 	TIME_STAMP m_absTimeEvent;
 	/// Abs time of the event at notification of parent process
 	TIME_STAMP m_absTimeNotif;
-	MkJson m_externalInfo;
+	MkJson_ m_externalInfo;
 
 private:
 	static log4cxx::LoggerPtr m_logger;

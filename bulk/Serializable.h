@@ -43,8 +43,9 @@ public:
 	*/
 	inline void Serialize1(std::ostream& xr_out, const std::string& x_dir) const // TODO
 	{
-		MkJson root;
-		Serialize(root, x_dir);
+		MkJson_ root;
+		MkJson  m(&root);
+		Serialize(m, x_dir);
 		xr_out << root;
 	}
 
@@ -54,7 +55,7 @@ public:
 	* @param xr_out Serialization object
 	* @param x_dir Output directory (for images)
 	*/
-	virtual void Serialize(MkJson& xr_out, const std::string& x_dir) const = 0;
+	virtual void Serialize(MkJson xr_out, const std::string& x_dir) const = 0;
 
 	/**
 	* @brief  Deserialize the stream from JSON
@@ -64,9 +65,10 @@ public:
 	*/
 	inline void Deserialize1(std::istream& x_in, const std::string& x_dir) // TODO rename
 	{
-		MkJson root;
+		MkJson_ root;
+		MkJson  m(&root);
 		x_in >> root;
-		Deserialize(root, x_dir);
+		Deserialize(m, x_dir); // TODO Suppress ref
 	}
 
 	/**
@@ -75,7 +77,7 @@ public:
 	* @param x_in   Serialization object
 	* @param x_dir  Input directory (for images)
 	*/
-	virtual void Deserialize(MkJson& x_in, const std::string& x_dir) = 0;
+	virtual void Deserialize(MkJson x_in, const std::string& x_dir) = 0;
 
 	std::string SerializeToString(const std::string& x_dir = "") const;
 

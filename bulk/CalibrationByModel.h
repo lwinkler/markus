@@ -32,8 +32,8 @@ public:
 
 	CalibrationByModel();
 	CalibrationByModel(double x_camera_height, double x_yaw, double x_roll, double x_focal, int x_height_model, int x_width_model);
-	void Serialize(MkJson& x_out, const std::string& x_dir ="") const;
-	void Deserialize(MkJson& x_in, const std::string& x_dir ="");
+	void Serialize(MkJson x_out, const std::string& x_dir ="") const;
+	void Deserialize(MkJson x_in, const std::string& x_dir ="");
 
 	double camera_height; // in m
 	double yaw;           // in degree

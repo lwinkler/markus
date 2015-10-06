@@ -31,47 +31,79 @@
 
 class MkJson;
 
-class MkJson
+class MkJson_ // TODO rename
 {
 	public:
-		inline MkJson() {};
-		MkJson(Json::Value xr_root) : mp_root(&xr_root) {}; // should be used by static members only
-		MkJson(const MkJson& x) : mp_root(x.mp_root.get()){};
-		~MkJson(){};
+		inline MkJson_() {};
+		MkJson_(Json::Value xr_root) : m_root(xr_root) {}; // should be used by static members only
+		MkJson_(const MkJson_& x) : m_root(x.m_root){};
+		~MkJson_(){};
 		MkJson operator [] (const std::string& x_str);
 		MkJson operator [] (int x_index);
-		// inline MkJson& operator = (const MkJson& x){ mp_root(&x.mp_root) {}
-		inline MkJson& operator = (double x_value) {*mp_root = x_value; return *this;}
-		inline MkJson& operator = (const std::string& x_value) {*mp_root = x_value; return *this;}
-		inline MkJson& operator=(const MkJson& x) {} // TODO
+		// inline MkJson_& operator = (const MkJson_& x){ m_root(&x.m_root) {}
+		inline MkJson_& operator = (double x_value) {m_root = x_value; return *this;}
+		inline MkJson_& operator = (const std::string& x_value) {m_root = x_value; return *this;}
+		inline MkJson_& operator = (const MkJson_& x) {} // TODO
 
-		inline void Append(const MkJson& x_obj); // TODO {(*this)[mp_root->size()] = *(x_obj.mp_root);}
-		inline void Clear(){mp_root->clear();}
+		inline void Append(const MkJson_& x_obj); // TODO {(*this)[m_root->size()] = *(x_obj.m_root);}
+		inline void Clear(){m_root.clear();}
 
-		inline friend std::ostream& operator<< (std::ostream& xr_out, const MkJson& x_obj) {xr_out << *(x_obj.mp_root); return xr_out;}
-		inline friend std::istream& operator>> (std::istream& xr_in, MkJson& x_obj) {xr_in >> *(x_obj.mp_root); return xr_in;}
+		inline friend std::ostream& operator<< (std::ostream& xr_out, const MkJson_& x_obj) {xr_out << (x_obj.m_root); return xr_out;}
+		inline friend std::istream& operator>> (std::istream& xr_in, MkJson_& x_obj) {xr_in >> (x_obj.m_root); return xr_in;}
 
-		inline float AsFloat() const {return mp_root->asFloat();} // TODO: Use asDouble when possible
-		inline double AsDouble() const {return mp_root->asDouble();} // TODO: Use asDouble when possible
-		inline std::string AsString() const {return mp_root->asString();} 
-		inline int AsInt() const {return mp_root->asInt();} 
-		inline bool AsBool() const {return mp_root->asBool();} 
-		inline int64_t AsInt64() const {return mp_root->asInt64();} 
+		inline float AsFloat() const {return m_root.asFloat();} // TODO: Use asDouble when possible
+		inline double AsDouble() const {return m_root.asDouble();} // TODO: Use asDouble when possible
+		inline std::string AsString() const {return m_root.asString();} 
+		inline int AsInt() const {return m_root.asInt();} 
+		inline bool AsBool() const {return m_root.asBool();} 
+		inline int64_t AsInt64() const {return m_root.asInt64();} 
 
-		inline std::vector<std::string> GetMemberNames() const {return mp_root->getMemberNames();}
-		inline size_t Size() const {return mp_root->size();}  // TODO: Check if array
-		inline size_t IsNull() const {return mp_root->isNull();}
+		inline std::vector<std::string> GetMemberNames() const {return m_root.getMemberNames();}
+		inline size_t Size() const {return m_root.size();}  // TODO: Check if array
+		inline size_t IsNull() const {return m_root.isNull();}
 
 		MkJson Create(const std::string& x_str);
 		MkJson Create(int x_index);
 
-		static MkJson emptyArray();
-		static MkJson nullValue();
+		static MkJson_ emptyArray();
+		static MkJson_ nullValue();
 
 
 	protected:
 
-		std::unique_ptr<Json::Value> mp_root;
+		Json::Value m_root;
+};
+
+class MkJson
+{
+	public:
+		MkJson(MkJson_* x) : m_ptr(x) {}
+		inline MkJson operator [] (const std::string& x_str) {return (*m_ptr)[x_str];}
+		inline MkJson operator [] (int x_index) {return (*m_ptr)[x_index];}
+		inline MkJson_ operator * () {return (*m_ptr);}
+		inline MkJson_ operator -> () {return (*m_ptr);}
+
+		inline MkJson operator = (double x_value) {*m_ptr = x_value; return *this;}
+		inline MkJson operator = (const std::string& x_value) {*m_ptr = x_value; return *this;}
+		inline MkJson operator = (const MkJson_& x) {} // TODO
+
+		inline MkJson Create(const std::string& x_str){return (*m_ptr)[x_str];}
+		inline MkJson Create(int x_index){return (*m_ptr)[x_index];}
+
+		inline float AsFloat() const {return m_ptr->AsFloat();}
+		inline double AsDouble() const {return m_ptr->AsDouble();}
+		inline std::string AsString() const {return m_ptr->AsString();} 
+		inline int AsInt() const {return m_ptr->AsInt();} 
+		inline bool AsBool() const {return m_ptr->AsBool();} 
+		inline int64_t AsInt64() const {return m_ptr->AsInt64();} 
+
+		inline std::vector<std::string> GetMemberNames() const {return m_ptr->GetMemberNames();}
+		inline size_t Size() const {return m_ptr->Size();}
+		inline size_t IsNull() const {return m_ptr->IsNull();}
+	
+
+	protected:
+		std::shared_ptr<MkJson_> m_ptr;
 };
 
 

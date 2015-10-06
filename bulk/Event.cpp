@@ -67,7 +67,7 @@ void Event::Randomize(unsigned int& xr_seed, const string& x_requirement, const 
 	}
 }
 
-void Event::Serialize(MkJson& xr_out, const string& x_dir) const
+void Event::Serialize(MkJson xr_out, const string& x_dir) const
 {
 	xr_out["raised"] = IsRaised();
 
@@ -80,12 +80,12 @@ void Event::Serialize(MkJson& xr_out, const string& x_dir) const
 		{
 			m_object.Serialize(xr_out.Create("object"), x_dir);
 		}
-		else xr_out["object"] = MkJson::nullValue();
+		else xr_out["object"] = MkJson_::nullValue();
 		xr_out["external"]    = m_externalInfo;
 	}
 }
 
-void Event::Deserialize(MkJson& xr_in, const string& x_dir)
+void Event::Deserialize(MkJson xr_in, const string& x_dir)
 {
 	// Note that a null JSON means that the event was not raised
 	bool raised = xr_in["raised"].AsBool();
@@ -101,7 +101,7 @@ void Event::Deserialize(MkJson& xr_in, const string& x_dir)
 		}
 
 		// Deserialize files
-		m_externalInfo = xr_in["external"];
+		m_externalInfo = *xr_in["external"];
 		/*
 		Json::Value::Members members = xr_in["external"].getMemberNames();
 		m_externalInfo.Clear();
@@ -173,15 +173,15 @@ void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 	m_absTimeNotif = getAbsTimeMs();
 	string level = "EVENT";
 
-	MkJson root;
-	Serialize(root, "");
+	MkJson_ root;
+	Serialize(&root, "");
 
 	LOG_DEBUG(m_logger, "Notify event:" << *this);
 
 	// root["external"] = m_externalInfo;
 
 	// export the event to our specific format
-	MkJson out;
+	MkJson_ out;
 	COPY_AND_CHECK(out["dateEvent"]          , root["dateEvent"]);
 	COPY_AND_CHECK(out["dateNotif"]          , root["dateNotif"]);
 	COPY_AND_CHECK(out["applicationName"]    , x_context.GetApplicationName());
@@ -194,7 +194,7 @@ void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 		out["attrs"] = root["external"];
 		// note: attrs can be empty, create an empty vector
 		if(out["attrs"].IsNull())
-			out["attrs"] = MkJson::emptyArray();
+			out["attrs"] = MkJson_::emptyArray();
 		level = "PROCESS";
 	}
 	else

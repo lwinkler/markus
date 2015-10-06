@@ -109,7 +109,7 @@ WebServiceException::WebServiceException(const string& x_descr, const string& x_
 * @param x_out Output stream
 * @param x_dir Output directory (for images)
 */
-void MkException::Serialize(MkJson& xr_out, const string& x_dir) const
+void MkException::Serialize(MkJson xr_out, const string& x_dir) const
 {
 	xr_out["description"] = m_description;
 	xr_out["code"] = m_code;
@@ -122,7 +122,7 @@ void MkException::Serialize(MkJson& xr_out, const string& x_dir) const
 * @param x_in
 * @param x_dir
 */
-void MkException::Deserialize(MkJson& xr_in, const string& x_dir)
+void MkException::Deserialize(MkJson xr_in, const string& x_dir)
 {
 	m_description = xr_in["description"].AsString();
 	m_code        = static_cast<MkExceptionCode>(xr_in["code"].AsInt());
