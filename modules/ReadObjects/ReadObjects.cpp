@@ -58,7 +58,19 @@ void ReadObjects::Reset()
 
 	CLEAN_DELETE(mp_annotationReader);
 	mp_annotationReader = new AnnotationFileReader();
-	mp_annotationReader->Open(m_param.file);
+	if (!m_param.file.empty())
+	{
+		string path = m_param.file;
+		if(m_param.prependOutputDirectory)
+		{
+			path = GetContext().GetOutputDir() + "/" + path;
+		}
+		mp_annotationReader->Open(path);
+	}
+	else
+	{
+		LOG_WARN(m_logger, "No input file given");
+	}
 
 	// m_outputFile<<"time"<<SEP<<"object"<<SEP<<"feature"<<SEP<<"value"<<SEP<<"mean"<<SEP<<"sqVariance"<<SEP<<"initial"<<SEP<<"min"<<SEP<<"max"<<SEP<<"nbSamples"<<endl;
 }
