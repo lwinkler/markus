@@ -55,6 +55,9 @@ void ReadObjects::Reset()
 {
 	Input::Reset();
 	//m_event.Empty();
+	m_ObjectOut.clear();
+	m_endOfStream = false;
+	Pause(false);
 
 	CLEAN_DELETE(mp_annotationReader);
 	mp_annotationReader = new AnnotationFileReader();
