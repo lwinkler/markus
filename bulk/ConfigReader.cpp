@@ -68,7 +68,7 @@ void splitTagName(const string& x_searchString, string& xr_tagName, string& xr_a
 }
 
 
-TiXmlDocument* createDoc(const std::string& x_fileName, bool x_allowCreation)
+TiXmlDocument* createDoc(const std::string& x_fileName, bool x_allowCreation, bool x_header)
 {
 	try
 	{
@@ -79,7 +79,7 @@ TiXmlDocument* createDoc(const std::string& x_fileName, bool x_allowCreation)
 			CLEAN_DELETE(doc);
 			if(x_allowCreation)
 			{
-				createEmptyConfigFile(x_fileName);
+				createEmptyConfigFile(x_fileName, x_header);
 				doc = new TiXmlDocument(x_fileName);
 				assert(doc->LoadFile());
 			}
@@ -105,9 +105,9 @@ TiXmlDocument* createDoc(const std::string& x_fileName, bool x_allowCreation)
 * @param x_fileName      Name of the XML file with relative path
 * @param x_allowCreation Allow the creation of a new file if unexistant
 */
-ConfigFile::ConfigFile(const string& x_fileName, bool x_allowCreation) :
+ConfigFile::ConfigFile(const string& x_fileName, bool x_allowCreation, bool x_header) :
 	mp_doc(dynamic_cast<TiXmlDocument*>(mp_node)),
-	ConfigReader(createDoc(x_fileName, x_allowCreation))
+	ConfigReader(createDoc(x_fileName, x_allowCreation, x_header))
 {
 	if(IsEmpty() || mp_doc == nullptr)
 		throw MkException("Initialize a ConfigReader to an empty config", LOC);
@@ -227,6 +227,25 @@ ConfigReader ConfigReader::RefSubConfig(const string& x_tagName, bool x_allowCre
 	}
 	return ConfigReader(newNode);
 }
+
+/**
+* @brief Return a config objects that was appended to the current config
+*
+* @param x_tagName   The node name of the sub element (= XML tag)
+*
+* @return config object
+*/
+ConfigReader ConfigReader::Append(const string& x_tagName)
+{
+	if(IsEmpty())
+		throw MkException("Impossible to find node " + x_tagName + " in ConfigReader" , LOC);
+
+	// Add a sub config element if not found
+	auto element = new TiXmlElement(x_tagName);
+	mp_node->LinkEndChild(element);
+	return ConfigReader(element);
+}
+
 
 
 /**
