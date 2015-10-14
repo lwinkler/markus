@@ -8,10 +8,10 @@ function deploy {
 		scp -r ${TARGET} vp@smartaid.quality:~
 	fi
 
-	read -r -p "Do you want to release "$TARGET" ? [y/N] " response
-	if [[ $response =~ ^[Yy]$ ]] ; then
-		scp -r ${TARGET} /mnt/releases/Morphean/VideoAID/markus
-	fi
+	# read -r -p "Do you want to release "$TARGET" ? [y/N] " response
+	# if [[ $response =~ ^[Yy]$ ]] ; then
+		# scp -r ${TARGET} /mnt/releases/Morphean/VideoAID/markus
+	# fi
 }
 
 #### BEGIN ####
@@ -110,7 +110,7 @@ fi
 TARGET=fall_v${MARKUS_TAG}
 rm -rf ${TARGET}
 mkdir ${TARGET}
-scp -r markus projects2/FallDetectionFromVP.xml modules2/FilterPython/vignettes log4cxx.min.xml projects2/Calibration ${TARGET}
+cp -r markus projects2/FallDetectionFromVP.xml modules2/FilterPython/vignettes log4cxx.min.xml projects2/Calibration ${TARGET}
 
 deploy
 
@@ -120,7 +120,16 @@ deploy
 TARGET=motion_v${MARKUS_TAG}
 rm -rf ${TARGET}
 mkdir ${TARGET}
-scp -r markus projects2/MotionDetectorFromVP.xml log4cxx.min.xml ${TARGET}
+cp -r markus projects2/MotionDetectorFromVP.xml log4cxx.min.xml ${TARGET}
+
+deploy
+
+# intrusion-bsub
+
+TARGET=intrusion1_v${MARKUS_TAG}
+rm -rf ${TARGET}
+mkdir ${TARGET}
+cp -r markus projects2/intrusion.dist.xml log4cxx.min.xml ${TARGET}
 
 deploy
 
