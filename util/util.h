@@ -44,7 +44,7 @@ const std::string timeStamp(int x_pid = 0);
 const std::string msToTimeStamp(TIME_STAMP x_ms);
 TIME_STAMP timeStampToMs(const std::string& x_timeStamp);
 TIME_STAMP getAbsTimeMs();
-void createEmptyConfigFile(const std::string& x_fileName);
+void createEmptyConfigFile(const std::string& x_fileName, bool x_header = true);
 bool compareFiles(const std::string& x_file1, const std::string& x_file2);
 std::string getFileContents(const std::string& x_filename);
 double diagonal(const cv::Mat& x_image);
