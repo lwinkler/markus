@@ -28,6 +28,10 @@
 #include "util.h"
 #include "feature_util.h"
 #include <vector>
+
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
+
 /**
 * @brief Class representing a feature in the form of a vector of float
 */
@@ -47,7 +51,19 @@ public:
 	}
 	inline virtual void Randomize(unsigned int& xr_seed, const std::string& x_param)
 	{
-		randomize(values, xr_seed);
+		if(x_param.empty())
+		{
+			randomize(values, xr_seed);
+		}
+		else
+		{
+			Json::Reader reader;
+			Json::Value root;
+			bool parsingSuccessful = reader.parse(x_param.c_str(), root);
+			assert(parsingSuccessful);
+			int size = root["size"].asInt();
+			randomize(values, xr_seed, size);
+		}
 	}
 	inline virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const
 	{

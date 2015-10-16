@@ -269,8 +269,11 @@ void Object::Randomize(unsigned int& xr_seed, const string& x_requirement, const
 			const FactoryFeatures& factory(Factories::featuresFactory());
 			for(const auto& elem : req.getMemberNames())
 			{
+				// create features according to the requirement
 				Feature* feat = factory.Create(req[elem]["type"].asString());
-				feat->Randomize(xr_seed, "");
+				stringstream ss;
+				ss << req[elem];
+				feat->Randomize(xr_seed, ss.str());
 				AddFeature(elem, feat);
 			}
 		}
