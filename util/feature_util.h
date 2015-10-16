@@ -282,9 +282,9 @@ template<class T> double compareSquared(const std::vector<T>& x_1, const std::ve
 	return sum / POW2(x_1.size());
 }
 
-template<class T>void randomize(std::vector<T>& xr_val, unsigned int& xr_seed)
+template<class T>void randomize(std::vector<T>& xr_val, unsigned int& xr_seed, size_t x_size = 10)
 {
-	xr_val.resize(10);
+	xr_val.resize(x_size);
 	for(auto& elem : xr_val)
 		randomize(elem, xr_seed);
 }
