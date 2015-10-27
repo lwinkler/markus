@@ -1,0 +1,2 @@
+#! /bin/bash
+$@ | sed -e "s/ERROR/\x1b[41m&\x1b[0m/" -e "s/WARN/\x1b[43m&\x1b[0m/" -e "s/INFO/\x1b[32m&\x1b[0m/" -e "s/DEBUG/\x1b[35m&\x1b[0m/"
