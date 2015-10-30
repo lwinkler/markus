@@ -1,7 +1,8 @@
 # This is a comment
 FROM ubuntu:14.04
 MAINTAINER Gaetan Collaud <gaetancollaud@gmail.com>
-RUN apt-get update && apt-get -y install \ 
+RUN apt-get update
+RUN apt-get -y install \ 
 	cmake \ 
 	libqt4-core \ 
 	libqt4-dev \ 
@@ -23,6 +24,11 @@ RUN apt-get update && apt-get -y install \
 	python-gridfs \
 	git
 
-RUN mkdir /home/markus && cd /home/markus && git clone https://github.com/lwinkler/markus.git && cd markus
-RUN cmake . && make clean && make update_modules_list && make
+WORKDIR /home
+RUN git clone https://github.com/lwinkler/markus.git 
+WORKDIR /home/markus
+RUN cmake . 
+RUN make clean 
+RUN make update_modules_list 
+RUN make
 

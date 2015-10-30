@@ -136,7 +136,7 @@ add_custom_target(check
 
 add_custom_target(update_modules_list
 	COMMENT "Update the list of modules for the editor"
-	COMMAND ./markus -d
+	COMMAND ./markus -d -n
 	DEPENDS  markus
 )
 
