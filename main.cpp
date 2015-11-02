@@ -241,7 +241,7 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 }
 
 /// Override the initial config with extra config files and argument set parameters
-void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, const vector<string>& parameters, log4cxx::LoggerPtr& logger)
+void overrideConfig(ConfigReader& mainConfig, const vector<string>& extraConfig, const vector<string>& parameters, log4cxx::LoggerPtr& logger)
 {
 	// Override values of parameters if an extra config is used
 	for(const auto& elem1 : extraConfig)
@@ -250,7 +250,7 @@ void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, 
 		{
 			// open the config and override the initial config
 			ConfigFile extra(elem1);
-			appConfig.OverrideWith(extra);
+			mainConfig.OverrideWith(extra);
 		}
 		catch(MkException& e)
 		{
@@ -278,9 +278,9 @@ void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, 
 			if(path.size() != 2)
 				throw MkException("Parameter set in command line must be in format 'module.parameter'", LOC);
 			if(path[0] == "manager")
-				appConfig.FindRef("parameters>param[name=\"" + path[1] + "\"]", true).SetValue(value);
+				mainConfig.RefSubConfig("application").FindRef("parameters>param[name=\"" + path[1] + "\"]", true).SetValue(value);
 			else
-				appConfig.FindRef("module[name=\"" + path[0] + "\"]>parameters>param[name=\"" + path[1] + "\"]", true).SetValue(value);
+				mainConfig.RefSubConfig("application").FindRef("module[name=\"" + path[0] + "\"]>parameters>param[name=\"" + path[1] + "\"]", true).SetValue(value);
 			// manager.GetModuleByName(path[0])->GetParameters().RefParameterByName(path[1]).SetValue(value, PARAMCONF_CMD);
 		}
 		catch(std::exception& e)
@@ -354,7 +354,7 @@ int main(int argc, char** argv)
 		MarkusApplication app(argc, argv);
 #endif
 
-		overrideConfig(appConfig, args.extraConfig, args.parameters, logger);
+		overrideConfig(mainConfig, args.extraConfig, args.parameters, logger);
 
 		if(args.simulation)
 		{

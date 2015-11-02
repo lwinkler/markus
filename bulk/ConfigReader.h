@@ -29,6 +29,7 @@
 #include <sstream>
 
 #include "define.h"
+#include <log4cxx/xml/domconfigurator.h>
 
 
 class Module;
@@ -92,6 +93,9 @@ protected:
 	ConfigReader NextSubConfig(const std::string& x_tagName, const std::string& x_attrName = "", const std::string& x_attrValue = "") const;
 	void CheckUniquenessOfId(const std::string& x_group, const std::string& x_type, const std::string& x_idLabel, const std::string& x_moduleName) const;
 	TiXmlNode* mp_node;
+
+private:
+	static log4cxx::LoggerPtr m_logger;
 };
 
 /**
