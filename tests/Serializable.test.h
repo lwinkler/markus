@@ -122,6 +122,7 @@ protected:
 	// Values for testing
 	cv::KeyPoint  m_kp;
 	cv::Point2f   m_pt2f;
+	cv::Point2d   m_pt2d;
 	cv::Point3f   m_pt3f;
 	vector<float> m_vect;
 	Object        m_obj2;
@@ -142,7 +143,8 @@ public:
 		m_vect.push_back(1e4);
 		m_vect.push_back(0.000234);
 
-		m_pt2f = cv::Point2f(33.5, 1e-4);
+		m_pt2f = cv::Point2d(33.5, 1e-4);
+		m_pt2d = cv::Point2d(33.5, 1e-4);
 		m_pt3f = cv::Point3f(33, 134.5, 1e4);
 
 		m_obj2 = Object("test");
@@ -155,6 +157,7 @@ public:
 		m_obj2.AddFeature("fvf", new FeatureVectorFloat(m_vect));
 		m_obj2.AddFeature("fkp", new FeatureKeyPoint(m_kp));
 		m_obj2.AddFeature("fp2f", new FeaturePoint2f(m_pt2f));
+		m_obj2.AddFeature("fp2f", new FeaturePoint2f(m_pt2d));
 		m_obj2.AddFeature("fp3f", new FeaturePoint3f(m_pt3f));
 		FeatureHistory fh;
 		fh.Update(004, FeatureFloat(777));
@@ -274,10 +277,10 @@ public:
 
 	void testPolygon()
 	{
-		vector<cv::Point2f> pts;
-		pts.push_back(cv::Point2f(34.4, 34));
-		pts.push_back(cv::Point2f(3.4, -455.5));
-		pts.push_back(cv::Point2f(344, 0.34));
+		vector<cv::Point2d> pts;
+		pts.push_back(cv::Point2d(34.4, 34));
+		pts.push_back(cv::Point2d(3.4, -455.5));
+		pts.push_back(cv::Point2d(344, 0.34));
 		Polygon polygon1(pts);
 		testSerialization(polygon1,"Polygon");
 	}

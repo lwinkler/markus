@@ -145,8 +145,8 @@ void Object::Deserialize(istream& x_in, const string& x_dir)
 void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 {
 	//Rect rect = it1->GetRect();
-	Point p1(posX - width / 2, posY - height / 2);
-	Point p2(posX + width / 2, posY + height / 2);
+	Point2d p1(posX - width / 2, posY - height / 2);
+	Point2d p2(posX + width / 2, posY + height / 2);
 
 	// Draw the rectangle in the input image
 	// if id is present, draw to the equivalent color
@@ -210,8 +210,8 @@ void Object::Intersect(const Mat& x_image)
 {
 	// cout<<"in "<<posX<<" "<<posY<<" "<<width<<" "<<height<<endl;
 	const cv::Rect& rect(GetRect());
-	Point tl = rect.tl();
-	Point br = rect.br();
+	Point2d tl = rect.tl();
+	Point2d br = rect.br();
 
 	if(tl.x < 0 || tl.y < 0
 			|| br.x > x_image.cols - 1 || br.y > x_image.rows - 1)
@@ -233,9 +233,9 @@ void Object::Intersect(const Mat& x_image)
 /// Randomize the content of the object
 void Object::Randomize(unsigned int& xr_seed, const string& x_requirement, const Size& x_size)
 {
-	SetRect(cv::Rect(
-				Point(rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height),
-				Point(rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height))
+	SetRect(cv::Rect_<double>(
+				Point2d(rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height),
+				Point2d(rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height))
 		   );
 	if(x_requirement != "")
 	{

@@ -153,10 +153,10 @@ void ModuleKeyPoints::ProcessFrame()
 
 		for(const auto& elem : pointsOfInterest)
 		{
-			Point point = Point(elem.pt.x, elem.pt.y) + obj1.TopLeft();
+			Point2d point = Point2d(elem.pt.x, elem.pt.y) + obj1.TopLeft();
 			Scalar color = Scalar(22, 88, elem.response);
 			circle(m_debug, point, elem.size, color);
-			line(m_debug, point, point + Point(
+			line(m_debug, point, point + Point2d(
 					 (5 + elem.octave) * cos(elem.angle / 360.0 * 2.0 * M_PI),
 					 (5 + elem.octave) * sin(elem.angle / 360.0 * 2.0 * M_PI)
 				 ), color);

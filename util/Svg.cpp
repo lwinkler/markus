@@ -67,7 +67,7 @@ void Svg::Line(const Point& x_point1, const Point& x_point2, const string& x_col
 
 void Svg::Draw(const Polygon& x_polygon, const std::string& x_color, double x_diagonal)
 {
-	vector <Point> pts;
+	vector <Point2d> pts;
 	for(const auto& pt : x_polygon.points)
 		pts.emplace_back(pt.x * x_diagonal, pt.y * x_diagonal);
 

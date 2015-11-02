@@ -98,8 +98,8 @@ public:
 		posX   = x_rect.tl().x + width / 2;
 		posY   = x_rect.tl().y + height / 2;
 	}
-	inline cv::Point TopLeft() const {return cv::Point(posX - width / 2, posY - height / 2);}
-	inline cv::Point Center() const {return cv::Point(posX, posY);}
+	inline cv::Point2d TopLeft() const {return cv::Point2d(posX - width / 2.0, posY - height / 2.0);}
+	inline cv::Point2d Center() const {return cv::Point2d(posX, posY);}
 
 	void RenderTo(cv::Mat& x_output, const cv::Scalar& x_color) const;
 	void Intersect(const cv::Mat& x_image);
