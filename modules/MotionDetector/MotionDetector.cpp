@@ -78,7 +78,7 @@ void MotionDetector::ProcessFrame()
 	split(m_input, channels);
 	m_value = 0;
 
-	m_event.Empty();
+	m_event.Clean();
 
 	for(int i = 0 ; i < m_input.channels() ; i++)
 	{

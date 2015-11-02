@@ -55,7 +55,7 @@ ReadEvent::~ReadEvent(void)
 void ReadEvent::Reset()
 {
 	Input::Reset();
-	m_event.Empty();
+	m_event.Clean();
 
 	CLEAN_DELETE(mp_annotationReader);
 	mp_annotationReader = new AnnotationFileReader();

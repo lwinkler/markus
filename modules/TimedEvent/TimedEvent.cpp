@@ -52,7 +52,7 @@ void TimedEvent::Reset()
 
 void TimedEvent::ProcessFrame()
 {
-	m_event.Empty();
+	m_event.Clean();
 
 	LOG_DEBUG(m_logger, "Current and next timestamps " << m_currentTimeStamp << ">=" << m_nextEvent);
 

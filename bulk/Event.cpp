@@ -51,7 +51,7 @@ Event::~Event() {}
 void Event::Randomize(unsigned int& xr_seed, const string& x_requirement, const Size& x_size)
 {
 	// random event
-	Empty();
+	Clean();
 	if(x_requirement != "" || rand_r(&xr_seed) < RAND_MAX /10) // TODO: reqs: object: features: ... ?
 	{
 		if(x_requirement == "" && rand_r(&xr_seed) < RAND_MAX /10)
@@ -127,7 +127,7 @@ void Event::Deserialize(istream& x_in, const string& x_dir)
 /**
 * @brief Empty the event: must be called on each frame process to avoid raising multiple events
 */
-void Event::Empty()
+void Event::Clean()
 {
 	m_eventName = "";
 	m_object = Object("empty");

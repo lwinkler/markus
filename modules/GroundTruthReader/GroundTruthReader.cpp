@@ -84,7 +84,7 @@ void GroundTruthReader::Reset()
 
 void GroundTruthReader::ProcessFrame()
 {
-	m_event.Empty();
+	m_event.Clean();
 	m_state = false;
 #ifdef MARKUS_DEBUG_STREAMS
 	m_debug.setTo(0);

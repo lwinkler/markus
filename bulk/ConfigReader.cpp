@@ -421,6 +421,11 @@ string ConfigReader::GetValue() const
 		return str;
 }
 
+bool ConfigReader::IsFinal() const
+{
+	return mp_node->ToElement()->GetText() != nullptr;
+}
+
 /**
 * @brief Set the value as string
 *
@@ -515,26 +520,7 @@ void ConfigReader::CheckUniquenessOfId(const string& x_group, const string& x_ty
 
 void ConfigReader::OverrideWith(const ConfigReader& x_extraConfig)
 {
-	// TODO this function should be more generic
-	/*
-	ConfigReader moduleConfig = x_extraConfig.GetSubConfig("application").GetSubConfig("module");
-	while(!moduleConfig.IsEmpty())
-	{
-		if(!moduleConfig.GetSubConfig("parameters").IsEmpty())
-		{
-			ConfigReader paramConfig = moduleConfig.GetSubConfig("parameters").GetSubConfig("param");
-			while(!paramConfig.IsEmpty())
-			{
-				// Override parameter
-				RefSubConfig("module", "name", moduleConfig.GetAttribute("name"))
-				.RefSubConfig("parameters").RefSubConfig("param", "name", paramConfig.GetAttribute("name"), true)
-				.SetValue(paramConfig.GetValue());
-				paramConfig = paramConfig.NextSubConfig("param");
-			}
-		}
-		moduleConfig = moduleConfig.NextSubConfig("module");
-	}
-	*/
+	// Note: This method is very specific to our type of configuration
 
 	for(const auto& conf1 : x_extraConfig.GetSubConfig("application").FindAll("module"))
 	{

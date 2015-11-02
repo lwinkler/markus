@@ -58,7 +58,7 @@ LogEvent::~LogEvent(void)
 void LogEvent::Reset()
 {
 	Module::Reset();
-	m_event.Empty();
+	m_event.Clean();
 
 	string srtFileName = GetContext().GetOutputDir() + "/" + m_param.file;
 	CLEAN_DELETE(mp_annotationWriter);

@@ -48,7 +48,7 @@ StreamEvent::~StreamEvent()
 
 void StreamEvent::ConvertInput()
 {
-	m_event.Empty(); // TODO : rename this method
+	m_event.Clean();
 
 	if(m_connected == nullptr) return;
 
