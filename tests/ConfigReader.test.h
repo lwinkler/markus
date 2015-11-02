@@ -108,8 +108,7 @@ public:
 		m_conf1->Validate();
 
 		// Compare with the initial config
-		// note: this is kind of hackish ... can you find a better way :-)
-		TS_ASSERT(compareFiles("tests/configAAA/config1.xml", "tests/tmp/config1_copy.xml"));
+		TS_ASSERT(compareFiles("tests/config/config1.xml", "tests/tmp/config1_copy.xml"));
 	}
 
 	/// Generate a config from an empty file and test

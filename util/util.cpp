@@ -396,6 +396,12 @@ bool compareFiles(const string& x_file1, const string& x_file2)
 {
 	ifstream file1(x_file1.c_str());
 	ifstream file2(x_file2.c_str());
+
+	if(!file1.is_open())
+		throw MkException("Cannot open file " + x_file1, LOC);
+	if(!file2.is_open())
+		throw MkException("Cannot open file " + x_file2, LOC);
+
 	string line1;
 	string line2;
 
