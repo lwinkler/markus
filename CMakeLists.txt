@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.6)
 
 # Options to be set with ccmake or cmake-gui
 set(CMAKE_BUILD_TYPE       "Debug" CACHE BOOL "Mode of compilation")
-set(Markus_NO_GUI          false   CACHE BOOL "Compile Markus without a graphical user interface")
+set(Markus_NO_GUI          true   CACHE BOOL "Compile Markus without a graphical user interface")
 set(Markus_USE_QT5         false   CACHE BOOL "Use QT 5 instead of 4")
 
 add_definitions(
@@ -73,7 +73,7 @@ include_directories(util bulk ${modules_dirs})
 
 set(markus_SRCS main.cpp)
 
-#-------------------------------------------------------------------------------- 
+#--------------------------------------------------------------------------------
 if(Markus_NO_GUI)
 	add_definitions(-DMARKUS_NO_GUI)
 	set(MK_DEPS util bulk ${modules_dirs})
@@ -86,7 +86,7 @@ endif()
 set(MK_DEPS ${MK_DEPS} ${MK_DEPS} ${TINYXML_LIBS} ${JSONCPP_LIBS} ${LOG4CXX_LIBS} ${OpenCV_LIBS} ${PYTHON_LIBRARIES} ${CURL_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT}) # double the dependencies to avoid linking error
 if(Markus_USE_QT5)
 	include_directories(${Qt5Widgets_INCLUDE_DIRS} ${Qt5WebKit_INCLUDE_DIRS} ${Qt5WebKitWidgets_INCLUDE_DIRS})
-	set(MK_DEPS ${MK_DEPS} ${Qt5Widgets_LIBRARIES} ${Qt5WebKit_LIBRARIES} ${Qt5WebKitWidgets_LIBRARIES}) 
+	set(MK_DEPS ${MK_DEPS} ${Qt5Widgets_LIBRARIES} ${Qt5WebKit_LIBRARIES} ${Qt5WebKitWidgets_LIBRARIES})
 	# Executables fail to build with Qt 5 in the default configuration
 	# without -fPIE. We add that here.
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS} ${Qt5WebKit_EXECUTABLE_COMPILE_FLAGS}")
@@ -100,7 +100,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR})
 
 
 
-#-------------------------------------------------------------------------------- 
+#--------------------------------------------------------------------------------
 
 add_subdirectory(util)
 add_subdirectory(bulk)
@@ -160,7 +160,7 @@ add_custom_target(xmlindent
 	COMMAND find -L projects/ projects2/ -name \"*.xml\" -print | xargs -i{} xmlindent -wt {}
 )
 
-#-------------------------------------------------------------------------------- 
+#--------------------------------------------------------------------------------
 #create a pretty commit id using git
 #uses 'git describe --tags', so tags are required in the repo
 #create a tag with 'git tag <name>' and 'git push --tags'
