@@ -24,21 +24,12 @@ RUN apt-get -y install \
 	python-gridfs \
 	git
 
-WORKDIR /home
-RUN git clone https://github.com/gaetancollaud/markus.git
+
 WORKDIR /home/markus
+ADD . /home/markus/
+
 RUN cmake .
 RUN make clean
 RUN make markus
-
-
-#RUN apt-get install -y x11vnc xvfb
-#RUN mkdir ~/.vnc
-#RUN x11vnc -storepasswd 1234 ~/.vnc/passwd
-
-#run bash -c 'echo "cd /home/markus && make update_modules_list" > ~/.bash_markus && chmod +x ~/.bash_markus'
-#run bash -c 'echo "~/.bash_markus" >> ~/.bashrc'
-#RUN x11vnc -forever -usepw -create &
-
-RUN make update_modules_list 
+RUN make update_modules_list
 RUN make
