@@ -55,6 +55,7 @@ public:
 	const ConfigReader GetSubConfig(const std::string& x_tagName, const std::string& x_attrName, const std::string& x_attrValue) const;
 	ConfigReader RefSubConfig(const std::string& x_tagName, bool x_allowCreation = false);
 	ConfigReader RefSubConfig(const std::string& x_tagName, const std::string& x_attrName, const std::string& x_attrValue, bool x_allowCreation = false);
+	ConfigReader Append(const std::string& x_tagName);
 
 	/// Check if the config object is empty
 	inline bool IsEmpty() const {return mp_node == nullptr;}
@@ -102,7 +103,7 @@ protected:
 class ConfigFile : public ConfigReader
 {
 public:
-	ConfigFile(const std::string& x_fileName, bool x_allowCreation=false);
+	ConfigFile(const std::string& x_fileName, bool x_allowCreation = false, bool x_header = true);
 	~ConfigFile();
 	void SaveToFile(const std::string& x_file) const;
 

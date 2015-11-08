@@ -2,13 +2,13 @@ project(markus)
 cmake_minimum_required(VERSION 2.6)
 
 # Options to be set with ccmake or cmake-gui
-set(CMAKE_BUILD_TYPE       "Debug" CACHE BOOL "Mode of compilation")
 set(Markus_NO_GUI          true   CACHE BOOL "Compile Markus without a graphical user interface")
 set(Markus_USE_QT5         false   CACHE BOOL "Use QT 5 instead of 4")
 
-add_definitions(
-	-std=c++11 # Add compilation for C++ 2011: Used for module SubSENSE
-)
+add_definitions(-std=c++11 -Wextra -Wno-unused-parameter -Wno-deprecated-register)
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+	add_definitions(-DMARKUS_DEBUG_STREAMS)
+endif()
 
 # Required packages
 find_package(OpenCV REQUIRED)
@@ -44,11 +44,6 @@ if(Markus_USE_QT5)
 else()
 	find_package(Qt4 REQUIRED)
 endif()
-
-set(CMAKE_CXX_FLAGS "-Wextra -Wno-unused-parameter -Wno-deprecated-register")
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -g")
-set(CMAKE_CXX_FLAGS_DEBUG  "-O2 -g -DMARKUS_DEBUG_STREAMS")
 
 # Tell CMake to run moc when necessary:
 set(CMAKE_AUTOMOC ON)

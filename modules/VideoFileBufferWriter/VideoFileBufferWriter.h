@@ -29,6 +29,8 @@
 
 #include <opencv2/highgui/highgui.hpp>
 #include <boost/circular_buffer.hpp>
+#include <mutex>
+#include <atomic>
 
 
 /**
@@ -67,6 +69,7 @@ public:
 	void AddImageToBuffer();
 	void OpenNewFile();
 	void CloseFile();
+	void WaitForThread() const;
 
 private:
 	const Parameters& m_param;
@@ -85,8 +88,11 @@ protected:
 	std::string m_fileName;
 
 	// temporary
-	boost::circular_buffer<cv::Mat> m_buffer;
-	TIME_STAMP m_endOfRecord;;
+	boost::circular_buffer<cv::Mat> m_buffer1;
+	boost::circular_buffer<cv::Mat> m_buffer2;
+	TIME_STAMP m_endOfRecord;
+	std::mutex m_mutex;
+	std::atomic<bool> m_threadIsWorking;
 };
 
 #endif

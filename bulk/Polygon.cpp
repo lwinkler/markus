@@ -36,7 +36,7 @@ Polygon::Polygon()
 	// points.push_back(Point2f(0.0,0.0));
 }
 
-Polygon::Polygon(const vector<Point2f>& x_value)
+Polygon::Polygon(const vector<Point2d>& x_value)
 	: points(x_value)
 {
 }

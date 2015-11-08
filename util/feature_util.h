@@ -80,6 +80,15 @@ inline double compareSquared(const cv::Point2f& x_1, const cv::Point2f& x_2) {re
 void randomize(cv::Point2f& xr_val, unsigned int& xr_seed);
 
 /* -------------------------------------------------------------------------------- */
+// Template specialization for features of type Point2d
+
+std::ostream& serialize(std::ostream& x_out, const cv::Point2d& x_value);
+std::istream& deserialize(std::istream& x_in,  cv::Point2d& xr_value);
+
+inline double compareSquared(const cv::Point2d& x_1, const cv::Point2d& x_2) {return x_1 != x_2;}
+void randomize(cv::Point2d& xr_val, unsigned int& xr_seed);
+
+/* -------------------------------------------------------------------------------- */
 // Template specialization for features of type Point3f
 
 std::ostream& serialize(std::ostream& x_out, const cv::Point3f& x_value);
@@ -282,9 +291,9 @@ template<class T> double compareSquared(const std::vector<T>& x_1, const std::ve
 	return sum / POW2(x_1.size());
 }
 
-template<class T>void randomize(std::vector<T>& xr_val, unsigned int& xr_seed)
+template<class T>void randomize(std::vector<T>& xr_val, unsigned int& xr_seed, size_t x_size = 10)
 {
-	xr_val.resize(10);
+	xr_val.resize(x_size);
 	for(auto& elem : xr_val)
 		randomize(elem, xr_seed);
 }

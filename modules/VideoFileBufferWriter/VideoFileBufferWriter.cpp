@@ -26,7 +26,7 @@
 #include "StreamEvent.h"
 #include "util.h"
 #include "Manager.h"
-#include <stdio.h>
+#include <thread>
 
 using namespace std;
 using namespace cv;
@@ -36,7 +36,9 @@ log4cxx::LoggerPtr VideoFileBufferWriter::m_logger(log4cxx::Logger::getLogger("V
 VideoFileBufferWriter::VideoFileBufferWriter(ParameterStructure& xr_params):
 	VideoFileWriter(xr_params),
 	m_param(dynamic_cast<Parameters&>(xr_params)),
-	m_buffer(m_param.bufferFramesBefore)   // TODO: should we lock this parameter
+	m_buffer1(m_param.bufferFramesBefore),
+	m_buffer2(m_param.bufferFramesBefore + 100),
+	m_threadIsWorking(false)
 {
 	// AddInputStream(0, new StreamImage("input", m_input, *this,   "Video input"));
 	AddInputStream(1, new StreamState("trigger", m_trigger, *this,  "Trigger to start/stop of the recording (e.g. motion)"));
@@ -54,16 +56,28 @@ VideoFileBufferWriter::~VideoFileBufferWriter(void)
 	CloseFile();
 }
 
+void VideoFileBufferWriter::WaitForThread() const
+{
+	while(m_threadIsWorking)
+	{
+		LOG_WARN(m_logger, "Thread is working. Waiting 1 sec.");
+		sleep(1);
+	}
+}
+
 void VideoFileBufferWriter::Reset()
 {
+	// note: we do not want to call the Reset of VideoFileWriter since the video file is opened later
 	Module::Reset();
 	CloseFile();
-	m_buffer.clear();
+	m_buffer1.clear();
+	m_buffer2.clear();
 }
 
 void VideoFileBufferWriter::CloseFile()
 {
 	// finalize
+	WaitForThread();
 	if(!m_writer.isOpened())
 		m_writer.release();
 	if (m_eraseFile)
@@ -88,7 +102,7 @@ void VideoFileBufferWriter::OpenNewFile()
 	assert(m_param.type == CV_8UC3);
 
 	stringstream ss;
-	ss << GetContext().GetOutputDir() << "/" << m_param.file  << "." << m_index++ << "." << ExtensionFromFourcc(m_param.fourcc);
+	ss << GetContext().GetOutputDir() << "/" << m_param.file  << "." << m_currentTimeStamp << "." << ExtensionFromFourcc(m_param.fourcc);
 	m_fileName = ss.str();
 	double fps = 12;
 
@@ -103,6 +117,7 @@ void VideoFileBufferWriter::OpenNewFile()
 	}
 
 	LOG_DEBUG(m_logger, "Start recording file "<<m_fileName<<" with fps="<<fps<<" and size "<<m_param.width<<"x"<<m_param.height);
+	WaitForThread();
 	m_writer.open(m_fileName, CV_FOURCC(s[0], s[1], s[2], s[3]), fps, Size(m_param.width, m_param.height), isColor);
 	if(!m_writer.isOpened())
 	{
@@ -113,15 +128,30 @@ void VideoFileBufferWriter::OpenNewFile()
 
 void VideoFileBufferWriter::ProcessFrame()
 {
-	LOG_DEBUG(m_logger, "Recording=" << m_recording << " until " << m_endOfRecord << " trigger=" << m_trigger);
+	LOG_DEBUG(m_logger, "Recording=" << m_recording << " until " << m_endOfRecord << " (" << (m_endOfRecord - m_currentTimeStamp) / 1000.0 
+		<< "s) trigger=" << m_trigger << " event=" << m_event.IsRaised() << " thread=" << m_threadIsWorking);
 
 	// We are always buffering
-	m_buffer.push_back(Mat());
-	m_input.copyTo(m_buffer.back());
+	m_buffer1.push_back(Mat());
+	m_input.copyTo(m_buffer1.back());
 
 	if(m_recording)
 	{
-		m_writer.write(m_input);
+		m_mutex.lock();
+		if(!m_threadIsWorking)
+		{
+			// Thread is complete: write directly
+			m_writer.write(m_input);
+		}
+		else
+		{
+			// Thread is working: add to buffer
+			if(m_buffer2.size() == m_buffer2.max_size())
+				LOG_ERROR(m_logger, "Buffer is not being written fast enough to disk, loosing frames");
+			m_buffer2.push_back();
+			m_input.copyTo(m_buffer2.back());
+		}
+		m_mutex.unlock();
 
 		if(m_trigger || m_event.IsRaised())
 			m_endOfRecord = m_currentTimeStamp + m_param.bufferDurationAfter * 1000;
@@ -140,9 +170,37 @@ void VideoFileBufferWriter::ProcessFrame()
 		{
 			// Write the buffer to disk
 			OpenNewFile();
-			LOG_DEBUG(m_logger, "Open " + m_fileName + " and add " + to_string(m_buffer.size()) + " frames");
-			for(const auto& frame : m_buffer)
-				m_writer.write(frame);
+			LOG_DEBUG(m_logger, "Open " + m_fileName + " for " + to_string(m_buffer1.size()) + " frames");
+			// m_buffer2 = boost::circular_buffer<Mat>(m_buffer1);
+			for(const auto elem : m_buffer1)
+			{
+				m_buffer2.push_back();
+				elem.copyTo(m_buffer2.back());
+			}
+			assert(!m_buffer1.empty());
+			assert(!m_buffer2.empty());
+			LOG_DEBUG(m_logger, "Starting thread");
+
+			std::thread t([this]()
+			{
+				// start new thread
+				while(true)
+				{
+					m_mutex.lock();
+					m_threadIsWorking = true;
+					if(m_buffer2.empty())
+					{
+						m_mutex.unlock();
+						break;
+					}
+					m_writer.write(m_buffer2.front());
+					m_buffer2.pop_front();
+
+					m_mutex.unlock();
+				}
+				m_threadIsWorking = false;
+			});
+			t.detach();
 			m_endOfRecord = m_currentTimeStamp + m_param.bufferDurationAfter * 1000;
 			m_recording = true;
 		}

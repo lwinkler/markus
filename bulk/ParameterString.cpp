@@ -35,7 +35,7 @@ void ParameterString::Export(ostream& rx_os, int x_tabs)
 	rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<endl;
 	tabs = string(x_tabs + 1, '\t');
 	rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<endl;
-	rx_os<<tabs<<"<value default='"<<m_default<<"'>"<<GetValue()<<"</value>"<<endl;
+	rx_os<<tabs<<"<value default=\""<<m_default<<"\">"<<GetValue()<<"</value>"<<endl;
 	rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<endl;
 	tabs = string(x_tabs, '\t');
 	rx_os<<tabs<<"</param>"<<endl;

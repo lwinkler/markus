@@ -100,6 +100,35 @@ void randomize(Point2f& xr_val, unsigned int& xr_seed)
 }
 
 /* -------------------------------------------------------------------------------- */
+ostream& serialize(ostream& x_out, const Point2d& x_val)
+{
+	Json::Value root;
+	root["x"] = x_val.x;
+	root["y"] = x_val.y;
+
+	Json::FastWriter writer;
+	string tmp = writer.write(root);
+	tmp.erase(remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
+	x_out<<tmp;
+	return x_out;
+}
+
+istream& deserialize(istream& x_in,  Point2d& xr_val)
+{
+	Json::Value root;
+	x_in >> root;
+	xr_val.x    = root["x"].asFloat();
+	xr_val.y    = root["y"].asFloat();
+	return x_in;
+}
+
+void randomize(Point2d& xr_val, unsigned int& xr_seed)
+{
+	randomize(xr_val.x, xr_seed);
+	randomize(xr_val.y, xr_seed);
+}
+
+/* -------------------------------------------------------------------------------- */
 ostream& serialize(ostream& x_out, const Point3f& x_val)
 {
 	Json::Value root;
