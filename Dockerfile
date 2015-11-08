@@ -33,3 +33,7 @@ RUN make clean
 RUN make markus
 RUN make update_modules_list
 RUN make
+
+VOLUME /home/markus/config
+
+RUN ln /dev/null /dev/raw1394
