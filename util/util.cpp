@@ -137,7 +137,6 @@ void adjustSize(const Mat& im_in, Mat& im_out)
 		else if(im_in.cols >= im_out.cols)
 		{
 			// note: Maybe one day, parametrize the interpolation method
-			// resize(im_in, im_out, im_out.size(), 0, 0, CV_INTER_AREA); // TODO for LM: See if we gain on detection with this line
 			resize(im_in, im_out, im_out.size(), 0, 0, CV_INTER_AREA);
 		}
 		else
@@ -232,7 +231,7 @@ void adjustChannels(const Mat& im_in, Mat& im_out)
 	}
 	else if(im_in.channels() == 3 && im_out.channels() == 1)
 	{
-		cvtColor(im_in, im_out, CV_BGR2GRAY); // TODO: probably use BGR!! check that no problem arises
+		cvtColor(im_in, im_out, CV_BGR2GRAY);
 	}
 	else throw MkException("Error in adjustChannels", LOC);
 }
