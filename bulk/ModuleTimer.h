@@ -24,20 +24,30 @@
 #ifndef QMODULE_TIMER_H
 #define QMODULE_TIMER_H
 
-#include <QTimer>
+#include <thread>
+#include <chrono>
+#include <atomic>
 
 class Processable;
 
 /// A timer associated with a module (for auto processing, mostly used in input modules)
-class QModuleTimer : public QTimer
+class QModuleTimer
 {
 public:
 	QModuleTimer(Processable & x_module);
+	~QModuleTimer(){Stop();}
 	void Reset(double x_fps);
 
+	// typedef std::function<void(void)> Timeout;
+
+	inline void Stop(){m_running = false; m_thread.join();}
+	void Start();
+
 protected:
-	virtual void timerEvent(QTimerEvent * px_event);
 	Processable & m_processable;
+	std::thread m_thread;
+	std::atomic<bool> m_running;
+	double m_delay = 0;
 };
 
 

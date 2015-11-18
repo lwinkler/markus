@@ -26,6 +26,7 @@
 
 using namespace std;
 
+#ifndef MARKUS_NO_GUI
 #include <QWidget>
 #include <QBoxLayout>
 #include <QLabel>
@@ -33,8 +34,6 @@ using namespace std;
 #include <QTextEdit>
 #include <QCheckBox>
 #include <QComboBox>
-
-#ifndef MARKUS_NO_GUI
 #include "QParameterSlider.h"
 #endif
 

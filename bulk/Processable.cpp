@@ -76,9 +76,9 @@ void Processable::Pause(bool x_pause)
 	if(m_moduleTimer == nullptr)
 		return;
 	if(x_pause)
-		m_moduleTimer->stop();
+		m_moduleTimer->Stop();
 	else
-		m_moduleTimer->start();
+		m_moduleTimer->Start();
 }
 
 

@@ -24,12 +24,12 @@
 #include "ModuleTimer.h"
 #include "Processable.h"
 
-#include <QTimer>
 
 using namespace std;
 
 QModuleTimer::QModuleTimer(Processable& x_module)
-	: m_processable(x_module)
+	: m_processable(x_module),
+	m_running(false)
 {
 	// Reset(x_fps);
 }
@@ -41,18 +41,38 @@ QModuleTimer::QModuleTimer(Processable& x_module)
 */
 void QModuleTimer::Reset(double x_fps)
 {
-	double delay = 1000.0 / 1000;
+	m_delay = 0.01;
 	if(x_fps > 0)
 	{
 		// Start a timer for module process
-		delay = 1000.0 / x_fps;
+		m_delay = 1.0 / x_fps;
 	}
-	start(delay);
+	Start();
 }
 
-void QModuleTimer::timerEvent(QTimerEvent* px_event)
+
+void QModuleTimer::Start()
 {
-	if(!m_processable.Process())
-		stop();
+	m_running = true;
+	auto ms = chrono::milliseconds((long) m_delay * 1000);
+	// std::chrono::seconds<1, double> ms(m_delay);
+
+	m_thread = thread([=]()
+	{
+		while (m_running == true)
+		{
+			try
+			{
+				this_thread::sleep_for(ms);
+				cout << m_delay << endl;
+				if(!m_processable.Process())
+					Stop();
+			}
+			catch(std::exception& e)
+			{
+				cout << "ERRRRRR" << e.what() << endl; // TODO
+			}
+		}
+	});
 }
 
