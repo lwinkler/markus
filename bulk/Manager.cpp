@@ -256,7 +256,12 @@ bool Manager::Process()
 		{
 			// if((*it)->IsAutoProcessed())
 			// Note: Since we are in centralized mode, all modules are called directly from the master
-			(elem)->Process();
+			elem->Process();
+		}
+		catch(FatalException& e)
+		{
+			LOG_ERROR(m_logger, (elem)->GetName() << ": Exception raised (FatalException), aborting : " << e.what());
+			m_continueFlag = recover = m_hasRecovered = false;
 		}
 		catch(EndOfStreamException& e)
 		{
