@@ -24,8 +24,6 @@
 #ifndef MANAGER_H
 #define MANAGER_H
 
-#include <QReadWriteLock>
-
 #include "ConfigReader.h"
 #include "Controller.h"
 #include "Timer.h"

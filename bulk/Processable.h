@@ -28,7 +28,6 @@
 #include "ParameterStructure.h"
 #include "ParameterNum.h"
 #include "Context.h"
-#include <QReadWriteLock>
 #include <log4cxx/logger.h>
 #include <boost/thread/shared_mutex.hpp>
 

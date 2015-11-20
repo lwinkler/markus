@@ -39,13 +39,15 @@ if("${JSONCPP_LIBS}" STREQUAL "")
 	message(FATAL_ERROR "JsonCpp library not found on your system")
 endif()
 
-if(Markus_USE_QT5)
-	find_package(Qt5Widgets REQUIRED)
-	find_package(Qt5WebKit REQUIRED)
-	find_package(Qt5WebKitWidgets REQUIRED)
-	# find_package(Qt5Core REQUIRED) # already found via Qt5Widgets
-else()
-	find_package(Qt4 REQUIRED)
+if(NOT Markus_NO_GUI)
+	if(Markus_USE_QT5)
+		find_package(Qt5Widgets REQUIRED)
+		find_package(Qt5WebKit REQUIRED)
+		find_package(Qt5WebKitWidgets REQUIRED)
+		# find_package(Qt5Core REQUIRED) # already found via Qt5Widgets
+	else()
+		find_package(Qt4 REQUIRED)
+	endif()
 endif()
 
 # Tell CMake to run moc when necessary:
@@ -82,16 +84,18 @@ endif()
 
 
 set(MK_DEPS ${MK_DEPS} ${MK_DEPS} ${TINYXML_LIBS} ${JSONCPP_LIBS} ${LOG4CXX_LIBS} ${OpenCV_LIBS} ${PYTHON_LIBRARIES} ${CURL_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT}) # double the dependencies to avoid linking error
-if(Markus_USE_QT5)
-	include_directories(${Qt5Widgets_INCLUDE_DIRS} ${Qt5WebKit_INCLUDE_DIRS} ${Qt5WebKitWidgets_INCLUDE_DIRS})
-	set(MK_DEPS ${MK_DEPS} ${Qt5Widgets_LIBRARIES} ${Qt5WebKit_LIBRARIES} ${Qt5WebKitWidgets_LIBRARIES}) 
-	# Executables fail to build with Qt 5 in the default configuration
-	# without -fPIE. We add that here.
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS} ${Qt5WebKit_EXECUTABLE_COMPILE_FLAGS}")
-	add_definitions(${Qt5Widgets_DEFINITIONS} ${Qt5WebKit_DEFINITIONS})
-else()
-	include_directories(${QT_INCLUDES})
-	set(MK_DEPS ${MK_DEPS} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTWEBKIT_LIBRARY} )
+if(NOT Markus_NO_GUI)
+	if(Markus_USE_QT5)
+		include_directories(${Qt5Widgets_INCLUDE_DIRS} ${Qt5WebKit_INCLUDE_DIRS} ${Qt5WebKitWidgets_INCLUDE_DIRS})
+		set(MK_DEPS ${MK_DEPS} ${Qt5Widgets_LIBRARIES} ${Qt5WebKit_LIBRARIES} ${Qt5WebKitWidgets_LIBRARIES}) 
+		# Executables fail to build with Qt 5 in the default configuration
+		# without -fPIE. We add that here.
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS} ${Qt5WebKit_EXECUTABLE_COMPILE_FLAGS}")
+		add_definitions(${Qt5Widgets_DEFINITIONS} ${Qt5WebKit_DEFINITIONS})
+	else()
+		include_directories(${QT_INCLUDES})
+		set(MK_DEPS ${MK_DEPS} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTWEBKIT_LIBRARY} )
+	endif()
 endif()
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR})

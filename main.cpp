@@ -21,7 +21,6 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include <QApplication>
 
 #include "Manager.h"
 #include "MkException.h"
@@ -30,6 +29,7 @@
 #include "Simulation.h"
 
 #ifndef MARKUS_NO_GUI
+#include <QApplication>
 #include "Editor.h"
 #include "Markus.h"
 #include "MarkusApplication.h"

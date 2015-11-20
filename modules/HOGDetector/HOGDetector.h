@@ -25,59 +25,22 @@
 #ifndef HOG_DETECTOR_H
 #define HOG_DETECTOR_H
 
-#include <QThread>
-
-#include "ModuleAsync.h"
+#include "Module.h"
 #include "Parameter.h"
 #include "StreamObject.h"
 
 /*! \class HOGDetector
- *  \brief Module class for detection based on cascade filters (Haar, ...)
+ *  \brief Module class for detection based on HOG models
  *
  */
 
-
-
-class HOGDetectionThread : public QThread
+class HOGDetector : public Module
 {
 public:
-	explicit HOGDetectionThread(QObject* parent = 0) {m_scaleFactor = 0;}
-	virtual ~HOGDetectionThread()
-	{
-		exit();
-		wait();
-	}
-	void SetData(const cv::Mat & xr_smallImg, float x_scaleFactor)
-	{
-		xr_smallImg.copyTo(m_smallImg);
-		//m_minNeighbors 	= x_minNeighbors;
-		//m_minSide 	= x_minSide;
-		m_scaleFactor 	= x_scaleFactor;
-	}
-
-	virtual void run();
-
-	cv::HOGDescriptor m_hog;
-	const std::vector<cv::Rect>& GetDetectedObjects() const { return m_detected;}
-	Timer m_timerThread;
-
-protected:
-	float m_scaleFactor;
-	cv::Mat m_smallImg;
-
-	std::vector<cv::Rect> m_detected;
-};
-
-/**
-* @brief Detect objects from a video stream using a HOG descriptor
-*/
-class HOGDetector : public ModuleAsync
-{
-public:
-	class Parameters : public ModuleAsync::Parameters
+	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : ModuleAsync::Parameters(x_confReader)
+		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
 			// m_list.push_back(new ParameterInt("minNeighbors", 2, 1, 100, 	&minNeighbors,	"Minimum numbers of neighbors (higher: less sensitive)")); // Note : Seems to be a bug with minNeighbors = 1 with most filters
 			m_list.push_back(new ParameterInt("min_side", 0, 0, 200, 		&minSide,	"Minimum size of the detected object"));
@@ -103,10 +66,8 @@ public:
 	MKCLASS("HOGDetector")
 	MKDESCR("Detect objects from a video stream using a HOG descriptor")
 
-	virtual void LaunchThread();
-	virtual void NormalProcess();
-	virtual void CopyResults();
-	void Reset();
+	virtual void Reset() override;
+	virtual void ProcessFrame() override;
 
 private:
 	const Parameters& m_param;
@@ -114,9 +75,11 @@ private:
 
 protected:
 
+	// state
+	cv::HOGDescriptor m_hog;
+
 	// input
 	cv::Mat m_input;
-	cv::Mat m_lastInput; // This is used by the thread
 
 	// output
 	std::vector<Object> m_detectedObjects;
@@ -125,10 +88,6 @@ protected:
 #ifdef MARKUS_DEBUG_STREAMS
 	cv::Mat m_debug;
 #endif
-
-	// thread
-	HOGDetectionThread m_thread;
-	virtual const QThread & GetRefThread() {return m_thread;}
 };
 
 #endif
