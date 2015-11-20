@@ -63,10 +63,12 @@ void QModuleTimer::Start()
 		{
 			try
 			{
+				cout << "time" << getAbsTimeMs() << endl;
 				this_thread::sleep_for(ms);
-				cout << m_delay << endl;
+				cout << &m_processable << endl;
 				if(!m_processable.Process())
 					Stop();
+				cout << "&m_processable" << endl;
 			}
 			catch(std::exception& e)
 			{

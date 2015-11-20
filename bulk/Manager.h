@@ -61,6 +61,7 @@ public:
 	~Manager();
 	virtual void Reset(bool x_resetInputs = true);
 	virtual bool Process();
+	virtual void Stop() override;
 	void SendCommand(const std::string& x_command, std::string x_value);
 	const std::vector<Module*>& GetModules() const {return m_modules; }
 	inline const Processable& GetModuleByName(const std::string& x_name) const {if(x_name == "manager") assert(false); else return RefModuleByName(x_name);}

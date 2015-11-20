@@ -30,6 +30,7 @@
 #include "Context.h"
 #include <QReadWriteLock>
 #include <log4cxx/logger.h>
+#include <boost/thread/shared_mutex.hpp>
 
 class QModuleTimer;
 
@@ -61,28 +62,29 @@ public:
 	virtual void Reset();
 	void Pause(bool x_pause);
 	virtual bool Process() = 0;
+	virtual void Stop();
 	inline void AllowAutoProcess(bool x_proc) {m_allowAutoProcess = x_proc;}
 	inline void SetRealTime(bool x_realTime) {m_realTime  = x_realTime;}
 	inline virtual void SetContext(const Context& x_context) {if(mp_context != nullptr) throw MkException("Context was already set", LOC); mp_context = &x_context;}
 	inline virtual const Context& GetContext() const {if(mp_context == nullptr) throw MkException("Context was not set", LOC); return *mp_context;}
 	inline bool IsContextSet() const{return mp_context != nullptr;}
 
-	inline void LockForRead() {m_lock.lockForRead();}
-	inline void LockForWrite() {m_lock.lockForWrite();}
-	inline void Unlock() {m_lock.unlock();}
-	inline bool TryLockForWrite() {return m_lock.tryLockForWrite();}
+	// inline void LockForRead() {m_lock.lockForRead();}
+	// inline void LockForWrite() {m_lock.lockForWrite();}
+	inline void Unlock() {}
+	// inline bool TryLockForWrite() {return m_lock.tryLockForWrite();}
 
 protected:
 	bool m_pause;
 	bool m_allowAutoProcess;
 	bool m_realTime;         /// Process in real-time: if true, the module processes as fast as possible
 	QModuleTimer * m_moduleTimer;
+	boost::shared_mutex m_lock;
 
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 	const Context* mp_context; /// context given by Manager (output directory, ...)
-	QReadWriteLock m_lock;
 };
 
 #endif

@@ -78,8 +78,18 @@ Manager::Manager(ParameterStructure& xr_params) :
 	}
 }
 
+void Manager::Stop()
+{
+	cout << "stop" << m_modules.size() << endl;
+	for(auto & elem : m_modules)
+		elem->Stop();
+	Processable::Stop();
+}
+
 Manager::~Manager()
 {
+	cout << "destroy manager" << endl;
+
 	PrintStatistics();
 
 
@@ -237,123 +247,127 @@ bool Manager::Process()
 	if(!m_isConnected)
 		throw MkException("Modules must be connected before processing", LOC);
 
-	if(!TryLockForWrite())
 	{
-		// LOG_WARN(m_logger, "Manager too slow !"); // Note: this happens every time
-		return true;
-	}
-	if(m_pause)
-	{
+		boost::unique_lock<boost::shared_mutex> lock(m_lock); // , boost::try_to_lock);
+
+		if(!lock)
+		{
+			LOG_WARN(m_logger, "Manager too slow !"); // Note: this happens every time
+			return true;
+		}
+		if(m_pause)
+		{
+			Unlock();
+			return true;
+		}
+		m_timerProcessing.Start();
+		bool recover = true;
+
+		for(auto & elem : m_modules)
+		{
+			try
+			{
+				// if((*it)->IsAutoProcessed())
+				// Note: Since we are in centralized mode, all modules are called directly from the master
+				elem->Process();
+			}
+			catch(FatalException& e)
+			{
+				LOG_ERROR(m_logger, (elem)->GetName() << ": Exception raised (FatalException), aborting : " << e.what());
+				m_continueFlag = recover = m_hasRecovered = false;
+			}
+			catch(EndOfStreamException& e)
+			{
+				if(m_hasRecovered)
+				{
+					// This exception happens after a recovery, keep it!
+					m_lastException = e;
+					NotifyException(m_lastException);
+				}
+				recover = m_hasRecovered = false;
+
+				LOG_INFO(m_logger, (elem)->GetName() << ": Exception raised (EndOfStream) : " << e.what());
+
+				// test if all inputs are over
+				if(EndOfAllStreams())
+				{
+					InterruptionManager::GetInst().AddEvent("exception." + e.GetName());
+					// TODO: test what happens if the stream of a camera is cut
+					LOG_INFO(m_logger, "End of all video streams : Manager::Process");
+					m_continueFlag = false;
+				}
+			}
+			catch(MkException& e)
+			{
+				// InterruptionManager::GetInst().AddEvent("exception." + e.GetName());
+				if(m_hasRecovered)
+				{
+					// This exception happens after a recovery, keep it!
+					m_lastException = e;
+					NotifyException(m_lastException);
+				}
+				recover = m_hasRecovered = false;
+				LOG_ERROR(m_logger, "(Markus exception " << e.GetCode() << "): " << e.what());
+			}
+			catch(exception& e)
+			{
+				if(m_hasRecovered)
+				{
+					// This exception happens after a recovery, keep it!
+					m_lastException = MkException((elem)->GetName() + " :" + string(e.what()), LOC);
+					NotifyException(m_lastException);
+				}
+				LOG_ERROR(m_logger, (elem)->GetName() << ": Exception raised (std::exception): " << e.what());
+			}
+			catch(string& str)
+			{
+				if(m_hasRecovered)
+				{
+					// This exception happens after a recovery, keep it!
+					m_lastException = MkException((elem)->GetName() + " :" + string(str), LOC);
+					NotifyException(m_lastException);
+				}
+				recover = m_hasRecovered = false;
+				LOG_ERROR(m_logger, (elem)->GetName() << ": Exception raised (string): " << str);
+			}
+			catch(const char* str)
+			{
+				if(m_hasRecovered)
+				{
+					// This exception happens after a recovery, keep it!
+					m_lastException = MkException((elem)->GetName() + " :" + string(str), LOC);
+					NotifyException(m_lastException);
+				}
+				recover = m_hasRecovered = false;
+				LOG_ERROR(m_logger, (elem)->GetName() << ": Exception raised (const char*): " << str);
+			}
+			catch(...)
+			{
+				if(m_hasRecovered)
+				{
+					// This exception happens after a recovery, keep it!
+					m_lastException = MkException((elem)->GetName() + ": Unknown", LOC);
+					NotifyException(m_lastException);
+				}
+				recover = m_hasRecovered = false;
+				LOG_ERROR(m_logger, (elem)->GetName() << ": Unknown exception raised");
+			}
+		}
+
+		// If a full processing cycle has been made without exception,
+		// we consider that the manager has recovered from exceptions
+		if(recover)
+			m_hasRecovered = true;
+		m_timerProcessing.Stop();
+		m_frameCount++;
+		if(m_frameCount % 100 == 0 && m_logger->isDebugEnabled())
+		{
+			PrintStatistics();
+		}
 		Unlock();
-		return true;
 	}
-	m_timerProcessing.Start();
-	bool recover = true;
-
-	for(auto & elem : m_modules)
-	{
-		try
-		{
-			// if((*it)->IsAutoProcessed())
-			// Note: Since we are in centralized mode, all modules are called directly from the master
-			elem->Process();
-		}
-		catch(FatalException& e)
-		{
-			LOG_ERROR(m_logger, (elem)->GetName() << ": Exception raised (FatalException), aborting : " << e.what());
-			m_continueFlag = recover = m_hasRecovered = false;
-		}
-		catch(EndOfStreamException& e)
-		{
-			if(m_hasRecovered)
-			{
-				// This exception happens after a recovery, keep it!
-				m_lastException = e;
-				NotifyException(m_lastException);
-			}
-			recover = m_hasRecovered = false;
-
-			LOG_INFO(m_logger, (elem)->GetName() << ": Exception raised (EndOfStream) : " << e.what());
-
-			// test if all inputs are over
-			if(EndOfAllStreams())
-			{
-				InterruptionManager::GetInst().AddEvent("exception." + e.GetName());
-				// TODO: test what happens if the stream of a camera is cut
-				LOG_INFO(m_logger, "End of all video streams : Manager::Process");
-				m_continueFlag = false;
-			}
-		}
-		catch(MkException& e)
-		{
-			// InterruptionManager::GetInst().AddEvent("exception." + e.GetName());
-			if(m_hasRecovered)
-			{
-				// This exception happens after a recovery, keep it!
-				m_lastException = e;
-				NotifyException(m_lastException);
-			}
-			recover = m_hasRecovered = false;
-			LOG_ERROR(m_logger, "(Markus exception " << e.GetCode() << "): " << e.what());
-		}
-		catch(exception& e)
-		{
-			if(m_hasRecovered)
-			{
-				// This exception happens after a recovery, keep it!
-				m_lastException = MkException((elem)->GetName() + " :" + string(e.what()), LOC);
-				NotifyException(m_lastException);
-			}
-			LOG_ERROR(m_logger, (elem)->GetName() << ": Exception raised (std::exception): " << e.what());
-		}
-		catch(string& str)
-		{
-			if(m_hasRecovered)
-			{
-				// This exception happens after a recovery, keep it!
-				m_lastException = MkException((elem)->GetName() + " :" + string(str), LOC);
-				NotifyException(m_lastException);
-			}
-			recover = m_hasRecovered = false;
-			LOG_ERROR(m_logger, (elem)->GetName() << ": Exception raised (string): " << str);
-		}
-		catch(const char* str)
-		{
-			if(m_hasRecovered)
-			{
-				// This exception happens after a recovery, keep it!
-				m_lastException = MkException((elem)->GetName() + " :" + string(str), LOC);
-				NotifyException(m_lastException);
-			}
-			recover = m_hasRecovered = false;
-			LOG_ERROR(m_logger, (elem)->GetName() << ": Exception raised (const char*): " << str);
-		}
-		catch(...)
-		{
-			if(m_hasRecovered)
-			{
-				// This exception happens after a recovery, keep it!
-				m_lastException = MkException((elem)->GetName() + ": Unknown", LOC);
-				NotifyException(m_lastException);
-			}
-			recover = m_hasRecovered = false;
-			LOG_ERROR(m_logger, (elem)->GetName() << ": Unknown exception raised");
-		}
-	}
-
-	// If a full processing cycle has been made without exception,
-	// we consider that the manager has recovered from exceptions
-	if(recover)
-		m_hasRecovered = true;
-	m_timerProcessing.Stop();
-	m_frameCount++;
-	if(m_frameCount % 100 == 0 && m_logger->isDebugEnabled())
-	{
-		PrintStatistics();
-	}
-	Unlock();
 	//if(m_frameCount % 20 == 0)
-	usleep(20); // This keeps the manager unlocked to allow the sending of commands // TODO find a cleaner way
+	// usleep(20); // This keeps the manager unlocked to allow the sending of commands // TODO find a cleaner way
 
 	// Send command generated by interruptions
 	m_continueFlag = m_continueFlag && (m_param.nbFrames == 0 || m_param.nbFrames != m_frameCount);
@@ -390,7 +404,7 @@ void Manager::SendCommand(const string& x_command, string x_value)
 	Processable&  process(elems.at(0) == "manager" ? dynamic_cast<Processable&>(*this) : RefModuleByName(elems.at(0)));
 	try
 	{
-		process.LockForWrite();
+		// TODO process.LockForWrite();
 		contr.FindController(elems.at(1)).CallAction(elems.at(2), &x_value);
 		process.Unlock();
 	}

@@ -10,6 +10,9 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
 	add_definitions(-DMARKUS_DEBUG_STREAMS)
 endif()
 
+find_package( Boost 1.40 COMPONENTS system thread REQUIRED )
+include_directories(${Boost_INCLUDE_DIR})
+
 # Required packages
 find_package(OpenCV REQUIRED)
 find_package(Threads REQUIRED)
@@ -110,7 +113,7 @@ endif()
 add_subdirectory(tests)
 
 add_executable(markus ${markus_SRCS})
-target_link_libraries(markus ${MK_DEPS})
+target_link_libraries(markus ${MK_DEPS} ${Boost_LIBRARIES})
 
 
 add_custom_target(doc

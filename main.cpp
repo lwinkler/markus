@@ -401,10 +401,15 @@ int main(int argc, char** argv)
 			// No gui. launch the process directly
 			// note: so far we cannot launch the process in a decentralized manner (with a timer on each module)
 
-			while(manager.Process())
+/*
+			if(args.centralized)
 			{
-				// nothing
+				while(manager.Process())
+				{
+					// nothing
+				}
 			}
+			*/
 		}
 		else
 		{
@@ -436,6 +441,7 @@ int main(int argc, char** argv)
 
 		// Write the modified params in config and save
 		manager.UpdateConfig();
+		manager.Stop();
 		mainConfig.SaveToFile("last_config.xml");
 	}
 	catch(MkException& e)

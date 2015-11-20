@@ -58,6 +58,7 @@ Module::Module(ParameterStructure& xr_params) :
 
 Module::~Module()
 {
+	cout<<"destroy module"<<endl;
 	// Delete all streams
 	for(auto & elem : m_inputStreams)
 		delete(elem.second);
@@ -156,7 +157,9 @@ double Module::GetRecordingFps() const
 */
 bool Module::Process()
 {
-	LockForWrite();
+	cout << __LINE__ << GetName() << endl;
+	boost::unique_lock<boost::shared_mutex> lock(m_lock);
+	cout << __LINE__ << endl;
 	if(m_pause)
 	{
 		Unlock();
@@ -247,7 +250,7 @@ bool Module::Process()
 
 			// Call depending modules (modules with fps = 0)
 			for(auto & elem : m_modulesDepending)
-				(elem)->Process();
+				elem->Process();
 
 			m_countProcessedFrames++;
 			m_lastTimeStamp = m_currentTimeStamp;
@@ -277,7 +280,7 @@ void Module::Export(ostream& rx_os, int x_indentation)
 	tabs = string(x_indentation + 1, '\t');
 	rx_os<<tabs<<"<parameters>"<<endl;
 	for(const auto & elem : m_param.GetList())
-		(elem)->Export(rx_os, x_indentation + 2);
+		elem->Export(rx_os, x_indentation + 2);
 	rx_os<<tabs<<"</parameters>"<<endl;
 
 	rx_os<<tabs<<"<inputs>"<<endl;

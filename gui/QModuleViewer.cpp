@@ -173,7 +173,7 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 		if(m_img_output == nullptr)
 			m_img_output = new Mat( Size(m_outputWidth, m_outputHeight), CV_8UC3);
 
-		m_currentModule->LockForRead();
+		// TODO m_currentModule->LockForRead();
 		m_currentStream->RenderTo(*m_img_original);
 		m_currentModule->Unlock();
 

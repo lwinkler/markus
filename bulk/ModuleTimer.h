@@ -27,6 +27,7 @@
 #include <thread>
 #include <chrono>
 #include <atomic>
+#include <assert.h>
 
 class Processable;
 
@@ -35,12 +36,12 @@ class QModuleTimer
 {
 public:
 	QModuleTimer(Processable & x_module);
-	~QModuleTimer(){Stop();}
+	virtual ~QModuleTimer(){assert(!m_running);}
 	void Reset(double x_fps);
 
 	// typedef std::function<void(void)> Timeout;
 
-	inline void Stop(){m_running = false; m_thread.join();}
+	inline void Stop(){m_running = false;m_thread.join();}
 	void Start();
 
 protected:

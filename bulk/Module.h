@@ -39,7 +39,6 @@
 
 
 class Stream;
-class QModuleTimer;
 
 /**
 * @brief Class representing a module. A module is a node of the application, it processes streams

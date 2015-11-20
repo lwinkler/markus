@@ -6,7 +6,7 @@ if(CXXTEST_FOUND)
 	file(GLOB tests_src3 "../*/*/*.test.h")
 
 	add_executable(unitTests unitTests.cpp)
-	target_link_libraries(unitTests ${MK_DEPS})
+	target_link_libraries(unitTests ${MK_DEPS} ${Boost_LIBRARIES})
 
 	add_custom_command(
 		OUTPUT unitTests.cpp

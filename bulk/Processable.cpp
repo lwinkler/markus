@@ -52,7 +52,11 @@ void Processable::Reset()
 	// Add the module timer (only works with QT)
 	if(m_param.autoProcess && m_allowAutoProcess)
 	{
-		CLEAN_DELETE(m_moduleTimer);
+		if(m_moduleTimer != nullptr)
+		{
+			m_moduleTimer->Stop(); // TODO How to handle this
+			CLEAN_DELETE(m_moduleTimer);
+		}
 		m_moduleTimer = new QModuleTimer(*this);
 
 		// Set a timer for all modules in auto-process (= called at a regular frame rate)
@@ -64,6 +68,17 @@ void Processable::Reset()
 	}
 	else m_moduleTimer = nullptr;
 }
+
+
+/**
+* @brief Stop the processing thread. To be used before destructur
+*
+*/
+void Processable::Stop()
+{
+	if(m_moduleTimer != nullptr)
+		m_moduleTimer->Stop();
+};
 
 /**
 * @brief Pause the module and stop the processing
