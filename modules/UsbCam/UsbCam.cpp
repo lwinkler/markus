@@ -74,7 +74,6 @@ void UsbCam::Capture()
 		if(m_capture.grab() == 0)
 		{
 			m_endOfStream = true;
-			Pause(true);
 			throw MkException("Capture failed on USB camera", LOC);
 		}
 

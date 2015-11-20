@@ -61,6 +61,7 @@ public:
 	~Manager();
 	virtual void Reset(bool x_resetInputs = true);
 	virtual bool Process();
+	virtual void Start() override;
 	virtual void Stop() override;
 	void SendCommand(const std::string& x_command, std::string x_value);
 	const std::vector<Module*>& GetModules() const {return m_modules; }
@@ -69,10 +70,8 @@ public:
 	void Connect();
 	void CreateEditorFiles(const std::string& x_fileName);
 	void PrintStatistics();
-	virtual void Pause(bool x_pause);
 	inline void Quit() {m_continueFlag = false;}
 	void Status() const;
-	void PauseInputs(bool x_pause);
 	bool EndOfAllStreams() const;
 	static std::string CreateOutputDir(const std::string& x_outputDir = "", const std::string& x_configFile = "");
 	inline void ListModulesTypes(std::vector<std::string>& xr_types) {mr_moduleFactory.List(xr_types);}

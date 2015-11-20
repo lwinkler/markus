@@ -78,6 +78,14 @@ Manager::Manager(ParameterStructure& xr_params) :
 	}
 }
 
+void Manager::Start()
+{
+	for(auto & elem : m_modules)
+		elem->Start();
+	Processable::Start();
+}
+
+
 void Manager::Stop()
 {
 	cout << "stop" << m_modules.size() << endl;
@@ -248,16 +256,11 @@ bool Manager::Process()
 		throw MkException("Modules must be connected before processing", LOC);
 
 	{
-		boost::unique_lock<boost::shared_mutex> lock(m_lock); // , boost::try_to_lock);
+		WriteLock lock(m_lock, boost::try_to_lock);
 
 		if(!lock)
 		{
 			LOG_WARN(m_logger, "Manager too slow !"); // Note: this happens every time
-			return true;
-		}
-		if(m_pause)
-		{
-			Unlock();
 			return true;
 		}
 		m_timerProcessing.Start();
@@ -278,6 +281,7 @@ bool Manager::Process()
 			}
 			catch(EndOfStreamException& e)
 			{
+				elem->Stop();
 				if(m_hasRecovered)
 				{
 					// This exception happens after a recovery, keep it!
@@ -364,7 +368,6 @@ bool Manager::Process()
 		{
 			PrintStatistics();
 		}
-		Unlock();
 	}
 	//if(m_frameCount % 20 == 0)
 	// usleep(20); // This keeps the manager unlocked to allow the sending of commands // TODO find a cleaner way
@@ -402,17 +405,10 @@ void Manager::SendCommand(const string& x_command, string x_value)
 	// Note: We cast module/manager twice since we need functions from both parents
 	Controllable& contr  (elems.at(0) == "manager" ? dynamic_cast<Controllable&>(*this) : RefModuleByName(elems.at(0)));
 	Processable&  process(elems.at(0) == "manager" ? dynamic_cast<Processable&>(*this) : RefModuleByName(elems.at(0)));
-	try
-	{
-		// TODO process.LockForWrite();
-		contr.FindController(elems.at(1)).CallAction(elems.at(2), &x_value);
-		process.Unlock();
-	}
-	catch(...)
-	{
-		process.Unlock();
-		throw;
-	}
+
+	WriteLock lock(process.RefLock());
+	contr.FindController(elems.at(1)).CallAction(elems.at(2), &x_value);
+
 	LOG_INFO(m_logger, "Command "<<x_command<<" returned value "<<x_value);
 }
 
@@ -447,32 +443,6 @@ void Manager::PrintStatistics()
 	}
 	benchSummary.SaveToFile(benchFileName);
 }
-
-/**
-* @brief Pause all modules
-*
-* @param x_pause Set or unset pause
-*/
-void Manager::Pause(bool x_pause)
-{
-	Processable::Pause(x_pause);
-	for(auto & elem : m_modules)
-		(elem)->Pause(x_pause);
-}
-
-/**
-* @brief Pause all inputs
-*
-* @param x_pause Set or unset pause
-*/
-void Manager::PauseInputs(bool x_pause)
-{
-	for(auto & elem : m_inputs)
-	{
-		(elem)->Pause(x_pause);
-	}
-}
-
 
 /**
 * @brief Check if end of all input streams

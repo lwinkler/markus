@@ -173,10 +173,10 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 		if(m_img_output == nullptr)
 			m_img_output = new Mat( Size(m_outputWidth, m_outputHeight), CV_8UC3);
 
-		// TODO m_currentModule->LockForRead();
-		m_currentStream->RenderTo(*m_img_original);
-		m_currentModule->Unlock();
-
+		{
+			Processable::ReadLock lock(m_currentModule->RefLock());
+			m_currentStream->RenderTo(*m_img_original);
+		}
 		adjust(*m_img_original, *m_img_output, m_img_tmp1, m_img_tmp2);
 
 		ConvertMat2QImage(m_img_output, &m_image);

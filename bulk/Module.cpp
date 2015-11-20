@@ -158,20 +158,17 @@ double Module::GetRecordingFps() const
 bool Module::Process()
 {
 	cout << __LINE__ << GetName() << endl;
-	boost::unique_lock<boost::shared_mutex> lock(m_lock);
+	WriteLock lock(m_lock);
 	cout << __LINE__ << endl;
-	if(m_pause)
-	{
-		Unlock();
-		return true;
-	}
 	try
 	{
+			cout << __LINE__ << endl;
 		if(!m_isReady)
 			throw MkException("Module must be ready before processing", LOC);
 
 		// Timestamp of the module is given by the input stream
 		m_currentTimeStamp = 0;
+			cout << __LINE__ << endl;
 		if(!m_inputStreams.empty())
 		{
 			// m_inputStreams[0]->LockModuleForRead();
@@ -185,8 +182,10 @@ bool Module::Process()
 		// if(m_currentTimeStamp == m_lastTimeStamp)
 			// LOG_WARN(m_logger, "Timestamp are not increasing correctly");
 #endif
+			cout << __LINE__ << endl;
 		if(m_param.autoProcess || (m_param.fps == 0 && m_currentTimeStamp != m_lastTimeStamp) || (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps > 1000)
 		{
+			cout << __LINE__ << endl;
 			// Process this frame
 
 			// Timer for benchmark
@@ -208,6 +207,7 @@ bool Module::Process()
 
 			// note: Inputs must call ProcessFrame to set the time stamp
 			// TODO: There is no reason to cache input modules !
+			cout << __LINE__ << endl;
 			if(m_param.cached < CachedState::READ_CACHE || IsInput())
 			{
 				// Read and convert inputs
@@ -230,6 +230,7 @@ bool Module::Process()
 
 				m_timerProcessing.Stop();
 			}
+			cout << __LINE__ << endl;
 			if(m_param.cached == CachedState::READ_CACHE)
 			{
 				assert(!IsInput());
@@ -237,6 +238,7 @@ bool Module::Process()
 				ReadFromCache();
 				m_timerProcessing.Stop();
 			}
+			cout << __LINE__ << endl;
 
 			// Propagate time stamps to outputs
 			for(auto & elem : m_outputStreams)
@@ -252,6 +254,8 @@ bool Module::Process()
 			for(auto & elem : m_modulesDepending)
 				elem->Process();
 
+			cout << __LINE__ << endl;
+
 			m_countProcessedFrames++;
 			m_lastTimeStamp = m_currentTimeStamp;
 		}
@@ -259,10 +263,8 @@ bool Module::Process()
 	catch(...)
 	{
 		LOG_WARN(m_logger, "Exception in module " << GetName());
-		Unlock();
 		throw;
 	}
-	Unlock();
 	return true;
 }
 
@@ -353,7 +355,6 @@ void Module::Serialize(ostream& x_out, const string& x_dir) const
 
 	root["id"]                   = m_id;
 	root["name"]                 = m_name;
-	root["pause"]                = m_pause;
 	// root["timer_conversion"]      = m_timerConversion.GetMsLong();
 	// root["timer_processing"]      = m_timerProcessing.GetMsLong();
 	// root["timer_waiting"]         = m_timerWaiting.GetMsLong();
@@ -398,7 +399,6 @@ void Module::Deserialize(istream& x_in, const string& x_dir)
 
 	m_id                   = root["id"].asInt();
 	m_name                 = root["name"].asString();
-	m_pause                = root["pause"].asBool();
 	// m_timerConversion      = root["timer_conversion"].asInt64();
 	// m_timerProcessing      = root["timer_processing"].asInt64();
 	// m_timerWaiting         = root["timer_waiting"].asInt64();

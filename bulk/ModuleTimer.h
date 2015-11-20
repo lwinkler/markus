@@ -32,17 +32,17 @@
 class Processable;
 
 /// A timer associated with a module (for auto processing, mostly used in input modules)
-class QModuleTimer
+class ModuleTimer
 {
 public:
-	QModuleTimer(Processable & x_module);
-	virtual ~QModuleTimer(){assert(!m_running);}
+	ModuleTimer(Processable & x_module);
+	virtual ~ModuleTimer(){assert(!m_running);}
 	void Reset(double x_fps);
 
 	// typedef std::function<void(void)> Timeout;
 
-	inline void Stop(){m_running = false;m_thread.join();}
-	void Start();
+	inline void Stop(){if(m_running){m_running = false;m_thread.join();}}
+	void Start(double x_fps);
 
 protected:
 	Processable & m_processable;

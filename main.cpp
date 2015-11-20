@@ -380,6 +380,7 @@ int main(int argc, char** argv)
 
 		manager.Connect();
 		manager.Reset();
+		manager.Start();
 
 
 		/// Create a separate thread to read the commands from stdin
@@ -401,7 +402,6 @@ int main(int argc, char** argv)
 			// No gui. launch the process directly
 			// note: so far we cannot launch the process in a decentralized manner (with a timer on each module)
 
-/*
 			if(args.centralized)
 			{
 				while(manager.Process())
@@ -409,7 +409,6 @@ int main(int argc, char** argv)
 					// nothing
 				}
 			}
-			*/
 		}
 		else
 		{

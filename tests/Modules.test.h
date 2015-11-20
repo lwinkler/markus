@@ -310,10 +310,9 @@ public:
 						for(const auto& elemAction : actions)
 						{
 							string value = "0";
-							// module->LockForWrite();
+							Processable::WriteLock lock(module->RefLock());
 							elemCtr.second->CallAction(elemAction, &value);
 							TS_TRACE("###  " + elemCtr.first + "." + elemAction + " returned " + value);
-							// module->Unlock();
 
 							for(int i = 0 ; i < 3 ; i++)
 								module->ProcessRandomInput(seed);

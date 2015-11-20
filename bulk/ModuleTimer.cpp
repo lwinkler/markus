@@ -27,32 +27,25 @@
 
 using namespace std;
 
-QModuleTimer::QModuleTimer(Processable& x_module)
+ModuleTimer::ModuleTimer(Processable& x_module)
 	: m_processable(x_module),
 	m_running(false)
 {
 	// Reset(x_fps);
 }
 
-/**
-* @brief Reset the timer
-*
-* @param x_fps The frame per second to be set
-*/
-void QModuleTimer::Reset(double x_fps)
+void ModuleTimer::Start(double x_fps)
 {
+	if(m_running)
+		return;
+
 	m_delay = 0.01;
 	if(x_fps > 0)
 	{
 		// Start a timer for module process
 		m_delay = 1.0 / x_fps;
 	}
-	Start();
-}
 
-
-void QModuleTimer::Start()
-{
 	m_running = true;
 	auto ms = chrono::milliseconds((long) m_delay * 1000);
 	// std::chrono::seconds<1, double> ms(m_delay);
@@ -63,7 +56,6 @@ void QModuleTimer::Start()
 		{
 			try
 			{
-				cout << "time" << getAbsTimeMs() << endl;
 				this_thread::sleep_for(ms);
 				cout << &m_processable << endl;
 				if(!m_processable.Process())

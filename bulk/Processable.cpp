@@ -32,7 +32,6 @@ Processable::Processable(ParameterStructure& xr_params) :
 	Configurable(xr_params),
 	m_param(dynamic_cast<const Parameters&>(xr_params))
 {
-	m_pause            = false;
 	m_allowAutoProcess = true;
 	m_realTime         = true;
 	m_moduleTimer      = nullptr;
@@ -57,17 +56,26 @@ void Processable::Reset()
 			m_moduleTimer->Stop(); // TODO How to handle this
 			CLEAN_DELETE(m_moduleTimer);
 		}
-		m_moduleTimer = new QModuleTimer(*this);
+		m_moduleTimer = new ModuleTimer(*this);
 
-		// Set a timer for all modules in auto-process (= called at a regular frame rate)
-		// all other are called as "slaves" of other modules
-		// If not real-time, a module will try to acquire frames as fast as possible
-		// this is usefull for a VideoFileReader input when we work offline
-		m_moduleTimer->Reset(m_realTime ? m_param.fps : 0);
 		LOG_DEBUG(m_logger, "Reseting auto-processed module with real-time="<<m_realTime<<" and fps="<<m_param.fps);
 	}
 	else m_moduleTimer = nullptr;
 }
+
+/**
+* @brief Start the processing thread. To be used after the reset
+*
+*/
+void Processable::Start()
+{
+	// Set a timer for all modules in auto-process (= called at a regular frame rate)
+	// all other are called as "slaves" of other modules
+	// If not real-time, a module will try to acquire frames as fast as possible
+	// this is usefull for a VideoFileReader input when we work offline
+	if(m_moduleTimer != nullptr)
+		m_moduleTimer->Start(m_realTime ? m_param.fps : 0);
+};
 
 
 /**
@@ -79,21 +87,5 @@ void Processable::Stop()
 	if(m_moduleTimer != nullptr)
 		m_moduleTimer->Stop();
 };
-
-/**
-* @brief Pause the module and stop the processing
-*
-* @param x_pause Pause on/off
-*/
-void Processable::Pause(bool x_pause)
-{
-	m_pause = x_pause;
-	if(m_moduleTimer == nullptr)
-		return;
-	if(x_pause)
-		m_moduleTimer->Stop();
-	else
-		m_moduleTimer->Start();
-}
 
 

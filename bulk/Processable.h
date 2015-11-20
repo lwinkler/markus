@@ -32,7 +32,7 @@
 #include <log4cxx/logger.h>
 #include <boost/thread/shared_mutex.hpp>
 
-class QModuleTimer;
+class ModuleTimer;
 
 /**
 * @brief Class representing a module. A module is a node of the application, it processes streams
@@ -40,6 +40,11 @@ class QModuleTimer;
 class Processable : public Configurable
 {
 public:
+	// Create a lock (for outside use)
+	typedef boost::shared_mutex Lock;
+	typedef boost::unique_lock<Lock> WriteLock;
+	typedef boost::shared_lock<Lock> ReadLock;
+	
 	class Parameters : public ParameterStructure
 	{
 	public:
@@ -60,25 +65,20 @@ public:
 	virtual ~Processable();
 
 	virtual void Reset();
-	void Pause(bool x_pause);
 	virtual bool Process() = 0;
+	virtual void Start();
 	virtual void Stop();
 	inline void AllowAutoProcess(bool x_proc) {m_allowAutoProcess = x_proc;}
 	inline void SetRealTime(bool x_realTime) {m_realTime  = x_realTime;}
 	inline virtual void SetContext(const Context& x_context) {if(mp_context != nullptr) throw MkException("Context was already set", LOC); mp_context = &x_context;}
 	inline virtual const Context& GetContext() const {if(mp_context == nullptr) throw MkException("Context was not set", LOC); return *mp_context;}
 	inline bool IsContextSet() const{return mp_context != nullptr;}
-
-	// inline void LockForRead() {m_lock.lockForRead();}
-	// inline void LockForWrite() {m_lock.lockForWrite();}
-	inline void Unlock() {}
-	// inline bool TryLockForWrite() {return m_lock.tryLockForWrite();}
+	inline boost::shared_mutex& RefLock(){return m_lock;}
 
 protected:
-	bool m_pause;
 	bool m_allowAutoProcess;
 	bool m_realTime;         /// Process in real-time: if true, the module processes as fast as possible
-	QModuleTimer * m_moduleTimer;
+	ModuleTimer * m_moduleTimer;
 	boost::shared_mutex m_lock;
 
 private:

@@ -50,6 +50,7 @@ VideoFileReader::~VideoFileReader()
 
 void VideoFileReader::Reset()
 {
+	cout << "reset vid" << endl;
 	Module::Reset();
 #ifndef MARKUS_NO_GUI
 	// Add a new control to play forward and rewind
@@ -99,7 +100,6 @@ void VideoFileReader::Capture()
 				// Note: there seems to be a 3 seconds lag when grabbing after the last frame. This is linked to format h264: MJPG is ok
 				m_endOfStream = true;
 				//std::exception e;
-				Pause(true);
 				throw EndOfStreamException("Capture of next frame failed", LOC);
 			}
 		}
