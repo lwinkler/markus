@@ -432,6 +432,7 @@ int main(int argc, char** argv)
 			returnValue = -1;
 #endif
 		}
+		manager.Stop();
 
 		Event ev2;
 		ev2.Raise("stopped");
@@ -440,7 +441,6 @@ int main(int argc, char** argv)
 
 		// Write the modified params in config and save
 		manager.UpdateConfig();
-		manager.Stop();
 		mainConfig.SaveToFile("last_config.xml");
 	}
 	catch(MkException& e)
