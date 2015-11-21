@@ -262,7 +262,7 @@ bool Module::Process()
 	}
 	catch(...)
 	{
-		LOG_WARN(m_logger, "Exception in module " << GetName());
+		LOG_WARN(m_logger, "Exception in module " << GetName()); // TODO remove this
 		throw;
 	}
 	return true;

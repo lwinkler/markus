@@ -58,7 +58,7 @@ void ModuleTimer::Start(double x_fps)
 			{
 				this_thread::sleep_for(ms); // TODO In parallel
 				cout << &m_processable << endl;
-				if(!m_processable.Process())
+				if(!m_processable.ProcessAndCatch())
 					Stop();
 			}
 			catch(std::exception& e)

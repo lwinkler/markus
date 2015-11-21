@@ -68,8 +68,7 @@ public:
 	void Connect();
 	void CreateEditorFiles(const std::string& x_fileName);
 	void PrintStatistics();
-	inline void Quit() {m_continueFlag = false;}
-	void Status() const;
+	inline void Quit() {Stop();}
 	bool EndOfAllStreams() const;
 	static std::string CreateOutputDir(const std::string& x_outputDir = "", const std::string& x_configFile = "");
 	inline void ListModulesTypes(std::vector<std::string>& xr_types) {mr_moduleFactory.List(xr_types);}
@@ -81,6 +80,7 @@ public:
 		for(auto& elem : m_modules)
 			elem->SetContext(x_context);
 	}
+	virtual const std::string& GetName() const override {static std::string str = "manager"; return str;}
 
 protected:
 	Module& RefModuleById(int x_id) const;
@@ -88,11 +88,6 @@ protected:
 	void NotifyException(const MkException& x_exeption);
 
 	bool m_isConnected;
-	// long long m_timerConvertion;
-	Timer m_timerProcessing;
-	bool m_continueFlag;           // Flag that is used to notify the manager of a Quit command, only working if centralized
-	bool m_hasRecovered;           // Flag to test if all modules have recovered from the last exception, only working if centralized
-	MkException m_lastException;   // Field to store the last exception
 
 	std::vector<Module *> m_modules;
 	std::vector<Module *> m_inputs;
@@ -102,7 +97,6 @@ protected:
 	const FactoryParameters& mr_parametersFactory;
 	const FactoryModules& mr_moduleFactory;
 	const FactoryParameters& mr_parameterFactory;
-	InterruptionManager& m_interruptionManager;
 
 private:
 	static log4cxx::LoggerPtr m_logger;

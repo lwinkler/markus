@@ -89,7 +89,7 @@ void ControllerManager::Stop(string* xp_value)
 void ControllerManager::ProcessOne(string* xp_value)
 {
 	manager.Stop();
-	manager.Process();
+	manager.ProcessAndCatch();
 }
 
 /**

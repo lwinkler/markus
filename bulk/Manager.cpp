@@ -47,15 +47,11 @@ Manager::Manager(ParameterStructure& xr_params) :
 	m_param(dynamic_cast<Parameters&>(xr_params)),
 	mr_parametersFactory(Factories::parametersFactory()),
 	mr_moduleFactory(Factories::modulesFactory()),
-	mr_parameterFactory(Factories::parametersFactory()),
-	m_lastException(MK_EXCEPTION_NORMAL, "normal", "No exception were thrown", "", ""),
-	m_interruptionManager(InterruptionManager::GetInst())
+	mr_parameterFactory(Factories::parametersFactory())
 {
 	LOG_INFO(m_logger, "Create manager");
 	m_frameCount = 0;
 	m_isConnected = false;
-	m_continueFlag = true;
-	m_hasRecovered = true;
 
 	for(const auto& moduleConfig : m_param.GetConfig().FindAll("module", true))
 	{
@@ -206,11 +202,11 @@ void Manager::Connect()
 */
 void Manager::Reset(bool x_resetInputs)
 {
+	Processable::Reset();
 	m_interruptionManager.Configure(m_param.GetConfig());
 
 	// Reset timers
 	// m_timerConvertion = 0;
-	m_timerProcessing.Reset();
 
 	// Reset all modules (to set the module timer)
 	for(auto & elem : m_modules)
@@ -218,9 +214,9 @@ void Manager::Reset(bool x_resetInputs)
 		if(x_resetInputs || !(elem)->IsInput())
 		{
 			// If manager is in autoprocess, modules must not be
-			(elem)->AllowAutoProcess(!m_param.autoProcess);
-			(elem)->SetRealTime(!m_param.fast);
-			(elem)->Reset();
+			elem->AllowAutoProcess(!m_param.autoProcess);
+			elem->SetRealTime(!m_param.fast);
+			elem->Reset();
 		}
 	}
 	if(!HasController("manager"))
@@ -238,8 +234,6 @@ void Manager::Reset(bool x_resetInputs)
 			throw MkException("Controller creation failed", LOC);
 		else AddController(ctr);
 	}
-	m_hasRecovered = true;
-	m_continueFlag = true;
 	m_frameCount = 0;
 }
 
@@ -248,10 +242,9 @@ void Manager::Reset(bool x_resetInputs)
 *
 * @return False if the processing must be stopped
 */
-bool Manager::Process()
+bool Manager::Process() // TODO void
 {
-	if(!m_isConnected)
-		throw MkException("Modules must be connected before processing", LOC);
+	assert(!m_isConnected); // Modules must be connected before processing
 
 	{
 		WriteLock lock(m_lock, boost::try_to_lock);
@@ -261,106 +254,12 @@ bool Manager::Process()
 			LOG_WARN(m_logger, "Manager too slow !"); // Note: this happens every time
 			return true;
 		}
-		m_timerProcessing.Start();
-		bool recover = true;
 
 		for(auto & elem : m_modules)
 		{
-			try
-			{
-				// if((*it)->IsAutoProcessed())
-				// Note: Since we are in centralized mode, all modules are called directly from the master
-				elem->Process();
-			}
-			catch(FatalException& e)
-			{
-				LOG_ERROR(m_logger, (elem)->GetName() << ": Exception raised (FatalException), aborting : " << e.what());
-				m_continueFlag = recover = m_hasRecovered = false;
-			}
-			catch(EndOfStreamException& e)
-			{
-				elem->Stop();
-				if(m_hasRecovered)
-				{
-					// This exception happens after a recovery, keep it!
-					m_lastException = e;
-					NotifyException(m_lastException);
-				}
-				recover = m_hasRecovered = false;
-
-				LOG_INFO(m_logger, (elem)->GetName() << ": Exception raised (EndOfStream) : " << e.what());
-
-				// test if all inputs are over
-				if(EndOfAllStreams())
-				{
-					InterruptionManager::GetInst().AddEvent("exception." + e.GetName());
-					// TODO: test what happens if the stream of a camera is cut
-					LOG_INFO(m_logger, "End of all video streams : Manager::Process");
-					m_continueFlag = false;
-				}
-			}
-			catch(MkException& e)
-			{
-				// InterruptionManager::GetInst().AddEvent("exception." + e.GetName());
-				if(m_hasRecovered)
-				{
-					// This exception happens after a recovery, keep it!
-					m_lastException = e;
-					NotifyException(m_lastException);
-				}
-				recover = m_hasRecovered = false;
-				LOG_ERROR(m_logger, "(Markus exception " << e.GetCode() << "): " << e.what());
-			}
-			catch(exception& e)
-			{
-				if(m_hasRecovered)
-				{
-					// This exception happens after a recovery, keep it!
-					m_lastException = MkException((elem)->GetName() + " :" + string(e.what()), LOC);
-					NotifyException(m_lastException);
-				}
-				LOG_ERROR(m_logger, (elem)->GetName() << ": Exception raised (std::exception): " << e.what());
-			}
-			catch(string& str)
-			{
-				if(m_hasRecovered)
-				{
-					// This exception happens after a recovery, keep it!
-					m_lastException = MkException((elem)->GetName() + " :" + string(str), LOC);
-					NotifyException(m_lastException);
-				}
-				recover = m_hasRecovered = false;
-				LOG_ERROR(m_logger, (elem)->GetName() << ": Exception raised (string): " << str);
-			}
-			catch(const char* str)
-			{
-				if(m_hasRecovered)
-				{
-					// This exception happens after a recovery, keep it!
-					m_lastException = MkException((elem)->GetName() + " :" + string(str), LOC);
-					NotifyException(m_lastException);
-				}
-				recover = m_hasRecovered = false;
-				LOG_ERROR(m_logger, (elem)->GetName() << ": Exception raised (const char*): " << str);
-			}
-			catch(...)
-			{
-				if(m_hasRecovered)
-				{
-					// This exception happens after a recovery, keep it!
-					m_lastException = MkException((elem)->GetName() + ": Unknown", LOC);
-					NotifyException(m_lastException);
-				}
-				recover = m_hasRecovered = false;
-				LOG_ERROR(m_logger, (elem)->GetName() << ": Unknown exception raised");
-			}
+			elem->Process();
 		}
 
-		// If a full processing cycle has been made without exception,
-		// we consider that the manager has recovered from exceptions
-		if(recover)
-			m_hasRecovered = true;
-		m_timerProcessing.Stop();
 		m_frameCount++;
 		if(m_frameCount % 100 == 0 && m_logger->isDebugEnabled())
 		{
@@ -370,21 +269,15 @@ bool Manager::Process()
 	//if(m_frameCount % 20 == 0)
 	// usleep(20); // This keeps the manager unlocked to allow the sending of commands // TODO find a cleaner way
 
-	// Send command generated by interruptions
-	m_continueFlag = m_continueFlag && (m_param.nbFrames == 0 || m_param.nbFrames != m_frameCount);
-
-	// note: we need send an event to stay in the loop
-	if(!m_continueFlag && m_param.autoProcess)
-		m_interruptionManager.AddEvent("event.stopped");
   
 	vector<Command> commands = m_interruptionManager.ReturnCommandsToSend();
 	for(const auto& command : commands)
 	{
 		SendCommand(command.name, command.value);
-		m_continueFlag = true;
+		//m_continueFlag = true;
 	}
 
-	return m_continueFlag;
+return true;
 }
 
 /**
@@ -551,23 +444,6 @@ Module& Manager::RefModuleByName(const string& x_name) const
 }
 
 
-/**
-* @brief Log the status of the application (last exception)
-*/
-void Manager::Status() const
-{
-	stringstream ss;
-	m_lastException.Serialize(ss, "");
-	Json::Value root;
-	ss >> root;
-	root["recovered"] = m_hasRecovered;
-	Event evt;
-	evt.Raise("status");
-	ss.clear();
-	ss << root;
-	evt.AddExternalInfo("exception", ss);
-	evt.Notify(GetContext(), true);
-}
 
 /**
 * @brief Return a directory that will contain all outputs files and logs. The dir is created at the first call of this method.
@@ -669,18 +545,3 @@ void Manager::WriteStateToDirectory(const string& x_directory) const
 }
 
 
-/**
-* @brief Notify the parent process of an exception
-*
-* @param x_exception Exception to be notified
-*/
-void Manager::NotifyException(const MkException& x_exception)
-{
-	InterruptionManager::GetInst().AddEvent("exception." + x_exception.GetName());// TODO keep this here ?
-	stringstream ss;
-	x_exception.Serialize(ss, "");
-	Event ev;
-	ev.AddExternalInfo("exception", ss);
-	ev.Raise("exception");
-	ev.Notify(GetContext(), true);
-}

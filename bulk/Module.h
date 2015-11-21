@@ -100,7 +100,7 @@ public:
 	virtual void Reset();
 	virtual bool Process();
 
-	virtual const std::string& GetName() const {return m_name;}
+	virtual const std::string& GetName() const override {return m_name;}
 	virtual const std::string& GetClass() const = 0;
 	MKCATEG("Other");
 	virtual const std::string& GetDescription() const = 0;

@@ -404,7 +404,7 @@ int main(int argc, char** argv)
 
 			if(args.centralized)
 			{
-				while(manager.Process())
+				while(manager.ProcessAndCatch())
 				{
 					// nothing
 				}
