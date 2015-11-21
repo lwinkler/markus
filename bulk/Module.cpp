@@ -157,18 +157,14 @@ double Module::GetRecordingFps() const
 */
 bool Module::Process()
 {
-	cout << __LINE__ << GetName() << endl;
 	WriteLock lock(m_lock);
-	cout << __LINE__ << endl;
 	try
 	{
-			cout << __LINE__ << endl;
 		if(!m_isReady)
 			throw MkException("Module must be ready before processing", LOC);
 
 		// Timestamp of the module is given by the input stream
 		m_currentTimeStamp = 0;
-			cout << __LINE__ << endl;
 		if(!m_inputStreams.empty())
 		{
 			// m_inputStreams[0]->LockModuleForRead();
@@ -182,10 +178,8 @@ bool Module::Process()
 		// if(m_currentTimeStamp == m_lastTimeStamp)
 			// LOG_WARN(m_logger, "Timestamp are not increasing correctly");
 #endif
-			cout << __LINE__ << endl;
 		if(m_param.autoProcess || (m_param.fps == 0 && m_currentTimeStamp != m_lastTimeStamp) || (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps > 1000)
 		{
-			cout << __LINE__ << endl;
 			// Process this frame
 
 			// Timer for benchmark
@@ -207,7 +201,6 @@ bool Module::Process()
 
 			// note: Inputs must call ProcessFrame to set the time stamp
 			// TODO: There is no reason to cache input modules !
-			cout << __LINE__ << endl;
 			if(m_param.cached < CachedState::READ_CACHE || IsInput())
 			{
 				// Read and convert inputs
@@ -230,7 +223,6 @@ bool Module::Process()
 
 				m_timerProcessing.Stop();
 			}
-			cout << __LINE__ << endl;
 			if(m_param.cached == CachedState::READ_CACHE)
 			{
 				assert(!IsInput());
@@ -238,7 +230,6 @@ bool Module::Process()
 				ReadFromCache();
 				m_timerProcessing.Stop();
 			}
-			cout << __LINE__ << endl;
 
 			// Propagate time stamps to outputs
 			for(auto & elem : m_outputStreams)
@@ -254,7 +245,6 @@ bool Module::Process()
 			for(auto & elem : m_modulesDepending)
 				elem->Process();
 
-			cout << __LINE__ << endl;
 
 			m_countProcessedFrames++;
 			m_lastTimeStamp = m_currentTimeStamp;

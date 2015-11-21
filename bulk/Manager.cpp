@@ -244,7 +244,7 @@ void Manager::Reset(bool x_resetInputs)
 */
 bool Manager::Process() // TODO void
 {
-	assert(!m_isConnected); // Modules must be connected before processing
+	assert(m_isConnected); // Modules must be connected before processing
 
 	{
 		WriteLock lock(m_lock, boost::try_to_lock);

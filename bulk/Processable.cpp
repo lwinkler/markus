@@ -100,8 +100,10 @@ void Processable::Stop()
 bool Processable::ProcessAndCatch()
 {
 	bool recover = true;
+	bool ret = true;
 	m_timerProcessing.Start();
 	try{
+		ret = Process();
 	}
 	catch(FatalException& e)
 	{
