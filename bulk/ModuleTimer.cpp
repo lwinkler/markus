@@ -27,12 +27,12 @@
 
 using namespace std;
 
+log4cxx::LoggerPtr ModuleTimer::m_logger(log4cxx::Logger::getLogger("ModuleTimer"));
+
 ModuleTimer::ModuleTimer(Processable& x_module)
 	: m_processable(x_module),
 	m_running(false)
-{
-	// Reset(x_fps);
-}
+{}
 
 void ModuleTimer::Start(double x_fps)
 {
@@ -56,11 +56,10 @@ void ModuleTimer::Start(double x_fps)
 		{
 			try
 			{
-				this_thread::sleep_for(ms);
+				this_thread::sleep_for(ms); // TODO In parallel
 				cout << &m_processable << endl;
 				if(!m_processable.Process())
 					Stop();
-				cout << "&m_processable" << endl;
 			}
 			catch(std::exception& e)
 			{
