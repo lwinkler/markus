@@ -82,7 +82,6 @@ void Manager::Start()
 
 void Manager::Stop()
 {
-	cout << "stop" << m_modules.size() << endl;
 	for(auto & elem : m_modules)
 		elem->Stop();
 	Processable::Stop();
@@ -90,17 +89,13 @@ void Manager::Stop()
 
 Manager::~Manager()
 {
-	cout << "destroy manager" << endl;
-
 	PrintStatistics();
-
 
 	for(auto & elem : m_modules)
 		delete elem;
 
 	for(auto & elem : m_parameters)
 		delete elem;
-
 }
 
 /**

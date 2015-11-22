@@ -45,16 +45,18 @@ void ModuleTimer::Start(double x_fps)
 		// Start a timer for module process
 		m_delay = 1.0 / x_fps;
 	}
-
+	
 	m_running = true;
-	auto ms = chrono::milliseconds((long) m_delay * 1000);
+	// auto ms = chrono::milliseconds((long) m_delay * 1000);
+	int us = m_delay * 1000000;
 	// std::chrono::seconds<1, double> ms(m_delay);
 
 	m_thread = thread([=]()
 	{
 		while (m_running == true)
 		{
-			this_thread::sleep_for(ms); // TODO In parallel
+			// this_thread::sleep_for(1s); // TODO In parallel
+			usleep(us);
 			if(!m_processable.ProcessAndCatch())
 				break; // Stop(); // TODO: Handle break with exceptions
 		}

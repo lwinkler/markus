@@ -81,8 +81,10 @@ void Processable::Start()
 	// all other are called as "slaves" of other modules
 	// If not real-time, a module will try to acquire frames as fast as possible
 	// this is usefull for a VideoFileReader input when we work offline
+	Module* mod = dynamic_cast<Module*>(this);
+	double recfps = mod == nullptr ? 0 : mod->GetRecordingFps();
 	if(m_moduleTimer != nullptr)
-		m_moduleTimer->Start(m_realTime ? m_param.fps : 0);
+		m_moduleTimer->Start(m_realTime ? recfps : 0);
 };
 
 

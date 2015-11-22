@@ -166,22 +166,22 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 {
 	if(m_currentStream != nullptr)
 	{
-		// We paint the image from the stream
-		if(m_img_original == nullptr)
-			m_img_original = new Mat( Size(m_currentStream->GetWidth(), m_currentStream->GetHeight()), CV_8UC3);
-		m_img_original->setTo(0);
-		if(m_img_output == nullptr)
-			m_img_output = new Mat( Size(m_outputWidth, m_outputHeight), CV_8UC3);
-
 		{
-			// note: we do not lock the module before reading, this may be dangerous and may lead to
+			// TODO : Clarify
+			// note: do we lock the module before reading ? this may be dangerous and may lead to
 			//       corrupted images, but avoids two problems:
 			//        - slow interaction with the GUI
 			//        - no image is displayed if we only try to lock and the module is busy
 			//       A solution could be to display asynchronously
-			// Processable::ReadLock lock(m_currentModule->RefLock(), boost::try_to_lock);
-			// if(lock)
-				m_currentStream->RenderTo(*m_img_original);
+			Processable::ReadLock lock(m_currentModule->RefLock()); // , boost::try_to_lock);
+			// We paint the image from the stream
+			if(m_img_original == nullptr)
+				m_img_original = new Mat( Size(m_currentStream->GetWidth(), m_currentStream->GetHeight()), CV_8UC3);
+			m_img_original->setTo(0);
+			if(m_img_output == nullptr)
+				m_img_output = new Mat( Size(m_outputWidth, m_outputHeight), CV_8UC3);
+
+			m_currentStream->RenderTo(*m_img_original);
 		}
 		adjust(*m_img_original, *m_img_output, m_img_tmp1, m_img_tmp2);
 
