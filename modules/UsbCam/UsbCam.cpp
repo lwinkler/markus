@@ -109,3 +109,10 @@ void UsbCam::GetProperties()
 			  // 	<<" WHITE_BALANCE"<<m_capture.get(CV_CAP_PROP_WHITE_BALANCE)
 			  <<" RECTIFICATION"<<m_capture.get(CV_CAP_PROP_RECTIFICATION));
 }
+
+double UsbCam::GetRecordingFps() const
+{
+	// There is probably no way to get a measure of FPS
+	// cout << "FPS" << m_capture.get(CV_CAP_PROP_FPS) << endl;
+	return m_param.fps == 0 ? 8 : m_param.fps;
+}

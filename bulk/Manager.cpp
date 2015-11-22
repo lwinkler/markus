@@ -105,7 +105,7 @@ void Manager::Connect()
 {
 	bool centralized = m_param.autoProcess;
 
-	Processable::Reset();
+	// Processable::Reset(); // TODO: Do we need this ?
 
 	if(m_isConnected)
 		throw MkException("Manager can only connect modules once", LOC);
@@ -153,7 +153,11 @@ void Manager::Connect()
 	//    the master module is the module responsible to call the Process method
 	bool changed = true;
 	bool ready = true;
-	vector<Module*> newOrder = m_inputs;
+	vector<Module*> newOrder;
+
+	for(auto mod : m_modules)
+		if(mod->IsAutoProcessed() || mod->IsInput())
+			newOrder.push_back(mod);
 
 	while(changed)
 	{
@@ -161,17 +165,17 @@ void Manager::Connect()
 		ready = true;
 		for(auto & elem : m_modules)
 		{
-			if(!(elem)->IsReady())
+			if(!elem->IsReady())
 			{
 				ready = false;
-				if((elem)->AllInputsAreReady())
+				if(elem->AllInputsAreReady())
 				{
-					(elem)->SetAsReady();
+					elem->SetAsReady();
 					if(centralized)
 						newOrder.push_back(elem);
 					else
 					{
-						Module& master = RefModuleByName((elem)->GetMasterModule().GetName());
+						Module& master = RefModuleByName(elem->GetMasterModule().GetName());
 						master.AddDependingModule(*elem);
 					}
 					// cout<<"Set module "<<depending->GetName()<<" as ready"<<endl;
@@ -206,7 +210,7 @@ void Manager::Reset(bool x_resetInputs)
 	// Reset all modules (to set the module timer)
 	for(auto & elem : m_modules)
 	{
-		if(x_resetInputs || !(elem)->IsInput())
+		if(x_resetInputs || !elem->IsInput())
 		{
 			// If manager is in autoprocess, modules must not be
 			elem->AllowAutoProcess(!m_param.autoProcess);
@@ -416,7 +420,7 @@ Module& Manager::RefModuleById(int x_id) const
 	Module* module = nullptr;
 	int found = 0;
 	for(const auto & elem : m_modules)
-		if((elem)->GetId() == x_id)
+		if(elem->GetId() == x_id)
 		{
 			module = elem;
 			found++;
@@ -433,7 +437,7 @@ Module& Manager::RefModuleById(int x_id) const
 Module& Manager::RefModuleByName(const string& x_name) const
 {
 	for(const auto & elem : m_modules)
-		if((elem)->GetName() == x_name)
+		if(elem->GetName() == x_name)
 			return *elem;
 	throw MkException("Cannot find module " + x_name, LOC);
 }
@@ -530,10 +534,10 @@ void Manager::WriteStateToDirectory(const string& x_directory) const
 	SYSTEM("mkdir -p " + directory);
 	for(const auto & elem : m_modules)
 	{
-		string fileName = directory + "/" + (elem)->GetName() + ".json";
+		string fileName = directory + "/" + elem->GetName() + ".json";
 		ofstream of;
 		of.open(fileName.c_str());
-		(elem)->Serialize(of, directory);
+		elem->Serialize(of, directory);
 		of.close();
 	}
 	LOG_INFO(m_logger, "Written state of the manager and all modules to " << directory);

@@ -65,7 +65,7 @@
 			<param name="type">CV_8UC3</param>
 			<param name="fps">10</param>
 		<param name="allow_unsync_input">1</param>
-<param name="auto_process">1</param>
+<param name="auto_process">0</param>
 </parameters>
 		<inputs>
 			<input id="0" moduleid="0" outputid="0"/>

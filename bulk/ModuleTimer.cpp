@@ -34,6 +34,7 @@ ModuleTimer::ModuleTimer(Processable& x_module)
 	m_running(false)
 {}
 
+
 void ModuleTimer::Start(double x_fps)
 {
 	if(m_running)
