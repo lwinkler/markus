@@ -104,7 +104,6 @@ Manager::~Manager()
 */
 void Manager::Connect()
 {
-	bool centralized = m_param.autoProcess;
 
 	// Processable::Reset(); // TODO: Do we need this ?
 
@@ -158,7 +157,10 @@ void Manager::Connect()
 
 	for(auto mod : m_modules)
 		if(mod->IsAutoProcessed() || mod->IsInput())
+		{
+			LOG_DEBUG(m_logger, "Add autoprocessing module " << mod->GetName());
 			newOrder.push_back(mod);
+		}
 
 	while(changed)
 	{
@@ -172,7 +174,7 @@ void Manager::Connect()
 				if(elem->AllInputsAreReady())
 				{
 					elem->SetAsReady();
-					if(centralized)
+					if(m_param.centralized)
 						newOrder.push_back(elem);
 					else
 					{
@@ -186,8 +188,11 @@ void Manager::Connect()
 		}
 	}
 	// If centralized reorder the module list
-	if(centralized)
+	if(m_param.centralized)
+	{
+		assert(m_modules.size() == newOrder.size());
 		m_modules = newOrder;
+	}
 
 	if(! ready)
 		throw MkException("Not all modules can be assigned to a master. There is probably a problem with the connections between modules.", LOC);
@@ -257,6 +262,7 @@ bool Manager::Process() // TODO void ?
 
 		for(auto & elem : m_modules)
 		{
+			LOG_DEBUG(m_logger, "Call Process on module " << elem->GetName());
 			elem->Process();
 		}
 

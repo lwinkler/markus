@@ -60,7 +60,6 @@ void Processable::Reset()
 			m_moduleTimer->Stop(); // TODO How to handle this: assert ?
 			CLEAN_DELETE(m_moduleTimer);
 		}
-		cout << "MT " << GetName() << endl;
 		m_moduleTimer = new ModuleTimer(*this);
 
 		LOG_DEBUG(m_logger, "Reseting auto-processed module with real-time="<<m_realTime<<" and fps="<<m_param.fps);

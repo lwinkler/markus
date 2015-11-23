@@ -41,6 +41,7 @@
 #include <cstdio>
 #include <log4cxx/xml/domconfigurator.h>
 #include <getopt.h>    /* for getopt_long; standard getopt is in unistd.h */
+#include <thread>
 
 using namespace std;
 
@@ -381,7 +382,6 @@ int main(int argc, char** argv)
 
 		manager.Connect();
 		manager.Reset();
-		manager.Start();
 
 
 		/// Create a separate thread to read the commands from stdin
@@ -410,9 +410,26 @@ int main(int argc, char** argv)
 					// nothing
 				}
 			}
+			else
+			{
+				manager.Start();
+				LOG_ERROR(logger, "Markus cannot run in decentralized mode without GUI yet.");
+				sleep(10); // TODO: This mode is not handled yet
+			}
 		}
 		else
 		{
+			std::thread th;
+			if(!managerParameters.autoProcess && args.centralized)
+			{
+				th = thread([&manager](){
+					while(manager.ProcessAndCatch())
+					{
+						// nothing
+					}
+				});
+			}
+			else manager.Start();
 #ifndef MARKUS_NO_GUI
 			ConfigFile mainGuiConfig("gui.xml", true);
 			ConfigReader guiConfig = mainGuiConfig.FindRef("gui[name=\"" + args.configFile + "\"]", true);
@@ -432,6 +449,8 @@ int main(int argc, char** argv)
 			LOG_ERROR(logger, "Markus was compiled without GUI. It can only be launched with option -nc");
 			returnValue = -1;
 #endif
+			if(!managerParameters.autoProcess && args.centralized)
+				th.join();
 		}
 		manager.Stop();
 

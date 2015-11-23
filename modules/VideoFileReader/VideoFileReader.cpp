@@ -50,7 +50,6 @@ VideoFileReader::~VideoFileReader()
 
 void VideoFileReader::Reset()
 {
-	cout << "reset vid" << endl;
 	Module::Reset();
 #ifndef MARKUS_NO_GUI
 	// Add a new control to play forward and rewind
