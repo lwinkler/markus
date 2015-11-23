@@ -166,9 +166,7 @@ bool Module::Process()
 		m_currentTimeStamp = 0;
 		if(!m_inputStreams.empty())
 		{
-			// m_inputStreams[0]->LockModuleForRead();
 			m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected();
-			// m_inputStreams[0]->UnLockModule();
 		}
 		else if(! m_param.autoProcess)
 			throw MkException("Module must have at least one input or have parameter auto_process=true", LOC);

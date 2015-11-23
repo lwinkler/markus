@@ -451,7 +451,7 @@ void ConfigFile::SaveToFile(const string& x_file) const
 }
 
 /**
-* @brief Validate that the configuration is valid
+* @brief Validate the configuration
 */
 void ConfigReader::Validate() const
 {

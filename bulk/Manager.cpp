@@ -34,6 +34,7 @@
 #include "util.h"
 
 #include <fstream>
+#include <boost/lexical_cast.hpp>
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/writer.h>
 
@@ -129,11 +130,15 @@ void Manager::Connect()
 				int inputId        = atoi(inputConfig.GetAttribute("id").c_str());
 				const string& tmp1 = inputConfig.GetAttribute("moduleid", "");
 				const string& tmp2 = inputConfig.GetAttribute("outputid", "");
+				const string& tmp3 = inputConfig.GetAttribute("block", "1");
+				const string& tmp4 = inputConfig.GetAttribute("sync", "1");
 				if(tmp1 != "" && tmp2 != "")
 				{
-					int outputModuleId    = atoi(tmp1.c_str());
-					int outputId          = atoi(tmp2.c_str());
+					int outputModuleId   = boost::lexical_cast<int>(tmp1);
+					int outputId         = boost::lexical_cast<int>(tmp2);
 					Stream& inputStream  = module.RefInputStreamById(inputId);
+					inputStream.SetBlocking(boost::lexical_cast<bool>(tmp3.c_str()));
+					inputStream.SetSynchronized(boost::lexical_cast<bool>(tmp4.c_str()));
 					Stream& outputStream = RefModuleById(outputModuleId).RefOutputStreamById(outputId);
 
 					// Connect input and output streams

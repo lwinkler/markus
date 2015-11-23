@@ -75,6 +75,10 @@ public:
 	inline void SetAsReady() {m_isReady = true;}
 	inline const std::string& GetRequirement() {return m_requirement;}
 	inline void SetRequirement(const std::string& x_requirement) {m_requirement = x_requirement;}
+	inline bool IsBlocking() const {return m_blocking;}
+	inline bool IsSynchronized() const {return m_synchronized;}
+	inline void SetBlocking(bool x_block) {m_blocking = x_block;}
+	inline void SetSynchronized(bool x_sync) {m_synchronized = x_sync;}
 
 protected:
 	std::string m_name;
@@ -87,6 +91,8 @@ protected:
 
 	Stream * m_connected;
 	bool m_isReady;
+	bool m_blocking     = true;
+	bool m_synchronized = true;
 	std::string m_requirement;
 
 private:
