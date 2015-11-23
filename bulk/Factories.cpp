@@ -38,6 +38,11 @@ delete pfeat;\
 
 #include "ControllerParameters.h"
 
+#define MK_DYNAMIC
+#ifdef MK_DYNAMIC
+#include "dynamicalLoading.h"
+#endif
+
 
 // Factories: The RegisterAll method will register all necessary creators
 
@@ -51,8 +56,14 @@ void registerAllModules(FactoryModules& x_fact1, FactoryParameters& x_fact2);
 
 void Factories::RegisterAll()
 {
+#ifdef MK_DYNAMIC
+	// Load dynamic libs for modules/features and register in factories
+	dynamicalLoading();
+#else
+
 	// All modules
 	registerAllModules(Factories::modulesFactory(), Factories::parametersFactory());
+#endif
 
 	// All features
 	FactoryFeatures& fact1(Factories::featuresFactory());

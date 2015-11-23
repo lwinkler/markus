@@ -318,7 +318,6 @@ int main(int argc, char** argv)
 	log4cxx::LoggerPtr logger(log4cxx::Logger::getLogger("main"));
 	int returnValue  = -1;
 
-
 	// Read arguments
 	struct arguments args;
 	if(processArguments(argc, argv, args, logger) < 1)
@@ -326,12 +325,9 @@ int main(int argc, char** argv)
 
 	if(args.editor)
 		launchEditor(argc, argv);
-
+	
 	try
 	{
-		// Register all modules, features, ... in factories
-		Factories::RegisterAll();
-
 		LOG_INFO(logger, Context::Version(true));
 		ConfigFile mainConfig(args.configFile);
 		mainConfig.Validate();
@@ -349,6 +345,9 @@ int main(int argc, char** argv)
 		}
 
 		log4cxx::xml::DOMConfigurator::configure(args.logConfigFile);
+
+		// Register all modules, features, ... in factories
+		Factories::RegisterAll();
 
 #ifndef MARKUS_NO_GUI
 		MarkusApplication app(argc, argv);

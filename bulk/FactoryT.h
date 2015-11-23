@@ -36,11 +36,12 @@
 /// This class is a template class for factories: a factory creates an instance of an object, the type of the object is specified as a string
 template<class T0, class T1, typename... Args> class FactoryT
 {
-	typedef T1* (*CreateObjectFunc)(Args... args);
-	typedef std::map<T0, CreateObjectFunc> Registry;
 	template<class T2> static T1* createObject(Args... args) {return new T2(args...);}
 
 public:
+	typedef T1* (*CreateObjectFunc)(Args... args);
+	typedef std::map<T0, CreateObjectFunc> Registry;
+
 	FactoryT() {}
 	template<class T2> void Register(const T0& name)
 	{

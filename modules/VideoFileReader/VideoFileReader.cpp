@@ -25,6 +25,7 @@
 
 #include "VideoFileReader.h"
 #include "StreamImage.h"
+#include "Factories.h"
 
 #ifndef MARKUS_NO_GUI
 #include "ControllerInputStream.h"
@@ -32,6 +33,18 @@
 
 using namespace std;
 using namespace cv;
+
+
+class staticRegistration
+{
+	public:
+	staticRegistration()
+	{
+		// register the maker with the factory
+		Factories::modulesFactory().Register<VideoFileReader>("VideoFileReader");
+	}
+};
+staticRegistration p;
 
 log4cxx::LoggerPtr VideoFileReader::m_logger(log4cxx::Logger::getLogger("VideoFileReader"));
 

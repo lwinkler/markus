@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 2.6)
 set(Markus_NO_GUI          false   CACHE BOOL "Compile Markus without a graphical user interface")
 set(Markus_USE_QT5         false   CACHE BOOL "Use QT 5 instead of 4")
 
-add_definitions(-std=c++11 -Wextra -Wno-unused-parameter -Wno-deprecated-register)
+add_definitions(-std=c++11 -rdynamic -Wextra -Wno-unused-parameter -Wno-deprecated-register)
 if (CMAKE_BUILD_TYPE MATCHES Debug)
 	add_definitions(-DMARKUS_DEBUG_STREAMS)
 endif()
@@ -71,14 +71,14 @@ set(markus_SRCS main.cpp)
 #-------------------------------------------------------------------------------- 
 if(Markus_NO_GUI)
 	add_definitions(-DMARKUS_NO_GUI)
-	set(MK_DEPS util bulk ${modules_dirs})
+	set(MK_DEPS util bulk modules)
 else()
-	set(MK_DEPS util bulk gui editor ${modules_dirs})
+	set(MK_DEPS util bulk modules gui editor)
 	include_directories(gui editor)
 endif()
 
 
-set(MK_DEPS ${MK_DEPS} ${MK_DEPS} ${TINYXML_LIBS} ${JSONCPP_LIBS} ${LOG4CXX_LIBS} ${OpenCV_LIBS} ${PYTHON_LIBRARIES} ${CURL_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT}) # double the dependencies to avoid linking error
+set(MK_DEPS ${MK_DEPS} ${MK_DEPS} ${TINYXML_LIBS} ${JSONCPP_LIBS} ${LOG4CXX_LIBS} ${OpenCV_LIBS} ${PYTHON_LIBRARIES} ${CURL_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} -ldl) # double the dependencies to avoid linking error
 if(Markus_USE_QT5)
 	include_directories(${Qt5Widgets_INCLUDE_DIRS} ${Qt5WebKit_INCLUDE_DIRS} ${Qt5WebKitWidgets_INCLUDE_DIRS})
 	set(MK_DEPS ${MK_DEPS} ${Qt5Widgets_LIBRARIES} ${Qt5WebKit_LIBRARIES} ${Qt5WebKitWidgets_LIBRARIES}) 
