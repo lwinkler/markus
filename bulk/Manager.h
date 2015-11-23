@@ -70,7 +70,7 @@ public:
 	void Connect();
 	void CreateEditorFiles(const std::string& x_fileName);
 	void PrintStatistics();
-	inline void Quit() {Stop();}
+	inline void Quit() {Stop();} // TODO: Implement this ?
 	bool EndOfAllStreams() const;
 	static std::string CreateOutputDir(const std::string& x_outputDir = "", const std::string& x_configFile = "");
 	inline void ListModulesTypes(std::vector<std::string>& xr_types) {mr_moduleFactory.List(xr_types);}

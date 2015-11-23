@@ -36,6 +36,7 @@ using namespace std;
 */
 void ControllerModule::Reset(string* xp_value)
 {
+	Processable::WriteLock lock(module.RefLock());
 	module.Reset();
 }
 
@@ -67,6 +68,7 @@ void ControllerModule::Stop(string* xp_value)
 */
 void ControllerModule::PrintStatistics(string* xp_value)
 {
+	Processable::ReadLock lock(module.RefLock());
 	string benchFileName = module.GetContext().GetOutputDir() + "/" + module.GetName() + ".benchmark.xml";
 	ConfigFile summary(benchFileName, true);
 	module.PrintStatistics(summary);

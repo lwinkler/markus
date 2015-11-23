@@ -37,6 +37,7 @@ using namespace std;
 */
 void ControllerManager::Reset(string* xp_value)
 {
+	Processable::WriteLock lock(manager.RefLock());
 	manager.Reset();
 }
 
@@ -47,6 +48,7 @@ void ControllerManager::Reset(string* xp_value)
 */
 void ControllerManager::ResetExceptInputs(string* xp_value)
 {
+	Processable::WriteLock lock(manager.RefLock());
 	manager.Reset(false);
 }
 
@@ -99,6 +101,7 @@ void ControllerManager::ProcessOne(string* xp_value)
 */
 void ControllerManager::PrintStatistics(string* xp_value)
 {
+	Processable::ReadLock lock(manager.RefLock());
 	manager.PrintStatistics();
 }
 
@@ -109,6 +112,7 @@ void ControllerManager::PrintStatistics(string* xp_value)
 */
 void ControllerManager::Status(string* xp_value)
 {
+	Processable::ReadLock lock(manager.RefLock());
 	manager.Status();
 }
 
@@ -119,6 +123,7 @@ void ControllerManager::Status(string* xp_value)
 */
 void ControllerManager::WriteStateToDirectory(string* xp_value)
 {
+	Processable::ReadLock lock(manager.RefLock());
 	manager.WriteStateToDirectory("state_" + timeStamp());
 }
 

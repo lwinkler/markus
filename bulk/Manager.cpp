@@ -104,8 +104,7 @@ Manager::~Manager()
 */
 void Manager::Connect()
 {
-
-	// Processable::Reset(); // TODO: Do we need this ?
+	Processable::Reset();
 
 	if(m_isConnected)
 		throw MkException("Manager can only connect modules once", LOC);
@@ -233,7 +232,7 @@ void Manager::Reset(bool x_resetInputs)
 		// Do not add param if locked or already present
 		if(elem->IsLocked() || HasController(elem->GetName()))
 			continue;
-		Controller* ctr = Factories::parameterControllerFactory().Create(elem->GetType(), *elem);
+		Controller* ctr = Factories::parameterControllerFactory().Create(elem->GetType(), *elem, *this);
 		if(ctr == nullptr)
 			throw MkException("Controller creation failed", LOC);
 		else AddController(ctr);
@@ -251,15 +250,6 @@ bool Manager::Process() // TODO void ?
 	assert(m_isConnected); // Modules must be connected before processing
 
 	{
-		WriteLock lock(m_lock); //, boost::try_to_lock);
-/*
-		if(!lock)
-		{
-			LOG_WARN(m_logger, "Manager too slow !");
-			return true;
-		}
-		*/
-
 		for(auto & elem : m_modules)
 		{
 			LOG_DEBUG(m_logger, "Call Process on module " << elem->GetName());
@@ -273,7 +263,7 @@ bool Manager::Process() // TODO void ?
 		}
 	}
 	//if(m_frameCount % 20 == 0)
-	// usleep(20); // This keeps the manager unlocked to allow the sending of commands // TODO find a cleaner way
+	usleep(20); // This keeps the manager unlocked to allow the sending of commands // TODO find a cleaner way
 
   
 	vector<Command> commands = m_interruptionManager.ReturnCommandsToSend();
@@ -303,7 +293,7 @@ void Manager::SendCommand(const string& x_command, string x_value)
 	Controllable& contr  (elems.at(0) == "manager" ? dynamic_cast<Controllable&>(*this) : RefModuleByName(elems.at(0)));
 	Processable&  process(elems.at(0) == "manager" ? dynamic_cast<Processable&>(*this) : RefModuleByName(elems.at(0)));
 
-	WriteLock lock(process.RefLock());
+	// WriteLock lock(process.RefLock());
 	contr.FindController(elems.at(1)).CallAction(elems.at(2), &x_value);
 
 	LOG_INFO(m_logger, "Command "<<x_command<<" returned value "<<x_value);
