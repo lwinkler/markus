@@ -63,7 +63,7 @@ void RandomEventGenerator::Reset()
 void RandomEventGenerator::Capture()
 {
 	// Wait to act consistently with other inputs
-	if(m_realTime)
+	if(IsRealTime())
 		usleep(1000000 / m_param.fps);
 
 	m_event.Clean();

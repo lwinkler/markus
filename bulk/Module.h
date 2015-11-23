@@ -127,7 +127,7 @@ public:
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 
-	virtual inline bool IsInput() {return false;}
+	virtual inline bool IsInput() const {return false;}
 	void Export(std::ostream& rx_os, int x_indentation);
 	Stream& RefInputStreamById(int x_id);
 	Stream& RefOutputStreamById(int x_id);

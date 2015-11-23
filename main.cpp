@@ -365,11 +365,12 @@ int main(int argc, char** argv)
 		}
 
 		// Set manager and context
-		Manager::Parameters parameters(appConfig);
+		Manager::Parameters managerParameters(appConfig);
 		// Override parameter auto_process with centralized
-		parameters.autoProcess = args.centralized;
-		parameters.fast = args.fast;
-		Manager manager(parameters);
+		managerParameters.autoProcess = false; // TODO: Use range
+		managerParameters.centralized = args.centralized;
+		managerParameters.fast = args.fast;
+		Manager manager(managerParameters);
 		manager.SetContext(context);
 
 		if(args.describe)
@@ -402,7 +403,7 @@ int main(int argc, char** argv)
 			// No gui. launch the process directly
 			// note: so far we cannot launch the process in a decentralized manner (with a timer on each module)
 
-			if(args.centralized)
+			if(!managerParameters.autoProcess && args.centralized)
 			{
 				while(manager.ProcessAndCatch())
 				{
@@ -417,8 +418,8 @@ int main(int argc, char** argv)
 			ConfigReader guiConfig = mainGuiConfig.FindRef("gui[name=\"" + args.configFile + "\"]", true);
 			guiConfig.FindRef("parameters", true);
 
-			MarkusWindow::Parameters parameters(guiConfig);
-			MarkusWindow gui(parameters, manager);
+			MarkusWindow::Parameters windowParameters(guiConfig);
+			MarkusWindow gui(windowParameters, manager);
 			gui.setWindowTitle("Markus");
 			if(!args.nogui)
 				gui.show();

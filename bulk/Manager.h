@@ -48,9 +48,11 @@ public:
 			m_list.push_back(new ParameterBool("fast", 0, 0, 1,           &fast, "Run as fast as possible: Inputs are not in real-time"));
 			m_list.push_back(new ParameterInt("nb_frames", 0, 0, INT_MAX, &nbFrames, "Number of frames to process. 0 for infinite. Only works in centralized mode"));
 			m_list.push_back(new ParameterString("arguments", "",         &arguments, "Command-line arguments, for storage only"));
+			m_list.push_back(new ParameterBool("centralized", 0, 0, 1,    &centralized, "Centralized mode. Do all calls to processing from the manager"));
 			ParameterStructure::Init();
 		}
 		bool fast;
+		bool centralized;
 		int nbFrames;
 		std::string arguments; // TODO: This is used in simulations, see what to do in normal case
 	};
@@ -96,7 +98,6 @@ protected:
 	int64_t m_frameCount;
 	const FactoryParameters& mr_parametersFactory;
 	const FactoryModules& mr_moduleFactory;
-	const FactoryParameters& mr_parameterFactory;
 
 private:
 	static log4cxx::LoggerPtr m_logger;

@@ -58,7 +58,6 @@ Module::Module(ParameterStructure& xr_params) :
 
 Module::~Module()
 {
-	cout<<"destroy module"<<endl;
 	// Delete all streams
 	for(auto & elem : m_inputStreams)
 		delete(elem.second);
@@ -79,7 +78,7 @@ void Module::Reset()
 	LOG_INFO(m_logger, "Reseting module "<<GetName());
 
 	// Lock the parameters that cannot be changed
-	m_param.LockParameterByName("class");
+	m_param.LockParameterByName("class"); // TODO: Should not be done here
 	m_param.LockParameterByName("width");
 	m_param.LockParameterByName("height");
 	m_param.LockParameterByName("type");
@@ -453,7 +452,7 @@ bool Module::AllInputsAreReady() const
 *
 * @return The master module
 */
-const Module& Module::GetMasterModule() const
+const Module& Module::GetMasterModule() const // TODO remove this after implementing new connection mode
 {
 	for(const auto & elem : m_inputStreams)
 	{
@@ -466,7 +465,7 @@ const Module& Module::GetMasterModule() const
 				return preceding.GetMasterModule();
 		}
 	}
-	throw MkException("Module must have at least one input connected or have auto_process=1", LOC);
+	throw MkException("Module must have at least one input connected or be an input or be autoprocessed", LOC);
 }
 
 /**

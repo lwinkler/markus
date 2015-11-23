@@ -46,8 +46,7 @@ Manager::Manager(ParameterStructure& xr_params) :
 	Processable(xr_params),
 	m_param(dynamic_cast<Parameters&>(xr_params)),
 	mr_parametersFactory(Factories::parametersFactory()),
-	mr_moduleFactory(Factories::modulesFactory()),
-	mr_parameterFactory(Factories::parametersFactory())
+	mr_moduleFactory(Factories::modulesFactory())
 {
 	LOG_INFO(m_logger, "Create manager");
 	m_frameCount = 0;
@@ -62,6 +61,8 @@ Manager::Manager(ParameterStructure& xr_params) :
 		ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, moduleConfig);
 		Module * tmp1 = mr_moduleFactory.Create(moduleType, *tmp2);
 
+		if(m_param.centralized)
+			tmp1->AllowAutoProcess(false);
 		LOG_DEBUG(m_logger, "Add module " << tmp1->GetName() << " to list input=" << (tmp1->IsInput() ? "yes" : "no"));
 		m_modules.push_back(tmp1);
 		m_parameters.push_back(tmp2);
@@ -213,7 +214,6 @@ void Manager::Reset(bool x_resetInputs)
 		if(x_resetInputs || !elem->IsInput())
 		{
 			// If manager is in autoprocess, modules must not be
-			elem->AllowAutoProcess(!m_param.autoProcess);
 			elem->SetRealTime(!m_param.fast);
 			elem->Reset();
 		}
@@ -241,18 +241,19 @@ void Manager::Reset(bool x_resetInputs)
 *
 * @return False if the processing must be stopped
 */
-bool Manager::Process() // TODO void
+bool Manager::Process() // TODO void ?
 {
 	assert(m_isConnected); // Modules must be connected before processing
 
 	{
-		WriteLock lock(m_lock, boost::try_to_lock);
-
+		WriteLock lock(m_lock); //, boost::try_to_lock);
+/*
 		if(!lock)
 		{
-			LOG_WARN(m_logger, "Manager too slow !"); // Note: this happens every time
+			LOG_WARN(m_logger, "Manager too slow !");
 			return true;
 		}
+		*/
 
 		for(auto & elem : m_modules)
 		{
@@ -276,7 +277,7 @@ bool Manager::Process() // TODO void
 		//m_continueFlag = true;
 	}
 
-return true;
+	return true;
 }
 
 /**
@@ -372,7 +373,7 @@ void Manager::CreateEditorFiles(const string& x_fileName)
 			moduleConfig.SetAttribute("id", id);
 			moduleConfig.FindRef("parameters>param[name=\"class\"]", true).SetValue(moduleType);
 
-			ParameterStructure* parameters = mr_parameterFactory.Create(moduleType, moduleConfig);
+			ParameterStructure* parameters = mr_parametersFactory.Create(moduleType, moduleConfig);
 			Module* module = mr_moduleFactory.Create(moduleType, *parameters);
 
 			modules_json.append(moduleType);
