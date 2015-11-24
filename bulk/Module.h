@@ -99,7 +99,7 @@ public:
 
 	virtual void Reset();
 	virtual bool Process();
-	bool ProcessingCondition() const;
+	bool ProcessingCondition();
 
 	virtual const std::string& GetName() const override {return m_name;}
 	virtual const std::string& GetClass() const = 0;
@@ -132,9 +132,6 @@ public:
 	void Export(std::ostream& rx_os, int x_indentation);
 	Stream& RefInputStreamById(int x_id);
 	Stream& RefOutputStreamById(int x_id);
-	inline bool IsReady() {return IsAutoProcessed() || m_isReady;}
-	void SetAsReady();
-	bool AllInputsAreReady() const;
 	const Module& GetMasterModule() const;
 	inline void CheckParameterRange() {m_param.CheckRange(false);}
 	inline bool IsUnitTestingEnabled() const {return m_isUnitTestingEnabled;}
@@ -156,7 +153,6 @@ protected:
 
 	TIME_STAMP m_lastTimeStamp;     // time stamp of the lastly processed input
 	TIME_STAMP m_currentTimeStamp;  // time stamp of the current input
-	bool m_isReady;
 	bool m_unsyncWarning;
 
 	virtual void ProcessFrame() = 0;

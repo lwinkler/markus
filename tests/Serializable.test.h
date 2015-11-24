@@ -136,7 +136,6 @@ public:
 		mp_fakeParams = m_factoryParameters.Create("VideoFileReader", mp_config->GetSubConfig("module"));
 		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeParams);
 		// note: we need a fake module to create the input streams
-		mp_fakeInput->SetAsReady();
 		mp_fakeInput->Reset();
 
 		m_vect.push_back(33.66);

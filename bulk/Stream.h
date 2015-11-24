@@ -71,8 +71,6 @@ public:
 			throw MkException("Stream " + GetName() + " is not connected", LOC);
 		return m_connected->GetTimeStamp();
 	}
-	inline bool IsReady() const {return m_isReady;}
-	inline void SetAsReady() {m_isReady = true;}
 	inline const std::string& GetRequirement() {return m_requirement;}
 	inline void SetRequirement(const std::string& x_requirement) {m_requirement = x_requirement;}
 	inline bool IsBlocking() const {return m_blocking;}
@@ -90,7 +88,6 @@ protected:
 	std::atomic<TIME_STAMP> m_timeStamp;
 
 	Stream * m_connected;
-	bool m_isReady;
 	bool m_blocking     = true;
 	bool m_synchronized = true;
 	std::string m_requirement;

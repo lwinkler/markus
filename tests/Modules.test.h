@@ -107,7 +107,6 @@ public:
 		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeConfig);
 		mp_fakeInput->AllowAutoProcess(false);
 		// note: we need a fake module to create the input streams
-		mp_fakeInput->SetAsReady();
 		mp_fakeInput->Reset();
 		mp_contextParams = new Context::Parameters(mp_configFile->Find("application"), "/tmp/config_empty.xml", "TestModule", "tests/out");
 		mp_context = new Context(*mp_contextParams);
@@ -191,7 +190,6 @@ public:
 			TS_ASSERT(outputStream != NULL);
 			TS_ASSERT(inputStream.IsConnected());
 		}
-		module->SetAsReady();
 		if(module->IsUnitTestingEnabled())
 			module->Reset();
 

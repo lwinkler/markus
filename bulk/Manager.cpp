@@ -122,10 +122,6 @@ void Manager::Connect()
 		int moduleId = atoi(moduleConfig.GetAttribute("id").c_str());
 		Module& module = RefModuleById(moduleId);
 
-		// If the module is automatically processed: set as ready
-		if(module.IsAutoProcessed())
-			module.SetAsReady();
-
 		// For each module
 		// Read conections of inputs
 		for(const auto& inputConfig : moduleConfig.Find("inputs").FindAll("input"))

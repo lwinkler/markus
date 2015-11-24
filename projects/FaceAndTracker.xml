@@ -55,7 +55,6 @@
 			<param name="width">640</param>
 			<param name="height">480</param>
 			<param name="fps">10</param>
-			<param name="allow_unsync_input">0</param>
 		</parameters>
 		<inputs>
 			<input id="0" moduleid="0" outputid="0"/>
