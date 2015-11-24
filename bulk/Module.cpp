@@ -163,15 +163,16 @@ bool Module::ProcessingCondition()
 		if(!elem.second->IsConnected())
 			continue;
 		TIME_STAMP ts = elem.second->GetTimeStampConnected();
-		LOG_DEBUG(m_logger, GetName() << ": Timestamp of input stream " << elem.second->GetName() << ":" << ts << ", last:" << m_lastTimeStamp);
-		if(elem.second->IsBlocking() && m_lastTimeStamp != TIME_STAMP_MIN)
+		LOG_DEBUG(m_logger, GetName() << ": Timestamp of input stream " << elem.second->GetName() << ":" << ts << ", last:" << m_lastTimeStamp << " " << elem.second->IsBlocking() << "," << elem.second->IsSynchronized());
+		if(elem.second->IsBlocking())
 		{
 			if(newTs == TIME_STAMP_MIN)
-			{
 				newTs = ts;
+			if(m_lastTimeStamp != TIME_STAMP_MIN)
+			{
+				if(ts <= m_lastTimeStamp || (m_param.fps != 0 && (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps < 1000))
+					return false;
 			}
-			if(ts <= m_lastTimeStamp || (m_param.fps != 0 && (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps < 1000))
-				return false;
 		}
 		if(elem.second->IsSynchronized())
 		{
@@ -181,6 +182,7 @@ bool Module::ProcessingCondition()
 				return false;
 		}
 	}
+	assert(newTs != TIME_STAMP_MIN); // module must have at least one connected and blocking input
 	m_currentTimeStamp = newTs;
 	return true;
 }
