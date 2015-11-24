@@ -70,13 +70,19 @@ Manager::Manager(ParameterStructure& xr_params) :
 
 		// Add to inputs if an input
 		if(tmp1->IsInput())
-			m_inputs.push_back(tmp1);
+		{
+			Input* tmpi = dynamic_cast<Input*>(tmp1);
+			assert(tmpi != nullptr);
+			m_inputs.push_back(tmpi);
+		}
+		if(tmp1->IsAutoProcessed())
+			m_autoProcessedModules.push_back(tmp1);
 	}
 }
 
 void Manager::Start()
 {
-	for(auto & elem : m_modules)
+	for(auto & elem : m_autoProcessedModules)
 		elem->Start();
 	Processable::Start();
 }
@@ -84,7 +90,7 @@ void Manager::Start()
 
 void Manager::Stop()
 {
-	for(auto & elem : m_modules)
+	for(auto & elem : m_autoProcessedModules)
 		elem->Stop();
 	Processable::Stop();
 }
@@ -127,7 +133,7 @@ void Manager::Connect()
 			// Check if connected to our previous module
 			try
 			{
-				int inputId        = atoi(inputConfig.GetAttribute("id").c_str());
+				int inputId        = boost::lexical_cast<int>(inputConfig.GetAttribute("id"));
 				const string& tmp1 = inputConfig.GetAttribute("moduleid", "");
 				const string& tmp2 = inputConfig.GetAttribute("outputid", "");
 				const string& tmp3 = inputConfig.GetAttribute("block", "1");
@@ -137,12 +143,14 @@ void Manager::Connect()
 					int outputModuleId   = boost::lexical_cast<int>(tmp1);
 					int outputId         = boost::lexical_cast<int>(tmp2);
 					Stream& inputStream  = module.RefInputStreamById(inputId);
-					inputStream.SetBlocking(boost::lexical_cast<bool>(tmp3.c_str()));
-					inputStream.SetSynchronized(boost::lexical_cast<bool>(tmp4.c_str()));
+					inputStream.SetBlocking(boost::lexical_cast<bool>(tmp3));
+					inputStream.SetSynchronized(boost::lexical_cast<bool>(tmp4));
 					Stream& outputStream = RefModuleById(outputModuleId).RefOutputStreamById(outputId);
 
 					// Connect input and output streams
+					// TODO: Check that modules have at least one blocking input
 					inputStream.Connect(&outputStream);
+					RefModuleById(outputModuleId).AddDependingModule(module);
 				}
 			}
 			catch(MkException& e)
@@ -153,6 +161,7 @@ void Manager::Connect()
 		}
 	}
 
+/*
 	// Set the master module for each module
 	//    the master module is the module responsible to call the Process method
 	bool changed = true;
@@ -200,6 +209,8 @@ void Manager::Connect()
 
 	if(! ready)
 		throw MkException("Not all modules can be assigned to a master. There is probably a problem with the connections between modules.", LOC);
+
+	*/
 
 	m_isConnected = true;
 }
@@ -255,7 +266,7 @@ bool Manager::Process() // TODO void ?
 	assert(m_isConnected); // Modules must be connected before processing
 
 	{
-		for(auto & elem : m_modules)
+		for(auto & elem : m_autoProcessedModules)
 		{
 			LOG_DEBUG(m_logger, "Call Process on module " << elem->GetName());
 			elem->Process();
@@ -346,7 +357,7 @@ bool Manager::EndOfAllStreams() const
 	bool endOfStreams = true;
 	for(const auto & elem : m_inputs)
 	{
-		if(!dynamic_cast<Input*>(elem)->IsEndOfStream())
+		if(!elem->IsEndOfStream())
 			endOfStreams = false;
 	}
 	return endOfStreams;

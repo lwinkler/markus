@@ -28,7 +28,6 @@
 			<param name="filter_file">modules/CascadeDetector/lbpcascade_frontalface.xml</param>
 			<param name="color">(255,0,255)</param>
 			<param name="object_label">face</param>
-		<param name="auto_process">1</param>
 </parameters>
 		<inputs>
 			<input id="0" moduleid="0" outputid="0"/>
@@ -46,7 +45,6 @@
 			<param name="width">640</param>
 			<param name="height">480</param>
 			<param name="type">CV_8UC1</param>
-			<param name="fps">10</param>
 		</parameters>
 		<inputs>
 			<input id="0" moduleid="1" outputid="0"/>
@@ -63,17 +61,14 @@
 			<param name="width">640</param>
 			<param name="height">480</param>
 			<param name="type">CV_8UC3</param>
-			<param name="fps">10</param>
-		<param name="allow_unsync_input">1</param>
-<param name="auto_process">0</param>
 </parameters>
 		<inputs>
-			<input id="0" moduleid="0" outputid="0"/>
-			<input id="1" moduleid="2" outputid="0"/>
-			<input id="2" moduleid="8" outputid="0"/>
-			<input id="3" moduleid="9" outputid="0"/>
-			<input id="4" moduleid="10" outputid="0"/>
-			<input id="5" moduleid="11" outputid="0"/>
+			<input id="0" moduleid="0" outputid="0" block="1" sync="1"/>
+			<input id="1" moduleid="2" outputid="0" block="0" sync="0"/>
+			<input id="2" moduleid="8" outputid="0" block="0" sync="0"/>
+			<input id="3" moduleid="9" outputid="0" block="0" sync="0"/>
+			<input id="4" moduleid="10" outputid="0" block="0" sync="0"/>
+			<input id="5" moduleid="11" outputid="0" block="0" sync="0"/>
 		</inputs>
 		<outputs>
 			<output id="0"/>
@@ -94,7 +89,6 @@
 			<param name="filter_file">modules/CascadeDetector/haarcascade_mcs_upperbody.xml</param>
 			<param name="color">(255,255,255)</param>
 			<param name="object_label">upper body</param>
-		<param name="auto_process">1</param>
 </parameters>
 		<inputs>
 			<input id="0" moduleid="0" outputid="0"/>
@@ -119,7 +113,6 @@
 			<param name="filter_file">modules/CascadeDetector/haarcascade_profileface.xml</param>
 			<param name="color">(255,255,255)</param>
 			<param name="object_label">profile</param>
-		<param name="auto_process">1</param>
 </parameters>
 		<inputs>
 			<input id="0" moduleid="0" outputid="0"/>
@@ -144,7 +137,6 @@
 			<param name="filter_file">modules/CascadeDetector/haarcascade_lefteye_2splits.xml</param>
 			<param name="color">(255,255,255)</param>
 			<param name="object_label">left eyes</param>
-		<param name="auto_process">1</param>
 </parameters>
 		<inputs>
 			<input id="0" moduleid="0" outputid="0"/>
@@ -169,7 +161,6 @@
 			<param name="filter_file">modules/CascadeDetector/haarcascade_upperbody.xml</param>
 			<param name="color">(255,255,255)</param>
 			<param name="object_label">upper body B</param>
-		<param name="auto_process">1</param>
 </parameters>
 		<inputs>
 			<input id="0" moduleid="0" outputid="0"/>
@@ -187,7 +178,6 @@
 			<param name="width">640</param>
 			<param name="height">480</param>
 			<param name="type">CV_8UC1</param>
-			<param name="fps">10</param>
 			<param name="max_matching_distance">0.4</param>
 		</parameters>
 		<inputs>
@@ -205,7 +195,6 @@
 			<param name="width">640</param>
 			<param name="height">480</param>
 			<param name="type">CV_8UC1</param>
-			<param name="fps">10</param>
 			<param name="max_matching_distance">0.4</param>
 		</parameters>
 		<inputs>
@@ -223,7 +212,6 @@
 			<param name="width">640</param>
 			<param name="height">480</param>
 			<param name="type">CV_8UC1</param>
-			<param name="fps">10</param>
 			<param name="max_matching_distance">0.4</param>
 		</parameters>
 		<inputs>
@@ -241,7 +229,6 @@
 			<param name="width">640</param>
 			<param name="height">480</param>
 			<param name="type">CV_8UC1</param>
-			<param name="fps">10</param>
 			<param name="max_matching_distance">0.4</param>
 		</parameters>
 		<inputs>

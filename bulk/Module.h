@@ -99,6 +99,7 @@ public:
 
 	virtual void Reset();
 	virtual bool Process();
+	bool ProcessingCondition() const;
 
 	virtual const std::string& GetName() const override {return m_name;}
 	virtual const std::string& GetClass() const = 0;

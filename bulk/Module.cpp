@@ -152,6 +152,36 @@ double Module::GetRecordingFps() const
 }
 
 /**
+* @brief Return true if all conditions for processing are met (all blocking inputs have received a frame, all are syncronized)
+* 
+* note: We need this kind of condition since all preceeding modules will call Process
+*/
+bool Module::ProcessingCondition() const
+{
+	TIME_STAMP syncTs = TIME_STAMP_MIN;
+	for(const auto& elem : m_inputStreams)
+	{
+		if(!elem.second->IsConnected())
+			continue;
+		TIME_STAMP ts = elem.second->GetTimeStampConnected();
+		LOG_DEBUG(m_logger, GetName() << ": Timestamp of input stream " << elem.second->GetName() << ":" << ts << ", last:" << m_lastTimeStamp);
+		if(elem.second->IsBlocking() && m_lastTimeStamp != TIME_STAMP_MIN)
+		{
+			if(ts <= m_lastTimeStamp || (m_param.fps != 0 && (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps < 1000))
+				return false;
+		}
+		if(elem.second->IsSynchronized())
+		{
+			if(syncTs == TIME_STAMP_MIN)
+				syncTs = ts;
+			else if(ts != syncTs)
+				return false;
+		}
+	}
+	return true;
+}
+
+/**
 * @brief Process one frame
 */
 bool Module::Process()
@@ -159,9 +189,6 @@ bool Module::Process()
 	WriteLock lock(m_lock);
 	try
 	{
-		if(!m_isReady)
-			throw MkException("Module must be ready before processing", LOC);
-
 		// Timestamp of the module is given by the input stream
 		m_currentTimeStamp = 0;
 		if(!m_inputStreams.empty())
@@ -175,7 +202,7 @@ bool Module::Process()
 		// if(m_currentTimeStamp == m_lastTimeStamp)
 			// LOG_WARN(m_logger, "Timestamp are not increasing correctly");
 #endif
-		if(m_param.autoProcess || (m_param.fps == 0 && m_currentTimeStamp != m_lastTimeStamp) || (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps > 1000)
+		if(m_param.autoProcess || ProcessingCondition())
 		{
 			// Process this frame
 
@@ -185,6 +212,7 @@ bool Module::Process()
 			// cout<<GetName()<<" "<<m_currentTimeStamp<<" "<<m_lastTimeStamp<<endl;
 
 			// Check that all inputs are in sync
+			/*
 			if(! m_param.allowUnsyncInput && m_unsyncWarning)
 				for(unsigned int i = 1 ; i < m_inputStreams.size() ; i++)
 				{
@@ -195,6 +223,7 @@ bool Module::Process()
 						m_unsyncWarning = false;
 					}
 				}
+				*/
 
 			// note: Inputs must call ProcessFrame to set the time stamp
 			// TODO: There is no reason to cache input modules !

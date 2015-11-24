@@ -32,6 +32,7 @@
 #include "Factories.h"
 #include "ParameterString.h"
 #include "Module.h"
+#include "Input.h"
 
 
 /**
@@ -91,8 +92,9 @@ protected:
 
 	bool m_isConnected;
 
-	std::vector<Module *> m_modules;
-	std::vector<Module *> m_inputs;
+	std::vector<Module *>  m_modules;
+	std::vector<Input *>   m_inputs;
+	std::vector<Module *>  m_autoProcessedModules;
 	std::vector<ParameterStructure *> m_parameters;
 
 	int64_t m_frameCount;
