@@ -42,6 +42,7 @@ public:
 
 	// typedef std::function<void(void)> Timeout;
 
+	inline bool IsRunning() const {return m_running;}
 	inline void Stop(){if(m_running){m_running = false;m_thread.join();}}
 	void Start(double x_fps);
 

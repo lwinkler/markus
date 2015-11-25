@@ -64,7 +64,8 @@ public:
 	virtual ~Processable();
 
 	virtual void Reset();
-	virtual bool Process() = 0;
+	virtual void Process() = 0;
+	virtual bool AbortCondition() const = 0;
 	virtual const std::string& GetName() const = 0;
 	bool ProcessAndCatch();
 	virtual void Start();
@@ -82,20 +83,20 @@ protected:
 	void NotifyException(const MkException& x_exeption);
 
 	InterruptionManager& m_interruptionManager;
-	ModuleTimer * m_moduleTimer;
 	boost::shared_mutex m_lock;
 	Timer m_timerProcessing;
 
 private:
-	bool m_allowAutoProcess;
-	bool m_realTime;         /// Process in real-time: if true, the module processes as fast as possible
-	bool m_continueFlag = true;    // Flag that is used to notify the manager of a Quit command, only working if centralized
-	bool m_hasRecovered = true;    // Flag to test if all modules have recovered from the last exception, only working if centralized
-	MkException m_lastException;   // Field to store the last exception
+	bool m_allowAutoProcess = true;
+	bool m_realTime         = true; /// Process in real-time: if true, the module processes as fast as possible
+	// bool m_continueFlag     = true; // Flag that is used to notify the manager of a Quit command, only working if centralized
+	bool m_hasRecovered     = true; // Flag to test if all modules have recovered from the last exception, only working if centralized
+	MkException m_lastException;    // Field to store the last exception
 
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
-	const Context* mp_context; /// context given by Manager (output directory, ...)
+	ModuleTimer * mp_moduleTimer = nullptr;
+	const Context* mp_context = nullptr; /// context given by Manager (output directory, ...)
 };
 
 #endif

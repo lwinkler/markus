@@ -105,8 +105,9 @@ public:
 	virtual ~Module();
 
 	virtual void Reset();
-	virtual bool Process();
+	virtual void Process();
 	bool ProcessingCondition();
+	inline bool AbortCondition() const override {return true;}
 
 	virtual const std::string& GetName() const override {return m_name;}
 	virtual const std::string& GetClass() const = 0;

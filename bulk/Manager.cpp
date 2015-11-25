@@ -282,7 +282,7 @@ void Manager::Reset(bool x_resetInputs)
 *
 * @return False if the processing must be stopped
 */
-bool Manager::Process()
+void Manager::Process()
 {
 	assert(m_isConnected); // Modules must be connected before processing
 
@@ -309,7 +309,7 @@ bool Manager::Process()
 		//m_continueFlag = true;
 	}
 
-	return true;
+	return;
 }
 
 /**
@@ -372,7 +372,7 @@ void Manager::PrintStatistics()
 *
 * @return True if all streams have ended
 */
-bool Manager::EndOfAllStreams() const
+bool Manager::AbortCondition() const
 {
 	bool endOfStreams = true;
 	for(const auto & elem : m_inputs)

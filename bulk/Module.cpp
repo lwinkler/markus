@@ -187,7 +187,7 @@ bool Module::ProcessingCondition()
 * @brief Process one frame
 * @return True if the frame was processed
 */
-bool Module::Process()
+void Module::Process()
 {
 	WriteLock lock(m_lock);
 	try
@@ -208,7 +208,7 @@ bool Module::Process()
 			// LOG_WARN(m_logger, "Timestamp are not increasing correctly");
 #endif
 		if(!m_param.autoProcess && !ProcessingCondition())
-			return false;
+			return;
 		// Process this frame
 
 		// Timer for benchmark
@@ -273,6 +273,7 @@ bool Module::Process()
 		}
 
 		// Call depending modules (modules with fps = 0)
+		//TODO if PropagateCondition()
 		for(auto & elem : m_modulesDepending)
 			elem->Process();
 
@@ -282,10 +283,10 @@ bool Module::Process()
 	}
 	catch(...)
 	{
-		LOG_WARN(m_logger, "Exception in module " << GetName()); // TODO remove this
+		LOG_WARN(m_logger, "Exception in module " << GetName());
 		throw;
 	}
-	return true;
+	return;
 }
 
 /**

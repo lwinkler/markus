@@ -61,6 +61,7 @@ void ModuleTimer::Start(double x_fps)
 			if(!m_processable.ProcessAndCatch())
 				break; // Stop(); // TODO: Handle break with exceptions
 		}
+		Stop();
 	});
 }
 

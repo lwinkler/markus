@@ -61,7 +61,8 @@ public:
 	Manager(ParameterStructure& x_configReader);
 	~Manager();
 	virtual void Reset(bool x_resetInputs = true);
-	virtual bool Process();
+	virtual void Process() override;
+	virtual bool AbortCondition() const override;
 	virtual void Start() override;
 	virtual void Stop() override;
 	void SendCommand(const std::string& x_command, std::string x_value);
@@ -73,7 +74,6 @@ public:
 	void CreateEditorFiles(const std::string& x_fileName);
 	void PrintStatistics();
 	inline void Quit() {Stop();} // TODO: Implement this ?
-	bool EndOfAllStreams() const;
 	static std::string CreateOutputDir(const std::string& x_outputDir = "", const std::string& x_configFile = "");
 	inline void ListModulesTypes(std::vector<std::string>& xr_types) {mr_moduleFactory.List(xr_types);}
 	void WriteStateToDirectory(const std::string& x_directory) const;
