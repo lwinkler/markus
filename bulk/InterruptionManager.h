@@ -28,7 +28,7 @@
 #include "ParameterStructure.h"
 #include <log4cxx/logger.h>
 
-/// Class to represent a command // TODO use everywhere
+/// Class to represent a command
 struct Command
 {
 	Command(const std::string& x_name, const std::string& x_value):

@@ -103,21 +103,19 @@ protected:
 class SerializableTestSuite : public CxxTest::TestSuite
 {
 public:
-	SerializableTestSuite()
-		: mp_fakeInput(NULL),
-		  mp_fakeParams(NULL),
+	SerializableTestSuite() :
 		  m_factoryParameters(Factories::parametersFactory()),
 		  m_factoryModules(Factories::modulesFactory()),
-		  m_factoryFeatures(Factories::featuresFactory()),
-		  mp_config(NULL) {}
+		  m_factoryFeatures(Factories::featuresFactory())
+		  {}
 
 protected:
 	const FactoryParameters& m_factoryParameters;
 	const FactoryModules& m_factoryModules;
 	const FactoryFeatures& m_factoryFeatures;
-	Module* mp_fakeInput;
-	ParameterStructure* mp_fakeParams;
-	ConfigFile* mp_config;
+	Module* mp_fakeInput              = nullptr;
+	ParameterStructure* mp_fakeParams = nullptr;
+	ConfigFile* mp_config             = nullptr;
 
 	// Values for testing
 	cv::KeyPoint  m_kp;

@@ -144,7 +144,6 @@ void Manager::Connect()
 					Stream& outputStream = RefModuleById(outputModuleId).RefOutputStreamById(outputId);
 
 					// Connect input and output streams
-					// TODO: Check that modules have at least one blocking input
 					inputStream.Connect(&outputStream);
 					RefModuleById(outputModuleId).AddDependingModule(module);
 				}
@@ -207,8 +206,34 @@ void Manager::Connect()
 		throw MkException("Not all modules can be assigned to a master. There is probably a problem with the connections between modules.", LOC);
 
 	*/
-
+	Check();
 	m_isConnected = true;
+}
+
+/**
+* @brief Check if modules are correctly connected
+*
+*/
+void Manager::Check() const
+{
+	for(auto& module : m_modules)
+	{
+		if(!module->IsInput())
+		{
+			bool bc = false;
+			// Check that at least one blocking input is connected
+			for(auto& input : module->GetInputStreamList())
+			{
+				if(input.second->IsBlocking() && input.second->IsConnected())
+				{
+					bc = true;
+					break;
+				}
+			}
+			if(!bc)
+				throw MkException("Module " + module->GetName() + " must have at least one blocking input that is connected", LOC);
+		}
+	}
 }
 
 /**
@@ -257,23 +282,22 @@ void Manager::Reset(bool x_resetInputs)
 *
 * @return False if the processing must be stopped
 */
-bool Manager::Process() // TODO void ?
+bool Manager::Process()
 {
 	assert(m_isConnected); // Modules must be connected before processing
 
+	for(auto & elem : m_autoProcessedModules)
 	{
-		for(auto & elem : m_autoProcessedModules)
-		{
-			LOG_DEBUG(m_logger, "Call Process on module " << elem->GetName());
-			elem->Process();
-		}
-
-		m_frameCount++;
-		if(m_frameCount % 100 == 0 && m_logger->isDebugEnabled())
-		{
-			PrintStatistics();
-		}
+		LOG_DEBUG(m_logger, "Call Process on module " << elem->GetName());
+		elem->Process();
 	}
+
+	m_frameCount++;
+	if(m_frameCount % 100 == 0 && m_logger->isDebugEnabled())
+	{
+		PrintStatistics();
+	}
+
 	//if(m_frameCount % 20 == 0)
 	usleep(20); // This keeps the manager unlocked to allow the sending of commands // TODO find a cleaner way
 

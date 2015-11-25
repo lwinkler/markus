@@ -85,6 +85,13 @@ public:
 			m_list.push_back(new ParameterCachedState("cached" , CV_8UC1 , &cached   , "Format of the input image"));
 
 			Init();
+
+			// Lock the parameters that cannot be changed
+			LockParameterByName("class");
+			LockParameterByName("width");
+			LockParameterByName("height");
+			LockParameterByName("type");
+			LockParameterByName("auto_process");
 		}
 
 		int width;

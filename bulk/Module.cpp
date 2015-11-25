@@ -76,19 +76,15 @@ void Module::Reset()
 	Processable::Reset();
 	LOG_INFO(m_logger, "Reseting module "<<GetName());
 
-	// Lock the parameters that cannot be changed
-	m_param.LockParameterByName("class"); // TODO: Should not be done here
-	m_param.LockParameterByName("width");
-	m_param.LockParameterByName("height");
-	m_param.LockParameterByName("type");
-	m_param.LockParameterByName("auto_process");
-
 	m_param.PrintParameters();
 	m_param.CheckRange(true);
 
 	m_timerProcessing.Reset();
 	m_timerWaiting.Reset();
 	m_timerConversion.Reset();
+
+	// Lock all parameters if needed
+	m_param.LockIfRequired();
 
 	// This must be done only once to avoid troubles in the GUI
 	// Add module controller
