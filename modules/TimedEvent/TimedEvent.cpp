@@ -47,7 +47,7 @@ TimedEvent::~TimedEvent(void)
 void TimedEvent::Reset()
 {
 	Module::Reset();
-	m_nextEvent = TIME_STAMP_INITIAL;
+	m_nextEvent = TIME_STAMP_MIN;
 }
 
 void TimedEvent::ProcessFrame()
@@ -58,7 +58,7 @@ void TimedEvent::ProcessFrame()
 
 	if(m_currentTimeStamp >= m_nextEvent)
 	{
-		if(m_nextEvent == TIME_STAMP_INITIAL)
+		if(m_nextEvent == TIME_STAMP_MIN)
 		{
 			m_nextEvent = m_currentTimeStamp + m_param.timeInterval * 1000;
 		}

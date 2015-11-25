@@ -35,7 +35,6 @@ UsbCam::UsbCam(ParameterStructure& xr_params):
 	m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_output(Size(m_param.width, m_param.height), m_param.type)  // Note: sizes will be overridden !
 {
-	// m_timeStamp = TIME_STAMP_INITIAL;
 	AddOutputStream(0, new StreamImage("input", m_output, *this, "Video stream of the camera"));
 	m_isUnitTestingEnabled = false; // disable since not every PC has an usb/web camera
 }

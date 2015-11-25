@@ -78,6 +78,7 @@ public:
 	inline virtual const Context& GetContext() const {if(mp_context == nullptr) throw MkException("Context was not set", LOC); return *mp_context;}
 	inline bool IsContextSet() const{return mp_context != nullptr;}
 	inline boost::shared_mutex& RefLock(){return m_lock;}
+	inline const MkException& LastException() const {return m_lastException;}
 
 protected:
 	void NotifyException(const MkException& x_exeption);

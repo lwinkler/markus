@@ -37,8 +37,7 @@ Stream::Stream(const string& x_name, Module& rx_module, const string& rx_descrip
 	mr_module(rx_module),
 	m_description(rx_description),
 	m_requirement(rx_requirement),
-	m_timeStamp(TIME_STAMP_INITIAL),
-	m_connected(nullptr)
+	m_timeStamp(TIME_STAMP_MIN)
 {
 }
 

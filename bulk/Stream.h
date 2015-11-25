@@ -37,6 +37,8 @@ public:
 	Stream(const std::string& x_name, Module& rx_module, const std::string& rx_description, const std::string& rx_requirement = "");
 	virtual ~Stream();
 
+	inline void Reset(){m_timeStamp = TIME_STAMP_MIN;}
+
 	virtual const std::string& GetClass() const = 0;
 	virtual const std::string& GetType() const = 0;
 	inline const std::string& GetName() const {return m_name;}
@@ -87,9 +89,9 @@ protected:
 	std::string m_description;
 	std::atomic<TIME_STAMP> m_timeStamp;
 
-	Stream * m_connected;
-	bool m_blocking     = true;
-	bool m_synchronized = true;
+	Stream * m_connected = nullptr;
+	bool m_blocking      = true;
+	bool m_synchronized  = true;
 	std::string m_requirement;
 
 private:

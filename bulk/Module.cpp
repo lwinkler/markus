@@ -50,7 +50,7 @@ Module::Module(ParameterStructure& xr_params) :
 
 	m_countProcessedFrames = 0;
 	m_lastTimeStamp        = TIME_STAMP_MIN;
-	m_currentTimeStamp     = TIME_STAMP_INITIAL;
+	m_currentTimeStamp     = TIME_STAMP_MIN;
 	m_unsyncWarning        = true;
 	m_isUnitTestingEnabled = true;
 }
@@ -73,8 +73,11 @@ Module::~Module()
 */
 void Module::Reset()
 {
-	Processable::Reset();
 	LOG_INFO(m_logger, "Reseting module "<<GetName());
+	Processable::Reset();
+
+	for(auto& stream : m_outputStreams)
+		stream.second->Reset();
 
 	m_param.PrintParameters();
 	m_param.CheckRange(true);

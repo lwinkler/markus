@@ -285,11 +285,17 @@ void Manager::Reset(bool x_resetInputs)
 void Manager::Process()
 {
 	assert(m_isConnected); // Modules must be connected before processing
+	int cpt = 0;
+	MkException lastException(MK_EXCEPTION_NORMAL, "normal", "No exception was thrown", "", "");
 
 	for(auto & elem : m_autoProcessedModules)
 	{
 		LOG_DEBUG(m_logger, "Call Process on module " << elem->GetName());
-		elem->Process();
+		if(!elem->ProcessAndCatch())
+		{
+			cpt++;
+			lastException = elem->LastException();
+		}
 	}
 
 	m_frameCount++;
@@ -307,6 +313,12 @@ void Manager::Process()
 	{
 		SendCommand(command.name, command.value);
 		//m_continueFlag = true;
+	}
+
+	if(cpt > 0)
+	{
+		LOG_WARN(m_logger, "Found " << cpt << " exception(s), the last one is " << lastException);
+		throw lastException;
 	}
 
 	return;
@@ -378,7 +390,11 @@ bool Manager::AbortCondition() const
 	for(const auto & elem : m_inputs)
 	{
 		if(!elem->IsEndOfStream())
+		{
+			cout << elem->GetName() << endOfStreams << endl;
 			endOfStreams = false;
+			break;
+		}
 	}
 	return endOfStreams;
 }

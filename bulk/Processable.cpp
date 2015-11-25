@@ -32,7 +32,7 @@ log4cxx::LoggerPtr Processable::m_logger(log4cxx::Logger::getLogger("Processable
 
 Processable::Processable(ParameterStructure& xr_params) :
 	Configurable(xr_params),
-	m_lastException(MK_EXCEPTION_NORMAL, "normal", "No exception were thrown", "", ""),
+	m_lastException(MK_EXCEPTION_NORMAL, "normal", "No exception was thrown", "", ""),
 	m_param(dynamic_cast<const Parameters&>(xr_params)),
 	m_interruptionManager(InterruptionManager::GetInst())
 {
@@ -104,7 +104,7 @@ void Processable::Stop()
 bool Processable::ProcessAndCatch()
 {
 	bool recover, continueFlag = true;
-	m_timerProcessing.Start();
+	m_timerProcessing.Start(); // TODO: make private and check
 	try
 	{
 		Process();
@@ -116,27 +116,6 @@ bool Processable::ProcessAndCatch()
 		m_lastException = e;
 		NotifyException(m_lastException);
 	}
-	catch(EndOfStreamException& e)
-	{
-		if(m_hasRecovered)
-		{
-			// This exception happens after a recovery, keep it!
-			m_lastException = e;
-			NotifyException(m_lastException);
-		}
-		recover = m_hasRecovered = false;
-
-		LOG_INFO(m_logger, GetName() << ": Exception raised (EndOfStream) : " << e.what());
-
-		// test if all inputs are over
-		if(AbortCondition())
-		{
-			InterruptionManager::GetInst().AddEvent("exception." + e.GetName());
-			// TODO: test what happens if the stream of a camera is cut
-			LOG_INFO(m_logger, "Abort condition has been fulfilled (end of all streams)");
-			continueFlag = false;
-		}
-	}
 	catch(MkException& e)
 	{
 		// InterruptionManager::GetInst().AddEvent("exception." + e.GetName());
@@ -147,7 +126,22 @@ bool Processable::ProcessAndCatch()
 			NotifyException(m_lastException);
 		}
 		recover = m_hasRecovered = false;
-		LOG_ERROR(m_logger, "(Markus exception " << e.GetCode() << "): " << e.what());
+
+		// note: handle errors by code as they may have been copied and de-generated
+		if(e.GetCode() == MK_EXCEPTION_ENDOFSTREAM)
+		{
+			LOG_INFO(m_logger, GetName() << ": Exception raised (EndOfStream) : " << e.what());
+
+			// test if all inputs are over
+			if(AbortCondition())
+			{
+				InterruptionManager::GetInst().AddEvent("exception." + e.GetName());
+				// TODO: test what happens if the stream of a camera is cut
+				LOG_INFO(m_logger, "Abort condition has been fulfilled (end of all streams)");
+				continueFlag = false;
+			}
+		}
+		else LOG_ERROR(m_logger, "(Markus exception " << e.GetCode() << "): " << e.what());
 	}
 	catch(exception& e)
 	{

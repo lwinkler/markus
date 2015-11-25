@@ -60,6 +60,7 @@ void ModuleTimer::Start(double x_fps)
 			usleep(us);
 			if(!m_processable.ProcessAndCatch())
 				break; // Stop(); // TODO: Handle break with exceptions
+			LOG_INFO(m_logger, "Exiting main loop");
 		}
 		Stop();
 	});
