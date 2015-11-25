@@ -106,7 +106,7 @@ public:
 
 	virtual void Reset();
 	virtual void Process();
-	bool ProcessingCondition();
+	bool ProcessingCondition() const;
 	inline bool AbortCondition() const override {return true;}
 
 	virtual const std::string& GetName() const override {return m_name;}
@@ -145,6 +145,7 @@ public:
 	inline bool IsUnitTestingEnabled() const {return m_isUnitTestingEnabled;}
 	inline TIME_STAMP GetCurrentTimeStamp() const {return m_currentTimeStamp;}
 	inline TIME_STAMP GetLastTimeStamp()    const {return m_lastTimeStamp;}
+	void ComputeCurrentTimeStamp();
 
 	void WriteToCache() const;
 	void ReadFromCache();

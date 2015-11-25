@@ -52,6 +52,7 @@ void TimedEvent::Reset()
 
 void TimedEvent::ProcessFrame()
 {
+	assert(m_currentTimeStamp != TIME_STAMP_MIN);
 	m_event.Clean();
 
 	LOG_DEBUG(m_logger, "Current and next timestamps " << m_currentTimeStamp << ">=" << m_nextEvent);

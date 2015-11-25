@@ -153,10 +153,9 @@ double Module::GetRecordingFps() const
 * 
 * note: We need this kind of condition since all preceeding modules will call Process
 */
-bool Module::ProcessingCondition()
+bool Module::ProcessingCondition() const
 {
 	TIME_STAMP syncTs = TIME_STAMP_MIN;
-	TIME_STAMP newTs  = TIME_STAMP_MIN;
 	for(const auto& elem : m_inputStreams)
 	{
 		if(!elem.second->IsConnected())
@@ -165,8 +164,6 @@ bool Module::ProcessingCondition()
 		LOG_DEBUG(m_logger, GetName() << ": Timestamp of input stream " << elem.second->GetName() << ":" << ts << ", last:" << m_lastTimeStamp << " " << elem.second->IsBlocking() << "," << elem.second->IsSynchronized());
 		if(elem.second->IsBlocking())
 		{
-			if(newTs == TIME_STAMP_MIN)
-				newTs = ts;
 			if(m_lastTimeStamp != TIME_STAMP_MIN)
 			{
 				if(ts <= m_lastTimeStamp || (m_param.fps != 0 && (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps < 1000))
@@ -181,9 +178,27 @@ bool Module::ProcessingCondition()
 				return false;
 		}
 	}
-	assert(newTs != TIME_STAMP_MIN); // module must have at least one connected and blocking input
-	m_currentTimeStamp = newTs;
 	return true;
+}
+
+/**
+* @brief Return the timestamp to use
+* 
+*/
+void Module::ComputeCurrentTimeStamp()
+{
+	// Return the timestamp of the first blocking input
+	for(const auto& elem : m_inputStreams)
+	{
+		if(elem.second->IsConnected() && elem.second->IsBlocking())
+		{
+			m_currentTimeStamp = elem.second->GetTimeStampConnected();
+			if(m_currentTimeStamp != TIME_STAMP_MIN)
+				return;
+		}
+	}
+	assert(IsAutoProcessed());
+	m_currentTimeStamp = 0;
 }
 
 /**
@@ -212,6 +227,8 @@ void Module::Process()
 #endif
 		if(!m_param.autoProcess && !ProcessingCondition())
 			return;
+		ComputeCurrentTimeStamp();
+
 		// Process this frame
 
 		// Timer for benchmark
@@ -589,6 +606,9 @@ void Module::ProcessRandomInput(unsigned int& xr_seed)
 		xr_seed = lastseed;
 		elem.second->Randomize(xr_seed);
 	}
+	if(m_currentTimeStamp == TIME_STAMP_MIN)
+		m_currentTimeStamp = 0;
+	else m_currentTimeStamp += static_cast<float>(rand_r(&xr_seed)) / RAND_MAX;
 	ProcessFrame();
 };
 
