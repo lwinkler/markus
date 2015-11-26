@@ -64,6 +64,17 @@ void ParameterStructure::Init()
 /**
 * @brief Set the value from xml configuration
 */
+void ParameterStructure::LockIfRequired()
+{
+	for(auto& param : m_list)
+	{
+		param->LockIfRequired();
+	}
+}
+
+/**
+* @brief Set the value from xml configuration
+*/
 void ParameterStructure::SetFromConfig()
 {
 	for(const auto& conf : m_configReader.FindAll("parameters>param"))

@@ -32,11 +32,12 @@ class Feature;
 class Module;
 class ConfigReader;
 class Controller;
+class Processable;
 
-typedef FactoryT<std::string, Module, ParameterStructure&>       FactoryModules;
+typedef FactoryT<std::string, Module, ParameterStructure&>             FactoryModules;
 typedef FactoryT<std::string, ParameterStructure, const ConfigReader&> FactoryParameters;
 typedef FactoryT<std::string, Feature>                                 FactoryFeatures;
-typedef FactoryT<ParameterType, Controller, Parameter&>                FactoryParameterController;
+typedef FactoryT<ParameterType, Controller, Parameter&, Processable&>  FactoryParameterController;
 
 
 /// This class is a factory for modules: it creates a module of each type as specified by a string

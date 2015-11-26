@@ -36,8 +36,9 @@ using namespace std;
 */
 void ControllerEvent::Validate(string* xp_value)
 {
-	module.ValidateLastEvent();
-	module.PopEvent();
+	Processable::WriteLock lock(m_module.RefLock());
+	m_module.ValidateLastEvent();
+	m_module.PopEvent();
 }
 
 /**
@@ -47,13 +48,14 @@ void ControllerEvent::Validate(string* xp_value)
 */
 void ControllerEvent::Invalidate(string* xp_value)
 {
-	module.InvalidateLastEvent();
-	module.PopEvent();
+	Processable::WriteLock lock(m_module.RefLock());
+	m_module.InvalidateLastEvent();
+	m_module.PopEvent();
 }
 
 ControllerEvent::ControllerEvent(ClassifyEvents& rx_module) :
 	Controller("event"),
-	module(rx_module)
+	m_module(rx_module)
 {
 	m_actions.insert(make_pair("Validate",   &ControllerEvent::Validate));
 	m_actions.insert(make_pair("Invalidate", &ControllerEvent::Invalidate));

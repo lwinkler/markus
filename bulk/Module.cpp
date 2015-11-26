@@ -50,8 +50,7 @@ Module::Module(ParameterStructure& xr_params) :
 
 	m_countProcessedFrames = 0;
 	m_lastTimeStamp        = TIME_STAMP_MIN;
-	m_currentTimeStamp     = TIME_STAMP_INITIAL;
-	m_isReady              = false;
+	m_currentTimeStamp     = TIME_STAMP_MIN;
 	m_unsyncWarning        = true;
 	m_isUnitTestingEnabled = true;
 }
@@ -74,16 +73,11 @@ Module::~Module()
 */
 void Module::Reset()
 {
-	Processable::Reset();
 	LOG_INFO(m_logger, "Reseting module "<<GetName());
+	Processable::Reset();
 
-	// Lock the parameters that cannot be changed
-	m_param.LockParameterByName("class");
-	m_param.LockParameterByName("width");
-	m_param.LockParameterByName("height");
-	m_param.LockParameterByName("type");
-	m_param.LockParameterByName("auto_process");
-	m_param.LockParameterByName("allow_unsync_input");
+	for(auto& stream : m_outputStreams)
+		stream.second->Reset();
 
 	m_param.PrintParameters();
 	m_param.CheckRange(true);
@@ -91,6 +85,9 @@ void Module::Reset()
 	m_timerProcessing.Reset();
 	m_timerWaiting.Reset();
 	m_timerConversion.Reset();
+
+	// Lock all parameters if needed
+	m_param.LockIfRequired();
 
 	// This must be done only once to avoid troubles in the GUI
 	// Add module controller
@@ -102,7 +99,7 @@ void Module::Reset()
 		// Do not add param if locked or already present
 		if(elem->IsLocked() || HasController(elem->GetName()))
 			continue;
-		Controller* ctr = Factories::parameterControllerFactory().Create(elem->GetType(), *elem);
+		Controller* ctr = Factories::parameterControllerFactory().Create(elem->GetType(), *elem, *this);
 		if(ctr == nullptr)
 			throw MkException("Controller creation failed", LOC);
 		else AddController(ctr);
@@ -152,115 +149,164 @@ double Module::GetRecordingFps() const
 }
 
 /**
-* @brief Process one frame
+* @brief Return true if all conditions for processing are met (all blocking inputs have received a frame, all are syncronized)
+* 
+* note: We need this kind of condition since all preceeding modules will call Process
 */
-bool Module::Process()
+bool Module::ProcessingCondition() const
 {
-	LockForWrite();
-	if(m_pause)
+	TIME_STAMP syncTs = TIME_STAMP_MIN;
+	for(const auto& elem : m_inputStreams)
 	{
-		Unlock();
-		return true;
+		if(!elem.second->IsConnected())
+			continue;
+		TIME_STAMP ts = elem.second->GetTimeStampConnected();
+		LOG_DEBUG(m_logger, GetName() << ": Timestamp of input stream " << elem.second->GetName() << ":" << ts << ", last:" << m_lastTimeStamp << " " << elem.second->IsBlocking() << "," << elem.second->IsSynchronized());
+		if(elem.second->IsBlocking())
+		{
+			if(m_lastTimeStamp != TIME_STAMP_MIN)
+			{
+				if(ts <= m_lastTimeStamp || (m_param.fps != 0 && (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps < 1000))
+					return false;
+			}
+		}
+		if(elem.second->IsSynchronized())
+		{
+			if(syncTs == TIME_STAMP_MIN)
+				syncTs = ts;
+			else if(ts != syncTs)
+				return false;
+		}
 	}
+	return true;
+}
+
+/**
+* @brief Return the timestamp to use
+* 
+*/
+void Module::ComputeCurrentTimeStamp()
+{
+	// Return the timestamp of the first blocking input
+	for(const auto& elem : m_inputStreams)
+	{
+		if(elem.second->IsConnected() && elem.second->IsBlocking())
+		{
+			m_currentTimeStamp = elem.second->GetTimeStampConnected();
+			if(m_currentTimeStamp != TIME_STAMP_MIN)
+				return;
+		}
+	}
+	assert(IsAutoProcessed());
+	m_currentTimeStamp = 0;
+}
+
+/**
+* @brief Process one frame
+* @return True if the frame was processed
+*/
+void Module::Process()
+{
+	WriteLock lock(m_lock);
 	try
 	{
-		if(!m_isReady)
-			throw MkException("Module must be ready before processing", LOC);
-
+		/*
 		// Timestamp of the module is given by the input stream
 		m_currentTimeStamp = 0;
 		if(!m_inputStreams.empty())
 		{
-			// m_inputStreams[0]->LockModuleForRead();
 			m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected();
-			// m_inputStreams[0]->UnLockModule();
 		}
 		else if(! m_param.autoProcess)
-			throw MkException("Module must have at least one input or have parameter auto_process=true", LOC);
+			throw MkException("Module must have at least one input or have parameter auto_process=true", LOC); // TODO: Check at the beginnning
+			*/
 
 #ifdef MARKUS_DEBUG_STREAMS
 		// if(m_currentTimeStamp == m_lastTimeStamp)
 			// LOG_WARN(m_logger, "Timestamp are not increasing correctly");
 #endif
-		if(m_param.autoProcess || (m_param.fps == 0 && m_currentTimeStamp != m_lastTimeStamp) || (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps > 1000)
+		if(!m_param.autoProcess && !ProcessingCondition())
+			return;
+		ComputeCurrentTimeStamp();
+
+		// Process this frame
+
+		// Timer for benchmark
+		m_timerConversion.Start();
+
+		// cout<<GetName()<<" "<<m_currentTimeStamp<<" "<<m_lastTimeStamp<<endl;
+
+		// Check that all inputs are in sync
+		/*
+		if(! m_param.allowUnsyncInput && m_unsyncWarning)
+			for(unsigned int i = 1 ; i < m_inputStreams.size() ; i++)
+			{
+				Stream& stream(*m_inputStreams.at(i));
+				if(stream.IsConnected() && stream.GetTimeStampConnected() != m_currentTimeStamp)
+				{
+					LOG_WARN(m_logger, "Input stream id="<<i<<" is not in sync with input stream id=0 for module "<<GetName()<<". If this is acceptable set parameter allow_unsync_input=1 for this module. To fix this problem cleanly you should probably set parameters auto_process=0 and fps=0 for the modules located between the input and module "<<GetName()<<".");
+					m_unsyncWarning = false;
+				}
+			}
+			*/
+
+		// note: Inputs must call ProcessFrame to set the time stamp
+		// TODO: There is no reason to cache input modules !
+		if(m_param.cached < CachedState::READ_CACHE || IsInput())
 		{
-			// Process this frame
-
-			// Timer for benchmark
-			m_timerConversion.Start();
-
-			// cout<<GetName()<<" "<<m_currentTimeStamp<<" "<<m_lastTimeStamp<<endl;
-
-			// Check that all inputs are in sync
-			if(! m_param.allowUnsyncInput && m_unsyncWarning)
-				for(unsigned int i = 1 ; i < m_inputStreams.size() ; i++)
+			// Read and convert inputs
+			if(IsInputProcessed())
+			{
+				for(auto & elem : m_inputStreams)
 				{
-					Stream& stream(*m_inputStreams.at(i));
-					if(stream.IsConnected() && stream.GetTimeStampConnected() != m_currentTimeStamp)
-					{
-						LOG_WARN(m_logger, "Input stream id="<<i<<" is not in sync with input stream id=0 for module "<<GetName()<<". If this is acceptable set parameter allow_unsync_input=1 for this module. To fix this problem cleanly you should probably set parameters auto_process=0 and fps=0 for the modules located between the input and module "<<GetName()<<".");
-						m_unsyncWarning = false;
-					}
+					Timer ti2;
+					//(*it)->LockModuleForRead();
+					// m_timerWaiting += ti2.GetMSecLong();
+					elem.second->ConvertInput();
+					//(*it)->UnLockModule();
 				}
-
-			// note: Inputs must call ProcessFrame to set the time stamp
-			// TODO: There is no reason to cache input modules !
-			if(m_param.cached < CachedState::READ_CACHE || IsInput())
-			{
-				// Read and convert inputs
-				if(IsInputProcessed())
-				{
-					for(auto & elem : m_inputStreams)
-					{
-						Timer ti2;
-						//(*it)->LockModuleForRead();
-						// m_timerWaiting += ti2.GetMSecLong();
-						elem.second->ConvertInput();
-						//(*it)->UnLockModule();
-					}
-					//assert(m_currentTimeStamp == m_inputStreams[0]->GetTimeStamp());
-				}
-				m_timerConversion.Stop();
-				m_timerProcessing.Start();
-
-				ProcessFrame();
-
-				m_timerProcessing.Stop();
+				//assert(m_currentTimeStamp == m_inputStreams[0]->GetTimeStamp());
 			}
-			if(m_param.cached == CachedState::READ_CACHE)
-			{
-				assert(!IsInput());
-				m_timerProcessing.Start();
-				ReadFromCache();
-				m_timerProcessing.Stop();
-			}
+			m_timerConversion.Stop();
+			m_timerProcessing.Start();
 
-			// Propagate time stamps to outputs
-			for(auto & elem : m_outputStreams)
-				elem.second->SetTimeStamp(m_currentTimeStamp);
+			ProcessFrame();
 
-			// Write outputs to cache
-			if(m_param.cached == CachedState::WRITE_CACHE)
-			{
-				WriteToCache();
-			}
-
-			// Call depending modules (modules with fps = 0)
-			for(auto & elem : m_modulesDepending)
-				(elem)->Process();
-
-			m_countProcessedFrames++;
-			m_lastTimeStamp = m_currentTimeStamp;
+			m_timerProcessing.Stop();
 		}
+		if(m_param.cached == CachedState::READ_CACHE)
+		{
+			assert(!IsInput());
+			m_timerProcessing.Start();
+			ReadFromCache();
+			m_timerProcessing.Stop();
+		}
+
+		// Propagate time stamps to outputs
+		for(auto & elem : m_outputStreams)
+			elem.second->SetTimeStamp(m_currentTimeStamp);
+
+		// Write outputs to cache
+		if(m_param.cached == CachedState::WRITE_CACHE)
+		{
+			WriteToCache();
+		}
+
+		// Call depending modules (modules with fps = 0)
+		//TODO if PropagateCondition()
+		for(auto & elem : m_modulesDepending)
+			elem->Process();
+
+
+		m_countProcessedFrames++;
+		m_lastTimeStamp = m_currentTimeStamp;
 	}
 	catch(...)
 	{
 		LOG_WARN(m_logger, "Exception in module " << GetName());
-		Unlock();
 		throw;
 	}
-	Unlock();
-	return true;
+	return;
 }
 
 /**
@@ -277,7 +323,7 @@ void Module::Export(ostream& rx_os, int x_indentation)
 	tabs = string(x_indentation + 1, '\t');
 	rx_os<<tabs<<"<parameters>"<<endl;
 	for(const auto & elem : m_param.GetList())
-		(elem)->Export(rx_os, x_indentation + 2);
+		elem->Export(rx_os, x_indentation + 2);
 	rx_os<<tabs<<"</parameters>"<<endl;
 
 	rx_os<<tabs<<"<inputs>"<<endl;
@@ -350,7 +396,6 @@ void Module::Serialize(ostream& x_out, const string& x_dir) const
 
 	root["id"]                   = m_id;
 	root["name"]                 = m_name;
-	root["pause"]                = m_pause;
 	// root["timer_conversion"]      = m_timerConversion.GetMsLong();
 	// root["timer_processing"]      = m_timerProcessing.GetMsLong();
 	// root["timer_waiting"]         = m_timerWaiting.GetMsLong();
@@ -395,7 +440,6 @@ void Module::Deserialize(istream& x_in, const string& x_dir)
 
 	m_id                   = root["id"].asInt();
 	m_name                 = root["name"].asString();
-	m_pause                = root["pause"].asBool();
 	// m_timerConversion      = root["timer_conversion"].asInt64();
 	// m_timerProcessing      = root["timer_processing"].asInt64();
 	// m_timerWaiting         = root["timer_waiting"].asInt64();
@@ -440,27 +484,12 @@ void Module::Deserialize(istream& x_in, const string& x_dir)
 }
 
 /**
-* @brief Check that all inputs are ready (they are connected to a working module)
-*
-* @return True if all are ready
-*/
-bool Module::AllInputsAreReady() const
-{
-	for(const auto & elem : m_inputStreams)
-	{
-		if(elem.second->IsConnected() && !elem.second->GetConnected().IsReady())
-			return false;
-	}
-	return true;
-}
-
-/**
 * @brief Return a reference to the master module. The master module is the preceeding module that is
  	 responsible for calling the process method. The first connected input determines what module is master.
 *
 * @return The master module
 */
-const Module& Module::GetMasterModule() const
+const Module& Module::GetMasterModule() const // TODO remove this after implementing new connection mode
 {
 	for(const auto & elem : m_inputStreams)
 	{
@@ -473,21 +502,8 @@ const Module& Module::GetMasterModule() const
 				return preceding.GetMasterModule();
 		}
 	}
-	throw MkException("Module must have at least one input connected or have auto_process=1", LOC);
+	throw MkException("Module must have at least one input connected or be an input or be autoprocessed", LOC);
 }
-
-/**
-* @brief Set as ready (and all inputs too)
-*/
-void Module::SetAsReady()
-{
-	m_isReady = true;
-	for(auto & elem : m_outputStreams)
-	{
-		elem.second->SetAsReady();
-	}
-}
-
 
 /**
 * @brief Add an input stream
@@ -590,6 +606,9 @@ void Module::ProcessRandomInput(unsigned int& xr_seed)
 		xr_seed = lastseed;
 		elem.second->Randomize(xr_seed);
 	}
+	if(m_currentTimeStamp == TIME_STAMP_MIN)
+		m_currentTimeStamp = 0;
+	else m_currentTimeStamp += static_cast<float>(rand_r(&xr_seed)) / RAND_MAX;
 	ProcessFrame();
 };
 

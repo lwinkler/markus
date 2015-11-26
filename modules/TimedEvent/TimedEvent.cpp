@@ -47,18 +47,19 @@ TimedEvent::~TimedEvent(void)
 void TimedEvent::Reset()
 {
 	Module::Reset();
-	m_nextEvent = TIME_STAMP_INITIAL;
+	m_nextEvent = TIME_STAMP_MIN;
 }
 
 void TimedEvent::ProcessFrame()
 {
+	assert(m_currentTimeStamp != TIME_STAMP_MIN);
 	m_event.Clean();
 
 	LOG_DEBUG(m_logger, "Current and next timestamps " << m_currentTimeStamp << ">=" << m_nextEvent);
 
 	if(m_currentTimeStamp >= m_nextEvent)
 	{
-		if(m_nextEvent == TIME_STAMP_INITIAL)
+		if(m_nextEvent == TIME_STAMP_MIN)
 		{
 			m_nextEvent = m_currentTimeStamp + m_param.timeInterval * 1000;
 		}

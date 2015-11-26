@@ -37,6 +37,7 @@ using namespace std;
 */
 void ControllerManager::Reset(string* xp_value)
 {
+	Processable::WriteLock lock(manager.RefLock());
 	manager.Reset();
 }
 
@@ -47,17 +48,18 @@ void ControllerManager::Reset(string* xp_value)
 */
 void ControllerManager::ResetExceptInputs(string* xp_value)
 {
+	Processable::WriteLock lock(manager.RefLock());
 	manager.Reset(false);
 }
 
 /**
-* @brief Command: Pause all the modules
+* @brief Command: Start all the modules
 *
 * @param xp_value unused
 */
-void ControllerManager::Pause(string* xp_value)
+void ControllerManager::Start(string* xp_value)
 {
-	manager.Pause(true);
+	manager.Start();
 }
 
 /**
@@ -72,13 +74,13 @@ void ControllerManager::Quit(string* xp_value)
 
 
 /**
-* @brief Command: Unpause all the modules
+* @brief Command: Stop all the modules
 *
 * @param xp_value
 */
-void ControllerManager::Unpause(string* xp_value)
+void ControllerManager::Stop(string* xp_value)
 {
-	manager.Pause(false);
+	manager.Stop();
 }
 
 /**
@@ -88,10 +90,8 @@ void ControllerManager::Unpause(string* xp_value)
 */
 void ControllerManager::ProcessOne(string* xp_value)
 {
-	manager.Pause(false);
-	manager.Unlock();
-	manager.Process();
-	manager.Pause(true);
+	manager.Stop();
+	manager.ProcessAndCatch();
 }
 
 /**
@@ -101,6 +101,7 @@ void ControllerManager::ProcessOne(string* xp_value)
 */
 void ControllerManager::PrintStatistics(string* xp_value)
 {
+	Processable::ReadLock lock(manager.RefLock());
 	manager.PrintStatistics();
 }
 
@@ -111,6 +112,7 @@ void ControllerManager::PrintStatistics(string* xp_value)
 */
 void ControllerManager::Status(string* xp_value)
 {
+	Processable::ReadLock lock(manager.RefLock());
 	manager.Status();
 }
 
@@ -121,6 +123,7 @@ void ControllerManager::Status(string* xp_value)
 */
 void ControllerManager::WriteStateToDirectory(string* xp_value)
 {
+	Processable::ReadLock lock(manager.RefLock());
 	manager.WriteStateToDirectory("state_" + timeStamp());
 }
 
@@ -131,8 +134,8 @@ ControllerManager::ControllerManager(Manager& rx_manager) :
 	m_actions.insert(make_pair("Reset",              &ControllerManager::Reset));
 	m_actions.insert(make_pair("ResetExceptInputs",  &ControllerManager::ResetExceptInputs));
 	m_actions.insert(make_pair("Quit",               &ControllerManager::Quit));
-	m_actions.insert(make_pair("Pause",              &ControllerManager::Pause));
-	m_actions.insert(make_pair("Unpause",            &ControllerManager::Unpause));
+	m_actions.insert(make_pair("Start",              &ControllerManager::Start));
+	m_actions.insert(make_pair("Stop",               &ControllerManager::Stop));
 	m_actions.insert(make_pair("ProcessOne",         &ControllerManager::ProcessOne));
 	m_actions.insert(make_pair("PrintStatistics",    &ControllerManager::PrintStatistics));
 	m_actions.insert(make_pair("Status",             &ControllerManager::Status));

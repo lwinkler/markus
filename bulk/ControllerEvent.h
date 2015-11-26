@@ -50,6 +50,6 @@ public:
 
 protected:
 	std::map<std::string, const action> m_actions;
-	ClassifyEvents  & module;
+	ClassifyEvents  & m_module;
 };
 #endif

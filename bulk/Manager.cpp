@@ -34,6 +34,7 @@
 #include "util.h"
 
 #include <fstream>
+#include <boost/lexical_cast.hpp>
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/writer.h>
 
@@ -46,20 +47,11 @@ Manager::Manager(ParameterStructure& xr_params) :
 	Processable(xr_params),
 	m_param(dynamic_cast<Parameters&>(xr_params)),
 	mr_parametersFactory(Factories::parametersFactory()),
-	mr_moduleFactory(Factories::modulesFactory()),
-	mr_parameterFactory(Factories::parametersFactory()),
-	m_lastException(MK_EXCEPTION_NORMAL, "normal", "No exception were thrown", "", ""),
-	m_interruptionManager(InterruptionManager::GetInst())
+	mr_moduleFactory(Factories::modulesFactory())
 {
 	LOG_INFO(m_logger, "Create manager");
 	m_frameCount = 0;
 	m_isConnected = false;
-	m_continueFlag = true;
-	m_hasRecovered = true;
-
-	m_inputs.clear();
-	m_modules.clear();
-	m_parameters.clear();
 
 	for(const auto& moduleConfig : m_param.GetConfig().FindAll("module", true))
 	{
@@ -70,25 +62,48 @@ Manager::Manager(ParameterStructure& xr_params) :
 		ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, moduleConfig);
 		Module * tmp1 = mr_moduleFactory.Create(moduleType, *tmp2);
 
-		// Add to inputs if an input
+		if(m_param.centralized)
+			tmp1->AllowAutoProcess(false);
+		LOG_DEBUG(m_logger, "Add module " << tmp1->GetName() << " to list input=" << (tmp1->IsInput() ? "yes" : "no"));
 		m_modules.push_back(tmp1);
 		m_parameters.push_back(tmp2);
+
+		// Add to inputs if an input
 		if(tmp1->IsInput())
-			m_inputs.push_back(tmp1);
+		{
+			Input* tmpi = dynamic_cast<Input*>(tmp1);
+			assert(tmpi != nullptr);
+			m_inputs.push_back(tmpi);
+		}
+		if(tmp1->IsAutoProcessed())
+			m_autoProcessedModules.push_back(tmp1);
 	}
+}
+
+void Manager::Start()
+{
+	for(auto & elem : m_autoProcessedModules)
+		elem->Start();
+	Processable::Start();
+}
+
+
+void Manager::Stop()
+{
+	for(auto & elem : m_autoProcessedModules)
+		elem->Stop();
+	Processable::Stop();
 }
 
 Manager::~Manager()
 {
 	PrintStatistics();
 
-
 	for(auto & elem : m_modules)
 		delete elem;
 
 	for(auto & elem : m_parameters)
 		delete elem;
-
 }
 
 /**
@@ -96,8 +111,6 @@ Manager::~Manager()
 */
 void Manager::Connect()
 {
-	bool centralized = m_param.autoProcess;
-
 	Processable::Reset();
 
 	if(m_isConnected)
@@ -109,10 +122,6 @@ void Manager::Connect()
 		int moduleId = atoi(moduleConfig.GetAttribute("id").c_str());
 		Module& module = RefModuleById(moduleId);
 
-		// If the module is automatically processed: set as ready
-		if(module.IsAutoProcessed())
-			module.SetAsReady();
-
 		// For each module
 		// Read conections of inputs
 		for(const auto& inputConfig : moduleConfig.Find("inputs").FindAll("input"))
@@ -120,18 +129,23 @@ void Manager::Connect()
 			// Check if connected to our previous module
 			try
 			{
-				int inputId        = atoi(inputConfig.GetAttribute("id").c_str());
+				int inputId        = boost::lexical_cast<int>(inputConfig.GetAttribute("id"));
 				const string& tmp1 = inputConfig.GetAttribute("moduleid", "");
 				const string& tmp2 = inputConfig.GetAttribute("outputid", "");
+				const string& tmp3 = inputConfig.GetAttribute("block", "1");
+				const string& tmp4 = inputConfig.GetAttribute("sync", "1");
 				if(tmp1 != "" && tmp2 != "")
 				{
-					int outputModuleId    = atoi(tmp1.c_str());
-					int outputId          = atoi(tmp2.c_str());
+					int outputModuleId   = boost::lexical_cast<int>(tmp1);
+					int outputId         = boost::lexical_cast<int>(tmp2);
 					Stream& inputStream  = module.RefInputStreamById(inputId);
+					inputStream.SetBlocking(boost::lexical_cast<bool>(tmp3));
+					inputStream.SetSynchronized(boost::lexical_cast<bool>(tmp4));
 					Stream& outputStream = RefModuleById(outputModuleId).RefOutputStreamById(outputId);
 
 					// Connect input and output streams
 					inputStream.Connect(&outputStream);
+					RefModuleById(outputModuleId).AddDependingModule(module);
 				}
 			}
 			catch(MkException& e)
@@ -142,11 +156,19 @@ void Manager::Connect()
 		}
 	}
 
+/*
 	// Set the master module for each module
 	//    the master module is the module responsible to call the Process method
 	bool changed = true;
 	bool ready = true;
-	vector<Module*> newOrder = m_inputs;
+	vector<Module*> newOrder;
+
+	for(auto mod : m_modules)
+		if(mod->IsAutoProcessed() || mod->IsInput())
+		{
+			LOG_DEBUG(m_logger, "Add autoprocessing module " << mod->GetName());
+			newOrder.push_back(mod);
+		}
 
 	while(changed)
 	{
@@ -154,17 +176,17 @@ void Manager::Connect()
 		ready = true;
 		for(auto & elem : m_modules)
 		{
-			if(!(elem)->IsReady())
+			if(!elem->IsReady())
 			{
 				ready = false;
-				if((elem)->AllInputsAreReady())
+				if(elem->AllInputsAreReady())
 				{
-					(elem)->SetAsReady();
-					if(centralized)
+					elem->SetAsReady();
+					if(m_param.centralized)
 						newOrder.push_back(elem);
 					else
 					{
-						Module& master = RefModuleByName((elem)->GetMasterModule().GetName());
+						Module& master = RefModuleByName(elem->GetMasterModule().GetName());
 						master.AddDependingModule(*elem);
 					}
 					// cout<<"Set module "<<depending->GetName()<<" as ready"<<endl;
@@ -174,13 +196,44 @@ void Manager::Connect()
 		}
 	}
 	// If centralized reorder the module list
-	if(centralized)
+	if(m_param.centralized)
+	{
+		assert(m_modules.size() == newOrder.size());
 		m_modules = newOrder;
+	}
 
 	if(! ready)
 		throw MkException("Not all modules can be assigned to a master. There is probably a problem with the connections between modules.", LOC);
 
+	*/
+	Check();
 	m_isConnected = true;
+}
+
+/**
+* @brief Check if modules are correctly connected
+*
+*/
+void Manager::Check() const
+{
+	for(auto& module : m_modules)
+	{
+		if(!module->IsInput())
+		{
+			bool bc = false;
+			// Check that at least one blocking input is connected
+			for(auto& input : module->GetInputStreamList())
+			{
+				if(input.second->IsBlocking() && input.second->IsConnected())
+				{
+					bc = true;
+					break;
+				}
+			}
+			if(!bc)
+				throw MkException("Module " + module->GetName() + " must have at least one blocking input that is connected", LOC);
+		}
+	}
 }
 
 /**
@@ -190,21 +243,20 @@ void Manager::Connect()
 */
 void Manager::Reset(bool x_resetInputs)
 {
+	Processable::Reset();
 	m_interruptionManager.Configure(m_param.GetConfig());
 
 	// Reset timers
 	// m_timerConvertion = 0;
-	m_timerProcessing.Reset();
 
 	// Reset all modules (to set the module timer)
 	for(auto & elem : m_modules)
 	{
-		if(x_resetInputs || !(elem)->IsInput())
+		if(x_resetInputs || !elem->IsInput())
 		{
 			// If manager is in autoprocess, modules must not be
-			(elem)->AllowAutoProcess(!m_param.autoProcess);
-			(elem)->SetRealTime(!m_param.fast);
-			(elem)->Reset();
+			elem->SetRealTime(!m_param.fast);
+			elem->Reset();
 		}
 	}
 	if(!HasController("manager"))
@@ -217,13 +269,11 @@ void Manager::Reset(bool x_resetInputs)
 		// Do not add param if locked or already present
 		if(elem->IsLocked() || HasController(elem->GetName()))
 			continue;
-		Controller* ctr = Factories::parameterControllerFactory().Create(elem->GetType(), *elem);
+		Controller* ctr = Factories::parameterControllerFactory().Create(elem->GetType(), *elem, *this);
 		if(ctr == nullptr)
 			throw MkException("Controller creation failed", LOC);
 		else AddController(ctr);
 	}
-	m_hasRecovered = true;
-	m_continueFlag = true;
 	m_frameCount = 0;
 }
 
@@ -232,144 +282,46 @@ void Manager::Reset(bool x_resetInputs)
 *
 * @return False if the processing must be stopped
 */
-bool Manager::Process()
+void Manager::Process()
 {
-	if(!m_isConnected)
-		throw MkException("Modules must be connected before processing", LOC);
+	assert(m_isConnected); // Modules must be connected before processing
+	int cpt = 0;
+	MkException lastException(MK_EXCEPTION_NORMAL, "normal", "No exception was thrown", "", "");
 
-	if(!TryLockForWrite())
+	for(auto & elem : m_autoProcessedModules)
 	{
-		// LOG_WARN(m_logger, "Manager too slow !"); // Note: this happens every time
-		return true;
-	}
-	if(m_pause)
-	{
-		Unlock();
-		return true;
-	}
-	m_timerProcessing.Start();
-	bool recover = true;
-
-	for(auto & elem : m_modules)
-	{
-		try
+		LOG_DEBUG(m_logger, "Call Process on module " << elem->GetName());
+		if(!elem->ProcessAndCatch())
 		{
-			// if((*it)->IsAutoProcessed())
-			// Note: Since we are in centralized mode, all modules are called directly from the master
-			elem->Process();
-		}
-		catch(FatalException& e)
-		{
-			LOG_ERROR(m_logger, (elem)->GetName() << ": Exception raised (FatalException), aborting : " << e.what());
-			m_continueFlag = recover = m_hasRecovered = false;
-		}
-		catch(EndOfStreamException& e)
-		{
-			if(m_hasRecovered)
-			{
-				// This exception happens after a recovery, keep it!
-				m_lastException = e;
-				NotifyException(m_lastException);
-			}
-			recover = m_hasRecovered = false;
-
-			LOG_INFO(m_logger, (elem)->GetName() << ": Exception raised (EndOfStream) : " << e.what());
-
-			// test if all inputs are over
-			if(EndOfAllStreams())
-			{
-				InterruptionManager::GetInst().AddEvent("exception." + e.GetName());
-				// TODO: test what happens if the stream of a camera is cut
-				LOG_INFO(m_logger, "End of all video streams : Manager::Process");
-				m_continueFlag = false;
-			}
-		}
-		catch(MkException& e)
-		{
-			// InterruptionManager::GetInst().AddEvent("exception." + e.GetName());
-			if(m_hasRecovered)
-			{
-				// This exception happens after a recovery, keep it!
-				m_lastException = e;
-				NotifyException(m_lastException);
-			}
-			recover = m_hasRecovered = false;
-			LOG_ERROR(m_logger, "(Markus exception " << e.GetCode() << "): " << e.what());
-		}
-		catch(exception& e)
-		{
-			if(m_hasRecovered)
-			{
-				// This exception happens after a recovery, keep it!
-				m_lastException = MkException((elem)->GetName() + " :" + string(e.what()), LOC);
-				NotifyException(m_lastException);
-			}
-			LOG_ERROR(m_logger, (elem)->GetName() << ": Exception raised (std::exception): " << e.what());
-		}
-		catch(string& str)
-		{
-			if(m_hasRecovered)
-			{
-				// This exception happens after a recovery, keep it!
-				m_lastException = MkException((elem)->GetName() + " :" + string(str), LOC);
-				NotifyException(m_lastException);
-			}
-			recover = m_hasRecovered = false;
-			LOG_ERROR(m_logger, (elem)->GetName() << ": Exception raised (string): " << str);
-		}
-		catch(const char* str)
-		{
-			if(m_hasRecovered)
-			{
-				// This exception happens after a recovery, keep it!
-				m_lastException = MkException((elem)->GetName() + " :" + string(str), LOC);
-				NotifyException(m_lastException);
-			}
-			recover = m_hasRecovered = false;
-			LOG_ERROR(m_logger, (elem)->GetName() << ": Exception raised (const char*): " << str);
-		}
-		catch(...)
-		{
-			if(m_hasRecovered)
-			{
-				// This exception happens after a recovery, keep it!
-				m_lastException = MkException((elem)->GetName() + ": Unknown", LOC);
-				NotifyException(m_lastException);
-			}
-			recover = m_hasRecovered = false;
-			LOG_ERROR(m_logger, (elem)->GetName() << ": Unknown exception raised");
+			cpt++;
+			lastException = elem->LastException();
 		}
 	}
 
-	// If a full processing cycle has been made without exception,
-	// we consider that the manager has recovered from exceptions
-	if(recover)
-		m_hasRecovered = true;
-	m_timerProcessing.Stop();
 	m_frameCount++;
 	if(m_frameCount % 100 == 0 && m_logger->isDebugEnabled())
 	{
 		PrintStatistics();
 	}
-	Unlock();
+
 	//if(m_frameCount % 20 == 0)
 	usleep(20); // This keeps the manager unlocked to allow the sending of commands // TODO find a cleaner way
 
-	// Send command generated by interruptions
-	m_continueFlag = m_continueFlag && (m_param.nbFrames == 0 || m_param.nbFrames != m_frameCount);
-
-	// note: we need send an event to stay in the loop
-	if(!m_continueFlag && m_param.autoProcess)
-		m_interruptionManager.AddEvent("event.stopped");
   
 	vector<Command> commands = m_interruptionManager.ReturnCommandsToSend();
 	for(const auto& command : commands)
 	{
 		SendCommand(command.name, command.value);
-		m_continueFlag = true;
+		//m_continueFlag = true;
 	}
 
-	return m_continueFlag;
+	if(cpt > 0)
+	{
+		LOG_WARN(m_logger, "Found " << cpt << " exception(s), the last one is " << lastException);
+		throw lastException;
+	}
+
+	return;
 }
 
 /**
@@ -388,17 +340,10 @@ void Manager::SendCommand(const string& x_command, string x_value)
 	// Note: We cast module/manager twice since we need functions from both parents
 	Controllable& contr  (elems.at(0) == "manager" ? dynamic_cast<Controllable&>(*this) : RefModuleByName(elems.at(0)));
 	Processable&  process(elems.at(0) == "manager" ? dynamic_cast<Processable&>(*this) : RefModuleByName(elems.at(0)));
-	try
-	{
-		process.LockForWrite();
-		contr.FindController(elems.at(1)).CallAction(elems.at(2), &x_value);
-		process.Unlock();
-	}
-	catch(...)
-	{
-		process.Unlock();
-		throw;
-	}
+
+	// WriteLock lock(process.RefLock());
+	contr.FindController(elems.at(1)).CallAction(elems.at(2), &x_value);
+
 	LOG_INFO(m_logger, "Command "<<x_command<<" returned value "<<x_value);
 }
 
@@ -435,43 +380,21 @@ void Manager::PrintStatistics()
 }
 
 /**
-* @brief Pause all modules
-*
-* @param x_pause Set or unset pause
-*/
-void Manager::Pause(bool x_pause)
-{
-	Processable::Pause(x_pause);
-	for(auto & elem : m_modules)
-		(elem)->Pause(x_pause);
-}
-
-/**
-* @brief Pause all inputs
-*
-* @param x_pause Set or unset pause
-*/
-void Manager::PauseInputs(bool x_pause)
-{
-	for(auto & elem : m_inputs)
-	{
-		(elem)->Pause(x_pause);
-	}
-}
-
-
-/**
 * @brief Check if end of all input streams
 *
 * @return True if all streams have ended
 */
-bool Manager::EndOfAllStreams() const
+bool Manager::AbortCondition() const
 {
 	bool endOfStreams = true;
 	for(const auto & elem : m_inputs)
 	{
-		if(!dynamic_cast<Input*>(elem)->IsEndOfStream())
+		if(!elem->IsEndOfStream())
+		{
+			cout << elem->GetName() << endOfStreams << endl;
 			endOfStreams = false;
+			break;
+		}
 	}
 	return endOfStreams;
 }
@@ -498,7 +421,7 @@ void Manager::CreateEditorFiles(const string& x_fileName)
 			moduleConfig.SetAttribute("id", id);
 			moduleConfig.FindRef("parameters>param[name=\"class\"]", true).SetValue(moduleType);
 
-			ParameterStructure* parameters = mr_parameterFactory.Create(moduleType, moduleConfig);
+			ParameterStructure* parameters = mr_parametersFactory.Create(moduleType, moduleConfig);
 			Module* module = mr_moduleFactory.Create(moduleType, *parameters);
 
 			modules_json.append(moduleType);
@@ -546,7 +469,7 @@ Module& Manager::RefModuleById(int x_id) const
 	Module* module = nullptr;
 	int found = 0;
 	for(const auto & elem : m_modules)
-		if((elem)->GetId() == x_id)
+		if(elem->GetId() == x_id)
 		{
 			module = elem;
 			found++;
@@ -563,29 +486,12 @@ Module& Manager::RefModuleById(int x_id) const
 Module& Manager::RefModuleByName(const string& x_name) const
 {
 	for(const auto & elem : m_modules)
-		if((elem)->GetName() == x_name)
+		if(elem->GetName() == x_name)
 			return *elem;
 	throw MkException("Cannot find module " + x_name, LOC);
 }
 
 
-/**
-* @brief Log the status of the application (last exception)
-*/
-void Manager::Status() const
-{
-	stringstream ss;
-	m_lastException.Serialize(ss, "");
-	Json::Value root;
-	ss >> root;
-	root["recovered"] = m_hasRecovered;
-	Event evt;
-	evt.Raise("status");
-	ss.clear();
-	ss << root;
-	evt.AddExternalInfo("exception", ss);
-	evt.Notify(GetContext(), true);
-}
 
 /**
 * @brief Return a directory that will contain all outputs files and logs. The dir is created at the first call of this method.
@@ -677,28 +583,13 @@ void Manager::WriteStateToDirectory(const string& x_directory) const
 	SYSTEM("mkdir -p " + directory);
 	for(const auto & elem : m_modules)
 	{
-		string fileName = directory + "/" + (elem)->GetName() + ".json";
+		string fileName = directory + "/" + elem->GetName() + ".json";
 		ofstream of;
 		of.open(fileName.c_str());
-		(elem)->Serialize(of, directory);
+		elem->Serialize(of, directory);
 		of.close();
 	}
 	LOG_INFO(m_logger, "Written state of the manager and all modules to " << directory);
 }
 
 
-/**
-* @brief Notify the parent process of an exception
-*
-* @param x_exception Exception to be notified
-*/
-void Manager::NotifyException(const MkException& x_exception)
-{
-	InterruptionManager::GetInst().AddEvent("exception." + x_exception.GetName());// TODO keep this here ?
-	stringstream ss;
-	x_exception.Serialize(ss, "");
-	Event ev;
-	ev.AddExternalInfo("exception", ss);
-	ev.Raise("exception");
-	ev.Notify(GetContext(), true);
-}

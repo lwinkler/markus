@@ -58,6 +58,7 @@ public:
 
 	void Capture();
 	virtual void Reset();
+	virtual double GetRecordingFps() const override;
 
 private:
 	const Parameters& m_param;

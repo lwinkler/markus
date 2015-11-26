@@ -62,7 +62,7 @@ protected:
 		manager.Reset();
 
 		for(int i = 0 ; i < 10 ; i++)
-			if(!manager.Process())
+			if(!manager.ProcessAndCatch())
 				break;
 	}
 

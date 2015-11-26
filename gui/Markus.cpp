@@ -174,9 +174,9 @@ void MarkusWindow::createActionsAndMenus()
 	for(const auto& elem : actions)
 	{
 		QAction* action = new QAction(elem.c_str(), this);
-		if(elem == "Pause")
+		if(elem == "Stop")
 			action->setShortcut(QKeySequence("p"));
-		else if(elem == "Unpause")
+		else if(elem == "Start")
 			action->setShortcut(QKeySequence("Shift+p"));
 		else if(elem == "Reset")
 			action->setShortcut(QKeySequence("Shift+r"));

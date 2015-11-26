@@ -21,7 +21,6 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include <QApplication>
 
 #include "Manager.h"
 #include "MkException.h"
@@ -30,6 +29,7 @@
 #include "Simulation.h"
 
 #ifndef MARKUS_NO_GUI
+#include <QApplication>
 #include "Editor.h"
 #include "Markus.h"
 #include "MarkusApplication.h"
@@ -41,6 +41,7 @@
 #include <cstdio>
 #include <log4cxx/xml/domconfigurator.h>
 #include <getopt.h>    /* for getopt_long; standard getopt is in unistd.h */
+#include <thread>
 
 using namespace std;
 
@@ -364,11 +365,12 @@ int main(int argc, char** argv)
 		}
 
 		// Set manager and context
-		Manager::Parameters parameters(appConfig);
+		Manager::Parameters managerParameters(appConfig);
 		// Override parameter auto_process with centralized
-		parameters.autoProcess = args.centralized;
-		parameters.fast = args.fast;
-		Manager manager(parameters);
+		managerParameters.autoProcess = false; // TODO: Use range
+		managerParameters.centralized = args.centralized;
+		managerParameters.fast = args.fast;
+		Manager manager(managerParameters);
 		manager.SetContext(context);
 
 		if(args.describe)
@@ -400,20 +402,40 @@ int main(int argc, char** argv)
 			// No gui. launch the process directly
 			// note: so far we cannot launch the process in a decentralized manner (with a timer on each module)
 
-			while(manager.Process())
+			if(!managerParameters.autoProcess && args.centralized)
 			{
-				// nothing
+				while(manager.ProcessAndCatch())
+				{
+					// nothing
+				}
+			}
+			else
+			{
+				manager.Start();
+				LOG_ERROR(logger, "Markus cannot run in decentralized mode without GUI yet.");
+				sleep(10); // TODO: This mode is not handled yet
 			}
 		}
 		else
 		{
+			std::thread th;
+			if(!managerParameters.autoProcess && args.centralized)
+			{
+				th = thread([&manager](){
+					while(manager.ProcessAndCatch())
+					{
+						// nothing
+					}
+				});
+			}
+			else manager.Start();
 #ifndef MARKUS_NO_GUI
 			ConfigFile mainGuiConfig("gui.xml", true);
 			ConfigReader guiConfig = mainGuiConfig.FindRef("gui[name=\"" + args.configFile + "\"]", true);
 			guiConfig.FindRef("parameters", true);
 
-			MarkusWindow::Parameters parameters(guiConfig);
-			MarkusWindow gui(parameters, manager);
+			MarkusWindow::Parameters windowParameters(guiConfig);
+			MarkusWindow gui(windowParameters, manager);
 			gui.setWindowTitle("Markus");
 			if(!args.nogui)
 				gui.show();
@@ -426,7 +448,10 @@ int main(int argc, char** argv)
 			LOG_ERROR(logger, "Markus was compiled without GUI. It can only be launched with option -nc");
 			returnValue = -1;
 #endif
+			if(!managerParameters.autoProcess && args.centralized)
+				th.join();
 		}
+		manager.Stop();
 
 		Event ev2;
 		ev2.Raise("stopped");

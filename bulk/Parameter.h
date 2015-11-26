@@ -61,10 +61,8 @@ public:
 
 	Parameter(const std::string& x_name, const std::string& x_description):
 		m_name(x_name),
-		m_confSource(PARAMCONF_UNSET),
-		m_description(x_description),
-		m_isLocked(false),
-		m_isHidden(false) {}
+		m_description(x_description)
+		{}
 	virtual ~Parameter() {}
 
 	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) = 0;
@@ -82,11 +80,13 @@ public:
 	virtual bool CheckRange() const = 0;
 	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const = 0;
 	virtual void Export(std::ostream& rx_os, int x_indentation) = 0;
-	inline void Lock()
-	{
-		m_isLocked = true;
-	}
+
+	/// Use this method to mark parameters that must not change value after initialization
+	inline void Lock(){m_requiresLock = true;}
+	/// Lock the parameter if required
+	inline void LockIfRequired(){if(m_requiresLock) m_isLocked = true;}
 	inline bool IsLocked() const {return m_isLocked;}
+	/// Mark the parameter as hidden (e.g. passwords)
 	inline void Hide() {m_isHidden = true;}
 	inline bool IsHidden() const {return m_isHidden;}
 
@@ -98,10 +98,12 @@ public:
 
 protected:
 	const std::string m_name;
-	ParameterConfigType m_confSource;
+	ParameterConfigType m_confSource = PARAMCONF_UNSET;
 	const std::string m_description;
-	bool m_isLocked;
-	bool m_isHidden;
+
+	bool m_requiresLock   = false;
+	bool m_isLocked       = false;
+	bool m_isHidden       = false;
 private:
 	static log4cxx::LoggerPtr m_logger;
 };

@@ -52,7 +52,6 @@
 <param name="height">48</param>
 <param name="type">CV_8UC3</param>
 <param name="fps">10</param>
-<param name="allow_unsync_input">1</param>
 </parameters>
 <inputs>
 <input id="0" moduleid="0" outputid="0"/>

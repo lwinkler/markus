@@ -37,6 +37,7 @@ using namespace std;
 */
 void ControllerInputStream::SetCursor(string* xp_value)
 {
+	Processable::WriteLock lock(m_module.RefLock());
 	if(xp_value != nullptr)
 		m_module.SetMsec(PSTR2FLOAT(xp_value));
 #ifndef MARKUS_NO_GUI
@@ -53,6 +54,7 @@ void ControllerInputStream::SetCursor(string* xp_value)
 */
 void ControllerInputStream::GetCursor(string* xp_value)
 {
+	Processable::ReadLock lock(m_module.RefLock());
 	if(xp_value != nullptr)
 	{
 		FLOAT2PSTR(m_module.GetMsec(), xp_value);

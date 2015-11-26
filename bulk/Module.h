@@ -39,7 +39,6 @@
 
 
 class Stream;
-class QModuleTimer;
 
 /**
 * @brief Class representing a module. A module is a node of the application, it processes streams
@@ -86,6 +85,13 @@ public:
 			m_list.push_back(new ParameterCachedState("cached" , CV_8UC1 , &cached   , "Format of the input image"));
 
 			Init();
+
+			// Lock the parameters that cannot be changed
+			LockParameterByName("class");
+			LockParameterByName("width");
+			LockParameterByName("height");
+			LockParameterByName("type");
+			LockParameterByName("auto_process");
 		}
 
 		int width;
@@ -99,9 +105,11 @@ public:
 	virtual ~Module();
 
 	virtual void Reset();
-	virtual bool Process();
+	virtual void Process();
+	bool ProcessingCondition() const;
+	inline bool AbortCondition() const override {return true;}
 
-	virtual const std::string& GetName() const {return m_name;}
+	virtual const std::string& GetName() const override {return m_name;}
 	virtual const std::string& GetClass() const = 0;
 	MKCATEG("Other");
 	virtual const std::string& GetDescription() const = 0;
@@ -128,18 +136,16 @@ public:
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 
-	virtual inline bool IsInput() {return false;}
+	virtual inline bool IsInput() const {return false;}
 	void Export(std::ostream& rx_os, int x_indentation);
 	Stream& RefInputStreamById(int x_id);
 	Stream& RefOutputStreamById(int x_id);
-	inline bool IsReady() {return IsAutoProcessed() || m_isReady;}
-	void SetAsReady();
-	bool AllInputsAreReady() const;
 	const Module& GetMasterModule() const;
 	inline void CheckParameterRange() {m_param.CheckRange(false);}
 	inline bool IsUnitTestingEnabled() const {return m_isUnitTestingEnabled;}
 	inline TIME_STAMP GetCurrentTimeStamp() const {return m_currentTimeStamp;}
 	inline TIME_STAMP GetLastTimeStamp()    const {return m_lastTimeStamp;}
+	void ComputeCurrentTimeStamp();
 
 	void WriteToCache() const;
 	void ReadFromCache();
@@ -156,7 +162,6 @@ protected:
 
 	TIME_STAMP m_lastTimeStamp;     // time stamp of the lastly processed input
 	TIME_STAMP m_currentTimeStamp;  // time stamp of the current input
-	bool m_isReady;
 	bool m_unsyncWarning;
 
 	virtual void ProcessFrame() = 0;

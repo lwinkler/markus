@@ -56,6 +56,7 @@ protected:
 		TS_ASSERT(xr_param.GetValueString() == x_legalValue);
 		TS_ASSERT(xr_param.GetConfigurationSource() == PARAMCONF_DEF);
 		xr_param.Lock();
+		xr_param.LockIfRequired();
 		TS_ASSERT(xr_param.IsLocked());
 
 		string fileName = "tests/tmp/" + xr_param.GetName() + ".xml";
