@@ -35,13 +35,16 @@ using namespace std;
 using namespace cv;
 
 
+
 class staticRegistration
 {
 	public:
 	staticRegistration()
 	{
+		cout << "idi \n";
 		// register the maker with the factory
 		Factories::modulesFactory().Register<VideoFileReader>("VideoFileReader");
+		Factories::parametersFactory().Register<VideoFileReader::Parameters>("VideoFileReader");
 	}
 };
 staticRegistration p;

@@ -49,7 +49,7 @@ void dynamicalLoading()
 {
 	static log4cxx::LoggerPtr logger(log4cxx::Logger::getLogger("dynamicalLoading"));
 
-	const char *cmd = "find modules/ modules2/ -name \"*.so\"";
+	const char *cmd = "find modules/ modules2/ -name \"*VideoFileReader.so\""; // TODO: All modules
 	char in_buf[BUF_SIZE]; // string to get dynamic lib names
 	std::list<void *> dl_list; // list to hold handles for dynamic libs
 	std::vector<std::string> moduleNames;  // vector of module types used to build menu
@@ -73,7 +73,8 @@ void dynamicalLoading()
 		// append ./ to the front of the lib name
 		sprintf(name, "./%s", in_buf);
 		LOG_DEBUG(logger, "Reading " << name);
-		void* dlib = dlopen(name, RTLD_NOW | RTLD_GLOBAL);
+		// void* dlib = dlopen(name, RTLD_NOW | RTLD_GLOBAL);
+		void* dlib = dlopen(name, RTLD_LAZY);
 		if(dlib == NULL)
 		{
 			LOG_ERROR(logger, "Error while loading module " << name << " dynamically: " << dlerror());

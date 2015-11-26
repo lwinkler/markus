@@ -59,6 +59,7 @@ public:
 	/// Create a new instance
 	T1 * Create(const T0& x_type, Args... args) const
 	{
+		std::cout << m_register.size() << "FACTS\n";
 		auto it = m_register.find(x_type);
 
 		if (it == m_register.end())

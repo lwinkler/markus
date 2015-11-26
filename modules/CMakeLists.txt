@@ -8,6 +8,8 @@ file(GLOB modules_src
 # Auto generate AllModules.cpp (used at first run)
 execute_process(COMMAND ./modules/AllModules.cpp.sh . OUTPUT_FILE modules/AllModules.cpp)
 
+add_definitions(-fPIC -shared)
+
 # TODO: Remove this ?
 add_library(modules
 # AllModules.cpp
