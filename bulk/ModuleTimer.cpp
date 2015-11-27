@@ -59,8 +59,10 @@ void ModuleTimer::Start(double x_fps)
 			// this_thread::sleep_for(1s); // TODO In parallel
 			usleep(us);
 			if(!m_processable.ProcessAndCatch())
+			{
+				LOG_INFO(m_logger, "Exiting main loop");
 				break; // Stop(); // TODO: Handle break with exceptions
-			LOG_INFO(m_logger, "Exiting main loop");
+			}
 		}
 		Stop();
 	});
