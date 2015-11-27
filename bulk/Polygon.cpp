@@ -56,8 +56,9 @@ void Polygon::DrawMask(Mat& xr_target, const Scalar& x_color) const
 	for(auto & scaledPt : scaledPts)
 	{
 		scaledPt  = *itpts * diag;
+		// cout << *itpts << " : " << scaledPt.x <<  ">=" << xr_target.cols << " " << scaledPt.y << ">=" << xr_target.rows << endl;
 		if(scaledPt.x >= xr_target.cols || scaledPt.y >= xr_target.rows)
-			throw MkException("Drawing out of bounds of image", LOC);
+			throw MkException("Drawing out of bounds of image ", LOC);
 		++itpts;
 	}
 

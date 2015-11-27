@@ -147,7 +147,19 @@ public:
 				moduleConfig.RefSubConfig("parameters").RefSubConfig("param", "name", elem.first, true).SetValue(elem.second);
 
 		mp_configFile->SaveToFile("tests/tmp/tmp.xml");
-		ParameterStructure* parameters = m_factoryParameters.Create(x_type, moduleConfig);
+
+		ParameterStructure* parameters = nullptr;
+		try
+		{
+			parameters = m_factoryParameters.Create(x_type, moduleConfig);
+		}
+		catch(ParameterException& e)
+		{
+			if(parameters != nullptr)
+				delete(parameters);
+			TS_TRACE("Cannot set parameter, reason: " + string(e.what()));
+			return std::make_pair(nullptr, nullptr);
+		}
 		Module* module                 = m_factoryModules.Create(x_type, *parameters);
 		module->SetContext(*mp_context);
 		module->AllowAutoProcess(false);
@@ -340,7 +352,7 @@ public:
 			Module* module;
 			ParameterStructure* parameters;
 			std::tie(parameters, module) = createAndConnectModule(modType);
-			if(!module->IsUnitTestingEnabled())
+			if(module == nullptr || parameters == nullptr || !module->IsUnitTestingEnabled())
 			{
 				delete module;
 				delete parameters;
@@ -366,7 +378,7 @@ public:
 
 				TS_TRACE("Generate values for param of type " + elem->GetTypeString() + " in range " + elem->GetRange());
 				elem->GenerateValues(10, values);
-
+			
 				for(const auto& elemVal : values)
 				{
 					// For each value
