@@ -47,7 +47,7 @@ These libraries and utilities can be installed to create advanced modules:
 	- *Curl*: To use an input camera with call to a specific webservice
 	- *Avtools*: Video manipulation tools to use the benchmark of test
 
-	sudo apt-get install cmake-qt-gui cmake-curses-gui qtcreator python-dev cxxtest libcurl4-openssl-dev python-opencv python-sklearn python-skimage libav-tools  python-pymongo python-gridfs
+	sudo apt-get install cmake-qt-gui cmake-curses-gui qtcreator python-dev cxxtest libcurl4-openssl-dev python-opencv python-sklearn python-numpy python-skimage libav-tools  python-pymongo python-gridfs
 
 ### Compile OpenCV from sources (not recommended)
 Alternatively you can compile OpenCV from sources. Do not forget to install the depandencies with apt-get build-dep first:
