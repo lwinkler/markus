@@ -2,7 +2,6 @@
 add_library(bulk
 Factories.cpp
 Module.cpp
-ModuleAsync.cpp
 ModuleKeyPoints.cpp
 Manager.cpp
 Context.cpp

@@ -40,7 +40,7 @@ class Event : public Serializable
 public:
 	Event();
 	~Event();
-	void Empty();
+	void Clean();
 	void Raise(const std::string& x_eventName, TIME_STAMP x_absTimeEvent = 0);
 	void Raise(const std::string& x_eventName, const Object& m_object, TIME_STAMP x_absTimeEvent = 0);
 	inline bool IsRaised() const {return m_eventName != "";}

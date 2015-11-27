@@ -57,7 +57,6 @@ void ReadObjects::Reset()
 	//m_event.Empty();
 	m_ObjectOut.clear();
 	m_endOfStream = false;
-	Pause(false);
 
 	CLEAN_DELETE(mp_annotationReader);
 	mp_annotationReader = new AnnotationFileReader();
@@ -89,7 +88,6 @@ void ReadObjects::Capture()
 	if(!mp_annotationReader->ReadNextAnnotation(text))
 	{
 		m_endOfStream = true;
-		Pause(true);
 		throw EndOfStreamException("Cannot read next annotation", LOC);
 	}
 	m_currentTimeStamp = mp_annotationReader->GetCurrentTimeStamp();

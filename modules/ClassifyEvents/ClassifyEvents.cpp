@@ -50,7 +50,7 @@ void ClassifyEvents::Reset()
 
 void ClassifyEvents::ProcessFrame()
 {
-	m_eventOut.Empty();
+	m_eventOut.Clean();
 	if(! m_eventIn.IsRaised())
 		return;
 
@@ -96,7 +96,7 @@ void ClassifyEvents::PopEvent()
 		{
 			// There is no more events in the list: empty
 			m_imageToValidate.setTo(0);
-			m_eventToValidate.Empty();
+			m_eventToValidate.Clean();
 		}
 	}
 	else LOG_WARN(m_logger, "Cannot call PopEvent, event list is empty");

@@ -181,7 +181,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 				}
 
 				// add a name
-				// TODO: in the future maybe use a hash
+				// note: in the future maybe use a hash
 				xr_variationNames.push_back(elem);
 
 				// Change value of param

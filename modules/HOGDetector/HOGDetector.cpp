@@ -36,9 +36,8 @@ using namespace cv;
 log4cxx::LoggerPtr HOGDetector::m_logger(log4cxx::Logger::getLogger("HOGDetector"));
 
 HOGDetector::HOGDetector(ParameterStructure& xr_params)
-	: ModuleAsync(xr_params), m_param(dynamic_cast<Parameters&>(xr_params)),
-	  m_input(Size(m_param.width, m_param.height), m_param.type),
-	  m_lastInput(Size(m_param.width, m_param.height), m_param.type)
+	: Module(xr_params), m_param(dynamic_cast<Parameters&>(xr_params)),
+	  m_input(Size(m_param.width, m_param.height), m_param.type)
 {
 	AddInputStream(0, new StreamImage("input", m_input, *this, 		"Video input"));
 
@@ -55,44 +54,23 @@ HOGDetector::~HOGDetector()
 
 void HOGDetector::Reset()
 {
-	ModuleAsync::Reset();
-	m_thread.m_hog.setSVMDetector(HOGDescriptor::getDefaultPeopleDetector());
+	Module::Reset();
+	m_hog.setSVMDetector(HOGDescriptor::getDefaultPeopleDetector());
 }
 
 // This method launches the thread
-void HOGDetector::LaunchThread()
+void HOGDetector::ProcessFrame()
 {
-	// assert(m_input->type() == CV_8UC1);
-	//	throw MkException("For cascade detection, input type must be CV_8UC1 and not " + ParameterImageType::ImageTypeInt2Str(img->type()));
-	m_input.copyTo(m_lastInput);
-	Mat smallImg(m_lastInput);
+	Mat smallImg(m_input);
 	// equalizeHist( smallImg, smallImg );
 
-	// Launch a new Thread
-	m_thread.SetData(smallImg, m_param.scaleFactor);
-	m_thread.start();
-	// m_thread.run(); // Use run instead of start for synchronous use
-}
+	std::vector<cv::Rect> detected;
 
-void HOGDetector::NormalProcess()
-{
-#ifdef MARKUS_DEBUG_STREAMS
-	m_lastInput.copyTo(m_debug);
+	m_hog.detectMultiScale(smallImg, detected, 0, Size(8,8), Size(32,32), m_param.scaleFactor, 2);
 
-	for(const auto& elem : m_detectedObjects)
-	{
-		// Draw the rectangle in the input image
-		rectangle(m_debug, elem.GetRect(), Scalar(255, 0, 33), 1, 8, 0 );
-	}
-#endif
-}
-
-/// Copy the results from the thread to the module
-void HOGDetector::CopyResults()
-{
 	const double diagonal = sqrt(m_param.width * m_param.width + m_param.height * m_param.height);
 	m_detectedObjects.clear();
-	for(const auto & elem : m_thread.GetDetectedObjects())
+	for(const auto & elem : detected)
 	{
 		Object obj(m_param.objectLabel, elem);
 
@@ -103,21 +81,15 @@ void HOGDetector::CopyResults()
 
 		m_detectedObjects.push_back(obj);
 	}
-	m_timerThread.Add(m_thread.m_timerThread);
-	m_countFramesThread++;
+
+#ifdef MARKUS_DEBUG_STREAMS
+	m_input.copyTo(m_debug);
+
+	for(const auto& elem : m_detectedObjects)
+	{
+		// Draw the rectangle in the input image
+		rectangle(m_debug, elem.GetRect(), Scalar(255, 0, 33), 1, 8, 0 );
+	}
+#endif
 }
-
-/// Run the detection process inside the thread
-void HOGDetectionThread::run()
-{
-	m_timerThread.Start();
-	m_detected.clear();
-	//if(m_scaleFactor == 1.00)
-	//m_hog.detect(m_smallImg, m_detected) // , 0, Size(8,8), Size(32,32));
-	//else
-	m_hog.detectMultiScale(m_smallImg, m_detected, 0, Size(8,8), Size(32,32), m_scaleFactor, 2);
-
-	m_timerThread.Stop();
-}
-
 

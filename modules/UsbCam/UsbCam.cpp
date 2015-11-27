@@ -35,7 +35,6 @@ UsbCam::UsbCam(ParameterStructure& xr_params):
 	m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_output(Size(m_param.width, m_param.height), m_param.type)  // Note: sizes will be overridden !
 {
-	// m_timeStamp = TIME_STAMP_INITIAL;
 	AddOutputStream(0, new StreamImage("input", m_output, *this, "Video stream of the camera"));
 	m_isUnitTestingEnabled = false; // disable since not every PC has an usb/web camera
 }
@@ -74,7 +73,6 @@ void UsbCam::Capture()
 		if(m_capture.grab() == 0)
 		{
 			m_endOfStream = true;
-			Pause(true);
 			throw MkException("Capture failed on USB camera", LOC);
 		}
 
@@ -109,4 +107,11 @@ void UsbCam::GetProperties()
 			  <<" CONVERT_RGB "<<m_capture.get(CV_CAP_PROP_CONVERT_RGB)
 			  // 	<<" WHITE_BALANCE"<<m_capture.get(CV_CAP_PROP_WHITE_BALANCE)
 			  <<" RECTIFICATION"<<m_capture.get(CV_CAP_PROP_RECTIFICATION));
+}
+
+double UsbCam::GetRecordingFps() const
+{
+	// There is probably no way to get a measure of FPS
+	// cout << "FPS" << m_capture.get(CV_CAP_PROP_FPS) << endl;
+	return m_param.fps == 0 ? 8 : m_param.fps;
 }

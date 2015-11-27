@@ -93,7 +93,6 @@
 <param name="class">RenderObjects</param>
 <param name="width">64</param>
 <param name="height">48</param>
-<param name="allow_unsync_input">0</param>
 <param name="fps">1</param>
 </parameters>
 <uiobject x="1334" y="474" width="0" height="0"/>

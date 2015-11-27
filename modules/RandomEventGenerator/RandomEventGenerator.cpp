@@ -53,7 +53,7 @@ void RandomEventGenerator::Reset()
 	if(m_param.randomSeed == 0)
 		m_seed = time(nullptr);
 	else m_seed = m_param.randomSeed;
-	m_event.Empty();
+	m_event.Clean();
 
 	// We must initialize the last time stamp
 	m_lastTimeStamp = - 1000 / m_param.fps;
@@ -63,10 +63,10 @@ void RandomEventGenerator::Reset()
 void RandomEventGenerator::Capture()
 {
 	// Wait to act consistently with other inputs
-	if(m_realTime)
+	if(IsRealTime())
 		usleep(1000000 / m_param.fps);
 
-	m_event.Empty();
+	m_event.Clean();
 	m_output.setTo(0);
 	m_currentTimeStamp = m_lastTimeStamp + 1000 / m_param.fps;
 

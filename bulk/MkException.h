@@ -22,6 +22,7 @@ enum MkExceptionCode
 	MK_EXCEPTION_FEAT_NOT_FOUND   = 1014,
 	// MK_EXCEPTION_FEAT_STD        = 1015,
 	MK_EXCEPTION_WEBSERVICE       = 1015,
+	MK_EXCEPTION_FATAL            = 1016,
 
 	// last code since unix can only return codes from 0 to 126
 	MK_EXCEPTION_LAST        = 1126
@@ -93,5 +94,15 @@ class WebServiceException : public MkException
 public:
 	WebServiceException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
 };
+
+/**
+* @brief Fatal exception: will abort the execution
+*/
+class FatalException : public MkException
+{
+public:
+	FatalException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
+};
+
 
 #endif

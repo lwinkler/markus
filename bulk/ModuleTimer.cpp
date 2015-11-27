@@ -24,35 +24,45 @@
 #include "ModuleTimer.h"
 #include "Processable.h"
 
-#include <QTimer>
 
 using namespace std;
 
-QModuleTimer::QModuleTimer(Processable& x_module)
-	: m_processable(x_module)
-{
-	// Reset(x_fps);
-}
+log4cxx::LoggerPtr ModuleTimer::m_logger(log4cxx::Logger::getLogger("ModuleTimer"));
 
-/**
-* @brief Reset the timer
-*
-* @param x_fps The frame per second to be set
-*/
-void QModuleTimer::Reset(double x_fps)
+ModuleTimer::ModuleTimer(Processable& x_module)
+	: m_processable(x_module),
+	m_running(false)
+{}
+
+
+void ModuleTimer::Start(double x_fps)
 {
-	double delay = 1000.0 / 1000;
+	if(m_running)
+		return;
+
+	m_delay = 0.01;
 	if(x_fps > 0)
 	{
 		// Start a timer for module process
-		delay = 1000.0 / x_fps;
+		m_delay = 1.0 / x_fps;
 	}
-	start(delay);
-}
+	
+	m_running = true;
+	// auto ms = chrono::milliseconds((long) m_delay * 1000);
+	int us = m_delay * 1000000;
+	// std::chrono::seconds<1, double> ms(m_delay);
 
-void QModuleTimer::timerEvent(QTimerEvent* px_event)
-{
-	if(!m_processable.Process())
-		stop();
+	m_thread = thread([=]()
+	{
+		while (m_running == true)
+		{
+			// this_thread::sleep_for(1s); // TODO In parallel
+			usleep(us);
+			if(!m_processable.ProcessAndCatch())
+				break; // Stop(); // TODO: Handle break with exceptions
+			LOG_INFO(m_logger, "Exiting main loop");
+		}
+		Stop();
+	});
 }
 

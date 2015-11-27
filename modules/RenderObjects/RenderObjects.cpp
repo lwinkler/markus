@@ -35,12 +35,12 @@ RenderObjects::RenderObjects(ParameterStructure& xr_params) :
 	m_imageInput(Size(m_param.width, m_param.height), m_param.type),
 	m_imageOutput(Size(m_param.width, m_param.height), m_param.type)
 {
-	AddInputStream(0, new StreamImage( "input", m_imageInput, *this,	"Input video stream"));
-	AddInputStream(1, new StreamObject("input", m_objectInput1, *this,	"Object stream 1"));
-	AddInputStream(2, new StreamObject("input", m_objectInput2, *this,	"Object stream 1"));
-	AddInputStream(3, new StreamObject("input", m_objectInput3, *this,	"Object stream 1"));
-	AddInputStream(4, new StreamObject("input", m_objectInput4, *this,	"Object stream 1"));
-	AddInputStream(5, new StreamObject("input", m_objectInput5, *this,	"Object stream 1"));
+	AddInputStream(0, new StreamImage( "image", m_imageInput, *this,	"Input video stream"));
+	AddInputStream(1, new StreamObject("objects0", m_objectInput1, *this,	"Object stream 0"));
+	AddInputStream(2, new StreamObject("objects1", m_objectInput2, *this,	"Object stream 1"));
+	AddInputStream(3, new StreamObject("objects2", m_objectInput3, *this,	"Object stream 2"));
+	AddInputStream(4, new StreamObject("objects3", m_objectInput4, *this,	"Object stream 3"));
+	AddInputStream(5, new StreamObject("objects4", m_objectInput5, *this,	"Object stream 4"));
 
 	AddOutputStream(0, new StreamImage("output", m_imageOutput, *this,	"Output video stream"));
 }

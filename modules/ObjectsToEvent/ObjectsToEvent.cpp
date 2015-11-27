@@ -47,7 +47,7 @@ void ObjectsToEvent::Reset()
 
 void ObjectsToEvent::ProcessFrame()
 {
-	m_event.Empty();
+	m_event.Clean();
 	if(m_objectsIn.size() >= m_param.minObjectsNb && m_objectsIn.size() <= m_param.maxObjectsNb)
 	{
 		if(!m_state)
