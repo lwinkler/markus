@@ -157,7 +157,7 @@ public:
 		{
 			if(parameters != nullptr)
 				delete(parameters);
-			TS_TRACE("Cannot set parameter, reason: " + string(e.what()));
+			TS_TRACE("Cannot set parameter in createAndConnectModule, reason: " + string(e.what()));
 			return std::make_pair(nullptr, nullptr);
 		}
 		Module* module                 = m_factoryModules.Create(x_type, *parameters);
@@ -352,12 +352,6 @@ public:
 			Module* module;
 			ParameterStructure* parameters;
 			std::tie(parameters, module) = createAndConnectModule(modType);
-			if(module == nullptr || parameters == nullptr || !module->IsUnitTestingEnabled())
-			{
-				delete module;
-				delete parameters;
-				continue;
-			}
 			TS_TRACE("# on module " + modType);
 
 			string lastParam = "";
@@ -391,6 +385,12 @@ public:
 					Module* module2;
 					ParameterStructure* parameters2;
 					std::tie(parameters2, module2) = createAndConnectModule(modType, &params);
+					if(module2 == nullptr || parameters2 == nullptr || !module2->IsUnitTestingEnabled())
+					{
+						CLEAN_DELETE(module2);
+						CLEAN_DELETE(parameters2);
+						continue;
+					}
 					TS_ASSERT(module2->IsUnitTestingEnabled());
 
 					for(int i = 0 ; i < 3 ; i++)
