@@ -81,10 +81,8 @@ void Processable::Start()
 
 	if(m_realTime)
 	{
-		// If a module, use GetRecordingFps to get the closest estimation of 
-		// which fps to use 
-		Module* mod = dynamic_cast<Module*>(this);
-		mp_moduleTimer->Start(mod == nullptr ? 0 : mod->GetRecordingFps());
+		// use GetRecordingFps to get the closest estimation of which fps to use (to mimic real-time)
+		mp_moduleTimer->Start(GetRecordingFps());
 	}
 	else mp_moduleTimer->Start(0);
 };

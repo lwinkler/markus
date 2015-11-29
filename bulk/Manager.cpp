@@ -259,6 +259,7 @@ void Manager::Reset(bool x_resetInputs)
 			elem->Reset();
 		}
 	}
+	SetRealTime(!m_param.fast);
 	if(!HasController("manager"))
 	{
 		AddController(new ControllerManager(*this));

@@ -368,9 +368,10 @@ int main(int argc, char** argv)
 		// Set manager and context
 		Manager::Parameters managerParameters(appConfig);
 		// Override parameter auto_process with centralized
-		managerParameters.autoProcess = false; // TODO: Use range
+		managerParameters.autoProcess = true; // TODO: Use range
 		managerParameters.centralized = args.centralized;
 		managerParameters.fast = args.fast;
+		cout << "fast" << args.fast << endl;
 		Manager manager(managerParameters);
 		manager.SetContext(context);
 

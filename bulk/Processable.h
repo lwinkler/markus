@@ -67,6 +67,7 @@ public:
 	virtual void Process() = 0;
 	virtual bool AbortCondition() const = 0;
 	virtual const std::string& GetName() const = 0;
+	virtual double GetRecordingFps() const = 0;
 	bool ProcessAndCatch();
 	virtual void Start();
 	virtual void Stop();

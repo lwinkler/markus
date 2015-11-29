@@ -85,6 +85,11 @@ public:
 			elem->SetContext(x_context);
 	}
 	virtual const std::string& GetName() const override {static std::string str = "manager"; return str;}
+	virtual double GetRecordingFps() const override
+	{
+		assert(!m_inputs.empty());
+		return m_inputs.at(0)->GetRecordingFps();
+	}
 
 protected:
 	Module& RefModuleById(int x_id) const;
