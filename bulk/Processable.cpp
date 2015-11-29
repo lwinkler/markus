@@ -48,8 +48,9 @@ Processable::~Processable()
 */
 void Processable::Reset()
 {
-	// Add the module timer (only works with QT)
-	if(m_param.autoProcess && m_allowAutoProcess)
+	// Add the module timer
+	// Autoprocess is on for modules if decentralized and for manager if centralized
+	if(m_param.autoProcess && (GetName() == "manager" ^ ! GetContext().IsCentralized()))
 	{
 		if(mp_moduleTimer != nullptr)
 		{
@@ -58,9 +59,13 @@ void Processable::Reset()
 		}
 		mp_moduleTimer = new ModuleTimer(*this);
 
-		LOG_DEBUG(m_logger, "Reseting auto-processed module with real-time="<<m_realTime<<" and fps="<<m_param.fps);
+		LOG_DEBUG(m_logger, "Reseting auto-processed " << GetName() << " with real-time="<<GetContext().IsRealTime()<<" and fps="<<m_param.fps);
 	}
-	else mp_moduleTimer = nullptr;
+	else
+	{
+		CLEAN_DELETE(mp_moduleTimer);
+		mp_moduleTimer = nullptr;
+	}
 
 	m_timerProcessing.Reset();
 	m_hasRecovered = true;
@@ -79,7 +84,7 @@ void Processable::Start()
 	if(mp_moduleTimer == nullptr)
 		return;
 
-	if(m_realTime)
+	if(GetContext().IsRealTime())
 	{
 		// use GetRecordingFps to get the closest estimation of which fps to use (to mimic real-time)
 		mp_moduleTimer->Start(GetRecordingFps());

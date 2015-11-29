@@ -100,7 +100,6 @@ public:
 		mp_configFile->RefSubConfig("application").SetAttribute("name", "unitTest");
 		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", mp_configFile->Find("application>module[name=\"VideoFileReader0\"]"));
 		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeConfig);
-		mp_fakeInput->AllowAutoProcess(false);
 		// note: we need a fake module to create the input streams
 		mp_fakeInput->Reset();
 		mp_contextParams = new Context::Parameters(mp_configFile->Find("application"), "/tmp/config_empty.xml", "TestModule", "tests/out");
@@ -150,7 +149,6 @@ public:
 		ParameterStructure* parameters = m_factoryParameters.Create(x_type, moduleConfig);
 		Module* module                 = m_factoryModules.Create(x_type, *parameters);
 		module->SetContext(*mp_context);
-		module->AllowAutoProcess(false);
 		m_image = cv::Mat(module->GetHeight(), module->GetWidth(), module->GetImageType());
 
 		// Create custom streams to feed each input of the module

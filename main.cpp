@@ -341,8 +341,10 @@ int main(int argc, char** argv)
 
 		// Init global variables and objects
 		// Context manages all call to system, files, ...
-		Context::Parameters contextParams(mainConfig.Find("application"), args.configFile, appConfig.GetAttribute("name"), args.outputDir);
-		Context context(contextParams);
+		Context::Parameters contextParameters(mainConfig.Find("application"), args.configFile, appConfig.GetAttribute("name"), args.outputDir);
+		contextParameters.centralized = args.centralized;
+		contextParameters.realTime    = !args.fast;
+		Context context(contextParameters);
 		if(args.outputDir != "")
 		{
 			string dir = args.outputDir + "/";
@@ -369,9 +371,6 @@ int main(int argc, char** argv)
 		Manager::Parameters managerParameters(appConfig);
 		// Override parameter auto_process with centralized
 		managerParameters.autoProcess = true; // TODO: Use range
-		managerParameters.centralized = args.centralized;
-		managerParameters.fast = args.fast;
-		cout << "fast" << args.fast << endl;
 		Manager manager(managerParameters);
 		manager.SetContext(context);
 
@@ -406,6 +405,8 @@ int main(int argc, char** argv)
 
 			if(!managerParameters.autoProcess && args.centralized)
 			{
+				assert(false);
+				// TODO: Unused. Remove ?
 				while(manager.ProcessAndCatch())
 				{
 					// nothing
@@ -423,6 +424,7 @@ int main(int argc, char** argv)
 			std::thread th;
 			if(!managerParameters.autoProcess && args.centralized)
 			{
+				assert(false);
 				th = thread([&manager](){
 					while(manager.ProcessAndCatch())
 					{

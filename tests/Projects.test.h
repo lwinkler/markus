@@ -57,7 +57,6 @@ protected:
 		TS_ASSERT(!appConfig.IsEmpty());
 		Manager::Parameters params(appConfig);
 		Manager manager(params);
-		manager.AllowAutoProcess(false);
 		manager.Connect();
 		manager.Reset();
 

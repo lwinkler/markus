@@ -62,8 +62,6 @@ Manager::Manager(ParameterStructure& xr_params) :
 		ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, moduleConfig);
 		Module * tmp1 = mr_moduleFactory.Create(moduleType, *tmp2);
 
-		if(m_param.centralized)
-			tmp1->AllowAutoProcess(false);
 		LOG_DEBUG(m_logger, "Add module " << tmp1->GetName() << " to list input=" << (tmp1->IsInput() ? "yes" : "no"));
 		m_modules.push_back(tmp1);
 		m_parameters.push_back(tmp2);
@@ -255,11 +253,9 @@ void Manager::Reset(bool x_resetInputs)
 		if(x_resetInputs || !elem->IsInput())
 		{
 			// If manager is in autoprocess, modules must not be
-			elem->SetRealTime(!m_param.fast);
 			elem->Reset();
 		}
 	}
-	SetRealTime(!m_param.fast);
 	if(!HasController("manager"))
 	{
 		AddController(new ControllerManager(*this));
