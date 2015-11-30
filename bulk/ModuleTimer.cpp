@@ -40,25 +40,30 @@ void ModuleTimer::Start(double x_fps)
 	if(m_running)
 		return;
 
-	m_delay = 0.01;
+	double delay = 0.01;
 	if(x_fps > 0)
 	{
 		// Start a timer for module process
-		m_delay = 1.0 / x_fps;
+		delay = 1.0 / x_fps;
 	}
 	
 	m_running = true;
-	// auto ms = chrono::milliseconds((long) m_delay * 1000);
-	int us = m_delay * 1000000;
-	// std::chrono::seconds<1, double> ms(m_delay);
+	// auto ms = chrono::milliseconds((long) delay * 1000);
+	int us = delay * 1000000;
+	// std::chrono::seconds<1, double> ms(delay);
 
-	m_thread = thread([=]()
+	m_thread = thread([&]()
 	{
 		while (m_running == true)
 		{
-			// this_thread::sleep_for(1s); // TODO In parallel
-			usleep(us);
-			if(!m_processable.ProcessAndCatch())
+			std::thread execThread([&]()
+			{
+				usleep(us);
+			});
+			bool ret = m_processable.ProcessAndCatch();
+			execThread.join();
+
+			if(!ret)
 			{
 				LOG_INFO(m_logger, "Exiting main loop");
 				break;

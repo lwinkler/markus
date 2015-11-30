@@ -100,6 +100,7 @@ public:
 		.RefSubConfig("param", "name", "fps", true).SetValue("22");
 		mp_configFile->RefSubConfig("application").SetAttribute("name", "unitTest");
 		mp_contextParams = new Context::Parameters(mp_configFile->Find("application"), "/tmp/config_empty.xml", "TestModule", "tests/out");
+		mp_contextParams->centralized = true;
 		mp_context = new Context(*mp_contextParams);
 		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", mp_configFile->Find("application>module[name=\"VideoFileReader0\"]"));
 		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeConfig);
