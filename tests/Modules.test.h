@@ -36,6 +36,7 @@
 #include "MkException.h"
 #include "FeatureFloatInTime.h"
 #include "FeatureVector.h"
+#include "Timer.h"
 
 using namespace std;
 
@@ -224,6 +225,8 @@ public:
 		// Test on each type of module
 		for(const auto& modType : m_moduleTypes)
 		{
+			Timer timer;
+			timer.Start();
 			try
 			{
 				TS_TRACE("# on module " + modType);
@@ -323,6 +326,9 @@ public:
 			{
 				TS_TRACE("Parameter exception caught: " + std::string(e.what()));
 			}
+			timer.Stop();
+			if(timer.GetSecDouble() > 10)
+				TS_WARN("Module " + modType + " took " + std::to_string(timer.GetSecDouble()) + "s");
 		}
 	}
 
@@ -336,6 +342,8 @@ public:
 		// Test on each type of module
 		for(const auto& modType : m_moduleTypes)
 		{
+			Timer timer;
+			timer.Start();
 			Module* module;
 			ParameterStructure* parameters;
 			std::tie(parameters, module) = createAndConnectModule(modType);
@@ -391,6 +399,9 @@ public:
 			}
 			delete module;
 			delete parameters;
+			timer.Stop();
+			if(timer.GetSecDouble() > 10)
+				TS_WARN("Module " + modType + " took " + std::to_string(timer.GetSecDouble()) + "s");
 		}
 	}
 

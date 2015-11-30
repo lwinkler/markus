@@ -66,7 +66,7 @@ For compilation use the following flags.
 
 	cmake \
         -DCMAKE_VERBOSE_MAKEFILE=ON \
-        -DCMAKE_BUILD_TYPE=Debug        \
+        -DCMAKE_BUILD_TYPE=Release        \
         -DBUILD_NEW_PYTHON_SUPPORT=ON   \
         -DWITH_FFMPEG=ON        \
         -DWITH_GSTREAMER=OFF    \

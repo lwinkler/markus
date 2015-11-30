@@ -28,7 +28,6 @@
 #include "Object.h"
 #include "Polygon.h"
 #include "util.h"
-#include <cv.h>
 
 
 /**
