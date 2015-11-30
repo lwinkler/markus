@@ -98,12 +98,13 @@ public:
 		.RefSubConfig("parameters", true)
 		.RefSubConfig("param", "name", "fps", true).SetValue("22");
 		mp_configFile->RefSubConfig("application").SetAttribute("name", "unitTest");
-		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", mp_configFile->Find("application>module[name=\"VideoFileReader0\"]"));
-		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeConfig);
-		// note: we need a fake module to create the input streams
-		mp_fakeInput->Reset();
 		mp_contextParams = new Context::Parameters(mp_configFile->Find("application"), "/tmp/config_empty.xml", "TestModule", "tests/out");
 		mp_context = new Context(*mp_contextParams);
+		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", mp_configFile->Find("application>module[name=\"VideoFileReader0\"]"));
+		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeConfig);
+		mp_fakeInput->SetContext(*mp_context);
+		// note: we need a fake module to create the input streams
+		mp_fakeInput->Reset();
 	}
 	void tearDown()
 	{

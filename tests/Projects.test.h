@@ -42,6 +42,8 @@ public:
 	}
 	void tearDown()
 	{
+		CLEAN_DELETE(mp_context);
+		CLEAN_DELETE(mp_contextParams);
 	}
 
 protected:
@@ -52,11 +54,17 @@ protected:
 		mainConfig.Validate();
 		ConfigReader appConfig = mainConfig.GetSubConfig("application");
 		// Note: Added this to avoid deleting the output directory
-		appConfig.RefSubConfig("parameters", true).RefSubConfig("param", "name", "auto_clean", true).SetValue("0");
-		appConfig.RefSubConfig("parameters", true).RefSubConfig("param", "name", "auto_process", true).SetValue("1");
 		TS_ASSERT(!appConfig.IsEmpty());
 		Manager::Parameters params(appConfig);
+		// params.autoProcess = false;
 		Manager manager(params);
+		CLEAN_DELETE(mp_context);
+		CLEAN_DELETE(mp_contextParams);
+		mp_contextParams = new Context::Parameters(appConfig, "/tmp/config_empty.xml", "TestProjects", "tests/out");
+		mp_contextParams->centralized = true;
+		mp_contextParams->autoClean   = false;
+		mp_context = new Context(*mp_contextParams);
+		manager.SetContext(*mp_context);
 		manager.Connect();
 		manager.Reset();
 
@@ -64,6 +72,9 @@ protected:
 			if(!manager.ProcessAndCatch())
 				break;
 	}
+
+	Context::Parameters* mp_contextParams = nullptr;
+	Context* mp_context                   = nullptr;
 
 public:
 	/// Run different existing configs

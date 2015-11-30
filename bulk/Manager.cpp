@@ -282,6 +282,7 @@ void Manager::Reset(bool x_resetInputs)
 void Manager::Process()
 {
 	assert(m_isConnected); // Modules must be connected before processing
+	assert(GetContext().IsCentralized());
 	int cpt = 0;
 	MkException lastException(MK_EXCEPTION_NORMAL, "normal", "No exception was thrown", "", "");
 
