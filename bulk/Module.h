@@ -79,6 +79,7 @@ public:
 		Parameters(const ConfigReader& x_confReader) : Processable::Parameters(x_confReader)
 		{
 			m_list.push_back(new ParameterString("class"       , ""      , &objClass , "Class of the module (define the module's function)"));
+			m_list.push_back(new ParameterString("master"      , ""      , &master   , "Master module on which this module's processing is dependent. If empty, use all preceeding modules"));
 			m_list.push_back(new ParameterInt("width"          , 640     , 1         , MAX_WIDTH , &width  , "Width of the input"));
 			m_list.push_back(new ParameterInt("height"         , 480     , 1         , MAX_HEIGHT, &height , "Height of the input"));
 			m_list.push_back(new ParameterImageType("type"     , CV_8UC1 , &type     , "Format of the input image"));
@@ -98,6 +99,7 @@ public:
 		int height;
 		int type;
 		std::string objClass;
+		std::string master;
 		int cached;
 	};
 

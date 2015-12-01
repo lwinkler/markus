@@ -41,7 +41,8 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterFloat("motion_thres", 0.1, 0, 1, &motionThres,	"Threshold for motion analysis"));
+			m_list.push_back(new ParameterFloat("motion_thres" , 0.1 , 0 , 1 , &motionThres , "Threshold for motion analysis"));
+			m_list.push_back(new ParameterBool("propagate"     , 1   , 0 , 1 , &propagate   , "Threshold for motion analysis"));
 
 			RefParameterByName("width").SetRange("[32:6400]");
 			RefParameterByName("height").SetRange("[24:4800]");
@@ -49,6 +50,7 @@ public:
 		}
 
 		float motionThres;
+		bool propagate;
 	};
 
 	MotionDetector(ParameterStructure& xr_params);
@@ -58,6 +60,7 @@ public:
 	MKDESCR("Detect motion from an image where pixel value represents motion")
 
 	virtual void ProcessFrame();
+	virtual bool PropagateCondition() const override {return m_param.propagate || m_state;}
 	void Reset();
 
 private:
@@ -74,7 +77,7 @@ protected:
 	double m_value;
 
 	// temp
-	StreamNum<double>* mp_streamValues;
+	StreamNum<double>* mp_streamValues = nullptr;
 
 	// debug
 #ifdef MARKUS_DEBUG_STREAMS

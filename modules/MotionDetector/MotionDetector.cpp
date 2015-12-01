@@ -92,6 +92,8 @@ void MotionDetector::ProcessFrame()
 	if(m_state == true && oldState == false)
 		m_event.Raise("motion");
 	
+	LOG_DEBUG(m_logger, "Motion state " << m_state);
+	
 
 #ifdef MARKUS_DEBUG_STREAMS
 	mp_streamValues->Store();

@@ -141,7 +141,10 @@ void Manager::Connect()
 
 					// Connect input and output streams
 					inputStream.Connect(&outputStream);
-					RefModuleById(outputModuleId).AddDependingModule(module);
+					if(module.GetParameters().GetParameterByName("master").GetValueString().empty())
+						RefModuleById(outputModuleId).AddDependingModule(module);
+					else
+						RefModuleByName(module.GetParameters().GetParameterByName("master").GetValueString()).AddDependingModule(module);
 				}
 			}
 			catch(MkException& e)

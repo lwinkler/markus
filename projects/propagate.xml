@@ -1,0 +1,59 @@
+<application name="CustomProject">
+<module id="0" name="Input">
+<inputs/>
+<outputs>
+<output id="0"/>
+</outputs>
+<parameters>
+<param name="class">UsbCam</param>
+</parameters>
+		<uiobject x="500" y="300" width="0" height="0"/>
+	</module>
+<module id="2" name="MotionDetector2">
+<inputs>
+<input id="0" outputid="0" moduleid="4"/>
+</inputs>
+<outputs>
+<output id="0"/>
+<output id="1"/>
+<output id="2"/>
+</outputs>
+<parameters>
+<param name="class">MotionDetector</param>
+<param name="propagate">0</param>
+<param name="motion_thres">0.001</param>
+<param name="width">160</param>
+<param name="height">120</param>
+</parameters>
+		<uiobject x="1143" y="293" width="0" height="0"/>
+	</module>
+<module id="3" name="SlitCam3">
+<inputs>
+<input id="0" outputid="0" moduleid="0"/>
+</inputs>
+<outputs>
+<output id="0"/>
+</outputs>
+<parameters>
+<param name="class">SlitCam</param>
+<param name="master">MotionDetector2</param>
+</parameters>
+		<uiobject x="915" y="461" width="0" height="0"/>
+	</module>
+<module id="4" name="BgrSubRunAvg4">
+<inputs>
+<input id="0" outputid="0" moduleid="0"/>
+</inputs>
+<outputs>
+<output id="0"/>
+<output id="1"/>
+</outputs>
+<parameters>
+<param name="class">BgrSubRunAvg</param>
+<param name="width">160</param>
+<param name="height">120</param>
+<param name="foreground_thres">0.05</param>
+</parameters>
+	<uiobject x="820" y="298" width="0" height="0"/>
+	</module>
+</application>
