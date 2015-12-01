@@ -106,8 +106,9 @@ public:
 
 	virtual void Reset();
 	virtual void Process();
-	bool ProcessingCondition() const;
-	inline bool AbortCondition() const override {return true;}
+	bool ProcessingCondition() const;                                      /// Return true if the current frame must be processed
+	inline virtual bool PropagateCondition() const {return true;}          /// Return true if the depending modules must be called. To be overridden
+	inline bool AbortCondition() const override {return false;}             /// Return true if the processing should be aborted
 
 	virtual const std::string& GetName() const override {return m_name;}
 	virtual const std::string& GetClass() const = 0;

@@ -50,8 +50,6 @@ Manager::Manager(ParameterStructure& xr_params) :
 	mr_moduleFactory(Factories::modulesFactory())
 {
 	LOG_INFO(m_logger, "Create manager");
-	m_frameCount = 0;
-	m_isConnected = false;
 
 	for(const auto& moduleConfig : m_param.GetConfig().FindAll("module", true))
 	{
@@ -292,6 +290,7 @@ void Manager::Process()
 		if(!elem->ProcessAndCatch())
 		{
 			cpt++;
+			LOG_WARN(m_logger, "Exception " << elem->LastException());
 			lastException = elem->LastException();
 		}
 	}
@@ -384,12 +383,13 @@ void Manager::PrintStatistics()
 */
 bool Manager::AbortCondition() const
 {
+	if(m_quitting)
+		return true;
 	bool endOfStreams = true;
 	for(const auto & elem : m_inputs)
 	{
 		if(!elem->IsEndOfStream())
 		{
-			cout << elem->GetName() << endOfStreams << endl;
 			endOfStreams = false;
 			break;
 		}
