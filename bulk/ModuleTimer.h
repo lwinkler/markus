@@ -25,7 +25,6 @@
 #define QMODULE_TIMER_H
 
 #include <thread>
-#include <chrono>
 #include <atomic>
 #include <assert.h>
 #include <log4cxx/logger.h>

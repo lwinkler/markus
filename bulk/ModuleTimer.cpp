@@ -23,6 +23,7 @@
 
 #include "ModuleTimer.h"
 #include "Processable.h"
+#include "util.h"
 
 
 using namespace std;
@@ -56,12 +57,11 @@ void ModuleTimer::Start(double x_fps)
 	{
 		while (m_running == true)
 		{
-			std::thread execThread([&]()
-			{
-				usleep(us);
-			});
+			TIME_STAMP beg = getAbsTimeMs();
 			bool ret = m_processable.ProcessAndCatch();
-			execThread.join();
+
+			// Wait to respect the fps
+			usleep((getAbsTimeMs() - beg) * 1000);
 
 			if(!ret)
 			{
