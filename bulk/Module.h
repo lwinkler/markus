@@ -143,7 +143,6 @@ public:
 	void Export(std::ostream& rx_os, int x_indentation);
 	Stream& RefInputStreamById(int x_id);
 	Stream& RefOutputStreamById(int x_id);
-	const Module& GetMasterModule() const;
 	inline void CheckParameterRange() {m_param.CheckRange(false);}
 	inline bool IsUnitTestingEnabled() const {return m_isUnitTestingEnabled;}
 	inline TIME_STAMP GetCurrentTimeStamp() const {return m_currentTimeStamp;}

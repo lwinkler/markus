@@ -489,28 +489,6 @@ void Module::Deserialize(istream& x_in, const string& x_dir)
 }
 
 /**
-* @brief Return a reference to the master module. The master module is the preceeding module that is
- 	 responsible for calling the process method. The first connected input determines what module is master.
-*
-* @return The master module
-*/
-const Module& Module::GetMasterModule() const // TODO remove this after implementing new connection mode
-{
-	for(const auto & elem : m_inputStreams)
-	{
-		if(elem.second->IsConnected())
-		{
-			const Module& preceding = elem.second->GetConnected().GetModule();
-			if(preceding.IsAutoProcessed())
-				return preceding;
-			else
-				return preceding.GetMasterModule();
-		}
-	}
-	throw MkException("Module must have at least one input connected or be an input or be autoprocessed", LOC);
-}
-
-/**
 * @brief Add an input stream
 *
 * @param x_id      id
