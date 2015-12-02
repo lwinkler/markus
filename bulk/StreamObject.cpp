@@ -60,8 +60,8 @@ void StreamObject::ConvertInput()
 	if(pstream == nullptr)
 		throw MkException("Stream of objects " + GetName() + " is not correctly connected", LOC);
 	vector<Object> rectsTarget = pstream->m_objects;
-	double ratioX = static_cast<double>(m_width) / pstream->GetWidth();
-	double ratioY = static_cast<double>(m_height) / pstream->GetHeight();
+	double ratioX = static_cast<double>(GetWidth()) / pstream->GetWidth();
+	double ratioY = static_cast<double>(GetHeight()) / pstream->GetHeight();
 
 	m_objects.clear();
 	for(const auto& elem : rectsTarget)
@@ -79,7 +79,7 @@ void StreamObject::ConvertInput()
 
 void StreamObject::RenderTo(Mat& x_output) const
 {
-	if(x_output.cols != m_width || x_output.rows != m_height)
+	if(x_output.cols != GetWidth() || x_output.rows != GetHeight())
 		throw MkException("Cannot render, image must have the same size as the stream", LOC);
 	for(const auto& elem : m_objects)
 	{

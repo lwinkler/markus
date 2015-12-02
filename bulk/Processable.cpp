@@ -190,8 +190,8 @@ bool Processable::ProcessAndCatch()
 		LOG_ERROR(m_logger, GetName() << ": Unknown exception raised");
 	}
 
-		// If a full processing cycle has been made without exception,
-		// we consider that the manager has recovered from exceptions
+	// If a full processing cycle has been made without exception,
+	// we consider that the manager has recovered from exceptions
 	if(recover)
 		m_hasRecovered = true;
 
