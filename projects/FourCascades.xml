@@ -10,7 +10,6 @@
 		<inputs/>
 		<outputs>
 			<output id="0"/>
-			<output id="1"/>
 		</outputs>
 		<display x="17" y="88" width="150" height="75"/>
 		<uiobject x="71" y="94" width="0" height="0"/>
@@ -34,7 +33,6 @@
 		</inputs>
 		<outputs>
 			<output id="0"/>
-			<output id="1"/>
 		</outputs>
 		<display x="263" y="54" width="150" height="75"/>
 		<uiobject x="548" y="80" width="0" height="0"/>
@@ -55,27 +53,6 @@
 		<display x="648" y="52" width="150" height="75"/>
 		<uiobject x="746" y="84" width="0" height="0"/>
 	</module>
-	<module name="RenderObjects" id="3">
-		<parameters>
-			<param name="class">RenderObjects</param>
-			<param name="width">640</param>
-			<param name="height">480</param>
-			<param name="type">CV_8UC3</param>
-</parameters>
-		<inputs>
-			<input id="0" moduleid="0" outputid="0" block="1" sync="1"/>
-			<input id="1" moduleid="2" outputid="0" block="0" sync="0"/>
-			<input id="2" moduleid="8" outputid="0" block="0" sync="0"/>
-			<input id="3" moduleid="9" outputid="0" block="0" sync="0"/>
-			<input id="4" moduleid="10" outputid="0" block="0" sync="0"/>
-			<input id="5" moduleid="11" outputid="0" block="0" sync="0"/>
-		</inputs>
-		<outputs>
-			<output id="0"/>
-		</outputs>
-		<display x="1049" y="242" width="150" height="165"/>
-		<uiobject x="1051" y="130" width="0" height="0"/>
-	</module>
 	<module name="CascadeDetector2" id="4">
 		<parameters>
 			<param name="class">CascadeDetector</param>
@@ -95,7 +72,6 @@
 		</inputs>
 		<outputs>
 			<output id="0"/>
-			<output id="1"/>
 		</outputs>
 		<display x="271" y="154" width="150" height="75"/>
 		<uiobject x="545" y="190" width="0" height="0"/>
@@ -119,7 +95,6 @@
 		</inputs>
 		<outputs>
 			<output id="0"/>
-			<output id="1"/>
 		</outputs>
 		<display x="275" y="255" width="150" height="75"/>
 		<uiobject x="548" y="314" width="0" height="0"/>
@@ -143,7 +118,6 @@
 		</inputs>
 		<outputs>
 			<output id="0"/>
-			<output id="1"/>
 		</outputs>
 		<display x="275" y="372" width="150" height="75"/>
 		<uiobject x="555" y="454" width="0" height="0"/>
@@ -167,7 +141,6 @@
 		</inputs>
 		<outputs>
 			<output id="0"/>
-			<output id="1"/>
 		</outputs>
 		<display x="273" y="496" width="150" height="75"/>
 		<uiobject x="558" y="568" width="0" height="0"/>

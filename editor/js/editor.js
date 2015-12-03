@@ -277,7 +277,6 @@ var xmlProject = null;
 					// Create anchor point for GUI
 					var scope = $(this).data('class').find('type').text();
 					var color = pointsColor[scope];
-					console.log(el);
 					var multi = $(this).data('class').attr('multi');
 					var e1;
 					if(multi === undefined)
@@ -287,9 +286,9 @@ var xmlProject = null;
 								anchor:[0, y, -1, 0], 
 								scope: scope,
 								paintStyle:{ fillStyle: color},
-								connectorStyle:{}
+								connectorStyle:{strokeStyle: color}
 							},
-							inputPointMulti
+							inputPoint
 						);
 					} else {
 						e1 = jsPlumb.addEndpoint(
@@ -297,9 +296,9 @@ var xmlProject = null;
 								anchor:[0, y, -1, 0], 
 								scope: scope,
 								paintStyle:{ fillStyle: "white", strokeStyle: color, lineWidth: 5},
-								connectorStyle:{}
+								connectorStyle:{strokeStyle: color}
 							},
-							inputPoint
+							inputPointMulti
 						);
 					}
 					$(e1).data('config', $(this));
