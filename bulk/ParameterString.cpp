@@ -29,7 +29,7 @@ using namespace std;
 // Static variables 
 log4cxx::LoggerPtr ParameterString::m_logger(log4cxx::Logger::getLogger("ParameterString"));
 
-void ParameterString::Export(ostream& rx_os, int x_tabs)
+void ParameterString::Export(ostream& rx_os, int x_tabs) const
 {
 	string tabs(x_tabs, '\t');
 	rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<endl;

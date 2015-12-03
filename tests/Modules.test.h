@@ -432,5 +432,32 @@ public:
 		}
 
 	}
+
+	/// Test export
+	void testExport(const Module& xr_module)
+	{
+		string fileName = "tests/tmp/" + xr_module.GetName() + ".xml";
+		ofstream of(fileName.c_str());
+		xr_module.Export(of, 0);
+		of.close();
+		TS_ASSERT(compareFiles(fileName, "tests/modules/" + xr_module.GetName() + ".xml"));
+	}
+
+	/// Test export
+	void testExport()
+	{
+		std::vector<std::string> moduleTypes = {"VideoFileReader", "SlitCam", "BgrSubMOG2", "RenderObjects"};
+
+		for(auto& modType : moduleTypes)
+		{
+			TS_TRACE("# on module " + modType);
+			Module* module;
+			ParameterStructure* parameters;
+			std::tie(parameters, module) = createAndConnectModule(modType);
+			testExport(*module);
+			delete module;
+			delete parameters;
+		}
+	}
 };
 #endif

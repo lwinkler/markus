@@ -320,7 +320,7 @@ void Module::Process()
 * @param rx_os         Output stream
 * @param x_indentation Number of tabs in indentation
 */
-void Module::Export(ostream& rx_os, int x_indentation)
+void Module::Export(ostream& rx_os, int x_indentation) const
 {
 	string tabs(x_indentation, '\t');
 	tabs = string(x_indentation, '\t');
