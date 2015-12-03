@@ -55,7 +55,7 @@ public:
 	virtual void Randomize(unsigned int& xr_seed) = 0;
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
-	void Export(std::ostream& rx_os, int x_id, int x_indentation, bool x_isInput) const;
+	virtual void Export(std::ostream& rx_os, int x_id, int x_indentation, bool x_isInput) const;
 	inline bool IsConnected() const {return m_connected != nullptr;}
 	inline const Module& GetModule() const {return mr_module;}
 	inline Stream& GetConnected() const

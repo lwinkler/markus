@@ -108,6 +108,30 @@ var xmlProject = null;
 				dropOptions : dropOptions
 			};
 
+			var inputPointMulti = {
+				endpoint:"Rectangle",
+				paintStyle:{ fillStyle:colorDefault },
+				isSource:false,
+				scope:"default",
+				connectorStyle:{ strokeStyle:colorDefault, lineWidth:2 },
+				maxConnections:99,
+				isTarget:true,
+				beforeDrop:function(params) { 
+					// Connect input with output on xml
+					var xmlOutput = $(params.connection.endpoints[0]).data('config');
+					var xmlInput  = $(params.dropEndpoint).data('config');
+
+					// if(!! xmlInput || !! xmlOutput)
+					// 	return false;
+					xmlInput.attr('outputid', xmlOutput.attr('id'));
+					xmlInput.attr('moduleid', xmlOutput.parent().parent().attr('id'));
+					hasChanges = true;
+
+					return true;
+				},				
+				dropOptions : dropOptions
+			};
+
 
 			var outputPoint = {
 				endpoint:["Dot", { radius:10 }],
@@ -249,19 +273,35 @@ var xmlProject = null;
 				var offset = 1.0 / (xmlInputs.length + 1);
 				var y = offset;
 
-				xmlInputs.each(function(index){
+				xmlInputs.each(function(index, el){
 					// Create anchor point for GUI
 					var scope = $(this).data('class').find('type').text();
 					var color = pointsColor[scope];
-					var e1 = jsPlumb.addEndpoint(
-						'w' + id, {
-							anchor:[0, y, -1, 0], 
-							scope: scope,
-							paintStyle:{ fillStyle: color},
-							connectorStyle:{ strokeStyle: color}
-						},
-						inputPoint
-					);
+					console.log(el);
+					var multi = $(this).data('class').attr('multi');
+					var e1;
+					if(multi === undefined)
+					{
+						e1 = jsPlumb.addEndpoint(
+							'w' + id, {
+								anchor:[0, y, -1, 0], 
+								scope: scope,
+								paintStyle:{ fillStyle: color},
+								connectorStyle:{}
+							},
+							inputPointMulti
+						);
+					} else {
+						e1 = jsPlumb.addEndpoint(
+							'w' + id, {
+								anchor:[0, y, -1, 0], 
+								scope: scope,
+								paintStyle:{ fillStyle: "white", strokeStyle: color, lineWidth: 5},
+								connectorStyle:{}
+							},
+							inputPoint
+						);
+					}
 					$(e1).data('config', $(this));
 					$(this).data('gui', $(e1));
 					y += offset;

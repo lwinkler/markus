@@ -47,30 +47,10 @@
 			<name>image</name>
 			<description>Input video stream</description>
 		</input>
-		<input id="1">
+		<input id="1" multi="1">
 			<type>Objects</type>
 			<name>objects0</name>
-			<description>Object stream 0</description>
-		</input>
-		<input id="2">
-			<type>Objects</type>
-			<name>objects1</name>
-			<description>Object stream 1</description>
-		</input>
-		<input id="3">
-			<type>Objects</type>
-			<name>objects2</name>
-			<description>Object stream 2</description>
-		</input>
-		<input id="4">
-			<type>Objects</type>
-			<name>objects3</name>
-			<description>Object stream 3</description>
-		</input>
-		<input id="5">
-			<type>Objects</type>
-			<name>objects4</name>
-			<description>Object stream 4</description>
+			<description>Object stream</description>
 		</input>
 	</inputs>
 	<outputs>
