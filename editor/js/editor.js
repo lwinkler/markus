@@ -119,7 +119,7 @@ var xmlProject = null;
 				beforeDrop:function(params) { 
 					// Connect input with output on xml
 					var xmlOutput = $(params.connection.endpoints[0]).data('config');
-					var xmlInput  = $(params.dropEndpoint).data('config');
+					var xmlInput  = $("<input/>", xmlProject).appendTo($(params.dropEndpoint).data('config'));
 
 					// if(!! xmlInput || !! xmlOutput)
 					// 	return false;
@@ -150,8 +150,28 @@ var xmlProject = null;
 
 					// if(!! xmlInput || !! xmlOutput)
 					// 	return false;
-					xmlInput.removeAttr('outputid');
-					xmlInput.removeAttr('moduleid');
+					if(xmlInput.children().length > 0) {
+						// This is the case of a multiple input, remove the sub-input
+						var outputid = $(params.endpoints[0]).data("config").attr("id");
+						var moduleid = $(params.endpoints[0]).data("config").parent().parent().attr("id"); // $(params.target).data("config").parent().parent().attr("id");
+
+						// This is a HACK. To improve we need to access the endpoint on output side each time // TODO
+						if(outputid == $(params.suspendedEndpoint).data("config").attr("id"))
+							outputid = $(params.endpoints[1]).data("config").attr("id");
+
+						if(moduleid == $(params.suspendedEndpoint).data("config").parent().parent().attr("id"))
+							moduleid = $(params.endpoints[1]).data("config").parent().parent().attr("id");
+						console.log($(params.endpoints[0]).data("config").attr("id"));
+						console.log($(params.endpoints[1]).data("config").attr("id"));
+						console.log($(params.suspendedEndpoint).data("config").attr("id"));
+						console.log( outputid + " " + moduleid);
+						console.log(xmlInput.find('>input[outputid="' + outputid + '"][moduleid="' + moduleid + '"]')[0]);
+						xmlInput.find('>input[outputid="' + outputid + '"][moduleid="' + moduleid + '"]')[0].remove();
+						console.log("ici");
+					} else {
+						xmlInput.removeAttr('outputid');
+						xmlInput.removeAttr('moduleid');
+					}
 					hasChanges = true;
 					return true;
 				},
@@ -526,6 +546,7 @@ var xmlProject = null;
 
 				// Link inputs-outputs
 				xmlProject.find('module').each(function(index){
+					// Reconnect all inputs to outputs
 					$(this).find('inputs > input').each(function(){
 
 						// rebuild connections
@@ -538,6 +559,20 @@ var xmlProject = null;
 								// type:"basic"
 							});
 						}
+						// Reconnect all sub-inputs to outputs (multiple inputs)
+						$(this).find('> input').each(function(){
+
+							// rebuild connections
+							var moduleid = $(this).attr('moduleid');
+							var outputid = $(this).attr('outputid');
+							if($.isNumeric(moduleid) && $.isNumeric(outputid)) {
+								jsPlumb.connect({
+									sourceEndpoint: $(this).parent().data('gui')[0],
+									targetEndpoint: xmlProject.find('module[id="' + moduleid + '"] > outputs > output[id="' + outputid + '"]').data('gui')[0],
+									// type:"basic"
+								});
+							}
+						});
 					});
 				});
 				hasChanges = false;
