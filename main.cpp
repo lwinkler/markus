@@ -341,8 +341,10 @@ int main(int argc, char** argv)
 
 		// Init global variables and objects
 		// Context manages all call to system, files, ...
-		Context::Parameters contextParams(mainConfig.Find("application"), args.configFile, appConfig.GetAttribute("name"), args.outputDir);
-		Context context(contextParams);
+		Context::Parameters contextParameters(mainConfig.Find("application"), args.configFile, appConfig.GetAttribute("name"), args.outputDir);
+		contextParameters.centralized = args.centralized;
+		contextParameters.realTime    = !args.fast;
+		Context context(contextParameters);
 		if(args.outputDir != "")
 		{
 			string dir = args.outputDir + "/";
@@ -368,9 +370,7 @@ int main(int argc, char** argv)
 		// Set manager and context
 		Manager::Parameters managerParameters(appConfig);
 		// Override parameter auto_process with centralized
-		managerParameters.autoProcess = false; // TODO: Use range
-		managerParameters.centralized = args.centralized;
-		managerParameters.fast = args.fast;
+		managerParameters.autoProcess = !args.nogui;
 		Manager manager(managerParameters);
 		manager.SetContext(context);
 
@@ -402,9 +402,9 @@ int main(int argc, char** argv)
 		{
 			// No gui. launch the process directly
 			// note: so far we cannot launch the process in a decentralized manner (with a timer on each module)
-
-			if(!managerParameters.autoProcess && args.centralized)
+			if(args.centralized)
 			{
+				assert(!managerParameters.autoProcess);
 				while(manager.ProcessAndCatch())
 				{
 					// nothing
@@ -412,25 +412,14 @@ int main(int argc, char** argv)
 			}
 			else
 			{
-				manager.Start();
 				LOG_ERROR(logger, "Markus cannot run in decentralized mode without GUI yet.");
-				sleep(10); // TODO: This mode is not handled yet
 			}
 		}
 		else
 		{
-			std::thread th;
-			if(!managerParameters.autoProcess && args.centralized)
-			{
-				th = thread([&manager](){
-					while(manager.ProcessAndCatch())
-					{
-						// nothing
-					}
-				});
-			}
-			else manager.Start();
 #ifndef MARKUS_NO_GUI
+			assert(managerParameters.autoProcess);
+			manager.Start();
 			ConfigFile mainGuiConfig("gui.xml", true);
 			ConfigReader guiConfig = mainGuiConfig.FindRef("gui[name=\"" + args.configFile + "\"]", true);
 			guiConfig.FindRef("parameters", true);
@@ -440,17 +429,15 @@ int main(int argc, char** argv)
 			gui.setWindowTitle("Markus");
 			if(!args.nogui)
 				gui.show();
-			returnValue = app.exec();
+			if(app.exec() != 0)
+				LOG_ERROR(logger, "Qt Application returned error code");
 
 			// write the modified params in config and save
 			gui.UpdateConfig();
 			mainGuiConfig.SaveToFile("gui.xml");
 #else
 			LOG_ERROR(logger, "Markus was compiled without GUI. It can only be launched with option -nc");
-			returnValue = -1;
 #endif
-			if(!managerParameters.autoProcess && args.centralized)
-				th.join();
 		}
 		manager.Stop();
 

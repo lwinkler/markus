@@ -61,7 +61,7 @@ public:
 	}
 	inline const ParameterType& GetType() const {const static ParameterType s = PARAM_ENUM; return s;}
 	virtual const std::string& GetTypeString() const = 0;
-	virtual void Export(std::ostream& rx_os, int x_indentation);
+	virtual void Export(std::ostream& rx_os, int x_indentation) const;
 	virtual const std::map<std::string, int>& GetEnum() const = 0;
 	virtual const std::map<int, std::string>& GetReverseEnum() const = 0;
 

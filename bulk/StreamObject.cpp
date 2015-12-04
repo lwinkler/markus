@@ -26,30 +26,24 @@
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/writer.h>
 
+#define DEFAULT_STREAM_COLOR cv::Scalar(255, 255, 255)
+
 using namespace std;
 using namespace cv;
 
-log4cxx::LoggerPtr StreamObject::m_logger(log4cxx::Logger::getLogger("StreamObject"));
-
-StreamObject::StreamObject(const string& x_name, vector<Object>& xr_objects, Module& rx_module, const string& x_description, const string& rx_requirement):
-	Stream(x_name, rx_module, x_description, rx_requirement),
-	m_objects(xr_objects)
-{}
-
-StreamObject::~StreamObject()
-{
-
-}
+template<>log4cxx::LoggerPtr StreamObject::m_logger(log4cxx::Logger::getLogger("StreamObject"));
+template<> const string StreamObject::m_type         = "Objects";
+template<> const string StreamObject::m_class        = "StreamObjects";
 
 /// Convert the input to the right format
 
-void StreamObject::ConvertInput()
+template<>void StreamObject::ConvertInput()
 {
 	if(m_connected == nullptr)
 	{
 		// LOG_DEBUG(m_logger, "Object input not connected, use the whole image");
-		m_objects.clear();
-		m_objects.push_back(Object("screen", Rect(0, 0, GetWidth(), GetHeight())));
+		m_object.clear();
+		m_object.push_back(Object("screen", Rect(0, 0, GetWidth(), GetHeight())));
 		return;
 	}
 
@@ -59,15 +53,15 @@ void StreamObject::ConvertInput()
 	const StreamObject * pstream = dynamic_cast<const StreamObject*>(m_connected);
 	if(pstream == nullptr)
 		throw MkException("Stream of objects " + GetName() + " is not correctly connected", LOC);
-	vector<Object> rectsTarget = pstream->m_objects;
-	double ratioX = static_cast<double>(m_width) / pstream->GetWidth();
-	double ratioY = static_cast<double>(m_height) / pstream->GetHeight();
+	vector<Object> rectsTarget = pstream->m_object;
+	double ratioX = static_cast<double>(GetWidth()) / pstream->GetWidth();
+	double ratioY = static_cast<double>(GetHeight()) / pstream->GetHeight();
 
-	m_objects.clear();
+	m_object.clear();
 	for(const auto& elem : rectsTarget)
 	{
-		m_objects.push_back(elem);
-		Object& obj(m_objects[m_objects.size() - 1]);
+		m_object.push_back(elem);
+		Object& obj(m_object[m_object.size() - 1]);
 		obj.posX   *= ratioX;
 		obj.posY   *= ratioY;
 		obj.width  *= ratioX;
@@ -77,18 +71,18 @@ void StreamObject::ConvertInput()
 
 /// Render : Draw rectangles on image
 
-void StreamObject::RenderTo(Mat& x_output) const
+template<>void StreamObject::RenderTo(Mat& x_output) const
 {
-	if(x_output.cols != m_width || x_output.rows != m_height)
+	if(x_output.cols != GetWidth() || x_output.rows != GetHeight())
 		throw MkException("Cannot render, image must have the same size as the stream", LOC);
-	for(const auto& elem : m_objects)
+	for(const auto& elem : m_object)
 	{
 		elem.RenderTo(x_output, DEFAULT_STREAM_COLOR);
 	}
 }
 
 /// Query : give info about cursor position
-void StreamObject::Query(int x_posX, int x_posY) const
+template<>void StreamObject::Query(int x_posX, int x_posY) const
 {
 	// check if out of bounds
 	if(x_posX < 0 || x_posY < 0 || x_posX >= GetWidth() || x_posY >= GetHeight())
@@ -96,26 +90,26 @@ void StreamObject::Query(int x_posX, int x_posY) const
 
 	Point pt(x_posX, x_posY);
 
-	for(const auto& elem : m_objects)
+	for(const auto& elem : m_object)
 		if(elem.GetRect().contains(pt))
 			LOG_INFO(m_logger, elem);
 	
 }
 
 /// Randomize the content of the stream
-void StreamObject::Randomize(unsigned int& xr_seed)
+template<>void StreamObject::Randomize(unsigned int& xr_seed)
 {
-	m_objects.clear();
+	m_object.clear();
 	int nb = rand_r(&xr_seed) % 10;
 	for(int i = 0 ; i < nb ; i++)
 	{
 		Object obj("random");
 		obj.Randomize(xr_seed, m_requirement, Size(GetWidth(), GetHeight()));
-		m_objects.push_back(obj);
+		m_object.push_back(obj);
 	}
 }
 
-void StreamObject::Serialize(ostream& x_out, const string& x_dir) const
+template<>void StreamObject::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 	stringstream ss;
@@ -123,11 +117,11 @@ void StreamObject::Serialize(ostream& x_out, const string& x_dir) const
 	ss >> root;
 	int cpt = 0;
 
-	if(m_objects.size() == 0)
+	if(m_object.size() == 0)
 		root["objects"] = Json::Value(Json::arrayValue); // Empty array
 
 	// Serialize vector of objects
-	for(const auto& elem : m_objects)
+	for(const auto& elem : m_object)
 	{
 		ss.clear();
 		elem.Serialize(ss, x_dir);
@@ -137,7 +131,7 @@ void StreamObject::Serialize(ostream& x_out, const string& x_dir) const
 	x_out << root;
 }
 
-void StreamObject::Deserialize(istream& x_in, const string& x_dir)
+template<>void StreamObject::Deserialize(istream& x_in, const string& x_dir)
 {
 	Json::Value root;
 	x_in >> root;  // note: copy first for local use
@@ -145,13 +139,13 @@ void StreamObject::Deserialize(istream& x_in, const string& x_dir)
 	ss << root;
 	Stream::Deserialize(ss, x_dir);
 
-	Clear();
+	m_object.clear();
 	for(const auto & elem : root["objects"])
 	{
 		ss.clear();
 		Object obj("empty");
-		AddObject(obj);
+		m_object.push_back(obj);
 		ss << elem;
-		m_objects.back().Deserialize(ss, x_dir);
+		m_object.back().Deserialize(ss, x_dir);
 	}
 }

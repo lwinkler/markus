@@ -21,56 +21,43 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef STREAM_IMAGE_H
-#define STREAM_IMAGE_H
+#ifndef STREAM_T_H
+#define STREAM_T_H
 
-#include "StreamT.h"
-#include <map>
+#include "Stream.h"
 
-/// Structure used to keep the time stamp along with a buffer image (to speed up conversion)
-struct BufferImage
-{
-	BufferImage() : timeStamp(TIME_STAMP_MIN) {}
-	TIME_STAMP timeStamp;
-	cv::Mat    image;
-};
+/// Stream in the form of located objects
 
-typedef StreamT<cv::Mat> StreamImage;
-
-
-/// Class for a stream of images (or video) used for input and output
-template<> class StreamT<typename cv::Mat> : public Stream
+template<typename T>class StreamT : public Stream
 {
 public:
-	StreamT(const std::string& x_name, cv::Mat& x_image, Module& rx_module, const std::string& rx_description);
-	MKCLASS("StreamImage")
-	MKTYPE("Image")
+	StreamT(const std::string& rx_name, T& rx_object, Module& rx_module, const std::string& rx_description, const std::string& rx_requirement = "") :
+		Stream(rx_name, rx_module, rx_description, rx_requirement),
+		m_object(rx_object)
+	{}
+	~StreamT(){}
+	virtual const std::string& GetClass() const{return m_class;}
+	virtual const std::string& GetType() const {return m_type;}
+
+	inline const T& GetObject() const {return m_object;}
+	inline       T& RefObject() const {return m_object;}
 
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat& x_output) const;
 	virtual void Query(int x_posX, int x_posY) const;
+	virtual void Randomize(unsigned int& rx_seed);
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
-	virtual void Randomize(unsigned int& xr_seed);
-	const cv::Mat& GetImage() const {return m_image;}
-	void Connect(Stream * x_stream, bool x_bothWays = true);
+	// double GetFeatureValue(const std::vector<Feature>& x_vect, const char* x_name);
 
 protected:
-	static std::string createResolutionString(const cv::Size x_size, int x_depth, int x_channels)
-	{
-		std::stringstream ss;
-		ss << x_size.width << "x" << x_size.height << "_" << x_depth << "_" << x_channels;
-		return ss.str();
-	}
-	void ConvertToOutput(TIME_STAMP x_ts, cv::Mat& xr_output);
-	cv::Mat& m_image;
-	StreamImage* mp_connectedImage;
-
-	std::map<std::string, BufferImage> m_buffers;
+	T& m_object;
 
 private:
-	// DISABLE_COPY(Stream)
+	DISABLE_COPY(StreamT)
 	static log4cxx::LoggerPtr m_logger;
+	static const std::string m_type;
+	static const std::string m_class;
 };
 
 #endif

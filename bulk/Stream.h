@@ -44,9 +44,9 @@ public:
 	inline const std::string& GetName() const {return m_name;}
 	// inline int GetId() const {return m_id;}
 	// inline void SetId(int x_id) {m_id = x_id;} // id should disappear at term
-	inline int GetWidth() const {return m_width;} // TODO: is this used ?
-	inline int GetHeight() const {return m_height;}
-	inline cv::Size GetSize() const {return cv::Size(m_width, m_height);}
+	inline int GetWidth() const {return GetModule().GetWidth();}
+	inline int GetHeight() const {return GetModule().GetHeight();}
+	inline cv::Size GetSize() const {return cv::Size(mr_module.GetWidth(), mr_module.GetHeight());}
 	inline const std::string& GetDescription() const {return m_description;}
 	virtual void RenderTo(cv::Mat& x_output) const = 0;
 	virtual void Query(int x_posX, int x_posY) const = 0;
@@ -55,7 +55,7 @@ public:
 	virtual void Randomize(unsigned int& xr_seed) = 0;
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
-	void Export(std::ostream& rx_os, int x_id, int x_indentation, bool x_isInput);
+	void Export(std::ostream& rx_os, int x_id, int x_indentation, bool x_isInput) const;
 	inline bool IsConnected() const {return m_connected != nullptr;}
 	inline const Module& GetModule() const {return mr_module;}
 	inline Stream& GetConnected() const
@@ -83,8 +83,6 @@ public:
 protected:
 	std::string m_name;
 	// const int m_id;
-	int m_width;
-	int m_height;
 	Module& mr_module;
 	std::string m_description;
 	std::atomic<TIME_STAMP> m_timeStamp;

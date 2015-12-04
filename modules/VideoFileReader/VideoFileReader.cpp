@@ -57,6 +57,7 @@ void VideoFileReader::Reset()
 		AddController(new ControllerInputStream(*this));
 #endif
 
+	m_beginTimeStamp = 0;
 	m_capture.release();
 	m_capture.open(m_param.file);
 	if(! m_capture.isOpened())
@@ -88,7 +89,9 @@ void VideoFileReader::Capture()
 		{
 			if(m_param.loop)
 			{
+				TIME_STAMP ts = m_lastTimeStamp;
 				Reset();
+				m_beginTimeStamp = ts;
 				// m_capture.release();
 				// m_capture.open(m_param.file);
 				if(!m_capture.grab())
@@ -104,7 +107,7 @@ void VideoFileReader::Capture()
 		}
 
 		m_capture.retrieve(m_output);
-		m_currentTimeStamp = m_capture.get(CV_CAP_PROP_POS_MSEC);
+		m_currentTimeStamp = m_beginTimeStamp + m_capture.get(CV_CAP_PROP_POS_MSEC);
 		//cout<<m_currentTimeStamp<<" - "<<m_lastTimeStamp<<endl;
 
 		// only break out of the loop once we fulfill the fps criterion

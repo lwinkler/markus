@@ -50,8 +50,6 @@ Manager::Manager(ParameterStructure& xr_params) :
 	mr_moduleFactory(Factories::modulesFactory())
 {
 	LOG_INFO(m_logger, "Create manager");
-	m_frameCount = 0;
-	m_isConnected = false;
 
 	for(const auto& moduleConfig : m_param.GetConfig().FindAll("module", true))
 	{
@@ -62,8 +60,6 @@ Manager::Manager(ParameterStructure& xr_params) :
 		ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, moduleConfig);
 		Module * tmp1 = mr_moduleFactory.Create(moduleType, *tmp2);
 
-		if(m_param.centralized)
-			tmp1->AllowAutoProcess(false);
 		LOG_DEBUG(m_logger, "Add module " << tmp1->GetName() << " to list input=" << (tmp1->IsInput() ? "yes" : "no"));
 		m_modules.push_back(tmp1);
 		m_parameters.push_back(tmp2);
@@ -145,7 +141,10 @@ void Manager::Connect()
 
 					// Connect input and output streams
 					inputStream.Connect(&outputStream);
-					RefModuleById(outputModuleId).AddDependingModule(module);
+					if(module.GetParameters().GetParameterByName("master").GetValueString().empty())
+						RefModuleById(outputModuleId).AddDependingModule(module);
+					else
+						RefModuleByName(module.GetParameters().GetParameterByName("master").GetValueString()).AddDependingModule(module);
 				}
 			}
 			catch(MkException& e)
@@ -155,57 +154,6 @@ void Manager::Connect()
 			}
 		}
 	}
-
-/*
-	// Set the master module for each module
-	//    the master module is the module responsible to call the Process method
-	bool changed = true;
-	bool ready = true;
-	vector<Module*> newOrder;
-
-	for(auto mod : m_modules)
-		if(mod->IsAutoProcessed() || mod->IsInput())
-		{
-			LOG_DEBUG(m_logger, "Add autoprocessing module " << mod->GetName());
-			newOrder.push_back(mod);
-		}
-
-	while(changed)
-	{
-		changed = false;
-		ready = true;
-		for(auto & elem : m_modules)
-		{
-			if(!elem->IsReady())
-			{
-				ready = false;
-				if(elem->AllInputsAreReady())
-				{
-					elem->SetAsReady();
-					if(m_param.centralized)
-						newOrder.push_back(elem);
-					else
-					{
-						Module& master = RefModuleByName(elem->GetMasterModule().GetName());
-						master.AddDependingModule(*elem);
-					}
-					// cout<<"Set module "<<depending->GetName()<<" as ready"<<endl;
-					changed = true;
-				}
-			}
-		}
-	}
-	// If centralized reorder the module list
-	if(m_param.centralized)
-	{
-		assert(m_modules.size() == newOrder.size());
-		m_modules = newOrder;
-	}
-
-	if(! ready)
-		throw MkException("Not all modules can be assigned to a master. There is probably a problem with the connections between modules.", LOC);
-
-	*/
 	Check();
 	m_isConnected = true;
 }
@@ -255,7 +203,6 @@ void Manager::Reset(bool x_resetInputs)
 		if(x_resetInputs || !elem->IsInput())
 		{
 			// If manager is in autoprocess, modules must not be
-			elem->SetRealTime(!m_param.fast);
 			elem->Reset();
 		}
 	}
@@ -294,6 +241,7 @@ void Manager::Process()
 		if(!elem->ProcessAndCatch())
 		{
 			cpt++;
+			LOG_WARN(m_logger, "Exception " << elem->LastException());
 			lastException = elem->LastException();
 		}
 	}
@@ -386,12 +334,13 @@ void Manager::PrintStatistics()
 */
 bool Manager::AbortCondition() const
 {
+	if(m_quitting)
+		return true;
 	bool endOfStreams = true;
 	for(const auto & elem : m_inputs)
 	{
 		if(!elem->IsEndOfStream())
 		{
-			cout << elem->GetName() << endOfStreams << endl;
 			endOfStreams = false;
 			break;
 		}

@@ -32,8 +32,6 @@ log4cxx::LoggerPtr Stream::m_logger(log4cxx::Logger::getLogger("Stream"));
 
 Stream::Stream(const string& x_name, Module& rx_module, const string& rx_description, const string& rx_requirement) :
 	m_name(x_name),
-	m_width(rx_module.GetWidth()),
-	m_height(rx_module.GetHeight()),
 	mr_module(rx_module),
 	m_description(rx_description),
 	m_requirement(rx_requirement),
@@ -53,7 +51,7 @@ Stream::~Stream()
 * @param x_indentation Number of tabs for indentation
 * @param x_isInput     Is an input
 */
-void Stream::Export(ostream& rx_os, int x_id, int x_indentation, bool x_isInput)
+void Stream::Export(ostream& rx_os, int x_id, int x_indentation, bool x_isInput) const
 {
 	string tabs(x_indentation , '\t');
 	string inout = "output";
@@ -87,8 +85,6 @@ void Stream::Serialize(ostream& x_out, const string& x_dir) const
 	root["name"]        = m_name;
 	// root["id"]          = m_id;
 	root["type"]        = GetType();
-	root["width"]       = m_width;
-	root["height"]      = m_height;
 	root["description"] = m_description;
 	root["timeStamp"]   = m_timeStamp.load();
 	root["connected"]   = IsConnected();
@@ -107,8 +103,6 @@ void Stream::Deserialize(istream& x_in, const string& x_dir)
 	// cout<<root["type"].asString()<<" != "<<GetType()<<endl;
 	if(root["type"].asString() != GetType())
 		throw MkException("Stream must have the right type before serializing", LOC);
-	m_width       = root["width"].asDouble();
-	m_height      = root["height"].asDouble();
 	m_description = root["description"].asString();
 	m_timeStamp   = root["timeStamp"].asInt64();
 	if(root["connected"] != IsConnected())

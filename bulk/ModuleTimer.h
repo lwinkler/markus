@@ -25,7 +25,6 @@
 #define QMODULE_TIMER_H
 
 #include <thread>
-#include <chrono>
 #include <atomic>
 #include <assert.h>
 #include <log4cxx/logger.h>
@@ -50,7 +49,6 @@ protected:
 	Processable & m_processable;
 	std::thread m_thread;
 	std::atomic<bool> m_running;
-	double m_delay = 0;
 
 private:
 	static log4cxx::LoggerPtr m_logger;

@@ -293,9 +293,14 @@ void Module::Process()
 		}
 
 		// Call depending modules (modules with fps = 0)
-		//TODO if PropagateCondition()
-		for(auto & elem : m_modulesDepending)
-			elem->Process();
+		if(PropagateCondition())
+		{
+			for(auto & elem : m_modulesDepending)
+			{
+				elem->Process();
+			}
+		}
+		else LOG_DEBUG(m_logger, "No propagation of processing to depending modules");
 
 
 		m_countProcessedFrames++;
@@ -315,7 +320,7 @@ void Module::Process()
 * @param rx_os         Output stream
 * @param x_indentation Number of tabs in indentation
 */
-void Module::Export(ostream& rx_os, int x_indentation)
+void Module::Export(ostream& rx_os, int x_indentation) const
 {
 	string tabs(x_indentation, '\t');
 	tabs = string(x_indentation, '\t');
@@ -481,28 +486,6 @@ void Module::Deserialize(istream& x_in, const string& x_dir)
 		m_debugStreams[i]->Deserialize(ss, x_dir);
 	}
 #endif
-}
-
-/**
-* @brief Return a reference to the master module. The master module is the preceeding module that is
- 	 responsible for calling the process method. The first connected input determines what module is master.
-*
-* @return The master module
-*/
-const Module& Module::GetMasterModule() const // TODO remove this after implementing new connection mode
-{
-	for(const auto & elem : m_inputStreams)
-	{
-		if(elem.second->IsConnected())
-		{
-			const Module& preceding = elem.second->GetConnected().GetModule();
-			if(preceding.IsAutoProcessed())
-				return preceding;
-			else
-				return preceding.GetMasterModule();
-		}
-	}
-	throw MkException("Module must have at least one input connected or be an input or be autoprocessed", LOC);
 }
 
 /**

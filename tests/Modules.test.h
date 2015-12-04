@@ -36,6 +36,7 @@
 #include "MkException.h"
 #include "FeatureFloatInTime.h"
 #include "FeatureVector.h"
+#include "Timer.h"
 
 using namespace std;
 
@@ -98,13 +99,14 @@ public:
 		.RefSubConfig("parameters", true)
 		.RefSubConfig("param", "name", "fps", true).SetValue("22");
 		mp_configFile->RefSubConfig("application").SetAttribute("name", "unitTest");
+		mp_contextParams = new Context::Parameters(mp_configFile->Find("application"), "/tmp/config_empty.xml", "TestModule", "tests/out");
+		mp_contextParams->centralized = true;
+		mp_context = new Context(*mp_contextParams);
 		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", mp_configFile->Find("application>module[name=\"VideoFileReader0\"]"));
 		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeConfig);
-		mp_fakeInput->AllowAutoProcess(false);
+		mp_fakeInput->SetContext(*mp_context);
 		// note: we need a fake module to create the input streams
 		mp_fakeInput->Reset();
-		mp_contextParams = new Context::Parameters(mp_configFile->Find("application"), "/tmp/config_empty.xml", "TestModule", "tests/out");
-		mp_context = new Context(*mp_contextParams);
 	}
 	void tearDown()
 	{
@@ -162,7 +164,6 @@ public:
 		}
 		Module* module                 = m_factoryModules.Create(x_type, *parameters);
 		module->SetContext(*mp_context);
-		module->AllowAutoProcess(false);
 		m_image = cv::Mat(module->GetHeight(), module->GetWidth(), module->GetImageType());
 
 		// Create custom streams to feed each input of the module
@@ -237,6 +238,8 @@ public:
 		// Test on each type of module
 		for(const auto& modType : m_moduleTypes)
 		{
+			Timer timer;
+			timer.Start();
 			try
 			{
 				TS_TRACE("# on module " + modType);
@@ -336,6 +339,9 @@ public:
 			{
 				TS_TRACE("Parameter exception caught: " + std::string(e.what()));
 			}
+			timer.Stop();
+			if(timer.GetSecDouble() > 10)
+				TS_WARN("Module " + modType + " took " + std::to_string(timer.GetSecDouble()) + "s");
 		}
 	}
 
@@ -349,6 +355,8 @@ public:
 		// Test on each type of module
 		for(const auto& modType : m_moduleTypes)
 		{
+			Timer timer;
+			timer.Start();
 			Module* module;
 			ParameterStructure* parameters;
 			std::tie(parameters, module) = createAndConnectModule(modType);
@@ -404,6 +412,9 @@ public:
 			}
 			delete module;
 			delete parameters;
+			timer.Stop();
+			if(timer.GetSecDouble() > 10)
+				TS_WARN("Module " + modType + " took " + std::to_string(timer.GetSecDouble()) + "s");
 		}
 	}
 
@@ -432,6 +443,33 @@ public:
 				TS_FAIL("Error(s) found in " + outDir + "/markus.log");
 		}
 
+	}
+
+	/// Test export
+	void testExport(const Module& xr_module)
+	{
+		string fileName = "tests/tmp/" + xr_module.GetName() + ".xml";
+		ofstream of(fileName.c_str());
+		xr_module.Export(of, 0);
+		of.close();
+		TS_ASSERT(compareFiles(fileName, "tests/modules/" + xr_module.GetName() + ".xml"));
+	}
+
+	/// Test export
+	void testExport()
+	{
+		std::vector<std::string> moduleTypes = {"VideoFileReader", "SlitCam", "BgrSubMOG2", "RenderObjects"};
+
+		for(auto& modType : moduleTypes)
+		{
+			TS_TRACE("# on module " + modType);
+			Module* module;
+			ParameterStructure* parameters;
+			std::tie(parameters, module) = createAndConnectModule(modType);
+			testExport(*module);
+			delete module;
+			delete parameters;
+		}
 	}
 };
 #endif

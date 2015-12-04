@@ -30,25 +30,15 @@
 using namespace std;
 using namespace cv;
 
-log4cxx::LoggerPtr StreamEvent::m_logger(log4cxx::Logger::getLogger("StreamEvent"));
-
-StreamEvent::StreamEvent(const string& x_name, Event& x_event, Module& rx_module, const string& rx_description) :
-	Stream(x_name, rx_module, rx_description),
-	m_event(x_event)
-{
-}
-
-
-StreamEvent::~StreamEvent()
-{
-
-}
+template<> log4cxx::LoggerPtr StreamEvent::m_logger(log4cxx::Logger::getLogger("StreamEvent"));
+template<> const string StreamEvent::m_type         = "Event";
+template<> const string StreamEvent::m_class        = "StreamEvent";
 
 // Transmit the event to the connected module
 
-void StreamEvent::ConvertInput()
+template<> void StreamEvent::ConvertInput()
 {
-	m_event.Clean();
+	m_object.Clean();
 
 	if(m_connected == nullptr) return;
 
@@ -58,52 +48,52 @@ void StreamEvent::ConvertInput()
 	const StreamEvent * pstream = dynamic_cast<const StreamEvent*>(m_connected);
 	if(pstream == nullptr)
 		throw MkException("Stream of event " + GetName() + " is not correctly connected", LOC);
-	m_event = pstream->GetEvent();
+	m_object = pstream->GetObject();
 
-	if(! m_event.IsRaised()) return;
+	if(! m_object.IsRaised()) return;
 
-	double ratioX = static_cast<double>(m_width) / pstream->GetWidth();
-	double ratioY = static_cast<double>(m_height) / pstream->GetHeight();
-	m_event.ScaleObject(ratioX, ratioY);
+	double ratioX = static_cast<double>(GetWidth()) / pstream->GetWidth();
+	double ratioY = static_cast<double>(GetHeight()) / pstream->GetHeight();
+	m_object.ScaleObject(ratioX, ratioY);
 }
 
 /// Randomize the content of the stream
-void StreamEvent::Randomize(unsigned int& xr_seed)
+template<> void StreamEvent::Randomize(unsigned int& xr_seed)
 {
 	// random event
-	m_event.Randomize(xr_seed, m_requirement, GetSize());
+	m_object.Randomize(xr_seed, m_requirement, GetSize());
 }
 
 /// Render : to display the event
-void StreamEvent::RenderTo(Mat& x_output) const
+template<> void StreamEvent::RenderTo(Mat& x_output) const
 {
-	if(m_event.IsRaised())
+	if(m_object.IsRaised())
 	{
 		x_output.setTo(Scalar(255, 255, 255));
-		m_event.GetObject().RenderTo(x_output, Scalar(255, 0, 0));
+		m_object.GetObject().RenderTo(x_output, Scalar(255, 0, 0));
 	}
 	// else x_output.setTo(0);
 }
 
 /// Query : give info about cursor position
-void StreamEvent::Query(int x_posX, int x_posY) const
+template<> void StreamEvent::Query(int x_posX, int x_posY) const
 {
-	LOG_INFO(m_logger, m_event);
+	LOG_INFO(m_logger, m_object);
 }
 
-void StreamEvent::Serialize(ostream& x_out, const string& x_dir) const
+template<> void StreamEvent::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 	stringstream ss;
 	Stream::Serialize(ss, x_dir);
 	ss >> root;
 	ss.clear();
-	m_event.Serialize(ss, x_dir);
+	m_object.Serialize(ss, x_dir);
 	ss >> root["event"];
 	x_out << root;
 }
 
-void StreamEvent::Deserialize(istream& x_in, const string& x_dir)
+template<> void StreamEvent::Deserialize(istream& x_in, const string& x_dir)
 {
 	Json::Value root;
 	x_in >> root;  // note: copy first for local use
@@ -114,5 +104,5 @@ void StreamEvent::Deserialize(istream& x_in, const string& x_dir)
 
 	ss.clear();
 	ss << root["event"];
-	m_event.Deserialize(ss, x_dir);
+	m_object.Deserialize(ss, x_dir);
 }

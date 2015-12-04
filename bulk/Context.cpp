@@ -33,7 +33,8 @@ using namespace std;
 
 log4cxx::LoggerPtr Context::m_logger(log4cxx::Logger::getLogger("Context"));
 
-Context::Context(const ParameterStructure& xr_params) :
+Context::Context(ParameterStructure& xr_params) :
+	Configurable(xr_params),
 	m_param(dynamic_cast<const Parameters&>(xr_params))
 {
 	m_outputDir = CreateOutputDir(m_param.outputDir);
