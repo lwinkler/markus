@@ -5,7 +5,8 @@
 <output id="0"/>
 </outputs>
 <parameters>
-<param name="class">UsbCam</param>
+<param name="class">VideoFileReader</param>
+<param name="loop">1</param>
 </parameters>
 		<uiobject x="500" y="300" width="0" height="0"/>
 	</module>
@@ -23,7 +24,7 @@
 <param name="propagate">0</param>
 <param name="width">160</param>
 <param name="height">120</param>
-<param name="motion_thres">0.01</param>
+<param name="motion_thres">0.001</param>
 </parameters>
 		<uiobject x="1143" y="293" width="0" height="0"/>
 	</module>
