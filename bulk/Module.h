@@ -140,10 +140,9 @@ public:
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 
 	virtual inline bool IsInput() const {return false;}
-	void Export(std::ostream& rx_os, int x_indentation);
+	void Export(std::ostream& rx_os, int x_indentation) const;
 	Stream& RefInputStreamById(int x_id);
 	Stream& RefOutputStreamById(int x_id);
-	const Module& GetMasterModule() const;
 	inline void CheckParameterRange() {m_param.CheckRange(false);}
 	inline bool IsUnitTestingEnabled() const {return m_isUnitTestingEnabled;}
 	inline TIME_STAMP GetCurrentTimeStamp() const {return m_currentTimeStamp;}

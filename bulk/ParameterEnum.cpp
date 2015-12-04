@@ -36,7 +36,7 @@ log4cxx::LoggerPtr ParameterEnum::m_logger(log4cxx::Logger::getLogger("Parameter
 * @param rx_os         Output stream
 * @param x_indentation Number of tabs for indentation
 */
-void ParameterEnum::Export(ostream& rx_os, int x_indentation)
+void ParameterEnum::Export(ostream& rx_os, int x_indentation) const
 {
 	string tabs(x_indentation, '\t');
 	rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<endl;

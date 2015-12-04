@@ -24,34 +24,10 @@
 #ifndef STREAM_EVENT_H
 #define STREAM_EVENT_H
 
-#include "Stream.h"
+#include "StreamT.h"
 #include "Event.h"
 
-/// Stream in the form of located objects
-
-class StreamEvent : public Stream
-{
-public:
-	StreamEvent(const std::string& rx_name, Event& x_event, Module& rx_module, const std::string& rx_description);
-	~StreamEvent();
-	MKCLASS("StreamEvent")
-	MKTYPE("Event")
-	inline void SetEvent(const Event& x_event) {m_event = x_event;}
-	inline const Event& GetEvent() const {return m_event;}
-
-	virtual void ConvertInput();
-	virtual void RenderTo(cv::Mat& x_output) const;
-	virtual void Query(int x_posX, int x_posY) const;
-	virtual void Randomize(unsigned int& xr_seed);
-	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
-	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
-
-protected:
-	Event& m_event;
-
-private:
-	DISABLE_COPY(StreamEvent)
-	static log4cxx::LoggerPtr m_logger;
-};
+/// Stream in the form of events
+typedef StreamT<Event> StreamEvent;
 
 #endif

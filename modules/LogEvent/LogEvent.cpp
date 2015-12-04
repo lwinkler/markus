@@ -205,5 +205,5 @@ bool LogEvent::IsInputProcessed() const
 {
 	const StreamEvent* pStream =  dynamic_cast<const StreamEvent*>(&m_inputStreams.at(0)->GetConnected());
 	assert(pStream != nullptr);
-	return m_event.IsRaised() || pStream->GetEvent().IsRaised();
+	return m_event.IsRaised() || pStream->GetObject().IsRaised();
 }

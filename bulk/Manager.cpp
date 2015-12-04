@@ -154,57 +154,6 @@ void Manager::Connect()
 			}
 		}
 	}
-
-/*
-	// Set the master module for each module
-	//    the master module is the module responsible to call the Process method
-	bool changed = true;
-	bool ready = true;
-	vector<Module*> newOrder;
-
-	for(auto mod : m_modules)
-		if(mod->IsAutoProcessed() || mod->IsInput())
-		{
-			LOG_DEBUG(m_logger, "Add autoprocessing module " << mod->GetName());
-			newOrder.push_back(mod);
-		}
-
-	while(changed)
-	{
-		changed = false;
-		ready = true;
-		for(auto & elem : m_modules)
-		{
-			if(!elem->IsReady())
-			{
-				ready = false;
-				if(elem->AllInputsAreReady())
-				{
-					elem->SetAsReady();
-					if(m_param.centralized)
-						newOrder.push_back(elem);
-					else
-					{
-						Module& master = RefModuleByName(elem->GetMasterModule().GetName());
-						master.AddDependingModule(*elem);
-					}
-					// cout<<"Set module "<<depending->GetName()<<" as ready"<<endl;
-					changed = true;
-				}
-			}
-		}
-	}
-	// If centralized reorder the module list
-	if(m_param.centralized)
-	{
-		assert(m_modules.size() == newOrder.size());
-		m_modules = newOrder;
-	}
-
-	if(! ready)
-		throw MkException("Not all modules can be assigned to a master. There is probably a problem with the connections between modules.", LOC);
-
-	*/
 	Check();
 	m_isConnected = true;
 }

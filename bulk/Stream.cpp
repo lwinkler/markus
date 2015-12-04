@@ -51,7 +51,7 @@ Stream::~Stream()
 * @param x_indentation Number of tabs for indentation
 * @param x_isInput     Is an input
 */
-void Stream::Export(ostream& rx_os, int x_id, int x_indentation, bool x_isInput)
+void Stream::Export(ostream& rx_os, int x_id, int x_indentation, bool x_isInput) const
 {
 	string tabs(x_indentation , '\t');
 	string inout = "output";

@@ -24,40 +24,9 @@
 #ifndef STREAM_OBJECT_H
 #define STREAM_OBJECT_H
 
-#include "Stream.h"
+#include "StreamT.h"
 #include "Object.h"
 
-#define DEFAULT_STREAM_COLOR cv::Scalar(255, 255, 255)
-
-
-/// Stream in the form of located objects
-
-class StreamObject : public Stream
-{
-public:
-	StreamObject(const std::string& rx_name, std::vector<Object>& r_rects, Module& rx_module, const std::string& rx_description, const std::string& rx_requirement = "");
-	~StreamObject();
-	MKCLASS("StreamObjects")
-	MKTYPE("Objects")
-
-	inline void Clear() {m_objects.clear();}
-	inline void AddObject(const Object& x_obj) {m_objects.push_back(x_obj);}
-	inline const std::vector<Object>& GetObjects() const {return m_objects;}
-
-	virtual void ConvertInput();
-	virtual void RenderTo(cv::Mat& x_output) const;
-	virtual void Query(int x_posX, int x_posY) const;
-	virtual void Randomize(unsigned int& xr_seed);
-	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
-	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
-	// double GetFeatureValue(const std::vector<Feature>& x_vect, const char* x_name);
-
-protected:
-	std::vector<Object> & m_objects;
-
-private:
-	DISABLE_COPY(StreamObject)
-	static log4cxx::LoggerPtr m_logger;
-};
+typedef StreamT<std::vector<Object>> StreamObject;
 
 #endif

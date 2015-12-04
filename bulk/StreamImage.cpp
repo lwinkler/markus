@@ -33,7 +33,7 @@ using namespace cv;
 
 log4cxx::LoggerPtr StreamImage::m_logger(log4cxx::Logger::getLogger("StreamImage"));
 
-StreamImage::StreamImage(const string& x_name, Mat& x_image, Module& rx_module, const string& rx_description) :
+StreamT<Mat>::StreamT(const string& x_name, Mat& x_image, Module& rx_module, const string& rx_description) :
 	Stream(x_name, rx_module, rx_description),
 	m_image(x_image)
 {
@@ -41,10 +41,6 @@ StreamImage::StreamImage(const string& x_name, Mat& x_image, Module& rx_module, 
 	// assert(x_image.cols == rx_module.GetWidth() && x_image.rows == rx_module.GetHeight()); // Disable this for unit tests
 }
 
-
-StreamImage::~StreamImage()
-{
-}
 
 // Convert an input (image from a different module) to the correct resolution into m_image. This method keeps a map containing all temporary image in case they are needed later
 void StreamImage::ConvertInput()
