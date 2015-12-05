@@ -1,9 +1,6 @@
 // Global objects
 "use strict";
 
-// TODO: The connection from input to output are not deleted if input is deleted
-// TODO: Remove parameters if the field is empty in gui
-
 var maxIdModules = 0;
 var xmlModuleTypes = [];
 var xmlProject = null;
@@ -152,22 +149,10 @@ var xmlProject = null;
 					// 	return false;
 					if(xmlInput.children().length > 0) {
 						// This is the case of a multiple input, remove the sub-input
-						var outputid = $(params.endpoints[0]).data("config").attr("id");
-						var moduleid = $(params.endpoints[0]).data("config").parent().parent().attr("id"); // $(params.target).data("config").parent().parent().attr("id");
+						var outputid = $(params.endpoints[1]).data("config").attr("id");
+						var moduleid = $(params.endpoints[1]).data("config").parent().parent().attr("id"); // $(params.target).data("config").parent().parent().attr("id");
 
-						// This is a HACK. To improve we need to access the endpoint on output side each time // TODO
-						if(outputid == $(params.suspendedEndpoint).data("config").attr("id"))
-							outputid = $(params.endpoints[1]).data("config").attr("id");
-
-						if(moduleid == $(params.suspendedEndpoint).data("config").parent().parent().attr("id"))
-							moduleid = $(params.endpoints[1]).data("config").parent().parent().attr("id");
-						console.log($(params.endpoints[0]).data("config").attr("id"));
-						console.log($(params.endpoints[1]).data("config").attr("id"));
-						console.log($(params.suspendedEndpoint).data("config").attr("id"));
-						console.log( outputid + " " + moduleid);
-						console.log(xmlInput.find('>input[outputid="' + outputid + '"][moduleid="' + moduleid + '"]')[0]);
 						xmlInput.find('>input[outputid="' + outputid + '"][moduleid="' + moduleid + '"]')[0].remove();
-						console.log("ici");
 					} else {
 						xmlInput.removeAttr('outputid');
 						xmlInput.removeAttr('moduleid');
@@ -539,7 +524,6 @@ var xmlProject = null;
 					// create the window representing the module
 					var index = parseInt($(this).attr('id'));
 					createModuleWindow($(this), index, $(this).find('uiobject'));
-					// console.log(index + " " + maxIdModules)
 					if(index >= maxIdModules)
 						maxIdModules = index + 1;
 				});
@@ -554,8 +538,8 @@ var xmlProject = null;
 						var outputid = $(this).attr('outputid');
 						if($.isNumeric(moduleid) && $.isNumeric(outputid)) {
 							jsPlumb.connect({
-								sourceEndpoint: $(this).data('gui')[0],
-								targetEndpoint: xmlProject.find('module[id="' + moduleid + '"] > outputs > output[id="' + outputid + '"]').data('gui')[0],
+								targetEndpoint: $(this).data('gui')[0],
+								sourceEndpoint: xmlProject.find('module[id="' + moduleid + '"] > outputs > output[id="' + outputid + '"]').data('gui')[0],
 								// type:"basic"
 							});
 						}
