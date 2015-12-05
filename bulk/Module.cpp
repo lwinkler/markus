@@ -169,7 +169,7 @@ bool Module::ProcessingCondition() const
 			if(m_lastTimeStamp != TIME_STAMP_MIN)
 			{
 				// TODO: Handle the case where we rewind
-				if(ts <= m_lastTimeStamp || (m_param.fps != 0 && (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps < 1000))
+				if(ts <= m_lastTimeStamp || (m_param.fps != 0 && (ts - m_lastTimeStamp) * m_param.fps < 1000))
 					return false;
 			}
 		}
