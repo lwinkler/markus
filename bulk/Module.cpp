@@ -298,6 +298,18 @@ void Module::Process()
 		// Call depending modules (modules with fps = 0)
 		if(PropagateCondition())
 		{
+			/*
+			vector<thread> threads;
+			for(auto & elem : m_modulesDepending)
+			{
+				cout << threads.size() << endl;
+				threads.emplace_back([&elem]{
+					elem->Process();
+				});
+			}
+			for(auto& thread : threads)
+				thread.join();
+			*/
 			for(auto & elem : m_modulesDepending)
 			{
 				elem->Process();

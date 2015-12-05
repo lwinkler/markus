@@ -39,12 +39,12 @@ public:
 		// note: we need to decide the size before this constructor
 		//       since we use references to each element of the vector
 		if(rx_objects.empty())
-			throw MkException("Multiple inputs must contain a reference to a vector of size 1 or more. Please resize vector before initializing the stream. Please note that this size is the max size of the vector", LOC); // TODO use std::array
+			throw MkException("Multiple inputs must contain a reference to a vector of size 1 or more. Please resize vector before initializing the stream. Please note that this size is the max size of the vector", LOC);
 	}
 	~MultipleStreamT(){}
 	virtual void Connect(Stream *x_stream, bool x_bothWays = true)
 	{
-		assert(m_objects.size() == m_size && m_nextObj < m_size - 1);
+		assert(m_objects.size() == m_size && m_nextObj < m_size);
 		if(!this->IsConnected())
 		{
 			assert(m_nextObj == 0);
