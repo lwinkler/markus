@@ -53,7 +53,7 @@ public:
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 	virtual void Randomize(unsigned int& xr_seed);
 	const cv::Mat& GetImage() const {return m_image;}
-	void Connect(Stream * x_stream, bool x_bothWays = true);
+	void Connect(Stream * x_stream);
 
 protected:
 	static std::string createResolutionString(const cv::Size x_size, int x_depth, int x_channels)

@@ -46,6 +46,7 @@ template<>void StreamObject::ConvertInput()
 		m_object.push_back(Object("screen", Rect(0, 0, GetWidth(), GetHeight())));
 		return;
 	}
+	assert(!m_connected->IsConnected());
 
 	// Copy time stamp to output
 	m_timeStamp = GetConnected().GetTimeStamp();

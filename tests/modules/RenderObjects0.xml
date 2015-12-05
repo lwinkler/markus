@@ -47,7 +47,7 @@
 			<name>image</name>
 			<description>Input video stream</description>
 		</input>
-		<input id="1" multi="1">
+		<input id="1" multi="10">
 			<type>Objects</type>
 			<name>objects0</name>
 			<description>Object stream</description>

@@ -50,6 +50,7 @@ void StreamImage::ConvertInput()
 		m_image.setTo(0);
 		return;
 	}
+	assert(!m_connected->IsConnected());
 
 	mp_connectedImage->ConvertToOutput(mr_module.GetCurrentTimeStamp(), m_image);
 }
@@ -198,13 +199,11 @@ void StreamImage::Deserialize(istream& x_in, const string& x_dir)
 		throw MkException("Cannot open serialized image from file " + fileName, LOC);
 }
 
-void StreamImage::Connect(Stream* x_stream, bool x_bothWays)
+void StreamImage::Connect(Stream* x_stream)
 {
 	// This method was rewritten to avoid a dynamic cast at each ConvertInput
 	assert(x_stream != nullptr);
 	m_connected = x_stream;
-	if(x_bothWays) // TODO: This should not exist
-		x_stream->Connect(this, false);
 
 	mp_connectedImage = dynamic_cast<StreamImage*>(m_connected);
 	if(mp_connectedImage == nullptr)

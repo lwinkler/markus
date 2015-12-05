@@ -71,14 +71,10 @@ void Stream::Export(ostream& rx_os, int x_id, int x_indentation, bool x_isInput)
 *
 * @param x_stream Output stream to connect to
 */
-void Stream::Connect(Stream* x_stream, bool x_bothWays)
+void Stream::Connect(Stream* x_stream)
 {
-	// if(IsConnected())
-		// TODO: Only inputs and not outputs can connect throw MkException("Cannot connect input " + GetName() + " twice", LOC);
 	assert(x_stream != nullptr);
 	m_connected = x_stream;
-	if(x_bothWays)
-		x_stream->Connect(this, false);
 }
 
 void Stream::Serialize(ostream& x_out, const string& x_dir) const

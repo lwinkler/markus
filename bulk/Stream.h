@@ -50,7 +50,7 @@ public:
 	inline const std::string& GetDescription() const {return m_description;}
 	virtual void RenderTo(cv::Mat& x_output) const = 0;
 	virtual void Query(int x_posX, int x_posY) const = 0;
-	virtual void Connect(Stream *x_stream, bool x_bothWays = true);
+	virtual void Connect(Stream *x_stream);
 	virtual void ConvertInput() = 0;
 	virtual void Randomize(unsigned int& xr_seed) = 0;
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;

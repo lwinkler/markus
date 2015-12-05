@@ -53,10 +53,6 @@
 <inputs>
 <input id="0" moduleid="0" outputid="0"/>
 <input id="1" moduleid="2" outputid="0"/>
-<input id="2" moduleid="" outputid=""/>
-<input id="3" moduleid="" outputid=""/>
-<input id="4" moduleid="" outputid=""/>
-<input id="5" moduleid="" outputid=""/>
 </inputs>
 <outputs>
 <output id="0"/>
