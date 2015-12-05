@@ -5,13 +5,14 @@
 <output id="0"/>
 </outputs>
 <parameters>
-<param name="class">UsbCam</param>
+<param name="class">VideoFileReader</param>
+<param name="loop">1</param>
 </parameters>
 		<uiobject x="500" y="300" width="0" height="0"/>
 	</module>
 <module id="2" name="MotionDetector2">
 <inputs>
-<input id="0" outputid="0" moduleid="4"/>
+<input id="0" outputid="0" moduleid="5"/>
 </inputs>
 <outputs>
 <output id="0"/>
@@ -21,9 +22,9 @@
 <parameters>
 <param name="class">MotionDetector</param>
 <param name="propagate">0</param>
-<param name="motion_thres">0.001</param>
 <param name="width">160</param>
 <param name="height">120</param>
+<param name="motion_thres">0.001</param>
 </parameters>
 		<uiobject x="1143" y="293" width="0" height="0"/>
 	</module>
@@ -40,20 +41,16 @@
 </parameters>
 		<uiobject x="915" y="461" width="0" height="0"/>
 	</module>
-<module id="4" name="BgrSubRunAvg4">
+<module id="5" name="TempDiff5">
 <inputs>
 <input id="0" outputid="0" moduleid="0"/>
 </inputs>
 <outputs>
 <output id="0"/>
-<output id="1"/>
 </outputs>
 <parameters>
-<param name="class">BgrSubRunAvg</param>
-<param name="width">160</param>
-<param name="height">120</param>
-<param name="foreground_thres">0.05</param>
+<param name="class">TempDiff</param>
 </parameters>
-	<uiobject x="820" y="298" width="0" height="0"/>
+		<uiobject x="822" y="258" width="0" height="0"/>
 	</module>
 </application>

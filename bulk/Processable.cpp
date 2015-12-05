@@ -52,12 +52,10 @@ void Processable::Reset()
 	// Autoprocess is on for modules if decentralized and for manager if centralized
 	if(m_param.autoProcess && (GetName() == "manager" ^ ! GetContext().IsCentralized()))
 	{
-		if(mp_moduleTimer != nullptr)
-		{
-			mp_moduleTimer->Stop(); // TODO How to handle this: assert ?
-			CLEAN_DELETE(mp_moduleTimer);
-		}
-		mp_moduleTimer = new ModuleTimer(*this);
+		// note LW: Since Reset can be called while processing, we do not allow to re-create a timer
+		//          fixing this would be tricky. See module VideoFileReader
+		if(mp_moduleTimer == nullptr)
+			mp_moduleTimer = new ModuleTimer(*this);
 
 		LOG_DEBUG(m_logger, "Reseting auto-processed " << GetName() << " with real-time="<<GetContext().IsRealTime()<<" and fps="<<m_param.fps);
 	}

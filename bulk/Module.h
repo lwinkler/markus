@@ -129,6 +129,7 @@ public:
 
 	inline int GetWidth() const          {return m_param.width;}
 	inline int GetHeight() const         {return m_param.height;}
+	inline cv::Size GetSize() const      {return cv::Size(m_param.width, m_param.height);}
 	inline int GetImageType() const      {return m_param.type;}
 	inline double GetFps() const         {return m_param.fps;}
 	inline bool IsAutoProcessed() const  {return m_param.autoProcess;}

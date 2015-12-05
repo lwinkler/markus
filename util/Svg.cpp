@@ -65,11 +65,10 @@ void Svg::Line(const Point& x_point1, const Point& x_point2, const string& x_col
 	line.SetAttribute("stroke", x_color);
 }
 
-void Svg::Draw(const Polygon& x_polygon, const std::string& x_color, double x_diagonal)
+void Svg::Draw(const Polygon& x_polygon, const std::string& x_color, const Size& x_size)
 {
 	vector <Point2d> pts;
-	for(const auto& pt : x_polygon.points)
-		pts.emplace_back(pt.x * x_diagonal, pt.y * x_diagonal);
+	x_polygon.GetPoints(pts, x_size);
 
 	Draw(pts, x_color, true);
 }

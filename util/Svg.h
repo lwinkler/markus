@@ -66,7 +66,7 @@ public:
 	}
 
 	/// Draw a polygon
-	void Draw(const Polygon& x_polygon, const std::string& x_color, double x_diagonal);
+	void Draw(const Polygon& x_polygon, const std::string& x_color, const cv::Size& x_size);
 
 	/// Write the SVG file
 	void Write() const {m_file.SaveToFile(m_fileName);}

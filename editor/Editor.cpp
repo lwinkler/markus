@@ -62,7 +62,8 @@ Editor::Editor(const string& x_project, QWidget *parent) :
 	// setupUi(this);
 	stringstream ss;
 	char pwd[256];
-	assert(getcwd(pwd, sizeof(pwd)) != nullptr);
+	char * ret = getcwd(pwd, sizeof(pwd));
+	assert(ret != nullptr);
 	ss<<"file://"<<pwd<<"/editor.html";
 	m_view.load(QUrl(ss.str().c_str()));
 

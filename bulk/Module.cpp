@@ -164,8 +164,11 @@ bool Module::ProcessingCondition() const
 		LOG_DEBUG(m_logger, GetName() << ": Timestamp of input stream " << elem.second->GetName() << ":" << ts << ", last:" << m_lastTimeStamp << " " << elem.second->IsBlocking() << "," << elem.second->IsSynchronized());
 		if(elem.second->IsBlocking())
 		{
+			if(ts == TIME_STAMP_MIN) // note: handle the case where the previous module has not processed
+				return false;
 			if(m_lastTimeStamp != TIME_STAMP_MIN)
 			{
+				// TODO: Handle the case where we rewind
 				if(ts <= m_lastTimeStamp || (m_param.fps != 0 && (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps < 1000))
 					return false;
 			}

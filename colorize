@@ -1,2 +1,3 @@
 #! /bin/bash
-$@ | sed -e "s/ERROR/\x1b[41m&\x1b[0m/" -e "s/WARN/\x1b[43m&\x1b[0m/" -e "s/INFO/\x1b[32m&\x1b[0m/" -e "s/DEBUG/\x1b[35m&\x1b[0m/"
+$@ | sed -e "s/ERRORS*/\x1b[41m&\x1b[0m/" -e "s/WARN[A-Z]*/\x1b[43m&\x1b[0m/" -e "s/INFO[A-Z]*/\x1b[32m&\x1b[0m/" -e "s/DEBUG/\x1b[35m&\x1b[0m/" -e "s/TRACE/\x1b[35m&\x1b[0m/" \
+         -e "s/[eE]rrors*/\x1b[41m&\x1b[0m/" -e "s/[wW]arn[a-z]*/\x1b[43m&\x1b[0m/" -e "s/[Ii]nfo[a-z]*/\x1b[32m&\x1b[0m/" -e "s/[Dd]ebug/\x1b[35m&\x1b[0m/" -e "s/[Tt]race/\x1b[35m&\x1b[0m/"
