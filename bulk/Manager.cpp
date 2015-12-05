@@ -43,6 +43,7 @@ using namespace std;
 
 log4cxx::LoggerPtr Manager::m_logger(log4cxx::Logger::getLogger("Manager"));
 
+
 Manager::Manager(ParameterStructure& xr_params) :
 	Processable(xr_params),
 	m_param(dynamic_cast<Parameters&>(xr_params)),
@@ -122,37 +123,18 @@ void Manager::Connect()
 		// Read conections of inputs
 		for(const auto& inputConfig : moduleConfig.Find("inputs").FindAll("input"))
 		{
-			// Check if connected to our previous module
-			try
-			{
-				int inputId        = boost::lexical_cast<int>(inputConfig.GetAttribute("id"));
-				const string& tmp1 = inputConfig.GetAttribute("moduleid", "");
-				const string& tmp2 = inputConfig.GetAttribute("outputid", "");
-				const string& tmp3 = inputConfig.GetAttribute("block", "1");
-				const string& tmp4 = inputConfig.GetAttribute("sync", "1");
-				if(tmp1 != "" && tmp2 != "")
-				{
-					int outputModuleId   = boost::lexical_cast<int>(tmp1);
-					int outputId         = boost::lexical_cast<int>(tmp2);
-					Stream& inputStream  = module.RefInputStreamById(inputId);
-					inputStream.SetBlocking(boost::lexical_cast<bool>(tmp3));
-					inputStream.SetSynchronized(boost::lexical_cast<bool>(tmp4));
-					Stream& outputStream = RefModuleById(outputModuleId).RefOutputStreamById(outputId);
+			ConnectInput(inputConfig, module, boost::lexical_cast<int>(inputConfig.GetAttribute("id")));
 
-					// Connect input and output streams
-					inputStream.Connect(&outputStream);
-					if(module.GetParameters().GetParameterByName("master").GetValueString().empty())
-						RefModuleById(outputModuleId).AddDependingModule(module);
-					else
-						RefModuleByName(module.GetParameters().GetParameterByName("master").GetValueString()).AddDependingModule(module);
-				}
-			}
-			catch(MkException& e)
+			// Connect all sub-inputs: only used in case of multiple streams
+			for(const auto& subInputConfig : inputConfig.FindAll("input"))
 			{
-				LOG_ERROR(m_logger, "Cannot connect input "<<inputConfig.GetAttribute("id", "(unknown)")<<" of module "<<module.GetName());
-				throw;
+				ConnectInput(subInputConfig, module, boost::lexical_cast<int>(inputConfig.GetAttribute("id")));
 			}
 		}
+
+		// Add to depending modules, using master parameter
+		if(!module.GetParameters().GetParameterByName("master").GetValueString().empty())
+			RefModuleByName(module.GetParameters().GetParameterByName("master").GetValueString()).AddDependingModule(module);
 	}
 	Check();
 	m_isConnected = true;
@@ -541,4 +523,46 @@ void Manager::WriteStateToDirectory(const string& x_directory) const
 	LOG_INFO(m_logger, "Written state of the manager and all modules to " << directory);
 }
 
+
+/**
+* @brief Connect one input given the content of the config. Used by Connect
+*
+* @param x_inputConfig Config of the input
+* @param xr_module     Module to connect
+* @param x_inputId     Id of input
+*/
+void Manager::ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module, int x_inputId) const
+{
+	// Check if connected to our previous module
+	try
+	{
+		const string& tmp1 = x_inputConfig.GetAttribute("moduleid", "");
+		const string& tmp2 = x_inputConfig.GetAttribute("outputid", "");
+		const string& tmp3 = x_inputConfig.GetAttribute("block", "1");
+		const string& tmp4 = x_inputConfig.GetAttribute("sync", "1");
+
+		// Connection of a simple input
+		if(tmp1 != "" && tmp2 != "")
+		{
+			LOG_DEBUG(m_logger, "Connect input " + to_string(x_inputId) + " of module " + xr_module.GetName() + " to output " + tmp1 + ":" + tmp2);
+
+			int outputModuleId   = boost::lexical_cast<int>(tmp1);
+			int outputId         = boost::lexical_cast<int>(tmp2);
+			Stream& inputStream  = xr_module.RefInputStreamById(x_inputId);
+			inputStream.SetBlocking(boost::lexical_cast<bool>(tmp3));
+			inputStream.SetSynchronized(boost::lexical_cast<bool>(tmp4));
+			Stream& outputStream = RefModuleById(outputModuleId).RefOutputStreamById(outputId);
+
+			// Connect input and output streams
+			inputStream.Connect(&outputStream);
+			if(xr_module.GetParameters().GetParameterByName("master").GetValueString().empty())
+				RefModuleById(outputModuleId).AddDependingModule(xr_module);
+		}
+	}
+	catch(MkException& e)
+	{
+		LOG_ERROR(m_logger, "Cannot connect input "<<x_inputConfig.GetAttribute("id", "(unknown)")<<" of module "<<xr_module.GetName());
+		throw;
+	}
+}
 

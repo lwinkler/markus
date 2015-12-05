@@ -91,6 +91,7 @@ protected:
 	Module& RefModuleById(int x_id) const;
 	Module& RefModuleByName(const std::string& x_name) const;
 	void NotifyException(const MkException& x_exeption);
+	void ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module, int x_inputId) const;
 
 	int64_t m_frameCount = 0;
 	bool m_isConnected   = false;
