@@ -33,7 +33,7 @@ using namespace cv;
 
 log4cxx::LoggerPtr StreamImage::m_logger(log4cxx::Logger::getLogger("StreamImage"));
 
-StreamT<Mat>::StreamT(const string& x_name, Mat& x_image, Module& rx_module, const string& rx_description) :
+StreamT<Mat>::StreamT(const string& x_name, Mat& x_image, Module& rx_module, const string& rx_description, const string& x_requirements) :
 	Stream(x_name, rx_module, rx_description),
 	m_image(x_image)
 {

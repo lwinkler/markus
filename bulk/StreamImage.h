@@ -42,7 +42,7 @@ typedef StreamT<cv::Mat> StreamImage;
 template<> class StreamT<typename cv::Mat> : public Stream
 {
 public:
-	StreamT(const std::string& x_name, cv::Mat& x_image, Module& rx_module, const std::string& rx_description);
+	StreamT(const std::string& x_name, cv::Mat& x_image, Module& rx_module, const std::string& x_description, const std::string& x_requirements = "");
 	MKCLASS("StreamImage")
 	MKTYPE("Image")
 
