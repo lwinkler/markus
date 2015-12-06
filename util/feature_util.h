@@ -164,10 +164,35 @@ inline std::istream& deserialize(std::istream& x_in, int& xr_value)
 inline double compareSquared(int x_1, int x_2)
 {
 	// Cast to double to avoid overflows
-	return POW2(static_cast<double>(x_1) - x_2);
+	return POW2(x_1 - x_2);
 }
 
 inline void randomize(int& xr_val, unsigned int& xr_seed)
+{
+	xr_val = rand_r(&xr_seed) % 1000;
+}
+
+/* -------------------------------------------------------------------------------- */
+// Template specialization for features of type uint
+
+inline std::ostream& serialize(std::ostream& x_out, uint x_value)   { x_out << "{\"valueUInt\":" << x_value << "}";  return x_out; }
+inline std::istream& deserialize(std::istream& x_in, uint& xr_value)
+{
+	// Note: we must serialize integer features differently than float to avoid having the same signature
+	// this is due to the fact that the serialization does not store the type of the feature
+	Json::Value root;
+	x_in >> root;
+	xr_value = root["valueUInt"].asInt();
+	return x_in;
+}
+
+inline double compareSquared(uint x_1, uint x_2)
+{
+	// Cast to double to avoid overflows
+	return POW2(static_cast<int>(x_1 - x_2));
+}
+
+inline void randomize(uint& xr_val, unsigned int& xr_seed)
 {
 	xr_val = rand_r(&xr_seed) % 1000;
 }

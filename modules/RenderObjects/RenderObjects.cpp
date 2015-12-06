@@ -43,7 +43,7 @@ RenderObjects::RenderObjects(ParameterStructure& xr_params) :
 	AddOutputStream(0, new StreamImage("output", m_imageOutput, *this,	"Output video stream"));
 }
 
-RenderObjects::~RenderObjects(void )
+RenderObjects::~RenderObjects()
 {
 }
 
