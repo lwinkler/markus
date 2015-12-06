@@ -28,10 +28,10 @@
 
 /// Stream in the form of located objects
 
-template<typename T>class MultipleStreamT : public StreamT<T>
+template<typename T>class MultiStreamT : public StreamT<T>
 {
 public:
-	MultipleStreamT(const std::string& rx_name, std::vector<T>& rx_objects, Module& rx_module, const std::string& rx_description, const std::string& rx_requirement = "") :
+	MultiStreamT(const std::string& rx_name, std::vector<T>& rx_objects, Module& rx_module, const std::string& rx_description, const std::string& rx_requirement = "") :
 		StreamT<T>(rx_name, rx_objects.at(0), rx_module, rx_description, rx_requirement),
 		m_objects(rx_objects),
 		m_size(rx_objects.size())
@@ -41,7 +41,7 @@ public:
 		if(rx_objects.empty())
 			throw MkException("Multiple inputs must contain a reference to a vector of size 1 or more. Please resize vector before initializing the stream. Please note that this size is the max size of the vector", LOC);
 	}
-	~MultipleStreamT(){}
+	~MultiStreamT(){}
 	virtual void Connect(Stream *x_stream)
 	{
 		assert(m_objects.size() == m_size && m_nextObj < m_size);
@@ -83,7 +83,7 @@ protected:
 	size_t          m_nextObj = 0;
 
 private:
-	DISABLE_COPY(MultipleStreamT)
+	DISABLE_COPY(MultiStreamT)
 	static log4cxx::LoggerPtr m_logger;
 	static const std::string m_type;
 	static const std::string m_class;
