@@ -55,7 +55,7 @@ public:
 		bool oneFrameOnly;
 		bool prependOutputDirectory;
 	};
-	inline virtual bool IsEndOfStream() const override {return m_param.oneFrameOnly || Input::IsEndOfStream();}
+	inline virtual bool AbortCondition() const override {return m_param.oneFrameOnly || m_endOfStream;}
 
 	ReadObjects(ParameterStructure& xr_params);
 	~ReadObjects(void);

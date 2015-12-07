@@ -316,18 +316,18 @@ void Manager::PrintStatistics()
 */
 bool Manager::AbortCondition() const
 {
-	if(m_quitting)
+	if(m_quitting || (m_param.nbFrames != 0 && m_frameCount >= m_param.nbFrames))
 		return true;
-	bool endOfStreams = true;
+	
+	// Check that all input streams are finished
 	for(const auto & elem : m_inputs)
 	{
-		if(!elem->IsEndOfStream())
+		if(!elem->AbortCondition())
 		{
-			endOfStreams = false;
-			break;
+			return false;
 		}
 	}
-	return endOfStreams;
+	return true;
 }
 
 /**
