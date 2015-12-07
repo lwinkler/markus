@@ -85,7 +85,7 @@ void ReadObjects::Capture()
 
 	string text;
 
-	if(!mp_annotationReader->ReadNextAnnotation(text))
+	if(!mp_annotationReader->ReadNextAnnotation(text)) // TODO : Currently the reader returns 1 on the last read. It should return it only at the next read.
 	{
 		m_endOfStream = true;
 		throw EndOfStreamException("Cannot read next annotation", LOC);

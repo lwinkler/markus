@@ -213,6 +213,9 @@ void Manager::Reset(bool x_resetInputs)
 */
 void Manager::Process()
 {
+	if(m_quitting || (m_param.nbFrames != 0 && m_frameCount >= m_param.nbFrames))
+		throw EndOfStreamException("Quit command was sent or the number of frames to processe was reached.", LOC);
+
 	assert(m_isConnected); // Modules must be connected before processing
 	int cpt = 0;
 	MkException lastException(MK_EXCEPTION_NORMAL, "normal", "No exception was thrown", "", "");
