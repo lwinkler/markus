@@ -237,21 +237,6 @@ void Module::Process()
 		// Timer for benchmark
 		m_timerConversion.Start();
 
-		// cout<<GetName()<<" "<<m_currentTimeStamp<<" "<<m_lastTimeStamp<<endl;
-
-		// Check that all inputs are in sync
-		/*
-		if(! m_param.allowUnsyncInput && m_unsyncWarning)
-			for(unsigned int i = 1 ; i < m_inputStreams.size() ; i++)
-			{
-				Stream& stream(*m_inputStreams.at(i));
-				if(stream.IsConnected() && stream.GetTimeStampConnected() != m_currentTimeStamp)
-				{
-					LOG_WARN(m_logger, "Input stream id="<<i<<" is not in sync with input stream id=0 for module "<<GetName()<<". If this is acceptable set parameter allow_unsync_input=1 for this module. To fix this problem cleanly you should probably set parameters auto_process=0 and fps=0 for the modules located between the input and module "<<GetName()<<".");
-					m_unsyncWarning = false;
-				}
-			}
-			*/
 
 		// note: Inputs must call ProcessFrame to set the time stamp
 		// TODO: There is no reason to cache input modules !
