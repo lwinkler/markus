@@ -211,4 +211,6 @@ void StreamImage::Connect(Stream* x_stream)
 		m_connected = nullptr;
 		throw MkException("Input stream cannot be connected probably because it is not of type StreamImage", LOC);
 	}
+	m_connected->SetAsConnected();
+	SetAsConnected();
 }

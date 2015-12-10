@@ -35,6 +35,7 @@
 #include "StreamState.h"
 #include "StreamEvent.h"
 #include "StreamT.h"
+#include "StreamNum.h"
 #include "MultiStreamT.h"
 
 

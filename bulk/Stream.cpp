@@ -75,6 +75,8 @@ void Stream::Connect(Stream* x_stream)
 {
 	assert(x_stream != nullptr);
 	m_connected = x_stream;
+	m_connected->SetAsConnected();
+	SetAsConnected();
 }
 
 void Stream::Serialize(ostream& x_out, const string& x_dir) const
