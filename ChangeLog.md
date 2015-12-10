@@ -5,3 +5,4 @@ Known problems
 
 Improvements
 ============
+- Deserialization SHOULD ALWAYS check if the value exists
