@@ -50,7 +50,7 @@ void StreamImage::ConvertInput()
 		m_image.setTo(0);
 		return;
 	}
-	assert(!m_connected->IsConnected());
+	assert(m_connected->IsConnected());
 
 	mp_connectedImage->ConvertToOutput(mr_module.GetCurrentTimeStamp(), m_image);
 }

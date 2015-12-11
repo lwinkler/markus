@@ -42,7 +42,7 @@ template<> void StreamState::ConvertInput()
 		m_object = false;
 		return;
 	}
-	assert(!m_connected->IsConnected());
+	assert(m_connected->IsConnected());
 
 	// Copy time stamp to output
 	m_timeStamp = GetConnected().GetTimeStamp();

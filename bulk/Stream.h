@@ -62,7 +62,7 @@ public:
 	inline Stream& GetConnected() const
 	{
 		if(m_connected == nullptr)
-			throw MkException("Stream " + GetName() + " is not connected", LOC);
+			throw MkException("Stream " + GetName() + " is not connected or is an output", LOC);
 		return *m_connected;
 	}
 
@@ -71,7 +71,7 @@ public:
 	inline TIME_STAMP GetTimeStampConnected() const
 	{
 		if(m_connected == nullptr)
-			throw MkException("Stream " + GetName() + " is not connected", LOC);
+			throw MkException("Stream " + GetName() + " is not connected or is an output", LOC);
 		return m_connected->GetTimeStamp();
 	}
 	inline const std::string& GetRequirement() {return m_requirement;}

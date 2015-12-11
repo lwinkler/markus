@@ -41,7 +41,7 @@ template<> void StreamEvent::ConvertInput()
 	m_object.Clean();
 
 	if(m_connected == nullptr) return;
-	assert(!m_connected->IsConnected());
+	assert(m_connected->IsConnected());
 
 	// Copy time stamp to output
 	m_timeStamp = GetConnected().GetTimeStamp();
