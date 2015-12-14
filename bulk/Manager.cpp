@@ -175,6 +175,7 @@ void Manager::Reset(bool x_resetInputs)
 {
 	Processable::Reset();
 	m_interruptionManager.Configure(m_param.GetConfig());
+	m_timerProcessing.Reset();
 
 	// Reset timers
 	// m_timerConvertion = 0;
@@ -219,6 +220,7 @@ void Manager::Process()
 	assert(m_isConnected); // Modules must be connected before processing
 	int cpt = 0;
 	MkException lastException(MK_EXCEPTION_NORMAL, "normal", "No exception was thrown", "", "");
+	m_timerProcessing.Start();
 
 	for(auto & elem : m_autoProcessedModules)
 	{
@@ -231,6 +233,7 @@ void Manager::Process()
 		}
 	}
 
+	m_timerProcessing.Stop();
 	m_frameCount++;
 	if(m_frameCount % 100 == 0 && m_logger->isDebugEnabled())
 	{

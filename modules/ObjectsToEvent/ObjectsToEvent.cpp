@@ -50,7 +50,7 @@ void ObjectsToEvent::ProcessFrame()
 	m_event.Clean();
 	if(m_objectsIn.size() >= m_param.minObjectsNb && m_objectsIn.size() <= m_param.maxObjectsNb)
 	{
-		if(!m_state)
+		if(!m_state || !m_param.onlyNew)
 			m_event.Raise(m_param.eventName);
 		m_state = true;
 	}
