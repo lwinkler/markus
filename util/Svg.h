@@ -50,8 +50,9 @@ public:
 	{
 		std::stringstream ss;
 
-		if(x_points.size() <= 1)
-			throw MkException("Cannot draw path containing less than point yet", LOC);
+		if(x_points.empty())
+			return;
+			// throw MkException("Cannot draw path containing less than 1 point yet", LOC);
 
 		ss << "M" << x_points.begin()->x << " " << x_points.begin()->y;
 
