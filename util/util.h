@@ -54,4 +54,15 @@ void execute(const std::string& x_cmd, std::ostream& xr_stdout);
 void execute(const std::string& x_cmd, std::vector<std::string>& xr_result);
 bool boolValue(const std::string& x_value);
 
+template<class T> void mergeVector(std::vector<T>& vdest, const std::vector<T>& vori)
+{
+	for(const auto& ori : vori)
+	{
+		// TODO: There is probably a more efficient of smarter way to do this
+		if(std::find(vdest.begin(), vdest.end(), ori) == vdest.end())
+			vdest.push_back(ori);
+	}
+}
+
+
 #endif
