@@ -128,6 +128,8 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 		auto itval = originalValues.begin();
 		for(const auto& itpar : paramNames)
 		{
+			try
+			{
 			LOG_DEBUG(m_logger, "Param:"<< *itmod << ":" << itpar);
 			*ittar = new ConfigReader(manOrMod(xr_mainConfig, *itmod).FindRef("parameters>param[name=\"" + itpar + "\"]", true));
 			*itval = (*ittar)->GetValue();
@@ -135,6 +137,11 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 			itval++;
 			if(moduleNames.size() > 1)
 				itmod++;
+			}
+			catch(exception &e)
+			{
+				throw MkException("Cannot variate parameter " + itpar + " of module " + *itmod + ": " + e.what(), LOC);
+			}
 		}
 
 
