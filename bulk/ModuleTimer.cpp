@@ -41,7 +41,7 @@ void ModuleTimer::Start(double x_fps)
 	if(m_running)
 		return;
 
-	double delay = 0.01;
+	double delay = 0.0;
 	if(x_fps > 0)
 	{
 		// Start a timer for module process
@@ -50,18 +50,24 @@ void ModuleTimer::Start(double x_fps)
 	
 	m_running = true;
 	// auto ms = chrono::milliseconds((long) delay * 1000);
-	int us = delay * 1000000;
 	// std::chrono::seconds<1, double> ms(delay);
 
-	m_thread = thread([&]()
+	m_thread = thread([this, delay, x_fps]()
 	{
+		TIME_STAMP waitMs = delay * 1000;
 		while (m_running == true)
 		{
-			TIME_STAMP beg = getAbsTimeMs();
+			TIME_STAMP ts = getAbsTimeMs();
 			bool ret = m_processable.ProcessAndCatch();
 
 			// Wait to respect the fps
-			usleep((getAbsTimeMs() - beg) * 1000);
+			ts = getAbsTimeMs() - ts;
+			// cout << "runn" << ts << " " << waitMs << " " << x_fps << endl;
+			if(ts < waitMs)
+			{
+				LOG_DEBUG(m_logger, "Sleep ms " << (waitMs - ts));
+				usleep((waitMs - ts) * 1000);
+			}
 
 			if(!ret)
 			{

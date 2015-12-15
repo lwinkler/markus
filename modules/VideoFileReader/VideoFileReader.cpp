@@ -41,7 +41,6 @@ VideoFileReader::VideoFileReader(ParameterStructure& xr_params):
 	m_output(Size(m_param.width, m_param.height), CV_8UC3) // Note: sizes will be overridden !
 {
 	AddOutputStream(0, new StreamImage("input", m_output, *this,	"Video stream"));
-	m_recordingFps = 0;
 }
 
 VideoFileReader::~VideoFileReader()

@@ -86,7 +86,7 @@ protected:
 
 	// temporary
 	cv::VideoCapture m_capture;
-	double m_recordingFps;
+	double m_recordingFps = 0;
 };
 
 #endif
