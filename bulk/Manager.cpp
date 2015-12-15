@@ -215,7 +215,7 @@ void Manager::Reset(bool x_resetInputs)
 void Manager::Process()
 {
 	if(m_quitting || (m_param.nbFrames != 0 && m_frameCount >= m_param.nbFrames))
-		throw EndOfStreamException("Quit command was sent or the number of frames to processe was reached.", LOC);
+		throw EndOfStreamException("Quit command was sent or the number of frames to process was reached.", LOC);
 
 	assert(m_isConnected); // Modules must be connected before processing
 	int cpt = 0;
@@ -243,13 +243,7 @@ void Manager::Process()
 	//if(m_frameCount % 20 == 0)
 	usleep(20); // This keeps the manager unlocked to allow the sending of commands // TODO find a cleaner way
 
-  
-	vector<Command> commands = m_interruptionManager.ReturnCommandsToSend();
-	for(const auto& command : commands)
-	{
-		SendCommand(command.name, command.value);
-		//m_continueFlag = true;
-	}
+  	ManageInterruptions();
 
 	if(cpt > 0)
 	{
@@ -572,3 +566,17 @@ void Manager::ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module,
 	}
 }
 
+
+/**
+* @brief Manage all interruptions
+*
+*/
+void Manager::ManageInterruptions()
+{
+	vector<Command> commands = m_interruptionManager.ReturnCommandsToSend();
+	for(const auto& command : commands)
+	{
+		SendCommand(command.name, command.value);
+		//m_continueFlag = true;
+	}
+}

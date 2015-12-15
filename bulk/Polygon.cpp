@@ -66,7 +66,11 @@ template<> void Polygon::GetPoints<cv::Point>(std::vector<cv::Point>& xr_points,
 		if(scaledPt.y == x_size.height)
 			scaledPt.y = x_size.height - 1;
 		if(scaledPt.x > x_size.width || scaledPt.y > x_size.height)
-			throw MkException("Drawing out of bounds of image ", LOC);
+		{
+			stringstream ss;
+			ss << scaledPt << " is outside " << x_size;
+			throw MkException("Drawing out of bounds of image: " + ss.str(), LOC);
+		}
 		++itpts;
 	}
 }

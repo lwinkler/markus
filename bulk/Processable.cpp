@@ -21,7 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "Module.h"
+#include "Manager.h"
 #include "ModuleTimer.h"
 #include "InterruptionManager.h"
 #include "Event.h"
@@ -130,10 +130,20 @@ bool Processable::ProcessAndCatch()
 			// test if all inputs are over
 			if(AbortCondition())
 			{
-				InterruptionManager::GetInst().AddEvent("exception." + e.GetName());
+				InterruptionManager::GetInst().AddEvent("event.stopped");
+				try
+				{
+					// This is a trick to call event.stopped and manage interruptions
+					dynamic_cast<Manager&>(*this).ManageInterruptions();
+					continueFlag = !AbortCondition();
+				}
+				catch(...)
+				{
+					continueFlag = false;
+				}
+				
 				// TODO: test what happens if the stream of a camera is cut
 				LOG_INFO(m_logger, "Abort condition has been fulfilled (end of all streams)");
-				continueFlag = false;
 			}
 		}
 		else if(e.GetCode() == MK_EXCEPTION_FATAL)

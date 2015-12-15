@@ -441,9 +441,7 @@ int main(int argc, char** argv)
 		}
 		manager.Stop();
 
-		Event ev2;
-		ev2.Raise("stopped");
-		ev2.Notify(context, true);
+
 		returnValue = MK_EXCEPTION_NORMAL - MK_EXCEPTION_FIRST;
 
 		// Write the modified params in config and save
@@ -483,7 +481,7 @@ int main(int argc, char** argv)
 	}
 
 
-	// For benchmark only: this line should have no effect in no QuickTimer is used
+	// For benchmark only: this line should have no effect if no QuickTimer is used
 	QuickTimer::PrintTimers();
 
 

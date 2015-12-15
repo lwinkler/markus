@@ -69,6 +69,7 @@ public:
 	void Check() const;
 	void CreateEditorFiles(const std::string& x_fileName);
 	void PrintStatistics();
+	void ManageInterruptions();
 	inline void Quit() {m_quitting = true;}
 	static std::string CreateOutputDir(const std::string& x_outputDir = "", const std::string& x_configFile = "");
 	inline void ListModulesTypes(std::vector<std::string>& xr_types) {mr_moduleFactory.List(xr_types);}
@@ -90,7 +91,6 @@ public:
 protected:
 	Module& RefModuleById(int x_id) const;
 	Module& RefModuleByName(const std::string& x_name) const;
-	void NotifyException(const MkException& x_exeption);
 	void ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module, int x_inputId) const;
 
 	int64_t m_frameCount = 0;
