@@ -39,6 +39,8 @@ public:
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 
 	std::map <TIME_STAMP, FeaturePtr> features;
+private:
+	static log4cxx::LoggerPtr m_logger;
 };
 
 #endif
