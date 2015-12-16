@@ -84,7 +84,6 @@ private:
 protected:
 	void SaveImage(Event& x_event);
 	bool IsInputProcessed() const;
-	void AddExternalImage(const cv::Mat& x_image, const std::string& x_name, const std::string& x_file, Event& x_event);
 	void WriteEvent();
 	void CompareWithGroundTruth();
 

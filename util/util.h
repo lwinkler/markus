@@ -27,6 +27,7 @@
 #include <opencv2/core/core.hpp>
 #include "define.h"
 
+class Event;
 
 /// this file contains some usefull functions and methods. To be included in .cpp files
 void adjust(const cv::Mat& im_in, cv::Mat& im_out, cv::Mat*& tmp1, cv::Mat*& tmp2);
@@ -53,6 +54,7 @@ void printStack(int sig);;
 void execute(const std::string& x_cmd, std::ostream& xr_stdout);
 void execute(const std::string& x_cmd, std::vector<std::string>& xr_result);
 bool boolValue(const std::string& x_value);
+void addExternalImage(const cv::Mat& x_image, const std::string& x_name, const std::string& x_fileWithPath, Event& xr_event);
 
 template<class T> void mergeVector(std::vector<T>& vdest, const std::vector<T>& vori)
 {

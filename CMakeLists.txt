@@ -16,19 +16,11 @@ include_directories(${Boost_INCLUDE_DIR})
 # Required packages
 find_package(OpenCV REQUIRED)
 find_package(Threads REQUIRED)
-find_package(CURL QUIET)
-find_package(PythonLibs 2 QUIET)
 
 find_library(LOG4CXX_LIBS log4cxx)
 find_library(TINYXML_LIBS tinyxml)
 find_library(JSONCPP_LIBS jsoncpp)
 
-if("${CURL_LIBRARIES}" STREQUAL "")
-	message(WARNING "Curl library not found on your system. Some modules may not compile.")
-endif()
-if("${PYTHON_LIBRARIES}" STREQUAL "")
-	message(WARNING "Python library not found on your system. Some modules may not compile.")
-endif()
 if("${LOG4CXX_LIBS}" STREQUAL "")
 	message(FATAL_ERROR "Log4CXX library not found on your system")
 endif()
@@ -38,6 +30,13 @@ endif()
 if("${JSONCPP_LIBS}" STREQUAL "")
 	message(FATAL_ERROR "JsonCpp library not found on your system")
 endif()
+
+set(MK_EXT_DEPS ${MK_EXT_DEPS} ${LOG4CXX_LIBS})
+set(MK_EXT_DEPS ${MK_EXT_DEPS} ${TINYXML_LIBS})
+set(MK_EXT_DEPS ${MK_EXT_DEPS} ${JSONCPP_LIBS})
+set(MK_EXT_DEPS ${MK_EXT_DEPS} ${OpenCV_LIBS})
+set(MK_EXT_DEPS ${MK_EXT_DEPS} ${CMAKE_THREAD_LIBS_INIT})
+set(MK_EXT_DEPS ${MK_EXT_DEPS} ${Boost_LIBRARIES})
 
 if(NOT Markus_NO_GUI)
 	if(Markus_USE_QT5)
@@ -82,19 +81,17 @@ else()
 	include_directories(gui editor)
 endif()
 
-
-set(MK_DEPS ${MK_DEPS} ${MK_DEPS} ${TINYXML_LIBS} ${JSONCPP_LIBS} ${LOG4CXX_LIBS} ${OpenCV_LIBS} ${PYTHON_LIBRARIES} ${CURL_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT}) # double the dependencies to avoid linking error
 if(NOT Markus_NO_GUI)
 	if(Markus_USE_QT5)
 		include_directories(${Qt5Widgets_INCLUDE_DIRS} ${Qt5WebKit_INCLUDE_DIRS} ${Qt5WebKitWidgets_INCLUDE_DIRS})
-		set(MK_DEPS ${MK_DEPS} ${Qt5Widgets_LIBRARIES} ${Qt5WebKit_LIBRARIES} ${Qt5WebKitWidgets_LIBRARIES}) 
+		set(MK_EXT_DEPS ${MK_EXT_DEPS} ${Qt5Widgets_LIBRARIES} ${Qt5WebKit_LIBRARIES} ${Qt5WebKitWidgets_LIBRARIES}) 
 		# Executables fail to build with Qt 5 in the default configuration
 		# without -fPIE. We add that here.
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS} ${Qt5WebKit_EXECUTABLE_COMPILE_FLAGS}")
 		add_definitions(${Qt5Widgets_DEFINITIONS} ${Qt5WebKit_DEFINITIONS})
 	else()
 		include_directories(${QT_INCLUDES})
-		set(MK_DEPS ${MK_DEPS} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTWEBKIT_LIBRARY} )
+		set(MK_EXT_DEPS ${MK_EXT_DEPS} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTWEBKIT_LIBRARY} )
 	endif()
 endif()
 
@@ -108,6 +105,8 @@ add_subdirectory(util)
 add_subdirectory(bulk)
 foreach(iter IN LISTS modules_dirs)
 	add_subdirectory(${iter})
+message("EXT ${MK_EXT_DEPS}")
+
 endforeach(iter)
 add_subdirectory(tools)
 if(NOT Markus_NO_GUI)
@@ -117,7 +116,7 @@ endif()
 add_subdirectory(tests)
 
 add_executable(markus ${markus_SRCS})
-target_link_libraries(markus ${MK_DEPS} ${Boost_LIBRARIES})
+target_link_libraries(markus ${MK_DEPS} ${MK_DEPS} ${MK_EXT_DEPS}) # double the dependencies to avoid linking error
 
 
 add_custom_target(doc

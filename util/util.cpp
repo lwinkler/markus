@@ -23,6 +23,7 @@
 
 #include "util.h"
 #include "Manager.h"
+#include "Event.h"
 #include "MkException.h"
 #include <fstream>
 #include <cstdio>
@@ -537,3 +538,19 @@ bool boolValue(const std::string& x_value)
 
 	throw MkException("Ambiguous value cannot be converted to bool: " + x_value, LOC);
 }
+
+/**
+* @brief Write image to disk and add the path of the image to the event
+*
+* @param x_image        Image to add
+* @param x_fileWithPath Path to image
+* @param xr_event       Event to modify
+*
+*/
+void addExternalImage(const Mat& x_image, const std::string& x_name, const std::string& x_fileWithPath, Event& xr_event)
+{
+	imwrite(x_fileWithPath, x_image);
+	// LOG_DEBUG(m_logger, "Add external file to event " << x_name << ": " << x_fileWithPath);
+	xr_event.AddExternalFile(x_name, x_fileWithPath);
+}
+

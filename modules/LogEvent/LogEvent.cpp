@@ -124,7 +124,7 @@ void LogEvent::SaveImage(Event& x_event)
 	{
 		std::stringstream ss1;
 		ss1 << m_folder << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_1." << m_param.extension;
-		AddExternalImage(m_inputIm1, "globalImage", ss1.str(), x_event);
+		addExternalImage(m_inputIm1, "globalImage", ss1.str(), x_event);
 
 		if(obj.width > 0 && obj.height > 0)
 		{
@@ -132,7 +132,7 @@ void LogEvent::SaveImage(Event& x_event)
 			ss2 << m_folder << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_1" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
 			Mat img = (m_inputIm1)(obj.GetRect());
-			AddExternalImage((m_inputIm1)(obj.GetRect()), "objectImage", ss2.str(), x_event);
+			addExternalImage((m_inputIm1)(obj.GetRect()), "objectImage", ss2.str(), x_event);
 		}
 	}
 
@@ -140,7 +140,7 @@ void LogEvent::SaveImage(Event& x_event)
 	{
 		std::stringstream ss1;
 		ss1 << m_folder << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_2." << m_param.extension;
-		AddExternalImage(m_inputIm2, "globalMask", ss1.str(), x_event);
+		addExternalImage(m_inputIm2, "globalMask", ss1.str(), x_event);
 
 		if(obj.width > 0 && obj.height > 0)
 		{
@@ -148,17 +148,9 @@ void LogEvent::SaveImage(Event& x_event)
 			ss2 << m_folder << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_2" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
 			Mat img = (m_inputIm2)(obj.GetRect());
-			AddExternalImage(img, "objectMask", ss2.str(), x_event);
+			addExternalImage(img, "objectMask", ss2.str(), x_event);
 		}
 	}
-}
-
-/// Store the extra information necessary along with the event
-void LogEvent::AddExternalImage(const Mat& x_image, const std::string& x_name, const std::string& x_file, Event& x_event)
-{
-	imwrite(x_file, x_image);
-	LOG_DEBUG(m_logger, "Add external file to event " << x_name << ": " << x_file);
-	x_event.AddExternalFile(x_name, x_file);
 }
 
 /// Compare the events previously detected with the ground truth file
