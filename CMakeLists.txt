@@ -105,8 +105,6 @@ add_subdirectory(util)
 add_subdirectory(bulk)
 foreach(iter IN LISTS modules_dirs)
 	add_subdirectory(${iter})
-message("EXT ${MK_EXT_DEPS}")
-
 endforeach(iter)
 add_subdirectory(tools)
 if(NOT Markus_NO_GUI)
