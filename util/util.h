@@ -50,7 +50,7 @@ bool compareFiles(const std::string& x_file1, const std::string& x_file2);
 std::string getFileContents(const std::string& x_filename);
 double diagonal(const cv::Mat& x_image);
 std::string basename(const std::string& x_pathName);
-void printStack(int sig);;
+void printStack(int sig);
 void execute(const std::string& x_cmd, std::ostream& xr_stdout);
 void execute(const std::string& x_cmd, std::vector<std::string>& xr_result);
 bool boolValue(const std::string& x_value);

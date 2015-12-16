@@ -40,8 +40,6 @@ log4cxx::LoggerPtr Event::m_logger(log4cxx::Logger::getLogger("Event"));
 Event::Event() :
 	m_object("empty")
 {
-	m_absTimeEvent = 0;
-	m_absTimeNotif = 0;
 	m_externalInfo.clear();
 }
 

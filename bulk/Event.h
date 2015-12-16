@@ -46,6 +46,8 @@ public:
 	inline bool IsRaised() const {return m_eventName != "";}
 	inline const std::string& GetEventName() const {return m_eventName;}
 	inline const Object& GetObject() const {return m_object;}
+	inline const TIME_STAMP& GetTimeNotif() const {return m_absTimeNotif;}
+	inline const TIME_STAMP& GetTimeEvent() const {return m_absTimeEvent;}
 	inline void AddFeature(std::string x_name, Feature* x_feat) {m_object.AddFeature(x_name, x_feat);}
 	inline void ScaleObject(double x_ratioX, double x_ratioY)
 	{
@@ -79,9 +81,9 @@ protected:
 	std::string m_eventName;
 	Object m_object;
 	/// Abs time of the event (given by current date)
-	TIME_STAMP m_absTimeEvent;
+	TIME_STAMP m_absTimeEvent = 0;
 	/// Abs time of the event at notification of parent process
-	TIME_STAMP m_absTimeNotif;
+	TIME_STAMP m_absTimeNotif = 0;
 	Json::Value m_externalInfo;
 
 private:
