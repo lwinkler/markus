@@ -28,6 +28,8 @@
 #include "Parameter.h"
 #include "ParameterStructure.h"
 
+// #define REGISTER_MODULE(type) static Factories::RegisterModule<type, type::Parameters> g_register_##type(#type);
+
 class Feature;
 class Module;
 class ConfigReader;
@@ -44,6 +46,20 @@ typedef FactoryT<ParameterType, Controller, Parameter&, Processable&>  FactoryPa
 class Factories
 {
 public:
+	/// Used to statically register modules
+	/*
+	template<class M, class P> class RegisterModule
+	{
+		public:
+			RegisterModule(const std::string& x_type)
+			{
+				std::cout << __LINE__ << std::endl;
+				// modulesFactory().Register<M>(x_type);
+				// parametersFactory().Register<P>(x_type);
+			}
+	};
+	*/
+
 	inline static FactoryParameters& parametersFactory()                   {static FactoryParameters FactoryParameters; return FactoryParameters;}
 	inline static FactoryModules&    modulesFactory()                      {static FactoryModules    factoryModules;    return factoryModules;}
 	inline static FactoryFeatures&   featuresFactory()                     {static FactoryFeatures   factoryFeatures;   return factoryFeatures;}

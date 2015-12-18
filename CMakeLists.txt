@@ -97,6 +97,9 @@ endif()
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR})
 
+# trick: We need to include this here to compile
+include_directories(/usr/local/mongo-cxx-driver/include)
+
 
 
 #-------------------------------------------------------------------------------- 
