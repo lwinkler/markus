@@ -51,9 +51,11 @@ public:
 			m_scalar = 0;
 			return;
 		}
+		assert(m_connected->IsConnected());
+
 		// Copy time stamp to output
 		m_timeStamp = GetConnected().GetTimeStamp();
-		m_scalar = dynamic_cast<const StreamNum*>(m_connected)->GetScalar();
+		m_scalar = dynamic_cast<const StreamNum&>(*m_connected).GetScalar();
 	}
 	/// Method to be called at the end of each step to store the last point for the plot
 	inline void Store(){m_scalars.push_back(m_scalar);}

@@ -44,8 +44,6 @@ LogEvent::LogEvent(ParameterStructure& xr_params)
 	AddInputStream(1, new StreamImage("image", m_inputIm1, *this, "Video input for image extraction (optional)"));
 	AddInputStream(2, new StreamImage("mask" , m_inputIm2, *this, "Binary mask for image extraction (optional)"));
 
-	m_saveImage1 = false;
-	m_saveImage2 = false;
 	mp_annotationWriter = nullptr;
 }
 
@@ -116,39 +114,37 @@ void LogEvent::WriteEvent()
 }
 
 /// Save related images
-void LogEvent::SaveImage(Event& x_event)
+void LogEvent::SaveImage(Event& xr_event) const
 {
-	const Object& obj(m_event.GetObject());
+	const Object& obj(xr_event.GetObject());
 
 	if(m_saveImage1)
 	{
 		std::stringstream ss1;
-		ss1 << m_folder << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_1." << m_param.extension;
-		addExternalImage(m_inputIm1, "globalImage", ss1.str(), x_event);
+		ss1 << m_folder << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_global_1." << m_param.extension;
+		addExternalImage(m_inputIm1, "globalImage", ss1.str(), xr_event);
 
 		if(obj.width > 0 && obj.height > 0)
 		{
 			std::stringstream ss2;
-			ss2 << m_folder << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_1" << "." << m_param.extension;
+			ss2 << m_folder << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_1" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
-			Mat img = (m_inputIm1)(obj.GetRect());
-			addExternalImage((m_inputIm1)(obj.GetRect()), "objectImage", ss2.str(), x_event);
+			addExternalImage((m_inputIm1)(obj.GetRect()), "objectImage", ss2.str(), xr_event);
 		}
 	}
 
 	if(m_saveImage2)
 	{
 		std::stringstream ss1;
-		ss1 << m_folder << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_2." << m_param.extension;
-		addExternalImage(m_inputIm2, "globalMask", ss1.str(), x_event);
+		ss1 << m_folder << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_global_2." << m_param.extension;
+		addExternalImage(m_inputIm2, "globalMask", ss1.str(), xr_event);
 
 		if(obj.width > 0 && obj.height > 0)
 		{
 			std::stringstream ss2;
-			ss2 << m_folder << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_2" << "." << m_param.extension;
+			ss2 << m_folder << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_2" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
-			Mat img = (m_inputIm2)(obj.GetRect());
-			addExternalImage(img, "objectMask", ss2.str(), x_event);
+			addExternalImage((m_inputIm2)(obj.GetRect()), "objectMask", ss2.str(), xr_event);
 		}
 	}
 }
