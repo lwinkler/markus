@@ -139,13 +139,17 @@ public:
 	StreamsTestSuite() :
 		m_configFile("tests/streams/config.xml"),
 		m_config(m_configFile),
-		m_fakeParams(m_config.FindRef("application>module[name=\"FakeModule\"]", true))
+		m_fakeParams1(m_config.FindRef("application>module[name=\"FakeModule\"]", true)),
+		m_fakeParams2(m_config.FindRef("application>module[name=\"FakeModule\"]", true)),
+		m_fakeParams3(m_config.FindRef("application>module[name=\"FakeModule\"]", true))
 		{}
 
 protected:
 	ConfigFile m_configFile;
 	ConfigReader        m_config;
-	Module::Parameters  m_fakeParams;
+	Module::Parameters  m_fakeParams1;
+	Module::Parameters  m_fakeParams2;
+	Module::Parameters  m_fakeParams3;
 	FakeModule*         mp_fakeModule1;
 	FakeModule*         mp_fakeModule2;
 	FakeModule*         mp_fakeModule3;
@@ -153,16 +157,16 @@ protected:
 public:
 	void setUp()
 	{
-		m_fakeParams.width = 320;
-		m_fakeParams.height = 240;
-		m_fakeParams.type = CV_8UC3;
-		mp_fakeModule1 = new FakeModule(m_fakeParams);
-		m_fakeParams.width = 160;
-		m_fakeParams.height = 120;
-		mp_fakeModule2 = new FakeModule(m_fakeParams);
-		m_fakeParams.width = 320;
-		m_fakeParams.height = 240;
-		mp_fakeModule3 = new FakeModule(m_fakeParams);
+		m_fakeParams1.width  = 320;
+		m_fakeParams1.height = 240;
+		m_fakeParams1.type   = CV_8UC3;
+		mp_fakeModule1       = new FakeModule(m_fakeParams1);
+		m_fakeParams2.width  = 160;
+		m_fakeParams2.height = 120;
+		mp_fakeModule2       = new FakeModule(m_fakeParams2);
+		m_fakeParams3.width  = 320;
+		m_fakeParams3.height = 240;
+		mp_fakeModule3       = new FakeModule(m_fakeParams3);
 
 		for(auto input : mp_fakeModule1->GetInputStreamList())
 		{
