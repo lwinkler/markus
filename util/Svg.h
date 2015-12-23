@@ -54,10 +54,10 @@ public:
 			return;
 			// throw MkException("Cannot draw path containing less than 1 point yet", LOC);
 
-		ss << "M" << x_points.begin()->x << " " << x_points.begin()->y;
+		ss << "M" << x_points.begin()->x * m_widthRatio << " " << x_points.begin()->y * m_heightRatio;
 
 		for(typename std::vector<P>::const_iterator it = x_points.begin() + 1 ; it != x_points.end(); it++)
-			ss << " L" << it->x << " " << it->y;
+			ss << " L" << it->x * m_widthRatio << " " << it->y * m_heightRatio;
 		if(x_closed)
 			ss << " Z";
 
@@ -67,10 +67,22 @@ public:
 	}
 
 	/// Draw a polygon
-	void Draw(const Polygon& x_polygon, const std::string& x_color, const cv::Size& x_size);
+	inline void Draw(const Polygon& x_polygon, const std::string& x_color, const cv::Size& x_size)
+	{
+		std::vector <cv::Point2d> pts;
+		x_polygon.GetPoints(pts, x_size);
+
+		Draw(pts, x_color, true);
+	}
 
 	/// Write the SVG file
 	void Write() const {m_file.SaveToFile(m_fileName);}
+
+	/// Include an external image file (as link) use the whole canvas
+	void LinkImage(const std::string& x_file);
+
+	/// Include an external image file (as link) specify the position
+	void LinkImage(const std::string& x_file, const cv::Rect& x_rect);
 
 private:
 	static log4cxx::LoggerPtr m_logger;

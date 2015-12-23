@@ -65,10 +65,22 @@ void Svg::Line(const Point& x_point1, const Point& x_point2, const string& x_col
 	line.SetAttribute("stroke", x_color);
 }
 
-void Svg::Draw(const Polygon& x_polygon, const std::string& x_color, const Size& x_size)
+void Svg::LinkImage(const std::string& x_file)
 {
-	vector <Point2d> pts;
-	x_polygon.GetPoints(pts, x_size);
+	ConfigReader image = m_svg.Append("image");
+	image.SetAttribute("xlink:href", x_file);
+	image.SetAttribute("x", 0);
+	image.SetAttribute("y", 0);
+	image.SetAttribute("width", SVG_WIDTH);
+	image.SetAttribute("height", SVG_HEIGHT);
+}
 
-	Draw(pts, x_color, true);
+void Svg::LinkImage(const std::string& x_file, const Rect& x_rect)
+{
+	ConfigReader image = m_svg.Append("image");
+	image.SetAttribute("xlink:href", x_file);
+	image.SetAttribute("x", x_rect.x);
+	image.SetAttribute("y", x_rect.y);
+	image.SetAttribute("width", x_rect.width);
+	image.SetAttribute("height", x_rect.height);
 }
