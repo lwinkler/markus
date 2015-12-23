@@ -150,9 +150,9 @@ protected:
 	Module::Parameters  m_fakeParams1;
 	Module::Parameters  m_fakeParams2;
 	Module::Parameters  m_fakeParams3;
-	FakeModule*         mp_fakeModule1;
-	FakeModule*         mp_fakeModule2;
-	FakeModule*         mp_fakeModule3;
+	FakeModule*         mp_fakeModule1 = nullptr;
+	FakeModule*         mp_fakeModule2 = nullptr;
+	FakeModule*         mp_fakeModule3 = nullptr;
 
 public:
 	void setUp()

@@ -56,7 +56,7 @@ public:
 
 		ss << "M" << x_points.begin()->x * m_widthRatio << " " << x_points.begin()->y * m_heightRatio;
 
-		for(typename std::vector<P>::const_iterator it = x_points.begin() + 1 ; it != x_points.end(); it++)
+		for(typename std::vector<P>::const_iterator it = x_points.begin() + 1 ; it != x_points.end(); ++it)
 			ss << " L" << it->x * m_widthRatio << " " << it->y * m_heightRatio;
 		if(x_closed)
 			ss << " Z";

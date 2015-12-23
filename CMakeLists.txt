@@ -133,7 +133,7 @@ add_custom_target(lint
 
 add_custom_target(check
 	COMMENT "Check C++ code statically with cppcheck"
-	COMMAND cppcheck bulk ${modules_dirs} util tests main.cpp editor gui --force --enable=all -q
+	COMMAND cppcheck bulk ${modules_dirs} util tests main.cpp editor gui --force --enable=all -q --template "{file}:{line}: {severity} {id}: {message}" --inline-suppr
 )
 
 add_custom_target(update_modules_list

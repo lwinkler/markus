@@ -84,7 +84,6 @@ void Polygon::DrawMask(Mat& xr_target, const Scalar& x_color) const
 		return;
 	assert(m_width * m_height > 0);
 	const int npoints = points.size();
-	double diag = diagonal(xr_target);
 	vector<Point> scaledPts;
 	GetPoints(scaledPts, xr_target.size());
 

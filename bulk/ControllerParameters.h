@@ -80,6 +80,7 @@ public:
 	virtual std::string GetValueFromWidget();
 
 protected:
+	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
 	QParameterSlider * mp_parameterSlider;
 	ParameterInt& m_param2;
 };
@@ -94,6 +95,7 @@ public:
 	virtual std::string GetValueFromWidget();
 
 protected:
+	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
 	QParameterSlider * mp_parameterSlider;
 	ParameterUInt& m_param2;
 };
@@ -109,6 +111,7 @@ public:
 	virtual std::string GetValueFromWidget();
 
 protected:
+	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
 	QParameterSlider * mp_parameterSlider;
 	ParameterDouble  & m_param2;
 };
@@ -123,6 +126,7 @@ public:
 	virtual std::string GetValueFromWidget();
 
 protected:
+	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
 	QParameterSlider * mp_parameterSlider;
 	ParameterFloat   & m_param2;
 };
@@ -137,6 +141,7 @@ public:
 	virtual std::string GetValueFromWidget();
 
 protected:
+	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
 	QCheckBox     * mp_checkBox;
 	ParameterBool & m_param2;
 };
@@ -151,6 +156,7 @@ public:
 	virtual std::string GetValueFromWidget();
 
 protected:
+	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
 	QLineEdit       * mp_lineEdit;
 	ParameterString & m_param2;
 };
@@ -165,6 +171,7 @@ public:
 	virtual std::string GetValueFromWidget();
 
 protected:
+	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
 	QLineEdit             * mp_lineEdit;
 	ParameterSerializable & m_param2;
 };
@@ -181,12 +188,19 @@ public:
 protected:
 	//QPainter * parameterLine;
 	ParameterSerializable & m_param2;
+	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
 	QWidget * mp_widget;
+	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
 	QParameterSlider * mp_sliderX;
+	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
 	QParameterSlider * mp_sliderY;
+	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
 	QParameterSlider * mp_sliderHeight;
+	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
 	QLabel* mp_labX;
+	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
 	QLabel* mp_labY;
+	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
 	QLabel* mp_labHeight ;
 };
 
@@ -201,6 +215,7 @@ public:
 	virtual std::string GetValueFromWidget();
 
 protected:
+	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
 	QComboBox     * mp_comboBox;
 	ParameterEnum & m_param2;
 };
@@ -216,6 +231,7 @@ public:
 	virtual std::string GetValueFromWidget();
 
 protected:
+	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
 	QTextEdit * mp_textEdit;
 	Parameter & m_param2;
 };

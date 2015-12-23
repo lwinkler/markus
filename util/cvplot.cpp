@@ -34,13 +34,9 @@ void Series::SetColor(Scalar x_color, bool x_auto_color)
 	auto_color = x_auto_color;
 }
 
-Figure::Figure(const string& name)
+Figure::Figure(const string& name) : figure_name(name)
 {
-	figure_name = name;
-
-	custom_range_y = false;
-	custom_range_x = false;
-	backgroud_color = CV_WHITE;
+	// background_color = CV_WHITE;
 	axis_color = CV_BLACK;
 	text_color = CV_BLACK;
 
@@ -243,7 +239,7 @@ void Figure::Show()
 	Initialize();
 
 	IplImage *output = cvCreateImage(figure_size, IPL_DEPTH_8U, 3);
-	cvSet(output, backgroud_color, 0);
+	cvSet(output, background_color, 0);
 
 	DrawAxis(output);
 

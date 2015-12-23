@@ -72,11 +72,11 @@ protected:
 	cv::Mat m_image;
 	bool m_state = false;
 	Event m_event;
-	float  m_float;
-	double m_double;
-	int    m_int;
-	uint   m_uint;
-	bool   m_bool;
+	float  m_float   = 0;
+	double m_double  = 0;
+	int    m_int     = 0;
+	uint   m_uint    = 0;
+	bool   m_bool    = false;
 	vector<Object> m_objects;
 	int m_cpt = 0;
 

@@ -269,7 +269,7 @@ void Manager::SendCommand(const string& x_command, string x_value)
 
 	// Note: We cast module/manager twice since we need functions from both parents
 	Controllable& contr  (elems.at(0) == "manager" ? dynamic_cast<Controllable&>(*this) : RefModuleByName(elems.at(0)));
-	Processable&  process(elems.at(0) == "manager" ? dynamic_cast<Processable&>(*this) : RefModuleByName(elems.at(0)));
+	// Processable&  process(elems.at(0) == "manager" ? dynamic_cast<Processable&>(*this) : RefModuleByName(elems.at(0)));
 
 	// WriteLock lock(process.RefLock());
 	contr.FindController(elems.at(1)).CallAction(elems.at(2), &x_value);

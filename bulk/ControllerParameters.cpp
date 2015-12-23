@@ -128,7 +128,7 @@ void ControllerParameter::SetControlledValue(string* xp_value)
 void ControllerParameter::GetCurrent(string* xp_value)
 {
 	Processable::ReadLock lock(m_module.RefLock());
-	string oldValue = m_param.GetValueString();
+	// string oldValue = m_param.GetValueString();
 	if(xp_value != nullptr)
 	{
 		stringstream ss;

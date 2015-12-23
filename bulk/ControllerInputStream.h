@@ -51,6 +51,7 @@ public:
 
 protected:
 	std::map<std::string, const action> m_actions;
+	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
 	QParameterSlider * m_parameterSlider;
 	VideoFileReader  & m_module;
 };
