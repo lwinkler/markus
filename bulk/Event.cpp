@@ -65,7 +65,7 @@ void Event::Randomize(unsigned int& xr_seed, const string& x_requirement, const 
 	}
 }
 
-void Event::Serialize(ostream& x_out, const string& x_dir) const
+void Event::Serialize(ostream& xr_out, const string& x_dir) const
 {
 	Json::Value root;
 	root["raised"] = IsRaised();
@@ -84,7 +84,7 @@ void Event::Serialize(ostream& x_out, const string& x_dir) const
 		else root["object"] = Json::Value(Json::nullValue); // Null
 		root["external"] = m_externalInfo;
 	}
-	x_out << root;
+	xr_out << root;
 }
 
 void Event::Deserialize(istream& x_in, const string& x_dir)
@@ -227,4 +227,15 @@ void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 	tmp.erase(remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
 
 	LOG_WARN(m_logger, "@notif@ " << level << " " << tmp);
+}
+
+/// Return the external files
+void Event::GetExternalFiles(map<std::string, string>& xr_output) const
+{
+	xr_output.clear();
+	for(const auto& elem : m_externalInfo["files"].getMemberNames())
+	{
+		// TODO: return name as well
+		xr_output[elem] = m_externalInfo["files"][elem].asString();
+	}
 }
