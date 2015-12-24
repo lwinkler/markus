@@ -229,7 +229,7 @@ void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 	LOG_WARN(m_logger, "@notif@ " << level << " " << tmp);
 }
 
-/// Return the external files
+/// Return the external files // TODO Unit tests
 void Event::GetExternalFiles(map<std::string, string>& xr_output) const
 {
 	xr_output.clear();

@@ -84,7 +84,8 @@ TiXmlDocument* createDoc(const std::string& x_fileName, bool x_allowCreation, bo
 				createEmptyConfigFile(x_fileName, x_header);
 				doc = new TiXmlDocument(x_fileName);
 				auto tmp = doc->LoadFile();
-				assert(tmp);
+				if(!tmp)
+					throw MkException("Cannot create temporary file", LOC);
 			}
 			else throw MkException("Could not load file as XML '" + x_fileName + "'. Error='" + (doc ? doc->ErrorDesc() : "") + "'. Exiting.", LOC);
 		}
@@ -92,11 +93,11 @@ TiXmlDocument* createDoc(const std::string& x_fileName, bool x_allowCreation, bo
 	}
 	catch(exception& e)
 	{
-		fatal("Fatal exception in constructor of ConfigReader: " + string(e.what()), LOC);
+		throw MkException("Fatal exception in constructor of ConfigReader: " + string(e.what()), LOC);
 	}
 	catch(...)
 	{
-		fatal("Fatal exception in constructor of ConfigReader", LOC);
+		throw MkException("Fatal exception in constructor of ConfigReader", LOC);
 	}
 	// note: avoid a compiler warning
 	return nullptr;
