@@ -423,7 +423,7 @@ public:
 	void testBySpecificXmlProjects()
 	{
 		vector<string> result1;
-		execute("find modules/ modules2/ -name \"testing*.xml\"", result1);
+		execute("xargs -a modules.txt -I{} find {} -name \"testing*.xml\"", result1);
 
 		for(auto elem : result1)
 		{

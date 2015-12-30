@@ -1,16 +1,11 @@
 cmake_minimum_required(VERSION 2.8)
 
-file(GLOB modules_src
-    "*/*.cpp"
-)
+appendModules(modules_src)
 
-#-------------------------------------------------------------------------------- 
-# Auto generate AllModules.cpp (used at first run)
-execute_process(COMMAND ./modules/AllModules.cpp.sh . OUTPUT_FILE modules/AllModules.cpp)
+# message("Found these source files in modules/: ${modules_src}")
 
 add_library(modules
 ${modules_src}
-AllModules.cpp
 )
 
 

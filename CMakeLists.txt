@@ -2,8 +2,42 @@ project(markus)
 cmake_minimum_required(VERSION 2.6)
 
 # Options to be set with ccmake or cmake-gui
+set(Markus_MODULE_DIRS          "modules;modules2"   CACHE STRING "List of directories containing modules")
+set(Markus_PROJECTS_DIRS        "projects;projects2" CACHE STRING "List of directories containing XML projects")
+set(Markus_MODULE_BLACKLIST     ""                   CACHE STRING "List of modules to blacklist")
 set(Markus_NO_GUI          false   CACHE BOOL "Compile Markus without a graphical user interface")
 set(Markus_USE_QT5         false   CACHE BOOL "Use QT 5 instead of 4")
+
+# Create text files: dirs.txt contains all module directories and modules.txt contains all paths to modules
+file(REMOVE dirs.txt)
+file(REMOVE modules.txt)
+foreach(iter IN LISTS Markus_MODULE_DIRS)
+	file(APPEND dirs.txt "${iter}\n")
+endforeach()
+
+# Function used by module directories: create a list of all module directories and add all *.cpp files to modules_src
+function(appendModules modules_src)
+file(GLOB tmp "*")
+foreach(mod IN LISTS tmp)
+	if(IS_DIRECTORY ${mod})
+		get_filename_component(name1 ${mod} NAME_WE)
+		if(name1 STREQUAL "CMakeFiles")
+		else()
+			list(FIND Markus_MODULE_BLACKLIST ${name1} index)
+			if(index STREQUAL "-1")
+				# Include this module
+				file(APPEND "${PROJECT_SOURCE_DIR}/modules.txt" "${mod}\n")
+				file(GLOB modules_tmp "${mod}/*.cpp")
+				list(APPEND modules_src2 ${modules_tmp})
+			else()
+				message("Blacklisted module ${name1}")
+			endif()
+		endif()
+	endif()
+endforeach(mod)
+set(modules_src ${modules_src2} PARENT_SCOPE)
+endfunction(appendModules)
+
 
 add_definitions(-std=c++11 -Wextra -Wno-unused-parameter -Wno-deprecated-register)
 if (CMAKE_BUILD_TYPE MATCHES Debug)
@@ -56,28 +90,27 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Search all directory named modules... (note: we need to preserve the order)
-file(GLOB modules_tmp
-    "modules" "modules2*" "modules3*" "modules4"
-)
-foreach(iter IN LISTS modules_tmp)
-	get_filename_component(ext1  ${iter} EXT)
-	get_filename_component(name1 ${iter} NAME_WE)
-	list(APPEND modules_dirs "${name1}${ext1}")
-endforeach(iter)
+# file(GLOB modules_tmp
+    # "modules" "modules2*" "modules3*" "modules4"
+# )
+# foreach(iter IN LISTS modules_tmp)
+	# get_filename_component(ext1  ${iter} EXT)
+	# get_filename_component(name1 ${iter} NAME_WE)
+	# list(APPEND modules_dirs "${name1}${ext1}")
+# endforeach(iter)
 # message("Looking for modules in ${modules_dirs}")
 
 include_directories(${PYTHON_INCLUDE_DIRS})
-include_directories(util bulk ${modules_dirs})
+include_directories(util bulk ${Markus_MODULE_DIRS})
 
-
-set(markus_SRCS main.cpp)
+set(markus_SRCS main.cpp modules/AllModules.cpp)
 
 #-------------------------------------------------------------------------------- 
 if(Markus_NO_GUI)
 	add_definitions(-DMARKUS_NO_GUI)
-	set(MK_DEPS util bulk ${modules_dirs})
+	set(MK_DEPS util bulk ${Markus_MODULE_DIRS})
 else()
-	set(MK_DEPS util bulk gui editor ${modules_dirs})
+	set(MK_DEPS util bulk gui editor ${Markus_MODULE_DIRS})
 	include_directories(gui editor)
 endif()
 
@@ -103,10 +136,10 @@ include_directories(/usr/local/mongo-cxx-driver/include)
 
 
 #-------------------------------------------------------------------------------- 
-
+# Include sub directories
 add_subdirectory(util)
 add_subdirectory(bulk)
-foreach(iter IN LISTS modules_dirs)
+foreach(iter IN LISTS Markus_MODULE_DIRS)
 	add_subdirectory(${iter})
 endforeach(iter)
 add_subdirectory(tools)
@@ -114,6 +147,9 @@ if(NOT Markus_NO_GUI)
 	add_subdirectory(gui)
 	add_subdirectory(editor)
 endif()
+# Auto generate AllModules.cpp
+execute_process(COMMAND ./modules/AllModules.cpp.sh . OUTPUT_FILE modules/AllModules.cpp)
+
 add_subdirectory(tests)
 
 add_executable(markus ${markus_SRCS})
@@ -128,12 +164,12 @@ add_custom_target(doc
 
 add_custom_target(lint
 	COMMENT "Check C++ lint rules with the lint tool provided by Google"
-	COMMAND find -L bulk ${modules_dirs} util tests main.cpp editor gui -name \"*.h\" -print -o -name \"*.cpp\" ! -name \"moc_*.cpp\" -print | xargs tools/cpplint.py --filter=-whitespace,-legal,-build,-runtime/references,-runtime/explicit,-readability/todo,-readability/streams,-readability/function,-runtime/string
+	COMMAND find -L bulk ${Markus_MODULE_DIRS} util tests main.cpp editor gui -name \"*.h\" -print -o -name \"*.cpp\" ! -name \"moc_*.cpp\" -print | xargs tools/cpplint.py --filter=-whitespace,-legal,-build,-runtime/references,-runtime/explicit,-readability/todo,-readability/streams,-readability/function,-runtime/string
 )
 
 add_custom_target(check
 	COMMENT "Check C++ code statically with cppcheck"
-	COMMAND cppcheck bulk ${modules_dirs} util tests main.cpp editor gui --force --enable=all -q --template "{file}:{line}: {severity} {id}: {message}" --inline-suppr
+	COMMAND cppcheck bulk ${Markus_MODULE_DIRS} util tests main.cpp editor gui --force --enable=all -q --template "{file}:{line}: {severity} {id}: {message}" --inline-suppr
 )
 
 add_custom_target(update_modules_list
