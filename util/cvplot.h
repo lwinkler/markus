@@ -146,5 +146,5 @@ namespace CvPlot
 
 	void label(std::string lbl);
 
-};
+}; // namespace CvPlot
 #endif

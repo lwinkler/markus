@@ -164,12 +164,12 @@ add_custom_target(doc
 
 add_custom_target(lint
 	COMMENT "Check C++ lint rules with the lint tool provided by Google"
-	COMMAND find -L bulk ${Markus_MODULE_DIRS} util tests main.cpp editor gui -name \"*.h\" -print -o -name \"*.cpp\" ! -name \"moc_*.cpp\" -print | xargs tools/cpplint.py --filter=-whitespace,-legal,-build,-runtime/references,-runtime/explicit,-readability/todo,-readability/streams,-readability/function,-runtime/string
+	COMMAND tools/list_source_dirs.sh | xargs -I{} find -L {} -name \"*.h\" -print -o -name \"*.cpp\" ! -name \"moc_*.cpp\" -print | xargs tools/cpplint.py --filter=-whitespace,-legal,-build,-runtime/references,-runtime/explicit,-readability/todo,-readability/streams,-readability/function,-runtime/string
 )
 
 add_custom_target(check
 	COMMENT "Check C++ code statically with cppcheck"
-	COMMAND cppcheck bulk ${Markus_MODULE_DIRS} util tests main.cpp editor gui --force --enable=all -q --template "{file}:{line}: {severity} {id}: {message}" --inline-suppr
+	COMMAND tools/list_source_dirs.sh | xargs cppcheck --force --enable=all -q --template "{file}:{line}: {severity} {id}: {message}" --inline-suppr
 )
 
 add_custom_target(update_modules_list
