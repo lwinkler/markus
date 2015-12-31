@@ -2,7 +2,7 @@
 
 echo bulk
 echo util
-echo test
+echo tests
 echo main.cpp
 echo editor
 echo gui
