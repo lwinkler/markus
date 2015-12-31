@@ -73,8 +73,8 @@ void Event::Serialize(ostream& xr_out, const string& x_dir) const
 	if(IsRaised())
 	{
 		root["eventName"]  = m_eventName;
-		root["dateEvent"] = m_absTimeEvent;
-		root["dateNotif"] = m_absTimeNotif;
+		root["dateEvent"]  = Json::UInt64(m_absTimeEvent);
+		root["dateNotif"]  = Json::UInt64(m_absTimeNotif);
 		if(m_object.GetName() != "empty")
 		{
 			stringstream ss;

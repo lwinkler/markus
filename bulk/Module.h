@@ -158,14 +158,14 @@ protected:
 	Timer m_timerConversion;
 	Timer m_timerProcessing;
 	Timer m_timerWaiting;
-	long long m_countProcessedFrames;
+	uint64_t m_countProcessedFrames = 0;
 
 	// for testing
-	bool m_isUnitTestingEnabled;
+	bool m_isUnitTestingEnabled = true;
 
-	TIME_STAMP m_lastTimeStamp;     // time stamp of the lastly processed input
-	TIME_STAMP m_currentTimeStamp;  // time stamp of the current input
-	bool m_unsyncWarning;
+	TIME_STAMP m_lastTimeStamp    = TIME_STAMP_MIN;  // time stamp of the lastly processed input
+	TIME_STAMP m_currentTimeStamp = TIME_STAMP_MIN;  // time stamp of the current input
+	bool m_unsyncWarning = true;
 
 	virtual void ProcessFrame() = 0;
 	inline virtual bool IsInputProcessed() const {return true;}

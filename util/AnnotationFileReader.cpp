@@ -51,6 +51,7 @@ istream& AnnotationFileReader::SafeGetline(istream& is, string& t)
 	// The sentry object performs various tasks,
 	// such as thread synchronization and updating the stream state.
 
+	// cppcheck-suppress unreadVariable
 	istream::sentry se(is, true);
 	streambuf* sb = is.rdbuf();
 

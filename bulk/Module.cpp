@@ -47,12 +47,6 @@ Module::Module(ParameterStructure& xr_params) :
 {
 	m_id	= atoi(xr_params.GetConfig().GetAttribute("id").c_str());
 	LOG_INFO(m_logger, "Create module " << m_name);
-
-	m_countProcessedFrames = 0;
-	m_lastTimeStamp        = TIME_STAMP_MIN;
-	m_currentTimeStamp     = TIME_STAMP_MIN;
-	m_unsyncWarning        = true;
-	m_isUnitTestingEnabled = true;
 }
 
 Module::~Module()
@@ -404,7 +398,7 @@ void Module::Serialize(ostream& x_out, const string& x_dir) const
 	// root["timer_conversion"]      = m_timerConversion.GetMsLong();
 	// root["timer_processing"]      = m_timerProcessing.GetMsLong();
 	// root["timer_waiting"]         = m_timerWaiting.GetMsLong();
-	root["countProcessedFrames"] = m_countProcessedFrames;
+	root["countProcessedFrames"] = Json::UInt64(m_countProcessedFrames);
 
 	// Dump inputs
 	for(const auto & elem : m_inputStreams)

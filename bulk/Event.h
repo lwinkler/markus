@@ -73,7 +73,7 @@ public:
 	inline void AddExternalInfo(const std::string& x_label, const std::string& x_value) {m_externalInfo[x_label] = x_value;}
 	inline void AddExternalInfo(const std::string& x_label, double x_value) {m_externalInfo[x_label] = x_value;}
 	inline void AddExternalInfo(const std::string& x_label, int x_value) {m_externalInfo[x_label] = x_value;}
-	inline void AddExternalInfo(const std::string& x_label, unsigned long long x_value) {m_externalInfo[x_label] = x_value;}
+	inline void AddExternalInfo(const std::string& x_label, uint64_t x_value) {Json::Value::UInt64 val(x_value); m_externalInfo[x_label] = val;}
 	inline void AddExternalInfo(const std::string& x_label, std::istream& x_in) {x_in >> m_externalInfo[x_label];}
 	inline void AddExternalFile(const std::string& x_label, const std::string& x_file) {m_externalInfo["files"][x_label] = x_file;}
 	void GetExternalFiles(std::map<std::string, std::string>& xr_output) const;

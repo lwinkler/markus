@@ -86,7 +86,7 @@ void Stream::Serialize(ostream& x_out, const string& x_dir) const
 	// root["id"]          = m_id;
 	root["type"]        = GetType();
 	root["description"] = m_description;
-	root["timeStamp"]   = m_timeStamp.load();
+	root["timeStamp"]   = Json::UInt64(m_timeStamp.load());
 	root["connected"]   = IsConnected();
 	x_out << root;
 }
