@@ -172,6 +172,13 @@ add_custom_target(check
 	COMMAND tools/list_source_dirs.sh | xargs cppcheck --force --enable=all -q --template "{file}:{line}: {severity} {id}: {message}" --inline-suppr
 )
 
+add_custom_target(todo
+	COMMENT "List all todos"
+	COMMAND tools/list_source_dirs.sh | xargs -I{} grep -rn TODO --exclude-dir=js {}
+	# COMMAND git grep -n TODO
+	# COMMAND cd modules2 && git grep -n TODO
+)
+
 add_custom_target(update_modules_list
 	COMMENT "Update the list of modules for the editor"
 	COMMAND ./markus -d
