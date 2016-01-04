@@ -65,7 +65,7 @@ void Processable::Reset()
 		mp_moduleTimer = nullptr;
 	}
 
-	m_timerProcessing.Reset();
+	m_timerProcessable.Reset();
 	m_hasRecovered = true;
 }
 
@@ -92,7 +92,7 @@ void Processable::Start()
 
 
 /**
-* @brief Stop the processing thread. To be used before destructur
+* @brief Stop the processing thread. To be used before destructor
 *
 */
 void Processable::Stop()
@@ -106,7 +106,7 @@ bool Processable::ProcessAndCatch()
 {
 	bool recover      = true;
 	bool continueFlag = true;
-	m_timerProcessing.Start(); // TODO: make private and check
+	m_timerProcessable.Start();
 	try
 	{
 		Process();
@@ -197,6 +197,8 @@ bool Processable::ProcessAndCatch()
 		recover = m_hasRecovered = false;
 		LOG_ERROR(m_logger, GetName() << ": Unknown exception raised");
 	}
+
+	m_timerProcessable.Stop();
 
 	// If a full processing cycle has been made without exception,
 	// we consider that the manager has recovered from exceptions

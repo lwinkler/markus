@@ -175,7 +175,6 @@ void Manager::Reset(bool x_resetInputs)
 {
 	Processable::Reset();
 	m_interruptionManager.Configure(m_param.GetConfig());
-	m_timerProcessing.Reset();
 
 	// Reset timers
 	// m_timerConvertion = 0;
@@ -220,7 +219,6 @@ void Manager::Process()
 	assert(m_isConnected); // Modules must be connected before processing
 	int cpt = 0;
 	MkException lastException(MK_EXCEPTION_NORMAL, "normal", "No exception was thrown", "", "");
-	m_timerProcessing.Start();
 
 	for(auto & elem : m_autoProcessedModules)
 	{
@@ -233,7 +231,6 @@ void Manager::Process()
 		}
 	}
 
-	m_timerProcessing.Stop();
 	m_frameCount++;
 	if(m_frameCount % 100 == 0 && m_logger->isDebugEnabled())
 	{
@@ -282,10 +279,10 @@ void Manager::SendCommand(const string& x_command, string x_value)
 */
 void Manager::PrintStatistics()
 {
-	double fps = m_frameCount / m_timerProcessing.GetSecDouble();
-	LOG_INFO(m_logger, "Manager: "<<m_frameCount<<" frames processed in "<<m_timerProcessing.GetSecDouble()*1000<<" ms ("<< fps <<" frames/s)");
+	double fps = m_frameCount / m_timerProcessable.GetSecDouble();
+	LOG_INFO(m_logger, "Manager: " << m_frameCount << " frames processed in " << m_timerProcessable.GetSecDouble() * 1000 << " ms, " << fps << " fps");
 	// LOG_INFO("input convertion "                  <<m_timerConvertion<<" ms ("<<(1000.0 * m_frameCount) / m_timerConvertion<<" frames/s)");
-	// LOG_INFO("Total time "<< m_timerProcessing + m_timerConvertion<<" ms ("<<     (1000.0 * m_frameCount) /(m_timerProcessing + m_timerConvertion)<<" frames/s)");
+	// LOG_INFO("Total time "<< m_timerProcessable + m_timerConvertion<<" ms ("<<     (1000.0 * m_frameCount) /(m_timerProcessable + m_timerConvertion)<<" frames/s)");
 
 	// Create an XML file to summarize CPU usage
 	//     if output dir is empty, write to /tmp
@@ -297,7 +294,8 @@ void Manager::PrintStatistics()
 	// Write perf to output XML
 	ConfigReader perfModule = conf.FindRef("manager", true);
 	perfModule.FindRef("nb_frames", true).SetValue(m_frameCount);
-	perfModule.FindRef("timer[name=\"processing\"]", true).SetValue(m_timerProcessing.GetSecDouble()*1000);
+	perfModule.FindRef("timer[name=\"processable\"]", true).SetValue(m_timerProcessable.GetSecDouble()*1000);
+	perfModule.FindRef("timer[name=\"processing\"]", true).SetValue(m_timerProcessable.GetSecDouble()*1000); // note: this line is kept for backward compatibility
 	perfModule.FindRef("fps", true).SetValue(fps);
 
 	// Call for each module

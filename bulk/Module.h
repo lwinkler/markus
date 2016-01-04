@@ -156,7 +156,7 @@ public:
 protected:
 	// for benchmarking
 	Timer m_timerConversion;
-	Timer m_timerProcessing;
+	Timer m_timerProcessFrame;
 	Timer m_timerWaiting;
 	uint64_t m_countProcessedFrames = 0;
 

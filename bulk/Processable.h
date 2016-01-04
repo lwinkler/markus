@@ -83,7 +83,7 @@ protected:
 
 	InterruptionManager& m_interruptionManager;
 	boost::shared_mutex m_lock;
-	Timer m_timerProcessing;
+	Timer m_timerProcessable;
 
 private:
 	bool m_hasRecovered     = true; // Flag to test if all modules have recovered from the last exception, only working if centralized
