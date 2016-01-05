@@ -27,6 +27,7 @@
 #include "version.h"
 
 #include <fstream>
+#include <unistd.h>
 
 
 using namespace std;
@@ -38,6 +39,12 @@ Context::Context(ParameterStructure& xr_params) :
 	m_param(dynamic_cast<const Parameters&>(xr_params))
 {
 	m_outputDir = CreateOutputDir(m_param.outputDir);
+	if(m_param.jobId.empty())
+	{
+		LOG_INFO(m_logger, "A test jobId is created from time stamp. This should only be used for tests");
+		m_jobId   = "test_" + timeStamp(getpid());
+	}
+	else m_jobId = m_param.jobId;
 }
 
 Context::~Context()
