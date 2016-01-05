@@ -25,6 +25,7 @@
 
 #include "VideoFileReader.h"
 #include "StreamImage.h"
+#include "util.h"
 
 #ifndef MARKUS_NO_GUI
 #include "ControllerInputStream.h"
@@ -56,7 +57,8 @@ void VideoFileReader::Reset()
 		AddController(new ControllerInputStream(*this));
 #endif
 
-	m_beginTimeStamp = 0;
+	m_beginTimeStamp = timeStampFromFileName(m_param.file);
+	LOG_DEBUG(m_logger, "Open " << m_param.file << " timestamps start at " << m_beginTimeStamp);
 	m_capture.release();
 	m_capture.open(m_param.file);
 	if(! m_capture.isOpened())

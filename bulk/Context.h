@@ -50,6 +50,8 @@ public:
 			m_list.push_back(new ParameterString("output_dir", "",        &outputDir,       "Directory used to write results files of manager and modules. If empty a directory is created from the date"));
 			m_list.push_back(new ParameterBool("centralized", 0, 0, 1,    &centralized,     "All modules are called from the manager. Option -c"));
 			m_list.push_back(new ParameterBool("real_time", 0, 0, 1,      &realTime,        "All modules process in real-time. Disable to increase processing speed. Option -f"));
+			m_list.push_back(new ParameterString("job_id"      ,  ""    , &jobId         ,  "Job id for storage in database. Leave empty to generate a random value"));
+			m_list.push_back(new ParameterInt("cameraId"    ,  0, 0, INT_MAX, &cameraId  ,  "CameraId id for storage in database. Leave empty for tests only."));
 			ParameterStructure::Init();
 
 			// Override values: must be set for each run
@@ -64,6 +66,8 @@ public:
 		std::string outputDir;
 		bool centralized;
 		bool realTime;
+		std::string jobId;
+		int cameraId;
 	};
 
 	~Context();
@@ -71,13 +75,16 @@ public:
 	static std::string Version(bool x_full);
 	inline const std::string& GetOutputDir() const {if(m_outputDir.empty())throw MkException("Output dir has not been created", LOC); return m_outputDir;}
 	inline const std::string& GetApplicationName() const {return m_param.applicationName;}
+	inline const std::string& GetJobId() const {return m_jobId;}
 	bool IsOutputDirEmpty() const;
 	inline bool IsCentralized() const {return m_param.centralized;}
 	inline bool IsRealTime() const {return m_param.realTime;}
+	const Parameters& GetParameters() const {return m_param;}
 
 protected:
 	std::string CreateOutputDir(const std::string& x_outputDir = "");
 	std::string m_outputDir;
+	std::string m_jobId;
 
 private:
 	DISABLE_COPY(Context)
