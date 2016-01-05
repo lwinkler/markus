@@ -185,6 +185,7 @@ void Manager::Reset(bool x_resetInputs)
 		if(x_resetInputs || !elem->IsInput())
 		{
 			// If manager is in autoprocess, modules must not be
+			Processable::WriteLock lock(elem->RefLock());
 			elem->Reset();
 		}
 	}

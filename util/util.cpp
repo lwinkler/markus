@@ -357,15 +357,13 @@ TIME_STAMP timeStampFromFileName(const string& x_fileName)
 	struct tm tm;
 	if(sscanf(basename(x_fileName).c_str(), "%4d%2d%2d_%2d%2d%2d_", &tm.tm_year, &tm.tm_mon, &tm.tm_mday, &tm.tm_hour, &tm.tm_min, &tm.tm_sec) != 6)
 		return 0;
-	printf("TS%4d-%2d-%2d_%2d-%2d-%2d\n",  tm.tm_year, tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+	// printf("TS%4d-%2d-%2d_%2d-%2d-%2d\n",  tm.tm_year, tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 	tm.tm_year -= 1900; // year start at 1900
-	tm.tm_mon  --;      // monthes since january
+	tm.tm_mon  --;      // months since january
 	TIME_STAMP t = timegm(&tm);
-	printf("TS%4d-%2d-%2d_%2d-%2d-%2d\n",  tm.tm_year, tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+	// printf("TS%4d-%2d-%2d_%2d-%2d-%2d\n",  tm.tm_year, tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 	t *= 1000;
 	return t;
-
-	// strptime(x_fileName.c_str(), "%Y-%m-%d %T", &brokenTime);
 }
 
 // Convert a string to json object

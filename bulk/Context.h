@@ -74,6 +74,7 @@ public:
 	bool IsOutputDirEmpty() const;
 	inline bool IsCentralized() const {return m_param.centralized;}
 	inline bool IsRealTime() const {return m_param.realTime;}
+	const Parameters& GetParameters() const {return m_param;}
 
 protected:
 	std::string CreateOutputDir(const std::string& x_outputDir = "");
