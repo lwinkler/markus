@@ -1,0 +1,266 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+</head>
+<body>
+
+<h1>My charts</h1>
+
+<p>Bla</p>
+<!--button onclick="$('#date_graph').toggle();">toggle</button-->
+<div id="date_graph" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+<div id="roc_graph"  style="min-width: 310px; height: 400px; max-width: 400px; margin: 0 auto"></div>
+
+<table id="datatable" style="display:none">
+	<thead>
+		<tr>
+			<th>Simulation results</th>
+			<th>Detection</th>
+			<th>FA/h</th>
+			<th>Computation speed</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Title</td>
+			<td>0.5</td>
+			<td>4</td>
+			<td>440</td>
+		</tr>
+		<tr>
+			<td>Title1</td>
+			<td>0.5</td>
+			<td>5</td>
+			<td>340</td>
+		</tr>
+		<tr>
+			<td>Title</td>
+			<td>0.2</td>
+			<td>0</td>
+			<td>940</td>
+		</tr>
+		<tr>
+			<td>Title</td>
+			<td>0.9</td>
+			<td>11</td>
+			<td>140</td>
+		</tr>
+		<tr>
+			<td>Title</td>
+			<td>0.3</td>
+			<td>18</td>
+			<td>40</td>
+		</tr>
+		<tr>
+			<td>Title</td>
+			<td>0.2</td>
+			<td>4</td>
+			<td>40</td>
+		</tr>
+	</tbody>
+</table>
+
+<table id="roc_datatable" style="display:none">
+	<thead>
+		<tr>
+			<th>Detection</th>
+			<th>False alarms</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Title0</td>
+			<td>0.5</td>
+			<td>4</td>
+		</tr>
+		<tr>
+			<td>Title1</td>
+			<td>0.5</td>
+			<td>4</td>
+		</tr>
+		<tr>
+			<td>Title1</td>
+			<td>0.2</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>Title1</td>
+			<td>0.9</td>
+			<td>11</td>
+		</tr>
+		<tr>
+			<td>Title1</td>
+			<td>1</td>
+			<td>18</td>
+		</tr>
+		<tr>
+			<td>TitleX</td>
+			<td>0.2</td>
+			<td>4</td>
+		</tr>
+	</tbody>
+</table>
+
+<script>
+/* Functions to plot the data with highchart.js */
+$(function () {
+	$('#date_graph').highcharts({
+		chart: {
+			type: 'line',
+			zoomType: 'xy'
+		},
+		title: {
+			text: 'Simulation results'
+		},
+		xAxis: {
+			title: {
+				enabled: true,
+				text: 'Simulation name'
+			}
+		},
+		yAxis: [{ // Primary yAxis
+			labels: {
+				format: '{value} %'
+					// style: {
+						// color: Highcharts.getOptions().colors[2]
+					// }
+			},
+			title: {
+				text: 'Detection rate'
+			},
+			min: 0,
+			max: 1
+		}, { // Secondary yAxis
+			gridLineWidth: 0,
+			title: {
+				text: 'False alarms',
+			},
+			labels: {
+				format: '{value} FA/h',
+			},
+			opposite: true
+		}, { // Tertiary yAxis
+			gridLineWidth: 0,
+			title: {
+				text: 'Computation speed'
+			},
+			labels: {
+				format: '{value} fps',
+			}
+		}],
+		tooltip: {
+			shared: true
+		},
+		legend: {
+			layout: 'vertical',
+			align: 'left',
+			verticalAlign: 'top',
+			x: 100,
+			y: 70,
+			floating: true,
+			backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+			borderWidth: 1
+		},
+		plotOptions: {
+			line: {
+				marker: {
+					radius: 5,
+					states: {
+						hover: {
+							enabled: true,
+							lineColor: 'rgb(100,100,100)'
+						}
+					}
+				},
+				states: {
+					hover: {
+						marker: {
+							enabled: false
+						}
+					}
+				}
+			}
+		},
+		series: [
+			{
+				name: "Detection",
+				yAxis: 0,
+				tooltip: {
+					valueSuffix: ' %'
+				}
+			},
+			{
+				name: "False alarms",
+				yAxis: 1,
+				tooltip: {
+					valueSuffix: ' FA/h'
+				}
+			},
+			{
+				name: "Computation speed",
+				yAxis: 2,
+				tooltip: {
+					valueSuffix: ' fps'
+				},
+				type: "spline"
+			}
+		],
+		data: {
+			table: 'datatable'
+		}
+	});
+
+	$('#roc_graph').highcharts({
+		data: {
+			table: 'datatable',
+seriesMapping: [{
+	label: 0,
+	x: 2,
+	y: 1,
+	z: 3
+}]
+		},
+		chart: {
+			type: 'scatter'
+		},
+		plotOptions:{
+			scatter:{
+				lineWidth:2
+			}
+		},
+		title: {
+			text: 'ROC curve: ...'
+		},
+		xAxis: {
+			title: {
+				text: 'False positive / h'
+			}
+		},
+		yAxis: {
+			title: {
+				text: 'Detection rate'
+			},
+			min: 0,
+			max: 1
+		},
+		series: [{
+			yAxis: 0,
+			type: 'scatter',
+		}],
+		tooltip: {
+			shared: true,
+			formatter: function() {
+				return '<b>'+ this.point.label +'</b><br/>'+
+					this.point.x + '% , ' + this.point.y + ' FA/h';
+			}
+		}
+	});
+});
+</script>
+</body>
+</html>
