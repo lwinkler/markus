@@ -110,7 +110,7 @@ def generate_html(path, datas, dirname='analysis', filename='summary.html'):
 
 	# Results
 	body <= H2('Results')
-	table = TABLE(border=1, style='border-collapse: collapse;')
+	table = TABLE(border=1, style='border-collapse: collapse;', id='result_table')
 	row = TR(style='background: lightgray;')
 
 	if args.vertical:

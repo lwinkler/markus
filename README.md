@@ -45,7 +45,7 @@ These libraries and utilities can be installed to create advanced modules:
 	- *CxxTests** : To run the unit test
 	- *Avtools*: Video manipulation tools to use the benchmark of test
 
-	sudo apt-get install cmake-qt-gui cmake-curses-gui qtcreator python-dev python-opencv cxxtest libav-tools
+	sudo apt-get install cmake-qt-gui cmake-curses-gui qtcreator python-dev python-opencv python-bs4 cxxtest libav-tools
 
 Since modules can be stored on different repositories please check the separate README.md of each directory for dependencies.
 
