@@ -11,11 +11,10 @@
 
 <h1>Title of the document</h1>
 
-<p>This document should be copied and edited to add text. Then data can be imported from the HTML files that summarize simulations. This can be done using a command similar to:</p>
+<p>This document should be copied and edited. Then data can be imported from the HTML files that summarize simulations. This can be done using a command similar to:</p>
 
 <p><b>tools/evaluation/append_result.py simulation_latest/results/summary.html tmp.html -b simulation_latest/results/FirstSimulation/benchmark.xml -t datatable</b></p>
-<!--button onclick="$('#date_graph').toggle();">toggle</button-->
-<div id="date_graph" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+<div id="name_graph" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
 <div id="roc_graph"  style="min-width: 310px; height: 400px; max-width: 400px; margin: 0 auto"></div>
 
 <table id="datatable" style="display:none">
@@ -70,157 +69,169 @@
 <script>
 /* Functions to plot the data with highchart.js */
 $(function () {
-	$('#date_graph').highcharts({
-		chart: {
-			type: 'line',
-			zoomType: 'xy'
-		},
-		title: {
-			text: 'Simulation results'
-		},
-		xAxis: {
-			title: {
-				enabled: true,
-				text: 'Simulation name'
-			}
-		},
-		yAxis: [{ // Primary yAxis
-			labels: {
-				format: '{value} %'
-					// style: {
-						// color: Highcharts.getOptions().colors[2]
-					// }
+
+	/* Create a plot by simulation name */
+	function plot_by_name(datatable) {
+		return {
+			chart: {
+				type: 'line',
+				zoomType: 'xy'
 			},
 			title: {
-				text: 'Detection rate'
+				text: 'Simulation results'
 			},
-			min: 0,
-			max: 100
-		}, { // Secondary yAxis
-			gridLineWidth: 0,
-			title: {
-				text: 'False alarms',
+			xAxis: {
+				title: {
+					enabled: true,
+					text: 'Simulation name'
+				}
 			},
-			labels: {
-				format: '{value} FA/h',
+			yAxis: [{ // Primary yAxis
+				labels: {
+					format: '{value} %'
+						// style: {
+							// color: Highcharts.getOptions().colors[2]
+						// }
+				},
+				title: {
+					text: 'Detection rate'
+				},
+				min: 0,
+				max: 100
+			}, { // Secondary yAxis
+				gridLineWidth: 0,
+				title: {
+					text: 'False alarms',
+				},
+				labels: {
+					format: '{value} FA/h',
+				},
+				opposite: true
+			}, { // Tertiary yAxis
+				gridLineWidth: 0,
+				title: {
+					text: 'Computation speed'
+				},
+				labels: {
+					format: '{value} fps',
+				}
+			}],
+			tooltip: {
+				shared: true
 			},
-			opposite: true
-		}, { // Tertiary yAxis
-			gridLineWidth: 0,
-			title: {
-				text: 'Computation speed'
+			legend: {
+				layout: 'vertical',
+				align: 'left',
+				verticalAlign: 'top',
+				x: 100,
+				y: 70,
+				floating: true,
+				backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+				borderWidth: 1
 			},
-			labels: {
-				format: '{value} fps',
-			}
-		}],
-		tooltip: {
-			shared: true
-		},
-		legend: {
-			layout: 'vertical',
-			align: 'left',
-			verticalAlign: 'top',
-			x: 100,
-			y: 70,
-			floating: true,
-			backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
-			borderWidth: 1
-		},
-		plotOptions: {
-			line: {
-				marker: {
-					radius: 5,
+			plotOptions: {
+				line: {
+					marker: {
+						radius: 5,
+						states: {
+							hover: {
+								enabled: true,
+								lineColor: 'rgb(100,100,100)'
+							}
+						}
+					},
 					states: {
 						hover: {
-							enabled: true,
-							lineColor: 'rgb(100,100,100)'
-						}
-					}
-				},
-				states: {
-					hover: {
-						marker: {
-							enabled: false
+							marker: {
+								enabled: false
+							}
 						}
 					}
 				}
-			}
-		},
-		series: [
-			{
-				name: "Detection",
-				yAxis: 0,
-				tooltip: {
-					valueSuffix: ' %'
-				}
 			},
-			{
-				name: "False alarms",
-				yAxis: 1,
-				tooltip: {
-					valueSuffix: ' FA/h'
-				}
-			},
-			{
-				name: "Computation speed",
-				yAxis: 2,
-				tooltip: {
-					valueSuffix: ' fps'
+			series: [
+				{
+					name: "Detection",
+					yAxis: 0,
+					tooltip: {
+						valueSuffix: ' %'
+					}
 				},
-				type: "spline"
+				{
+					name: "False alarms",
+					yAxis: 1,
+					tooltip: {
+						valueSuffix: ' FA/h'
+					}
+				},
+				{
+					name: "Computation speed",
+					yAxis: 2,
+					tooltip: {
+						valueSuffix: ' fps'
+					},
+					type: "spline"
+				}
+			],
+			data: {
+				table: datatable
 			}
-		],
-		data: {
-			table: 'datatable'
-		}
-	});
+		};
+	}
 
-	$('#roc_graph').highcharts({
-		data: {
-			table: 'datatable',
-			seriesMapping: [{
-				label: 0,
-				x: 2,
-				y: 1,
-				z: 3
-			}]
-		},
-		chart: {
-			type: 'scatter'
-		},
-		plotOptions:{
-			scatter:{
-				// lineWidth:2
-			}
-		},
-		title: {
-			text: 'ROC curve: ...'
-		},
-		xAxis: {
-			title: {
-				text: 'False positive / h'
-			}
-		},
-		yAxis: {
-			title: {
-				text: 'Detection rate'
+	/* Create a ROC plot using detection percent and false alarms */
+	function plot_roc(datatable) {
+		return {
+			data: {
+				table: datatable,
+				seriesMapping: [{
+					label: 0,
+					x: 2,
+					y: 1,
+					z: 3
+				}]
 			},
-			min: 0,
-			max: 100
-		},
-		series: [{
-			yAxis: 0,
-			type: 'scatter',
-		}],
-		tooltip: {
-			shared: true,
-			formatter: function() {
-				return '<b>'+ this.point.label +'</b><br/>'+
-					this.point.y + '% , ' + this.point.x + ' FA/h, ' + this.point.z + ' fps';
+			chart: {
+				type: 'scatter'
+			},
+			plotOptions:{
+				scatter:{
+					// lineWidth:2
+				}
+			},
+			title: {
+				text: 'ROC scatter plot'
+			},
+			xAxis: {
+				title: {
+					text: 'False positive / h'
+				}
+			},
+			yAxis: {
+				title: {
+					text: 'Detection rate'
+				},
+				min: 0,
+				max: 100
+			},
+			series: [{
+				yAxis: 0,
+				type: 'scatter',
+			}],
+			tooltip: {
+				shared: true,
+				formatter: function() {
+					return '<b>'+ this.point.label +'</b><br/>'+
+						this.point.y + '% , ' + this.point.x + (this.point.z ? ' FA/h, ' + this.point.z + ' fps' : 'FA/h');
+				}
 			}
-		}
-	});
+		};
+	}
+
+
+	// Define data tables
+	$('#roc_graph').highcharts(plot_roc(this, 'datatable'));
+	$('#name_graph').highcharts(plot_by_name(this, 'datatable'));
 });
 </script>
 </body>

@@ -48,8 +48,15 @@ def arguments_parser():
 						type=str,
 						help='XML file for computation speed information (FPS). Usually named benchmark.xml')
 
-	# Id of the output table
+	# Title to use for the entry in table
 	parser.add_argument('-t',
+						dest='title',
+						default='',
+						type=str,
+						help='Title to use for the entry in table')
+
+	# Id of the output table
+	parser.add_argument('-d',
 						dest='output_table',
 						default='datatable',
 						type=str,
@@ -64,9 +71,23 @@ def retrieve_fps():
 	soup = BeautifulSoup(f)
 	return soup.find('benchmark').find('manager').find('fps').get_text()
 
-# def prettify(self, encoding=None, formatter="minimal", indent_width=8):
+def multiple_replace(dict, text):
+	# Create a regular expression  from the dictionary keys
+	regex = re.compile("(%s)" % "|".join(map(re.escape, dict.keys())))
+
+	# For each match, look-up corresponding value in dictionary
+	return regex.sub(lambda mo: dict[mo.string[mo.start():mo.end()]], text) 
+
+# Write our own prettify function: This can be improved
+def prettify(self, encoding=None, formatter="minimal", indent_width=8):
+	dict = {
+		"<td>\n"  : "<td>",
+		"</td>\n" : "</td>",
+		"<tr>\n"  : "<tr>"
+	} 
 	# r = re.compile(r'^(\s*)', re.MULTILINE)
 	# return re.sub('        ', '\t', r.sub(r'\1' * indent_width, self.prettify(encoding, formatter)))
+	return multiple_replace(dict, self.prettify(encoding, formatter))
 
 def main():
 	"""Main function"""
@@ -90,6 +111,9 @@ def main():
 	entry1 = ""
 	entry2 = ""
 	entry3 = ""
+
+	if args.title != "":
+		title = args.title
 
 	if args.clear:
 		soup2.find("table", {"id": args.output_table}).find("tbody").string = ""
@@ -145,12 +169,12 @@ def main():
 
 	if args.temp:
 		with open("tmp.html", "wb") as file:
-			# file.write(prettify(soup2))
-			file.write(soup2.prettify(None, "minimal"))
+			file.write(prettify(soup2))
+			# file.write(soup2.prettify(None, "minimal"))
 	else:
 		with open(args.OUTPUT_FILE, "wb") as file:
-			# file.write(prettify(soup2))
-			file.write(soup2.prettify(None, "minimal"))
+			file.write(prettify(soup2))
+			# file.write(soup2.prettify(None, "minimal"))
 
 if __name__ == '__main__':
 	main()
