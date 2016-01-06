@@ -41,8 +41,28 @@ def arguments_parser():
 						action="store_true",
 						help='Write output to tmp.html instead of overriding')
 
+	# benchmark file, for fps data
+	parser.add_argument('-b',
+						dest='bench',
+						default='',
+						type=str,
+						help='XML file for computation speed information (FPS). Usually named benchmark.xml')
+
+	# Id of the output table
+	parser.add_argument('-t',
+						dest='output_table',
+						default='datatable',
+						type=str,
+						help='The html id of the table to be modified in the output html file')
+
+
 
 	return parser.parse_args()
+
+def retrieve_fps():
+	f = open(args.bench, 'r')
+	soup = BeautifulSoup(f)
+	return soup.find('benchmark').find('manager').find('fps').get_text()
 
 # def prettify(self, encoding=None, formatter="minimal", indent_width=8):
 	# r = re.compile(r'^(\s*)', re.MULTILINE)
@@ -66,49 +86,59 @@ def main():
 	tables = soup1.find("table", {'id': 'result_table'})
 
 	# Values to extract
-	title  = os.path.basename(args.INPUT_FILE).replace(".html", "")
+	title  = args.INPUT_FILE.replace(".html", "")
 	entry1 = ""
 	entry2 = ""
-	entry3 = "" # TODO
+	entry3 = ""
 
-	# Parse input file
-	for row in tables.findAll("tr"):
-		try:
-			# Find name as the <b> tag
-			name = row.findAll("td")[0].findAll("b")[0].get_text()
-			cells = row.findAll("td")
-			# Find value as the content of the last cell
-			value = cells[len(cells) - 1].get_text()
-
-			if name == "Detected":
-				entry1 = value.replace('%', '').strip()
-			if name == "False alarm rate":
-				entry2 = value.replace('alarms/hour', '').strip()
-
-		except IndexError as e:
-			print "skip row: " + str(e)
-	
-	print "Insert values in table: %s, %s, %s, title:%s" % (entry1, entry2, entry3, title)
-	
 	if args.clear:
-		soup2.find("table", {"id": "datatable"}).find("tbody").string = ""
+		soup2.find("table", {"id": args.output_table}).find("tbody").string = ""
+		print "Clear table"
+	else:
 
-	new_tr = soup2.new_tag("tr")
+		# FPS info
+		if args.bench != "":
+			entry3 = retrieve_fps()
 
-	new_td = soup2.new_tag("td")
-	new_td.string = title
-	new_tr.append(new_td)
-	new_td = soup2.new_tag("td")
-	new_td.string = entry1
-	new_tr.append(new_td)
-	new_td = soup2.new_tag("td")
-	new_td.string = entry2
-	new_tr.append(new_td)
-	new_td = soup2.new_tag("td")
-	new_td.string = entry3
-	new_tr.append(new_td)
+		# Parse input file
+		for row in tables.findAll("tr"):
+			try:
+				# Find name as the <b> tag
+				name = row.findAll("td")[0].findAll("b")[0].get_text()
+				# print name
+				cells = row.findAll("td")
+				# Find value as the content of the second cell (total)
+				value = cells[1].get_text()
 
-	soup2.find("table", {"id": "datatable"}).find("tbody").append(new_tr)
+				if name == "Detected":
+					entry1 = value.replace('%', '').strip()
+					# N/A means no alarm should be detected
+					if entry1 == 'N/A': 
+						entry1 = "100"
+				if name == "False alarm rate":
+					entry2 = value.replace('alarms/hour', '').strip()
+
+			except IndexError as e:
+				print "skip row: " + str(e)
+		
+		print "Insert values in table: %s, %s, %s, title:%s" % (entry1, entry2, entry3, title)
+		
+		new_tr = soup2.new_tag("tr")
+
+		new_td = soup2.new_tag("td")
+		new_td.string = title
+		new_tr.append(new_td)
+		new_td = soup2.new_tag("td")
+		new_td.string = entry1
+		new_tr.append(new_td)
+		new_td = soup2.new_tag("td")
+		new_td.string = entry2
+		new_tr.append(new_td)
+		new_td = soup2.new_tag("td")
+		new_td.string = entry3
+		new_tr.append(new_td)
+
+		soup2.find("table", {"id": args.output_table}).find("tbody").append(new_tr)
 	
 	htmlf1.close()
 	htmlf2.close()

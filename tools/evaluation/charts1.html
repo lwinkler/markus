@@ -9,9 +9,11 @@
 </head>
 <body>
 
-<h1>My charts</h1>
+<h1>Title of the document</h1>
 
-<p>Bla</p>
+<p>This document should be copied and edited to add text. Then data can be imported from the HTML files that summarize simulations. This can be done using a command similar to:</p>
+
+<p><b>tools/evaluation/append_result.py simulation_latest/results/summary.html tmp.html -b simulation_latest/results/FirstSimulation/benchmark.xml -t datatable</b></p>
 <!--button onclick="$('#date_graph').toggle();">toggle</button-->
 <div id="date_graph" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
 <div id="roc_graph"  style="min-width: 310px; height: 400px; max-width: 400px; margin: 0 auto"></div>
@@ -177,12 +179,12 @@ $(function () {
 	$('#roc_graph').highcharts({
 		data: {
 			table: 'datatable',
-seriesMapping: [{
-	label: 0,
-	x: 2,
-	y: 1,
-	z: 3
-}]
+			seriesMapping: [{
+				label: 0,
+				x: 2,
+				y: 1,
+				z: 3
+			}]
 		},
 		chart: {
 			type: 'scatter'
@@ -215,7 +217,7 @@ seriesMapping: [{
 			shared: true,
 			formatter: function() {
 				return '<b>'+ this.point.label +'</b><br/>'+
-					this.point.x + '% , ' + this.point.y + ' FA/h';
+					this.point.y + '% , ' + this.point.x + ' FA/h, ' + this.point.z + ' fps';
 			}
 		}
 	});
