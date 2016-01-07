@@ -150,7 +150,9 @@ def main():
 		new_tr = soup2.new_tag("tr")
 
 		new_td = soup2.new_tag("td")
-		new_td.string = title
+		new_a  = soup2.new_tag("a", href=args.INPUT_FILE)
+		new_a.string = title
+		new_td.append(new_a)
 		new_tr.append(new_td)
 		new_td = soup2.new_tag("td")
 		new_td.string = entry1
