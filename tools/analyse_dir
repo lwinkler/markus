@@ -1,8 +1,0 @@
-#! /bin/bash
-
-
-echo "Entering $1"
-cd $1
-cat markus*.log| sed -n 's/.*file = \(.*\)\.mp4.*/\1/p' | awk '{print "../tools/analyse_events_vs_ground_truth.py event.srt "$0".srt "$0".mp4" }' > cmd_analyse
-bash cmd_analyse
-cd ..
