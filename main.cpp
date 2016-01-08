@@ -168,7 +168,7 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 			break;
 		case 'v':
 			LOG_INFO(logger, Context::Version(true));
-			return 0;
+			exit(0);
 		case 'd':
 			args.describe = true;
 			break;
