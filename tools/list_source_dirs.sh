@@ -1,4 +1,9 @@
 #! /bin/bash
+#
+# This script lists all sources directories of Markus. It is used by commands:
+#
+# 	make lint
+# 	make check
 
 echo bulk
 echo util
