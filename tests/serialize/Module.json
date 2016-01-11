@@ -9,14 +9,10 @@
 		{
 			"connected" : false,
 			"description" : "Another description for a video stream",
-			"height" : 24,
 			"image" : "tests/serialize/image/Module0.img.23422423424234.jpg",
 			"name" : "img",
-			"ready" : false,
 			"timeStamp" : 23422423424234,
-			"type" : "Image",
-			"width" : 32
+			"type" : "Image"
 		}
-	],
-	"pause" : true
+	]
 }

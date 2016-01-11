@@ -24,8 +24,6 @@
 #ifndef MANAGER_H
 #define MANAGER_H
 
-#include <QReadWriteLock>
-
 #include "ConfigReader.h"
 #include "Controller.h"
 #include "Timer.h"
@@ -34,6 +32,7 @@
 #include "Factories.h"
 #include "ParameterString.h"
 #include "Module.h"
+#include "Input.h"
 
 
 /**
@@ -47,12 +46,10 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Processable::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterBool("fast", 0, 0, 1,           &fast, "Run as fast as possible: Inputs are not in real-time"));
 			m_list.push_back(new ParameterInt("nb_frames", 0, 0, INT_MAX, &nbFrames, "Number of frames to process. 0 for infinite. Only works in centralized mode"));
 			m_list.push_back(new ParameterString("arguments", "",         &arguments, "Command-line arguments, for storage only"));
 			ParameterStructure::Init();
 		}
-		bool fast;
 		int nbFrames;
 		std::string arguments; // TODO: This is used in simulations, see what to do in normal case
 	};
@@ -60,19 +57,20 @@ public:
 	Manager(ParameterStructure& x_configReader);
 	~Manager();
 	virtual void Reset(bool x_resetInputs = true);
-	virtual bool Process();
+	virtual void Process() override;
+	virtual bool AbortCondition() const override;
+	virtual void Start() override;
+	virtual void Stop() override;
 	void SendCommand(const std::string& x_command, std::string x_value);
 	const std::vector<Module*>& GetModules() const {return m_modules; }
 	inline const Processable& GetModuleByName(const std::string& x_name) const {if(x_name == "manager") assert(false); else return RefModuleByName(x_name);}
 
 	void Connect();
+	void Check() const;
 	void CreateEditorFiles(const std::string& x_fileName);
 	void PrintStatistics();
-	virtual void Pause(bool x_pause);
-	inline void Quit() {m_continueFlag = false;}
-	void Status() const;
-	void PauseInputs(bool x_pause);
-	bool EndOfAllStreams() const;
+	void ManageInterruptions();
+	inline void Quit() {m_quitting = true;}
 	static std::string CreateOutputDir(const std::string& x_outputDir = "", const std::string& x_configFile = "");
 	inline void ListModulesTypes(std::vector<std::string>& xr_types) {mr_moduleFactory.List(xr_types);}
 	void WriteStateToDirectory(const std::string& x_directory) const;
@@ -83,28 +81,29 @@ public:
 		for(auto& elem : m_modules)
 			elem->SetContext(x_context);
 	}
+	virtual const std::string& GetName() const override {static std::string str = "manager"; return str;}
+	virtual double GetRecordingFps() const override
+	{
+		assert(!m_inputs.empty());
+		return m_inputs.at(0)->GetRecordingFps();
+	}
 
 protected:
 	Module& RefModuleById(int x_id) const;
 	Module& RefModuleByName(const std::string& x_name) const;
-	void NotifyException(const MkException& x_exeption);
+	void ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module, int x_inputId) const;
 
-	bool m_isConnected;
-	// long long m_timerConvertion;
-	Timer m_timerProcessing;
-	bool m_continueFlag;           // Flag that is used to notify the manager of a Quit command, only working if centralized
-	bool m_hasRecovered;           // Flag to test if all modules have recovered from the last exception, only working if centralized
-	MkException m_lastException;   // Field to store the last exception
+	int64_t m_frameCount = 0;
+	bool m_isConnected   = false;
+	bool m_quitting      = false;
 
-	std::vector<Module *> m_modules;
-	std::vector<Module *> m_inputs;
+	std::vector<Module *>  m_modules;
+	std::vector<Input *>   m_inputs;
+	std::vector<Module *>  m_autoProcessedModules;
 	std::vector<ParameterStructure *> m_parameters;
 
-	int64_t m_frameCount;
 	const FactoryParameters& mr_parametersFactory;
 	const FactoryModules& mr_moduleFactory;
-	const FactoryParameters& mr_parameterFactory;
-	InterruptionManager& m_interruptionManager;
 
 private:
 	static log4cxx::LoggerPtr m_logger;

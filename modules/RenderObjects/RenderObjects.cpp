@@ -22,6 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "RenderObjects.h"
+#include "MultiStreamT.h"
 #include "StreamObject.h"
 #include "StreamImage.h"
 
@@ -35,17 +36,14 @@ RenderObjects::RenderObjects(ParameterStructure& xr_params) :
 	m_imageInput(Size(m_param.width, m_param.height), m_param.type),
 	m_imageOutput(Size(m_param.width, m_param.height), m_param.type)
 {
-	AddInputStream(0, new StreamImage( "input", m_imageInput, *this,	"Input video stream"));
-	AddInputStream(1, new StreamObject("input", m_objectInput1, *this,	"Object stream 1"));
-	AddInputStream(2, new StreamObject("input", m_objectInput2, *this,	"Object stream 1"));
-	AddInputStream(3, new StreamObject("input", m_objectInput3, *this,	"Object stream 1"));
-	AddInputStream(4, new StreamObject("input", m_objectInput4, *this,	"Object stream 1"));
-	AddInputStream(5, new StreamObject("input", m_objectInput5, *this,	"Object stream 1"));
+	AddInputStream(0, new StreamImage( "image", m_imageInput, *this,	"Input video stream"));
+	m_objectInputs.resize(10);
+	AddInputStream(1, new MultiStreamT<vector<Object>>("objects0", m_objectInputs, *this,	"Object stream"));
 
 	AddOutputStream(0, new StreamImage("output", m_imageOutput, *this,	"Output video stream"));
 }
 
-RenderObjects::~RenderObjects(void )
+RenderObjects::~RenderObjects()
 {
 }
 
@@ -57,6 +55,17 @@ void RenderObjects::Reset()
 
 void RenderObjects::ProcessFrame()
 {
-	for(int i = 0 ; i < 5 ; i++)
-		m_inputStreams[i]->RenderTo(m_imageOutput);
+	for(const auto& input : m_inputStreams)
+		input.second->RenderTo(m_imageOutput);
+		/*
+	for(auto& objects : m_objectInputs)
+	{
+		for(auto& obj : objects)
+		{
+			// cout <<  input.first << endl;
+			obj.RenderTo(m_imageOutput, Scalar(i * 30,100 - i * 30,0));
+		}
+		i++;
+	}
+		*/
 }

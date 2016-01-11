@@ -23,36 +23,59 @@
 
 #include "ModuleTimer.h"
 #include "Processable.h"
+#include "util.h"
 
-#include <QTimer>
 
 using namespace std;
 
-QModuleTimer::QModuleTimer(Processable& x_module)
-	: m_processable(x_module)
-{
-	// Reset(x_fps);
-}
+log4cxx::LoggerPtr ModuleTimer::m_logger(log4cxx::Logger::getLogger("ModuleTimer"));
 
-/**
-* @brief Reset the timer
-*
-* @param x_fps The frame per second to be set
-*/
-void QModuleTimer::Reset(double x_fps)
+ModuleTimer::ModuleTimer(Processable& x_module)
+	: m_processable(x_module),
+	m_running(false)
+{}
+
+
+void ModuleTimer::Start(double x_fps)
 {
-	double delay = 1000.0 / 1000;
+	if(m_running)
+		return;
+
+	double delay = 0.0;
 	if(x_fps > 0)
 	{
 		// Start a timer for module process
-		delay = 1000.0 / x_fps;
+		delay = 1.0 / x_fps;
 	}
-	start(delay);
-}
+	
+	m_running = true;
+	// auto ms = chrono::milliseconds((long) delay * 1000);
+	// std::chrono::seconds<1, double> ms(delay);
 
-void QModuleTimer::timerEvent(QTimerEvent* px_event)
-{
-	if(!m_processable.Process())
-		stop();
+	m_thread = thread([this, delay, x_fps]()
+	{
+		TIME_STAMP waitMs = delay * 1000;
+		while (m_running == true)
+		{
+			TIME_STAMP ts = getAbsTimeMs();
+			bool ret = m_processable.ProcessAndCatch();
+
+			// Wait to respect the fps
+			ts = getAbsTimeMs() - ts;
+			// cout << "runn" << ts << " " << waitMs << " " << x_fps << endl;
+			if(ts < waitMs)
+			{
+				LOG_DEBUG(m_logger, "Sleep ms " << (waitMs - ts));
+				usleep((waitMs - ts) * 1000);
+			}
+
+			if(!ret)
+			{
+				LOG_INFO(m_logger, "Exiting main loop");
+				break;
+			}
+		}
+		// Stop();
+	});
 }
 

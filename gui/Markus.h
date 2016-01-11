@@ -37,7 +37,6 @@
 
 class Manager;
 class ConfigReader;
-class QModuleTimer;
 
 
 /**
@@ -70,8 +69,6 @@ private:
 	Parameters& m_param;
 
 	Manager& m_manager;
-
-	//std::vector<QModuleTimer *> m_moduleTimer;
 
 	bool notify(QObject *receiver_, QEvent *event_);
 	void timerEvent(QTimerEvent*);

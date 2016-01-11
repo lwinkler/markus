@@ -82,9 +82,8 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
-	void SaveImage(Event& x_event);
+	void SaveImage(Event& xr_event) const;
 	bool IsInputProcessed() const;
-	void AddExternalImage(const cv::Mat& x_image, const std::string& x_name, const std::string& x_file, Event& x_event);
 	void WriteEvent();
 	void CompareWithGroundTruth();
 
@@ -94,8 +93,8 @@ protected:
 	cv::Mat m_inputIm2;
 
 	// temporary
-	bool m_saveImage1;
-	bool m_saveImage2;
+	bool m_saveImage1 = false;
+	bool m_saveImage2 = false;
 	std::string m_folder;
 	AnnotationFileWriter* mp_annotationWriter;
 };

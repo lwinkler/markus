@@ -24,20 +24,34 @@
 #ifndef QMODULE_TIMER_H
 #define QMODULE_TIMER_H
 
-#include <QTimer>
+#include <thread>
+#include <atomic>
+#include <assert.h>
+#include <log4cxx/logger.h>
 
 class Processable;
 
 /// A timer associated with a module (for auto processing, mostly used in input modules)
-class QModuleTimer : public QTimer
+class ModuleTimer
 {
 public:
-	QModuleTimer(Processable & x_module);
+	ModuleTimer(Processable & x_module);
+	virtual ~ModuleTimer(){assert(!m_running);}
 	void Reset(double x_fps);
 
+	// typedef std::function<void(void)> Timeout;
+
+	inline bool IsRunning() const {return m_running;}
+	inline void Stop(){if(m_running){m_running = false;m_thread.join();}}
+	void Start(double x_fps);
+
 protected:
-	virtual void timerEvent(QTimerEvent * px_event);
 	Processable & m_processable;
+	std::thread m_thread;
+	std::atomic<bool> m_running;
+
+private:
+	static log4cxx::LoggerPtr m_logger;
 };
 
 

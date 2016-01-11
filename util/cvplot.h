@@ -68,7 +68,7 @@ namespace CvPlot
 		// margin size
 		int    border_size;
 
-		cv::Scalar backgroud_color;
+		// cv::Scalar background_color;
 		cv::Scalar axis_color;
 		cv::Scalar text_color;
 
@@ -76,20 +76,20 @@ namespace CvPlot
 		std::vector<Series> plots;
 
 		// manual or automatic range
-		bool custom_range_y;
-		float y_max;
-		float y_min;
+		bool custom_range_y = false;
+		float y_max = 0;
+		float y_min = 0;
 
-		float y_scale;
+		float y_scale = 0;
 
-		bool custom_range_x;
-		float x_max;
-		float x_min;
+		bool custom_range_x = false;
+		float x_max = 0;
+		float x_min = 0;
 
-		float x_scale;
+		float x_scale = 0;
 
 		// automatically change color for each curve
-		size_t color_index;
+		size_t color_index = 0;
 
 	public:
 		Figure(const std::string& name);
@@ -146,5 +146,5 @@ namespace CvPlot
 
 	void label(std::string lbl);
 
-};
+}; // namespace CvPlot
 #endif

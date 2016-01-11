@@ -34,6 +34,6 @@ QWebPage2::QWebPage2(QObject *parent): QWebPage(parent) {}
 
 void QWebPage2::javaScriptConsoleMessage(const QString& message, int lineNumber, const QString& sourceID)
 {
-	QString logEntry = message +" on line:"+ QString::number(lineNumber) +" Source:"+ sourceID;
+	QString logEntry = message + " on line:" + QString::number(lineNumber) + " Source:" + sourceID;
 	qDebug()<<logEntry;
 }

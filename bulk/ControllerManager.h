@@ -48,8 +48,8 @@ public:
 	void Reset(std::string* xp_value);
 	void ResetExceptInputs(std::string* xp_value);
 	void Quit(std::string* xp_value);
-	void Pause(std::string* xp_value);
-	void Unpause(std::string* xp_value);
+	void Start(std::string* xp_value);
+	void Stop(std::string* xp_value);
 	void ProcessOne(std::string* xp_value);
 	void PrintStatistics(std::string* xp_value);
 	void Status(std::string* xp_value);

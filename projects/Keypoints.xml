@@ -6,11 +6,8 @@
 		</outputs>
 		<parameters>
 			<param name="class">UsbCam</param>
-			
 			<param name="fps">2</param>
 		</parameters>
-		
-		
 		<uiobject x="500" y="300" width="0" height="0"/>
 	</module>
 	<module id="3" name="KeyPointsFast3">
@@ -24,9 +21,7 @@
 		<parameters>
 			<param name="class">KeyPointsFast</param>
 		</parameters>
-		
-		
-		<uiobject x="913" y="163" width="0" height="0"/>
+		<uiobject x="912" y="163" width="0" height="0"/>
 	</module>
 	<module id="4" name="KeyPointsGoodFeaturesToTrack4">
 		<inputs>
@@ -39,9 +34,7 @@
 		<parameters>
 			<param name="class">KeyPointsGoodFeaturesToTrack</param>
 		</parameters>
-		
-		
-		<uiobject x="917" y="267" width="0" height="0"/>
+		<uiobject x="915" y="267" width="0" height="0"/>
 	</module>
 	<module id="6" name="KeyPointsDense6">
 		<inputs>
@@ -55,8 +48,6 @@
 			<param name="class">KeyPointsDense</param>
 			<param name="init_xy_step">30</param>
 		</parameters>
-		
-		
 		<uiobject x="916" y="373" width="0" height="0"/>
 	</module>
 	<module id="7" name="KeyPointsStar7">
@@ -70,8 +61,6 @@
 		<parameters>
 			<param name="class">KeyPointsStar</param>
 		</parameters>
-		
-		
 		<uiobject x="915" y="481" width="0" height="0"/>
 	</module>
 	<module id="8" name="KeyPointsMser8">
@@ -86,8 +75,6 @@
 			<param name="class">KeyPointsMser</param>
 			<!--param name="type">CV_8UC3</param-->
 		</parameters>
-		
-		
 		<uiobject x="916" y="593" width="0" height="0"/>
 	</module>
 	<module id="9" name="KeyPointsBrisk9">
@@ -114,7 +101,8 @@
 		<parameters>
 			<param name="class">KeyPointsOrb</param>
 			<param name="nb_features">100</param>
-		</parameters>
+		<param name="descriptor">orb</param>
+</parameters>
 		<uiobject x="1116" y="377" width="0" height="0"/>
 	</module>
 	<module id="11" name="OpticalFlowKeyPoints11">

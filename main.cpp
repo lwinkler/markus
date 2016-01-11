@@ -21,7 +21,6 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include <QApplication>
 
 #include "Manager.h"
 #include "MkException.h"
@@ -30,6 +29,7 @@
 #include "Simulation.h"
 
 #ifndef MARKUS_NO_GUI
+#include <QApplication>
 #include "Editor.h"
 #include "Markus.h"
 #include "MarkusApplication.h"
@@ -41,6 +41,7 @@
 #include <cstdio>
 #include <log4cxx/xml/domconfigurator.h>
 #include <getopt.h>    /* for getopt_long; standard getopt is in unistd.h */
+#include <thread>
 
 using namespace std;
 
@@ -167,7 +168,7 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 			break;
 		case 'v':
 			LOG_INFO(logger, Context::Version(true));
-			return 0;
+			exit(0);
 		case 'd':
 			args.describe = true;
 			break;
@@ -241,7 +242,7 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 }
 
 /// Override the initial config with extra config files and argument set parameters
-void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, const vector<string>& parameters, log4cxx::LoggerPtr& logger)
+void overrideConfig(ConfigReader& mainConfig, const vector<string>& extraConfig, const vector<string>& parameters, log4cxx::LoggerPtr& logger)
 {
 	// Override values of parameters if an extra config is used
 	for(const auto& elem1 : extraConfig)
@@ -250,7 +251,7 @@ void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, 
 		{
 			// open the config and override the initial config
 			ConfigFile extra(elem1);
-			appConfig.OverrideWith(extra);
+			mainConfig.OverrideWith(extra);
 		}
 		catch(MkException& e)
 		{
@@ -278,9 +279,9 @@ void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, 
 			if(path.size() != 2)
 				throw MkException("Parameter set in command line must be in format 'module.parameter'", LOC);
 			if(path[0] == "manager")
-				appConfig.FindRef("parameters>param[name=\"" + path[1] + "\"]", true).SetValue(value);
+				mainConfig.RefSubConfig("application").FindRef("parameters>param[name=\"" + path[1] + "\"]", true).SetValue(value);
 			else
-				appConfig.FindRef("module[name=\"" + path[0] + "\"]>parameters>param[name=\"" + path[1] + "\"]", true).SetValue(value);
+				mainConfig.RefSubConfig("application").FindRef("module[name=\"" + path[0] + "\"]>parameters>param[name=\"" + path[1] + "\"]", true).SetValue(value);
 			// manager.GetModuleByName(path[0])->GetParameters().RefParameterByName(path[1]).SetValue(value, PARAMCONF_CMD);
 		}
 		catch(std::exception& e)
@@ -340,8 +341,10 @@ int main(int argc, char** argv)
 
 		// Init global variables and objects
 		// Context manages all call to system, files, ...
-		Context::Parameters contextParams(mainConfig.Find("application"), args.configFile, appConfig.GetAttribute("name"), args.outputDir);
-		Context context(contextParams);
+		Context::Parameters contextParameters(mainConfig.Find("application"), args.configFile, appConfig.GetAttribute("name"), args.outputDir);
+		contextParameters.centralized = args.centralized;
+		contextParameters.realTime    = !args.fast;
+		Context context(contextParameters);
 		if(args.outputDir != "")
 		{
 			string dir = args.outputDir + "/";
@@ -354,7 +357,7 @@ int main(int argc, char** argv)
 		MarkusApplication app(argc, argv);
 #endif
 
-		overrideConfig(appConfig, args.extraConfig, args.parameters, logger);
+		overrideConfig(mainConfig, args.extraConfig, args.parameters, logger);
 
 		if(args.simulation)
 		{
@@ -365,11 +368,10 @@ int main(int argc, char** argv)
 		}
 
 		// Set manager and context
-		Manager::Parameters parameters(appConfig);
+		Manager::Parameters managerParameters(appConfig);
 		// Override parameter auto_process with centralized
-		parameters.autoProcess = args.centralized;
-		parameters.fast = args.fast;
-		Manager manager(parameters);
+		managerParameters.autoProcess = !args.nogui;
+		Manager manager(managerParameters);
 		manager.SetContext(context);
 
 		if(args.describe)
@@ -400,38 +402,46 @@ int main(int argc, char** argv)
 		{
 			// No gui. launch the process directly
 			// note: so far we cannot launch the process in a decentralized manner (with a timer on each module)
-
-			while(manager.Process())
+			if(args.centralized)
 			{
-				// nothing
+				assert(!managerParameters.autoProcess);
+				while(manager.ProcessAndCatch())
+				{
+					// nothing
+				}
+			}
+			else
+			{
+				LOG_ERROR(logger, "Markus cannot run in decentralized mode without GUI yet.");
 			}
 		}
 		else
 		{
 #ifndef MARKUS_NO_GUI
+			assert(managerParameters.autoProcess);
+			manager.Start();
 			ConfigFile mainGuiConfig("gui.xml", true);
 			ConfigReader guiConfig = mainGuiConfig.FindRef("gui[name=\"" + args.configFile + "\"]", true);
 			guiConfig.FindRef("parameters", true);
 
-			MarkusWindow::Parameters parameters(guiConfig);
-			MarkusWindow gui(parameters, manager);
+			MarkusWindow::Parameters windowParameters(guiConfig);
+			MarkusWindow gui(windowParameters, manager);
 			gui.setWindowTitle("Markus");
 			if(!args.nogui)
 				gui.show();
-			returnValue = app.exec();
+			if(app.exec() != 0)
+				LOG_ERROR(logger, "Qt Application returned error code");
 
 			// write the modified params in config and save
 			gui.UpdateConfig();
 			mainGuiConfig.SaveToFile("gui.xml");
 #else
 			LOG_ERROR(logger, "Markus was compiled without GUI. It can only be launched with option -nc");
-			returnValue = -1;
 #endif
 		}
+		manager.Stop();
 
-		Event ev2;
-		ev2.Raise("stopped");
-		ev2.Notify(context, true);
+
 		returnValue = MK_EXCEPTION_NORMAL - MK_EXCEPTION_FIRST;
 
 		// Write the modified params in config and save
@@ -471,7 +481,7 @@ int main(int argc, char** argv)
 	}
 
 
-	// For benchmark only: this line should have no effect in no QuickTimer is used
+	// For benchmark only: this line should have no effect if no QuickTimer is used
 	QuickTimer::PrintTimers();
 
 

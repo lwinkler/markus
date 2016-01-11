@@ -24,34 +24,8 @@
 #ifndef STREAM_STATE_H
 #define STREAM_STATE_H
 
-#include "Stream.h"
+#include "StreamT.h"
 
-/// Stream containing only one binary state (e.g Is there motion or not ?)
-
-class StreamState : public Stream
-{
-public:
-	StreamState(const std::string& rx_name, bool& x_state, Module& rx_module, const std::string& rx_description);
-	~StreamState();
-	MKCLASS("StreamState")
-	MKTYPE("State")
-
-	inline void SetState(bool x_state) {m_state = x_state;}
-	inline bool GetState() const {return m_state;}
-
-	virtual void ConvertInput();
-	virtual void RenderTo(cv::Mat& x_output) const;
-	virtual void Query(int x_posX, int x_posY) const;
-	virtual void Randomize(unsigned int& xr_seed);
-	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
-	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
-
-protected:
-	bool& m_state;
-
-private:
-	DISABLE_COPY(StreamState)
-	static log4cxx::LoggerPtr m_logger;
-};
+typedef StreamT<bool> StreamState;
 
 #endif

@@ -1,0 +1,63 @@
+<module name="RenderObjects0" description="Output video stream with additional object streams">
+	<parameters>
+		<param name="auto_process">
+			<type>bool</type>
+			<value min="0" max="1" default="0">0</value>
+			<description>If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream</description>
+		</param>
+		<param name="fps">
+			<type>double</type>
+			<value min="0" max="1000" default="0">123</value>
+			<description>Frames per seconds (processing speed)</description>
+		</param>
+		<param name="class">
+			<type>string</type>
+			<value default="">RenderObjects</value>
+			<description>Class of the module (define the module's function)</description>
+		</param>
+		<param name="master">
+			<type>string</type>
+			<value default=""></value>
+			<description>Master module on which this module's processing is dependent. If empty, use all preceeding modules</description>
+		</param>
+		<param name="width">
+			<type>int</type>
+			<value min="1" max="6400" default="640">640</value>
+			<description>Width of the input</description>
+		</param>
+		<param name="height">
+			<type>int</type>
+			<value min="1" max="4800" default="480">480</value>
+			<description>Height of the input</description>
+		</param>
+		<param name="type">
+			<type>imageType</type>
+			<value default="CV_8UC3">CV_8UC3</value>
+			<description>Format of the input image</description>
+		</param>
+		<param name="cached">
+			<type>cachedState</type>
+			<value default="NO_CACHE">NO_CACHE</value>
+			<description>Format of the input image</description>
+		</param>
+	</parameters>
+	<inputs>
+		<input id="0">
+			<type>Image</type>
+			<name>image</name>
+			<description>Input video stream</description>
+		</input>
+		<input id="1" multi="10">
+			<type>Objects</type>
+			<name>objects0</name>
+			<description>Object stream</description>
+		</input>
+	</inputs>
+	<outputs>
+		<output id="0">
+			<type>Image</type>
+			<name>output</name>
+			<description>Output video stream</description>
+		</output>
+	</outputs>
+</module>

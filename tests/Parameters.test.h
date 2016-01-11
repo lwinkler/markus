@@ -53,9 +53,11 @@ protected:
 		TS_ASSERT(xr_param.GetConfigurationSource() == PARAMCONF_UNKNOWN);
 		xr_param.SetDefault(x_legalValue);
 		xr_param.SetValueToDefault();
+		// cout << xr_param.GetValueString() << " == \n" <<  x_legalValue << endl;
 		TS_ASSERT(xr_param.GetValueString() == x_legalValue);
 		TS_ASSERT(xr_param.GetConfigurationSource() == PARAMCONF_DEF);
 		xr_param.Lock();
+		xr_param.LockIfRequired();
 		TS_ASSERT(xr_param.IsLocked());
 
 		string fileName = "tests/tmp/" + xr_param.GetName() + ".xml";
@@ -172,8 +174,8 @@ public:
 	{
 		TS_TRACE("Test ParameterSerializable - Polygon");
 		Polygon myPolygon;
-		ParameterSerializable paramPolygon("param_polygon",  "{\"points\":[{{\"x\":5.0,\"y\":0.50},{\"x\":6.0,\"y\":5.50}}]}", &myPolygon, "Parameter of type Polygon");
-		testParameter(paramPolygon, "{\"points\":[{\"x\":54.0,\"y\":53.50},{\"x\":3454.0,\"y\":53.50},{\"x\":54.0,\"y\":53.50},{\"x\":5.0,\"y\":0.50}]}", "", "") ;
+		ParameterSerializable paramPolygon("param_polygon",  "{\"height\":0.6,\"points\":[{{\"x\":5.0,\"y\":0.50},{\"x\":6.0,\"y\":5.50}}],\"width\":0.8}", &myPolygon, "Parameter of type Polygon");
+		testParameter(paramPolygon, "{\"height\":0.660,\"points\":[{\"x\":54.0,\"y\":53.50},{\"x\":3454.0,\"y\":53.50},{\"x\":54.0,\"y\":53.50},{\"x\":5.0,\"y\":0.50}],\"width\":0.860}", "", "") ;
 	}
 };
 #endif

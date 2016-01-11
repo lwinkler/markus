@@ -24,7 +24,7 @@
 #ifndef STREAM_IMAGE_H
 #define STREAM_IMAGE_H
 
-#include "Stream.h"
+#include "StreamT.h"
 #include <map>
 
 /// Structure used to keep the time stamp along with a buffer image (to speed up conversion)
@@ -35,13 +35,14 @@ struct BufferImage
 	cv::Mat    image;
 };
 
+typedef StreamT<cv::Mat> StreamImage;
+
 
 /// Class for a stream of images (or video) used for input and output
-class StreamImage : public Stream
+template<> class StreamT<typename cv::Mat> : public Stream
 {
 public:
-	StreamImage(const std::string& x_name, cv::Mat& x_image, Module& rx_module, const std::string& rx_description);
-	~StreamImage();
+	StreamT(const std::string& x_name, cv::Mat& x_image, Module& rx_module, const std::string& x_description, const std::string& x_requirements = "");
 	MKCLASS("StreamImage")
 	MKTYPE("Image")
 
@@ -52,7 +53,7 @@ public:
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 	virtual void Randomize(unsigned int& xr_seed);
 	const cv::Mat& GetImage() const {return m_image;}
-	void Connect(Stream * x_stream, bool x_bothWays = true);
+	void Connect(Stream * x_stream);
 
 protected:
 	static std::string createResolutionString(const cv::Size x_size, int x_depth, int x_channels)
@@ -68,7 +69,7 @@ protected:
 	std::map<std::string, BufferImage> m_buffers;
 
 private:
-	DISABLE_COPY(StreamImage)
+	// DISABLE_COPY(Stream)
 	static log4cxx::LoggerPtr m_logger;
 };
 

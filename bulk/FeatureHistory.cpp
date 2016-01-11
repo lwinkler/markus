@@ -31,6 +31,8 @@
 
 using namespace std;
 
+log4cxx::LoggerPtr FeatureHistory::m_logger(log4cxx::Logger::getLogger("FeatureHistory"));
+
 
 /**
 * @brief Keep a feature up to date in a dynamic way (similar to a running average)
@@ -42,7 +44,7 @@ void FeatureHistory::Update(const TIME_STAMP& x_timeStamp, const Feature& x_feat
 {
 	auto it = features.find(x_timeStamp);
 	if(it != features.end())
-		throw MkException("A feature already exists for this time stamp.", LOC);
+		LOG_WARN(m_logger, "A feature already exists for this time stamp.");
 
 	features.insert(std::make_pair(x_timeStamp, x_feat.CreateCopy()));
 }

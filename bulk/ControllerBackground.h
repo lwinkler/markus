@@ -49,6 +49,6 @@ public:
 
 protected:
 	std::map<std::string, const action> m_actions;
-	BackgroundSubtraction  & module;
+	BackgroundSubtraction  & m_module;
 };
 #endif

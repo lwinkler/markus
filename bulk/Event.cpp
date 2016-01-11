@@ -40,8 +40,6 @@ log4cxx::LoggerPtr Event::m_logger(log4cxx::Logger::getLogger("Event"));
 Event::Event() :
 	m_object("empty")
 {
-	m_absTimeEvent = 0;
-	m_absTimeNotif = 0;
 	m_externalInfo.clear();
 }
 
@@ -51,8 +49,8 @@ Event::~Event() {}
 void Event::Randomize(unsigned int& xr_seed, const string& x_requirement, const Size& x_size)
 {
 	// random event
-	Empty();
-	if(x_requirement != "" || rand_r(&xr_seed) < RAND_MAX /10) // TODO: reqs: object: features: ... ?
+	Clean();
+	if(x_requirement != "" || rand_r(&xr_seed) < RAND_MAX /10)
 	{
 		if(x_requirement == "" && rand_r(&xr_seed) < RAND_MAX /10)
 		{
@@ -67,7 +65,7 @@ void Event::Randomize(unsigned int& xr_seed, const string& x_requirement, const 
 	}
 }
 
-void Event::Serialize(ostream& x_out, const string& x_dir) const
+void Event::Serialize(ostream& xr_out, const string& x_dir) const
 {
 	Json::Value root;
 	root["raised"] = IsRaised();
@@ -75,8 +73,8 @@ void Event::Serialize(ostream& x_out, const string& x_dir) const
 	if(IsRaised())
 	{
 		root["eventName"]  = m_eventName;
-		root["dateEvent"] = m_absTimeEvent;
-		root["dateNotif"] = m_absTimeNotif;
+		root["dateEvent"]  = Json::UInt64(m_absTimeEvent);
+		root["dateNotif"]  = Json::UInt64(m_absTimeNotif);
 		if(m_object.GetName() != "empty")
 		{
 			stringstream ss;
@@ -86,7 +84,7 @@ void Event::Serialize(ostream& x_out, const string& x_dir) const
 		else root["object"] = Json::Value(Json::nullValue); // Null
 		root["external"] = m_externalInfo;
 	}
-	x_out << root;
+	xr_out << root;
 }
 
 void Event::Deserialize(istream& x_in, const string& x_dir)
@@ -127,7 +125,7 @@ void Event::Deserialize(istream& x_in, const string& x_dir)
 /**
 * @brief Empty the event: must be called on each frame process to avoid raising multiple events
 */
-void Event::Empty()
+void Event::Clean()
 {
 	m_eventName = "";
 	m_object = Object("empty");
@@ -229,4 +227,15 @@ void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 	tmp.erase(remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
 
 	LOG_WARN(m_logger, "@notif@ " << level << " " << tmp);
+}
+
+/// Return the external files // TODO Unit tests
+void Event::GetExternalFiles(map<std::string, string>& xr_output) const
+{
+	xr_output.clear();
+	for(const auto& elem : m_externalInfo["files"].getMemberNames())
+	{
+		// TODO: return name as well
+		xr_output[elem] = m_externalInfo["files"][elem].asString();
+	}
 }

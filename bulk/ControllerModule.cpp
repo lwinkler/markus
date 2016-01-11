@@ -36,27 +36,29 @@ using namespace std;
 */
 void ControllerModule::Reset(string* xp_value)
 {
+	Processable::WriteLock lock(module.RefLock());
 	module.Reset();
 }
 
+
 /**
-* @brief Pause the module
+* @brief Start the module
 *
 * @param xp_value unused
 */
-void ControllerModule::Pause(string* xp_value)
+void ControllerModule::Start(string* xp_value)
 {
-	module.Pause(true);
+	module.Start();
 }
 
 /**
-* @brief Unpause the module
+* @brief Stop the module
 *
 * @param xp_value unused
 */
-void ControllerModule::Unpause(string* xp_value)
+void ControllerModule::Stop(string* xp_value)
 {
-	module.Pause(false);
+	module.Stop();
 }
 
 /**
@@ -66,6 +68,7 @@ void ControllerModule::Unpause(string* xp_value)
 */
 void ControllerModule::PrintStatistics(string* xp_value)
 {
+	Processable::ReadLock lock(module.RefLock());
 	string benchFileName = module.GetContext().GetOutputDir() + "/" + module.GetName() + ".benchmark.xml";
 	ConfigFile summary(benchFileName, true);
 	module.PrintStatistics(summary);
@@ -78,8 +81,8 @@ ControllerModule::ControllerModule(Module& rx_module) :
 	module(rx_module)
 {
 	m_actions.insert(make_pair("Reset",           &ControllerModule::Reset));
-	m_actions.insert(make_pair("Pause",           &ControllerModule::Pause));
-	m_actions.insert(make_pair("Unpause",         &ControllerModule::Unpause));
+	m_actions.insert(make_pair("Start",           &ControllerModule::Start));
+	m_actions.insert(make_pair("Stop",            &ControllerModule::Stop));
 	m_actions.insert(make_pair("PrintStatistics", &ControllerModule::PrintStatistics));
 }
 

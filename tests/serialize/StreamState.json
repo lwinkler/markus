@@ -2,11 +2,8 @@
 {
 	"connected" : false,
 	"description" : "Another description for a stream of state",
-	"height" : 24,
 	"name" : "streamStateA",
-	"ready" : true,
 	"state" : true,
 	"timeStamp" : 23423422234234,
-	"type" : "State",
-	"width" : 32
+	"type" : "State"
 }

@@ -1,0 +1,83 @@
+<module name="BgrSubMOG20" description="Perform background subtraction via Mixtures Of Gaussians (OpenCV MOG2)">
+	<parameters>
+		<param name="auto_process">
+			<type>bool</type>
+			<value min="0" max="1" default="0">0</value>
+			<description>If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream</description>
+		</param>
+		<param name="fps">
+			<type>double</type>
+			<value min="0" max="1000" default="0">123</value>
+			<description>Frames per seconds (processing speed)</description>
+		</param>
+		<param name="class">
+			<type>string</type>
+			<value default="">BgrSubMOG2</value>
+			<description>Class of the module (define the module's function)</description>
+		</param>
+		<param name="master">
+			<type>string</type>
+			<value default=""></value>
+			<description>Master module on which this module's processing is dependent. If empty, use all preceeding modules</description>
+		</param>
+		<param name="width">
+			<type>int</type>
+			<value min="1" max="6400" default="640">640</value>
+			<description>Width of the input</description>
+		</param>
+		<param name="height">
+			<type>int</type>
+			<value min="1" max="4800" default="480">480</value>
+			<description>Height of the input</description>
+		</param>
+		<param name="type">
+			<type>imageType</type>
+			<value default="CV_8UC3">CV_8UC3</value>
+			<description>Format of the input image</description>
+		</param>
+		<param name="cached">
+			<type>cachedState</type>
+			<value default="NO_CACHE">NO_CACHE</value>
+			<description>Format of the input image</description>
+		</param>
+		<param name="history">
+			<type>int</type>
+			<value min="1" max="10000" default="500">500</value>
+			<description>Length of the history</description>
+		</param>
+		<param name="var_thres">
+			<type>float</type>
+			<value min="1" max="255" default="16">16</value>
+			<description>Threshold on the squared Mahalanobis distance to decide whether it is well described by the background model (selectivity of background) </description>
+		</param>
+		<param name="b_shadow_detection">
+			<type>bool</type>
+			<value min="0" max="1" default="0">0</value>
+			<description>Enable shadow detection</description>
+		</param>
+		<param name="learning_rate">
+			<type>double</type>
+			<value min="-1" max="1" default="-1">-1</value>
+			<description>Learning rate of the model</description>
+		</param>
+	</parameters>
+	<inputs>
+		<input id="0">
+			<type>Image</type>
+			<name>input</name>
+			<description>Video input</description>
+		</input>
+	</inputs>
+	<outputs>
+		<output id="0">
+			<type>Image</type>
+			<name>foreground</name>
+			<description>Foreground</description>
+		</output>
+		<output id="1">
+			<type>Image</type>
+			<name>background</name>
+			<description>Background</description>
+		</output>
+	</outputs>
+</module>

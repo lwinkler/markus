@@ -62,7 +62,7 @@ bool AnnotationSrtFileReader::ReadNextAnnotation(string& rx_subText)
 		{
 			m_srtFile >> line;
 			if(! m_srtFile.good())
-				throw MkException("End of file in AnnotationSrtFileReader", LOC);
+				throw EndOfStreamException("End of file ", LOC);
 		}
 		int num = atoi(line.c_str());
 		LOG_DEBUG(m_logger, "Subtitle nb "<<num);
@@ -89,13 +89,20 @@ bool AnnotationSrtFileReader::ReadNextAnnotation(string& rx_subText)
 			rx_subText += line + " ";
 			SafeGetline(m_srtFile, line);
 			if(! m_srtFile.good())
-				throw MkException("End of file in AnnotationSrtFileReader", LOC);
+				throw EndOfStreamException("End of file", LOC);
 		}
 		LOG_DEBUG(m_logger, "Read next sub: "<<rx_subText);
 	}
 	catch(MkException& e)
 	{
-		LOG_ERROR(m_logger, "Exception while reading .srt file in AnnotationSrtFileReader: " << e.what());
+		if(e.GetCode() == MK_EXCEPTION_ENDOFSTREAM)
+		{
+			LOG_WARN(m_logger, "Exception while reading .srt file : " << e.what());
+		}
+		else
+		{
+			LOG_ERROR(m_logger, "Exception while reading .srt file : " << e.what());
+		}
 		rx_subText = "";
 		m_srtStart = msToTimeStamp(0);
 		m_srtEnd   = msToTimeStamp(0);

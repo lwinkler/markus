@@ -28,6 +28,8 @@
 
 using namespace std;
 
+log4cxx::LoggerPtr ConfigReader::m_logger(log4cxx::Logger::getLogger("ConfigReader"));
+
 
 /// split tag[name="bla"]>bloo into tag, name, bla and bloo
 void splitTagName(const string& x_searchString, string& xr_tagName, string& xr_attrName, string& xr_attrValue, string& xr_searchString2)
@@ -82,7 +84,8 @@ TiXmlDocument* createDoc(const std::string& x_fileName, bool x_allowCreation, bo
 				createEmptyConfigFile(x_fileName, x_header);
 				doc = new TiXmlDocument(x_fileName);
 				auto tmp = doc->LoadFile();
-				assert(tmp);
+				if(!tmp)
+					throw MkException("Cannot create temporary file", LOC);
 			}
 			else throw MkException("Could not load file as XML '" + x_fileName + "'. Error='" + (doc ? doc->ErrorDesc() : "") + "'. Exiting.", LOC);
 		}
@@ -90,11 +93,11 @@ TiXmlDocument* createDoc(const std::string& x_fileName, bool x_allowCreation, bo
 	}
 	catch(exception& e)
 	{
-		fatal("Fatal exception in constructor of ConfigReader: " + string(e.what()), LOC);
+		throw MkException("Fatal exception in constructor of ConfigReader: " + string(e.what()), LOC);
 	}
 	catch(...)
 	{
-		fatal("Fatal exception in constructor of ConfigReader", LOC);
+		throw MkException("Fatal exception in constructor of ConfigReader", LOC);
 	}
 	// note: avoid a compiler warning
 	return nullptr;
@@ -419,6 +422,11 @@ string ConfigReader::GetValue() const
 		return str;
 }
 
+bool ConfigReader::IsFinal() const
+{
+	return mp_node->ToElement()->GetText() != nullptr;
+}
+
 /**
 * @brief Set the value as string
 *
@@ -444,7 +452,7 @@ void ConfigFile::SaveToFile(const string& x_file) const
 }
 
 /**
-* @brief Validate that the configuration is valid
+* @brief Validate the configuration
 */
 void ConfigReader::Validate() const
 {
@@ -513,41 +521,24 @@ void ConfigReader::CheckUniquenessOfId(const string& x_group, const string& x_ty
 
 void ConfigReader::OverrideWith(const ConfigReader& x_extraConfig)
 {
-	// TODO unit test
-	// TODO this function should be more generic
-	/*
-	ConfigReader moduleConfig = x_extraConfig.GetSubConfig("application").GetSubConfig("module");
-	while(!moduleConfig.IsEmpty())
-	{
-		if(!moduleConfig.GetSubConfig("parameters").IsEmpty())
-		{
-			ConfigReader paramConfig = moduleConfig.GetSubConfig("parameters").GetSubConfig("param");
-			while(!paramConfig.IsEmpty())
-			{
-				// Override parameter
-				RefSubConfig("module", "name", moduleConfig.GetAttribute("name"))
-				.RefSubConfig("parameters").RefSubConfig("param", "name", paramConfig.GetAttribute("name"), true)
-				.SetValue(paramConfig.GetValue());
-				paramConfig = paramConfig.NextSubConfig("param");
-			}
-		}
-		moduleConfig = moduleConfig.NextSubConfig("module");
-	}
-	*/
+	// Note: This method is very specific to our type of configuration
 
 	for(const auto& conf1 : x_extraConfig.GetSubConfig("application").FindAll("module"))
 	{
+		ConfigReader appConf(RefSubConfig("application"));
 		if(!conf1.GetSubConfig("parameters").IsEmpty())
 		{
 			for(const auto& conf2 : conf1.GetSubConfig("parameters").FindAll("param"))
 			{
-				if(GetSubConfig("module", "name", conf1.GetAttribute("name")).IsEmpty())
+				// cout << conf1.GetAttribute("name") << ":" << conf2.GetAttribute("name") << endl;
+				if(appConf.GetSubConfig("module", "name", conf1.GetAttribute("name")).IsEmpty())
 				{
-					// LOG_WARN(m_logger, "Module " << conf1.GetAttribute("name") << " cannot be overriden since it does not exist in the current config");
+					LOG_WARN(m_logger, "Module " << conf1.GetAttribute("name") << " cannot be overriden since it does not exist in the current config");
 					continue;
 				}
 				// Override parameter
-				RefSubConfig("module", "name", conf1.GetAttribute("name"))
+				LOG_DEBUG(m_logger, "Override parameter " << conf2.GetAttribute("name") << " with value " << conf2.GetValue());
+				appConf.RefSubConfig("module", "name", conf1.GetAttribute("name"))
 				.RefSubConfig("parameters").RefSubConfig("param", "name", conf2.GetAttribute("name"), true)
 				.SetValue(conf2.GetValue());
 			}
@@ -572,6 +563,8 @@ const ConfigReader ConfigReader::Find(const string& x_searchString, bool x_fatal
 
 		string tagName, attrName, attrValue, searchString2;
 		splitTagName(x_searchString, tagName, attrName, attrValue, searchString2);
+
+		// cout << "Search in config: " << tagName << "[" << attrName << "=\"" << attrValue << "\"]" << endl;
 
 		if(attrName == "")
 			return GetSubConfig(tagName).Find(searchString2);

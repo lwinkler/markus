@@ -23,6 +23,7 @@
 
 #include "util.h"
 #include "Manager.h"
+#include "Event.h"
 #include "MkException.h"
 #include <fstream>
 #include <cstdio>
@@ -137,7 +138,6 @@ void adjustSize(const Mat& im_in, Mat& im_out)
 		else if(im_in.cols >= im_out.cols)
 		{
 			// note: Maybe one day, parametrize the interpolation method
-			// resize(im_in, im_out, im_out.size(), 0, 0, CV_INTER_AREA); // TODO for LM: See if we gain on detection with this line
 			resize(im_in, im_out, im_out.size(), 0, 0, CV_INTER_AREA);
 		}
 		else
@@ -232,7 +232,7 @@ void adjustChannels(const Mat& im_in, Mat& im_out)
 	}
 	else if(im_in.channels() == 3 && im_out.channels() == 1)
 	{
-		cvtColor(im_in, im_out, CV_BGR2GRAY); // TODO: probably use BGR!! check that no problem arises
+		cvtColor(im_in, im_out, CV_BGR2GRAY);
 	}
 	else throw MkException("Error in adjustChannels", LOC);
 }
@@ -351,6 +351,21 @@ TIME_STAMP getAbsTimeMs()
 	return tp.tv_sec * 1000 + tp.tv_usec / 1000;
 }
 
+/// Return a time stamp if the file name clearly contains a date. Return 0 otherwise
+TIME_STAMP timeStampFromFileName(const string& x_fileName)
+{
+	struct tm tm;
+	if(sscanf(basename(x_fileName).c_str(), "%4d%2d%2d_%2d%2d%2d_", &tm.tm_year, &tm.tm_mon, &tm.tm_mday, &tm.tm_hour, &tm.tm_min, &tm.tm_sec) != 6)
+		return 0;
+	// printf("TS%4d-%2d-%2d_%2d-%2d-%2d\n",  tm.tm_year, tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+	tm.tm_year -= 1900; // year start at 1900
+	tm.tm_mon  --;      // months since january
+	TIME_STAMP t = timegm(&tm);
+	// printf("TS%4d-%2d-%2d_%2d-%2d-%2d\n",  tm.tm_year, tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+	t *= 1000;
+	return t;
+}
+
 // Convert a string to json object
 /*
 string jsonify(const string& x_name, const string& x_value)
@@ -396,6 +411,12 @@ bool compareFiles(const string& x_file1, const string& x_file2)
 {
 	ifstream file1(x_file1.c_str());
 	ifstream file2(x_file2.c_str());
+
+	if(!file1.is_open())
+		throw MkException("Cannot open file " + x_file1, LOC);
+	if(!file2.is_open())
+		throw MkException("Cannot open file " + x_file2, LOC);
+
 	string line1;
 	string line2;
 
@@ -532,3 +553,19 @@ bool boolValue(const std::string& x_value)
 
 	throw MkException("Ambiguous value cannot be converted to bool: " + x_value, LOC);
 }
+
+/**
+* @brief Write image to disk and add the path of the image to the event
+*
+* @param x_image        Image to add
+* @param x_fileWithPath Path to image
+* @param xr_event       Event to modify
+*
+*/
+void addExternalImage(const Mat& x_image, const std::string& x_name, const std::string& x_fileWithPath, Event& xr_event)
+{
+	imwrite(x_fileWithPath, x_image);
+	// LOG_DEBUG(m_logger, "Add external file to event " << x_name << ": " << x_fileWithPath);
+	xr_event.AddExternalFile(x_name, x_fileWithPath);
+}
+

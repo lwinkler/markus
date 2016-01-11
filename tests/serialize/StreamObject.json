@@ -2,7 +2,6 @@
 {
 	"connected" : false,
 	"description" : "Another description for a stream of objects",
-	"height" : 24,
 	"name" : "streamObject",
 	"objects" : 
 	[
@@ -35,8 +34,6 @@
 			"y" : 0.620
 		}
 	],
-	"ready" : true,
 	"timeStamp" : 213412313333123,
-	"type" : "Objects",
-	"width" : 32
+	"type" : "Objects"
 }

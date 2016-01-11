@@ -29,28 +29,20 @@
 using namespace std;
 using namespace cv;
 
-log4cxx::LoggerPtr StreamState::m_logger(log4cxx::Logger::getLogger("StreamState"));
-
-StreamState::StreamState(const string& x_name, bool& x_state, Module& rx_module, const string& rx_description) :
-	Stream(x_name, rx_module, rx_description),
-	m_state(x_state)
-{
-}
-
-StreamState::~StreamState()
-{
-
-}
+template<> log4cxx::LoggerPtr StreamState::m_logger(log4cxx::Logger::getLogger("StreamState"));
+template<> const string StreamState::m_type         = "State";
+template<> const string StreamState::m_class        = "StreamState";
 
 // Transmit the state to the connected module
 
-void StreamState::ConvertInput()
+template<> void StreamState::ConvertInput()
 {
 	if(m_connected == nullptr)
 	{
-		m_state = false;
+		m_object = false;
 		return;
 	}
+	assert(m_connected->IsConnected());
 
 	// Copy time stamp to output
 	m_timeStamp = GetConnected().GetTimeStamp();
@@ -58,45 +50,45 @@ void StreamState::ConvertInput()
 	const StreamState * pstream = dynamic_cast<const StreamState*>(m_connected);
 	if(pstream == nullptr)
 		throw MkException("Stream of state " + GetName() + " is not correctly connected", LOC);
-	m_state = pstream->GetState();
+	m_object = pstream->GetObject();
 }
 
 /// Render : to display the state we simply color the image in black/white
 
-void StreamState::RenderTo(Mat& x_output) const
+template<> void StreamState::RenderTo(Mat& x_output) const
 {
-	x_output.setTo(Scalar(255 * m_state, 255 * m_state, 255 * m_state));
+	x_output.setTo(Scalar(255 * m_object, 255 * m_object, 255 * m_object));
 }
 
 /// Query : give info about cursor position
-void StreamState::Query(int x_posX, int x_posY) const
+template<> void StreamState::Query(int x_posX, int x_posY) const
 {
 	// check if out of bounds
 	if(x_posX < 0 || x_posY < 0 || x_posX >= GetWidth() || x_posY >= GetHeight())
 		return;
 	
-	LOG_INFO(m_logger, "State =" << static_cast<int>(m_state));
+	LOG_INFO(m_logger, "State =" << static_cast<int>(m_object));
 }
 
 /// Randomize the content of the stream
-void StreamState::Randomize(unsigned int& xr_seed)
+template<> void StreamState::Randomize(unsigned int& xr_seed)
 {
 	// random state
 	if(rand_r(&xr_seed) < RAND_MAX / 10)
-		m_state = !m_state;
+		m_object = !m_object;
 }
 
-void StreamState::Serialize(ostream& x_out, const string& x_dir) const
+template<> void StreamState::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 	stringstream ss;
 	Stream::Serialize(ss, x_dir);
 	ss >> root;
-	root["state"] = m_state;
+	root["state"] = m_object;
 	x_out << root;
 }
 
-void StreamState::Deserialize(istream& x_in, const string& x_dir)
+template<> void StreamState::Deserialize(istream& x_in, const string& x_dir)
 {
 	Json::Value root;
 	x_in >> root;  // note: copy first for local use
@@ -104,5 +96,5 @@ void StreamState::Deserialize(istream& x_in, const string& x_dir)
 	ss << root;
 	Stream::Deserialize(ss, x_dir);
 
-	m_state = root["state"].asBool();
+	m_object = root["state"].asBool();
 }

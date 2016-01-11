@@ -103,21 +103,19 @@ protected:
 class SerializableTestSuite : public CxxTest::TestSuite
 {
 public:
-	SerializableTestSuite()
-		: mp_fakeInput(NULL),
-		  mp_fakeParams(NULL),
+	SerializableTestSuite() :
 		  m_factoryParameters(Factories::parametersFactory()),
 		  m_factoryModules(Factories::modulesFactory()),
-		  m_factoryFeatures(Factories::featuresFactory()),
-		  mp_config(NULL) {}
+		  m_factoryFeatures(Factories::featuresFactory())
+		  {}
 
 protected:
 	const FactoryParameters& m_factoryParameters;
 	const FactoryModules& m_factoryModules;
 	const FactoryFeatures& m_factoryFeatures;
-	Module* mp_fakeInput;
-	ParameterStructure* mp_fakeParams;
-	ConfigFile* mp_config;
+	Module* mp_fakeInput              = nullptr;
+	ParameterStructure* mp_fakeParams = nullptr;
+	ConfigFile* mp_config             = nullptr;
 
 	// Values for testing
 	cv::KeyPoint  m_kp;
@@ -136,8 +134,7 @@ public:
 		mp_fakeParams = m_factoryParameters.Create("VideoFileReader", mp_config->GetSubConfig("module"));
 		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeParams);
 		// note: we need a fake module to create the input streams
-		mp_fakeInput->SetAsReady();
-		mp_fakeInput->Reset();
+		// mp_fakeInput->Reset();
 
 		m_vect.push_back(33.66);
 		m_vect.push_back(1e4);
@@ -234,7 +231,7 @@ public:
 	{
 		vector<Object> objects;
 		StreamObject stream2("streamObject", objects, *mp_fakeInput, "A stream of objects");
-		stream2.AddObject(m_obj2);
+		stream2.RefObject().push_back(m_obj2);
 		testSerialization(stream2, "StreamObject");
 	}
 

@@ -5,8 +5,8 @@ if(CXXTEST_FOUND)
 	file(GLOB tests_src2 "../*/*.test.h")
 	file(GLOB tests_src3 "../*/*/*.test.h")
 
-	add_executable(unitTests unitTests.cpp)
-	target_link_libraries(unitTests ${MK_DEPS})
+	add_executable(unitTests unitTests.cpp ../modules/AllModules.cpp)
+	target_link_libraries(unitTests ${MK_DEPS} ${MK_DEPS} ${MK_EXT_DEPS}) # double the dependencies to avoid linking error
 
 	add_custom_command(
 		OUTPUT unitTests.cpp

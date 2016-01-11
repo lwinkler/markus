@@ -66,7 +66,7 @@ void CalibrationByModel::Deserialize(std::istream& x_in, const std::string& x_di
 {
 	Json::Value root;
 	x_in >> root;
-	camera_height = root["height"].asDouble(); // TODO: Deserialization SHOULD always check if the value exists
+	camera_height = root["height"].asDouble();
 	yaw           = root["yaw"].asDouble();
 	roll          = root["roll"].asDouble();
 	focal         = root["focal"].asDouble();

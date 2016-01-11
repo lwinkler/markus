@@ -45,8 +45,6 @@ public:
 
 			m_list.push_back(new ParameterFloat("threshold", 0.01, 0, 1, &threshold, "If the difference between one input frame and the othre is higher than this threshold then an error is logged"));
 
-			RefParameterByName("allow_unsync_input").SetDefault("1"); // TODO: check if needed
-
 			Init();
 		}
 

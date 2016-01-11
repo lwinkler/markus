@@ -27,6 +27,7 @@
 #include <opencv2/core/core.hpp>
 #include "define.h"
 
+class Event;
 
 /// this file contains some usefull functions and methods. To be included in .cpp files
 void adjust(const cv::Mat& im_in, cv::Mat& im_out, cv::Mat*& tmp1, cv::Mat*& tmp2);
@@ -44,14 +45,27 @@ const std::string timeStamp(int x_pid = 0);
 const std::string msToTimeStamp(TIME_STAMP x_ms);
 TIME_STAMP timeStampToMs(const std::string& x_timeStamp);
 TIME_STAMP getAbsTimeMs();
+TIME_STAMP timeStampFromFileName(const std::string& x_fileName);
 void createEmptyConfigFile(const std::string& x_fileName, bool x_header = true);
 bool compareFiles(const std::string& x_file1, const std::string& x_file2);
 std::string getFileContents(const std::string& x_filename);
 double diagonal(const cv::Mat& x_image);
 std::string basename(const std::string& x_pathName);
-void printStack(int sig);;
+void printStack(int sig);
 void execute(const std::string& x_cmd, std::ostream& xr_stdout);
 void execute(const std::string& x_cmd, std::vector<std::string>& xr_result);
 bool boolValue(const std::string& x_value);
+void addExternalImage(const cv::Mat& x_image, const std::string& x_name, const std::string& x_fileWithPath, Event& xr_event);
+
+template<class T> void mergeVector(std::vector<T>& vdest, const std::vector<T>& vori)
+{
+	for(const auto& ori : vori)
+	{
+		// TODO: There is probably a more efficient of smarter way to do this
+		if(std::find(vdest.begin(), vdest.end(), ori) == vdest.end())
+			vdest.push_back(ori);
+	}
+}
+
 
 #endif

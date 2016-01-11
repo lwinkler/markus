@@ -72,7 +72,7 @@ void RandomObjectsGenerator::Reset()
 void RandomObjectsGenerator::Capture()
 {
 	// Wait to act consistently with other inputs
-	if(m_realTime)
+	if(GetContext().IsRealTime())
 		usleep(1000000 / m_param.fps);
 
 	const double diagonal = sqrt(m_param.width * m_param.width + m_param.height * m_param.height);

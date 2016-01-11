@@ -33,7 +33,7 @@ using namespace cv;
 
 log4cxx::LoggerPtr StreamImage::m_logger(log4cxx::Logger::getLogger("StreamImage"));
 
-StreamImage::StreamImage(const string& x_name, Mat& x_image, Module& rx_module, const string& rx_description) :
+StreamT<Mat>::StreamT(const string& x_name, Mat& x_image, Module& rx_module, const string& rx_description, const string& x_requirements) :
 	Stream(x_name, rx_module, rx_description),
 	m_image(x_image)
 {
@@ -41,10 +41,6 @@ StreamImage::StreamImage(const string& x_name, Mat& x_image, Module& rx_module, 
 	// assert(x_image.cols == rx_module.GetWidth() && x_image.rows == rx_module.GetHeight()); // Disable this for unit tests
 }
 
-
-StreamImage::~StreamImage()
-{
-}
 
 // Convert an input (image from a different module) to the correct resolution into m_image. This method keeps a map containing all temporary image in case they are needed later
 void StreamImage::ConvertInput()
@@ -54,6 +50,7 @@ void StreamImage::ConvertInput()
 		m_image.setTo(0);
 		return;
 	}
+	assert(m_connected->IsConnected());
 
 	mp_connectedImage->ConvertToOutput(mr_module.GetCurrentTimeStamp(), m_image);
 }
@@ -202,13 +199,11 @@ void StreamImage::Deserialize(istream& x_in, const string& x_dir)
 		throw MkException("Cannot open serialized image from file " + fileName, LOC);
 }
 
-void StreamImage::Connect(Stream* x_stream, bool x_bothWays)
+void StreamImage::Connect(Stream* x_stream)
 {
 	// This method was rewritten to avoid a dynamic cast at each ConvertInput
 	assert(x_stream != nullptr);
 	m_connected = x_stream;
-	if(x_bothWays)
-		x_stream->Connect(this, false);
 
 	mp_connectedImage = dynamic_cast<StreamImage*>(m_connected);
 	if(mp_connectedImage == nullptr)
@@ -216,4 +211,13 @@ void StreamImage::Connect(Stream* x_stream, bool x_bothWays)
 		m_connected = nullptr;
 		throw MkException("Input stream cannot be connected probably because it is not of type StreamImage", LOC);
 	}
+	if(m_image.empty())
+		m_image = Mat(mr_module.GetSize(), mr_module.GetImageType());
+	else assert(m_image.size() == mr_module.GetSize());
+
+	if(mp_connectedImage->GetImage().empty())
+		throw MkException("Connecting a StreamImage with an image of size zero", LOC);
+
+	m_connected->SetAsConnected();
+	SetAsConnected();
 }

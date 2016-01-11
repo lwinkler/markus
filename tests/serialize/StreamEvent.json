@@ -42,10 +42,7 @@
 		},
 		"raised" : true
 	},
-	"height" : 24,
 	"name" : "streamEventA",
-	"ready" : true,
 	"timeStamp" : 12341244444444,
-	"type" : "Event",
-	"width" : 32
+	"type" : "Event"
 }

@@ -37,14 +37,16 @@ protected:
 	ConfigFile* m_conf2;
 	ConfigFile* m_conf3;
 	ConfigFile* m_conf4;
+	ConfigFile* m_conf5;
 public:
 	void setUp()
 	{
-		m_conf1 = new ConfigFile("tests/config1.xml");
+		m_conf1 = new ConfigFile("tests/config/config1.xml");
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		m_conf2 = new ConfigFile("/tmp/config_empty.xml");
 		m_conf3 = new ConfigFile("/tmp/config_empty.xml");
 		m_conf4 = new ConfigFile("/tmp/config_empty.xml");
+		m_conf5 = new ConfigFile("tests/config/config_part.xml");
 	}
 	void tearDown()
 	{
@@ -52,6 +54,7 @@ public:
 		delete m_conf2;
 		delete m_conf3;
 		delete m_conf4;
+		delete m_conf5;
 	}
 
 
@@ -105,8 +108,7 @@ public:
 		m_conf1->Validate();
 
 		// Compare with the initial config
-		// note: this is kind of hackish ... can you find a better way :-)
-		TS_ASSERT(compareFiles("tests/config1.xml", "tests/tmp/config1_copy.xml"));
+		TS_ASSERT(compareFiles("tests/config/config1.xml", "tests/tmp/config1_copy.xml"));
 	}
 
 	/// Generate a config from an empty file and test
@@ -117,14 +119,27 @@ public:
 		appConf.RefSubConfig("aaa", "name", "nameX", true)
 		.RefSubConfig("bbb", "name", "nameY", true)
 		.RefSubConfig("ccc", "name", "nameZ", true).SetValue("someValue");
-		m_conf2->SaveToFile("tests/config_generated.xml");
+		m_conf2->SaveToFile("tests/config/config_generated.xml");
 
-		ConfigFile generatedConf("tests/config_generated.xml");
+		ConfigFile generatedConf("tests/config/config_generated.xml");
 		TS_ASSERT(generatedConf.GetSubConfig("application")
 				  .GetSubConfig("aaa", "name", "nameX")
 				  .GetSubConfig("bbb", "name", "nameY")
 				  .GetSubConfig("ccc", "name", "nameZ")
 				  .GetValue() == "someValue");
+	}
+
+	/// Override the original config
+	void testOverride()
+	{
+		TS_TRACE("\n# Test the override of the original configuration");
+		m_conf1->OverrideWith(*m_conf5);
+
+		TS_ASSERT(m_conf1->Find("application>module[name=\"Module0\"]>parameters").GetSubConfig("param", "name", "param_text").GetValue() == "a new text");
+		TS_ASSERT(m_conf1->Find("application>module[name=\"Module0\"]>parameters").GetSubConfig("param", "name", "param_int").GetValue() == "33");
+		TS_ASSERT(m_conf1->Find("application>module[name=\"Module0\"]>parameters").GetSubConfig("param", "name", "param_float").GetValue() == "3.1415");
+		TS_ASSERT(m_conf1->Find("application>module[name=\"Module1\"]>parameters").Find("param[name=\"param_float\"]").GetValue()  == "77.7");
+		TS_ASSERT(m_conf1->Find("application>module[name=\"Module1\"]>parameters>param[name=\"param_int\"]").GetValue()  == "42");
 	}
 };
 

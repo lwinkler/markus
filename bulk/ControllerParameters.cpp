@@ -23,9 +23,11 @@
 
 #include "ControllerParameters.h"
 #include "CalibrationByHeight.h"
+#include "Processable.h"
 
 using namespace std;
 
+#ifndef MARKUS_NO_GUI
 #include <QWidget>
 #include <QBoxLayout>
 #include <QLabel>
@@ -33,8 +35,6 @@ using namespace std;
 #include <QTextEdit>
 #include <QCheckBox>
 #include <QComboBox>
-
-#ifndef MARKUS_NO_GUI
 #include "QParameterSlider.h"
 #endif
 
@@ -50,6 +50,7 @@ log4cxx::LoggerPtr ControllerParameter::m_logger(log4cxx::Logger::getLogger("Con
 */
 void ControllerParameter::GetParameterType(string* xp_value)
 {
+	Processable::ReadLock lock(m_module.RefLock());
 	if(xp_value != nullptr)
 	{
 		*xp_value = m_param.GetTypeString();
@@ -69,6 +70,7 @@ void ControllerParameter::GetParameterType(string* xp_value)
 */
 void ControllerParameter::GetRange(string* xp_value)
 {
+	Processable::ReadLock lock(m_module.RefLock());
 	if(xp_value != nullptr)
 	{
 		*xp_value = m_param.GetRange();
@@ -88,6 +90,7 @@ void ControllerParameter::GetRange(string* xp_value)
 */
 void ControllerParameter::SetControlledValue(string* xp_value)
 {
+	Processable::WriteLock lock(m_module.RefLock());
 	string oldValue = m_param.GetValueString();
 	ParameterConfigType configType = m_param.GetConfigurationSource();
 
@@ -124,6 +127,8 @@ void ControllerParameter::SetControlledValue(string* xp_value)
 */
 void ControllerParameter::GetCurrent(string* xp_value)
 {
+	Processable::ReadLock lock(m_module.RefLock());
+	// string oldValue = m_param.GetValueString();
 	if(xp_value != nullptr)
 	{
 		stringstream ss;
@@ -145,6 +150,7 @@ void ControllerParameter::GetCurrent(string* xp_value)
 */
 void ControllerParameter::GetDefault(string* xp_value)
 {
+	Processable::ReadLock lock(m_module.RefLock());
 	if(xp_value != nullptr)
 	{
 		*xp_value = m_param.GetDefaultString();
@@ -158,9 +164,10 @@ void ControllerParameter::GetDefault(string* xp_value)
 }
 
 
-ControllerParameter::ControllerParameter(Parameter& x_param):
+ControllerParameter::ControllerParameter(Parameter& x_param, Processable& x_module):
 	Controller(x_param.GetName()),
-	m_param(x_param)
+	m_param(x_param),
+	m_module(x_module)
 {
 	m_actions.insert(make_pair("GetType",    &ControllerParameter::GetParameterType));
 	m_actions.insert(make_pair("GetRange",   &ControllerParameter::GetRange));
@@ -172,8 +179,8 @@ ControllerParameter::ControllerParameter(Parameter& x_param):
 
 /*------------------------------------------------------------------------------------------------*/
 
-ControllerInt::ControllerInt(Parameter& x_param):
-	ControllerParameter(x_param),
+ControllerInt::ControllerInt(Parameter& x_param, Processable& x_module):
+	ControllerParameter(x_param, x_module),
 	m_param2(dynamic_cast<ParameterInt&>(x_param))
 {
 	mp_parameterSlider = nullptr;
@@ -210,8 +217,8 @@ string ControllerInt::GetValueFromWidget()
 
 /*------------------------------------------------------------------------------------------------*/
 
-ControllerUInt::ControllerUInt(Parameter& x_param):
-	ControllerParameter(x_param),
+ControllerUInt::ControllerUInt(Parameter& x_param, Processable& x_module):
+	ControllerParameter(x_param, x_module),
 	m_param2(dynamic_cast<ParameterUInt&>(x_param))
 {
 	mp_parameterSlider = nullptr;
@@ -246,8 +253,8 @@ string ControllerUInt::GetValueFromWidget()
 #endif
 }
 /*------------------------------------------------------------------------------------------------*/
-ControllerDouble::ControllerDouble(Parameter& x_param):
-	ControllerParameter(x_param),
+ControllerDouble::ControllerDouble(Parameter& x_param, Processable& x_module):
+	ControllerParameter(x_param, x_module),
 	m_param2(dynamic_cast<ParameterDouble&>(x_param))
 {
 	mp_parameterSlider = nullptr;
@@ -280,8 +287,8 @@ string ControllerDouble::GetValueFromWidget()
 }
 /*------------------------------------------------------------------------------------------------*/
 
-ControllerFloat::ControllerFloat(Parameter& x_param):
-	ControllerParameter(x_param),
+ControllerFloat::ControllerFloat(Parameter& x_param, Processable& x_module):
+	ControllerParameter(x_param, x_module),
 	m_param2(dynamic_cast<ParameterFloat&>(x_param))
 {
 	mp_parameterSlider = nullptr;
@@ -316,8 +323,8 @@ string ControllerFloat::GetValueFromWidget()
 #endif
 }
 /*------------------------------------------------------------------------------------------------*/
-ControllerBool::ControllerBool(Parameter& x_param):
-	ControllerParameter(x_param),
+ControllerBool::ControllerBool(Parameter& x_param, Processable& x_module):
+	ControllerParameter(x_param, x_module),
 	m_param2(dynamic_cast<ParameterBool&>(x_param))
 {
 	mp_checkBox = nullptr;
@@ -351,8 +358,8 @@ string ControllerBool::GetValueFromWidget()
 #endif
 }
 /*------------------------------------------------------------------------------------------------*/
-ControllerString::ControllerString(Parameter& x_param):
-	ControllerParameter(x_param),
+ControllerString::ControllerString(Parameter& x_param, Processable& x_module):
+	ControllerParameter(x_param, x_module),
 	m_param2(dynamic_cast<ParameterString&>(x_param))
 {
 	mp_lineEdit = nullptr;
@@ -387,8 +394,8 @@ string ControllerString::GetValueFromWidget()
 }
 
 /*------------------------------------------------------------------------------------------------*/
-ControllerSerializable::ControllerSerializable(Parameter& x_param):
-	ControllerParameter(x_param),
+ControllerSerializable::ControllerSerializable(Parameter& x_param, Processable& x_module):
+	ControllerParameter(x_param, x_module),
 	m_param2(dynamic_cast<ParameterSerializable&>(x_param))
 {
 	mp_lineEdit = nullptr;
@@ -427,8 +434,8 @@ string ControllerSerializable::GetValueFromWidget()
 #endif
 }
 /*------------------------------------------------------------------------------------------------*/
-ControllerCalibrationByHeight::ControllerCalibrationByHeight(Parameter& x_param):
-	ControllerParameter(x_param),
+ControllerCalibrationByHeight::ControllerCalibrationByHeight(Parameter& x_param, Processable& x_module):
+	ControllerParameter(x_param, x_module),
 	m_param2(dynamic_cast<ParameterSerializable&>(x_param))
 {
 	mp_widget = nullptr;
@@ -503,8 +510,8 @@ string ControllerCalibrationByHeight::GetValueFromWidget()
 }
 
 /*------------------------------------------------------------------------------------------------*/
-ControllerEnum::ControllerEnum(Parameter& x_param):
-	ControllerParameter(x_param),
+ControllerEnum::ControllerEnum(Parameter& x_param, Processable& x_module):
+	ControllerParameter(x_param, x_module),
 	m_param2(dynamic_cast<ParameterEnum&>(x_param))
 {
 	mp_comboBox = nullptr;
@@ -547,8 +554,8 @@ string ControllerEnum::GetValueFromWidget()
 }
 
 /*------------------------------------------------------------------------------------------------*/
-ControllerText::ControllerText(Parameter& x_param):
-	ControllerParameter(x_param),
+ControllerText::ControllerText(Parameter& x_param, Processable& x_module):
+	ControllerParameter(x_param, x_module),
 	m_param2(x_param)
 {
 	mp_textEdit = nullptr;

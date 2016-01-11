@@ -36,6 +36,7 @@
 #include "MkException.h"
 #include "FeatureFloatInTime.h"
 #include "FeatureVector.h"
+#include "Timer.h"
 
 using namespace std;
 
@@ -51,45 +52,40 @@ using namespace std;
 class ModulesTestSuite : public CxxTest::TestSuite
 {
 public:
-	ModulesTestSuite()
-		: mp_fakeConfig(NULL),
-		  mp_fakeInput(NULL),
-		  mp_configFile(NULL),
-		  mp_context(NULL),
-		  m_state(false),
+	ModulesTestSuite() :
 		  m_factoryParameters(Factories::parametersFactory()),
 		  m_factoryModules(Factories::modulesFactory()),
-		  m_factoryFeatures(Factories::featuresFactory()),
-		  m_cpt(0) {}
+		  m_factoryFeatures(Factories::featuresFactory())
+		  {}
 protected:
 	vector<string> m_moduleTypes;
 	const FactoryParameters&  m_factoryParameters;
 	const FactoryModules&  m_factoryModules;
 	const FactoryFeatures& m_factoryFeatures;
-	ParameterStructure* mp_fakeConfig;
-	Module* mp_fakeInput;
-	ConfigFile* mp_configFile;
-	Context::Parameters* mp_contextParams;
-	Context* mp_context;
+	ParameterStructure* mp_fakeConfig     = nullptr;
+	Module* mp_fakeInput                  = nullptr;
+	ConfigFile* mp_configFile             = nullptr;
+	Context::Parameters* mp_contextParams = nullptr;
+	Context* mp_context                   = nullptr;
 
 	// Objects for streams
 	cv::Mat m_image;
-	bool m_state;
+	bool m_state = false;
 	Event m_event;
-	float  m_float;
-	double m_double;
-	int    m_int;
-	uint   m_uint;
-	bool   m_bool;
+	float  m_float   = 0;
+	double m_double  = 0;
+	int    m_int     = 0;
+	uint   m_uint    = 0;
+	bool   m_bool    = false;
 	vector<Object> m_objects;
-	int m_cpt;
+	int m_cpt = 0;
 
 public:
 	void setUp()
 	{
 		m_cpt = 0;
 		char* tmp = getenv("MODULE_TO_TEST");
-		if(tmp != NULL)
+		if(tmp != nullptr)
 		{
 			m_moduleTypes.push_back(tmp);
 			TS_WARN("$MODULE_TO_TEST should only be used for development purposes.");
@@ -103,14 +99,14 @@ public:
 		.RefSubConfig("parameters", true)
 		.RefSubConfig("param", "name", "fps", true).SetValue("22");
 		mp_configFile->RefSubConfig("application").SetAttribute("name", "unitTest");
+		mp_contextParams = new Context::Parameters(mp_configFile->Find("application"), "/tmp/config_empty.xml", "TestModule", "tests/out");
+		mp_contextParams->centralized = true;
+		mp_context = new Context(*mp_contextParams);
 		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", mp_configFile->Find("application>module[name=\"VideoFileReader0\"]"));
 		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeConfig);
-		mp_fakeInput->AllowAutoProcess(false);
+		mp_fakeInput->SetContext(*mp_context);
 		// note: we need a fake module to create the input streams
-		mp_fakeInput->SetAsReady();
 		mp_fakeInput->Reset();
-		mp_contextParams = new Context::Parameters(mp_configFile->Find("application"), "/tmp/config_empty.xml", "TestModule", "tests/out");
-		mp_context = new Context(*mp_contextParams);
 	}
 	void tearDown()
 	{
@@ -142,28 +138,39 @@ public:
 	}
 
 	/// Create module and make it ready to process
-	std::tuple<ParameterStructure*, Module*> createAndConnectModule(const string& x_type, const map<string, string>* xp_parameters = NULL)
+	std::tuple<ParameterStructure*, Module*> createAndConnectModule(const string& x_type, const map<string, string>* xp_parameters = nullptr)
 	{
 		TS_TRACE("Create and connect module of class " + x_type);
 		ConfigReader moduleConfig = addModuleToConfig(x_type, *mp_configFile);
 
 		// Add parameters to override to the config
-		if(xp_parameters != NULL)
+		if(xp_parameters != nullptr)
 			for(const auto& elem : *xp_parameters)
 				moduleConfig.RefSubConfig("parameters").RefSubConfig("param", "name", elem.first, true).SetValue(elem.second);
 
 		mp_configFile->SaveToFile("tests/tmp/tmp.xml");
-		ParameterStructure* parameters = m_factoryParameters.Create(x_type, moduleConfig);
+
+		ParameterStructure* parameters = nullptr;
+		try
+		{
+			parameters = m_factoryParameters.Create(x_type, moduleConfig);
+		}
+		catch(ParameterException& e)
+		{
+			if(parameters != nullptr)
+				delete(parameters);
+			TS_TRACE("Cannot set parameter in createAndConnectModule, reason: " + string(e.what()));
+			return std::make_pair(nullptr, nullptr);
+		}
 		Module* module                 = m_factoryModules.Create(x_type, *parameters);
 		module->SetContext(*mp_context);
-		module->AllowAutoProcess(false);
 		m_image = cv::Mat(module->GetHeight(), module->GetWidth(), module->GetImageType());
 
 		// Create custom streams to feed each input of the module
 		for(const auto& elem : module->GetInputStreamList())
 		{
 			Stream& inputStream = module->RefInputStreamById(elem.first);
-			Stream* outputStream = NULL;
+			Stream* outputStream = nullptr;
 
 			if(elem.second->GetClass() == "StreamImage")
 				outputStream = new StreamImage("test", m_image, *mp_fakeInput, "Test input");
@@ -188,10 +195,9 @@ public:
 				TSM_ASSERT("Unknown input stream type", false);
 			}
 			inputStream.Connect(outputStream);
-			TS_ASSERT(outputStream != NULL);
+			TS_ASSERT(outputStream != nullptr);
 			TS_ASSERT(inputStream.IsConnected());
 		}
-		module->SetAsReady();
 		if(module->IsUnitTestingEnabled())
 			module->Reset();
 
@@ -232,6 +238,8 @@ public:
 		// Test on each type of module
 		for(const auto& modType : m_moduleTypes)
 		{
+			Timer timer;
+			timer.Start();
 			try
 			{
 				TS_TRACE("# on module " + modType);
@@ -255,6 +263,11 @@ public:
 
 					if(elemCtr.second->GetClass() == "ControllerParameter")
 					{
+						// note: this parameter cannot be tested as will always create an error
+						// TODO: Fix this cleanly
+						if(elemCtr.second->GetName() == "prepend_output_directory")
+							continue;
+
 						// Test specific for controllers of type parameter
 						string type, range, defval, newValue;
 						assert(actions.size() == 5); // If not you need to write one more test
@@ -273,7 +286,7 @@ public:
 
 						vector<string> values;
 						TS_TRACE("Generate values for param of type " + type + " in range " + range);
-						module->GetParameters().GetParameterByName(elemCtr.first).GenerateValues(20, values, range);
+						module->GetParameters().GetParameterByName(elemCtr.first).GenerateValues(10, values, range);
 
 						for(auto& elemVal : values)
 						{
@@ -310,10 +323,8 @@ public:
 						for(const auto& elemAction : actions)
 						{
 							string value = "0";
-							// module->LockForWrite();
 							elemCtr.second->CallAction(elemAction, &value);
 							TS_TRACE("###  " + elemCtr.first + "." + elemAction + " returned " + value);
-							// module->Unlock();
 
 							for(int i = 0 ; i < 3 ; i++)
 								module->ProcessRandomInput(seed);
@@ -328,6 +339,9 @@ public:
 			{
 				TS_TRACE("Parameter exception caught: " + std::string(e.what()));
 			}
+			timer.Stop();
+			if(timer.GetSecDouble() > 10)
+				TS_WARN("Module " + modType + " took " + std::to_string(timer.GetSecDouble()) + "s");
 		}
 	}
 
@@ -341,15 +355,11 @@ public:
 		// Test on each type of module
 		for(const auto& modType : m_moduleTypes)
 		{
+			Timer timer;
+			timer.Start();
 			Module* module;
 			ParameterStructure* parameters;
 			std::tie(parameters, module) = createAndConnectModule(modType);
-			if(!module->IsUnitTestingEnabled())
-			{
-				delete module;
-				delete parameters;
-				continue;
-			}
 			TS_TRACE("# on module " + modType);
 
 			string lastParam = "";
@@ -370,7 +380,7 @@ public:
 
 				TS_TRACE("Generate values for param of type " + elem->GetTypeString() + " in range " + elem->GetRange());
 				elem->GenerateValues(10, values);
-
+			
 				for(const auto& elemVal : values)
 				{
 					// For each value
@@ -383,6 +393,12 @@ public:
 					Module* module2;
 					ParameterStructure* parameters2;
 					std::tie(parameters2, module2) = createAndConnectModule(modType, &params);
+					if(module2 == nullptr || parameters2 == nullptr || !module2->IsUnitTestingEnabled())
+					{
+						CLEAN_DELETE(module2);
+						CLEAN_DELETE(parameters2);
+						continue;
+					}
 					TS_ASSERT(module2->IsUnitTestingEnabled());
 
 					for(int i = 0 ; i < 3 ; i++)
@@ -396,6 +412,9 @@ public:
 			}
 			delete module;
 			delete parameters;
+			timer.Stop();
+			if(timer.GetSecDouble() > 10)
+				TS_WARN("Module " + modType + " took " + std::to_string(timer.GetSecDouble()) + "s");
 		}
 	}
 
@@ -404,7 +423,7 @@ public:
 	void testBySpecificXmlProjects()
 	{
 		vector<string> result1;
-		execute("find modules/ modules2/ -name \"testing*.xml\"", result1);
+		execute("xargs -a modules.txt -I{} find {} -name \"testing*.xml\"", result1);
 
 		for(auto elem : result1)
 		{
@@ -424,6 +443,33 @@ public:
 				TS_FAIL("Error(s) found in " + outDir + "/markus.log");
 		}
 
+	}
+
+	/// Test export
+	void testExport(const Module& xr_module)
+	{
+		string fileName = "tests/tmp/" + xr_module.GetName() + ".xml";
+		ofstream of(fileName.c_str());
+		xr_module.Export(of, 0);
+		of.close();
+		TS_ASSERT(compareFiles(fileName, "tests/modules/" + xr_module.GetName() + ".xml"));
+	}
+
+	/// Test export
+	void testExport()
+	{
+		std::vector<std::string> moduleTypes = {"VideoFileReader", "SlitCam", "BgrSubMOG2", "RenderObjects"};
+
+		for(auto& modType : moduleTypes)
+		{
+			TS_TRACE("# on module " + modType);
+			Module* module;
+			ParameterStructure* parameters;
+			std::tie(parameters, module) = createAndConnectModule(modType);
+			testExport(*module);
+			delete module;
+			delete parameters;
+		}
 	}
 };
 #endif

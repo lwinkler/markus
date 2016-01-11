@@ -158,7 +158,7 @@ public:
 		mr_value = m_default;
 		m_confSource = PARAMCONF_DEF;
 	}
-	virtual void Export(std::ostream& rx_os, int x_indentation)
+	virtual void Export(std::ostream& rx_os, int x_indentation) const
 	{
 		std::string tabs(x_indentation, '\t');
 		rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<std::endl;

@@ -60,11 +60,7 @@ private:
 protected:
 	// input
 	cv::Mat m_imageInput;
-	std::vector<Object> m_objectInput1;
-	std::vector<Object> m_objectInput2;
-	std::vector<Object> m_objectInput3;
-	std::vector<Object> m_objectInput4;
-	std::vector<Object> m_objectInput5;
+	std::vector<std::vector<Object>> m_objectInputs;
 
 	// output
 	cv::Mat m_imageOutput;

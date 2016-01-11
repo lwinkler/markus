@@ -39,7 +39,6 @@
 
 
 class Stream;
-class QModuleTimer;
 
 /**
 * @brief Class representing a module. A module is a node of the application, it processes streams
@@ -80,18 +79,27 @@ public:
 		Parameters(const ConfigReader& x_confReader) : Processable::Parameters(x_confReader)
 		{
 			m_list.push_back(new ParameterString("class"       , ""      , &objClass , "Class of the module (define the module's function)"));
+			m_list.push_back(new ParameterString("master"      , ""      , &master   , "Master module on which this module's processing is dependent. If empty, use all preceeding modules"));
 			m_list.push_back(new ParameterInt("width"          , 640     , 1         , MAX_WIDTH , &width  , "Width of the input"));
 			m_list.push_back(new ParameterInt("height"         , 480     , 1         , MAX_HEIGHT, &height , "Height of the input"));
 			m_list.push_back(new ParameterImageType("type"     , CV_8UC1 , &type     , "Format of the input image"));
 			m_list.push_back(new ParameterCachedState("cached" , CV_8UC1 , &cached   , "Format of the input image"));
 
 			Init();
+
+			// Lock the parameters that cannot be changed
+			LockParameterByName("class");
+			LockParameterByName("width");
+			LockParameterByName("height");
+			LockParameterByName("type");
+			LockParameterByName("auto_process");
 		}
 
 		int width;
 		int height;
 		int type;
 		std::string objClass;
+		std::string master;
 		int cached;
 	};
 
@@ -99,9 +107,12 @@ public:
 	virtual ~Module();
 
 	virtual void Reset();
-	virtual bool Process();
+	virtual void Process();
+	bool ProcessingCondition() const;                                      /// Return true if the current frame must be processed
+	inline virtual bool PropagateCondition() const {return true;}          /// Return true if the depending modules must be called. To be overridden
+	inline bool AbortCondition() const override {return false;}             /// Return true if the processing should be aborted
 
-	virtual const std::string& GetName() const {return m_name;}
+	virtual const std::string& GetName() const override {return m_name;}
 	virtual const std::string& GetClass() const = 0;
 	MKCATEG("Other");
 	virtual const std::string& GetDescription() const = 0;
@@ -118,6 +129,7 @@ public:
 
 	inline int GetWidth() const          {return m_param.width;}
 	inline int GetHeight() const         {return m_param.height;}
+	inline cv::Size GetSize() const      {return cv::Size(m_param.width, m_param.height);}
 	inline int GetImageType() const      {return m_param.type;}
 	inline double GetFps() const         {return m_param.fps;}
 	inline bool IsAutoProcessed() const  {return m_param.autoProcess;}
@@ -128,18 +140,15 @@ public:
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 
-	virtual inline bool IsInput() {return false;}
-	void Export(std::ostream& rx_os, int x_indentation);
+	virtual inline bool IsInput() const {return false;}
+	void Export(std::ostream& rx_os, int x_indentation) const;
 	Stream& RefInputStreamById(int x_id);
 	Stream& RefOutputStreamById(int x_id);
-	inline bool IsReady() {return IsAutoProcessed() || m_isReady;}
-	void SetAsReady();
-	bool AllInputsAreReady() const;
-	const Module& GetMasterModule() const;
 	inline void CheckParameterRange() {m_param.CheckRange(false);}
 	inline bool IsUnitTestingEnabled() const {return m_isUnitTestingEnabled;}
 	inline TIME_STAMP GetCurrentTimeStamp() const {return m_currentTimeStamp;}
 	inline TIME_STAMP GetLastTimeStamp()    const {return m_lastTimeStamp;}
+	void ComputeCurrentTimeStamp();
 
 	void WriteToCache() const;
 	void ReadFromCache();
@@ -147,17 +156,16 @@ public:
 protected:
 	// for benchmarking
 	Timer m_timerConversion;
-	Timer m_timerProcessing;
+	Timer m_timerProcessFrame;
 	Timer m_timerWaiting;
-	long long m_countProcessedFrames;
+	uint64_t m_countProcessedFrames = 0;
 
 	// for testing
-	bool m_isUnitTestingEnabled;
+	bool m_isUnitTestingEnabled = true;
 
-	TIME_STAMP m_lastTimeStamp;     // time stamp of the lastly processed input
-	TIME_STAMP m_currentTimeStamp;  // time stamp of the current input
-	bool m_isReady;
-	bool m_unsyncWarning;
+	TIME_STAMP m_lastTimeStamp    = TIME_STAMP_MIN;  // time stamp of the lastly processed input
+	TIME_STAMP m_currentTimeStamp = TIME_STAMP_MIN;  // time stamp of the current input
+	bool m_unsyncWarning = true;
 
 	virtual void ProcessFrame() = 0;
 	inline virtual bool IsInputProcessed() const {return true;}

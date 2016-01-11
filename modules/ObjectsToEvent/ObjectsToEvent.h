@@ -40,15 +40,17 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterUInt(  "min_object"  ,        0, 0, INT_MAX, &minObjectsNb  , "Min number of objects"));
+			m_list.push_back(new ParameterUInt(  "min_object"  ,        1, 0, INT_MAX, &minObjectsNb  , "Min number of objects"));
 			m_list.push_back(new ParameterUInt(  "max_object"  ,  INT_MAX, 0, INT_MAX, &maxObjectsNb  , "Max number of objects"));
 			m_list.push_back(new ParameterString("event_name"  ,  "count_reached"    , &eventName     , "Name of the event"));
+			m_list.push_back(new ParameterBool(  "only_new"    ,        1, 0,       1, &onlyNew       , "Only raise an event if no object was present of previous frame"));
 
 			Init();
 		}
 		unsigned int minObjectsNb;
 		unsigned int maxObjectsNb;
 		std::string eventName;
+		bool onlyNew;
 	};
 
 	ObjectsToEvent(ParameterStructure& xr_params);

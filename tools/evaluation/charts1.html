@@ -1,0 +1,238 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+</head>
+<body>
+
+<h1>Title of the document</h1>
+
+<p>This document should be copied and edited. Then data can be imported from the HTML files that summarize simulations. This can be done using a command similar to:</p>
+
+<p><b>tools/evaluation/append_result.py simulation_latest/results/summary.html tmp.html -b simulation_latest/results/FirstSimulation/benchmark.xml -t datatable</b></p>
+<div id="name_graph" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+<div id="roc_graph"  style="min-width: 310px; height: 400px; max-width: 400px; margin: 0 auto"></div>
+
+<table id="datatable" style="">
+	<thead>
+		<tr>
+			<th></th>
+			<th>Detected</th>
+			<th>False alarm rate</th>
+			<th>Computation speed</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Title</td>
+			<td>50</td>
+			<td>4</td>
+			<td>440</td>
+		</tr>
+		<tr>
+			<td>Title1</td>
+			<td>50</td>
+			<td>5</td>
+			<td>340</td>
+		</tr>
+		<tr>
+			<td>Title</td>
+			<td>20</td>
+			<td>0</td>
+			<td>940</td>
+		</tr>
+		<tr>
+			<td>Title</td>
+			<td>90</td>
+			<td>11</td>
+			<td>140</td>
+		</tr>
+		<tr>
+			<td>Title</td>
+			<td>30</td>
+			<td>18</td>
+			<td>40</td>
+		</tr>
+		<tr>
+			<td>Title</td>
+			<td>20</td>
+			<td>4</td>
+			<td>40</td>
+		</tr>
+	</tbody>
+</table>
+
+<script>
+/* Functions to plot the data with highchart.js */
+$(function () {
+
+	/* Create a plot by simulation name */
+	function plot_by_name(datatable) {
+		return {
+			chart: {
+				type: 'line',
+				zoomType: 'xy'
+			},
+			title: {
+				text: 'Simulation results'
+			},
+			xAxis: {
+				title: {
+					enabled: true,
+					text: 'Simulation name'
+				}
+			},
+			yAxis: [{ // Primary yAxis
+				labels: {
+					format: '{value} %'
+						// style: {
+							// color: Highcharts.getOptions().colors[2]
+						// }
+				},
+				title: {
+					text: 'Detection rate'
+				},
+				min: 0,
+				max: 100
+			}, { // Secondary yAxis
+				gridLineWidth: 0,
+				title: {
+					text: 'False alarms',
+				},
+				labels: {
+					format: '{value} FA/h',
+				},
+				opposite: true
+			}, { // Tertiary yAxis
+				gridLineWidth: 0,
+				title: {
+					text: 'Computation speed'
+				},
+				labels: {
+					format: '{value} fps',
+				}
+			}],
+			tooltip: {
+				shared: true
+			},
+			legend: {
+				layout: 'vertical',
+				align: 'left',
+				verticalAlign: 'top',
+				x: 100,
+				y: 70,
+				floating: true,
+				backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+				borderWidth: 1
+			},
+			plotOptions: {
+				line: {
+					marker: {
+						radius: 5,
+						states: {
+							hover: {
+								enabled: true,
+								lineColor: 'rgb(100,100,100)'
+							}
+						}
+					},
+					states: {
+						hover: {
+							marker: {
+								enabled: false
+							}
+						}
+					}
+				}
+			},
+			series: [
+				{
+					name: "Detection",
+					yAxis: 0,
+					tooltip: {
+						valueSuffix: ' %'
+					}
+				},
+				{
+					name: "False alarms",
+					yAxis: 1,
+					tooltip: {
+						valueSuffix: ' FA/h'
+					}
+				},
+				{
+					name: "Computation speed",
+					yAxis: 2,
+					tooltip: {
+						valueSuffix: ' fps'
+					},
+					type: "spline"
+				}
+			],
+			data: {
+				table: datatable
+			}
+		};
+	}
+
+	/* Create a ROC plot using detection percent and false alarms */
+	function plot_roc(datatable) {
+		return {
+			data: {
+				table: datatable,
+				seriesMapping: [{
+					label: 0,
+					x: 2,
+					y: 1,
+					z: 3
+				}]
+			},
+			chart: {
+				type: 'scatter'
+			},
+			plotOptions:{
+				scatter:{
+					// lineWidth:2
+				}
+			},
+			title: {
+				text: 'ROC scatter plot'
+			},
+			xAxis: {
+				title: {
+					text: 'False positive / h'
+				}
+			},
+			yAxis: {
+				title: {
+					text: 'Detection rate'
+				},
+				min: 0,
+				max: 100
+			},
+			series: [{
+				yAxis: 0,
+				type: 'scatter',
+			}],
+			tooltip: {
+				shared: true,
+				formatter: function() {
+					return '<b>'+ this.point.label +'</b><br/>'+
+						this.point.y + '% , ' + this.point.x + (this.point.z ? ' FA/h, ' + this.point.z + ' fps' : 'FA/h');
+				}
+			}
+		};
+	}
+
+
+	// Define data tables
+	$('#roc_graph').highcharts(plot_roc(this, 'datatable'));
+	$('#name_graph').highcharts(plot_by_name(this, 'datatable'));
+});
+</script>
+</body>
+</html>

@@ -40,12 +40,14 @@ class Event : public Serializable
 public:
 	Event();
 	~Event();
-	void Empty();
+	void Clean();
 	void Raise(const std::string& x_eventName, TIME_STAMP x_absTimeEvent = 0);
 	void Raise(const std::string& x_eventName, const Object& m_object, TIME_STAMP x_absTimeEvent = 0);
 	inline bool IsRaised() const {return m_eventName != "";}
 	inline const std::string& GetEventName() const {return m_eventName;}
 	inline const Object& GetObject() const {return m_object;}
+	inline const TIME_STAMP& GetTimeNotif() const {return m_absTimeNotif;}
+	inline const TIME_STAMP& GetTimeEvent() const {return m_absTimeEvent;}
 	inline void AddFeature(std::string x_name, Feature* x_feat) {m_object.AddFeature(x_name, x_feat);}
 	inline void ScaleObject(double x_ratioX, double x_ratioY)
 	{
@@ -65,23 +67,24 @@ public:
 	}
 	void Notify(const Context& x_contextbool, bool x_isProcessEvent=false);
 	virtual void Randomize(unsigned int& xr_seed, const std::string& x_requirement, const cv::Size& x_size);
-	virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const;
+	virtual void Serialize(std::ostream& xr_out, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& x_in, const std::string& x_dir);
 
 	inline void AddExternalInfo(const std::string& x_label, const std::string& x_value) {m_externalInfo[x_label] = x_value;}
 	inline void AddExternalInfo(const std::string& x_label, double x_value) {m_externalInfo[x_label] = x_value;}
 	inline void AddExternalInfo(const std::string& x_label, int x_value) {m_externalInfo[x_label] = x_value;}
-	inline void AddExternalInfo(const std::string& x_label, unsigned long long x_value) {m_externalInfo[x_label] = x_value;}
+	inline void AddExternalInfo(const std::string& x_label, uint64_t x_value) {Json::Value::UInt64 val(x_value); m_externalInfo[x_label] = val;}
 	inline void AddExternalInfo(const std::string& x_label, std::istream& x_in) {x_in >> m_externalInfo[x_label];}
 	inline void AddExternalFile(const std::string& x_label, const std::string& x_file) {m_externalInfo["files"][x_label] = x_file;}
+	void GetExternalFiles(std::map<std::string, std::string>& xr_output) const;
 
 protected:
 	std::string m_eventName;
 	Object m_object;
 	/// Abs time of the event (given by current date)
-	TIME_STAMP m_absTimeEvent;
+	TIME_STAMP m_absTimeEvent = 0;
 	/// Abs time of the event at notification of parent process
-	TIME_STAMP m_absTimeNotif;
+	TIME_STAMP m_absTimeNotif = 0;
 	Json::Value m_externalInfo;
 
 private:

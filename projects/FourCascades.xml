@@ -10,10 +10,9 @@
 		<inputs/>
 		<outputs>
 			<output id="0"/>
-			<output id="1"/>
 		</outputs>
 		<display x="17" y="88" width="150" height="75"/>
-		<uiobject x="71" y="94" width="0" height="0"/>
+		<uiobject x="64" y="281" width="0" height="0"/>
 	</module>
 	<module name="CascadeDetector1" id="1">
 		<parameters>
@@ -21,23 +20,22 @@
 			<param name="width">640</param>
 			<param name="height">480</param>
 			<param name="type">CV_8UC1</param>
-			<param name="detection_fps">1</param>
+			<param name="fps">1</param>
 			<param name="min_neighbors">2</param>
 			<param name="min_side">0</param>
 			<param name="scale_factor">1.2</param>
 			<param name="filter_file">modules/CascadeDetector/lbpcascade_frontalface.xml</param>
 			<param name="color">(255,0,255)</param>
 			<param name="object_label">face</param>
-		</parameters>
+</parameters>
 		<inputs>
 			<input id="0" moduleid="0" outputid="0"/>
 		</inputs>
 		<outputs>
 			<output id="0"/>
-			<output id="1"/>
 		</outputs>
 		<display x="263" y="54" width="150" height="75"/>
-		<uiobject x="548" y="80" width="0" height="0"/>
+		<uiobject x="551" y="282" width="0" height="0"/>
 	</module>
 	<module name="TrackerByFeatures1" id="2">
 		<parameters>
@@ -45,7 +43,6 @@
 			<param name="width">640</param>
 			<param name="height">480</param>
 			<param name="type">CV_8UC1</param>
-			<param name="fps">10</param>
 		</parameters>
 		<inputs>
 			<input id="0" moduleid="1" outputid="0"/>
@@ -54,29 +51,7 @@
 			<output id="0"/>
 		</outputs>
 		<display x="648" y="52" width="150" height="75"/>
-		<uiobject x="746" y="84" width="0" height="0"/>
-	</module>
-	<module name="RenderObjects" id="3">
-		<parameters>
-			<param name="class">RenderObjects</param>
-			<param name="width">640</param>
-			<param name="height">480</param>
-			<param name="type">CV_8UC3</param>
-			<param name="fps">10</param>
-		</parameters>
-		<inputs>
-			<input id="0" moduleid="0" outputid="0"/>
-			<input id="1" moduleid="2" outputid="0"/>
-			<input id="2" moduleid="8" outputid="0"/>
-			<input id="3" moduleid="9" outputid="0"/>
-			<input id="4" moduleid="10" outputid="0"/>
-			<input id="5" moduleid="11" outputid="0"/>
-		</inputs>
-		<outputs>
-			<output id="0"/>
-		</outputs>
-		<display x="1049" y="242" width="150" height="165"/>
-		<uiobject x="1051" y="130" width="0" height="0"/>
+		<uiobject x="739" y="278" width="0" height="0"/>
 	</module>
 	<module name="CascadeDetector2" id="4">
 		<parameters>
@@ -84,24 +59,22 @@
 			<param name="width">640</param>
 			<param name="height">480</param>
 			<param name="type">CV_8UC1</param>
-			<param name="fps">10</param>
-			<param name="detection_fps">1</param>
+			<param name="fps">1</param>
 			<param name="min_neighbors">2</param>
 			<param name="min_side">0</param>
 			<param name="scale_factor">1.2</param>
 			<param name="filter_file">modules/CascadeDetector/haarcascade_mcs_upperbody.xml</param>
 			<param name="color">(255,255,255)</param>
 			<param name="object_label">upper body</param>
-		</parameters>
+</parameters>
 		<inputs>
 			<input id="0" moduleid="0" outputid="0"/>
 		</inputs>
 		<outputs>
 			<output id="0"/>
-			<output id="1"/>
 		</outputs>
 		<display x="271" y="154" width="150" height="75"/>
-		<uiobject x="545" y="190" width="0" height="0"/>
+		<uiobject x="552" y="395" width="0" height="0"/>
 	</module>
 	<module name="CascadeDetector3" id="5">
 		<parameters>
@@ -109,24 +82,22 @@
 			<param name="width">640</param>
 			<param name="height">480</param>
 			<param name="type">CV_8UC1</param>
-			<param name="fps">10</param>
-			<param name="detection_fps">1</param>
+			<param name="fps">1</param>
 			<param name="min_neighbors">2</param>
 			<param name="min_side">0</param>
 			<param name="scale_factor">1.2</param>
 			<param name="filter_file">modules/CascadeDetector/haarcascade_profileface.xml</param>
 			<param name="color">(255,255,255)</param>
 			<param name="object_label">profile</param>
-		</parameters>
+</parameters>
 		<inputs>
 			<input id="0" moduleid="0" outputid="0"/>
 		</inputs>
 		<outputs>
 			<output id="0"/>
-			<output id="1"/>
 		</outputs>
 		<display x="275" y="255" width="150" height="75"/>
-		<uiobject x="548" y="314" width="0" height="0"/>
+		<uiobject x="554" y="511" width="0" height="0"/>
 	</module>
 	<module name="CascadeDetector4" id="6">
 		<parameters>
@@ -134,24 +105,22 @@
 			<param name="width">640</param>
 			<param name="height">480</param>
 			<param name="type">CV_8UC1</param>
-			<param name="fps">10</param>
-			<param name="detection_fps">1</param>
+			<param name="fps">1</param>
 			<param name="min_neighbors">2</param>
 			<param name="min_side">0</param>
 			<param name="scale_factor">1.2</param>
 			<param name="filter_file">modules/CascadeDetector/haarcascade_lefteye_2splits.xml</param>
 			<param name="color">(255,255,255)</param>
 			<param name="object_label">left eyes</param>
-		</parameters>
+</parameters>
 		<inputs>
 			<input id="0" moduleid="0" outputid="0"/>
 		</inputs>
 		<outputs>
 			<output id="0"/>
-			<output id="1"/>
 		</outputs>
 		<display x="275" y="372" width="150" height="75"/>
-		<uiobject x="405" y="471" width="0" height="0"/>
+		<uiobject x="553" y="630" width="0" height="0"/>
 	</module>
 	<module name="CascadeDetector5" id="7">
 		<parameters>
@@ -159,24 +128,22 @@
 			<param name="width">640</param>
 			<param name="height">480</param>
 			<param name="type">CV_8UC1</param>
-			<param name="fps">10</param>
-			<param name="detection_fps">1</param>
+			<param name="fps">1</param>
 			<param name="min_neighbors">2</param>
 			<param name="min_side">0</param>
 			<param name="scale_factor">1.2</param>
 			<param name="filter_file">modules/CascadeDetector/haarcascade_upperbody.xml</param>
 			<param name="color">(255,255,255)</param>
 			<param name="object_label">upper body B</param>
-		</parameters>
+</parameters>
 		<inputs>
 			<input id="0" moduleid="0" outputid="0"/>
 		</inputs>
 		<outputs>
 			<output id="0"/>
-			<output id="1"/>
 		</outputs>
 		<display x="273" y="496" width="150" height="75"/>
-		<uiobject x="558" y="568" width="0" height="0"/>
+		<uiobject x="556" y="747" width="0" height="0"/>
 	</module>
 	<module name="TrackerByFeatures2" id="8">
 		<parameters>
@@ -184,7 +151,6 @@
 			<param name="width">640</param>
 			<param name="height">480</param>
 			<param name="type">CV_8UC1</param>
-			<param name="fps">10</param>
 			<param name="max_matching_distance">0.4</param>
 		</parameters>
 		<inputs>
@@ -194,7 +160,7 @@
 			<output id="0"/>
 		</outputs>
 		<display x="655" y="155" width="150" height="75"/>
-		<uiobject x="745" y="195" width="0" height="0"/>
+		<uiobject x="743" y="394" width="0" height="0"/>
 	</module>
 	<module name="TrackerByFeatures3" id="9">
 		<parameters>
@@ -202,7 +168,6 @@
 			<param name="width">640</param>
 			<param name="height">480</param>
 			<param name="type">CV_8UC1</param>
-			<param name="fps">10</param>
 			<param name="max_matching_distance">0.4</param>
 		</parameters>
 		<inputs>
@@ -212,7 +177,7 @@
 			<output id="0"/>
 		</outputs>
 		<display x="652" y="252" width="150" height="75"/>
-		<uiobject x="744" y="317" width="0" height="0"/>
+		<uiobject x="743" y="510" width="0" height="0"/>
 	</module>
 	<module name="TrackerByFeatures4" id="10">
 		<parameters>
@@ -220,7 +185,6 @@
 			<param name="width">640</param>
 			<param name="height">480</param>
 			<param name="type">CV_8UC1</param>
-			<param name="fps">10</param>
 			<param name="max_matching_distance">0.4</param>
 		</parameters>
 		<inputs>
@@ -230,7 +194,7 @@
 			<output id="0"/>
 		</outputs>
 		<display x="655" y="376" width="150" height="75"/>
-		<uiobject x="744" y="450" width="0" height="0"/>
+		<uiobject x="741" y="632" width="0" height="0"/>
 	</module>
 	<module name="TrackerByFeatures5" id="11">
 		<parameters>
@@ -238,7 +202,6 @@
 			<param name="width">640</param>
 			<param name="height">480</param>
 			<param name="type">CV_8UC1</param>
-			<param name="fps">10</param>
 			<param name="max_matching_distance">0.4</param>
 		</parameters>
 		<inputs>
@@ -248,6 +211,25 @@
 			<output id="0"/>
 		</outputs>
 		<display x="654" y="500" width="150" height="75"/>
-		<uiobject x="745" y="567" width="0" height="0"/>
+		<uiobject x="740" y="744" width="0" height="0"/>
+	</module>
+<module id="12" name="RenderObjects12">
+<inputs>
+<input id="0" outputid="0" moduleid="0"/>
+<input id="1">
+<input outputid="0" moduleid="2"/>
+<input outputid="0" moduleid="8"/>
+<input outputid="0" moduleid="9"/>
+<input outputid="0" moduleid="10"/>
+<input outputid="0" moduleid="11"/>
+</input>
+</inputs>
+<outputs>
+<output id="0"/>
+</outputs>
+<parameters>
+<param name="class">RenderObjects</param>
+</parameters>
+		<uiobject x="1063" y="351" width="0" height="0"/>
 	</module>
 </application>

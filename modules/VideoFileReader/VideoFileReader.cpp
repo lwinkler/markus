@@ -25,6 +25,7 @@
 
 #include "VideoFileReader.h"
 #include "StreamImage.h"
+#include "util.h"
 
 #ifndef MARKUS_NO_GUI
 #include "ControllerInputStream.h"
@@ -41,7 +42,6 @@ VideoFileReader::VideoFileReader(ParameterStructure& xr_params):
 	m_output(Size(m_param.width, m_param.height), CV_8UC3) // Note: sizes will be overridden !
 {
 	AddOutputStream(0, new StreamImage("input", m_output, *this,	"Video stream"));
-	m_recordingFps = 0;
 }
 
 VideoFileReader::~VideoFileReader()
@@ -57,6 +57,8 @@ void VideoFileReader::Reset()
 		AddController(new ControllerInputStream(*this));
 #endif
 
+	m_beginTimeStamp = timeStampFromFileName(m_param.file);
+	LOG_DEBUG(m_logger, "Open " << m_param.file << " timestamps start at " << m_beginTimeStamp);
 	m_capture.release();
 	m_capture.open(m_param.file);
 	if(! m_capture.isOpened())
@@ -88,7 +90,9 @@ void VideoFileReader::Capture()
 		{
 			if(m_param.loop)
 			{
+				TIME_STAMP ts = m_lastTimeStamp;
 				Reset();
+				m_beginTimeStamp = ts;
 				// m_capture.release();
 				// m_capture.open(m_param.file);
 				if(!m_capture.grab())
@@ -99,13 +103,12 @@ void VideoFileReader::Capture()
 				// Note: there seems to be a 3 seconds lag when grabbing after the last frame. This is linked to format h264: MJPG is ok
 				m_endOfStream = true;
 				//std::exception e;
-				Pause(true);
 				throw EndOfStreamException("Capture of next frame failed", LOC);
 			}
 		}
 
 		m_capture.retrieve(m_output);
-		m_currentTimeStamp = m_capture.get(CV_CAP_PROP_POS_MSEC);
+		m_currentTimeStamp = m_beginTimeStamp + m_capture.get(CV_CAP_PROP_POS_MSEC);
 		//cout<<m_currentTimeStamp<<" - "<<m_lastTimeStamp<<endl;
 
 		// only break out of the loop once we fulfill the fps criterion

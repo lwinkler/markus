@@ -103,6 +103,10 @@ WebServiceException::WebServiceException(const string& x_descr, const string& x_
 	MkException(MK_EXCEPTION_WEBSERVICE, "web_service", "WebServiceException: " + x_descr, x_position, x_function)
 {}
 
+FatalException::FatalException(const string& x_descr, const string& x_position, const string& x_function) :
+	MkException(MK_EXCEPTION_FATAL, "fatal", "FatalException: " + x_descr, x_position, x_function)
+{}
+
 /**
 * @brief Serialize exception to JSON
 *

@@ -78,7 +78,7 @@ void MotionDetector::ProcessFrame()
 	split(m_input, channels);
 	m_value = 0;
 
-	m_event.Empty();
+	m_event.Clean();
 
 	for(int i = 0 ; i < m_input.channels() ; i++)
 	{
@@ -91,6 +91,8 @@ void MotionDetector::ProcessFrame()
 	m_state = (m_value >= m_param.motionThres);
 	if(m_state == true && oldState == false)
 		m_event.Raise("motion");
+	
+	LOG_DEBUG(m_logger, "Motion state " << m_state);
 	
 
 #ifdef MARKUS_DEBUG_STREAMS

@@ -37,12 +37,13 @@ using namespace std;
 */
 void ControllerBackground::StartOnlineLearning(string* xp_value)
 {
-	module.StartOnlineLearning(xp_value == nullptr ? false : boolValue(*xp_value));
+	Processable::WriteLock lock(m_module.RefLock());
+	m_module.StartOnlineLearning(xp_value == nullptr ? false : boolValue(*xp_value));
 }
 
 ControllerBackground::ControllerBackground(BackgroundSubtraction& rx_module) :
 	Controller("background"),
-	module(rx_module)
+	m_module(rx_module)
 {
 	m_actions.insert(make_pair("StartOnlineLearning", &ControllerBackground::StartOnlineLearning));
 }

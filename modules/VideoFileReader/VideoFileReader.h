@@ -78,12 +78,15 @@ private:
 protected:
 	void GetProperties();
 
+	// state
+	TIME_STAMP m_beginTimeStamp = 0;  /// Used to handle time stamps with loop=1
+
 	// output
 	cv::Mat m_output;
 
 	// temporary
 	cv::VideoCapture m_capture;
-	double m_recordingFps;
+	double m_recordingFps = 0;
 };
 
 #endif

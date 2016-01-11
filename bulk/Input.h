@@ -48,9 +48,9 @@ public:
 
 	virtual void Capture() = 0;
 	inline const std::string& GetName()const {return m_name;}
-	inline virtual bool IsEndOfStream() const {return m_endOfStream;}
+	inline virtual bool AbortCondition() const override {return m_endOfStream;}
 	inline void ProcessFrame() {Capture();}
-	virtual inline bool IsInput() {return true;}
+	virtual inline bool IsInput() const override {return true;}
 
 protected:
 	bool m_endOfStream;

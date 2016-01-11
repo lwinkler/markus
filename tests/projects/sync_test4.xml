@@ -80,11 +80,13 @@
 <module id="8" name="RenderObjects8">
 <inputs>
 <input id="0" outputid="0" moduleid="0"/>
-<input id="1" outputid="0" moduleid="9"/>
-<input id="2" outputid="0" moduleid="9"/>
-<input id="3" outputid="0" moduleid="10"/>
-<input id="4" outputid="0" moduleid="14"/>
-<input id="5" outputid="0" moduleid="14"/>
+<input id="1">
+<input outputid="0" moduleid="9"/>
+<input outputid="0" moduleid="9"/>
+<input outputid="0" moduleid="10"/>
+<input outputid="0" moduleid="14"/>
+<input outputid="0" moduleid="14"/>
+</input>
 </inputs>
 <outputs>
 <output id="0"/>
@@ -93,7 +95,6 @@
 <param name="class">RenderObjects</param>
 <param name="width">64</param>
 <param name="height">48</param>
-<param name="allow_unsync_input">0</param>
 <param name="fps">1</param>
 </parameters>
 <uiobject x="1334" y="474" width="0" height="0"/>
