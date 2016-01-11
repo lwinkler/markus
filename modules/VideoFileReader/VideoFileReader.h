@@ -68,7 +68,7 @@ public:
 	int GetMsec();
 	int GetFrame();
 	int GetMaxMsec();
-	int GetMaxFrame();
+	int GetFrameCount();
 	virtual double GetRecordingFps() const override;
 
 private:

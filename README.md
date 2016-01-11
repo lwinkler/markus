@@ -103,6 +103,12 @@ First compilation commands:
 
 Then simply use 'make' as for any other projects. 
 
+### Running in a Docker container
+A Dockerfile has been created (by Gaetan Collaud) to run Markus as a Docker container. This is still experimental.
+
+	docker build -t markus/markus .
+	docker run -it markus/markus /home/markus/markus
+
 Getting started
 ===============
 Editor

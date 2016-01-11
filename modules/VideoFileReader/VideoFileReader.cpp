@@ -185,7 +185,7 @@ int VideoFileReader::GetMaxMsec()
 }
 
 // Get reading time in frames
-int VideoFileReader::GetMaxFrame()
+int VideoFileReader::GetFrameCount()
 {
 	return m_capture.get(CV_CAP_PROP_FRAME_COUNT);
 }
