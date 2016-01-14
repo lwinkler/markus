@@ -41,8 +41,8 @@ public:
 	Event();
 	~Event();
 	void Clean();
-	void Raise(const std::string& x_eventName, TIME_STAMP x_absTimeEvent = 0);
-	void Raise(const std::string& x_eventName, const Object& m_object, TIME_STAMP x_absTimeEvent = 0);
+	void Raise(const std::string& x_eventName, TIME_STAMP x_absTimeNotif, TIME_STAMP x_absTimeEvent);
+	void Raise(const std::string& x_eventName, const Object& m_object, TIME_STAMP x_absTimeNotif, TIME_STAMP x_absTimeEvent);
 	inline bool IsRaised() const {return m_eventName != "";}
 	inline const std::string& GetEventName() const {return m_eventName;}
 	inline const Object& GetObject() const {return m_object;}

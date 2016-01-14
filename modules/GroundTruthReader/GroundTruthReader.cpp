@@ -107,7 +107,7 @@ void GroundTruthReader::ProcessFrame()
 	if (m_oldState != m_state)
 	{
 		// Raise an alarm
-		m_event.Raise("Ground Truth changed");
+		m_event.Raise("Ground Truth changed", m_currentTimeStamp, m_currentTimeStamp);
 		m_oldState = m_state;
 
 		// Update tracked object

@@ -222,14 +222,14 @@ bool Processable::ProcessAndCatch()
 *
 * @param x_exception Exception to be notified
 */
-void Processable::NotifyException(const MkException& x_exception)
+void Processable::NotifyException(const MkException& x_exception, TIME_STAMP x_currentTimeStamp)
 {
 	InterruptionManager::GetInst().AddEvent("exception." + x_exception.GetName());// TODO keep this here ?
 	stringstream ss;
 	x_exception.Serialize(ss, "");
 	Event ev;
 	ev.AddExternalInfo("exception", ss);
-	ev.Raise("exception");
+	ev.Raise("exception", x_currentTimeStamp, x_currentTimeStamp);
 	ev.Notify(GetContext(), true);
 }
 
@@ -244,7 +244,7 @@ void Processable::Status() const
 	ss >> root;
 	root["recovered"] = m_hasRecovered;
 	Event evt;
-	evt.Raise("status");
+	evt.Raise("status", 0, 0); // TODO: Use time stamp
 	ss.clear();
 	ss << root;
 	evt.AddExternalInfo("exception", ss);

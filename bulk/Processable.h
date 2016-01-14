@@ -79,7 +79,7 @@ public:
 	inline const MkException& LastException() const {return m_lastException;}
 
 protected:
-	void NotifyException(const MkException& x_exeption);
+	void NotifyException(const MkException& x_exeption, TIME_STAMP x_currentTimeStamp = 0); // TODO: Add the time stamp to processable !
 
 	InterruptionManager& m_interruptionManager;
 	boost::shared_mutex m_lock;

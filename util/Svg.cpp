@@ -42,6 +42,7 @@ Svg::Svg(const std::string& x_fileName, const Size& x_size) :
 	m_svg.SetAttribute("width",  SVG_WIDTH);
 	m_svg.SetAttribute("height", SVG_HEIGHT);
 	m_svg.SetAttribute("style",  SVG_STYLE);
+	m_svg.SetAttribute("xmlns", "http://www.w3.org/2000/svg");
 }
 
 void Svg::Draw(const Object& x_object, const string& x_color)
@@ -68,9 +69,11 @@ void Svg::Line(const Point& x_point1, const Point& x_point2, const string& x_col
 void Svg::LinkImage(const std::string& x_file)
 {
 	ConfigReader image = m_svg.Append("image");
-	image.SetAttribute("xlink:href", x_file);
-	image.SetAttribute("x", 0);
-	image.SetAttribute("y", 0);
+	// link to an image can later create a broken link
+	// image.SetAttribute("xlink:href", x_file);
+	// No need to set x,y -> set to 0 by default
+	// image.SetAttribute("x", 0);
+	// image.SetAttribute("y", 0);
 	image.SetAttribute("width", SVG_WIDTH);
 	image.SetAttribute("height", SVG_HEIGHT);
 }
@@ -78,7 +81,7 @@ void Svg::LinkImage(const std::string& x_file)
 void Svg::LinkImage(const std::string& x_file, const Rect& x_rect)
 {
 	ConfigReader image = m_svg.Append("image");
-	image.SetAttribute("xlink:href", x_file);
+	// image.SetAttribute("xlink:href", x_file);
 	image.SetAttribute("x", x_rect.x);
 	image.SetAttribute("y", x_rect.y);
 	image.SetAttribute("width", x_rect.width);

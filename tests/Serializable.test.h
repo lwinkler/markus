@@ -162,7 +162,7 @@ public:
 		fh.Update(006, FeatureInt(5));
 		m_obj2.AddFeature("fh", fh.CreateCopy());
 
-		m_evt2.Raise("name2", m_obj2);
+		m_evt2.Raise("name2", m_obj2, 123, 6345);
 	}
 	void tearDown()
 	{
@@ -215,7 +215,7 @@ public:
 	{
 		Event evt1;
 		testSerialization(evt1, "Event1");
-		evt1.Raise("name1");
+		evt1.Raise("name1", 242, 234252345);
 		testSerialization(evt1, "Event2");
 		testSerialization(m_evt2, "Event3");
 	}

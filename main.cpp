@@ -395,7 +395,7 @@ int main(int argc, char** argv)
 		// Notify the parent process (for monitoring purposes)
 		Event ev1;
 		ev1.AddExternalInfo("pid", getpid());
-		ev1.Raise("started");
+		ev1.Raise("started", 0, 0);
 		ev1.Notify(context, true);
 
 		if(args.nogui)

@@ -54,13 +54,13 @@ void Event::Randomize(unsigned int& xr_seed, const string& x_requirement, const 
 	{
 		if(x_requirement == "" && rand_r(&xr_seed) < RAND_MAX /10)
 		{
-			Raise("random");
+			Raise("random", rand_r(&xr_seed), rand_r(&xr_seed));
 		}
 		else
 		{
 			Object obj("random");
 			obj.Randomize(xr_seed, x_requirement, x_size);
-			Raise("random", obj);
+			Raise("random", obj, rand_r(&xr_seed), rand_r(&xr_seed));
 		}
 	}
 }
@@ -137,11 +137,13 @@ void Event::Clean()
 *
 * @param x_eventName    Name of the event (e.g. "motion", "intrusion")
 * @param x_object       An object linked with the event. The features of the object will be used as the features of the event.
-* @param x_absTimeEvent Optional: The time at which the event started. Use this field if events are raised with a delay.
+* @param x_absTimeNotif The time at which the event occured
+* @param x_absTimeEvent The time at which the event started. The times will differ if events are raised with a delay.
 */
-void Event::Raise(const string& x_eventName, const Object& x_object, TIME_STAMP x_absTimeEvent)
+void Event::Raise(const string& x_eventName, const Object& x_object, TIME_STAMP x_absTimeNotif, TIME_STAMP x_absTimeEvent)
 {
-	m_absTimeEvent = x_absTimeEvent == 0 ? getAbsTimeMs() : x_absTimeEvent;
+	m_absTimeEvent = x_absTimeEvent; // TODO rename abstime to something
+	m_absTimeNotif = x_absTimeNotif;
 	if(IsRaised())
 		LOG_WARN(m_logger, "The same event is raised several times. Older events are overriden");
 	m_eventName       = x_eventName;
@@ -152,12 +154,14 @@ void Event::Raise(const string& x_eventName, const Object& x_object, TIME_STAMP 
 * @brief Raise an event without features
 *
 * @param x_eventName    Name of the event (e.g. "motion", "intrusion")
-* @param x_absTimeEvent Optional: The time at which the event started. Use this field if events are raised with a delay.
+* @param x_absTimeNotif The time at which the event occured
+* @param x_absTimeEvent The time at which the event started. The times will differ if events are raised with a delay.
 */
-void Event::Raise(const string& x_eventName, TIME_STAMP x_absTimeEvent)
+void Event::Raise(const string& x_eventName, TIME_STAMP x_absTimeNotif, TIME_STAMP x_absTimeEvent)
 {
 	InterruptionManager::GetInst().AddEvent("event." + x_eventName);// TODO keep this here ?
-	m_absTimeEvent = x_absTimeEvent == 0 ? getAbsTimeMs() : x_absTimeEvent;
+	m_absTimeEvent = x_absTimeEvent;
+	m_absTimeNotif = x_absTimeNotif;
 	if(IsRaised())
 		LOG_WARN(m_logger, "The same event is raised several times. Older events are overriden");
 	m_eventName = x_eventName;

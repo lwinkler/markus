@@ -75,7 +75,7 @@ void RandomEventGenerator::Capture()
 		// Generate an event with an associated object
 		if(m_param.nbFeatures == 0)
 		{
-			m_event.Raise("random");
+			m_event.Raise("random", m_currentTimeStamp, m_currentTimeStamp);
 		}
 		else
 		{
@@ -101,7 +101,7 @@ void RandomEventGenerator::Capture()
 				l = dynamic_cast<const FeatureFloat&>(obj.GetFeature("feat4")).value * 5 + 1;
 			circle(m_output, Point(x, y), r, Scalar(100, c, 255 - c), l);
 
-			m_event.Raise("random", obj);
+			m_event.Raise("random", obj, m_currentTimeStamp, m_currentTimeStamp);
 		}
 		m_timeNextEvent = m_currentTimeStamp + m_param.timeInterval * 1000;
 	}
