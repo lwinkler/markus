@@ -57,11 +57,12 @@ public:
 			++itpts;
 		}
 	}
-	inline int Size() const {return points.size();}
+	inline size_t Size() const {return points.size();}
 	virtual void Serialize(std::ostream& x_out, const std::string& x_dir ="") const;
 	virtual void Deserialize(std::istream& x_in, const std::string& x_dir ="");
 
 	std::vector<cv::Point2d> points; //TODO : make protected
+protected:
 	double m_width  = 0;
 	double m_height = 0;
 };
