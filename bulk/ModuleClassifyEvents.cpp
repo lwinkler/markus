@@ -6,7 +6,7 @@
 *    This file is not part of Markus.
 -------------------------------------------------------------------------------------*/
 
-#include "ClassifyEvents.h"
+#include "ModuleClassifyEvents.h"
 #include "StreamEvent.h"
 #include "StreamImage.h"
 #include "StreamDebug.h"
@@ -16,9 +16,9 @@
 using namespace std;
 using namespace cv;
 
-log4cxx::LoggerPtr ClassifyEvents::m_logger(log4cxx::Logger::getLogger("ClassifyEvents"));
+log4cxx::LoggerPtr ModuleClassifyEvents::m_logger(log4cxx::Logger::getLogger("ModuleClassifyEvents"));
 
-ClassifyEvents::ClassifyEvents(ParameterStructure& xr_params) :
+ModuleClassifyEvents::ModuleClassifyEvents(ParameterStructure& xr_params) :
 	Module(xr_params),
 	m_param(dynamic_cast<Parameters&>(xr_params))
 {
@@ -36,11 +36,11 @@ ClassifyEvents::ClassifyEvents(ParameterStructure& xr_params) :
 #endif
 }
 
-ClassifyEvents::~ClassifyEvents(void )
+ModuleClassifyEvents::~ModuleClassifyEvents(void )
 {
 }
 
-void ClassifyEvents::Reset()
+void ModuleClassifyEvents::Reset()
 {
 	Module::Reset();
 	// Add a new control to play forward and rewind
@@ -48,7 +48,7 @@ void ClassifyEvents::Reset()
 		AddController(new ControllerEvent(*this));
 }
 
-void ClassifyEvents::ProcessFrame()
+void ModuleClassifyEvents::ProcessFrame()
 {
 	m_eventOut.Clean();
 	if(! m_eventIn.IsRaised())
@@ -64,7 +64,7 @@ void ClassifyEvents::ProcessFrame()
 		m_eventOut = m_eventIn;
 }
 
-void ClassifyEvents::PushEvent()
+void ModuleClassifyEvents::PushEvent()
 {
 	if(true)// if(m_eventToValidate.IsRaised())
 	{
@@ -80,7 +80,7 @@ void ClassifyEvents::PushEvent()
 	}
 }
 
-void ClassifyEvents::PopEvent()
+void ModuleClassifyEvents::PopEvent()
 {
 	if(!m_events.empty())
 	{
@@ -108,19 +108,19 @@ void ClassifyEvents::PopEvent()
 
 
 /// Consider the last event as invalid and train the classifier
-void ClassifyEvents::InvalidateLastEvent()
+void ModuleClassifyEvents::InvalidateLastEvent()
 {
 	LOG_WARN(m_logger, "This method is empty and must be redefined in a children");
 }
 
 /// Consider the last event as valid and train the classifier
-void ClassifyEvents::ValidateLastEvent()
+void ModuleClassifyEvents::ValidateLastEvent()
 {
 	LOG_WARN(m_logger, "This method must be redefined in a children");
 }
 
 /// Return a probability [0..1] that the event is valid
-float ClassifyEvents::PredictEventValidity(const Event& x_event)
+float ModuleClassifyEvents::PredictEventValidity(const Event& x_event)
 {
 	return 1;
 }

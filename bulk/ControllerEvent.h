@@ -26,7 +26,7 @@
 
 #include "Controller.h"
 
-class ClassifyEvents;
+class ModuleClassifyEvents;
 
 /**
 * @brief Control class for an event classifier
@@ -34,7 +34,7 @@ class ClassifyEvents;
 class ControllerEvent : public Controller
 {
 public:
-	ControllerEvent(ClassifyEvents& rx_module);
+	ControllerEvent(ModuleClassifyEvents& rx_module);
 	~ControllerEvent() {}
 	MKCLASS("ControllerEvent")
 
@@ -50,6 +50,6 @@ public:
 
 protected:
 	std::map<std::string, const action> m_actions;
-	ClassifyEvents  & m_module;
+	ModuleClassifyEvents  & m_module;
 };
 #endif

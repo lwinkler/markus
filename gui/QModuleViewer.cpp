@@ -167,7 +167,6 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 	if(m_currentStream != nullptr)
 	{
 		{
-			// TODO : Clarify
 			// note: do we lock the module before reading ? this may be dangerous and may lead to
 			//       corrupted images, but avoids two problems:
 			//        - slow interaction with the GUI
@@ -360,7 +359,7 @@ void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qimg)
 	// So far only char images are supported
 	if(mat->type() != CV_8UC1 && mat->type() != CV_8UC3)
 	{
-		printf("Warning: unsupported image type to be displayed"); // TODO: LOG
+		printf("Warning: unsupported image type to be displayed");
 		return;
 	}
 

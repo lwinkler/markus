@@ -22,7 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ControllerEvent.h"
-#include "ClassifyEvents/ClassifyEvents.h"
+#include "ModuleClassifyEvents.h"
 
 using namespace std;
 
@@ -53,7 +53,7 @@ void ControllerEvent::Invalidate(string* xp_value)
 	m_module.PopEvent();
 }
 
-ControllerEvent::ControllerEvent(ClassifyEvents& rx_module) :
+ControllerEvent::ControllerEvent(ModuleClassifyEvents& rx_module) :
 	Controller("event"),
 	m_module(rx_module)
 {
