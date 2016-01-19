@@ -39,7 +39,7 @@ public:
 	~AnnotationAssFileReader();
 	bool ReadNextAnnotation(std::string& rx_subText);
 	void Open(const std::string& x_file);
-	cv::Rect GetBox();
+	cv::Rect GetBox() const override;
 
 protected:
 	double m_widthProportion;

@@ -59,7 +59,7 @@ void AnnotationAssFileReader::Open(const string& x_file)
 }
 
 
-Rect AnnotationAssFileReader::GetBox()
+Rect AnnotationAssFileReader::GetBox() const
 {
 	return m_boudingBox;
 }

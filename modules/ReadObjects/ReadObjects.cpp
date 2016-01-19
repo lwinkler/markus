@@ -24,13 +24,11 @@
 #include "ReadObjects.h"
 #include "StreamState.h"
 #include "util.h"
+#include "AnnotationFileReader.h"
 #include "feature_util.h"
 #include "Manager.h"
 
 #include <ctime>
-
-#define SEP "\t"
-
 
 using namespace std;
 using namespace cv;
@@ -42,7 +40,6 @@ ReadObjects::ReadObjects(ParameterStructure& xr_params)
 {
 	// Init input streams
 	AddOutputStream(0, new StreamObject("object", m_ObjectOut, *this, "Output object read from file"));
-	mp_annotationReader = nullptr;
 }
 
 ReadObjects::~ReadObjects(void)
@@ -59,7 +56,7 @@ void ReadObjects::Reset()
 	m_endOfStream = false;
 
 	CLEAN_DELETE(mp_annotationReader);
-	mp_annotationReader = new AnnotationFileReader();
+	mp_annotationReader = createAnnotationFileReader(m_param.file, m_param.width, m_param.height);
 	if (!m_param.file.empty())
 	{
 		string path = m_param.file;
@@ -69,12 +66,6 @@ void ReadObjects::Reset()
 		}
 		mp_annotationReader->Open(path);
 	}
-	else
-	{
-		LOG_WARN(m_logger, "No input file given");
-	}
-
-	// m_outputFile<<"time"<<SEP<<"object"<<SEP<<"feature"<<SEP<<"value"<<SEP<<"mean"<<SEP<<"sqVariance"<<SEP<<"initial"<<SEP<<"min"<<SEP<<"max"<<SEP<<"nbSamples"<<endl;
 }
 
 void ReadObjects::Capture()
@@ -85,7 +76,7 @@ void ReadObjects::Capture()
 
 	string text;
 
-	if(!mp_annotationReader->ReadNextAnnotation(text)) // TODO : Currently the reader returns 1 on the last read. It should return it only at the next read.
+	if(!mp_annotationReader->ReadNextAnnotation(text))
 	{
 		m_endOfStream = true;
 		throw EndOfStreamException("Cannot read next annotation", LOC);

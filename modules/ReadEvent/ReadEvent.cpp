@@ -25,9 +25,9 @@
 #include "StreamEvent.h"
 #include "StreamImage.h"
 #include "util.h"
+#include "AnnotationFileReader.h"
 #include "Manager.h"
 
-#define SEP "\t"
 
 using namespace std;
 using namespace cv;
@@ -43,8 +43,6 @@ ReadEvent::ReadEvent(ParameterStructure& xr_params)
 	AddOutputStream(0, new StreamEvent("event", m_event, *this, "Input event to be logged"));
 	AddOutputStream(1, new StreamImage("image", m_outputIm1, *this, "Video output for image extraction (optional)"));
 	AddOutputStream(2, new StreamImage("mask" , m_outputIm2, *this, "Binary mask for image extraction (optional)"));
-
-	mp_annotationReader = nullptr;
 }
 
 ReadEvent::~ReadEvent(void)
@@ -58,8 +56,7 @@ void ReadEvent::Reset()
 	m_event.Clean();
 
 	CLEAN_DELETE(mp_annotationReader);
-	mp_annotationReader = new AnnotationFileReader();
-	mp_annotationReader->Open(m_param.file);
+	mp_annotationReader = createAnnotationFileReader(m_param.file, m_param.width, m_param.height);
 }
 
 void ReadEvent::Capture()

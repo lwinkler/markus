@@ -26,8 +26,8 @@
 
 #include "Input.h"
 #include "Event.h"
-#include "AnnotationFileReader.h"
 
+class AnnotationFileReader;
 
 /**
 * @brief Read an event from an annotation file
@@ -71,7 +71,7 @@ protected:
 	cv::Mat m_outputIm2;
 
 	// temporary
-	AnnotationFileReader* mp_annotationReader;
+	AnnotationFileReader* mp_annotationReader = nullptr;
 };
 
 #endif

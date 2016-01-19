@@ -28,6 +28,7 @@
 #include "define.h"
 
 class Event;
+class AnnotationFileReader;
 
 /// this file contains some usefull functions and methods. To be included in .cpp files
 void adjust(const cv::Mat& im_in, cv::Mat& im_out, cv::Mat*& tmp1, cv::Mat*& tmp2);
@@ -66,6 +67,8 @@ template<class T> void mergeVector(std::vector<T>& vdest, const std::vector<T>& 
 			vdest.push_back(ori);
 	}
 }
+
+AnnotationFileReader* createAnnotationFileReader(const std::string& x_fileName, int x_width, int x_height);
 
 
 #endif

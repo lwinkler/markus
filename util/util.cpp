@@ -25,6 +25,8 @@
 #include "Manager.h"
 #include "Event.h"
 #include "MkException.h"
+#include "AnnotationSrtFileReader.h"
+#include "AnnotationAssFileReader.h"
 #include <fstream>
 #include <cstdio>
 #include <opencv2/opencv.hpp>
@@ -569,3 +571,30 @@ void addExternalImage(const Mat& x_image, const std::string& x_name, const std::
 	xr_event.AddExternalFile(x_name, x_fileWithPath);
 }
 
+
+/**
+* @brief Create a reader for an annotation file (*.ass or *.srt)
+*
+* @param x_fileName     Name of the file, for
+* @param x_fileWithPath Path to image
+* @param xr_event       Event to modify
+* @return Pointer to the new object
+*
+*/
+AnnotationFileReader* createAnnotationFileReader(const string& x_fileName, int x_width, int x_height)
+{
+	AnnotationFileReader* p = nullptr;
+	if(x_fileName.empty())
+		throw MkException("Name for file is empty", LOC);
+	if(x_fileName.substr(x_fileName.find_last_of(".") + 1) == "ass")
+	{
+		p = new AnnotationAssFileReader(x_width, x_height);
+	}
+	else if(x_fileName.substr(x_fileName.find_last_of(".") + 1) == "srt")
+	{
+		p = new AnnotationSrtFileReader();
+	}
+	else throw MkException("Invalid file name : " + x_fileName, LOC);
+	p->Open(x_fileName);
+	return p;
+}

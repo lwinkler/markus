@@ -117,70 +117,6 @@ void AnnotationFileReader::Open(const string& x_file)
 	}
 }
 
-bool AnnotationFileReader::ReadNextAnnotation(string& rx_subText)
-{
-	if(! m_srtFile.good())
-	{
-		LOG_DEBUG(m_logger, "End of subtitle file");
-		rx_subText = "";
-		return false;
-	}
-
-	string line, tmp;
-	try
-	{
-		// Read next subtitle
-		// 2
-		// 00:00:30,700 --> 00:00:31,900
-		// state_0
-
-		while(line.size() == 0)
-		{
-			m_srtFile >> line;
-			if(! m_srtFile.good())
-				throw MkException("End of file in AnnotationFileReader", LOC);
-		}
-		int num = atoi(line.c_str());
-		LOG_DEBUG(m_logger, "Subtitle nb "<<num);
-		if(num != m_num + 1)
-			LOG_WARN(m_logger, "Missing subtitle number "<<(m_num + 1));
-		m_num = num;
-		//safeGetline(m_srtFile, line);
-		//istringstream ss(line);
-		//ss >> m_srtStart >> tmp >> m_srtEnd;
-		m_srtFile >> m_srtStart;
-		m_srtFile >> tmp;
-		if(tmp != "-->")
-			throw MkException("Subtitle format error: must contain '-->'", LOC);
-		m_srtFile >> m_srtEnd;
-
-		SafeGetline(m_srtFile, line); // end of line: must be empty
-		if(! line.empty())
-			throw MkException("Subtitle format error. There must be an empty line after subtitle.", LOC);
-		SafeGetline(m_srtFile, line);
-
-		rx_subText = "";
-		while(line.size() != 0)
-		{
-			rx_subText += line + " ";
-			SafeGetline(m_srtFile, line);
-			if(! m_srtFile.good())
-				throw MkException("End of file in AnnotationFileReader", LOC);
-		}
-		LOG_DEBUG(m_logger, "Read next sub: "<<rx_subText);
-	}
-	catch(MkException& e)
-	{
-		LOG_WARN(m_logger, "Exception while reading .srt file in AnnotationFileReader: " << e.what());
-		rx_subText = "";
-		m_srtStart = msToTimeStamp(0);
-		m_srtEnd   = msToTimeStamp(0);
-		return false;
-	}
-	return true;
-}
-
-
 string AnnotationFileReader::ReadAnnotationForTimeStamp(TIME_STAMP x_current)
 {
 	if(! m_srtFile.good())
@@ -201,9 +137,4 @@ string AnnotationFileReader::ReadAnnotationForTimeStamp(TIME_STAMP x_current)
 	if(current >= m_srtStart && current <= m_srtEnd)
 		return m_text;
 	else return "";
-}
-
-Rect AnnotationFileReader::GetBox()
-{
-	return Rect();
 }

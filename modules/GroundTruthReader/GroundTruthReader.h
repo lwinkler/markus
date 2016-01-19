@@ -26,11 +26,10 @@
 
 #include "Module.h"
 #include "StreamObject.h"
-#include "AnnotationAssFileReader.h"
-#include "AnnotationSrtFileReader.h"
 #include "Event.h"
 
 
+class AnnotationFileReader;
 
 /**
 * @brief Read a ground truth file
@@ -89,7 +88,7 @@ protected:
 #endif
 
 	// temp
-	AnnotationFileReader* mp_annotationReader;
+	AnnotationFileReader* mp_annotationReader = nullptr;
 };
 
 #endif
