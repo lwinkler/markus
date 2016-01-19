@@ -208,24 +208,13 @@ void Module::Process()
 	WriteLock lock(m_lock);
 	try
 	{
-		/*
-		// Timestamp of the module is given by the input stream
-		m_currentTimeStamp = 0;
-		if(!m_inputStreams.empty())
-		{
-			m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected();
-		}
-		else if(! m_param.autoProcess)
-			throw MkException("Module must have at least one input or have parameter auto_process=true", LOC); // TODO: Check at the beginnning
-			*/
-
-#ifdef MARKUS_DEBUG_STREAMS
-		// if(m_currentTimeStamp == m_lastTimeStamp)
-			// LOG_WARN(m_logger, "Timestamp are not increasing correctly");
-#endif
 		if(!m_param.autoProcess && !ProcessingCondition())
 			return;
 		ComputeCurrentTimeStamp();
+#ifdef MARKUS_DEBUG_STREAMS
+		if(m_currentTimeStamp == m_lastTimeStamp)
+			LOG_WARN(m_logger, "Timestamp are not increasing correctly");
+#endif
 
 		// Process this frame
 
