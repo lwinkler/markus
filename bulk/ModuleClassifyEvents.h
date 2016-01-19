@@ -54,9 +54,9 @@ public:
 
 	virtual void ProcessFrame();
 	void Reset();
-	virtual void InvalidateLastEvent();
-	virtual void ValidateLastEvent();
-	virtual float PredictEventValidity(const Event& x_event);
+	virtual void InvalidateLastEvent() = 0;
+	virtual void ValidateLastEvent() = 0;
+	virtual float PredictEventValidity(const Event& x_event) = 0;
 	void PushEvent();
 	void PopEvent();
 

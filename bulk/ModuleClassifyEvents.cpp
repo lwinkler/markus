@@ -101,26 +101,3 @@ void ModuleClassifyEvents::PopEvent()
 	}
 	else LOG_WARN(m_logger, "Cannot call PopEvent, event list is empty");
 }
-
-// ---------------------------------------------------------------------------------
-// The following functions must be redefined
-// ---------------------------------------------------------------------------------
-
-
-/// Consider the last event as invalid and train the classifier
-void ModuleClassifyEvents::InvalidateLastEvent()
-{
-	LOG_WARN(m_logger, "This method is empty and must be redefined in a children");
-}
-
-/// Consider the last event as valid and train the classifier
-void ModuleClassifyEvents::ValidateLastEvent()
-{
-	LOG_WARN(m_logger, "This method must be redefined in a children");
-}
-
-/// Return a probability [0..1] that the event is valid
-float ModuleClassifyEvents::PredictEventValidity(const Event& x_event)
-{
-	return 1;
-}
