@@ -50,7 +50,7 @@ template<> void StreamState::ConvertInput()
 	const StreamState * pstream = dynamic_cast<const StreamState*>(m_connected);
 	if(pstream == nullptr)
 		throw MkException("Stream of state " + GetName() + " is not correctly connected", LOC);
-	m_object = pstream->GetObject();
+	m_object = pstream->GetContent();
 }
 
 /// Render : to display the state we simply color the image in black/white

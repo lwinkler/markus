@@ -65,5 +65,5 @@ bool EventToObjects::IsInputProcessed() const
 {
 	const StreamEvent* pStream =  dynamic_cast<const StreamEvent*>(&m_inputStreams.at(0)->GetConnected());
 	assert(pStream != nullptr);
-	return m_event.IsRaised() || pStream->GetObject().IsRaised(); // TODO: Rename to GetContent
+	return m_event.IsRaised() || pStream->GetContent().IsRaised();
 }

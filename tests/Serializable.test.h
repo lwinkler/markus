@@ -239,7 +239,7 @@ public:
 	{
 		vector<Object> objects;
 		StreamObject stream2("streamObject", objects, *mp_fakeInput, "A stream of objects");
-		stream2.RefObject().push_back(m_obj2);
+		stream2.RefContent().push_back(m_obj2);
 		testSerialization(stream2, "StreamObject");
 	}
 
