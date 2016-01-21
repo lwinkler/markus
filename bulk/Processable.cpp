@@ -224,7 +224,7 @@ bool Processable::ProcessAndCatch()
 */
 void Processable::NotifyException(const MkException& x_exception)
 {
-	InterruptionManager::GetInst().AddEvent("exception." + x_exception.GetName());// TODO keep this here ?
+	InterruptionManager::GetInst().AddEvent("exception." + x_exception.GetName());
 	stringstream ss;
 	x_exception.Serialize(ss, "");
 	Event ev;

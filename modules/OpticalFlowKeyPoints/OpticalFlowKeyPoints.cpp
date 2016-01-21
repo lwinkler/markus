@@ -78,7 +78,7 @@ void OpticalFlowKeyPoints::ProcessFrame()
 	{
 		// KeyPoint keypoint = dynamic_cast<const FeatureKeyPoint&>(itkp->GetFeature("keypoint")).keypoint;
 		// pointsIn.push_back(keypoint.pt);
-		pointsIn.push_back(Point2f(elem.posX, elem.posY)); // TODO Add to object class ?
+		pointsIn.push_back(elem.Center());
 	}
 
 	// If just initialized

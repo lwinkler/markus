@@ -92,7 +92,7 @@ void GroundTruthReader::ProcessFrame()
 	if(text != "")
 	{
 		// looking to match a part of pattern
-		m_state = m_param.pattern.find(text) != string::npos; // TODO: Improve this with regexp
+		m_state = m_param.pattern.find(text) != string::npos;
 
 #ifdef MARKUS_DEBUG_STREAMS
 		Scalar color = m_state ? Scalar(0, 255, 0) : Scalar(0, 0, 255);
