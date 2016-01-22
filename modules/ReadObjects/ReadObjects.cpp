@@ -56,7 +56,6 @@ void ReadObjects::Reset()
 	m_endOfStream = false;
 
 	CLEAN_DELETE(mp_annotationReader);
-	mp_annotationReader = createAnnotationFileReader(m_param.file, m_param.width, m_param.height);
 	if (!m_param.file.empty())
 	{
 		string path = m_param.file;
@@ -64,8 +63,9 @@ void ReadObjects::Reset()
 		{
 			path = GetContext().GetOutputDir() + "/" + path;
 		}
-		mp_annotationReader->Open(path);
+		mp_annotationReader = createAnnotationFileReader(path, m_param.width, m_param.height);
 	}
+	else mp_annotationReader = createAnnotationFileReader("", m_param.width, m_param.height);
 }
 
 void ReadObjects::Capture()
