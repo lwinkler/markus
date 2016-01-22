@@ -193,7 +193,6 @@ public:
 			mp_fakeModule1->ProcessFrame();
 			for(auto input : mp_fakeModule1->GetInputStreamList())
 			{
-				// TODO: This could be improved
 				int id = input.first;
 				mp_fakeModule2->RefInputStreamById(id).ConvertInput();
 				mp_fakeModule3->RefInputStreamById(id).ConvertInput();

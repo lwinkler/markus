@@ -115,7 +115,6 @@ void Object::Deserialize(istream& x_in, const string& x_dir)
 	height = root["height"].asDouble();
 
 	m_feats.clear();
-	// TODO: JsonCpp has a bug for serializing floats !
 
 	// Get an instance of the feature factory
 	const FactoryFeatures& factory(Factories::featuresFactoryBySignature());

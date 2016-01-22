@@ -13,7 +13,7 @@
   font-family: 'Open Sans';
   font-style: normal;
   font-weight: 400;
- 	/* TODO: Find a compatible font
+ 	/* note: Maybe find a compatible font
  		src:local('Open Sans'), 
  		local('OpenSans'),
  		url("OpenSans-Regular.ttf") format('truetype'),

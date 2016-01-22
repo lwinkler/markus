@@ -6,3 +6,6 @@ Known problems
 Improvements
 ============
 - Deserialization SHOULD ALWAYS check if the value exists
+- JsonCpp has a bug for serializing floats !
+- Check that all parameters are always initialized
+- InterruptionManager should be its own module and be automatically connected

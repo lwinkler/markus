@@ -159,7 +159,7 @@ void Event::Raise(const string& x_eventName, const Object& x_object, TIME_STAMP 
 */
 void Event::Raise(const string& x_eventName, TIME_STAMP x_absTimeNotif, TIME_STAMP x_absTimeEvent)
 {
-	InterruptionManager::GetInst().AddEvent("event." + x_eventName);// TODO keep this here ?
+	InterruptionManager::GetInst().AddEvent("event." + x_eventName);
 	m_timeStampEvent = x_absTimeEvent;
 	m_timeStampNotif = x_absTimeNotif;
 	if(IsRaised())
