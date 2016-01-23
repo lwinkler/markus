@@ -494,13 +494,10 @@ def generate_html(stats, logs, data, out='out', filename='report.html'):
 		else:
 			bg = "#FFD4D3"
 
-		row = TR(style='background: ' + bg + ';')
+		row = TR(id="event%d" % event.id, style='background: ' + bg + ';')
 		if event.image_file:
-			row <= TD(A(B(event.id),
-						href=event.image_file))
-			row <= TD(CENTER(IMG(src=event.image_file,
-								 width='100',
-								 CLASS='images')))
+			row <= TD(A(B(event.id), href=event.image_file))
+			row <= TD(CENTER(IMG(src=event.image_file, width='100', CLASS='images')))
 		else:
 			row <= TD(B(event.id))
 		row <= TD(event.begin)
@@ -539,31 +536,22 @@ def generate_html(stats, logs, data, out='out', filename='report.html'):
 
 		row = TR(style='background: ' + bg + ';')
 		if args.images:
-			row <= TD(A(B(truth.id),
-						href="./images/truth_" + str(truth.id) + ".jpg"))
-			row <= TD(CENTER(IMG(src="./images/truth_" + str(truth.id) +
-								 ".jpg",
-								 width='100',
-								 CLASS='images')))
+			row <= TD(A(B(truth.id), href="./images/truth_" + str(truth.id) + ".jpg"))
+			row <= TD(CENTER(IMG(src="./images/truth_" + str(truth.id) + ".jpg", width='100', CLASS='images')))
 		else:
 			row <= TD(B(truth.id))
 		cell = TD()
 		comma = ''
 		for match in matches:
 			cell <= comma
-			cell <= A(str(match.id), href=event.image_file)
+			cell <= A(str(match.id), href="#event%d" % match.id)
 			comma = ', '
 		row <= cell
-		row <= TD(truth.begin, style='padding-left: 20px; '
-				  'padding-right: 20px')
-		row <= TD(truth.end, style='padding-left: 20px; '
-				  'padding-right: 20px')
-		row <= TD(truth.match_begin, style='padding-left: 20px; '
-				  'padding-right: 20px')
-		row <= TD(truth.match_end, style='padding-left: 20px; '
-				  'padding-right: 20px')
-		row <= TD(truth.text, style='padding-left: 20px; '
-				  'padding-right: 20px')
+		row <= TD(truth.begin, style='padding-left: 20px; padding-right: 20px')
+		row <= TD(truth.end, style='padding-left: 20px; padding-right: 20px')
+		row <= TD(truth.match_begin, style='padding-left: 20px; padding-right: 20px')
+		row <= TD(truth.match_end, style='padding-left: 20px; padding-right: 20px')
+		row <= TD(truth.text, style='padding-left: 20px; padding-right: 20px')
 		table <= row
 	body <= table
 

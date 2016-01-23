@@ -61,6 +61,6 @@ class Time:
 		return fmt % self.toTuple()
 
 	def subtractDate(self, dt):
-		begin = datetime.datetime.utcfromtimestamp(self.milis / 1000) - dt
+		begin = datetime.datetime.utcfromtimestamp(self.milis / 1000.0) - dt
 		self.milis = int(begin.total_seconds() * 1000)
 
