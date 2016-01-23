@@ -168,7 +168,8 @@ bool Module::ProcessingCondition() const
 					LOG_DEBUG(m_logger, "Rewind detected");
 					return true;
 				}
-				if((m_param.fps != 0 && (ts - m_lastTimeStamp) * m_param.fps < 1000))
+				// note : condition ts == m_lastTimeStamp is here to handle special cases such as ReadObject
+				if(ts == m_lastTimeStamp || (m_param.fps != 0 && (ts - m_lastTimeStamp) * m_param.fps < 1000))
 					return false;
 			}
 		}
