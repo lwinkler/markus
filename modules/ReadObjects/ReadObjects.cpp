@@ -28,8 +28,6 @@
 #include "feature_util.h"
 #include "Manager.h"
 
-#include <ctime>
-
 using namespace std;
 using namespace cv;
 

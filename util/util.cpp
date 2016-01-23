@@ -348,9 +348,10 @@ TIME_STAMP timeStampToMs(const string& x_timeStamp)
 // Return an absolute timestamp in miliseconds. Absolute timestamps are based on processor time and are used on server side
 TIME_STAMP getAbsTimeMs()
 {
-	struct timeval tp;
-	gettimeofday(&tp, nullptr);
-	return tp.tv_sec * 1000 + tp.tv_usec / 1000;
+	struct timespec tp;
+	if(clock_gettime(CLOCK_MONOTONIC, &tp) == -1)
+		throw MkException("Cannot get time", LOC);
+	return tp.tv_sec * 1000 + tp.tv_nsec / 1000000;
 }
 
 /// Return a time stamp if the file name clearly contains a date. Return 0 otherwise
