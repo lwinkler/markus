@@ -162,8 +162,13 @@ bool Module::ProcessingCondition() const
 				return false;
 			if(m_lastTimeStamp != TIME_STAMP_MIN)
 			{
-				// TODO: Handle the case where we rewind
-				if(ts <= m_lastTimeStamp || (m_param.fps != 0 && (ts - m_lastTimeStamp) * m_param.fps < 1000))
+				// Handle the case where a rewind occured
+				if(ts < m_lastTimeStamp)
+				{
+					LOG_DEBUG(m_logger, "Rewind detected");
+					return true;
+				}
+				if((m_param.fps != 0 && (ts - m_lastTimeStamp) * m_param.fps < 1000))
 					return false;
 			}
 		}
