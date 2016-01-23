@@ -106,7 +106,7 @@ def generate_html(path, datas, dirname='analysis', filename='summary.html'):
 	for _, _, s in datas:
 		if 'Video duration' in s:
 			vid += s['Video duration'][0]
-	total = statistics(Evaluation(**tot), Video(duration=vid))
+	total = statistics(Evaluation(**tot), Video(duration=vid,start_timestamp=0))
 
 	# Results
 	body <= H2('Results')
