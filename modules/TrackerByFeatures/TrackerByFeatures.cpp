@@ -245,7 +245,7 @@ void TrackerByFeatures::UpdateTemplates()
 		// cout<<"Update template "<<it1->GetNum()<<endl;
 		if(elem.m_lastMatchingObject != nullptr)
 		{
-			// Add two extra features: distance and speed /// TODO
+			// Add two extra features: distance and speed
 			// const Feature& x = it1->m_lastMatchingObject->GetFeature("x");
 			// const Feature& y = it1->m_lastMatchingObject->GetFeature("y");
 

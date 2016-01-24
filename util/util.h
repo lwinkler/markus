@@ -62,7 +62,7 @@ template<class T> void mergeVector(std::vector<T>& vdest, const std::vector<T>& 
 {
 	for(const auto& ori : vori)
 	{
-		// TODO: There is probably a more efficient of smarter way to do this
+		// note: There is probably a more efficient of smarter way to do this
 		if(std::find(vdest.begin(), vdest.end(), ori) == vdest.end())
 			vdest.push_back(ori);
 	}

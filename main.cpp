@@ -450,7 +450,8 @@ int main(int argc, char** argv)
 	}
 	catch(MkException& e)
 	{
-		// TODO: Try to print the full stack trace of exceptions
+		// improvement: maybe try to print the full stack trace of exceptions
+		// TODO: Add an argument to determine if the program recovers from exceptions
 		LOG_ERROR(logger, "(Markus exception " << e.GetCode() << "): " << e.what());
 		returnValue = e.GetCode() - MK_EXCEPTION_FIRST;
 	}
