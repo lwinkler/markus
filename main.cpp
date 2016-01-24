@@ -341,6 +341,7 @@ int main(int argc, char** argv)
 
 		// Init global variables and objects
 		// Context manages all call to system, files, ...
+		// TODO: So far it is impossible to override parameters of context via command-line. Also, there should be a separated config for context and manager. Maybe.
 		Context::Parameters contextParameters(mainConfig.Find("application"), args.configFile, appConfig.GetAttribute("name"), args.outputDir);
 		contextParameters.centralized = args.centralized;
 		contextParameters.realTime    = !args.fast;

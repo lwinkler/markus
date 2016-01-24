@@ -228,7 +228,6 @@ void Module::Process()
 		m_timerWaiting.Stop();
 
 		// note: Inputs must call ProcessFrame to set the time stamp
-		// TODO: There is no reason to cache input modules !
 		if(m_param.cached < CachedState::READ_CACHE || IsInput())
 		{
 			m_timerConversion.Start();
@@ -248,9 +247,8 @@ void Module::Process()
 
 			m_timerProcessFrame.Stop();
 		}
-		if(m_param.cached == CachedState::READ_CACHE)
+		else if(m_param.cached == CachedState::READ_CACHE)
 		{
-			assert(!IsInput());
 			m_timerProcessFrame.Start();
 			ReadFromCache();
 			m_timerProcessFrame.Stop();
@@ -551,12 +549,15 @@ void Module::ReadFromCache()
 	for(auto& elem : m_outputStreams)
 	{
 		if(!elem.second->IsConnected()) continue;
-		string directory = "cache/"; // TODO fix this m_context.GetOutputDir() + "/cache/";
+		const string& directory = GetContext().GetParameters().cacheDirectory;
+		assert(!directory.empty());
+		if(directory.empty())
+			throw MkException("Trying to read streams from cache but no cache directory is specified", LOC);
 		stringstream fileName;
-		fileName << directory << GetName() << "." << elem.second->GetName() << "." << m_currentTimeStamp << ".json";
+		fileName << directory << "/" << GetName() << "." << elem.second->GetName() << "." << m_currentTimeStamp << ".json";
 		ifstream ifs;
 		ifs.open(fileName.str().c_str());
-		if(!ifs.good()) // TODO: Check that all files are open correctly !!
+		if(!ifs.good())
 			throw MkException("Error while reading from stream cache: " + fileName.str(), LOC);
 		elem.second->Deserialize(ifs, directory);
 		ifs.close();

@@ -52,6 +52,7 @@ public:
 			m_list.push_back(new ParameterBool("real_time", 0, 0, 1,      &realTime,        "All modules process in real-time. Disable to increase processing speed. Option -f"));
 			m_list.push_back(new ParameterString("job_id"      ,  ""    , &jobId         ,  "Job id for storage in database. Leave empty to generate a random value"));
 			m_list.push_back(new ParameterInt("cameraId"    ,  0, 0, INT_MAX, &cameraId  ,  "CameraId id for storage in database. Leave empty for tests only."));
+			m_list.push_back(new ParameterString("cache_directory", ""  , &cacheDirectory,  "The directory in which the cache can be found, empty if no cache"));
 			ParameterStructure::Init();
 
 			// Override values: must be set for each run
@@ -68,6 +69,7 @@ public:
 		bool realTime;
 		std::string jobId;
 		int cameraId;
+		std::string cacheDirectory;
 	};
 
 	~Context();
