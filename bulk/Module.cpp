@@ -550,7 +550,6 @@ void Module::ReadFromCache()
 	{
 		if(!elem.second->IsConnected()) continue;
 		const string& directory = GetContext().GetParameters().cacheDirectory;
-		assert(!directory.empty());
 		if(directory.empty())
 			throw MkException("Trying to read streams from cache but no cache directory is specified", LOC);
 		stringstream fileName;

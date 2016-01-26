@@ -51,7 +51,7 @@ public:
 			ParameterStructure::Init();
 		}
 		int nbFrames;
-		std::string arguments; // TODO: This is used in simulations, see what to do in normal case
+		std::string arguments; // note: This is used in simulations, see what to do in normal case
 	};
 
 	Manager(ParameterStructure& x_configReader);
