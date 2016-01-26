@@ -135,7 +135,7 @@ bool Processable::ProcessAndCatch()
 				{
 					// This is a trick to call event.stopped and manage interruptions
 					dynamic_cast<Manager&>(*this).ManageInterruptions();
-					continueFlag = !AbortCondition();
+					continueFlag = GetContext().GetParameters().robust && !AbortCondition();
 				}
 				catch(...)
 				{
@@ -151,7 +151,11 @@ bool Processable::ProcessAndCatch()
 			LOG_ERROR(m_logger, GetName() << ": Exception raised (FatalException), aborting : " << e.what());
 			continueFlag = false;
 		}
-		else LOG_ERROR(m_logger, "(Markus exception " << e.GetCode() << "): " << e.what());
+		else
+		{
+			LOG_ERROR(m_logger, "(Markus exception " << e.GetCode() << "): " << e.what());
+			continueFlag = GetContext().GetParameters().robust;
+		}
 	}
 	catch(exception& e)
 	{

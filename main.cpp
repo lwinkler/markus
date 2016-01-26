@@ -67,6 +67,7 @@ void usage()
 		" -i  --stdin           Read commands from stdin\n"
 		" -n  --no-gui          Run process without gui\n"
 		" -f  --fast            Fast, no real-time input\n"
+		" -R  --robust          Robust, continue if an exception occured during processing\n"
 		" -l  --log-conf <log4cxx_config>.xml\n"
 		"                       Set logging mode\n"
 		" -o  --output-dir directory\n"
@@ -75,6 +76,7 @@ void usage()
 		"                       Override the value of one parameter\n"
 		" -x  --xml extra_config.xml\n"
 		"                       Override some parameters in an extra XML file\n"
+		" -C  --cache           Cache directory (from another run) if using cache\n"
 	);
 }
 
@@ -128,10 +130,12 @@ struct arguments
 	bool useStdin    = false;
 	bool editor      = false;
 	bool simulation  = false;
+	bool robust      = false;
 
 	string configFile    = "config.xml";
 	string logConfigFile = "log4cxx.xml";
 	string outputDir     = "";
+	string cacheDirectory = "";
 	vector<string> parameters;
 	vector<string> extraConfig;
 };
@@ -154,11 +158,13 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 		{"output_dir",  1, 0, 'o'},
 		{"parameter",   1, 0, 'p'},
 		{"xml",         1, 0, 'x'},
+		{"cache",       1, 0, 'C'},
+		{"robust",      0, 0, 'R'},
 		{nullptr, 0, nullptr, 0}
 	};
 	char c;
 	int option_index = 0;
-	while ((c = getopt_long(argc, argv, "hvdeScfinl:o:p:x:", long_options, &option_index)) != -1)
+	while ((c = getopt_long(argc, argv, "hvdeScfinRl:o:p:x:C:", long_options, &option_index)) != -1)
 	{
 		switch (c)
 		{
@@ -190,6 +196,9 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 		case 'n':
 			args.nogui = true;
 			break;
+		case 'R':
+			args.robust = true;
+			break;
 		case 'l':
 			args.logConfigFile = optarg;
 			break;
@@ -201,6 +210,9 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 			break;
 		case 'x':
 			args.extraConfig.push_back(optarg);
+			break;
+		case 'C':
+			args.cacheDirectory = optarg;
 			break;
 		case ':': // missing argument
 			LOG_ERROR(logger, "--"<<long_options[::optopt].name<<": an argument is required");
@@ -341,10 +353,11 @@ int main(int argc, char** argv)
 
 		// Init global variables and objects
 		// Context manages all call to system, files, ...
-		// TODO: So far it is impossible to override parameters of context via command-line. Also, there should be a separated config for context and manager. Maybe.
 		Context::Parameters contextParameters(mainConfig.Find("application"), args.configFile, appConfig.GetAttribute("name"), args.outputDir);
-		contextParameters.centralized = args.centralized;
-		contextParameters.realTime    = !args.fast;
+		contextParameters.centralized    = args.centralized;
+		contextParameters.robust         = args.robust;
+		contextParameters.realTime       = !args.fast;
+		contextParameters.cacheDirectory = args.cacheDirectory;
 		Context context(contextParameters);
 		if(args.outputDir != "")
 		{
@@ -455,7 +468,6 @@ int main(int argc, char** argv)
 	catch(MkException& e)
 	{
 		// improvement: maybe try to print the full stack trace of exceptions
-		// TODO: Add an argument to determine if the program recovers from exceptions
 		LOG_ERROR(logger, "(Markus exception " << e.GetCode() << "): " << e.what());
 		returnValue = e.GetCode() - MK_EXCEPTION_FIRST;
 	}
