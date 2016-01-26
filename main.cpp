@@ -447,7 +447,10 @@ int main(int argc, char** argv)
 
 		// Write the modified params in config and save
 		manager.UpdateConfig();
+#ifndef MARKUS_NO_GUI
+		// Save the last config with modifs. This would cause a problem if we had no write access to the current dir
 		mainConfig.SaveToFile("last_config.xml");
+#endif
 	}
 	catch(MkException& e)
 	{
