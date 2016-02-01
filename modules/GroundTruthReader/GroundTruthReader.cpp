@@ -29,6 +29,7 @@
 #include "StreamDebug.h"
 #include "FeatureStd.h"
 #include "util.h"
+#include "AnnotationFileReader.h"
 
 using namespace std;
 using namespace cv;
@@ -41,7 +42,6 @@ GroundTruthReader::GroundTruthReader(ParameterStructure& xr_params):
 	m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_input(Size(m_param.width, m_param.height), m_param.type)
 {
-	mp_annotationReader = nullptr;
 	AddInputStream(0, new StreamImage("input",  m_input, *this, "Video input"));
 	AddInputStream(1, new StreamObject("input object",  m_objects, *this, "Incoming objects"));
 
@@ -72,14 +72,10 @@ void GroundTruthReader::Reset()
 	m_assFile = (m_param.file.substr(m_param.file.find_last_of(".") + 1) == "ass");
 	if(m_assFile)
 	{
-		mp_annotationReader = new AnnotationAssFileReader(m_param.width,m_param.height);
 		const double diagonal = sqrt(m_param.width * m_param.width + m_param.height * m_param.height);
 		distanceRefObject = diagonal * m_param.distance;
 	}
-	else
-		mp_annotationReader = new AnnotationSrtFileReader();
-
-	mp_annotationReader->Open(m_param.file);
+	mp_annotationReader = createAnnotationFileReader(m_param.file, m_param.width, m_param.height);
 }
 
 void GroundTruthReader::ProcessFrame()
@@ -96,7 +92,7 @@ void GroundTruthReader::ProcessFrame()
 	if(text != "")
 	{
 		// looking to match a part of pattern
-		m_state = m_param.pattern.find(text) != string::npos; // TODO: Improve this with regexp
+		m_state = m_param.pattern.find(text) != string::npos;
 
 #ifdef MARKUS_DEBUG_STREAMS
 		Scalar color = m_state ? Scalar(0, 255, 0) : Scalar(0, 0, 255);
@@ -107,7 +103,7 @@ void GroundTruthReader::ProcessFrame()
 	if (m_oldState != m_state)
 	{
 		// Raise an alarm
-		m_event.Raise("Ground Truth changed");
+		m_event.Raise("Ground Truth changed", m_currentTimeStamp, m_currentTimeStamp);
 		m_oldState = m_state;
 
 		// Update tracked object

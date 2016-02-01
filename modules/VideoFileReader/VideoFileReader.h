@@ -32,6 +32,8 @@
 
 /**
 * @brief Read video stream from a video file
+*
+*  improvement: implement parameters for begin and end of reading time
 */
 class VideoFileReader : public Input
 {

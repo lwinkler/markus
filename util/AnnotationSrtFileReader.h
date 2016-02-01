@@ -40,6 +40,9 @@ public:
 	~AnnotationSrtFileReader();
 	bool ReadNextAnnotation(std::string& rx_subText);
 
+	/// Cannot return a box since we do not have this info in .srt files
+	virtual cv::Rect GetBox() const override {return cv::Rect();}
+
 private:
 	static log4cxx::LoggerPtr m_logger;
 

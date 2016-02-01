@@ -64,7 +64,7 @@ void TimedEvent::ProcessFrame()
 			m_nextEvent = m_currentTimeStamp + m_param.timeInterval * 1000;
 		}
 
-		m_event.Raise("timed_event");
+		m_event.Raise("timed_event", m_currentTimeStamp, m_currentTimeStamp);
 		while(m_nextEvent <= m_currentTimeStamp)
 			m_nextEvent += m_param.timeInterval * 1000;
 	}

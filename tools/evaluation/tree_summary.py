@@ -95,7 +95,7 @@ def build_stats(child_videos, videos, images, out):
 			out <= BR()
 	
 	if nb > 0:
-		stats = statistics(Evaluation(**stats), Video(duration=duration))
+		stats = statistics(Evaluation(**stats), Video(duration=duration,start_timestamp=0))
 		for s in stats.keys():
 			v, f = stats[s]
 			out <= SPAN(s + ": " + (f % v))

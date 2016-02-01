@@ -21,6 +21,7 @@ import pickle
 import argparse
 import subprocess
 import json
+import datetime
 from time import strftime, localtime
 from platform import platform
 from vplib.time import Time
@@ -40,7 +41,7 @@ Evaluation = namedtuple('Evaluation',
 		'ambs ')
 
 # Video metrics
-Video = namedtuple('Video', 'duration')
+Video = namedtuple('Video', 'duration start_timestamp')
 
 # Truth tuple
 Truth = namedtuple('Truth', 'id begin end match_begin match_end is_valid is_ambiguous text')
@@ -90,10 +91,21 @@ def is_ambiguous(text):
 
 
 def video_info(video):
-	""" Function to get information about the video """
+	""" Function to get information about the video. Note: This MUST be similat to what is done in markus/util/util.cpp : timeStampFromFileName """
 	# If no video
 	if video is None:
 		return None
+	
+	# Detect starting time stamp from the video file name
+	start_timestamp = datetime.datetime.utcfromtimestamp(0)
+	if args.start_timestamp == -1:
+		try:
+			word=re.search(r'^(\d+_\d+)_',os.path.basename(video)).group(1)
+			# start_timestamp = (datetime.datetime.strptime(word,"%Y%m%d_%H%M%S") - epoch).total_seconds() * 1000.0
+			start_timestamp = datetime.datetime.strptime(word,"%Y%m%d_%H%M%S")
+			print "Video is considered to start at %s" % str(start_timestamp)
+		except:
+			print "Video is considered to start at %s" % str(start_timestamp)
 
 	try:
 		# Run avprobe to get info. Note: This replaces ffprobe
@@ -103,7 +115,7 @@ def video_info(video):
 		# Search the duration in the output
 		dval = re.search('Duration: ([^,]*),', ffout)
 		# Return the informations
-		return Video(duration=Time(text=dval.group(1), sep_ms='.'))
+		return Video(duration=Time(text=dval.group(1), sep_ms='.'),start_timestamp=start_timestamp)
 	except subprocess.CalledProcessError:
 		return None
 
@@ -154,14 +166,14 @@ def extract_images(events, truths, video, out='out'):
 
 def match_times(begin, end):
 	""" Return the time which must be used to check if the event occurs """
+	
 	# If uncompromising, impose the begin time to be at least d seconds after
 	if args.uncompromising:
-		m_begin = begin + Time(seconds=args.delay) - \
-			Time(seconds=args.tolerance)
-	# Otherwise, accept alert arriving before delay
+		m_begin = begin + Time(seconds=args.delay) - Time(seconds=args.tolerance)
 	else:
+		# Otherwise, accept alert arriving before delay
 		m_begin = begin - Time(seconds=args.tolerance)
-
+	
 	# End time adjustements
 	m_end = end + Time(seconds=args.delay) + Time(seconds=args.tolerance)
 
@@ -169,10 +181,12 @@ def match_times(begin, end):
 	return m_begin, m_end
 
 
-def read_events(file_path):
+def read_events(file_path, start_timestamp):
 	"""Read the events file"""
 	# previous version: return evtfiles.parse(file_path)
 	entries = subrip.parse(file_path)
+	if start_timestamp == 0:
+		start_timestamp = datetime.datetime.utcfromtimestamp(0)
 
 	# Prepare the events array
 	events = []
@@ -181,6 +195,7 @@ def read_events(file_path):
 	for entry in entries:
 
 		# Match times
+		entry.begin.subtractDate(start_timestamp)
 		match_begin, match_end = match_times(entry.begin, entry.end)
 		ident = entry.begin.milis
 
@@ -221,13 +236,16 @@ def read_truths(file_path):
 		if not fall or fall is None:
 			continue
 
+		entry_begin = entry.begin
+		entry_end   = entry.end
+
 		# Match times
-		match_begin, match_end = match_times(entry.begin, entry.end)
+		match_begin, match_end = match_times(entry_begin, entry_end)
 
 		# Otherwise add to the truths array
 		truths.append(Truth(id=entry.number,
-							begin=entry.begin,
-							end=entry.end,
+							begin=entry_begin,
+							end=entry_end,
 							match_begin=match_begin,
 							match_end=match_end,
 							text=entry.text.strip(' \t\n\r'),
@@ -476,13 +494,10 @@ def generate_html(stats, logs, data, out='out', filename='report.html'):
 		else:
 			bg = "#FFD4D3"
 
-		row = TR(style='background: ' + bg + ';')
+		row = TR(id="event%d" % event.id, style='background: ' + bg + ';')
 		if event.image_file:
-			row <= TD(A(B(event.id),
-						href=event.image_file))
-			row <= TD(CENTER(IMG(src=event.image_file,
-								 width='100',
-								 CLASS='images')))
+			row <= TD(A(B(event.id), href=event.image_file))
+			row <= TD(CENTER(IMG(src=event.image_file, width='100', CLASS='images')))
 		else:
 			row <= TD(B(event.id))
 		row <= TD(event.begin)
@@ -521,31 +536,22 @@ def generate_html(stats, logs, data, out='out', filename='report.html'):
 
 		row = TR(style='background: ' + bg + ';')
 		if args.images:
-			row <= TD(A(B(truth.id),
-						href="./images/truth_" + str(truth.id) + ".jpg"))
-			row <= TD(CENTER(IMG(src="./images/truth_" + str(truth.id) +
-								 ".jpg",
-								 width='100',
-								 CLASS='images')))
+			row <= TD(A(B(truth.id), href="./images/truth_" + str(truth.id) + ".jpg"))
+			row <= TD(CENTER(IMG(src="./images/truth_" + str(truth.id) + ".jpg", width='100', CLASS='images')))
 		else:
 			row <= TD(B(truth.id))
 		cell = TD()
 		comma = ''
 		for match in matches:
 			cell <= comma
-			cell <= A(str(match.id), href=event.image_file)
+			cell <= A(str(match.id), href="#event%d" % match.id)
 			comma = ', '
 		row <= cell
-		row <= TD(truth.begin, style='padding-left: 20px; '
-				  'padding-right: 20px')
-		row <= TD(truth.end, style='padding-left: 20px; '
-				  'padding-right: 20px')
-		row <= TD(truth.match_begin, style='padding-left: 20px; '
-				  'padding-right: 20px')
-		row <= TD(truth.match_end, style='padding-left: 20px; '
-				  'padding-right: 20px')
-		row <= TD(truth.text, style='padding-left: 20px; '
-				  'padding-right: 20px')
+		row <= TD(truth.begin, style='padding-left: 20px; padding-right: 20px')
+		row <= TD(truth.end, style='padding-left: 20px; padding-right: 20px')
+		row <= TD(truth.match_begin, style='padding-left: 20px; padding-right: 20px')
+		row <= TD(truth.match_end, style='padding-left: 20px; padding-right: 20px')
+		row <= TD(truth.text, style='padding-left: 20px; padding-right: 20px')
 		table <= row
 	body <= table
 
@@ -657,6 +663,13 @@ def arguments_parser():
 						action='store_true',
 						help='recalculate the results only, do not run markus, should only be used on a pre-existant result')
 
+	# Tolerance
+	parser.add_argument('--start-timestamp',
+						dest='start_timestamp',
+						default=-1,
+						type=int,
+						help='The start time stamp of the video. Some videos might start with a time stamp that is given by the recording time. By default, detect from the video file name.')
+
 	return parser.parse_args()
 
 
@@ -669,17 +682,17 @@ def main():
 	# Parse the arguments
 	args = arguments_parser()
 
+	# Get video info
+	video = video_info(args.VIDEO_FILE)
+
 	# Get the array of events
-	events = read_events(args.EVENT_FILE)
+	events = read_events(args.EVENT_FILE, video.start_timestamp if video else 0)
 
 	# Get the array of truths
 	truths = read_truths(args.TRUTH_FILE)
 
 	# Evaluate the events regarding to the ground truth
 	evaluation, logs = evaluate(events, truths)
-
-	# Get video info
-	video = video_info(args.VIDEO_FILE)
 
 	# Extract images
 	if args.images:

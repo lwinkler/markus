@@ -264,7 +264,7 @@ public:
 					if(elemCtr.second->GetClass() == "ControllerParameter")
 					{
 						// note: this parameter cannot be tested as will always create an error
-						// TODO: Fix this cleanly
+						//       maybe fix in a cleaner way
 						if(elemCtr.second->GetName() == "prepend_output_directory")
 							continue;
 

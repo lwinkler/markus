@@ -239,7 +239,7 @@ void Manager::Process()
 	}
 
 	//if(m_frameCount % 20 == 0)
-	usleep(20); // This keeps the manager unlocked to allow the sending of commands // TODO find a cleaner way
+	// usleep(20); // This keeps the manager unlocked to allow the sending of commands
 
   	ManageInterruptions();
 

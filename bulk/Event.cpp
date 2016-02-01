@@ -54,13 +54,13 @@ void Event::Randomize(unsigned int& xr_seed, const string& x_requirement, const 
 	{
 		if(x_requirement == "" && rand_r(&xr_seed) < RAND_MAX /10)
 		{
-			Raise("random");
+			Raise("random", rand_r(&xr_seed), rand_r(&xr_seed));
 		}
 		else
 		{
 			Object obj("random");
 			obj.Randomize(xr_seed, x_requirement, x_size);
-			Raise("random", obj);
+			Raise("random", obj, rand_r(&xr_seed), rand_r(&xr_seed));
 		}
 	}
 }
@@ -73,8 +73,8 @@ void Event::Serialize(ostream& xr_out, const string& x_dir) const
 	if(IsRaised())
 	{
 		root["eventName"]  = m_eventName;
-		root["dateEvent"]  = Json::UInt64(m_absTimeEvent);
-		root["dateNotif"]  = Json::UInt64(m_absTimeNotif);
+		root["dateEvent"]  = Json::UInt64(m_timeStampEvent);
+		root["dateNotif"]  = Json::UInt64(m_timeStampNotif);
 		if(m_object.GetName() != "empty")
 		{
 			stringstream ss;
@@ -96,8 +96,8 @@ void Event::Deserialize(istream& x_in, const string& x_dir)
 	if(raised)
 	{
 		m_eventName = root["eventName"].asString();
-		m_absTimeEvent = root["dateEvent"].asInt64();
-		m_absTimeNotif = root["dateNotif"].asInt64();
+		m_timeStampEvent = root["dateEvent"].asInt64();
+		m_timeStampNotif = root["dateNotif"].asInt64();
 
 		if(!root["object"].isNull())
 		{
@@ -115,8 +115,8 @@ void Event::Deserialize(istream& x_in, const string& x_dir)
 	else
 	{
 		m_eventName = "";
-		m_absTimeEvent = 0;
-		m_absTimeNotif = 0;
+		m_timeStampEvent = 0;
+		m_timeStampNotif = 0;
 		m_object = Object("empty");
 		m_externalInfo.clear();
 	}
@@ -137,11 +137,13 @@ void Event::Clean()
 *
 * @param x_eventName    Name of the event (e.g. "motion", "intrusion")
 * @param x_object       An object linked with the event. The features of the object will be used as the features of the event.
-* @param x_absTimeEvent Optional: The time at which the event started. Use this field if events are raised with a delay.
+* @param x_absTimeNotif The time at which the event occured
+* @param x_absTimeEvent The time at which the event started. The times will differ if events are raised with a delay.
 */
-void Event::Raise(const string& x_eventName, const Object& x_object, TIME_STAMP x_absTimeEvent)
+void Event::Raise(const string& x_eventName, const Object& x_object, TIME_STAMP x_absTimeNotif, TIME_STAMP x_absTimeEvent)
 {
-	m_absTimeEvent = x_absTimeEvent == 0 ? getAbsTimeMs() : x_absTimeEvent;
+	m_timeStampEvent = x_absTimeEvent;
+	m_timeStampNotif = x_absTimeNotif;
 	if(IsRaised())
 		LOG_WARN(m_logger, "The same event is raised several times. Older events are overriden");
 	m_eventName       = x_eventName;
@@ -152,12 +154,14 @@ void Event::Raise(const string& x_eventName, const Object& x_object, TIME_STAMP 
 * @brief Raise an event without features
 *
 * @param x_eventName    Name of the event (e.g. "motion", "intrusion")
-* @param x_absTimeEvent Optional: The time at which the event started. Use this field if events are raised with a delay.
+* @param x_absTimeNotif The time at which the event occured
+* @param x_absTimeEvent The time at which the event started. The times will differ if events are raised with a delay.
 */
-void Event::Raise(const string& x_eventName, TIME_STAMP x_absTimeEvent)
+void Event::Raise(const string& x_eventName, TIME_STAMP x_absTimeNotif, TIME_STAMP x_absTimeEvent)
 {
-	InterruptionManager::GetInst().AddEvent("event." + x_eventName);// TODO keep this here ?
-	m_absTimeEvent = x_absTimeEvent == 0 ? getAbsTimeMs() : x_absTimeEvent;
+	InterruptionManager::GetInst().AddEvent("event." + x_eventName);
+	m_timeStampEvent = x_absTimeEvent;
+	m_timeStampNotif = x_absTimeNotif;
 	if(IsRaised())
 		LOG_WARN(m_logger, "The same event is raised several times. Older events are overriden");
 	m_eventName = x_eventName;
@@ -173,7 +177,6 @@ void Event::Raise(const string& x_eventName, TIME_STAMP x_absTimeEvent)
 */
 void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 {
-	m_absTimeNotif = getAbsTimeMs();
 	Json::Value root;
 	string level = "EVENT";
 
@@ -235,7 +238,6 @@ void Event::GetExternalFiles(map<std::string, string>& xr_output) const
 	xr_output.clear();
 	for(const auto& elem : m_externalInfo["files"].getMemberNames())
 	{
-		// TODO: return name as well
 		xr_output[elem] = m_externalInfo["files"][elem].asString();
 	}
 }

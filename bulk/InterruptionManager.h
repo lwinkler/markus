@@ -55,7 +55,7 @@ class InterruptionManager // : public Configurable
 public:
 	InterruptionManager();
 
-	// Singleton: InterruptionManager is instanciated here ! // TODO: Maybe make this into a module
+	// Singleton: InterruptionManager is instanciated here !
 	static InterruptionManager& GetInst(){static InterruptionManager m; return m;}
 
 	inline void AddEvent(const std::string& x_name){m_events.push_back(x_name);}

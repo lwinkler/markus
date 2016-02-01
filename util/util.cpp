@@ -25,6 +25,8 @@
 #include "Manager.h"
 #include "Event.h"
 #include "MkException.h"
+#include "AnnotationSrtFileReader.h"
+#include "AnnotationAssFileReader.h"
 #include <fstream>
 #include <cstdio>
 #include <opencv2/opencv.hpp>
@@ -346,9 +348,10 @@ TIME_STAMP timeStampToMs(const string& x_timeStamp)
 // Return an absolute timestamp in miliseconds. Absolute timestamps are based on processor time and are used on server side
 TIME_STAMP getAbsTimeMs()
 {
-	struct timeval tp;
-	gettimeofday(&tp, nullptr);
-	return tp.tv_sec * 1000 + tp.tv_usec / 1000;
+	struct timespec tp;
+	if(clock_gettime(CLOCK_MONOTONIC, &tp) == -1)
+		throw MkException("Cannot get time", LOC);
+	return tp.tv_sec * 1000 + tp.tv_nsec / 1000000;
 }
 
 /// Return a time stamp if the file name clearly contains a date. Return 0 otherwise
@@ -569,3 +572,36 @@ void addExternalImage(const Mat& x_image, const std::string& x_name, const std::
 	xr_event.AddExternalFile(x_name, x_fileWithPath);
 }
 
+
+/**
+* @brief Create a reader for an annotation file (*.ass or *.srt)
+*
+* @param x_fileName     Name of the file, for
+* @param x_fileWithPath Path to image
+* @param xr_event       Event to modify
+* @return Pointer to the new object
+*
+*/
+AnnotationFileReader* createAnnotationFileReader(const string& x_fileName, int x_width, int x_height)
+{
+	AnnotationFileReader* p = nullptr;
+	if(x_fileName.empty())
+	{
+		// TODO by LW: This only exists for intrusion.tracklets, this should normally throw
+		// throw MkException("Name for file is empty", LOC);
+		cout <<"WARNING: Name for file is empty" << endl;
+		p = new AnnotationSrtFileReader();
+		return p;
+	}
+	else if(x_fileName.substr(x_fileName.find_last_of(".") + 1) == "ass")
+	{
+		p = new AnnotationAssFileReader(x_width, x_height);
+	}
+	else if(x_fileName.substr(x_fileName.find_last_of(".") + 1) == "srt")
+	{
+		p = new AnnotationSrtFileReader();
+	}
+	else throw MkException("Invalid file name : " + x_fileName, LOC);
+	p->Open(x_fileName);
+	return p;
+}

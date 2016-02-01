@@ -39,8 +39,8 @@ public:
 	virtual const std::string& GetClass() const{return m_class;}
 	virtual const std::string& GetType() const {return m_type;}
 
-	inline const T& GetObject() const {return m_object;}
-	inline       T& RefObject() const {return m_object;}
+	inline const T& GetContent() const {return m_object;}
+	inline       T& RefContent() const {return m_object;}
 
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat& x_output) const;

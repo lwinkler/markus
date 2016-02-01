@@ -27,10 +27,6 @@
 #include "feature_util.h"
 #include "Manager.h"
 
-//#include <ctime>
-
-#define SEP "\t"
-
 using namespace std;
 using namespace cv;
 
@@ -75,10 +71,6 @@ void LogObjects::Reset()
 	CLEAN_DELETE(mp_annotationWriter);
 	mp_annotationWriter = new AnnotationFileWriter();
 	mp_annotationWriter->Open(srtFileName);
-
-	// m_folder  = m_context.GetOutputDir() + "/" + m_param.folder + "/";
-	// SYSTEM("mkdir -p " + m_folder);
-	// m_outputFile<<"time"<<SEP<<"object"<<SEP<<"feature"<<SEP<<"value"<<SEP<<"mean"<<SEP<<"sqVariance"<<SEP<<"initial"<<SEP<<"min"<<SEP<<"max"<<SEP<<"nbSamples"<<endl;
 }
 
 void LogObjects::ProcessFrame()

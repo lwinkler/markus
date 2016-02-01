@@ -162,8 +162,14 @@ bool Module::ProcessingCondition() const
 				return false;
 			if(m_lastTimeStamp != TIME_STAMP_MIN)
 			{
-				// TODO: Handle the case where we rewind
-				if(ts <= m_lastTimeStamp || (m_param.fps != 0 && (ts - m_lastTimeStamp) * m_param.fps < 1000))
+				// Handle the case where a rewind occured
+				if(ts < m_lastTimeStamp)
+				{
+					LOG_DEBUG(m_logger, "Rewind detected");
+					return true;
+				}
+				// note : condition ts == m_lastTimeStamp is here to handle special cases such as ReadObject
+				if(ts == m_lastTimeStamp || (m_param.fps != 0 && (ts - m_lastTimeStamp) * m_param.fps < 1000))
 					return false;
 			}
 		}
@@ -208,24 +214,13 @@ void Module::Process()
 	WriteLock lock(m_lock);
 	try
 	{
-		/*
-		// Timestamp of the module is given by the input stream
-		m_currentTimeStamp = 0;
-		if(!m_inputStreams.empty())
-		{
-			m_currentTimeStamp = m_inputStreams[0]->GetTimeStampConnected();
-		}
-		else if(! m_param.autoProcess)
-			throw MkException("Module must have at least one input or have parameter auto_process=true", LOC); // TODO: Check at the beginnning
-			*/
-
-#ifdef MARKUS_DEBUG_STREAMS
-		// if(m_currentTimeStamp == m_lastTimeStamp)
-			// LOG_WARN(m_logger, "Timestamp are not increasing correctly");
-#endif
 		if(!m_param.autoProcess && !ProcessingCondition())
 			return;
 		ComputeCurrentTimeStamp();
+#ifdef MARKUS_DEBUG_STREAMS
+		if(m_currentTimeStamp == m_lastTimeStamp)
+			LOG_WARN(m_logger, "Timestamp are not increasing correctly");
+#endif
 
 		// Process this frame
 
@@ -233,7 +228,6 @@ void Module::Process()
 		m_timerWaiting.Stop();
 
 		// note: Inputs must call ProcessFrame to set the time stamp
-		// TODO: There is no reason to cache input modules !
 		if(m_param.cached < CachedState::READ_CACHE || IsInput())
 		{
 			m_timerConversion.Start();
@@ -253,9 +247,8 @@ void Module::Process()
 
 			m_timerProcessFrame.Stop();
 		}
-		if(m_param.cached == CachedState::READ_CACHE)
+		else if(m_param.cached == CachedState::READ_CACHE)
 		{
-			assert(!IsInput());
 			m_timerProcessFrame.Start();
 			ReadFromCache();
 			m_timerProcessFrame.Stop();
@@ -556,12 +549,14 @@ void Module::ReadFromCache()
 	for(auto& elem : m_outputStreams)
 	{
 		if(!elem.second->IsConnected()) continue;
-		string directory = "cache/"; // TODO fix this m_context.GetOutputDir() + "/cache/";
+		const string& directory = GetContext().GetParameters().cacheDirectory;
+		if(directory.empty())
+			throw MkException("Trying to read streams from cache but no cache directory is specified", LOC);
 		stringstream fileName;
-		fileName << directory << GetName() << "." << elem.second->GetName() << "." << m_currentTimeStamp << ".json";
+		fileName << directory << "/" << GetName() << "." << elem.second->GetName() << "." << m_currentTimeStamp << ".json";
 		ifstream ifs;
 		ifs.open(fileName.str().c_str());
-		if(!ifs.good()) // TODO: Check that all files are open correctly !!
+		if(!ifs.good())
 			throw MkException("Error while reading from stream cache: " + fileName.str(), LOC);
 		elem.second->Deserialize(ifs, directory);
 		ifs.close();

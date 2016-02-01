@@ -42,9 +42,9 @@ public:
 	virtual void Open(const std::string& x_file);
 	TIME_STAMP GetCurrentTimeStamp();
 	TIME_STAMP GetEndTimeStamp();
-	virtual bool ReadNextAnnotation(std::string& rx_subText);
+	virtual bool ReadNextAnnotation(std::string& rx_subText) = 0;
 	virtual std::string ReadAnnotationForTimeStamp(TIME_STAMP x_current);
-	virtual cv::Rect GetBox();
+	virtual cv::Rect GetBox() const = 0;
 
 protected:
 	std::istream& SafeGetline(std::istream& is, std::string& t);

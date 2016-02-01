@@ -27,8 +27,6 @@
 #include "util.h"
 #include "Manager.h"
 
-#define SEP "\t"
-
 using namespace std;
 using namespace cv;
 
@@ -87,28 +85,6 @@ void LogEvent::WriteEvent()
 	LOG_DEBUG(m_logger, "Write event to log file");
 	stringstream ss;
 
-	// Log event label
-	/* The old way
-	ss<<m_event.GetEventName()<<endl;
-
-	// Log event features with values
-	if(m_event.GetFeatures().size() != 0)
-		ss<<"time"<<SEP<<"object"<<SEP<<"feature"<<SEP<<"value"<<SEP<<"mean"<<SEP<<"sqVariance"<<SEP<<"initial"<<SEP<<"min"<<SEP<<"max"<<SEP<<"nbSamples"<<endl;
-	for(map<string, Feature>::const_iterator it2 = m_event.GetFeatures().begin() ; it2 != m_event.GetFeatures().end() ; it2++)
-	{
-		const Feature & feat = it2->second;
-		ss<<m_currentTimeStamp<<SEP
-			<<m_event.GetObject().GetName()<<m_event.GetObject().GetId()<<SEP
-			<<it2->first<<SEP
-			<<feat.value<<SEP
-			<<feat.mean<<SEP
-			<<feat.sqVariance<<SEP
-			<<feat.initial<<SEP
-			<<feat.min<<SEP
-			<<feat.max<<SEP
-			<<feat.nbSamples<<endl;
-	}*/
-	// ss<<"\"event\":";
 	ss<<m_event.SerializeToString(m_folder);
 	mp_annotationWriter->WriteAnnotation(m_currentTimeStamp, m_currentTimeStamp + 1000 * m_param.duration, ss);
 }
@@ -193,5 +169,5 @@ bool LogEvent::IsInputProcessed() const
 {
 	const StreamEvent* pStream =  dynamic_cast<const StreamEvent*>(&m_inputStreams.at(0)->GetConnected());
 	assert(pStream != nullptr);
-	return m_event.IsRaised() || pStream->GetObject().IsRaised();
+	return m_event.IsRaised() || pStream->GetContent().IsRaised();
 }

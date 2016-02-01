@@ -123,6 +123,7 @@ protected:
 	cv::Point2d   m_pt2d;
 	cv::Point3f   m_pt3f;
 	vector<float> m_vect;
+	vector<int> m_vectInt;
 	Object        m_obj2;
 	Event m_evt2;
 
@@ -136,9 +137,15 @@ public:
 		// note: we need a fake module to create the input streams
 		// mp_fakeInput->Reset();
 
+		m_vect.clear();
 		m_vect.push_back(33.66);
 		m_vect.push_back(1e4);
 		m_vect.push_back(0.000234);
+
+		m_vectInt.clear();
+		m_vectInt.push_back(33);
+		m_vectInt.push_back(-243124);
+		m_vectInt.push_back(0);
 
 		m_pt2f = cv::Point2d(33.5, 1e-4);
 		m_pt2d = cv::Point2d(33.5, 1e-4);
@@ -148,10 +155,11 @@ public:
 		m_obj2.AddFeature("feat1", 77);
 		m_obj2.AddFeature("feat2", 3453.444e-123);
 		m_obj2.AddFeature("ff", new FeatureFloat(0.93));
-		m_obj2.AddFeature("ff", new FeatureInt(93));
+		m_obj2.AddFeature("fi", new FeatureInt(93));
 		m_obj2.AddFeature("ffif", new FeatureFloatInTime(0.132));
 		m_obj2.AddFeature("fstr", new FeatureString("someString"));
 		m_obj2.AddFeature("fvf", new FeatureVectorFloat(m_vect));
+		m_obj2.AddFeature("fvi", new FeatureVectorInt(m_vectInt));
 		m_obj2.AddFeature("fkp", new FeatureKeyPoint(m_kp));
 		m_obj2.AddFeature("fp2f", new FeaturePoint2f(m_pt2f));
 		m_obj2.AddFeature("fp2f", new FeaturePoint2f(m_pt2d));
@@ -162,7 +170,7 @@ public:
 		fh.Update(006, FeatureInt(5));
 		m_obj2.AddFeature("fh", fh.CreateCopy());
 
-		m_evt2.Raise("name2", m_obj2);
+		m_evt2.Raise("name2", m_obj2, 123, 6345);
 	}
 	void tearDown()
 	{
@@ -215,7 +223,7 @@ public:
 	{
 		Event evt1;
 		testSerialization(evt1, "Event1");
-		evt1.Raise("name1");
+		evt1.Raise("name1", 242, 234252345);
 		testSerialization(evt1, "Event2");
 		testSerialization(m_evt2, "Event3");
 	}
@@ -231,7 +239,7 @@ public:
 	{
 		vector<Object> objects;
 		StreamObject stream2("streamObject", objects, *mp_fakeInput, "A stream of objects");
-		stream2.RefObject().push_back(m_obj2);
+		stream2.RefContent().push_back(m_obj2);
 		testSerialization(stream2, "StreamObject");
 	}
 
@@ -319,6 +327,12 @@ public:
 	{
 		FeatureVectorFloat fvf(m_vect);
 		testSerialization(fvf, "FeatureVectorFloat");
+	}
+
+	void testFeatureVectorInt()
+	{
+		FeatureVectorInt fvi(m_vectInt);
+		testSerialization(fvi, "FeatureVectorInt");
 	}
 
 	void testFeatureKeyPoint()

@@ -99,12 +99,13 @@ void randomize(cv::Point3f& xr_val, unsigned int& xr_seed);
 
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features of type Mat
+// 	note: maybe matrices should be treated in image streams but how ?
 
-std::ostream& serialize(std::ostream& x_out, const cv::Mat& x_value);
-std::istream& deserialize(std::istream& x_in,  cv::Mat& xr_value);
-
-double compareSquared(const cv::Mat& x_1, const cv::Mat& x_2);
-void randomize(cv::Mat& xr_val, unsigned int& xr_seed);
+// std::ostream& serialize(std::ostream& x_out, const cv::Mat& x_value);
+// std::istream& deserialize(std::istream& x_in,  cv::Mat& xr_value);
+// 
+// double compareSquared(const cv::Mat& x_1, const cv::Mat& x_2);
+// void randomize(cv::Mat& xr_val, unsigned int& xr_seed);
 
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features of type float

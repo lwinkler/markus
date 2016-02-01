@@ -3,6 +3,7 @@ add_library(bulk
 Factories.cpp
 Module.cpp
 ModuleKeyPoints.cpp
+ModuleClassifyEvents.cpp
 Manager.cpp
 Context.cpp
 Input.cpp

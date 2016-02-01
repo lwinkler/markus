@@ -21,8 +21,6 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-// TODO: Implement parameters for begin and end of reading time
-
 #include "VideoFileReader.h"
 #include "StreamImage.h"
 #include "util.h"

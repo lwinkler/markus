@@ -49,9 +49,11 @@ public:
 			m_list.push_back(new ParameterString("application_name", "",  &applicationName, "Name of the application. May also be set in the XML as attribute of <application>"));
 			m_list.push_back(new ParameterString("output_dir", "",        &outputDir,       "Directory used to write results files of manager and modules. If empty a directory is created from the date"));
 			m_list.push_back(new ParameterBool("centralized", 0, 0, 1,    &centralized,     "All modules are called from the manager. Option -c"));
+			m_list.push_back(new ParameterBool("robust",      0, 0, 1,    &robust,          "Continue if an exception occured during processing"));
 			m_list.push_back(new ParameterBool("real_time", 0, 0, 1,      &realTime,        "All modules process in real-time. Disable to increase processing speed. Option -f"));
 			m_list.push_back(new ParameterString("job_id"      ,  ""    , &jobId         ,  "Job id for storage in database. Leave empty to generate a random value"));
-			m_list.push_back(new ParameterInt("cameraId"    ,  0, 0, INT_MAX, &cameraId  ,  "CameraId id for storage in database. Leave empty for tests only."));
+			m_list.push_back(new ParameterInt("camera_id",  0, 0, INT_MAX, &cameraId     ,  "CameraId id for storage in database. Leave empty for tests only."));
+			m_list.push_back(new ParameterString("cache_directory", ""  , &cacheDirectory,  "The directory in which the cache can be found, empty if no cache"));
 			ParameterStructure::Init();
 
 			// Override values: must be set for each run
@@ -66,8 +68,10 @@ public:
 		std::string outputDir;
 		bool centralized;
 		bool realTime;
+		bool robust;
 		std::string jobId;
 		int cameraId;
+		std::string cacheDirectory;
 	};
 
 	~Context();

@@ -7,6 +7,7 @@ Created 2014-01-29 Fabien Dubosson
 """
 
 from collections import namedtuple
+import datetime
 
 # Time Tuple
 TimeTuple = namedtuple("Time", "hours minutes seconds milis")
@@ -58,3 +59,8 @@ class Time:
 	def __repr__(self):
 		fmt = "%02d:%02d:%02d,%03d"
 		return fmt % self.toTuple()
+
+	def subtractDate(self, dt):
+		begin = datetime.datetime.utcfromtimestamp(self.milis / 1000.0) - dt
+		self.milis = int(begin.total_seconds() * 1000)
+

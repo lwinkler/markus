@@ -24,7 +24,6 @@
 #include "NetworkCam.h"
 #include "StreamImage.h"
 #include <errno.h>
-#include <sys/time.h>
 #include <util.h>
 
 #define TIMEOUT 3 // 3 sec timeout
@@ -102,10 +101,11 @@ bool NetworkCam::Grab()
 	// Create a second thread to check if disconnected
 	pthread_t thread;
 	struct timespec my_timeout;
-	struct timeval now;
-	gettimeofday(&now,nullptr); // TODO: use https://blog.habets.se/2010/09/gettimeofday-should-never-be-used-to-measure-time
-	my_timeout.tv_sec  = now.tv_sec + TIMEOUT;
-	my_timeout.tv_nsec = now.tv_usec * 1000;
+	if (clock_gettime(CLOCK_MONOTONIC, &my_timeout) == -1)
+	{
+		throw MkException("Error with clock_gettime", LOC);
+	}
+	my_timeout.tv_sec += TIMEOUT;
 
 	// create thread
 	struct_thread st;

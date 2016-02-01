@@ -1,12 +1,27 @@
 /*----------------------------------------------------------------------------------
 *
+*    MARKUS : a manager for video analysis modules
+*
 *    author : Laurent Winkler <lwinkler888@gmail.com>
 *
 *
-*    This file is not part of Markus.
+*    This file is part of Markus.
+*
+*    Markus is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU Lesser General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    Markus is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU Lesser General Public License for more details.
+*
+*    You should have received a copy of the GNU Lesser General Public License
+*    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "ClassifyEvents.h"
+#include "ModuleClassifyEvents.h"
 #include "StreamEvent.h"
 #include "StreamImage.h"
 #include "StreamDebug.h"
@@ -16,9 +31,9 @@
 using namespace std;
 using namespace cv;
 
-log4cxx::LoggerPtr ClassifyEvents::m_logger(log4cxx::Logger::getLogger("ClassifyEvents"));
+log4cxx::LoggerPtr ModuleClassifyEvents::m_logger(log4cxx::Logger::getLogger("ModuleClassifyEvents"));
 
-ClassifyEvents::ClassifyEvents(ParameterStructure& xr_params) :
+ModuleClassifyEvents::ModuleClassifyEvents(ParameterStructure& xr_params) :
 	Module(xr_params),
 	m_param(dynamic_cast<Parameters&>(xr_params))
 {
@@ -36,11 +51,11 @@ ClassifyEvents::ClassifyEvents(ParameterStructure& xr_params) :
 #endif
 }
 
-ClassifyEvents::~ClassifyEvents(void )
+ModuleClassifyEvents::~ModuleClassifyEvents(void )
 {
 }
 
-void ClassifyEvents::Reset()
+void ModuleClassifyEvents::Reset()
 {
 	Module::Reset();
 	// Add a new control to play forward and rewind
@@ -48,7 +63,7 @@ void ClassifyEvents::Reset()
 		AddController(new ControllerEvent(*this));
 }
 
-void ClassifyEvents::ProcessFrame()
+void ModuleClassifyEvents::ProcessFrame()
 {
 	m_eventOut.Clean();
 	if(! m_eventIn.IsRaised())
@@ -64,7 +79,7 @@ void ClassifyEvents::ProcessFrame()
 		m_eventOut = m_eventIn;
 }
 
-void ClassifyEvents::PushEvent()
+void ModuleClassifyEvents::PushEvent()
 {
 	if(true)// if(m_eventToValidate.IsRaised())
 	{
@@ -80,7 +95,7 @@ void ClassifyEvents::PushEvent()
 	}
 }
 
-void ClassifyEvents::PopEvent()
+void ModuleClassifyEvents::PopEvent()
 {
 	if(!m_events.empty())
 	{
@@ -100,27 +115,4 @@ void ClassifyEvents::PopEvent()
 		}
 	}
 	else LOG_WARN(m_logger, "Cannot call PopEvent, event list is empty");
-}
-
-// ---------------------------------------------------------------------------------
-// The following functions must be redefined
-// ---------------------------------------------------------------------------------
-
-
-/// Consider the last event as invalid and train the classifier
-void ClassifyEvents::InvalidateLastEvent()
-{
-	LOG_WARN(m_logger, "This method is empty and must be redefined in a children");
-}
-
-/// Consider the last event as valid and train the classifier
-void ClassifyEvents::ValidateLastEvent()
-{
-	LOG_WARN(m_logger, "This method must be redefined in a children");
-}
-
-/// Return a probability [0..1] that the event is valid
-float ClassifyEvents::PredictEventValidity(const Event& x_event)
-{
-	return 1;
 }

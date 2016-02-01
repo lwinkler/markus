@@ -49,7 +49,7 @@ template<> void StreamEvent::ConvertInput()
 	const StreamEvent * pstream = dynamic_cast<const StreamEvent*>(m_connected);
 	if(pstream == nullptr)
 		throw MkException("Stream of event " + GetName() + " is not correctly connected", LOC);
-	m_object = pstream->GetObject();
+	m_object = pstream->GetContent();
 
 	if(! m_object.IsRaised()) return;
 

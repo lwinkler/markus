@@ -29,15 +29,8 @@
 #include "feature_util.h"
 #include <vector>
 
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
-
 /**
-* @brief Class representing a feature in the form of a vector of float
-*/
-
-/**
-* @brief Class representing a feature template. This can be used to create new templates
+* @brief Class representing a feature in the form of a vector of primitive type
 */
 template<class T> class FeatureVectorT : public Feature
 {
@@ -65,14 +58,8 @@ public:
 			randomize(values, xr_seed, size);
 		}
 	}
-	inline virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const
-	{
-		serialize(x_out, values);
-	}
-	inline virtual void Deserialize(std::istream& x_in, const std::string& x_dir)
-	{
-		deserialize(x_in, values);
-	}
+	virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const;
+	virtual void Deserialize(std::istream& x_in, const std::string& x_dir);
 
 	// The value of the feature
 	std::vector<T> values;
@@ -81,7 +68,6 @@ public:
 
 // Definitions
 typedef FeatureVectorT<float>   FeatureVectorFloat;
-// note: FeatureVectorInt cannot be used: so far the signature of this feature is the same as FeatureVectorFloat // TODO fix or suppress these
 typedef FeatureVectorT<int>   FeatureVectorInt;
 
 

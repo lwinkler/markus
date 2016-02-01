@@ -90,7 +90,7 @@ void MotionDetector::ProcessFrame()
 	bool oldState = m_state;
 	m_state = (m_value >= m_param.motionThres);
 	if(m_state == true && oldState == false)
-		m_event.Raise("motion");
+		m_event.Raise("motion", m_currentTimeStamp, m_currentTimeStamp);
 	
 	LOG_DEBUG(m_logger, "Motion state " << m_state);
 	

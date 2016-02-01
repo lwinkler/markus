@@ -77,7 +77,7 @@ void UsbCam::Capture()
 		}
 
 		m_capture.retrieve(m_output);
-		m_currentTimeStamp = getAbsTimeMs(); // TODO: use real timer
+		m_currentTimeStamp = getAbsTimeMs();
 		// cout<<m_capture.get(CV_CAP_PROP_POS_MSEC)<<endl;
 
 		// only break out of the loop once we fulfill the fps criterion

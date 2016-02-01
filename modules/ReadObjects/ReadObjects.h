@@ -27,8 +27,9 @@
 #include "Input.h"
 #include "StreamObject.h"
 #include <fstream>
-#include "AnnotationFileReader.h"
 
+
+class AnnotationFileReader;
 
 /**
 * @brief Read a stream of objects and log data to a text file
@@ -77,7 +78,7 @@ protected:
 	std::vector<Object> m_ObjectOut;
 
 	// temporary
-	AnnotationFileReader* mp_annotationReader;
+	AnnotationFileReader* mp_annotationReader = nullptr;
 	std::string text;
 	TIME_STAMP currentTimeStampTmp;
 	bool firstAnnotation;
