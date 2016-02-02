@@ -40,12 +40,13 @@ These libraries and utilities can be installed to create advanced modules:
 	- *CMake GUI* : to set the compilation flags visually (packages cmake-curses-gui or cmake-qt-gui)
 	- *Qt Creator* : a full IDE for C++ and QT (package qtcreator)
 	- *Python*: for some modules (package python-dev  python-opencv python-sklearn python-skimage python-pip)
-		- *Python deps*: sudo pip install xmltodict
-		- *Nagios plugin*: for monitoring: sudo pip install nagiosplugin
+		- *Python deps*: xmltodict
+		- *Nagios plugin*: for monitoring: nagiosplugin
 	- *CxxTests** : To run the unit test
 	- *Avtools*: Video manipulation tools to use the benchmark of test
 
 	sudo apt-get install cmake-qt-gui cmake-curses-gui qtcreator python-dev python-opencv python-bs4 cxxtest libav-tools
+	sudo pip install xmltodict nagiosplugin
 
 Since modules can be stored on different repositories please check the separate README.md of each directory for dependencies.
 

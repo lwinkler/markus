@@ -483,8 +483,8 @@ var xmlProject = null;
 			// Delete the current modules and load a XML project file 
 			//--------------------------------------------------------------------------------
 			this.loadProjectFile = function loadProjectFile(fileName) { 
-				if(fileName.search(".xml") != fileName.length - 4){
-					alert("Project file must be in .xml format");
+				if(fileName.lastIndexOf(".xml") != fileName.length - 4){
+					alert("Project file have .xml extension: " + fileName);
 					return;
 				}
 
