@@ -557,6 +557,8 @@ void Manager::ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module,
 			if(xr_module.GetParameters().GetParameterByName("master").GetValueString().empty())
 				RefModuleById(outputModuleId).AddDependingModule(xr_module);
 		}
+		else if(tmp1.empty() && ! tmp2.empty()) throw MkException("Exception while connecting input: missing moduleid in config", LOC);
+		else if(! tmp1.empty() && tmp2.empty()) throw MkException("Exception while connecting input: missing outputid in config", LOC);
 	}
 	catch(MkException& e)
 	{
