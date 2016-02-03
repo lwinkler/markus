@@ -155,7 +155,7 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 		{"stdin",       0, 0, 'i'},
 		{"no-gui",      0, 0, 'n'},
 		{"log-conf",    1, 0, 'l'},
-		{"output_dir",  1, 0, 'o'},
+		{"output-dir",  1, 0, 'o'},
 		{"parameter",   1, 0, 'p'},
 		{"xml",         1, 0, 'x'},
 		{"cache",       1, 0, 'C'},

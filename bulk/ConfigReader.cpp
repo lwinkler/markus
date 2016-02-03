@@ -511,6 +511,27 @@ void ConfigReader::CheckUniquenessOfId(const string& x_group, const string& x_ty
 	}
 }
 
+
+
+void ConfigReader::overrideParameters(const ConfigReader& x_newConfig, ConfigReader x_oldConfig)
+{
+	if(x_newConfig.GetSubConfig("parameters").IsEmpty())
+		return;
+	for(const auto& conf2 : x_newConfig.GetSubConfig("parameters").FindAll("param"))
+	{
+		// cout << x_newConfig.GetAttribute("name") << ":" << conf2.GetAttribute("name") << endl;
+		if(x_oldConfig.IsEmpty())
+		{
+			LOG_WARN(m_logger, "Module " << x_newConfig.GetAttribute("name") << " cannot be overriden since it does not exist in the current config");
+			continue;
+		}
+		// Override parameter
+		LOG_DEBUG(m_logger, "Override parameter " << conf2.GetAttribute("name") << " with value " << conf2.GetValue());
+		x_oldConfig.RefSubConfig("parameters").RefSubConfig("param", "name", conf2.GetAttribute("name"), true)
+			.SetValue(conf2.GetValue());
+	}
+}
+
 /**
 * @brief Apply extra XML config to modify the initial config (used with option -x)
 *
@@ -522,27 +543,11 @@ void ConfigReader::CheckUniquenessOfId(const string& x_group, const string& x_ty
 void ConfigReader::OverrideWith(const ConfigReader& x_extraConfig)
 {
 	// Note: This method is very specific to our type of configuration
+	overrideParameters(x_extraConfig.GetSubConfig("application"), RefSubConfig("application"));
 
 	for(const auto& conf1 : x_extraConfig.GetSubConfig("application").FindAll("module"))
 	{
-		ConfigReader appConf(RefSubConfig("application"));
-		if(!conf1.GetSubConfig("parameters").IsEmpty())
-		{
-			for(const auto& conf2 : conf1.GetSubConfig("parameters").FindAll("param"))
-			{
-				// cout << conf1.GetAttribute("name") << ":" << conf2.GetAttribute("name") << endl;
-				if(appConf.GetSubConfig("module", "name", conf1.GetAttribute("name")).IsEmpty())
-				{
-					LOG_WARN(m_logger, "Module " << conf1.GetAttribute("name") << " cannot be overriden since it does not exist in the current config");
-					continue;
-				}
-				// Override parameter
-				LOG_DEBUG(m_logger, "Override parameter " << conf2.GetAttribute("name") << " with value " << conf2.GetValue());
-				appConf.RefSubConfig("module", "name", conf1.GetAttribute("name"))
-				.RefSubConfig("parameters").RefSubConfig("param", "name", conf2.GetAttribute("name"), true)
-				.SetValue(conf2.GetValue());
-			}
-		}
+		overrideParameters(conf1, RefSubConfig("application").RefSubConfig("module", "name", conf1.GetAttribute("name")));
 	}
 }
 
