@@ -52,7 +52,7 @@ public:
 			m_list.push_back(new ParameterBool("robust",      0, 0, 1,    &robust,          "Continue if an exception occured during processing"));
 			m_list.push_back(new ParameterBool("real_time", 0, 0, 1,      &realTime,        "All modules process in real-time. Disable to increase processing speed. Option -f"));
 			m_list.push_back(new ParameterString("job_id"      ,  ""    , &jobId         ,  "Job id for storage in database. Leave empty to generate a random value"));
-			m_list.push_back(new ParameterInt("camera_id",  0, 0, INT_MAX, &cameraId     ,  "CameraId id for storage in database. Leave empty for tests only."));
+			m_list.push_back(new ParameterString("camera_id",  ""       , &cameraId      ,  "CameraId id for storage in database. Leave empty for tests only."));
 			m_list.push_back(new ParameterString("cache_directory", ""  , &cacheDirectory,  "The directory in which the cache can be found, empty if no cache"));
 			ParameterStructure::Init();
 
@@ -70,7 +70,7 @@ public:
 		bool realTime;
 		bool robust;
 		std::string jobId;
-		int cameraId;
+		std::string cameraId;
 		std::string cacheDirectory;
 	};
 
@@ -80,6 +80,7 @@ public:
 	inline const std::string& GetOutputDir() const {if(m_outputDir.empty())throw MkException("Output dir has not been created", LOC); return m_outputDir;}
 	inline const std::string& GetApplicationName() const {return m_param.applicationName;}
 	inline const std::string& GetJobId() const {return m_jobId;}
+	inline const std::string& GetCameraId() const {return m_param.cameraId;}
 	bool IsOutputDirEmpty() const;
 	inline bool IsCentralized() const {return m_param.centralized;}
 	inline bool IsRealTime() const {return m_param.realTime;}
