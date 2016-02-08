@@ -347,6 +347,7 @@ int main(int argc, char** argv)
 
 		LOG_INFO(logger, Context::Version(true));
 		ConfigFile mainConfig(args.configFile);
+		overrideConfig(mainConfig, args.extraConfig, args.parameters, logger);
 		mainConfig.Validate();
 		ConfigReader appConfig = mainConfig.Find("application");
 		assert(!appConfig.IsEmpty());
@@ -370,8 +371,6 @@ int main(int argc, char** argv)
 #ifndef MARKUS_NO_GUI
 		MarkusApplication app(argc, argv);
 #endif
-
-		overrideConfig(mainConfig, args.extraConfig, args.parameters, logger);
 
 		if(args.simulation)
 		{
