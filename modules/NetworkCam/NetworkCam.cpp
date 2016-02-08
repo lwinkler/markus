@@ -25,6 +25,9 @@
 #include "StreamImage.h"
 #include <errno.h>
 #include <util.h>
+#include <future>
+#include <thread>
+#include <chrono>
 
 #define TIMEOUT 3 // 3 sec timeout
 
@@ -32,25 +35,6 @@ using namespace std;
 using namespace cv;
 
 log4cxx::LoggerPtr NetworkCam::m_logger(log4cxx::Logger::getLogger("NetworkCam"));
-
-struct struct_thread
-{
-	VideoCapture* capture;
-	sem_t* sem;
-	bool ret;
-};
-
-
-/// Specific thread dedicated to the reading of commands via stdin
-void *grab_thread_nc(void *x_void_ptr)
-{
-	struct_thread* pst = reinterpret_cast<struct_thread*>(x_void_ptr);
-	pst->ret = pst->capture->grab();
-	sem_post(pst->sem);
-
-	return nullptr;
-}
-
 
 NetworkCam::NetworkCam(ParameterStructure& xr_params):
 	Input(xr_params),
@@ -76,7 +60,7 @@ void NetworkCam::Reset()
 
 	if(! m_capture.isOpened())
 	{
-		throw MkException("Error : Network error, cannot open url : " + m_param.url, LOC);
+		throw MkException("Network, cannot open url : " + m_param.url, LOC);
 	}
 
 	// Normally this value should be given by m_capture.get(CV_CAP_PROP_FPS);
@@ -98,36 +82,22 @@ void NetworkCam::Reset()
 
 bool NetworkCam::Grab()
 {
-	// Create a second thread to check if disconnected
-	pthread_t thread;
-	struct timespec my_timeout;
-	if (clock_gettime(CLOCK_MONOTONIC, &my_timeout) == -1)
+	std::future<bool> ret = std::async(std::launch::async, [this](){ 
+		return m_capture.grab();
+	}); 
+
+	std::future_status status = ret.wait_for(std::chrono::seconds(TIMEOUT));
+	if (status == std::future_status::timeout)
 	{
-		throw MkException("Error with clock_gettime", LOC);
-	}
-	my_timeout.tv_sec += TIMEOUT;
-
-	// create thread
-	struct_thread st;
-	st.capture = &m_capture;
-	st.sem     = &m_semTimeout;
-	pthread_create(&thread, nullptr, grab_thread_nc, &st);
-	int ret = sem_timedwait(&m_semTimeout, &my_timeout);
-
-	if (ret==-1 && errno==ETIMEDOUT)
-	{
-		LOG_WARN(m_logger, "Timeout while grabbing stream. Camera may be disconnected.");
-		pthread_cancel(thread);
-		m_capture.release();
-		// pthread_join(thread,nullptr);
-
+		LOG_WARN(m_logger, "Timeout while grabbing frame. Camera may be disconnected.");
 		return false;
 	}
-	else
+	if (status != std::future_status::ready)
 	{
-		pthread_join(thread,nullptr);
-		return st.ret;
+		LOG_WARN(m_logger, "Timeout while grabbing frame. Deferred. This case should never happen.");
+		return false;
 	}
+	return ret.get();
 }
 
 void NetworkCam::Capture()
