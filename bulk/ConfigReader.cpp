@@ -515,20 +515,27 @@ void ConfigReader::CheckUniquenessOfId(const string& x_group, const string& x_ty
 
 void ConfigReader::overrideParameters(const ConfigReader& x_newConfig, ConfigReader x_oldConfig)
 {
-	if(x_newConfig.GetSubConfig("parameters").IsEmpty())
-		return;
+	// if(x_newConfig.GetSubConfig("parameters").IsEmpty())
+		// return;
 	for(const auto& conf2 : x_newConfig.GetSubConfig("parameters").FindAll("param"))
 	{
-		// cout << x_newConfig.GetAttribute("name") << ":" << conf2.GetAttribute("name") << endl;
-		if(x_oldConfig.IsEmpty())
+		try
 		{
-			LOG_WARN(m_logger, "Module " << x_newConfig.GetAttribute("name") << " cannot be overriden since it does not exist in the current config");
-			continue;
+			// cout << x_newConfig.GetAttribute("name") << ":" << conf2.GetAttribute("name") << endl;
+			if(x_oldConfig.IsEmpty())
+			{
+				LOG_WARN(m_logger, "Module " << x_newConfig.GetAttribute("name") << " cannot be overriden since it does not exist in the current config");
+				continue;
+			}
+			// Override parameter
+			LOG_DEBUG(m_logger, "Override parameter " << conf2.GetAttribute("name") << " with value " << conf2.GetValue());
+			x_oldConfig.RefSubConfig("parameters").RefSubConfig("param", "name", conf2.GetAttribute("name"), true)
+				.SetValue(conf2.GetValue());
 		}
-		// Override parameter
-		LOG_DEBUG(m_logger, "Override parameter " << conf2.GetAttribute("name") << " with value " << conf2.GetValue());
-		x_oldConfig.RefSubConfig("parameters").RefSubConfig("param", "name", conf2.GetAttribute("name"), true)
-			.SetValue(conf2.GetValue());
+		catch(MkException& e)
+		{
+			LOG_WARN(m_logger, "Cannot read parameters from extra config: "<<e.what());
+		}
 	}
 }
 

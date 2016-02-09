@@ -259,16 +259,9 @@ void overrideConfig(ConfigReader& mainConfig, const vector<string>& extraConfig,
 	// Override values of parameters if an extra config is used
 	for(const auto& elem1 : extraConfig)
 	{
-		try
-		{
-			// open the config and override the initial config
-			ConfigFile extra(elem1);
-			mainConfig.OverrideWith(extra);
-		}
-		catch(MkException& e)
-		{
-			LOG_WARN(logger, "Cannot read parameters from extra config \""<<elem1<<"\": "<<e.what());
-		}
+		// open the config and override the initial config
+		ConfigFile extra(elem1);
+		mainConfig.OverrideWith(extra);
 	}
 
 	// Set values of parameters if set from command line
