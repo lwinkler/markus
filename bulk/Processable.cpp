@@ -135,15 +135,24 @@ bool Processable::ProcessAndCatch()
 				{
 					// This is a trick to call event.stopped and manage interruptions
 					dynamic_cast<Manager&>(*this).ManageInterruptions();
-					continueFlag = GetContext().GetParameters().robust && !AbortCondition();
+					// continueFlag = GetContext().GetParameters().robust && !AbortCondition();
+					continueFlag = !AbortCondition();
 				}
-				catch(...)
+				catch(exception& e)
 				{
+					LOG_WARN(m_logger, "Exception during interruption: " + string(e.what()));
 					continueFlag = false;
 				}
 				
 				// TODO: test what happens if the stream of a camera is cut
-				LOG_INFO(m_logger, "Abort condition has been fulfilled (end of all streams)");
+				if(!continueFlag)
+				{
+					LOG_INFO(m_logger, "Abort condition has been fulfilled (end of all streams)");
+				}
+				else 
+				{
+					LOG_INFO(m_logger, "An event prevented the execution from stopping. Continue processing.");
+				}
 			}
 		}
 		else if(e.GetCode() == MK_EXCEPTION_FATAL)
