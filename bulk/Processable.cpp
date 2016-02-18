@@ -138,9 +138,9 @@ bool Processable::ProcessAndCatch()
 					// continueFlag = GetContext().GetParameters().robust && !AbortCondition();
 					continueFlag = !AbortCondition();
 				}
-				catch(exception& e)
+				catch(bad_cast& e)
 				{
-					LOG_WARN(m_logger, "Exception during interruption: " + string(e.what()));
+					LOG_DEBUG(m_logger, "Exception during interruption: " + string(e.what()));
 					continueFlag = false;
 				}
 				
