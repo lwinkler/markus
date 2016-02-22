@@ -80,9 +80,9 @@ void VideoFileBufferWriter::CloseFile()
 	WaitForThread();
 	if(!m_writer.isOpened())
 		m_writer.release();
-	if (m_eraseFile)
+	if (m_eraseFile && !m_fileName.empty())
 	{
-		LOG_DEBUG(m_logger, "Delete file file "<<m_fileName);
+		LOG_DEBUG(m_logger, "Delete file "<<m_fileName);
 		if (remove(m_fileName.c_str()) != 0)
 			LOG_WARN(m_logger, "Error deleting temporary video file named " << m_fileName);
 	}

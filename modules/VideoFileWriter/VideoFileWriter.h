@@ -43,14 +43,14 @@ public:
 			Module::Parameters(x_confReader)
 		{
 			m_list.push_back(new ParameterString("file", 	  "output", 	     &file,      "Name of the video file to write, with path"));
-			m_list.push_back(new ParameterString("fourcc", 	  "MJPG", 	     &fourcc,    "Four character code, determines the format. PIM1, MJPG, MP42, DIV3, DIVX, U263, I263, FLV1"));
+			m_list.push_back(new ParameterString("fourcc", 	  "MJPG", 	     &fourcc,    "Four character code, determines the format. PIM1, MJPG, MP42, DIV3, DIVX, H263, I263, FLV1"));
 
 			RefParameterByName("width").SetRange("[32:6400]");
 			RefParameterByName("height").SetRange("[24:4800]");
 			RefParameterByName("type").SetDefault("CV_8UC3");
 			RefParameterByName("type").SetRange("[CV_8UC3]");
 
-			RefParameterByName("fourcc").SetRange("[MJPG,MP42,DIV3,DIVX,U263,FLV1]"); // PIM1 does not support 12 fps: disabled for tests / I263 also deactivated for tests
+			RefParameterByName("fourcc").SetRange("[MJPG,MP42,DIV3,DIVX,FLV1]"); // PIM1 does not support 12 fps: disabled for tests / I263 also deactivated for tests
 
 			Init();
 		};

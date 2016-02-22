@@ -18,7 +18,6 @@
 <param name="width">64</param>
 <param name="height">48</param>
 <param name="type">CV_8UC1</param>
-<param name="detection_fps">1</param>
 <param name="min_neighbors">2</param>
 <param name="min_side">0</param>
 <param name="scale_factor">1.2</param>

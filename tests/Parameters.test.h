@@ -48,8 +48,11 @@ protected:
 	{
 		xr_param.SetValue(x_legalValue, PARAMCONF_UNKNOWN);
 		TS_ASSERT(xr_param.CheckRange() == true);
-		xr_param.SetValue(x_illegalValue, PARAMCONF_UNKNOWN);
-		TS_ASSERT(x_illegalValue == "" || xr_param.CheckRange() == false);
+		if(!x_illegalValue.empty())
+		{
+			xr_param.SetValue(x_illegalValue, PARAMCONF_UNKNOWN);
+			TS_ASSERT(xr_param.CheckRange() == false);
+		}
 		TS_ASSERT(xr_param.GetConfigurationSource() == PARAMCONF_UNKNOWN);
 		xr_param.SetDefault(x_legalValue);
 		xr_param.SetValueToDefault();
