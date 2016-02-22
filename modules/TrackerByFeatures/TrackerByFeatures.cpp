@@ -396,14 +396,14 @@ void TrackerByFeatures::CheckMergeSplit()
 				double wo = dynamic_cast<const FeatureFloat&>(obj.GetFeature("width")).value;
 				double ho = dynamic_cast<const FeatureFloat&>(obj.GetFeature("height")).value;
 
-				if(wt + ht > wo + wt)
+				if(wt*wt + ht*ht > wo*wo + ho*ho)
 				{
 					// Condition for object split
-					// note: so far the distance to consider a split is the double of w/2 . This is a security margin
 					if(abs(xt - xo) <= wt / 2 && abs(yt - yo) <= ht / 2)
 					{
 						if(obj.HasFeature("split"))
 						{
+							// TODO: This warning happens too often. See how to fix. Maybe use a vector
 							LOG_WARN(m_logger, "Object already has a split attribute.")
 						}
 						else
