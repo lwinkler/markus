@@ -380,6 +380,7 @@ void TrackerByFeatures::CheckMergeSplit()
 	for(auto& obj : m_objects)
 	{
 		vector<int> merged;
+		vector<int> split;
 		for(const auto& ptemp : templates)
 		{
 			if(ptemp == m_matched[&obj])
@@ -401,17 +402,8 @@ void TrackerByFeatures::CheckMergeSplit()
 					// Condition for object split
 					if(abs(xt - xo) <= wt / 2 && abs(yt - yo) <= ht / 2)
 					{
-						if(obj.HasFeature("split"))
-						{
-							// TODO: This warning happens too often. See how to fix. Maybe use a vector
-							LOG_WARN(m_logger, "Object already has a split attribute.")
-						}
-						else
-						{
-							obj.AddFeature("split", new FeatureInt(ptemp->GetNum()));
-							LOG_DEBUG(m_logger,"Objects split with "<<ptemp->GetNum());
-							// cout << "Objects split with "<<ptemp->GetNum() << endl;
-						}
+						split.push_back(ptemp->GetNum());
+						// LOG_DEBUG(m_logger,"Objects split from "<<ptemp->GetNum());
 					}
 				}
 				else
@@ -421,7 +413,7 @@ void TrackerByFeatures::CheckMergeSplit()
 					if(abs(xo - xt) <= wo / 2 && abs(yo - yt) <= ho / 2)
 					{
 						merged.push_back(ptemp->GetNum());
-						LOG_DEBUG(m_logger,"Objects merged with "<<ptemp->GetNum());
+						// LOG_DEBUG(m_logger,"Objects merged with "<<ptemp->GetNum());
 					}
 				}
 			}
@@ -435,6 +427,11 @@ void TrackerByFeatures::CheckMergeSplit()
 		{
 			obj.AddFeature("merge", new FeatureVectorInt(merged));
 			LOG_DEBUG(m_logger, "Object merged with "<< merged.size() << " templates");
+		}
+		if(!split.empty())
+		{
+			obj.AddFeature("merge", new FeatureVectorInt(split));
+			LOG_DEBUG(m_logger, "Object split from "<< split.size() << " templates");
 		}
 	}
 }
