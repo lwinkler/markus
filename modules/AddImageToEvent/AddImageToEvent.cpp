@@ -44,7 +44,7 @@ AddImageToEvent::AddImageToEvent(ParameterStructure& xr_params):
 	AddInputStream(1, new StreamImage( "input",  m_inputIm1, *this,   "Video input"));
 	// AddInputStream(2, new StreamImage( "input2", m_inputIm2, *this,   "Binary mask"));
 
-	AddInputStream(0, new StreamEvent( "output", m_event, *this,   "Outgoing events"));
+	AddOutputStream(0, new StreamEvent( "output", m_event, *this,   "Outgoing events"));
 }
 
 AddImageToEvent::~AddImageToEvent()
