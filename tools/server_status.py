@@ -301,7 +301,7 @@ def main():
 	# For each job
 	for job in jobs:
 		# Print detail
-		[value] = getQuery(url + '/job/' + job, ['value'])
+		[value] = getQuery(url + '/job/' + job, ['data'])
 
 		lineStart1 = lineCount(args.logJBoss)
 		expr = args.logDir + '/markus_*%s/markus.log' % job
@@ -345,10 +345,10 @@ def main():
 	# A set of rules for the output of job description
 	# TODO: display a clear error message
 	rules = [
-		{'name': 'statusCode1', 'target': 'log1', 'contains': True, 'text': '"code":1010', 
-			'descr': 'JBoss must receive the status code 1010. Another value indicates that an exception was caught'},
-		{'name': 'statusCode2', 'target': 'log2', 'contains': True, 'text': '"code":1010',
-			'descr': 'Markus process must receive the status code 1010. Another value indicates that an exception was caught'},
+		{'name': 'statusCode1', 'target': 'log1', 'contains': True, 'text': '"code":1000', 
+			'descr': 'JBoss must receive the status code 1000. Another value indicates that an exception was caught'},
+		{'name': 'statusCode2', 'target': 'log2', 'contains': True, 'text': '"code":1000',
+			'descr': 'Markus process must receive the status code 1000. Another value indicates that an exception was caught'},
 		{'name': 'cmdSent1', 'target': 'log2', 'contains': True, 'text': 'Command manager.manager.Status returned value', 
 			'descr': 'Markus process must receive and execute command "Status"'},
 		{'name': 'cmdSent2', 'target': 'log2', 'contains': True, 'text': 'Command manager.manager.PrintStatistics returned value', 
