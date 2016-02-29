@@ -34,7 +34,7 @@ class ParameterImageType : public ParameterEnum
 {
 public:
 	ParameterImageType(const std::string& x_name, int x_default, int * xp_value, const std::string& x_description)
-		: ParameterEnum(x_name, x_default, xp_value, x_description){}
+		: ParameterEnum(x_name, x_default, xp_value, x_description) {}
 	~ParameterImageType() {}
 
 	// Conversion methods

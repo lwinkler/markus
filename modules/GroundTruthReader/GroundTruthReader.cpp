@@ -120,10 +120,10 @@ void GroundTruthReader::ProcessFrame()
 
 				// middle of bounding box
 				Rect centerRefObj = Rect(
-					refObj.x + (refObj.width  - distanceRefObject) / 2, 
-					refObj.y + (refObj.height - distanceRefObject) / 2, 
-					distanceRefObject, distanceRefObject
-				);
+										refObj.x + (refObj.width  - distanceRefObject) / 2,
+										refObj.y + (refObj.height - distanceRefObject) / 2,
+										distanceRefObject, distanceRefObject
+									);
 				for(const auto& obj : m_objects)
 				{
 					Rect objRect = obj.GetRect();

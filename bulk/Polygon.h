@@ -53,7 +53,7 @@ public:
 			scaledPt.y = itpts->y * correctionRatioY;
 			// std::cout << *itpts << " : " << scaledPt.x <<  ">=" << x_size.width << " " << scaledPt.y << ">=" << x_size.height << std::endl;
 			// if(scaledPt.x >= x_size.width || scaledPt.y >= x_size.height)
-				// throw MkException("Drawing out of bounds of image ", LOC);
+			// throw MkException("Drawing out of bounds of image ", LOC);
 			++itpts;
 		}
 	}

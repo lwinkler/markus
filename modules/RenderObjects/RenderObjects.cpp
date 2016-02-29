@@ -57,15 +57,15 @@ void RenderObjects::ProcessFrame()
 {
 	for(const auto& input : m_inputStreams)
 		input.second->RenderTo(m_imageOutput);
-		/*
+	/*
 	for(auto& objects : m_objectInputs)
 	{
-		for(auto& obj : objects)
-		{
-			// cout <<  input.first << endl;
-			obj.RenderTo(m_imageOutput, Scalar(i * 30,100 - i * 30,0));
-		}
-		i++;
+	for(auto& obj : objects)
+	{
+		// cout <<  input.first << endl;
+		obj.RenderTo(m_imageOutput, Scalar(i * 30,100 - i * 30,0));
 	}
-		*/
+	i++;
+	}
+	*/
 }

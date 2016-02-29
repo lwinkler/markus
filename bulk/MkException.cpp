@@ -58,15 +58,15 @@ void fatal(const std::string& x_description, const std::string& x_position, cons
 
 MkException::MkException(const string& x_description, const string& x_position, const string& x_function)
 	: m_description(writeDescription(x_description, x_position, x_function)),
-	m_name("unknown"),
-	m_code(MK_EXCEPTION_UNKNOWN)
+	  m_name("unknown"),
+	  m_code(MK_EXCEPTION_UNKNOWN)
 {
 }
 
 MkException::MkException(MkExceptionCode x_code, const std::string& x_name, const string& x_description, const string& x_position, const string& x_function)
 	: m_description(writeDescription(x_description, x_position, x_function)),
-	m_name(x_name),
-	m_code(x_code)
+	  m_name(x_name),
+	  m_code(x_code)
 {
 }
 

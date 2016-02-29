@@ -45,8 +45,8 @@ Context::Context(ParameterStructure& xr_params) :
 		m_jobId   = "test_" + timeStamp(getpid());
 	}
 	else m_jobId = m_param.jobId;
-	LOG_INFO(m_logger, "Created context with cameraId=\"" << GetCameraId() << "\", jobId=\"" 
-		<< GetJobId() << "\", applicationName=\"" << GetApplicationName() << "\", configFile=\"" << m_param.configFile << "\"");
+	LOG_INFO(m_logger, "Created context with cameraId=\"" << GetCameraId() << "\", jobId=\""
+			 << GetJobId() << "\", applicationName=\"" << GetApplicationName() << "\", configFile=\"" << m_param.configFile << "\"");
 	m_param.PrintParameters();
 }
 

@@ -30,7 +30,7 @@
 using namespace std;
 
 
-BackgroundSubtraction::BackgroundSubtraction(ParameterStructure& xr_params) : 
+BackgroundSubtraction::BackgroundSubtraction(ParameterStructure& xr_params) :
 	Module(xr_params),
 	m_param(dynamic_cast<Parameters&>(xr_params))
 {

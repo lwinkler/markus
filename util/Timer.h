@@ -33,37 +33,37 @@
 /// Timer class used for benchmarking
 class Timer
 {
-	public:
-		Timer() : m_increments(0) {}
-		int64_t GetMsLong() const;
-		double GetSecDouble() const;
-		inline void Reset(){m_timer.reset();m_increments=0;}
-		inline void Start(){m_timer.start(); m_increments++;}
-		inline void Stop(){m_timer.stop();}
-		inline void Add(const Timer& x_val){m_timer.value += x_val.GetSecDouble();}
-		inline void Print() const;
+public:
+	Timer() : m_increments(0) {}
+	int64_t GetMsLong() const;
+	double GetSecDouble() const;
+	inline void Reset() {m_timer.reset(); m_increments=0;}
+	inline void Start() {m_timer.start(); m_increments++;}
+	inline void Stop() {m_timer.stop();}
+	inline void Add(const Timer& x_val) {m_timer.value += x_val.GetSecDouble();}
+	inline void Print() const;
 
-	protected:
-		cvflann::StartStopTimer m_timer;
-		uint64_t m_increments;
+protected:
+	cvflann::StartStopTimer m_timer;
+	uint64_t m_increments;
 };
 
 
 /// A simple timer with name. Can be used to simplify benchmarking
 class QuickTimer
 {
-	public:
-		QuickTimer(const std::string& s){}
-		QuickTimer(const std::string& x_description, const std::string& x_position, const std::string& x_function);
-		~QuickTimer(){ms_timers[m_name].Stop();}
-		void Start(){}
-		void Stop(){}
+public:
+	QuickTimer(const std::string& s) {}
+	QuickTimer(const std::string& x_description, const std::string& x_position, const std::string& x_function);
+	~QuickTimer() {ms_timers[m_name].Stop();}
+	void Start() {}
+	void Stop() {}
 
-		static void PrintTimers();
+	static void PrintTimers();
 
-	private:
-		const std::string m_name;
-		static std::map<std::string, Timer> ms_timers;
+private:
+	const std::string m_name;
+	static std::map<std::string, Timer> ms_timers;
 };
 
 

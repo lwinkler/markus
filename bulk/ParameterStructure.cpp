@@ -177,7 +177,7 @@ void ParameterStructure::CheckRange(bool x_checkRelated) const
 	{
 		// Check that all parameters in config are related to the module
 		// if(m_configReader.Find("parameters").IsEmpty())
-			// return;
+		// return;
 		for(const auto& conf : m_configReader.FindAll("parameters>param"))
 		{
 			string name = conf.GetAttribute("name");

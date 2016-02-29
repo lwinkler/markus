@@ -53,10 +53,10 @@ class ModulesTestSuite : public CxxTest::TestSuite
 {
 public:
 	ModulesTestSuite() :
-		  m_factoryParameters(Factories::parametersFactory()),
-		  m_factoryModules(Factories::modulesFactory()),
-		  m_factoryFeatures(Factories::featuresFactory())
-		  {}
+		m_factoryParameters(Factories::parametersFactory()),
+		m_factoryModules(Factories::modulesFactory()),
+		m_factoryFeatures(Factories::featuresFactory())
+	{}
 protected:
 	vector<string> m_moduleTypes;
 	const FactoryParameters&  m_factoryParameters;
@@ -187,7 +187,7 @@ public:
 			else if(elem.second->GetClass() == "StreamNum<int>")
 				outputStream = new StreamNum<int>("test", m_int, *mp_fakeInput, "Test input");
 			// else if(elem.second->GetClass() == "StreamNum<unsigned int>")
-				// outputStream = new StreamNum<uint>("test", m_uint, *mp_fakeInput, "Test input");
+			// outputStream = new StreamNum<uint>("test", m_uint, *mp_fakeInput, "Test input");
 			else if(elem.second->GetClass() == "StreamNum<bool>")
 				outputStream = new StreamNum<bool>("test", m_bool, *mp_fakeInput, "Test input");
 			else
@@ -380,7 +380,7 @@ public:
 
 				TS_TRACE("Generate values for param of type " + elem->GetTypeString() + " in range " + elem->GetRange());
 				elem->GenerateValues(10, values);
-			
+
 				for(const auto& elemVal : values)
 				{
 					// For each value

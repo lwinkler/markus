@@ -25,7 +25,7 @@
 
 using namespace std;
 
-// Static variables 
+// Static variables
 template<> log4cxx::LoggerPtr ParameterNum<bool>::m_logger(log4cxx::Logger::getLogger("ParameterNum<bool>"));
 template<> log4cxx::LoggerPtr ParameterNum<int>::m_logger(log4cxx::Logger::getLogger("ParameterNum<int>"));
 template<> log4cxx::LoggerPtr ParameterNum<unsigned int>::m_logger(log4cxx::Logger::getLogger("ParameterNum<unsigned int>"));

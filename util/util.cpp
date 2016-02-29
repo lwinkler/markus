@@ -356,12 +356,12 @@ TIME_STAMP getAbsTimeMs()
 	gettimeofday(&tp, nullptr);
 	return tp.tv_sec * 1000 + tp.tv_usec / 1000;
 
-/*
-	struct timespec tp;
-	if(clock_gettime(CLOCK_MONOTONIC, &tp) == -1)
-		throw MkException("Cannot get time", LOC);
-	return tp.tv_sec * 1000 + tp.tv_nsec / 1000000;
-	*/
+	/*
+		struct timespec tp;
+		if(clock_gettime(CLOCK_MONOTONIC, &tp) == -1)
+			throw MkException("Cannot get time", LOC);
+		return tp.tv_sec * 1000 + tp.tv_nsec / 1000000;
+		*/
 }
 
 /// Return a time stamp if the file name clearly contains a date. Return 0 otherwise

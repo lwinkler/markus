@@ -134,16 +134,16 @@ ConfigFile::~ConfigFile()
 *
 * @param xp_node
 */
-ConfigReader::ConfigReader(TiXmlNode* xp_node) : 
+ConfigReader::ConfigReader(TiXmlNode* xp_node) :
 	mp_node(xp_node)
 {
 }
 
-ConfigReader::ConfigReader(const ConfigReader& x_conf) : 
+ConfigReader::ConfigReader(const ConfigReader& x_conf) :
 	mp_node(x_conf.mp_node)
 {
 	// if(IsEmpty())
-		// throw MkException("Initialize a ConfigReader to an empty config", LOC);
+	// throw MkException("Initialize a ConfigReader to an empty config", LOC);
 }
 
 ConfigReader::~ConfigReader()
@@ -192,15 +192,15 @@ const ConfigReader ConfigReader::GetSubConfigIgnoreNamespace(const string& x_tag
 		auto pos = tag.find(' ');
 		if(pos != string::npos)
 			tag = tag.substr(0, pos);
-		
+
 		// Strip everything before :
 		pos = tag.find(':');
 		if(pos != string::npos)
 			tag = tag.substr(pos + 1);
-		
+
 		if(tag == x_tagName)
 			return ConfigReader(newNode);
-		
+
 		newNode = mp_node->NextSibling();
 	}
 	return ConfigReader(newNode);
@@ -516,7 +516,7 @@ void ConfigReader::CheckUniquenessOfId(const string& x_group, const string& x_ty
 void ConfigReader::overrideParameters(const ConfigReader& x_newConfig, ConfigReader x_oldConfig)
 {
 	// if(x_newConfig.GetSubConfig("parameters").IsEmpty())
-		// return;
+	// return;
 	for(const auto& conf2 : x_newConfig.GetSubConfig("parameters").FindAll("param"))
 	{
 		try
@@ -530,7 +530,7 @@ void ConfigReader::overrideParameters(const ConfigReader& x_newConfig, ConfigRea
 			// Override parameter
 			LOG_DEBUG(m_logger, "Override parameter " << conf2.GetAttribute("name") << " with value " << conf2.GetValue());
 			x_oldConfig.RefSubConfig("parameters").RefSubConfig("param", "name", conf2.GetAttribute("name"), true)
-				.SetValue(conf2.GetValue());
+			.SetValue(conf2.GetValue());
 		}
 		catch(MkException& e)
 		{

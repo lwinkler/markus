@@ -37,7 +37,7 @@ public:
 	Stream(const std::string& x_name, Module& rx_module, const std::string& rx_description, const std::string& rx_requirement = "");
 	virtual ~Stream();
 
-	inline void Reset(){m_timeStamp = TIME_STAMP_MIN;}
+	inline void Reset() {m_timeStamp = TIME_STAMP_MIN;}
 
 	virtual const std::string& GetClass() const = 0;
 	virtual const std::string& GetType() const = 0;
@@ -57,7 +57,7 @@ public:
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 	virtual void Export(std::ostream& rx_os, int x_id, int x_indentation, bool x_isInput) const;
 	inline bool IsConnected() const {return m_isConnected;}
-	inline void SetAsConnected(){m_isConnected = true;}
+	inline void SetAsConnected() {m_isConnected = true;}
 	inline const Module& GetModule() const {return mr_module;}
 	inline Stream& GetConnected() const
 	{

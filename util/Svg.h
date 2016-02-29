@@ -52,7 +52,7 @@ public:
 
 		if(x_points.empty())
 			return;
-			// throw MkException("Cannot draw path containing less than 1 point yet", LOC);
+		// throw MkException("Cannot draw path containing less than 1 point yet", LOC);
 
 		ss << "M" << x_points.begin()->x * m_widthRatio << " " << x_points.begin()->y * m_heightRatio;
 

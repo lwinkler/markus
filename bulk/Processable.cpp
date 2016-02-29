@@ -143,13 +143,13 @@ bool Processable::ProcessAndCatch()
 					LOG_DEBUG(m_logger, "Exception during interruption: " + string(e.what()));
 					continueFlag = false;
 				}
-				
+
 				// TODO: test what happens if the stream of a camera is cut
 				if(!continueFlag)
 				{
 					LOG_INFO(m_logger, "Abort condition has been fulfilled (end of all streams)");
 				}
-				else 
+				else
 				{
 					LOG_INFO(m_logger, "An event prevented the execution from stopping. Continue processing.");
 				}

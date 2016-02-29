@@ -104,10 +104,10 @@ class SerializableTestSuite : public CxxTest::TestSuite
 {
 public:
 	SerializableTestSuite() :
-		  m_factoryParameters(Factories::parametersFactory()),
-		  m_factoryModules(Factories::modulesFactory()),
-		  m_factoryFeatures(Factories::featuresFactory())
-		  {}
+		m_factoryParameters(Factories::parametersFactory()),
+		m_factoryModules(Factories::modulesFactory()),
+		m_factoryFeatures(Factories::featuresFactory())
+	{}
 
 protected:
 	const FactoryParameters& m_factoryParameters;

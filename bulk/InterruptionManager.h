@@ -33,7 +33,7 @@ struct Command
 {
 	Command(const std::string& x_name, const std::string& x_value):
 		name(x_name),
-		value(x_value){}
+		value(x_value) {}
 	std::string name;
 	std::string value;
 };
@@ -42,7 +42,7 @@ struct Interruption
 {
 	Interruption(const Command& x_command, int x_count) :
 		command(x_command),
-		remaining(x_count){}
+		remaining(x_count) {}
 	Command command;
 	int remaining;
 };
@@ -56,15 +56,15 @@ public:
 	InterruptionManager();
 
 	// Singleton: InterruptionManager is instanciated here !
-	static InterruptionManager& GetInst(){static InterruptionManager m; return m;}
+	static InterruptionManager& GetInst() {static InterruptionManager m; return m;}
 
-	inline void AddEvent(const std::string& x_name){m_events.push_back(x_name);}
+	inline void AddEvent(const std::string& x_name) {m_events.push_back(x_name);}
 	inline void Reset()                            {m_events.clear(); m_interruptions.clear();}
 	inline void ClearEvents()                      {m_events.clear();}
 
 	void Configure(const ConfigReader& x_config);
 	std::vector<Command> ReturnCommandsToSend();
-	
+
 
 
 protected:

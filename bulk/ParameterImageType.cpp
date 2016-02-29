@@ -26,12 +26,13 @@
 
 using namespace std;
 
-// Static variables 
+// Static variables
 log4cxx::LoggerPtr ParameterImageType::m_logger(log4cxx::Logger::getLogger("ParameterImageType"));
 
 
 // Static variables
-const map<string, int>  ParameterImageType::Enum = {
+const map<string, int>  ParameterImageType::Enum =
+{
 	{"CV_8UC1", CV_8UC1},
 	{"CV_8UC2", CV_8UC2},
 	{"CV_8UC3", CV_8UC3},

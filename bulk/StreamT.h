@@ -35,8 +35,8 @@ public:
 		Stream(rx_name, rx_module, rx_description, rx_requirement),
 		m_object(rx_object)
 	{}
-	~StreamT(){}
-	virtual const std::string& GetClass() const{return m_class;}
+	~StreamT() {}
+	virtual const std::string& GetClass() const {return m_class;}
 	virtual const std::string& GetType() const {return m_type;}
 
 	inline const T& GetContent() const {return m_object;}

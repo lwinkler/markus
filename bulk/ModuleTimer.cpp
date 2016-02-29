@@ -32,7 +32,7 @@ log4cxx::LoggerPtr ModuleTimer::m_logger(log4cxx::Logger::getLogger("ModuleTimer
 
 ModuleTimer::ModuleTimer(Processable& x_module)
 	: m_processable(x_module),
-	m_running(false)
+	  m_running(false)
 {}
 
 
@@ -47,7 +47,7 @@ void ModuleTimer::Start(double x_fps)
 		// Start a timer for module process
 		delay = 1.0 / x_fps;
 	}
-	
+
 	m_running = true;
 	// auto ms = chrono::milliseconds((long) delay * 1000);
 	// std::chrono::seconds<1, double> ms(delay);

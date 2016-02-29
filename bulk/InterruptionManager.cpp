@@ -48,10 +48,10 @@ void InterruptionManager::Configure(const ConfigReader& x_config)
 	for(const auto& config : x_config.FindAll("interruptions>interruption"))
 	{
 		Interruption inter(Command(
-			config.GetAttribute("command"), 
-			config.GetAttribute("value", "")),
-			atoi(config.GetAttribute("nb", "-1").c_str())
-		);
+							   config.GetAttribute("command"),
+							   config.GetAttribute("value", "")),
+						   atoi(config.GetAttribute("nb", "-1").c_str())
+						  );
 		string event = config.GetAttribute("event");
 		m_interruptions[event].push_back(inter);
 		LOG_INFO(m_logger, "Add interruption for "<<event<<" --> "<<inter.command.name<<"="<<inter.command.value<<" "<<inter.remaining<<" time(s)");

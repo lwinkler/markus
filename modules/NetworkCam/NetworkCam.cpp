@@ -82,9 +82,10 @@ void NetworkCam::Reset()
 
 bool NetworkCam::Grab()
 {
-	std::future<bool> ret = std::async(std::launch::async, [this](){ 
+	std::future<bool> ret = std::async(std::launch::async, [this]()
+	{
 		return m_capture.grab();
-	}); 
+	});
 
 	std::future_status status = ret.wait_for(std::chrono::seconds(TIMEOUT));
 	if (status == std::future_status::timeout)

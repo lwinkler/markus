@@ -58,7 +58,7 @@ public:
 		m_scalar = dynamic_cast<const StreamNum&>(*m_connected).GetScalar();
 	}
 	/// Method to be called at the end of each step to store the last point for the plot
-	inline void Store(){m_scalars.push_back(m_scalar);}
+	inline void Store() {m_scalars.push_back(m_scalar);}
 	virtual void RenderTo(cv::Mat& x_output) const
 	{
 		std::vector<float> pts;
@@ -97,7 +97,7 @@ public:
 		Stream::Deserialize(ss, x_dir);
 		m_scalar = root["value"].asDouble();
 	}
-	virtual void Randomize(unsigned int& xr_seed){randomize(m_scalar, xr_seed);}
+	virtual void Randomize(unsigned int& xr_seed) {randomize(m_scalar, xr_seed);}
 	const T& GetScalar() const {return m_scalar;}
 
 protected:

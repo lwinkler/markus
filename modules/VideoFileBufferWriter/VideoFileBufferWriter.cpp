@@ -128,8 +128,8 @@ void VideoFileBufferWriter::OpenNewFile()
 
 void VideoFileBufferWriter::ProcessFrame()
 {
-	LOG_DEBUG(m_logger, "Recording=" << m_recording << " until " << m_endOfRecord << " (" << (m_endOfRecord - m_currentTimeStamp) / 1000.0 
-		<< "s) trigger=" << m_trigger << " event=" << m_event.IsRaised() << " thread=" << m_threadIsWorking);
+	LOG_DEBUG(m_logger, "Recording=" << m_recording << " until " << m_endOfRecord << " (" << (m_endOfRecord - m_currentTimeStamp) / 1000.0
+			  << "s) trigger=" << m_trigger << " event=" << m_event.IsRaised() << " thread=" << m_threadIsWorking);
 
 	// We are always buffering
 	m_buffer1.push_back(Mat());

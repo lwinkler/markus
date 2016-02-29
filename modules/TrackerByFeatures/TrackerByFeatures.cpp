@@ -212,7 +212,7 @@ const Template * TrackerByFeatures::MatchObject(const Object& x_obj)const
 {
 	double bestDist = DBL_MAX;
 	const Template* bestTemp = nullptr;
-	
+
 	//cout<<"Comparing template "<<m_num<<" with "<<x_regs.size()<<" objects"<<endl;
 
 	for(const auto& temp : m_templates)
@@ -370,13 +370,13 @@ void TrackerByFeatures::CheckMergeSplit()
 
 	vector<const Template*> templates;
 
-	// Push all templates that were present on the current or the last frame 
+	// Push all templates that were present on the current or the last frame
 	for(const auto& temp : m_templates)
 	{
 		if(temp.m_lastSeen >= m_lastTimeStamp)
 			templates.push_back(&temp);
 	}
-	
+
 	for(auto& obj : m_objects)
 	{
 		vector<int> merged;
@@ -417,7 +417,7 @@ void TrackerByFeatures::CheckMergeSplit()
 					}
 				}
 			}
-			catch(exception& e) 
+			catch(exception& e)
 			{
 				LOG_WARN(m_logger, "Exception in split/merge: "<< e.what());
 			}

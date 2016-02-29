@@ -49,7 +49,7 @@ public:
 			Init();
 		};
 		float h;
-		int templateWindowSize; 
+		int templateWindowSize;
 		int searchWindowSize;
 		bool cielab;
 

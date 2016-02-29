@@ -36,13 +36,13 @@ class ModuleTimer
 {
 public:
 	ModuleTimer(Processable & x_module);
-	virtual ~ModuleTimer(){assert(!m_running);}
+	virtual ~ModuleTimer() {assert(!m_running);}
 	void Reset(double x_fps);
 
 	// typedef std::function<void(void)> Timeout;
 
 	inline bool IsRunning() const {return m_running;}
-	inline void Stop(){if(m_running){m_running = false;m_thread.join();}}
+	inline void Stop() {if(m_running) {m_running = false; m_thread.join();}}
 	void Start(double x_fps);
 
 protected:

@@ -30,7 +30,7 @@
 class FeatureHistory : public Feature
 {
 public:
-	FeatureHistory(){}
+	FeatureHistory() {}
 	Feature* CreateCopy() const {return new FeatureHistory(*this);}
 	void Update(const TIME_STAMP& x_timeStamp, const Feature& x_feat);
 	virtual double CompareSquared(const Feature& x_feature) const;

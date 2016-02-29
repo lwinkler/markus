@@ -62,7 +62,7 @@ public:
 	Parameter(const std::string& x_name, const std::string& x_description):
 		m_name(x_name),
 		m_description(x_description)
-		{}
+	{}
 	virtual ~Parameter() {}
 
 	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) = 0;
@@ -82,9 +82,9 @@ public:
 	virtual void Export(std::ostream& rx_os, int x_indentation) const = 0;
 
 	/// Use this method to mark parameters that must not change value after initialization
-	inline void Lock(){m_requiresLock = true;}
+	inline void Lock() {m_requiresLock = true;}
 	/// Lock the parameter if required
-	inline void LockIfRequired(){if(m_requiresLock) m_isLocked = true;}
+	inline void LockIfRequired() {if(m_requiresLock) m_isLocked = true;}
 	inline bool IsLocked() const {return m_isLocked;}
 	/// Mark the parameter as hidden (e.g. passwords)
 	inline void Hide() {m_isHidden = true;}

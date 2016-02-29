@@ -25,7 +25,7 @@
 
 using namespace std;
 
-// Static variables 
+// Static variables
 template<> log4cxx::LoggerPtr StreamNum<bool>::m_logger(log4cxx::Logger::getLogger("StreamNum<bool>"));
 template<> log4cxx::LoggerPtr StreamNum<int>::m_logger(log4cxx::Logger::getLogger("StreamNum<int>"));
 template<> log4cxx::LoggerPtr StreamNum<unsigned int>::m_logger(log4cxx::Logger::getLogger("StreamNum<unsigned int>"));

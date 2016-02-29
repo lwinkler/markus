@@ -99,7 +99,7 @@ void CompareObjects::ProcessFrame()
 		if(sum > m_param.threshold)
 			LOG_ERROR(m_logger, "Object "<<obj1.GetName()<<obj1.GetId()<<" dissimilarity is higher that threshold: "<<sum<<" > "<<m_param.threshold);
 		LOG_DEBUG(m_logger, "Object "<<obj1.GetName()<<obj1.GetId()<<" dissimilarity="<<sum);
-		
+
 		++itObj2;
 	}
 }

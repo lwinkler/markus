@@ -142,7 +142,7 @@ void StreamImage::Query(int x_posX, int x_posY) const
 	// check if out of bounds
 	if(x_posX < 0 || x_posY < 0 || x_posX >= GetWidth() || x_posY >= GetHeight())
 		return;
-	
+
 	Rect rect(x_posX, x_posY, 1, 1);
 	LOG_INFO(m_logger, "Pixel value at " << x_posX << "," << x_posY << " = " << m_image(rect));
 }

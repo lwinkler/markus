@@ -94,7 +94,7 @@ template<>void StreamObject::Query(int x_posX, int x_posY) const
 	for(const auto& elem : m_object)
 		if(elem.GetRect().contains(pt))
 			LOG_INFO(m_logger, elem);
-	
+
 }
 
 /// Randomize the content of the stream

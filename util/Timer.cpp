@@ -47,7 +47,7 @@ void Timer::Print() const
 	cout<<"Timer has measured " << GetSecDouble() << "s in " << m_increments << " increments" << std::endl;
 }
 
-QuickTimer::QuickTimer(const std::string& x_description, const std::string& x_position, const std::string& x_function) 
+QuickTimer::QuickTimer(const std::string& x_description, const std::string& x_position, const std::string& x_function)
 	: m_name(x_description + " at " + basename(x_position) + ":" + x_function)
 {
 	ms_timers[m_name].Start();

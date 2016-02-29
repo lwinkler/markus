@@ -102,10 +102,10 @@ class StreamsTestSuite : public CxxTest::TestSuite
 			// AddOutputStream( 7, new MultiStreamT<double>("double", m_doubles, *this, "Test stream"));
 		}
 
-		~FakeModule(){}
+		~FakeModule() {}
 		MKCLASS("FakeModule")
 		MKDESCR("Output video stream with additional object streams")
-		void Reset(){}
+		void Reset() {}
 		virtual void ProcessFrame()
 		{
 			for(auto& stream : m_inputStreams)
@@ -142,7 +142,7 @@ public:
 		m_fakeParams1(m_config.FindRef("application>module[name=\"FakeModule\"]", true)),
 		m_fakeParams2(m_config.FindRef("application>module[name=\"FakeModule\"]", true)),
 		m_fakeParams3(m_config.FindRef("application>module[name=\"FakeModule\"]", true))
-		{}
+	{}
 
 protected:
 	ConfigFile m_configFile;

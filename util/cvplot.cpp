@@ -58,7 +58,7 @@ Series* Figure::Add(const Series &s)
 
 void Figure::Clear()
 {
-      plots.clear();
+	plots.clear();
 }
 
 void Figure::Initialize()
@@ -112,7 +112,8 @@ void Figure::Initialize()
 Scalar Figure::GetAutoColor()
 {
 	// 	change color for each curve.
-	static const std::vector<Scalar> colors = {
+	static const std::vector<Scalar> colors =
+	{
 		CV_RGB(200,200,200),	// grey
 		CV_RGB(60,60,255),	// light-blue
 		CV_RGB(60,255,60),	// light-green
@@ -135,7 +136,7 @@ Scalar Figure::GetAutoColor()
 
 void Figure::DrawAxis(Mat& output)
 {
-	const int bs = border_size;		
+	const int bs = border_size;
 	const int h = figure_size.height;
 	const int w = figure_size.width;
 
@@ -186,7 +187,7 @@ void Figure::DrawAxis(Mat& output)
 
 void Figure::DrawPlots(Mat &output)
 {
-	int bs = border_size;		
+	int bs = border_size;
 	int h = figure_size.height;
 	// int w = figure_size.width;
 
@@ -204,7 +205,7 @@ void Figure::DrawPlots(Mat &output)
 			int x = cvRound((   i  - x_min) * x_scale);
 			Point next_point = Point(bs + x, h - (bs + y));
 			circle(output, next_point, 1, plot.color, 1);
-			
+
 			// draw a line between two points
 			if (i >= 1)
 				line(output, prev_point, next_point, plot.color, 1, CV_AA);
@@ -257,7 +258,7 @@ void Figure::Show()
 
 bool PlotManager::HasFigure(string wnd)
 {
-	return false;	
+	return false;
 }
 
 // search a named window, return null if not found.
@@ -355,9 +356,9 @@ void clear(const string figure_name)
 	Figure *fig = pm.FindFigure(figure_name);
 	if (fig != NULL)
 	{
-		fig->Clear();	
+		fig->Clear();
 	}
-	
+
 }
 // add a label to the most recently added curve
 // static method

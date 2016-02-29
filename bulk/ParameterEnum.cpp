@@ -26,7 +26,7 @@
 
 using namespace std;
 
-// Static variables 
+// Static variables
 log4cxx::LoggerPtr ParameterEnum::m_logger(log4cxx::Logger::getLogger("ParameterEnum"));
 
 
@@ -161,7 +161,7 @@ map<int,string> ParameterEnum::CreateReverseMap(const map<string, int>& x_map)
 		auto it = out.find(elem.second);
 		if(it == out.end())
 			out.insert(make_pair(elem.second, elem.first));
-		else 
+		else
 			fatal("ParameterEnum contains 2 entries with same value " + elem.first + " and " + it->second, LOC);
 	}
 	return out;

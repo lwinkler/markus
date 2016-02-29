@@ -79,20 +79,20 @@ void AddImageToEvent::ProcessFrame()
 		}
 	}
 
-/*
-	if(m_saveImage2)
-	{
-		std::stringstream ss1;
-		ss1 << m_folder << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_2." << m_param.extension;
-		addExternalImage(m_inputIm2, "globalMask", ss1.str(), m_event);
-
-		if(obj.width > 0 && obj.height > 0)
+	/*
+		if(m_saveImage2)
 		{
-			std::stringstream ss2;
-			ss2 << m_folder << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_2" << "." << m_param.extension;
-			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
-			addExternalImage((m_inputIm2)(obj.GetRect()), "objectMask", ss2.str(), m_event);
+			std::stringstream ss1;
+			ss1 << m_folder << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_2." << m_param.extension;
+			addExternalImage(m_inputIm2, "globalMask", ss1.str(), m_event);
+
+			if(obj.width > 0 && obj.height > 0)
+			{
+				std::stringstream ss2;
+				ss2 << m_folder << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_2" << "." << m_param.extension;
+				// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
+				addExternalImage((m_inputIm2)(obj.GetRect()), "objectMask", ss2.str(), m_event);
+			}
 		}
-	}
-	*/
+		*/
 }

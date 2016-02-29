@@ -110,7 +110,7 @@ public:
 	*
 	* @return true or false
 	*/
-	inline bool HasController(const std::string& x_name) const{return m_controls.find(x_name) != m_controls.end();}
+	inline bool HasController(const std::string& x_name) const {return m_controls.find(x_name) != m_controls.end();}
 	/**
 	* @brief Add a controller
 	*

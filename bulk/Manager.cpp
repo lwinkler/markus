@@ -241,7 +241,7 @@ void Manager::Process()
 	//if(m_frameCount % 20 == 0)
 	// usleep(20); // This keeps the manager unlocked to allow the sending of commands
 
-  	ManageInterruptions();
+	ManageInterruptions();
 
 	if(cpt > 0)
 	{
@@ -317,7 +317,7 @@ bool Manager::AbortCondition() const
 {
 	if(m_quitting || (m_param.nbFrames != 0 && m_frameCount >= m_param.nbFrames))
 		return true;
-	
+
 	// Check that all input streams are finished
 	for(const auto & elem : m_inputs)
 	{

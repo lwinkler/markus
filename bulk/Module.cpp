@@ -100,7 +100,7 @@ void Module::Reset()
 	}
 
 	if(m_param.cached == CachedState::WRITE_CACHE)
-		 SYSTEM("mkdir -p " + GetContext().GetOutputDir() + "/cache/");
+		SYSTEM("mkdir -p " + GetContext().GetOutputDir() + "/cache/");
 }
 
 /**
@@ -144,7 +144,7 @@ double Module::GetRecordingFps() const
 
 /**
 * @brief Return true if all conditions for processing are met (all blocking inputs have received a frame, all are syncronized)
-* 
+*
 * note: We need this kind of condition since all preceeding modules will call Process
 */
 bool Module::ProcessingCondition() const
@@ -186,7 +186,7 @@ bool Module::ProcessingCondition() const
 
 /**
 * @brief Return the timestamp to use
-* 
+*
 */
 void Module::ComputeCurrentTimeStamp()
 {
@@ -585,7 +585,8 @@ void Module::ProcessRandomInput(unsigned int& xr_seed)
 };
 
 /// Static members of ParameterCachedState
-const map<string, int> Module::ParameterCachedState::Enum = {
+const map<string, int> Module::ParameterCachedState::Enum =
+{
 	{"NO_CACHE", CachedState::NO_CACHE},
 	{"WRITE_CACHE", CachedState::WRITE_CACHE},
 	{"READ_CACHE", CachedState::READ_CACHE},

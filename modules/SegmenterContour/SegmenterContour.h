@@ -47,13 +47,13 @@ public:
 
 			RefParameterByName("type").SetRange("[CV_8UC1]"); //,CV_32SC1]");
 			RefParameterByName("features").SetRange("["
-				"x,y,width,height,"
-				"area,"
-				"ellipse_angle,ellipse_cos,ellipse_sin,ellipse_width,ellipse_height,ellipse_ratio,"
-				"moment_00,moment_11,moment_02,moment_20,"
-				"hu_moment_1,hu_moment_2,hu_moment_3,hu_moment_4,hu_moment_5,hu_moment_6,hu_moment_7,"
-				"solidity"
-			"]");
+													"x,y,width,height,"
+													"area,"
+													"ellipse_angle,ellipse_cos,ellipse_sin,ellipse_width,ellipse_height,ellipse_ratio,"
+													"moment_00,moment_11,moment_02,moment_20,"
+													"hu_moment_1,hu_moment_2,hu_moment_3,hu_moment_4,hu_moment_5,hu_moment_6,hu_moment_7,"
+													"solidity"
+													"]");
 			Init();
 		};
 		std::string objectLabel;
