@@ -196,7 +196,7 @@ add_custom_target(tests
 
 add_custom_target(indent
 	COMMENT "Indent all files by following the standart"
-	COMMAND find -L . -name \"*.h\" -print -o -name \"*.cpp\" -print | xargs astyle -nToO --style=allman
+	COMMAND tools/list_source_dirs.sh | xargs -I{} find {} -name \"*.h\" -print -o -name \"*.cpp\" -print | xargs astyle -nToO --style=allman
 )
 
 add_custom_target(xmlindent
