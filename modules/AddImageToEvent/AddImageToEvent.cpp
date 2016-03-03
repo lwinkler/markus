@@ -63,6 +63,9 @@ void AddImageToEvent::Reset()
 
 void AddImageToEvent::ProcessFrame()
 {
+	if(!m_event.IsRaised())
+		return;
+
 	const Object& obj(m_event.GetObject());
 	if(m_saveImage1)
 	{
