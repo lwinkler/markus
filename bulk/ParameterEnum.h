@@ -54,14 +54,13 @@ public:
 	virtual void Print(std::ostream& os) const;
 	virtual void SetValueToDefault()
 	{
-		if(m_isLocked)
+		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		mr_value = m_default;
 		m_confSource = PARAMCONF_DEF;
 	}
 	inline const ParameterType& GetType() const {const static ParameterType s = PARAM_ENUM; return s;}
 	virtual const std::string& GetTypeString() const = 0;
-	virtual void Export(std::ostream& rx_os, int x_indentation) const;
 	virtual const std::map<std::string, int>& GetEnum() const = 0;
 	virtual const std::map<int, std::string>& GetReverseEnum() const = 0;
 

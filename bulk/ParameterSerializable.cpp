@@ -27,18 +27,6 @@ using namespace std;
 
 log4cxx::LoggerPtr ParameterSerializable::m_logger(log4cxx::Logger::getLogger("ParameterSerializable"));
 
-void ParameterSerializable::Export(ostream& rx_os, int x_indentation) const
-{
-	string tabs(x_indentation, '\t');
-	rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<endl;
-	tabs = string(x_indentation + 1, '\t');
-	rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<endl;
-	rx_os<<tabs<<"<value default=\'"<<m_default<<"\'>";
-	rx_os<<mr_value.SerializeToString()<<"</value>"<<endl;
-	rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<endl;
-	tabs = string(x_indentation, '\t');
-	rx_os<<tabs<<"</param>"<<endl;
-}
 
 /**
  * @brief Generate values in range

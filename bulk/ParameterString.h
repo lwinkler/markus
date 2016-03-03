@@ -64,7 +64,6 @@ public:
 		mr_value = m_default;
 		m_confSource = PARAMCONF_DEF;
 	}
-	virtual void Export(std::ostream& rx_os, int x_tabs) const;
 	inline const ParameterType& GetType() const {const static ParameterType s = PARAM_STR; return s;}
 	inline const std::string& GetTypeString() const {const static std::string s = "string"; return s;}
 

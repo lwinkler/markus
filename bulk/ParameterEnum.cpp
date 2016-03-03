@@ -29,27 +29,6 @@ using namespace std;
 // Static variables
 log4cxx::LoggerPtr ParameterEnum::m_logger(log4cxx::Logger::getLogger("ParameterEnum"));
 
-
-/**
-* @brief Export the parameter for module description
-*
-* @param rx_os         Output stream
-* @param x_indentation Number of tabs for indentation
-*/
-void ParameterEnum::Export(ostream& rx_os, int x_indentation) const
-{
-	string tabs(x_indentation, '\t');
-	rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<endl;
-	tabs = string(x_indentation + 1, '\t');
-	rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<endl;
-	rx_os<<tabs<<"<value default=\""<<GetReverseEnum().at(m_default)<<"\">"<<GetReverseEnum().at(GetValue())<<"</value>"<<endl;
-	rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<endl;
-	tabs = string(x_indentation, '\t');
-	rx_os<<tabs<<"</param>"<<endl;
-}
-
-
-
 /**
 * @brief Set the value of the parameter
 *
@@ -139,12 +118,12 @@ void ParameterEnum::Print(ostream& os) const
 {
 	try
 	{
-		os<<m_name<<"="<<GetReverseEnum().at(GetValue())<<" ("<<GetValue()<<") ("<<configType[m_confSource]<<"); ";
+		os<<GetName()<<"="<<GetReverseEnum().at(GetValue())<<" ("<<GetValue()<<") ("<<configType[m_confSource]<<"); ";
 	}
 	catch(exception &e)
 	{
-		LOG_WARN(m_logger, "Exception while printing " << m_name << " with value " << GetValue());
-		throw MkException("Exception with parameter " + m_name + ": " + string(e.what()), LOC);
+		LOG_WARN(m_logger, "Exception while printing " << GetName() << " with value " << GetValue());
+		throw MkException("Exception with parameter " + GetName() + ": " + string(e.what()), LOC);
 	}
 }
 

@@ -367,7 +367,7 @@ void Module::PrintStatistics(ConfigReader& xr_xmlResult) const
 			 m_timerProcessFrame.GetMsLong()<<"ms, tconv="<<m_timerConversion.GetMsLong()<<"ms, twait="<<
 			 m_timerWaiting.GetMsLong()<<"ms), "<< fps <<" fps");
 	if(m_timerProcessable.GetMsLong() > 0)
-		LOG_INFO(m_logger, "Module "<<GetName()<<": Time spent in parent: " << m_timerProcessable.GetMsLong() << " ms");
+		LOG_INFO(m_logger, "Module "<<GetName()<<": Time spent in current and depending module: " << m_timerProcessable.GetMsLong() << " ms");
 
 	// Write perf to output XML
 	ConfigReader perfModule(xr_xmlResult.FindRef("module[name=\"" + GetName() + "\"]", true));

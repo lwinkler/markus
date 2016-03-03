@@ -79,7 +79,7 @@ public:
 	}
 	virtual bool CheckRange() const = 0;
 	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const = 0;
-	virtual void Export(std::ostream& rx_os, int x_indentation) const = 0;
+	virtual void Export(std::ostream& rx_os, int x_indentation) const final;
 
 	/// Use this method to mark parameters that must not change value after initialization
 	inline void Lock() {m_requiresLock = true;}
@@ -97,13 +97,16 @@ public:
 	virtual void SetRange(const std::string& x_range) = 0;
 
 protected:
-	const std::string m_name;
 	ParameterConfigType m_confSource = PARAMCONF_UNSET;
+	bool m_isLocked       = false;
+
+protected: // TODO make private
+	const std::string m_name;
 	const std::string m_description;
 
 	bool m_requiresLock   = false;
-	bool m_isLocked       = false;
 	bool m_isHidden       = false;
+
 private:
 	static log4cxx::LoggerPtr m_logger;
 };

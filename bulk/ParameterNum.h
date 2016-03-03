@@ -149,7 +149,7 @@ public:
 	}
 	virtual void Print(std::ostream& os) const
 	{
-		os<<m_name<<"="<<GetValue()<<" ["<<m_min<<":"<<m_max<<"] ("<<configType[m_confSource]<<"); ";
+		os<<GetName()<<"="<<GetValue()<<" ["<<m_min<<":"<<m_max<<"] ("<<configType[m_confSource]<<"); ";
 	}
 	virtual void SetValueToDefault()
 	{
@@ -157,17 +157,6 @@ public:
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		mr_value = m_default;
 		m_confSource = PARAMCONF_DEF;
-	}
-	virtual void Export(std::ostream& rx_os, int x_indentation) const
-	{
-		std::string tabs(x_indentation, '\t');
-		rx_os<<tabs<<"<param name=\""<<m_name<<"\">"<<std::endl;
-		tabs = std::string(x_indentation + 1, '\t');
-		rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<std::endl;
-		rx_os<<tabs<<"<value min=\""<<m_min<<"\" max=\""<<m_max<<"\" default=\""<<m_default<<"\">"<<GetValue()<<"</value>"<<std::endl;
-		rx_os<<tabs<<"<description>"<<m_description<<"</description>"<<std::endl;
-		tabs = std::string(x_indentation, '\t');
-		rx_os<<tabs<<"</param>"<<std::endl;
 	}
 
 	T m_default;

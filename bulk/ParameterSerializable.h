@@ -96,7 +96,6 @@ public:
 		mr_value.Deserialize(ss, "");
 		m_confSource = PARAMCONF_DEF;
 	}
-	virtual void Export(std::ostream& rx_os, int x_indentation) const;
 
 private:
 	static log4cxx::LoggerPtr m_logger;
