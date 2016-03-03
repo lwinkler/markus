@@ -1,5 +1,5 @@
 <param name="param_string">
 	<type>string</type>
-	<value default="legal">legal</value>
+	<value default='legal' range='[]'>legal</value>
 	<description>Parameter of type string</description>
 </param>

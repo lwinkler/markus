@@ -1,5 +1,5 @@
 <param name="param_calibrationByHeight">
 	<type>serializable</type>
-	<value default='{"height":0.0,"x":1.0,"y":0.0}'>{"height":0.0,"x":1.0,"y":0.0}</value>
+	<value default='{"height":0.0,"x":1.0,"y":0.0}' range=''>{"height":0.0,"x":1.0,"y":0.0}</value>
 	<description>Parameter of type CalibrationByHeight</description>
 </param>
