@@ -31,9 +31,8 @@ using namespace std;
 log4cxx::LoggerPtr Stream::m_logger(log4cxx::Logger::getLogger("Stream"));
 
 Stream::Stream(const string& x_name, Module& rx_module, const string& rx_description, const string& rx_requirement) :
-	m_name(x_name),
+	Parameter(x_name, rx_description),
 	mr_module(rx_module),
-	m_description(rx_description),
 	m_requirement(rx_requirement),
 	m_timeStamp(TIME_STAMP_MIN)
 {
@@ -97,13 +96,15 @@ void Stream::Deserialize(istream& x_in, const string& x_dir)
 	Json::Value root;
 	x_in >> root;
 
-	m_name = root["name"].asString();
+	if(GetName() != root["name"].asString())
+		throw MkException("Stream must have the same name before serializing", LOC);
 	// if(m_id   != root["id"].asInt())
 	// throw MkException("Stream must have the right id before serializing", LOC);
 	// cout<<root["type"].asString()<<" != "<<GetType()<<endl;
 	if(root["type"].asString() != GetType())
 		throw MkException("Stream must have the right type before serializing", LOC);
-	m_description = root["description"].asString();
+	if(GetDescription() != root["description"].asString())
+		LOG_WARN(m_logger, "Stream does not have the same description");
 	m_timeStamp   = root["timeStamp"].asInt64();
 	if(root["connected"] != IsConnected())
 		throw MkException("Stream must have the same connection state before deserializing", LOC);

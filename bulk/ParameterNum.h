@@ -61,8 +61,8 @@ public:
 		ss2<<values.at(1);
 		ss2>>m_max;
 	}
-	inline const ParameterType& GetType() const {return m_type;}
-	inline const std::string& GetTypeString() const {return m_typeStr;}
+	inline const ParameterType& GetParameterType() const {return m_type;}
+	inline const std::string& GetType() const {return m_typeStr;}
 	inline const T GetDefault() const {return m_default;}
 	inline const T GetMin() const {return m_min;}
 	inline const T GetMax() const {return m_max;}
@@ -105,7 +105,7 @@ public:
 	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range) const
 	{
 		std::string range = x_range == "" ? GetRange() : x_range;
-		const ParameterType& type = GetType();
+		const ParameterType& type = GetParameterType();
 		rx_values.clear();
 		double min = 0;
 		double max = 0;

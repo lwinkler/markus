@@ -48,18 +48,18 @@ log4cxx::LoggerPtr ControllerParameter::m_logger(log4cxx::Logger::getLogger("Con
 *
 * @param xp_value Output type
 */
-void ControllerParameter::GetParameterType(string* xp_value)
+void ControllerParameter::GetType(string* xp_value)
 {
 	Processable::ReadLock lock(m_module.RefLock());
 	if(xp_value != nullptr)
 	{
-		*xp_value = m_param.GetTypeString();
+		*xp_value = m_param.GetType();
 		return;
 	}
 #ifdef MARKUS_NO_GUI
 	assert(false);
 #else
-	LOG_INFO(m_logger, "Parameter type is \"" + m_param.GetTypeString() + "\"");
+	LOG_INFO(m_logger, "Parameter type is \"" + m_param.GetType() + "\"");
 #endif
 }
 
@@ -169,7 +169,7 @@ ControllerParameter::ControllerParameter(Parameter& x_param, Processable& x_modu
 	m_param(x_param),
 	m_module(x_module)
 {
-	m_actions.insert(make_pair("GetType",    &ControllerParameter::GetParameterType));
+	m_actions.insert(make_pair("GetType",    &ControllerParameter::GetType));
 	m_actions.insert(make_pair("GetRange",   &ControllerParameter::GetRange));
 	m_actions.insert(make_pair("Set",        &ControllerParameter::SetControlledValue));
 	m_actions.insert(make_pair("Get",        &ControllerParameter::GetCurrent));

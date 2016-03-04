@@ -43,7 +43,7 @@ void Parameter::Export(ostream& rx_os, int x_indentation) const
 	string tabs(x_indentation, '\t');
 	rx_os<<tabs<<"<param name=\""<<GetName()<<"\">"<<endl;
 	tabs = string(x_indentation + 1, '\t');
-	rx_os<<tabs<<"<type>"<<GetTypeString()<<"</type>"<<endl;
+	rx_os<<tabs<<"<type>"<<GetType()<<"</type>"<<endl;
 	rx_os<<tabs<<"<value default='"<<GetDefaultString()<<"' range='"<<GetRange()<<"'>"<<GetValueString()<<"</value>"<<endl;
 	rx_os<<tabs<<"<description>"<<GetDescription()<<"</description>"<<endl;
 	tabs = string(x_indentation, '\t');

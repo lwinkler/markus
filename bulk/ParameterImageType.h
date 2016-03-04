@@ -38,7 +38,7 @@ public:
 	~ParameterImageType() {}
 
 	// Conversion methods
-	inline const std::string& GetTypeString() const {const static std::string s = "imageType"; return s;}
+	inline const std::string& GetType() const {const static std::string s = "imageType"; return s;}
 	const std::map<std::string, int> & GetEnum() const {return Enum;}
 	const std::map<int, std::string> & GetReverseEnum() const {return ReverseEnum;}
 

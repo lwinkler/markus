@@ -199,7 +199,7 @@ void Manager::Reset(bool x_resetInputs)
 		// Do not add param if locked or already present
 		if(elem->IsLocked() || HasController(elem->GetName()))
 			continue;
-		Controller* ctr = Factories::parameterControllerFactory().Create(elem->GetType(), *elem, *this);
+		Controller* ctr = Factories::parameterControllerFactory().Create(elem->GetParameterType(), *elem, *this);
 		if(ctr == nullptr)
 			throw MkException("Controller creation failed", LOC);
 		else AddController(ctr);

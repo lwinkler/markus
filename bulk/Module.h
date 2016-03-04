@@ -63,7 +63,7 @@ public:
 		~ParameterCachedState() {}
 
 		// Conversion methods
-		inline const std::string& GetTypeString() const {const static std::string s = "cachedState"; return s;}
+		inline const std::string& GetType() const {const static std::string s = "cachedState"; return s;}
 		const std::map<std::string, int> & GetEnum() const {return Enum;}
 		const std::map<int, std::string> & GetReverseEnum() const {return ReverseEnum;}
 

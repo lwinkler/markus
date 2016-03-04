@@ -52,7 +52,7 @@ public:
 	virtual std::string GetValueFromWidget() = 0;
 
 	// Controllers
-	void GetParameterType(std::string* xp_value);
+	void GetType(std::string* xp_value);
 	void GetRange(std::string* xp_value);
 	void SetControlledValue(std::string* xp_value);
 	void GetCurrent(std::string* xp_value);

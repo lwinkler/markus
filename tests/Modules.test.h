@@ -373,12 +373,12 @@ public:
 				if(!elem->IsLocked())
 					continue;
 
-				TS_TRACE("## on parameter " + elem->GetName() + " of type " + elem->GetTypeString() + " on range " + elem->GetRange());
+				TS_TRACE("## on parameter " + elem->GetName() + " of type " + elem->GetType() + " on range " + elem->GetRange());
 
 				// Generate a new module with each value for locked parameter
 				vector<string> values;
 
-				TS_TRACE("Generate values for param of type " + elem->GetTypeString() + " in range " + elem->GetRange());
+				TS_TRACE("Generate values for param of type " + elem->GetType() + " in range " + elem->GetRange());
 				elem->GenerateValues(10, values);
 
 				for(const auto& elemVal : values)

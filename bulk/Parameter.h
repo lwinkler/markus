@@ -38,7 +38,9 @@ enum ParameterType
 	PARAM_STR,
 	PARAM_SERIALIZABLE,
 	PARAM_OBJECT_HEIGHT,
-	PARAM_ENUM
+	PARAM_ENUM,
+	PARAM_UNKNOWN,
+	PARAM_SIZE
 };
 
 enum ParameterConfigType
@@ -54,7 +56,7 @@ enum ParameterConfigType
 
 
 /// Class representing a generic parameter for use in a module
-class Parameter
+class Parameter // : public Serializable
 {
 public:
 	static const char configType[PARAMCONF_SIZE][16];
@@ -68,8 +70,8 @@ public:
 	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) = 0;
 	virtual void SetDefault(const std::string& x_value) = 0;
 	inline const std::string& GetName() const {return m_name;}
-	virtual const ParameterType& GetType() const = 0;
-	virtual const std::string& GetTypeString() const = 0;
+	virtual const ParameterType& GetParameterType() const = 0;
+	virtual const std::string& GetType() const = 0;
 	inline const std::string& GetDescription() const {return m_description;}
 	inline const ParameterConfigType& GetConfigurationSource() const {return m_confSource;}
 	virtual void SetValueToDefault() = 0;
@@ -79,7 +81,7 @@ public:
 	}
 	virtual bool CheckRange() const = 0;
 	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const = 0;
-	virtual void Export(std::ostream& rx_os, int x_indentation) const final;
+	virtual void Export(std::ostream& rx_os, int x_indentation) const;
 
 	/// Use this method to mark parameters that must not change value after initialization
 	inline void Lock() {m_requiresLock = true;}
@@ -95,6 +97,9 @@ public:
 	virtual std::string GetDefaultString() const = 0;
 	virtual std::string GetRange() const = 0;
 	virtual void SetRange(const std::string& x_range) = 0;
+
+	// virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const override {x_out << GetValueString();}
+	// virtual void Deserialize(std::istream& x_in, const std::string& x_dir) override {std::stringstream ss; ss << x_in; SetValue(ss.str(), PARAMCONF_UNKNOWN);}
 
 protected:
 	ParameterConfigType m_confSource = PARAMCONF_UNSET;

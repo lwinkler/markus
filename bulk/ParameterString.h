@@ -64,8 +64,8 @@ public:
 		mr_value = m_default;
 		m_confSource = PARAMCONF_DEF;
 	}
-	inline const ParameterType& GetType() const {const static ParameterType s = PARAM_STR; return s;}
-	inline const std::string& GetTypeString() const {const static std::string s = "string"; return s;}
+	inline const ParameterType& GetParameterType() const {const static ParameterType s = PARAM_STR; return s;}
+	inline const std::string& GetType() const {const static std::string s = "string"; return s;}
 
 	inline const std::string& GetDefault() {return m_default;}
 private:

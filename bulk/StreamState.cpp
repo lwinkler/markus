@@ -32,6 +32,7 @@ using namespace cv;
 template<> log4cxx::LoggerPtr StreamState::m_logger(log4cxx::Logger::getLogger("StreamState"));
 template<> const string StreamState::m_type         = "State";
 template<> const string StreamState::m_class        = "StreamState";
+template<> const ParameterType StreamState::m_parameterType = PARAM_BOOL;
 
 // Transmit the state to the connected module
 

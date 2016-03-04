@@ -31,7 +31,7 @@
 
 /// This is the parent class for all streams (input and output of data)
 
-class Stream : public Serializable
+class Stream : public Serializable, public Parameter
 {
 public:
 	Stream(const std::string& x_name, Module& rx_module, const std::string& rx_description, const std::string& rx_requirement = "");
@@ -40,8 +40,7 @@ public:
 	inline void Reset() {m_timeStamp = TIME_STAMP_MIN;}
 
 	virtual const std::string& GetClass() const = 0;
-	virtual const std::string& GetType() const = 0;
-	inline const std::string& GetName() const {return m_name;}
+	virtual const std::string& GetType() const override = 0;
 	// inline int GetId() const {return m_id;}
 	// inline void SetId(int x_id) {m_id = x_id;} // id should disappear at term
 	inline int GetWidth() const {return GetModule().GetWidth();}
@@ -81,11 +80,24 @@ public:
 	inline void SetBlocking(bool x_block) {m_blocking = x_block;}
 	inline void SetSynchronized(bool x_sync) {m_synchronized = x_sync;}
 
+	// Methods inherited from Parameter class
+	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType){} // TODO
+	virtual void SetDefault(const std::string& x_value) {} // TODO
+	virtual const ParameterType& GetParameterType() const = 0;
+	virtual void SetValueToDefault(){} // TODO
+	virtual bool CheckRange() const {return true;}
+	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const {rx_values.clear();}
+	// virtual void Export(std::ostream& rx_os, int x_indentation) const {Export(rx_os, 0, x_indentation, true);}
+
+	// For controllers and actions
+	virtual std::string GetValueString() const{ return SerializeToString();};
+	virtual std::string GetDefaultString() const{return "";};
+	virtual std::string GetRange() const {return "";}
+	virtual void SetRange(const std::string& x_range){}
+
 protected:
-	std::string m_name;
 	// const int m_id;
 	Module& mr_module;
-	std::string m_description;
 	std::atomic<TIME_STAMP> m_timeStamp;
 
 	Stream * m_connected = nullptr;

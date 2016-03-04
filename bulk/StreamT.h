@@ -38,6 +38,7 @@ public:
 	~StreamT() {}
 	virtual const std::string& GetClass() const {return m_class;}
 	virtual const std::string& GetType() const {return m_type;}
+	virtual const ParameterType& GetParameterType() const {return m_parameterType;}
 
 	inline const T& GetContent() const {return m_object;}
 	inline       T& RefContent() const {return m_object;}
@@ -58,6 +59,7 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 	static const std::string m_type;
 	static const std::string m_class;
+	static const ParameterType m_parameterType;
 };
 
 #endif

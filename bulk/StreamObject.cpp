@@ -34,6 +34,7 @@ using namespace cv;
 template<>log4cxx::LoggerPtr StreamObject::m_logger(log4cxx::Logger::getLogger("StreamObject"));
 template<> const string StreamObject::m_type         = "Objects";
 template<> const string StreamObject::m_class        = "StreamObjects";
+template<> const ParameterType StreamObject::m_parameterType = PARAM_SERIALIZABLE;
 
 /// Convert the input to the right format
 
