@@ -43,8 +43,8 @@ template<>void StreamObject::ConvertInput()
 	if(m_connected == nullptr)
 	{
 		// LOG_DEBUG(m_logger, "Object input not connected, use the whole image");
-		m_object.clear();
-		m_object.push_back(Object("screen", Rect(0, 0, GetWidth(), GetHeight())));
+		// TODO m_object.clear();
+		// TODO m_object.push_back(Object("screen", Rect(0, 0, GetWidth(), GetHeight())));
 		return;
 	}
 	assert(m_connected->IsConnected());

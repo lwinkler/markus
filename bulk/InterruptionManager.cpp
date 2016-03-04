@@ -62,7 +62,7 @@ void InterruptionManager::Configure(const ConfigReader& x_config)
 /// Send all commands generated from interruptions
 vector<Command> InterruptionManager::ReturnCommandsToSend()
 {
-	vector<Command> commands;
+	vector<Command> commands = m_commands;
 	for(const auto& event : m_events)
 	{
 		auto it = m_interruptions.find(event);
@@ -83,5 +83,6 @@ vector<Command> InterruptionManager::ReturnCommandsToSend()
 	if(!commands.empty())
 		LOG_INFO(m_logger, "Returning " << commands.size() << " interruptions");
 	m_events.clear();
+	m_commands.clear();
 	return commands;
 }

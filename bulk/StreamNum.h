@@ -101,7 +101,12 @@ public:
 	virtual void Randomize(unsigned int& xr_seed) {randomize(m_scalar, xr_seed);}
 	const T& GetScalar() const {return m_scalar;}
 
-	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType){std::stringstream ss(x_value); deserialize(ss, m_scalar);}
+	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType)
+	{
+		std::stringstream ss(x_value);
+		deserialize(ss, m_scalar);
+		m_confSource = x_confType;
+	}
 	virtual void SetDefault(const std::string& x_value){assert(false);}
 	virtual void SetValueToDefault(){m_scalar = T{};};
 	virtual std::string GetValueString() const{std::stringstream ss; serialize(ss, m_scalar); return ss.str();};
