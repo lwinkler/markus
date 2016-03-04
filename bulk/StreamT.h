@@ -25,6 +25,7 @@
 #define STREAM_T_H
 
 #include "Stream.h"
+#include "feature_util.h"
 
 /// Stream in the form of located objects
 
@@ -50,6 +51,11 @@ public:
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 	// double GetFeatureValue(const std::vector<Feature>& x_vect, const char* x_name);
+
+	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType){}
+	virtual void SetDefault(const std::string& x_value){assert(false);}
+	virtual void SetValueToDefault(){m_object = T{};};
+	virtual std::string GetValueString() const{std::stringstream ss; serialize(ss, m_object); return ss.str();};
 
 protected:
 	T& m_object;

@@ -41,6 +41,7 @@ public:
 
 	virtual const std::string& GetClass() const = 0;
 	virtual const std::string& GetType() const override = 0;
+	virtual const ParameterType& GetParameterType() const = 0;
 	// inline int GetId() const {return m_id;}
 	// inline void SetId(int x_id) {m_id = x_id;} // id should disappear at term
 	inline int GetWidth() const {return GetModule().GetWidth();}
@@ -81,16 +82,12 @@ public:
 	inline void SetSynchronized(bool x_sync) {m_synchronized = x_sync;}
 
 	// Methods inherited from Parameter class
-	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType){assert(false);} // TODO
-	virtual void SetDefault(const std::string& x_value) {assert(false);} // TODO
-	virtual const ParameterType& GetParameterType() const = 0;
-	virtual void SetValueToDefault(){Reset();}
+	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType) = 0;
+	virtual void SetDefault(const std::string& x_value) = 0;
+	virtual void SetValueToDefault() = 0;
 	virtual bool CheckRange() const {return true;}
 	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const {rx_values.clear();}
-	// virtual void Export(std::ostream& rx_os, int x_indentation) const {Export(rx_os, 0, x_indentation, true);}
-
-	// For controllers and actions
-	virtual std::string GetValueString() const{ return SerializeToString();};
+	virtual std::string GetValueString() const = 0;
 	virtual std::string GetDefaultString() const{return "";};
 	virtual std::string GetRange() const {return "";}
 	virtual void SetRange(const std::string& x_range){}

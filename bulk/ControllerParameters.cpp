@@ -434,6 +434,46 @@ string ControllerSerializable::GetValueFromWidget()
 #endif
 }
 /*------------------------------------------------------------------------------------------------*/
+ControllerStream::ControllerStream(Parameter& x_param, Processable& x_module):
+	ControllerParameter(x_param, x_module),
+	m_param2(dynamic_cast<Stream&>(x_param))
+{
+	mp_lineEdit = nullptr;
+}
+
+QWidget* ControllerStream::CreateWidget()
+{
+#ifndef MARKUS_NO_GUI
+	mp_lineEdit = new QLineEdit();
+	mp_lineEdit->setStyleSheet("color: black; background-color: white");
+	mp_lineEdit->setText(m_param2.GetValueString().c_str());
+	return mp_lineEdit;
+#else
+	return nullptr;
+#endif
+}
+
+
+void ControllerStream::SetWidgetValue(const string& x_value)
+{
+#ifndef MARKUS_NO_GUI
+	mp_lineEdit->setText(x_value.c_str());
+#else
+	assert(false);
+	return;
+#endif
+}
+
+string ControllerStream::GetValueFromWidget()
+{
+#ifndef MARKUS_NO_GUI
+	return mp_lineEdit->text().toStdString();
+#else
+	assert(false);
+	return "";
+#endif
+}
+/*------------------------------------------------------------------------------------------------*/
 ControllerCalibrationByHeight::ControllerCalibrationByHeight(Parameter& x_param, Processable& x_module):
 	ControllerParameter(x_param, x_module),
 	m_param2(dynamic_cast<ParameterSerializable&>(x_param))

@@ -29,6 +29,7 @@
 #include "ParameterEnum.h"
 #include "ParameterString.h"
 #include "ParameterSerializable.h"
+#include "Stream.h"
 #include "Controller.h"
 
 
@@ -174,6 +175,21 @@ protected:
 	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
 	QLineEdit             * mp_lineEdit;
 	ParameterSerializable & m_param2;
+};
+
+/// Control class for a object height parameter
+class ControllerStream : public ControllerParameter
+{
+public:
+	ControllerStream(Parameter& x_param, Processable& x_module);
+	virtual QWidget* CreateWidget();
+	virtual void SetWidgetValue(const std::string& x_value);
+	virtual std::string GetValueFromWidget();
+
+protected:
+	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
+	QLineEdit             * mp_lineEdit;
+	Stream & m_param2;
 };
 
 /// Control class for a object height parameter

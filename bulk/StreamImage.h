@@ -56,6 +56,11 @@ public:
 	const cv::Mat& GetImage() const {return m_image;}
 	void Connect(Stream * x_stream);
 
+	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType){assert(false);} // TODO
+	virtual void SetDefault(const std::string& x_value){assert(false);}
+	virtual void SetValueToDefault(){m_image.setTo(0);};
+	virtual std::string GetValueString() const{std::stringstream ss; ss << m_image; return ss.str();};
+
 protected:
 	static std::string createResolutionString(const cv::Size x_size, int x_depth, int x_channels)
 	{
