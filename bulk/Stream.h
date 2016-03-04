@@ -81,10 +81,10 @@ public:
 	inline void SetSynchronized(bool x_sync) {m_synchronized = x_sync;}
 
 	// Methods inherited from Parameter class
-	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType){} // TODO
-	virtual void SetDefault(const std::string& x_value) {} // TODO
+	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType){assert(false);} // TODO
+	virtual void SetDefault(const std::string& x_value) {assert(false);} // TODO
 	virtual const ParameterType& GetParameterType() const = 0;
-	virtual void SetValueToDefault(){} // TODO
+	virtual void SetValueToDefault(){Reset();}
 	virtual bool CheckRange() const {return true;}
 	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const {rx_values.clear();}
 	// virtual void Export(std::ostream& rx_os, int x_indentation) const {Export(rx_os, 0, x_indentation, true);}

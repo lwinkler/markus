@@ -231,7 +231,7 @@ public:
 	void testStreamImage()
 	{
 		cv::Mat image1(cv::Size(640, 480), CV_8U);
-		StreamImage stream1("streamImage", image1, *mp_fakeInput, "A stream of image");
+		StreamImage stream1("img", image1, *mp_fakeInput, "A stream of image");
 		testSerialization(stream1, "StreamImage");
 	}
 

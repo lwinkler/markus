@@ -53,12 +53,12 @@ Module::~Module()
 {
 	// Delete all streams
 	for(auto & elem : m_inputStreams)
-		delete(elem.second);
+		; // TODO clarify delete(elem.second);
 	for(auto & elem : m_outputStreams)
 		delete(elem.second);
 #ifdef MARKUS_DEBUG_STREAMS
 	for(auto & elem : m_debugStreams)
-		delete(elem.second);
+		; // TODO clarify delete(elem.second);
 #endif
 }
 
@@ -487,6 +487,11 @@ void Module::AddInputStream(int x_id, Stream* xp_stream)
 	if(m_inputStreams.find(x_id) != m_inputStreams.end())
 		throw MkException("Two streams with same id", LOC);
 	m_inputStreams.insert(make_pair(x_id, xp_stream));
+
+	if(xp_stream->GetParameterType() != PARAM_UNKNOWN)
+	{
+		m_param.AddParameter(xp_stream);
+	}
 }
 
 /// Add an output stream

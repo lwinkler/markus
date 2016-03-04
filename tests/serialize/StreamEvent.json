@@ -1,7 +1,7 @@
 
 {
 	"connected" : false,
-	"description" : "Another description for a stream of event",
+	"description" : "A stream of event",
 	"event" : 
 	{
 		"dateEvent" : 12341244444444,
@@ -42,7 +42,7 @@
 		},
 		"raised" : true
 	},
-	"name" : "streamEventA",
+	"name" : "streamEvent",
 	"timeStamp" : 12341244444444,
 	"type" : "Event"
 }

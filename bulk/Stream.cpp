@@ -97,12 +97,12 @@ void Stream::Deserialize(istream& x_in, const string& x_dir)
 	x_in >> root;
 
 	if(GetName() != root["name"].asString())
-		throw MkException("Stream must have the same name before serializing", LOC);
+		throw MkException("Stream must have the same name before serializing: " + GetName(), LOC);
 	// if(m_id   != root["id"].asInt())
 	// throw MkException("Stream must have the right id before serializing", LOC);
 	// cout<<root["type"].asString()<<" != "<<GetType()<<endl;
 	if(root["type"].asString() != GetType())
-		throw MkException("Stream must have the right type before serializing", LOC);
+		throw MkException("Stream must have the right type before serializing: " + GetType(), LOC);
 	if(GetDescription() != root["description"].asString())
 		LOG_WARN(m_logger, "Stream does not have the same description");
 	m_timeStamp   = root["timeStamp"].asInt64();

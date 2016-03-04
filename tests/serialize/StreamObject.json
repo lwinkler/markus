@@ -1,7 +1,7 @@
 
 {
 	"connected" : false,
-	"description" : "Another description for a stream of objects",
+	"description" : "A stream of objects",
 	"name" : "streamObject",
 	"objects" : 
 	[

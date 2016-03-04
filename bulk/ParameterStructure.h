@@ -49,6 +49,7 @@ public:
 	const std::vector<Parameter*>& GetList() const {return m_list;}
 	void LockParameterByName(const std::string& x_name) {RefParameterByName(x_name).Lock();}
 	void LockIfRequired();
+	void AddParameter(Parameter* xr_param);
 
 protected:
 	std::vector<Parameter*> m_list;

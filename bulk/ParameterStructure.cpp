@@ -46,6 +46,14 @@ ParameterStructure::~ParameterStructure()
 }
 
 /**
+* @brief Add a parameter to the structure
+*/
+void ParameterStructure::AddParameter(Parameter* xr_param)
+{
+	m_list.push_back(xr_param);
+}
+
+/**
 * @brief Initialize the parameter structure with the value from default or xml configuration
 */
 void ParameterStructure::Init()
