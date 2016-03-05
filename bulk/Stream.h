@@ -47,7 +47,6 @@ public:
 	inline int GetWidth() const {return GetModule().GetWidth();}
 	inline int GetHeight() const {return GetModule().GetHeight();}
 	inline cv::Size GetSize() const {return cv::Size(mr_module.GetWidth(), mr_module.GetHeight());}
-	inline const std::string& GetDescription() const {return m_description;}
 	virtual void RenderTo(cv::Mat& x_output) const = 0;
 	virtual void Query(int x_posX, int x_posY) const = 0;
 	virtual void Connect(Stream *x_stream);

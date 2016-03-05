@@ -106,14 +106,12 @@ protected:
 	ParameterConfigType m_confSource = PARAMCONF_UNSET;
 	bool m_isLocked       = false;
 
-protected: // TODO make private
+private:
 	const std::string m_name;
 	const std::string m_description;
-
 	bool m_requiresLock   = false;
 	bool m_isHidden       = false;
 
-private:
 	static log4cxx::LoggerPtr m_logger;
 };
 

@@ -70,8 +70,8 @@ public:
 		if(x_isInput) inout = "input";
 		rx_os<<tabs<<"<"<<inout<<" id=\""<<x_id<<"\" multi=\"" << m_size << "\">"<<std::endl;
 		tabs = std::string(x_indentation + 1, '\t');
-		rx_os<<tabs<<"<type>"<<StreamT<T>::GetParameterType()<<"</type>"<<std::endl;
-		rx_os<<tabs<<"<name>"<<Stream::m_name<<"</name>"<<std::endl;
+		rx_os<<tabs<<"<type>"<<StreamT<T>::GetType()<<"</type>"<<std::endl;
+		rx_os<<tabs<<"<name>"<<Stream::GetName()<<"</name>"<<std::endl;
 		rx_os<<tabs<<"<description>"<<Stream::GetDescription()<<"</description>"<<std::endl;
 		tabs = std::string(x_indentation, '\t');
 		rx_os<<tabs<<"</"<<inout<<">"<<std::endl;

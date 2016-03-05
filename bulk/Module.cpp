@@ -52,13 +52,14 @@ Module::Module(ParameterStructure& xr_params) :
 Module::~Module()
 {
 	// Delete all streams
-	for(auto & elem : m_inputStreams)
-		; // TODO clarify delete(elem.second);
+	// note: input streams will be destroyed as parameters
+	// for(auto & elem : m_inputStreams)
+		// delete(elem.second);
 	for(auto & elem : m_outputStreams)
 		delete(elem.second);
 #ifdef MARKUS_DEBUG_STREAMS
-	for(auto & elem : m_debugStreams)
-		; // TODO clarify delete(elem.second);
+	// for(auto & elem : m_debugStreams)
+		// delete(elem.second);
 #endif
 }
 
@@ -491,6 +492,7 @@ void Module::AddInputStream(int x_id, Stream* xp_stream)
 	if(xp_stream->GetParameterType() != PARAM_UNKNOWN)
 	{
 		m_param.AddParameter(xp_stream);
+		m_param.SetValueToDefault();
 	}
 }
 

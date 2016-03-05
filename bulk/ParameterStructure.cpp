@@ -50,6 +50,11 @@ ParameterStructure::~ParameterStructure()
 */
 void ParameterStructure::AddParameter(Parameter* xr_param)
 {
+	for(const auto elem : m_list)
+	{
+		if(elem->GetName() == xr_param->GetName())
+			throw MkException("Try to add a parameter (or input/output) with an existing name \"" + xr_param->GetName() + "\" in module " + m_moduleName,  LOC);
+	}
 	m_list.push_back(xr_param);
 }
 

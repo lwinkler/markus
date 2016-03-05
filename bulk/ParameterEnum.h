@@ -38,6 +38,9 @@ public:
 		m_default(x_default),
 		mr_value(*xp_value),
 		m_allowAllValues(true) {}
+	
+	MKPARAMTYPE(PARAM_ENUM)
+
 	void SetValue(const std::string& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/);
 	void SetValue(int rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/);
 	void SetDefault(const std::string& rx_value);
@@ -59,7 +62,6 @@ public:
 		mr_value = m_default;
 		m_confSource = PARAMCONF_DEF;
 	}
-	inline const ParameterType& GetParameterType() const {const static ParameterType s = PARAM_ENUM; return s;}
 	virtual const std::string& GetType() const = 0;
 	virtual const std::map<std::string, int>& GetEnum() const = 0;
 	virtual const std::map<int, std::string>& GetReverseEnum() const = 0;

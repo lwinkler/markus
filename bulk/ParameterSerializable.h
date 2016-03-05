@@ -39,6 +39,9 @@ public:
 		mr_value(*xp_value)
 	{
 	}
+	MKPARAMTYPE(PARAM_SERIALIZABLE)
+	MKTYPE("serializable")
+
 	inline std::string GetValueString() const
 	{
 		return mr_value.SerializeToString();
@@ -46,8 +49,6 @@ public:
 	inline std::string GetDefaultString() const {return m_default;}
 	inline std::string GetRange() const {return "";}
 	inline virtual void SetRange(const std::string& x_range) {}
-	inline const ParameterType& GetParameterType() const {const static ParameterType s = PARAM_SERIALIZABLE; return s;}
-	inline const std::string& GetType() const {const static std::string s = "serializable"; return s;}
 	// inline const Serializable& GetDefault() const {	return m_default;}
 
 	inline void SetValue(const Serializable& x_value, ParameterConfigType x_confType)

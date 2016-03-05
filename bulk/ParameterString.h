@@ -36,6 +36,9 @@ public:
 		Parameter(x_name, x_description),
 		m_default(x_default),
 		mr_value(*xp_value) {}
+	MKPARAMTYPE(PARAM_STR)
+	MKTYPE("string")
+
 	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/)
 	{
 		if(m_isLocked)
@@ -64,8 +67,6 @@ public:
 		mr_value = m_default;
 		m_confSource = PARAMCONF_DEF;
 	}
-	inline const ParameterType& GetParameterType() const {const static ParameterType s = PARAM_STR; return s;}
-	inline const std::string& GetType() const {const static std::string s = "string"; return s;}
 
 	inline const std::string& GetDefault() {return m_default;}
 private:

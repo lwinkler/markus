@@ -58,7 +58,7 @@ void Stream::Export(ostream& rx_os, int x_id, int x_indentation, bool x_isInput)
 	rx_os<<tabs<<"<"<<inout<<" id=\""<<x_id<<"\">"<<endl;
 	tabs = string(x_indentation + 1, '\t');
 	rx_os<<tabs<<"<type>"<<GetType()<<"</type>"<<endl;
-	rx_os<<tabs<<"<name>"<<m_name<<"</name>"<<endl;
+	rx_os<<tabs<<"<name>"<<GetName()<<"</name>"<<endl;
 	rx_os<<tabs<<"<description>"<<GetDescription()<<"</description>"<<endl;
 	tabs = string(x_indentation, '\t');
 	rx_os<<tabs<<"</"<<inout<<">"<<endl;
@@ -81,10 +81,10 @@ void Stream::Connect(Stream* x_stream)
 void Stream::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
-	root["name"]        = m_name;
+	root["name"]        = GetName();
 	// root["id"]          = m_id;
 	root["type"]        = GetType();
-	root["description"] = m_description;
+	root["description"] = GetDescription();
 	root["timeStamp"]   = Json::UInt64(m_timeStamp.load());
 	root["connected"]   = IsConnected();
 	x_out << root;
