@@ -59,8 +59,8 @@ public:
 		m_confSource = x_confType;
 	}
 	virtual void SetDefault(const std::string& x_value){assert(false);}
-	virtual void SetValueToDefault(){m_object = T{};};
-	virtual std::string GetValueString() const{std::stringstream ss; serialize(ss, m_object); return ss.str();};
+	virtual void SetValueToDefault(){m_object = T{};}
+	virtual std::string GetValueString() const{std::stringstream ss; serialize(ss, m_object); return ss.str();}
 
 protected:
 	T& m_object;

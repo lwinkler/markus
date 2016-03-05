@@ -56,8 +56,8 @@ public:
 	const cv::Mat& GetImage() const {return m_image;}
 	void Connect(Stream * x_stream);
 
-	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType){assert(false);} // TODO
-	virtual void SetDefault(const std::string& x_value){assert(false);}
+	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType){LOG_WARN(m_logger, "Impossible to set the value of a stream of type image as a parameter");} // TODO
+	virtual void SetDefault(const std::string& x_value){LOG_WARN(m_logger, "Impossible to set the default value of a stream of type image as a parameter");} // TODO
 	virtual void SetValueToDefault(){m_image.setTo(0);};
 	virtual std::string GetValueString() const{std::stringstream ss; ss << m_image; return ss.str();};
 

@@ -36,15 +36,18 @@ template<> const string StreamObject::m_type         = "Objects";
 template<> const string StreamObject::m_class        = "StreamObjects";
 template<> const ParameterType StreamObject::m_parameterType = PARAM_STREAM;
 
-/// Convert the input to the right format
+template<>void StreamObject::SetValueToDefault()
+{
+	m_object.clear();
+	m_object.push_back(Object("screen", Rect(0, 0, GetWidth(), GetHeight())));
+}
 
+/// Convert the input to the right format
 template<>void StreamObject::ConvertInput()
 {
 	if(m_connected == nullptr)
 	{
-		// LOG_DEBUG(m_logger, "Object input not connected, use the whole image");
-		// TODO m_object.clear();
-		// TODO m_object.push_back(Object("screen", Rect(0, 0, GetWidth(), GetHeight())));
+		LOG_DEBUG(m_logger, "Object input not connected, use the whole image");
 		return;
 	}
 	assert(m_connected->IsConnected());
