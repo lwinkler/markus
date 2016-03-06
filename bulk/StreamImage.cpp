@@ -211,7 +211,6 @@ void StreamImage::Connect(Stream* x_stream)
 		m_connected = nullptr;
 		throw MkException("Input stream cannot be connected probably because it is not of type StreamImage", LOC);
 	}
-	cout << m_image.size() << " " << mr_module.GetSize() << endl;
 	if(m_image.empty())
 		m_image = Mat(mr_module.GetSize(), mr_module.GetImageType());
 	else assert(m_image.size() == mr_module.GetSize());

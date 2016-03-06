@@ -56,6 +56,7 @@ void ParameterStructure::AddParameter(Parameter* xr_param)
 			throw MkException("Try to add a parameter (or input/output) with an existing name \"" + xr_param->GetName() + "\" in module " + m_moduleName,  LOC);
 	}
 	m_list.push_back(xr_param);
+	m_list.back()->SetValueToDefault(); // TODO: this should be needed since we do it in Init
 }
 
 /**
