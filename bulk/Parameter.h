@@ -27,6 +27,7 @@
 #include "define.h"
 #include "MkException.h"
 #include <log4cxx/logger.h>
+#include <algorithm>
 
 enum ParameterType
 {
@@ -78,7 +79,10 @@ public:
 	virtual void SetValueToDefault() = 0;
 	virtual void Print(std::ostream& os) const
 	{
-		os<<m_name<<"=\""<<GetValueString()<<"\" ("<<configType[m_confSource]<<"); ";
+		// note: remove line return to shorten json objects
+		std::string tmp = GetValueString();
+		tmp.erase(std::remove(tmp.begin(), tmp.end(), '\n'), tmp.end()); // TODO: Also tabs + create a function
+		os<<m_name<<"=\""<<tmp<<"\" ("<<configType[m_confSource]<<"); ";
 	}
 	virtual bool CheckRange() const = 0;
 	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const = 0;
