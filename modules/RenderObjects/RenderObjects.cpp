@@ -38,7 +38,7 @@ RenderObjects::RenderObjects(ParameterStructure& xr_params) :
 {
 	AddInputStream(0, new StreamImage( "image", m_imageInput, *this,	"Input video stream"));
 	m_objectInputs.resize(10);
-	AddInputStream(1, new MultiStreamT<vector<Object>>("objects0", m_objectInputs, *this,	"Object stream"));
+	AddInputStream(1, new MultiStreamT<vector<Object>>("objects", m_objectInputs, *this,	"Object stream"));
 
 	AddOutputStream(0, new StreamImage("output", m_imageOutput, *this,	"Output video stream"));
 }

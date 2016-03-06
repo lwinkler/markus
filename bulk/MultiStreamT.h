@@ -56,7 +56,9 @@ public:
 			auto it = StreamT<T>::mr_module.GetInputStreamList().end();
 			it--;
 			int lastId = it->first;
-			Stream* pstream = new StreamT<T>(StreamT<T>::GetName(), m_objects.at(m_nextObj), Stream::mr_module, Stream::GetDescription());
+			std::stringstream ss;
+			ss << StreamT<T>::GetName() << "-" << lastId;
+			Stream* pstream = new StreamT<T>(ss.str(), m_objects.at(m_nextObj), Stream::mr_module, Stream::GetDescription());
 			Stream::mr_module.AddInputStream(lastId + 1, pstream);
 			pstream->Connect(x_stream);
 		}
