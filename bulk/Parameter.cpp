@@ -22,6 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "Parameter.h"
+#include "util.h"
 
 using namespace std;
 
@@ -40,15 +41,28 @@ log4cxx::LoggerPtr Parameter::m_logger(log4cxx::Logger::getLogger("Parameter"));
 */
 void Parameter::Export(ostream& rx_os, int x_indentation) const
 {
+	std::string def = GetDefaultString();
+	singleLine(def);
 	string tabs(x_indentation, '\t');
 	rx_os<<tabs<<"<param name=\""<<GetName()<<"\">"<<endl;
 	tabs = string(x_indentation + 1, '\t');
 	rx_os<<tabs<<"<type>"<<GetType()<<"</type>"<<endl;
-	rx_os<<tabs<<"<value default='"<<GetDefaultString()<<"' range='"<<GetRange()<<"'>"<<GetDefaultString()<<"</value>"<<endl;
+	rx_os<<tabs<<"<value default='"<< def <<"' range='"<<GetRange()<<"'>"<< def <<"</value>"<<endl;
 	rx_os<<tabs<<"<description>"<<GetDescription()<<"</description>"<<endl;
 	tabs = string(x_indentation, '\t');
 	rx_os<<tabs<<"</param>"<<endl;
 }
 
 
-
+/**
+* @brief Print the description of the parameter for logging
+*
+* @param rx_os         Output stream
+*/
+void Parameter::Print(std::ostream& os) const
+{
+	// note: remove line return to shorten json objects
+	std::string tmp = GetValueString();
+	singleLine(tmp);
+	os<<m_name<<"=\""<<tmp<<"\" ("<<configType[m_confSource]<<"); ";
+}

@@ -69,6 +69,7 @@ template<class T> void mergeVector(std::vector<T>& vdest, const std::vector<T>& 
 }
 
 AnnotationFileReader* createAnnotationFileReader(const std::string& x_fileName, int x_width, int x_height);
+void singleLine(std::string& str);
 
 
 #endif

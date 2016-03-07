@@ -34,7 +34,8 @@ template<typename T>class StreamT : public Stream
 public:
 	StreamT(const std::string& rx_name, T& rx_object, Module& rx_module, const std::string& rx_description, const std::string& rx_requirement = "") :
 		Stream(rx_name, rx_module, rx_description, rx_requirement),
-		m_content(rx_object)
+		m_content(rx_object),
+		m_default(T{})
 	{}
 	~StreamT() {}
 	virtual const std::string& GetClass() const {return m_class;}
@@ -58,8 +59,8 @@ public:
 		deserialize(ss, m_content);
 		m_confSource = x_confType;
 	}
-	virtual void SetDefault(const std::string& x_value){std::stringstream ss(x_value); deserialize(ss, m_content);}
-	virtual void SetValueToDefault(){m_content = m_default;}
+	virtual void SetDefault(const std::string& x_value){std::stringstream ss(x_value); deserialize(ss, m_default);}
+	virtual void SetValueToDefault(){m_content = m_default; m_confSource = PARAMCONF_DEF;}
 	virtual std::string GetValueString() const{std::stringstream ss; serialize(ss, m_content); return ss.str();}
 	virtual std::string GetDefaultString() const {std::stringstream ss; serialize(ss, m_default); return ss.str();}
 

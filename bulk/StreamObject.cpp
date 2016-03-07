@@ -36,10 +36,12 @@ template<> const string StreamObject::m_type         = "Objects";
 template<> const string StreamObject::m_class        = "StreamObjects";
 template<> const ParameterType StreamObject::m_parameterType = PARAM_STREAM;
 
-template<>void StreamObject::SetValueToDefault()
+template<> StreamObject::StreamT(const std::string& rx_name, vector<Object>& rx_object, Module& rx_module, const std::string& rx_description, const std::string& rx_requirement) :
+	Stream(rx_name, rx_module, rx_description, rx_requirement),
+	m_content(rx_object)
 {
-	m_content.clear();
-	m_content.push_back(Object("screen", Rect(0, 0, GetWidth(), GetHeight())));
+	m_default.clear();
+	m_default.push_back(Object("screen", Rect(0, 0, GetWidth(), GetHeight())));
 }
 
 /// Convert the input to the right format

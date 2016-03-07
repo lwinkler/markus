@@ -43,8 +43,8 @@ using namespace std;
 
 class ParametersTestSuite : public CxxTest::TestSuite
 {
-protected:
-	void testParameter(Parameter& xr_param, const string& x_legalValue, const string& x_illegalValue, const string& x_testRange)
+public:
+	static void testParameter(Parameter& xr_param, const string& x_legalValue, const string& x_illegalValue, const string& x_testRange)
 	{
 		xr_param.SetValue(x_legalValue, PARAMCONF_UNKNOWN);
 		TS_ASSERT(xr_param.CheckRange() == true);
@@ -56,7 +56,7 @@ protected:
 		TS_ASSERT(xr_param.GetConfigurationSource() == PARAMCONF_UNKNOWN);
 		xr_param.SetDefault(x_legalValue);
 		xr_param.SetValueToDefault();
-		// cout << xr_param.GetValueString() << " == \n" <<  x_legalValue << endl;
+		// cout << xr_param.GetValueString() << " == " <<  x_legalValue << endl;
 		TS_ASSERT(xr_param.GetValueString() == x_legalValue);
 		TS_ASSERT(xr_param.GetConfigurationSource() == PARAMCONF_DEF);
 		xr_param.Lock();
@@ -86,7 +86,6 @@ protected:
 		TS_ASSERT(xr_param.GetRange() == x_testRange);
 	}
 
-public:
 	void setUp()
 	{
 	}

@@ -77,13 +77,7 @@ public:
 	inline const std::string& GetDescription() const {return m_description;}
 	inline const ParameterConfigType& GetConfigurationSource() const {return m_confSource;}
 	virtual void SetValueToDefault() = 0;
-	virtual void Print(std::ostream& os) const
-	{
-		// note: remove line return to shorten json objects
-		std::string tmp = GetValueString();
-		tmp.erase(std::remove(tmp.begin(), tmp.end(), '\n'), tmp.end()); // TODO: Also tabs + create a function
-		os<<m_name<<"=\""<<tmp<<"\" ("<<configType[m_confSource]<<"); ";
-	}
+	virtual void Print(std::ostream& os) const;
 	virtual bool CheckRange() const = 0;
 	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const = 0;
 	virtual void Export(std::ostream& rx_os, int x_indentation) const;

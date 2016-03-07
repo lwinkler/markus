@@ -56,11 +56,11 @@ public:
 	const cv::Mat& GetImage() const {return m_content;}
 	void Connect(Stream * x_stream);
 
-	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType){LOG_WARN(m_logger, "Impossible to set the value of a stream of type image as a parameter");} // TODO
-	virtual void SetDefault(const std::string& x_value){LOG_WARN(m_logger, "Impossible to set the default value of a stream of type image as a parameter");} // TODO
-	virtual void SetValueToDefault(){m_content.setTo(0);};
-	virtual std::string GetValueString() const {std::stringstream ss; ss << m_content; return ss.str();};
-	virtual std::string GetDefaultString() const {return "[]";} // TODO
+	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType){LOG_WARN(m_logger, "Impossible to set the value of a stream of type image as a parameter"); m_confSource = x_confType;}
+	virtual void SetDefault(const std::string& x_value){LOG_WARN(m_logger, "Impossible to set the default value of a stream of type image as a parameter");}
+	virtual void SetValueToDefault(){m_content.setTo(0); m_confSource = PARAMCONF_DEF;};
+	virtual std::string GetValueString() const {std::stringstream ss; ss << m_content; return ss.str();}
+	virtual std::string GetDefaultString() const {cv::Mat def(m_content.size(), m_content.type()); def.setTo(0); std::stringstream ss; ss << def; return ss.str();}
 
 protected:
 	static std::string createResolutionString(const cv::Size x_size, int x_depth, int x_channels)
@@ -70,10 +70,9 @@ protected:
 		return ss.str();
 	}
 	void ConvertToOutput(TIME_STAMP x_ts, cv::Mat& xr_output);
-	cv::Mat& m_content;
 	StreamImage* mp_connectedImage;
-
 	std::map<std::string, BufferImage> m_buffers;
+	cv::Mat& m_content;
 
 private:
 	// DISABLE_COPY(Stream)

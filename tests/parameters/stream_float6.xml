@@ -1,0 +1,5 @@
+<param name="stream_float6">
+	<type>NumFloat</type>
+	<value default='0' range=''>0</value>
+	<description>Test stream</description>
+</param>

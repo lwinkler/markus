@@ -56,7 +56,17 @@ void ParameterStructure::AddParameter(Parameter* xr_param)
 			throw MkException("Try to add a parameter (or input/output) with an existing name \"" + xr_param->GetName() + "\" in module " + m_moduleName,  LOC);
 	}
 	m_list.push_back(xr_param);
-	m_list.back()->SetValueToDefault(); // TODO: this should be needed since we do it in Init
+
+	// note: since this method might be used after structure initialization, we init the param anyway
+	m_list.back()->SetValueToDefault();
+	// TODO : Read value from config
+	if(!m_list.back()->CheckRange())
+	{
+		stringstream ss;
+		ss<<"Parameter "<<m_list.back()->GetName()<<" is out of range: ";
+		m_list.back()->Print(ss);
+		throw ParameterException(ss.str(), LOC);
+	}
 }
 
 /**

@@ -1,0 +1,5 @@
+<param name="stream_uint5">
+	<type>NumUInt</type>
+	<value default='{"valueUInt":0}' range=''>{"valueUInt":0}</value>
+	<description>Test stream</description>
+</param>

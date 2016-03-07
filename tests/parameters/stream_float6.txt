@@ -1,0 +1,1 @@
+stream_float6="0" (def); 

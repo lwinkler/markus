@@ -29,6 +29,7 @@
 
 #include "util.h"
 
+// #include "Parameters.test.h"
 #include "StreamImage.h"
 #include "StreamObject.h"
 #include "StreamDebug.h"
@@ -65,41 +66,41 @@ class StreamsTestSuite : public CxxTest::TestSuite
 			}
 
 			TS_ASSERT(GetWidth() * GetHeight() > 0);
-			AddInputStream( 0, new StreamObject("object0", m_obj, *this, "Test stream"));
-			AddInputStream( 1, new StreamEvent("event1", m_evt, *this, "Test stream"));
-			AddInputStream( 2, new StreamImage("image2", m_image, *this, "Test stream"));
-			AddInputStream( 3, new StreamNum<bool>("bool3", m_bool, *this, "Test stream"));
-			AddInputStream( 4, new StreamNum<int>("inti4", m_int, *this, "Test stream"));
-			AddInputStream( 5, new StreamNum<uint>("uint5", m_uint, *this, "Test stream"));
-			AddInputStream( 6, new StreamNum<float>("float6", m_float, *this, "Test stream"));
-			AddInputStream( 7, new StreamNum<double>("double7", m_double, *this, "Test stream"));
+			AddInputStream( 0, new StreamObject("stream_object0", m_obj, *this, "Test stream"));
+			AddInputStream( 1, new StreamEvent("stream_event1", m_evt, *this, "Test stream"));
+			AddInputStream( 2, new StreamImage("stream_image2", m_image, *this, "Test stream"));
+			AddInputStream( 3, new StreamNum<bool>("stream_bool3", m_bool, *this, "Test stream"));
+			AddInputStream( 4, new StreamNum<int>("stream_int4", m_int, *this, "Test stream"));
+			AddInputStream( 5, new StreamNum<uint>("stream_uint5", m_uint, *this, "Test stream"));
+			AddInputStream( 6, new StreamNum<float>("stream_float6", m_float, *this, "Test stream"));
+			AddInputStream( 7, new StreamNum<double>("stream_double7", m_double, *this, "Test stream"));
 
-			AddInputStream( 8, new MultiStreamT<vector<Object>>("object8", m_objs, *this, "Test stream"));
-			AddInputStream( 9, new MultiStreamT<Event>("event9", m_evts, *this, "Test stream"));
-			AddInputStream(10, new MultiStreamT<cv::Mat>("image10", m_images, *this, "Test stream"));
-			// AddInputStream( 3, new MultiStreamT<bool>("bool", m_bools, *this, "Test stream"));
-			// AddInputStream( 4, new MultiStreamT<int>("int", m_ints, *this, "Test stream"));
-			// AddInputStream( 5, new MultiStreamT<uint>("uint", m_uints, *this, "Test stream"));
-			// AddInputStream( 6, new MultiStreamT<float>("float", m_floats, *this, "Test stream"));
-			// AddInputStream( 7, new MultiStreamT<double>("double", m_doubles, *this, "Test stream"));
+			AddInputStream( 8, new MultiStreamT<vector<Object>>("stream_object8", m_objs, *this, "Test stream"));
+			AddInputStream( 9, new MultiStreamT<Event>("stream_event9", m_evts, *this, "Test stream"));
+			AddInputStream(10, new MultiStreamT<cv::Mat>("stream_image10", m_images, *this, "Test stream"));
+			// AddInputStream( 3, new MultiStreamT<bool>("stream_bool", m_bools, *this, "Test stream"));
+			// AddInputStream( 4, new MultiStreamT<int>("stream_int", m_ints, *this, "Test stream"));
+			// AddInputStream( 5, new MultiStreamT<uint>("stream_uint", m_uints, *this, "Test stream"));
+			// AddInputStream( 6, new MultiStreamT<float>("stream_float", m_floats, *this, "Test stream"));
+			// AddInputStream( 7, new MultiStreamT<double>("stream_double", m_doubles, *this, "Test stream"));
 
-			AddOutputStream( 0, new StreamObject("object100", m_obj, *this, "Test stream"));
-			AddOutputStream( 1, new StreamEvent("event101", m_evt, *this, "Test stream"));
-			AddOutputStream( 2, new StreamImage("image102", m_image, *this, "Test stream"));
-			AddOutputStream( 3, new StreamNum<bool>("bool103", m_bool, *this, "Test stream"));
-			AddOutputStream( 4, new StreamNum<int>("int104", m_int, *this, "Test stream"));
-			AddOutputStream( 5, new StreamNum<uint>("uint105", m_uint, *this, "Test stream"));
-			AddOutputStream( 6, new StreamNum<float>("float106", m_float, *this, "Test stream"));
-			AddOutputStream( 7, new StreamNum<double>("double107", m_double, *this, "Test stream"));
+			AddOutputStream( 0, new StreamObject("stream_object100", m_obj, *this, "Test stream"));
+			AddOutputStream( 1, new StreamEvent("stream_event101", m_evt, *this, "Test stream"));
+			AddOutputStream( 2, new StreamImage("stream_image102", m_image, *this, "Test stream"));
+			AddOutputStream( 3, new StreamNum<bool>("stream_bool103", m_bool, *this, "Test stream"));
+			AddOutputStream( 4, new StreamNum<int>("stream_int104", m_int, *this, "Test stream"));
+			AddOutputStream( 5, new StreamNum<uint>("stream_uint105", m_uint, *this, "Test stream"));
+			AddOutputStream( 6, new StreamNum<float>("stream_float106", m_float, *this, "Test stream"));
+			AddOutputStream( 7, new StreamNum<double>("stream_double107", m_double, *this, "Test stream"));
 
-			AddOutputStream( 8, new MultiStreamT<vector<Object>>("object108", m_objs, *this, "Test stream"));
-			AddOutputStream( 9, new MultiStreamT<Event>("event109", m_evts, *this, "Test stream"));
-			AddOutputStream(10, new MultiStreamT<cv::Mat>("image110", m_images, *this, "Test stream"));
-			// AddOutputStream( 3, new MultiStreamT<bool>("bool", m_bools, *this, "Test stream"));
-			// AddOutputStream( 4, new MultiStreamT<int>("int", m_ints, *this, "Test stream"));
-			// AddOutputStream( 5, new MultiStreamT<uint>("uint", m_uints, *this, "Test stream"));
-			// AddOutputStream( 6, new MultiStreamT<float>("float", m_floats, *this, "Test stream"));
-			// AddOutputStream( 7, new MultiStreamT<double>("double", m_doubles, *this, "Test stream"));
+			AddOutputStream( 8, new MultiStreamT<vector<Object>>("stream_object108", m_objs, *this, "Test stream"));
+			AddOutputStream( 9, new MultiStreamT<Event>("stream_event109", m_evts, *this, "Test stream"));
+			AddOutputStream(10, new MultiStreamT<cv::Mat>("stream_image110", m_images, *this, "Test stream"));
+			// AddOutputStream( 3, new MultiStreamT<bool>("stream_bool", m_bools, *this, "Test stream"));
+			// AddOutputStream( 4, new MultiStreamT<int>("stream_int", m_ints, *this, "Test stream"));
+			// AddOutputStream( 5, new MultiStreamT<uint>("stream_uint", m_uints, *this, "Test stream"));
+			// AddOutputStream( 6, new MultiStreamT<float>("stream_float", m_floats, *this, "Test stream"));
+			// AddOutputStream( 7, new MultiStreamT<double>("stream_double", m_doubles, *this, "Test stream"));
 		}
 
 		~FakeModule() {}
@@ -138,18 +139,15 @@ class StreamsTestSuite : public CxxTest::TestSuite
 public:
 	StreamsTestSuite() :
 		m_configFile("tests/streams/config.xml"),
-		m_config(m_configFile),
-		m_fakeParams1(m_config.FindRef("application>module[name=\"FakeModule\"]", true)),
-		m_fakeParams2(m_config.FindRef("application>module[name=\"FakeModule\"]", true)),
-		m_fakeParams3(m_config.FindRef("application>module[name=\"FakeModule\"]", true))
+		m_config(m_configFile)
 	{}
 
 protected:
 	ConfigFile m_configFile;
 	ConfigReader        m_config;
-	Module::Parameters  m_fakeParams1;
-	Module::Parameters  m_fakeParams2;
-	Module::Parameters  m_fakeParams3;
+	Module::Parameters* mp_fakeParams1 = nullptr;
+	Module::Parameters* mp_fakeParams2 = nullptr;
+	Module::Parameters* mp_fakeParams3 = nullptr;
 	FakeModule*         mp_fakeModule1 = nullptr;
 	FakeModule*         mp_fakeModule2 = nullptr;
 	FakeModule*         mp_fakeModule3 = nullptr;
@@ -157,16 +155,19 @@ protected:
 public:
 	void setUp()
 	{
-		m_fakeParams1.width  = 320;
-		m_fakeParams1.height = 240;
-		m_fakeParams1.type   = CV_8UC3;
-		mp_fakeModule1       = new FakeModule(m_fakeParams1);
-		m_fakeParams2.width  = 160;
-		m_fakeParams2.height = 120;
-		mp_fakeModule2       = new FakeModule(m_fakeParams2);
-		m_fakeParams3.width  = 320;
-		m_fakeParams3.height = 240;
-		mp_fakeModule3       = new FakeModule(m_fakeParams3);
+		mp_fakeParams1 = new Module::Parameters(m_config.FindRef("application>module[name=\"FakeModule\"]", true));
+		mp_fakeParams2 = new Module::Parameters(m_config.FindRef("application>module[name=\"FakeModule\"]", true));
+		mp_fakeParams3 = new Module::Parameters(m_config.FindRef("application>module[name=\"FakeModule\"]", true));
+		mp_fakeParams1->width  = 320;
+		mp_fakeParams1->height = 240;
+		mp_fakeParams1->type   = CV_8UC3;
+		mp_fakeModule1       = new FakeModule(*mp_fakeParams1);
+		mp_fakeParams2->width  = 160;
+		mp_fakeParams2->height = 120;
+		mp_fakeModule2       = new FakeModule(*mp_fakeParams2);
+		mp_fakeParams3->width  = 320;
+		mp_fakeParams3->height = 240;
+		mp_fakeModule3       = new FakeModule(*mp_fakeParams3);
 
 		for(auto input : mp_fakeModule1->GetInputStreamList())
 		{
@@ -175,12 +176,19 @@ public:
 			mp_fakeModule2->RefInputStreamById(id).Connect(&mp_fakeModule1->RefOutputStreamById(id));
 			mp_fakeModule3->RefInputStreamById(id).Connect(&mp_fakeModule2->RefOutputStreamById(id));
 		}
+
+		mp_fakeModule1->Reset();
+		mp_fakeModule2->Reset();
+		mp_fakeModule3->Reset();
 	}
 	void tearDown()
 	{
 		delete(mp_fakeModule1);
 		delete(mp_fakeModule2);
 		delete(mp_fakeModule3);
+		delete(mp_fakeParams1);
+		delete(mp_fakeParams2);
+		delete(mp_fakeParams3);
 	}
 
 public:
@@ -197,6 +205,15 @@ public:
 				mp_fakeModule2->RefInputStreamById(id).ConvertInput();
 				mp_fakeModule3->RefInputStreamById(id).ConvertInput();
 			}
+		}
+	}
+
+	void testStreamAsParameters()
+	{
+		mp_fakeModule1->Reset();
+		for(auto input : mp_fakeModule1->GetInputStreamList())
+		{
+			ParametersTestSuite::testParameter(*input.second, input.second->GetDefaultString(), "", "");
 		}
 	}
 };
