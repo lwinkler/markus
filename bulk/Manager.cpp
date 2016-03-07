@@ -577,7 +577,17 @@ void Manager::ManageInterruptions()
 	vector<Command> commands = m_interruptionManager.ReturnCommandsToSend();
 	for(const auto& command : commands)
 	{
-		SendCommand(command.name, command.value);
-		//m_continueFlag = true;
+		try
+		{
+			SendCommand(command.name, command.value);
+		}
+		catch(std::exception& e)
+		{
+			LOG_WARN(m_logger, "Cannot execute command \"" << command.name << "\" "<<e.what());
+		}
+		catch(...)
+		{
+			LOG_WARN(m_logger, "Cannot execute comman \"" << command.name << "\"");
+		}
 	}
 }

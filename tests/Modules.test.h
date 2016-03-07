@@ -422,9 +422,9 @@ public:
 	// Test by searching the XML files that were created specially to unit test one modules (ModuleX.test.xml)
 	void testBySpecificXmlProjects()
 	{
-		char* tmp = getenv("MODULE_TO_TEST");
-		if(tmp != nullptr)
+		if(getenv("MODULE_TO_TEST") != nullptr)
 		{
+			// added this to go faster through the tests
 			TS_WARN("$MODULE_TO_TEST should only be used for development purposes.");
 			return;
 		}

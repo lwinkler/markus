@@ -51,7 +51,7 @@ VideoFileBufferWriter::VideoFileBufferWriter(ParameterStructure& xr_params):
 	m_endOfRecord = 0;
 }
 
-VideoFileBufferWriter::~VideoFileBufferWriter(void)
+VideoFileBufferWriter::~VideoFileBufferWriter()
 {
 	CloseFile();
 }
@@ -137,7 +137,7 @@ void VideoFileBufferWriter::ProcessFrame()
 
 	if(m_recording)
 	{
-		m_mutex.lock();
+		m_mutex.lock(); // TODO: use local variable ?
 		if(!m_threadIsWorking)
 		{
 			// Thread is complete: write directly
