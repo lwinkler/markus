@@ -40,7 +40,7 @@ public:
 	StreamNum(const std::string& x_name, T& rx_scalar, Module& rx_module, const std::string& x_description) :
 		Stream(x_name, rx_module, x_description),
 		m_scalars(PLOT_LENGTH),
-		m_scalar(rx_scalar) {}
+		m_content(rx_scalar) {}
 	virtual const std::string& GetClass() const {return m_class;}
 	virtual const std::string& GetType() const {return m_type;}
 	virtual const ParameterType& GetParameterType() const {return m_parameterType;}
@@ -49,17 +49,17 @@ public:
 	{
 		if(m_connected == nullptr)
 		{
-			m_scalar = 0;
+			m_content = 0;
 			return;
 		}
 		assert(m_connected->IsConnected());
 
 		// Copy time stamp to output
 		m_timeStamp = GetConnected().GetTimeStamp();
-		m_scalar = dynamic_cast<const StreamNum&>(*m_connected).GetScalar();
+		m_content = dynamic_cast<const StreamNum&>(*m_connected).GetScalar();
 	}
 	/// Method to be called at the end of each step to store the last point for the plot
-	inline void Store() {m_scalars.push_back(m_scalar);}
+	inline void Store() {m_scalars.push_back(m_content);}
 	virtual void RenderTo(cv::Mat& x_output) const
 	{
 		std::vector<float> pts;
@@ -77,7 +77,7 @@ public:
 	}
 	virtual void Query(int x_posX, int x_posY) const
 	{
-		LOG_INFO(m_logger, "value = " << m_scalar);
+		LOG_INFO(m_logger, "value = " << m_content);
 	}
 	virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const
 	{
@@ -86,7 +86,7 @@ public:
 		Stream::Serialize(ss, x_dir);
 
 		ss >> root;
-		root["value"] = m_scalar;
+		root["value"] = m_content;
 		x_out << root;
 	}
 	virtual void Deserialize(std::istream& x_in, const std::string& x_dir)
@@ -96,23 +96,25 @@ public:
 		std::stringstream ss;
 		ss << root;
 		Stream::Deserialize(ss, x_dir);
-		m_scalar = root["value"].asDouble();
+		m_content = root["value"].asDouble();
 	}
-	virtual void Randomize(unsigned int& xr_seed) {randomize(m_scalar, xr_seed);}
-	const T& GetScalar() const {return m_scalar;}
+	virtual void Randomize(unsigned int& xr_seed) {randomize(m_content, xr_seed);}
+	const T& GetScalar() const {return m_content;}
 
 	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType)
 	{
 		std::stringstream ss(x_value);
-		deserialize(ss, m_scalar);
+		deserialize(ss, m_content);
 		m_confSource = x_confType;
 	}
-	virtual void SetDefault(const std::string& x_value){assert(false);}
-	virtual void SetValueToDefault(){m_scalar = T{};};
-	virtual std::string GetValueString() const{std::stringstream ss; serialize(ss, m_scalar); return ss.str();};
+	virtual void SetDefault(const std::string& x_value){std::stringstream ss(x_value); deserialize(ss, m_content);}
+	virtual void SetValueToDefault(){m_content = m_default;}
+	virtual std::string GetValueString() const{std::stringstream ss; serialize(ss, m_content); return ss.str();}
+	virtual std::string GetDefaultString() const {std::stringstream ss; serialize(ss, m_default); return ss.str();}
 
 protected:
-	T& m_scalar;
+	T& m_content;
+	T  m_default;
 	// circular buffer for plot rendering
 	boost::circular_buffer<float> m_scalars;
 	static const std::string m_class;

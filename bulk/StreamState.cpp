@@ -32,7 +32,7 @@ using namespace cv;
 template<> log4cxx::LoggerPtr StreamState::m_logger(log4cxx::Logger::getLogger("StreamState"));
 template<> const string StreamState::m_type         = "State";
 template<> const string StreamState::m_class        = "StreamState";
-template<> const ParameterType StreamState::m_parameterType = PARAM_BOOL;
+template<> const ParameterType StreamState::m_parameterType = PARAM_STREAM;
 
 // Transmit the state to the connected module
 
@@ -40,7 +40,7 @@ template<> void StreamState::ConvertInput()
 {
 	if(m_connected == nullptr)
 	{
-		m_object = false;
+		m_content = false;
 		return;
 	}
 	assert(m_connected->IsConnected());
@@ -51,14 +51,14 @@ template<> void StreamState::ConvertInput()
 	const StreamState * pstream = dynamic_cast<const StreamState*>(m_connected);
 	if(pstream == nullptr)
 		throw MkException("Stream of state " + GetName() + " is not correctly connected", LOC);
-	m_object = pstream->GetContent();
+	m_content = pstream->GetContent();
 }
 
 /// Render : to display the state we simply color the image in black/white
 
 template<> void StreamState::RenderTo(Mat& x_output) const
 {
-	x_output.setTo(Scalar(255 * m_object, 255 * m_object, 255 * m_object));
+	x_output.setTo(Scalar(255 * m_content, 255 * m_content, 255 * m_content));
 }
 
 /// Query : give info about cursor position
@@ -68,7 +68,7 @@ template<> void StreamState::Query(int x_posX, int x_posY) const
 	if(x_posX < 0 || x_posY < 0 || x_posX >= GetWidth() || x_posY >= GetHeight())
 		return;
 
-	LOG_INFO(m_logger, "State =" << static_cast<int>(m_object));
+	LOG_INFO(m_logger, "State =" << static_cast<int>(m_content));
 }
 
 /// Randomize the content of the stream
@@ -76,7 +76,7 @@ template<> void StreamState::Randomize(unsigned int& xr_seed)
 {
 	// random state
 	if(rand_r(&xr_seed) < RAND_MAX / 10)
-		m_object = !m_object;
+		m_content = !m_content;
 }
 
 template<> void StreamState::Serialize(ostream& x_out, const string& x_dir) const
@@ -85,7 +85,7 @@ template<> void StreamState::Serialize(ostream& x_out, const string& x_dir) cons
 	stringstream ss;
 	Stream::Serialize(ss, x_dir);
 	ss >> root;
-	root["state"] = m_object;
+	root["state"] = m_content;
 	x_out << root;
 }
 
@@ -97,5 +97,5 @@ template<> void StreamState::Deserialize(istream& x_in, const string& x_dir)
 	ss << root;
 	Stream::Deserialize(ss, x_dir);
 
-	m_object = root["state"].asBool();
+	m_content = root["state"].asBool();
 }

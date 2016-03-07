@@ -39,7 +39,7 @@ template<> const ParameterType StreamEvent::m_parameterType = PARAM_STREAM;
 
 template<> void StreamEvent::ConvertInput()
 {
-	m_object.Clean();
+	m_content.Clean();
 
 	if(m_connected == nullptr) return;
 	assert(m_connected->IsConnected());
@@ -50,29 +50,29 @@ template<> void StreamEvent::ConvertInput()
 	const StreamEvent * pstream = dynamic_cast<const StreamEvent*>(m_connected);
 	if(pstream == nullptr)
 		throw MkException("Stream of event " + GetName() + " is not correctly connected", LOC);
-	m_object = pstream->GetContent();
+	m_content = pstream->GetContent();
 
-	if(! m_object.IsRaised()) return;
+	if(! m_content.IsRaised()) return;
 
 	double ratioX = static_cast<double>(GetWidth()) / pstream->GetWidth();
 	double ratioY = static_cast<double>(GetHeight()) / pstream->GetHeight();
-	m_object.ScaleObject(ratioX, ratioY);
+	m_content.ScaleObject(ratioX, ratioY);
 }
 
 /// Randomize the content of the stream
 template<> void StreamEvent::Randomize(unsigned int& xr_seed)
 {
 	// random event
-	m_object.Randomize(xr_seed, m_requirement, GetSize());
+	m_content.Randomize(xr_seed, m_requirement, GetSize());
 }
 
 /// Render : to display the event
 template<> void StreamEvent::RenderTo(Mat& x_output) const
 {
-	if(m_object.IsRaised())
+	if(m_content.IsRaised())
 	{
 		x_output.setTo(Scalar(255, 255, 255));
-		m_object.GetObject().RenderTo(x_output, Scalar(255, 0, 0));
+		m_content.GetObject().RenderTo(x_output, Scalar(255, 0, 0));
 	}
 	// else x_output.setTo(0);
 }
@@ -80,7 +80,7 @@ template<> void StreamEvent::RenderTo(Mat& x_output) const
 /// Query : give info about cursor position
 template<> void StreamEvent::Query(int x_posX, int x_posY) const
 {
-	LOG_INFO(m_logger, m_object);
+	LOG_INFO(m_logger, m_content);
 }
 
 template<> void StreamEvent::Serialize(ostream& x_out, const string& x_dir) const
@@ -90,7 +90,7 @@ template<> void StreamEvent::Serialize(ostream& x_out, const string& x_dir) cons
 	Stream::Serialize(ss, x_dir);
 	ss >> root;
 	ss.clear();
-	m_object.Serialize(ss, x_dir);
+	m_content.Serialize(ss, x_dir);
 	ss >> root["event"];
 	x_out << root;
 }
@@ -106,5 +106,5 @@ template<> void StreamEvent::Deserialize(istream& x_in, const string& x_dir)
 
 	ss.clear();
 	ss << root["event"];
-	m_object.Deserialize(ss, x_dir);
+	m_content.Deserialize(ss, x_dir);
 }

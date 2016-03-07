@@ -34,15 +34,15 @@ template<typename T>class StreamT : public Stream
 public:
 	StreamT(const std::string& rx_name, T& rx_object, Module& rx_module, const std::string& rx_description, const std::string& rx_requirement = "") :
 		Stream(rx_name, rx_module, rx_description, rx_requirement),
-		m_object(rx_object)
+		m_content(rx_object)
 	{}
 	~StreamT() {}
 	virtual const std::string& GetClass() const {return m_class;}
 	virtual const std::string& GetType() const {return m_type;}
 	virtual const ParameterType& GetParameterType() const {return m_parameterType;}
 
-	inline const T& GetContent() const {return m_object;}
-	inline       T& RefContent() const {return m_object;}
+	inline const T& GetContent() const {return m_content;}
+	inline       T& RefContent() const {return m_content;}
 
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat& x_output) const;
@@ -55,15 +55,17 @@ public:
 	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType)
 	{
 		std::stringstream ss(x_value);
-		deserialize(ss, m_object);
+		deserialize(ss, m_content);
 		m_confSource = x_confType;
 	}
-	virtual void SetDefault(const std::string& x_value){assert(false);}
-	virtual void SetValueToDefault(){m_object = T{};}
-	virtual std::string GetValueString() const{std::stringstream ss; serialize(ss, m_object); return ss.str();}
+	virtual void SetDefault(const std::string& x_value){std::stringstream ss(x_value); deserialize(ss, m_content);}
+	virtual void SetValueToDefault(){m_content = m_default;}
+	virtual std::string GetValueString() const{std::stringstream ss; serialize(ss, m_content); return ss.str();}
+	virtual std::string GetDefaultString() const {std::stringstream ss; serialize(ss, m_default); return ss.str();}
 
 protected:
-	T& m_object;
+	T& m_content;
+	T  m_default;
 
 private:
 	DISABLE_COPY(StreamT)

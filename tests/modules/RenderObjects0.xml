@@ -40,9 +40,9 @@
 			<value default='NO_CACHE' range='[DISABLED,NO_CACHE,READ_CACHE,WRITE_CACHE]'>NO_CACHE</value>
 			<description>Format of the input image</description>
 		</param>
-		<param name="objects0">
+		<param name="objects">
 			<type>Objects</type>
-			<value default='' range=''></value>
+			<value default='[]' range=''>[]</value>
 			<description>Object stream</description>
 		</param>
 	</parameters>
@@ -54,7 +54,7 @@
 		</input>
 		<input id="1" multi="10">
 			<type>Objects</type>
-			<name>objects0</name>
+			<name>objects</name>
 			<description>Object stream</description>
 		</input>
 	</inputs>

@@ -87,9 +87,9 @@ public:
 	virtual bool CheckRange() const {return true;}
 	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const {rx_values.clear();}
 	virtual std::string GetValueString() const = 0;
-	virtual std::string GetDefaultString() const{return "";}; // TODO ?
-	virtual std::string GetRange() const {return "";} // TODO ?
-	virtual void SetRange(const std::string& x_range){} // TODO ?
+	virtual std::string GetDefaultString() const = 0;
+	inline std::string GetRange() const {return "";}
+	inline virtual void SetRange(const std::string& x_range) {}
 
 protected:
 	// const int m_id;

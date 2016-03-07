@@ -35,30 +35,30 @@ log4cxx::LoggerPtr StreamImage::m_logger(log4cxx::Logger::getLogger("StreamImage
 
 StreamT<Mat>::StreamT(const string& x_name, Mat& x_image, Module& rx_module, const string& rx_description, const string& x_requirements) :
 	Stream(x_name, rx_module, rx_description),
-	m_image(x_image)
+	m_content(x_image)
 {
 	LOG_DEBUG(m_logger, "Create image "<<x_image.cols<<"x"<<x_image.rows<<" for module "<<rx_module.GetName()<<" of size "<<rx_module.GetWidth()<<"x"<<rx_module.GetHeight());
 	// assert(x_image.cols == rx_module.GetWidth() && x_image.rows == rx_module.GetHeight()); // Disable this for unit tests
 }
 
 
-// Convert an input (image from a different module) to the correct resolution into m_image. This method keeps a map containing all temporary image in case they are needed later
+// Convert an input (image from a different module) to the correct resolution into m_content. This method keeps a map containing all temporary image in case they are needed later
 void StreamImage::ConvertInput()
 {
 	if(m_connected == nullptr)
 	{
-		m_image.setTo(0);
+		m_content.setTo(0);
 		return;
 	}
 	assert(m_connected->IsConnected());
 
-	mp_connectedImage->ConvertToOutput(mr_module.GetCurrentTimeStamp(), m_image);
+	mp_connectedImage->ConvertToOutput(mr_module.GetCurrentTimeStamp(), m_content);
 }
 
 // Convert to an output (from the input) to take advantage of the buffer
 void StreamImage::ConvertToOutput(TIME_STAMP x_ts, cv::Mat& xr_output)
 {
-	const Mat* corrected = &m_image;
+	const Mat* corrected = &m_content;
 	TIME_STAMP ts = mr_module.GetCurrentTimeStamp();
 
 	if(corrected->cols != xr_output.cols || corrected->rows != xr_output.rows)
@@ -133,7 +133,7 @@ void StreamImage::ConvertToOutput(TIME_STAMP x_ts, cv::Mat& xr_output)
 
 void StreamImage::RenderTo(Mat& x_output) const
 {
-	m_image.copyTo(x_output);
+	m_content.copyTo(x_output);
 }
 
 /// Query : give info about cursor position
@@ -144,21 +144,21 @@ void StreamImage::Query(int x_posX, int x_posY) const
 		return;
 
 	Rect rect(x_posX, x_posY, 1, 1);
-	LOG_INFO(m_logger, "Pixel value at " << x_posX << "," << x_posY << " = " << m_image(rect));
+	LOG_INFO(m_logger, "Pixel value at " << x_posX << "," << x_posY << " = " << m_content(rect));
 }
 
 /// Randomize the content of the stream
 void StreamImage::Randomize(unsigned int& xr_seed)
 {
 	// random image
-	m_image = Mat(m_image.size(), m_image.type());
-	m_image.setTo(0);
+	m_content = Mat(m_content.size(), m_content.type());
+	m_content.setTo(0);
 	int nb = rand_r(&xr_seed) % 100;
 	for ( int i = 0; i < nb; i++ )
 	{
 		Point center;
-		center.x = rand_r(&xr_seed) % m_image.cols;
-		center.y = rand_r(&xr_seed) % m_image.rows;
+		center.x = rand_r(&xr_seed) % m_content.cols;
+		center.y = rand_r(&xr_seed) % m_content.rows;
 
 		Size axes;
 		axes.width  = rand_r(&xr_seed) % 200;
@@ -167,7 +167,7 @@ void StreamImage::Randomize(unsigned int& xr_seed)
 		double angle = rand_r(&xr_seed) % 180;
 		Scalar randomColor(rand_r(&xr_seed) % 255, rand_r(&xr_seed) % 255, rand_r(&xr_seed) % 255);
 
-		ellipse(m_image, center, axes, angle, angle - 100, angle + 200,
+		ellipse(m_content, center, axes, angle, angle - 100, angle + 200,
 				randomColor, (rand_r(&xr_seed) % 10) - 1);
 	}
 }
@@ -180,7 +180,7 @@ void StreamImage::Serialize(ostream& x_out, const string& x_dir) const
 	ss >> root;
 	stringstream fileName;
 	fileName << x_dir << "/" << GetModule().GetName() << "." << GetName() << "." << m_timeStamp << ".jpg";
-	imwrite(fileName.str(), m_image);
+	imwrite(fileName.str(), m_content);
 	root["image"] = fileName.str();
 	x_out << root;
 }
@@ -194,8 +194,8 @@ void StreamImage::Deserialize(istream& x_in, const string& x_dir)
 	Stream::Deserialize(ss, x_dir);
 
 	string fileName = root["image"].asString();
-	m_image = imread(fileName);
-	if(m_image.empty())
+	m_content = imread(fileName);
+	if(m_content.empty())
 		throw MkException("Cannot open serialized image from file " + fileName, LOC);
 }
 
@@ -211,9 +211,9 @@ void StreamImage::Connect(Stream* x_stream)
 		m_connected = nullptr;
 		throw MkException("Input stream cannot be connected probably because it is not of type StreamImage", LOC);
 	}
-	if(m_image.empty())
-		m_image = Mat(mr_module.GetSize(), mr_module.GetImageType());
-	else assert(m_image.size() == mr_module.GetSize());
+	if(m_content.empty())
+		m_content = Mat(mr_module.GetSize(), mr_module.GetImageType());
+	else assert(m_content.size() == mr_module.GetSize());
 
 	if(mp_connectedImage->GetImage().empty())
 		throw MkException("Connecting a StreamImage with an image of size zero", LOC);

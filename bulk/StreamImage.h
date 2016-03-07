@@ -53,13 +53,14 @@ public:
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 	virtual void Randomize(unsigned int& xr_seed);
-	const cv::Mat& GetImage() const {return m_image;}
+	const cv::Mat& GetImage() const {return m_content;}
 	void Connect(Stream * x_stream);
 
 	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType){LOG_WARN(m_logger, "Impossible to set the value of a stream of type image as a parameter");} // TODO
 	virtual void SetDefault(const std::string& x_value){LOG_WARN(m_logger, "Impossible to set the default value of a stream of type image as a parameter");} // TODO
-	virtual void SetValueToDefault(){m_image.setTo(0);};
-	virtual std::string GetValueString() const{std::stringstream ss; ss << m_image; return ss.str();};
+	virtual void SetValueToDefault(){m_content.setTo(0);};
+	virtual std::string GetValueString() const {std::stringstream ss; ss << m_content; return ss.str();};
+	virtual std::string GetDefaultString() const {return "[]";} // TODO
 
 protected:
 	static std::string createResolutionString(const cv::Size x_size, int x_depth, int x_channels)
@@ -69,7 +70,7 @@ protected:
 		return ss.str();
 	}
 	void ConvertToOutput(TIME_STAMP x_ts, cv::Mat& xr_output);
-	cv::Mat& m_image;
+	cv::Mat& m_content;
 	StreamImage* mp_connectedImage;
 
 	std::map<std::string, BufferImage> m_buffers;

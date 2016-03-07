@@ -38,8 +38,8 @@ template<> const ParameterType StreamObject::m_parameterType = PARAM_STREAM;
 
 template<>void StreamObject::SetValueToDefault()
 {
-	m_object.clear();
-	m_object.push_back(Object("screen", Rect(0, 0, GetWidth(), GetHeight())));
+	m_content.clear();
+	m_content.push_back(Object("screen", Rect(0, 0, GetWidth(), GetHeight())));
 }
 
 /// Convert the input to the right format
@@ -58,15 +58,15 @@ template<>void StreamObject::ConvertInput()
 	const StreamObject * pstream = dynamic_cast<const StreamObject*>(m_connected);
 	if(pstream == nullptr)
 		throw MkException("Stream of objects " + GetName() + " is not correctly connected", LOC);
-	vector<Object> rectsTarget = pstream->m_object;
+	vector<Object> rectsTarget = pstream->m_content;
 	double ratioX = static_cast<double>(GetWidth()) / pstream->GetWidth();
 	double ratioY = static_cast<double>(GetHeight()) / pstream->GetHeight();
 
-	m_object.clear();
+	m_content.clear();
 	for(const auto& elem : rectsTarget)
 	{
-		m_object.push_back(elem);
-		Object& obj(m_object[m_object.size() - 1]);
+		m_content.push_back(elem);
+		Object& obj(m_content[m_content.size() - 1]);
 		obj.posX   *= ratioX;
 		obj.posY   *= ratioY;
 		obj.width  *= ratioX;
@@ -80,7 +80,7 @@ template<>void StreamObject::RenderTo(Mat& x_output) const
 {
 	if(x_output.cols != GetWidth() || x_output.rows != GetHeight())
 		throw MkException("Cannot render, image must have the same size as the stream", LOC);
-	for(const auto& elem : m_object)
+	for(const auto& elem : m_content)
 	{
 		elem.RenderTo(x_output, DEFAULT_STREAM_COLOR);
 	}
@@ -95,7 +95,7 @@ template<>void StreamObject::Query(int x_posX, int x_posY) const
 
 	Point pt(x_posX, x_posY);
 
-	for(const auto& elem : m_object)
+	for(const auto& elem : m_content)
 		if(elem.GetRect().contains(pt))
 			LOG_INFO(m_logger, elem);
 
@@ -104,13 +104,13 @@ template<>void StreamObject::Query(int x_posX, int x_posY) const
 /// Randomize the content of the stream
 template<>void StreamObject::Randomize(unsigned int& xr_seed)
 {
-	m_object.clear();
+	m_content.clear();
 	int nb = rand_r(&xr_seed) % 10;
 	for(int i = 0 ; i < nb ; i++)
 	{
 		Object obj("random");
 		obj.Randomize(xr_seed, m_requirement, Size(GetWidth(), GetHeight()));
-		m_object.push_back(obj);
+		m_content.push_back(obj);
 	}
 }
 
@@ -122,11 +122,11 @@ template<>void StreamObject::Serialize(ostream& x_out, const string& x_dir) cons
 	ss >> root;
 	int cpt = 0;
 
-	if(m_object.size() == 0)
+	if(m_content.size() == 0)
 		root["objects"] = Json::Value(Json::arrayValue); // Empty array
 
 	// Serialize vector of objects
-	for(const auto& elem : m_object)
+	for(const auto& elem : m_content)
 	{
 		ss.clear();
 		elem.Serialize(ss, x_dir);
@@ -144,13 +144,13 @@ template<>void StreamObject::Deserialize(istream& x_in, const string& x_dir)
 	ss << root;
 	Stream::Deserialize(ss, x_dir);
 
-	m_object.clear();
+	m_content.clear();
 	for(const auto & elem : root["objects"])
 	{
 		ss.clear();
 		Object obj("empty");
-		m_object.push_back(obj);
+		m_content.push_back(obj);
 		ss << elem;
-		m_object.back().Deserialize(ss, x_dir);
+		m_content.back().Deserialize(ss, x_dir);
 	}
 }
