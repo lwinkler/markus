@@ -56,8 +56,8 @@ public:
 	// MKCLASS("ModuleKeyPoints")
 	// MKDESCR("Extract different types of keyPoints from image")
 
-	virtual void ProcessFrame();
-	void Reset();
+	virtual void ProcessFrame() override;
+	virtual void Reset() override;
 
 private:
 	Parameters& m_param;

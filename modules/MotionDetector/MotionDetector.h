@@ -59,9 +59,9 @@ public:
 	MKCATEG("EventDetector")
 	MKDESCR("Detect motion from an image where pixel value represents motion")
 
-	virtual void ProcessFrame();
+	virtual void Reset() override;
+	virtual void ProcessFrame() override;
 	virtual bool PropagateCondition() const override {return m_param.propagate || m_state;}
-	void Reset();
 
 private:
 	const Parameters& m_param;

@@ -61,8 +61,8 @@ public:
 	MKCATEG("Input")
 	MKDESCR("Read a ground truth file")
 
-	void ProcessFrame();
-	void Reset();
+	void ProcessFrame() override;
+	void Reset() override;
 
 private:
 	const Parameters& m_param;

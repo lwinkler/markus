@@ -52,9 +52,9 @@ public:
 	MKCATEG("EventDetector")
 	MKDESCR("Trigger an event periodically (at a specified interval of time)")
 
-	virtual void ProcessFrame();
-	virtual bool IsInputProcessed() const;
-	void Reset();
+	virtual void ProcessFrame() override;
+	virtual bool IsInputProcessed() const override;
+	virtual void Reset() override;
 
 private:
 	const Parameters& m_param;

@@ -47,9 +47,9 @@ public:
 	~Input();
 
 	virtual void Capture() = 0;
-	inline const std::string& GetName()const {return m_name;}
+	inline const std::string& GetName() const override {return m_name;}
 	inline virtual bool AbortCondition() const override {return m_endOfStream;}
-	inline void ProcessFrame() {Capture();}
+	inline void ProcessFrame() override {Capture();}
 	virtual inline bool IsInput() const override {return true;}
 
 protected:

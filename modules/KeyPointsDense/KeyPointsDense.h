@@ -67,7 +67,7 @@ public:
 	MKCATEG("KeyPoints")
 	MKDESCR("Extract key points of type Dense")
 
-	void Reset();
+	virtual void Reset() override;
 
 private:
 	const Parameters& m_param;

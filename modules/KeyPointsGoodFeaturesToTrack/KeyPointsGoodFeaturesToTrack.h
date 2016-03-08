@@ -63,7 +63,7 @@ public:
 	MKCATEG("KeyPoints")
 	MKDESCR("Extract keypoints of type GoodFeaturesToTrack on image")
 
-	void Reset();
+	virtual void Reset() override;
 
 private:
 	const Parameters& m_param;

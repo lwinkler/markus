@@ -32,15 +32,15 @@
 #define CLEAN_DELETE(x) if((x) != nullptr){delete((x));(x) = nullptr;}
 
 /// Macro to define the Class of an object (for method GetClass)
-#define MKCLASS(cl) inline virtual const std::string& GetClass() const {const static std::string s = cl; return s;}
+#define MKCLASS(cl) inline virtual const std::string& GetClass() const override {const static std::string s = cl; return s;}
 /// Macro to define the Type of an object (for method GetType)
-#define MKTYPE(cl) inline virtual const std::string& GetType() const {const static std::string s = cl; return s;}
+#define MKTYPE(cl) inline virtual const std::string& GetType() const override {const static std::string s = cl; return s;}
 /// Macro to define the Type of an object (for method GetType)
-#define MKPARAMTYPE(cl) inline virtual const ParameterType& GetParameterType() const {const static ParameterType s = cl; return s;}
+#define MKPARAMTYPE(cl) inline virtual const ParameterType& GetParameterType() const override {const static ParameterType s = cl; return s;}
 /// Macro to define the Category of an object (for method GetCategory)
-#define MKCATEG(cl) inline virtual const std::string& GetCategory() const {const static std::string s = cl; return s;}
+#define MKCATEG(cl) inline virtual const std::string& GetCategory() const override {const static std::string s = cl; return s;}
 /// Macro to define the Description of an object (for method GetDescription)
-#define MKDESCR(cl) inline virtual const std::string& GetDescription() const {const static std::string s = cl; return s;}
+#define MKDESCR(cl) inline virtual const std::string& GetDescription() const override {const static std::string s = cl; return s;}
 
 /// Disable copy constructor
 #define DISABLE_COPY(Class) \

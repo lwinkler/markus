@@ -42,13 +42,13 @@ public:
 	MKPARAMTYPE(PARAM_SERIALIZABLE)
 	MKTYPE("serializable")
 
-	inline std::string GetValueString() const
+	inline std::string GetValueString() const override
 	{
 		return mr_value.SerializeToString();
 	}
-	inline std::string GetDefaultString() const {return m_default;}
-	inline std::string GetRange() const {return "";}
-	inline virtual void SetRange(const std::string& x_range) {}
+	inline std::string GetDefaultString() const override {return m_default;}
+	inline std::string GetRange() const override {return "";}
+	inline virtual void SetRange(const std::string& x_range) override {}
 	// inline const Serializable& GetDefault() const {	return m_default;}
 
 	inline void SetValue(const Serializable& x_value, ParameterConfigType x_confType)
@@ -59,7 +59,7 @@ public:
 		m_confSource = x_confType;
 	}
 
-	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/)
+	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) override
 	{
 		if(m_isLocked)
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
@@ -74,7 +74,7 @@ public:
 		mr_value.Deserialize(istr, ""); // atof is sensible to locale format and may use , as a separator
 		m_confSource = x_confType;
 	}
-	virtual void SetDefault(const std::string& rx_value)
+	virtual void SetDefault(const std::string& rx_value) override
 	{
 		m_default = rx_value;
 	}
@@ -82,13 +82,13 @@ public:
 	{
 		return mr_value;
 	}
-	virtual bool CheckRange() const
+	virtual bool CheckRange() const override
 	{
 		// Note: so far it is not possible to check the range of serializable params
 		return true;
 	}
-	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const;
-	virtual void SetValueToDefault()
+	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const override;
+	virtual void SetValueToDefault() override
 	{
 		if(m_isLocked)
 			throw MkException("You tried to set the value of a locked parameter.", LOC);

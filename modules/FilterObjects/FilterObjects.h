@@ -70,9 +70,10 @@ public:
 	~FilterObjects();
 	MKCLASS("FilterObjects")
 	MKDESCR("Filter the input objects based on different criterion")
+	MKCATEG("Other")
 
-	virtual void ProcessFrame();
-	void Reset();
+	virtual void ProcessFrame() override;
+	virtual void Reset() override;
 
 private:
 	const Parameters& m_param;

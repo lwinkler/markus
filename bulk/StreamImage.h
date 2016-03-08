@@ -47,20 +47,23 @@ public:
 	MKTYPE("Image")
 	MKPARAMTYPE(PARAM_UNKNOWN)
 
-	virtual void ConvertInput();
-	virtual void RenderTo(cv::Mat& x_output) const;
-	virtual void Query(int x_posX, int x_posY) const;
-	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
-	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
-	virtual void Randomize(unsigned int& xr_seed);
+	virtual void ConvertInput() override;
+	virtual void RenderTo(cv::Mat& x_output) const override;
+	virtual void Query(int x_posX, int x_posY) const override;
+	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const override;
+	virtual void Deserialize(std::istream& stream, const std::string& x_dir) override;
+	virtual void Randomize(unsigned int& xr_seed) override;
 	const cv::Mat& GetImage() const {return m_content;}
-	void Connect(Stream * x_stream);
+	void Connect(Stream * x_stream) override;
 
-	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType){LOG_WARN(m_logger, "Impossible to set the value of a stream of type image as a parameter"); m_confSource = x_confType;}
-	virtual void SetDefault(const std::string& x_value){LOG_WARN(m_logger, "Impossible to set the default value of a stream of type image as a parameter");}
-	virtual void SetValueToDefault(){m_content.setTo(0); m_confSource = PARAMCONF_DEF;};
-	virtual std::string GetValueString() const {std::stringstream ss; ss << m_content; return ss.str();}
-	virtual std::string GetDefaultString() const {cv::Mat def(m_content.size(), m_content.type()); def.setTo(0); std::stringstream ss; ss << def; return ss.str();}
+	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType) override
+	{
+		LOG_WARN(m_logger, "Impossible to set the value of a stream of type image as a parameter"); m_confSource = x_confType;
+	}
+	virtual void SetDefault(const std::string& x_value) override {LOG_WARN(m_logger, "Impossible to set the default value of a stream of type image as a parameter");}
+	virtual void SetValueToDefault() override {m_content.setTo(0); m_confSource = PARAMCONF_DEF;};
+	virtual std::string GetValueString() const override {std::stringstream ss; ss << m_content; return ss.str();}
+	virtual std::string GetDefaultString() const override {cv::Mat def(m_content.size(), m_content.type()); def.setTo(0); std::stringstream ss; ss << def; return ss.str();}
 
 protected:
 	static std::string createResolutionString(const cv::Size x_size, int x_depth, int x_channels)

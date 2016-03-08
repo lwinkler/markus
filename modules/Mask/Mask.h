@@ -50,8 +50,8 @@ public:
 	MKCATEG("Image")
 	MKDESCR("Apply a binary mask to an image input")
 
-	virtual void ProcessFrame();
-	void Reset();
+	virtual void ProcessFrame() override;
+	virtual void Reset() override;
 
 private:
 	const Parameters& m_param;

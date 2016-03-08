@@ -62,7 +62,7 @@ public:
 	MKCATEG("KeyPoints")
 	MKDESCR("Extract key points of type Brisk")
 
-	void Reset();
+	void Reset() override;
 
 private:
 	const Parameters& m_param;

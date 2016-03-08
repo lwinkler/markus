@@ -76,8 +76,8 @@ public:
 	MKCATEG("BackgroundSubtraction")
 	MKDESCR("Perform background subtraction via Mixtures Of Gaussians (OpenCV MOG1)")
 
-	virtual void ProcessFrame();
-	void Reset();
+	virtual void ProcessFrame() override;
+	virtual void Reset() override;
 
 private:
 	const Parameters& m_param;

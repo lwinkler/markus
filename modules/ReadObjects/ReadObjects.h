@@ -59,12 +59,12 @@ public:
 	inline virtual bool AbortCondition() const override {return m_param.oneFrameOnly || m_endOfStream;}
 
 	ReadObjects(ParameterStructure& xr_params);
-	~ReadObjects(void);
+	~ReadObjects();
 	MKCLASS("ReadObjects")
 	MKCATEG("Input")
 	MKDESCR("Read an object from an annotation file")
 
-	void Reset();
+	void Reset() override;
 
 private:
 	const Parameters& m_param;
@@ -72,7 +72,7 @@ private:
 
 protected:
 
-	virtual void Capture();
+	virtual void Capture() override;
 
 	// ouput
 	std::vector<Object> m_ObjectOut;

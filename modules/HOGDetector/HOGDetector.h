@@ -67,6 +67,7 @@ public:
 	~HOGDetector(void);
 	MKCLASS("HOGDetector")
 	MKDESCR("Detect objects from a video stream using a HOG descriptor")
+	MKCATEG("Other")
 
 	virtual void Reset() override;
 	virtual void ProcessFrame() override;

@@ -60,8 +60,8 @@ public:
 	MKCATEG("Input")
 	MKDESCR("Read video stream from a video file")
 
-	void Capture();
-	void Reset();
+	virtual void Capture() override;
+	virtual void Reset() override;
 	// const cv::Mat * GetImage() const {return m_output;}
 
 	// Specific to file reader

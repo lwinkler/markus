@@ -59,8 +59,8 @@ public:
 	MKCATEG("Output")
 	MKDESCR("Write all objects as a collection of images (thumbnails)")
 
-	virtual void ProcessFrame();
-	void Reset();
+	virtual void ProcessFrame() override;
+	virtual void Reset() override;
 
 private:
 	const Parameters& m_param;

@@ -48,7 +48,7 @@ public:
 	ControllerParameter(Parameter& x_param, Processable& x_module);
 	MKCLASS("ControllerParameter")
 
-	virtual QWidget* CreateWidget() = 0;
+	virtual QWidget* CreateWidget() override = 0;
 	virtual void SetWidgetValue(const std::string& x_value) = 0;
 	virtual std::string GetValueFromWidget() = 0;
 

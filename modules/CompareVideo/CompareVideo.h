@@ -59,12 +59,13 @@ public:
 	~CompareVideo();
 
 	/* Reset current state of this module */
-	void Reset();
+	virtual void Reset() override;
 
 	MKCLASS("CompareVideo");
 	MKDESCR("Compare the two input videos and compute the dissimilarity of them for all the sequence");
+	MKCATEG("Test")
 
-	virtual void ProcessFrame();
+	virtual void ProcessFrame() override;
 
 private:
 	const Parameters& m_param;
