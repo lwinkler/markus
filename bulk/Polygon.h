@@ -67,5 +67,8 @@ protected:
 	double m_height = 0;
 };
 
+// partial specialization
+template<> void Polygon::GetPoints<cv::Point>(std::vector<cv::Point>& xr_points, const cv::Size& x_size) const;
+
 
 #endif

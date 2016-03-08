@@ -29,4 +29,13 @@
 
 typedef StreamT<std::vector<Object>> StreamObject;
 
+// partial specialization
+template<> StreamObject::StreamT(const std::string& rx_name, std::vector<Object>& rx_object, Module& rx_module, const std::string& rx_description, const std::string& rx_requirement);
+template<>void StreamObject::ConvertInput();
+template<>void StreamObject::RenderTo(cv::Mat& x_output) const;
+template<>void StreamObject::Query(int x_posX, int x_posY) const;
+template<>void StreamObject::Randomize(unsigned int& xr_seed);
+template<>void StreamObject::Serialize(std::ostream& x_out, const std::string& x_dir) const;
+template<>void StreamObject::Deserialize(std::istream& x_in, const std::string& x_dir);
+
 #endif
