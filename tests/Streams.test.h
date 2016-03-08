@@ -29,7 +29,7 @@
 
 #include "util.h"
 
-// #include "Parameters.test.h"
+#include "Parameters.test.h"
 #include "StreamImage.h"
 #include "StreamObject.h"
 #include "StreamDebug.h"
