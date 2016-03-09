@@ -31,7 +31,6 @@ typedef StreamT<std::vector<Object>> StreamObject;
 
 // partial specialization
 template<> StreamObject::StreamT(const std::string& rx_name, std::vector<Object>& rx_object, Module& rx_module, const std::string& rx_description, const std::string& rx_requirement);
-template<>void StreamObject::Reset();
 template<>void StreamObject::ConvertInput();
 template<>void StreamObject::RenderTo(cv::Mat& x_output) const;
 template<>void StreamObject::Query(int x_posX, int x_posY) const;

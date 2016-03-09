@@ -103,12 +103,6 @@ void Module::Reset()
 		else AddController(ctr);
 	}
 
-	for(auto elem : m_inputStreams)
-		elem.second->Reset();
-
-	for(auto elem : m_outputStreams)
-		elem.second->Reset();
-
 	if(m_param.cached == CachedState::WRITE_CACHE)
 		SYSTEM("mkdir -p " + GetContext().GetOutputDir() + "/cache/");
 }

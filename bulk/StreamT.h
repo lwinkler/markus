@@ -45,7 +45,6 @@ public:
 	inline const T& GetContent() const {return m_content;}
 	inline       T& RefContent() const {return m_content;}
 
-	inline virtual void Reset() {Stream::Reset();}
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat& x_output) const;
 	virtual void Query(int x_posX, int x_posY) const;

@@ -40,17 +40,8 @@ template<> StreamObject::StreamT(const std::string& rx_name, vector<Object>& rx_
 	Stream(rx_name, rx_module, rx_description, rx_requirement),
 	m_content(rx_object)
 {
-}
-
-/// Convert the input to the right format
-template<>void StreamObject::Reset()
-{
-	Stream::Reset();
-	m_content.clear();
-
-	// As a convention, if the stream is not connected, we use a full screen object
-	if(!IsConnected())
-		m_content.push_back(Object("screen", Rect(0, 0, GetWidth(), GetHeight())));
+	m_default.clear();
+	m_default.push_back(Object("screen", Rect(0, 0, GetWidth(), GetHeight())));
 }
 
 /// Convert the input to the right format
