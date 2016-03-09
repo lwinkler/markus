@@ -41,28 +41,28 @@ public:
 	
 	MKPARAMTYPE(PARAM_ENUM)
 
-	void SetValue(const std::string& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/);
+	void SetValue(const std::string& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/) override;
 	void SetValue(int rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/);
-	void SetDefault(const std::string& rx_value);
+	void SetDefault(const std::string& rx_value) override;
 	inline int GetDefault() const {return m_default;}
 	inline int GetValue() const {return mr_value;}
-	inline std::string GetValueString() const {return GetReverseEnum().at(mr_value);}
-	inline std::string GetDefaultString() const {return GetReverseEnum().at(m_default);}
-	std::string GetRange() const;
-	virtual void SetRange(const std::string& x_range);
+	inline std::string GetValueString() const override {return GetReverseEnum().at(mr_value);}
+	inline std::string GetDefaultString() const override {return GetReverseEnum().at(m_default);}
+	std::string GetRange() const override;
+	virtual void SetRange(const std::string& x_range) override;
 	inline void AllowAllValues(bool x_allow) {m_allowAllValues = x_allow;}
 	inline void AllowValue(const std::string& x_value, bool x_allow) {m_allowedValues[GetEnum().at(x_value)] = x_allow;}
-	virtual bool CheckRange() const;
-	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const;
-	virtual void Print(std::ostream& os) const;
-	virtual void SetValueToDefault()
+	virtual bool CheckRange() const override;
+	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const override;
+	virtual void Print(std::ostream& os) const override;
+	virtual void SetValueToDefault() override
 	{
 		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		mr_value = m_default;
 		m_confSource = PARAMCONF_DEF;
 	}
-	virtual const std::string& GetType() const = 0;
+	virtual const std::string& GetType() const override = 0;
 	virtual const std::map<std::string, int>& GetEnum() const = 0;
 	virtual const std::map<int, std::string>& GetReverseEnum() const = 0;
 

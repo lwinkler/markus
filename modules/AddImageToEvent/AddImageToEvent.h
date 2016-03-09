@@ -59,8 +59,8 @@ public:
 	MKCATEG("Output")
 	MKDESCR("Add an attached image to an event (after saving it as a file)")
 
-	virtual void ProcessFrame();
-	void Reset();
+	virtual void ProcessFrame() override;
+	virtual void Reset() override;
 
 private:
 	const Parameters& m_param;

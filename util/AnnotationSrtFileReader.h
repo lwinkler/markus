@@ -38,7 +38,7 @@ class AnnotationSrtFileReader : public AnnotationFileReader
 public:
 	AnnotationSrtFileReader();
 	~AnnotationSrtFileReader();
-	bool ReadNextAnnotation(std::string& rx_subText);
+	bool ReadNextAnnotation(std::string& rx_subText) override;
 
 	/// Cannot return a box since we do not have this info in .srt files
 	virtual cv::Rect GetBox() const override {return cv::Rect();}

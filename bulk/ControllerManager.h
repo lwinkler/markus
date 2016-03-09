@@ -38,7 +38,7 @@ public:
 	~ControllerManager() {}
 	MKCLASS("ControllerManager")
 
-	virtual QWidget* CreateWidget();
+	virtual QWidget* CreateWidget() override;
 
 	typedef void (ControllerManager::*action)(std::string*);
 	DECLARE_CALL_ACTION(action);

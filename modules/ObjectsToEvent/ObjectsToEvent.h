@@ -58,8 +58,8 @@ public:
 	MKCATEG("Conversion")
 	MKDESCR("Count objects and raise an event and state if a condition is reached")
 
-	virtual void ProcessFrame();
-	void Reset();
+	virtual void ProcessFrame() override;
+	virtual void Reset() override;
 
 private:
 	const Parameters& m_param;

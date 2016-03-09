@@ -101,6 +101,7 @@ public:
 	~CascadeDetector(void);
 	MKCLASS("CascadeDetector")
 	MKDESCR("Detect objects from a video stream using a cascade filter (c.f. Haar patterns)")
+	MKCATEG("Other")
 
 	void Reset() override;
 	void ProcessFrame() override;

@@ -25,7 +25,6 @@
 
 #include "Feature.h"
 #include "MkException.h"
-#include "util.h"
 #include "feature_util.h"
 #include <vector>
 

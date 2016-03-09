@@ -40,7 +40,7 @@ ReadObjects::ReadObjects(ParameterStructure& xr_params)
 	AddOutputStream(0, new StreamObject("object", m_ObjectOut, *this, "Output object read from file"));
 }
 
-ReadObjects::~ReadObjects(void)
+ReadObjects::~ReadObjects()
 {
 	// delete(m_input);
 	CLEAN_DELETE(mp_annotationReader);

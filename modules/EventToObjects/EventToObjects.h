@@ -50,15 +50,15 @@ public:
 	MKCATEG("Conversion")
 	MKDESCR("Transform a stream of events into a stream of objects")
 
-	virtual void ProcessFrame();
-	void Reset();
+	virtual void ProcessFrame() override;
+	virtual void Reset() override;
 
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
-	virtual bool IsInputProcessed() const;
+	virtual bool IsInputProcessed() const override;
 
 	// input
 	Event m_event;

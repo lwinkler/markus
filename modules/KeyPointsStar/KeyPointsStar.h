@@ -61,7 +61,7 @@ public:
 	MKCATEG("KeyPoints")
 	MKDESCR("Extract key points of type Star")
 
-	void Reset();
+	virtual void Reset() override;
 
 private:
 	const Parameters& m_param;

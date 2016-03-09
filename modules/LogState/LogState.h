@@ -55,8 +55,8 @@ public:
 	MKCATEG("Output")
 	MKDESCR("Read a state stream and log it to .srt file")
 
-	void Reset();
-	virtual void ProcessFrame();
+	virtual void Reset() override;
+	virtual void ProcessFrame() override;
 
 private:
 	const Parameters& m_param;

@@ -75,7 +75,7 @@ public:
 	inline void ListModulesTypes(std::vector<std::string>& xr_types) {mr_moduleFactory.List(xr_types);}
 	void WriteStateToDirectory(const std::string& x_directory) const;
 	void UpdateConfig();
-	inline virtual void SetContext(const Context& x_context)
+	inline virtual void SetContext(const Context& x_context) override
 	{
 		Processable::SetContext(x_context);
 		for(auto& elem : m_modules)

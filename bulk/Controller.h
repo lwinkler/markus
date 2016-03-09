@@ -41,7 +41,7 @@ class QWidget;
 // Use macros to declare members of Controller childs, not the cleanest thing but you are free to try to
 // improve on this
 #define DECLARE_CALL_ACTION(action) \
-void CallAction(const std::string& x_name, std::string* xp_value)\
+void CallAction(const std::string& x_name, std::string* xp_value) override\
 {\
 	auto it = m_actions.find(x_name);\
 	if(it == m_actions.end())\
@@ -49,7 +49,7 @@ void CallAction(const std::string& x_name, std::string* xp_value)\
 	(this->*(it->second))(xp_value);\
 }
 #define DECLARE_LIST_ACTION(action) \
-void ListActions(std::vector<std::string>& xr_actions) const\
+void ListActions(std::vector<std::string>& xr_actions) const override\
 {\
 	for(const auto& elem : m_actions)\
 		xr_actions.push_back(elem.first);\

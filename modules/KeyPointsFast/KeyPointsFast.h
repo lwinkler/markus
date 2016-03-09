@@ -55,7 +55,7 @@ public:
 	MKCATEG("KeyPoints")
 	MKDESCR("Extract keypoints of type FAST")
 
-	void Reset();
+	void Reset() override;
 
 private:
 	const Parameters& m_param;

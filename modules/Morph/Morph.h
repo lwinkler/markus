@@ -61,8 +61,8 @@ public:
 	MKCATEG("Image")
 	MKDESCR("Apply a morphological operator to an image")
 
-	virtual void ProcessFrame();
-	void Reset();
+	virtual void ProcessFrame() override;
+	void Reset() override;
 
 private:
 	const Parameters& m_param;

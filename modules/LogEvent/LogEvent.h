@@ -73,8 +73,8 @@ public:
 	MKCATEG("Output")
 	MKDESCR("Read an event and log it to .srt file")
 
-	virtual void ProcessFrame();
-	void Reset();
+	virtual void ProcessFrame() override;
+	void Reset() override;
 
 private:
 	const Parameters& m_param;
@@ -82,7 +82,7 @@ private:
 
 protected:
 	void SaveImage(Event& xr_event) const;
-	bool IsInputProcessed() const;
+	bool IsInputProcessed() const override;
 	void WriteEvent();
 	void CompareWithGroundTruth();
 

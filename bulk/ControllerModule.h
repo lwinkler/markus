@@ -37,7 +37,7 @@ public:
 	~ControllerModule() {}
 	MKCLASS("ControllerModule")
 
-	virtual QWidget* CreateWidget();
+	virtual QWidget* CreateWidget() override;
 
 	// Controls
 	void Reset(std::string* xp_value);

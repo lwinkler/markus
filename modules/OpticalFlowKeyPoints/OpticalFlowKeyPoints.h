@@ -59,8 +59,8 @@ public:
 	MKCATEG("KeyPoints")
 	MKDESCR("Calculate optical flow for all key points")
 
-	void Reset();
-	void ProcessFrame();
+	void Reset() override;
+	void ProcessFrame() override;
 
 private:
 	const Parameters& m_param;

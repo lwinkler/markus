@@ -37,7 +37,7 @@ class AnnotationFileReader
 {
 public:
 	AnnotationFileReader();
-	~AnnotationFileReader();
+	virtual ~AnnotationFileReader();
 
 	virtual void Open(const std::string& x_file);
 	TIME_STAMP GetCurrentTimeStamp();

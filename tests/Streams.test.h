@@ -51,6 +51,7 @@ class StreamsTestSuite : public CxxTest::TestSuite
 	class FakeModule : public Module
 	{
 	public:
+		MKCATEG("Fake")
 		FakeModule(ParameterStructure& xr_params) :
 			Module(xr_params),
 			m_param(dynamic_cast<Parameters&>(xr_params)),
@@ -106,8 +107,8 @@ class StreamsTestSuite : public CxxTest::TestSuite
 		~FakeModule() {}
 		MKCLASS("FakeModule")
 		MKDESCR("Output video stream with additional object streams")
-		void Reset() {}
-		virtual void ProcessFrame()
+		void Reset() override {}
+		virtual void ProcessFrame() override
 		{
 			for(auto& stream : m_inputStreams)
 				stream.second->Randomize(seed);

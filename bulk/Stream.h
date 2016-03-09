@@ -41,7 +41,7 @@ public:
 
 	virtual const std::string& GetClass() const = 0;
 	virtual const std::string& GetType() const override = 0;
-	virtual const ParameterType& GetParameterType() const = 0;
+	virtual const ParameterType& GetParameterType() const override = 0;
 	// inline int GetId() const {return m_id;}
 	// inline void SetId(int x_id) {m_id = x_id;} // id should disappear at term
 	inline int GetWidth() const {return GetModule().GetWidth();}
@@ -52,8 +52,8 @@ public:
 	virtual void Connect(Stream *x_stream);
 	virtual void ConvertInput() = 0;
 	virtual void Randomize(unsigned int& xr_seed) = 0;
-	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
-	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
+	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const override;
+	virtual void Deserialize(std::istream& stream, const std::string& x_dir) override;
 	virtual void Export(std::ostream& rx_os, int x_id, int x_indentation, bool x_isInput) const;
 	inline bool IsConnected() const {return m_isConnected;}
 	inline void SetAsConnected() {m_isConnected = true;}
@@ -81,15 +81,15 @@ public:
 	inline void SetSynchronized(bool x_sync) {m_synchronized = x_sync;}
 
 	// Methods inherited from Parameter class
-	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType) = 0;
-	virtual void SetDefault(const std::string& x_value) = 0;
-	virtual void SetValueToDefault() = 0;
-	virtual bool CheckRange() const {return true;}
-	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const {rx_values.clear();}
-	virtual std::string GetValueString() const = 0;
-	virtual std::string GetDefaultString() const = 0;
-	inline std::string GetRange() const {return "";}
-	inline virtual void SetRange(const std::string& x_range) {}
+	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType) override = 0;
+	virtual void SetDefault(const std::string& x_value) override = 0;
+	virtual void SetValueToDefault() override = 0;
+	virtual bool CheckRange() const override {return true;}
+	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const override {rx_values.clear();}
+	virtual std::string GetValueString() const override = 0;
+	virtual std::string GetDefaultString() const override = 0;
+	inline std::string GetRange() const override {return "";}
+	inline virtual void SetRange(const std::string& x_range) override {}
 
 protected:
 	// const int m_id;
