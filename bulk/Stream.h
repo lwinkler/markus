@@ -37,7 +37,7 @@ public:
 	Stream(const std::string& x_name, Module& rx_module, const std::string& rx_description, const std::string& rx_requirement = "");
 	virtual ~Stream();
 
-	inline void Reset() {m_timeStamp = TIME_STAMP_MIN;}
+	inline virtual void Reset() {m_timeStamp = TIME_STAMP_MIN;}
 
 	virtual const std::string& GetClass() const = 0;
 	virtual const std::string& GetType() const override = 0;
