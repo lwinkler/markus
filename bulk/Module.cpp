@@ -58,8 +58,8 @@ Module::~Module()
 	for(auto & elem : m_outputStreams)
 		delete(elem.second);
 #ifdef MARKUS_DEBUG_STREAMS
-	// for(auto & elem : m_debugStreams)
-		// delete(elem.second);
+	for(auto & elem : m_debugStreams)
+		delete(elem.second);
 #endif
 }
 
@@ -71,9 +71,9 @@ void Module::Reset()
 	LOG_INFO(m_logger, "Reseting module "<<GetName());
 	Processable::Reset();
 
-	// TODO causes problem for some modules: check
-	// for(auto& stream : m_inputStreams)
-		// stream.second->Reset();
+	// TODO inputs resets causes problem for some modules: check and remove this line if ok
+	for(auto& stream : m_inputStreams)
+		stream.second->Reset();
 	for(auto& stream : m_outputStreams)
 		stream.second->Reset();
 
