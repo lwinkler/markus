@@ -40,7 +40,7 @@ LogObjects::LogObjects(ParameterStructure& xr_params)
 	mp_annotationWriter = nullptr;
 }
 
-LogObjects::~LogObjects(void)
+LogObjects::~LogObjects()
 {
 	Compress();
 	CLEAN_DELETE(mp_annotationWriter);

@@ -45,7 +45,7 @@ LogEvent::LogEvent(ParameterStructure& xr_params)
 	mp_annotationWriter = nullptr;
 }
 
-LogEvent::~LogEvent(void)
+LogEvent::~LogEvent()
 {
 	CLEAN_DELETE(mp_annotationWriter);
 	CompareWithGroundTruth();

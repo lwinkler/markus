@@ -47,7 +47,7 @@ SlitCam::SlitCam(ParameterStructure& xr_params):
 	AddOutputStream(0, new StreamImage("slit",  m_output, *this, 	"Slit camera stream"));
 }
 
-SlitCam::~SlitCam(void)
+SlitCam::~SlitCam()
 {
 }
 

@@ -47,7 +47,7 @@ public:
 	};
 
 	TimedEvent(ParameterStructure& xr_params);
-	~TimedEvent(void);
+	~TimedEvent();
 	MKCLASS("TimedEvent")
 	MKCATEG("EventDetector")
 	MKDESCR("Trigger an event periodically (at a specified interval of time)")

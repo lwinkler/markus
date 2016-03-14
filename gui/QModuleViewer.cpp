@@ -117,7 +117,7 @@ QModuleViewer::QModuleViewer(const Manager& xr_manager, ParameterStructure& xr_p
 	connect(mp_comboStreams, SIGNAL(activated(int)), this, SLOT(updateStreamNb(int)));
 }
 
-QModuleViewer::~QModuleViewer(void)
+QModuleViewer::~QModuleViewer()
 {
 	CLEAN_DELETE(m_img_original);
 	CLEAN_DELETE(m_img_output);

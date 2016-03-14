@@ -40,7 +40,7 @@ TimedEvent::TimedEvent(ParameterStructure& xr_params)
 	AddOutputStream(0, new StreamEvent("event", m_event,  *this, 	"Event occuring at a fixed frequency"));
 }
 
-TimedEvent::~TimedEvent(void)
+TimedEvent::~TimedEvent()
 {
 }
 

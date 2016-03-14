@@ -45,7 +45,7 @@ ReadEvent::ReadEvent(ParameterStructure& xr_params)
 	AddOutputStream(2, new StreamImage("mask" , m_outputIm2, *this, "Binary mask for image extraction (optional)"));
 }
 
-ReadEvent::~ReadEvent(void)
+ReadEvent::~ReadEvent()
 {
 	CLEAN_DELETE(mp_annotationReader);
 }

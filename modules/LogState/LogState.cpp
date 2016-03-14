@@ -38,7 +38,7 @@ LogState::LogState(ParameterStructure& xr_params)
 	AddInputStream(0, new StreamState("input", m_state, *this, 	"Input state to be logged"));
 }
 
-LogState::~LogState(void)
+LogState::~LogState()
 {
 	WriteState();
 	// delete(m_input);

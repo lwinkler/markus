@@ -59,7 +59,7 @@ MotionDetector::MotionDetector(ParameterStructure& xr_params)
 #endif
 }
 
-MotionDetector::~MotionDetector(void)
+MotionDetector::~MotionDetector()
 {
 }
 

@@ -54,7 +54,7 @@ public:
 	};
 
 	MotionDetector(ParameterStructure& xr_params);
-	~MotionDetector(void);
+	~MotionDetector();
 	MKCLASS("MotionDetector")
 	MKCATEG("EventDetector")
 	MKDESCR("Detect motion from an image where pixel value represents motion")
