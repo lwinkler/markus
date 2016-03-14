@@ -45,3 +45,9 @@ Simulation.cpp
 InterruptionManager.cpp
 )
 
+# Work in progress to add precompiled headers for Module.h
+# add_library(Module.h.gch
+# 	Module.h
+# )
+# set_target_properties(Module.h.gch PROPERTIES LINKER_LANGUAGE C)
+# target_compile_options(Module.h.gch BEFORE PUBLIC -x c++-header)
