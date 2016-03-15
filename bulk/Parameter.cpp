@@ -41,13 +41,13 @@ log4cxx::LoggerPtr Parameter::m_logger(log4cxx::Logger::getLogger("Parameter"));
 */
 void Parameter::Export(ostream& rx_os, int x_indentation) const
 {
-	std::string def = GetDefaultString();
-	singleLine(def);
+	std::string val = GetValueString();
+	singleLine(val);
 	string tabs(x_indentation, '\t');
 	rx_os<<tabs<<"<param name=\""<<GetName()<<"\">"<<endl;
 	tabs = string(x_indentation + 1, '\t');
 	rx_os<<tabs<<"<type>"<<GetType()<<"</type>"<<endl;
-	rx_os<<tabs<<"<value default='"<< def <<"' range='"<<GetRange()<<"'>"<< def <<"</value>"<<endl;
+	rx_os<<tabs<<"<value default='"<< val <<"' range='"<<GetRange()<<"'>"<< val <<"</value>"<<endl;
 	rx_os<<tabs<<"<description>"<<GetDescription()<<"</description>"<<endl;
 	tabs = string(x_indentation, '\t');
 	rx_os<<tabs<<"</param>"<<endl;
