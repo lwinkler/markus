@@ -22,11 +22,9 @@
 -------------------------------------------------------------------------------------*/
 
 #include "$moduleName.h"
+#include "StreamNum.h"
 #include "StreamImage.h"
-
-#include <iostream>
-#include <cstdio>
-#include <opencv2/highgui/highgui.hpp>
+$includes
 
 using namespace std;
 // using namespace cv;
