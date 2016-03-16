@@ -87,6 +87,7 @@ public:
 		assert(!m_inputs.empty());
 		return m_inputs.at(0)->GetRecordingFps();
 	}
+	virtual void Status() const override;
 
 protected:
 	Module& RefModuleById(int x_id) const;

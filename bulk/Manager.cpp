@@ -216,7 +216,7 @@ void Manager::Process()
 {
 	if(m_quitting || (m_param.nbFrames != 0 && m_frameCount >= m_param.nbFrames))
 		throw EndOfStreamException("Quit command was sent or the number of frames to process was reached.", LOC);
-
+	
 	assert(m_isConnected); // Modules must be connected before processing
 	int cpt = 0;
 	MkException lastException(MK_EXCEPTION_NORMAL, "normal", "No exception was thrown", "", "");
@@ -590,4 +590,35 @@ void Manager::ManageInterruptions()
 			LOG_WARN(m_logger, "Cannot execute comman \"" << command.name << "\"");
 		}
 	}
+}
+
+/**
+* @brief Log the status of the application (last exception)
+*/
+void Manager::Status() const
+{
+	Json::Value root;
+
+	for(auto module : m_modules)
+	{
+		if(module->LastException().GetCode() != 1000)
+		{
+			stringstream ss;
+			module->LastException().Serialize(ss, "");
+			ss >> root[module->GetName()];
+			root[module->GetName()]["recovered"] = module->HasRecovered();
+		}
+	}
+	stringstream ss;
+	LastException().Serialize(ss, "");
+	ss >> root["manager"];
+	root["manager"]["recovered"] = HasRecovered();
+
+	Event evt;
+	// note: it is difficult to associate a time stamp with events
+	evt.Raise("status", 0, 0);
+	ss.clear();
+	ss << root;
+	evt.AddExternalInfo("exceptions", ss);
+	evt.Notify(GetContext(), true);
 }
