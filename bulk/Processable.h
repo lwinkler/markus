@@ -71,12 +71,13 @@ public:
 	bool ProcessAndCatch();
 	virtual void Start();
 	virtual void Stop();
-	virtual void Status() const;
+	void Status() const;
 	inline virtual void SetContext(const Context& x_context) {if(mp_context != nullptr) throw MkException("Context was already set", LOC); mp_context = &x_context;}
 	inline virtual const Context& GetContext() const {if(mp_context == nullptr) throw MkException("Context was not set", LOC); return *mp_context;}
 	inline bool IsContextSet() const {return mp_context != nullptr;}
 	inline Lock& RefLock() {return m_lock;}
 	inline const MkException& LastException() const {return m_lastException;}
+	inline void SetLastException(const MkException& x_excep) {m_lastException = x_excep;}
 	inline bool HasRecovered() const {return m_hasRecovered;}
 
 protected:
@@ -89,10 +90,6 @@ protected:
 private:
 	bool m_hasRecovered     = true; // Flag to test if all modules have recovered from the last exception, only working if centralized
 	MkException m_lastException;    // Field to store the last exception
-
-	// To handle disconnection
-	TIME_STAMP m_sleeping = 0;        // Time to sleep, used with certain exceptions
-	int        m_retryConnection = 0; // Number of retry
 
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;

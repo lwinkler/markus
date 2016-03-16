@@ -109,16 +109,6 @@ bool Processable::ProcessAndCatch()
 	m_timerProcessable.Start();
 	try
 	{
-		if(m_sleeping > 0)
-		{
-			// If the manager is in a waiting state, wait 500 ms and return
-			TIME_STAMP wait = MIN(m_sleeping, 500);
-			LOG_DEBUG(m_logger, "Sleep " << wait << " ms out of " << m_sleeping);
-			usleep(wait * 1000);
-			m_sleeping -= wait;
-			return true;
-		}
-
 		Process();
 	}
 	catch(MkException& e)
@@ -169,16 +159,6 @@ bool Processable::ProcessAndCatch()
 		{
 			LOG_ERROR(m_logger, GetName() << ": Exception raised (FatalException), aborting : " << e.what());
 			continueFlag = false;
-		}
-		else if(e.GetCode() == MK_EXCEPTION_DISCONNECTED)
-		{
-			LOG_ERROR(m_logger, GetName() << ": Exception raised (Disconnected) : " << e.what());
-			// sleeping 10 seconds if stream is temporarily cut and then 5 minutes before reconnecting
-			// this parameter could maybe be added to context
-			m_retryConnection++;
-			m_sleeping = m_retryConnection < 10 ? 10000 : 5 * 60 * 1000;
-			LOG_INFO(m_logger, "Waiting " << m_sleeping << " ms");
-			continueFlag = true;
 		}
 		else
 		{
@@ -238,7 +218,6 @@ bool Processable::ProcessAndCatch()
 	if(recover)
 	{
 		m_hasRecovered = true;
-		m_retryConnection = 0;
 	}
 
 	// note: we need send an event to stay in the loop
