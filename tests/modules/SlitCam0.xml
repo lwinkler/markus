@@ -7,12 +7,12 @@
 		</param>
 		<param name="fps">
 			<type>double</type>
-			<value default='0' range='[0:1000]'>0</value>
+			<value default='123' range='[0:1000]'>123</value>
 			<description>Frames per seconds (processing speed)</description>
 		</param>
 		<param name="class">
 			<type>string</type>
-			<value default='' range='[]'></value>
+			<value default='SlitCam' range='[]'>SlitCam</value>
 			<description>Class of the module (define the module's function)</description>
 		</param>
 		<param name="master">
