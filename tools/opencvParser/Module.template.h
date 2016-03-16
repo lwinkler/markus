@@ -47,7 +47,7 @@ public:
 	~$moduleName();
 	MKCLASS("$moduleName")
 	MKCATEG("$category")
-	MKDESCR("A simple example module that mimics a slit camera (or linear camera). The camera input is a range of pixels in the middle of the image.")
+	MKDESCR("$description")
 	virtual void ProcessFrame() override;
 	virtual void Reset() override;
 

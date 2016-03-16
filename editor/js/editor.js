@@ -583,14 +583,18 @@ var xmlProject = null;
 				var inputs = div.find("#inputs").empty();
 				xml.find("inputs > input").each(function(el){
 					var cl = $(this).data('class');
-					inputs.append('<p>' + cl.find('name').text() + ': ' + cl.find('description').text() + '</p>');
+					var descr = cl.find('description').text();
+					var type = cl.find('type').text();
+					inputs.append('<li>' + cl.find('name').text() + ' (' + type + ') ' + (descr ? ': ' + descr : '') + '</li>');
 				});
 				
 				// Show outputs
 				var outputs = div.find("#outputs").empty();
 				xml.find("outputs > output").each(function(el){
 					var cl = $(this).data('class');
-					outputs.append('<p>' + cl.find('name').text() + ': ' + cl.find('description').text() + '</p>');
+					var descr = cl.find('description').text();
+					var type = cl.find('type').text();
+					outputs.append('<li>' + cl.find('name').text() + ' (' + type + ') ' + (descr ? ': ' + descr : '') + '</li>');
 				});
 				
 				// Show parameters

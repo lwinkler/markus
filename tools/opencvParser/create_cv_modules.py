@@ -72,11 +72,12 @@ def create_substitutions(hname, module_name, decl):
 	return {
 		'includes':   "#include<%s>" % hname,
 		'moduleName': module_name,
-		'category':   hname.split('/')[-1],
+		'category':   hname.split('/')[-1].replace('.', '_'),
 		'init':       init,
 		'members':    members,
 		'function':   fct,
-		'streams':    streams
+		'streams':    streams,
+		'description': ''
 	}
 
 def create_file(file_name, template_file_name, substitutions):
