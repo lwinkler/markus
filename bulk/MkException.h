@@ -23,6 +23,8 @@ enum MkExceptionCode
 	// MK_EXCEPTION_FEAT_STD        = 1015,
 	MK_EXCEPTION_WEBSERVICE       = 1015,
 	MK_EXCEPTION_FATAL            = 1016,
+	MK_EXCEPTION_DISCONNECTED     = 1017,
+	MK_EXCEPTION_VIDEO_STREAM     = 1018,
 
 	// last code since unix can only return codes from 0 to 126
 	MK_EXCEPTION_LAST        = 1126
@@ -94,6 +96,26 @@ class WebServiceException : public MkException
 public:
 	WebServiceException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
 };
+
+/**
+* @brief Exception thrown if the camera is disconnected
+*/
+class DisconnectedException : public MkException
+{
+public:
+	DisconnectedException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
+};
+
+/**
+* @brief Exception thrown if an error occured while reading the video stream
+*/
+class VideoStreamException : public MkException
+{
+public:
+	VideoStreamException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
+};
+
+
 
 /**
 * @brief Fatal exception: will abort the execution

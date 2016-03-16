@@ -103,6 +103,15 @@ WebServiceException::WebServiceException(const string& x_descr, const string& x_
 	MkException(MK_EXCEPTION_WEBSERVICE, "web_service", "WebServiceException: " + x_descr, x_position, x_function)
 {}
 
+DisconnectedException::DisconnectedException(const string& x_descr, const string& x_position, const string& x_function) :
+	MkException(MK_EXCEPTION_DISCONNECTED, "disconnected", "DisconnectedException: " + x_descr, x_position, x_function)
+{}
+
+VideoStreamException::VideoStreamException(const string& x_descr, const string& x_position, const string& x_function) :
+	MkException(MK_EXCEPTION_VIDEO_STREAM, "video_stream", "VideoStreamException: " + x_descr, x_position, x_function)
+{}
+
+
 FatalException::FatalException(const string& x_descr, const string& x_position, const string& x_function) :
 	MkException(MK_EXCEPTION_FATAL, "fatal", "FatalException: " + x_descr, x_position, x_function)
 {}
