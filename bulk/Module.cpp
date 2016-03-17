@@ -71,7 +71,6 @@ void Module::Reset()
 	LOG_INFO(m_logger, "Reseting module "<<GetName());
 	Processable::Reset();
 
-	// TODO inputs resets causes problem for some modules: check and remove this line if ok
 	for(auto& stream : m_inputStreams)
 		stream.second->Reset();
 	for(auto& stream : m_outputStreams)

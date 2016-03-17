@@ -172,7 +172,7 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 			//        - slow interaction with the GUI
 			//        - no image is displayed if we only try to lock and the module is busy
 			//       A solution could be to display asynchronously
-			Processable::ReadLock lock(m_currentModule->RefLock()); // , boost::try_to_lock);
+			Processable::ReadLock lock(m_currentModule->RefLock(), boost::try_to_lock);
 			// We paint the image from the stream
 			if(m_img_original == nullptr)
 				m_img_original = new Mat( Size(m_currentStream->GetWidth(), m_currentStream->GetHeight()), CV_8UC3);

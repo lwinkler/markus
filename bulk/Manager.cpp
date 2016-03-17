@@ -241,8 +241,7 @@ void Manager::Process()
 
 	if(cptExceptions > 0)
 	{
-		// TODO see if we can do it cleaner
-		SetLastException(lastException);
+		// SetLastException(lastException);
 		LOG_WARN(m_logger, "Found " << cptExceptions << " exception(s), the last one is " << lastException);
 		throw lastException;
 	}

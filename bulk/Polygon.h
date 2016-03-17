@@ -61,8 +61,8 @@ public:
 	virtual void Serialize(std::ostream& x_out, const std::string& x_dir ="") const;
 	virtual void Deserialize(std::istream& x_in, const std::string& x_dir ="");
 
-	std::vector<cv::Point2d> points; //TODO : make protected
 protected:
+	std::vector<cv::Point2d> points;
 	double m_width  = 0;
 	double m_height = 0;
 };
