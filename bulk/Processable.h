@@ -69,11 +69,11 @@ public:
 	virtual const std::string& GetName() const = 0;
 	virtual double GetRecordingFps() const = 0;
 	bool ProcessAndCatch();
-	inline virtual void ManageInterruptions(){};
+	inline virtual bool ManageInterruptions(bool x_continueFlag){return true;}
 	virtual void Start();
 	virtual void Stop();
 	void Status() const;
-	void SetSleep();
+	void SetSleep(int x_ms);
 	bool DoSleep();
 	inline virtual void SetContext(const Context& x_context) {if(mp_context != nullptr) throw MkException("Context was already set", LOC); mp_context = &x_context;}
 	inline virtual const Context& GetContext() const {if(mp_context == nullptr) throw MkException("Context was not set", LOC); return *mp_context;}
@@ -101,7 +101,6 @@ private:
 
 	// To handle disconnection
 	TIME_STAMP m_sleepTime = 0;        // Time to sleep, used with certain exceptions
-	int        m_retryConnection = 0; // Number of retry
 };
 
 #endif

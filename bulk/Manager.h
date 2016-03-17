@@ -69,7 +69,7 @@ public:
 	void Check() const;
 	void CreateEditorFiles(const std::string& x_fileName);
 	void PrintStatistics();
-	virtual void ManageInterruptions() override;
+	virtual bool ManageInterruptions(bool x_continueFlag) override;
 	inline void Quit() {m_quitting = true;}
 	static std::string CreateOutputDir(const std::string& x_outputDir = "", const std::string& x_configFile = "");
 	inline void ListModulesTypes(std::vector<std::string>& xr_types) {mr_moduleFactory.List(xr_types);}

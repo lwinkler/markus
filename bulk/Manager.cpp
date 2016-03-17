@@ -214,9 +214,6 @@ void Manager::Reset(bool x_resetInputs)
 */
 void Manager::Process()
 {
-	if(m_quitting || (m_param.nbFrames != 0 && m_frameCount >= m_param.nbFrames))
-		throw EndOfStreamException("Quit command was sent or the number of frames to process was reached.", LOC);
-
 	assert(m_isConnected); // Modules must be connected before processing
 
 	int cptExceptions = 0;
@@ -230,7 +227,7 @@ void Manager::Process()
 		if(!elem->HasRecovered())
 		{
 			cptExceptions++;
-			LOG_WARN(m_logger, "manager found exception in " << elem->GetName() << ": " << elem->LastException());
+			LOG_WARN(m_logger, "The manager found an exception in " << elem->GetName());
 			lastException = elem->LastException();
 		}
 	}
@@ -571,8 +568,15 @@ void Manager::ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module,
 * @brief Manage all interruptions
 *
 */
-void Manager::ManageInterruptions()
+bool Manager::ManageInterruptions(bool x_continueFlag)
 {
+	// the quit command was sent. Quit anyway
+	if(m_quitting)
+		return false;
+
+	if(m_param.nbFrames != 0 && m_frameCount >= m_param.nbFrames)
+		x_continueFlag = false;
+
 	//if(m_frameCount % 20 == 0)
 	// usleep(20); // This keeps the manager unlocked to allow the sending of commands
 	vector<Command> commands = m_interruptionManager.ReturnCommandsToSend();
@@ -588,8 +592,21 @@ void Manager::ManageInterruptions()
 		}
 		catch(...)
 		{
-			LOG_WARN(m_logger, "Cannot execute comman \"" << command.name << "\"");
+			LOG_WARN(m_logger, "Cannot execute command \"" << command.name << "\"");
 		}
+	}
+	if(x_continueFlag)
+		return true;
+
+	if(AbortCondition())
+	{
+		LOG_INFO(m_logger, "Abort condition has been fulfilled (end of all streams)");
+		return false;
+	}
+	else
+	{
+		LOG_INFO(m_logger, "An event prevented the execution from stopping. Continue processing.");
+		return true;
 	}
 }
 

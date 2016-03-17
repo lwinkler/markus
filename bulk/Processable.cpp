@@ -67,7 +67,6 @@ void Processable::Reset()
 
 	m_timerProcessable.Reset();
 	m_hasRecovered = true;
-	m_retryConnection = 0;
 	m_sleepTime       = 0;
 }
 
@@ -106,10 +105,10 @@ void Processable::Stop()
 /**
 * @brief The processable will sleep before processing
 */
-void Processable::SetSleep()
+void Processable::SetSleep(int x_ms)
 {
-	m_retryConnection++;
-	m_sleepTime = m_retryConnection < 10 ? 10000 : 5 * 60 * 1000;
+	// m_retryConnection++;
+	m_sleepTime = x_ms; // m_retryConnection < 10 ? 10000 : 5 * 60 * 1000;
 	LOG_INFO(m_logger, "Set a waiting of " << m_sleepTime << " ms");
 }
 
@@ -123,7 +122,7 @@ bool Processable::DoSleep()
 	{
 		// If the manager is in a waiting state, wait 500 ms and return
 		TIME_STAMP wait = MIN(m_sleepTime, 500);
-		LOG_INFO(m_logger, "Sleep " << wait << " ms out of " << m_sleepTime);
+		LOG_DEBUG(m_logger, "Sleep " << wait << " ms out of " << m_sleepTime);
 		usleep(wait * 1000);
 		m_sleepTime -= wait;
 		return true;
@@ -165,19 +164,7 @@ bool Processable::ProcessAndCatch()
 			if(AbortCondition())
 			{
 				InterruptionManager::GetInst().AddEvent("event.stopped");
-				// This is a trick to call event.stopped and manage interruptions
-				ManageInterruptions();
-				// continueFlag = GetContext().GetParameters().robust && !AbortCondition();
-				continueFlag = !AbortCondition();
-
-				if(!continueFlag)
-				{
-					LOG_INFO(m_logger, "Abort condition has been fulfilled (end of all streams)");
-				}
-				else
-				{
-					LOG_INFO(m_logger, "An event prevented the execution from stopping. Continue processing.");
-				}
+				continueFlag = true;
 			}
 		}
 		else if(e.GetCode() == MK_EXCEPTION_FATAL)
@@ -249,9 +236,7 @@ bool Processable::ProcessAndCatch()
 	if(!continueFlag && m_param.autoProcess)
 		m_interruptionManager.AddEvent("event.stopped");
 
-	ManageInterruptions();
-
-	return continueFlag;
+	return ManageInterruptions(continueFlag);
 }
 
 /**

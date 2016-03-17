@@ -24,6 +24,7 @@
 #include "ControllerManager.h"
 #include "Manager.h"
 #include "util.h"
+#include <boost/lexical_cast.hpp>
 
 using namespace std;
 
@@ -90,7 +91,7 @@ void ControllerManager::Stop(string* xp_value)
 */
 void ControllerManager::SetSleep(string* xp_value)
 {
-	manager.SetSleep();
+	manager.SetSleep(boost::lexical_cast<int>(*xp_value));
 }
 
 
