@@ -577,6 +577,9 @@ bool Manager::ManageInterruptions(bool x_continueFlag)
 	if(m_param.nbFrames != 0 && m_frameCount >= m_param.nbFrames)
 		x_continueFlag = false;
 
+	if(!x_continueFlag && AbortCondition())
+		InterruptionManager::GetInst().AddEvent("event.stopped");
+
 	//if(m_frameCount % 20 == 0)
 	// usleep(20); // This keeps the manager unlocked to allow the sending of commands
 	vector<Command> commands = m_interruptionManager.ReturnCommandsToSend();

@@ -163,8 +163,7 @@ bool Processable::ProcessAndCatch()
 			// test if all inputs are over
 			if(AbortCondition())
 			{
-				InterruptionManager::GetInst().AddEvent("event.stopped");
-				continueFlag = true;
+				continueFlag = false;
 			}
 		}
 		else if(e.GetCode() == MK_EXCEPTION_FATAL)

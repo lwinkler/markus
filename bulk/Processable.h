@@ -69,7 +69,7 @@ public:
 	virtual const std::string& GetName() const = 0;
 	virtual double GetRecordingFps() const = 0;
 	bool ProcessAndCatch();
-	inline virtual bool ManageInterruptions(bool x_continueFlag){return true;}
+	inline virtual bool ManageInterruptions(bool x_continueFlag){return x_continueFlag;}
 	virtual void Start();
 	virtual void Stop();
 	void Status() const;
