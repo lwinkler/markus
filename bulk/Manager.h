@@ -69,7 +69,7 @@ public:
 	void Check() const;
 	void CreateEditorFiles(const std::string& x_fileName);
 	void PrintStatistics();
-	void ManageInterruptions();
+	virtual void ManageInterruptions() override;
 	inline void Quit() {m_quitting = true;}
 	static std::string CreateOutputDir(const std::string& x_outputDir = "", const std::string& x_configFile = "");
 	inline void ListModulesTypes(std::vector<std::string>& xr_types) {mr_moduleFactory.List(xr_types);}
@@ -105,10 +105,6 @@ protected:
 
 	const FactoryParameters& mr_parametersFactory;
 	const FactoryModules& mr_moduleFactory;
-
-	// To handle disconnection
-	TIME_STAMP m_sleepTime = 0;        // Time to sleep, used with certain exceptions
-	int        m_retryConnection = 0; // Number of retry
 
 private:
 	static log4cxx::LoggerPtr m_logger;

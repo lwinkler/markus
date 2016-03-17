@@ -205,8 +205,6 @@ void Manager::Reset(bool x_resetInputs)
 		else AddController(ctr);
 	}
 	m_frameCount      = 0;
-	m_retryConnection = 0;
-	m_sleepTime       = 0;
 }
 
 /**
@@ -219,28 +217,20 @@ void Manager::Process()
 	if(m_quitting || (m_param.nbFrames != 0 && m_frameCount >= m_param.nbFrames))
 		throw EndOfStreamException("Quit command was sent or the number of frames to process was reached.", LOC);
 
-	if(m_sleepTime > 0)
-	{
-		// If the manager is in a waiting state, wait 500 ms and return
-		TIME_STAMP wait = MIN(m_sleepTime, 500);
-		LOG_DEBUG(m_logger, "Sleep " << wait << " ms out of " << m_sleepTime);
-		usleep(wait * 1000);
-		m_sleepTime -= wait;
-		return;
-	}
-
-	
 	assert(m_isConnected); // Modules must be connected before processing
-	int cpt = 0;
+
+	int cptExceptions = 0;
 	MkException lastException(MK_EXCEPTION_NORMAL, "normal", "No exception was thrown", "", "");
 
 	for(auto & elem : m_autoProcessedModules)
 	{
 		LOG_DEBUG(m_logger, "Call Process on module " << elem->GetName());
-		if(!elem->ProcessAndCatch())
+		elem->ProcessAndCatch();
+
+		if(!elem->HasRecovered())
 		{
-			cpt++;
-			LOG_WARN(m_logger, "Exception " << elem->LastException());
+			cptExceptions++;
+			LOG_WARN(m_logger, "manager found exception in " << elem->GetName() << ": " << elem->LastException());
 			lastException = elem->LastException();
 		}
 	}
@@ -250,34 +240,15 @@ void Manager::Process()
 	{
 		PrintStatistics();
 	}
+	
 
-	//if(m_frameCount % 20 == 0)
-	// usleep(20); // This keeps the manager unlocked to allow the sending of commands
-	if(lastException.GetCode() == MK_EXCEPTION_DISCONNECTED)
+	if(cptExceptions > 0)
 	{
-		m_retryConnection++;
-		m_sleepTime = m_retryConnection < 10 ? 10000 : 5 * 60 * 1000;
-		LOG_INFO(m_logger, "Waiting " << m_sleepTime << " ms");
-
 		// TODO see if we can do it cleaner
 		SetLastException(lastException);
-		return;
-	}
-	else
-	{
-		assert(m_sleepTime == 0);
-		m_retryConnection = 0;
-	}
-
-	ManageInterruptions();
-
-	if(cpt > 0)
-	{
-		LOG_WARN(m_logger, "Found " << cpt << " exception(s), the last one is " << lastException);
+		LOG_WARN(m_logger, "Found " << cptExceptions << " exception(s), the last one is " << lastException);
 		throw lastException;
 	}
-
-	return;
 }
 
 /**
@@ -602,6 +573,8 @@ void Manager::ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module,
 */
 void Manager::ManageInterruptions()
 {
+	//if(m_frameCount % 20 == 0)
+	// usleep(20); // This keeps the manager unlocked to allow the sending of commands
 	vector<Command> commands = m_interruptionManager.ReturnCommandsToSend();
 	for(const auto& command : commands)
 	{

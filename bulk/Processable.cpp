@@ -67,6 +67,8 @@ void Processable::Reset()
 
 	m_timerProcessable.Reset();
 	m_hasRecovered = true;
+	m_retryConnection = 0;
+	m_sleepTime       = 0;
 }
 
 /**
@@ -101,15 +103,47 @@ void Processable::Stop()
 		mp_moduleTimer->Stop();
 };
 
+/**
+* @brief The processable will sleep before processing
+*/
+void Processable::SetSleep()
+{
+	m_retryConnection++;
+	m_sleepTime = m_retryConnection < 10 ? 10000 : 5 * 60 * 1000;
+	LOG_INFO(m_logger, "Set a waiting of " << m_sleepTime << " ms");
+}
+
+/**
+* @brief Stop the processing thread. To be used before destructor
+*
+*/
+bool Processable::DoSleep()
+{
+	if(m_sleepTime > 0)
+	{
+		// If the manager is in a waiting state, wait 500 ms and return
+		TIME_STAMP wait = MIN(m_sleepTime, 500);
+		LOG_INFO(m_logger, "Sleep " << wait << " ms out of " << m_sleepTime);
+		usleep(wait * 1000);
+		m_sleepTime -= wait;
+		return true;
+	}
+	return false;
+}
 
 bool Processable::ProcessAndCatch()
 {
 	bool recover      = true;
 	bool continueFlag = true;
+	
+	// If the processable is asked to sleep, wait and do not process
+	bool doSleep = DoSleep();
+
 	m_timerProcessable.Start();
 	try
 	{
-		Process();
+		if(!doSleep)
+			Process();
 	}
 	catch(MkException& e)
 	{
@@ -131,20 +165,11 @@ bool Processable::ProcessAndCatch()
 			if(AbortCondition())
 			{
 				InterruptionManager::GetInst().AddEvent("event.stopped");
-				try
-				{
-					// This is a trick to call event.stopped and manage interruptions
-					dynamic_cast<Manager&>(*this).ManageInterruptions();
-					// continueFlag = GetContext().GetParameters().robust && !AbortCondition();
-					continueFlag = !AbortCondition();
-				}
-				catch(bad_cast& e)
-				{
-					LOG_DEBUG(m_logger, "Exception during interruption: " + string(e.what()));
-					continueFlag = false;
-				}
+				// This is a trick to call event.stopped and manage interruptions
+				ManageInterruptions();
+				// continueFlag = GetContext().GetParameters().robust && !AbortCondition();
+				continueFlag = !AbortCondition();
 
-				// TODO: test what happens if the stream of a camera is cut
 				if(!continueFlag)
 				{
 					LOG_INFO(m_logger, "Abort condition has been fulfilled (end of all streams)");
@@ -224,6 +249,8 @@ bool Processable::ProcessAndCatch()
 	if(!continueFlag && m_param.autoProcess)
 		m_interruptionManager.AddEvent("event.stopped");
 
+	ManageInterruptions();
+
 	return continueFlag;
 }
 
@@ -262,3 +289,4 @@ void Processable::Status() const
 	evt.AddExternalInfo("exception", ss);
 	evt.Notify(GetContext(), true);
 }
+

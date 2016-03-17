@@ -84,6 +84,17 @@ void ControllerManager::Stop(string* xp_value)
 }
 
 /**
+* @brief Command: The manager will sleep before next processing (centralized mode only)
+*
+* @param xp_value
+*/
+void ControllerManager::SetSleep(string* xp_value)
+{
+	manager.SetSleep();
+}
+
+
+/**
 * @brief Command: Process one frame
 *
 * @param xp_value
@@ -136,6 +147,7 @@ ControllerManager::ControllerManager(Manager& rx_manager) :
 	m_actions.insert(make_pair("Quit",               &ControllerManager::Quit));
 	m_actions.insert(make_pair("Start",              &ControllerManager::Start));
 	m_actions.insert(make_pair("Stop",               &ControllerManager::Stop));
+	m_actions.insert(make_pair("SetSleep",           &ControllerManager::SetSleep));
 	m_actions.insert(make_pair("ProcessOne",         &ControllerManager::ProcessOne));
 	m_actions.insert(make_pair("PrintStatistics",    &ControllerManager::PrintStatistics));
 	m_actions.insert(make_pair("Status",             &ControllerManager::Status));
