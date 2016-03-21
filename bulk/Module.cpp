@@ -76,9 +76,6 @@ void Module::Reset()
 	for(auto& stream : m_outputStreams)
 		stream.second->Reset();
 
-	m_param.PrintParameters();
-	m_param.CheckRange(true);
-
 	m_timerProcessFrame.Reset();
 	m_timerWaiting.Reset();
 	m_timerConversion.Reset();

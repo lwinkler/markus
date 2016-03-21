@@ -48,6 +48,9 @@ Processable::~Processable()
 */
 void Processable::Reset()
 {
+	m_param.PrintParameters();
+	m_param.CheckRange(true);
+
 	// Add the module timer
 	// Autoprocess is on for modules if decentralized and for manager if centralized
 	if(m_param.autoProcess && (GetName() == "manager" ^ ! GetContext().IsCentralized()))
@@ -170,6 +173,7 @@ bool Processable::ProcessAndCatch()
 		{
 			LOG_ERROR(m_logger, GetName() << ": Exception raised (FatalException), aborting : " << e.what());
 			continueFlag = false;
+			return false;
 		}
 		else
 		{

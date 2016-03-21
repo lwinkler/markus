@@ -173,6 +173,9 @@ void Manager::Check() const
 */
 void Manager::Reset(bool x_resetInputs)
 {
+	GetContext().GetParameters().PrintParameters();
+	GetContext().GetParameters().CheckRange(true);
+
 	Processable::Reset();
 	m_interruptionManager.Configure(m_param.GetConfig());
 

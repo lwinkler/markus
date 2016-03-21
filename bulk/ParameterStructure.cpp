@@ -116,7 +116,7 @@ void ParameterStructure::SetFromConfig()
 		catch(ParameterException& e)
 		{
 			// note: do not output a warning, unused parameters are checked inside CheckRange
-			// LOG_WARN(m_logger, "Unknown parameter in configuration: "<<name<<" in module "<<m_moduleName);
+			LOG_DEBUG(m_logger, "Unknown parameter in configuration: "<<name<<" in module "<<m_moduleName);
 		}
 	}
 }
@@ -211,7 +211,8 @@ void ParameterStructure::CheckRange(bool x_checkRelated) const
 			}
 			catch(ParameterException& e)
 			{
-				LOG_WARN(m_logger, e.what());
+				// TODO: This logs every time we override camera_id or job_id
+				LOG_WARN(m_logger, "Exception in CheckRange: " << e.what());
 			}
 		}
 	}
