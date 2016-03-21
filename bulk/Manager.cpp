@@ -222,12 +222,12 @@ void Manager::Reset(bool x_resetInputs)
 void Manager::Process()
 {
 	assert(m_isConnected); // Modules must be connected before processing
+	MkException lastException(MK_EXCEPTION_NORMAL, "normal", "No exception was thrown", "", "");
 
 	// To avoid freeze and infinite loops, use a timer
-	std::future<bool> ret = std::async(std::launch::async, [this]()
+	std::future<int> ret = std::async(std::launch::async, [this, &lastException]()
 	{
 		int cptExceptions = 0;
-		MkException lastException(MK_EXCEPTION_NORMAL, "normal", "No exception was thrown", "", "");
 
 		for(auto & elem : m_autoProcessedModules)
 		{
@@ -241,27 +241,25 @@ void Manager::Process()
 				lastException = elem->LastException();
 			}
 		}
-
 		m_frameCount++;
 		if(m_frameCount % 100 == 0 && m_logger->isDebugEnabled())
 		{
 			PrintStatistics();
 		}
-		
 
-		if(cptExceptions > 0)
-		{
-			// SetLastException(lastException);
-			LOG_WARN(m_logger, "Found " << cptExceptions << " exception(s), the last one is " << lastException);
-			throw lastException;
-		}
-		return true;
+		return cptExceptions;
 	});
 
 	std::future_status status = ret.wait_for(std::chrono::seconds(PROCESS_TIMEOUT));
 	if (status != std::future_status::ready)
 	{
 		throw FatalException("Timeout while processing. Check for freeze and infinite loops.", LOC);
+	}
+	int result = ret.get();
+	if(result > 0)
+	{
+		LOG_WARN(m_logger, "Found " << result << " exception(s), the last one is " << lastException);
+		throw lastException;
 	}
 }
 

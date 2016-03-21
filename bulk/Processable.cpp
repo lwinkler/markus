@@ -178,10 +178,10 @@ bool Processable::ProcessAndCatch()
 		else
 		{
 			LOG_ERROR(m_logger, "(Markus exception " << e.GetCode() << "): " << e.what());
-			continueFlag = false;
-			if(!GetContext().GetParameters().robust)
-				return false;
+			// continueFlag = false;
 		}
+		if(!GetContext().GetParameters().robust)
+			return false;
 	}
 	catch(exception& e)
 	{
@@ -236,10 +236,6 @@ bool Processable::ProcessAndCatch()
 	{
 		m_hasRecovered = true;
 	}
-
-	// note: we need send an event to stay in the loop
-	if(!continueFlag && m_param.autoProcess)
-		m_interruptionManager.AddEvent("event.stopped");
 
 	return ManageInterruptions(continueFlag);
 }
