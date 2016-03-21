@@ -4,8 +4,10 @@
 import os, sys, re, string
 from hdr_parser import *
 
+# Global variables
 std_types = ['bool', 'float', 'double', 'int', 'long'] # , 'std::string']
 forbidden = ['param', 'width', 'height', 'type', 'class', 'cached', 'master', 'fps', ]
+
 
 def translateType(decl):
 	""" Translate types to internal types of Markus """
@@ -86,10 +88,10 @@ def create_file(file_name, template_file_name, substitutions):
 	with open(file_name, 'w') as fout:
 		fout.write(src.substitute(substitutions))
 
-def create_markus_module(hname, decl):
+def create_markus_module(hname, modules_dir, decl):
 
 	module_name = decl[0].replace('.', '_')
-	module_dir  = "modules_gen/" + module_name
+	module_dir  = modules_dir + "/" + module_name
 
 	d = create_substitutions(hname, module_name, decl)
 	os.mkdir(module_dir)
@@ -106,6 +108,26 @@ if __name__ == '__main__':
 	decls = []
 	nbOk = 0
 	tot  = 0
+
+	if len(sys.argv) != 3:
+		print "usage: %s <opencv_includes> <output_directory>" % argv[0]
+		exit(0)
+
+	modules_dir   = sys.argv[2]
+	opencv_incdir = sys.argv[1]
+	opencv_hdr_list = [
+		opencv_incdir + "/core/core.hpp",
+		# opencv_incdir + "/flann/miniflann.hpp",
+		opencv_incdir + "/ml/ml.hpp",
+		opencv_incdir + "/imgproc/imgproc.hpp",
+		opencv_incdir + "/calib3d/calib3d.hpp",
+		opencv_incdir + "/features2d/features2d.hpp",
+		opencv_incdir + "/video/tracking.hpp",
+		opencv_incdir + "/video/background_segm.hpp",
+		opencv_incdir + "/objdetect/objdetect.hpp",
+		opencv_incdir + "/contrib/contrib.hpp",
+		opencv_incdir + "/highgui/highgui.hpp"
+	]
 
 	for hname in opencv_hdr_list:
 		for decl in parser.parse(hname):
@@ -130,7 +152,7 @@ if __name__ == '__main__':
 				continue
 
 			try:
-				create_markus_module(hname, decl)
+				create_markus_module(hname, modules_dir, decl)
 				print "Create module '%s' (from %s)" % (decl[0], hname)
 				nbOk += 1
 			except Exception as e:
