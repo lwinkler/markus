@@ -597,11 +597,7 @@ AnnotationFileReader* createAnnotationFileReader(const string& x_fileName, int x
 	AnnotationFileReader* p = nullptr;
 	if(x_fileName.empty())
 	{
-		// TODO by LW: This only exists for intrusion.tracklets, this should normally throw
-		// throw MkException("Name for file is empty", LOC);
-		cout <<"WARNING: Name for file is empty" << endl;
-		p = new AnnotationSrtFileReader();
-		return p;
+		throw MkException("Name for file is empty", LOC);
 	}
 	else if(x_fileName.substr(x_fileName.find_last_of(".") + 1) == "ass")
 	{
