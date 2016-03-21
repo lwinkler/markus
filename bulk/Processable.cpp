@@ -70,7 +70,7 @@ void Processable::Reset()
 
 	m_timerProcessable.Reset();
 	m_hasRecovered = true;
-	m_sleepTime       = 0;
+	m_sleepTime    = 0;
 }
 
 /**
