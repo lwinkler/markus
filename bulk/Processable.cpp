@@ -172,13 +172,15 @@ bool Processable::ProcessAndCatch()
 		else if(e.GetCode() == MK_EXCEPTION_FATAL)
 		{
 			LOG_ERROR(m_logger, GetName() << ": Exception raised (FatalException), aborting : " << e.what());
-			continueFlag = false;
+			// continueFlag = false;
 			return false;
 		}
 		else
 		{
 			LOG_ERROR(m_logger, "(Markus exception " << e.GetCode() << "): " << e.what());
-			continueFlag = GetContext().GetParameters().robust;
+			continueFlag = false;
+			if(!GetContext().GetParameters().robust)
+				return false;
 		}
 	}
 	catch(exception& e)
@@ -230,7 +232,7 @@ bool Processable::ProcessAndCatch()
 
 	// If a full processing cycle has been made without exception,
 	// we consider that the manager has recovered from exceptions
-	if(recover)
+	if(recover && !doSleep)
 	{
 		m_hasRecovered = true;
 	}

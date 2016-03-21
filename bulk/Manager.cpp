@@ -610,7 +610,7 @@ bool Manager::ManageInterruptions(bool x_continueFlag)
 	}
 	else
 	{
-		LOG_INFO(m_logger, "An event prevented the execution from stopping. Continue processing.");
+		LOG_INFO(m_logger, "Abort condition is not fulfilled. Continue processing.");
 		return true;
 	}
 }
@@ -647,3 +647,14 @@ void Manager::Status() const
 	evt.Notify(GetContext(), true);
 }
 */
+
+
+int Manager::ReturnCode() const
+{
+	// Return no error if end-of-stream or if has recovered
+	if(HasRecovered() || MK_EXCEPTION_ENDOFSTREAM)
+		return MK_EXCEPTION_NORMAL - MK_EXCEPTION_FIRST;
+	else
+		return LastException().GetCode() - MK_EXCEPTION_FIRST;
+}
+

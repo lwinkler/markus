@@ -95,6 +95,8 @@ void *send_commands(void *x_void_ptr)
 		{
 			if(getline(cin, input))
 			{
+				if(input.empty())
+					continue;
 				split(input, ' ', elems);
 				if(elems.size() == 1)
 					value = "";
@@ -446,9 +448,7 @@ int main(int argc, char** argv)
 #endif
 		}
 		manager.Stop();
-
-
-		returnValue = MK_EXCEPTION_NORMAL - MK_EXCEPTION_FIRST;
+		returnValue = manager.ReturnCode();
 
 		// Write the modified params in config and save
 		manager.UpdateConfig();
