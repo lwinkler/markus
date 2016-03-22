@@ -34,10 +34,14 @@
 #include "util.h"
 
 #include <fstream>
+#include <future>
+#include <thread>
+#include <chrono>
 #include <boost/lexical_cast.hpp>
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/writer.h>
 
+#define PROCESS_TIMEOUT 60 // 1 min timeout
 
 using namespace std;
 
@@ -218,34 +222,43 @@ void Manager::Reset(bool x_resetInputs)
 void Manager::Process()
 {
 	assert(m_isConnected); // Modules must be connected before processing
-
-	int cptExceptions = 0;
 	MkException lastException(MK_EXCEPTION_NORMAL, "normal", "No exception was thrown", "", "");
 
-	for(auto & elem : m_autoProcessedModules)
+	// To avoid freeze and infinite loops, use a timer
+	std::future<int> ret = std::async(std::launch::async, [this, &lastException]()
 	{
-		LOG_DEBUG(m_logger, "Call Process on module " << elem->GetName());
-		elem->ProcessAndCatch();
+		int cptExceptions = 0;
 
-		if(!elem->HasRecovered())
+		for(auto & elem : m_autoProcessedModules)
 		{
-			cptExceptions++;
-			LOG_WARN(m_logger, "The manager found an exception in " << elem->GetName());
-			lastException = elem->LastException();
+			LOG_DEBUG(m_logger, "Call Process on module " << elem->GetName());
+			elem->ProcessAndCatch();
+
+			if(!elem->HasRecovered())
+			{
+				cptExceptions++;
+				LOG_WARN(m_logger, "The manager found an exception in " << elem->GetName());
+				lastException = elem->LastException();
+			}
 		}
-	}
+		m_frameCount++;
+		if(m_frameCount % 100 == 0 && m_logger->isDebugEnabled())
+		{
+			PrintStatistics();
+		}
 
-	m_frameCount++;
-	if(m_frameCount % 100 == 0 && m_logger->isDebugEnabled())
-	{
-		PrintStatistics();
-	}
-	
+		return cptExceptions;
+	});
 
-	if(cptExceptions > 0)
+	std::future_status status = ret.wait_for(std::chrono::seconds(PROCESS_TIMEOUT));
+	if (status != std::future_status::ready)
 	{
-		// SetLastException(lastException);
-		LOG_WARN(m_logger, "Found " << cptExceptions << " exception(s), the last one is " << lastException);
+		throw FatalException("Timeout while processing. Check for freeze and infinite loops.", LOC);
+	}
+	int result = ret.get();
+	if(result > 0)
+	{
+		LOG_WARN(m_logger, "Found " << result << " exception(s), the last one is " << lastException);
 		throw lastException;
 	}
 }
@@ -610,7 +623,7 @@ bool Manager::ManageInterruptions(bool x_continueFlag)
 	}
 	else
 	{
-		LOG_INFO(m_logger, "An event prevented the execution from stopping. Continue processing.");
+		LOG_INFO(m_logger, "Abort condition is not fulfilled. Continue processing.");
 		return true;
 	}
 }
@@ -647,3 +660,14 @@ void Manager::Status() const
 	evt.Notify(GetContext(), true);
 }
 */
+
+
+int Manager::ReturnCode() const
+{
+	// Return no error if end-of-stream or if has recovered
+	if(HasRecovered() || LastException().GetCode() == MK_EXCEPTION_ENDOFSTREAM)
+		return MK_EXCEPTION_NORMAL - MK_EXCEPTION_FIRST;
+	else
+		return LastException().GetCode() - MK_EXCEPTION_FIRST;
+}
+

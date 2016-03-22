@@ -59,6 +59,7 @@ public:
 	virtual void Reset(bool x_resetInputs = true);
 	virtual void Process() override;
 	virtual bool AbortCondition() const override;
+	int ReturnCode() const;
 	virtual void Start() override;
 	virtual void Stop() override;
 	void SendCommand(const std::string& x_command, std::string x_value);
