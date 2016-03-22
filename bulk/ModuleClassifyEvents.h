@@ -50,7 +50,7 @@ public:
 	};
 
 	ModuleClassifyEvents(ParameterStructure& xr_params);
-	~ModuleClassifyEvents();
+	virtual ~ModuleClassifyEvents();
 
 	virtual void ProcessFrame() override;
 	virtual void Reset() override;

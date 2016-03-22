@@ -64,7 +64,7 @@ public:
 	};
 
 	HOGDetector(ParameterStructure& xr_params);
-	~HOGDetector();
+	virtual ~HOGDetector();
 	MKCLASS("HOGDetector")
 	MKDESCR("Detect objects from a video stream using a HOG descriptor")
 	MKCATEG("Other")

@@ -34,7 +34,7 @@ class ControllerModule : public Controller
 {
 public:
 	ControllerModule(Module& rx_module);
-	~ControllerModule() {}
+	virtual ~ControllerModule() {}
 	MKCLASS("ControllerModule")
 
 	virtual QWidget* CreateWidget() override;

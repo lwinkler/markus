@@ -39,7 +39,7 @@ class Event : public Serializable
 {
 public:
 	Event();
-	~Event();
+	virtual ~Event();
 	void Clean();
 	void Raise(const std::string& x_eventName, TIME_STAMP x_absTimeNotif, TIME_STAMP x_absTimeEvent);
 	void Raise(const std::string& x_eventName, const Object& m_object, TIME_STAMP x_absTimeNotif, TIME_STAMP x_absTimeEvent);

@@ -74,7 +74,7 @@ public:
 		std::string cacheDirectory;
 	};
 
-	~Context();
+	virtual ~Context();
 	Context(ParameterStructure& xr_params);
 	static std::string Version(bool x_full);
 	inline const std::string& GetOutputDir() const {if(m_outputDir.empty())throw MkException("Output dir has not been created", LOC); return m_outputDir;}

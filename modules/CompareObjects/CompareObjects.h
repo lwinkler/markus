@@ -53,7 +53,7 @@ public:
 	CompareObjects(ParameterStructure& xr_params);
 
 	/* Destructor */
-	~CompareObjects();
+	virtual ~CompareObjects();
 
 	/* Reset current state of this module */
 	virtual void Reset() override;

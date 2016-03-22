@@ -54,7 +54,7 @@ public:
 	};
 
 	OpticalFlowKeyPoints(ParameterStructure& x_configReader);
-	~OpticalFlowKeyPoints();
+	virtual ~OpticalFlowKeyPoints();
 	MKCLASS("OpticalFlowKeyPoints")
 	MKCATEG("KeyPoints")
 	MKDESCR("Calculate optical flow for all key points")

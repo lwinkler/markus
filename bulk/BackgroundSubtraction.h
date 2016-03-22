@@ -47,7 +47,7 @@ public:
 	};
 
 	BackgroundSubtraction(ParameterStructure& xr_params);
-	~BackgroundSubtraction();
+	virtual ~BackgroundSubtraction();
 
 	virtual void Reset() override;
 

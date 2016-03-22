@@ -68,7 +68,7 @@ public:
 	};
 
 	LogEvent(ParameterStructure& xr_params);
-	~LogEvent();
+	virtual ~LogEvent();
 	MKCLASS("LogEvent")
 	MKCATEG("Output")
 	MKDESCR("Read an event and log it to .srt file")

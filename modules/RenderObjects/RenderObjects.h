@@ -46,7 +46,7 @@ public:
 	};
 
 	RenderObjects(ParameterStructure& xr_params);
-	~RenderObjects();
+	virtual ~RenderObjects();
 	MKCLASS("RenderObjects")
 	MKDESCR("Output video stream with additional object streams")
 

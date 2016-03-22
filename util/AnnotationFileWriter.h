@@ -36,7 +36,7 @@ class AnnotationFileWriter
 {
 public:
 	AnnotationFileWriter();
-	~AnnotationFileWriter();
+	virtual ~AnnotationFileWriter();
 
 	void Open(const std::string& x_file);
 	void WriteAnnotation(TIME_STAMP x_start, TIME_STAMP x_end, std::stringstream& x_in);

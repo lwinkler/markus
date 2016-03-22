@@ -51,7 +51,7 @@ public:
 	};
 
 	ReadEvent(ParameterStructure& xr_params);
-	~ReadEvent();
+	virtual ~ReadEvent();
 	MKCLASS("ReadEvent")
 	MKCATEG("Input")
 	MKDESCR("Read an event from an annotation file")

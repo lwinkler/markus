@@ -59,7 +59,7 @@ public:
 	};
 
 	VideoFileBufferWriter(ParameterStructure& xr_params);
-	~VideoFileBufferWriter();
+	virtual ~VideoFileBufferWriter();
 	MKCLASS("VideoFileBufferWriter")
 	MKCATEG("Output")
 	MKDESCR("Write output to a buffer and export it if an evenement occurs")

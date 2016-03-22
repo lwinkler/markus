@@ -62,7 +62,7 @@ public:
 	};
 
 	KeyPointsDense(ParameterStructure& xr_params);
-	~KeyPointsDense();
+	virtual ~KeyPointsDense();
 	MKCLASS("KeyPointsDense")
 	MKCATEG("KeyPoints")
 	MKDESCR("Extract key points of type Dense")

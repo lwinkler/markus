@@ -32,7 +32,7 @@ class MarkusApplication : public QApplication
 {
 public:
 	MarkusApplication(int &argc, char ** argv);
-	// ~MarkusApplication();
+	virtual ~MarkusApplication(){}
 private:
 	bool notify(QObject *receiver_, QEvent *event_);
 	static log4cxx::LoggerPtr m_logger;

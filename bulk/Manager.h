@@ -55,7 +55,7 @@ public:
 	};
 
 	Manager(ParameterStructure& x_configReader);
-	~Manager();
+	virtual ~Manager();
 	virtual void Reset(bool x_resetInputs = true);
 	virtual void Process() override;
 	virtual bool AbortCondition() const override;

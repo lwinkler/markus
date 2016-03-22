@@ -96,7 +96,7 @@ class Controllable
 {
 public:
 	Controllable() {}
-	~Controllable()
+	virtual ~Controllable()
 	{
 		for(auto & elem : m_controls)
 			delete(elem.second);

@@ -41,7 +41,7 @@ class QControlBoard : public QWidget
 	Q_OBJECT
 public:
 	QControlBoard(Module& x_module, QWidget *parent = 0);
-	~QControlBoard();
+	virtual ~QControlBoard();
 	virtual void Destroy() {}
 	void updateControl(Controller* x_control);
 

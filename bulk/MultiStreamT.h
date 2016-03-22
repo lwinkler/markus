@@ -41,7 +41,7 @@ public:
 		if(rx_objects.empty())
 			throw MkException("Multiple inputs must contain a reference to a vector of size 1 or more. Please resize vector before initializing the stream. Please note that this size is the max size of the vector", LOC);
 	}
-	~MultiStreamT() {}
+	virtual ~MultiStreamT() {}
 	virtual void Connect(Stream *x_stream) override
 	{
 		assert(m_objects.size() == m_size && m_nextObj < m_size);

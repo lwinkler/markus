@@ -35,7 +35,7 @@ class ParameterStructure
 {
 public:
 	ParameterStructure(const ConfigReader& x_configReader);
-	~ParameterStructure();
+	virtual ~ParameterStructure();
 	inline const ConfigReader& GetConfig() const {return m_configReader;}
 	inline ConfigReader& RefConfig() {return m_configReader;}
 	void Init();

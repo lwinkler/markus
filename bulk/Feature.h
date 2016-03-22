@@ -46,7 +46,7 @@ public:
 /**
 * @brief Class representing a feature pointer: used in vectors and maps
 */
-class FeaturePtr // : public Serializable
+class FeaturePtr final // : public Serializable
 {
 public:
 	FeaturePtr(Feature* x_feat) : mp_feat(x_feat) {}

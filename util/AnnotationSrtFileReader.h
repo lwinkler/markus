@@ -37,7 +37,7 @@ class AnnotationSrtFileReader : public AnnotationFileReader
 {
 public:
 	AnnotationSrtFileReader();
-	~AnnotationSrtFileReader();
+	virtual ~AnnotationSrtFileReader();
 	bool ReadNextAnnotation(std::string& rx_subText) override;
 
 	/// Cannot return a box since we do not have this info in .srt files

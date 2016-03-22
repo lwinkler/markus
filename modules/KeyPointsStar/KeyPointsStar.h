@@ -56,7 +56,7 @@ public:
 	};
 
 	KeyPointsStar(ParameterStructure& xr_params);
-	~KeyPointsStar();
+	virtual ~KeyPointsStar();
 	MKCLASS("KeyPointsStar")
 	MKCATEG("KeyPoints")
 	MKDESCR("Extract key points of type Star")

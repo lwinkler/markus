@@ -50,7 +50,7 @@ public:
 	};
 
 	LogState(ParameterStructure& xr_params);
-	~LogState();
+	virtual ~LogState();
 	MKCLASS("LogState")
 	MKCATEG("Output")
 	MKDESCR("Read a state stream and log it to .srt file")

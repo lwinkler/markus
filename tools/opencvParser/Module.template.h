@@ -44,7 +44,7 @@ public:
 	};
 
 	$moduleName(ParameterStructure& xr_params);
-	~$moduleName();
+	virtual ~$moduleName();
 	MKCLASS("$moduleName")
 	MKCATEG("$category")
 	MKDESCR("$description")

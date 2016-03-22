@@ -44,7 +44,7 @@ public:
 	};
 
 	Input(ParameterStructure& x_param);
-	~Input();
+	virtual ~Input();
 
 	virtual void Capture() = 0;
 	inline const std::string& GetName() const override {return m_name;}

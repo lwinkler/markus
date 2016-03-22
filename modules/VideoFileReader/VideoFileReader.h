@@ -55,7 +55,7 @@ public:
 	};
 
 	VideoFileReader(ParameterStructure& xr_params);
-	~VideoFileReader();
+	virtual ~VideoFileReader();
 	MKCLASS("VideoFileReader")
 	MKCATEG("Input")
 	MKDESCR("Read video stream from a video file")

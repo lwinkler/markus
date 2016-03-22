@@ -37,7 +37,7 @@ public:
 		m_content(rx_object),
 		m_default(T{})
 	{}
-	~StreamT() {}
+	virtual ~StreamT() {}
 	virtual const std::string& GetClass() const {return m_class;}
 	virtual const std::string& GetType() const {return m_type;}
 	virtual const ParameterType& GetParameterType() const {return m_parameterType;}

@@ -38,7 +38,7 @@ class MkException : public std::exception, public Serializable
 public:
 	MkException(const std::string& x_description, const std::string& x_position, const std::string& x_function);
 	MkException(MkExceptionCode x_code, const std::string& x_name, const std::string& x_description, const std::string& x_position, const std::string& x_function);
-	~MkException() throw();
+	virtual ~MkException() throw();
 	const char* what() const throw();
 	inline MkExceptionCode GetCode() const {return m_code;}
 	inline const std::string& GetName() const {return m_name;}

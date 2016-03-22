@@ -50,7 +50,7 @@ public:
 	};
 
 	KeyPointsFast(ParameterStructure& xr_params);
-	~KeyPointsFast();
+	virtual ~KeyPointsFast();
 	MKCLASS("KeyPointsFast")
 	MKCATEG("KeyPoints")
 	MKDESCR("Extract keypoints of type FAST")

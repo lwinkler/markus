@@ -52,7 +52,7 @@ public:
 	};
 
 	ModuleKeyPoints(ParameterStructure& xr_params);
-	~ModuleKeyPoints();
+	virtual ~ModuleKeyPoints();
 	// MKCLASS("ModuleKeyPoints")
 	// MKDESCR("Extract different types of keyPoints from image")
 

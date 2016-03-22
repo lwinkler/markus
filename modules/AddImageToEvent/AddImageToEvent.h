@@ -54,7 +54,7 @@ public:
 	};
 
 	AddImageToEvent(ParameterStructure& xr_params);
-	~AddImageToEvent();
+	virtual ~AddImageToEvent();
 	MKCLASS("AddImageToEvent")
 	MKCATEG("Output")
 	MKDESCR("Add an attached image to an event (after saving it as a file)")

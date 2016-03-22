@@ -56,7 +56,7 @@ public:
 	CompareVideo(ParameterStructure& xr_params);
 
 	/* Destructor */
-	~CompareVideo();
+	virtual ~CompareVideo();
 
 	/* Reset current state of this module */
 	virtual void Reset() override;

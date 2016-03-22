@@ -61,7 +61,7 @@ public:
 	};
 
 	TrackerByFeatures(ParameterStructure& xr_params);
-	~TrackerByFeatures();
+	virtual ~TrackerByFeatures();
 	MKCLASS("TrackerByFeatures")
 	MKDESCR("Track objects by matching a set of features (typically x,y,width and height)")
 

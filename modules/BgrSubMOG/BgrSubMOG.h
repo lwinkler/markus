@@ -71,7 +71,7 @@ public:
 	};
 
 	BgrSubMOG(ParameterStructure& x_configReader);
-	~BgrSubMOG();
+	virtual ~BgrSubMOG();
 	MKCLASS("BgrSubMOG")
 	MKCATEG("BackgroundSubtraction")
 	MKDESCR("Perform background subtraction via Mixtures Of Gaussians (OpenCV MOG1)")

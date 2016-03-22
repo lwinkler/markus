@@ -48,7 +48,7 @@ class ConfigReader
 {
 public:
 	ConfigReader(const ConfigReader& x_conf);
-	~ConfigReader();
+	virtual ~ConfigReader();
 
 	// Method to access elements of the config
 	const ConfigReader GetSubConfig(const std::string& x_tagName) const;
@@ -111,7 +111,7 @@ class ConfigFile : public ConfigReader
 {
 public:
 	ConfigFile(const std::string& x_fileName, bool x_allowCreation = false, bool x_header = true);
-	~ConfigFile();
+	virtual ~ConfigFile();
 	void SaveToFile(const std::string& x_file) const;
 
 private:
@@ -127,7 +127,7 @@ class Configurable
 {
 public:
 	Configurable(ParameterStructure& x_param) : m_param(x_param) {}
-	~Configurable() {}
+	virtual ~Configurable() {}
 	virtual const ParameterStructure& GetParameters() const {return m_param;}
 
 private:

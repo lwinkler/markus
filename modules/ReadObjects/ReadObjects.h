@@ -59,7 +59,7 @@ public:
 	inline virtual bool AbortCondition() const override {return m_param.oneFrameOnly || m_endOfStream;}
 
 	ReadObjects(ParameterStructure& xr_params);
-	~ReadObjects();
+	virtual ~ReadObjects();
 	MKCLASS("ReadObjects")
 	MKCATEG("Input")
 	MKDESCR("Read an object from an annotation file")

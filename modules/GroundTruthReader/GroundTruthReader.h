@@ -56,7 +56,7 @@ public:
 	};
 
 	GroundTruthReader(ParameterStructure& x_confReader);
-	~GroundTruthReader();
+	virtual ~GroundTruthReader();
 	MKCLASS("GroundTruthReader")
 	MKCATEG("Input")
 	MKDESCR("Read a ground truth file")

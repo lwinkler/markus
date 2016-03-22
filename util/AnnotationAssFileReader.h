@@ -36,7 +36,7 @@ class AnnotationAssFileReader : public AnnotationFileReader
 {
 public:
 	AnnotationAssFileReader(int x_width, int x_height);
-	~AnnotationAssFileReader();
+	virtual ~AnnotationAssFileReader();
 	bool ReadNextAnnotation(std::string& rx_subText) override;
 	void Open(const std::string& x_file) override;
 	cv::Rect GetBox() const override;

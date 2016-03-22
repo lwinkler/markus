@@ -49,7 +49,7 @@ public:
 	};
 
 	FeatureToValue(ParameterStructure& xr_params);
-	~FeatureToValue();
+	virtual ~FeatureToValue();
 	MKCLASS("FeatureToValue")
 	MKCATEG("Conversion")
 	MKDESCR("Convert an object feature to a value stream (if several objects are present, use the largest)")

@@ -35,7 +35,7 @@ class ControllerManager : public Controller
 {
 public:
 	ControllerManager(Manager& rx_module);
-	~ControllerManager() {}
+	virtual ~ControllerManager() {}
 	MKCLASS("ControllerManager")
 
 	virtual QWidget* CreateWidget() override;

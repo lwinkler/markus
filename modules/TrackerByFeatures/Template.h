@@ -32,7 +32,7 @@
  *  A template is what allows to track an Object, through different frames. A set of Templates is typically
  * used inside a Tracker.
  */
-class Template
+class Template final
 {
 public:
 	Template();
