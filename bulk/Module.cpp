@@ -53,8 +53,11 @@ Module::~Module()
 {
 	// Delete all streams
 	// note: input streams will be destroyed as parameters
-	// for(auto & elem : m_inputStreams)
-		// delete(elem.second);
+	for(auto & elem : m_inputStreams)
+	{
+		if(elem.second->GetParameterType() == PARAM_UNKNOWN)
+			delete(elem.second);
+	}
 	for(auto & elem : m_outputStreams)
 		delete(elem.second);
 #ifdef MARKUS_DEBUG_STREAMS
