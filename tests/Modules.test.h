@@ -48,6 +48,24 @@ using namespace std;
 #include <stdio.h>
 
 
+/// Class used to test a module and destroy automatically its allocations
+struct ModuleTester
+{
+	Module* module                 = nullptr;
+	ParameterStructure* parameters = nullptr;
+	vector<Stream*> outputStreams;
+
+	~ModuleTester()
+	{
+		cout << "dealloc " << module->GetName() << endl;
+		for(auto elem : outputStreams)
+			delete elem;
+		delete module;
+		delete parameters;
+	}
+};
+
+
 /// Unit testing class for ConfigReader class
 class ModulesTestSuite : public CxxTest::TestSuite
 {
@@ -138,7 +156,7 @@ public:
 	}
 
 	/// Create module and make it ready to process
-	std::tuple<ParameterStructure*, Module*> createAndConnectModule(const string& x_type, const map<string, string>* xp_parameters = nullptr)
+	void createAndConnectModule(ModuleTester& tester, const string& x_type, const map<string, string>* xp_parameters = nullptr)
 	{
 		TS_TRACE("Create and connect module of class " + x_type);
 		ConfigReader moduleConfig = addModuleToConfig(x_type, *mp_configFile);
@@ -160,7 +178,7 @@ public:
 			if(parameters != nullptr)
 				delete(parameters);
 			TS_TRACE("Cannot set parameter in createAndConnectModule, reason: " + string(e.what()));
-			return std::make_pair(nullptr, nullptr);
+			return;
 		}
 		Module* module                 = m_factoryModules.Create(x_type, *parameters);
 		module->SetContext(*mp_context);
@@ -195,13 +213,17 @@ public:
 				TSM_ASSERT("Unknown input stream type", false);
 			}
 			inputStream.Connect(outputStream);
+			tester.outputStreams.push_back(outputStream);
 			TS_ASSERT(outputStream != nullptr);
 			TS_ASSERT(inputStream.IsConnected());
 		}
 		if(module->IsUnitTestingEnabled())
 			module->Reset();
 
-		return std::make_tuple(parameters,module);
+		tester.module = module;
+		tester.parameters = parameters;
+
+		return;
 	}
 
 	/// Run the modules with different inputs generated randomly
@@ -214,17 +236,14 @@ public:
 		for(const auto& elem : m_moduleTypes)
 		{
 			TS_TRACE("## on module " + elem);
-			Module* module;
-			ParameterStructure* parameters;
-			std::tie(parameters, module) = createAndConnectModule(elem);
-			if(module->IsUnitTestingEnabled())
+			ModuleTester tester;
+			createAndConnectModule(tester, elem);
+			if(tester.module->IsUnitTestingEnabled())
 			{
 				for(int i = 0 ; i < 50 ; i++)
-					module->ProcessRandomInput(seed);
+					tester.module->ProcessRandomInput(seed);
 			}
 			else TS_TRACE("--> unit testing disabled on " + elem);
-			delete module;
-			delete parameters;
 		}
 	}
 
@@ -243,19 +262,16 @@ public:
 			try
 			{
 				TS_TRACE("# on module " + modType);
-				Module* module;
-				ParameterStructure* parameters;
-				tie(parameters, module) = createAndConnectModule(modType);
-				if(!module->IsUnitTestingEnabled())
+				ModuleTester tester;
+				createAndConnectModule(tester, modType);
+				if(!tester.module->IsUnitTestingEnabled())
 				{
 					TS_TRACE("--> unit testing disabled on " + modType);
-					delete module;
-					delete parameters;
 					continue;
 				}
 
 				// Test on all controllers of the module
-				for(const auto& elemCtr : module->GetControllersList())
+				for(const auto& elemCtr : tester.module->GetControllersList())
 				{
 					TS_TRACE("## on controller " + elemCtr.first + " of class " + elemCtr.second->GetClass());
 					vector<string> actions;
@@ -286,7 +302,7 @@ public:
 
 						vector<string> values;
 						TS_TRACE("Generate values for param of type " + type + " in range " + range);
-						module->GetParameters().GetParameterByName(elemCtr.first).GenerateValues(10, values, range);
+						tester.module->GetParameters().GetParameterByName(elemCtr.first).GenerateValues(10, values, range);
 
 						for(auto& elemVal : values)
 						{
@@ -297,7 +313,7 @@ public:
 							// Test if the config is globally still valid
 							try
 							{
-								module->CheckParameterRange();
+								tester.module->CheckParameterRange();
 							}
 							catch(ParameterException& e)
 							{
@@ -310,9 +326,9 @@ public:
 
 							TSM_ASSERT("Value set must be returned by get: " + elemVal + "!=" + newValue, elemVal == newValue);
 
-							module->Reset();
+							tester.module->Reset();
 							for(int i = 0 ; i < 3 ; i++)
-								module->ProcessRandomInput(seed);
+								tester.module->ProcessRandomInput(seed);
 							TS_TRACE("###  " + elemCtr.first + ".Set returned " + elemVal);
 							TS_TRACE("###  " + elemCtr.first + ".Get returned " + newValue);
 						}
@@ -327,13 +343,10 @@ public:
 							TS_TRACE("###  " + elemCtr.first + "." + elemAction + " returned " + value);
 
 							for(int i = 0 ; i < 3 ; i++)
-								module->ProcessRandomInput(seed);
+								tester.module->ProcessRandomInput(seed);
 						}
 					}
 				}
-
-				delete module;
-				delete parameters;
 			}
 			catch(ParameterException &e)
 			{
@@ -357,16 +370,15 @@ public:
 		{
 			Timer timer;
 			timer.Start();
-			Module* module;
-			ParameterStructure* parameters;
-			std::tie(parameters, module) = createAndConnectModule(modType);
+			ModuleTester tester;
+			createAndConnectModule(tester, modType);
 			TS_TRACE("# on module " + modType);
 
 			string lastParam = "";
 			string lastDefault = "";
 
 			// Test on all controllers of the module
-			for(const auto& elem : module->GetParameters().GetList())
+			for(const auto& elem : tester.module->GetParameters().GetList())
 			{
 				// Create a second module with the parameter value (in case it is locked)
 				// we already have tested the other parameters with controllers
@@ -390,28 +402,20 @@ public:
 					if(lastParam != "")
 						params[lastParam] = lastDefault;
 
-					Module* module2;
-					ParameterStructure* parameters2;
-					std::tie(parameters2, module2) = createAndConnectModule(modType, &params);
-					if(module2 == nullptr || parameters2 == nullptr || !module2->IsUnitTestingEnabled())
+					ModuleTester tester2;
+					createAndConnectModule(tester2, modType, &params);
+					if(tester2.module == nullptr || tester2.parameters == nullptr || !tester2.module->IsUnitTestingEnabled())
 					{
-						CLEAN_DELETE(module2);
-						CLEAN_DELETE(parameters2);
 						continue;
 					}
-					TS_ASSERT(module2->IsUnitTestingEnabled());
+					TS_ASSERT(tester2.module->IsUnitTestingEnabled());
 
 					for(int i = 0 ; i < 3 ; i++)
-						module2->ProcessRandomInput(seed);
-
-					delete module2;
-					delete parameters2;
+						tester2.module->ProcessRandomInput(seed);
 				}
 				lastParam = elem->GetName();
 				lastDefault = elem->GetDefaultString();
 			}
-			delete module;
-			delete parameters;
 			timer.Stop();
 			if(timer.GetSecDouble() > 10)
 				TS_WARN("Module " + modType + " took " + std::to_string(timer.GetSecDouble()) + "s");
@@ -470,12 +474,9 @@ public:
 		for(auto& modType : moduleTypes)
 		{
 			TS_TRACE("# on module " + modType);
-			Module* module;
-			ParameterStructure* parameters;
-			std::tie(parameters, module) = createAndConnectModule(modType);
-			testExport(*module);
-			delete module;
-			delete parameters;
+			ModuleTester tester;
+			createAndConnectModule(tester, modType);
+			testExport(*tester.module);
 		}
 	}
 };

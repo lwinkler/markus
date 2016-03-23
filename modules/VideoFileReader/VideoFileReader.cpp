@@ -44,6 +44,7 @@ VideoFileReader::VideoFileReader(ParameterStructure& xr_params):
 
 VideoFileReader::~VideoFileReader()
 {
+	m_capture.release();
 }
 
 void VideoFileReader::Reset()
@@ -91,8 +92,6 @@ void VideoFileReader::Capture()
 				TIME_STAMP ts = m_lastTimeStamp;
 				Reset();
 				m_beginTimeStamp = ts;
-				// m_capture.release();
-				// m_capture.open(m_param.file);
 				if(!m_capture.grab())
 					throw MkException("Impossible to reopen the video file", LOC);
 			}
