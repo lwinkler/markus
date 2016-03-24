@@ -314,3 +314,18 @@ To aggregate results with respect to one variation of one parameter you may use 
 E.g. You have configured a variation on each video file of one set that contains one variation of the resolution (small and medium). Then use this command to aggregate all results that were made with a small resolution.
 
 	tools/evaluation/aggregate.py simulation_20141128_170932/results -f simulation_20141128_170932/small.txt -o small.html
+
+# Releasing
+## Check for memory leaks
+Use valgrind to check for leaks:
+
+	valgrind -v --num-callers=100 --tool=memcheck --leak-check=full --undef-value-errors=no --log-file=valgrind.log --leak-check=full --show-leak-kinds=all tests/unitTests
+
+In valgrind.log: check the leak summary: there should be no definetely/indirectly lost data and no still reachable data:
+
+	==4049== LEAK SUMMARY:
+	==4049==    definitely lost: 656 bytes in 8 blocks
+	==4049==    indirectly lost: 35 bytes in 3 blocks
+	==4049==      possibly lost: 177,580 bytes in 369 blocks
+	==4049==    still reachable: 9,360,442 bytes in 9,834 blocks
+	==4049==         suppressed: 0 bytes in 0 blocks

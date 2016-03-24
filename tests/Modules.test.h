@@ -57,7 +57,6 @@ struct ModuleTester
 
 	~ModuleTester()
 	{
-		cout << "dealloc " << module->GetName() << endl;
 		for(auto elem : outputStreams)
 			delete elem;
 		delete module;
