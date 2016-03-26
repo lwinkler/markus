@@ -44,12 +44,13 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
 	add_definitions(-DMARKUS_DEBUG_STREAMS)
 endif()
 
-find_package( Boost 1.40 COMPONENTS system thread REQUIRED )
+find_package( Boost 1.40 COMPONENTS system thread python REQUIRED )
 include_directories(${Boost_INCLUDE_DIR})
 
 # Required packages
 find_package(OpenCV REQUIRED)
 find_package(Threads REQUIRED)
+find_package(PythonLibs 2 QUIET)
 
 find_library(LOG4CXX_LIBS log4cxx)
 find_library(TINYXML_LIBS tinyxml)
@@ -64,6 +65,10 @@ endif()
 if("${JSONCPP_LIBS}" STREQUAL "")
 	message(FATAL_ERROR "JsonCpp library not found on your system")
 endif()
+if("${PYTHON_LIBRARIES}" STREQUAL "")
+	message(FATAL_ERROR "Python library not found on your system")
+endif()
+
 
 set(MK_EXT_DEPS ${MK_EXT_DEPS} ${LOG4CXX_LIBS})
 set(MK_EXT_DEPS ${MK_EXT_DEPS} ${TINYXML_LIBS})
@@ -71,6 +76,7 @@ set(MK_EXT_DEPS ${MK_EXT_DEPS} ${JSONCPP_LIBS})
 set(MK_EXT_DEPS ${MK_EXT_DEPS} ${OpenCV_LIBS})
 set(MK_EXT_DEPS ${MK_EXT_DEPS} ${CMAKE_THREAD_LIBS_INIT})
 set(MK_EXT_DEPS ${MK_EXT_DEPS} ${Boost_LIBRARIES})
+set(EXT_DEPS ${EXT_DEPS} ${PYTHON_LIBRARIES})
 
 if(NOT Markus_NO_GUI)
 	if(Markus_USE_QT5)

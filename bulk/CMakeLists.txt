@@ -4,6 +4,7 @@ Factories.cpp
 Module.cpp
 ModuleKeyPoints.cpp
 ModuleClassifyEvents.cpp
+ModulePython.cpp
 Manager.cpp
 Context.cpp
 Input.cpp

@@ -317,7 +317,7 @@ E.g. You have configured a variation on each video file of one set that contains
 
 # Releasing
 ## Check for memory leaks
-Use valgrind to check for leaks:
+Use valgrind to check for leaks. Be sure to compile without GUI for better results.
 
 	valgrind -v --num-callers=100 --tool=memcheck --leak-check=full --undef-value-errors=no --log-file=valgrind.log --leak-check=full --show-leak-kinds=all tests/unitTests
 
