@@ -615,7 +615,7 @@ AnnotationFileReader* createAnnotationFileReader(const string& x_fileName, int x
 /**
 * @brief Remove tabs and carriage return
 *
-* @param string String
+* @param strString
 *
 */
 void singleLine(std::string& str)
@@ -623,3 +623,4 @@ void singleLine(std::string& str)
 	str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
 	str.erase(std::remove(str.begin(), str.end(), '\t'), str.end());
 }
+

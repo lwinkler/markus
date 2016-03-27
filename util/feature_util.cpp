@@ -234,3 +234,4 @@ void randomize(Point3f& xr_val, unsigned int& xr_seed)
 // return sum / x_1.channels();
 // }
 //
+

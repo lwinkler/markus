@@ -27,7 +27,7 @@
 #include <boost/python.hpp>
 #include "Module.h"
 
-
+class FeaturePtr;
 
 /**
 * @brief This class is a parent class for all module of keypoint extraction
@@ -53,6 +53,28 @@ class ModulePython : public Module
 	protected:
 		bool m_initialized = false;
 	};
+protected:
+
+	/// A struct representing a list of features and the names of features to use (for use in method calls)
+	struct FeatureList
+	{
+		FeatureList(const std::map <std::string, FeaturePtr>& xr_features, const std::vector<std::string>& xr_featureNames)
+		: features(xr_features), featureNames(xr_featureNames) {}
+		int GetNumberOfFeatures() const;
+
+		const std::map <std::string, FeaturePtr>& features;
+		const std::vector<std::string>& featureNames;
+	};
+
+	// Conversion structures
+	struct MatToPython
+	{
+		static PyObject* convert(cv::Mat const& x_mat);
+	};
+	struct FeatureListToPython
+	{
+		static PyObject* convert(FeatureList const& x_mat);
+	};
 
 public:
 	class Parameters : public Module::Parameters
@@ -60,8 +82,8 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterString("script_path",  "modules2/FilterPython/vignettes", 	&scriptPath, "Path to the folder containing python scripts")); // TODO change value
-			m_list.push_back(new ParameterString("script", 	     "markus.py",                               &script,     "Name of the Python script (without .py)"));
+			m_list.push_back(new ParameterString("script_path",  "python_dir", &scriptPath, "Path to the folder containing python scripts"));
+			m_list.push_back(new ParameterString("script", 	     "script.py",  &script,     "Name of the Python script (without .py)"));
 
 			Init();
 		};
