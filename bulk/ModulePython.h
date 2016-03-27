@@ -41,7 +41,7 @@ class ModulePython : public Module
 		OncePython();
 		void Init()
 		{
-			// if(!m_initialized) // TODO: Check if ok!
+			if(!m_initialized) // TODO: Check if ok!
 				Py_Initialize();
 			m_initialized = true;
 		}

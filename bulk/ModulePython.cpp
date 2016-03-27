@@ -45,8 +45,8 @@ PyObject* ModulePython::MatToPython::convert(cv::Mat const& x_mat)
 			PyList_SET_ITEM(mylist, k++, PyInt_FromLong(x_mat.at<uchar>(i, j)));// PyInt_FromLong(array[x_mat.step[0] * i + j]));
 		}
 	}
-	Py_BuildValue("[i]", mylist);
-	return boost::python::incref(mylist);
+	// Py_BuildValue("[i]", mylist);
+	return mylist; // boost::python::incref(mylist);
 }
 
 /// Convert FeatureList to Python
@@ -80,8 +80,8 @@ PyObject* ModulePython::FeatureListToPython::convert(ModulePython::FeatureList c
 			}
 		}
 	}
-	Py_BuildValue("[d]", mylist);
-	return boost::python::incref(mylist);
+	// Py_BuildValue("[d]", mylist);
+	return mylist;// boost::python::incref(mylist);
 }
 
 int ModulePython::FeatureList::GetNumberOfFeatures() const
