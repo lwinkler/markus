@@ -46,7 +46,6 @@ PyObject* ModulePython::MatToPython::convert(cv::Mat const& x_mat)
 		}
 	}
 	Py_BuildValue("[i]", mylist);
-	// return boost::python::incref(boost::python::object("Thisis not a mat").ptr());
 	return boost::python::incref(mylist);
 }
 
@@ -156,9 +155,4 @@ void ModulePython::Reset()
 	Module::Reset();
 }
 
-/**
- */
-void ModulePython::ProcessFrame()
-{
-}
 
