@@ -236,6 +236,11 @@ void Object::Randomize(unsigned int& xr_seed, const string& x_requirement, const
 				Point2d(rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height),
 				Point2d(rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height))
 		   );
+	if(rand_r(&xr_seed) % 20 == 0)
+	{
+		width  = 0;
+		height = 0;
+	}
 	if(x_requirement != "")
 	{
 		Json::Value root;
