@@ -25,7 +25,6 @@
 #include "StreamImage.h"
 #include "util.h"
 #include "Manager.h"
-#include <opencv2/highgui/highgui.hpp>
 #include <fstream>
 
 using namespace std;
@@ -40,7 +39,7 @@ ThumbnailWriter::ThumbnailWriter(ParameterStructure& xr_params):
 	m_input2(Size(m_param.width, m_param.height), m_param.type)
 {
 	AddInputStream(0, new StreamImage( "input", m_input, *this,   "Video input"));
-	AddInputStream(1, new StreamObject("objects", m_objectsIn, *this,     "Incoming objects"));
+	AddInputStream(1, new StreamObject("objects", m_objectsIn, *this,     "Incoming objects", "{\"width\":{\"min\":1},\"height\":{\"min\":1}}"));
 	AddInputStream(2, new StreamImage( "input2", m_input2, *this,   "Binary mask"));
 }
 
