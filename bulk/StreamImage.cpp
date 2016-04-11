@@ -131,7 +131,7 @@ void StreamImage::ConvertToOutput(TIME_STAMP x_ts, cv::Mat& xr_output)
 }
 
 
-void StreamImage::RenderTo(Mat& x_output) const
+void StreamImage::RenderTo(cv::Mat& x_output) const
 {
 	m_content.copyTo(x_output);
 }

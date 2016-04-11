@@ -77,6 +77,7 @@ void SegmenterContour::Reset()
 	}
 }
 
+/// Process the frame
 void SegmenterContour::ProcessFrame()
 {
 	// Mat threshold_output;

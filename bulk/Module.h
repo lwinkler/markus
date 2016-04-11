@@ -167,6 +167,7 @@ protected:
 	TIME_STAMP m_currentTimeStamp = TIME_STAMP_MIN;  // time stamp of the current input
 	bool m_unsyncWarning = true;
 
+	/// Process on frame: This method should be redefined in each module and defines what gets processed
 	virtual void ProcessFrame() = 0;
 	inline virtual bool IsInputProcessed() const {return true;}
 

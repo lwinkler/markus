@@ -31,12 +31,14 @@
 using namespace std;
 using namespace cv;
 
+/// Constructor
 Polygon::Polygon()
 {
 	// points.push_back(Point2f(0.0,0.0));
 }
 
-Polygon::Polygon(const vector<Point2d>& x_value)
+/// Constructor from a set of points
+Polygon::Polygon(const vector<cv::Point2d>& x_value)
 	: points(x_value)
 {
 }

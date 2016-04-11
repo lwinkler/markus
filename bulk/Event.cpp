@@ -173,6 +173,7 @@ void Event::Raise(const string& x_eventName, TIME_STAMP x_absTimeNotif, TIME_STA
 /**
 * @brief Log an event and notify the parent process
 *
+* @param x_context        The context object
 * @param x_isProcessEvent If true, this indicates that the event is linked with processing and not analytics (e.g. for process events: "started", "stopped", "exception", "status")
 */
 void Event::Notify(const Context& x_context, bool x_isProcessEvent)

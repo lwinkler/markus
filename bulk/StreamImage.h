@@ -39,7 +39,7 @@ typedef StreamT<cv::Mat> StreamImage;
 
 
 /// Class for a stream of images (or video) used for input and output
-template<> class StreamT<typename cv::Mat> : public Stream
+template<> class StreamImage : public Stream
 {
 public:
 	StreamT(const std::string& x_name, cv::Mat& x_image, Module& rx_module, const std::string& x_description, const std::string& x_requirements = "");

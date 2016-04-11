@@ -301,7 +301,6 @@ void Module::Process()
 		LOG_WARN(m_logger, "Exception in module " << GetName());
 		throw;
 	}
-	return;
 }
 
 /**

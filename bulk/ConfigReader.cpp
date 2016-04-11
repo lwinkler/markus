@@ -542,7 +542,7 @@ void ConfigReader::overrideParameters(const ConfigReader& x_newConfig, ConfigRea
 /**
 * @brief Apply extra XML config to modify the initial config (used with option -x)
 *
-* @param xr_extraConfig Extra config to use for overriding
+* @param x_extraConfig Extra config to use for overriding
 *
 * @return
 */

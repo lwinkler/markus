@@ -34,14 +34,13 @@
 
 class Module;
 class ParameterStructure;
-
 class TiXmlNode;
 class TiXmlDocument;
 
 
 /**
 * @brief       Class used to manipulate configuration files
-* @description A ConfigReader object is a reference to a sub part of a ConfigFile.
+* @brief       A ConfigReader object is a reference to a sub part of a ConfigFile.
                This utility relies on TinyXml.
 */
 class ConfigReader
@@ -103,7 +102,7 @@ private:
 
 /**
 * @brief       Class used to manipulate configuration files
-* @description A ConfigFile object is created from an XML file. It can browse the different tags of the file by creating sub config objects. Each sub config object is
+* @brief       A ConfigFile object is created from an XML file. It can browse the different tags of the file by creating sub config objects. Each sub config object is
                a reference to the sub configuration. Not a copy.
                This utility relies on TinyXml.
 */
