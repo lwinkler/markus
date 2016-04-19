@@ -74,8 +74,10 @@ void Module::Reset()
 	LOG_INFO(m_logger, "Reseting module "<<GetName());
 	Processable::Reset();
 
-	for(auto& stream : m_inputStreams)
-		stream.second->Reset();
+	// note: The input streams must never be reset since this would be incoherent with the 
+	//       behavior of parameters. Reseting them would erase the current value and set them to default.
+	// for(auto& stream : m_inputStreams)
+		// stream.second->Reset();
 	for(auto& stream : m_outputStreams)
 		stream.second->Reset();
 
