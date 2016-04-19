@@ -81,6 +81,11 @@ void Module::Reset()
 	for(auto& stream : m_outputStreams)
 		stream.second->Reset();
 
+#ifdef MARKUS_DEBUG_STREAMS
+	for(auto& stream : m_debugStreams)
+		stream.second->Reset();
+#endif
+
 	m_timerProcessFrame.Reset();
 	m_timerWaiting.Reset();
 	m_timerConversion.Reset();
