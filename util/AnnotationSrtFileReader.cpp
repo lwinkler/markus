@@ -64,7 +64,7 @@ bool AnnotationSrtFileReader::ReadNextAnnotation(string& rx_subText)
 			if(! m_srtFile.good())
 				throw EndOfStreamException("End of file ", LOC);
 		}
-		int num = boost::lexical_cast<int>(line.c_str());
+		int num = boost::lexical_cast<int>(line);
 		LOG_DEBUG(m_logger, "Subtitle nb "<<num);
 		if(num != m_num + 1)
 			LOG_WARN(m_logger, "Missing subtitle number "<<(m_num + 1));

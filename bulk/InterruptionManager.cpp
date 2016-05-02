@@ -50,7 +50,7 @@ void InterruptionManager::Configure(const ConfigReader& x_config)
 		Interruption inter(Command(
 			config.GetAttribute("command"),
 			config.GetAttribute("value", "")),
-			boost::lexical_cast<int>(config.GetAttribute("nb", "-1").c_str())
+			boost::lexical_cast<int>(config.GetAttribute("nb", "-1"))
 		);
 		string event = config.GetAttribute("event");
 		m_interruptions[event].push_back(inter);

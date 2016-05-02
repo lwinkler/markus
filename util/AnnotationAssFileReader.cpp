@@ -85,7 +85,7 @@ void AnnotationAssFileReader::ReadSrt(const string& srt)
 	for (auto& elem : rect)
 	{
 		getline(stream, word, separator);
-		elem = boost::lexical_cast<int>(word.c_str());
+		elem = boost::lexical_cast<int>(word);
 	}
 	Point p1(rect[0] * m_widthProportion,rect[1] * m_heightProportion);
 	Point p2(rect[2] * m_widthProportion,rect[3] * m_heightProportion);
@@ -230,14 +230,14 @@ void AnnotationAssFileReader::ReadResolution()
 	string::size_type start = line.find_last_of(":");
 	if (start == string::npos)
 		throw MkException("Subtitle format error: must contain 'PlayResX : value'", LOC);
-	int width = boost::lexical_cast<int>((line.substr(start+1)).c_str());
+	int width = boost::lexical_cast<int>((line.substr(start+1)));
 	SafeGetline(m_srtFile, line);
 	if (line.find("PlayResY") == string::npos)
 		throw MkException("Subtitle format error: must contain 'PlayResY'", LOC);
 	start = line.find_last_of(":");
 	if (start == string::npos)
 		throw MkException("Subtitle format error: must contain 'PlayResY : value'", LOC);
-	int height = boost::lexical_cast<int>((line.substr(start+1)).c_str());
+	int height = boost::lexical_cast<int>((line.substr(start+1)));
 
 	m_widthProportion  = static_cast<double>(m_inputWidth)  / width;
 	m_heightProportion = static_cast<double>(m_inputHeight) / height;

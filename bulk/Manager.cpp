@@ -138,7 +138,7 @@ void Manager::Connect()
 	// Connect input and output streams (re-read the config once since we need all modules to be connected)
 	for(const auto& moduleConfig : m_param.GetConfig().FindAll("module"))
 	{
-		int moduleId = boost::lexical_cast<int>(moduleConfig.GetAttribute("id").c_str());
+		int moduleId = boost::lexical_cast<int>(moduleConfig.GetAttribute("id"));
 		Module& module = RefModuleById(moduleId);
 
 		// For each module
