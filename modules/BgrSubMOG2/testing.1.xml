@@ -29,8 +29,6 @@
 </outputs>
 <parameters>
 <param name="class">VideoFileReader</param>
-<param name="auto_process"/>
-<param name="fps"/>
 <param name="file">in/input.mp4</param>
 <param name="width">160</param>
 <param name="height">120</param>
@@ -50,8 +48,6 @@
 </outputs>
 <parameters>
 <param name="class">VideoFileReader</param>
-<param name="auto_process"/>
-<param name="fps"/>
 <param name="width">160</param>
 <param name="height">120</param>
 
@@ -77,8 +73,6 @@
 </outputs>
 <parameters>
 <param name="class">BgrSubMOG2</param>
-<param name="auto_process"/>
-<param name="fps"/>
 <param name="learning_rate">0.0001</param>
 <param name="width">160</param>
 <param name="height">120</param>

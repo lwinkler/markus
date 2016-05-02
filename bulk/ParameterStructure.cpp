@@ -118,6 +118,10 @@ void ParameterStructure::SetFromConfig()
 			// note: do not output a warning, unused parameters are checked inside CheckRange
 			LOG_DEBUG(m_logger, "Unknown parameter in configuration: "<<name<<" in module "<<m_moduleName);
 		}
+		catch(std::exception& e)
+		{
+			throw MkException("Exception while setting parameter " + name + ": " + string(e.what()), LOC);
+		}
 	}
 }
 
