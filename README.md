@@ -329,3 +329,4 @@ In valgrind.log: check the leak summary: there should be no definetely/indirectl
 	==4049==      possibly lost: 177,580 bytes in 369 blocks
 	==4049==    still reachable: 9,360,442 bytes in 9,834 blocks
 	==4049==         suppressed: 0 bytes in 0 blocks
+
