@@ -49,7 +49,7 @@ Processable::~Processable()
 void Processable::Reset()
 {
 	m_param.PrintParameters();
-	m_param.CheckRange(true);
+	m_param.CheckRange(GetName() != "manager");
 
 	// Add the module timer
 	// Autoprocess is on for modules if decentralized and for manager if centralized

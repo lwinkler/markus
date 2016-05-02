@@ -351,7 +351,8 @@ int main(int argc, char** argv)
 		overrideConfig(mainConfig, args.extraConfig, args.parameters, logger);
 		mainConfig.Validate();
 		ConfigReader appConfig = mainConfig.Find("application");
-		assert(!appConfig.IsEmpty());
+		if(appConfig.IsEmpty())
+			throw MkException("Tag <application> must be present in configuration file.", LOC);
 
 		// Init global variables and objects
 		// Context manages all call to system, files, ...
@@ -385,7 +386,8 @@ int main(int argc, char** argv)
 		Manager::Parameters managerParameters(appConfig);
 		// Override parameter auto_process with centralized
 		managerParameters.autoProcess = !args.nogui;
-		managerParameters.aspectRatio = args.aspectRatio;
+		if(!args.aspectRatio.empty())
+			managerParameters.aspectRatio = args.aspectRatio;
 		Manager manager(managerParameters);
 		manager.SetContext(context);
 
