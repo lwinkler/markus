@@ -32,6 +32,7 @@
 #include <opencv2/opencv.hpp>
 #include <execinfo.h>
 #include <sys/time.h>
+#include <boost/lexical_cast.hpp>
 
 using namespace std;
 using namespace cv;
@@ -624,3 +625,20 @@ void singleLine(std::string& str)
 	str.erase(std::remove(str.begin(), str.end(), '\t'), str.end());
 }
 
+/**
+* @brief Convert aspect ratio from string format "4:3" to double 1.333
+*
+* @param x_string Aspect ratio given as string
+* @return Aspect ratio in double format
+*
+*/
+double convertAspectRatio(const std::string& x_string)
+{
+	vector<string> resol;
+	resol = split(x_string, ':', resol);
+	if(resol.size() != 2)
+	{
+		throw MkException("Wrong format for aspect ratio \"" + x_string + "\". Should be in format \"4:3\"", LOC);
+	}
+	return boost::lexical_cast<double>(resol.at(0)) / boost::lexical_cast<double>(resol.at(1));
+}

@@ -77,6 +77,7 @@ void usage()
 		" -x  --xml extra_config.xml\n"
 		"                       Override some parameters in an extra XML file\n"
 		" -C  --cache           Cache directory (from another run) if using cache\n"
+		" -a  --aspect-ratio    Force all modules to comply with this aspect ratio (e.g. 4:3, 3:4, ...)\n"
 	);
 }
 
@@ -133,6 +134,7 @@ struct arguments
 	bool editor      = false;
 	bool simulation  = false;
 	bool robust      = false;
+	double aspectRatio = 0;
 
 	string configFile    = "config.xml";
 	string logConfigFile = "log4cxx.xml";
@@ -162,11 +164,12 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 		{"xml",         1, 0, 'x'},
 		{"cache",       1, 0, 'C'},
 		{"robust",      0, 0, 'R'},
+		{"aspect-ratio", 1, 0, 'a'},
 		{nullptr, 0, nullptr, 0}
 	};
 	char c;
 	int option_index = 0;
-	while ((c = getopt_long(argc, argv, "hvdeScfinRl:o:p:x:C:", long_options, &option_index)) != -1)
+	while ((c = getopt_long(argc, argv, "hvdeScfinRl:o:p:x:C:a:", long_options, &option_index)) != -1)
 	{
 		switch (c)
 		{
@@ -215,6 +218,9 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 			break;
 		case 'C':
 			args.cacheDirectory = optarg;
+			break;
+		case 'a':
+			args.aspectRatio = convertAspectRatio(optarg);
 			break;
 		case ':': // missing argument
 			LOG_ERROR(logger, "--"<<long_options[::optopt].name<<": an argument is required");
@@ -379,6 +385,7 @@ int main(int argc, char** argv)
 		Manager::Parameters managerParameters(appConfig);
 		// Override parameter auto_process with centralized
 		managerParameters.autoProcess = !args.nogui;
+		managerParameters.aspectRatio = args.aspectRatio;
 		Manager manager(managerParameters);
 		manager.SetContext(context);
 

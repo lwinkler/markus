@@ -56,13 +56,29 @@ Manager::Manager(ParameterStructure& xr_params) :
 {
 	LOG_INFO(m_logger, "Create manager");
 
-	for(const auto& moduleConfig : m_param.GetConfig().FindAll("module", true))
+	for(auto& moduleConfig : m_param.GetConfig().FindAll("module", true))
 	{
 		// Read parameters
 		if(moduleConfig.Find("parameters", true).IsEmpty())
 			throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name", "(unknown)"), LOC);
 		string moduleType = moduleConfig.Find("parameters>param[name=\"class\"]").GetValue();
 		ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, moduleConfig);
+
+		if(m_param.aspectRatio > 0)
+		{
+			// Force the aspect ratio to given value
+			Module::Parameters& mp = dynamic_cast<Module::Parameters&>(*tmp2);
+			if(m_param.aspectRatio >= 1)
+			{
+				mp.height = mp.width / m_param.aspectRatio;
+			}
+			else
+			{
+				mp.height = mp.width * m_param.aspectRatio;
+				swap(mp.width, mp.height);
+			}
+			LOG_INFO(m_logger, "Change aspect ratio of module of type " + moduleType + " to " + to_string(mp.width) + "x" + to_string(mp.height) + " to match " + to_string(m_param.aspectRatio));
+		}
 		Module * tmp1 = mr_moduleFactory.Create(moduleType, *tmp2);
 
 		LOG_DEBUG(m_logger, "Add module " << tmp1->GetName() << " to list input=" << (tmp1->IsInput() ? "yes" : "no"));

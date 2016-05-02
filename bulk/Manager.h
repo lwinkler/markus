@@ -48,10 +48,12 @@ public:
 		{
 			m_list.push_back(new ParameterInt("nb_frames", 0, 0, INT_MAX, &nbFrames, "Number of frames to process. 0 for infinite. Only works in centralized mode"));
 			m_list.push_back(new ParameterString("arguments", "",         &arguments, "Command-line arguments, for storage only"));
+			m_list.push_back(new ParameterDouble("aspect_ratio", 0, 0, 10, &aspectRatio, "If non-zero, at creation each module width/height are changed to match this aspect ratio"));
 			ParameterStructure::Init();
 		}
 		int nbFrames;
 		std::string arguments; // note: This is used in simulations, see what to do in normal case
+		double aspectRatio;
 	};
 
 	Manager(ParameterStructure& x_configReader);
