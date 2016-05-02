@@ -134,7 +134,7 @@ struct arguments
 	bool editor      = false;
 	bool simulation  = false;
 	bool robust      = false;
-	double aspectRatio = 0;
+	string aspectRatio;
 
 	string configFile    = "config.xml";
 	string logConfigFile = "log4cxx.xml";
@@ -220,7 +220,7 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 			args.cacheDirectory = optarg;
 			break;
 		case 'a':
-			args.aspectRatio = convertAspectRatio(optarg);
+			args.aspectRatio = optarg;
 			break;
 		case ':': // missing argument
 			LOG_ERROR(logger, "--"<<long_options[::optopt].name<<": an argument is required");

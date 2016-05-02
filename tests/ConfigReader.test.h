@@ -101,7 +101,7 @@ public:
 		ConfigReader param3 = module0conf.GetSubConfig("parameters").GetSubConfig("param", "name", "param_float");
 		TS_ASSERT(param3.GetValue() == "3.1415");
 
-		TS_ASSERT(atoi(param1.GetAttribute("id").c_str()) == 0);
+		TS_ASSERT(boost::lexical_cast<int>(param1.GetAttribute("id").c_str()) == 0);
 		TS_ASSERT(param1.GetAttribute("name") == "param_text");
 
 		m_conf1->SaveToFile("tests/tmp/config1_copy.xml");

@@ -64,20 +64,22 @@ Manager::Manager(ParameterStructure& xr_params) :
 		string moduleType = moduleConfig.Find("parameters>param[name=\"class\"]").GetValue();
 		ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, moduleConfig);
 
-		if(m_param.aspectRatio > 0)
+		if(!m_param.aspectRatio.empty())
 		{
 			// Force the aspect ratio to given value
 			Module::Parameters& mp = dynamic_cast<Module::Parameters&>(*tmp2);
-			if(m_param.aspectRatio >= 1)
+			double ar = convertAspectRatio(m_param.aspectRatio);
+			if(ar >= 1)
 			{
-				mp.height = mp.width / m_param.aspectRatio;
+				mp.height = mp.width / ar;
 			}
 			else
 			{
-				mp.height = mp.width * m_param.aspectRatio;
+				mp.height = mp.width * ar;
 				swap(mp.width, mp.height);
 			}
-			LOG_INFO(m_logger, "Change aspect ratio of module of type " + moduleType + " to " + to_string(mp.width) + "x" + to_string(mp.height) + " to match " + to_string(m_param.aspectRatio));
+			// cout << mp.width << "x" << mp.height << endl;
+			LOG_INFO(m_logger, "Change aspect ratio of module of type " + moduleType + " to " + to_string(mp.width) + "x" + to_string(mp.height) + " to match " + m_param.aspectRatio);
 		}
 		Module * tmp1 = mr_moduleFactory.Create(moduleType, *tmp2);
 
@@ -136,7 +138,7 @@ void Manager::Connect()
 	// Connect input and output streams (re-read the config once since we need all modules to be connected)
 	for(const auto& moduleConfig : m_param.GetConfig().FindAll("module"))
 	{
-		int moduleId = atoi(moduleConfig.GetAttribute("id").c_str());
+		int moduleId = boost::lexical_cast<int>(moduleConfig.GetAttribute("id").c_str());
 		Module& module = RefModuleById(moduleId);
 
 		// For each module

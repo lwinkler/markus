@@ -208,7 +208,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 				throw MkException("To set more than one parameter variation, use an external file with option file=...", LOC);
 			// default values. Empty range means that the prog uses the default range of the param
 			string range = varConf.GetAttribute("range", "");
-			int nb = atof(varConf.GetAttribute("nb", "10").c_str());
+			int nb = boost::lexical_cast<int>(varConf.GetAttribute("nb", "10"));
 
 			LOG_DEBUG(m_logger, "Variations for module " << moduleNames.at(0));
 			const Parameter& param = m_manager.GetModuleByName(moduleNames.at(0)).GetParameters().GetParameterByName(paramNames.at(0));

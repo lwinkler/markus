@@ -45,7 +45,7 @@ Module::Module(ParameterStructure& xr_params) :
 	m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_name(xr_params.GetConfig().GetAttribute("name"))
 {
-	m_id	= atoi(xr_params.GetConfig().GetAttribute("id").c_str());
+	m_id	= boost::lexical_cast<int>(xr_params.GetConfig().GetAttribute("id").c_str());
 	LOG_INFO(m_logger, "Create module " << m_name);
 }
 

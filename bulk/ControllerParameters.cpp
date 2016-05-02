@@ -24,6 +24,7 @@
 #include "ControllerParameters.h"
 #include "CalibrationByHeight.h"
 #include "Processable.h"
+#include <boost/lexical_cast.hpp>
 
 using namespace std;
 
@@ -199,7 +200,7 @@ QWidget* ControllerInt::CreateWidget()
 void ControllerInt::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
-	mp_parameterSlider->SetValue(atoi(x_value.c_str()));
+	mp_parameterSlider->SetValue(boost::lexical_cast<int>(x_value.c_str()));
 #endif
 }
 
@@ -237,7 +238,7 @@ QWidget* ControllerUInt::CreateWidget()
 void ControllerUInt::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
-	mp_parameterSlider->SetValue(atoi(x_value.c_str()));
+	mp_parameterSlider->SetValue(boost::lexical_cast<int>(x_value.c_str()));
 #endif
 }
 
@@ -270,7 +271,7 @@ QWidget* ControllerDouble::CreateWidget()
 void ControllerDouble::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
-	mp_parameterSlider->SetValue(atof(x_value.c_str()));
+	mp_parameterSlider->SetValue(boost::lexical_cast<double>(x_value.c_str()));
 #endif
 }
 
@@ -307,7 +308,7 @@ QWidget* ControllerFloat::CreateWidget()
 void ControllerFloat::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
-	mp_parameterSlider->SetValue(atof(x_value.c_str()));
+	mp_parameterSlider->SetValue(boost::lexical_cast<double>(x_value.c_str()));
 #endif
 }
 

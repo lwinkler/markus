@@ -70,8 +70,7 @@ public:
 			m_confSource = x_confType;
 			return;
 		}
-
-		mr_value.Deserialize(istr, ""); // atof is sensible to locale format and may use , as a separator
+		mr_value.Deserialize(istr, "");
 		m_confSource = x_confType;
 	}
 	virtual void SetDefault(const std::string& rx_value) override

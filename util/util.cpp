@@ -251,9 +251,9 @@ Scalar colorFromStr(string x_str)
 		if(!(pos1 && pos2 && pos3))
 			throw MkException("Error in colorFromStr", LOC);
 
-		return Scalar(atoi(x_str.substr(1, pos1 - 1).c_str()),
-					  atoi(x_str.substr(pos1 + 1, pos2 - pos1 - 1).c_str()),
-					  atoi(x_str.substr(pos2 + 1, pos3 - pos2 - 1).c_str()));
+		return Scalar(boost::lexical_cast<int>(x_str.substr(1, pos1 - 1).c_str()),
+					  boost::lexical_cast<int>(x_str.substr(pos1 + 1, pos2 - pos1 - 1).c_str()),
+					  boost::lexical_cast<int>(x_str.substr(pos2 + 1, pos3 - pos2 - 1).c_str()));
 	}
 	else return Scalar(0, 0, 0);
 }

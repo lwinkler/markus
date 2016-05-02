@@ -30,11 +30,6 @@
 
 #include "Parameter.h"
 
-#define PSTR2INT(pstr)      atoi((pstr)->c_str())
-#define PSTR2FLOAT(pstr)    atof((pstr)->c_str())
-#define INT2PSTR(x, pstr)   { stringstream ss; ss<<x; *(pstr) = ss.str();}
-#define FLOAT2PSTR(x, pstr) { stringstream ss; ss<<x; *(pstr) = ss.str();}
-
 class Module;
 class QWidget;
 

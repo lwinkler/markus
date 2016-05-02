@@ -28,6 +28,7 @@
 #include "MkException.h"
 #include "Parameter.h"
 #include <log4cxx/logger.h>
+#include <boost/lexical_cast.hpp>
 
 #define EPSILON 1e-5
 
@@ -71,8 +72,7 @@ public:
 	{
 		if(m_isLocked)
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
-		std::istringstream istr(rx_value);
-		istr >> mr_value; // atof is sensible to locale format and may use , as a separator
+		mr_value = boost::lexical_cast<T>(rx_value);
 		m_confSource = x_confType;
 	}
 	inline void SetValue(T x_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
@@ -89,8 +89,7 @@ public:
 	};*/
 	virtual void SetDefault(const std::string& rx_value)
 	{
-		std::istringstream istr(rx_value);
-		istr >> m_default; // atof is sensible to locale format and may use , as a separator
+		m_default = boost::lexical_cast<T>(rx_value);
 		m_confSource = PARAMCONF_DEF;
 	}
 	virtual T GetValue() const
