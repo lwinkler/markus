@@ -60,8 +60,8 @@ void VideoFileBufferWriter::WaitForThread() const
 {
 	while(m_threadIsWorking)
 	{
-		LOG_WARN(m_logger, "Thread is working. Waiting 1 sec.");
-		sleep(1);
+		LOG_WARN(m_logger, "Thread is still working. Waiting 0.1 sec.");
+		usleep(100000);
 	}
 }
 
@@ -180,6 +180,7 @@ void VideoFileBufferWriter::ProcessFrame()
 			assert(!m_buffer1.empty());
 			assert(!m_buffer2.empty());
 			LOG_DEBUG(m_logger, "Starting thread");
+			m_threadIsWorking = true; // note: must be set here to handle case where destructor is called
 
 			std::thread t([this]()
 			{
@@ -187,7 +188,6 @@ void VideoFileBufferWriter::ProcessFrame()
 				while(true)
 				{
 					m_mutex.lock();
-					m_threadIsWorking = true;
 					if(m_buffer2.empty())
 					{
 						m_mutex.unlock();
