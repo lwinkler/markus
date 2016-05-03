@@ -68,6 +68,7 @@ public:
 	const std::vector<Module*>& GetModules() const {return m_modules; }
 	inline const Processable& GetModuleByName(const std::string& x_name) const {if(x_name == "manager") assert(false); else return RefModuleByName(x_name);}
 
+	void Rebuild();
 	void Connect();
 	void Check() const;
 	void CreateEditorFiles(const std::string& x_fileName);
@@ -92,7 +93,10 @@ public:
 	}
 	// virtual void Status() const override;
 
-protected:
+private:
+	void Build();
+	void Destroy();
+
 	Module& RefModuleById(int x_id) const;
 	Module& RefModuleByName(const std::string& x_name) const;
 	void ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module, int x_inputId) const;
@@ -109,7 +113,6 @@ protected:
 	const FactoryParameters& mr_parametersFactory;
 	const FactoryModules& mr_moduleFactory;
 
-private:
 	static log4cxx::LoggerPtr m_logger;
 	Parameters& m_param;
 };

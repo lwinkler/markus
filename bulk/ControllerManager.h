@@ -50,6 +50,7 @@ public:
 	void Quit(std::string* xp_value);
 	void Start(std::string* xp_value);
 	void Stop(std::string* xp_value);
+	void Rebuild(std::string* xp_value);
 	void SetSleep(std::string* xp_value);
 	void ProcessOne(std::string* xp_value);
 	void PrintStatistics(std::string* xp_value);

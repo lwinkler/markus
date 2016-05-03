@@ -55,7 +55,19 @@ Manager::Manager(ParameterStructure& xr_params) :
 	mr_moduleFactory(Factories::modulesFactory())
 {
 	LOG_INFO(m_logger, "Create manager");
+	Build();
+}
 
+Manager::~Manager()
+{
+	Destroy();
+}
+
+/**
+* @brief Create all modules
+*/
+void Manager::Build()
+{
 	for(auto& moduleConfig : m_param.GetConfig().FindAll("module", true))
 	{
 		// Read parameters
@@ -99,6 +111,50 @@ Manager::Manager(ParameterStructure& xr_params) :
 	}
 }
 
+/**
+* @brief Destroy all modules
+*/
+void Manager::Destroy()
+{
+	PrintStatistics();
+
+	for(auto & elem : m_modules)
+		delete elem;
+	m_modules.clear();
+
+	for(auto & elem : m_parameters)
+		delete elem;
+	m_parameters.clear();
+	m_inputs.clear();
+	m_autoProcessedModules.clear();
+}
+
+/**
+* @brief Destroy and rebuild all modules
+*/
+void Manager::Rebuild()
+{
+	if(GetContext().GetParameters().centralized)
+	{
+		LOG_WARN(m_logger, "Manager::Rebuild only makes sense in centralized mode");
+		return;
+	}
+#ifdef MARKUS_NO_GUI
+	Stop();
+	Destroy();
+	Build();
+	for(auto& elem : m_modules)
+		elem->SetContext(GetContext());
+	m_isConnected = false;
+	Connect();
+	Reset();
+	Start();
+#else
+	// TODO: Maybe one day improve the GUI in order to handle rebuild and then handle decentralized
+	LOG_WARN(m_logger, "Manager::Rebuild can only be called when compiled without GUI.");
+#endif
+}
+
 void Manager::Start()
 {
 	for(auto & elem : m_autoProcessedModules)
@@ -114,16 +170,6 @@ void Manager::Stop()
 	Processable::Stop();
 }
 
-Manager::~Manager()
-{
-	PrintStatistics();
-
-	for(auto & elem : m_modules)
-		delete elem;
-
-	for(auto & elem : m_parameters)
-		delete elem;
-}
 
 /**
 * @brief Connect the different modules
@@ -238,6 +284,7 @@ void Manager::Reset(bool x_resetInputs)
 */
 void Manager::Process()
 {
+	WriteLock lock(m_lock);
 	assert(m_isConnected); // Modules must be connected before processing
 	MkException lastException(MK_EXCEPTION_NORMAL, "normal", "No exception was thrown", "", "");
 
@@ -295,9 +342,6 @@ void Manager::SendCommand(const string& x_command, string x_value)
 
 	// Note: We cast module/manager twice since we need functions from both parents
 	Controllable& contr  (elems.at(0) == "manager" ? dynamic_cast<Controllable&>(*this) : RefModuleByName(elems.at(0)));
-	// Processable&  process(elems.at(0) == "manager" ? dynamic_cast<Processable&>(*this) : RefModuleByName(elems.at(0)));
-
-	// WriteLock lock(process.RefLock());
 	contr.FindController(elems.at(1)).CallAction(elems.at(2), &x_value);
 
 	LOG_INFO(m_logger, "Command "<<x_command<<" returned value "<<x_value);

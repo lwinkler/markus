@@ -111,11 +111,11 @@ void *send_commands(void *x_void_ptr)
 		}
 		catch(std::exception& e)
 		{
-			LOG_ERROR(logger, "Cannot execute command: "<<e.what());
+			LOG_ERROR(logger, "Cannot execute command '" << input << "': " << e.what());
 		}
 		catch(...)
 		{
-			LOG_ERROR(logger, "Cannot execute command");
+			LOG_ERROR(logger, "Cannot execute command '" << input << "'");
 		}
 		// usleep(1000000);
 		cin.clear();
