@@ -317,6 +317,7 @@ void Manager::Process()
 	std::future_status status = ret.wait_for(std::chrono::seconds(PROCESS_TIMEOUT));
 	if (status != std::future_status::ready)
 	{
+		// TODO: Maybe exit directly. See if the exception is correctly thrown
 		throw FatalException("Timeout while processing. Check for freezes and infinite loops.", LOC);
 	}
 	int result = ret.get();

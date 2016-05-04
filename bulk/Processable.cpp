@@ -169,7 +169,7 @@ bool Processable::ProcessAndCatch()
 				continueFlag = false;
 			}
 		}
-		else if(e.GetCode() == MK_EXCEPTION_FATAL)
+		else if(e.IsFatal())
 		{
 			LOG_ERROR(m_logger, GetName() << ": Exception raised (FatalException), aborting : " << e.what());
 			// continueFlag = false;

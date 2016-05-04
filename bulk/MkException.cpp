@@ -49,10 +49,10 @@ string writeDescription(const string& x_description, const string& x_position, c
 * @param x_function    Function of method
 *
 */
-void fatal(const std::string& x_description, const std::string& x_position, const std::string& x_function)
+void fatal(const string& x_description, MkExceptionCode x_code, const string& x_position, const string& x_function)
 {
-	std::cerr<<"FATAL ERROR: "<<writeDescription(x_description, x_position, x_function)<<std::endl;
-	exit(1);
+	cerr<<"FATAL ERROR: "<<writeDescription(x_description, x_position, x_function) << ", aborting with code " << x_code << endl;
+	exit(x_code - MK_EXCEPTION_FIRST);
 }
 
 
@@ -63,7 +63,7 @@ MkException::MkException(const string& x_description, const string& x_position, 
 {
 }
 
-MkException::MkException(MkExceptionCode x_code, const std::string& x_name, const string& x_description, const string& x_position, const string& x_function)
+MkException::MkException(MkExceptionCode x_code, const string& x_name, const string& x_description, const string& x_position, const string& x_function)
 	: m_description(writeDescription(x_description, x_position, x_function)),
 	  m_name(x_name),
 	  m_code(x_code)
@@ -76,7 +76,7 @@ MkException::~MkException() throw()
 
 
 /**
-* @brief Redefinition of the virtual method of std::exception
+* @brief Redefinition of the virtual method of exception
 *
 * @return Description
 */
@@ -114,7 +114,25 @@ VideoStreamException::VideoStreamException(const string& x_descr, const string& 
 
 FatalException::FatalException(const string& x_descr, const string& x_position, const string& x_function) :
 	MkException(MK_EXCEPTION_FATAL, "fatal", "FatalException: " + x_descr, x_position, x_function)
+{
+	m_fatal = true;
+}
+
+FatalException::FatalException(MkExceptionCode x_code, const string& x_name, const string& x_descr, const string& x_position, const string& x_function) :
+	MkException(x_code, x_name, x_descr, x_position, x_function)
+{
+	m_fatal = true;
+}
+
+// TODO: Verify that these classes are used
+GrabFreezeException::GrabFreezeException(const string& x_descr, const string& x_position, const string& x_function) :
+	FatalException(MK_FATAL_GRAB_FREEZE, "grab_freeze", "GrabFreezeException: " + x_descr, x_position, x_function)
 {}
+
+ProcessFreezeException::ProcessFreezeException(const string& x_descr, const string& x_position, const string& x_function) :
+	FatalException(MK_FATAL_PROCESS_FREEZE, "process_freeze", "ProcessFreezeException: " + x_descr, x_position, x_function)
+{
+}
 
 /**
 * @brief Serialize exception to JSON

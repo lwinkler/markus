@@ -586,7 +586,7 @@ const ConfigReader ConfigReader::Find(const string& x_searchString, bool x_fatal
 	catch(...)
 	{
 		if(x_fatal)
-			fatal("Fatal exception while finding target " + x_searchString, LOC);
+			fatal("Fatal exception while finding target " + x_searchString, MK_EXCEPTION_FATAL, LOC);
 		else throw;
 	}
 	// return something to avoid compilation warnings
@@ -617,7 +617,7 @@ ConfigReader ConfigReader::FindRef(const string& x_searchString, bool x_allowCre
 	catch(...)
 	{
 		if(x_fatal)
-			fatal("Fatal exception while finding target " + x_searchString, LOC);
+			fatal("Fatal exception while finding target " + x_searchString, MK_EXCEPTION_FATAL, LOC);
 		else throw;
 	}
 	// return something to avoid compilation warnings
@@ -670,7 +670,7 @@ vector<ConfigReader> ConfigReader::FindAll(const string& x_searchString, bool x_
 	catch(...)
 	{
 		if(x_fatal)
-			fatal("Fatal exception while finding target " + x_searchString, LOC);
+			fatal("Fatal exception while finding target " + x_searchString, MK_EXCEPTION_FATAL, LOC);
 		else throw;
 	}
 	// return something to avoid compilation warnings

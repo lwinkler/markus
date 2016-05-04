@@ -6,7 +6,6 @@
 #include "define.h"
 #include "Serializable.h"
 
-void fatal(const std::string& x_description, const std::string& x_position, const std::string& x_function);
 
 /**
 * @brief Exception codes: correspond with return values (+1000)
@@ -25,10 +24,14 @@ enum MkExceptionCode
 	MK_EXCEPTION_FATAL            = 1016,
 	MK_EXCEPTION_DISCONNECTED     = 1017,
 	MK_EXCEPTION_VIDEO_STREAM     = 1018,
+	MK_FATAL_GRAB_FREEZE          = 1019,
+	MK_FATAL_PROCESS_FREEZE       = 1020,
 
 	// last code since unix can only return codes from 0 to 126
 	MK_EXCEPTION_LAST        = 1126
 };
+
+void fatal(const std::string& x_description, MkExceptionCode x_code, const std::string& x_position, const std::string& x_function);
 
 /**
 * @brief Exception class
@@ -42,23 +45,27 @@ public:
 	const char* what() const throw();
 	inline MkExceptionCode GetCode() const {return m_code;}
 	inline const std::string& GetName() const {return m_name;}
+	inline bool IsFatal() const {return m_fatal;}
 	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
 	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
 
-protected:
+private:
 	std::string m_description;
 	std::string m_name;     // For interruption calls
 	MkExceptionCode m_code; // For return value of main
+
+protected:
+	bool m_fatal = false;
 };
 
 /*class ProcessingException : public MkException {
 	public:
-		ProcessingException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
+		ProcessingException(const std::string& x_description, const std::string& x_position, const std::string& x_function);
 };
 
 class FileNotFoundException : public MkException {
 	public:
-		FileNotFoundException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
+		FileNotFoundException(const std::string& x_description, const std::string& x_position, const std::string& x_function);
 };*/
 
 /**
@@ -67,7 +74,7 @@ class FileNotFoundException : public MkException {
 class EndOfStreamException : public MkException
 {
 public:
-	EndOfStreamException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
+	EndOfStreamException(const std::string& x_description, const std::string& x_position, const std::string& x_function);
 };
 
 /**
@@ -76,7 +83,7 @@ public:
 class ParameterException : public MkException
 {
 public:
-	ParameterException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
+	ParameterException(const std::string& x_description, const std::string& x_position, const std::string& x_function);
 };
 
 /**
@@ -85,7 +92,7 @@ public:
 class FeatureNotFoundException : public MkException
 {
 public:
-	FeatureNotFoundException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
+	FeatureNotFoundException(const std::string& x_description, const std::string& x_position, const std::string& x_function);
 };
 
 /**
@@ -94,7 +101,7 @@ public:
 class WebServiceException : public MkException
 {
 public:
-	WebServiceException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
+	WebServiceException(const std::string& x_description, const std::string& x_position, const std::string& x_function);
 };
 
 /**
@@ -103,7 +110,7 @@ public:
 class DisconnectedException : public MkException
 {
 public:
-	DisconnectedException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
+	DisconnectedException(const std::string& x_description, const std::string& x_position, const std::string& x_function);
 };
 
 /**
@@ -112,7 +119,7 @@ public:
 class VideoStreamException : public MkException
 {
 public:
-	VideoStreamException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
+	VideoStreamException(const std::string& x_description, const std::string& x_position, const std::string& x_function);
 };
 
 
@@ -123,7 +130,20 @@ public:
 class FatalException : public MkException
 {
 public:
-	FatalException(const std::string& x_description, const std::string& x_position, const std::string& x_function="");
+	FatalException(const std::string& x_description, const std::string& x_position, const std::string& x_function);
+	FatalException(MkExceptionCode x_code, const std::string& x_name, const std::string& x_description, const std::string& x_position, const std::string& x_function);
+};
+
+class GrabFreezeException : public FatalException
+{
+public:
+	GrabFreezeException(const std::string& x_description, const std::string& x_position, const std::string& x_function);
+};
+
+class ProcessFreezeException : public FatalException
+{
+public:
+	ProcessFreezeException(const std::string& x_description, const std::string& x_position, const std::string& x_function);
 };
 
 
