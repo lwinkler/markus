@@ -23,6 +23,7 @@
 
 #include "NetworkCam.h"
 #include "StreamImage.h"
+#include "InterruptionManager.h"
 #include <errno.h>
 #include <util.h>
 #include <future>
@@ -119,6 +120,19 @@ void NetworkCam::Capture()
 		}
 
 		m_capture.retrieve(m_output);
+
+		if(m_param.checkAspectRatio)
+		{
+			if(m_output.cols * m_param.height != m_param.width * m_output.rows)
+			{
+				stringstream ss;
+				ss << "Aspect ratio of acquired image " << m_output.size() << " is inconsistant with " << GetSize();
+				LOG_ERROR(m_logger, ss.str() << ": send rebuild command to the manager");
+				InterruptionManager::GetInst().AddCommand(Command("manager.aspect_ratio.Set", convertAspectRatio(m_output.size())));
+				InterruptionManager::GetInst().AddCommand(Command("manager.manager.Rebuild", ""));
+				throw VideoStreamException(ss.str(), LOC);
+			}
+		}
 
 		// cout<<"NetworkCam capture image "<<m_output->cols<<"x"<<m_output->rows<<" time stamp "<<m_capture.get(CV_CAP_PROP_POS_MSEC) / 1000.0<< endl;
 
