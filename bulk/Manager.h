@@ -114,6 +114,6 @@ private:
 	const FactoryModules& mr_moduleFactory;
 
 	static log4cxx::LoggerPtr m_logger;
-	Parameters& m_param;
+	const Parameters& m_param;
 };
 #endif

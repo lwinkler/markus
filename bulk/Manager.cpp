@@ -134,12 +134,7 @@ void Manager::Destroy()
 */
 void Manager::Rebuild()
 {
-	if(GetContext().GetParameters().centralized)
-	{
-		LOG_WARN(m_logger, "Manager::Rebuild only makes sense in centralized mode");
-		return;
-	}
-#ifdef MARKUS_NO_GUI
+// #ifdef MARKUS_NO_GUI
 	Stop();
 	Destroy();
 	Build();
@@ -149,10 +144,12 @@ void Manager::Rebuild()
 	Connect();
 	Reset();
 	Start();
+	/*
 #else
 	// TODO: Maybe one day improve the GUI in order to handle rebuild and then handle decentralized
 	LOG_WARN(m_logger, "Manager::Rebuild can only be called when compiled without GUI.");
 #endif
+	*/
 }
 
 void Manager::Start()
@@ -292,6 +289,8 @@ void Manager::Process()
 	std::future<int> ret = std::async(std::launch::async, [this, &lastException]()
 	{
 		int cptExceptions = 0;
+		if(m_autoProcessedModules.empty())
+			throw FatalException("Manager must contain at least one auto processed module (i.e. an input module). Possibly a rebuild command went wrong", LOC);
 
 		for(auto & elem : m_autoProcessedModules)
 		{
@@ -658,7 +657,7 @@ bool Manager::ManageInterruptions(bool x_continueFlag)
 		InterruptionManager::GetInst().AddEvent("event.stopped");
 
 	//if(m_frameCount % 20 == 0)
-	// usleep(20); // This keeps the manager unlocked to allow the sending of commands
+	usleep(20); // This keeps the manager unlocked to allow the sending of commands
 	vector<Command> commands = m_interruptionManager.ReturnCommandsToSend();
 	for(const auto& command : commands)
 	{

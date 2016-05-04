@@ -33,6 +33,7 @@
 #include <execinfo.h>
 #include <sys/time.h>
 #include <boost/lexical_cast.hpp>
+#include <boost/rational.hpp>
 
 using namespace std;
 using namespace cv;
@@ -641,4 +642,17 @@ double convertAspectRatio(const std::string& x_string)
 		throw MkException("Wrong format for aspect ratio \"" + x_string + "\". Should be in format \"4:3\"", LOC);
 	}
 	return boost::lexical_cast<double>(resol.at(0)) / boost::lexical_cast<double>(resol.at(1));
+}
+
+/**
+* @brief Convert aspect ratio from size format to string "4:3"
+*
+* @param x_size Size
+* @return Aspect ratio in string format
+*
+*/
+std::string convertAspectRatio(const cv::Size& x_size)
+{
+	boost::rational<int> r(x_size.width, x_size.height);
+	return to_string(r.numerator()) + ":" + to_string(r.denominator());
 }
