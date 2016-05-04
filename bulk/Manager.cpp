@@ -317,7 +317,7 @@ void Manager::Process()
 	std::future_status status = ret.wait_for(std::chrono::seconds(PROCESS_TIMEOUT));
 	if (status != std::future_status::ready)
 	{
-		throw FatalException("Timeout while processing. Check for freeze and infinite loops.", LOC);
+		throw FatalException("Timeout while processing. Check for freezes and infinite loops.", LOC);
 	}
 	int result = ret.get();
 	if(result > 0)
@@ -344,7 +344,7 @@ void Manager::SendCommand(const string& x_command, string x_value)
 	Controllable& contr  (elems.at(0) == "manager" ? dynamic_cast<Controllable&>(*this) : RefModuleByName(elems.at(0)));
 	contr.FindController(elems.at(1)).CallAction(elems.at(2), &x_value);
 
-	LOG_INFO(m_logger, "Command "<<x_command<<" returned value "<<x_value);
+	LOG_INFO(m_logger, "Command " << x_command << " returned value '" << x_value << "'");
 }
 
 /**

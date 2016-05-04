@@ -114,7 +114,7 @@ void NetworkCam::Capture()
 			if(Grab() != true)
 			{
 				m_endOfStream = true;
-				throw MkException("Capture failed on network camera", LOC);
+				throw VideoStreamException("Capture failed on network camera", LOC);
 			}
 		}
 
