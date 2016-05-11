@@ -171,7 +171,7 @@ bool Processable::ProcessAndCatch()
 		}
 		else if(e.IsFatal())
 		{
-			LOG_ERROR(m_logger, GetName() << ": Exception raised (FatalException), aborting : " << e.what());
+			LOG_ERROR(m_logger, GetName() << ": Fatal exception raised, aborting : " << e.what());
 			// continueFlag = false;
 			return false;
 		}

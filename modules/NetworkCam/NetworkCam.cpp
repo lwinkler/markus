@@ -91,7 +91,7 @@ bool NetworkCam::Grab()
 	std::future_status status = ret.wait_for(std::chrono::seconds(TIMEOUT));
 	if (status != std::future_status::ready)
 	{
-		throw FatalException("Timeout while grabbing frame. Camera may be disconnected.", LOC);
+		throw GrabFreezeException("Timeout while grabbing frame. Camera may be disconnected.", LOC);
 	}
 	return ret.get();
 }
