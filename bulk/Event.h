@@ -48,6 +48,8 @@ public:
 	inline const Object& GetObject() const {return m_object;}
 	inline const TIME_STAMP& GetTimeNotif() const {return m_timeStampNotif;}
 	inline const TIME_STAMP& GetTimeEvent() const {return m_timeStampEvent;}
+	inline const TIME_STAMP& GetTimeStart() const {return m_timeStampStart;}
+	inline const TIME_STAMP& GetTimeEnd() const {return m_timeStampEnd;}
 	inline void AddFeature(std::string x_name, Feature* x_feat) {m_object.AddFeature(x_name, x_feat);}
 	inline void ScaleObject(double x_ratioX, double x_ratioY)
 	{
@@ -85,6 +87,10 @@ protected:
 	TIME_STAMP m_timeStampEvent = TIME_STAMP_MIN;
 	/// Time stamp of the notification (Can be different if the event is notified with a delay)
 	TIME_STAMP m_timeStampNotif = TIME_STAMP_MIN;
+	/// Time stamp of the start of the event
+	TIME_STAMP m_timeStampStart = TIME_STAMP_MIN;
+	/// Time stamp of the end of the event
+	TIME_STAMP m_timeStampEnd = TIME_STAMP_MIN;
 	Json::Value m_externalInfo;
 
 private:
