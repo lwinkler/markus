@@ -141,7 +141,7 @@ map<int,string> ParameterEnum::CreateReverseMap(const map<string, int>& x_map)
 		if(it == out.end())
 			out.insert(make_pair(elem.second, elem.first));
 		else
-			fatal("ParameterEnum contains 2 entries with same value " + elem.first + " and " + it->second, MK_EXCEPTION_FATAL, LOC);
+			throw MkException("ParameterEnum contains 2 entries with the same value " + elem.first + " and " + it->second, LOC);
 	}
 	return out;
 }

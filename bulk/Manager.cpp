@@ -68,10 +68,10 @@ Manager::~Manager()
 */
 void Manager::Build()
 {
-	for(auto& moduleConfig : m_param.GetConfig().FindAll("module", true))
+	for(auto& moduleConfig : m_param.GetConfig().FindAll("module"))
 	{
 		// Read parameters
-		if(moduleConfig.Find("parameters", true).IsEmpty())
+		if(moduleConfig.Find("parameters").IsEmpty())
 			throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name", "(unknown)"), LOC);
 		string moduleType = moduleConfig.Find("parameters>param[name=\"class\"]").GetValue();
 		ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, moduleConfig);

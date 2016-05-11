@@ -82,9 +82,9 @@ public:
 	void OverrideWith(const ConfigReader& xr_extraConfig);
 
 	// New access functions with JQuery-like syntax
-	const ConfigReader Find(const std::string& x_searchString, bool x_fatal = false) const;
-	ConfigReader    FindRef(const std::string& x_searchString, bool x_allowCreation = false, bool x_fatal = false);
-	std::vector<ConfigReader> FindAll(const std::string& x_searchString, bool x_fatal = false) const;
+	const ConfigReader Find(const std::string& x_searchString) const;
+	ConfigReader    FindRef(const std::string& x_searchString, bool x_allowCreation = false);
+	std::vector<ConfigReader> FindAll(const std::string& x_searchString) const;
 	bool IsFinal() const;
 
 protected:

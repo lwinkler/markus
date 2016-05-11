@@ -562,35 +562,23 @@ void ConfigReader::OverrideWith(const ConfigReader& x_extraConfig)
 * @brief Find a sub config (with a similar syntax as JQuery)
 *
 * @param  x_searchString The search path with jquery-like syntax
-* @param  x_fatal        All exceptions are fatal: close program
 * @return value
 */
-const ConfigReader ConfigReader::Find(const string& x_searchString, bool x_fatal) const
+const ConfigReader ConfigReader::Find(const string& x_searchString) const
 {
-	try
-	{
-		// If empty return node: for recurrent function
-		if(x_searchString.empty())
-			return *this;
+	// If empty return node: for recurrent function
+	if(x_searchString.empty())
+		return *this;
 
-		string tagName, attrName, attrValue, searchString2;
-		splitTagName(x_searchString, tagName, attrName, attrValue, searchString2);
+	string tagName, attrName, attrValue, searchString2;
+	splitTagName(x_searchString, tagName, attrName, attrValue, searchString2);
 
-		// cout << "Search in config: " << tagName << "[" << attrName << "=\"" << attrValue << "\"]" << endl;
+	// cout << "Search in config: " << tagName << "[" << attrName << "=\"" << attrValue << "\"]" << endl;
 
-		if(attrName == "")
-			return GetSubConfig(tagName).Find(searchString2);
-		else
-			return GetSubConfig(tagName, attrName, attrValue).Find(searchString2);
-	}
-	catch(...)
-	{
-		if(x_fatal)
-			fatal("Fatal exception while finding target " + x_searchString, MK_EXCEPTION_FATAL, LOC);
-		else throw;
-	}
-	// return something to avoid compilation warnings
-	return *this;
+	if(attrName == "")
+		return GetSubConfig(tagName).Find(searchString2);
+	else
+		return GetSubConfig(tagName, attrName, attrValue).Find(searchString2);
 }
 
 /**
@@ -599,29 +587,18 @@ const ConfigReader ConfigReader::Find(const string& x_searchString, bool x_fatal
 * @param  x_searchString The search path with jquery-like syntax
 * @return value
 */
-ConfigReader ConfigReader::FindRef(const string& x_searchString, bool x_allowCreation, bool x_fatal)
+ConfigReader ConfigReader::FindRef(const string& x_searchString, bool x_allowCreation)
 {
-	try
-	{
-		if(x_searchString.empty())
-			return *this;
+	if(x_searchString.empty())
+		return *this;
 
-		string tagName, attrName, attrValue, searchString2;
-		splitTagName(x_searchString, tagName, attrName, attrValue, searchString2);
+	string tagName, attrName, attrValue, searchString2;
+	splitTagName(x_searchString, tagName, attrName, attrValue, searchString2);
 
-		if(attrName == "")
-			return RefSubConfig(tagName, x_allowCreation).FindRef(searchString2, x_allowCreation);
-		else
-			return RefSubConfig(tagName, attrName, attrValue, x_allowCreation).FindRef(searchString2, x_allowCreation);
-	}
-	catch(...)
-	{
-		if(x_fatal)
-			fatal("Fatal exception while finding target " + x_searchString, MK_EXCEPTION_FATAL, LOC);
-		else throw;
-	}
-	// return something to avoid compilation warnings
-	return *this;
+	if(attrName == "")
+		return RefSubConfig(tagName, x_allowCreation).FindRef(searchString2, x_allowCreation);
+	else
+		return RefSubConfig(tagName, attrName, attrValue, x_allowCreation).FindRef(searchString2, x_allowCreation);
 }
 
 
@@ -629,50 +606,38 @@ ConfigReader ConfigReader::FindRef(const string& x_searchString, bool x_allowCre
 * @brief Find all sub configs (with a similar syntax as JQuery)
 *
 * @param  x_searchString The search path with jquery-like syntax
-* @param  x_fatal        All exceptions are fatal: close program
 * @return A vector of configurations
 */
-vector<ConfigReader> ConfigReader::FindAll(const string& x_searchString, bool x_fatal) const
+vector<ConfigReader> ConfigReader::FindAll(const string& x_searchString) const
 {
 	vector<ConfigReader> results;
 
-	try
+	if(IsEmpty())
 	{
-		if(IsEmpty())
-		{
-			return results;
-		}
-		// If empty return node: for recurrent function
-		if(x_searchString.empty())
-		{
-			results.push_back(*this);
-			return results;
-		}
-
-		string tagName, attrName, attrValue, searchString2;
-		splitTagName(x_searchString, tagName, attrName, attrValue, searchString2);
-
-		if(searchString2 == "")
-		{
-			ConfigReader conf = GetSubConfig(tagName, attrName, attrValue);
-			while(!conf.IsEmpty())
-			{
-				results.push_back(conf);
-				conf = conf.NextSubConfig(tagName, attrName, attrValue);
-			}
-			return results;
-		}
-		else if(attrName == "")
-			return GetSubConfig(tagName).FindAll(searchString2);
-		else
-			return GetSubConfig(tagName, attrName, attrValue).FindAll(searchString2);
+		return results;
 	}
-	catch(...)
+	// If empty return node: for recurrent function
+	if(x_searchString.empty())
 	{
-		if(x_fatal)
-			fatal("Fatal exception while finding target " + x_searchString, MK_EXCEPTION_FATAL, LOC);
-		else throw;
+		results.push_back(*this);
+		return results;
 	}
-	// return something to avoid compilation warnings
-	return results;
+
+	string tagName, attrName, attrValue, searchString2;
+	splitTagName(x_searchString, tagName, attrName, attrValue, searchString2);
+
+	if(searchString2 == "")
+	{
+		ConfigReader conf = GetSubConfig(tagName, attrName, attrValue);
+		while(!conf.IsEmpty())
+		{
+			results.push_back(conf);
+			conf = conf.NextSubConfig(tagName, attrName, attrValue);
+		}
+		return results;
+	}
+	else if(attrName == "")
+		return GetSubConfig(tagName).FindAll(searchString2);
+	else
+		return GetSubConfig(tagName, attrName, attrValue).FindAll(searchString2);
 }
