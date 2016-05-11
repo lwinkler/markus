@@ -201,7 +201,7 @@ def checkStatus(jobDetails, rules):
 					valid = False
 					break
 		if not valid:
-			errors.append(rule['name'])
+			errors.append("%s %s '%s'" % (rule['target'], 'does not contain' if rule['contains'] else 'contains', rule['text']))
 
 
 	return errors
