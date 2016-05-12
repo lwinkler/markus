@@ -1,16 +1,15 @@
 #! /usr/bin/python
 
+# TODO: Remove dependency to vplib by using a standart html lib by using beautifulsoup4
+
 import os.path
 import requests
-import sys
 import json
 import time
 import glob
-
 import argparse
 import vplib
 from vplib.HTMLTags import *
-
 import nagiosplugin
 import logging
 
@@ -281,7 +280,7 @@ class VerifySummary(nagiosplugin.Summary):
 		
 		for detail in self.jobDetails:
 			if len(detail['errors']):
-				log += "Job " + detail['hash'] + " has errors(" + ', '.join(detail['errors']) + ')\n'
+				log += "Job %s has %d error(s) (%s)\n" % (detail['hash'], len(detail['errors']), ', '.join(detail['errors']))
 		# log += "rules:\n" + str(self.rules)
 		generateReport(self.jobDetails, self.output)
 		return log
