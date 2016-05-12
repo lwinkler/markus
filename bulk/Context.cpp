@@ -187,6 +187,7 @@ string Context::CreateOutputDir(const string& x_outputDir)
 bool Context::IsOutputDirEmpty() const
 {
 	vector<string> res;
+	// TODO Avoid using commands as much as possible
 	execute("ls -A " + m_outputDir + " | wc -l", res);
 
 	return res.at(0) == "0";

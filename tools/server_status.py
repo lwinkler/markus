@@ -343,7 +343,6 @@ def main():
 	time.sleep(args.delay)
 
 	# A set of rules for the output of job description
-	# TODO: display a clear error message
 	rules = [
 		{'name': 'statusCode1', 'target': 'log1', 'contains': True, 'text': '"code":1000', 
 			'descr': 'JBoss must receive the status code 1000. Another value indicates that an exception was caught'},
