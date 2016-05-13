@@ -60,7 +60,14 @@ Manager::Manager(ParameterStructure& xr_params) :
 
 Manager::~Manager()
 {
-	Destroy();
+	try
+	{
+		Destroy();
+	}
+	catch(exception &e)
+	{
+		LOG_ERROR(m_logger, "Fatal exception while destroying the manager: " << e.what());
+	}
 }
 
 /**
