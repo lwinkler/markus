@@ -115,6 +115,8 @@ def lineCount(fname):
 	return sum(1 for line in open(fname))
 
 def appendLogFromLine(fname, nb_line):
+	if fname == "":
+		return ""
 	i=0
 	logBuffer=[]
 	with open(fname, "r") as f:
@@ -325,14 +327,17 @@ def main():
 		lineStart1 = lineCount(args.logJBoss)
 		expr = args.logDir + '/markus_*%s/markus.log' % job
 		files  = glob.glob(expr)
-		if len(files) != 1:
-			_log.warning('%d files found as %s: %s' % (len(files), expr, str(files)))
+		if len(files) == 0:
+			_log.error('No log file found as %s: %s' % (expr, str(files)))
+			markusLog = ""
+		elif len(files) != 1:
+			_log.warning('%d log files found as %s: %s' % (len(files), expr, str(files)))
 			files = sorted(files, key=lambda x: os.path.getmtime(x))
 			markusLog = files[len(files)-1]
 			_log.warning("Using file %s " % markusLog)
 		else:
 			markusLog = files[0]
-		lineStart2 = lineCount(markusLog)
+		lineStart2 = lineCount(markusLog) if markusLog != "" else 0
 
 		# Send command to read status
 		_log.debug('Send command Status')
@@ -367,6 +372,8 @@ def main():
 	# {'name': 'statusCode2', 'target': 'log2', 'contains': True, 'text': '"code":1000',
 	# 		'descr': 'Markus process must receive the status code 1000. Another value indicates that an exception was caught'},
 	rules = [
+		{'name': 'isEmpty', 'target': 'log2', 'contains': True, 'text': ' ',
+			'descr': 'Markus log file is empty. Job is probably not running.'},
 		{'name': 'statusRecovered1', 'target': 'log1', 'contains': True, 'text': '"recovered":true',
 			'descr': 'JBoss must receive the status indicating that the process recovered from the last exception.'},
 		{'name': 'statusRecovered2', 'target': 'log2', 'contains': True, 'text': '"recovered":true',
