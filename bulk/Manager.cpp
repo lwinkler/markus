@@ -350,7 +350,7 @@ void Manager::SendCommand(const string& x_command, string x_value)
 	Controllable& contr  (elems.at(0) == "manager" ? dynamic_cast<Controllable&>(*this) : RefModuleByName(elems.at(0)));
 	contr.FindController(elems.at(1)).CallAction(elems.at(2), &x_value);
 
-	LOG_INFO(m_logger, "Command " << x_command << " returned value '" << x_value << "'");
+	LOG_INFO(m_logger, "Command " << x_command << " returned value '" << TRUNCATE_STRING(x_value) << "'");
 }
 
 /**

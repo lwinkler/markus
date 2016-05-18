@@ -84,4 +84,7 @@ Class &operator=(const Class &);
 #define LOC __FILE__ ":" S2(__LINE__), __FUNCTION__
 #define POSITION __FILE__ ":" S2(__LINE__)
 
+// Truncate a string
+#define TRUNCATE_LENGTH 100
+#define TRUNCATE_STRING(str) (str.size() > TRUNCATE_LENGTH ? str.substr(0, TRUNCATE_LENGTH) + "..." : str)
 
