@@ -64,5 +64,5 @@ void Parameter::Print(std::ostream& os) const
 	// note: remove line return to shorten json objects
 	std::string tmp = GetValueString();
 	singleLine(tmp);
-	os << m_name << "=\"" << TRUNCATE_STRING(tmp) << "\" (" << configType[m_confSource] << "); ";
+	os<<m_name<<"=\""<<tmp<<"\" ("<<configType[m_confSource]<<"); ";
 }
