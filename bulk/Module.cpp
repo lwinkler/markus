@@ -305,6 +305,7 @@ void Module::Process()
 		m_timerWaiting.Stop();
 		m_timerConversion.Stop();
 		m_timerProcessFrame.Stop();
+		m_lastTimeStamp = m_currentTimeStamp;
 		LOG_WARN(m_logger, "Exception in module " << GetName());
 		throw;
 	}
