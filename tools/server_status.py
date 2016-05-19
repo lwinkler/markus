@@ -374,7 +374,7 @@ def main():
 	rules = [
 		{'name': 'isEmpty', 'target': 'log2', 'contains': True, 'text': ' ',
 			'descr': 'Markus log file is empty. Job is probably not running.'},
-		{'name': 'statusRecovered1', 'target': 'log1', 'contains': True, 'text': '"recovered":true',
+		{'name': 'statusRecovered1', 'target': 'log1', 'contains': True, 'text': 'recovered=true',
 			'descr': 'JBoss must receive the status indicating that the process recovered from the last exception.'},
 		{'name': 'statusRecovered2', 'target': 'log2', 'contains': True, 'text': '"recovered":true',
 			'descr': 'Markus process must receive the status indicating that the process recovered from the last exception.'},
