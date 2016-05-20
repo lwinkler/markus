@@ -22,6 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ParameterStructure.h"
+#include "assert.h"
 
 using namespace std;
 
@@ -56,6 +57,15 @@ void ParameterStructure::AddParameter(Parameter* xr_param)
 			throw MkException("Try to add a parameter (or input/output) with an existing name \"" + xr_param->GetName() + "\" in module " + m_moduleName,  LOC);
 	}
 	m_list.push_back(xr_param);
+}
+
+/**
+* @brief Add a parameter to the structure
+*/
+// TODO: This method should in time disappear
+void ParameterStructure::AddParameterForStream(Parameter* xr_param)
+{
+	AddParameter(xr_param);
 
 	// note: since this method might be used after structure initialization, we init the param anyway
 	m_list.back()->SetValueToDefault();
@@ -72,6 +82,7 @@ void ParameterStructure::AddParameter(Parameter* xr_param)
 /**
 * @brief Initialize the parameter structure with the value from default or xml configuration
 */
+// TODO: Avoid call to Init in each module by setting values when param is added
 void ParameterStructure::Init()
 {
 	// Read config file
@@ -105,18 +116,14 @@ void ParameterStructure::SetFromConfig()
 	{
 		string name  = conf.GetAttribute("name");
 		string value = conf.GetValue();
-		//SetValueByName(name, value, PARAMCONF_XML);
 
 		try
 		{
+			if(!ParameterExists(name))
+				continue;
 			Parameter& param = RefParameterByName(name);
 			if(!param.IsLocked())
 				param.SetValue(value, PARAMCONF_XML);
-		}
-		catch(ParameterException& e)
-		{
-			// note: do not output a warning, unused parameters are checked inside CheckRange
-			LOG_DEBUG(m_logger, "Unknown parameter in configuration: "<<name<<" in module "<<m_moduleName);
 		}
 		catch(std::exception& e)
 		{
@@ -159,6 +166,25 @@ const Parameter& ParameterStructure::GetParameterByName(const string& x_name) co
 	}
 
 	throw ParameterException("Parameter not found in module " + m_moduleName + ": " + x_name, LOC);
+}
+
+/**
+* @brief Check if the parameter exists in the structure
+*
+* @param x_name Name
+*
+* @return true if exists
+*/
+bool ParameterStructure::ParameterExists(const string& x_name) const
+{
+	for(const auto & elem : m_list)
+	{
+		if(elem->GetName() == x_name)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 /**

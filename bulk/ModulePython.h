@@ -82,8 +82,8 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterString("script_path",  "python_dir", &scriptPath, "Path to the folder containing python scripts"));
-			m_list.push_back(new ParameterString("script", 	     "script.py",  &script,     "Name of the Python script (without .py)"));
+			AddParameter(new ParameterString("script_path",  "python_dir", &scriptPath, "Path to the folder containing python scripts"));
+			AddParameter(new ParameterString("script", 	     "script.py",  &script,     "Name of the Python script (without .py)"));
 
 			Init();
 		};

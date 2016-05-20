@@ -38,8 +38,8 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterFloat("background_alpha",	0.02, 	0, 1,	&backgroundAlpha,	"Defines the speed at which the background adapts"));
-			m_list.push_back(new ParameterFloat("foreground_thres", 	0.2, 	0, 1,	&foregroundThres,	"Threshold to accept a pixel as foreground"));
+			AddParameter(new ParameterFloat("background_alpha",	0.02, 	0, 1,	&backgroundAlpha,	"Defines the speed at which the background adapts"));
+			AddParameter(new ParameterFloat("foreground_thres", 	0.2, 	0, 1,	&foregroundThres,	"Threshold to accept a pixel as foreground"));
 
 			RefParameterByName("type").SetDefault("CV_32FC3");
 

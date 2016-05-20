@@ -49,15 +49,18 @@ public:
 	const std::vector<Parameter*>& GetList() const {return m_list;}
 	void LockParameterByName(const std::string& x_name) {RefParameterByName(x_name).Lock();}
 	void LockIfRequired();
+	bool ParameterExists(const std::string& x_name) const;
 	void AddParameter(Parameter* xr_param);
+	void AddParameterForStream(Parameter* xr_param);
 
 protected:
-	std::vector<Parameter*> m_list;
-	std::string m_moduleName;
-	bool m_writeAllParamsToConfig;
 	Parameter & RefParameterByName(const std::string& x_name);
 
 private:
+	std::vector<Parameter*> m_list;
+	std::string m_moduleName;
+	bool m_writeAllParamsToConfig;
+
 	ConfigReader m_configReader; // Warning this still contains reference to the tinyxml config!
 	static log4cxx::LoggerPtr m_logger;
 	// Note: Disable copies of parameters as a safety

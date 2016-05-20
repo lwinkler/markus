@@ -40,8 +40,8 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Input::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterString("file"        , "in/events.srt", &file      , "Name of the .srt file without extension"));
-			m_list.push_back(new ParameterString("folder_name" , "events_img"  , &folder    , "Name of the folder to create for images"));
+			AddParameter(new ParameterString("file"        , "in/events.srt", &file      , "Name of the .srt file without extension"));
+			AddParameter(new ParameterString("folder_name" , "events_img"  , &folder    , "Name of the folder to create for images"));
 
 			RefParameterByName("type").SetDefault("CV_8UC3"); // This will probably be ignored
 			Init();

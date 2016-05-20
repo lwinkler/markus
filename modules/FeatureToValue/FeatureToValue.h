@@ -41,7 +41,7 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterString("feature", "height",  &feature, "The feature to convert to a value stream"));
+			AddParameter(new ParameterString("feature", "height",  &feature, "The feature to convert to a value stream"));
 
 			Init();
 		};

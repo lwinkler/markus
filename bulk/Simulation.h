@@ -39,7 +39,7 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
 		{
-			ParameterStructure::Init();
+			Init();
 		}
 	};
 

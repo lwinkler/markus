@@ -43,10 +43,10 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Input::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterString("file"        , "in/objects.srt", &file      , "Name of the .srt file without extension"));
-			m_list.push_back(new ParameterString("folder_name" , "events_img"    , &folder    , "Name of the folder to create for images"));
-			m_list.push_back(new ParameterBool("one_frame_only", 0, 0, 1         , &oneFrameOnly, "Read only one frame, to define a fixed sets of objects"));
-			m_list.push_back(new ParameterBool("prepend_output_directory", 0, 0, 1         , &prependOutputDirectory, "Automatically prepend the output directory to the given file (ex: 'in/objects.srt' will becomes 'out/out_20151002_154035/in/objects.srt')"));
+			AddParameter(new ParameterString("file"        , "in/objects.srt", &file      , "Name of the .srt file without extension"));
+			AddParameter(new ParameterString("folder_name" , "events_img"    , &folder    , "Name of the folder to create for images"));
+			AddParameter(new ParameterBool("one_frame_only", 0, 0, 1         , &oneFrameOnly, "Read only one frame, to define a fixed sets of objects"));
+			AddParameter(new ParameterBool("prepend_output_directory", 0, 0, 1         , &prependOutputDirectory, "Automatically prepend the output directory to the given file (ex: 'in/objects.srt' will becomes 'out/out_20151002_154035/in/objects.srt')"));
 
 			RefParameterByName("type").SetDefault("CV_8UC3"); // This will probably be ignored
 			Init();

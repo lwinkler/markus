@@ -40,8 +40,8 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : ModuleKeyPoints::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterInt("threshold", 10, 0, 255, &threshold,"Threshold"));
-			m_list.push_back(new ParameterBool("non_max_suppression", 0, 0, 1, &nonMaxSuppression,"if true, non-maximum suppression is applied to detected corners"));
+			AddParameter(new ParameterInt("threshold", 10, 0, 255, &threshold,"Threshold"));
+			AddParameter(new ParameterBool("non_max_suppression", 0, 0, 1, &nonMaxSuppression,"if true, non-maximum suppression is applied to detected corners"));
 			Init();
 		};
 		int threshold;

@@ -54,11 +54,11 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
 		{
-			// m_list.push_back(new ParameterString("module", "", &module, "Module to display"));
-			m_list.push_back(new ParameterInt("module",   0, -1, 1000, &module,  "Index of the module to display"));
-			m_list.push_back(new ParameterInt("stream",   0, -1, 1000, &stream,  "Index of the stream to display"));
-			m_list.push_back(new ParameterInt("control", -1, -1, 1000, &control, "Index of the control to display"));
-			m_list.push_back(new ParameterBool("display_options", 1, 0, 1, &displayOptions, "Display the options to select the module, stream, ..."));
+			// AddParameter(new ParameterString("module", "", &module, "Module to display"));
+			AddParameter(new ParameterInt("module",   0, -1, 1000, &module,  "Index of the module to display"));
+			AddParameter(new ParameterInt("stream",   0, -1, 1000, &stream,  "Index of the stream to display"));
+			AddParameter(new ParameterInt("control", -1, -1, 1000, &control, "Index of the control to display"));
+			AddParameter(new ParameterBool("display_options", 1, 0, 1, &displayOptions, "Display the options to select the module, stream, ..."));
 
 			Init();
 			m_writeAllParamsToConfig = true;

@@ -37,8 +37,8 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterDouble( "online_learn_time",            0.0,       0, 600,    &onlineLearnTime,            "learn the background on the first seconds of the video"));
-			m_list.push_back(new ParameterDouble( "online_learn_ratio",           5.0,       1, 100,    &onlineLearnRatio,           "increase the learning rate by this ratio at initialization"));
+			AddParameter(new ParameterDouble( "online_learn_time",            0.0,       0, 600,    &onlineLearnTime,            "Learn the background on the first seconds of the video"));
+			AddParameter(new ParameterDouble( "online_learn_ratio",           5.0,       1, 100,    &onlineLearnRatio,           "Increase the learning rate by this ratio at initialization"));
 
 			Init();
 		}

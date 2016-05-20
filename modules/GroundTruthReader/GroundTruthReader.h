@@ -43,9 +43,9 @@ public:
 		Parameters(const ConfigReader& x_confReader) :
 			Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterString("file", 	"in/input.srt", &file,    "Name of the video file to read, with path"));
-			m_list.push_back(new ParameterString("pattern",	"state_1",      &pattern, "Pattern to search in text. If this is found the state is equal to the text"));
-			m_list.push_back(new ParameterDouble("distance", 0.1, 0, 1,		&distance, "distance between real object and ROI in ass file in pourcentage of image diagonal"));
+			AddParameter(new ParameterString("file", 	"in/input.srt", &file,    "Name of the video file to read, with path"));
+			AddParameter(new ParameterString("pattern",	"state_1",      &pattern, "Pattern to search in text. If this is found the state is equal to the text"));
+			AddParameter(new ParameterDouble("distance", 0.1, 0, 1,		&distance, "distance between real object and ROI in ass file in pourcentage of image diagonal"));
 			Init();
 		};
 

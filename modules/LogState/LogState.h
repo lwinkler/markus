@@ -43,7 +43,7 @@ public:
 		Parameters(const ConfigReader& x_confReader) :
 			Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterString("file", 	  "state", 	     &file,      "Name of the .srt file without extension"));
+			AddParameter(new ParameterString("file", 	  "state", 	     &file,      "Name of the .srt file without extension"));
 			Init();
 		}
 		std::string file;

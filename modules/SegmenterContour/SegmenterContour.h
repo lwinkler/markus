@@ -40,10 +40,10 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterInt(   "min_width",  0, 	 0, MAX_WIDTH,  &minWidth,	"Minimal width of an object to segment."));
-			m_list.push_back(new ParameterInt(   "min_height", 0, 	 0, MAX_HEIGHT, &minHeight,	"Minimal height of an object to segment."));
-			m_list.push_back(new ParameterString("object_label",         "object",             &objectLabel,"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
-			m_list.push_back(new ParameterString("features",     "x,y,width,height",           &features,   "List of features to extract, separated with ',' possible: x,y,width,height,area,ellipse_{angle,cos,sin,ratio,width,height}, moment_{00,11,20,02}, hu_moment_{1-7}"));
+			AddParameter(new ParameterInt(   "min_width",  0, 	 0, MAX_WIDTH,  &minWidth,	"Minimal width of an object to segment."));
+			AddParameter(new ParameterInt(   "min_height", 0, 	 0, MAX_HEIGHT, &minHeight,	"Minimal height of an object to segment."));
+			AddParameter(new ParameterString("object_label",         "object",             &objectLabel,"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
+			AddParameter(new ParameterString("features",     "x,y,width,height",           &features,   "List of features to extract, separated with ',' possible: x,y,width,height,area,ellipse_{angle,cos,sin,ratio,width,height}, moment_{00,11,20,02}, hu_moment_{1-7}"));
 
 			RefParameterByName("type").SetRange("[CV_8UC1]"); //,CV_32SC1]");
 			RefParameterByName("features").SetRange("["

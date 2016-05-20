@@ -41,8 +41,8 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterFloat("motion_thres" , 0.1 , 0 , 1 , &motionThres , "Threshold for motion analysis"));
-			m_list.push_back(new ParameterBool("propagate"     , 1   , 0 , 1 , &propagate   , "Threshold for motion analysis"));
+			AddParameter(new ParameterFloat("motion_thres" , 0.1 , 0 , 1 , &motionThres , "Threshold for motion analysis"));
+			AddParameter(new ParameterBool("propagate"     , 1   , 0 , 1 , &propagate   , "Threshold for motion analysis"));
 
 			RefParameterByName("width").SetRange("[32:6400]");
 			RefParameterByName("height").SetRange("[24:4800]");

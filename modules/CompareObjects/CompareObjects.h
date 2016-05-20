@@ -40,7 +40,7 @@ public:
 	public:
 		Parameters(const ConfigReader &x_confReader) : Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterFloat("threshold", 0.1, 0, 1, &threshold, "Dissimilarity threshold for all the sequence"));
+			AddParameter(new ParameterFloat("threshold", 0.1, 0, 1, &threshold, "Dissimilarity threshold for all the sequence"));
 
 			Init();
 		};

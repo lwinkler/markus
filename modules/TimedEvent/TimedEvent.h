@@ -40,7 +40,7 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterDouble("time_interval", 30, 0.001, 3600 * 24 * 365, &timeInterval, "Time interval in seconds"));
+			AddParameter(new ParameterDouble("time_interval", 30, 0.001, 3600 * 24 * 365, &timeInterval, "Time interval in seconds"));
 			Init();
 		}
 		double timeInterval;

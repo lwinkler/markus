@@ -43,18 +43,18 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader, const std::string& x_configFile, const std::string& x_applicationName, const std::string& x_outputDir) : ParameterStructure(x_confReader)
 		{
-			m_list.push_back(new ParameterBool("auto_clean", 0, 0, 1,     &autoClean,       "Automatically clean the temporary directory when the application closes"));
-			m_list.push_back(new ParameterString("archive_dir", "",       &archiveDir,      "If specified the data is copied inside this directory for archive"));
-			m_list.push_back(new ParameterString("config_file", "",       &configFile,      "Name of the XML containing the configuration"));
-			m_list.push_back(new ParameterString("application_name", "",  &applicationName, "Name of the application. May also be set in the XML as attribute of <application>"));
-			m_list.push_back(new ParameterString("output_dir", "",        &outputDir,       "Directory used to write results files of manager and modules. If empty a directory is created from the date"));
-			m_list.push_back(new ParameterBool("centralized", 0, 0, 1,    &centralized,     "All modules are called from the manager. Option -c"));
-			m_list.push_back(new ParameterBool("robust",      0, 0, 1,    &robust,          "Continue if an exception occured during processing"));
-			m_list.push_back(new ParameterBool("real_time", 0, 0, 1,      &realTime,        "All modules process in real-time. Disable to increase processing speed. Option -f"));
-			m_list.push_back(new ParameterString("job_id"      ,  ""    , &jobId         ,  "Job id for storage in database. Leave empty to generate a random value"));
-			m_list.push_back(new ParameterString("camera_id",  ""       , &cameraId      ,  "CameraId id for storage in database. Leave empty for tests only."));
-			m_list.push_back(new ParameterString("cache_directory", ""  , &cacheDirectory,  "The directory in which the cache can be found, empty if no cache"));
-			ParameterStructure::Init();
+			AddParameter(new ParameterBool("auto_clean", 0, 0, 1,     &autoClean,       "Automatically clean the temporary directory when the application closes"));
+			AddParameter(new ParameterString("archive_dir", "",       &archiveDir,      "If specified the data is copied inside this directory for archive"));
+			AddParameter(new ParameterString("config_file", "",       &configFile,      "Name of the XML containing the configuration"));
+			AddParameter(new ParameterString("application_name", "",  &applicationName, "Name of the application. May also be set in the XML as attribute of <application>"));
+			AddParameter(new ParameterString("output_dir", "",        &outputDir,       "Directory used to write results files of manager and modules. If empty a directory is created from the date"));
+			AddParameter(new ParameterBool("centralized", 0, 0, 1,    &centralized,     "All modules are called from the manager. Option -c"));
+			AddParameter(new ParameterBool("robust",      0, 0, 1,    &robust,          "Continue if an exception occured during processing"));
+			AddParameter(new ParameterBool("real_time", 0, 0, 1,      &realTime,        "All modules process in real-time. Disable to increase processing speed. Option -f"));
+			AddParameter(new ParameterString("job_id"      ,  ""    , &jobId         ,  "Job id for storage in database. Leave empty to generate a random value"));
+			AddParameter(new ParameterString("camera_id",  ""       , &cameraId      ,  "CameraId id for storage in database. Leave empty for tests only."));
+			AddParameter(new ParameterString("cache_directory", ""  , &cacheDirectory,  "The directory in which the cache can be found, empty if no cache"));
+			Init();
 
 			// Override values: must be set for each run
 			configFile      = x_configFile;

@@ -40,12 +40,12 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : ModuleKeyPoints::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterInt("nb_features"    , 500 , 1 , 1000 , &nbFeatures    , ""));
-			m_list.push_back(new ParameterFloat("scale_factor" , 1.2 , 1 , 1.2  , &scaleFactor   , ""));
-			m_list.push_back(new ParameterInt("nb_levels"      , 8   , 1 , 10   , &nbLevels      , ""));
-			m_list.push_back(new ParameterInt("edge_threshold" , 31  , 2 , 100  , &edgeThreshold , ""));
-			m_list.push_back(new ParameterInt("first_level"    , 0   , 0 , 5    , &firstLevel    , ""));
-			m_list.push_back(new ParameterInt("wta_k"          , 2   , 0 , 100  , &wta_k         , ""));
+			AddParameter(new ParameterInt("nb_features"    , 500 , 1 , 1000 , &nbFeatures    , ""));
+			AddParameter(new ParameterFloat("scale_factor" , 1.2 , 1 , 1.2  , &scaleFactor   , ""));
+			AddParameter(new ParameterInt("nb_levels"      , 8   , 1 , 10   , &nbLevels      , ""));
+			AddParameter(new ParameterInt("edge_threshold" , 31  , 2 , 100  , &edgeThreshold , ""));
+			AddParameter(new ParameterInt("first_level"    , 0   , 0 , 5    , &firstLevel    , ""));
+			AddParameter(new ParameterInt("wta_k"          , 2   , 0 , 100  , &wta_k         , ""));
 
 			// Limit size to accelerate unit tests
 			RefParameterByName("width").SetRange("[64:1280]");

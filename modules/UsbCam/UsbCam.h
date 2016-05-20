@@ -42,7 +42,7 @@ public:
 		Parameters(const ConfigReader& x_confReader) :
 			Input::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterInt("num", 	-1, 	-1, 	2,	&num,	"Number of the USB camera (usually 0 or 1)"));
+			AddParameter(new ParameterInt("num", 	-1, 	-1, 	2,	&num,	"Number of the USB camera (usually 0 or 1)"));
 			Init();
 		}
 
