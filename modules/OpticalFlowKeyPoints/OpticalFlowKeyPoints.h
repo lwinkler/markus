@@ -44,7 +44,6 @@ public:
 			AddParameter(new ParameterInt("max_level",  3, 0, 12, &maxLevel, "0-based maximal pyramid level number; if set to 0, pyramids are not used (single level), if set to 1, two levels are used, and so on; if pyramids are passed to input then algorithm will use as many levels as pyramids have but no more than maxLevel"));
 
 			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3]");
-			Init();
 		};
 		int winSide;
 		int maxLevel;

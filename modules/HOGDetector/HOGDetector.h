@@ -50,11 +50,12 @@ public:
 
 			// Limit size to accelerate unit tests
 			RefParameterByName("width").SetDefault("320");
+			RefParameterByName("width").SetValueToDefault();
 			RefParameterByName("height").SetDefault("240");
+			RefParameterByName("height").SetValueToDefault();
 			RefParameterByName("width").SetRange("[320:1280]");
 			RefParameterByName("height").SetRange("[240:960]");
 			RefParameterByName("type").SetRange("[CV_8UC1]");
-			Init();
 		};
 
 		// int minNeighbors;

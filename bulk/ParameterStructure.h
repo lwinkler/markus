@@ -38,7 +38,7 @@ public:
 	virtual ~ParameterStructure();
 	inline const ConfigReader& GetConfig() const {return m_configReader;}
 	inline ConfigReader& RefConfig() {return m_configReader;}
-	void Init();
+	void Initialize();
 	void SetFromConfig();
 	void UpdateConfig() const;
 	void SetValueToDefault();
@@ -55,13 +55,13 @@ public:
 
 protected:
 	Parameter & RefParameterByName(const std::string& x_name);
+	bool m_writeAllParamsToConfig;
 
 private:
 	std::vector<Parameter*> m_list;
 	std::string m_moduleName;
-	bool m_writeAllParamsToConfig;
 
-	ConfigReader m_configReader; // Warning this still contains reference to the tinyxml config!
+	ConfigReader m_configReader; // Warning this still contains reference to the tinyxml config! // TODO: maybe avoid storing this
 	static log4cxx::LoggerPtr m_logger;
 	// Note: Disable copies of parameters as a safety
 	DISABLE_COPY(ParameterStructure)

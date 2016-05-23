@@ -49,7 +49,6 @@ public:
 			AddParameter(new ParameterInt("nb_frames", 0, 0, INT_MAX, &nbFrames, "Number of frames to process. 0 for infinite. Only works in centralized mode"));
 			AddParameter(new ParameterString("arguments", "",         &arguments, "Command-line arguments, for storage only"));
 			AddParameter(new ParameterString("aspect_ratio", "", &aspectRatio, "If non-empty, at creation each module width/height are changed to match this aspect ratio. E.g. \"4:3\"."));
-			Init();
 		}
 		int nbFrames;
 		std::string arguments; // note: This is used in simulations, see what to do in normal case

@@ -48,9 +48,6 @@ public:
 			AddParameter(new ParameterInt("init_img_bound",       0  , 0, 255, &initImgBound, ""));
 			AddParameter(new ParameterBool("vary_xy_step_with_scale",   8, 0, 1, &varyXyStepWithScale, "The grid node size is multiplied if true"));
 			AddParameter(new ParameterBool("vary_img_bound_with_scale", 0, 0, 1, &varyImgBoundWithScale, "Size of image boundary is multiplied if true"));
-
-
-			Init();
 		};
 		float initFeatureScale;
 		int featureScaleLevels;

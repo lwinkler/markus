@@ -59,9 +59,8 @@ public:
 			AddParameter(new ParameterDouble("learning_rate",	-1, 	-1, 1, &learningRate,	"Learning rate of the model"));
 
 			RefParameterByName("type").SetDefault("CV_8UC3");
+			RefParameterByName("type").SetValueToDefault();
 			RefParameterByName("type").SetRange("[CV_8UC3]");
-
-			Init();
 		};
 		int history;
 		float varThres;

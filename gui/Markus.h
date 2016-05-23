@@ -55,7 +55,6 @@ public:
 			AddParameter(new ParameterInt("nb_cols", 1, 1, 4, &nbCols, "Number of columns for display"));
 			AddParameter(new ParameterInt("nb_rows", 1, 1, 4, &nbRows, "Number of rows for display"));
 
-			Init();
 			m_writeAllParamsToConfig = true;
 		}
 		int nbCols;

@@ -59,7 +59,6 @@ public:
 			AddParameter(new ParameterDouble("noise_sigma",       15,    0,    1000,     &noiseSigma,      "noise strength"));
 			AddParameter(new ParameterDouble("learning_rate",     -1,    -1,       1,     &learningRate,    "Learning rate of the model"));
 
-			Init();
 			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3]");
 		};
 		int history;

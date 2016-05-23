@@ -102,9 +102,9 @@ public:
 
 protected:
 	ParameterConfigType m_confSource = PARAMCONF_UNSET;
-	bool m_isLocked       = false;
 
 private:
+	bool m_isLocked       = false;
 	const std::string m_name;
 	const std::string m_description;
 	bool m_requiresLock   = false;

@@ -115,10 +115,15 @@ public:
 		addModuleToConfig("VideoFileReader", *mp_configFile)
 		.RefSubConfig("parameters", true)
 		.RefSubConfig("param", "name", "fps", true).SetValue("22");
+
 		mp_configFile->RefSubConfig("application").SetAttribute("name", "unitTest");
-		mp_contextParams = new Context::Parameters(mp_configFile->Find("application"), "/tmp/config_empty.xml", "TestModule", "tests/out");
+		mp_configFile->FindRef("application>parameters>param[name=\"config_file\"]"     , true).SetValue("/tmp/config_empty.xml");
+		mp_configFile->FindRef("application>parameters>param[name=\"application_name\"]", true).SetValue("TestModule");
+		mp_configFile->FindRef("application>parameters>param[name=\"output_dir\"]"      , true).SetValue("tests/out");
+		mp_contextParams = new Context::Parameters(mp_configFile->Find("application"));
 		mp_contextParams->centralized = true;
 		mp_context = new Context(*mp_contextParams);
+
 		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", mp_configFile->Find("application>module[name=\"VideoFileReader0\"]"));
 		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeConfig);
 		mp_fakeInput->SetContext(*mp_context);

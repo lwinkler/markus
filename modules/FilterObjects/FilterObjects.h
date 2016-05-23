@@ -51,8 +51,6 @@ public:
 			AddParameter(new ParameterDouble("max_custom"     , FLT_MAX, 0, FLT_MAX, &maxCustom       , "Max value for the custom feature"));
 
 			RefParameterByName("custom_feature").SetRange("[x,y,width,height]");
-
-			Init();
 		}
 		double minTravelDist;
 		double minBorderDist;

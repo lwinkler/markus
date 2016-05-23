@@ -50,8 +50,6 @@ public:
 			// Limit size to accelerate unit tests
 			RefParameterByName("width").SetRange("[64:1280]");
 			RefParameterByName("height").SetRange("[48:960]");
-
-			Init();
 		};
 		int nbFeatures;
 		float scaleFactor;

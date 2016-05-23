@@ -49,8 +49,6 @@ public:
 			AddParameter(new ParameterDouble("area_threshold" , 1.01  , 1 , 2       , &areaThreshold , ""));
 			AddParameter(new ParameterDouble("min_margin"     , .003  , 0 , 1       , &minMargin     , ""));
 			AddParameter(new ParameterInt("edge_blur_size"    , 5     , 0 , 100     , &edgeBlurSize  , ""));
-
-			Init();
 		};
 		int delta;
 		int minArea;

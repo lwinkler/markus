@@ -51,7 +51,6 @@ public:
 		{
 			AddParameter(new ParameterString("url", "", &url, "Network address of the camera (e.g. http://root:admin@192.168.3.62/mjpg/1/video.mjpg"));
 			AddParameter(new ParameterBool("check_aspect_ratio", 0, 0, 1, &checkAspectRatio, "If true checks the aspect ratio of the incoming image and rebuilds all modules if wrong"));
-			Init();
 		}
 
 	public:

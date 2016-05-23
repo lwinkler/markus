@@ -85,8 +85,6 @@ public:
 			AddParameter(new ParameterImageType("type"     , CV_8UC1 , &type     , "Format of the input image"));
 			AddParameter(new ParameterCachedState("cached" , CV_8UC1 , &cached   , "Format of the input image"));
 
-			Init();
-
 			// Lock the parameters that cannot be changed
 			LockParameterByName("class");
 			LockParameterByName("width");

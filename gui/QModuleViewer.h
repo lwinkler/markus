@@ -60,7 +60,6 @@ public:
 			AddParameter(new ParameterInt("control", -1, -1, 1000, &control, "Index of the control to display"));
 			AddParameter(new ParameterBool("display_options", 1, 0, 1, &displayOptions, "Display the options to select the module, stream, ..."));
 
-			Init();
 			m_writeAllParamsToConfig = true;
 		}
 		int module;

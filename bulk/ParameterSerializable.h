@@ -53,7 +53,7 @@ public:
 
 	inline void SetValue(const Serializable& x_value, ParameterConfigType x_confType)
 	{
-		if(m_isLocked)
+		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		mr_value = x_value;
 		m_confSource = x_confType;
@@ -61,7 +61,7 @@ public:
 
 	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) override
 	{
-		if(m_isLocked)
+		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		std::istringstream istr(rx_value);
 		if(rx_value == "")	// This case happens with unit testing
@@ -89,7 +89,7 @@ public:
 	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const override;
 	virtual void SetValueToDefault() override
 	{
-		if(m_isLocked)
+		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		std::stringstream ss;
 		ss << m_default;

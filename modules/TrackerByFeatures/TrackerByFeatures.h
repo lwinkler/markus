@@ -49,8 +49,6 @@ public:
 			AddParameter(new ParameterString("features"                , "x,y,width,height"  , &features                , "List of features to use for tracking (only scalar values, must be present in objects to track)"));
 			AddParameter(new ParameterDouble("alpha"                   , 0.01, 0    , 1      , &alpha                   , "Alpha for feature update, used to set the mean value dynamically. Sets the adaptibility of the tracker and is used to calculate mean and variation features."));
 			AddParameter(new ParameterBool  ("handle_split"            , 0   , 0    , 1      , &handleSplit             , "Handle the splitting of one object into multiple objects."));
-
-			Init();
 		}
 		double maxMatchingDistance;
 		double timeDisappear;

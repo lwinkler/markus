@@ -43,7 +43,6 @@ public:
 			Input::Parameters(x_confReader)
 		{
 			AddParameter(new ParameterInt("num", 	-1, 	-1, 	2,	&num,	"Number of the USB camera (usually 0 or 1)"));
-			Init();
 		}
 
 	public:

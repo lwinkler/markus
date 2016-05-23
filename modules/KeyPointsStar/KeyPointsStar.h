@@ -45,8 +45,6 @@ public:
 			AddParameter(new ParameterInt("line_threshold_projected" , 10 , 1 , 1000 , &lineThresholdProjected , ""));
 			AddParameter(new ParameterInt("line_threshold_binarized" , 8  , 1 , 1000 , &lineThresholdBinarized , ""));
 			AddParameter(new ParameterInt("suppress_non_max_size"    , 5  , 1 , 1000 , &suppressNonmaxSize     , ""));
-
-			Init();
 		};
 		int maxSize;
 		int responseThreshold;

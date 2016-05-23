@@ -47,7 +47,6 @@ public:
 			AddParameter(new ParameterInt("iterations",  1,   1, 10,   &iterations, "Number of times the operation is applied to the image"));
 
 			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3]");
-			Init();
 		};
 		int oper;
 		int element;

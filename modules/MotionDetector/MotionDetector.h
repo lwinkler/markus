@@ -46,7 +46,6 @@ public:
 
 			RefParameterByName("width").SetRange("[32:6400]");
 			RefParameterByName("height").SetRange("[24:4800]");
-			Init();
 		}
 
 		float motionThres;

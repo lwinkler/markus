@@ -90,7 +90,7 @@ void Module::Reset()
 	m_timerWaiting.Reset();
 	m_timerConversion.Reset();
 
-	// Lock all parameters if needed
+	// Lock all parameters if needed // TODO lock in Configurable constructor
 	m_param.LockIfRequired();
 
 	// This must be done only once to avoid troubles in the GUI

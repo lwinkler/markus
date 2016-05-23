@@ -46,7 +46,6 @@ public:
 		{
 			AddParameter(new ParameterString("file",  "in/input.mp4", &file, "Name of the video file to read, with path"));
 			AddParameter(new ParameterBool("loop",    0, 0, 1,        &loop, "Loop on file"));
-			Init();
 		}
 
 	public:

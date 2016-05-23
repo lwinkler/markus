@@ -42,8 +42,6 @@ public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
 			AddParameter(new ParameterString("feature", "height",  &feature, "The feature to convert to a value stream"));
-
-			Init();
 		};
 		std::string feature;
 	};

@@ -65,7 +65,10 @@ protected:
 		Manager::Parameters params(appConfig);
 		params.aspectRatio = x_aspectRatio;
 		params.autoProcess = false;
-		Context::Parameters contextParams(appConfig, x_configFile, "TestProjects", "tests/out\0");
+		appConfig.FindRef("parameters>param[name=\"config_file\"]"     , true).SetValue(x_configFile);
+		appConfig.FindRef("parameters>param[name=\"application_name\"]", true).SetValue("TestProjects");
+		appConfig.FindRef("parameters>param[name=\"output_dir\"]"      , true).SetValue("tests/out");
+		Context::Parameters contextParams(appConfig);
 		contextParams.centralized = true;
 		contextParams.autoClean   = false;
 		Context context(contextParams);

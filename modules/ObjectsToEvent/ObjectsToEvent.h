@@ -44,8 +44,6 @@ public:
 			AddParameter(new ParameterUInt(  "max_object"  ,  INT_MAX, 0, INT_MAX, &maxObjectsNb  , "Max number of objects"));
 			AddParameter(new ParameterString("event_name"  ,  "count_reached"    , &eventName     , "Name of the event"));
 			AddParameter(new ParameterBool(  "only_new"    ,        1, 0,       1, &onlyNew       , "Only raise an event if no object was present of previous frame"));
-
-			Init();
 		}
 		unsigned int minObjectsNb;
 		unsigned int maxObjectsNb;

@@ -44,7 +44,6 @@ public:
 			Module::Parameters(x_confReader)
 		{
 			AddParameter(new ParameterString("file", 	  "state", 	     &file,      "Name of the .srt file without extension"));
-			Init();
 		}
 		std::string file;
 	};

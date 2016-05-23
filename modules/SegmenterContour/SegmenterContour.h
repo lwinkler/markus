@@ -54,7 +54,6 @@ public:
 													"hu_moment_1,hu_moment_2,hu_moment_3,hu_moment_4,hu_moment_5,hu_moment_6,hu_moment_7,"
 													"solidity"
 													"]");
-			Init();
 		};
 		std::string objectLabel;
 		int minWidth;

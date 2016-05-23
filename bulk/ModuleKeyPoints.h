@@ -46,7 +46,6 @@ public:
 			RefParameterByName("type").SetRange("[CV_8UC1]");
 			RefParameterByName("width").SetRange("[64:6400]");
 			RefParameterByName("height").SetRange("[48:4800]");
-			Init();
 		};
 		std::string descriptor;
 	};

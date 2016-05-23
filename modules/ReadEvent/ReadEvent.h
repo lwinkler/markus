@@ -44,7 +44,7 @@ public:
 			AddParameter(new ParameterString("folder_name" , "events_img"  , &folder    , "Name of the folder to create for images"));
 
 			RefParameterByName("type").SetDefault("CV_8UC3"); // This will probably be ignored
-			Init();
+			RefParameterByName("type").SetValueToDefault();
 		}
 		std::string file;
 		std::string folder;

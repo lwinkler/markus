@@ -45,8 +45,9 @@ public:
 
 			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC2,CV_8UC3]");
 			RefParameterByName("width").SetDefault("160");
+			RefParameterByName("width").SetValueToDefault();
 			RefParameterByName("height").SetDefault("120");
-			Init();
+			RefParameterByName("height").SetValueToDefault();
 		};
 		float h;
 		int templateWindowSize;

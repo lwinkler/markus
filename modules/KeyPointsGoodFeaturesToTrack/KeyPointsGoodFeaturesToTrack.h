@@ -46,8 +46,6 @@ public:
 			AddParameter(new ParameterInt("block_size", 3, 1, MAX_WIDTH, &blockSize,"Size of an average block for computing a derivative covariation matrix over each pixel neighborhood"));
 			AddParameter(new ParameterBool("use_harris_detector", 0, 0, 1, &useHarrisDetector,"Parameter indicating whether to use a Harris detector"));
 			AddParameter(new ParameterDouble("k", 0.04, 0, 1, &k,"Free parameter of the Harris detector"));
-
-			Init();
 		};
 		int maxCorners;
 		double qualityLevel;

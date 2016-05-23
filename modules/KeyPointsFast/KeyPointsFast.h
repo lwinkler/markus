@@ -42,7 +42,6 @@ public:
 		{
 			AddParameter(new ParameterInt("threshold", 10, 0, 255, &threshold,"Threshold"));
 			AddParameter(new ParameterBool("non_max_suppression", 0, 0, 1, &nonMaxSuppression,"if true, non-maximum suppression is applied to detected corners"));
-			Init();
 		};
 		int threshold;
 		bool nonMaxSuppression;

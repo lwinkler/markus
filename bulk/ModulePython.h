@@ -84,8 +84,6 @@ public:
 		{
 			AddParameter(new ParameterString("script_path",  "python_dir", &scriptPath, "Path to the folder containing python scripts"));
 			AddParameter(new ParameterString("script", 	     "script.py",  &script,     "Name of the Python script (without .py)"));
-
-			Init();
 		};
 		std::string scriptPath;
 		std::string script;

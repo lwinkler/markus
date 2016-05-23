@@ -41,7 +41,7 @@ public:
 	class Parameters : public ParameterStructure
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader, const std::string& x_configFile, const std::string& x_applicationName, const std::string& x_outputDir) : ParameterStructure(x_confReader)
+		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
 		{
 			AddParameter(new ParameterBool("auto_clean", 0, 0, 1,     &autoClean,       "Automatically clean the temporary directory when the application closes"));
 			AddParameter(new ParameterString("archive_dir", "",       &archiveDir,      "If specified the data is copied inside this directory for archive"));
@@ -54,12 +54,6 @@ public:
 			AddParameter(new ParameterString("job_id"      ,  ""    , &jobId         ,  "Job id for storage in database. Leave empty to generate a random value"));
 			AddParameter(new ParameterString("camera_id",  ""       , &cameraId      ,  "CameraId id for storage in database. Leave empty for tests only."));
 			AddParameter(new ParameterString("cache_directory", ""  , &cacheDirectory,  "The directory in which the cache can be found, empty if no cache"));
-			Init();
-
-			// Override values: must be set for each run
-			configFile      = x_configFile;
-			applicationName = x_applicationName;
-			outputDir       = x_outputDir;
 		}
 		bool autoClean;
 		std::string archiveDir;
