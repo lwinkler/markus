@@ -110,6 +110,7 @@ public:
 	inline virtual bool PropagateCondition() const {return true;}          /// Return true if the depending modules must be called. To be overridden
 	inline bool AbortCondition() const override {return false;}             /// Return true if the processing should be aborted
 
+	void SetName(const std::string& x_name){m_name = x_name;}
 	virtual const std::string& GetName() const override {return m_name;}
 	virtual const std::string& GetClass() const = 0;
 	virtual const std::string& GetCategory() const{static const std::string cat = "Other"; return cat;}

@@ -75,7 +75,7 @@ Manager::~Manager()
 */
 void Manager::Build()
 {
-	for(auto& moduleConfig : m_param.GetConfig().FindAll("module"))
+	for(auto& moduleConfig : m_param.config.FindAll("module"))
 	{
 		// Read parameters
 		if(moduleConfig.Find("parameters").IsEmpty())
@@ -102,6 +102,7 @@ void Manager::Build()
 			LOG_INFO(m_logger, "Change aspect ratio of module of type " + moduleType + " to " + to_string(mp.width) + "x" + to_string(mp.height) + " to match " + m_param.aspectRatio);
 		}
 		Module * tmp1 = mr_moduleFactory.Create(moduleType, *tmp2);
+		tmp1->SetName(moduleConfig.GetAttribute("name")); // TODO one day add name as a standard parameter
 
 		LOG_DEBUG(m_logger, "Add module " << tmp1->GetName() << " to list input=" << (tmp1->IsInput() ? "yes" : "no"));
 		int id = boost::lexical_cast<int>(moduleConfig.GetAttribute("id"));
@@ -192,7 +193,7 @@ void Manager::Connect()
 		throw MkException("Manager can only connect modules once", LOC);
 
 	// Connect input and output streams (re-read the config once since we need all modules to be connected)
-	for(const auto& moduleConfig : m_param.GetConfig().FindAll("module"))
+	for(const auto& moduleConfig : m_param.config.FindAll("module"))
 	{
 		int moduleId = boost::lexical_cast<int>(moduleConfig.GetAttribute("id"));
 		Module& module = RefModuleById(moduleId);
@@ -254,7 +255,7 @@ void Manager::Reset(bool x_resetInputs)
 	GetContext().GetParameters().PrintParameters();
 
 	Processable::Reset();
-	m_interruptionManager.Configure(m_param.GetConfig()); // TODO: When do we call reset ?
+	m_interruptionManager.Configure(m_param.config); // TODO: When do we call reset ?
 
 	// Reset timers
 	// m_timerConvertion = 0;

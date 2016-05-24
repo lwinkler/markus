@@ -42,8 +42,7 @@ log4cxx::LoggerPtr Module::m_logger(log4cxx::Logger::getLogger("Module"));
 
 Module::Module(ParameterStructure& xr_params) :
 	Processable(xr_params),
-	m_param(dynamic_cast<Parameters&>(xr_params)),
-	m_name(xr_params.GetConfig().GetAttribute("name"))
+	m_param(dynamic_cast<Parameters&>(xr_params))
 {
 	LOG_INFO(m_logger, "Create module " << m_name);
 }
@@ -70,6 +69,8 @@ Module::~Module()
 */
 void Module::Reset()
 {
+	if(GetName().empty())
+		throw MkException("Module of class " + GetClass() + " has an empty name", LOC);
 	LOG_INFO(m_logger, "Reseting module "<<GetName());
 	Processable::Reset();
 

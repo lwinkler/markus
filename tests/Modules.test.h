@@ -127,6 +127,7 @@ public:
 		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", mp_configFile->Find("application>module[name=\"VideoFileReader0\"]"));
 		mp_fakeConfig->Initialize();
 		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeConfig);
+		mp_fakeInput->SetName("VideoFileReader0");
 		mp_fakeInput->SetContext(*mp_context);
 		// note: we need a fake module to create the input streams
 		mp_fakeInput->Reset();
@@ -186,7 +187,8 @@ public:
 			TS_TRACE("Cannot set parameter in createAndConnectModule, reason: " + string(e.what()));
 			return;
 		}
-		Module* module                 = m_factoryModules.Create(x_type, *parameters);
+		Module* module = m_factoryModules.Create(x_type, *parameters);
+		module->SetName(moduleConfig.GetAttribute("name"));
 		module->SetContext(*mp_context);
 		m_image = cv::Mat(module->GetHeight(), module->GetWidth(), module->GetImageType());
 

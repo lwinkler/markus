@@ -44,7 +44,7 @@ public:
 	class Parameters : public Processable::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Processable::Parameters(x_confReader)
+		Parameters(const ConfigReader& x_confReader) : Processable::Parameters(x_confReader), config(x_confReader)
 		{
 			AddParameter(new ParameterInt("nb_frames", 0, 0, INT_MAX, &nbFrames, "Number of frames to process. 0 for infinite. Only works in centralized mode"));
 			AddParameter(new ParameterString("arguments", "",         &arguments, "Command-line arguments, for storage only"));
@@ -53,9 +53,10 @@ public:
 		int nbFrames;
 		std::string arguments; // note: This is used in simulations, see what to do in normal case
 		std::string aspectRatio;
+		ConfigReader config;
 	};
 
-	Manager(ParameterStructure& x_configReader);
+	Manager(ParameterStructure& xr_params);
 	virtual ~Manager();
 	virtual void Reset(bool x_resetInputs = true);
 	virtual void Process() override;

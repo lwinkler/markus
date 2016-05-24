@@ -37,9 +37,10 @@ public:
 	class Parameters : public ParameterStructure
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
+		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader), config(x_confReader)
 		{
 		}
+		ConfigReader config;
 	};
 
 	Simulation(Parameters& xr_params, const Context& x_context);
