@@ -64,7 +64,15 @@ public:
 	virtual void Start() override;
 	virtual void Stop() override;
 	void SendCommand(const std::string& x_command, std::string x_value);
-	const std::vector<Module*>& GetModules() const {return m_modules; }
+	const std::vector<Module*> RefModules() const
+	{
+		std::vector<Module*> modules; 
+		for(auto elem : m_modules)
+		{
+			modules.push_back(elem.second);
+		}
+		return modules;
+	}
 	inline const Processable& GetModuleByName(const std::string& x_name) const {if(x_name == "manager") assert(false); else return RefModuleByName(x_name);}
 
 	void Rebuild();
@@ -82,7 +90,7 @@ public:
 	{
 		Processable::SetContext(x_context);
 		for(auto& elem : m_modules)
-			elem->SetContext(x_context);
+			elem.second->SetContext(x_context);
 	}
 	virtual const std::string& GetName() const override {static std::string str = "manager"; return str;}
 	virtual double GetRecordingFps() const override
@@ -104,10 +112,10 @@ private:
 	bool m_isConnected   = false;
 	bool m_quitting      = false;
 
-	std::vector<Module *>  m_modules;
-	std::vector<Input *>   m_inputs;
-	std::vector<Module *>  m_autoProcessedModules;
-	std::vector<ParameterStructure *> m_parameters;
+	std::map<int, Module *> m_modules;
+	std::vector<Input *>    m_inputs;
+	std::vector<Module *>   m_autoProcessedModules;
+	std::map<int, ParameterStructure *> m_parameters;
 
 	const FactoryParameters& mr_parametersFactory;
 	const FactoryModules& mr_moduleFactory;

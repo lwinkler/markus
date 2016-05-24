@@ -45,7 +45,6 @@ Module::Module(ParameterStructure& xr_params) :
 	m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_name(xr_params.GetConfig().GetAttribute("name"))
 {
-	m_id	= boost::lexical_cast<int>(xr_params.GetConfig().GetAttribute("id"));
 	LOG_INFO(m_logger, "Create module " << m_name);
 }
 
@@ -399,7 +398,6 @@ void Module::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 
-	root["id"]                   = m_id;
 	root["name"]                 = m_name;
 	// root["timer_conversion"]      = m_timerConversion.GetMsLong();
 	// root["timer_processing"]      = m_timerProcessFrame.GetMsLong();
@@ -443,7 +441,6 @@ void Module::Deserialize(istream& x_in, const string& x_dir)
 	Json::Value root;
 	x_in >> root;
 
-	m_id                   = root["id"].asInt();
 	m_name                 = root["name"].asString();
 	// m_timerConversion.Reset();
 	// m_timerProcessFrame.Reset();

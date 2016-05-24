@@ -81,7 +81,7 @@ protected:
 			manager.Connect();
 			manager.Reset();
 
-			for(auto& module : manager.GetModules())
+			for(auto& module : manager.RefModules())
 			{
 				// cout << module->GetHeight() << " * " << x_aspectRatio << " == " <<  module->GetWidth() << endl;
 				TS_ASSERT(static_cast<int>(module->GetHeight() * convertAspectRatio(x_aspectRatio)) == module->GetWidth() 

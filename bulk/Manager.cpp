@@ -104,8 +104,13 @@ void Manager::Build()
 		Module * tmp1 = mr_moduleFactory.Create(moduleType, *tmp2);
 
 		LOG_DEBUG(m_logger, "Add module " << tmp1->GetName() << " to list input=" << (tmp1->IsInput() ? "yes" : "no"));
-		m_modules.push_back(tmp1);
-		m_parameters.push_back(tmp2);
+		int id = boost::lexical_cast<int>(moduleConfig.GetAttribute("id"));
+		auto ret = m_modules.insert(std::pair<int,Module*>(id, tmp1));
+		if(ret.second == false)
+		{
+			throw MkException("Module with id " + moduleConfig.GetAttribute("id") + " is listed more than one time in config", LOC);
+		}
+		m_parameters.insert(std::pair<int, ParameterStructure*>(id, tmp2));
 
 		// Add to inputs if an input
 		if(tmp1->IsInput())
@@ -127,11 +132,11 @@ void Manager::Destroy()
 	PrintStatistics();
 
 	for(auto & elem : m_modules)
-		delete elem;
+		delete elem.second;
 	m_modules.clear();
 
 	for(auto & elem : m_parameters)
-		delete elem;
+		delete elem.second;
 	m_parameters.clear();
 	m_inputs.clear();
 	m_autoProcessedModules.clear();
@@ -147,7 +152,7 @@ void Manager::Rebuild()
 	Destroy();
 	Build();
 	for(auto& elem : m_modules)
-		elem->SetContext(GetContext());
+		elem.second->SetContext(GetContext());
 	m_isConnected = false;
 	Connect();
 	Reset();
@@ -219,13 +224,13 @@ void Manager::Connect()
 */
 void Manager::Check() const
 {
-	for(auto& module : m_modules)
+	for(auto& elem : m_modules)
 	{
-		if(!module->IsInput())
+		if(!elem.second->IsInput())
 		{
 			bool bc = false;
 			// Check that at least one blocking input is connected
-			for(auto& input : module->GetInputStreamList())
+			for(auto& input : elem.second->GetInputStreamList())
 			{
 				if(input.second->IsBlocking() && input.second->IsConnected())
 				{
@@ -234,7 +239,7 @@ void Manager::Check() const
 				}
 			}
 			if(!bc)
-				throw MkException("Module " + module->GetName() + " must have at least one blocking input that is connected", LOC);
+				throw MkException("Module " + elem.second->GetName() + " must have at least one blocking input that is connected", LOC);
 		}
 	}
 }
@@ -249,7 +254,7 @@ void Manager::Reset(bool x_resetInputs)
 	GetContext().GetParameters().PrintParameters();
 
 	Processable::Reset();
-	m_interruptionManager.Configure(m_param.GetConfig());
+	m_interruptionManager.Configure(m_param.GetConfig()); // TODO: When do we call reset ?
 
 	// Reset timers
 	// m_timerConvertion = 0;
@@ -257,11 +262,11 @@ void Manager::Reset(bool x_resetInputs)
 	// Reset all modules (to set the module timer)
 	for(auto & elem : m_modules)
 	{
-		if(x_resetInputs || !elem->IsInput())
+		if(x_resetInputs || !elem.second->IsInput())
 		{
 			// If manager is in autoprocess, modules must not be
-			Processable::WriteLock lock(elem->RefLock());
-			elem->Reset();
+			Processable::WriteLock lock(elem.second->RefLock());
+			elem.second->Reset();
 		}
 	}
 	if(!HasController("manager"))
@@ -382,7 +387,7 @@ void Manager::PrintStatistics()
 	for(const auto& module : m_modules)
 	{
 		// LOG_INFO(cpt<<": ");
-		module->PrintStatistics(conf);
+		module.second->PrintStatistics(conf);
 	}
 	benchSummary.SaveToFile(benchFileName);
 }
@@ -478,11 +483,13 @@ Module& Manager::RefModuleById(int x_id) const
 	Module* module = nullptr;
 	int found = 0;
 	for(const auto & elem : m_modules)
-		if(elem->GetId() == x_id)
+	{
+		if(elem.first == x_id)
 		{
-			module = elem;
+			module = elem.second;
 			found++;
 		}
+	}
 	if(found == 1)
 		return *module;
 	if(found == 0)
@@ -495,8 +502,8 @@ Module& Manager::RefModuleById(int x_id) const
 Module& Manager::RefModuleByName(const string& x_name) const
 {
 	for(const auto & elem : m_modules)
-		if(elem->GetName() == x_name)
-			return *elem;
+		if(elem.second->GetName() == x_name)
+			return *elem.second;
 	throw MkException("Cannot find module " + x_name, LOC);
 }
 
@@ -577,7 +584,7 @@ void Manager::UpdateConfig()
 {
 	// Set all config ready to be saved
 	for(auto & elem : m_parameters)
-		elem->UpdateConfig();
+		elem.second->UpdateConfig();
 	m_param.UpdateConfig();
 }
 
@@ -592,10 +599,10 @@ void Manager::WriteStateToDirectory(const string& x_directory) const
 	SYSTEM("mkdir -p " + directory);
 	for(const auto & elem : m_modules)
 	{
-		string fileName = directory + "/" + elem->GetName() + ".json";
+		string fileName = directory + "/" + elem.second->GetName() + ".json";
 		ofstream of;
 		of.open(fileName.c_str());
-		elem->Serialize(of, directory);
+		elem.second->Serialize(of, directory);
 		of.close();
 	}
 	LOG_INFO(m_logger, "Written state of the manager and all modules to " << directory);

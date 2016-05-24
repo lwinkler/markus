@@ -114,7 +114,6 @@ public:
 	virtual const std::string& GetClass() const = 0;
 	virtual const std::string& GetCategory() const{static const std::string cat = "Other"; return cat;}
 	virtual const std::string& GetDescription() const = 0;
-	int GetId() const {return m_id;}
 
 	const std::map<int, Stream*>& GetInputStreamList() const {return m_inputStreams;}
 	const std::map<int, Stream*>& GetOutputStreamList() const {return m_outputStreams;}
@@ -175,7 +174,6 @@ protected:
 	std::map<int, Stream *> m_debugStreams;
 
 	std::string m_name;
-	int m_id;
 	std::vector<Module *> m_modulesDepending;
 
 private:

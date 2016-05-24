@@ -89,17 +89,6 @@ void ParameterStructure::AddParameter(Parameter* xr_param)
 void ParameterStructure::AddParameterForStream(Parameter* xr_param)
 {
 	AddParameter(xr_param);
-
-	// note: since this method might be used after structure initialization, we init the param anyway
-	// m_list.back()->SetValueToDefault();
-	// TODO : Read value from config
-	if(!m_list.back()->CheckRange())
-	{
-		stringstream ss;
-		ss<<"Parameter "<<m_list.back()->GetName()<<" is out of range: ";
-		m_list.back()->Print(ss);
-		throw ParameterException(ss.str(), LOC);
-	}
 }
 
 
