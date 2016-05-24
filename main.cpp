@@ -454,7 +454,7 @@ int main(int argc, char** argv)
 				LOG_ERROR(logger, "Qt Application returned error code");
 
 			// write the modified params in config and save
-			gui.UpdateConfig();
+			gui.UpdateConfig(guiConfig);
 			mainGuiConfig.SaveToFile("gui.xml");
 #else
 			LOG_ERROR(logger, "Markus was compiled without GUI. It can only be launched with option -nc");
@@ -463,9 +463,9 @@ int main(int argc, char** argv)
 		manager.Stop();
 		returnValue = manager.ReturnCode();
 
-		// Write the modified params in config and save
-		manager.UpdateConfig();
 #ifndef MARKUS_NO_GUI
+		// Write the modified params in config and save
+		manager.UpdateConfig(mainConfig);
 		// Save the last config with modifs. This would cause a problem if we had no write access to the current dir
 		mainConfig.SaveToFile("last_config.xml");
 #endif

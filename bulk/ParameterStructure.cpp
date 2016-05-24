@@ -96,15 +96,15 @@ void ParameterStructure::AddParameterForStream(Parameter* xr_param)
 * @brief Initialize the parameter structure with the value from default or xml configuration
 */
 // TODO: Avoid call to Init in each module by setting values when param is added
-void ParameterStructure::Initialize()
+void ParameterStructure::Initialize(const ConfigReader& x_config)
 {
 	// Read config file
 	SetValueToDefault();
 
 	// Read parameters from config
-	SetFromConfig();
+	SetFromConfig(x_config);
 
-	CheckRange(false);
+	CheckRange(false); //TODO: Keep ?
 }
 
 /**
@@ -122,9 +122,9 @@ void ParameterStructure::LockIfRequired()
 /**
 * @brief Set the value from xml configuration
 */
-void ParameterStructure::SetFromConfig()
+void ParameterStructure::SetFromConfig(const ConfigReader& x_config)
 {
-	for(const auto& conf : m_configReader.FindAll("parameters>param"))
+	for(const auto& conf : x_config.FindAll("parameters>param"))
 	{
 		string name  = conf.GetAttribute("name");
 		string value = conf.GetValue();
@@ -147,9 +147,9 @@ void ParameterStructure::SetFromConfig()
 /**
 * @brief Save all values and prepare xml configuration for writing
 */
-void ParameterStructure::UpdateConfig() const
+void ParameterStructure::UpdateConfig(ConfigReader& xr_config) const
 {
-	ConfigReader conf = m_configReader.Find("parameters");
+	ConfigReader conf = xr_config.Find("parameters");
 
 	for(const auto & elem : m_list)
 	{

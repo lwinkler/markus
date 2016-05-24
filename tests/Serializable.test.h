@@ -133,7 +133,7 @@ public:
 		createEmptyConfigFile("/tmp/config_empty.xml");
 		mp_config = new ConfigFile("tests/serialize/module.xml");
 		mp_fakeParams = m_factoryParameters.Create("VideoFileReader", mp_config->GetSubConfig("module"));
-		mp_fakeParams->Initialize();
+		mp_fakeParams->Initialize(mp_config->GetSubConfig("module"));
 		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeParams);
 		mp_fakeInput->SetName("Fake");
 		// note: we need a fake module to create the input streams

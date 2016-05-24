@@ -63,7 +63,7 @@ public:
 	};
 
 	MarkusWindow(ParameterStructure& rx_param, Manager& rx_manager);
-	void UpdateConfig();
+	void UpdateConfig(ConfigReader& xr_config);
 private:
 	// ConfigReader& m_configReader;
 	Parameters& m_param;

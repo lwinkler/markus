@@ -83,11 +83,11 @@ void MarkusWindow::timerEvent(QTimerEvent* px_event)
 	//update();
 }
 
-void MarkusWindow::UpdateConfig()
+void MarkusWindow::UpdateConfig(ConfigReader& xr_config)
 {
 	for(auto & elem : m_paramsViewer)
-		elem->UpdateConfig();
-	m_param.UpdateConfig();
+		elem->UpdateConfig(xr_config);
+	m_param.UpdateConfig(xr_config);
 }
 
 QLabel *MarkusWindow::createLabel(const QString &text)

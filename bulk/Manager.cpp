@@ -82,7 +82,7 @@ void Manager::Build()
 			throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name", "(unknown)"), LOC);
 		string moduleType = moduleConfig.Find("parameters>param[name=\"class\"]").GetValue();
 		ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, moduleConfig);
-		tmp2->Initialize();
+		tmp2->Initialize(moduleConfig);
 
 		if(!m_param.aspectRatio.empty())
 		{
@@ -581,12 +581,12 @@ string Manager::CreateOutputDir(const string& x_outputDir, const string& x_confi
 /**
 * @brief Save the configuration of manager and modules to file
 */
-void Manager::UpdateConfig()
+void Manager::UpdateConfig(ConfigReader& xr_config)
 {
 	// Set all config ready to be saved
 	for(auto & elem : m_parameters)
-		elem.second->UpdateConfig();
-	m_param.UpdateConfig();
+		elem.second->UpdateConfig(xr_config);
+	m_param.UpdateConfig(xr_config);
 }
 
 /**
