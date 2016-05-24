@@ -42,10 +42,8 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterString("file", 	  "objects.srt", 	     &file,      "Name of the .srt file without extension"));
-			m_list.push_back(new ParameterBool("compress", 	  0, 0, 1, 	     &compress,      "Compress the result as a tar.gz"));
-			//m_list.push_back(new ParameterString("folder_name" , "events_img" , &folder    , "Name of the folder to create for images"));
-			Init();
+			AddParameter(new ParameterString("file", 	  "objects.srt", 	     &file,      "Name of the .srt file without extension"));
+			AddParameter(new ParameterBool("compress", 	  0, 0, 1, 	     &compress,      "Compress the result as a tar.gz"));
 		}
 		std::string file;
 		bool compress;

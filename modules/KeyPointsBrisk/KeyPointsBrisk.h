@@ -40,16 +40,14 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : ModuleKeyPoints::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterInt("threshold"       , 30 , 1 , 255 , &threshold    , ""));
-			m_list.push_back(new ParameterInt("octaves"         , 3  , 1 , 100 , &octaves      , ""));
-			m_list.push_back(new ParameterFloat("pattern_scale" , 1  , 0 , 10  , &patternScale , ""));
+			AddParameter(new ParameterInt("threshold"       , 30 , 1 , 255 , &threshold    , ""));
+			AddParameter(new ParameterInt("octaves"         , 3  , 1 , 100 , &octaves      , ""));
+			AddParameter(new ParameterFloat("pattern_scale" , 1  , 0 , 10  , &patternScale , ""));
 
 			// Limit size to accelerate unit tests
 			RefParameterByName("width").SetRange("[64:1280]");
 			RefParameterByName("height").SetRange("[48:960]");
 			RefParameterByName("octaves").SetRange("[1:3]");
-
-			Init();
 		};
 		int threshold;
 		int octaves;

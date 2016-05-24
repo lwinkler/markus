@@ -64,6 +64,7 @@ public:
 		if(nErr > 0)
 		{
 			cout << "Found " << nErr << " errors in tests/markus.log" << endl;
+			// TODO: returning false might lead to segfaults. Find out why		
 			return false;
 		}
 		return true;

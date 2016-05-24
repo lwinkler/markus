@@ -66,9 +66,9 @@ QModuleViewer::QModuleViewer(const Manager& xr_manager, ParameterStructure& xr_p
 	m_outputHeight = 0.8 * height();
 
 	// Handlers for modules
-	if(xr_manager.GetModules().size() == 0)
+	if(xr_manager.RefModules().size() == 0)
 		throw MkException("Module list cannot be empty", LOC);
-	m_currentModule 	= xr_manager.GetModules().front();
+	m_currentModule 	= xr_manager.RefModules().front();
 	m_currentStream 	= m_currentModule->GetOutputStreamList().begin()->second;
 
 	mp_comboModules 	= new QComboBox();
@@ -84,7 +84,7 @@ QModuleViewer::QModuleViewer(const Manager& xr_manager, ParameterStructure& xr_p
 	layoutCombos->addWidget(lab1, 0, 0);
 	mp_comboModules->clear();
 	int ind = 0;
-	for(const auto & elem : xr_manager.GetModules())
+	for(const auto & elem : xr_manager.RefModules())
 		mp_comboModules->addItem((elem)->GetName().c_str(), ind++);
 	layoutCombos->addWidget(mp_comboModules, 0, 1);
 	if(m_param.module > 0 && m_param.module < mp_comboModules->count())
@@ -266,14 +266,14 @@ void QModuleViewer::updateModuleNb(int x_index)
 {
 	Module* mod = nullptr;
 
-	if(x_index < 0 || x_index >= static_cast<int>(mr_manager.GetModules().size()))
+	if(x_index < 0 || x_index >= static_cast<int>(mr_manager.RefModules().size()))
 	{
-		mod = mr_manager.GetModules().at(0);
+		mod = mr_manager.RefModules().at(0);
 		m_param.module = 0;
 	}
 	else
 	{
-		mod = mr_manager.GetModules().at(x_index);
+		mod = mr_manager.RefModules().at(x_index);
 		m_param.module = x_index;
 	}
 	updateModule(mod);

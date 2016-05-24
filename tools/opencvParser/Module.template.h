@@ -39,7 +39,6 @@ public:
 		Parameters(const ConfigReader& x_confReader) :
 			Module::Parameters(x_confReader)
 		{
-			Init();
 		}
 	};
 

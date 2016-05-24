@@ -40,13 +40,11 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : ModuleKeyPoints::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterInt("max_size"                 , 16 , 1 , 1000 , &maxSize              , ""));
-			m_list.push_back(new ParameterInt("response_threshold"       , 30 , 1 , 1000 , &responseThreshold      , ""));
-			m_list.push_back(new ParameterInt("line_threshold_projected" , 10 , 1 , 1000 , &lineThresholdProjected , ""));
-			m_list.push_back(new ParameterInt("line_threshold_binarized" , 8  , 1 , 1000 , &lineThresholdBinarized , ""));
-			m_list.push_back(new ParameterInt("suppress_non_max_size"    , 5  , 1 , 1000 , &suppressNonmaxSize     , ""));
-
-			Init();
+			AddParameter(new ParameterInt("max_size"                 , 16 , 1 , 1000 , &maxSize              , ""));
+			AddParameter(new ParameterInt("response_threshold"       , 30 , 1 , 1000 , &responseThreshold      , ""));
+			AddParameter(new ParameterInt("line_threshold_projected" , 10 , 1 , 1000 , &lineThresholdProjected , ""));
+			AddParameter(new ParameterInt("line_threshold_binarized" , 8  , 1 , 1000 , &lineThresholdBinarized , ""));
+			AddParameter(new ParameterInt("suppress_non_max_size"    , 5  , 1 , 1000 , &suppressNonmaxSize     , ""));
 		};
 		int maxSize;
 		int responseThreshold;

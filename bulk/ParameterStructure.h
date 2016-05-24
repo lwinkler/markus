@@ -36,9 +36,7 @@ class ParameterStructure
 public:
 	ParameterStructure(const ConfigReader& x_configReader);
 	virtual ~ParameterStructure();
-	inline const ConfigReader& GetConfig() const {return m_configReader;}
-	inline ConfigReader& RefConfig() {return m_configReader;}
-	void Init();
+	void Initialize();
 	void SetFromConfig();
 	void UpdateConfig() const;
 	void SetValueToDefault();
@@ -49,16 +47,19 @@ public:
 	const std::vector<Parameter*>& GetList() const {return m_list;}
 	void LockParameterByName(const std::string& x_name) {RefParameterByName(x_name).Lock();}
 	void LockIfRequired();
+	bool ParameterExists(const std::string& x_name) const;
 	void AddParameter(Parameter* xr_param);
+	void AddParameterForStream(Parameter* xr_param);
 
 protected:
-	std::vector<Parameter*> m_list;
-	std::string m_moduleName;
-	bool m_writeAllParamsToConfig;
 	Parameter & RefParameterByName(const std::string& x_name);
+	bool m_writeAllParamsToConfig;
 
 private:
-	ConfigReader m_configReader; // Warning this still contains reference to the tinyxml config!
+	std::vector<Parameter*> m_list;
+	std::string m_moduleName;
+
+	ConfigReader m_configReader; // Warning this still contains reference to the tinyxml config! // TODO: maybe avoid storing this
 	static log4cxx::LoggerPtr m_logger;
 	// Note: Disable copies of parameters as a safety
 	DISABLE_COPY(ParameterStructure)

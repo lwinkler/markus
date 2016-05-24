@@ -78,14 +78,12 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Processable::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterString("class"       , ""      , &objClass , "Class of the module (define the module's function)"));
-			m_list.push_back(new ParameterString("master"      , ""      , &master   , "Master module on which this module's processing is dependent. If empty, use all preceeding modules"));
-			m_list.push_back(new ParameterInt("width"          , 640     , 1         , MAX_WIDTH , &width  , "Width of the input"));
-			m_list.push_back(new ParameterInt("height"         , 480     , 1         , MAX_HEIGHT, &height , "Height of the input"));
-			m_list.push_back(new ParameterImageType("type"     , CV_8UC1 , &type     , "Format of the input image"));
-			m_list.push_back(new ParameterCachedState("cached" , CV_8UC1 , &cached   , "Format of the input image"));
-
-			Init();
+			AddParameter(new ParameterString("class"       , ""      , &objClass , "Class of the module (define the module's function)"));
+			AddParameter(new ParameterString("master"      , ""      , &master   , "Master module on which this module's processing is dependent. If empty, use all preceeding modules"));
+			AddParameter(new ParameterInt("width"          , 640     , 1         , MAX_WIDTH , &width  , "Width of the input"));
+			AddParameter(new ParameterInt("height"         , 480     , 1         , MAX_HEIGHT, &height , "Height of the input"));
+			AddParameter(new ParameterImageType("type"     , CV_8UC1 , &type     , "Format of the input image"));
+			AddParameter(new ParameterCachedState("cached" , CV_8UC1 , &cached   , "Format of the input image"));
 
 			// Lock the parameters that cannot be changed
 			LockParameterByName("class");
@@ -112,11 +110,11 @@ public:
 	inline virtual bool PropagateCondition() const {return true;}          /// Return true if the depending modules must be called. To be overridden
 	inline bool AbortCondition() const override {return false;}             /// Return true if the processing should be aborted
 
+	void SetName(const std::string& x_name){m_name = x_name;}
 	virtual const std::string& GetName() const override {return m_name;}
 	virtual const std::string& GetClass() const = 0;
 	virtual const std::string& GetCategory() const{static const std::string cat = "Other"; return cat;}
 	virtual const std::string& GetDescription() const = 0;
-	int GetId() const {return m_id;}
 
 	const std::map<int, Stream*>& GetInputStreamList() const {return m_inputStreams;}
 	const std::map<int, Stream*>& GetOutputStreamList() const {return m_outputStreams;}
@@ -177,7 +175,6 @@ protected:
 	std::map<int, Stream *> m_debugStreams;
 
 	std::string m_name;
-	int m_id;
 	std::vector<Module *> m_modulesDepending;
 
 private:

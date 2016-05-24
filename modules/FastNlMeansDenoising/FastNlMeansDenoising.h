@@ -38,15 +38,14 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterFloat("h"                 , 3 , 1 , 100 , &h                  , "Parameter regulating filter strength. Big h value perfectly removes noise but also removes image details   , smaller h value preserves details but also preserves some noise"));
-			m_list.push_back(new ParameterInt  ("template_win_size" , 7 , 1 ,  33 , &templateWindowSize , "Size in pixels of the template patch that is used to compute weights. Should be odd"));
-			m_list.push_back(new ParameterInt  ("search_win_size"   , 7 , 1 ,  33 , &searchWindowSize   , "Size in pixels of the window that is used to compute weighted average for given pixel. Should be odd. "));
-			m_list.push_back(new ParameterBool ("cielab"   , 0 , 0, 1 , &cielab, "Convert image to CIELAB colorspace and then separately denoise L and AB"));
+			AddParameter(new ParameterFloat("h"                 , 3 , 1 , 100 , &h                  , "Parameter regulating filter strength. Big h value perfectly removes noise but also removes image details   , smaller h value preserves details but also preserves some noise"));
+			AddParameter(new ParameterInt  ("template_win_size" , 7 , 1 ,  33 , &templateWindowSize , "Size in pixels of the template patch that is used to compute weights. Should be odd"));
+			AddParameter(new ParameterInt  ("search_win_size"   , 7 , 1 ,  33 , &searchWindowSize   , "Size in pixels of the window that is used to compute weighted average for given pixel. Should be odd. "));
+			AddParameter(new ParameterBool ("cielab"   , 0 , 0, 1 , &cielab, "Convert image to CIELAB colorspace and then separately denoise L and AB"));
 
 			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC2,CV_8UC3]");
 			RefParameterByName("width").SetDefault("160");
 			RefParameterByName("height").SetDefault("120");
-			Init();
 		};
 		float h;
 		int templateWindowSize;

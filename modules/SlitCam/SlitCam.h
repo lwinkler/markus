@@ -40,13 +40,11 @@ public:
 		Parameters(const ConfigReader& x_confReader) :
 			Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterInt("aperture", 1, 1, 10, &aperture,	"Size of the aperture of the camera"));
+			AddParameter(new ParameterInt("aperture", 1, 1, 10, &aperture,	"Size of the aperture of the camera"));
 
 			RefParameterByName("width").SetRange("[20:6400]");
 			RefParameterByName("height").SetRange("[20:4800]");
 			RefParameterByName("type").SetDefault("CV_8UC3");
-
-			Init();
 		}
 
 		int aperture;

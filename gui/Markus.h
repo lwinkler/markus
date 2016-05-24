@@ -49,17 +49,17 @@ public:
 	class Parameters : public ParameterStructure
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
+		Parameters(ConfigReader& x_confReader) : ParameterStructure(x_confReader), config(x_confReader)
 		{
-			// m_list.push_back(new ParameterString("module", "", &module, "Module to display"));
-			m_list.push_back(new ParameterInt("nb_cols", 1, 1, 4, &nbCols, "Number of columns for display"));
-			m_list.push_back(new ParameterInt("nb_rows", 1, 1, 4, &nbRows, "Number of rows for display"));
+			// AddParameter(new ParameterString("module", "", &module, "Module to display"));
+			AddParameter(new ParameterInt("nb_cols", 1, 1, 4, &nbCols, "Number of columns for display"));
+			AddParameter(new ParameterInt("nb_rows", 1, 1, 4, &nbRows, "Number of rows for display"));
 
-			Init();
 			m_writeAllParamsToConfig = true;
 		}
 		int nbCols;
 		int nbRows;
+		ConfigReader& config;
 	};
 
 	MarkusWindow(ParameterStructure& rx_param, Manager& rx_manager);

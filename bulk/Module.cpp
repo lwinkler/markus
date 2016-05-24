@@ -42,10 +42,8 @@ log4cxx::LoggerPtr Module::m_logger(log4cxx::Logger::getLogger("Module"));
 
 Module::Module(ParameterStructure& xr_params) :
 	Processable(xr_params),
-	m_param(dynamic_cast<Parameters&>(xr_params)),
-	m_name(xr_params.GetConfig().GetAttribute("name"))
+	m_param(dynamic_cast<Parameters&>(xr_params))
 {
-	m_id	= boost::lexical_cast<int>(xr_params.GetConfig().GetAttribute("id"));
 	LOG_INFO(m_logger, "Create module " << m_name);
 }
 
@@ -71,6 +69,8 @@ Module::~Module()
 */
 void Module::Reset()
 {
+	if(GetName().empty())
+		throw MkException("Module of class " + GetClass() + " has an empty name", LOC);
 	LOG_INFO(m_logger, "Reseting module "<<GetName());
 	Processable::Reset();
 
@@ -90,7 +90,7 @@ void Module::Reset()
 	m_timerWaiting.Reset();
 	m_timerConversion.Reset();
 
-	// Lock all parameters if needed
+	// Lock all parameters if needed // TODO lock in Configurable constructor
 	m_param.LockIfRequired();
 
 	// This must be done only once to avoid troubles in the GUI
@@ -305,6 +305,7 @@ void Module::Process()
 		m_timerWaiting.Stop();
 		m_timerConversion.Stop();
 		m_timerProcessFrame.Stop();
+		m_lastTimeStamp = m_currentTimeStamp;
 		LOG_WARN(m_logger, "Exception in module " << GetName());
 		throw;
 	}
@@ -398,7 +399,6 @@ void Module::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 
-	root["id"]                   = m_id;
 	root["name"]                 = m_name;
 	// root["timer_conversion"]      = m_timerConversion.GetMsLong();
 	// root["timer_processing"]      = m_timerProcessFrame.GetMsLong();
@@ -442,7 +442,6 @@ void Module::Deserialize(istream& x_in, const string& x_dir)
 	Json::Value root;
 	x_in >> root;
 
-	m_id                   = root["id"].asInt();
 	m_name                 = root["name"].asString();
 	// m_timerConversion.Reset();
 	// m_timerProcessFrame.Reset();
@@ -499,7 +498,7 @@ void Module::AddInputStream(int x_id, Stream* xp_stream)
 
 	if(xp_stream->GetParameterType() != PARAM_UNKNOWN)
 	{
-		m_param.AddParameter(xp_stream);
+		m_param.AddParameterForStream(xp_stream);
 	}
 }
 

@@ -22,6 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ParameterStructure.h"
+#include "assert.h"
 
 using namespace std;
 
@@ -57,22 +58,45 @@ void ParameterStructure::AddParameter(Parameter* xr_param)
 	}
 	m_list.push_back(xr_param);
 
-	// note: since this method might be used after structure initialization, we init the param anyway
-	m_list.back()->SetValueToDefault();
-	// TODO : Read value from config
-	if(!m_list.back()->CheckRange())
+	// Directly set the right value
+	xr_param->SetValueToDefault();
+	if(m_configReader.GetSubConfig("parameters").IsEmpty())
+	{
+		LOG_WARN(m_logger, "No <parameters/> structure in configuration of " << m_configReader.GetAttribute("name"));
+	}
+	else
+	{
+		ConfigReader conf(m_configReader.Find("parameters>param[name=\"" + xr_param->GetName() + "\"]"));
+		if(!conf.IsEmpty())
+		{
+			string value = conf.GetValue();
+			xr_param->SetValue(value, PARAMCONF_XML);
+		}
+	}
+	if(!xr_param->CheckRange())
 	{
 		stringstream ss;
-		ss<<"Parameter "<<m_list.back()->GetName()<<" is out of range: ";
-		m_list.back()->Print(ss);
+		ss<<"Parameter "<<xr_param->GetName()<<" is out of range: ";
+		xr_param->Print(ss);
 		throw ParameterException(ss.str(), LOC);
 	}
 }
 
 /**
+* @brief Add a parameter to the structure
+*/
+// TODO: This method should in time disappear
+void ParameterStructure::AddParameterForStream(Parameter* xr_param)
+{
+	AddParameter(xr_param);
+}
+
+
+/**
 * @brief Initialize the parameter structure with the value from default or xml configuration
 */
-void ParameterStructure::Init()
+// TODO: Avoid call to Init in each module by setting values when param is added
+void ParameterStructure::Initialize()
 {
 	// Read config file
 	SetValueToDefault();
@@ -80,14 +104,13 @@ void ParameterStructure::Init()
 	// Read parameters from config
 	SetFromConfig();
 
-	// LOG_INFO("Parameters for "<<m_moduleName<<" initialized.");
-	// PrintParameters(); // Global::log.stream(LOG_INFO));
 	CheckRange(false);
 }
 
 /**
 * @brief Set the value from xml configuration
 */
+// TODO: still usefull ?
 void ParameterStructure::LockIfRequired()
 {
 	for(auto& param : m_list)
@@ -105,18 +128,14 @@ void ParameterStructure::SetFromConfig()
 	{
 		string name  = conf.GetAttribute("name");
 		string value = conf.GetValue();
-		//SetValueByName(name, value, PARAMCONF_XML);
 
 		try
 		{
+			if(!ParameterExists(name))
+				continue;
 			Parameter& param = RefParameterByName(name);
 			if(!param.IsLocked())
 				param.SetValue(value, PARAMCONF_XML);
-		}
-		catch(ParameterException& e)
-		{
-			// note: do not output a warning, unused parameters are checked inside CheckRange
-			LOG_DEBUG(m_logger, "Unknown parameter in configuration: "<<name<<" in module "<<m_moduleName);
 		}
 		catch(std::exception& e)
 		{
@@ -162,6 +181,25 @@ const Parameter& ParameterStructure::GetParameterByName(const string& x_name) co
 }
 
 /**
+* @brief Check if the parameter exists in the structure
+*
+* @param x_name Name
+*
+* @return true if exists
+*/
+bool ParameterStructure::ParameterExists(const string& x_name) const
+{
+	for(const auto & elem : m_list)
+	{
+		if(elem->GetName() == x_name)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
 * @brief Get the reference to a parameter by name
 *
 * @param x_name Name
@@ -191,6 +229,7 @@ void ParameterStructure::SetValueToDefault()
 	{
 		if(!elem->IsLocked())
 			elem->SetValueToDefault();
+		else LOG_WARN(m_logger, "Trying to set value of locked parameter " << elem->GetName() << " to default");
 	}
 }
 

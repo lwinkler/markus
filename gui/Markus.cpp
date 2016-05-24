@@ -280,10 +280,10 @@ void MarkusWindow::resizeEvent(QResizeEvent* event)
 	{
 		stringstream ss;
 		ss<<"viewer"<<ind;
-		ConfigReader conf(m_param.RefConfig().FindRef("viewer[name=\"" + ss.str() + "\"]", true));
+		ConfigReader conf(m_param.config.FindRef("viewer[name=\"" + ss.str() + "\"]", true));
 		conf.FindRef("parameters", true);
 		m_paramsViewer.push_back(new QModuleViewer::Parameters(conf));
-		m_moduleViewer.push_back(new QModuleViewer(m_manager, *m_paramsViewer.back()));
+// 		m_moduleViewer.push_back(new QModuleViewer(m_manager, *m_paramsViewer.back()));
 		m_moduleViewer.at(ind)->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 		// m_moduleViewer.at(ind)->showDisplayOptions(true);
 	}

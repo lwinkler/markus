@@ -44,9 +44,8 @@ public:
 		Parameters(const ConfigReader& x_confReader) :
 			Input::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterString("file",  "in/input.mp4", &file, "Name of the video file to read, with path"));
-			m_list.push_back(new ParameterBool("loop",    0, 0, 1,        &loop, "Loop on file"));
-			Init();
+			AddParameter(new ParameterString("file",  "in/input.mp4", &file, "Name of the video file to read, with path"));
+			AddParameter(new ParameterBool("loop",    0, 0, 1,        &loop, "Loop on file"));
 		}
 
 	public:

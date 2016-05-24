@@ -40,17 +40,15 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : ModuleKeyPoints::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterInt("delta"             , 5     , 1 , 100     , &delta         , ""));
-			m_list.push_back(new ParameterInt("min_area"          , 60    , 0 , 100     , &minArea       , ""));
-			m_list.push_back(new ParameterInt("max_area"          , 14400 , 1 , INT_MAX , &maxArea       , ""));
-			m_list.push_back(new ParameterFloat("max_variation"   , .25   , 0 , 1       , &maxVariation  , ""));
-			m_list.push_back(new ParameterFloat("min_diversity"   , .2    , 0 , 1       , &minDiversity  , ""));
-			m_list.push_back(new ParameterInt("max_evolution"     , 200   , 1 , 1000    , &maxEvolution  , ""));
-			m_list.push_back(new ParameterDouble("area_threshold" , 1.01  , 1 , 2       , &areaThreshold , ""));
-			m_list.push_back(new ParameterDouble("min_margin"     , .003  , 0 , 1       , &minMargin     , ""));
-			m_list.push_back(new ParameterInt("edge_blur_size"    , 5     , 0 , 100     , &edgeBlurSize  , ""));
-
-			Init();
+			AddParameter(new ParameterInt("delta"             , 5     , 1 , 100     , &delta         , ""));
+			AddParameter(new ParameterInt("min_area"          , 60    , 0 , 100     , &minArea       , ""));
+			AddParameter(new ParameterInt("max_area"          , 14400 , 1 , INT_MAX , &maxArea       , ""));
+			AddParameter(new ParameterFloat("max_variation"   , .25   , 0 , 1       , &maxVariation  , ""));
+			AddParameter(new ParameterFloat("min_diversity"   , .2    , 0 , 1       , &minDiversity  , ""));
+			AddParameter(new ParameterInt("max_evolution"     , 200   , 1 , 1000    , &maxEvolution  , ""));
+			AddParameter(new ParameterDouble("area_threshold" , 1.01  , 1 , 2       , &areaThreshold , ""));
+			AddParameter(new ParameterDouble("min_margin"     , .003  , 0 , 1       , &minMargin     , ""));
+			AddParameter(new ParameterInt("edge_blur_size"    , 5     , 0 , 100     , &edgeBlurSize  , ""));
 		};
 		int delta;
 		int minArea;

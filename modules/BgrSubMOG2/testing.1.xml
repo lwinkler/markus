@@ -1,6 +1,5 @@
 <application name="CustomProject">
-
-
+<parameters/>
 <module id="0" name="CompareVideo0">
 <inputs>
 <input id="0" outputid="0" moduleid="4"/>
@@ -9,19 +8,12 @@
 <outputs/>
 <parameters>
 <param name="class">CompareVideo</param>
-
 <param name="width">160</param>
 <param name="height">120</param>
 <param name="threshold">0.01</param>
 </parameters>
-
-
-
-
 <uiobject x="957" y="342" width="0" height="0"/>
 </module>
-
-
 <module id="1" name="VideoFileReader1">
 <inputs/>
 <outputs>
@@ -33,14 +25,8 @@
 <param name="width">160</param>
 <param name="height">120</param>
 </parameters>
-
-
-
-
 <uiobject x="518" y="213" width="0" height="0"/>
 </module>
-
-
 <module id="2" name="VideoFileReader2">
 <inputs/>
 <outputs>
@@ -50,17 +36,10 @@
 <param name="class">VideoFileReader</param>
 <param name="width">160</param>
 <param name="height">120</param>
-
 <param name="file">modules/BgrSubMOG2/in.foreground.MP42.avi</param>
 </parameters>
-
-
-
-
 <uiobject x="533" y="348" width="0" height="0"/>
 </module>
-
-
 <module id="4" name="BgrSubMOG24">
 <inputs>
 <input id="0" outputid="0" moduleid="1"/>
@@ -68,8 +47,6 @@
 <outputs>
 <output id="0"/>
 <output id="1"/>
-<output id="2"/>
-<output id="3"/>
 </outputs>
 <parameters>
 <param name="class">BgrSubMOG2</param>
@@ -77,13 +54,8 @@
 <param name="width">160</param>
 <param name="height">120</param>
 </parameters>
-
-
-
-
 <uiobject x="757" y="219" width="0" height="0"/>
 </module>
-
 <module id="5" name="VideoFileWriter5">
 <inputs>
 <input id="0" outputid="0" moduleid="4"/>
@@ -94,13 +66,8 @@
 <param name="fourcc">MP42</param>
 <param name="width">160</param>
 <param name="height">120</param>
-
 <param name="file">foreground</param>
 </parameters>
-
-
-
-
 <uiobject x="1163" y="136" width="0" height="0"/>
 </module>
 <module id="6" name="VideoFileReader6">
@@ -110,7 +77,6 @@
 </outputs>
 <parameters>
 <param name="class">VideoFileReader</param>
-
 <param name="width">160</param>
 <param name="height">120</param>
 <param name="file">modules/BgrSubMOG2/in.background.MP42.avi</param>

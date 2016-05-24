@@ -37,7 +37,7 @@ log4cxx::LoggerPtr ParameterEnum::m_logger(log4cxx::Logger::getLogger("Parameter
 */
 void ParameterEnum::SetValue(const string& rx_value, ParameterConfigType x_confType)
 {
-	if(m_isLocked)
+	if(IsLocked())
 		throw ParameterException("You tried to set the value of a locked parameter.", LOC);
 	mr_value = GetEnum().at(rx_value);
 	m_confSource = x_confType;
@@ -51,7 +51,7 @@ void ParameterEnum::SetValue(const string& rx_value, ParameterConfigType x_confT
 */
 void ParameterEnum::SetValue(int rx_value, ParameterConfigType x_confType)
 {
-	if(m_isLocked)
+	if(IsLocked())
 		throw ParameterException("You tried to set the value of a locked parameter.", LOC);
 	mr_value = rx_value;
 	m_confSource = x_confType;

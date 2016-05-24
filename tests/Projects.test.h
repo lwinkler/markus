@@ -42,8 +42,6 @@ public:
 	}
 	void tearDown()
 	{
-		CLEAN_DELETE(mp_context);
-		CLEAN_DELETE(mp_contextParams);
 	}
 
 protected:
@@ -58,29 +56,32 @@ protected:
 
 	void runConfig(const string& x_configFile, const string& x_aspectRatio)
 	{
+		TS_TRACE("## Unit test with configuration " + x_configFile);
+		ConfigFile mainConfig(x_configFile);
+		mainConfig.Validate();
+		ConfigReader appConfig = mainConfig.GetSubConfig("application");
+		// Note: Added this to avoid deleting the output directory
+		TS_ASSERT(!appConfig.IsEmpty());
+		Manager::Parameters params(appConfig);
+		params.aspectRatio = x_aspectRatio;
+		params.autoProcess = false;
+		appConfig.FindRef("parameters>param[name=\"config_file\"]"     , true).SetValue(x_configFile);
+		appConfig.FindRef("parameters>param[name=\"application_name\"]", true).SetValue("TestProjects");
+		appConfig.FindRef("parameters>param[name=\"output_dir\"]"      , true).SetValue("tests/out");
+		Context::Parameters contextParams(appConfig);
+		contextParams.centralized = true;
+		contextParams.autoClean   = false;
+		Context context(contextParams);
+
 		try
 		{
-			TS_TRACE("## Unit test with configuration " + x_configFile);
-			ConfigFile mainConfig(x_configFile);
-			mainConfig.Validate();
-			ConfigReader appConfig = mainConfig.GetSubConfig("application");
-			// Note: Added this to avoid deleting the output directory
-			TS_ASSERT(!appConfig.IsEmpty());
-			Manager::Parameters params(appConfig);
-			params.aspectRatio = x_aspectRatio;
-			// params.autoProcess = false;
 			Manager manager(params);
-			CLEAN_DELETE(mp_context);
-			CLEAN_DELETE(mp_contextParams);
-			mp_contextParams = new Context::Parameters(appConfig, "/tmp/config_empty.xml", "TestProjects", "tests/out");
-			mp_contextParams->centralized = true;
-			mp_contextParams->autoClean   = false;
-			mp_context = new Context(*mp_contextParams);
-			manager.SetContext(*mp_context);
+
+			manager.SetContext(context);
 			manager.Connect();
 			manager.Reset();
 
-			for(auto& module : manager.GetModules())
+			for(auto& module : manager.RefModules())
 			{
 				// cout << module->GetHeight() << " * " << x_aspectRatio << " == " <<  module->GetWidth() << endl;
 				TS_ASSERT(static_cast<int>(module->GetHeight() * convertAspectRatio(x_aspectRatio)) == module->GetWidth() 
@@ -88,8 +89,7 @@ protected:
 			}
 
 			for(int i = 0 ; i < 10 ; i++)
-				if(!manager.ProcessAndCatch())
-					break;
+				TS_ASSERT(manager.ProcessAndCatch())
 		}
 		catch(ParameterException& e)
 		{
@@ -97,12 +97,9 @@ protected:
 		}
 	}
 
-	Context::Parameters* mp_contextParams = nullptr;
-	Context* mp_context                   = nullptr;
-
 public:
 	/// Run different existing configs
-	void testSync()
+	void testProjects1()
 	{
 		TS_TRACE("\n# Unit test with different test projects");
 		runConfig("tests/projects/sync_test1.xml");
@@ -110,6 +107,22 @@ public:
 		runConfig("tests/projects/sync_test3.xml");
 		runConfig("tests/projects/sync_test4.xml");
 		runConfig("tests/projects/FaceAndTracker.xml");
+	}
+
+	/// Run different existing configs: XMLs ending in testing.xml
+	void DisabletestProjects2() // TODO: If the test returns false in tearDownWorld, this results in a segfault
+	{
+		TS_TRACE("\n# Unit test with different test projects: XMLs ending in ...testing.xml");
+		vector<string> result1;
+		execute("xargs -a modules.txt -I{} find {} -name \"testing*.xml\"", result1);
+		int cpt = 0;
+		for(auto& elem : result1)
+		{
+			runConfig(elem);
+			if(cpt > 1)
+				return;
+			cpt++;
+		}
 	}
 };
 #endif

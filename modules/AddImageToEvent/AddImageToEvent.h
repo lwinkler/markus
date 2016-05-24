@@ -41,13 +41,11 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterString("folder_name" ,  "events_img"   , &folder    ,  "Name of the folder to create for images"));
-			m_list.push_back(new ParameterString("extension"  , "jpg"        , &extension , "Extension of the thumbnails. Determines the output format."));
+			AddParameter(new ParameterString("folder_name" ,  "events_img"   , &folder    ,  "Name of the folder to create for images"));
+			AddParameter(new ParameterString("extension"  , "jpg"        , &extension , "Extension of the thumbnails. Determines the output format."));
 
 			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3,CV_32FC1,CV_32FC3]");
 			RefParameterByName("extension").SetRange("[jpg,png]");
-
-			Init();
 		};
 		std::string folder;
 		std::string extension;

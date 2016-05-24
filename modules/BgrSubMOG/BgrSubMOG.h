@@ -53,13 +53,12 @@ public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
 			// This parameters should not change
-			m_list.push_back(new ParameterInt   ("history",          200,    1,   10000,     &history,         "Length of the history"));
-			m_list.push_back(new ParameterInt   ("nmixtures",          5,    1,      10,     &nmixtures,       "Number of Gaussian mixtures"));
-			m_list.push_back(new ParameterDouble("background_ratio", 0.7,    0,       1,     &backgroundRatio, "Background ratio"));
-			m_list.push_back(new ParameterDouble("noise_sigma",       15,    0,    1000,     &noiseSigma,      "noise strength"));
-			m_list.push_back(new ParameterDouble("learning_rate",     -1,    -1,       1,     &learningRate,    "Learning rate of the model"));
+			AddParameter(new ParameterInt   ("history",          200,    1,   10000,     &history,         "Length of the history"));
+			AddParameter(new ParameterInt   ("nmixtures",          5,    1,      10,     &nmixtures,       "Number of Gaussian mixtures"));
+			AddParameter(new ParameterDouble("background_ratio", 0.7,    0,       1,     &backgroundRatio, "Background ratio"));
+			AddParameter(new ParameterDouble("noise_sigma",       15,    0,    1000,     &noiseSigma,      "noise strength"));
+			AddParameter(new ParameterDouble("learning_rate",     -1,    -1,       1,     &learningRate,    "Learning rate of the model"));
 
-			Init();
 			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3]");
 		};
 		int history;

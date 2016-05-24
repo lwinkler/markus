@@ -41,7 +41,7 @@ public:
 
 	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) override
 	{
-		if(m_isLocked)
+		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		mr_value = rx_value;
 		m_confSource = x_confType;
@@ -62,7 +62,7 @@ public:
 	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const override;
 	virtual void SetValueToDefault() override
 	{
-		if(m_isLocked)
+		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		mr_value = m_default;
 		m_confSource = PARAMCONF_DEF;

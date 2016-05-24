@@ -43,20 +43,19 @@ public:
 		Parameters(const ConfigReader& x_confReader) :
 			Module::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterString("file"        , "event.srt"  , &file      ,  "Name of the .srt file without extension"));
-			m_list.push_back(new ParameterDouble("duration"    , 5, 0, 600    , &duration  ,  "Duration of the event for logging in .srt file"));
-			m_list.push_back(new ParameterString("folder_name" , "events_img" , &folder    ,  "Name of the folder to create for images"));
-			m_list.push_back(new ParameterString("extension"   , "jpg"        , &extension ,  "Extension of the thumbnails. Determines the output format."));
+			AddParameter(new ParameterString("file"        , "event.srt"  , &file      ,  "Name of the .srt file without extension"));
+			AddParameter(new ParameterDouble("duration"    , 5, 0, 600    , &duration  ,  "Duration of the event for logging in .srt file"));
+			AddParameter(new ParameterString("folder_name" , "events_img" , &folder    ,  "Name of the folder to create for images"));
+			AddParameter(new ParameterString("extension"   , "jpg"        , &extension ,  "Extension of the thumbnails. Determines the output format."));
 
 			// The 4 gt_ parameters are only used for evaluation vs ground truth file
-			m_list.push_back(new ParameterString("gt_command"  , ""           , &gtCommand ,  "The command to use for comparison with ground truthi, e.g. \"tools/evaluation/analyse_events.py -d 0 -t 8 -e intrusion\""));
-			m_list.push_back(new ParameterString("gt_file"     , ""           , &gtFile    ,  "Ground truth file name. If empty, the program will consider that the ground truth is empty."));
-			m_list.push_back(new ParameterString("gt_video"    , ""           , &gtVideo   ,  "Video file to use to create the ground truth."));
+			AddParameter(new ParameterString("gt_command"  , ""           , &gtCommand ,  "The command to use for comparison with ground truthi, e.g. \"tools/evaluation/analyse_events.py -d 0 -t 8 -e intrusion\""));
+			AddParameter(new ParameterString("gt_file"     , ""           , &gtFile    ,  "Ground truth file name. If empty, the program will consider that the ground truth is empty."));
+			AddParameter(new ParameterString("gt_video"    , ""           , &gtVideo   ,  "Video file to use to create the ground truth."));
 
 			RefParameterByName("type").SetDefault("CV_8UC3");
 			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3]");
 			RefParameterByName("extension").SetRange("[jpg,png]");
-			Init();
 		}
 		std::string file;
 		double duration;

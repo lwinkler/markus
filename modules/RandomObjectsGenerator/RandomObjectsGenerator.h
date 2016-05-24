@@ -38,12 +38,11 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Input::Parameters(x_confReader)
 		{
-			m_list.push_back(new ParameterInt("nb_objects"  , 10  , 0 , 1000    , &nbObjects  , "Number of objects to generate per step"));
-			m_list.push_back(new ParameterInt("nb_features" , 4   , 0 , 1000    , &nbFeatures , "Number of features per event"));
-			m_list.push_back(new ParameterInt("random_seed" , 0   , 0 , INT_MAX , &randomSeed , "Seed for random generator: 0 means seed is generated from timer"));
-			m_list.push_back(new ParameterDouble("speed"    , .005, 0 , DBL_MAX , &speed ,      "Speed for the variation of object features"));
+			AddParameter(new ParameterInt("nb_objects"  , 10  , 0 , 1000    , &nbObjects  , "Number of objects to generate per step"));
+			AddParameter(new ParameterInt("nb_features" , 4   , 0 , 1000    , &nbFeatures , "Number of features per event"));
+			AddParameter(new ParameterInt("random_seed" , 0   , 0 , INT_MAX , &randomSeed , "Seed for random generator: 0 means seed is generated from timer"));
+			AddParameter(new ParameterDouble("speed"    , .005, 0 , DBL_MAX , &speed ,      "Speed for the variation of object features"));
 			RefParameterByName("fps").SetDefault("5");
-			Init();
 		}
 
 	public:

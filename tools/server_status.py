@@ -1,15 +1,20 @@
 #! /usr/bin/python
 
+# note: Maybe one day, remove dependency to vplib by using a standart html lib by using beautifulsoup4.
+
 import os.path
 import requests
-import sys
 import json
 import time
 import glob
-
 import argparse
-import vplib
-from vplib.HTMLTags import *
+
+try:
+	# These libs are used only to print HTML reports
+	import vplib
+	from vplib.HTMLTags import *
+except:
+	pass
 
 import nagiosplugin
 import logging
@@ -22,8 +27,7 @@ def arguments_parser():
 	""" Define the parser and parse arguments """
 
 	# Main parser
-	parser = argparse.ArgumentParser(description='Print the status of analytics jobs running on server to a file',
-			version=vplib.__version__)
+	parser = argparse.ArgumentParser(description='Print the status of analytics jobs running on server to a file')
 
 	# Events file
 	# Output file
@@ -89,6 +93,13 @@ def arguments_parser():
 			type=int,
 			help='Nb of jobs in error state before raising a critical error')
 
+	# Nb of jobs in error state before raising a critical error
+	parser.add_argument('-C',
+			dest='command',
+			default='',
+			type=str,
+			help='Send a command to all jobs instead before checking status.')
+
 
 	return parser.parse_args()
 
@@ -104,6 +115,8 @@ def lineCount(fname):
 	return sum(1 for line in open(fname))
 
 def appendLogFromLine(fname, nb_line):
+	if fname == "":
+		return ""
 	i=0
 	logBuffer=[]
 	with open(fname, "r") as f:
@@ -209,6 +222,7 @@ def checkStatus(jobDetails, rules):
 def generateReport(jobDetails, filename):
 	if filename == '':
 		return
+	
 	# generate report
 	with open(filename, 'wt') as out:
 
@@ -281,7 +295,7 @@ class VerifySummary(nagiosplugin.Summary):
 		
 		for detail in self.jobDetails:
 			if len(detail['errors']):
-				log += "Job " + detail['hash'] + " has errors(" + ', '.join(detail['errors']) + ')\n'
+				log += "Job %s has %d error(s) (%s)\n" % (detail['hash'], len(detail['errors']), ', '.join(detail['errors']))
 		# log += "rules:\n" + str(self.rules)
 		generateReport(self.jobDetails, self.output)
 		return log
@@ -298,6 +312,13 @@ def main():
 
 	_log.info("Found %d jobs: %s" % (len(jobs), jobs))
 
+	if args.command != '':
+		# For each job
+		for job in jobs:
+			# Send command to read status
+			_log.debug('Send command Status')
+			postQuery(url + '/job/command/' + job, [], {'command': args.command})
+
 	# For each job
 	for job in jobs:
 		# Print detail
@@ -306,14 +327,17 @@ def main():
 		lineStart1 = lineCount(args.logJBoss)
 		expr = args.logDir + '/markus_*%s/markus.log' % job
 		files  = glob.glob(expr)
-		if len(files) != 1:
-			_log.warning('%d files found as %s: %s' % (len(files), expr, str(files)))
+		if len(files) == 0:
+			_log.error('No log file found as %s: %s' % (expr, str(files)))
+			markusLog = ""
+		elif len(files) != 1:
+			_log.warning('%d log files found as %s: %s' % (len(files), expr, str(files)))
 			files = sorted(files, key=lambda x: os.path.getmtime(x))
 			markusLog = files[len(files)-1]
 			_log.warning("Using file %s " % markusLog)
 		else:
 			markusLog = files[0]
-		lineStart2 = lineCount(markusLog)
+		lineStart2 = lineCount(markusLog) if markusLog != "" else 0
 
 		# Send command to read status
 		_log.debug('Send command Status')
@@ -343,12 +367,17 @@ def main():
 	time.sleep(args.delay)
 
 	# A set of rules for the output of job description
-	# TODO: display a clear error message
+	# {'name': 'statusCode1', 'target': 'log1', 'contains': True, 'text': '"code":1000', 
+	#		'descr': 'JBoss must receive the status code 1000. Another value indicates that an exception was caught'},
+	# {'name': 'statusCode2', 'target': 'log2', 'contains': True, 'text': '"code":1000',
+	# 		'descr': 'Markus process must receive the status code 1000. Another value indicates that an exception was caught'},
 	rules = [
-		{'name': 'statusCode1', 'target': 'log1', 'contains': True, 'text': '"code":1000', 
-			'descr': 'JBoss must receive the status code 1000. Another value indicates that an exception was caught'},
-		{'name': 'statusCode2', 'target': 'log2', 'contains': True, 'text': '"code":1000',
-			'descr': 'Markus process must receive the status code 1000. Another value indicates that an exception was caught'},
+		{'name': 'isEmpty', 'target': 'log2', 'contains': True, 'text': ' ',
+			'descr': 'Markus log file is empty. Job is probably not running.'},
+		{'name': 'statusRecovered1', 'target': 'log1', 'contains': True, 'text': 'recovered=true',
+			'descr': 'JBoss must receive the status indicating that the process recovered from the last exception.'},
+		{'name': 'statusRecovered2', 'target': 'log2', 'contains': True, 'text': '"recovered":true',
+			'descr': 'Markus process must receive the status indicating that the process recovered from the last exception.'},
 		{'name': 'cmdSent1', 'target': 'log2', 'contains': True, 'text': 'Command manager.manager.Status returned value', 
 			'descr': 'Markus process must receive and execute command "Status"'},
 		{'name': 'cmdSent2', 'target': 'log2', 'contains': True, 'text': 'Command manager.manager.PrintStatistics returned value', 

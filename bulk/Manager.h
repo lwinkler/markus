@@ -44,19 +44,19 @@ public:
 	class Parameters : public Processable::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Processable::Parameters(x_confReader)
+		Parameters(const ConfigReader& x_confReader) : Processable::Parameters(x_confReader), config(x_confReader)
 		{
-			m_list.push_back(new ParameterInt("nb_frames", 0, 0, INT_MAX, &nbFrames, "Number of frames to process. 0 for infinite. Only works in centralized mode"));
-			m_list.push_back(new ParameterString("arguments", "",         &arguments, "Command-line arguments, for storage only"));
-			m_list.push_back(new ParameterString("aspect_ratio", "", &aspectRatio, "If non-empty, at creation each module width/height are changed to match this aspect ratio. E.g. \"4:3\"."));
-			ParameterStructure::Init();
+			AddParameter(new ParameterInt("nb_frames", 0, 0, INT_MAX, &nbFrames, "Number of frames to process. 0 for infinite. Only works in centralized mode"));
+			AddParameter(new ParameterString("arguments", "",         &arguments, "Command-line arguments, for storage only"));
+			AddParameter(new ParameterString("aspect_ratio", "", &aspectRatio, "If non-empty, at creation each module width/height are changed to match this aspect ratio. E.g. \"4:3\"."));
 		}
 		int nbFrames;
 		std::string arguments; // note: This is used in simulations, see what to do in normal case
 		std::string aspectRatio;
+		ConfigReader config;
 	};
 
-	Manager(ParameterStructure& x_configReader);
+	Manager(ParameterStructure& xr_params);
 	virtual ~Manager();
 	virtual void Reset(bool x_resetInputs = true);
 	virtual void Process() override;
@@ -65,7 +65,15 @@ public:
 	virtual void Start() override;
 	virtual void Stop() override;
 	void SendCommand(const std::string& x_command, std::string x_value);
-	const std::vector<Module*>& GetModules() const {return m_modules; }
+	const std::vector<Module*> RefModules() const
+	{
+		std::vector<Module*> modules; 
+		for(auto elem : m_modules)
+		{
+			modules.push_back(elem.second);
+		}
+		return modules;
+	}
 	inline const Processable& GetModuleByName(const std::string& x_name) const {if(x_name == "manager") assert(false); else return RefModuleByName(x_name);}
 
 	void Rebuild();
@@ -83,7 +91,7 @@ public:
 	{
 		Processable::SetContext(x_context);
 		for(auto& elem : m_modules)
-			elem->SetContext(x_context);
+			elem.second->SetContext(x_context);
 	}
 	virtual const std::string& GetName() const override {static std::string str = "manager"; return str;}
 	virtual double GetRecordingFps() const override
@@ -105,10 +113,10 @@ private:
 	bool m_isConnected   = false;
 	bool m_quitting      = false;
 
-	std::vector<Module *>  m_modules;
-	std::vector<Input *>   m_inputs;
-	std::vector<Module *>  m_autoProcessedModules;
-	std::vector<ParameterStructure *> m_parameters;
+	std::map<int, Module *> m_modules;
+	std::vector<Input *>    m_inputs;
+	std::vector<Module *>   m_autoProcessedModules;
+	std::map<int, ParameterStructure *> m_parameters;
 
 	const FactoryParameters& mr_parametersFactory;
 	const FactoryModules& mr_moduleFactory;

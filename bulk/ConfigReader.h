@@ -125,7 +125,7 @@ private:
 class Configurable
 {
 public:
-	Configurable(ParameterStructure& x_param) : m_param(x_param) {}
+	Configurable(ParameterStructure& x_param);
 	virtual ~Configurable() {}
 	virtual const ParameterStructure& GetParameters() const {return m_param;}
 

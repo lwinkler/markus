@@ -70,14 +70,14 @@ public:
 
 	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
 	{
-		if(m_isLocked)
+		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		mr_value = boost::lexical_cast<T>(rx_value);
 		m_confSource = x_confType;
 	}
 	inline void SetValue(T x_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
 	{
-		if(m_isLocked)
+		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		mr_value = x_value;
 		m_confSource = x_confType;
@@ -152,7 +152,7 @@ public:
 	}
 	virtual void SetValueToDefault()
 	{
-		if(m_isLocked)
+		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		mr_value = m_default;
 		m_confSource = PARAMCONF_DEF;
