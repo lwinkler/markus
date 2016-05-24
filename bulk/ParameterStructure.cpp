@@ -60,6 +60,7 @@ void ParameterStructure::AddParameter(Parameter* xr_param)
 
 	// Directly set the right value
 	xr_param->SetValueToDefault();
+	/*
 	if(m_configReader.GetSubConfig("parameters").IsEmpty())
 	{
 		LOG_WARN(m_logger, "No <parameters/> structure in configuration of " << m_configReader.GetAttribute("name"));
@@ -80,6 +81,7 @@ void ParameterStructure::AddParameter(Parameter* xr_param)
 		xr_param->Print(ss);
 		throw ParameterException(ss.str(), LOC);
 	}
+	*/
 }
 
 /**
@@ -99,7 +101,7 @@ void ParameterStructure::AddParameterForStream(Parameter* xr_param)
 void ParameterStructure::Initialize(const ConfigReader& x_config)
 {
 	// Read config file
-	SetValueToDefault();
+	// SetValueToDefault();
 
 	// Read parameters from config
 	SetFromConfig(x_config);

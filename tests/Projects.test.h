@@ -69,6 +69,7 @@ protected:
 		appConfig.FindRef("parameters>param[name=\"application_name\"]", true).SetValue("TestProjects");
 		appConfig.FindRef("parameters>param[name=\"output_dir\"]"      , true).SetValue("tests/out");
 		Context::Parameters contextParams(appConfig);
+		contextParams.Initialize(appConfig);
 		contextParams.centralized = true;
 		contextParams.autoClean   = false;
 		Context context(contextParams);

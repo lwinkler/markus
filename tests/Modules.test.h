@@ -121,6 +121,7 @@ public:
 		mp_configFile->FindRef("application>parameters>param[name=\"application_name\"]", true).SetValue("TestModule");
 		mp_configFile->FindRef("application>parameters>param[name=\"output_dir\"]"      , true).SetValue("tests/out");
 		mp_contextParams = new Context::Parameters(mp_configFile->Find("application"));
+		mp_contextParams->Initialize(mp_configFile->Find("application"));
 		mp_contextParams->centralized = true;
 		mp_context = new Context(*mp_contextParams);
 

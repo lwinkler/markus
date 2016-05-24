@@ -360,6 +360,7 @@ int main(int argc, char** argv)
 		mainConfig.FindRef("application>parameters>param[name=\"application_name\"]", true).SetValue(appConfig.GetAttribute("name"));
 		mainConfig.FindRef("application>parameters>param[name=\"output_dir\"]"      , true).SetValue(args.outputDir);
 		Context::Parameters contextParameters(mainConfig.Find("application"));
+		contextParameters.Initialize(mainConfig.Find("application"));
 
 		contextParameters.centralized    = args.centralized;
 		contextParameters.robust         = args.robust;
