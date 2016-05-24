@@ -43,7 +43,7 @@ public:
 			AddParameter(new ParameterString("file"        , "in/events.srt", &file      , "Name of the .srt file without extension"));
 			AddParameter(new ParameterString("folder_name" , "events_img"  , &folder    , "Name of the folder to create for images"));
 
-			RefParameterByName("type").SetDefault("CV_8UC3"); // This will probably be ignored
+			RefParameterByName("type").SetDefaultAndValue("CV_8UC3"); // This will probably be ignored
 			RefParameterByName("type").SetValueToDefault();
 		}
 		std::string file;

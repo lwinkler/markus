@@ -38,7 +38,7 @@ public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
 			RefParameterByName("auto_process").SetRange("[1:1]");
-			RefParameterByName("auto_process").SetDefault("1"); // Input must be in real time otherwise they are never called
+			RefParameterByName("auto_process").SetDefaultAndValue("1"); // Input must be in real time otherwise they are never called
 			RefParameterByName("auto_process").SetValueToDefault();
 		}
 	};

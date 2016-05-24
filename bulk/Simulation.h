@@ -40,18 +40,21 @@ public:
 		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader), config(x_confReader)
 		{
 		}
-		ConfigReader config;
+		const ConfigReader& config;
 	};
 
 	Simulation(Parameters& xr_params, const Context& x_context);
 	void Generate(ConfigFile& mainConfig);
 
-protected:
+private:
 	/// Add an entry in the Makefile
 	void AddSimulationEntry(const std::vector<std::string>& x_variationNames, const ConfigFile& x_mainConfig);
 
 	/// Add variation to simulation
 	void AddVariations(std::vector<std::string>& x_variationNames, const ConfigReader& x_varConf, ConfigFile& xr_mainConfig);
+
+	static log4cxx::LoggerPtr m_logger;
+	Parameters& m_param; // note: to save time
 
 	// Streams for generation of the simulation Makefile
 	std::stringstream m_allTargets;
@@ -62,8 +65,5 @@ protected:
 	const std::string m_outputDir;
 	int m_cpt;
 
-private:
-	static log4cxx::LoggerPtr m_logger;
-	Parameters& m_param; // note: to save time
 };
 #endif

@@ -71,6 +71,7 @@ public:
 
 	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) = 0;
 	virtual void SetDefault(const std::string& x_value) = 0;
+	inline void SetDefaultAndValue(const std::string& x_value){SetDefault(x_value); SetValueToDefault();}
 	inline const std::string& GetName() const {return m_name;}
 	virtual const ParameterType& GetParameterType() const = 0;
 	virtual const std::string& GetType() const = 0;

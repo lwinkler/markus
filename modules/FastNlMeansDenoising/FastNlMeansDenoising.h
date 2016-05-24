@@ -44,8 +44,8 @@ public:
 			AddParameter(new ParameterBool ("cielab"   , 0 , 0, 1 , &cielab, "Convert image to CIELAB colorspace and then separately denoise L and AB"));
 
 			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC2,CV_8UC3]");
-			RefParameterByName("width").SetDefault("160");
-			RefParameterByName("height").SetDefault("120");
+			RefParameterByName("width").SetDefaultAndValue("160");
+			RefParameterByName("height").SetDefaultAndValue("120");
 		};
 		float h;
 		int templateWindowSize;

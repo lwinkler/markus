@@ -56,10 +56,10 @@ public:
 			AddParameter(new ParameterString("object_label", "casc", 			&objectLabel,	"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
 
 			RefParameterByName("type").SetRange("[CV_8UC1]");
-			RefParameterByName("type").SetDefault("CV_8UC1");
+			RefParameterByName("type").SetDefaultAndValue("CV_8UC1");
 			// Limit size to accelerate unit tests
-			RefParameterByName("width").SetDefault("160");
-			RefParameterByName("height").SetDefault("120");
+			RefParameterByName("width").SetDefaultAndValue("160");
+			RefParameterByName("height").SetDefaultAndValue("120");
 			RefParameterByName("width").SetRange("[1:1280]");
 			RefParameterByName("height").SetRange("[1:960]");
 			RefParameterByName("filter_file").SetRange("["

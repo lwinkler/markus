@@ -360,7 +360,7 @@ int main(int argc, char** argv)
 		mainConfig.FindRef("application>parameters>param[name=\"application_name\"]", true).SetValue(appConfig.GetAttribute("name"));
 		mainConfig.FindRef("application>parameters>param[name=\"output_dir\"]"      , true).SetValue(args.outputDir);
 		Context::Parameters contextParameters(mainConfig.Find("application"));
-		contextParameters.Initialize(mainConfig.Find("application"));
+		contextParameters.SetFromConfig(mainConfig.Find("application"));
 
 		contextParameters.centralized    = args.centralized;
 		contextParameters.robust         = args.robust;
@@ -466,7 +466,7 @@ int main(int argc, char** argv)
 
 #ifndef MARKUS_NO_GUI
 		// Write the modified params in config and save
-		manager.UpdateConfig(mainConfig);
+		manager.UpdateConfig(appConfig);
 		// Save the last config with modifs. This would cause a problem if we had no write access to the current dir
 		mainConfig.SaveToFile("last_config.xml");
 #endif

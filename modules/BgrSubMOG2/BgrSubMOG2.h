@@ -58,7 +58,7 @@ public:
 			AddParameter(new ParameterBool  ("b_shadow_detection",	false, 	0, 1, &bShadowDetection,	"Enable shadow detection"));
 			AddParameter(new ParameterDouble("learning_rate",	-1, 	-1, 1, &learningRate,	"Learning rate of the model"));
 
-			RefParameterByName("type").SetDefault("CV_8UC3");
+			RefParameterByName("type").SetDefaultAndValue("CV_8UC3");
 			RefParameterByName("type").SetRange("[CV_8UC3]");
 		};
 		int history;

@@ -82,7 +82,7 @@ void Manager::Build()
 			throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name", "(unknown)"), LOC);
 		string moduleType = moduleConfig.Find("parameters>param[name=\"class\"]").GetValue();
 		ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, moduleConfig);
-		tmp2->Initialize(moduleConfig);
+		tmp2->SetFromConfig(moduleConfig);
 
 		if(!m_param.aspectRatio.empty())
 		{

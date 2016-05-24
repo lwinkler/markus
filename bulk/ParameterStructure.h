@@ -36,7 +36,6 @@ class ParameterStructure
 public:
 	ParameterStructure(const ConfigReader& x_configReader);
 	virtual ~ParameterStructure();
-	void Initialize(const ConfigReader& x_config);
 	void SetFromConfig(const ConfigReader& x_config);
 	void UpdateConfig(ConfigReader& xr_config) const;
 	void SetValueToDefault();

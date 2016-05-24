@@ -291,7 +291,7 @@ const ConfigReader ConfigReader::GetSubConfig(const string& x_tagName, const str
 ConfigReader ConfigReader::RefSubConfig(const string& x_tagName, const string& x_attrName, const string& x_attrValue, bool x_allowCreation)
 {
 	if(IsEmpty())
-		throw MkException("Impossible to find node " + x_tagName + " in ConfigReader with name " + x_attrName + "=\"" + x_attrValue + "\"" , LOC);
+		throw MkException("Impossible to find node " + x_tagName + " in ConfigReader with attribute " + x_attrName + "=\"" + x_attrValue + "\"" , LOC);
 
 	TiXmlNode* newNode = mp_node->FirstChild(x_tagName);
 
@@ -644,6 +644,5 @@ vector<ConfigReader> ConfigReader::FindAll(const string& x_searchString) const
 
 Configurable::Configurable(ParameterStructure& x_param) : m_param(x_param)
 {
-	// TODO: When ? m_param.Initialize();
 	m_param.CheckRange(true);
 }

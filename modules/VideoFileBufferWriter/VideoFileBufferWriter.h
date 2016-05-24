@@ -49,7 +49,7 @@ public:
 			AddParameter(new ParameterDouble("buffer_duration_after", 120, 0, 600,    &bufferDurationAfter, "Length of video buffer after activity [s]. If possible this should be longer than the duration before next event."));
 			AddParameter(new ParameterBool("keep_all_recordings"    , 0, 0, 1,        &keepAllRecordings  , "Keep all recordings, event if no event is associated with it."));
 
-			RefParameterByName("type").SetDefault("CV_8UC3");
+			RefParameterByName("type").SetDefaultAndValue("CV_8UC3");
 			RefParameterByName("type").SetRange("[CV_8UC3]");
 		};
 		int    bufferFramesBefore;

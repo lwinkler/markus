@@ -93,22 +93,6 @@ void ParameterStructure::AddParameterForStream(Parameter* xr_param)
 	AddParameter(xr_param);
 }
 
-
-/**
-* @brief Initialize the parameter structure with the value from default or xml configuration
-*/
-// TODO: Avoid call to Init in each module by setting values when param is added
-void ParameterStructure::Initialize(const ConfigReader& x_config)
-{
-	// Read config file
-	// SetValueToDefault();
-
-	// Read parameters from config
-	SetFromConfig(x_config);
-
-	CheckRange(false); //TODO: Keep ?
-}
-
 /**
 * @brief Set the value from xml configuration
 */
@@ -144,6 +128,7 @@ void ParameterStructure::SetFromConfig(const ConfigReader& x_config)
 			throw MkException("Exception while setting parameter " + name + ": " + string(e.what()), LOC);
 		}
 	}
+	CheckRange(false);
 }
 
 /**

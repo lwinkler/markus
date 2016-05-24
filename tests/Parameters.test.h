@@ -54,7 +54,7 @@ public:
 			TS_ASSERT(xr_param.CheckRange() == false);
 		}
 		TS_ASSERT(xr_param.GetConfigurationSource() == PARAMCONF_UNKNOWN);
-		xr_param.SetDefault(x_legalValue);
+		xr_param.SetDefaultAndValue(x_legalValue);
 		xr_param.SetValueToDefault();
 		// cout << xr_param.GetValueString() << " == " <<  x_legalValue << endl;
 		TS_ASSERT(xr_param.GetValueString() == x_legalValue);
