@@ -233,15 +233,15 @@ void Object::Intersect(const Mat& x_image)
 void Object::Randomize(unsigned int& xr_seed, const string& x_requirement, const Size& x_size)
 {
 	SetRect(cv::Rect_<double>(
-				Point2d(rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height),
-				Point2d(rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height))
-		   );
+		Point2d(rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height),
+		Point2d(rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height))
+	);
 	if(rand_r(&xr_seed) % 20 == 0)
 	{
 		width  = 0;
 		height = 0;
 	}
-	if(x_requirement != "")
+	if(!x_requirement.empty())
 	{
 		Json::Value root;
 		Json::Reader reader;
@@ -256,10 +256,10 @@ void Object::Randomize(unsigned int& xr_seed, const string& x_requirement, const
 		Mat bounds(x_size, CV_8UC1);
 		Intersect(bounds);
 	}
-
+	
 	// Add features
 	m_feats.clear();
-	if(x_requirement != "")
+	if(!x_requirement.empty())
 	{
 		Json::Value root;
 		Json::Reader reader;
