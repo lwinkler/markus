@@ -43,7 +43,6 @@ public:
 			AddParameter(new ParameterInt("random_seed" , 0   , 0 , INT_MAX , &randomSeed , "Seed for random generator: 0 means seed is generated from timer"));
 			AddParameter(new ParameterDouble("speed"    , .005, 0 , DBL_MAX , &speed ,      "Speed for the variation of object features"));
 			RefParameterByName("fps").SetDefault("5");
-			RefParameterByName("fps").SetValueToDefault();
 		}
 
 	public:

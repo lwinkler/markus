@@ -42,7 +42,6 @@ public:
 			AddParameter(new ParameterFloat("foreground_thres", 	0.2, 	0, 1,	&foregroundThres,	"Threshold to accept a pixel as foreground"));
 
 			RefParameterByName("type").SetDefault("CV_32FC3");
-			RefParameterByName("type").SetValueToDefault();
 			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3,CV_32FC1,CV_32FC3]");
 		};
 		float backgroundAlpha;

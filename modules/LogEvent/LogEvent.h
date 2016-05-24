@@ -54,7 +54,6 @@ public:
 			AddParameter(new ParameterString("gt_video"    , ""           , &gtVideo   ,  "Video file to use to create the ground truth."));
 
 			RefParameterByName("type").SetDefault("CV_8UC3");
-			RefParameterByName("type").SetValueToDefault();
 			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3]");
 			RefParameterByName("extension").SetRange("[jpg,png]");
 		}

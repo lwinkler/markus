@@ -57,12 +57,9 @@ public:
 
 			RefParameterByName("type").SetRange("[CV_8UC1]");
 			RefParameterByName("type").SetDefault("CV_8UC1");
-			RefParameterByName("type").SetValueToDefault();
 			// Limit size to accelerate unit tests
 			RefParameterByName("width").SetDefault("160");
-			RefParameterByName("width").SetValueToDefault();
 			RefParameterByName("height").SetDefault("120");
-			RefParameterByName("height").SetValueToDefault();
 			RefParameterByName("width").SetRange("[1:1280]");
 			RefParameterByName("height").SetRange("[1:960]");
 			RefParameterByName("filter_file").SetRange("["

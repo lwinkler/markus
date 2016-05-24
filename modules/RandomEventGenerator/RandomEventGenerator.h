@@ -41,10 +41,8 @@ public:
 			AddParameter(new ParameterInt("nb_features", 	4, 	0, 	1000,	 &nbFeatures,	"Number of features per event"));
 			AddParameter(new ParameterInt("random_seed", 	0, 	0, 	INT_MAX, &randomSeed,	"Seed for random generator: 0 means seed is generated from timer"));
 			AddParameter(new ParameterDouble("time_interval", 	0, 	0, 	DBL_MAX, &timeInterval,	"Time interval between events [s]"));
-			RefParameterByName("type").SetValueToDefault();
 			RefParameterByName("type").SetDefault("CV_8UC3");
 			RefParameterByName("fps").SetDefault("5");
-			RefParameterByName("fps").SetValueToDefault();
 		}
 
 	public:

@@ -49,7 +49,6 @@ public:
 			AddParameter(new ParameterBool("prepend_output_directory", 0, 0, 1         , &prependOutputDirectory, "Automatically prepend the output directory to the given file (ex: 'in/objects.srt' will becomes 'out/out_20151002_154035/in/objects.srt')"));
 
 			RefParameterByName("type").SetDefault("CV_8UC3"); // This will probably be ignored
-			RefParameterByName("type").SetValueToDefault();
 		}
 		std::string file;
 		std::string folder;

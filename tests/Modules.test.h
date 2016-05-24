@@ -125,6 +125,7 @@ public:
 		mp_context = new Context(*mp_contextParams);
 
 		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", mp_configFile->Find("application>module[name=\"VideoFileReader0\"]"));
+		mp_fakeConfig->Initialize();
 		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeConfig);
 		mp_fakeInput->SetContext(*mp_context);
 		// note: we need a fake module to create the input streams
@@ -176,6 +177,7 @@ public:
 		try
 		{
 			parameters = m_factoryParameters.Create(x_type, moduleConfig);
+			parameters->Initialize();
 		}
 		catch(ParameterException& e)
 		{

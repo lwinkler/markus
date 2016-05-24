@@ -45,7 +45,6 @@ public:
 			RefParameterByName("width").SetRange("[20:6400]");
 			RefParameterByName("height").SetRange("[20:4800]");
 			RefParameterByName("type").SetDefault("CV_8UC3");
-			RefParameterByName("type").SetValueToDefault();
 		}
 
 		int aperture;
