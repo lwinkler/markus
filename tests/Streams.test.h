@@ -159,9 +159,9 @@ public:
 		mp_fakeParams1 = new Module::Parameters(m_config.FindRef("application>module[name=\"FakeModule\"]", true));
 		mp_fakeParams2 = new Module::Parameters(m_config.FindRef("application>module[name=\"FakeModule\"]", true));
 		mp_fakeParams3 = new Module::Parameters(m_config.FindRef("application>module[name=\"FakeModule\"]", true));
-		mp_fakeParams1->SetFromConfig(m_config.Find("application>module[name=\"FakeModule\"]"));
-		mp_fakeParams2->SetFromConfig(m_config.Find("application>module[name=\"FakeModule\"]"));
-		mp_fakeParams3->SetFromConfig(m_config.Find("application>module[name=\"FakeModule\"]"));
+		mp_fakeParams1->Read(m_config.Find("application>module[name=\"FakeModule\"]"));
+		mp_fakeParams2->Read(m_config.Find("application>module[name=\"FakeModule\"]"));
+		mp_fakeParams3->Read(m_config.Find("application>module[name=\"FakeModule\"]"));
 		mp_fakeParams1->width  = 320;
 		mp_fakeParams1->height = 240;
 		mp_fakeParams1->type   = CV_8UC3;

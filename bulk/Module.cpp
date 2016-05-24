@@ -44,7 +44,7 @@ Module::Module(ParameterStructure& xr_params) :
 	Processable(xr_params),
 	m_param(dynamic_cast<Parameters&>(xr_params))
 {
-	LOG_INFO(m_logger, "Create module " << m_name);
+	LOG_INFO(m_logger, "Create module " << GetName());
 }
 
 Module::~Module()
@@ -89,9 +89,6 @@ void Module::Reset()
 	m_timerProcessFrame.Reset();
 	m_timerWaiting.Reset();
 	m_timerConversion.Reset();
-
-	// Lock all parameters if needed // TODO lock in Configurable constructor
-	m_param.LockIfRequired();
 
 	// This must be done only once to avoid troubles in the GUI
 	// Add module controller
@@ -321,7 +318,7 @@ void Module::Export(ostream& rx_os, int x_indentation) const
 {
 	string tabs(x_indentation, '\t');
 	tabs = string(x_indentation, '\t');
-	rx_os<<tabs<<"<module name=\""<<m_name<<"\" description=\""<<GetDescription()<<"\">"<<endl;
+	rx_os<<tabs<<"<module name=\""<<GetName()<<"\" description=\""<<GetDescription()<<"\">"<<endl;
 	tabs = string(x_indentation + 1, '\t');
 	rx_os<<tabs<<"<parameters>"<<endl;
 	for(const auto & elem : m_param.GetList())
@@ -399,7 +396,7 @@ void Module::Serialize(ostream& x_out, const string& x_dir) const
 {
 	Json::Value root;
 
-	root["name"]                 = m_name;
+	root["name"]                 = GetName();
 	// root["timer_conversion"]      = m_timerConversion.GetMsLong();
 	// root["timer_processing"]      = m_timerProcessFrame.GetMsLong();
 	// root["timer_waiting"]         = m_timerWaiting.GetMsLong();
@@ -442,10 +439,8 @@ void Module::Deserialize(istream& x_in, const string& x_dir)
 	Json::Value root;
 	x_in >> root;
 
-	m_name                 = root["name"].asString();
-	// m_timerConversion.Reset();
-	// m_timerProcessFrame.Reset();
-	// m_timerWaiting.Reset();
+	if(GetName() != root["name"].asString())
+		throw MkException("Name does not match in serialization for module " + GetName(), LOC);
 	m_countProcessedFrames = root["countProcessedFrames"].asInt64();
 
 	stringstream ss;

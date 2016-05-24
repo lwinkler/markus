@@ -92,7 +92,7 @@ private:
 	bool m_hasRecovered     = true; // Flag to test if all modules have recovered from the last exception, only working if centralized
 	MkException m_lastException;    // Field to store the last exception
 
-	const Parameters& m_param;
+	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 	ModuleTimer * mp_moduleTimer = nullptr;
 	const Context* mp_context = nullptr; /// context given by Manager (output directory, ...)

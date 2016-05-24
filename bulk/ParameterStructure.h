@@ -36,10 +36,11 @@ class ParameterStructure
 public:
 	ParameterStructure(const ConfigReader& x_configReader);
 	virtual ~ParameterStructure();
-	void SetFromConfig(const ConfigReader& x_config);
-	void UpdateConfig(ConfigReader& xr_config) const;
+	void Read(const ConfigReader& x_config);
+	void Write(ConfigReader& xr_config) const;
 	void SetValueToDefault();
-	virtual void CheckRange(bool x_checkRelated) const;
+	virtual void CheckRange() const;
+	void CheckRange(const ConfigReader& x_config) const;
 	void PrintParameters() const;
 	//void SetValueByName(const std::string& x_name, const std::string& x_value, ParameterConfigType x_configType = PARAMCONF_UNKNOWN);
 	const Parameter & GetParameterByName(const std::string& x_name) const;
@@ -49,6 +50,7 @@ public:
 	bool ParameterExists(const std::string& x_name) const;
 	void AddParameter(Parameter* xr_param);
 	void AddParameterForStream(Parameter* xr_param);
+	inline const std::string& GetName() const {return m_name;}
 
 protected:
 	Parameter & RefParameterByName(const std::string& x_name);
@@ -56,9 +58,8 @@ protected:
 
 private:
 	std::vector<Parameter*> m_list;
-	std::string m_moduleName;
+	std::string m_name;
 
-	ConfigReader m_configReader; // Warning this still contains reference to the tinyxml config! // TODO: maybe avoid storing this
 	static log4cxx::LoggerPtr m_logger;
 	// Note: Disable copies of parameters as a safety
 	DISABLE_COPY(ParameterStructure)

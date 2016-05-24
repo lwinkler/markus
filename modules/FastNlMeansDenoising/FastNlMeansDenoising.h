@@ -53,9 +53,9 @@ public:
 		bool cielab;
 
 		// Redefine CheckRange: we want to add new conditions
-		virtual void CheckRange(bool x_checkRelated) const
+		virtual void CheckRange() const
 		{
-			Module::Parameters::CheckRange(x_checkRelated);
+			Module::Parameters::CheckRange();
 			cv::Mat m(1,1, this->type);
 			if(cielab && m.channels() != 3)
 				throw ParameterException("Cielab color space is only for images with 3 channels", LOC);

@@ -124,7 +124,6 @@ FatalException::FatalException(MkExceptionCode x_code, const string& x_name, con
 	m_fatal = true;
 }
 
-// TODO: Verify that these classes are used
 GrabFreezeException::GrabFreezeException(const string& x_descr, const string& x_position, const string& x_function) :
 	FatalException(MK_FATAL_GRAB_FREEZE, "grab_freeze", "GrabFreezeException: " + x_descr, x_position, x_function)
 {}

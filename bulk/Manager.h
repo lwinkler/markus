@@ -86,7 +86,7 @@ public:
 	static std::string CreateOutputDir(const std::string& x_outputDir = "", const std::string& x_configFile = "");
 	inline void ListModulesTypes(std::vector<std::string>& xr_types) {mr_moduleFactory.List(xr_types);}
 	void WriteStateToDirectory(const std::string& x_directory) const;
-	void UpdateConfig(ConfigReader& xr_config);
+	void WriteConfig(ConfigReader& xr_config);
 	inline virtual void SetContext(const Context& x_context) override
 	{
 		Processable::SetContext(x_context);

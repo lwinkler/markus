@@ -60,8 +60,7 @@ public:
 
 	inline void AddEvent(const std::string& x_name) {m_events.push_back(x_name);}
 	inline void AddCommand(const Command& x_command) {m_commands.push_back(x_command);}
-	inline void Reset()                            {m_events.clear(); m_interruptions.clear(); m_commands.clear();}
-	inline void ClearEvents()                      {m_events.clear(); m_commands.clear();}
+	inline void Reset()                      {m_events.clear(); m_commands.clear();}
 
 	void Configure(const ConfigReader& x_config);
 	std::vector<Command> ReturnCommandsToSend();
@@ -69,6 +68,8 @@ public:
 
 
 protected:
+
+	// state
 	std::vector<std::string> m_events;
 	std::vector<Command>     m_commands;
 	std::map<std::string, std::vector<Interruption> > m_interruptions;

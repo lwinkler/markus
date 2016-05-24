@@ -33,7 +33,7 @@ log4cxx::LoggerPtr Processable::m_logger(log4cxx::Logger::getLogger("Processable
 Processable::Processable(ParameterStructure& xr_params) :
 	Configurable(xr_params),
 	m_lastException(MK_EXCEPTION_NORMAL, "normal", "No exception was thrown", "", ""),
-	m_param(dynamic_cast<const Parameters&>(xr_params)),
+	m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_interruptionManager(InterruptionManager::GetInst())
 {
 }
@@ -49,7 +49,11 @@ Processable::~Processable()
 void Processable::Reset()
 {
 	m_param.PrintParameters();
-	m_param.CheckRange(GetName() != "manager");
+	m_param.CheckRange();
+
+	// Lock all parameters if needed
+	// note: maybe there is another place to do this: explicitely call after reading parameters
+	m_param.LockIfRequired();
 
 	// Add the module timer
 	// Autoprocess is on for modules if decentralized and for manager if centralized

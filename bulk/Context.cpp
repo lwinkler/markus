@@ -39,7 +39,7 @@ Context::Context(ParameterStructure& xr_params) :
 	m_param(dynamic_cast<const Parameters&>(xr_params))
 {
 	if(m_param.configFile.empty())
-		throw MkException("Config file name is empty", LOC); // TODO: Maybe extract from ConfigReader
+		throw MkException("Config file name is empty", LOC);
 
 	m_outputDir = CreateOutputDir(m_param.outputDir);
 	if(m_param.jobId.empty())

@@ -33,8 +33,7 @@ log4cxx::LoggerPtr ParameterStructure::m_logger(log4cxx::Logger::getLogger("Para
 
 
 ParameterStructure::ParameterStructure(const ConfigReader& x_configReader):
-	m_configReader(x_configReader),
-	m_moduleName(x_configReader.GetAttribute("name", "unnamed"))
+	m_name(x_configReader.GetAttribute("name", "unnamed"))
 {
 	m_writeAllParamsToConfig = false;
 }
@@ -54,7 +53,7 @@ void ParameterStructure::AddParameter(Parameter* xr_param)
 	for(const auto elem : m_list)
 	{
 		if(elem->GetName() == xr_param->GetName())
-			throw MkException("Try to add a parameter (or input/output) with an existing name \"" + xr_param->GetName() + "\" in module " + m_moduleName,  LOC);
+			throw MkException("Try to add a parameter (or input/output) with an existing name \"" + xr_param->GetName() + "\" in module " + m_name,  LOC);
 	}
 	m_list.push_back(xr_param);
 
@@ -96,7 +95,6 @@ void ParameterStructure::AddParameterForStream(Parameter* xr_param)
 /**
 * @brief Set the value from xml configuration
 */
-// TODO: still usefull ?
 void ParameterStructure::LockIfRequired()
 {
 	for(auto& param : m_list)
@@ -108,7 +106,7 @@ void ParameterStructure::LockIfRequired()
 /**
 * @brief Set the value from xml configuration
 */
-void ParameterStructure::SetFromConfig(const ConfigReader& x_config)
+void ParameterStructure::Read(const ConfigReader& x_config)
 {
 	for(const auto& conf : x_config.FindAll("parameters>param"))
 	{
@@ -128,13 +126,13 @@ void ParameterStructure::SetFromConfig(const ConfigReader& x_config)
 			throw MkException("Exception while setting parameter " + name + ": " + string(e.what()), LOC);
 		}
 	}
-	CheckRange(false);
+	CheckRange();
 }
 
 /**
 * @brief Save all values and prepare xml configuration for writing
 */
-void ParameterStructure::UpdateConfig(ConfigReader& xr_config) const
+void ParameterStructure::Write(ConfigReader& xr_config) const
 {
 	ConfigReader conf = xr_config.Find("parameters");
 
@@ -164,7 +162,7 @@ const Parameter& ParameterStructure::GetParameterByName(const string& x_name) co
 		}
 	}
 
-	throw ParameterException("Parameter not found in module " + m_moduleName + ": " + x_name, LOC);
+	throw ParameterException("Parameter not found in module " + m_name + ": " + x_name, LOC);
 }
 
 /**
@@ -203,7 +201,7 @@ Parameter& ParameterStructure::RefParameterByName(const string& x_name)
 		}
 	}
 
-	throw ParameterException("Parameter not found in module " + m_moduleName + ": " + x_name, LOC);
+	throw ParameterException("Parameter not found in module " + m_name + ": " + x_name, LOC);
 }
 
 
@@ -223,31 +221,35 @@ void ParameterStructure::SetValueToDefault()
 /**
 * @brief  Check that the parameter values are in range [min;max] and throw an exception if not
 *
-* @param x_checkRelated Check that all parameters in config are related to the module
+* @param x_config Config to check
 */
-void ParameterStructure::CheckRange(bool x_checkRelated) const
+void ParameterStructure::CheckRange(const ConfigReader& x_config) const
 {
-	if(x_checkRelated)
+	// Check that all parameters in config are related to the module
+	// if(m_configReader.Find("parameters").IsEmpty())
+	// return;
+	for(const auto& conf : x_config.FindAll("parameters>param"))
 	{
-		// Check that all parameters in config are related to the module
-		// if(m_configReader.Find("parameters").IsEmpty())
-		// return;
-		for(const auto& conf : m_configReader.FindAll("parameters>param"))
+		string name = conf.GetAttribute("name");
+		try
 		{
-			string name = conf.GetAttribute("name");
-			try
-			{
-				GetParameterByName(name);
-			}
-			catch(ParameterException& e)
-			{
-				// TODO: This logs every time we override camera_id or job_id
-				LOG_WARN(m_logger, "Exception in CheckRange: " << e.what());
-			}
+			GetParameterByName(name);
+		}
+		catch(ParameterException& e)
+		{
+			// TODO: This logs every time we override camera_id or job_id
+			LOG_WARN(m_logger, "Exception in CheckRange: " << e.what());
 		}
 	}
+	CheckRange();
+}
 
 
+/**
+* @brief  Check that the parameter values are in range [min;max] and throw an exception if not
+*/
+void ParameterStructure::CheckRange() const
+{
 	// Check that each parameter's value is within range
 	for(const auto & elem : m_list)
 	{

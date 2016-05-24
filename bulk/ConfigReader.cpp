@@ -644,5 +644,5 @@ vector<ConfigReader> ConfigReader::FindAll(const string& x_searchString) const
 
 Configurable::Configurable(ParameterStructure& x_param) : m_param(x_param)
 {
-	m_param.CheckRange(true);
+	m_param.CheckRange();
 }

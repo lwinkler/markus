@@ -56,6 +56,7 @@ Manager::Manager(ParameterStructure& xr_params) :
 {
 	LOG_INFO(m_logger, "Create manager");
 	Build();
+	m_interruptionManager.Configure(m_param.config);
 }
 
 Manager::~Manager()
@@ -82,7 +83,8 @@ void Manager::Build()
 			throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name", "(unknown)"), LOC);
 		string moduleType = moduleConfig.Find("parameters>param[name=\"class\"]").GetValue();
 		ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, moduleConfig);
-		tmp2->SetFromConfig(moduleConfig);
+		tmp2->Read(moduleConfig);
+		tmp2->CheckRange(moduleConfig);
 
 		if(!m_param.aspectRatio.empty())
 		{
@@ -102,7 +104,6 @@ void Manager::Build()
 			LOG_INFO(m_logger, "Change aspect ratio of module of type " + moduleType + " to " + to_string(mp.width) + "x" + to_string(mp.height) + " to match " + m_param.aspectRatio);
 		}
 		Module * tmp1 = mr_moduleFactory.Create(moduleType, *tmp2);
-		tmp1->SetName(moduleConfig.GetAttribute("name")); // TODO one day add name as a standard parameter
 
 		LOG_DEBUG(m_logger, "Add module " << tmp1->GetName() << " to list input=" << (tmp1->IsInput() ? "yes" : "no"));
 		int id = boost::lexical_cast<int>(moduleConfig.GetAttribute("id"));
@@ -188,6 +189,7 @@ void Manager::Stop()
 void Manager::Connect()
 {
 	Processable::Reset();
+	m_interruptionManager.Reset();
 
 	if(m_isConnected)
 		throw MkException("Manager can only connect modules once", LOC);
@@ -255,7 +257,6 @@ void Manager::Reset(bool x_resetInputs)
 	GetContext().GetParameters().PrintParameters();
 
 	Processable::Reset();
-	m_interruptionManager.Configure(m_param.config); // TODO: When do we call reset ?
 
 	// Reset timers
 	// m_timerConvertion = 0;
@@ -581,12 +582,12 @@ string Manager::CreateOutputDir(const string& x_outputDir, const string& x_confi
 /**
 * @brief Save the configuration of manager and modules to file
 */
-void Manager::UpdateConfig(ConfigReader& xr_config)
+void Manager::WriteConfig(ConfigReader& xr_config)
 {
 	// Set all config ready to be saved
 	for(auto & elem : m_parameters)
-		elem.second->UpdateConfig(xr_config);
-	m_param.UpdateConfig(xr_config);
+		elem.second->Write(xr_config);
+	m_param.Write(xr_config);
 }
 
 /**
