@@ -70,6 +70,8 @@ public:
 
 	virtual ~Context();
 	Context(ParameterStructure& xr_params);
+
+	// note: All public methods must be thread-safe
 	static std::string Version(bool x_full);
 	inline const std::string& GetOutputDir() const {if(m_outputDir.empty())throw MkException("Output dir has not been created", LOC); return m_outputDir;}
 	inline const std::string& GetApplicationName() const {return m_param.applicationName;}
