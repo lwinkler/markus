@@ -91,5 +91,6 @@ private:
 	DISABLE_COPY(Context)
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
+	static bool m_unique;
 };
 #endif

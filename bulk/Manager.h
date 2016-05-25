@@ -83,7 +83,6 @@ public:
 	void PrintStatistics();
 	virtual bool ManageInterruptions(bool x_continueFlag) override;
 	inline void Quit() {m_quitting = true;}
-	static std::string CreateOutputDir(const std::string& x_outputDir = "", const std::string& x_configFile = "");
 	inline void ListModulesTypes(std::vector<std::string>& xr_types) {mr_moduleFactory.List(xr_types);}
 	void WriteStateToDirectory(const std::string& x_directory) const;
 	void WriteConfig(ConfigReader& xr_config);

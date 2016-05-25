@@ -33,11 +33,15 @@
 using namespace std;
 
 log4cxx::LoggerPtr Context::m_logger(log4cxx::Logger::getLogger("Context"));
+bool Context::m_unique = false;
 
 Context::Context(ParameterStructure& xr_params) :
 	Configurable(xr_params),
 	m_param(dynamic_cast<const Parameters&>(xr_params))
 {
+	if(m_unique)
+		throw MkException("More than one Context object was created. This should never happen.", LOC);
+	m_unique = true;
 	if(m_param.configFile.empty())
 		throw MkException("Config file name is empty", LOC);
 
@@ -118,6 +122,7 @@ Context::~Context()
 	{
 		LOG_ERROR(m_logger, "Exception thrown while archiving: " << e.what());
 	}
+	m_unique = false;
 }
 
 /**
