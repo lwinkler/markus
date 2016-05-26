@@ -26,10 +26,6 @@
 #include "util.h"
 #include "version.h"
 
-#include <fstream>
-#include <unistd.h>
-
-
 using namespace std;
 
 log4cxx::LoggerPtr Context::m_logger(log4cxx::Logger::getLogger("Context"));
@@ -85,7 +81,7 @@ Context::~Context()
 			if(m_param.archiveDir != "")
 			{
 				LOG_INFO(m_logger, "Working directory moved to " + m_param.archiveDir);
-				SYSTEM("mkdir -p " + m_param.archiveDir);
+				MkDir(m_param.archiveDir);
 				SYSTEM("mv " + m_outputDir + " " + m_param.archiveDir + "/");
 			}
 			else
@@ -99,7 +95,7 @@ Context::~Context()
 			if(m_param.archiveDir != "")
 			{
 				LOG_INFO(m_logger, "Working directory moved to " + m_param.archiveDir);
-				SYSTEM("mkdir -p " + m_param.archiveDir);
+				MkDir(m_param.archiveDir);
 				SYSTEM("mv " + m_outputDir + " " + m_param.archiveDir + "/");
 			}
 			else
@@ -139,7 +135,7 @@ string Context::CreateOutputDir(const string& x_outputDir)
 	{
 		if(x_outputDir == "")
 		{
-			SYSTEM("mkdir -p out/");
+			MkDir("out/");
 			outputDir = "out/out_" + timeStamp();
 			int16_t trial = 0; // Must NOT be a char to avoid concatenation problems!
 			string tmp = outputDir;
@@ -149,7 +145,7 @@ string Context::CreateOutputDir(const string& x_outputDir)
 			{
 				try
 				{
-					SYSTEM("mkdir \"" + outputDir + "\"");
+					MkDir(outputDir);
 					trial = 250;
 				}
 				catch(...)
@@ -172,7 +168,7 @@ string Context::CreateOutputDir(const string& x_outputDir)
 		{
 			// If the name is specified do not check if the direcory exists
 			outputDir = x_outputDir;
-			SYSTEM("mkdir -p \"" + outputDir + "\"");
+			MkDir(outputDir);
 
 			// note: do not log as logger may not be initialized
 			// Copy config file to output directory
@@ -220,4 +216,14 @@ string Context::Version(bool x_full)
 		ss<<VERSION_STRING<<","<<VERSION_STRING2;
 
 	return ss.str();
+}
+
+/**
+* @brief Create a directory inside the output directory
+*
+* @param x_directory Directory nema
+*/
+void Context::MkDir(const std::string& x_directory)
+{
+	SYSTEM("mkdir -p " + x_directory);
 }

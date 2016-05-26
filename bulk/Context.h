@@ -24,7 +24,7 @@
 #ifndef CONTEXT_H
 #define CONTEXT_H
 
-#include <string>
+#include <fstream>
 #include <log4cxx/logger.h>
 #include "MkException.h"
 #include "ConfigReader.h"
@@ -71,6 +71,9 @@ public:
 	virtual ~Context();
 	Context(ParameterStructure& xr_params);
 
+	// All file system methods
+	void MkDir(const std::string& x_directory);
+
 	// note: All public methods must be thread-safe
 	static std::string Version(bool x_full);
 	inline const std::string& GetOutputDir() const {if(m_outputDir.empty())throw MkException("Output dir has not been created", LOC); return m_outputDir;}
@@ -92,5 +95,13 @@ private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 	static bool m_unique;
+};
+
+class MkOfstream : public std::ofstream
+{
+public:
+	MkOfstream(const Context& x_context, const std::string& x_fileName, ios_base::openmode x_mode = ios_base::out)
+		: std::ofstream(/* TODO x_context.GetOutputDir() + "/" + */x_fileName, x_mode)
+	{}
 };
 #endif

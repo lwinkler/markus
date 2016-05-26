@@ -154,7 +154,7 @@ void Manager::Rebuild()
 	Destroy();
 	Build();
 	for(auto& elem : m_modules)
-		elem.second->SetContext(GetContext());
+		elem.second->SetContext(RefContext());
 	m_isConnected = false;
 	Connect();
 	Reset();
@@ -296,7 +296,7 @@ void Manager::Reset(bool x_resetInputs)
 */
 void Manager::Process()
 {
-	WriteLock lock(m_lock);
+	WriteLock lock(RefLock());
 	assert(m_isConnected); // Modules must be connected before processing
 	MkException lastException(MK_EXCEPTION_NORMAL, "normal", "No exception was thrown", "", "");
 
@@ -425,7 +425,6 @@ void Manager::CreateEditorFiles(const string& x_fileName)
 		map<string,vector<string>> categories;
 		Json::Value modules_json;
 
-		SYSTEM("mkdir -p modules");
 		vector<string> moduleTypes;
 		mr_moduleFactory.List(moduleTypes);
 		int id = 0;
@@ -525,17 +524,15 @@ void Manager::WriteConfig(ConfigReader& xr_config)
 *
 * @param x_directory Output directory
 */
-void Manager::WriteStateToDirectory(const string& x_directory) const
+void Manager::WriteStateToDirectory(const string& x_directory)
 {
 	string directory = GetContext().GetOutputDir() + "/" + x_directory;
-	SYSTEM("mkdir -p " + directory);
+	RefContext().MkDir(directory);
 	for(const auto & elem : m_modules)
 	{
 		string fileName = directory + "/" + elem.second->GetName() + ".json";
-		ofstream of;
-		of.open(fileName.c_str());
+		MkOfstream of(RefContext(), fileName);
 		elem.second->Serialize(of, directory);
-		of.close();
 	}
 	LOG_INFO(m_logger, "Written state of the manager and all modules to " << directory);
 }

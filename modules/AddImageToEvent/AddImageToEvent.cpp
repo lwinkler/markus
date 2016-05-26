@@ -56,7 +56,7 @@ void AddImageToEvent::Reset()
 	Module::Reset();
 
 	m_folder  = GetContext().GetOutputDir() + "/" + m_param.folder + "/";
-	SYSTEM("mkdir -p " + m_folder);
+	RefContext().MkDir(m_folder);
 	m_saveImage1 = m_inputStreams.at(1)->IsConnected();
 	// m_saveImage2 = m_inputStreams.at(2)->IsConnected();
 }

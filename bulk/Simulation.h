@@ -43,7 +43,7 @@ public:
 		const ConfigReader& config;
 	};
 
-	Simulation(Parameters& xr_params, const Context& x_context);
+	Simulation(Parameters& xr_params, Context& x_context);
 	void Generate(ConfigFile& mainConfig);
 
 private:

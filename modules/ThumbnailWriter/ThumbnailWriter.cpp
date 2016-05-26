@@ -78,7 +78,7 @@ void ThumbnailWriter::Reset()
 {
 	Module::Reset();
 	// m_folderName  = Manager::OutputDir() + "/" + m_param.folder + "/";
-	// SYSTEM("mkdir -p " + m_folderName);
+	// RefContext().MkDir(m_folderName);
 }
 
 void ThumbnailWriter::ProcessFrame()
@@ -98,7 +98,7 @@ void ThumbnailWriter::ProcessFrame()
 		ofstream of(ss2.str().c_str());
 		if(!of.is_open())
 		{
-			SYSTEM("mkdir -p " + folderName)
+			RefContext().MkDir(folderName);
 			of.open(ss2.str().c_str());
 			if(!of.is_open())
 				throw MkException("Impossible to create file " + ss2.str(), LOC);

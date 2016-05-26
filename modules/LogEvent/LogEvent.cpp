@@ -64,7 +64,7 @@ void LogEvent::Reset()
 	m_saveImage2 = m_inputStreams.at(2)->IsConnected();
 
 	m_folder  = GetContext().GetOutputDir() + "/" + m_param.folder + "/";
-	SYSTEM("mkdir -p " + m_folder);
+	RefContext().MkDir(m_folder);
 }
 
 void LogEvent::ProcessFrame()
@@ -133,7 +133,7 @@ void LogEvent::CompareWithGroundTruth()
 	try
 	{
 		string outDir = GetContext().GetOutputDir() + "/analysis";
-		SYSTEM("mkdir -p " + outDir);
+		RefContext().MkDir(outDir);
 		if(!m_param.gtFile.empty())
 			SYSTEM("cp " + m_param.gtFile + " " + outDir);
 		stringstream cmd;

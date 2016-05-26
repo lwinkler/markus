@@ -43,7 +43,7 @@ inline ConfigReader manOrMod(ConfigReader xr_mainConfig, const string& x_name)
 }
 
 
-Simulation::Simulation(Parameters& xr_params, const Context& x_context) :
+Simulation::Simulation(Parameters& xr_params, Context& x_context) :
 	Configurable(xr_params),
 	m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_managerParams(m_param.config),

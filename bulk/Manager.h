@@ -84,9 +84,9 @@ public:
 	virtual bool ManageInterruptions(bool x_continueFlag) override;
 	inline void Quit() {m_quitting = true;}
 	inline void ListModulesTypes(std::vector<std::string>& xr_types) {mr_moduleFactory.List(xr_types);}
-	void WriteStateToDirectory(const std::string& x_directory) const;
+	void WriteStateToDirectory(const std::string& x_directory);
 	void WriteConfig(ConfigReader& xr_config);
-	inline virtual void SetContext(const Context& x_context) override
+	inline virtual void SetContext(Context& x_context) override
 	{
 		Processable::SetContext(x_context);
 		for(auto& elem : m_modules)

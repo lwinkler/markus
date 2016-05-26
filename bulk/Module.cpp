@@ -107,7 +107,7 @@ void Module::Reset()
 	}
 
 	if(m_param.cached == CachedState::WRITE_CACHE)
-		SYSTEM("mkdir -p " + GetContext().GetOutputDir() + "/cache/");
+		RefContext().MkDir(GetContext().GetOutputDir() + "/cache");
 }
 
 /**
@@ -218,7 +218,7 @@ void Module::ComputeCurrentTimeStamp()
 void Module::Process()
 {
 	m_timerWaiting.Start();
-	WriteLock lock(m_lock);
+	WriteLock lock(RefLock());
 	try
 	{
 		if(!m_param.autoProcess && !ProcessingCondition())
@@ -537,13 +537,11 @@ void Module::WriteToCache() const
 	for(const auto &elem : m_outputStreams)
 	{
 		if(!elem.second->IsConnected()) continue;
-		string directory = GetContext().GetOutputDir() + "/cache/";
+		string directory = GetContext().GetOutputDir() + "/cache";
 		stringstream fileName;
 		fileName << directory << GetName() << "." << elem.second->GetName() << "." << m_currentTimeStamp << ".json";
-		ofstream of;
-		of.open(fileName.str().c_str());
+		MkOfstream of(RefContext(), fileName.str().c_str());
 		elem.second->Serialize(of, directory);
-		of.close();
 	}
 }
 
