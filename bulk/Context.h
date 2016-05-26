@@ -73,6 +73,10 @@ public:
 
 	// All file system methods
 	void MkDir(const std::string& x_directory);
+	std::string ReserveFile(const std::string& x_file);
+	void FreeFile(const std::string& x_file);
+	void Rm(const std::string& x_fileName);
+	void RmDir(const std::string& x_directory);
 
 	// note: All public methods must be thread-safe
 	static std::string Version(bool x_full);
@@ -86,6 +90,9 @@ public:
 	const Parameters& GetParameters() const {return m_param;}
 
 protected:
+	inline static void mkDir(const std::string& x_directory) {SYSTEM("mkdir -p " + x_directory);}
+	inline static void rm(const std::string& x_file) {SYSTEM("rm " + x_file);}
+	inline static void rmDir(const std::string& x_directory) {SYSTEM("rm -r " + x_directory);}
 	std::string CreateOutputDir(const std::string& x_outputDir = "");
 	std::string m_outputDir;
 	std::string m_jobId;
@@ -100,8 +107,19 @@ private:
 class MkOfstream : public std::ofstream
 {
 public:
-	MkOfstream(const Context& x_context, const std::string& x_fileName, ios_base::openmode x_mode = ios_base::out)
-		: std::ofstream(/* TODO x_context.GetOutputDir() + "/" + */x_fileName, x_mode)
-	{}
+	MkOfstream(Context& x_context, const std::string& x_fileName, ios_base::openmode x_mode = ios_base::out)
+		: std::ofstream(x_context.GetOutputDir() + "/" + x_fileName, x_mode),
+		mr_context(x_context),
+		m_fileName(x_fileName)
+	{
+		mr_context.ReserveFile(m_fileName);
+	}
+	~MkOfstream()
+	{
+		mr_context.FreeFile(m_fileName);
+	}
+private:
+	Context& mr_context;
+	std::string m_fileName;
 };
 #endif

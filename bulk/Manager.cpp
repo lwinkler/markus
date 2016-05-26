@@ -373,7 +373,7 @@ void Manager::PrintStatistics()
 
 	// Create an XML file to summarize CPU usage
 	//     if output dir is empty, write to /tmp
-	string benchFileName = ((IsContextSet() && !GetContext().IsOutputDirEmpty()) ? GetContext().GetOutputDir() : "/tmp") + "/benchmark.xml";
+	string benchFileName = (IsContextSet() && !GetContext().IsOutputDirEmpty()) ? RefContext().ReserveFile("benchmark.xml") : "/tmp/benchmark" + timeStamp() +  ".xml";
 	ConfigFile benchSummary(benchFileName, true);
 	ConfigReader conf = benchSummary.FindRef("benchmark", true);
 
@@ -526,15 +526,13 @@ void Manager::WriteConfig(ConfigReader& xr_config)
 */
 void Manager::WriteStateToDirectory(const string& x_directory)
 {
-	string directory = GetContext().GetOutputDir() + "/" + x_directory;
-	RefContext().MkDir(directory);
+	RefContext().MkDir(x_directory);
 	for(const auto & elem : m_modules)
 	{
-		string fileName = directory + "/" + elem.second->GetName() + ".json";
-		MkOfstream of(RefContext(), fileName);
-		elem.second->Serialize(of, directory);
+		MkOfstream of(RefContext(), x_directory + "/" + elem.second->GetName() + ".json");
+		elem.second->Serialize(of, GetContext().GetOutputDir() + "/" + x_directory);
 	}
-	LOG_INFO(m_logger, "Written state of the manager and all modules to " << directory);
+	LOG_INFO(m_logger, "Written state of the manager and all modules to " << GetContext().GetOutputDir() + "/" + x_directory);
 }
 
 

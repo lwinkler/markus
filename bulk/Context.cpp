@@ -81,13 +81,13 @@ Context::~Context()
 			if(m_param.archiveDir != "")
 			{
 				LOG_INFO(m_logger, "Working directory moved to " + m_param.archiveDir);
-				MkDir(m_param.archiveDir);
+				mkDir(m_param.archiveDir);
 				SYSTEM("mv " + m_outputDir + " " + m_param.archiveDir + "/");
 			}
 			else
 			{
 				LOG_INFO(m_logger, "Working directory deleted");
-				SYSTEM("rm -rf " + m_outputDir);
+				rmDir(m_outputDir);
 			}
 		}
 		else
@@ -95,7 +95,7 @@ Context::~Context()
 			if(m_param.archiveDir != "")
 			{
 				LOG_INFO(m_logger, "Working directory moved to " + m_param.archiveDir);
-				MkDir(m_param.archiveDir);
+				mkDir(m_param.archiveDir);
 				SYSTEM("mv " + m_outputDir + " " + m_param.archiveDir + "/");
 			}
 			else
@@ -104,7 +104,7 @@ Context::~Context()
 				if(empty)
 				{
 					LOG_INFO(m_logger, "Removing empty directory " << m_outputDir);
-					SYSTEM("rm -r " + m_outputDir);
+					rmDir(m_outputDir);
 				}
 				else
 				{
@@ -135,7 +135,7 @@ string Context::CreateOutputDir(const string& x_outputDir)
 	{
 		if(x_outputDir == "")
 		{
-			MkDir("out/");
+			mkDir("out");
 			outputDir = "out/out_" + timeStamp();
 			int16_t trial = 0; // Must NOT be a char to avoid concatenation problems!
 			string tmp = outputDir;
@@ -145,7 +145,7 @@ string Context::CreateOutputDir(const string& x_outputDir)
 			{
 				try
 				{
-					MkDir(outputDir);
+					mkDir(outputDir);
 					trial = 250;
 				}
 				catch(...)
@@ -168,7 +168,7 @@ string Context::CreateOutputDir(const string& x_outputDir)
 		{
 			// If the name is specified do not check if the direcory exists
 			outputDir = x_outputDir;
-			MkDir(outputDir);
+			mkDir(outputDir);
 
 			// note: do not log as logger may not be initialized
 			// Copy config file to output directory
@@ -225,5 +225,48 @@ string Context::Version(bool x_full)
 */
 void Context::MkDir(const std::string& x_directory)
 {
-	SYSTEM("mkdir -p " + x_directory);
+	mkDir(GetOutputDir() + "/" + x_directory);
 }
+
+/**
+* @brief Reserve a file inside the output directory
+*
+* @param x_filePath File name with path
+* @return the full path to the file resource
+*/
+std::string Context::ReserveFile(const std::string& x_filePath)
+{
+	return GetOutputDir() + "/" + x_filePath;
+}
+
+/**
+* @brief Free a file resource inside output directory
+*
+* @param x_directory Directory name
+*/
+void Context::FreeFile(const std::string& x_file)
+{
+	//TODO: See if we use this or not
+}
+
+/**
+* @brief Remove a file inside output directory
+*
+* @param x_fileName File name
+*/
+void Context::Rm(const std::string& x_fileName)
+{
+	FreeFile(x_fileName);
+	rm(GetOutputDir() + "/" + x_fileName);
+}
+
+/**
+* @brief Remove a directory inside output directory
+*
+* @param x_directory Directory name
+*/
+void Context::RmDir(const std::string& x_directory)
+{
+	rmDir(GetOutputDir() + "/" + x_directory);
+}
+

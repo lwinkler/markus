@@ -87,7 +87,7 @@ void ThumbnailWriter::ProcessFrame()
 	for(auto & elem : m_objectsIn)
 	{
 		// folder name
-		string folderName = GetContext().GetOutputDir() + "/" + m_param.folder + "/";
+		string folderName = m_param.folder + "/";
 		while(replaceExpr(folderName, elem.GetFeatures()))
 			;
 
@@ -95,7 +95,7 @@ void ThumbnailWriter::ProcessFrame()
 		// Save features to .json
 		std::stringstream ss2;
 		ss2 << folderName << m_currentTimeStamp << "_" << elem.GetName()<< elem.GetId() << "_" << cpt << ".json";
-		ofstream of(ss2.str().c_str());
+		MkOfstream of(RefContext(), ss2.str().c_str());
 		if(!of.is_open())
 		{
 			RefContext().MkDir(folderName);
@@ -104,7 +104,7 @@ void ThumbnailWriter::ProcessFrame()
 				throw MkException("Impossible to create file " + ss2.str(), LOC);
 		}
 		LOG_DEBUG(m_logger, "Write object to " << ss2.str());
-		elem.Serialize(of, folderName);
+		elem.Serialize(of, GetContext().GetOutputDir() + "/" + folderName);
 		of.close();
 
 

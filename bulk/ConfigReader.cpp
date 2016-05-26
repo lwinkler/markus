@@ -85,7 +85,7 @@ TiXmlDocument* createDoc(const std::string& x_fileName, bool x_allowCreation, bo
 				doc = new TiXmlDocument(x_fileName);
 				auto tmp = doc->LoadFile();
 				if(!tmp)
-					throw MkException("Cannot create temporary file", LOC);
+					throw MkException("Cannot create temporary file " + x_fileName, LOC);
 			}
 			else throw MkException("Could not load file as XML '" + x_fileName + "'. Error='" + (doc ? doc->ErrorDesc() : "") + "'. Exiting.", LOC);
 		}

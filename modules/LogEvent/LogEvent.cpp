@@ -63,8 +63,8 @@ void LogEvent::Reset()
 	m_saveImage1 = m_inputStreams.at(1)->IsConnected();
 	m_saveImage2 = m_inputStreams.at(2)->IsConnected();
 
-	m_folder  = GetContext().GetOutputDir() + "/" + m_param.folder + "/";
-	RefContext().MkDir(m_folder);
+	m_folder = GetContext().GetOutputDir() + "/" + m_param.folder + "/";
+	RefContext().MkDir(m_param.folder);
 }
 
 void LogEvent::ProcessFrame()
@@ -133,7 +133,7 @@ void LogEvent::CompareWithGroundTruth()
 	try
 	{
 		string outDir = GetContext().GetOutputDir() + "/analysis";
-		RefContext().MkDir(outDir);
+		RefContext().MkDir("analysis");
 		if(!m_param.gtFile.empty())
 			SYSTEM("cp " + m_param.gtFile + " " + outDir);
 		stringstream cmd;
@@ -145,10 +145,8 @@ void LogEvent::CompareWithGroundTruth()
 			cmd<<" -i -V "<<m_param.gtVideo;
 
 		// Save command for later use
-		string fileName = GetContext().GetOutputDir() + "/eval.sh";
-		ofstream ofs(fileName.c_str(), ios_base::app);
+		MkOfstream ofs(RefContext(), "eval.sh", ios_base::app);
 		ofs << cmd.str() << endl;
-		ofs.close();
 
 		LOG_DEBUG(m_logger, "Execute cmd: " + cmd.str());
 		SYSTEM(cmd.str());

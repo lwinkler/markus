@@ -37,7 +37,6 @@
 
 #include <signal.h>
 #include <iostream>
-#include <fstream>
 #include <cstdio>
 #include <log4cxx/xml/domconfigurator.h>
 #include <getopt.h>    /* for getopt_long; standard getopt is in unistd.h */
