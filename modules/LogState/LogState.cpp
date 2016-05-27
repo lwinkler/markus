@@ -60,12 +60,8 @@ void LogState::Reset()
 	m_srtFileName = "log." + gmtime(&tm_struct, &now) + ".srt";
 	*/
 
-
-	m_srtFileName = GetContext().GetOutputDir() + "/" + m_param.file + ".srt";
-	// cout<<"file"<<m_param.file<<endl;
-	// cout<<m_srtFileName<<endl;
 	m_file.close();
-	m_file.open (m_srtFileName.c_str(), std::ios_base::app);
+	m_file.open(RefContext().ReserveFile(m_param.file), std::ios_base::app);
 	if(! m_file.is_open())
 		throw MkException("Impossible to open file " + m_srtFileName, LOC);
 }

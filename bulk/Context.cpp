@@ -240,23 +240,12 @@ std::string Context::ReserveFile(const std::string& x_filePath)
 }
 
 /**
-* @brief Free a file resource inside output directory
-*
-* @param x_directory Directory name
-*/
-void Context::FreeFile(const std::string& x_file)
-{
-	//TODO: See if we use this or not
-}
-
-/**
 * @brief Remove a file inside output directory
 *
 * @param x_fileName File name
 */
 void Context::Rm(const std::string& x_fileName)
 {
-	FreeFile(x_fileName);
 	rm(GetOutputDir() + "/" + x_fileName);
 }
 

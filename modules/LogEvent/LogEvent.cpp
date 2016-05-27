@@ -56,14 +56,12 @@ void LogEvent::Reset()
 	Module::Reset();
 	m_event.Clean();
 
-	string srtFileName = GetContext().GetOutputDir() + "/" + m_param.file;
 	CLEAN_DELETE(mp_annotationWriter);
 	mp_annotationWriter = new AnnotationFileWriter();
-	mp_annotationWriter->Open(srtFileName);
+	mp_annotationWriter->Open(RefContext().ReserveFile(m_param.file));
 	m_saveImage1 = m_inputStreams.at(1)->IsConnected();
 	m_saveImage2 = m_inputStreams.at(2)->IsConnected();
 
-	m_folder = GetContext().GetOutputDir() + "/" + m_param.folder + "/";
 	RefContext().MkDir(m_param.folder);
 }
 
@@ -85,7 +83,7 @@ void LogEvent::WriteEvent()
 	LOG_DEBUG(m_logger, "Write event to log file");
 	stringstream ss;
 
-	ss<<m_event.SerializeToString(m_folder);
+	ss<<m_event.SerializeToString(RefContext().GetOutputDir() + "/" + m_param.folder);
 	mp_annotationWriter->WriteAnnotation(m_currentTimeStamp, m_currentTimeStamp + 1000 * m_param.duration, ss);
 }
 
@@ -97,30 +95,30 @@ void LogEvent::SaveImage(Event& xr_event) const
 	if(m_saveImage1)
 	{
 		std::stringstream ss1;
-		ss1 << m_folder << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_global_1." << m_param.extension;
-		addExternalImage(m_inputIm1, "globalImage", ss1.str(), xr_event);
+		ss1 << m_param.folder << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_global_1." << m_param.extension;
+		addExternalImage(m_inputIm1, "globalImage", RefContext().ReserveFile(ss1.str()), xr_event);
 
 		if(obj.width > 0 && obj.height > 0)
 		{
 			std::stringstream ss2;
-			ss2 << m_folder << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_1" << "." << m_param.extension;
+			ss2 << m_param.folder << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_1" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
-			addExternalImage((m_inputIm1)(obj.GetRect()), "objectImage", ss2.str(), xr_event);
+			addExternalImage((m_inputIm1)(obj.GetRect()), "objectImage", RefContext().ReserveFile(ss2.str()), xr_event);
 		}
 	}
 
 	if(m_saveImage2)
 	{
 		std::stringstream ss1;
-		ss1 << m_folder << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_global_2." << m_param.extension;
-		addExternalImage(m_inputIm2, "globalMask", ss1.str(), xr_event);
+		ss1 << m_param.folder << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_global_2." << m_param.extension;
+		addExternalImage(m_inputIm2, "globalMask", RefContext().ReserveFile(ss1.str()), xr_event);
 
 		if(obj.width > 0 && obj.height > 0)
 		{
 			std::stringstream ss2;
-			ss2 << m_folder << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_2" << "." << m_param.extension;
+			ss2 << m_param.folder << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_2" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
-			addExternalImage((m_inputIm2)(obj.GetRect()), "objectMask", ss2.str(), xr_event);
+			addExternalImage((m_inputIm2)(obj.GetRect()), "objectMask",  RefContext().ReserveFile(ss2.str()), xr_event);
 		}
 	}
 }
@@ -145,7 +143,7 @@ void LogEvent::CompareWithGroundTruth()
 			cmd<<" -i -V "<<m_param.gtVideo;
 
 		// Save command for later use
-		MkOfstream ofs(RefContext(), "eval.sh", ios_base::app);
+		ofstream ofs(RefContext().ReserveFile("eval.sh"), ios_base::app);
 		ofs << cmd.str() << endl;
 
 		LOG_DEBUG(m_logger, "Execute cmd: " + cmd.str());

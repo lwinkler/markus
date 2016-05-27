@@ -50,7 +50,7 @@ void LogObjects::Compress()
 {
 	if(!m_param.compress)
 		return;
-	string tarFile = GetContext().GetOutputDir() + "/" + m_param.file + ".tar.bz";
+	string tarFile = RefContext().ReserveFile(m_param.file + ".tar.bz");
 	LOG_INFO(m_logger, "Compress objects to " << tarFile);
 	try
 	{
@@ -67,10 +67,9 @@ void LogObjects::Reset()
 {
 	Module::Reset();
 
-	string srtFileName = GetContext().GetOutputDir() + "/" + m_param.file;
 	CLEAN_DELETE(mp_annotationWriter);
 	mp_annotationWriter = new AnnotationFileWriter();
-	mp_annotationWriter->Open(srtFileName);
+	mp_annotationWriter->Open(RefContext().ReserveFile(m_param.file));
 }
 
 void LogObjects::ProcessFrame()

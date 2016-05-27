@@ -529,7 +529,7 @@ void Manager::WriteStateToDirectory(const string& x_directory)
 	RefContext().MkDir(x_directory);
 	for(const auto & elem : m_modules)
 	{
-		MkOfstream of(RefContext(), x_directory + "/" + elem.second->GetName() + ".json");
+		ofstream of(RefContext().ReserveFile(x_directory + "/" + elem.second->GetName() + ".json"));
 		elem.second->Serialize(of, GetContext().GetOutputDir() + "/" + x_directory);
 	}
 	LOG_INFO(m_logger, "Written state of the manager and all modules to " << GetContext().GetOutputDir() + "/" + x_directory);

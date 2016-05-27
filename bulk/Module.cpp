@@ -539,7 +539,7 @@ void Module::WriteToCache() const
 		if(!elem.second->IsConnected()) continue;
 		stringstream fileName;
 		fileName << "cache/" << GetName() << "." << elem.second->GetName() << "." << m_currentTimeStamp << ".json";
-		MkOfstream of(RefContext(), fileName.str());
+		ofstream of(RefContext().ReserveFile(fileName.str()));
 		elem.second->Serialize(of, GetContext().GetOutputDir() + "/cache");
 	}
 }

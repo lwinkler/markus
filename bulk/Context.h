@@ -24,7 +24,6 @@
 #ifndef CONTEXT_H
 #define CONTEXT_H
 
-#include <fstream>
 #include <log4cxx/logger.h>
 #include "MkException.h"
 #include "ConfigReader.h"
@@ -74,7 +73,6 @@ public:
 	// All file system methods
 	void MkDir(const std::string& x_directory);
 	std::string ReserveFile(const std::string& x_file);
-	void FreeFile(const std::string& x_file);
 	void Rm(const std::string& x_fileName);
 	void RmDir(const std::string& x_directory);
 
@@ -102,24 +100,5 @@ private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 	static bool m_unique;
-};
-
-class MkOfstream : public std::ofstream
-{
-public:
-	MkOfstream(Context& x_context, const std::string& x_fileName, ios_base::openmode x_mode = ios_base::out)
-		: std::ofstream(x_context.GetOutputDir() + "/" + x_fileName, x_mode),
-		mr_context(x_context),
-		m_fileName(x_fileName)
-	{
-		mr_context.ReserveFile(m_fileName);
-	}
-	~MkOfstream()
-	{
-		mr_context.FreeFile(m_fileName);
-	}
-private:
-	Context& mr_context;
-	std::string m_fileName;
 };
 #endif

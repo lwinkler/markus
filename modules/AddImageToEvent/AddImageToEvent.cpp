@@ -54,10 +54,8 @@ void AddImageToEvent::Reset()
 {
 	Module::Reset();
 
-	m_folder  = GetContext().GetOutputDir() + "/" + m_param.folder + "/";
 	RefContext().MkDir(m_param.folder);
 	m_saveImage1 = m_inputStreams.at(1)->IsConnected();
-	// m_saveImage2 = m_inputStreams.at(2)->IsConnected();
 }
 
 void AddImageToEvent::ProcessFrame()
@@ -69,32 +67,15 @@ void AddImageToEvent::ProcessFrame()
 	if(m_saveImage1)
 	{
 		std::stringstream ss1;
-		ss1 << m_folder << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_1." << m_param.extension;
-		addExternalImage(m_inputIm1, "globalImage", ss1.str(), m_event);
+		ss1 << m_param.folder << "/" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_1." << m_param.extension;
+		addExternalImage(m_inputIm1, "globalImage", RefContext().ReserveFile(ss1.str()), m_event);
 
 		if(obj.width > 0 && obj.height > 0)
 		{
 			std::stringstream ss2;
-			ss2 << m_folder << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_1" << "." << m_param.extension;
+			ss2 << m_param.folder << "/" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_1" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
-			addExternalImage((m_inputIm1)(obj.GetRect()), "objectImage", ss2.str(), m_event);
+			addExternalImage((m_inputIm1)(obj.GetRect()), "objectImage", RefContext().ReserveFile(ss2.str()), m_event);
 		}
 	}
-
-	/*
-		if(m_saveImage2)
-		{
-			std::stringstream ss1;
-			ss1 << m_folder << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_2." << m_param.extension;
-			addExternalImage(m_inputIm2, "globalMask", ss1.str(), m_event);
-
-			if(obj.width > 0 && obj.height > 0)
-			{
-				std::stringstream ss2;
-				ss2 << m_folder << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_2" << "." << m_param.extension;
-				// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
-				addExternalImage((m_inputIm2)(obj.GetRect()), "objectMask", ss2.str(), m_event);
-			}
-		}
-		*/
 }

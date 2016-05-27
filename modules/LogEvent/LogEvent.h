@@ -93,7 +93,6 @@ protected:
 	// temporary
 	bool m_saveImage1 = false;
 	bool m_saveImage2 = false;
-	std::string m_folder;
 	AnnotationFileWriter* mp_annotationWriter;
 };
 

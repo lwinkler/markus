@@ -61,8 +61,8 @@ void VideoFileWriter::Reset()
 	assert(m_param.type == CV_8UC3);
 
 	stringstream ss;
-	ss << GetContext().GetOutputDir() << "/" << m_param.file  << "." << m_index++ << "." << ExtensionFromFourcc(m_param.fourcc);
-	const string filename = ss.str();
+	ss << m_param.file  << "." << m_index++ << "." << ExtensionFromFourcc(m_param.fourcc);
+	const string filename = RefContext().ReserveFile(ss.str());
 	double fps = 12;
 
 	try

@@ -73,7 +73,6 @@ void ControllerModule::PrintStatistics(string* xp_value)
 	ConfigFile summary(benchFileName, true);
 	module.PrintStatistics(summary);
 	summary.SaveToFile(benchFileName);
-	module.RefContext().FreeFile(module.GetName() + ".benchmark.xml");
 }
 
 

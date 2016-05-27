@@ -57,10 +57,6 @@ void ReadObjects::Reset()
 	if (!m_param.file.empty())
 	{
 		string path = m_param.file;
-		if(m_param.prependOutputDirectory)
-		{
-			path = GetContext().GetOutputDir() + "/" + path;
-		}
 		mp_annotationReader = createAnnotationFileReader(path, m_param.width, m_param.height);
 	}
 	else mp_annotationReader = createAnnotationFileReader("", m_param.width, m_param.height);

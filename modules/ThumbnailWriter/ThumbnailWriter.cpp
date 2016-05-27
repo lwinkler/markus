@@ -95,7 +95,7 @@ void ThumbnailWriter::ProcessFrame()
 		// Save features to .json
 		std::stringstream ss2;
 		ss2 << folderName << m_currentTimeStamp << "_" << elem.GetName()<< elem.GetId() << "_" << cpt << ".json";
-		MkOfstream of(RefContext(), ss2.str().c_str());
+		ofstream of(RefContext().ReserveFile(ss2.str()));
 		if(!of.is_open())
 		{
 			RefContext().MkDir(folderName);
