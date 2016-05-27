@@ -89,7 +89,7 @@ protected:
 	Timer m_timerProcessable;
 
 private:
-	boost::shared_mutex m_lock;
+	Lock m_lock;
 	bool m_hasRecovered     = true; // Flag to test if all modules have recovered from the last exception, only working if centralized
 	MkException m_lastException;    // Field to store the last exception
 

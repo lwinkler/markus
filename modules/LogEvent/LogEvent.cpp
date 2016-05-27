@@ -133,7 +133,7 @@ void LogEvent::CompareWithGroundTruth()
 		string outDir = GetContext().GetOutputDir() + "/analysis";
 		RefContext().MkDir("analysis");
 		if(!m_param.gtFile.empty())
-			SYSTEM("cp " + m_param.gtFile + " " + outDir);
+			RefContext().Cp(m_param.gtFile, "");
 		stringstream cmd;
 		cmd<< m_param.gtCommand << " " << GetContext().GetOutputDir() << "/" << m_param.file;
 		// if(m_param.gtFile != "")

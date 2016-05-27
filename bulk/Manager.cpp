@@ -373,7 +373,7 @@ void Manager::PrintStatistics()
 
 	// Create an XML file to summarize CPU usage
 	//     if output dir is empty, write to /tmp
-	string benchFileName = (IsContextSet() && !GetContext().IsOutputDirEmpty()) ? RefContext().ReserveFile("benchmark.xml") : "/tmp/benchmark" + timeStamp() +  ".xml";
+	string benchFileName = (IsContextSet() && !RefContext().IsOutputDirEmpty()) ? RefContext().ReserveFile("benchmark.xml") : "/tmp/benchmark" + timeStamp() +  ".xml";
 	ConfigFile benchSummary(benchFileName, true);
 	ConfigReader conf = benchSummary.FindRef("benchmark", true);
 

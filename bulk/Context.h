@@ -25,6 +25,7 @@
 #define CONTEXT_H
 
 #include <log4cxx/logger.h>
+#include <boost/thread/shared_mutex.hpp>
 #include "MkException.h"
 #include "ConfigReader.h"
 #include "ParameterStructure.h"
@@ -73,6 +74,8 @@ public:
 	// All file system methods
 	void MkDir(const std::string& x_directory);
 	std::string ReserveFile(const std::string& x_file);
+	void UnreserveFile(const std::string& x_file);
+	void Cp(const std::string& x_fileName1, const std::string& x_fileName2);
 	void Rm(const std::string& x_fileName);
 	void RmDir(const std::string& x_directory);
 
@@ -82,7 +85,7 @@ public:
 	inline const std::string& GetApplicationName() const {return m_param.applicationName;}
 	inline const std::string& GetJobId() const {return m_jobId;}
 	inline const std::string& GetCameraId() const {return m_param.cameraId;}
-	bool IsOutputDirEmpty() const;
+	bool IsOutputDirEmpty();
 	inline bool IsCentralized() const {return m_param.centralized;}
 	inline bool IsRealTime() const {return m_param.realTime;}
 	const Parameters& GetParameters() const {return m_param;}
@@ -90,10 +93,19 @@ public:
 protected:
 	inline static void mkDir(const std::string& x_directory) {SYSTEM("mkdir -p " + x_directory);}
 	inline static void rm(const std::string& x_file) {SYSTEM("rm " + x_file);}
+	inline static void cp(const std::string& x_filePath1, const std::string& x_filePath2) {SYSTEM("cp -n " + x_filePath1 + " " + x_filePath2);}
 	inline static void rmDir(const std::string& x_directory) {SYSTEM("rm -r " + x_directory);}
+	inline static void mv(const std::string& x_path1, const std::string& x_destDir) {SYSTEM("mv " + x_path1 + " " + x_destDir + "/");}
+
 	std::string CreateOutputDir(const std::string& x_outputDir = "");
 	std::string m_outputDir;
 	std::string m_jobId;
+
+	typedef boost::shared_mutex Lock;
+	typedef boost::unique_lock<Lock> WriteLock;
+	typedef boost::shared_lock<Lock> ReadLock;
+	Lock m_lock;
+	std::map<std::string, bool> m_reservedFiles;
 
 private:
 	DISABLE_COPY(Context)

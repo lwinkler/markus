@@ -65,7 +65,7 @@ Context::~Context()
 	{
 		try
 		{
-			SYSTEM("cp markus.log " + m_outputDir + "/markus.copy.log");
+			Cp("markus.log", "markus.copy.log");
 		}
 		catch(...)
 		{
@@ -82,7 +82,7 @@ Context::~Context()
 			{
 				LOG_INFO(m_logger, "Working directory moved to " + m_param.archiveDir);
 				mkDir(m_param.archiveDir);
-				SYSTEM("mv " + m_outputDir + " " + m_param.archiveDir + "/");
+				mv(m_outputDir, m_param.archiveDir);
 			}
 			else
 			{
@@ -96,7 +96,7 @@ Context::~Context()
 			{
 				LOG_INFO(m_logger, "Working directory moved to " + m_param.archiveDir);
 				mkDir(m_param.archiveDir);
-				SYSTEM("mv " + m_outputDir + " " + m_param.archiveDir + "/");
+				mv(m_outputDir, m_param.archiveDir);
 			}
 			else
 			{
@@ -108,8 +108,7 @@ Context::~Context()
 				}
 				else
 				{
-					// note: -n means to avoid an error message if we copy a file to itself (happens with markus -o ...)
-					SYSTEM("cp -n " + m_param.configFile + " " + m_outputDir);
+					cp(m_param.configFile, m_outputDir);
 				}
 			}
 		}
@@ -133,7 +132,7 @@ string Context::CreateOutputDir(const string& x_outputDir)
 	string outputDir;
 	try
 	{
-		if(x_outputDir == "")
+		if(x_outputDir.empty())
 		{
 			mkDir("out");
 			outputDir = "out/out_" + timeStamp();
@@ -172,8 +171,7 @@ string Context::CreateOutputDir(const string& x_outputDir)
 
 			// note: do not log as logger may not be initialized
 			// Copy config file to output directory
-			// cout<<"Creating directory "<<outputDir<<endl;
-			SYSTEM("cp " + m_param.configFile + " " + outputDir);
+			cp(m_param.configFile, outputDir);
 		}
 	}
 	catch(exception& e)
@@ -188,11 +186,13 @@ string Context::CreateOutputDir(const string& x_outputDir)
 *
 * @return True if dir is empty
 */
-bool Context::IsOutputDirEmpty() const
+bool Context::IsOutputDirEmpty()
 {
 	vector<string> res;
 	// TODO Avoid using commands as much as possible
 	execute("ls -A " + m_outputDir + " | wc -l", res);
+	ReadLock lock(m_lock);
+	LOG_INFO(m_logger, "Files found in " << m_outputDir << ": " << res.at(0) << ", correctly reserved: " << m_reservedFiles.size());
 
 	return res.at(0) == "0";
 }
@@ -236,7 +236,46 @@ void Context::MkDir(const std::string& x_directory)
 */
 std::string Context::ReserveFile(const std::string& x_filePath)
 {
+	WriteLock lock(m_lock);
+	LOG_INFO(m_logger, "Reserve output file " << x_filePath);
+	auto ret = m_reservedFiles.insert(std::pair<string, bool>(x_filePath, true));
+	if(ret.second == false)
+	{
+		LOG_WARN(m_logger, "File is overridden in output directory: " << x_filePath);
+	}
 	return GetOutputDir() + "/" + x_filePath;
+}
+
+/**
+* @brief Uneserve a file inside the output directory
+*
+* @param x_filePath File name with path
+*/
+void Context::UnreserveFile(const std::string& x_filePath)
+{
+	WriteLock lock(m_lock);
+	auto it = m_reservedFiles.find(x_filePath);
+	if(it == m_reservedFiles.end())
+	{
+		LOG_WARN(m_logger, "Removing unknown file from output directory");
+	}
+	else
+	{
+		m_reservedFiles.erase(it);
+	}
+}
+
+/**
+* @brief Remove a file inside output directory
+*
+* @param x_filePath1 File name with path
+* @param x_filePath2 File name with path (inside output directory), if empty, keep the same file
+*/
+void Context::Cp(const std::string& x_fileName1, const std::string& x_fileName2)
+{
+	string dest = x_fileName2.empty() ? basename(x_fileName1) : x_fileName2;
+	ReserveFile(dest);
+	cp(x_fileName1, GetOutputDir() + "/" + dest);
 }
 
 /**
@@ -246,6 +285,7 @@ std::string Context::ReserveFile(const std::string& x_filePath)
 */
 void Context::Rm(const std::string& x_fileName)
 {
+	UnreserveFile(x_fileName);
 	rm(GetOutputDir() + "/" + x_fileName);
 }
 
