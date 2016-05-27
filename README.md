@@ -1,9 +1,12 @@
+- **Author** Laurent Winkler
+- **Date**   Created in 2010
+
 Markus:
 =======
 
 Markus is a program to create video detection applications. Its base philosophy is that an application can be separated into a set of simple modules. 
 
-Each module implements a simple function (pattern detection, object tracking, background subtraction ...). Each module can have input an output streams of different types.
+Each module implements a simple function (pattern detection, object tracking, background subtraction ...). Each module can have input an output streams of different types. 
 
 Compilation for Linux
 ---------------------
