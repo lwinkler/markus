@@ -110,25 +110,25 @@ public:
 		else
 			m_factoryModules.List(m_moduleTypes);
 		
-		string emptyFile = "/tmp/config_empty.xml";
-		createEmptyConfigFile(emptyFile);
-		mp_configFile = new ConfigFile(emptyFile);
+		string emptyFileName = "/tmp/config_empty.xml";
+		createEmptyConfigFile(emptyFileName);
+		mp_configFile = new ConfigFile(emptyFileName);
 		addModuleToConfig("VideoFileReader", *mp_configFile)
 		.RefSubConfig("parameters", true)
 		.RefSubConfig("param", "name", "fps", true).SetValue("22");
 
 		mp_configFile->RefSubConfig("application").SetAttribute("name", "unitTest");
-		mp_configFile->FindRef("application>parameters>param[name=\"config_file\"]"     , true).SetValue(emptyFile);
-		mp_configFile->FindRef("application>parameters>param[name=\"application_name\"]", true).SetValue("TestModule");
-		mp_configFile->FindRef("application>parameters>param[name=\"output_dir\"]"      , true).SetValue("tests/out");
 		mp_contextParams = new Context::Parameters(mp_configFile->Find("application"));
-		mp_contextParams->autoClean = true; // TODO set all params this way
-		mp_contextParams->Read(mp_configFile->Find("application"));
-		mp_contextParams->centralized = true;
+		mp_contextParams->configFile      = emptyFileName;
+		mp_contextParams->applicationName = "TestModule";
+		mp_contextParams->outputDir       = "tests/out";
+		mp_contextParams->autoClean       = true;
+		// mp_contextParams->Read(mp_configFile->Find("application"));
+		mp_contextParams->centralized     = true;
 		mp_context = new Context(*mp_contextParams);
 
 		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", mp_configFile->Find("application>module[name=\"VideoFileReader0\"]"));
-		mp_fakeConfig->Read(mp_configFile->Find("application>module[name=\"VideoFileReader0\"]"));
+		// mp_fakeConfig->Read(mp_configFile->Find("application>module[name=\"VideoFileReader0\"]"));
 		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeConfig);
 		mp_fakeInput->SetContext(*mp_context);
 		// note: we need a fake module to create the input streams

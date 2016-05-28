@@ -1,4 +1,5 @@
 <application name="FourCascades" description="">
+	<parameters/>
 	<module name="Input" id="0">
 		<parameters>
 			<param name="class">UsbCam</param>

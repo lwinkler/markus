@@ -63,21 +63,20 @@ protected:
 		// Note: Added this to avoid deleting the output directory
 		TS_ASSERT(!appConfig.IsEmpty());
 		Manager::Parameters params(appConfig);
-		params.aspectRatio = x_aspectRatio;
-		params.autoProcess = false;
-		appConfig.FindRef("parameters>param[name=\"config_file\"]"     , true).SetValue(x_configFile);
-		appConfig.FindRef("parameters>param[name=\"application_name\"]", true).SetValue("TestProjects");
-		appConfig.FindRef("parameters>param[name=\"output_dir\"]"      , true).SetValue("tests/out");
+		params.aspectRatio     = x_aspectRatio;
+		params.autoProcess     = false;
 		Context::Parameters contextParams(appConfig);
-		contextParams.Read(appConfig);
+		contextParams.configFile      = x_configFile;
+		contextParams.outputDir       = "tests/out"; // note: these files are not checked for errors
+		contextParams.applicationName = "TestProjects";
 		contextParams.centralized = true;
 		contextParams.autoClean   = true;
+		contextParams.Read(appConfig);
 		Context context(contextParams);
 
 		try
 		{
 			Manager manager(params);
-
 			manager.SetContext(context);
 			manager.Connect();
 			manager.Reset();
@@ -111,18 +110,18 @@ public:
 	}
 
 	/// Run different existing configs: XMLs ending in testing.xml
-	void DisabletestProjects2() // TODO: If the test returns false in tearDownWorld, this results in a segfault
+	// disabled since this would log a lot of errors
+	void disabled_testProjects2()
 	{
 		TS_TRACE("\n# Unit test with different test projects: XMLs ending in ...testing.xml");
 		vector<string> result1;
 		execute("xargs -a modules.txt -I{} find {} -name \"testing*.xml\"", result1);
-		int cpt = 0;
+
+		// Since most XMLs make tests and would output errors with a different aspect ratio,
+		// we will redirect the logs where they will not be checked for errors
 		for(auto& elem : result1)
 		{
 			runConfig(elem);
-			if(cpt > 1)
-				return;
-			cpt++;
 		}
 	}
 };

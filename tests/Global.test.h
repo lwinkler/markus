@@ -23,6 +23,7 @@
 #ifndef TEST_GLOBAL_H
 #define TEST_GLOBAL_H
 #include <cxxtest/GlobalFixture.h>
+#include <boost/filesystem.hpp>
 #include <log4cxx/xml/domconfigurator.h>
 
 #include "Factories.h"
@@ -37,38 +38,38 @@ class MarkusFixture : public CxxTest::GlobalFixture
 {
 public:
 	bool setUp() {return true;}
-	bool tearDown() {return true;}
+	bool tearDown()
+	{
+		static int lastNWarn = 0;
+		static int lastNErr  = 0;
+		stringstream ss1;
+		execute("cat tests/markus.log | grep WARN | grep -v EVENT", ss1);
+		int nWarn = std::count(std::istreambuf_iterator<char>(ss1), std::istreambuf_iterator<char>(), '\n');
+		if(nWarn - lastNWarn > 0)
+		{
+			cout << "Found " << nWarn - lastNWarn << " new warning(s) in tests/markus.log, total " << nWarn << endl;
+		}
+		lastNWarn = nWarn;
+
+		stringstream ss3;
+		execute("cat tests/markus.log | grep ERROR", ss3);
+		int nErr = std::count(std::istreambuf_iterator<char>(ss3), std::istreambuf_iterator<char>(), '\n');
+		if(nErr - lastNErr > 0)
+			cout << "Found " << nErr - lastNErr << " new errors in tests/markus.log, total " << nErr << endl;
+		lastNErr  = nErr;
+		return nErr - lastNErr == 0;
+	}
 	bool setUpWorld()
 	{
 		log4cxx::xml::DOMConfigurator::configure("tests/log4cxx.xml");
 		Factories::RegisterAll();
 
-		SYSTEM("rm -rf tests/out");
-		SYSTEM("rm -rf tests/tmp");
-		SYSTEM("mkdir -p tests/tmp");
+		boost::filesystem::remove_all("tests/out");
+		boost::filesystem::remove_all("tests/tmp");
+		boost::filesystem::create_directory("tests/tmp");
 		return true;
 	}
-	bool tearDownWorld()
-	{
-		stringstream ss1;
-		execute("cat tests/markus.log | grep WARN | grep -v EVENT", ss1);
-		int nWarn = std::count(std::istreambuf_iterator<char>(ss1), std::istreambuf_iterator<char>(), '\n');
-		if(nWarn > 0)
-		{
-			cout << "Found " << nWarn << " warnings in tests/markus.log" << endl;
-		}
-
-		stringstream ss3;
-		execute("cat tests/markus.log | grep ERROR", ss3);
-		int nErr = std::count(std::istreambuf_iterator<char>(ss3), std::istreambuf_iterator<char>(), '\n');
-		if(nErr > 0)
-		{
-			cout << "Found " << nErr << " errors in tests/markus.log" << endl;
-			// TODO: returning false might lead to segfaults. Find out why		
-			return false;
-		}
-		return true;
-	}
+	bool tearDownWorld(){return true;}
 };
 static MarkusFixture g_globalFixture;
 #endif

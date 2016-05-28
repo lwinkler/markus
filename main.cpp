@@ -352,19 +352,21 @@ int main(int argc, char** argv)
 		ConfigReader appConfig = mainConfig.Find("application");
 		if(appConfig.IsEmpty())
 			throw MkException("Tag <application> must be present in configuration file.", LOC);
+		if(appConfig.Find("parameters").IsEmpty())
+			throw MkException("Tag <application> must contain a <parameters> section", LOC);
 
 		// Init global variables and objects
 		// Context manages all call to system, files, ...
-		mainConfig.FindRef("application>parameters>param[name=\"config_file\"]"     , true).SetValue(args.configFile);
-		mainConfig.FindRef("application>parameters>param[name=\"application_name\"]", true).SetValue(appConfig.GetAttribute("name"));
-		mainConfig.FindRef("application>parameters>param[name=\"output_dir\"]"      , true).SetValue(args.outputDir);
 		Context::Parameters contextParameters(mainConfig.Find("application"));
 		contextParameters.Read(mainConfig.Find("application"));
 
-		contextParameters.centralized    = args.centralized;
-		contextParameters.robust         = args.robust;
-		contextParameters.realTime       = !args.fast;
-		contextParameters.cacheDirectory = args.cacheDirectory;
+		contextParameters.outputDir       = args.outputDir;
+		contextParameters.configFile      = args.configFile;
+		contextParameters.applicationName = appConfig.GetAttribute("name");
+		contextParameters.centralized     = args.centralized;
+		contextParameters.robust          = args.robust;
+		contextParameters.realTime        = !args.fast;
+		contextParameters.cacheDirectory  = args.cacheDirectory;
 		Context context(contextParameters);
 		if(args.outputDir != "")
 		{
