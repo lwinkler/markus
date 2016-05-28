@@ -237,7 +237,8 @@ void ParameterStructure::CheckRange(const ConfigReader& x_config) const
 		}
 		catch(ParameterException& e)
 		{
-			// TODO: This logs every time we override camera_id or job_id
+			// note: This logs every time we override camera_id or job_id
+			//       since the parameters are shared between Manager and Context
 			LOG_WARN(m_logger, "Exception in CheckRange: " << e.what());
 		}
 	}

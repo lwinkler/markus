@@ -123,7 +123,7 @@ protected:
 		boost::filesystem::rename(x_path1, x_destDir);
 	}
 
-	void CreateOutputDir(const std::string& x_outputDir = "");
+	void CreateOutputDir(const std::string& x_outputDir, const std::string& x_timeStamp);
 	std::string m_outputDir;
 	std::string m_jobId;
 

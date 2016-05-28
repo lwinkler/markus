@@ -62,7 +62,7 @@ PyObject* ModulePython::FeatureListToPython::convert(ModulePython::FeatureList c
 			throw MkException("Feature " + featureName + " not found in input object", LOC);
 
 		//LOG_DEBUG(m_logger, "Add feature "<<featureName<<" to Python arguments: "<<*feat->second);
-		const FeatureFloat* pff = dynamic_cast<const FeatureFloat*>(&*feat->second); //TODO: Define cast for FeaturePtr ?
+		const FeatureFloat* pff = dynamic_cast<const FeatureFloat*>(&*feat->second);
 		if(pff != nullptr)
 		{
 			PyList_SET_ITEM(mylist, cpt, PyFloat_FromDouble(pff->value));

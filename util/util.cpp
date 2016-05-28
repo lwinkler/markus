@@ -302,19 +302,20 @@ const string timeStamp(int x_pid)
 {
 	time_t rawtime;
 	time(&rawtime);
-	const tm* timeinfo = localtime (&rawtime);
+	const tm* timeinfo = localtime(&rawtime);
 
 	char dd[20];
-	// TODO: not accurate enough, use ms
 	strftime(dd, sizeof(dd), "%Y%m%d_%H%M%S", timeinfo);
 
+	stringstream ss;
+	// note: workaround to have ms precision
+	//       fix this properly when put_time is correctly implemented in g++
+	ss << dd << getAbsTimeMs() % 1000;
 	if(x_pid != 0)
 	{
-		stringstream ss;
-		ss<<dd<<"_"<<x_pid;
-		return ss.str();
+		ss << "_" << x_pid;
 	}
-	else return string(dd);
+	return ss.str();
 }
 
 /// Convert a time in miliseconds to a time stamp (format used in subtitle files)

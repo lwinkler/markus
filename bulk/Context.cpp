@@ -41,11 +41,12 @@ Context::Context(ParameterStructure& xr_params) :
 	if(m_param.configFile.empty())
 		throw MkException("Config file name is empty", LOC);
 
-	CreateOutputDir(m_param.outputDir);
+	string ts = timeStamp(getpid());
+	CreateOutputDir(m_param.outputDir, ts);
 	if(m_param.jobId.empty())
 	{
 		LOG_INFO(m_logger, "A test jobId is created from time stamp. This should only be used for tests");
-		m_jobId   = "test_" + timeStamp(getpid());
+		m_jobId   = "test_" + ts;
 	}
 	else m_jobId = m_param.jobId;
 	LOG_INFO(m_logger, "Created context with cameraId=\"" << GetCameraId() << "\", jobId=\""
@@ -127,7 +128,7 @@ Context::~Context()
 *
 * @return Name of the output dir
 */
-void Context::CreateOutputDir(const string& x_outputDir)
+void Context::CreateOutputDir(const string& x_outputDir, const string& x_timeStamp)
 {
 	string outputDir;
 	try
@@ -135,28 +136,10 @@ void Context::CreateOutputDir(const string& x_outputDir)
 		if(x_outputDir.empty())
 		{
 			mkDir("out");
-			outputDir = "out/out_" + timeStamp();
-			int16_t trial = 0; // Must NOT be a char to avoid concatenation problems!
-			string tmp = outputDir;
-
-			// Try to create the output dir, if it fails, try changing the name
-			while(trial < 250)
-			{
-				try
-				{
-					mkDir(outputDir);
-					trial = 250;
-				}
-				catch(...)
-				{
-					stringstream ss;
-					trial++;
-					ss<<tmp<<"_"<<trial;
-					outputDir = ss.str();
-					if(trial == 250)
-						throw MkException("Cannot create output directory", LOC);
-				}
-			}
+			outputDir = "out/out_" + x_timeStamp;
+			if(boost::filesystem::exists(outputDir))
+				throw MkException("Output directory already existing: " + outputDir, LOC);
+			mkDir(outputDir);
 
 			// note: do not log as logger may not be initialized
 			boost::filesystem::remove("out_latest");
@@ -178,7 +161,7 @@ void Context::CreateOutputDir(const string& x_outputDir)
 	}
 	catch(exception& e)
 	{
-		cerr << "Exception in Context::CreateOutputDir: " << e.what() << endl;
+		throw MkException("Exception in Context::CreateOutputDir: " + string(e.what()), LOC);
 	}
 }
 
