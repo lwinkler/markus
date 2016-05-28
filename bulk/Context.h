@@ -24,6 +24,11 @@
 #ifndef CONTEXT_H
 #define CONTEXT_H
 
+// Workaround: should be unnecessary in time: http://stackoverflow.com/questions/35007134/c-boost-undefined-reference-to-boostfilesystemdetailcopy-file
+#define BOOST_NO_CXX11_SCOPED_ENUMS
+#include <boost/filesystem.hpp>
+#undef BOOST_NO_CXX11_SCOPED_ENUMS
+
 #include <log4cxx/logger.h>
 #include <boost/thread/shared_mutex.hpp>
 #include "MkException.h"
@@ -91,13 +96,34 @@ public:
 	const Parameters& GetParameters() const {return m_param;}
 
 protected:
-	inline static void mkDir(const std::string& x_directory) {SYSTEM("mkdir -p " + x_directory);}
-	inline static void rm(const std::string& x_file) {SYSTEM("rm " + x_file);}
-	inline static void cp(const std::string& x_filePath1, const std::string& x_filePath2) {SYSTEM("cp -n " + x_filePath1 + " " + x_filePath2);}
-	inline static void rmDir(const std::string& x_directory) {SYSTEM("rm -r " + x_directory);}
-	inline static void mv(const std::string& x_path1, const std::string& x_destDir) {SYSTEM("mv " + x_path1 + " " + x_destDir + "/");}
+	inline static void mkDir(const std::string& x_directory)
+	{
+		boost::filesystem::create_directories(x_directory);
+	}
+	inline static void rm(const std::string& x_file)
+	{
+		if(!boost::filesystem::remove(x_file))
+			LOG_WARN(m_logger, "Cannot remove unexistant file " << x_file);
+	}
+	inline static void cp(const std::string& x_filePath1, const std::string& x_filePath2)
+	{
+		if(boost::filesystem::exists(x_filePath2))
+		{
+			LOG_WARN(m_logger, "File " << x_filePath2 << " overwritten");
+		}
+		boost::filesystem::copy_file(x_filePath1, x_filePath2, boost::filesystem::copy_option::overwrite_if_exists);
+	}
+	inline static void rmDir(const std::string& x_directory)
+	{
+		if(!boost::filesystem::remove_all(x_directory))
+			LOG_WARN(m_logger, "Cannot remove unexisting directory " << x_directory);
+	}
+	inline static void mv(const std::string& x_path1, const std::string& x_destDir)
+	{
+		boost::filesystem::rename(x_path1, x_destDir);
+	}
 
-	std::string CreateOutputDir(const std::string& x_outputDir = "");
+	void CreateOutputDir(const std::string& x_outputDir = "");
 	std::string m_outputDir;
 	std::string m_jobId;
 

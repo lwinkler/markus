@@ -44,7 +44,7 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
 	add_definitions(-DMARKUS_DEBUG_STREAMS)
 endif()
 
-find_package( Boost 1.40 COMPONENTS system thread python REQUIRED )
+find_package( Boost 1.40 COMPONENTS system thread python filesystem REQUIRED )
 include_directories(${Boost_INCLUDE_DIR})
 
 # Required packages

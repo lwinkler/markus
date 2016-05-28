@@ -109,18 +109,20 @@ public:
 		}
 		else
 			m_factoryModules.List(m_moduleTypes);
-
-		createEmptyConfigFile("/tmp/config_empty.xml");
-		mp_configFile = new ConfigFile("/tmp/config_empty.xml");
+		
+		string emptyFile = "/tmp/config_empty.xml";
+		createEmptyConfigFile(emptyFile);
+		mp_configFile = new ConfigFile(emptyFile);
 		addModuleToConfig("VideoFileReader", *mp_configFile)
 		.RefSubConfig("parameters", true)
 		.RefSubConfig("param", "name", "fps", true).SetValue("22");
 
 		mp_configFile->RefSubConfig("application").SetAttribute("name", "unitTest");
-		mp_configFile->FindRef("application>parameters>param[name=\"config_file\"]"     , true).SetValue("/tmp/config_empty.xml");
+		mp_configFile->FindRef("application>parameters>param[name=\"config_file\"]"     , true).SetValue(emptyFile);
 		mp_configFile->FindRef("application>parameters>param[name=\"application_name\"]", true).SetValue("TestModule");
 		mp_configFile->FindRef("application>parameters>param[name=\"output_dir\"]"      , true).SetValue("tests/out");
 		mp_contextParams = new Context::Parameters(mp_configFile->Find("application"));
+		mp_contextParams->autoClean = true; // TODO set all params this way
 		mp_contextParams->Read(mp_configFile->Find("application"));
 		mp_contextParams->centralized = true;
 		mp_context = new Context(*mp_contextParams);

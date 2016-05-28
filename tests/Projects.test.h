@@ -71,7 +71,7 @@ protected:
 		Context::Parameters contextParams(appConfig);
 		contextParams.Read(appConfig);
 		contextParams.centralized = true;
-		contextParams.autoClean   = false;
+		contextParams.autoClean   = true;
 		Context context(contextParams);
 
 		try

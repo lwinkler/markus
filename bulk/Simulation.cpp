@@ -28,10 +28,12 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <boost/filesystem.hpp>
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/writer.h>
 
 using namespace std;
+using namespace boost::filesystem;
 
 log4cxx::LoggerPtr Simulation::m_logger(log4cxx::Logger::getLogger("Simulation"));
 
@@ -84,7 +86,7 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 	subdir << m_outputDir << "/ready/" << sd.str();
 	stringstream xmlProjName;
 	xmlProjName << subdir.str() << "/" << name << ".xml";
-	SYSTEM("mkdir -p " + subdir.str());
+	create_directory(subdir.str());
 	x_mainConfig.SaveToFile(xmlProjName.str());
 
 	// Last but not least:
@@ -157,7 +159,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 				throw MkException("References must have the same sizes as parameters", LOC);
 
 			// set values of parameters by using a JSON file
-			SYSTEM("cp " + file + " " + m_outputDir);
+			copy(file, m_outputDir + "/" + basename(file));
 			ifstream ifs;
 			ifs.open(file);
 			Json::Value root;
@@ -247,12 +249,14 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 /// Generate a simulation ready to be launched
 void Simulation::Generate(ConfigFile& mainConfig)
 {
-	SYSTEM("mkdir -p " + m_outputDir);
-	SYSTEM("ln -sfn " + m_outputDir + " simulation_latest");
+	create_directory(m_outputDir);
+
+	remove("simulation_latest");
+	create_symlink(m_outputDir, "simulation_latest");
 	mainConfig.SaveToFile("simulation_latest/Simulation.xml");
-	SYSTEM("mkdir -p " + m_outputDir + "/ready");
-	SYSTEM("mkdir -p " + m_outputDir + "/running");
-	SYSTEM("mkdir -p " + m_outputDir + "/results");
+	create_directory(m_outputDir + "/ready");
+	create_directory(m_outputDir + "/running");
+	create_directory(m_outputDir + "/results");
 
 	// Initialize members
 	m_allTargets.str("");

@@ -41,7 +41,7 @@ Context::Context(ParameterStructure& xr_params) :
 	if(m_param.configFile.empty())
 		throw MkException("Config file name is empty", LOC);
 
-	m_outputDir = CreateOutputDir(m_param.outputDir);
+	CreateOutputDir(m_param.outputDir);
 	if(m_param.jobId.empty())
 	{
 		LOG_INFO(m_logger, "A test jobId is created from time stamp. This should only be used for tests");
@@ -108,7 +108,7 @@ Context::~Context()
 				}
 				else
 				{
-					cp(m_param.configFile, m_outputDir);
+					Cp(m_param.configFile, "");
 				}
 			}
 		}
@@ -127,7 +127,7 @@ Context::~Context()
 *
 * @return Name of the output dir
 */
-string Context::CreateOutputDir(const string& x_outputDir)
+void Context::CreateOutputDir(const string& x_outputDir)
 {
 	string outputDir;
 	try
@@ -159,9 +159,9 @@ string Context::CreateOutputDir(const string& x_outputDir)
 			}
 
 			// note: do not log as logger may not be initialized
-			// cout<<"Creating directory "<<outputDir<<" and symbolic link out_latest"<<endl;
-			// note: use ln with args sfn to override existing link
-			SYSTEM("ln -sfn \"" + outputDir + "\" out_latest");
+			boost::filesystem::remove("out_latest");
+			boost::filesystem::create_symlink(outputDir, "out_latest");
+			m_outputDir = outputDir;
 		}
 		else
 		{
@@ -171,14 +171,15 @@ string Context::CreateOutputDir(const string& x_outputDir)
 
 			// note: do not log as logger may not be initialized
 			// Copy config file to output directory
-			cp(m_param.configFile, outputDir);
+			m_outputDir = outputDir;
+			ReserveFile(m_param.configFile);
+			cp(m_param.configFile, outputDir + "/" + basename(m_param.configFile));
 		}
 	}
 	catch(exception& e)
 	{
 		cerr << "Exception in Context::CreateOutputDir: " << e.what() << endl;
 	}
-	return outputDir;
 }
 
 /**
@@ -189,10 +190,10 @@ string Context::CreateOutputDir(const string& x_outputDir)
 bool Context::IsOutputDirEmpty()
 {
 	vector<string> res;
-	// TODO Avoid using commands as much as possible
-	execute("ls -A " + m_outputDir + " | wc -l", res);
+	execute("find " + m_outputDir + " -type f | wc -l", res);
 	ReadLock lock(m_lock);
-	LOG_INFO(m_logger, "Files found in " << m_outputDir << ": " << res.at(0) << ", correctly reserved: " << m_reservedFiles.size());
+	if(boost::lexical_cast<uint>(res.at(0)) != m_reservedFiles.size())
+		LOG_WARN(m_logger, "Files found in " << m_outputDir << ": " << res.at(0) << ", correctly reserved: " << m_reservedFiles.size());
 
 	return res.at(0) == "0";
 }

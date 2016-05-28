@@ -305,6 +305,7 @@ const string timeStamp(int x_pid)
 	const tm* timeinfo = localtime (&rawtime);
 
 	char dd[20];
+	// TODO: not accurate enough, use ms
 	strftime(dd, sizeof(dd), "%Y%m%d_%H%M%S", timeinfo);
 
 	if(x_pid != 0)

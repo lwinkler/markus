@@ -133,7 +133,7 @@ void LogEvent::CompareWithGroundTruth()
 		string outDir = GetContext().GetOutputDir() + "/analysis";
 		RefContext().MkDir("analysis");
 		if(!m_param.gtFile.empty())
-			RefContext().Cp(m_param.gtFile, "");
+			RefContext().Cp(m_param.gtFile, "analysis/" + basename(m_param.gtFile));
 		stringstream cmd;
 		cmd<< m_param.gtCommand << " " << GetContext().GetOutputDir() << "/" << m_param.file;
 		// if(m_param.gtFile != "")
@@ -148,6 +148,18 @@ void LogEvent::CompareWithGroundTruth()
 
 		LOG_DEBUG(m_logger, "Execute cmd: " + cmd.str());
 		SYSTEM(cmd.str());
+
+		// Iterate over all files created by the command
+		boost::filesystem::directory_iterator end_iter;
+		for(boost::filesystem::directory_iterator dir_iter(outDir) ; dir_iter != end_iter ; ++dir_iter)
+		{
+			if(boost::filesystem::is_regular_file(dir_iter->status()))
+			{
+				stringstream ss;
+				ss << "analysis/" << dir_iter->path().filename().string();
+				RefContext().ReserveFile(ss.str());
+			}
+		}
 	}
 	catch(MkException& e)
 	{
