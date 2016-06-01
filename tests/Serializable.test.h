@@ -171,6 +171,7 @@ public:
 		fh.Update(006, FeatureInt(5));
 		m_obj2.AddFeature("fh", fh.CreateCopy());
 
+		m_evt2.Clean();
 		m_evt2.Raise("name2", m_obj2, 123, 6345);
 	}
 	void tearDown()

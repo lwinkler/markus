@@ -43,7 +43,7 @@ public:
 		static int lastNWarn = 0;
 		static int lastNErr  = 0;
 		stringstream ss1;
-		execute("cat tests/markus.log | grep WARN | grep -v EVENT", ss1);
+		execute("cat tests/markus.log | grep WARN | grep -v @notif@", ss1);
 		int nWarn = std::count(std::istreambuf_iterator<char>(ss1), std::istreambuf_iterator<char>(), '\n');
 		if(nWarn - lastNWarn > 0)
 		{

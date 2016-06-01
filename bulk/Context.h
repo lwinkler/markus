@@ -107,6 +107,10 @@ protected:
 	}
 	inline static void cp(const std::string& x_filePath1, const std::string& x_filePath2)
 	{
+		if(! boost::filesystem::exists(x_filePath1))
+		{
+			throw MkException("Cannot copy unexistant file " + x_filePath1, LOC);
+		}
 		if(boost::filesystem::exists(x_filePath2))
 		{
 			LOG_WARN(m_logger, "File " << x_filePath2 << " overwritten");

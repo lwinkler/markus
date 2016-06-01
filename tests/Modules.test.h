@@ -455,7 +455,7 @@ public:
 			TS_TRACE("Execute " + cmd);
 			SYSTEM(cmd);
 			// gather possible errors and warnings
-			execute("cat " + outDir + "/markus.log | grep WARN", result2);
+			execute("cat " + outDir + "/markus.log | grep WARN | grep -v @notif@", result2);
 			if(!result2.empty())
 				TS_WARN("Warning(s) found in " + outDir + "/markus.log");
 			execute("cat " + outDir + "/markus.log | grep ERROR", result2);
