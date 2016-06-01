@@ -94,12 +94,13 @@ void ThumbnailWriter::ProcessFrame()
 
 		// Save features to .json
 		std::stringstream ss2;
-		ss2 << folderName << m_currentTimeStamp << "_" << elem.GetName()<< elem.GetId() << "_" << cpt << ".json";
-		ofstream of(RefContext().ReserveFile(ss2.str()));
+		ss2 << folderName << "/" << m_currentTimeStamp << "_" << elem.GetName()<< elem.GetId() << "_" << cpt << ".json";
+		string fileName = RefContext().ReserveFile(ss2.str());
+		ofstream of(fileName);
 		if(!of.is_open())
 		{
 			RefContext().MkDir(folderName);
-			of.open(ss2.str().c_str());
+			of.open(fileName);
 			if(!of.is_open())
 				throw MkException("Impossible to create file " + ss2.str(), LOC);
 		}
