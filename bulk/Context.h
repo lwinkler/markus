@@ -83,6 +83,7 @@ public:
 	void Cp(const std::string& x_fileName1, const std::string& x_fileName2);
 	void Rm(const std::string& x_fileName);
 	void RmDir(const std::string& x_directory);
+	inline bool Exists(const std::string& x_fileName) const {return boost::filesystem::exists(GetOutputDir() + "/" + x_fileName);}
 
 	// note: All public methods must be thread-safe
 	static std::string Version(bool x_full);

@@ -67,7 +67,7 @@ protected:
 		params.autoProcess     = false;
 		Context::Parameters contextParams(appConfig);
 		contextParams.configFile      = x_configFile;
-		contextParams.outputDir       = "tests/out"; // note: these files are not checked for errors
+		contextParams.outputDir       = "";
 		contextParams.applicationName = "TestProjects";
 		contextParams.centralized = true;
 		contextParams.autoClean   = true;

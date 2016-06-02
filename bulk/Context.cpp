@@ -109,7 +109,7 @@ Context::~Context()
 				}
 				else
 				{
-					if(!boost::filesystem::exists(m_param.configFile))
+					if(!Exists(basename(m_param.configFile)))
 						Cp(m_param.configFile, "");
 				}
 			}
@@ -183,9 +183,7 @@ bool Context::IsOutputDirEmpty()
 			ss << elem.first << " ";
 		LOG_WARN(m_logger, res.size() << " files found in " << m_outputDir << ", " << m_reservedFiles.size() << " correctly reserved: " << ss.str());
 	}
-
-
-	return res.at(0) == "0";
+	return res.empty();
 }
 
 /**
