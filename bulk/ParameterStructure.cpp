@@ -132,7 +132,7 @@ void ParameterStructure::Read(const ConfigReader& x_config)
 /**
 * @brief Save all values and prepare xml configuration for writing
 */
-void ParameterStructure::Write(ConfigReader& xr_config) const
+void ParameterStructure::Write(ConfigReader xr_config) const
 {
 	ConfigReader conf = xr_config.Find("parameters");
 

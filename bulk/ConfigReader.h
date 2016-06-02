@@ -127,6 +127,7 @@ class Configurable
 public:
 	Configurable(ParameterStructure& x_param);
 	virtual ~Configurable() {}
+	virtual void WriteConfig(ConfigReader xr_config) const;
 	virtual const ParameterStructure& GetParameters() const {return m_param;}
 
 private:

@@ -254,8 +254,6 @@ void Manager::Check() const
 */
 void Manager::Reset(bool x_resetInputs)
 {
-	GetContext().GetParameters().PrintParameters();
-
 	Processable::Reset();
 
 	// Reset timers
@@ -511,12 +509,13 @@ Module& Manager::RefModuleByName(const string& x_name) const
 /**
 * @brief Save the configuration of manager and modules to file
 */
-void Manager::WriteConfig(ConfigReader& xr_config)
+void Manager::WriteConfig(ConfigReader xr_config) const // TODO unit test
 {
 	// Set all config ready to be saved
-	for(auto & elem : m_parameters)
-		elem.second->Write(xr_config);
+	for(auto & elem : m_modules)
+		elem.second->WriteConfig(xr_config.FindRef("module[name=\"" + elem.second->GetName() + "\"]"));
 	m_param.Write(xr_config);
+	GetContext().WriteConfig(xr_config);
 }
 
 /**

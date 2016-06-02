@@ -1,9 +1,14 @@
 <application name="testConfig" description="A config for unit testing purposes">
+    <parameters>
+        <param name="param_text">SomeText0</param>
+        <param name="param_int">0</param>
+        <param name="param_float">0</param>
+    </parameters>
     <module name="Module0" id="0">
         <parameters>
-            <param id="0" name="param_text">SomeText</param>
-            <param id="1" name="param_int">21</param>
-            <param id="2" name="param_float">3.1415</param>
+            <param name="param_text">SomeText</param>
+            <param name="param_int">21</param>
+            <param name="param_float">3.1415</param>
         </parameters>
         <inputs />
         <outputs>
@@ -12,9 +17,9 @@
     </module>
     <module name="Module1" id="1">
         <parameters>
-            <param id="0" name="param_text">AnotherText</param>
-            <param id="1" name="param_int">42</param>
-            <param id="2" name="param_float">2.71828</param>
+            <param name="param_text">AnotherText</param>
+            <param name="param_int">42</param>
+            <param name="param_float">2.71828</param>
         </parameters>
         <inputs>
             <input id="0" moduleid="1" outputid="0" />

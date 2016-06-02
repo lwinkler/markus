@@ -37,7 +37,7 @@ public:
 	ParameterStructure(const ConfigReader& x_configReader);
 	virtual ~ParameterStructure();
 	void Read(const ConfigReader& x_config);
-	void Write(ConfigReader& xr_config) const;
+	void Write(ConfigReader xr_config) const;
 	void SetValueToDefault();
 	virtual void CheckRange() const;
 	void CheckRange(const ConfigReader& x_config) const;

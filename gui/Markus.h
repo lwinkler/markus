@@ -63,7 +63,7 @@ public:
 	};
 
 	MarkusWindow(ParameterStructure& rx_param, Manager& rx_manager);
-	void WriteConfig(ConfigReader& xr_config);
+	void WriteConfig(ConfigReader xr_config) const override;
 private:
 	// ConfigReader& m_configReader;
 	Parameters& m_param;

@@ -463,10 +463,10 @@ def generate_html(stats, logs, data, out='out', filename='report.html'):
 	body <= H3('Other informations')
 	table = TABLE(border=1, style='border-collapse: collapse;')
 	table <= TR(TH('Name') + TH('Value'), style='background: lightgray;')
-	table <= TR(TD(B('Date')) + TD(strftime("%Y-%m-%d %H:%M:%S",
-											localtime())))
+	table <= TR(TD(B('Date')) + TD(strftime("%Y-%m-%d %H:%M:%S", localtime())))
 	table <= TR(TD(B('Script Version')) + TD(vplib.__version__))
 	table <= TR(TD(B('System info')) + TD(platform()))
+	table <= TR(TD(B('Links')) + TD(A("dir", href="..") + ", " + A("log", href="../markus.log") + ", " + A("benchmark", href="../benchmark.xml")))
 	body <= table
 
 	# Statisticts section

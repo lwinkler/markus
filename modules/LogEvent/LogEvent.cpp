@@ -95,13 +95,13 @@ void LogEvent::SaveImage(Event& xr_event) const
 	if(m_saveImage1)
 	{
 		std::stringstream ss1;
-		ss1 << m_param.folder << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_global_1." << m_param.extension;
+		ss1 << m_param.folder << "/" << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_global_1." << m_param.extension;
 		addExternalImage(m_inputIm1, "globalImage", RefContext().ReserveFile(ss1.str()), xr_event);
 
 		if(obj.width > 0 && obj.height > 0)
 		{
 			std::stringstream ss2;
-			ss2 << m_param.folder << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_1" << "." << m_param.extension;
+			ss2 << m_param.folder << "/" << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_1" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
 			addExternalImage((m_inputIm1)(obj.GetRect()), "objectImage", RefContext().ReserveFile(ss2.str()), xr_event);
 		}
@@ -110,13 +110,13 @@ void LogEvent::SaveImage(Event& xr_event) const
 	if(m_saveImage2)
 	{
 		std::stringstream ss1;
-		ss1 << m_param.folder << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_global_2." << m_param.extension;
+		ss1 << m_param.folder << "/" << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_global_2." << m_param.extension;
 		addExternalImage(m_inputIm2, "globalMask", RefContext().ReserveFile(ss1.str()), xr_event);
 
 		if(obj.width > 0 && obj.height > 0)
 		{
 			std::stringstream ss2;
-			ss2 << m_param.folder << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_2" << "." << m_param.extension;
+			ss2 << m_param.folder << "/" << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_2" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
 			addExternalImage((m_inputIm2)(obj.GetRect()), "objectMask",  RefContext().ReserveFile(ss2.str()), xr_event);
 		}

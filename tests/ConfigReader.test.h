@@ -101,7 +101,6 @@ public:
 		ConfigReader param3 = module0conf.GetSubConfig("parameters").GetSubConfig("param", "name", "param_float");
 		TS_ASSERT(param3.GetValue() == "3.1415");
 
-		TS_ASSERT(boost::lexical_cast<int>(param1.GetAttribute("id").c_str()) == 0);
 		TS_ASSERT(param1.GetAttribute("name") == "param_text");
 
 		m_conf1->SaveToFile("tests/tmp/config1_copy.xml");
@@ -133,7 +132,16 @@ public:
 	void testOverride()
 	{
 		TS_TRACE("\n# Test the override of the original configuration");
+
+		TS_ASSERT(m_conf1->Find("application>parameters>param[name=\"param_text\"]").GetValue() == "SomeText0");
+		TS_ASSERT(m_conf1->Find("application>parameters>param[name=\"param_int\"]").GetValue() == "0");
+		TS_ASSERT(m_conf1->Find("application>parameters>param[name=\"param_float\"]").GetValue() == "0");
+
 		m_conf1->OverrideWith(*m_conf5);
+
+		TS_ASSERT(m_conf1->Find("application>parameters>param[name=\"param_text\"]").GetValue() == "NewText0");
+		TS_ASSERT(m_conf1->Find("application>parameters>param[name=\"param_int\"]").GetValue() == "44");
+		TS_ASSERT(m_conf1->Find("application>parameters>param[name=\"param_float\"]").GetValue() == "0.51");
 
 		TS_ASSERT(m_conf1->Find("application>module[name=\"Module0\"]>parameters").GetSubConfig("param", "name", "param_text").GetValue() == "a new text");
 		TS_ASSERT(m_conf1->Find("application>module[name=\"Module0\"]>parameters").GetSubConfig("param", "name", "param_int").GetValue() == "33");

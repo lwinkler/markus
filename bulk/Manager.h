@@ -85,7 +85,7 @@ public:
 	inline void Quit() {m_quitting = true;}
 	inline void ListModulesTypes(std::vector<std::string>& xr_types) {mr_moduleFactory.List(xr_types);}
 	void WriteStateToDirectory(const std::string& x_directory);
-	void WriteConfig(ConfigReader& xr_config);
+	virtual void WriteConfig(ConfigReader xr_config) const override;
 	inline virtual void SetContext(Context& x_context) override
 	{
 		Processable::SetContext(x_context);
