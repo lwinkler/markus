@@ -106,8 +106,21 @@ template<>void StreamObject::Query(int x_posX, int x_posY) const
 /// Randomize the content of the stream
 template<>void StreamObject::Randomize(unsigned int& xr_seed)
 {
+	int minNb = 0;
+	int maxNb = 10;
+
+	if(!m_requirement.empty())
+	{
+		Json::Value root;
+			Json::Reader reader;
+		if(!reader.parse(m_requirement, root, false))
+			throw MkException("Error parsing requirement: " + m_requirement, LOC);
+		minNb = root.get("min", minNb).asInt();
+		maxNb = root.get("max", maxNb).asInt();
+	}
+
+	int nb = (maxNb - minNb) == 0 ? minNb : minNb + rand_r(&xr_seed) % (maxNb - minNb);
 	m_content.clear();
-	int nb = rand_r(&xr_seed) % 10;
 	for(int i = 0 ; i < nb ; i++)
 	{
 		Object obj("random");

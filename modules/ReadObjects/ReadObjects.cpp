@@ -64,10 +64,6 @@ void ReadObjects::Reset()
 
 void ReadObjects::Capture()
 {
-	// If needed, stop on first non-empty objects
-	if(m_param.oneFrameOnly && !m_ObjectOut.empty())
-		return;
-
 	string text;
 
 	if(!mp_annotationReader->ReadNextAnnotation(text))

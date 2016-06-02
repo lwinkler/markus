@@ -143,7 +143,7 @@ void LogEvent::CompareWithGroundTruth()
 			cmd<<" -i -V "<<m_param.gtVideo;
 
 		// Save command for later use
-		ofstream ofs(RefContext().ReserveFile("eval.sh"), ios_base::app);
+		ofstream ofs(RefContext().ReserveFile("eval.sh", true), ios_base::app);
 		ofs << cmd.str() << endl;
 
 		LOG_DEBUG(m_logger, "Execute cmd: " + cmd.str());

@@ -469,7 +469,7 @@ int main(int argc, char** argv)
 		// Write the modified params in config and save
 		manager.WriteConfig(appConfig);
 		// Save the last config with modifs to the output file
-		mainConfig.SaveToFile(context.ReserveFile("overriden.xml"));
+		mainConfig.SaveToFile(context.ReserveFile("overridden.xml"));
 	}
 	catch(MkException& e)
 	{

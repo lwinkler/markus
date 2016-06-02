@@ -145,7 +145,7 @@ void Event::Raise(const string& x_eventName, const Object& x_object, TIME_STAMP 
 	m_timeStampEvent = x_absTimeEvent;
 	m_timeStampNotif = x_absTimeNotif;
 	if(IsRaised())
-		LOG_WARN(m_logger, "The same event is raised several times. Older events are overriden");
+		LOG_WARN(m_logger, "The same event is raised several times. Older events are overridden");
 	m_eventName       = x_eventName;
 	m_object      = x_object;
 }
@@ -163,7 +163,7 @@ void Event::Raise(const string& x_eventName, TIME_STAMP x_absTimeNotif, TIME_STA
 	m_timeStampEvent = x_absTimeEvent;
 	m_timeStampNotif = x_absTimeNotif;
 	if(IsRaised())
-		LOG_WARN(m_logger, "The same event is raised several times. Older events are overriden");
+		LOG_WARN(m_logger, "The same event is raised several times. Older events are overridden");
 	m_eventName = x_eventName;
 	m_object = Object("empty");
 }

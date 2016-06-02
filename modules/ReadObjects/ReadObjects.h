@@ -44,14 +44,12 @@ public:
 		Parameters(const ConfigReader& x_confReader) : Input::Parameters(x_confReader)
 		{
 			AddParameter(new ParameterString("file"        , "in/objects.srt", &file      , "Name of the .srt file without extension"));
-			AddParameter(new ParameterBool("one_frame_only", 0, 0, 1         , &oneFrameOnly, "Read only one frame, to define a fixed sets of objects"));
 
 			RefParameterByName("type").SetDefaultAndValue("CV_8UC3"); // This will probably be ignored
 		}
 		std::string file;
-		bool oneFrameOnly;
 	};
-	inline virtual bool AbortCondition() const override {return m_param.oneFrameOnly || m_endOfStream;}
+	inline virtual bool AbortCondition() const override {return m_endOfStream;}
 
 	ReadObjects(ParameterStructure& xr_params);
 	virtual ~ReadObjects();

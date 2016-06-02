@@ -109,7 +109,8 @@ Context::~Context()
 				}
 				else
 				{
-					Cp(m_param.configFile, "");
+					if(!boost::filesystem::exists(m_param.configFile))
+						Cp(m_param.configFile, "");
 				}
 			}
 		}
@@ -155,8 +156,8 @@ void Context::CreateOutputDir(const string& x_outputDir, const string& x_timeSta
 			// note: do not log as logger may not be initialized
 			// Copy config file to output directory
 			m_outputDir = outputDir;
-			ReserveFile(m_param.configFile);
-			cp(m_param.configFile, outputDir + "/" + basename(m_param.configFile));
+			cp(m_param.configFile, ReserveFile(basename(m_param.configFile)));
+			ReserveFile("markus.log");
 		}
 	}
 	catch(exception& e)
@@ -173,10 +174,16 @@ void Context::CreateOutputDir(const string& x_outputDir, const string& x_timeSta
 bool Context::IsOutputDirEmpty()
 {
 	vector<string> res;
-	execute("find " + m_outputDir + " -type f | wc -l", res);
+	execute("find " + m_outputDir + " -type f", res);
 	ReadLock lock(m_lock);
-	if(boost::lexical_cast<uint>(res.at(0)) != m_reservedFiles.size())
-		LOG_WARN(m_logger, "Files found in " << m_outputDir << ": " << res.at(0) << ", correctly reserved: " << m_reservedFiles.size());
+	if(boost::lexical_cast<uint>(res.size()) != m_reservedFiles.size())
+	{
+		stringstream ss;
+		for(auto& elem : m_reservedFiles)
+			ss << elem.first << " ";
+		LOG_WARN(m_logger, res.size() << " files found in " << m_outputDir << ", " << m_reservedFiles.size() << " correctly reserved: " << ss.str());
+	}
+
 
 	return res.at(0) == "0";
 }
@@ -218,12 +225,12 @@ void Context::MkDir(const std::string& x_directory)
 * @param x_filePath File name with path
 * @return the full path to the file resource
 */
-std::string Context::ReserveFile(const std::string& x_filePath)
+std::string Context::ReserveFile(const std::string& x_filePath, bool x_ignoreIfPresent)
 {
 	WriteLock lock(m_lock);
 	LOG_INFO(m_logger, "Reserve output file " << x_filePath);
 	auto ret = m_reservedFiles.insert(std::pair<string, bool>(x_filePath, true));
-	if(ret.second == false)
+	if(ret.second == false && !x_ignoreIfPresent)
 	{
 		LOG_WARN(m_logger, "File is overridden in output directory: " << x_filePath);
 	}

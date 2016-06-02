@@ -466,7 +466,7 @@ def generate_html(stats, logs, data, out='out', filename='report.html'):
 	table <= TR(TD(B('Date')) + TD(strftime("%Y-%m-%d %H:%M:%S", localtime())))
 	table <= TR(TD(B('Script Version')) + TD(vplib.__version__))
 	table <= TR(TD(B('System info')) + TD(platform()))
-	table <= TR(TD(B('Links')) + TD(A("dir", href="..") + ", " + A("log", href="../markus.log") + ", " + A("benchmark", href="../benchmark.xml")))
+	table <= TR(TD(B('Links')) + TD(A("dir", href="..") + ", " + A("log", href="../markus.log"))))
 	body <= table
 
 	# Statisticts section

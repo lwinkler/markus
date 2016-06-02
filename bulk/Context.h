@@ -78,7 +78,7 @@ public:
 
 	// All file system methods
 	void MkDir(const std::string& x_directory);
-	std::string ReserveFile(const std::string& x_file);
+	std::string ReserveFile(const std::string& x_file, bool x_ignoreIfPresent = false);
 	void UnreserveFile(const std::string& x_file);
 	void Cp(const std::string& x_fileName1, const std::string& x_fileName2);
 	void Rm(const std::string& x_fileName);

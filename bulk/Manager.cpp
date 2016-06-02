@@ -334,7 +334,7 @@ void Manager::Process()
 	int result = ret.get();
 	if(result > 0)
 	{
-		LOG_WARN(m_logger, "Found " << result << " exception(s), the last one is " << lastException);
+		LOG_WARN(m_logger, "Found " << result << " exception(s), the last one is " << lastException); // TODO: on one line
 		throw lastException;
 	}
 }
@@ -371,10 +371,11 @@ void Manager::PrintStatistics()
 
 	// Create an XML file to summarize CPU usage
 	//     if output dir is empty, write to /tmp
-	string benchFileName = (IsContextSet() && !RefContext().IsOutputDirEmpty()) ? RefContext().ReserveFile("benchmark.xml") : "/tmp/benchmark" + timeStamp() +  ".xml";
+	// TODO: Remove previous file if exist
+	bool notEmpty = IsContextSet() && !RefContext().IsOutputDirEmpty(); // must be called before ReserveFile
+	string benchFileName = notEmpty ? RefContext().ReserveFile("benchmark.xml") : "/tmp/benchmark" + timeStamp() +  ".xml";
 	ConfigFile benchSummary(benchFileName, true);
 	ConfigReader conf = benchSummary.FindRef("benchmark", true);
-
 
 	// Write perf to output XML
 	ConfigReader perfModule = conf.FindRef("manager", true);

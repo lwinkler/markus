@@ -524,7 +524,7 @@ void ConfigReader::overrideParameters(const ConfigReader& x_newConfig, ConfigRea
 			// cout << x_newConfig.GetAttribute("name") << ":" << conf2.GetAttribute("name") << endl;
 			if(x_oldConfig.IsEmpty())
 			{
-				LOG_WARN(m_logger, "Module " << x_newConfig.GetAttribute("name") << " cannot be overriden since it does not exist in the current config");
+				LOG_WARN(m_logger, "Module " << x_newConfig.GetAttribute("name") << " cannot be overridden since it does not exist in the current config");
 				continue;
 			}
 			// Override parameter
