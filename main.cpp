@@ -466,12 +466,10 @@ int main(int argc, char** argv)
 		manager.Stop();
 		returnValue = manager.ReturnCode();
 
-#ifndef MARKUS_NO_GUI
 		// Write the modified params in config and save
 		manager.WriteConfig(appConfig);
-		// Save the last config with modifs. This would cause a problem if we had no write access to the current dir
-		mainConfig.SaveToFile("last_config.xml");
-#endif
+		// Save the last config with modifs to the output file
+		mainConfig.SaveToFile(context.ReserveFile("overriden.xml"));
 	}
 	catch(MkException& e)
 	{

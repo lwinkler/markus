@@ -77,8 +77,6 @@ bool replaceExpr(string& rx_name, const map<string,FeaturePtr>& x_features)
 void ThumbnailWriter::Reset()
 {
 	Module::Reset();
-	// m_folderName  = Manager::OutputDir() + "/" + m_param.folder + "/";
-	// RefContext().MkDir(m_folderName);
 }
 
 void ThumbnailWriter::ProcessFrame()
@@ -87,7 +85,7 @@ void ThumbnailWriter::ProcessFrame()
 	for(auto & elem : m_objectsIn)
 	{
 		// folder name
-		string folderName = m_param.folder + "/";
+		string folderName = m_param.folder;
 		while(replaceExpr(folderName, elem.GetFeatures()))
 			;
 
@@ -119,14 +117,14 @@ void ThumbnailWriter::ProcessFrame()
 			continue;
 		}*/
 		std::stringstream ss1;
-		ss1 << folderName << m_currentTimeStamp << "_" << elem.GetName()<< elem.GetId() << "_" << cpt << "." << m_param.extension;
+		ss1 << folderName << "/" << m_currentTimeStamp << "_" << elem.GetName()<< elem.GetId() << "_" << cpt << "." << m_param.extension;
 		imwrite(ss1.str(), (m_input)(rect));
 
 		// For each object save a thumbnail
 		if(m_inputStreams.at(2)->IsConnected())
 		{
 			std::stringstream ss2;
-			ss2 << folderName << m_currentTimeStamp << "_" << elem.GetName()<< elem.GetId() << "_" << cpt << "_mask." << m_param.extension;
+			ss2 << folderName<< "/"  << m_currentTimeStamp << "_" << elem.GetName()<< elem.GetId() << "_" << cpt << "_mask." << m_param.extension;
 			imwrite(ss2.str(), (m_input2)(rect));
 		}
 

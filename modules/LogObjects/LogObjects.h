@@ -47,7 +47,6 @@ public:
 		}
 		std::string file;
 		bool compress;
-		//std::string folder;
 	};
 
 	LogObjects(ParameterStructure& xr_params);
@@ -69,7 +68,6 @@ protected:
 	std::vector <Object> m_objectsIn;
 
 	// temporary
-	std::string   m_folder;
 	std::ofstream m_outputFile;
 	AnnotationFileWriter* mp_annotationWriter;
 };

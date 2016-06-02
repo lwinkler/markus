@@ -69,9 +69,6 @@ protected:
 	cv::Mat m_input;
 	cv::Mat m_input2;
 	std::vector <Object> m_objectsIn;
-
-	// temporary
-	std::string m_folderName;
 };
 
 #endif
