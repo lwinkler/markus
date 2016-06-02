@@ -447,7 +447,6 @@ public:
 
 		for(auto elem : result1)
 		{
-			vector<string> result2;
 			// For each xml, execute the file with Markus executable
 			TS_TRACE("Testing XML project " + elem);
 			string outDir = "out/test_" + basename(elem) + "_" + timeStamp();
@@ -455,12 +454,24 @@ public:
 			TS_TRACE("Execute " + cmd);
 			SYSTEM(cmd);
 			// gather possible errors and warnings
-			execute("cat " + outDir + "/markus.log | grep WARN | grep -v @notif@", result2);
-			if(!result2.empty())
-				TS_WARN("Warning(s) found in " + outDir + "/markus.log");
-			execute("cat " + outDir + "/markus.log | grep ERROR", result2);
-			if(!result2.empty())
-				TS_FAIL("Error(s) found in " + outDir + "/markus.log");
+			stringstream ssWarn;
+			stringstream ssErr;
+			execute("cat " + outDir + "/markus.log | grep WARN | grep -v @notif@", ssWarn);
+			int nWarn = std::count(std::istreambuf_iterator<char>(ssWarn), std::istreambuf_iterator<char>(), '\n');
+			if(nWarn > 0)
+			{
+				// Log warnings
+				TS_WARN("Found " + to_string(nWarn) + " warning(s) in " + outDir + "/markus.log");
+				cout << ssWarn.str() << endl;
+			}
+			execute("cat " + outDir + "/markus.log | grep ERROR", ssErr);
+			int nErr = std::count(std::istreambuf_iterator<char>(ssErr), std::istreambuf_iterator<char>(), '\n');
+			if(nErr > 0)
+			{
+				// Log errors
+				TS_FAIL("Found " + to_string(nErr) + " error(s) in " + outDir + "/markus.log");
+				cout << ssErr.str() << endl;
+			}
 		}
 
 	}

@@ -43,21 +43,27 @@ public:
 		static int lastNWarn = 0;
 		static int lastNErr  = 0;
 		stringstream ss1;
-		execute("cat tests/markus.log | grep WARN | grep -v @notif@", ss1);
+		execute("cat tests/markus.log | grep WARN | grep -v @notif@ | tail -n+" + to_string(lastNWarn), ss1);
 		int nWarn = std::count(std::istreambuf_iterator<char>(ss1), std::istreambuf_iterator<char>(), '\n');
-		if(nWarn - lastNWarn > 0)
+		if(nWarn > 0)
 		{
-			cout << "Found " << nWarn - lastNWarn << " new warning(s) in tests/markus.log, total " << nWarn << endl;
+			// Log warnings
+			lastNWarn += nWarn;
+			TS_WARN("Found " + to_string(nWarn) + " new warning(s) in tests/markus.log, total " + to_string(lastNWarn));
+			cout << ss1.str() << endl;
 		}
-		lastNWarn = nWarn;
 
 		stringstream ss3;
-		execute("cat tests/markus.log | grep ERROR", ss3);
+		execute("cat tests/markus.log | grep ERROR | tail -n+" + to_string(lastNErr), ss3);
 		int nErr = std::count(std::istreambuf_iterator<char>(ss3), std::istreambuf_iterator<char>(), '\n');
-		if(nErr - lastNErr > 0)
-			cout << "Found " << nErr - lastNErr << " new errors in tests/markus.log, total " << nErr << endl;
-		lastNErr  = nErr;
-		return nErr - lastNErr == 0;
+		if(nErr > 0)
+		{
+			// Log errors
+			lastNErr += nErr;
+			TS_FAIL("Found " + to_string(nErr) + " new errors in tests/markus.log, total " + to_string(lastNErr));
+			cout << ss3.str() << endl;
+		}
+		return nErr == 0;
 	}
 	bool setUpWorld()
 	{
