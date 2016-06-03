@@ -372,6 +372,7 @@ int main(int argc, char** argv)
 		{
 			string dir = args.outputDir + "/";
 			setenv("LOG_DIR", dir.c_str(), 1);
+			context.ReserveFile("markus.log");
 		}
 
 		log4cxx::xml::DOMConfigurator::configure(args.logConfigFile);

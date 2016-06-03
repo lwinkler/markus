@@ -145,8 +145,7 @@ public:
 
 	ConfigReader addModuleToConfig(const string& rx_type, ConfigReader& xr_config)
 	{
-		ConfigReader moduleConfig =  xr_config.RefSubConfig("application", true)
-									 .RefSubConfig("module", "name", rx_type + "0", true);
+		ConfigReader moduleConfig =  xr_config.RefSubConfig("application", true).RefSubConfig("module", "name", rx_type + "0", true);
 		ConfigReader paramConfig  = moduleConfig.RefSubConfig("parameters", true);
 
 		paramConfig.RefSubConfig("param" , "name", "class", true).SetValue(rx_type);
@@ -253,6 +252,7 @@ public:
 					tester.module->ProcessRandomInput(seed);
 			}
 			else TS_TRACE("--> unit testing disabled on " + elem);
+			mp_context->CleanDir();
 		}
 	}
 
@@ -361,6 +361,7 @@ public:
 			{
 				TS_TRACE("Parameter exception caught: " + std::string(e.what()));
 			}
+			mp_context->CleanDir();
 			timer.Stop();
 			if(timer.GetSecDouble() > 10)
 				TS_WARN("Module " + modType + " took " + std::to_string(timer.GetSecDouble()) + "s");
@@ -421,6 +422,7 @@ public:
 
 					for(int i = 0 ; i < 3 ; i++)
 						tester2.module->ProcessRandomInput(seed);
+					mp_context->CleanDir();
 				}
 				lastParam = elem->GetName();
 				lastDefault = elem->GetDefaultString();
@@ -428,8 +430,6 @@ public:
 			timer.Stop();
 			if(timer.GetSecDouble() > 10)
 				TS_WARN("Module " + modType + " took " + std::to_string(timer.GetSecDouble()) + "s");
-
-			mp_context->CleanDir();
 		}
 	}
 
@@ -499,6 +499,7 @@ public:
 			ModuleTester tester;
 			createAndConnectModule(tester, modType);
 			testExport(*tester.module);
+			mp_context->CleanDir();
 		}
 	}
 };

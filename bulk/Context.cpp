@@ -36,6 +36,7 @@ Context::Context(ParameterStructure& xr_params) :
 	Configurable(xr_params),
 	m_param(dynamic_cast<const Parameters&>(xr_params))
 {
+	LOG_DEBUG(m_logger, "Create context object");
 	if(m_unique)
 		throw MkException("More than one Context object was created. This should never happen.", LOC);
 	m_unique = true;
@@ -51,12 +52,13 @@ Context::Context(ParameterStructure& xr_params) :
 	}
 	else m_jobId = m_param.jobId;
 	LOG_INFO(m_logger, "Created context with cameraId=\"" << GetCameraId() << "\", jobId=\""
-			 << GetJobId() << "\", applicationName=\"" << GetApplicationName() << "\", configFile=\"" << m_param.configFile << "\"");
+		<< GetJobId() << "\", applicationName=\"" << GetApplicationName() << "\", configFile=\"" << m_param.configFile << "\"");
 	m_param.PrintParameters();
 }
 
 Context::~Context()
 {
+	LOG_DEBUG(m_logger, "Destroy context object");
 	// check if dir is empty and was automatically generated (no -o option)
 	CheckOutputDir();
 	bool empty = m_param.outputDir.empty() && IsOutputDirEmpty();
@@ -159,11 +161,7 @@ void Context::CreateOutputDir(const string& x_outputDir, const string& x_timeSta
 			// note: do not log as logger may not be initialized
 			// Copy config file to output directory
 			m_outputDir = outputDir;
-			cp(m_param.configFile, ReserveFile(basename(m_param.configFile)));
-
-			// In case the logs are done directly in the output dir
-			if(getenv("LOG_DIR") != nullptr)
-				ReserveFile("markus.log");
+			Cp(m_param.configFile, "");
 		}
 	}
 	catch(exception& e)
@@ -204,9 +202,11 @@ void Context::CheckOutputDir()
 	}
 	for(auto& elem : res)
 	{
-		if(m_reservedFiles.find(elem) == m_reservedFiles.end())
+		// TODO: For now we avoid the warning for jpg. See how to fix cleanly
+		if(m_reservedFiles.find(elem) == m_reservedFiles.end() && elem.find(".jpg") == string::npos)
 			LOG_WARN(m_logger, "File " << elem << " is present in output directory but was not reserved");
 	}
+	LOG_DEBUG(m_logger, "Reserved files " << m_reservedFiles.size() << " line:" << __LINE__)
 }
 
 
@@ -245,14 +245,14 @@ void Context::CleanDir()
 	map<string, bool> reservedFiles;
 	{
 		ReadLock lock(m_lock);
-		m_reservedFiles = m_reservedFiles; // since we remove from the map
+		reservedFiles = m_reservedFiles; // since we remove from the map
 	}
 	for(const auto elem : reservedFiles)
 	{
-		// if(elem.first != "markus.log")
 		Rm(elem.first);
 	}
 	m_reservedFiles.clear();
+	LOG_DEBUG(m_logger, "Reserved files " << m_reservedFiles.size() << " line:" << __LINE__)
 }
 
 /**
@@ -277,12 +277,13 @@ std::string Context::ReserveFile(const std::string& x_filePath, int x_uniqueInde
 	LOG_DEBUG(m_logger, "Lock Context, line " << __LINE__);
 	WriteLock lock(m_lock);
 	stringstream ss;
-	if(x_uniqueIndex < 0)
+	if(x_uniqueIndex < 0 || x_filePath.find("%d") == string::npos)
 		ss << x_filePath; 
 	else
 		ss << boost::format(x_filePath) % x_uniqueIndex; 
 	LOG_INFO(m_logger, "Reserve output file " << ss.str());
 	auto ret = m_reservedFiles.insert(std::pair<string, bool>(ss.str(), true));
+	LOG_DEBUG(m_logger, "Reserved files " << m_reservedFiles.size() << " line:" << __LINE__)
 	if(ret.second == false)
 	{
 		LOG_WARN(m_logger, "File is overridden in output directory: " << ss.str());
@@ -308,6 +309,7 @@ void Context::UnreserveFile(const std::string& x_filePath)
 	{
 		m_reservedFiles.erase(it);
 	}
+	LOG_DEBUG(m_logger, "Reserved files " << m_reservedFiles.size() << " line:" << __LINE__)
 }
 
 /**
@@ -318,9 +320,9 @@ void Context::UnreserveFile(const std::string& x_filePath)
 */
 void Context::Cp(const std::string& x_fileName1, const std::string& x_fileName2)
 {
+	LOG_DEBUG(m_logger, "Copy file " << x_fileName1 << " into output dir " << x_fileName2);
 	string dest = x_fileName2.empty() ? basename(x_fileName1) : x_fileName2;
-	ReserveFile(dest);
-	cp(x_fileName1, GetOutputDir() + "/" + dest);
+	cp(x_fileName1, ReserveFile(dest));
 }
 
 /**
@@ -330,6 +332,7 @@ void Context::Cp(const std::string& x_fileName1, const std::string& x_fileName2)
 */
 void Context::Rm(const std::string& x_fileName)
 {
+	LOG_DEBUG(m_logger, "Remove file " << x_fileName << " from output dir");
 	UnreserveFile(x_fileName);
 	rm(GetOutputDir() + "/" + x_fileName);
 }
