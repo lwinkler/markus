@@ -73,6 +73,7 @@ void Module::Reset()
 		throw MkException("Module of class " + GetClass() + " has an empty name", LOC);
 	LOG_INFO(m_logger, "Reseting module "<<GetName());
 	Processable::Reset();
+	m_nbReset++;
 
 	// note: The input streams must never be reset since this would be incoherent with the 
 	//       behavior of parameters. Reseting them would erase the current value and set them to default.
@@ -225,6 +226,10 @@ void Module::Process()
 			return;
 		ComputeCurrentTimeStamp();
 #ifdef MARKUS_DEBUG_STREAMS
+		if(m_nbReset == UINT16_MAX)
+		{
+			LOG_ERROR(m_logger, "Module " << GetName() << " was never reseted. This should never happen");
+		}
 		if(m_currentTimeStamp == m_lastTimeStamp)
 			LOG_WARN(m_logger, "Timestamp are not increasing correctly");
 #endif

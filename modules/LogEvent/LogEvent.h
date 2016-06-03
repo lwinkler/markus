@@ -43,7 +43,7 @@ public:
 		Parameters(const ConfigReader& x_confReader) :
 			Module::Parameters(x_confReader)
 		{
-			AddParameter(new ParameterString("file"        , "event.srt"  , &file      ,  "Name of the .srt file without extension"));
+			AddParameter(new ParameterString("file"        , "event.%d.srt", &file      ,  "Name of the .srt file without extension"));
 			AddParameter(new ParameterDouble("duration"    , 5, 0, 600    , &duration  ,  "Duration of the event for logging in .srt file"));
 			AddParameter(new ParameterString("folder"      , "events_img" , &folder    ,  "Name of the folder to create for images"));
 			AddParameter(new ParameterString("extension"   , "jpg"        , &extension ,  "Extension of the thumbnails. Determines the output format."));

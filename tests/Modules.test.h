@@ -428,6 +428,8 @@ public:
 			timer.Stop();
 			if(timer.GetSecDouble() > 10)
 				TS_WARN("Module " + modType + " took " + std::to_string(timer.GetSecDouble()) + "s");
+
+			mp_context->CleanDir();
 		}
 	}
 

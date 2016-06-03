@@ -22,9 +22,10 @@
 -------------------------------------------------------------------------------------*/
 
 #include "Context.h"
-
 #include "util.h"
 #include "version.h"
+
+#include <boost/format.hpp>
 
 using namespace std;
 
@@ -57,6 +58,7 @@ Context::Context(ParameterStructure& xr_params) :
 Context::~Context()
 {
 	// check if dir is empty and was automatically generated (no -o option)
+	CheckOutputDir();
 	bool empty = m_param.outputDir.empty() && IsOutputDirEmpty();
 
 	if(!empty)
@@ -88,6 +90,7 @@ Context::~Context()
 			else
 			{
 				LOG_INFO(m_logger, "Working directory deleted");
+				CleanDir();
 				rmDir(m_outputDir);
 			}
 		}
@@ -157,7 +160,10 @@ void Context::CreateOutputDir(const string& x_outputDir, const string& x_timeSta
 			// Copy config file to output directory
 			m_outputDir = outputDir;
 			cp(m_param.configFile, ReserveFile(basename(m_param.configFile)));
-			ReserveFile("markus.log");
+
+			// In case the logs are done directly in the output dir
+			if(getenv("LOG_DIR") != nullptr)
+				ReserveFile("markus.log");
 		}
 	}
 	catch(exception& e)
@@ -173,18 +179,36 @@ void Context::CreateOutputDir(const string& x_outputDir, const string& x_timeSta
 */
 bool Context::IsOutputDirEmpty()
 {
-	vector<string> res;
-	execute("find " + m_outputDir + " -type f", res);
+	LOG_DEBUG(m_logger, "Lock Context, line " << __LINE__);
 	ReadLock lock(m_lock);
-	if(boost::lexical_cast<uint>(res.size()) != m_reservedFiles.size())
-	{
-		stringstream ss;
-		for(auto& elem : m_reservedFiles)
-			ss << elem.first << " ";
-		LOG_WARN(m_logger, res.size() << " files found in " << m_outputDir << ", " << m_reservedFiles.size() << " correctly reserved: " << ss.str());
-	}
-	return res.empty();
+	return m_reservedFiles.empty();
 }
+
+/**
+* @brief Check that the output dir is in a coherent state with the reserved objects
+*/
+void Context::CheckOutputDir()
+{
+	LOG_DEBUG(m_logger, "Lock Context, line " << __LINE__);
+	ReadLock lock(m_lock);
+	vector<string> res;
+	execute("find " + m_outputDir + " -type f | sed -n 's|^" + m_outputDir + "/||p'", res);
+
+	if(m_reservedFiles.size() != res.size())
+		LOG_WARN(m_logger, res.size() << " files found in " << m_outputDir << " for " << m_reservedFiles.size() << " correctly reserved");
+
+	for(auto& elem : m_reservedFiles)
+	{
+		if(find(res.begin(), res.end(), elem.first) == res.end())
+			LOG_WARN(m_logger, "File " << elem.first << " was reserved but is not present in output directory");
+	}
+	for(auto& elem : res)
+	{
+		if(m_reservedFiles.find(elem) == m_reservedFiles.end())
+			LOG_WARN(m_logger, "File " << elem << " is present in output directory but was not reserved");
+	}
+}
+
 
 /**
 * @brief Return a string containing the version of the executable
@@ -208,6 +232,30 @@ string Context::Version(bool x_full)
 }
 
 /**
+* @brief Clean the output directory
+*
+* @param x_full Return the full info string with info on host
+*
+* @return Version
+*/
+void Context::CleanDir()
+{
+	CheckOutputDir(); // must be before lock
+	LOG_DEBUG(m_logger, "Lock Context, line " << __LINE__);
+	map<string, bool> reservedFiles;
+	{
+		ReadLock lock(m_lock);
+		m_reservedFiles = m_reservedFiles; // since we remove from the map
+	}
+	for(const auto elem : reservedFiles)
+	{
+		// if(elem.first != "markus.log")
+		Rm(elem.first);
+	}
+	m_reservedFiles.clear();
+}
+
+/**
 * @brief Create a directory inside the output directory
 *
 * @param x_directory Directory nema
@@ -220,19 +268,26 @@ void Context::MkDir(const std::string& x_directory)
 /**
 * @brief Reserve a file inside the output directory
 *
-* @param x_filePath File name with path
+* @param x_filePath    File name with path
+* @param x_uniqueIndex Optional. An index to generate a unique file name 
 * @return the full path to the file resource
 */
-std::string Context::ReserveFile(const std::string& x_filePath, bool x_ignoreIfPresent)
+std::string Context::ReserveFile(const std::string& x_filePath, int x_uniqueIndex)
 {
+	LOG_DEBUG(m_logger, "Lock Context, line " << __LINE__);
 	WriteLock lock(m_lock);
-	LOG_INFO(m_logger, "Reserve output file " << x_filePath);
-	auto ret = m_reservedFiles.insert(std::pair<string, bool>(x_filePath, true));
-	if(ret.second == false && !x_ignoreIfPresent)
+	stringstream ss;
+	if(x_uniqueIndex < 0)
+		ss << x_filePath; 
+	else
+		ss << boost::format(x_filePath) % x_uniqueIndex; 
+	LOG_INFO(m_logger, "Reserve output file " << ss.str());
+	auto ret = m_reservedFiles.insert(std::pair<string, bool>(ss.str(), true));
+	if(ret.second == false)
 	{
-		LOG_WARN(m_logger, "File is overridden in output directory: " << x_filePath);
+		LOG_WARN(m_logger, "File is overridden in output directory: " << ss.str());
 	}
-	return GetOutputDir() + "/" + x_filePath;
+	return GetOutputDir() + "/" + ss.str();
 }
 
 /**
@@ -242,6 +297,7 @@ std::string Context::ReserveFile(const std::string& x_filePath, bool x_ignoreIfP
 */
 void Context::UnreserveFile(const std::string& x_filePath)
 {
+	LOG_DEBUG(m_logger, "Lock Context, line " << __LINE__);
 	WriteLock lock(m_lock);
 	auto it = m_reservedFiles.find(x_filePath);
 	if(it == m_reservedFiles.end())

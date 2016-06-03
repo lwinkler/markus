@@ -58,7 +58,7 @@ void LogEvent::Reset()
 
 	CLEAN_DELETE(mp_annotationWriter);
 	mp_annotationWriter = new AnnotationFileWriter();
-	mp_annotationWriter->Open(RefContext().ReserveFile(m_param.file));
+	mp_annotationWriter->Open(RefContext().ReserveFile(m_param.file, m_nbReset));
 	m_saveImage1 = m_inputStreams.at(1)->IsConnected();
 	m_saveImage2 = m_inputStreams.at(2)->IsConnected();
 
@@ -143,7 +143,7 @@ void LogEvent::CompareWithGroundTruth()
 			cmd<<" -i -V "<<m_param.gtVideo;
 
 		// Save command for later use
-		ofstream ofs(RefContext().ReserveFile("eval.sh", true), ios_base::app);
+		ofstream ofs(RefContext().ReserveFile("eval.%d.sh", m_nbReset), ios_base::app);
 		ofs << cmd.str() << endl;
 
 		LOG_DEBUG(m_logger, "Execute cmd: " + cmd.str());

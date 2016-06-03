@@ -75,15 +75,16 @@ public:
 
 	virtual ~Context();
 	Context(ParameterStructure& xr_params);
+	void CleanDir();
 
 	// All file system methods
 	void MkDir(const std::string& x_directory);
-	std::string ReserveFile(const std::string& x_file, bool x_ignoreIfPresent = false);
+	std::string ReserveFile(const std::string& x_file, int x_uniqueIndex = -1);
 	void UnreserveFile(const std::string& x_file);
 	void Cp(const std::string& x_fileName1, const std::string& x_fileName2);
 	void Rm(const std::string& x_fileName);
 	void RmDir(const std::string& x_directory);
-	inline bool Exists(const std::string& x_fileName) const {return boost::filesystem::exists(GetOutputDir() + "/" + x_fileName);}
+	inline bool Exists(const std::string& x_fileName) {ReadLock(m_lock); return m_reservedFiles.find(x_fileName) != m_reservedFiles.end();}
 
 	// note: All public methods must be thread-safe
 	static std::string Version(bool x_full);
@@ -92,6 +93,7 @@ public:
 	inline const std::string& GetJobId() const {return m_jobId;}
 	inline const std::string& GetCameraId() const {return m_param.cameraId;}
 	bool IsOutputDirEmpty();
+	void CheckOutputDir();
 	inline bool IsCentralized() const {return m_param.centralized;}
 	inline bool IsRealTime() const {return m_param.realTime;}
 	const Parameters& GetParameters() const {return m_param;}

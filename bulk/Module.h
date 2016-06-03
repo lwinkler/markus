@@ -156,6 +156,7 @@ protected:
 	Timer m_timerProcessFrame;
 	Timer m_timerWaiting;
 	uint64_t m_countProcessedFrames = 0;
+	uint16_t m_nbReset = UINT16_MAX;
 
 	// for testing
 	bool m_isUnitTestingEnabled = true;

@@ -61,7 +61,7 @@ void LogState::Reset()
 	*/
 
 	m_file.close();
-	m_file.open(RefContext().ReserveFile(m_param.file, true), std::ios_base::app);
+	m_file.open(RefContext().ReserveFile(m_param.file, m_nbReset), std::ios_base::app);
 	if(! m_file.is_open())
 		throw MkException("Impossible to open file " + m_srtFileName, LOC);
 }

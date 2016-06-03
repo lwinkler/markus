@@ -50,7 +50,7 @@ void AnnotationFileWriter::Open(const string& x_file)
 	// m_srtEnd   = msToTimeStamp(0);
 	m_subId    = 0;
 
-	LOG_DEBUG(m_logger, "Open anotation file: "<<x_file);
+	LOG_DEBUG(m_logger, "Open annotation file: "<<x_file);
 
 	if(m_file.is_open())
 		m_file.close();

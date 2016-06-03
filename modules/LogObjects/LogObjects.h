@@ -42,8 +42,8 @@ public:
 	public:
 		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
-			AddParameter(new ParameterString("file", 	  "objects.srt", 	     &file,      "Name of the .srt file without extension"));
-			AddParameter(new ParameterBool("compress", 	  0, 0, 1, 	     &compress,      "Compress the result as a tar.gz"));
+			AddParameter(new ParameterString("file"   , "objects.%d.srt" , &file , "Name of the .srt file without extension"));
+			AddParameter(new ParameterBool("compress" , 0 , 0     , 1    , &compress , "Compress the result as a tar.gz"));
 		}
 		std::string file;
 		bool compress;
