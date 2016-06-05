@@ -380,35 +380,51 @@ public:
 		{
 			Timer timer;
 			timer.Start();
-			ModuleTester tester;
-			createAndConnectModule(tester, modType);
-			TS_TRACE("# on module " + modType);
+
+			vector<vector<string>> allValues;
+			vector<string> allDefault;
+			vector<string> allNames;
+
+			{
+				// Scope for tester structure
+				ModuleTester tester;
+				createAndConnectModule(tester, modType);
+				TS_TRACE("# on module " + modType);
+
+				// Test on all controllers of the module
+				for(const auto& elem : tester.module->GetParameters().GetList())
+				{
+					// Create a second module with the parameter value (in case it is locked)
+					// we already have tested the other parameters with controllers
+					if(!elem->IsLocked())
+						continue;
+
+					TS_TRACE("## on parameter " + elem->GetName() + " of type " + elem->GetType() + " on range " + elem->GetRange());
+
+					// Generate a new module with each value for locked parameter
+					vector<string> values;
+
+					TS_TRACE("Generate values for param of type " + elem->GetType() + " in range " + elem->GetRange());
+					elem->GenerateValues(10, values);
+					allValues.push_back(values);
+					allDefault.push_back(elem->GetDefaultString());
+					allNames.push_back(elem->GetName());
+				}
+			}
+			// We need to clean here to avoid overriding files
+			mp_context->CleanDir();
 
 			string lastParam = "";
 			string lastDefault = "";
 
-			// Test on all controllers of the module
-			for(const auto& elem : tester.module->GetParameters().GetList())
+			for(size_t i = 0 ; i < allValues.size() ; i++)
 			{
-				// Create a second module with the parameter value (in case it is locked)
-				// we already have tested the other parameters with controllers
-				if(!elem->IsLocked())
-					continue;
-
-				TS_TRACE("## on parameter " + elem->GetName() + " of type " + elem->GetType() + " on range " + elem->GetRange());
-
-				// Generate a new module with each value for locked parameter
-				vector<string> values;
-
-				TS_TRACE("Generate values for param of type " + elem->GetType() + " in range " + elem->GetRange());
-				elem->GenerateValues(10, values);
-
-				for(const auto& elemVal : values)
+				for(const auto& elemVal : allValues[i])
 				{
 					// For each value
 					map<string, string> params;
-					TS_TRACE("Set param " + elem->GetName() + " = " + elemVal + " and " + lastParam + " = " + lastDefault);
-					params[elem->GetName()] = elemVal;
+					TS_TRACE("Set param " + allNames[i] + " = " + elemVal + " and " + lastParam + " = " + lastDefault);
+					params[allNames[i]] = elemVal;
 					if(lastParam != "")
 						params[lastParam] = lastDefault;
 
@@ -424,8 +440,8 @@ public:
 						tester2.module->ProcessRandomInput(seed);
 					mp_context->CleanDir();
 				}
-				lastParam = elem->GetName();
-				lastDefault = elem->GetDefaultString();
+				lastParam   = allNames[i];
+				lastDefault = allDefault[i];
 			}
 			timer.Stop();
 			if(timer.GetSecDouble() > 10)
