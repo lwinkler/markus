@@ -313,7 +313,8 @@ void Manager::Process()
 			if(!elem->HasRecovered())
 			{
 				cptExceptions++;
-				LOG_WARN(m_logger, "The manager found an exception in " << elem->GetName());
+				// note: we already log a warning later
+				LOG_INFO(m_logger, "The manager found an exception in " << elem->GetName());
 				lastException = elem->LastException();
 			}
 		}
@@ -334,7 +335,8 @@ void Manager::Process()
 	int result = ret.get();
 	if(result > 0)
 	{
-		LOG_WARN(m_logger, "Found " << result << " exception(s), the last one is " << lastException.SerializeToString());
+		// note: we already log as a warning later in ProcessAndCatch
+		LOG_INFO(m_logger, "Found " << result << " exception(s), the last one is " << lastException.SerializeToString());
 		throw lastException;
 	}
 }
