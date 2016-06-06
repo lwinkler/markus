@@ -146,7 +146,7 @@ bool AnnotationAssFileReader::ReadNextAnnotation(string& rx_subText)
 		{
 			SafeGetline(m_srtFile, line);
 			if(! m_srtFile.good())
-				throw MkException("End of file in AnnotationAssFileReader", LOC);
+				throw EndOfStreamException("End of file in AnnotationAssFileReader", LOC);
 		}
 
 		// get start time
@@ -191,9 +191,9 @@ bool AnnotationAssFileReader::ReadNextAnnotation(string& rx_subText)
 		LOG_DEBUG(m_logger, "Read next sub: "<<m_srt);
 		return true;
 	}
-	catch(MkException& e)
+	catch(EndOfStreamException& e)
 	{
-		LOG_ERROR(m_logger, "Exception while reading .ass file in AnnotationAssFileReader: " << e.what());
+		LOG_INFO(m_logger, "End of .ass file: " << e.what());
 		rx_subText = "";
 		m_srtStart = msToTimeStamp(0);
 		m_srtEnd   = msToTimeStamp(0);

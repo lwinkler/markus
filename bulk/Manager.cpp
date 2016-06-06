@@ -334,7 +334,7 @@ void Manager::Process()
 	int result = ret.get();
 	if(result > 0)
 	{
-		LOG_WARN(m_logger, "Found " << result << " exception(s), the last one is " << lastException); // TODO: on one line
+		LOG_WARN(m_logger, "Found " << result << " exception(s), the last one is " << lastException.SerializeToString());
 		throw lastException;
 	}
 }

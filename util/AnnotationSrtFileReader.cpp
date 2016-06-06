@@ -93,16 +93,9 @@ bool AnnotationSrtFileReader::ReadNextAnnotation(string& rx_subText)
 		}
 		LOG_DEBUG(m_logger, "Read next sub: "<<rx_subText);
 	}
-	catch(MkException& e)
+	catch(EndOfStreamException& e)
 	{
-		if(e.GetCode() == MK_EXCEPTION_ENDOFSTREAM)
-		{
-			LOG_WARN(m_logger, "Exception while reading .srt file : " << e.what());
-		}
-		else
-		{
-			LOG_ERROR(m_logger, "Exception while reading .srt file : " << e.what());
-		}
+		LOG_INFO(m_logger, "End of .srt file : " << e.what());
 		rx_subText = "";
 		m_srtStart = msToTimeStamp(0);
 		m_srtEnd   = msToTimeStamp(0);
