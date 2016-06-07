@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 """
 Evaluation of a video events regarding to its ground truth
@@ -57,8 +56,7 @@ def is_tool(name):
 	""" Check if a tool exists """
 	try:
 		devnull = open(os.devnull, 'w')
-		subprocess.check_call(['which', name], stdout=devnull,
-							  stderr=subprocess.STDOUT)
+		subprocess.check_call(['which', name], stdout=devnull, stderr=subprocess.STDOUT)
 	except subprocess.CalledProcessError:
 		return False
 	return True

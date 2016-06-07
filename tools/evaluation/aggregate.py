@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 """
 Aggregate results of several videos into one report.
@@ -59,7 +58,7 @@ def generate_html(path, datas, dirname='analysis', filename='summary.html'):
 		print('No results to aggregate')
 		exit(1)
 
-	# Create HEAD and BODY
+	# Create HEAD and BODY
 	head = HEAD(TITLE('Report'))
 	body = BODY(H1('Report'))
 
