@@ -72,10 +72,6 @@ protected:
 
 	// temporary
 	AnnotationFileReader* mp_annotationReader = nullptr;
-	std::string text;
-	TIME_STAMP currentTimeStampTmp;
-	bool firstAnnotation;
-
 };
 
 #endif

@@ -208,8 +208,9 @@ void Module::ComputeCurrentTimeStamp()
 				return;
 		}
 	}
-	assert(IsAutoProcessed());
-	m_currentTimeStamp = 0;
+	if(!IsAutoProcessed())
+		throw MkException("Only an autoprocessed (or input) module can have no connected input. Module " + GetName(), LOC);
+	m_currentTimeStamp = TIME_STAMP_MIN;
 }
 
 /**
@@ -225,14 +226,6 @@ void Module::Process()
 		if(!m_param.autoProcess && !ProcessingCondition())
 			return;
 		ComputeCurrentTimeStamp();
-#ifdef MARKUS_DEBUG_STREAMS
-		if(m_nbReset == UINT16_MAX)
-		{
-			LOG_ERROR(m_logger, "Module " << GetName() << " was never reseted. This should never happen");
-		}
-		if(m_currentTimeStamp == m_lastTimeStamp)
-			LOG_WARN(m_logger, "Timestamp are not increasing correctly");
-#endif
 
 		// Process this frame
 
@@ -298,6 +291,16 @@ void Module::Process()
 		}
 		else LOG_DEBUG(m_logger, "No propagation of processing to depending modules");
 
+#ifdef MARKUS_DEBUG_STREAMS
+		if(m_nbReset == UINT16_MAX)
+		{
+			LOG_ERROR(m_logger, "Module " << GetName() << " was never reseted. This should never happen");
+		}
+		if(m_currentTimeStamp == TIME_STAMP_MIN)
+			LOG_WARN(m_logger, "Module " << GetName() << " must set a timestamp!");
+		if(m_currentTimeStamp == m_lastTimeStamp)
+			LOG_WARN(m_logger, "Timestamp are not increasing correctly in " << GetName());
+#endif
 
 		m_countProcessedFrames++;
 		m_lastTimeStamp = m_currentTimeStamp;
