@@ -126,6 +126,8 @@ ModulePython::ModulePython(ParameterStructure& xr_params) :
 		// Change working directory (for python)
 		char pwd[256];
 		char* res = getcwd(pwd, sizeof(pwd));
+		if(res == nullptr)
+			throw MkException("Change of working dir to " + string(pwd) + " failed", LOC);
 
 		m_pyMain    = boost::python::import("__main__");
 		m_pyGlobals = m_pyMain.attr("__dict__");

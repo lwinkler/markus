@@ -302,10 +302,11 @@ const string timeStamp(int x_pid)
 {
 	time_t rawtime;
 	time(&rawtime);
-	const tm* timeinfo = localtime(&rawtime);
+	struct tm timeinfo;
+	localtime_r(&rawtime, &timeinfo);
 
 	char dd[20];
-	strftime(dd, sizeof(dd), "%Y%m%d_%H%M%S", timeinfo);
+	strftime(dd, sizeof(dd), "%Y%m%d_%H%M%S", &timeinfo);
 
 	stringstream ss;
 	// note: workaround to have ms precision
