@@ -1,4 +1,5 @@
 <application name="TestLogObjects">
+	<parameters/>
 	<module id="0" name="VideoFileReader0">
 		<inputs/>
 		<outputs>

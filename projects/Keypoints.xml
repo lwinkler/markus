@@ -1,4 +1,5 @@
 <application name="CustomProject">
+	<parameters/>
 	<module id="0" name="Input">
 		<inputs/>
 		<outputs>

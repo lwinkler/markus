@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <application name="Simple" description="">
+	<parameters/>
 	<module id="0" name="UsbCam0">
 		<inputs/>
 		<outputs>

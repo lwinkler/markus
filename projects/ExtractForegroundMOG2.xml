@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <application name="ExtrackForegroundMOG">
+	<parameters/>
 	<module id="0" name="Input">
 		<inputs/>
 		<outputs>

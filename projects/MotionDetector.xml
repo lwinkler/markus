@@ -1,4 +1,5 @@
 <application name="MotionDetector">
+	<parameters/>
 	
 	<module name="BgrSubRunAvg" id="1">
 		<parameters>
