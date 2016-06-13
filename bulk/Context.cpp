@@ -70,11 +70,12 @@ Context::~Context()
 	{
 		try
 		{
-			mp_outputDir->Cp("markus.log", "markus.copy.log");
+			// note: for tests the log file is located in tests
+			mp_outputDir->Cp(m_param.outputDir == "tests/out" ? "tests/markus.log" : "markus.log", "markus.copy.log");
 		}
-		catch(...)
+		catch(exception& e)
 		{
-			LOG_WARN(m_logger, "Error at the copy of markus.log");
+			LOG_WARN(m_logger, "Error at the copy of markus.log: " << e.what());
 		}
 	}
 

@@ -52,11 +52,9 @@ public:
 	void UnreserveFile(const std::string& x_file);
 	void Cp(const std::string& x_fileName1, const std::string& x_fileName2);
 	void Rm(const std::string& x_fileName);
-	// void RmDir(const std::string& x_directory);
 	inline bool FileExists(const std::string& x_fileName) {ReadLock(m_lock); return m_reservedFiles.find(x_fileName) != m_reservedFiles.end();}
 	inline bool DirExists(const std::string& x_dirName) {ReadLock lock(m_lock); return FindSubDir(x_dirName) != nullptr;}
 	inline const std::string& GetPath() const {return m_path;}
-	// inline const std::string& GetDirName() const {return m_dirName;}
 
 	// For context
 	void ArchiveAndClean(bool x_clean, const std::string& x_archiveDir, const std::string& x_configFile);
@@ -95,6 +93,8 @@ public: // TODO: Make protected
 
 protected:
 	MkDirectory* FindSubDir(const std::string& x_dirName);
+	inline void RegisterSubDir(const std::string& x_dirName, MkDirectory* xp_subdir){WriteLock(m_lock); mp_subDirectories.insert(std::make_pair(x_dirName, xp_subdir));}
+	void UnregisterSubDir(MkDirectory* xp_subdir);
 
 	typedef boost::shared_mutex Lock;
 	typedef boost::unique_lock<Lock> WriteLock;
@@ -107,7 +107,6 @@ private:
 	DISABLE_COPY(MkDirectory)
 	static log4cxx::LoggerPtr m_logger;
 	const std::string m_path;
-	const std::string m_dirName;
 	MkDirectory* mp_parent = nullptr;
 };
 #endif

@@ -30,17 +30,24 @@ using namespace std;
 
 log4cxx::LoggerPtr MkDirectory::m_logger(log4cxx::Logger::getLogger("MkDirectory"));
 
-MkDirectory::MkDirectory(const std::string& x_dirName, MkDirectory& xr_parent, bool x_exist) : m_path(xr_parent.GetPath() + "/" + x_dirName), m_dirName(x_dirName), mp_parent(&xr_parent)
+MkDirectory::MkDirectory(const std::string& x_dirName, MkDirectory& xr_parent, bool x_exist) : m_path(xr_parent.GetPath() + "/" + x_dirName), mp_parent(&xr_parent)
 {
-	// TODO: fix path
-	// if(x_dirName.find('/') != std::string::npos)
-		// throw MkException("Directory name must not containt '/': " + x_dirName, LOC);
+	if(m_path == "." || m_path == ".." || m_path.empty())
+	{
+		throw FatalException("Invalid directory path '" + m_path + "', aborting", LOC);
+	}
+	if(x_dirName.find('/') != std::string::npos)
+		throw MkException("Directory name must not containt '/': " + x_dirName, LOC);
+	xr_parent.RegisterSubDir(x_dirName, this);
 	if(!x_exist)
 		mkDir(m_path);
-	// TODO: register
 }
-MkDirectory::MkDirectory(const std::string& x_dirName, const std::string& x_path, bool x_exist) : m_path(x_path), m_dirName(x_dirName), mp_parent(nullptr)
+MkDirectory::MkDirectory(const std::string& x_dirName, const std::string& x_path, bool x_exist) : m_path(x_path + "/" + x_dirName), mp_parent(nullptr)
 {
+	if(m_path == "." || m_path == ".." || m_path.empty())
+	{
+		throw FatalException("Invalid directory path '" + m_path + "', aborting", LOC);
+	}
 	// if(x_dirName.find('/') != std::string::npos)
 		// throw MkException("Directory name must not containt '/': " + x_dirName, LOC);
 	if(!x_exist)
@@ -54,7 +61,8 @@ MkDirectory::~MkDirectory()
 	{
 		LOG_ERROR(m_logger, "Sub directory " << elem.first << " was not unregistred from parent " << m_path);
 	}
-		// TODO: unregister
+	if(mp_parent != nullptr)
+		mp_parent->UnregisterSubDir(this);
 }
 
 /**
@@ -83,15 +91,36 @@ bool MkDirectory::IsEmpty()
 	return m_reservedFiles.empty();
 }
 
+void MkDirectory::UnregisterSubDir(MkDirectory* xp_subdir)
+{
+	WriteLock(m_lock);
+	for(auto it = mp_subDirectories.begin() ; it != mp_subDirectories.end() ; ++it)
+	{
+		if(it->second == xp_subdir)
+		{
+			if(it->second == xp_subdir)
+			{
+				mp_subDirectories.erase(it);
+				return;
+			}
+		}
+	}
+}
+
 /**
 * @brief Check that the output dir is in a coherent state with the reserved objects
 */
 void MkDirectory::CheckOutputDir()
 {
 	LOG_DEBUG(m_logger, "Lock MkDirectory, line " << __LINE__);
+
+	// recursive
+	for(auto elem : mp_subDirectories)
+		elem.second->CheckOutputDir();
+
 	ReadLock lock(m_lock);
 	vector<string> res;
-	execute("find " + m_path + " -type f | sed -n 's|^" + m_path + "/||p'", res);
+	execute("find " + m_path + " -maxdepth 1 -type f | sed -n 's|^" + m_path + "/||p'", res);
 
 	if(m_reservedFiles.size() != res.size())
 		LOG_WARN(m_logger, res.size() << " files found in " << m_path << " for " << m_reservedFiles.size() << " correctly reserved");
@@ -99,13 +128,12 @@ void MkDirectory::CheckOutputDir()
 	for(auto& elem : m_reservedFiles)
 	{
 		if(find(res.begin(), res.end(), elem.first) == res.end())
-			LOG_WARN(m_logger, "File " << elem.first << " was reserved but is not present in output directory");
+			LOG_WARN(m_logger, "File " << elem.first << " was reserved but is not present in output directory " << m_path);
 	}
 	for(auto& elem : res)
 	{
-		// TODO: For now we avoid the warning for jpg. See how to fix cleanly
-		if(m_reservedFiles.find(elem) == m_reservedFiles.end() && elem.find(".jpg") == string::npos)
-			LOG_WARN(m_logger, "File " << elem << " is present in output directory but was not reserved");
+		if(m_reservedFiles.find(elem) == m_reservedFiles.end())
+			LOG_WARN(m_logger, "File " << elem << " is present in output directory " << m_path << " but was not reserved");
 	}
 	LOG_DEBUG(m_logger, "Reserved files " << m_reservedFiles.size() << " line:" << __LINE__)
 }
@@ -124,6 +152,9 @@ void MkDirectory::CleanDir()
 		ReadLock lock(m_lock);
 		reservedFiles = m_reservedFiles; // since we remove from the map
 	}
+	// recursive
+	for(auto elem : mp_subDirectories)
+		elem.second->CleanDir();
 	for(const auto elem : reservedFiles)
 	{
 		Rm(elem.first);
@@ -211,8 +242,8 @@ void MkDirectory::UnreserveFile(const std::string& x_filePath)
 */
 void MkDirectory::Cp(const std::string& x_fileName1, const std::string& x_fileName2)
 {
-	LOG_DEBUG(m_logger, "Copy file " << x_fileName1 << " into output dir " << x_fileName2);
 	string dest = x_fileName2.empty() ? basename(x_fileName1) : x_fileName2;
+	LOG_DEBUG(m_logger, "Copy file " << x_fileName1 << " into output dir " << m_path << " as " << dest);
 	cp(x_fileName1, ReserveFile(dest));
 }
 
@@ -247,6 +278,8 @@ void MkDirectory::RmDir(const std::string& x_directory)
 */
 void MkDirectory::ArchiveAndClean(bool x_clean, const string& x_archiveDir, const string& x_configFile)
 {
+	if(mp_parent != nullptr)
+		throw MkException("Unexpected: ArchiveAndClean should only be called from main output directory", LOC);
 	if(x_clean)
 	{
 		if(x_archiveDir != "")

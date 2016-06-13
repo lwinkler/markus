@@ -179,9 +179,12 @@ void StreamImage::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 	Stream::Serialize(ss, xp_dir);
 	ss >> root;
 	stringstream fileName;
-	fileName << xp_dir << "/" << GetModule().GetName() << "." << GetName() << "." << m_timeStamp << ".jpg";
-	imwrite(fileName.str(), m_content);
-	root["image"] = fileName.str();
+	fileName << GetModule().GetName() << "." << GetName() << "." << m_timeStamp << ".jpg";
+	if(xp_dir == nullptr)
+		root["image"] = "/dev/null/image.jpg";
+	else
+		root["image"] = xp_dir->ReserveFile(fileName.str());
+	imwrite(root["image"].asString(), m_content);
 	x_out << root;
 }
 

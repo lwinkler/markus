@@ -2,7 +2,7 @@
 {
 	"connected" : false,
 	"description" : "A stream of image",
-	"image" : "tests/serialize/image/Module0.img.4345345.jpg",
+	"image" : "./tests/serialize/image/Module0.img.4345345.jpg",
 	"name" : "img",
 	"timeStamp" : 4345345,
 	"type" : "Image"
