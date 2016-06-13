@@ -105,22 +105,18 @@ void Context::CreateOutputDir(const string& x_outputDir, const string& x_timeSta
 	{
 		if(x_outputDir.empty())
 		{
-			MkDirectory::mkDir("out");
-			outputDir = "out/out_" + x_timeStamp;
-			if(boost::filesystem::exists(outputDir))
-				throw MkException("Output directory already existing: " + outputDir, LOC);
-			// MkDirectory::mkDir(outputDir);
+			boost::filesystem::create_directories("out");
+			outputDir = "out_" + x_timeStamp;
 
 			// note: do not log as logger may not be initialized
-			mp_outputDir.reset(new MkDirectory(outputDir, ".", false));
+			mp_outputDir.reset(new MkDirectory(outputDir, "out", false));
 			boost::filesystem::remove("out_latest");
-			boost::filesystem::create_symlink(outputDir, "out_latest");
+			boost::filesystem::create_symlink("out/" + outputDir, "out_latest");
 		}
 		else
 		{
 			// If the name is specified do not check if the directory exists
 			outputDir = x_outputDir;
-			// MkDirectory::mkDir(outputDir);
 
 			// note: do not log as logger may not be initialized
 			// Copy config file to output directory

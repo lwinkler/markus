@@ -59,7 +59,7 @@ public:
 	// For context
 	void ArchiveAndClean(bool x_clean, const std::string& x_archiveDir, const std::string& x_configFile);
 
-public: // TODO: Make protected
+protected:
 	inline static void mkDir(const std::string& x_directory)
 	{
 		boost::filesystem::create_directories(x_directory);
@@ -91,7 +91,6 @@ public: // TODO: Make protected
 		boost::filesystem::rename(x_path1, x_destDir);
 	}
 
-protected:
 	MkDirectory* FindSubDir(const std::string& x_dirName);
 	inline void RegisterSubDir(const std::string& x_dirName, MkDirectory* xp_subdir){WriteLock(m_lock); mp_subDirectories.insert(std::make_pair(x_dirName, xp_subdir));}
 	void UnregisterSubDir(MkDirectory* xp_subdir);
