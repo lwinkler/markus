@@ -66,7 +66,7 @@ bool replaceExpr(string& rx_name, const map<string,FeaturePtr>& x_features)
 	else
 	{
 		stringstream ss;
-		(*it->second).Serialize(ss,"");
+		(*it->second).Serialize(ss);
 		rx_name.replace(beg, end + 1, ss.str());
 	}
 
@@ -92,18 +92,17 @@ void ThumbnailWriter::ProcessFrame()
 
 		// Save features to .json
 		std::stringstream ss2;
-		ss2 << folderName << "/" << m_currentTimeStamp << "_" << elem.GetName()<< elem.GetId() << "_" << cpt << ".json";
-		string fileName = RefContext().ReserveFile(ss2.str());
+		ss2 << m_currentTimeStamp << "_" << elem.GetName()<< elem.GetId() << "_" << cpt << ".json";
+		MkDirectory dir(folderName, RefContext().RefOutputDir(), RefContext().RefOutputDir().DirExists(folderName));
+
+		string fileName = dir.ReserveFile(ss2.str());
 		ofstream of(fileName);
 		if(!of.is_open())
 		{
-			RefContext().MkDir(folderName);
-			of.open(fileName);
-			if(!of.is_open())
-				throw MkException("Impossible to create file " + ss2.str(), LOC);
+			throw MkException("Impossible to create file " + ss2.str(), LOC);
 		}
 		LOG_DEBUG(m_logger, "Write object to " << ss2.str());
-		elem.Serialize(of, GetContext().GetOutputDir() + "/" + folderName);
+		elem.Serialize(of, &dir);
 		of.close();
 
 
@@ -117,15 +116,15 @@ void ThumbnailWriter::ProcessFrame()
 			continue;
 		}*/
 		std::stringstream ss1;
-		ss1 << folderName << "/" << m_currentTimeStamp << "_" << elem.GetName()<< elem.GetId() << "_" << cpt << "." << m_param.extension;
-		imwrite(ss1.str(), (m_input)(rect));
+		ss1 << m_currentTimeStamp << "_" << elem.GetName()<< elem.GetId() << "_" << cpt << "." << m_param.extension;
+		imwrite(dir.ReserveFile(ss1.str()), (m_input)(rect));
 
 		// For each object save a thumbnail
 		if(m_inputStreams.at(2)->IsConnected())
 		{
-			std::stringstream ss2;
-			ss2 << folderName<< "/"  << m_currentTimeStamp << "_" << elem.GetName()<< elem.GetId() << "_" << cpt << "_mask." << m_param.extension;
-			imwrite(ss2.str(), (m_input2)(rect));
+			std::stringstream ss3;
+			ss3 << m_currentTimeStamp << "_" << elem.GetName()<< elem.GetId() << "_" << cpt << "_mask." << m_param.extension;
+			imwrite(dir.ReserveFile(ss3.str()), (m_input2)(rect));
 		}
 
 		cpt++;

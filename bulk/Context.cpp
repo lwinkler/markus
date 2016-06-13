@@ -60,17 +60,17 @@ Context::~Context()
 {
 	LOG_DEBUG(m_logger, "Destroy context object");
 	// check if dir is empty and was automatically generated (no -o option)
-	CheckOutputDir();
-	bool empty = m_param.outputDir.empty() && IsOutputDirEmpty();
+	mp_outputDir->CheckOutputDir();
+	bool empty = m_param.outputDir.empty() && mp_outputDir->IsEmpty();
 
 	if(!empty)
-		LOG_INFO(m_logger, "Results written to directory "<<m_outputDir);
+		LOG_INFO(m_logger, "Results written to directory "<<mp_outputDir->GetPath());
 
 	if(getenv("LOG_DIR") == nullptr && !empty)
 	{
 		try
 		{
-			Cp("markus.log", "markus.copy.log");
+			mp_outputDir->Cp("markus.log", "markus.copy.log");
 		}
 		catch(...)
 		{
@@ -81,44 +81,7 @@ Context::~Context()
 	// Copy the directory for archiving if needed
 	try
 	{
-		if(m_param.autoClean)
-		{
-			if(m_param.archiveDir != "")
-			{
-				LOG_INFO(m_logger, "Working directory moved to " + m_param.archiveDir);
-				mkDir(m_param.archiveDir);
-				mv(m_outputDir, m_param.archiveDir);
-			}
-			else
-			{
-				LOG_INFO(m_logger, "Working directory deleted");
-				CleanDir();
-				rmDir(m_outputDir);
-			}
-		}
-		else
-		{
-			if(m_param.archiveDir != "")
-			{
-				LOG_INFO(m_logger, "Working directory moved to " + m_param.archiveDir);
-				mkDir(m_param.archiveDir);
-				mv(m_outputDir, m_param.archiveDir);
-			}
-			else
-			{
-				// Remove directory if empty else copy XML config
-				if(empty)
-				{
-					LOG_INFO(m_logger, "Removing empty directory " << m_outputDir);
-					rmDir(m_outputDir);
-				}
-				else
-				{
-					if(!Exists(basename(m_param.configFile)))
-						Cp(m_param.configFile, "");
-				}
-			}
-		}
+		mp_outputDir->ArchiveAndClean(m_param.autoClean, m_param.archiveDir, m_param.configFile);
 	}
 	catch(MkException &e)
 	{
@@ -141,72 +104,33 @@ void Context::CreateOutputDir(const string& x_outputDir, const string& x_timeSta
 	{
 		if(x_outputDir.empty())
 		{
-			mkDir("out");
+			MkDirectory::mkDir("out");
 			outputDir = "out/out_" + x_timeStamp;
 			if(boost::filesystem::exists(outputDir))
 				throw MkException("Output directory already existing: " + outputDir, LOC);
-			mkDir(outputDir);
+			// MkDirectory::mkDir(outputDir);
 
 			// note: do not log as logger may not be initialized
+			mp_outputDir.reset(new MkDirectory(outputDir, ".", false));
 			boost::filesystem::remove("out_latest");
 			boost::filesystem::create_symlink(outputDir, "out_latest");
-			m_outputDir = outputDir;
 		}
 		else
 		{
-			// If the name is specified do not check if the direcory exists
+			// If the name is specified do not check if the directory exists
 			outputDir = x_outputDir;
-			mkDir(outputDir);
+			// MkDirectory::mkDir(outputDir);
 
 			// note: do not log as logger may not be initialized
 			// Copy config file to output directory
-			m_outputDir = outputDir;
-			Cp(m_param.configFile, "");
+			mp_outputDir.reset(new MkDirectory(outputDir, ".", false));
+			mp_outputDir->Cp(m_param.configFile, "");
 		}
 	}
 	catch(exception& e)
 	{
 		throw MkException("Exception in Context::CreateOutputDir: " + string(e.what()), LOC);
 	}
-}
-
-/**
-* @brief Return true if the output directory contains no file
-*
-* @return True if dir is empty
-*/
-bool Context::IsOutputDirEmpty()
-{
-	LOG_DEBUG(m_logger, "Lock Context, line " << __LINE__);
-	ReadLock lock(m_lock);
-	return m_reservedFiles.empty();
-}
-
-/**
-* @brief Check that the output dir is in a coherent state with the reserved objects
-*/
-void Context::CheckOutputDir()
-{
-	LOG_DEBUG(m_logger, "Lock Context, line " << __LINE__);
-	ReadLock lock(m_lock);
-	vector<string> res;
-	execute("find " + m_outputDir + " -type f | sed -n 's|^" + m_outputDir + "/||p'", res);
-
-	if(m_reservedFiles.size() != res.size())
-		LOG_WARN(m_logger, res.size() << " files found in " << m_outputDir << " for " << m_reservedFiles.size() << " correctly reserved");
-
-	for(auto& elem : m_reservedFiles)
-	{
-		if(find(res.begin(), res.end(), elem.first) == res.end())
-			LOG_WARN(m_logger, "File " << elem.first << " was reserved but is not present in output directory");
-	}
-	for(auto& elem : res)
-	{
-		// TODO: For now we avoid the warning for jpg. See how to fix cleanly
-		if(m_reservedFiles.find(elem) == m_reservedFiles.end() && elem.find(".jpg") == string::npos)
-			LOG_WARN(m_logger, "File " << elem << " is present in output directory but was not reserved");
-	}
-	LOG_DEBUG(m_logger, "Reserved files " << m_reservedFiles.size() << " line:" << __LINE__)
 }
 
 
@@ -229,121 +153,5 @@ string Context::Version(bool x_full)
 		ss<<VERSION_STRING<<","<<VERSION_STRING2;
 
 	return ss.str();
-}
-
-/**
-* @brief Clean the output directory
-*
-* @param x_full Return the full info string with info on host
-*
-* @return Version
-*/
-void Context::CleanDir()
-{
-	CheckOutputDir(); // must be before lock
-	LOG_DEBUG(m_logger, "Lock Context, line " << __LINE__);
-	map<string, bool> reservedFiles;
-	{
-		ReadLock lock(m_lock);
-		reservedFiles = m_reservedFiles; // since we remove from the map
-	}
-	for(const auto elem : reservedFiles)
-	{
-		Rm(elem.first);
-	}
-	m_reservedFiles.clear();
-	LOG_DEBUG(m_logger, "Reserved files " << m_reservedFiles.size() << " line:" << __LINE__)
-}
-
-/**
-* @brief Create a directory inside the output directory
-*
-* @param x_directory Directory nema
-*/
-void Context::MkDir(const std::string& x_directory)
-{
-	mkDir(GetOutputDir() + "/" + x_directory);
-}
-
-/**
-* @brief Reserve a file inside the output directory
-*
-* @param x_filePath    File name with path
-* @param x_uniqueIndex Optional. An index to generate a unique file name 
-* @return the full path to the file resource
-*/
-std::string Context::ReserveFile(const std::string& x_filePath, int x_uniqueIndex)
-{
-	LOG_DEBUG(m_logger, "Lock Context, line " << __LINE__);
-	WriteLock lock(m_lock);
-	stringstream ss;
-	if(x_uniqueIndex < 0 || x_filePath.find("%d") == string::npos)
-		ss << x_filePath; 
-	else
-		ss << boost::format(x_filePath) % x_uniqueIndex; 
-	LOG_INFO(m_logger, "Reserve output file " << ss.str());
-	auto ret = m_reservedFiles.insert(std::pair<string, bool>(ss.str(), true));
-	LOG_DEBUG(m_logger, "Reserved files " << m_reservedFiles.size() << " line:" << __LINE__)
-	if(ret.second == false)
-	{
-		LOG_WARN(m_logger, "File is overridden in output directory: " << ss.str());
-	}
-	return GetOutputDir() + "/" + ss.str();
-}
-
-/**
-* @brief Uneserve a file inside the output directory
-*
-* @param x_filePath File name with path
-*/
-void Context::UnreserveFile(const std::string& x_filePath)
-{
-	LOG_DEBUG(m_logger, "Lock Context, line " << __LINE__);
-	WriteLock lock(m_lock);
-	auto it = m_reservedFiles.find(x_filePath);
-	if(it == m_reservedFiles.end())
-	{
-		LOG_WARN(m_logger, "Removing unknown file from output directory");
-	}
-	else
-	{
-		m_reservedFiles.erase(it);
-	}
-	LOG_DEBUG(m_logger, "Reserved files " << m_reservedFiles.size() << " line:" << __LINE__)
-}
-
-/**
-* @brief Remove a file inside output directory
-*
-* @param x_filePath1 File name with path
-* @param x_filePath2 File name with path (inside output directory), if empty, keep the same file
-*/
-void Context::Cp(const std::string& x_fileName1, const std::string& x_fileName2)
-{
-	LOG_DEBUG(m_logger, "Copy file " << x_fileName1 << " into output dir " << x_fileName2);
-	string dest = x_fileName2.empty() ? basename(x_fileName1) : x_fileName2;
-	cp(x_fileName1, ReserveFile(dest));
-}
-
-/**
-* @brief Remove a file inside output directory
-*
-* @param x_fileName File name
-*/
-void Context::Rm(const std::string& x_fileName)
-{
-	LOG_DEBUG(m_logger, "Remove file " << x_fileName << " from output dir");
-	UnreserveFile(x_fileName);
-	rm(GetOutputDir() + "/" + x_fileName);
-}
-
-/**
-* @brief Remove a directory inside output directory
-*
-* @param x_directory Directory name
-*/
-void Context::RmDir(const std::string& x_directory)
-{
-	rmDir(GetOutputDir() + "/" + x_directory);
 }
 

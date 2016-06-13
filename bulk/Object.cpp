@@ -80,7 +80,7 @@ Object::~Object()
 	m_feats.clear();
 }
 
-void Object::Serialize(ostream& x_out, const string& x_dir) const
+void Object::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 {
 	Json::Value root;
 	root["id"]     = m_id;
@@ -93,7 +93,7 @@ void Object::Serialize(ostream& x_out, const string& x_dir) const
 	for(const auto & elem : m_feats)
 	{
 		stringstream ss;
-		elem.second->Serialize(ss, x_dir);
+		elem.second->Serialize(ss, xp_dir);
 		ss >> root["features"][elem.first];
 	}
 	if(m_feats.empty())
@@ -102,7 +102,7 @@ void Object::Serialize(ostream& x_out, const string& x_dir) const
 	x_out << root;
 }
 
-void Object::Deserialize(istream& x_in, const string& x_dir)
+void Object::Deserialize(istream& x_in, MkDirectory* xp_dir)
 {
 	Json::Value root;
 	x_in >> root;
@@ -129,7 +129,7 @@ void Object::Deserialize(istream& x_in, const string& x_dir)
 		Feature* feat = factory.Create(signature);
 		stringstream ss2;
 		ss2 << root["features"][elem];
-		feat->Deserialize(ss2, x_dir);
+		feat->Deserialize(ss2, xp_dir);
 		AddFeature(elem, feat);
 	}
 }

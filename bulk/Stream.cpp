@@ -78,7 +78,7 @@ void Stream::Connect(Stream* x_stream)
 	SetAsConnected();
 }
 
-void Stream::Serialize(ostream& x_out, const string& x_dir) const
+void Stream::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 {
 	Json::Value root;
 	root["name"]        = GetName();
@@ -91,7 +91,7 @@ void Stream::Serialize(ostream& x_out, const string& x_dir) const
 }
 
 
-void Stream::Deserialize(istream& x_in, const string& x_dir)
+void Stream::Deserialize(istream& x_in, MkDirectory* xp_dir)
 {
 	Json::Value root;
 	x_in >> root;

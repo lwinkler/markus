@@ -497,7 +497,7 @@ QWidget* ControllerCalibrationByHeight::CreateWidget()
 	CalibrationByHeight calib;
 	stringstream ss;
 	ss << m_param2.GetValue();
-	calib.Deserialize(ss, "");
+	calib.Deserialize(ss);
 
 	mp_sliderX = new QParameterSlider(calib.x, 0, 1, PRECISION_DOUBLE,mp_widget);
 	mp_sliderY = new QParameterSlider(calib.y, 0, 1, PRECISION_DOUBLE,mp_widget);

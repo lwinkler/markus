@@ -46,8 +46,8 @@ public:
 	inline MkExceptionCode GetCode() const {return m_code;}
 	inline const std::string& GetName() const {return m_name;}
 	inline bool IsFatal() const {return m_fatal;}
-	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
-	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
+	virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const;
+	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr);
 
 private:
 	std::string m_description;

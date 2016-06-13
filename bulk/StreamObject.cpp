@@ -129,11 +129,11 @@ template<>void StreamObject::Randomize(unsigned int& xr_seed)
 	}
 }
 
-template<>void StreamObject::Serialize(ostream& x_out, const string& x_dir) const
+template<>void StreamObject::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 {
 	Json::Value root;
 	stringstream ss;
-	Stream::Serialize(ss, x_dir);
+	Stream::Serialize(ss, xp_dir);
 	ss >> root;
 	int cpt = 0;
 
@@ -144,20 +144,20 @@ template<>void StreamObject::Serialize(ostream& x_out, const string& x_dir) cons
 	for(const auto& elem : m_content)
 	{
 		ss.clear();
-		elem.Serialize(ss, x_dir);
+		elem.Serialize(ss, xp_dir);
 		ss >> root["objects"][cpt];
 		cpt++;
 	}
 	x_out << root;
 }
 
-template<>void StreamObject::Deserialize(istream& x_in, const string& x_dir)
+template<>void StreamObject::Deserialize(istream& x_in, MkDirectory* xp_dir)
 {
 	Json::Value root;
 	x_in >> root;  // note: copy first for local use
 	stringstream ss;
 	ss << root;
-	Stream::Deserialize(ss, x_dir);
+	Stream::Deserialize(ss, xp_dir);
 
 	m_content.clear();
 	for(const auto & elem : root["objects"])
@@ -166,6 +166,6 @@ template<>void StreamObject::Deserialize(istream& x_in, const string& x_dir)
 		Object obj("empty");
 		m_content.push_back(obj);
 		ss << elem;
-		m_content.back().Deserialize(ss, x_dir);
+		m_content.back().Deserialize(ss, xp_dir);
 	}
 }

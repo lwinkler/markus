@@ -49,7 +49,7 @@ CalibrationByModel::CalibrationByModel(double x_camera_height, double x_yaw, dou
 	ncols         = x_width_model;
 }
 
-void CalibrationByModel::Serialize(std::ostream& x_out, const std::string& x_dir) const
+void CalibrationByModel::Serialize(std::ostream& x_out, MkDirectory* xp_dir) const
 {
 
 	Json::Value root;
@@ -62,7 +62,7 @@ void CalibrationByModel::Serialize(std::ostream& x_out, const std::string& x_dir
 	x_out << root;
 }
 
-void CalibrationByModel::Deserialize(std::istream& x_in, const std::string& x_dir)
+void CalibrationByModel::Deserialize(std::istream& x_in, MkDirectory* xp_dir)
 {
 	Json::Value root;
 	x_in >> root;

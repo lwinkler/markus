@@ -85,7 +85,7 @@ void FeatureFloatInTime::Randomize(unsigned int& xr_seed, const string& x_param)
 	}
 }
 
-void FeatureFloatInTime::Serialize(ostream& x_out, const string& x_dir) const
+void FeatureFloatInTime::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 {
 	Json::Value root;
 	root["value"]      = value;
@@ -102,7 +102,7 @@ void FeatureFloatInTime::Serialize(ostream& x_out, const string& x_dir) const
 	x_out<<tmp;
 }
 
-void FeatureFloatInTime::Deserialize(istream& x_in, const string& x_dir)
+void FeatureFloatInTime::Deserialize(istream& x_in, MkDirectory* xp_dir)
 {
 	Json::Value root;
 	x_in >> root;

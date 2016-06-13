@@ -56,6 +56,7 @@ void ReadEvent::Reset()
 	m_event.Clean();
 
 	CLEAN_DELETE(mp_annotationReader);
+	mp_inputDir.reset(new MkDirectory(m_param.folder, "", true));
 	mp_annotationReader = createAnnotationFileReader(m_param.file, m_param.width, m_param.height);
 }
 
@@ -69,7 +70,7 @@ void ReadEvent::Capture()
 	}
 	m_currentTimeStamp = mp_annotationReader->GetCurrentTimeStamp();
 	istringstream ss(text);
-	m_event.Deserialize(ss, m_param.folder);
+	m_event.Deserialize(ss, mp_inputDir.get());
 	assert(m_event.IsRaised());
 }
 

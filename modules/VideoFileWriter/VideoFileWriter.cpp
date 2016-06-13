@@ -62,7 +62,7 @@ void VideoFileWriter::Reset()
 
 	stringstream ss;
 	ss << m_param.file  << "." << m_index++ << "." << ExtensionFromFourcc(m_param.fourcc);
-	const string filename = RefContext().ReserveFile(ss.str());
+	const string filename = RefContext().RefOutputDir().ReserveFile(ss.str());
 	double fps = 12;
 
 	try

@@ -374,8 +374,8 @@ void Manager::PrintStatistics()
 	// Create an XML file to summarize CPU usage
 	//     if output dir is empty, write to /tmp
 	// TODO: Remove previous file if exist
-	bool notEmpty = IsContextSet() && !RefContext().IsOutputDirEmpty(); // must be called before ReserveFile
-	string benchFileName = notEmpty ? RefContext().ReserveFile("benchmark.xml") : "/tmp/benchmark" + timeStamp() +  ".xml";
+	bool notEmpty = IsContextSet() && !RefContext().RefOutputDir().IsEmpty(); // must be called before ReserveFile
+	string benchFileName = notEmpty ? RefContext().RefOutputDir().ReserveFile("benchmark.xml") : "/tmp/benchmark" + timeStamp() +  ".xml";
 	ConfigFile benchSummary(benchFileName, true);
 	ConfigReader conf = benchSummary.FindRef("benchmark", true);
 
@@ -528,13 +528,13 @@ void Manager::WriteConfig(ConfigReader xr_config) const // TODO unit test
 */
 void Manager::WriteStateToDirectory(const string& x_directory)
 {
-	RefContext().MkDir(x_directory);
+	MkDirectory dir(x_directory, RefContext().RefOutputDir(), false);
 	for(const auto & elem : m_modules)
 	{
-		ofstream of(RefContext().ReserveFile(x_directory + "/" + elem.second->GetName() + ".json"));
-		elem.second->Serialize(of, GetContext().GetOutputDir() + "/" + x_directory);
+		ofstream of(dir.ReserveFile(elem.second->GetName() + ".json"));
+		elem.second->Serialize(of, &dir);
 	}
-	LOG_INFO(m_logger, "Written state of the manager and all modules to " << GetContext().GetOutputDir() + "/" + x_directory);
+	LOG_INFO(m_logger, "Written state of the manager and all modules to " << dir.GetPath());
 }
 
 

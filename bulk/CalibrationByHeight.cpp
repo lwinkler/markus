@@ -42,7 +42,7 @@ CalibrationByHeight::CalibrationByHeight(double x_value_x, double x_value_y, dou
 	height = x_height;
 }
 
-void CalibrationByHeight::Serialize(ostream& x_out, const string& x_dir) const
+void CalibrationByHeight::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 {
 	Json::Value root;
 
@@ -54,7 +54,7 @@ void CalibrationByHeight::Serialize(ostream& x_out, const string& x_dir) const
 	x_out << root;
 }
 
-void CalibrationByHeight::Deserialize(istream& x_in, const string& x_dir)
+void CalibrationByHeight::Deserialize(istream& x_in, MkDirectory* xp_dir)
 {
 	Json::Value root;
 	x_in >> root;

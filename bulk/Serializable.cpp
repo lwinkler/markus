@@ -97,10 +97,10 @@ string signatureJSONTree(const Json::Value &x_root, int x_depth)
 	return result;
 }
 
-string Serializable::SerializeToString(const string& x_dir) const
+string Serializable::SerializeToString(MkDirectory* xp_dir) const
 {
 	stringstream ss;
-	Serialize(ss, x_dir);
+	Serialize(ss, xp_dir);
 	Json::Value root;
 	ss >> root;
 	Json::FastWriter writer;

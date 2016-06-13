@@ -252,7 +252,7 @@ public:
 					tester.module->ProcessRandomInput(seed);
 			}
 			else TS_TRACE("--> unit testing disabled on " + elem);
-			mp_context->CleanDir();
+			mp_context->RefOutputDir().CleanDir();
 		}
 	}
 
@@ -361,7 +361,7 @@ public:
 			{
 				TS_TRACE("Parameter exception caught: " + std::string(e.what()));
 			}
-			mp_context->CleanDir();
+			mp_context->RefOutputDir().CleanDir();
 			timer.Stop();
 			if(timer.GetSecDouble() > 10)
 				TS_WARN("Module " + modType + " took " + std::to_string(timer.GetSecDouble()) + "s");
@@ -412,7 +412,7 @@ public:
 				}
 			}
 			// We need to clean here to avoid overriding files
-			mp_context->CleanDir();
+			mp_context->RefOutputDir().CleanDir();
 
 			string lastParam = "";
 			string lastDefault = "";
@@ -438,7 +438,7 @@ public:
 
 					for(int i = 0 ; i < 3 ; i++)
 						tester2.module->ProcessRandomInput(seed);
-					mp_context->CleanDir();
+					mp_context->RefOutputDir().CleanDir();
 				}
 				lastParam   = allNames[i];
 				lastDefault = allDefault[i];
@@ -515,7 +515,7 @@ public:
 			ModuleTester tester;
 			createAndConnectModule(tester, modType);
 			testExport(*tester.module);
-			mp_context->CleanDir();
+			mp_context->RefOutputDir().CleanDir();
 		}
 	}
 };

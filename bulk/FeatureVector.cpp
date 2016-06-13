@@ -64,16 +64,16 @@ template<class T>std::istream& deserializeSimple(std::istream& x_in,  std::vecto
 	return x_in;
 }
 
-template<>void FeatureVectorT<float>::Serialize(std::ostream& x_out, const std::string& x_dir) const
+template<>void FeatureVectorT<float>::Serialize(std::ostream& x_out, MkDirectory* xp_dir) const
 {
 	serialize(x_out, values);
 }
-template<>void FeatureVectorT<float>::Deserialize(std::istream& x_in, const std::string& x_dir)
+template<>void FeatureVectorT<float>::Deserialize(std::istream& x_in, MkDirectory* xp_dir)
 {
 	deserialize(x_in, values);
 }
 
-template<>void FeatureVectorT<int>::Serialize(std::ostream& xr_out, const std::string& x_dir) const
+template<>void FeatureVectorT<int>::Serialize(std::ostream& xr_out, MkDirectory* xp_dir) const
 {
 	Json::Value root;
 	root["type"] = "int";
@@ -82,7 +82,7 @@ template<>void FeatureVectorT<int>::Serialize(std::ostream& xr_out, const std::s
 	ss >> root["values"];
 	xr_out << root;
 }
-template<>void FeatureVectorT<int>::Deserialize(std::istream& xr_in, const std::string& x_dir)
+template<>void FeatureVectorT<int>::Deserialize(std::istream& xr_in, MkDirectory* xp_dir)
 {
 	Json::Value root;
 	xr_in >> root;

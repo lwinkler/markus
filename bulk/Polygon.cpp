@@ -95,14 +95,14 @@ void Polygon::DrawMask(Mat& xr_target, const Scalar& x_color) const
 }
 
 
-void Polygon::Serialize(ostream& x_out, const string& x_dir) const
+void Polygon::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 {
 	x_out<<"{\"width\":" << m_width << ",\"height\":" << m_height << ",\"points\":";
 	serialize(x_out, points);
 	x_out<<"}";
 }
 
-void Polygon::Deserialize(istream& x_in, const string& x_dir)
+void Polygon::Deserialize(istream& x_in, MkDirectory* xp_dir)
 {
 	Json::Value root;
 	x_in >> root;

@@ -7,6 +7,7 @@ ModuleClassifyEvents.cpp
 ModulePython.cpp
 Manager.cpp
 Context.cpp
+MkDirectory.cpp
 Input.cpp
 BackgroundSubtraction.cpp
 Parameter.cpp

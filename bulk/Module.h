@@ -134,8 +134,8 @@ public:
 
 	inline void AddDependingModule (Module & x_module) {m_modulesDepending.push_back(&x_module);} /// Add a module to the list: depending modules are called when processing is complete
 	virtual void PrintStatistics(ConfigReader& xr_result) const;
-	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const override;
-	virtual void Deserialize(std::istream& stream, const std::string& x_dir) override;
+	virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const override;
+	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr) override;
 
 	virtual inline bool IsInput() const {return false;}
 	void Export(std::ostream& rx_os, int x_indentation) const;
@@ -175,6 +175,7 @@ protected:
 	std::map<int, Stream *> m_debugStreams;
 
 	std::vector<Module *> m_modulesDepending;
+	std::unique_ptr<MkDirectory> mp_cacheDir;
 
 private:
 	Parameters& m_param;

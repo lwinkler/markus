@@ -49,8 +49,8 @@ public:
 	virtual void RenderTo(cv::Mat& x_output) const;
 	virtual void Query(int x_posX, int x_posY) const;
 	virtual void Randomize(unsigned int& rx_seed);
-	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
-	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
+	virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const;
+	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr);
 	// double GetFeatureValue(const std::vector<Feature>& x_vect, const char* x_name);
 
 	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType)

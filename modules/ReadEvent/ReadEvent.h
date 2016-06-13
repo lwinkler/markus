@@ -72,6 +72,7 @@ protected:
 
 	// temporary
 	AnnotationFileReader* mp_annotationReader = nullptr;
+	std::unique_ptr<MkDirectory> mp_inputDir;
 };
 
 #endif

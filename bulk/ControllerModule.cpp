@@ -70,7 +70,7 @@ void ControllerModule::Stop(string* xp_value)
 void ControllerModule::PrintStatistics(string* xp_value)
 {
 	Processable::ReadLock lock(module.RefLock());
-	string benchFileName = module.RefContext().ReserveFile(module.GetName() + "." + timeStamp() + ".benchmark.xml");
+	string benchFileName = module.RefContext().RefOutputDir().ReserveFile(module.GetName() + "." + timeStamp() + ".benchmark.xml");
 	ConfigFile summary(benchFileName, true);
 	module.PrintStatistics(summary);
 	summary.SaveToFile(benchFileName);

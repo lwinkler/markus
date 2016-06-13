@@ -79,23 +79,23 @@ public:
 	{
 		LOG_INFO(m_logger, "value = " << m_content);
 	}
-	virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const
+	virtual void Serialize(std::ostream& x_out, MkDirectory* xp_dir = nullptr) const
 	{
 		Json::Value root;
 		std::stringstream ss;
-		Stream::Serialize(ss, x_dir);
+		Stream::Serialize(ss, xp_dir);
 
 		ss >> root;
 		root["value"] = m_content;
 		x_out << root;
 	}
-	virtual void Deserialize(std::istream& x_in, const std::string& x_dir)
+	virtual void Deserialize(std::istream& x_in, MkDirectory* xp_dir = nullptr)
 	{
 		Json::Value root;
 		x_in >> root;  // note: copy first for local use
 		std::stringstream ss;
 		ss << root;
-		Stream::Deserialize(ss, x_dir);
+		Stream::Deserialize(ss, xp_dir);
 		m_content = root["value"].asDouble();
 	}
 	virtual void Randomize(unsigned int& xr_seed) {randomize(m_content, xr_seed);}

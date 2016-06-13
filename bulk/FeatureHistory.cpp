@@ -78,7 +78,7 @@ void FeatureHistory::Randomize(unsigned int& xr_seed, const string& x_param)
 	}
 }
 
-void FeatureHistory::Serialize(ostream& x_out, const string& x_dir) const
+void FeatureHistory::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 {
 	if(features.empty())
 	{
@@ -91,7 +91,7 @@ void FeatureHistory::Serialize(ostream& x_out, const string& x_dir) const
 	for(const auto& elem : features)
 	{
 		x_out << "{\"time\":"<<elem.first<<",\"feature\":";
-		elem.second->Serialize(x_out, "");
+		elem.second->Serialize(x_out);
 		if(i == features.size() - 1)
 			x_out << "}";
 		else
@@ -101,7 +101,7 @@ void FeatureHistory::Serialize(ostream& x_out, const string& x_dir) const
 	x_out << "]}";
 }
 
-void FeatureHistory::Deserialize(istream& x_in, const string& x_dir)
+void FeatureHistory::Deserialize(istream& x_in, MkDirectory* xp_dir)
 {
 	Json::Value root0;
 	x_in >> root0;  // note: copy first for local use
@@ -118,7 +118,7 @@ void FeatureHistory::Deserialize(istream& x_in, const string& x_dir)
 		Feature* feat = factory.Create(signature);
 		stringstream ss2;
 		ss2 << root[i]["feature"];
-		feat->Deserialize(ss2, x_dir);
+		feat->Deserialize(ss2, xp_dir);
 		features.insert(std::make_pair(root[i]["time"].asInt(), feat));
 	}
 }

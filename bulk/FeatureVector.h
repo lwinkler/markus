@@ -57,8 +57,8 @@ public:
 			randomize(values, xr_seed, size);
 		}
 	}
-	virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const;
-	virtual void Deserialize(std::istream& x_in, const std::string& x_dir);
+	virtual void Serialize(std::ostream& x_out, MkDirectory* xp_dir = nullptr) const;
+	virtual void Deserialize(std::istream& x_in, MkDirectory* xp_dir = nullptr);
 
 	// The value of the feature
 	std::vector<T> values;

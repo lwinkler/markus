@@ -36,7 +36,7 @@ template<> void StreamEvent::ConvertInput();
 template<> void StreamEvent::Randomize(unsigned int& xr_seed);
 template<> void StreamEvent::RenderTo(cv::Mat& x_output) const;
 template<> void StreamEvent::Query(int x_posX, int x_posY) const;
-template<> void StreamEvent::Serialize(std::ostream& x_out, const std::string& x_dir) const;
-template<> void StreamEvent::Deserialize(std::istream& x_in, const std::string& x_dir);
+template<> void StreamEvent::Serialize(std::ostream& x_out, MkDirectory* xp_dir) const;
+template<> void StreamEvent::Deserialize(std::istream& x_in, MkDirectory* xp_dir);
 
 #endif

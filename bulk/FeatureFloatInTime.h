@@ -35,8 +35,8 @@ public:
 	void Update(const Feature& x_feat, double x_alpha);
 	virtual double CompareSquared(const Feature& x_feature) const;
 	virtual void Randomize(unsigned int& xr_seed, const std::string& x_param);
-	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const;
-	virtual void Deserialize(std::istream& stream, const std::string& x_dir);
+	virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const;
+	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr);
 
 	float mean;
 	float sqVariance;

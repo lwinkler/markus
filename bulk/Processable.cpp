@@ -253,7 +253,7 @@ void Processable::NotifyException(const MkException& x_exception)
 {
 	InterruptionManager::GetInst().AddEvent("exception." + x_exception.GetName());
 	stringstream ss;
-	x_exception.Serialize(ss, "");
+	x_exception.Serialize(ss);
 	Event ev;
 	ev.AddExternalInfo("exception", ss);
 	// note: it is difficult to associate a time stamp with events
@@ -267,7 +267,7 @@ void Processable::NotifyException(const MkException& x_exception)
 void Processable::Status() const
 {
 	stringstream ss;
-	m_lastException.Serialize(ss, "");
+	m_lastException.Serialize(ss);
 	Json::Value root;
 	ss >> root;
 	root["recovered"] = m_hasRecovered;

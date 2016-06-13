@@ -172,26 +172,26 @@ void StreamImage::Randomize(unsigned int& xr_seed)
 	}
 }
 
-void StreamImage::Serialize(ostream& x_out, const string& x_dir) const
+void StreamImage::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 {
 	Json::Value root;
 	stringstream ss;
-	Stream::Serialize(ss, x_dir);
+	Stream::Serialize(ss, xp_dir);
 	ss >> root;
 	stringstream fileName;
-	fileName << x_dir << "/" << GetModule().GetName() << "." << GetName() << "." << m_timeStamp << ".jpg";
+	fileName << xp_dir << "/" << GetModule().GetName() << "." << GetName() << "." << m_timeStamp << ".jpg";
 	imwrite(fileName.str(), m_content);
 	root["image"] = fileName.str();
 	x_out << root;
 }
 
-void StreamImage::Deserialize(istream& x_in, const string& x_dir)
+void StreamImage::Deserialize(istream& x_in, MkDirectory* xp_dir)
 {
 	Json::Value root;
 	x_in >> root;  // note: copy first for local use
 	stringstream ss;
 	ss << root;
-	Stream::Deserialize(ss, x_dir);
+	Stream::Deserialize(ss, xp_dir);
 
 	string fileName = root["image"].asString();
 	m_content = imread(fileName);

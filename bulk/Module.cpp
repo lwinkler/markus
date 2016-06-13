@@ -108,7 +108,8 @@ void Module::Reset()
 	}
 
 	if(m_param.cached == CachedState::WRITE_CACHE)
-		RefContext().MkDir("cache");
+		mp_cacheDir.reset(new MkDirectory("cache", RefContext().RefOutputDir(), false));
+	else mp_cacheDir.reset(nullptr);
 }
 
 /**
@@ -398,9 +399,9 @@ void Module::PrintStatistics(ConfigReader& xr_xmlResult) const
 * @brief Serialize the stream content to a directory
 *
 * @param x_out Output stream
-* @param x_dir Directory (for images)
+* @param xp_dir MkDirectory (for images)
 */
-void Module::Serialize(ostream& x_out, const string& x_dir) const
+void Module::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 {
 	Json::Value root;
 
@@ -414,14 +415,14 @@ void Module::Serialize(ostream& x_out, const string& x_dir) const
 	for(const auto & elem : m_inputStreams)
 	{
 		stringstream ss;
-		elem.second->Serialize(ss, x_dir);
+		elem.second->Serialize(ss, xp_dir);
 		ss >> root["inputs"][elem.first];
 	}
 	// Dump outputs
 	for(const auto & elem : m_outputStreams)
 	{
 		stringstream ss;
-		elem.second->Serialize(ss, x_dir);
+		elem.second->Serialize(ss, xp_dir);
 		ss >> root["outputs"][elem.first];
 	}
 #ifdef MARKUS_DEBUG_STREAMS
@@ -429,7 +430,7 @@ void Module::Serialize(ostream& x_out, const string& x_dir) const
 	for(const auto & elem : m_debugStreams)
 	{
 		stringstream ss;
-		elem.second->Serialize(ss, x_dir);
+		elem.second->Serialize(ss, xp_dir);
 		ss >> root["debugs"][elem.first];
 	}
 #endif
@@ -440,9 +441,9 @@ void Module::Serialize(ostream& x_out, const string& x_dir) const
 * @brief Deserialize the module from JSON
 *
 * @param x_in  Input stream
-* @param x_dir Input dir (for images)
+* @param xp_dir Input dir (for images)
 */
-void Module::Deserialize(istream& x_in, const string& x_dir)
+void Module::Deserialize(istream& x_in, MkDirectory* xp_dir)
 {
 	Json::Value root;
 	x_in >> root;
@@ -460,7 +461,7 @@ void Module::Deserialize(istream& x_in, const string& x_dir)
 	{
 		ss.clear();
 		ss << root["inputs"][i];
-		m_inputStreams[i]->Deserialize(ss, x_dir);
+		m_inputStreams[i]->Deserialize(ss, xp_dir);
 	}
 
 	// read outputs
@@ -470,7 +471,7 @@ void Module::Deserialize(istream& x_in, const string& x_dir)
 	{
 		ss.clear();
 		ss << root["outputs"][i];
-		m_outputStreams[i]->Deserialize(ss, x_dir);
+		m_outputStreams[i]->Deserialize(ss, xp_dir);
 	}
 
 #ifdef MARKUS_DEBUG_STREAMS
@@ -481,7 +482,7 @@ void Module::Deserialize(istream& x_in, const string& x_dir)
 	{
 		ss.clear();
 		ss << root["debugs"][i];
-		m_debugStreams[i]->Deserialize(ss, x_dir);
+		m_debugStreams[i]->Deserialize(ss, xp_dir);
 	}
 #endif
 }
@@ -547,8 +548,8 @@ void Module::WriteToCache() const
 		if(!elem.second->IsConnected()) continue;
 		stringstream fileName;
 		fileName << "cache/" << GetName() << "." << elem.second->GetName() << "." << m_currentTimeStamp << ".json";
-		ofstream of(RefContext().ReserveFile(fileName.str()));
-		elem.second->Serialize(of, GetContext().GetOutputDir() + "/cache");
+		ofstream of(RefContext().RefOutputDir().ReserveFile(fileName.str()));
+		elem.second->Serialize(of, mp_cacheDir.get());
 	}
 }
 
@@ -558,20 +559,20 @@ void Module::WriteToCache() const
 */
 void Module::ReadFromCache()
 {
+	MkDirectory directory(GetContext().GetParameters().cacheDirectory, ".", true);
 	// Read output stream from cache
 	for(auto& elem : m_outputStreams)
 	{
 		if(!elem.second->IsConnected()) continue;
-		const string& directory = GetContext().GetParameters().cacheDirectory;
-		if(directory.empty())
+		if(GetContext().GetParameters().cacheDirectory.empty())
 			throw MkException("Trying to read streams from cache but no cache directory is specified", LOC);
 		stringstream fileName;
-		fileName << directory << "/" << GetName() << "." << elem.second->GetName() << "." << m_currentTimeStamp << ".json";
+		fileName << directory.GetPath() << "/" << GetName() << "." << elem.second->GetName() << "." << m_currentTimeStamp << ".json";
 		ifstream ifs;
 		ifs.open(fileName.str().c_str());
 		if(!ifs.good())
 			throw MkException("Error while reading from stream cache: " + fileName.str(), LOC);
-		elem.second->Deserialize(ifs, directory);
+		elem.second->Deserialize(ifs, &directory);
 		ifs.close();
 	}
 }

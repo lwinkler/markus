@@ -83,28 +83,28 @@ template<> void StreamEvent::Query(int x_posX, int x_posY) const
 	LOG_INFO(m_logger, m_content);
 }
 
-template<> void StreamEvent::Serialize(ostream& x_out, const string& x_dir) const
+template<> void StreamEvent::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 {
 	Json::Value root;
 	stringstream ss;
-	Stream::Serialize(ss, x_dir);
+	Stream::Serialize(ss, xp_dir);
 	ss >> root;
 	ss.clear();
-	m_content.Serialize(ss, x_dir);
+	m_content.Serialize(ss, xp_dir);
 	ss >> root["event"];
 	x_out << root;
 }
 
-template<> void StreamEvent::Deserialize(istream& x_in, const string& x_dir)
+template<> void StreamEvent::Deserialize(istream& x_in, MkDirectory* xp_dir)
 {
 	Json::Value root;
 	x_in >> root;  // note: copy first for local use
 
 	stringstream ss;
 	ss << root;
-	Stream::Deserialize(ss, x_dir);
+	Stream::Deserialize(ss, xp_dir);
 
 	ss.clear();
 	ss << root["event"];
-	m_content.Deserialize(ss, x_dir);
+	m_content.Deserialize(ss, xp_dir);
 }

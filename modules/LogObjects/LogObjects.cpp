@@ -50,7 +50,7 @@ void LogObjects::Compress()
 {
 	if(!m_param.compress)
 		return;
-	string tarFile = RefContext().ReserveFile(m_param.file + ".%d.tar.bz", m_nbReset);
+	string tarFile = RefContext().RefOutputDir().ReserveFile(m_param.file + ".%d.tar.bz", m_nbReset);
 	LOG_INFO(m_logger, "Compress objects to " << tarFile);
 	try
 	{
@@ -69,7 +69,7 @@ void LogObjects::Reset()
 
 	CLEAN_DELETE(mp_annotationWriter);
 	mp_annotationWriter = new AnnotationFileWriter();
-	mp_annotationWriter->Open(RefContext().ReserveFile(m_param.file, m_nbReset));
+	mp_annotationWriter->Open(RefContext().RefOutputDir().ReserveFile(m_param.file, m_nbReset));
 }
 
 void LogObjects::ProcessFrame()

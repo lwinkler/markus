@@ -98,8 +98,8 @@ public:
 	virtual std::string GetRange() const = 0;
 	virtual void SetRange(const std::string& x_range) = 0;
 
-	// virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const override {x_out << GetValueString();}
-	// virtual void Deserialize(std::istream& x_in, const std::string& x_dir) override {std::stringstream ss; ss << x_in; SetValue(ss.str(), PARAMCONF_UNKNOWN);}
+	// virtual void Serialize(std::ostream& x_out, MkDirectory* xp_dir = nullptr) const override {x_out << GetValueString();}
+	// virtual void Deserialize(std::istream& x_in, MkDirectory* xp_dir = nullptr) override {std::stringstream ss; ss << x_in; SetValue(ss.str(), PARAMCONF_UNKNOWN);}
 
 protected:
 	ParameterConfigType m_confSource = PARAMCONF_UNSET;

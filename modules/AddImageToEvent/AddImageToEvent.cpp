@@ -54,7 +54,7 @@ void AddImageToEvent::Reset()
 {
 	Module::Reset();
 
-	RefContext().MkDir(m_param.folder);
+	mp_outputDir.reset(new MkDirectory(m_param.folder, RefContext().RefOutputDir(), false));
 	m_saveImage1 = m_inputStreams.at(1)->IsConnected();
 }
 
@@ -67,15 +67,15 @@ void AddImageToEvent::ProcessFrame()
 	if(m_saveImage1)
 	{
 		std::stringstream ss1;
-		ss1 << m_param.folder << "/" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_1." << m_param.extension;
-		addExternalImage(m_inputIm1, "globalImage", RefContext().ReserveFile(ss1.str()), m_event);
+		ss1 << m_currentTimeStamp << "_" << m_event.GetEventName() << "_global_1." << m_param.extension;
+		addExternalImage(m_inputIm1, "globalImage", mp_outputDir->ReserveFile(ss1.str()), m_event);
 
 		if(obj.width > 0 && obj.height > 0)
 		{
 			std::stringstream ss2;
-			ss2 << m_param.folder << "/" << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_1" << "." << m_param.extension;
+			ss2 << m_currentTimeStamp << "_" << m_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_1" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
-			addExternalImage((m_inputIm1)(obj.GetRect()), "objectImage", RefContext().ReserveFile(ss2.str()), m_event);
+			addExternalImage((m_inputIm1)(obj.GetRect()), "objectImage", mp_outputDir->ReserveFile(ss2.str()), m_event);
 		}
 	}
 }

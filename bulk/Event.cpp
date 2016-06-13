@@ -65,7 +65,7 @@ void Event::Randomize(unsigned int& xr_seed, const string& x_requirement, const 
 	}
 }
 
-void Event::Serialize(ostream& xr_out, const string& x_dir) const
+void Event::Serialize(ostream& xr_out, MkDirectory* xp_dir) const
 {
 	Json::Value root;
 	root["raised"] = IsRaised();
@@ -78,7 +78,7 @@ void Event::Serialize(ostream& xr_out, const string& x_dir) const
 		if(m_object.GetName() != "empty")
 		{
 			stringstream ss;
-			m_object.Serialize(ss, x_dir);
+			m_object.Serialize(ss, xp_dir);
 			ss >> root["object"];
 		}
 		else root["object"] = Json::Value(Json::nullValue); // Null
@@ -87,7 +87,7 @@ void Event::Serialize(ostream& xr_out, const string& x_dir) const
 	xr_out << root;
 }
 
-void Event::Deserialize(istream& x_in, const string& x_dir)
+void Event::Deserialize(istream& x_in, MkDirectory* xp_dir)
 {
 	// Note that a null JSON means that the event was not raised
 	Json::Value root;
@@ -103,7 +103,7 @@ void Event::Deserialize(istream& x_in, const string& x_dir)
 		{
 			stringstream ss;
 			ss << root["object"];
-			m_object.Deserialize(ss, x_dir);
+			m_object.Deserialize(ss, xp_dir);
 		}
 
 		// Deserialize files
@@ -182,7 +182,7 @@ void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 	string level = "EVENT";
 
 	stringstream ss;
-	Serialize(ss, "");
+	Serialize(ss);
 	ss >> root;
 
 	LOG_DEBUG(m_logger, "Notify event:" << *this);

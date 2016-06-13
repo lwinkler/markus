@@ -24,18 +24,13 @@
 #ifndef CONTEXT_H
 #define CONTEXT_H
 
-// Workaround: should be unnecessary in time: http://stackoverflow.com/questions/35007134/c-boost-undefined-reference-to-boostfilesystemdetailcopy-file
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
-#undef BOOST_NO_CXX11_SCOPED_ENUMS
-
 #include <log4cxx/logger.h>
-#include <boost/thread/shared_mutex.hpp>
 #include "MkException.h"
 #include "ConfigReader.h"
 #include "ParameterStructure.h"
 #include "ParameterString.h"
 #include "ParameterNum.h"
+#include "MkDirectory.h"
 
 /**
 * @brief All informations that must be known by modules concerning application run-time. Including access to file system.
@@ -75,16 +70,6 @@ public:
 
 	virtual ~Context();
 	Context(ParameterStructure& xr_params);
-	void CleanDir();
-
-	// All file system methods
-	void MkDir(const std::string& x_directory);
-	std::string ReserveFile(const std::string& x_file, int x_uniqueIndex = -1);
-	void UnreserveFile(const std::string& x_file);
-	void Cp(const std::string& x_fileName1, const std::string& x_fileName2);
-	void Rm(const std::string& x_fileName);
-	void RmDir(const std::string& x_directory);
-	inline bool Exists(const std::string& x_fileName) {ReadLock(m_lock); return m_reservedFiles.find(x_fileName) != m_reservedFiles.end();}
 
 	// note: All public methods must be thread-safe
 	static std::string Version(bool x_full);
@@ -92,53 +77,16 @@ public:
 	inline const std::string& GetApplicationName() const {return m_param.applicationName;}
 	inline const std::string& GetJobId() const {return m_jobId;}
 	inline const std::string& GetCameraId() const {return m_param.cameraId;}
-	bool IsOutputDirEmpty();
-	void CheckOutputDir();
+	inline MkDirectory& RefOutputDir() {return *mp_outputDir;}
 	inline bool IsCentralized() const {return m_param.centralized;}
 	inline bool IsRealTime() const {return m_param.realTime;}
 	const Parameters& GetParameters() const {return m_param;}
 
 protected:
-	inline static void mkDir(const std::string& x_directory)
-	{
-		boost::filesystem::create_directories(x_directory);
-	}
-	inline static void rm(const std::string& x_file)
-	{
-		if(!boost::filesystem::remove(x_file))
-			LOG_WARN(m_logger, "Cannot remove unexistant file " << x_file);
-	}
-	inline static void cp(const std::string& x_filePath1, const std::string& x_filePath2)
-	{
-		if(! boost::filesystem::exists(x_filePath1))
-		{
-			throw MkException("Cannot copy unexistant file " + x_filePath1, LOC);
-		}
-		if(boost::filesystem::exists(x_filePath2))
-		{
-			LOG_WARN(m_logger, "File " << x_filePath2 << " overwritten");
-		}
-		boost::filesystem::copy_file(x_filePath1, x_filePath2, boost::filesystem::copy_option::overwrite_if_exists);
-	}
-	inline static void rmDir(const std::string& x_directory)
-	{
-		if(!boost::filesystem::remove_all(x_directory))
-			LOG_WARN(m_logger, "Cannot remove unexisting directory " << x_directory);
-	}
-	inline static void mv(const std::string& x_path1, const std::string& x_destDir)
-	{
-		boost::filesystem::rename(x_path1, x_destDir);
-	}
-
 	void CreateOutputDir(const std::string& x_outputDir, const std::string& x_timeStamp);
 	std::string m_outputDir;
 	std::string m_jobId;
-
-	typedef boost::shared_mutex Lock;
-	typedef boost::unique_lock<Lock> WriteLock;
-	typedef boost::shared_lock<Lock> ReadLock;
-	Lock m_lock;
-	std::map<std::string, bool> m_reservedFiles;
+	std::unique_ptr<MkDirectory> mp_outputDir;
 
 private:
 	DISABLE_COPY(Context)

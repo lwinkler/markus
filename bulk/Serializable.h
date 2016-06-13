@@ -28,6 +28,8 @@
 
 /// Class for all serializable objects
 
+class MkDirectory;
+
 class Serializable
 {
 public:
@@ -40,16 +42,16 @@ public:
 	* @param x_out Output stream
 	* @param x_dir Output directory (for images)
 	*/
-	virtual void Serialize(std::ostream& x_out, const std::string& x_dir) const = 0;
+	virtual void Serialize(std::ostream& x_out, MkDirectory* xp_dir = nullptr) const = 0;
 	/**
 	* @brief  Deserialize the stream from JSON
 	*
 	* @param x_in   Input stream
 	* @param x_dir  Input directory (for images)
 	*/
-	virtual void Deserialize(std::istream& x_in, const std::string& x_dir) = 0;
+	virtual void Deserialize(std::istream& x_in, MkDirectory* xp_dir = nullptr) = 0;
 
-	std::string SerializeToString(const std::string& x_dir = "") const;
+	std::string SerializeToString(MkDirectory* xp_dir = nullptr) const;
 
 	/**
 	* @brief Redefinition of the output stream operator <<
@@ -59,7 +61,7 @@ public:
 	*
 	* @return output stream
 	*/
-	inline friend std::ostream& operator<< (std::ostream& x_out, const Serializable& x_obj) {x_obj.Serialize(x_out, ""); return x_out;}
+	inline friend std::ostream& operator<< (std::ostream& x_out, const Serializable& x_obj) {x_obj.Serialize(x_out); return x_out;}
 
 	/**
 	* @brief Redefinition of the input stream operator <<
@@ -69,7 +71,7 @@ public:
 	*
 	* @return input stream
 	*/
-	inline friend std::istream& operator>> (std::istream& x_in, Serializable& x_obj) {x_obj.Deserialize(x_in, ""); return x_in;}
+	inline friend std::istream& operator>> (std::istream& x_in, Serializable& x_obj) {x_obj.Deserialize(x_in); return x_in;}
 
 	/**
 	* @brief Extract the signature (name of all subfields)

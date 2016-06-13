@@ -58,11 +58,11 @@ void LogEvent::Reset()
 
 	CLEAN_DELETE(mp_annotationWriter);
 	mp_annotationWriter = new AnnotationFileWriter();
-	mp_annotationWriter->Open(RefContext().ReserveFile(m_param.file, m_nbReset));
+	mp_annotationWriter->Open(RefContext().RefOutputDir().ReserveFile(m_param.file, m_nbReset));
 	m_saveImage1 = m_inputStreams.at(1)->IsConnected();
 	m_saveImage2 = m_inputStreams.at(2)->IsConnected();
 
-	RefContext().MkDir(m_param.folder);
+	mp_outputDir.reset(new MkDirectory(m_param.folder, RefContext().RefOutputDir(), false));
 }
 
 void LogEvent::ProcessFrame()
@@ -83,7 +83,7 @@ void LogEvent::WriteEvent()
 	LOG_DEBUG(m_logger, "Write event to log file");
 	stringstream ss;
 
-	ss<<m_event.SerializeToString(RefContext().GetOutputDir() + "/" + m_param.folder);
+	ss<<m_event.SerializeToString(mp_outputDir.get());
 	mp_annotationWriter->WriteAnnotation(m_currentTimeStamp, m_currentTimeStamp + 1000 * m_param.duration, ss);
 }
 
@@ -96,14 +96,14 @@ void LogEvent::SaveImage(Event& xr_event) const
 	{
 		std::stringstream ss1;
 		ss1 << m_param.folder << "/" << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_global_1." << m_param.extension;
-		addExternalImage(m_inputIm1, "globalImage", RefContext().ReserveFile(ss1.str()), xr_event);
+		addExternalImage(m_inputIm1, "globalImage", RefContext().RefOutputDir().ReserveFile(ss1.str()), xr_event);
 
 		if(obj.width > 0 && obj.height > 0)
 		{
 			std::stringstream ss2;
 			ss2 << m_param.folder << "/" << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_1" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
-			addExternalImage((m_inputIm1)(obj.GetRect()), "objectImage", RefContext().ReserveFile(ss2.str()), xr_event);
+			addExternalImage((m_inputIm1)(obj.GetRect()), "objectImage", RefContext().RefOutputDir().ReserveFile(ss2.str()), xr_event);
 		}
 	}
 
@@ -111,14 +111,14 @@ void LogEvent::SaveImage(Event& xr_event) const
 	{
 		std::stringstream ss1;
 		ss1 << m_param.folder << "/" << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_global_2." << m_param.extension;
-		addExternalImage(m_inputIm2, "globalMask", RefContext().ReserveFile(ss1.str()), xr_event);
+		addExternalImage(m_inputIm2, "globalMask", RefContext().RefOutputDir().ReserveFile(ss1.str()), xr_event);
 
 		if(obj.width > 0 && obj.height > 0)
 		{
 			std::stringstream ss2;
 			ss2 << m_param.folder << "/" << m_currentTimeStamp << "_" << xr_event.GetEventName() << "_" << obj.GetName()<< obj.GetId() << "_2" << "." << m_param.extension;
 			// cout<<"Save image "<<obj.m_posX<<" "<<obj.m_posY<<endl;
-			addExternalImage((m_inputIm2)(obj.GetRect()), "objectMask",  RefContext().ReserveFile(ss2.str()), xr_event);
+			addExternalImage((m_inputIm2)(obj.GetRect()), "objectMask",  RefContext().RefOutputDir().ReserveFile(ss2.str()), xr_event);
 		}
 	}
 }
@@ -130,12 +130,12 @@ void LogEvent::CompareWithGroundTruth()
 		return;
 	try
 	{
-		string outDir = GetContext().GetOutputDir() + "/analysis";
-		RefContext().MkDir("analysis");
+		MkDirectory dir("analysis", RefContext().RefOutputDir(), false);
+		string outDir = dir.GetPath();
 		if(!m_param.gtFile.empty())
-			RefContext().Cp(m_param.gtFile, "analysis/" + basename(m_param.gtFile));
+			RefContext().RefOutputDir().Cp(m_param.gtFile, "analysis/" + basename(m_param.gtFile));
 		stringstream cmd;
-		cmd<< m_param.gtCommand << " " << GetContext().GetOutputDir() << "/" << m_param.file;
+		cmd<< m_param.gtCommand << " " << RefContext().RefOutputDir().GetPath() << "/" << m_param.file;
 		// if(m_param.gtFile != "")
 		cmd<< " " << outDir << "/" << basename(m_param.gtFile);
 		cmd<< " --html --no-browser -o " << outDir;
@@ -143,7 +143,7 @@ void LogEvent::CompareWithGroundTruth()
 			cmd<<" -i -V "<<m_param.gtVideo;
 
 		// Save command for later use
-		ofstream ofs(RefContext().ReserveFile("eval.%d.sh", m_nbReset), ios_base::app);
+		ofstream ofs(RefContext().RefOutputDir().ReserveFile("eval.%d.sh", m_nbReset), ios_base::app);
 		ofs << cmd.str() << endl;
 
 		LOG_DEBUG(m_logger, "Execute cmd: " + cmd.str());
@@ -157,7 +157,7 @@ void LogEvent::CompareWithGroundTruth()
 			{
 				stringstream ss;
 				ss << "analysis/" << dir_iter->path().filename().string();
-				RefContext().ReserveFile(ss.str());
+				RefContext().RefOutputDir().ReserveFile(ss.str());
 			}
 		}
 	}

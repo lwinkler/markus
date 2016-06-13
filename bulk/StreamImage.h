@@ -50,8 +50,8 @@ public:
 	virtual void ConvertInput() override;
 	virtual void RenderTo(cv::Mat& x_output) const override;
 	virtual void Query(int x_posX, int x_posY) const override;
-	virtual void Serialize(std::ostream& stream, const std::string& x_dir) const override;
-	virtual void Deserialize(std::istream& stream, const std::string& x_dir) override;
+	virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const override;
+	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr) override;
 	virtual void Randomize(unsigned int& xr_seed) override;
 	const cv::Mat& GetImage() const {return m_content;}
 	void Connect(Stream * x_stream) override;

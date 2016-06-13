@@ -29,7 +29,9 @@
 #include "Timer.h"
 #include "AnnotationFileWriter.h"
 
+#include <memory>
 
+class MkDirectory;
 
 /**
 * @brief Read an event and log it to .srt file
@@ -94,6 +96,7 @@ protected:
 	bool m_saveImage1 = false;
 	bool m_saveImage2 = false;
 	AnnotationFileWriter* mp_annotationWriter;
+	std::unique_ptr<MkDirectory> mp_outputDir;
 };
 
 #endif

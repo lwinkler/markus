@@ -70,7 +70,7 @@ public:
 			m_confSource = x_confType;
 			return;
 		}
-		mr_value.Deserialize(istr, "");
+		mr_value.Deserialize(istr);
 		m_confSource = x_confType;
 	}
 	virtual void SetDefault(const std::string& rx_value) override
@@ -93,7 +93,7 @@ public:
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		std::stringstream ss;
 		ss << m_default;
-		mr_value.Deserialize(ss, "");
+		mr_value.Deserialize(ss);
 		m_confSource = PARAMCONF_DEF;
 	}
 

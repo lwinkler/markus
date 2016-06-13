@@ -139,7 +139,7 @@ ProcessFreezeException::ProcessFreezeException(const string& x_descr, const stri
 * @param x_out Output stream
 * @param x_dir Output directory (for images)
 */
-void MkException::Serialize(ostream& x_out, const string& x_dir) const
+void MkException::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 {
 	Json::Value root;
 	root["description"] = m_description;
@@ -154,7 +154,7 @@ void MkException::Serialize(ostream& x_out, const string& x_dir) const
 * @param x_in
 * @param x_dir
 */
-void MkException::Deserialize(istream& x_in, const string& x_dir)
+void MkException::Deserialize(istream& x_in, MkDirectory* xp_dir)
 {
 	Json::Value root;
 	x_in >> root;

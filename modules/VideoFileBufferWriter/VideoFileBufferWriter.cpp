@@ -103,7 +103,7 @@ void VideoFileBufferWriter::OpenNewFile()
 
 	stringstream ss;
 	ss << m_param.file  << "." << m_currentTimeStamp << "." << ExtensionFromFourcc(m_param.fourcc);
-	m_fileName = RefContext().ReserveFile(ss.str());
+	m_fileName = RefContext().RefOutputDir().ReserveFile(ss.str());
 	double fps = 12;
 
 	try

@@ -72,6 +72,7 @@ protected:
 
 	// temporary
 	bool m_saveImage1 = false;
+	std::unique_ptr<MkDirectory> mp_outputDir;
 };
 
 #endif

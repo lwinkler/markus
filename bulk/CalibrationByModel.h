@@ -32,8 +32,8 @@ public:
 
 	CalibrationByModel();
 	CalibrationByModel(double x_camera_height, double x_yaw, double x_roll, double x_focal, int x_height_model, int x_width_model);
-	void Serialize(std::ostream& x_out, const std::string& x_dir ="") const;
-	void Deserialize(std::istream& x_in, const std::string& x_dir ="");
+	void Serialize(std::ostream& x_out, MkDirectory* xp_dir = nullptr) const;
+	void Deserialize(std::istream& x_in, MkDirectory* xp_dir = nullptr);
 
 	double camera_height; // in m
 	double yaw;           // in degree

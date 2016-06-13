@@ -372,7 +372,7 @@ int main(int argc, char** argv)
 		{
 			string dir = args.outputDir + "/";
 			setenv("LOG_DIR", dir.c_str(), 1);
-			context.ReserveFile("markus.log");
+			context.RefOutputDir().ReserveFile("markus.log");
 		}
 
 		log4cxx::xml::DOMConfigurator::configure(args.logConfigFile);
@@ -470,7 +470,7 @@ int main(int argc, char** argv)
 		// Write the modified params in config and save
 		manager.WriteConfig(appConfig);
 		// Save the last config with modifs to the output file
-		mainConfig.SaveToFile(context.ReserveFile("overridden.xml"));
+		mainConfig.SaveToFile(context.RefOutputDir().ReserveFile("overridden.xml"));
 	}
 	catch(MkException& e)
 	{
