@@ -131,7 +131,7 @@ void LogEvent::CompareWithGroundTruth()
 	try
 	{
 		MkDirectory dir("analysis", RefContext().RefOutputDir(), false);
-		string outDir = dir.GetPath();
+		const string& outDir(dir.GetPath());
 		if(!m_param.gtFile.empty())
 			RefContext().RefOutputDir().Cp(m_param.gtFile, "analysis/" + basename(m_param.gtFile));
 		stringstream cmd;

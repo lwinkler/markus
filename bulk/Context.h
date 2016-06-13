@@ -73,7 +73,6 @@ public:
 
 	// note: All public methods must be thread-safe
 	static std::string Version(bool x_full);
-	inline const std::string& GetOutputDir() const {if(m_outputDir.empty())throw MkException("Output dir has not been created", LOC); return m_outputDir;}
 	inline const std::string& GetApplicationName() const {return m_param.applicationName;}
 	inline const std::string& GetJobId() const {return m_jobId;}
 	inline const std::string& GetCameraId() const {return m_param.cameraId;}
@@ -84,7 +83,6 @@ public:
 
 protected:
 	void CreateOutputDir(const std::string& x_outputDir, const std::string& x_timeStamp);
-	std::string m_outputDir;
 	std::string m_jobId;
 	std::unique_ptr<MkDirectory> mp_outputDir;
 

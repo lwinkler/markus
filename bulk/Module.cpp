@@ -567,9 +567,9 @@ void Module::ReadFromCache()
 		if(GetContext().GetParameters().cacheDirectory.empty())
 			throw MkException("Trying to read streams from cache but no cache directory is specified", LOC);
 		stringstream fileName;
-		fileName << directory.GetPath() << "/" << GetName() << "." << elem.second->GetName() << "." << m_currentTimeStamp << ".json";
+		fileName << GetName() << "." << elem.second->GetName() << "." << m_currentTimeStamp << ".json";
 		ifstream ifs;
-		ifs.open(fileName.str().c_str());
+		ifs.open(directory.ReserveFile(fileName.str()));
 		if(!ifs.good())
 			throw MkException("Error while reading from stream cache: " + fileName.str(), LOC);
 		elem.second->Deserialize(ifs, &directory);

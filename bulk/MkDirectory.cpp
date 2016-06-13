@@ -164,30 +164,6 @@ void MkDirectory::CleanDir()
 }
 
 /**
-* @brief Create a directory inside the output directory
-*
-* @param x_directory MkDirectory nema
-*/
-/*
-MkDirectory& MkDirectory::MkDir(const std::string& x_directory, bool x_exist)
-{
-	WriteLock lock(m_lock);
-
-	MkDirectory* ptr = FindSubDir(x_directory);
-	if(ptr != nullptr)
-	{
-		LOG_WARN(m_logger, "Subdirectory " + x_directory + " already exists in " + GetPath());
-		return *ptr;
-	}
-	else
-	{
-		mp_subDirectories.emplace_back(new MkDirectory(x_directory, GetPath(), x_exist));
-		return *mp_subDirectories.back();
-	}
-}
-*/
-
-/**
 * @brief Reserve a file inside the output directory
 *
 * @param x_filePath    File name with path
@@ -278,6 +254,7 @@ void MkDirectory::RmDir(const std::string& x_directory)
 */
 void MkDirectory::ArchiveAndClean(bool x_clean, const string& x_archiveDir, const string& x_configFile)
 {
+	WriteLock lock(m_lock);
 	if(mp_parent != nullptr)
 		throw MkException("Unexpected: ArchiveAndClean should only be called from main output directory", LOC);
 	if(x_clean)

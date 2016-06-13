@@ -55,7 +55,7 @@ void LogObjects::Compress()
 	try
 	{
 		// Compress file and remove
-		SYSTEM("tar --remove-files -cjf " + tarFile + " -C " + GetContext().GetOutputDir() + " " + m_param.file);
+		SYSTEM("tar --remove-files -cjf " + tarFile + " -C " + RefContext().RefOutputDir().GetPath() + " " + m_param.file);
 	}
 	catch(MkException& e)
 	{
