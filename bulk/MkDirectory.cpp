@@ -254,7 +254,6 @@ void MkDirectory::RmDir(const std::string& x_directory)
 */
 void MkDirectory::ArchiveAndClean(bool x_clean, const string& x_archiveDir, const string& x_configFile)
 {
-	WriteLock lock(m_lock);
 	if(mp_parent != nullptr)
 		throw MkException("Unexpected: ArchiveAndClean should only be called from main output directory", LOC);
 	if(x_clean)
@@ -291,7 +290,7 @@ void MkDirectory::ArchiveAndClean(bool x_clean, const string& x_archiveDir, cons
 			else
 			{
 				if(!FileExists(basename(x_configFile)))
-					Cp(x_configFile, "");
+					Cp(x_configFile);
 			}
 		}
 	}

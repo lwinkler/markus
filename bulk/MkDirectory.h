@@ -50,7 +50,7 @@ public:
 	// All file system methods
 	std::string ReserveFile(const std::string& x_file, int x_uniqueIndex = -1);
 	void UnreserveFile(const std::string& x_file);
-	void Cp(const std::string& x_fileName1, const std::string& x_fileName2);
+	void Cp(const std::string& x_fileName1, const std::string& x_fileName2 = "");
 	void Rm(const std::string& x_fileName);
 	inline bool FileExists(const std::string& x_fileName) {ReadLock(m_lock); return m_reservedFiles.find(x_fileName) != m_reservedFiles.end();}
 	inline bool DirExists(const std::string& x_dirName) {ReadLock lock(m_lock); return FindSubDir(x_dirName) != nullptr;}

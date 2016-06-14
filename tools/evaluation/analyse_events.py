@@ -260,10 +260,10 @@ def evaluate(events, truths):
 	# TODO: In the future the generated files should respect an existing format. E.g. *.ass or *.csv or pickle
 	#   - the 3 first lines were added by Alexandre Heili for his scripts
 	#   - the 4th line was added by Florian Rossier
-	fid_fp = open(args.output + '/FP.txt','w')
-	fid_fn = open(args.output + '/FN.txt','w')
-	fid_tp = open(args.output + '/TP.txt','w')
-	fid_gt = open(args.output + '/GT.txt','w') 
+	# fid_fp = open(args.output + '/FP.txt','w')
+	# fid_fn = open(args.output + '/FN.txt','w')
+	# fid_tp = open(args.output + '/TP.txt','w')
+	# fid_gt = open(args.output + '/GT.txt','w') 
 	
 	# Variable to log event
 	log_event = []
@@ -290,7 +290,7 @@ def evaluate(events, truths):
 
 			# Test for matching
 			if matched:
-				fid_tp.write('%s %s\n' % (event.begin.milis, event.end.milis))
+				# fid_tp.write('%s %s\n' % (event.begin.milis, event.end.milis))
 				# Keep track of matched ground truth
 				if event.id not in matched_events:
 					matched_events[event.id] = []
@@ -303,15 +303,15 @@ def evaluate(events, truths):
 					evt_dup = True
 				matched_events[event.id].append(truth)
 				matched_truths[truth.id].append(event)
-		if event.id in matched_events:
-            		fid_gt.write('1\n') # this is a true event mark it with 1
+		# if event.id in matched_events:
+			# fid_gt.write('1\n') # this is a true event mark it with 1
 		# Log event
 		log_event.append((event, matched_events[event.id] if event.id in matched_events else [], event.id in matched_events, evt_dup))
 
 		if not event.id in matched_events:
 			fp += 1
-			fid_fp.write('%s %s\n' % (event.begin.milis, event.end.milis))
-			fid_gt.write('0\n') #false positive event mark it with 0
+			# fid_fp.write('%s %s\n' % (event.begin.milis, event.end.milis))
+			# fid_gt.write('0\n') #false positive event mark it with 0
 
 	tp = 0
 	for truth in truths:
@@ -320,7 +320,7 @@ def evaluate(events, truths):
 			ambs += 1
 			continue
 		if not truth.id in matched_truths:
-			fid_fn.write('%s %s\n' % (truth.begin.milis, truth.end.milis))
+			# fid_fn.write('%s %s\n' % (truth.begin.milis, truth.end.milis))
 			fn += 1
 		else:
 			tp += 1
@@ -336,10 +336,10 @@ def evaluate(events, truths):
 						 dup_gt=ndup_gt,
 						 det=len(events),
 						 pos=len(truths) - ambs)
-	fid_fp.close()
-	fid_fn.close()
-	fid_tp.close()
-	fid_gt.close()
+	# fid_fp.close()
+	# fid_fn.close()
+	# fid_tp.close()
+	# fid_gt.close()
 
 	return (results, (log_event, log_truth))
 

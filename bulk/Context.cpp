@@ -121,7 +121,7 @@ void Context::CreateOutputDir(const string& x_outputDir, const string& x_timeSta
 			// note: do not log as logger may not be initialized
 			// Copy config file to output directory
 			mp_outputDir.reset(new MkDirectory(outputDir, ".", false));
-			mp_outputDir->Cp(m_param.configFile, "");
+			mp_outputDir->Cp(m_param.configFile);
 		}
 	}
 	catch(exception& e)

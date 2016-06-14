@@ -131,19 +131,20 @@ void LogEvent::CompareWithGroundTruth()
 	try
 	{
 		MkDirectory dir("analysis", RefContext().RefOutputDir(), false);
-		const string& outDir(dir.GetPath());
 		if(!m_param.gtFile.empty())
-			RefContext().RefOutputDir().Cp(m_param.gtFile, "analysis/" + basename(m_param.gtFile));
+			dir.Cp(m_param.gtFile);
 		stringstream cmd;
 		cmd<< m_param.gtCommand << " " << RefContext().RefOutputDir().GetPath() << "/" << m_param.file;
-		// if(m_param.gtFile != "")
-		cmd<< " " << outDir << "/" << basename(m_param.gtFile);
-		cmd<< " --html --no-browser -o " << outDir;
+		if(m_param.gtFile.empty())
+			cmd<< " empty.srt"; // trick: give unexistant file as param
+		else
+			cmd<< " " << dir.GetPath() << "/" << basename(m_param.gtFile);
+		cmd<< " --html --no-browser -o " << dir.GetPath();
 		if(m_param.gtVideo != "")
 			cmd<<" -i -V "<<m_param.gtVideo;
 
 		// Save command for later use
-		ofstream ofs(RefContext().RefOutputDir().ReserveFile("eval.%d.sh", m_nbReset), ios_base::app);
+		ofstream ofs(dir.ReserveFile("eval.%d.sh", m_nbReset), ios_base::app);
 		ofs << cmd.str() << endl;
 
 		LOG_DEBUG(m_logger, "Execute cmd: " + cmd.str());
@@ -151,13 +152,12 @@ void LogEvent::CompareWithGroundTruth()
 
 		// Iterate over all files created by the command
 		boost::filesystem::directory_iterator end_iter;
-		for(boost::filesystem::directory_iterator dir_iter(outDir) ; dir_iter != end_iter ; ++dir_iter)
+		for(boost::filesystem::directory_iterator dir_iter(dir.GetPath()) ; dir_iter != end_iter ; ++dir_iter)
 		{
 			if(boost::filesystem::is_regular_file(dir_iter->status()))
 			{
-				stringstream ss;
-				ss << "analysis/" << dir_iter->path().filename().string();
-				RefContext().RefOutputDir().ReserveFile(ss.str());
+				if(!dir.FileExists(dir_iter->path().filename().string()))
+					dir.ReserveFile(dir_iter->path().filename().string());
 			}
 		}
 	}
