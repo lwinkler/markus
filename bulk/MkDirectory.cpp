@@ -57,7 +57,7 @@ MkDirectory::MkDirectory(const std::string& x_dirName, const std::string& x_path
 MkDirectory::~MkDirectory()
 {
 	// note: do not erase, link only
-	for(const auto& elem : mp_subDirectories)
+	for(const auto elem : mp_subDirectories)
 	{
 		LOG_ERROR(m_logger, "Sub directory " << elem.first << " was not unregistred from parent " << m_path);
 	}
@@ -88,6 +88,10 @@ bool MkDirectory::IsEmpty()
 {
 	LOG_DEBUG(m_logger, "Lock MkDirectory, line " << __LINE__);
 	ReadLock lock(m_lock);
+	for(auto elem : mp_subDirectories) {
+		if(!elem.second->IsEmpty())
+			return false;
+	}
 	return m_reservedFiles.empty();
 }
 
@@ -234,18 +238,6 @@ void MkDirectory::Rm(const std::string& x_fileName)
 	UnreserveFile(x_fileName);
 	rm(m_path + "/" + x_fileName);
 }
-
-/**
-* @brief Remove a directory inside output directory
-*
-* @param x_directory MkDirectory name
-*/
-/*
-void MkDirectory::RmDir(const std::string& x_directory)
-{
-	rmDir(m_path + "/" + x_directory);
-}
-*/
 
 /**
 * @brief Remove a directory inside output directory

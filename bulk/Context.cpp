@@ -45,6 +45,10 @@ Context::Context(ParameterStructure& xr_params) :
 
 	string ts = timeStamp(getpid());
 	CreateOutputDir(m_param.outputDir, ts);
+	if(! m_param.cacheIn.empty())
+		mp_cacheIn.reset(new MkDirectory(m_param.cacheIn, ".", true));
+	if(! m_param.cacheOut.empty())
+		mp_cacheOut.reset(new MkDirectory(m_param.cacheOut, *mp_outputDir, false));
 	if(m_param.jobId.empty())
 	{
 		LOG_INFO(m_logger, "A test jobId is created from time stamp. This should only be used for tests");

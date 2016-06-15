@@ -53,7 +53,8 @@ public:
 			AddParameter(new ParameterBool("real_time", 0, 0, 1,      &realTime,        "All modules process in real-time. Disable to increase processing speed. Option -f"));
 			AddParameter(new ParameterString("job_id"      ,  ""    , &jobId         ,  "Job id for storage in database. Leave empty to generate a random value"));
 			AddParameter(new ParameterString("camera_id",  ""       , &cameraId      ,  "CameraId id for storage in database. Leave empty for tests only."));
-			AddParameter(new ParameterString("cache_directory", ""  , &cacheDirectory,  "The directory in which the cache can be found, empty if no cache"));
+			AddParameter(new ParameterString("cache_in",        ""  , &cacheIn       ,  "The cache directory of a previous, empty if no cache, relative to output directory"));
+			AddParameter(new ParameterString("cache_out",       ""  , &cacheOut      ,  "The directory in which the cache should be written, empty if no cache, relative to current directory"));
 		}
 		bool autoClean;
 		std::string archiveDir;
@@ -65,7 +66,8 @@ public:
 		bool robust;
 		std::string jobId;
 		std::string cameraId;
-		std::string cacheDirectory;
+		std::string cacheIn;
+		std::string cacheOut;
 	};
 
 	virtual ~Context();
@@ -76,7 +78,9 @@ public:
 	inline const std::string& GetApplicationName() const {return m_param.applicationName;}
 	inline const std::string& GetJobId() const {return m_jobId;}
 	inline const std::string& GetCameraId() const {return m_param.cameraId;}
-	inline MkDirectory& RefOutputDir() {return *mp_outputDir;}
+	inline MkDirectory& RefOutputDir() {if(mp_outputDir.get() == nullptr) throw MkException("No output dir exists", LOC); return *mp_outputDir;}
+	inline MkDirectory& RefCacheIn() {if(mp_cacheIn.get() == nullptr) throw MkException("No input cache dir exists, use option -I", LOC); return *mp_cacheIn;}
+	inline MkDirectory& RefCacheOut() {if(mp_cacheOut.get() == nullptr) throw MkException("No output cache dir exists, use option -O", LOC); return *mp_cacheOut;}
 	inline bool IsCentralized() const {return m_param.centralized;}
 	inline bool IsRealTime() const {return m_param.realTime;}
 	const Parameters& GetParameters() const {return m_param;}
@@ -85,6 +89,8 @@ protected:
 	void CreateOutputDir(const std::string& x_outputDir, const std::string& x_timeStamp);
 	std::string m_jobId;
 	std::unique_ptr<MkDirectory> mp_outputDir;
+	std::unique_ptr<MkDirectory> mp_cacheIn;
+	std::unique_ptr<MkDirectory> mp_cacheOut;
 
 private:
 	DISABLE_COPY(Context)

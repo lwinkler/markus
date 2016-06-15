@@ -75,7 +75,8 @@ void usage()
 		"                       Override the value of one parameter\n"
 		" -x  --xml extra_config.xml\n"
 		"                       Override some parameters in an extra XML file\n"
-		" -C  --cache           Cache directory (from another run) if using cache\n"
+		" -O  --cache-out       Cache directory for output, relative to output directory. Usually \"cache\"\n"
+		" -I  --cache-in        Cache directory for input from a previous run, relative to current directory\n"
 		" -a  --aspect-ratio    Force all modules to comply with this aspect ratio (e.g. 4:3, 3:4, ...)\n"
 	);
 }
@@ -138,7 +139,8 @@ struct arguments
 	string configFile    = "config.xml";
 	string logConfigFile = "log4cxx.xml";
 	string outputDir     = "";
-	string cacheDirectory = "";
+	string cacheIn = "";
+	string cacheOut = "";
 	vector<string> parameters;
 	vector<string> extraConfig;
 };
@@ -161,14 +163,15 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 		{"output-dir",  1, 0, 'o'},
 		{"parameter",   1, 0, 'p'},
 		{"xml",         1, 0, 'x'},
-		{"cache",       1, 0, 'C'},
+		{"cache-in",    1, 0, 'I'},
+		{"cache-out",   1, 0, 'O'},
 		{"robust",      0, 0, 'R'},
 		{"aspect-ratio", 1, 0, 'a'},
 		{nullptr, 0, nullptr, 0}
 	};
 	char c;
 	int option_index = 0;
-	while ((c = getopt_long(argc, argv, "hvdeScfinRl:o:p:x:C:a:", long_options, &option_index)) != -1)
+	while ((c = getopt_long(argc, argv, "hvdeScfinRl:o:p:x:I:O:a:", long_options, &option_index)) != -1)
 	{
 		switch (c)
 		{
@@ -215,8 +218,11 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 		case 'x':
 			args.extraConfig.push_back(optarg);
 			break;
-		case 'C':
-			args.cacheDirectory = optarg;
+		case 'I':
+			args.cacheIn = optarg;
+			break;
+		case 'O':
+			args.cacheOut = optarg;
 			break;
 		case 'a':
 			args.aspectRatio = optarg;
@@ -366,7 +372,8 @@ int main(int argc, char** argv)
 		contextParameters.centralized     = args.centralized;
 		contextParameters.robust          = args.robust;
 		contextParameters.realTime        = !args.fast;
-		contextParameters.cacheDirectory  = args.cacheDirectory;
+		contextParameters.cacheIn         = args.cacheIn;
+		contextParameters.cacheOut        = args.cacheOut;
 		Context context(contextParameters);
 		if(args.outputDir != "")
 		{

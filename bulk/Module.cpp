@@ -106,10 +106,6 @@ void Module::Reset()
 			throw MkException("Controller creation failed", LOC);
 		else AddController(ctr);
 	}
-
-	if(m_param.cached == CachedState::WRITE_CACHE)
-		mp_cacheDir.reset(new MkDirectory("cache", RefContext().RefOutputDir(), false));
-	else mp_cacheDir.reset(nullptr);
 }
 
 /**
@@ -542,14 +538,18 @@ void Module::AddDebugStream(int x_id, Stream* xp_stream)
 */
 void Module::WriteToCache() const
 {
+	// Read output stream from cache
 	// Write output stream to cache
+	MkDirectory& dir(RefContext().RefCacheOut());
 	for(const auto &elem : m_outputStreams)
 	{
 		if(!elem.second->IsConnected()) continue;
 		stringstream fileName;
-		fileName << "cache/" << GetName() << "." << elem.second->GetName() << "." << m_currentTimeStamp << ".json";
-		ofstream of(RefContext().RefOutputDir().ReserveFile(fileName.str()));
-		elem.second->Serialize(of, mp_cacheDir.get());
+		fileName << GetName() << "." << elem.second->GetName() << "." << m_currentTimeStamp << ".json";
+		ofstream of(dir.ReserveFile(fileName.str()));
+		if(!of.good())
+			throw MkException("Error while writing to cache: " + fileName.str(), LOC);
+		elem.second->Serialize(of, &dir);
 	}
 }
 
@@ -559,20 +559,18 @@ void Module::WriteToCache() const
 */
 void Module::ReadFromCache()
 {
-	MkDirectory directory(GetContext().GetParameters().cacheDirectory, ".", true);
+	MkDirectory& dir(RefContext().RefCacheIn());
 	// Read output stream from cache
 	for(auto& elem : m_outputStreams)
 	{
 		if(!elem.second->IsConnected()) continue;
-		if(GetContext().GetParameters().cacheDirectory.empty())
-			throw MkException("Trying to read streams from cache but no cache directory is specified", LOC);
 		stringstream fileName;
 		fileName << GetName() << "." << elem.second->GetName() << "." << m_currentTimeStamp << ".json";
 		ifstream ifs;
-		ifs.open(directory.ReserveFile(fileName.str()));
+		ifs.open(dir.ReserveFile(fileName.str()));
 		if(!ifs.good())
-			throw MkException("Error while reading from stream cache: " + fileName.str(), LOC);
-		elem.second->Deserialize(ifs, &directory);
+			throw MkException("Error while reading from cache: " + fileName.str(), LOC);
+		elem.second->Deserialize(ifs, &dir);
 		ifs.close();
 	}
 }
