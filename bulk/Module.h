@@ -83,7 +83,7 @@ public:
 			AddParameter(new ParameterInt("width"          , 640     , 1         , MAX_WIDTH , &width  , "Width of the input"));
 			AddParameter(new ParameterInt("height"         , 480     , 1         , MAX_HEIGHT, &height , "Height of the input"));
 			AddParameter(new ParameterImageType("type"     , CV_8UC1 , &type     , "Format of the input image"));
-			AddParameter(new ParameterCachedState("cached" , CV_8UC1 , &cached   , "Format of the input image"));
+			AddParameter(new ParameterCachedState("cached" , CachedState::NO_CACHE, &cached   , "Format of the input image"));
 
 			// Lock the parameters that cannot be changed
 			LockParameterByName("class");
@@ -175,7 +175,6 @@ protected:
 	std::map<int, Stream *> m_debugStreams;
 
 	std::vector<Module *> m_modulesDepending;
-	std::unique_ptr<MkDirectory> mp_cacheDir;
 
 private:
 	Parameters& m_param;
