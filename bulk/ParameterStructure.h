@@ -31,7 +31,8 @@
 #include <log4cxx/logger.h>
 
 /// Represents a set of parameters for a configurable objects
-class ParameterStructure
+// Note: Disable copies of parameters as a safety
+class ParameterStructure : boost::noncopyable
 {
 public:
 	ParameterStructure(const ConfigReader& x_configReader);
@@ -60,8 +61,6 @@ private:
 	std::string m_name;
 
 	static log4cxx::LoggerPtr m_logger;
-	// Note: Disable copies of parameters as a safety
-	DISABLE_COPY(ParameterStructure)
 };
 
 

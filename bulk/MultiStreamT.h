@@ -85,7 +85,6 @@ protected:
 	size_t          m_nextObj = 0;
 
 private:
-	DISABLE_COPY(MultiStreamT)
 	static log4cxx::LoggerPtr m_logger;
 	static const std::string m_type;
 	static const std::string m_class;

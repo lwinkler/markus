@@ -122,7 +122,6 @@ protected:
 	static const ParameterType m_parameterType;
 
 private:
-	DISABLE_COPY(StreamNum)
 	static log4cxx::LoggerPtr m_logger;
 };
 

@@ -37,7 +37,7 @@
 /**
 * @brief A directory class to control accesses to the system file
 */
-class MkDirectory
+class MkDirectory : boost::noncopyable
 {
 public:
 	MkDirectory(const std::string& x_dirName, MkDirectory& xr_parent, bool x_exist);
@@ -103,7 +103,6 @@ protected:
 	std::map<std::string, MkDirectory*> mp_subDirectories;
 
 private:
-	DISABLE_COPY(MkDirectory)
 	static log4cxx::LoggerPtr m_logger;
 	const std::string m_path;
 	MkDirectory* mp_parent = nullptr;

@@ -69,7 +69,6 @@ protected:
 	T  m_default;
 
 private:
-	DISABLE_COPY(StreamT)
 	static log4cxx::LoggerPtr m_logger;
 	static const std::string m_type;
 	static const std::string m_class;

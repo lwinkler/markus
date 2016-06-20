@@ -42,11 +42,6 @@
 /// Macro to define the Description of an object (for method GetDescription)
 #define MKDESCR(cl) inline virtual const std::string& GetDescription() const override {const static std::string s = cl; return s;}
 
-/// Disable copy constructor
-#define DISABLE_COPY(Class) \
-Class(const Class &); \
-Class &operator=(const Class &);
-
 // time stamp: use for all time stamps on frames in [ms]
 #define TIME_STAMP uint64_t
 #define TIME_STAMP_MIN ULLONG_MAX // for initialization as well

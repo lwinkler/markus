@@ -27,6 +27,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <boost/noncopyable.hpp>
 
 #include "define.h"
 #include <log4cxx/xml/domconfigurator.h>
@@ -106,7 +107,7 @@ private:
                a reference to the sub configuration. Not a copy.
                This utility relies on TinyXml.
 */
-class ConfigFile : public ConfigReader
+class ConfigFile : public ConfigReader, boost::noncopyable
 {
 public:
 	ConfigFile(const std::string& x_fileName, bool x_allowCreation = false, bool x_header = true);
@@ -114,7 +115,6 @@ public:
 	void SaveToFile(const std::string& x_file) const;
 
 private:
-	DISABLE_COPY(ConfigFile)
 	TiXmlDocument* mp_doc;
 };
 
@@ -122,7 +122,7 @@ private:
 /**
 * @brief Parent class for all configurable objects (containing parameters)
 */
-class Configurable
+class Configurable : boost::noncopyable
 {
 public:
 	Configurable(ParameterStructure& x_param);
@@ -132,7 +132,6 @@ public:
 
 private:
 	ParameterStructure& m_param;
-	DISABLE_COPY(Configurable)
 };
 
 #endif

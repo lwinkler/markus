@@ -78,7 +78,6 @@ protected:
 	cv::Mat& m_content;
 
 private:
-	// DISABLE_COPY(Stream)
 	static log4cxx::LoggerPtr m_logger;
 };
 

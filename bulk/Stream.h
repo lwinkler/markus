@@ -31,7 +31,7 @@
 
 /// This is the parent class for all streams (input and output of data)
 
-class Stream : public Serializable, public Parameter
+class Stream : public Serializable, public Parameter, boost::noncopyable
 {
 public:
 	Stream(const std::string& x_name, Module& rx_module, const std::string& rx_description, const std::string& rx_requirement = "");
@@ -103,7 +103,6 @@ protected:
 	std::string m_requirement;
 
 private:
-	DISABLE_COPY(Stream)
 	static log4cxx::LoggerPtr m_logger;
 };
 
