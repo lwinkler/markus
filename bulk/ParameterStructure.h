@@ -49,7 +49,6 @@ public:
 	void LockIfRequired();
 	bool ParameterExists(const std::string& x_name) const;
 	void AddParameter(Parameter* xr_param);
-	void AddParameterForStream(Parameter* xr_param);
 	inline const std::string& GetName() const {return m_name;}
 
 protected:

@@ -35,7 +35,7 @@ log4cxx::LoggerPtr LogEvent::m_logger(log4cxx::Logger::getLogger("LogEvent"));
 LogEvent::LogEvent(ParameterStructure& xr_params)
 	: Module(xr_params), m_param(dynamic_cast<Parameters&>(xr_params)),
 	  m_inputIm1(Size(m_param.width, m_param.height), m_param.type),
-	  m_inputIm2(Size(m_param.width, m_param.height), m_param.type) // TODO: All of these second streams should be black and white normally
+	  m_inputIm2(Size(m_param.width, m_param.height), CV_8UC1) // note: All of these second streams should be black and white normally
 {
 	// Init input images
 	AddInputStream(0, new StreamEvent("event", m_event, *this, "Input event to be logged"));
