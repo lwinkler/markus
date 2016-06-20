@@ -457,6 +457,7 @@ int main(int argc, char** argv)
 			guiConfig.FindRef("parameters", true);
 
 			MarkusWindow::Parameters windowParameters(guiConfig);
+			windowParameters.Read(guiConfig);
 			MarkusWindow gui(windowParameters, manager);
 			gui.setWindowTitle("Markus");
 			if(!args.nogui)

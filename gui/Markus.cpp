@@ -71,22 +71,14 @@ MarkusWindow::MarkusWindow(ParameterStructure& rx_param, Manager& rx_manager)
 
 void MarkusWindow::timerEvent(QTimerEvent* px_event)
 {
-	/*if(m_centralized)
-	{
-		// at each increment, call the general Process method
-		m_manager.Process();
-	}*/
-
 	for(int i = 0 ; i < m_param.nbCols * m_param.nbRows ; i++)
 		m_moduleViewer[i]->update();
-
-	//update();
 }
 
 void MarkusWindow::WriteConfig(ConfigReader xr_config) const
 {
 	for(auto & elem : m_paramsViewer)
-		elem->Write(xr_config);
+		elem->Write(xr_config.FindRef("viewer[name=\"" + elem->GetName() + "\"]"));
 	m_param.Write(xr_config);
 }
 
@@ -278,12 +270,11 @@ void MarkusWindow::resizeEvent(QResizeEvent* event)
 	// Add new module viewers to config
 	for(int ind = size ; ind < m_param.nbRows * m_param.nbCols ; ind++)
 	{
-		stringstream ss;
-		ss<<"viewer"<<ind;
-		ConfigReader conf(m_param.config.FindRef("viewer[name=\"" + ss.str() + "\"]", true));
+		ConfigReader conf(m_param.config.FindRef("viewer[name=\"viewer" + to_string(ind) + "\"]", true));
 		conf.FindRef("parameters", true);
 		m_paramsViewer.push_back(new QModuleViewer::Parameters(conf));
- 		m_moduleViewer.push_back(new QModuleViewer(m_manager, *m_paramsViewer.back()));
+		m_paramsViewer.back()->Read(conf);
+		m_moduleViewer.push_back(new QModuleViewer(m_manager, *m_paramsViewer.back()));
 		m_moduleViewer.at(ind)->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 		// m_moduleViewer.at(ind)->showDisplayOptions(true);
 	}
@@ -308,5 +299,3 @@ void MarkusWindow::resizeEvent(QResizeEvent* event)
 		}
 	}
 }
-
-// #include "markus.moc"

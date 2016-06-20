@@ -295,7 +295,7 @@ public:
 
 	void testModule()
 	{
-		// TODO: test the serialization of all modules
+		// TODO: implement and test the serialization of all modules
 		testSerialization(*mp_fakeInput, "Module");
 	}
 

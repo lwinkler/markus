@@ -498,7 +498,7 @@ void Module::AddInputStream(int x_id, Stream* xp_stream)
 
 	if(xp_stream->GetParameterType() != PARAM_UNKNOWN)
 	{
-		m_param.AddParameterForStream(xp_stream);
+		m_param.AddParameter(xp_stream);
 	}
 }
 

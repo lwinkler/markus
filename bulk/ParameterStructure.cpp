@@ -84,15 +84,6 @@ void ParameterStructure::AddParameter(Parameter* xr_param)
 }
 
 /**
-* @brief Add a parameter to the structure
-*/
-// TODO: This method should in time disappear
-void ParameterStructure::AddParameterForStream(Parameter* xr_param)
-{
-	AddParameter(xr_param);
-}
-
-/**
 * @brief Set the value from xml configuration
 */
 void ParameterStructure::LockIfRequired()
