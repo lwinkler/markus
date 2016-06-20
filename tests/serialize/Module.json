@@ -8,7 +8,7 @@
 		{
 			"connected" : false,
 			"description" : "Video stream",
-			"image" : "./tests/serialize/image/Module0.input.23422423424234.jpg",
+			"image" : "tests/serialize/image/Module0.input.23422423424234.jpg",
 			"name" : "input",
 			"timeStamp" : 23422423424234,
 			"type" : "Image"

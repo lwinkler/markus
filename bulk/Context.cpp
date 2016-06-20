@@ -46,7 +46,7 @@ Context::Context(ParameterStructure& xr_params) :
 	string ts = timeStamp(getpid());
 	CreateOutputDir(m_param.outputDir, ts);
 	if(! m_param.cacheIn.empty())
-		mp_cacheIn.reset(new MkDirectory(m_param.cacheIn, ".", true));
+		mp_cacheIn.reset(new MkDirectory(m_param.cacheIn, true));
 	if(! m_param.cacheOut.empty())
 		mp_cacheOut.reset(new MkDirectory(m_param.cacheOut, *mp_outputDir, false));
 	if(m_param.jobId.empty())
@@ -113,7 +113,7 @@ void Context::CreateOutputDir(const string& x_outputDir, const string& x_timeSta
 			outputDir = "out_" + x_timeStamp;
 
 			// note: do not log as logger may not be initialized
-			mp_outputDir.reset(new MkDirectory(outputDir, "out", false));
+			mp_outputDir.reset(new MkDirectory("out/" + outputDir, false));
 			boost::filesystem::remove("out_latest");
 			boost::filesystem::create_symlink("out/" + outputDir, "out_latest");
 		}
@@ -124,7 +124,7 @@ void Context::CreateOutputDir(const string& x_outputDir, const string& x_timeSta
 
 			// note: do not log as logger may not be initialized
 			// Copy config file to output directory
-			mp_outputDir.reset(new MkDirectory(outputDir, ".", false));
+			mp_outputDir.reset(new MkDirectory(outputDir, false));
 			mp_outputDir->Cp(m_param.configFile);
 		}
 	}

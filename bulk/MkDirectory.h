@@ -41,7 +41,7 @@ class MkDirectory
 {
 public:
 	MkDirectory(const std::string& x_dirName, MkDirectory& xr_parent, bool x_exist);
-	MkDirectory(const std::string& x_dirName, const std::string& x_path, bool x_exist);
+	MkDirectory(const std::string& x_dirName, bool x_exist);
 	virtual ~MkDirectory();
 	void CleanDir();
 	bool IsEmpty();

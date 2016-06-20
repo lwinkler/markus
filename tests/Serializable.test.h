@@ -188,7 +188,7 @@ protected:
 		string fileName1 = "tests/tmp/serialize1_" + name + ".json";
 		string fileName2 = "tests/tmp/serialize2_" + name + ".json";
 		string fileName3 = "tests/serialize/" + name + ".json";
-		MkDirectory dir1("tests", ".", false);
+		MkDirectory dir1("tests", false);
 		MkDirectory dir2("serialize", dir1, false);
 		MkDirectory dir3("image", dir2, false);
 		TS_TRACE("Test serialization of " + name + " = " + obj.SerializeToString()  +  " with signature = "  +  obj.Signature());

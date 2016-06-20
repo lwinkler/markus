@@ -468,6 +468,7 @@ string getFileContents(const string& x_fileName)
 		in.seekg(0, ios::beg);
 		in.read(&contents[0], contents.size());
 		in.close();
+		singleLine(contents);
 		return contents;
 	}
 	else throw MkException("Cannot open file " + x_fileName, LOC);
@@ -626,6 +627,7 @@ AnnotationFileReader* createAnnotationFileReader(const string& x_fileName, int x
 void singleLine(std::string& str)
 {
 	str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
+	str.erase(std::remove(str.begin(), str.end(), '\r'), str.end());
 	str.erase(std::remove(str.begin(), str.end(), '\t'), str.end());
 }
 
