@@ -137,7 +137,7 @@ void VideoFileBufferWriter::ProcessFrame()
 
 	if(m_recording)
 	{
-		m_mutex.lock(); // TODO: use local variable ?
+		m_mutex.lock();
 		if(!m_threadIsWorking)
 		{
 			// Thread is complete: write directly
