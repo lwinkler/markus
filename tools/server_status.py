@@ -93,12 +93,17 @@ def arguments_parser():
 			type=int,
 			help='Nb of jobs in error state before raising a critical error')
 
-	# Nb of jobs in error state before raising a critical error
 	parser.add_argument('-C',
 			dest='command',
 			default='',
 			type=str,
 			help='Send a command to all jobs instead before checking status.')
+
+	parser.add_argument('-n',
+			dest='number',
+			default=1,
+			type=int,
+			help='Send the same command multiple time for tests')
 
 
 	return parser.parse_args()
@@ -313,11 +318,13 @@ def main():
 	_log.info("Found %d jobs: %s" % (len(jobs), jobs))
 
 	if args.command != '':
-		# For each job
-		for job in jobs:
-			# Send command to read status
-			_log.debug('Send command Status')
-			postQuery(url + '/job/command/' + job, [], {'command': args.command})
+		for i in range(0, args.number):
+			# For each job
+			for job in jobs:
+				# Send command to read status
+				_log.debug('Send command Status')
+				postQuery(url + '/job/command/' + job, [], {'command': args.command})
+		exit(0)
 
 	# For each job
 	for job in jobs:
