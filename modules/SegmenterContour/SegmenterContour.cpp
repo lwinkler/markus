@@ -137,95 +137,95 @@ void SegmenterContour::ProcessFrame()
 			// Add the possible features
 			for(const auto& name : m_featureNames)
 			{
-				if(name.compare("x") == 0)
+				if(name == "x")
 				{
 					obj.AddFeature("x", obj.posX / diagonal);
 				}
-				else if(name.compare("y") == 0)
+				else if(name == "y")
 				{
 					obj.AddFeature("y", obj.posY / diagonal);
 				}
-				else if(name.compare("width") == 0)
+				else if(name == "width")
 				{
 					obj.AddFeature("width", obj.width / diagonal);
 				}
-				else if(name.compare("height") == 0)
+				else if(name == "height")
 				{
 					obj.AddFeature("height", obj.height / diagonal);
 				}
-				else if(name.compare("area") == 0)
+				else if(name == "area")
 				{
 					obj.AddFeature("area", contourArea(contours[i]) / fullArea);
 				}
-				else if(name.compare("ellipse_angle") == 0)
+				else if(name == "ellipse_angle")
 				{
 					obj.AddFeature("ellipse_angle", minEllipse.angle / 180.0); // 180 is the max possible angle
 				}
-				else if(name.compare("ellipse_cos") == 0)
+				else if(name == "ellipse_cos")
 				{
 					obj.AddFeature("ellipse_cos", cos(minEllipse.angle * M_PI / 180.0)); // [-1..1]
 				}
-				else if(name.compare("ellipse_sin") == 0)
+				else if(name == "ellipse_sin")
 				{
 					obj.AddFeature("ellipse_sin", sin(minEllipse.angle * M_PI / 180.0)); // [0..1]
 				}
-				else if(name.compare("ellipse_width") == 0)
+				else if(name == "ellipse_width")
 				{
 					obj.AddFeature("ellipse_width", static_cast<double>(minEllipse.size.width) / diagonal);
 				}
-				else if(name.compare("ellipse_height") == 0)
+				else if(name == "ellipse_height")
 				{
 					obj.AddFeature("ellipse_height", static_cast<double>(minEllipse.size.height)  / diagonal);
 				}
-				else if(name.compare("ellipse_ratio") == 0)
+				else if(name == "ellipse_ratio")
 				{
 					obj.AddFeature("ellipse_ratio", minEllipse.size.height == 0 ? 0 : static_cast<double>(minEllipse.size.width) / minEllipse.size.height);
 				}
-				else if(name.compare("moment_00") == 0)
+				else if(name == "moment_00")
 				{
 					obj.AddFeature("moment_00", m00_scaled);
 				}
-				else if(name.compare("moment_11") == 0)
+				else if(name == "moment_11")
 				{
 					obj.AddFeature("moment_11", mom.mu11/pow(m00_scaled, 2));
 				}
-				else if(name.compare("moment_02") == 0)
+				else if(name == "moment_02")
 				{
 					obj.AddFeature("moment_02", mom.mu02/pow(m00_scaled, 2));
 				}
-				else if(name.compare("moment_20") == 0)
+				else if(name == "moment_20")
 				{
 					obj.AddFeature("moment_20", mom.mu20/pow(m00_scaled, 2));
 				}
-				else if(name.compare("hu_moment_1") == 0)
+				else if(name == "hu_moment_1")
 				{
 					obj.AddFeature("hu_moment_1", hu[0]);
 				}
-				else if(name.compare("hu_moment_2") == 0)
+				else if(name == "hu_moment_2")
 				{
 					obj.AddFeature("hu_moment_2", hu[1]);
 				}
-				else if(name.compare("hu_moment_3") == 0)
+				else if(name == "hu_moment_3")
 				{
 					obj.AddFeature("hu_moment_3", hu[2]);
 				}
-				else if(name.compare("hu_moment_4") == 0)
+				else if(name == "hu_moment_4")
 				{
 					obj.AddFeature("hu_moment_4", hu[3]);
 				}
-				else if(name.compare("hu_moment_5") == 0)
+				else if(name == "hu_moment_5")
 				{
 					obj.AddFeature("hu_moment_5", hu[4]);
 				}
-				else if(name.compare("hu_moment_6") == 0)
+				else if(name == "hu_moment_6")
 				{
 					obj.AddFeature("hu_moment_6", hu[5]);
 				}
-				else if(name.compare("hu_moment_7") == 0)
+				else if(name == "hu_moment_7")
 				{
 					obj.AddFeature("hu_moment_7", hu[6]);
 				}
-				else if(name.compare("solidity")==0)
+				else if(name == "solidity")
 				{
 					vector<Point> ptConvexHull;
 					convexHull(contours[i],ptConvexHull);
