@@ -37,6 +37,7 @@
 #include "FeatureFloatInTime.h"
 #include "FeatureVector.h"
 #include "Timer.h"
+#include "Manager.h"
 
 using namespace std;
 
@@ -84,6 +85,7 @@ protected:
 	ConfigFile* mp_configFile             = nullptr;
 	Context::Parameters* mp_contextParams = nullptr;
 	Context* mp_context                   = nullptr;
+	string m_emptyFileName = "/tmp/config_empty.xml";
 
 	// Objects for streams
 	cv::Mat m_image;
@@ -110,16 +112,15 @@ public:
 		else
 			m_factoryModules.List(m_moduleTypes);
 		
-		string emptyFileName = "/tmp/config_empty.xml";
-		createEmptyConfigFile(emptyFileName);
-		mp_configFile = new ConfigFile(emptyFileName);
+		createEmptyConfigFile(m_emptyFileName);
+		mp_configFile = new ConfigFile(m_emptyFileName);
 		addModuleToConfig("VideoFileReader", *mp_configFile)
 		.RefSubConfig("parameters", true)
 		.RefSubConfig("param", "name", "fps", true).SetValue("22");
 
 		mp_configFile->RefSubConfig("application").SetAttribute("name", "unitTest");
 		mp_contextParams = new Context::Parameters(mp_configFile->Find("application"));
-		mp_contextParams->configFile      = emptyFileName;
+		mp_contextParams->configFile      = m_emptyFileName;
 		mp_contextParams->applicationName = "TestModule";
 		mp_contextParams->outputDir       = "tests/out";
 		mp_contextParams->autoClean       = true;
@@ -149,7 +150,7 @@ public:
 		ConfigReader paramConfig  = moduleConfig.RefSubConfig("parameters", true);
 
 		paramConfig.RefSubConfig("param" , "name", "class", true).SetValue(rx_type);
-		// paramConfig.RefSubConfig("param" , "auto_process" , true).SetValue("0");
+		paramConfig.RefSubConfig("param" , "name", "auto_process" , true).SetValue("1");
 		paramConfig.RefSubConfig("param" , "name", "fps"  , true).SetValue("123");
 
 		moduleConfig.RefSubConfig("inputs", true);
@@ -451,49 +452,6 @@ public:
 
 
 	// Test by searching the XML files that were created specially to unit test one modules (ModuleX.test.xml)
-	void testBySpecificXmlProjects()
-	{
-		if(getenv("MODULE_TO_TEST") != nullptr)
-		{
-			// added this to go faster through the tests
-			TS_WARN("$MODULE_TO_TEST should only be used for development purposes.");
-			return;
-		}
-
-		vector<string> result1;
-		execute("xargs -a modules.txt -I{} find {} -name \"testing*.xml\"", result1);
-
-		for(auto elem : result1)
-		{
-			// For each xml, execute the file with Markus executable
-			TS_TRACE("Testing XML project " + elem);
-			string outDir = "out/test_" + basename(elem) + "_" + timeStamp();
-			string cmd = "./markus -ncf " + elem + " -o " + outDir + " > /dev/null";
-			TS_TRACE("Execute " + cmd);
-			SYSTEM(cmd);
-			// gather possible errors and warnings
-			stringstream ssWarn;
-			stringstream ssErr;
-			execute("cat " + outDir + "/markus.log | grep WARN | grep -v @notif@", ssWarn);
-			int nWarn = std::count(std::istreambuf_iterator<char>(ssWarn), std::istreambuf_iterator<char>(), '\n');
-			if(nWarn > 0)
-			{
-				// Log warnings
-				TS_WARN("Found " + to_string(nWarn) + " warning(s) in " + outDir + "/markus.log");
-				cout << ssWarn.str() << endl;
-			}
-			execute("cat " + outDir + "/markus.log | grep ERROR", ssErr);
-			int nErr = std::count(std::istreambuf_iterator<char>(ssErr), std::istreambuf_iterator<char>(), '\n');
-			if(nErr > 0)
-			{
-				// Log errors
-				TS_FAIL("Found " + to_string(nErr) + " error(s) in " + outDir + "/markus.log");
-				cout << ssErr.str() << endl;
-			}
-		}
-
-	}
-
 	/// Test export
 	void testExport(const Module& xr_module)
 	{
@@ -515,6 +473,61 @@ public:
 			ModuleTester tester;
 			createAndConnectModule(tester, modType);
 			testExport(*tester.module);
+			mp_context->RefOutputDir().CleanDir();
+		}
+	}
+
+	/// Test rebuild
+	void testRebuild()
+	{
+		TS_TRACE("\n# Test rebuild");
+		unsigned int seed = 324234566;
+
+		// Test on each type of module
+		for(const auto& elem : m_moduleTypes)
+		{
+			TS_TRACE("## on module " + elem);
+			ModuleTester tester;
+			createAndConnectModule(tester, elem);
+			if(tester.module->IsUnitTestingEnabled())
+			{
+				try
+				{
+					Manager::Parameters mparams(mp_configFile->Find("application"));
+					Manager manager(mparams);
+					manager.SetContext(*mp_context);
+					manager.Connect();
+					Module* module = manager.RefModules().back();
+					manager.Reset();
+					module->Reset();
+
+					for(int i = 0 ; i < 3 ; i++) 
+					{
+						module->ProcessRandomInput(seed);
+						// manager.ProcessAndCatch();
+					}
+					TS_TRACE("### force rebuild on " + module->GetName());
+					manager.Rebuild();
+					// note: do not use the original module !
+					module = manager.RefModules().back();
+					TS_TRACE("Rebuilt " + module->GetName());
+					for(int i = 0 ; i < 3 ; i++) 
+					{
+						module->ProcessRandomInput(seed);
+						// manager.ProcessAndCatch();
+					}
+
+					// trick: the module is already destroyed by the manager
+					// tester.module = nullptr;
+				}
+				catch(...)
+				{
+					// TODO clean
+					// tester.module = nullptr;
+					throw;
+				}
+			}
+			else TS_TRACE("--> unit testing disabled on " + elem);
 			mp_context->RefOutputDir().CleanDir();
 		}
 	}

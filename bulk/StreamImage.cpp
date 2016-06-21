@@ -153,6 +153,11 @@ void StreamImage::Randomize(unsigned int& xr_seed)
 	// random image
 	m_content = Mat(m_content.size(), m_content.type());
 	m_content.setTo(0);
+	if(m_content.cols == 0 || m_content.rows == 0)
+	{
+		LOG_WARN(m_logger, "StreamInput should not be empty");
+		return;
+	}
 	int nb = rand_r(&xr_seed) % 100;
 	for ( int i = 0; i < nb; i++ )
 	{

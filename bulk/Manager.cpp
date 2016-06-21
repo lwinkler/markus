@@ -229,7 +229,7 @@ void Manager::Check() const
 {
 	for(auto& elem : m_modules)
 	{
-		if(!elem.second->IsInput())
+		if(!elem.second->IsAutoProcessed())
 		{
 			bool bc = false;
 			// Check that at least one blocking input is connected

@@ -124,5 +124,42 @@ public:
 			runConfig(elem);
 		}
 	}
+
+	void testBySpecificXmlProjects()
+	{
+		vector<string> result1;
+		execute("xargs -a modules.txt -I{} find {} -name \"testing*.xml\"", result1);
+
+		for(auto elem : result1)
+		{
+			// For each xml, execute the file with Markus executable
+			TS_TRACE("Testing XML project " + elem);
+			string outDir = "out/test_" + basename(elem) + "_" + timeStamp();
+			string cmd = "./markus -ncf " + elem + " -o " + outDir + " > /dev/null";
+			TS_TRACE("Execute " + cmd);
+			SYSTEM(cmd);
+			// gather possible errors and warnings
+			stringstream ssWarn;
+			stringstream ssErr;
+			execute("cat " + outDir + "/markus.log | grep WARN | grep -v @notif@", ssWarn);
+			int nWarn = std::count(std::istreambuf_iterator<char>(ssWarn), std::istreambuf_iterator<char>(), '\n');
+			if(nWarn > 0)
+			{
+				// Log warnings
+				TS_WARN("Found " + to_string(nWarn) + " warning(s) in " + outDir + "/markus.log");
+				cout << ssWarn.str() << endl;
+			}
+			execute("cat " + outDir + "/markus.log | grep ERROR", ssErr);
+			int nErr = std::count(std::istreambuf_iterator<char>(ssErr), std::istreambuf_iterator<char>(), '\n');
+			if(nErr > 0)
+			{
+				// Log errors
+				TS_FAIL("Found " + to_string(nErr) + " error(s) in " + outDir + "/markus.log");
+				cout << ssErr.str() << endl;
+			}
+		}
+
+	}
+
 };
 #endif
