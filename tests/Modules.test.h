@@ -114,7 +114,7 @@ public:
 		
 		createEmptyConfigFile(m_emptyFileName);
 		mp_configFile = new ConfigFile(m_emptyFileName);
-		addModuleToConfig("VideoFileReader", *mp_configFile)
+		AddModuleToConfig("VideoFileReader", *mp_configFile)
 		.RefSubConfig("parameters", true)
 		.RefSubConfig("param", "name", "fps", true).SetValue("22");
 
@@ -144,13 +144,12 @@ public:
 		CLEAN_DELETE(mp_contextParams);
 	}
 
-	ConfigReader addModuleToConfig(const string& rx_type, ConfigReader& xr_config)
+	ConfigReader AddModuleToConfig(const string& rx_type, ConfigReader& xr_config)
 	{
 		ConfigReader moduleConfig =  xr_config.RefSubConfig("application", true).RefSubConfig("module", "name", rx_type + "0", true);
 		ConfigReader paramConfig  = moduleConfig.RefSubConfig("parameters", true);
 
 		paramConfig.RefSubConfig("param" , "name", "class", true).SetValue(rx_type);
-		paramConfig.RefSubConfig("param" , "name", "auto_process" , true).SetValue("1");
 		paramConfig.RefSubConfig("param" , "name", "fps"  , true).SetValue("123");
 
 		moduleConfig.RefSubConfig("inputs", true);
@@ -164,10 +163,10 @@ public:
 	}
 
 	/// Create module and make it ready to process
-	void createAndConnectModule(ModuleTester& tester, const string& x_type, const map<string, string>* xp_parameters = nullptr)
+	void CreateAndConnectModule(ModuleTester& tester, const string& x_type, const map<string, string>* xp_parameters = nullptr)
 	{
 		TS_TRACE("Create and connect module of class " + x_type);
-		ConfigReader moduleConfig = addModuleToConfig(x_type, *mp_configFile);
+		ConfigReader moduleConfig = AddModuleToConfig(x_type, *mp_configFile);
 
 		// Add parameters to override to the config
 		if(xp_parameters != nullptr)
@@ -186,7 +185,7 @@ public:
 		{
 			if(parameters != nullptr)
 				delete(parameters);
-			TS_TRACE("Cannot set parameter in createAndConnectModule, reason: " + string(e.what()));
+			TS_TRACE("Cannot set parameter in CreateAndConnectModule, reason: " + string(e.what()));
 			return;
 		}
 		Module* module = m_factoryModules.Create(x_type, *parameters);
@@ -246,7 +245,7 @@ public:
 		{
 			TS_TRACE("## on module " + elem);
 			ModuleTester tester;
-			createAndConnectModule(tester, elem);
+			CreateAndConnectModule(tester, elem);
 			if(tester.module->IsUnitTestingEnabled())
 			{
 				for(int i = 0 ; i < 50 ; i++)
@@ -273,7 +272,7 @@ public:
 			{
 				TS_TRACE("# on module " + modType);
 				ModuleTester tester;
-				createAndConnectModule(tester, modType);
+				CreateAndConnectModule(tester, modType);
 				if(!tester.module->IsUnitTestingEnabled())
 				{
 					TS_TRACE("--> unit testing disabled on " + modType);
@@ -389,7 +388,7 @@ public:
 			{
 				// Scope for tester structure
 				ModuleTester tester;
-				createAndConnectModule(tester, modType);
+				CreateAndConnectModule(tester, modType);
 				TS_TRACE("# on module " + modType);
 
 				// Test on all controllers of the module
@@ -430,7 +429,7 @@ public:
 						params[lastParam] = lastDefault;
 
 					ModuleTester tester2;
-					createAndConnectModule(tester2, modType, &params);
+					CreateAndConnectModule(tester2, modType, &params);
 					if(tester2.module == nullptr || tester2.parameters == nullptr || !tester2.module->IsUnitTestingEnabled())
 					{
 						continue;
@@ -471,7 +470,7 @@ public:
 		{
 			TS_TRACE("# on module " + modType);
 			ModuleTester tester;
-			createAndConnectModule(tester, modType);
+			CreateAndConnectModule(tester, modType);
 			testExport(*tester.module);
 			mp_context->RefOutputDir().CleanDir();
 		}
@@ -488,44 +487,38 @@ public:
 		{
 			TS_TRACE("## on module " + elem);
 			ModuleTester tester;
-			createAndConnectModule(tester, elem);
-			if(tester.module->IsUnitTestingEnabled())
+			map<string, string> overrid = {{"auto_process", "1"}};
+			CLEAN_DELETE(mp_configFile);
+			mp_configFile = new ConfigFile(m_emptyFileName);
+			CreateAndConnectModule(tester, elem, &overrid);
+			if(tester.module->IsUnitTestingEnabled() && !tester.module->IsInput())
 			{
-				try
-				{
-					Manager::Parameters mparams(mp_configFile->Find("application"));
-					Manager manager(mparams);
-					manager.SetContext(*mp_context);
-					manager.Connect();
-					Module* module = manager.RefModules().back();
-					manager.Reset();
-					module->Reset();
+				mp_configFile->RefSubConfig("application", true).SetAttribute("name", "unitTest");
+				Manager::Parameters mparams(mp_configFile->Find("application"));
+				Manager manager(mparams);
+				manager.SetContext(*mp_context);
+				manager.Connect();
+				Module* module = manager.RefModules().back();
+				manager.Reset();
+				module->Reset();
 
-					for(int i = 0 ; i < 3 ; i++) 
-					{
-						module->ProcessRandomInput(seed);
-						// manager.ProcessAndCatch();
-					}
-					TS_TRACE("### force rebuild on " + module->GetName());
-					manager.Rebuild();
-					// note: do not use the original module !
-					module = manager.RefModules().back();
-					TS_TRACE("Rebuilt " + module->GetName());
-					for(int i = 0 ; i < 3 ; i++) 
-					{
-						module->ProcessRandomInput(seed);
-						// manager.ProcessAndCatch();
-					}
-
-					// trick: the module is already destroyed by the manager
-					// tester.module = nullptr;
-				}
-				catch(...)
+				for(int i = 0 ; i < 3 ; i++) 
 				{
-					// TODO clean
-					// tester.module = nullptr;
-					throw;
+					module->ProcessRandomInput(seed);
+					// manager.ProcessAndCatch();
 				}
+				TS_TRACE("### force rebuild on " + module->GetName());
+				manager.Rebuild();
+				mp_context->RefOutputDir().CleanDir();
+				// note: do not use the original module !
+				module = manager.RefModules().back();
+				TS_TRACE("Rebuilt " + module->GetName());
+				for(int i = 0 ; i < 3 ; i++) 
+				{
+					module->ProcessRandomInput(seed);
+					// manager.ProcessAndCatch();
+				}
+				mp_context->RefOutputDir().CleanDir();
 			}
 			else TS_TRACE("--> unit testing disabled on " + elem);
 			mp_context->RefOutputDir().CleanDir();
