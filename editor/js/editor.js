@@ -416,7 +416,7 @@ var xmlProject = null;
 					var instance = $('<param/>', xmlProject).appendTo(instanceParameters)
 					.attr('name', $(this).attr('name'))
 					.data('class', $(this))
-					.text($(this).find('value').text());
+					.text(type);
 				});
 
 				
