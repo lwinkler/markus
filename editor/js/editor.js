@@ -222,7 +222,8 @@ var xmlProject = null;
 
 				// Load an empty project
 				xmlProject = $(document.implementation.createDocument(null, "application", null)).find('application');
-				xmlProject.attr("name", "CustomProject")
+				$("<parameters/>", xmlProject).appendTo($(xmlProject));
+				xmlProject.attr("name", "CustomProject");
 
 				$('#detail').hide();
 				$('#explanation').show();
