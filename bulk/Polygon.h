@@ -40,13 +40,13 @@ public:
 	template<typename T> void GetPoints(std::vector<T>& xr_points, const cv::Size& x_size) const
 	{
 		xr_points.clear();
-		if(points.empty())
+		if(m_points.empty())
 			return;
 		assert(m_width * m_height > 0);
 		double correctionRatioX = x_size.width  / m_width; // 1 / (m_width / m_height) * diag;
 		double correctionRatioY = x_size.height / m_height; // 1 / (m_width / m_height) * diag;
-		auto itpts = points.begin();
-		xr_points.resize(points.size());
+		auto itpts = m_points.begin();
+		xr_points.resize(m_points.size());
 		for(auto & scaledPt : xr_points)
 		{
 			scaledPt.x = itpts->x * correctionRatioX;
@@ -57,12 +57,12 @@ public:
 			++itpts;
 		}
 	}
-	inline size_t Size() const {return points.size();}
+	inline size_t Size() const {return m_points.size();}
 	virtual void Serialize(std::ostream& x_out, MkDirectory* xp_dir = nullptr) const override;
 	virtual void Deserialize(std::istream& x_in, MkDirectory* xp_dir = nullptr) override;
 
 protected:
-	std::vector<cv::Point2d> points;
+	std::vector<cv::Point2d> m_points;
 	double m_width  = 0;
 	double m_height = 0;
 };
