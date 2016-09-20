@@ -51,14 +51,10 @@ using namespace std;
 // Constructor
 QModuleViewer::QModuleViewer(const Manager& xr_manager, ParameterStructure& xr_params, QWidget *parent) :
 	QWidget(parent),
-	Configurable(xr_params),
+	Module(xr_params),
 	mr_manager(xr_manager),
 	m_param(dynamic_cast<QModuleViewer::Parameters&>(xr_params))
 {
-	m_img_tmp1              = nullptr; // Allocated on first conversion
-	m_img_tmp2              = nullptr;
-	m_img_output            = nullptr;
-	m_img_original          = nullptr;
 	m_controlBoard          = nullptr;
 
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -68,8 +64,8 @@ QModuleViewer::QModuleViewer(const Manager& xr_manager, ParameterStructure& xr_p
 	// Handlers for modules
 	if(xr_manager.RefModules().size() == 0)
 		throw MkException("Module list cannot be empty", LOC);
-	m_currentModule 	= xr_manager.RefModules().front();
-	m_currentStream 	= m_currentModule->GetOutputStreamList().begin()->second;
+	// m_currentModule 	= xr_manager.RefModules().front();
+	// m_currentStream 	= m_currentModule->GetOutputStreamList().begin()->second;
 
 	mp_comboModules 	= new QComboBox();
 	mp_comboStreams 	= new QComboBox();
@@ -119,19 +115,23 @@ QModuleViewer::QModuleViewer(const Manager& xr_manager, ParameterStructure& xr_p
 
 QModuleViewer::~QModuleViewer()
 {
-	CLEAN_DELETE(m_img_original);
-	CLEAN_DELETE(m_img_output);
-	CLEAN_DELETE(m_img_tmp1);
-	CLEAN_DELETE(m_img_tmp2);
-
 	delete mp_comboModules ;
 	delete mp_comboStreams;
 	delete mp_mainLayout;
 	delete mp_gbCombos;
 }
 
+void QModuleViewer::ProcessFrame()
+{
+}
+
+void QModuleViewer::Reset()
+{
+}
+
 void QModuleViewer::resizeEvent(QResizeEvent * e)
 {
+	/*
 	if(m_currentStream != nullptr)
 	{
 		// Keep proportionality
@@ -158,14 +158,14 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 
 	CLEAN_DELETE(m_img_output);
 	CLEAN_DELETE(m_img_original);
-	CLEAN_DELETE(m_img_tmp1);
-	CLEAN_DELETE(m_img_tmp2);
+	*/
 }
 
 void QModuleViewer::paintEvent(QPaintEvent * e)
 {
-	if(m_currentStream != nullptr)
+	// if(m_currentStream != nullptr)
 	{
+		/*
 		{
 			// note: do we lock the module before reading ? this may be dangerous and may lead to
 			//       corrupted images, but avoids two problems:
@@ -188,17 +188,19 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 
 		QPainter painter(this);
 		painter.drawImage(QRect(m_offsetX, m_offsetY, m_image.width(), m_image.height()), m_image);
+		*/
 	}
 }
 
 /// Change the module being currently displayed
 void QModuleViewer::updateModule(Module * x_module)
 {
-	m_currentModule = x_module;
+	// m_currentModule = x_module;
 	mp_comboStreams->clear();
 	CLEAN_DELETE(m_controlBoard);
 
 	int cpt = 0;
+	/*
 	for(const auto & elem : m_currentModule->GetOutputStreamList())
 	{
 		mp_comboStreams->addItem(elem.second->GetName().c_str(), cpt++);
@@ -207,6 +209,7 @@ void QModuleViewer::updateModule(Module * x_module)
 	{
 		mp_comboStreams->addItem(elem.second->GetName().c_str(), cpt++);
 	}
+	*/
 
 	// Update the stream
 	updateStreamNb(m_param.stream);
@@ -227,6 +230,7 @@ void QModuleViewer::updateModule(Module * x_module)
 	this->addAction(actionShowDisplayMenu);
 
 	// Show control board for parameters
+	/*
 	const map<string, Controller*>& ctrs = m_currentModule->GetControllersList();
 	cpt = 0;
 
@@ -255,6 +259,7 @@ void QModuleViewer::updateModule(Module * x_module)
 		cpt++;
 	}
 	this->setContextMenuPolicy(Qt::ActionsContextMenu);
+	*/
 
 	// actionShowDisplayMenu->setChecked(m_param.displayOptions);
 	showDisplayOptions(m_param.displayOptions);
@@ -285,6 +290,7 @@ void QModuleViewer::updateStreamNb(int x_index)
 	unsigned int cpt = static_cast<unsigned int>(x_index);
 	Stream* stream = nullptr;
 
+	/*
 	if(x_index >= 0 && cpt < m_currentModule->GetOutputStreamList().size())
 	{
 		// Pick an output stream
@@ -306,6 +312,7 @@ void QModuleViewer::updateStreamNb(int x_index)
 			m_param.stream = 0;
 		}
 	}
+	*/
 	updateStream(stream);
 }
 
@@ -316,8 +323,9 @@ void QModuleViewer::updateControlNb(int x_index)
 	CLEAN_DELETE(m_controlBoard);
 	if(x_index < 0)
 		return;
-	m_controlBoard = new QControlBoard(*m_currentModule, this);
+	m_controlBoard = new QControlBoard(this);
 	mp_mainLayout->addWidget(m_controlBoard, 0);
+	/*
 	auto it = m_currentModule->GetControllersList().begin();
 	unsigned int cpt = static_cast<unsigned int>(x_index);
 
@@ -334,13 +342,12 @@ void QModuleViewer::updateControlNb(int x_index)
 		}
 	}
 	else m_param.control = -1;
+	*/
 }
 
 void QModuleViewer::updateStream(Stream * x_outputStream)
 {
-	m_currentStream = x_outputStream;
-	CLEAN_DELETE(m_img_original);
-	CLEAN_DELETE(m_img_output);
+	// m_currentStream = x_outputStream;
 }
 
 
@@ -402,12 +409,14 @@ void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qimg)
 // Display some info on stream (and position of cursor)
 void QModuleViewer::mouseDoubleClickEvent(QMouseEvent * event)
 {
+	/*
 	if(m_currentStream == nullptr)
 		return;
 	QPoint cursor = event->pos();
 	int x = (cursor.x() - m_offsetX) * m_currentStream->GetWidth() / m_image.width();
 	int y = (cursor.y() - m_offsetY) * m_currentStream->GetHeight() / m_image.height();
 	m_currentStream->Query(x, y);
+	*/
 }
 
 // #include "QModuleViewer.moc"

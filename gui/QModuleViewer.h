@@ -33,7 +33,6 @@
 #include "Module.h"
 
 class Manager;
-class Module;
 class Stream;
 class ControlBoard;
 class QComboBox;
@@ -45,14 +44,14 @@ class QListWidget;
 
 
 /// Class used to display one module in a widget
-class QModuleViewer : public QWidget, public Configurable
+class QModuleViewer : public QWidget, public Module
 {
 	Q_OBJECT
 public:
-	class Parameters : public ParameterStructure
+	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
+		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
 		{
 			// AddParameter(new ParameterString("module", "", &module, "Module to display"));
 			AddParameter(new ParameterInt("module",   0, -1, 1000, &module,  "Index of the module to display"));
@@ -70,14 +69,19 @@ public:
 
 	QModuleViewer(const Manager& x_manager, ParameterStructure& xr_params, QWidget *parent = 0);
 	virtual ~QModuleViewer();
+	MKCLASS("QModuleViewer")
+	MKCATEG("Other")
+	MKDESCR("TODO")
+
+	virtual void ProcessFrame() override;
+	virtual void Reset() override;
+
 	static void  ConvertMat2QImage(const cv::Mat *mat, QImage *qim);
 	void mouseDoubleClickEvent(QMouseEvent * event);
 private:
 	QBoxLayout * mp_mainLayout;
 
 	QImage m_image;
-	Module        * m_currentModule;
-	const Stream  * m_currentStream;
 	const Manager & mr_manager;
 
 	int m_outputWidth;
@@ -92,12 +96,6 @@ private:
 	QComboBox   * mp_comboModules;
 	QComboBox   * mp_comboStreams;
 	QWidget     * mp_widEmpty;
-
-	// Images for format conversion
-	cv::Mat * m_img_original;
-	cv::Mat * m_img_output;
-	cv::Mat * m_img_tmp1;
-	cv::Mat * m_img_tmp2;
 
 	QControlBoard * m_controlBoard;
 	Parameters& m_param;

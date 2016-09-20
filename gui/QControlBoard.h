@@ -31,7 +31,6 @@
 
 /// Class to control a module (settings ...)
 class Controller;
-class Module;
 class QGroupBox;
 class QHBoxLayout;
 
@@ -40,14 +39,13 @@ class QControlBoard : public QWidget
 {
 	Q_OBJECT
 public:
-	QControlBoard(Module& x_module, QWidget *parent = 0);
+	QControlBoard(QWidget *parent = 0);
 	virtual ~QControlBoard();
 	virtual void Destroy() {}
 	void updateControl(Controller* x_control);
 
 protected:
 	Controller  * mp_currentControl;
-	Module      & m_currentModule;
 
 	void paintEvent(QPaintEvent *event);
 	virtual void resizeEvent(QResizeEvent * e);

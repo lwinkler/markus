@@ -65,6 +65,11 @@ public:
 		m_nextObj++;
 	}
 
+	virtual void Disconnect() override
+	{
+		assert(false); // TODO
+	}
+
 	virtual void Export(std::ostream& rx_os, int x_id, int x_indentation, bool x_isInput) const override
 	{
 		std::string tabs(x_indentation , '\t');

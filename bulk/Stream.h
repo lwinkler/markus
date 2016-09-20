@@ -50,13 +50,14 @@ public:
 	virtual void RenderTo(cv::Mat& x_output) const = 0;
 	virtual void Query(int x_posX, int x_posY) const = 0;
 	virtual void Connect(Stream *x_stream);
+	virtual void Disconnect();
 	virtual void ConvertInput() = 0;
 	virtual void Randomize(unsigned int& xr_seed) = 0;
 	virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const override;
 	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr) override;
 	virtual void Export(std::ostream& rx_os, int x_id, int x_indentation, bool x_isInput) const;
 	inline bool IsConnected() const {return m_isConnected;}
-	inline void SetAsConnected() {m_isConnected = true;}
+	inline void SetAsConnected(bool x_val) {m_isConnected = x_val;}
 	inline const Module& GetModule() const {return mr_module;}
 	inline Stream& GetConnected() const
 	{

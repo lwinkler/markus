@@ -23,7 +23,6 @@
 
 #include "QControlBoard.h"
 #include "Controller.h"
-#include "Module.h"
 #include "Manager.h"
 #include <QBoxLayout>
 #include <QLabel>
@@ -33,8 +32,7 @@
 using namespace std;
 
 
-QControlBoard::QControlBoard(Module& x_module, QWidget *parent):
-	m_currentModule(x_module)
+QControlBoard::QControlBoard(QWidget *parent)
 {
 	auto  mainLayout = new QBoxLayout(QBoxLayout::TopToBottom);
 	mp_gbControls		= new QScrollArea;
