@@ -34,12 +34,12 @@ using namespace cv;
 /// Constructor
 Polygon::Polygon()
 {
-	// points.push_back(Point2f(0.0,0.0));
+	// m_points.push_back(Point2f(0.0,0.0));
 }
 
 /// Constructor from a set of points
 Polygon::Polygon(const vector<cv::Point2d>& x_value)
-	: points(x_value)
+	: m_points(x_value)
 {
 }
 
@@ -47,15 +47,15 @@ Polygon::Polygon(const vector<cv::Point2d>& x_value)
 template<> void Polygon::GetPoints<cv::Point>(std::vector<cv::Point>& xr_points, const cv::Size& x_size) const
 {
 	xr_points.clear();
-	if(points.empty())
+	if(m_points.empty())
 		return;
 	assert(m_width * m_height > 0);
 	assert(x_size.width * x_size.height > 0);
 	double correctionRatioX = x_size.width  / m_width; // 1 / (m_width / m_height) * diag;
 	double correctionRatioY = x_size.height / m_height; // 1 / (m_width / m_height) * diag;
-	auto itpts = points.begin();
+	auto itpts = m_points.begin();
 
-	xr_points.resize(points.size());
+	xr_points.resize(m_points.size());
 	for(auto & scaledPt : xr_points)
 	{
 		scaledPt.x = itpts->x * correctionRatioX;
@@ -82,10 +82,10 @@ template<> void Polygon::GetPoints<cv::Point>(std::vector<cv::Point>& xr_points,
 */
 void Polygon::DrawMask(Mat& xr_target, const Scalar& x_color) const
 {
-	if(points.empty())
+	if(m_points.empty())
 		return;
 	assert(m_width * m_height > 0);
-	const int npoints = points.size();
+	const int npoints = m_points.size();
 	vector<Point> scaledPts;
 	GetPoints(scaledPts, xr_target.size());
 
@@ -98,7 +98,7 @@ void Polygon::DrawMask(Mat& xr_target, const Scalar& x_color) const
 void Polygon::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 {
 	x_out<<"{\"width\":" << m_width << ",\"height\":" << m_height << ",\"points\":";
-	serialize(x_out, points);
+	serialize(x_out, m_points);
 	x_out<<"}";
 }
 
@@ -109,12 +109,10 @@ void Polygon::Deserialize(istream& x_in, MkDirectory* xp_dir)
 	m_width  = root["width"].asDouble();
 	m_height = root["height"].asDouble();
 
-	// note: for retrocompatibility, we use a normalized ratio of 4:3
-	if(m_width == 0)
-		m_width = 0.8;
-	if(m_height == 0)
-		m_height = 0.6;
 	stringstream ss;
 	ss << root["points"];
-	deserialize(ss, points);
+	deserialize(ss, m_points);
+
+	if((m_width == 0 || m_height == 0) && ! m_points.empty())
+		assert(false); // TODO throw MkException("Polygon was serialized without specifying width or height", LOC);
 }
