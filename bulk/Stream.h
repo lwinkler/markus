@@ -42,11 +42,8 @@ public:
 	virtual const std::string& GetClass() const = 0;
 	virtual const std::string& GetType() const override = 0;
 	virtual const ParameterType& GetParameterType() const override = 0;
-	// inline int GetId() const {return m_id;}
-	// inline void SetId(int x_id) {m_id = x_id;} // id should disappear at term
-	inline int GetWidth() const {return GetModule().GetWidth();}
-	inline int GetHeight() const {return GetModule().GetHeight();}
-	inline cv::Size GetSize() const {return cv::Size(mr_module.GetWidth(), mr_module.GetHeight());}
+	
+	inline const cv::Size GetSize() const {return mr_module.GetSize();}
 	virtual void RenderTo(cv::Mat& x_output) const = 0;
 	virtual void Query(int x_posX, int x_posY) const = 0;
 	virtual void Connect(Stream *x_stream);
@@ -92,7 +89,6 @@ public:
 	inline virtual void SetRange(const std::string& x_range) override {}
 
 protected:
-	// const int m_id;
 	Module& mr_module;
 	std::atomic<TIME_STAMP> m_timeStamp;
 

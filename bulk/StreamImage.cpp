@@ -52,14 +52,14 @@ void StreamImage::ConvertInput()
 	}
 	assert(m_connected->IsConnected());
 
-	mp_connectedImage->ConvertToOutput(mr_module.GetCurrentTimeStamp(), m_content);
+	m_timeStamp = GetConnected().GetTimeStamp();
+	mp_connectedImage->ConvertToOutput(m_timeStamp, m_content);
 }
 
 // Convert to an output (from the input) to take advantage of the buffer
 void StreamImage::ConvertToOutput(TIME_STAMP x_ts, cv::Mat& xr_output)
 {
 	const Mat* corrected = &m_content;
-	TIME_STAMP ts = mr_module.GetCurrentTimeStamp();
 
 	if(corrected->cols != xr_output.cols || corrected->rows != xr_output.rows)
 	{
@@ -140,7 +140,7 @@ void StreamImage::RenderTo(cv::Mat& x_output) const
 void StreamImage::Query(int x_posX, int x_posY) const
 {
 	// check if out of bounds
-	if(x_posX < 0 || x_posY < 0 || x_posX >= GetWidth() || x_posY >= GetHeight())
+	if(!Rect(Point(0, 0), GetSize()).contains(Point(x_posX, x_posY)))
 		return;
 
 	Rect rect(x_posX, x_posY, 1, 1);

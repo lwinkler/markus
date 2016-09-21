@@ -135,7 +135,7 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 	if(m_currentStream != nullptr)
 	{
 		// Keep proportionality
-		double ratio = static_cast<double>(m_currentStream->GetHeight()) / m_currentStream->GetWidth();
+		double ratio = static_cast<double>(m_currentStream->GetSize().height) / m_currentStream->GetSize().width;
 
 		m_outputWidth  = e->size().width();
 		m_outputHeight = e->size().height();
@@ -175,7 +175,7 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 			Processable::ReadLock lock(m_currentModule->RefLock(), boost::try_to_lock);
 			// We paint the image from the stream
 			if(m_img_original == nullptr)
-				m_img_original = new Mat( Size(m_currentStream->GetWidth(), m_currentStream->GetHeight()), CV_8UC3);
+				m_img_original = new Mat(m_currentStream->GetSize(), CV_8UC3);
 			m_img_original->setTo(0);
 			if(m_img_output == nullptr)
 				m_img_output = new Mat( Size(m_outputWidth, m_outputHeight), CV_8UC3);
@@ -405,8 +405,8 @@ void QModuleViewer::mouseDoubleClickEvent(QMouseEvent * event)
 	if(m_currentStream == nullptr)
 		return;
 	QPoint cursor = event->pos();
-	int x = (cursor.x() - m_offsetX) * m_currentStream->GetWidth() / m_image.width();
-	int y = (cursor.y() - m_offsetY) * m_currentStream->GetHeight() / m_image.height();
+	int x = (cursor.x() - m_offsetX) * m_currentStream->GetSize().width / m_image.width();
+	int y = (cursor.y() - m_offsetY) * m_currentStream->GetSize().height / m_image.height();
 	m_currentStream->Query(x, y);
 }
 
