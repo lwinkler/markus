@@ -367,17 +367,6 @@ void Manager::SendCommand(const string& x_command, string x_value)
 * @param x_command Command in format "module.controller.Command"
 * @param x_value   Value used as input/output
 */
-const Stream& Manager::GetOutput(const std::string& x_moduleName, int x_outputId) const
-{
-	return RefModuleByName(x_moduleName).RefOutputStreamById(x_outputId);
-}
-
-/**
-* @brief Send a command // TODO
-*
-* @param x_command Command in format "module.controller.Command"
-* @param x_value   Value used as input/output
-*/
 void Manager::ConnectExternalInput(Stream& xr_input, const std::string& x_moduleName, int x_outputId)
 {
 	xr_input.Connect(&RefModuleByName(x_moduleName).RefOutputStreamById(x_outputId)); // TODO: Connect by ref

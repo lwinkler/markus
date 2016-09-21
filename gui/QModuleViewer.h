@@ -91,8 +91,7 @@ public:
 
 private:
 	Stream* CreateStream(const std::string& x_type);
-	void updateModule(Module * x_module);
-	void updateStream(Stream * x_outputStream);
+	void updateModule(const Module& x_module);
 	int IndexOfModule(std::string& x_moduleName){
 		auto it = std::find(m_moduleNames.begin(), m_moduleNames.end(), x_moduleName);
 		if(it == m_moduleNames.end())
@@ -123,7 +122,9 @@ private:
 
 	// Stream and module to handle rendering via Markus
 	std::vector<std::string> m_moduleNames;
-	Module::Parameters& m_viewerParams; // TODO: Remove this
+	std::map<int, std::string> m_outputStreams;
+	std::map<int, std::string> m_debugStreams;
+	// Module::Parameters& m_viewerParams; // TODO: Remove this
 	Viewer*       mp_viewerModule        = nullptr;
 	Stream*       mp_stream              = nullptr;
 	cv::Mat       m_contentImage;

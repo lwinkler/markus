@@ -274,6 +274,7 @@ void MarkusWindow::resizeEvent(QResizeEvent* event)
 		conf.FindRef("parameters", true);
 		m_paramsViewer.push_back(new QModuleViewer::Parameters(conf));
 		m_paramsViewer.back()->Read(conf);
+		assert(!m_paramsViewer.empty());
 		m_moduleViewer.push_back(new QModuleViewer(m_manager, *m_paramsViewer.back()));
 		m_moduleViewer.at(ind)->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 		// m_moduleViewer.at(ind)->showDisplayOptions(true);

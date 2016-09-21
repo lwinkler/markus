@@ -67,7 +67,6 @@ public:
 
 	// Interface for interaction with external objects
 	void SendCommand(const std::string& x_command, std::string x_value);
-	const Stream& GetOutput(const std::string& x_moduleName, int x_outputId) const;
 	void ConnectExternalInput(Stream& xr_input, const std::string& x_moduleName, int x_outputId);
 
 	const std::vector<Module*> RefModules() const

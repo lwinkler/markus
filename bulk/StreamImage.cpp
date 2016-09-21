@@ -210,7 +210,8 @@ void StreamImage::Deserialize(istream& x_in, MkDirectory* xp_dir)
 void StreamImage::Connect(Stream* x_stream)
 {
 	// This method was rewritten to avoid a dynamic cast at each ConvertInput
-	Stream::Connect(x_stream);
+	assert(x_stream != nullptr);
+	m_connected = x_stream;
 
 	mp_connectedImage = dynamic_cast<StreamImage*>(m_connected);
 	if(mp_connectedImage == nullptr)
@@ -225,6 +226,8 @@ void StreamImage::Connect(Stream* x_stream)
 	if(mp_connectedImage->GetImage().empty())
 		throw MkException("Connecting a StreamImage with an image of size zero", LOC);
 
+	m_connected->SetAsConnected(true);
+	SetAsConnected(true);
 }
 
 void StreamImage::Disconnect()
