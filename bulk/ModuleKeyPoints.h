@@ -39,7 +39,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("descriptor", "", &descriptor, "The keypoint descriptor: ORB, BRIEF or Opponent. Leave empty for none.")); // TODO: It seems that only the original descriptor works
 

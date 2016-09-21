@@ -38,7 +38,7 @@ public:
 	class Parameters : public Input::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Input::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : Input::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("file"   , "in/events.srt", &file      , "Name of the .srt file without extension"));
 			AddParameter(new ParameterString("folder" , "events_img"  , &folder    , "Name of the folder to create for images"));

@@ -38,7 +38,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3,CV_32FC1,CV_32FC3]");
 		};

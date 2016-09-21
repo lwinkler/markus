@@ -38,7 +38,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterUInt(  "min_object"  ,        1, 0, INT_MAX, &minObjectsNb  , "Min number of objects"));
 			AddParameter(new ParameterUInt(  "max_object"  ,  INT_MAX, 0, INT_MAX, &maxObjectsNb  , "Max number of objects"));

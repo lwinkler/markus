@@ -35,7 +35,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			RefParameterByName("auto_process").SetRange("[1:1]");
 			RefParameterByName("auto_process").SetDefaultAndValue("1"); // Input must be in real time otherwise they are never called

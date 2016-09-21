@@ -42,8 +42,8 @@ public:
 	class Parameters : public VideoFileWriter::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) :
-			VideoFileWriter::Parameters(x_confReader)
+		Parameters(const std::string& x_name) :
+			VideoFileWriter::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt   ("buffer_frames_before" , 1200, 0, 10000, &bufferFramesBefore,  "Length of video buffer before activity [frames]"));
 			AddParameter(new ParameterDouble("buffer_duration_after", 120, 0, 600,    &bufferDurationAfter, "Length of video buffer after activity [s]. If possible this should be longer than the duration before next event."));

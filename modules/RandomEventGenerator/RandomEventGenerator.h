@@ -36,7 +36,7 @@ public:
 	class Parameters : public Input::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Input::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : Input::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt("nb_features", 	4, 	0, 	1000,	 &nbFeatures,	"Number of features per event"));
 			AddParameter(new ParameterInt("random_seed", 	0, 	0, 	INT_MAX, &randomSeed,	"Seed for random generator: 0 means seed is generated from timer"));

@@ -363,7 +363,7 @@ int main(int argc, char** argv)
 
 		// Init global variables and objects
 		// Context manages all call to system, files, ...
-		Context::Parameters contextParameters(mainConfig.Find("application"));
+		Context::Parameters contextParameters(mainConfig.Find("application").GetAttribute("name"));
 		contextParameters.Read(mainConfig.Find("application"));
 
 		contextParameters.outputDir       = args.outputDir;

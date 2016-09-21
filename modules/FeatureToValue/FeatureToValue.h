@@ -39,7 +39,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("feature", "height",  &feature, "The feature to convert to a value stream"));
 		};

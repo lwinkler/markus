@@ -40,7 +40,7 @@ public:
 	{
 
 	public:
-		Parameters(const ConfigReader &x_confReader) : Module::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterFloat("threshold", 0.01, 0, 1, &threshold, "If the difference between one input frame and the othre is higher than this threshold then an error is logged"));
 		}

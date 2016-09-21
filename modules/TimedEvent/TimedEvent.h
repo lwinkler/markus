@@ -38,7 +38,7 @@ public:
 	{
 
 	public:
-		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterDouble("time_interval", 30, 0.001, 3600 * 24 * 365, &timeInterval, "Time interval in seconds"));
 		}

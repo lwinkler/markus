@@ -38,7 +38,7 @@ public:
 	class Parameters : public ModuleKeyPoints::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : ModuleKeyPoints::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : ModuleKeyPoints::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt("delta"             , 5     , 1 , 100     , &delta         , ""));
 			AddParameter(new ParameterInt("min_area"          , 60    , 0 , 100     , &minArea       , ""));

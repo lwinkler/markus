@@ -41,7 +41,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterDouble("max_matching_distance"   , 0.1 , 0    , 100    , &maxMatchingDistance     , "Tolerance of the tracker."));
 			AddParameter(new ParameterDouble("time_disappear"          , 1.0 , 0    , 300    , &timeDisappear           , "Time before disappearence of an object [s]"));

@@ -38,7 +38,7 @@ public:
 	class Parameters : public ModuleKeyPoints::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : ModuleKeyPoints::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : ModuleKeyPoints::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt("nb_features"    , 500 , 1 , 1000 , &nbFeatures    , ""));
 			AddParameter(new ParameterFloat("scale_factor" , 1.2 , 1 , 1.2  , &scaleFactor   , ""));

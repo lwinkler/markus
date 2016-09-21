@@ -38,7 +38,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt(   "min_width",  0, 	 0, MAX_WIDTH,  &minWidth,	"Minimal width of an object to segment."));
 			AddParameter(new ParameterInt(   "min_height", 0, 	 0, MAX_HEIGHT, &minHeight,	"Minimal height of an object to segment."));

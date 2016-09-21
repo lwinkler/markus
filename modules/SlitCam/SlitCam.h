@@ -37,8 +37,8 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) :
-			Module::Parameters(x_confReader)
+		Parameters(const std::string& x_name) :
+			Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt("aperture", 1, 1, 10, &aperture,	"Size of the aperture of the camera"));
 

@@ -36,7 +36,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterFloat("background_alpha",	0.02, 	0, 1,	&backgroundAlpha,	"Defines the speed at which the background adapts"));
 			AddParameter(new ParameterFloat("foreground_thres", 	0.2, 	0, 1,	&foregroundThres,	"Threshold to accept a pixel as foreground"));

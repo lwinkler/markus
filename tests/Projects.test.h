@@ -65,7 +65,7 @@ protected:
 		Manager::Parameters params(appConfig);
 		params.aspectRatio     = x_aspectRatio;
 		params.autoProcess     = false;
-		Context::Parameters contextParams(appConfig);
+		Context::Parameters contextParams(appConfig.GetAttribute("name"));
 		contextParams.configFile      = x_configFile;
 		contextParams.outputDir       = "";
 		contextParams.applicationName = "TestProjects";

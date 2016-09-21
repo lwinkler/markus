@@ -39,7 +39,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("folder"    , "thumbs" , &folder    , "Name of the folder to create with path. Use %{feature} to separate by feature"));
 			AddParameter(new ParameterString("extension"  , "jpg"        , &extension , "Extension of the thumbnails. Determines the output format."));

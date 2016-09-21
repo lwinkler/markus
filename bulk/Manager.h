@@ -44,7 +44,7 @@ public:
 	class Parameters : public Processable::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Processable::Parameters(x_confReader), config(x_confReader)
+		Parameters(const ConfigReader& x_confReader) : Processable::Parameters(x_confReader.GetAttribute("name")), config(x_confReader)
 		{
 			AddParameter(new ParameterInt("nb_frames", 0, 0, INT_MAX, &nbFrames, "Number of frames to process. 0 for infinite. Only works in centralized mode"));
 			AddParameter(new ParameterString("arguments", "",         &arguments, "Command-line arguments, for storage only"));

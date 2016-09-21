@@ -80,7 +80,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("script_path",  "python_dir", &scriptPath, "Path to the folder containing python scripts"));
 			AddParameter(new ParameterString("script", 	     "script.py",  &script,     "Name of the Python script (without .py)"));
