@@ -35,7 +35,7 @@
 class ParameterStructure : boost::noncopyable
 {
 public:
-	ParameterStructure(const ConfigReader& x_configReader);
+	ParameterStructure(const std::string& x_name);
 	virtual ~ParameterStructure();
 	void Read(const ConfigReader& x_config);
 	void Write(ConfigReader xr_config) const;

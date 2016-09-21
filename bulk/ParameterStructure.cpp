@@ -32,8 +32,8 @@ log4cxx::LoggerPtr ParameterStructure::m_logger(log4cxx::Logger::getLogger("Para
 
 
 
-ParameterStructure::ParameterStructure(const ConfigReader& x_configReader):
-	m_name(x_configReader.GetAttribute("name", "unnamed"))
+ParameterStructure::ParameterStructure(const std::string& x_name):
+	m_name(x_name)
 {
 	m_writeAllParamsToConfig = false;
 }

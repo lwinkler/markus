@@ -38,7 +38,7 @@ public:
 	class Parameters : public ModuleKeyPoints::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : ModuleKeyPoints::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : ModuleKeyPoints::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt("threshold"       , 30 , 1 , 255 , &threshold    , ""));
 			AddParameter(new ParameterInt("octaves"         , 3  , 1 , 100 , &octaves      , ""));

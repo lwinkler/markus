@@ -76,7 +76,7 @@ public:
 	class Parameters : public Processable::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Processable::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : Processable::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("class"       , ""      , &objClass , "Class of the module (define the module's function)"));
 			AddParameter(new ParameterString("master"      , ""      , &master   , "Master module on which this module's processing is dependent. If empty, use all preceeding modules"));

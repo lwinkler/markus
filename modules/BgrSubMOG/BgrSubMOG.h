@@ -50,7 +50,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			// This parameters should not change
 			AddParameter(new ParameterInt   ("history",          200,    1,   10000,     &history,         "Length of the history"));

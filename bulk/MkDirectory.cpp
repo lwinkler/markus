@@ -60,7 +60,7 @@ MkDirectory::~MkDirectory()
 	// note: do not erase, link only
 	for(const auto elem : mp_subDirectories)
 	{
-		LOG_ERROR(m_logger, "Sub directory " << elem.first << " was not unregistred from parent " << m_path);
+		LOG_WARN(m_logger, "Sub directory " << elem.first << " was not unregistred from parent " << m_path);
 	}
 	if(mp_parent != nullptr)
 		mp_parent->UnregisterSubDir(this);
@@ -184,7 +184,9 @@ std::string MkDirectory::ReserveFile(const std::string& x_filePath, int x_unique
 		ss << x_filePath; 
 	else
 		ss << boost::format(x_filePath) % x_uniqueIndex; 
-	LOG_INFO(m_logger, "Reserve output file " << ss.str());
+	LOG_INFO(m_logger, "Reserve output file " << ss.str() << " in " << m_path);
+	if(m_reservedFiles.find(ss.str()) != m_reservedFiles.end())
+		LOG_WARN(m_logger, "File " << ss.str() << " already exists in " << m_path);
 	auto ret = m_reservedFiles.insert(std::pair<string, bool>(ss.str(), true));
 	LOG_DEBUG(m_logger, "Reserved files " << m_reservedFiles.size() << " line:" << __LINE__)
 	if(ret.second == false)
@@ -212,7 +214,7 @@ void MkDirectory::UnreserveFile(const std::string& x_filePath)
 	{
 		m_reservedFiles.erase(it);
 	}
-	LOG_DEBUG(m_logger, "Reserved files " << m_reservedFiles.size() << " line:" << __LINE__)
+	LOG_DEBUG(m_logger, "Unreserved files " << m_reservedFiles.size() << " line:" << __LINE__)
 }
 
 /**

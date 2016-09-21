@@ -49,7 +49,7 @@ public:
 	class Parameters : public ParameterStructure
 	{
 	public:
-		Parameters(ConfigReader& x_confReader) : ParameterStructure(x_confReader), config(x_confReader)
+		Parameters(ConfigReader& x_confReader) : ParameterStructure(x_confReader), config(x_configReader.GetAttribute("name"))
 		{
 			// AddParameter(new ParameterString("module", "", &module, "Module to display"));
 			AddParameter(new ParameterInt("nb_cols", 1, 1, 4, &nbCols, "Number of columns for display"));

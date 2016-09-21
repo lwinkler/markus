@@ -67,7 +67,7 @@ public:
 	class Parameters : public ParameterStructure
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
+		Parameters(const std::string& x_name) : ParameterStructure(x_name)
 		{
 			// AddParameter(new ParameterString("module", "", &module, "Module to display"));
 			AddParameter(new ParameterString("module",   "", &module,  "Name of the module to display"));

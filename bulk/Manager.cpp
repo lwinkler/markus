@@ -82,7 +82,7 @@ void Manager::Build()
 		if(moduleConfig.Find("parameters").IsEmpty())
 			throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name", "(unknown)"), LOC);
 		string moduleType = moduleConfig.Find("parameters>param[name=\"class\"]").GetValue();
-		ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, moduleConfig);
+		ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, moduleConfig.GetAttribute("name"));
 		tmp2->Read(moduleConfig);
 		tmp2->CheckRange(moduleConfig);
 
@@ -449,7 +449,7 @@ void Manager::CreateEditorFiles(const string& x_fileName)
 			moduleConfig.SetAttribute("id", id);
 			moduleConfig.FindRef("parameters>param[name=\"class\"]", true).SetValue(moduleType);
 
-			ParameterStructure* parameters = mr_parametersFactory.Create(moduleType, moduleConfig);
+			ParameterStructure* parameters = mr_parametersFactory.Create(moduleType, moduleConfig.GetAttribute("name"));
 			Module* module = mr_moduleFactory.Create(moduleType, *parameters);
 
 			modules_json.append(moduleType);

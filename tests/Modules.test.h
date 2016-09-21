@@ -119,7 +119,7 @@ public:
 		.RefSubConfig("param", "name", "fps", true).SetValue("22");
 
 		mp_configFile->RefSubConfig("application").SetAttribute("name", "unitTest");
-		mp_contextParams = new Context::Parameters(mp_configFile->Find("application"));
+		mp_contextParams = new Context::Parameters(mp_configFile->Find("application").GetAttribute("name"));
 		mp_contextParams->configFile      = m_emptyFileName;
 		mp_contextParams->applicationName = "TestModule";
 		mp_contextParams->outputDir       = "tests/out";
@@ -128,7 +128,7 @@ public:
 		mp_contextParams->centralized     = true;
 		mp_context = new Context(*mp_contextParams);
 
-		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", mp_configFile->Find("application>module[name=\"VideoFileReader0\"]"));
+		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", mp_configFile->Find("application>module[name=\"VideoFileReader0\"]").GetAttribute("name"));
 		// mp_fakeConfig->Read(mp_configFile->Find("application>module[name=\"VideoFileReader0\"]"));
 		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeConfig);
 		mp_fakeInput->SetContext(*mp_context);
@@ -178,7 +178,7 @@ public:
 		ParameterStructure* parameters = nullptr;
 		try
 		{
-			parameters = m_factoryParameters.Create(x_type, moduleConfig);
+			parameters = m_factoryParameters.Create(x_type, moduleConfig.GetAttribute("name"));
 			parameters->Read(moduleConfig);
 		}
 		catch(ParameterException& e)

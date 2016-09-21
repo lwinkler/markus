@@ -38,7 +38,7 @@ public:
 	class Parameters : public ModuleKeyPoints::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : ModuleKeyPoints::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : ModuleKeyPoints::Parameters(x_name)
 		{
 			AddParameter(new ParameterFloat("init_feature_scale", 1,   1, 255, &initFeatureScale, ""));
 			// Note: feature_scale_levels is memory consuming. Limited to 2 for unit testing purposes

@@ -38,7 +38,7 @@ public:
 	class Parameters : public ModuleKeyPoints::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : ModuleKeyPoints::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : ModuleKeyPoints::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt("max_corners", 1000, 1, INT_MAX, &maxCorners, "Maximum number of corners to return. If there are more corners than are found, the strongest of them is returned."));
 			AddParameter(new ParameterDouble("quality_level", 0.01, 0.01, 1, &qualityLevel,"Parameter characterizing the minimal accepted quality of image corners."));

@@ -35,7 +35,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterDouble( "online_learn_time",            0.0,       0, 600,    &onlineLearnTime,            "Learn the background on the first seconds of the video"));
 			AddParameter(new ParameterDouble( "online_learn_ratio",           5.0,       1, 100,    &onlineLearnRatio,           "Increase the learning rate by this ratio at initialization"));

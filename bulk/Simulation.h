@@ -37,7 +37,7 @@ public:
 	class Parameters : public ParameterStructure
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader), config(x_confReader)
+		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader.GetAttribute("name")), config(x_confReader)
 		{
 		}
 		const ConfigReader& config;

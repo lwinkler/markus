@@ -41,7 +41,7 @@ public:
 	class Parameters : public ParameterStructure
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
+		Parameters(const std::string& x_name) : ParameterStructure(x_name)
 		{
 			AddParameter(new ParameterBool("auto_clean", 0, 0, 1,     &autoClean,       "Automatically clean the temporary directory when the application closes"));
 			AddParameter(new ParameterString("archive_dir", "",       &archiveDir,      "If specified the data is copied inside this directory for archive"));

@@ -38,7 +38,7 @@ public:
 	class Parameters : public ModuleKeyPoints::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : ModuleKeyPoints::Parameters(x_confReader)
+		Parameters(const std::string& x_name) : ModuleKeyPoints::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt("max_size"                 , 16 , 1 , 1000 , &maxSize              , ""));
 			AddParameter(new ParameterInt("response_threshold"       , 30 , 1 , 1000 , &responseThreshold      , ""));

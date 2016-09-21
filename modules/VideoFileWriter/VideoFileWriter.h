@@ -39,8 +39,8 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) :
-			Module::Parameters(x_confReader)
+		Parameters(const std::string& x_name) :
+			Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("file", 	  "output", 	     &file,      "Name of the video file to write, with path"));
 			AddParameter(new ParameterString("fourcc", 	  "MJPG", 	     &fourcc,    "Four character code, determines the format. PIM1, MJPG, MP42, DIV3, DIVX, H263, I263, FLV1"));

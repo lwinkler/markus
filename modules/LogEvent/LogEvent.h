@@ -42,8 +42,8 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) :
-			Module::Parameters(x_confReader)
+		Parameters(const std::string& x_name) :
+			Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("file"        , "event.%d.srt", &file      ,  "Name of the .srt file without extension"));
 			AddParameter(new ParameterDouble("duration"    , 5, 0, 600    , &duration  ,  "Duration of the event for logging in .srt file"));
