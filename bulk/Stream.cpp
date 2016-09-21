@@ -85,9 +85,9 @@ void Stream::Connect(Stream* x_stream)
 */
 void Stream::Disconnect()
 {
-	m_connected = nullptr;
 	m_connected->SetAsConnected(false);
 	SetAsConnected(false);
+	m_connected = nullptr;
 }
 
 void Stream::Serialize(ostream& x_out, MkDirectory* xp_dir) const

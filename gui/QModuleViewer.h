@@ -90,7 +90,7 @@ public:
 	void mouseDoubleClickEvent(QMouseEvent * event);
 
 private:
-	Stream* CreateStream(const std::string& x_type);
+	void CreateStream();
 	void updateModule(const Module& x_module);
 	int IndexOfModule(std::string& x_moduleName){
 		auto it = std::find(m_moduleNames.begin(), m_moduleNames.end(), x_moduleName);
@@ -124,7 +124,8 @@ private:
 	std::vector<std::string> m_moduleNames;
 	std::map<int, std::string> m_outputStreams;
 	std::map<int, std::string> m_debugStreams;
-	// Module::Parameters& m_viewerParams; // TODO: Remove this
+
+	Module::Parameters* mp_viewerParams  = nullptr; //TODO remove
 	Viewer*       mp_viewerModule        = nullptr;
 	Stream*       mp_stream              = nullptr;
 	cv::Mat       m_contentImage;

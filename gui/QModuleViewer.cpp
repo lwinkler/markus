@@ -54,23 +54,18 @@ QModuleViewer::QModuleViewer(Manager& xr_manager, ParameterStructure& xr_params,
 	Configurable(xr_params),
 	mr_manager(xr_manager),
 	m_param(dynamic_cast<QModuleViewer::Parameters&>(xr_params))
-	// m_viewerParams(dynamic_cast<Module::Parameters&>(xr_params))
 {
-	cout << "ici " << __LINE__ << endl;
 	m_controlBoard          = nullptr;
-	cout << "ici " << __LINE__ << endl;
 
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	m_outputWidth  = 0.8 * width();
 	m_outputHeight = 0.8 * height();
 
 	// Handlers for modules
-	if(xr_manager.RefModules().size() == 0)
+	mr_manager.ListModulesNames(m_moduleNames);
+	if(m_moduleNames.size() == 0)
 		throw MkException("Module list cannot be empty", LOC);
-	// m_currentModule 	= xr_manager.RefModules().front();
-	// m_currentStream 	= m_currentModule->GetOutputStreamList().begin()->second;
 
-	cout << "ici " << __LINE__ << endl;
 	mp_comboModules 	= new QComboBox();
 	mp_comboStreams 	= new QComboBox();
 	mp_mainLayout 		= new QBoxLayout(QBoxLayout::TopToBottom);
@@ -84,9 +79,9 @@ QModuleViewer::QModuleViewer(Manager& xr_manager, ParameterStructure& xr_params,
 	layoutCombos->addWidget(lab1, 0, 0);
 	mp_comboModules->clear();
 	int ind = 0;
-	cout << "ici " << __LINE__ << endl;
-	for(const auto & elem : xr_manager.RefModules())
-		mp_comboModules->addItem((elem)->GetName().c_str(), ind++);
+	assert(!m_moduleNames.empty());
+	for(const auto & elem : m_moduleNames)
+		mp_comboModules->addItem(elem.c_str(), ind++);
 	layoutCombos->addWidget(mp_comboModules, 0, 1);
 	int index = IndexOfModule(m_param.module);
 	if(index > 0 && index < mp_comboModules->count())
@@ -94,24 +89,19 @@ QModuleViewer::QModuleViewer(Manager& xr_manager, ParameterStructure& xr_params,
 
 	QLabel* lab2 = new QLabel(tr("Out stream"));
 	layoutCombos->addWidget(lab2, 1, 0);
-	cout << "ici " << __LINE__ << endl;
 	this->updateModuleNb(index);
-	cout << "ici " << __LINE__ << endl;
 	layoutCombos->addWidget(mp_comboStreams, 1, 1);
 
 	// Create the group with combo menus
 	mp_gbCombos->setLayout(layoutCombos);
-	cout << "ici " << __LINE__ << endl;
 	mp_gbCombos->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
 	// add widgets to main layout
-	cout << "ici " << __LINE__ << endl;
 	mp_mainLayout->addWidget(mp_gbCombos, 0);
 	// mp_mainLayout->addWidget(mp_gbButtons, 1);
 	mp_mainLayout->addWidget(mp_widEmpty, 1); // this is only for alignment
 
 	setPalette(QPalette(QColor(20, 20, 20)));
-	cout << "ici " << __LINE__ << endl;
 	setAutoFillBackground(true);
 
 	//update();
@@ -132,16 +122,14 @@ QModuleViewer::~QModuleViewer()
 	delete mp_gbCombos;
 }
 
-Stream* QModuleViewer::CreateStream(const string& x_type)
+void QModuleViewer::CreateStream()
 {
-	return new StreamImage("test", m_contentImage, *mp_viewerModule, "Fake stream");
-}
-
-void QModuleViewer::resizeEvent(QResizeEvent * e)
-{
+	// (mr_manager.GetModuleByName(m_param.module).GetOutputStreamById(m_param.stream).GetType());
 	cout << "ici " << __LINE__ << endl;
 	if(mp_stream != nullptr)
 		mp_stream->Disconnect();
+	cout << "ici " << __LINE__ << endl;
+	CLEAN_DELETE(mp_viewerParams);
 	cout << "ici " << __LINE__ << endl;
 	CLEAN_DELETE(mp_viewerModule);
 	cout << "ici " << __LINE__ << endl;
@@ -149,16 +137,24 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 	cout << "ici " << __LINE__ << endl;
 	CLEAN_DELETE(mp_contentSerializable);
 	cout << "ici " << __LINE__ << endl;
-	// TODO m_viewerParams.width = e->size().width();
-	// TODO m_viewerParams.height = e->size().height();
-	// TODO m_viewerParams.autoProcess = false;
+	mp_viewerParams = new Module::Parameters("fake");
+	mp_viewerParams->width  = m_outputWidth;
+	mp_viewerParams->height = m_outputHeight;
 	cout << "ici " << __LINE__ << endl;
-	// TODO mp_viewerModule = new Viewer(m_viewerParams);
+	mp_viewerParams->autoProcess = false;
 	cout << "ici " << __LINE__ << endl;
-	mp_stream = CreateStream(mr_manager.GetModuleByName(m_param.module).GetOutputStreamById(m_param.stream).GetType());
+	mp_viewerModule = new Viewer(*mp_viewerParams);
+	cout << "ici " << __LINE__ << endl;
+	mp_stream = new StreamImage("test", m_contentImage, *mp_viewerModule, "Fake stream");
 	mr_manager.ConnectExternalInput(*mp_stream, m_param.module, m_param.stream);
+	cout << "ici " << __LINE__ << endl;
 	mp_viewerModule->Reset();
 	cout << "ici " << __LINE__ << endl;
+}
+
+void QModuleViewer::resizeEvent(QResizeEvent * e)
+{
+	CreateStream();
 
 	// Keep proportionality
 	double ratio = static_cast<double>(mp_stream->GetHeight()) / mp_stream->GetWidth();
@@ -287,17 +283,13 @@ void QModuleViewer::updateModuleNb(int x_index)
 	// Module* mod = nullptr;
 
 	cout << "ici " << __LINE__ << endl;
-	mr_manager.ListModulesNames(m_moduleNames); //TODO: no member ?
-	assert(!m_moduleNames.empty());
 	cout << "ici " << __LINE__ << endl;
 	if(x_index < 0 || x_index >= static_cast<int>(m_moduleNames.size()))
 	{
-		// mod = mr_manager.RefModules().at(0);
 		m_param.module = m_moduleNames.at(0);
 	}
 	else
 	{
-		// // mod = mr_manager.RefModules().at(x_index);
 		m_param.module = m_moduleNames.at(x_index);
 	}
 	cout << "ici " << __LINE__ << endl;
@@ -310,31 +302,33 @@ void QModuleViewer::updateModuleNb(int x_index)
 void QModuleViewer::updateStreamNb(int x_index)
 {
 	unsigned int cpt = static_cast<unsigned int>(x_index);
-	Stream* stream = nullptr;
+	cout << "ici " << __LINE__ << endl;
 
-	/*
-	if(x_index >= 0 && cpt < m_currentModule->GetOutputStreamList().size())
+	const Module& module(mr_manager.GetModuleByName(m_param.module));
+	cout << "ici " << __LINE__ << endl;
+
+	if(x_index >= 0 && cpt < module.GetOutputStreamList().size())
 	{
 		// Pick an output stream
-		// stream = m_currentModule->GetOutputStreamList().at(cpt);
+		// stream = module.GetOutputStreamList().at(cpt);
 		m_param.stream = x_index;
 	}
 	else
 	{
 		// Pick a debug stream
-		cpt -= m_currentModule->GetOutputStreamList().size();
-		if(cpt < m_currentModule->GetDebugStreamList().size())
+		cpt -= module.GetOutputStreamList().size();
+		if(cpt < module.GetDebugStreamList().size())
 		{
-			stream = m_currentModule->GetDebugStreamList().at(cpt);
 			m_param.stream = x_index;
 		}
 		else
 		{
-			// stream = m_currentModule->GetOutputStreamList().at(0);
 			m_param.stream = 0;
 		}
 	}
-	*/
+	cout << "ici " << __LINE__ << endl;
+	CreateStream();
+	cout << "ici " << __LINE__ << endl;
 }
 
 /// display the control with the given index
