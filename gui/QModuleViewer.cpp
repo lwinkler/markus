@@ -49,13 +49,18 @@ using namespace cv;
 using namespace std;
 
 // Constructor
-QModuleViewer::QModuleViewer(const Manager& xr_manager, ParameterStructure& xr_params, QWidget *parent) :
+QModuleViewer::QModuleViewer(Manager& xr_manager, ParameterStructure& xr_params, QWidget *parent) :
 	QWidget(parent),
-	Module(xr_params),
+	Configurable(xr_params),
 	mr_manager(xr_manager),
-	m_param(dynamic_cast<QModuleViewer::Parameters&>(xr_params))
+	m_param(dynamic_cast<QModuleViewer::Parameters&>(xr_params)),
+	m_viewerParams(dynamic_cast<Module::Parameters&>(xr_params))
 {
+/*
 	m_controlBoard          = nullptr;
+	cout << "ici " << __LINE__ << endl;
+	mr_manager.ListModulesNames(m_moduleNames);
+	cout << "ici " << __LINE__ << endl;
 
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	m_outputWidth  = 0.8 * width();
@@ -67,6 +72,7 @@ QModuleViewer::QModuleViewer(const Manager& xr_manager, ParameterStructure& xr_p
 	// m_currentModule 	= xr_manager.RefModules().front();
 	// m_currentStream 	= m_currentModule->GetOutputStreamList().begin()->second;
 
+	cout << "ici " << __LINE__ << endl;
 	mp_comboModules 	= new QComboBox();
 	mp_comboStreams 	= new QComboBox();
 	mp_mainLayout 		= new QBoxLayout(QBoxLayout::TopToBottom);
@@ -80,15 +86,17 @@ QModuleViewer::QModuleViewer(const Manager& xr_manager, ParameterStructure& xr_p
 	layoutCombos->addWidget(lab1, 0, 0);
 	mp_comboModules->clear();
 	int ind = 0;
+	cout << "ici " << __LINE__ << endl;
 	for(const auto & elem : xr_manager.RefModules())
 		mp_comboModules->addItem((elem)->GetName().c_str(), ind++);
 	layoutCombos->addWidget(mp_comboModules, 0, 1);
-	if(m_param.module > 0 && m_param.module < mp_comboModules->count())
-		mp_comboModules->setCurrentIndex(m_param.module);
+	int index = IndexOfModule(m_param.module);
+	if(index > 0 && index < mp_comboModules->count())
+		mp_comboModules->setCurrentIndex(index);
 
 	QLabel* lab2 = new QLabel(tr("Out stream"));
 	layoutCombos->addWidget(lab2, 1, 0);
-	this->updateModuleNb(m_param.module);
+	this->updateModuleNb(index);
 	layoutCombos->addWidget(mp_comboStreams, 1, 1);
 
 	// Create the group with combo menus
@@ -109,8 +117,9 @@ QModuleViewer::QModuleViewer(const Manager& xr_manager, ParameterStructure& xr_p
 	// set layout to main
 	setLayout(mp_mainLayout);
 
-	connect(mp_comboModules, SIGNAL(activated(int)), this, SLOT(updateModuleNb(int) ));
+	connect(mp_comboModules, SIGNAL(activated(int)), this, SLOT(updateModuleName(int) ));
 	connect(mp_comboStreams, SIGNAL(activated(int)), this, SLOT(updateStreamNb(int)));
+*/
 }
 
 QModuleViewer::~QModuleViewer()
@@ -121,95 +130,98 @@ QModuleViewer::~QModuleViewer()
 	delete mp_gbCombos;
 }
 
-void QModuleViewer::ProcessFrame()
+Stream* QModuleViewer::CreateStream(const string& x_type)
 {
-}
-
-void QModuleViewer::Reset()
-{
+	return new StreamImage("test", m_contentImage, *mp_viewerModule, "Fake stream");
 }
 
 void QModuleViewer::resizeEvent(QResizeEvent * e)
 {
-	/*
-	if(m_currentStream != nullptr)
+/*
+	cout << "ici " << __LINE__ << endl;
+	mp_stream->Disconnect();
+	CLEAN_DELETE(mp_viewerModule);
+	CLEAN_DELETE(mp_stream);
+	CLEAN_DELETE(mp_contentSerializable);
+	cout << "ici " << __LINE__ << endl;
+	m_viewerParams.width = e->size().width();
+	m_viewerParams.height = e->size().height();
+	m_viewerParams.autoProcess = false;
+	cout << "ici " << __LINE__ << endl;
+	mp_viewerModule = new Viewer(m_viewerParams);
+	cout << "ici " << __LINE__ << endl;
+	mp_stream = CreateStream(mr_manager.GetModuleByName(m_param.module).GetOutputStreamById(m_param.stream).GetType());
+	mr_manager.ConnectExternalInput(*mp_stream, m_param.module, m_param.stream);
+	mp_viewerModule->Reset();
+	cout << "ici " << __LINE__ << endl;
+
+	// Keep proportionality
+	double ratio = static_cast<double>(mp_stream->GetHeight()) / mp_stream->GetWidth();
+
+	m_outputWidth  = e->size().width();
+	m_outputHeight = e->size().height();
+
+	if(m_outputHeight >= m_outputWidth * ratio)
 	{
-		// Keep proportionality
-		double ratio = static_cast<double>(m_currentStream->GetHeight()) / m_currentStream->GetWidth();
-
-		m_outputWidth  = e->size().width();
-		m_outputHeight = e->size().height();
-
-		if(m_outputHeight >= m_outputWidth * ratio)
-		{
-			m_outputHeight = m_outputWidth * ratio;
-			m_offsetX = 0;
-			m_offsetY = (e->size().height() - m_outputHeight) / 2;
-		}
-		else
-		{
-			m_outputWidth = m_outputHeight / ratio;
-			m_offsetX = (e->size().width() - m_outputWidth) / 2;
-			m_offsetY = 0;
-		}
-
-		m_image =  QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
+		m_outputHeight = m_outputWidth * ratio;
+		m_offsetX = 0;
+		m_offsetY = (e->size().height() - m_outputHeight) / 2;
+	}
+	else
+	{
+		m_outputWidth = m_outputHeight / ratio;
+		m_offsetX = (e->size().width() - m_outputWidth) / 2;
+		m_offsetY = 0;
 	}
 
-	CLEAN_DELETE(m_img_output);
-	CLEAN_DELETE(m_img_original);
-	*/
+	m_image = QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
+*/
 }
 
 void QModuleViewer::paintEvent(QPaintEvent * e)
 {
-	// if(m_currentStream != nullptr)
+/*
+	if(mp_viewerModule != nullptr)
 	{
-		/*
 		{
 			// note: do we lock the module before reading ? this may be dangerous and may lead to
 			//       corrupted images, but avoids two problems:
 			//        - slow interaction with the GUI
 			//        - no image is displayed if we only try to lock and the module is busy
 			//       A solution could be to display asynchronously
-			Processable::ReadLock lock(m_currentModule->RefLock(), boost::try_to_lock);
+			// TODO Processable::ReadLock lock(m_currentModule->RefLock(), boost::try_to_lock);
 			// We paint the image from the stream
-			if(m_img_original == nullptr)
-				m_img_original = new Mat( Size(m_currentStream->GetWidth(), m_currentStream->GetHeight()), CV_8UC3);
-			m_img_original->setTo(0);
-			if(m_img_output == nullptr)
-				m_img_output = new Mat( Size(m_outputWidth, m_outputHeight), CV_8UC3);
-
-			m_currentStream->RenderTo(*m_img_original);
+			mp_stream->ConvertInput();
+			mp_stream->RenderTo(m_contentImage);
 		}
-		adjust(*m_img_original, *m_img_output, m_img_tmp1, m_img_tmp2);
 
-		ConvertMat2QImage(m_img_output, &m_image);
+		ConvertMat2QImage(m_contentImage, m_image);
 
 		QPainter painter(this);
 		painter.drawImage(QRect(m_offsetX, m_offsetY, m_image.width(), m_image.height()), m_image);
-		*/
 	}
+*/
 }
 
 /// Change the module being currently displayed
 void QModuleViewer::updateModule(Module * x_module)
 {
+/*
+	// TODO: Lock module for safety
 	// m_currentModule = x_module;
 	mp_comboStreams->clear();
 	CLEAN_DELETE(m_controlBoard);
 
 	int cpt = 0;
-	/*
-	for(const auto & elem : m_currentModule->GetOutputStreamList())
+	for(const auto & elem : x_module->GetOutputStreamList())
+	{
+		QString str;
+		mp_comboStreams->addItem(elem.second->GetName().c_str(), str);
+	}
+	for(const auto & elem : x_module->GetDebugStreamList())
 	{
 		mp_comboStreams->addItem(elem.second->GetName().c_str(), cpt++);
 	}
-	for(const auto & elem : m_currentModule->GetDebugStreamList())
-	{
-		mp_comboStreams->addItem(elem.second->GetName().c_str(), cpt++);
-	}
-	*/
 
 	// Update the stream
 	updateStreamNb(m_param.stream);
@@ -230,8 +242,7 @@ void QModuleViewer::updateModule(Module * x_module)
 	this->addAction(actionShowDisplayMenu);
 
 	// Show control board for parameters
-	/*
-	const map<string, Controller*>& ctrs = m_currentModule->GetControllersList();
+	const map<string, Controller*>& ctrs = x_module->GetControllersList();
 	cpt = 0;
 
 	// Add option to right-click: controls
@@ -259,29 +270,31 @@ void QModuleViewer::updateModule(Module * x_module)
 		cpt++;
 	}
 	this->setContextMenuPolicy(Qt::ActionsContextMenu);
-	*/
 
 	// actionShowDisplayMenu->setChecked(m_param.displayOptions);
 	showDisplayOptions(m_param.displayOptions);
 	updateControlNb(m_param.control);
+*/
 }
 
 /// change the module being currently displayed (by index)
 void QModuleViewer::updateModuleNb(int x_index)
 {
+/*
 	Module* mod = nullptr;
 
 	if(x_index < 0 || x_index >= static_cast<int>(mr_manager.RefModules().size()))
 	{
 		mod = mr_manager.RefModules().at(0);
-		m_param.module = 0;
+		m_param.module = m_moduleNames.at(0);
 	}
 	else
 	{
 		mod = mr_manager.RefModules().at(x_index);
-		m_param.module = x_index;
+		m_param.module = m_moduleNames.at(x_index);
 	}
 	updateModule(mod);
+*/
 }
 
 /// Change the stream being currently displayed (by index)
@@ -360,22 +373,22 @@ void QModuleViewer::showDisplayOptions(bool x_isChecked)
 	m_param.displayOptions = x_isChecked;
 }
 
-void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qimg)
+void QModuleViewer::ConvertMat2QImage(const Mat& x_mat, QImage& xr_qimg)
 {
 
 	// So far only char images are supported
-	if(mat->type() != CV_8UC1 && mat->type() != CV_8UC3)
+	if(x_mat.type() != CV_8UC1 && x_mat.type() != CV_8UC3)
 	{
 		printf("Warning: unsupported image type to be displayed");
 		return;
 	}
 
-	const int & h = mat->rows;
-	const int & w = mat->cols;
-	const int & channels = mat->channels();
-	const char *data = reinterpret_cast<const char*>(mat->data);
+	const int & h = x_mat.rows;
+	const int & w = x_mat.cols;
+	const int & channels = x_mat.channels();
+	const char *data = reinterpret_cast<const char*>(x_mat.data);
 
-	for (int y = 0; y < h; y++, data += mat->cols * mat->channels())
+	for (int y = 0; y < h; y++, data += x_mat.cols * x_mat.channels())
 	{
 		for (int x = 0; x < w; x++)
 		{
@@ -396,11 +409,11 @@ void QModuleViewer::ConvertMat2QImage(const Mat *mat, QImage *qimg)
 			if (channels == 4)
 			{
 				char a = data[x * channels + 3];
-				qimg->setPixel(x, y, qRgba(r, g, b, a));
+				xr_qimg.setPixel(x, y, qRgba(r, g, b, a));
 			}
 			else
 			{
-				qimg->setPixel(x, y, qRgb(r, g, b));
+				xr_qimg.setPixel(x, y, qRgb(r, g, b));
 			}
 		}
 	}

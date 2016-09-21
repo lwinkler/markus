@@ -64,7 +64,12 @@ public:
 	int ReturnCode() const;
 	virtual void Start() override;
 	virtual void Stop() override;
+
+	// Interface for interaction with external objects
 	void SendCommand(const std::string& x_command, std::string x_value);
+	const Stream& GetOutput(const std::string& x_moduleName, int x_outputId) const;
+	void ConnectExternalInput(Stream& xr_input, const std::string& x_moduleName, int x_outputId);
+
 	const std::vector<Module*> RefModules() const
 	{
 		std::vector<Module*> modules; 
@@ -74,7 +79,8 @@ public:
 		}
 		return modules;
 	}
-	inline const Processable& GetModuleByName(const std::string& x_name) const {if(x_name == "manager") assert(false); else return RefModuleByName(x_name);}
+	inline const Module& GetModuleByName(const std::string& x_name) const {return RefModuleByName(x_name);}
+	inline const Processable& GetProcessableByName(const std::string& x_name) const {if(x_name == "manager") assert(false); else return RefModuleByName(x_name);}
 
 	void Rebuild();
 	void Connect();
@@ -83,7 +89,14 @@ public:
 	void PrintStatistics();
 	virtual bool ManageInterruptions(bool x_continueFlag) override;
 	inline void Quit() {m_quitting = true;}
-	inline void ListModulesTypes(std::vector<std::string>& xr_types) {mr_moduleFactory.List(xr_types);}
+	inline void ListModulesTypes(std::vector<std::string>& xr_types) const {mr_moduleFactory.List(xr_types);}
+	inline void ListModulesNames(std::vector<std::string>& xr_names) const
+	{
+		for(auto elem : m_modules)
+		{
+			xr_names.push_back(elem.second->GetName());
+		}
+	}
 	void WriteStateToDirectory(const std::string& x_directory);
 	virtual void WriteConfig(ConfigReader xr_config) const override;
 	inline virtual void SetContext(Context& x_context) override

@@ -343,6 +343,32 @@ void Module::Export(ostream& rx_os, int x_indentation) const
 	rx_os<<tabs<<"</module>"<<endl;
 }
 
+const Stream& Module::GetInputStreamById(int x_id) const
+{
+	auto it = m_inputStreams.find(x_id);
+
+	if(it == m_inputStreams.end())
+	{
+		stringstream ss;
+		ss<<"GetInputStreamById : no stream with id="<<x_id<<" for module "<<GetName();
+		throw MkException(ss.str(), LOC);
+	}
+	return *(it->second);
+}
+
+const Stream& Module::GetOutputStreamById(int x_id) const
+{
+	auto it = m_outputStreams.find(x_id);
+
+	if(it == m_outputStreams.end())
+	{
+		stringstream ss;
+		ss<<"GetInputStreamById : no stream with id="<<x_id<<" for module "<<GetName();
+		throw MkException(ss.str(), LOC);
+	}
+	return *(it->second);
+}
+
 Stream& Module::RefInputStreamById(int x_id)
 {
 	auto it = m_inputStreams.find(x_id);

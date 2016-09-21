@@ -30,6 +30,8 @@
 #include <QImage>
 #include <QPainter>
 #include "QControlBoard.h"
+#include "ParameterStructure.h"
+#include "ParameterNum.h"
 #include "Module.h"
 
 class Manager;
@@ -44,45 +46,64 @@ class QListWidget;
 
 
 /// Class used to display one module in a widget
-class QModuleViewer : public QWidget, public Module
+class QModuleViewer : public QWidget, public Configurable
 {
 	Q_OBJECT
-public:
-	class Parameters : public Module::Parameters
+	class Viewer : public Module 
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Module::Parameters(x_confReader)
+		Viewer(ParameterStructure& xr_params) : Module(xr_params){}
+		virtual ~Viewer() {}
+		MKCLASS("Viewer")
+		// MKCATEG("Input")
+		MKDESCR("TODO")
+		virtual void ProcessFrame() override {}
+		virtual void Reset() override {}
+
+	private:
+		static log4cxx::LoggerPtr m_logger;
+	};
+public:
+	class Parameters : public ParameterStructure
+	{
+	public:
+		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader)
 		{
 			// AddParameter(new ParameterString("module", "", &module, "Module to display"));
-			AddParameter(new ParameterInt("module",   0, -1, 1000, &module,  "Index of the module to display"));
+			AddParameter(new ParameterString("module",   "", &module,  "Name of the module to display"));
 			AddParameter(new ParameterInt("stream",   0, -1, 1000, &stream,  "Index of the stream to display"));
 			AddParameter(new ParameterInt("control", -1, -1, 1000, &control, "Index of the control to display"));
 			AddParameter(new ParameterBool("display_options", 1, 0, 1, &displayOptions, "Display the options to select the module, stream, ..."));
 
 			m_writeAllParamsToConfig = true;
 		}
-		int module;
+		std::string module;
 		int stream;
 		int control;
 		bool displayOptions;
 	};
 
-	QModuleViewer(const Manager& x_manager, ParameterStructure& xr_params, QWidget *parent = 0);
+	QModuleViewer(Manager& x_manager, ParameterStructure& xr_params, QWidget *parent = 0);
 	virtual ~QModuleViewer();
-	MKCLASS("QModuleViewer")
-	MKCATEG("Other")
-	MKDESCR("TODO")
 
-	virtual void ProcessFrame() override;
-	virtual void Reset() override;
-
-	static void  ConvertMat2QImage(const cv::Mat *mat, QImage *qim);
+	static void  ConvertMat2QImage(const cv::Mat& x_mat, QImage& xr_qim);
 	void mouseDoubleClickEvent(QMouseEvent * event);
+
 private:
+	Stream* CreateStream(const std::string& x_type);
+	void updateModule(Module * x_module);
+	void updateStream(Stream * x_outputStream);
+	int IndexOfModule(std::string& x_moduleName){
+		auto it = std::find(m_moduleNames.begin(), m_moduleNames.end(), x_moduleName);
+		if(it == m_moduleNames.end())
+			return 0; // throw MkException("Cannot find " + x_moduleName + " in module names");
+		return it - m_moduleNames.begin();
+	}
+
 	QBoxLayout * mp_mainLayout;
 
 	QImage m_image;
-	const Manager & mr_manager;
+	Manager & mr_manager;
 
 	int m_outputWidth;
 	int m_outputHeight;
@@ -100,12 +121,18 @@ private:
 	QControlBoard * m_controlBoard;
 	Parameters& m_param;
 
+	// Stream and module to handle rendering via Markus
+	std::vector<std::string> m_moduleNames;
+	Module::Parameters& m_viewerParams; // TODO: Remove this
+	Viewer*       mp_viewerModule        = nullptr;
+	Stream*       mp_stream              = nullptr;
+	cv::Mat       m_contentImage;
+	Serializable* mp_contentSerializable = nullptr;
+
 public slots:
 	void updateModuleNb(int x_index);
 	void updateStreamNb(int x_index);
 	void updateControlNb(int x_index = -1);
-	void updateModule(Module * x_module);
-	void updateStream(Stream * x_outputStream);
 	void showDisplayOptions(bool x_isChecked);
 };
 

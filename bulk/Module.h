@@ -139,7 +139,9 @@ public:
 
 	virtual inline bool IsInput() const {return false;}
 	void Export(std::ostream& rx_os, int x_indentation) const;
-	Stream& RefInputStreamById(int x_id);
+	const Stream& GetInputStreamById(int x_id) const;
+	const Stream& GetOutputStreamById(int x_id) const;
+	Stream& RefInputStreamById(int x_id);   // TODO private
 	Stream& RefOutputStreamById(int x_id);
 	inline void CheckParameterRange() {m_param.CheckRange();}
 	inline bool IsUnitTestingEnabled() const {return m_isUnitTestingEnabled;}

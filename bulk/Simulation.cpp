@@ -213,7 +213,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 			int nb = boost::lexical_cast<int>(varConf.GetAttribute("nb", "10"));
 
 			LOG_DEBUG(m_logger, "Variations for module " << moduleNames.at(0));
-			const Parameter& param = m_manager.GetModuleByName(moduleNames.at(0)).GetParameters().GetParameterByName(paramNames.at(0));
+			const Parameter& param = m_manager.GetProcessableByName(moduleNames.at(0)).GetParameters().GetParameterByName(paramNames.at(0));
 			vector<string> values;
 			param.GenerateValues(nb, values, range);
 
