@@ -85,8 +85,8 @@ void Stream::Connect(Stream* x_stream)
 */
 void Stream::Disconnect()
 {
-	m_connected->SetAsConnected(false);
 	SetAsConnected(false);
+	// TODO: The other stream will still be mark as connected. See what to do.
 	m_connected = nullptr;
 }
 

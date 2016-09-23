@@ -54,47 +54,66 @@ QModuleViewer::QModuleViewer(Manager& xr_manager, ParameterStructure& xr_params,
 	Configurable(xr_params),
 	mr_manager(xr_manager),
 	m_param(dynamic_cast<QModuleViewer::Parameters&>(xr_params))
+	// m_viewerParams(dynamic_cast<Module::Parameters&>(xr_params))
 {
+	cout << __LINE__ << endl;
 	m_controlBoard          = nullptr;
 
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	m_outputWidth  = 0.8 * width();
-	m_outputHeight = 0.8 * height();
+	cout << __LINE__ << endl;
+	// m_outputWidth  = 0.8 * width();
+	// m_outputHeight = 0.8 * height();
 
 	// Handlers for modules
+	cout << __LINE__ << endl;
 	mr_manager.ListModulesNames(m_moduleNames);
-	if(m_moduleNames.size() == 0)
+	cout << __LINE__ << endl;
+	if(m_moduleNames.empty())
 		throw MkException("Module list cannot be empty", LOC);
+	cout << __LINE__ << endl;
 
 	mp_comboModules 	= new QComboBox();
 	mp_comboStreams 	= new QComboBox();
 	mp_mainLayout 		= new QBoxLayout(QBoxLayout::TopToBottom);
 	mp_gbCombos 		= new QGroupBox(tr("Display options"));
 	mp_widEmpty		= new QWidget();
+	cout << __LINE__ << endl;
 
 	auto  layoutCombos = new QGridLayout;
+	cout << __LINE__ << endl;
 
 	// Fill the list of modules
 	QLabel* lab1 = new QLabel(tr("Module"));
 	layoutCombos->addWidget(lab1, 0, 0);
 	mp_comboModules->clear();
+	cout << __LINE__ << endl;
 	int ind = 0;
-	assert(!m_moduleNames.empty());
+	cout << __LINE__ << endl;
+	
 	for(const auto & elem : m_moduleNames)
 		mp_comboModules->addItem(elem.c_str(), ind++);
+	cout << __LINE__ << endl;
 	layoutCombos->addWidget(mp_comboModules, 0, 1);
+	cout << __LINE__ << endl;
 	int index = IndexOfModule(m_param.module);
+	cout << __LINE__ << endl;
 	if(index > 0 && index < mp_comboModules->count())
 		mp_comboModules->setCurrentIndex(index);
+	cout << "ASDFAS" << this->geometry().width() << endl;
+
+	// resizeEvent(this->geometry());
 
 	QLabel* lab2 = new QLabel(tr("Out stream"));
 	layoutCombos->addWidget(lab2, 1, 0);
+	cout << __LINE__ << endl;
 	this->updateModuleNb(index);
 	layoutCombos->addWidget(mp_comboStreams, 1, 1);
+	cout << __LINE__ << endl;
 
 	// Create the group with combo menus
 	mp_gbCombos->setLayout(layoutCombos);
 	mp_gbCombos->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+	cout << __LINE__ << endl;
 
 	// add widgets to main layout
 	mp_mainLayout->addWidget(mp_gbCombos, 0);
@@ -103,9 +122,10 @@ QModuleViewer::QModuleViewer(Manager& xr_manager, ParameterStructure& xr_params,
 
 	setPalette(QPalette(QColor(20, 20, 20)));
 	setAutoFillBackground(true);
+	cout << __LINE__ << endl;
 
 	//update();
-	m_image = QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
+	// m_qimage = QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
 
 	// set layout to main
 	setLayout(mp_mainLayout);
@@ -122,45 +142,50 @@ QModuleViewer::~QModuleViewer()
 	delete mp_gbCombos;
 }
 
-void QModuleViewer::CreateStream()
+void QModuleViewer::CreateStream(int x_outputWidth, int x_outputHeight)
 {
+	cout << __LINE__ << endl;
 	// (mr_manager.GetModuleByName(m_param.module).GetOutputStreamById(m_param.stream).GetType());
-	cout << "ici " << __LINE__ << endl;
 	if(mp_stream != nullptr)
 		mp_stream->Disconnect();
-	cout << "ici " << __LINE__ << endl;
 	CLEAN_DELETE(mp_viewerParams);
-	cout << "ici " << __LINE__ << endl;
 	CLEAN_DELETE(mp_viewerModule);
-	cout << "ici " << __LINE__ << endl;
 	CLEAN_DELETE(mp_stream);
-	cout << "ici " << __LINE__ << endl;
-	CLEAN_DELETE(mp_contentSerializable);
-	cout << "ici " << __LINE__ << endl;
+	CLEAN_DELETE(mp_contentSerializable); // TODO
+	if(x_outputWidth == 0 || x_outputHeight == 0)
+		return;
+	cout << __LINE__ << endl;
 	mp_viewerParams = new Module::Parameters("fake");
-	mp_viewerParams->width  = m_outputWidth;
-	mp_viewerParams->height = m_outputHeight;
-	cout << "ici " << __LINE__ << endl;
+	mp_viewerParams->width  = x_outputWidth;
+	mp_viewerParams->height = x_outputHeight;
+	mp_viewerParams->type = CV_8UC3;
 	mp_viewerParams->autoProcess = false;
-	cout << "ici " << __LINE__ << endl;
+	cout << __LINE__ << x_outputWidth << endl;
 	mp_viewerModule = new Viewer(*mp_viewerParams);
-	cout << "ici " << __LINE__ << endl;
+	cout << __LINE__ << endl;
 	mp_stream = new StreamImage("test", m_contentImage, *mp_viewerModule, "Fake stream");
+	cout << __LINE__ << endl;
 	mr_manager.ConnectExternalInput(*mp_stream, m_param.module, m_param.stream);
-	cout << "ici " << __LINE__ << endl;
+	cout << __LINE__ << endl;
 	mp_viewerModule->Reset();
-	cout << "ici " << __LINE__ << endl;
+
+	m_qimage = QImage(x_outputWidth, x_outputHeight, QImage::Format_RGB32);
+	cout << __LINE__ << endl;
 }
 
 void QModuleViewer::resizeEvent(QResizeEvent * e)
 {
-	CreateStream();
-
+	cout << __LINE__ << endl;
 	// Keep proportionality
-	double ratio = static_cast<double>(mp_stream->GetHeight()) / mp_stream->GetWidth();
 
+	cout << __LINE__ << endl;
 	m_outputWidth  = e->size().width();
+	cout << "width " << m_outputWidth << endl;
 	m_outputHeight = e->size().height();
+	cout << __LINE__ << endl;
+	Size outputSize = mr_manager.GetModuleByName(m_param.module).GetOutputStreamById(m_param.stream).GetSize();
+
+	double ratio = static_cast<double>(outputSize.height) / outputSize.width; // TODO: ratio function
 
 	if(m_outputHeight >= m_outputWidth * ratio)
 	{
@@ -174,13 +199,22 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 		m_offsetX = (e->size().width() - m_outputWidth) / 2;
 		m_offsetY = 0;
 	}
-
-	m_image = QImage(m_outputWidth, m_outputHeight, QImage::Format_RGB32);
+	CreateStream(m_outputWidth, m_outputHeight);
+	cout << "offset" << m_offsetX << " " << m_offsetY << endl;
+	cout << m_outputWidth << " " << m_outputHeight << endl;
+	cout << __LINE__ << endl;
 }
 
 void QModuleViewer::paintEvent(QPaintEvent * e)
 {
-	if(mp_viewerModule != nullptr)
+	cout << __LINE__ << endl;
+	if(mp_stream == nullptr || !mp_stream->IsConnected())
+	{
+		cout << "stream null2" << endl; // TODO
+		return;
+	}
+	assert(mp_stream != nullptr);
+	if(mp_stream != nullptr)
 	{
 		{
 			// note: do we lock the module before reading ? this may be dangerous and may lead to
@@ -190,15 +224,14 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 			//       A solution could be to display asynchronously
 			// TODO Processable::ReadLock lock(m_currentModule->RefLock(), boost::try_to_lock);
 			// We paint the image from the stream
-			mp_stream->ConvertInput();
-			mp_stream->RenderTo(m_contentImage);
+			mp_stream->ConvertInput(); // TODO: depending
+			// mp_stream->RenderTo(m_contentImage);
 		}
-
-		ConvertMat2QImage(m_contentImage, m_image);
-
+		ConvertMat2QImage(m_contentImage, m_qimage);
 		QPainter painter(this);
-		painter.drawImage(QRect(m_offsetX, m_offsetY, m_image.width(), m_image.height()), m_image);
+		painter.drawImage(QRect(m_offsetX, m_offsetY, m_qimage.width(), m_qimage.height()), m_qimage);
 	}
+	cout << __LINE__ << endl;
 }
 
 /// Change the module being currently displayed
@@ -206,6 +239,7 @@ void QModuleViewer::updateModule(const Module& x_module)
 {
 	// TODO: Lock module for safety
 	// m_currentModule = x_module;
+	cout << __LINE__ << endl;
 	mp_comboStreams->clear();
 	CLEAN_DELETE(m_controlBoard);
 
@@ -215,31 +249,35 @@ void QModuleViewer::updateModule(const Module& x_module)
 		QString str;
 		mp_comboStreams->addItem(elem.second->GetName().c_str(), str);
 	}
-	cout << "ici " << __LINE__ << endl;
 	for(const auto & elem : x_module.GetDebugStreamList())
 	{
 		mp_comboStreams->addItem(elem.second->GetName().c_str(), cpt++);
 	}
+	cout << __LINE__ << endl;
 
-	cout << "ici " << __LINE__ << endl;
 	// Update the stream
 	updateStreamNb(m_param.stream);
 	if(m_param.stream > 0 && m_param.stream < mp_comboStreams->count())
 		mp_comboStreams->setCurrentIndex(m_param.stream);
 
-	cout << "ici " << __LINE__ << endl;
+	return; // TODO
+
 	// Empty the action menu (different for each module)
+	cout << __LINE__ << endl;
 	QList<QAction *> actions = this->actions();
 	for(auto & action : actions)
 		this->removeAction(action);
+	cout << __LINE__ << endl;
 
-	cout << "ici " << __LINE__ << endl;
 	// Set context menus
 	QAction * actionShowDisplayMenu = new QAction(tr("Show display options"), this);
 	actionShowDisplayMenu->setCheckable(true);
+	cout << __LINE__ << endl;
 	connect(actionShowDisplayMenu, SIGNAL(triggered(bool)), this, SLOT(showDisplayOptions(bool)));
 	actionShowDisplayMenu->setChecked(m_param.displayOptions);
+	cout << __LINE__ << endl;
 	actionShowDisplayMenu->setShortcut(tr("Ctrl+S"));
+	cout << __LINE__ << endl;
 	this->addAction(actionShowDisplayMenu);
 
 	// Show control board for parameters
@@ -280,10 +318,9 @@ void QModuleViewer::updateModule(const Module& x_module)
 /// change the module being currently displayed (by index)
 void QModuleViewer::updateModuleNb(int x_index)
 {
+	cout << __LINE__ << endl;
 	// Module* mod = nullptr;
 
-	cout << "ici " << __LINE__ << endl;
-	cout << "ici " << __LINE__ << endl;
 	if(x_index < 0 || x_index >= static_cast<int>(m_moduleNames.size()))
 	{
 		m_param.module = m_moduleNames.at(0);
@@ -292,20 +329,16 @@ void QModuleViewer::updateModuleNb(int x_index)
 	{
 		m_param.module = m_moduleNames.at(x_index);
 	}
-	cout << "ici " << __LINE__ << endl;
 	// TODO: lock manager
 	updateModule(mr_manager.GetModuleByName(m_param.module));
-	cout << "ici " << __LINE__ << endl;
 }
 
 /// Change the stream being currently displayed (by index)
 void QModuleViewer::updateStreamNb(int x_index)
 {
 	unsigned int cpt = static_cast<unsigned int>(x_index);
-	cout << "ici " << __LINE__ << endl;
 
 	const Module& module(mr_manager.GetModuleByName(m_param.module));
-	cout << "ici " << __LINE__ << endl;
 
 	if(x_index >= 0 && cpt < module.GetOutputStreamList().size())
 	{
@@ -326,9 +359,8 @@ void QModuleViewer::updateStreamNb(int x_index)
 			m_param.stream = 0;
 		}
 	}
-	cout << "ici " << __LINE__ << endl;
-	CreateStream();
-	cout << "ici " << __LINE__ << endl;
+	cout << __LINE__ << " " << m_outputWidth <<  endl;
+	CreateStream(m_outputWidth, m_outputHeight);
 }
 
 /// display the control with the given index
@@ -371,6 +403,8 @@ void QModuleViewer::showDisplayOptions(bool x_isChecked)
 
 void QModuleViewer::ConvertMat2QImage(const Mat& x_mat, QImage& xr_qimg)
 {
+	cout << x_mat.size() << endl;
+	assert(x_mat.cols == xr_qimg.width() && x_mat.rows == xr_qimg.height());
 
 	// So far only char images are supported
 	if(x_mat.type() != CV_8UC1 && x_mat.type() != CV_8UC3)
@@ -422,8 +456,8 @@ void QModuleViewer::mouseDoubleClickEvent(QMouseEvent * event)
 	if(m_currentStream == nullptr)
 		return;
 	QPoint cursor = event->pos();
-	int x = (cursor.x() - m_offsetX) * m_currentStream->GetWidth() / m_image.width();
-	int y = (cursor.y() - m_offsetY) * m_currentStream->GetHeight() / m_image.height();
+	int x = (cursor.x() - m_offsetX) * m_currentStream->GetWidth() / m_qimage.width();
+	int y = (cursor.y() - m_offsetY) * m_currentStream->GetHeight() / m_qimage.height();
 	m_currentStream->Query(x, y);
 	*/
 }

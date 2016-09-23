@@ -65,7 +65,7 @@ template<> void StreamState::RenderTo(Mat& x_output) const
 template<> void StreamState::Query(int x_posX, int x_posY) const
 {
 	// check if out of bounds
-	if(x_posX < 0 || x_posY < 0 || x_posX >= GetWidth() || x_posY >= GetHeight())
+	if(!Rect(Point(0, 0), GetSize()).contains(Point(x_posX, x_posY)))
 		return;
 
 	LOG_INFO(m_logger, "State =" << static_cast<int>(m_content));

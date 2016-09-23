@@ -41,7 +41,7 @@ template<> StreamObject::StreamT(const std::string& rx_name, vector<Object>& rx_
 	m_content(rx_object)
 {
 	m_default.clear();
-	m_default.push_back(Object("screen", Rect(0, 0, GetWidth(), GetHeight())));
+	m_default.push_back(Object("screen", Rect(Point(0, 0), GetSize())));
 }
 
 /// Convert the input to the right format
@@ -61,8 +61,8 @@ template<>void StreamObject::ConvertInput()
 	if(pstream == nullptr)
 		throw MkException("Stream of objects " + GetName() + " is not correctly connected", LOC);
 	vector<Object> rectsTarget = pstream->m_content;
-	double ratioX = static_cast<double>(GetWidth()) / pstream->GetWidth();
-	double ratioY = static_cast<double>(GetHeight()) / pstream->GetHeight();
+	double ratioX = static_cast<double>(GetSize().width) / pstream->GetSize().width;
+	double ratioY = static_cast<double>(GetSize().height) / pstream->GetSize().height;
 
 	m_content.clear();
 	for(const auto& elem : rectsTarget)
@@ -80,7 +80,7 @@ template<>void StreamObject::ConvertInput()
 
 template<>void StreamObject::RenderTo(Mat& x_output) const
 {
-	if(x_output.cols != GetWidth() || x_output.rows != GetHeight())
+	if(x_output.size() != GetSize())
 		throw MkException("Cannot render, image must have the same size as the stream", LOC);
 	for(const auto& elem : m_content)
 	{
@@ -89,10 +89,10 @@ template<>void StreamObject::RenderTo(Mat& x_output) const
 }
 
 /// Query : give info about cursor position
-template<>void StreamObject::Query(int x_posX, int x_posY) const
+template<>void StreamObject::Query(int x_posX, int x_posY) const // TODO: use Point
 {
 	// check if out of bounds
-	if(x_posX < 0 || x_posY < 0 || x_posX >= GetWidth() || x_posY >= GetHeight())
+	if(!Rect(Point(0, 0), GetSize()).contains(Point(x_posX, x_posY)))
 		return;
 
 	Point pt(x_posX, x_posY);
@@ -124,7 +124,7 @@ template<>void StreamObject::Randomize(unsigned int& xr_seed)
 	for(int i = 0 ; i < nb ; i++)
 	{
 		Object obj("random");
-		obj.Randomize(xr_seed, m_requirement, Size(GetWidth(), GetHeight()));
+		obj.Randomize(xr_seed, m_requirement, GetSize());
 		m_content.push_back(obj);
 	}
 }

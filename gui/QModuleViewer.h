@@ -90,7 +90,7 @@ public:
 	void mouseDoubleClickEvent(QMouseEvent * event);
 
 private:
-	void CreateStream();
+	void CreateStream(int x_outputWidth, int x_outputHeight);
 	void updateModule(const Module& x_module);
 	int IndexOfModule(std::string& x_moduleName){
 		auto it = std::find(m_moduleNames.begin(), m_moduleNames.end(), x_moduleName);
@@ -101,13 +101,13 @@ private:
 
 	QBoxLayout * mp_mainLayout;
 
-	QImage m_image;
+	QImage m_qimage;
 	Manager & mr_manager;
 
-	int m_outputWidth;
-	int m_outputHeight;
-	int m_offsetX;
-	int m_offsetY;
+	int m_outputWidth = 0;
+	int m_outputHeight = 0;
+	int m_offsetX = 0;
+	int m_offsetY = 0;
 
 	void paintEvent(QPaintEvent *event);
 	virtual void resizeEvent(QResizeEvent * e);
