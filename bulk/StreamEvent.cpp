@@ -54,7 +54,7 @@ template<> void StreamEvent::ConvertInput()
 
 	if(! m_content.IsRaised()) return;
 
-	double ratioX = static_cast<double>(GetSize().width) / pstream->GetSize().width;
+	double ratioX = static_cast<double>(GetSize().width) / pstream->GetSize().width; // TODO: use ratio function
 	double ratioY = static_cast<double>(GetSize().height) / pstream->GetSize().height;
 	m_content.ScaleObject(ratioX, ratioY);
 }

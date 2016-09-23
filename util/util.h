@@ -73,5 +73,17 @@ AnnotationFileReader* createAnnotationFileReader(const std::string& x_fileName, 
 void singleLine(std::string& str);
 double convertAspectRatio(const std::string& x_string);
 std::string convertAspectRatio(const cv::Size& x_size);
+inline double aspectRatio(cv::Size& x_size)
+{
+	return static_cast<double>(x_size.height) / x_size.width;
+}
+
+inline cv::Point_<double> ratio(cv::Size& x_size1, cv::Size& x_size2)
+{
+	return cv::Point_<double>(
+		static_cast<double>(x_size1.width) / x_size2.width,
+		static_cast<double>(x_size1.height) / x_size2.height
+	);
+}
 
 #endif

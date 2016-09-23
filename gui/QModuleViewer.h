@@ -30,9 +30,9 @@
 #include <QImage>
 #include <QPainter>
 #include "QControlBoard.h"
+#include "Module.h"
 #include "ParameterStructure.h"
 #include "ParameterNum.h"
-#include "Module.h"
 
 class Manager;
 class Stream;
@@ -43,26 +43,13 @@ class QGroupBox;
 class QBoxLayout;
 class QLabel;
 class QListWidget;
+class Viewer;
 
 
 /// Class used to display one module in a widget
 class QModuleViewer : public QWidget, public Configurable
 {
 	Q_OBJECT
-	class Viewer : public Module 
-	{
-	public:
-		Viewer(ParameterStructure& xr_params) : Module(xr_params){}
-		virtual ~Viewer() {}
-		MKCLASS("Viewer")
-		// MKCATEG("Input")
-		MKDESCR("TODO")
-		virtual void ProcessFrame() override {}
-		virtual void Reset() override {}
-
-	private:
-		static log4cxx::LoggerPtr m_logger;
-	};
 public:
 	class Parameters : public ParameterStructure
 	{
@@ -90,7 +77,8 @@ public:
 	void mouseDoubleClickEvent(QMouseEvent * event);
 
 private:
-	void CreateStream(int x_outputWidth, int x_outputHeight);
+	void CreateInputStream(int x_outputWidth, int x_outputHeight);
+	void Reconnect();
 	void updateModule(const Module& x_module);
 	int IndexOfModule(std::string& x_moduleName){
 		auto it = std::find(m_moduleNames.begin(), m_moduleNames.end(), x_moduleName);
@@ -125,11 +113,8 @@ private:
 	std::map<int, std::string> m_outputStreams;
 	std::map<int, std::string> m_debugStreams;
 
-	Module::Parameters* mp_viewerParams  = nullptr; //TODO remove
-	Viewer*       mp_viewerModule        = nullptr;
-	Stream*       mp_stream              = nullptr;
-	cv::Mat       m_contentImage;
-	Serializable* mp_contentSerializable = nullptr;
+	Module::Parameters* mp_viewerParams = nullptr; //TODO remove
+	Viewer*             mp_viewerModule = nullptr;
 
 public slots:
 	void updateModuleNb(int x_index);

@@ -37,11 +37,11 @@ template<typename T>
 class StreamNum : public Stream
 {
 public:
-	StreamNum(const std::string& x_name, T& rx_scalar, Module& rx_module, const std::string& x_description) :
-		Stream(x_name, rx_module, x_description),
+	StreamNum(const std::string& x_name, T& rx_scalar, Module& rx_module, const std::string& x_description, const std::string& rx_requirement = "") :
+		Stream(x_name, rx_module, x_description, rx_requirement),
 		m_scalars(PLOT_LENGTH),
 		m_content(rx_scalar) {}
-	virtual const std::string& GetClass() const {return m_class;}
+	virtual const std::string& GetClass() const {return m_class;} // TODO: delete ?
 	virtual const std::string& GetType() const {return m_type;}
 	virtual const ParameterType& GetParameterType() const {return m_parameterType;}
 

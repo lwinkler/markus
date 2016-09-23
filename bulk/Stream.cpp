@@ -85,9 +85,12 @@ void Stream::Connect(Stream* x_stream)
 */
 void Stream::Disconnect()
 {
+	cout << __LINE__ << endl;
 	SetAsConnected(false);
+	cout << __LINE__ << endl;
 	// TODO: The other stream will still be mark as connected. See what to do.
 	m_connected = nullptr;
+	cout << __LINE__ << endl;
 }
 
 void Stream::Serialize(ostream& x_out, MkDirectory* xp_dir) const
