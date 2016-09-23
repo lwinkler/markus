@@ -45,7 +45,6 @@
 			<param name="type">CV_8UC3</param>
 			<param name="background_alpha">0.01</param>
 			<param name="foreground_thres">0.1</param>
-			<param name="fps"/>
 		</parameters>
 		<inputs>
 			<input id="0" moduleid="0" outputid="0"/>
@@ -64,9 +63,7 @@
 			<param name="height">480</param>
 			<param name="type">CV_8UC1</param>
 			<param name="time_disappear">5</param>
-			<param name="fps"/>
 			<param name="alpha">0.1</param>
-			<param name="max_matching_distance"/>
 		</parameters>
 		<inputs>
 			<input id="0" moduleid="4" outputid="0"/>

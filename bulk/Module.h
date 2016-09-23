@@ -141,7 +141,6 @@ public:
 	void Export(std::ostream& rx_os, int x_indentation) const;
 	const Stream& GetInputStreamById(int x_id) const;
 	const Stream& GetOutputStreamById(int x_id) const;
-	const Stream& GetDebugStreamById(int x_id) const;
 	Stream& RefInputStreamById(int x_id);   // TODO private
 	Stream& RefOutputStreamById(int x_id);
 	inline void CheckParameterRange() {m_param.CheckRange();}

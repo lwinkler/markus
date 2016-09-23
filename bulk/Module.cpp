@@ -199,23 +199,15 @@ bool Module::ProcessingCondition() const
 void Module::ComputeCurrentTimeStamp()
 {
 	// Return the timestamp of the first blocking input
-	cout << m_inputStreams.size() << endl;
 	for(const auto& elem : m_inputStreams)
 	{
-		cout << GetName() << " conn " << elem.second->IsConnected() << endl;
-		cout << elem.second->IsBlocking() << endl;
 		if(elem.second->IsConnected() && elem.second->IsBlocking())
 		{
 			m_currentTimeStamp = elem.second->GetTimeStampConnected();
-		cout << m_currentTimeStamp << endl;
-		cout << (m_currentTimeStamp == TIME_STAMP_MIN) << endl;
 			if(m_currentTimeStamp != TIME_STAMP_MIN)
 				return;
-		cout << __LINE__ << endl;
 		}
-		cout << __LINE__ << endl;
 	}
-		cout << __LINE__ << endl;
 	if(!IsAutoProcessed())
 		throw MkException("Only an autoprocessed (or input) module can have no connected input. Module " + GetName(), LOC);
 	m_currentTimeStamp = TIME_STAMP_MIN;
@@ -284,7 +276,6 @@ void Module::Process()
 			vector<thread> threads;
 			for(auto & elem : m_modulesDepending)
 			{
-				cout << threads.size() << endl;
 				threads.emplace_back([&elem]{
 					elem->Process();
 				});
@@ -373,26 +364,17 @@ const Stream& Module::GetOutputStreamById(int x_id) const
 
 	if(it == m_outputStreams.end())
 	{
-		stringstream ss;
-		ss<<"GetInputStreamById : no stream with id="<<x_id<<" for module "<<GetName();
-		throw MkException(ss.str(), LOC);
+		it = m_debugStreams.find(x_id - 1000); // TODO: const
+		if(it == m_debugStreams.end())
+		{
+			stringstream ss;
+			ss<<"GetInputStreamById : no stream with id="<<x_id<<" for module "<<GetName();
+			throw MkException(ss.str(), LOC);
+		}
+		return *(it->second);
 	}
 	return *(it->second);
 }
-
-const Stream& Module::GetDebugStreamById(int x_id) const
-{
-	auto it = m_debugStreams.find(x_id);
-
-	if(it == m_debugStreams.end())
-	{
-		stringstream ss;
-		ss<<"GetInputStreamById : no stream with id="<<x_id<<" for module "<<GetName();
-		throw MkException(ss.str(), LOC);
-	}
-	return *(it->second);
-}
-
 
 Stream& Module::RefInputStreamById(int x_id)
 {
@@ -413,9 +395,13 @@ Stream& Module::RefOutputStreamById(int x_id)
 
 	if(it == m_outputStreams.end())
 	{
-		stringstream ss;
-		ss<<"GetInputStreamById : no stream with id="<<x_id<<" for module "<<GetName();
-		throw MkException(ss.str(), LOC);
+		it = m_debugStreams.find(x_id - 1000);
+		if(it == m_debugStreams.end())
+		{
+			stringstream ss;
+			ss<<"GetInputStreamById : no stream with id="<<x_id<<" for module "<<GetName();
+			throw MkException(ss.str(), LOC);
+		}
 	}
 	return *(it->second);
 }

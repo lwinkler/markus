@@ -58,8 +58,8 @@ public:
 		{
 			// AddParameter(new ParameterString("module", "", &module, "Module to display"));
 			AddParameter(new ParameterString("module",   "", &module,  "Name of the module to display"));
-			AddParameter(new ParameterInt("stream",   0, -1, 1000, &stream,  "Index of the stream to display"));
-			AddParameter(new ParameterInt("control", -1, -1, 1000, &control, "Index of the control to display"));
+			AddParameter(new ParameterInt("stream",   0, -1, 2000, &stream,  "Index of the stream to display"));
+			AddParameter(new ParameterInt("control", -1, -1, 2000, &control, "Index of the control to display"));
 			AddParameter(new ParameterBool("display_options", 1, 0, 1, &displayOptions, "Display the options to select the module, stream, ..."));
 
 			m_writeAllParamsToConfig = true;
@@ -86,6 +86,12 @@ private:
 			return 0; // throw MkException("Cannot find " + x_moduleName + " in module names");
 		return it - m_moduleNames.begin();
 	}
+	int IndexOfStream(int x_streamId){
+		auto it = std::find(m_streamIds.begin(), m_streamIds.end(), x_streamId);
+		if(it == m_streamIds.end())
+			return 0; // throw MkException("Cannot find " + x_moduleName + " in module names");
+		return it - m_streamIds.begin();
+	}
 
 	QBoxLayout * mp_mainLayout;
 
@@ -110,8 +116,7 @@ private:
 
 	// Stream and module to handle rendering via Markus
 	std::vector<std::string> m_moduleNames;
-	std::map<int, std::string> m_outputStreams;
-	std::map<int, std::string> m_debugStreams;
+	std::vector<int>         m_streamIds;
 
 	Module::Parameters* mp_viewerParams = nullptr; //TODO remove
 	Viewer*             mp_viewerModule = nullptr;
