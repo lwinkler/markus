@@ -222,7 +222,6 @@ ControllerUInt::ControllerUInt(Parameter& x_param, Processable& x_module):
 	ControllerParameter(x_param, x_module),
 	m_param2(dynamic_cast<ParameterUInt&>(x_param))
 {
-	mp_parameterSlider = nullptr;
 }
 
 QWidget* ControllerUInt::CreateWidget()
@@ -258,8 +257,8 @@ ControllerDouble::ControllerDouble(Parameter& x_param, Processable& x_module):
 	ControllerParameter(x_param, x_module),
 	m_param2(dynamic_cast<ParameterDouble&>(x_param))
 {
-	mp_parameterSlider = nullptr;
 }
+
 QWidget* ControllerDouble::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
@@ -268,6 +267,7 @@ QWidget* ControllerDouble::CreateWidget()
 	return nullptr;
 #endif
 }
+
 void ControllerDouble::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI

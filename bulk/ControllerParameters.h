@@ -82,7 +82,7 @@ public:
 
 protected:
 	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
-	QParameterSlider * mp_parameterSlider;
+	QParameterSlider * mp_parameterSlider = nullptr;
 	ParameterInt& m_param2;
 };
 
@@ -97,7 +97,7 @@ public:
 
 protected:
 	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
-	QParameterSlider * mp_parameterSlider;
+	QParameterSlider * mp_parameterSlider = nullptr;
 	ParameterUInt& m_param2;
 };
 
@@ -113,7 +113,7 @@ public:
 
 protected:
 	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
-	QParameterSlider * mp_parameterSlider;
+	QParameterSlider * mp_parameterSlider = nullptr;
 	ParameterDouble  & m_param2;
 };
 
@@ -128,7 +128,7 @@ public:
 
 protected:
 	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
-	QParameterSlider * mp_parameterSlider;
+	QParameterSlider * mp_parameterSlider = nullptr;
 	ParameterFloat   & m_param2;
 };
 

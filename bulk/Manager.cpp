@@ -362,6 +362,23 @@ void Manager::SendCommand(const string& x_command, string x_value)
 }
 
 /**
+* @brief Send a command
+*
+* @param x_command Command in format "module.controller.Command"
+*/
+void Manager::SendCommand(const string& x_command)
+{
+	vector<string> elems;
+	split(x_command, '.', elems);
+	if(elems.size() != 3)
+		throw MkException("Command must be in format \"module.controller.Command\": " + x_command, LOC);
+
+	// Note: We cast module/manager twice since we need functions from both parents
+	Controllable& contr  (elems.at(0) == "manager" ? dynamic_cast<Controllable&>(*this) : RefModuleByName(elems.at(0)));
+	contr.FindController(elems.at(1)).CallAction(elems.at(2), nullptr);
+}
+
+/**
 * @brief Send a command // TODO
 *
 * @param x_command Command in format "module.controller.Command"

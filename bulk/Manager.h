@@ -81,6 +81,14 @@ public:
 	inline const Module& GetModuleByName(const std::string& x_name) const {return RefModuleByName(x_name);}
 	inline const Processable& GetProcessableByName(const std::string& x_name) const {if(x_name == "manager") assert(false); else return RefModuleByName(x_name);}
 
+#ifndef MARKUS_NO_GUI
+	inline QWidget* CreateControllerWidget(const std::string& x_moduleName, const std::string& x_controllerName)
+	{
+		return RefModuleByName(x_moduleName).FindController(x_controllerName).CreateWidget();
+	}
+	void SendCommand(const std::string& x_command); // TODO: see if we can avoid
+#endif
+
 	void Rebuild();
 	void Connect();
 	void Check() const;

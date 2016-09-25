@@ -95,8 +95,8 @@ public:
 		Processable::ReadLock lock(RefLock());
 		m_image.setTo(0);
 		mp_stream->RenderTo(m_image);
-		if(m_image.cols == rx_qimage.width() && m_image.rows == rx_qimage.height()) // TODO: why ?
-			QModuleViewer::ConvertMat2QImage(m_image, rx_qimage);
+		assert(m_image.cols == rx_qimage.width() && m_image.rows == rx_qimage.height());
+		QModuleViewer::ConvertMat2QImage(m_image, rx_qimage);
 	}
 	virtual void ProcessFrame() override 
 	{
@@ -137,8 +137,6 @@ QModuleViewer::QModuleViewer(Manager& xr_manager, ParameterStructure& xr_params,
 	mr_manager(xr_manager),
 	m_param(dynamic_cast<QModuleViewer::Parameters&>(xr_params))
 {
-	m_controlBoard          = nullptr;
-
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
 	// Handlers for modules
@@ -194,6 +192,7 @@ QModuleViewer::~QModuleViewer()
 {
 	delete mp_viewerModule;
 	delete mp_viewerParams;
+	delete mp_controlBoard;
 	delete mp_comboModules;
 	delete mp_comboStreams;
 	delete mp_mainLayout;
@@ -299,7 +298,7 @@ void QModuleViewer::updateModule(const Module& x_module)
 	mp_comboStreams->clear();
 	m_streamIds.clear();
 	m_controllerNames.clear();
-	CLEAN_DELETE(m_controlBoard);
+	CLEAN_DELETE(mp_controlBoard);
 
 	for(const auto & elem : x_module.GetOutputStreamList())
 	{
@@ -372,6 +371,11 @@ void QModuleViewer::updateModule(const Module& x_module)
 /// change the module being currently displayed (by index)
 void QModuleViewer::updateModuleNb(int x_index)
 {
+	if(m_moduleNames.empty())
+	{
+		m_param.module = "";
+		return;
+	}
 	if(x_index < 0 || x_index >= static_cast<int>(m_moduleNames.size()))
 	{
 		m_param.module = m_moduleNames.at(0);
@@ -386,6 +390,11 @@ void QModuleViewer::updateModuleNb(int x_index)
 /// Change the stream being currently displayed (by index)
 void QModuleViewer::updateStreamNb(int x_index)
 {
+	if(m_streamIds.empty())
+	{
+		m_param.stream = -1;
+		return;
+	}
 	if(x_index < 0 || x_index >= static_cast<int>(m_streamIds.size()))
 	{
 		m_param.stream = m_streamIds.at(0);
@@ -401,23 +410,23 @@ void QModuleViewer::updateStreamNb(int x_index)
 void QModuleViewer::updateControlNb(int x_index)
 {
 	m_param.control = x_index;
-	CLEAN_DELETE(m_controlBoard);
-	if(x_index < 0)
+	CLEAN_DELETE(mp_controlBoard);
+	if(x_index < 0 || m_controllerNames.empty())
+	{
+		m_param.control = -1;
 		return;
-	m_controlBoard = new QControlBoard(this);
-	mp_mainLayout->addWidget(m_controlBoard, 0);
-	auto it = m_controllerNames.begin();
-	unsigned int cpt = static_cast<unsigned int>(x_index);
+	}
 
-	if(x_index >= 0 && cpt < m_controllerNames.size())
+	if(x_index >= 0 && x_index < static_cast<int>(m_controllerNames.size()))
 	{
 		try
 		{
-			advance(it, x_index);
-			// TODO m_controlBoard->updateControl(it);
+			mp_controlBoard = new QControlBoard(mr_manager, m_param.module, m_controllerNames.at(x_index), this);
+			mp_mainLayout->addWidget(mp_controlBoard, 0);
 		}
 		catch(...)
 		{
+			cout << "Error while setting controller" << endl;
 			m_param.control = -1;
 		}
 	}

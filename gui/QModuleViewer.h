@@ -106,12 +106,11 @@ private:
 	void paintEvent(QPaintEvent *event);
 	virtual void resizeEvent(QResizeEvent * e);
 
-	QGroupBox   * mp_gbCombos;
-	QComboBox   * mp_comboModules;
-	QComboBox   * mp_comboStreams;
-	QWidget     * mp_widEmpty;
-
-	QControlBoard * m_controlBoard;
+	QGroupBox   * mp_gbCombos = nullptr;
+	QComboBox   * mp_comboModules = nullptr;
+	QComboBox   * mp_comboStreams = nullptr;
+	QWidget     * mp_widEmpty = nullptr;
+	QControlBoard * mp_controlBoard = nullptr;
 	Parameters& m_param;
 
 	// Stream and module to handle rendering via Markus

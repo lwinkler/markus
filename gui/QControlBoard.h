@@ -25,34 +25,35 @@
 #define CONTROL_BOARD_H
 
 
-//#include "Input.h"
 #include <QWidget>
 #include <QScrollArea>
+
 
 /// Class to control a module (settings ...)
 class Controller;
 class QGroupBox;
 class QHBoxLayout;
+class Manager;
 
 /// QT widget to display one controller
 class QControlBoard : public QWidget
 {
 	Q_OBJECT
 public:
-	QControlBoard(QWidget *parent = 0);
+	QControlBoard(Manager& rx_manager, const std::string& x_moduleName, const std::string& x_controllerName, QWidget *xp_parent);
 	virtual ~QControlBoard();
 	virtual void Destroy() {}
-	void updateControl(Controller* x_control);
 
 protected:
-	Controller  * mp_currentControl;
-
 	void paintEvent(QPaintEvent *event);
 	virtual void resizeEvent(QResizeEvent * e);
 
 	QScrollArea * mp_gbControls;
 	QGroupBox   * mp_gbButtons;
 	QHBoxLayout * mp_buttonLayout;
+	Manager&      mr_manager;
+	std::string   m_moduleName;
+	std::string   m_controllerName;
 
 public slots:
 	void callAction();

@@ -32,7 +32,10 @@
 using namespace std;
 
 
-QControlBoard::QControlBoard(QWidget *parent)
+QControlBoard::QControlBoard(Manager& rx_manager, const string& x_moduleName, const string& x_controllerName, QWidget *xp_parent)
+	: mr_manager(rx_manager),
+	m_moduleName(x_moduleName),
+	m_controllerName(x_controllerName)
 {
 	auto  mainLayout = new QBoxLayout(QBoxLayout::TopToBottom);
 	mp_gbControls		= new QScrollArea;
@@ -40,13 +43,43 @@ QControlBoard::QControlBoard(QWidget *parent)
 
 	// Create the group with settings buttons
 	mp_buttonLayout = new QHBoxLayout;
-	mp_currentControl = nullptr;
 
 	mp_gbButtons->setLayout(mp_buttonLayout);
 	mainLayout->addWidget(mp_gbControls, 0);
 	mainLayout->addWidget(mp_gbButtons, 1);
 	setLayout(mainLayout);
+
+	// Create the control buttons
+	vector<string> actions;
+	mr_manager.GetModuleByName(m_moduleName).FindController(x_controllerName).ListActions(actions);
+	for(const auto& elem : actions)
+	{
+		// note : names must match between buttons and actions
+		QPushButton* button = new QPushButton(elem.c_str());
+		mp_buttonLayout->addWidget(button);
+		connect(button, SIGNAL(pressed()), this, SLOT(callAction(void)));
+	}
+
+	/// Create new control screen
+	mp_gbControls->setWidgetResizable(true);
+	auto  vbox = new QGridLayout;
+
+	QLabel * lab = new QLabel(x_controllerName.c_str());
+	vbox->addWidget(lab, 0, 0);
+	QWidget* wid = mr_manager.CreateControllerWidget(x_moduleName, x_controllerName);
+	if(wid != nullptr)
+		vbox->addWidget(wid, 0, 1);
+
+	auto viewport = new QWidget;
+	viewport->setLayout(vbox);
+	viewport->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+	mp_gbControls->setWidget(viewport);
+
+	mp_gbControls->show();
+	mp_gbButtons->show();
 }
+
+
 
 QControlBoard::~QControlBoard()
 {
@@ -64,48 +97,11 @@ void QControlBoard::paintEvent(QPaintEvent * e)
 }
 
 
-/// Update the list of controls associated with the module
-void QControlBoard::updateControl(Controller* x_control)
-{
-	mp_currentControl = x_control;
-
-	// Create the control buttons
-	vector<string> actions;
-	mp_currentControl->ListActions(actions);
-	for(vector<string>::const_iterator it = actions.begin() ; it != actions.end() ; ++it)
-	{
-		// note : names must match between buttons and actions
-		QPushButton* button = new QPushButton(it->c_str());
-		mp_buttonLayout->addWidget(button);
-		connect(button, SIGNAL(pressed()), this, SLOT(callAction(void)));
-	}
-
-
-	/// Create new control screen
-	mp_gbControls->setWidgetResizable(true);
-	auto  vbox = new QGridLayout;
-
-	QLabel * lab = new QLabel(x_control->GetName().c_str());
-	vbox->addWidget(lab, 0, 0);
-	QWidget* wid = x_control->CreateWidget();
-	if(wid != nullptr)
-		vbox->addWidget(wid, 0, 1);
-
-	auto viewport = new QWidget;
-	viewport->setLayout(vbox);
-	viewport->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-	mp_gbControls->setWidget(viewport);
-
-	mp_gbControls->show();
-	mp_gbButtons->show();
-}
-
-
 void QControlBoard::callAction()
 {
 	QPushButton* button = dynamic_cast<QPushButton*>(sender());
 	assert(button != nullptr);
 
 	// LOG_DEBUG(Manager::Logger(), "Call control on module "<<m_currentModule.GetName());
-	mp_currentControl->CallAction(button->text().toStdString(), nullptr);
+	mr_manager.SendCommand(m_moduleName + "." + m_controllerName + "." + button->text().toStdString());
 }
