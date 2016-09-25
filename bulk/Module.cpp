@@ -60,11 +60,6 @@ Module::~Module()
 	for(auto & elem : m_outputStreams)
 		delete(elem.second);
 	m_outputStreams.clear();
-#ifdef MARKUS_DEBUG_STREAMS
-	for(auto & elem : m_debugStreams)
-		delete(elem.second);
-	m_debugStreams.clear();
-#endif
 }
 
 /**
@@ -84,11 +79,6 @@ void Module::Reset()
 		// stream.second->Reset();
 	for(auto& stream : m_outputStreams)
 		stream.second->Reset();
-
-#ifdef MARKUS_DEBUG_STREAMS
-	for(auto& stream : m_debugStreams)
-		stream.second->Reset();
-#endif
 
 	m_timerProcessFrame.Reset();
 	m_timerWaiting.Reset();
@@ -339,7 +329,10 @@ void Module::Export(ostream& rx_os, int x_indentation) const
 
 	rx_os<<tabs<<"<outputs>"<<endl;
 	for(const auto& elem : m_outputStreams)
-		elem.second->Export(rx_os, elem.first, x_indentation + 2, false);
+	{
+		if(elem.first < MIN_DEBUG_STREAM_ID)
+			elem.second->Export(rx_os, elem.first, x_indentation + 2, false);
+	}
 	rx_os<<tabs<<"</outputs>"<<endl;
 	tabs = string(x_indentation, '\t');
 	rx_os<<tabs<<"</module>"<<endl;
@@ -364,14 +357,9 @@ const Stream& Module::GetOutputStreamById(int x_id) const
 
 	if(it == m_outputStreams.end())
 	{
-		it = m_debugStreams.find(x_id - 1000); // TODO: const
-		if(it == m_debugStreams.end())
-		{
-			stringstream ss;
-			ss<<"GetInputStreamById : no stream with id="<<x_id<<" for module "<<GetName();
-			throw MkException(ss.str(), LOC);
-		}
-		return *(it->second);
+		stringstream ss;
+		ss<<"GetInputStreamById : no stream with id="<<x_id<<" for module "<<GetName();
+		throw MkException(ss.str(), LOC);
 	}
 	return *(it->second);
 }
@@ -395,13 +383,9 @@ Stream& Module::RefOutputStreamById(int x_id)
 
 	if(it == m_outputStreams.end())
 	{
-		it = m_debugStreams.find(x_id - 1000);
-		if(it == m_debugStreams.end())
-		{
-			stringstream ss;
-			ss<<"GetInputStreamById : no stream with id="<<x_id<<" for module "<<GetName();
-			throw MkException(ss.str(), LOC);
-		}
+		stringstream ss;
+		ss<<"GetInputStreamById : no stream with id="<<x_id<<" for module "<<GetName();
+		throw MkException(ss.str(), LOC);
 	}
 	return *(it->second);
 }
@@ -458,15 +442,6 @@ void Module::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 		elem.second->Serialize(ss, xp_dir);
 		ss >> root["outputs"][elem.first];
 	}
-#ifdef MARKUS_DEBUG_STREAMS
-	// Dump debugs
-	for(const auto & elem : m_debugStreams)
-	{
-		stringstream ss;
-		elem.second->Serialize(ss, xp_dir);
-		ss >> root["debugs"][elem.first];
-	}
-#endif
 	x_out << root;
 }
 
@@ -506,18 +481,6 @@ void Module::Deserialize(istream& x_in, MkDirectory* xp_dir)
 		ss << root["outputs"][i];
 		m_outputStreams[i]->Deserialize(ss, xp_dir);
 	}
-
-#ifdef MARKUS_DEBUG_STREAMS
-	// read debug streams
-	size1 = root["debugs"].size();
-	assert(size1 == m_debugStreams.size());
-	for(unsigned int i = 0 ; i < size1 ; i++)
-	{
-		ss.clear();
-		ss << root["debugs"][i];
-		m_debugStreams[i]->Deserialize(ss, xp_dir);
-	}
-#endif
 }
 
 /**
@@ -539,9 +502,8 @@ void Module::AddInputStream(int x_id, Stream* xp_stream)
 	}
 }
 
-/// Add an output stream
 /**
-* @brief Add a debug stream
+* @brief Add an output stream
 *
 * @param x_id      id
 * @param xp_stream stream
@@ -562,10 +524,10 @@ void Module::AddOutputStream(int x_id, Stream* xp_stream)
 */
 void Module::AddDebugStream(int x_id, Stream* xp_stream)
 {
-	// xp_stream->SetId(x_id);
-	if(m_debugStreams.find(x_id) != m_debugStreams.end())
-		throw MkException("Two streams with same id", LOC);
-	m_debugStreams.insert(make_pair(x_id, xp_stream));
+#ifdef MARKUS_DEBUG_STREAMS
+	// Simply add an output with a id increased by 1000
+	AddOutputStream(x_id + MIN_DEBUG_STREAM_ID, xp_stream);
+#endif
 }
 
 

@@ -117,6 +117,7 @@ private:
 	// Stream and module to handle rendering via Markus
 	std::vector<std::string> m_moduleNames;
 	std::vector<int>         m_streamIds;
+	std::vector<std::string> m_controllerNames;
 
 	Module::Parameters* mp_viewerParams = nullptr; //TODO remove
 	Viewer*             mp_viewerModule = nullptr;

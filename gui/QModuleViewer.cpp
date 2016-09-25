@@ -278,17 +278,14 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 		return;
 	}
 	{
-		// note: do we lock the module before reading ? this may be dangerous and may lead to
-		//       corrupted images, but avoids two problems:
-		//        - slow interaction with the GUI
-		//        - no image is displayed if we only try to lock and the module is busy
-		//       A solution could be to display asynchronously
-		// TODO Processable::ReadLock lock(m_currentModule->RefLock(), boost::try_to_lock);
-		// We paint the image from the stream
-		try{
-		mp_viewerModule->Process();
+		try
+		{
+			mp_viewerModule->Process();
 		}
-		catch(...){} // TODO
+		catch(MkException &e)
+		{
+			cout << "Error while processing in viewer " + string(e.what()) << endl;
+		}
 	}
 	mp_viewerModule->RenderTo(m_qimage);
 	QPainter painter(this);
@@ -299,9 +296,9 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 void QModuleViewer::updateModule(const Module& x_module)
 {
 	// TODO: Lock module for safety
-	// m_currentModule = x_module;
 	mp_comboStreams->clear();
 	m_streamIds.clear();
+	m_controllerNames.clear();
 	CLEAN_DELETE(m_controlBoard);
 
 	for(const auto & elem : x_module.GetOutputStreamList())
@@ -310,11 +307,12 @@ void QModuleViewer::updateModule(const Module& x_module)
 		mp_comboStreams->addItem(elem.second->GetName().c_str(), elem.first);
 		m_streamIds.push_back(elem.first);
 	}
-	for(const auto & elem : x_module.GetDebugStreamList())
+
+	for(const auto & elem : x_module.GetControllersList())
 	{
-		mp_comboStreams->addItem(elem.second->GetName().c_str(), 1000 + elem.first);
-		m_streamIds.push_back(1000 + elem.first);
+		m_controllerNames.push_back(elem.first);
 	}
+
 
 	// Update the stream
 	// if(m_param.stream > 0 && m_param.stream < mp_comboStreams->count())
@@ -322,8 +320,6 @@ void QModuleViewer::updateModule(const Module& x_module)
 	if(index > 0 && index < mp_comboStreams->count())
 		mp_comboStreams->setCurrentIndex(index);
 	updateStreamNb(index);
-
-	return; // TODO
 
 	// Empty the action menu (different for each module)
 	QList<QAction *> actions = this->actions();
@@ -376,8 +372,6 @@ void QModuleViewer::updateModule(const Module& x_module)
 /// change the module being currently displayed (by index)
 void QModuleViewer::updateModuleNb(int x_index)
 {
-	// Module* mod = nullptr;
-
 	if(x_index < 0 || x_index >= static_cast<int>(m_moduleNames.size()))
 	{
 		m_param.module = m_moduleNames.at(0);
@@ -386,7 +380,6 @@ void QModuleViewer::updateModuleNb(int x_index)
 	{
 		m_param.module = m_moduleNames.at(x_index);
 	}
-	// TODO: lock manager
 	updateModule(mr_manager.GetModuleByName(m_param.module));
 }
 
@@ -407,22 +400,21 @@ void QModuleViewer::updateStreamNb(int x_index)
 /// display the control with the given index
 void QModuleViewer::updateControlNb(int x_index)
 {
-	/*
 	m_param.control = x_index;
 	CLEAN_DELETE(m_controlBoard);
 	if(x_index < 0)
 		return;
 	m_controlBoard = new QControlBoard(this);
 	mp_mainLayout->addWidget(m_controlBoard, 0);
-	auto it = m_currentModule->GetControllersList().begin();
+	auto it = m_controllerNames.begin();
 	unsigned int cpt = static_cast<unsigned int>(x_index);
 
-	if(x_index >= 0 && cpt < m_currentModule->GetControllersList().size())
+	if(x_index >= 0 && cpt < m_controllerNames.size())
 	{
 		try
 		{
 			advance(it, x_index);
-			m_controlBoard->updateControl(it->second);
+			// TODO m_controlBoard->updateControl(it);
 		}
 		catch(...)
 		{
@@ -430,7 +422,6 @@ void QModuleViewer::updateControlNb(int x_index)
 		}
 	}
 	else m_param.control = -1;
-	*/
 }
 
 void QModuleViewer::showDisplayOptions(bool x_isChecked)

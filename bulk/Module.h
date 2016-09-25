@@ -35,6 +35,7 @@
 
 #define MAX_WIDTH  6400
 #define MAX_HEIGHT 4800
+#define MIN_DEBUG_STREAM_ID 1000
 
 
 
@@ -117,7 +118,6 @@ public:
 
 	const std::map<int, Stream*>& GetInputStreamList() const {return m_inputStreams;}
 	const std::map<int, Stream*>& GetOutputStreamList() const {return m_outputStreams;}
-	const std::map<int, Stream*>& GetDebugStreamList() const {return m_debugStreams;}
 	void ProcessRandomInput(unsigned int& xr_seed);  /// For unit testing
 	void AddInputStream(int x_id, Stream* xp_stream);
 	void AddOutputStream(int x_id, Stream* xp_stream);
