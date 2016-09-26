@@ -379,10 +379,11 @@ void Manager::SendCommand(const string& x_command)
 }
 
 /**
-* @brief Send a command // TODO
+* @brief Connect an input of an external module to one internal output
 *
-* @param x_command Command in format "module.controller.Command"
-* @param x_value   Value used as input/output
+* @param xr_input     External output
+* @param x_moduleName Internal module name
+* @param x_outputId   Internal output id
 */
 void Manager::ConnectExternalInput(Stream& xr_input, const std::string& x_moduleName, int x_outputId)
 {

@@ -67,7 +67,7 @@ public:
 
 	virtual void Disconnect() override
 	{
-		assert(false); // TODO
+		throw MkException("Disconnection not implemented for multi streams"); // TODO
 	}
 
 	virtual void Export(std::ostream& rx_os, int x_id, int x_indentation, bool x_isInput) const override

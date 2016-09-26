@@ -106,10 +106,10 @@ private:
 	void paintEvent(QPaintEvent *event);
 	virtual void resizeEvent(QResizeEvent * e);
 
-	QGroupBox   * mp_gbCombos = nullptr;
-	QComboBox   * mp_comboModules = nullptr;
-	QComboBox   * mp_comboStreams = nullptr;
-	QWidget     * mp_widEmpty = nullptr;
+	QGroupBox     * mp_gbCombos     = nullptr;
+	QComboBox     * mp_comboModules = nullptr;
+	QComboBox     * mp_comboStreams = nullptr;
+	QWidget       * mp_widEmpty     = nullptr;
 	QControlBoard * mp_controlBoard = nullptr;
 	Parameters& m_param;
 
@@ -118,7 +118,7 @@ private:
 	std::vector<int>         m_streamIds;
 	std::vector<std::string> m_controllerNames;
 
-	Module::Parameters* mp_viewerParams = nullptr; //TODO remove
+	Module::Parameters* mp_viewerParams = nullptr;
 	Viewer*             mp_viewerModule = nullptr;
 
 public slots:
