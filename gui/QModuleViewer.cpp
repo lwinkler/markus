@@ -113,6 +113,7 @@ public:
 		Module::Reset();
 	}
 	inline const string& GetParentModuleName() const {return m_parentModuleName;}
+	inline void Query(int x, int y) const {mp_stream->Query(x, y);}
 protected:
 	const Module::Parameters& m_param;
 	Stream* mp_stream = nullptr;
@@ -524,14 +525,13 @@ void QModuleViewer::ConvertMat2QImage(const Mat& x_mat, QImage& xr_qimg)
 // Display some info on stream (and position of cursor)
 void QModuleViewer::mouseDoubleClickEvent(QMouseEvent * event)
 {
-	/* TODO
-	if(m_currentStream == nullptr)
+	if(mp_viewerModule == nullptr)
 		return;
 	QPoint cursor = event->pos();
-	int x = (cursor.x() - m_offsetX) * m_currentStream->GetWidth() / m_qimage.width();
-	int y = (cursor.y() - m_offsetY) * m_currentStream->GetHeight() / m_qimage.height();
-	m_currentStream->Query(x, y);
-	*/
+	assert(mp_viewerModule->GetWidth() == m_qimage.width());
+	assert(mp_viewerModule->GetHeight() == m_qimage.height());
+	int x = (cursor.x() - m_offsetX); // * mp_viewerModule->GetWidth() / m_qimage.width();
+	int y = (cursor.y() - m_offsetY); // * mp_viewerModule->GetHeight() / m_qimage.height();
+	mp_viewerModule->Query(x, y);
 }
 
-// #include "QModuleViewer.moc"
