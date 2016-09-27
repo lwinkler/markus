@@ -220,7 +220,7 @@ public:
 			{
 				TSM_ASSERT("Unknown input stream type", false);
 			}
-			inputStream.Connect(outputStream);
+			inputStream.Connect(*outputStream);
 			tester.outputStreams.push_back(outputStream);
 			TS_ASSERT(outputStream != nullptr);
 			TS_ASSERT(inputStream.IsConnected());

@@ -42,13 +42,13 @@ public:
 			throw MkException("Multiple inputs must contain a reference to a vector of size 1 or more. Please resize vector before initializing the stream. Please note that this size is the max size of the vector", LOC);
 	}
 	virtual ~MultiStreamT() {}
-	virtual void Connect(Stream *x_stream) override
+	virtual void Connect(Stream& xr_stream) override
 	{
 		assert(m_objects.size() == m_size && m_nextObj < m_size);
 		if(!this->IsConnected())
 		{
 			assert(m_nextObj == 0);
-			StreamT<T>::Connect(x_stream);
+			StreamT<T>::Connect(xr_stream);
 		}
 		else
 		{
@@ -60,7 +60,7 @@ public:
 			ss << StreamT<T>::GetName() << "-" << lastId;
 			Stream* pstream = new StreamT<T>(ss.str(), m_objects.at(m_nextObj), Stream::mr_module, Stream::GetDescription());
 			Stream::mr_module.AddInputStream(lastId + 1, pstream);
-			pstream->Connect(x_stream);
+			pstream->Connect(xr_stream);
 		}
 		m_nextObj++;
 	}

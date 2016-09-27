@@ -68,12 +68,11 @@ void Stream::Export(ostream& rx_os, int x_id, int x_indentation, bool x_isInput)
 /**
 * @brief Connect an input with an output
 *
-* @param x_stream Output stream to connect to
+* @param xr_stream Output stream to connect to
 */
-void Stream::Connect(Stream* x_stream)
+void Stream::Connect(Stream& xr_stream)
 {
-	assert(x_stream != nullptr);
-	m_connected = x_stream;
+	m_connected = &xr_stream;
 	m_connected->SetAsConnected(true);
 	SetAsConnected(true);
 }
@@ -81,7 +80,6 @@ void Stream::Connect(Stream* x_stream)
 /**
 * @brief Disconnect an input with an output
 *
-* @param x_stream Output stream to connect to
 */
 void Stream::Disconnect()
 {

@@ -62,13 +62,6 @@ MarkusWindow::MarkusWindow(ParameterStructure& rx_param, Manager& rx_manager)
 	setWindowTitle(tr("Markus"));
 }
 
-
-void MarkusWindow::timerEvent(QTimerEvent* px_event)
-{
-	for(int i = 0 ; i < m_param.nbCols * m_param.nbRows ; i++)
-		m_moduleViewer[i]->update();
-}
-
 void MarkusWindow::WriteConfig(ConfigReader xr_config) const
 {
 	for(auto & elem : m_paramsViewer)

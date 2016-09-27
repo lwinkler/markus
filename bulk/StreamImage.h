@@ -54,7 +54,7 @@ public:
 	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr) override;
 	virtual void Randomize(unsigned int& xr_seed) override;
 	const cv::Mat& GetImage() const {return m_content;}
-	void Connect(Stream * x_stream) override;
+	void Connect(Stream& xr_stream) override;
 	void Disconnect() override;
 
 	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType) override

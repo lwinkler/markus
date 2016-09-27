@@ -208,11 +208,10 @@ void StreamImage::Deserialize(istream& x_in, MkDirectory* xp_dir)
 		throw MkException("Cannot open serialized image from file " + fileName, LOC);
 }
 
-void StreamImage::Connect(Stream* x_stream)
+void StreamImage::Connect(Stream& xr_stream)
 {
 	// This method was rewritten to avoid a dynamic cast at each ConvertInput
-	assert(x_stream != nullptr);
-	m_connected = x_stream;
+	m_connected = &xr_stream;
 
 	mp_connectedImage = dynamic_cast<StreamImage*>(m_connected);
 	if(mp_connectedImage == nullptr)

@@ -149,7 +149,6 @@ void Manager::Destroy()
 */
 void Manager::Rebuild()
 {
-// #ifdef MARKUS_NO_GUI
 	Stop();
 	Destroy();
 	Build();
@@ -159,12 +158,6 @@ void Manager::Rebuild()
 	Connect();
 	Reset();
 	Start();
-	/*
-#else
-	// TODO: Maybe one day improve the GUI in order to handle rebuild and then handle decentralized
-	LOG_WARN(m_logger, "Manager::Rebuild can only be called when compiled without GUI.");
-#endif
-	*/
 }
 
 void Manager::Start()
@@ -389,7 +382,7 @@ void Manager::ConnectExternalInput(Stream& xr_input, const std::string& x_module
 {
 	Module& mod(RefModuleByName(x_moduleName));
 	// WriteLock lock(mod.RefLock());
-	xr_input.Connect(&mod.RefOutputStreamById(x_outputId)); // TODO: Connect by ref
+	xr_input.Connect(mod.RefOutputStreamById(x_outputId));
 }
 
 /**
@@ -600,7 +593,7 @@ void Manager::ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module,
 			Stream& outputStream = RefModuleById(outputModuleId).RefOutputStreamById(outputId);
 
 			// Connect input and output streams
-			inputStream.Connect(&outputStream);
+			inputStream.Connect(outputStream);
 			if(xr_module.GetParameters().GetParameterByName("master").GetValueString().empty())
 				RefModuleById(outputModuleId).AddDependingModule(xr_module);
 		}

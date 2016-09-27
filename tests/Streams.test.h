@@ -177,8 +177,8 @@ public:
 		{
 			// connect inputs with outputs
 			int id = input.first;
-			mp_fakeModule2->RefInputStreamById(id).Connect(&mp_fakeModule1->RefOutputStreamById(id));
-			mp_fakeModule3->RefInputStreamById(id).Connect(&mp_fakeModule2->RefOutputStreamById(id));
+			mp_fakeModule2->RefInputStreamById(id).Connect(mp_fakeModule1->RefOutputStreamById(id));
+			mp_fakeModule3->RefInputStreamById(id).Connect(mp_fakeModule2->RefOutputStreamById(id));
 		}
 
 		mp_fakeModule1->Reset();

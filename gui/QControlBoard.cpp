@@ -96,7 +96,6 @@ void QControlBoard::paintEvent(QPaintEvent * e)
 {
 }
 
-
 void QControlBoard::callAction()
 {
 	QPushButton* button = dynamic_cast<QPushButton*>(sender());
