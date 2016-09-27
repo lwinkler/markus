@@ -275,9 +275,7 @@ void Module::Process()
 			*/
 			for(auto & elem : m_modulesDepending)
 			{
-				cout << "Process " << elem->GetName() << endl;
 				elem->Process();
-				cout << "done" << endl;
 			}
 		}
 		else LOG_DEBUG(m_logger, "No propagation of processing to depending modules");
@@ -607,11 +605,11 @@ void Module::RemoveDependingModule(const Module & x_module)
 	auto it = find(m_modulesDepending.begin(), m_modulesDepending.end(), &x_module);
 	if(it == m_modulesDepending.end())
 	{
-		LOG_WARN(m_logger, "Module not found in depending modules of " << GetName());
+		throw MkException("Module " + x_module.GetName() + " not found in depending modules of " + GetName(), LOC);
 	}
 	else
 	{
-		cout << "Remove depending module " << x_module.GetName() << " from " << GetName() << endl;
+		LOG_DEBUG(m_logger, "Remove depending module " << &x_module << " from " << GetName());
 		m_modulesDepending.erase(it);
 	}
 }

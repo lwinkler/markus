@@ -45,7 +45,6 @@ class QLabel;
 class QListWidget;
 class Viewer;
 
-
 /// Class used to display one module in a widget
 class QModuleViewer : public QWidget, public Configurable
 {
@@ -76,7 +75,7 @@ public:
 	static void  ConvertMat2QImage(const cv::Mat& x_mat, QImage& xr_qim);
 	void mouseDoubleClickEvent(QMouseEvent * event);
 
-private:
+protected:
 	void CreateInputStream(int x_outputWidth, int x_outputHeight);
 	void Reconnect();
 	void updateModule(const Module& x_module);
@@ -111,7 +110,6 @@ private:
 	QComboBox     * mp_comboStreams = nullptr;
 	QWidget       * mp_widEmpty     = nullptr;
 	QControlBoard * mp_controlBoard = nullptr;
-	Parameters& m_param;
 
 	// Stream and module to handle rendering via Markus
 	std::vector<std::string> m_moduleNames;
@@ -120,6 +118,10 @@ private:
 
 	Module::Parameters* mp_viewerParams = nullptr;
 	Viewer*             mp_viewerModule = nullptr;
+
+private:
+	Parameters& m_param;
+	static log4cxx::LoggerPtr m_logger;
 
 public slots:
 	void updateModuleNb(int x_index);
