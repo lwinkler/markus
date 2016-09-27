@@ -78,8 +78,9 @@ template<> void StreamEvent::RenderTo(Mat& x_output) const
 }
 
 /// Query : give info about cursor position
-template<> void StreamEvent::Query(int x_posX, int x_posY) const
+template<> void StreamEvent::Query(std::ostream& xr_out, const cv::Point& x_pt) const
 {
+	xr_out << m_content << endl;
 	LOG_INFO(m_logger, m_content);
 }
 

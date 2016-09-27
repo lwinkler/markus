@@ -30,6 +30,7 @@
 #include <QMenu>
 #include <QScrollBar>
 #include <QLabel>
+#include <QMessageBox>
 #include <qevent.h>
 
 #include <QPixmap>
@@ -113,7 +114,7 @@ public:
 		Module::Reset();
 	}
 	inline const string& GetParentModuleName() const {return m_parentModuleName;}
-	inline void Query(int x, int y) const {mp_stream->Query(x, y);}
+	inline void Query(std::ostream& xr_out, const cv::Point& x_pt) const {mp_stream->Query(xr_out, x_pt);}
 protected:
 	const Module::Parameters& m_param;
 	Stream* mp_stream = nullptr;
@@ -530,8 +531,12 @@ void QModuleViewer::mouseDoubleClickEvent(QMouseEvent * event)
 	QPoint cursor = event->pos();
 	assert(mp_viewerModule->GetWidth() == m_qimage.width());
 	assert(mp_viewerModule->GetHeight() == m_qimage.height());
-	int x = (cursor.x() - m_offsetX); // * mp_viewerModule->GetWidth() / m_qimage.width();
-	int y = (cursor.y() - m_offsetY); // * mp_viewerModule->GetHeight() / m_qimage.height();
-	mp_viewerModule->Query(x, y);
+	Point pt(cursor.x() - m_offsetX, cursor.y() - m_offsetY); // * mp_viewerModule->GetWidth() / m_qimage.width();
+	stringstream ss1;
+	stringstream ss2;
+	ss1 << "Query stream at " << pt;
+	mp_viewerModule->Query(ss2, pt);
+
+	QMessageBox::about(this, QString(ss1.str().c_str()), QString(ss2.str().c_str()));
 }
 

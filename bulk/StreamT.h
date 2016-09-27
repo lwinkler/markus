@@ -47,7 +47,7 @@ public:
 
 	virtual void ConvertInput();
 	virtual void RenderTo(cv::Mat& x_output) const;
-	virtual void Query(int x_posX, int x_posY) const;
+	virtual void Query(std::ostream& xr_out, const cv::Point& x_pt) const;
 	virtual void Randomize(unsigned int& rx_seed);
 	virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const;
 	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr);

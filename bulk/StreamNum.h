@@ -75,8 +75,9 @@ public:
 		fig.DrawPlots(x_output);
 		fig.DrawLabels(x_output, x_output.cols - 100, 10);
 	}
-	virtual void Query(int x_posX, int x_posY) const
+	virtual void Query(std::ostream& xr_out, const cv::Point& x_pt) const
 	{
+		xr_out << m_content << std::endl;
 		LOG_INFO(m_logger, "value = " << m_content);
 	}
 	virtual void Serialize(std::ostream& x_out, MkDirectory* xp_dir = nullptr) const

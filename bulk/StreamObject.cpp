@@ -89,17 +89,18 @@ template<>void StreamObject::RenderTo(Mat& x_output) const
 }
 
 /// Query : give info about cursor position
-template<>void StreamObject::Query(int x_posX, int x_posY) const // TODO: use Point
+template<>void StreamObject::Query(std::ostream& xr_out, const cv::Point& x_pt) const
 {
 	// check if out of bounds
-	if(!Rect(Point(0, 0), GetSize()).contains(Point(x_posX, x_posY)))
+	if(!Rect(Point(0, 0), GetSize()).contains(x_pt))
 		return;
 
-	Point pt(x_posX, x_posY);
-
 	for(const auto& elem : m_content)
-		if(elem.GetRect().contains(pt))
+		if(elem.GetRect().contains(x_pt))
+		{
+			xr_out << elem << endl;
 			LOG_INFO(m_logger, elem);
+		}
 
 }
 

@@ -49,7 +49,7 @@ public:
 
 	virtual void ConvertInput() override;
 	virtual void RenderTo(cv::Mat& x_output) const override;
-	virtual void Query(int x_posX, int x_posY) const override;
+	virtual void Query(std::ostream& xr_out, const cv::Point& x_pt) const override;
 	virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const override;
 	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr) override;
 	virtual void Randomize(unsigned int& xr_seed) override;

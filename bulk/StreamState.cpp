@@ -62,12 +62,13 @@ template<> void StreamState::RenderTo(Mat& x_output) const
 }
 
 /// Query : give info about cursor position
-template<> void StreamState::Query(int x_posX, int x_posY) const
+template<> void StreamState::Query(std::ostream& xr_out, const cv::Point& x_pt) const
 {
 	// check if out of bounds
-	if(!Rect(Point(0, 0), GetSize()).contains(Point(x_posX, x_posY)))
+	if(!Rect(Point(0, 0), GetSize()).contains(x_pt))
 		return;
-
+	
+	xr_out << static_cast<int>(m_content) << endl;
 	LOG_INFO(m_logger, "State =" << static_cast<int>(m_content));
 }
 

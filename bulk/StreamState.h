@@ -31,7 +31,7 @@ typedef StreamT<bool> StreamState;
 // partial specialization
 template<> void StreamState::ConvertInput();
 template<> void StreamState::RenderTo(cv::Mat& x_output) const;
-template<> void StreamState::Query(int x_posX, int x_posY) const;
+template<> void StreamState::Query(std::ostream& xr_out, const cv::Point& x_pt) const;
 template<> void StreamState::Randomize(unsigned int& xr_seed);
 template<> void StreamState::Serialize(std::ostream& x_out, MkDirectory* xp_dir) const;
 template<> void StreamState::Deserialize(std::istream& x_in, MkDirectory* xp_dir);

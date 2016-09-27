@@ -45,7 +45,7 @@ public:
 	
 	inline const cv::Size GetSize() const {return mr_module.GetSize();}
 	virtual void RenderTo(cv::Mat& x_output) const = 0;
-	virtual void Query(int x_posX, int x_posY) const = 0;
+	virtual void Query(std::ostream& xr_out, const cv::Point& x_pt) const = 0;
 	virtual void Connect(Stream *x_stream);
 	virtual void Disconnect();
 	virtual void ConvertInput() = 0;
