@@ -59,16 +59,16 @@ log4cxx::LoggerPtr QModuleViewer::m_logger(log4cxx::Logger::getLogger("QModuleVi
 // template for stream creation
 template<typename T>Stream* createStream(T& content, Module& module)
 {
-	return new StreamT<T>("test", content, module, "Fake stream");
+	return new StreamT<T>("viewer", content, module, "QModuleViewer stream");
 }
 
 // special cases
-template<> Stream* createStream<float>(float& content, Module& module){return new StreamNum<float>("test", content, module, "Fake stream");}
-template<> Stream* createStream<double>(double& content, Module& module){return new StreamNum<double>("test", content, module, "Fake stream");}
-template<> Stream* createStream<int>(int& content, Module& module){return new StreamNum<int>("test", content, module, "Fake stream");}
-template<> Stream* createStream<uint>(uint& content, Module& module){return new StreamNum<uint>("test", content, module, "Fake stream");}
-template<> Stream* createStream<bool>(bool& content, Module& module){return new StreamNum<bool>("test", content, module, "Fake stream");}
-template<> Stream* createStream<vector<Object>>(vector<Object>& content, Module& module){return new StreamObject("test", content, module, "Fake stream");}
+template<> Stream* createStream<float>(float& content, Module& module){return new StreamNum<float>("viewer", content, module, "QModuleViewer stream");}
+template<> Stream* createStream<double>(double& content, Module& module){return new StreamNum<double>("viewer", content, module, "QModuleViewer stream");}
+template<> Stream* createStream<int>(int& content, Module& module){return new StreamNum<int>("viewer", content, module, "QModuleViewer stream");}
+template<> Stream* createStream<uint>(uint& content, Module& module){return new StreamNum<uint>("viewer", content, module, "QModuleViewer stream");}
+template<> Stream* createStream<bool>(bool& content, Module& module){return new StreamNum<bool>("viewer", content, module, "QModuleViewer stream");}
+template<> Stream* createStream<vector<Object>>(vector<Object>& content, Module& module){return new StreamObject("viewer", content, module, "QModuleViewer stream");}
 
 class Viewer : public Module
 {

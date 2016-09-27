@@ -71,7 +71,6 @@ private:
 	Manager& m_manager;
 
 	bool notify(QObject *receiver_, QEvent *event_);
-	void timerEvent(QTimerEvent* e) override;
 	void resizeEvent(QResizeEvent* e) override;
 
 	void createActionsAndMenus();
