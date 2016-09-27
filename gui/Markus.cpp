@@ -52,7 +52,7 @@ MarkusWindow::MarkusWindow(ParameterStructure& rx_param, Manager& rx_manager)
 	// Call to manager process each 10 ms
 	//if(!m_centralized)
 	// TODO: use depending modules to trigger paint event
-	startTimer(static_cast<int>(MARKUS_TIMER_S * 1000));  // 10 -> 0.01-second timer
+	// startTimer(static_cast<int>(MARKUS_TIMER_S * 1000));  // 10 -> 0.01-second timer
 
 	setWindowState(Qt::WindowMaximized);
 

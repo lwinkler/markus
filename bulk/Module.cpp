@@ -275,7 +275,9 @@ void Module::Process()
 			*/
 			for(auto & elem : m_modulesDepending)
 			{
+				cout << "Process " << elem->GetName() << endl;
 				elem->Process();
+				cout << "done" << endl;
 			}
 		}
 		else LOG_DEBUG(m_logger, "No propagation of processing to depending modules");
@@ -594,6 +596,25 @@ void Module::ProcessRandomInput(unsigned int& xr_seed)
 	else m_currentTimeStamp += 1 + static_cast<float>(rand_r(&xr_seed)) / RAND_MAX;
 	ProcessFrame();
 };
+
+/**
+* @brief Remove a module from depending
+*
+* @param x_module Pointer to module
+*/
+void Module::RemoveDependingModule(const Module & x_module)
+{
+	auto it = find(m_modulesDepending.begin(), m_modulesDepending.end(), &x_module);
+	if(it == m_modulesDepending.end())
+	{
+		LOG_WARN(m_logger, "Module not found in depending modules of " << GetName());
+	}
+	else
+	{
+		cout << "Remove depending module " << x_module.GetName() << " from " << GetName() << endl;
+		m_modulesDepending.erase(it);
+	}
+}
 
 /// Static members of ParameterCachedState
 const map<string, int> Module::ParameterCachedState::Enum =

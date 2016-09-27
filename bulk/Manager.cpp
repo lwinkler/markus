@@ -387,7 +387,9 @@ void Manager::SendCommand(const string& x_command)
 */
 void Manager::ConnectExternalInput(Stream& xr_input, const std::string& x_moduleName, int x_outputId)
 {
-	xr_input.Connect(&RefModuleByName(x_moduleName).RefOutputStreamById(x_outputId)); // TODO: Connect by ref
+	Module& mod(RefModuleByName(x_moduleName));
+	// WriteLock lock(mod.RefLock());
+	xr_input.Connect(&mod.RefOutputStreamById(x_outputId)); // TODO: Connect by ref
 }
 
 /**

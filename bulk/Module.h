@@ -132,7 +132,8 @@ public:
 	inline bool IsAutoProcessed() const  {return m_param.autoProcess;}
 	virtual double GetRecordingFps() const override;
 
-	inline void AddDependingModule (Module & x_module) {m_modulesDepending.push_back(&x_module);} /// Add a module to the list: depending modules are called when processing is complete
+	inline void AddDependingModule(Module & rx_module) {m_modulesDepending.push_back(&rx_module);} /// Add a module to the list: depending modules are called when processing is complete
+	void RemoveDependingModule(const Module & x_module);
 	virtual void PrintStatistics(ConfigReader& xr_result) const;
 	virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const override;
 	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr) override;

@@ -68,6 +68,13 @@ public:
 	// Interface for interaction with external objects
 	void SendCommand(const std::string& x_command, std::string x_value);
 	void ConnectExternalInput(Stream& xr_input, const std::string& x_moduleName, int x_outputId);
+	inline void CallModuleMethod(const std::string& x_moduleName, std::function<void(Module*)> x_method)
+	{
+		Module& mod(RefModuleByName(x_moduleName));
+		// WriteLock lock(mod.RefLock());
+		x_method(&mod);
+	}
+	inline Lock& LockModuleByName(const std::string& x_moduleName) {return RefModuleByName(x_moduleName).RefLock();}
 
 	const std::vector<Module*> RefModules() const
 	{

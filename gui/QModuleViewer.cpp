@@ -71,23 +71,31 @@ class Viewer : public Module
 public:
 	MKCLASS("Viewer")
 	MKDESCR("Viewer module used internally by QModuleViewer.")
-	Viewer(ParameterStructure& xr_params) 
+	Viewer(ParameterStructure& xr_params, QModuleViewer& xr_gui) 
 		: Module(xr_params),
 		m_param(dynamic_cast<Module::Parameters&>(xr_params)),
-		m_image(Size(m_param.width, m_param.height), m_param.type)
+		m_image(Size(m_param.width, m_param.height), m_param.type),
+		mr_gui(xr_gui)
 	{
+		cout << __LINE__ << endl;
 	}
 	virtual ~Viewer()
 	{
 		Processable::WriteLock lock(RefLock());
+		cout << "Delete viewer" << endl;
 		if(mp_stream != nullptr)
 			mp_stream->Disconnect();
+		cout << __LINE__ << endl;
 	}
 	void Reconnect(Manager& rx_manager, const string& x_moduleName, int x_streamId)
 	{
+		cout << __LINE__ << endl;
 		Processable::WriteLock lock(RefLock());
+		cout << __LINE__ << endl;
 		mp_stream->Disconnect();
+		cout << __LINE__ << endl;
 		rx_manager.ConnectExternalInput(*mp_stream, x_moduleName, x_streamId);
+		cout << __LINE__ << endl;
 		// mp_stream->SetAsConnected(true);
 	}
 	void RenderTo(QImage& rx_qimage)
@@ -100,29 +108,38 @@ public:
 	}
 	virtual void ProcessFrame() override 
 	{
-		assert(mp_stream->IsConnected());
+		// assert(mp_stream->IsConnected());
 		// mp_stream->ConvertInput(); // TODO: depending
+		cout << "update 1" << endl;
+		mr_gui.update();
+		cout << "update 2" << endl;
 	}
 	virtual void Reset() override
 	{
+		cout << __LINE__ << endl;
+		Processable::WriteLock lock(RefLock());
 		Module::Reset();
+		cout << __LINE__ << endl;
 	}
 protected:
 	const Module::Parameters& m_param;
 	Stream* mp_stream = nullptr;
 	Mat m_image;
+	QModuleViewer& mr_gui;
 };
 
 // Template for stream creation
 template<typename T>class ViewerT : public Viewer
 {
 public:
-	ViewerT(ParameterStructure& xr_params) : Viewer(xr_params)
+	ViewerT(ParameterStructure& xr_params, QModuleViewer& xr_gui) : Viewer(xr_params, xr_gui)
 	{
+		cout << __LINE__ << endl;
 		mp_stream = createStream<T>(content, *this);
 		mp_stream->SetBlocking(true);
 		mp_stream->SetSynchronized(true);
 		AddInputStream(0, mp_stream);
+		cout << __LINE__ << endl;
 	}
 	virtual ~ViewerT(){}
 
@@ -190,6 +207,7 @@ QModuleViewer::QModuleViewer(Manager& xr_manager, ParameterStructure& xr_params,
 
 QModuleViewer::~QModuleViewer()
 {
+	mr_manager.CallModuleMethod(m_param.module, [=] (Module* pmod) {pmod->RemoveDependingModule(*mp_viewerModule);});
 	delete mp_viewerModule;
 	delete mp_viewerParams;
 	delete mp_controlBoard;
@@ -202,7 +220,16 @@ QModuleViewer::~QModuleViewer()
 
 void QModuleViewer::CreateInputStream(int x_outputWidth, int x_outputHeight)
 {
-	CLEAN_DELETE(mp_viewerModule);
+	// Processable::WriteLock lock1(mr_manager.RefLock());
+	Processable::WriteLock lock1(mr_manager.LockModuleByName(m_param.module));
+	if(mp_viewerModule != nullptr)
+	{
+		cout << __LINE__ << endl;
+		mr_manager.CallModuleMethod(m_param.module, [=] (Module* pmod) {pmod->RemoveDependingModule(*mp_viewerModule);});
+		cout << __LINE__ << endl;
+		CLEAN_DELETE(mp_viewerModule);
+		cout << __LINE__ << endl;
+	}
 	CLEAN_DELETE(mp_viewerParams);
 	if(x_outputWidth == 0 || x_outputHeight == 0)
 		return;
@@ -215,22 +242,26 @@ void QModuleViewer::CreateInputStream(int x_outputWidth, int x_outputHeight)
 	const string type = mr_manager.GetModuleByName(m_param.module).GetOutputStreamById(m_param.stream).GetType();
 
 	if(type == "Image")
-		mp_viewerModule = new ViewerT<Mat>(*mp_viewerParams);
+		mp_viewerModule = new ViewerT<Mat>(*mp_viewerParams, *this);
 	else if(type == "Objects")
-		mp_viewerModule = new ViewerT<vector<Object>>(*mp_viewerParams);
+		mp_viewerModule = new ViewerT<vector<Object>>(*mp_viewerParams, *this);
 	else if(type == "Event")
-		mp_viewerModule = new ViewerT<Event>(*mp_viewerParams);
+		mp_viewerModule = new ViewerT<Event>(*mp_viewerParams, *this);
 	else if(type == "NumBool")
-		mp_viewerModule = new ViewerT<bool>(*mp_viewerParams);
+		mp_viewerModule = new ViewerT<bool>(*mp_viewerParams, *this);
 	else if(type == "NumInt")
-		mp_viewerModule = new ViewerT<uint>(*mp_viewerParams);
+		mp_viewerModule = new ViewerT<uint>(*mp_viewerParams, *this);
 	else if(type == "NumUIt")
-		mp_viewerModule = new ViewerT<int>(*mp_viewerParams);
+		mp_viewerModule = new ViewerT<int>(*mp_viewerParams, *this);
 	else if(type == "NumFloat")
-		mp_viewerModule = new ViewerT<float>(*mp_viewerParams);
+		mp_viewerModule = new ViewerT<float>(*mp_viewerParams, *this);
 	else if(type == "NumDouble")
-		mp_viewerModule = new ViewerT<double>(*mp_viewerParams);
+		mp_viewerModule = new ViewerT<double>(*mp_viewerParams, *this);
 	else throw MkException("Unknown stream type " + type, LOC);
+
+		cout << __LINE__ << endl;
+	mr_manager.CallModuleMethod(m_param.module, [=] (Module* pmod) {pmod->AddDependingModule(*mp_viewerModule);});
+		cout << __LINE__ << endl;
 
 	m_qimage = QImage(x_outputWidth, x_outputHeight, QImage::Format_RGB32);
 	Reconnect();
@@ -238,15 +269,21 @@ void QModuleViewer::CreateInputStream(int x_outputWidth, int x_outputHeight)
 
 void QModuleViewer::Reconnect()
 {
-	// Processable::WriteLock lock(mp_viewerModule->RefLock());
 	if(mp_viewerModule == nullptr)
 		return;
+		cout << __LINE__ << endl;
 	mp_viewerModule->Reconnect(mr_manager, m_param.module, m_param.stream);
+		cout << __LINE__ << endl;
 	mp_viewerModule->Reset();
+		cout << __LINE__ << endl;
+	// process once to display the current frame
+	// TODO mp_viewerModule->Process();
+		cout << __LINE__ << endl;
 }
 
 void QModuleViewer::resizeEvent(QResizeEvent * e)
 {
+		cout << __LINE__ << endl;
 	// Keep proportionality
 	m_outputWidth  = e->size().width();
 	m_outputHeight = e->size().height();
@@ -268,33 +305,38 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 		m_offsetY     = 0;
 	}
 	CreateInputStream(m_outputWidth, m_outputHeight);
+		cout << __LINE__ << endl;
 }
 
 void QModuleViewer::paintEvent(QPaintEvent * e)
 {
+		cout << __LINE__ << endl;
 	if(mp_viewerModule == nullptr)
 	{
 		return;
 	}
+		cout << __LINE__ << endl;
 	{
 		try
 		{
-			mp_viewerModule->Process();
+			// mp_viewerModule->Process();
 		}
 		catch(MkException &e)
 		{
 			cout << "Error while processing in viewer " + string(e.what()) << endl;
 		}
 	}
+		cout << __LINE__ << endl;
 	mp_viewerModule->RenderTo(m_qimage);
 	QPainter painter(this);
 	painter.drawImage(QRect(m_offsetX, m_offsetY, m_qimage.width(), m_qimage.height()), m_qimage);
+		cout << __LINE__ << endl;
 }
 
 /// Change the module being currently displayed
 void QModuleViewer::updateModule(const Module& x_module)
 {
-	// TODO: Lock module for safety
+		cout << __LINE__ << endl;
 	mp_comboStreams->clear();
 	m_streamIds.clear();
 	m_controllerNames.clear();
@@ -366,6 +408,7 @@ void QModuleViewer::updateModule(const Module& x_module)
 	// actionShowDisplayMenu->setChecked(m_param.displayOptions);
 	showDisplayOptions(m_param.displayOptions);
 	updateControlNb(m_param.control);
+		cout << __LINE__ << endl;
 }
 
 /// change the module being currently displayed (by index)
@@ -390,12 +433,12 @@ void QModuleViewer::updateModuleNb(int x_index)
 /// Change the stream being currently displayed (by index)
 void QModuleViewer::updateStreamNb(int x_index)
 {
-	if(m_streamIds.empty())
+	if(m_streamIds.empty() || x_index < 0)
 	{
 		m_param.stream = -1;
 		return;
 	}
-	if(x_index < 0 || x_index >= static_cast<int>(m_streamIds.size()))
+	if(x_index >= static_cast<int>(m_streamIds.size()))
 	{
 		m_param.stream = m_streamIds.at(0);
 	}
