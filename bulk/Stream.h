@@ -53,8 +53,8 @@ public:
 	virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const override;
 	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr) override;
 	virtual void Export(std::ostream& rx_os, int x_id, int x_indentation, bool x_isInput) const;
-	inline bool IsConnected() const {return m_isConnected;}
-	inline void SetAsConnected(bool x_val) {m_isConnected = x_val; if(!x_val) m_connected = nullptr;}
+	inline bool IsConnected() const {return m_cptConnected > 0;}
+	inline void SetAsConnected(bool x_val) {x_val ? m_cptConnected++ : m_cptConnected--; if(m_cptConnected == 0) m_connected == nullptr; assert(m_cptConnected >= 0);}
 	inline const Module& GetModule() const {return mr_module;}
 	inline Stream& GetConnected() const
 	{
@@ -94,7 +94,7 @@ protected:
 	std::atomic<TIME_STAMP> m_timeStamp;
 
 	Stream * m_connected = nullptr;
-	bool m_isConnected   = false;
+	int m_cptConnected   = 0;
 	bool m_blocking      = true;
 	bool m_synchronized  = true;
 	std::string m_requirement;

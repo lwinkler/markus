@@ -114,5 +114,5 @@ void Polygon::Deserialize(istream& x_in, MkDirectory* xp_dir)
 	deserialize(ss, m_points);
 
 	if((m_width == 0 || m_height == 0) && ! m_points.empty())
-		assert(false); // TODO throw MkException("Polygon was serialized without specifying width or height", LOC);
+		throw MkException("Polygon was serialized without specifying width or height", LOC);
 }
