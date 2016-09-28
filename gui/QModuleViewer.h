@@ -79,13 +79,15 @@ protected:
 	void CreateInputStream(int x_outputWidth, int x_outputHeight);
 	void Reconnect();
 	void updateModule(const Module& x_module);
-	int IndexOfModule(std::string& x_moduleName){
+	int IndexOfModule(std::string& x_moduleName)
+	{
 		auto it = std::find(m_moduleNames.begin(), m_moduleNames.end(), x_moduleName);
 		if(it == m_moduleNames.end())
 			return 0; // throw MkException("Cannot find " + x_moduleName + " in module names");
 		return it - m_moduleNames.begin();
 	}
-	int IndexOfStream(int x_streamId){
+	int IndexOfStream(int x_streamId)
+	{
 		auto it = std::find(m_streamIds.begin(), m_streamIds.end(), x_streamId);
 		if(it == m_streamIds.end())
 			return 0; // throw MkException("Cannot find " + x_moduleName + " in module names");

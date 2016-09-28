@@ -63,12 +63,13 @@ public:
 	};
 
 	MarkusWindow(ParameterStructure& rx_param, Manager& rx_manager);
+	virtual ~MarkusWindow();
 	void WriteConfig(ConfigReader xr_config) const override;
 private:
 	// ConfigReader& m_configReader;
 	Parameters& m_param;
 
-	Manager& m_manager;
+	Manager& mr_manager;
 
 	bool notify(QObject *receiver_, QEvent *event_);
 	void resizeEvent(QResizeEvent* e) override;
@@ -87,6 +88,7 @@ private:
 private slots:
 	void about();
 	void viewDisplayOptions(bool x_isChecked);
+	void refresh();
 	void view1x1();
 	void view1x2();
 	void view2x2();

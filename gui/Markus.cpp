@@ -47,7 +47,7 @@ using namespace std;
 MarkusWindow::MarkusWindow(ParameterStructure& rx_param, Manager& rx_manager)
 	: Configurable(rx_param),
 	  m_param(dynamic_cast<MarkusWindow::Parameters&>(rx_param)),
-	  m_manager(rx_manager)
+	  mr_manager(rx_manager)
 {
 	setWindowState(Qt::WindowMaximized);
 
@@ -60,6 +60,11 @@ MarkusWindow::MarkusWindow(ParameterStructure& rx_param, Manager& rx_manager)
 	resizeEvent(nullptr);
 
 	setWindowTitle(tr("Markus"));
+}
+
+MarkusWindow::~MarkusWindow()
+{
+	mr_manager.SendCommand("manager.manager.Stop", "");
 }
 
 void MarkusWindow::WriteConfig(ConfigReader xr_config) const
@@ -107,19 +112,36 @@ void MarkusWindow::createActionsAndMenus()
 	QAction* viewDisplayOptionsAct = new QAction(tr("Show display options"), this);
 	viewDisplayOptionsAct->setCheckable(true);
 	connect(viewDisplayOptionsAct, SIGNAL(triggered(bool)), this, SLOT(viewDisplayOptions(bool)));
+
+	QAction* refresh = new QAction(tr("Refresh"), this);
+	refresh->setShortcut(QKeySequence("F5"));
+	connect(refresh, SIGNAL(triggered()), this, SLOT(refresh()));
+
 	QAction* view1x1Act = new QAction(tr("View 1x1"), this);
+	view1x1Act->setShortcut(QKeySequence("7"));
 	connect(view1x1Act, SIGNAL(triggered()), this, SLOT(view1x1()));
+
 	QAction* view1x2Act = new QAction(tr("View 2x1"), this);
+	view1x2Act->setShortcut(QKeySequence("8"));
 	connect(view1x2Act, SIGNAL(triggered()), this, SLOT(view1x2()));
+
 	QAction* view2x2Act = new QAction(tr("View 2x2"), this);
+	view2x2Act->setShortcut(QKeySequence("5"));
 	connect(view2x2Act, SIGNAL(triggered()), this, SLOT(view2x2()));
+
 	QAction* view2x3Act = new QAction(tr("View 2x3"), this);
+	view2x3Act->setShortcut(QKeySequence("6"));
 	connect(view2x3Act, SIGNAL(triggered()), this, SLOT(view2x3()));
+
 	QAction* view3x3Act = new QAction(tr("View 3x3"), this);
+	view3x3Act->setShortcut(QKeySequence("3"));
 	connect(view3x3Act, SIGNAL(triggered()), this, SLOT(view3x3()));
+
 	QAction* view3x4Act = new QAction(tr("View 3x4"), this);
 	connect(view3x4Act, SIGNAL(triggered()), this, SLOT(view3x4()));
+
 	QAction* view4x4Act = new QAction(tr("View 4x4"), this);
+	view4x4Act->setShortcut(QKeySequence("0"));
 	connect(view4x4Act, SIGNAL(triggered()), this, SLOT(view4x4()));
 
 
@@ -135,6 +157,7 @@ void MarkusWindow::createActionsAndMenus()
 	// View menu
 	QMenu* viewMenu = new QMenu(tr("&View"), this);
 	viewMenu->addAction(viewDisplayOptionsAct);
+	viewMenu->addAction(refresh);
 	viewMenu->addAction(view1x1Act);
 	viewMenu->addAction(view1x2Act);
 	viewMenu->addAction(view2x2Act);
@@ -149,7 +172,7 @@ void MarkusWindow::createActionsAndMenus()
 	// Action for manager menu
 	//    list all commands available in the manager controller
 	vector<string> actions;
-	m_manager.FindController("manager").ListActions(actions);
+	mr_manager.FindController("manager").ListActions(actions);
 	for(const auto& elem : actions)
 	{
 		QAction* action = new QAction(elem.c_str(), this);
@@ -184,6 +207,13 @@ void MarkusWindow::viewDisplayOptions(bool x_isChecked)
 	{
 		m_moduleViewer.at(ind)->showDisplayOptions(x_isChecked);
 	}
+}
+
+void MarkusWindow::refresh()
+{
+	// A trick to resize all module viewers and force to recreate viewer modules. Is there a better way ?
+	showNormal();
+	showMaximized();
 }
 
 void MarkusWindow::view1x1()
@@ -240,7 +270,7 @@ void MarkusWindow::callManagerCommand()
 	QAction* action = dynamic_cast<QAction*>(sender());
 	assert(action != nullptr);
 
-	m_manager.SendCommand("manager.manager." + string(action->text().toStdString()), "");
+	mr_manager.SendCommand("manager.manager." + string(action->text().toStdString()), "");
 }
 
 void MarkusWindow::resizeEvent(QResizeEvent* event)
@@ -262,7 +292,7 @@ void MarkusWindow::resizeEvent(QResizeEvent* event)
 		m_paramsViewer.push_back(new QModuleViewer::Parameters(conf.GetAttribute("name")));
 		m_paramsViewer.back()->Read(conf);
 		assert(!m_paramsViewer.empty());
-		m_moduleViewer.push_back(new QModuleViewer(m_manager, *m_paramsViewer.back()));
+		m_moduleViewer.push_back(new QModuleViewer(mr_manager, *m_paramsViewer.back()));
 		m_moduleViewer.at(ind)->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 		// m_moduleViewer.at(ind)->showDisplayOptions(true);
 	}

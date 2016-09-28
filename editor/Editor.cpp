@@ -236,16 +236,7 @@ void Editor::CreateMenus()
 	fileMenu->addAction(updateProjectsAct);
 	fileMenu->addAction(updateModulesAct);
 
-
 	viewMenu = new QMenu(tr("&View"), this);
-	// viewMenu->addAction(viewDisplayOptionsAct);
-	// viewMenu->addAction(view1x1Act);
-	// viewMenu->addAction(view1x2Act);
-	// viewMenu->addAction(view2x2Act);
-	// viewMenu->addAction(view2x3Act);
-	// viewMenu->addAction(view3x3Act);
-	// viewMenu->addAction(view3x4Act);
-	// viewMenu->addAction(view4x4Act);
 
 	helpMenu = new QMenu(tr("&Help"), this);
 	helpMenu->addAction(aboutAct);
