@@ -5,7 +5,14 @@ var maxIdModules = 0;
 var xmlModuleTypes = [];
 var xmlProject = null;
 
+// If qmanager object is unexistent, instanciate a stub instead
+var qmgr = typeof qmanager != "undefined" ? qmanager : {
+	test: function(){}
+};
+
 ;(function() {
+
+	qmgr.test(222, "yeah man");
 
 	// Declarations
 	var _initialised = false;

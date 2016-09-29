@@ -7,6 +7,20 @@
 #include <QWebView>
 #include <QMainWindow>
 
+#include <QObject>
+#include <iostream>
+
+
+class QManager : public QObject {
+	Q_OBJECT
+public:
+	Q_INVOKABLE void test(int a, QString b) {
+		printf("bla %d %s\n", a, b.toStdString().c_str());
+		std::cout << b.toStdString() << std::endl;
+	}
+};
+
+
 class Editor : public QMainWindow
 {
 	Q_OBJECT

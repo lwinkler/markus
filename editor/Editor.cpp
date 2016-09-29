@@ -54,6 +54,7 @@ Editor::Editor(const string& x_project, QWidget *parent) :
 	m_projectToLoad(x_project)
 {
 	auto page = new QWebPage2();
+	page->mainFrame()->addToJavaScriptWindowObject("qmanager", new QManager);
 	m_view.setPage(page);
 
 	setWindowState(Qt::WindowMaximized);
@@ -66,6 +67,7 @@ Editor::Editor(const string& x_project, QWidget *parent) :
 	assert(ret != nullptr);
 	ss<<"file://"<<pwd<<"/editor.html";
 	m_view.load(QUrl(ss.str().c_str()));
+
 
 	connect(&m_view, SIGNAL(loadFinished(bool)), this, SLOT(adaptDom(bool)));
 
