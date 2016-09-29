@@ -8,16 +8,16 @@ var xmlProject = null;
 ;(function() {
 
 	// Declarations
-	var _initialised = false,
-	showConnectionInfo = function(s) {
+	var _initialised = false;
+	var connections = [];
+	function showConnectionInfo(s) {
 		$("#list").html(s);
 		$("#list").fadeIn({complete:function() { jsPlumb.repaintEverything(); }});
-	},	
-	hideConnectionInfo = function() {
+	};
+	function hideConnectionInfo() {
 		$("#list").fadeOut({complete:function() { jsPlumb.repaintEverything(); }});
-	},
-	connections = [],
-	updateConnections = function(conn, remove) {
+	};
+	function updateConnections(conn, remove) {
 		if (!remove) connections.push(conn);
 		else {
 			var idx = -1;

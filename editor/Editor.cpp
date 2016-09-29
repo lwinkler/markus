@@ -53,7 +53,7 @@ using namespace std;
 Editor::Editor(const string& x_project, QWidget *parent) :
 	m_projectToLoad(x_project)
 {
-	auto  page = new QWebPage2();
+	auto page = new QWebPage2();
 	m_view.setPage(page);
 
 	setWindowState(Qt::WindowMaximized);
@@ -119,10 +119,14 @@ bool Editor::maybeSave()
 	if(m_view.page()->mainFrame()->evaluateJavaScript("window.markusEditor.hasChanged();").toBool())
 	{
 		QMessageBox::StandardButton ret;
-		ret = QMessageBox::warning(this, tr("Application"),
-								   tr("The project has been modified.\n"
-									  "Do you want to save your changes?"),
-								   QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+		ret = QMessageBox::warning(
+			this, tr("Application"),
+			tr(
+				"The project has been modified.\n"
+				"Do you want to save your changes?"
+			),
+			QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel
+		);
 		if (ret == QMessageBox::Save)
 			return save();
 		else if (ret == QMessageBox::Cancel)
