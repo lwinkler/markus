@@ -67,6 +67,7 @@ public:
 
 	// Interface for interaction with external objects
 	void SendCommand(const std::string& x_command, std::string x_value);
+	void SendCommand(const std::string& x_command); // TODO: see if we can avoid this method
 	void ConnectExternalInput(Stream& xr_input, const std::string& x_moduleName, int x_outputId);
 	inline void CallModuleMethod(const std::string& x_moduleName, std::function<void(Module*)> x_method)
 	{
@@ -93,7 +94,6 @@ public:
 	{
 		return RefModuleByName(x_moduleName).FindController(x_controllerName).CreateWidget();
 	}
-	void SendCommand(const std::string& x_command); // TODO: see if we can avoid
 #endif
 
 	void Rebuild();
