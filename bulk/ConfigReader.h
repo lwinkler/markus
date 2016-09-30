@@ -118,6 +118,22 @@ private:
 	TiXmlDocument* mp_doc;
 };
 
+/**
+* @brief       Class used to manipulate configuration files
+* @brief       A ConfigFile object is created from an XML file. It can browse the different tags of the file by creating sub config objects. Each sub config object is
+               a reference to the sub configuration. Not a copy.
+               This utility relies on TinyXml.
+*/
+class ConfigString : public ConfigReader, boost::noncopyable
+{
+public:
+	ConfigString(const std::string& x_string);
+	virtual ~ConfigString();
+
+private:
+	TiXmlDocument* mp_doc;
+};
+
 
 /**
 * @brief Parent class for all configurable objects (containing parameters)

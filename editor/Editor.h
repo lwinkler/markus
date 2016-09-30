@@ -10,14 +10,15 @@
 #include <QObject>
 #include <iostream>
 
+class Manager;
 
 class QManager : public QObject {
 	Q_OBJECT
 public:
-	Q_INVOKABLE void test(int a, QString b) {
-		printf("bla %d %s\n", a, b.toStdString().c_str());
-		std::cout << b.toStdString() << std::endl;
-	}
+	QManager(Manager& xr_manager);
+	Q_INVOKABLE void CreateModule(QString x_xmlString);
+private:
+	Manager& mr_manager;
 };
 
 
@@ -44,7 +45,7 @@ private:
 	void CreateMenus();
 
 public:
-	Editor(const std::string& x_project = "", QWidget *parent = 0);
+	Editor(Manager* xp_manager = nullptr, const std::string& x_project = "", QWidget *parent = 0);
 	void setUrl(const QUrl &url);
 
 public slots:

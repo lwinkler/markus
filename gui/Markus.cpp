@@ -33,6 +33,7 @@
 #include <QComboBox>
 #include <qevent.h>
 
+#include "Editor.h"
 #include "Manager.h"
 #include "Module.h"
 #include "ModuleTimer.h"
@@ -117,6 +118,10 @@ void MarkusWindow::createActionsAndMenus()
 	refresh->setShortcut(QKeySequence("F5"));
 	connect(refresh, SIGNAL(triggered()), this, SLOT(refresh()));
 
+	QAction* editor = new QAction(tr("Editor"), this);
+	editor->setShortcut(QKeySequence("F6"));
+	connect(editor, SIGNAL(triggered()), this, SLOT(editor()));
+
 	QAction* view1x1Act = new QAction(tr("View 1x1"), this);
 	view1x1Act->setShortcut(QKeySequence("7"));
 	connect(view1x1Act, SIGNAL(triggered()), this, SLOT(view1x1()));
@@ -158,6 +163,7 @@ void MarkusWindow::createActionsAndMenus()
 	QMenu* viewMenu = new QMenu(tr("&View"), this);
 	viewMenu->addAction(viewDisplayOptionsAct);
 	viewMenu->addAction(refresh);
+	viewMenu->addAction(editor);
 	viewMenu->addAction(view1x1Act);
 	viewMenu->addAction(view1x2Act);
 	viewMenu->addAction(view2x2Act);
@@ -214,6 +220,13 @@ void MarkusWindow::refresh()
 	// A trick to resize all module viewers and force to recreate viewer modules. Is there a better way ?
 	showNormal();
 	showMaximized();
+}
+
+/// open an editor window
+void MarkusWindow::editor()
+{
+	QWidget* ed = new Editor(&mr_manager, mr_manager.GetContext().GetParameters().configFile);
+	ed->show();
 }
 
 void MarkusWindow::view1x1()

@@ -125,7 +125,7 @@ public:
 		assert(!m_inputs.empty());
 		return m_inputs.at(0)->GetRecordingFps();
 	}
-	// virtual void Status() const override;
+	void BuildModule(const ConfigReader& x_moduleConfig);
 
 private:
 	void Build();
@@ -142,7 +142,7 @@ private:
 	std::map<int, Module *> m_modules;
 	std::vector<Input *>    m_inputs;
 	std::vector<Module *>   m_autoProcessedModules;
-	std::map<int, ParameterStructure *> m_parameters;
+	std::vector<ParameterStructure *> m_parameters;
 
 	const FactoryParameters& mr_parametersFactory;
 	const FactoryModules& mr_moduleFactory;
