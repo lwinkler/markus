@@ -2,7 +2,7 @@ project(markus)
 cmake_minimum_required(VERSION 2.6)
 
 # Options to be set with ccmake or cmake-gui
-set(Markus_MODULE_DIRS          "modules;modules2"   CACHE STRING "List of directories containing modules")
+set(Markus_MODULE_DIRS          "modules"   CACHE STRING "List of directories containing modules")
 set(Markus_PROJECTS_DIRS        "projects;projects2" CACHE STRING "List of directories containing XML projects")
 set(Markus_MODULE_BLACKLIST     ""                   CACHE STRING "List of modules to blacklist")
 set(Markus_NO_GUI          false   CACHE BOOL "Compile Markus without a graphical user interface")
