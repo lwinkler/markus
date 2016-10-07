@@ -75,7 +75,7 @@ string signatureJSONTree(const Json::Value &x_root, int x_depth)
 		for(Json::ValueConstIterator itr = x_root.begin() ; itr != x_root.end() ; itr++)
 		{
 			result += "\"";
-			result += itr.memberName();
+			result += itr.name();
 			result += "\":";
 			if((*itr).isObject())
 			{
