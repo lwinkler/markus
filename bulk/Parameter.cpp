@@ -43,13 +43,12 @@ log4cxx::LoggerPtr Parameter::m_logger(log4cxx::Logger::getLogger("Parameter"));
 void Parameter::Export(ostream& rx_os) const
 {
 	using namespace nlohmann;
-	std::string val = GetValueString();
-	singleLine(val);
+	cout << GetValueString() << endl;
 	json js= {
 		{"name", GetName()},
 		{"type", GetType()},
 		{"description", GetType()},
-		{"default", val},
+		{"default", json::parse(GetValueString())},
 		{"range", GetRange()}
 	};
 	rx_os << js;

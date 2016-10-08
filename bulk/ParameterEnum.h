@@ -46,8 +46,8 @@ public:
 	void SetDefault(const std::string& rx_value) override;
 	inline int GetDefault() const {return m_default;}
 	inline int GetValue() const {return mr_value;}
-	inline std::string GetValueString() const override {return GetReverseEnum().at(mr_value);}
-	inline std::string GetDefaultString() const override {return GetReverseEnum().at(m_default);}
+	inline std::string GetValueString() const override {return "\"" + GetReverseEnum().at(mr_value) + "\"";}
+	inline std::string GetDefaultString() const override {return "\"" + GetReverseEnum().at(m_default) + "\"";}
 	std::string GetRange() const override;
 	virtual void SetRange(const std::string& x_range) override;
 	inline void AllowAllValues(bool x_allow) {m_allowAllValues = x_allow;}

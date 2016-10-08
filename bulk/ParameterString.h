@@ -51,8 +51,8 @@ public:
 		m_default = x_value;
 	}
 	inline const std::string& GetValue() const {return mr_value;}
-	inline virtual std::string GetValueString() const override {return mr_value;}
-	inline virtual std::string GetDefaultString() const override {return m_default;}
+	inline virtual std::string GetValueString() const override {return "\"" + mr_value + "\"";}
+	inline virtual std::string GetDefaultString() const override {return "\"" + m_default + "\"";}
 	virtual std::string GetRange() const override;
 	virtual void SetRange(const std::string& x_range) override;
 	inline virtual bool CheckRange() const override
