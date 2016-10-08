@@ -78,7 +78,8 @@ public:
 			{"id", x_id},
 			{"type", StreamT<T>::GetType()},
 			{"name", StreamT<T>::GetName()},
-			{"description", StreamT<T>::GetDescription()}
+			{"description", StreamT<T>::GetDescription()},
+			{"multi", m_size}
 		};
 		rx_os << js;
 	}

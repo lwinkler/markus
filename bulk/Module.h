@@ -79,7 +79,6 @@ public:
 	public:
 		Parameters(const std::string& x_name) : Processable::Parameters(x_name)
 		{
-			AddParameter(new ParameterString("class"       , ""      , &objClass , "Class of the module (define the module's function)"));
 			AddParameter(new ParameterString("master"      , ""      , &master   , "Master module on which this module's processing is dependent. If empty, use all preceeding modules"));
 			AddParameter(new ParameterInt("width"          , 640     , 1         , MAX_WIDTH , &width  , "Width of the input"));
 			AddParameter(new ParameterInt("height"         , 480     , 1         , MAX_HEIGHT, &height , "Height of the input"));
@@ -87,7 +86,6 @@ public:
 			AddParameter(new ParameterCachedState("cached" , CachedState::NO_CACHE, &cached   , "Format of the input image"));
 
 			// Lock the parameters that cannot be changed
-			LockParameterByName("class");
 			LockParameterByName("width");
 			LockParameterByName("height");
 			LockParameterByName("type");

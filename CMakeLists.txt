@@ -203,11 +203,6 @@ add_custom_target(indent
 	COMMAND tools/list_source_dirs.sh | xargs -I{} find {} -name \"*.h\" -print -o -name \"*.cpp\" -print | xargs astyle -nToO --style=allman
 )
 
-add_custom_target(xmlindent
-	COMMENT "Indent all files by following the standart"
-	COMMAND find -L projects/ projects2/ -name \"*.xml\" -print | xargs -i{} xmlindent -wt {}
-)
-
 #-------------------------------------------------------------------------------- 
 #create a pretty commit id using git
 #uses 'git describe --tags', so tags are required in the repo

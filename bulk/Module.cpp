@@ -315,6 +315,7 @@ void Module::Export(ostream& rx_os) const
 {
 	using namespace nlohmann;
 	json js = {
+		{"class", GetClass()},
 		{"name", GetName()},
 		{"description", GetDescription()},
 		{"parameters", json::array()},

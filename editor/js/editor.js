@@ -2,7 +2,7 @@
 "use strict";
 
 var maxIdModules = 0;
-var xmlModuleTypes = [];
+var jsonModuleTypes = {};
 var xmlProject = null;
 
 ;(function() {
@@ -192,6 +192,27 @@ var xmlProject = null;
 			}
 
 			//-------------------------------------------------------------------------------- 
+			// Load a json file
+			//--------------------------------------------------------------------------------
+			function loadJson(fileName) {
+				var target = "";
+				$.ajax({
+					type: "GET",
+					url : fileName,
+					cache: false,
+					async: false,
+					dataType: "json",
+					success : function (data) {
+						target = data;
+					},
+					error: function(e) { console.log("Error : Failed to load " + fileName + " status:" + e.status)}
+				});
+				hasChanges = false;
+				return target;
+			}
+
+
+			//-------------------------------------------------------------------------------- 
 			// Parse string and return string
 			//--------------------------------------------------------------------------------
 			if (window.DOMParser) {
@@ -275,15 +296,15 @@ var xmlProject = null;
 
 				// Draw input connectors
 				var xmlInputs  = xmlModule.find("inputs > input");
-				// var classInputs = xmlModuleTypes[type].find("inputs > input");
+				// var classInputs = jsonModuleTypes[type].find("inputs > input");
 				var offset = 1.0 / (xmlInputs.length + 1);
 				var y = offset;
 
 				xmlInputs.each(function(index, el){
 					// Create anchor point for GUI
-					var scope = $(this).data('class').find('type').text();
+					var scope = $(this).data('class').type;
 					var color = pointsColor[scope];
-					var multi = $(this).data('class').attr('multi');
+					var multi = $(this).data('class').multi;
 					var e1;
 					if(multi === undefined)
 					{
@@ -317,7 +338,7 @@ var xmlProject = null;
 				y = offset;
 				xmlOutputs.each(function(index){
 					// Create anchor point for GUI
-					var scope = $(this).data('class').find('type').text();
+					var scope = $(this).data('class').type;
 					var color = pointsColor[scope];
 					var e1 = jsPlumb.addEndpoint(
 						'w' + id, {
@@ -390,40 +411,36 @@ var xmlProject = null;
 				});
 
 				// Draw input connectors
-				var classInputs    = $(xmlModuleTypes[type]).find("inputs > input");
 				var instanceInputs = $('<inputs/>', xmlProject).appendTo(xmlInstance);
-
-				classInputs.each(function(index){
+				jsonModuleTypes[type].inputs.forEach(function(el){
 					// Add input to instance
 					$('<input/>', xmlProject).appendTo(instanceInputs)
-					.attr("id", $(this).attr('id'))
-					.data('class', $(this));
+					.attr("id", el.id)
+					.data('class', el);
 				});
 
-				var classOutputs    = $(xmlModuleTypes[type]).find("outputs > output");
 				var instanceOutputs = $('<outputs/>', xmlProject).appendTo(xmlInstance);
-				classOutputs.each(function(index){
+				jsonModuleTypes[type].outputs.forEach(function(el){
 					// Add output to instance
 					$('<output/>', xmlProject).appendTo(instanceOutputs)
-					.attr('id', $(this).attr('id'))
-					.data('class', $(this));
+					.attr('id', el.id)
+					.data('class', el);
 				});
 				
-				var classParameters  = $(xmlModuleTypes[type]).find("parameters");
 				var instanceParameters = $('<parameters/>', xmlProject).appendTo(xmlInstance);
 				// note: do not list all parameters: only the class
-				classParameters.find('param[name="class"]').each(function(index){
+				jsonModuleTypes[type].parameters.forEach(function(el){
 					// Add parameter to instance
 					var instance = $('<param/>', xmlProject).appendTo(instanceParameters)
-					.attr('name', $(this).attr('name'))
-					.data('class', $(this))
+					.attr('name', el.name)
+					.data('class', el)
 					.text(type);
 				});
 
 				
 				// Create the associated window
 				var newWindow = createModuleWindow(xmlInstance, id);
-				xmlInstance.data('class', xmlModuleTypes[type].find('module'));
+				xmlInstance.data('class', jsonModuleTypes[type]);
 				maxIdModules++;
 				hasChanges = true;
 			}
@@ -511,16 +528,18 @@ var xmlProject = null;
 					var type = getModuleType($(this));
 					console.log("Adding module " + $(this).attr('name') + " of type " + type);
 
+					/*
 					$(this).find('inputs > input').each(function(){
-						$(this).data('class', xmlModuleTypes[type].find('inputs > input[id="' + $(this).attr('id') + '"]'));
+						$(this).data('class', null); // TODO jsonModuleTypes[type].find('inputs > input[id="' + $(this).attr('id') + '"]'));
 					});
 					$(this).find('outputs > output').each(function(){
-						$(this).data('class', xmlModuleTypes[type].find('outputs > output[id="' + $(this).attr('id') + '"]'));
+						$(this).data('class', null); // TODO jsonModuleTypes[type].find('outputs > output[id="' + $(this).attr('id') + '"]'));
 					});
 					$(this).find('parameters > param').each(function(){
-						$(this).data('class', xmlModuleTypes[type].find('parameters > param[name="' + $(this).attr('name') + '"]'));
+						$(this).data('class', null); // TODO jsonModuleTypes[type].find('parameters > param[name="' + $(this).attr('name') + '"]'));
 					});
-					$(this).data('class', xmlModuleTypes[type].find('module'));
+				       */
+					$(this).data('class', jsonModuleTypes[type]);
 
 					// create the window representing the module
 					var index = parseInt($(this).attr('id'));
@@ -573,7 +592,7 @@ var xmlProject = null;
 				// Module description
 				var module = div.find("#module").empty();
 				var type = xml.find('parameters > param[name=class]').text();
-				var cl1 = $(xmlModuleTypes[type]);
+				var cl1 = jsonModuleTypes[type];
 				// module.append('<ul>')
 				module.append('<li><b>Type: </b>'  + type + '</li>')
 				.append('<li><b>Description: </b>' + cl1.attr('description') + '</li>')
@@ -602,7 +621,7 @@ var xmlProject = null;
 				// note: list the parameters of the module template since the instance may not have all params
 				var parameters = div.find("#parameters").empty();
 				var type = xml.find("parameters > param[name='class']").text();
-				var classParameters  = $(xmlModuleTypes[type]).find("parameters");
+				var classParameters  = jsonModuleTypes[type].parameters;
 
 				// create header for the table of parameters
 				parameters.append('<table>')
@@ -674,7 +693,7 @@ var xmlProject = null;
 						try
 						{
 							// Load the matching xml file
-							xmlModuleTypes[mod] = $(loadXML("editor/modules/" + mod + ".xml")).find("module");
+							jsonModuleTypes[mod] = loadJson("editor/modules/" + mod + ".json");
 						}
 						catch(err)
 						{

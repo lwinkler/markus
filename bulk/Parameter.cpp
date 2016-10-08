@@ -43,7 +43,6 @@ log4cxx::LoggerPtr Parameter::m_logger(log4cxx::Logger::getLogger("Parameter"));
 void Parameter::Export(ostream& rx_os) const
 {
 	using namespace nlohmann;
-	cout << GetValueString() << endl;
 	json js= {
 		{"name", GetName()},
 		{"type", GetType()},
