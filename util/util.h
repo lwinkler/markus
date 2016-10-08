@@ -50,6 +50,7 @@ TIME_STAMP getAbsTimeMs();
 TIME_STAMP timeStampFromFileName(const std::string& x_fileName);
 void createEmptyConfigFile(const std::string& x_fileName, bool x_header = true);
 bool compareFiles(const std::string& x_file1, const std::string& x_file2);
+bool compareJsonFiles(const std::string& x_file1, const std::string& x_file2);
 std::string getFileContents(const std::string& x_filename);
 double diagonal(const cv::Mat& x_image);
 std::string basename(const std::string& x_pathName);

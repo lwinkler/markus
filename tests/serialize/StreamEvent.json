@@ -32,7 +32,7 @@
 		},
 		"object" : 
 		{
-			"features" : null,
+			"features" : {},
 			"height" : 0.5600000000000001,
 			"id" : 442243,
 			"name" : "test_serialize2",

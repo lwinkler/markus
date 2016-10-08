@@ -97,7 +97,13 @@ void Object::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 		ss >> root["features"][elem.first];
 	}
 	if(m_feats.empty())
-		root["features"] = Json::Value::null;
+	{
+		Json::Value empty;
+		Json::Reader reader;
+		reader.parse("{}", empty);
+
+		root["features"] = empty;
+	}
 
 	x_out << root;
 }

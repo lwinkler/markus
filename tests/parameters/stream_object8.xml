@@ -1,5 +1,5 @@
 <param name="stream_object8">
 	<type>Objects</type>
-	<value default='[{"features" : null,"height" : 240.0,"id" : -1,"name" : "screen","width" : 320.0,"x" : 160.0,"y" : 120.0}]' range=''>[{"features" : null,"height" : 240.0,"id" : -1,"name" : "screen","width" : 320.0,"x" : 160.0,"y" : 120.0}]</value>
+	<value default='[{"features" : {},"height" : 240.0,"id" : -1,"name" : "screen","width" : 320.0,"x" : 160.0,"y" : 120.0}]' range=''>[{"features" : [],"height" : 240.0,"id" : -1,"name" : "screen","width" : 320.0,"x" : 160.0,"y" : 120.0}]</value>
 	<description>Test stream</description>
 </param>

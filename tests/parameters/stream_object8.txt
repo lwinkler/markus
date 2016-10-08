@@ -1,1 +1,1 @@
-stream_object8="[{"features" : null,"height" : 240.0,"id" : -1,"name" : "screen","width" : 320.0,"x" : 160.0,"y" : 120.0}]" (def); 
+stream_object8="[{"features" : {},"height" : 240.0,"id" : -1,"name" : "screen","width" : 320.0,"x" : 160.0,"y" : 120.0}]" (def); 

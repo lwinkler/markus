@@ -207,7 +207,10 @@ protected:
 		// Compare with the initial config
 		inf.close();
 		of2.close();
-		TS_ASSERT(compareFiles(fileName2, fileName3));
+		if(!compareJsonFiles(fileName2, fileName3))
+		{
+			TS_FAIL("Failed comparison of Json files " + fileName2 + " " + fileName3);
+		}
 	}
 
 public:

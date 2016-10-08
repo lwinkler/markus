@@ -451,6 +451,27 @@ bool compareFiles(const string& x_file1, const string& x_file2)
 }
 
 /**
+* @brief Compare 2 JSON files
+*
+* @param x_file1 File 1
+* @param x_file2 File 2
+*
+* @return true if files are identical
+*/
+bool compareJsonFiles(const string& x_file1, const string& x_file2)
+{
+	vector<string> ret;
+	stringstream cmd;
+	cmd << "jq --argfile a " << x_file1 << " --argfile b " << x_file2 << " -n '$a == $b'";
+	execute(cmd.str(), ret);
+
+	if(ret.size() != 1)
+		throw MkException("Unexpected result for jq command size:" + to_string(ret.size()), LOC);
+	return ret.at(0) == "true";
+}
+
+
+/**
 * @brief Return the content of a file
 *
 * @param filename

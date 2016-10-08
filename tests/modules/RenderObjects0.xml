@@ -42,7 +42,7 @@
 		</param>
 		<param name="objects">
 			<type>Objects</type>
-			<value default='[{"features" : null,"height" : 480.0,"id" : -1,"name" : "screen","width" : 640.0,"x" : 320.0,"y" : 240.0}]' range=''>[{"features" : null,"height" : 480.0,"id" : -1,"name" : "screen","width" : 640.0,"x" : 320.0,"y" : 240.0}]</value>
+			<value default='[{"features" : {},"height" : 480.0,"id" : -1,"name" : "screen","width" : 640.0,"x" : 320.0,"y" : 240.0}]' range=''>[{"features" : {},"height" : 480.0,"id" : -1,"name" : "screen","width" : 640.0,"x" : 320.0,"y" : 240.0}]</value>
 			<description>Object stream</description>
 		</param>
 	</parameters>

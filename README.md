@@ -21,12 +21,13 @@ In all cases you will need the following packages to compile Markus:
 	- *LibTinyXML*
 	- *LibLog4Cxx*
 	- *awk*: used at compile time
+	- *jq*: JSON file comparison. Used for tests
 
 On Ubuntu the apt-get install command is:
 
 **CAUTION**: Be careful if you install libopencv-dev as this installs nvidia packages along. This might harm your computer http://askubuntu.com/questions/243043/after-logging-in-theres-a-black-screen-and-my-cursor-nothing-else-in-ubuntu
 
-	sudo apt-get install cmake libqt4-core  libqt4-dev libtinyxml-dev libopencv-dev liblog4cxx10-dev libjsoncpp-dev libboost-all-dev
+	sudo apt-get install cmake libqt4-core  libqt4-dev libtinyxml-dev libopencv-dev liblog4cxx10-dev libjsoncpp-dev libboost-all-dev jq
 
 ### Alternative: use Qt5
 

@@ -31,13 +31,15 @@
 
 using namespace std;
 
-string signatureJSONValue(const Json::Value &x_val)
+string signatureJsonValue(const Json::Value &x_val)
 {
-	if( x_val.isString() )
+	if( x_val.isNull() )
+		return "null";
+	else if( x_val.isString() )
 		return "%s";
-	/*
 	else if( x_val.isBool() )
-	return "%b";
+		return "%f"; // TODO
+	/*
 	else if( x_val.isInt() )
 	return "%d";
 	else if( x_val.isUInt() )
@@ -52,13 +54,14 @@ string signatureJSONValue(const Json::Value &x_val)
 		assert(false);
 	else
 	{
-		cout << x_val;
-		throw MkException("Unknown type in JSON ", LOC);
+		cout << x_val << endl;
+		// LOG_ERROR(m_logger, "Unknown type " <<  x_val);
+		throw MkException("Unknown type in JSON", LOC);
 	}
 	return "";
 }
 
-string signatureJSONTree(const Json::Value &x_root, int x_depth)
+string signatureJsonTree(const Json::Value &x_root, int x_depth)
 {
 	x_depth += 1;
 	// cout<<" {type=["<<x_root.type()<<"], size="<<x_root.size()<<"}"<<endl;
@@ -81,18 +84,18 @@ string signatureJSONTree(const Json::Value &x_root, int x_depth)
 			{
 
 				result += "{";
-				result += signatureJSONTree(*itr, x_depth);
+				result += signatureJsonTree(*itr, x_depth);
 				result += "}";
 			}
 			else
-				result += signatureJSONTree(*itr, x_depth);
+				result += signatureJsonTree(*itr, x_depth);
 			result += ",";
 		}
 		return result;
 	}
 	else
 	{
-		result += signatureJSONValue(x_root);
+		result += signatureJsonValue(x_root);
 	}
 	return result;
 }
@@ -120,5 +123,5 @@ string Serializable::signature(istream& x_in)
 {
 	Json::Value root;
 	x_in >> root;
-	return signatureJSONTree(root, 0);
+	return signatureJsonTree(root, 0);
 }
