@@ -23,6 +23,7 @@
 
 #include "Parameter.h"
 #include "util.h"
+#include "json.hpp"
 
 using namespace std;
 
@@ -39,18 +40,19 @@ log4cxx::LoggerPtr Parameter::m_logger(log4cxx::Logger::getLogger("Parameter"));
 * @param rx_os         Output stream
 * @param x_indentation Number of tabs for indentation
 */
-void Parameter::Export(ostream& rx_os, int x_indentation) const
+void Parameter::Export(ostream& rx_os) const
 {
+	using namespace nlohmann;
 	std::string val = GetValueString();
 	singleLine(val);
-	string tabs(x_indentation, '\t');
-	rx_os<<tabs<<"<param name=\""<<GetName()<<"\">"<<endl;
-	tabs = string(x_indentation + 1, '\t');
-	rx_os<<tabs<<"<type>"<<GetType()<<"</type>"<<endl;
-	rx_os<<tabs<<"<value default='"<< val <<"' range='"<<GetRange()<<"'>"<< val <<"</value>"<<endl;
-	rx_os<<tabs<<"<description>"<<GetDescription()<<"</description>"<<endl;
-	tabs = string(x_indentation, '\t');
-	rx_os<<tabs<<"</param>"<<endl;
+	json js= {
+		{"name", GetName()},
+		{"type", GetType()},
+		{"description", GetType()},
+		{"default", val},
+		{"range", GetRange()}
+	};
+	rx_os << js;
 }
 
 

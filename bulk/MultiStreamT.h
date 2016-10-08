@@ -25,6 +25,7 @@
 #define MULTIPLE_STREAM_T_H
 
 #include "StreamT.h"
+#include "json.hpp"
 
 /// Stream in the form of located objects
 
@@ -70,18 +71,16 @@ public:
 		throw MkException("Disconnection not implemented for multi streams", LOC); // TODO
 	}
 
-	virtual void Export(std::ostream& rx_os, int x_id, int x_indentation, bool x_isInput) const override
+	virtual void Export(std::ostream& rx_os, int x_id) const override
 	{
-		std::string tabs(x_indentation , '\t');
-		std::string inout = "output";
-		if(x_isInput) inout = "input";
-		rx_os<<tabs<<"<"<<inout<<" id=\""<<x_id<<"\" multi=\"" << m_size << "\">"<<std::endl;
-		tabs = std::string(x_indentation + 1, '\t');
-		rx_os<<tabs<<"<type>"<<StreamT<T>::GetType()<<"</type>"<<std::endl;
-		rx_os<<tabs<<"<name>"<<Stream::GetName()<<"</name>"<<std::endl;
-		rx_os<<tabs<<"<description>"<<Stream::GetDescription()<<"</description>"<<std::endl;
-		tabs = std::string(x_indentation, '\t');
-		rx_os<<tabs<<"</"<<inout<<">"<<std::endl;
+		using namespace nlohmann;
+		json js = {
+			{"id", x_id},
+			{"type", StreamT<T>::GetType()},
+			{"name", StreamT<T>::GetName()},
+			{"description", StreamT<T>::GetDescription()}
+		};
+		rx_os << js;
 	}
 
 protected:

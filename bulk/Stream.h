@@ -52,7 +52,7 @@ public:
 	virtual void Randomize(unsigned int& xr_seed) = 0;
 	virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const override;
 	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr) override;
-	virtual void Export(std::ostream& rx_os, int x_id, int x_indentation, bool x_isInput) const;
+	virtual void Export(std::ostream& rx_os, int x_id) const;
 	inline bool IsConnected() const {return m_cptConnected > 0;}
 	inline void SetAsConnected(bool x_val)
 	{

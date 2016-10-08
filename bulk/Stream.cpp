@@ -25,6 +25,7 @@
 #include "Module.h"
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/writer.h>
+#include "json.hpp"
 
 using namespace std;
 
@@ -47,21 +48,17 @@ Stream::~Stream()
 *
 * @param rx_os         Output stream
 * @param x_id          Id of stream
-* @param x_indentation Number of tabs for indentation
-* @param x_isInput     Is an input
 */
-void Stream::Export(ostream& rx_os, int x_id, int x_indentation, bool x_isInput) const
+void Stream::Export(ostream& rx_os, int x_id) const
 {
-	string tabs(x_indentation , '\t');
-	string inout = "output";
-	if(x_isInput) inout = "input";
-	rx_os<<tabs<<"<"<<inout<<" id=\""<<x_id<<"\">"<<endl;
-	tabs = string(x_indentation + 1, '\t');
-	rx_os<<tabs<<"<type>"<<GetType()<<"</type>"<<endl;
-	rx_os<<tabs<<"<name>"<<GetName()<<"</name>"<<endl;
-	rx_os<<tabs<<"<description>"<<GetDescription()<<"</description>"<<endl;
-	tabs = string(x_indentation, '\t');
-	rx_os<<tabs<<"</"<<inout<<">"<<endl;
+	using namespace nlohmann;
+	json js = {
+		{"id", x_id},
+		{"type", GetType()},
+		{"name", GetName()},
+		{"description", GetDescription()}
+	};
+	rx_os << js;
 }
 
 

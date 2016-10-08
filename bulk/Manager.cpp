@@ -38,8 +38,6 @@
 #include <thread>
 #include <chrono>
 #include <boost/lexical_cast.hpp>
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
 
 #define PROCESS_TIMEOUT 60 // 1 min timeout
 
@@ -472,10 +470,9 @@ void Manager::CreateEditorFiles(const string& x_fileName)
 			categories["all"].push_back(moduleType);
 
 			// Create the specific XML
-			string file("editor/modules/" + moduleType + ".xml");
+			string file("editor/modules/" + moduleType + ".json");
 			ofstream os(file.c_str());
-			os<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"<<endl;
-			module->Export(os, 0);
+			module->Export(os);
 			delete module;
 			delete parameters;
 			os.close();

@@ -81,7 +81,7 @@ public:
 	virtual void Print(std::ostream& os) const;
 	virtual bool CheckRange() const = 0;
 	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const = 0;
-	virtual void Export(std::ostream& rx_os, int x_indentation) const;
+	virtual void Export(std::ostream& rx_os) const;
 
 	/// Use this method to mark parameters that must not change value after initialization
 	inline void Lock() {m_requiresLock = true;}

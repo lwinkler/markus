@@ -139,7 +139,7 @@ public:
 	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr) override;
 
 	virtual inline bool IsInput() const {return false;}
-	void Export(std::ostream& rx_os, int x_indentation) const;
+	void Export(std::ostream& rx_os) const;
 	const Stream& GetInputStreamById(int x_id) const;
 	const Stream& GetOutputStreamById(int x_id) const;
 	Stream& RefInputStreamById(int x_id);

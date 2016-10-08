@@ -456,7 +456,7 @@ public:
 	{
 		string fileName = "tests/tmp/" + xr_module.GetName() + ".xml";
 		ofstream of(fileName.c_str());
-		xr_module.Export(of, 0);
+		xr_module.Export(of);
 		of.close();
 		TS_ASSERT(compareFiles(fileName, "tests/modules/" + xr_module.GetName() + ".xml"));
 	}

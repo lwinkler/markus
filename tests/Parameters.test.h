@@ -65,7 +65,7 @@ public:
 
 		string fileName = "tests/tmp/" + xr_param.GetName() + ".xml";
 		ofstream of(fileName.c_str());
-		xr_param.Export(of, 0);
+		xr_param.Export(of);
 		of.close();
 		TS_ASSERT(compareFiles(fileName, "tests/parameters/" + xr_param.GetName() + ".xml"));
 

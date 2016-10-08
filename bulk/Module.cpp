@@ -32,6 +32,7 @@
 
 #include "ControllerModule.h"
 #include "Factories.h"
+#include "json.hpp"
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/writer.h>
 #include <fstream>
@@ -309,33 +310,40 @@ void Module::Process()
 * @brief Describe the module with name, parameters, inputs, outputs to an output stream (in xml)
 *
 * @param rx_os         Output stream
-* @param x_indentation Number of tabs in indentation
 */
-void Module::Export(ostream& rx_os, int x_indentation) const
+void Module::Export(ostream& rx_os) const
 {
-	string tabs(x_indentation, '\t');
-	tabs = string(x_indentation, '\t');
-	rx_os<<tabs<<"<module name=\""<<GetName()<<"\" description=\""<<GetDescription()<<"\">"<<endl;
-	tabs = string(x_indentation + 1, '\t');
-	rx_os<<tabs<<"<parameters>"<<endl;
+	using namespace nlohmann;
+	json js = {
+		{"name", GetName()},
+		{"description", GetDescription()},
+		{"parameters", json::array()},
+		{"inputs", json::array()},
+		{"outputs", json::array()}
+	};
+
 	for(const auto & elem : m_param.GetList())
-		elem->Export(rx_os, x_indentation + 2);
-	rx_os<<tabs<<"</parameters>"<<endl;
-
-	rx_os<<tabs<<"<inputs>"<<endl;
+	{
+		stringstream ss;
+		elem->Export(ss);
+		js["parameters"].push_back(json::parse(ss.str()));
+	}
 	for(const auto& elem : m_inputStreams)
-		elem.second->Export(rx_os, elem.first, x_indentation + 2, true);
-	rx_os<<tabs<<"</inputs>"<<endl;
-
-	rx_os<<tabs<<"<outputs>"<<endl;
+	{
+		stringstream ss;
+		elem.second->Export(ss, elem.first);
+		js["inputs"].push_back(json::parse(ss.str()));
+	}
 	for(const auto& elem : m_outputStreams)
 	{
 		if(elem.first < MIN_DEBUG_STREAM_ID)
-			elem.second->Export(rx_os, elem.first, x_indentation + 2, false);
+		{
+			stringstream ss;
+			elem.second->Export(ss, elem.first);
+			js["outputs"].push_back(json::parse(ss.str()));
+		}
 	}
-	rx_os<<tabs<<"</outputs>"<<endl;
-	tabs = string(x_indentation, '\t');
-	rx_os<<tabs<<"</module>"<<endl;
+	rx_os << js.dump(1);
 }
 
 const Stream& Module::GetInputStreamById(int x_id) const
