@@ -32,7 +32,6 @@
 
 #include "ControllerModule.h"
 #include "Factories.h"
-#include "json.hpp"
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/writer.h>
 #include <fstream>
@@ -313,27 +312,25 @@ void Module::Process()
 */
 void Module::Export(ostream& rx_os) const
 {
-	using namespace nlohmann;
-	json js = {
-		{"class", GetClass()},
-		{"name", GetName()},
-		{"description", GetDescription()},
-		{"parameters", json::array()},
-		{"inputs", json::array()},
-		{"outputs", json::array()}
-	};
+	Json::Value root;
+	root["class"]       = GetClass();
+	root["name"]        = GetName();
+	root["description"] = GetDescription();
 
+	int i = 0;
 	for(const auto & elem : m_param.GetList())
 	{
 		stringstream ss;
 		elem->Export(ss);
-		js["parameters"].push_back(json::parse(ss.str()));
+		ss >> root["parameters"][i];
+		i++;
 	}
+	i = 0;
 	for(const auto& elem : m_inputStreams)
 	{
 		stringstream ss;
 		elem.second->Export(ss, elem.first);
-		js["inputs"].push_back(json::parse(ss.str()));
+		ss >> root["inputs"][i];
 	}
 	for(const auto& elem : m_outputStreams)
 	{
@@ -341,10 +338,10 @@ void Module::Export(ostream& rx_os) const
 		{
 			stringstream ss;
 			elem.second->Export(ss, elem.first);
-			js["outputs"].push_back(json::parse(ss.str()));
+			ss >> root["outputs"][i];
 		}
 	}
-	rx_os << js.dump(1);
+	rx_os << root;
 }
 
 const Stream& Module::GetInputStreamById(int x_id) const

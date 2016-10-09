@@ -25,7 +25,6 @@
 #include "Module.h"
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/writer.h>
-#include "json.hpp"
 
 using namespace std;
 
@@ -51,14 +50,12 @@ Stream::~Stream()
 */
 void Stream::Export(ostream& rx_os, int x_id) const
 {
-	using namespace nlohmann;
-	json js = {
-		{"id", x_id},
-		{"type", GetType()},
-		{"name", GetName()},
-		{"description", GetDescription()}
-	};
-	rx_os << js;
+	Json::Value root;
+	root["id"] = x_id;
+	root["type"] = GetType();
+	root["name"] = GetName();
+	root["description"] = GetDescription();
+	rx_os << root;
 }
 
 

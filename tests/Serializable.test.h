@@ -59,7 +59,7 @@ public:
 		  m_string("test_string")
 	{
 		m_int    = 333;
-		m_float  = 55.1233234;
+		m_float  = 55.12308;
 		m_double = 34.444;
 
 		m_obj.AddFeature("some_feat", 46.30);

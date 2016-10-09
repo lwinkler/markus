@@ -23,7 +23,8 @@
 
 #include "Parameter.h"
 #include "util.h"
-#include "json.hpp"
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
 
 using namespace std;
 
@@ -42,15 +43,18 @@ log4cxx::LoggerPtr Parameter::m_logger(log4cxx::Logger::getLogger("Parameter"));
 */
 void Parameter::Export(ostream& rx_os) const
 {
-	using namespace nlohmann;
-	json js= {
-		{"name", GetName()},
-		{"type", GetType()},
-		{"description", GetType()},
-		{"default", json::parse(GetValueString())},
-		{"range", GetRange()}
-	};
-	rx_os << js;
+	Json::Value root;
+	Json::Value def;
+	Json::Reader reader;
+	
+	root["name"] = GetName();
+	root["type"] = GetType();
+	root["description"] = GetType();
+	if(!reader.parse(GetValueString(), def))
+		throw MkException("Cannot parse default parameter value in JSON: " + GetValueString(), LOC);
+	root["default"] = def;
+	root["range"] = GetRange();
+	rx_os << root;
 }
 
 

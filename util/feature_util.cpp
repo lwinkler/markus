@@ -46,7 +46,7 @@ ostream& serialize(ostream& x_out, const KeyPoint& x_val)
 	return x_out;
 }
 
-istream& deserialize(istream& x_in,  KeyPoint& xr_val)
+istream& deserialize(istream& x_in, KeyPoint& xr_val)
 {
 	Json::Value root;
 	x_in >> root;

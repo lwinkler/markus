@@ -58,7 +58,7 @@ void CalibrationByHeight::Deserialize(istream& x_in, MkDirectory* xp_dir)
 {
 	Json::Value root;
 	x_in >> root;
-	x = root["x"].asFloat();
-	y = root["y"].asFloat();
-	height = root["height"].asFloat();
+	x = root["x"].asDouble();
+	y = root["y"].asDouble();
+	height = root["height"].asDouble();
 }

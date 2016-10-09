@@ -149,7 +149,6 @@ public:
 		ConfigReader moduleConfig =  xr_config.RefSubConfig("application", true).RefSubConfig("module", "name", rx_type + "0", true);
 		ConfigReader paramConfig  = moduleConfig.RefSubConfig("parameters", true);
 
-		paramConfig.RefSubConfig("param" , "name", "class", true).SetValue(rx_type);
 		paramConfig.RefSubConfig("param" , "name", "fps"  , true).SetValue("123");
 
 		moduleConfig.RefSubConfig("inputs", true);

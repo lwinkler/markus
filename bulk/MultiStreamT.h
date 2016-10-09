@@ -25,7 +25,8 @@
 #define MULTIPLE_STREAM_T_H
 
 #include "StreamT.h"
-#include "json.hpp"
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
 
 /// Stream in the form of located objects
 
@@ -43,6 +44,8 @@ public:
 			throw MkException("Multiple inputs must contain a reference to a vector of size 1 or more. Please resize vector before initializing the stream. Please note that this size is the max size of the vector", LOC);
 	}
 	virtual ~MultiStreamT() {}
+	// TODO virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const override;
+	// TODO virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr) override;
 	virtual void Connect(Stream& xr_stream) override
 	{
 		assert(m_objects.size() == m_size && m_nextObj < m_size);
@@ -73,15 +76,13 @@ public:
 
 	virtual void Export(std::ostream& rx_os, int x_id) const override
 	{
-		using namespace nlohmann;
-		json js = {
-			{"id", x_id},
-			{"type", StreamT<T>::GetType()},
-			{"name", StreamT<T>::GetName()},
-			{"description", StreamT<T>::GetDescription()},
-			{"multi", m_size}
-		};
-		rx_os << js;
+		Json::Value root;
+		root["id"] = x_id;
+		root["type"] = StreamT<T>::GetType();
+		root["name"] = StreamT<T>::GetName();
+		root["description"] = StreamT<T>::GetDescription();
+		root["multi"] = static_cast<int>(m_size);
+		rx_os << root;
 	}
 
 protected:
