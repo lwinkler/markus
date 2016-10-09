@@ -76,52 +76,59 @@ void Manager::Build()
 {
 	for(auto& moduleConfig : m_param.config.FindAll("module"))
 	{
-		// Read parameters
-		if(moduleConfig.Find("parameters").IsEmpty())
-			throw MkException("Impossible to find <parameters> section for module " +  moduleConfig.GetAttribute("name", "(unknown)"), LOC);
-		string moduleType = moduleConfig.Find("parameters>param[name=\"class\"]").GetValue();
-		ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, moduleConfig.GetAttribute("name"));
-		tmp2->Read(moduleConfig);
-		tmp2->CheckRange(moduleConfig);
-
-		if(!m_param.aspectRatio.empty())
-		{
-			// Force the aspect ratio to given value
-			Module::Parameters& mp = dynamic_cast<Module::Parameters&>(*tmp2);
-			double ar = convertAspectRatio(m_param.aspectRatio);
-			if(ar >= 1)
-			{
-				mp.height = mp.width / ar;
-			}
-			else
-			{
-				mp.height = mp.width * ar;
-				swap(mp.width, mp.height);
-			}
-			// cout << mp.width << "x" << mp.height << endl;
-			LOG_INFO(m_logger, "Change aspect ratio of module of type " + moduleType + " to " + to_string(mp.width) + "x" + to_string(mp.height) + " to match " + m_param.aspectRatio);
-		}
-		Module * tmp1 = mr_moduleFactory.Create(moduleType, *tmp2);
-
-		LOG_DEBUG(m_logger, "Add module " << tmp1->GetName() << " to list input=" << (tmp1->IsInput() ? "yes" : "no"));
-		int id = boost::lexical_cast<int>(moduleConfig.GetAttribute("id"));
-		auto ret = m_modules.insert(std::pair<int,Module*>(id, tmp1));
-		if(ret.second == false)
-		{
-			throw MkException("Module with id " + moduleConfig.GetAttribute("id") + " is listed more than one time in config", LOC);
-		}
-		m_parameters.insert(std::pair<int, ParameterStructure*>(id, tmp2));
-
-		// Add to inputs if an input
-		if(tmp1->IsInput())
-		{
-			Input* tmpi = dynamic_cast<Input*>(tmp1);
-			assert(tmpi != nullptr);
-			m_inputs.push_back(tmpi);
-		}
-		if(tmp1->IsAutoProcessed())
-			m_autoProcessedModules.push_back(tmp1);
+		BuildModule(moduleConfig);
 	}
+}
+
+void Manager::BuildModule(const ConfigReader& x_moduleConfig)
+{
+	// Read parameters
+	if(x_moduleConfig.Find("parameters").IsEmpty())
+		throw MkException("Impossible to find <parameters> section for module " +  x_moduleConfig.GetAttribute("name", "(unknown)"), LOC);
+	string moduleType = x_moduleConfig.Find("parameters>param[name=\"class\"]").GetValue();
+	ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, x_moduleConfig.GetAttribute("name"));
+	tmp2->Read(x_moduleConfig);
+	tmp2->CheckRange(x_moduleConfig);
+
+	if(!m_param.aspectRatio.empty())
+	{
+		// Force the aspect ratio to given value
+		Module::Parameters& mp = dynamic_cast<Module::Parameters&>(*tmp2);
+		double ar = convertAspectRatio(m_param.aspectRatio);
+		if(ar >= 1)
+		{
+			mp.height = mp.width / ar;
+		}
+		else
+		{
+			mp.height = mp.width * ar;
+			swap(mp.width, mp.height);
+		}
+		// cout << mp.width << "x" << mp.height << endl;
+		LOG_INFO(m_logger, "Change aspect ratio of module of type " + moduleType + " to " + to_string(mp.width) + "x" + to_string(mp.height) + " to match " + m_param.aspectRatio);
+	}
+	Module * tmp1 = mr_moduleFactory.Create(moduleType, *tmp2);
+
+	LOG_DEBUG(m_logger, "Add module " << tmp1->GetName() << " to list input=" << (tmp1->IsInput() ? "yes" : "no"));
+	int id = boost::lexical_cast<int>(x_moduleConfig.GetAttribute("id"));
+	auto ret = m_modules.insert(pair<int,Module*>(id, tmp1));
+	if(ret.second == false)
+	{
+		throw MkException("Module with id " + x_moduleConfig.GetAttribute("id") + " is listed more than one time in config", LOC);
+	}
+	m_parameters.push_back(tmp2);
+
+	// Add to inputs if an input
+	if(tmp1->IsInput())
+	{
+		Input* tmpi = dynamic_cast<Input*>(tmp1);
+		assert(tmpi != nullptr);
+		m_inputs.push_back(tmpi);
+	}
+	if(tmp1->IsAutoProcessed())
+		m_autoProcessedModules.push_back(tmp1);
+
+	tmp1->SetContext(RefContext());
 }
 
 /**
@@ -136,7 +143,7 @@ void Manager::Destroy()
 	m_modules.clear();
 
 	for(auto & elem : m_parameters)
-		delete elem.second;
+		delete elem;
 	m_parameters.clear();
 	m_inputs.clear();
 	m_autoProcessedModules.clear();
@@ -150,8 +157,6 @@ void Manager::Rebuild()
 	Stop();
 	Destroy();
 	Build();
-	for(auto& elem : m_modules)
-		elem.second->SetContext(RefContext());
 	m_isConnected = false;
 	Connect();
 	Reset();
@@ -290,7 +295,7 @@ void Manager::Process()
 	MkException lastException(MK_EXCEPTION_NORMAL, "normal", "No exception was thrown", "", "");
 
 	// To avoid freeze and infinite loops, use a timer
-	std::future<int> ret = std::async(std::launch::async, [this, &lastException]()
+	future<int> ret = async(launch::async, [this, &lastException]()
 	{
 		int cptExceptions = 0;
 		if(m_autoProcessedModules.empty())
@@ -318,8 +323,8 @@ void Manager::Process()
 		return cptExceptions;
 	});
 
-	std::future_status status = ret.wait_for(std::chrono::seconds(PROCESS_TIMEOUT));
-	if (status != std::future_status::ready)
+	future_status status = ret.wait_for(chrono::seconds(PROCESS_TIMEOUT));
+	if (status != future_status::ready)
 	{
 		throw ProcessFreezeException("Timeout while processing. Check for freezes and infinite loops.", LOC);
 	}
@@ -376,7 +381,7 @@ void Manager::SendCommand(const string& x_command)
 * @param x_moduleName Internal module name
 * @param x_outputId   Internal output id
 */
-void Manager::ConnectExternalInput(Stream& xr_input, const std::string& x_moduleName, int x_outputId)
+void Manager::ConnectExternalInput(Stream& xr_input, const string& x_moduleName, int x_outputId)
 {
 	Module& mod(RefModuleByName(x_moduleName));
 	// WriteLock lock(mod.RefLock());
@@ -624,7 +629,7 @@ bool Manager::ManageInterruptions(bool x_continueFlag)
 		{
 			SendCommand(command.name, command.value);
 		}
-		catch(std::exception& e)
+		catch(exception& e)
 		{
 			LOG_WARN(m_logger, "Cannot execute command \"" << command.name << "\" "<<e.what());
 		}

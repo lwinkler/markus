@@ -317,7 +317,7 @@ void launchEditor(int argc, char** argv)
 	string projectFile = "";
 	if(argc > 2)
 		projectFile = argv[2];
-	Editor editor(projectFile);
+	Editor editor(nullptr, projectFile);
 	app.exec();
 	exit(0);
 #else

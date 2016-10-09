@@ -103,6 +103,31 @@ TiXmlDocument* createDoc(const std::string& x_fileName, bool x_allowCreation, bo
 	return nullptr;
 }
 
+TiXmlDocument* createDoc(const std::string& x_xmlContent)
+{
+	try
+	{
+		TiXmlDocument* doc = new TiXmlDocument;
+		if (!doc->Parse(reinterpret_cast<const char*>(x_xmlContent.c_str()), 0, TIXML_ENCODING_UTF8))
+		{
+			CLEAN_DELETE(doc);
+			throw MkException("Could not parse string XML:" + x_xmlContent + "'. Error='" + (doc ? doc->ErrorDesc() : "") + "'. Exiting.", LOC);
+		}
+		return doc;
+	}
+	catch(exception& e)
+	{
+		throw MkException("Fatal exception in constructor of ConfigReader: " + string(e.what()), LOC);
+	}
+	catch(...)
+	{
+		throw MkException("Fatal exception in constructor of ConfigReader", LOC);
+	}
+	// note: avoid a compiler warning
+	return nullptr;
+}
+
+
 /**
 * @brief Constructor
 *
@@ -117,17 +142,34 @@ ConfigFile::ConfigFile(const string& x_fileName, bool x_allowCreation, bool x_he
 		throw MkException("Initialize a ConfigReader to an empty config", LOC);
 }
 
+ConfigFile::~ConfigFile()
+{
+	CLEAN_DELETE(mp_doc);
+}
+
+
 ConfigReader& ConfigReader::operator = (const ConfigReader& x_conf)
 {
 	mp_node      = x_conf.mp_node;
 	return *this;
 }
 
-ConfigFile::~ConfigFile()
+/**
+* @brief Constructor
+*
+* @param x_content XML string
+*/
+ConfigString::ConfigString(const string& x_content) :
+	ConfigReader(createDoc(x_content))
+{
+	if(IsEmpty() || mp_doc == nullptr)
+		throw MkException("Initialize a ConfigReader to an empty config", LOC);
+}
+
+ConfigString::~ConfigString()
 {
 	CLEAN_DELETE(mp_doc);
 }
-
 
 /**
 * @brief Constructor for a class based on a sub-node (used internally)

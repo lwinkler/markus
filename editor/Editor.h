@@ -7,6 +7,21 @@
 #include <QWebView>
 #include <QMainWindow>
 
+#include <QObject>
+#include <iostream>
+
+class Manager;
+
+class QManager : public QObject {
+	Q_OBJECT
+public:
+	QManager(Manager& xr_manager);
+	Q_INVOKABLE void CreateModule(QString x_xmlString);
+private:
+	Manager& mr_manager;
+};
+
+
 class Editor : public QMainWindow
 {
 	Q_OBJECT
@@ -30,7 +45,7 @@ private:
 	void CreateMenus();
 
 public:
-	Editor(const std::string& x_project = "", QWidget *parent = 0);
+	Editor(Manager* xp_manager = nullptr, const std::string& x_project = "", QWidget *parent = 0);
 	void setUrl(const QUrl &url);
 
 public slots:
