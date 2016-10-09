@@ -29,7 +29,9 @@
 #include <QWebElement>
 #include <QWebFrame>
 #include <QAction>
+#include "ConfigReader.h"
 #include "Editor.h"
+#include "Manager.h"
 #include "QWebPage2.h"
 #include "MkException.h"
 #include "util.h"
@@ -50,10 +52,12 @@
 
 using namespace std;
 
-Editor::Editor(const string& x_project, QWidget *parent) :
+Editor::Editor(Manager* xp_manager, const string& x_project, QWidget *parent) :
 	m_projectToLoad(x_project)
 {
-	auto  page = new QWebPage2();
+	auto page = new QWebPage2();
+	if(xp_manager != nullptr)
+		page->mainFrame()->addToJavaScriptWindowObject("qmanager", new QManager(*xp_manager));
 	m_view.setPage(page);
 
 	setWindowState(Qt::WindowMaximized);
@@ -66,6 +70,7 @@ Editor::Editor(const string& x_project, QWidget *parent) :
 	assert(ret != nullptr);
 	ss<<"file://"<<pwd<<"/editor.html";
 	m_view.load(QUrl(ss.str().c_str()));
+
 
 	connect(&m_view, SIGNAL(loadFinished(bool)), this, SLOT(adaptDom(bool)));
 
@@ -119,10 +124,14 @@ bool Editor::maybeSave()
 	if(m_view.page()->mainFrame()->evaluateJavaScript("window.markusEditor.hasChanged();").toBool())
 	{
 		QMessageBox::StandardButton ret;
-		ret = QMessageBox::warning(this, tr("Application"),
-								   tr("The project has been modified.\n"
-									  "Do you want to save your changes?"),
-								   QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+		ret = QMessageBox::warning(
+			this, tr("Application"),
+			tr(
+				"The project has been modified.\n"
+				"Do you want to save your changes?"
+			),
+			QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel
+		);
 		if (ret == QMessageBox::Save)
 			return save();
 		else if (ret == QMessageBox::Cancel)
@@ -244,4 +253,19 @@ void Editor::CreateMenus()
 	menuBar()->addMenu(fileMenu);
 	menuBar()->addMenu(viewMenu);
 	menuBar()->addMenu(helpMenu);
+}
+
+QManager::QManager(Manager& xr_manager)
+	: mr_manager(xr_manager)
+{
+}
+
+/// Create a module given its config
+void QManager::CreateModule(QString x_xmlString)
+{
+	ConfigString config(x_xmlString.toStdString());
+	mr_manager.BuildModule(config);
+	Connect();
+	Reset();
+	Start();
 }
