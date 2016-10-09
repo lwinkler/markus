@@ -102,20 +102,20 @@ public:
 	void testProjects1()
 	{
 		TS_TRACE("\n# Unit test with different test projects");
-		runConfig("tests/projects/sync_test1.xml");
-		runConfig("tests/projects/sync_test2.xml");
-		runConfig("tests/projects/sync_test3.xml");
-		runConfig("tests/projects/sync_test4.xml");
-		runConfig("tests/projects/FaceAndTracker.xml");
+		runConfig("tests/projects/sync_test1.json");
+		runConfig("tests/projects/sync_test2.json");
+		runConfig("tests/projects/sync_test3.json");
+		runConfig("tests/projects/sync_test4.json");
+		runConfig("tests/projects/FaceAndTracker.json");
 	}
 
-	/// Run different existing configs: XMLs ending in testing.xml
+	/// Run different existing configs: XMLs ending in testing.json
 	// disabled since this would log a lot of errors
 	void disabled_testProjects2()
 	{
-		TS_TRACE("\n# Unit test with different test projects: XMLs ending in ...testing.xml");
+		TS_TRACE("\n# Unit test with different test projects: XMLs ending in ...testing.json");
 		vector<string> result1;
-		execute("xargs -a modules.txt -I{} find {} -name \"testing*.xml\"", result1);
+		execute("xargs -a modules.txt -I{} find {} -name \"testing*.json\"", result1);
 
 		// Since most XMLs make tests and would output errors with a different aspect ratio,
 		// we will redirect the logs where they will not be checked for errors
@@ -128,11 +128,11 @@ public:
 	void testBySpecificXmlProjects()
 	{
 		vector<string> result1;
-		execute("xargs -a modules.txt -I{} find {} -name \"testing*.xml\"", result1);
+		execute("xargs -a modules.txt -I{} find {} -name \"testing*.json\"", result1);
 
 		for(auto elem : result1)
 		{
-			// For each xml, execute the file with Markus executable
+			// For each json, execute the file with Markus executable
 			TS_TRACE("Testing XML project " + elem);
 			string outDir = "out/test_" + basename(elem) + "_" + timeStamp();
 			string cmd = "./markus -ncf " + elem + " -o " + outDir + " > /dev/null";

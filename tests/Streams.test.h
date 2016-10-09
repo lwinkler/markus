@@ -139,7 +139,7 @@ class StreamsTestSuite : public CxxTest::TestSuite
 
 public:
 	StreamsTestSuite() :
-		m_configFile("tests/streams/config.xml"),
+		m_configFile("tests/streams/config.json"),
 		m_config(m_configFile)
 	{}
 

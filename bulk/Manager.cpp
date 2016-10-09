@@ -396,9 +396,9 @@ void Manager::PrintStatistics()
 	// Create an XML file to summarize CPU usage
 	//     if output dir is empty, write to /tmp
 	bool notEmpty = IsContextSet() && !RefContext().RefOutputDir().IsEmpty(); // must be called before ReserveFile
-	if(RefContext().RefOutputDir().FileExists("benchmark.xml"))
-		RefContext().RefOutputDir().Rm("benchmark.xml");
-	string benchFileName = notEmpty ? RefContext().RefOutputDir().ReserveFile("benchmark.xml") : "/tmp/benchmark" + timeStamp() +  ".xml";
+	if(RefContext().RefOutputDir().FileExists("benchmark.json"))
+		RefContext().RefOutputDir().Rm("benchmark.json");
+	string benchFileName = notEmpty ? RefContext().RefOutputDir().ReserveFile("benchmark.json") : "/tmp/benchmark" + timeStamp() +  ".json";
 	ConfigFile benchSummary(benchFileName, true);
 	ConfigReader conf = benchSummary.FindRef("benchmark", true);
 
@@ -440,7 +440,7 @@ bool Manager::AbortCondition() const
 }
 
 /**
-* @brief Export current configuration to xml: this is used to create the XML and JSON files to describe each module
+* @brief Export current configuration to json: this is used to create the XML and JSON files to describe each module
 */
 void Manager::CreateEditorFiles(const string& x_fileName)
 {
@@ -454,13 +454,7 @@ void Manager::CreateEditorFiles(const string& x_fileName)
 		int id = 0;
 		for(const auto& moduleType : moduleTypes)
 		{
-			createEmptyConfigFile("/tmp/config_empty.xml");
-			ConfigFile config("/tmp/config_empty.xml");
-			ConfigReader moduleConfig = config.FindRef("application>module[name=\"" + moduleType + "\"]", true);
-			moduleConfig.SetAttribute("id", id);
-			moduleConfig.FindRef("parameters>param[name=\"class\"]", true).SetValue(moduleType);
-
-			ParameterStructure* parameters = mr_parametersFactory.Create(moduleType, moduleConfig.GetAttribute("name"));
+			ParameterStructure* parameters = mr_parametersFactory.Create(moduleType, moduleType);
 			Module* module = mr_moduleFactory.Create(moduleType, *parameters);
 
 			modules_json.append(moduleType);

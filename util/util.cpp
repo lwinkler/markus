@@ -408,10 +408,10 @@ string jsonify(const string& x_name, TIME_STAMP x_value)
 void createEmptyConfigFile(const string& x_fileName, bool x_header)
 {
 	ofstream of(x_fileName.c_str());
-	of<<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"<<endl;
+	of<<"{}"<<endl;
 
 	if(x_header)
-		of<<"<!-- Markus XML configuration file -->"<<endl;
+		of<<"/* Markus XML configuration file */"<<endl;
 
 	of.close();
 }

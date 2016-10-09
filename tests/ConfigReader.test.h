@@ -41,12 +41,12 @@ protected:
 public:
 	void setUp()
 	{
-		m_conf1 = new ConfigFile("tests/config/config1.xml");
-		createEmptyConfigFile("/tmp/config_empty.xml");
-		m_conf2 = new ConfigFile("/tmp/config_empty.xml");
-		m_conf3 = new ConfigFile("/tmp/config_empty.xml");
-		m_conf4 = new ConfigFile("/tmp/config_empty.xml");
-		m_conf5 = new ConfigFile("tests/config/config_part.xml");
+		m_conf1 = new ConfigFile("tests/config/config1.json");
+		createEmptyConfigFile("/tmp/config_empty.json");
+		m_conf2 = new ConfigFile("/tmp/config_empty.json");
+		m_conf3 = new ConfigFile("/tmp/config_empty.json");
+		m_conf4 = new ConfigFile("/tmp/config_empty.json");
+		m_conf5 = new ConfigFile("tests/config/config_part.json");
 	}
 	void tearDown()
 	{
@@ -64,11 +64,11 @@ public:
 		TS_TRACE("\n# Test on the syntax of configurations");
 		ConfigReader conf(*m_conf3);
 		conf.RefSubConfig("t1", true).RefSubConfig("t2", true).RefSubConfig("t3", "name", "bla", true).SetValue("333");
-		m_conf3->SaveToFile("tests/tmp/test3.xml");
+		m_conf3->SaveToFile("tests/tmp/test3.json");
 		ConfigReader conf2(*m_conf4);
 		conf2.FindRef("t1>t2>t3[name=\"bla\"]", true).SetValue("333");
 		conf2.FindRef("t1>t2>t3[name=\"blo\"]", true).SetValue("555");
-		m_conf4->SaveToFile("tests/tmp/test4.xml");
+		m_conf4->SaveToFile("tests/tmp/test4.json");
 
 		TS_ASSERT(!conf2.Find("t1").IsEmpty());
 		TS_ASSERT(!conf2.Find("t1>t2").IsEmpty());
@@ -103,11 +103,11 @@ public:
 
 		TS_ASSERT(param1.GetAttribute("name") == "param_text");
 
-		m_conf1->SaveToFile("tests/tmp/config1_copy.xml");
+		m_conf1->SaveToFile("tests/tmp/config1_copy.json");
 		m_conf1->Validate();
 
 		// Compare with the initial config
-		TS_ASSERT(compareFiles("tests/config/config1.xml", "tests/tmp/config1_copy.xml"));
+		TS_ASSERT(compareFiles("tests/config/config1.json", "tests/tmp/config1_copy.json"));
 	}
 
 	/// Generate a config from an empty file and test
@@ -118,9 +118,9 @@ public:
 		appConf.RefSubConfig("aaa", "name", "nameX", true)
 		.RefSubConfig("bbb", "name", "nameY", true)
 		.RefSubConfig("ccc", "name", "nameZ", true).SetValue("someValue");
-		m_conf2->SaveToFile("tests/config/config_generated.xml");
+		m_conf2->SaveToFile("tests/config/config_generated.json");
 
-		ConfigFile generatedConf("tests/config/config_generated.xml");
+		ConfigFile generatedConf("tests/config/config_generated.json");
 		TS_ASSERT(generatedConf.GetSubConfig("application")
 				  .GetSubConfig("aaa", "name", "nameX")
 				  .GetSubConfig("bbb", "name", "nameY")

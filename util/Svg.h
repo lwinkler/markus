@@ -24,7 +24,7 @@
 #ifndef MK_SVG_H
 #define MK_SVG_H
 
-#include "ConfigReader.h"
+#include "ConfigXml.h"
 #include "Object.h"
 #include "Polygon.h"
 
@@ -60,7 +60,7 @@ public:
 		if(x_closed)
 			ss << " Z";
 
-		ConfigReader path = m_svg.Append("path");
+		ConfigXml path = m_svg.Append("path");
 		path.SetAttribute("d", ss.str());
 		path.SetAttribute("stroke", x_color);
 	}
@@ -88,10 +88,10 @@ private:
 
 protected:
 	const std::string m_fileName;
-	ConfigFile   m_file;
-	ConfigReader m_svg;
-	const double m_widthRatio;
-	const double m_heightRatio;
+	ConfigFileXml m_file;
+	ConfigXml     m_svg;
+	const double  m_widthRatio;
+	const double  m_heightRatio;
 };
 
 #endif
