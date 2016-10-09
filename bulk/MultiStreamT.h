@@ -77,10 +77,9 @@ public:
 	virtual void Export(std::ostream& rx_os, int x_id) const override
 	{
 		Json::Value root;
-		root["id"] = x_id;
-		root["type"] = StreamT<T>::GetType();
-		root["name"] = StreamT<T>::GetName();
-		root["description"] = StreamT<T>::GetDescription();
+		std::stringstream ss;
+		StreamT<T>::Export(ss, x_id);
+		ss >> root;
 		root["multi"] = static_cast<int>(m_size);
 		rx_os << root;
 	}

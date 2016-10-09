@@ -49,7 +49,7 @@ void Parameter::Export(ostream& rx_os) const
 	
 	root["name"] = GetName();
 	root["type"] = GetType();
-	root["description"] = GetType();
+	root["description"] = GetDescription();
 	if(!reader.parse(GetValueString(), def))
 		throw MkException("Cannot parse default parameter value in JSON: " + GetValueString(), LOC);
 	root["default"] = def;

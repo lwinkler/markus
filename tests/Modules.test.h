@@ -453,11 +453,14 @@ public:
 	/// Test export
 	void testExport(const Module& xr_module)
 	{
-		string fileName = "tests/tmp/" + xr_module.GetName() + ".xml";
+		string fileName = "tests/tmp/" + xr_module.GetName() + ".json";
 		ofstream of(fileName.c_str());
 		xr_module.Export(of);
 		of.close();
-		TS_ASSERT(compareFiles(fileName, "tests/modules/" + xr_module.GetName() + ".xml"));
+		if(!compareJsonFiles(fileName, "tests/modules/" + xr_module.GetName() + ".json"))
+		{
+			TS_FAIL("Files should be identical: " + fileName + " tests/modules/" + xr_module.GetName() + ".json");
+		}
 	}
 
 	/// Test export
