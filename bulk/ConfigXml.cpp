@@ -382,11 +382,6 @@ string ConfigXml::GetValue() const
 		return str;
 }
 
-bool ConfigXml::IsFinal() const
-{
-	return mp_node->ToElement()->GetText() != nullptr;
-}
-
 /**
 * @brief Set the value as string
 *

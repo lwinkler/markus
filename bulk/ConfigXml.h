@@ -83,7 +83,6 @@ public:
 	const ConfigXml Find(const std::string& x_searchString) const;
 	ConfigXml    FindRef(const std::string& x_searchString, bool x_allowCreation = false);
 	std::vector<ConfigXml> FindAll(const std::string& x_searchString) const;
-	bool IsFinal() const;
 
 protected:
 	ConfigXml(TiXmlNode* xp_node);

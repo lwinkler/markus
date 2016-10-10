@@ -85,7 +85,7 @@ void Manager::BuildModule(const ConfigReader& x_moduleConfig)
 	// Read parameters
 	if(x_moduleConfig.Find("parameters").IsEmpty())
 		throw MkException("Impossible to find <parameters> section for module " +  x_moduleConfig.GetAttribute("name", "(unknown)"), LOC);
-	string moduleType = x_moduleConfig.Find("parameters>param[name=\"class\"]").GetValue();
+	string moduleType = x_moduleConfig.Find("class").GetValue();
 	ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, x_moduleConfig.GetAttribute("name"));
 	tmp2->Read(x_moduleConfig);
 	tmp2->CheckRange(x_moduleConfig);

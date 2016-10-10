@@ -21,12 +21,20 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
+#include <fstream>
+#include <boost/filesystem.hpp>
 #include "ConfigReader.h"
 #include "ParameterStructure.h"
 #include "util.h"
-#include <tinyxml.h> // TODO remove all
 
 using namespace std;
+
+
+//TODO rewrite this class as a simple wrapper (inherited from Json::Value) and add
+// - Find methods
+// - Overwrite methods
 
 log4cxx::LoggerPtr ConfigReader::m_logger(log4cxx::Logger::getLogger("ConfigReader"));
 
@@ -35,6 +43,10 @@ log4cxx::LoggerPtr ConfigReader::m_logger(log4cxx::Logger::getLogger("ConfigRead
 void splitTagName(const string& x_searchString, string& xr_tagName, string& xr_attrName, string& xr_attrValue, string& xr_searchString2)
 {
 	size_t pos1 = x_searchString.find('>');
+
+	// TODO remove
+	Json::Value j2;
+	Json::Value& j1(j2["asdf"]);
 
 	// split search string according to >
 	string searchString1 = x_searchString;
@@ -70,61 +82,28 @@ void splitTagName(const string& x_searchString, string& xr_tagName, string& xr_a
 }
 
 
-TiXmlDocument* createDoc(const std::string& x_fileName, bool x_allowCreation, bool x_header)
+Json::Value* createDoc(const std::string& x_fileName, bool x_allowCreation, bool x_header)
 {
-	try
+	Json::Value* doc = new Json::Value;
+	if(!boost::filesystem::exists(x_fileName))
 	{
-		TiXmlDocument* doc = nullptr; // Initialize to null as there can be an error in construction
-		doc = new TiXmlDocument(x_fileName);
-		if (!doc->LoadFile())
+		if(x_allowCreation)
 		{
-			CLEAN_DELETE(doc);
-			if(x_allowCreation)
-			{
-				createEmptyConfigFile(x_fileName, x_header);
-				doc = new TiXmlDocument(x_fileName);
-				auto tmp = doc->LoadFile();
-				if(!tmp)
-					throw MkException("Cannot create temporary file " + x_fileName, LOC);
-			}
-			else throw MkException("Could not load file as XML '" + x_fileName + "'. Error='" + (doc ? doc->ErrorDesc() : "") + "'. Exiting.", LOC);
+			createEmptyConfigFile(x_fileName, x_header);
 		}
-		return doc;
+		else throw MkException("Could not load file as XML '" + x_fileName + "'. Exiting.", LOC);
 	}
-	catch(exception& e)
-	{
-		throw MkException("Fatal exception in constructor of ConfigReader: " + string(e.what()), LOC);
-	}
-	catch(...)
-	{
-		throw MkException("Fatal exception in constructor of ConfigReader", LOC);
-	}
-	// note: avoid a compiler warning
-	return nullptr;
+	ifstream ifs(x_fileName);
+	ifs >> *doc;
+	return doc;
 }
 
-TiXmlDocument* createDoc(const std::string& x_xmlContent)
+Json::Value* createDoc(const std::string& x_xmlContent)
 {
-	try
-	{
-		TiXmlDocument* doc = new TiXmlDocument;
-		if (!doc->Parse(reinterpret_cast<const char*>(x_xmlContent.c_str()), 0, TIXML_ENCODING_UTF8))
-		{
-			CLEAN_DELETE(doc);
-			throw MkException("Could not parse string XML:" + x_xmlContent + "'. Error='" + (doc ? doc->ErrorDesc() : "") + "'. Exiting.", LOC);
-		}
-		return doc;
-	}
-	catch(exception& e)
-	{
-		throw MkException("Fatal exception in constructor of ConfigReader: " + string(e.what()), LOC);
-	}
-	catch(...)
-	{
-		throw MkException("Fatal exception in constructor of ConfigReader", LOC);
-	}
-	// note: avoid a compiler warning
-	return nullptr;
+	Json::Value* doc = new Json::Value;
+	Json::Reader reader;
+	reader.parse(x_xmlContent, *doc);
+	return doc;
 }
 
 
@@ -135,22 +114,20 @@ TiXmlDocument* createDoc(const std::string& x_xmlContent)
 * @param x_allowCreation Allow the creation of a new file if unexistant
 */
 ConfigFile::ConfigFile(const string& x_fileName, bool x_allowCreation, bool x_header) :
-	mp_doc(dynamic_cast<TiXmlDocument*>(mp_node)),
-	ConfigReader(createDoc(x_fileName, x_allowCreation, x_header))
+	ConfigReader(createDoc(x_fileName))
 {
-	if(IsEmpty() || mp_doc == nullptr)
+	if(IsEmpty())
 		throw MkException("Initialize a ConfigReader to an empty config", LOC);
 }
 
 ConfigFile::~ConfigFile()
 {
-	CLEAN_DELETE(mp_doc);
+	CLEAN_DELETE(mp_jsonRoot);
 }
-
 
 ConfigReader& ConfigReader::operator = (const ConfigReader& x_conf)
 {
-	mp_node      = x_conf.mp_node;
+	mp_jsonRoot = x_conf.mp_jsonRoot;
 	return *this;
 }
 
@@ -162,13 +139,13 @@ ConfigReader& ConfigReader::operator = (const ConfigReader& x_conf)
 ConfigString::ConfigString(const string& x_content) :
 	ConfigReader(createDoc(x_content))
 {
-	if(IsEmpty() || mp_doc == nullptr)
+	if(IsEmpty() || mp_jsonRoot == nullptr)
 		throw MkException("Initialize a ConfigReader to an empty config", LOC);
 }
 
 ConfigString::~ConfigString()
 {
-	CLEAN_DELETE(mp_doc);
+	CLEAN_DELETE(mp_jsonRoot);
 }
 
 /**
@@ -176,13 +153,13 @@ ConfigString::~ConfigString()
 *
 * @param xp_node
 */
-ConfigReader::ConfigReader(TiXmlNode* xp_node) :
-	mp_node(xp_node)
+ConfigReader::ConfigReader(Json::Value* xp_jsonRoot) :
+	mp_jsonRoot(xp_jsonRoot)
 {
 }
 
 ConfigReader::ConfigReader(const ConfigReader& x_conf) :
-	mp_node(x_conf.mp_node)
+	mp_jsonRoot(x_conf.mp_jsonRoot)
 {
 	// if(IsEmpty())
 	// throw MkException("Initialize a ConfigReader to an empty config", LOC);
@@ -192,6 +169,10 @@ ConfigReader::~ConfigReader()
 {
 	// ConfigReader is a reference: do not delete anything
 }
+
+//TODO inline
+bool ConfigReader::IsEmpty() const {return mp_jsonRoot == nullptr || mp_jsonRoot->empty();}
+inline bool ConfigReader::operator == (const ConfigReader &a) {return &a.mp_jsonRoot == &mp_jsonRoot;}
 
 /**
 * @brief Return a config objects that points to the sub element of configuration
@@ -204,50 +185,11 @@ const ConfigReader ConfigReader::GetSubConfig(const string& x_tagName) const
 {
 	if(IsEmpty())
 		throw MkException("Impossible to find node " + x_tagName + " in ConfigReader", LOC);
-	TiXmlNode* newNode = mp_node->FirstChild(x_tagName);
-	return ConfigReader(newNode);
+	if(mp_jsonRoot->isMember(x_tagName))
+		return ConfigReader(&(*mp_jsonRoot)[x_tagName]);
+	else
+		return ConfigReader(nullptr);
 }
-
-/**
-* @brief Return a config objects that points to the sub element of configuration (ignoring XML namespaces). Experimental
-*
-* Note: xml namespaces can be of different formats http://www.w3schools.com/xml/xml_namespaces.asp
-*       We only account for the tag name. This can of course be done in a cleaner way by implementing libxml++. So far a bug is preventing this.
-*
-* Known bug: it seems that NextSibling only browse children nodes with one name and ignores others.
-*
-* @param x_tagName   The node name of the sub element (= XML tag)
-*
-* @return config object
-*/
-const ConfigReader ConfigReader::GetSubConfigIgnoreNamespace(const string& x_tagName) const
-{
-	if(IsEmpty())
-		throw MkException("Impossible to find node " + x_tagName + " in ConfigReader", LOC);
-	TiXmlNode* newNode = mp_node->FirstChild();
-
-	while(newNode != nullptr && mp_node->Value() != x_tagName)
-	{
-		string tag(newNode->Value());
-
-		// Strip everything after first space
-		auto pos = tag.find(' ');
-		if(pos != string::npos)
-			tag = tag.substr(0, pos);
-
-		// Strip everything before :
-		pos = tag.find(':');
-		if(pos != string::npos)
-			tag = tag.substr(pos + 1);
-
-		if(tag == x_tagName)
-			return ConfigReader(newNode);
-
-		newNode = mp_node->NextSibling();
-	}
-	return ConfigReader(newNode);
-}
-
 
 /**
 * @brief Return a config objects that points to the sub element of configuration
@@ -262,16 +204,11 @@ ConfigReader ConfigReader::RefSubConfig(const string& x_tagName, bool x_allowCre
 	if(IsEmpty())
 		throw MkException("Impossible to find node " + x_tagName + " in ConfigReader" , LOC);
 
-	TiXmlNode* newNode = mp_node->FirstChild(x_tagName);
-
-	if(newNode == nullptr && x_allowCreation)
-	{
-		// Add a sub config element if not found
-		auto   element = new TiXmlElement(x_tagName);
-		mp_node->LinkEndChild(element);
-		return ConfigReader(element);
-	}
-	return ConfigReader(newNode);
+	Json::Value* newNode = &(*mp_jsonRoot)[x_tagName];
+	if(x_allowCreation || mp_jsonRoot->isMember(x_tagName))
+		return ConfigReader(&(*mp_jsonRoot)[x_tagName]);
+	else
+		return ConfigReader(nullptr);
 }
 
 /**
@@ -281,6 +218,7 @@ ConfigReader ConfigReader::RefSubConfig(const string& x_tagName, bool x_allowCre
 *
 * @return config object
 */
+/* TODO
 ConfigReader ConfigReader::Append(const string& x_tagName)
 {
 	if(IsEmpty())
@@ -291,6 +229,7 @@ ConfigReader ConfigReader::Append(const string& x_tagName)
 	mp_node->LinkEndChild(element);
 	return ConfigReader(element);
 }
+*/
 
 
 
@@ -303,21 +242,19 @@ ConfigReader ConfigReader::Append(const string& x_tagName)
 *
 * @return config object
 */
-const ConfigReader ConfigReader::GetSubConfig(const string& x_tagName, const string& x_attrName, const string& x_attrValue) const
+const ConfigReader ConfigReader::GetSubConfig(const string& x_attrName, const string& x_attrValue) const
 {
 	if(IsEmpty())
-		throw MkException("Impossible to find node " + x_tagName + " in ConfigReader with attribute " + x_attrName + "=\"" + x_attrValue + "\"" , LOC);
-	TiXmlNode* newNode = mp_node->FirstChild(x_tagName);
+		throw MkException("Impossible to find node with property " + x_attrName + " in ConfigReader with attribute " + x_attrName + "=\"" + x_attrValue + "\"" , LOC);
+	if(!mp_jsonRoot->isArray())
+		throw MkException("Current node must be an array ", LOC);
 
-	if(x_attrName == "")
-		return ConfigReader(newNode);
-
-	while(newNode != nullptr && newNode->ToElement()->Attribute(x_attrName.c_str()) != x_attrValue)
+	for(Json::Value& elem : *mp_jsonRoot)
 	{
-		newNode = newNode->NextSibling(x_tagName);
+		if(x_attrName == "" || (elem.isMember(x_attrName) && elem[x_attrName] == x_attrValue))
+			return ConfigReader(&elem);
 	}
-
-	return ConfigReader(newNode);
+	return ConfigReader(nullptr);
 }
 
 /**
@@ -330,31 +267,24 @@ const ConfigReader ConfigReader::GetSubConfig(const string& x_tagName, const str
 *
 * @return config object
 */
-ConfigReader ConfigReader::RefSubConfig(const string& x_tagName, const string& x_attrName, const string& x_attrValue, bool x_allowCreation)
+ConfigReader ConfigReader::RefSubConfig(const string& x_attrName, const string& x_attrValue, bool x_allowCreation)
 {
 	if(IsEmpty())
-		throw MkException("Impossible to find node " + x_tagName + " in ConfigReader with attribute " + x_attrName + "=\"" + x_attrValue + "\"" , LOC);
+		throw MkException("Impossible to find node with property " + x_attrName + " in ConfigReader with attribute " + x_attrName + "=\"" + x_attrValue + "\"" , LOC);
+	if(!mp_jsonRoot->isArray())
+		throw MkException("Current node must be an array ", LOC);
 
-	TiXmlNode* newNode = mp_node->FirstChild(x_tagName);
-
-	if(x_attrName != "")
+	for(Json::Value elem : *mp_jsonRoot)
 	{
-		const char* name = nullptr;
-		while(newNode != nullptr && ((name = newNode->ToElement()->Attribute("name")) == nullptr || x_attrValue != name))
-		{
-			newNode = newNode->NextSibling(x_tagName);
-		}
+		if(x_attrName == "" || (elem.isMember(x_attrName) && elem[x_attrName] == x_attrValue))
+			return ConfigReader(&elem);
 	}
-	if(newNode == nullptr && x_allowCreation)
+	if(x_allowCreation)
 	{
-		// Add a sub config element if not found
-		auto   element = new TiXmlElement(x_tagName);
-		if(x_attrName != "")
-			element->SetAttribute(x_attrName, x_attrValue);
-		mp_node->LinkEndChild(element);
-		return ConfigReader(element);
+		assert(false); // TODO: this is a check
+		return ConfigReader(nullptr);
 	}
-	return ConfigReader(newNode);
+	return ConfigReader(nullptr);
 }
 
 /**
@@ -365,6 +295,7 @@ ConfigReader ConfigReader::RefSubConfig(const string& x_tagName, const string& x
 *
 * @return config object
 */
+/*
 ConfigReader ConfigReader::NextSubConfig(const string& x_tagName, const string& x_attrName, const string& x_attrValue) const
 {
 	if(IsEmpty())
@@ -381,6 +312,7 @@ ConfigReader ConfigReader::NextSubConfig(const string& x_tagName, const string& 
 
 	return ConfigReader(newNode);
 }
+*/
 
 /**
 * @brief Return the attribute (as string) for one element
@@ -393,16 +325,11 @@ const string ConfigReader::GetAttribute(const string& x_attributeName) const
 {
 	if(IsEmpty())
 		throw MkException("Impossible to find attribute " + x_attributeName + " in ConfigReader, node is empty" , LOC);
-	TiXmlElement* element = mp_node->ToElement();
-	//string s(*element->Attribute(x_attributeName));
-	if(element == nullptr)
-		throw MkException("Impossible to find node in ConfigReader", LOC);
-
-	const string * str = element->Attribute(x_attributeName);
-	if(str == nullptr)
+	ConfigReader res(GetSubConfig(x_attributeName));
+	if(res.IsEmpty())
 		throw MkException("Attribute " + x_attributeName + " is unexistant", LOC);
 	else
-		return *str;
+		return res.GetValue();
 }
 
 
@@ -414,37 +341,15 @@ const string ConfigReader::GetAttribute(const string& x_attributeName) const
 *
 * @return attribute
 */
-const string ConfigReader::GetAttribute(const string& x_attributeName, const string& x_default) const
+const string ConfigReader::GetAttribute(const string& x_attributeName, const string& x_default) const // TODO: Rename or change
 {
 	if(IsEmpty())
 		throw MkException("Impossible to find attribute " + x_attributeName + " in ConfigReader" , LOC);
-	TiXmlElement* element = mp_node->ToElement();
-	//string s(*element->Attribute(x_attributeName));
-	if(element == nullptr)
-		throw MkException("Impossible to find node in ConfigReader", LOC);
-
-	const string * str = element->Attribute(x_attributeName);
-	if(str == nullptr)
+	ConfigReader res(GetSubConfig(x_attributeName));
+	if(res.IsEmpty())
 		return x_default;
 	else
-		return *str;
-}
-
-/**
-* @brief Set the attribute for one element
-*
-* @param x_attributeName Name of the attribute
-* @param x_value         Value to set
-*/
-void ConfigReader::SetAttribute(const string& x_attributeName, const string& x_value)
-{
-	if(IsEmpty())
-		throw MkException("Impossible to find attribute " + x_attributeName + " in ConfigReader" , LOC);
-	TiXmlElement* element = mp_node->ToElement();
-	if(element == nullptr)
-		throw MkException("Impossible to find attribute " + x_attributeName + " in ConfigReader" , LOC);
-
-	element->SetAttribute(x_attributeName, x_value);
+		return res.GetValue();
 }
 
 /**
@@ -456,17 +361,8 @@ string ConfigReader::GetValue() const
 {
 	if(IsEmpty())
 		throw MkException("Impossible to find node" , LOC);
-	TiXmlElement* element = mp_node->ToElement();
-	const char * str = element->GetText();
-	if(str == nullptr)
-		return "";
-	else
-		return str;
-}
+	return mp_jsonRoot->asString(); // TODO as int ...
 
-bool ConfigReader::IsFinal() const
-{
-	return mp_node->ToElement()->GetText() != nullptr;
 }
 
 /**
@@ -474,13 +370,16 @@ bool ConfigReader::IsFinal() const
 *
 * @param x_value Value to set
 */
+/*
 void ConfigReader::SetValue(const string& x_value)
 {
 	if(IsEmpty())
 		throw MkException("Impossible to find node" , LOC);
+	mr_json
 	mp_node->Clear();
 	mp_node->LinkEndChild(new TiXmlText(x_value)); //ToText();
 }
+*/
 
 /**
 * @brief Save the config as an xml file
@@ -670,11 +569,15 @@ vector<ConfigReader> ConfigReader::FindAll(const string& x_searchString) const
 
 	if(searchString2 == "")
 	{
-		ConfigReader conf = GetSubConfig(tagName, attrName, attrValue);
+		Json::Value arr = (*mp_jsonRoot); // TODO tagName is useless [tagName];
+		if(!arr.isArray())
+			throw MkException("Expecting array in find all for tag " + tagName, LOC);
 		while(!conf.IsEmpty())
+		for(auto& elem : arr)
 		{
+			if(attrName == "" || (elem.isMember(attrName) && elem[attrName] == attrValue))
+				return ConfigReader(&elem);
 			results.push_back(conf);
-			conf = conf.NextSubConfig(tagName, attrName, attrValue);
 		}
 		return results;
 	}
@@ -686,6 +589,7 @@ vector<ConfigReader> ConfigReader::FindAll(const string& x_searchString) const
 
 Configurable::Configurable(ParameterStructure& x_param) : m_param(x_param)
 {
+	// TODO: Probably check input for null
 	m_param.CheckRange();
 }
 

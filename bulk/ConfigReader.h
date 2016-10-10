@@ -35,14 +35,12 @@
 
 class Module;
 class ParameterStructure;
-class TiXmlNode;
-class TiXmlDocument;
+namespace Json{class Value;}
 
 
 /**
 * @brief       Class used to manipulate configuration files
 * @brief       A ConfigReader object is a reference to a sub part of a ConfigFile.
-               This utility relies on TinyXml.
 */
 class ConfigReader
 {
@@ -52,25 +50,20 @@ public:
 
 	// Method to access elements of the config
 	const ConfigReader GetSubConfig(const std::string& x_tagName) const;
-	const ConfigReader GetSubConfigIgnoreNamespace(const std::string& x_tagName) const;
-	const ConfigReader GetSubConfig(const std::string& x_tagName, const std::string& x_attrName, const std::string& x_attrValue) const;
+	const ConfigReader GetSubConfig(const std::string& x_attrName, const std::string& x_attrValue) const;
 	ConfigReader RefSubConfig(const std::string& x_tagName, bool x_allowCreation = false);
-	ConfigReader RefSubConfig(const std::string& x_tagName, const std::string& x_attrName, const std::string& x_attrValue, bool x_allowCreation = false);
+	ConfigReader RefSubConfig(const std::string& x_attrName, const std::string& x_attrValue, bool x_allowCreation = false);
 	ConfigReader Append(const std::string& x_tagName);
 
 	/// Check if the config object is empty
-	inline bool IsEmpty() const {return mp_node == nullptr;}
+	bool IsEmpty() const;
 	std::string GetValue() const;
-	void SetValue(const std::string& x_value);
 	template<typename T> inline void SetValue(const T& x_value)
 	{
-		std::stringstream ss;
-		ss << x_value;
-		SetValue(ss.str());
+		// TODO x_value >> *mp_jsonRoot;
 	}
 	const std::string GetAttribute(const std::string& x_attributeName) const;
 	const std::string GetAttribute(const std::string& x_attributeName, const std::string& x_default) const;
-	void SetAttribute(const std::string& x_attributeName, const std::string& x_value);
 	template<typename T> inline void SetAttribute(const std::string& x_attributeName, const T& x_value)
 	{
 		std::stringstream ss;
@@ -79,23 +72,22 @@ public:
 	}
 	void Validate() const;
 	/// Redefinition of == operator
-	inline bool operator == (const ConfigReader &a) {return a.mp_node == mp_node;}
+	bool operator == (const ConfigReader &a);
 	void OverrideWith(const ConfigReader& xr_extraConfig);
 
 	// New access functions with JQuery-like syntax
 	const ConfigReader Find(const std::string& x_searchString) const;
 	ConfigReader    FindRef(const std::string& x_searchString, bool x_allowCreation = false);
 	std::vector<ConfigReader> FindAll(const std::string& x_searchString) const;
-	bool IsFinal() const;
 
 protected:
-	ConfigReader(TiXmlNode* xp_node);
+	ConfigReader(Json::Value* xp_node);
 	ConfigReader& operator = (const ConfigReader& x_conf);
-	ConfigReader NextSubConfig(const std::string& x_tagName, const std::string& x_attrName = "", const std::string& x_attrValue = "") const;
+	// ConfigReader NextSubConfig(const std::string& x_tagName, const std::string& x_attrName = "", const std::string& x_attrValue = "") const;
 	void CheckUniquenessOfId(const std::string& x_group, const std::string& x_type, const std::string& x_idLabel, const std::string& x_moduleName) const;
 	static void overrideParameters(const ConfigReader& x_newConfig, ConfigReader x_oldConfig);
 
-	TiXmlNode* mp_node;
+	Json::Value* mp_jsonRoot = nullptr;
 
 private:
 	static log4cxx::LoggerPtr m_logger;
@@ -105,7 +97,6 @@ private:
 * @brief       Class used to manipulate configuration files
 * @brief       A ConfigFile object is created from an XML file. It can browse the different tags of the file by creating sub config objects. Each sub config object is
                a reference to the sub configuration. Not a copy.
-               This utility relies on TinyXml.
 */
 class ConfigFile : public ConfigReader, boost::noncopyable
 {
@@ -115,7 +106,7 @@ public:
 	void SaveToFile(const std::string& x_file) const;
 
 private:
-	TiXmlDocument* mp_doc;
+	Json::Value* mp_jsonRoot = nullptr;
 };
 
 /**
@@ -131,7 +122,7 @@ public:
 	virtual ~ConfigString();
 
 private:
-	TiXmlDocument* mp_doc;
+	Json::Value* mp_jsonRoot = nullptr;
 };
 
 

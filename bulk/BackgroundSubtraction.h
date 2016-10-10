@@ -24,7 +24,6 @@
 #ifndef MK_BACKGROUND_SUB_H
 #define MK_BACKGROUND_SUB_H
 
-#include "ConfigReader.h"
 #include "Parameter.h"
 #include "Module.h"
 

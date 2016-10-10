@@ -263,9 +263,10 @@ QManager::QManager(Manager& xr_manager)
 /// Create a module given its config
 void QManager::CreateModule(QString x_xmlString)
 {
+	assert(false);
 	ConfigString config(x_xmlString.toStdString());
 	mr_manager.BuildModule(config);
-	Connect();
-	Reset();
-	Start();
+	// Connect();
+	// Reset();
+	// Start();
 }
