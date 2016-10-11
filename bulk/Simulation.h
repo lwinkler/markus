@@ -25,7 +25,6 @@
 #define MK_SIMULATION_H
 
 #include "Manager.h"
-#include "ConfigReader.h"
 #include <sstream>
 
 /**
@@ -37,21 +36,21 @@ public:
 	class Parameters : public ParameterStructure
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader.GetAttribute("name")), config(x_confReader)
+		Parameters(const ConfigReader& x_confReader) : ParameterStructure(x_confReader["name"].asString()), config(x_confReader)
 		{
 		}
 		const ConfigReader& config;
 	};
 
 	Simulation(Parameters& xr_params, Context& x_context);
-	void Generate(ConfigFile& mainConfig);
+	void Generate(ConfigReader& mainConfig);
 
 private:
 	/// Add an entry in the Makefile
-	void AddSimulationEntry(const std::vector<std::string>& x_variationNames, const ConfigFile& x_mainConfig);
+	void AddSimulationEntry(const std::vector<std::string>& x_variationNames, const ConfigReader& x_mainConfig);
 
 	/// Add variation to simulation
-	void AddVariations(std::vector<std::string>& x_variationNames, const ConfigReader& x_varConf, ConfigFile& xr_mainConfig);
+	void AddVariations(std::vector<std::string>& x_variationNames, const ConfigReader& x_varConf, ConfigReader& xr_mainConfig);
 
 	static log4cxx::LoggerPtr m_logger;
 	Parameters& m_param; // note: to save time

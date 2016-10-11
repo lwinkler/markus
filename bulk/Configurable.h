@@ -21,48 +21,27 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef RENDER_OBJECTS_H
-#define RENDER_OBJECTS_H
+#ifndef CONFIGURABLE_H
+#define CONFIGURABLE_H
 
-#include "Module.h"
+#include <boost/noncopyable.hpp>
+#include "ConfigReader.h"
 
-class Object;
+class ParameterStructure;
 
 /**
-* @brief Output video stream with additional object streams
+* @brief Parent class for all configurable objects (containing parameters)
 */
-class RenderObjects : public Module
+class Configurable : boost::noncopyable
 {
 public:
-	class Parameters : public Module::Parameters
-	{
-	public:
-		Parameters(const std::string& x_name) : Module::Parameters(x_name)
-		{
-			RefParameterByName("type").SetDefaultAndValue("CV_8UC3");
-		};
-	};
-
-	RenderObjects(ParameterStructure& xr_params);
-	virtual ~RenderObjects();
-	MKCLASS("RenderObjects")
-	MKDESCR("Output video stream with additional object streams")
-
-	void Reset() override;
-	virtual void ProcessFrame() override;
+	Configurable(ParameterStructure& x_param);
+	virtual ~Configurable() {}
+	virtual void WriteConfig(ConfigReader& xr_config) const;
+	virtual const ParameterStructure& GetParameters() const {return m_param;}
 
 private:
-	const Parameters& m_param;
-	static log4cxx::LoggerPtr m_logger;
-
-protected:
-	// input
-	cv::Mat m_imageInput;
-	std::vector<std::vector<Object>> m_objectInputs;
-
-	// output
-	cv::Mat m_imageOutput;
+	ParameterStructure& m_param;
 };
-
 
 #endif

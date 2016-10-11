@@ -33,20 +33,25 @@ using namespace std;
 class ConfigReaderTestSuite : public CxxTest::TestSuite
 {
 protected:
-	ConfigFile* m_conf1;
-	ConfigFile* m_conf2;
-	ConfigFile* m_conf3;
-	ConfigFile* m_conf4;
-	ConfigFile* m_conf5;
+	ConfigReader* m_conf1;
+	ConfigReader* m_conf2;
+	ConfigReader* m_conf3;
+	ConfigReader* m_conf4;
+	ConfigReader* m_conf5;
 public:
 	void setUp()
 	{
-		m_conf1 = new ConfigFile("tests/config/config1.json");
+		m_conf1 = new ConfigReader;
+		m_conf2 = new ConfigReader;
+		m_conf3 = new ConfigReader;
+		m_conf4 = new ConfigReader;
+		m_conf5 = new ConfigReader;
+		readFromFile(*m_conf1, "tests/config/config1.json");
 		createEmptyConfigFile("/tmp/config_empty.json");
-		m_conf2 = new ConfigFile("/tmp/config_empty.json");
-		m_conf3 = new ConfigFile("/tmp/config_empty.json");
-		m_conf4 = new ConfigFile("/tmp/config_empty.json");
-		m_conf5 = new ConfigFile("tests/config/config_part.json");
+		readFromFile(*m_conf2, "/tmp/config_empty.json");
+		readFromFile(*m_conf3, "/tmp/config_empty.json");
+		readFromFile(*m_conf4, "/tmp/config_empty.json");
+		readFromFile(*m_conf5, "tests/config/config_part.json");
 	}
 	void tearDown()
 	{
@@ -62,21 +67,20 @@ public:
 	void testSyntax()
 	{
 		TS_TRACE("\n# Test on the syntax of configurations");
-		ConfigReader conf(*m_conf3);
-		conf.RefSubConfig("t1", true).RefSubConfig("t2", true).RefSubConfig("t3", "name", "bla", true).SetValue("333");
-		m_conf3->SaveToFile("tests/tmp/test3.json");
-		ConfigReader conf2(*m_conf4);
-		conf2.FindRef("t1>t2>t3[name=\"bla\"]", true).SetValue("333");
-		conf2.FindRef("t1>t2>t3[name=\"blo\"]", true).SetValue("555");
-		m_conf4->SaveToFile("tests/tmp/test4.json");
+		ConfigReader& conf(*m_conf3);
+		conf["t1"]["t2"]["t3"]["bla"] = 333;
+		saveToFile(*m_conf3, "tests/tmp/test3.json");
+		ConfigReader& conf2(*m_conf4);
+		conf2["t1"]["t2"]["t3"] = "333";
+		conf2["t1"]["t2"]["t3"]["blo"] = "555";
+		saveToFile(*m_conf4, "tests/tmp/test4.json");
 
-		TS_ASSERT(!conf2.Find("t1").IsEmpty());
-		TS_ASSERT(!conf2.Find("t1>t2").IsEmpty());
-		TS_ASSERT(!conf2.Find("t1>t2>t3[name=\"bla\"]").IsEmpty());
-		TS_ASSERT( conf2.Find("t1>t2>t3[name=\"bla\"]").GetValue() == "333");
-		TS_ASSERT(conf2.FindAll("t1>t2>t3[name=\"bla\"]").size() == 1);
-		TS_ASSERT(conf2.FindAll("t1>t2>t3").size() == 2);
-		TS_ASSERT(conf2.Find("t1>t2").FindAll("t3").size() == 2);
+		TS_ASSERT(!conf2["t1"].isNull());
+		TS_ASSERT(!conf2["t1"]["t2"].isNull());
+		TS_ASSERT(!conf2["t1"]["t2"]["t3"].isNull());
+		TS_ASSERT(conf2["t1"]["t2"]["t3"]["bla"].size() == 1);
+		TS_ASSERT( conf2["t1"]["t2"]["t3"].asInt() == 333);
+		TS_ASSERT(conf2["t1"]["t2"]["t3"].size() == 2);
 	}
 
 	/// Load and save a config file
@@ -84,27 +88,27 @@ public:
 	{
 		TS_TRACE("\n# Test the loading of configurations");
 
-		ConfigReader appConf = m_conf1->GetSubConfig("application");
-		ConfigReader module0conf = appConf.GetSubConfig("module", "name", "Module0");
-		ConfigReader module1conf = appConf.GetSubConfig("module", "name", "Module1");
+		ConfigReader& appConf((*m_conf1)["application"]);
+		ConfigReader& module0conf(appConf["module"]["Module0"]);
+		ConfigReader& module1conf = appConf["module"]["Module1"];
 
 		// old access
-		TS_ASSERT(module0conf == appConf.GetSubConfig("module", "name", "Module0"));
-		TS_ASSERT(module1conf == appConf.FindAll("module").at(1));
-		TS_ASSERT(module1conf == appConf.FindAll("module[name=\"Module1\"]").at(0));
-		TS_ASSERT(! module0conf.GetSubConfig("parameters").IsEmpty());
+		TS_ASSERT(module0conf == appConf["module"]["Module0"]);
+		TS_ASSERT(module1conf == appConf["modules"]);
+		// TS_ASSERT(module1conf == appConf.FindAll("module[name=\"Module1\"]").at(0));
+		TS_ASSERT(! module0conf["parameters"].isNull());
 
-		ConfigReader param1 = module0conf.GetSubConfig("parameters").GetSubConfig("param", "name", "param_text");
-		TS_ASSERT(param1.GetValue() == "SomeText");
-		ConfigReader param2 = module0conf.GetSubConfig("parameters").GetSubConfig("param", "name", "param_int");
-		TS_ASSERT(param2.GetValue() == "21");
-		ConfigReader param3 = module0conf.GetSubConfig("parameters").GetSubConfig("param", "name", "param_float");
-		TS_ASSERT(param3.GetValue() == "3.1415");
+		ConfigReader& param1 = module0conf["parameters"]["param"]["name"]["param_text"];
+		TS_ASSERT(param1.asString() == "SomeText");
+		ConfigReader& param2 = module0conf["parameters"]["param"]["name"]["param_int"];
+		TS_ASSERT(param2.asString() == "21");
+		ConfigReader& param3 = module0conf["parameters"]["param"]["name"]["param_float"];
+		TS_ASSERT(param3.asString() == "3.1415");
 
-		TS_ASSERT(param1.GetAttribute("name") == "param_text");
+		TS_ASSERT(param1["name"].asString() == "param_text");
 
-		m_conf1->SaveToFile("tests/tmp/config1_copy.json");
-		m_conf1->Validate();
+		saveToFile(*m_conf1, "tests/tmp/config1_copy.json");
+		validate(*m_conf1);
 
 		// Compare with the initial config
 		TS_ASSERT(compareFiles("tests/config/config1.json", "tests/tmp/config1_copy.json"));
@@ -114,18 +118,18 @@ public:
 	void testGenerate()
 	{
 		TS_TRACE("\n# Test the generation of configurations");
-		ConfigReader appConf = m_conf2->RefSubConfig("application", true);
-		appConf.RefSubConfig("aaa", "name", "nameX", true)
-		.RefSubConfig("bbb", "name", "nameY", true)
-		.RefSubConfig("ccc", "name", "nameZ", true).SetValue("someValue");
-		m_conf2->SaveToFile("tests/config/config_generated.json");
+		ConfigReader& appConf((*m_conf2)["application"]);
+		appConf["aaa"]["name"]["nameX"]
+		["bbb"]["name"]["nameY"]
+		["ccc"]["name"]["nameZ"] = "someValue";
+		saveToFile(*m_conf2, "tests/config/config_generated.json");
 
-		ConfigFile generatedConf("tests/config/config_generated.json");
-		TS_ASSERT(generatedConf.GetSubConfig("application")
-				  .GetSubConfig("aaa", "name", "nameX")
-				  .GetSubConfig("bbb", "name", "nameY")
-				  .GetSubConfig("ccc", "name", "nameZ")
-				  .GetValue() == "someValue");
+		ConfigReader generatedConf("tests/config/config_generated.json");
+		TS_ASSERT(generatedConf["application"]
+				  ["aaa"]["name"]["nameX"]
+				  ["bbb"]["name"]["nameY"]
+				  ["ccc"]["name"]["nameZ"]
+				  .asString() == "someValue");
 	}
 
 	/// Override the original config
@@ -133,21 +137,21 @@ public:
 	{
 		TS_TRACE("\n# Test the override of the original configuration");
 
-		TS_ASSERT(m_conf1->Find("application>parameters>param[name=\"param_text\"]").GetValue() == "SomeText0");
-		TS_ASSERT(m_conf1->Find("application>parameters>param[name=\"param_int\"]").GetValue() == "0");
-		TS_ASSERT(m_conf1->Find("application>parameters>param[name=\"param_float\"]").GetValue() == "0");
+		TS_ASSERT((*m_conf1)["application"]["parameters"]["param_text]"].asString() == "SomeText0");
+		TS_ASSERT((*m_conf1)["application"]["parameters"]["param_int]"].asString() == "0");
+		TS_ASSERT((*m_conf1)["application"]["parameters"]["param_float]"].asString() == "0");
 
-		m_conf1->OverrideWith(*m_conf5);
+		overrideWith(*m_conf1, *m_conf5);
 
-		TS_ASSERT(m_conf1->Find("application>parameters>param[name=\"param_text\"]").GetValue() == "NewText0");
-		TS_ASSERT(m_conf1->Find("application>parameters>param[name=\"param_int\"]").GetValue() == "44");
-		TS_ASSERT(m_conf1->Find("application>parameters>param[name=\"param_float\"]").GetValue() == "0.51");
+		TS_ASSERT((*m_conf1)["application"]["parameters"]["param_text"].asString() == "NewText0");
+		TS_ASSERT((*m_conf1)["application"]["parameters"]["param_int"].asString() == "44");
+		TS_ASSERT((*m_conf1)["application"]["parameters"]["param_float"].asString() == "0.51");
 
-		TS_ASSERT(m_conf1->Find("application>module[name=\"Module0\"]>parameters").GetSubConfig("param", "name", "param_text").GetValue() == "a new text");
-		TS_ASSERT(m_conf1->Find("application>module[name=\"Module0\"]>parameters").GetSubConfig("param", "name", "param_int").GetValue() == "33");
-		TS_ASSERT(m_conf1->Find("application>module[name=\"Module0\"]>parameters").GetSubConfig("param", "name", "param_float").GetValue() == "3.1415");
-		TS_ASSERT(m_conf1->Find("application>module[name=\"Module1\"]>parameters").Find("param[name=\"param_float\"]").GetValue()  == "77.7");
-		TS_ASSERT(m_conf1->Find("application>module[name=\"Module1\"]>parameters>param[name=\"param_int\"]").GetValue()  == "42");
+		TS_ASSERT((*m_conf1)["application"]["modules"]["Module0"]["parameters"]["param_text"].asString() == "a new text");
+		TS_ASSERT((*m_conf1)["application"]["modules"]["Module0"]["parameters"]["param_int"].asString() == "33");
+		TS_ASSERT((*m_conf1)["application"]["modules"]["Module0"]["parameters"]["param_float"].asString() == "3.1415");
+		TS_ASSERT((*m_conf1)["application"]["modules"]["Module1"]["parameters"]["param_float"].asString()  == "77.7");
+		TS_ASSERT((*m_conf1)["application"]["modules"]["Module1"]["parameters"]["param_int"].asString()  == "42");
 	}
 };
 

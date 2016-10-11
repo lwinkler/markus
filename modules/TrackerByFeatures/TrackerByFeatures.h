@@ -29,8 +29,6 @@
 #include "StreamObject.h"
 #include "Template.h"
 
-class ConfigReader;
-
 
 /**
 * @brief Track objects by matching a set of features (typically x,y,width andci height)

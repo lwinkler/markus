@@ -57,15 +57,16 @@ protected:
 	void runConfig(const string& x_configFile, const string& x_aspectRatio)
 	{
 		TS_TRACE("## Unit test with configuration " + x_configFile);
-		ConfigFile mainConfig(x_configFile);
-		mainConfig.Validate();
-		ConfigReader appConfig = mainConfig.GetSubConfig("application");
+		ConfigReader mainConfig;
+		readFromFile(mainConfig, x_configFile);
+		validate(mainConfig);
+		ConfigReader appConfig = mainConfig["application"];
 		// Note: Added this to avoid deleting the output directory
-		TS_ASSERT(!appConfig.IsEmpty());
+		TS_ASSERT(!appConfig.isNull());
 		Manager::Parameters params(appConfig);
 		params.aspectRatio     = x_aspectRatio;
 		params.autoProcess     = false;
-		Context::Parameters contextParams(appConfig.GetAttribute("name"));
+		Context::Parameters contextParams(appConfig["name"].asString());
 		contextParams.configFile      = x_configFile;
 		contextParams.outputDir       = "";
 		contextParams.applicationName = "TestProjects";

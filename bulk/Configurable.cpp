@@ -21,48 +21,19 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef RENDER_OBJECTS_H
-#define RENDER_OBJECTS_H
+#include "Configurable.h"
+#include "ParameterStructure.h"
 
-#include "Module.h"
+using namespace std;
 
-class Object;
 
-/**
-* @brief Output video stream with additional object streams
-*/
-class RenderObjects : public Module
+Configurable::Configurable(ParameterStructure& x_param) : m_param(x_param)
 {
-public:
-	class Parameters : public Module::Parameters
-	{
-	public:
-		Parameters(const std::string& x_name) : Module::Parameters(x_name)
-		{
-			RefParameterByName("type").SetDefaultAndValue("CV_8UC3");
-		};
-	};
+	// TODO: Probably check input for null
+	m_param.CheckRange();
+}
 
-	RenderObjects(ParameterStructure& xr_params);
-	virtual ~RenderObjects();
-	MKCLASS("RenderObjects")
-	MKDESCR("Output video stream with additional object streams")
-
-	void Reset() override;
-	virtual void ProcessFrame() override;
-
-private:
-	const Parameters& m_param;
-	static log4cxx::LoggerPtr m_logger;
-
-protected:
-	// input
-	cv::Mat m_imageInput;
-	std::vector<std::vector<Object>> m_objectInputs;
-
-	// output
-	cv::Mat m_imageOutput;
-};
-
-
-#endif
+void Configurable::WriteConfig(ConfigReader& xr_config) const
+{
+	m_param.Write(xr_config);
+}

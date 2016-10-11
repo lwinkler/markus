@@ -82,7 +82,7 @@ protected:
 	const FactoryFeatures& m_factoryFeatures;
 	ParameterStructure* mp_fakeConfig     = nullptr;
 	Module* mp_fakeInput                  = nullptr;
-	ConfigFile* mp_configFile             = nullptr;
+	ConfigReader* mp_configFile           = nullptr;
 	Context::Parameters* mp_contextParams = nullptr;
 	Context* mp_context                   = nullptr;
 	string m_emptyFileName = "/tmp/config_empty.xml";
@@ -113,13 +113,12 @@ public:
 			m_factoryModules.List(m_moduleTypes);
 		
 		createEmptyConfigFile(m_emptyFileName);
-		mp_configFile = new ConfigFile(m_emptyFileName);
-		AddModuleToConfig("VideoFileReader", *mp_configFile)
-		.RefSubConfig("parameters", true)
-		.RefSubConfig("param", "name", "fps", true).SetValue("22");
+		mp_configFile = new ConfigReader;
+		readFromFile(*mp_configFile, m_emptyFileName);
+		AddModuleToConfig("VideoFileReader", *mp_configFile)["parameters"]["fps"] = "22";
 
-		mp_configFile->RefSubConfig("application").SetAttribute("name", "unitTest");
-		mp_contextParams = new Context::Parameters(mp_configFile->Find("application").GetAttribute("name"));
+		(*mp_configFile)["application"]["name"] = "unitTest";
+		mp_contextParams = new Context::Parameters((*mp_configFile)["application"]["name"].asString());
 		mp_contextParams->configFile      = m_emptyFileName;
 		mp_contextParams->applicationName = "TestModule";
 		mp_contextParams->outputDir       = "tests/out";
@@ -128,7 +127,7 @@ public:
 		mp_contextParams->centralized     = true;
 		mp_context = new Context(*mp_contextParams);
 
-		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", mp_configFile->Find("application>module[name=\"VideoFileReader0\"]").GetAttribute("name"));
+		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", (*mp_configFile)["application"]["VideoFileReader0"]["name"].asString());
 		// mp_fakeConfig->Read(mp_configFile->Find("application>module[name=\"VideoFileReader0\"]"));
 		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeConfig);
 		mp_fakeInput->SetContext(*mp_context);
@@ -146,18 +145,15 @@ public:
 
 	ConfigReader AddModuleToConfig(const string& rx_type, ConfigReader& xr_config)
 	{
-		ConfigReader moduleConfig =  xr_config.RefSubConfig("application", true).RefSubConfig("module", "name", rx_type + "0", true);
-		ConfigReader paramConfig  = moduleConfig.RefSubConfig("parameters", true);
+		ConfigReader moduleConfig =  xr_config["application"][rx_type + "0"];
+		ConfigReader paramConfig  = moduleConfig["parameters"];
 
-		paramConfig.RefSubConfig("param" , "name", "fps"  , true).SetValue("123");
-
-		moduleConfig.RefSubConfig("inputs", true);
-		moduleConfig.RefSubConfig("outputs", true);
-		moduleConfig.SetAttribute("name", rx_type + "0");
+		paramConfig["fps"] = "123";
+		moduleConfig[rx_type + "0"];
 
 		stringstream ss;
 		ss<<m_cpt++;
-		moduleConfig.SetAttribute("id", ss.str());
+		moduleConfig["id"] = ss.str();
 		return moduleConfig;
 	}
 
@@ -170,14 +166,14 @@ public:
 		// Add parameters to override to the config
 		if(xp_parameters != nullptr)
 			for(const auto& elem : *xp_parameters)
-				moduleConfig.RefSubConfig("parameters").RefSubConfig("param", "name", elem.first, true).SetValue(elem.second);
+				moduleConfig["parameters"][elem.first] = elem.second;
 
-		mp_configFile->SaveToFile("tests/tmp/tmp.xml");
+		saveToFile(*mp_configFile, "tests/tmp/tmp.xml");
 
 		ParameterStructure* parameters = nullptr;
 		try
 		{
-			parameters = m_factoryParameters.Create(x_type, moduleConfig.GetAttribute("name"));
+			parameters = m_factoryParameters.Create(x_type, moduleConfig["name"].asString());
 			parameters->Read(moduleConfig);
 		}
 		catch(ParameterException& e)
@@ -491,12 +487,12 @@ public:
 			ModuleTester tester;
 			map<string, string> overrid = {{"auto_process", "1"}};
 			CLEAN_DELETE(mp_configFile);
-			mp_configFile = new ConfigFile(m_emptyFileName);
+			mp_configFile = new ConfigReader(m_emptyFileName);
 			CreateAndConnectModule(tester, elem, &overrid);
 			if(tester.module->IsUnitTestingEnabled() && !tester.module->IsInput())
 			{
-				mp_configFile->RefSubConfig("application", true).SetAttribute("name", "unitTest");
-				Manager::Parameters mparams(mp_configFile->Find("application"));
+				(*mp_configFile)["application"]["name"] = "unitTest";
+				Manager::Parameters mparams((*mp_configFile)["application"].asString());
 				Manager manager(mparams);
 				manager.SetContext(*mp_context);
 				manager.Connect();

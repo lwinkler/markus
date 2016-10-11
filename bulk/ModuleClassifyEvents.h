@@ -30,8 +30,6 @@
 
 #include <list>
 
-class ConfigReader;
-
 /**
 * @brief A virtual module to filter events based on user feedback
 */

@@ -73,9 +73,11 @@ void ControllerModule::PrintStatistics(string* xp_value)
 	if(module.RefContext().RefOutputDir().FileExists(module.GetName() + ".benchmark.json"))
 		module.RefContext().RefOutputDir().Rm(module.GetName() + ".benchmark.json");
 	string benchFileName = module.RefContext().RefOutputDir().ReserveFile(module.GetName() + ".benchmark.json");
+	/* TODO
 	ConfigFile summary(benchFileName, true);
 	module.PrintStatistics(summary);
 	summary.SaveToFile(benchFileName);
+	*/
 }
 
 

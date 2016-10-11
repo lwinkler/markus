@@ -24,7 +24,7 @@
 #ifndef PROCESSABLE_H
 #define PROCESSABLE_H
 
-#include "ConfigReader.h"
+#include "Configurable.h"
 #include "ParameterStructure.h"
 #include "ParameterNum.h"
 #include "Context.h"

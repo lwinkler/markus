@@ -25,9 +25,9 @@
 #define PARAMETER_STRUCTURE_H
 
 #include "define.h"
-#include "ConfigReader.h"
 #include "Parameter.h"
 #include "MkException.h"
+#include "ConfigReader.h"
 #include <log4cxx/logger.h>
 
 /// Represents a set of parameters for a configurable objects
@@ -38,7 +38,7 @@ public:
 	ParameterStructure(const std::string& x_name);
 	virtual ~ParameterStructure();
 	void Read(const ConfigReader& x_config);
-	void Write(ConfigReader xr_config) const;
+	void Write(ConfigReader& xr_config) const;
 	void SetValueToDefault();
 	virtual void CheckRange() const;
 	void CheckRange(const ConfigReader& x_config) const;

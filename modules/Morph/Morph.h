@@ -26,9 +26,6 @@
 
 #include "Module.h"
 
-class ConfigReader;
-
-
 
 /**
 * @brief Apply a morphological operator to an image

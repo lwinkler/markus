@@ -26,7 +26,7 @@
 
 #include <log4cxx/logger.h>
 #include "MkException.h"
-#include "ConfigReader.h"
+#include "Configurable.h"
 #include "ParameterStructure.h"
 #include "ParameterString.h"
 #include "ParameterNum.h"

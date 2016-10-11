@@ -22,7 +22,6 @@
 -------------------------------------------------------------------------------------*/
 
 #include "Module.h"
-#include "ConfigReader.h"
 #include "util.h"
 
 #include "Stream.h"
@@ -409,15 +408,13 @@ void Module::PrintStatistics(ConfigReader& xr_xmlResult) const
 		LOG_INFO(m_logger, "Module "<<GetName()<<": Time spent in current and depending module: " << m_timerProcessable.GetMsLong() << " ms");
 
 	// Write perf to output XML
-	ConfigReader perfModule(xr_xmlResult.FindRef("module[name=\"" + GetName() + "\"]", true));
-	/* TODO
-	perfModule.FindRef("nb_frames", true).SetValue(m_countProcessedFrames);
-	perfModule.FindRef("timer[name=\"processable\"]", true).SetValue(m_timerProcessable.GetMsLong());
-	perfModule.FindRef("timer[name=\"processing\"]", true).SetValue(m_timerProcessFrame.GetMsLong());
-	perfModule.FindRef("timer[name=\"conversion\"]", true).SetValue(m_timerConversion.GetMsLong());
-	perfModule.FindRef("timer[name=\"waiting\"]", true).SetValue(m_timerWaiting.GetMsLong());
-	perfModule.FindRef("fps", true).SetValue(fps);
-	*/
+	ConfigReader& perfModule(xr_xmlResult["module"][GetName()]);
+	perfModule["nb_frames"]             = Json::UInt64(m_countProcessedFrames);
+	perfModule["timers"]["processable"] = Json::UInt64(m_timerProcessable.GetMsLong());
+	perfModule["timers"]["processing"]  = Json::UInt64(m_timerProcessFrame.GetMsLong());
+	perfModule["timers"]["conversion"]  = Json::UInt64(m_timerConversion.GetMsLong());
+	perfModule["timers"]["waiting"]     = Json::UInt64(m_timerWaiting.GetMsLong());
+	perfModule["fps"]                   = fps;
 }
 
 /**

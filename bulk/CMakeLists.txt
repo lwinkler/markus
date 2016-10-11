@@ -30,6 +30,7 @@ FeatureFloatInTime.cpp
 FeatureHistory.cpp
 FeatureVector.cpp
 ConfigReader.cpp
+Configurable.cpp
 ConfigXml.cpp
 ModuleTimer.cpp
 MkException.cpp

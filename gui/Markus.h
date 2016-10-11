@@ -36,7 +36,6 @@
 #define MARKUS_TIMER_S 0.01 // Interval for the main timer
 
 class Manager;
-class ConfigReader;
 
 
 /**
@@ -49,7 +48,7 @@ public:
 	class Parameters : public ParameterStructure
 	{
 	public:
-		Parameters(ConfigReader& x_configReader) : ParameterStructure(x_configReader.GetAttribute("name")), config(x_configReader)
+		Parameters(ConfigReader& x_configReader) : ParameterStructure(x_configReader["name"].asString()), config(x_configReader)
 		{
 			// AddParameter(new ParameterString("module", "", &module, "Module to display"));
 			AddParameter(new ParameterInt("nb_cols", 1, 1, 4, &nbCols, "Number of columns for display"));
@@ -59,12 +58,12 @@ public:
 		}
 		int nbCols;
 		int nbRows;
-		ConfigReader& config;
+		Json::Value config;
 	};
 
 	MarkusWindow(ParameterStructure& rx_param, Manager& rx_manager);
 	virtual ~MarkusWindow();
-	void WriteConfig(ConfigReader xr_config) const override;
+	void WriteConfig(ConfigReader& xr_config) const override;
 private:
 	// ConfigReader& m_configReader;
 	Parameters& m_param;

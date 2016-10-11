@@ -37,11 +37,10 @@ using namespace boost::filesystem;
 
 log4cxx::LoggerPtr Simulation::m_logger(log4cxx::Logger::getLogger("Simulation"));
 
-
 /// Function to return either a module or the manager from a config
 inline ConfigReader manOrMod(ConfigReader xr_mainConfig, const string& x_name)
 {
-	return x_name == "manager" ? xr_mainConfig.FindRef("application") : xr_mainConfig.FindRef("application>module[name=\"" + x_name + "\"]");
+	return x_name == "manager" ? xr_mainConfig["application"] : xr_mainConfig["application"]["modules"][x_name];
 }
 
 
@@ -58,7 +57,7 @@ Simulation::Simulation(Parameters& xr_params, Context& x_context) :
 
 
 /// Add targets lines for inclusion in Makefile
-void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, const ConfigFile& x_mainConfig)
+void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, const ConfigReader& x_mainConfig)
 {
 	// Generate entries for makefile
 	stringstream sd;
@@ -69,7 +68,7 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 	string arguments;
 	try
 	{
-		arguments = x_mainConfig.Find("application>parameters>param[name=\"arguments\"]").GetValue();
+		arguments = x_mainConfig["application"]["parameters"]["arguments"].asString();
 	}
 	catch(MkException &e) {}
 	m_allTargets << "$(OUTDIR)/results/" <<  sd.str() << " ";
@@ -87,7 +86,7 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 	stringstream xmlProjName;
 	xmlProjName << subdir.str() << "/" << name << ".xml";
 	create_directory(subdir.str());
-	x_mainConfig.SaveToFile(xmlProjName.str());
+	saveToFile(x_mainConfig, xmlProjName.str());
 
 	// Last but not least:
 	// Register the different variations for summaries in .txt files
@@ -104,26 +103,24 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 }
 
 /// Add variation to simulation
-void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigReader& x_varConf, ConfigFile& xr_mainConfig)
+void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigReader& x_varConf, ConfigReader& xr_mainConfig)
 {
-	for(const auto& varConf : x_varConf.FindAll("var"))
+	for(const auto& varConf : x_varConf)
 	{
 		// Read module and parameter attribute
-		vector<string> moduleNames;
-		split(varConf.GetAttribute("modules", ""), ',', moduleNames);
-		if(moduleNames.empty())
-			moduleNames.push_back(varConf.GetAttribute("module"));
-		vector<string> paramNames;
-		split(varConf.GetAttribute("parameters", ""), ',', paramNames);
-		if(paramNames.empty())
-			paramNames.push_back(varConf.GetAttribute("param"));
+		assert(varConf["module"].isNull()); // note: no longer supported
+		assert(varConf["param"].isNull());  // note: no longer supported
+		// split(varConf["modules"], ',', moduleNames); // TODO: Use json syntax
+		const auto& paramNames(varConf["parameters"]);
+		const auto& moduleNames(varConf["modules"]);
+		// split(varConf["parameters"], ',', paramNames);
 		if(moduleNames.size() != 1 && moduleNames.size() != paramNames.size())
 			throw MkException("Modules and parameters must have the same size in <var> or modules must only contain one module", LOC);
 
 		// Get all targets to be varied in config
-		vector<ConfigReader*> targets;
+		vector<ConfigReader> targets;
 		targets.resize(paramNames.size());
-		vector<string> originalValues;
+		vector<ConfigReader> originalValues;
 		originalValues.resize(paramNames.size());
 		auto ittar = targets.begin();
 		auto itmod = moduleNames.begin();
@@ -132,9 +129,9 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 		{
 			try
 			{
-				LOG_DEBUG(m_logger, "Param:"<< *itmod << ":" << itpar);
-				*ittar = new ConfigReader(manOrMod(xr_mainConfig, *itmod).FindRef("parameters>param[name=\"" + itpar + "\"]", true));
-				*itval = (*ittar)->GetValue();
+				LOG_DEBUG(m_logger, "Param:"<< itmod->asString() << ":" << itpar.asString());
+				*ittar = manOrMod(xr_mainConfig, itmod->asString())["parameters"][itpar.asString()];
+				*itval = ittar->asString();
 				ittar++;
 				itval++;
 				if(moduleNames.size() > 1)
@@ -142,19 +139,18 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 			}
 			catch(exception &e)
 			{
-				throw MkException("Cannot variate parameter " + itpar + " of module " + *itmod + ": " + e.what(), LOC);
+				throw MkException("Cannot variate parameter " + itpar.asString() + " of module " + itmod->asString() + ": " + e.what(), LOC);
 			}
 		}
 
 
-		string file;
-		file = varConf.GetAttribute("file", "");
+		string file = varConf["file"].asString();
 
 		if(file != "")
 		{
 			// Reference to the value to use (in json file)
-			vector<string> refNames;
-			split(varConf.GetAttribute("references", ""), ',', refNames);
+			const auto& refNames = varConf["references"];
+			// split(varConf["references"], ',', refNames);
 			if(refNames.size() != paramNames.size())
 				throw MkException("References must have the same sizes as parameters", LOC);
 
@@ -171,20 +167,20 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 				int i = 0;
 				for(const auto& ref : refNames)
 				{
-					if(root[elem][ref].isNull())
-						throw MkException("No tag " + ref + " for " + elem, LOC);
+					if(root[elem][ref.asString()].isNull())
+						throw MkException("No tag " + ref.asString() + " for " + elem, LOC);
 
-					Json::Value jvalue = root[elem][ref];
+					Json::Value jvalue = root[elem][ref.asString()];
 					// cout<<value.asString()<<endl;
 					try
 					{
-						targets.at(i)->SetValue(jvalue.asString());
+						targets.at(i) = jvalue.asString();
 					}
 					catch(...)
 					{
 						stringstream ss1;
 						ss1 << jvalue;
-						targets.at(i)->SetValue(ss1.str());
+						targets.at(i) = ss1.str();
 					}
 					i++;
 				}
@@ -194,8 +190,8 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 				xr_variationNames.push_back(elem);
 
 				// Change value of param
-				ConfigReader subConf = varConf.Find("var");
-				if(subConf.IsEmpty())
+				ConfigReader subConf = varConf["var"];
+				if(subConf.isNull())
 					AddSimulationEntry(xr_variationNames, xr_mainConfig);
 				else
 					AddVariations(xr_variationNames, varConf, xr_mainConfig);
@@ -209,11 +205,11 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 			if(paramNames.size() > 1)
 				throw MkException("To set more than one parameter variation, use an external file with option file=...", LOC);
 			// default values. Empty range means that the prog uses the default range of the param
-			string range = varConf.GetAttribute("range", "");
-			int nb = boost::lexical_cast<int>(varConf.GetAttribute("nb", "10"));
+			string range = varConf["range"].asString();
+			int nb = varConf.get("nb", 10).asInt();
 
-			LOG_DEBUG(m_logger, "Variations for module " << moduleNames.at(0));
-			const Parameter& param = m_manager.GetModuleByName(moduleNames.at(0)).GetParameters().GetParameterByName(paramNames.at(0));
+			LOG_DEBUG(m_logger, "Variations for module " << moduleNames[0].asString());
+			const Parameter& param = m_manager.GetModuleByName(moduleNames[0].asString()).GetParameters().GetParameterByName(paramNames[0].asString());
 			vector<string> values;
 			param.GenerateValues(nb, values, range);
 
@@ -221,12 +217,12 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 			for(const auto& elem : values)
 			{
 				LOG_DEBUG(m_logger, "Value = " << elem);
-				xr_variationNames.push_back(paramNames.at(0) + "-" + elem);
+				xr_variationNames.push_back(paramNames[0].asString() + "-" + elem);
 
 				// Change value of param
-				targets.at(0)->SetValue(elem);
-				ConfigReader subConf = varConf.Find("var");
-				if(subConf.IsEmpty())
+				targets.at(0) = elem;
+				ConfigReader subConf = varConf["var"];
+				if(subConf.isNull())
 					AddSimulationEntry(xr_variationNames, xr_mainConfig);
 				else
 					AddVariations(xr_variationNames, varConf, xr_mainConfig);
@@ -236,10 +232,9 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 
 		// Set the target back to its original value and delete config obj
 		itval = originalValues.begin();
-		for(ConfigReader* target : targets)
+		for(auto& target : targets)
 		{
-			target->SetValue(*itval);
-			delete target;
+			target = *itval;
 			itval++;
 		}
 	}
@@ -247,13 +242,13 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 
 
 /// Generate a simulation ready to be launched
-void Simulation::Generate(ConfigFile& mainConfig)
+void Simulation::Generate(ConfigReader& mainConfig)
 {
 	create_directory(m_outputDir);
 
 	remove("simulation_latest");
 	create_symlink(m_outputDir, "simulation_latest");
-	mainConfig.SaveToFile("simulation_latest/Simulation.xml");
+	saveToFile(mainConfig, "simulation_latest/Simulation.xml");
 	create_directory(m_outputDir + "/ready");
 	create_directory(m_outputDir + "/running");
 	create_directory(m_outputDir + "/results");
@@ -264,7 +259,7 @@ void Simulation::Generate(ConfigFile& mainConfig)
 	m_cpt = 0;
 
 	vector<string> variationNames;
-	AddVariations(variationNames, m_param.config.Find("variations"), mainConfig);
+	AddVariations(variationNames, m_param.config["variations"], mainConfig);
 
 	// Generate a MakeFile for the simulation
 	string makefile = m_outputDir + "/simulation.make";

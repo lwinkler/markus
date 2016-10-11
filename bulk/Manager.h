@@ -24,7 +24,7 @@
 #ifndef MANAGER_H
 #define MANAGER_H
 
-#include "ConfigReader.h"
+#include "Configurable.h"
 #include "Controller.h"
 #include "Timer.h"
 #include "Processable.h"
@@ -33,6 +33,7 @@
 #include "ParameterString.h"
 #include "Module.h"
 #include "Input.h"
+#include "ConfigReader.h"
 
 
 /**
@@ -44,7 +45,7 @@ public:
 	class Parameters : public Processable::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Processable::Parameters(x_confReader.GetAttribute("name")), config(x_confReader)
+		Parameters(const ConfigReader& x_confReader) : Processable::Parameters(x_confReader["name"].asString()), config(x_confReader)
 		{
 			AddParameter(new ParameterInt("nb_frames", 0, 0, INT_MAX, &nbFrames, "Number of frames to process. 0 for infinite. Only works in centralized mode"));
 			AddParameter(new ParameterString("arguments", "",         &arguments, "Command-line arguments, for storage only"));
@@ -112,7 +113,7 @@ public:
 		}
 	}
 	void WriteStateToDirectory(const std::string& x_directory);
-	virtual void WriteConfig(ConfigReader xr_config) const override;
+	virtual void WriteConfig(ConfigReader& xr_config) const override;
 	inline virtual void SetContext(Context& x_context) override
 	{
 		Processable::SetContext(x_context);

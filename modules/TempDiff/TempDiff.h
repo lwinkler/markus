@@ -26,8 +26,6 @@
 
 #include "Module.h"
 
-class ConfigReader;
-
 
 /**
 * @brief Perform temporal differencing: compare frame with previous frame by subtraction

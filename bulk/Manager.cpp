@@ -74,7 +74,7 @@ Manager::~Manager()
 */
 void Manager::Build()
 {
-	for(auto& moduleConfig : m_param.config.FindAll("module"))
+	for(const auto& moduleConfig : m_param.config["modules"])
 	{
 		BuildModule(moduleConfig);
 	}
@@ -83,10 +83,10 @@ void Manager::Build()
 void Manager::BuildModule(const ConfigReader& x_moduleConfig)
 {
 	// Read parameters
-	if(x_moduleConfig.Find("parameters").IsEmpty())
-		throw MkException("Impossible to find <parameters> section for module " +  x_moduleConfig.GetAttribute("name", "(unknown)"), LOC);
-	string moduleType = x_moduleConfig.Find("class").GetValue();
-	ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, x_moduleConfig.GetAttribute("name"));
+	if(!x_moduleConfig.isMember("parameters"))
+		throw MkException("Impossible to find 'parameters' section for module " +  x_moduleConfig.get("name", "(unknown)").asString(), LOC);
+	string moduleType = x_moduleConfig["class"].asString();
+	ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, x_moduleConfig["name"].asString());
 	tmp2->Read(x_moduleConfig);
 	tmp2->CheckRange(x_moduleConfig);
 
@@ -110,11 +110,11 @@ void Manager::BuildModule(const ConfigReader& x_moduleConfig)
 	Module * tmp1 = mr_moduleFactory.Create(moduleType, *tmp2);
 
 	LOG_DEBUG(m_logger, "Add module " << tmp1->GetName() << " to list input=" << (tmp1->IsInput() ? "yes" : "no"));
-	int id = boost::lexical_cast<int>(x_moduleConfig.GetAttribute("id"));
+	int id = boost::lexical_cast<int>(x_moduleConfig["id"].asInt());
 	auto ret = m_modules.insert(pair<int,Module*>(id, tmp1));
 	if(ret.second == false)
 	{
-		throw MkException("Module with id " + x_moduleConfig.GetAttribute("id") + " is listed more than one time in config", LOC);
+		throw MkException("Module with id " + x_moduleConfig["id"].asString() + " is listed more than one time in config", LOC);
 	}
 	m_parameters.push_back(tmp2);
 
@@ -191,21 +191,21 @@ void Manager::Connect()
 		throw MkException("Manager can only connect modules once", LOC);
 
 	// Connect input and output streams (re-read the config once since we need all modules to be connected)
-	for(const auto& moduleConfig : m_param.config.FindAll("module"))
+	for(const auto& moduleConfig : m_param.config["modules"])
 	{
-		int moduleId = boost::lexical_cast<int>(moduleConfig.GetAttribute("id"));
+		int moduleId = boost::lexical_cast<int>(moduleConfig["id"].asInt());
 		Module& module = RefModuleById(moduleId);
 
 		// For each module
 		// Read conections of inputs
-		for(const auto& inputConfig : moduleConfig.Find("inputs").FindAll("input"))
+		for(const auto& inputConfig : moduleConfig["inputs"])
 		{
-			ConnectInput(inputConfig, module, boost::lexical_cast<int>(inputConfig.GetAttribute("id")));
+			ConnectInput(inputConfig, module, boost::lexical_cast<int>(inputConfig["id"]));
 
 			// Connect all sub-inputs: only used in case of multiple streams
-			for(const auto& subInputConfig : inputConfig.FindAll("input"))
+			for(const auto& subInputConfig : inputConfig["inputs"])
 			{
-				ConnectInput(subInputConfig, module, boost::lexical_cast<int>(inputConfig.GetAttribute("id")));
+				ConnectInput(subInputConfig, module, boost::lexical_cast<int>(inputConfig["id"]));
 			}
 		}
 
@@ -404,6 +404,7 @@ void Manager::PrintStatistics()
 	if(RefContext().RefOutputDir().FileExists("benchmark.json"))
 		RefContext().RefOutputDir().Rm("benchmark.json");
 	string benchFileName = notEmpty ? RefContext().RefOutputDir().ReserveFile("benchmark.json") : "/tmp/benchmark" + timeStamp() +  ".json";
+	/* TODO
 	ConfigFile benchSummary(benchFileName, true);
 	ConfigReader conf = benchSummary.FindRef("benchmark", true);
 
@@ -421,6 +422,7 @@ void Manager::PrintStatistics()
 		module.second->PrintStatistics(conf);
 	}
 	benchSummary.SaveToFile(benchFileName);
+	*/
 }
 
 /**
@@ -533,11 +535,11 @@ Module& Manager::RefModuleByName(const string& x_name) const
 /**
 * @brief Save the configuration of manager and modules to file
 */
-void Manager::WriteConfig(ConfigReader xr_config) const // TODO unit test
+void Manager::WriteConfig(ConfigReader& xr_config) const // TODO unit test
 {
 	// Set all config ready to be saved
 	for(auto & elem : m_modules)
-		elem.second->WriteConfig(xr_config.FindRef("module[name=\"" + elem.second->GetName() + "\"]"));
+		elem.second->WriteConfig(xr_config["modules"][elem.second->GetName()]);
 	m_param.Write(xr_config);
 	GetContext().WriteConfig(xr_config);
 }
@@ -571,10 +573,10 @@ void Manager::ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module,
 	// Check if connected to our previous module
 	try
 	{
-		const string& tmp1 = x_inputConfig.GetAttribute("moduleid", "");
-		const string& tmp2 = x_inputConfig.GetAttribute("outputid", "");
-		const string& tmp3 = x_inputConfig.GetAttribute("block", "1");
-		const string& tmp4 = x_inputConfig.GetAttribute("sync", "1");
+		const string& tmp1 = x_inputConfig.get("moduleid", "").asString();
+		const string& tmp2 = x_inputConfig.get("outputid", "").asString();
+		const string& tmp3 = x_inputConfig.get("block", "1").asString();
+		const string& tmp4 = x_inputConfig.get("sync", "1").asString();
 
 		// Connection of a simple input
 		if(tmp1 != "" && tmp2 != "")
@@ -598,7 +600,7 @@ void Manager::ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module,
 	}
 	catch(MkException& e)
 	{
-		LOG_ERROR(m_logger, "Cannot connect input "<<x_inputConfig.GetAttribute("id", "(unknown)")<<" of module "<<xr_module.GetName());
+		LOG_ERROR(m_logger, "Cannot connect input " << x_inputConfig.get("id", "(unknown)").asString() << " of module " << xr_module.GetName());
 		throw;
 	}
 }

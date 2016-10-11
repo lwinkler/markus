@@ -24,7 +24,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#include "ConfigReader.h"
+#include "Configurable.h"
 #include "Parameter.h"
 #include "Module.h"
 

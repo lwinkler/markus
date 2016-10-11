@@ -27,24 +27,31 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
 #include <boost/noncopyable.hpp>
 
-#include "define.h"
-#include <log4cxx/xml/domconfigurator.h>
+// #include "define.h"
+// #include <log4cxx/xml/domconfigurator.h>
 
 
 class Module;
 class ParameterStructure;
-namespace Json{class Value;}
+
+typedef Json::Value ConfigReader;
 
 
 /**
 * @brief       Class used to manipulate configuration files
 * @brief       A ConfigReader object is a reference to a sub part of a ConfigFile.
 */
-class ConfigReader
-{
-public:
+// class ConfigReader : public Json::Value, boost::noncopyable
+// {
+// public:
+	// ConfigReader(){}
+	// ConfigReader(const Json::Value& xr_jsonRoot);
+	// ConfigReader(Json::Value& xr_jsonRoot);
+	/*
 	ConfigReader(const ConfigReader& x_conf);
 	virtual ~ConfigReader();
 
@@ -73,31 +80,40 @@ public:
 	void Validate() const;
 	/// Redefinition of == operator
 	bool operator == (const ConfigReader &a);
-	void OverrideWith(const ConfigReader& xr_extraConfig);
+	*/
+	void readFromFile(ConfigReader& rx_config, const std::string& x_fileName, bool x_allowCreation = false);
+	void overrideWith(ConfigReader& rx_config, const ConfigReader& xr_extraConfig);
 
 	// New access functions with JQuery-like syntax
-	const ConfigReader Find(const std::string& x_searchString) const;
-	ConfigReader    FindRef(const std::string& x_searchString, bool x_allowCreation = false);
-	std::vector<ConfigReader> FindAll(const std::string& x_searchString) const;
+	// const ConfigReader& Find(const std::string& x_searchString) const;
+	// ConfigReader& FindRef(const std::string& x_searchString, bool x_allowCreation = false);
+	// std::vector<ConfigReader> FindAll(const std::string& x_searchString) const;
+	void saveToFile(const ConfigReader& rx_config, const std::string& x_file);
+	void validate(const ConfigReader& rx_config);
+	/*
 
 protected:
 	ConfigReader(Json::Value* xp_node);
 	ConfigReader& operator = (const ConfigReader& x_conf);
 	// ConfigReader NextSubConfig(const std::string& x_tagName, const std::string& x_attrName = "", const std::string& x_attrValue = "") const;
-	void CheckUniquenessOfId(const std::string& x_group, const std::string& x_type, const std::string& x_idLabel, const std::string& x_moduleName) const;
+	*/
+	void checkUniquenessOfId(const ConfigReader& rx_config, const std::string& x_group, const std::string& x_type, const std::string& x_idLabel, const std::string& x_moduleName);
+	/*
 	static void overrideParameters(const ConfigReader& x_newConfig, ConfigReader x_oldConfig);
 
 	Json::Value* mp_jsonRoot = nullptr;
+	*/
 
-private:
-	static log4cxx::LoggerPtr m_logger;
-};
+// private:
+	// static log4cxx::LoggerPtr m_logger;
+// };
 
 /**
 * @brief       Class used to manipulate configuration files
 * @brief       A ConfigFile object is created from an XML file. It can browse the different tags of the file by creating sub config objects. Each sub config object is
                a reference to the sub configuration. Not a copy.
 */
+/*
 class ConfigFile : public ConfigReader, boost::noncopyable
 {
 public:
@@ -108,6 +124,7 @@ public:
 private:
 	Json::Value* mp_jsonRoot = nullptr;
 };
+*/
 
 /**
 * @brief       Class used to manipulate configuration files
@@ -115,6 +132,7 @@ private:
                a reference to the sub configuration. Not a copy.
                This utility relies on TinyXml.
 */
+/*
 class ConfigString : public ConfigReader, boost::noncopyable
 {
 public:
@@ -124,21 +142,5 @@ public:
 private:
 	Json::Value* mp_jsonRoot = nullptr;
 };
-
-
-/**
-* @brief Parent class for all configurable objects (containing parameters)
 */
-class Configurable : boost::noncopyable
-{
-public:
-	Configurable(ParameterStructure& x_param);
-	virtual ~Configurable() {}
-	virtual void WriteConfig(ConfigReader xr_config) const;
-	virtual const ParameterStructure& GetParameters() const {return m_param;}
-
-private:
-	ParameterStructure& m_param;
-};
-
 #endif

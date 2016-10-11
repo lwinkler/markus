@@ -68,11 +68,13 @@ MarkusWindow::~MarkusWindow()
 	mr_manager.SendCommand("manager.manager.Stop", "");
 }
 
-void MarkusWindow::WriteConfig(ConfigReader xr_config) const
+void MarkusWindow::WriteConfig(ConfigReader& xr_config) const
 {
+	/* TODO
 	for(auto & elem : m_paramsViewer)
 		elem->Write(xr_config.FindRef("viewer[name=\"" + elem->GetName() + "\"]"));
 	m_param.Write(xr_config);
+	*/
 }
 
 QLabel *MarkusWindow::createLabel(const QString &text)
@@ -300,9 +302,9 @@ void MarkusWindow::resizeEvent(QResizeEvent* event)
 	// Add new module viewers to config
 	for(int ind = size ; ind < m_param.nbRows * m_param.nbCols ; ind++)
 	{
-		ConfigReader conf(m_param.config.FindRef("viewer[name=\"viewer" + to_string(ind) + "\"]", true));
-		conf.FindRef("parameters", true);
-		m_paramsViewer.push_back(new QModuleViewer::Parameters(conf.GetAttribute("name")));
+		ConfigReader& conf(m_param.config["viewers"]["viewer" + to_string(ind)]);
+		conf["parameters"];
+		m_paramsViewer.push_back(new QModuleViewer::Parameters(conf["name"].asString()));
 		m_paramsViewer.back()->Read(conf);
 		assert(!m_paramsViewer.empty());
 		m_moduleViewer.push_back(new QModuleViewer(mr_manager, *m_paramsViewer.back()));

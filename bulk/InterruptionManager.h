@@ -24,7 +24,7 @@
 #ifndef MK_INTERRUPTION_MANAGER_H
 #define MK_INTERRUPTION_MANAGER_H
 
-#include "ConfigReader.h"
+#include "Configurable.h"
 #include "ParameterStructure.h"
 #include <log4cxx/logger.h>
 

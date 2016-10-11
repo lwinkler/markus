@@ -22,6 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ParameterStructure.h"
+#include "ConfigReader.h"
 #include "assert.h"
 
 using namespace std;
@@ -59,28 +60,6 @@ void ParameterStructure::AddParameter(Parameter* xr_param)
 
 	// Directly set the right value
 	xr_param->SetValueToDefault();
-	/*
-	if(m_configReader.GetSubConfig("parameters").IsEmpty())
-	{
-		LOG_WARN(m_logger, "No <parameters/> structure in configuration of " << m_configReader.GetAttribute("name"));
-	}
-	else
-	{
-		ConfigReader conf(m_configReader.Find("parameters>param[name=\"" + xr_param->GetName() + "\"]"));
-		if(!conf.IsEmpty())
-		{
-			string value = conf.GetValue();
-			xr_param->SetValue(value, PARAMCONF_XML);
-		}
-	}
-	if(!xr_param->CheckRange())
-	{
-		stringstream ss;
-		ss<<"Parameter "<<xr_param->GetName()<<" is out of range: ";
-		xr_param->Print(ss);
-		throw ParameterException(ss.str(), LOC);
-	}
-	*/
 }
 
 /**
@@ -99,10 +78,9 @@ void ParameterStructure::LockIfRequired()
 */
 void ParameterStructure::Read(const ConfigReader& x_config)
 {
-	for(const auto& conf : x_config.FindAll("parameters>param"))
+	for(const auto& name : x_config["parameters"].getMemberNames())
 	{
-		string name  = conf.GetAttribute("name");
-		string value = conf.GetValue();
+		string value = x_config["parameters"][name].asString();
 
 		try
 		{
@@ -123,15 +101,13 @@ void ParameterStructure::Read(const ConfigReader& x_config)
 /**
 * @brief Save all values and prepare xml configuration for writing
 */
-void ParameterStructure::Write(ConfigReader xr_config) const
+void ParameterStructure::Write(ConfigReader& xr_config) const
 {
-	ConfigReader conf = xr_config.Find("parameters");
-
 	for(const auto & elem : m_list)
 	{
-		if(m_writeAllParamsToConfig || (elem)->GetConfigurationSource() != PARAMCONF_DEF)
+		if(m_writeAllParamsToConfig || elem->GetConfigurationSource() != PARAMCONF_DEF)
 		{
-			conf.FindRef("param[name=\"" +(elem)->GetName() + "\"]", true).SetValue((elem)->GetValueString());
+			xr_config["parameters"][elem->GetName()] = elem->GetValueString();
 		}
 	}
 }
@@ -147,7 +123,7 @@ const Parameter& ParameterStructure::GetParameterByName(const string& x_name) co
 {
 	for(const auto & elem : m_list)
 	{
-		if((elem)->GetName().compare(x_name) == 0)
+		if(elem->GetName().compare(x_name) == 0)
 		{
 			return *elem;
 		}
@@ -217,11 +193,8 @@ void ParameterStructure::SetValueToDefault()
 void ParameterStructure::CheckRange(const ConfigReader& x_config) const
 {
 	// Check that all parameters in config are related to the module
-	// if(m_configReader.Find("parameters").IsEmpty())
-	// return;
-	for(const auto& conf : x_config.FindAll("parameters>param"))
+	for(const auto& name : x_config["parameters"].getMemberNames())
 	{
-		string name = conf.GetAttribute("name");
 		try
 		{
 			GetParameterByName(name);
@@ -245,11 +218,11 @@ void ParameterStructure::CheckRange() const
 	// Check that each parameter's value is within range
 	for(const auto & elem : m_list)
 	{
-		if(!(elem)->CheckRange())
+		if(!elem->CheckRange())
 		{
 			stringstream ss;
-			ss<<"Parameter "<<(elem)->GetName()<<" is out of range: ";
-			(elem)->Print(ss);
+			ss<<"Parameter "<<elem->GetName()<<" is out of range: ";
+			elem->Print(ss);
 			throw ParameterException(ss.str(), LOC);
 		}
 	}
@@ -264,8 +237,8 @@ void ParameterStructure::PrintParameters() const
 	// string confType = "";
 	for(const auto & elem : m_list)
 	{
-		if(!(elem)->IsHidden())
-			(elem)->Print(ss);
+		if(!elem->IsHidden())
+			elem->Print(ss);
 	}
 	if(m_list.size() > 0)
 		LOG_INFO(m_logger, ss.str());

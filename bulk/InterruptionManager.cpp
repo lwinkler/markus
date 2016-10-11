@@ -43,16 +43,14 @@ InterruptionManager::InterruptionManager()
 void InterruptionManager::Configure(const ConfigReader& x_config)
 {
 	m_interruptions.clear();
-	if(x_config.FindAll("interruptions").size() == 0)
-		return;
-	for(const auto& config : x_config.FindAll("interruptions>interruption"))
+	for(const auto& config : x_config["interruptions"])
 	{
 		Interruption inter(Command(
-			config.GetAttribute("command"),
-			config.GetAttribute("value", "")),
-			boost::lexical_cast<int>(config.GetAttribute("nb", "-1"))
+			config["command"].asString(),
+			config.get("value", "").asString()),
+			boost::lexical_cast<int>(config.get("nb", "-1").asString())
 		);
-		string event = config.GetAttribute("event");
+		string event = config["event"].asString();
 		m_interruptions[event].push_back(inter);
 		LOG_INFO(m_logger, "Add interruption for "<<event<<" --> "<<inter.command.name<<"="<<inter.command.value<<" "<<inter.remaining<<" time(s)");
 	}

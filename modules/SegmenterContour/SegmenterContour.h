@@ -27,8 +27,6 @@
 #include "Module.h"
 #include "StreamObject.h"
 
-class ConfigReader;
-
 /**
 * @brief Segments a binary image and outputs a stream of objects (with OpenCV contour) and extracts their features (position, width and height)
 */

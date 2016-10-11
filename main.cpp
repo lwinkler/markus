@@ -273,8 +273,9 @@ void overrideConfig(ConfigReader& mainConfig, const vector<string>& extraConfig,
 	for(const auto& elem1 : extraConfig)
 	{
 		// open the config and override the initial config
-		ConfigFile extra(elem1);
-		mainConfig.OverrideWith(extra);
+		ConfigReader extra;
+		readFromFile(extra, elem1);
+		overrideWith(mainConfig, extra);
 	}
 
 	// Set values of parameters if set from command line
@@ -297,9 +298,9 @@ void overrideConfig(ConfigReader& mainConfig, const vector<string>& extraConfig,
 			if(path.size() != 2)
 				throw MkException("Parameter set in command line must be in format 'module.parameter'", LOC);
 			if(path[0] == "manager")
-				mainConfig.RefSubConfig("application").FindRef("parameters>param[name=\"" + path[1] + "\"]", true).SetValue(value);
+				mainConfig["application"]["parameters"][path[1]] = value; // TODO: Handle cases where parameter is integer, float, ...
 			else
-				mainConfig.RefSubConfig("application").FindRef("module[name=\"" + path[0] + "\"]>parameters>param[name=\"" + path[1] + "\"]", true).SetValue(value);
+				mainConfig["application"]["module"][path[0]]["parameters"][path[1]] = value;
 			// manager.GetModuleByName(path[0])->GetParameters().RefParameterByName(path[1]).SetValue(value, PARAMCONF_CMD);
 		}
 		catch(std::exception& e)
@@ -352,23 +353,24 @@ int main(int argc, char** argv)
 		Factories::RegisterAll();
 
 		LOG_INFO(logger, Context::Version(true));
-		ConfigFile mainConfig(args.configFile);
+		ConfigReader mainConfig;
+		readFromFile(mainConfig, args.configFile);
 		overrideConfig(mainConfig, args.extraConfig, args.parameters, logger);
-		mainConfig.Validate();
-		ConfigReader appConfig = mainConfig.Find("application");
-		if(appConfig.IsEmpty())
+		validate(mainConfig);
+		ConfigReader& appConfig(mainConfig["application"]);
+		if(appConfig.isNull())
 			throw MkException("Tag <application> must be present in configuration file.", LOC);
-		if(appConfig.Find("parameters").IsEmpty())
+		if(appConfig["parameters"].isNull())
 			throw MkException("Tag <application> must contain a <parameters> section", LOC);
 
 		// Init global variables and objects
 		// Context manages all call to system, files, ...
-		Context::Parameters contextParameters(mainConfig.Find("application").GetAttribute("name"));
-		contextParameters.Read(mainConfig.Find("application"));
+		Context::Parameters contextParameters(mainConfig["application"]["name"].asString());
+		contextParameters.Read(mainConfig["application"]);
 
 		contextParameters.outputDir       = args.outputDir;
 		contextParameters.configFile      = args.configFile;
-		contextParameters.applicationName = appConfig.GetAttribute("name");
+		contextParameters.applicationName = appConfig["name"].asString();
 		contextParameters.centralized     = args.centralized;
 		contextParameters.robust          = args.robust;
 		contextParameters.realTime        = !args.fast;
@@ -390,7 +392,7 @@ int main(int argc, char** argv)
 
 		if(args.simulation)
 		{
-			Simulation::Parameters parameters(mainConfig.Find("application"));
+			Simulation::Parameters parameters(mainConfig["application"]);
 			Simulation sim(parameters, context);
 			sim.Generate(mainConfig);
 			return 0;
@@ -452,9 +454,10 @@ int main(int argc, char** argv)
 #ifndef MARKUS_NO_GUI
 			assert(managerParameters.autoProcess);
 			manager.Start();
-			ConfigFile mainGuiConfig("gui.xml", true);
-			ConfigReader guiConfig = mainGuiConfig.FindRef("gui[name=\"" + args.configFile + "\"]", true);
-			guiConfig.FindRef("parameters", true);
+			ConfigReader mainGuiConfig;
+			readFromFile(mainGuiConfig, "gui.xml", true);
+			ConfigReader& guiConfig(mainGuiConfig["gui"][args.configFile]);
+			guiConfig["parameters"];
 
 			MarkusWindow::Parameters windowParameters(guiConfig);
 			windowParameters.Read(guiConfig);
@@ -467,7 +470,7 @@ int main(int argc, char** argv)
 
 			// write the modified params in config and save
 			gui.WriteConfig(guiConfig);
-			mainGuiConfig.SaveToFile("gui.xml");
+			saveToFile(mainGuiConfig, "gui.xml");
 #else
 			LOG_ERROR(logger, "Markus was compiled without GUI. It can only be launched with option -nc");
 #endif
@@ -478,7 +481,7 @@ int main(int argc, char** argv)
 		// Write the modified params in config and save
 		manager.WriteConfig(appConfig);
 		// Save the last config with modifs to the output file
-		mainConfig.SaveToFile(context.RefOutputDir().ReserveFile("overridden.xml"));
+		saveToFile(mainConfig, context.RefOutputDir().ReserveFile("overridden.xml"));
 	}
 	catch(MkException& e)
 	{
