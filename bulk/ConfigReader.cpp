@@ -26,7 +26,7 @@
 #include <fstream>
 #include <boost/filesystem.hpp>
 #include "ConfigReader.h"
-#include "ParameterStructure.h"
+#include "MkException.h"
 #include "util.h"
 
 using namespace std;
@@ -48,7 +48,14 @@ using namespace std;
 */
 void readFromFile(ConfigReader& rx_config, const std::string& x_fileName, bool x_allowCreation)
 {
-	assert(false); // TODO
+	if(!boost::filesystem::exists(x_fileName))
+	{
+		if(x_allowCreation)
+			createEmptyConfigFile(x_fileName, true);
+		else throw MkException("File " + x_fileName + " does not exist", LOC);
+	}
+	ifstream ifs(x_fileName);
+	ifs >> rx_config;
 }
 
 /**
@@ -56,10 +63,10 @@ void readFromFile(ConfigReader& rx_config, const std::string& x_fileName, bool x
 *
 * @param x_file Name of the file with relative path
 */
-void saveToFile(const ConfigReader& xr_config, const string& x_file)
+void saveToFile(const ConfigReader& xr_config, const string& x_fileName)
 {
-	// if(!mp_doc->SaveFile(x_file))
-		// throw MkException("Error saving to file " + x_file, LOC);
+	ofstream of(x_fileName);
+	of << xr_config;
 }
 
 /**
@@ -67,35 +74,24 @@ void saveToFile(const ConfigReader& xr_config, const string& x_file)
 */
 void validate(const ConfigReader& xr_config)
 {
-	/*
-	ConfigReader appConf = GetSubConfig("application");
-	if(appConf.IsEmpty())
+	const ConfigReader& appConf = xr_config["application"];
+	if(appConf.isNull())
 		throw MkException("Configuration must contain <application> subconfiguration", LOC);
-	map<string,bool> moduleIds;
-	map<string,bool> moduleNames;
-	ConfigReader conf = appConf.GetSubConfig("module");
-
-	while(!conf.IsEmpty())
+	map<int,bool> moduleIds;
+	
+	for(const auto& name : appConf["modules"].getMemberNames())
 	{
-		string id = conf.GetAttribute("id", "");
-		string name = conf.GetAttribute("name", "");
-		if(id == "")
+		const auto& conf = appConf["modules"][name];
+		const auto& id   = conf["id"];
+		if(!id.isInt())
 			throw MkException("Module " + name + " has no id", LOC);
-		if(name == "")
-			throw MkException("Module " + id + " has no name", LOC);
-		if(moduleIds[id])
-			throw MkException("Module with id=" + id + " must be unique", LOC);
-		moduleIds[id] = true;
-		if(moduleNames[name])
-			throw MkException("Module with name=" + name + " must be unique", LOC);
-		moduleNames[name] = true;
+		if(moduleIds[id.asInt()])
+			throw MkException("Module with id=" + to_string(id.asInt()) + " must be unique", LOC);
+		moduleIds[id.asInt()] = true;
 
-		conf.CheckUniquenessOfId("inputs",     "input",  "id",   name);
-		conf.CheckUniquenessOfId("outputs",    "output", "id",   name);
-		conf.CheckUniquenessOfId("parameters", "param",  "name", name);
-		conf = conf.NextSubConfig("module");
+		checkUniquenessOfId(conf, "inputs",     "id",   name);
+		checkUniquenessOfId(conf, "outputs",    "id",   name);
 	}
-	*/
 }
 
 /**
@@ -106,59 +102,49 @@ void validate(const ConfigReader& xr_config)
 * @param x_idLabel    Label
 * @param x_moduleName Name of the module
 */
-void checkUniquenessOfId(const ConfigReader& xr_config, const string& x_group, const string& x_type, const string& x_idLabel, const string& x_moduleName)
+void checkUniquenessOfId(const ConfigReader& xr_config, const string& x_group, const string& x_idLabel, const string& x_moduleName)
 {
 	// Check that input streams are unique
-	/*
-	map<string,bool> ids;
-	ConfigReader conf = GetSubConfig(x_group);
-	if(conf.IsEmpty())
+	map<int, bool> ids;
+	const ConfigReader& conf(xr_config[x_group]);
+	if(conf.isNull())
 		return;
-	conf = conf.GetSubConfig(x_type);
-	while(!conf.IsEmpty())
+	for(const auto& name : xr_config.getMemberNames())
 	{
-		string id = conf.GetAttribute(x_idLabel);
+		int id = conf[name][x_idLabel].asInt();
 		if(ids[id])
-			throw MkException(x_type + " with " + x_idLabel + "=" + id + " must be unique for module name=" + x_moduleName, LOC);
+			throw MkException("Json property " + x_group + " " + x_idLabel + "=" + to_string(id) + " must be unique for module name=" + x_moduleName, LOC);
 		ids[id] = true;
-		conf = conf.NextSubConfig(x_type);
 	}
-	*/
 }
 
 
 
-	/*
-void ConfigReader::overrideParameters(const ConfigReader& x_newConfig, ConfigReader x_oldConfig)
+void overrideParameters(ConfigReader& x_oldConfig, const ConfigReader& x_newConfig, const string& x_parentName)
 {
-	// if(x_newConfig.GetSubConfig("parameters").IsEmpty())
-	// return;
-	for(const auto& conf2 : x_newConfig.GetSubConfig("parameters").FindAll("param"))
+	if(x_newConfig.isObject() && x_newConfig.isObject())
 	{
-		try
+		for(const auto& name : x_newConfig.getMemberNames())
 		{
-			// cout << x_newConfig.GetAttribute("name") << ":" << conf2.GetAttribute("name") << endl;
-			if(x_oldConfig.IsEmpty())
-			{
-				LOG_WARN(m_logger, "Module " << x_newConfig.GetAttribute("name") << " cannot be overridden since it does not exist in the current config");
+			if(!x_newConfig.isMember(name))
 				continue;
+			if(x_parentName == "parameters")
+			{
+				x_oldConfig[name] = x_newConfig[name];
 			}
-			// Override parameter
-			LOG_DEBUG(m_logger, "Override parameter " << conf2.GetAttribute("name") << " with value " << conf2.GetValue());
-			x_oldConfig.RefSubConfig("parameters").RefSubConfig("param", "name", conf2.GetAttribute("name"), true)
-			.SetValue(conf2.GetValue());
-		}
-		catch(MkException& e)
-		{
-			LOG_WARN(m_logger, "Cannot read parameters from extra config: "<<e.what());
+			else
+			{
+				// recursive call
+				overrideParameters(x_oldConfig[name], x_newConfig[name], name);
+			}
 		}
 	}
 }
-	*/
 
 /**
-* @brief Apply extra XML config to modify the initial config (used with option -x)
+* @brief Apply extra JSON config to modify the initial config (used with option -x)
 *
+* @param xr_config     Config to override
 * @param x_extraConfig Extra config to use for overriding
 *
 * @return
@@ -166,107 +152,6 @@ void ConfigReader::overrideParameters(const ConfigReader& x_newConfig, ConfigRea
 
 void overrideWith(ConfigReader& xr_config, const ConfigReader& x_extraConfig)
 {
-	/*
 	// Note: This method is very specific to our type of configuration
-	overrideParameters(x_extraConfig.GetSubConfig("application"), RefSubConfig("application"));
-
-	for(const auto& conf1 : x_extraConfig.GetSubConfig("application").FindAll("module"))
-	{
-		overrideParameters(conf1, RefSubConfig("application").RefSubConfig("module", "name", conf1.GetAttribute("name")));
-	}
-	*/
+	overrideParameters(xr_config["application"]["modules"], x_extraConfig["application"]["modules"], "modules");
 }
-
-/**
-* @brief Find a sub config (with a similar syntax as JQuery)
-*
-* @param  x_searchString The search path with jquery-like syntax
-* @return value
-*/
-/*
-const ConfigReader ConfigReader::Find(const string& x_searchString)
-{
-	// If empty return node: for recurrent function
-	if(x_searchString.empty())
-		return *this;
-
-	string tagName, attrName, attrValue, searchString2;
-	splitTagName(x_searchString, tagName, attrName, attrValue, searchString2);
-
-	// cout << "Search in config: " << tagName << "[" << attrName << "=\"" << attrValue << "\"]" << endl;
-
-	if(attrName == "")
-		return GetSubConfig(tagName).Find(searchString2);
-	else
-		return GetSubConfig(tagName, attrName, attrValue).Find(searchString2);
-}
-*/
-
-/**
-* @brief Find a sub config (with a similar syntax as JQuery)
-*
-* @param  x_searchString The search path with jquery-like syntax
-* @return value
-*/
-/*
-ConfigReader ConfigReader::FindRef(const string& x_searchString, bool x_allowCreation)
-{
-	if(x_searchString.empty())
-		return *this;
-
-	string tagName, attrName, attrValue, searchString2;
-	splitTagName(x_searchString, tagName, attrName, attrValue, searchString2);
-
-	if(attrName == "")
-		return RefSubConfig(tagName, x_allowCreation).FindRef(searchString2, x_allowCreation);
-	else
-		return RefSubConfig(tagName, attrName, attrValue, x_allowCreation).FindRef(searchString2, x_allowCreation);
-}
-*/
-
-
-/**
-* @brief Find all sub configs (with a similar syntax as JQuery)
-*
-* @param  x_searchString The search path with jquery-like syntax
-* @return A vector of configurations
-*/
-/*
-vector<ConfigReader> ConfigReader::FindAll(const string& x_searchString) const
-{
-	vector<ConfigReader> results;
-
-	if(IsEmpty())
-	{
-		return results;
-	}
-	// If empty return node: for recurrent function
-	if(x_searchString.empty())
-	{
-		results.push_back(*this);
-		return results;
-	}
-
-	string tagName, attrName, attrValue, searchString2;
-	splitTagName(x_searchString, tagName, attrName, attrValue, searchString2);
-
-	if(searchString2 == "")
-	{
-		Json::Value arr = (*mp_jsonRoot); // TODO tagName is useless [tagName];
-		if(!arr.isArray())
-			throw MkException("Expecting array in find all for tag " + tagName, LOC);
-		while(!conf.IsEmpty())
-		for(auto& elem : arr)
-		{
-			if(attrName == "" || (elem.isMember(attrName) && elem[attrName] == attrValue))
-				return ConfigReader(&elem);
-			results.push_back(conf);
-		}
-		return results;
-	}
-	else if(attrName == "")
-		return GetSubConfig(tagName).FindAll(searchString2);
-	else
-		return GetSubConfig(tagName, attrName, attrValue).FindAll(searchString2);
-}
-*/
