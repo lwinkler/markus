@@ -269,6 +269,7 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 /// Override the initial config with extra config files and argument set parameters
 void overrideConfig(ConfigReader& mainConfig, const vector<string>& extraConfig, const vector<string>& parameters, log4cxx::LoggerPtr& logger)
 {
+	Json::Reader reader;
 	// Override values of parameters if an extra config is used
 	for(const auto& elem1 : extraConfig)
 	{
@@ -298,9 +299,9 @@ void overrideConfig(ConfigReader& mainConfig, const vector<string>& extraConfig,
 			if(path.size() != 2)
 				throw MkException("Parameter set in command line must be in format 'module.parameter'", LOC);
 			if(path[0] == "manager")
-				mainConfig["application"]["parameters"][path[1]] = value; // TODO: Handle cases where parameter is integer, float, ...
+				reader.parse(value, mainConfig["application"]["parameters"][path[1]]);
 			else
-				mainConfig["application"]["module"][path[0]]["parameters"][path[1]] = value;
+				reader.parse(value, mainConfig["application"]["module"][path[0]]["parameters"][path[1]]);
 			// manager.GetModuleByName(path[0])->GetParameters().RefParameterByName(path[1]).SetValue(value, PARAMCONF_CMD);
 		}
 		catch(std::exception& e)

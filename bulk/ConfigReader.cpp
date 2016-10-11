@@ -32,13 +32,6 @@
 using namespace std;
 
 
-//TODO rewrite this class as a simple wrapper (inherited from Json::Value) and add
-// - Find methods
-// - Overwrite methods
-
-// log4cxx::LoggerPtr ConfigReader::m_logger(log4cxx::Logger::getLogger("ConfigReader"));
-
-
 /**
 * @brief Save the config as an xml file
 *

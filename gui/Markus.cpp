@@ -70,11 +70,9 @@ MarkusWindow::~MarkusWindow()
 
 void MarkusWindow::WriteConfig(ConfigReader& xr_config) const
 {
-	/* TODO
 	for(auto & elem : m_paramsViewer)
-		elem->Write(xr_config.FindRef("viewer[name=\"" + elem->GetName() + "\"]"));
+		elem->Write(xr_config[elem->GetName()]);
 	m_param.Write(xr_config);
-	*/
 }
 
 QLabel *MarkusWindow::createLabel(const QString &text)

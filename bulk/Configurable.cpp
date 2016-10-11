@@ -29,7 +29,6 @@ using namespace std;
 
 Configurable::Configurable(ParameterStructure& x_param) : m_param(x_param)
 {
-	// TODO: Probably check input for null
 	m_param.CheckRange();
 }
 

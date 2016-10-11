@@ -110,10 +110,8 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 		// Read module and parameter attribute
 		assert(varConf["module"].isNull()); // note: no longer supported
 		assert(varConf["param"].isNull());  // note: no longer supported
-		// split(varConf["modules"], ',', moduleNames); // TODO: Use json syntax
 		const auto& paramNames(varConf["parameters"]);
 		const auto& moduleNames(varConf["modules"]);
-		// split(varConf["parameters"], ',', paramNames);
 		if(moduleNames.size() != 1 && moduleNames.size() != paramNames.size())
 			throw MkException("Modules and parameters must have the same size in <var> or modules must only contain one module", LOC);
 
@@ -150,7 +148,6 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 		{
 			// Reference to the value to use (in json file)
 			const auto& refNames = varConf["references"];
-			// split(varConf["references"], ',', refNames);
 			if(refNames.size() != paramNames.size())
 				throw MkException("References must have the same sizes as parameters", LOC);
 

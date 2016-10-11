@@ -404,16 +404,17 @@ void Manager::PrintStatistics()
 	if(RefContext().RefOutputDir().FileExists("benchmark.json"))
 		RefContext().RefOutputDir().Rm("benchmark.json");
 	string benchFileName = notEmpty ? RefContext().RefOutputDir().ReserveFile("benchmark.json") : "/tmp/benchmark" + timeStamp() +  ".json";
-	/* TODO
-	ConfigFile benchSummary(benchFileName, true);
-	ConfigReader conf = benchSummary.FindRef("benchmark", true);
+
+	ConfigReader benchSummary;
+	readFromFile(benchSummary, benchFileName, true);
+	ConfigReader& conf(benchSummary["benchmark"]);
 
 	// Write perf to output XML
-	ConfigReader perfModule = conf.FindRef("manager", true);
-	perfModule.FindRef("nb_frames", true).SetValue(m_frameCount);
-	perfModule.FindRef("timer[name=\"processable\"]", true).SetValue(m_timerProcessable.GetSecDouble()*1000);
-	perfModule.FindRef("timer[name=\"processing\"]", true).SetValue(m_timerProcessable.GetSecDouble()*1000); // note: this line is kept for backward compatibility
-	perfModule.FindRef("fps", true).SetValue(fps);
+	ConfigReader& perfModule(conf["manager"]);
+	perfModule["nb_frames"]             = Json::UInt64(m_frameCount);
+	perfModule["timers"]["processable"] = Json::UInt64(m_timerProcessable.GetMsLong());
+	// perfModule["timers"]["processing"]  = Json::UInt64(m_timerProcessFrame.GetMsLong());
+	perfModule["fps"]                   = fps;
 
 	// Call for each module
 	for(const auto& module : m_modules)
@@ -421,8 +422,7 @@ void Manager::PrintStatistics()
 		// LOG_INFO(cpt<<": ");
 		module.second->PrintStatistics(conf);
 	}
-	benchSummary.SaveToFile(benchFileName);
-	*/
+	saveToFile(benchSummary, benchFileName);
 }
 
 /**
@@ -535,7 +535,7 @@ Module& Manager::RefModuleByName(const string& x_name) const
 /**
 * @brief Save the configuration of manager and modules to file
 */
-void Manager::WriteConfig(ConfigReader& xr_config) const // TODO unit test
+void Manager::WriteConfig(ConfigReader& xr_config) const
 {
 	// Set all config ready to be saved
 	for(auto & elem : m_modules)
