@@ -109,9 +109,6 @@ protected:
 	boost::python::object m_pyMain;
 	boost::python::object m_pyGlobals;
 	boost::python::object m_pyModule;
-
-#ifdef MARKUS_DEBUG_STREAMS
-#endif
 };
 
 

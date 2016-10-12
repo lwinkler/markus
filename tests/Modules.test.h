@@ -117,8 +117,8 @@ public:
 		readFromFile(*mp_configFile, m_emptyFileName);
 		AddModuleToConfig("VideoFileReader", *mp_configFile)["parameters"]["fps"] = "22";
 
-		(*mp_configFile)["application"]["name"] = "unitTest";
-		mp_contextParams = new Context::Parameters((*mp_configFile)["application"]["name"].asString());
+		(*mp_configFile)["name"] = "unitTest";
+		mp_contextParams = new Context::Parameters((*mp_configFile)["name"].asString());
 		mp_contextParams->configFile      = m_emptyFileName;
 		mp_contextParams->applicationName = "TestModule";
 		mp_contextParams->outputDir       = "tests/out";
@@ -127,7 +127,7 @@ public:
 		mp_contextParams->centralized     = true;
 		mp_context = new Context(*mp_contextParams);
 
-		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", (*mp_configFile)["application"]["VideoFileReader0"]["name"].asString());
+		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", (*mp_configFile)["VideoFileReader0"]["name"].asString());
 		// mp_fakeConfig->Read(mp_configFile->Find("application>module[name=\"VideoFileReader0\"]"));
 		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeConfig);
 		mp_fakeInput->SetContext(*mp_context);
@@ -145,7 +145,7 @@ public:
 
 	ConfigReader AddModuleToConfig(const string& rx_type, ConfigReader& xr_config)
 	{
-		ConfigReader moduleConfig =  xr_config["application"][rx_type + "0"];
+		ConfigReader moduleConfig =  xr_config[rx_type + "0"];
 		ConfigReader paramConfig  = moduleConfig["parameters"];
 
 		paramConfig["fps"] = "123";
@@ -491,8 +491,8 @@ public:
 			CreateAndConnectModule(tester, elem, &overrid);
 			if(tester.module->IsUnitTestingEnabled() && !tester.module->IsInput())
 			{
-				(*mp_configFile)["application"]["name"] = "unitTest";
-				Manager::Parameters mparams((*mp_configFile)["application"].asString());
+				(*mp_configFile)["name"] = "unitTest";
+				Manager::Parameters mparams((*mp_configFile).asString());
 				Manager manager(mparams);
 				manager.SetContext(*mp_context);
 				manager.Connect();

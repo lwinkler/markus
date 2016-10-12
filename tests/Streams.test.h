@@ -156,12 +156,12 @@ protected:
 public:
 	void setUp()
 	{
-		mp_fakeParams1 = new Module::Parameters(m_config["application"]["modules"]["FakeModule"]["name"].asString());
-		mp_fakeParams2 = new Module::Parameters(m_config["application"]["modules"]["FakeModule"]["name"].asString());
-		mp_fakeParams3 = new Module::Parameters(m_config["application"]["modules"]["FakeModule"]["name"].asString());
-		mp_fakeParams1->Read(m_config["application"]["modules"]["FakeModule"]);
-		mp_fakeParams2->Read(m_config["application"]["modules"]["FakeModule"]);
-		mp_fakeParams3->Read(m_config["application"]["modules"]["FakeModule"]);
+		mp_fakeParams1 = new Module::Parameters(m_config["modules"]["FakeModule"]["name"].asString());
+		mp_fakeParams2 = new Module::Parameters(m_config["modules"]["FakeModule"]["name"].asString());
+		mp_fakeParams3 = new Module::Parameters(m_config["modules"]["FakeModule"]["name"].asString());
+		mp_fakeParams1->Read(m_config["modules"]["FakeModule"]);
+		mp_fakeParams2->Read(m_config["modules"]["FakeModule"]);
+		mp_fakeParams3->Read(m_config["modules"]["FakeModule"]);
 		mp_fakeParams1->width  = 320;
 		mp_fakeParams1->height = 240;
 		mp_fakeParams1->type   = CV_8UC3;

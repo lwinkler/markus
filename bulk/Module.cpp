@@ -316,21 +316,18 @@ void Module::Export(ostream& rx_os) const
 	root["name"]        = GetName();
 	root["description"] = GetDescription();
 
-	int i = 0;
 	for(const auto & elem : m_param.GetList())
 	{
 		stringstream ss;
 		elem->Export(ss);
-		ss >> root["parameters"][i];
-		i++;
+		ss >> root["parameters"][elem->GetName()];
 	}
-	i = 0;
 	for(const auto& elem : m_inputStreams)
 	{
-		// TODO: parameters are not inputs
+		// TODO: parameters are now inputs
 		stringstream ss;
 		elem.second->Export(ss, elem.first);
-		ss >> root["inputs"][i];
+		ss >> root["inputs"][elem.second->GetName()];
 	}
 	for(const auto& elem : m_outputStreams)
 	{
@@ -338,7 +335,7 @@ void Module::Export(ostream& rx_os) const
 		{
 			stringstream ss;
 			elem.second->Export(ss, elem.first);
-			ss >> root["outputs"][i];
+			ss >> root["outputs"][elem.second->GetName()];
 		}
 	}
 	rx_os << root;

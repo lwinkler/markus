@@ -67,14 +67,11 @@ void writeToFile(const ConfigReader& xr_config, const string& x_fileName)
 */
 void validate(const ConfigReader& xr_config)
 {
-	const ConfigReader& appConf = xr_config["application"];
-	if(appConf.isNull())
-		throw MkException("Configuration must contain <application> subconfiguration", LOC);
 	map<int,bool> moduleIds;
 	
-	for(const auto& name : appConf["modules"].getMemberNames())
+	for(const auto& name : xr_config["modules"].getMemberNames())
 	{
-		const auto& conf = appConf["modules"][name];
+		const auto& conf = xr_config["modules"][name];
 		const auto& id   = conf["id"];
 		if(!id.isInt())
 			throw MkException("Module " + name + " has no id", LOC);
@@ -146,5 +143,5 @@ void overrideParameters(ConfigReader& x_oldConfig, const ConfigReader& x_newConf
 void overrideWith(ConfigReader& xr_config, const ConfigReader& x_extraConfig)
 {
 	// Note: This method is very specific to our type of configuration
-	overrideParameters(xr_config["application"]["modules"], x_extraConfig["application"]["modules"], "modules");
+	overrideParameters(xr_config["modules"], x_extraConfig["modules"], "modules");
 }

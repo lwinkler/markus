@@ -136,7 +136,7 @@ struct arguments
 	bool robust      = false;
 	string aspectRatio;
 
-	string configFile    = "config.xml";
+	string configFile    = "config.json";
 	string logConfigFile = "log4cxx.xml";
 	string outputDir     = "";
 	string cacheIn = "";
@@ -267,7 +267,7 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 }
 
 /// Override the initial config with extra config files and argument set parameters
-void overrideConfig(ConfigReader& mainConfig, const vector<string>& extraConfig, const vector<string>& parameters, log4cxx::LoggerPtr& logger)
+void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, const vector<string>& parameters, log4cxx::LoggerPtr& logger)
 {
 	Json::Reader reader;
 	// Override values of parameters if an extra config is used
@@ -276,7 +276,7 @@ void overrideConfig(ConfigReader& mainConfig, const vector<string>& extraConfig,
 		// open the config and override the initial config
 		ConfigReader extra;
 		readFromFile(extra, elem1);
-		overrideWith(mainConfig, extra);
+		overrideWith(appConfig, extra);
 	}
 
 	// Set values of parameters if set from command line
@@ -299,9 +299,9 @@ void overrideConfig(ConfigReader& mainConfig, const vector<string>& extraConfig,
 			if(path.size() != 2)
 				throw MkException("Parameter set in command line must be in format 'module.parameter'", LOC);
 			if(path[0] == "manager")
-				reader.parse(value, mainConfig["application"]["parameters"][path[1]]);
+				reader.parse(value, appConfig["parameters"][path[1]]);
 			else
-				reader.parse(value, mainConfig["application"]["module"][path[0]]["parameters"][path[1]]);
+				reader.parse(value, appConfig["module"][path[0]]["parameters"][path[1]]);
 			// manager.GetModuleByName(path[0])->GetParameters().RefParameterByName(path[1]).SetValue(value, PARAMCONF_CMD);
 		}
 		catch(std::exception& e)
@@ -354,20 +354,19 @@ int main(int argc, char** argv)
 		Factories::RegisterAll();
 
 		LOG_INFO(logger, Context::Version(true));
-		ConfigReader mainConfig;
-		readFromFile(mainConfig, args.configFile);
-		overrideConfig(mainConfig, args.extraConfig, args.parameters, logger);
-		validate(mainConfig);
-		ConfigReader& appConfig(mainConfig["application"]);
+		ConfigReader appConfig;
+		readFromFile(appConfig, args.configFile);
+		overrideConfig(appConfig, args.extraConfig, args.parameters, logger);
+		validate(appConfig);
 		if(appConfig.isNull())
 			throw MkException("Tag <application> must be present in configuration file.", LOC);
-		if(appConfig["parameters"].isNull())
-			throw MkException("Tag <application> must contain a <parameters> section", LOC);
+		// if(appConfig["parameters"].isNull())
+			// throw MkException("Tag <application> must contain a <parameters> section", LOC);
 
 		// Init global variables and objects
 		// Context manages all call to system, files, ...
-		Context::Parameters contextParameters(mainConfig["application"]["name"].asString());
-		contextParameters.Read(mainConfig["application"]);
+		Context::Parameters contextParameters(appConfig["name"].asString());
+		contextParameters.Read(appConfig);
 
 		contextParameters.outputDir       = args.outputDir;
 		contextParameters.configFile      = args.configFile;
@@ -393,9 +392,9 @@ int main(int argc, char** argv)
 
 		if(args.simulation)
 		{
-			Simulation::Parameters parameters(mainConfig["application"]);
+			Simulation::Parameters parameters(appConfig);
 			Simulation sim(parameters, context);
-			sim.Generate(mainConfig);
+			sim.Generate(appConfig);
 			return 0;
 		}
 
@@ -482,7 +481,7 @@ int main(int argc, char** argv)
 		// Write the modified params in config and save
 		manager.WriteConfig(appConfig);
 		// Save the last config with modifs to the output file
-		writeToFile(mainConfig, context.RefOutputDir().ReserveFile("overridden.xml"));
+		writeToFile(appConfig, context.RefOutputDir().ReserveFile("overridden.xml"));
 	}
 	catch(MkException& e)
 	{

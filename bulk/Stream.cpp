@@ -53,7 +53,6 @@ void Stream::Export(ostream& rx_os, int x_id) const
 	Json::Value root;
 	root["id"] = x_id;
 	root["type"] = GetType();
-	root["name"] = GetName();
 	root["description"] = GetDescription();
 	rx_os << root;
 }

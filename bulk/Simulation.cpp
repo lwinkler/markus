@@ -40,7 +40,7 @@ log4cxx::LoggerPtr Simulation::m_logger(log4cxx::Logger::getLogger("Simulation")
 /// Function to return either a module or the manager from a config
 inline ConfigReader manOrMod(ConfigReader xr_mainConfig, const string& x_name)
 {
-	return x_name == "manager" ? xr_mainConfig["application"] : xr_mainConfig["application"]["modules"][x_name];
+	return x_name == "manager" ? xr_mainConfig : xr_mainConfig["modules"][x_name];
 }
 
 
@@ -68,7 +68,7 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 	string arguments;
 	try
 	{
-		arguments = x_mainConfig["application"]["parameters"]["arguments"].asString();
+		arguments = x_mainConfig["parameters"]["arguments"].asString();
 	}
 	catch(MkException &e) {}
 	m_allTargets << "$(OUTDIR)/results/" <<  sd.str() << " ";

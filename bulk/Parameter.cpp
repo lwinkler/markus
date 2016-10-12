@@ -47,7 +47,6 @@ void Parameter::Export(ostream& rx_os) const
 	Json::Value def;
 	Json::Reader reader;
 	
-	root["name"] = GetName();
 	root["type"] = GetType();
 	root["description"] = GetDescription();
 	if(!reader.parse(GetValueString(), def))
