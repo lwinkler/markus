@@ -69,11 +69,11 @@ public:
 		TS_TRACE("\n# Test on the syntax of configurations");
 		ConfigReader& conf(*m_conf3);
 		conf["t1"]["t2"]["t3"]["bla"] = 333;
-		saveToFile(*m_conf3, "tests/tmp/test3.json");
+		writeToFile(*m_conf3, "tests/tmp/test3.json");
 		ConfigReader& conf2(*m_conf4);
 		conf2["t1"]["t2"]["t3"] = "333";
 		conf2["t1"]["t2"]["t3"]["blo"] = "555";
-		saveToFile(*m_conf4, "tests/tmp/test4.json");
+		writeToFile(*m_conf4, "tests/tmp/test4.json");
 
 		TS_ASSERT(!conf2["t1"].isNull());
 		TS_ASSERT(!conf2["t1"]["t2"].isNull());
@@ -107,7 +107,7 @@ public:
 
 		TS_ASSERT(param1["name"].asString() == "param_text");
 
-		saveToFile(*m_conf1, "tests/tmp/config1_copy.json");
+		writeToFile(*m_conf1, "tests/tmp/config1_copy.json");
 		validate(*m_conf1);
 
 		// Compare with the initial config
@@ -122,7 +122,7 @@ public:
 		appConf["aaa"]["name"]["nameX"]
 		["bbb"]["name"]["nameY"]
 		["ccc"]["name"]["nameZ"] = "someValue";
-		saveToFile(*m_conf2, "tests/config/config_generated.json");
+		writeToFile(*m_conf2, "tests/config/config_generated.json");
 
 		ConfigReader generatedConf("tests/config/config_generated.json");
 		TS_ASSERT(generatedConf["application"]

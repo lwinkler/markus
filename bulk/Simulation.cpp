@@ -86,7 +86,7 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 	stringstream xmlProjName;
 	xmlProjName << subdir.str() << "/" << name << ".xml";
 	create_directory(subdir.str());
-	saveToFile(x_mainConfig, xmlProjName.str());
+	writeToFile(x_mainConfig, xmlProjName.str());
 
 	// Last but not least:
 	// Register the different variations for summaries in .txt files
@@ -245,7 +245,7 @@ void Simulation::Generate(ConfigReader& mainConfig)
 
 	remove("simulation_latest");
 	create_symlink(m_outputDir, "simulation_latest");
-	saveToFile(mainConfig, "simulation_latest/Simulation.xml");
+	writeToFile(mainConfig, "simulation_latest/Simulation.xml");
 	create_directory(m_outputDir + "/ready");
 	create_directory(m_outputDir + "/running");
 	create_directory(m_outputDir + "/results");

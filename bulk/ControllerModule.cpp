@@ -77,7 +77,7 @@ void ControllerModule::PrintStatistics(string* xp_value)
 	ConfigReader summary;
 	readFromFile(summary, benchFileName, true);
 	module.PrintStatistics(summary);
-	saveToFile(summary, benchFileName);
+	writeToFile(summary, benchFileName);
 }
 
 

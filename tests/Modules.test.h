@@ -168,7 +168,7 @@ public:
 			for(const auto& elem : *xp_parameters)
 				moduleConfig["parameters"][elem.first] = elem.second;
 
-		saveToFile(*mp_configFile, "tests/tmp/tmp.xml");
+		writeToFile(*mp_configFile, "tests/tmp/tmp.xml");
 
 		ParameterStructure* parameters = nullptr;
 		try

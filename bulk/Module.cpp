@@ -327,6 +327,7 @@ void Module::Export(ostream& rx_os) const
 	i = 0;
 	for(const auto& elem : m_inputStreams)
 	{
+		// TODO: parameters are not inputs
 		stringstream ss;
 		elem.second->Export(ss, elem.first);
 		ss >> root["inputs"][i];

@@ -145,6 +145,7 @@ include_directories(/usr/local/mongo-cxx-driver/include)
 # Include sub directories
 add_subdirectory(util)
 add_subdirectory(bulk)
+add_subdirectory(tools)
 foreach(iter IN LISTS Markus_MODULE_DIRS)
 	add_subdirectory(${iter})
 endforeach(iter)

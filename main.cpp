@@ -471,7 +471,7 @@ int main(int argc, char** argv)
 
 			// write the modified params in config and save
 			gui.WriteConfig(guiConfig);
-			saveToFile(mainGuiConfig, "gui.xml");
+			writeToFile(mainGuiConfig, "gui.xml");
 #else
 			LOG_ERROR(logger, "Markus was compiled without GUI. It can only be launched with option -nc");
 #endif
@@ -482,7 +482,7 @@ int main(int argc, char** argv)
 		// Write the modified params in config and save
 		manager.WriteConfig(appConfig);
 		// Save the last config with modifs to the output file
-		saveToFile(mainConfig, context.RefOutputDir().ReserveFile("overridden.xml"));
+		writeToFile(mainConfig, context.RefOutputDir().ReserveFile("overridden.xml"));
 	}
 	catch(MkException& e)
 	{

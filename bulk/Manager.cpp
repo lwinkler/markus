@@ -422,7 +422,7 @@ void Manager::PrintStatistics()
 		// LOG_INFO(cpt<<": ");
 		module.second->PrintStatistics(conf);
 	}
-	saveToFile(benchSummary, benchFileName);
+	writeToFile(benchSummary, benchFileName);
 }
 
 /**

@@ -1,11 +1,5 @@
 {
-	"name":"testConfig",
 	"description":"A config for unit testing purposes",
-	"parameters": {
-		"param_text":"SomeText0",
-		"param_int":0,
-		"param_float":0
-	},
 	"modules": {
 		"Module0":{
 			"id": 0,
@@ -41,6 +35,12 @@
 				}
 			}
 		}
-	}
+	},
+	"parameters": {
+		"param_text":"SomeText0",
+		"param_int":0,
+		"param_float":0
+	},
+	"name":"testConfig"
 }
 			   

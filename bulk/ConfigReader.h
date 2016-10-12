@@ -38,7 +38,7 @@ typedef Json::Value ConfigReader;
 
 void readFromFile(ConfigReader& rx_config, const std::string& x_fileName, bool x_allowCreation = false);
 void overrideWith(ConfigReader& rx_config, const ConfigReader& xr_extraConfig);
-void saveToFile(const ConfigReader& rx_config, const std::string& x_file);
+void writeToFile(const ConfigReader& rx_config, const std::string& x_file);
 void validate(const ConfigReader& rx_config);
 void checkUniquenessOfId(const ConfigReader& rx_config, const std::string& x_group, const std::string& x_idLabel, const std::string& x_moduleName);
 

@@ -56,7 +56,7 @@ void readFromFile(ConfigReader& rx_config, const std::string& x_fileName, bool x
 *
 * @param x_file Name of the file with relative path
 */
-void saveToFile(const ConfigReader& xr_config, const string& x_fileName)
+void writeToFile(const ConfigReader& xr_config, const string& x_fileName)
 {
 	ofstream of(x_fileName);
 	of << xr_config;
