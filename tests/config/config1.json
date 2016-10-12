@@ -1,0 +1,46 @@
+{
+	"name":"testConfig",
+	"description":"A config for unit testing purposes",
+	"parameters": {
+		"param_text":"SomeText0",
+		"param_int":0,
+		"param_float":0
+	},
+	"modules": {
+		"Module0":{
+			"id": 0,
+			"parameters": {
+				"param_text":"SomeText",
+				"param_int":21,
+				"param_float":3.1415
+			},
+			"inputs": {},
+			"outputs": {
+				"first": {
+					"id":0
+				}
+			}
+		},
+		"Module1":{
+			"id": 1,
+			"parameters": {
+				"param_text":"AnotherText",
+				"param_int":42,
+				"param_float":2.71828
+			},
+			"inputs": {
+				"first": {
+					"id": 0,
+					"moduleid": 1,
+					"outputid": 0
+				}
+			},
+			"outputs": {
+				"first": {
+					"id":0
+				}
+			}
+		}
+	}
+}
+			   
