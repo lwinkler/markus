@@ -37,7 +37,7 @@ FastNlMeansDenoising::FastNlMeansDenoising(ParameterStructure& xr_params) :
 	m_input(Size(m_param.width, m_param.height), m_param.type),
 	m_output(Size(m_param.width, m_param.height), m_param.type)
 {
-	AddInputStream(0  , new StreamImage("input"  , m_input  , *this , "Video input"));
+	AddInputStream(0  , new StreamImage("image"  , m_input  , *this , "Video input"));
 
 	AddOutputStream(0 , new StreamImage("output" , m_output , *this , "Foreground"));
 };

@@ -67,11 +67,11 @@ void translateElement(const ConfigXml x_xml, ConfigReader& xr_json)
 	{
 		try
 		{
-			xr_json["value"] = lexical_cast<double>(field);
+			xr_json = lexical_cast<double>(field);
 		}
 		catch(...)
 		{
-			xr_json["value"] = field;
+			xr_json = field;
 		}
 	}
 }

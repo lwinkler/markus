@@ -42,13 +42,13 @@ GroundTruthReader::GroundTruthReader(ParameterStructure& xr_params):
 	m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_input(Size(m_param.width, m_param.height), m_param.type)
 {
-	AddInputStream(0, new StreamImage("input",  m_input, *this, "Video input"));
-	AddInputStream(1, new StreamObject("input object",  m_objects, *this, "Incoming objects"));
+	AddInputStream(0, new StreamImage("image",  m_input, *this, "Video input"));
+	AddInputStream(1, new StreamObject("objects",  m_objects, *this, "Incoming objects"));
 
 	// AddOutputStream(0, new StreamImage("input", m_input,  *this, 	"Copy of the input stream"));
 	AddOutputStream(0, new StreamState("state", m_state,  *this, 	"State read from the annotation file"));
-	AddOutputStream(1, new StreamObject("output object",  m_objects, *this, "Outcoming objects"));
-	AddOutputStream(2, new StreamEvent( "change_gt", m_event,     *this,   "State of ground truth changed"));
+	AddOutputStream(1, new StreamObject("objects",  m_objects, *this, "Outcoming objects"));
+	AddOutputStream(2, new StreamEvent( "event", m_event,     *this,   "State of ground truth changed"));
 
 #ifdef MARKUS_DEBUG_STREAMS
 	m_debug = Mat(Size(m_param.width, m_param.height), CV_8UC3);

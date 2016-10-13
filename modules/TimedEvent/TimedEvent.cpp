@@ -35,7 +35,7 @@ TimedEvent::TimedEvent(ParameterStructure& xr_params)
 	  m_input(Size(m_param.width, m_param.height), m_param.type)
 {
 	// Init output images
-	AddInputStream(0, new StreamImage("input", m_input, *this, 	"Video input"));
+	AddInputStream(0, new StreamImage("image", m_input, *this, 	"Video input"));
 
 	AddOutputStream(0, new StreamEvent("event", m_event,  *this, 	"Event occuring at a fixed frequency"));
 }

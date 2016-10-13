@@ -65,7 +65,7 @@ TrackerByFeatures::TrackerByFeatures(ParameterStructure& xr_params) :
 	stringstream ss;
 	ss << "{\"features\":{" << join(feats, ',', "\"%s\":{\"type\":\"FeatureFloat\"}") << "}}";
 
-	AddInputStream(0, new StreamObject("input",      m_objects, *this, "Input objects", ss.str()));
+	AddInputStream(0, new StreamObject("image",      m_objects, *this, "Input objects", ss.str()));
 
 	AddOutputStream(0, new StreamObject("tracker",   m_objects, *this, "Tracked objects"));
 

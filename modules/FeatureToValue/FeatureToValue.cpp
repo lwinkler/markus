@@ -35,7 +35,7 @@ FeatureToValue::FeatureToValue(ParameterStructure& xr_params) :
 	m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_value(0)
 {
-	AddInputStream(0, new StreamObject("input", m_objectInput, *this, "Incoming objects",
+	AddInputStream(0, new StreamObject("image", m_objectInput, *this, "Incoming objects",
 									   "{\"features\":{"
 									   "\"" + m_param.feature + "\":{\"type\":\"FeatureFloat\"}}}"));
 

@@ -40,7 +40,7 @@ VideoFileBufferWriter::VideoFileBufferWriter(ParameterStructure& xr_params):
 	m_buffer2(m_param.bufferFramesBefore + 100),
 	m_threadIsWorking(false)
 {
-	// AddInputStream(0, new StreamImage("input", m_input, *this,   "Video input"));
+	// AddInputStream(0, new StreamImage("image", m_input, *this,   "Video input"));
 	AddInputStream(1, new StreamState("trigger", m_trigger, *this,  "Trigger to start/stop of the recording (e.g. motion)"));
 	AddInputStream(2, new StreamEvent("event", m_event,     *this,  "Event to which the record will be linked"));
 

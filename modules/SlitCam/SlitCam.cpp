@@ -42,7 +42,7 @@ SlitCam::SlitCam(ParameterStructure& xr_params):
 	m_position = 0;
 
 	// Init output images
-	AddInputStream(0, new StreamImage("input", m_input, *this, 	"Video input"));
+	AddInputStream(0, new StreamImage("image", m_input, *this, 	"Video input"));
 
 	AddOutputStream(0, new StreamImage("slit",  m_output, *this, 	"Slit camera stream"));
 }

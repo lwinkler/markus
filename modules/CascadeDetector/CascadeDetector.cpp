@@ -48,7 +48,7 @@ CascadeDetector::CascadeDetector(ParameterStructure& xr_params)
 	if(! m_cascade.load( m_param.filterFile ) || m_cascade.empty())
 		throw MkException("Impossible to load cascade filter " + m_param.filterFile, LOC);
 
-	AddInputStream(0, new StreamImage("input", m_input, *this, 		"Video input"));
+	AddInputStream(0, new StreamImage("image", m_input, *this, 		"Video input"));
 
 	AddOutputStream(0, new StreamObject("detected", m_detectedObjects, *this,	"Detected objects"));
 #ifdef MARKUS_DEBUG_STREAMS

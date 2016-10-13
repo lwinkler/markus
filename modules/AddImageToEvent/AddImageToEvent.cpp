@@ -39,11 +39,11 @@ AddImageToEvent::AddImageToEvent(ParameterStructure& xr_params):
 	m_inputIm1(Size(m_param.width, m_param.height), m_param.type)
 	// m_inputIm2(Size(m_param.width, m_param.height), m_param.type)
 {
-	AddInputStream(0, new StreamEvent( "events", m_event, *this,     "Outgoing events"));
-	AddInputStream(1, new StreamImage( "input",  m_inputIm1, *this,   "Video input"));
+	AddInputStream(0, new StreamEvent("event", m_event, *this,     "Outgoing events"));
+	AddInputStream(1, new StreamImage("image",  m_inputIm1, *this,   "Video input"));
 	// AddInputStream(2, new StreamImage( "input2", m_inputIm2, *this,   "Binary mask"));
 
-	AddOutputStream(0, new StreamEvent( "output", m_event, *this,   "Outgoing events"));
+	AddOutputStream(0, new StreamEvent("image", m_event, *this,   "Outgoing events"));
 }
 
 AddImageToEvent::~AddImageToEvent()

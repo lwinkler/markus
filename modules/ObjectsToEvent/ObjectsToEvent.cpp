@@ -34,7 +34,7 @@ ObjectsToEvent::ObjectsToEvent(ParameterStructure& xr_params) :
 	Module(xr_params),
 	m_param(dynamic_cast<Parameters&>(xr_params))
 {
-	AddInputStream(0, new StreamObject("input", 	m_objectsIn, *this,	"Incoming objects"));
+	AddInputStream(0, new StreamObject("image", 	m_objectsIn, *this,	"Incoming objects"));
 
 	AddOutputStream(0, new StreamEvent("event",  m_event, *this,	"Raise an event if the condition is filled"));
 	AddOutputStream(1, new StreamState("state",  m_state, *this,	"Set state to true if the condition is filled"));

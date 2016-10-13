@@ -41,7 +41,7 @@ BgrSubRunAvg::BgrSubRunAvg(ParameterStructure& xr_params) :
 	m_foreground_tmp(Size(m_param.width, m_param.height), m_param.type),
 	m_accumulator()
 {
-	AddInputStream(0, new StreamImage("input",             m_input, *this,   "Video input"));
+	AddInputStream(0, new StreamImage("image",             m_input, *this,   "Video input"));
 
 	AddOutputStream(0, new StreamImage("foreground", m_foreground,*this,      "Foreground"));
 	AddOutputStream(1, new StreamImage("background", m_background, *this,		"Background"));

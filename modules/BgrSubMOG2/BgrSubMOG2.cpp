@@ -43,7 +43,7 @@ BgrSubMOG2::BgrSubMOG2(ParameterStructure& xr_params) :
 
 	// m_description = "Perform background subtraction via Mixtures Of Gaussians";
 
-	AddInputStream(0, new StreamImage("input",       m_input, *this,   "Video input"));
+	AddInputStream(0, new StreamImage("image",       m_input, *this,   "Video input"));
 
 	AddOutputStream(0, new StreamImage("foreground", m_foreground,*this,      "Foreground"));
 	AddOutputStream(1, new StreamImage("background", m_background, *this,		"Background"));

@@ -39,7 +39,7 @@ HOGDetector::HOGDetector(ParameterStructure& xr_params)
 	: Module(xr_params), m_param(dynamic_cast<Parameters&>(xr_params)),
 	  m_input(Size(m_param.width, m_param.height), m_param.type)
 {
-	AddInputStream(0, new StreamImage("input", m_input, *this, 		"Video input"));
+	AddInputStream(0, new StreamImage("image", m_input, *this, 		"Video input"));
 
 	AddOutputStream(0, new StreamObject("detected", m_detectedObjects, /*colorFromStr(m_param.color),*/ *this,	"Detected objects"));
 #ifdef MARKUS_DEBUG_STREAMS

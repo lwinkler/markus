@@ -38,9 +38,9 @@ ThumbnailWriter::ThumbnailWriter(ParameterStructure& xr_params):
 	m_input(Size(m_param.width, m_param.height), m_param.type),
 	m_input2(Size(m_param.width, m_param.height), m_param.type)
 {
-	AddInputStream(0, new StreamImage( "input", m_input, *this,   "Video input"));
+	AddInputStream(0, new StreamImage( "image", m_input, *this,   "Video input"));
 	AddInputStream(1, new StreamObject("objects", m_objectsIn, *this,     "Incoming objects", "{\"width\":{\"min\":1},\"height\":{\"min\":1}}"));
-	AddInputStream(2, new StreamImage( "input2", m_input2, *this,   "Binary mask"));
+	AddInputStream(2, new StreamImage( "image2", m_input2, *this,   "Binary mask"));
 }
 
 ThumbnailWriter::~ThumbnailWriter()

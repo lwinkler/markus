@@ -40,7 +40,7 @@ SegmenterContour::SegmenterContour(ParameterStructure& xr_params) :
 	m_input(Size(m_param.width, m_param.height), m_param.type)
 {
 	// Initialize inputs and outputs streams
-	AddInputStream(0, new StreamImage("input", m_input, *this,	"Input binary stream"));
+	AddInputStream(0, new StreamImage("image", m_input, *this,	"Input binary stream"));
 
 	AddOutputStream(0, new StreamObject("segmented", m_regions, *this,	"Segmented objects"));
 

@@ -42,13 +42,13 @@ BgrSubMOG::BgrSubMOG(ParameterStructure& xr_params) :
 {
 	mp_mog = nullptr;
 
-	AddInputStream(0, new StreamImage("input",       m_input,      *this,   "Video input"));
+	AddInputStream(0, new StreamImage("image",       m_input,      *this,   "Video input"));
 
 	AddOutputStream(0, new StreamImage("foreground", m_foreground, *this,   "Foreground"));
 	AddOutputStream(1, new StreamImage("background", m_background, *this,   "Background"));
 
 #ifdef MARKUS_DEBUG_STREAMS
-	AddDebugStream(0, new StreamDebug("input",       m_input,      *this,   "Input"));
+	AddDebugStream(0, new StreamDebug("debug",       m_input,      *this,   "Input"));
 #endif
 };
 

@@ -35,7 +35,7 @@ LogState::LogState(ParameterStructure& xr_params)
 	: Module(xr_params), m_param(dynamic_cast<Parameters&>(xr_params))
 {
 	// Init input images
-	AddInputStream(0, new StreamState("input", m_state, *this, 	"Input state to be logged"));
+	AddInputStream(0, new StreamState("image", m_state, *this, 	"Input state to be logged"));
 }
 
 LogState::~LogState()
