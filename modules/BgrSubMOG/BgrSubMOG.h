@@ -55,9 +55,9 @@ public:
 			// This parameters should not change
 			AddParameter(new ParameterInt   ("history",          200,    1,   10000,     &history,         "Length of the history"));
 			AddParameter(new ParameterInt   ("nmixtures",          5,    1,      10,     &nmixtures,       "Number of Gaussian mixtures"));
-			AddParameter(new ParameterDouble("background_ratio", 0.7,    0,       1,     &backgroundRatio, "Background ratio"));
-			AddParameter(new ParameterDouble("noise_sigma",       15,    0,    1000,     &noiseSigma,      "noise strength"));
-			AddParameter(new ParameterDouble("learning_rate",     -1,    -1,       1,     &learningRate,    "Learning rate of the model"));
+			AddParameter(new ParameterDouble("backgroundRatio", 0.7,    0,       1,     &backgroundRatio, "Background ratio"));
+			AddParameter(new ParameterDouble("noiseSigma",       15,    0,    1000,     &noiseSigma,      "noise strength"));
+			AddParameter(new ParameterDouble("learningRate",     -1,    -1,       1,     &learningRate,    "Learning rate of the model"));
 
 			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3]");
 		};

@@ -37,9 +37,9 @@ public:
 	public:
 		Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
-			RefParameterByName("auto_process").SetRange("[1:1]");
-			RefParameterByName("auto_process").SetDefaultAndValue("1"); // Input must be in real time otherwise they are never called
-			RefParameterByName("auto_process").SetValueToDefault();
+			RefParameterByName("autoProcess").SetRange("[1:1]");
+			RefParameterByName("autoProcess").SetDefaultAndValue("1"); // Input must be in real time otherwise they are never called
+			RefParameterByName("autoProcess").SetValueToDefault();
 		}
 	};
 

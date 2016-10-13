@@ -40,7 +40,7 @@ public:
 		{
 			AddParameter(new ParameterInt("operator",    0,   0, 6,    &oper,       "Morphological operator: ERODE=0,DILATE=1,OPEN=2,CLOSE=3,GRADIENT=4,TOPHAT=5,BLACKHAT=6"));
 			AddParameter(new ParameterInt("element",     2,   0, 2,    &element,    "Morphological element: RECT=0, CROSS=1, ELLIPSE=2"));
-			AddParameter(new ParameterInt("kernel_size", 5,   3, 30,   &kernelSize, "Size of the element"));
+			AddParameter(new ParameterInt("kernelSize", 5,   3, 30,   &kernelSize, "Size of the element"));
 			AddParameter(new ParameterInt("iterations",  1,   1, 10,   &iterations, "Number of times the operation is applied to the image"));
 
 			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3]");

@@ -59,7 +59,7 @@ public:
 			AddParameter(new ParameterString("module",   "", &module,  "Name of the module to display"));
 			AddParameter(new ParameterInt("stream",   0, -1, 2000, &stream,  "Index of the stream to display"));
 			AddParameter(new ParameterInt("control", -1, -1, 2000, &control, "Index of the control to display"));
-			AddParameter(new ParameterBool("display_options", 1, 0, 1, &displayOptions, "Display the options to select the module, stream, ..."));
+			AddParameter(new ParameterBool("displayOptions", 1, 0, 1, &displayOptions, "Display the options to select the module, stream, ..."));
 
 			m_writeAllParamsToConfig = true;
 		}

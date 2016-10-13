@@ -89,7 +89,7 @@ public:
 			LockParameterByName("width");
 			LockParameterByName("height");
 			LockParameterByName("type");
-			LockParameterByName("auto_process");
+			LockParameterByName("autoProcess");
 		}
 
 		int width;

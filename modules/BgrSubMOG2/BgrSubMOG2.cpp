@@ -49,7 +49,7 @@ BgrSubMOG2::BgrSubMOG2(ParameterStructure& xr_params) :
 	AddOutputStream(1, new StreamImage("background", m_background, *this,		"Background"));
 
 #ifdef MARKUS_DEBUG_STREAMS
-	AddDebugStream(0, new StreamDebug("foreground_with_shadows", m_foregroundWithShadows, *this,	"Foreground with shadows"));
+	AddDebugStream(0, new StreamDebug("foregroundWithShadows", m_foregroundWithShadows, *this,	"Foreground with shadows"));
 #endif
 };
 

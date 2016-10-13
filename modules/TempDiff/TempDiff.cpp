@@ -41,7 +41,7 @@ TempDiff::TempDiff(ParameterStructure& xr_params) :
 	m_lastImg(Size(m_param.width, m_param.height), m_param.type)
 {
 	AddInputStream(0, new StreamImage("image", m_input, *this,             "Video input"));
-	AddOutputStream(0, new StreamImage("temp_diff", m_temporalDiff, *this, "Temporal difference"));
+	AddOutputStream(0, new StreamImage("tempDiff", m_temporalDiff, *this, "Temporal difference"));
 }
 
 void TempDiff::Reset()

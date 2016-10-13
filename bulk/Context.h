@@ -43,18 +43,18 @@ public:
 	public:
 		Parameters(const std::string& x_name) : ParameterStructure(x_name)
 		{
-			AddParameter(new ParameterBool("auto_clean", 0, 0, 1,     &autoClean,       "Automatically clean the temporary directory when the application closes"));
-			AddParameter(new ParameterString("archive_dir", "",       &archiveDir,      "If specified the data is copied inside this directory for archive"));
-			AddParameter(new ParameterString("config_file", "",       &configFile,      "Name of the XML containing the configuration"));
-			AddParameter(new ParameterString("application_name", "",  &applicationName, "Name of the application. May also be set in the XML as attribute of <application>"));
-			AddParameter(new ParameterString("output_dir", "",        &outputDir,       "Directory used to write results files of manager and modules. If empty a directory is created from the date"));
+			AddParameter(new ParameterBool("autoClean", 0, 0, 1,     &autoClean,       "Automatically clean the temporary directory when the application closes"));
+			AddParameter(new ParameterString("archiveDir", "",       &archiveDir,      "If specified the data is copied inside this directory for archive"));
+			AddParameter(new ParameterString("configFile", "",       &configFile,      "Name of the XML containing the configuration"));
+			AddParameter(new ParameterString("applicationName", "",  &applicationName, "Name of the application. May also be set in the XML as attribute of <application>"));
+			AddParameter(new ParameterString("outputDir", "",        &outputDir,       "Directory used to write results files of manager and modules. If empty a directory is created from the date"));
 			AddParameter(new ParameterBool("centralized", 0, 0, 1,    &centralized,     "All modules are called from the manager. Option -c"));
 			AddParameter(new ParameterBool("robust",      0, 0, 1,    &robust,          "Continue if an exception occured during processing"));
-			AddParameter(new ParameterBool("real_time", 0, 0, 1,      &realTime,        "All modules process in real-time. Disable to increase processing speed. Option -f"));
-			AddParameter(new ParameterString("job_id"      ,  ""    , &jobId         ,  "Job id for storage in database. Leave empty to generate a random value"));
-			AddParameter(new ParameterString("camera_id",  ""       , &cameraId      ,  "CameraId id for storage in database. Leave empty for tests only."));
-			AddParameter(new ParameterString("cache_in",        ""  , &cacheIn       ,  "The cache directory of a previous, empty if no cache, relative to output directory"));
-			AddParameter(new ParameterString("cache_out",       ""  , &cacheOut      ,  "The directory in which the cache should be written, empty if no cache, relative to current directory"));
+			AddParameter(new ParameterBool("realTime", 0, 0, 1,      &realTime,        "All modules process in real-time. Disable to increase processing speed. Option -f"));
+			AddParameter(new ParameterString("jobId"      ,  ""    , &jobId         ,  "Job id for storage in database. Leave empty to generate a random value"));
+			AddParameter(new ParameterString("cameraId",  ""       , &cameraId      ,  "CameraId id for storage in database. Leave empty for tests only."));
+			AddParameter(new ParameterString("cacheIn",        ""  , &cacheIn       ,  "The cache directory of a previous, empty if no cache, relative to output directory"));
+			AddParameter(new ParameterString("cacheOut",       ""  , &cacheOut      ,  "The directory in which the cache should be written, empty if no cache, relative to current directory"));
 		}
 		bool autoClean;
 		std::string archiveDir;

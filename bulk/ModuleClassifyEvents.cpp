@@ -43,11 +43,11 @@ ModuleClassifyEvents::ModuleClassifyEvents(ParameterStructure& xr_params) :
 	AddInputStream(1, new StreamImage( "image" ,   m_imageIn,  *this, "Image associated with the event (for display)"));
 
 	AddOutputStream(0, new StreamEvent("filtered", m_eventOut, *this, "Filtered events"));
-	AddOutputStream(1, new StreamEvent("last_event", m_eventToValidate, *this, "Event awaiting user feedback"));
+	AddOutputStream(1, new StreamEvent("lastEvent", m_eventToValidate, *this, "Event awaiting user feedback"));
 
 #ifdef MARKUS_DEBUG_STREAMS
 	m_imageToValidate = Mat(Size(m_param.width, m_param.height), CV_8UC3);
-	AddDebugStream(0, new StreamDebug("last_event_im", m_imageToValidate, *this, "Image corresponding to the last event"));
+	AddDebugStream(0, new StreamDebug("lastEventIm", m_imageToValidate, *this, "Image corresponding to the last event"));
 #endif
 }
 

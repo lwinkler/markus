@@ -16,7 +16,7 @@
 		{
 			"default" : 1,
 			"description" : "If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream",
-			"name" : "auto_process",
+			"name" : "autoProcess",
 			"range" : "[1:1]",
 			"type" : "bool"
 		},

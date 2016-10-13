@@ -52,7 +52,7 @@ ModuleKeyPoints::ModuleKeyPoints(ParameterStructure& xr_params) :
 
 #ifdef MARKUS_DEBUG_STREAMS
 	m_debug = Mat(Size(m_param.width, m_param.height), CV_8UC3);
-	AddDebugStream(0, new StreamDebug("input_with_key_point", m_debug, *this,	"Foreground with KeyPoint"));
+	AddDebugStream(0, new StreamDebug("inputWithKeyPoint", m_debug, *this,	"Foreground with KeyPoint"));
 #endif
 };
 

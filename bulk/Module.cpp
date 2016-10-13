@@ -318,12 +318,16 @@ void Module::Export(ostream& rx_os) const
 
 	for(const auto & elem : m_param.GetList())
 	{
+		if(elem->GetName().find('_') != string::npos)
+			throw MkException("Forbidden character _ in " + elem->GetName(), LOC);
 		stringstream ss;
 		elem->Export(ss);
 		ss >> root["parameters"][elem->GetName()];
 	}
 	for(const auto& elem : m_inputStreams)
 	{
+		if(elem.second->GetName().find('_') != string::npos)
+			throw MkException("Forbidden character _ in " + elem.second->GetName(), LOC);
 		// TODO: parameters are now inputs
 		stringstream ss;
 		elem.second->Export(ss, elem.first);
@@ -331,6 +335,8 @@ void Module::Export(ostream& rx_os) const
 	}
 	for(const auto& elem : m_outputStreams)
 	{
+		if(elem.second->GetName().find('_') != string::npos)
+			throw MkException("Forbidden character _ in " + elem.second->GetName(), LOC);
 		if(elem.first < MIN_DEBUG_STREAM_ID)
 		{
 			stringstream ss;

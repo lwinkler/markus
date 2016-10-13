@@ -401,7 +401,7 @@ int main(int argc, char** argv)
 		// Set manager and context
 		Manager::Parameters managerParameters(appConfig);
 		managerParameters.Read(appConfig);
-		// Override parameter auto_process with centralized
+		// Override parameter autoProcess with centralized
 		managerParameters.autoProcess = !args.nogui;
 		if(!args.aspectRatio.empty())
 			managerParameters.aspectRatio = args.aspectRatio;

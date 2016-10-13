@@ -42,7 +42,7 @@ public:
 		{
 			AddParameter(new ParameterInt("threshold"       , 30 , 1 , 255 , &threshold    , ""));
 			AddParameter(new ParameterInt("octaves"         , 3  , 1 , 100 , &octaves      , ""));
-			AddParameter(new ParameterFloat("pattern_scale" , 1  , 0 , 10  , &patternScale , ""));
+			AddParameter(new ParameterFloat("patternScale" , 1  , 0 , 10  , &patternScale , ""));
 
 			// Limit size to accelerate unit tests
 			RefParameterByName("width").SetRange("[64:1280]");

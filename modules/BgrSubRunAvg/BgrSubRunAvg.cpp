@@ -46,7 +46,7 @@ BgrSubRunAvg::BgrSubRunAvg(ParameterStructure& xr_params) :
 	AddOutputStream(0, new StreamImage("foreground", m_foreground,*this,      "Foreground"));
 	AddOutputStream(1, new StreamImage("background", m_background, *this,		"Background"));
 
-	AddDebugStream(0, new StreamImage("foreground_tmp", m_foreground_tmp,*this,      "Foreground tmp"));
+	AddDebugStream(0, new StreamImage("foregroundTmp", m_foreground_tmp,*this,      "Foreground tmp"));
 };
 
 

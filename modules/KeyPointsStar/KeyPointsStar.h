@@ -40,11 +40,11 @@ public:
 	public:
 		Parameters(const std::string& x_name) : ModuleKeyPoints::Parameters(x_name)
 		{
-			AddParameter(new ParameterInt("max_size"                 , 16 , 1 , 1000 , &maxSize              , ""));
-			AddParameter(new ParameterInt("response_threshold"       , 30 , 1 , 1000 , &responseThreshold      , ""));
-			AddParameter(new ParameterInt("line_threshold_projected" , 10 , 1 , 1000 , &lineThresholdProjected , ""));
-			AddParameter(new ParameterInt("line_threshold_binarized" , 8  , 1 , 1000 , &lineThresholdBinarized , ""));
-			AddParameter(new ParameterInt("suppress_non_max_size"    , 5  , 1 , 1000 , &suppressNonmaxSize     , ""));
+			AddParameter(new ParameterInt("maxSize"                 , 16 , 1 , 1000 , &maxSize              , ""));
+			AddParameter(new ParameterInt("responseThreshold"       , 30 , 1 , 1000 , &responseThreshold      , ""));
+			AddParameter(new ParameterInt("lineThresholdProjected" , 10 , 1 , 1000 , &lineThresholdProjected , ""));
+			AddParameter(new ParameterInt("lineThresholdBinarized" , 8  , 1 , 1000 , &lineThresholdBinarized , ""));
+			AddParameter(new ParameterInt("suppressNonMaxSize"    , 5  , 1 , 1000 , &suppressNonmaxSize     , ""));
 		};
 		int maxSize;
 		int responseThreshold;

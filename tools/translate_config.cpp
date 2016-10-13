@@ -13,7 +13,24 @@ using namespace boost;
 map<int, string> modules;
 map<string, string> moduleTypes;
 
-string getInputName(const string& module, int id, bool isInput)
+string camelCase(const string& str)
+{
+	string s = str;
+	string res;
+	for(uint i = 0 ; i < s.size() ; i++)
+	{
+		if(s[i] == '_')
+		{
+			assert(i < s.size() - 1);
+			s[i+1]-= ('a' - 'A');
+		}
+		else
+			res.push_back(s[i]);
+	}
+	return res;
+}
+
+string getInputNameFromExport(const string& module, int id, bool isInput)
 {
 	ConfigReader json;
 	readFromFile(json, "editor/modules/" + module + ".json");
@@ -59,7 +76,7 @@ void translateElement(const ConfigXml x_xml, ConfigReader& xr_json)
 		string moduleName = modules[lexical_cast<int>(field)];
 		string moduleType = moduleTypes[moduleName];
 		xr_json["connected"]["module"] = moduleName;
-		xr_json["connected"]["output"] = getInputName(moduleType, lexical_cast<int>(x_xml.GetAttribute("outputid")), false);
+		xr_json["connected"]["output"] = getInputNameFromExport(moduleType, lexical_cast<int>(x_xml.GetAttribute("outputid")), false);
 	}
 
 	field = x_xml.GetValue();
@@ -81,10 +98,9 @@ void translateModule(const ConfigXml x_xml, ConfigReader& xr_json)
 	string modName  = x_xml.GetAttribute("name");
 	string modClass = moduleTypes[modName];
 	xr_json["name"] = modName;
-	xr_json["name"] = modName;
 	for(const auto& xml : x_xml.FindAll("parameters>param"))
 	{
-		string name = xml.GetAttribute("name");
+		string name = camelCase(xml.GetAttribute("name"));
 		if(name == "class")
 		{
 			xr_json["class"] = xml.GetValue();
@@ -95,7 +111,7 @@ void translateModule(const ConfigXml x_xml, ConfigReader& xr_json)
 	}
 	for(const auto& xml : x_xml.FindAll("inputs>input"))
 	{
-		string name = getInputName(modClass, lexical_cast<int>(xml.GetAttribute("id")), true);
+		string name = camelCase(getInputNameFromExport(modClass, lexical_cast<int>(xml.GetAttribute("id")), true));
 		if(name == "class")
 			continue;
 		if(xr_json["inputs"].isMember(name))
@@ -107,7 +123,7 @@ void translateModule(const ConfigXml x_xml, ConfigReader& xr_json)
 	}
 	for(const auto& xml : x_xml.FindAll("outputs>param"))
 	{
-		string name = getInputName(modName, lexical_cast<int>(xml.GetAttribute("id")), false);
+		string name = camelCase(getInputNameFromExport(modName, lexical_cast<int>(xml.GetAttribute("id")), false));
 		translateElement(xml, xr_json["outputs"][name]);
 	}
 }

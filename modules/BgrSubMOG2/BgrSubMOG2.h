@@ -54,9 +54,9 @@ public:
 
 			// This parameters should not change
 			AddParameter(new ParameterInt  ("history",	500, 	1, 10000,	&history,	"Length of the history"));
-			AddParameter(new ParameterFloat("var_thres",	16, 	1, 255,	&varThres,	"Threshold on the squared Mahalanobis distance to decide whether it is well described by the background model (selectivity of background) "));
-			AddParameter(new ParameterBool  ("b_shadow_detection",	false, 	0, 1, &bShadowDetection,	"Enable shadow detection"));
-			AddParameter(new ParameterDouble("learning_rate",	-1, 	-1, 1, &learningRate,	"Learning rate of the model"));
+			AddParameter(new ParameterFloat("varThres",	16, 	1, 255,	&varThres,	"Threshold on the squared Mahalanobis distance to decide whether it is well described by the background model (selectivity of background) "));
+			AddParameter(new ParameterBool  ("bShadowDetection",	false, 	0, 1, &bShadowDetection,	"Enable shadow detection"));
+			AddParameter(new ParameterDouble("learningRate",	-1, 	-1, 1, &learningRate,	"Learning rate of the model"));
 
 			RefParameterByName("type").SetDefaultAndValue("CV_8UC3");
 			RefParameterByName("type").SetRange("[CV_8UC3]");

@@ -40,7 +40,7 @@ public:
 	public:
 		Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
-			AddParameter(new ParameterDouble("time_interval", 30, 0.001, 3600 * 24 * 365, &timeInterval, "Time interval in seconds"));
+			AddParameter(new ParameterDouble("timeInterval", 30, 0.001, 3600 * 24 * 365, &timeInterval, "Time interval in seconds"));
 		}
 		double timeInterval;
 	};

@@ -41,7 +41,7 @@ public:
 		Parameters(const std::string& x_name) : Input::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("file"   , "in/events.srt", &file      , "Name of the .srt file without extension"));
-			AddParameter(new ParameterString("folder" , "events_img"  , &folder    , "Name of the folder to create for images"));
+			AddParameter(new ParameterString("folder" , "eventsImg"  , &folder    , "Name of the folder to create for images"));
 
 			RefParameterByName("type").SetDefaultAndValue("CV_8UC3"); // This will probably be ignored
 			RefParameterByName("type").SetValueToDefault();

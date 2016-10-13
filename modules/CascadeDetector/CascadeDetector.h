@@ -48,12 +48,12 @@ public:
 		Parameters(const std::string& x_name) :
 			Module::Parameters(x_name)
 		{
-			AddParameter(new ParameterInt("min_neighbors", 2, 1, 100, 	&minNeighbors,	"Minimum numbers of neighbors (higher: less sensitive)")); // Note : Seems to be a bug with minNeighbors = 1 with most filters
-			AddParameter(new ParameterInt("min_side", 0, 0, 200, 		&minSide,	"Minimum size of the detected object"));
-			AddParameter(new ParameterDouble("scale_factor", 1.2, 1.01, 2, 	&scaleFactor,	"Scale factor for scanning (higher: less sensitive)"));
-			AddParameter(new ParameterString("filter_file", "modules/CascadeDetector/lbpcascade_frontalface.xml",  &filterFile, "File with filter data of the detected object"));
+			AddParameter(new ParameterInt("minNeighbors", 2, 1, 100, 	&minNeighbors,	"Minimum numbers of neighbors (higher: less sensitive)")); // Note : Seems to be a bug with minNeighbors = 1 with most filters
+			AddParameter(new ParameterInt("minSide", 0, 0, 200, 		&minSide,	"Minimum size of the detected object"));
+			AddParameter(new ParameterDouble("scaleFactor", 1.2, 1.01, 2, 	&scaleFactor,	"Scale factor for scanning (higher: less sensitive)"));
+			AddParameter(new ParameterString("filterFile", "modules/CascadeDetector/lbpcascade_frontalface.xml",  &filterFile, "File with filter data of the detected object"));
 			// AddParameter(new ParameterString("color", "(255,255,255)",		&color,	"Color to draw the output"));
-			AddParameter(new ParameterString("object_label", "casc", 			&objectLabel,	"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
+			AddParameter(new ParameterString("objectLabel", "casc", 			&objectLabel,	"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
 
 			RefParameterByName("type").SetRange("[CV_8UC1]");
 			RefParameterByName("type").SetDefaultAndValue("CV_8UC1");
@@ -62,7 +62,7 @@ public:
 			RefParameterByName("height").SetDefaultAndValue("120");
 			RefParameterByName("width").SetRange("[1:1280]");
 			RefParameterByName("height").SetRange("[1:960]");
-			RefParameterByName("filter_file").SetRange("["
+			RefParameterByName("filterFile").SetRange("["
 					"modules/CascadeDetector/haarcascade_eye_tree_eyeglasses.xml,"
 					"modules/CascadeDetector/haarcascade_eye.xml,"
 					"modules/CascadeDetector/haarcascade_frontalface_alt2.xml,"
@@ -84,7 +84,7 @@ public:
 					"modules/CascadeDetector/haarcascade_upperbody.xml,"
 					"modules/CascadeDetector/lbpcascade_frontalface.xml"
 					"]");
-			LockParameterByName("filter_file");
+			LockParameterByName("filterFile");
 		}
 
 		int minNeighbors;

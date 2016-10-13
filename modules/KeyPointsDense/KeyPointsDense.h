@@ -40,14 +40,14 @@ public:
 	public:
 		Parameters(const std::string& x_name) : ModuleKeyPoints::Parameters(x_name)
 		{
-			AddParameter(new ParameterFloat("init_feature_scale", 1,   1, 255, &initFeatureScale, ""));
+			AddParameter(new ParameterFloat("initFeatureScale", 1,   1, 255, &initFeatureScale, ""));
 			// Note: feature_scale_levels is memory consuming. Limited to 2 for unit testing purposes
-			AddParameter(new ParameterInt("feature_scale_levels", 1,   1, 2, &featureScaleLevels, "Number of levels of scaling"));
-			AddParameter(new ParameterFloat("feature_scale_mul" , 0.1, 0, 1, &featureScaleMul, "Multiplication factor between each level"));
-			AddParameter(new ParameterInt("init_xy_step",         6  , 1, 255, &initXyStep, ""));
-			AddParameter(new ParameterInt("init_img_bound",       0  , 0, 255, &initImgBound, ""));
-			AddParameter(new ParameterBool("vary_xy_step_with_scale",   8, 0, 1, &varyXyStepWithScale, "The grid node size is multiplied if true"));
-			AddParameter(new ParameterBool("vary_img_bound_with_scale", 0, 0, 1, &varyImgBoundWithScale, "Size of image boundary is multiplied if true"));
+			AddParameter(new ParameterInt("featureScaleLevels", 1,   1, 2, &featureScaleLevels, "Number of levels of scaling"));
+			AddParameter(new ParameterFloat("featureScaleMul" , 0.1, 0, 1, &featureScaleMul, "Multiplication factor between each level"));
+			AddParameter(new ParameterInt("initXyStep",         6  , 1, 255, &initXyStep, ""));
+			AddParameter(new ParameterInt("initImgBound",       0  , 0, 255, &initImgBound, ""));
+			AddParameter(new ParameterBool("varyXyStepWithScale",   8, 0, 1, &varyXyStepWithScale, "The grid node size is multiplied if true"));
+			AddParameter(new ParameterBool("varyImgBoundWithScale", 0, 0, 1, &varyImgBoundWithScale, "Size of image boundary is multiplied if true"));
 		};
 		float initFeatureScale;
 		int featureScaleLevels;

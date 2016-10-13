@@ -41,7 +41,7 @@ public:
 	public:
 		Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
-			AddParameter(new ParameterFloat("motion_thres" , 0.1 , 0 , 1 , &motionThres , "Threshold for motion analysis"));
+			AddParameter(new ParameterFloat("motionThres" , 0.1 , 0 , 1 , &motionThres , "Threshold for motion analysis"));
 			AddParameter(new ParameterBool("propagate"     , 1   , 0 , 1 , &propagate   , "Threshold for motion analysis"));
 
 			RefParameterByName("width").SetRange("[32:6400]");

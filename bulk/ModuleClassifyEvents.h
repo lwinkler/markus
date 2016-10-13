@@ -41,7 +41,7 @@ public:
 	public:
 		Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
-			AddParameter(new ParameterDouble("validity_thres", 0.5, 0, 1, &validityThres, "Decision threshold to consider an event as valid [0 to 1]"));
+			AddParameter(new ParameterDouble("validityThres", 0.5, 0, 1, &validityThres, "Decision threshold to consider an event as valid [0 to 1]"));
 		}
 		double validityThres;
 	};

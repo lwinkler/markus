@@ -41,14 +41,14 @@ public:
 		Parameters(const std::string& x_name) : ModuleKeyPoints::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt("delta"             , 5     , 1 , 100     , &delta         , ""));
-			AddParameter(new ParameterInt("min_area"          , 60    , 0 , 100     , &minArea       , ""));
-			AddParameter(new ParameterInt("max_area"          , 14400 , 1 , INT_MAX , &maxArea       , ""));
-			AddParameter(new ParameterFloat("max_variation"   , .25   , 0 , 1       , &maxVariation  , ""));
-			AddParameter(new ParameterFloat("min_diversity"   , .2    , 0 , 1       , &minDiversity  , ""));
-			AddParameter(new ParameterInt("max_evolution"     , 200   , 1 , 1000    , &maxEvolution  , ""));
-			AddParameter(new ParameterDouble("area_threshold" , 1.01  , 1 , 2       , &areaThreshold , ""));
-			AddParameter(new ParameterDouble("min_margin"     , .003  , 0 , 1       , &minMargin     , ""));
-			AddParameter(new ParameterInt("edge_blur_size"    , 5     , 0 , 100     , &edgeBlurSize  , ""));
+			AddParameter(new ParameterInt("minArea"          , 60    , 0 , 100     , &minArea       , ""));
+			AddParameter(new ParameterInt("maxArea"          , 14400 , 1 , INT_MAX , &maxArea       , ""));
+			AddParameter(new ParameterFloat("maxVariation"   , .25   , 0 , 1       , &maxVariation  , ""));
+			AddParameter(new ParameterFloat("minDiversity"   , .2    , 0 , 1       , &minDiversity  , ""));
+			AddParameter(new ParameterInt("maxEvolution"     , 200   , 1 , 1000    , &maxEvolution  , ""));
+			AddParameter(new ParameterDouble("areaThreshold" , 1.01  , 1 , 2       , &areaThreshold , ""));
+			AddParameter(new ParameterDouble("minMargin"     , .003  , 0 , 1       , &minMargin     , ""));
+			AddParameter(new ParameterInt("edgeBlurSize"    , 5     , 0 , 100     , &edgeBlurSize  , ""));
 		};
 		int delta;
 		int minArea;

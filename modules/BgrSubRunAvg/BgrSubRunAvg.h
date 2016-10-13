@@ -38,8 +38,8 @@ public:
 	public:
 		Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
-			AddParameter(new ParameterFloat("background_alpha",	0.02, 	0, 1,	&backgroundAlpha,	"Defines the speed at which the background adapts"));
-			AddParameter(new ParameterFloat("foreground_thres", 	0.2, 	0, 1,	&foregroundThres,	"Threshold to accept a pixel as foreground"));
+			AddParameter(new ParameterFloat("backgroundAlpha",	0.02, 	0, 1,	&backgroundAlpha,	"Defines the speed at which the background adapts"));
+			AddParameter(new ParameterFloat("foregroundThres", 	0.2, 	0, 1,	&foregroundThres,	"Threshold to accept a pixel as foreground"));
 
 			RefParameterByName("type").SetDefaultAndValue("CV_32FC3");
 			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3,CV_32FC1,CV_32FC3]");

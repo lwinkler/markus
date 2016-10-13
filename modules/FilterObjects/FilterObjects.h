@@ -39,18 +39,18 @@ public:
 	public:
 		Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
-			AddParameter(new ParameterDouble("min_travel_dist", 0.0, 0, 1,    &minTravelDist  , "An object must have been tracked on this distance to be accepted [% of image diagonal]"));
-			AddParameter(new ParameterDouble("min_border_dist", 0.0, 0, 1,    &minBorderDist  , "An object must be distant from the image border [% of image diagonal]"));
-			AddParameter(new ParameterInt(   "max_object_nb"  ,  -1, -1, 1000, &maxObjectsNb  , "If there are more than this number of objects, all are filtered out"));
-			AddParameter(new ParameterDouble("min_obj_width"  , 0.0, 0, 1,    &minObjectWidth , "Minimum width to accept an object"));
-			AddParameter(new ParameterDouble("min_obj_height" , 0.0, 0, 1,    &minObjectHeight, "Minimum height to accept an object"));
-			AddParameter(new ParameterDouble("max_obj_width"  , 1.0, 0, 1,    &maxObjectWidth , "Maximum width to accept an object"));
-			AddParameter(new ParameterDouble("max_obj_height" , 1.0, 0, 1,    &maxObjectHeight, "Maximum height to accept an object"));
-			AddParameter(new ParameterString("custom_feature" , ""       ,    &customFeature  , "Name of a custom feature to test. Must be of type float"));
-			AddParameter(new ParameterDouble("min_custom"     , 0.0, 0, FLT_MAX    , &minCustom       , "Min value for the custom feature"));
-			AddParameter(new ParameterDouble("max_custom"     , FLT_MAX, 0, FLT_MAX, &maxCustom       , "Max value for the custom feature"));
+			AddParameter(new ParameterDouble("minTravelDist", 0.0, 0, 1,    &minTravelDist  , "An object must have been tracked on this distance to be accepted [% of image diagonal]"));
+			AddParameter(new ParameterDouble("minBorderDist", 0.0, 0, 1,    &minBorderDist  , "An object must be distant from the image border [% of image diagonal]"));
+			AddParameter(new ParameterInt(   "maxObjectNb"  ,  -1, -1, 1000, &maxObjectsNb  , "If there are more than this number of objects, all are filtered out"));
+			AddParameter(new ParameterDouble("minObjWidth"  , 0.0, 0, 1,    &minObjectWidth , "Minimum width to accept an object"));
+			AddParameter(new ParameterDouble("minObjHeight" , 0.0, 0, 1,    &minObjectHeight, "Minimum height to accept an object"));
+			AddParameter(new ParameterDouble("maxObjWidth"  , 1.0, 0, 1,    &maxObjectWidth , "Maximum width to accept an object"));
+			AddParameter(new ParameterDouble("maxObjHeight" , 1.0, 0, 1,    &maxObjectHeight, "Maximum height to accept an object"));
+			AddParameter(new ParameterString("customFeature" , ""       ,    &customFeature  , "Name of a custom feature to test. Must be of type float"));
+			AddParameter(new ParameterDouble("minCustom"     , 0.0, 0, FLT_MAX    , &minCustom       , "Min value for the custom feature"));
+			AddParameter(new ParameterDouble("maxCustom"     , FLT_MAX, 0, FLT_MAX, &maxCustom       , "Max value for the custom feature"));
 
-			RefParameterByName("custom_feature").SetRange("[x,y,width,height]");
+			RefParameterByName("customFeature").SetRange("[x,y,width,height]");
 		}
 		double minTravelDist;
 		double minBorderDist;

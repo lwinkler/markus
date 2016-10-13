@@ -40,10 +40,10 @@ public:
 	public:
 		Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
-			AddParameter(new ParameterUInt(  "min_object"  ,        1, 0, INT_MAX, &minObjectsNb  , "Min number of objects"));
-			AddParameter(new ParameterUInt(  "max_object"  ,  INT_MAX, 0, INT_MAX, &maxObjectsNb  , "Max number of objects"));
-			AddParameter(new ParameterString("event_name"  ,  "count_reached"    , &eventName     , "Name of the event"));
-			AddParameter(new ParameterBool(  "only_new"    ,        1, 0,       1, &onlyNew       , "Only raise an event if no object was present of previous frame"));
+			AddParameter(new ParameterUInt(  "minObject"  ,        1, 0, INT_MAX, &minObjectsNb  , "Min number of objects"));
+			AddParameter(new ParameterUInt(  "maxObject"  ,  INT_MAX, 0, INT_MAX, &maxObjectsNb  , "Max number of objects"));
+			AddParameter(new ParameterString("eventName"  ,  "count_reached"    , &eventName     , "Name of the event"));
+			AddParameter(new ParameterBool(  "onlyNew"    ,        1, 0,       1, &onlyNew       , "Only raise an event if no object was present of previous frame"));
 		}
 		unsigned int minObjectsNb;
 		unsigned int maxObjectsNb;

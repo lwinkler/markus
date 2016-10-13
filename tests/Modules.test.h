@@ -485,7 +485,7 @@ public:
 		{
 			TS_TRACE("## on module " + elem);
 			ModuleTester tester;
-			map<string, string> overrid = {{"auto_process", "1"}};
+			map<string, string> overrid = {{"autoProcess", "1"}};
 			CLEAN_DELETE(mp_configFile);
 			mp_configFile = new ConfigReader(m_emptyFileName);
 			CreateAndConnectModule(tester, elem, &overrid);

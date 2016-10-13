@@ -51,8 +51,8 @@ public:
 		Parameters(ConfigReader& x_configReader) : ParameterStructure(x_configReader["name"].asString()), config(x_configReader)
 		{
 			// AddParameter(new ParameterString("module", "", &module, "Module to display"));
-			AddParameter(new ParameterInt("nb_cols", 1, 1, 4, &nbCols, "Number of columns for display"));
-			AddParameter(new ParameterInt("nb_rows", 1, 1, 4, &nbRows, "Number of rows for display"));
+			AddParameter(new ParameterInt("nbCols", 1, 1, 4, &nbCols, "Number of columns for display"));
+			AddParameter(new ParameterInt("nbRows", 1, 1, 4, &nbRows, "Number of rows for display"));
 
 			m_writeAllParamsToConfig = true;
 		}

@@ -38,9 +38,9 @@ public:
 	public:
 		Parameters(const std::string& x_name) : Input::Parameters(x_name)
 		{
-			AddParameter(new ParameterInt("nb_objects"  , 10  , 0 , 1000    , &nbObjects  , "Number of objects to generate per step"));
-			AddParameter(new ParameterInt("nb_features" , 4   , 0 , 1000    , &nbFeatures , "Number of features per event"));
-			AddParameter(new ParameterInt("random_seed" , 0   , 0 , INT_MAX , &randomSeed , "Seed for random generator: 0 means seed is generated from timer"));
+			AddParameter(new ParameterInt("nbObjects"  , 10  , 0 , 1000    , &nbObjects  , "Number of objects to generate per step"));
+			AddParameter(new ParameterInt("nbFeatures" , 4   , 0 , 1000    , &nbFeatures , "Number of features per event"));
+			AddParameter(new ParameterInt("randomSeed" , 0   , 0 , INT_MAX , &randomSeed , "Seed for random generator: 0 means seed is generated from timer"));
 			AddParameter(new ParameterDouble("speed"    , .005, 0 , DBL_MAX , &speed ,      "Speed for the variation of object features"));
 			RefParameterByName("fps").SetDefaultAndValue("5");
 		}

@@ -51,9 +51,9 @@ public:
 			AddParameter(new ParameterString("extension"   , "jpg"        , &extension ,  "Extension of the thumbnails. Determines the output format."));
 
 			// The 4 gt_ parameters are only used for evaluation vs ground truth file
-			AddParameter(new ParameterString("gt_command"  , ""           , &gtCommand ,  "The command to use for comparison with ground truthi, e.g. \"tools/evaluation/analyse_events.py -d 0 -t 8 -e intrusion\""));
-			AddParameter(new ParameterString("gt_file"     , ""           , &gtFile    ,  "Ground truth file name. If empty, the program will consider that the ground truth is empty."));
-			AddParameter(new ParameterString("gt_video"    , ""           , &gtVideo   ,  "Video file to use to create the ground truth."));
+			AddParameter(new ParameterString("gtCommand"  , ""           , &gtCommand ,  "The command to use for comparison with ground truthi, e.g. \"tools/evaluation/analyse_events.py -d 0 -t 8 -e intrusion\""));
+			AddParameter(new ParameterString("gtFile"     , ""           , &gtFile    ,  "Ground truth file name. If empty, the program will consider that the ground truth is empty."));
+			AddParameter(new ParameterString("gtVideo"    , ""           , &gtVideo   ,  "Video file to use to create the ground truth."));
 
 			RefParameterByName("type").SetDefaultAndValue("CV_8UC3");
 			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3]");
