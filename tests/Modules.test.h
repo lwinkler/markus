@@ -189,7 +189,7 @@ public:
 		// Create custom streams to feed each input of the module
 		for(const auto& elem : module->GetInputStreamList())
 		{
-			Stream& inputStream = module->RefInputStreamById(elem.first);
+			Stream& inputStream = module->RefInputStreamByName(elem.first);
 			Stream* outputStream = nullptr;
 
 			if(elem.second->GetClass() == "StreamImage")

@@ -330,70 +330,70 @@ void Module::Export(ostream& rx_os) const
 			throw MkException("Forbidden character _ in " + elem.second->GetName(), LOC);
 		// TODO: parameters are now inputs
 		stringstream ss;
-		elem.second->Export(ss, elem.first);
+		elem.second->Export(ss);
 		ss >> root["inputs"][elem.second->GetName()];
 	}
 	for(const auto& elem : m_outputStreams)
 	{
 		if(elem.second->GetName().find('_') != string::npos)
 			throw MkException("Forbidden character _ in " + elem.second->GetName(), LOC);
-		if(elem.first < MIN_DEBUG_STREAM_ID)
+		if(!elem.second->debug)
 		{
 			stringstream ss;
-			elem.second->Export(ss, elem.first);
+			elem.second->Export(ss);
 			ss >> root["outputs"][elem.second->GetName()];
 		}
 	}
 	rx_os << root;
 }
 
-const Stream& Module::GetInputStreamById(int x_id) const
+const Stream& Module::GetInputStreamByName(const string& x_name) const
 {
-	auto it = m_inputStreams.find(x_id);
+	auto it = m_inputStreams.find(x_name);
 
 	if(it == m_inputStreams.end())
 	{
 		stringstream ss;
-		ss<<"GetInputStreamById : no stream with id="<<x_id<<" for module "<<GetName();
+		ss<<"GetInputStreamByName : no stream with name="<<x_name<<" for module "<<GetName();
 		throw MkException(ss.str(), LOC);
 	}
 	return *(it->second);
 }
 
-const Stream& Module::GetOutputStreamById(int x_id) const
+const Stream& Module::GetOutputStreamByName(const string& x_name) const
 {
-	auto it = m_outputStreams.find(x_id);
+	auto it = m_outputStreams.find(x_name);
 
 	if(it == m_outputStreams.end())
 	{
 		stringstream ss;
-		ss<<"GetInputStreamById : no stream with id="<<x_id<<" for module "<<GetName();
+		ss<<"GetInputStreamByName : no stream with name="<<x_name<<" for module "<<GetName();
 		throw MkException(ss.str(), LOC);
 	}
 	return *(it->second);
 }
 
-Stream& Module::RefInputStreamById(int x_id)
+Stream& Module::RefInputStreamByName(const string& x_name)
 {
-	auto it = m_inputStreams.find(x_id);
+	auto it = m_inputStreams.find(x_name);
 
 	if(it == m_inputStreams.end())
 	{
 		stringstream ss;
-		ss<<"GetInputStreamById : no stream with id="<<x_id<<" for module "<<GetName();
+		ss<<"GetInputStreamByName : no stream with name="<<x_name<<" for module "<<GetName();
 		throw MkException(ss.str(), LOC);
 	}
 	return *(it->second);
 }
 
-Stream& Module::RefOutputStreamById(int x_id)
+Stream& Module::RefOutputStreamByName(const string& x_name)
 {
-	auto it = m_outputStreams.find(x_id);
+	auto it = m_outputStreams.find(x_name);
 
 	if(it == m_outputStreams.end())
 	{
 		stringstream ss;
-		ss<<"GetInputStreamById : no stream with id="<<x_id<<" for module "<<GetName();
+		ss<<"GetInputStreamByName : no stream with name="<<x_name<<" for module "<<GetName();
 		throw MkException(ss.str(), LOC);
 	}
 	return *(it->second);
@@ -474,23 +474,27 @@ void Module::Deserialize(istream& x_in, MkDirectory* xp_dir)
 	// read inputs
 	unsigned int size1 = root["inputs"].size();
 	assert(size1 == m_inputStreams.size());
-	for(unsigned int i = 0 ; i < size1 ; i++)
+	for(auto& elem : m_inputStreams)
 	{
 		ss.clear();
-		ss << root["inputs"][i];
-		m_inputStreams[i]->Deserialize(ss, xp_dir);
+		ss << root["inputs"][elem.first];
+		m_inputStreams[elem.first]->Deserialize(ss, xp_dir);
 	}
 
 	// read outputs
 	size1 = root["outputs"].size();
 	assert(size1 == m_outputStreams.size());
-	for(unsigned int i = 0 ; i < size1 ; i++)
+	for(auto& elem : m_outputStreams)
 	{
 		ss.clear();
-		ss << root["outputs"][i];
-		m_outputStreams[i]->Deserialize(ss, xp_dir);
+		ss << root["outputs"][elem.first];
+		m_outputStreams[elem.first]->Deserialize(ss, xp_dir);
 	}
 }
+
+void Module::AddInputStream(int x_id, Stream* xp_stream){AddInputStream(xp_stream);xp_stream->id = x_id;}
+void Module::AddOutputStream(int x_id, Stream* xp_stream){AddOutputStream(xp_stream);xp_stream->id = x_id;}
+void Module::AddDebugStream(int x_id, Stream* xp_stream){AddDebugStream(xp_stream);xp_stream->id = x_id;}
 
 /**
 * @brief Add an input stream
@@ -498,13 +502,9 @@ void Module::Deserialize(istream& x_in, MkDirectory* xp_dir)
 * @param x_id      id
 * @param xp_stream stream
 */
-void Module::AddInputStream(int x_id, Stream* xp_stream)
+void Module::AddInputStream(Stream* xp_stream)
 {
-	// xp_stream->SetId(x_id);
-	if(m_inputStreams.find(x_id) != m_inputStreams.end())
-		throw MkException("Two streams with same id", LOC);
-	m_inputStreams.insert(make_pair(x_id, xp_stream));
-
+	m_inputStreams.insert(make_pair(xp_stream->GetName(), xp_stream));
 	if(xp_stream->GetParameterType() != PARAM_UNKNOWN)
 	{
 		m_param.AddParameter(xp_stream);
@@ -517,12 +517,9 @@ void Module::AddInputStream(int x_id, Stream* xp_stream)
 * @param x_id      id
 * @param xp_stream stream
 */
-void Module::AddOutputStream(int x_id, Stream* xp_stream)
+void Module::AddOutputStream(Stream* xp_stream)
 {
-	// xp_stream->SetId(x_id);
-	if(m_outputStreams.find(x_id) != m_outputStreams.end())
-		throw MkException("Two streams with same id", LOC);
-	m_outputStreams.insert(make_pair(x_id, xp_stream));
+	m_outputStreams.insert(make_pair(xp_stream->GetName(), xp_stream));
 }
 
 /**
@@ -531,11 +528,12 @@ void Module::AddOutputStream(int x_id, Stream* xp_stream)
 * @param x_id      id
 * @param xp_stream stream
 */
-void Module::AddDebugStream(int x_id, Stream* xp_stream)
+void Module::AddDebugStream(Stream* xp_stream)
 {
 #ifdef MARKUS_DEBUG_STREAMS
 	// Simply add an output with a id increased by 1000
-	AddOutputStream(x_id + MIN_DEBUG_STREAM_ID, xp_stream);
+	AddOutputStream(xp_stream);
+	xp_stream->debug = true;
 #endif
 }
 

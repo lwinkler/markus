@@ -55,7 +55,7 @@ void AddImageToEvent::Reset()
 	Module::Reset();
 
 	mp_outputDir.reset(new MkDirectory(m_param.folder, RefContext().RefOutputDir(), false));
-	m_saveImage1 = m_inputStreams.at(1)->IsConnected();
+	m_saveImage1 = m_inputStreams.at("image")->IsConnected();
 }
 
 void AddImageToEvent::ProcessFrame()

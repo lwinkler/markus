@@ -89,11 +89,11 @@ public:
 		if(mp_stream != nullptr)
 			mp_stream->Disconnect();
 	}
-	void Reconnect(Manager& rx_manager, const string& x_moduleName, int x_streamId)
+	void Reconnect(Manager& rx_manager, const string& x_moduleName, string x_streamName)
 	{
 		Processable::WriteLock lock(RefLock());
 		mp_stream->Disconnect();
-		rx_manager.ConnectExternalInput(*mp_stream, x_moduleName, x_streamId);
+		rx_manager.ConnectExternalInput(*mp_stream, x_moduleName, x_streamName);
 		// mp_stream->SetAsConnected(true);
 	}
 	void RenderTo(QImage& rx_qimage)
@@ -243,7 +243,7 @@ void QModuleViewer::CreateInputStream(int x_outputWidth, int x_outputHeight)
 	mp_viewerParams->type        = CV_8UC3;
 	mp_viewerParams->autoProcess = false;
 
-	const string type = mr_manager.GetModuleByName(m_param.module).GetOutputStreamById(m_param.stream).GetType();
+	const string type = mr_manager.GetModuleByName(m_param.module).GetOutputStreamByName(m_param.stream).GetType();
 
 	if(type == "Image")
 		mp_viewerModule = new ViewerT<Mat>(*mp_viewerParams, *this, m_param.module);
@@ -286,7 +286,7 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 	m_outputWidth  = e->size().width();
 	m_outputHeight = e->size().height();
 	Size outputSize;
-	outputSize = mr_manager.GetModuleByName(m_param.module).GetOutputStreamById(m_param.stream).GetSize();
+	outputSize = mr_manager.GetModuleByName(m_param.module).GetOutputStreamByName(m_param.stream).GetSize();
 
 	double ratio = aspectRatio(outputSize);
 
@@ -330,15 +330,15 @@ void QModuleViewer::paintEvent(QPaintEvent * e)
 void QModuleViewer::updateModule(const Module& x_module)
 {
 	mp_comboStreams->clear();
-	m_streamIds.clear();
+	m_streamNames.clear();
 	m_controllerNames.clear();
 	CLEAN_DELETE(mp_controlBoard);
 
 	for(const auto & elem : x_module.GetOutputStreamList())
 	{
 		QString str;
-		mp_comboStreams->addItem(elem.second->GetName().c_str(), elem.first);
-		m_streamIds.push_back(elem.first);
+		mp_comboStreams->addItem(elem.second->GetName().c_str(), IndexOfStream(elem.first));
+		m_streamNames.push_back(elem.first);
 	}
 
 	for(const auto & elem : x_module.GetControllersList())
@@ -424,18 +424,18 @@ void QModuleViewer::updateModuleNb(int x_index)
 /// Change the stream being currently displayed (by index)
 void QModuleViewer::updateStreamNb(int x_index)
 {
-	if(m_streamIds.empty() || x_index < 0)
+	if(m_streamNames.empty() || x_index < 0)
 	{
 		m_param.stream = -1;
 		return;
 	}
-	if(x_index >= static_cast<int>(m_streamIds.size()))
+	if(x_index >= static_cast<int>(m_streamNames.size()))
 	{
-		m_param.stream = m_streamIds.at(0);
+		m_param.stream = m_streamNames.at(0);
 	}
 	else
 	{
-		m_param.stream = m_streamIds.at(x_index);
+		m_param.stream = m_streamNames.at(x_index);
 	}
 	CreateInputStream(m_outputWidth, m_outputHeight);
 }

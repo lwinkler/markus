@@ -37,8 +37,6 @@
 #define MAX_HEIGHT 4800
 #define MIN_DEBUG_STREAM_ID 1000
 
-
-
 class Stream;
 
 /**
@@ -114,9 +112,14 @@ public:
 	virtual const std::string& GetCategory() const{static const std::string cat = "Other"; return cat;}
 	virtual const std::string& GetDescription() const = 0;
 
-	const std::map<int, Stream*>& GetInputStreamList() const {return m_inputStreams;}
-	const std::map<int, Stream*>& GetOutputStreamList() const {return m_outputStreams;}
+	const std::map<std::string, Stream*>& GetInputStreamList() const {return m_inputStreams;}
+	const std::map<std::string, Stream*>& GetOutputStreamList() const {return m_outputStreams;}
 	void ProcessRandomInput(unsigned int& xr_seed);  /// For unit testing
+	void AddInputStream(Stream* xp_stream);
+	void AddOutputStream(Stream* xp_stream);
+	void AddDebugStream(Stream* xp_stream);
+
+	// For backward compatibility: TODO remove
 	void AddInputStream(int x_id, Stream* xp_stream);
 	void AddOutputStream(int x_id, Stream* xp_stream);
 	void AddDebugStream(int x_id, Stream* xp_stream);
@@ -138,10 +141,10 @@ public:
 
 	virtual inline bool IsInput() const {return false;}
 	void Export(std::ostream& rx_os) const;
-	const Stream& GetInputStreamById(int x_id) const;
-	const Stream& GetOutputStreamById(int x_id) const;
-	Stream& RefInputStreamById(int x_id);
-	Stream& RefOutputStreamById(int x_id);
+	const Stream& GetInputStreamByName(const std::string& x_name) const;
+	const Stream& GetOutputStreamByName(const std::string& x_name) const;
+	Stream& RefInputStreamByName(const std::string& x_name);
+	Stream& RefOutputStreamByName(const std::string& x_name);
 	inline void CheckParameterRange() {m_param.CheckRange();}
 	inline bool IsUnitTestingEnabled() const {return m_isUnitTestingEnabled;}
 	inline TIME_STAMP GetCurrentTimeStamp() const {return m_currentTimeStamp;}
@@ -171,9 +174,9 @@ protected:
 	inline virtual bool IsInputProcessed() const {return true;}
 
 	// Streams
-	std::map<int, Stream *> m_inputStreams;
-	std::map<int, Stream *> m_outputStreams;
-	std::map<int, Stream *> m_debugStreams;
+	std::map<std::string, Stream *> m_inputStreams;
+	std::map<std::string, Stream *> m_outputStreams;
+	std::map<std::string, Stream *> m_debugStreams;
 
 	std::vector<Module *> m_modulesDepending;
 

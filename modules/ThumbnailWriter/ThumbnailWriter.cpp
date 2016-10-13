@@ -120,7 +120,7 @@ void ThumbnailWriter::ProcessFrame()
 		imwrite(dir.ReserveFile(ss1.str()), (m_input)(rect));
 
 		// For each object save a thumbnail
-		if(m_inputStreams.at(2)->IsConnected())
+		if(m_inputStreams.at("image2")->IsConnected())
 		{
 			std::stringstream ss3;
 			ss3 << m_currentTimeStamp << "_" << elem.GetName()<< elem.GetId() << "_" << cpt << "_mask." << m_param.extension;

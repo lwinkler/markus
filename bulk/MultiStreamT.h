@@ -59,7 +59,7 @@ public:
 			assert(!StreamT<T>::mr_module.GetInputStreamList().empty());
 			auto it = StreamT<T>::mr_module.GetInputStreamList().end();
 			it--;
-			int lastId = it->first;
+			int lastId = it->second->id;
 			std::stringstream ss;
 			ss << StreamT<T>::GetName() << "-" << lastId;
 			Stream* pstream = new StreamT<T>(ss.str(), m_objects.at(m_nextObj), Stream::mr_module, Stream::GetDescription());
@@ -74,11 +74,11 @@ public:
 		throw MkException("Disconnection not implemented for multi streams", LOC); // TODO
 	}
 
-	virtual void Export(std::ostream& rx_os, int x_id) const override
+	virtual void Export(std::ostream& rx_os) const override
 	{
 		Json::Value root;
 		std::stringstream ss;
-		StreamT<T>::Export(ss, x_id);
+		StreamT<T>::Export(ss);
 		ss >> root;
 		root["multi"] = static_cast<int>(m_size);
 		rx_os << root;

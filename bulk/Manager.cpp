@@ -191,19 +191,20 @@ void Manager::Connect()
 	// Connect input and output streams (re-read the config once since we need all modules to be connected)
 	for(const auto& moduleConfig : m_param.config["modules"])
 	{
-		int moduleId = boost::lexical_cast<int>(moduleConfig["id"].asInt());
-		Module& module = RefModuleById(moduleId);
+		Module& module = RefModuleByName(moduleConfig["name"].asString());
 
 		// For each module
 		// Read conections of inputs
 		for(const auto& inputConfig : moduleConfig["inputs"])
 		{
-			ConnectInput(inputConfig, module, boost::lexical_cast<int>(inputConfig["id"]));
+			if(!inputConfig.isObject() || !inputConfig.isMember("connected"))
+				continue;
+			ConnectInput(inputConfig, module, inputConfig["name"].asString());
 
 			// Connect all sub-inputs: only used in case of multiple streams
 			for(const auto& subInputConfig : inputConfig["inputs"])
 			{
-				ConnectInput(subInputConfig, module, boost::lexical_cast<int>(inputConfig["id"]));
+				ConnectInput(subInputConfig, module, inputConfig["name"].asString());
 			}
 		}
 
@@ -379,11 +380,11 @@ void Manager::SendCommand(const string& x_command)
 * @param x_moduleName Internal module name
 * @param x_outputId   Internal output id
 */
-void Manager::ConnectExternalInput(Stream& xr_input, const string& x_moduleName, int x_outputId)
+void Manager::ConnectExternalInput(Stream& xr_input, const string& x_moduleName, const std::string& x_outputStreamName)
 {
 	Module& mod(RefModuleByName(x_moduleName));
 	// WriteLock lock(mod.RefLock());
-	xr_input.Connect(mod.RefOutputStreamById(x_outputId));
+	xr_input.Connect(mod.RefOutputStreamByName(x_outputStreamName));
 }
 
 /**
@@ -501,27 +502,6 @@ void Manager::CreateEditorFiles(const string& x_fileName)
 	}
 }
 
-Module& Manager::RefModuleById(int x_id) const
-{
-	Module* module = nullptr;
-	int found = 0;
-	for(const auto & elem : m_modules)
-	{
-		if(elem.first == x_id)
-		{
-			module = elem.second;
-			found++;
-		}
-	}
-	if(found == 1)
-		return *module;
-	if(found == 0)
-		throw MkException("Module not found", LOC);
-	else
-		throw MkException("more than one module with id ", LOC);
-}
-
-
 Module& Manager::RefModuleByName(const string& x_name) const
 {
 	for(const auto & elem : m_modules)
@@ -564,37 +544,25 @@ void Manager::WriteStateToDirectory(const string& x_directory)
 *
 * @param x_inputConfig Config of the input
 * @param xr_module     Module to connect
-* @param x_inputId     Id of input
+* @param x_inputName   Name of input
 */
-void Manager::ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module, int x_inputId) const
+void Manager::ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module, const string& x_inputName) const
 {
 	// Check if connected to our previous module
 	try
 	{
-		const string& tmp1 = x_inputConfig.get("moduleid", "").asString();
-		const string& tmp2 = x_inputConfig.get("outputid", "").asString();
-		const string& tmp3 = x_inputConfig.get("block", "1").asString();
-		const string& tmp4 = x_inputConfig.get("sync", "1").asString();
-
 		// Connection of a simple input
-		if(tmp1 != "" && tmp2 != "")
-		{
-			LOG_DEBUG(m_logger, "Connect input " + to_string(x_inputId) + " of module " + xr_module.GetName() + " to output " + tmp1 + ":" + tmp2);
+		LOG_DEBUG(m_logger, "Connect input " + x_inputName + " of module " + xr_module.GetName() + " to output " + x_inputConfig["connected"]["module"].asString() + ":" + x_inputConfig["connected"]["output"].asString());
 
-			int outputModuleId   = boost::lexical_cast<int>(tmp1);
-			int outputId         = boost::lexical_cast<int>(tmp2);
-			Stream& inputStream  = xr_module.RefInputStreamById(x_inputId);
-			inputStream.SetBlocking(boost::lexical_cast<bool>(tmp3));
-			inputStream.SetSynchronized(boost::lexical_cast<bool>(tmp4));
-			Stream& outputStream = RefModuleById(outputModuleId).RefOutputStreamById(outputId);
+		Stream& inputStream  = xr_module.RefInputStreamByName(x_inputName);
+		inputStream.SetBlocking(x_inputConfig.get("block", 1).asInt());
+		inputStream.SetSynchronized(x_inputConfig.get("sync", 1).asInt());
+		Stream& outputStream = RefModuleByName(x_inputConfig["connected"]["module"].asString()).RefOutputStreamByName(x_inputConfig["connected"]["output"].asString());
 
-			// Connect input and output streams
-			inputStream.Connect(outputStream);
-			if(xr_module.GetParameters().GetParameterByName("master").GetValueString().empty())
-				RefModuleById(outputModuleId).AddDependingModule(xr_module);
-		}
-		else if(tmp1.empty() && ! tmp2.empty()) throw MkException("Exception while connecting input: missing moduleid in config", LOC);
-		else if(! tmp1.empty() && tmp2.empty()) throw MkException("Exception while connecting input: missing outputid in config", LOC);
+		// Connect input and output streams
+		inputStream.Connect(outputStream);
+		if(xr_module.GetParameters().GetParameterByName("master").GetValueString().empty())
+			RefModuleByName(x_inputConfig["connected"]["module"].asString()).AddDependingModule(xr_module);
 	}
 	catch(MkException& e)
 	{

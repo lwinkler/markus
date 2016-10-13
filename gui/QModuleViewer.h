@@ -56,15 +56,15 @@ public:
 		Parameters(const std::string& x_name) : ParameterStructure(x_name)
 		{
 			// AddParameter(new ParameterString("module", "", &module, "Module to display"));
-			AddParameter(new ParameterString("module",   "", &module,  "Name of the module to display"));
-			AddParameter(new ParameterInt("stream",   0, -1, 2000, &stream,  "Index of the stream to display"));
+			AddParameter(new ParameterString("module",  "", &module,  "Name of the module to display"));
+			AddParameter(new ParameterString("stream",  "", &stream,  "Index of the stream to display"));
 			AddParameter(new ParameterInt("control", -1, -1, 2000, &control, "Index of the control to display"));
 			AddParameter(new ParameterBool("displayOptions", 1, 0, 1, &displayOptions, "Display the options to select the module, stream, ..."));
 
 			m_writeAllParamsToConfig = true;
 		}
 		std::string module;
-		int stream;
+		std::string stream;
 		int control;
 		bool displayOptions;
 	};
@@ -86,12 +86,12 @@ protected:
 			return 0; // throw MkException("Cannot find " + x_moduleName + " in module names");
 		return it - m_moduleNames.begin();
 	}
-	int IndexOfStream(int x_streamId)
+	int IndexOfStream(const std::string& x_streamName)
 	{
-		auto it = std::find(m_streamIds.begin(), m_streamIds.end(), x_streamId);
-		if(it == m_streamIds.end())
+		auto it = std::find(m_streamNames.begin(), m_streamNames.end(), x_streamName);
+		if(it == m_streamNames.end())
 			return 0; // throw MkException("Cannot find " + x_moduleName + " in module names");
-		return it - m_streamIds.begin();
+		return it - m_streamNames.begin();
 	}
 
 	QBoxLayout * mp_mainLayout;
@@ -115,7 +115,7 @@ protected:
 
 	// Stream and module to handle rendering via Markus
 	std::vector<std::string> m_moduleNames;
-	std::vector<int>         m_streamIds;
+	std::vector<std::string> m_streamNames;
 	std::vector<std::string> m_controllerNames;
 
 	Module::Parameters* mp_viewerParams = nullptr;

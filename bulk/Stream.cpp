@@ -48,10 +48,10 @@ Stream::~Stream()
 * @param rx_os         Output stream
 * @param x_id          Id of stream
 */
-void Stream::Export(ostream& rx_os, int x_id) const
+void Stream::Export(ostream& rx_os) const
 {
 	Json::Value root;
-	root["id"] = x_id;
+	root["id"] = id;
 	root["type"] = GetType();
 	root["description"] = GetDescription();
 	rx_os << root;

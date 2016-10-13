@@ -52,7 +52,7 @@ public:
 	virtual void Randomize(unsigned int& xr_seed) = 0;
 	virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const override;
 	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr) override;
-	virtual void Export(std::ostream& rx_os, int x_id) const;
+	virtual void Export(std::ostream& rx_os) const;
 	inline bool IsConnected() const {return m_cptConnected > 0;}
 	inline void SetAsConnected(bool x_val)
 	{
@@ -101,6 +101,9 @@ public:
 	virtual std::string GetDefaultString() const override = 0;
 	inline std::string GetRange() const override {return "";}
 	inline virtual void SetRange(const std::string& x_range) override {}
+
+	int id     = -1;
+	bool debug = false;
 
 protected:
 	Module& mr_module;

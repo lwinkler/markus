@@ -59,8 +59,8 @@ void LogEvent::Reset()
 	CLEAN_DELETE(mp_annotationWriter);
 	mp_annotationWriter = new AnnotationFileWriter();
 	mp_annotationWriter->Open(RefContext().RefOutputDir().ReserveFile(m_param.file, m_nbReset));
-	m_saveImage1 = m_inputStreams.at(1)->IsConnected();
-	m_saveImage2 = m_inputStreams.at(2)->IsConnected();
+	m_saveImage1 = m_inputStreams.at("image")->IsConnected();
+	m_saveImage2 = m_inputStreams.at("mask")->IsConnected();
 
 	mp_outputDir.reset(new MkDirectory(m_param.folder, RefContext().RefOutputDir(), false));
 }

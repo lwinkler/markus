@@ -176,9 +176,9 @@ public:
 		for(auto input : mp_fakeModule1->GetInputStreamList())
 		{
 			// connect inputs with outputs
-			int id = input.first;
-			mp_fakeModule2->RefInputStreamById(id).Connect(mp_fakeModule1->RefOutputStreamById(id));
-			mp_fakeModule3->RefInputStreamById(id).Connect(mp_fakeModule2->RefOutputStreamById(id));
+			string name = input.first;
+			mp_fakeModule2->RefInputStreamByName(name).Connect(mp_fakeModule1->RefOutputStreamByName(name));
+			mp_fakeModule3->RefInputStreamByName(name).Connect(mp_fakeModule2->RefOutputStreamByName(name));
 		}
 
 		mp_fakeModule1->Reset();
@@ -205,9 +205,9 @@ public:
 			mp_fakeModule1->ProcessFrame();
 			for(auto input : mp_fakeModule1->GetInputStreamList())
 			{
-				int id = input.first;
-				mp_fakeModule2->RefInputStreamById(id).ConvertInput();
-				mp_fakeModule3->RefInputStreamById(id).ConvertInput();
+				string name = input.first;
+				mp_fakeModule2->RefInputStreamByName(name).ConvertInput();
+				mp_fakeModule3->RefInputStreamByName(name).ConvertInput();
 			}
 		}
 	}

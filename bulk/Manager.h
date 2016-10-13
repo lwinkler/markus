@@ -69,7 +69,7 @@ public:
 	// Interface for interaction with external objects
 	void SendCommand(const std::string& x_command, std::string x_value);
 	void SendCommand(const std::string& x_command); // TODO: see if we can avoid this method
-	void ConnectExternalInput(Stream& xr_input, const std::string& x_moduleName, int x_outputId);
+	void ConnectExternalInput(Stream& xr_input, const std::string& x_moduleName, const std::string& x_outputStreamName);
 	inline void CallModuleMethod(const std::string& x_moduleName, std::function<void(Module*)> x_method)
 	{
 		Module& mod(RefModuleByName(x_moduleName));
@@ -132,9 +132,8 @@ private:
 	void Build();
 	void Destroy();
 
-	Module& RefModuleById(int x_id) const;
 	Module& RefModuleByName(const std::string& x_name) const;
-	void ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module, int x_inputId) const;
+	void ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module, const std::string& x_input) const;
 
 	int64_t m_frameCount = 0;
 	bool m_isConnected   = false;
