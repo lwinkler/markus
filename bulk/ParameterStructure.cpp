@@ -78,9 +78,9 @@ void ParameterStructure::LockIfRequired()
 */
 void ParameterStructure::Read(const ConfigReader& x_config)
 {
-	for(const auto& name : x_config["parameters"].getMemberNames())
+	for(const auto& name : x_config["inputs"].getMemberNames())
 	{
-		string value = x_config["parameters"][name].asString();
+		string value = x_config["inputs"][name].asString();
 
 		try
 		{
@@ -107,7 +107,7 @@ void ParameterStructure::Write(ConfigReader& xr_config) const
 	{
 		if(m_writeAllParamsToConfig || elem->GetConfigurationSource() != PARAMCONF_DEF)
 		{
-			xr_config["parameters"][elem->GetName()] = elem->GetValueString();
+			xr_config["inputs"][elem->GetName()] = elem->GetValueString();
 		}
 	}
 }
@@ -193,7 +193,7 @@ void ParameterStructure::SetValueToDefault()
 void ParameterStructure::CheckRange(const ConfigReader& x_config) const
 {
 	// Check that all parameters in config are related to the module
-	for(const auto& name : x_config["parameters"].getMemberNames())
+	for(const auto& name : x_config["inputs"].getMemberNames())
 	{
 		try
 		{

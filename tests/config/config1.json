@@ -2,13 +2,11 @@
 	"description":"A config for unit testing purposes",
 	"modules": {
 		"Module0":{
-			"id": 0,
-			"parameters": {
+			"inputs": {
 				"param_text":"SomeText",
 				"param_int":21,
 				"param_float":3.1415
 			},
-			"inputs": {},
 			"outputs": {
 				"first": {
 					"id":0
@@ -16,13 +14,10 @@
 			}
 		},
 		"Module1":{
-			"id": 1,
-			"parameters": {
+			"inputs": {
 				"param_text":"AnotherText",
 				"param_int":42,
-				"param_float":2.71828
-			},
-			"inputs": {
+				"param_float":2.71828,
 				"first": {
 					"id": 0,
 					"moduleid": 1,
@@ -36,7 +31,7 @@
 			}
 		}
 	},
-	"parameters": {
+	"inputs": {
 		"param_text":"SomeText0",
 		"param_int":0,
 		"param_float":0

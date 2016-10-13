@@ -68,7 +68,7 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 	string arguments;
 	try
 	{
-		arguments = x_mainConfig["parameters"]["arguments"].asString();
+		arguments = x_mainConfig["inputs"]["arguments"].asString();
 	}
 	catch(MkException &e) {}
 	m_allTargets << "$(OUTDIR)/results/" <<  sd.str() << " ";
@@ -110,7 +110,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 		// Read module and parameter attribute
 		assert(varConf["module"].isNull()); // note: no longer supported
 		assert(varConf["param"].isNull());  // note: no longer supported
-		const auto& paramNames(varConf["parameters"]);
+		const auto& paramNames(varConf["inputs"]);
 		const auto& moduleNames(varConf["modules"]);
 		if(moduleNames.size() != 1 && moduleNames.size() != paramNames.size())
 			throw MkException("Modules and parameters must have the same size in <var> or modules must only contain one module", LOC);
@@ -128,7 +128,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 			try
 			{
 				LOG_DEBUG(m_logger, "Param:"<< itmod->asString() << ":" << itpar.asString());
-				*ittar = manOrMod(xr_mainConfig, itmod->asString())["parameters"][itpar.asString()];
+				*ittar = manOrMod(xr_mainConfig, itmod->asString())["inputs"][itpar.asString()];
 				*itval = ittar->asString();
 				ittar++;
 				itval++;

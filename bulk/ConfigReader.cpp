@@ -67,21 +67,7 @@ void writeToFile(const ConfigReader& xr_config, const string& x_fileName)
 */
 void validate(const ConfigReader& xr_config)
 {
-	map<int,bool> moduleIds;
-	
-	for(const auto& name : xr_config["modules"].getMemberNames())
-	{
-		const auto& conf = xr_config["modules"][name];
-		const auto& id   = conf["id"];
-		if(!id.isInt())
-			throw MkException("Module " + name + " has no id", LOC);
-		if(moduleIds[id.asInt()])
-			throw MkException("Module with id=" + to_string(id.asInt()) + " must be unique", LOC);
-		moduleIds[id.asInt()] = true;
-
-		checkUniquenessOfId(conf, "inputs",     "id",   name);
-		checkUniquenessOfId(conf, "outputs",    "id",   name);
-	}
+	// note: nothing to check yet
 }
 
 /**
@@ -118,7 +104,7 @@ void overrideParameters(ConfigReader& x_oldConfig, const ConfigReader& x_newConf
 		{
 			if(!x_newConfig.isMember(name))
 				continue;
-			if(x_parentName == "parameters")
+			if(x_parentName == "inputs")
 			{
 				x_oldConfig[name] = x_newConfig[name];
 			}

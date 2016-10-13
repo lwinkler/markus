@@ -299,9 +299,9 @@ void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, 
 			if(path.size() != 2)
 				throw MkException("Parameter set in command line must be in format 'module.parameter'", LOC);
 			if(path[0] == "manager")
-				reader.parse(value, appConfig["parameters"][path[1]]);
+				reader.parse(value, appConfig["inputs"][path[1]]);
 			else
-				reader.parse(value, appConfig["module"][path[0]]["parameters"][path[1]]);
+				reader.parse(value, appConfig["module"][path[0]]["inputs"][path[1]]);
 			// manager.GetModuleByName(path[0])->GetParameters().RefParameterByName(path[1]).SetValue(value, PARAMCONF_CMD);
 		}
 		catch(std::exception& e)
@@ -360,8 +360,8 @@ int main(int argc, char** argv)
 		validate(appConfig);
 		if(appConfig.isNull())
 			throw MkException("Tag <application> must be present in configuration file.", LOC);
-		// if(appConfig["parameters"].isNull())
-			// throw MkException("Tag <application> must contain a <parameters> section", LOC);
+		// if(appConfig["inputs"].isNull())
+			// throw MkException("Tag <application> must contain a <inputs> section", LOC);
 
 		// Init global variables and objects
 		// Context manages all call to system, files, ...
@@ -457,7 +457,6 @@ int main(int argc, char** argv)
 			ConfigReader mainGuiConfig;
 			readFromFile(mainGuiConfig, "gui.xml", true);
 			ConfigReader& guiConfig(mainGuiConfig["gui"][args.configFile]);
-			guiConfig["parameters"];
 
 			MarkusWindow::Parameters windowParameters(guiConfig);
 			windowParameters.Read(guiConfig);

@@ -96,13 +96,13 @@ public:
 		TS_ASSERT(module0conf == appConf["module"]["Module0"]);
 		TS_ASSERT(module1conf == appConf["modules"]);
 		// TS_ASSERT(module1conf == appConf.FindAll("module[name=\"Module1\"]").at(0));
-		TS_ASSERT(! module0conf["parameters"].isNull());
+		TS_ASSERT(! module0conf["inputs"].isNull());
 
-		ConfigReader& param1 = module0conf["parameters"]["param"]["name"]["param_text"];
+		ConfigReader& param1 = module0conf["inputs"]["param"]["name"]["param_text"];
 		TS_ASSERT(param1.asString() == "SomeText");
-		ConfigReader& param2 = module0conf["parameters"]["param"]["name"]["param_int"];
+		ConfigReader& param2 = module0conf["inputs"]["param"]["name"]["param_int"];
 		TS_ASSERT(param2.asString() == "21");
-		ConfigReader& param3 = module0conf["parameters"]["param"]["name"]["param_float"];
+		ConfigReader& param3 = module0conf["inputs"]["param"]["name"]["param_float"];
 		TS_ASSERT(param3.asString() == "3.1415");
 
 		TS_ASSERT(param1["name"].asString() == "param_text");
@@ -137,21 +137,21 @@ public:
 	{
 		TS_TRACE("\n# Test the override of the original configuration");
 
-		TS_ASSERT((*m_conf1)["parameters"]["param_text]"].asString() == "SomeText0");
-		TS_ASSERT((*m_conf1)["parameters"]["param_int]"].asString() == "0");
-		TS_ASSERT((*m_conf1)["parameters"]["param_float]"].asString() == "0");
+		TS_ASSERT((*m_conf1)["inputs"]["param_text]"].asString() == "SomeText0");
+		TS_ASSERT((*m_conf1)["inputs"]["param_int]"].asString() == "0");
+		TS_ASSERT((*m_conf1)["inputs"]["param_float]"].asString() == "0");
 
 		overrideWith(*m_conf1, *m_conf5);
 
-		TS_ASSERT((*m_conf1)["parameters"]["param_text"].asString() == "NewText0");
-		TS_ASSERT((*m_conf1)["parameters"]["param_int"].asString() == "44");
-		TS_ASSERT((*m_conf1)["parameters"]["param_float"].asString() == "0.51");
+		TS_ASSERT((*m_conf1)["inputs"]["param_text"].asString() == "NewText0");
+		TS_ASSERT((*m_conf1)["inputs"]["param_int"].asString() == "44");
+		TS_ASSERT((*m_conf1)["inputs"]["param_float"].asString() == "0.51");
 
-		TS_ASSERT((*m_conf1)["modules"]["Module0"]["parameters"]["param_text"].asString() == "a new text");
-		TS_ASSERT((*m_conf1)["modules"]["Module0"]["parameters"]["param_int"].asString() == "33");
-		TS_ASSERT((*m_conf1)["modules"]["Module0"]["parameters"]["param_float"].asString() == "3.1415");
-		TS_ASSERT((*m_conf1)["modules"]["Module1"]["parameters"]["param_float"].asString()  == "77.7");
-		TS_ASSERT((*m_conf1)["modules"]["Module1"]["parameters"]["param_int"].asString()  == "42");
+		TS_ASSERT((*m_conf1)["modules"]["Module0"]["inputs"]["param_text"].asString() == "a new text");
+		TS_ASSERT((*m_conf1)["modules"]["Module0"]["inputs"]["param_int"].asString() == "33");
+		TS_ASSERT((*m_conf1)["modules"]["Module0"]["inputs"]["param_float"].asString() == "3.1415");
+		TS_ASSERT((*m_conf1)["modules"]["Module1"]["inputs"]["param_float"].asString()  == "77.7");
+		TS_ASSERT((*m_conf1)["modules"]["Module1"]["inputs"]["param_int"].asString()  == "42");
 	}
 };
 

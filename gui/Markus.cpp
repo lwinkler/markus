@@ -301,7 +301,6 @@ void MarkusWindow::resizeEvent(QResizeEvent* event)
 	for(int ind = size ; ind < m_param.nbRows * m_param.nbCols ; ind++)
 	{
 		ConfigReader& conf(m_param.config["viewers"]["viewer" + to_string(ind)]);
-		conf["parameters"];
 		m_paramsViewer.push_back(new QModuleViewer::Parameters(conf["name"].asString()));
 		m_paramsViewer.back()->Read(conf);
 		assert(!m_paramsViewer.empty());

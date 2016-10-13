@@ -115,7 +115,7 @@ public:
 		createEmptyConfigFile(m_emptyFileName);
 		mp_configFile = new ConfigReader;
 		readFromFile(*mp_configFile, m_emptyFileName);
-		AddModuleToConfig("VideoFileReader", *mp_configFile)["parameters"]["fps"] = "22";
+		AddModuleToConfig("VideoFileReader", *mp_configFile)["inputs"]["fps"] = "22";
 
 		(*mp_configFile)["name"] = "unitTest";
 		mp_contextParams = new Context::Parameters((*mp_configFile)["name"].asString());
@@ -123,7 +123,6 @@ public:
 		mp_contextParams->applicationName = "TestModule";
 		mp_contextParams->outputDir       = "tests/out";
 		mp_contextParams->autoClean       = true;
-		// mp_contextParams->Read(mp_configFile->Find("application"));
 		mp_contextParams->centralized     = true;
 		mp_context = new Context(*mp_contextParams);
 
@@ -146,7 +145,7 @@ public:
 	ConfigReader AddModuleToConfig(const string& rx_type, ConfigReader& xr_config)
 	{
 		ConfigReader moduleConfig =  xr_config[rx_type + "0"];
-		ConfigReader paramConfig  = moduleConfig["parameters"];
+		ConfigReader paramConfig  = moduleConfig["inputs"];
 
 		paramConfig["fps"] = "123";
 		moduleConfig[rx_type + "0"];
@@ -166,7 +165,7 @@ public:
 		// Add parameters to override to the config
 		if(xp_parameters != nullptr)
 			for(const auto& elem : *xp_parameters)
-				moduleConfig["parameters"][elem.first] = elem.second;
+				moduleConfig["inputs"][elem.first] = elem.second;
 
 		writeToFile(*mp_configFile, "tests/tmp/tmp.xml");
 

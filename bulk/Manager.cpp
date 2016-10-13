@@ -83,8 +83,6 @@ void Manager::Build()
 void Manager::BuildModule(const ConfigReader& x_moduleConfig)
 {
 	// Read parameters
-	if(!x_moduleConfig.isMember("parameters"))
-		throw MkException("Impossible to find 'parameters' section for module " +  x_moduleConfig.get("name", "(unknown)").asString(), LOC);
 	string moduleType = x_moduleConfig["class"].asString();
 	ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, x_moduleConfig["name"].asString());
 	tmp2->Read(x_moduleConfig);

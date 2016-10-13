@@ -322,7 +322,7 @@ void Module::Export(ostream& rx_os) const
 			throw MkException("Forbidden character _ in " + elem->GetName(), LOC);
 		stringstream ss;
 		elem->Export(ss);
-		ss >> root["parameters"][elem->GetName()];
+		ss >> root["inputs"][elem->GetName()];
 	}
 	for(const auto& elem : m_inputStreams)
 	{
