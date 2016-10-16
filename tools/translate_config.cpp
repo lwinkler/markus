@@ -3,8 +3,8 @@
 #include <boost/lexical_cast.hpp>
 #include "ConfigReader.h"
 #include "ConfigXml.h"
-#include "jsoncpp/json/reader.h"
-#include "jsoncpp/json/writer.h"
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
 
 using namespace std;
 using namespace boost;

@@ -42,14 +42,17 @@ public:
 	MKPARAMTYPE(PARAM_SERIALIZABLE)
 	MKTYPE("serializable")
 
-	inline std::string GetValueString() const override
+	inline ConfigReader GetValue() const override
 	{
-		return mr_value.SerializeToString();
+		std::stringstream ss;
+		ss << mr_value;
+		Json::Value val;
+		ss >> val;
+		return val;
 	}
-	inline std::string GetDefaultString() const override {return m_default;}
+	inline ConfigReader GetDefault() const override {return m_default;}
 	inline std::string GetRange() const override {return "";}
 	inline virtual void SetRange(const std::string& x_range) override {}
-	// inline const Serializable& GetDefault() const {	return m_default;}
 
 	inline void SetValue(const Serializable& x_value, ParameterConfigType x_confType)
 	{
@@ -59,27 +62,23 @@ public:
 		m_confSource = x_confType;
 	}
 
-	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) override
+	virtual void SetValue(const ConfigReader& rx_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) override
 	{
 		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
-		std::istringstream istr(rx_value);
-		if(rx_value == "")	// This case happens with unit testing
-		{
-			LOG_WARN(m_logger, "Serializable parameter is set to empty string value");
-			m_confSource = x_confType;
-			return;
-		}
-		mr_value.Deserialize(istr);
+		// TODO std::istringstream istr(rx_value);
+		// TODO if(rx_value == "")	// This case happens with unit testing
+		// TODO {
+			// TODO LOG_WARN(m_logger, "Serializable parameter is set to empty string value");
+			// TODO m_confSource = x_confType;
+			// TODO return;
+		// TODO }
+		// TODO mr_value.Deserialize(istr);
 		m_confSource = x_confType;
 	}
-	virtual void SetDefault(const std::string& rx_value) override
+	virtual void SetDefault(const ConfigReader& rx_value) override
 	{
 		m_default = rx_value;
-	}
-	const Serializable& GetValue() const
-	{
-		return mr_value;
 	}
 	virtual bool CheckRange() const override
 	{
@@ -92,14 +91,14 @@ public:
 		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		std::stringstream ss;
-		ss << m_default;
+		// TODO ss << m_default;
 		mr_value.Deserialize(ss);
 		m_confSource = PARAMCONF_DEF;
 	}
 
 private:
 	static log4cxx::LoggerPtr m_logger;
-	std::string m_default;
+	ConfigReader m_default;
 	Serializable& mr_value;
 };
 

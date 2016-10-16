@@ -25,6 +25,8 @@
 #include "CalibrationByHeight.h"
 #include "Processable.h"
 #include <boost/lexical_cast.hpp>
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
 
 using namespace std;
 
@@ -92,12 +94,15 @@ void ControllerParameter::GetRange(string* xp_value)
 void ControllerParameter::SetControlledValue(string* xp_value)
 {
 	Processable::WriteLock lock(m_module.RefLock());
-	string oldValue = m_param.GetValueString();
+	const auto oldValue = m_param.GetValue();
 	ParameterConfigType configType = m_param.GetConfigurationSource();
+	Json::Reader reader;
+	Json::Value j;
 
 	if(xp_value != nullptr)
 	{
-		m_param.SetValue(*xp_value, PARAMCONF_CMD);
+		reader.parse(*xp_value, j);
+		m_param.SetValue(j, PARAMCONF_CMD);
 	}
 	else
 	{
@@ -106,7 +111,8 @@ void ControllerParameter::SetControlledValue(string* xp_value)
 #else
 		try
 		{
-			m_param.SetValue(GetValueFromWidget(), PARAMCONF_GUI);
+			reader.parse(GetValueFromWidget(), j);
+			m_param.SetValue(j, PARAMCONF_GUI);
 		}
 		catch(...)
 		{
@@ -130,17 +136,17 @@ void ControllerParameter::GetCurrent(string* xp_value)
 {
 	Processable::ReadLock lock(m_module.RefLock());
 	// string oldValue = m_param.GetValueString();
+	stringstream ss;
+	ss << m_param.GetValue();
 	if(xp_value != nullptr)
 	{
-		stringstream ss;
-		ss<<m_param.GetValueString();
 		*xp_value = ss.str();
 		return;
 	}
 #ifdef MARKUS_NO_GUI
 	assert(false);
 #else
-	SetWidgetValue(m_param.GetValueString());
+	SetWidgetValue(ss.str());
 #endif
 }
 
@@ -152,15 +158,17 @@ void ControllerParameter::GetCurrent(string* xp_value)
 void ControllerParameter::GetDefault(string* xp_value)
 {
 	Processable::ReadLock lock(m_module.RefLock());
+	stringstream ss;
+	ss<<m_param.GetDefault();
 	if(xp_value != nullptr)
 	{
-		*xp_value = m_param.GetDefaultString();
+		*xp_value = ss.str();
 		return;
 	}
 #ifdef MARKUS_NO_GUI
 	assert(false);
 #else
-	SetWidgetValue(m_param.GetDefaultString());
+	SetWidgetValue(ss.str());
 #endif
 }
 
@@ -190,7 +198,7 @@ ControllerInt::ControllerInt(Parameter& x_param, Processable& x_module):
 QWidget* ControllerInt::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue(), m_param2.GetMin(), m_param2.GetMax(), 0);
+	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue().asInt(), m_param2.GetMin(), m_param2.GetMax(), 0);
 #else
 	return nullptr;
 #endif
@@ -227,7 +235,7 @@ ControllerUInt::ControllerUInt(Parameter& x_param, Processable& x_module):
 QWidget* ControllerUInt::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue(), m_param2.GetMin(), m_param2.GetMax(), 0);
+	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue().asUInt(), m_param2.GetMin(), m_param2.GetMax(), 0);
 #else
 	return nullptr;
 #endif
@@ -262,7 +270,7 @@ ControllerDouble::ControllerDouble(Parameter& x_param, Processable& x_module):
 QWidget* ControllerDouble::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue(), m_param2.GetMin(), m_param2.GetMax(), PRECISION_DOUBLE);
+	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue().asDouble(), m_param2.GetMin(), m_param2.GetMax(), PRECISION_DOUBLE);
 #else
 	return nullptr;
 #endif
@@ -299,7 +307,7 @@ ControllerFloat::ControllerFloat(Parameter& x_param, Processable& x_module):
 QWidget* ControllerFloat::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue(), m_param2.GetMin(), m_param2.GetMax(), PRECISION_DOUBLE);
+	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue().asFloat(), m_param2.GetMin(), m_param2.GetMax(), PRECISION_DOUBLE);
 #else
 	return nullptr;
 #endif
@@ -335,7 +343,7 @@ QWidget* ControllerBool::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
 	mp_checkBox = new QCheckBox("Enabled");
-	mp_checkBox->setChecked(m_param2.GetValue());
+	mp_checkBox->setChecked(m_param2.GetValue().asInt());
 	return mp_checkBox;
 #else
 	return nullptr;
@@ -371,7 +379,7 @@ QWidget* ControllerString::CreateWidget()
 #ifndef MARKUS_NO_GUI
 	mp_lineEdit = new QLineEdit();
 	mp_lineEdit->setStyleSheet("color: black; background-color: white");
-	mp_lineEdit->setText(m_param2.GetValue().c_str());
+	mp_lineEdit->setText(m_param2.GetValue().asString().c_str());
 	return mp_lineEdit;
 #else
 	return nullptr;
@@ -407,7 +415,7 @@ QWidget* ControllerSerializable::CreateWidget()
 #ifndef MARKUS_NO_GUI
 	mp_lineEdit = new QLineEdit();
 	mp_lineEdit->setStyleSheet("color: black; background-color: white");
-	mp_lineEdit->setText(m_param2.GetValueString().c_str());
+	mp_lineEdit->setText(jsonToString(m_param2.GetValue()).c_str());
 	return mp_lineEdit;
 #else
 	return nullptr;
@@ -447,7 +455,7 @@ QWidget* ControllerStream::CreateWidget()
 #ifndef MARKUS_NO_GUI
 	mp_lineEdit = new QLineEdit();
 	mp_lineEdit->setStyleSheet("color: black; background-color: white");
-	mp_lineEdit->setText(m_param2.GetValueString().c_str());
+	mp_lineEdit->setText(jsonToString(m_param2.GetValueString()).c_str());
 	return mp_lineEdit;
 #else
 	return nullptr;
@@ -567,7 +575,7 @@ QWidget* ControllerEnum::CreateWidget()
 	{
 		mp_comboBox->addItem(elem.first.c_str(), elem.second);
 	}
-	int index = mp_comboBox->findData(m_param2.GetValue());
+	int index = mp_comboBox->findData(m_param2.GetValue().asInt());
 	mp_comboBox->setCurrentIndex(index);
 
 	return mp_comboBox;
@@ -579,7 +587,7 @@ QWidget* ControllerEnum::CreateWidget()
 void ControllerEnum::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
-	int index = mp_comboBox->findData(m_param2.GetValue());
+	int index = mp_comboBox->findData(m_param2.GetValue().asInt());
 	mp_comboBox->setCurrentIndex(index);
 #endif
 }
@@ -607,7 +615,7 @@ QWidget* ControllerText::CreateWidget()
 #ifndef MARKUS_NO_GUI
 	mp_textEdit = new QTextEdit();
 	mp_textEdit->setStyleSheet("color: black; background-color: white");
-	mp_textEdit->setText(m_param2.GetValueString().c_str());
+	mp_textEdit->setText(jsonToString(m_param2.GetValue()).c_str());
 	return mp_textEdit;
 #else
 	return nullptr;

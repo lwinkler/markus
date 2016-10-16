@@ -35,37 +35,22 @@ log4cxx::LoggerPtr ParameterEnum::m_logger(log4cxx::Logger::getLogger("Parameter
 * @param rx_value   String containing the value
 * @param x_confType Source of the configuration (default, xml, GUI, ...)
 */
-void ParameterEnum::SetValue(const string& rx_value, ParameterConfigType x_confType)
+void ParameterEnum::SetValue(const ConfigReader& rx_value, ParameterConfigType x_confType)
 {
 	if(IsLocked())
 		throw ParameterException("You tried to set the value of a locked parameter.", LOC);
-	mr_value = GetEnum().at(rx_value);
+	mr_value = GetEnum().at(rx_value.asString());
 	m_confSource = x_confType;
 }
-
-/**
-* @brief Set the value of the parameter
-*
-* @param rx_value   Integer containing the value
-* @param x_confType Source of the configuration (default, xml, GUI, ...)
-*/
-void ParameterEnum::SetValue(int rx_value, ParameterConfigType x_confType)
-{
-	if(IsLocked())
-		throw ParameterException("You tried to set the value of a locked parameter.", LOC);
-	mr_value = rx_value;
-	m_confSource = x_confType;
-}
-
 
 /**
 * @brief Set the default value
 *
 * @param rx_value Value to set
 */
-void ParameterEnum::SetDefault(const string& rx_value)
+void ParameterEnum::SetDefault(const ConfigReader& rx_value)
 {
-	m_default = GetEnum().at(rx_value);
+	m_default = GetEnum().at(rx_value.asString());
 }
 
 /**
@@ -118,11 +103,11 @@ void ParameterEnum::Print(ostream& os) const
 {
 	try
 	{
-		os<<GetName()<<"="<<GetReverseEnum().at(GetValue())<<" ("<<GetValue()<<") ("<<configType[m_confSource]<<"); ";
+		os<<GetName()<<"="<<GetReverseEnum().at(GetValue().asInt())<<" ("<<GetValue().asInt()<<") ("<<configType[m_confSource]<<"); ";
 	}
 	catch(exception &e)
 	{
-		LOG_WARN(m_logger, "Exception while printing " << GetName() << " with value " << GetValue());
+		LOG_WARN(m_logger, "Exception while printing " << GetName() << " with value " << GetValue().asInt());
 		throw MkException("Exception with parameter " + GetName() + ": " + string(e.what()), LOC);
 	}
 }

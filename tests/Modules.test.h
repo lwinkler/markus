@@ -157,7 +157,7 @@ public:
 	}
 
 	/// Create module and make it ready to process
-	void CreateAndConnectModule(ModuleTester& tester, const string& x_type, const map<string, string>* xp_parameters = nullptr)
+	void CreateAndConnectModule(ModuleTester& tester, const string& x_type, const map<string, Json::Value>* xp_parameters = nullptr)
 	{
 		TS_TRACE("Create and connect module of class " + x_type);
 		ConfigReader moduleConfig = AddModuleToConfig(x_type, *mp_configFile);
@@ -376,7 +376,7 @@ public:
 			timer.Start();
 
 			vector<vector<string>> allValues;
-			vector<string> allDefault;
+			vector<Json::Value> allDefault;
 			vector<string> allNames;
 
 			{
@@ -401,7 +401,7 @@ public:
 					TS_TRACE("Generate values for param of type " + elem->GetType() + " in range " + elem->GetRange());
 					elem->GenerateValues(10, values);
 					allValues.push_back(values);
-					allDefault.push_back(elem->GetDefaultString());
+					allDefault.push_back(elem->GetDefault());
 					allNames.push_back(elem->GetName());
 				}
 			}
@@ -409,15 +409,15 @@ public:
 			mp_context->RefOutputDir().CleanDir();
 
 			string lastParam = "";
-			string lastDefault = "";
+			Json::Value lastDefault;
 
 			for(size_t i = 0 ; i < allValues.size() ; i++)
 			{
 				for(const auto& elemVal : allValues[i])
 				{
 					// For each value
-					map<string, string> params;
-					TS_TRACE("Set param " + allNames[i] + " = " + elemVal + " and " + lastParam + " = " + lastDefault);
+					map<string, Json::Value> params;
+					TS_TRACE("Set param " + allNames[i] + " = " + elemVal + " and " + lastParam + " = " + jsonToString(lastDefault));
 					params[allNames[i]] = elemVal;
 					if(lastParam != "")
 						params[lastParam] = lastDefault;
@@ -484,7 +484,7 @@ public:
 		{
 			TS_TRACE("## on module " + elem);
 			ModuleTester tester;
-			map<string, string> overrid = {{"autoProcess", "1"}};
+			map<string, Json::Value> overrid = {{"autoProcess", "1"}};
 			CLEAN_DELETE(mp_configFile);
 			mp_configFile = new ConfigReader(m_emptyFileName);
 			CreateAndConnectModule(tester, elem, &overrid);
@@ -492,8 +492,7 @@ public:
 			{
 				(*mp_configFile)["name"] = "unitTest";
 				Manager::Parameters mparams((*mp_configFile).asString());
-				Manager manager(mparams);
-				manager.SetContext(*mp_context);
+				Manager manager(mparams, *mp_context);
 				manager.Connect();
 				Module* module = manager.RefModules().back();
 				manager.Reset();

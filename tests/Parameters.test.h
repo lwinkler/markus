@@ -57,7 +57,7 @@ public:
 		xr_param.SetDefaultAndValue(x_legalValue);
 		xr_param.SetValueToDefault();
 		// cout << xr_param.GetValueString() << " == " <<  x_legalValue << endl;
-		TS_ASSERT(xr_param.GetValueString() == x_legalValue);
+		TS_ASSERT(xr_param.GetValue() == x_legalValue);
 		TS_ASSERT(xr_param.GetConfigurationSource() == PARAMCONF_DEF);
 		xr_param.Lock();
 		xr_param.LockIfRequired();

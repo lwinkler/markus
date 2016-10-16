@@ -80,7 +80,11 @@ void ParameterStructure::Read(const ConfigReader& x_config)
 {
 	for(const auto& name : x_config["inputs"].getMemberNames())
 	{
-		string value = x_config["inputs"][name].asString();
+		if(x_config["inputs"][name].isObject() && x_config["inputs"][name].isMember("connected"))
+			continue; // the input is connected: do not read
+				
+		const auto& value = x_config["inputs"][name];
+		cout << x_config["inputs"][name].asString() << endl;
 
 		try
 		{
@@ -88,7 +92,7 @@ void ParameterStructure::Read(const ConfigReader& x_config)
 				continue;
 			Parameter& param = RefParameterByName(name);
 			if(!param.IsLocked())
-				param.SetValue(value, PARAMCONF_XML);
+				param.SetValue(value, PARAMCONF_XML); // TODO: directly set values as json objects
 		}
 		catch(std::exception& e)
 		{
@@ -107,7 +111,7 @@ void ParameterStructure::Write(ConfigReader& xr_config) const
 	{
 		if(m_writeAllParamsToConfig || elem->GetConfigurationSource() != PARAMCONF_DEF)
 		{
-			xr_config["inputs"][elem->GetName()] = elem->GetValueString();
+			xr_config["inputs"][elem->GetName()] = elem->GetValue();
 		}
 	}
 }

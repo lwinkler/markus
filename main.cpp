@@ -405,8 +405,7 @@ int main(int argc, char** argv)
 		managerParameters.autoProcess = !args.nogui;
 		if(!args.aspectRatio.empty())
 			managerParameters.aspectRatio = args.aspectRatio;
-		Manager manager(managerParameters);
-		manager.SetContext(context);
+		Manager manager(managerParameters, context);
 
 		if(args.describe)
 		{

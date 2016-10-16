@@ -44,8 +44,8 @@ public:
 		m_min(x_min),
 		m_max(x_max),
 		mr_value(*xp_value) {}
-	inline std::string GetValueString() const {std::stringstream ss; ss<<mr_value; return ss.str();}
-	inline std::string GetDefaultString() const {std::stringstream ss; ss<<m_default; return ss.str();}
+	inline ConfigReader GetValue() const {return mr_value;}
+	inline ConfigReader GetDefault() const {return m_default;}
 	inline std::string GetRange() const {std::stringstream ss; ss<<"["<<m_min<<":"<<m_max<<"]"; return ss.str();}
 	inline virtual void SetRange(const std::string& x_range)
 	{
@@ -64,41 +64,31 @@ public:
 	}
 	inline const ParameterType& GetParameterType() const {return m_type;}
 	inline const std::string& GetType() const {return m_typeStr;}
-	inline const T GetDefault() const {return m_default;}
 	inline const T GetMin() const {return m_min;}
 	inline const T GetMax() const {return m_max;}
 
-	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
+	virtual void SetValue(const ConfigReader& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
 	{
 		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
-		mr_value = boost::lexical_cast<T>(rx_value);
+		mr_value = rx_value.asDouble();
 		m_confSource = x_confType;
 	}
-	inline void SetValue(T x_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
+	// inline void SetValue(T x_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
+	// {
+		// if(IsLocked())
+			// throw MkException("You tried to set the value of a locked parameter.", LOC);
+		// mr_value = x_value;
+		// m_confSource = x_confType;
+	// }
+	virtual void SetDefault(const ConfigReader& rx_value) override
 	{
-		if(IsLocked())
-			throw MkException("You tried to set the value of a locked parameter.", LOC);
-		mr_value = x_value;
-		m_confSource = x_confType;
-	}
-	/*virtual void SetValue(const void * px_value, ParameterConfigType x_confType = PARAMCONF_UNKNOWN)
-	{
-		mr_value = *static_cast<const T*>(px_value);
-		m_confSource = x_confType;
-	};*/
-	virtual void SetDefault(const std::string& rx_value)
-	{
-		m_default = boost::lexical_cast<T>(rx_value);
+		m_default = rx_value.asDouble();
 		m_confSource = PARAMCONF_DEF;
-	}
-	virtual T GetValue() const
-	{
-		return mr_value;
 	}
 	virtual bool CheckRange() const
 	{
-		T value = GetValue();
+		T value = GetValue().asDouble();
 		return (value <= m_max + EPSILON && value >= m_min - EPSILON);
 	}
 	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range) const
@@ -148,7 +138,7 @@ public:
 	}
 	virtual void Print(std::ostream& os) const
 	{
-		os<<GetName()<<"="<<GetValue()<<" ["<<m_min<<":"<<m_max<<"] ("<<configType[m_confSource]<<"); ";
+		os<<GetName()<<"="<<GetValue().asDouble()<<" ["<<m_min<<":"<<m_max<<"] ("<<configType[m_confSource]<<"); ";
 	}
 	virtual void SetValueToDefault()
 	{

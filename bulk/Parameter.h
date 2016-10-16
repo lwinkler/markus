@@ -26,6 +26,7 @@
 
 #include "define.h"
 #include "MkException.h"
+#include "ConfigReader.h"
 #include <log4cxx/logger.h>
 #include <algorithm>
 
@@ -56,7 +57,6 @@ enum ParameterConfigType
 	PARAMCONF_SIZE
 };
 
-
 /// Class representing a generic parameter for use in a module
 class Parameter // : public Serializable
 {
@@ -69,9 +69,9 @@ public:
 	{}
 	virtual ~Parameter() {}
 
-	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) = 0;
-	virtual void SetDefault(const std::string& x_value) = 0;
-	inline void SetDefaultAndValue(const std::string& x_value){SetDefault(x_value); SetValueToDefault();}
+	virtual void SetValue(const ConfigReader& x_value, ParameterConfigType x_confType) = 0;
+	virtual void SetDefault(const ConfigReader& x_value) = 0;
+	inline void SetDefaultAndValue(const ConfigReader& x_value){SetDefault(x_value); SetValueToDefault();}
 	inline const std::string& GetName() const {return m_name;}
 	virtual const ParameterType& GetParameterType() const = 0;
 	virtual const std::string& GetType() const = 0;
@@ -93,8 +93,8 @@ public:
 	inline bool IsHidden() const {return m_isHidden;}
 
 	// For controllers and actions
-	virtual std::string GetValueString() const = 0;
-	virtual std::string GetDefaultString() const = 0;
+	virtual ConfigReader GetValue() const = 0;
+	virtual ConfigReader  GetDefault() const = 0;
 	virtual std::string GetRange() const = 0;
 	virtual void SetRange(const std::string& x_range) = 0;
 

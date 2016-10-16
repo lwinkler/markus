@@ -39,20 +39,19 @@ public:
 	MKPARAMTYPE(PARAM_STR)
 	MKTYPE("string")
 
-	virtual void SetValue(const std::string& rx_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) override
+	virtual void SetValue(const ConfigReader& rx_value, ParameterConfigType x_confType) override
 	{
 		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
-		mr_value = rx_value;
+		mr_value = rx_value.asString();
 		m_confSource = x_confType;
 	}
-	virtual void SetDefault(const std::string& x_value) override
+	virtual void SetDefault(const ConfigReader& x_value) override
 	{
-		m_default = x_value;
+		m_default = x_value.asString();
 	}
-	inline const std::string& GetValue() const {return mr_value;}
-	inline virtual std::string GetValueString() const override {return "\"" + mr_value + "\"";}
-	inline virtual std::string GetDefaultString() const override {return "\"" + m_default + "\"";}
+	inline virtual ConfigReader GetValue() const override {return mr_value;}
+	inline virtual ConfigReader GetDefault() const override {return m_default;}
 	virtual std::string GetRange() const override;
 	virtual void SetRange(const std::string& x_range) override;
 	inline virtual bool CheckRange() const override

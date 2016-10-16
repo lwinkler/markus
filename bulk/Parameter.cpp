@@ -49,9 +49,7 @@ void Parameter::Export(ostream& rx_os) const
 	
 	root["type"] = GetType();
 	root["description"] = GetDescription();
-	if(!reader.parse(GetValueString(), def))
-		throw MkException("Cannot parse default parameter value in JSON: " + GetValueString(), LOC);
-	root["default"] = def;
+	root["default"] = GetDefault();
 	root["range"] = GetRange();
 	rx_os << root;
 }
@@ -65,7 +63,14 @@ void Parameter::Export(ostream& rx_os) const
 void Parameter::Print(std::ostream& os) const
 {
 	// note: remove line return to shorten json objects
-	std::string tmp = GetValueString();
-	singleLine(tmp);
-	os<<m_name<<"=\""<<tmp<<"\" ("<<configType[m_confSource]<<"); ";
+	stringstream ss;
+	// TODO GetValue() >> ss;
+	// TODO singleLine(tmp);
+	os<<m_name<<"=\""<<ss.str()<<"\" ("<<configType[m_confSource]<<"); ";
+}
+
+void Parameter::SetValue(const ConfigReader& x_value, ParameterConfigType x_confType){
+	std::stringstream ss;
+	ss << x_value;
+	SetValue(ss.str(), x_confType);
 }

@@ -42,7 +42,7 @@ public:
 			AddParameter(new ParameterInt("randomSeed", 	0, 	0, 	INT_MAX, &randomSeed,	"Seed for random generator: 0 means seed is generated from timer"));
 			AddParameter(new ParameterDouble("timeInterval", 	0, 	0, 	DBL_MAX, &timeInterval,	"Time interval between events [s]"));
 			RefParameterByName("type").SetDefaultAndValue("CV_8UC3");
-			RefParameterByName("fps").SetDefaultAndValue("5");
+			RefParameterByName("fps").SetDefaultAndValue(5);
 		}
 
 	public:

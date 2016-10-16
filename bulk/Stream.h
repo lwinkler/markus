@@ -92,13 +92,13 @@ public:
 	inline void SetSynchronized(bool x_sync) {m_synchronized = x_sync;}
 
 	// Methods inherited from Parameter class
-	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType) override = 0;
-	virtual void SetDefault(const std::string& x_value) override = 0;
+	virtual void SetValue(const ConfigReader& x_value, ParameterConfigType x_confType) override = 0;
+	virtual void SetDefault(const ConfigReader& x_value) override = 0;
 	virtual void SetValueToDefault() override = 0;
 	virtual bool CheckRange() const override {return true;}
 	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const override {rx_values.clear();}
-	virtual std::string GetValueString() const override = 0;
-	virtual std::string GetDefaultString() const override = 0;
+	virtual ConfigReader GetValue() const override = 0;
+	virtual ConfigReader GetDefault() const override = 0;
 	inline std::string GetRange() const override {return "";}
 	inline virtual void SetRange(const std::string& x_range) override {}
 

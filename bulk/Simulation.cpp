@@ -48,10 +48,9 @@ Simulation::Simulation(Parameters& xr_params, Context& x_context) :
 	Configurable(xr_params),
 	m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_managerParams(m_param.config),
-	m_manager(m_managerParams),
+	m_manager(m_managerParams, x_context),
 	m_outputDir("simulation_" + timeStamp())
 {
-	m_manager.SetContext(x_context);
 	m_cpt = 0;
 }
 

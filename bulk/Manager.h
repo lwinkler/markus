@@ -57,7 +57,7 @@ public:
 		ConfigReader config;
 	};
 
-	Manager(ParameterStructure& xr_params);
+	Manager(ParameterStructure& xr_params, Context& xr_context);
 	virtual ~Manager();
 	virtual void Reset(bool x_resetInputs = true);
 	virtual void Process() override;

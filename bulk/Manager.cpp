@@ -46,13 +46,14 @@ using namespace std;
 log4cxx::LoggerPtr Manager::m_logger(log4cxx::Logger::getLogger("Manager"));
 
 
-Manager::Manager(ParameterStructure& xr_params) :
+Manager::Manager(ParameterStructure& xr_params, Context& xr_context) :
 	Processable(xr_params),
 	m_param(dynamic_cast<Parameters&>(xr_params)),
 	mr_parametersFactory(Factories::parametersFactory()),
 	mr_moduleFactory(Factories::modulesFactory())
 {
 	LOG_INFO(m_logger, "Create manager");
+	SetContext(xr_context);
 	Build();
 	m_interruptionManager.Configure(m_param.config);
 }
@@ -209,8 +210,9 @@ void Manager::Connect()
 		}
 
 		// Add to depending modules, using master parameter
-		if(!module.GetParameters().GetParameterByName("master").GetValueString().empty())
-			RefModuleByName(module.GetParameters().GetParameterByName("master").GetValueString()).AddDependingModule(module);
+		const auto& mas(module.GetParameters().GetParameterByName("master").GetValue());
+		if(!mas.isNull() && !mas.asString().empty())
+			RefModuleByName(mas.asString()).AddDependingModule(module);
 	}
 	Check();
 	m_isConnected = true;
@@ -561,7 +563,7 @@ void Manager::ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module,
 
 		// Connect input and output streams
 		inputStream.Connect(outputStream);
-		if(xr_module.GetParameters().GetParameterByName("master").GetValueString().empty())
+		if(xr_module.GetParameters().GetParameterByName("master").GetValue().empty())
 			RefModuleByName(x_inputConfig["connected"]["module"].asString()).AddDependingModule(xr_module);
 	}
 	catch(MkException& e)

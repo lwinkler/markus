@@ -102,16 +102,19 @@ public:
 	virtual void Randomize(unsigned int& xr_seed) {randomize(m_content, xr_seed);}
 	const T& GetScalar() const {return m_content;}
 
-	virtual void SetValue(const std::string& x_value, ParameterConfigType x_confType)
+	virtual void SetValue(const ConfigReader& x_value, ParameterConfigType x_confType)
 	{
-		std::stringstream ss(x_value);
-		deserialize(ss, m_content);
-		m_confSource = x_confType;
+		// TODO std::stringstream ss(x_value);
+		// TODO deserialize(ss, m_content);
+		// TODO m_confSource = x_confType;
 	}
-	virtual void SetDefault(const std::string& x_value){std::stringstream ss(x_value); deserialize(ss, m_content);}
+	virtual void SetDefault(const ConfigReader& x_value){
+		//TODO std::stringstream ss(x_value);
+		//TODO deserialize(ss, m_content);
+	}
 	virtual void SetValueToDefault(){m_content = m_default; m_confSource = PARAMCONF_DEF;}
-	virtual std::string GetValueString() const{std::stringstream ss; serialize(ss, m_content); return ss.str();}
-	virtual std::string GetDefaultString() const {std::stringstream ss; serialize(ss, m_default); return ss.str();}
+	virtual ConfigReader GetValue() const{std::stringstream ss; serialize(ss, m_content); return ss.str();}
+	virtual ConfigReader GetDefault() const {std::stringstream ss; serialize(ss, m_default); return ss.str();}
 
 protected:
 	T& m_content;

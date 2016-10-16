@@ -49,8 +49,8 @@ public:
 			AddParameter(new ParameterString("objectLabel", "hog", 			&objectLabel,	"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
 
 			// Limit size to accelerate unit tests
-			RefParameterByName("width").SetDefaultAndValue("320");
-			RefParameterByName("height").SetDefaultAndValue("240");
+			RefParameterByName("width").SetDefaultAndValue(320);
+			RefParameterByName("height").SetDefaultAndValue(240);
 			RefParameterByName("width").SetRange("[320:1280]");
 			RefParameterByName("height").SetRange("[240:960]");
 			RefParameterByName("type").SetRange("[CV_8UC1]");

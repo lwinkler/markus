@@ -76,8 +76,7 @@ protected:
 
 		try
 		{
-			Manager manager(params);
-			manager.SetContext(context);
+			Manager manager(params, context);
 			manager.Connect();
 			manager.Reset();
 
