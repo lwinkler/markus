@@ -1,1 +1,1 @@
-stream_uint5="{"valueUInt":0}" (def); 
+stream_uint5=0 (def); 

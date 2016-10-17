@@ -25,6 +25,7 @@
 #define STREAM_NUM_H
 
 #include "Stream.h"
+#include "ParameterNum.h"
 #include "feature_util.h"
 #include "cvplot.h"
 #include <sstream>
@@ -104,17 +105,15 @@ public:
 
 	virtual void SetValue(const ConfigReader& x_value, ParameterConfigType x_confType)
 	{
-		std::stringstream ss(jsonToString(x_value));
-		deserialize(ss, m_content);
+		m_content = ParameterNum<T>::castJson(x_value);
 		m_confSource = x_confType;
 	}
 	virtual void SetDefault(const ConfigReader& x_value){
-		std::stringstream ss(jsonToString(x_value));
-		deserialize(ss, m_content);
+		m_default = ParameterNum<T>::castJson(x_value);
 	}
 	virtual void SetValueToDefault(){m_content = m_default; m_confSource = PARAMCONF_DEF;}
-	virtual ConfigReader GetValue() const{std::stringstream ss; serialize(ss, m_content); return ss.str();}
-	virtual ConfigReader GetDefault() const {std::stringstream ss; serialize(ss, m_default); return ss.str();}
+	virtual ConfigReader GetValue() const{return m_content;}
+	virtual ConfigReader GetDefault() const {return m_default;}
 
 protected:
 	T& m_content;

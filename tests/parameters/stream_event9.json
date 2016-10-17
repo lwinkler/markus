@@ -1,5 +1,10 @@
-<param name="stream_event9">
-	<type>Event</type>
-	<value default='{"raised" : false}' range=''>{"raised" : false}</value>
-	<description>Test stream</description>
-</param>
+{
+	"default" : 
+	{
+		"raised" : false
+	},
+	"description" : "Test stream",
+	"id" : 9,
+	"multi" : 14,
+	"type" : "Event"
+}

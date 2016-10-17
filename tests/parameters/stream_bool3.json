@@ -1,5 +1,6 @@
-<param name="stream_bool3">
-	<type>NumBool</type>
-	<value default='{"valueBool":0}' range=''>{"valueBool":0}</value>
-	<description>Test stream</description>
-</param>
+{
+	"default" : false,
+	"description" : "Test stream",
+	"id" : 3,
+	"type" : "NumBool"
+}

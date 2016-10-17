@@ -1,1 +1,1 @@
-stream_bool3="{"valueBool":0}" (def); 
+stream_bool3=false (def); 

@@ -1,5 +1,6 @@
-<param name="stream_double7">
-	<type>NumDouble</type>
-	<value default='{"valueDouble":0}' range=''>{"valueDouble":0}</value>
-	<description>Test stream</description>
-</param>
+{
+	"default" : 0,
+	"description" : "Test stream",
+	"id" : 7,
+	"type" : "NumDouble"
+}

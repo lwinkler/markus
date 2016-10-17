@@ -1,1 +1,1 @@
-stream_event9="{"raised" : false}" (def); 
+stream_event9={"raised" : false} (def); 

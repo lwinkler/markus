@@ -84,7 +84,6 @@ void ParameterStructure::Read(const ConfigReader& x_config)
 			continue; // the input is connected: do not read
 				
 		const auto& value = x_config["inputs"][name];
-		cout << x_config["inputs"][name].asString() << endl;
 
 		try
 		{

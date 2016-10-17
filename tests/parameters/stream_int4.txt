@@ -1,1 +1,1 @@
-stream_int4="{"valueInt":0}" (def); 
+stream_int4=0 (def); 

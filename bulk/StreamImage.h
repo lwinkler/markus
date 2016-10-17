@@ -65,8 +65,21 @@ public:
 	virtual void SetDefault(const ConfigReader& x_value) override {LOG_WARN(m_logger, "Impossible to set the default value of a stream of type image as a parameter");}
 	virtual void SetValueToDefault() override {m_content.setTo(0); m_confSource = PARAMCONF_DEF;};
 	// note: This will not work with images
-	virtual ConfigReader GetValue() const override {std::stringstream ss; ss << m_content; return ss.str();}
-	virtual ConfigReader GetDefault() const override {cv::Mat def(m_content.size(), m_content.type()); def.setTo(0); std::stringstream ss; ss << def; return ss.str();}
+	virtual ConfigReader GetValue() const override
+	{
+		// note: for simplicity, we only serialize the size
+		Json::Value root;
+		root["width"] = m_content.cols;
+		root["height"] = m_content.rows;
+		return root;
+	}
+	virtual ConfigReader GetDefault() const override
+	{
+		Json::Value root;
+		root["width"] = m_content.cols;
+		root["height"] = m_content.rows;
+		return root;
+	}
 
 protected:
 	static std::string createResolutionString(const cv::Size x_size, int x_depth, int x_channels)

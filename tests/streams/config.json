@@ -1,0 +1,13 @@
+{
+	"modules": {
+		"FakeModule":{
+			"parameters":{},
+			"inputs": {
+				"input0": {}
+			},
+			"outputs": {
+				"output0": {}
+			}
+		}
+	}
+}

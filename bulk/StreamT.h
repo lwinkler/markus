@@ -64,8 +64,8 @@ public:
 		deserialize(ss, m_default);
 	}
 	virtual void SetValueToDefault(){m_content = m_default; m_confSource = PARAMCONF_DEF;}
-	virtual ConfigReader GetValue() const{std::stringstream ss; serialize(ss, m_content); return ss.str();}
-	virtual ConfigReader GetDefault() const {std::stringstream ss; serialize(ss, m_default); return ss.str();}
+	virtual ConfigReader GetValue() const{std::stringstream ss; serialize(ss, m_content); return stringToJson(ss.str());}
+	virtual ConfigReader GetDefault() const {std::stringstream ss; serialize(ss, m_default); return stringToJson(ss.str());}
 
 protected:
 	T& m_content;

@@ -85,18 +85,18 @@ class StreamsTestSuite : public CxxTest::TestSuite
 			// AddInputStream( 6, new MultiStreamT<float>("stream_float", m_floats, *this, "Test stream"));
 			// AddInputStream( 7, new MultiStreamT<double>("stream_double", m_doubles, *this, "Test stream"));
 
-			AddOutputStream( 0, new StreamObject("stream_object100", m_obj, *this, "Test stream"));
-			AddOutputStream( 1, new StreamEvent("stream_event101", m_evt, *this, "Test stream"));
-			AddOutputStream( 2, new StreamImage("stream_image102", m_image, *this, "Test stream"));
-			AddOutputStream( 3, new StreamNum<bool>("stream_bool103", m_bool, *this, "Test stream"));
-			AddOutputStream( 4, new StreamNum<int>("stream_int104", m_int, *this, "Test stream"));
-			AddOutputStream( 5, new StreamNum<uint>("stream_uint105", m_uint, *this, "Test stream"));
-			AddOutputStream( 6, new StreamNum<float>("stream_float106", m_float, *this, "Test stream"));
-			AddOutputStream( 7, new StreamNum<double>("stream_double107", m_double, *this, "Test stream"));
+			AddOutputStream( 0, new StreamObject("stream_object0", m_obj, *this, "Test stream"));
+			AddOutputStream( 1, new StreamEvent("stream_event1", m_evt, *this, "Test stream"));
+			AddOutputStream( 2, new StreamImage("stream_image2", m_image, *this, "Test stream"));
+			AddOutputStream( 3, new StreamNum<bool>("stream_bool3", m_bool, *this, "Test stream"));
+			AddOutputStream( 4, new StreamNum<int>("stream_int4", m_int, *this, "Test stream"));
+			AddOutputStream( 5, new StreamNum<uint>("stream_uint5", m_uint, *this, "Test stream"));
+			AddOutputStream( 6, new StreamNum<float>("stream_float6", m_float, *this, "Test stream"));
+			AddOutputStream( 7, new StreamNum<double>("stream_double7", m_double, *this, "Test stream"));
 
-			AddOutputStream( 8, new MultiStreamT<vector<Object>>("stream_object108", m_objs, *this, "Test stream"));
-			AddOutputStream( 9, new MultiStreamT<Event>("stream_event109", m_evts, *this, "Test stream"));
-			AddOutputStream(10, new MultiStreamT<cv::Mat>("stream_image110", m_images, *this, "Test stream"));
+			AddOutputStream( 8, new MultiStreamT<vector<Object>>("stream_object8", m_objs, *this, "Test stream"));
+			AddOutputStream( 9, new MultiStreamT<Event>("stream_event9", m_evts, *this, "Test stream"));
+			AddOutputStream(10, new MultiStreamT<cv::Mat>("stream_image10", m_images, *this, "Test stream"));
 			// AddOutputStream( 3, new MultiStreamT<bool>("stream_bool", m_bools, *this, "Test stream"));
 			// AddOutputStream( 4, new MultiStreamT<int>("stream_int", m_ints, *this, "Test stream"));
 			// AddOutputStream( 5, new MultiStreamT<uint>("stream_uint", m_uints, *this, "Test stream"));
@@ -138,13 +138,12 @@ class StreamsTestSuite : public CxxTest::TestSuite
 	};
 
 public:
-	StreamsTestSuite() :
-		m_configFile("tests/streams/config.json"),
-		m_config(m_configFile)
-	{}
+	StreamsTestSuite()
+	{
+		readFromFile(m_config, "tests/streams/config.json");
+	}
 
 protected:
-	ConfigReader        m_configFile;
 	ConfigReader        m_config;
 	Module::Parameters* mp_fakeParams1 = nullptr;
 	Module::Parameters* mp_fakeParams2 = nullptr;
@@ -156,9 +155,9 @@ protected:
 public:
 	void setUp()
 	{
-		mp_fakeParams1 = new Module::Parameters(m_config["modules"]["FakeModule"]["name"].asString());
-		mp_fakeParams2 = new Module::Parameters(m_config["modules"]["FakeModule"]["name"].asString());
-		mp_fakeParams3 = new Module::Parameters(m_config["modules"]["FakeModule"]["name"].asString());
+		mp_fakeParams1 = new Module::Parameters("FakeModule");
+		mp_fakeParams2 = new Module::Parameters("FakeModule");
+		mp_fakeParams3 = new Module::Parameters("FakeModule");
 		mp_fakeParams1->Read(m_config["modules"]["FakeModule"]);
 		mp_fakeParams2->Read(m_config["modules"]["FakeModule"]);
 		mp_fakeParams3->Read(m_config["modules"]["FakeModule"]);
@@ -217,7 +216,7 @@ public:
 		mp_fakeModule1->Reset();
 		for(auto input : mp_fakeModule1->GetInputStreamList())
 		{
-			ParametersTestSuite::testParameter(*input.second, jsonToString(input.second->GetDefault()), "");
+			ParametersTestSuite::testParameter(*input.second, input.second->GetDefault(), Json::nullValue);
 		}
 	}
 };

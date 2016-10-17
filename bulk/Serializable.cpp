@@ -38,7 +38,7 @@ string signatureJsonValue(const Json::Value &x_val)
 	else if( x_val.isString() )
 		return "%s";
 	else if( x_val.isBool() )
-		return "%f"; // TODO
+		return "%b";
 	/*
 	else if( x_val.isInt() )
 	return "%d";
