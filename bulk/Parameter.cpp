@@ -63,10 +63,9 @@ void Parameter::Export(ostream& rx_os) const
 void Parameter::Print(std::ostream& os) const
 {
 	// note: remove line return to shorten json objects
-	stringstream ss;
-	// TODO GetValue() >> ss;
-	// TODO singleLine(tmp);
-	os<<m_name<<"=\""<<ss.str()<<"\" ("<<configType[m_confSource]<<"); ";
+	string s = jsonToString(GetValue());
+	singleLine(s);
+	os<<m_name<<"="<<s<<" ("<<configType[m_confSource]<<"); ";
 }
 
 void Parameter::SetValue(const ConfigReader& x_value, ParameterConfigType x_confType){

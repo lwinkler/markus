@@ -47,6 +47,7 @@ public:
 	inline ConfigReader GetValue() const {return mr_value;}
 	inline ConfigReader GetDefault() const {return m_default;}
 	inline std::string GetRange() const {std::stringstream ss; ss<<"["<<m_min<<":"<<m_max<<"]"; return ss.str();}
+	static T castJson(const ConfigReader& x_json);
 	inline virtual void SetRange(const std::string& x_range)
 	{
 		std::vector<std::string> values;
@@ -71,7 +72,7 @@ public:
 	{
 		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
-		mr_value = rx_value.asDouble();
+		mr_value = castJson(rx_value);
 		m_confSource = x_confType;
 	}
 	// inline void SetValue(T x_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
@@ -83,12 +84,13 @@ public:
 	// }
 	virtual void SetDefault(const ConfigReader& rx_value) override
 	{
-		m_default = rx_value.asDouble();
+		m_default = castJson(rx_value);
 		m_confSource = PARAMCONF_DEF;
 	}
 	virtual bool CheckRange() const
 	{
-		T value = GetValue().asDouble();
+		T value = castJson(GetValue());
+		// std::cout << "min" << m_min << " " << m_max << std::endl;
 		return (value <= m_max + EPSILON && value >= m_min - EPSILON);
 	}
 	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range) const
@@ -138,7 +140,7 @@ public:
 	}
 	virtual void Print(std::ostream& os) const
 	{
-		os<<GetName()<<"="<<GetValue().asDouble()<<" ["<<m_min<<":"<<m_max<<"] ("<<configType[m_confSource]<<"); ";
+		os<<GetName()<<"="<<castJson(GetValue())<<" ["<<m_min<<":"<<m_max<<"] ("<<configType[m_confSource]<<"); ";
 	}
 	virtual void SetValueToDefault()
 	{

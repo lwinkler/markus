@@ -1,0 +1,6 @@
+{
+	"default" : 635,
+	"description" : "Parameter of type int",
+	"range" : "[32:66000]",
+	"type" : "int"
+}

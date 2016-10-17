@@ -55,12 +55,13 @@ public:
 
 	virtual void SetValue(const ConfigReader& x_value, ParameterConfigType x_confType)
 	{
-		// TODO std::stringstream ss(x_value);
-		// TODO deserialize(ss, m_content);
-		// TODO m_confSource = x_confType;
+		std::stringstream ss(jsonToString(x_value));
+		deserialize(ss, m_content);
+		m_confSource = x_confType;
 	}
 	virtual void SetDefault(const ConfigReader& x_value){
-		// TODO std::stringstream ss(x_value); deserialize(ss, m_default);
+		std::stringstream ss(jsonToString(x_value));
+		deserialize(ss, m_default);
 	}
 	virtual void SetValueToDefault(){m_content = m_default; m_confSource = PARAMCONF_DEF;}
 	virtual ConfigReader GetValue() const{std::stringstream ss; serialize(ss, m_content); return ss.str();}

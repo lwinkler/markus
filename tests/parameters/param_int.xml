@@ -1,5 +1,0 @@
-<param name="param_int">
-	<type>int</type>
-	<value default='433' range='[32:66000]'>433</value>
-	<description>Parameter of type int</description>
-</param>

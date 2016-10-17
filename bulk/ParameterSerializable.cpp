@@ -22,6 +22,8 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ParameterSerializable.h"
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
 
 using namespace std;
 
@@ -50,4 +52,31 @@ void ParameterSerializable::GenerateValues(int x_nbSamples, vector<string>& rx_v
 		rx_values.pop_back();
 	assert(rx_values.size() > 0);
 	*/
+}
+
+void ParameterSerializable::SetValue(const ConfigReader& rx_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) 
+{
+	if(IsLocked())
+		throw MkException("You tried to set the value of a locked parameter.", LOC);
+	std::stringstream ss;
+	ss << rx_value;
+	if(rx_value == "")	// This case happens with unit testing
+	{
+		LOG_WARN(m_logger, "Serializable parameter is set to empty string value");
+		m_confSource = x_confType;
+		return;
+	}
+	mr_value.Deserialize(ss);
+	m_confSource = x_confType;
+}
+
+void ParameterSerializable::SetValueToDefault() 
+{
+	if(IsLocked())
+		throw MkException("You tried to set the value of a locked parameter.", LOC);
+
+	std::stringstream ss;
+	ss << m_default;
+	mr_value.Deserialize(ss);
+	m_confSource = PARAMCONF_DEF;
 }

@@ -1,0 +1,6 @@
+{
+	"default" : 633,
+	"description" : "Parameter of type unsigned int",
+	"range" : "[32:66000]",
+	"type" : "unsigned int"
+}

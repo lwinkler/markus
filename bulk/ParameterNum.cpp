@@ -45,3 +45,28 @@ template<> const string ParameterNum<int>::m_typeStr          = "int";
 template<> const string ParameterNum<float>::m_typeStr        = "float";
 template<> const string ParameterNum<double>::m_typeStr       = "double";
 
+template<> double ParameterNum<double>::castJson(const Json::Value& x_json)
+{
+	return x_json.asDouble();
+}
+
+template<> float ParameterNum<float>::castJson(const Json::Value& x_json)
+{
+	return x_json.asFloat();
+}
+
+template<> int ParameterNum<int>::castJson(const Json::Value& x_json)
+{
+	return x_json.asInt();
+}
+
+template<> uint ParameterNum<uint>::castJson(const Json::Value& x_json)
+{
+	return x_json.asUInt();
+}
+
+template<> bool ParameterNum<bool>::castJson(const Json::Value& x_json)
+{
+	return x_json.asBool();
+}
+

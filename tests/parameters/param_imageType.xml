@@ -1,5 +1,0 @@
-<param name="param_imageType">
-	<type>imageType</type>
-	<value default='CV_8UC2' range='[CV_8UC1,CV_8UC2,CV_8UC3]'>CV_8UC2</value>
-	<description>Parameter of type imageType</description>
-</param>

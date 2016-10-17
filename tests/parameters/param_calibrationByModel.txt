@@ -1,1 +1,1 @@
-param_calibrationByModel="{"focal":240.0,"height":2404.226076415452,"ncols":640,"nrows":480,"roll":137.4711820374162,"yaw":-1.203589252653426}" (def); 
+param_calibrationByModel={"focal" : 240,"height" : 2404.2199999999998,"ncols" : 640,"nrows" : 480,"roll" : 137.471,"yaw" : -1.2035800000000001} (def); 

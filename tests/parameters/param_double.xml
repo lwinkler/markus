@@ -1,5 +1,0 @@
-<param name="param_double">
-	<type>double</type>
-	<value default='1e+44' range='[1e+33:1e+99]'>1e+44</value>
-	<description>Parameter of type double</description>
-</param>

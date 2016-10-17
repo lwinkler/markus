@@ -1,0 +1,6 @@
+{
+	"default" : -0.5,
+	"description" : "Parameter of type float",
+	"range" : "[-10:4.45e+24]",
+	"type" : "float"
+}

@@ -1,5 +1,0 @@
-<param name="param_calibrationByModel">
-	<type>serializable</type>
-	<value default='{"focal":240.0,"height":2404.226076415452,"ncols":640,"nrows":480,"roll":137.4711820374162,"yaw":-1.203589252653426}' range=''>{"focal":240.0,"height":2404.226076415452,"ncols":640,"nrows":480,"roll":137.4711820374162,"yaw":-1.203589252653426}</value>
-	<description>Parameter of type CalibrationByModel</description>
-</param>

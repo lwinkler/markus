@@ -1,5 +1,0 @@
-<param name="param_bool">
-	<type>bool</type>
-	<value default='1' range='[0:1]'>1</value>
-	<description>Parameter of type bool</description>
-</param>

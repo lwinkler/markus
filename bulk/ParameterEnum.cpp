@@ -103,11 +103,11 @@ void ParameterEnum::Print(ostream& os) const
 {
 	try
 	{
-		os<<GetName()<<"="<<GetReverseEnum().at(GetValue().asInt())<<" ("<<GetValue().asInt()<<") ("<<configType[m_confSource]<<"); ";
+		os<<GetName()<<"="<<GetReverseEnum().at(mr_value)<<" ("<<mr_value<<") ("<<configType[m_confSource]<<"); ";
 	}
 	catch(exception &e)
 	{
-		LOG_WARN(m_logger, "Exception while printing " << GetName() << " with value " << GetValue().asInt());
+		LOG_WARN(m_logger, "Exception while printing " << GetName() << " with value " << mr_value);
 		throw MkException("Exception with parameter " + GetName() + ": " + string(e.what()), LOC);
 	}
 }

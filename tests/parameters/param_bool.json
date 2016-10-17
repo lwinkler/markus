@@ -1,0 +1,6 @@
+{
+	"default" : false,
+	"description" : "Parameter of type bool",
+	"range" : "[0:1]",
+	"type" : "bool"
+}

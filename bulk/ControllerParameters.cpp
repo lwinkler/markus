@@ -135,7 +135,6 @@ void ControllerParameter::SetControlledValue(string* xp_value)
 void ControllerParameter::GetCurrent(string* xp_value)
 {
 	Processable::ReadLock lock(m_module.RefLock());
-	// string oldValue = m_param.GetValueString();
 	stringstream ss;
 	ss << m_param.GetValue();
 	if(xp_value != nullptr)
@@ -455,7 +454,7 @@ QWidget* ControllerStream::CreateWidget()
 #ifndef MARKUS_NO_GUI
 	mp_lineEdit = new QLineEdit();
 	mp_lineEdit->setStyleSheet("color: black; background-color: white");
-	mp_lineEdit->setText(jsonToString(m_param2.GetValueString()).c_str());
+	mp_lineEdit->setText(jsonToString(m_param2.GetValue()).c_str());
 	return mp_lineEdit;
 #else
 	return nullptr;

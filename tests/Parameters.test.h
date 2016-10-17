@@ -36,6 +36,8 @@
 #include "CalibrationByHeight.h"
 #include "CalibrationByModel.h"
 #include "Polygon.h"
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
 
 using namespace std;
 
@@ -44,30 +46,27 @@ using namespace std;
 class ParametersTestSuite : public CxxTest::TestSuite
 {
 public:
-	static void testParameter(Parameter& xr_param, const string& x_legalValue, const string& x_illegalValue, const string& x_testRange)
+	static void testParameter(Parameter& xr_param, const Json::Value& x_legalValue, const Json::Value& x_illegalValue)
 	{
 		xr_param.SetValue(x_legalValue, PARAMCONF_UNKNOWN);
 		TS_ASSERT(xr_param.CheckRange() == true);
-		if(!x_illegalValue.empty())
+		if(!x_illegalValue.isNull())
 		{
 			xr_param.SetValue(x_illegalValue, PARAMCONF_UNKNOWN);
 			TS_ASSERT(xr_param.CheckRange() == false);
 		}
-		TS_ASSERT(xr_param.GetConfigurationSource() == PARAMCONF_UNKNOWN);
 		xr_param.SetDefaultAndValue(x_legalValue);
 		xr_param.SetValueToDefault();
-		// cout << xr_param.GetValueString() << " == " <<  x_legalValue << endl;
-		TS_ASSERT(xr_param.GetValue() == x_legalValue);
+		// TS_ASSERT(xr_param.GetValue().compare(x_legalValue));
+		TS_ASSERT(jsonToString(xr_param.GetValue()) == jsonToString(x_legalValue));
+		// TS_ASSERT(xr_param.GetValue() == x_legalValue); // does not work apparently
 		TS_ASSERT(xr_param.GetConfigurationSource() == PARAMCONF_DEF);
-		xr_param.Lock();
-		xr_param.LockIfRequired();
-		TS_ASSERT(xr_param.IsLocked());
 
-		string fileName = "tests/tmp/" + xr_param.GetName() + ".xml";
+		string fileName = "tests/tmp/" + xr_param.GetName() + ".json";
 		ofstream of(fileName.c_str());
 		xr_param.Export(of);
 		of.close();
-		TS_ASSERT(compareFiles(fileName, "tests/parameters/" + xr_param.GetName() + ".xml"));
+		TS_ASSERT(compareJsonFiles(fileName, "tests/parameters/" + xr_param.GetName() + ".json"));
 
 		fileName = "tests/tmp/" + xr_param.GetName() + ".txt";
 		of.open(fileName.c_str());
@@ -79,11 +78,28 @@ public:
 		string range = xr_param.GetRange();
 		xr_param.SetRange(range);
 		TS_ASSERT(xr_param.GetRange() == range);
+	}
 
+	static void testLock(Parameter& xr_param)
+	{
+		xr_param.Lock();
+		xr_param.LockIfRequired();
+		TS_ASSERT(xr_param.IsLocked());
+
+
+	}
+	
+	static void testRange(Parameter& xr_param, const Json::Value& x_illegalValue, const string& x_testRange)
+	{
 		// test that the test range stays identical
 		xr_param.SetRange(x_testRange);
 		// cout<<xr_param.GetRange()<<endl;
 		TS_ASSERT(xr_param.GetRange() == x_testRange);
+
+		if(x_illegalValue.isNull())
+			return;
+		xr_param.SetValue(x_illegalValue, PARAMCONF_XML);
+		TS_ASSERT(!xr_param.CheckRange());
 	}
 
 	void setUp()
@@ -100,8 +116,9 @@ public:
 		TS_TRACE("Test ParameterBool");
 		bool myBool = true;
 		ParameterBool paramBool("param_bool", false, 0, 1, &myBool, "Parameter of type bool");
-		testParameter(paramBool, "1", "", "[0:0]");
-		// testParameter(paramBool, "0", "", "[1:1]");
+		testParameter(paramBool, false, Json::nullValue);
+		testRange(paramBool, true, "[0:0]");
+		testLock(paramBool);
 	}
 
 	void testParameterInt()
@@ -109,7 +126,9 @@ public:
 		TS_TRACE("Test ParameterInt");
 		int myInt = 3456;
 		ParameterInt paramInt("param_int", 12345, 32, 66000, &myInt, "Parameter of type int");
-		testParameter(paramInt, "433", "-1234", "[555:789]");
+		testParameter(paramInt, 635, -1234);
+		testRange(paramInt, 4, "[555:789]");
+		testLock(paramInt);
 	}
 
 	void testParameterUInt()
@@ -117,7 +136,9 @@ public:
 		TS_TRACE("Test ParameterUInt");
 		unsigned int myInt = 3456;
 		ParameterUInt paramUInt("param_uint", 12345, 32, 66000, &myInt, "Parameter of type unsigned int");
-		testParameter(paramUInt, "433", "3", "[555:789]");
+		testParameter(paramUInt, 633, 3);
+		testRange(paramUInt, 10000, "[555:789]");
+		testLock(paramUInt);
 	}
 
 	void testParameterFloat()
@@ -125,7 +146,9 @@ public:
 		TS_TRACE("Test ParameterFloat");
 		float myFloat = 2.133e44;
 		ParameterFloat paramFloat("param_float", 234, - 10, 4.45e24, &myFloat, "Parameter of type float");
-		testParameter(paramFloat, "-0.5", "-400", "[666:60000]");
+		testParameter(paramFloat, -0.5, -400);
+		testRange(paramFloat, -0.5, "[666:60000]");
+		testLock(paramFloat);
 	}
 
 	void testParameterDouble()
@@ -133,7 +156,9 @@ public:
 		TS_TRACE("Test ParameterDouble");
 		double myDouble = 2.133e54;
 		ParameterDouble paramDouble("param_double", 120e33, 1e33, 1e99, &myDouble, "Parameter of type double");
-		testParameter(paramDouble, "1e+44", "-0", "[1e+44:1e+90]");
+		testParameter(paramDouble, 1e+44, -0);
+		testRange(paramDouble, 1e+43, "[1e+44:1e+90]");
+		testLock(paramDouble);
 	}
 
 	void testParameterString()
@@ -141,7 +166,9 @@ public:
 		TS_TRACE("Test ParameterString");
 		string myString = "value_current";
 		ParameterString paramString("param_string", "default_value", &myString, "Parameter of type string");
-		testParameter(paramString, "legal", "", "[]");
+		testParameter(paramString, "legal", Json::nullValue);
+		testRange(paramString, Json::nullValue, "[]");
+		testLock(paramString);
 	}
 
 	void testParameterImageType()
@@ -150,7 +177,9 @@ public:
 		int myImageType = CV_8UC3;
 		ParameterImageType paramImageType("param_imageType", CV_8UC1, &myImageType, "Parameter of type imageType");
 		paramImageType.SetRange("[CV_8UC1,CV_8UC2,CV_8UC3]");
-		testParameter(paramImageType, "CV_8UC2", "CV_32SC1", "[CV_32FC4]");
+		testParameter(paramImageType, "CV_8UC2", "CV_32SC1");
+		testRange(paramImageType, "CV_8UC2", "[CV_32FC4]");
+		testLock(paramImageType);
 	}
 
 	void testParameterCalibrationByHeight()
@@ -158,18 +187,20 @@ public:
 		TS_TRACE("Test ParameterSerializable - CalibrationByHeight");
 		CalibrationByHeight myCalibrationByHeight;
 		ParameterSerializable paramCalibrationByHeight("param_calibrationByHeight",  "{\"height\":0.6,\"x\":0.3,\"y\":0.6}", &myCalibrationByHeight, "Parameter of type CalibrationByHeight");
-		testParameter(paramCalibrationByHeight, "{\"height\":0.0,\"x\":1.0,\"y\":0.0}", "", "") ; // note: For now there is no range check ,"{\"x\":1, \"y\":0, \n \"height\":1.5}");
+		testParameter(paramCalibrationByHeight, stringToJson("{\"height\":0.0,\"x\":1.0,\"y\":0.0}"), Json::nullValue) ; // note: For now there is no range check ,"{\"x\":1, \"y\":0, \n \"height\":1.5}");
+		testLock(paramCalibrationByHeight);
 	}
 
 	void testParameterCalibrationByModel()
 	{
 		TS_TRACE("Test ParameterSerializable - CalibrationByModel");
-		string json_data = "{\"focal\":240.0,\"height\":2404.226076415452,\"ncols\":640,\"nrows\":480,\"roll\":137.4711820374162,\"yaw\":-1.203589252653426}";
+		string json_data = "{\"focal\":240.0,\"height\":2404.22,\"ncols\":640,\"nrows\":480,\"roll\":137.471,\"yaw\":-1.20358}";
 		string json_data2 = "{\"focal\":910.0,\"height\":7000.52453240,\"ncols\":384,\"nrows\":287,\"roll\":-10.650,\"yaw\":-35.30}";
 
 		CalibrationByModel myCalibrationByModel;
 		ParameterSerializable paramCalibrationByModel("param_calibrationByModel",  json_data2, &myCalibrationByModel, "Parameter of type CalibrationByModel");
-		testParameter(paramCalibrationByModel, json_data, "", "") ;
+		testParameter(paramCalibrationByModel, stringToJson(json_data), Json::nullValue) ;
+		testLock(paramCalibrationByModel);
 	}
 
 	void testParameterPolygon()
@@ -177,7 +208,8 @@ public:
 		TS_TRACE("Test ParameterSerializable - Polygon");
 		Polygon myPolygon;
 		ParameterSerializable paramPolygon("param_polygon",  "{\"height\":0.6,\"points\":[{{\"x\":5.0,\"y\":0.50},{\"x\":6.0,\"y\":5.50}}],\"width\":0.8}", &myPolygon, "Parameter of type Polygon");
-		testParameter(paramPolygon, "{\"height\":0.660,\"points\":[{\"x\":54.0,\"y\":53.50},{\"x\":3454.0,\"y\":53.50},{\"x\":54.0,\"y\":53.50},{\"x\":5.0,\"y\":0.50}],\"width\":0.860}", "", "") ;
+		testParameter(paramPolygon, stringToJson("{\"height\":0.660,\"points\":[{\"x\":54.0,\"y\":53.50},{\"x\":3454.0,\"y\":53.50},{\"x\":54.0,\"y\":53.50},{\"x\":5.0,\"y\":0.50}],\"width\":0.860}"), Json::nullValue) ;
+		testLock(paramPolygon);
 	}
 
 

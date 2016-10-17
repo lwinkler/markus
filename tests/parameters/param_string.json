@@ -1,0 +1,6 @@
+{
+	"default" : "legal",
+	"description" : "Parameter of type string",
+	"range" : "[]",
+	"type" : "string"
+}

@@ -62,20 +62,7 @@ public:
 		m_confSource = x_confType;
 	}
 
-	virtual void SetValue(const ConfigReader& rx_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) override
-	{
-		if(IsLocked())
-			throw MkException("You tried to set the value of a locked parameter.", LOC);
-		// TODO std::istringstream istr(rx_value);
-		// TODO if(rx_value == "")	// This case happens with unit testing
-		// TODO {
-			// TODO LOG_WARN(m_logger, "Serializable parameter is set to empty string value");
-			// TODO m_confSource = x_confType;
-			// TODO return;
-		// TODO }
-		// TODO mr_value.Deserialize(istr);
-		m_confSource = x_confType;
-	}
+	virtual void SetValue(const ConfigReader& rx_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) override;
 	virtual void SetDefault(const ConfigReader& rx_value) override
 	{
 		m_default = rx_value;
@@ -86,15 +73,7 @@ public:
 		return true;
 	}
 	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const override;
-	virtual void SetValueToDefault() override
-	{
-		if(IsLocked())
-			throw MkException("You tried to set the value of a locked parameter.", LOC);
-		std::stringstream ss;
-		// TODO ss << m_default;
-		mr_value.Deserialize(ss);
-		m_confSource = PARAMCONF_DEF;
-	}
+	virtual void SetValueToDefault() override;
 
 private:
 	static log4cxx::LoggerPtr m_logger;
