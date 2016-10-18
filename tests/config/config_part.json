@@ -1,0 +1,21 @@
+{
+	"description": "A config to override config1",
+	"inputs": {
+		"param_text": "NewText0",
+		"param_int": 44,
+		"param_float": 0.51
+	},
+	"modules": {
+		"Module1": {
+			"inputs": {
+				"param_float": 77.7
+			}
+		},
+		"Module0": {
+			"inputs": {
+				"param_text": "a new text",
+				"param_int": 33
+			}
+		}
+	}
+}

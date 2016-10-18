@@ -301,7 +301,7 @@ void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, 
 			if(path[0] == "manager")
 				reader.parse(value, appConfig["inputs"][path[1]]);
 			else
-				reader.parse(value, appConfig["module"][path[0]]["inputs"][path[1]]);
+				reader.parse(value, appConfig[path[0]]["inputs"][path[1]]);
 			// manager.GetModuleByName(path[0])->GetParameters().RefParameterByName(path[1]).SetValue(value, PARAMCONF_CMD);
 		}
 		catch(std::exception& e)

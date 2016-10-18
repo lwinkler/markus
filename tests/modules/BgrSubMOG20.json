@@ -2,102 +2,119 @@
 	"class" : "BgrSubMOG2",
 	"description" : "Perform background subtraction via Mixtures Of Gaussians (OpenCV MOG2)",
 	"inputs" : 
-	[
+	{
+		"autoProcess" : 
 		{
-			"description" : "Video input",
-			"id" : 0,
-			"name" : "input",
-			"type" : "Image"
-		}
-	],
-	"name" : "BgrSubMOG20",
-	"outputs" : 
-	[
-		{
-			"description" : "Background",
-			"id" : 1,
-			"name" : "background",
-			"type" : "Image"
-		}
-	],
-	"parameters" : 
-	[
-		{
-			"default" : 0,
+			"default" : false,
 			"description" : "If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream",
-			"name" : "autoProcess",
 			"range" : "[0:1]",
 			"type" : "bool"
 		},
+		"bShadowDetection" : 
 		{
-			"default" : 123,
-			"description" : "Frames per seconds (processing speed)",
-			"name" : "fps",
-			"range" : "[0:1000]",
-			"type" : "double"
+			"default" : false,
+			"description" : "Enable shadow detection",
+			"range" : "[0:1]",
+			"type" : "bool"
 		},
-		{
-			"default" : "",
-			"description" : "Master module on which this module's processing is dependent. If empty, use all preceeding modules",
-			"name" : "master",
-			"range" : "[]",
-			"type" : "string"
-		},
-		{
-			"default" : 640,
-			"description" : "Width of the input",
-			"name" : "width",
-			"range" : "[1:6400]",
-			"type" : "int"
-		},
-		{
-			"default" : 480,
-			"description" : "Height of the input",
-			"name" : "height",
-			"range" : "[1:4800]",
-			"type" : "int"
-		},
-		{
-			"default" : "CV_8UC3",
-			"description" : "Format of the input image",
-			"name" : "type",
-			"range" : "[CV_8UC3]",
-			"type" : "imageType"
-		},
+		"cached" : 
 		{
 			"default" : "NO_CACHE",
 			"description" : "Format of the input image",
-			"name" : "cached",
 			"range" : "[DISABLED,NO_CACHE,READ_CACHE,WRITE_CACHE]",
 			"type" : "cachedState"
 		},
+		"fps" : 
+		{
+			"default" : 0,
+			"description" : "Frames per seconds (processing speed)",
+			"range" : "[0:1000]",
+			"type" : "double"
+		},
+		"height" : 
+		{
+			"default" : 480,
+			"description" : "Height of the input",
+			"range" : "[1:4800]",
+			"type" : "int"
+		},
+		"history" : 
 		{
 			"default" : 500,
 			"description" : "Length of the history",
-			"name" : "history",
 			"range" : "[1:10000]",
 			"type" : "int"
 		},
+		"image" : 
 		{
-			"default" : 16,
-			"description" : "Threshold on the squared Mahalanobis distance to decide whether it is well described by the background model (selectivity of background) ",
-			"name" : "var_thres",
-			"range" : "[1:255]",
-			"type" : "float"
+			"default" : 
+			{
+				"height" : 480,
+				"width" : 640
+			},
+			"description" : "Video input",
+			"id" : 0,
+			"type" : "Image"
 		},
-		{
-			"default" : 0,
-			"description" : "Enable shadow detection",
-			"name" : "b_shadow_detection",
-			"range" : "[0:1]",
-			"type" : "bool"
-		},
+		"learningRate" : 
 		{
 			"default" : -1,
 			"description" : "Learning rate of the model",
-			"name" : "learning_rate",
 			"range" : "[-1:1]",
 			"type" : "double"
+		},
+		"master" : 
+		{
+			"default" : "",
+			"description" : "Master module on which this module's processing is dependent. If empty, use all preceeding modules",
+			"range" : "[]",
+			"type" : "string"
+		},
+		"type" : 
+		{
+			"default" : "CV_8UC3",
+			"description" : "Format of the input image",
+			"range" : "[CV_8UC3]",
+			"type" : "imageType"
+		},
+		"varThres" : 
+		{
+			"default" : 16,
+			"description" : "Threshold on the squared Mahalanobis distance to decide whether it is well described by the background model (selectivity of background) ",
+			"range" : "[1:255]",
+			"type" : "float"
+		},
+		"width" : 
+		{
+			"default" : 640,
+			"description" : "Width of the input",
+			"range" : "[1:6400]",
+			"type" : "int"
 		}
-	]
+	},
+	"outputs" : 
+	{
+		"background" : 
+		{
+			"default" : 
+			{
+				"height" : 480,
+				"width" : 640
+			},
+			"description" : "Background",
+			"id" : 1,
+			"type" : "Image"
+		},
+		"foreground" : 
+		{
+			"default" : 
+			{
+				"height" : 480,
+				"width" : 640
+			},
+			"description" : "Foreground",
+			"id" : 0,
+			"type" : "Image"
+		}
+	}
 }

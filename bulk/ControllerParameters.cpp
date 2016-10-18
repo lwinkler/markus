@@ -96,13 +96,10 @@ void ControllerParameter::SetControlledValue(string* xp_value)
 	Processable::WriteLock lock(m_module.RefLock());
 	const auto oldValue = m_param.GetValue();
 	ParameterConfigType configType = m_param.GetConfigurationSource();
-	Json::Reader reader;
-	Json::Value j;
 
 	if(xp_value != nullptr)
 	{
-		reader.parse(*xp_value, j);
-		m_param.SetValue(j, PARAMCONF_CMD);
+		m_param.SetValue(stringToJson(*xp_value), PARAMCONF_CMD);
 	}
 	else
 	{
@@ -111,8 +108,7 @@ void ControllerParameter::SetControlledValue(string* xp_value)
 #else
 		try
 		{
-			reader.parse(GetValueFromWidget(), j);
-			m_param.SetValue(j, PARAMCONF_GUI);
+			m_param.SetValue(jsonToString(GetValueFromWidget()), PARAMCONF_GUI);
 		}
 		catch(...)
 		{

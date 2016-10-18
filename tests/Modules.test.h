@@ -82,7 +82,7 @@ protected:
 	const FactoryFeatures& m_factoryFeatures;
 	ParameterStructure* mp_fakeConfig     = nullptr;
 	Module* mp_fakeInput                  = nullptr;
-	ConfigReader* mp_configFile           = nullptr;
+	ConfigReader m_configFile;
 	Context::Parameters* mp_contextParams = nullptr;
 	Context* mp_context                   = nullptr;
 	string m_emptyFileName = "/tmp/config_empty.xml";
@@ -113,12 +113,12 @@ public:
 			m_factoryModules.List(m_moduleTypes);
 		
 		createEmptyConfigFile(m_emptyFileName);
-		mp_configFile = new ConfigReader;
-		readFromFile(*mp_configFile, m_emptyFileName);
-		AddModuleToConfig("VideoFileReader", *mp_configFile)["inputs"]["fps"] = "22";
+		AddModuleToConfig("VideoFileReader", m_configFile)["inputs"]["fps"] = 22;
+		assert(!m_configFile.isNull());
+		assert(m_configFile.isObject());
 
-		(*mp_configFile)["name"] = "unitTest";
-		mp_contextParams = new Context::Parameters((*mp_configFile)["name"].asString());
+		m_configFile["name"] = "unitTest";
+		mp_contextParams = new Context::Parameters("manager");
 		mp_contextParams->configFile      = m_emptyFileName;
 		mp_contextParams->applicationName = "TestModule";
 		mp_contextParams->outputDir       = "tests/out";
@@ -126,8 +126,8 @@ public:
 		mp_contextParams->centralized     = true;
 		mp_context = new Context(*mp_contextParams);
 
-		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", (*mp_configFile)["VideoFileReader0"]["name"].asString());
-		// mp_fakeConfig->Read(mp_configFile->Find("application>module[name=\"VideoFileReader0\"]"));
+		mp_fakeConfig = m_factoryParameters.Create("VideoFileReader", "VideoFileReader0");
+		// mp_fakeConfig->Read(m_configFile->Find("application>module[name=\"VideoFileReader0\"]"));
 		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeConfig);
 		mp_fakeInput->SetContext(*mp_context);
 		// note: we need a fake module to create the input streams
@@ -137,7 +137,6 @@ public:
 	{
 		CLEAN_DELETE(mp_fakeConfig);
 		CLEAN_DELETE(mp_fakeInput);
-		CLEAN_DELETE(mp_configFile);
 		CLEAN_DELETE(mp_context);
 		CLEAN_DELETE(mp_contextParams);
 	}
@@ -160,19 +159,19 @@ public:
 	void CreateAndConnectModule(ModuleTester& tester, const string& x_type, const map<string, Json::Value>* xp_parameters = nullptr)
 	{
 		TS_TRACE("Create and connect module of class " + x_type);
-		ConfigReader moduleConfig = AddModuleToConfig(x_type, *mp_configFile);
+		ConfigReader moduleConfig = AddModuleToConfig(x_type, m_configFile);
 
 		// Add parameters to override to the config
 		if(xp_parameters != nullptr)
 			for(const auto& elem : *xp_parameters)
 				moduleConfig["inputs"][elem.first] = elem.second;
 
-		writeToFile(*mp_configFile, "tests/tmp/tmp.xml");
+		writeToFile(m_configFile, "tests/tmp/tmp.xml");
 
 		ParameterStructure* parameters = nullptr;
 		try
 		{
-			parameters = m_factoryParameters.Create(x_type, moduleConfig["name"].asString());
+			parameters = m_factoryParameters.Create(x_type, x_type + "0");
 			parameters->Read(moduleConfig);
 		}
 		catch(ParameterException& e)
@@ -484,14 +483,14 @@ public:
 		{
 			TS_TRACE("## on module " + elem);
 			ModuleTester tester;
-			map<string, Json::Value> overrid = {{"autoProcess", "1"}};
-			CLEAN_DELETE(mp_configFile);
-			mp_configFile = new ConfigReader(m_emptyFileName);
+			map<string, Json::Value> overrid = {{"autoProcess", true}};
+			Json::Value root;
+			m_configFile = root;
 			CreateAndConnectModule(tester, elem, &overrid);
 			if(tester.module->IsUnitTestingEnabled() && !tester.module->IsInput())
 			{
-				(*mp_configFile)["name"] = "unitTest";
-				Manager::Parameters mparams((*mp_configFile).asString());
+				m_configFile["name"] = "unitTest";
+				Manager::Parameters mparams(m_configFile);
 				Manager manager(mparams, *mp_context);
 				manager.Connect();
 				Module* module = manager.RefModules().back();

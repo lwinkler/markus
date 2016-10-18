@@ -87,7 +87,9 @@ void Manager::BuildModule(const string& x_name, const ConfigReader& x_moduleConf
 	string moduleType = x_moduleConfig["class"].asString();
 	ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, x_name);
 	tmp2->Read(x_moduleConfig);
-	tmp2->CheckRange(x_moduleConfig);
+
+	// note: Commented for now: TODO: initialize the inputs as real parameters
+	// tmp2->CheckRange(x_moduleConfig);
 
 	if(!m_param.aspectRatio.empty())
 	{
@@ -154,6 +156,9 @@ void Manager::Rebuild()
 	m_isConnected = false;
 	Connect();
 	Reset();
+	Check();
+	for(const auto& elem : m_modules)
+		elem.second->CheckParameterRange();
 	Start();
 }
 
@@ -185,22 +190,23 @@ void Manager::Connect()
 		throw MkException("Manager can only connect modules once", LOC);
 
 	// Connect input and output streams (re-read the config once since we need all modules to be connected)
-	for(const auto& moduleConfig : m_param.config["modules"])
+	for(const auto& name : m_param.config["modules"].getMemberNames())
 	{
-		Module& module = RefModuleByName(moduleConfig["name"].asString());
+		Module& module = RefModuleByName(name);
 
 		// For each module
 		// Read conections of inputs
-		for(const auto& inputConfig : moduleConfig["inputs"])
+		for(const auto& inputName : m_param.config["modules"][name]["inputs"].getMemberNames())
 		{
+			const auto& inputConfig(m_param.config["modules"][name]["inputs"][inputName]);
 			if(!inputConfig.isObject() || !inputConfig.isMember("connected"))
 				continue;
-			ConnectInput(inputConfig, module, inputConfig["name"].asString());
+			ConnectInput(inputConfig, module, inputName);
 
 			// Connect all sub-inputs: only used in case of multiple streams
 			for(const auto& subInputConfig : inputConfig["inputs"])
 			{
-				ConnectInput(subInputConfig, module, inputConfig["name"].asString());
+				ConnectInput(subInputConfig, module, inputName);
 			}
 		}
 
@@ -209,7 +215,6 @@ void Manager::Connect()
 		if(!mas.isNull() && !mas.asString().empty())
 			RefModuleByName(mas.asString()).AddDependingModule(module);
 	}
-	Check();
 	m_isConnected = true;
 }
 

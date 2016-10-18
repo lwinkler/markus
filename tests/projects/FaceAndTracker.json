@@ -1,0 +1,68 @@
+{
+	"description" : "",
+	"modules" : 
+	{
+		"CascadeDetector" : 
+		{
+			"class" : "CascadeDetector",
+			"inputs" : 
+			{
+				"filterFile" : "modules/CascadeDetector/lbpcascade_frontalface.xml",
+				"height" : 48,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				},
+				"minNeighbors" : 2,
+				"minSide" : 0,
+				"objectLabel" : "face",
+				"scaleFactor" : 1.2,
+				"type" : "CV_8UC1",
+				"width" : 64
+			}
+		},
+		"Input" : 
+		{
+			"class" : "VideoFileReader"
+		},
+		"RenderObjects" : 
+		{
+			"class" : "RenderObjects",
+			"inputs" : 
+			{
+				"fps" : 10,
+				"height" : 48,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				},
+				"objects" : null,
+				"width" : 64
+			}
+		},
+		"TrackerByFeatures" : 
+		{
+			"class" : "TrackerByFeatures",
+			"inputs" : 
+			{
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "CascadeDetector",
+						"output" : "detected"
+					}
+				}
+			}
+		}
+	},
+	"name" : "FaceAndTracker"
+}

@@ -50,11 +50,13 @@ Module::~Module()
 {
 	// Delete all streams
 	// note: input streams will be destroyed as parameters
+	/*
 	for(auto & elem : m_inputStreams)
 	{
-		// if(elem.second->GetParameterType() == PARAM_UNKNOWN)
-		delete(elem.second);
+		if(elem.second->GetParameterType() == PARAM_UNKNOWN)
+			delete(elem.second);
 	}
+	*/
 	m_inputStreams.clear();
 	for(auto & elem : m_outputStreams)
 		delete(elem.second);
@@ -313,7 +315,7 @@ void Module::Export(ostream& rx_os) const
 {
 	Json::Value root;
 	root["class"]       = GetClass();
-	root["name"]        = GetName();
+	// root["name"]        = GetName();
 	root["description"] = GetDescription();
 
 	for(const auto & elem : m_param.GetList())
@@ -431,7 +433,7 @@ void Module::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 {
 	Json::Value root;
 
-	root["name"]                 = GetName();
+	// root["name"]                 = GetName();
 	// root["timer_conversion"]      = m_timerConversion.GetMsLong();
 	// root["timer_processing"]      = m_timerProcessFrame.GetMsLong();
 	// root["timer_waiting"]         = m_timerWaiting.GetMsLong();
@@ -465,8 +467,8 @@ void Module::Deserialize(istream& x_in, MkDirectory* xp_dir)
 	Json::Value root;
 	x_in >> root;
 
-	if(GetName() != root["name"].asString())
-		throw MkException("Name does not match in serialization for module " + GetName(), LOC);
+	// if(GetName() != root["name"].asString())
+		// throw MkException("Name does not match in serialization for module " + GetName(), LOC);
 	m_countProcessedFrames = root["countProcessedFrames"].asInt64();
 
 	stringstream ss;
@@ -505,10 +507,7 @@ void Module::AddDebugStream(int x_id, Stream* xp_stream){AddDebugStream(xp_strea
 void Module::AddInputStream(Stream* xp_stream)
 {
 	m_inputStreams.insert(make_pair(xp_stream->GetName(), xp_stream));
-	// if(xp_stream->GetParameterType() != PARAM_UNKNOWN)
-	{
-		m_param.AddParameter(xp_stream);
-	}
+	m_param.AddParameter(xp_stream);
 }
 
 /**

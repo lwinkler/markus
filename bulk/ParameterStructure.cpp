@@ -126,7 +126,7 @@ const Parameter& ParameterStructure::GetParameterByName(const string& x_name) co
 {
 	for(const auto & elem : m_list)
 	{
-		if(elem->GetName().compare(x_name) == 0)
+		if(elem->GetName() == x_name)
 		{
 			return *elem;
 		}

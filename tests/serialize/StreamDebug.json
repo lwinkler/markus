@@ -3,7 +3,6 @@
 	"connected" : false,
 	"description" : "Another description for a stream of debug",
 	"image" : "tests/serialize/image/Module0.img.jpg",
-	"name" : "img",
 	"timeStamp" : 1399367541,
 	"type" : "Debug"
 }

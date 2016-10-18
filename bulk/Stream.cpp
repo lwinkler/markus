@@ -84,7 +84,7 @@ void Stream::Disconnect()
 void Stream::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 {
 	Json::Value root;
-	root["name"]        = GetName();
+	// root["name"]        = GetName();
 	root["type"]        = GetType();
 	root["description"] = GetDescription();
 	root["timeStamp"]   = Json::UInt64(m_timeStamp.load());
@@ -98,8 +98,8 @@ void Stream::Deserialize(istream& x_in, MkDirectory* xp_dir)
 	Json::Value root;
 	x_in >> root;
 
-	if(GetName() != root["name"].asString())
-		throw MkException("Stream must have the same name before serializing: " + GetName(), LOC);
+	// if(GetName() != root["name"].asString())
+		// throw MkException("Stream must have the same name before serializing: " + GetName(), LOC);
 	if(root["type"].asString() != GetType())
 		throw MkException("Stream must have the right type before serializing: " + GetType(), LOC);
 	if(GetDescription() != root["description"].asString())

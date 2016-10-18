@@ -1,6 +1,5 @@
 {
 	"module": {
-		"name": "Module0",
 		"id": 0,
 		"class": "VideoFileReader",
 		"parameters":{

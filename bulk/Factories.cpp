@@ -82,5 +82,6 @@ void Factories::RegisterAll()
 	factParamCtr.Register<ControllerString>(PARAM_STR);
 	factParamCtr.Register<ControllerVoid>(PARAM_OBJECTS);
 	factParamCtr.Register<ControllerVoid>(PARAM_IMAGE);
+	factParamCtr.Register<ControllerVoid>(PARAM_EVENT);
 }
 

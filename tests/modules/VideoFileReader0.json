@@ -1,80 +1,84 @@
 {
 	"class" : "VideoFileReader",
 	"description" : "Read video stream from a video file",
-	"name" : "VideoFileReader0",
-	"outputs" : 
-	[
+	"inputs" : 
+	{
+		"autoProcess" : 
 		{
-			"description" : "Video stream",
-			"id" : 0,
-			"name" : "input",
-			"type" : "Image"
-		}
-	],
-	"parameters" : 
-	[
-		{
-			"default" : 1,
+			"default" : true,
 			"description" : "If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream",
-			"name" : "autoProcess",
 			"range" : "[1:1]",
 			"type" : "bool"
 		},
-		{
-			"default" : 123,
-			"description" : "Frames per seconds (processing speed)",
-			"name" : "fps",
-			"range" : "[0:1000]",
-			"type" : "double"
-		},
-		{
-			"default" : "",
-			"description" : "Master module on which this module's processing is dependent. If empty, use all preceeding modules",
-			"name" : "master",
-			"range" : "[]",
-			"type" : "string"
-		},
-		{
-			"default" : 640,
-			"description" : "Width of the input",
-			"name" : "width",
-			"range" : "[1:6400]",
-			"type" : "int"
-		},
-		{
-			"default" : 480,
-			"description" : "Height of the input",
-			"name" : "height",
-			"range" : "[1:4800]",
-			"type" : "int"
-		},
-		{
-			"default" : "CV_8UC1",
-			"description" : "Format of the input image",
-			"name" : "type",
-			"range" : "[CV_16SC1,CV_16SC2,CV_16SC3,CV_16SC4,CV_16UC1,CV_16UC2,CV_16UC3,CV_16UC4,CV_32FC1,CV_32FC2,CV_32FC3,CV_32FC4,CV_32SC1,CV_32SC2,CV_32SC3,CV_32SC4,CV_64FC1,CV_64FC2,CV_64FC3,CV_64FC4,CV_8SC1,CV_8SC2,CV_8SC3,CV_8SC4,CV_8UC1,CV_8UC2,CV_8UC3]",
-			"type" : "imageType"
-		},
+		"cached" : 
 		{
 			"default" : "NO_CACHE",
 			"description" : "Format of the input image",
-			"name" : "cached",
 			"range" : "[DISABLED,NO_CACHE,READ_CACHE,WRITE_CACHE]",
 			"type" : "cachedState"
 		},
+		"file" : 
 		{
 			"default" : "in/input.mp4",
 			"description" : "Name of the video file to read, with path",
-			"name" : "file",
 			"range" : "[]",
 			"type" : "string"
 		},
+		"fps" : 
 		{
 			"default" : 0,
+			"description" : "Frames per seconds (processing speed)",
+			"range" : "[0:1000]",
+			"type" : "double"
+		},
+		"height" : 
+		{
+			"default" : 480,
+			"description" : "Height of the input",
+			"range" : "[1:4800]",
+			"type" : "int"
+		},
+		"loop" : 
+		{
+			"default" : false,
 			"description" : "Loop on file",
-			"name" : "loop",
 			"range" : "[0:1]",
 			"type" : "bool"
+		},
+		"master" : 
+		{
+			"default" : "",
+			"description" : "Master module on which this module's processing is dependent. If empty, use all preceeding modules",
+			"range" : "[]",
+			"type" : "string"
+		},
+		"type" : 
+		{
+			"default" : "CV_8UC1",
+			"description" : "Format of the input image",
+			"range" : "[CV_16SC1,CV_16SC2,CV_16SC3,CV_16SC4,CV_16UC1,CV_16UC2,CV_16UC3,CV_16UC4,CV_32FC1,CV_32FC2,CV_32FC3,CV_32FC4,CV_32SC1,CV_32SC2,CV_32SC3,CV_32SC4,CV_64FC1,CV_64FC2,CV_64FC3,CV_64FC4,CV_8SC1,CV_8SC2,CV_8SC3,CV_8SC4,CV_8UC1,CV_8UC2,CV_8UC3]",
+			"type" : "imageType"
+		},
+		"width" : 
+		{
+			"default" : 640,
+			"description" : "Width of the input",
+			"range" : "[1:6400]",
+			"type" : "int"
 		}
-	]
+	},
+	"outputs" : 
+	{
+		"image" : 
+		{
+			"default" : 
+			{
+				"height" : 480,
+				"width" : 640
+			},
+			"description" : "Video stream",
+			"id" : 0,
+			"type" : "Image"
+		}
+	}
 }

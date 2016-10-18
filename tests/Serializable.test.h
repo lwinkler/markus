@@ -133,7 +133,7 @@ public:
 		createEmptyConfigFile("/tmp/config_empty.json");
 		mp_config = new ConfigReader;
 		readFromFile(*mp_config, "tests/serialize/module.json");
-		mp_fakeParams = m_factoryParameters.Create("VideoFileReader", (*mp_config)["module"]["name"].asString());
+		mp_fakeParams = m_factoryParameters.Create("VideoFileReader", "Module0");
 		mp_fakeParams->Read((*mp_config)["module"]);
 		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeParams);
 		// note: we need a fake module to create the input streams

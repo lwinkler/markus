@@ -1,13 +1,11 @@
 
 {
 	"countProcessedFrames" : 123433331,
-	"name" : "Module0",
 	"outputs" : 
 	{
 		"image": {
 			"connected" : false,
 			"description" : "Video stream",
-			"name": "image",
 			"image" : "tests/serialize/image/Module0.image.23422423424234.jpg",
 			"timeStamp" : 23422423424234,
 			"type" : "Image"

@@ -42,7 +42,6 @@
 		},
 		"raised" : true
 	},
-	"name" : "streamEvent",
 	"timeStamp" : 12341244444444,
 	"type" : "Event"
 }

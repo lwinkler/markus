@@ -129,7 +129,7 @@ void overrideParameters(ConfigReader& x_oldConfig, const ConfigReader& x_newConf
 void overrideWith(ConfigReader& xr_config, const ConfigReader& x_extraConfig)
 {
 	// Note: This method is very specific to our type of configuration
-	overrideParameters(xr_config["modules"], x_extraConfig["modules"], "modules");
+	overrideParameters(xr_config, x_extraConfig, "");
 }
 
 std::string jsonToString(const Json::Value& x_json)

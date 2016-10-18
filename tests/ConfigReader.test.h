@@ -32,55 +32,21 @@ using namespace std;
 
 class ConfigReaderTestSuite : public CxxTest::TestSuite
 {
-protected:
-	ConfigReader* m_conf1;
-	ConfigReader* m_conf2;
-	ConfigReader* m_conf3;
-	ConfigReader* m_conf4;
-	ConfigReader* m_conf5;
 public:
-	void setUp()
-	{
-		m_conf1 = new ConfigReader;
-		m_conf2 = new ConfigReader;
-		m_conf3 = new ConfigReader;
-		m_conf4 = new ConfigReader;
-		m_conf5 = new ConfigReader;
-		readFromFile(*m_conf1, "tests/config/config1.json");
-		createEmptyConfigFile("/tmp/config_empty.json");
-		readFromFile(*m_conf2, "/tmp/config_empty.json");
-		readFromFile(*m_conf3, "/tmp/config_empty.json");
-		readFromFile(*m_conf4, "/tmp/config_empty.json");
-		readFromFile(*m_conf5, "tests/config/config_part.json");
-	}
-	void tearDown()
-	{
-		delete m_conf1;
-		delete m_conf2;
-		delete m_conf3;
-		delete m_conf4;
-		delete m_conf5;
-	}
-
-
 	/// Test new syntax
 	void testSyntax()
 	{
 		TS_TRACE("\n# Test on the syntax of configurations");
-		ConfigReader& conf(*m_conf3);
+		ConfigReader conf;
 		conf["t1"]["t2"]["t3"]["bla"] = 333;
-		writeToFile(*m_conf3, "tests/tmp/test3.json");
-		ConfigReader& conf2(*m_conf4);
-		conf2["t1"]["t2"]["t3"] = "333";
-		conf2["t1"]["t2"]["t3"]["blo"] = "555";
-		writeToFile(*m_conf4, "tests/tmp/test4.json");
+		writeToFile(conf, "tests/tmp/test3.json");
+		ConfigReader conf2;
+		readFromFile(conf2, "tests/tmp/test3.json");
 
 		TS_ASSERT(!conf2["t1"].isNull());
 		TS_ASSERT(!conf2["t1"]["t2"].isNull());
 		TS_ASSERT(!conf2["t1"]["t2"]["t3"].isNull());
-		TS_ASSERT(conf2["t1"]["t2"]["t3"]["bla"].size() == 1);
-		TS_ASSERT( conf2["t1"]["t2"]["t3"].asInt() == 333);
-		TS_ASSERT(conf2["t1"]["t2"]["t3"].size() == 2);
+		TS_ASSERT( conf2["t1"]["t2"]["t3"]["bla"].asInt() == 333);
 	}
 
 	/// Load and save a config file
@@ -88,47 +54,48 @@ public:
 	{
 		TS_TRACE("\n# Test the loading of configurations");
 
-		ConfigReader& appConf((*m_conf1));
-		ConfigReader& module0conf(appConf["module"]["Module0"]);
-		ConfigReader& module1conf = appConf["module"]["Module1"];
+		ConfigReader appConf;
+		readFromFile(appConf, "tests/config/config1.json");
+		ConfigReader& module0conf(appConf["modules"]["Module0"]);
+		ConfigReader& module1conf = appConf["modules"]["Module1"];
 
 		// old access
-		TS_ASSERT(module0conf == appConf["module"]["Module0"]);
-		TS_ASSERT(module1conf == appConf["modules"]);
-		// TS_ASSERT(module1conf == appConf.FindAll("module[name=\"Module1\"]").at(0));
+		TS_ASSERT(module0conf == appConf["modules"]["Module0"]);
+		TS_ASSERT(module1conf == appConf["modules"]["Module1"]);
 		TS_ASSERT(! module0conf["inputs"].isNull());
 
-		ConfigReader& param1 = module0conf["inputs"]["param"]["name"]["param_text"];
+		ConfigReader& param1 = module0conf["inputs"]["param_text"];
 		TS_ASSERT(param1.asString() == "SomeText");
-		ConfigReader& param2 = module0conf["inputs"]["param"]["name"]["param_int"];
-		TS_ASSERT(param2.asString() == "21");
-		ConfigReader& param3 = module0conf["inputs"]["param"]["name"]["param_float"];
-		TS_ASSERT(param3.asString() == "3.1415");
+		ConfigReader& param2 = module0conf["inputs"]["param_int"];
+		TS_ASSERT(param2.asInt() == 21);
+		ConfigReader& param3 = module0conf["inputs"]["param_float"];
+		TS_ASSERT(param3.asDouble() == 3.1415);
 
-		TS_ASSERT(param1["name"].asString() == "param_text");
-
-		writeToFile(*m_conf1, "tests/tmp/config1_copy.json");
-		validate(*m_conf1);
+		ConfigReader conf1;
+		readFromFile(conf1, "tests/config/config1.json");
+		writeToFile(conf1, "tests/tmp/config1_copy.json");
+		validate(conf1);
 
 		// Compare with the initial config
-		TS_ASSERT(compareFiles("tests/config/config1.json", "tests/tmp/config1_copy.json"));
+		TS_ASSERT(compareJsonFiles("tests/config/config1.json", "tests/tmp/config1_copy.json"));
 	}
 
 	/// Generate a config from an empty file and test
 	void testGenerate()
 	{
 		TS_TRACE("\n# Test the generation of configurations");
-		ConfigReader& appConf((*m_conf2));
-		appConf["aaa"]["name"]["nameX"]
-		["bbb"]["name"]["nameY"]
-		["ccc"]["name"]["nameZ"] = "someValue";
-		writeToFile(*m_conf2, "tests/config/config_generated.json");
+		ConfigReader appConf;
+		appConf["aaa"]["nameX"]
+		["bbb"]["nameY"]
+		["ccc"]["nameZ"] = "someValue";
+		writeToFile(appConf, "tests/config/config_generated.json");
 
-		ConfigReader generatedConf("tests/config/config_generated.json");
+		ConfigReader generatedConf;
+		readFromFile(generatedConf, "tests/config/config_generated.json");
 		TS_ASSERT(generatedConf
-				  ["aaa"]["name"]["nameX"]
-				  ["bbb"]["name"]["nameY"]
-				  ["ccc"]["name"]["nameZ"]
+				  ["aaa"]["nameX"]
+				  ["bbb"]["nameY"]
+				  ["ccc"]["nameZ"]
 				  .asString() == "someValue");
 	}
 
@@ -136,22 +103,27 @@ public:
 	void testOverride()
 	{
 		TS_TRACE("\n# Test the override of the original configuration");
+		ConfigReader conf1;
+		readFromFile(conf1, "tests/config/config1.json");
 
-		TS_ASSERT((*m_conf1)["inputs"]["param_text]"].asString() == "SomeText0");
-		TS_ASSERT((*m_conf1)["inputs"]["param_int]"].asString() == "0");
-		TS_ASSERT((*m_conf1)["inputs"]["param_float]"].asString() == "0");
+		ConfigReader conf5;
+		readFromFile(conf5, "tests/config/config_part.json");
 
-		overrideWith(*m_conf1, *m_conf5);
+		TS_ASSERT(conf1["inputs"]["param_text"].asString() == "SomeText0");
+		TS_ASSERT(conf1["inputs"]["param_int"].asInt() == 0);
+		TS_ASSERT(conf1["inputs"]["param_float"].asInt() == 0);
 
-		TS_ASSERT((*m_conf1)["inputs"]["param_text"].asString() == "NewText0");
-		TS_ASSERT((*m_conf1)["inputs"]["param_int"].asString() == "44");
-		TS_ASSERT((*m_conf1)["inputs"]["param_float"].asString() == "0.51");
+		overrideWith(conf1, conf5);
 
-		TS_ASSERT((*m_conf1)["modules"]["Module0"]["inputs"]["param_text"].asString() == "a new text");
-		TS_ASSERT((*m_conf1)["modules"]["Module0"]["inputs"]["param_int"].asString() == "33");
-		TS_ASSERT((*m_conf1)["modules"]["Module0"]["inputs"]["param_float"].asString() == "3.1415");
-		TS_ASSERT((*m_conf1)["modules"]["Module1"]["inputs"]["param_float"].asString()  == "77.7");
-		TS_ASSERT((*m_conf1)["modules"]["Module1"]["inputs"]["param_int"].asString()  == "42");
+		TS_ASSERT(conf1["inputs"]["param_text"].asString() == "NewText0");
+		TS_ASSERT(conf1["inputs"]["param_int"].asInt() == 44);
+		TS_ASSERT(conf1["inputs"]["param_float"].asDouble() == 0.51);
+
+		TS_ASSERT(conf1["modules"]["Module0"]["inputs"]["param_text"].asString() == "a new text");
+		TS_ASSERT(conf1["modules"]["Module0"]["inputs"]["param_int"].asInt() == 33);
+		TS_ASSERT(conf1["modules"]["Module0"]["inputs"]["param_float"].asDouble() == 3.1415);
+		TS_ASSERT(conf1["modules"]["Module1"]["inputs"]["param_float"].asDouble()  == 77.7);
+		TS_ASSERT(conf1["modules"]["Module1"]["inputs"]["param_int"].asInt()  == 42);
 	}
 };
 
