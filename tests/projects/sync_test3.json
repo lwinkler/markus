@@ -1,0 +1,215 @@
+{
+	"description" : "(unk)",
+	"modules" : 
+	{
+		"BgrSubRunAvg1" : 
+		{
+			"class" : "BgrSubRunAvg",
+			"inputs" : 
+			{
+				"height" : 48,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "VideoFileReader0",
+						"output" : "image"
+					}
+				},
+				"width" : 64
+			}
+		},
+		"Morph15" : 
+		{
+			"class" : "Morph",
+			"inputs" : 
+			{
+				"element" : 2,
+				"height" : 48,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "BgrSubRunAvg1",
+						"output" : "foreground"
+					}
+				},
+				"kernelSize" : 5,
+				"operator" : 0,
+				"width" : 64
+			}
+		},
+		"Morph16" : 
+		{
+			"class" : "Morph",
+			"inputs" : 
+			{
+				"element" : 2,
+				"height" : 48,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "TempDiff2",
+						"output" : "tempDiff"
+					}
+				},
+				"kernelSize" : 5,
+				"operator" : 0,
+				"width" : 64
+			}
+		},
+		"Morph4" : 
+		{
+			"class" : "Morph",
+			"inputs" : 
+			{
+				"element" : 2,
+				"height" : 48,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Morph15",
+						"output" : "output"
+					}
+				},
+				"kernelSize" : 5,
+				"operator" : 0,
+				"width" : 64
+			}
+		},
+		"Morph6" : 
+		{
+			"class" : "Morph",
+			"inputs" : 
+			{
+				"element" : 2,
+				"height" : 48,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "VideoFileReader0",
+						"output" : "image"
+					}
+				},
+				"kernelSize" : 5,
+				"operator" : 0,
+				"width" : 64
+			}
+		},
+		"MotionDetector12" : 
+		{
+			"class" : "MotionDetector",
+			"inputs" : 
+			{
+				"height" : 48,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "TempDiff2",
+						"output" : "tempDiff"
+					}
+				},
+				"width" : 64
+			}
+		},
+		"RenderObjects8" : 
+		{
+			"class" : "RenderObjects",
+			"inputs" : 
+			{
+				"height" : 48,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "VideoFileReader0",
+						"output" : "image"
+					}
+				},
+				"objects" : null,
+				"width" : 64
+			}
+		},
+		"SegmenterContour10" : 
+		{
+			"class" : "SegmenterContour",
+			"inputs" : 
+			{
+				"height" : 48,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Morph16",
+						"output" : "output"
+					}
+				},
+				"width" : 64
+			}
+		},
+		"SegmenterContour14" : 
+		{
+			"class" : "SegmenterContour",
+			"inputs" : 
+			{
+				"height" : 48,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Morph6",
+						"output" : "output"
+					}
+				},
+				"width" : 64
+			}
+		},
+		"SegmenterContour9" : 
+		{
+			"class" : "SegmenterContour",
+			"inputs" : 
+			{
+				"height" : 48,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Morph4",
+						"output" : "output"
+					}
+				},
+				"width" : 64
+			}
+		},
+		"TempDiff2" : 
+		{
+			"class" : "TempDiff",
+			"inputs" : 
+			{
+				"height" : 48,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "VideoFileReader0",
+						"output" : "image"
+					}
+				},
+				"width" : 64
+			}
+		},
+		"VideoFileReader0" : 
+		{
+			"class" : "VideoFileReader",
+			"inputs" : 
+			{
+				"file" : "in/input.mp4"
+			}
+		}
+	},
+	"name" : "CustomProject"
+}

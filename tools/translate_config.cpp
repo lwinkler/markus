@@ -97,7 +97,7 @@ void translateModule(const ConfigXml x_xml, ConfigReader& xr_json)
 {
 	string modName  = x_xml.GetAttribute("name");
 	string modClass = moduleTypes[modName];
-	xr_json["name"] = modName;
+	// xr_json["name"] = modName;
 	for(const auto& xml : x_xml.FindAll("parameters>param"))
 	{
 		string name = camelCase(xml.GetAttribute("name"));

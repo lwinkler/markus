@@ -1,0 +1,69 @@
+{
+	"description" : "",
+	"modules" : 
+	{
+		"CascadeDetector" : 
+		{
+			"class" : "CascadeDetector",
+			"inputs" : 
+			{
+				"height" : 48,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				},
+				"type" : "CV_8UC1",
+				"width" : 64
+			}
+		},
+		"Input" : 
+		{
+			"class" : "VideoFileReader",
+			"inputs" : 
+			{
+				"fps" : 10
+			}
+		},
+		"RenderObjects" : 
+		{
+			"class" : "RenderObjects",
+			"inputs" : 
+			{
+				"fps" : 10,
+				"height" : 48,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				},
+				"objects" : null,
+				"type" : "CV_8UC3",
+				"width" : 64
+			}
+		},
+		"TrackerByFeatures" : 
+		{
+			"class" : "TrackerByFeatures",
+			"inputs" : 
+			{
+				"fps" : 10,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "CascadeDetector",
+						"output" : "detected"
+					}
+				}
+			}
+		}
+	},
+	"name" : "FaceAndTracker"
+}

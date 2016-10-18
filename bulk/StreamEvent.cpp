@@ -33,7 +33,7 @@ using namespace cv;
 template<> log4cxx::LoggerPtr StreamEvent::m_logger(log4cxx::Logger::getLogger("StreamEvent"));
 template<> const string StreamEvent::m_type         = "Event";
 template<> const string StreamEvent::m_class        = "StreamEvent";
-template<> const ParameterType StreamEvent::m_parameterType = PARAM_STREAM;
+template<> const ParameterType StreamEvent::m_parameterType = PARAM_SERIALIZABLE;
 
 // Transmit the event to the connected module
 

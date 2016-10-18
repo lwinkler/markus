@@ -442,19 +442,19 @@ string ControllerSerializable::GetValueFromWidget()
 #endif
 }
 /*------------------------------------------------------------------------------------------------*/
-ControllerStream::ControllerStream(Parameter& x_param, Processable& x_module):
-	ControllerParameter(x_param, x_module),
-	m_param2(dynamic_cast<Stream&>(x_param))
+ControllerVoid::ControllerVoid(Parameter& x_param, Processable& x_module):
+	ControllerParameter(x_param, x_module)
+	// m_param2(dynamic_cast<Stream&>(x_param))
 {
 	mp_lineEdit = nullptr;
 }
 
-QWidget* ControllerStream::CreateWidget()
+QWidget* ControllerVoid::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
 	mp_lineEdit = new QLineEdit();
 	mp_lineEdit->setStyleSheet("color: black; background-color: white");
-	mp_lineEdit->setText(jsonToString(m_param2.GetValue()).c_str());
+	// mp_lineEdit->setText(jsonToString(m_param2.GetValue()).c_str());
 	return mp_lineEdit;
 #else
 	return nullptr;
@@ -462,7 +462,7 @@ QWidget* ControllerStream::CreateWidget()
 }
 
 
-void ControllerStream::SetWidgetValue(const string& x_value)
+void ControllerVoid::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
 	mp_lineEdit->setText(x_value.c_str());
@@ -472,7 +472,7 @@ void ControllerStream::SetWidgetValue(const string& x_value)
 #endif
 }
 
-string ControllerStream::GetValueFromWidget()
+string ControllerVoid::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	return mp_lineEdit->text().toStdString();

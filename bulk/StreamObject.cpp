@@ -34,7 +34,7 @@ using namespace cv;
 template<>log4cxx::LoggerPtr StreamObject::m_logger(log4cxx::Logger::getLogger("StreamObject"));
 template<> const string StreamObject::m_type         = "Objects";
 template<> const string StreamObject::m_class        = "StreamObjects";
-template<> const ParameterType StreamObject::m_parameterType = PARAM_STREAM;
+template<> const ParameterType StreamObject::m_parameterType = PARAM_OBJECTS;
 
 template<> StreamObject::StreamT(const std::string& rx_name, vector<Object>& rx_object, Module& rx_module, const std::string& rx_description, const std::string& rx_requirement) :
 	Stream(rx_name, rx_module, rx_description, rx_requirement),

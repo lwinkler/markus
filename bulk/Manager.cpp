@@ -75,17 +75,17 @@ Manager::~Manager()
 */
 void Manager::Build()
 {
-	for(const auto& moduleConfig : m_param.config["modules"])
+	for(const auto& name : m_param.config["modules"].getMemberNames())
 	{
-		BuildModule(moduleConfig);
+		BuildModule(name, m_param.config["modules"][name]);
 	}
 }
 
-void Manager::BuildModule(const ConfigReader& x_moduleConfig)
+void Manager::BuildModule(const string& x_name, const ConfigReader& x_moduleConfig)
 {
 	// Read parameters
 	string moduleType = x_moduleConfig["class"].asString();
-	ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, x_moduleConfig["name"].asString());
+	ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, x_name);
 	tmp2->Read(x_moduleConfig);
 	tmp2->CheckRange(x_moduleConfig);
 
@@ -109,12 +109,7 @@ void Manager::BuildModule(const ConfigReader& x_moduleConfig)
 	Module * tmp1 = mr_moduleFactory.Create(moduleType, *tmp2);
 
 	LOG_DEBUG(m_logger, "Add module " << tmp1->GetName() << " to list input=" << (tmp1->IsInput() ? "yes" : "no"));
-	int id = boost::lexical_cast<int>(x_moduleConfig["id"].asInt());
-	auto ret = m_modules.insert(pair<int,Module*>(id, tmp1));
-	if(ret.second == false)
-	{
-		throw MkException("Module with id " + x_moduleConfig["id"].asString() + " is listed more than one time in config", LOC);
-	}
+	m_modules[tmp1->GetName()] = tmp1;
 	m_parameters.push_back(tmp2);
 
 	// Add to inputs if an input
@@ -145,7 +140,7 @@ void Manager::Destroy()
 		delete elem;
 	m_parameters.clear();
 	m_inputs.clear();
-	m_autoProcessedModules.clear();
+	m_autoProcessedModules.clear(); // TODO: There probable should be only m_inputs or this. Check
 }
 
 /**

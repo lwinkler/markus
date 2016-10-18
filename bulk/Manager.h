@@ -126,7 +126,7 @@ public:
 		assert(!m_inputs.empty());
 		return m_inputs.at(0)->GetRecordingFps();
 	}
-	void BuildModule(const ConfigReader& x_moduleConfig);
+	void BuildModule(const std::string& x_name, const ConfigReader& x_moduleConfig);
 
 private:
 	void Build();
@@ -139,7 +139,7 @@ private:
 	bool m_isConnected   = false;
 	bool m_quitting      = false;
 
-	std::map<int, Module *> m_modules;
+	std::map<std::string, Module *> m_modules;
 	std::vector<Input *>    m_inputs;
 	std::vector<Module *>   m_autoProcessedModules;
 	std::vector<ParameterStructure *> m_parameters;

@@ -52,8 +52,8 @@ Module::~Module()
 	// note: input streams will be destroyed as parameters
 	for(auto & elem : m_inputStreams)
 	{
-		if(elem.second->GetParameterType() == PARAM_UNKNOWN)
-			delete(elem.second);
+		// if(elem.second->GetParameterType() == PARAM_UNKNOWN)
+		delete(elem.second);
 	}
 	m_inputStreams.clear();
 	for(auto & elem : m_outputStreams)
@@ -505,7 +505,7 @@ void Module::AddDebugStream(int x_id, Stream* xp_stream){AddDebugStream(xp_strea
 void Module::AddInputStream(Stream* xp_stream)
 {
 	m_inputStreams.insert(make_pair(xp_stream->GetName(), xp_stream));
-	if(xp_stream->GetParameterType() != PARAM_UNKNOWN)
+	// if(xp_stream->GetParameterType() != PARAM_UNKNOWN)
 	{
 		m_param.AddParameter(xp_stream);
 	}
