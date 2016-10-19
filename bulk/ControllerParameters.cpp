@@ -76,13 +76,13 @@ void ControllerParameter::GetRange(string* xp_value)
 	Processable::ReadLock lock(m_module.RefLock());
 	if(xp_value != nullptr)
 	{
-		*xp_value = m_param.GetRange();
+		*xp_value = jsonToString(m_param.GetRange());
 		return;
 	}
 #ifdef MARKUS_NO_GUI
 	assert(false);
 #else
-	LOG_INFO(m_logger, "Parameter range is \"" + m_param.GetRange() + "\"");
+	LOG_INFO(m_logger, "Parameter range is \"" + jsonToString(m_param.GetRange()) + "\"");
 #endif
 }
 
@@ -119,7 +119,7 @@ void ControllerParameter::SetControlledValue(string* xp_value)
 	if(!m_param.CheckRange())
 	{
 		m_param.SetValue(oldValue, configType);
-		throw MkException("Parameter " + m_param.GetName() + "= " + *xp_value + " is out of range " + m_param.GetRange(), LOC);
+		throw MkException("Parameter " + m_param.GetName() + "= " + *xp_value + " is out of range " + jsonToString(m_param.GetRange()), LOC);
 	}
 }
 
@@ -193,7 +193,7 @@ ControllerInt::ControllerInt(Parameter& x_param, Processable& x_module):
 QWidget* ControllerInt::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue().asInt(), m_param2.GetMin(), m_param2.GetMax(), 0);
+	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue().asInt(), m_param2.GetRange()["min"].asDouble(), m_param2.GetRange()["max"].asDouble(), 0);
 #else
 	return nullptr;
 #endif
@@ -230,7 +230,7 @@ ControllerUInt::ControllerUInt(Parameter& x_param, Processable& x_module):
 QWidget* ControllerUInt::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue().asUInt(), m_param2.GetMin(), m_param2.GetMax(), 0);
+	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue().asUInt(), m_param2.GetRange()["min"].asDouble(), m_param2.GetRange()["max"].asDouble(), 0);
 #else
 	return nullptr;
 #endif
@@ -265,7 +265,7 @@ ControllerDouble::ControllerDouble(Parameter& x_param, Processable& x_module):
 QWidget* ControllerDouble::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue().asDouble(), m_param2.GetMin(), m_param2.GetMax(), PRECISION_DOUBLE);
+	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue().asDouble(), m_param2.GetRange()["min"].asDouble(), m_param2.GetRange()["max"].asDouble(), PRECISION_DOUBLE);
 #else
 	return nullptr;
 #endif
@@ -302,7 +302,7 @@ ControllerFloat::ControllerFloat(Parameter& x_param, Processable& x_module):
 QWidget* ControllerFloat::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue().asFloat(), m_param2.GetMin(), m_param2.GetMax(), PRECISION_DOUBLE);
+	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue().asFloat(), m_param2.GetRange()["min"].asDouble(), m_param2.GetRange()["max"].asDouble(), PRECISION_DOUBLE);
 #else
 	return nullptr;
 #endif

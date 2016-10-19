@@ -75,8 +75,8 @@ public:
 		TS_ASSERT(compareFiles(fileName, "tests/parameters/" + xr_param.GetName() + ".txt"));
 
 		// test that the current range stays identical
-		string range = xr_param.GetRange();
-		xr_param.SetRange(range);
+		Json::Value range = xr_param.GetRange();
+		xr_param.SetRange(xr_param.GetRange());
 		TS_ASSERT(xr_param.GetRange() == range);
 	}
 

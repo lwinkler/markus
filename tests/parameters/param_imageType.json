@@ -1,6 +1,14 @@
 {
 	"default" : "CV_8UC2",
 	"description" : "Parameter of type imageType",
-	"range" : "[CV_8UC1,CV_8UC2,CV_8UC3]",
+	"range" : 
+	{
+		"allowed" : 
+		[
+			"CV_8UC1",
+			"CV_8UC2",
+			"CV_8UC3"
+		]
+	},
 	"type" : "imageType"
 }

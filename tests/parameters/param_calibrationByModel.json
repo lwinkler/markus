@@ -9,6 +9,6 @@
 		"yaw" : -1.2035800000000001
 	},
 	"description" : "Parameter of type CalibrationByModel",
-	"range" : "",
+	"range" : {},
 	"type" : "serializable"
 }

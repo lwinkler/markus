@@ -302,15 +302,15 @@ public:
 						elemCtr.second->CallAction("GetDefault", &defval);
 						TS_TRACE("###  " + elemCtr.first + ".GetDefault returned " + defval);
 
-						vector<string> values;
 						TS_TRACE("Generate values for param of type " + type + " in range " + range);
-						tester.module->GetParameters().GetParameterByName(elemCtr.first).GenerateValues(10, values, range);
+						Json::Value values = tester.module->GetParameters().GetParameterByName(elemCtr.first).GenerateValues(10, stringToJson(range));
 
 						for(auto& elemVal : values)
 						{
 							// For string type we cannot set random values
 							// cout<<"set "<<value<<endl;
-							elemCtr.second->CallAction("Set", &elemVal);
+							string tmps = elemVal.asString();
+							elemCtr.second->CallAction("Set", &tmps);
 
 							// Test if the config is globally still valid
 							try
@@ -326,13 +326,13 @@ public:
 							newValue = "0";
 							elemCtr.second->CallAction("Get", &newValue);
 
-							TSM_ASSERT("Value set must be returned by get: " + elemVal + "!=" + newValue, elemVal == newValue);
+							TSM_ASSERT("Value set must be returned by get: " + jsonToString(elemVal) + "!=" + newValue, jsonToString(elemVal) == newValue);
 
 							tester.module->Reset();
 							for(int i = 0 ; i < 3 ; i++)
 								tester.module->ProcessRandomInput(seed);
-							TS_TRACE("###  " + elemCtr.first + ".Set returned " + elemVal);
-							TS_TRACE("###  " + elemCtr.first + ".Get returned " + newValue);
+							TS_TRACE("###  " + elemCtr.first + ".Set returned " + jsonToString(elemVal));
+							TS_TRACE("###  " + elemCtr.first + ".Get returned " + jsonToString(newValue));
 						}
 						elemCtr.second->CallAction("Set", &defval);
 					}
@@ -374,7 +374,7 @@ public:
 			Timer timer;
 			timer.Start();
 
-			vector<vector<string>> allValues;
+			vector<Json::Value> allValues;
 			vector<Json::Value> allDefault;
 			vector<string> allNames;
 
@@ -392,12 +392,12 @@ public:
 					if(!elem->IsLocked())
 						continue;
 
-					TS_TRACE("## on parameter " + elem->GetName() + " of type " + elem->GetType() + " on range " + elem->GetRange());
+					TS_TRACE("## on parameter " + elem->GetName() + " of type " + elem->GetType() + " on range " + jsonToString(elem->GetRange()));
 
 					// Generate a new module with each value for locked parameter
-					vector<string> values;
+					Json::Value values;
 
-					TS_TRACE("Generate values for param of type " + elem->GetType() + " in range " + elem->GetRange());
+					TS_TRACE("Generate values for param of type " + elem->GetType() + " in range " + jsonToString(elem->GetRange()));
 					elem->GenerateValues(10, values);
 					allValues.push_back(values);
 					allDefault.push_back(elem->GetDefault());
@@ -416,7 +416,7 @@ public:
 				{
 					// For each value
 					map<string, Json::Value> params;
-					TS_TRACE("Set param " + allNames[i] + " = " + elemVal + " and " + lastParam + " = " + jsonToString(lastDefault));
+					TS_TRACE("Set param " + allNames[i] + " = " + jsonToString(elemVal) + " and " + lastParam + " = " + jsonToString(lastDefault));
 					params[allNames[i]] = elemVal;
 					if(lastParam != "")
 						params[lastParam] = lastDefault;

@@ -115,7 +115,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 			throw MkException("Modules and parameters must have the same size in <var> or modules must only contain one module", LOC);
 
 		// Get all targets to be varied in config
-		vector<ConfigReader> targets;
+		Json::Value targets;
 		targets.resize(paramNames.size());
 		vector<ConfigReader> originalValues;
 		originalValues.resize(paramNames.size());
@@ -170,13 +170,13 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 					// cout<<value.asString()<<endl;
 					try
 					{
-						targets.at(i) = jvalue.asString();
+						targets[i] = jvalue.asString();
 					}
 					catch(...)
 					{
 						stringstream ss1;
 						ss1 << jvalue;
-						targets.at(i) = ss1.str();
+						targets[i] = ss1.str();
 					}
 					i++;
 				}
@@ -201,22 +201,21 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 			if(paramNames.size() > 1)
 				throw MkException("To set more than one parameter variation, use an external file with option file=...", LOC);
 			// default values. Empty range means that the prog uses the default range of the param
-			string range = varConf["range"].asString();
+			Json::Value range = varConf["range"];
 			int nb = varConf.get("nb", 10).asInt();
 
 			LOG_DEBUG(m_logger, "Variations for module " << moduleNames[0].asString());
 			const Parameter& param = m_manager.GetModuleByName(moduleNames[0].asString()).GetParameters().GetParameterByName(paramNames[0].asString());
-			vector<string> values;
-			param.GenerateValues(nb, values, range);
+			Json::Value values = param.GenerateValues(nb, range);
 
 			// Generate a config for each variation
 			for(const auto& elem : values)
 			{
 				LOG_DEBUG(m_logger, "Value = " << elem);
-				xr_variationNames.push_back(paramNames[0].asString() + "-" + elem);
+				xr_variationNames.push_back(paramNames[0].asString() + "-" + jsonToString(elem));
 
 				// Change value of param
-				targets.at(0) = elem;
+				targets[0] = elem;
 				ConfigReader subConf = varConf["var"];
 				if(subConf.isNull())
 					AddSimulationEntry(xr_variationNames, xr_mainConfig);

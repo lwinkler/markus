@@ -24,6 +24,6 @@
 		"width" : 0.85999999999999999
 	},
 	"description" : "Parameter of type Polygon",
-	"range" : "",
+	"range" : {},
 	"type" : "serializable"
 }

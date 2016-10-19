@@ -21,14 +21,22 @@
 		{
 			"default" : 0,
 			"description" : "Frames per seconds (processing speed)",
-			"range" : "[0:1000]",
+			"range" : 
+			{
+				"max" : 1000,
+				"min" : 0
+			},
 			"type" : "double"
 		},
 		"height" : 
 		{
 			"default" : 480,
 			"description" : "Height of the input",
-			"range" : "[1:4800]",
+			"range" : 
+			{
+				"max" : 4800,
+				"min" : 1
+			},
 			"type" : "int"
 		},
 		"image" : 
@@ -46,7 +54,7 @@
 		{
 			"default" : "",
 			"description" : "Master module on which this module's processing is dependent. If empty, use all preceeding modules",
-			"range" : "[]",
+			"range" : {},
 			"type" : "string"
 		},
 		"objects" : 
@@ -79,7 +87,11 @@
 		{
 			"default" : 640,
 			"description" : "Width of the input",
-			"range" : "[1:6400]",
+			"range" : 
+			{
+				"max" : 6400,
+				"min" : 1
+			},
 			"type" : "int"
 		}
 	},

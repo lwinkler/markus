@@ -60,38 +60,15 @@ void ParameterEnum::SetDefault(const ConfigReader& rx_value)
 */
 bool ParameterEnum::CheckRange() const
 {
-	auto it = m_allowedValues.find(mr_value);
-	if(it != m_allowedValues.end())
-		return it->second;
-	else
-		return m_allowAllValues;
-}
+	if(!m_range.isMember("allowed"))
+		return true;
 
-/**
-* @brief Print the range of possible values
-*
-* @return Range as a string
-*/
-string ParameterEnum::GetRange() const
-{
-	vector<string> result;
-	for(const auto & elem : GetEnum())
+	for(const auto& elem : m_range["allowed"])
 	{
-		// If a value is specified in allowed values we respect this
-		// otherwise look at m_allowAllValues
-		auto it2 = m_allowedValues.find(elem.second);
-		if(it2 != m_allowedValues.end())
-		{
-			if(it2->second)
-				result.push_back(elem.first);
-		}
-		else
-		{
-			if(m_allowAllValues)
-				result.push_back(elem.first);
-		}
+		if(elem.asString() == GetReverseEnum().at(mr_value))
+			return true;
 	}
-	return "[" + join(result, ',') + "]";
+	return false;
 }
 
 /**
@@ -132,51 +109,20 @@ map<int,string> ParameterEnum::CreateReverseMap(const map<string, int>& x_map)
 }
 
 /**
-* @brief Set the range of acceptable values
-*
-* @param x_range Range in the form "[val1,val2,val3]"
-*/
-void ParameterEnum::SetRange(const string& x_range)
-{
-	vector<string> values;
-	if(x_range.substr(0, 1) != "[" || x_range.substr(x_range.size() - 1, 1) != "]")
-		throw MkException("Error in range " + x_range, LOC);
-	split(x_range.substr(1, x_range.size() - 2), ',', values);
-	// Remove last element if empty, due to an extra comma
-	assert(values.size() > 0);
-	if(values.back() == "")
-		values.pop_back();
-	assert(values.size() > 0);
-
-	AllowAllValues(false);
-	m_allowedValues.clear();
-	for(const auto& elem : values)
-	{
-		AllowValue(elem, true);
-	}
-}
-
-/**
  * @brief Generate values in range
  *
  * @param x_nbSamples Number of valuew to generate
- * @param rx_values Output
  * @param x_range      Range (if empty take parameter range)
  *
  */
-void ParameterEnum::GenerateValues(int x_nbSamples, vector<string>& rx_values, const string& x_range) const
+Json::Value ParameterEnum::GenerateValues(int x_nbSamples, const Json::Value& x_range) const
 {
-	string range = x_range == "" ? GetRange() : x_range;
-	rx_values.clear();
-	split(range.substr(1, range.size() - 2), ',', rx_values);
-
-	// Remove last element if empty, due to an extra comma
-	if(rx_values.empty())
-		throw MkException("Value array is empty, range= " + range, LOC);
-	if(rx_values.back() == "")
-	{
-		rx_values.pop_back();
-		if(rx_values.empty())
-			throw MkException("Value array is empty, range= " + range, LOC);
-	}
+	if(!x_range.isMember("allowed"))
+		return x_range["allowed"];
+	if(!x_range.isMember("advised"))
+		return x_range["advised"];
+	Json::Value root = Json::arrayValue;
+	for(const auto& elem : GetEnum())
+		root.append(elem.first);
+	return root;
 }

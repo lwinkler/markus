@@ -1,6 +1,10 @@
 {
 	"default" : 633,
 	"description" : "Parameter of type unsigned int",
-	"range" : "[32:66000]",
+	"range" : 
+	{
+		"max" : 66000,
+		"min" : 32
+	},
 	"type" : "unsigned int"
 }

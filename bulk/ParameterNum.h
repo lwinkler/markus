@@ -41,32 +41,16 @@ public:
 	ParameterNum(const std::string& x_name, T x_default, T x_min, T x_max, T * xp_value, const std::string& x_description) :
 		Parameter(x_name, x_description),
 		m_default(x_default),
-		m_min(x_min),
-		m_max(x_max),
-		mr_value(*xp_value) {}
+		mr_value(*xp_value)
+	{
+		m_range["min"] = x_min;
+		m_range["max"] = x_max;
+	}
 	inline ConfigReader GetValue() const {return mr_value;}
 	inline ConfigReader GetDefault() const {return m_default;}
-	inline std::string GetRange() const {std::stringstream ss; ss<<"["<<m_min<<":"<<m_max<<"]"; return ss.str();}
 	static T castJson(const ConfigReader& x_json);
-	inline virtual void SetRange(const std::string& x_range)
-	{
-		std::vector<std::string> values;
-		if(x_range.substr(0, 1) != "[" || x_range.substr(x_range.size() - 1, 1) != "]")
-			throw MkException("Error in range " + x_range, LOC);
-		split(x_range.substr(1, x_range.size() - 2), ':', values);
-		if(values.size() != 2)
-			throw MkException("Error in range", LOC);
-		std::stringstream ss1;
-		ss1<<values.at(0);
-		ss1>>m_min;
-		std::stringstream ss2;
-		ss2<<values.at(1);
-		ss2>>m_max;
-	}
 	inline const ParameterType& GetParameterType() const {return m_type;}
 	inline const std::string& GetType() const {return m_typeStr;}
-	inline const T GetMin() const {return m_min;}
-	inline const T GetMax() const {return m_max;}
 
 	virtual void SetValue(const ConfigReader& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
 	{
@@ -91,26 +75,24 @@ public:
 	{
 		T value = castJson(GetValue());
 		// std::cout << "min" << m_min << " " << m_max << std::endl;
-		return (value <= m_max + EPSILON && value >= m_min - EPSILON);
+		return (value <= m_range["max"].asDouble() + EPSILON && value >= m_range["min"].asDouble() - EPSILON);
 	}
-	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range) const
+	virtual Json::Value GenerateValues(int x_nbSamples, const Json::Value& x_range) const
 	{
-		std::string range = x_range == "" ? GetRange() : x_range;
+		const Json::Value range = x_range.isNull() ? GetRange() : x_range;
 		const ParameterType& type = GetParameterType();
-		rx_values.clear();
-		double min = 0;
-		double max = 0;
+		if(range.isMember("allowed"))
+			return range["allowed"];
+		double min = range["min"].asDouble();
+		double max = range["max"].asDouble();
+		Json::Value values = Json::arrayValue;
 
-		if(2 != sscanf(range.c_str(), "[%16lf:%16lf]", &min, &max))
-			throw MkException("Error with range " + range, LOC);
 		if((type == PARAM_UINT || type == PARAM_INT || type == PARAM_BOOL) && max - min + 1 <= x_nbSamples)
 		{
 			for(int i = min ; i <= max ; i++)
 			{
-				std::stringstream ss;
-				ss<<i;
-				rx_values.push_back(ss.str());
-				// rx_values.push_back(static_cast<int>(min + static_cast<int>(i/x_nbSamples) % static_cast<int>(max - min + 1)));
+				values.append(i);
+				// values.append(static_cast<int>(min + static_cast<int>(i/x_nbSamples) % static_cast<int>(max - min + 1)));
 			}
 		}
 		else if(type == PARAM_UINT || type == PARAM_INT || type == PARAM_BOOL)
@@ -118,9 +100,7 @@ public:
 			double incr = x_nbSamples <= 1 ? 0 : (max - min) / (x_nbSamples - 1);
 			for(int i = 0 ; i < x_nbSamples ; i++)
 			{
-				std::stringstream ss;
-				ss<<static_cast<int>(min + i * incr);
-				rx_values.push_back(ss.str());
+				values.append(static_cast<int>(min + i * incr));
 			}
 		}
 		else
@@ -130,17 +110,16 @@ public:
 			// std::cout << x_nbSamples << std::endl;
 			for(int i = 0 ; i < x_nbSamples ; i++)
 			{
-				std::stringstream ss;
-				ss<<(min + i * incr);
-				rx_values.push_back(ss.str());
+				values.append(min + i * incr);
 			}
 		}
-		if(rx_values.empty())
-			throw MkException("Value array is empty, range= " + range, LOC);
+		if(values.empty())
+			throw MkException("Value array is empty, range= " + jsonToString(range), LOC);
+		return values;
 	}
 	virtual void Print(std::ostream& os) const
 	{
-		os<<GetName()<<"="<<castJson(GetValue())<<" ["<<m_min<<":"<<m_max<<"] ("<<configType[m_confSource]<<"); ";
+		os<<GetName()<<"="<<castJson(GetValue())<<" ["<<m_range["min"].asDouble()<<":"<<m_range["max"].asDouble()<<"] ("<<configType[m_confSource]<<"); ";
 	}
 	virtual void SetValueToDefault()
 	{
@@ -151,8 +130,6 @@ public:
 	}
 
 	T m_default;
-	T m_min;
-	T m_max;
 private:
 	T& mr_value;
 	static const ParameterType m_type;

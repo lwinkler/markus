@@ -96,11 +96,9 @@ public:
 	virtual void SetDefault(const ConfigReader& x_value) override = 0;
 	virtual void SetValueToDefault() override = 0;
 	virtual bool CheckRange() const override {return true;}
-	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const override {rx_values.clear();}
+	virtual Json::Value GenerateValues(int x_nbSamples, const Json::Value& x_range) const override {return Json::nullValue;}
 	virtual ConfigReader GetValue() const override = 0;
 	virtual ConfigReader GetDefault() const override = 0;
-	inline std::string GetRange() const override {return "";}
-	inline virtual void SetRange(const std::string& x_range) override {}
 
 	int id     = -1;
 	bool debug = false;
@@ -113,7 +111,7 @@ protected:
 	int m_cptConnected   = 0;
 	bool m_blocking      = true;
 	bool m_synchronized  = true;
-	std::string m_requirement;
+	std::string m_requirement; // TODO: Merge with range ?
 
 private:
 	static log4cxx::LoggerPtr m_logger;

@@ -51,8 +51,6 @@ public:
 		return val;
 	}
 	inline ConfigReader GetDefault() const override {return m_default;}
-	inline std::string GetRange() const override {return "";}
-	inline virtual void SetRange(const std::string& x_range) override {}
 
 	inline void SetValue(const Serializable& x_value, ParameterConfigType x_confType)
 	{
@@ -72,7 +70,7 @@ public:
 		// Note: so far it is not possible to check the range of serializable params
 		return true;
 	}
-	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const override;
+	virtual Json::Value GenerateValues(int x_nbSamples, const Json::Value& x_range) const override;
 	virtual void SetValueToDefault() override;
 
 private:

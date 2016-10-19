@@ -6,6 +6,6 @@
 		"y" : 0
 	},
 	"description" : "Parameter of type CalibrationByHeight",
-	"range" : "",
+	"range" : {},
 	"type" : "serializable"
 }

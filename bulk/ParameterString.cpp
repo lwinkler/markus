@@ -30,30 +30,6 @@ using namespace std;
 log4cxx::LoggerPtr ParameterString::m_logger(log4cxx::Logger::getLogger("ParameterString"));
 
 /**
-* @brief Set the range of acceptable values
-*
-* @param x_range Range in the form "[val1,val2,val3]"
-*/
-void ParameterString::SetRange(const string& x_range)
-{
-	if(x_range.substr(0, 1) != "[" || x_range.substr(x_range.size() - 1, 1) != "]")
-		throw MkException("Error in range " + x_range, LOC);
-	split(x_range.substr(1, x_range.size() - 2), ',', m_valuesInRange);
-	// Remove last element if empty, due to an extra comma
-	if(!m_valuesInRange.empty() && m_valuesInRange.back() == "")
-		m_valuesInRange.pop_back();
-}
-
-/**
-* @brief Return the range of values
-*
-*/
-std::string ParameterString::GetRange() const
-{
-	return "[" + join(m_valuesInRange, ',') + "]";
-}
-
-/**
  * @brief Generate values in range
  *
  * @param x_nbSamples Number of valuew to generate
@@ -61,15 +37,16 @@ std::string ParameterString::GetRange() const
  * @param x_range      Range (if empty take parameter range)
  *
  */
-void ParameterString::GenerateValues(int x_nbSamples, vector<string>& rx_values, const string& x_range) const
+Json::Value ParameterString::GenerateValues(int x_nbSamples, const Json::Value& x_range) const
 {
-	if(!x_range.empty())
+	const Json::Value range = x_range.isNull() ? GetRange() : x_range;
+	if(range.isMember("allowed"))
 	{
-		rx_values.clear();
-		if(!x_range.empty())
-			split(x_range.substr(1, x_range.size() - 2), ',', rx_values);
-		else
-			rx_values.push_back(m_default);
+		return range["allowed"];
 	}
-	else rx_values = m_valuesInRange;
+	if(range.isMember("advised"))
+	{
+		return range["advised"];
+	}
+	else return GetDefault();
 }

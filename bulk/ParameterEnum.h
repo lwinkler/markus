@@ -36,8 +36,8 @@ public:
 	ParameterEnum(const std::string& x_name, int x_default, int * xp_value, const std::string& x_description):
 		Parameter(x_name, x_description),
 		m_default(x_default),
-		mr_value(*xp_value),
-		m_allowAllValues(true) {}
+		mr_value(*xp_value)
+	{}
 	
 	MKPARAMTYPE(PARAM_ENUM)
 
@@ -45,12 +45,8 @@ public:
 	void SetDefault(const ConfigReader& rx_value) override;
 	inline ConfigReader GetValue() const override {return GetReverseEnum().at(mr_value);}
 	inline ConfigReader GetDefault() const override {return GetReverseEnum().at(m_default);}
-	std::string GetRange() const override;
-	virtual void SetRange(const std::string& x_range) override;
-	inline void AllowAllValues(bool x_allow) {m_allowAllValues = x_allow;}
-	inline void AllowValue(const std::string& x_value, bool x_allow) {m_allowedValues[GetEnum().at(x_value)] = x_allow;}
 	virtual bool CheckRange() const override;
-	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const override;
+	virtual Json::Value GenerateValues(int x_nbSamples, const Json::Value& x_range) const override;
 	virtual void Print(std::ostream& os) const override;
 	virtual void SetValueToDefault() override
 	{
@@ -65,9 +61,6 @@ public:
 
 protected:
 	static std::map<int, std::string> CreateReverseMap(const std::map<std::string, int>& x_map);
-
-	bool m_allowAllValues;
-	std::map<int, bool> m_allowedValues;
 
 	int m_default;
 	int& mr_value;

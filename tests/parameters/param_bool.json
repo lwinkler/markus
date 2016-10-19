@@ -1,6 +1,10 @@
 {
 	"default" : false,
 	"description" : "Parameter of type bool",
-	"range" : "[0:1]",
+	"range" : 
+	{
+		"max" : true,
+		"min" : false
+	},
 	"type" : "bool"
 }

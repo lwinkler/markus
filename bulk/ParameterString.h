@@ -52,13 +52,11 @@ public:
 	}
 	inline virtual ConfigReader GetValue() const override {return mr_value;}
 	inline virtual ConfigReader GetDefault() const override {return m_default;}
-	virtual std::string GetRange() const override;
-	virtual void SetRange(const std::string& x_range) override;
 	inline virtual bool CheckRange() const override
 	{
 		return true;
 	}
-	virtual void GenerateValues(int x_nbSamples, std::vector<std::string>& rx_values, const std::string& x_range = "") const override;
+	virtual Json::Value GenerateValues(int x_nbSamples, const Json::Value& x_range) const override;
 	virtual void SetValueToDefault() override
 	{
 		if(IsLocked())
@@ -71,7 +69,6 @@ public:
 private:
 	std::string m_default;
 	std::string& mr_value;
-	std::vector<std::string> m_valuesInRange;
 	static log4cxx::LoggerPtr m_logger;
 };
 

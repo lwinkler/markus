@@ -28,21 +28,33 @@
 		{
 			"default" : 0,
 			"description" : "Frames per seconds (processing speed)",
-			"range" : "[0:1000]",
+			"range" : 
+			{
+				"max" : 1000,
+				"min" : 0
+			},
 			"type" : "double"
 		},
 		"height" : 
 		{
 			"default" : 480,
 			"description" : "Height of the input",
-			"range" : "[1:4800]",
+			"range" : 
+			{
+				"max" : 4800,
+				"min" : 1
+			},
 			"type" : "int"
 		},
 		"history" : 
 		{
 			"default" : 500,
 			"description" : "Length of the history",
-			"range" : "[1:10000]",
+			"range" : 
+			{
+				"max" : 10000,
+				"min" : 1
+			},
 			"type" : "int"
 		},
 		"image" : 
@@ -60,35 +72,53 @@
 		{
 			"default" : -1,
 			"description" : "Learning rate of the model",
-			"range" : "[-1:1]",
+			"range" : 
+			{
+				"max" : 1,
+				"min" : -1
+			},
 			"type" : "double"
 		},
 		"master" : 
 		{
 			"default" : "",
 			"description" : "Master module on which this module's processing is dependent. If empty, use all preceeding modules",
-			"range" : "[]",
+			"range" : {},
 			"type" : "string"
 		},
 		"type" : 
 		{
 			"default" : "CV_8UC3",
 			"description" : "Format of the input image",
-			"range" : "[CV_8UC3]",
+			"range" : 
+			{
+				"allowed" : 
+				[
+					"CV_8UC3"
+				]
+			},
 			"type" : "imageType"
 		},
 		"varThres" : 
 		{
 			"default" : 16,
 			"description" : "Threshold on the squared Mahalanobis distance to decide whether it is well described by the background model (selectivity of background) ",
-			"range" : "[1:255]",
+			"range" : 
+			{
+				"max" : 255,
+				"min" : 1
+			},
 			"type" : "float"
 		},
 		"width" : 
 		{
 			"default" : 640,
 			"description" : "Width of the input",
-			"range" : "[1:6400]",
+			"range" : 
+			{
+				"max" : 6400,
+				"min" : 1
+			},
 			"type" : "int"
 		}
 	},

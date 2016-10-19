@@ -1,6 +1,10 @@
 {
 	"default" : 1.0000000000000001e+44,
 	"description" : "Parameter of type double",
-	"range" : "[1e+33:1e+99]",
+	"range" : 
+	{
+		"max" : 9.9999999999999997e+98,
+		"min" : 9.9999999999999995e+32
+	},
 	"type" : "double"
 }

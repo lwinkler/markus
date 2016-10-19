@@ -38,10 +38,10 @@ log4cxx::LoggerPtr ParameterSerializable::m_logger(log4cxx::Logger::getLogger("P
  * @param x_range      Range (if empty take parameter range)
  *
  */
-void ParameterSerializable::GenerateValues(int x_nbSamples, vector<string>& rx_values, const string& x_range) const
+Json::Value ParameterSerializable::GenerateValues(int x_nbSamples, const Json::Value& x_range) const
 {
+	return Json::arrayValue;
 	// string range = x_range == "" ? GetRange() : x_range;
-	rx_values.clear();
 	// throw MkException("Method is not implemented", LOC);
 	/*
 	split(x_range.substr(1, x_range.size() - 2), ',', rx_values);

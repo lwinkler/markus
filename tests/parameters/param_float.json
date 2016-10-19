@@ -1,6 +1,10 @@
 {
 	"default" : -0.5,
 	"description" : "Parameter of type float",
-	"range" : "[-10:4.45e+24]",
+	"range" : 
+	{
+		"max" : 4.4500000183909475e+24,
+		"min" : -10
+	},
 	"type" : "float"
 }
