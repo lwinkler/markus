@@ -309,7 +309,7 @@ public:
 						{
 							// For string type we cannot set random values
 							// cout<<"set "<<value<<endl;
-							string tmps = elemVal.asString();
+							string tmps = jsonToString(elemVal);
 							elemCtr.second->CallAction("Set", &tmps);
 
 							// Test if the config is globally still valid
@@ -326,12 +326,16 @@ public:
 							newValue = "0";
 							elemCtr.second->CallAction("Get", &newValue);
 
-							TSM_ASSERT("Value set must be returned by get: " + jsonToString(elemVal) + "!=" + newValue, jsonToString(elemVal) == newValue);
+							if(elemVal != stringToJson(newValue))
+							{
+								if(!elemVal.isNumeric() || elemVal.asFloat() != stringToJson(newValue).asFloat())
+									TS_FAIL("Value set must be returned by get: " + tmps + "!=" + newValue);
+							}
 
 							tester.module->Reset();
 							for(int i = 0 ; i < 3 ; i++)
 								tester.module->ProcessRandomInput(seed);
-							TS_TRACE("###  " + elemCtr.first + ".Set returned " + jsonToString(elemVal));
+							TS_TRACE("###  " + elemCtr.first + ".Set returned " + tmps);
 							TS_TRACE("###  " + elemCtr.first + ".Get returned " + jsonToString(newValue));
 						}
 						elemCtr.second->CallAction("Set", &defval);

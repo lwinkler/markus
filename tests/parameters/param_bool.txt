@@ -1,1 +1,1 @@
-param_bool=0 [0:1] (def); 
+param_bool=0 [:] (def); 

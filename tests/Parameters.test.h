@@ -76,7 +76,8 @@ public:
 
 		// test that the current range stays identical
 		Json::Value range = xr_param.GetRange();
-		xr_param.SetRange(xr_param.GetRange());
+		xr_param.SetRange(range);
+		// cout << jsonToString(range).size() << " == " << jsonToString(xr_param.GetRange()).compare(jsonToString(range)) << endl;
 		TS_ASSERT(xr_param.GetRange() == range);
 	}
 
@@ -93,8 +94,10 @@ public:
 	{
 		// test that the test range stays identical
 		xr_param.SetRange(x_testRange);
+		Json::Value json = xr_param.GetRange();
+		xr_param.SetRange(json);
 		// cout<<xr_param.GetRange()<<endl;
-		TS_ASSERT(xr_param.GetRange() == x_testRange);
+		TS_ASSERT(xr_param.GetRange() == json);
 
 		if(x_illegalValue.isNull())
 			return;

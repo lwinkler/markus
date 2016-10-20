@@ -43,8 +43,18 @@ public:
 		m_default(x_default),
 		mr_value(*xp_value)
 	{
-		m_range["min"] = x_min;
-		m_range["max"] = x_max;
+		if(GetType() == "bool")
+		{
+			if(x_min == 1)
+				m_range["min"] = true;
+			if(x_max == 0)
+				m_range["max"] = false;
+		}
+		else
+		{
+			m_range["min"] = x_min;
+			m_range["max"] = x_max;
+		}
 	}
 	inline ConfigReader GetValue() const {return mr_value;}
 	inline ConfigReader GetDefault() const {return m_default;}
@@ -75,7 +85,11 @@ public:
 	{
 		T value = castJson(GetValue());
 		// std::cout << "min" << m_min << " " << m_max << std::endl;
-		return (value <= m_range["max"].asDouble() + EPSILON && value >= m_range["min"].asDouble() - EPSILON);
+		if(m_range.isMember("max") && value > m_range["max"].asDouble())
+			return false;
+		if(m_range.isMember("min") && value < m_range["min"].asDouble())
+			return false;
+		return true;
 	}
 	virtual Json::Value GenerateValues(int x_nbSamples, const Json::Value& x_range) const
 	{
@@ -119,7 +133,13 @@ public:
 	}
 	virtual void Print(std::ostream& os) const
 	{
-		os<<GetName()<<"="<<castJson(GetValue())<<" ["<<m_range["min"].asDouble()<<":"<<m_range["max"].asDouble()<<"] ("<<configType[m_confSource]<<"); ";
+		os<<GetName()<<"="<<castJson(GetValue())<<" [";
+		if(m_range.isMember("min"))
+			os << m_range["min"].asDouble();
+		os << ":";
+		if(m_range.isMember("max"))
+			os << m_range["max"].asDouble();
+		os << "] (" << configType[m_confSource] << "); ";
 	}
 	virtual void SetValueToDefault()
 	{

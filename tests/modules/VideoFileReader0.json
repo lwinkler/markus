@@ -7,14 +7,17 @@
 		{
 			"default" : true,
 			"description" : "If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream",
-			"range" : "[1:1]",
+			"range" : 
+			{
+				"min" : true
+			},
 			"type" : "bool"
 		},
 		"cached" : 
 		{
 			"default" : "NO_CACHE",
 			"description" : "Format of the input image",
-			"range" : "[DISABLED,NO_CACHE,READ_CACHE,WRITE_CACHE]",
+			"range" : {},
 			"type" : "cachedState"
 		},
 		"file" : 
@@ -50,7 +53,7 @@
 		{
 			"default" : false,
 			"description" : "Loop on file",
-			"range" : "[0:1]",
+			"range" : {},
 			"type" : "bool"
 		},
 		"master" : 

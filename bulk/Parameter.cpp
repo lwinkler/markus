@@ -87,8 +87,18 @@ void Parameter::SetRange(const Json::Value& x_range)
 			throw MkException("Empty range", LOC);
 		if(2 == sscanf(range.c_str(), "[%16lf:%16lf]", &min, &max))
 		{
-			root["min"] = min;
-			root["max"] = max;
+			if(GetType() == "bool")
+			{
+				if(min == 1)
+					root["min"] = true;
+				if(max == 0)
+					root["max"] = false;
+			}
+			else
+			{
+				root["min"] = min;
+				root["max"] = max;
+			}
 		}
 		else if(range.at(0) == '[' && range.back() == ']')
 		{

@@ -7,21 +7,21 @@
 		{
 			"default" : false,
 			"description" : "If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream",
-			"range" : "[0:1]",
+			"range" : {},
 			"type" : "bool"
 		},
 		"bShadowDetection" : 
 		{
 			"default" : false,
 			"description" : "Enable shadow detection",
-			"range" : "[0:1]",
+			"range" : {},
 			"type" : "bool"
 		},
 		"cached" : 
 		{
 			"default" : "NO_CACHE",
 			"description" : "Format of the input image",
-			"range" : "[DISABLED,NO_CACHE,READ_CACHE,WRITE_CACHE]",
+			"range" : {},
 			"type" : "cachedState"
 		},
 		"fps" : 
