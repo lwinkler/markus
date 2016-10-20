@@ -98,6 +98,8 @@ void translateModule(const ConfigXml x_xml, ConfigReader& xr_json)
 	string modName  = x_xml.GetAttribute("name");
 	string modClass = moduleTypes[modName];
 	// xr_json["name"] = modName;
+	xr_json["inputs"] = Json::objectValue;
+	xr_json["outputs"] = Json::objectValue;
 	for(const auto& xml : x_xml.FindAll("parameters>param"))
 	{
 		string name = camelCase(xml.GetAttribute("name"));
@@ -108,6 +110,8 @@ void translateModule(const ConfigXml x_xml, ConfigReader& xr_json)
 		}
 		// note: parameters are now inputs
 		translateElement(xml, xr_json["inputs"][name]);
+		if(xr_json["inputs"][name].isNull())
+			xr_json["inputs"].removeMember(name);
 	}
 	for(const auto& xml : x_xml.FindAll("inputs>input"))
 	{
@@ -116,15 +120,24 @@ void translateModule(const ConfigXml x_xml, ConfigReader& xr_json)
 			continue;
 		if(xr_json["inputs"].isMember(name))
 		{
-			cerr << "There cannot be 2 inputs of parameters with the same id: " << name << endl;
+			cerr << "There cannot be 2 inputs or parameters with the same name: " << name << endl;
 			exit(-1);
 		}
 		translateElement(xml, xr_json["inputs"][name]);
+		if(xr_json["inputs"][name].isNull())
+			xr_json["inputs"].removeMember(name);
 	}
-	for(const auto& xml : x_xml.FindAll("outputs>param"))
+	for(const auto& xml : x_xml.FindAll("outputs>output"))
 	{
-		string name = camelCase(getInputNameFromExport(modName, lexical_cast<int>(xml.GetAttribute("id")), false));
+		string name = camelCase(getInputNameFromExport(modClass, lexical_cast<int>(xml.GetAttribute("id")), false));
+		if(xr_json["outputs"].isMember(name))
+		{
+			cerr << "There cannot be 2 outputs with the same name: " << name << endl;
+			exit(-1);
+		}
 		translateElement(xml, xr_json["outputs"][name]);
+		if(xr_json["outputs"][name].isNull())
+			xr_json["outputs"].removeMember(name);
 	}
 }
 
