@@ -213,7 +213,8 @@ void translateVariations(const ConfigXml x_xml, ConfigReader& xr_json)
 			translateArray(xml.GetAttribute("modules"), jsonVar["modules"], false);
 			translateArray(xml.GetAttribute("parameters"), jsonVar["parameters"], true);
 			jsonVar["file"] = xml.GetAttribute("file");
-
+			if(!xml.GetAttribute("references", "").empty())
+				translateArray(xml.GetAttribute("references"), jsonVar["references"], true);
 		}
 		else
 		{
