@@ -119,7 +119,7 @@ void ControllerParameter::SetControlledValue(string* xp_value)
 	if(!m_param.CheckRange())
 	{
 		m_param.SetValue(oldValue, configType);
-		throw MkException("Parameter " + m_param.GetName() + "= " + *xp_value + " is out of range " + jsonToString(m_param.GetRange()), LOC);
+		throw MkException("Parameter " + m_param.GetName() + "=" + *xp_value + " is out of range " + jsonToString(m_param.GetRange()), LOC);
 	}
 }
 

@@ -55,6 +55,15 @@ struct ModuleTester
 	Module* module                 = nullptr;
 	ParameterStructure* parameters = nullptr;
 	vector<Stream*> outputStreams;
+	ConfigReader configFile;
+
+	ModuleTester()
+	{
+		addModuleToConfig("VideoFileReader", configFile)["inputs"]["fps"] = 22;
+		assert(!configFile.isNull());
+		assert(configFile.isObject());
+		configFile["name"] = "unitTest";
+	}
 
 	~ModuleTester()
 	{
@@ -63,6 +72,21 @@ struct ModuleTester
 		delete module;
 		delete parameters;
 	}
+
+	static ConfigReader& addModuleToConfig(const string& rx_type, ConfigReader& xr_config)
+	{
+		ConfigReader& moduleConfig = xr_config["modules"][rx_type + "0"];
+		moduleConfig["class"] = rx_type;
+		ConfigReader& paramConfig  = moduleConfig["inputs"];
+
+		paramConfig["fps"] = 123;
+
+		// stringstream ss;
+		// ss<<m_cpt++;
+		// moduleConfig["id"] = ss.str();
+		return moduleConfig;
+	}
+
 };
 
 
@@ -82,10 +106,9 @@ protected:
 	const FactoryFeatures& m_factoryFeatures;
 	ParameterStructure* mp_fakeConfig     = nullptr;
 	Module* mp_fakeInput                  = nullptr;
-	ConfigReader m_configFile;
 	Context::Parameters* mp_contextParams = nullptr;
 	Context* mp_context                   = nullptr;
-	string m_emptyFileName = "/tmp/config_empty.xml";
+	string m_emptyFileName = "/tmp/config_empty.json";
 
 	// Objects for streams
 	cv::Mat m_image;
@@ -113,11 +136,6 @@ public:
 			m_factoryModules.List(m_moduleTypes);
 		
 		createEmptyConfigFile(m_emptyFileName);
-		AddModuleToConfig("VideoFileReader", m_configFile)["inputs"]["fps"] = 22;
-		assert(!m_configFile.isNull());
-		assert(m_configFile.isObject());
-
-		m_configFile["name"] = "unitTest";
 		mp_contextParams = new Context::Parameters("manager");
 		mp_contextParams->configFile      = m_emptyFileName;
 		mp_contextParams->applicationName = "TestModule";
@@ -141,32 +159,18 @@ public:
 		CLEAN_DELETE(mp_contextParams);
 	}
 
-	ConfigReader AddModuleToConfig(const string& rx_type, ConfigReader& xr_config)
-	{
-		ConfigReader moduleConfig =  xr_config[rx_type + "0"];
-		ConfigReader paramConfig  = moduleConfig["inputs"];
-
-		paramConfig["fps"] = "123";
-		moduleConfig[rx_type + "0"];
-
-		stringstream ss;
-		ss<<m_cpt++;
-		moduleConfig["id"] = ss.str();
-		return moduleConfig;
-	}
-
 	/// Create module and make it ready to process
 	void CreateAndConnectModule(ModuleTester& tester, const string& x_type, const map<string, Json::Value>* xp_parameters = nullptr)
 	{
 		TS_TRACE("Create and connect module of class " + x_type);
-		ConfigReader moduleConfig = AddModuleToConfig(x_type, m_configFile);
+		ConfigReader& moduleConfig = ModuleTester::addModuleToConfig(x_type, tester.configFile);
 
 		// Add parameters to override to the config
 		if(xp_parameters != nullptr)
 			for(const auto& elem : *xp_parameters)
 				moduleConfig["inputs"][elem.first] = elem.second;
 
-		writeToFile(m_configFile, "tests/tmp/tmp.xml");
+		writeToFile(tester.configFile, "tests/tmp/tmp.json");
 
 		ParameterStructure* parameters = nullptr;
 		try
@@ -447,7 +451,7 @@ public:
 	}
 
 
-	// Test by searching the XML files that were created specially to unit test one modules (ModuleX.test.xml)
+	// Test by searching the XML files that were created specially to unit test one modules (ModuleX.test.json)
 	/// Test export
 	void testExport(const Module& xr_module)
 	{
@@ -488,13 +492,11 @@ public:
 			TS_TRACE("## on module " + elem);
 			ModuleTester tester;
 			map<string, Json::Value> overrid = {{"autoProcess", true}};
-			Json::Value root;
-			m_configFile = root;
 			CreateAndConnectModule(tester, elem, &overrid);
+
 			if(tester.module->IsUnitTestingEnabled() && !tester.module->IsInput())
 			{
-				m_configFile["name"] = "unitTest";
-				Manager::Parameters mparams(m_configFile);
+				Manager::Parameters mparams(tester.configFile);
 				Manager manager(mparams, *mp_context);
 				manager.Connect();
 				Module* module = manager.RefModules().back();

@@ -28,6 +28,7 @@
 #include "MkException.h"
 #include "Parameter.h"
 #include <log4cxx/logger.h>
+#include <limits>
 #include <boost/lexical_cast.hpp>
 
 #define EPSILON 1e-5
@@ -97,8 +98,10 @@ public:
 		const ParameterType& type = GetParameterType();
 		if(range.isMember("allowed"))
 			return range["allowed"];
-		double min = range["min"].asDouble();
-		double max = range["max"].asDouble();
+		double min = range.isMember("min") ? range["min"].asDouble() : std::numeric_limits<T>::min();
+		double max = range.isMember("max") ? range["max"].asDouble() : std::numeric_limits<T>::max();
+		if(min == max && x_nbSamples > 1)
+			x_nbSamples = 1;
 		Json::Value values = Json::arrayValue;
 
 		if((type == PARAM_UINT || type == PARAM_INT || type == PARAM_BOOL) && max - min + 1 <= x_nbSamples)
@@ -124,7 +127,9 @@ public:
 			// std::cout << x_nbSamples << std::endl;
 			for(int i = 0 ; i < x_nbSamples ; i++)
 			{
-				values.append(min + i * incr);
+				double val = min + i * incr;
+				if(val <= max) // handle infinite case
+					values.append(val);
 			}
 		}
 		if(values.empty())

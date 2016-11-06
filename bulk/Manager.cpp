@@ -75,6 +75,8 @@ Manager::~Manager()
 */
 void Manager::Build()
 {
+	if(m_param.config["modules"].isNull())
+		throw MkException("Config is null", LOC);
 	for(const auto& name : m_param.config["modules"].getMemberNames())
 	{
 		BuildModule(name, m_param.config["modules"][name]);
