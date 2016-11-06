@@ -48,7 +48,7 @@ MotionDetector::MotionDetector(ParameterStructure& xr_params)
 {
 	// Init output images
 	AddInputStream(0, new StreamImage("image", m_input, *this, 	"Video input"));
-	AddOutputStream(0, new StreamState("motion", m_state,  *this, 	"Motion is detected"));
+	AddOutputStream(0, new StreamState("state", m_state,  *this, 	"State, true if motion is detected"));
 	AddOutputStream(1, new StreamEvent("motion", m_event,  *this, 	"Motion is detected"));
 	mp_streamValues = new StreamNum<double>("value", m_value,  *this,      "Scalar representing the motion level");
 	AddOutputStream(2, mp_streamValues);

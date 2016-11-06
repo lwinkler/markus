@@ -2,6 +2,7 @@
 	"description":"A config for unit testing purposes",
 	"modules": {
 		"Module0":{
+			"class": "SlitCam",
 			"inputs": {
 				"param_text":"SomeText",
 				"param_int":21,
@@ -14,6 +15,7 @@
 			}
 		},
 		"Module1":{
+			"class": "SlitCam",
 			"inputs": {
 				"param_text":"AnotherText",
 				"param_int":42,

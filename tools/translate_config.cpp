@@ -153,6 +153,7 @@ int main(int argc, char** argv)
 	// Open xml config
 	const string filename_old(argv[1]);
 	const string filename_new(argv[2]);
+	cout << "Translate " << filename_old << " to " << filename_new << endl;
 	ConfigFileXml file_old(filename_old);
 	ConfigXml     conf(file_old.GetSubConfig("application"));
 	ConfigReader json;

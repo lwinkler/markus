@@ -8,7 +8,6 @@
 		<inputs/>
 		<outputs>
 			<output id="0"/>
-			<output id="1"/>
 		</outputs>
 		<display x="0" y="53" width="150" height="75"/>
 		<uiobject type="" x="243" y="261" width="0" height="0"/>
@@ -30,7 +29,6 @@
 		</inputs>
 		<outputs>
 			<output id="0"/>
-			<output id="1"/>
 		</outputs>
 		<display x="263" y="54" width="150" height="75"/>
 		<uiobject type="" x="454" y="333" width="0" height="0"/>
@@ -59,10 +57,6 @@
 		<inputs>
 			<input id="0" moduleid="0" outputid="0"/>
 			<input id="1" moduleid="2" outputid="0"/>
-			<input id="2" moduleid="" outputid=""/>
-			<input id="3" moduleid="" outputid=""/>
-			<input id="4" moduleid="" outputid=""/>
-			<input id="5" moduleid="" outputid=""/>
 		</inputs>
 		<outputs>
 			<output id="0"/>
