@@ -43,7 +43,7 @@ public:
 	};
 
 	Simulation(Parameters& xr_params, Context& x_context);
-	void Generate(ConfigReader& mainConfig);
+	void Generate();
 
 private:
 	/// Add an entry in the Makefile

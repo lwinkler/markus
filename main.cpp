@@ -394,7 +394,7 @@ int main(int argc, char** argv)
 		{
 			Simulation::Parameters parameters(appConfig);
 			Simulation sim(parameters, context);
-			sim.Generate(appConfig);
+			sim.Generate();
 			return 0;
 		}
 

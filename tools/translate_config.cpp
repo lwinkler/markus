@@ -3,6 +3,7 @@
 #include <boost/lexical_cast.hpp>
 #include "ConfigReader.h"
 #include "ConfigXml.h"
+#include "util.h"
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/writer.h>
 
@@ -139,8 +140,98 @@ void translateModule(const ConfigXml x_xml, ConfigReader& xr_json)
 		if(xr_json["outputs"][name].isNull())
 			xr_json["outputs"].removeMember(name);
 	}
+
+	if(xr_json["inputs"].getMemberNames().empty())
+		xr_json.removeMember("inputs");
+	if(xr_json["outputs"].getMemberNames().empty())
+		xr_json.removeMember("outputs");
+
+	ConfigXml confui = x_xml.GetSubConfig("uiobject");
+	if(!confui.IsEmpty())
+	{
+		xr_json["uiobject"]["x"] = lexical_cast<int>(confui.GetAttribute("x"));
+		xr_json["uiobject"]["y"] = lexical_cast<int>(confui.GetAttribute("y"));
+		xr_json["uiobject"]["width"] = lexical_cast<int>(confui.GetAttribute("width"));
+		xr_json["uiobject"]["height"] = lexical_cast<int>(confui.GetAttribute("height"));
+	}
 }
 
+void translateArray(const string& x_string, ConfigReader& xr_json, bool x_translateCamelCase)
+{
+	vector<string> res;
+	split(x_string, ',', res);
+	xr_json = Json::arrayValue;
+	for(const auto& elem : res)
+		xr_json.append(x_translateCamelCase ? camelCase(elem) : elem);
+}
+
+void translateRange(const string& x_string, ConfigReader& xr_json)
+{
+	double min, max;
+	if(2 == sscanf(x_string.c_str(), "[%16lf:%16lf]", &min, &max))
+	{
+		xr_json["min"] = min;
+		xr_json["max"] = max;
+	}
+	else if(x_string.at(0) == '[' && x_string.back() == ']')
+	{
+		vector<string> values;
+		split(x_string.substr(1, x_string.size() - 2), ',', values);
+		// Remove last element if empty, due to an extra comma
+		if(values.size() > 0)
+		{
+			if(values.back() == "")
+				values.pop_back();
+		}
+
+		for(const auto& elem : values)
+		{
+			xr_json["allowed"].append(elem);
+		}
+	}
+	else assert(false);
+}
+
+// for simulations
+void translateVariations(const ConfigXml x_xml, ConfigReader& xr_json)
+{
+	xr_json = Json::arrayValue;
+	for(const auto& xml : x_xml.FindAll("var"))
+	{
+		ConfigReader jsonVar;
+		if(!xml.GetAttribute("module", "").empty())
+		{
+			jsonVar["module"] = xml.GetAttribute("module");
+			jsonVar["parameter"] = xml.GetAttribute("param");
+			jsonVar["nb"] = boost::lexical_cast<int>(xml.GetAttribute("nb"));
+
+			if(!xml.GetAttribute("range", "").empty())
+				translateRange(xml.GetAttribute("range"), jsonVar["range"]);
+		}
+		else if(!xml.GetAttribute("modules", "").empty())
+		{
+			translateArray(xml.GetAttribute("modules"), jsonVar["modules"], false);
+			translateArray(xml.GetAttribute("parameters"), jsonVar["parameters"], true);
+			jsonVar["file"] = xml.GetAttribute("file");
+
+		}
+		else
+		{
+			cerr << "Invalid variation" << endl;
+			exit(-1);
+		}
+
+
+		// recursive
+		if(!xml.GetSubConfig("var").IsEmpty())
+		{
+			translateVariations(xml, jsonVar["variations"]);
+		}
+
+		xr_json.append(jsonVar);
+	}
+
+}
 
 int main(int argc, char** argv)
 {
@@ -178,13 +269,10 @@ int main(int argc, char** argv)
 		translateModule(xml, json["modules"][name]);
 	}
 
-	ConfigXml confui = conf.GetSubConfig("uiobject");
-	if(!confui.IsEmpty())
+	ConfigXml confvars = conf.GetSubConfig("variations");
+	if(!confvars.IsEmpty())
 	{
-		json["uiobject"]["x"] = lexical_cast<int>(confui.GetAttribute("x"));
-		json["uiobject"]["y"] = lexical_cast<int>(confui.GetAttribute("y"));
-		json["uiobject"]["width"] = lexical_cast<int>(confui.GetAttribute("width"));
-		json["uiobject"]["height"] = lexical_cast<int>(confui.GetAttribute("height"));
+		translateVariations(confvars, json["variations"]);
 	}
 
 

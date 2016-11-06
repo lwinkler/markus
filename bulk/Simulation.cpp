@@ -104,6 +104,8 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 /// Add variation to simulation
 void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigReader& x_varConf, ConfigReader& xr_mainConfig)
 {
+	if(x_varConf.isNull())
+		throw MkException("Variation config is null. Please check that a 'variations' property is present in similation file", LOC);
 	for(const auto& varConf : x_varConf)
 	{
 		// Read module and parameter attribute
@@ -237,13 +239,13 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 
 
 /// Generate a simulation ready to be launched
-void Simulation::Generate(ConfigReader& mainConfig)
+void Simulation::Generate()
 {
 	create_directory(m_outputDir);
 
 	remove("simulation_latest");
 	create_symlink(m_outputDir, "simulation_latest");
-	writeToFile(mainConfig, "simulation_latest/Simulation.xml");
+	writeToFile(m_param.config, "simulation_latest/Simulation.xml");
 	create_directory(m_outputDir + "/ready");
 	create_directory(m_outputDir + "/running");
 	create_directory(m_outputDir + "/results");
@@ -254,7 +256,8 @@ void Simulation::Generate(ConfigReader& mainConfig)
 	m_cpt = 0;
 
 	vector<string> variationNames;
-	AddVariations(variationNames, m_param.config["variations"], mainConfig);
+	ConfigReader copyConfig = m_param.config;
+	AddVariations(variationNames, m_param.config["variations"], copyConfig);
 
 	// Generate a MakeFile for the simulation
 	string makefile = m_outputDir + "/simulation.make";
