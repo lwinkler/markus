@@ -189,7 +189,7 @@ public:
 	{
 		TS_TRACE("Test ParameterSerializable - CalibrationByHeight");
 		CalibrationByHeight myCalibrationByHeight;
-		ParameterSerializable paramCalibrationByHeight("param_calibrationByHeight",  "{\"height\":0.6,\"x\":0.3,\"y\":0.6}", &myCalibrationByHeight, "Parameter of type CalibrationByHeight");
+		ParameterSerializable paramCalibrationByHeight("param_calibrationByHeight",  stringToJson("{\"height\":0.6,\"x\":0.3,\"y\":0.6}"), &myCalibrationByHeight, "Parameter of type CalibrationByHeight");
 		testParameter(paramCalibrationByHeight, stringToJson("{\"height\":0.0,\"x\":1.0,\"y\":0.0}"), Json::nullValue) ; // note: For now there is no range check ,"{\"x\":1, \"y\":0, \n \"height\":1.5}");
 		testLock(paramCalibrationByHeight);
 	}
@@ -201,7 +201,7 @@ public:
 		string json_data2 = "{\"focal\":910.0,\"height\":7000.52453240,\"ncols\":384,\"nrows\":287,\"roll\":-10.650,\"yaw\":-35.30}";
 
 		CalibrationByModel myCalibrationByModel;
-		ParameterSerializable paramCalibrationByModel("param_calibrationByModel",  json_data2, &myCalibrationByModel, "Parameter of type CalibrationByModel");
+		ParameterSerializable paramCalibrationByModel("param_calibrationByModel",  stringToJson(json_data2), &myCalibrationByModel, "Parameter of type CalibrationByModel");
 		testParameter(paramCalibrationByModel, stringToJson(json_data), Json::nullValue) ;
 		testLock(paramCalibrationByModel);
 	}
@@ -210,7 +210,7 @@ public:
 	{
 		TS_TRACE("Test ParameterSerializable - Polygon");
 		Polygon myPolygon;
-		ParameterSerializable paramPolygon("param_polygon",  "{\"height\":0.6,\"points\":[{{\"x\":5.0,\"y\":0.50},{\"x\":6.0,\"y\":5.50}}],\"width\":0.8}", &myPolygon, "Parameter of type Polygon");
+		ParameterSerializable paramPolygon("param_polygon",  stringToJson("{\"height\":0.6,\"points\":[{{\"x\":5.0,\"y\":0.50},{\"x\":6.0,\"y\":5.50}}],\"width\":0.8}"), &myPolygon, "Parameter of type Polygon");
 		testParameter(paramPolygon, stringToJson("{\"height\":0.660,\"points\":[{\"x\":54.0,\"y\":53.50},{\"x\":3454.0,\"y\":53.50},{\"x\":54.0,\"y\":53.50},{\"x\":5.0,\"y\":0.50}],\"width\":0.860}"), Json::nullValue) ;
 		testLock(paramPolygon);
 	}

@@ -137,7 +137,7 @@ ModulePython::ModulePython(ParameterStructure& xr_params) :
 		   << "sys.path.append('" << pwd << "/" << m_param.scriptPath << "')";
 
 		exec(ss.str().c_str(), m_pyGlobals, m_pyGlobals);
-		m_pyModule  = boost::python::exec_file(m_param.script.c_str(), m_pyGlobals, m_pyGlobals);
+		// TODO fix : m_pyModule  = boost::python::exec_file(m_param.script.c_str(), m_pyGlobals, m_pyGlobals);
 	}
 	catch(...)
 	{
