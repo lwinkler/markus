@@ -1,0 +1,113 @@
+{
+	"description" : "(unk)",
+	"modules" : 
+	{
+		"BgrSubMOG21" : 
+		{
+			"class" : "BgrSubMOG2",
+			"inputs" : 
+			{
+				"autoProcess" : 0,
+				"bShadowDetection" : 0,
+				"fps" : 0,
+				"height" : 240,
+				"history" : 500,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				},
+				"learningRate" : -1,
+				"type" : "CV_8UC3",
+				"varThres" : 16,
+				"width" : 320
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 699,
+				"y" : 423
+			}
+		},
+		"Input" : 
+		{
+			"class" : "VideoFileReader",
+			"inputs" : 
+			{
+				"file" : "in/input.mp4",
+				"height" : 240,
+				"width" : 320
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 500,
+				"y" : 300
+			}
+		},
+		"VideoFileWriter2" : 
+		{
+			"class" : "VideoFileWriter",
+			"inputs" : 
+			{
+				"autoProcess" : 0,
+				"file" : "standard",
+				"fourcc" : "MJPG",
+				"fps" : 0,
+				"height" : 240,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				},
+				"type" : "CV_8UC3",
+				"width" : 320
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 701,
+				"y" : 262
+			}
+		},
+		"VideoFileWriter3" : 
+		{
+			"class" : "VideoFileWriter",
+			"inputs" : 
+			{
+				"autoProcess" : 0,
+				"file" : "foreground",
+				"fourcc" : "MJPG",
+				"fps" : 0,
+				"height" : 240,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "BgrSubMOG21",
+						"output" : "foreground"
+					}
+				},
+				"type" : "CV_8UC3",
+				"width" : 320
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 905,
+				"y" : 418
+			}
+		}
+	},
+	"name" : "ExtractForegroundMOG"
+}

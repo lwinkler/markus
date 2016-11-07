@@ -1,0 +1,49 @@
+{
+	"description" : "",
+	"modules" : 
+	{
+		"Input" : 
+		{
+			"class" : "UsbCam",
+			"inputs" : 
+			{
+				"fps" : 100,
+				"num" : -1,
+				"type" : "CV_8UC3"
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 460,
+				"y" : 447
+			}
+		},
+		"SlitCamera1" : 
+		{
+			"class" : "SlitCam",
+			"inputs" : 
+			{
+				"aperture" : 1,
+				"height" : 480,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				},
+				"width" : 640
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 681,
+				"y" : 431
+			}
+		}
+	},
+	"name" : "ddd2"
+}

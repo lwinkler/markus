@@ -1,0 +1,81 @@
+{
+	"description" : "(unk)",
+	"modules" : 
+	{
+		"CompareObjects2" : 
+		{
+			"class" : "CompareObjects",
+			"inputs" : 
+			{
+				"video1" : 
+				{
+					"connected" : 
+					{
+						"module" : "ReadObjects0",
+						"output" : "object"
+					}
+				},
+				"video2" : 
+				{
+					"connected" : 
+					{
+						"module" : "ReadObjects3",
+						"output" : "object"
+					}
+				}
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 736,
+				"y" : 453
+			}
+		},
+		"LogObjects1" : 
+		{
+			"class" : "LogObjects",
+			"inputs" : 
+			{
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "ReadObjects0",
+						"output" : "object"
+					}
+				}
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 700,
+				"y" : 300
+			}
+		},
+		"ReadObjects0" : 
+		{
+			"class" : "ReadObjects",
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 500,
+				"y" : 300
+			}
+		},
+		"ReadObjects3" : 
+		{
+			"class" : "ReadObjects",
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 516,
+				"y" : 453
+			}
+		}
+	},
+	"name" : "CustomProject"
+}

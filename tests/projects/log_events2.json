@@ -1,0 +1,48 @@
+{
+	"description" : "(unk)",
+	"modules" : 
+	{
+		"LogEvent0" : 
+		{
+			"class" : "LogEvent",
+			"inputs" : 
+			{
+				"event" : 
+				{
+					"connected" : 
+					{
+						"module" : "ReadEvent1",
+						"output" : "event"
+					}
+				},
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "ReadEvent1",
+						"output" : "image"
+					}
+				}
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 905,
+				"y" : 417
+			}
+		},
+		"ReadEvent1" : 
+		{
+			"class" : "ReadEvent",
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 569,
+				"y" : 369
+			}
+		}
+	},
+	"name" : "CustomProject"
+}

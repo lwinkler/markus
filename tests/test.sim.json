@@ -1,0 +1,160 @@
+{
+	"description" : "",
+	"modules" : 
+	{
+		"Input" : 
+		{
+			"class" : "VideoFileReader",
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 474,
+				"y" : 231
+			}
+		},
+		"LogEvent" : 
+		{
+			"class" : "LogEvent",
+			"inputs" : 
+			{
+				"event" : 
+				{
+					"connected" : 
+					{
+						"module" : "MotionDetector",
+						"output" : "motion"
+					}
+				},
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				},
+				"mask" : 
+				{
+					"connected" : 
+					{
+						"module" : "TempDiff",
+						"output" : "tempDiff"
+					}
+				}
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 976,
+				"y" : 496
+			}
+		},
+		"LogState" : 
+		{
+			"class" : "LogState",
+			"inputs" : 
+			{
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "MotionDetector",
+						"output" : "state"
+					}
+				}
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 1155,
+				"y" : 191
+			}
+		},
+		"MotionDetector" : 
+		{
+			"class" : "MotionDetector",
+			"inputs" : 
+			{
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "TempDiff",
+						"output" : "tempDiff"
+					}
+				}
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 948,
+				"y" : 249
+			}
+		},
+		"TempDiff" : 
+		{
+			"class" : "TempDiff",
+			"inputs" : 
+			{
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				}
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 715,
+				"y" : 274
+			}
+		}
+	},
+	"name" : "MOG",
+	"variations" : 
+	[
+		{
+			"file" : "tools/evaluation/sets/sztr_subset1.json",
+			"modules" : 
+			[
+				"Input",
+				"LogEvent",
+				"TempDiff",
+				"LogEvent"
+			],
+			"parameters" : 
+			[
+				"file",
+				"gtFile",
+				"zoneForbidden",
+				"gtVideo"
+			],
+			"variations" : 
+			[
+				{
+					"module" : "MotionDetector",
+					"nb" : 3,
+					"parameter" : "motion_thres"
+				}
+			]
+		},
+		{
+			"module" : "TempDiff",
+			"nb" : 4,
+			"parameter" : "fps",
+			"range" : 
+			{
+				"max" : 10,
+				"min" : 1
+			}
+		}
+	]
+}

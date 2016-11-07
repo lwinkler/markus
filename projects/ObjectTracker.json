@@ -1,0 +1,161 @@
+{
+	"description" : "",
+	"modules" : 
+	{
+		"BgrSubRunAvg" : 
+		{
+			"class" : "BgrSubRunAvg",
+			"inputs" : 
+			{
+				"backgroundAlpha" : 0.01,
+				"foregroundThres" : 0.10000000000000001,
+				"height" : 48,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				},
+				"type" : "CV_8UC3",
+				"width" : 64
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 688,
+				"y" : 314
+			}
+		},
+		"Input" : 
+		{
+			"class" : "UsbCam",
+			"inputs" : 
+			{
+				"fps" : 0,
+				"height" : 480,
+				"num" : -1,
+				"type" : "CV_8UC1",
+				"width" : 640
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 493,
+				"y" : 238
+			}
+		},
+		"LogObjects5" : 
+		{
+			"class" : "LogObjects",
+			"inputs" : 
+			{
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "TrackerByFeatures",
+						"output" : "tracker"
+					}
+				}
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 1263,
+				"y" : 464
+			}
+		},
+		"RenderObjects" : 
+		{
+			"class" : "RenderObjects",
+			"inputs" : 
+			{
+				"fps" : 10,
+				"height" : 480,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				},
+				"objects" : 
+				{
+					"connected" : 
+					{
+						"module" : "TrackerByFeatures",
+						"output" : "tracker"
+					}
+				},
+				"width" : 640
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 1316,
+				"y" : 270
+			}
+		},
+		"SegmenterContour" : 
+		{
+			"class" : "SegmenterContour",
+			"inputs" : 
+			{
+				"height" : 48,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "BgrSubRunAvg",
+						"output" : "foreground"
+					}
+				},
+				"minHeight" : 3,
+				"minWidth" : 3,
+				"width" : 64
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 901,
+				"y" : 308
+			}
+		},
+		"TrackerByFeatures" : 
+		{
+			"class" : "TrackerByFeatures",
+			"inputs" : 
+			{
+				"alpha" : 0.10000000000000001,
+				"height" : 480,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "SegmenterContour",
+						"output" : "segmented"
+					}
+				},
+				"timeDisappear" : 5,
+				"type" : "CV_8UC1",
+				"width" : 640
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 1126,
+				"y" : 311
+			}
+		}
+	},
+	"name" : "ObjectTracker"
+}

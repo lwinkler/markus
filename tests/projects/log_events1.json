@@ -1,0 +1,48 @@
+{
+	"description" : "(unk)",
+	"modules" : 
+	{
+		"LogEvent1" : 
+		{
+			"class" : "LogEvent",
+			"inputs" : 
+			{
+				"event" : 
+				{
+					"connected" : 
+					{
+						"module" : "RandomEventGenerator0",
+						"output" : "event"
+					}
+				},
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "RandomEventGenerator0",
+						"output" : "image"
+					}
+				}
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 767,
+				"y" : 389
+			}
+		},
+		"RandomEventGenerator0" : 
+		{
+			"class" : "RandomEventGenerator",
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 500,
+				"y" : 300
+			}
+		}
+	},
+	"name" : "CustomProject"
+}

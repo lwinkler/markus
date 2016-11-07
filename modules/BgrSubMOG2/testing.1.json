@@ -1,0 +1,200 @@
+{
+	"description" : "(unk)",
+	"modules" : 
+	{
+		"BgrSubMOG24" : 
+		{
+			"class" : "BgrSubMOG2",
+			"inputs" : 
+			{
+				"height" : 120,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "VideoFileReader1",
+						"output" : "image"
+					}
+				},
+				"learningRate" : 0.0001,
+				"width" : 160
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 757,
+				"y" : 219
+			}
+		},
+		"CompareVideo0" : 
+		{
+			"class" : "CompareVideo",
+			"inputs" : 
+			{
+				"height" : 120,
+				"threshold" : 0.01,
+				"video1" : 
+				{
+					"connected" : 
+					{
+						"module" : "BgrSubMOG24",
+						"output" : "foreground"
+					}
+				},
+				"video2" : 
+				{
+					"connected" : 
+					{
+						"module" : "VideoFileReader2",
+						"output" : "image"
+					}
+				},
+				"width" : 160
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 957,
+				"y" : 342
+			}
+		},
+		"CompareVideo7" : 
+		{
+			"class" : "CompareVideo",
+			"inputs" : 
+			{
+				"height" : 120,
+				"video1" : 
+				{
+					"connected" : 
+					{
+						"module" : "BgrSubMOG24",
+						"output" : "background"
+					}
+				},
+				"video2" : 
+				{
+					"connected" : 
+					{
+						"module" : "VideoFileReader6",
+						"output" : "image"
+					}
+				},
+				"width" : 160
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 957,
+				"y" : 473
+			}
+		},
+		"VideoFileReader1" : 
+		{
+			"class" : "VideoFileReader",
+			"inputs" : 
+			{
+				"file" : "in/input.mp4",
+				"height" : 120,
+				"width" : 160
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 518,
+				"y" : 213
+			}
+		},
+		"VideoFileReader2" : 
+		{
+			"class" : "VideoFileReader",
+			"inputs" : 
+			{
+				"file" : "modules/BgrSubMOG2/in.foreground.MP42.avi",
+				"height" : 120,
+				"width" : 160
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 533,
+				"y" : 348
+			}
+		},
+		"VideoFileReader6" : 
+		{
+			"class" : "VideoFileReader",
+			"inputs" : 
+			{
+				"file" : "modules/BgrSubMOG2/in.background.MP42.avi",
+				"height" : 120,
+				"width" : 160
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 529,
+				"y" : 542
+			}
+		},
+		"VideoFileWriter5" : 
+		{
+			"class" : "VideoFileWriter",
+			"inputs" : 
+			{
+				"file" : "foreground",
+				"fourcc" : "MP42",
+				"height" : 120,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "BgrSubMOG24",
+						"output" : "foreground"
+					}
+				},
+				"width" : 160
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 1163,
+				"y" : 136
+			}
+		},
+		"VideoFileWriter8" : 
+		{
+			"class" : "VideoFileWriter",
+			"inputs" : 
+			{
+				"file" : "background",
+				"fourcc" : "MP42",
+				"height" : 120,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "BgrSubMOG24",
+						"output" : "background"
+					}
+				},
+				"width" : 160
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 1168,
+				"y" : 246
+			}
+		}
+	},
+	"name" : "CustomProject"
+}

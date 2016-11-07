@@ -1,0 +1,111 @@
+{
+	"description" : "(unk)",
+	"modules" : 
+	{
+		"CompareObjects3" : 
+		{
+			"class" : "CompareObjects",
+			"inputs" : 
+			{
+				"video1" : 
+				{
+					"connected" : 
+					{
+						"module" : "TrackerByFeatures1",
+						"output" : "tracker"
+					}
+				},
+				"video2" : 
+				{
+					"connected" : 
+					{
+						"module" : "ReadObjects4",
+						"output" : "object"
+					}
+				}
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 1018,
+				"y" : 379
+			}
+		},
+		"LogObjects2" : 
+		{
+			"class" : "LogObjects",
+			"inputs" : 
+			{
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "TrackerByFeatures1",
+						"output" : "tracker"
+					}
+				}
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 947,
+				"y" : 155
+			}
+		},
+		"ReadObjects0" : 
+		{
+			"class" : "ReadObjects",
+			"inputs" : 
+			{
+				"file" : "modules/TrackerByFeatures/in.objects.srt"
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 500,
+				"y" : 300
+			}
+		},
+		"ReadObjects4" : 
+		{
+			"class" : "ReadObjects",
+			"inputs" : 
+			{
+				"file" : "modules/TrackerByFeatures/gt.objects.srt"
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 700,
+				"y" : 443
+			}
+		},
+		"TrackerByFeatures1" : 
+		{
+			"class" : "TrackerByFeatures",
+			"inputs" : 
+			{
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "ReadObjects0",
+						"output" : "object"
+					}
+				}
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 700,
+				"y" : 300
+			}
+		}
+	},
+	"name" : "CustomProject"
+}

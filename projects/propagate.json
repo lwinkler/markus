@@ -1,0 +1,93 @@
+{
+	"description" : "(unk)",
+	"modules" : 
+	{
+		"Input" : 
+		{
+			"class" : "VideoFileReader",
+			"inputs" : 
+			{
+				"loop" : 1
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 500,
+				"y" : 300
+			}
+		},
+		"MotionDetector2" : 
+		{
+			"class" : "MotionDetector",
+			"inputs" : 
+			{
+				"height" : 120,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "TempDiff5",
+						"output" : "tempDiff"
+					}
+				},
+				"motionThres" : 0.001,
+				"propagate" : 0,
+				"width" : 160
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 1143,
+				"y" : 293
+			}
+		},
+		"SlitCam3" : 
+		{
+			"class" : "SlitCam",
+			"inputs" : 
+			{
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				},
+				"master" : "MotionDetector2"
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 915,
+				"y" : 461
+			}
+		},
+		"TempDiff5" : 
+		{
+			"class" : "TempDiff",
+			"inputs" : 
+			{
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				}
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 822,
+				"y" : 258
+			}
+		}
+	},
+	"name" : "CustomProject"
+}

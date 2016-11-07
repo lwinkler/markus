@@ -1,0 +1,102 @@
+{
+	"description" : "(unk)",
+	"modules" : 
+	{
+		"BgrSubRunAvg" : 
+		{
+			"class" : "BgrSubRunAvg",
+			"inputs" : 
+			{
+				"backgroundAlpha" : 0.001,
+				"foregroundThres" : 0.10000000000000001,
+				"fps" : 1000,
+				"height" : 240,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				},
+				"type" : "CV_8UC3",
+				"width" : 320
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 792,
+				"y" : 240
+			}
+		},
+		"Input" : 
+		{
+			"class" : "NetworkCam",
+			"inputs" : 
+			{
+				"url" : "rtsp://root:admin@192.168.1.200/axis-media/media.amp?videocodec=h264&resolution=320x240&fps=8&compression=30&tcp"
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 588,
+				"y" : 360
+			}
+		},
+		"LogEvent6" : 
+		{
+			"class" : "LogEvent",
+			"inputs" : 
+			{
+				"event" : 
+				{
+					"connected" : 
+					{
+						"module" : "MotionDetector4",
+						"output" : "motion"
+					}
+				},
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				}
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 1196,
+				"y" : 358
+			}
+		},
+		"MotionDetector4" : 
+		{
+			"class" : "MotionDetector",
+			"inputs" : 
+			{
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "BgrSubRunAvg",
+						"output" : "foreground"
+					}
+				}
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 1003,
+				"y" : 237
+			}
+		}
+	},
+	"name" : "MotionDetector"
+}

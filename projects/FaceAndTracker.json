@@ -1,0 +1,104 @@
+{
+	"description" : "",
+	"modules" : 
+	{
+		"CascadeDetector" : 
+		{
+			"class" : "CascadeDetector",
+			"inputs" : 
+			{
+				"filterFile" : "modules/CascadeDetector/lbpcascade_frontalface.xml",
+				"height" : 480,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				},
+				"minNeighbors" : 2,
+				"minSide" : 0,
+				"objectLabel" : "face",
+				"scaleFactor" : 1.2,
+				"type" : "CV_8UC1",
+				"width" : 640
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 454,
+				"y" : 333
+			}
+		},
+		"Input" : 
+		{
+			"class" : "UsbCam",
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 243,
+				"y" : 261
+			}
+		},
+		"RenderObjects" : 
+		{
+			"class" : "RenderObjects",
+			"inputs" : 
+			{
+				"fps" : 10,
+				"height" : 480,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				},
+				"objects" : 
+				{
+					"connected" : 
+					{
+						"module" : "TrackerByFeatures",
+						"output" : "tracker"
+					}
+				},
+				"width" : 640
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 842,
+				"y" : 269
+			}
+		},
+		"TrackerByFeatures" : 
+		{
+			"class" : "TrackerByFeatures",
+			"inputs" : 
+			{
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "CascadeDetector",
+						"output" : "detected"
+					}
+				},
+				"timeDisappear" : 10
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 662,
+				"y" : 333
+			}
+		}
+	},
+	"name" : "FaceAndTracker"
+}

@@ -1,0 +1,336 @@
+{
+	"description" : "",
+	"modules" : 
+	{
+		"CascadeDetector1" : 
+		{
+			"class" : "CascadeDetector",
+			"inputs" : 
+			{
+				"color" : "(255,0,255)",
+				"filterFile" : "modules/CascadeDetector/lbpcascade_frontalface.xml",
+				"fps" : 1,
+				"height" : 480,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				},
+				"minNeighbors" : 2,
+				"minSide" : 0,
+				"objectLabel" : "face",
+				"scaleFactor" : 1.2,
+				"type" : "CV_8UC1",
+				"width" : 640
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 551,
+				"y" : 282
+			}
+		},
+		"CascadeDetector2" : 
+		{
+			"class" : "CascadeDetector",
+			"inputs" : 
+			{
+				"color" : "(255,255,255)",
+				"filterFile" : "modules/CascadeDetector/haarcascade_mcs_upperbody.xml",
+				"fps" : 1,
+				"height" : 480,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				},
+				"minNeighbors" : 2,
+				"minSide" : 0,
+				"objectLabel" : "upper body",
+				"scaleFactor" : 1.2,
+				"type" : "CV_8UC1",
+				"width" : 640
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 552,
+				"y" : 395
+			}
+		},
+		"CascadeDetector3" : 
+		{
+			"class" : "CascadeDetector",
+			"inputs" : 
+			{
+				"color" : "(255,255,255)",
+				"filterFile" : "modules/CascadeDetector/haarcascade_profileface.xml",
+				"fps" : 1,
+				"height" : 480,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				},
+				"minNeighbors" : 2,
+				"minSide" : 0,
+				"objectLabel" : "profile",
+				"scaleFactor" : 1.2,
+				"type" : "CV_8UC1",
+				"width" : 640
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 554,
+				"y" : 511
+			}
+		},
+		"CascadeDetector4" : 
+		{
+			"class" : "CascadeDetector",
+			"inputs" : 
+			{
+				"color" : "(255,255,255)",
+				"filterFile" : "modules/CascadeDetector/haarcascade_lefteye_2splits.xml",
+				"fps" : 1,
+				"height" : 480,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				},
+				"minNeighbors" : 2,
+				"minSide" : 0,
+				"objectLabel" : "left eyes",
+				"scaleFactor" : 1.2,
+				"type" : "CV_8UC1",
+				"width" : 640
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 553,
+				"y" : 630
+			}
+		},
+		"CascadeDetector5" : 
+		{
+			"class" : "CascadeDetector",
+			"inputs" : 
+			{
+				"color" : "(255,255,255)",
+				"filterFile" : "modules/CascadeDetector/haarcascade_upperbody.xml",
+				"fps" : 1,
+				"height" : 480,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				},
+				"minNeighbors" : 2,
+				"minSide" : 0,
+				"objectLabel" : "upper body B",
+				"scaleFactor" : 1.2,
+				"type" : "CV_8UC1",
+				"width" : 640
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 556,
+				"y" : 747
+			}
+		},
+		"Input" : 
+		{
+			"class" : "UsbCam",
+			"inputs" : 
+			{
+				"height" : 480,
+				"num" : -1,
+				"type" : "CV_8UC1",
+				"width" : 640
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 64,
+				"y" : 281
+			}
+		},
+		"RenderObjects12" : 
+		{
+			"class" : "RenderObjects",
+			"inputs" : 
+			{
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "Input",
+						"output" : "image"
+					}
+				}
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 1063,
+				"y" : 351
+			}
+		},
+		"TrackerByFeatures1" : 
+		{
+			"class" : "TrackerByFeatures",
+			"inputs" : 
+			{
+				"height" : 480,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "CascadeDetector1",
+						"output" : "detected"
+					}
+				},
+				"type" : "CV_8UC1",
+				"width" : 640
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 739,
+				"y" : 278
+			}
+		},
+		"TrackerByFeatures2" : 
+		{
+			"class" : "TrackerByFeatures",
+			"inputs" : 
+			{
+				"height" : 480,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "CascadeDetector2",
+						"output" : "detected"
+					}
+				},
+				"maxMatchingDistance" : 0.40000000000000002,
+				"type" : "CV_8UC1",
+				"width" : 640
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 743,
+				"y" : 394
+			}
+		},
+		"TrackerByFeatures3" : 
+		{
+			"class" : "TrackerByFeatures",
+			"inputs" : 
+			{
+				"height" : 480,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "CascadeDetector3",
+						"output" : "detected"
+					}
+				},
+				"maxMatchingDistance" : 0.40000000000000002,
+				"type" : "CV_8UC1",
+				"width" : 640
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 743,
+				"y" : 510
+			}
+		},
+		"TrackerByFeatures4" : 
+		{
+			"class" : "TrackerByFeatures",
+			"inputs" : 
+			{
+				"height" : 480,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "CascadeDetector4",
+						"output" : "detected"
+					}
+				},
+				"maxMatchingDistance" : 0.40000000000000002,
+				"type" : "CV_8UC1",
+				"width" : 640
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 741,
+				"y" : 632
+			}
+		},
+		"TrackerByFeatures5" : 
+		{
+			"class" : "TrackerByFeatures",
+			"inputs" : 
+			{
+				"height" : 480,
+				"image" : 
+				{
+					"connected" : 
+					{
+						"module" : "CascadeDetector5",
+						"output" : "detected"
+					}
+				},
+				"maxMatchingDistance" : 0.40000000000000002,
+				"type" : "CV_8UC1",
+				"width" : 640
+			},
+			"uiobject" : 
+			{
+				"height" : 0,
+				"width" : 0,
+				"x" : 740,
+				"y" : 744
+			}
+		}
+	},
+	"name" : "FourCascades"
+}
