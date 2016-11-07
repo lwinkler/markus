@@ -142,7 +142,7 @@
 		{
 			"module" : "TrackerByFeatures",
 			"nb" : 2,
-			"parameter" : "max_matching_distance",
+			"parameter" : "maxMatchingDistance",
 			"range" : 
 			{
 				"max" : 100,
