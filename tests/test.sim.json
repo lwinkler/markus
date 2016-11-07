@@ -122,27 +122,24 @@
 	"variations" : 
 	[
 		{
-			"file" : "tools/evaluation/sets/sztr_subset1.json",
+			"file" : "tests/videos.json",
 			"modules" : 
 			[
 				"Input",
-				"LogEvent",
-				"TempDiff",
 				"LogEvent"
 			],
+			"references": ["video", "annotation"],
 			"parameters" : 
 			[
 				"file",
-				"gtFile",
-				"zoneForbidden",
-				"gtVideo"
+				"gtFile"
 			],
 			"variations" : 
 			[
 				{
 					"module" : "MotionDetector",
 					"nb" : 3,
-					"parameter" : "motion_thres"
+					"parameter" : "motionThres"
 				}
 			]
 		},

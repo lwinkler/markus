@@ -1,0 +1,19 @@
+{
+	"SZTRA101a01": {
+		"video": "videos/ilids_SterileZone/SZTR/video/SZTRA101a01.mov.mkv",
+		"annotation": "video-annotations/ilids_SterileZone/SZTR/video/SZTRA101a01.srt",
+		"arguments": "-p Input.class=VideoFileReader -x video-annotations/ilids_SterileZone/SZTR/video/SZTR100.xml"
+	},
+
+	"SZTRA101a02": {
+		"video": "videos/ilids_SterileZone/SZTR/video/SZTRA101a02.mov.mkv",
+		"annotation": "video-annotations/ilids_SterileZone/SZTR/video/SZTRA101a02.srt",
+		"arguments": "-p Input.class=VideoFileReader -x video-annotations/ilids_SterileZone/SZTR/video/SZTR100.xml"
+	},
+
+	"SZTRA101a03": {
+		"video": "videos/ilids_SterileZone/SZTR/video/SZTRA101a03.mov.mkv",
+		"annotation": "video-annotations/ilids_SterileZone/SZTR/video/SZTRA101a03.srt",
+		"arguments": "-p Input.class=VideoFileReader -x video-annotations/ilids_SterileZone/SZTR/video/SZTR100.xml"
+	}
+}

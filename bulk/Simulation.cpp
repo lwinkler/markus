@@ -38,7 +38,7 @@ using namespace boost::filesystem;
 log4cxx::LoggerPtr Simulation::m_logger(log4cxx::Logger::getLogger("Simulation"));
 
 /// Function to return either a module or the manager from a config
-inline ConfigReader manOrMod(ConfigReader xr_mainConfig, const string& x_name)
+inline ConfigReader& manOrMod(ConfigReader& xr_mainConfig, const string& x_name)
 {
 	return x_name == "manager" ? xr_mainConfig : xr_mainConfig["modules"][x_name];
 }
@@ -74,7 +74,7 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 	m_targets << "$(OUTDIR)/results/" << sd.str() << ":" << endl;
 	// xr_targets << "\t" << "mkdir -p $(OUTDIR)/results/"  << sd.str() << endl;
 	m_targets << "\t" << "rm -rf $(OUTDIR)/running/"  << sd.str() << endl;
-	m_targets << "\t" << "$(EXE) $(PARAMS) $(OUTDIR)/ready/" << sd.str() << "/" << name << ".xml -o $(OUTDIR)/running/" << sd.str() <<
+	m_targets << "\t" << "$(EXE) $(PARAMS) $(OUTDIR)/ready/" << sd.str() << "/" << name << ".json -o $(OUTDIR)/running/" << sd.str() <<
 			  " " << arguments << endl;
 	m_targets << "\t" << "mv $(OUTDIR)/running/" << sd.str() << " $(OUTDIR)/results/" << endl;
 	m_targets << endl;
@@ -82,10 +82,10 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 	// Create ready/... directory that describes the simulation
 	stringstream subdir;
 	subdir << m_outputDir << "/ready/" << sd.str();
-	stringstream xmlProjName;
-	xmlProjName << subdir.str() << "/" << name << ".xml";
+	stringstream jsonProjName;
+	jsonProjName << subdir.str() << "/" << name << ".json";
 	create_directory(subdir.str());
-	writeToFile(x_mainConfig, xmlProjName.str());
+	writeToFile(x_mainConfig, jsonProjName.str());
 
 	// Last but not least:
 	// Register the different variations for summaries in .txt files
@@ -101,38 +101,41 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 	m_cpt++;
 }
 
+const Json::Value createArray(const string& x_names, const string& x_name, const Json::Value& varConf)
+{
+	if(varConf.isMember(x_names))
+		return varConf[x_names];
+	Json::Value val(Json::arrayValue);
+	val.append(varConf[x_name]);
+	return val;
+}
+
 /// Add variation to simulation
 void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigReader& x_varConf, ConfigReader& xr_mainConfig)
 {
 	if(x_varConf.isNull())
-		throw MkException("Variation config is null. Please check that a 'variations' property is present in similation file", LOC);
+		throw MkException("Variation config is null. Please check that a 'variations' property is present in simulation file", LOC);
 	for(const auto& varConf : x_varConf)
 	{
 		// Read module and parameter attribute
-		assert(varConf["module"].isNull()); // note: no longer supported
 		assert(varConf["param"].isNull());  // note: no longer supported
-		const auto& paramNames(varConf["inputs"]);
-		const auto& moduleNames(varConf["modules"]);
+		const auto paramNames(createArray("parameters", "parameter", varConf));
+		const auto moduleNames(createArray("modules", "module", varConf));
 		if(moduleNames.size() != 1 && moduleNames.size() != paramNames.size())
-			throw MkException("Modules and parameters must have the same size in <var> or modules must only contain one module", LOC);
+			throw MkException("Modules and parameters must have the same size (in variation) or modules must only contain one module", LOC);
 
 		// Get all targets to be varied in config
-		Json::Value targets;
-		targets.resize(paramNames.size());
-		vector<ConfigReader> originalValues;
-		originalValues.resize(paramNames.size());
-		auto ittar = targets.begin();
+		vector<Json::Value*> targets;
+		Json::Value originalValues;
 		auto itmod = moduleNames.begin();
-		auto itval = originalValues.begin();
 		for(const auto& itpar : paramNames)
 		{
 			try
 			{
-				LOG_DEBUG(m_logger, "Param:"<< itmod->asString() << ":" << itpar.asString());
-				*ittar = manOrMod(xr_mainConfig, itmod->asString())["inputs"][itpar.asString()];
-				*itval = ittar->asString();
-				ittar++;
-				itval++;
+				LOG_DEBUG(m_logger, "Param:" << itmod->asString() << ":" << itpar.asString());
+				ConfigReader& target = manOrMod(xr_mainConfig, itmod->asString())["inputs"][itpar.asString()];
+				targets.push_back(&target);
+				originalValues.append(target.asString());
 				if(moduleNames.size() > 1)
 					itmod++;
 			}
@@ -145,7 +148,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 
 		string file = varConf["file"].asString();
 
-		if(file != "")
+		if(!file.empty())
 		{
 			// Reference to the value to use (in json file)
 			const auto& refNames = varConf["references"];
@@ -168,18 +171,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 					if(root[elem][ref.asString()].isNull())
 						throw MkException("No tag " + ref.asString() + " for " + elem, LOC);
 
-					Json::Value jvalue = root[elem][ref.asString()];
-					// cout<<value.asString()<<endl;
-					try
-					{
-						targets[i] = jvalue.asString();
-					}
-					catch(...)
-					{
-						stringstream ss1;
-						ss1 << jvalue;
-						targets[i] = ss1.str();
-					}
+					*(targets[i]) = root[elem][ref.asString()];
 					i++;
 				}
 
@@ -188,11 +180,10 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 				xr_variationNames.push_back(elem);
 
 				// Change value of param
-				ConfigReader subConf = varConf["var"];
-				if(subConf.isNull())
-					AddSimulationEntry(xr_variationNames, xr_mainConfig);
+				if(varConf.isMember("variations"))
+					AddVariations(xr_variationNames, varConf["variations"], xr_mainConfig);
 				else
-					AddVariations(xr_variationNames, varConf, xr_mainConfig);
+					AddSimulationEntry(xr_variationNames, xr_mainConfig);
 				xr_variationNames.pop_back();
 			}
 			ifs.close();
@@ -203,7 +194,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 			if(paramNames.size() > 1)
 				throw MkException("To set more than one parameter variation, use an external file with option file=...", LOC);
 			// default values. Empty range means that the prog uses the default range of the param
-			Json::Value range = varConf["range"];
+			const Json::Value& range = varConf["range"];
 			int nb = varConf.get("nb", 10).asInt();
 
 			LOG_DEBUG(m_logger, "Variations for module " << moduleNames[0].asString());
@@ -211,27 +202,26 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 			Json::Value values = param.GenerateValues(nb, range);
 
 			// Generate a config for each variation
-			for(const auto& elem : values)
+			for(auto& elem : values)
 			{
 				LOG_DEBUG(m_logger, "Value = " << elem);
 				xr_variationNames.push_back(paramNames[0].asString() + "-" + jsonToString(elem));
 
 				// Change value of param
-				targets[0] = elem;
-				ConfigReader subConf = varConf["var"];
-				if(subConf.isNull())
-					AddSimulationEntry(xr_variationNames, xr_mainConfig);
+				*(targets[0]) = elem;
+				if(varConf.isMember("variations"))
+					AddVariations(xr_variationNames, varConf["variations"], xr_mainConfig);
 				else
-					AddVariations(xr_variationNames, varConf, xr_mainConfig);
+					AddSimulationEntry(xr_variationNames, xr_mainConfig);
 				xr_variationNames.pop_back();
 			}
 		}
 
 		// Set the target back to its original value and delete config obj
-		itval = originalValues.begin();
+		auto itval = originalValues.begin();
 		for(auto& target : targets)
 		{
-			target = *itval;
+			*target = *itval;
 			itval++;
 		}
 	}
@@ -245,7 +235,7 @@ void Simulation::Generate()
 
 	remove("simulation_latest");
 	create_symlink(m_outputDir, "simulation_latest");
-	writeToFile(m_param.config, "simulation_latest/Simulation.xml");
+	writeToFile(m_param.config, "simulation_latest/Simulation.json");
 	create_directory(m_outputDir + "/ready");
 	create_directory(m_outputDir + "/running");
 	create_directory(m_outputDir + "/results");
