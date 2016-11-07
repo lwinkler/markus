@@ -102,6 +102,7 @@ void Module::Reset()
 	}
 }
 
+
 /**
 * @brief Return the fps that can be used for recording. This value is special as it depends from preceeding modules.
 *
@@ -118,25 +119,19 @@ double Module::GetRecordingFps() const
 	}
 	else
 	{
-		// If the module is not autoprocessed then the FPS is given by the previous module
-		// Note: we assume that the fps is given by the first stream in the module
-		if(m_inputStreams.empty())
-			throw MkException("This module must have at least one input stream", LOC);
-		if(m_param.fps == 0)
+		// If the module is not autoprocessed then the FPS is given by the previous modules
+		// Note: we assume that the fps is given by min fps of all blocking modules
+		double minFps = DBL_MAX;
+		for(auto& elem : m_inputStreams)
 		{
-			Stream * stream = m_inputStreams.at(0);
-			if(stream == nullptr)
-				throw MkException("First stream is null", LOC);
-			stream = &(stream->GetConnected());
-			if(stream == nullptr)
-				throw MkException("Connected stream is null in Module::GetRecordingFps", LOC);
-			return stream->GetModule().GetRecordingFps();
+			if(elem.second->IsBlocking())
+				minFps = min(minFps, elem.second->GetConnected().GetModule().GetRecordingFps());
 		}
-		else
-		{
-			// estimate the fps to the min of input and current
-			return MIN(m_param.fps, m_inputStreams.at(0)->GetConnected().GetModule().GetRecordingFps());
-		}
+		if(m_param.fps > 0)
+			minFps = min(minFps, m_param.fps);
+		if(minFps == DBL_MAX)
+			throw MkException("Module without blocking input", LOC);
+		return minFps;
 	}
 
 }
