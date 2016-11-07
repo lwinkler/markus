@@ -35,7 +35,7 @@ class ParameterSerializable : public Parameter
 public:
 	ParameterSerializable(const std::string& x_name, const std::string& x_default, Serializable * xp_value, const std::string& x_description) :
 		Parameter(x_name, x_description),
-		m_default(x_default),
+		m_default(stringToJson(x_default)),
 		mr_value(*xp_value)
 	{
 	}
