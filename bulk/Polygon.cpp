@@ -106,7 +106,6 @@ void Polygon::Deserialize(istream& x_in, MkDirectory* xp_dir)
 {
 	Json::Value root;
 	x_in >> root;
-	cout << root["width"] << endl;
 	m_width  = root["width"].asDouble();
 	m_height = root["height"].asDouble();
 
@@ -115,9 +114,5 @@ void Polygon::Deserialize(istream& x_in, MkDirectory* xp_dir)
 	deserialize(ss, m_points);
 
 	if((m_width == 0 || m_height == 0) && ! m_points.empty())
-	{
-		m_width = 0.8;
-		m_height = 0.6;
-	}
-		// TODO restaure throw MkException("Polygon was serialized without specifying width or height", LOC);
+		throw MkException("Polygon was serialized without specifying width or height", LOC);
 }
