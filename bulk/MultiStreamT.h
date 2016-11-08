@@ -104,7 +104,9 @@ public:
 
 	void Disconnect() override
 	{
-		throw MkException("Disconnection not implemented for multi streams", LOC); // TODO
+		Stream::Disconnect();
+		m_nextObj = 0;
+		m_objects.clear();
 	}
 
 	void Export(std::ostream& rx_os) const override
@@ -124,8 +126,6 @@ protected:
 
 private:
 	static log4cxx::LoggerPtr m_logger;
-	// static const std::string m_type;
-	// static const std::string m_class;
 };
 
 #endif

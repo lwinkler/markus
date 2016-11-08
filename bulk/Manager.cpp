@@ -144,7 +144,7 @@ void Manager::Destroy()
 		delete elem;
 	m_parameters.clear();
 	m_inputs.clear();
-	m_autoProcessedModules.clear(); // TODO: There probable should be only m_inputs or this. Check
+	m_autoProcessedModules.clear();
 }
 
 /**

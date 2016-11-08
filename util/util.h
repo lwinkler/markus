@@ -79,7 +79,7 @@ inline double aspectRatio(cv::Size& x_size)
 	return static_cast<double>(x_size.height) / x_size.width;
 }
 
-inline cv::Point_<double> ratio(cv::Size& x_size1, cv::Size& x_size2)
+inline cv::Point_<double> ratio(const cv::Size& x_size1, const cv::Size& x_size2)
 {
 	return cv::Point_<double>(
 		static_cast<double>(x_size1.width) / x_size2.width,

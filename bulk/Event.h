@@ -51,12 +51,12 @@ public:
 	inline const TIME_STAMP& GetTimeStart() const {return m_timeStampStart;}
 	inline const TIME_STAMP& GetTimeEnd() const {return m_timeStampEnd;}
 	inline void AddFeature(std::string x_name, Feature* x_feat) {m_object.AddFeature(x_name, x_feat);}
-	inline void ScaleObject(double x_ratioX, double x_ratioY)
+	inline void ScaleObject(cv::Point_<double> x_ratio)
 	{
-		m_object.posX   *= x_ratioX;
-		m_object.posY   *= x_ratioY;
-		m_object.width  *= x_ratioX;
-		m_object.height *= x_ratioY;
+		m_object.posX   *= x_ratio.x;
+		m_object.posY   *= x_ratio.y;
+		m_object.width  *= x_ratio.x;
+		m_object.height *= x_ratio.y;
 	}
 	inline void SetObject(const Object& x_object) {m_object = x_object;}
 	// inline const std::string& GetObjectEventName(){return m_objectEventName;};

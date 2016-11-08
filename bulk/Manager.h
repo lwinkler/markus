@@ -68,7 +68,7 @@ public:
 
 	// Interface for interaction with external objects
 	void SendCommand(const std::string& x_command, std::string x_value);
-	void SendCommand(const std::string& x_command); // TODO: see if we can avoid this method
+	void SendCommand(const std::string& x_command);
 	void ConnectExternalInput(Stream& xr_input, const std::string& x_moduleName, const std::string& x_outputStreamName);
 	inline void CallModuleMethod(const std::string& x_moduleName, std::function<void(Module*)> x_method)
 	{
@@ -130,7 +130,7 @@ public:
 	double GetRecordingFps() const override
 	{
 		assert(!m_inputs.empty());
-		return m_inputs.at(0)->GetRecordingFps();
+		return m_inputs.first()->GetRecordingFps();
 	}
 	void BuildModule(const std::string& x_name, const ConfigReader& x_moduleConfig);
 

@@ -24,7 +24,7 @@
 #ifndef CONFIG_XML_H
 #define CONFIG_XML_H
 
-// TODO: Maybe suppress and use tinyxml directly for SVG
+// note: this class is kept to draw SVG and also for legacy reasons
 
 #include <string>
 #include <vector>
