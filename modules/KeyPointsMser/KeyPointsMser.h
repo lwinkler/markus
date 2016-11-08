@@ -67,7 +67,7 @@ public:
 	MKCATEG("KeyPoints")
 	MKDESCR("Extract key points of type Mser")
 
-	virtual void Reset() override;
+	void Reset() override;
 
 private:
 	const Parameters& m_param;

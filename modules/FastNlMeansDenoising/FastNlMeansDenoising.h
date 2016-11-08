@@ -68,8 +68,8 @@ public:
 	MKCATEG("Image")
 	MKDESCR("Perform image denoising using Non-local Means Denoising algorithm, for gaussian noise")
 
-	virtual void ProcessFrame() override;
-	virtual void Reset() override;
+	void ProcessFrame() override;
+	void Reset() override;
 
 private:
 	const Parameters& m_param;

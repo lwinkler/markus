@@ -108,7 +108,7 @@ class StreamsTestSuite : public CxxTest::TestSuite
 		MKCLASS("FakeModule")
 		MKDESCR("Output video stream with additional object streams")
 		void Reset() override {}
-		virtual void ProcessFrame() override
+		void ProcessFrame() override
 		{
 			for(auto& stream : m_inputStreams)
 				stream.second->Randomize(seed);

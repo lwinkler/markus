@@ -104,11 +104,11 @@ public:
 		assert(m_image.cols == rx_qimage.width() && m_image.rows == rx_qimage.height());
 		QModuleViewer::ConvertMat2QImage(m_image, rx_qimage);
 	}
-	virtual void ProcessFrame() override 
+	void ProcessFrame() override 
 	{
 		mr_gui.update();
 	}
-	virtual void Reset() override
+	void Reset() override
 	{
 		Processable::WriteLock lock(RefLock());
 		Module::Reset();

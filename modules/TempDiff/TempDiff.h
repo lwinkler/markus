@@ -47,8 +47,8 @@ public:
 	MKCATEG("Image")
 	MKDESCR("Perform temporal differencing: compare frame with previous frame by subtraction")
 
-	virtual void ProcessFrame() override;
-	virtual void Reset() override;
+	void ProcessFrame() override;
+	void Reset() override;
 
 private:
 	const Parameters& m_param;

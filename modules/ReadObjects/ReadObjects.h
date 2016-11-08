@@ -49,7 +49,7 @@ public:
 		}
 		std::string file;
 	};
-	inline virtual bool AbortCondition() const override {return m_endOfStream;}
+	bool AbortCondition() const override {return m_endOfStream;}
 
 	ReadObjects(ParameterStructure& xr_params);
 	virtual ~ReadObjects();
@@ -65,7 +65,7 @@ private:
 
 protected:
 
-	virtual void Capture() override;
+	void Capture() override;
 
 	// ouput
 	std::vector<Object> m_ObjectOut;

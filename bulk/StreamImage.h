@@ -47,25 +47,25 @@ public:
 	MKTYPE("Image")
 	MKPARAMTYPE(PARAM_STREAM_IMAGE)
 
-	virtual void ConvertInput() override;
-	virtual void RenderTo(cv::Mat& x_output) const override;
-	virtual void Query(std::ostream& xr_out, const cv::Point& x_pt) const override;
-	virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const override;
-	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr) override;
-	virtual void Randomize(unsigned int& xr_seed) override;
+	void ConvertInput() override;
+	void RenderTo(cv::Mat& x_output) const override;
+	void Query(std::ostream& xr_out, const cv::Point& x_pt) const override;
+	void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const override;
+	void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr) override;
+	void Randomize(unsigned int& xr_seed) override;
 	const cv::Mat& GetImage() const {return m_content;}
 	void Connect(Stream& xr_stream) override;
 	void Disconnect() override;
 
-	virtual void SetValue(const ConfigReader& x_value, ParameterConfigType x_confType) override
+	void SetValue(const ConfigReader& x_value, ParameterConfigType x_confType) override
 	{
 		LOG_WARN(m_logger, "Impossible to set the value of a stream of type image as a parameter");
 		// m_confSource = x_confType;
 	}
-	virtual void SetDefault(const ConfigReader& x_value) override {LOG_WARN(m_logger, "Impossible to set the default value of a stream of type image as a parameter");}
-	virtual void SetValueToDefault() override {m_content.setTo(0); m_confSource = PARAMCONF_DEF;};
+	void SetDefault(const ConfigReader& x_value) override {LOG_WARN(m_logger, "Impossible to set the default value of a stream of type image as a parameter");}
+	void SetValueToDefault() override {m_content.setTo(0); m_confSource = PARAMCONF_DEF;};
 	// note: This will not work with images
-	virtual ConfigReader GetValue() const override
+	ConfigReader GetValue() const override
 	{
 		// note: for simplicity, we only serialize the size
 		Json::Value root;
@@ -73,7 +73,7 @@ public:
 		root["height"] = m_content.rows;
 		return root;
 	}
-	virtual ConfigReader GetDefault() const override
+	ConfigReader GetDefault() const override
 	{
 		Json::Value root;
 		root["width"] = m_content.cols;

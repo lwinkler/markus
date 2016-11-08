@@ -49,7 +49,7 @@ public:
 	MKDESCR("Output video stream with additional object streams")
 
 	void Reset() override;
-	virtual void ProcessFrame() override;
+	void ProcessFrame() override;
 
 private:
 	const Parameters& m_param;

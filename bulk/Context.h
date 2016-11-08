@@ -78,9 +78,24 @@ public:
 	inline const std::string& GetApplicationName() const {return m_param.applicationName;}
 	inline const std::string& GetJobId() const {return m_jobId;}
 	inline const std::string& GetCameraId() const {return m_param.cameraId;}
-	inline MkDirectory& RefOutputDir() {if(mp_outputDir.get() == nullptr) throw MkException("No output dir exists", LOC); return *mp_outputDir;}
-	inline MkDirectory& RefCacheIn() {if(mp_cacheIn.get() == nullptr) throw MkException("No input cache dir exists, use option -I", LOC); return *mp_cacheIn;}
-	inline MkDirectory& RefCacheOut() {if(mp_cacheOut.get() == nullptr) throw MkException("No output cache dir exists, use option -O", LOC); return *mp_cacheOut;}
+	inline MkDirectory& RefOutputDir()
+	{
+		if(mp_outputDir.get() == nullptr)
+			throw MkException("No output dir exists", LOC);
+		return *mp_outputDir;
+	}
+	inline MkDirectory& RefCacheIn()
+	{
+		if(mp_cacheIn.get() == nullptr)
+			throw MkException("No input cache dir exists, use option -I", LOC);
+		return *mp_cacheIn;
+	}
+	inline MkDirectory& RefCacheOut()
+	{
+		if(mp_cacheOut.get() == nullptr)
+			throw MkException("No output cache dir exists, use option -O", LOC);
+		return *mp_cacheOut;
+	}
 	inline bool IsCentralized() const {return m_param.centralized;}
 	inline bool IsRealTime() const {return m_param.realTime;}
 	const Parameters& GetParameters() const {return m_param;}

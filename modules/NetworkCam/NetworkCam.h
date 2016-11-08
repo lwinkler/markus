@@ -64,9 +64,9 @@ public:
 	MKCATEG("Input")
 	MKDESCR("Read video stream from a network camera")
 
-	virtual void Capture() override;
-	virtual void Reset() override;
-	virtual double GetRecordingFps() const override;
+	void Capture() override;
+	void Reset() override;
+	double GetRecordingFps() const override;
 
 private:
 	bool Grab();

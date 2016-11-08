@@ -101,13 +101,13 @@ public:
 	Module(ParameterStructure& x_param);
 	virtual ~Module();
 
-	virtual void Reset() override;
-	virtual void Process() override;
+	void Reset() override;
+	void Process() override;
 	bool ProcessingCondition() const;                                      /// Return true if the current frame must be processed
 	inline virtual bool PropagateCondition() const {return true;}          /// Return true if the depending modules must be called. To be overridden
 	inline bool AbortCondition() const override {return false;}             /// Return true if the processing should be aborted
 
-	virtual const std::string& GetName() const override {return m_param.GetName();}
+	const std::string& GetName() const override {return m_param.GetName();}
 	virtual const std::string& GetClass() const = 0;
 	virtual const std::string& GetCategory() const{static const std::string cat = "Other"; return cat;}
 	virtual const std::string& GetDescription() const = 0;
@@ -131,13 +131,13 @@ public:
 	inline int GetImageType() const      {return m_param.type;}
 	inline double GetFps() const         {return m_param.fps;}
 	inline bool IsAutoProcessed() const  {return m_param.autoProcess;}
-	virtual double GetRecordingFps() const override;
+	double GetRecordingFps() const override;
 
 	inline void AddDependingModule(Module & rx_module) {m_modulesDepending.push_back(&rx_module);} /// Add a module to the list: depending modules are called when processing is complete
 	void RemoveDependingModule(const Module & x_module);
 	virtual void PrintStatistics(ConfigReader& xr_result) const;
-	virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const override;
-	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr) override;
+	void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const override;
+	void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr) override;
 
 	virtual inline bool IsInput() const {return false;}
 	void Export(std::ostream& rx_os) const;

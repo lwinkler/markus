@@ -60,18 +60,18 @@ public:
 		m_confSource = x_confType;
 	}
 
-	virtual void SetValue(const ConfigReader& rx_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) override;
-	virtual void SetDefault(const ConfigReader& rx_value) override
+	void SetValue(const ConfigReader& rx_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) override;
+	void SetDefault(const ConfigReader& rx_value) override
 	{
 		m_default = rx_value;
 	}
-	virtual bool CheckRange() const override
+	bool CheckRange() const override
 	{
 		// Note: so far it is not possible to check the range of serializable params
 		return true;
 	}
-	virtual Json::Value GenerateValues(int x_nbSamples, const Json::Value& x_range) const override;
-	virtual void SetValueToDefault() override;
+	Json::Value GenerateValues(int x_nbSamples, const Json::Value& x_range) const override;
+	void SetValueToDefault() override;
 
 private:
 	static log4cxx::LoggerPtr m_logger;

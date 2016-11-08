@@ -38,7 +38,7 @@ public:
 	virtual ~ControllerEvent() {}
 	MKCLASS("ControllerEvent")
 
-	virtual QWidget* CreateWidget() override;
+	QWidget* CreateWidget() override;
 
 	// Controls
 	void Validate(std::string* xp_value);

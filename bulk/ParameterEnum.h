@@ -45,17 +45,17 @@ public:
 	void SetDefault(const ConfigReader& rx_value) override;
 	inline ConfigReader GetValue() const override {return GetReverseEnum().at(mr_value);}
 	inline ConfigReader GetDefault() const override {return GetReverseEnum().at(m_default);}
-	virtual bool CheckRange() const override;
-	virtual Json::Value GenerateValues(int x_nbSamples, const Json::Value& x_range) const override;
-	virtual void Print(std::ostream& os) const override;
-	virtual void SetValueToDefault() override
+	bool CheckRange() const override;
+	Json::Value GenerateValues(int x_nbSamples, const Json::Value& x_range) const override;
+	void Print(std::ostream& os) const override;
+	void SetValueToDefault() override
 	{
 		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		mr_value = m_default;
 		m_confSource = PARAMCONF_DEF;
 	}
-	virtual const std::string& GetType() const override = 0;
+	const std::string& GetType() const override = 0;
 	virtual const std::map<std::string, int>& GetEnum() const = 0;
 	virtual const std::map<int, std::string>& GetReverseEnum() const = 0;
 

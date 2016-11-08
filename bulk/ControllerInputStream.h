@@ -39,7 +39,7 @@ public:
 	virtual ~ControllerInputStream();
 	MKCLASS("ControllerInputStream")
 
-	virtual QWidget* CreateWidget() override;
+	QWidget* CreateWidget() override;
 
 	typedef void (ControllerInputStream::*action)(std::string*);
 	DECLARE_CALL_ACTION(action);

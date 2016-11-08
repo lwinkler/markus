@@ -58,8 +58,8 @@ public:
 		}
 	}
 	inline size_t Size() const {return m_points.size();}
-	virtual void Serialize(std::ostream& x_out, MkDirectory* xp_dir = nullptr) const override;
-	virtual void Deserialize(std::istream& x_in, MkDirectory* xp_dir = nullptr) override;
+	void Serialize(std::ostream& x_out, MkDirectory* xp_dir = nullptr) const override;
+	void Deserialize(std::istream& x_in, MkDirectory* xp_dir = nullptr) override;
 
 protected:
 	std::vector<cv::Point2d> m_points;

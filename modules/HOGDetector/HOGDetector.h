@@ -68,8 +68,8 @@ public:
 	MKDESCR("Detect objects from a video stream using a HOG descriptor")
 	MKCATEG("Other")
 
-	virtual void Reset() override;
-	virtual void ProcessFrame() override;
+	void Reset() override;
+	void ProcessFrame() override;
 
 private:
 	const Parameters& m_param;

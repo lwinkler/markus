@@ -63,8 +63,8 @@ public:
 	MKCATEG("Output")
 	MKDESCR("Write output to a buffer and export it if an evenement occurs")
 
-	virtual void ProcessFrame() override;
-	virtual void Reset() override;
+	void ProcessFrame() override;
+	void Reset() override;
 	void AddImageToBuffer();
 	void OpenNewFile();
 	void CloseFile();

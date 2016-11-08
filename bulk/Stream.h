@@ -40,8 +40,8 @@ public:
 	inline void Reset() {m_timeStamp = TIME_STAMP_MIN;SetValueToDefault();}
 
 	virtual const std::string& GetClass() const = 0;
-	virtual const std::string& GetType() const override = 0;
-	virtual const ParameterType& GetParameterType() const override = 0;
+	const std::string& GetType() const override = 0;
+	const ParameterType& GetParameterType() const override = 0;
 	
 	inline const cv::Size GetSize() const {return mr_module.GetSize();}
 	virtual void RenderTo(cv::Mat& x_output) const = 0;
@@ -50,8 +50,8 @@ public:
 	virtual void Disconnect();
 	virtual void ConvertInput() = 0;
 	virtual void Randomize(unsigned int& xr_seed) = 0;
-	virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const override;
-	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr) override;
+	void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const override;
+	void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr) override;
 	virtual void Export(std::ostream& rx_os) const;
 	inline bool IsConnected() const {return m_cptConnected > 0;}
 	inline void SetAsConnected(bool x_val)
@@ -92,13 +92,13 @@ public:
 	inline void SetSynchronized(bool x_sync) {m_synchronized = x_sync;}
 
 	// Methods inherited from Parameter class
-	virtual void SetValue(const ConfigReader& x_value, ParameterConfigType x_confType) override = 0;
-	virtual void SetDefault(const ConfigReader& x_value) override = 0;
-	virtual void SetValueToDefault() override = 0;
-	virtual bool CheckRange() const override {return true;}
-	virtual Json::Value GenerateValues(int x_nbSamples, const Json::Value& x_range) const override {return Json::nullValue;}
-	virtual ConfigReader GetValue() const override = 0;
-	virtual ConfigReader GetDefault() const override = 0;
+	void SetValue(const ConfigReader& x_value, ParameterConfigType x_confType) override = 0;
+	void SetDefault(const ConfigReader& x_value) override = 0;
+	void SetValueToDefault() override = 0;
+	bool CheckRange() const override {return true;}
+	Json::Value GenerateValues(int x_nbSamples, const Json::Value& x_range) const override {return Json::nullValue;}
+	ConfigReader GetValue() const override = 0;
+	ConfigReader GetDefault() const override = 0;
 
 	int id     = -1;
 	bool debug = false;

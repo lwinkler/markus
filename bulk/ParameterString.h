@@ -39,25 +39,25 @@ public:
 	MKPARAMTYPE(PARAM_STR)
 	MKTYPE("string")
 
-	virtual void SetValue(const ConfigReader& rx_value, ParameterConfigType x_confType) override
+	void SetValue(const ConfigReader& rx_value, ParameterConfigType x_confType) override
 	{
 		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		mr_value = rx_value.asString();
 		m_confSource = x_confType;
 	}
-	virtual void SetDefault(const ConfigReader& x_value) override
+	void SetDefault(const ConfigReader& x_value) override
 	{
 		m_default = x_value.asString();
 	}
-	inline virtual ConfigReader GetValue() const override {return mr_value;}
-	inline virtual ConfigReader GetDefault() const override {return m_default;}
-	inline virtual bool CheckRange() const override
+	ConfigReader GetValue() const override {return mr_value;}
+	ConfigReader GetDefault() const override {return m_default;}
+	bool CheckRange() const override
 	{
 		return true;
 	}
-	virtual Json::Value GenerateValues(int x_nbSamples, const Json::Value& x_range) const override;
-	virtual void SetValueToDefault() override
+	Json::Value GenerateValues(int x_nbSamples, const Json::Value& x_range) const override;
+	void SetValueToDefault() override
 	{
 		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);

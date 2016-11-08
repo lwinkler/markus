@@ -55,9 +55,9 @@ public:
 	MKCATEG("Input")
 	MKDESCR("Read video stream from an enbedded or USB camera")
 
-	virtual void Capture() override;
-	virtual void Reset() override;
-	virtual double GetRecordingFps() const override;
+	void Capture() override;
+	void Reset() override;
+	double GetRecordingFps() const override;
 
 private:
 	const Parameters& m_param;

@@ -52,8 +52,8 @@ public:
 	MKCATEG("Conversion")
 	MKDESCR("Convert an object feature to a value stream (if several objects are present, use the largest)")
 
-	virtual void Reset() override;
-	virtual void ProcessFrame() override;
+	void Reset() override;
+	void ProcessFrame() override;
 
 private:
 	const Parameters& m_param;

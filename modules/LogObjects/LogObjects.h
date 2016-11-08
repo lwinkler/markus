@@ -55,8 +55,8 @@ public:
 	MKCATEG("Output")
 	MKDESCR("Read a stream of objects and log data to a text file")
 
-	virtual void ProcessFrame() override;
-	virtual void Reset() override;
+	void ProcessFrame() override;
+	void Reset() override;
 	void Compress();
 
 private:

@@ -58,8 +58,8 @@ public:
 	MKCATEG("Input")
 	MKDESCR("Generate an object with varying features at each step")
 
-	virtual void Capture() override;
-	virtual void Reset() override;
+	void Capture() override;
+	void Reset() override;
 
 private:
 	const Parameters& m_param;

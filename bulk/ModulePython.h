@@ -92,8 +92,8 @@ public:
 	ModulePython(ParameterStructure& xr_params);
 	virtual ~ModulePython();
 
-	virtual void ProcessFrame() override = 0;
-	virtual void Reset() override;
+	void ProcessFrame() override = 0;
+	void Reset() override;
 
 private:
 	Parameters& m_param;

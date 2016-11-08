@@ -63,7 +63,7 @@ public:
 	MKCATEG("Output")
 	MKDESCR("Write output to a video file")
 
-	virtual void ProcessFrame() override;
+	void ProcessFrame() override;
 	void Reset() override;
 	static const std::string ExtensionFromFourcc(const std::string& x_fourcc);
 

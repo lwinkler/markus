@@ -64,7 +64,7 @@ public:
 
 		m_obj.AddFeature("some_feat", 46.30);
 	}
-	virtual void Serialize(ostream& x_out, MkDirectory* xp_dir = nullptr) const override
+	void Serialize(ostream& x_out, MkDirectory* xp_dir = nullptr) const override
 	{
 		Json::Value root;
 		root["int1"] = m_int;
@@ -76,7 +76,7 @@ public:
 		ss >> root["object"];
 		x_out << root;
 	}
-	virtual void Deserialize(istream& x_in, MkDirectory* xp_dir = nullptr) override
+	void Deserialize(istream& x_in, MkDirectory* xp_dir = nullptr) override
 	{
 		Json::Value root;
 		x_in >> root;

@@ -54,8 +54,8 @@ public:
 	MKCATEG("BackgroundSubtraction")
 	MKDESCR("Perform a background subtraction using a running average")
 
-	virtual void ProcessFrame() override;
-	virtual void Reset() override;
+	void ProcessFrame() override;
+	void Reset() override;
 
 private:
 	const Parameters& m_param;

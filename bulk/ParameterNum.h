@@ -77,7 +77,7 @@ public:
 		// mr_value = x_value;
 		// m_confSource = x_confType;
 	// }
-	virtual void SetDefault(const ConfigReader& rx_value) override
+	void SetDefault(const ConfigReader& rx_value) override
 	{
 		m_default = castJson(rx_value);
 		m_confSource = PARAMCONF_DEF;

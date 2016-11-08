@@ -54,7 +54,7 @@ public:
 	virtual ~CompareObjects();
 
 	/* Reset current state of this module */
-	virtual void Reset() override;
+	void Reset() override;
 
 	/* Compare the two images and return the amount of pixels that are different */
 	int64_t ComputeDissimilarity(const cv::Mat& A, const cv::Mat& B);
@@ -63,7 +63,7 @@ public:
 	MKDESCR("Compare the two input objects streams and compute the dissimilarity of them for all the sequence");
 	MKCATEG("Test")
 
-	virtual void ProcessFrame() override;
+	void ProcessFrame() override;
 
 private:
 	const Parameters& m_param;

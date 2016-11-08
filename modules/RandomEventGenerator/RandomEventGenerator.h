@@ -57,8 +57,8 @@ public:
 	MKCATEG("Input")
 	MKDESCR("Generate an event with random features at each step")
 
-	virtual void Capture() override;
-	virtual void Reset() override;
+	void Capture() override;
+	void Reset() override;
 
 private:
 	const Parameters& m_param;

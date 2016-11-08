@@ -46,7 +46,7 @@ public:
 	virtual ~MultiStreamT() {}
 	// TODO virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const override;
 	// TODO virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr) override;
-	virtual void Connect(Stream& xr_stream) override
+	void Connect(Stream& xr_stream) override
 	{
 		assert(m_objects.size() == m_size && m_nextObj < m_size);
 		if(!this->IsConnected())
@@ -69,12 +69,12 @@ public:
 		m_nextObj++;
 	}
 
-	virtual void Disconnect() override
+	void Disconnect() override
 	{
 		throw MkException("Disconnection not implemented for multi streams", LOC); // TODO
 	}
 
-	virtual void Export(std::ostream& rx_os) const override
+	void Export(std::ostream& rx_os) const override
 	{
 		Json::Value root;
 		std::stringstream ss;

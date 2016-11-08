@@ -73,9 +73,24 @@ public:
 	void Status() const;
 	void SetSleep(int x_ms);
 	bool DoSleep();
-	inline virtual void SetContext(Context& x_context) {if(mp_context != nullptr) throw MkException("Context was already set", LOC); mp_context = &x_context;}
-	inline virtual const Context& GetContext() const {if(mp_context == nullptr) throw MkException("Context was not set", LOC); return *mp_context;}
-	inline virtual Context& RefContext() const {if(mp_context == nullptr) throw MkException("Context was not set", LOC); return *mp_context;}
+	inline virtual void SetContext(Context& x_context)
+	{
+		if(mp_context != nullptr)
+			throw MkException("Context was already set", LOC);
+		mp_context = &x_context;
+	}
+	inline virtual const Context& GetContext() const
+	{
+		if(mp_context == nullptr)
+			throw MkException("Context was not set", LOC);
+		return *mp_context;
+	}
+	inline virtual Context& RefContext() const
+	{
+		if(mp_context == nullptr)
+			throw MkException("Context was not set", LOC);
+		return *mp_context;
+	}
 	inline bool IsContextSet() const {return mp_context != nullptr;}
 	inline Lock& RefLock() {return m_lock;}
 	inline const MkException& LastException() const {return m_lastException;}

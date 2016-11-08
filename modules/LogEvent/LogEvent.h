@@ -74,7 +74,7 @@ public:
 	MKCATEG("Output")
 	MKDESCR("Read an event and log it to .srt file")
 
-	virtual void ProcessFrame() override;
+	void ProcessFrame() override;
 	void Reset() override;
 
 private:

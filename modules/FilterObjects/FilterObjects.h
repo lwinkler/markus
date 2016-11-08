@@ -70,8 +70,8 @@ public:
 	MKDESCR("Filter the input objects based on different criterion")
 	MKCATEG("Other")
 
-	virtual void ProcessFrame() override;
-	virtual void Reset() override;
+	void ProcessFrame() override;
+	void Reset() override;
 
 private:
 	const Parameters& m_param;

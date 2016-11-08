@@ -48,7 +48,7 @@ public:
 
 	virtual void Capture() = 0;
 	inline void ProcessFrame() override {Capture();}
-	virtual inline bool IsInput() const override {return true;}
+	inline bool IsInput() const override {return true;}
 
 protected:
 	bool m_endOfStream;

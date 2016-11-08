@@ -60,11 +60,11 @@ public:
 	Manager(ParameterStructure& xr_params, Context& xr_context);
 	virtual ~Manager();
 	virtual void Reset(bool x_resetInputs = true);
-	virtual void Process() override;
-	virtual bool AbortCondition() const override;
+	void Process() override;
+	bool AbortCondition() const override;
 	int ReturnCode() const;
-	virtual void Start() override;
-	virtual void Stop() override;
+	void Start() override;
+	void Stop() override;
 
 	// Interface for interaction with external objects
 	void SendCommand(const std::string& x_command, std::string x_value);
@@ -88,7 +88,13 @@ public:
 		return modules;
 	}
 	inline const Module& GetModuleByName(const std::string& x_name) const {return RefModuleByName(x_name);}
-	inline const Processable& GetProcessableByName(const std::string& x_name) const {if(x_name == "manager") assert(false); else return RefModuleByName(x_name);}
+	inline const Processable& GetProcessableByName(const std::string& x_name) const
+	{
+		if(x_name == "manager")
+			assert(false);
+		else 
+			return RefModuleByName(x_name);
+	}
 
 #ifndef MARKUS_NO_GUI
 	inline QWidget* CreateControllerWidget(const std::string& x_moduleName, const std::string& x_controllerName)
@@ -102,7 +108,7 @@ public:
 	void Check() const;
 	void CreateEditorFiles(const std::string& x_fileName);
 	void PrintStatistics();
-	virtual bool ManageInterruptions(bool x_continueFlag) override;
+	bool ManageInterruptions(bool x_continueFlag) override;
 	inline void Quit() {m_quitting = true;}
 	inline void ListModulesTypes(std::vector<std::string>& xr_types) const {mr_moduleFactory.List(xr_types);}
 	inline void ListModulesNames(std::vector<std::string>& xr_names) const
@@ -113,15 +119,15 @@ public:
 		}
 	}
 	void WriteStateToDirectory(const std::string& x_directory);
-	virtual void WriteConfig(ConfigReader& xr_config) const override;
-	inline virtual void SetContext(Context& x_context) override
+	void WriteConfig(ConfigReader& xr_config) const override;
+	void SetContext(Context& x_context) override
 	{
 		Processable::SetContext(x_context);
 		for(auto& elem : m_modules)
 			elem.second->SetContext(x_context);
 	}
-	virtual const std::string& GetName() const override {static std::string str = "manager"; return str;}
-	virtual double GetRecordingFps() const override
+	const std::string& GetName() const override {static std::string str = "manager"; return str;}
+	double GetRecordingFps() const override
 	{
 		assert(!m_inputs.empty());
 		return m_inputs.at(0)->GetRecordingFps();

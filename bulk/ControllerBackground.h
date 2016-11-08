@@ -38,7 +38,7 @@ public:
 	virtual ~ControllerBackground() {}
 	MKCLASS("ControllerBackground")
 
-	virtual QWidget* CreateWidget() override;
+	QWidget* CreateWidget() override;
 
 	// Controls
 	void StartOnlineLearning(std::string* xp_value);

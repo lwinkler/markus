@@ -56,14 +56,14 @@ public:
 	MKCATEG("Input")
 	MKDESCR("Read an event from an annotation file")
 
-	virtual void Reset() override;
+	void Reset() override;
 
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
-	virtual void Capture() override;
+	void Capture() override;
 
 	// input
 	Event m_event;

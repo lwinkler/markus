@@ -59,8 +59,8 @@ public:
 	MKCATEG("Input")
 	MKDESCR("Read video stream from a video file")
 
-	virtual void Capture() override;
-	virtual void Reset() override;
+	void Capture() override;
+	void Reset() override;
 	// const cv::Mat * GetImage() const {return m_output;}
 
 	// Specific to file reader
@@ -70,7 +70,7 @@ public:
 	int GetFrame();
 	int GetMaxMsec();
 	int GetFrameCount();
-	virtual double GetRecordingFps() const override;
+	double GetRecordingFps() const override;
 
 private:
 	const Parameters& m_param;
