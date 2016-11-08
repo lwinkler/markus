@@ -88,10 +88,10 @@ public:
 		appConf["aaa"]["nameX"]
 		["bbb"]["nameY"]
 		["ccc"]["nameZ"] = "someValue";
-		writeToFile(appConf, "tests/config/config_generated.json");
+		writeToFile(appConf, "tests/tmp/config_generated.json");
 
 		ConfigReader generatedConf;
-		readFromFile(generatedConf, "tests/config/config_generated.json");
+		readFromFile(generatedConf, "tests/tmp/config_generated.json");
 		TS_ASSERT(generatedConf
 				  ["aaa"]["nameX"]
 				  ["bbb"]["nameY"]

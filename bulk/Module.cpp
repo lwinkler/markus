@@ -325,7 +325,7 @@ void Module::Export(ostream& rx_os) const
 	{
 		if(elem.second->GetName().find('_') != string::npos)
 			throw MkException("Forbidden character _ in " + elem.second->GetName(), LOC);
-		// TODO: parameters are now inputs
+		// note: parameters are now inputs
 		stringstream ss;
 		elem.second->Export(ss);
 		ss >> root["inputs"][elem.second->GetName()];

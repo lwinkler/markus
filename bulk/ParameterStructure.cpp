@@ -91,7 +91,7 @@ void ParameterStructure::Read(const ConfigReader& x_config)
 				continue;
 			Parameter& param = RefParameterByName(name);
 			if(!param.IsLocked())
-				param.SetValue(value, PARAMCONF_XML); // TODO: directly set values as json objects
+				param.SetValue(value, PARAMCONF_XML);
 		}
 		catch(std::exception& e)
 		{
