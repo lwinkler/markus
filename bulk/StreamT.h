@@ -51,7 +51,6 @@ public:
 	virtual void Randomize(unsigned int& rx_seed);
 	virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const;
 	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr);
-	// double GetFeatureValue(const std::vector<Feature>& x_vect, const char* x_name);
 
 	virtual void SetValue(const ConfigReader& x_value, ParameterConfigType x_confType)
 	{

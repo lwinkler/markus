@@ -77,13 +77,13 @@ class StreamsTestSuite : public CxxTest::TestSuite
 			AddInputStream( 7, new StreamNum<double>("stream_double7", m_double, *this, "Test stream"));
 
 			AddInputStream( 8, new MultiStreamT<vector<Object>>("stream_object8", m_objs, *this, "Test stream"));
-			AddInputStream( 9, new MultiStreamT<Event>("stream_event9", m_evts, *this, "Test stream"));
-			AddInputStream(10, new MultiStreamT<cv::Mat>("stream_image10", m_images, *this, "Test stream"));
-			// AddInputStream( 3, new MultiStreamT<bool>("stream_bool", m_bools, *this, "Test stream"));
-			// AddInputStream( 4, new MultiStreamT<int>("stream_int", m_ints, *this, "Test stream"));
-			// AddInputStream( 5, new MultiStreamT<uint>("stream_uint", m_uints, *this, "Test stream"));
-			// AddInputStream( 6, new MultiStreamT<float>("stream_float", m_floats, *this, "Test stream"));
-			// AddInputStream( 7, new MultiStreamT<double>("stream_double", m_doubles, *this, "Test stream"));
+			// AddInputStream( 9, new MultiStreamT<Event>("stream_event9", m_evts, *this, "Test stream"));
+			// AddInputStream(10, new MultiStreamT<cv::Mat>("stream_image10", m_images, *this, "Test stream"));
+			// AddInputStream(11, new MultiStreamT<bool>("stream_bool11", m_bools, *this, "Test stream"));
+			// AddInputStream(12, new MultiStreamT<int>("stream_int12", m_ints, *this, "Test stream"));
+			// AddInputStream(13, new MultiStreamT<uint>("stream_uint13", m_uints, *this, "Test stream"));
+			// AddInputStream(14, new MultiStreamT<float>("stream_float14", m_floats, *this, "Test stream"));
+			// AddInputStream(15, new MultiStreamT<double>("stream_double15", m_doubles, *this, "Test stream"));
 
 			AddOutputStream( 0, new StreamObject("stream_object0", m_obj, *this, "Test stream"));
 			AddOutputStream( 1, new StreamEvent("stream_event1", m_evt, *this, "Test stream"));
@@ -95,13 +95,13 @@ class StreamsTestSuite : public CxxTest::TestSuite
 			AddOutputStream( 7, new StreamNum<double>("stream_double7", m_double, *this, "Test stream"));
 
 			AddOutputStream( 8, new MultiStreamT<vector<Object>>("stream_object8", m_objs, *this, "Test stream"));
-			AddOutputStream( 9, new MultiStreamT<Event>("stream_event9", m_evts, *this, "Test stream"));
-			AddOutputStream(10, new MultiStreamT<cv::Mat>("stream_image10", m_images, *this, "Test stream"));
-			// AddOutputStream( 3, new MultiStreamT<bool>("stream_bool", m_bools, *this, "Test stream"));
-			// AddOutputStream( 4, new MultiStreamT<int>("stream_int", m_ints, *this, "Test stream"));
-			// AddOutputStream( 5, new MultiStreamT<uint>("stream_uint", m_uints, *this, "Test stream"));
-			// AddOutputStream( 6, new MultiStreamT<float>("stream_float", m_floats, *this, "Test stream"));
-			// AddOutputStream( 7, new MultiStreamT<double>("stream_double", m_doubles, *this, "Test stream"));
+			// AddOutputStream( 9, new MultiStreamT<Event>("stream_event9", m_evts, *this, "Test stream"));
+			// AddOutputStream(10, new MultiStreamT<cv::Mat>("stream_image10", m_images, *this, "Test stream"));
+			// AddOutputStream(11, new MultiStreamT<bool>("stream_bool11", m_bools, *this, "Test stream"));
+			// AddOutputStream(12, new MultiStreamT<int>("stream_int12", m_ints, *this, "Test stream"));
+			// AddOutputStream(13, new MultiStreamT<uint>("stream_uint13", m_uints, *this, "Test stream"));
+			// AddOutputStream(14, new MultiStreamT<float>("stream_float14", m_floats, *this, "Test stream"));
+			// AddOutputStream(15, new MultiStreamT<double>("stream_double15", m_doubles, *this, "Test stream"));
 		}
 
 		~FakeModule() {}
