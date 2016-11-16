@@ -36,7 +36,7 @@ template<> const string StreamObject::m_type         = "Objects";
 template<> const string StreamObject::m_class        = "StreamObjects";
 template<> const ParameterType StreamObject::m_parameterType = PARAM_STREAM_OBJECTS;
 
-template<> StreamObject::StreamT(const std::string& rx_name, vector<Object>& rx_object, Module& rx_module, const std::string& rx_description, const std::string& rx_requirement) :
+template<> StreamObject::StreamT(const std::string& rx_name, vector<Object>& rx_object, Module& rx_module, const std::string& rx_description, const Json::Value& rx_requirement) :
 	Stream(rx_name, rx_module, rx_description, rx_requirement),
 	m_content(rx_object)
 {
@@ -110,14 +110,10 @@ template<>void StreamObject::Randomize(unsigned int& xr_seed)
 	int minNb = 0;
 	int maxNb = 10;
 
-	if(!m_requirement.empty())
+	if(!m_range.isNull())
 	{
-		Json::Value root;
-			Json::Reader reader;
-		if(!reader.parse(m_requirement, root, false))
-			throw MkException("Error parsing requirement: " + m_requirement, LOC);
-		minNb = root.get("min", minNb).asInt();
-		maxNb = root.get("max", maxNb).asInt();
+		minNb = m_range.get("min", minNb).asInt();
+		maxNb = m_range.get("max", maxNb).asInt();
 	}
 
 	int nb = (maxNb - minNb) == 0 ? minNb : minNb + rand_r(&xr_seed) % (maxNb - minNb);
@@ -125,7 +121,7 @@ template<>void StreamObject::Randomize(unsigned int& xr_seed)
 	for(int i = 0 ; i < nb ; i++)
 	{
 		Object obj("random");
-		obj.Randomize(xr_seed, m_requirement, GetSize());
+		obj.Randomize(xr_seed, m_range, GetSize());
 		m_content.push_back(obj);
 	}
 }

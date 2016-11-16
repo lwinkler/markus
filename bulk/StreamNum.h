@@ -38,7 +38,7 @@ template<typename T>
 class StreamNum : public Stream
 {
 public:
-	StreamNum(const std::string& x_name, T& rx_scalar, Module& rx_module, const std::string& x_description, const std::string& rx_requirement = "") :
+	StreamNum(const std::string& x_name, T& rx_scalar, Module& rx_module, const std::string& x_description, const Json::Value& rx_requirement = Json::nullValue) :
 		Stream(x_name, rx_module, x_description, rx_requirement),
 		m_scalars(PLOT_LENGTH),
 		m_content(rx_scalar) {}

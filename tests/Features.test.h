@@ -58,7 +58,7 @@ protected:
 		// cout << "feat.CompareSquared(feat) = " << feat.CompareSquared(feat) << endl;
 		TS_ASSERT(feat.CompareSquared(feat) == 0);
 		TS_ASSERT(feat.CompareSquared(*copy) == 0);
-		copy->Randomize(xr_seed, "");
+		copy->Randomize(xr_seed, Json::nullValue);
 		TS_TRACE("compare with "+copy->SerializeToString() + " with signature = " + feat.Signature());
 		// cout << "feat.CompareSquared(*copy) = " << feat.CompareSquared(*copy) << endl;
 		TS_ASSERT(feat.CompareSquared(*copy) > 0);

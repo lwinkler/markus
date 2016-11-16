@@ -198,7 +198,7 @@ public:
 			if(elem.second->GetClass() == "StreamImage")
 				outputStream = new StreamImage("test", m_image, *mp_fakeInput, "Test input");
 			else if(elem.second->GetClass() == "StreamObjects")
-				outputStream = new StreamObject("test", m_objects, *mp_fakeInput, "Test input", elem.second->GetRequirement());
+				outputStream = new StreamObject("test", m_objects, *mp_fakeInput, "Test input", elem.second->GetRange());
 			else if(elem.second->GetClass() == "StreamState")
 				outputStream = new StreamState("test", m_state, *mp_fakeInput, "Test input");
 			else if(elem.second->GetClass() == "StreamEvent")

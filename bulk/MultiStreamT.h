@@ -33,7 +33,7 @@
 template<typename T>class MultiStreamT : public StreamT<T>
 {
 public:
-	MultiStreamT(const std::string& rx_name, std::vector<T>& rx_objects, Module& rx_module, const std::string& rx_description, const std::string& rx_requirement = "") :
+	MultiStreamT(const std::string& rx_name, std::vector<T>& rx_objects, Module& rx_module, const std::string& rx_description, const Json::Value& rx_requirement = Json::nullValue) :
 		StreamT<T>(rx_name, rx_objects.at(0), rx_module, rx_description, rx_requirement),
 		m_objects(rx_objects),
 		m_maxSize(rx_objects.size())

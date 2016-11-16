@@ -61,7 +61,7 @@ template<> void StreamEvent::ConvertInput()
 template<> void StreamEvent::Randomize(unsigned int& xr_seed)
 {
 	// random event
-	m_content.Randomize(xr_seed, m_requirement, GetSize());
+	m_content.Randomize(xr_seed, m_range, GetSize());
 }
 
 /// Render : to display the event

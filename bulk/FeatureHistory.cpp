@@ -67,7 +67,7 @@ double FeatureHistory::CompareSquared(const Feature& x_feature) const
 	return sum / POW2(features.size());
 }
 
-void FeatureHistory::Randomize(unsigned int& xr_seed, const string& x_param)
+void FeatureHistory::Randomize(unsigned int& xr_seed, const Json::Value& x_param)
 {
 	features.clear();
 	for(int i = 0 ; i  < 100 ; i++)

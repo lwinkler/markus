@@ -34,7 +34,7 @@
 class Stream : public Serializable, public Parameter, boost::noncopyable
 {
 public:
-	Stream(const std::string& x_name, Module& rx_module, const std::string& rx_description, const std::string& rx_requirement = "");
+	Stream(const std::string& x_name, Module& rx_module, const std::string& rx_description, const Json::Value& rx_requirement = Json::nullValue);
 	virtual ~Stream();
 
 	inline void Reset() {m_timeStamp = TIME_STAMP_MIN;SetValueToDefault();}
@@ -84,8 +84,6 @@ public:
 			throw MkException("Stream " + GetName() + " is not connected or is an output", LOC);
 		return m_connected->GetTimeStamp();
 	}
-	inline const std::string& GetRequirement() {return m_requirement;}
-	inline void SetRequirement(const std::string& x_requirement) {m_requirement = x_requirement;}
 	inline bool IsBlocking() const {return m_blocking;}
 	inline bool IsSynchronized() const {return m_synchronized;}
 	inline void SetBlocking(bool x_block) {m_blocking = x_block;}
@@ -111,7 +109,6 @@ protected:
 	int m_cptConnected   = 0;
 	bool m_blocking      = true;
 	bool m_synchronized  = true;
-	std::string m_requirement; // TODO: Merge with range ?
 
 private:
 	static log4cxx::LoggerPtr m_logger;

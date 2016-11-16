@@ -227,7 +227,7 @@ void Object::Intersect(const Mat& x_image)
 }
 
 /// Randomize the content of the object
-void Object::Randomize(unsigned int& xr_seed, const string& x_requirement, const Size& x_size)
+void Object::Randomize(unsigned int& xr_seed, const Json::Value& x_requirement, const Size& x_size)
 {
 	SetRect(cv::Rect_<double>(
 		Point2d(rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height),
@@ -238,16 +238,12 @@ void Object::Randomize(unsigned int& xr_seed, const string& x_requirement, const
 		width  = 0;
 		height = 0;
 	}
-	if(!x_requirement.empty())
+	if(!x_requirement.isNull())
 	{
-		Json::Value root;
-		Json::Reader reader;
-		if(!reader.parse(x_requirement, root, false))
-			throw MkException("Error parsing requirement: " + x_requirement, LOC);
-		int minWidth = root["width"].get("min", 0).asInt();
-		int maxWidth = root["width"].get("max", x_size.width).asInt();
-		int minHeight = root["height"].get("min", 0).asInt();
-		int maxHeight = root["height"].get("max", x_size.height).asInt();
+		int minWidth = x_requirement["width"].get("min", 0).asInt();
+		int maxWidth = x_requirement["width"].get("max", x_size.width).asInt();
+		int minHeight = x_requirement["height"].get("min", 0).asInt();
+		int maxHeight = x_requirement["height"].get("max", x_size.height).asInt();
 		width  = RANGE(width,  minWidth,  maxWidth);
 		height = RANGE(height, minHeight, maxHeight);
 		Mat bounds(x_size, CV_8UC1);
@@ -258,12 +254,7 @@ void Object::Randomize(unsigned int& xr_seed, const string& x_requirement, const
 	m_feats.clear();
 	if(!x_requirement.empty())
 	{
-		Json::Value root;
-		Json::Reader reader;
-		// cout<<x_requirement<<endl;
-		if(!reader.parse(x_requirement, root, false))
-			throw MkException("Error parsing requirement: " + x_requirement, LOC);
-		Json::Value req = root["features"];
+		const Json::Value& req = x_requirement["features"];
 		if(!req.isNull())
 		{
 			// Get an instance of the feature factory
@@ -272,9 +263,7 @@ void Object::Randomize(unsigned int& xr_seed, const string& x_requirement, const
 			{
 				// create features according to the requirement
 				Feature* feat = factory.Create(req[elem]["type"].asString());
-				stringstream ss;
-				ss << req[elem];
-				feat->Randomize(xr_seed, ss.str());
+				feat->Randomize(xr_seed, req[elem]);
 				AddFeature(elem, feat);
 			}
 		}

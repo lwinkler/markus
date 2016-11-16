@@ -32,7 +32,7 @@
 template<typename T>class StreamT : public Stream
 {
 public:
-	StreamT(const std::string& rx_name, T& rx_object, Module& rx_module, const std::string& rx_description, const std::string& rx_requirement = "") :
+	StreamT(const std::string& rx_name, T& rx_object, Module& rx_module, const std::string& rx_description, const Json::Value& rx_requirement = Json::nullValue) :
 		Stream(rx_name, rx_module, rx_description, rx_requirement),
 		m_content(rx_object),
 		m_default(T{})

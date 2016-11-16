@@ -68,7 +68,7 @@ public:
 		return m_object.GetFeature(x_name);
 	}
 	void Notify(const Context& x_contextbool, bool x_isProcessEvent=false);
-	virtual void Randomize(unsigned int& xr_seed, const std::string& x_requirement, const cv::Size& x_size);
+	virtual void Randomize(unsigned int& xr_seed, const Json::Value& x_requirement, const cv::Size& x_size);
 	virtual void Serialize(std::ostream& xr_out, MkDirectory* xp_dir = nullptr) const;
 	virtual void Deserialize(std::istream& x_in, MkDirectory* xp_dir = nullptr);
 

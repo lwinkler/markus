@@ -46,13 +46,13 @@ Event::Event() :
 Event::~Event() {}
 
 /// Randomize the content of the event
-void Event::Randomize(unsigned int& xr_seed, const string& x_requirement, const Size& x_size)
+void Event::Randomize(unsigned int& xr_seed, const Json::Value& x_requirement, const Size& x_size)
 {
 	// random event
 	Clean();
-	if(x_requirement != "" || rand_r(&xr_seed) < RAND_MAX /10)
+	if(x_requirement != Json::nullValue || rand_r(&xr_seed) < RAND_MAX /10)
 	{
-		if(x_requirement == "" && rand_r(&xr_seed) < RAND_MAX /10)
+		if(x_requirement == Json::nullValue && rand_r(&xr_seed) < RAND_MAX /10)
 		{
 			Raise("random", rand_r(&xr_seed), rand_r(&xr_seed));
 		}

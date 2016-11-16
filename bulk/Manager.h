@@ -130,7 +130,7 @@ public:
 	double GetRecordingFps() const override
 	{
 		assert(!m_inputs.empty());
-		return m_inputs.first()->GetRecordingFps();
+		return m_inputs.front()->GetRecordingFps();
 	}
 	void BuildModule(const std::string& x_name, const ConfigReader& x_moduleConfig);
 

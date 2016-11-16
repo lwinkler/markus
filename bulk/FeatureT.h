@@ -40,7 +40,7 @@ public:
 		const FeatureT<T>& feat(dynamic_cast<const FeatureT<T>&>(x_feature));
 		return compareSquared(value, feat.value);
 	}
-	inline void Randomize(unsigned int& xr_seed, const std::string& x_param)
+	inline void Randomize(unsigned int& xr_seed, const Json::Value& x_param)
 	{
 		randomize(value, xr_seed);
 	}
