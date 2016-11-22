@@ -245,9 +245,9 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 	{
 		args.configFile = argv[argc - 2];
 		stringstream ss;
-		ss<<"Input.file="<<argv[argc - 1];
+		ss<<"Input.file=\"" << argv[argc - 1] << "\"";
 		args.parameters.push_back(ss.str());
-		args.parameters.push_back("Input.class=VideoFileReader");
+		args.parameters.push_back("Input.class=\"VideoFileReader\"");
 	}
 	else if (optind == argc - 1)
 	{
@@ -289,20 +289,16 @@ void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, 
 			if (*(param.begin()) == '\'')
 				param = param.substr(1,param.length());
 
-			string value = elem.substr(elem.find("=") + 1);
-			// remove quote if necessary
-			if (*(value.rbegin()) == '\'')
-				value = value.substr(0,value.length()-1);
-
+			const string value = elem.substr(elem.find("=") + 1);
 			vector<string> path;
 			split(param, '.', path);
 			if(path.size() != 2)
 				throw MkException("Parameter set in command line must be in format 'module.parameter'", LOC);
-			if(path[0] == "manager")
-				reader.parse(value, appConfig["inputs"][path[1]]);
+			ConfigReader& conf(path[0] == "manager" ? appConfig : appConfig["modules"][path[0]]);
+			if(path[1] == "class")
+				conf["class"] = stringToJson(value);
 			else
-				reader.parse(value, appConfig[path[0]]["inputs"][path[1]]);
-			// manager.GetModuleByName(path[0])->GetParameters().RefParameterByName(path[1]).SetValue(value, PARAMCONF_CMD);
+				conf["inputs"][path[1]] = stringToJson(value);
 		}
 		catch(std::exception& e)
 		{

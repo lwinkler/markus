@@ -70,7 +70,7 @@ void Module::Reset()
 {
 	if(GetName().empty())
 		throw MkException("Module of class " + GetClass() + " has an empty name", LOC);
-	LOG_INFO(m_logger, "Reseting module "<<GetName());
+	LOG_INFO(m_logger, "Reseting module " << GetName() << " of class " << GetClass());
 	Processable::Reset();
 	m_nbReset++;
 
