@@ -33,7 +33,10 @@
 #include <jsoncpp/json/writer.h>
 
 using namespace std;
-using namespace boost::filesystem;
+// using namespace boost::filesystem;
+using boost::filesystem::create_directory;
+using boost::filesystem::copy;
+using boost::filesystem::create_symlink;
 
 log4cxx::LoggerPtr Simulation::m_logger(log4cxx::Logger::getLogger("Simulation"));
 
