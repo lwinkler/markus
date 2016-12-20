@@ -312,14 +312,18 @@ void Module::Export(ostream& rx_os) const
 	root["class"]       = GetClass();
 	// root["name"]        = GetName();
 	root["description"] = GetDescription();
+	root["inputs"]  = Json::arrayValue;
+	root["outputs"] = Json::arrayValue;
 
 	for(const auto & elem : m_param.GetList())
 	{
 		if(elem->GetName().find('_') != string::npos)
 			throw MkException("Forbidden character _ in " + elem->GetName(), LOC);
 		stringstream ss;
+		Json::Value val;
 		elem->Export(ss);
-		ss >> root["inputs"][elem->GetName()];
+		ss >> val;
+		root["inputs"].append(val);
 	}
 	for(const auto& elem : m_inputStreams)
 	{
@@ -327,8 +331,10 @@ void Module::Export(ostream& rx_os) const
 			throw MkException("Forbidden character _ in " + elem.second->GetName(), LOC);
 		// note: parameters are now inputs
 		stringstream ss;
+		Json::Value val;
 		elem.second->Export(ss);
-		ss >> root["inputs"][elem.second->GetName()];
+		ss >> val;
+		root["inputs"].append(val);
 	}
 	for(const auto& elem : m_outputStreams)
 	{
@@ -338,7 +344,9 @@ void Module::Export(ostream& rx_os) const
 		{
 			stringstream ss;
 			elem.second->Export(ss);
-			ss >> root["outputs"][elem.second->GetName()];
+			Json::Value val;
+			ss >> val;
+			root["outputs"].append(val);
 		}
 	}
 	rx_os << root;

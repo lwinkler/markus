@@ -48,6 +48,7 @@ void Parameter::Export(ostream& rx_os) const
 	Json::Reader reader;
 	
 	root["type"] = GetType();
+	root["name"] = GetName();
 	root["description"] = GetDescription();
 	root["default"] = GetDefault();
 	root["range"] = GetRange();
