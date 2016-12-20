@@ -58,7 +58,7 @@ void usage()
 		"options:\n"
 		" -h  --help            Print this help        \n"
 		" -v  --version         Print version information\n"
-		" -d  --describe        Create a description of all modules in XML format inside module/ directory. For development purpose.\n"
+		" -d  --describe        Create a description of all modules in XML format inside module/ directory. Used by the editor.\n"
 		" -e  --editor          Launch the module editor. \n"
 		" -S  --simulation      Prepare a full simultion based on a *.sim.xml file\n"
 		"                       Override some parameters in an extra XML file\n"

@@ -456,48 +456,34 @@ void Manager::CreateEditorFiles(const string& x_fileName)
 {
 	try
 	{
-		map<string,vector<string>> categories;
-		Json::Value modules_json;
+		Json::Value moduleCategoriesJson;
+		Json::Value moduleDescriptionsJson = Json::arrayValue;
 
 		vector<string> moduleTypes;
 		mr_moduleFactory.List(moduleTypes);
-		int id = 0;
 		for(const auto& moduleType : moduleTypes)
 		{
 			ParameterStructure* parameters = mr_parametersFactory.Create(moduleType, moduleType);
 			Module* module = mr_moduleFactory.Create(moduleType, *parameters);
 
-			modules_json.append(moduleType);
+			moduleCategoriesJson[module->GetCategory()].append(moduleType);
+			moduleCategoriesJson["all"].append(moduleType);
 
-			// Append to the category
-			categories[module->GetCategory()].push_back(moduleType);
-			categories["all"].push_back(moduleType);
-
-			// Create the specific XML
-			string file("editor/modules/" + moduleType + ".json");
-			ofstream os(file.c_str());
+			// JSON file containing all module descriptions
+			stringstream os;
 			module->Export(os);
-			delete module;
-			delete parameters;
-			os.close();
-			id++;
+			Json::Value root;
+			os >> root;
+			moduleDescriptionsJson.append(root);
 		}
 
-		// Generate the js file containing the categories
-
-		Json::Value categories_json;
-		for(const auto& categ : categories)
-		{
-			for(const auto& mod : categ.second)
-			{
-				categories_json[categ.first].append(mod);
-			}
-		}
-		ofstream of(x_fileName);
-		of << "// This file contain the list of modules and modules categories. Generated automatically and used by the editor" << endl;
-		of << "var availableCategories = " << categories_json << ";" << endl << endl;
-		of << "var availableModules = "    << modules_json    << ";" << endl << endl;
-		of.close();
+		// Generate the js files containing
+		ofstream os1("editor/modules/modulesDescription.json"); // all module descriptions
+		os1 << moduleDescriptionsJson << endl;
+		os1.close();
+		ofstream os2("editor/modules/modulesCategories.json");
+		os2 << moduleCategoriesJson << endl;
+		os2.close();
 	}
 	catch(MkException& e)
 	{
