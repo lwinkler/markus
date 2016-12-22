@@ -56,6 +56,7 @@ void Stream::Export(ostream& rx_os) const
 	root["name"] = GetName();
 	root["default"] = GetDefault();
 	root["description"] = GetDescription();
+	root["stream"] = true;
 	rx_os << root;
 }
 
