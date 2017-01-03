@@ -1,6 +1,7 @@
 {
 	"default" : false,
 	"description" : "Test stream",
-	"id" : 3,
+	"name" : "stream_bool3",
+	"stream" : true,
 	"type" : "NumBool"
 }

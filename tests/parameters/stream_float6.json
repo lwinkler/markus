@@ -1,6 +1,7 @@
 {
 	"default" : 0,
 	"description" : "Test stream",
-	"id" : 6,
+	"name" : "stream_float6",
+	"stream" : true,
 	"type" : "NumFloat"
 }

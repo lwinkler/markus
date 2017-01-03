@@ -4,6 +4,7 @@
 		"raised" : false
 	},
 	"description" : "Test stream",
-	"id" : 1,
+	"name" : "stream_event1",
+	"stream" : true,
 	"type" : "Event"
 }

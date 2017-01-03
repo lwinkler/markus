@@ -1,6 +1,7 @@
 {
 	"default" : 0,
 	"description" : "Test stream",
-	"id" : 5,
+	"name" : "stream_uint5",
+	"stream" : true,
 	"type" : "NumUInt"
 }

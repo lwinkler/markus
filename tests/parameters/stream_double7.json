@@ -1,6 +1,7 @@
 {
 	"default" : 0,
 	"description" : "Test stream",
-	"id" : 7,
+	"name" : "stream_double7",
+	"stream" : true,
 	"type" : "NumDouble"
 }

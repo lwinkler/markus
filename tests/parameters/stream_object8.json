@@ -12,7 +12,8 @@
 		}
 	],
 	"description" : "Test stream",
-	"id" : 8,
 	"multi" : 10,
+	"name" : "stream_object8",
+	"stream" : true,
 	"type" : "Objects"
 }

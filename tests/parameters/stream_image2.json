@@ -5,6 +5,7 @@
 		"width" : 320
 	},
 	"description" : "Test stream",
-	"id" : 2,
+	"name" : "stream_image2",
+	"stream" : true,
 	"type" : "Image"
 }

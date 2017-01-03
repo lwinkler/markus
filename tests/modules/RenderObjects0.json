@@ -2,25 +2,18 @@
 	"class" : "RenderObjects",
 	"description" : "Output video stream with additional object streams",
 	"inputs" : 
-	{
-		"autoProcess" : 
+	[
 		{
 			"default" : false,
 			"description" : "If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream",
+			"name" : "autoProcess",
 			"range" : {},
 			"type" : "bool"
 		},
-		"cached" : 
-		{
-			"default" : "NO_CACHE",
-			"description" : "Format of the input image",
-			"range" : {},
-			"type" : "cachedState"
-		},
-		"fps" : 
 		{
 			"default" : 0,
 			"description" : "Frames per seconds (processing speed)",
+			"name" : "fps",
 			"range" : 
 			{
 				"max" : 1000,
@@ -28,10 +21,28 @@
 			},
 			"type" : "double"
 		},
-		"height" : 
+		{
+			"default" : "",
+			"description" : "Master module on which this module's processing is dependent. If empty, use all preceeding modules",
+			"name" : "master",
+			"range" : {},
+			"type" : "string"
+		},
+		{
+			"default" : 640,
+			"description" : "Width of the input",
+			"name" : "width",
+			"range" : 
+			{
+				"max" : 6400,
+				"min" : 1
+			},
+			"type" : "int"
+		},
 		{
 			"default" : 480,
 			"description" : "Height of the input",
+			"name" : "height",
 			"range" : 
 			{
 				"max" : 4800,
@@ -39,7 +50,20 @@
 			},
 			"type" : "int"
 		},
-		"image" : 
+		{
+			"default" : "CV_8UC3",
+			"description" : "Format of the input image",
+			"name" : "type",
+			"range" : {},
+			"type" : "imageType"
+		},
+		{
+			"default" : "NO_CACHE",
+			"description" : "Format of the input image",
+			"name" : "cached",
+			"range" : {},
+			"type" : "cachedState"
+		},
 		{
 			"default" : 
 			{
@@ -47,17 +71,10 @@
 				"width" : 640
 			},
 			"description" : "Input video stream",
-			"id" : 0,
+			"name" : "image",
+			"stream" : true,
 			"type" : "Image"
 		},
-		"master" : 
-		{
-			"default" : "",
-			"description" : "Master module on which this module's processing is dependent. If empty, use all preceeding modules",
-			"range" : {},
-			"type" : "string"
-		},
-		"objects" : 
 		{
 			"default" : 
 			[
@@ -72,32 +89,14 @@
 				}
 			],
 			"description" : "Object stream",
-			"id" : 1,
 			"multi" : 10,
+			"name" : "objects",
+			"stream" : true,
 			"type" : "Objects"
-		},
-		"type" : 
-		{
-			"default" : "CV_8UC3",
-			"description" : "Format of the input image",
-			"range" : {},
-			"type" : "imageType"
-		},
-		"width" : 
-		{
-			"default" : 640,
-			"description" : "Width of the input",
-			"range" : 
-			{
-				"max" : 6400,
-				"min" : 1
-			},
-			"type" : "int"
 		}
-	},
+	],
 	"outputs" : 
-	{
-		"output" : 
+	[
 		{
 			"default" : 
 			{
@@ -105,8 +104,9 @@
 				"width" : 640
 			},
 			"description" : "Output video stream",
-			"id" : 0,
+			"name" : "output",
+			"stream" : true,
 			"type" : "Image"
 		}
-	}
+	]
 }

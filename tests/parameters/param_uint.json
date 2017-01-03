@@ -1,6 +1,7 @@
 {
 	"default" : 633,
 	"description" : "Parameter of type unsigned int",
+	"name" : "param_uint",
 	"range" : 
 	{
 		"max" : 66000,

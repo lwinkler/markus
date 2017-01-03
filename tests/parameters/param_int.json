@@ -1,6 +1,7 @@
 {
 	"default" : 635,
 	"description" : "Parameter of type int",
+	"name" : "param_int",
 	"range" : 
 	{
 		"max" : 66000,

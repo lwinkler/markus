@@ -1,6 +1,7 @@
 {
 	"default" : -0.5,
 	"description" : "Parameter of type float",
+	"name" : "param_float",
 	"range" : 
 	{
 		"max" : 4.4500000183909475e+24,

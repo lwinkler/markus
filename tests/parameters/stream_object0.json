@@ -12,6 +12,7 @@
 		}
 	],
 	"description" : "Test stream",
-	"id" : 0,
+	"name" : "stream_object0",
+	"stream" : true,
 	"type" : "Objects"
 }

@@ -2,35 +2,21 @@
 	"class" : "VideoFileReader",
 	"description" : "Read video stream from a video file",
 	"inputs" : 
-	{
-		"autoProcess" : 
+	[
 		{
 			"default" : true,
 			"description" : "If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream",
+			"name" : "autoProcess",
 			"range" : 
 			{
 				"min" : true
 			},
 			"type" : "bool"
 		},
-		"cached" : 
-		{
-			"default" : "NO_CACHE",
-			"description" : "Format of the input image",
-			"range" : {},
-			"type" : "cachedState"
-		},
-		"file" : 
-		{
-			"default" : "in/input.mp4",
-			"description" : "Name of the video file to read, with path",
-			"range" : {},
-			"type" : "string"
-		},
-		"fps" : 
 		{
 			"default" : 0,
 			"description" : "Frames per seconds (processing speed)",
+			"name" : "fps",
 			"range" : 
 			{
 				"max" : 1000,
@@ -38,10 +24,28 @@
 			},
 			"type" : "double"
 		},
-		"height" : 
+		{
+			"default" : "",
+			"description" : "Master module on which this module's processing is dependent. If empty, use all preceeding modules",
+			"name" : "master",
+			"range" : {},
+			"type" : "string"
+		},
+		{
+			"default" : 640,
+			"description" : "Width of the input",
+			"name" : "width",
+			"range" : 
+			{
+				"max" : 6400,
+				"min" : 1
+			},
+			"type" : "int"
+		},
 		{
 			"default" : 480,
 			"description" : "Height of the input",
+			"name" : "height",
 			"range" : 
 			{
 				"max" : 4800,
@@ -49,42 +53,37 @@
 			},
 			"type" : "int"
 		},
-		"loop" : 
-		{
-			"default" : false,
-			"description" : "Loop on file",
-			"range" : {},
-			"type" : "bool"
-		},
-		"master" : 
-		{
-			"default" : "",
-			"description" : "Master module on which this module's processing is dependent. If empty, use all preceeding modules",
-			"range" : {},
-			"type" : "string"
-		},
-		"type" : 
 		{
 			"default" : "CV_8UC1",
 			"description" : "Format of the input image",
+			"name" : "type",
 			"range" : {},
 			"type" : "imageType"
 		},
-		"width" : 
 		{
-			"default" : 640,
-			"description" : "Width of the input",
-			"range" : 
-			{
-				"max" : 6400,
-				"min" : 1
-			},
-			"type" : "int"
+			"default" : "NO_CACHE",
+			"description" : "Format of the input image",
+			"name" : "cached",
+			"range" : {},
+			"type" : "cachedState"
+		},
+		{
+			"default" : "in/input.mp4",
+			"description" : "Name of the video file to read, with path",
+			"name" : "file",
+			"range" : {},
+			"type" : "string"
+		},
+		{
+			"default" : false,
+			"description" : "Loop on file",
+			"name" : "loop",
+			"range" : {},
+			"type" : "bool"
 		}
-	},
+	],
 	"outputs" : 
-	{
-		"image" : 
+	[
 		{
 			"default" : 
 			{
@@ -92,8 +91,9 @@
 				"width" : 640
 			},
 			"description" : "Video stream",
-			"id" : 0,
+			"name" : "image",
+			"stream" : true,
 			"type" : "Image"
 		}
-	}
+	]
 }
