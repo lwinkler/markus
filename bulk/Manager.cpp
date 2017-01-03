@@ -456,7 +456,7 @@ void Manager::CreateEditorFiles(const string& x_fileName)
 {
 	try
 	{
-		Json::Value moduleCategoriesJson;
+		map<string,vector<string>> moduleCategories;
 		Json::Value moduleDescriptionsJson = Json::arrayValue;
 
 		vector<string> moduleTypes;
@@ -466,8 +466,8 @@ void Manager::CreateEditorFiles(const string& x_fileName)
 			ParameterStructure* parameters = mr_parametersFactory.Create(moduleType, moduleType);
 			Module* module = mr_moduleFactory.Create(moduleType, *parameters);
 
-			moduleCategoriesJson[module->GetCategory()].append(moduleType);
-			moduleCategoriesJson["all"].append(moduleType);
+			moduleCategories[module->GetCategory()].push_back(moduleType);
+			moduleCategories["all"].push_back(moduleType);
 
 			// JSON file containing all module descriptions
 			stringstream os;
@@ -475,6 +475,15 @@ void Manager::CreateEditorFiles(const string& x_fileName)
 			Json::Value root;
 			os >> root;
 			moduleDescriptionsJson.append(root);
+		}
+		Json::Value moduleCategoriesJson = Json::arrayValue;
+		for(const auto& elem : moduleCategories) {
+			Json::Value root;
+			root["name"]    = elem.first;
+			root["modules"] = Json::arrayValue;
+			for(const auto& mod : elem.second)
+				root["modules"].append(mod);
+			moduleCategoriesJson.append(root);
 		}
 
 		// Generate the js files containing

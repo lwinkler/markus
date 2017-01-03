@@ -325,6 +325,7 @@ void Module::Export(ostream& rx_os) const
 		ss >> val;
 		root["inputs"].append(val);
 	}
+	/* Already in parameters
 	for(const auto& elem : m_inputStreams)
 	{
 		if(elem.second->GetName().find('_') != string::npos)
@@ -336,6 +337,7 @@ void Module::Export(ostream& rx_os) const
 		ss >> val;
 		root["inputs"].append(val);
 	}
+	*/
 	for(const auto& elem : m_outputStreams)
 	{
 		if(elem.second->GetName().find('_') != string::npos)
