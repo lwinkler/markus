@@ -124,6 +124,8 @@ public:
 		TS_ASSERT(conf1["modules"]["Module0"]["inputs"]["param_float"].asDouble() == 3.1415);
 		TS_ASSERT(conf1["modules"]["Module1"]["inputs"]["param_float"].asDouble()  == 77.7);
 		TS_ASSERT(conf1["modules"]["Module1"]["inputs"]["param_int"].asInt()  == 42);
+
+		TS_ASSERT(conf1["inputs"]["param_float"].asDouble() == 0.51);
 	}
 };
 

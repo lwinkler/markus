@@ -108,7 +108,7 @@ void ParameterStructure::Write(ConfigReader& xr_config) const
 	{
 		if(m_writeAllParamsToConfig || elem->GetConfigurationSource() != PARAMCONF_DEF)
 		{
-			xr_config["inputs"][elem->GetName()] = elem->GetValue();
+			replaceOrAppendInArray(xr_config["inputs"], "name", elem->GetName())["value"] = elem->GetValue();
 		}
 	}
 }

@@ -59,7 +59,7 @@ struct ModuleTester
 
 	ModuleTester()
 	{
-		addModuleToConfig("VideoFileReader", configFile)["inputs"]["fps"] = 22;
+		replaceOrAppendInArray(addModuleToConfig("VideoFileReader", configFile)["inputs"], "name", "fps") = 22;
 		assert(!configFile.isNull());
 		assert(configFile.isObject());
 		configFile["name"] = "unitTest";
@@ -79,7 +79,7 @@ struct ModuleTester
 		moduleConfig["class"] = rx_type;
 		ConfigReader& paramConfig  = moduleConfig["inputs"];
 
-		paramConfig["fps"] = 123;
+		replaceOrAppendInArray(paramConfig, "name", "fps") = 123;
 
 		// stringstream ss;
 		// ss<<m_cpt++;
@@ -168,7 +168,7 @@ public:
 		// Add parameters to override to the config
 		if(xp_parameters != nullptr)
 			for(const auto& elem : *xp_parameters)
-				moduleConfig["inputs"][elem.first] = elem.second;
+				replaceOrAppendInArray(moduleConfig["inputs"], "name", elem.first) = elem.second;
 
 		writeToFile(tester.configFile, "tests/tmp/tmp.json");
 

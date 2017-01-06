@@ -360,7 +360,6 @@ int main(int argc, char** argv)
 		// Init global variables and objects
 		// Context manages all call to system, files, ...
 		Context::Parameters contextParameters(appConfig["name"].asString());
-			writeToFile(appConfig, "asdf.json");
 		contextParameters.Read(appConfig);
 
 		contextParameters.outputDir       = args.outputDir;

@@ -516,7 +516,7 @@ void Manager::WriteConfig(ConfigReader& xr_config) const
 {
 	// Set all config ready to be saved
 	for(auto & elem : m_modules)
-		elem.second->WriteConfig(xr_config["modules"][elem.second->GetName()]);
+		elem.second->WriteConfig(findFirstInArray(xr_config["modules"], "name", elem.second->GetName()));
 	m_param.Write(xr_config);
 	GetContext().WriteConfig(xr_config);
 }
