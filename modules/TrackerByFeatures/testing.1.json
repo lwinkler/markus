@@ -1,29 +1,29 @@
 {
 	"description" : "(unk)",
 	"modules" : 
-	{
-		"CompareObjects3" : 
+	[
 		{
 			"class" : "CompareObjects",
 			"inputs" : 
-			{
-				"video1" : 
+			[
 				{
 					"connected" : 
 					{
 						"module" : "TrackerByFeatures1",
 						"output" : "tracker"
-					}
+					},
+					"name" : "video1"
 				},
-				"video2" : 
 				{
 					"connected" : 
 					{
 						"module" : "ReadObjects4",
 						"output" : "object"
-					}
+					},
+					"name" : "video2"
 				}
-			},
+			],
+			"name" : "CompareObjects3",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -32,20 +32,20 @@
 				"y" : 379
 			}
 		},
-		"LogObjects2" : 
 		{
 			"class" : "LogObjects",
 			"inputs" : 
-			{
-				"image" : 
+			[
 				{
 					"connected" : 
 					{
 						"module" : "TrackerByFeatures1",
 						"output" : "tracker"
-					}
+					},
+					"name" : "image"
 				}
-			},
+			],
+			"name" : "LogObjects2",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -54,13 +54,16 @@
 				"y" : 155
 			}
 		},
-		"ReadObjects0" : 
 		{
 			"class" : "ReadObjects",
 			"inputs" : 
-			{
-				"file" : "modules/TrackerByFeatures/in.objects.srt"
-			},
+			[
+				{
+					"name" : "file",
+					"value" : "modules/TrackerByFeatures/in.objects.srt"
+				}
+			],
+			"name" : "ReadObjects0",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -69,13 +72,16 @@
 				"y" : 300
 			}
 		},
-		"ReadObjects4" : 
 		{
 			"class" : "ReadObjects",
 			"inputs" : 
-			{
-				"file" : "modules/TrackerByFeatures/gt.objects.srt"
-			},
+			[
+				{
+					"name" : "file",
+					"value" : "modules/TrackerByFeatures/gt.objects.srt"
+				}
+			],
+			"name" : "ReadObjects4",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -84,20 +90,20 @@
 				"y" : 443
 			}
 		},
-		"TrackerByFeatures1" : 
 		{
 			"class" : "TrackerByFeatures",
 			"inputs" : 
-			{
-				"image" : 
+			[
 				{
 					"connected" : 
 					{
 						"module" : "ReadObjects0",
 						"output" : "object"
-					}
+					},
+					"name" : "image"
 				}
-			},
+			],
+			"name" : "TrackerByFeatures1",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -106,6 +112,6 @@
 				"y" : 300
 			}
 		}
-	},
+	],
 	"name" : "CustomProject"
 }

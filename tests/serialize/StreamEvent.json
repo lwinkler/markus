@@ -1,4 +1,3 @@
-
 {
 	"connected" : false,
 	"description" : "A stream of event",
@@ -11,17 +10,14 @@
 		{
 			"objects" : 
 			[
-				
 				{
 					"ewwww" : [ 1, 2, 3, 4 ],
 					"more" : "fun"
 				},
-				
 				{
 					"ewwww" : [ 1, 2, 4 ],
 					"more" : "fun"
 				},
-				
 				{
 					"ewwww" : [ 1, 3, 4 ],
 					"more" : "no more!"
@@ -42,6 +38,7 @@
 		},
 		"raised" : true
 	},
+	"name" : "streamEvent",
 	"timeStamp" : 12341244444444,
 	"type" : "Event"
 }

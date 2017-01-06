@@ -86,7 +86,7 @@ void Stream::Disconnect()
 void Stream::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 {
 	Json::Value root;
-	// root["name"]        = GetName();
+	root["name"]        = GetName();
 	root["type"]        = GetType();
 	root["description"] = GetDescription();
 	root["timeStamp"]   = Json::UInt64(m_timeStamp.load());

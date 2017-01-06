@@ -1,24 +1,33 @@
 {
 	"description" : "(unk)",
 	"modules" : 
-	{
-		"BgrSubMOG24" : 
+	[
 		{
 			"class" : "BgrSubMOG2",
 			"inputs" : 
-			{
-				"height" : 120,
-				"image" : 
+			[
+				{
+					"name" : "height",
+					"value" : 120
+				},
 				{
 					"connected" : 
 					{
 						"module" : "VideoFileReader1",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				},
-				"learningRate" : 0.0001,
-				"width" : 160
-			},
+				{
+					"name" : "learningRate",
+					"value" : 0.0001
+				},
+				{
+					"name" : "width",
+					"value" : 160
+				}
+			],
+			"name" : "BgrSubMOG24",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -27,31 +36,40 @@
 				"y" : 219
 			}
 		},
-		"CompareVideo0" : 
 		{
 			"class" : "CompareVideo",
 			"inputs" : 
-			{
-				"height" : 120,
-				"threshold" : 0.01,
-				"video1" : 
+			[
+				{
+					"name" : "height",
+					"value" : 120
+				},
+				{
+					"name" : "threshold",
+					"value" : 0.01
+				},
 				{
 					"connected" : 
 					{
 						"module" : "BgrSubMOG24",
 						"output" : "foreground"
-					}
+					},
+					"name" : "video1"
 				},
-				"video2" : 
 				{
 					"connected" : 
 					{
 						"module" : "VideoFileReader2",
 						"output" : "image"
-					}
+					},
+					"name" : "video2"
 				},
-				"width" : 160
-			},
+				{
+					"name" : "width",
+					"value" : 160
+				}
+			],
+			"name" : "CompareVideo0",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -60,30 +78,36 @@
 				"y" : 342
 			}
 		},
-		"CompareVideo7" : 
 		{
 			"class" : "CompareVideo",
 			"inputs" : 
-			{
-				"height" : 120,
-				"video1" : 
+			[
+				{
+					"name" : "height",
+					"value" : 120
+				},
 				{
 					"connected" : 
 					{
 						"module" : "BgrSubMOG24",
 						"output" : "background"
-					}
+					},
+					"name" : "video1"
 				},
-				"video2" : 
 				{
 					"connected" : 
 					{
 						"module" : "VideoFileReader6",
 						"output" : "image"
-					}
+					},
+					"name" : "video2"
 				},
-				"width" : 160
-			},
+				{
+					"name" : "width",
+					"value" : 160
+				}
+			],
+			"name" : "CompareVideo7",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -92,15 +116,24 @@
 				"y" : 473
 			}
 		},
-		"VideoFileReader1" : 
 		{
 			"class" : "VideoFileReader",
 			"inputs" : 
-			{
-				"file" : "in/input.mp4",
-				"height" : 120,
-				"width" : 160
-			},
+			[
+				{
+					"name" : "file",
+					"value" : "in/input.mp4"
+				},
+				{
+					"name" : "height",
+					"value" : 120
+				},
+				{
+					"name" : "width",
+					"value" : 160
+				}
+			],
+			"name" : "VideoFileReader1",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -109,15 +142,24 @@
 				"y" : 213
 			}
 		},
-		"VideoFileReader2" : 
 		{
 			"class" : "VideoFileReader",
 			"inputs" : 
-			{
-				"file" : "modules/BgrSubMOG2/in.foreground.MP42.avi",
-				"height" : 120,
-				"width" : 160
-			},
+			[
+				{
+					"name" : "file",
+					"value" : "modules/BgrSubMOG2/in.foreground.MP42.avi"
+				},
+				{
+					"name" : "height",
+					"value" : 120
+				},
+				{
+					"name" : "width",
+					"value" : 160
+				}
+			],
+			"name" : "VideoFileReader2",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -126,15 +168,24 @@
 				"y" : 348
 			}
 		},
-		"VideoFileReader6" : 
 		{
 			"class" : "VideoFileReader",
 			"inputs" : 
-			{
-				"file" : "modules/BgrSubMOG2/in.background.MP42.avi",
-				"height" : 120,
-				"width" : 160
-			},
+			[
+				{
+					"name" : "file",
+					"value" : "modules/BgrSubMOG2/in.background.MP42.avi"
+				},
+				{
+					"name" : "height",
+					"value" : 120
+				},
+				{
+					"name" : "width",
+					"value" : 160
+				}
+			],
+			"name" : "VideoFileReader6",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -143,24 +194,36 @@
 				"y" : 542
 			}
 		},
-		"VideoFileWriter5" : 
 		{
 			"class" : "VideoFileWriter",
 			"inputs" : 
-			{
-				"file" : "foreground",
-				"fourcc" : "MP42",
-				"height" : 120,
-				"image" : 
+			[
+				{
+					"name" : "file",
+					"value" : "foreground"
+				},
+				{
+					"name" : "fourcc",
+					"value" : "MP42"
+				},
+				{
+					"name" : "height",
+					"value" : 120
+				},
 				{
 					"connected" : 
 					{
 						"module" : "BgrSubMOG24",
 						"output" : "foreground"
-					}
+					},
+					"name" : "image"
 				},
-				"width" : 160
-			},
+				{
+					"name" : "width",
+					"value" : 160
+				}
+			],
+			"name" : "VideoFileWriter5",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -169,24 +232,36 @@
 				"y" : 136
 			}
 		},
-		"VideoFileWriter8" : 
 		{
 			"class" : "VideoFileWriter",
 			"inputs" : 
-			{
-				"file" : "background",
-				"fourcc" : "MP42",
-				"height" : 120,
-				"image" : 
+			[
+				{
+					"name" : "file",
+					"value" : "background"
+				},
+				{
+					"name" : "fourcc",
+					"value" : "MP42"
+				},
+				{
+					"name" : "height",
+					"value" : 120
+				},
 				{
 					"connected" : 
 					{
 						"module" : "BgrSubMOG24",
 						"output" : "background"
-					}
+					},
+					"name" : "image"
 				},
-				"width" : 160
-			},
+				{
+					"name" : "width",
+					"value" : 160
+				}
+			],
+			"name" : "VideoFileWriter8",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -195,6 +270,6 @@
 				"y" : 246
 			}
 		}
-	},
+	],
 	"name" : "CustomProject"
 }
