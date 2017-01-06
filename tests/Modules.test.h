@@ -59,7 +59,7 @@ struct ModuleTester
 
 	ModuleTester()
 	{
-		replaceOrAppendInArray(addModuleToConfig("VideoFileReader", configFile)["inputs"], "name", "fps") = 22;
+		replaceOrAppendInArray(addModuleToConfig("VideoFileReader", configFile)["inputs"], "name", "fps")["value"] = 22;
 		assert(!configFile.isNull());
 		assert(configFile.isObject());
 		configFile["name"] = "unitTest";
@@ -75,11 +75,11 @@ struct ModuleTester
 
 	static ConfigReader& addModuleToConfig(const string& rx_type, ConfigReader& xr_config)
 	{
-		ConfigReader& moduleConfig = xr_config["modules"][rx_type + "0"];
+		ConfigReader& moduleConfig = replaceOrAppendInArray(xr_config["modules"], "name", rx_type + "0");
 		moduleConfig["class"] = rx_type;
 		ConfigReader& paramConfig  = moduleConfig["inputs"];
 
-		replaceOrAppendInArray(paramConfig, "name", "fps") = 123;
+		replaceOrAppendInArray(paramConfig, "name", "fps")["value"] = 123;
 
 		// stringstream ss;
 		// ss<<m_cpt++;
@@ -166,9 +166,10 @@ public:
 		ConfigReader& moduleConfig = ModuleTester::addModuleToConfig(x_type, tester.configFile);
 
 		// Add parameters to override to the config
+		moduleConfig["inputs"] = Json::arrayValue;
 		if(xp_parameters != nullptr)
 			for(const auto& elem : *xp_parameters)
-				replaceOrAppendInArray(moduleConfig["inputs"], "name", elem.first) = elem.second;
+				replaceOrAppendInArray(moduleConfig["inputs"], "name", elem.first)["value"] = elem.second;
 
 		writeToFile(tester.configFile, "tests/tmp/tmp.json");
 
