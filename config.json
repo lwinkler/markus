@@ -1,16 +1,25 @@
 {
 	"description" : "",
 	"modules" : 
-	{
-		"Input" : 
+	[
 		{
+			"name": "Input",
 			"class" : "UsbCam",
 			"inputs" : 
-			{
-				"fps" : 100,
-				"num" : -1,
-				"type" : "CV_8UC3"
-			},
+			[
+				{
+					"name": "fps",
+					"value": 100
+				},
+				{
+					"name": "num",
+					"value": -1
+				},
+				{
+					"name": "type",
+					"value": "CV_8UC3"
+				}
+			],
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -19,23 +28,29 @@
 				"y" : 447
 			}
 		},
-		"SlitCamera1" : 
 		{
+			"name" : "SlitCamera1",
 			"class" : "SlitCam",
 			"inputs" : 
-			{
-				"aperture" : 1,
-				"height" : 480,
-				"image" : 
+			[
 				{
+					"name": "aperture",
+					"value": 1
+				},{
+					"name": "height",
+					"value": 480
+				},{
+					"name": "image" ,
 					"connected" : 
 					{
 						"module" : "Input",
 						"output" : "image"
 					}
-				},
-				"width" : 640
-			},
+				},{
+					"name": "width",
+					"value": 640
+				}
+			],
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -44,6 +59,6 @@
 				"y" : 431
 			}
 		}
-	},
+	],
 	"name" : "ddd2"
 }

@@ -81,6 +81,7 @@ void validate(const ConfigReader& xr_config)
 void checkUniquenessOfId(const ConfigReader& xr_config, const string& x_group, const string& x_idLabel, const string& x_moduleName)
 {
 	// Check that input streams are unique
+	assert(false); // TODO: Adapt this !!!!
 	map<int, bool> ids;
 	const ConfigReader& conf(xr_config[x_group]);
 	if(conf.isNull())
@@ -98,6 +99,7 @@ void checkUniquenessOfId(const ConfigReader& xr_config, const string& x_group, c
 
 void overrideParameters(ConfigReader& x_oldConfig, const ConfigReader& x_newConfig, const string& x_parentName)
 {
+	assert(false); // TODO: Adapt this !!!!
 	if(x_newConfig.isObject() && x_newConfig.isObject())
 	{
 		for(const auto& name : x_newConfig.getMemberNames())

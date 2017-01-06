@@ -445,18 +445,24 @@ void Module::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 	root["countProcessedFrames"] = Json::UInt64(m_countProcessedFrames);
 
 	// Dump inputs
+	root["inputs"] = Json::arrayValue;
 	for(const auto & elem : m_inputStreams)
 	{
 		stringstream ss;
 		elem.second->Serialize(ss, xp_dir);
-		ss >> root["inputs"][elem.first];
+		Json::Value tmp;
+		ss >> tmp;
+		root["inputs"].append(tmp);
 	}
 	// Dump outputs
+	root["outputs"] = Json::arrayValue;
 	for(const auto & elem : m_outputStreams)
 	{
 		stringstream ss;
 		elem.second->Serialize(ss, xp_dir);
-		ss >> root["outputs"][elem.first];
+		Json::Value tmp;
+		ss >> tmp;
+		root["outputs"].append(tmp);
 	}
 	x_out << root;
 }
@@ -481,21 +487,25 @@ void Module::Deserialize(istream& x_in, MkDirectory* xp_dir)
 	// read inputs
 	unsigned int size1 = root["inputs"].size();
 	assert(size1 == m_inputStreams.size());
+	int i = 0;
 	for(auto& elem : m_inputStreams)
 	{
 		ss.clear();
-		ss << root["inputs"][elem.first];
+		ss << root["inputs"][i];
 		m_inputStreams[elem.first]->Deserialize(ss, xp_dir);
+		i++;
 	}
 
 	// read outputs
 	size1 = root["outputs"].size();
 	assert(size1 == m_outputStreams.size());
+	i = 0;
 	for(auto& elem : m_outputStreams)
 	{
 		ss.clear();
-		ss << root["outputs"][elem.first];
+		ss << root["outputs"][i];
 		m_outputStreams[elem.first]->Deserialize(ss, xp_dir);
+		i++;
 	}
 }
 

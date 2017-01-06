@@ -77,9 +77,9 @@ void Manager::Build()
 {
 	if(m_param.config["modules"].isNull())
 		throw MkException("Config is null", LOC);
-	for(const auto& name : m_param.config["modules"].getMemberNames())
+	for(const auto& elem : m_param.config["modules"])
 	{
-		BuildModule(name, m_param.config["modules"][name]);
+		BuildModule(elem["name"].asString(), elem);
 	}
 }
 
@@ -192,23 +192,23 @@ void Manager::Connect()
 		throw MkException("Manager can only connect modules once", LOC);
 
 	// Connect input and output streams (re-read the config once since we need all modules to be connected)
-	for(const auto& name : m_param.config["modules"].getMemberNames())
+	for(const auto& conf : m_param.config["modules"])
 	{
-		Module& module = RefModuleByName(name);
+		Module& module = RefModuleByName(conf["name"].asString());
 
 		// For each module
 		// Read conections of inputs
-		for(const auto& inputName : m_param.config["modules"][name]["inputs"].getMemberNames())
+		for(const auto& inputConf : conf["inputs"])
 		{
-			const auto& inputConfig(m_param.config["modules"][name]["inputs"][inputName]);
+			const auto& inputConfig(inputConf);
 			if(!inputConfig.isObject() || !inputConfig.isMember("connected"))
 				continue;
-			ConnectInput(inputConfig, module, inputName);
+			ConnectInput(inputConfig, module, inputConf["name"].asString());
 
 			// Connect all sub-inputs: only used in case of multiple streams
 			for(const auto& subInputConfig : inputConfig["inputs"])
 			{
-				ConnectInput(subInputConfig, module, inputName);
+				ConnectInput(subInputConfig, module, inputConf["name"].asString());
 			}
 		}
 

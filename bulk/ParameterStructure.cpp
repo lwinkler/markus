@@ -78,24 +78,24 @@ void ParameterStructure::LockIfRequired()
 */
 void ParameterStructure::Read(const ConfigReader& x_config)
 {
-	for(const auto& name : x_config["inputs"].getMemberNames())
+	for(const auto& inputConf : x_config["inputs"])
 	{
-		if(x_config["inputs"][name].isObject() && x_config["inputs"][name].isMember("connected"))
+		if(inputConf.isObject() && inputConf.isMember("connected"))
 			continue; // the input is connected: do not read
 				
-		const auto& value = x_config["inputs"][name];
+		const auto& value = inputConf["value"];
 
 		try
 		{
-			if(!ParameterExists(name))
+			if(!ParameterExists(inputConf["name"].asString()))
 				continue;
-			Parameter& param = RefParameterByName(name);
+			Parameter& param = RefParameterByName(inputConf["name"].asString());
 			if(!param.IsLocked())
 				param.SetValue(value, PARAMCONF_XML);
 		}
 		catch(std::exception& e)
 		{
-			throw MkException("Exception while setting parameter " + name + ": " + string(e.what()), LOC);
+			throw MkException("Exception while setting parameter " + inputConf["name"].asString() + ": " + string(e.what()), LOC);
 		}
 	}
 	CheckRange();
@@ -196,11 +196,11 @@ void ParameterStructure::SetValueToDefault()
 void ParameterStructure::CheckRange(const ConfigReader& x_config) const
 {
 	// Check that all parameters in config are related to the module
-	for(const auto& name : x_config["inputs"].getMemberNames())
+	for(const auto& inputConf : x_config["inputs"])
 	{
 		try
 		{
-			GetParameterByName(name);
+			GetParameterByName(inputConf["name"].asString());
 		}
 		catch(ParameterException& e)
 		{
