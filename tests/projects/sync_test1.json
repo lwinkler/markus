@@ -1,69 +1,103 @@
 {
 	"description" : "",
 	"modules" : 
-	{
-		"CascadeDetector" : 
+	[
 		{
 			"class" : "CascadeDetector",
 			"inputs" : 
-			{
-				"height" : 48,
-				"image" : 
+			[
+				{
+					"name" : "height",
+					"value" : 48
+				},
 				{
 					"connected" : 
 					{
 						"module" : "Input",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				},
-				"type" : "CV_8UC1",
-				"width" : 64
-			}
+				{
+					"name" : "type",
+					"value" : "CV_8UC1"
+				},
+				{
+					"name" : "width",
+					"value" : 64
+				}
+			],
+			"name" : "CascadeDetector",
+			"outputs" : []
 		},
-		"Input" : 
 		{
 			"class" : "VideoFileReader",
 			"inputs" : 
-			{
-				"fps" : 10
-			}
+			[
+				{
+					"name" : "fps",
+					"value" : 10
+				}
+			],
+			"name" : "Input",
+			"outputs" : []
 		},
-		"RenderObjects" : 
 		{
 			"class" : "RenderObjects",
 			"inputs" : 
-			{
-				"fps" : 10,
-				"height" : 48,
-				"image" : 
+			[
+				{
+					"name" : "fps",
+					"value" : 10
+				},
+				{
+					"name" : "height",
+					"value" : 48
+				},
 				{
 					"connected" : 
 					{
 						"module" : "Input",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				},
-				"objects" : null,
-				"type" : "CV_8UC3",
-				"width" : 64
-			}
+				{
+					"name" : "objects",
+					"value" : null
+				},
+				{
+					"name" : "type",
+					"value" : "CV_8UC3"
+				},
+				{
+					"name" : "width",
+					"value" : 64
+				}
+			],
+			"name" : "RenderObjects",
+			"outputs" : []
 		},
-		"TrackerByFeatures" : 
 		{
 			"class" : "TrackerByFeatures",
 			"inputs" : 
-			{
-				"fps" : 10,
-				"image" : 
+			[
+				{
+					"name" : "fps",
+					"value" : 10
+				},
 				{
 					"connected" : 
 					{
 						"module" : "CascadeDetector",
 						"output" : "detected"
-					}
+					},
+					"name" : "image"
 				}
-			}
+			],
+			"name" : "TrackerByFeatures",
+			"outputs" : []
 		}
-	},
+	],
 	"name" : "FaceAndTracker"
 }

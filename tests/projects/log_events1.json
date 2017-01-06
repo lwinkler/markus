@@ -1,29 +1,30 @@
 {
 	"description" : "(unk)",
 	"modules" : 
-	{
-		"LogEvent1" : 
+	[
 		{
 			"class" : "LogEvent",
 			"inputs" : 
-			{
-				"event" : 
+			[
 				{
 					"connected" : 
 					{
 						"module" : "RandomEventGenerator0",
 						"output" : "event"
-					}
+					},
+					"name" : "event"
 				},
-				"image" : 
 				{
 					"connected" : 
 					{
 						"module" : "RandomEventGenerator0",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				}
-			},
+			],
+			"name" : "LogEvent1",
+			"outputs" : [],
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -32,9 +33,11 @@
 				"y" : 389
 			}
 		},
-		"RandomEventGenerator0" : 
 		{
 			"class" : "RandomEventGenerator",
+			"inputs" : [],
+			"name" : "RandomEventGenerator0",
+			"outputs" : [],
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -43,6 +46,6 @@
 				"y" : 300
 			}
 		}
-	},
+	],
 	"name" : "CustomProject"
 }

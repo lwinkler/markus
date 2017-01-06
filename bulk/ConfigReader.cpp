@@ -97,25 +97,11 @@ void checkUniquenessOfId(const ConfigReader& xr_config, const string& x_group, c
 
 
 
-void overrideParameters(ConfigReader& x_oldConfig, const ConfigReader& x_newConfig, const string& x_parentName)
+void overrideInputs(ConfigReader& xr_oldConfig, const ConfigReader& x_newConfig)
 {
-	assert(false); // TODO: Adapt this !!!!
-	if(x_newConfig.isObject() && x_newConfig.isObject())
+	for(const auto& elem : x_newConfig)
 	{
-		for(const auto& name : x_newConfig.getMemberNames())
-		{
-			if(!x_newConfig.isMember(name))
-				continue;
-			if(x_parentName == "inputs")
-			{
-				x_oldConfig[name] = x_newConfig[name];
-			}
-			else
-			{
-				// recursive call
-				overrideParameters(x_oldConfig[name], x_newConfig[name], name);
-			}
-		}
+		replaceOrAppendInArray(xr_oldConfig, "name", elem["name"].asString()) = elem;
 	}
 }
 
@@ -130,8 +116,10 @@ void overrideParameters(ConfigReader& x_oldConfig, const ConfigReader& x_newConf
 
 void overrideWith(ConfigReader& xr_config, const ConfigReader& x_extraConfig)
 {
-	// Note: This method is very specific to our type of configuration
-	overrideParameters(xr_config, x_extraConfig, "");
+	for(const auto& elem : x_extraConfig["modules"])
+	{
+		overrideInputs(findFirstInArray(xr_config["modules"], "name", elem["name"].asString())["inputs"], elem["inputs"]);
+	}
 }
 
 std::string jsonToString(const Json::Value& x_json)

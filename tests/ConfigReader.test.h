@@ -56,20 +56,18 @@ public:
 
 		ConfigReader appConf;
 		readFromFile(appConf, "tests/config/config1.json");
-		ConfigReader& module0conf(appConf["modules"]["Module0"]);
-		ConfigReader& module1conf = appConf["modules"]["Module1"];
+		ConfigReader& module0conf(findFirstInArray(appConf["modules"], "name", "Module0"));
+		ConfigReader& module1conf = findFirstInArray(appConf["modules"], "name", "Module1");
 
-		// old access
-		TS_ASSERT(module0conf == appConf["modules"]["Module0"]);
-		TS_ASSERT(module1conf == appConf["modules"]["Module1"]);
 		TS_ASSERT(! module0conf["inputs"].isNull());
+		TS_ASSERT(! module1conf["inputs"].isNull());
 
-		ConfigReader& param1 = module0conf["inputs"]["param_text"];
-		TS_ASSERT(param1.asString() == "SomeText");
-		ConfigReader& param2 = module0conf["inputs"]["param_int"];
-		TS_ASSERT(param2.asInt() == 21);
-		ConfigReader& param3 = module0conf["inputs"]["param_float"];
-		TS_ASSERT(param3.asDouble() == 3.1415);
+		ConfigReader& param1 = findFirstInArray(module0conf["inputs"], "name", "param_text");
+		TS_ASSERT(param1["value"].asString() == "SomeText");
+		ConfigReader& param2 = findFirstInArray(module0conf["inputs"], "name", "param_int");
+		TS_ASSERT(param2["value"].asInt() == 21);
+		ConfigReader& param3 = findFirstInArray(module0conf["inputs"], "name", "param_float");
+		TS_ASSERT(param3["value"].asDouble() == 3.1415);
 
 		ConfigReader conf1;
 		readFromFile(conf1, "tests/config/config1.json");
@@ -105,27 +103,22 @@ public:
 		TS_TRACE("\n# Test the override of the original configuration");
 		ConfigReader conf1;
 		readFromFile(conf1, "tests/config/config1.json");
+		ConfigReader& conf2(conf1["modules"][0]);
 
 		ConfigReader conf5;
 		readFromFile(conf5, "tests/config/config_part.json");
 
-		TS_ASSERT(conf1["inputs"]["param_text"].asString() == "SomeText0");
-		TS_ASSERT(conf1["inputs"]["param_int"].asInt() == 0);
-		TS_ASSERT(conf1["inputs"]["param_float"].asInt() == 0);
+		TS_ASSERT(findFirstInArray(conf2["inputs"], "name", "param_text")["value"].asString() == "SomeText");
+		TS_ASSERT(findFirstInArray(conf2["inputs"], "name", "param_int")["value"].asInt() == 21);
+		TS_ASSERT(findFirstInArray(conf2["inputs"], "name", "param_float")["value"].asDouble() == 3.1415000000000002);
 
 		overrideWith(conf1, conf5);
 
-		TS_ASSERT(conf1["inputs"]["param_text"].asString() == "NewText0");
-		TS_ASSERT(conf1["inputs"]["param_int"].asInt() == 44);
-		TS_ASSERT(conf1["inputs"]["param_float"].asDouble() == 0.51);
-
-		TS_ASSERT(conf1["modules"]["Module0"]["inputs"]["param_text"].asString() == "a new text");
-		TS_ASSERT(conf1["modules"]["Module0"]["inputs"]["param_int"].asInt() == 33);
-		TS_ASSERT(conf1["modules"]["Module0"]["inputs"]["param_float"].asDouble() == 3.1415);
-		TS_ASSERT(conf1["modules"]["Module1"]["inputs"]["param_float"].asDouble()  == 77.7);
-		TS_ASSERT(conf1["modules"]["Module1"]["inputs"]["param_int"].asInt()  == 42);
-
-		TS_ASSERT(conf1["inputs"]["param_float"].asDouble() == 0.51);
+		TS_ASSERT(findFirstInArray(findFirstInArray(conf1["modules"], "name", "Module0")["inputs"], "name", "param_text")["value"].asString() == "a new text");
+		TS_ASSERT(findFirstInArray(findFirstInArray(conf1["modules"], "name", "Module0")["inputs"], "name", "param_int")["value"].asInt() == 33);
+		TS_ASSERT(findFirstInArray(findFirstInArray(conf1["modules"], "name", "Module0")["inputs"], "name", "param_float")["value"].asDouble() == 3.1415);
+		TS_ASSERT(findFirstInArray(findFirstInArray(conf1["modules"], "name", "Module1")["inputs"], "name", "param_float")["value"].asDouble()  == 77.7);
+		TS_ASSERT(findFirstInArray(findFirstInArray(conf1["modules"], "name", "Module1")["inputs"], "name", "param_int")["value"].asInt()  == 42);
 	}
 };
 

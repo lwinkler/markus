@@ -1,215 +1,335 @@
 {
 	"description" : "(unk)",
 	"modules" : 
-	{
-		"BgrSubRunAvg1" : 
+	[
 		{
 			"class" : "BgrSubRunAvg",
 			"inputs" : 
-			{
-				"height" : 48,
-				"image" : 
+			[
+				{
+					"name" : "height",
+					"value" : 48
+				},
 				{
 					"connected" : 
 					{
 						"module" : "VideoFileReader0",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				},
-				"width" : 64
-			}
+				{
+					"name" : "width",
+					"value" : 64
+				}
+			],
+			"name" : "BgrSubRunAvg1",
+			"outputs" : []
 		},
-		"Morph15" : 
 		{
 			"class" : "Morph",
 			"inputs" : 
-			{
-				"element" : 2,
-				"height" : 48,
-				"image" : 
+			[
+				{
+					"name" : "element",
+					"value" : 2
+				},
+				{
+					"name" : "height",
+					"value" : 48
+				},
 				{
 					"connected" : 
 					{
 						"module" : "BgrSubRunAvg1",
 						"output" : "foreground"
-					}
+					},
+					"name" : "image"
 				},
-				"kernelSize" : 5,
-				"operator" : 0,
-				"width" : 64
-			}
+				{
+					"name" : "kernelSize",
+					"value" : 5
+				},
+				{
+					"name" : "operator",
+					"value" : 0
+				},
+				{
+					"name" : "width",
+					"value" : 64
+				}
+			],
+			"name" : "Morph15",
+			"outputs" : []
 		},
-		"Morph16" : 
 		{
 			"class" : "Morph",
 			"inputs" : 
-			{
-				"element" : 2,
-				"height" : 48,
-				"image" : 
+			[
+				{
+					"name" : "element",
+					"value" : 2
+				},
+				{
+					"name" : "height",
+					"value" : 48
+				},
 				{
 					"connected" : 
 					{
 						"module" : "TempDiff2",
 						"output" : "tempDiff"
-					}
+					},
+					"name" : "image"
 				},
-				"kernelSize" : 5,
-				"operator" : 0,
-				"width" : 64
-			}
+				{
+					"name" : "kernelSize",
+					"value" : 5
+				},
+				{
+					"name" : "operator",
+					"value" : 0
+				},
+				{
+					"name" : "width",
+					"value" : 64
+				}
+			],
+			"name" : "Morph16",
+			"outputs" : []
 		},
-		"Morph4" : 
 		{
 			"class" : "Morph",
 			"inputs" : 
-			{
-				"element" : 2,
-				"height" : 48,
-				"image" : 
+			[
+				{
+					"name" : "element",
+					"value" : 2
+				},
+				{
+					"name" : "height",
+					"value" : 48
+				},
 				{
 					"connected" : 
 					{
 						"module" : "Morph15",
 						"output" : "output"
-					}
+					},
+					"name" : "image"
 				},
-				"kernelSize" : 5,
-				"operator" : 0,
-				"width" : 64
-			}
+				{
+					"name" : "kernelSize",
+					"value" : 5
+				},
+				{
+					"name" : "operator",
+					"value" : 0
+				},
+				{
+					"name" : "width",
+					"value" : 64
+				}
+			],
+			"name" : "Morph4",
+			"outputs" : []
 		},
-		"Morph6" : 
 		{
 			"class" : "Morph",
 			"inputs" : 
-			{
-				"element" : 2,
-				"height" : 48,
-				"image" : 
+			[
+				{
+					"name" : "element",
+					"value" : 2
+				},
+				{
+					"name" : "height",
+					"value" : 48
+				},
 				{
 					"connected" : 
 					{
 						"module" : "VideoFileReader0",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				},
-				"kernelSize" : 5,
-				"operator" : 0,
-				"width" : 64
-			}
+				{
+					"name" : "kernelSize",
+					"value" : 5
+				},
+				{
+					"name" : "operator",
+					"value" : 0
+				},
+				{
+					"name" : "width",
+					"value" : 64
+				}
+			],
+			"name" : "Morph6",
+			"outputs" : []
 		},
-		"MotionDetector12" : 
 		{
 			"class" : "MotionDetector",
 			"inputs" : 
-			{
-				"height" : 48,
-				"image" : 
+			[
+				{
+					"name" : "height",
+					"value" : 48
+				},
 				{
 					"connected" : 
 					{
 						"module" : "TempDiff2",
 						"output" : "tempDiff"
-					}
+					},
+					"name" : "image"
 				},
-				"width" : 64
-			}
+				{
+					"name" : "width",
+					"value" : 64
+				}
+			],
+			"name" : "MotionDetector12",
+			"outputs" : []
 		},
-		"RenderObjects8" : 
 		{
 			"class" : "RenderObjects",
 			"inputs" : 
-			{
-				"height" : 48,
-				"image" : 
+			[
+				{
+					"name" : "height",
+					"value" : 48
+				},
 				{
 					"connected" : 
 					{
 						"module" : "VideoFileReader0",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				},
-				"objects" : null,
-				"width" : 64
-			}
+				{
+					"name" : "objects",
+					"value" : null
+				},
+				{
+					"name" : "width",
+					"value" : 64
+				}
+			],
+			"name" : "RenderObjects8",
+			"outputs" : []
 		},
-		"SegmenterContour10" : 
 		{
 			"class" : "SegmenterContour",
 			"inputs" : 
-			{
-				"height" : 48,
-				"image" : 
+			[
+				{
+					"name" : "height",
+					"value" : 48
+				},
 				{
 					"connected" : 
 					{
 						"module" : "Morph16",
 						"output" : "output"
-					}
+					},
+					"name" : "image"
 				},
-				"width" : 64
-			}
+				{
+					"name" : "width",
+					"value" : 64
+				}
+			],
+			"name" : "SegmenterContour10",
+			"outputs" : []
 		},
-		"SegmenterContour14" : 
 		{
 			"class" : "SegmenterContour",
 			"inputs" : 
-			{
-				"height" : 48,
-				"image" : 
+			[
+				{
+					"name" : "height",
+					"value" : 48
+				},
 				{
 					"connected" : 
 					{
 						"module" : "Morph6",
 						"output" : "output"
-					}
+					},
+					"name" : "image"
 				},
-				"width" : 64
-			}
+				{
+					"name" : "width",
+					"value" : 64
+				}
+			],
+			"name" : "SegmenterContour14",
+			"outputs" : []
 		},
-		"SegmenterContour9" : 
 		{
 			"class" : "SegmenterContour",
 			"inputs" : 
-			{
-				"height" : 48,
-				"image" : 
+			[
+				{
+					"name" : "height",
+					"value" : 48
+				},
 				{
 					"connected" : 
 					{
 						"module" : "Morph4",
 						"output" : "output"
-					}
+					},
+					"name" : "image"
 				},
-				"width" : 64
-			}
+				{
+					"name" : "width",
+					"value" : 64
+				}
+			],
+			"name" : "SegmenterContour9",
+			"outputs" : []
 		},
-		"TempDiff2" : 
 		{
 			"class" : "TempDiff",
 			"inputs" : 
-			{
-				"height" : 48,
-				"image" : 
+			[
+				{
+					"name" : "height",
+					"value" : 48
+				},
 				{
 					"connected" : 
 					{
 						"module" : "VideoFileReader0",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				},
-				"width" : 64
-			}
+				{
+					"name" : "width",
+					"value" : 64
+				}
+			],
+			"name" : "TempDiff2",
+			"outputs" : []
 		},
-		"VideoFileReader0" : 
 		{
 			"class" : "VideoFileReader",
 			"inputs" : 
-			{
-				"file" : "in/input.mp4"
-			}
+			[
+				{
+					"name" : "file",
+					"value" : "in/input.mp4"
+				}
+			],
+			"name" : "VideoFileReader0",
+			"outputs" : []
 		}
-	},
+	],
 	"name" : "CustomProject"
 }

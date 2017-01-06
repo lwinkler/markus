@@ -1,43 +1,74 @@
 {
-	"description":"A config for unit testing purposes",
-	"modules": {
-		"Module0":{
-			"class": "SlitCam",
-			"inputs": {
-				"param_text":"SomeText",
-				"param_int":21,
-				"param_float":3.1415
-			},
-			"outputs": {
-				"first": {
-					"id":0
+	"description" : "A config for unit testing purposes",
+	"modules" : 
+	[
+		{
+			"class" : "SlitCam",
+			"inputs" : 
+			[
+				{
+					"name" : "param_float",
+					"value" : 3.1415000000000002
+				},
+				{
+					"name" : "param_int",
+					"value" : 21
+				},
+				{
+					"name" : "param_text",
+					"value" : "SomeText"
 				}
-			}
+			],
+			"name" : "Module0",
+			"outputs" : 
+			[
+				{
+					"name" : "first",
+					"value" : 
+					{
+						"id" : 0
+					}
+				}
+			]
 		},
-		"Module1":{
-			"class": "SlitCam",
-			"inputs": {
-				"param_text":"AnotherText",
-				"param_int":42,
-				"param_float":2.71828,
-				"first": {
-					"id": 0,
-					"moduleid": 1,
-					"outputid": 0
+		{
+			"class" : "SlitCam",
+			"inputs" : 
+			[
+				{
+					"name" : "first",
+					"value" : 
+					{
+						"id" : 0,
+						"moduleid" : 1,
+						"outputid" : 0
+					}
+				},
+				{
+					"name" : "param_float",
+					"value" : 2.71828
+				},
+				{
+					"name" : "param_int",
+					"value" : 42
+				},
+				{
+					"name" : "param_text",
+					"value" : "AnotherText"
 				}
-			},
-			"outputs": {
-				"first": {
-					"id":0
+			],
+			"name" : "Module1",
+			"outputs" : 
+			[
+				{
+					"name" : "first",
+					"value" : 
+					{
+						"id" : 0
+					}
 				}
-			}
+			]
 		}
-	},
-	"inputs": {
-		"param_text":"SomeText0",
-		"param_int":0,
-		"param_float":0
-	},
-	"name":"testConfig"
+	],
+	"name" : "testConfig"
 }
-			   
