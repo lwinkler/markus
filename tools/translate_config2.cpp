@@ -65,9 +65,9 @@ int main(int argc, char** argv)
 		Json::Value tmp;
 		tmp = json1["modules"][name];
 		tmp["inputs"]  = translateElement(json1["modules"][name]["inputs"]);
-		tmp["outputs"] = translateElement(json1["modules"][name]["outputs"]);
+		// tmp["outputs"] = translateElement(json1["modules"][name]["outputs"]);
+		tmp["name"] = name;
 		json2["modules"].append(tmp);
-		json2["name"] = name;
 	}
 
 	// Open json file
