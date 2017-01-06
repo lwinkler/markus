@@ -148,3 +148,63 @@ Json::Value stringToJson(const std::string& x_string)
 	ss >> json;
 	return json;
 }
+
+/**
+* @brief Replace the first occurence or append to a config array
+*
+* @param xconf   Config to search
+* @param x_name  Name of the field
+* @param x_value Value of the field
+*
+* @return reference
+*/
+Json::Value& replaceOrAppendInArray(ConfigReader& x_conf, const std::string& x_name, const std::string& x_value)
+{
+	for(auto& elem : x_conf)
+	{
+		if(elem[x_name].asString() == x_value)
+			return elem;
+	}
+	Json::Value root;
+	root[x_name] = x_value;
+	x_conf.append(root);
+	return x_conf[x_conf.size() - 1];
+}
+
+/**
+* @brief Find first occurence of name=value in array
+*
+* @param xconf   Config to search
+* @param x_name  Name of the field
+* @param x_value Value of the field
+*
+* @return reference
+*/
+Json::Value& findFirstInArray(ConfigReader& x_conf, const std::string& x_name, const std::string& x_value)
+{
+	for(auto& elem : x_conf)
+	{
+		if(elem[x_name].asString() == x_value)
+			return elem;
+	}
+	throw MkException("No occurence of " + x_name + "=" + x_value + " in config", LOC);
+}
+
+/**
+* @brief Find first occurence of name=value in array (constant)
+*
+* @param xconf   Config to search
+* @param x_name  Name of the field
+* @param x_value Value of the field
+*
+* @return reference
+*/
+const Json::Value& findFirstInArrayConst(const ConfigReader& x_conf, const std::string& x_name, const std::string& x_value)
+{
+	for(const auto& elem : x_conf)
+	{
+		if(elem[x_name].asString() == x_value)
+			return elem;
+	}
+	throw MkException("No occurence of " + x_name + "=" + x_value + " in config", LOC);
+}

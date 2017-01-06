@@ -41,7 +41,10 @@ void overrideWith(ConfigReader& rx_config, const ConfigReader& xr_extraConfig);
 void writeToFile(const ConfigReader& rx_config, const std::string& x_file);
 void validate(const ConfigReader& rx_config);
 void checkUniquenessOfId(const ConfigReader& rx_config, const std::string& x_group, const std::string& x_idLabel, const std::string& x_moduleName);
-std::string jsonToString(const Json::Value& x_json);
-Json::Value stringToJson(const std::string& x_string);
+std::string jsonToString(const ConfigReader& x_json);
+ConfigReader stringToJson(const std::string& x_string);
+ConfigReader& findFirstInArray(ConfigReader& x_conf, const std::string& x_name, const std::string& x_value);
+ConfigReader& replaceOrAppendInArray(ConfigReader& x_conf, const std::string& x_name, const std::string& x_value);
+const ConfigReader& findFirstInArrayConst(const ConfigReader& x_conf, const std::string& x_name, const std::string& x_value);
 
 #endif

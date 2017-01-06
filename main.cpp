@@ -294,11 +294,11 @@ void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, 
 			split(param, '.', path);
 			if(path.size() != 2)
 				throw MkException("Parameter set in command line must be in format 'module.parameter'", LOC);
-			ConfigReader& conf(path[0] == "manager" ? appConfig : appConfig["modules"][path[0]]);
+			ConfigReader& conf(path[0] == "manager" ? appConfig : findFirstInArray(appConfig["modules"], "name", path[0]));
 			if(path[1] == "class")
 				conf["class"] = stringToJson(value);
 			else
-				conf["inputs"][path[1]] = stringToJson(value);
+				replaceOrAppendInArray(conf["inputs"], "name", path[1])["value"] = stringToJson(value);
 		}
 		catch(std::exception& e)
 		{
@@ -356,12 +356,11 @@ int main(int argc, char** argv)
 		validate(appConfig);
 		if(appConfig.isNull())
 			throw MkException("Tag <application> must be present in configuration file.", LOC);
-		// if(appConfig["inputs"].isNull())
-			// throw MkException("Tag <application> must contain a <inputs> section", LOC);
 
 		// Init global variables and objects
 		// Context manages all call to system, files, ...
 		Context::Parameters contextParameters(appConfig["name"].asString());
+			writeToFile(appConfig, "asdf.json");
 		contextParameters.Read(appConfig);
 
 		contextParameters.outputDir       = args.outputDir;
@@ -450,7 +449,7 @@ int main(int argc, char** argv)
 			assert(managerParameters.autoProcess);
 			manager.Start();
 			ConfigReader mainGuiConfig;
-			readFromFile(mainGuiConfig, "gui.xml", true);
+			readFromFile(mainGuiConfig, "gui.json", true);
 			ConfigReader& guiConfig(mainGuiConfig["gui"][args.configFile]);
 
 			MarkusWindow::Parameters windowParameters(guiConfig);
@@ -464,7 +463,7 @@ int main(int argc, char** argv)
 
 			// write the modified params in config and save
 			gui.WriteConfig(guiConfig);
-			writeToFile(mainGuiConfig, "gui.xml");
+			writeToFile(mainGuiConfig, "gui.json");
 #else
 			LOG_ERROR(logger, "Markus was compiled without GUI. It can only be launched with option -nc");
 #endif
@@ -475,7 +474,7 @@ int main(int argc, char** argv)
 		// Write the modified params in config and save
 		manager.WriteConfig(appConfig);
 		// Save the last config with modifs to the output file
-		writeToFile(appConfig, context.RefOutputDir().ReserveFile("overridden.xml"));
+		writeToFile(appConfig, context.RefOutputDir().ReserveFile("overridden.json"));
 	}
 	catch(MkException& e)
 	{

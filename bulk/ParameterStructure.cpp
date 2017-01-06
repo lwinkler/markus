@@ -83,15 +83,13 @@ void ParameterStructure::Read(const ConfigReader& x_config)
 		if(inputConf.isObject() && inputConf.isMember("connected"))
 			continue; // the input is connected: do not read
 				
-		const auto& value = inputConf["value"];
-
 		try
 		{
 			if(!ParameterExists(inputConf["name"].asString()))
 				continue;
 			Parameter& param = RefParameterByName(inputConf["name"].asString());
 			if(!param.IsLocked())
-				param.SetValue(value, PARAMCONF_XML);
+				param.SetValue(inputConf["value"], PARAMCONF_XML);
 		}
 		catch(std::exception& e)
 		{
