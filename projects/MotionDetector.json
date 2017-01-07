@@ -1,27 +1,45 @@
 {
 	"description" : "(unk)",
 	"modules" : 
-	{
-		"BgrSubRunAvg" : 
+	[
 		{
 			"class" : "BgrSubRunAvg",
 			"inputs" : 
-			{
-				"backgroundAlpha" : 0.001,
-				"foregroundThres" : 0.10000000000000001,
-				"fps" : 1000,
-				"height" : 240,
-				"image" : 
+			[
+				{
+					"name" : "backgroundAlpha",
+					"value" : 0.001
+				},
+				{
+					"name" : "foregroundThres",
+					"value" : 0.10000000000000001
+				},
+				{
+					"name" : "fps",
+					"value" : 1000
+				},
+				{
+					"name" : "height",
+					"value" : 240
+				},
 				{
 					"connected" : 
 					{
 						"module" : "Input",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				},
-				"type" : "CV_8UC3",
-				"width" : 320
-			},
+				{
+					"name" : "type",
+					"value" : "CV_8UC3"
+				},
+				{
+					"name" : "width",
+					"value" : 320
+				}
+			],
+			"name" : "BgrSubRunAvg",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -30,13 +48,16 @@
 				"y" : 240
 			}
 		},
-		"Input" : 
 		{
 			"class" : "NetworkCam",
 			"inputs" : 
-			{
-				"url" : "rtsp://root:admin@192.168.1.200/axis-media/media.amp?videocodec=h264&resolution=320x240&fps=8&compression=30&tcp"
-			},
+			[
+				{
+					"name" : "url",
+					"value" : "rtsp://root:admin@192.168.1.200/axis-media/media.amp?videocodec=h264&resolution=320x240&fps=8&compression=30&tcp"
+				}
+			],
+			"name" : "Input",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -45,28 +66,28 @@
 				"y" : 360
 			}
 		},
-		"LogEvent6" : 
 		{
 			"class" : "LogEvent",
 			"inputs" : 
-			{
-				"event" : 
+			[
 				{
 					"connected" : 
 					{
 						"module" : "MotionDetector4",
 						"output" : "motion"
-					}
+					},
+					"name" : "event"
 				},
-				"image" : 
 				{
 					"connected" : 
 					{
 						"module" : "Input",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				}
-			},
+			],
+			"name" : "LogEvent6",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -75,20 +96,20 @@
 				"y" : 358
 			}
 		},
-		"MotionDetector4" : 
 		{
 			"class" : "MotionDetector",
 			"inputs" : 
-			{
-				"image" : 
+			[
 				{
 					"connected" : 
 					{
 						"module" : "BgrSubRunAvg",
 						"output" : "foreground"
-					}
+					},
+					"name" : "image"
 				}
-			},
+			],
+			"name" : "MotionDetector4",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -97,6 +118,6 @@
 				"y" : 237
 			}
 		}
-	},
+	],
 	"name" : "MotionDetector"
 }

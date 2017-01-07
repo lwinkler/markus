@@ -1,26 +1,41 @@
 {
 	"description" : "",
 	"modules" : 
-	{
-		"BgrSubRunAvg" : 
+	[
 		{
 			"class" : "BgrSubRunAvg",
 			"inputs" : 
-			{
-				"backgroundAlpha" : 0.01,
-				"foregroundThres" : 0.10000000000000001,
-				"height" : 48,
-				"image" : 
+			[
+				{
+					"name" : "backgroundAlpha",
+					"value" : 0.01
+				},
+				{
+					"name" : "foregroundThres",
+					"value" : 0.10000000000000001
+				},
+				{
+					"name" : "height",
+					"value" : 48
+				},
 				{
 					"connected" : 
 					{
 						"module" : "Input",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				},
-				"type" : "CV_8UC3",
-				"width" : 64
-			},
+				{
+					"name" : "type",
+					"value" : "CV_8UC3"
+				},
+				{
+					"name" : "width",
+					"value" : 64
+				}
+			],
+			"name" : "BgrSubRunAvg",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -29,17 +44,32 @@
 				"y" : 314
 			}
 		},
-		"Input" : 
 		{
 			"class" : "UsbCam",
 			"inputs" : 
-			{
-				"fps" : 0,
-				"height" : 480,
-				"num" : -1,
-				"type" : "CV_8UC1",
-				"width" : 640
-			},
+			[
+				{
+					"name" : "fps",
+					"value" : 0
+				},
+				{
+					"name" : "height",
+					"value" : 480
+				},
+				{
+					"name" : "num",
+					"value" : -1
+				},
+				{
+					"name" : "type",
+					"value" : "CV_8UC1"
+				},
+				{
+					"name" : "width",
+					"value" : 640
+				}
+			],
+			"name" : "Input",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -48,20 +78,20 @@
 				"y" : 238
 			}
 		},
-		"LogObjects5" : 
 		{
 			"class" : "LogObjects",
 			"inputs" : 
-			{
-				"image" : 
+			[
 				{
 					"connected" : 
 					{
 						"module" : "TrackerByFeatures",
 						"output" : "tracker"
-					}
+					},
+					"name" : "image"
 				}
-			},
+			],
+			"name" : "LogObjects5",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -70,31 +100,40 @@
 				"y" : 464
 			}
 		},
-		"RenderObjects" : 
 		{
 			"class" : "RenderObjects",
 			"inputs" : 
-			{
-				"fps" : 10,
-				"height" : 480,
-				"image" : 
+			[
+				{
+					"name" : "fps",
+					"value" : 10
+				},
+				{
+					"name" : "height",
+					"value" : 480
+				},
 				{
 					"connected" : 
 					{
 						"module" : "Input",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				},
-				"objects" : 
 				{
 					"connected" : 
 					{
 						"module" : "TrackerByFeatures",
 						"output" : "tracker"
-					}
+					},
+					"name" : "objects"
 				},
-				"width" : 640
-			},
+				{
+					"name" : "width",
+					"value" : 640
+				}
+			],
+			"name" : "RenderObjects",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -103,24 +142,36 @@
 				"y" : 270
 			}
 		},
-		"SegmenterContour" : 
 		{
 			"class" : "SegmenterContour",
 			"inputs" : 
-			{
-				"height" : 48,
-				"image" : 
+			[
+				{
+					"name" : "height",
+					"value" : 48
+				},
 				{
 					"connected" : 
 					{
 						"module" : "BgrSubRunAvg",
 						"output" : "foreground"
-					}
+					},
+					"name" : "image"
 				},
-				"minHeight" : 3,
-				"minWidth" : 3,
-				"width" : 64
-			},
+				{
+					"name" : "minHeight",
+					"value" : 3
+				},
+				{
+					"name" : "minWidth",
+					"value" : 3
+				},
+				{
+					"name" : "width",
+					"value" : 64
+				}
+			],
+			"name" : "SegmenterContour",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -129,25 +180,40 @@
 				"y" : 308
 			}
 		},
-		"TrackerByFeatures" : 
 		{
 			"class" : "TrackerByFeatures",
 			"inputs" : 
-			{
-				"alpha" : 0.10000000000000001,
-				"height" : 480,
-				"image" : 
+			[
+				{
+					"name" : "alpha",
+					"value" : 0.10000000000000001
+				},
+				{
+					"name" : "height",
+					"value" : 480
+				},
 				{
 					"connected" : 
 					{
 						"module" : "SegmenterContour",
 						"output" : "segmented"
-					}
+					},
+					"name" : "image"
 				},
-				"timeDisappear" : 5,
-				"type" : "CV_8UC1",
-				"width" : 640
-			},
+				{
+					"name" : "timeDisappear",
+					"value" : 5
+				},
+				{
+					"name" : "type",
+					"value" : "CV_8UC1"
+				},
+				{
+					"name" : "width",
+					"value" : 640
+				}
+			],
+			"name" : "TrackerByFeatures",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -156,6 +222,6 @@
 				"y" : 311
 			}
 		}
-	},
+	],
 	"name" : "ObjectTracker"
 }

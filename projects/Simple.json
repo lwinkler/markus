@@ -1,18 +1,33 @@
 {
 	"description" : "",
 	"modules" : 
-	{
-		"UsbCam0" : 
+	[
 		{
 			"class" : "UsbCam",
 			"inputs" : 
-			{
-				"fps" : 10,
-				"height" : 480,
-				"num" : -1,
-				"type" : "CV_8UC1",
-				"width" : 640
-			},
+			[
+				{
+					"name" : "fps",
+					"value" : 10
+				},
+				{
+					"name" : "height",
+					"value" : 480
+				},
+				{
+					"name" : "num",
+					"value" : -1
+				},
+				{
+					"name" : "type",
+					"value" : "CV_8UC1"
+				},
+				{
+					"name" : "width",
+					"value" : 640
+				}
+			],
+			"name" : "UsbCam0",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -21,6 +36,6 @@
 				"y" : 300
 			}
 		}
-	},
+	],
 	"name" : "Simple"
 }

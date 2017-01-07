@@ -1,14 +1,17 @@
 {
 	"description" : "(unk)",
 	"modules" : 
-	{
-		"Input" : 
+	[
 		{
 			"class" : "VideoFileReader",
 			"inputs" : 
-			{
-				"loop" : 1
-			},
+			[
+				{
+					"name" : "loop",
+					"value" : 1
+				}
+			],
+			"name" : "Input",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -17,24 +20,36 @@
 				"y" : 300
 			}
 		},
-		"MotionDetector2" : 
 		{
 			"class" : "MotionDetector",
 			"inputs" : 
-			{
-				"height" : 120,
-				"image" : 
+			[
+				{
+					"name" : "height",
+					"value" : 120
+				},
 				{
 					"connected" : 
 					{
 						"module" : "TempDiff5",
 						"output" : "tempDiff"
-					}
+					},
+					"name" : "image"
 				},
-				"motionThres" : 0.001,
-				"propagate" : 0,
-				"width" : 160
-			},
+				{
+					"name" : "motionThres",
+					"value" : 0.001
+				},
+				{
+					"name" : "propagate",
+					"value" : 0
+				},
+				{
+					"name" : "width",
+					"value" : 160
+				}
+			],
+			"name" : "MotionDetector2",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -43,21 +58,24 @@
 				"y" : 293
 			}
 		},
-		"SlitCam3" : 
 		{
 			"class" : "SlitCam",
 			"inputs" : 
-			{
-				"image" : 
+			[
 				{
 					"connected" : 
 					{
 						"module" : "Input",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				},
-				"master" : "MotionDetector2"
-			},
+				{
+					"name" : "master",
+					"value" : "MotionDetector2"
+				}
+			],
+			"name" : "SlitCam3",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -66,20 +84,20 @@
 				"y" : 461
 			}
 		},
-		"TempDiff5" : 
 		{
 			"class" : "TempDiff",
 			"inputs" : 
-			{
-				"image" : 
+			[
 				{
 					"connected" : 
 					{
 						"module" : "Input",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				}
-			},
+			],
+			"name" : "TempDiff5",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -88,6 +106,6 @@
 				"y" : 258
 			}
 		}
-	},
+	],
 	"name" : "CustomProject"
 }

@@ -1,14 +1,17 @@
 {
 	"description" : "(unk)",
 	"modules" : 
-	{
-		"Input" : 
+	[
 		{
 			"class" : "UsbCam",
 			"inputs" : 
-			{
-				"fps" : 2
-			},
+			[
+				{
+					"name" : "fps",
+					"value" : 2
+				}
+			],
+			"name" : "Input",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -17,20 +20,20 @@
 				"y" : 300
 			}
 		},
-		"KeyPointsBrisk9" : 
 		{
 			"class" : "KeyPointsBrisk",
 			"inputs" : 
-			{
-				"image" : 
+			[
 				{
 					"connected" : 
 					{
 						"module" : "Input",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				}
-			},
+			],
+			"name" : "KeyPointsBrisk9",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -39,21 +42,24 @@
 				"y" : 275
 			}
 		},
-		"KeyPointsDense6" : 
 		{
 			"class" : "KeyPointsDense",
 			"inputs" : 
-			{
-				"image" : 
+			[
 				{
 					"connected" : 
 					{
 						"module" : "Input",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				},
-				"initXyStep" : 30
-			},
+				{
+					"name" : "initXyStep",
+					"value" : 30
+				}
+			],
+			"name" : "KeyPointsDense6",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -62,20 +68,20 @@
 				"y" : 373
 			}
 		},
-		"KeyPointsFast3" : 
 		{
 			"class" : "KeyPointsFast",
 			"inputs" : 
-			{
-				"image" : 
+			[
 				{
 					"connected" : 
 					{
 						"module" : "Input",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				}
-			},
+			],
+			"name" : "KeyPointsFast3",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -84,20 +90,20 @@
 				"y" : 163
 			}
 		},
-		"KeyPointsGoodFeaturesToTrack4" : 
 		{
 			"class" : "KeyPointsGoodFeaturesToTrack",
 			"inputs" : 
-			{
-				"image" : 
+			[
 				{
 					"connected" : 
 					{
 						"module" : "Input",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				}
-			},
+			],
+			"name" : "KeyPointsGoodFeaturesToTrack4",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -106,20 +112,20 @@
 				"y" : 267
 			}
 		},
-		"KeyPointsMser8" : 
 		{
 			"class" : "KeyPointsMser",
 			"inputs" : 
-			{
-				"image" : 
+			[
 				{
 					"connected" : 
 					{
 						"module" : "Input",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				}
-			},
+			],
+			"name" : "KeyPointsMser8",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -128,22 +134,28 @@
 				"y" : 593
 			}
 		},
-		"KeyPointsOrb10" : 
 		{
 			"class" : "KeyPointsOrb",
 			"inputs" : 
-			{
-				"descriptor" : "orb",
-				"image" : 
+			[
+				{
+					"name" : "descriptor",
+					"value" : "orb"
+				},
 				{
 					"connected" : 
 					{
 						"module" : "Input",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				},
-				"nbFeatures" : 100
-			},
+				{
+					"name" : "nbFeatures",
+					"value" : 100
+				}
+			],
+			"name" : "KeyPointsOrb10",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -152,20 +164,20 @@
 				"y" : 377
 			}
 		},
-		"KeyPointsStar7" : 
 		{
 			"class" : "KeyPointsStar",
 			"inputs" : 
-			{
-				"image" : 
+			[
 				{
 					"connected" : 
 					{
 						"module" : "Input",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				}
-			},
+			],
+			"name" : "KeyPointsStar7",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -174,30 +186,36 @@
 				"y" : 481
 			}
 		},
-		"OpticalFlowKeyPoints11" : 
 		{
 			"class" : "OpticalFlowKeyPoints",
 			"inputs" : 
-			{
-				"image" : 
+			[
 				{
 					"connected" : 
 					{
 						"module" : "Input",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				},
-				"keypoints" : 
 				{
 					"connected" : 
 					{
 						"module" : "KeyPointsOrb10",
 						"output" : "output"
-					}
+					},
+					"name" : "keypoints"
 				},
-				"maxLevel" : 7,
-				"winSide" : 40
-			},
+				{
+					"name" : "maxLevel",
+					"value" : 7
+				},
+				{
+					"name" : "winSide",
+					"value" : 40
+				}
+			],
+			"name" : "OpticalFlowKeyPoints11",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -206,28 +224,28 @@
 				"y" : 368
 			}
 		},
-		"OpticalFlowKeyPoints12" : 
 		{
 			"class" : "OpticalFlowKeyPoints",
 			"inputs" : 
-			{
-				"image" : 
+			[
 				{
 					"connected" : 
 					{
 						"module" : "Input",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				},
-				"keypoints" : 
 				{
 					"connected" : 
 					{
 						"module" : "KeyPointsDense6",
 						"output" : "output"
-					}
+					},
+					"name" : "keypoints"
 				}
-			},
+			],
+			"name" : "OpticalFlowKeyPoints12",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -236,6 +254,6 @@
 				"y" : 476
 			}
 		}
-	},
+	],
 	"name" : "CustomProject"
 }

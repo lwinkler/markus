@@ -1,29 +1,53 @@
 {
 	"description" : "",
 	"modules" : 
-	{
-		"CascadeDetector" : 
+	[
 		{
 			"class" : "CascadeDetector",
 			"inputs" : 
-			{
-				"filterFile" : "modules/CascadeDetector/lbpcascade_frontalface.xml",
-				"height" : 480,
-				"image" : 
+			[
+				{
+					"name" : "filterFile",
+					"value" : "modules/CascadeDetector/lbpcascade_frontalface.xml"
+				},
+				{
+					"name" : "height",
+					"value" : 480
+				},
 				{
 					"connected" : 
 					{
 						"module" : "Input",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				},
-				"minNeighbors" : 2,
-				"minSide" : 0,
-				"objectLabel" : "face",
-				"scaleFactor" : 1.2,
-				"type" : "CV_8UC1",
-				"width" : 640
-			},
+				{
+					"name" : "minNeighbors",
+					"value" : 2
+				},
+				{
+					"name" : "minSide",
+					"value" : 0
+				},
+				{
+					"name" : "objectLabel",
+					"value" : "face"
+				},
+				{
+					"name" : "scaleFactor",
+					"value" : 1.2
+				},
+				{
+					"name" : "type",
+					"value" : "CV_8UC1"
+				},
+				{
+					"name" : "width",
+					"value" : 640
+				}
+			],
+			"name" : "CascadeDetector",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -32,9 +56,10 @@
 				"y" : 333
 			}
 		},
-		"Input" : 
 		{
 			"class" : "UsbCam",
+			"inputs" : [],
+			"name" : "Input",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -43,31 +68,40 @@
 				"y" : 261
 			}
 		},
-		"RenderObjects" : 
 		{
 			"class" : "RenderObjects",
 			"inputs" : 
-			{
-				"fps" : 10,
-				"height" : 480,
-				"image" : 
+			[
+				{
+					"name" : "fps",
+					"value" : 10
+				},
+				{
+					"name" : "height",
+					"value" : 480
+				},
 				{
 					"connected" : 
 					{
 						"module" : "Input",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				},
-				"objects" : 
 				{
 					"connected" : 
 					{
 						"module" : "TrackerByFeatures",
 						"output" : "tracker"
-					}
+					},
+					"name" : "objects"
 				},
-				"width" : 640
-			},
+				{
+					"name" : "width",
+					"value" : 640
+				}
+			],
+			"name" : "RenderObjects",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -76,21 +110,24 @@
 				"y" : 269
 			}
 		},
-		"TrackerByFeatures" : 
 		{
 			"class" : "TrackerByFeatures",
 			"inputs" : 
-			{
-				"image" : 
+			[
 				{
 					"connected" : 
 					{
 						"module" : "CascadeDetector",
 						"output" : "detected"
-					}
+					},
+					"name" : "image"
 				},
-				"timeDisappear" : 10
-			},
+				{
+					"name" : "timeDisappear",
+					"value" : 10
+				}
+			],
+			"name" : "TrackerByFeatures",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -99,6 +136,6 @@
 				"y" : 333
 			}
 		}
-	},
+	],
 	"name" : "FaceAndTracker"
 }

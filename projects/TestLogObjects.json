@@ -1,29 +1,53 @@
 {
 	"description" : "(unk)",
 	"modules" : 
-	{
-		"BgrSubMOG21" : 
+	[
 		{
 			"class" : "BgrSubMOG2",
 			"inputs" : 
-			{
-				"bShadowDetection" : 0,
-				"fps" : 0,
-				"height" : 240,
-				"history" : 500,
-				"image" : 
+			[
+				{
+					"name" : "bShadowDetection",
+					"value" : 0
+				},
+				{
+					"name" : "fps",
+					"value" : 0
+				},
+				{
+					"name" : "height",
+					"value" : 240
+				},
+				{
+					"name" : "history",
+					"value" : 500
+				},
 				{
 					"connected" : 
 					{
 						"module" : "VideoFileReader0",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				},
-				"learningRate" : -1,
-				"type" : "CV_8UC3",
-				"varThres" : 16,
-				"width" : 320
-			},
+				{
+					"name" : "learningRate",
+					"value" : -1
+				},
+				{
+					"name" : "type",
+					"value" : "CV_8UC3"
+				},
+				{
+					"name" : "varThres",
+					"value" : 16
+				},
+				{
+					"name" : "width",
+					"value" : 320
+				}
+			],
+			"name" : "BgrSubMOG21",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -32,25 +56,40 @@
 				"y" : 300
 			}
 		},
-		"LogObjects3" : 
 		{
 			"class" : "LogObjects",
 			"inputs" : 
-			{
-				"file" : "untracked",
-				"fps" : 0,
-				"height" : 240,
-				"image" : 
+			[
+				{
+					"name" : "file",
+					"value" : "untracked"
+				},
+				{
+					"name" : "fps",
+					"value" : 0
+				},
+				{
+					"name" : "height",
+					"value" : 240
+				},
 				{
 					"connected" : 
 					{
 						"module" : "SegmenterContour2",
 						"output" : "segmented"
-					}
+					},
+					"name" : "image"
 				},
-				"type" : "CV_8UC1",
-				"width" : 320
-			},
+				{
+					"name" : "type",
+					"value" : "CV_8UC1"
+				},
+				{
+					"name" : "width",
+					"value" : 320
+				}
+			],
+			"name" : "LogObjects3",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -59,25 +98,40 @@
 				"y" : 459
 			}
 		},
-		"LogObjects5" : 
 		{
 			"class" : "LogObjects",
 			"inputs" : 
-			{
-				"file" : "tracked",
-				"fps" : 0,
-				"height" : 240,
-				"image" : 
+			[
+				{
+					"name" : "file",
+					"value" : "tracked"
+				},
+				{
+					"name" : "fps",
+					"value" : 0
+				},
+				{
+					"name" : "height",
+					"value" : 240
+				},
 				{
 					"connected" : 
 					{
 						"module" : "TrackerByFeatures4",
 						"output" : "tracker"
-					}
+					},
+					"name" : "image"
 				},
-				"type" : "CV_8UC1",
-				"width" : 320
-			},
+				{
+					"name" : "type",
+					"value" : "CV_8UC1"
+				},
+				{
+					"name" : "width",
+					"value" : 320
+				}
+			],
+			"name" : "LogObjects5",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -86,28 +140,52 @@
 				"y" : 270
 			}
 		},
-		"SegmenterContour2" : 
 		{
 			"class" : "SegmenterContour",
 			"inputs" : 
-			{
-				"features" : "x,y,width,height",
-				"fps" : 0,
-				"height" : 240,
-				"image" : 
+			[
+				{
+					"name" : "features",
+					"value" : "x,y,width,height"
+				},
+				{
+					"name" : "fps",
+					"value" : 0
+				},
+				{
+					"name" : "height",
+					"value" : 240
+				},
 				{
 					"connected" : 
 					{
 						"module" : "BgrSubMOG21",
 						"output" : "foreground"
-					}
+					},
+					"name" : "image"
 				},
-				"minHeight" : 10,
-				"minWidth" : 10,
-				"objectLabel" : "object",
-				"type" : "CV_8UC1",
-				"width" : 320
-			},
+				{
+					"name" : "minHeight",
+					"value" : 10
+				},
+				{
+					"name" : "minWidth",
+					"value" : 10
+				},
+				{
+					"name" : "objectLabel",
+					"value" : "object"
+				},
+				{
+					"name" : "type",
+					"value" : "CV_8UC1"
+				},
+				{
+					"name" : "width",
+					"value" : 320
+				}
+			],
+			"name" : "SegmenterContour2",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -116,36 +194,36 @@
 				"y" : 300
 			}
 		},
-		"ThumbnailWriter6" : 
 		{
 			"class" : "ThumbnailWriter",
 			"inputs" : 
-			{
-				"image" : 
+			[
 				{
 					"connected" : 
 					{
 						"module" : "VideoFileReader0",
 						"output" : "image"
-					}
+					},
+					"name" : "image"
 				},
-				"image2" : 
 				{
 					"connected" : 
 					{
 						"module" : "BgrSubMOG21",
 						"output" : "foreground"
-					}
+					},
+					"name" : "image2"
 				},
-				"objects" : 
 				{
 					"connected" : 
 					{
 						"module" : "TrackerByFeatures4",
 						"output" : "tracker"
-					}
+					},
+					"name" : "objects"
 				}
-			},
+			],
+			"name" : "ThumbnailWriter6",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -154,26 +232,44 @@
 				"y" : 142
 			}
 		},
-		"TrackerByFeatures4" : 
 		{
 			"class" : "TrackerByFeatures",
 			"inputs" : 
-			{
-				"alpha" : 0.10000000000000001,
-				"features" : "x,y,width,height",
-				"fps" : 0,
-				"height" : 240,
-				"image" : 
+			[
+				{
+					"name" : "alpha",
+					"value" : 0.10000000000000001
+				},
+				{
+					"name" : "features",
+					"value" : "x,y,width,height"
+				},
+				{
+					"name" : "fps",
+					"value" : 0
+				},
+				{
+					"name" : "height",
+					"value" : 240
+				},
 				{
 					"connected" : 
 					{
 						"module" : "SegmenterContour2",
 						"output" : "segmented"
-					}
+					},
+					"name" : "image"
 				},
-				"type" : "CV_8UC1",
-				"width" : 320
-			},
+				{
+					"name" : "type",
+					"value" : "CV_8UC1"
+				},
+				{
+					"name" : "width",
+					"value" : 320
+				}
+			],
+			"name" : "TrackerByFeatures4",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -182,16 +278,28 @@
 				"y" : 269
 			}
 		},
-		"VideoFileReader0" : 
 		{
 			"class" : "UsbCam",
 			"inputs" : 
-			{
-				"fps" : 0,
-				"height" : 240,
-				"type" : "CV_8UC1",
-				"width" : 320
-			},
+			[
+				{
+					"name" : "fps",
+					"value" : 0
+				},
+				{
+					"name" : "height",
+					"value" : 240
+				},
+				{
+					"name" : "type",
+					"value" : "CV_8UC1"
+				},
+				{
+					"name" : "width",
+					"value" : 320
+				}
+			],
+			"name" : "VideoFileReader0",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -200,6 +308,6 @@
 				"y" : 300
 			}
 		}
-	},
+	],
 	"name" : "TestLogObjects"
 }
