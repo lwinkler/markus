@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
 		"allowJs": false,
+		"alwaysStrict": true,
 		"target": "es5",
 		"module": "commonjs",
 		"moduleResolution": "node",

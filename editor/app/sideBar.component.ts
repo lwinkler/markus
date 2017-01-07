@@ -67,10 +67,10 @@ export class SideBarComponent {
 	@Input()
 	hasChanges: boolean; // TODO
 
-	findInput(name : string) {
+	findInput(name: string) {
 		return Utils.findByName(this.module.inputs, name);
 	}
-	findOutput(name : string) {
+	findOutput(name: string) {
 		return Utils.findByName(this.module.outputs, name);
 	}
 }

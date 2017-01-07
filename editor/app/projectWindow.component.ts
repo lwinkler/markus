@@ -11,7 +11,8 @@ import {Module}  from './module';
 import {Utils} from './utils';
 
 
-declare var jsPlumb:any; // preemptive declaration for external js object
+// preemptive declaration for external js object
+declare var jsPlumb: any;
 
 @Component({
 	selector: 'project-window',
@@ -53,32 +54,32 @@ export class ProjectWindowComponent implements AfterViewInit {
 	@Output()
 	selectedModule: Module;
 	@Output() selectModule: EventEmitter<string> = new EventEmitter<string>();
-	_initialised : boolean = false;
-	maxIdModules : number = 0;
-	jsPlumbInstance : any;
-	reconnect : boolean = false;
+	_initialised: boolean = false;
+	maxIdModules: number = 0;
+	jsPlumbInstance: any;
+	reconnect: boolean = false;
 
-	findClassDescription(className : string) : any {
+	findClassDescription(className: string): any {
 		return Utils.findByClass(this.moduleDescriptions, className);
 	}
 
-	onSelect(event : string) : void {
+	onSelect(event: string): void {
 		this.selectModule.emit(event);
 	}
 
-	onDelete(event : string) : void {
+	onDelete(event: string): void {
 		Utils.removeByName(this.project.modules, event);
 		this.hasChanges = true;
 	}
 
-	onCreate(event : string) : void {
+	onCreate(event: string): void {
 		let i = 0;
 		while(Utils.findByName(this.project.modules, event + i) !== undefined) {
 			i++;
 		}
 			let x = 0, y = 0;
 			for(let mod of this.project.modules) {
-				if(mod.uiobject.x > x){
+				if(mod.uiobject.x > x) {
 					x = mod.uiobject.x;
 					y = mod.uiobject.y;
 				}
@@ -86,31 +87,31 @@ export class ProjectWindowComponent implements AfterViewInit {
 		this.project.modules.push({name: event + i, class: event, inputs:[], outputs:[], uiobject:{x: x + 200, y: y}});
 		this.hasChanges = true;
 	}
-	onDeleteAll(event : any) : void {
+	onDeleteAll(event: any): void {
 		if(!confirm('Delete all modules ?'))
 			return;
 		this.jsPlumbInstance.detachEveryConnection();
 		this.project.modules = [];
 		this.hasChanges = true;
 	}
-	onUploadProject(event : any) : void {
+	onUploadProject(event: any): void {
 
-		if(event.srcElement.files.length != 1)
+		if(event.srcElement.files.length !== 1)
 			alert('You need to select one file: ' + event.srcElement.files.length + ' selected');
 		let file = event.srcElement.files[0];
 		let reader = new FileReader();
 		reader.readAsText(file, 'UTF-8');
-		var self = this;
-		reader.onload = function (evt : any) {
+		var self = this; // TODO: improve
+		reader.onload = function (evt: any) {
 			Project.readFromFile(self.project, evt.target.result);
 			self.reconnect = true;
 			self.hasChanges = false;
-		}
-		reader.onerror = function (evt : any) {
+		};
+		reader.onerror = function (evt: any) {
 			alert('Error reading JSON file'); // TODO: message
-		}
+		};
 	}
-	ngAfterViewChecked() : void {
+	ngAfterViewChecked(): void {
 		// note: we have to use a reconnect state variable as:
 		//       - the view must have been initialized
 		//       - reconnection must be done once only
@@ -133,18 +134,18 @@ export class ProjectWindowComponent implements AfterViewInit {
 	}
 
 	// Connect input and output
-	connectInput(params : any) {
+	connectInput(params: any) {
 		let inputModule = Utils.findByName(this.project.modules, params.inputModule);
 		let inputStream = Utils.findByNameAndAdd(inputModule.inputs, params.inputStream);
 		inputStream.connected = {
 			module: params.outputModule,
 			output: params.outputStream
-		}
+		};
 		this.hasChanges = true;
 	}
 
 	// Disconnect input and output
-	disconnectInput(params : any) {
+	disconnectInput(params: any) {
 		let inputModule = Utils.findByName(this.project.modules, params.inputModule);
 		let inputStream = Utils.findByNameAndAdd(inputModule.inputs, params.inputStream);
 		inputStream.connected = undefined;
@@ -155,30 +156,30 @@ export class ProjectWindowComponent implements AfterViewInit {
 	 *  This file contains the JS that handles the first init of each jQuery demonstration, and also switching
 	 *  between render modes.
 	 */
-	ngAfterViewInit() : void{
-		var self = this;
+	ngAfterViewInit(): void {
+		var self = this; // TODO
 		jsPlumb.ready(function() {
 
 			jsPlumb.importDefaults({
-				DragOptions : { cursor: 'pointer', zIndex:2000 },
-				PaintStyle : { stroke:'#666' },
-				EndpointStyle : { width:20, height:16, stroke:'#666' },
-				Endpoint : 'Rectangle',
-				Anchors : ['TopCenter', 'TopCenter']
+				DragOptions: { cursor: 'pointer', zIndex:2000 },
+				PaintStyle: { stroke:'#666' },
+				EndpointStyle: { width:20, height:16, stroke:'#666' },
+				Endpoint: 'Rectangle',
+				Anchors: ['TopCenter', 'TopCenter']
 			});
 			self.jsPlumbInstance = jsPlumb.getInstance({
-				DragOptions : { cursor: 'pointer', zIndex:2000 },
-				PaintStyle : { stroke:'#666' },
+				DragOptions: { cursor: 'pointer', zIndex:2000 },
+				PaintStyle: { stroke:'#666' },
 				EndpointHoverStyle: { fill: 'orange' },
 				HoverPaintStyle: { stroke: 'orange' },
-				EndpointStyle : { width:20, height:16, stroke:'#666' },
-				Endpoint : 'Rectangle',
-				Anchors : ['TopCenter', 'TopCenter'],
+				EndpointStyle: { width:20, height:16, stroke:'#666' },
+				Endpoint: 'Rectangle',
+				Anchors: ['TopCenter', 'TopCenter'],
 				Container: 'canvas'
 			});
 
 			// Events linked to connection of inputs and outputs
-			self.jsPlumbInstance.bind('connection', function(params : any, originalEvent : any) { 
+			self.jsPlumbInstance.bind('connection', function(params: any, originalEvent: any) {
 				// Check if this was done by the user
 				if(originalEvent === undefined)
 					return;
@@ -191,7 +192,7 @@ export class ProjectWindowComponent implements AfterViewInit {
 
 				return true;
 			});
-			self.jsPlumbInstance.bind('beforeDetach', function(params : any, originalEvent : any) { 
+			self.jsPlumbInstance.bind('beforeDetach', function(params: any, originalEvent: any) {
 				// Check if this was done by the user
 				if(originalEvent === undefined)
 					return;

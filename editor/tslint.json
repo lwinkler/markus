@@ -5,17 +5,17 @@
 			true,
 			"check-space"
 		],
-		"curly": true,
+		"curly": false,
 		"eofline": true,
 		"forin": true,
 		"indent": [
 			true,
-			"spaces"
+			"tabs"
 		],
 		"label-position": true,
 		"label-undefined": true,
 		"max-line-length": [
-			true,
+			false,
 			140
 		],
 		"member-access": false,
@@ -82,7 +82,7 @@
 		],
 		"variable-name": false,
 		"whitespace": [
-			true,
+			false,
 			"check-branch",
 			"check-decl",
 			"check-operator",

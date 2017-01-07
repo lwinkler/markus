@@ -1,7 +1,7 @@
 export class Utils {
 	static findByName(list: Array<any>, name: string) {
 		for(let val of list) {
-			if(val.name == name)
+			if(val.name === name)
 				return val;
 		}
 		// throw ('No object with name ' + name + ' in list');
@@ -9,7 +9,7 @@ export class Utils {
 	}
 	static findByNameAndAdd(list: Array<any>, name: string) {
 		for(let val of list) {
-			if(val.name == name)
+			if(val.name === name)
 				return val;
 		}
 		list.push({name: name});
@@ -18,7 +18,7 @@ export class Utils {
 	static removeByName(list: Array<any>, name: string) {
 		let ind = 0;
 		for(let val of list) {
-			if(val.name == name) {
+			if(val.name === name) {
 				list.splice(ind, 1);
 				return;
 			}
@@ -28,7 +28,7 @@ export class Utils {
 	}
 	static findByClass(list: Array<any>, name: string) {
 		for(let val of list) {
-			if(val.class == name)
+			if(val.class === name)
 				return val;
 		}
 		// throw ('No object with class ' + name + ' in list');

@@ -6,8 +6,6 @@ import {
 import {ModuleInput}  from './moduleInput';
 import {Utils} from './utils';
 
-'use strict';
-
 @Component({
 	selector: 'input-value',
 	template: `
@@ -41,7 +39,7 @@ export class InputValue {
 	description: any;
 	@Input()
 	inputs: Array<any>;
-	activate($event : any) : void {
+	activate($event: any): void {
 		if($event.target.checked) {
 			this.input = Utils.findByNameAndAdd(this.inputs, this.description.name);
 			this.input.value = this.description.default;
@@ -50,7 +48,7 @@ export class InputValue {
 			this.input = undefined;
 		}
 	}
-	cast() : any { // TODO: split
+	cast(): any { // TODO: split
 		switch(this.description.type) {
 			case 'float':
 			case 'double':
@@ -58,7 +56,7 @@ export class InputValue {
 				break;
 			case 'int':
 			case 'unsigned int':
-				this.input.value = parseInt(this.input.value);
+				this.input.value = parseInt(this.input.value, 10);
 				break;
 			case 'bool':
 				this.input.value = this.input.value > 0;

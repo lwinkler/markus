@@ -6,10 +6,10 @@ import {
 	ViewEncapsulation,
 	Injectable
 } from '@angular/core';
-import {Http, Response} from '@angular/http'
+import {Http, Response} from '@angular/http';
 import {Project}  from './project';
 import {Utils} from './utils';
-import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/map';
 
 @Component({
 	selector: 'top-bar',
@@ -41,37 +41,38 @@ import 'rxjs/add/operator/map'
 export class TopBarComponent {
 	@Input()
 	project: Project = undefined;
-	categorieToAdd : string = 'all';
-	moduleToAdd : string;
+	categorieToAdd: string = 'all';
+	moduleToAdd: string;
 	moduleCategories: Array<Object> = [{name:'all', modules: []}];
 	moduleCategorie: any = {name: 'all', modules:[]};
-	constructor(http : Http) {
-		http.get('modules/moduleCategories.json').map((res: Response) => res.json()).subscribe(res => this.moduleCategories = res);
-	}
 	@Output() createModule:  EventEmitter<string> = new EventEmitter<string>();
 	@Output() uploadProject: EventEmitter<string> = new EventEmitter<string>();
 	@Output() deleteAll:     EventEmitter<string> = new EventEmitter<string>();
-	onChange(event : any) {
+
+	constructor(http: Http) {
+		http.get('modules/moduleCategories.json').map((res: Response) => res.json()).subscribe(res => this.moduleCategories = res);
+	}
+	onChange(event: any) {
 		this.moduleCategorie = Utils.findByName(this.moduleCategories, this.categorieToAdd);
 		if(this.moduleCategorie.modules.length > 0) {
 			this.moduleToAdd = this.moduleCategorie.modules[0];
 		}
 	}
-	onDownload(event : any) {
+	onDownload(event: any) {
 		// alert('Project: ' + JSON.stringify(this.project));
-		var dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(this.project, null, '\t'));
-		var dlAnchorElem = document.getElementById('downloadAnchorElem');
+		let dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(this.project, null, '\t'));
+		let dlAnchorElem = document.getElementById('downloadAnchorElem');
 		dlAnchorElem.setAttribute('href',     dataStr     );
 		dlAnchorElem.setAttribute('download', this.project.name + '.json');
 		dlAnchorElem.click();
 	}
-	onUploadProject(event : any) {
+	onUploadProject(event: any) {
 		this.uploadProject.emit(event);
 	}
-	onCreate(event : string) : void {
+	onCreate(event: string): void {
 		this.createModule.emit(this.moduleToAdd);
 	}
-	onDeleteAll(event : any) {
+	onDeleteAll(event: any) {
 		this.deleteAll.emit(event);
 	}
 }
