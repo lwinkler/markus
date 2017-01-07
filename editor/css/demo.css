@@ -6,11 +6,11 @@
 
 /** ELEMENTS **/
 .window{
-    font-size:0.8em;
-    font-family:serif;
-    font-style:italic;
-    padding-top:0.9em; 
-    line-height:1.5em;
+	font-size:0.8em;
+	font-family:serif;
+	font-style:italic;
+	padding-top:0.9em; 
+	line-height:1.5em;
 }
 
 /** LINKS IN WINDOWS **/
@@ -23,19 +23,19 @@
 
 /** INFO WINDOW **/
 #list {
-    text-align:center;
-    display:none;
-    font-size:90%;
-    position:absolute;
-    width:250px;
-    left:30%;
-    top:100px;
-    background-color:white;
-    padding:5px;
-    border:1px solid #456;
-    opacity:0.8;
-    border-radius:8px;
-    color:#444;
+	text-align:center;
+	display:none;
+	font-size:90%;
+	position:absolute;
+	width:250px;
+	left:30%;
+	top:100px;
+	background-color:white;
+	padding:5px;
+	border:1px solid #456;
+	opacity:0.8;
+	border-radius:8px;
+	color:#444;
 }
 #list table { width:100%;}
 #list table th, #list strong { color:black; font-size:12px;}
