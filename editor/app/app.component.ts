@@ -30,7 +30,7 @@ export class AppComponent {
 	hasChanges : boolean = false;
 	moduleDescriptions: any = {all: []};
 	constructor(http : Http) {
-		http.get('./moduleDescriptions.json').map((res: Response) => res.json()).subscribe(res => this.moduleDescriptions = res);
+		http.get('modules/moduleDescriptions.json').map((res: Response) => res.json()).subscribe(res => this.moduleDescriptions = res);
 	}
 	onSelect(event : string) : void {
 		this.selectedModule = undefined;

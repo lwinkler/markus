@@ -46,7 +46,7 @@ export class TopBarComponent {
 	moduleCategories: Array<Object> = [{name:'all', modules: []}];
 	moduleCategorie: any = {name: 'all', modules:[]};
 	constructor(http : Http) {
-		http.get('./moduleCategories.json').map((res: Response) => res.json()).subscribe(res => this.moduleCategories = res);
+		http.get('modules/moduleCategories.json').map((res: Response) => res.json()).subscribe(res => this.moduleCategories = res);
 	}
 	@Output() createModule:  EventEmitter<string> = new EventEmitter<string>();
 	@Output() uploadProject: EventEmitter<string> = new EventEmitter<string>();

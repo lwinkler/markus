@@ -46,26 +46,11 @@ export class InputValue {
 			this.input = Utils.findByNameAndAdd(this.inputs, this.description.name);
 			this.input.value = this.description.default;
 		} else {
-			Utils.removeByName(this.inputs, this.input.name);
+			Utils.removeByName(this.inputs, this.description.name);
 			this.input = undefined;
 		}
 	}
-	inputType() : string {
-		switch(this.description.type) {
-			case 'float':
-			case 'double':
-			case 'int':
-			case 'unsigned int':
-			case 'bool':
-				//TODO return 'number';
-			case 'string':
-				return 'text';
-			default: 
-				console.log('Warning: unknown data type ' + this.description.type);
-				return 'text';
-		}
-	}
-	cast() : any {
+	cast() : any { // TODO: split
 		switch(this.description.type) {
 			case 'float':
 			case 'double':
@@ -78,25 +63,6 @@ export class InputValue {
 			case 'bool':
 				this.input.value = this.input.value > 0;
 				break;
-		}
-	}
-	inputMin() : number {
-		return this.description.range.min;
-	}
-	inputMax() : number {
-		return this.description.range.max;
-	}
-	inputStep() : number {
-		switch(this.description.type) {
-			case 'int':
-			case 'unsigned int':
-			case 'bool':
-				return 1;
-			case 'double':
-			case 'float':
-				return 0.01;
-			default:
-				return undefined;
 		}
 	}
 }

@@ -68,7 +68,8 @@ Editor::Editor(Manager* xp_manager, const string& x_project, QWidget *parent) :
 	char pwd[256];
 	char * ret = getcwd(pwd, sizeof(pwd));
 	assert(ret != nullptr);
-	ss<<"file://"<<pwd<<"/editor.html";
+	ss<<"file://"<<pwd<<"/editor/index.html";
+	// ss << "http://localhost:3000";
 	m_view.load(QUrl(ss.str().c_str()));
 
 

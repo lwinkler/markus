@@ -89,7 +89,7 @@ let outputPoint = {
 `,
 	styles: [
 	],
-	encapsulation: ViewEncapsulation.Native
+	encapsulation: ViewEncapsulation.Emulated
 })
 export class ModuleComponent implements AfterViewInit {
 	@Input()        module            : Module;
