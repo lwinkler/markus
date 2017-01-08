@@ -13,13 +13,13 @@ import {Utils} from './utils';
 <span *ngIf='input!=undefined'>
 	<span type='text' *ngIf='input.connected'>(connected)</span>
 	<div [ngSwitch]='description.type' *ngIf='input.value!==undefined'>
-		<input *ngSwitchCase='"float"'        min='{{description.range.min}}' max='{{description.range.max}}' step='0.01' [(ngModel)]='input.value' (ngModelChange)='cast()'/>
-		<input *ngSwitchCase='"double"'       min='{{description.range.min}}' max='{{description.range.max}}' step='0.01' [(ngModel)]='input.value' (ngModelChange)='cast()'/>
-		<input *ngSwitchCase='"int"'          min='{{description.range.min}}' max='{{description.range.max}}' step='1'    [(ngModel)]='input.value' (ngModelChange)='cast()'/>
-		<input *ngSwitchCase='"unsigned int"' min='{{description.range.min}}' max='{{description.range.max}}' step='1'    [(ngModel)]='input.value' (ngModelChange)='cast()'/>
+		<input *ngSwitchCase='"float"'        type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='0.01' [(ngModel)]='input.value' (ngModelChange)='cast()' size='10'/>
+		<input *ngSwitchCase='"double"'       type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='0.01' [(ngModel)]='input.value' (ngModelChange)='cast()' size='10'/>
+		<input *ngSwitchCase='"int"'          type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='1'    [(ngModel)]='input.value' (ngModelChange)='cast()' size='10'/>
+		<input *ngSwitchCase='"unsigned int"' type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='1'    [(ngModel)]='input.value' (ngModelChange)='cast()' size='10'/>
 		<input *ngSwitchCase='"bool"' type='checkbox' [(ngModel)]='input.value'/>
-		<input *ngSwitchCase='"string"' type='string' [(ngModel)]='input.value'/>
-		<span *ngSwitchDefault>Unknown type {{description.type}}</span>
+		<input *ngSwitchCase='"string"' type='string' [(ngModel)]='input.value' size='10'/>
+		<span *ngSwitchDefault>unknown type</span>
 	</div>
 </span>
 <span *ngIf='input===undefined'>

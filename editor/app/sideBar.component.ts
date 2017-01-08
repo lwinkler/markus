@@ -6,7 +6,7 @@ import {Utils} from './utils';
 @Component({
 	selector: 'side-bar',
 	template: `
-<div class="side-bar">
+<div class='side-bar'>
 	<div *ngIf='module===undefined'>
 		<h3>Markus module editor</h3>
 			<p>This is the visual module editor for Markus. With this simple web interface you can open, visualize and edit projects. </p>
@@ -26,25 +26,25 @@ import {Utils} from './utils';
 		<h3>{{module.name}} ({{module.class}}) [{{module.uiobject.x}}, {{module.uiobject.y}}]</h3>
 		<!-- Causes problems with jsPlumb input type='text' [(ngModel)]='module.name'/-->
 		<h3>Inputs</h3>
-		<table>
+		<table class='stream-table'>
 			<tr><th>Name</th><th>Type</th><th>Default</th><th>Range</th><th>Value</th></tr>
 			<tr *ngFor='let inp of moduleDescription.inputs'>
 				<td>{{inp.name}}</td>
 				<td>{{inp.type}}</td>
-				<td>{{inp.default|json}}</td>
-				<td>{{inp.range|json}}</td>
+				<td><input value='{{inp.default|json}}' size='10'/></td>
+				<td><input value='{{inp.range|json}}' size='10'/></td>
 				<td><input-value [description]='inp' [inputs]='module.inputs' [input]='findInput(inp.name)'></input-value></td>
 			</tr>
 		</table>
 		<h3>Outputs</h3>
-		<table>
+		<table class='stream-table'>
 			<tr><th>Name</th><th>Type</th><th>Default</th><th>Range</th><th>Value</th></tr>
 			<tr *ngFor='let inp of moduleDescription.outputs'>
 				<td>{{inp.name}}</td>
-				<td>{{inp.type}}</td>
-				<td>{{inp.default|json}}</td>
-				<td>{{inp.range|json}}</td>
-				<td><input-value [description]='inp' [inputs]='module.outputs' [input]='findOutput(inp.name)'></input-value></td>
+				<td><input value='{{inp.type}}'/></td>
+				<td><input value='{{inp.default|json}}' size='10'/></td>
+				<td><input value='{{inp.range|json}}' size='10'/></td>
+				<td><input-value [description]='inp' [inputs]='module.outputs'></input-value></td>
 			</tr>
 		</table>
 	</div>
@@ -55,7 +55,8 @@ import {Utils} from './utils';
 `.side-bar {
 	width: 25%;
 	float: left;
-}`
+}
+`
 	],
 	encapsulation: ViewEncapsulation.Emulated
 })
@@ -70,8 +71,8 @@ export class SideBarComponent {
 	findInput(name: string) {
 		return Utils.findByName(this.module.inputs, name);
 	}
-	findOutput(name: string) {
-		return Utils.findByName(this.module.outputs, name);
-	}
+	// findOutput(name: string) {
+		// return Utils.findByName(this.module.outputs, name);
+	// }
 }
 
