@@ -10,25 +10,42 @@ import {Utils} from './utils';
 	selector: 'input-value',
 	template: `
 <input type='checkbox' (change)='activate($event)' value='input!==undefined'/>
-<span *ngIf='input!=undefined'>
-	<span type='text' *ngIf='input.connected'>(connected)</span>
-	<div [ngSwitch]='description.type' *ngIf='input.value!==undefined'>
-		<input *ngSwitchCase='"float"'        type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='0.01' [(ngModel)]='input.value' (ngModelChange)='cast()' size='10'/>
-		<input *ngSwitchCase='"double"'       type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='0.01' [(ngModel)]='input.value' (ngModelChange)='cast()' size='10'/>
-		<input *ngSwitchCase='"int"'          type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='1'    [(ngModel)]='input.value' (ngModelChange)='cast()' size='10'/>
-		<input *ngSwitchCase='"unsigned int"' type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='1'    [(ngModel)]='input.value' (ngModelChange)='cast()' size='10'/>
-		<input *ngSwitchCase='"bool"' type='checkbox' [(ngModel)]='input.value'/>
-		<input *ngSwitchCase='"string"' type='string' [(ngModel)]='input.value' size='10'/>
-		<span *ngSwitchDefault>unknown type</span>
-	</div>
-</span>
+<span type='text' *ngIf='input!==undefined&&input.connected'>(connected)</span>
+<select *ngIf='input!==undefined&&description.range.allowed' type='checkbox' [(ngModel)]='input.value'>
+	<option *ngFor='let val of description.range.allowed' [value]='val'>{{val}}</option>
+</select>
+
+<div [ngSwitch]='description.type' *ngIf='input!==undefined&&input.value!==undefined&&!description.range.allowed'>
+	<input *ngSwitchCase='"float"'        type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='0.01' [(ngModel)]='input.value' (ngModelChange)='castFloat()' size='10'/>
+	<input *ngSwitchCase='"double"'       type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='0.01' [(ngModel)]='input.value' (ngModelChange)='castFloat()' size='10'/>
+	<input *ngSwitchCase='"int"'          type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='1'    [(ngModel)]='input.value' (ngModelChange)='castInt()' size='10'/>
+	<input *ngSwitchCase='"unsigned int"' type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='1'    [(ngModel)]='input.value' (ngModelChange)='castInt()' size='10'/>
+	<input *ngSwitchCase='"bool"' type='checkbox' [(ngModel)]='input.value'/>
+	<input *ngSwitchCase='"string"' type='string' [(ngModel)]='input.value' size='10'/>
+	<span *ngSwitchDefault>unknown type</span>
+</div>
 <span *ngIf='input===undefined'>
 	(unset)
 </span>
 `,
+	host: {
+		'class': 'input-value'
+	},
 	styles: [
 `.input-value {
-}`
+	white-space:nowrap;
+}
+span {
+	white-space:nowrap;
+}
+div {
+	white-space:nowrap;
+}
+select {
+	width: 100px;
+	display: inline-block
+}
+`
 	],
 	encapsulation: ViewEncapsulation.Emulated
 })
@@ -48,19 +65,10 @@ export class InputValue {
 			this.input = undefined;
 		}
 	}
-	cast(): any { // TODO: split
-		switch(this.description.type) {
-			case 'float':
-			case 'double':
-				this.input.value = parseFloat(this.input.value);
-				break;
-			case 'int':
-			case 'unsigned int':
-				this.input.value = parseInt(this.input.value, 10);
-				break;
-			case 'bool':
-				this.input.value = this.input.value > 0;
-				break;
-		}
+	castFloat(): any {
+		this.input.value = parseFloat(this.input.value);
+	}
+	castInt(): any {
+		this.input.value = parseInt(this.input.value, 10);
 	}
 }

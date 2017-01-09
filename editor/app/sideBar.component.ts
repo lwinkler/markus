@@ -33,7 +33,7 @@ import {Utils} from './utils';
 				<td>{{inp.type}}</td>
 				<td><input value='{{inp.default|json}}' size='10'/></td>
 				<td><input value='{{inp.range|json}}' size='10'/></td>
-				<td><input-value [description]='inp' [inputs]='module.inputs' [input]='findInput(inp.name)'></input-value></td>
+				<td style="white-space:nowrap;"><input-value [description]='inp' [inputs]='module.inputs' [input]='findInput(inp.name)'></input-value></td>
 			</tr>
 		</table>
 		<h3>Outputs</h3>
@@ -44,7 +44,7 @@ import {Utils} from './utils';
 				<td><input value='{{inp.type}}'/></td>
 				<td><input value='{{inp.default|json}}' size='10'/></td>
 				<td><input value='{{inp.range|json}}' size='10'/></td>
-				<td><input-value [description]='inp' [inputs]='module.outputs'></input-value></td>
+				<td style='width: 995px;'><input-value [description]='inp' [inputs]='module.outputs'></input-value></td>
 			</tr>
 		</table>
 	</div>

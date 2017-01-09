@@ -35,7 +35,8 @@ Stream::Stream(const string& x_name, Module& rx_module, const string& rx_descrip
 	mr_module(rx_module),
 	m_timeStamp(TIME_STAMP_MIN)
 {
-	SetRange(rx_requirement);
+	if(!rx_requirement.isNull())
+		SetRange(rx_requirement);
 }
 
 Stream::~Stream()
@@ -57,6 +58,7 @@ void Stream::Export(ostream& rx_os) const
 	root["default"] = GetDefault();
 	root["description"] = GetDescription();
 	root["stream"] = true;
+	root["range"] = GetRange();
 	rx_os << root;
 }
 
