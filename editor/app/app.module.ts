@@ -5,6 +5,7 @@ import {HttpModule} from '@angular/http';
 import {AppComponent} from './app.component';
 import {TopBarComponent} from './topBar.component';
 import {SideBarComponent} from './sideBar.component';
+import {InputSet} from './inputSet.component';
 import {InputValue} from './inputValue.component';
 import {ProjectWindowComponent} from './projectWindow.component';
 import {ModuleComponent} from './module.component';
@@ -37,6 +38,7 @@ class MyErrorHandler implements ErrorHandler {
 		SideBarComponent,
 		ProjectWindowComponent,
 		ModuleComponent,
+		InputSet,
 		InputValue
 	],
 	bootstrap: [AppComponent],

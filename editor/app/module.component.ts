@@ -76,8 +76,8 @@ let outputPoint = {
 	host: {
 		'[id]': 'module.name',
 		'class': 'window',
-		'(click)': 'onSelect($event)',
-		'(mouseleave)': 'onMouseLeave($event)',
+		'(mousedown)': 'onSelect($event)',
+		'(mousemove)': 'onMouseLeave($event)',
 		'[style.left.px]': 'module.uiobject.x',
 		'[style.top.px]': 'module.uiobject.y'
 	},
@@ -101,11 +101,14 @@ export class ModuleComponent implements AfterViewInit {
 		this.selectModule.emit(this.module.name);
 	}
 	onMouseLeave(event: any): boolean {
+		let el = event.srcElement;
+		while(el.tagName != "MODULE")
+			el = el.parentElement;
 		// As a small trick we update the position here
 		// maybe could be done cleaner but how ?
 		this.module.uiobject = {
-			x: event.srcElement.offsetLeft,
-			y: event.srcElement.offsetTop
+			x: el.offsetLeft,
+			y: el.offsetTop
 		};
 		return true;
 	}
