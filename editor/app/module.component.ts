@@ -89,7 +89,7 @@ let outputPoint = {
 	styles: [
 `
 module {
-	z-index: 22;
+	z-index: 3;
 }
 `
 	],

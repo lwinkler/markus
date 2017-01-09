@@ -42,7 +42,7 @@ import {Utils} from './utils';
 			<tr><th>Name</th><th>Type</th><th>Default</th><th>Range</th></tr>
 			<tr *ngFor='let stream of moduleDescription.outputs'>
 				<td>{{stream.name}}</td>
-				<td><input value='{{stream.type}}'/></td>
+				<td>{{stream.type}}</td>
 				<td><json-modal [object]='stream.default'></json-modal></td>
 				<td><json-modal [object]='stream.range'></json-modal></td>
 			</tr>

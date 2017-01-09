@@ -51,8 +51,6 @@ export class ProjectWindowComponent implements AfterViewInit {
 	hasChanges: boolean;
 	@Input()
 	moduleDescriptions: Array<Module>;
-	@Output()
-	selectedModule: Module;
 	@Output() selectModule: EventEmitter<string> = new EventEmitter<string>();
 	_initialised: boolean = false;
 	maxIdModules: number = 0;
@@ -70,7 +68,7 @@ export class ProjectWindowComponent implements AfterViewInit {
 	onDelete(event: string): void {
 		Utils.removeByName(this.project.modules, event);
 		this.hasChanges = true;
-		// this.onSelect(undefined);
+		this.onSelect(undefined); // as a safety
 	}
 
 	onCreate(event: string): void {
@@ -94,7 +92,7 @@ export class ProjectWindowComponent implements AfterViewInit {
 		this.jsPlumbInstance.detachEveryConnection();
 		this.project.modules = [];
 		this.hasChanges = true;
-		// this.onSelect(undefined);
+		this.onSelect(undefined);
 	}
 	onUploadProject(event: any): void {
 

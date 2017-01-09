@@ -34,6 +34,6 @@ export class AppComponent {
 	}
 	onSelect(event: string): void {
 		this.selectedModule = Utils.findByName(this.project.modules, event);
-		this.selectedModuleDescription = Utils.findByClass(this.moduleDescriptions, this.selectedModule.class);
+		this.selectedModuleDescription = this.selectedModule ? Utils.findByClass(this.moduleDescriptions, this.selectedModule.class) : undefined;
 	}
 }
