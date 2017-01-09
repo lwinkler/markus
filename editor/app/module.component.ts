@@ -87,6 +87,11 @@ let outputPoint = {
 <p><a class='cmdLink delete' rel='{{module.name}}' (click)='onDelete($event)'>delete</a></p>
 `,
 	styles: [
+`
+module {
+	z-index: 22;
+}
+`
 	],
 	encapsulation: ViewEncapsulation.Emulated
 })

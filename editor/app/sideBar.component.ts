@@ -31,8 +31,8 @@ import {Utils} from './utils';
 			<tr *ngFor='let stream of moduleDescription.inputs'>
 				<td>{{stream.name}}</td>
 				<td>{{stream.type}}</td>
-				<td><input value='{{stream.default|json}}' size='10'/></td>
-				<td><input value='{{stream.range|json}}' size='10'/></td>
+				<td><json-modal [object]='stream.default'></json-modal></td>
+				<td><json-modal [object]='stream.range'></json-modal></td>
 				<td><input-set [description]='stream' [inputs]='module.inputs' [input]='findInput(stream.name)'></input-set></td>
 				<td style='display: inline-block; width: 100px'><input-value [description]='stream' [input]='findInput(stream.name)'></input-value></td>
 			</tr>
@@ -43,8 +43,8 @@ import {Utils} from './utils';
 			<tr *ngFor='let stream of moduleDescription.outputs'>
 				<td>{{stream.name}}</td>
 				<td><input value='{{stream.type}}'/></td>
-				<td><input value='{{stream.default|json}}' size='10'/></td>
-				<td><input value='{{stream.range|json}}' size='10'/></td>
+				<td><json-modal [object]='stream.default'></json-modal></td>
+				<td><json-modal [object]='stream.range'></json-modal></td>
 			</tr>
 		</table>
 	</div>

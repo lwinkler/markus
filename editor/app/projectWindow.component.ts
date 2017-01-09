@@ -70,6 +70,7 @@ export class ProjectWindowComponent implements AfterViewInit {
 	onDelete(event: string): void {
 		Utils.removeByName(this.project.modules, event);
 		this.hasChanges = true;
+		// this.onSelect(undefined);
 	}
 
 	onCreate(event: string): void {
@@ -93,6 +94,7 @@ export class ProjectWindowComponent implements AfterViewInit {
 		this.jsPlumbInstance.detachEveryConnection();
 		this.project.modules = [];
 		this.hasChanges = true;
+		// this.onSelect(undefined);
 	}
 	onUploadProject(event: any): void {
 

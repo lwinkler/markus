@@ -33,8 +33,6 @@ export class AppComponent {
 		http.get('modules/moduleDescriptions.json').map((res: Response) => res.json()).subscribe(res => this.moduleDescriptions = res);
 	}
 	onSelect(event: string): void {
-		this.selectedModule = undefined;
-		this.selectedModuleDescription = undefined;
 		this.selectedModule = Utils.findByName(this.project.modules, event);
 		this.selectedModuleDescription = Utils.findByClass(this.moduleDescriptions, this.selectedModule.class);
 	}

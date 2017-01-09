@@ -41,7 +41,7 @@ import 'rxjs/add/operator/map';
 export class TopBarComponent {
 	@Input()
 	project: Project = undefined;
-	categorieToAdd: string = 'all';
+	categorieToAdd: string;
 	moduleToAdd: string;
 	moduleCategories: Array<Object> = [{name:'all', modules: []}];
 	moduleCategorie: any = {name: 'all', modules:[]};
