@@ -9,11 +9,11 @@ import {ModuleInput}  from './moduleInput';
 	selector: 'input-value',
 	template: `
 <span type='text' *ngIf='input!==undefined&&input.connected'>(connected)</span>
-<select *ngIf='input!==undefined&&description.range.allowed' type='checkbox' [(ngModel)]='input.value'>
-	<option *ngFor='let val of description.range.allowed' [value]='val'>{{val}}</option>
+<select *ngIf='input!==undefined&&description.enum' type='checkbox' [(ngModel)]='input.value'>
+	<option *ngFor='let val of (description.range.allowed||description.enum)' [value]='val'>{{val}}</option>
 </select>
 
-<div [ngSwitch]='description.type' *ngIf='input!==undefined&&input.value!==undefined&&!description.range.allowed'>
+<div [ngSwitch]='description.type' *ngIf='input!==undefined&&input.value!==undefined&&!description.enum'>
 	<input *ngSwitchCase='"float"'        type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='0.01' [(ngModel)]='input.value' (ngModelChange)='castFloat()' size='10'/>
 	<input *ngSwitchCase='"double"'       type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='0.01' [(ngModel)]='input.value' (ngModelChange)='castFloat()' size='10'/>
 	<input *ngSwitchCase='"int"'          type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='1'    [(ngModel)]='input.value' (ngModelChange)='castInt()' size='10'/>

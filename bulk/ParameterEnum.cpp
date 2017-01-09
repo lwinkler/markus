@@ -23,6 +23,8 @@
 
 #include "ParameterEnum.h"
 #include "util.h"
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
 
 using namespace std;
 
@@ -125,4 +127,25 @@ Json::Value ParameterEnum::GenerateValues(int x_nbSamples, const Json::Value& x_
 	for(const auto& elem : GetEnum())
 		root.append(elem.first);
 	return root;
+}
+
+/**
+* @brief Export the parameter for module description
+*
+* @param rx_os         Output stream
+* @param x_indentation Number of tabs for indentation
+*/
+void ParameterEnum::Export(ostream& rx_os) const
+{
+	Json::Value root;
+	std::stringstream ss;
+	Parameter::Export(ss);
+	ss >> root;
+	
+	root["enum"] = Json::arrayValue;
+	for(const auto& elem : GetEnum())
+	{
+		root["enum"].append(elem.first);
+	}
+	rx_os << root;
 }
