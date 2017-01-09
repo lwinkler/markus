@@ -449,7 +449,7 @@ int main(int argc, char** argv)
 			manager.Start();
 			ConfigReader mainGuiConfig;
 			readFromFile(mainGuiConfig, "gui.json", true);
-			ConfigReader& guiConfig(mainGuiConfig["gui"][args.configFile]);
+			ConfigReader& guiConfig(mainGuiConfig[args.configFile]);
 
 			MarkusWindow::Parameters windowParameters(guiConfig);
 			windowParameters.Read(guiConfig);

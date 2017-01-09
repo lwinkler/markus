@@ -111,6 +111,7 @@ void ParameterStructure::Write(ConfigReader& xr_config) const
 			replaceOrAppendInArray(xr_config["inputs"], "name", elem->GetName())["value"] = elem->GetValue();
 		}
 	}
+	xr_config["name"] = GetName();
 }
 
 /**
