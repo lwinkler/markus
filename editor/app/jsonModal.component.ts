@@ -11,10 +11,10 @@ import {
 <button  (click)='onOpen(true)'>{{object|json}}</button>
 
 <!-- The Modal -->
-<div class="modal" *ngIf='!closed' (click)='onOpen(false)'>
+<div class='modal' *ngIf='!closed' (click)='onOpen(false)'>
 	<!-- Modal content -->
-	<div class="modal-content" (click)='onNop($event)'>
-		<span class="close" (click)='onOpen(false)'>&times;</span>
+	<div class='modal-content' (click)='onNop($event)'>
+		<span class='close' (click)='onOpen(false)'>&times;</span>
 		<p>{{object|json}}</p>
 	</div>
 </div>
@@ -75,12 +75,12 @@ button {
 export class JsonModal {
 	@Input()
 	object: Object;
-	closed : boolean = true;
+	closed: boolean = true;
 
-	onOpen(value : boolean) : void {
+	onOpen(value: boolean): void {
 		this.closed = !value;
 	}
-	onNop(event : any) {
+	onNop(event: any) {
 		event.stopPropagation();
 	}
 }

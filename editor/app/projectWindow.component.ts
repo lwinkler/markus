@@ -52,7 +52,6 @@ export class ProjectWindowComponent implements AfterViewInit {
 	@Input()
 	moduleDescriptions: Array<Module>;
 	@Output() selectModule: EventEmitter<string> = new EventEmitter<string>();
-	_initialised: boolean = false;
 	maxIdModules: number = 0;
 	jsPlumbInstance: any;
 	reconnect: boolean = false;
@@ -101,14 +100,13 @@ export class ProjectWindowComponent implements AfterViewInit {
 		let file = event.srcElement.files[0];
 		let reader = new FileReader();
 		reader.readAsText(file, 'UTF-8');
-		var self = this; // TODO: improve
-		reader.onload = function (evt: any) {
-			Project.readFromFile(self.project, evt.target.result);
-			self.reconnect = true;
-			self.hasChanges = false;
+		reader.onload = (evt: any) => {
+			Project.readFromFile(this.project, evt.target.result);
+			this.reconnect = true;
+			this.hasChanges = false;
 		};
 		reader.onerror = function (evt: any) {
-			alert('Error reading JSON file'); // TODO: message
+			alert('Error reading JSON file');
 		};
 	}
 	ngAfterViewChecked(): void {
@@ -157,8 +155,7 @@ export class ProjectWindowComponent implements AfterViewInit {
 	 *  between render modes.
 	 */
 	ngAfterViewInit(): void {
-		var self = this; // TODO
-		jsPlumb.ready(function() {
+		jsPlumb.ready(() => {
 
 			jsPlumb.importDefaults({
 				DragOptions: { cursor: 'pointer', zIndex:2000 },
@@ -167,7 +164,7 @@ export class ProjectWindowComponent implements AfterViewInit {
 				Endpoint: 'Rectangle',
 				Anchors: ['TopCenter', 'TopCenter']
 			});
-			self.jsPlumbInstance = jsPlumb.getInstance({
+			this.jsPlumbInstance = jsPlumb.getInstance({
 				DragOptions: { cursor: 'pointer', zIndex:2000 },
 				PaintStyle: { stroke:'#666' },
 				EndpointHoverStyle: { fill: 'orange' },
@@ -179,11 +176,11 @@ export class ProjectWindowComponent implements AfterViewInit {
 			});
 
 			// Events linked to connection of inputs and outputs
-			self.jsPlumbInstance.bind('connection', function(params: any, originalEvent: any) {
+			this.jsPlumbInstance.bind('connection', function(params: any, originalEvent: any) {
 				// Check if this was done by the user
 				if(originalEvent === undefined)
 					return;
-				self.connectInput({
+				this.connectInput({
 					inputModule:  params.targetId,
 					inputStream:  params.targetEndpoint.getParameter('name'),
 					outputModule: params.sourceId,
@@ -192,11 +189,11 @@ export class ProjectWindowComponent implements AfterViewInit {
 
 				return true;
 			});
-			self.jsPlumbInstance.bind('beforeDetach', function(params: any, originalEvent: any) {
+			this.jsPlumbInstance.bind('beforeDetach', function(params: any, originalEvent: any) {
 				// Check if this was done by the user
 				if(originalEvent === undefined)
 					return;
-				self.disconnectInput({
+				this.disconnectInput({
 					inputModule:  params.targetId,
 					inputStream:  params.suspendedEndpoint.getParameter('name'),
 					outputModule: params.sourceId,

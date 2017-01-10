@@ -1,3 +1,12 @@
+
+// can be used to iterate on object keys (not recommended)
+// import {Pipe, PipeTransform} from '@angular/core';
+// @Pipe({ name: 'keys',  pure: true })
+// export class PipeKeys implements PipeTransform {
+// 	       return Object.keys(value).map(key => ({key: key, value: value[key]}));
+// 	}
+// }
+
 export class Utils {
 	static findByName(list: Array<any>, name: string) {
 		for(let val of list) {

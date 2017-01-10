@@ -107,7 +107,7 @@ export class ModuleComponent implements AfterViewInit {
 	}
 	onMouseLeave(event: any): boolean {
 		let el = event.srcElement;
-		while(el.tagName != "MODULE")
+		while(el.tagName !== 'MODULE')
 			el = el.parentElement;
 		// As a small trick we update the position here
 		// maybe could be done cleaner but how ?

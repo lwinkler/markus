@@ -20,13 +20,6 @@ class MyErrorHandler implements ErrorHandler {
 	}
 }
 
-// import {Pipe, PipeTransform} from '@angular/core';
-// @Pipe({ name: 'keys',  pure: true }) // TODO move to utils
-// export class PipeKeys implements PipeTransform {
-// 	       return Object.keys(value).map(key => ({key: key, value: value[key]}));
-// 	}
-// } TODO move
-
 @NgModule({
 	imports: [
 		BrowserModule,
