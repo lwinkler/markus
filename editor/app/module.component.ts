@@ -88,9 +88,6 @@ let outputPoint = {
 `,
 	styles: [
 `
-module {
-	z-index: 3;
-}
 `
 	],
 	encapsulation: ViewEncapsulation.Emulated

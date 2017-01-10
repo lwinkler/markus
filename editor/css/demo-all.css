@@ -29,52 +29,6 @@ body {
 	background-color:#eaedef;
 }
 
-#headerWrapper {
-	width:100%;
-	background-color:black;
-	position:fixed;
-	top:0;left:0;
-	z-index:10000;
-	height:44px;
-	padding:0;
-	opacity:0.8;
-}
-
-#header {
-	margin-top:0;
-	height:44px;
-	font-size:13px;
-	margin-left:auto;
-	margin-right:auto;
-	width:950px;
-	background-image:url(logo_bw_44h.jpg);
-	background-repeat:no-repeat;
-}
-
-#main {  
-	margin-top:44px;
-	position: relative;
-	font-size: 80%;
-}
-
-#sidebar {		 
-	width: 420px;
-	font-size: 12px;
-	left: 20px;
-	top: 90px;
-}
-
-#explanation, #dropZone {
-	text-align: left;
-	padding: 10px;
-}
-
-#detail {
-	text-align: left;
-	padding: 10px;
-	display: block;
-}
-
 
 /* demo elements */
 
@@ -92,73 +46,6 @@ a:hover {
 	color:#1b911b;
 }
 
-.menu, #render, #explanation, #detail, #dropZone {   
-	background-color:#fff;
-}
-
-.menu {
-  height: 15px;
-	float:right;	 
-  padding-top:1em;
-  padding-bottom:0.4em;   
-  background-color: transparent;
-	margin-right:30px;
-  font-size:12px;
-}
-
-.menu a, #render a {
-	color:white;
-}
-
-.menu a {
-  margin-right: 19px;
-}
-
-.menu a:hover {
-	color:orange;
-}
-
-.menu a:active {
-	color:#5c96bc;
-}
-
-#render a:hover {
-	color:orange;
-}
-
-#render {
-	padding-top:2px;
-	margin-left:auto;
-	margin-right:auto;
-	z-index:5000;
-	margin-top:0px;  
-	text-align: center;
-	background-color:white;
-	font-size:11.5px;
-	background-color: #5c96bc;
-	color:white;
-}
-
-
-#render ul {
-	padding-left:1em;
-}
-#render ul li {
-	list-style-type:none;
-}
-#render h5 {
-	display:inline;
-}
-
-.otherLibraries {
-	display:inline;
-}
-
-#render a {
-	margin-right:10px;
-}
-
-
 .selected {
 	color:orange !important;
 }
@@ -175,44 +62,6 @@ a:hover {
 
 }
 path, ._jsPlumb_endpoint { cursor:pointer; }
-
-.cmd { padding:0.5em; width:60px;}
-.cmd:hover { 
-  border:2px solid #5c96bc;
-  background-color:#89bcde;
-  color:white;
-}
-.cmd:active {
-  border:2px solid orange;
-  color:orange;
-}
-
-.label {
-  font-size:13px; 
-  padding:8px;
-  padding:8px;
-}
-
-.component { 
-  border:1px solid #346789; 
-  border-radius:0.5em;
-  opacity:0.8; 
-  filter:alpha(opacity=80);
-  background-color:white;
-  color:black;
-  padding:0.5em;   
-  font-size:0.8em;
-}
-
-.component:hover {
-	border:1px solid #123456;
-	box-shadow: 2px 2px 19px #444;
-   -o-box-shadow: 2px 2px 19px #444;
-   -webkit-box-shadow: 2px 2px 19px #444;
-   -moz-box-shadow: 2px 2px 19px #fff;
-	opacity:0.9;
-	filter:alpha(opacity=90);
-}
 
 .window {
 	background-color:white;
