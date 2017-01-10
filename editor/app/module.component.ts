@@ -130,10 +130,10 @@ export class ModuleComponent implements AfterViewInit {
 	ngAfterViewInit(): void {
 
 		// Draw input connectors
-		function countStreams(inputs: Array<any>): number {
+		function countStreams(streams: Array<any>): number {
 			let cpt = 0;
-			for(let input of inputs) {
-				if(input.stream)
+			for(let stream of streams) {
+				if(stream.stream)
 					cpt++;
 			}
 			return cpt;
@@ -157,7 +157,7 @@ export class ModuleComponent implements AfterViewInit {
 						parameters: {
 							name: input.name
 						},
-						uuid: this.module.name + '_' + input.name
+						uuid: this.module.name + '_i_' + input.name
 					},
 					inputPoint
 				);
@@ -171,7 +171,7 @@ export class ModuleComponent implements AfterViewInit {
 						parameters: {
 							name: input.name
 						},
-						uuid: this.module.name + '_' + input.name
+						uuid: this.module.name + '_i_' + input.name
 					},
 					inputPointMulti
 				);
@@ -194,7 +194,7 @@ export class ModuleComponent implements AfterViewInit {
 					parameters: {
 						name: output.name
 					},
-					uuid: this.module.name + '_' + output.name
+					uuid: this.module.name + '_o_' + output.name
 				},
 				outputPoint
 			);

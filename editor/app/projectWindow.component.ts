@@ -21,7 +21,7 @@ declare var jsPlumb: any;
 	[project]='project'
 	(createModule)='onCreate($event)'
 	(uploadProject)='onUploadProject($event)'
-	(deleteAll)='onDeleteAll($event)'
+	(deleteAll)='onDeleteAll(true)'
 ></top-bar>
 <div class='jtk-demo-canvas canvas-wide drag-drop-demo jtk-surface jtk-surface-nopan' id='canvas'>
 	<module 
@@ -75,21 +75,22 @@ export class ProjectWindowComponent implements AfterViewInit {
 		while(Utils.findByName(this.project.modules, event + i) !== undefined) {
 			i++;
 		}
-			let x = 0, y = 0;
-			for(let mod of this.project.modules) {
-				if(mod.uiobject.x > x) {
-					x = mod.uiobject.x;
-					y = mod.uiobject.y;
-				}
+		let x = 0, y = 0;
+		for(let mod of this.project.modules) {
+			if(mod.uiobject.x > x) {
+				x = mod.uiobject.x;
+				y = mod.uiobject.y;
 			}
+		}
 		this.project.modules.push({name: event + i, class: event, inputs:[], outputs:[], uiobject:{x: x + 200, y: y}});
 		this.hasChanges = true;
 	}
-	onDeleteAll(event: any): void {
-		if(!confirm('Delete all modules ?'))
+	onDeleteAll(ask: boolean): void {
+		if(ask && !confirm('Delete all modules ?'))
 			return;
-		this.jsPlumbInstance.detachEveryConnection();
+		// this.jsPlumbInstance.detachEveryConnection();
 		this.project.modules = [];
+		this.jsPlumbInstance.deleteEveryEndpoint();
 		this.hasChanges = true;
 		this.onSelect(undefined);
 	}
@@ -101,6 +102,9 @@ export class ProjectWindowComponent implements AfterViewInit {
 		let reader = new FileReader();
 		reader.readAsText(file, 'UTF-8');
 		reader.onload = (evt: any) => {
+			// note: needed for a clean delete
+			this.onDeleteAll(false);
+
 			Project.readFromFile(this.project, evt.target.result);
 			this.reconnect = true;
 			this.hasChanges = false;
@@ -122,8 +126,8 @@ export class ProjectWindowComponent implements AfterViewInit {
 				if(inp.connected) {
 					this.jsPlumbInstance.connect({
 						uuids:[
-							mod.name + '_' + inp.name,
-							inp.connected.module + '_' + inp.connected.output
+							inp.connected.module + '_o_' + inp.connected.output,
+							mod.name + '_i_' + inp.name
 						]
 					});
 				}
