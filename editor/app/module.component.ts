@@ -84,7 +84,7 @@ let outputPoint = {
 	template: `
 <h3>{{module.name}}</h3>
 <p>{{module.class}}</p>
-<p><a class='cmdLink delete' rel='{{module.name}}' (click)='onDelete($event)'>delete</a></p>
+<p><a class='cmdLink' rel='{{module.name}}' (click)='onDelete($event)'>delete</a></p>
 `,
 	styles: [
 `
