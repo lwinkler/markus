@@ -550,18 +550,21 @@ void Manager::ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module,
 	// Check if connected to our previous module
 	try
 	{
+		string conMod = x_inputConfig["connected"]["module"].asString();
+		string conOut = x_inputConfig["connected"]["output"].asString();
 		// Connection of a simple input
-		LOG_DEBUG(m_logger, "Connect input " + x_inputName + " of module " + xr_module.GetName() + " to output " + x_inputConfig["connected"]["module"].asString() + ":" + x_inputConfig["connected"]["output"].asString());
+		LOG_DEBUG(m_logger, "Connect input " + x_inputName + " of module " + xr_module.GetName() + " to output " + conMod + ":" + conOut);
 
 		Stream& inputStream  = xr_module.RefInputStreamByName(x_inputName);
 		inputStream.SetBlocking(x_inputConfig.get("block", 1).asInt());
 		inputStream.SetSynchronized(x_inputConfig.get("sync", 1).asInt());
-		Stream& outputStream = RefModuleByName(x_inputConfig["connected"]["module"].asString()).RefOutputStreamByName(x_inputConfig["connected"]["output"].asString());
+		Stream& outputStream = RefModuleByName(conMod).RefOutputStreamByName(conOut);
 
 		// Connect input and output streams
 		inputStream.Connect(outputStream);
-		if(xr_module.GetParameters().GetParameterByName("master").GetValue().empty())
-			RefModuleByName(x_inputConfig["connected"]["module"].asString()).AddDependingModule(xr_module);
+		cout << "master" << xr_module.GetParameters().GetParameterByName("master").GetValue() << endl;
+		if(xr_module.GetParameters().GetParameterByName("master").GetValue().asString().empty())
+			RefModuleByName(conMod).AddDependingModule(xr_module);
 	}
 	catch(MkException& e)
 	{

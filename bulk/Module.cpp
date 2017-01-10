@@ -438,7 +438,7 @@ void Module::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 {
 	Json::Value root;
 
-	// root["name"]                 = GetName();
+	root["name"]                 = GetName();
 	// root["timer_conversion"]      = m_timerConversion.GetMsLong();
 	// root["timer_processing"]      = m_timerProcessFrame.GetMsLong();
 	// root["timer_waiting"]         = m_timerWaiting.GetMsLong();
@@ -478,8 +478,8 @@ void Module::Deserialize(istream& x_in, MkDirectory* xp_dir)
 	Json::Value root;
 	x_in >> root;
 
-	// if(GetName() != root["name"].asString())
-		// throw MkException("Name does not match in serialization for module " + GetName(), LOC);
+	if(GetName() != root["name"].asString())
+		throw MkException("Name does not match in serialization for module " + GetName(), LOC);
 	m_countProcessedFrames = root["countProcessedFrames"].asInt64();
 
 	stringstream ss;
