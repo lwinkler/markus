@@ -64,18 +64,12 @@ h3 {
 	encapsulation: ViewEncapsulation.Emulated
 })
 export class SideBarComponent {
-	@Input()
-	module: Module;
-	@Input()
-	moduleDescription: any;
-	@Input()
-	hasChanges: boolean; // TODO
+	@Input() private module: Module;
+	@Input() public  moduleDescription: any;
+	@Input() private hasChanges: boolean; // TODO
 
 	findInput(name: string) {
 		return Utils.findByName(this.module.inputs, name);
 	}
-	// findOutput(name: string) {
-		// return Utils.findByName(this.module.outputs, name);
-	// }
 }
 

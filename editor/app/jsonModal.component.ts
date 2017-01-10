@@ -73,9 +73,8 @@ button {
 	encapsulation: ViewEncapsulation.Emulated
 })
 export class JsonModal {
-	@Input()
-	object: Object;
-	closed: boolean = true;
+	@Input() public object: Object;
+	private closed: boolean = true;
 
 	onOpen(value: boolean): void {
 		this.closed = !value;

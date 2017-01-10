@@ -39,15 +39,14 @@ import 'rxjs/add/operator/map';
 })
 @Injectable()
 export class TopBarComponent {
-	@Input()
-	project: Project = undefined;
-	categorieToAdd: string;
-	moduleToAdd: string;
-	moduleCategories: Array<Object> = [{name:'all', modules: []}];
-	moduleCategorie: any = {name: 'all', modules:[]};
-	@Output() createModule:  EventEmitter<string> = new EventEmitter<string>();
-	@Output() uploadProject: EventEmitter<string> = new EventEmitter<string>();
-	@Output() deleteAll:     EventEmitter<string> = new EventEmitter<string>();
+	@Input()  private project: Project = undefined;
+	@Output() private createModule:  EventEmitter<string> = new EventEmitter<string>();
+	@Output() private uploadProject: EventEmitter<string> = new EventEmitter<string>();
+	@Output() private deleteAll:     EventEmitter<string> = new EventEmitter<string>();
+	private categorieToAdd: string;
+	private moduleToAdd: string;
+	private moduleCategories: Array<Object> = [{name:'all', modules: []}];
+	private moduleCategorie: any = {name: 'all', modules:[]};
 
 	constructor(http: Http) {
 		http.get('modules/moduleCategories.json').map((res: Response) => res.json()).subscribe(res => this.moduleCategories = res);

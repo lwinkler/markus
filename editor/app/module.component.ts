@@ -96,11 +96,11 @@ module {
 	encapsulation: ViewEncapsulation.Emulated
 })
 export class ModuleComponent implements AfterViewInit {
-	@Input()        module: Module;
-	@Input()        moduleDescription: any;
-	@Input()        jsPlumbInstance: any;
-	@Output()       selectModule: EventEmitter<string> = new EventEmitter<string>();
-	@Output()       deleteModule: EventEmitter<string> = new EventEmitter<string>();
+	@Input()   private module: Module;
+	@Input()   private moduleDescription: any;
+	@Input()   private jsPlumbInstance: any;
+	@Output()  private selectModule: EventEmitter<string> = new EventEmitter<string>();
+	@Output()  private deleteModule: EventEmitter<string> = new EventEmitter<string>();
 
 	onSelect(): void {
 		this.selectModule.emit(this.module.name);

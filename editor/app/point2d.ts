@@ -1,4 +1,4 @@
 export class Point2d {
-	x: number;
-	y: number;
+	public x: number;
+	public y: number;
 }

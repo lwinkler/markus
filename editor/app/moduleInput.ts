@@ -1,4 +1,4 @@
 export class ModuleInput {
-	value?: any;
-	connected?: any;
+	public value?: any;
+	public connected?: any;
 }

@@ -4,6 +4,7 @@ import {
 	Output,
 	ViewEncapsulation,
 	AfterViewInit,
+	AfterViewChecked,
 	EventEmitter
 } from '@angular/core';
 import {Project}  from './project';
@@ -44,17 +45,13 @@ declare var jsPlumb: any;
 	],
 	encapsulation: ViewEncapsulation.Emulated
 })
-export class ProjectWindowComponent implements AfterViewInit {
-	@Input()
-	project: Project;
-	@Input()
-	hasChanges: boolean;
-	@Input()
-	moduleDescriptions: Array<Module>;
-	@Output() selectModule: EventEmitter<string> = new EventEmitter<string>();
-	maxIdModules: number = 0;
-	jsPlumbInstance: any;
-	reconnect: boolean = false;
+export class ProjectWindowComponent implements AfterViewInit, AfterViewChecked {
+	@Input()  private project: Project;
+	@Input()  private hasChanges: boolean;
+	@Input()  private moduleDescriptions: Array<Module>;
+	@Output() private selectModule: EventEmitter<string> = new EventEmitter<string>();
+	private jsPlumbInstance: any;
+	private reconnect: boolean = false;
 
 	findClassDescription(className: string): any {
 		return Utils.findByClass(this.moduleDescriptions, className);
@@ -113,7 +110,7 @@ export class ProjectWindowComponent implements AfterViewInit {
 			alert('Error reading JSON file');
 		};
 	}
-	ngAfterViewChecked(): void {
+	public ngAfterViewChecked(): void {
 		// note: we have to use a reconnect state variable as:
 		//       - the view must have been initialized
 		//       - reconnection must be done once only

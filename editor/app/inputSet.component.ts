@@ -20,12 +20,9 @@ import {Utils} from './utils';
 	encapsulation: ViewEncapsulation.Emulated
 })
 export class InputSet {
-	@Input()
-	input: ModuleInput;
-	@Input()
-	description: any;
-	@Input()
-	inputs: Array<any>;
+	@Input() private input: ModuleInput;
+	@Input() private description: any;
+	@Input() private inputs: Array<any>;
 	activate($event: any): void {
 		if($event.target.checked) {
 			this.input = Utils.findByNameAndAdd(this.inputs, this.description.name);

@@ -1,9 +1,9 @@
 import {Point2d} from './point2d';
 
 export class Module {
-	class: string;
-	name: string;
-	inputs: Array<any>;
-	outputs: Array<any>;
-	uiobject: Point2d;
+	public class: string;
+	public name: string;
+	public inputs: Array<any>;
+	public outputs: Array<any>;
+	public uiobject: Point2d;
 }

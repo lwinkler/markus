@@ -23,12 +23,11 @@ import {Utils} from './utils';
 `
 })
 export class AppComponent {
-	projectFile: string;
-	project: Project = {name:'emptyProject', description:'', modules:[]};
-	selectedModule: Module;
-	selectedModuleDescription: Module;
-	hasChanges: boolean = false;
-	moduleDescriptions: any = {all: []};
+	private project: Project = {name:'emptyProject', description:'', modules:[]};
+	private selectedModule: Module;
+	private selectedModuleDescription: Module;
+	private hasChanges: boolean = false;
+	private moduleDescriptions: any = {all: []};
 	constructor(http: Http) {
 		http.get('modules/moduleDescriptions.json').map((res: Response) => res.json()).subscribe(res => this.moduleDescriptions = res);
 	}

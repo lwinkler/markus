@@ -42,10 +42,8 @@ select {
 	encapsulation: ViewEncapsulation.Emulated
 })
 export class InputValue {
-	@Input()
-	input: ModuleInput;
-	@Input()
-	description: any;
+	@Input() private input: ModuleInput;
+	@Input() public  description: any;
 	castFloat(): any {
 		this.input.value = parseFloat(this.input.value);
 	}
