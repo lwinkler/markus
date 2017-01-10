@@ -562,7 +562,6 @@ void Manager::ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module,
 
 		// Connect input and output streams
 		inputStream.Connect(outputStream);
-		cout << "master" << xr_module.GetParameters().GetParameterByName("master").GetValue() << endl;
 		if(xr_module.GetParameters().GetParameterByName("master").GetValue().asString().empty())
 			RefModuleByName(conMod).AddDependingModule(xr_module);
 	}
