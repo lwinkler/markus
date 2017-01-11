@@ -286,6 +286,37 @@ void Manager::Reset(bool x_resetInputs)
 	m_frameCount      = 0;
 }
 
+
+int Manager::Process2(MkException& rx_lastException)
+{
+	int cptExceptions = 0;
+	if(m_autoProcessedModules.empty())
+		throw FatalException("Manager must contain at least one auto processed module (i.e. an input module). Possibly a rebuild command went wrong", LOC);
+
+	for(auto & elem : m_autoProcessedModules)
+	{
+		LOG_DEBUG(m_logger, "Call Process on module " << elem->GetName());
+		elem->ProcessAndCatch();
+
+		if(!elem->HasRecovered())
+		{
+			cptExceptions++;
+			// note: we already log a warning later
+			LOG_INFO(m_logger, "The manager found an exception in " << elem->GetName());
+			rx_lastException = elem->LastException();
+		}
+	}
+	m_frameCount++;
+	if(m_frameCount % 100 == 0 && m_logger->isDebugEnabled())
+	{
+		PrintStatistics();
+	}
+	if(cptExceptions > 0)
+		throw rx_lastException;
+
+	return cptExceptions;
+}
+
 /**
 * @brief All modules process one frame
 *
@@ -297,33 +328,12 @@ void Manager::Process()
 	assert(m_isConnected); // Modules must be connected before processing
 	MkException lastException(MK_EXCEPTION_NORMAL, "normal", "No exception was thrown", "", "");
 
+	// TODO: Something goes wrong if we use the timer. What ?
+#ifdef MANAGER_TIMER
 	// To avoid freeze and infinite loops, use a timer
 	future<int> ret = async(launch::async, [this, &lastException]()
 	{
-		int cptExceptions = 0;
-		if(m_autoProcessedModules.empty())
-			throw FatalException("Manager must contain at least one auto processed module (i.e. an input module). Possibly a rebuild command went wrong", LOC);
-
-		for(auto & elem : m_autoProcessedModules)
-		{
-			LOG_DEBUG(m_logger, "Call Process on module " << elem->GetName());
-			elem->ProcessAndCatch();
-
-			if(!elem->HasRecovered())
-			{
-				cptExceptions++;
-				// note: we already log a warning later
-				LOG_INFO(m_logger, "The manager found an exception in " << elem->GetName());
-				lastException = elem->LastException();
-			}
-		}
-		m_frameCount++;
-		if(m_frameCount % 100 == 0 && m_logger->isDebugEnabled())
-		{
-			PrintStatistics();
-		}
-
-		return cptExceptions;
+		return Process2(lastException);
 	});
 
 	future_status status = ret.wait_for(chrono::seconds(PROCESS_TIMEOUT));
@@ -338,6 +348,10 @@ void Manager::Process()
 		LOG_INFO(m_logger, "Found " << result << " exception(s), the last one is " << lastException.SerializeToString());
 		throw lastException;
 	}
+#else
+	if(Process2(lastException) > 0)
+		throw lastException;
+#endif
 }
 
 /**

@@ -30,22 +30,23 @@ private:
 	QWebView m_view;
 	QString m_currentProject;
 	std::string m_projectToLoad;
-	QAction *aboutAct;
-	QAction *loadProjectAct;
-	QAction *saveProjectAct;
-	QAction *saveProjectAsAct;
-	QAction *updateProjectsAct;
-	QAction *updateModulesAct;
+	QAction *aboutAct = nullptr;
+	QAction *loadProjectAct = nullptr;
+	QAction *saveProjectAct = nullptr;
+	QAction *saveProjectAsAct = nullptr;
+	QAction *updateProjectsAct = nullptr;
+	QAction *updateModulesAct = nullptr;
 
-	QMenu *fileMenu;
-	QMenu *viewMenu;
-	QMenu *helpMenu;
+	QMenu *fileMenu = nullptr;
+	QMenu *viewMenu = nullptr;
+	QMenu *helpMenu = nullptr;
 
 	void CreateActions();
 	void CreateMenus();
 
 public:
 	Editor(Manager* xp_manager = nullptr, const std::string& x_project = "", QWidget *parent = 0);
+	~Editor();
 	void setUrl(const QUrl &url);
 
 public slots:

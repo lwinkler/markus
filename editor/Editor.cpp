@@ -81,6 +81,22 @@ Editor::Editor(Manager* xp_manager, const string& x_project, QWidget *parent) :
 	show();
 }
 
+Editor::~Editor()
+{
+	// delete page§
+
+	delete aboutAct;
+	delete loadProjectAct;
+	delete saveProjectAct;
+	delete saveProjectAsAct;
+	delete updateProjectsAct;
+	delete updateModulesAct;
+
+	delete fileMenu;
+	delete viewMenu;
+	delete helpMenu;
+}
+
 /// Adapt the DOM to the Qt environment
 void Editor::adaptDom(bool x_loadOk)
 {
@@ -88,11 +104,11 @@ void Editor::adaptDom(bool x_loadOk)
 	QWebFrame *frame = m_view.page()->mainFrame();
 	QWebElement document = frame->documentElement();
 
-	// Deactivate the download button
+	// Deactivate the download button // TODO: not working
 	QWebElementCollection elements = document.findAll("#downloadProject");
 
 	foreach (QWebElement element, elements)
-	element.setAttribute("disabled", "disabled");
+		element.setAttribute("disabled", "disabled");
 
 	// if a project is select load it
 	QString fileName(m_projectToLoad.c_str());

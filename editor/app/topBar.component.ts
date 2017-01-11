@@ -16,7 +16,7 @@ import 'rxjs/add/operator/map';
 	template: `
 <div class='top-bar'>
 	Project name <input type='text' [(ngModel)]='project.name' placeholder='projectFile'/>
-	<button (click)='onDownload($event)'>Download</button>
+	<button (click)='onDownload($event)' id='downloadProject'>Download</button>
 	<button (click)='onDeleteAll($event)'>Delete all</button>
 	<a id='downloadAnchorElem' style='display:none'>Download link</a>
 	<label>Load:</label> <input type='file' accept='.json' (change)='onUploadProject($event)'/>

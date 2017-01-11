@@ -479,7 +479,7 @@ void Module::Deserialize(istream& x_in, MkDirectory* xp_dir)
 	x_in >> root;
 
 	if(GetName() != root["name"].asString())
-		throw MkException("Name does not match in serialization for module " + GetName(), LOC);
+		throw MkException("Name does not match in serialization for module " + GetName() + "(!='" + root["name"].asString() + "')", LOC);
 	m_countProcessedFrames = root["countProcessedFrames"].asInt64();
 
 	stringstream ss;

@@ -137,6 +137,7 @@ public:
 private:
 	void Build();
 	void Destroy();
+	int Process2(MkException& xr_lastException);
 
 	Module& RefModuleByName(const std::string& x_name) const;
 	void ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module, const std::string& x_input) const;

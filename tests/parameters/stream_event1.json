@@ -5,6 +5,7 @@
 	},
 	"description" : "Test stream",
 	"name" : "stream_event1",
+	"range" : {},
 	"stream" : true,
 	"type" : "Event"
 }

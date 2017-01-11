@@ -4,6 +4,8 @@ import {Project} from './project';
 import {Http, Response} from '@angular/http';
 import {Utils} from './utils';
 
+declare var g_controller: any;
+
 @Component({
 	selector: 'markus-editor',
 	template: `
@@ -23,13 +25,17 @@ import {Utils} from './utils';
 `
 })
 export class AppComponent {
-	private project: Project = {name:'emptyProject', description:'', modules:[]};
+	public project: Project = {name:'emptyProject', description:'', modules:[]};
 	private selectedModule: Module;
 	private selectedModuleDescription: Module;
-	private hasChanges: boolean = false;
+	public hasChanges: boolean = false;
 	private moduleDescriptions: any = {all: []};
 	constructor(http: Http) {
 		http.get('modules/moduleDescriptions.json').map((res: Response) => res.json()).subscribe(res => this.moduleDescriptions = res);
+
+		// For control from our Qt editor
+		if(typeof g_controller !== 'undefined')
+			g_controller.app = this;
 	}
 	onSelect(event: string): void {
 		this.selectedModule = Utils.findByName(this.project.modules, event);

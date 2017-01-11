@@ -6,6 +6,7 @@
 	},
 	"description" : "Test stream",
 	"name" : "stream_image2",
+	"range" : {},
 	"stream" : true,
 	"type" : "Image"
 }

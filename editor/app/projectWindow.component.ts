@@ -93,8 +93,9 @@ export class ProjectWindowComponent implements AfterViewInit, AfterViewChecked {
 	}
 	onUploadProject(event: any): void {
 
-		if(event.srcElement.files.length !== 1)
-			alert('You need to select one file: ' + event.srcElement.files.length + ' selected');
+		if(event.srcElement.files.length !== 1) {
+			console.log('Warning: You need to select one file: ' + event.srcElement.files.length + ' selected');
+		}
 		let file = event.srcElement.files[0];
 		let reader = new FileReader();
 		reader.readAsText(file, 'UTF-8');

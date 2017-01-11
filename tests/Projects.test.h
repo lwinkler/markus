@@ -98,7 +98,7 @@ protected:
 
 public:
 	/// Run different existing configs
-	void testProjects1()
+	void testProjects1() // TODO: Fix and enable
 	{
 		TS_TRACE("\n# Unit test with different test projects");
 		runConfig("tests/projects/sync_test1.json");

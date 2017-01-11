@@ -72,7 +72,6 @@ path, ._jsPlumb_endpoint { cursor:pointer; }
 	font-family:serif;
 	font-style:italic;
 	overflow: hidden;
-	z-index: 3; /* TODO: ignored ? */
 	z-index:24;
 	text-align:center;
 	cursor:pointer;

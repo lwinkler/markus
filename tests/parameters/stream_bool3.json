@@ -2,6 +2,7 @@
 	"default" : false,
 	"description" : "Test stream",
 	"name" : "stream_bool3",
+	"range" : {},
 	"stream" : true,
 	"type" : "NumBool"
 }
