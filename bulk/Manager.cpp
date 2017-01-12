@@ -329,7 +329,11 @@ void Manager::Process()
 	MkException lastException(MK_EXCEPTION_NORMAL, "normal", "No exception was thrown", "", "");
 
 	// TODO: Something goes wrong if we use the timer. What ?
+// #define MANAGER_TIMER
 #ifdef MANAGER_TIMER
+	static bool once = false;
+	assert(once == false);
+	once = true;
 	// To avoid freeze and infinite loops, use a timer
 	future<int> ret = async(launch::async, [this, &lastException]()
 	{

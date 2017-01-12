@@ -7,10 +7,6 @@
 			"inputs" : 
 			[
 				{
-					"name" : "autoProcess",
-					"value" : 0
-				},
-				{
 					"name" : "bShadowDetection",
 					"value" : 0
 				},
@@ -91,10 +87,6 @@
 			"inputs" : 
 			[
 				{
-					"name" : "autoProcess",
-					"value" : 0
-				},
-				{
 					"name" : "file",
 					"value" : "standard"
 				},
@@ -140,10 +132,6 @@
 			"class" : "VideoFileWriter",
 			"inputs" : 
 			[
-				{
-					"name" : "autoProcess",
-					"value" : 0
-				},
 				{
 					"name" : "file",
 					"value" : "foreground"
