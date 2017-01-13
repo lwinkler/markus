@@ -354,8 +354,7 @@ int main(int argc, char** argv)
 		readFromFile(appConfig, args.configFile);
 		overrideConfig(appConfig, args.extraConfig, args.parameters, logger);
 		validate(appConfig);
-		if(appConfig.isNull())
-			throw MkException("Tag <application> must be present in configuration file.", LOC);
+		assert(!appConfig.isNull());
 
 		// Init global variables and objects
 		// Context manages all call to system, files, ...

@@ -178,7 +178,7 @@ export class ProjectWindowComponent implements AfterViewInit, AfterViewChecked {
 			});
 
 			// Events linked to connection of inputs and outputs
-			this.jsPlumbInstance.bind('connection', function(params: any, originalEvent: any) {
+			this.jsPlumbInstance.bind('connection', (params: any, originalEvent: any) => {
 				// Check if this was done by the user
 				if(originalEvent === undefined)
 					return;

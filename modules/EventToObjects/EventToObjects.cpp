@@ -63,7 +63,7 @@ void EventToObjects::ProcessFrame()
 /// 	there are two reason why we want to process: either the event is raised or the previous frame had a raised event
 bool EventToObjects::IsInputProcessed() const
 {
-	const StreamEvent* pStream =  dynamic_cast<const StreamEvent*>(&m_inputStreams.at(0)->GetConnected());
+	const StreamEvent* pStream =  dynamic_cast<const StreamEvent*>(&m_inputStreams.at("event")->GetConnected());
 	assert(pStream != nullptr);
 	return m_event.IsRaised() || pStream->GetContent().IsRaised();
 }

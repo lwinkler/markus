@@ -51,6 +51,7 @@ include_directories(${Boost_INCLUDE_DIR})
 find_package(OpenCV REQUIRED)
 find_package(Threads REQUIRED)
 find_package(PythonLibs 2 QUIET)
+find_package(MONGOC QUIET)
 
 find_library(LOG4CXX_LIBS log4cxx)
 find_library(TINYXML_LIBS tinyxml)
@@ -76,6 +77,8 @@ set(MK_EXT_DEPS ${MK_EXT_DEPS} ${JSONCPP_LIBS})
 set(MK_EXT_DEPS ${MK_EXT_DEPS} ${OpenCV_LIBS})
 set(MK_EXT_DEPS ${MK_EXT_DEPS} ${CMAKE_THREAD_LIBS_INIT})
 set(MK_EXT_DEPS ${MK_EXT_DEPS} ${Boost_LIBRARIES})
+set(MK_EXT_DEPS ${MK_EXT_DEPS} "bson-1.0")
+set(MK_EXT_DEPS ${MK_EXT_DEPS} "mongoc-1.0")
 set(EXT_DEPS ${EXT_DEPS} ${PYTHON_LIBRARIES})
 
 if(NOT Markus_NO_GUI)
@@ -135,9 +138,8 @@ if(NOT Markus_NO_GUI)
 endif()
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR})
-
-# trick: We need to include this here to compile
-include_directories(/usr/local/mongo-cxx-driver/include)
+include_directories(/usr/include/libbson-1.0)
+include_directories(/usr/include/libmongoc-1.0)
 
 
 
