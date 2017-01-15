@@ -7,6 +7,7 @@ import {TopBarComponent} from './topBar.component';
 import {SideBarComponent} from './sideBar.component';
 import {InputSet} from './inputSet.component';
 import {InputValue} from './inputValue.component';
+import {DbObjectViewer} from './dbObjectViewer.component';
 import {JsonModal} from './jsonModal.component';
 import {ProjectWindowComponent} from './projectWindow.component';
 import {ModuleComponent} from './module.component';
@@ -34,7 +35,8 @@ class MyErrorHandler implements ErrorHandler {
 		ModuleComponent,
 		InputSet,
 		InputValue,
-		JsonModal
+		JsonModal,
+		DbObjectViewer
 	],
 	bootstrap: [AppComponent],
 	providers: [{provide: ErrorHandler, useClass: MyErrorHandler}]

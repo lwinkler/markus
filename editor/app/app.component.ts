@@ -21,6 +21,8 @@ declare var g_controller: any;
 		[hasChanges]='hasChanges'
 		[moduleDescription]='selectedModuleDescription'
 	></side-bar>
+
+	<db-object-viewer></db-object-viewer>
 </div>
 `
 })
