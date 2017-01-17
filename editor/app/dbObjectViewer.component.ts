@@ -18,9 +18,6 @@ declare var g_controller: any;
 		<option *ngFor='let job of jobs' [value]='job._id'>{{job._id}} {{job.applicationName}} {{job.startDate}}</option>
 	</select>
 
-	<p></p>
-
-
 	<h1>Objects</h1>
 	<table class='object-table'>
 		<tr><th>Id</th><th>name</th></tr>
