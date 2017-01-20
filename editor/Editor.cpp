@@ -89,7 +89,6 @@ Editor::~Editor()
 	delete loadProjectAct;
 	delete saveProjectAct;
 	delete saveProjectAsAct;
-	delete updateProjectsAct;
 	delete updateModulesAct;
 
 	delete fileMenu;
@@ -209,15 +208,6 @@ bool Editor::saveProject(const QString& x_fileName)
 }
 
 /// Update list of projects
-void Editor::updateProjects()
-{
-	if(!maybeSave())
-		return;
-	SYSTEM("make update_projects_list");
-	m_view.reload();
-}
-
-/// Update list of projects
 void Editor::updateModules()
 {
 	if(!maybeSave())
@@ -245,8 +235,6 @@ void Editor::CreateActions()
 	connect(saveProjectAct, SIGNAL(triggered()), this, SLOT(save()));
 	saveProjectAsAct = new QAction(tr("Save project as"), this);
 	connect(saveProjectAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
-	updateProjectsAct = new QAction(tr("Update the list of projects"), this);
-	connect(updateProjectsAct, SIGNAL(triggered()), this, SLOT(updateProjects()));
 	updateModulesAct = new QAction(tr("Update the list of modules"), this);
 	connect(updateModulesAct, SIGNAL(triggered()), this, SLOT(updateModules()));
 }
@@ -259,7 +247,6 @@ void Editor::CreateMenus()
 	fileMenu->addAction(saveProjectAct);
 	fileMenu->addAction(saveProjectAsAct);
 	fileMenu->addSeparator();
-	fileMenu->addAction(updateProjectsAct);
 	fileMenu->addAction(updateModulesAct);
 
 	viewMenu = new QMenu(tr("&View"), this);
