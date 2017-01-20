@@ -311,12 +311,15 @@ void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, 
 void launchEditor(int argc, char** argv)
 {
 #ifndef MARKUS_NO_GUI
-	QApplication app(argc, argv);
-	string projectFile = "";
-	if(argc > 2)
-		projectFile = argv[2];
-	Editor editor(nullptr, projectFile);
-	app.exec();
+	{
+		// note: to avoid errors in destructor, leave the above {}
+		QApplication app(argc, argv);
+		string projectFile = "";
+		if(argc > 2)
+			projectFile = argv[2];
+		Editor editor(nullptr, projectFile);
+		app.exec();
+	}
 	exit(0);
 #else
 	cerr<<"To launch the editor Markus must be compiled with GUI"<<endl;
