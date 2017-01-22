@@ -118,6 +118,5 @@ double UsbCam::GetRecordingFps() const
 {
 	// There is probably no way to get a measure of FPS
 	// cout << "FPS" << m_capture.get(CV_CAP_PROP_FPS) << endl;
-	// TODO: fps should not be 8 by default. This prevents the usb cam from working at full speed
-	return m_param.fps == 0 ? 8 : m_param.fps;
+	return m_param.fps;
 }

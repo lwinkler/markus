@@ -50,7 +50,7 @@ public:
 
 	QWidget* CreateWidget() override = 0;
 	virtual void SetWidgetValue(const std::string& x_value) = 0;
-	virtual std::string GetValueFromWidget() = 0;
+	virtual Json::Value GetValueFromWidget() = 0;
 
 	// Controllers
 	void GetType(std::string* xp_value);
@@ -78,7 +78,7 @@ public:
 	ControllerInt(Parameter& x_param, Processable& x_module);
 	virtual QWidget* CreateWidget();
 	virtual void SetWidgetValue(const std::string& x_value);
-	virtual std::string GetValueFromWidget();
+	virtual Json::Value GetValueFromWidget();
 
 protected:
 	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
@@ -93,7 +93,7 @@ public:
 	ControllerUInt(Parameter& x_param, Processable& x_module);
 	virtual QWidget* CreateWidget();
 	virtual void SetWidgetValue(const std::string& x_value);
-	virtual std::string GetValueFromWidget();
+	virtual Json::Value GetValueFromWidget();
 
 protected:
 	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
@@ -109,7 +109,7 @@ public:
 	ControllerDouble(Parameter& x_param, Processable& x_module);
 	virtual QWidget* CreateWidget();
 	virtual void SetWidgetValue(const std::string& x_value);
-	virtual std::string GetValueFromWidget();
+	virtual Json::Value GetValueFromWidget();
 
 protected:
 	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
@@ -124,7 +124,7 @@ public:
 	ControllerFloat(Parameter& x_param, Processable& x_module);
 	virtual QWidget* CreateWidget();
 	virtual void SetWidgetValue(const std::string& x_value);
-	virtual std::string GetValueFromWidget();
+	virtual Json::Value GetValueFromWidget();
 
 protected:
 	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
@@ -139,7 +139,7 @@ public:
 	ControllerBool(Parameter& x_param, Processable& x_module);
 	virtual QWidget* CreateWidget();
 	virtual void SetWidgetValue(const std::string& x_value);
-	virtual std::string GetValueFromWidget();
+	virtual Json::Value GetValueFromWidget();
 
 protected:
 	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
@@ -154,7 +154,7 @@ public:
 	ControllerString(Parameter& x_param, Processable& x_module);
 	virtual QWidget* CreateWidget();
 	virtual void SetWidgetValue(const std::string& x_value);
-	virtual std::string GetValueFromWidget();
+	virtual Json::Value GetValueFromWidget();
 
 protected:
 	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
@@ -169,7 +169,7 @@ public:
 	ControllerSerializable(Parameter& x_param, Processable& x_module);
 	virtual QWidget* CreateWidget();
 	virtual void SetWidgetValue(const std::string& x_value);
-	virtual std::string GetValueFromWidget();
+	virtual Json::Value GetValueFromWidget();
 
 protected:
 	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
@@ -184,7 +184,7 @@ public:
 	ControllerVoid(Parameter& x_param, Processable& x_module);
 	virtual QWidget* CreateWidget();
 	virtual void SetWidgetValue(const std::string& x_value);
-	virtual std::string GetValueFromWidget();
+	virtual Json::Value GetValueFromWidget();
 
 protected:
 	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
@@ -199,7 +199,7 @@ public:
 	ControllerCalibrationByHeight(Parameter& x_param, Processable& x_module);
 	virtual QWidget* CreateWidget();
 	virtual void SetWidgetValue(const std::string& x_value);
-	virtual std::string GetValueFromWidget();
+	virtual Json::Value GetValueFromWidget();
 
 protected:
 	//QPainter * parameterLine;
@@ -228,7 +228,7 @@ public:
 	ControllerEnum(Parameter& x_param, Processable& x_module);
 	virtual QWidget* CreateWidget();
 	virtual void SetWidgetValue(const std::string& x_value);
-	virtual std::string GetValueFromWidget();
+	virtual Json::Value GetValueFromWidget();
 
 protected:
 	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
@@ -244,7 +244,7 @@ public:
 	ControllerText(Parameter& x_param, Processable& x_module);
 	virtual QWidget* CreateWidget();
 	virtual void SetWidgetValue(const std::string& x_value);
-	virtual std::string GetValueFromWidget();
+	virtual Json::Value GetValueFromWidget();
 
 protected:
 	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
