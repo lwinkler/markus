@@ -35,7 +35,7 @@ log4cxx::LoggerPtr ParameterEnum::m_logger(log4cxx::Logger::getLogger("Parameter
 * @brief Set the value of the parameter
 *
 * @param rx_value   String containing the value
-* @param x_confType Source of the configuration (default, xml, GUI, ...)
+* @param x_confType Source of the configuration (default, json, GUI, ...)
 */
 void ParameterEnum::SetValue(const ConfigReader& rx_value, ParameterConfigType x_confType)
 {

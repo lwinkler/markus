@@ -12,14 +12,14 @@ import {Utils} from './utils';
 			<p>This is the visual module editor for Markus. With this simple web interface you can open, visualize and edit projects. </p>
 			<ul>
 				<li><b>Create a new module: </b>Add the module you need using the 'Create' selection box above and connect the modules'inputs and outputs by drag and drop.</li>
-				<li><b>Download the project: </b>This opens a new tab to your browser. You can save it as an xml file under the 'project/' directory.</li>
+				<li><b>Download the project: </b>This opens a new tab to your browser. You can save it as an json file under the 'project/' directory.</li>
 				<li><b>Clean: </b>Remove all modules from the board and start a new project.</li>
 				<li><b>Load a project: </b>Load an existing project</li>
 			</ul>
 		<h3>Tips</h3>
 			<ul>
 				<li><b>Supported browsers: </b>So far the module editor has only been tested with Firefox. It should work with Chrome as well but only through a web server. (E.g. Apache)</li>
-				<li><b>XML files: </b>Modules classes (with inputs and outputs) are defined in xml files inside the 'module/' directory. Project files are saved as XML files inside the project directory.</li>
+				<li><b>JSON files: </b>Modules classes (with inputs and outputs) are defined in json files inside the 'module/' directory. Project files are saved as JSON files inside the project directory.</li>
 			</ul>
 	</div>
 	<div *ngIf='module!==undefined'>

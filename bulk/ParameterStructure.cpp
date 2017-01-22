@@ -63,7 +63,7 @@ void ParameterStructure::AddParameter(Parameter* xr_param)
 }
 
 /**
-* @brief Set the value from xml configuration
+* @brief Set the value from json configuration
 */
 void ParameterStructure::LockIfRequired()
 {
@@ -74,7 +74,7 @@ void ParameterStructure::LockIfRequired()
 }
 
 /**
-* @brief Set the value from xml configuration
+* @brief Set the value from json configuration
 */
 void ParameterStructure::Read(const ConfigReader& x_config)
 {
@@ -89,7 +89,7 @@ void ParameterStructure::Read(const ConfigReader& x_config)
 				continue;
 			Parameter& param = RefParameterByName(inputConf["name"].asString());
 			if(!param.IsLocked())
-				param.SetValue(inputConf["value"], PARAMCONF_XML);
+				param.SetValue(inputConf["value"], PARAMCONF_JSON);
 		}
 		catch(std::exception& e)
 		{
@@ -100,7 +100,7 @@ void ParameterStructure::Read(const ConfigReader& x_config)
 }
 
 /**
-* @brief Save all values and prepare xml configuration for writing
+* @brief Save all values and prepare json configuration for writing
 */
 void ParameterStructure::Write(ConfigReader& xr_config) const
 {

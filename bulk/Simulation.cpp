@@ -193,7 +193,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 		}
 		else
 		{
-			// Set values by using range information provided in XML
+			// Set values by using range information provided in JSON
 			if(paramNames.size() > 1)
 				throw MkException("To set more than one parameter variation, use an external file with option file=...", LOC);
 			// default values. Empty range means that the prog uses the default range of the param

@@ -419,7 +419,7 @@ void Manager::PrintStatistics()
 	// LOG_INFO("input convertion "                  <<m_timerConvertion<<" ms ("<<(1000.0 * m_frameCount) / m_timerConvertion<<" frames/s)");
 	// LOG_INFO("Total time "<< m_timerProcessable + m_timerConvertion<<" ms ("<<     (1000.0 * m_frameCount) /(m_timerProcessable + m_timerConvertion)<<" frames/s)");
 
-	// Create an XML file to summarize CPU usage
+	// Create a JSON file to summarize CPU usage
 	//     if output dir is empty, write to /tmp
 	bool notEmpty = IsContextSet() && !RefContext().RefOutputDir().IsEmpty(); // must be called before ReserveFile
 	if(RefContext().RefOutputDir().FileExists("benchmark.json"))
@@ -468,7 +468,7 @@ bool Manager::AbortCondition() const
 }
 
 /**
-* @brief Export current configuration to json: this is used to create the XML and JSON files to describe each module
+* @brief Export current configuration to json: this is used to create the JSON files to describe each module
 */
 void Manager::CreateEditorFiles(const string& x_fileName)
 {

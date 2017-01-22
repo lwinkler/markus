@@ -33,7 +33,7 @@ using namespace std;
 
 
 /**
-* @brief Save the config as an xml file
+* @brief Save the config as a json file
 *
 * @param rx_config Result config
 * @param x_fileName File name
@@ -52,7 +52,7 @@ void readFromFile(ConfigReader& rx_config, const std::string& x_fileName, bool x
 }
 
 /**
-* @brief Save the config as an xml file
+* @brief Save the config as an json file
 *
 * @param x_file Name of the file with relative path
 */

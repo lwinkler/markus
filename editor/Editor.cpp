@@ -119,7 +119,7 @@ void Editor::adaptDom(bool x_loadOk)
 	}
 }
 
-/// Load an XML project file
+/// Load an JSON project file
 void Editor::loadProject()
 {
 	if(maybeSave())
@@ -179,7 +179,7 @@ bool Editor::saveAs()
 	return saveProject(fileName);
 }
 
-/// Save a project as XML
+/// Save a project as JSON
 bool Editor::saveProject(const QString& x_fileName)
 {
 	QFile file(x_fileName);
@@ -265,7 +265,7 @@ QManager::QManager(Manager& xr_manager)
 }
 
 /// Create a module given its config
-void QManager::CreateModule(QString x_xmlString)
+void QManager::CreateModule(QString x_jsonString) // TODO
 {
 	assert(false);
 	// ConfigString config(x_xmlString.toStdString());
