@@ -89,7 +89,6 @@ Editor::~Editor()
 	delete loadProjectAct;
 	delete saveProjectAct;
 	delete saveProjectAsAct;
-	delete updateProjectsAct;
 	delete updateModulesAct;
 
 	delete fileMenu;
@@ -120,7 +119,7 @@ void Editor::adaptDom(bool x_loadOk)
 	}
 }
 
-/// Load an XML project file
+/// Load an JSON project file
 void Editor::loadProject()
 {
 	if(maybeSave())
@@ -180,7 +179,7 @@ bool Editor::saveAs()
 	return saveProject(fileName);
 }
 
-/// Save a project as XML
+/// Save a project as JSON
 bool Editor::saveProject(const QString& x_fileName)
 {
 	QFile file(x_fileName);
@@ -206,15 +205,6 @@ bool Editor::saveProject(const QString& x_fileName)
 #endif
 	// statusBar()->showMessage(tr("File saved"), 2000);
 	return true;
-}
-
-/// Update list of projects
-void Editor::updateProjects()
-{
-	if(!maybeSave())
-		return;
-	SYSTEM("make update_projects_list");
-	m_view.reload();
 }
 
 /// Update list of projects
@@ -245,8 +235,6 @@ void Editor::CreateActions()
 	connect(saveProjectAct, SIGNAL(triggered()), this, SLOT(save()));
 	saveProjectAsAct = new QAction(tr("Save project as"), this);
 	connect(saveProjectAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
-	updateProjectsAct = new QAction(tr("Update the list of projects"), this);
-	connect(updateProjectsAct, SIGNAL(triggered()), this, SLOT(updateProjects()));
 	updateModulesAct = new QAction(tr("Update the list of modules"), this);
 	connect(updateModulesAct, SIGNAL(triggered()), this, SLOT(updateModules()));
 }
@@ -259,7 +247,6 @@ void Editor::CreateMenus()
 	fileMenu->addAction(saveProjectAct);
 	fileMenu->addAction(saveProjectAsAct);
 	fileMenu->addSeparator();
-	fileMenu->addAction(updateProjectsAct);
 	fileMenu->addAction(updateModulesAct);
 
 	viewMenu = new QMenu(tr("&View"), this);
@@ -278,7 +265,7 @@ QManager::QManager(Manager& xr_manager)
 }
 
 /// Create a module given its config
-void QManager::CreateModule(QString x_xmlString)
+void QManager::CreateModule(QString x_jsonString) // TODO
 {
 	assert(false);
 	// ConfigString config(x_xmlString.toStdString());

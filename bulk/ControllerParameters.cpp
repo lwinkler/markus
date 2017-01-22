@@ -108,11 +108,11 @@ void ControllerParameter::SetControlledValue(string* xp_value)
 #else
 		try
 		{
-			m_param.SetValue(jsonToString(GetValueFromWidget()), PARAMCONF_GUI);
+			m_param.SetValue(GetValueFromWidget(), PARAMCONF_GUI);
 		}
-		catch(...)
+		catch(exception& e)
 		{
-			LOG_ERROR(m_logger, "Error setting value of parameter from widget");
+			LOG_ERROR(m_logger, "Error setting value of parameter from widget: " + string(e.what()));
 		}
 #endif
 	}
@@ -207,12 +207,10 @@ void ControllerInt::SetWidgetValue(const string& x_value)
 #endif
 }
 
-string ControllerInt::GetValueFromWidget()
+Json::Value ControllerInt::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
-	stringstream ss;
-	ss<<mp_parameterSlider->GetValue();
-	return ss.str();
+	return mp_parameterSlider->GetValue();
 #else
 	assert(false);
 	return "";
@@ -244,12 +242,10 @@ void ControllerUInt::SetWidgetValue(const string& x_value)
 #endif
 }
 
-string ControllerUInt::GetValueFromWidget()
+Json::Value ControllerUInt::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
-	stringstream ss;
-	ss<<mp_parameterSlider->GetValue();
-	return ss.str();
+	return mp_parameterSlider->GetValue();
 #else
 	assert(false);
 	return "";
@@ -278,12 +274,10 @@ void ControllerDouble::SetWidgetValue(const string& x_value)
 #endif
 }
 
-string ControllerDouble::GetValueFromWidget()
+Json::Value ControllerDouble::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
-	stringstream ss;
-	ss<<mp_parameterSlider->GetValue();
-	return ss.str();
+	return mp_parameterSlider->GetValue();
 #else
 	assert(false);
 	return "";
@@ -315,12 +309,10 @@ void ControllerFloat::SetWidgetValue(const string& x_value)
 #endif
 }
 
-string ControllerFloat::GetValueFromWidget()
+Json::Value ControllerFloat::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
-	stringstream ss;
-	ss<<mp_parameterSlider->GetValue();
-	return ss.str();
+	return mp_parameterSlider->GetValue();
 #else
 	assert(false);
 	return "";
@@ -352,10 +344,10 @@ void ControllerBool::SetWidgetValue(const string& x_value)
 #endif
 }
 
-string ControllerBool::GetValueFromWidget()
+Json::Value ControllerBool::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_checkBox->isChecked() ? "1" : "0";
+	return mp_checkBox->isChecked();
 #else
 	assert(false);
 	return "";
@@ -387,7 +379,7 @@ void ControllerString::SetWidgetValue(const string& x_value)
 #endif
 }
 
-string ControllerString::GetValueFromWidget()
+Json::Value ControllerString::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	return mp_lineEdit->text().toStdString();
@@ -428,10 +420,10 @@ void ControllerSerializable::SetWidgetValue(const string& x_value)
 #endif
 }
 
-string ControllerSerializable::GetValueFromWidget()
+Json::Value ControllerSerializable::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_lineEdit->text().toStdString();
+	return stringToJson(mp_lineEdit->text().toStdString());
 #else
 	assert(false);
 	return "";
@@ -468,7 +460,7 @@ void ControllerVoid::SetWidgetValue(const string& x_value)
 #endif
 }
 
-string ControllerVoid::GetValueFromWidget()
+Json::Value ControllerVoid::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	return mp_lineEdit->text().toStdString();
@@ -536,7 +528,7 @@ void ControllerCalibrationByHeight::SetWidgetValue(const string& x_value)
 #endif
 }
 
-string ControllerCalibrationByHeight::GetValueFromWidget()
+Json::Value ControllerCalibrationByHeight::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	stringstream ss;
@@ -546,7 +538,7 @@ string ControllerCalibrationByHeight::GetValueFromWidget()
 	object.height = mp_sliderHeight->GetValue();
 	object.Serialize(ss);
 
-	return ss.str();
+	return stringToJson(ss.str());
 #else
 	assert(false);
 	return "";
@@ -587,7 +579,7 @@ void ControllerEnum::SetWidgetValue(const string& x_value)
 #endif
 }
 
-string ControllerEnum::GetValueFromWidget()
+Json::Value ControllerEnum::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	return m_param2.GetReverseEnum().at(mp_comboBox->itemData(mp_comboBox->currentIndex()).toInt());
@@ -623,7 +615,7 @@ void ControllerText::SetWidgetValue(const string& x_value)
 #endif
 }
 
-string ControllerText::GetValueFromWidget()
+Json::Value ControllerText::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	return mp_textEdit->toPlainText().toStdString();

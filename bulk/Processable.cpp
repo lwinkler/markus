@@ -139,6 +139,7 @@ bool Processable::DoSleep()
 
 bool Processable::ProcessAndCatch()
 {
+	WriteLock lock(RefLock());
 	bool recover      = true;
 	bool continueFlag = true;
 	

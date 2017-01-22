@@ -120,11 +120,11 @@ Editor
 ------
 You will get a good idea of the Markus philosophy and its modular way of thinking by opening one of the projects via the project editor:
 
-	./markus -e projects/FourCascades.xml
+	./markus -e projects/FourCascades.json
 
 or
 
-	./markus -e projects/ObjectTracker.xml
+	./markus -e projects/ObjectTracker.json
 
 Get a look at the different projects in the project direcory. You will see different classes of modules that are linked together. The links represent streams.
 
@@ -137,7 +137,7 @@ GUI
 ---
 The GUI lets you visualize the work of the different modules in the project. You can see the content of each stream:
 
-	./markus  projects/ObjectTracker.xml in/input.mp4 -p Input.loop=1
+	./markus  projects/ObjectTracker.json in/input.mp4 -p Input.loop=1
 
 Then via the GUI menu, select:
 	
@@ -148,19 +148,19 @@ Then pick different modules and streams to be visualized.
 A few useful tricks:
 * Left click on a stream lets you select different controls to send to the module: e.g. change the value of a parameter or set the position on a video file.
 * Double click on a stream prints info in logs based on cursor position: e.g. value of pixel or object.
-* The last GUI configuration for each XML is saved automatically.
-* A last_config.xml file is automatically created. It contains the last project with the modifications made during the run.
+* The last GUI configuration for each JSON config is saved automatically.
+* A last_config.json file is automatically created. It contains the last project with the modifications made during the run.
 
 ### Note on video inputs
 By convension each project should contain one module named "Input". If a video file is specified in command line this module will be overrided and the video file will be used as input.
 
-E.g. This will use the USB camera of your laptop as input (as specified in the project XML)
+E.g. This will use the USB camera of your laptop as input (as specified in the project JSON file)
 
-	./markus projects/FourCascades.xml
+	./markus projects/FourCascades.json
 
 This will use input.mp4 as input
 
-	./markus projects/FourCascades.xml in/input.mp4
+	./markus projects/FourCascades.json in/input.mp4
 
 Adding new modules
 ------------------
@@ -200,7 +200,7 @@ The philosophy of Markus is very simple to grasp. An application for video analy
 - Parameters: list of parameters for the module operation
 - Controllers: A controller allows the user to interact with the module at runtime (for advanced use). It is used for example to change the value of a parameter or to interact with a file player.
 
-The values of the different parameters and the connections between modules is defined in a XML file (You can find samples inside the **projects/** directory)
+The values of the different parameters and the connections between modules is defined in a JSON file (You can find samples inside the **projects/** directory)
 
 Concepts:
 ---------
@@ -232,15 +232,15 @@ Time values are given by a time stamp that is linked with the input stream. They
 
 Simulations (advanced)
 -----------
-Markus can also create create variations of an XML configuration. It can be used to:
+Markus can also create create variations of an JSON configuration. It can be used to:
 - Vary the resolution of certain modules
-- Vary the values of any parameter in an XML config
-- Use the same XML config on a list of videos
+- Vary the values of any parameter in an JSON config
+- Use the same JSON config on a list of videos
 
-### Definition in XML
-The variations can be specified directly in the XML config (see examples below) and can be used to generate a simulation directory with:
+### Definition in JSON
+The variations can be specified directly in the JSON config (see examples below) and can be used to generate a simulation directory with:
 
-	./markus -S projects/ObjectTracker.sim.xml
+	./markus -S projects/ObjectTracker.sim.json
 
 	2015-05-29 10:54:12,199 [0x7f0c7389ea40] INFO  [Manager] Create manager
 	2015-05-29 10:54:12,199 [0x7f0c7389ea40] INFO  [Module] Create module Input
@@ -276,7 +276,7 @@ The result is a simulation directory containing 30 different run of markus.
 Here we have a simulation with 1 variation. It changes the video file to use (as specified in the JSON file) as well as other parameters (LogEvent.gt_file,manager.arguments,LogEvent.gt_video):
 
 Notes:
-- *manager.arguments* can add extra arguments to the markus command: here we use it to override part of the config (-x SZTR100.xml) with an XML config related to the video.
+- *manager.arguments* can add extra arguments to the markus command: here we use it to override part of the config (-x SZTR100.json) with a JSON config related to the video.
 - Unlike example 1 this will only generate one run of markus per video. This is one single variation, not 2.
 
 	<variations>
@@ -290,13 +290,13 @@ Notes:
 		"SZTRA101a01": {
 			"video": "videos/ilids_SterileZone/SZTR/video/SZTRA101a01.mov.mkv",
 				"annotation": "video-annotations/ilids_SterileZone/SZTR/video/SZTRA101a01.srt",
-				"arguments": "-x video-annotations/ilids_SterileZone/SZTR/video/SZTR100.xml"
+				"arguments": "-x video-annotations/ilids_SterileZone/SZTR/video/SZTR100.json"
 		},
 
 		"SZTRA101a02": {
 			"video": "videos/ilids_SterileZone/SZTR/video/SZTRA101a02.mov.mkv",
 			"annotation": "video-annotations/ilids_SterileZone/SZTR/video/SZTRA101a02.srt",
-			"arguments": "-x video-annotations/ilids_SterileZone/SZTR/video/SZTR100.xml"
+			"arguments": "-x video-annotations/ilids_SterileZone/SZTR/video/SZTR100.json"
 		},
 		...
 	}

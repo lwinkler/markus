@@ -324,16 +324,13 @@ int Manager::Process2(MkException& rx_lastException)
 */
 void Manager::Process()
 {
-	WriteLock lock(RefLock());
+	// WriteLock lock(RefLock());
 	assert(m_isConnected); // Modules must be connected before processing
 	MkException lastException(MK_EXCEPTION_NORMAL, "normal", "No exception was thrown", "", "");
 
 	// TODO: Something goes wrong if we use the timer. What ?
 // #define MANAGER_TIMER
 #ifdef MANAGER_TIMER
-	static bool once = false;
-	assert(once == false);
-	once = true;
 	// To avoid freeze and infinite loops, use a timer
 	future<int> ret = async(launch::async, [this, &lastException]()
 	{
@@ -419,7 +416,7 @@ void Manager::PrintStatistics()
 	// LOG_INFO("input convertion "                  <<m_timerConvertion<<" ms ("<<(1000.0 * m_frameCount) / m_timerConvertion<<" frames/s)");
 	// LOG_INFO("Total time "<< m_timerProcessable + m_timerConvertion<<" ms ("<<     (1000.0 * m_frameCount) /(m_timerProcessable + m_timerConvertion)<<" frames/s)");
 
-	// Create an XML file to summarize CPU usage
+	// Create a JSON file to summarize CPU usage
 	//     if output dir is empty, write to /tmp
 	bool notEmpty = IsContextSet() && !RefContext().RefOutputDir().IsEmpty(); // must be called before ReserveFile
 	if(RefContext().RefOutputDir().FileExists("benchmark.json"))
@@ -468,7 +465,7 @@ bool Manager::AbortCondition() const
 }
 
 /**
-* @brief Export current configuration to json: this is used to create the XML and JSON files to describe each module
+* @brief Export current configuration to json: this is used to create the JSON files to describe each module
 */
 void Manager::CreateEditorFiles(const string& x_fileName)
 {
@@ -608,7 +605,7 @@ bool Manager::ManageInterruptions(bool x_continueFlag)
 		InterruptionManager::GetInst().AddEvent("event.stopped");
 
 	//if(m_frameCount % 20 == 0)
-	usleep(20); // This keeps the manager unlocked to allow the sending of commands
+	usleep(0); // This keeps the manager unlocked to allow the sending of commands
 	vector<Command> commands = m_interruptionManager.ReturnCommandsToSend();
 	for(const auto& command : commands)
 	{

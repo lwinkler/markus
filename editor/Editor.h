@@ -16,7 +16,7 @@ class QManager : public QObject {
 	Q_OBJECT
 public:
 	QManager(Manager& xr_manager);
-	Q_INVOKABLE void CreateModule(QString x_xmlString);
+	Q_INVOKABLE void CreateModule(QString x_jsonString);
 private:
 	Manager& mr_manager;
 };
@@ -34,7 +34,6 @@ private:
 	QAction *loadProjectAct = nullptr;
 	QAction *saveProjectAct = nullptr;
 	QAction *saveProjectAsAct = nullptr;
-	QAction *updateProjectsAct = nullptr;
 	QAction *updateModulesAct = nullptr;
 
 	QMenu *fileMenu = nullptr;
@@ -55,7 +54,6 @@ public slots:
 	bool save();
 	bool saveAs();
 	bool saveProject(const QString& x_fileName);
-	void updateProjects();
 	void updateModules();
 	void about();
 	bool maybeSave();

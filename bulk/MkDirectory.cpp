@@ -276,7 +276,7 @@ void MkDirectory::ArchiveAndClean(bool x_clean, const string& x_archiveDir, cons
 		}
 		else
 		{
-			// Remove directory if empty else copy XML config
+			// Remove directory if empty else copy JSON config
 			if(IsEmpty())
 			{
 				LOG_INFO(m_logger, "Removing empty directory " << GetPath());

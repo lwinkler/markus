@@ -50,18 +50,18 @@ using namespace std;
 void usage()
 {
 	printf(
-		"Usage : markus <options> <configuration.xml> <video_file> \n"
+		"Usage : markus <options> <configuration.json> <video_file> \n"
 		"\n"
-		" configuration.xml     The configuration of the application describing the different modules\n"
+		" configuration.json     The configuration of the application describing the different modules\n"
 		" video_file (opt.)     A video file to use as input. (assuming the input module is named \"Input\")\n"
 		"\n"
 		"options:\n"
 		" -h  --help            Print this help        \n"
 		" -v  --version         Print version information\n"
-		" -d  --describe        Create a description of all modules in XML format inside module/ directory. Used by the editor.\n"
+		" -d  --describe        Create a description of all modules in JSON format inside module/ directory. Used by the editor.\n"
 		" -e  --editor          Launch the module editor. \n"
-		" -S  --simulation      Prepare a full simultion based on a *.sim.xml file\n"
-		"                       Override some parameters in an extra XML file\n"
+		" -S  --simulation      Prepare a full simultion based on a *.sim.json file\n"
+		"                       Override some parameters in an extra JSON file\n"
 		" -c  --centralized     Module processing function is called from the manager (instead of decentralized timers)\n"
 		" -i  --stdin           Read commands from stdin\n"
 		" -n  --no-gui          Run process without gui\n"
@@ -73,8 +73,8 @@ void usage()
 		"                       Set the name of the output directory\n"
 		" -p  --parameter \"moduleName.paramName=value\"\n"
 		"                       Override the value of one parameter\n"
-		" -x  --xml extra_config.xml\n"
-		"                       Override some parameters in an extra XML file\n"
+		" -x  --json extra_config.json\n"
+		"                       Override some parameters in an extra JSON file\n"
 		" -O  --cache-out       Cache directory for output, relative to output directory. Usually \"cache\"\n"
 		" -I  --cache-in        Cache directory for input from a previous run, relative to current directory\n"
 		" -a  --aspect-ratio    Force all modules to comply with this aspect ratio (e.g. 4:3, 3:4, ...)\n"
@@ -162,7 +162,7 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 		{"log-conf",    1, 0, 'l'},
 		{"output-dir",  1, 0, 'o'},
 		{"parameter",   1, 0, 'p'},
-		{"xml",         1, 0, 'x'},
+		{"json",        1, 0, 'x'},
 		{"cache-in",    1, 0, 'I'},
 		{"cache-out",   1, 0, 'O'},
 		{"robust",      0, 0, 'R'},
@@ -311,12 +311,15 @@ void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, 
 void launchEditor(int argc, char** argv)
 {
 #ifndef MARKUS_NO_GUI
-	QApplication app(argc, argv);
-	string projectFile = "";
-	if(argc > 2)
-		projectFile = argv[2];
-	Editor editor(nullptr, projectFile);
-	app.exec();
+	{
+		// note: to avoid errors in destructor, leave the above {}
+		QApplication app(argc, argv);
+		string projectFile = "";
+		if(argc > 2)
+			projectFile = argv[2];
+		Editor editor(nullptr, projectFile);
+		app.exec();
+	}
 	exit(0);
 #else
 	cerr<<"To launch the editor Markus must be compiled with GUI"<<endl;
@@ -331,7 +334,7 @@ int main(int argc, char** argv)
 	// Enabling this will handle segfault but will not create a nice core dump
 	// signal(SIGSEGV, printStack);
 
-	// Load XML configuration file using DOMConfigurator
+	// Load JSON configuration file using DOMConfigurator
 	log4cxx::LoggerPtr logger(log4cxx::Logger::getLogger("main"));
 	int returnValue  = -1;
 

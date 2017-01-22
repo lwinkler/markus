@@ -191,11 +191,6 @@ add_custom_target(update_modules_list
 	DEPENDS  markus
 )
 
-add_custom_target(update_projects_list
-	COMMENT "Update the list of projects for the editor"
-	COMMAND editor/js/all_projects.js.sh > editor/js/all_projects.js
-)
-
 add_custom_target(tests
 	COMMENT "Launch the set of unit tests"
 	COMMAND tests/unitTests

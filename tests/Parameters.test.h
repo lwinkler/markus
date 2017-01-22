@@ -101,7 +101,7 @@ public:
 
 		if(x_illegalValue.isNull())
 			return;
-		xr_param.SetValue(x_illegalValue, PARAMCONF_XML);
+		xr_param.SetValue(x_illegalValue, PARAMCONF_JSON);
 		TS_ASSERT(!xr_param.CheckRange());
 	}
 

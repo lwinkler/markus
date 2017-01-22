@@ -206,7 +206,7 @@ void Module::ComputeCurrentTimeStamp()
 void Module::Process()
 {
 	m_timerWaiting.Start();
-	WriteLock lock(RefLock());
+	// WriteLock lock(RefLock());
 	try
 	{
 		if(!m_param.autoProcess && !ProcessingCondition())
@@ -302,7 +302,7 @@ void Module::Process()
 }
 
 /**
-* @brief Describe the module with name, parameters, inputs, outputs to an output stream (in xml)
+* @brief Describe the module with name, parameters, inputs, outputs to an output stream (in json)
 *
 * @param rx_os         Output stream
 */
@@ -409,7 +409,7 @@ Stream& Module::RefOutputStreamByName(const string& x_name)
 /**
 * @brief Print all statistics related to the module
 */
-void Module::PrintStatistics(ConfigReader& xr_xmlResult) const
+void Module::PrintStatistics(ConfigReader& xr_result) const
 {
 	double fps = (m_countProcessedFrames / (m_timerProcessFrame.GetSecDouble() + m_timerConversion.GetSecDouble() + m_timerWaiting.GetSecDouble()));
 	LOG_INFO(m_logger, "Module "<<GetName()<<": "<<m_countProcessedFrames<<" frames processed (tproc="<<
@@ -418,8 +418,8 @@ void Module::PrintStatistics(ConfigReader& xr_xmlResult) const
 	if(m_timerProcessable.GetMsLong() > 0)
 		LOG_INFO(m_logger, "Module "<<GetName()<<": Time spent in current and depending module: " << m_timerProcessable.GetMsLong() << " ms");
 
-	// Write perf to output XML
-	ConfigReader& perfModule(xr_xmlResult["module"][GetName()]);
+	// Write perf to output JSON
+	ConfigReader& perfModule(xr_result["module"][GetName()]);
 	perfModule["nb_frames"]             = Json::UInt64(m_countProcessedFrames);
 	perfModule["timers"]["processable"] = Json::UInt64(m_timerProcessable.GetMsLong());
 	perfModule["timers"]["processing"]  = Json::UInt64(m_timerProcessFrame.GetMsLong());

@@ -45,8 +45,8 @@ public:
 		{
 			AddParameter(new ParameterBool("autoClean", 0, 0, 1,     &autoClean,       "Automatically clean the temporary directory when the application closes"));
 			AddParameter(new ParameterString("archiveDir", "",       &archiveDir,      "If specified the data is copied inside this directory for archive"));
-			AddParameter(new ParameterString("configFile", "",       &configFile,      "Name of the XML containing the configuration"));
-			AddParameter(new ParameterString("applicationName", "",  &applicationName, "Name of the application. May also be set in the XML as attribute of <application>"));
+			AddParameter(new ParameterString("configFile", "",       &configFile,      "Name of the JSON containing the configuration"));
+			AddParameter(new ParameterString("applicationName", "",  &applicationName, "Name of the application. May also be set in the JSON as attribute of <application>"));
 			AddParameter(new ParameterString("outputDir", "",        &outputDir,       "Directory used to write results files of manager and modules. If empty a directory is created from the date"));
 			AddParameter(new ParameterBool("centralized", 0, 0, 1,    &centralized,     "All modules are called from the manager. Option -c"));
 			AddParameter(new ParameterBool("robust",      0, 0, 1,    &robust,          "Continue if an exception occured during processing"));

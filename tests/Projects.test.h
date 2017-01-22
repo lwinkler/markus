@@ -108,15 +108,15 @@ public:
 		runConfig("tests/projects/FaceAndTracker.json");
 	}
 
-	/// Run different existing configs: XMLs ending in testing.json
+	/// Run different existing configs: JSONs ending in testing.json
 	// disabled since this would log a lot of errors
 	void disabled_testProjects2()
 	{
-		TS_TRACE("\n# Unit test with different test projects: XMLs ending in ...testing.json");
+		TS_TRACE("\n# Unit test with different test projects: JSONs ending in ...testing.json");
 		vector<string> result1;
 		execute("xargs -a modules.txt -I{} find {} -name \"testing*.json\"", result1);
 
-		// Since most XMLs make tests and would output errors with a different aspect ratio,
+		// Since most JSONs make tests and would output errors with a different aspect ratio,
 		// we will redirect the logs where they will not be checked for errors
 		for(auto& elem : result1)
 		{
@@ -132,7 +132,7 @@ public:
 		for(auto elem : result1)
 		{
 			// For each json, execute the file with Markus executable
-			TS_TRACE("Testing XML project " + elem);
+			TS_TRACE("Testing JSON project " + elem);
 			string outDir = "out/test_" + basename(elem) + "_" + timeStamp();
 			string cmd = "./markus -ncf " + elem + " -o " + outDir + " > /dev/null";
 			TS_TRACE("Execute " + cmd);

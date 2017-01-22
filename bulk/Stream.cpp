@@ -44,7 +44,7 @@ Stream::~Stream()
 }
 
 /**
-* @brief Write description as XML of stream for module description
+* @brief Write description as JSON of stream for module description
 *
 * @param rx_os         Output stream
 * @param x_id          Id of stream

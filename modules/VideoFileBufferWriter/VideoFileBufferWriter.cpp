@@ -109,6 +109,8 @@ void VideoFileBufferWriter::OpenNewFile()
 	try
 	{
 		fps = GetRecordingFps();
+		if(fps == 0)
+			fps = 8; // default 8 fps
 	}
 	catch(exception& e)
 	{

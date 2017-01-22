@@ -411,7 +411,7 @@ void createEmptyConfigFile(const string& x_fileName, bool x_header)
 	of<<"{}"<<endl;
 
 	if(x_header)
-		of<<"/* Markus XML configuration file */"<<endl;
+		of<<"/* Markus configuration file */"<<endl;
 
 	of.close();
 }
