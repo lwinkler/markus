@@ -40,7 +40,6 @@ void ModuleTimer::Start(double x_fps)
 {
 	if(m_running.exchange(true))
 	{
-		assert(false); // TODO
 		LOG_WARN(m_logger, "Processable was started more than once");
 		return;
 	}
