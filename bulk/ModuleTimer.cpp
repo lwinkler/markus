@@ -38,8 +38,12 @@ ModuleTimer::ModuleTimer(Processable& x_module)
 
 void ModuleTimer::Start(double x_fps)
 {
-	if(m_running)
+	if(m_running.exchange(true))
+	{
+		assert(false); // TODO
+		LOG_WARN(m_logger, "Processable was started more than once");
 		return;
+	}
 
 	double delay = 0.0;
 	if(x_fps > 0)
@@ -48,7 +52,6 @@ void ModuleTimer::Start(double x_fps)
 		delay = 1.0 / x_fps;
 	}
 
-	m_running = true;
 	// auto ms = chrono::milliseconds((long) delay * 1000);
 	// std::chrono::seconds<1, double> ms(delay);
 
@@ -67,6 +70,18 @@ void ModuleTimer::Start(double x_fps)
 			{
 				LOG_DEBUG(m_logger, "Sleep ms " << (waitMs - ts));
 				usleep((waitMs - ts) * 1000);
+			}
+			else
+			{
+				// note: we must allow the other modules to run, e.g. for the GUI so we need to yield
+				//       unfortunately std::this_thread::yield() does not seem to work, therefore we use usleep
+				usleep(0);
+				static bool once = true;
+				if(waitMs > 0 && once)
+				{
+					LOG_WARN(m_logger, "Processing of " << m_processable.GetName() << " was too slow " << ts << " ms > " << waitMs << " ms");
+					once = false;
+				}
 			}
 
 			if(!ret)

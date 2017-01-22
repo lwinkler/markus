@@ -68,6 +68,13 @@ void UsbCam::Reset()
 
 void UsbCam::Capture()
 {
+	/*
+	if(m_param.fps > 0 && m_lastTimeStamp != TIME_STAMP_MIN)
+	{
+		TIME_STAMP wait = m_param.fps > 0 ? (1000. / m_param.fps) - (getAbsTimeMs() - m_lastTimeStamp) : 0;
+		// usleep(wait * 1000);
+	}
+	*/
 	while(true)
 	{
 		if(m_capture.grab() == 0)
@@ -78,7 +85,6 @@ void UsbCam::Capture()
 
 		m_capture.retrieve(m_output);
 		m_currentTimeStamp = getAbsTimeMs();
-		// cout<<m_capture.get(CV_CAP_PROP_POS_MSEC)<<endl;
 
 		// only break out of the loop once we fulfill the fps criterion
 		if(m_param.fps == 0 || (m_currentTimeStamp - m_lastTimeStamp) * m_param.fps > 1000)
@@ -90,7 +96,6 @@ void UsbCam::Capture()
 	// time_t rawtime;
 	// time(&rawtime);
 	LOG_DEBUG(m_logger, "UsbCam: Capture time: "<< getAbsTimeMs());
-	// SetTimeStampToOutputs(m_currentTimeStamp);
 }
 
 void UsbCam::GetProperties()
@@ -113,5 +118,6 @@ double UsbCam::GetRecordingFps() const
 {
 	// There is probably no way to get a measure of FPS
 	// cout << "FPS" << m_capture.get(CV_CAP_PROP_FPS) << endl;
+	// TODO: fps should not be 8 by default. This prevents the usb cam from working at full speed
 	return m_param.fps == 0 ? 8 : m_param.fps;
 }

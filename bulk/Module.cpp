@@ -206,7 +206,7 @@ void Module::ComputeCurrentTimeStamp()
 void Module::Process()
 {
 	m_timerWaiting.Start();
-	WriteLock lock(RefLock());
+	// WriteLock lock(RefLock());
 	try
 	{
 		if(!m_param.autoProcess && !ProcessingCondition())

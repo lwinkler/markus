@@ -237,7 +237,7 @@ Markus can also create create variations of an XML configuration. It can be used
 - Vary the values of any parameter in an XML config
 - Use the same XML config on a list of videos
 
-### Definition in XML
+### Definition in XML TODO Json
 The variations can be specified directly in the XML config (see examples below) and can be used to generate a simulation directory with:
 
 	./markus -S projects/ObjectTracker.sim.xml
