@@ -70,33 +70,6 @@ void validate(const ConfigReader& xr_config)
 	// note: nothing to check yet
 }
 
-/**
-* @brief Check that an id is unique: for validation purpose
-*
-* @param x_group      Group (e.g. inputs, parameters, ...)
-* @param x_type       Type (e.g. input)
-* @param x_idLabel    Label
-* @param x_moduleName Name of the module
-*/
-void checkUniquenessOfId(const ConfigReader& xr_config, const string& x_group, const string& x_idLabel, const string& x_moduleName)
-{
-	// Check that input streams are unique
-	assert(false); // TODO: Adapt this !!!!
-	map<int, bool> ids;
-	const ConfigReader& conf(xr_config[x_group]);
-	if(conf.isNull())
-		return;
-	for(const auto& name : xr_config.getMemberNames())
-	{
-		int id = conf[name][x_idLabel].asInt();
-		if(ids[id])
-			throw MkException("Json property " + x_group + " " + x_idLabel + "=" + to_string(id) + " must be unique for module name=" + x_moduleName, LOC);
-		ids[id] = true;
-	}
-}
-
-
-
 void overrideInputs(ConfigReader& xr_oldConfig, const ConfigReader& x_newConfig)
 {
 	for(const auto& elem : x_newConfig)

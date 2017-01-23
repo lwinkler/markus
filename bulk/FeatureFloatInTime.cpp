@@ -106,7 +106,7 @@ void FeatureFloatInTime::Deserialize(istream& x_in, MkDirectory* xp_dir)
 {
 	Json::Value root;
 	x_in >> root;
-	value      = root["value"].asFloat(); // TODO: asDouble ?
+	value      = root["value"].asFloat();
 	mean       = root["mean"].asFloat();
 	sqVariance = root["sqVariance"].asFloat();
 	initial    = root["initial"].asFloat();
