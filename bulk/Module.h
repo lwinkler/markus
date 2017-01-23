@@ -119,7 +119,7 @@ public:
 	void AddOutputStream(Stream* xp_stream);
 	void AddDebugStream(Stream* xp_stream);
 
-	// For backward compatibility: TODO remove
+	// For backward compatibility: TODO remove since ids are not used anymore
 	void AddInputStream(int x_id, Stream* xp_stream);
 	void AddOutputStream(int x_id, Stream* xp_stream);
 	void AddDebugStream(int x_id, Stream* xp_stream);

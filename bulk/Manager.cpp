@@ -328,7 +328,7 @@ void Manager::Process()
 	assert(m_isConnected); // Modules must be connected before processing
 	MkException lastException(MK_EXCEPTION_NORMAL, "normal", "No exception was thrown", "", "");
 
-	// TODO: Something goes wrong if we use the timer. What ?
+	// TODO: Something goes wrong in opencv resize if we use the timer. Why ?
 // #define MANAGER_TIMER
 #ifdef MANAGER_TIMER
 	// To avoid freeze and infinite loops, use a timer
