@@ -33,10 +33,16 @@ On Ubuntu the apt-get install command is:
 
 Markus can also be compiled with Qt5. The packages required for qt webkit are a bit more complicated in this case:
 	
-	sudo apt-get install qt5-default libqt5webkit5-dev qtquick1-5-dev qtlocation5-dev qtsensors5-dev qtdeclarative5-dev
+	sudo apt-get install qt5-default libqt5webkit5-dev qtquick1-5-dev qtlocation5-dev qtsensors5-dev qtdeclarative5-dev npm
 	ccmake .
 
 Then enable compilation with Qt5 in the menu.
+
+### Editor
+To install the new editor based on Angular2 type:
+
+	cd editor
+	npm install
 
 ### Other dependencies
 

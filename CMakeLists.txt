@@ -6,7 +6,7 @@ set(Markus_MODULE_DIRS          "modules"   CACHE STRING "List of directories co
 set(Markus_PROJECTS_DIRS        "projects;projects2" CACHE STRING "List of directories containing XML projects")
 set(Markus_MODULE_BLACKLIST     ""                   CACHE STRING "List of modules to blacklist")
 set(Markus_NO_GUI          false   CACHE BOOL "Compile Markus without a graphical user interface")
-set(Markus_USE_QT5         false   CACHE BOOL "Use QT 5 instead of 4")
+set(Markus_USE_QT5         true   CACHE BOOL "Use QT 5 instead of 4")
 
 # Create text files: dirs.txt contains all module directories and modules.txt contains all paths to modules
 file(REMOVE dirs.txt)
