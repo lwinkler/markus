@@ -286,6 +286,7 @@ Notes:
 
 *my_video.json*:
 
+``` json
 	{
 		"SZTRA101a01": {
 			"video": "videos/ilids_SterileZone/SZTR/video/SZTRA101a01.mov.mkv",
@@ -300,6 +301,7 @@ Notes:
 		},
 		...
 	}
+```
 
 ### Running a simulation
 he simulation directory contains all files needed to run the different variations as well as a makefile. A simulation can be run with:
