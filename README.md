@@ -43,6 +43,7 @@ To install the new editor based on Angular2 type:
 
 	cd editor
 	npm install
+	tsc
 
 ### Other dependencies
 
