@@ -15,9 +15,6 @@ Compilation for Linux
 In all cases you will need the following packages to compile Markus:
 	- *CMake*
 	- *Qt4*
-	- *OpenCV 2*
-		- from sources http://opencv.org/downloads.html
-		- or via a package installer
 	- *LibTinyXML*
 	- *LibLog4Cxx*
 	- *awk*: used at compile time
@@ -25,18 +22,37 @@ In all cases you will need the following packages to compile Markus:
 
 On Ubuntu the apt-get install command is:
 
-**CAUTION**: Be careful if you install libopencv-dev as this installs nvidia packages along. This might harm your computer http://askubuntu.com/questions/243043/after-logging-in-theres-a-black-screen-and-my-cursor-nothing-else-in-ubuntu
+**CAUTION**: On old Ubuntu versions (14.04 and maybe 16.04). Be careful if you install libopencv-dev as this installs nvidia packages along. This might harm your computer http://askubuntu.com/questions/243043/after-logging-in-theres-a-black-screen-and-my-cursor-nothing-else-in-ubuntu
 
-	sudo apt-get install cmake libqt4-core  libqt4-dev libtinyxml-dev libopencv-dev liblog4cxx10-dev libjsoncpp-dev libboost-all-dev jq libmongoc-dev libbson-dev
+	sudo apt-get install cmake libtinyxml-dev liblog4cxx10-dev libjsoncpp-dev libboost-all-dev jq libmongoc-dev libbson-dev
 
-### Alternative: use Qt5
+### Installing OpenCV
+Markus works with OpenCV3. We recommend to install it from sources since the version of apt-get and other package managers may not have all contributions enabled.
 
-Markus can also be compiled with Qt5. The packages required for qt webkit are a bit more complicated in this case:
+To install it from apt-get on Ubuntu:
+
+	sudo apt-get install libopencv-dev
+
+To install from sources:
+
+	git clone https://github.com/opencv/opencv.git
+	cd opencv
+	mkdir build
+	cd build
+	cmake ..
+	make -j4
+	sudo make install
+
+### Qt5 dependencies
+
+Markus is also compiled with Qt5. The packages required for qt webkit are a bit more complicated in this case:
 	
 	sudo apt-get install qt5-default libqt5webkit5-dev qtquick1-5-dev qtlocation5-dev qtsensors5-dev qtdeclarative5-dev npm
 	ccmake .
 
-Then enable compilation with Qt5 in the menu.
+Old. Dependencies for Qt4. To compile with Qt4 enable the Qt4 compilation (with command `ccmake .`)
+	
+	sudo apt-get install libqt4-core  libqt4-dev
 
 ### Editor
 To install the new editor based on Angular2 type:
@@ -60,51 +76,6 @@ These libraries and utilities can be installed to create advanced modules:
 	sudo pip install xmltodict nagiosplugin
 
 Since modules can be stored on different repositories please check the separate README.md of each directory for dependencies.
-
-### Compile OpenCV from sources (not recommended)
-Alternatively you can compile OpenCV from sources. Do not forget to install the dependencies with apt-get build-dep first:
-	
-	sudo apt-get build-dep libcv-dev
-
-Clone the github repository:
-
-	git clone https://github.com/Itseez/opencv.git
-
-Checkout a stable version (e.g.):
-
-	git checkout 2.4.6.2-rc1
-
-For compilation use the following flags.
-
-	cmake \
-        -DCMAKE_VERBOSE_MAKEFILE=ON \
-        -DCMAKE_BUILD_TYPE=Release        \
-        -DBUILD_NEW_PYTHON_SUPPORT=ON   \
-        -DWITH_FFMPEG=ON        \
-        -DWITH_GSTREAMER=OFF    \
-        -DWITH_GTK=ON   \
-        -DWITH_JASPER=ON        \
-        -DWITH_JPEG=ON  \
-        -DWITH_PNG=ON   \
-        -DWITH_TIFF=ON  \
-        -DWITH_OPENEXR=ON \
-        -DWITH_PVAPI=ON \
-        -DWITH_UNICAP=OFF       \
-        -DWITH_1394=ON  \
-        -DWITH_V4L=ON   \
-        -DWITH_EIGEN=ON \
-        -DWITH_XINE=OFF \
-        -DBUILD_TESTS=OFF \
-        -DCMAKE_SKIP_RPATH=ON \
-        -DWITH_CUDA=OFF
-
-        make
-        sudo make install
-
-You can select which version of OpenCV to use with ccmake (OpenCV_DIR=/usr/local/share/OpenCV)
-
-**Important** : To force the rtsp streams to use TCP you need to apply the patch in patch_tcp.diff to opencv sources (will not be needed anymore for OpenCV 3.0)
-
 
 ###  Compilation
 First compilation commands:
@@ -171,8 +142,7 @@ This will use input.mp4 as input
 
 Adding new modules
 ------------------
-Add a NewModule directory in modules/. You can use other modules as example  
-then:
+Add a NewModule directory in modules/. You can use other modules as example. Then:
 
 	cmake .
 	make update_modules_list
@@ -197,6 +167,8 @@ FindOpenCV.cmake is missing
 ---------------------------
 At compilation CMake may complain that FindOpencv.cmake is missing. In this case you should compile OpenCV from sources. This problem happens in Ubuntu since version 13.04.
 
+---
+
 Technical details
 =================
 
@@ -209,11 +181,10 @@ The philosophy of Markus is very simple to grasp. An application for video analy
 
 The values of the different parameters and the connections between modules is defined in a JSON file (You can find samples inside the **projects/** directory)
 
-Concepts:
+Concepts
 ---------
 - One module must be as simple as possible. If one module is too complex it must be split into two different modules.
 - In case of inheritance the list of parameters is inherited as well.
-
 
 Classes
 -------
@@ -329,6 +300,8 @@ E.g. You have configured a variation on each video file of one set that contains
 	tools/evaluation/aggregate.py simulation_20141128_170932/results -f simulation_20141128_170932/small.txt -o small.html
 
 # Releasing
+A few steps to follow before releasing.
+
 ## Check for memory leaks
 Use valgrind to check for leaks. Be sure to compile without GUI for better results.
 
