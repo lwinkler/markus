@@ -70,7 +70,7 @@ public:
 		double learningRate;
 	};
 
-	BgrSubMOG(ParameterStructure& x_configReader);
+	explicit BgrSubMOG(ParameterStructure& x_configReader);
 	virtual ~BgrSubMOG();
 	MKCLASS("BgrSubMOG")
 	MKCATEG("BackgroundSubtraction")

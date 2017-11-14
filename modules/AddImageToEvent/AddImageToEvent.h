@@ -39,7 +39,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : Module::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("folder"    ,  "eventsImg", &folder    ,  "Name of the folder to create for images"));
 			AddParameter(new ParameterString("extension" , "jpg"        , &extension , "Extension of the thumbnails. Determines the output format."));

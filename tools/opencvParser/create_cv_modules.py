@@ -110,23 +110,25 @@ if __name__ == '__main__':
 	tot  = 0
 
 	if len(sys.argv) != 3:
-		print "usage: %s <opencv_includes> <output_directory>" % argv[0]
+		print "usage: %s <opencv_includes> <output_directory>" % sys.argv[0]
 		exit(0)
 
 	modules_dir   = sys.argv[2]
 	opencv_incdir = sys.argv[1]
 	opencv_hdr_list = [
-		opencv_incdir + "/core/core.hpp",
-		# opencv_incdir + "/flann/miniflann.hpp",
-		opencv_incdir + "/ml/ml.hpp",
-		opencv_incdir + "/imgproc/imgproc.hpp",
-		opencv_incdir + "/calib3d/calib3d.hpp",
-		opencv_incdir + "/features2d/features2d.hpp",
-		opencv_incdir + "/video/tracking.hpp",
-		opencv_incdir + "/video/background_segm.hpp",
-		opencv_incdir + "/objdetect/objdetect.hpp",
-		opencv_incdir + "/contrib/contrib.hpp",
-		opencv_incdir + "/highgui/highgui.hpp"
+		opencv_incdir + "/core/include/opencv2/core.hpp",
+		opencv_incdir + "/core/include/opencv2/core/ocl.hpp",
+		# opencv_incdir + "/flann/include/opencv2/flann/miniflann.hpp",
+		opencv_incdir + "/ml/include/opencv2/ml.hpp",
+		opencv_incdir + "/imgproc/include/opencv2/imgproc.hpp",
+		opencv_incdir + "/calib3d/include/opencv2/calib3d.hpp",
+		opencv_incdir + "/features2d/include/opencv2/features2d.hpp",
+		opencv_incdir + "/video/include/opencv2/video/tracking.hpp",
+		opencv_incdir + "/video/include/opencv2/video/background_segm.hpp",
+		opencv_incdir + "/objdetect/include/opencv2/objdetect.hpp",
+		opencv_incdir + "/imgcodecs/include/opencv2/imgcodecs.hpp",
+		opencv_incdir + "/videoio/include/opencv2/videoio.hpp",
+		opencv_incdir + "/highgui/include/opencv2/highgui.hpp"
 	]
 
 	for hname in opencv_hdr_list:

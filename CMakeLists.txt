@@ -92,12 +92,6 @@ if(NOT Markus_NO_GUI)
 	endif()
 endif()
 
-# Tell CMake to run moc when necessary:
-# set(CMAKE_AUTOMOC ON)
-# As moc files are generated in the binary dir, tell CMake
-# to always look for includes there:
-# set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
 # Search all directory named modules... (note: we need to preserve the order)
 # file(GLOB modules_tmp
     # "modules" "modules2*" "modules3*" "modules4"
@@ -172,7 +166,7 @@ add_custom_target(doc
 
 add_custom_target(lint
 	COMMENT "Check C++ lint rules with the lint tool provided by Google"
-	COMMAND tools/list_source_dirs.sh | xargs -I{} find -L {} -name \"*.h\" -print -o -name \"*.cpp\" ! -name \"moc_*.cpp\" -print | xargs tools/cpplint.py --filter=-whitespace,-legal,-build,-runtime/references,-runtime/explicit,-readability/todo,-readability/streams,-readability/function,-runtime/string
+	COMMAND tools/list_source_dirs.sh | tools/list_source_dirs.sh | xargs -I{} find -L {} ! -name "moc*" -name "*.h" -print -o -name "*.cpp" ! -name "moc*" -print | xargs tools/cpplint.py --filter=-whitespace,-legal,-build,-runtime/references,-runtime/explicit,-readability/todo,-readability/streams,-readability/function,-runtime/string
 )
 
 add_custom_target(check
@@ -199,6 +193,11 @@ add_custom_target(tests
 add_custom_target(indent
 	COMMENT "Indent all files by following the standart"
 	COMMAND tools/list_source_dirs.sh | xargs -I{} find {} -name \"*.h\" -print -o -name \"*.cpp\" -print | xargs astyle -nToO --style=allman
+)
+
+add_custom_target(generate_modules_from_opencv
+	COMMENT "Generate modules automatically by parsing the includes of opencv. Experimental."
+	COMMAND tools/opencvParser/create_cv_modules.py opencv/modules modules_gen
 )
 
 #-------------------------------------------------------------------------------- 

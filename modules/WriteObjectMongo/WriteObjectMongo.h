@@ -61,7 +61,7 @@ public:
 		std::string collection;
 	};
 
-	virtual void ProcessFrame() override;
+	void ProcessFrame() override;
 	void Reset() override;
 	static const char* contentType(const std::string& x_fileName);
 

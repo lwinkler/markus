@@ -28,7 +28,7 @@
 
 
 /**
-* @brief A simple example module that mimics a slit camera (or linear camera). The camera input is a range of pixels in the middle of the image.
+* @brief A template for modules generated automatically
 */
 class $moduleName : public Module
 {
@@ -36,13 +36,13 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) :
+		explicit Parameters(const std::string& x_name) :
 			Module::Parameters(x_name)
 		{
 		}
 	};
 
-	$moduleName(ParameterStructure& xr_params);
+	explicit $moduleName(ParameterStructure& xr_params);
 	virtual ~$moduleName();
 	MKCLASS("$moduleName")
 	MKCATEG("$category")
