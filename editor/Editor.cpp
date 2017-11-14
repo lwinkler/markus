@@ -56,8 +56,8 @@ Editor::Editor(Manager* xp_manager, const string& x_project, QWidget *parent) :
 	m_projectToLoad(x_project)
 {
 	auto page = new QWebPage2();
-	if(xp_manager != nullptr)
-		page->mainFrame()->addToJavaScriptWindowObject("qmanager", new QManager(*xp_manager));
+	//if(xp_manager != nullptr)
+		//page->mainFrame()->addToJavaScriptWindowObject("qmanager", new QManager(*xp_manager));
 	m_view.setPage(page);
 
 	setWindowState(Qt::WindowMaximized);
@@ -259,6 +259,7 @@ void Editor::CreateMenus()
 	menuBar()->addMenu(helpMenu);
 }
 
+/*
 QManager::QManager(Manager& xr_manager)
 	: mr_manager(xr_manager)
 {
@@ -274,3 +275,4 @@ void QManager::CreateModule(QString x_jsonString) // TODO
 	// Reset();
 	// Start();
 }
+*/

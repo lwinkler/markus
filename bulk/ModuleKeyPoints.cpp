@@ -65,8 +65,8 @@ ModuleKeyPoints::~ModuleKeyPoints()
 
 void ModuleKeyPoints::Reset()
 {
-	vector<string> algos;
-	Algorithm::getList(algos);
+	// vector<string> algos;
+	// Algorithm::getList(algos);
 	// for(vector<string>::iterator it = algos.begin() ; it != algos.end() ; it++)
 	//	cout<<*it<<endl;
 
@@ -75,7 +75,7 @@ void ModuleKeyPoints::Reset()
 	CLEAN_DELETE(mp_descriptor);
 	if(m_param.descriptor != "")
 	{
-		mp_descriptor = /*DescriptorExtractor::create(m_param.descriptor); */ new OrbDescriptorExtractor(); // TODO: Should probably be in the child module
+		mp_descriptor = /*DescriptorExtractor::create(m_param.descriptor); */ cv::ORB::create(); // TODO: Should probably be in the child module
 		if(mp_descriptor == nullptr || mp_descriptor->empty())
 			throw(MkException("Cannot create key points descriptor extractor", LOC));
 	}

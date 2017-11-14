@@ -61,13 +61,13 @@ void BgrSubMOG::Reset()
 {
 	Module::Reset();
 	CLEAN_DELETE(mp_mog);
-	mp_mog = new BackgroundSubtractorMOG(m_param.history, m_param.nmixtures, m_param.backgroundRatio, m_param.noiseSigma);
-	mp_mog->initialize(m_input.size(), m_input.type());
+	// TODO probably suppress this module mp_mog = bgsegm::createBackgroundSubtractorMOG(m_param.history, m_param.nmixtures, m_param.backgroundRatio, m_param.noiseSigma);
+	// mp_mog->initialize(m_input.size(), m_input.type());
 }
 
 void BgrSubMOG::ProcessFrame()
 {
-	mp_mog->operator ()(m_input, m_foreground , m_param.learningRate);
+	mp_mog->apply(m_input, m_foreground , m_param.learningRate);
 	mp_mog->getBackgroundImage(m_background);
 };
 

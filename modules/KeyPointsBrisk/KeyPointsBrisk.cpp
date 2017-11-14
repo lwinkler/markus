@@ -49,7 +49,7 @@ void KeyPointsBrisk::Reset()
 {
 	ModuleKeyPoints::Reset();
 	CLEAN_DELETE(mp_detector);
-	mp_detector = new BRISK(
+	mp_detector = BRISK::create(
 		m_param.threshold,
 		m_param.octaves,
 		m_param.patternScale

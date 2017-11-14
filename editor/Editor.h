@@ -12,6 +12,7 @@
 
 class Manager;
 
+/*
 class QManager : public QObject {
 	Q_OBJECT
 public:
@@ -20,6 +21,7 @@ public:
 private:
 	Manager& mr_manager;
 };
+*/
 
 
 class Editor : public QMainWindow

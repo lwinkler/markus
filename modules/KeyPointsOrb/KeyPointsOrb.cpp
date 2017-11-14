@@ -25,6 +25,7 @@
 #include "StreamDebug.h"
 #include "StreamObject.h"
 #include "FeatureOpenCv.h"
+#include "opencv2/features2d/features2d.hpp"
 
 //for debug
 #include "util.h"
@@ -49,7 +50,7 @@ void KeyPointsOrb::Reset()
 {
 	ModuleKeyPoints::Reset();
 	CLEAN_DELETE(mp_detector);
-	mp_detector = new ORB(
+	mp_detector = ORB::create(
 		m_param.nbFeatures,
 		m_param.scaleFactor,
 		m_param.nbLevels,

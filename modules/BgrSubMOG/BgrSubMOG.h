@@ -26,6 +26,7 @@
 
 #include "Module.h"
 #include "opencv2/video/background_segm.hpp"
+#include "opencv2/bgsegm.hpp"
 
 
 // default parameters of gaussian background detection algorithm from opencv
@@ -87,7 +88,7 @@ protected:
 	cv::Mat m_input;
 
 	// state variables
-	cv::BackgroundSubtractorMOG* mp_mog;
+	cv::bgsegm::BackgroundSubtractorMOG* mp_mog;
 
 	// output
 	cv::Mat m_foreground;

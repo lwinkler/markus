@@ -27,6 +27,7 @@
 #include "StreamImage.h"
 
 using namespace cv;
+using namespace std;
 
 log4cxx::LoggerPtr RenderObjects::m_logger(log4cxx::Logger::getLogger("RenderObjects"));
 

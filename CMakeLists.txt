@@ -93,10 +93,10 @@ if(NOT Markus_NO_GUI)
 endif()
 
 # Tell CMake to run moc when necessary:
-set(CMAKE_AUTOMOC ON)
+# set(CMAKE_AUTOMOC ON)
 # As moc files are generated in the binary dir, tell CMake
 # to always look for includes there:
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
+# set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Search all directory named modules... (note: we need to preserve the order)
 # file(GLOB modules_tmp
@@ -209,14 +209,14 @@ add_custom_target(indent
 find_package(Git)
 if(GIT_FOUND)
 	execute_process(COMMAND ${GIT_EXECUTABLE} describe --long --tags --dirty RESULT_VARIABLE res_var OUTPUT_VARIABLE GIT_COM_ID )
-	execute_process(COMMAND ${GIT_EXECUTABLE} describe --long --tags --dirty RESULT_VARIABLE res_var OUTPUT_VARIABLE GIT_COM_ID2 WORKING_DIRECTORY vp-detection )
+	# execute_process(COMMAND ${GIT_EXECUTABLE} describe --long --tags --dirty RESULT_VARIABLE res_var OUTPUT_VARIABLE GIT_COM_ID2 WORKING_DIRECTORY vp-detection )
 	execute_process(COMMAND uname -a OUTPUT_VARIABLE GIT_BUILD_HOST )
 	if( NOT ${res_var} EQUAL 0 )
 		set( GIT_COMMIT_ID "git commit id unknown")
 		message( WARNING "Git failed (not a repo, or no tags). Build will not contain git revision info." )
 	endif()
 	string( REPLACE "\n" "" GIT_COMMIT_ID ${GIT_COM_ID} )
-	string( REPLACE "\n" "" GIT_COMMIT_ID2 ${GIT_COM_ID2} )
+	#string( REPLACE "\n" "" GIT_COMMIT_ID2 ${GIT_COM_ID2} )
 	string( REPLACE "\n" "" GIT_BUILD_HOST ${GIT_BUILD_HOST} )
 else()
 	set( GIT_COMMIT_ID "unknown (git not found!)")

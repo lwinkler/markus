@@ -25,6 +25,7 @@
 #include "StreamDebug.h"
 #include "StreamObject.h"
 #include "FeatureOpenCv.h"
+#include "opencv2/features2d/features2d.hpp"
 
 //for debug
 #include "util.h"
@@ -49,7 +50,7 @@ void KeyPointsMser::Reset()
 {
 	ModuleKeyPoints::Reset();
 	CLEAN_DELETE(mp_detector);
-	mp_detector = new MserFeatureDetector(
+	mp_detector = cv::MSER::create(
 		m_param.delta,
 		m_param.minArea,
 		m_param.maxArea,

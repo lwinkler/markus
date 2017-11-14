@@ -25,6 +25,7 @@
 #include "StreamDebug.h"
 #include "StreamObject.h"
 #include "FeatureOpenCv.h"
+#include "opencv2/features2d/features2d.hpp"
 
 //for debug
 #include "util.h"
@@ -49,7 +50,7 @@ void KeyPointsFast::Reset()
 {
 	ModuleKeyPoints::Reset();
 	CLEAN_DELETE(mp_detector);
-	mp_detector = new FastFeatureDetector(m_param.threshold, m_param.nonMaxSuppression);
+	mp_detector = cv::FastFeatureDetector::create(m_param.threshold, m_param.nonMaxSuppression);
 	// mp_detector = Algorithm::create<Feature2D>("Feature2D.Fast");
 	if(mp_detector == nullptr && mp_detector->empty())
 		throw MkException("Cannot create detector", LOC);
