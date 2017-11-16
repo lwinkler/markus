@@ -59,7 +59,7 @@ To install the new editor based on Angular2 type:
 
 	cd editor
 	npm install
-	tsc
+	make start_server
 
 ### Other dependencies
 

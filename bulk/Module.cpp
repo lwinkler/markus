@@ -317,8 +317,9 @@ void Module::Export(ostream& rx_os) const
 
 	for(const auto & elem : m_param.GetList())
 	{
-		if(elem->GetName().find('_') != string::npos)
-			throw MkException("Forbidden character _ in " + elem->GetName(), LOC);
+		// TODO restore this: problem with generated modules that contain _ in parameter names
+		// if(elem->GetName().find('_') != string::npos)
+			// throw MkException("Forbidden character _ in " + elem->GetName(), LOC);
 		stringstream ss;
 		Json::Value val;
 		elem->Export(ss);
@@ -340,8 +341,9 @@ void Module::Export(ostream& rx_os) const
 	*/
 	for(const auto& elem : m_outputStreams)
 	{
-		if(elem.second->GetName().find('_') != string::npos)
-			throw MkException("Forbidden character _ in " + elem.second->GetName(), LOC);
+		// TODO restore this: problem with generated modules that contain _ in parameter names
+		// if(elem.second->GetName().find('_') != string::npos)
+			// throw MkException("Forbidden character _ in " + elem.second->GetName(), LOC);
 		if(!elem.second->debug)
 		{
 			stringstream ss;
