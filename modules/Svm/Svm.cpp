@@ -63,10 +63,20 @@ void Svm::Reset()
 		TestModel();
 
 	Module::Reset();
-	if(m_param.train)
-		mp_statModel = SVM::create();
-	else
-		mp_statModel = Algorithm::load<SVM>(m_param.modelFile);
+	if(m_param.train) {
+		Ptr<SVM> model = SVM::create();
+		model->setType(m_param.type);
+		model->setKernel(m_param.kernel);
+		model->setDegree(m_param.degree);
+		model->setGamma(m_param.gamma);
+		model->setCoef0(m_param.coef0);
+		model->setC(m_param.c);
+		model->setNu(m_param.nu);
+		model->setP(m_param.p);
+		mp_statModel = model;
+	} else {
+		mp_statModel = SVM::load(m_param.modelFile);
+	}
 	split(m_param.features, ',', m_featureNames);
 
 	m_dataLength = 0;
@@ -74,16 +84,6 @@ void Svm::Reset()
 	m_responses  = Mat();
 	m_row        = Mat();
 
-	/*
-	m->setType(m_param.type);
-	m->setKernel(m_param.kernel);
-	m->setDegree(m_param.degree);
-	m->setGamma(m_param.gamma);
-	m->setCoef0(m_param.coef0);
-	m->setC(m_param.c);
-	m->setNu(m_param.nu);
-	m->setP(m_param.p);
-	*/
 }
 
 void Svm::ProcessFrame()

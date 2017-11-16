@@ -52,11 +52,26 @@ public:
 			AddParameter(new ParameterString("modelFile", "model.data", &modelFile, "Path to the model file for testing"));
 			AddParameter(new ParameterString("features", "x", &features, "List of features to use from the object. Separated by a comma."));
 			AddParameter(new ParameterString("response", "y", &response, "Name of the response feature to train with."));
+
+			AddParameter(new ParameterDouble("gamma", 1, 0, 1, &gamma, "SVM gamma. For SVM::POLY, SVM::RBF, SVM::SIGMOID or SVM::CHI2."));
+			AddParameter(new ParameterDouble("coef0", 0, 0, 1, &coef0, "SVM coef0. For SVM::POLY or SVM::SIGMOID.."));
+			AddParameter(new ParameterDouble("degree", 0, 0, 1, &degree, "SVM degree. For SVM::POLY."));
+			AddParameter(new ParameterDouble("c", 0, 0, 1, &c, "SVM c. For SVM::C_SVC, SVM::EPS_SVR or SVM::NU_SVR."));
+			AddParameter(new ParameterDouble("nu", 0, 0, 1, &nu, "SVM nu. For SVM::NU_SVC, SVM::ONE_CLASS or SVM::NU_SVR."));
+			AddParameter(new ParameterDouble("p", 0, 0, 1, &p, "SVM p. For SVM::EPS_SVR."));
 		}
 		bool train;
 		std::string modelFile;
 		std::string features;
 		std::string response;
+
+		// svm
+		double gamma;
+		double coef0;
+		double degree;
+		double c;
+		double nu;
+		double p;
 	};
 
 	Svm(ParameterStructure& xr_params);
