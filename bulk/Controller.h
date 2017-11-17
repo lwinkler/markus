@@ -80,7 +80,7 @@ public:
 	virtual void CallAction(const std::string& x_name, std::string* xp_value) = 0;
 
 protected:
-	std::string m_name;
+	const std::string m_name;
 };
 
 

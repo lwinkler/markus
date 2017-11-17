@@ -65,8 +65,8 @@ void Svm::Reset()
 	Module::Reset();
 	if(m_param.train) {
 		Ptr<SVM> model = SVM::create();
-		model->setType(m_param.type);
-		model->setKernel(m_param.kernel);
+		// model->setType(m_param.type);
+		model->setKernel(m_param.kernelType);
 		model->setDegree(m_param.degree);
 		model->setGamma(m_param.gamma);
 		model->setCoef0(m_param.coef0);

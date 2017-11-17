@@ -7,7 +7,7 @@
 ## Copyright (c) 2017 Laurent Winkler lwinkler888 at gmail dot com
 ## 
 
-""" Usage: call with <filename> <typename>
+""" Usage: call with <header> <enum with namespace>
 """
 
 import sys
@@ -34,39 +34,68 @@ def find_class(node, ns_path):
 	
 	return found
 
+def generate_param_enum(header_file, node, full_name):
+
+	enum_map = ''
+
+	# print c.kind
+	if node.kind != cindex.CursorKind.ENUM_DECL:
+		raise Exception('Expecting an enum and not %s' % node.kind)
+	for cc in node.get_children():
+		enum_map += '\n\t{"%s", %s},' % (cc.spelling, cc.enum_value)
+
+	fout.write("""
+
+#include "%s"
+
+// Static variables
+template<> const map<string, int>  ParameterEnumT<%s>::Enum =
+{%s
+};
+template<> const map<int, string> ParameterEnumT<%s>::ReverseEnum = ParameterEnumT::CreateReverseMap(ParameterEnumT<%s>::Enum);
+template<> const string ParameterEnumT<%s>::m_type = "%s";
+
+""" % (header_file, full_name, enum_map[:-1], full_name, full_name, full_name, node.spelling))
+
 
 def main():
-	if len(sys.argv) < 1:
-		print "usage: %s <header> <arguments...>" % sys.argv[0]
-		exit(1)
+	# if len(sys.argv) < 1:
+		# print 'usage: %s <header> <enum with namespace>' % sys.argv[0]
+		# exit(1)
 
-	index = cindex.Index.create()
-	src = sys.argv[1]
-	# return [src, index.parse(src, ["-D_POP_PARSER_"] + sys.argv[2:])]
 
-	tu = index.parse(src, args=['-x', 'c++'])
-	# print dir(tu)
-	# [src, tu] = init_tu(sys.argv)
-	# tu = index.parse(src, ["-I."])
+	# add here all the enums to generate
+	header_and_enums = [
+		['opencv/modules/ml/include/opencv2/ml.hpp', 'cv::ml::SVM::KernelTypes']
+	]
 
-	all_classes = find_class(tu.cursor, sys.argv[2].split("::"))
+	# Generate file
+	fout.write("""/* This file was generated automatically the generate_param_enum.py parser */
 
-	print "found %d node(s):" % len(all_classes)
-	if len(all_classes) != 1:
-		exit(1)
-	for c in all_classes:
-		# print "class %s in %s" % (c.spelling, c.location)
-		# print c.kind
-		if c.kind != cindex.CursorKind.ENUM_DECL:
-			raise Exception("Expecting an enum and not %s" % c.kind)
-		for cc in c.get_children():
-			print "%s %s" % (cc.spelling, cc.enum_value)
-			# print cc.data
-			# print dir(cc.data)
-			# for ccc in cc.data:
-				# print dir(ccc)
-				# print ccc.numerator
-				# print ccc.real
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
+#include "ParameterEnumT.h"
+
+using namespace std;
+
+""")
+
+	for header_and_enum in header_and_enums:
+		# parse the code starting at the given header
+		header_file = header_and_enum[0]
+		index = cindex.Index.create()
+		src = header_file
+		tu = index.parse(src, args=['-x', 'c++'])
+
+		enum_full_name = header_and_enum[1]
+		enum_classes = find_class(tu.cursor, enum_full_name.split('::'))
+
+		# print 'found %d node(s):' % len(all_classes)
+		if len(enum_classes) != 1:
+			raise Exception('Expecting to find one node for %s, found %d' % (enum_full_name, len(enum_classes)))
+
+		generate_param_enum(header_file, enum_classes[0], enum_full_name)
 
 # Start main
-main()
+with open("bulk/ParameterEnumT.cpp", "w") as fout:
+	main()

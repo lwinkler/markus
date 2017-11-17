@@ -27,13 +27,12 @@
 #include "Module.h"
 #include "Parameter.h"
 #include "StreamObject.h"
+#include "ParameterEnumT.h"
 
 /*! \class Svm
  *  \brief Classification using Svm
  *
  */
-
-
 
 /**
 * @brief Classify objects by using a SVM on its features
@@ -53,6 +52,7 @@ public:
 			AddParameter(new ParameterString("features", "x", &features, "List of features to use from the object. Separated by a comma."));
 			AddParameter(new ParameterString("response", "y", &response, "Name of the response feature to train with."));
 
+			AddParameter(new ParameterEnumT<cv::ml::SVM::KernelTypes>("kernelType", cv::ml::SVM::KernelTypes::RBF, &kernelType, "SVM kernel type"));
 			AddParameter(new ParameterDouble("gamma", 1, 0, 1, &gamma, "SVM gamma. For SVM::POLY, SVM::RBF, SVM::SIGMOID or SVM::CHI2."));
 			AddParameter(new ParameterDouble("coef0", 0, 0, 1, &coef0, "SVM coef0. For SVM::POLY or SVM::SIGMOID.."));
 			AddParameter(new ParameterDouble("degree", 0, 0, 1, &degree, "SVM degree. For SVM::POLY."));
@@ -64,6 +64,7 @@ public:
 		std::string modelFile;
 		std::string features;
 		std::string response;
+		int kernelType;
 
 		// svm
 		double gamma;
