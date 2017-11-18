@@ -27,6 +27,7 @@
 #include <string>
 #include <vector>
 #include <assert.h>
+#include <log4cxx/logger.h>
 
 #include "Parameter.h"
 
@@ -80,6 +81,7 @@ public:
 	virtual void CallAction(const std::string& x_name, std::string* xp_value) = 0;
 
 protected:
+	static log4cxx::LoggerPtr m_logger;
 	const std::string m_name;
 };
 

@@ -42,7 +42,7 @@
 #include "StreamImage.h"
 #include "StreamObject.h"
 #include "QControlBoard.h"
-#include "ControllerParameters.h"
+#include "ControllerParameterT.h"
 #include "Module.h"
 #include "StreamT.h"
 #include "StreamNum.h"

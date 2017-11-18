@@ -25,6 +25,7 @@
 
 using namespace std;
 
+log4cxx::LoggerPtr Controller::m_logger(log4cxx::Logger::getLogger("Controller"));
 
 Controller::Controller(const string& x_name) :
 	m_name(x_name)

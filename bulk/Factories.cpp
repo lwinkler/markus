@@ -36,7 +36,7 @@ fact2.Register<child>(pfeat->Signature());\
 delete pfeat;\
 }}
 
-#include "ControllerParameters.h"
+#include "ControllerParameterT.h"
 
 
 // Factories: The RegisterAll method will register all necessary creators
@@ -78,7 +78,7 @@ void Factories::RegisterAll()
 	factParamCtr.Register<ControllerInt>(PARAM_INT);
 	factParamCtr.Register<ControllerUInt>(PARAM_UINT);
 	factParamCtr.Register<ControllerSerializable>(PARAM_SERIALIZABLE);
-	factParamCtr.Register<ControllerCalibrationByHeight>(PARAM_OBJECT_HEIGHT);
+	// factParamCtr.Register<ControllerCalibrationByHeight>(PARAM_OBJECT_HEIGHT);
 	factParamCtr.Register<ControllerString>(PARAM_STR);
 	factParamCtr.Register<ControllerVoid>(PARAM_STREAM_OBJECTS);
 	factParamCtr.Register<ControllerVoid>(PARAM_STREAM_IMAGE);

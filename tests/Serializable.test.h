@@ -36,8 +36,6 @@
 #include "StreamDebug.h"
 #include "StreamState.h"
 #include "StreamEvent.h"
-#include "CalibrationByHeight.h"
-#include "CalibrationByModel.h"
 #include "Polygon.h"
 #include "Event.h"
 
@@ -267,24 +265,6 @@ public:
 	{
 		MkException excep("test", LOC);
 		testSerialization(excep, "MkException");
-	}
-
-	void testCalibrationByHeight()
-	{
-		CalibrationByHeight calib1;
-		testSerialization(calib1, "CalibrationByHeight1");
-
-		CalibrationByHeight calib2(0.33, 0.6, 0.25);
-		testSerialization(calib2, "CalibrationByHeight2");
-	}
-
-	void testCalibrationByModel()
-	{
-		CalibrationByModel calibModel1;
-		testSerialization(calibModel1,"CalibrationByModel1");
-
-		CalibrationByModel calibModel2(2404.2260764154521, -1.2035892526534258, 137.47118203741616,240.0, 480 , 640);
-		testSerialization(calibModel2,"CalibrationByModel2");
 	}
 
 	void testPolygon()

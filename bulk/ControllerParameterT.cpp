@@ -21,8 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "ControllerParameters.h"
-#include "CalibrationByHeight.h"
+#include "ControllerParameterT.h"
 #include "Processable.h"
 #include <boost/lexical_cast.hpp>
 #include <jsoncpp/json/reader.h>
@@ -41,17 +40,33 @@ using namespace std;
 #include "QParameterSlider.h"
 #endif
 
+typedef ControllerParameterT<ParameterInt> ControllerInt;
+typedef ControllerParameterT<ParameterUInt> ControllerUInt;
+typedef ControllerParameterT<ParameterDouble> ControllerDouble;
+typedef ControllerParameterT<ParameterFloat> ControllerFloat;
+typedef ControllerParameterT<ParameterBool> ControllerBool;
+typedef ControllerParameterT<ParameterString> ControllerString;
+typedef ControllerParameterT<ParameterSerializable> ControllerSerializable;
+typedef ControllerParameterT<ParameterEnum> ControllerEnum;
+
+// Explicit template instanciation
+template class ControllerParameterT<ParameterInt>;
+template class ControllerParameterT<ParameterUInt>;
+template class ControllerParameterT<ParameterDouble>;
+template class ControllerParameterT<ParameterFloat>;
+template class ControllerParameterT<ParameterBool>;
+template class ControllerParameterT<ParameterString>;
+template class ControllerParameterT<ParameterSerializable>;
+template class ControllerParameterT<ParameterEnum>;
 
 #define PRECISION_DOUBLE 2
-
-log4cxx::LoggerPtr ControllerParameter::m_logger(log4cxx::Logger::getLogger("ControllerParameter"));
 
 /**
 * @brief Command: Display the type of the parameter
 *
 * @param xp_value Output type
 */
-void ControllerParameter::GetType(string* xp_value)
+template<class T> void ControllerParameterT<T>::GetType(string* xp_value)
 {
 	Processable::ReadLock lock(m_module.RefLock());
 	if(xp_value != nullptr)
@@ -71,7 +86,7 @@ void ControllerParameter::GetType(string* xp_value)
 *
 * @param xp_value Output range
 */
-void ControllerParameter::GetRange(string* xp_value)
+template<class T> void ControllerParameterT<T>::GetRange(string* xp_value)
 {
 	Processable::ReadLock lock(m_module.RefLock());
 	if(xp_value != nullptr)
@@ -91,7 +106,7 @@ void ControllerParameter::GetRange(string* xp_value)
 *
 * @param xp_value Output value if the pointer is not null
 */
-void ControllerParameter::SetControlledValue(string* xp_value)
+template<class T> void ControllerParameterT<T>::SetControlledValue(string* xp_value)
 {
 	Processable::WriteLock lock(m_module.RefLock());
 	const auto oldValue = m_param.GetValue();
@@ -128,7 +143,7 @@ void ControllerParameter::SetControlledValue(string* xp_value)
 *
 * @param xp_value Output value if the pointer is not null
 */
-void ControllerParameter::GetCurrent(string* xp_value)
+template<class T> void ControllerParameterT<T>::GetCurrent(string* xp_value)
 {
 	Processable::ReadLock lock(m_module.RefLock());
 	stringstream ss;
@@ -150,7 +165,7 @@ void ControllerParameter::GetCurrent(string* xp_value)
 *
 * @param xp_value Output value if the pointer is not null
 */
-void ControllerParameter::GetDefault(string* xp_value)
+template<class T> void ControllerParameterT<T>::GetDefault(string* xp_value)
 {
 	Processable::ReadLock lock(m_module.RefLock());
 	stringstream ss;
@@ -168,49 +183,30 @@ void ControllerParameter::GetDefault(string* xp_value)
 }
 
 
-ControllerParameter::ControllerParameter(Parameter& x_param, Processable& x_module):
-	Controller(x_param.GetName()),
-	m_param(x_param),
-	m_module(x_module)
-{
-	m_actions.insert(make_pair("GetType",    &ControllerParameter::GetType));
-	m_actions.insert(make_pair("GetRange",   &ControllerParameter::GetRange));
-	m_actions.insert(make_pair("Set",        &ControllerParameter::SetControlledValue));
-	m_actions.insert(make_pair("Get",        &ControllerParameter::GetCurrent));
-	m_actions.insert(make_pair("GetDefault", &ControllerParameter::GetDefault));
-}
-
 
 /*------------------------------------------------------------------------------------------------*/
 
-ControllerInt::ControllerInt(Parameter& x_param, Processable& x_module):
-	ControllerParameter(x_param, x_module),
-	m_param2(dynamic_cast<ParameterInt&>(x_param))
-{
-	mp_parameterSlider = nullptr;
-}
-
-QWidget* ControllerInt::CreateWidget()
+template<> QWidget* ControllerInt::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue().asInt(), m_param2.GetRange()["min"].asDouble(), m_param2.GetRange()["max"].asDouble(), 0);
+	return mp_widget = new QParameterSlider(m_param.GetValue().asInt(), m_param.GetRange()["min"].asDouble(), m_param.GetRange()["max"].asDouble(), 0);
 #else
 	return nullptr;
 #endif
 }
 
 
-void ControllerInt::SetWidgetValue(const string& x_value)
+template<> void ControllerInt::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
-	mp_parameterSlider->SetValue(boost::lexical_cast<int>(x_value));
+	dynamic_cast<QParameterSlider*>(mp_widget)->SetValue(boost::lexical_cast<int>(x_value));
 #endif
 }
 
-Json::Value ControllerInt::GetValueFromWidget()
+template<> Json::Value ControllerInt::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_parameterSlider->GetValue();
+	return dynamic_cast<QParameterSlider*>(mp_widget)->GetValue();
 #else
 	assert(false);
 	return "";
@@ -219,65 +215,27 @@ Json::Value ControllerInt::GetValueFromWidget()
 
 /*------------------------------------------------------------------------------------------------*/
 
-ControllerUInt::ControllerUInt(Parameter& x_param, Processable& x_module):
-	ControllerParameter(x_param, x_module),
-	m_param2(dynamic_cast<ParameterUInt&>(x_param))
-{
-}
-
-QWidget* ControllerUInt::CreateWidget()
+template<> QWidget* ControllerUInt::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue().asUInt(), m_param2.GetRange()["min"].asDouble(), m_param2.GetRange()["max"].asDouble(), 0);
+	return mp_widget = new QParameterSlider(m_param.GetValue().asUInt(), m_param.GetRange()["min"].asDouble(), m_param.GetRange()["max"].asDouble(), 0);
 #else
 	return nullptr;
 #endif
 }
 
 
-void ControllerUInt::SetWidgetValue(const string& x_value)
+template<> void ControllerUInt::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
-	mp_parameterSlider->SetValue(boost::lexical_cast<int>(x_value));
+	dynamic_cast<QParameterSlider*>(mp_widget)->SetValue(boost::lexical_cast<int>(x_value));
 #endif
 }
 
-Json::Value ControllerUInt::GetValueFromWidget()
+template<> Json::Value ControllerUInt::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_parameterSlider->GetValue();
-#else
-	assert(false);
-	return "";
-#endif
-}
-/*------------------------------------------------------------------------------------------------*/
-ControllerDouble::ControllerDouble(Parameter& x_param, Processable& x_module):
-	ControllerParameter(x_param, x_module),
-	m_param2(dynamic_cast<ParameterDouble&>(x_param))
-{
-}
-
-QWidget* ControllerDouble::CreateWidget()
-{
-#ifndef MARKUS_NO_GUI
-	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue().asDouble(), m_param2.GetRange()["min"].asDouble(), m_param2.GetRange()["max"].asDouble(), PRECISION_DOUBLE);
-#else
-	return nullptr;
-#endif
-}
-
-void ControllerDouble::SetWidgetValue(const string& x_value)
-{
-#ifndef MARKUS_NO_GUI
-	mp_parameterSlider->SetValue(boost::lexical_cast<double>(x_value));
-#endif
-}
-
-Json::Value ControllerDouble::GetValueFromWidget()
-{
-#ifndef MARKUS_NO_GUI
-	return mp_parameterSlider->GetValue();
+	return dynamic_cast<QParameterSlider*>(mp_widget)->GetValue();
 #else
 	assert(false);
 	return "";
@@ -285,104 +243,111 @@ Json::Value ControllerDouble::GetValueFromWidget()
 }
 /*------------------------------------------------------------------------------------------------*/
 
-ControllerFloat::ControllerFloat(Parameter& x_param, Processable& x_module):
-	ControllerParameter(x_param, x_module),
-	m_param2(dynamic_cast<ParameterFloat&>(x_param))
-{
-	mp_parameterSlider = nullptr;
-}
-
-
-QWidget* ControllerFloat::CreateWidget()
+template<> QWidget* ControllerDouble::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_parameterSlider = new QParameterSlider(m_param2.GetValue().asFloat(), m_param2.GetRange()["min"].asDouble(), m_param2.GetRange()["max"].asDouble(), PRECISION_DOUBLE);
+	return mp_widget = new QParameterSlider(m_param.GetValue().asDouble(), m_param.GetRange()["min"].asDouble(), m_param.GetRange()["max"].asDouble(), PRECISION_DOUBLE);
 #else
 	return nullptr;
 #endif
 }
 
-void ControllerFloat::SetWidgetValue(const string& x_value)
+template<> void ControllerDouble::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
-	mp_parameterSlider->SetValue(boost::lexical_cast<double>(x_value));
+	dynamic_cast<QParameterSlider*>(mp_widget)->SetValue(boost::lexical_cast<double>(x_value));
 #endif
 }
 
-Json::Value ControllerFloat::GetValueFromWidget()
+template<> Json::Value ControllerDouble::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_parameterSlider->GetValue();
+	return dynamic_cast<QParameterSlider*>(mp_widget)->GetValue();
 #else
 	assert(false);
 	return "";
 #endif
 }
 /*------------------------------------------------------------------------------------------------*/
-ControllerBool::ControllerBool(Parameter& x_param, Processable& x_module):
-	ControllerParameter(x_param, x_module),
-	m_param2(dynamic_cast<ParameterBool&>(x_param))
-{
-	mp_checkBox = nullptr;
-}
 
-QWidget* ControllerBool::CreateWidget()
+
+template<> QWidget* ControllerFloat::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	mp_checkBox = new QCheckBox("Enabled");
-	mp_checkBox->setChecked(m_param2.GetValue().asInt());
-	return mp_checkBox;
+	return mp_widget = new QParameterSlider(m_param.GetValue().asFloat(), m_param.GetRange()["min"].asDouble(), m_param.GetRange()["max"].asDouble(), PRECISION_DOUBLE);
 #else
 	return nullptr;
 #endif
 }
 
-void ControllerBool::SetWidgetValue(const string& x_value)
+template<> void ControllerFloat::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
-	mp_checkBox->setChecked(x_value == "1");
+	dynamic_cast<QParameterSlider*>(mp_widget)->SetValue(boost::lexical_cast<double>(x_value));
 #endif
 }
 
-Json::Value ControllerBool::GetValueFromWidget()
+template<> Json::Value ControllerFloat::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_checkBox->isChecked();
+	return dynamic_cast<QParameterSlider*>(mp_widget)->GetValue();
 #else
 	assert(false);
 	return "";
 #endif
 }
 /*------------------------------------------------------------------------------------------------*/
-ControllerString::ControllerString(Parameter& x_param, Processable& x_module):
-	ControllerParameter(x_param, x_module),
-	m_param2(dynamic_cast<ParameterString&>(x_param))
-{
-	mp_lineEdit = nullptr;
-}
-
-QWidget* ControllerString::CreateWidget()
+template<> QWidget* ControllerBool::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	mp_lineEdit = new QLineEdit();
-	mp_lineEdit->setStyleSheet("color: black; background-color: white");
-	mp_lineEdit->setText(m_param2.GetValue().asString().c_str());
-	return mp_lineEdit;
+	mp_widget = new QCheckBox("Enabled");
+	dynamic_cast<QCheckBox*>(mp_widget)->setChecked(m_param.GetValue().asInt());
+	return mp_widget;
 #else
 	return nullptr;
 #endif
 }
-void ControllerString::SetWidgetValue(const string& x_value)
+
+template<> void ControllerBool::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
-	mp_lineEdit->setText(x_value.c_str());
+	dynamic_cast<QCheckBox*>(mp_widget)->setChecked(x_value == "1");
 #endif
 }
 
-Json::Value ControllerString::GetValueFromWidget()
+template<> Json::Value ControllerBool::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_lineEdit->text().toStdString();
+	return dynamic_cast<QCheckBox*>(mp_widget)->isChecked();
+#else
+	assert(false);
+	return "";
+#endif
+}
+/*------------------------------------------------------------------------------------------------*/
+template<> QWidget* ControllerString::CreateWidget()
+{
+#ifndef MARKUS_NO_GUI
+	QLineEdit* lineEdit = new QLineEdit();
+	lineEdit->setStyleSheet("color: black; background-color: white");
+	lineEdit->setText(m_param.GetValue().asString().c_str());
+	mp_widget = lineEdit;
+	return lineEdit;
+#else
+	return nullptr;
+#endif
+}
+template<> void ControllerString::SetWidgetValue(const string& x_value)
+{
+#ifndef MARKUS_NO_GUI
+	dynamic_cast<QLineEdit*>(mp_widget)->setText(x_value.c_str());
+#endif
+}
+
+template<> Json::Value ControllerString::GetValueFromWidget()
+{
+#ifndef MARKUS_NO_GUI
+	return dynamic_cast<QLineEdit*>(mp_widget)->text().toStdString();
 #else
 	assert(false);
 	return "";
@@ -390,60 +355,50 @@ Json::Value ControllerString::GetValueFromWidget()
 }
 
 /*------------------------------------------------------------------------------------------------*/
-ControllerSerializable::ControllerSerializable(Parameter& x_param, Processable& x_module):
-	ControllerParameter(x_param, x_module),
-	m_param2(dynamic_cast<ParameterSerializable&>(x_param))
-{
-	mp_lineEdit = nullptr;
-}
 
-QWidget* ControllerSerializable::CreateWidget()
+template<> QWidget* ControllerSerializable::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	mp_lineEdit = new QLineEdit();
-	mp_lineEdit->setStyleSheet("color: black; background-color: white");
-	mp_lineEdit->setText(jsonToString(m_param2.GetValue()).c_str());
-	return mp_lineEdit;
+	QLineEdit* lineEdit = new QLineEdit();
+	lineEdit->setStyleSheet("color: black; background-color: white");
+	lineEdit->setText(jsonToString(m_param.GetValue()).c_str());
+	mp_widget = lineEdit;
+	return lineEdit;
 #else
 	return nullptr;
 #endif
 }
 
 
-void ControllerSerializable::SetWidgetValue(const string& x_value)
+template<> void ControllerSerializable::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
-	mp_lineEdit->setText(x_value.c_str());
+	dynamic_cast<QLineEdit*>(mp_widget)->setText(x_value.c_str());
 #else
 	assert(false);
 	return;
 #endif
 }
 
-Json::Value ControllerSerializable::GetValueFromWidget()
+template<> Json::Value ControllerSerializable::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return stringToJson(mp_lineEdit->text().toStdString());
+	return stringToJson(dynamic_cast<QLineEdit*>(mp_widget)->text().toStdString());
 #else
 	assert(false);
 	return "";
 #endif
 }
 /*------------------------------------------------------------------------------------------------*/
-ControllerVoid::ControllerVoid(Parameter& x_param, Processable& x_module):
-	ControllerParameter(x_param, x_module)
-	// m_param2(dynamic_cast<Stream&>(x_param))
-{
-	mp_lineEdit = nullptr;
-}
 
 QWidget* ControllerVoid::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	mp_lineEdit = new QLineEdit();
-	mp_lineEdit->setStyleSheet("color: black; background-color: white");
-	// mp_lineEdit->setText(jsonToString(m_param2.GetValue()).c_str());
-	return mp_lineEdit;
+	// QLineEdit* lineEdit = new QLineEdit();
+	// lineEdit->setStyleSheet("color: black; background-color: white");
+	// // lineEdit->setText(jsonToString(m_param.GetValue()).c_str());
+	// mp_widget = lineEdit;
+	return nullptr;
 #else
 	return nullptr;
 #endif
@@ -453,7 +408,7 @@ QWidget* ControllerVoid::CreateWidget()
 void ControllerVoid::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
-	mp_lineEdit->setText(x_value.c_str());
+	// dynamic_cast<QLineEdit*>(mp_widget)->setText(x_value.c_str());
 #else
 	assert(false);
 	return;
@@ -463,16 +418,19 @@ void ControllerVoid::SetWidgetValue(const string& x_value)
 Json::Value ControllerVoid::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_lineEdit->text().toStdString();
+	return ""; // dynamic_cast<QLineEdit*>(mp_widget)->text().toStdString();
 #else
 	assert(false);
 	return "";
 #endif
 }
 /*------------------------------------------------------------------------------------------------*/
+/*
 ControllerCalibrationByHeight::ControllerCalibrationByHeight(Parameter& x_param, Processable& x_module):
-	ControllerParameter(x_param, x_module),
-	m_param2(dynamic_cast<ParameterSerializable&>(x_param))
+	Controller(x_param.GetName()),
+	m_param(dynamic_cast<ParameterSerializable&>(x_param)),
+	// m_param(x_param),
+	m_module(x_module)
 {
 	mp_widget = nullptr;
 	mp_sliderX = nullptr;
@@ -491,7 +449,7 @@ QWidget* ControllerCalibrationByHeight::CreateWidget()
 	mp_widget = new QWidget();
 	CalibrationByHeight calib;
 	stringstream ss;
-	ss << m_param2.GetValue();
+	ss << m_param.GetValue();
 	calib.Deserialize(ss);
 
 	mp_sliderX = new QParameterSlider(calib.x, 0, 1, PRECISION_DOUBLE,mp_widget);
@@ -544,83 +502,45 @@ Json::Value ControllerCalibrationByHeight::GetValueFromWidget()
 	return "";
 #endif
 }
+*/
 
 /*------------------------------------------------------------------------------------------------*/
-ControllerEnum::ControllerEnum(Parameter& x_param, Processable& x_module):
-	ControllerParameter(x_param, x_module),
-	m_param2(dynamic_cast<ParameterEnum&>(x_param))
-{
-	mp_comboBox = nullptr;
-}
 
-
-QWidget* ControllerEnum::CreateWidget()
+template<> QWidget* ControllerEnum::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	mp_comboBox = new QComboBox;
-	for(const auto & elem : m_param2.GetEnum())
+	QComboBox* comboBox = new QComboBox;
+	for(const auto & elem : m_param.GetEnum())
 	{
-		mp_comboBox->addItem(elem.first.c_str(), elem.second);
+		comboBox->addItem(elem.first.c_str(), elem.second);
 	}
-	int index = mp_comboBox->findData(m_param2.GetValue().asInt());
-	mp_comboBox->setCurrentIndex(index);
+	int index = comboBox->findData(m_param.GetValue().asInt());
+	comboBox->setCurrentIndex(index);
+	mp_widget = comboBox;
 
-	return mp_comboBox;
+	return comboBox;
 #else
 	return nullptr;
 #endif
 }
 
-void ControllerEnum::SetWidgetValue(const string& x_value)
+template<> void ControllerEnum::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
-	int index = mp_comboBox->findData(m_param2.GetValue().asInt());
-	mp_comboBox->setCurrentIndex(index);
+	QComboBox* comboBox = dynamic_cast<QComboBox*>(mp_widget);
+	int index = comboBox->findData(m_param.GetValue().asInt());
+	comboBox->setCurrentIndex(index);
 #endif
 }
 
-Json::Value ControllerEnum::GetValueFromWidget()
+template<> Json::Value ControllerEnum::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return m_param2.GetReverseEnum().at(mp_comboBox->itemData(mp_comboBox->currentIndex()).toInt());
+	QComboBox* comboBox = dynamic_cast<QComboBox*>(mp_widget);
+	return m_param.GetReverseEnum().at(comboBox->itemData(comboBox->currentIndex()).toInt());
 #else
 	assert(false);
 	return "";
 #endif
 }
 
-/*------------------------------------------------------------------------------------------------*/
-ControllerText::ControllerText(Parameter& x_param, Processable& x_module):
-	ControllerParameter(x_param, x_module),
-	m_param2(x_param)
-{
-	mp_textEdit = nullptr;
-}
-
-QWidget* ControllerText::CreateWidget()
-{
-#ifndef MARKUS_NO_GUI
-	mp_textEdit = new QTextEdit();
-	mp_textEdit->setStyleSheet("color: black; background-color: white");
-	mp_textEdit->setText(jsonToString(m_param2.GetValue()).c_str());
-	return mp_textEdit;
-#else
-	return nullptr;
-#endif
-}
-void ControllerText::SetWidgetValue(const string& x_value)
-{
-#ifndef MARKUS_NO_GUI
-	mp_textEdit->setText(x_value.c_str());
-#endif
-}
-
-Json::Value ControllerText::GetValueFromWidget()
-{
-#ifndef MARKUS_NO_GUI
-	return mp_textEdit->toPlainText().toStdString();
-#else
-	assert(false);
-	return "";
-#endif
-}

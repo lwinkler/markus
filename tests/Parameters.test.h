@@ -33,8 +33,6 @@
 #include "ParameterSerializable.h"
 #include "util.h"
 #include "MkException.h"
-#include "CalibrationByHeight.h"
-#include "CalibrationByModel.h"
 #include "Polygon.h"
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/writer.h>
@@ -183,27 +181,6 @@ public:
 		testParameter(paramImageType, "CV_8UC2", "CV_32SC1");
 		testRange(paramImageType, "CV_8UC2", "[CV_32FC4]");
 		testLock(paramImageType);
-	}
-
-	void testParameterCalibrationByHeight()
-	{
-		TS_TRACE("Test ParameterSerializable - CalibrationByHeight");
-		CalibrationByHeight myCalibrationByHeight;
-		ParameterSerializable paramCalibrationByHeight("param_calibrationByHeight",  stringToJson("{\"height\":0.6,\"x\":0.3,\"y\":0.6}"), &myCalibrationByHeight, "Parameter of type CalibrationByHeight");
-		testParameter(paramCalibrationByHeight, stringToJson("{\"height\":0.0,\"x\":1.0,\"y\":0.0}"), Json::nullValue) ; // note: For now there is no range check ,"{\"x\":1, \"y\":0, \n \"height\":1.5}");
-		testLock(paramCalibrationByHeight);
-	}
-
-	void testParameterCalibrationByModel()
-	{
-		TS_TRACE("Test ParameterSerializable - CalibrationByModel");
-		string json_data = "{\"focal\":240.0,\"height\":2404.22,\"ncols\":640,\"nrows\":480,\"roll\":137.471,\"yaw\":-1.20358}";
-		string json_data2 = "{\"focal\":910.0,\"height\":7000.52453240,\"ncols\":384,\"nrows\":287,\"roll\":-10.650,\"yaw\":-35.30}";
-
-		CalibrationByModel myCalibrationByModel;
-		ParameterSerializable paramCalibrationByModel("param_calibrationByModel",  stringToJson(json_data2), &myCalibrationByModel, "Parameter of type CalibrationByModel");
-		testParameter(paramCalibrationByModel, stringToJson(json_data), Json::nullValue) ;
-		testLock(paramCalibrationByModel);
 	}
 
 	void testParameterPolygon()
