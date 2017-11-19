@@ -24,7 +24,6 @@
 #ifndef MODULE_H
 #define MODULE_H
 
-#include "ParameterImageType.h"
 #include "ParameterNum.h"
 #include "ParameterString.h"
 #include "Controller.h"
@@ -57,7 +56,7 @@ public:
 			AddParameter(new ParameterString("master"      , ""      , &master   , "Master module on which this module's processing is dependent. If empty, use all preceeding modules"));
 			AddParameter(new ParameterInt("width"          , 640     , 1         , MAX_WIDTH , &width  , "Width of the input"));
 			AddParameter(new ParameterInt("height"         , 480     , 1         , MAX_HEIGHT, &height , "Height of the input"));
-			AddParameter(new ParameterImageType("type"     , CV_8UC1 , &type     , "Format of the input image"));
+			AddParameter(new ParameterEnumT<mk::ImageType>("type"     , CV_8UC1 , &type     , "Format of the input image"));
 			AddParameter(new ParameterEnumT<mk::CachedState>("cached" , mk::CachedState::NO_CACHE, &cached   , "Format of the input image"));
 
 			// Lock the parameters that cannot be changed

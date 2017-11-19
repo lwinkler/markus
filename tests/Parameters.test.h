@@ -27,6 +27,7 @@
 #include <fstream>
 
 #include "Parameter.h"
+#include "ParameterEnumT.h"
 #include "ParameterNum.h"
 #include "ParameterString.h"
 #include "ParameterSerializable.h"
@@ -175,7 +176,7 @@ public:
 	{
 		TS_TRACE("Test ParameterImageType");
 		int myImageType = CV_8UC3;
-		ParameterImageType paramImageType("param_imageType", CV_8UC1, &myImageType, "Parameter of type imageType");
+		ParameterEnumT<mk::ImageType> paramImageType("param_imageType", CV_8UC1, &myImageType, "Parameter of type imageType");
 		paramImageType.SetRange("[CV_8UC1,CV_8UC2,CV_8UC3]");
 		testParameter(paramImageType, "CV_8UC2", "CV_32SC1");
 		testRange(paramImageType, "CV_8UC2", "[CV_32FC4]");

@@ -12,7 +12,6 @@ Input.cpp
 BackgroundSubtraction.cpp
 Parameter.cpp
 ParameterEnum.cpp
-ParameterImageType.cpp
 ParameterStructure.cpp
 ParameterNum.cpp
 ParameterString.cpp

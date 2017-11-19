@@ -39,44 +39,42 @@ namespace mk {
 	};
 
 	
-	/*
 	enum ImageType {
-		_8UC1 = CV_8UC1,
-		_8UC2 = CV_8UC2,
-		_8UC3 = CV_8UC3,
+		mk_CV_8UC1 = CV_8UC1,
+		mk_CV_8UC2 = CV_8UC2,
+		mk_CV_8UC3 = CV_8UC3,
 		//map1["_8UC(n)"] = CV_8UC(n);
-		_8SC1 = CV_8SC1,
-		_8SC2 = CV_8SC2,
-		_8SC3 = CV_8SC3,
-		_8SC4 = CV_8SC4,
+		mk_CV_8SC1 = CV_8SC1,
+		mk_CV_8SC2 = CV_8SC2,
+		mk_CV_8SC3 = CV_8SC3,
+		mk_CV_8SC4 = CV_8SC4,
 		//map1["_8SC(n)"] = CV_8SC(n);
-		_16UC1 = CV_16UC1,
-		_16UC2 = CV_16UC2,
-		_16UC3 = CV_16UC3,
-		_16UC4 = CV_16UC4,
+		mk_CV_16UC1 = CV_16UC1,
+		mk_CV_16UC2 = CV_16UC2,
+		mk_CV_16UC3 = CV_16UC3,
+		mk_CV_16UC4 = CV_16UC4,
 		//map1["_16UC(n)"] = CV_16UC(n);
-		_16SC1 = CV_16SC1,
-		_16SC2 = CV_16SC2,
-		_16SC3 = CV_16SC3,
-		_16SC4 = CV_16SC4,
+		mk_CV_16SC1 = CV_16SC1,
+		mk_CV_16SC2 = CV_16SC2,
+		mk_CV_16SC3 = CV_16SC3,
+		mk_CV_16SC4 = CV_16SC4,
 		//map1["_16SC(n)"] = ;
-		_32SC1 = CV_32SC1,
-		_32SC2 = CV_32SC2,
-		_32SC3 = CV_32SC3,
-		_32SC4 = CV_32SC4,
+		mk_CV_32SC1 = CV_32SC1,
+		mk_CV_32SC2 = CV_32SC2,
+		mk_CV_32SC3 = CV_32SC3,
+		mk_CV_32SC4 = CV_32SC4,
 		//map1["_32SC1"] = CV_32SC1;
-		_32FC1 = CV_32FC1,
-		_32FC2 = CV_32FC2,
-		_32FC3 = CV_32FC3,
-		_32FC4 = CV_32FC4,
+		mk_CV_32FC1 = CV_32FC1,
+		mk_CV_32FC2 = CV_32FC2,
+		mk_CV_32FC3 = CV_32FC3,
+		mk_CV_32FC4 = CV_32FC4,
 		//map1["_32FC1"] = CV_32FC1;
-		_64FC1 = CV_64FC1,
-		_64FC2 = CV_64FC2,
-		_64FC3 = CV_64FC3,
-		_64FC4 = CV_64FC4
+		mk_CV_64FC1 = CV_64FC1,
+		mk_CV_64FC2 = CV_64FC2,
+		mk_CV_64FC3 = CV_64FC3,
+		mk_CV_64FC4 = CV_64FC4
 		//map1["_64FC1"] = CV_64FC1;
 	};
-	*/
 }
 
 #endif

@@ -40,7 +40,9 @@ def generate_param_enum(header_file, node, full_name):
 	if node.kind != cindex.CursorKind.ENUM_DECL:
 		raise Exception('Expecting an enum and not %s' % node.kind)
 	for cc in node.get_children():
-		enum_map += '\n\t{"%s", %s},' % (cc.spelling, cc.enum_value)
+		# Remove prefix mk_ if present (to avoid problems with CV_8U... macros)
+		a = cc.spelling[3:] if cc.spelling.startswith('mk_') else cc.spelling
+		enum_map += '\n\t{"%s", %s},' % (a, cc.enum_value)
 
 	fout.write("""
 
@@ -65,6 +67,7 @@ def main():
 	# add here all the enums to generate
 	header_and_enums = [
 		['util/enums.h', 'mk::CachedState'],
+		['util/enums.h', 'mk::ImageType'],
 		['opencv/modules/ml/include/opencv2/ml.hpp', 'cv::ml::SVM::KernelTypes']
 	]
 
