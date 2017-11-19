@@ -29,7 +29,6 @@
 #include "Parameter.h"
 #include "ParameterNum.h"
 #include "ParameterString.h"
-#include "ParameterImageType.h"
 #include "ParameterSerializable.h"
 #include "util.h"
 #include "MkException.h"

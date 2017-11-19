@@ -45,7 +45,7 @@ class Processable;
 template<class T>class ControllerParameterT : public Controller
 {
 public:
-	ControllerParameterT(T& x_param, Processable& x_module) :
+	ControllerParameterT(Parameter& x_param, Processable& x_module) :
 		Controller(x_param.GetName()),
 		m_param(dynamic_cast<T&>(x_param)),
 		m_module(x_module)

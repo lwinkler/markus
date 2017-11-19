@@ -11,10 +11,7 @@
 """
 
 import sys
-import os
 import clang.cindex as cindex
-from subprocess import call
-from pprint import pprint
 
 cindex.Config.set_library_path("/usr/lib/llvm-4.0/lib")
 
@@ -26,6 +23,7 @@ def find_class(node, ns_path):
 
 	# Recurse for children of this node
 	for c in node.get_children():
+		# print 'Search %s' % c.spelling
 		if c.spelling == ns_path[0]:
 			if len(ns_path) == 1:
 				found += [c]
@@ -52,7 +50,7 @@ def generate_param_enum(header_file, node, full_name):
 template<> const map<string, int>  ParameterEnumT<%s>::Enum =
 {%s
 };
-template<> const map<int, string> ParameterEnumT<%s>::ReverseEnum = ParameterEnumT::CreateReverseMap(ParameterEnumT<%s>::Enum);
+template<> const map<int, string> ParameterEnumT<%s>::ReverseEnum = ParameterEnum::CreateReverseMap(ParameterEnumT<%s>::Enum);
 template<> const string ParameterEnumT<%s>::m_type = "%s";
 
 """ % (header_file, full_name, enum_map[:-1], full_name, full_name, full_name, node.spelling))
@@ -66,6 +64,7 @@ def main():
 
 	# add here all the enums to generate
 	header_and_enums = [
+		['util/enums.h', 'mk::CachedState'],
 		['opencv/modules/ml/include/opencv2/ml.hpp', 'cv::ml::SVM::KernelTypes']
 	]
 

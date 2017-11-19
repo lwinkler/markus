@@ -36,6 +36,7 @@
 #include <fstream>
 
 using namespace std;
+using namespace mk;
 
 log4cxx::LoggerPtr Module::m_logger(log4cxx::Logger::getLogger("Module"));
 
@@ -637,12 +638,3 @@ void Module::RemoveDependingModule(const Module & x_module)
 	}
 }
 
-/// Static members of ParameterCachedState
-const map<string, int> Module::ParameterCachedState::Enum =
-{
-	{"NO_CACHE", CachedState::NO_CACHE},
-	{"WRITE_CACHE", CachedState::WRITE_CACHE},
-	{"READ_CACHE", CachedState::READ_CACHE},
-	{"DISABLED", CachedState::DISABLED}
-};
-const map<int, string> Module::ParameterCachedState::ReverseEnum = ParameterEnum::CreateReverseMap(ParameterCachedState::Enum);

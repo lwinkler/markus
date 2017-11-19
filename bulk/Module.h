@@ -30,6 +30,8 @@
 #include "Controller.h"
 #include "Processable.h"
 #include "Timer.h"
+#include "enums.h"
+#include "ParameterEnumT.h"
 #include <log4cxx/logger.h>
 #include <opencv2/core/core.hpp>
 
@@ -46,31 +48,6 @@ class Module : public Processable, public Controllable, public Serializable
 {
 public:
 	/// Parameter enum class. Determines if the module is cached (its output is stored to avoid computation costs)
-	enum CachedState : char
-	{
-		NO_CACHE    = 0,
-		WRITE_CACHE = 1,
-		READ_CACHE  = 2,
-		DISABLED    = 3
-	};
-
-	class ParameterCachedState : public ParameterEnum
-	{
-	public:
-		ParameterCachedState(const std::string& x_name, int x_default, int * xp_value, const std::string& x_description)
-			: ParameterEnum(x_name, x_default, xp_value, x_description) {}
-		virtual ~ParameterCachedState() {}
-
-		// Conversion methods
-		inline const std::string& GetType() const {const static std::string s = "cachedState"; return s;}
-		const std::map<std::string, int> & GetEnum() const {return Enum;}
-		const std::map<int, std::string> & GetReverseEnum() const {return ReverseEnum;}
-
-	private:
-		// static attributes
-		const static std::map<std::string, int> Enum;
-		const static std::map<int, std::string> ReverseEnum;
-	};
 
 	class Parameters : public Processable::Parameters
 	{
@@ -81,7 +58,7 @@ public:
 			AddParameter(new ParameterInt("width"          , 640     , 1         , MAX_WIDTH , &width  , "Width of the input"));
 			AddParameter(new ParameterInt("height"         , 480     , 1         , MAX_HEIGHT, &height , "Height of the input"));
 			AddParameter(new ParameterImageType("type"     , CV_8UC1 , &type     , "Format of the input image"));
-			AddParameter(new ParameterCachedState("cached" , CachedState::NO_CACHE, &cached   , "Format of the input image"));
+			AddParameter(new ParameterEnumT<mk::CachedState>("cached" , mk::CachedState::NO_CACHE, &cached   , "Format of the input image"));
 
 			// Lock the parameters that cannot be changed
 			LockParameterByName("width");
