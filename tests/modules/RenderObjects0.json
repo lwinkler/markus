@@ -85,7 +85,7 @@
 			],
 			"name" : "type",
 			"range" : {},
-			"type" : "imageType"
+			"type" : "ImageType"
 		},
 		{
 			"default" : "NO_CACHE",
@@ -99,7 +99,7 @@
 			],
 			"name" : "cached",
 			"range" : {},
-			"type" : "cachedState"
+			"type" : "CachedState"
 		},
 		{
 			"default" : 

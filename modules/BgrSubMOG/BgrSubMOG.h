@@ -88,7 +88,7 @@ protected:
 	cv::Mat m_input;
 
 	// state variables
-	cv::bgsegm::BackgroundSubtractorMOG* mp_mog;
+	cv::bgsegm::BackgroundSubtractorMOG* mp_mog = nullptr;
 
 	// output
 	cv::Mat m_foreground;

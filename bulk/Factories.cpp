@@ -80,9 +80,9 @@ void Factories::RegisterAll()
 	factParamCtr.Register<ControllerSerializable>(PARAM_SERIALIZABLE);
 	// factParamCtr.Register<ControllerCalibrationByHeight>(PARAM_OBJECT_HEIGHT);
 	factParamCtr.Register<ControllerString>(PARAM_STR);
-	factParamCtr.Register<ControllerVoid>(PARAM_STREAM_OBJECTS);
-	factParamCtr.Register<ControllerVoid>(PARAM_STREAM_IMAGE);
-	factParamCtr.Register<ControllerVoid>(PARAM_STREAM_EVENT);
-	factParamCtr.Register<ControllerVoid>(PARAM_STREAM_STATE);
+	factParamCtr.Register<ControllerParameterT<Stream>>(PARAM_STREAM_OBJECTS);
+	factParamCtr.Register<ControllerParameterT<Stream>>(PARAM_STREAM_IMAGE);
+	factParamCtr.Register<ControllerParameterT<Stream>>(PARAM_STREAM_EVENT);
+	factParamCtr.Register<ControllerParameterT<Stream>>(PARAM_STREAM_STATE);
 }
 

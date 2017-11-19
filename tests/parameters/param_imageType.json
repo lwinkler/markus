@@ -41,5 +41,5 @@
 			"CV_8UC3"
 		]
 	},
-	"type" : "imageType"
+	"type" : "ImageType"
 }

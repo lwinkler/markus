@@ -39,10 +39,6 @@ BgrSubMOG2::BgrSubMOG2(ParameterStructure& xr_params) :
 	m_background(Size(m_param.width, m_param.height), m_param.type),
 	m_foregroundWithShadows(Size(m_param.width, m_param.height), m_param.type)
 {
-	mp_mog2 = nullptr;
-
-	// m_description = "Perform background subtraction via Mixtures Of Gaussians";
-
 	AddInputStream(0, new StreamImage("image",       m_input, *this,   "Video input"));
 
 	AddOutputStream(0, new StreamImage("foreground", m_foreground,*this,      "Foreground"));
@@ -56,7 +52,7 @@ BgrSubMOG2::BgrSubMOG2(ParameterStructure& xr_params) :
 
 BgrSubMOG2::~BgrSubMOG2()
 {
-	CLEAN_DELETE(mp_mog2);
+	// TODO Fix this ? CLEAN_DELETE(mp_mog2);
 }
 
 void BgrSubMOG2::Reset()

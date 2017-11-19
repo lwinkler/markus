@@ -58,6 +58,7 @@ template class ControllerParameterT<ParameterBool>;
 template class ControllerParameterT<ParameterString>;
 template class ControllerParameterT<ParameterSerializable>;
 template class ControllerParameterT<ParameterEnum>;
+template class ControllerParameterT<Stream>;
 
 #define PRECISION_DOUBLE 2
 
@@ -391,118 +392,21 @@ template<> Json::Value ControllerSerializable::GetValueFromWidget()
 }
 /*------------------------------------------------------------------------------------------------*/
 
-QWidget* ControllerVoid::CreateWidget()
+template<> QWidget* ControllerParameterT<Stream>::CreateWidget()
 {
-#ifndef MARKUS_NO_GUI
-	// QLineEdit* lineEdit = new QLineEdit();
-	// lineEdit->setStyleSheet("color: black; background-color: white");
-	// // lineEdit->setText(jsonToString(m_param.GetValue()).c_str());
-	// mp_widget = lineEdit;
 	return nullptr;
-#else
-	return nullptr;
-#endif
 }
 
 
-void ControllerVoid::SetWidgetValue(const string& x_value)
+template<> void ControllerParameterT<Stream>::SetWidgetValue(const string& x_value)
 {
-#ifndef MARKUS_NO_GUI
-	// dynamic_cast<QLineEdit*>(mp_widget)->setText(x_value.c_str());
-#else
-	assert(false);
 	return;
-#endif
 }
 
-Json::Value ControllerVoid::GetValueFromWidget()
+template<> Json::Value ControllerParameterT<Stream>::GetValueFromWidget()
 {
-#ifndef MARKUS_NO_GUI
-	return ""; // dynamic_cast<QLineEdit*>(mp_widget)->text().toStdString();
-#else
-	assert(false);
 	return "";
-#endif
 }
-/*------------------------------------------------------------------------------------------------*/
-/*
-ControllerCalibrationByHeight::ControllerCalibrationByHeight(Parameter& x_param, Processable& x_module):
-	Controller(x_param.GetName()),
-	m_param(dynamic_cast<ParameterSerializable&>(x_param)),
-	// m_param(x_param),
-	m_module(x_module)
-{
-	mp_widget = nullptr;
-	mp_sliderX = nullptr;
-	mp_sliderY = nullptr;
-	mp_sliderHeight = nullptr;
-	mp_labX = nullptr;
-	mp_labY = nullptr;
-	mp_labHeight = nullptr;
-}
-
-QWidget* ControllerCalibrationByHeight::CreateWidget()
-{
-#ifndef MARKUS_NO_GUI
-
-	auto   mainLayout = new QGridLayout();
-	mp_widget = new QWidget();
-	CalibrationByHeight calib;
-	stringstream ss;
-	ss << m_param.GetValue();
-	calib.Deserialize(ss);
-
-	mp_sliderX = new QParameterSlider(calib.x, 0, 1, PRECISION_DOUBLE,mp_widget);
-	mp_sliderY = new QParameterSlider(calib.y, 0, 1, PRECISION_DOUBLE,mp_widget);
-	mp_sliderHeight = new QParameterSlider(calib.height, 0, 1, PRECISION_DOUBLE,mp_widget);
-	mp_labX = new QLabel("x");
-	mp_labY = new QLabel("y");
-	mp_labHeight = new QLabel("height");
-
-	mainLayout->addWidget(mp_labX, 0, 0);
-	mainLayout->addWidget(mp_sliderX,0,1);
-	mainLayout->addWidget(mp_labY, 1, 0);
-	mainLayout->addWidget(mp_sliderY,1,1);
-	mainLayout->addWidget(mp_labHeight, 2, 0);
-	mainLayout->addWidget(mp_sliderHeight,2,1);
-	mp_widget->setLayout(mainLayout);
-
-	return mp_widget;
-#else
-	return nullptr;
-#endif
-}
-
-
-void ControllerCalibrationByHeight::SetWidgetValue(const string& x_value)
-{
-#ifndef MARKUS_NO_GUI
-	CalibrationByHeight object;
-	istringstream str(x_value);
-	object.Deserialize(str);
-	mp_sliderX->SetValue(object.x);
-	mp_sliderY->SetValue(object.y);
-	mp_sliderHeight->SetValue(object.height);
-#endif
-}
-
-Json::Value ControllerCalibrationByHeight::GetValueFromWidget()
-{
-#ifndef MARKUS_NO_GUI
-	stringstream ss;
-	CalibrationByHeight object;
-	object.x = mp_sliderX->GetValue();
-	object.y = mp_sliderY->GetValue();
-	object.height = mp_sliderHeight->GetValue();
-	object.Serialize(ss);
-
-	return stringToJson(ss.str());
-#else
-	assert(false);
-	return "";
-#endif
-}
-*/
 
 /*------------------------------------------------------------------------------------------------*/
 

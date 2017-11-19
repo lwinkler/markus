@@ -92,7 +92,7 @@ protected:
 	cv::Mat m_foregroundWithShadows;
 
 	// state variables
-	cv::BackgroundSubtractorMOG2* mp_mog2;
+	cv::BackgroundSubtractorMOG2* mp_mog2 = nullptr;
 };
 
 

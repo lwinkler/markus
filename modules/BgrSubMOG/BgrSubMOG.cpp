@@ -40,8 +40,6 @@ BgrSubMOG::BgrSubMOG(ParameterStructure& xr_params) :
 	m_foreground(Size(m_param.width, m_param.height), CV_8UC1),
 	m_background(Size(m_param.width, m_param.height), m_param.type)
 {
-	mp_mog = nullptr;
-
 	AddInputStream(0, new StreamImage("image",       m_input,      *this,   "Video input"));
 
 	AddOutputStream(0, new StreamImage("foreground", m_foreground, *this,   "Foreground"));
