@@ -67,6 +67,9 @@ template<> uint ParameterNum<uint>::castJson(const Json::Value& x_json)
 
 template<> bool ParameterNum<bool>::castJson(const Json::Value& x_json)
 {
-	return x_json.asBool();
+// TODO LW Fix this cout <<x_json.asString() << "int " << x_json.isBool() << " " << "null" << x_json.isString();
+	if(x_json.isBool())
+		return x_json.asBool();
+	return x_json.asInt() > 0;
 }
 

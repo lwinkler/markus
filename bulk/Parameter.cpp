@@ -34,6 +34,7 @@ const char Parameter::configType[PARAMCONF_SIZE][16] = {"unset", "def", "json", 
 log4cxx::LoggerPtr Parameter::m_logger(log4cxx::Logger::getLogger("Parameter"));
 
 
+// TODO: Maybe one day avoid having a range for each instance. Link it with module.
 
 /**
 * @brief Export the parameter for module description

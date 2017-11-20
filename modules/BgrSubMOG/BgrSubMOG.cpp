@@ -52,14 +52,14 @@ BgrSubMOG::BgrSubMOG(ParameterStructure& xr_params) :
 
 BgrSubMOG::~BgrSubMOG()
 {
-	CLEAN_DELETE(mp_mog);
 }
 
 void BgrSubMOG::Reset()
 {
 	Module::Reset();
-	CLEAN_DELETE(mp_mog);
-	// TODO probably suppress this module mp_mog = bgsegm::createBackgroundSubtractorMOG(m_param.history, m_param.nmixtures, m_param.backgroundRatio, m_param.noiseSigma);
+	mp_mog.release();
+	// TODO probably suppress this module 
+	// mp_mog = bgsegm::createBackgroundSubtractorMOG(m_param.history, m_param.nmixtures, m_param.backgroundRatio, m_param.noiseSigma);
 	// mp_mog->initialize(m_input.size(), m_input.type());
 }
 

@@ -55,7 +55,7 @@ public:
 			// This parameters should not change
 			AddParameter(new ParameterInt  ("history",	500, 	1, 10000,	&history,	"Length of the history"));
 			AddParameter(new ParameterFloat("varThres",	16, 	1, 255,	&varThres,	"Threshold on the squared Mahalanobis distance to decide whether it is well described by the background model (selectivity of background) "));
-			AddParameter(new ParameterBool  ("bShadowDetection",	false, 	0, 1, &bShadowDetection,	"Enable shadow detection"));
+			AddParameter(new ParameterBool  ("bShadowDetection",	0, 	0, 1, &bShadowDetection,	"Enable shadow detection"));
 			AddParameter(new ParameterDouble("learningRate",	-1, 	-1, 1, &learningRate,	"Learning rate of the model"));
 
 			RefParameterByName("type").SetDefaultAndValue("CV_8UC3");
@@ -92,7 +92,7 @@ protected:
 	cv::Mat m_foregroundWithShadows;
 
 	// state variables
-	cv::BackgroundSubtractorMOG2* mp_mog2 = nullptr;
+	cv::Ptr<cv::BackgroundSubtractorMOG2> mp_mog2;
 };
 
 

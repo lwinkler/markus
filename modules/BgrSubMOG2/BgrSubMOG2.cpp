@@ -52,15 +52,13 @@ BgrSubMOG2::BgrSubMOG2(ParameterStructure& xr_params) :
 
 BgrSubMOG2::~BgrSubMOG2()
 {
-	// TODO Fix this ? CLEAN_DELETE(mp_mog2);
 }
 
 void BgrSubMOG2::Reset()
 {
 	Module::Reset();
-	CLEAN_DELETE(mp_mog2);
+	mp_mog2.release();
 	mp_mog2 = createBackgroundSubtractorMOG2(m_param.history, m_param.varThres, m_param.bShadowDetection);
-	// mp_mog2->initialize(m_input.size(), m_input.type());
 }
 
 void BgrSubMOG2::ProcessFrame()
