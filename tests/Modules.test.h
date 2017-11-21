@@ -315,6 +315,7 @@ public:
 							// For string type we cannot set random values
 							// cout<<"set "<<value<<endl;
 							string tmps = jsonToString(elemVal);
+							// cout << "translated to string " << tmps << endl;
 							elemCtr.second->CallAction("Set", &tmps);
 
 							// Test if the config is globally still valid

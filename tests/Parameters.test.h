@@ -110,6 +110,17 @@ public:
 	void tearDown()
 	{
 	}
+
+	void testJson()
+	{
+		TS_ASSERT(stringToJson("\"mystring\"").asString() == "mystring");
+		TS_ASSERT(stringToJson("34").asInt() == 34);
+		TS_ASSERT(stringToJson("34.1").asFloat() - 34.1 < 0.0001);
+		TS_ASSERT(stringToJson("true").asBool() == true);
+		TS_ASSERT(stringToJson("false").asBool() == false);
+		TS_ASSERT(stringToJson("1").asBool() == true);
+		TS_ASSERT(stringToJson("0").asBool() == false);
+	}
 	/**
 	* @brief Test all classes that inherit from Parameter
 	*/
