@@ -156,7 +156,7 @@ public:
 		m_obj2.AddFeature("feat2", 3453.444e-123);
 		m_obj2.AddFeature("ff", new FeatureFloat(0.93));
 		m_obj2.AddFeature("fi", new FeatureInt(93));
-		m_obj2.AddFeature("ffif", new FeatureFloatInTime(0.132));
+		m_obj2.AddFeature("ffif", new FeatureFloatInTime(FeatureFloat(0.132)));
 		m_obj2.AddFeature("fstr", new FeatureString("someString"));
 		m_obj2.AddFeature("fvf", new FeatureVectorFloat(m_vect));
 		m_obj2.AddFeature("fvi", new FeatureVectorInt(m_vectInt));
@@ -292,7 +292,7 @@ public:
 
 	void testFeatureFloatInTime()
 	{
-		FeatureFloatInTime ffit(0.93);
+		FeatureFloatInTime ffit(FeatureFloat(0.93));
 		testSerialization(ffit, "FeatureFloatInTime");
 	}
 

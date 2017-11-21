@@ -32,6 +32,7 @@
 #include "ParameterString.h"
 #include "ParameterSerializable.h"
 #include "util.h"
+#include "enums.h"
 #include "MkException.h"
 #include "Polygon.h"
 #include <jsoncpp/json/reader.h>
