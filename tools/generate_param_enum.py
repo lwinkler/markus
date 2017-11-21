@@ -68,7 +68,8 @@ def main():
 	header_and_enums = [
 		['util/enums.h', 'mk::CachedState'],
 		['util/enums.h', 'mk::ImageType'],
-		['opencv/modules/ml/include/opencv2/ml.hpp', 'cv::ml::SVM::KernelTypes']
+		['opencv/modules/ml/include/opencv2/ml.hpp', 'cv::ml::SVM::KernelTypes'],
+		['opencv/modules/ml/include/opencv2/ml.hpp', 'cv::ml::SVM::Types']
 	]
 
 	# Generate file

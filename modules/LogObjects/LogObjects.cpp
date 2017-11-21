@@ -36,7 +36,7 @@ LogObjects::LogObjects(ParameterStructure& xr_params)
 	: Module(xr_params), m_param(dynamic_cast<Parameters&>(xr_params))
 {
 	// Init input streams
-	AddInputStream(0, new StreamObject("image",      m_objectsIn, *this,     "Incoming objects"));
+	AddInputStream(0, new StreamObject("input",      m_objectsIn, *this,     "Incoming objects"));
 	mp_annotationWriter = nullptr;
 }
 

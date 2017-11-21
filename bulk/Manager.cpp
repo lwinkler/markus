@@ -582,7 +582,7 @@ void Manager::ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module,
 	}
 	catch(MkException& e)
 	{
-		LOG_ERROR(m_logger, "Cannot connect input " << x_inputConfig.get("id", "(unknown)").asString() << " of module " << xr_module.GetName());
+		LOG_ERROR(m_logger, "Cannot connect input " << x_inputName << " of module " << xr_module.GetName() << ". Reason: " << string(e.what()));
 		throw;
 	}
 }

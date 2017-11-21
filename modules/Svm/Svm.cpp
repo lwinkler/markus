@@ -66,6 +66,7 @@ void Svm::Reset()
 	if(m_param.train) {
 		Ptr<SVM> model = SVM::create();
 		// model->setType(m_param.type);
+		model->setType(SVM::EPS_SVR);
 		model->setKernel(m_param.kernelType);
 		model->setDegree(m_param.degree);
 		model->setGamma(m_param.gamma);
@@ -73,6 +74,19 @@ void Svm::Reset()
 		model->setC(m_param.c);
 		model->setNu(m_param.nu);
 		model->setP(m_param.p);
+		model->setTermCriteria(TermCriteria( CV_TERMCRIT_ITER + CV_TERMCRIT_EPS, 1000, 1e-3 ));
+		/*
+		model->setCoef0( 0.0 );
+		model->setDegree( 3 );
+		model->setTermCriteria( TermCriteria( CV_TERMCRIT_ITER + CV_TERMCRIT_EPS, 1000, 1e-3 ) );
+		model->setGamma( 0 );
+		model->setKernel( SVM::LINEAR );
+		model->setNu( 0.5 );
+		model->setP( 0.1 ); // for EPSILON_SVR, epsilon in loss function?
+		model->setC( 0.01 ); // From paper, soft classifier
+		model->setType( SVM::EPS_SVR ); // C_SVC; // EPSILON_SVR; // may be also NU_SVR; // do regression task
+		*/
+		                                     
 		mp_statModel = model;
 	} else {
 		mp_statModel = SVM::load(m_param.modelFile);
@@ -97,12 +111,13 @@ void Svm::ProcessFrame()
 			if(m_dataLength == 0)
 				throw MkException("Data has size zero", LOC);
 			m_samples   = Mat(0, m_dataLength, CV_32FC1);
-			m_responses = Mat(0, 1, CV_32S);
+			m_responses = Mat(0, 1, CV_32SC1);
 			m_row = Mat(1, m_dataLength, CV_32FC1);
 		}
 
 		// append data
 		int i = 0;
+		assert(static_cast<int>(m_featureNames.size()) == m_row.cols);
 		for(const auto& name : m_featureNames)
 		{
 			m_row.at<float>(i, 1) = dynamic_cast<const FeatureFloat&>(obj.GetFeature(name)).value;
@@ -143,8 +158,8 @@ void Svm::TrainModel()
 		throw MkException("Unable to train model", LOC);
 	}
 
-    float err = mp_statModel->calcError(data, true, m_responses);
-    LOG_INFO(m_logger, "Error of model on train data: " << err << "%");
+	float err = mp_statModel->calcError(data, true, m_responses);
+	LOG_INFO(m_logger, "Error of model on train data: " << err << "%");
 
 	string modelFile = RefContext().RefOutputDir().ReserveFile("model.data");
 	mp_statModel->save(modelFile);
@@ -159,7 +174,7 @@ void Svm::TestModel()
 	cout << "Responses" << m_responses.size() << endl;
 	Ptr<TrainData> data = TrainData::create(m_samples, ROW_SAMPLE, m_responses); //, InputArray varIdx=noArray(), InputArray sampleIdx=noArray(), InputArray sampleWeights=noArray(), InputArray varType=noArray());
 	
-    float err = mp_statModel->calcError(data, true, m_responses);
-    LOG_INFO(m_logger, "Error of model on test data: " << err << "%");
+	float err = mp_statModel->calcError(data, true, m_responses);
+	LOG_INFO(m_logger, "Error of model on test data: " << err << "%");
 }
 
