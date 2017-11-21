@@ -35,7 +35,7 @@ class Processable;
 class ModuleTimer
 {
 public:
-	ModuleTimer(Processable & x_module);
+	explicit ModuleTimer(Processable & x_module);
 	virtual ~ModuleTimer() {assert(!m_running);}
 	void Reset(double x_fps);
 

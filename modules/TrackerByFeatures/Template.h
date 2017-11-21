@@ -45,7 +45,7 @@ public:
 	void UpdateFeatures(double x_alpha, TIME_STAMP m_currentTimeStamp);
 	bool NeedCleaning(TIME_STAMP x_cleaningTimeStamp);
 
-	inline void AddFeature(std::string x_name, double x_value) {m_feats.insert(std::make_pair(x_name, FeatureFloatInTime(x_value)));}
+	inline void AddFeature(std::string x_name, double x_value) {m_feats.insert(std::make_pair(x_name, FeatureFloatInTime(FeatureFloat(x_value))));}
 	inline const FeatureFloatInTime& GetFeature(const std::string& x_name) const
 	{
 		auto it = m_feats.find(x_name);

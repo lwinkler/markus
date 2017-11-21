@@ -48,7 +48,7 @@ public:
 	class Parameters : public ParameterStructure
 	{
 	public:
-		Parameters(ConfigReader& x_configReader) : ParameterStructure("window"), config(x_configReader)
+		explicit Parameters(ConfigReader& x_configReader) : ParameterStructure("window"), config(x_configReader)
 		{
 			// AddParameter(new ParameterString("module", "", &module, "Module to display"));
 			AddParameter(new ParameterInt("nbCols", 1, 1, 4, &nbCols, "Number of columns for display"));

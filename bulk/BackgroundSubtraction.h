@@ -34,7 +34,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : Module::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterDouble( "onlineLearnTime",            0.0,       0, 600,    &onlineLearnTime,            "Learn the background on the first seconds of the video"));
 			AddParameter(new ParameterDouble( "onlineLearnRatio",           5.0,       1, 100,    &onlineLearnRatio,           "Increase the learning rate by this ratio at initialization"));
@@ -43,7 +43,7 @@ public:
 		double onlineLearnRatio;
 	};
 
-	BackgroundSubtraction(ParameterStructure& xr_params);
+	explicit BackgroundSubtraction(ParameterStructure& xr_params);
 	virtual ~BackgroundSubtraction();
 
 	void Reset() override;

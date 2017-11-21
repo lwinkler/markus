@@ -80,7 +80,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : Module::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("scriptPath",  "python_dir", &scriptPath, "Path to the folder containing python scripts"));
 			AddParameter(new ParameterString("script", 	     "script.py",  &script,     "Name of the Python script (without .py)"));
@@ -89,7 +89,7 @@ public:
 		std::string script;
 	};
 
-	ModulePython(ParameterStructure& xr_params);
+	explicit ModulePython(ParameterStructure& xr_params);
 	virtual ~ModulePython();
 
 	void ProcessFrame() override = 0;

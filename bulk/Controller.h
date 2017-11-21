@@ -57,7 +57,7 @@ void ListActions(std::vector<std::string>& xr_actions) const override\
 class Controller
 {
 public:
-	Controller(const std::string& x_name);
+	explicit Controller(const std::string& x_name);
 	virtual ~Controller();
 
 	/// Create a QT Widget for this controller

@@ -51,7 +51,7 @@ public:
 	class Parameters : public Processable::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : Processable::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Processable::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("master"      , ""      , &master   , "Master module on which this module's processing is dependent. If empty, use all preceeding modules"));
 			AddParameter(new ParameterInt("width"          , 640     , 1         , MAX_WIDTH , &width  , "Width of the input"));
@@ -74,7 +74,7 @@ public:
 		int cached;
 	};
 
-	Module(ParameterStructure& x_param);
+	explicit Module(ParameterStructure& x_param);
 	virtual ~Module();
 
 	void Reset() override;

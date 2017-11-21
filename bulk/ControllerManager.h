@@ -34,7 +34,7 @@ class Manager;
 class ControllerManager : public Controller
 {
 public:
-	ControllerManager(Manager& rx_module);
+	explicit ControllerManager(Manager& rx_module);
 	virtual ~ControllerManager() {}
 	MKCLASS("ControllerManager")
 

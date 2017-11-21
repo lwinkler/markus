@@ -34,7 +34,7 @@ class BackgroundSubtraction;
 class ControllerBackground : public Controller
 {
 public:
-	ControllerBackground(BackgroundSubtraction& rx_module);
+	explicit ControllerBackground(BackgroundSubtraction& rx_module);
 	virtual ~ControllerBackground() {}
 	MKCLASS("ControllerBackground")
 

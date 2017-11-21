@@ -33,7 +33,7 @@ template<class T> class FeatureT : public Feature
 {
 public:
 	FeatureT() : value(T {} /*initialize to 0 or other*/) {}
-	FeatureT(T x_value) : value(x_value) {}
+	explicit FeatureT(T x_value) : value(x_value) {}
 	Feature* CreateCopy() const {return new FeatureT(*this);}
 	inline virtual double CompareSquared(const Feature& x_feature) const
 	{

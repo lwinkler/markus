@@ -34,7 +34,7 @@
 template<class T> class FeatureVectorT : public Feature
 {
 public:
-	FeatureVectorT(const std::vector<T>& x_values = std::vector<T>(0)) : values(x_values) {}
+	explicit FeatureVectorT(const std::vector<T>& x_values = std::vector<T>(0)) : values(x_values) {}
 	Feature* CreateCopy() const {return new FeatureVectorT<T>(*this);}
 	inline virtual double CompareSquared(const Feature& x_feature) const
 	{

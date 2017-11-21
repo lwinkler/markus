@@ -35,7 +35,7 @@ class QParameterSlider;
 class ControllerInputStream : public Controller
 {
 public:
-	ControllerInputStream(VideoFileReader& rx_module);
+	explicit ControllerInputStream(VideoFileReader& rx_module);
 	virtual ~ControllerInputStream();
 	MKCLASS("ControllerInputStream")
 

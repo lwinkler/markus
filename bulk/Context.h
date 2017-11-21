@@ -41,7 +41,7 @@ public:
 	class Parameters : public ParameterStructure
 	{
 	public:
-		Parameters(const std::string& x_name) : ParameterStructure(x_name)
+		explicit Parameters(const std::string& x_name) : ParameterStructure(x_name)
 		{
 			AddParameter(new ParameterBool("autoClean", 0, 0, 1,     &autoClean,       "Automatically clean the temporary directory when the application closes"));
 			AddParameter(new ParameterString("archiveDir", "",       &archiveDir,      "If specified the data is copied inside this directory for archive"));
@@ -71,7 +71,7 @@ public:
 	};
 
 	virtual ~Context();
-	Context(ParameterStructure& xr_params);
+	explicit Context(ParameterStructure& xr_params);
 
 	// note: All public methods must be thread-safe
 	static std::string Version(bool x_full);

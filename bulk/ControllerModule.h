@@ -33,7 +33,7 @@ class Module;
 class ControllerModule : public Controller
 {
 public:
-	ControllerModule(Module& rx_module);
+	explicit ControllerModule(Module& rx_module);
 	virtual ~ControllerModule() {}
 	MKCLASS("ControllerModule")
 

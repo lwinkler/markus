@@ -40,7 +40,7 @@
 class Object : public Serializable
 {
 public:
-	Object(const std::string & x_name = "unnamed");
+	explicit Object(const std::string & x_name = "unnamed");
 	Object(const std::string & x_name, const cv::Rect & x_rect);
 	virtual ~Object();
 	Object(const Object &);

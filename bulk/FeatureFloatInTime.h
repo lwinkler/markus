@@ -30,7 +30,7 @@
 class FeatureFloatInTime : public FeatureFloat
 {
 public:
-	FeatureFloatInTime(const FeatureFloat& x_feat = FeatureFloat());
+	explicit FeatureFloatInTime(const FeatureFloat& x_feat = FeatureFloat());
 	Feature* CreateCopy() const {return new FeatureFloatInTime(*this);}
 	void Update(const Feature& x_feat, double x_alpha);
 	virtual double CompareSquared(const Feature& x_feature) const;

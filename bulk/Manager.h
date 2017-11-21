@@ -45,7 +45,7 @@ public:
 	class Parameters : public Processable::Parameters
 	{
 	public:
-		Parameters(const ConfigReader& x_confReader) : Processable::Parameters("manager"), config(x_confReader)
+		explicit Parameters(const ConfigReader& x_confReader) : Processable::Parameters("manager"), config(x_confReader)
 		{
 			AddParameter(new ParameterInt("nbFrames", 0, 0, INT_MAX, &nbFrames, "Number of frames to process. 0 for infinite. Only works in centralized mode"));
 			AddParameter(new ParameterString("arguments", "",         &arguments, "Command-line arguments, for storage only"));

@@ -34,7 +34,7 @@ class ModuleClassifyEvents;
 class ControllerEvent : public Controller
 {
 public:
-	ControllerEvent(ModuleClassifyEvents& rx_module);
+	explicit ControllerEvent(ModuleClassifyEvents& rx_module);
 	virtual ~ControllerEvent() {}
 	MKCLASS("ControllerEvent")
 

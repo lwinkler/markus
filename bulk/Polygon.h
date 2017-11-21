@@ -35,7 +35,7 @@ class Polygon : public Serializable
 public:
 
 	Polygon();
-	Polygon(const std::vector<cv::Point2d>& x_value);
+	explicit Polygon(const std::vector<cv::Point2d>& x_value);
 	void DrawMask(cv::Mat& xr_target, const cv::Scalar& x_color) const;
 	template<typename T> void GetPoints(std::vector<T>& xr_points, const cv::Size& x_size) const
 	{

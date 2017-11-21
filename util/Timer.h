@@ -53,7 +53,7 @@ protected:
 class QuickTimer
 {
 public:
-	QuickTimer(const std::string& s) {}
+	explicit QuickTimer(const std::string& s) {}
 	QuickTimer(const std::string& x_description, const std::string& x_position, const std::string& x_function);
 	virtual ~QuickTimer() {ms_timers[m_name].Stop();}
 	void Start() {}

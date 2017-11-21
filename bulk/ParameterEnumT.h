@@ -33,9 +33,7 @@ template<class T> class ParameterEnumT : public ParameterEnum
 {
 public:
 	ParameterEnumT(const std::string& x_name, int x_default, int * xp_value, const std::string& x_description):
-		ParameterEnum(x_name, x_default, xp_value, x_description),
-		m_default(x_default),
-		mr_value(*xp_value)
+		ParameterEnum(x_name, x_default, xp_value, x_description)
 	{}
 	
 	const std::map<std::string, int>& GetEnum() const {return Enum;}
@@ -46,8 +44,6 @@ protected:
 	static const std::map<std::string, int> Enum;
 	static const std::map<int, std::string>  ReverseEnum;
 
-	int m_default;
-	int& mr_value;
 private:
 	static const std::string m_type;
 };

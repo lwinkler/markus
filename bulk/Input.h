@@ -35,7 +35,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : Module::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			RefParameterByName("autoProcess").SetRange("[1:1]");
 			RefParameterByName("autoProcess").SetDefaultAndValue(1); // Input must be in real time otherwise they are never called
@@ -43,7 +43,7 @@ public:
 		}
 	};
 
-	Input(ParameterStructure& x_param);
+	explicit Input(ParameterStructure& x_param);
 	virtual ~Input();
 
 	virtual void Capture() = 0;

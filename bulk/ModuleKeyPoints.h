@@ -39,7 +39,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : Module::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("descriptor", "", &descriptor, "The keypoint descriptor: ORB, BRIEF or Opponent. Leave empty for none.")); // TODO: It seems that only the original descriptor works
 
@@ -50,7 +50,7 @@ public:
 		std::string descriptor;
 	};
 
-	ModuleKeyPoints(ParameterStructure& xr_params);
+	explicit ModuleKeyPoints(ParameterStructure& xr_params);
 	virtual ~ModuleKeyPoints();
 	// MKCLASS("ModuleKeyPoints")
 	// MKDESCR("Extract different types of keyPoints from image")

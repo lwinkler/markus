@@ -47,7 +47,7 @@ public:
 	cv::Scalar color;
 
 	Series(const Series& s);
-	Series(const std::vector<float>& rx_data);
+	explicit Series(const std::vector<float>& rx_data);
 
 	// release memory
 	void Clear();
@@ -92,7 +92,7 @@ private:
 	size_t color_index = 0;
 
 public:
-	Figure(const std::string& name);
+	explicit Figure(const std::string& name);
 	~Figure();
 
 	inline std::string GetFigureName() const {return figure_name;}

@@ -85,7 +85,7 @@ public:
 	std::vector<ConfigXml> FindAll(const std::string& x_searchString) const;
 
 protected:
-	ConfigXml(TiXmlNode* xp_node);
+	explicit ConfigXml(TiXmlNode* xp_node);
 	ConfigXml& operator = (const ConfigXml& x_conf);
 	ConfigXml NextSubConfig(const std::string& x_tagName, const std::string& x_attrName = "", const std::string& x_attrValue = "") const;
 

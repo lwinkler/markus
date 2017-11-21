@@ -39,14 +39,14 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : Module::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterDouble("validityThres", 0.5, 0, 1, &validityThres, "Decision threshold to consider an event as valid [0 to 1]"));
 		}
 		double validityThres;
 	};
 
-	ModuleClassifyEvents(ParameterStructure& xr_params);
+	explicit ModuleClassifyEvents(ParameterStructure& xr_params);
 	virtual ~ModuleClassifyEvents();
 
 	void ProcessFrame() override;
