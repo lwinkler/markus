@@ -51,7 +51,7 @@ public:
 		std::string extension;
 	};
 
-	AddImageToEvent(ParameterStructure& xr_params);
+	explicit AddImageToEvent(ParameterStructure& xr_params);
 	virtual ~AddImageToEvent();
 	MKCLASS("AddImageToEvent")
 	MKCATEG("Output")

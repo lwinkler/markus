@@ -37,13 +37,13 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : Module::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			RefParameterByName("type").SetDefaultAndValue("CV_8UC3");
 		};
 	};
 
-	RenderObjects(ParameterStructure& xr_params);
+	explicit RenderObjects(ParameterStructure& xr_params);
 	virtual ~RenderObjects();
 	MKCLASS("RenderObjects")
 	MKDESCR("Output video stream with additional object streams")

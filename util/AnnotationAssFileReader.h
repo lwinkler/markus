@@ -63,9 +63,6 @@ private:
 	int m_inputHeight;
 	cv::Rect m_boudingBox;
 	std::string m_srt;
-
-
-
 };
 
 #endif

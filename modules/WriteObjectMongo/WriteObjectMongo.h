@@ -37,7 +37,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) :
+		explicit Parameters(const std::string& x_name) :
 			Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("folder"   ,  "events_img"   , &folder    ,  "Name of the folder to create for images"));
@@ -65,7 +65,7 @@ public:
 	void Reset() override;
 	static const char* contentType(const std::string& x_fileName);
 
-	WriteObjectMongo(ParameterStructure& xr_params);
+	explicit WriteObjectMongo(ParameterStructure& xr_params);
 	virtual ~WriteObjectMongo();
 	MKCLASS("WriteObjectMongo")
 	MKCATEG("Output")

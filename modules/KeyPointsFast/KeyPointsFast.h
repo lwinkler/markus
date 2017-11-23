@@ -38,7 +38,7 @@ public:
 	class Parameters : public ModuleKeyPoints::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : ModuleKeyPoints::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : ModuleKeyPoints::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt("threshold", 10, 0, 255, &threshold,"Threshold"));
 			AddParameter(new ParameterBool("nonMaxSuppression", 0, 0, 1, &nonMaxSuppression,"if true, non-maximum suppression is applied to detected corners"));
@@ -48,7 +48,7 @@ public:
 		// type – one of the three neighborhoods as defined in the paper: FastFeatureDetector::TYPE_9_16, FastFeatureDetector::TYPE_7_12, FastFeatureDetector::TYPE_5_8
 	};
 
-	KeyPointsFast(ParameterStructure& xr_params);
+	explicit KeyPointsFast(ParameterStructure& xr_params);
 	virtual ~KeyPointsFast();
 	MKCLASS("KeyPointsFast")
 	MKCATEG("KeyPoints")

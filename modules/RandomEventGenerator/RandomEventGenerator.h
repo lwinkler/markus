@@ -36,7 +36,7 @@ public:
 	class Parameters : public Input::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : Input::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Input::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt("nbFeatures", 	4, 	0, 	1000,	 &nbFeatures,	"Number of features per event"));
 			AddParameter(new ParameterInt("randomSeed", 	0, 	0, 	INT_MAX, &randomSeed,	"Seed for random generator: 0 means seed is generated from timer"));
@@ -51,7 +51,7 @@ public:
 		double timeInterval;
 	};
 
-	RandomEventGenerator(ParameterStructure& xr_params);
+	explicit RandomEventGenerator(ParameterStructure& xr_params);
 	virtual ~RandomEventGenerator();
 	MKCLASS("RandomEventGenerator")
 	MKCATEG("Input")

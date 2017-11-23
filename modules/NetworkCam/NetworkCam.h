@@ -46,7 +46,7 @@ public:
 	class Parameters : public Input::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) :
+		explicit Parameters(const std::string& x_name) :
 			Input::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("url", "", &url, "Network address of the camera (e.g. http://root:admin@192.168.3.62/mjpg/1/video.mjpg"));
@@ -58,7 +58,7 @@ public:
 		bool checkAspectRatio;
 	};
 
-	NetworkCam(ParameterStructure& xr_params);
+	explicit NetworkCam(ParameterStructure& xr_params);
 	virtual ~NetworkCam();
 	MKCLASS("NetworkCam")
 	MKCATEG("Input")

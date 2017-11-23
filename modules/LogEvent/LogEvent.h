@@ -42,7 +42,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) :
+		explicit Parameters(const std::string& x_name) :
 			Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("file"        , "event.%d.srt", &file      ,  "Name of the .srt file without extension"));
@@ -68,7 +68,7 @@ public:
 		std::string gtVideo;
 	};
 
-	LogEvent(ParameterStructure& xr_params);
+	explicit LogEvent(ParameterStructure& xr_params);
 	virtual ~LogEvent();
 	MKCLASS("LogEvent")
 	MKCATEG("Output")

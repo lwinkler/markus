@@ -45,7 +45,7 @@ public:
 	{
 
 	public:
-		Parameters(const std::string& x_name) :
+		explicit Parameters(const std::string& x_name) :
 			Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt("minNeighbors", 2, 1, 100, 	&minNeighbors,	"Minimum numbers of neighbors (higher: less sensitive)")); // Note : Seems to be a bug with minNeighbors = 1 with most filters
@@ -94,7 +94,7 @@ public:
 		std::string objectLabel;
 	};
 
-	CascadeDetector(ParameterStructure& xr_params);
+	explicit CascadeDetector(ParameterStructure& xr_params);
 	virtual ~CascadeDetector();
 	MKCLASS("CascadeDetector")
 	MKDESCR("Detect objects from a video stream using a cascade filter (c.f. Haar patterns)")

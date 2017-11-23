@@ -128,7 +128,7 @@ void WriteObjectMongo::ProcessFrame()
 	int cpt = 0;
 	for(const auto& elem : m_objects)
 	{
-		mongoc_cursor_t *cursor;
+		// mongoc_cursor_t *cursor;
 		bson_error_t error;
 
 		stringstream sobj;

@@ -39,7 +39,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : Module::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterDouble("maxMatchingDistance"   , 0.1 , 0    , 100    , &maxMatchingDistance     , "Tolerance of the tracker."));
 			AddParameter(new ParameterDouble("timeDisappear"          , 1.0 , 0    , 300    , &timeDisappear           , "Time before disappearence of an object [s]"));
@@ -56,7 +56,7 @@ public:
 		std::string features;
 	};
 
-	TrackerByFeatures(ParameterStructure& xr_params);
+	explicit TrackerByFeatures(ParameterStructure& xr_params);
 	virtual ~TrackerByFeatures();
 	MKCLASS("TrackerByFeatures")
 	MKDESCR("Track objects by matching a set of features (typically x,y,width and height)")

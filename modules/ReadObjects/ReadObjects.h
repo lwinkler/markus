@@ -41,7 +41,7 @@ public:
 	class Parameters : public Input::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : Input::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Input::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("file"        , "in/objects.srt", &file      , "Name of the .srt file without extension"));
 
@@ -51,7 +51,7 @@ public:
 	};
 	bool AbortCondition() const override {return m_endOfStream;}
 
-	ReadObjects(ParameterStructure& xr_params);
+	explicit ReadObjects(ParameterStructure& xr_params);
 	virtual ~ReadObjects();
 	MKCLASS("ReadObjects")
 	MKCATEG("Input")

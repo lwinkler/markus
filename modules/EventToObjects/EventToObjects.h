@@ -38,12 +38,12 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : Module::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 		}
 	};
 
-	EventToObjects(ParameterStructure& xr_params);
+	explicit EventToObjects(ParameterStructure& xr_params);
 	virtual ~EventToObjects();
 	MKCLASS("EventToObjects")
 	MKCATEG("Conversion")

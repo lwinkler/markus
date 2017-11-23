@@ -38,7 +38,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : Module::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterUInt(  "minObject"  ,        1, 0, INT_MAX, &minObjectsNb  , "Min number of objects"));
 			AddParameter(new ParameterUInt(  "maxObject"  ,  INT_MAX, 0, INT_MAX, &maxObjectsNb  , "Max number of objects"));
@@ -51,7 +51,7 @@ public:
 		bool onlyNew;
 	};
 
-	ObjectsToEvent(ParameterStructure& xr_params);
+	explicit ObjectsToEvent(ParameterStructure& xr_params);
 	MKCLASS("ObjectsToEvent")
 	MKCATEG("Conversion")
 	MKDESCR("Count objects and raise an event and state if a condition is reached")

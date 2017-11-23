@@ -40,7 +40,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) :
+		explicit Parameters(const std::string& x_name) :
 			Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("file", 	"in/input.srt", &file,    "Name of the video file to read, with path"));
@@ -54,7 +54,7 @@ public:
 		double distance;
 	};
 
-	GroundTruthReader(ParameterStructure& x_confReader);
+	explicit GroundTruthReader(ParameterStructure& x_confReader);
 	virtual ~GroundTruthReader();
 	MKCLASS("GroundTruthReader")
 	MKCATEG("Input")

@@ -36,13 +36,13 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : Module::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3,CV_32FC1,CV_32FC3]");
 		};
 	};
 
-	TempDiff(ParameterStructure& xr_params);
+	explicit TempDiff(ParameterStructure& xr_params);
 	MKCLASS("TempDiff")
 	MKCATEG("Image")
 	MKDESCR("Perform temporal differencing: compare frame with previous frame by subtraction")

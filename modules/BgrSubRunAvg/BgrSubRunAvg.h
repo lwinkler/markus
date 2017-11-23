@@ -36,7 +36,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : Module::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterFloat("backgroundAlpha",	0.02, 	0, 1,	&backgroundAlpha,	"Defines the speed at which the background adapts"));
 			AddParameter(new ParameterFloat("foregroundThres", 	0.2, 	0, 1,	&foregroundThres,	"Threshold to accept a pixel as foreground"));
@@ -48,7 +48,7 @@ public:
 		float foregroundThres;
 	};
 
-	BgrSubRunAvg(ParameterStructure& xr_params);
+	explicit BgrSubRunAvg(ParameterStructure& xr_params);
 	virtual ~BgrSubRunAvg();
 	MKCLASS("BgrSubRunAvg")
 	MKCATEG("BackgroundSubtraction")

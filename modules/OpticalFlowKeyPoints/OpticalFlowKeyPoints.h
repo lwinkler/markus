@@ -38,7 +38,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : Module::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt("winSide",  21, 3, 255, &winSide, "Side of the square window used as search window at each pyramid level"));
 			AddParameter(new ParameterInt("maxLevel",  3, 0, 12, &maxLevel, "0-based maximal pyramid level number; if set to 0, pyramids are not used (single level), if set to 1, two levels are used, and so on; if pyramids are passed to input then algorithm will use as many levels as pyramids have but no more than maxLevel"));
@@ -52,7 +52,7 @@ public:
 		// double minEigThreshold=1e-4
 	};
 
-	OpticalFlowKeyPoints(ParameterStructure& x_configReader);
+	explicit OpticalFlowKeyPoints(ParameterStructure& x_configReader);
 	virtual ~OpticalFlowKeyPoints();
 	MKCLASS("OpticalFlowKeyPoints")
 	MKCATEG("KeyPoints")

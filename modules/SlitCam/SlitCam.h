@@ -37,7 +37,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) :
+		explicit Parameters(const std::string& x_name) :
 			Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt("aperture", 1, 1, 10, &aperture,	"Size of the aperture of the camera"));
@@ -50,7 +50,7 @@ public:
 		int aperture;
 	};
 
-	SlitCam(ParameterStructure& xr_params);
+	explicit SlitCam(ParameterStructure& xr_params);
 	virtual ~SlitCam();
 	MKCLASS("SlitCam")
 	MKCATEG("Input")

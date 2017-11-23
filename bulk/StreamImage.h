@@ -89,7 +89,7 @@ protected:
 		return ss.str();
 	}
 	void ConvertToOutput(TIME_STAMP x_ts, cv::Mat& xr_output);
-	StreamImage* mp_connectedImage;
+	StreamImage* mp_connectedImage = nullptr;
 	std::map<std::string, BufferImage> m_buffers;
 	cv::Mat& m_content;
 

@@ -38,7 +38,7 @@ public:
 	class Parameters : public ModuleKeyPoints::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : ModuleKeyPoints::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : ModuleKeyPoints::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt("delta"             , 5     , 1 , 100     , &delta         , ""));
 			AddParameter(new ParameterInt("minArea"          , 60    , 0 , 100     , &minArea       , ""));
@@ -61,7 +61,7 @@ public:
 		int edgeBlurSize;
 	};
 
-	KeyPointsMser(ParameterStructure& xr_params);
+	explicit KeyPointsMser(ParameterStructure& xr_params);
 	virtual ~KeyPointsMser();
 	MKCLASS("KeyPointsMser")
 	MKCATEG("KeyPoints")

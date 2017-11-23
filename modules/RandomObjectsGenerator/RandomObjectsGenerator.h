@@ -36,7 +36,7 @@ public:
 	class Parameters : public Input::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : Input::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Input::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt("nbObjects"  , 10  , 0 , 1000    , &nbObjects  , "Number of objects to generate per step"));
 			AddParameter(new ParameterInt("nbFeatures" , 4   , 0 , 1000    , &nbFeatures , "Number of features per event"));
@@ -52,7 +52,7 @@ public:
 		double speed;
 	};
 
-	RandomObjectsGenerator(ParameterStructure& xr_params);
+	explicit RandomObjectsGenerator(ParameterStructure& xr_params);
 	virtual ~RandomObjectsGenerator();
 	MKCLASS("RandomObjectsGenerator")
 	MKCATEG("Input")

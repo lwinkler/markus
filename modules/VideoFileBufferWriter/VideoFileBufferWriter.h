@@ -42,7 +42,7 @@ public:
 	class Parameters : public VideoFileWriter::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) :
+		explicit Parameters(const std::string& x_name) :
 			VideoFileWriter::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt   ("bufferFramesBefore" , 1200, 0, 10000, &bufferFramesBefore,  "Length of video buffer before activity [frames]"));
@@ -57,7 +57,7 @@ public:
 		bool   keepAllRecordings;
 	};
 
-	VideoFileBufferWriter(ParameterStructure& xr_params);
+	explicit VideoFileBufferWriter(ParameterStructure& xr_params);
 	virtual ~VideoFileBufferWriter();
 	MKCLASS("VideoFileBufferWriter")
 	MKCATEG("Output")

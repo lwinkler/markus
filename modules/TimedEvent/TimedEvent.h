@@ -38,14 +38,14 @@ public:
 	{
 
 	public:
-		Parameters(const std::string& x_name) : Module::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterDouble("timeInterval", 30, 0.001, 3600 * 24 * 365, &timeInterval, "Time interval in seconds"));
 		}
 		double timeInterval;
 	};
 
-	TimedEvent(ParameterStructure& xr_params);
+	explicit TimedEvent(ParameterStructure& xr_params);
 	virtual ~TimedEvent();
 	MKCLASS("TimedEvent")
 	MKCATEG("EventDetector")

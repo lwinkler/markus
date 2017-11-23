@@ -39,7 +39,7 @@ public:
 	{
 
 	public:
-		Parameters(const std::string& x_name) : Module::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterFloat("motionThres" , 0.1 , 0 , 1 , &motionThres , "Threshold for motion analysis"));
 			AddParameter(new ParameterBool("propagate"     , 1   , 0 , 1 , &propagate   , "Threshold for motion analysis"));
@@ -52,7 +52,7 @@ public:
 		bool propagate;
 	};
 
-	MotionDetector(ParameterStructure& xr_params);
+	explicit MotionDetector(ParameterStructure& xr_params);
 	virtual ~MotionDetector();
 	MKCLASS("MotionDetector")
 	MKCATEG("EventDetector")

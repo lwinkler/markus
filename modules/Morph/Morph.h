@@ -36,7 +36,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : Module::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt("operator",    0,   0, 6,    &oper,       "Morphological operator: ERODE=0,DILATE=1,OPEN=2,CLOSE=3,GRADIENT=4,TOPHAT=5,BLACKHAT=6"));
 			AddParameter(new ParameterInt("element",     2,   0, 2,    &element,    "Morphological element: RECT=0, CROSS=1, ELLIPSE=2"));
@@ -51,7 +51,7 @@ public:
 		int iterations;
 	};
 
-	Morph(ParameterStructure& xr_params);
+	explicit Morph(ParameterStructure& xr_params);
 	virtual ~Morph();
 	MKCLASS("Morph")
 	MKCATEG("Image")

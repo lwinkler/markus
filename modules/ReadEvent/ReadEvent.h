@@ -38,7 +38,7 @@ public:
 	class Parameters : public Input::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : Input::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Input::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("file"   , "in/events.srt", &file      , "Name of the .srt file without extension"));
 			AddParameter(new ParameterString("folder" , "eventsImg"  , &folder    , "Name of the folder to create for images"));
@@ -50,7 +50,7 @@ public:
 		std::string folder;
 	};
 
-	ReadEvent(ParameterStructure& xr_params);
+	explicit ReadEvent(ParameterStructure& xr_params);
 	virtual ~ReadEvent();
 	MKCLASS("ReadEvent")
 	MKCATEG("Input")

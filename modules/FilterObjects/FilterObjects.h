@@ -37,7 +37,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : Module::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterDouble("minTravelDist", 0.0, 0, 1,    &minTravelDist  , "An object must have been tracked on this distance to be accepted [% of image diagonal]"));
 			AddParameter(new ParameterDouble("minBorderDist", 0.0, 0, 1,    &minBorderDist  , "An object must be distant from the image border [% of image diagonal]"));
@@ -64,7 +64,7 @@ public:
 		double maxCustom;
 	};
 
-	FilterObjects(ParameterStructure& xr_params);
+	explicit FilterObjects(ParameterStructure& xr_params);
 	virtual ~FilterObjects();
 	MKCLASS("FilterObjects")
 	MKDESCR("Filter the input objects based on different criterion")

@@ -38,7 +38,7 @@ public:
 	class Parameters : public ModuleKeyPoints::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : ModuleKeyPoints::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : ModuleKeyPoints::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt("maxCorners", 1000, 1, INT_MAX, &maxCorners, "Maximum number of corners to return. If there are more corners than are found, the strongest of them is returned."));
 			AddParameter(new ParameterDouble("qualityLevel", 0.01, 0.01, 1, &qualityLevel,"Parameter characterizing the minimal accepted quality of image corners."));
@@ -55,7 +55,7 @@ public:
 		double k;
 	};
 
-	KeyPointsGoodFeaturesToTrack(ParameterStructure& xr_params);
+	explicit KeyPointsGoodFeaturesToTrack(ParameterStructure& xr_params);
 	virtual ~KeyPointsGoodFeaturesToTrack();
 	MKCLASS("KeyPointsGoodFeaturesToTrack")
 	MKCATEG("KeyPoints")

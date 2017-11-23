@@ -44,7 +44,7 @@ public:
 	{
 
 	public:
-		Parameters(const std::string& x_name) :
+		explicit Parameters(const std::string& x_name) :
 			Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterBool("train", 1, 0, 1, &train, "True if in training mode"));
@@ -75,7 +75,7 @@ public:
 		double p;
 	};
 
-	Svm(ParameterStructure& xr_params);
+	explicit Svm(ParameterStructure& xr_params);
 	virtual ~Svm();
 	MKCLASS("Svm")
 	MKDESCR("Classify objects by using a SVM on its features")

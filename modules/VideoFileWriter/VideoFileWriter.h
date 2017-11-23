@@ -39,7 +39,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) :
+		explicit Parameters(const std::string& x_name) :
 			Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("file", 	  "output", 	     &file,      "Name of the video file to write, with path"));
@@ -57,7 +57,7 @@ public:
 		std::string fourcc;
 	};
 
-	VideoFileWriter(ParameterStructure& xr_params);
+	explicit VideoFileWriter(ParameterStructure& xr_params);
 	virtual ~VideoFileWriter();
 	MKCLASS("VideoFileWriter")
 	MKCATEG("Output")

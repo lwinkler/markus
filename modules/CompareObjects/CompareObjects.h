@@ -38,7 +38,7 @@ public:
 	{
 
 	public:
-		Parameters(const std::string& x_name) : Module::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterFloat("threshold", 0.1, 0, 1, &threshold, "Dissimilarity threshold for all the sequence"));
 		};
@@ -48,7 +48,7 @@ public:
 	};
 
 	/* Constructor */
-	CompareObjects(ParameterStructure& xr_params);
+	explicit CompareObjects(ParameterStructure& xr_params);
 
 	/* Destructor */
 	virtual ~CompareObjects();

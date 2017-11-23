@@ -40,7 +40,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) :
+		explicit Parameters(const std::string& x_name) :
 			Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("file", "state.%d.srt", &file, "Name of the .srt file with extension"));
@@ -48,7 +48,7 @@ public:
 		std::string file;
 	};
 
-	LogState(ParameterStructure& xr_params);
+	explicit LogState(ParameterStructure& xr_params);
 	virtual ~LogState();
 	MKCLASS("LogState")
 	MKCATEG("Output")

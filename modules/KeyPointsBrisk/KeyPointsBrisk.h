@@ -38,7 +38,7 @@ public:
 	class Parameters : public ModuleKeyPoints::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : ModuleKeyPoints::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : ModuleKeyPoints::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt("threshold"       , 30 , 1 , 255 , &threshold    , ""));
 			AddParameter(new ParameterInt("octaves"         , 3  , 1 , 100 , &octaves      , ""));
@@ -54,7 +54,7 @@ public:
 		float patternScale;
 	};
 
-	KeyPointsBrisk(ParameterStructure& xr_params);
+	explicit KeyPointsBrisk(ParameterStructure& xr_params);
 	virtual ~KeyPointsBrisk();
 	MKCLASS("KeyPointsBrisk")
 	MKCATEG("KeyPoints")

@@ -40,7 +40,7 @@ public:
 	class Parameters : public Module::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : Module::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			// AddParameter(new ParameterInt("minNeighbors", 2, 1, 100, 	&minNeighbors,	"Minimum numbers of neighbors (higher: less sensitive)")); // Note : Seems to be a bug with minNeighbors = 1 with most filters
 			AddParameter(new ParameterInt("minSide", 0, 0, 200, 		&minSide,	"Minimum size of the detected object"));
@@ -62,7 +62,7 @@ public:
 		std::string objectLabel;
 	};
 
-	HOGDetector(ParameterStructure& xr_params);
+	explicit HOGDetector(ParameterStructure& xr_params);
 	virtual ~HOGDetector();
 	MKCLASS("HOGDetector")
 	MKDESCR("Detect objects from a video stream using a HOG descriptor")

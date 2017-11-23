@@ -38,7 +38,7 @@ public:
 	class Parameters : public ModuleKeyPoints::Parameters
 	{
 	public:
-		Parameters(const std::string& x_name) : ModuleKeyPoints::Parameters(x_name)
+		explicit Parameters(const std::string& x_name) : ModuleKeyPoints::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt("nbFeatures"    , 500 , 1 , 1000 , &nbFeatures    , ""));
 			AddParameter(new ParameterFloat("scaleFactor" , 1.2 , 1 , 1.2  , &scaleFactor   , ""));
@@ -61,7 +61,7 @@ public:
 		// int patchSize=31 =~ edgeThreshold
 	};
 
-	KeyPointsOrb(ParameterStructure& xr_params);
+	explicit KeyPointsOrb(ParameterStructure& xr_params);
 	virtual ~KeyPointsOrb();
 	MKCLASS("KeyPointsOrb")
 	MKCATEG("KeyPoints")
