@@ -32,7 +32,7 @@
 {\
 fact1.Register<child>(type);\
 Feature* pfeat = new child();\
-fact2.Register<child>(pfeat->Signature());\
+fact2.Register<child>(signature(*pfeat));\
 delete pfeat;\
 }}
 

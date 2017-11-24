@@ -77,3 +77,19 @@ template<> const map<string, int>  ParameterEnumT<cv::ml::SVM::KernelTypes>::Enu
 template<> const map<int, string> ParameterEnumT<cv::ml::SVM::KernelTypes>::ReverseEnum = ParameterEnum::CreateReverseMap(ParameterEnumT<cv::ml::SVM::KernelTypes>::Enum);
 template<> const string ParameterEnumT<cv::ml::SVM::KernelTypes>::m_type = "KernelTypes";
 
+
+
+#include "opencv/modules/ml/include/opencv2/ml.hpp"
+
+// Static variables
+template<> const map<string, int>  ParameterEnumT<cv::ml::SVM::Types>::Enum =
+{
+	{"C_SVC", 100},
+	{"NU_SVC", 101},
+	{"ONE_CLASS", 102},
+	{"EPS_SVR", 103},
+	{"NU_SVR", 104}
+};
+template<> const map<int, string> ParameterEnumT<cv::ml::SVM::Types>::ReverseEnum = ParameterEnum::CreateReverseMap(ParameterEnumT<cv::ml::SVM::Types>::Enum);
+template<> const string ParameterEnumT<cv::ml::SVM::Types>::m_type = "Types";
+

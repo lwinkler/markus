@@ -78,18 +78,24 @@ void FeatureHistory::Randomize(unsigned int& xr_seed, const Json::Value& x_param
 	}
 }
 
-void FeatureHistory::Serialize(ostream& x_out, MkDirectory* xp_dir) const
+void FeatureHistory::Serialize(mkjson& _json) const
 {
-	if(features.empty())
-	{
-		x_out<<"{\"history\":[]}";
-		return;
-	}
+/*
+	_json = mkjson{
+		{"x", _pt.x},
+		{"y", _pt.y},
+		{"history", features}
+	};
 
 	x_out << "{\"history\":[";
 	size_t i = 0;
 	for(const auto& elem : features)
 	{
+		_json = mkjson{
+			{"x", _pt.x},
+			{"y", _pt.y},
+			{"z", _pt.z}
+		};
 		x_out << "{\"time\":"<<elem.first<<",\"feature\":";
 		elem.second->Serialize(x_out);
 		if(i == features.size() - 1)
@@ -99,10 +105,12 @@ void FeatureHistory::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 		i++;
 	}
 	x_out << "]}";
+	*/
 }
 
-void FeatureHistory::Deserialize(istream& x_in, MkDirectory* xp_dir)
+void FeatureHistory::Deserialize(const mkjson& _json)
 {
+	/* TODO
 	Json::Value root0;
 	x_in >> root0;  // note: copy first for local use
 	Json::Value root = root0["history"];
@@ -121,4 +129,5 @@ void FeatureHistory::Deserialize(istream& x_in, MkDirectory* xp_dir)
 		feat->Deserialize(ss2, xp_dir);
 		features.insert(std::make_pair(root[i]["time"].asInt(), feat));
 	}
+	*/
 }

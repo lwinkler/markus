@@ -36,9 +36,12 @@ void fatal(const std::string& x_description, MkExceptionCode x_code, const std::
 /**
 * @brief Exception class
 */
-class MkException : public std::exception, public Serializable
+class MkException : public std::exception // public Serializable
 {
 public:
+	friend void to_json(mkjson& _json, const MkException& _ser);
+	friend void from_json(const mkjson& _json, MkException& _ser);
+
 	MkException(const std::string& x_description, const std::string& x_position, const std::string& x_function);
 	MkException(MkExceptionCode x_code, const std::string& x_name, const std::string& x_description, const std::string& x_position, const std::string& x_function);
 	virtual ~MkException() throw();
@@ -46,8 +49,6 @@ public:
 	inline MkExceptionCode GetCode() const {return m_code;}
 	inline const std::string& GetName() const {return m_name;}
 	inline bool IsFatal() const {return m_fatal;}
-	virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const;
-	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr);
 
 private:
 	std::string m_description;

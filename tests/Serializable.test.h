@@ -49,7 +49,7 @@
 using namespace std;
 
 /// Test class for serialization
-class TestObject : public Serializable
+class TestObject // : public Serializable
 {
 public:
 	TestObject()

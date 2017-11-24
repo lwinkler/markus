@@ -131,9 +131,8 @@ void WriteObjectMongo::ProcessFrame()
 		// mongoc_cursor_t *cursor;
 		bson_error_t error;
 
-		stringstream sobj;
-		elem.Serialize(sobj, mp_outputDir.get());
-		bson_t* doc = bson_new_from_json(reinterpret_cast<const uint8_t*>(sobj.str().c_str()), -1, &error);
+		mkjson json(elem);
+		bson_t* doc = bson_new_from_json(reinterpret_cast<const uint8_t*>(json.dump().c_str()), -1, &error);
 		assert(doc);
 
 		// create a mongo document

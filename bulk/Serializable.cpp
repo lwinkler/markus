@@ -31,13 +31,13 @@
 
 using namespace std;
 
-string signatureJsonValue(const Json::Value &x_val)
+string signatureJsonValue(const mkjson &x_val)
 {
-	if( x_val.isNull() )
+	if( x_val.is_null() )
 		return "null";
-	else if( x_val.isString() )
+	else if( x_val.is_string() )
 		return "%s";
-	else if( x_val.isBool() )
+	else if( x_val.is_boolean() )
 		return "%b";
 	/*
 	else if( x_val.isInt() )
@@ -48,9 +48,9 @@ string signatureJsonValue(const Json::Value &x_val)
 	// Note: the differienciation between different types of num values is ambiguous:
 	// e.g. a float can be a round number so its signature might be %d when deserialized
 	// so we keep %f as the only possibility
-	else if( x_val.isNumeric() )
+	else if( x_val.is_number() )
 		return "%f";
-	else if( x_val.isArray() )
+	else if( x_val.is_array() )
 		assert(false);
 	else
 	{
@@ -61,67 +61,42 @@ string signatureJsonValue(const Json::Value &x_val)
 	return "";
 }
 
-string signatureJsonTree(const Json::Value &x_root, int x_depth)
+string signatureJsonTree(const mkjson &x_json, int x_depth)
 {
 	x_depth += 1;
-	// cout<<" {type=["<<x_root.type()<<"], size="<<x_root.size()<<"}"<<endl;
+	// cout<<" {type=["<<x_json.type()<<"], size="<<x_json.size()<<"}"<<endl;
 
 	string result;
 
-	if(x_root.isArray())
+	if(x_json.is_array())
 	{
 		return "[]";
 	}
-	else if(x_root.isObject())
+	else if(x_json.is_object())
 	{
 		// printf("\n");
-		for(Json::ValueConstIterator itr = x_root.begin() ; itr != x_root.end() ; itr++)
+		for(auto it = x_json.cbegin(); it != x_json.cend(); ++it)
 		{
 			result += "\"";
-			result += itr.name();
+			result += it.key();
 			result += "\":";
-			if((*itr).isObject())
+			if(it.value().is_object())
 			{
 
 				result += "{";
-				result += signatureJsonTree(*itr, x_depth);
+				result += signatureJsonTree(it.value(), x_depth);
 				result += "}";
 			}
 			else
-				result += signatureJsonTree(*itr, x_depth);
+				result += signatureJsonTree(it.value(), x_depth);
 			result += ",";
 		}
 		return result;
 	}
 	else
 	{
-		result += signatureJsonValue(x_root);
+		result += signatureJsonValue(x_json);
 	}
 	return result;
 }
 
-string Serializable::SerializeToString(MkDirectory* xp_dir) const
-{
-	stringstream ss;
-	Serialize(ss, xp_dir);
-	Json::Value root;
-	ss >> root;
-	Json::FastWriter writer;
-	string tmp = writer.write(root);
-	tmp.erase(remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
-	return tmp;
-}
-
-string Serializable::Signature() const
-{
-	stringstream ss;
-	ss<<SerializeToString();
-	return Serializable::signature(ss);
-}
-
-string Serializable::signature(istream& x_in)
-{
-	Json::Value root;
-	x_in >> root;
-	return signatureJsonTree(root, 0);
-}

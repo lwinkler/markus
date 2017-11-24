@@ -31,9 +31,26 @@
 
 /// This is the parent class for all streams (input and output of data)
 
-class Stream : public Serializable, public Parameter, boost::noncopyable
+class Stream /* : public Serializable,*/ : public Parameter, boost::noncopyable
 {
 public:
+	// inline void to_json(mkjson& _json, const Stream& _ser) {_ser.Serialize(_json, _}
+	// void from_json(const mkjson& _json, Stream& _ser);
+	template<class T> static void serializeWithDir(mkjson& rx_json, const std::map<std::string, T*>& x_map, MkDirectory* xp_dir){
+		for(const auto& elem : x_map) {
+			mkjson json;
+			elem.second->Serialize(json, xp_dir);
+			rx_json[elem.first] = (json);
+		}
+	}
+	template<class T> static void deserializeWithDir(mkjson& x_json, std::map<std::string, T*>& rx_map, MkDirectory* xp_dir){
+		assert(rx_map.size() == x_json.size());
+		// TODO: Use a json vector instead, no access by key
+		for(nlohmann::json::const_iterator it = x_json.cbegin(); it != x_json.cend(); ++it) {
+			rx_map[it.key()]->Deserialize(it.value(), xp_dir);
+		}
+	}
+
 	Stream(const std::string& x_name, Module& rx_module, const std::string& rx_description, const Json::Value& rx_requirement = Json::nullValue);
 	virtual ~Stream();
 
@@ -50,8 +67,8 @@ public:
 	virtual void Disconnect();
 	virtual void ConvertInput() = 0;
 	virtual void Randomize(unsigned int& xr_seed) = 0;
-	void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const override;
-	void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr) override;
+	void Serialize(mkjson& rx_json, MkDirectory* xp_dir = nullptr) const;
+	void Deserialize(const mkjson& x_json, MkDirectory* xp_dir = nullptr);
 	virtual void Export(std::ostream& rx_os) const;
 	inline bool IsConnected() const {return m_cptConnected > 0;}
 	inline void SetAsConnected(bool x_val)

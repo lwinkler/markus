@@ -21,6 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 #include "Object.h"
+#include "Serializable.h"
 #include "util.h"
 #include "define.h"
 #include <jsoncpp/json/writer.h>
@@ -80,62 +81,40 @@ Object::~Object()
 	m_feats.clear();
 }
 
-void Object::Serialize(ostream& x_out, MkDirectory* xp_dir) const
-{
-	Json::Value root;
-	root["id"]     = m_id;
-	root["name"]   = m_name;
-	root["x"]      = posX;
-	root["y"]      = posY;
-	root["width"]  = width;
-	root["height"] = height;
-
-	for(const auto & elem : m_feats)
-	{
-		stringstream ss;
-		elem.second->Serialize(ss, xp_dir);
-		ss >> root["features"][elem.first];
-	}
-	if(m_feats.empty())
-	{
-		root["features"] = Json::objectValue;
-	}
-
-	x_out << root;
+void to_json(mkjson& rx_json, const Object& _pt) {
+	rx_json = mkjson{
+		{"id", _pt.m_id},
+		{"name", _pt.m_name},
+		{"x", _pt.posX},
+		{"y", _pt.posY},
+		{"width", _pt.width},
+		{"height", _pt.height},
+		{"features", _pt.m_feats}
+	};
 }
 
-void Object::Deserialize(istream& x_in, MkDirectory* xp_dir)
-{
-	Json::Value root;
-	x_in >> root;
-
-	m_id   = root["id"].asInt();
-	m_name = root["name"].asString();
-	posX   = root["x"].asDouble();
-	posY   = root["y"].asDouble();
-	width  = root["width"].asDouble();
-	height = root["height"].asDouble();
-
-	m_feats.clear();
+void from_json(const mkjson& x_json, Object& _pt) {
+	_pt.m_id = x_json.at("id").get<int>();
+	_pt.m_name = x_json.at("name").get<string>();
+	_pt.posY = x_json.at("x").get<double>();
+	_pt.posY = x_json.at("y").get<double>();
+	_pt.width = x_json.at("width").get<double>();
+	_pt.height = x_json.at("height").get<double>();
 
 	// Get an instance of the feature factory
 	const FactoryFeatures& factory(Factories::featuresFactoryBySignature());
 
-	for(const auto& elem : root["features"].getMemberNames())
+	for(const auto& elem : x_json.at("features"))
 	{
 		// Extract the signature of the feature:
 		//     this allows us to recognize the type of feature
-		stringstream ss;
-		ss << root["features"][elem];
-		string signature = Serializable::signature(ss);
-		Feature* feat = factory.Create(signature);
-		stringstream ss2;
-		ss2 << root["features"][elem];
-		feat->Deserialize(ss2, xp_dir);
-		AddFeature(elem, feat);
+		mkjson json(elem);
+		string sign= signature(json);
+		Feature* feat = factory.Create(sign);
+		feat->Deserialize(json);
+		_pt.AddFeature(elem, feat);
 	}
 }
-
 
 /**
 * @brief Draw an object on an image (for visualization)

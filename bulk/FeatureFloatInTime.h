@@ -30,13 +30,16 @@
 class FeatureFloatInTime : public FeatureFloat
 {
 public:
+	friend void to_json(mkjson& _json, const FeatureFloatInTime& _ser);
+	friend void from_json(const mkjson& _json, FeatureFloatInTime& _ser);
+
 	explicit FeatureFloatInTime(const FeatureFloat& x_feat = FeatureFloat());
 	Feature* CreateCopy() const {return new FeatureFloatInTime(*this);}
 	void Update(const Feature& x_feat, double x_alpha);
-	virtual double CompareSquared(const Feature& x_feature) const;
-	virtual void Randomize(unsigned int& xr_seed, const Json::Value& x_param);
-	virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const;
-	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr);
+	double CompareSquared(const Feature& x_feature) const override;
+	void Randomize(unsigned int& xr_seed, const Json::Value& x_param) override;
+	void Serialize(mkjson& _json) const override;
+	void Deserialize(const mkjson& _json) override;
 
 	float mean;
 	float sqVariance;

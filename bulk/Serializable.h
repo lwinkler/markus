@@ -25,70 +25,24 @@
 #define SERIALIZABLE_H
 
 #include <iostream>
+#include <sstream> // TODO remove
+#include "json.hpp"
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
+
+using mkjson = nlohmann::json;
 
 /// Class for all serializable objects
 
 class MkDirectory;
 
-class Serializable
+std::string signatureJsonTree(const mkjson &x_root, int x_depth);
+inline std::string signature(const mkjson& x_json)
 {
-public:
-	Serializable() {}
-	virtual ~Serializable() {}
+	return signatureJsonTree(x_json, 0);
+}
 
-	/**
-	* @brief Serialize the stream content to JSON
-	*
-	* @param x_out Output stream
-	* @param x_dir Output directory (for images)
-	*/
-	virtual void Serialize(std::ostream& x_out, MkDirectory* xp_dir = nullptr) const = 0;
-	/**
-	* @brief  Deserialize the stream from JSON
-	*
-	* @param x_in   Input stream
-	* @param x_dir  Input directory (for images)
-	*/
-	virtual void Deserialize(std::istream& x_in, MkDirectory* xp_dir = nullptr) = 0;
+// std::string signature(std::istream& x_in);
 
-	std::string SerializeToString(MkDirectory* xp_dir = nullptr) const;
-
-	/**
-	* @brief Redefinition of the output stream operator <<
-	*
-	* @param x_out Output stream
-	* @param x_obj Object to serialize
-	*
-	* @return output stream
-	*/
-	inline friend std::ostream& operator<< (std::ostream& x_out, const Serializable& x_obj) {x_obj.Serialize(x_out); return x_out;}
-
-	/**
-	* @brief Redefinition of the input stream operator <<
-	*
-	* @param x_in  Input stream
-	* @param x_obj Object to deserialize
-	*
-	* @return input stream
-	*/
-	inline friend std::istream& operator>> (std::istream& x_in, Serializable& x_obj) {x_obj.Deserialize(x_in); return x_in;}
-
-	/**
-	* @brief Extract the signature (name of all subfields)
-	*
-	* @return input signature
-	*/
-	std::string Signature() const;
-
-protected:
-	/**
-	* @brief Extract the signature (name of all subfields). Static function
-	*
-	* @param x_serial Serialized object
-	*
-	* @return input signature
-	*/
-	static std::string signature(std::istream& x_in);
-};
 
 #endif

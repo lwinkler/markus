@@ -33,6 +33,9 @@
 template<typename T>class MultiStreamT : public StreamT<T>
 {
 public:
+	friend inline void to_json(mkjson& rx_json, const MultiStreamT<T>& x_ser) {x_ser.Serialize(rx_json);}
+	friend inline void from_json(const mkjson& x_json, MultiStreamT<T>& rx_ser) {rx_ser.Deserialize(x_json);}
+	
 	MultiStreamT(const std::string& rx_name, std::vector<T>& rx_objects, Module& rx_module, const std::string& rx_description, const Json::Value& rx_requirement = Json::nullValue) :
 		StreamT<T>(rx_name, rx_objects.at(0), rx_module, rx_description, rx_requirement),
 		m_objects(rx_objects),
@@ -45,38 +48,23 @@ public:
 	}
 	virtual ~MultiStreamT() {}
 
-	void Serialize(std::ostream& x_out, MkDirectory* xp_dir = nullptr) const
+	void Serialize(mkjson& rx_json, MkDirectory* xp_dir = nullptr) const
 	{
-		Json::Value root;
-		std::stringstream ss;
-		StreamT<T>::Serialize(ss, xp_dir);
-		ss >> root;
+		StreamT<T>::Serialize(rx_json, xp_dir);
 
-		root["maxSize"] = static_cast<int>(m_maxSize);
-		root["nextObj"] = static_cast<int>(m_nextObj);
-		std::stringstream ss2;
-		serialize(ss2, m_objects);
-		ss2 >> root["content"];
-
-		x_out << root;
+		rx_json["maxSize"] = m_maxSize;
+		rx_json["nextObj"] = m_nextObj;
+		rx_json["content"] = m_objects;
 	}
 
-	void Deserialize(std::istream& x_in, MkDirectory* xp_dir = nullptr)
+	void Deserialize(const mkjson& x_json, MkDirectory* xp_dir = nullptr)
 	{
-		Json::Value root;
-		x_in >> root;  // note: copy first for local use
+		StreamT<T>::Deserialize(x_json, xp_dir);
 
-		std::stringstream ss;
-		ss << root;
-		StreamT<T>::Deserialize(ss, xp_dir);
-
-		if(m_maxSize != root["maxSize"].asUInt())
+		if(m_maxSize != x_json.at("maxSize").get<uint>())
 			throw MkException("Deserializing to a MultiStream of wrong size", LOC);
-		m_nextObj = root["m_nextObj"].asUInt();
-
-		std::stringstream ss2;
-		ss2 << root["content"];
-		deserialize(ss2, m_objects);
+		nlohmann::from_json(x_json.at("nextObj"), m_nextObj);
+		nlohmann::from_json(x_json.at("content"), m_objects);
 	}
 
 	void Connect(Stream& xr_stream) override

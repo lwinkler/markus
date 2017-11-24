@@ -25,8 +25,9 @@
 #define FEATURE_UTIL_H
 
 #include <opencv2/features2d/features2d.hpp>
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
+// #include <jsoncpp/json/reader.h>
+// #include <jsoncpp/json/writer.h>
+#include "json.hpp"
 #include "define.h"
 #include "MkException.h"
 #include <boost/circular_buffer.hpp>
@@ -40,6 +41,20 @@
 
  If a function is commented this probably means that the default operator for the class is used
 */
+
+template<class T> inline std::ostream& serialize(std::ostream& x_out, const T& x_val) {
+	mkjson root(x_val);
+	x_out << root.dump();
+}
+
+template<class T> inline std::istream& deserialize(std::istream& x_in,  T& xr_val) {
+	mkjson root;
+	x_in >> root;
+	T val(xr_val);
+	xr_val = val;
+}
+
+
 
 /* -------------------------------------------------------------------------------- */
 // Acquire a char from stream and verify
@@ -55,10 +70,72 @@ inline std::istream& get_char(std::istream& x_in)
 }
 
 /* -------------------------------------------------------------------------------- */
+// Template specialization for features of type Point2f
+
+namespace cv {
+	template<class T> inline void to_json(mkjson& _json, const Point_<T>& _pt) {
+		_json = mkjson{{"x", _pt.x}, {"y", _pt.y}};
+	}
+	template<class T> inline void from_json(const mkjson& _json, Point_<T>& _pt) {
+		_pt.x = _json.at("x").get<T>();
+		_pt.y = _json.at("y").get<T>();
+	}
+}
+
+inline double compareSquared(const cv::Point2f& x_1, const cv::Point2f& x_2) {return x_1 != x_2;}
+void randomize(cv::Point2f& xr_val, unsigned int& xr_seed);
+
+/* -------------------------------------------------------------------------------- */
+// Template specialization for features of type Point2d
+
+inline double compareSquared(const cv::Point2d& x_1, const cv::Point2d& x_2) {return x_1 != x_2;}
+void randomize(cv::Point2d& xr_val, unsigned int& xr_seed);
+
+/* -------------------------------------------------------------------------------- */
+// Template specialization for features of type Point3f
+
+namespace cv {
+	template<class T> inline void to_json(mkjson& _json, const Point3_<T>& _pt) {
+		_json = mkjson{
+			{"x", _pt.x},
+			{"y", _pt.y},
+			{"z", _pt.z}
+		};
+	}
+	template<class T> inline void from_json(const mkjson& _json, Point3_<T>& _pt) {
+		_pt.x = _json.at("x").get<T>();
+		_pt.y = _json.at("y").get<T>();
+		_pt.z = _json.at("z").get<T>();
+	}
+}
+
+inline double compareSquared(const cv::Point3f& x_1, const cv::Point3f& x_2) {return x_1 != x_2;}
+void randomize(cv::Point3f& xr_val, unsigned int& xr_seed);
+
+/* -------------------------------------------------------------------------------- */
 // Template specialization for features of type KeyPoint
 
-std::ostream& serialize(std::ostream& x_out, const cv::KeyPoint& x_val);
-std::istream& deserialize(std::istream& x_in,  cv::KeyPoint& xr_val);
+namespace cv {
+	inline void to_json(mkjson& _json, const KeyPoint& _kp) {
+		_json = mkjson{
+			{"angle", _kp.angle}, 
+			{"classId", _kp.class_id}, 
+			{"octave", _kp.octave}, 
+			{"pt", _kp.pt}, 
+			{"response", _kp.response},
+			{"size", _kp.size}
+		};
+	}
+	inline void from_json(const mkjson& _json, KeyPoint& _kp) {
+		_kp.angle = _json.at("angle").get<float>();
+		_kp.class_id = _json.at("classId").get<int>();
+		_kp.octave = _json.at("octave").get<int>();
+		_kp.pt = _json.at("pt").get<Point2f>();
+		_kp.response = _json.at("response").get<float>();
+		_kp.size = _json.at("size").get<float>();
+	}
+}
+
 inline double compareSquared(const cv::KeyPoint& x_1, const cv::KeyPoint& x_2)
 {
 	return !(x_1.angle      == x_2.angle
@@ -69,33 +146,6 @@ inline double compareSquared(const cv::KeyPoint& x_1, const cv::KeyPoint& x_2)
 			 && x_1.size     == x_2.size);
 }
 void randomize(cv::KeyPoint& xr_val, unsigned int& xr_seed);
-
-/* -------------------------------------------------------------------------------- */
-// Template specialization for features of type Point2f
-
-std::ostream& serialize(std::ostream& x_out, const cv::Point2f& x_value);
-std::istream& deserialize(std::istream& x_in,  cv::Point2f& xr_value);
-
-inline double compareSquared(const cv::Point2f& x_1, const cv::Point2f& x_2) {return x_1 != x_2;}
-void randomize(cv::Point2f& xr_val, unsigned int& xr_seed);
-
-/* -------------------------------------------------------------------------------- */
-// Template specialization for features of type Point2d
-
-std::ostream& serialize(std::ostream& x_out, const cv::Point2d& x_value);
-std::istream& deserialize(std::istream& x_in,  cv::Point2d& xr_value);
-
-inline double compareSquared(const cv::Point2d& x_1, const cv::Point2d& x_2) {return x_1 != x_2;}
-void randomize(cv::Point2d& xr_val, unsigned int& xr_seed);
-
-/* -------------------------------------------------------------------------------- */
-// Template specialization for features of type Point3f
-
-std::ostream& serialize(std::ostream& x_out, const cv::Point3f& x_value);
-std::istream& deserialize(std::istream& x_in,  cv::Point3f& xr_value);
-
-inline double compareSquared(const cv::Point3f& x_1, const cv::Point3f& x_2) {return x_1 != x_2;}
-void randomize(cv::Point3f& xr_val, unsigned int& xr_seed);
 
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features of type Mat
@@ -126,17 +176,6 @@ inline void randomize(float& xr_val, unsigned int& xr_seed)
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features of type double
 
-inline std::ostream& serialize(std::ostream& x_out, double x_value)   { x_out << "{\"valueDouble\":" << x_value << "}";  return x_out; }
-inline std::istream& deserialize(std::istream& x_in, double& xr_value)
-{
-	// Note: we must serialize integer features differently than float to avoid having the same signature
-	// this is due to the fact that the serialization does not store the type of the feature
-	Json::Value root;
-	x_in >> root;
-	xr_value = root["valueDouble"].asDouble();
-	return x_in;
-}
-
 inline double compareSquared(double x_1, double x_2)
 {
 	return POW2(x_1 - x_2);
@@ -150,17 +189,6 @@ inline void randomize(double& xr_val, unsigned int& xr_seed)
 
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features of type int
-
-inline std::ostream& serialize(std::ostream& x_out, int x_value)   { x_out << "{\"valueInt\":" << x_value << "}";  return x_out; }
-inline std::istream& deserialize(std::istream& x_in, int& xr_value)
-{
-	// Note: we must serialize integer features differently than float to avoid having the same signature
-	// this is due to the fact that the serialization does not store the type of the feature
-	Json::Value root;
-	x_in >> root;
-	xr_value = root["valueInt"].asInt();
-	return x_in;
-}
 
 inline double compareSquared(int x_1, int x_2)
 {
@@ -176,17 +204,6 @@ inline void randomize(int& xr_val, unsigned int& xr_seed)
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features of type uint
 
-inline std::ostream& serialize(std::ostream& x_out, uint x_value)   { x_out << "{\"valueUInt\":" << x_value << "}";  return x_out; }
-inline std::istream& deserialize(std::istream& x_in, uint& xr_value)
-{
-	// Note: we must serialize integer features differently than float to avoid having the same signature
-	// this is due to the fact that the serialization does not store the type of the feature
-	Json::Value root;
-	x_in >> root;
-	xr_value = root["valueUInt"].asInt();
-	return x_in;
-}
-
 inline double compareSquared(uint x_1, uint x_2)
 {
 	// Cast to double to avoid overflows
@@ -200,19 +217,6 @@ inline void randomize(uint& xr_val, unsigned int& xr_seed)
 
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features of type bool
-
-inline std::ostream& serialize(std::ostream& x_out, bool x_value)
-{
-	x_out << (x_value ? "true" : "false");
-	return x_out;
-}
-inline std::istream& deserialize(std::istream& x_in, bool& xr_value)
-{
-	Json::Value root;
-	x_in >> root;
-	xr_value = root.asBool();
-	return x_in;
-}
 
 inline double compareSquared(bool x_1, bool x_2)
 {
@@ -228,14 +232,6 @@ inline void randomize(bool& xr_val, unsigned int& xr_seed)
 
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features of type string
-
-inline std::ostream& serialize(std::ostream& x_out, const std::string& x_value) { x_out << '"' << x_value << '"'; return x_out;}
-inline std::istream& deserialize(std::istream& x_in, std::string& xr_value)
-{
-	x_in >> get_char<'"'> >> xr_value;
-	xr_value.erase( xr_value.size() - 1 ); // erase the last character. Should be "
-	return x_in;
-}
 
 inline double compareSquared(const std::string& x_1, const std::string& x_2)
 {
@@ -258,50 +254,10 @@ inline void randomize(std::string& xr_val, unsigned int& xr_seed)
 /* -------------------------------------------------------------------------------- */
 // Serialization function for class serializable
 
-inline std::ostream& serialize(std::ostream& x_out, const Serializable& x_value) { x_value.Serialize(x_out); return x_out;}
-inline std::istream& deserialize(std::istream& x_in, Serializable& xr_value) {xr_value.Deserialize(x_in); return x_in;}
 
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features in vectors (must be at the end)
 
-template<class T>std::ostream& serialize(std::ostream& x_out, const std::vector<T>& x_val)
-{
-	if(x_val.size() == 0)
-	{
-		x_out<<"[]";
-		return x_out;
-	}
-
-	x_out << "[";
-	auto it = x_val.begin();
-	while(it != x_val.end() - 1)
-	{
-		serialize(x_out,*it);
-		x_out << ",";
-		++it;
-	}
-	serialize(x_out,*it);
-	x_out << "]";
-	return x_out;
-}
-
-template<class T>std::istream& deserialize(std::istream& x_in,  std::vector<T>& xr_val)
-{
-	Json::Value root;
-	x_in >> root;  // note: copy first for local use
-	assert(root.isArray());
-
-	xr_val.clear();
-	xr_val.resize(root.size());
-	for(unsigned int i = 0 ; i < root.size() ; i++)
-	{
-		std::stringstream ss;
-		ss << root[i];
-		deserialize(ss, xr_val[i]);
-	}
-
-	return x_in;
-}
 
 template<class T> double compareSquared(const std::vector<T>& x_1, const std::vector<T>& x_2)
 {
@@ -331,6 +287,7 @@ template<class T>void randomize(std::vector<T>& xr_val, unsigned int& xr_seed, s
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features in circular buffers
 
+/*
 template<class T>std::ostream& serialize(std::ostream& x_out, const boost::circular_buffer<T>& x_val)
 {
 	if(x_val.size() == 0)
@@ -369,6 +326,7 @@ template<class T>std::istream& deserialize(std::istream& x_in,  boost::circular_
 
 	return x_in;
 }
+*/
 
 template<class T> double compareSquared(const boost::circular_buffer<T>& x_1, const boost::circular_buffer<T>& x_2)
 {

@@ -437,37 +437,14 @@ void Module::PrintStatistics(ConfigReader& xr_result) const
 * @param x_out Output stream
 * @param xp_dir MkDirectory (for images)
 */
-void Module::Serialize(ostream& x_out, MkDirectory* xp_dir) const
+void Module::Serialize(mkjson& rx_json, MkDirectory* xp_dir) const
 {
-	Json::Value root;
-
-	root["name"]                 = GetName();
-	// root["timer_conversion"]      = m_timerConversion.GetMsLong();
-	// root["timer_processing"]      = m_timerProcessFrame.GetMsLong();
-	// root["timer_waiting"]         = m_timerWaiting.GetMsLong();
-	root["countProcessedFrames"] = Json::UInt64(m_countProcessedFrames);
-
-	// Dump inputs
-	root["inputs"] = Json::arrayValue;
-	for(const auto & elem : m_inputStreams)
-	{
-		stringstream ss;
-		elem.second->Serialize(ss, xp_dir);
-		Json::Value tmp;
-		ss >> tmp;
-		root["inputs"].append(tmp);
-	}
-	// Dump outputs
-	root["outputs"] = Json::arrayValue;
-	for(const auto & elem : m_outputStreams)
-	{
-		stringstream ss;
-		elem.second->Serialize(ss, xp_dir);
-		Json::Value tmp;
-		ss >> tmp;
-		root["outputs"].append(tmp);
-	}
-	x_out << root;
+	rx_json = mkjson{
+		{"name", GetName()},
+		{"countProcessedFrames", m_countProcessedFrames}
+	};
+	Stream::serializeWithDir(rx_json["inputs"], m_inputStreams, xp_dir);
+	Stream::serializeWithDir(rx_json["outputs"], m_outputStreams, xp_dir);
 }
 
 /**
@@ -476,40 +453,13 @@ void Module::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 * @param x_in  Input stream
 * @param xp_dir Input dir (for images)
 */
-void Module::Deserialize(istream& x_in, MkDirectory* xp_dir)
+void Module::Deserialize(mkjson& x_json, MkDirectory* xp_dir)
 {
-	Json::Value root;
-	x_in >> root;
-
-	if(GetName() != root["name"].asString())
-		throw MkException("Name does not match in serialization for module " + GetName() + "(!='" + root["name"].asString() + "')", LOC);
-	m_countProcessedFrames = root["countProcessedFrames"].asInt64();
-
-	stringstream ss;
-
-	// read inputs
-	unsigned int size1 = root["inputs"].size();
-	assert(size1 == m_inputStreams.size());
-	int i = 0;
-	for(auto& elem : m_inputStreams)
-	{
-		ss.clear();
-		ss << root["inputs"][i];
-		m_inputStreams[elem.first]->Deserialize(ss, xp_dir);
-		i++;
-	}
-
-	// read outputs
-	size1 = root["outputs"].size();
-	assert(size1 == m_outputStreams.size());
-	i = 0;
-	for(auto& elem : m_outputStreams)
-	{
-		ss.clear();
-		ss << root["outputs"][i];
-		m_outputStreams[elem.first]->Deserialize(ss, xp_dir);
-		i++;
-	}
+	if(GetName() != x_json.at("name").get<string>())
+		throw MkException("Name does not match in serialization for module " + GetName() + "(!='" + x_json.at("name").get<string>() + "')", LOC);
+	m_countProcessedFrames = x_json.at("countProcessedFrames").get<uint64_t>();
+	Stream::deserializeWithDir(x_json.at("inputs"), m_inputStreams, xp_dir);
+	Stream::deserializeWithDir(x_json.at("outputs"), m_outputStreams, xp_dir);
 }
 
 void Module::AddInputStream(int x_id, Stream* xp_stream){AddInputStream(xp_stream);xp_stream->id = x_id;}
@@ -572,7 +522,9 @@ void Module::WriteToCache() const
 		ofstream of(dir.ReserveFile(fileName.str()));
 		if(!of.good())
 			throw MkException("Error while writing to cache: " + fileName.str(), LOC);
-		elem.second->Serialize(of, &dir);
+		mkjson json;
+		elem.second->Serialize(json, &dir);
+		json >> of;
 	}
 }
 
@@ -593,7 +545,9 @@ void Module::ReadFromCache()
 		ifs.open(dir.ReserveFile(fileName.str()));
 		if(!ifs.good())
 			throw MkException("Error while reading from cache: " + fileName.str(), LOC);
-		elem.second->Deserialize(ifs, &dir);
+		mkjson json;
+		ifs >> json;
+		elem.second->Deserialize(json, &dir);
 		ifs.close();
 	}
 }

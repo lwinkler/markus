@@ -53,13 +53,13 @@ protected:
 	void testFeature(Feature& feat, const string& name, unsigned int& xr_seed)
 	{
 		// Note: features need to be initialized to 0 or similar value
-		TS_TRACE("Test feature of type " + name + " = " + feat.SerializeToString() + " with signature = " + feat.Signature());
+		TS_TRACE("Test feature of type " + name + " = " + mkjson(feat).dump() + " with signature = " + signature(feat));
 		Feature* copy = feat.CreateCopy();
 		// cout << "feat.CompareSquared(feat) = " << feat.CompareSquared(feat) << endl;
 		TS_ASSERT(feat.CompareSquared(feat) == 0);
 		TS_ASSERT(feat.CompareSquared(*copy) == 0);
 		copy->Randomize(xr_seed, Json::nullValue);
-		TS_TRACE("compare with "+copy->SerializeToString() + " with signature = " + feat.Signature());
+		TS_TRACE("compare with "+ mkjson(*copy).dump() + " with signature = " + signature(feat));
 		// cout << "feat.CompareSquared(*copy) = " << feat.CompareSquared(*copy) << endl;
 		TS_ASSERT(feat.CompareSquared(*copy) > 0);
 		delete copy;
@@ -100,11 +100,11 @@ public:
 			TS_TRACE("Test the serialization of feature " + elem);
 			Feature* feat = m_factoryFeatures.Create(elem);
 
-			string signature = feat->Signature();
+			string sign = signature(feat);
 			delete(feat);
 
 			// Generate feature by signature
-			feat = m_factoryFeaturesBySignature.Create(signature);
+			feat = m_factoryFeaturesBySignature.Create(sign);
 			testFeature(*feat, elem, seed);
 			delete(feat);
 		}

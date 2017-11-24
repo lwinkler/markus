@@ -547,7 +547,9 @@ void Manager::WriteStateToDirectory(const string& x_directory)
 	for(const auto & elem : m_modules)
 	{
 		ofstream of(dir.ReserveFile(elem.second->GetName() + ".json"));
-		elem.second->Serialize(of, &dir);
+		mkjson json;
+		elem.second->Serialize(json, &dir);
+		of << json;
 	}
 	LOG_INFO(m_logger, "Written state of the manager and all modules to " << dir.GetPath());
 }

@@ -27,21 +27,25 @@
 #include <string>
 #include <jsoncpp/json/reader.h>
 #include "define.h"
+#include "feature_util.h"
 #include "Serializable.h"
 
 /**
 * @brief Class representing a feature of a template/object. (e.g. area, perimeter, length, ...)
 */
-class Feature : public Serializable
+class Feature // : public Serializable
 {
 public:
+	friend inline void to_json(mkjson& _json, const Feature& _ser) {_ser.Serialize(_json);}
+	friend inline void from_json(const mkjson& _json, Feature& _ser) {_ser.Deserialize(_json);}
+
 	Feature() {}
 	virtual ~Feature() {}
 	virtual Feature* CreateCopy() const = 0;
 	virtual double CompareSquared(const Feature& x_feature) const = 0;
 	virtual void Randomize(unsigned int& xr_seed, const Json::Value& x_param) = 0;
-	virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const = 0;
-	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr) = 0;
+	virtual void Serialize(mkjson& _json) const = 0;
+	virtual void Deserialize(const mkjson& _json) = 0;
 };
 
 /**
@@ -50,6 +54,13 @@ public:
 class FeaturePtr final // : public Serializable
 {
 public:
+	friend inline void to_json(mkjson& _json, const FeaturePtr& _ser) {
+		_ser->Serialize(_json);
+	}
+	friend inline void from_json(const mkjson& _json, FeaturePtr& _ser) {
+		_ser->Deserialize(_json);
+	}
+
 	FeaturePtr(Feature* x_feat) : mp_feat(x_feat) {}
 	FeaturePtr(const FeaturePtr& x_feat) : mp_feat(x_feat->CreateCopy()) {}
 	~FeaturePtr() {delete mp_feat;}

@@ -178,31 +178,23 @@ void StreamImage::Randomize(unsigned int& xr_seed)
 	}
 }
 
-void StreamImage::Serialize(ostream& x_out, MkDirectory* xp_dir) const
+void StreamImage::Serialize(mkjson& rx_json, MkDirectory* xp_dir) const
 {
-	Json::Value root;
-	stringstream ss;
-	Stream::Serialize(ss, xp_dir);
-	ss >> root;
+	Stream::Serialize(rx_json, xp_dir);
 	stringstream fileName;
 	fileName << GetModule().GetName() << "." << GetName() << "." << m_timeStamp << ".jpg";
 	if(xp_dir == nullptr)
-		root["image"] = "/dev/null/image.jpg";
+		rx_json["image"] = "/dev/null/image.jpg";
 	else
-		root["image"] = xp_dir->ReserveFile(fileName.str());
-	imwrite(root["image"].asString(), m_content);
-	x_out << root;
+		rx_json["image"] = xp_dir->ReserveFile(fileName.str());
+	imwrite(rx_json.at("image").get<string>(), m_content);
 }
 
-void StreamImage::Deserialize(istream& x_in, MkDirectory* xp_dir)
+void StreamImage::Deserialize(const mkjson& x_json, MkDirectory* xp_dir)
 {
-	Json::Value root;
-	x_in >> root;  // note: copy first for local use
-	stringstream ss;
-	ss << root;
-	Stream::Deserialize(ss, xp_dir);
+	Stream::Deserialize(x_json, xp_dir);
 
-	string fileName = root["image"].asString();
+	string fileName = x_json["image"].get<string>();
 	m_content = imread(fileName);
 	if(m_content.empty())
 		throw MkException("Cannot open serialized image from file " + fileName, LOC);

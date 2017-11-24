@@ -95,24 +95,17 @@ void Polygon::DrawMask(Mat& xr_target, const Scalar& x_color) const
 }
 
 
-void Polygon::Serialize(ostream& x_out, MkDirectory* xp_dir) const
+void to_json(mkjson& _json, const Polygon& _ser)
 {
-	x_out<<"{\"width\":" << m_width << ",\"height\":" << m_height << ",\"points\":";
-	serialize(x_out, m_points);
-	x_out<<"}";
+	_json = mkjson{{"width", _ser.m_width}, {"height", _ser.m_height}, {"points", _ser.m_points}};
 }
 
-void Polygon::Deserialize(istream& x_in, MkDirectory* xp_dir)
+void from_json(const mkjson& _json, Polygon& _ser)
 {
-	Json::Value root;
-	x_in >> root;
-	m_width  = root["width"].asDouble();
-	m_height = root["height"].asDouble();
+	_ser.m_width = _json.at("width").get<double>();
+	_ser.m_height = _json.at("height").get<double>();
+	_ser.m_points = _json.at("points").get<vector<Point2d>>();
 
-	stringstream ss;
-	ss << root["points"];
-	deserialize(ss, m_points);
-
-	if((m_width == 0 || m_height == 0) && ! m_points.empty())
+	if((_ser.m_width == 0 || _ser.m_height == 0) && ! _ser.m_points.empty())
 		throw MkException("Polygon was serialized without specifying width or height", LOC);
 }

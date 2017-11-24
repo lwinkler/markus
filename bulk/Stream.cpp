@@ -85,30 +85,28 @@ void Stream::Disconnect()
 	m_connected = nullptr;
 }
 
-void Stream::Serialize(ostream& x_out, MkDirectory* xp_dir) const
+void Stream::Serialize(mkjson& rx_json, MkDirectory* xp_dir) const
 {
-	Json::Value root;
-	root["name"]        = GetName();
-	root["type"]        = GetType();
-	root["description"] = GetDescription();
-	root["timeStamp"]   = Json::UInt64(m_timeStamp.load());
-	root["connected"]   = IsConnected();
-	x_out << root;
+	rx_json = mkjson{
+		{"name", GetName()}, 
+		{"type", GetType()}, 
+		{"description", GetDescription()}, 
+		{"timeStamp", m_timeStamp.load()}, 
+		{"connected", IsConnected()}
+	};
 }
 
 
-void Stream::Deserialize(istream& x_in, MkDirectory* xp_dir)
+void Stream::Deserialize(const mkjson& x_json, MkDirectory* xp_dir)
 {
-	Json::Value root;
-	x_in >> root;
-
 	// if(GetName() != root["name"].asString())
 		// throw MkException("Stream must have the same name before serializing: " + GetName(), LOC);
-	if(root["type"].asString() != GetType())
+	if(x_json.at("type").get<string>() != GetType())
 		throw MkException("Stream must have the right type before serializing: " + GetType(), LOC);
-	if(GetDescription() != root["description"].asString())
+	if(GetDescription() != x_json.at("description").get<string>())
 		LOG_WARN(m_logger, "Stream does not have the same description");
-	m_timeStamp   = root["timeStamp"].asInt64();
-	if(root["connected"] != IsConnected())
+	m_timeStamp = x_json.at("timeStamp").get<uint64_t>();
+	if(x_json.at("connected") != IsConnected())
 		throw MkException("Stream must have the same connection state before deserializing", LOC);
 }
+

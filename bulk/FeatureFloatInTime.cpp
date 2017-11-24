@@ -85,32 +85,26 @@ void FeatureFloatInTime::Randomize(unsigned int& xr_seed, const Json::Value& x_p
 	}
 }
 
-void FeatureFloatInTime::Serialize(ostream& x_out, MkDirectory* xp_dir) const
+void FeatureFloatInTime::Serialize(mkjson& rx_json) const
 {
-	Json::Value root;
-	root["value"]      = value;
-	root["mean"]       = mean;
-	root["sqVariance"] = sqVariance;
-	root["initial"]    = initial;
-	root["min"]        = min;
-	root["max"]        = max;
-	root["nbSamples"]  = nbSamples;
-
-	Json::FastWriter writer;
-	string tmp = writer.write(root);
-	tmp.erase(remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
-	x_out<<tmp;
+	rx_json = mkjson{
+		{"value", value},
+		{"mean", mean},
+		{"sqVariance", sqVariance},
+		{"initial", initial},
+		{"min", min},
+		{"max", max},
+		{"nbSamples", nbSamples}
+	};
 }
 
-void FeatureFloatInTime::Deserialize(istream& x_in, MkDirectory* xp_dir)
+void FeatureFloatInTime::Deserialize(const mkjson& x_json)
 {
-	Json::Value root;
-	x_in >> root;
-	value      = root["value"].asFloat();
-	mean       = root["mean"].asFloat();
-	sqVariance = root["sqVariance"].asFloat();
-	initial    = root["initial"].asFloat();
-	min        = root["min"].asFloat();
-	max        = root["max"].asFloat();
-	nbSamples  = root["nbSamples"].asInt();
+	value = x_json.at("value").get<float>();
+	mean = x_json.at("mean").get<float>();
+	sqVariance = x_json.at("sqVariance").get<float>();
+	initial = x_json.at("initial").get<float>();
+	min = x_json.at("min").get<float>();
+	max = x_json.at("max").get<float>();
+	nbSamples = x_json.at("nbSamples").get<int>();
 }

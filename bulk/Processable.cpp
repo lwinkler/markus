@@ -253,10 +253,8 @@ bool Processable::ProcessAndCatch()
 void Processable::NotifyException(const MkException& x_exception)
 {
 	InterruptionManager::GetInst().AddEvent("exception." + x_exception.GetName());
-	stringstream ss;
-	x_exception.Serialize(ss);
 	Event ev;
-	ev.AddExternalInfo("exception", ss);
+	ev.AddExternalInfo("exception", mkjson(x_exception).dump());
 	// note: it is difficult to associate a time stamp with events
 	ev.Raise("exception", 0, 0);
 	ev.Notify(GetContext(), true);
@@ -268,16 +266,12 @@ void Processable::NotifyException(const MkException& x_exception)
 void Processable::Status() const
 {
 	stringstream ss;
-	m_lastException.Serialize(ss);
-	Json::Value root;
-	ss >> root;
-	root["recovered"] = m_hasRecovered;
+	mkjson json(m_lastException);
+	json["recovered"] = m_hasRecovered;
 	Event evt;
 	// note: it is difficult to associate a time stamp with events
 	evt.Raise("status", 0, 0);
-	ss.clear();
-	ss << root;
-	evt.AddExternalInfo("exception", ss);
+	evt.AddExternalInfo("exception", json.dump());
 	evt.Notify(GetContext(), true);
 }
 

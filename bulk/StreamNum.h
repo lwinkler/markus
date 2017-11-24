@@ -31,6 +31,9 @@
 #include <sstream>
 #include <boost/circular_buffer.hpp>
 
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/writer.h>
+
 #define PLOT_LENGTH 50
 
 /// Class for a stream of images (or video) used for input and output
@@ -38,6 +41,9 @@ template<typename T>
 class StreamNum : public Stream
 {
 public:
+	// friend void to_json(mkjson& _json, const StreamNum& _ser);
+	// friend void from_json(const mkjson& _json, StreamNum& _ser);
+
 	StreamNum(const std::string& x_name, T& rx_scalar, Module& rx_module, const std::string& x_description, const Json::Value& rx_requirement = Json::nullValue) :
 		Stream(x_name, rx_module, x_description, rx_requirement),
 		m_scalars(PLOT_LENGTH),
@@ -81,24 +87,15 @@ public:
 		xr_out << m_content << std::endl;
 		LOG_INFO(m_logger, "value = " << m_content);
 	}
-	virtual void Serialize(std::ostream& x_out, MkDirectory* xp_dir = nullptr) const
+	virtual void Serialize(mkjson& rx_json, MkDirectory* xp_dir = nullptr) const
 	{
-		Json::Value root;
-		std::stringstream ss;
-		Stream::Serialize(ss, xp_dir);
-
-		ss >> root;
-		root["value"] = m_content;
-		x_out << root;
+		Stream::Serialize(rx_json, xp_dir);
+		nlohmann::to_json(rx_json["value"], m_content);
 	}
-	virtual void Deserialize(std::istream& x_in, MkDirectory* xp_dir = nullptr)
+	virtual void Deserialize(const mkjson& x_json, MkDirectory* xp_dir = nullptr)
 	{
-		Json::Value root;
-		x_in >> root;  // note: copy first for local use
-		std::stringstream ss;
-		ss << root;
-		Stream::Deserialize(ss, xp_dir);
-		m_content = root["value"].asDouble();
+		Stream::Deserialize(x_json, xp_dir);
+		nlohmann::from_json(x_json.at("value"), m_content);
 	}
 	virtual void Randomize(unsigned int& xr_seed) {randomize(m_content, xr_seed);}
 	const T& GetScalar() const {return m_content;}

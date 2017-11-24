@@ -37,9 +37,12 @@
  *  - blob obtained after background subtraction and segmentation
  *  - face detected with a sliding window algorithm
  */
-class Object : public Serializable
+class Object // : public Serializable
 {
 public:
+	friend void to_json(mkjson& _json, const Object& _ser);
+	friend void from_json(const mkjson& _json, Object& _ser);
+
 	explicit Object(const std::string & x_name = "unnamed");
 	Object(const std::string & x_name, const cv::Rect & x_rect);
 	virtual ~Object();
@@ -104,8 +107,6 @@ public:
 	void RenderTo(cv::Mat& x_output, const cv::Scalar& x_color) const;
 	void Intersect(const cv::Mat& x_image);
 	virtual void Randomize(unsigned int& xr_seed, const Json::Value& x_requirement, const cv::Size& xr_size);
-	virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const;
-	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr);
 
 protected:
 	std::string m_name;

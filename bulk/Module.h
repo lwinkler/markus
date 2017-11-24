@@ -43,10 +43,12 @@ class Stream;
 /**
 * @brief Class representing a module. A module is a node of the application, it processes streams
 */
-class Module : public Processable, public Controllable, public Serializable
+class Module : public Processable, public Controllable// , public Serializable
 {
 public:
 	/// Parameter enum class. Determines if the module is cached (its output is stored to avoid computation costs)
+	// inline friend void to_json(mkjson& _json, const Module& _ser);
+	// inline friend void from_json(const mkjson& _json, Module& _ser);
 
 	class Parameters : public Processable::Parameters
 	{
@@ -112,8 +114,8 @@ public:
 	inline void AddDependingModule(Module & rx_module) {m_modulesDepending.push_back(&rx_module);} /// Add a module to the list: depending modules are called when processing is complete
 	void RemoveDependingModule(const Module & x_module);
 	virtual void PrintStatistics(ConfigReader& xr_result) const;
-	void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const override;
-	void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr) override;
+	void Serialize(mkjson& rx_json, MkDirectory* xp_dir = nullptr) const;
+	void Deserialize(mkjson& x_json, MkDirectory* xp_dir = nullptr);
 
 	virtual inline bool IsInput() const {return false;}
 	void Export(std::ostream& rx_os) const;

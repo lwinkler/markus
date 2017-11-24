@@ -64,31 +64,17 @@ template<class T>std::istream& deserializeSimple(std::istream& x_in,  std::vecto
 	return x_in;
 }
 
-template<>void FeatureVectorT<float>::Serialize(std::ostream& x_out, MkDirectory* xp_dir) const
+template<>void FeatureVectorT<int>::Serialize(mkjson& rx_json) const
 {
-	serialize(x_out, values);
-}
-template<>void FeatureVectorT<float>::Deserialize(std::istream& x_in, MkDirectory* xp_dir)
-{
-	deserialize(x_in, values);
+	rx_json = mkjson{
+		{"type", "int"},
+		{"values", values}
+	};
 }
 
-template<>void FeatureVectorT<int>::Serialize(std::ostream& xr_out, MkDirectory* xp_dir) const
+template<>void FeatureVectorT<int>::Deserialize(const mkjson& x_json)
 {
-	Json::Value root;
-	root["type"] = "int";
-	stringstream ss;
-	serializeSimple(ss, values);
-	ss >> root["values"];
-	xr_out << root;
-}
-template<>void FeatureVectorT<int>::Deserialize(std::istream& xr_in, MkDirectory* xp_dir)
-{
-	Json::Value root;
-	xr_in >> root;
-	stringstream ss;
-	ss << root["values"];
-	deserializeSimple(ss, values);
-	if(root["type"].asString() != "int")
-		throw MkException("Wrong feature vector type " + root["type"].asString(), LOC);
+	if(x_json.at("type") != "int")
+		throw MkException("Wrong feature vector type " + x_json.at("type").get<string>(), LOC);
+	values = x_json.at("values").get<vector<int>>();
 }

@@ -32,6 +32,13 @@
 template<class T> class FeatureT : public Feature
 {
 public:
+	inline friend void to_json(mkjson& _json, const FeatureT<T>& _ser){
+		nlohmann::to_json(_json, _ser.value);
+	}
+	inline friend void from_json(const mkjson& _json, FeatureT<T>& _ser) {
+		nlohmann::from_json(_json, _ser.value);
+	}
+	
 	FeatureT() : value(T {} /*initialize to 0 or other*/) {}
 	explicit FeatureT(T x_value) : value(x_value) {}
 	Feature* CreateCopy() const {return new FeatureT(*this);}
@@ -44,8 +51,12 @@ public:
 	{
 		randomize(value, xr_seed);
 	}
-	inline virtual void Serialize(std::ostream& x_out, MkDirectory* xp_dir = nullptr) const { serialize(x_out, value); }
-	inline virtual void Deserialize(std::istream& x_in, MkDirectory* xp_dir = nullptr) { deserialize(x_in, value);}
+	inline virtual void Serialize(mkjson& rx_json) const {
+		nlohmann::to_json(rx_json, value);
+	}
+	inline virtual void Deserialize(const mkjson& x_json) {
+		nlohmann::from_json(x_json, value);
+	}
 
 	// The value of the feature
 	T value;

@@ -65,9 +65,9 @@ bool replaceExpr(string& rx_name, const map<string,FeaturePtr>& x_features)
 	}
 	else
 	{
-		stringstream ss;
-		(*it->second).Serialize(ss);
-		rx_name.replace(beg, end + 1, ss.str());
+		mkjson json;
+		(*it->second).Serialize(json);
+		rx_name.replace(beg, end + 1, json.dump());
 	}
 
 	return true;
@@ -102,7 +102,8 @@ void ThumbnailWriter::ProcessFrame()
 			throw MkException("Impossible to create file " + ss2.str(), LOC);
 		}
 		LOG_DEBUG(m_logger, "Write object to " << ss2.str());
-		elem.Serialize(of, &dir);
+		mkjson json(elem);
+		of << json;
 		of.close();
 
 

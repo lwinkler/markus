@@ -29,11 +29,11 @@
 typedef StreamT<bool> StreamState;
 
 // partial specialization
-template<> void StreamState::ConvertInput();
-template<> void StreamState::RenderTo(cv::Mat& x_output) const;
-template<> void StreamState::Query(std::ostream& xr_out, const cv::Point& x_pt) const;
-template<> void StreamState::Randomize(unsigned int& xr_seed);
-template<> void StreamState::Serialize(std::ostream& x_out, MkDirectory* xp_dir) const;
-template<> void StreamState::Deserialize(std::istream& x_in, MkDirectory* xp_dir);
+template<> void StreamT<bool>::ConvertInput();
+template<> void StreamT<bool>::RenderTo(cv::Mat& x_output) const;
+template<> void StreamT<bool>::Query(std::ostream& xr_out, const cv::Point& x_pt) const;
+template<> void StreamT<bool>::Randomize(unsigned int& xr_seed);
+template<> void StreamT<bool>::Serialize(mkjson& rx_json, MkDirectory* xp_dir) const;
+template<> void StreamT<bool>::Deserialize(const mkjson& x_json, MkDirectory* xp_dir);
 
 #endif

@@ -32,6 +32,9 @@
 template<typename T>class StreamT : public Stream
 {
 public:
+	// void to_json(mkjson& _json, const StreamT<T>& _ser);
+	// void from_json(const mkjson& _json, StreamT<T>& _ser);
+
 	explicit StreamT(const std::string& rx_name, T& rx_object, Module& rx_module, const std::string& rx_description, const Json::Value& rx_requirement = Json::nullValue) :
 		Stream(rx_name, rx_module, rx_description, rx_requirement),
 		m_content(rx_object),
@@ -49,8 +52,8 @@ public:
 	virtual void RenderTo(cv::Mat& x_output) const;
 	virtual void Query(std::ostream& xr_out, const cv::Point& x_pt) const;
 	virtual void Randomize(unsigned int& rx_seed);
-	virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const;
-	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr);
+	virtual void Serialize(mkjson& rx_json, MkDirectory* xp_dir = nullptr) const;
+	virtual void Deserialize(const mkjson& x_json, MkDirectory* xp_dir = nullptr);
 
 	virtual void SetValue(const ConfigReader& x_value, ParameterConfigType x_confType)
 	{

@@ -82,8 +82,7 @@ void LogEvent::WriteEvent()
 {
 	LOG_DEBUG(m_logger, "Write event to log file");
 	stringstream ss;
-
-	ss<<m_event.SerializeToString(mp_outputDir.get());
+	ss << mkjson(m_event).dump();
 	mp_annotationWriter->WriteAnnotation(m_currentTimeStamp, m_currentTimeStamp + 1000 * m_param.duration, ss);
 }
 

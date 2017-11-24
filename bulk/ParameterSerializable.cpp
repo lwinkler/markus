@@ -66,7 +66,8 @@ void ParameterSerializable::SetValue(const ConfigReader& rx_value, ParameterConf
 		m_confSource = x_confType;
 		return;
 	}
-	mr_value.Deserialize(ss);
+	// mr_value.Deserialize(ss);
+	ss << mr_value.dump();
 	m_confSource = x_confType;
 }
 
@@ -77,6 +78,7 @@ void ParameterSerializable::SetValueToDefault()
 
 	std::stringstream ss;
 	ss << m_default;
-	mr_value.Deserialize(ss);
+	// mr_value.Deserialize(ss);
+	ss << mr_value.dump();
 	m_confSource = PARAMCONF_DEF;
 }

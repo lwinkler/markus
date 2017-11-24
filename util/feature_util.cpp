@@ -28,37 +28,6 @@ using namespace std;
 using namespace cv;
 
 /* -------------------------------------------------------------------------------- */
-ostream& serialize(ostream& x_out, const KeyPoint& x_val)
-{
-	Json::Value root;
-	root["angle"] = x_val.angle;
-	root["classId"] = x_val.class_id;
-	root["octave"] = x_val.octave;
-	root["x"] = x_val.pt.x;
-	root["y"] = x_val.pt.y;
-	root["response"] = x_val.response;
-	root["size"] = x_val.size;
-
-	Json::FastWriter writer;
-	string tmp = writer.write(root);
-	tmp.erase(remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
-	x_out<<tmp;
-	return x_out;
-}
-
-istream& deserialize(istream& x_in, KeyPoint& xr_val)
-{
-	Json::Value root;
-	x_in >> root;
-	xr_val.angle = root["angle"].asFloat();
-	xr_val.class_id = root["classId"].asInt();
-	xr_val.octave = root["octave"].asInt();
-	xr_val.pt.x = root["x"].asFloat();
-	xr_val.pt.y = root["y"].asFloat();
-	xr_val.response = root["response"].asFloat();
-	xr_val.size = root["size"].asFloat();
-	return x_in;
-}
 
 void randomize(KeyPoint& xr_val, unsigned int& xr_seed)
 {
@@ -71,27 +40,6 @@ void randomize(KeyPoint& xr_val, unsigned int& xr_seed)
 	randomize(xr_val.size, xr_seed);
 }
 /* -------------------------------------------------------------------------------- */
-ostream& serialize(ostream& x_out, const Point2f& x_val)
-{
-	Json::Value root;
-	root["x"] = x_val.x;
-	root["y"] = x_val.y;
-
-	Json::FastWriter writer;
-	string tmp = writer.write(root);
-	tmp.erase(remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
-	x_out<<tmp;
-	return x_out;
-}
-
-istream& deserialize(istream& x_in,  Point2f& xr_val)
-{
-	Json::Value root;
-	x_in >> root;
-	xr_val.x    = root["x"].asFloat();
-	xr_val.y    = root["y"].asFloat();
-	return x_in;
-}
 
 void randomize(Point2f& xr_val, unsigned int& xr_seed)
 {
@@ -100,27 +48,6 @@ void randomize(Point2f& xr_val, unsigned int& xr_seed)
 }
 
 /* -------------------------------------------------------------------------------- */
-ostream& serialize(ostream& x_out, const Point2d& x_val)
-{
-	Json::Value root;
-	root["x"] = x_val.x;
-	root["y"] = x_val.y;
-
-	Json::FastWriter writer;
-	string tmp = writer.write(root);
-	tmp.erase(remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
-	x_out<<tmp;
-	return x_out;
-}
-
-istream& deserialize(istream& x_in,  Point2d& xr_val)
-{
-	Json::Value root;
-	x_in >> root;
-	xr_val.x    = root["x"].asFloat();
-	xr_val.y    = root["y"].asFloat();
-	return x_in;
-}
 
 void randomize(Point2d& xr_val, unsigned int& xr_seed)
 {
@@ -129,29 +56,6 @@ void randomize(Point2d& xr_val, unsigned int& xr_seed)
 }
 
 /* -------------------------------------------------------------------------------- */
-ostream& serialize(ostream& x_out, const Point3f& x_val)
-{
-	Json::Value root;
-	root["x"] = x_val.x;
-	root["y"] = x_val.y;
-	root["z"] = x_val.z;
-
-	Json::FastWriter writer;
-	string tmp = writer.write(root);
-	tmp.erase(remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
-	x_out<<tmp;
-	return x_out;
-}
-
-istream& deserialize(istream& x_in,  Point3f& xr_val)
-{
-	Json::Value root;
-	x_in >> root;
-	xr_val.x    = root["x"].asFloat();
-	xr_val.y    = root["y"].asFloat();
-	xr_val.z    = root["z"].asFloat();
-	return x_in;
-}
 
 void randomize(Point3f& xr_val, unsigned int& xr_seed)
 {

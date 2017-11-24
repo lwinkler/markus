@@ -33,7 +33,7 @@
 class ParameterSerializable : public Parameter
 {
 public:
-	ParameterSerializable(const std::string& x_name, const ConfigReader& x_default, Serializable * xp_value, const std::string& x_description) :
+	ParameterSerializable(const std::string& x_name, const ConfigReader& x_default, mkjson * xp_value, const std::string& x_description) :
 		Parameter(x_name, x_description),
 		m_default(x_default),
 		mr_value(*xp_value)
@@ -44,6 +44,7 @@ public:
 
 	inline ConfigReader GetValue() const override
 	{
+		// TODO LW: Simplify: return val
 		std::stringstream ss;
 		ss << mr_value;
 		Json::Value val;
@@ -52,7 +53,7 @@ public:
 	}
 	inline ConfigReader GetDefault() const override {return m_default;}
 
-	inline void SetValue(const Serializable& x_value, ParameterConfigType x_confType)
+	inline void SetValue(const mkjson& x_value, ParameterConfigType x_confType)
 	{
 		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
@@ -76,7 +77,7 @@ public:
 private:
 	static log4cxx::LoggerPtr m_logger;
 	ConfigReader m_default;
-	Serializable& mr_value;
+	mkjson& mr_value;
 };
 
 

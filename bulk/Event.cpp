@@ -22,6 +22,7 @@
 -------------------------------------------------------------------------------------*/
 #include "Event.h"
 #include "Object.h"
+#include "Serializable.h"
 #include "util.h"
 #include "InterruptionManager.h"
 
@@ -65,60 +66,49 @@ void Event::Randomize(unsigned int& xr_seed, const Json::Value& x_requirement, c
 	}
 }
 
-void Event::Serialize(ostream& xr_out, MkDirectory* xp_dir) const
+void to_json(mkjson& rx_json, const Event& x_ser)
 {
-	Json::Value root;
-	root["raised"] = IsRaised();
-
-	if(IsRaised())
+	if(x_ser.IsRaised())
 	{
-		root["eventName"]  = m_eventName;
-		root["dateEvent"]  = Json::UInt64(m_timeStampEvent);
-		root["dateNotif"]  = Json::UInt64(m_timeStampNotif);
-		if(m_object.GetName() != "empty")
-		{
-			stringstream ss;
-			m_object.Serialize(ss, xp_dir);
-			ss >> root["object"];
-		}
-		else root["object"] = Json::Value(Json::nullValue); // Null
-		root["external"] = m_externalInfo;
+		rx_json = mkjson{
+			{"raised", true},
+			{"eventName", x_ser.m_eventName},
+			{"eventEvent", x_ser.m_timeStampEvent},
+			{"eventNotif", x_ser.m_timeStampNotif},
+			{"object", x_ser.m_object}
+			// TODO {"external", x_ser.m_externalInfo}
+		};
 	}
-	xr_out << root;
+	else rx_json = mkjson{{"raised", false}};
 }
 
-void Event::Deserialize(istream& x_in, MkDirectory* xp_dir)
+void from_json(const mkjson& x_json, Event& _ser)
 {
 	// Note that a null JSON means that the event was not raised
-	Json::Value root;
-	x_in >> root;
-	bool raised = root["raised"].asBool();
+	bool raised = x_json["raised"].get<bool>();
 	if(raised)
 	{
-		m_eventName = root["eventName"].asString();
-		m_timeStampEvent = root["dateEvent"].asInt64();
-		m_timeStampNotif = root["dateNotif"].asInt64();
+		_ser.m_eventName = x_json["eventName"].get<string>();
+		_ser.m_timeStampEvent = x_json["dateEvent"].get<TIME_STAMP>();
+		_ser.m_timeStampNotif = x_json["dateNotif"].get<TIME_STAMP>();
 
-		if(!root["object"].isNull())
+		if(!x_json["object"].is_null())
 		{
-			stringstream ss;
-			ss << root["object"];
-			m_object.Deserialize(ss, xp_dir);
+			_ser.m_object = x_json["object"].get<Object>();
 		}
 
 		// Deserialize files
-		Json::Value::Members members = root["external"].getMemberNames();
-		m_externalInfo.clear();
-		for(const auto& elem : members)
-			m_externalInfo[elem] = root["external"][elem];
+		_ser.m_externalInfo.clear();
+		for(auto it = x_json.at("external").cbegin(); it != x_json.at("external").cend(); ++it)
+			; // TODO m_externalInfo = x_json["external"].get<Object>();
 	}
 	else
 	{
-		m_eventName = "";
-		m_timeStampEvent = 0;
-		m_timeStampNotif = 0;
-		m_object = Object("empty");
-		m_externalInfo.clear();
+		_ser.m_eventName = "";
+		_ser.m_timeStampEvent = 0;
+		_ser.m_timeStampNotif = 0;
+		_ser.m_object = Object("empty");
+		_ser.m_externalInfo.clear();
 	}
 }
 
@@ -178,6 +168,7 @@ void Event::Raise(const string& x_eventName, TIME_STAMP x_absTimeNotif, TIME_STA
 */
 void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 {
+	/*
 	Json::Value root;
 	string level = "EVENT";
 
@@ -231,6 +222,8 @@ void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 	tmp.erase(remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
 
 	LOG_WARN(m_logger, "@notif@ " << level << " " << tmp);
+	*/
+	LOG_WARN(m_logger, mkjson(*this).dump());
 }
 
 /// Return the external files

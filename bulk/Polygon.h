@@ -30,9 +30,11 @@
 #include <vector>
 
 
-class Polygon : public Serializable
+class Polygon // : public Serializable
 {
 public:
+	friend void to_json(mkjson& _json, const Polygon& _ser);
+	friend void from_json(const mkjson& _json, Polygon& _ser);
 
 	Polygon();
 	explicit Polygon(const std::vector<cv::Point2d>& x_value);
@@ -58,8 +60,6 @@ public:
 		}
 	}
 	inline size_t Size() const {return m_points.size();}
-	void Serialize(std::ostream& x_out, MkDirectory* xp_dir = nullptr) const override;
-	void Deserialize(std::istream& x_in, MkDirectory* xp_dir = nullptr) override;
 
 protected:
 	std::vector<cv::Point2d> m_points;

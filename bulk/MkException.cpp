@@ -139,13 +139,13 @@ ProcessFreezeException::ProcessFreezeException(const string& x_descr, const stri
 * @param x_out Output stream
 * @param x_dir Output directory (for images)
 */
-void MkException::Serialize(ostream& x_out, MkDirectory* xp_dir) const
+void to_json(mkjson& rx_json, const MkException& x_ser)
 {
-	Json::Value root;
-	root["description"] = m_description;
-	root["code"] = m_code;
-	root["name"] = m_name;
-	x_out << root;
+	rx_json = mkjson{
+		{"description", x_ser.m_description},
+		{"code", x_ser.m_code},
+		{"name", x_ser.m_name}
+	};
 }
 
 /**
@@ -154,11 +154,10 @@ void MkException::Serialize(ostream& x_out, MkDirectory* xp_dir) const
 * @param x_in
 * @param x_dir
 */
-void MkException::Deserialize(istream& x_in, MkDirectory* xp_dir)
+void from_json(const mkjson& x_json, MkException& rx_ser)
 {
-	Json::Value root;
-	x_in >> root;
-	m_description = root["description"].asString();
-	m_code        = static_cast<MkExceptionCode>(root["code"].asInt());
-	m_name        = root["name"].asString();
+	rx_ser.m_description = x_json.at("description").get<string>();
+	rx_ser.m_code        = x_json.at("code").get<MkExceptionCode>();
+	rx_ser.m_name        = x_json.at("name").get<string>();
 }
+

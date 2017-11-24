@@ -42,6 +42,9 @@ typedef StreamT<cv::Mat> StreamImage;
 template<> class StreamT<cv::Mat> : public Stream
 {
 public:
+	friend void to_json(mkjson& _json, const StreamT& _ser);
+	friend void from_json(const mkjson& _json, StreamT& _ser);
+
 	StreamT(const std::string& x_name, cv::Mat& x_image, Module& rx_module, const std::string& x_description, const std::string& x_requirements = "");
 	MKCLASS("StreamImage")
 	MKTYPE("Image")
@@ -50,8 +53,8 @@ public:
 	void ConvertInput() override;
 	void RenderTo(cv::Mat& x_output) const override;
 	void Query(std::ostream& xr_out, const cv::Point& x_pt) const override;
-	void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const override;
-	void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr) override;
+	void Serialize(mkjson& rx_json, MkDirectory* xp_dir = nullptr) const;
+	void Deserialize(const mkjson& x_json, MkDirectory* xp_dir = nullptr);
 	void Randomize(unsigned int& xr_seed) override;
 	const cv::Mat& GetImage() const {return m_content;}
 	void Connect(Stream& xr_stream) override;

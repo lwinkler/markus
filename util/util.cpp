@@ -682,3 +682,4 @@ std::string convertAspectRatio(const cv::Size& x_size)
 	boost::rational<int> r(x_size.width, x_size.height);
 	return to_string(r.numerator()) + ":" + to_string(r.denominator());
 }
+

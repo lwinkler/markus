@@ -98,8 +98,9 @@ template<>void StreamObject::Query(std::ostream& xr_out, const cv::Point& x_pt) 
 	for(const auto& elem : m_content)
 		if(elem.GetRect().contains(x_pt))
 		{
-			xr_out << elem << endl;
-			LOG_INFO(m_logger, elem);
+			mkjson json(elem);
+			xr_out << json.dump() << endl;
+			LOG_INFO(m_logger, json.dump());
 		}
 
 }
@@ -126,43 +127,14 @@ template<>void StreamObject::Randomize(unsigned int& xr_seed)
 	}
 }
 
-template<>void StreamObject::Serialize(ostream& x_out, MkDirectory* xp_dir) const
+template<>void StreamObject::Serialize(mkjson& rx_json, MkDirectory* xp_dir) const
 {
-	Json::Value root;
-	stringstream ss;
-	Stream::Serialize(ss, xp_dir);
-	ss >> root;
-	int cpt = 0;
-
-	if(m_content.size() == 0)
-		root["objects"] = Json::Value(Json::arrayValue); // Empty array
-
-	// Serialize vector of objects
-	for(const auto& elem : m_content)
-	{
-		ss.clear();
-		elem.Serialize(ss, xp_dir);
-		ss >> root["objects"][cpt];
-		cpt++;
-	}
-	x_out << root;
+	Stream::Serialize(rx_json, xp_dir);
+	nlohmann::to_json(rx_json["objects"], m_content);
 }
 
-template<>void StreamObject::Deserialize(istream& x_in, MkDirectory* xp_dir)
+template<>void StreamObject::Deserialize(const mkjson& x_json, MkDirectory* xp_dir)
 {
-	Json::Value root;
-	x_in >> root;  // note: copy first for local use
-	stringstream ss;
-	ss << root;
-	Stream::Deserialize(ss, xp_dir);
-
-	m_content.clear();
-	for(const auto & elem : root["objects"])
-	{
-		ss.clear();
-		Object obj("empty");
-		m_content.push_back(obj);
-		ss << elem;
-		m_content.back().Deserialize(ss, xp_dir);
-	}
+	Stream::Deserialize(x_json, xp_dir);
+	nlohmann::from_json(x_json.at("objects"), m_content);
 }

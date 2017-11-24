@@ -30,13 +30,16 @@
 class FeatureHistory : public Feature
 {
 public:
+	friend void to_json(mkjson& _json, const FeatureHistory& _ser);
+	friend void from_json(const mkjson& _json, FeatureHistory& _ser);
+
 	FeatureHistory() {}
 	Feature* CreateCopy() const {return new FeatureHistory(*this);}
 	void Update(const TIME_STAMP& x_timeStamp, const Feature& x_feat);
-	virtual double CompareSquared(const Feature& x_feature) const;
-	virtual void Randomize(unsigned int& xr_seed, const Json::Value& x_param);
-	virtual void Serialize(std::ostream& stream, MkDirectory* xp_dir = nullptr) const;
-	virtual void Deserialize(std::istream& stream, MkDirectory* xp_dir = nullptr);
+	double CompareSquared(const Feature& x_feature) const override;
+	void Randomize(unsigned int& xr_seed, const Json::Value& x_param) override;
+	void Serialize(mkjson& _json) const override;
+	void Deserialize(const mkjson& _json) override;
 
 	std::map <TIME_STAMP, FeaturePtr> features;
 private:

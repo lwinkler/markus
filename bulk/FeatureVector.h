@@ -34,6 +34,13 @@
 template<class T> class FeatureVectorT : public Feature
 {
 public:
+	inline friend void to_json(mkjson& _json, const FeatureVectorT<T>& _ser){
+		to_json(_json, _ser.value);
+	}
+	inline friend void from_json(const mkjson& _json, FeatureVectorT<T>& _ser) {
+		from_json(_json, _ser.value);
+	}
+
 	explicit FeatureVectorT(const std::vector<T>& x_values = std::vector<T>(0)) : values(x_values) {}
 	Feature* CreateCopy() const {return new FeatureVectorT<T>(*this);}
 	inline virtual double CompareSquared(const Feature& x_feature) const
@@ -54,8 +61,8 @@ public:
 			randomize(values, xr_seed, size);
 		}
 	}
-	virtual void Serialize(std::ostream& x_out, MkDirectory* xp_dir = nullptr) const;
-	virtual void Deserialize(std::istream& x_in, MkDirectory* xp_dir = nullptr);
+	inline virtual void Serialize(mkjson& _json) const {nlohmann::to_json(_json["values"], values);}
+	inline virtual void Deserialize(const mkjson& _json) {nlohmann::from_json(_json.at("values"), values);}
 
 	// The value of the feature
 	std::vector<T> values;

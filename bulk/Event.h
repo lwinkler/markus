@@ -35,9 +35,12 @@
 class Event;
 
 /// Class representing a event (e.g. Ponctual moment in time where an intrusion occurs)
-class Event : public Serializable
+class Event // : public Serializable
 {
 public:
+	friend void to_json(mkjson& _json, const Event& _ser);
+	friend void from_json(const mkjson& _json, Event& _ser);
+
 	Event();
 	virtual ~Event();
 	void Clean();
@@ -69,8 +72,6 @@ public:
 	}
 	void Notify(const Context& x_contextbool, bool x_isProcessEvent=false);
 	virtual void Randomize(unsigned int& xr_seed, const Json::Value& x_requirement, const cv::Size& x_size);
-	virtual void Serialize(std::ostream& xr_out, MkDirectory* xp_dir = nullptr) const;
-	virtual void Deserialize(std::istream& x_in, MkDirectory* xp_dir = nullptr);
 
 	inline void AddExternalInfo(const std::string& x_label, const std::string& x_value) {m_externalInfo[x_label] = x_value;}
 	inline void AddExternalInfo(const std::string& x_label, double x_value) {m_externalInfo[x_label] = x_value;}
