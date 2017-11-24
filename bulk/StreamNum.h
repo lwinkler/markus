@@ -41,8 +41,8 @@ template<typename T>
 class StreamNum : public Stream
 {
 public:
-	inline void to_json(mkjson& _json, const StreamNum<T>& _ser){_ser.Serialize(_json);}
-	inline void from_json(const mkjson& _json, StreamNum<T>& _ser){_ser.Deserialize(_json);}
+	friend inline void to_json(mkjson& _json, const StreamNum<T>& _ser){_ser.Serialize(_json);}
+	friend inline void from_json(const mkjson& _json, StreamNum<T>& _ser){_ser.Deserialize(_json);}
 
 	StreamNum(const std::string& x_name, T& rx_scalar, Module& rx_module, const std::string& x_description, const Json::Value& rx_requirement = Json::nullValue) :
 		Stream(x_name, rx_module, x_description, rx_requirement),

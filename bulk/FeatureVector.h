@@ -34,12 +34,8 @@
 template<class T> class FeatureVectorT : public Feature
 {
 public:
-	inline friend void to_json(mkjson& _json, const FeatureVectorT<T>& _ser){
-		nlohmann::to_json(_json, _ser.values);
-	}
-	inline friend void from_json(const mkjson& _json, FeatureVectorT<T>& _ser) {
-		nlohmann::from_json(_json, _ser.values);
-	}
+	inline friend void to_json(mkjson& _json, const FeatureVectorT<T>& _ser){_ser.Serialize(_json);}
+	inline friend void from_json(const mkjson& _json, FeatureVectorT<T>& _ser) {_ser.Deserialize(_json);}
 
 	explicit FeatureVectorT(const std::vector<T>& x_values = std::vector<T>(0)) : values(x_values) {}
 	Feature* CreateCopy() const {return new FeatureVectorT<T>(*this);}

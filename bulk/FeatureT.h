@@ -32,12 +32,8 @@
 template<class T> class FeatureT : public Feature
 {
 public:
-	inline friend void to_json(mkjson& _json, const FeatureT<T>& _ser){
-		nlohmann::to_json(_json, _ser.value);
-	}
-	inline friend void from_json(const mkjson& _json, FeatureT<T>& _ser) {
-		nlohmann::from_json(_json, _ser.value);
-	}
+	inline friend void to_json(mkjson& _json, const FeatureT<T>& _ser){_ser.Serialize(_json);}
+	inline friend void from_json(const mkjson& _json, FeatureT<T>& _ser) {_ser.Deserialize(_json);}
 	
 	FeatureT() : value(T {} /*initialize to 0 or other*/) {}
 	explicit FeatureT(T x_value) : value(x_value) {}
@@ -61,4 +57,8 @@ public:
 	// The value of the feature
 	T value;
 };
+
+// Special case for int to change the signature
+template<> inline void FeatureT<int>::Serialize(mkjson& rx_json) const {rx_json["valueInt"] = value;}
+template<> inline void FeatureT<int>::Deserialize(const mkjson& rx_json) {value = rx_json.at("valueInt").get<int>();}
 #endif
