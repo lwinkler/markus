@@ -100,7 +100,7 @@ public:
 			TS_TRACE("Test the serialization of feature " + elem);
 			Feature* feat = m_factoryFeatures.Create(elem);
 
-			string sign = signature(feat);
+			string sign = signature(*feat);
 			delete(feat);
 
 			// Generate feature by signature

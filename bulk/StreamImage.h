@@ -42,8 +42,8 @@ typedef StreamT<cv::Mat> StreamImage;
 template<> class StreamT<cv::Mat> : public Stream
 {
 public:
-	friend void to_json(mkjson& _json, const StreamT& _ser);
-	friend void from_json(const mkjson& _json, StreamT& _ser);
+	friend inline void to_json(mkjson& _json, const StreamT& _ser){_ser.Serialize(_json);}
+	friend inline void from_json(const mkjson& _json, StreamT& _ser){_ser.Deserialize(_json);}
 
 	StreamT(const std::string& x_name, cv::Mat& x_image, Module& rx_module, const std::string& x_description, const std::string& x_requirements = "");
 	MKCLASS("StreamImage")

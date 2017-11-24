@@ -62,29 +62,25 @@ public:
 
 		m_obj.AddFeature("some_feat", 46.30);
 	}
-	void Serialize(ostream& x_out, MkDirectory* xp_dir = nullptr) const override
+
+	friend void to_json(mkjson& rx_json, const TestObject& x_obj)
 	{
-		Json::Value root;
-		root["int1"] = m_int;
-		root["float1"] = m_float;
-		root["double1"] = m_double;
-		root["string1"] = m_string;
-		stringstream ss;
-		m_obj.Serialize(ss, xp_dir);
-		ss >> root["object"];
-		x_out << root;
+		rx_json = mkjson{
+			{"int1", x_obj.m_int},
+			{"float1", x_obj.m_float},
+			{"int1", x_obj.m_int},
+			{"double1", x_obj.m_double},
+			{"string1", x_obj.m_string},
+			{"object", x_obj.m_obj}
+		};
 	}
-	void Deserialize(istream& x_in, MkDirectory* xp_dir = nullptr) override
+	friend void from_json(const mkjson& x_json, TestObject& rx_obj)
 	{
-		Json::Value root;
-		x_in >> root;
-		m_int = root["int1"].asInt();
-		m_float = root["float1"].asFloat();
-		m_double = root["double1"].asDouble();
-		m_string = root["string1"].asString();
-		stringstream ss;
-		ss << root["object"];
-		m_obj.Deserialize(ss, xp_dir);
+		rx_obj.m_int = x_json.at("int1").get<int>();
+		rx_obj.m_float = x_json.at("float1").get<float>();
+		rx_obj.m_double = x_json.at("double1").get<double>();
+		rx_obj.m_string = x_json.at("string1").get<string>();
+		rx_obj.m_obj = x_json.at("object").get<Object>();
 	}
 
 protected:
@@ -181,27 +177,24 @@ public:
 
 protected:
 	/// Test the serialization of one serializable class
-	void testSerialization(Serializable& obj, const string& name)
+	template<class T>void testSerialization(T& obj, const string& name)
 	{
 		TS_TRACE("Test the serialization of " + name);
 		string fileName1 = "tests/tmp/serialize1_" + name + ".json";
 		string fileName2 = "tests/tmp/serialize2_" + name + ".json";
 		string fileName3 = "tests/serialize/" + name + ".json";
-		MkDirectory dir1("tests", false);
-		MkDirectory dir2("serialize", dir1, false);
-		MkDirectory dir3("image", dir2, false);
-		TS_TRACE("Test serialization of " + name + " = " + obj.SerializeToString()  +  " with signature = "  +  obj.Signature());
+		TS_TRACE("Test serialization of " + name + " = " + mkjson(obj).dump()  +  " with signature = "  +  signature(obj));
 		ofstream of1(fileName1.c_str());
-		obj.Serialize(of1, &dir3);
+		serialize(of1, obj);
 		of1.close();
 
 		// stringstream ss2;
 
 		ifstream inf(fileName3.c_str());
 		TS_ASSERT(inf.is_open());
-		obj.Deserialize(inf, &dir3);
+		deserialize(inf, obj);
 		ofstream of2(fileName2.c_str());
-		obj.Serialize(of2, &dir3);
+		serialize(of2, obj);
 
 		// Compare with the initial config
 		inf.close();

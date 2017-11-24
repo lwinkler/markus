@@ -35,10 +35,10 @@ template<class T> class FeatureVectorT : public Feature
 {
 public:
 	inline friend void to_json(mkjson& _json, const FeatureVectorT<T>& _ser){
-		to_json(_json, _ser.value);
+		nlohmann::to_json(_json, _ser.values);
 	}
 	inline friend void from_json(const mkjson& _json, FeatureVectorT<T>& _ser) {
-		from_json(_json, _ser.value);
+		nlohmann::from_json(_json, _ser.values);
 	}
 
 	explicit FeatureVectorT(const std::vector<T>& x_values = std::vector<T>(0)) : values(x_values) {}

@@ -200,9 +200,9 @@ public:
 		TS_TRACE("Test ParameterSerializable - Polygon");
 		Polygon myPolygon;
 		// ParameterSerializable paramPolygon("param_polygon",  R"({"height":0.6,"points":[{"x":5.0,"y":0.50},{"x":6.0,"y":5.50}],"width":0.8}")"_json, &myPolygon, "Parameter of type Polygon");
-		ParameterSerializable paramPolygon("param_polygon",  stringToJson("{\"height\":0.6,\"points\":[{\"x\":5.0,\"y\":0.50},{\"x\":6.0,\"y\":5.50}],\"width\":0.8}"), &myPolygon, "Parameter of type Polygon");
-		testParameter(paramPolygon, stringToJson("{\"height\":0.660,\"points\":[{\"x\":54.0,\"y\":53.50},{\"x\":3454.0,\"y\":53.50},{\"x\":54.0,\"y\":53.50},{\"x\":5.0,\"y\":0.50}],\"width\":0.860}"), Json::nullValue) ;
-		testLock(paramPolygon);
+		// TODO ParameterSerializable paramPolygon("param_polygon",  stringToJson("{\"height\":0.6,\"points\":[{\"x\":5.0,\"y\":0.50},{\"x\":6.0,\"y\":5.50}],\"width\":0.8}"), &myPolygon, "Parameter of type Polygon");
+		// TODO testParameter(paramPolygon, stringToJson("{\"height\":0.660,\"points\":[{\"x\":54.0,\"y\":53.50},{\"x\":3454.0,\"y\":53.50},{\"x\":54.0,\"y\":53.50},{\"x\":5.0,\"y\":0.50}],\"width\":0.860}"), Json::nullValue) ;
+		// TODO testLock(paramPolygon);
 	}
 
 

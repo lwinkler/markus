@@ -30,8 +30,8 @@
 class FeatureFloatInTime : public FeatureFloat
 {
 public:
-	friend void to_json(mkjson& _json, const FeatureFloatInTime& _ser);
-	friend void from_json(const mkjson& _json, FeatureFloatInTime& _ser);
+	friend void to_json(mkjson& _json, const FeatureFloatInTime& _ser){_ser.Serialize(_json);}
+	friend void from_json(const mkjson& _json, FeatureFloatInTime& _ser){_ser.Deserialize(_json);}
 
 	explicit FeatureFloatInTime(const FeatureFloat& x_feat = FeatureFloat());
 	Feature* CreateCopy() const {return new FeatureFloatInTime(*this);}

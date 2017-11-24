@@ -33,8 +33,8 @@
 template<typename T>class MultiStreamT : public StreamT<T>
 {
 public:
-	friend inline void to_json(mkjson& rx_json, const MultiStreamT<T>& x_ser) {x_ser.Serialize(rx_json);}
-	friend inline void from_json(const mkjson& x_json, MultiStreamT<T>& rx_ser) {rx_ser.Deserialize(x_json);}
+	inline void to_json(mkjson& rx_json, const MultiStreamT<T>& x_ser) {x_ser.Serialize(rx_json);}
+	inline void from_json(const mkjson& x_json, MultiStreamT<T>& rx_ser) {rx_ser.Deserialize(x_json);}
 	
 	MultiStreamT(const std::string& rx_name, std::vector<T>& rx_objects, Module& rx_module, const std::string& rx_description, const Json::Value& rx_requirement = Json::nullValue) :
 		StreamT<T>(rx_name, rx_objects.at(0), rx_module, rx_description, rx_requirement),

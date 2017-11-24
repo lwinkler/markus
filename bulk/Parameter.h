@@ -65,8 +65,8 @@ class Parameter // : public Serializable
 {
 public:
 	static const char configType[PARAMCONF_SIZE][16];
-	friend void to_json(mkjson& _json, const Parameter& _ser);
-	friend void from_json(const mkjson& _json, Parameter& _ser);
+	// friend void to_json(mkjson& _json, const Parameter& _ser);
+	// friend void from_json(const mkjson& _json, Parameter& _ser);
 
 	Parameter(const std::string& x_name, const std::string& x_description):
 		m_name(x_name),

@@ -32,8 +32,8 @@
 template<typename T>class StreamT : public Stream
 {
 public:
-	// void to_json(mkjson& _json, const StreamT<T>& _ser);
-	// void from_json(const mkjson& _json, StreamT<T>& _ser);
+	friend inline void to_json(mkjson& _json, const StreamT<T>& _ser){_ser.Serialize(_json);}
+	friend inline void from_json(const mkjson& _json, StreamT<T>& _ser){_ser.Deserialize(_json);}
 
 	explicit StreamT(const std::string& rx_name, T& rx_object, Module& rx_module, const std::string& rx_description, const Json::Value& rx_requirement = Json::nullValue) :
 		Stream(rx_name, rx_module, rx_description, rx_requirement),

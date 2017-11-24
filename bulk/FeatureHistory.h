@@ -30,8 +30,8 @@
 class FeatureHistory : public Feature
 {
 public:
-	friend void to_json(mkjson& _json, const FeatureHistory& _ser);
-	friend void from_json(const mkjson& _json, FeatureHistory& _ser);
+	friend void to_json(mkjson& _json, const FeatureHistory& _ser){_ser.Serialize(_json);}
+	friend void from_json(const mkjson& _json, FeatureHistory& _ser){_ser.Deserialize(_json);}
 
 	FeatureHistory() {}
 	Feature* CreateCopy() const {return new FeatureHistory(*this);}

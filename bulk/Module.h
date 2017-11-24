@@ -47,8 +47,8 @@ class Module : public Processable, public Controllable// , public Serializable
 {
 public:
 	/// Parameter enum class. Determines if the module is cached (its output is stored to avoid computation costs)
-	// inline friend void to_json(mkjson& _json, const Module& _ser);
-	// inline friend void from_json(const mkjson& _json, Module& _ser);
+	inline friend void to_json(mkjson& _json, const Module& _ser) {_ser.Serialize(_json);}
+	inline friend void from_json(const mkjson& _json, Module& _ser) {_ser.Deserialize(_json);}
 
 	class Parameters : public Processable::Parameters
 	{
@@ -115,7 +115,7 @@ public:
 	void RemoveDependingModule(const Module & x_module);
 	virtual void PrintStatistics(ConfigReader& xr_result) const;
 	void Serialize(mkjson& rx_json, MkDirectory* xp_dir = nullptr) const;
-	void Deserialize(mkjson& x_json, MkDirectory* xp_dir = nullptr);
+	void Deserialize(const mkjson& x_json, MkDirectory* xp_dir = nullptr);
 
 	virtual inline bool IsInput() const {return false;}
 	void Export(std::ostream& rx_os) const;

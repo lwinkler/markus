@@ -48,10 +48,9 @@ template<class T> inline std::ostream& serialize(std::ostream& x_out, const T& x
 }
 
 template<class T> inline std::istream& deserialize(std::istream& x_in,  T& xr_val) {
-	mkjson root;
-	x_in >> root;
-	T val(xr_val);
-	xr_val = val;
+	mkjson json;
+	x_in >> json;
+	nlohmann::from_json(json, xr_val);
 }
 
 

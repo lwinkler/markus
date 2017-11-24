@@ -34,8 +34,8 @@
 class Stream /* : public Serializable,*/ : public Parameter, boost::noncopyable
 {
 public:
-	// inline void to_json(mkjson& _json, const Stream& _ser) {_ser.Serialize(_json, _}
-	// void from_json(const mkjson& _json, Stream& _ser);
+	inline void to_json(mkjson& _json, const Stream& _ser){_ser.Serialize(_json);}
+	inline void from_json(const mkjson& _json, Stream& _ser){_ser.Deserialize(_json);}
 	template<class T> static void serializeWithDir(mkjson& rx_json, const std::map<std::string, T*>& x_map, MkDirectory* xp_dir){
 		for(const auto& elem : x_map) {
 			mkjson json;
@@ -43,7 +43,7 @@ public:
 			rx_json[elem.first] = (json);
 		}
 	}
-	template<class T> static void deserializeWithDir(mkjson& x_json, std::map<std::string, T*>& rx_map, MkDirectory* xp_dir){
+	template<class T> static void deserializeWithDir(const mkjson& x_json, std::map<std::string, T*>& rx_map, MkDirectory* xp_dir){
 		assert(rx_map.size() == x_json.size());
 		// TODO: Use a json vector instead, no access by key
 		for(nlohmann::json::const_iterator it = x_json.cbegin(); it != x_json.cend(); ++it) {

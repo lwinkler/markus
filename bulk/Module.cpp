@@ -453,7 +453,7 @@ void Module::Serialize(mkjson& rx_json, MkDirectory* xp_dir) const
 * @param x_in  Input stream
 * @param xp_dir Input dir (for images)
 */
-void Module::Deserialize(mkjson& x_json, MkDirectory* xp_dir)
+void Module::Deserialize(const mkjson& x_json, MkDirectory* xp_dir)
 {
 	if(GetName() != x_json.at("name").get<string>())
 		throw MkException("Name does not match in serialization for module " + GetName() + "(!='" + x_json.at("name").get<string>() + "')", LOC);
