@@ -84,7 +84,7 @@ void RandomEventGenerator::Capture()
 			{
 				stringstream name;
 				name<<"feat"<<i;
-				obj.AddFeature(name.str(), static_cast<float>(rand_r(&m_seed)) / RAND_MAX);
+				obj.AddFeature(name.str(), new FeatureFloat(static_cast<float>(rand_r(&m_seed)) / RAND_MAX));
 			}
 
 			// Output an image in relation with the event

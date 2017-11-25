@@ -183,7 +183,7 @@ protected:
 		string fileName1 = "tests/tmp/serialize1_" + name + ".json";
 		string fileName2 = "tests/tmp/serialize2_" + name + ".json";
 		string fileName3 = "tests/serialize/" + name + ".json";
-		TS_TRACE("Test serialization of " + name + " = " + mkjson(obj).dump()  +  " with signature = "  +  signature(obj));
+		TS_TRACE("Test serialization of " + name + " = " + mkjson(obj).dump() + " with signature = " + signature(obj));
 		ofstream of1(fileName1.c_str());
 		serialize(of1, obj);
 		of1.close();
@@ -192,7 +192,9 @@ protected:
 
 		ifstream inf(fileName3.c_str());
 		TS_ASSERT(inf.is_open());
-		deserialize(inf, obj);
+		// deserialize(inf, obj);
+		mkjson json = nlohmann::json::parse(inf);
+		nlohmann::from_json(json, obj);
 		ofstream of2(fileName2.c_str());
 		serialize(of2, obj);
 

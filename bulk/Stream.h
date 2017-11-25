@@ -34,20 +34,20 @@
 class Stream /* : public Serializable,*/ : public Parameter, boost::noncopyable
 {
 public:
-	inline void to_json(mkjson& _json, const Stream& _ser){_ser.Serialize(_json);}
-	inline void from_json(const mkjson& _json, Stream& _ser){_ser.Deserialize(_json);}
+	friend inline void to_json(mkjson& _json, const Stream& _ser){_ser.Serialize(_json);}
+	friend inline void from_json(const mkjson& _json, Stream& _ser){_ser.Deserialize(_json);}
 	template<class T> static void serializeWithDir(mkjson& rx_json, const std::map<std::string, T*>& x_map, MkDirectory* xp_dir){
+		rx_json = nlohmann::json::array();
 		for(const auto& elem : x_map) {
 			mkjson json;
 			elem.second->Serialize(json, xp_dir);
-			rx_json[elem.first] = (json);
+			rx_json.push_back(json);
 		}
 	}
 	template<class T> static void deserializeWithDir(const mkjson& x_json, std::map<std::string, T*>& rx_map, MkDirectory* xp_dir){
 		assert(rx_map.size() == x_json.size());
-		// TODO: Use a json vector instead, no access by key
-		for(nlohmann::json::const_iterator it = x_json.cbegin(); it != x_json.cend(); ++it) {
-			rx_map[it.key()]->Deserialize(it.value(), xp_dir);
+		for(const auto& elem : x_json) {
+			rx_map[elem.at("name").get<std::string>()]->Deserialize(elem, xp_dir);
 		}
 	}
 

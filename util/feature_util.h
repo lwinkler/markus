@@ -48,8 +48,7 @@ template<class T> inline std::ostream& serialize(std::ostream& x_out, const T& x
 }
 
 template<class T> inline std::istream& deserialize(std::istream& x_in,  T& xr_val) {
-	mkjson json;
-	x_in >> json;
+	mkjson json = nlohmann::json::parse(x_in);
 	nlohmann::from_json(json, xr_val);
 }
 
@@ -159,8 +158,8 @@ void randomize(cv::KeyPoint& xr_val, unsigned int& xr_seed);
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features of type float
 
-inline std::ostream& serialize(std::ostream& x_out, float x_value)   { x_out << x_value;  return x_out; }
-inline std::istream& deserialize(std::istream& x_in, float& xr_value) { x_in  >> xr_value; return x_in;  }
+// inline std::ostream& serialize(std::ostream& x_out, float x_value)   { x_out << x_value;  return x_out; }
+// inline std::istream& deserialize(std::istream& x_in, float& xr_value) { x_in  >> xr_value; return x_in;  }
 
 inline double compareSquared(float x_1, float x_2)
 {

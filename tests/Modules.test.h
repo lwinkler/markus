@@ -96,14 +96,12 @@ class ModulesTestSuite : public CxxTest::TestSuite
 public:
 	ModulesTestSuite() :
 		m_factoryParameters(Factories::parametersFactory()),
-		m_factoryModules(Factories::modulesFactory()),
-		m_factoryFeatures(Factories::featuresFactory())
+		m_factoryModules(Factories::modulesFactory())
 	{}
 protected:
 	vector<string> m_moduleTypes;
 	const FactoryParameters&  m_factoryParameters;
 	const FactoryModules&  m_factoryModules;
-	const FactoryFeatures& m_factoryFeatures;
 	ParameterStructure* mp_fakeConfig     = nullptr;
 	Module* mp_fakeInput                  = nullptr;
 	Context::Parameters* mp_contextParams = nullptr;

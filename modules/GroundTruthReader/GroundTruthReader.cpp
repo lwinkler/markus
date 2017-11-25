@@ -166,19 +166,19 @@ void GroundTruthReader::ProcessFrame()
 			// gt = 1 only if object has been detected in roi
 			if (find (trackedObj.begin(), trackedObj.end(), elem.GetId()) != trackedObj.end())
 			{
-				elem.AddFeature("gt", 1.0);
+				elem.AddFeature("gt", new FeatureFloat(1.0));
 				elem.AddFeature("label", new FeatureString(text));
 			}
 			else
 			{
-				elem.AddFeature("gt", 0.0);
+				elem.AddFeature("gt", new FeatureFloat(0.0));
 				elem.AddFeature("label", new FeatureString(""));
 			}
 
 		}
 		else
 		{
-			elem.AddFeature("gt", static_cast<float>(m_state));
+			elem.AddFeature("gt", new FeatureFloat(static_cast<float>(m_state)));
 			elem.AddFeature("label", new FeatureString(text));
 		}
 

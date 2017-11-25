@@ -74,10 +74,10 @@ void HOGDetector::ProcessFrame()
 	{
 		Object obj(m_param.objectLabel, elem);
 
-		obj.AddFeature("x"      , obj.posX   / diagonal);
-		obj.AddFeature("y"      , obj.posY   / diagonal);
-		obj.AddFeature("width"  , obj.width  / diagonal);
-		obj.AddFeature("height" , obj.height / diagonal);
+		obj.AddFeature("x"      , new FeatureFloat(obj.posX   / diagonal));
+		obj.AddFeature("y"      , new FeatureFloat(obj.posY   / diagonal));
+		obj.AddFeature("width"  , new FeatureFloat(obj.width  / diagonal));
+		obj.AddFeature("height" , new FeatureFloat(obj.height / diagonal));
 
 		m_detectedObjects.push_back(obj);
 	}

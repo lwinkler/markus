@@ -78,56 +78,30 @@ void FeatureHistory::Randomize(unsigned int& xr_seed, const Json::Value& x_param
 	}
 }
 
-void FeatureHistory::Serialize(mkjson& _json) const
+void FeatureHistory::Serialize(mkjson& rx_json) const
 {
-/*
-	_json = mkjson{
-		{"x", _pt.x},
-		{"y", _pt.y},
-		{"history", features}
-	};
-
-	x_out << "{\"history\":[";
-	size_t i = 0;
+	rx_json["history"] = nlohmann::json::array();
+	mkjson hist = rx_json["history"];
 	for(const auto& elem : features)
 	{
-		_json = mkjson{
-			{"x", _pt.x},
-			{"y", _pt.y},
-			{"z", _pt.z}
-		};
-		x_out << "{\"time\":"<<elem.first<<",\"feature\":";
-		elem.second->Serialize(x_out);
-		if(i == features.size() - 1)
-			x_out << "}";
-		else
-			x_out << "},";
-		i++;
+		mkjson feat_json{{"time", elem.first}};
+		elem.second->Serialize(feat_json["feature"]);
+		hist.push_back(feat_json);
 	}
-	x_out << "]}";
-	*/
 }
 
-void FeatureHistory::Deserialize(const mkjson& _json)
+void FeatureHistory::Deserialize(const mkjson& x_json)
 {
-	/* TODO
-	Json::Value root0;
-	x_in >> root0;  // note: copy first for local use
-	Json::Value root = root0["history"];
-	assert(root.isArray());
+	mkjson hist = x_json.at("history");
+	assert(hist.is_array());
 
 	features.clear();
 	FactoryFeatures& factory(Factories::featuresFactoryBySignature());
-	for(unsigned int i = 0 ; i < root.size() ; i++)
+	for(const auto& elem : hist)
 	{
-		stringstream ss;
-		ss << root[i]["feature"];
-		string signature = Serializable::signature(ss);
-		Feature* feat = factory.Create(signature);
-		stringstream ss2;
-		ss2 << root[i]["feature"];
-		feat->Deserialize(ss2, xp_dir);
-		features.insert(std::make_pair(root[i]["time"].asInt(), feat));
+		string sign= signature(elem.at("feature")); // TODO rename function signature
+		Feature* feat = factory.Create(sign);
+		feat->Deserialize(elem.at("feature"));
+		features.insert(std::make_pair(elem.at("time").get<TIME_STAMP>(), feat));
 	}
-	*/
 }

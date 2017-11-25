@@ -81,38 +81,38 @@ Object::~Object()
 	m_feats.clear();
 }
 
-void to_json(mkjson& rx_json, const Object& _pt) {
+void to_json(mkjson& rx_json, const Object& x_obj) {
 	rx_json = mkjson{
-		{"id", _pt.m_id},
-		{"name", _pt.m_name},
-		{"x", _pt.posX},
-		{"y", _pt.posY},
-		{"width", _pt.width},
-		{"height", _pt.height},
-		{"features", _pt.m_feats}
+		{"id", x_obj.m_id},
+		{"name", x_obj.m_name},
+		{"x", x_obj.posX},
+		{"y", x_obj.posY},
+		{"width", x_obj.width},
+		{"height", x_obj.height},
+		{"features", x_obj.m_feats}
 	};
 }
 
-void from_json(const mkjson& x_json, Object& _pt) {
-	_pt.m_id = x_json.at("id").get<int>();
-	_pt.m_name = x_json.at("name").get<string>();
-	_pt.posY = x_json.at("x").get<double>();
-	_pt.posY = x_json.at("y").get<double>();
-	_pt.width = x_json.at("width").get<double>();
-	_pt.height = x_json.at("height").get<double>();
+void from_json(const mkjson& x_json, Object& rx_obj) {
+	rx_obj.m_id = x_json.at("id").get<int>();
+	rx_obj.m_name = x_json.at("name").get<string>();
+	rx_obj.posY = x_json.at("x").get<double>();
+	rx_obj.posY = x_json.at("y").get<double>();
+	rx_obj.width = x_json.at("width").get<double>();
+	rx_obj.height = x_json.at("height").get<double>();
 
 	// Get an instance of the feature factory
 	const FactoryFeatures& factory(Factories::featuresFactoryBySignature());
 
-	for(const auto& elem : x_json.at("features"))
+	for(auto it = x_json.at("features").cbegin() ; it != x_json.at("features").cend() ; ++it)
 	{
 		// Extract the signature of the feature:
 		//     this allows us to recognize the type of feature
-		mkjson json(elem);
-		string sign= signature(json);
+		mkjson json(it.value());
+		string sign = signature(json);
 		Feature* feat = factory.Create(sign);
 		feat->Deserialize(json);
-		_pt.AddFeature(elem, feat);
+		rx_obj.AddFeature(it.key(), feat);
 	}
 }
 
@@ -254,7 +254,7 @@ void Object::Randomize(unsigned int& xr_seed, const Json::Value& x_requirement, 
 	{
 		stringstream name;
 		name<<"rand"<<i;
-		AddFeature(name.str(), static_cast<float>(rand_r(&xr_seed)) / RAND_MAX);
+		AddFeature(name.str(), new FeatureFloat(static_cast<float>(rand_r(&xr_seed)) / RAND_MAX));
 	}
 	// LOG_DEBUG(m_logger, "Generate random object with requirements:\""<<x_requirement<<"\" --> "<<this->SerializeToString());
 

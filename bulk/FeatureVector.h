@@ -57,12 +57,15 @@ public:
 			randomize(values, xr_seed, size);
 		}
 	}
-	inline virtual void Serialize(mkjson& _json) const {nlohmann::to_json(_json["values"], values);}
-	inline virtual void Deserialize(const mkjson& _json) {nlohmann::from_json(_json.at("values"), values);}
+	inline virtual void Serialize(mkjson& _json) const {nlohmann::to_json(_json, values);}
+	inline virtual void Deserialize(const mkjson& _json) {nlohmann::from_json(_json, values);}
 
 	// The value of the feature
 	std::vector<T> values;
 };
+
+template<>void FeatureVectorT<int>::Serialize(mkjson& rx_json) const;
+template<>void FeatureVectorT<int>::Deserialize(const mkjson& x_json);
 
 
 // Definitions

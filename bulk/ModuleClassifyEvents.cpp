@@ -70,7 +70,7 @@ void ModuleClassifyEvents::ProcessFrame()
 		return;
 
 	float result = PredictEventValidity(m_eventIn);
-	m_eventIn.AddFeature("valid", result);
+	m_eventIn.AddFeature("valid", new FeatureFloat(result));
 
 	PushEvent();
 

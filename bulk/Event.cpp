@@ -73,8 +73,8 @@ void to_json(mkjson& rx_json, const Event& x_ser)
 		rx_json = mkjson{
 			{"raised", true},
 			{"eventName", x_ser.m_eventName},
-			{"eventEvent", x_ser.m_timeStampEvent},
-			{"eventNotif", x_ser.m_timeStampNotif},
+			{"dateEvent", x_ser.m_timeStampEvent},
+			{"dateNotif", x_ser.m_timeStampNotif},
 			{"object", x_ser.m_object}
 			// TODO {"external", x_ser.m_externalInfo}
 		};

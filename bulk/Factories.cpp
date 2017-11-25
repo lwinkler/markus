@@ -35,6 +35,7 @@ Feature* pfeat = new child();\
 fact2.Register<child>(signature(*pfeat));\
 delete pfeat;\
 }}
+// cout << type << ":"  << signature(*pfeat) << endl;\
 
 #include "ControllerParameterT.h"
 

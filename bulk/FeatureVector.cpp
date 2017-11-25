@@ -74,7 +74,7 @@ template<>void FeatureVectorT<int>::Serialize(mkjson& rx_json) const
 
 template<>void FeatureVectorT<int>::Deserialize(const mkjson& x_json)
 {
-	if(x_json.at("type") != "int")
+	if(x_json.at("type").get<string>() != "int")
 		throw MkException("Wrong feature vector type " + x_json.at("type").get<string>(), LOC);
 	values = x_json.at("values").get<vector<int>>();
 }
