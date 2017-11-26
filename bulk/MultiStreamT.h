@@ -25,8 +25,6 @@
 #define MULTIPLE_STREAM_T_H
 
 #include "StreamT.h"
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
 
 /// Stream in the form of located objects
 
@@ -36,7 +34,7 @@ public:
 	inline void to_json(mkjson& rx_json, const MultiStreamT<T>& x_ser) {x_ser.Serialize(rx_json);}
 	inline void from_json(const mkjson& x_json, MultiStreamT<T>& rx_ser) {rx_ser.Deserialize(x_json);}
 	
-	MultiStreamT(const std::string& rx_name, std::vector<T>& rx_objects, Module& rx_module, const std::string& rx_description, const Json::Value& rx_requirement = Json::nullValue) :
+	MultiStreamT(const std::string& rx_name, std::vector<T>& rx_objects, Module& rx_module, const std::string& rx_description, const mkjson& rx_requirement = nullptr) :
 		StreamT<T>(rx_name, rx_objects.at(0), rx_module, rx_description, rx_requirement),
 		m_objects(rx_objects),
 		m_maxSize(rx_objects.size())
@@ -99,12 +97,12 @@ public:
 
 	void Export(std::ostream& rx_os) const override
 	{
-		Json::Value root;
+		mkjson json;
 		std::stringstream ss;
 		StreamT<T>::Export(ss);
-		ss >> root;
-		root["multi"] = static_cast<int>(m_maxSize);
-		rx_os << root;
+		json << ss;
+		json["multi"] = m_maxSize;
+		rx_os << json.dump();
 	}
 
 protected:

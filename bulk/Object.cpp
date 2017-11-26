@@ -24,8 +24,6 @@
 #include "Serializable.h"
 #include "util.h"
 #include "define.h"
-#include <jsoncpp/json/writer.h>
-#include <jsoncpp/json/reader.h>
 #include <boost/lexical_cast.hpp>
 #include "Factories.h"
 
@@ -206,7 +204,7 @@ void Object::Intersect(const Mat& x_image)
 }
 
 /// Randomize the content of the object
-void Object::Randomize(unsigned int& xr_seed, const Json::Value& x_requirement, const Size& x_size)
+void Object::Randomize(unsigned int& xr_seed, const mkjson& x_requirement, const Size& x_size)
 {
 	SetRect(cv::Rect_<double>(
 		Point2d(rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height),
@@ -217,12 +215,12 @@ void Object::Randomize(unsigned int& xr_seed, const Json::Value& x_requirement, 
 		width  = 0;
 		height = 0;
 	}
-	if(!x_requirement.isNull())
+	if(!x_requirement.is_null())
 	{
-		int minWidth = x_requirement["width"].get("min", 0).asInt();
-		int maxWidth = x_requirement["width"].get("max", x_size.width).asInt();
-		int minHeight = x_requirement["height"].get("min", 0).asInt();
-		int maxHeight = x_requirement["height"].get("max", x_size.height).asInt();
+		int minWidth = x_requirement.at("width").value<int>("min", 0);
+		int maxWidth = x_requirement.at("width").value<int>("max", x_size.width);
+		int minHeight = x_requirement.at("height").value<int>("min", 0);
+		int maxHeight = x_requirement.at("height").value<int>("max", x_size.height);
 		width  = RANGE(width,  minWidth,  maxWidth);
 		height = RANGE(height, minHeight, maxHeight);
 		Mat bounds(x_size, CV_8UC1);
@@ -233,17 +231,17 @@ void Object::Randomize(unsigned int& xr_seed, const Json::Value& x_requirement, 
 	m_feats.clear();
 	if(!x_requirement.empty())
 	{
-		const Json::Value& req = x_requirement["features"];
-		if(!req.isNull())
+		const mkjson& req = x_requirement.at("features");
+		if(!req.is_null())
 		{
 			// Get an instance of the feature factory
 			const FactoryFeatures& factory(Factories::featuresFactory());
-			for(const auto& elem : req.getMemberNames())
+			for(auto it = req.begin() ; it != req.end() ; ++it)
 			{
 				// create features according to the requirement
-				Feature* feat = factory.Create(req[elem]["type"].asString());
-				feat->Randomize(xr_seed, req[elem]);
-				AddFeature(elem, feat);
+				Feature* feat = factory.Create(it.value()["type"].get<string>());
+				feat->Randomize(xr_seed, it.value());
+				AddFeature(it.key(), feat);
 			}
 		}
 	}

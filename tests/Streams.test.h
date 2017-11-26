@@ -216,7 +216,7 @@ public:
 		mp_fakeModule1->Reset();
 		for(auto input : mp_fakeModule1->GetInputStreamList())
 		{
-			ParametersTestSuite::testParameter(*input.second, input.second->GetDefault(), Json::nullValue);
+			ParametersTestSuite::testParameter(*input.second, input.second->GetDefault(), nullptr);
 		}
 	}
 };

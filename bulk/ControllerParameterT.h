@@ -61,7 +61,7 @@ public:
 
 	QWidget* CreateWidget() override;
 	virtual void SetWidgetValue(const std::string& x_value);
-	virtual Json::Value GetValueFromWidget();
+	virtual mkjson GetValueFromWidget();
 
 	// Controllers
 	void GetType(std::string* xp_value);

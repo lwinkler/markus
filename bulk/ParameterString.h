@@ -43,12 +43,12 @@ public:
 	{
 		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
-		mr_value = rx_value.asString();
+		mr_value = rx_value.get<std::string>();
 		m_confSource = x_confType;
 	}
 	void SetDefault(const ConfigReader& x_value) override
 	{
-		m_default = x_value.asString();
+		m_default = x_value.get<std::string>();
 	}
 	ConfigReader GetValue() const override {return mr_value;}
 	ConfigReader GetDefault() const override {return m_default;}
@@ -56,7 +56,7 @@ public:
 	{
 		return true;
 	}
-	Json::Value GenerateValues(int x_nbSamples, const Json::Value& x_range) const override;
+	mkjson GenerateValues(int x_nbSamples, const mkjson& x_range) const override;
 	void SetValueToDefault() override
 	{
 		if(IsLocked())

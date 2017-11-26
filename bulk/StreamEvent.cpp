@@ -24,8 +24,6 @@
 #include "StreamEvent.h"
 #include "util.h"
 #include "Manager.h"
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
 
 using namespace std;
 using namespace cv;

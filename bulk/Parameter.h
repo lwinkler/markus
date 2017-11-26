@@ -70,8 +70,7 @@ public:
 
 	Parameter(const std::string& x_name, const std::string& x_description):
 		m_name(x_name),
-		m_description(x_description),
-		m_range(Json::objectValue)
+		m_description(x_description)
 	{}
 	virtual ~Parameter() {}
 
@@ -86,7 +85,7 @@ public:
 	virtual void SetValueToDefault() = 0;
 	virtual void Print(std::ostream& os) const;
 	virtual bool CheckRange() const = 0;
-	virtual Json::Value GenerateValues(int x_nbSamples, const Json::Value& x_range) const = 0;
+	virtual mkjson GenerateValues(int x_nbSamples, const mkjson& x_range) const = 0;
 	virtual void Export(std::ostream& rx_os) const;
 
 	/// Use this method to mark parameters that must not change value after initialization
@@ -102,14 +101,11 @@ public:
 	virtual ConfigReader GetValue() const = 0;
 	virtual ConfigReader GetDefault() const = 0;
 	inline ConfigReader GetRange() const{return m_range;}
-	void SetRange(const Json::Value& x_range);
-
-	// virtual void Serialize(std::ostream& x_out, MkDirectory* xp_dir = nullptr) const override {x_out << GetValueString();}
-	// virtual void Deserialize(std::istream& x_in, MkDirectory* xp_dir = nullptr) override {std::stringstream ss; ss << x_in; SetValue(ss.str(), PARAMCONF_UNKNOWN);}
+	void SetRange(const mkjson& x_range);
 
 protected:
 	ParameterConfigType m_confSource = PARAMCONF_UNSET;
-	Json::Value m_range;
+	mkjson m_range;
 
 private:
 	bool m_isLocked       = false;

@@ -23,8 +23,6 @@
 #include "FeatureHistory.h"
 #include "FeatureStd.h"
 #include "Factories.h"
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
 
 #define INI_VARIANCE 0.01
 #define MIN_VARIANCE 0.0001
@@ -67,7 +65,7 @@ double FeatureHistory::CompareSquared(const Feature& x_feature) const
 	return sum / POW2(features.size());
 }
 
-void FeatureHistory::Randomize(unsigned int& xr_seed, const Json::Value& x_param)
+void FeatureHistory::Randomize(unsigned int& xr_seed, const mkjson& x_param)
 {
 	features.clear();
 	for(int i = 0 ; i  < 100 ; i++)

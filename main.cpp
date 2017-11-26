@@ -269,7 +269,6 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 /// Override the initial config with extra config files and argument set parameters
 void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, const vector<string>& parameters, log4cxx::LoggerPtr& logger)
 {
-	Json::Reader reader;
 	// Override values of parameters if an extra config is used
 	for(const auto& elem1 : extraConfig)
 	{
@@ -357,16 +356,16 @@ int main(int argc, char** argv)
 		readFromFile(appConfig, args.configFile);
 		overrideConfig(appConfig, args.extraConfig, args.parameters, logger);
 		validate(appConfig);
-		assert(!appConfig.isNull());
+		assert(!appConfig.is_null());
 
 		// Init global variables and objects
 		// Context manages all call to system, files, ...
-		Context::Parameters contextParameters(appConfig["name"].asString());
+		Context::Parameters contextParameters(appConfig.at("name").get<string>());
 		contextParameters.Read(appConfig);
 
 		contextParameters.outputDir       = args.outputDir;
 		contextParameters.configFile      = args.configFile;
-		contextParameters.applicationName = appConfig["name"].asString();
+		contextParameters.applicationName = appConfig.at("name").get<string>();
 		contextParameters.centralized     = args.centralized;
 		contextParameters.robust          = args.robust;
 		contextParameters.realTime        = !args.fast;

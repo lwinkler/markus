@@ -4,8 +4,6 @@
 #include "ConfigReader.h"
 #include "ConfigXml.h"
 #include "util.h"
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
 
 using namespace std;
 using namespace boost;
@@ -16,11 +14,11 @@ map<string, string> moduleTypes;
 
 // json serialize float as double and test
 
-Json::Value translateElement(const Json::Value& x_in)
+mkjson translateElement(const mkjson& x_in)
 {
-	Json::Value out = Json::arrayValue;
+	mkjson out = nlohmann::json::array();
 	for(const auto& elem : x_in.getMemberNames()) {
-		Json::Value tmp;
+		mkjson tmp;
 		if(x_in[elem].isObject() && x_in[elem].isMember("connected"))
 		{
 			tmp = x_in[elem];
@@ -48,8 +46,8 @@ int main(int argc, char** argv)
 	const string filename_old(argv[1]);
 	const string filename_new(argv[2]);
 	cout << "Translate " << filename_old << " to " << filename_new << endl;
-	Json::Value json1;
-	Json::Value json2;
+	mkjson json1;
+	mkjson json2;
 	readFromFile(json1, filename_old);
 
 	if(json1.isMember("name"))
@@ -58,13 +56,13 @@ int main(int argc, char** argv)
 		json2["description"] = json1["description"];
 
 	cout << "Translate application " << json2["name"].asString() << endl;
-	json2["modules"] = Json::arrayValue;
+	json2["modules"] = nlohmann::json::array();
 
 	for(const auto& name : json1["modules"].getMemberNames())
 	{
-		Json::Value tmp;
-		tmp = json1["modules"][name];
-		tmp["inputs"]  = translateElement(json1["modules"][name]["inputs"]);
+		mkjson tmp;
+		tmp = json1.at("modules").at(name);
+		tmp["inputs"]  = translateElement(json1.at("modules".at(name).at("inputs")));
 		// tmp["outputs"] = translateElement(json1["modules"][name]["outputs"]);
 		tmp["name"] = name;
 		json2["modules"].append(tmp);

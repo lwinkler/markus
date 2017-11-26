@@ -343,7 +343,7 @@ public:
 		for(const auto& elem : listFeatures)
 		{
 			Feature* feat = m_factoryFeatures.Create(elem);
-			feat->Randomize(seed, Json::nullValue);
+			feat->Randomize(seed, nullptr);
 			testSerialization(*feat, elem);
 			delete(feat);
 		}

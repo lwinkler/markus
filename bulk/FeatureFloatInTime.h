@@ -34,10 +34,10 @@ public:
 	friend void from_json(const mkjson& _json, FeatureFloatInTime& _ser){_ser.Deserialize(_json);}
 
 	explicit FeatureFloatInTime(const FeatureFloat& x_feat = FeatureFloat());
-	Feature* CreateCopy() const {return new FeatureFloatInTime(*this);}
+	Feature* CreateCopy() const override {return new FeatureFloatInTime(*this);}
 	void Update(const Feature& x_feat, double x_alpha);
 	double CompareSquared(const Feature& x_feature) const override;
-	void Randomize(unsigned int& xr_seed, const Json::Value& x_param) override;
+	void Randomize(unsigned int& xr_seed, const mkjson& x_param) override;
 	void Serialize(mkjson& _json) const override;
 	void Deserialize(const mkjson& _json) override;
 

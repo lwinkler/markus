@@ -47,13 +47,13 @@ Event::Event() :
 Event::~Event() {}
 
 /// Randomize the content of the event
-void Event::Randomize(unsigned int& xr_seed, const Json::Value& x_requirement, const Size& x_size)
+void Event::Randomize(unsigned int& xr_seed, const mkjson& x_requirement, const Size& x_size)
 {
 	// random event
 	Clean();
-	if(x_requirement != Json::nullValue || rand_r(&xr_seed) < RAND_MAX /10)
+	if(!x_requirement.is_null() || rand_r(&xr_seed) < RAND_MAX /10)
 	{
-		if(x_requirement == Json::nullValue && rand_r(&xr_seed) < RAND_MAX /10)
+		if(x_requirement.is_null() && rand_r(&xr_seed) < RAND_MAX /10)
 		{
 			Raise("random", rand_r(&xr_seed), rand_r(&xr_seed));
 		}
@@ -75,8 +75,8 @@ void to_json(mkjson& rx_json, const Event& x_ser)
 			{"eventName", x_ser.m_eventName},
 			{"dateEvent", x_ser.m_timeStampEvent},
 			{"dateNotif", x_ser.m_timeStampNotif},
-			{"object", x_ser.m_object}
-			// TODO {"external", x_ser.m_externalInfo}
+			{"object", x_ser.m_object},
+			{"external", x_ser.m_externalInfo}
 		};
 	}
 	else rx_json = mkjson{{"raised", false}};
@@ -98,9 +98,7 @@ void from_json(const mkjson& x_json, Event& _ser)
 		}
 
 		// Deserialize files
-		_ser.m_externalInfo.clear();
-		for(auto it = x_json.at("external").cbegin(); it != x_json.at("external").cend(); ++it)
-			; // TODO m_externalInfo = x_json["external"].get<Object>();
+		_ser.m_externalInfo = x_json["external"];
 	}
 	else
 	{
@@ -169,7 +167,7 @@ void Event::Raise(const string& x_eventName, TIME_STAMP x_absTimeNotif, TIME_STA
 void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 {
 	/*
-	Json::Value root;
+	mkjson root;
 	string level = "EVENT";
 
 	stringstream ss;
@@ -181,7 +179,7 @@ void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 	// root["external"] = m_externalInfo;
 
 	// export the event to our specific format
-	Json::Value out;
+	mkjson out;
 	COPY_AND_CHECK(out["dateEvent"]          , root["dateEvent"]);
 	COPY_AND_CHECK(out["dateNotif"]          , root["dateNotif"]);
 	COPY_AND_CHECK(out["applicationName"]    , x_context.GetApplicationName());
@@ -194,7 +192,7 @@ void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 		out["attrs"] = root["external"];
 		// note: attrs can be empty, create an empty vector
 		if(out["attrs"].isNull())
-			out["attrs"] = Json::Value(Json::arrayValue);
+			out["attrs"] = mkjson(nlohmann::json::array());
 		level = "PROCESS";
 	}
 	else
@@ -203,8 +201,8 @@ void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 
 		if(m_object.GetName() != "empty")
 		{
-			Json::Value& outObj = out["objects"][0];
-			Json::Value& inObj  = root["object"];
+			mkjson& outObj = out["objects"][0];
+			mkjson& inObj  = root["object"];
 			stringstream ss;
 			ss<<inObj["name"].asString()<<inObj["id"].asInt();
 			COPY_AND_CHECK(outObj["objectId"] , ss.str());
@@ -230,8 +228,8 @@ void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 void Event::GetExternalFiles(map<std::string, string>& xr_output) const
 {
 	xr_output.clear();
-	for(const auto& elem : m_externalInfo["files"].getMemberNames())
+	for(auto it = m_externalInfo["files"].begin() ; it != m_externalInfo["files"].end() ; ++it)
 	{
-		xr_output[elem] = m_externalInfo["files"][elem].asString();
+		xr_output[it.key()] = it.value().get<string>();
 	}
 }

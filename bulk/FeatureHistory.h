@@ -37,7 +37,7 @@ public:
 	Feature* CreateCopy() const {return new FeatureHistory(*this);}
 	void Update(const TIME_STAMP& x_timeStamp, const Feature& x_feat);
 	double CompareSquared(const Feature& x_feature) const override;
-	void Randomize(unsigned int& xr_seed, const Json::Value& x_param) override;
+	void Randomize(unsigned int& xr_seed, const mkjson& x_param) override;
 	void Serialize(mkjson& _json) const override;
 	void Deserialize(const mkjson& _json) override;
 

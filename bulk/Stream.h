@@ -51,7 +51,7 @@ public:
 		}
 	}
 
-	Stream(const std::string& x_name, Module& rx_module, const std::string& rx_description, const Json::Value& rx_requirement = Json::nullValue);
+	Stream(const std::string& x_name, Module& rx_module, const std::string& rx_description, const mkjson& rx_requirement = nullptr);
 	virtual ~Stream();
 
 	inline void Reset() {m_timeStamp = TIME_STAMP_MIN;SetValueToDefault();}
@@ -69,7 +69,7 @@ public:
 	virtual void Randomize(unsigned int& xr_seed) = 0;
 	void Serialize(mkjson& rx_json, MkDirectory* xp_dir = nullptr) const;
 	void Deserialize(const mkjson& x_json, MkDirectory* xp_dir = nullptr);
-	virtual void Export(std::ostream& rx_os) const;
+	virtual void Export(std::ostream& rx_os) const override;
 	inline bool IsConnected() const {return m_cptConnected > 0;}
 	inline void SetAsConnected(bool x_val)
 	{
@@ -111,7 +111,7 @@ public:
 	void SetDefault(const ConfigReader& x_value) override = 0;
 	void SetValueToDefault() override = 0;
 	bool CheckRange() const override {return true;}
-	Json::Value GenerateValues(int x_nbSamples, const Json::Value& x_range) const override {return Json::nullValue;}
+	mkjson GenerateValues(int x_nbSamples, const mkjson& x_range) const override {return nullptr;}
 	ConfigReader GetValue() const override = 0;
 	ConfigReader GetDefault() const override = 0;
 

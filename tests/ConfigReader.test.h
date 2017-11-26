@@ -43,10 +43,10 @@ public:
 		ConfigReader conf2;
 		readFromFile(conf2, "tests/tmp/test3.json");
 
-		TS_ASSERT(!conf2["t1"].isNull());
-		TS_ASSERT(!conf2["t1"]["t2"].isNull());
-		TS_ASSERT(!conf2["t1"]["t2"]["t3"].isNull());
-		TS_ASSERT( conf2["t1"]["t2"]["t3"]["bla"].asInt() == 333);
+		TS_ASSERT(!conf2["t1"].is_null());
+		TS_ASSERT(!conf2["t1"]["t2"].is_null());
+		TS_ASSERT(!conf2["t1"]["t2"]["t3"].is_null());
+		TS_ASSERT( conf2["t1"]["t2"]["t3"]["bla"].get<int>() == 333);
 	}
 
 	/// Load and save a config file
@@ -56,18 +56,18 @@ public:
 
 		ConfigReader appConf;
 		readFromFile(appConf, "tests/config/config1.json");
-		ConfigReader& module0conf(findFirstInArray(appConf["modules"], "name", "Module0"));
+		ConfigReader& module0conf(findFirstInArray(appConf.at("modules"), "name", "Module0"));
 		ConfigReader& module1conf = findFirstInArray(appConf["modules"], "name", "Module1");
 
-		TS_ASSERT(! module0conf["inputs"].isNull());
-		TS_ASSERT(! module1conf["inputs"].isNull());
+		TS_ASSERT(! module0conf["inputs"].is_null());
+		TS_ASSERT(! module1conf["inputs"].is_null());
 
 		ConfigReader& param1 = findFirstInArray(module0conf["inputs"], "name", "param_text");
-		TS_ASSERT(param1["value"].asString() == "SomeText");
+		TS_ASSERT(param1["value"].get<string>() == "SomeText");
 		ConfigReader& param2 = findFirstInArray(module0conf["inputs"], "name", "param_int");
-		TS_ASSERT(param2["value"].asInt() == 21);
+		TS_ASSERT(param2["value"].get<int>() == 21);
 		ConfigReader& param3 = findFirstInArray(module0conf["inputs"], "name", "param_float");
-		TS_ASSERT(param3["value"].asDouble() == 3.1415);
+		TS_ASSERT(param3["value"].get<double>() == 3.1415);
 
 		ConfigReader conf1;
 		readFromFile(conf1, "tests/config/config1.json");
@@ -94,7 +94,7 @@ public:
 				  ["aaa"]["nameX"]
 				  ["bbb"]["nameY"]
 				  ["ccc"]["nameZ"]
-				  .asString() == "someValue");
+				  .get<string>() == "someValue");
 	}
 
 	/// Override the original config
@@ -108,17 +108,17 @@ public:
 		ConfigReader conf5;
 		readFromFile(conf5, "tests/config/config_part.json");
 
-		TS_ASSERT(findFirstInArray(conf2["inputs"], "name", "param_text")["value"].asString() == "SomeText");
-		TS_ASSERT(findFirstInArray(conf2["inputs"], "name", "param_int")["value"].asInt() == 21);
-		TS_ASSERT(findFirstInArray(conf2["inputs"], "name", "param_float")["value"].asDouble() == 3.1415000000000002);
+		TS_ASSERT(findFirstInArray(conf2["inputs"], "name", "param_text")["value"].get<string>() == "SomeText");
+		TS_ASSERT(findFirstInArray(conf2["inputs"], "name", "param_int")["value"].get<int>() == 21);
+		TS_ASSERT(findFirstInArray(conf2["inputs"], "name", "param_float")["value"].get<double>() == 3.1415000000000002);
 
 		overrideWith(conf1, conf5);
 
-		TS_ASSERT(findFirstInArray(findFirstInArray(conf1["modules"], "name", "Module0")["inputs"], "name", "param_text")["value"].asString() == "a new text");
-		TS_ASSERT(findFirstInArray(findFirstInArray(conf1["modules"], "name", "Module0")["inputs"], "name", "param_int")["value"].asInt() == 33);
-		TS_ASSERT(findFirstInArray(findFirstInArray(conf1["modules"], "name", "Module0")["inputs"], "name", "param_float")["value"].asDouble() == 3.1415);
-		TS_ASSERT(findFirstInArray(findFirstInArray(conf1["modules"], "name", "Module1")["inputs"], "name", "param_float")["value"].asDouble()  == 77.7);
-		TS_ASSERT(findFirstInArray(findFirstInArray(conf1["modules"], "name", "Module1")["inputs"], "name", "param_int")["value"].asInt()  == 42);
+		TS_ASSERT(findFirstInArray(findFirstInArray(conf1.at("modules"), "name", "Module0")["inputs"], "name", "param_text")["value"].get<string>() == "a new text");
+		TS_ASSERT(findFirstInArray(findFirstInArray(conf1.at("modules"), "name", "Module0")["inputs"], "name", "param_int")["value"].get<int>() == 33);
+		TS_ASSERT(findFirstInArray(findFirstInArray(conf1.at("modules"), "name", "Module0")["inputs"], "name", "param_float")["value"].get<double>() == 3.1415);
+		TS_ASSERT(findFirstInArray(findFirstInArray(conf1.at("modules"), "name", "Module1")["inputs"], "name", "param_float")["value"].get<double>()  == 77.7);
+		TS_ASSERT(findFirstInArray(findFirstInArray(conf1.at("modules"), "name", "Module1")["inputs"], "name", "param_int")["value"].get<int>()  == 42);
 	}
 };
 

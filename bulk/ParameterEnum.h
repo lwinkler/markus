@@ -46,7 +46,7 @@ public:
 	inline ConfigReader GetValue() const override {return GetReverseEnum().at(mr_value);}
 	inline ConfigReader GetDefault() const override {return GetReverseEnum().at(m_default);}
 	bool CheckRange() const override;
-	Json::Value GenerateValues(int x_nbSamples, const Json::Value& x_range) const override;
+	mkjson GenerateValues(int x_nbSamples, const mkjson& x_range) const override;
 	void Print(std::ostream& os) const override;
 	void SetValueToDefault() override
 	{

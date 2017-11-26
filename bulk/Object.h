@@ -106,7 +106,7 @@ public:
 
 	void RenderTo(cv::Mat& x_output, const cv::Scalar& x_color) const;
 	void Intersect(const cv::Mat& x_image);
-	virtual void Randomize(unsigned int& xr_seed, const Json::Value& x_requirement, const cv::Size& xr_size);
+	virtual void Randomize(unsigned int& xr_seed, const mkjson& x_requirement, const cv::Size& xr_size);
 
 protected:
 	std::string m_name;

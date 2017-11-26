@@ -23,6 +23,7 @@
 
 #include "Module.h"
 #include "util.h"
+#include "json.hpp"
 
 #include "Stream.h"
 #include "Timer.h"
@@ -31,8 +32,6 @@
 
 #include "ControllerModule.h"
 #include "Factories.h"
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
 #include <fstream>
 
 using namespace std;
@@ -309,12 +308,12 @@ void Module::Process()
 */
 void Module::Export(ostream& rx_os) const
 {
-	Json::Value root;
-	root["class"]       = GetClass();
-	// root["name"]        = GetName();
-	root["description"] = GetDescription();
-	root["inputs"]  = Json::arrayValue;
-	root["outputs"] = Json::arrayValue;
+	mkjson json;
+	json["class"]       = GetClass();
+	// json["name"]        = GetName();
+	json["description"] = GetDescription();
+	json["inputs"]  = nlohmann::json::array();
+	json["outputs"] = nlohmann::json::array();
 
 	for(const auto & elem : m_param.GetList())
 	{
@@ -322,10 +321,10 @@ void Module::Export(ostream& rx_os) const
 		// if(elem->GetName().find('_') != string::npos)
 			// throw MkException("Forbidden character _ in " + elem->GetName(), LOC);
 		stringstream ss;
-		Json::Value val;
+		mkjson val;
 		elem->Export(ss);
-		ss >> val;
-		root["inputs"].append(val);
+		val << ss;
+		json["inputs"].push_back(val);
 	}
 	/* Already in parameters
 	for(const auto& elem : m_inputStreams)
@@ -334,10 +333,10 @@ void Module::Export(ostream& rx_os) const
 			throw MkException("Forbidden character _ in " + elem.second->GetName(), LOC);
 		// note: parameters are now inputs
 		stringstream ss;
-		Json::Value val;
+		mkjson val;
 		elem.second->Export(ss);
 		ss >> val;
-		root["inputs"].append(val);
+		json["inputs"].append(val);
 	}
 	*/
 	for(const auto& elem : m_outputStreams)
@@ -349,12 +348,12 @@ void Module::Export(ostream& rx_os) const
 		{
 			stringstream ss;
 			elem.second->Export(ss);
-			Json::Value val;
-			ss >> val;
-			root["outputs"].append(val);
+			mkjson val;
+			val << ss;
+			json["outputs"].push_back(val);
 		}
 	}
-	rx_os << root;
+	rx_os << json.dump();
 }
 
 const Stream& Module::GetInputStreamByName(const string& x_name) const
@@ -423,11 +422,11 @@ void Module::PrintStatistics(ConfigReader& xr_result) const
 
 	// Write perf to output JSON
 	ConfigReader& perfModule(xr_result["module"][GetName()]);
-	perfModule["nb_frames"]             = Json::UInt64(m_countProcessedFrames);
-	perfModule["timers"]["processable"] = Json::UInt64(m_timerProcessable.GetMsLong());
-	perfModule["timers"]["processing"]  = Json::UInt64(m_timerProcessFrame.GetMsLong());
-	perfModule["timers"]["conversion"]  = Json::UInt64(m_timerConversion.GetMsLong());
-	perfModule["timers"]["waiting"]     = Json::UInt64(m_timerWaiting.GetMsLong());
+	perfModule["nb_frames"]             = m_countProcessedFrames;
+	perfModule["timers"]["processable"] = m_timerProcessable.GetMsLong();
+	perfModule["timers"]["processing"]  = m_timerProcessFrame.GetMsLong();
+	perfModule["timers"]["conversion"]  = m_timerConversion.GetMsLong();
+	perfModule["timers"]["waiting"]     = m_timerWaiting.GetMsLong();
 	perfModule["fps"]                   = fps;
 }
 

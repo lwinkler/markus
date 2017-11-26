@@ -25,8 +25,6 @@
 #define FEATURE_UTIL_H
 
 #include <opencv2/features2d/features2d.hpp>
-// #include <jsoncpp/json/reader.h>
-// #include <jsoncpp/json/writer.h>
 #include "json.hpp"
 #include "define.h"
 #include "MkException.h"

@@ -32,6 +32,7 @@
 #include "Controller.h"
 
 #include "util.h"
+#include "json.hpp"
 
 #include <fstream>
 #include <future>
@@ -75,18 +76,18 @@ Manager::~Manager()
 */
 void Manager::Build()
 {
-	if(m_param.config["modules"].isNull())
+	if(m_param.config["modules"].is_null())
 		throw MkException("Config is null", LOC);
 	for(const auto& elem : m_param.config["modules"])
 	{
-		BuildModule(elem["name"].asString(), elem);
+		BuildModule(elem["name"].get<string>(), elem);
 	}
 }
 
 void Manager::BuildModule(const string& x_name, const ConfigReader& x_moduleConfig)
 {
 	// Read parameters
-	string moduleType = x_moduleConfig["class"].asString();
+	string moduleType = x_moduleConfig["class"].get<string>();
 	ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, x_name);
 	tmp2->Read(x_moduleConfig);
 
@@ -194,28 +195,28 @@ void Manager::Connect()
 	// Connect input and output streams (re-read the config once since we need all modules to be connected)
 	for(const auto& conf : m_param.config["modules"])
 	{
-		Module& module = RefModuleByName(conf["name"].asString());
+		Module& module = RefModuleByName(conf.at("name").get<string>());
 
 		// For each module
 		// Read conections of inputs
-		for(const auto& inputConf : conf["inputs"])
+		for(const auto& inputConf : conf.at("inputs"))
 		{
 			const auto& inputConfig(inputConf);
-			if(!inputConfig.isObject() || !inputConfig.isMember("connected"))
+			if(!inputConfig.is_object() || inputConfig.find("connected") == inputConfig.end())
 				continue;
-			ConnectInput(inputConfig, module, inputConf["name"].asString());
+			ConnectInput(inputConfig, module, inputConf.at("name").get<string>());
 
 			// Connect all sub-inputs: only used in case of multiple streams
-			for(const auto& subInputConfig : inputConfig["inputs"])
+			for(const auto& subInputConfig : inputConfig.at("inputs"))
 			{
-				ConnectInput(subInputConfig, module, inputConf["name"].asString());
+				ConnectInput(subInputConfig, module, inputConf.at("name").get<string>());
 			}
 		}
 
 		// Add to depending modules, using master parameter
 		const auto& mas(module.GetParameters().GetParameterByName("master").GetValue());
-		if(!mas.isNull() && !mas.asString().empty())
-			RefModuleByName(mas.asString()).AddDependingModule(module);
+		if(!mas.is_null() && !mas.get<string>().empty())
+			RefModuleByName(mas.get<string>()).AddDependingModule(module);
 	}
 	m_isConnected = true;
 }
@@ -429,8 +430,8 @@ void Manager::PrintStatistics()
 
 	// Write perf to output XML
 	ConfigReader& perfModule(conf["manager"]);
-	perfModule["nb_frames"]             = Json::UInt64(m_frameCount);
-	perfModule["timers"]["processable"] = Json::UInt64(m_timerProcessable.GetMsLong());
+	perfModule["nb_frames"]             = m_frameCount;
+	perfModule["timers"]["processable"] = m_timerProcessable.GetMsLong();
 	// perfModule["timers"]["processing"]  = Json::UInt64(m_timerProcessFrame.GetMsLong());
 	perfModule["fps"]                   = fps;
 
@@ -472,7 +473,7 @@ void Manager::CreateEditorFiles(const string& x_fileName)
 	try
 	{
 		map<string,vector<string>> moduleCategories;
-		Json::Value moduleDescriptionsJson = Json::arrayValue;
+		mkjson moduleDescriptionsJson = nlohmann::json::array();
 
 		vector<string> moduleTypes;
 		mr_moduleFactory.List(moduleTypes);
@@ -487,18 +488,18 @@ void Manager::CreateEditorFiles(const string& x_fileName)
 			// JSON file containing all module descriptions
 			stringstream os;
 			module->Export(os);
-			Json::Value root;
-			os >> root;
-			moduleDescriptionsJson.append(root);
+			mkjson json;
+			json << os;
+			moduleDescriptionsJson.push_back(json);
 		}
-		Json::Value moduleCategoriesJson = Json::arrayValue;
+		mkjson moduleCategoriesJson = nlohmann::json::array();
 		for(const auto& elem : moduleCategories) {
-			Json::Value root;
-			root["name"]    = elem.first;
-			root["modules"] = Json::arrayValue;
+			mkjson json;
+			json["name"]    = elem.first;
+			json["modules"] = nlohmann::json::array();
 			for(const auto& mod : elem.second)
-				root["modules"].append(mod);
-			moduleCategoriesJson.append(root);
+				json["modules"].push_back(mod);
+			moduleCategoriesJson.push_back(json);
 		}
 
 		// Generate the js files containing
@@ -567,19 +568,19 @@ void Manager::ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module,
 	// Check if connected to our previous module
 	try
 	{
-		string conMod = x_inputConfig["connected"]["module"].asString();
-		string conOut = x_inputConfig["connected"]["output"].asString();
+		string conMod = x_inputConfig.at("connected").at("module").get<string>();
+		string conOut = x_inputConfig.at("connected").at("output").get<string>();
 		// Connection of a simple input
 		LOG_DEBUG(m_logger, "Connect input " + x_inputName + " of module " + xr_module.GetName() + " to output " + conMod + ":" + conOut);
 
 		Stream& inputStream  = xr_module.RefInputStreamByName(x_inputName);
-		inputStream.SetBlocking(x_inputConfig.get("block", 1).asInt());
-		inputStream.SetSynchronized(x_inputConfig.get("sync", 1).asInt());
+		inputStream.SetBlocking(x_inputConfig.value<int>("block", 1));
+		inputStream.SetSynchronized(x_inputConfig.value<int>("sync", 1));
 		Stream& outputStream = RefModuleByName(conMod).RefOutputStreamByName(conOut);
 
 		// Connect input and output streams
 		inputStream.Connect(outputStream);
-		if(xr_module.GetParameters().GetParameterByName("master").GetValue().asString().empty())
+		if(xr_module.GetParameters().GetParameterByName("master").GetValue().get<string>().empty())
 			RefModuleByName(conMod).AddDependingModule(xr_module);
 	}
 	catch(MkException& e)
@@ -645,7 +646,7 @@ bool Manager::ManageInterruptions(bool x_continueFlag)
 /* Enable this for a more verbose exception status
 void Manager::Status() const
 {
-	Json::Value root;
+	mkjson root;
 
 	for(auto module : m_modules)
 	{

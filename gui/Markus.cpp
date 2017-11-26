@@ -70,13 +70,11 @@ MarkusWindow::~MarkusWindow()
 
 void MarkusWindow::WriteConfig(ConfigReader& xr_config) const
 {
-	xr_config["modules"] = Json::arrayValue;
-	xr_config["modules"].resize(m_moduleViewer.size());
-	int ind = 0;
+	xr_config["modules"] = nlohmann::json::array();
 	for(auto & elem : m_moduleViewer)
 	{
-		elem->WriteConfig(xr_config["modules"][ind]);
-		ind++;
+		xr_config["modules"].emplace_back();
+		elem->WriteConfig(xr_config["modules"].back());
 	}
 	m_param.Write(xr_config);
 }
@@ -304,14 +302,13 @@ void MarkusWindow::resizeEvent(QResizeEvent* event)
 	}
 
 	// Add new module viewers to config
-	if(!m_param.config["modules"].isArray())
-		m_param.config["modules"] = Json::arrayValue;
-	m_param.config["modules"].resize(m_param.nbRows * m_param.nbCols);
+	if(!m_param.config["modules"].is_array())
+		m_param.config["modules"] = nlohmann::json::array();
 	for(int ind = size ; ind < m_param.nbRows * m_param.nbCols ; ind++)
 	{
 		ConfigReader& conf(m_param.config["modules"][ind]);
 		m_paramsViewer.push_back(new QModuleViewer::Parameters("viewer" + to_string(ind)));
-		if(!conf.isNull())
+		if(!conf.is_null())
 			m_paramsViewer.back()->Read(conf);
 		assert(!m_paramsViewer.empty());
 		m_moduleViewer.push_back(new QModuleViewer(mr_manager, *m_paramsViewer.back()));

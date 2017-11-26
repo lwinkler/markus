@@ -23,8 +23,6 @@
 
 #include "StreamObject.h"
 #include "util.h"
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
 
 #define DEFAULT_STREAM_COLOR cv::Scalar(255, 255, 255)
 
@@ -36,7 +34,7 @@ template<> const string StreamObject::m_type         = "Objects";
 template<> const string StreamObject::m_class        = "StreamObjects";
 template<> const ParameterType StreamObject::m_parameterType = PARAM_STREAM_OBJECTS;
 
-template<> StreamObject::StreamT(const std::string& rx_name, vector<Object>& rx_object, Module& rx_module, const std::string& rx_description, const Json::Value& rx_requirement) :
+template<> StreamObject::StreamT(const std::string& rx_name, vector<Object>& rx_object, Module& rx_module, const std::string& rx_description, const mkjson& rx_requirement) :
 	Stream(rx_name, rx_module, rx_description, rx_requirement),
 	m_content(rx_object)
 {
@@ -111,10 +109,10 @@ template<>void StreamObject::Randomize(unsigned int& xr_seed)
 	int minNb = 0;
 	int maxNb = 10;
 
-	if(!m_range.isNull())
+	if(!m_range.is_null())
 	{
-		minNb = m_range.get("min", minNb).asInt();
-		maxNb = m_range.get("max", maxNb).asInt();
+		minNb = m_range.value<int>("min", minNb);
+		maxNb = m_range.value<int>("max", maxNb);
 	}
 
 	int nb = (maxNb - minNb) == 0 ? minNb : minNb + rand_r(&xr_seed) % (maxNb - minNb);

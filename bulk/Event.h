@@ -27,8 +27,7 @@
 #include "define.h"
 #include "Object.h"
 #include "Context.h"
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
+#include "json.hpp"
 #include <log4cxx/logger.h>
 
 
@@ -71,13 +70,14 @@ public:
 		return m_object.GetFeature(x_name);
 	}
 	void Notify(const Context& x_contextbool, bool x_isProcessEvent=false);
-	virtual void Randomize(unsigned int& xr_seed, const Json::Value& x_requirement, const cv::Size& x_size);
+	virtual void Randomize(unsigned int& xr_seed, const mkjson& x_requirement, const cv::Size& x_size);
 
-	inline void AddExternalInfo(const std::string& x_label, const std::string& x_value) {m_externalInfo[x_label] = x_value;}
-	inline void AddExternalInfo(const std::string& x_label, double x_value) {m_externalInfo[x_label] = x_value;}
-	inline void AddExternalInfo(const std::string& x_label, int x_value) {m_externalInfo[x_label] = x_value;}
-	inline void AddExternalInfo(const std::string& x_label, uint64_t x_value) {Json::Value::UInt64 val(x_value); m_externalInfo[x_label] = val;}
-	inline void AddExternalInfo(const std::string& x_label, std::istream& x_in) {x_in >> m_externalInfo[x_label];}
+	template<class T> inline void AddExternalInfo(const std::string& x_label, const T& x_value) {m_externalInfo[x_label] = x_value;}
+	// inline void AddExternalInfo(const std::string& x_label, const std::string& x_value) {m_externalInfo[x_label] = x_value;}
+	// inline void AddExternalInfo(const std::string& x_label, double x_value) {m_externalInfo[x_label] = x_value;}
+	// inline void AddExternalInfo(const std::string& x_label, int x_value) {m_externalInfo[x_label] = x_value;}
+	// inline void AddExternalInfo(const std::string& x_label, uint64_t x_value) {Json::Value::UInt64 val(x_value); m_externalInfo[x_label] = val;}
+	// inline void AddExternalInfo(const std::string& x_label, std::istream& x_in) {x_in >> m_externalInfo[x_label];}
 	inline void AddExternalFile(const std::string& x_label, const std::string& x_file) {m_externalInfo["files"][x_label] = x_file;}
 	void GetExternalFiles(std::map<std::string, std::string>& xr_output) const;
 
@@ -92,7 +92,7 @@ protected:
 	TIME_STAMP m_timeStampStart = TIME_STAMP_MIN;
 	/// Time stamp of the end of the event
 	TIME_STAMP m_timeStampEnd = TIME_STAMP_MIN;
-	Json::Value m_externalInfo;
+	mkjson m_externalInfo;
 
 private:
 	static log4cxx::LoggerPtr m_logger;

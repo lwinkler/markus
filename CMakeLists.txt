@@ -39,7 +39,7 @@ set(modules_src ${modules_src2} PARENT_SCOPE)
 endfunction(appendModules)
 
 
-add_definitions(-std=c++11 -Wextra -Wno-unused-parameter -Wno-deprecated-register)
+add_definitions(-std=c++14 -Wextra -Wno-unused-parameter -Wno-deprecated-register)
 if (CMAKE_BUILD_TYPE MATCHES Debug)
 	add_definitions(-DMARKUS_DEBUG_STREAMS)
 endif()
@@ -55,16 +55,12 @@ find_package(MONGOC QUIET)
 
 find_library(LOG4CXX_LIBS log4cxx)
 find_library(TINYXML_LIBS tinyxml)
-find_library(JSONCPP_LIBS jsoncpp)
 
 if("${LOG4CXX_LIBS}" STREQUAL "")
 	message(FATAL_ERROR "Log4CXX library not found on your system")
 endif()
 if("${TINYXML_LIBS}" STREQUAL "")
 	message(FATAL_ERROR "TinyXML library not found on your system")
-endif()
-if("${JSONCPP_LIBS}" STREQUAL "")
-	message(FATAL_ERROR "JsonCpp library not found on your system")
 endif()
 if("${PYTHON_LIBRARIES}" STREQUAL "")
 	message(FATAL_ERROR "Python library not found on your system")
@@ -73,7 +69,6 @@ endif()
 
 set(MK_EXT_DEPS ${MK_EXT_DEPS} ${LOG4CXX_LIBS})
 set(MK_EXT_DEPS ${MK_EXT_DEPS} ${TINYXML_LIBS})
-set(MK_EXT_DEPS ${MK_EXT_DEPS} ${JSONCPP_LIBS})
 set(MK_EXT_DEPS ${MK_EXT_DEPS} ${OpenCV_LIBS})
 set(MK_EXT_DEPS ${MK_EXT_DEPS} ${CMAKE_THREAD_LIBS_INIT})
 set(MK_EXT_DEPS ${MK_EXT_DEPS} ${Boost_LIBRARIES})
@@ -141,7 +136,7 @@ include_directories(/usr/include/libmongoc-1.0)
 # Include sub directories
 add_subdirectory(util)
 add_subdirectory(bulk)
-add_subdirectory(tools)
+# add_subdirectory(tools)
 foreach(iter IN LISTS Markus_MODULE_DIRS)
 	add_subdirectory(${iter})
 endforeach(iter)
@@ -166,7 +161,7 @@ add_custom_target(doc
 
 add_custom_target(lint
 	COMMENT "Check C++ lint rules with the lint tool provided by Google"
-	COMMAND tools/list_source_dirs.sh | tools/list_source_dirs.sh | xargs -I{} find -L {} ! -name "moc*" -name "*.h" -print -o -name "*.cpp" ! -name "moc*" -print | xargs tools/cpplint.py --filter=-whitespace,-legal,-build,-runtime/references,-runtime/explicit,-readability/todo,-readability/streams,-readability/function,-runtime/string
+	COMMAND tools/list_source_dirs.sh | xargs -I{} find -L {} ! -name \"moc*\" -name \"*.h\" -print -o -name \"*.cpp\" ! -name \"moc*\" -print | xargs tools/cpplint.py --filter=-whitespace,-legal,-build,-runtime/references,-runtime/explicit,-readability/todo,-readability/streams,-readability/function,-runtime/string
 )
 
 add_custom_target(check

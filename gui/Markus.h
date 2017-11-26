@@ -58,7 +58,7 @@ public:
 		}
 		int nbCols;
 		int nbRows;
-		Json::Value config;
+		mkjson config;
 	};
 
 	MarkusWindow(ParameterStructure& rx_param, Manager& rx_manager);

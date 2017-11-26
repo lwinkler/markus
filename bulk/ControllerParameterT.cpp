@@ -24,8 +24,6 @@
 #include "ControllerParameterT.h"
 #include "Processable.h"
 #include <boost/lexical_cast.hpp>
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
 
 using namespace std;
 
@@ -190,7 +188,7 @@ template<class T> void ControllerParameterT<T>::GetDefault(string* xp_value)
 template<> QWidget* ControllerInt::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_widget = new QParameterSlider(m_param.GetValue().asInt(), m_param.GetRange()["min"].asDouble(), m_param.GetRange()["max"].asDouble(), 0);
+	return mp_widget = new QParameterSlider(m_param.GetValue().get<int>(), m_param.GetRange().at("min").get<double>(), m_param.GetRange().at("max").get<double>(), 0);
 #else
 	return nullptr;
 #endif
@@ -204,7 +202,7 @@ template<> void ControllerInt::SetWidgetValue(const string& x_value)
 #endif
 }
 
-template<> Json::Value ControllerInt::GetValueFromWidget()
+template<> mkjson ControllerInt::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	return dynamic_cast<QParameterSlider*>(mp_widget)->GetValue();
@@ -219,7 +217,7 @@ template<> Json::Value ControllerInt::GetValueFromWidget()
 template<> QWidget* ControllerUInt::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_widget = new QParameterSlider(m_param.GetValue().asUInt(), m_param.GetRange()["min"].asDouble(), m_param.GetRange()["max"].asDouble(), 0);
+	return mp_widget = new QParameterSlider(m_param.GetValue().get<uint>(), m_param.GetRange().at("min").get<double>(), m_param.GetRange().at("max").get<double>(), 0);
 #else
 	return nullptr;
 #endif
@@ -233,7 +231,7 @@ template<> void ControllerUInt::SetWidgetValue(const string& x_value)
 #endif
 }
 
-template<> Json::Value ControllerUInt::GetValueFromWidget()
+template<> mkjson ControllerUInt::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	return dynamic_cast<QParameterSlider*>(mp_widget)->GetValue();
@@ -247,7 +245,7 @@ template<> Json::Value ControllerUInt::GetValueFromWidget()
 template<> QWidget* ControllerDouble::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_widget = new QParameterSlider(m_param.GetValue().asDouble(), m_param.GetRange()["min"].asDouble(), m_param.GetRange()["max"].asDouble(), PRECISION_DOUBLE);
+	return mp_widget = new QParameterSlider(m_param.GetValue().get<double>(), m_param.GetRange().at("min").get<double>(), m_param.GetRange().at("max").get<double>(), PRECISION_DOUBLE);
 #else
 	return nullptr;
 #endif
@@ -260,7 +258,7 @@ template<> void ControllerDouble::SetWidgetValue(const string& x_value)
 #endif
 }
 
-template<> Json::Value ControllerDouble::GetValueFromWidget()
+template<> mkjson ControllerDouble::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	return dynamic_cast<QParameterSlider*>(mp_widget)->GetValue();
@@ -275,7 +273,7 @@ template<> Json::Value ControllerDouble::GetValueFromWidget()
 template<> QWidget* ControllerFloat::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_widget = new QParameterSlider(m_param.GetValue().asFloat(), m_param.GetRange()["min"].asDouble(), m_param.GetRange()["max"].asDouble(), PRECISION_DOUBLE);
+	return mp_widget = new QParameterSlider(m_param.GetValue().get<float>(), m_param.GetRange().at("min").get<double>(), m_param.GetRange().at("max").get<double>(), PRECISION_DOUBLE);
 #else
 	return nullptr;
 #endif
@@ -288,7 +286,7 @@ template<> void ControllerFloat::SetWidgetValue(const string& x_value)
 #endif
 }
 
-template<> Json::Value ControllerFloat::GetValueFromWidget()
+template<> mkjson ControllerFloat::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	return dynamic_cast<QParameterSlider*>(mp_widget)->GetValue();
@@ -302,7 +300,7 @@ template<> QWidget* ControllerBool::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
 	mp_widget = new QCheckBox("Enabled");
-	dynamic_cast<QCheckBox*>(mp_widget)->setChecked(m_param.GetValue().asInt());
+	dynamic_cast<QCheckBox*>(mp_widget)->setChecked(m_param.GetValue().get<int>());
 	return mp_widget;
 #else
 	return nullptr;
@@ -316,7 +314,7 @@ template<> void ControllerBool::SetWidgetValue(const string& x_value)
 #endif
 }
 
-template<> Json::Value ControllerBool::GetValueFromWidget()
+template<> mkjson ControllerBool::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	return dynamic_cast<QCheckBox*>(mp_widget)->isChecked();
@@ -331,7 +329,7 @@ template<> QWidget* ControllerString::CreateWidget()
 #ifndef MARKUS_NO_GUI
 	QLineEdit* lineEdit = new QLineEdit();
 	lineEdit->setStyleSheet("color: black; background-color: white");
-	lineEdit->setText(m_param.GetValue().asString().c_str());
+	lineEdit->setText(m_param.GetValue().get<string>().c_str());
 	mp_widget = lineEdit;
 	return lineEdit;
 #else
@@ -345,7 +343,7 @@ template<> void ControllerString::SetWidgetValue(const string& x_value)
 #endif
 }
 
-template<> Json::Value ControllerString::GetValueFromWidget()
+template<> mkjson ControllerString::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	return dynamic_cast<QLineEdit*>(mp_widget)->text().toStdString();
@@ -381,7 +379,7 @@ template<> void ControllerSerializable::SetWidgetValue(const string& x_value)
 #endif
 }
 
-template<> Json::Value ControllerSerializable::GetValueFromWidget()
+template<> mkjson ControllerSerializable::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	return stringToJson(dynamic_cast<QLineEdit*>(mp_widget)->text().toStdString());
@@ -403,7 +401,7 @@ template<> void ControllerParameterT<Stream>::SetWidgetValue(const string& x_val
 	return;
 }
 
-template<> Json::Value ControllerParameterT<Stream>::GetValueFromWidget()
+template<> mkjson ControllerParameterT<Stream>::GetValueFromWidget()
 {
 	return "";
 }
@@ -418,7 +416,7 @@ template<> QWidget* ControllerEnum::CreateWidget()
 	{
 		comboBox->addItem(elem.first.c_str(), elem.second);
 	}
-	int index = comboBox->findData(m_param.GetValue().asInt());
+	int index = comboBox->findData(m_param.GetValue().get<int>());
 	comboBox->setCurrentIndex(index);
 	mp_widget = comboBox;
 
@@ -432,12 +430,12 @@ template<> void ControllerEnum::SetWidgetValue(const string& x_value)
 {
 #ifndef MARKUS_NO_GUI
 	QComboBox* comboBox = dynamic_cast<QComboBox*>(mp_widget);
-	int index = comboBox->findData(m_param.GetValue().asInt());
+	int index = comboBox->findData(m_param.GetValue().get<int>());
 	comboBox->setCurrentIndex(index);
 #endif
 }
 
-template<> Json::Value ControllerEnum::GetValueFromWidget()
+template<> mkjson ControllerEnum::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
 	QComboBox* comboBox = dynamic_cast<QComboBox*>(mp_widget);

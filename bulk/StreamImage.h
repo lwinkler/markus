@@ -71,14 +71,14 @@ public:
 	ConfigReader GetValue() const override
 	{
 		// note: for simplicity, we only serialize the size
-		Json::Value root;
+		mkjson root;
 		root["width"] = m_content.cols;
 		root["height"] = m_content.rows;
 		return root;
 	}
 	ConfigReader GetDefault() const override
 	{
-		Json::Value root;
+		mkjson root;
 		root["width"] = m_content.cols;
 		root["height"] = m_content.rows;
 		return root;

@@ -25,10 +25,7 @@
 #define SERIALIZABLE_H
 
 #include <iostream>
-#include <sstream> // TODO remove
 #include "json.hpp"
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
 
 using mkjson = nlohmann::json;
 

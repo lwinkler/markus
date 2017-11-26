@@ -23,19 +23,18 @@
 
 #include "Stream.h"
 #include "Module.h"
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
+#include "json.hpp"
 
 using namespace std;
 
 log4cxx::LoggerPtr Stream::m_logger(log4cxx::Logger::getLogger("Stream"));
 
-Stream::Stream(const string& x_name, Module& rx_module, const string& rx_description, const Json::Value& rx_requirement) :
+Stream::Stream(const string& x_name, Module& rx_module, const string& rx_description, const mkjson& rx_requirement) :
 	Parameter(x_name, rx_description),
 	mr_module(rx_module),
 	m_timeStamp(TIME_STAMP_MIN)
 {
-	if(!rx_requirement.isNull())
+	if(!rx_requirement.is_null())
 		SetRange(rx_requirement);
 }
 
@@ -51,7 +50,7 @@ Stream::~Stream()
 */
 void Stream::Export(ostream& rx_os) const
 {
-	Json::Value root;
+	mkjson root;
 	// root["id"] = id;
 	root["type"] = GetType();
 	root["name"] = GetName();
@@ -59,7 +58,7 @@ void Stream::Export(ostream& rx_os) const
 	root["description"] = GetDescription();
 	root["stream"] = true;
 	root["range"] = GetRange();
-	rx_os << root;
+	rx_os << root.dump();
 }
 
 

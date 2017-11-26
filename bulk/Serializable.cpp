@@ -20,11 +20,8 @@
 *    You should have received a copy of the GNU Lesser General Public License
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
 #include <sstream>
-
-#include <opencv2/opencv.hpp>
+// #include <opencv2/opencv.hpp>
 #include "Serializable.h"
 #include "MkException.h"
 

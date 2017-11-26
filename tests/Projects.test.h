@@ -61,11 +61,11 @@ protected:
 		readFromFile(appConfig, x_configFile);
 		validate(appConfig);
 		// Note: Added this to avoid deleting the output directory
-		TS_ASSERT(!appConfig.isNull());
+		TS_ASSERT(!appConfig.is_null());
 		Manager::Parameters params(appConfig);
 		params.aspectRatio     = x_aspectRatio;
 		params.autoProcess     = false;
-		Context::Parameters contextParams(appConfig["name"].asString());
+		Context::Parameters contextParams(appConfig["name"].get<string>());
 		contextParams.configFile      = x_configFile;
 		contextParams.outputDir       = "";
 		contextParams.applicationName = "TestProjects";

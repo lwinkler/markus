@@ -44,7 +44,7 @@ public:
 		const FeatureVectorT<T>& feat(dynamic_cast<const FeatureVectorT<T>&>(x_feature));
 		return compareSquared(values, feat.values);
 	}
-	inline virtual void Randomize(unsigned int& xr_seed, const Json::Value& x_param)
+	inline virtual void Randomize(unsigned int& xr_seed, const mkjson& x_param)
 	{
 		if(x_param.empty())
 		{
@@ -52,8 +52,7 @@ public:
 		}
 		else
 		{
-			Json::Reader reader;
-			int size = x_param["size"].asInt();
+			int size = x_param["size"].get<int>();
 			randomize(values, xr_seed, size);
 		}
 	}

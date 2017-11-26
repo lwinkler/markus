@@ -35,7 +35,7 @@ public:
 	friend inline void to_json(mkjson& _json, const StreamT<T>& _ser){_ser.Serialize(_json);}
 	friend inline void from_json(const mkjson& _json, StreamT<T>& _ser){_ser.Deserialize(_json);}
 
-	explicit StreamT(const std::string& rx_name, T& rx_object, Module& rx_module, const std::string& rx_description, const Json::Value& rx_requirement = Json::nullValue) :
+	explicit StreamT(const std::string& rx_name, T& rx_object, Module& rx_module, const std::string& rx_description, const mkjson& rx_requirement = nullptr) :
 		Stream(rx_name, rx_module, rx_description, rx_requirement),
 		m_content(rx_object),
 		m_default(T{})

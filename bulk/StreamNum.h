@@ -31,9 +31,6 @@
 #include <sstream>
 #include <boost/circular_buffer.hpp>
 
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
-
 #define PLOT_LENGTH 50
 
 /// Class for a stream of images (or video) used for input and output
@@ -44,7 +41,7 @@ public:
 	friend inline void to_json(mkjson& _json, const StreamNum<T>& _ser){_ser.Serialize(_json);}
 	friend inline void from_json(const mkjson& _json, StreamNum<T>& _ser){_ser.Deserialize(_json);}
 
-	StreamNum(const std::string& x_name, T& rx_scalar, Module& rx_module, const std::string& x_description, const Json::Value& rx_requirement = Json::nullValue) :
+	StreamNum(const std::string& x_name, T& rx_scalar, Module& rx_module, const std::string& x_description, const mkjson& rx_requirement = nullptr) :
 		Stream(x_name, rx_module, x_description, rx_requirement),
 		m_scalars(PLOT_LENGTH),
 		m_content(rx_scalar) {}
@@ -102,11 +99,11 @@ public:
 
 	virtual void SetValue(const ConfigReader& x_value, ParameterConfigType x_confType)
 	{
-		m_content = ParameterNum<T>::castJson(x_value);
+		m_content = x_value.get<T>();
 		m_confSource = x_confType;
 	}
 	virtual void SetDefault(const ConfigReader& x_value){
-		m_default = ParameterNum<T>::castJson(x_value);
+		m_default = x_value.template get<T>();
 	}
 	virtual void SetValueToDefault(){m_content = m_default; m_confSource = PARAMCONF_DEF;}
 	virtual ConfigReader GetValue() const{return m_content;}

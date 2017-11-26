@@ -23,8 +23,6 @@
 
 #include "StreamState.h"
 #include "util.h"
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
 
 using namespace std;
 using namespace cv;

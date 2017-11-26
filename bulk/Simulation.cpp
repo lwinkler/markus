@@ -29,8 +29,6 @@
 #include <iomanip>
 #include <fstream>
 #include <boost/filesystem.hpp>
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
 
 using namespace std;
 // using namespace boost::filesystem;
@@ -70,7 +68,7 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 	string arguments;
 	try
 	{
-		arguments = x_mainConfig["inputs"]["arguments"].asString();
+		arguments = x_mainConfig.at("inputs").at("arguments").get<string>();
 	}
 	catch(MkException &e) {}
 	m_allTargets << "$(OUTDIR)/results/" <<  sd.str() << " ";
@@ -104,52 +102,52 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 	m_cpt++;
 }
 
-const Json::Value createArray(const string& x_names, const string& x_name, const Json::Value& varConf)
+const mkjson createArray(const string& x_names, const string& x_name, const mkjson& varConf)
 {
-	if(varConf.isMember(x_names))
+	if(varConf.find(x_names) != varConf.end())
 		return varConf[x_names];
-	Json::Value val(Json::arrayValue);
-	val.append(varConf[x_name]);
+	mkjson val(nlohmann::json::array());
+	val.push_back(varConf[x_name]);
 	return val;
 }
 
 /// Add variation to simulation
 void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigReader& x_varConf, ConfigReader& xr_mainConfig)
 {
-	if(x_varConf.isNull())
+	if(x_varConf.is_null())
 		throw MkException("Variation config is null. Please check that a 'variations' property is present in simulation file", LOC);
 	for(const auto& varConf : x_varConf)
 	{
 		// Read module and parameter attribute
-		assert(varConf["param"].isNull());  // note: no longer supported
+		assert(varConf.at("param").is_null());  // note: no longer supported
 		const auto paramNames(createArray("parameters", "parameter", varConf));
 		const auto moduleNames(createArray("modules", "module", varConf));
 		if(moduleNames.size() != 1 && moduleNames.size() != paramNames.size())
 			throw MkException("Modules and parameters must have the same size (in variation) or modules must only contain one module", LOC);
 
 		// Get all targets to be varied in config
-		vector<Json::Value*> targets;
-		Json::Value originalValues;
+		vector<mkjson*> targets;
+		mkjson originalValues;
 		auto itmod = moduleNames.begin();
 		for(const auto& itpar : paramNames)
 		{
 			try
 			{
-				LOG_DEBUG(m_logger, "Param:" << itmod->asString() << ":" << itpar.asString());
-				ConfigReader& target = manOrMod(xr_mainConfig, itmod->asString())["inputs"][itpar.asString()];
+				LOG_DEBUG(m_logger, "Param:" << itmod->get<string>() << ":" << itpar.get<string>());
+				ConfigReader& target = manOrMod(xr_mainConfig, itmod->get<string>()).at("inputs").at(itpar.get<string>());
 				targets.push_back(&target);
-				originalValues.append(target.asString());
+				originalValues.push_back(target.get<string>());
 				if(moduleNames.size() > 1)
 					itmod++;
 			}
 			catch(exception &e)
 			{
-				throw MkException("Cannot variate parameter " + itpar.asString() + " of module " + itmod->asString() + ": " + e.what(), LOC);
+				throw MkException("Cannot variate parameter " + itpar.get<string>() + " of module " + itmod->get<string>() + ": " + e.what(), LOC);
 			}
 		}
 
 
-		string file = varConf["file"].asString();
+		string file = varConf.at("file").get<string>();
 
 		if(!file.empty())
 		{
@@ -162,28 +160,28 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 			copy(file, m_outputDir + "/" + basename(file));
 			ifstream ifs;
 			ifs.open(file);
-			Json::Value root;
-			ifs >> root;
+			mkjson root;
+			root << ifs;
 
 			// For each set of parameters
-			for(const auto& elem : root.getMemberNames())
+			for(auto it = root.cbegin() ; it != root.cend() ; ++it)
 			{
 				int i = 0;
 				for(const auto& ref : refNames)
 				{
-					if(root[elem][ref.asString()].isNull())
-						throw MkException("No tag " + ref.asString() + " for " + elem, LOC);
+					if(it.value().at(ref.get<string>()).is_null())
+						throw MkException("No tag " + ref.get<string>() + " for " + it.key(), LOC);
 
-					*(targets[i]) = root[elem][ref.asString()];
+					*(targets[i]) = it.value().at(ref.get<string>());
 					i++;
 				}
 
 				// add a name
 				// note: in the future maybe use a hash
-				xr_variationNames.push_back(elem);
+				xr_variationNames.push_back(it.key());
 
 				// Change value of param
-				if(varConf.isMember("variations"))
+				if(varConf.find("variations") != varConf.end())
 					AddVariations(xr_variationNames, varConf["variations"], xr_mainConfig);
 				else
 					AddSimulationEntry(xr_variationNames, xr_mainConfig);
@@ -197,23 +195,23 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 			if(paramNames.size() > 1)
 				throw MkException("To set more than one parameter variation, use an external file with option file=...", LOC);
 			// default values. Empty range means that the prog uses the default range of the param
-			const Json::Value& range = varConf["range"];
-			int nb = varConf.get("nb", 10).asInt();
+			const mkjson& range = varConf.at("range");
+			int nb = varConf.value<int>("nb", 10);
 
-			LOG_DEBUG(m_logger, "Variations for module " << moduleNames[0].asString());
-			const Parameter& param = m_manager.GetModuleByName(moduleNames[0].asString()).GetParameters().GetParameterByName(paramNames[0].asString());
-			Json::Value values = param.GenerateValues(nb, range);
+			LOG_DEBUG(m_logger, "Variations for module " << moduleNames.at(0).get<string>());
+			const Parameter& param = m_manager.GetModuleByName(moduleNames.at(0).get<string>()).GetParameters().GetParameterByName(paramNames.at(0).get<string>());
+			mkjson values = param.GenerateValues(nb, range);
 
 			// Generate a config for each variation
 			for(auto& elem : values)
 			{
 				LOG_DEBUG(m_logger, "Value = " << elem);
-				xr_variationNames.push_back(paramNames[0].asString() + "-" + jsonToString(elem));
+				xr_variationNames.push_back(paramNames.at(0).get<string>() + "-" + jsonToString(elem));
 
 				// Change value of param
 				*(targets[0]) = elem;
-				if(varConf.isMember("variations"))
-					AddVariations(xr_variationNames, varConf["variations"], xr_mainConfig);
+				if(varConf.find("variations") != varConf.end())
+					AddVariations(xr_variationNames, varConf.at("variations"), xr_mainConfig);
 				else
 					AddSimulationEntry(xr_variationNames, xr_mainConfig);
 				xr_variationNames.pop_back();

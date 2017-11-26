@@ -1,8 +1,6 @@
 #include "MkException.h"
 #include "Parameter.h"
 #include <cstring>
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
 
 using namespace std;
 

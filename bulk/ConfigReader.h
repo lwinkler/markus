@@ -27,14 +27,13 @@
 #include <string>
 #include <vector>
 #include <sstream>
-#include <jsoncpp/json/reader.h>
-#include <boost/noncopyable.hpp>
+#include <json.hpp>
 
 
 class Module;
 class ParameterStructure;
 
-typedef Json::Value ConfigReader;
+typedef nlohmann::json ConfigReader;
 
 void readFromFile(ConfigReader& rx_config, const std::string& x_fileName, bool x_allowCreation = false);
 void overrideWith(ConfigReader& rx_config, const ConfigReader& xr_extraConfig);

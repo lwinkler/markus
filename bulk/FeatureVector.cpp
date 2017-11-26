@@ -23,8 +23,6 @@
 #include "FeatureVector.h"
 #include "MkException.h"
 #include "util.h"
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
 
 using namespace std;
 
@@ -50,15 +48,15 @@ template<class T>std::ostream& serializeSimple(std::ostream& x_out, const std::v
 
 template<class T>std::istream& deserializeSimple(std::istream& x_in,  std::vector<T>& xr_val)
 {
-	Json::Value root;
-	x_in >> root;  // note: copy first for local use
-	assert(root.isArray());
+	mkjson root;
+	root << x_in;  // note: copy first for local use
+	assert(root.is_array());
 
 	xr_val.clear();
 	xr_val.resize(root.size());
 	for(unsigned int i = 0 ; i < root.size() ; i++)
 	{
-		xr_val[i] = root[i].asFloat();
+		xr_val[i] = root[i].get<float>();
 	}
 
 	return x_in;

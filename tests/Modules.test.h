@@ -60,8 +60,8 @@ struct ModuleTester
 	ModuleTester()
 	{
 		replaceOrAppendInArray(addModuleToConfig("VideoFileReader", configFile)["inputs"], "name", "fps")["value"] = 22;
-		assert(!configFile.isNull());
-		assert(configFile.isObject());
+		assert(!configFile.is_null());
+		assert(configFile.is_object());
 		configFile["name"] = "unitTest";
 	}
 
@@ -158,13 +158,13 @@ public:
 	}
 
 	/// Create module and make it ready to process
-	void CreateAndConnectModule(ModuleTester& tester, const string& x_type, const map<string, Json::Value>* xp_parameters = nullptr)
+	void CreateAndConnectModule(ModuleTester& tester, const string& x_type, const map<string, mkjson>* xp_parameters = nullptr)
 	{
 		TS_TRACE("Create and connect module of class " + x_type);
 		ConfigReader& moduleConfig = ModuleTester::addModuleToConfig(x_type, tester.configFile);
 
 		// Add parameters to override to the config
-		moduleConfig["inputs"] = Json::arrayValue;
+		moduleConfig["inputs"] = nlohmann::json::array();
 		if(xp_parameters != nullptr)
 			for(const auto& elem : *xp_parameters)
 				replaceOrAppendInArray(moduleConfig["inputs"], "name", elem.first)["value"] = elem.second;
@@ -306,7 +306,7 @@ public:
 						TS_TRACE("###  " + elemCtr.first + ".GetDefault returned " + defval);
 
 						TS_TRACE("Generate values for param of type " + type + " in range " + range);
-						Json::Value values = tester.module->GetParameters().GetParameterByName(elemCtr.first).GenerateValues(10, stringToJson(range));
+						mkjson values = tester.module->GetParameters().GetParameterByName(elemCtr.first).GenerateValues(10, stringToJson(range));
 
 						for(auto& elemVal : values)
 						{
@@ -332,7 +332,7 @@ public:
 
 							if(elemVal != stringToJson(newValue))
 							{
-								if(!elemVal.isNumeric() || elemVal.asFloat() != stringToJson(newValue).asFloat())
+								if(!elemVal.is_number() || elemVal.get<float>() != stringToJson(newValue).get<float>())
 									TS_FAIL("Value set must be returned by get: " + tmps + "!=" + newValue);
 							}
 
@@ -382,8 +382,8 @@ public:
 			Timer timer;
 			timer.Start();
 
-			vector<Json::Value> allValues;
-			vector<Json::Value> allDefault;
+			vector<mkjson> allValues;
+			vector<mkjson> allDefault;
 			vector<string> allNames;
 
 			{
@@ -403,7 +403,7 @@ public:
 					TS_TRACE("## on parameter " + elem->GetName() + " of type " + elem->GetType() + " on range " + jsonToString(elem->GetRange()));
 
 					// Generate a new module with each value for locked parameter
-					Json::Value values;
+					mkjson values;
 
 					TS_TRACE("Generate values for param of type " + elem->GetType() + " in range " + jsonToString(elem->GetRange()));
 					elem->GenerateValues(10, values);
@@ -416,14 +416,14 @@ public:
 			mp_context->RefOutputDir().CleanDir();
 
 			string lastParam = "";
-			Json::Value lastDefault;
+			mkjson lastDefault;
 
 			for(size_t i = 0 ; i < allValues.size() ; i++)
 			{
 				for(const auto& elemVal : allValues[i])
 				{
 					// For each value
-					map<string, Json::Value> params;
+					map<string, mkjson> params;
 					TS_TRACE("Set param " + allNames[i] + " = " + jsonToString(elemVal) + " and " + lastParam + " = " + jsonToString(lastDefault));
 					params[allNames[i]] = elemVal;
 					if(lastParam != "")
@@ -491,7 +491,7 @@ public:
 		{
 			TS_TRACE("## on module " + elem);
 			ModuleTester tester;
-			map<string, Json::Value> overrid = {{"autoProcess", true}};
+			map<string, mkjson> overrid = {{"autoProcess", true}};
 			CreateAndConnectModule(tester, elem, &overrid);
 
 			if(tester.module->IsUnitTestingEnabled() && !tester.module->IsInput())

@@ -23,8 +23,7 @@
 
 #include "ParameterEnum.h"
 #include "util.h"
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
+#include "json.hpp"
 
 using namespace std;
 
@@ -41,7 +40,7 @@ void ParameterEnum::SetValue(const ConfigReader& rx_value, ParameterConfigType x
 {
 	if(IsLocked())
 		throw ParameterException("You tried to set the value of a locked parameter.", LOC);
-	mr_value = GetEnum().at(rx_value.asString());
+	mr_value = GetEnum().at(rx_value.get<string>());
 	m_confSource = x_confType;
 }
 
@@ -52,7 +51,7 @@ void ParameterEnum::SetValue(const ConfigReader& rx_value, ParameterConfigType x
 */
 void ParameterEnum::SetDefault(const ConfigReader& rx_value)
 {
-	m_default = GetEnum().at(rx_value.asString());
+	m_default = GetEnum().at(rx_value.get<string>());
 }
 
 /**
@@ -62,12 +61,12 @@ void ParameterEnum::SetDefault(const ConfigReader& rx_value)
 */
 bool ParameterEnum::CheckRange() const
 {
-	if(!m_range.isMember("allowed"))
+	if(m_range.find("allowed") == m_range.end())
 		return true;
 
-	for(const auto& elem : m_range["allowed"])
+	for(const auto& elem : m_range.at("allowed"))
 	{
-		if(elem.asString() == GetReverseEnum().at(mr_value))
+		if(elem.get<string>() == GetReverseEnum().at(mr_value))
 			return true;
 	}
 	return false;
@@ -117,15 +116,15 @@ map<int,string> ParameterEnum::CreateReverseMap(const map<string, int>& x_map)
  * @param x_range      Range (if empty take parameter range)
  *
  */
-Json::Value ParameterEnum::GenerateValues(int x_nbSamples, const Json::Value& x_range) const
+mkjson ParameterEnum::GenerateValues(int x_nbSamples, const mkjson& x_range) const
 {
-	if(!x_range.isMember("allowed"))
-		return x_range["allowed"];
-	if(!x_range.isMember("advised"))
-		return x_range["advised"];
-	Json::Value root = Json::arrayValue;
+	if(x_range.find("allowed") == x_range.end())
+		return x_range.at("allowed");
+	if(x_range.find("advised") == x_range.end())
+		return x_range.at("advised");
+	mkjson root = nlohmann::json::array();
 	for(const auto& elem : GetEnum())
-		root.append(elem.first);
+		root.push_back(elem.first);
 	return root;
 }
 
@@ -137,15 +136,15 @@ Json::Value ParameterEnum::GenerateValues(int x_nbSamples, const Json::Value& x_
 */
 void ParameterEnum::Export(ostream& rx_os) const
 {
-	Json::Value root;
+	mkjson root;
 	std::stringstream ss;
 	Parameter::Export(ss);
-	ss >> root;
+	root << ss;
 	
-	root["enum"] = Json::arrayValue;
+	root["enum"] = nlohmann::json::array();
 	for(const auto& elem : GetEnum())
 	{
-		root["enum"].append(elem.first);
+		root["enum"].push_back(elem.first);
 	}
-	rx_os << root;
+	rx_os << root.dump();
 }

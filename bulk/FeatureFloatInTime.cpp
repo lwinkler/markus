@@ -22,8 +22,6 @@
 -------------------------------------------------------------------------------------*/
 #include "FeatureFloatInTime.h"
 #include "FeatureStd.h"
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
 
 #define INI_VARIANCE 0.01
 #define MIN_VARIANCE 0.0001
@@ -71,16 +69,16 @@ double FeatureFloatInTime::CompareSquared(const Feature& x_feature) const
 	return POW2(value - feat.value) / POW2(sqVariance);
 }
 
-void FeatureFloatInTime::Randomize(unsigned int& xr_seed, const Json::Value& x_param)
+void FeatureFloatInTime::Randomize(unsigned int& xr_seed, const mkjson& x_param)
 {
-	FeatureFloat::Randomize(xr_seed, Json::nullValue);
+	FeatureFloat::Randomize(xr_seed, nullptr);
 
 	// Create a float feature and update
 	double alpha = static_cast<float>(rand_r(&xr_seed)) / RAND_MAX;
 	FeatureFloat ff;
 	for(int i = rand_r(&xr_seed) % 20 + 2 ; i != 0 ; i--)
 	{
-		ff.Randomize(xr_seed, Json::nullValue);
+		ff.Randomize(xr_seed, nullptr);
 		Update(ff, alpha);
 	}
 }

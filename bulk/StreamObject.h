@@ -30,7 +30,7 @@
 typedef StreamT<std::vector<Object>> StreamObject;
 
 // partial specialization
-template<> StreamObject::StreamT(const std::string& rx_name, std::vector<Object>& rx_object, Module& rx_module, const std::string& rx_description, const Json::Value& rx_requirement);
+template<> StreamObject::StreamT(const std::string& rx_name, std::vector<Object>& rx_object, Module& rx_module, const std::string& rx_description, const mkjson& rx_requirement);
 template<>void StreamObject::ConvertInput();
 template<>void StreamObject::RenderTo(cv::Mat& x_output) const;
 template<>void StreamObject::Query(std::ostream& xr_out, const cv::Point& x_pt) const;

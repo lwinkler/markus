@@ -21,8 +21,6 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
 #include <fstream>
 #include <boost/filesystem.hpp>
 #include "ConfigReader.h"
@@ -74,7 +72,7 @@ void overrideInputs(ConfigReader& xr_oldConfig, const ConfigReader& x_newConfig)
 {
 	for(const auto& elem : x_newConfig)
 	{
-		replaceOrAppendInArray(xr_oldConfig, "name", elem["name"].asString()) = elem;
+		replaceOrAppendInArray(xr_oldConfig, "name", elem.at("name").get<string>()) = elem;
 	}
 }
 
@@ -89,25 +87,20 @@ void overrideInputs(ConfigReader& xr_oldConfig, const ConfigReader& x_newConfig)
 
 void overrideWith(ConfigReader& xr_config, const ConfigReader& x_extraConfig)
 {
-	for(const auto& elem : x_extraConfig["modules"])
+	for(const auto& elem : x_extraConfig.at("modules"))
 	{
-		overrideInputs(findFirstInArray(xr_config["modules"], "name", elem["name"].asString())["inputs"], elem["inputs"]);
+		overrideInputs(findFirstInArray(xr_config.at("modules"), "name", elem.at("name").get<string>())["inputs"], elem["inputs"]);
 	}
 }
 
-std::string jsonToString(const Json::Value& x_json)
+std::string jsonToString(const mkjson& x_json)
 {
-	stringstream ss;
-	ss << x_json;
-	return ss.str();
+	return x_json.dump();
 }
 
-Json::Value stringToJson(const std::string& x_string)
+mkjson stringToJson(const std::string& x_string)
 {
-	istringstream ss(x_string);
-	Json::Value json;
-	ss >> json;
-	return json;
+	return mkjson(x_string);
 }
 
 /**
@@ -119,16 +112,16 @@ Json::Value stringToJson(const std::string& x_string)
 *
 * @return reference
 */
-Json::Value& replaceOrAppendInArray(ConfigReader& x_conf, const std::string& x_name, const std::string& x_value)
+mkjson& replaceOrAppendInArray(ConfigReader& x_conf, const std::string& x_name, const std::string& x_value)
 {
 	for(auto& elem : x_conf)
 	{
-		if(elem[x_name].asString() == x_value)
+		if(elem[x_name].get<string>() == x_value)
 			return elem;
 	}
-	Json::Value root;
+	mkjson root;
 	root[x_name] = x_value;
-	x_conf.append(root);
+	x_conf.push_back(root);
 	return x_conf[x_conf.size() - 1];
 }
 
@@ -141,11 +134,11 @@ Json::Value& replaceOrAppendInArray(ConfigReader& x_conf, const std::string& x_n
 *
 * @return reference
 */
-Json::Value& findFirstInArray(ConfigReader& x_conf, const std::string& x_name, const std::string& x_value)
+mkjson& findFirstInArray(ConfigReader& x_conf, const std::string& x_name, const std::string& x_value)
 {
 	for(auto& elem : x_conf)
 	{
-		if(elem[x_name].asString() == x_value)
+		if(elem.at(x_name).get<string>() == x_value)
 			return elem;
 	}
 	throw MkException("No occurence of " + x_name + "=" + x_value + " in config", LOC);
@@ -155,16 +148,16 @@ Json::Value& findFirstInArray(ConfigReader& x_conf, const std::string& x_name, c
 * @brief Find first occurence of name=value in array (constant)
 *
 * @param xconf   Config to search
-* @param x_name  Name of the field
+* @paam x_name  Name of the field
 * @param x_value Value of the field
 *
 * @return reference
 */
-const Json::Value& findFirstInArrayConst(const ConfigReader& x_conf, const std::string& x_name, const std::string& x_value)
+const mkjson& findFirstInArrayConst(const ConfigReader& x_conf, const std::string& x_name, const std::string& x_value)
 {
 	for(const auto& elem : x_conf)
 	{
-		if(elem[x_name].asString() == x_value)
+		if(elem.at(x_name).get<string>() == x_value)
 			return elem;
 	}
 	throw MkException("No occurence of " + x_name + "=" + x_value + " in config", LOC);

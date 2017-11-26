@@ -25,7 +25,6 @@
 
 #include <map>
 #include <string>
-#include <jsoncpp/json/reader.h>
 #include "define.h"
 #include "feature_util.h"
 #include "Serializable.h"
@@ -43,7 +42,7 @@ public:
 	virtual ~Feature() {}
 	virtual Feature* CreateCopy() const = 0;
 	virtual double CompareSquared(const Feature& x_feature) const = 0;
-	virtual void Randomize(unsigned int& xr_seed, const Json::Value& x_param) = 0;
+	virtual void Randomize(unsigned int& xr_seed, const mkjson& x_param) = 0;
 	virtual void Serialize(mkjson& _json) const = 0;
 	virtual void Deserialize(const mkjson& _json) = 0;
 };

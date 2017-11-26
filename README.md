@@ -24,7 +24,7 @@ On Ubuntu the apt-get install command is:
 
 **CAUTION**: On old Ubuntu versions (14.04 and maybe 16.04). Be careful if you install libopencv-dev as this installs nvidia packages along. This might harm your computer http://askubuntu.com/questions/243043/after-logging-in-theres-a-black-screen-and-my-cursor-nothing-else-in-ubuntu
 
-	sudo apt-get install cmake libtinyxml-dev liblog4cxx10-dev libjsoncpp-dev libboost-all-dev jq libmongoc-dev cxxtest libbson-dev
+	sudo apt-get install cmake libtinyxml-dev liblog4cxx10-dev libboost-all-dev jq libmongoc-dev cxxtest libbson-dev
 
 ### Installing OpenCV
 Markus works with OpenCV3. We recommend to install it from sources since the version of apt-get and other package managers may not have all contributions enabled.

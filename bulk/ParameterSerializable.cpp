@@ -22,8 +22,6 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ParameterSerializable.h"
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
 
 using namespace std;
 
@@ -38,9 +36,9 @@ log4cxx::LoggerPtr ParameterSerializable::m_logger(log4cxx::Logger::getLogger("P
  * @param x_range      Range (if empty take parameter range)
  *
  */
-Json::Value ParameterSerializable::GenerateValues(int x_nbSamples, const Json::Value& x_range) const
+mkjson ParameterSerializable::GenerateValues(int x_nbSamples, const mkjson& x_range) const
 {
-	return Json::arrayValue;
+	return nlohmann::json::array();
 	// string range = x_range == "" ? GetRange() : x_range;
 	// throw MkException("Method is not implemented", LOC);
 	/*
@@ -52,23 +50,6 @@ Json::Value ParameterSerializable::GenerateValues(int x_nbSamples, const Json::V
 		rx_values.pop_back();
 	assert(rx_values.size() > 0);
 	*/
-}
-
-void ParameterSerializable::SetValue(const ConfigReader& rx_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) 
-{
-	if(IsLocked())
-		throw MkException("You tried to set the value of a locked parameter.", LOC);
-	std::stringstream ss;
-	ss << rx_value;
-	if(rx_value == "")	// This case happens with unit testing
-	{
-		LOG_WARN(m_logger, "Serializable parameter is set to empty string value");
-		m_confSource = x_confType;
-		return;
-	}
-	// mr_value.Deserialize(ss);
-	ss << mr_value.dump();
-	m_confSource = x_confType;
 }
 
 void ParameterSerializable::SetValueToDefault() 

@@ -29,6 +29,7 @@
 #include "MkException.h"
 #include "ConfigReader.h"
 #include <log4cxx/logger.h>
+#include <boost/noncopyable.hpp>
 
 /// Represents a set of parameters for a configurable objects
 // Note: Disable copies of parameters as a safety

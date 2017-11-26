@@ -9,7 +9,6 @@ RUN apt-get -y install \
 	libtinyxml-dev \
 	libopencv-dev \
 	liblog4cxx10-dev \
-	libjsoncpp-dev \
 	libboost-all-dev \
 	cmake-curses-gui \
 	qtcreator \

@@ -57,17 +57,16 @@ public:
 			m_range["max"] = x_max;
 		}
 	}
-	inline ConfigReader GetValue() const {return mr_value;}
-	inline ConfigReader GetDefault() const {return m_default;}
-	static T castJson(const ConfigReader& x_json);
-	inline const ParameterType& GetParameterType() const {return m_type;}
-	inline const std::string& GetType() const {return m_typeStr;}
+	inline ConfigReader GetValue() const override {return mr_value;}
+	inline ConfigReader GetDefault() const override {return m_default;}
+	inline const ParameterType& GetParameterType() const override {return m_type;}
+	inline const std::string& GetType() const override {return m_typeStr;}
 
-	virtual void SetValue(const ConfigReader& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
+	virtual void SetValue(const ConfigReader& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/) override
 	{
 		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
-		mr_value = castJson(rx_value);
+		mr_value = rx_value.get<T>();
 		m_confSource = x_confType;
 	}
 	// inline void SetValue(T x_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
@@ -79,36 +78,38 @@ public:
 	// }
 	void SetDefault(const ConfigReader& rx_value) override
 	{
-		m_default = castJson(rx_value);
+		m_default = rx_value.get<T>();
 		m_confSource = PARAMCONF_DEF;
 	}
-	virtual bool CheckRange() const
+	virtual bool CheckRange() const override
 	{
-		T value = castJson(GetValue());
+		T value = GetValue().template get<T>();
 		// std::cout << "min" << m_min << " " << m_max << std::endl;
-		if(m_range.isMember("max") && value > m_range["max"].asDouble())
+		if(m_range.find("max") != m_range.end() && value > m_range.at("max").template get<T>())
 			return false;
-		if(m_range.isMember("min") && value < m_range["min"].asDouble())
+		if(m_range.find("min") != m_range.end() && value < m_range.at("min").template get<T>())
 			return false;
 		return true;
 	}
-	virtual Json::Value GenerateValues(int x_nbSamples, const Json::Value& x_range) const
+
+	// TODO improve: template
+	mkjson GenerateValues(int x_nbSamples, const mkjson& x_range) const override
 	{
-		const Json::Value range = x_range.isNull() ? GetRange() : x_range;
+		const mkjson range = x_range.is_null() ? GetRange() : x_range;
 		const ParameterType& type = GetParameterType();
-		if(range.isMember("allowed"))
-			return range["allowed"];
-		double min = range.isMember("min") ? range["min"].asDouble() : std::numeric_limits<T>::min();
-		double max = range.isMember("max") ? range["max"].asDouble() : std::numeric_limits<T>::max();
+		if(range.find("allowed") != range.end())
+			return range.at("allowed");
+		T min = range.find("min") != range.end() ? range.at("min").get<T>() : std::numeric_limits<T>::min();
+		T max = range.find("max") != range.end() ? range.at("max").get<T>() : std::numeric_limits<T>::max();
 		if(min == max && x_nbSamples > 1)
 			x_nbSamples = 1;
-		Json::Value values = Json::arrayValue;
+		mkjson values = nlohmann::json::array();
 
-		if((type == PARAM_UINT || type == PARAM_INT || type == PARAM_BOOL) && max - min + 1 <= x_nbSamples)
+		if((type == PARAM_UINT || type == PARAM_INT || type == PARAM_BOOL) && static_cast<int>(max - min + 1) <= x_nbSamples)
 		{
-			for(int i = min ; i <= max ; i++)
+			for(int i = static_cast<int>(min) ; i <= static_cast<int>(max) ; i++)
 			{
-				values.append(i);
+				values.push_back(i);
 				// values.append(static_cast<int>(min + static_cast<int>(i/x_nbSamples) % static_cast<int>(max - min + 1)));
 			}
 		}
@@ -117,7 +118,7 @@ public:
 			double incr = x_nbSamples <= 1 ? 0 : (max - min) / (x_nbSamples - 1);
 			for(int i = 0 ; i < x_nbSamples ; i++)
 			{
-				values.append(static_cast<int>(min + i * incr));
+				values.push_back(static_cast<int>(min + i * incr));
 			}
 		}
 		else
@@ -129,24 +130,24 @@ public:
 			{
 				double val = min + i * incr;
 				if(val <= max) // handle infinite case
-					values.append(val);
+					values.push_back(val);
 			}
 		}
 		if(values.empty())
 			throw MkException("Value array is empty, range= " + jsonToString(range), LOC);
 		return values;
 	}
-	virtual void Print(std::ostream& os) const
+	void Print(std::ostream& os) const override
 	{
-		os<<GetName()<<"="<<castJson(GetValue())<<" [";
-		if(m_range.isMember("min"))
-			os << m_range["min"].asDouble();
+		os<<GetName()<<"="<< GetValue().template get<T>() << " [";
+		if(m_range.find("min") != m_range.end())
+			os << m_range["min"].template get<double>();
 		os << ":";
-		if(m_range.isMember("max"))
-			os << m_range["max"].asDouble();
+		if(m_range.find("max") != m_range.end())
+			os << m_range["max"].template get<double>();
 		os << "] (" << configType[m_confSource] << "); ";
 	}
-	virtual void SetValueToDefault()
+	virtual void SetValueToDefault() override
 	{
 		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);

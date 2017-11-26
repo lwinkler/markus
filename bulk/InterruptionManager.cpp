@@ -22,8 +22,6 @@
 -------------------------------------------------------------------------------------*/
 
 #include <boost/lexical_cast.hpp>
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
 
 #include "MkException.h"
 #include "util.h"
@@ -46,11 +44,11 @@ void InterruptionManager::Configure(const ConfigReader& x_config)
 	for(const auto& config : x_config["interruptions"])
 	{
 		Interruption inter(Command(
-			config["command"].asString(),
-			config.get("value", "").asString()),
-			boost::lexical_cast<int>(config.get("nb", "-1").asString())
+			config.at("command").get<string>(),
+			config.value<string>("value", "")),
+			boost::lexical_cast<int>(config.value<string>("nb", "-1"))
 		);
-		string event = config["event"].asString();
+		string event = config.at("event").get<string>();
 		m_interruptions[event].push_back(inter);
 		LOG_INFO(m_logger, "Add interruption for "<<event<<" --> "<<inter.command.name<<"="<<inter.command.value<<" "<<inter.remaining<<" time(s)");
 	}

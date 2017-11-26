@@ -44,16 +44,11 @@ public:
 
 	inline ConfigReader GetValue() const override
 	{
-		// TODO LW: Simplify: return val
-		std::stringstream ss;
-		ss << mr_value;
-		Json::Value val;
-		ss >> val;
-		return val;
+		return mr_value;
 	}
 	inline ConfigReader GetDefault() const override {return m_default;}
 
-	inline void SetValue(const mkjson& x_value, ParameterConfigType x_confType)
+	inline void SetValue(const mkjson& x_value, ParameterConfigType x_confType) override
 	{
 		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
@@ -61,8 +56,7 @@ public:
 		m_confSource = x_confType;
 	}
 
-	void SetValue(const ConfigReader& rx_value, ParameterConfigType x_confType /*= PARAMCONF_UNKNOWN*/) override;
-	void SetDefault(const ConfigReader& rx_value) override
+	void SetDefault(const mkjson& rx_value) override
 	{
 		m_default = rx_value;
 	}
@@ -71,7 +65,7 @@ public:
 		// Note: so far it is not possible to check the range of serializable params
 		return true;
 	}
-	Json::Value GenerateValues(int x_nbSamples, const Json::Value& x_range) const override;
+	mkjson GenerateValues(int x_nbSamples, const mkjson& x_range) const override;
 	void SetValueToDefault() override;
 
 private:

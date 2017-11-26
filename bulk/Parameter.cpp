@@ -23,8 +23,7 @@
 
 #include "Parameter.h"
 #include "util.h"
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
+#include "json.hpp"
 
 using namespace std;
 
@@ -44,16 +43,13 @@ log4cxx::LoggerPtr Parameter::m_logger(log4cxx::Logger::getLogger("Parameter"));
 */
 void Parameter::Export(ostream& rx_os) const
 {
-	Json::Value root;
-	Json::Value def;
-	Json::Reader reader;
-	
-	root["type"] = GetType();
-	root["name"] = GetName();
-	root["description"] = GetDescription();
-	root["default"] = GetDefault();
-	root["range"] = GetRange();
-	rx_os << root;
+	mkjson json;
+	json["type"] = GetType();
+	json["name"] = GetName();
+	json["description"] = GetDescription();
+	json["default"] = GetDefault();
+	json["range"] = GetRange();
+	rx_os << json.dump();
 }
 
 
@@ -77,14 +73,14 @@ void Parameter::SetValue(const ConfigReader& x_value, ParameterConfigType x_conf
 }
 
 
-void Parameter::SetRange(const Json::Value& x_range)
+void Parameter::SetRange(const mkjson& x_range)
 {
-	if(x_range.isString())
+	if(x_range.is_string())
 	{
 		// For legacy and convenience, we accept [min:max] and [1,2,3] syntaxes
-		Json::Value root;
+		mkjson root;
 		double min, max;
-		const string& range(x_range.asString());
+		const string& range(x_range.get<string>());
 		if(range.empty())
 			throw MkException("Empty range", LOC);
 		if(2 == sscanf(range.c_str(), "[%16lf:%16lf]", &min, &max))
@@ -115,7 +111,7 @@ void Parameter::SetRange(const Json::Value& x_range)
 
 			for(const auto& elem : values)
 			{
-				root["allowed"].append(elem);
+				root["allowed"].push_back(elem);
 			}
 		}
 		else root = stringToJson(range);

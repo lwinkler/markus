@@ -37,13 +37,13 @@ public:
 	
 	FeatureT() : value(T {} /*initialize to 0 or other*/) {}
 	explicit FeatureT(T x_value) : value(x_value) {}
-	Feature* CreateCopy() const {return new FeatureT(*this);}
+	Feature* CreateCopy() const override {return new FeatureT(*this);}
 	inline virtual double CompareSquared(const Feature& x_feature) const
 	{
 		const FeatureT<T>& feat(dynamic_cast<const FeatureT<T>&>(x_feature));
 		return compareSquared(value, feat.value);
 	}
-	inline void Randomize(unsigned int& xr_seed, const Json::Value& x_param)
+	inline void Randomize(unsigned int& xr_seed, const mkjson& x_param)
 	{
 		randomize(value, xr_seed);
 	}

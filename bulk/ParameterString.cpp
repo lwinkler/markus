@@ -37,14 +37,14 @@ log4cxx::LoggerPtr ParameterString::m_logger(log4cxx::Logger::getLogger("Paramet
  * @param x_range      Range (if empty take parameter range)
  *
  */
-Json::Value ParameterString::GenerateValues(int x_nbSamples, const Json::Value& x_range) const
+mkjson ParameterString::GenerateValues(int x_nbSamples, const mkjson& x_range) const
 {
-	const Json::Value range = x_range.isNull() ? GetRange() : x_range;
-	if(range.isMember("allowed"))
+	const mkjson range = x_range.is_null() ? GetRange() : x_range;
+	if(range.find("allowed") != range.end())
 	{
-		return range["allowed"];
+		return range.at("allowed");
 	}
-	if(range.isMember("advised"))
+	if(range.find("advised") != range.end())
 	{
 		return range["advised"];
 	}

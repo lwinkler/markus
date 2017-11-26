@@ -36,9 +36,9 @@ string getInputNameFromExport(const string& module, int id, bool isInput)
 	ConfigReader json;
 	readFromFile(json, "editor/modules/" + module + ".json");
 	auto inp = json[isInput ? "inputs" : "outputs"];
-	if(!inp.isObject())
+	if(!inp.is_object())
 	{
-		cout << module << ":" << inp.type() << endl;
+		cout << module << ":" << inp.type_name() << endl;
 		stringstream ss;
 		ss << inp;
 		cout << ss.str() << endl;
@@ -160,7 +160,7 @@ void translateArray(const string& x_string, ConfigReader& xr_json, bool x_transl
 {
 	vector<string> res;
 	split(x_string, ',', res);
-	xr_json = Json::arrayValue;
+	xr_json = nlohmann::json::array();
 	for(const auto& elem : res)
 		xr_json.append(x_translateCamelCase ? camelCase(elem) : elem);
 }
@@ -195,7 +195,7 @@ void translateRange(const string& x_string, ConfigReader& xr_json)
 // for simulations
 void translateVariations(const ConfigXml x_xml, ConfigReader& xr_json)
 {
-	xr_json = Json::arrayValue;
+	xr_json = nlohmann::json::array();
 	for(const auto& xml : x_xml.FindAll("var"))
 	{
 		ConfigReader jsonVar;

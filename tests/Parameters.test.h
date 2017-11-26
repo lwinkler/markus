@@ -35,8 +35,6 @@
 #include "enums.h"
 #include "MkException.h"
 #include "Polygon.h"
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
 
 using namespace std;
 
@@ -45,11 +43,11 @@ using namespace std;
 class ParametersTestSuite : public CxxTest::TestSuite
 {
 public:
-	static void testParameter(Parameter& xr_param, const Json::Value& x_legalValue, const Json::Value& x_illegalValue)
+	static void testParameter(Parameter& xr_param, const mkjson& x_legalValue, const mkjson& x_illegalValue)
 	{
 		xr_param.SetValue(x_legalValue, PARAMCONF_UNKNOWN);
 		TS_ASSERT(xr_param.CheckRange() == true);
-		if(!x_illegalValue.isNull())
+		if(!x_illegalValue.is_null())
 		{
 			xr_param.SetValue(x_illegalValue, PARAMCONF_UNKNOWN);
 			TS_ASSERT(xr_param.CheckRange() == false);
@@ -74,7 +72,7 @@ public:
 		TS_ASSERT(compareFiles(fileName, "tests/parameters/" + xr_param.GetName() + ".txt"));
 
 		// test that the current range stays identical
-		Json::Value range = xr_param.GetRange();
+		mkjson range = xr_param.GetRange();
 		xr_param.SetRange(range);
 		// cout << jsonToString(range).size() << " == " << jsonToString(xr_param.GetRange()).compare(jsonToString(range)) << endl;
 		TS_ASSERT(xr_param.GetRange() == range);
@@ -89,16 +87,16 @@ public:
 
 	}
 	
-	static void testRange(Parameter& xr_param, const Json::Value& x_illegalValue, const string& x_testRange)
+	static void testRange(Parameter& xr_param, const mkjson& x_illegalValue, const string& x_testRange)
 	{
 		// test that the test range stays identical
 		xr_param.SetRange(x_testRange);
-		Json::Value json = xr_param.GetRange();
+		const mkjson& json(xr_param.GetRange());
 		xr_param.SetRange(json);
 		// cout<<xr_param.GetRange()<<endl;
 		TS_ASSERT(xr_param.GetRange() == json);
 
-		if(x_illegalValue.isNull())
+		if(x_illegalValue.is_null())
 			return;
 		xr_param.SetValue(x_illegalValue, PARAMCONF_JSON);
 		TS_ASSERT(!xr_param.CheckRange());
@@ -113,13 +111,13 @@ public:
 
 	void testJson()
 	{
-		TS_ASSERT(stringToJson("\"mystring\"").asString() == "mystring");
-		TS_ASSERT(stringToJson("34").asInt() == 34);
-		TS_ASSERT(stringToJson("34.1").asFloat() - 34.1 < 0.0001);
-		TS_ASSERT(stringToJson("true").asBool() == true);
-		TS_ASSERT(stringToJson("false").asBool() == false);
-		TS_ASSERT(stringToJson("1").asBool() == true);
-		TS_ASSERT(stringToJson("0").asBool() == false);
+		TS_ASSERT(stringToJson("\"mystring\"").get<string>() == "mystring");
+		TS_ASSERT(stringToJson("34").get<int>() == 34);
+		TS_ASSERT(stringToJson("34.1").get<float>() - 34.1 < 0.0001);
+		TS_ASSERT(stringToJson("true").get<bool>() == true);
+		TS_ASSERT(stringToJson("false").get<bool>() == false);
+		TS_ASSERT(stringToJson("1").get<bool>() == true);
+		TS_ASSERT(stringToJson("0").get<bool>() == false);
 	}
 	/**
 	* @brief Test all classes that inherit from Parameter
@@ -129,7 +127,7 @@ public:
 		TS_TRACE("Test ParameterBool");
 		bool myBool = true;
 		ParameterBool paramBool("param_bool", false, 0, 1, &myBool, "Parameter of type bool");
-		testParameter(paramBool, false, Json::nullValue);
+		testParameter(paramBool, false, nullptr);
 		testRange(paramBool, true, "[0:0]");
 		testLock(paramBool);
 	}
@@ -179,8 +177,8 @@ public:
 		TS_TRACE("Test ParameterString");
 		string myString = "value_current";
 		ParameterString paramString("param_string", "default_value", &myString, "Parameter of type string");
-		testParameter(paramString, "legal", Json::nullValue);
-		testRange(paramString, Json::nullValue, "[]");
+		testParameter(paramString, "legal", nullptr);
+		testRange(paramString, nullptr, "[]");
 		testLock(paramString);
 	}
 
@@ -201,7 +199,7 @@ public:
 		Polygon myPolygon;
 		// ParameterSerializable paramPolygon("param_polygon",  R"({"height":0.6,"points":[{"x":5.0,"y":0.50},{"x":6.0,"y":5.50}],"width":0.8}")"_json, &myPolygon, "Parameter of type Polygon");
 		// TODO ParameterSerializable paramPolygon("param_polygon",  stringToJson("{\"height\":0.6,\"points\":[{\"x\":5.0,\"y\":0.50},{\"x\":6.0,\"y\":5.50}],\"width\":0.8}"), &myPolygon, "Parameter of type Polygon");
-		// TODO testParameter(paramPolygon, stringToJson("{\"height\":0.660,\"points\":[{\"x\":54.0,\"y\":53.50},{\"x\":3454.0,\"y\":53.50},{\"x\":54.0,\"y\":53.50},{\"x\":5.0,\"y\":0.50}],\"width\":0.860}"), Json::nullValue) ;
+		// TODO testParameter(paramPolygon, stringToJson("{\"height\":0.660,\"points\":[{\"x\":54.0,\"y\":53.50},{\"x\":3454.0,\"y\":53.50},{\"x\":54.0,\"y\":53.50},{\"x\":5.0,\"y\":0.50}],\"width\":0.860}"), nullptr) ;
 		// TODO testLock(paramPolygon);
 	}
 

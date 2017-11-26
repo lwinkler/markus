@@ -36,8 +36,8 @@ public:
 		ParameterEnum(x_name, x_default, xp_value, x_description)
 	{}
 	
-	const std::map<std::string, int>& GetEnum() const {return Enum;}
-	const std::map<int, std::string>& GetReverseEnum() const {return ReverseEnum;}
+	const std::map<std::string, int>& GetEnum() const override {return Enum;}
+	const std::map<int, std::string>& GetReverseEnum() const override {return ReverseEnum;}
 	const std::string& GetType() const override {return m_type;};
 
 protected:

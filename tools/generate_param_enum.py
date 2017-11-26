@@ -75,8 +75,6 @@ def main():
 	# Generate file
 	fout.write("""/* This file was generated automatically the generate_param_enum.py parser */
 
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
 #include "ParameterEnumT.h"
 
 using namespace std;
