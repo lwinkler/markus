@@ -2,12 +2,16 @@
 	"modules": {
 		"FakeModule":{
 			"parameters":{},
-			"inputs": {
-				"input0": {}
-			},
-			"outputs": {
-				"output0": {}
-			}
+			"inputs": [
+				{
+					"name": "input0"
+				}
+			],
+			"outputs": [
+				{
+					"name": "output0"
+				}
+			]
 		}
 	}
 }

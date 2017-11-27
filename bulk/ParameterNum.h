@@ -141,10 +141,10 @@ public:
 	{
 		os<<GetName()<<"="<< GetValue().template get<T>() << " [";
 		if(m_range.find("min") != m_range.end())
-			os << m_range["min"].template get<double>();
+			os << m_range["min"].template get<T>();
 		os << ":";
 		if(m_range.find("max") != m_range.end())
-			os << m_range["max"].template get<double>();
+			os << m_range["max"].template get<T>();
 		os << "] (" << configType[m_confSource] << "); ";
 	}
 	virtual void SetValueToDefault() override
@@ -165,15 +165,11 @@ private:
 
 
 
-/// Parameter of type integer
+/// Define types
 typedef ParameterNum<int> 	ParameterInt;
-/// Parameter of type unsigned integer
 typedef ParameterNum<unsigned int> ParameterUInt;
-/// Parameter of type double
 typedef ParameterNum<double> 	ParameterDouble;
-/// Parameter of type float
 typedef ParameterNum<float> 	ParameterFloat;
-/// Parameter of type boolean
 typedef ParameterNum<bool> 	ParameterBool;
 
 #endif
