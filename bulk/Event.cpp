@@ -85,20 +85,20 @@ void to_json(mkjson& rx_json, const Event& x_ser)
 void from_json(const mkjson& x_json, Event& _ser)
 {
 	// Note that a null JSON means that the event was not raised
-	bool raised = x_json["raised"].get<bool>();
+	bool raised = x_json.at("raised").get<bool>();
 	if(raised)
 	{
-		_ser.m_eventName = x_json["eventName"].get<string>();
-		_ser.m_timeStampEvent = x_json["dateEvent"].get<TIME_STAMP>();
-		_ser.m_timeStampNotif = x_json["dateNotif"].get<TIME_STAMP>();
+		_ser.m_eventName = x_json.at("eventName").get<string>();
+		_ser.m_timeStampEvent = x_json.at("dateEvent").get<TIME_STAMP>();
+		_ser.m_timeStampNotif = x_json.at("dateNotif").get<TIME_STAMP>();
 
-		if(!x_json["object"].is_null())
+		if(!x_json.at("object").is_null())
 		{
-			_ser.m_object = x_json["object"].get<Object>();
+			_ser.m_object = x_json.at("object").get<Object>();
 		}
 
 		// Deserialize files
-		_ser.m_externalInfo = x_json["external"];
+		_ser.m_externalInfo = x_json.at("external");
 	}
 	else
 	{

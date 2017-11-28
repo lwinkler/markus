@@ -81,7 +81,8 @@ TiXmlDocument* createDoc(const std::string& x_fileName, bool x_allowCreation, bo
 			CLEAN_DELETE(doc);
 			if(x_allowCreation)
 			{
-				createEmptyConfigFile(x_fileName, x_header);
+				assert(false); // note: this is not handled anymore
+				createEmptyConfigFile(x_fileName);
 				doc = new TiXmlDocument(x_fileName);
 				auto tmp = doc->LoadFile();
 				if(!tmp)

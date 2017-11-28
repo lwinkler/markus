@@ -70,7 +70,8 @@ public:
 
 	Parameter(const std::string& x_name, const std::string& x_description):
 		m_name(x_name),
-		m_description(x_description)
+		m_description(x_description),
+		m_range(nlohmann::json::object())
 	{}
 	virtual ~Parameter() {}
 

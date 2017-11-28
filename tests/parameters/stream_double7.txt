@@ -1,1 +1,1 @@
-stream_double7=0 (def); 
+stream_double7=0.0 (def); 

@@ -45,6 +45,7 @@ class ParametersTestSuite : public CxxTest::TestSuite
 public:
 	static void testParameter(Parameter& xr_param, const mkjson& x_legalValue, const mkjson& x_illegalValue)
 	{
+		TS_TRACE("Test parameter " + xr_param.GetName());
 		xr_param.SetValue(x_legalValue, PARAMCONF_UNKNOWN);
 		TS_ASSERT(xr_param.CheckRange() == true);
 		if(!x_illegalValue.is_null())
@@ -83,8 +84,6 @@ public:
 		xr_param.Lock();
 		xr_param.LockIfRequired();
 		TS_ASSERT(xr_param.IsLocked());
-
-
 	}
 	
 	static void testRange(Parameter& xr_param, const mkjson& x_illegalValue, const string& x_testRange)

@@ -60,5 +60,6 @@
 			}
 		}
 	],
-	"name" : "ddd2"
+	"name" : "Default project",
+	"inputs":[]
 }

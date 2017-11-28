@@ -207,6 +207,8 @@ void Manager::Connect()
 			ConnectInput(inputConfig, module, inputConf.at("name").get<string>());
 
 			// Connect all sub-inputs: only used in case of multiple streams
+			if(inputConfig.find("inputs") == inputConfig.end())
+				continue;
 			for(const auto& subInputConfig : inputConfig.at("inputs"))
 			{
 				ConnectInput(subInputConfig, module, inputConf.at("name").get<string>());

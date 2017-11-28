@@ -57,17 +57,21 @@ public:
 
 	virtual void SetValue(const ConfigReader& x_value, ParameterConfigType x_confType)
 	{
-		std::stringstream ss(jsonToString(x_value));
-		deserialize(ss, m_content);
+		nlohmann::from_json(x_value, m_content);
 		m_confSource = x_confType;
 	}
 	virtual void SetDefault(const ConfigReader& x_value){
-		std::stringstream ss(jsonToString(x_value));
-		deserialize(ss, m_default);
+		nlohmann::from_json(x_value, m_default);
 	}
 	virtual void SetValueToDefault(){m_content = m_default; m_confSource = PARAMCONF_DEF;}
-	virtual ConfigReader GetValue() const{std::stringstream ss; serialize(ss, m_content); return stringToJson(ss.str());}
-	virtual ConfigReader GetDefault() const {std::stringstream ss; serialize(ss, m_default); return stringToJson(ss.str());}
+	virtual ConfigReader GetValue() const
+	{
+		return m_content;
+	}
+	virtual ConfigReader GetDefault() const
+	{
+		return m_default;
+	}
 
 protected:
 	T& m_content;

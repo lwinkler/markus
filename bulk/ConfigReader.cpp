@@ -42,11 +42,11 @@ void readFromFile(ConfigReader& rx_config, const std::string& x_fileName, bool x
 	if(!boost::filesystem::exists(x_fileName))
 	{
 		if(x_allowCreation)
-			createEmptyConfigFile(x_fileName, true);
+			createEmptyConfigFile(x_fileName);
 		else throw MkException("File " + x_fileName + " does not exist", LOC);
 	}
 	ifstream ifs(x_fileName);
-	ifs >> rx_config;
+	rx_config << ifs;
 }
 
 /**
@@ -95,7 +95,9 @@ void overrideWith(ConfigReader& xr_config, const ConfigReader& x_extraConfig)
 
 std::string jsonToString(const mkjson& x_json)
 {
-	return x_json.dump();
+	stringstream ss;
+	ss << x_json.dump();
+	return ss.str();
 }
 
 mkjson stringToJson(const std::string& x_string)

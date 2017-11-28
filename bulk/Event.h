@@ -31,8 +31,6 @@
 #include <log4cxx/logger.h>
 
 
-class Event;
-
 /// Class representing a event (e.g. Ponctual moment in time where an intrusion occurs)
 class Event // : public Serializable
 {

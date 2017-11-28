@@ -41,16 +41,18 @@ InterruptionManager::InterruptionManager()
 void InterruptionManager::Configure(const ConfigReader& x_config)
 {
 	m_interruptions.clear();
-	for(const auto& config : x_config["interruptions"])
-	{
-		Interruption inter(Command(
-			config.at("command").get<string>(),
-			config.value<string>("value", "")),
-			boost::lexical_cast<int>(config.value<string>("nb", "-1"))
-		);
-		string event = config.at("event").get<string>();
-		m_interruptions[event].push_back(inter);
-		LOG_INFO(m_logger, "Add interruption for "<<event<<" --> "<<inter.command.name<<"="<<inter.command.value<<" "<<inter.remaining<<" time(s)");
+	if(x_config.find("interruptions") != x_config.end()) {
+		for(const auto& config : x_config.at("interruptions"))
+		{
+			Interruption inter(Command(
+				config.at("command").get<string>(),
+				config.value<string>("value", "")),
+				boost::lexical_cast<int>(config.value<string>("nb", "-1"))
+			);
+			string event = config.at("event").get<string>();
+			m_interruptions[event].push_back(inter);
+			LOG_INFO(m_logger, "Add interruption for "<<event<<" --> "<<inter.command.name<<"="<<inter.command.value<<" "<<inter.remaining<<" time(s)");
+		}
 	}
 }
 

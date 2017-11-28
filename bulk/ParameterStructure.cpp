@@ -78,22 +78,25 @@ void ParameterStructure::LockIfRequired()
 */
 void ParameterStructure::Read(const ConfigReader& x_config)
 {
-	for(const auto& inputConf : x_config.at("inputs"))
+	if(x_config.find("inputs") != x_config.end())
 	{
-		if(inputConf.is_object() && inputConf.find("connected") != inputConf.end())
-			continue; // the input is connected: do not read
-				
-		try
+		for(const auto& inputConf : x_config.at("inputs"))
 		{
-			if(!ParameterExists(inputConf.at("name").get<string>()))
-				continue;
-			Parameter& param = RefParameterByName(inputConf.at("name").get<string>());
-			if(!param.IsLocked())
-				param.SetValue(inputConf.at("value"), PARAMCONF_JSON);
-		}
-		catch(std::exception& e)
-		{
-			throw MkException("Exception while setting parameter " + inputConf.at("name").get<string>() + ": " + string(e.what()), LOC);
+			if(inputConf.is_object() && inputConf.find("connected") != inputConf.end())
+				continue; // the input is connected: do not read
+					
+			try
+			{
+				if(!ParameterExists(inputConf.at("name").get<string>()))
+					continue;
+				Parameter& param = RefParameterByName(inputConf.at("name").get<string>());
+				if(!param.IsLocked())
+					param.SetValue(inputConf.at("value"), PARAMCONF_JSON);
+			}
+			catch(std::exception& e)
+			{
+				throw MkException("Exception while setting parameter " + inputConf.at("name").get<string>() + ": " + string(e.what()), LOC);
+			}
 		}
 	}
 	CheckRange();
