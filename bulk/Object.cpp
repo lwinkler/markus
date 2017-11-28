@@ -217,10 +217,12 @@ void Object::Randomize(unsigned int& xr_seed, const mkjson& x_requirement, const
 	}
 	if(!x_requirement.is_null())
 	{
-		int minWidth = x_requirement.at("width").value<int>("min", 0);
-		int maxWidth = x_requirement.at("width").value<int>("max", x_size.width);
-		int minHeight = x_requirement.at("height").value<int>("min", 0);
-		int maxHeight = x_requirement.at("height").value<int>("max", x_size.height);
+		mkjson widthReq  = x_requirement.value("width", nlohmann::json::object());
+		mkjson heightReq = x_requirement.value("height", nlohmann::json::object());
+		int minWidth = widthReq.value<int>("min", 0);
+		int maxWidth = widthReq.value<int>("max", x_size.width);
+		int minHeight = heightReq.value<int>("min", 0);
+		int maxHeight = heightReq.value<int>("max", x_size.height);
 		width  = RANGE(width,  minWidth,  maxWidth);
 		height = RANGE(height, minHeight, maxHeight);
 		Mat bounds(x_size, CV_8UC1);

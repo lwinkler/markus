@@ -96,7 +96,7 @@ protected:
 	cv::Ptr<cv::ml::StatModel> mp_statModel;
 	cv::Mat m_samples;
 	cv::Mat m_responses;
-	short m_dataLength = 0;
+	size_t m_dataLength = 0;
 
 	// input and output
 	std::vector<Object> m_objects;

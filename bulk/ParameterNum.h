@@ -62,7 +62,7 @@ public:
 	inline const ParameterType& GetParameterType() const override {return m_type;}
 	inline const std::string& GetType() const override {return m_typeStr;}
 
-	virtual void SetValue(const ConfigReader& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/) override
+	void SetValue(const ConfigReader& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/) override
 	{
 		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
@@ -81,7 +81,7 @@ public:
 		m_default = rx_value.get<T>();
 		m_confSource = PARAMCONF_DEF;
 	}
-	virtual bool CheckRange() const override
+	bool CheckRange() const override
 	{
 		T value = GetValue().template get<T>();
 		// std::cout << "min" << m_min << " " << m_max << std::endl;
@@ -147,7 +147,7 @@ public:
 			os << m_range["max"].template get<T>();
 		os << "] (" << configType[m_confSource] << "); ";
 	}
-	virtual void SetValueToDefault() override
+	void SetValueToDefault() override
 	{
 		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);

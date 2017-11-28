@@ -75,6 +75,6 @@ namespace mk {
 		mk_CV_64FC4 = CV_64FC4
 		//map1["_64FC1"] = CV_64FC1;
 	};
-}
+} // namespace mk
 
 #endif
