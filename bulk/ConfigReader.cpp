@@ -46,7 +46,7 @@ void readFromFile(ConfigReader& rx_config, const std::string& x_fileName, bool x
 		else throw MkException("File " + x_fileName + " does not exist", LOC);
 	}
 	ifstream ifs(x_fileName);
-	rx_config << ifs;
+	ifs >> rx_config;
 }
 
 /**

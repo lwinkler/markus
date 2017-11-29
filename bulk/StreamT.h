@@ -57,11 +57,11 @@ public:
 
 	virtual void SetValue(const ConfigReader& x_value, ParameterConfigType x_confType)
 	{
-		nlohmann::from_json(x_value, m_content);
+		from_mkjson(x_value, m_content);
 		m_confSource = x_confType;
 	}
 	virtual void SetDefault(const ConfigReader& x_value){
-		nlohmann::from_json(x_value, m_default);
+		from_mkjson(x_value, m_default);
 	}
 	virtual void SetValueToDefault(){m_content = m_default; m_confSource = PARAMCONF_DEF;}
 	virtual ConfigReader GetValue() const

@@ -122,7 +122,7 @@ mkjson ParameterEnum::GenerateValues(int x_nbSamples, const mkjson& x_range) con
 		return x_range.at("allowed");
 	if(x_range.find("advised") == x_range.end())
 		return x_range.at("advised");
-	mkjson root = nlohmann::json::array();
+	mkjson root = mkjson::array();
 	for(const auto& elem : GetEnum())
 		root.push_back(elem.first);
 	return root;
@@ -139,9 +139,9 @@ void ParameterEnum::Export(ostream& rx_os) const
 	mkjson root;
 	std::stringstream ss;
 	Parameter::Export(ss);
-	root << ss;
+	ss >> root;
 	
-	root["enum"] = nlohmann::json::array();
+	root["enum"] = mkjson::array();
 	for(const auto& elem : GetEnum())
 	{
 		root["enum"].push_back(elem.first);

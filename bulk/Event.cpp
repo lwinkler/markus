@@ -22,7 +22,7 @@
 -------------------------------------------------------------------------------------*/
 #include "Event.h"
 #include "Object.h"
-#include "Serializable.h"
+#include "serialize.h"
 #include "util.h"
 #include "InterruptionManager.h"
 

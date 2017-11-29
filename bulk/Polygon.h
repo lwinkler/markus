@@ -24,13 +24,13 @@
 #ifndef POLYGON_H
 #define POLYGON_H
 
-#include "Serializable.h"
+#include "serialize.h"
 #include "MkException.h"
 #include <opencv2/opencv.hpp>
 #include <vector>
 
 
-class Polygon // : public Serializable
+class Polygon
 {
 public:
 	friend void to_json(mkjson& _json, const Polygon& _ser);

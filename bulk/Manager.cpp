@@ -475,7 +475,7 @@ void Manager::CreateEditorFiles(const string& x_fileName)
 	try
 	{
 		map<string,vector<string>> moduleCategories;
-		mkjson moduleDescriptionsJson = nlohmann::json::array();
+		mkjson moduleDescriptionsJson = mkjson::array();
 
 		vector<string> moduleTypes;
 		mr_moduleFactory.List(moduleTypes);
@@ -488,17 +488,18 @@ void Manager::CreateEditorFiles(const string& x_fileName)
 			moduleCategories["all"].push_back(moduleType);
 
 			// JSON file containing all module descriptions
+			// TODO Improve
 			stringstream os;
 			module->Export(os);
 			mkjson json;
-			json << os;
+			os >> json;
 			moduleDescriptionsJson.push_back(json);
 		}
-		mkjson moduleCategoriesJson = nlohmann::json::array();
+		mkjson moduleCategoriesJson = mkjson::array();
 		for(const auto& elem : moduleCategories) {
 			mkjson json;
 			json["name"]    = elem.first;
-			json["modules"] = nlohmann::json::array();
+			json["modules"] = mkjson::array();
 			for(const auto& mod : elem.second)
 				json["modules"].push_back(mod);
 			moduleCategoriesJson.push_back(json);

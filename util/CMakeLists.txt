@@ -1,6 +1,7 @@
 
 add_library(util
 util.cpp
+serialize.cpp
 feature_util.cpp
 AnnotationFileReader.cpp
 AnnotationFileWriter.cpp

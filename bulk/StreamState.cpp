@@ -81,11 +81,11 @@ template<> void StreamState::Randomize(unsigned int& xr_seed)
 template<> void StreamState::Serialize(mkjson& rx_json, MkDirectory* xp_dir) const
 {
 	Stream::Serialize(rx_json, xp_dir);
-	nlohmann::to_json(rx_json["state"], m_content);
+	to_mkjson(rx_json["state"], m_content);
 }
 
 template<> void StreamState::Deserialize(const mkjson& x_json, MkDirectory* xp_dir)
 {
 	Stream::Deserialize(x_json, xp_dir);
-	nlohmann::from_json(x_json.at("state"), m_content);
+	from_mkjson(x_json.at("state"), m_content);
 }

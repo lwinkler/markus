@@ -56,8 +56,8 @@ public:
 			randomize(values, xr_seed, size);
 		}
 	}
-	inline virtual void Serialize(mkjson& _json) const {nlohmann::to_json(_json, values);}
-	inline virtual void Deserialize(const mkjson& _json) {nlohmann::from_json(_json, values);}
+	inline virtual void Serialize(mkjson& _json) const {to_mkjson(_json, values);}
+	inline virtual void Deserialize(const mkjson& _json) {from_mkjson(_json, values);}
 
 	// The value of the feature
 	std::vector<T> values;

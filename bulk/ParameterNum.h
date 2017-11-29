@@ -103,7 +103,7 @@ public:
 		T max = range.find("max") != range.end() ? range.at("max").get<T>() : std::numeric_limits<T>::max();
 		if(min == max && x_nbSamples > 1)
 			x_nbSamples = 1;
-		mkjson values = nlohmann::json::array();
+		mkjson values = mkjson::array();
 
 		if((type == PARAM_UINT || type == PARAM_INT || type == PARAM_BOOL) && static_cast<int>(max - min + 1) <= x_nbSamples)
 		{

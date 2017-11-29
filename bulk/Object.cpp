@@ -21,7 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 #include "Object.h"
-#include "Serializable.h"
+#include "serialize.h"
 #include "util.h"
 #include "define.h"
 #include <boost/lexical_cast.hpp>
@@ -217,8 +217,8 @@ void Object::Randomize(unsigned int& xr_seed, const mkjson& x_requirement, const
 	}
 	if(!x_requirement.is_null())
 	{
-		mkjson widthReq  = x_requirement.value("width", nlohmann::json::object());
-		mkjson heightReq = x_requirement.value("height", nlohmann::json::object());
+		mkjson widthReq  = x_requirement.value("width", mkjson::object());
+		mkjson heightReq = x_requirement.value("height", mkjson::object());
 		int minWidth = widthReq.value<int>("min", 0);
 		int maxWidth = widthReq.value<int>("max", x_size.width);
 		int minHeight = heightReq.value<int>("min", 0);

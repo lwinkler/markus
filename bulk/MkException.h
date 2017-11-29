@@ -4,7 +4,7 @@
 #include <exception>
 #include <string>
 #include "define.h"
-#include "Serializable.h"
+#include "serialize.h"
 
 
 /**
@@ -36,7 +36,7 @@ void fatal(const std::string& x_description, MkExceptionCode x_code, const std::
 /**
 * @brief Exception class
 */
-class MkException : public std::exception // public Serializable
+class MkException : public std::exception
 {
 public:
 	friend void to_json(mkjson& _json, const MkException& _ser);

@@ -48,10 +48,10 @@ public:
 		randomize(value, xr_seed);
 	}
 	inline virtual void Serialize(mkjson& rx_json) const {
-		nlohmann::to_json(rx_json, value);
+		to_mkjson(rx_json, value);
 	}
 	inline virtual void Deserialize(const mkjson& x_json) {
-		nlohmann::from_json(x_json, value);
+		from_mkjson(x_json, value);
 	}
 
 	// The value of the feature

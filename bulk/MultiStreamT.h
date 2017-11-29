@@ -61,8 +61,8 @@ public:
 
 		if(m_maxSize != x_json.at("maxSize").get<uint>())
 			throw MkException("Deserializing to a MultiStream of wrong size", LOC);
-		nlohmann::from_json(x_json.at("nextObj"), m_nextObj);
-		nlohmann::from_json(x_json.at("content"), m_objects);
+		from_mkjson(x_json.at("nextObj"), m_nextObj);
+		from_mkjson(x_json.at("content"), m_objects);
 	}
 
 	void Connect(Stream& xr_stream) override
@@ -100,7 +100,7 @@ public:
 		mkjson json;
 		std::stringstream ss;
 		StreamT<T>::Export(ss);
-		json << ss;
+		ss >> json;
 		json["multi"] = m_maxSize;
 		rx_os << json.dump();
 	}

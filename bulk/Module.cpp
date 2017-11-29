@@ -312,8 +312,8 @@ void Module::Export(ostream& rx_os) const
 	json["class"]       = GetClass();
 	// json["name"]        = GetName();
 	json["description"] = GetDescription();
-	json["inputs"]  = nlohmann::json::array();
-	json["outputs"] = nlohmann::json::array();
+	json["inputs"]  = mkjson::array();
+	json["outputs"] = mkjson::array();
 
 	for(const auto & elem : m_param.GetList())
 	{
@@ -323,7 +323,7 @@ void Module::Export(ostream& rx_os) const
 		stringstream ss;
 		mkjson val;
 		elem->Export(ss);
-		val << ss;
+		ss >> val;
 		json["inputs"].push_back(val);
 	}
 	/* Already in parameters
@@ -349,7 +349,7 @@ void Module::Export(ostream& rx_os) const
 			stringstream ss;
 			elem.second->Export(ss);
 			mkjson val;
-			val << ss;
+			ss >> val;
 			json["outputs"].push_back(val);
 		}
 	}
@@ -523,7 +523,7 @@ void Module::WriteToCache() const
 			throw MkException("Error while writing to cache: " + fileName.str(), LOC);
 		mkjson json;
 		elem.second->Serialize(json, &dir);
-		json >> of;
+		of << json;
 	}
 }
 

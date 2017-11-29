@@ -78,7 +78,7 @@ void FeatureHistory::Randomize(unsigned int& xr_seed, const mkjson& x_param)
 
 void FeatureHistory::Serialize(mkjson& rx_json) const
 {
-	rx_json["history"] = nlohmann::json::array();
+	rx_json["history"] = mkjson::array();
 	mkjson hist = rx_json["history"];
 	for(const auto& elem : features)
 	{

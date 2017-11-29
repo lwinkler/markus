@@ -128,11 +128,11 @@ template<>void StreamObject::Randomize(unsigned int& xr_seed)
 template<>void StreamObject::Serialize(mkjson& rx_json, MkDirectory* xp_dir) const
 {
 	Stream::Serialize(rx_json, xp_dir);
-	nlohmann::to_json(rx_json["objects"], m_content);
+	to_mkjson(rx_json["objects"], m_content);
 }
 
 template<>void StreamObject::Deserialize(const mkjson& x_json, MkDirectory* xp_dir)
 {
 	Stream::Deserialize(x_json, xp_dir);
-	nlohmann::from_json(x_json.at("objects"), m_content);
+	from_mkjson(x_json.at("objects"), m_content);
 }

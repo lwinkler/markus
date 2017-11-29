@@ -40,7 +40,6 @@ ControllerModule.cpp
 ControllerManager.cpp
 ControllerEvent.cpp
 ControllerBackground.cpp
-Serializable.cpp
 Processable.cpp
 Simulation.cpp
 InterruptionManager.cpp

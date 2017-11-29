@@ -43,7 +43,7 @@ class Stream;
 /**
 * @brief Class representing a module. A module is a node of the application, it processes streams
 */
-class Module : public Processable, public Controllable// , public Serializable
+class Module : public Processable, public Controllable
 {
 public:
 	/// Parameter enum class. Determines if the module is cached (its output is stored to avoid computation costs)

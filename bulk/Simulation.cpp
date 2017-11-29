@@ -106,7 +106,7 @@ const mkjson createArray(const string& x_names, const string& x_name, const mkjs
 {
 	if(varConf.find(x_names) != varConf.end())
 		return varConf[x_names];
-	mkjson val(nlohmann::json::array());
+	mkjson val(mkjson::array());
 	val.push_back(varConf[x_name]);
 	return val;
 }
@@ -161,7 +161,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 			ifstream ifs;
 			ifs.open(file);
 			mkjson root;
-			root << ifs;
+			ifs >> root;
 
 			// For each set of parameters
 			for(auto it = root.cbegin() ; it != root.cend() ; ++it)

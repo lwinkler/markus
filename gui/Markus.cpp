@@ -70,7 +70,7 @@ MarkusWindow::~MarkusWindow()
 
 void MarkusWindow::WriteConfig(ConfigReader& xr_config) const
 {
-	xr_config["modules"] = nlohmann::json::array();
+	xr_config["modules"] = mkjson::array();
 	for(auto & elem : m_moduleViewer)
 	{
 		xr_config["modules"].emplace_back();
@@ -303,7 +303,7 @@ void MarkusWindow::resizeEvent(QResizeEvent* event)
 
 	// Add new module viewers to config
 	if(!m_param.config["modules"].is_array())
-		m_param.config["modules"] = nlohmann::json::array();
+		m_param.config["modules"] = mkjson::array();
 	for(int ind = size ; ind < m_param.nbRows * m_param.nbCols ; ind++)
 	{
 		ConfigReader& conf(m_param.config["modules"][ind]);

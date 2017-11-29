@@ -27,12 +27,12 @@
 #include <string>
 #include "define.h"
 #include "feature_util.h"
-#include "Serializable.h"
+#include "serialize.h"
 
 /**
 * @brief Class representing a feature of a template/object. (e.g. area, perimeter, length, ...)
 */
-class Feature // : public Serializable
+class Feature
 {
 public:
 	friend inline void to_json(mkjson& _json, const Feature& _ser) {_ser.Serialize(_json);}
@@ -50,7 +50,7 @@ public:
 /**
 * @brief Class representing a feature pointer: used in vectors and maps
 */
-class FeaturePtr final // : public Serializable
+class FeaturePtr final
 {
 public:
 	friend inline void to_json(mkjson& _json, const FeaturePtr& _ser) {

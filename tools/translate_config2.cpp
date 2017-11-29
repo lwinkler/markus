@@ -16,7 +16,7 @@ map<string, string> moduleTypes;
 
 mkjson translateElement(const mkjson& x_in)
 {
-	mkjson out = nlohmann::json::array();
+	mkjson out = mkjson::array();
 	for(const auto& elem : x_in.getMemberNames()) {
 		mkjson tmp;
 		if(x_in[elem].isObject() && x_in[elem].isMember("connected"))
@@ -56,7 +56,7 @@ int main(int argc, char** argv)
 		json2["description"] = json1["description"];
 
 	cout << "Translate application " << json2["name"].asString() << endl;
-	json2["modules"] = nlohmann::json::array();
+	json2["modules"] = mkjson::array();
 
 	for(const auto& name : json1["modules"].getMemberNames())
 	{

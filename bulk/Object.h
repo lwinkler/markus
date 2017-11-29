@@ -37,7 +37,7 @@
  *  - blob obtained after background subtraction and segmentation
  *  - face detected with a sliding window algorithm
  */
-class Object // : public Serializable
+class Object
 {
 public:
 	friend void to_json(mkjson& _json, const Object& _ser);

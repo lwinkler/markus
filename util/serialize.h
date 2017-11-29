@@ -27,19 +27,25 @@
 #include <iostream>
 #include "json.hpp"
 
-using mkjson = nlohmann::json;
-
 /// Class for all serializable objects
+using mkjson = nlohmann::json;
+template<class T> inline void to_mkjson(mkjson& rx_js, const T& x_obj) 
+{
+	// rx_js = std::move(x_obj);
+	nlohmann::to_json(rx_js, x_obj);
+}
+template<class T> inline void from_mkjson(const mkjson& x_js, T&& rx_obj) 
+{
+	// rx_obj = std::move(x_js.get<T>());
+	nlohmann::to_json(x_js, rx_obj);
+}
 
-class MkDirectory;
 
 std::string signatureJsonTree(const mkjson &x_root, int x_depth);
 inline std::string signature(const mkjson& x_json)
 {
 	return signatureJsonTree(x_json, 0);
 }
-
-// std::string signature(std::istream& x_in);
 
 
 #endif

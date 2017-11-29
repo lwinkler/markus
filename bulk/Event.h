@@ -32,7 +32,7 @@
 
 
 /// Class representing a event (e.g. Ponctual moment in time where an intrusion occurs)
-class Event // : public Serializable
+class Event
 {
 public:
 	friend void to_json(mkjson& _json, const Event& _ser);

@@ -84,11 +84,11 @@ template<> void StreamEvent::Query(std::ostream& xr_out, const cv::Point& x_pt) 
 template<> void StreamEvent::Serialize(mkjson& rx_json, MkDirectory* xp_dir) const
 {
 	Stream::Serialize(rx_json, xp_dir);
-	nlohmann::to_json(rx_json["event"], m_content);
+	to_mkjson(rx_json["event"], m_content);
 }
 
 template<> void StreamEvent::Deserialize(const mkjson& x_json, MkDirectory* xp_dir)
 {
 	Stream::Deserialize(x_json, xp_dir);
-	nlohmann::from_json(x_json.at("event"), m_content);
+	from_mkjson(x_json.at("event"), m_content);
 }

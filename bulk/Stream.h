@@ -31,13 +31,13 @@
 
 /// This is the parent class for all streams (input and output of data)
 
-class Stream /* : public Serializable,*/ : public Parameter, boost::noncopyable
+class Stream : public Parameter, boost::noncopyable
 {
 public:
 	friend inline void to_json(mkjson& _json, const Stream& _ser){_ser.Serialize(_json);}
 	friend inline void from_json(const mkjson& _json, Stream& _ser){_ser.Deserialize(_json);}
 	template<class T> static void serializeWithDir(mkjson& rx_json, const std::map<std::string, T*>& x_map, MkDirectory* xp_dir){
-		rx_json = nlohmann::json::array();
+		rx_json = mkjson::array();
 		for(const auto& elem : x_map) {
 			mkjson json;
 			elem.second->Serialize(json, xp_dir);

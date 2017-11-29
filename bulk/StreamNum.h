@@ -87,12 +87,12 @@ public:
 	virtual void Serialize(mkjson& rx_json, MkDirectory* xp_dir = nullptr) const
 	{
 		Stream::Serialize(rx_json, xp_dir);
-		nlohmann::to_json(rx_json["value"], m_content);
+		to_mkjson(rx_json["value"], m_content);
 	}
 	virtual void Deserialize(const mkjson& x_json, MkDirectory* xp_dir = nullptr)
 	{
 		Stream::Deserialize(x_json, xp_dir);
-		nlohmann::from_json(x_json.at("value"), m_content);
+		from_mkjson(x_json.at("value"), m_content);
 	}
 	virtual void Randomize(unsigned int& xr_seed) {randomize(m_content, xr_seed);}
 	const T& GetScalar() const {return m_content;}

@@ -38,7 +38,7 @@ log4cxx::LoggerPtr ParameterSerializable::m_logger(log4cxx::Logger::getLogger("P
  */
 mkjson ParameterSerializable::GenerateValues(int x_nbSamples, const mkjson& x_range) const
 {
-	return nlohmann::json::array();
+	return mkjson::array();
 	// string range = x_range == "" ? GetRange() : x_range;
 	// throw MkException("Method is not implemented", LOC);
 	/*

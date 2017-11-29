@@ -160,7 +160,7 @@ void translateArray(const string& x_string, ConfigReader& xr_json, bool x_transl
 {
 	vector<string> res;
 	split(x_string, ',', res);
-	xr_json = nlohmann::json::array();
+	xr_json = mkjson::array();
 	for(const auto& elem : res)
 		xr_json.append(x_translateCamelCase ? camelCase(elem) : elem);
 }
@@ -195,7 +195,7 @@ void translateRange(const string& x_string, ConfigReader& xr_json)
 // for simulations
 void translateVariations(const ConfigXml x_xml, ConfigReader& xr_json)
 {
-	xr_json = nlohmann::json::array();
+	xr_json = mkjson::array();
 	for(const auto& xml : x_xml.FindAll("var"))
 	{
 		ConfigReader jsonVar;

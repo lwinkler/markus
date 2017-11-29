@@ -164,7 +164,7 @@ public:
 		ConfigReader& moduleConfig = ModuleTester::addModuleToConfig(x_type, tester.configFile);
 
 		// Add parameters to override to the config
-		moduleConfig["inputs"] = nlohmann::json::array();
+		moduleConfig["inputs"] = mkjson::array();
 		if(xp_parameters != nullptr)
 			for(const auto& elem : *xp_parameters)
 				replaceOrAppendInArray(moduleConfig["inputs"], "name", elem.first)["value"] = elem.second;

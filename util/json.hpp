@@ -1223,6 +1223,7 @@ auto from_json_array_impl(const BasicJsonType& j, CompatibleArrayType& arr, prio
     using std::end;
 
     arr.reserve(j.size());
+    arr.clear(); // added lwk
     std::transform(j.begin(), j.end(),
                    std::inserter(arr, end(arr)), [](const BasicJsonType & i)
     {

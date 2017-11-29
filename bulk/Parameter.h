@@ -61,7 +61,7 @@ enum ParameterConfigType
 };
 
 /// Class representing a generic parameter for use in a module
-class Parameter // : public Serializable
+class Parameter
 {
 public:
 	static const char configType[PARAMCONF_SIZE][16];
@@ -71,7 +71,7 @@ public:
 	Parameter(const std::string& x_name, const std::string& x_description):
 		m_name(x_name),
 		m_description(x_description),
-		m_range(nlohmann::json::object())
+		m_range(mkjson::object())
 	{}
 	virtual ~Parameter() {}
 

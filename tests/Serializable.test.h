@@ -29,7 +29,7 @@
 
 #include "util.h"
 #include "MkException.h"
-#include "Serializable.h"
+#include "serialize.h"
 
 #include "StreamImage.h"
 #include "StreamObject.h"
@@ -49,7 +49,7 @@
 using namespace std;
 
 /// Test class for serialization
-class TestObject // : public Serializable
+class TestObject
 {
 public:
 	TestObject()
@@ -193,8 +193,8 @@ protected:
 		ifstream inf(fileName3.c_str());
 		TS_ASSERT(inf.is_open());
 		// deserialize(inf, obj);
-		mkjson json = nlohmann::json::parse(inf);
-		nlohmann::from_json(json, obj);
+		mkjson json = mkjson::parse(inf);
+		from_mkjson(json, obj);
 		ofstream of2(fileName2.c_str());
 		serialize(of2, obj);
 
