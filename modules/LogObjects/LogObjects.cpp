@@ -76,7 +76,7 @@ void LogObjects::ProcessFrame()
 {
 	LOG_DEBUG(m_logger, "Write object to log file");
 	stringstream ss;
-	serialize(ss, m_objectsIn);
+	ss << multiLine(m_objectsIn);
 	mp_annotationWriter->WriteAnnotation(m_currentTimeStamp, m_currentTimeStamp, ss);
 }
 

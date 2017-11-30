@@ -1,44 +1,53 @@
 {
-	"connected" : false,
-	"description" : "A stream of event",
-	"event" : 
-	{
-		"dateEvent" : 12341244444444,
-		"dateNotif" : 2234234232432,
-		"eventName" : "oooooh_label_bleu",
-		"external" : 
-		{
-			"objects" : 
-			[
+	"connected": false,
+	"description": "A stream of event",
+	"event": {
+		"dateEvent": 12341244444444,
+		"dateNotif": 2234234232432,
+		"eventName": "oooooh_label_bleu",
+		"external": {
+			"objects": [
 				{
-					"ewwww" : [ 1, 2, 3, 4 ],
-					"more" : "fun"
+					"ewwww": [
+						1,
+						2,
+						3,
+						4
+					],
+					"more": "fun"
 				},
 				{
-					"ewwww" : [ 1, 2, 4 ],
-					"more" : "fun"
+					"ewwww": [
+						1,
+						2,
+						4
+					],
+					"more": "fun"
 				},
 				{
-					"ewwww" : [ 1, 3, 4 ],
-					"more" : "no more!"
+					"ewwww": [
+						1,
+						3,
+						4
+					],
+					"more": "no more!"
 				}
 			],
-			"other_name" : "Some external data with no specific structure",
-			"sadfs" : 324
+			"other_name": "Some external data with no specific structure",
+			"sadfs": 324
 		},
-		"object" : 
-		{
-			"features" : {},
-			"height" : 0.5600000000000001,
-			"id" : 442243,
-			"name" : "test_serialize2",
-			"width" : 0.50,
-			"x" : 0.60,
-			"y" : 0.30
+		"object": {
+			"features": {},
+			"height": 0.56,
+			"id": 442243,
+			"name": "test_serialize2",
+			"width": 0.5,
+			"x": 0.6,
+			"y": 0.3
 		},
-		"raised" : true
+		"raised": true
 	},
-	"name" : "streamEvent",
-	"timeStamp" : 12341244444444,
-	"type" : "Event"
+	"name": "streamEvent",
+	"timeStamp": 12341244444444,
+	"type": "Event"
 }

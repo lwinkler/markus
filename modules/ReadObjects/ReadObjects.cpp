@@ -74,7 +74,8 @@ void ReadObjects::Capture()
 	m_currentTimeStamp = mp_annotationReader->GetCurrentTimeStamp();
 	istringstream ss(text);
 	// m_outputStreams.at()->Deserialize(ss,m_param.folder);
-	deserialize(ss, m_ObjectOut);
+	mkjson json = mkjson::parse(ss);
+	from_mkjson(json, m_ObjectOut);
 	// LOG_DEBUG(m_logger, "Deserialized object: " << m_ObjectOut);
 	//m_ObjectOut.Deserialize(ss, m_param.folder);
 	//m_ObjectOut.push_back(obj);

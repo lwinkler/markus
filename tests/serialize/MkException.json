@@ -1,6 +1,5 @@
-
 {
-	"code" : 3335,
-	"description" : "An exception to serialize [position unknown]]",
-	"name" : "some_name"
+	"code": 3335,
+	"description": "An exception to serialize [position unknown]]",
+	"name": "some_name"
 }

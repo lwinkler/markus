@@ -1,36 +1,33 @@
 {
-	"connected" : false,
-	"description" : "A stream of objects",
-	"name" : "streamObject",
-	"objects" : 
-	[	
+	"connected": false,
+	"description": "A stream of objects",
+	"name": "streamObject",
+	"objects": [
 		{
-			"features" : 
-			{
-				"featA" : 2342,
-				"featB" : 111
+			"features": {
+				"featA": 2342.0,
+				"featB": 111.0
 			},
-			"height" : 0.550,
-			"id" : 333,
-			"name" : "test_serialize1",
-			"width" : 0.70,
-			"x" : 0.40,
-			"y" : 0.60
+			"height": 0.55,
+			"id": 333,
+			"name": "test_serialize1",
+			"width": 0.7,
+			"x": 0.4,
+			"y": 0.6
 		},
 		{
-			"features" : 
-			{
-				"featA" : 2,
-				"featB" : 1231.10
+			"features": {
+				"featA": 2.0,
+				"featB": 1231.09997558594
 			},
-			"height" : 0.50,
-			"id" : 33,
-			"name" : "test_serialize2",
-			"width" : 0.730,
-			"x" : 0.430,
-			"y" : 0.620
+			"height": 0.5,
+			"id": 33,
+			"name": "test_serialize2",
+			"width": 0.73,
+			"x": 0.43,
+			"y": 0.62
 		}
 	],
-	"timeStamp" : 213412313333123,
-	"type" : "Objects"
+	"timeStamp": 213412313333123,
+	"type": "Objects"
 }

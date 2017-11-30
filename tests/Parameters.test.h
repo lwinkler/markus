@@ -114,13 +114,11 @@ public:
 
 	void testJson()
 	{
-		TS_ASSERT(mkjson("\"mystring\"").get<string>() == "mystring");
-		TS_ASSERT(mkjson("34").get<int>() == 34);
-		TS_ASSERT(mkjson("34.1").get<float>() - 34.1 < 0.0001);
-		TS_ASSERT(mkjson("true").get<bool>() == true);
-		TS_ASSERT(mkjson("false").get<bool>() == false);
-		TS_ASSERT(mkjson("1").get<bool>() == true);
-		TS_ASSERT(mkjson("0").get<bool>() == false);
+		TS_ASSERT(mkjson("mystring").get<string>() == "mystring");
+		TS_ASSERT(mkjson(34).get<int>() == 34);
+		TS_ASSERT(mkjson(34.1).get<float>() - 34.1 < 0.0001);
+		TS_ASSERT(mkjson(true).get<bool>() == true);
+		TS_ASSERT(mkjson(false).get<bool>() == false);
 	}
 	/**
 	* @brief Test all classes that inherit from Parameter

@@ -1,17 +1,15 @@
-
 {
-	"double1" : 355.4440,
-	"float1" : 566.0,
-	"int1" : 555,
-	"object" : 
-	{
-		"features" : {},
-		"height" : 0.0,
-		"id" : 0,
-		"name" : "",
-		"width" : 0.0,
-		"x" : 0.0,
-		"y" : 0.0
+	"double1": 355.444,
+	"float1": 566.0,
+	"int1": 555,
+	"object": {
+		"features": {},
+		"height": 0.0,
+		"id": 0,
+		"name": "",
+		"width": 0.0,
+		"x": 0.0,
+		"y": 0.0
 	},
-	"string1" : "another_test"
+	"string1": "another_test"
 }

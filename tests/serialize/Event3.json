@@ -1,27 +1,28 @@
-
 {
-	"dateEvent" : 1399308502411,
-	"dateNotif" : 3453434522221,
-	"eventName" : "EventName",
-	"external" : 
-	{
-		"name" : "Some external data with no specific structure",
-		"obj" : 
-		{
-			"ewwww" : [ 1, 2, 3, 4 ],
-			"more" : "fun"
+	"dateEvent": 1399308502411,
+	"dateNotif": 3453434522221,
+	"eventName": "EventName",
+	"external": {
+		"name": "Some external data with no specific structure",
+		"obj": {
+			"ewwww": [
+				1,
+				2,
+				3,
+				4
+			],
+			"more": "fun"
 		},
-		"sadfs" : 324
+		"sadfs": 324
 	},
-	"object" : 
-	{
-		"features" : {},
-		"height" : 0.550,
-		"id" : 333,
-		"name" : "test_serialize",
-		"width" : 0.70,
-		"x" : 0.40,
-		"y" : 0.60
+	"object": {
+		"features": {},
+		"height": 0.55,
+		"id": 333,
+		"name": "test_serialize",
+		"width": 0.7,
+		"x": 0.4,
+		"y": 0.6
 	},
-	"raised" : true
+	"raised": true
 }

@@ -1,16 +1,14 @@
 {
-	"countProcessedFrames" : 123433331,
-	"inputs" : [],
-	"name" : "Module0",
-	"outputs" : 
-	[
+	"countProcessedFrames": 123433331,
+	"inputs": [],
+	"name": "Module0",
+	"outputs": [
 		{
+			"connected": false,
+			"description": "Video stream",
 			"name": "image",
-			"connected" : false,
-			"description" : "Video stream",
-			"image" : "tests/serialize/image/Module0.image.23422423424234.jpg",
-			"timeStamp" : 23422423424234,
-			"type" : "Image"
+			"timeStamp": 23422423424234,
+			"type": "Image"
 		}
 	]
 }

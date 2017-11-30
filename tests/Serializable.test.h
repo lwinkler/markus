@@ -181,11 +181,11 @@ protected:
 	{
 		TS_TRACE("Test the serialization of " + name);
 		string fileName1 = "tests/tmp/serialize1_" + name + ".json";
-		string fileName2 = "tests/tmp/serialize2_" + name + ".json";
+		string fileName2 = "tests/tmp/" + name + ".json";
 		string fileName3 = "tests/serialize/" + name + ".json";
 		TS_TRACE("Test serialization of " + name + " = " + oneLine(obj) + " with signature = " + signature(obj));
 		ofstream of1(fileName1.c_str());
-		serialize(of1, obj);
+		of1 << multiLine(obj);
 		of1.close();
 
 		// stringstream ss2;
@@ -196,7 +196,7 @@ protected:
 		mkjson json = mkjson::parse(inf);
 		from_mkjson(json, obj);
 		ofstream of2(fileName2.c_str());
-		serialize(of2, obj);
+		of2 << multiLine(obj);
 
 		// Compare with the initial config
 		inf.close();

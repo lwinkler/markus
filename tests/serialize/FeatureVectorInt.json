@@ -1,8 +1,6 @@
-
 {
-	"type" : "int",
-	"values" : 
-	[
+	"type": "int",
+	"values": [
 		33,
 		-243124,
 		0,
