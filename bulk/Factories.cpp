@@ -63,6 +63,7 @@ void Factories::RegisterAll()
 	REGISTER_FEATURE(FeatureInt, "FeatureInt");
 	REGISTER_FEATURE(FeatureFloatInTime, "FeatureFloatInTime");
 	REGISTER_FEATURE(FeatureVectorFloat, "FeatureVectorFloat");
+	REGISTER_FEATURE(FeatureVectorInt, "FeatureVectorInt");
 	REGISTER_FEATURE(FeatureString, "FeatureString");
 	REGISTER_FEATURE(FeatureKeyPoint, "FeatureKeyPoint");
 	REGISTER_FEATURE(FeaturePoint2f, "FeaturePoint2f");

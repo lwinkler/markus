@@ -79,7 +79,7 @@ void FeatureHistory::Randomize(unsigned int& xr_seed, const mkjson& x_param)
 void FeatureHistory::Serialize(mkjson& rx_json) const
 {
 	rx_json["history"] = mkjson::array();
-	mkjson hist = rx_json["history"];
+	mkjson& hist = rx_json["history"];
 	for(const auto& elem : features)
 	{
 		mkjson feat_json{{"time", elem.first}};
@@ -90,7 +90,7 @@ void FeatureHistory::Serialize(mkjson& rx_json) const
 
 void FeatureHistory::Deserialize(const mkjson& x_json)
 {
-	mkjson hist = x_json.at("history");
+	const mkjson& hist(x_json.at("history"));
 	assert(hist.is_array());
 
 	features.clear();

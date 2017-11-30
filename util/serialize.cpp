@@ -83,9 +83,12 @@ string signatureJsonTree(const mkjson &x_json, int x_depth)
 				result += "{";
 				result += signatureJsonTree(it.value(), x_depth);
 				result += "}";
+			} else {
+				if(it.key() == "type")
+					result += "\"" + it.value().get<string>() + "\"";
+				else
+					result += signatureJsonTree(it.value(), x_depth);
 			}
-			else
-				result += signatureJsonTree(it.value(), x_depth);
 			result += ",";
 		}
 		return result;

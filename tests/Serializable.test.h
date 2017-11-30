@@ -228,8 +228,9 @@ public:
 		testSerialization(m_evt2, "Event3");
 	}
 
-	void testStreamImage()
+	void disabled_testStreamImage()
 	{
+		// note: stream of image can only be serialized with the method Serialize
 		cv::Mat image1(cv::Size(640, 480), CV_8U);
 		StreamImage stream1("img", image1, *mp_fakeInput, "A stream of image");
 		testSerialization(stream1, "StreamImage");
