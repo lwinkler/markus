@@ -39,8 +39,6 @@ void readFromFile(ConfigReader& rx_config, const std::string& x_fileName, bool x
 void overrideWith(ConfigReader& rx_config, const ConfigReader& xr_extraConfig);
 void writeToFile(const ConfigReader& rx_config, const std::string& x_file);
 void validate(const ConfigReader& rx_config);
-std::string jsonToString(const ConfigReader& x_json);
-ConfigReader stringToJson(const std::string& x_string);
 ConfigReader& findFirstInArray(ConfigReader& x_conf, const std::string& x_name, const std::string& x_value);
 ConfigReader& replaceOrAppendInArray(ConfigReader& x_conf, const std::string& x_name, const std::string& x_value);
 const ConfigReader& findFirstInArrayConst(const ConfigReader& x_conf, const std::string& x_name, const std::string& x_value);

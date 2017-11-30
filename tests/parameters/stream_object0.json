@@ -1,19 +1,18 @@
 {
-	"default" : 
-	[
+	"default": [
 		{
-			"features" : {},
-			"height" : 240,
-			"id" : -1,
-			"name" : "screen",
-			"width" : 320,
-			"x" : 160,
-			"y" : 120
+			"features": {},
+			"height": 240.0,
+			"id": -1,
+			"name": "screen",
+			"width": 320.0,
+			"x": 160.0,
+			"y": 120.0
 		}
 	],
-	"description" : "Test stream",
-	"name" : "stream_object0",
-	"range" : {},
-	"stream" : true,
-	"type" : "Objects"
+	"description": "Test stream",
+	"name": "stream_object0",
+	"range": {},
+	"stream": true,
+	"type": "Objects"
 }

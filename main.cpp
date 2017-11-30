@@ -295,9 +295,9 @@ void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, 
 				throw MkException("Parameter set in command line must be in format 'module.parameter'", LOC);
 			ConfigReader& conf(path[0] == "manager" ? appConfig : findFirstInArray(appConfig["modules"], "name", path[0]));
 			if(path[1] == "class")
-				conf["class"] = stringToJson(value);
+				conf["class"] = mkjson(value);
 			else
-				replaceOrAppendInArray(conf["inputs"], "name", path[1])["value"] = stringToJson(value);
+				replaceOrAppendInArray(conf["inputs"], "name", path[1])["value"] = mkjson(value);
 		}
 		catch(std::exception& e)
 		{

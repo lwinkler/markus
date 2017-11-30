@@ -353,7 +353,7 @@ void Module::Export(ostream& rx_os) const
 			json["outputs"].push_back(val);
 		}
 	}
-	rx_os << json.dump();
+	rx_os << multiLine(json);
 }
 
 const Stream& Module::GetInputStreamByName(const string& x_name) const

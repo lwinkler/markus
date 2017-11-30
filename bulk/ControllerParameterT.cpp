@@ -90,13 +90,13 @@ template<class T> void ControllerParameterT<T>::GetRange(string* xp_value)
 	Processable::ReadLock lock(m_module.RefLock());
 	if(xp_value != nullptr)
 	{
-		*xp_value = jsonToString(m_param.GetRange());
+		*xp_value = oneLine(m_param.GetRange());
 		return;
 	}
 #ifdef MARKUS_NO_GUI
 	assert(false);
 #else
-	LOG_INFO(m_logger, "Parameter range is \"" + jsonToString(m_param.GetRange()) + "\"");
+	LOG_INFO(m_logger, "Parameter range is \"" + oneLine(m_param.GetRange()) + "\"");
 #endif
 }
 
@@ -113,7 +113,7 @@ template<class T> void ControllerParameterT<T>::SetControlledValue(string* xp_va
 
 	if(xp_value != nullptr)
 	{
-		m_param.SetValue(stringToJson(*xp_value), PARAMCONF_CMD);
+		m_param.SetValue(mkjson(*xp_value), PARAMCONF_CMD);
 	}
 	else
 	{
@@ -133,7 +133,7 @@ template<class T> void ControllerParameterT<T>::SetControlledValue(string* xp_va
 	if(!m_param.CheckRange())
 	{
 		m_param.SetValue(oldValue, configType);
-		throw MkException("Parameter " + m_param.GetName() + "=" + *xp_value + " is out of range " + jsonToString(m_param.GetRange()), LOC);
+		throw MkException("Parameter " + m_param.GetName() + "=" + *xp_value + " is out of range " + oneLine(m_param.GetRange()), LOC);
 	}
 }
 
@@ -360,7 +360,7 @@ template<> QWidget* ControllerSerializable::CreateWidget()
 #ifndef MARKUS_NO_GUI
 	QLineEdit* lineEdit = new QLineEdit();
 	lineEdit->setStyleSheet("color: black; background-color: white");
-	lineEdit->setText(jsonToString(m_param.GetValue()).c_str());
+	lineEdit->setText(oneLine(m_param.GetValue()).c_str());
 	mp_widget = lineEdit;
 	return lineEdit;
 #else
@@ -382,7 +382,7 @@ template<> void ControllerSerializable::SetWidgetValue(const string& x_value)
 template<> mkjson ControllerSerializable::GetValueFromWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return stringToJson(dynamic_cast<QLineEdit*>(mp_widget)->text().toStdString());
+	return mkjson(dynamic_cast<QLineEdit*>(mp_widget)->text().toStdString());
 #else
 	assert(false);
 	return "";

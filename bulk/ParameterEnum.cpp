@@ -146,5 +146,5 @@ void ParameterEnum::Export(ostream& rx_os) const
 	{
 		root["enum"].push_back(elem.first);
 	}
-	rx_os << root.dump();
+	rx_os << multiLine(root);
 }

@@ -44,6 +44,15 @@ template<class T> inline void from_mkjson(const mkjson& x_js, T& rx_obj)
 	nlohmann::from_json(x_js, rx_obj);
 }
 
+inline auto oneLine(const mkjson& x_json)
+{
+	return x_json.dump();
+}
+
+inline auto multiLine(const mkjson& x_json)
+{
+	return x_json.dump(1, '\t');
+}
 
 std::string signatureJsonTree(const mkjson &x_root, int x_depth);
 inline std::string signature(const mkjson& x_json)

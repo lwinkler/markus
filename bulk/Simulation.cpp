@@ -206,7 +206,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 			for(auto& elem : values)
 			{
 				LOG_DEBUG(m_logger, "Value = " << elem);
-				xr_variationNames.push_back(paramNames.at(0).get<string>() + "-" + jsonToString(elem));
+				xr_variationNames.push_back(paramNames.at(0).get<string>() + "-" + oneLine(elem));
 
 				// Change value of param
 				*(targets[0]) = elem;

@@ -132,7 +132,7 @@ void WriteObjectMongo::ProcessFrame()
 		bson_error_t error;
 
 		mkjson json(elem);
-		bson_t* doc = bson_new_from_json(reinterpret_cast<const uint8_t*>(json.dump().c_str()), -1, &error);
+		bson_t* doc = bson_new_from_json(reinterpret_cast<const uint8_t*>(oneLine(json).c_str()), -1, &error);
 		assert(doc);
 
 		// create a mongo document

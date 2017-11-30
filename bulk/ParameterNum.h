@@ -134,7 +134,7 @@ public:
 			}
 		}
 		if(values.empty())
-			throw MkException("Value array is empty, range= " + jsonToString(range), LOC);
+			throw MkException("Value array is empty, range= " + oneLine(range), LOC);
 		return values;
 	}
 	void Print(std::ostream& os) const override

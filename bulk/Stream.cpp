@@ -58,7 +58,7 @@ void Stream::Export(ostream& rx_os) const
 	root["description"] = GetDescription();
 	root["stream"] = true;
 	root["range"] = GetRange();
-	rx_os << root.dump();
+	rx_os << multiLine(root);
 }
 
 

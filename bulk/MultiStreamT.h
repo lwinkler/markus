@@ -102,7 +102,7 @@ public:
 		StreamT<T>::Export(ss);
 		ss >> json;
 		json["multi"] = m_maxSize;
-		rx_os << json.dump();
+		rx_os << multiLine(json);
 	}
 
 protected:

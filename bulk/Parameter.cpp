@@ -49,7 +49,7 @@ void Parameter::Export(ostream& rx_os) const
 	json["description"] = GetDescription();
 	json["default"] = GetDefault();
 	json["range"] = GetRange();
-	rx_os << json.dump();
+	rx_os << multiLine(json);
 }
 
 
@@ -61,7 +61,7 @@ void Parameter::Export(ostream& rx_os) const
 void Parameter::Print(std::ostream& os) const
 {
 	// note: remove line return to shorten json objects
-	os<<m_name<<"="<<GetValue().dump()<<" ("<<configType[m_confSource]<<"); ";
+	os<<m_name<<"="<< oneLine(GetValue()) << " ("<<configType[m_confSource]<<"); ";
 }
 
 void Parameter::SetValue(const ConfigReader& x_value, ParameterConfigType x_confType){
@@ -112,7 +112,7 @@ void Parameter::SetRange(const mkjson& x_range)
 				root["allowed"].push_back(elem);
 			}
 		}
-		else root = stringToJson(range);
+		else root = mkjson(range);
 		m_range = root;
 	}
 	else

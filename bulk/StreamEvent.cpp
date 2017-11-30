@@ -77,8 +77,8 @@ template<> void StreamEvent::RenderTo(Mat& x_output) const
 template<> void StreamEvent::Query(std::ostream& xr_out, const cv::Point& x_pt) const
 {
 	mkjson json(m_content);
-	xr_out << json.dump() << endl;
-	LOG_INFO(m_logger, json.dump());
+	xr_out << multiLine(json) << endl;
+	LOG_INFO(m_logger, multiLine(json));
 }
 
 template<> void StreamEvent::Serialize(mkjson& rx_json, MkDirectory* xp_dir) const

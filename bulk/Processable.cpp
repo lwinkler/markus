@@ -254,7 +254,7 @@ void Processable::NotifyException(const MkException& x_exception)
 {
 	InterruptionManager::GetInst().AddEvent("exception." + x_exception.GetName());
 	Event ev;
-	ev.AddExternalInfo("exception", mkjson(x_exception).dump());
+	ev.AddExternalInfo("exception", oneLine(x_exception));
 	// note: it is difficult to associate a time stamp with events
 	ev.Raise("exception", 0, 0);
 	ev.Notify(GetContext(), true);
@@ -270,7 +270,7 @@ void Processable::Status() const
 	Event evt;
 	// note: it is difficult to associate a time stamp with events
 	evt.Raise("status", 0, 0);
-	evt.AddExternalInfo("exception", json.dump());
+	evt.AddExternalInfo("exception", oneLine(json));
 	evt.Notify(GetContext(), true);
 }
 

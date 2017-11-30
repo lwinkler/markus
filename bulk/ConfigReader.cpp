@@ -93,17 +93,6 @@ void overrideWith(ConfigReader& xr_config, const ConfigReader& x_extraConfig)
 	}
 }
 
-std::string jsonToString(const mkjson& x_json)
-{
-	stringstream ss;
-	ss << x_json.dump();
-	return ss.str();
-}
-
-mkjson stringToJson(const std::string& x_string)
-{
-	return mkjson(x_string);
-}
 
 /**
 * @brief Replace the first occurence or append to a config array

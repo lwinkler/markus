@@ -94,7 +94,7 @@ void to_json(mkjson& rx_json, const Object& x_obj) {
 void from_json(const mkjson& x_json, Object& rx_obj) {
 	rx_obj.m_id = x_json.at("id").get<int>();
 	rx_obj.m_name = x_json.at("name").get<string>();
-	rx_obj.posY = x_json.at("x").get<double>();
+	rx_obj.posX = x_json.at("x").get<double>();
 	rx_obj.posY = x_json.at("y").get<double>();
 	rx_obj.width = x_json.at("width").get<double>();
 	rx_obj.height = x_json.at("height").get<double>();
@@ -160,7 +160,7 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 			//try
 			{
 				ostringstream text;
-				text << elem.first << "=" << mkjson(*elem.second).dump();
+				text << elem.first << "=" << multiLine(*elem.second);
 				pText.y += 7;
 				putText(x_output, text.str(), pText,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
 				i++;

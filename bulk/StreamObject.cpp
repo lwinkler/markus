@@ -97,8 +97,8 @@ template<>void StreamObject::Query(std::ostream& xr_out, const cv::Point& x_pt) 
 		if(elem.GetRect().contains(x_pt))
 		{
 			mkjson json(elem);
-			xr_out << json.dump() << endl;
-			LOG_INFO(m_logger, json.dump());
+			xr_out << multiLine(json) << endl;
+			LOG_INFO(m_logger, multiLine(json));
 		}
 
 }

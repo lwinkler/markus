@@ -57,9 +57,6 @@ void ParameterSerializable::SetValueToDefault()
 	if(IsLocked())
 		throw MkException("You tried to set the value of a locked parameter.", LOC);
 
-	std::stringstream ss;
-	ss << m_default;
-	// mr_value.Deserialize(ss);
-	ss << mr_value.dump();
+	mr_value = m_default;
 	m_confSource = PARAMCONF_DEF;
 }

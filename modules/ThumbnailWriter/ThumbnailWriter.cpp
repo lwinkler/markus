@@ -39,7 +39,7 @@ ThumbnailWriter::ThumbnailWriter(ParameterStructure& xr_params):
 	m_input2(Size(m_param.width, m_param.height), m_param.type)
 {
 	AddInputStream(0, new StreamImage( "image", m_input, *this,   "Video input"));
-	AddInputStream(1, new StreamObject("objects", m_objectsIn, *this,     "Incoming objects", stringToJson("{\"width\":{\"min\":1},\"height\":{\"min\":1}}")));
+	AddInputStream(1, new StreamObject("objects", m_objectsIn, *this,     "Incoming objects", mkjson("{\"width\":{\"min\":1},\"height\":{\"min\":1}}")));
 	AddInputStream(2, new StreamImage( "image2", m_input2, *this,   "Binary mask"));
 }
 
@@ -67,7 +67,7 @@ bool replaceExpr(string& rx_name, const map<string,FeaturePtr>& x_features)
 	{
 		mkjson json;
 		(*it->second).Serialize(json);
-		rx_name.replace(beg, end + 1, json.dump());
+		rx_name.replace(beg, end + 1, oneLine(json));
 	}
 
 	return true;

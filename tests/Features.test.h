@@ -53,13 +53,13 @@ protected:
 	void testFeature(Feature& feat, const string& name, unsigned int& xr_seed)
 	{
 		// Note: features need to be initialized to 0 or similar value
-		TS_TRACE("Test feature of type " + name + " = " + mkjson(feat).dump() + " with signature = " + signature(feat));
+		TS_TRACE("Test feature of type " + name + " = " + oneLine(feat) + " with signature = " + signature(feat));
 		Feature* copy = feat.CreateCopy();
 		// cout << "feat.CompareSquared(feat) = " << feat.CompareSquared(feat) << endl;
 		TS_ASSERT(feat.CompareSquared(feat) == 0);
 		TS_ASSERT(feat.CompareSquared(*copy) == 0);
 		copy->Randomize(xr_seed, nullptr);
-		TS_TRACE("compare with "+ mkjson(*copy).dump() + " with signature = " + signature(feat));
+		TS_TRACE("compare with "+ oneLine(*copy) + " with signature = " + signature(feat));
 		// cout << "feat.CompareSquared(*copy) = " << feat.CompareSquared(*copy) << endl;
 		TS_ASSERT(feat.CompareSquared(*copy) > 0);
 		delete copy;

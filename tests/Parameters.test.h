@@ -60,7 +60,7 @@ public:
 		xr_param.SetDefaultAndValue(x_legalValue);
 		xr_param.SetValueToDefault();
 		// TS_ASSERT(xr_param.GetValue().compare(x_legalValue));
-		TS_ASSERT(jsonToString(xr_param.GetValue()) == jsonToString(x_legalValue));
+		TS_ASSERT(oneLine(xr_param.GetValue()) == oneLine(x_legalValue));
 		// TS_ASSERT(xr_param.GetValue() == x_legalValue); // does not work apparently
 		TS_ASSERT(xr_param.GetConfigurationSource() == PARAMCONF_DEF);
 
@@ -79,7 +79,7 @@ public:
 		// test that the current range stays identical
 		mkjson range = xr_param.GetRange();
 		xr_param.SetRange(range);
-		// cout << jsonToString(range).size() << " == " << jsonToString(xr_param.GetRange()).compare(jsonToString(range)) << endl;
+		// cout << oneLine(range).size() << " == " << oneLine(xr_param.GetRange()).compare(oneLine(range)) << endl;
 		TS_ASSERT(xr_param.GetRange() == range);
 	}
 
@@ -114,13 +114,13 @@ public:
 
 	void testJson()
 	{
-		TS_ASSERT(stringToJson("\"mystring\"").get<string>() == "mystring");
-		TS_ASSERT(stringToJson("34").get<int>() == 34);
-		TS_ASSERT(stringToJson("34.1").get<float>() - 34.1 < 0.0001);
-		TS_ASSERT(stringToJson("true").get<bool>() == true);
-		TS_ASSERT(stringToJson("false").get<bool>() == false);
-		TS_ASSERT(stringToJson("1").get<bool>() == true);
-		TS_ASSERT(stringToJson("0").get<bool>() == false);
+		TS_ASSERT(mkjson("\"mystring\"").get<string>() == "mystring");
+		TS_ASSERT(mkjson("34").get<int>() == 34);
+		TS_ASSERT(mkjson("34.1").get<float>() - 34.1 < 0.0001);
+		TS_ASSERT(mkjson("true").get<bool>() == true);
+		TS_ASSERT(mkjson("false").get<bool>() == false);
+		TS_ASSERT(mkjson("1").get<bool>() == true);
+		TS_ASSERT(mkjson("0").get<bool>() == false);
 	}
 	/**
 	* @brief Test all classes that inherit from Parameter
@@ -201,8 +201,8 @@ public:
 		TS_TRACE("Test ParameterSerializable - Polygon");
 		Polygon myPolygon;
 		// ParameterSerializable paramPolygon("param_polygon",  R"({"height":0.6,"points":[{"x":5.0,"y":0.50},{"x":6.0,"y":5.50}],"width":0.8}")"_json, &myPolygon, "Parameter of type Polygon");
-		// TODO ParameterSerializable paramPolygon("param_polygon",  stringToJson("{\"height\":0.6,\"points\":[{\"x\":5.0,\"y\":0.50},{\"x\":6.0,\"y\":5.50}],\"width\":0.8}"), &myPolygon, "Parameter of type Polygon");
-		// TODO testParameter(paramPolygon, stringToJson("{\"height\":0.660,\"points\":[{\"x\":54.0,\"y\":53.50},{\"x\":3454.0,\"y\":53.50},{\"x\":54.0,\"y\":53.50},{\"x\":5.0,\"y\":0.50}],\"width\":0.860}"), nullptr) ;
+		// TODO ParameterSerializable paramPolygon("param_polygon",  mkjson("{\"height\":0.6,\"points\":[{\"x\":5.0,\"y\":0.50},{\"x\":6.0,\"y\":5.50}],\"width\":0.8}"), &myPolygon, "Parameter of type Polygon");
+		// TODO testParameter(paramPolygon, mkjson("{\"height\":0.660,\"points\":[{\"x\":54.0,\"y\":53.50},{\"x\":3454.0,\"y\":53.50},{\"x\":54.0,\"y\":53.50},{\"x\":5.0,\"y\":0.50}],\"width\":0.860}"), nullptr) ;
 		// TODO testLock(paramPolygon);
 	}
 

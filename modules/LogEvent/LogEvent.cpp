@@ -82,7 +82,7 @@ void LogEvent::WriteEvent()
 {
 	LOG_DEBUG(m_logger, "Write event to log file");
 	stringstream ss;
-	ss << mkjson(m_event).dump();
+	ss << multiLine(m_event);
 	mp_annotationWriter->WriteAnnotation(m_currentTimeStamp, m_currentTimeStamp + 1000 * m_param.duration, ss);
 }
 

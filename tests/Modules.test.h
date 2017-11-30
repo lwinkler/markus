@@ -306,13 +306,13 @@ public:
 						TS_TRACE("###  " + elemCtr.first + ".GetDefault returned " + defval);
 
 						TS_TRACE("Generate values for param of type " + type + " in range " + range);
-						mkjson values = tester.module->GetParameters().GetParameterByName(elemCtr.first).GenerateValues(10, stringToJson(range));
+						mkjson values = tester.module->GetParameters().GetParameterByName(elemCtr.first).GenerateValues(10, mkjson(range));
 
 						for(auto& elemVal : values)
 						{
 							// For string type we cannot set random values
 							// cout<<"set "<<value<<endl;
-							string tmps = jsonToString(elemVal);
+							string tmps = oneLine(elemVal);
 							// cout << "translated to string " << tmps << endl;
 							elemCtr.second->CallAction("Set", &tmps);
 
@@ -330,9 +330,9 @@ public:
 							newValue = "0";
 							elemCtr.second->CallAction("Get", &newValue);
 
-							if(elemVal != stringToJson(newValue))
+							if(elemVal != mkjson(newValue))
 							{
-								if(!elemVal.is_number() || elemVal.get<float>() != stringToJson(newValue).get<float>())
+								if(!elemVal.is_number() || elemVal.get<float>() != mkjson(newValue).get<float>())
 									TS_FAIL("Value set must be returned by get: " + tmps + "!=" + newValue);
 							}
 
@@ -340,7 +340,7 @@ public:
 							for(int i = 0 ; i < 3 ; i++)
 								tester.module->ProcessRandomInput(seed);
 							TS_TRACE("###  " + elemCtr.first + ".Set returned " + tmps);
-							TS_TRACE("###  " + elemCtr.first + ".Get returned " + jsonToString(newValue));
+							TS_TRACE("###  " + elemCtr.first + ".Get returned " + oneLine(newValue));
 						}
 						elemCtr.second->CallAction("Set", &defval);
 					}
@@ -400,12 +400,12 @@ public:
 					if(!elem->IsLocked())
 						continue;
 
-					TS_TRACE("## on parameter " + elem->GetName() + " of type " + elem->GetType() + " on range " + jsonToString(elem->GetRange()));
+					TS_TRACE("## on parameter " + elem->GetName() + " of type " + elem->GetType() + " on range " + oneLine(elem->GetRange()));
 
 					// Generate a new module with each value for locked parameter
 					mkjson values;
 
-					TS_TRACE("Generate values for param of type " + elem->GetType() + " in range " + jsonToString(elem->GetRange()));
+					TS_TRACE("Generate values for param of type " + elem->GetType() + " in range " + oneLine(elem->GetRange()));
 					elem->GenerateValues(10, values);
 					allValues.push_back(values);
 					allDefault.push_back(elem->GetDefault());
@@ -424,7 +424,7 @@ public:
 				{
 					// For each value
 					map<string, mkjson> params;
-					TS_TRACE("Set param " + allNames[i] + " = " + jsonToString(elemVal) + " and " + lastParam + " = " + jsonToString(lastDefault));
+					TS_TRACE("Set param " + allNames[i] + " = " + oneLine(elemVal) + " and " + lastParam + " = " + oneLine(lastDefault));
 					params[allNames[i]] = elemVal;
 					if(lastParam != "")
 						params[lastParam] = lastDefault;
