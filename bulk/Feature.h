@@ -60,7 +60,7 @@ public:
 		_ser->Deserialize(_json);
 	}
 
-	FeaturePtr(Feature* x_feat) : mp_feat(x_feat) {}
+	explicit FeaturePtr(Feature* x_feat) : mp_feat(x_feat) {}
 	FeaturePtr(const FeaturePtr& x_feat) : mp_feat(x_feat->CreateCopy()) {}
 	~FeaturePtr() {delete mp_feat;}
 	FeaturePtr& operator = (const FeaturePtr& x_feat)

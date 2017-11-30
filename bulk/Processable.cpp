@@ -265,7 +265,6 @@ void Processable::NotifyException(const MkException& x_exception)
 */
 void Processable::Status() const
 {
-	stringstream ss;
 	mkjson json(m_lastException);
 	json["recovered"] = m_hasRecovered;
 	Event evt;

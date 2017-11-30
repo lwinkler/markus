@@ -32,12 +32,16 @@ using mkjson = nlohmann::json;
 template<class T> inline void to_mkjson(mkjson& rx_js, const T& x_obj) 
 {
 	// rx_js = std::move(x_obj);
+	// mkjson js(x_obj);
+	// std::swap(rx_js, js);
 	nlohmann::to_json(rx_js, x_obj);
 }
-template<class T> inline void from_mkjson(const mkjson& x_js, T&& rx_obj) 
+template<class T> inline void from_mkjson(const mkjson& x_js, T& rx_obj) 
 {
 	// rx_obj = std::move(x_js.get<T>());
-	nlohmann::to_json(x_js, rx_obj);
+	// T obj{x_js};
+	// std::swap(rx_obj, obj);
+	nlohmann::from_json(x_js, rx_obj);
 }
 
 

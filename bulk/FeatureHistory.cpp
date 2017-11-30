@@ -44,7 +44,7 @@ void FeatureHistory::Update(const TIME_STAMP& x_timeStamp, const Feature& x_feat
 	if(it != features.end())
 		LOG_WARN(m_logger, "A feature already exists for this time stamp.");
 
-	features.insert(std::make_pair(x_timeStamp, x_feat.CreateCopy()));
+	features.insert(std::make_pair(x_timeStamp, FeaturePtr(x_feat.CreateCopy())));
 }
 
 double FeatureHistory::CompareSquared(const Feature& x_feature) const
@@ -72,7 +72,7 @@ void FeatureHistory::Randomize(unsigned int& xr_seed, const mkjson& x_param)
 	{
 		FeatureFloat* feat = new FeatureFloat();
 		feat->Randomize(xr_seed, "[0:1]");
-		features.insert(std::make_pair(i * 1000, feat));
+		features.insert(std::make_pair(i * 1000, FeaturePtr(feat)));
 	}
 }
 
@@ -100,6 +100,6 @@ void FeatureHistory::Deserialize(const mkjson& x_json)
 		string sign= signature(elem.at("feature")); // TODO rename function signature
 		Feature* feat = factory.Create(sign);
 		feat->Deserialize(elem.at("feature"));
-		features.insert(std::make_pair(elem.at("time").get<TIME_STAMP>(), feat));
+		features.insert(std::make_pair(elem.at("time").get<TIME_STAMP>(), FeaturePtr(feat)));
 	}
 }

@@ -45,25 +45,20 @@ class ParametersTestSuite : public CxxTest::TestSuite
 public:
 	static void testParameter(Parameter& xr_param, const mkjson& x_legalValue, const mkjson& x_illegalValue)
 	{
-		cout<< __LINE__ << " "  << xr_param.GetDefault().dump(2) << endl;
 		TS_TRACE("Test parameter " + xr_param.GetName());
 		xr_param.SetValue(x_legalValue, PARAMCONF_UNKNOWN);
 		TS_ASSERT(xr_param.CheckRange() == true);
-		cout<< __LINE__ << " "  << xr_param.GetDefault().dump(2) << endl;
 		if(!x_illegalValue.is_null())
 		{
 			xr_param.SetValue(x_illegalValue, PARAMCONF_UNKNOWN);
 			TS_ASSERT(xr_param.CheckRange() == false);
 		}
-		cout<< __LINE__ << " "  << xr_param.GetDefault().dump(2) << endl;
 		xr_param.SetDefaultAndValue(x_legalValue);
 		xr_param.SetDefaultAndValue(x_legalValue);
 		xr_param.SetDefaultAndValue(x_legalValue);
 		xr_param.SetDefaultAndValue(x_legalValue);
 		xr_param.SetDefaultAndValue(x_legalValue);
-		cout<< __LINE__ << " "  << xr_param.GetDefault().dump(2) << endl;
 		xr_param.SetValueToDefault();
-		cout<< __LINE__ << " "  << xr_param.GetDefault().dump(2) << endl;
 		// TS_ASSERT(xr_param.GetValue().compare(x_legalValue));
 		TS_ASSERT(jsonToString(xr_param.GetValue()) == jsonToString(x_legalValue));
 		// TS_ASSERT(xr_param.GetValue() == x_legalValue); // does not work apparently
