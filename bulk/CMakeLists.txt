@@ -14,8 +14,6 @@ Parameter.cpp
 ParameterEnum.cpp
 ParameterStructure.cpp
 ParameterNum.cpp
-ParameterString.cpp
-ParameterSerializable.cpp
 Polygon.cpp
 Stream.cpp
 StreamImage.cpp

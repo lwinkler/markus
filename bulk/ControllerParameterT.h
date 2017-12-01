@@ -27,8 +27,6 @@
 #include "Parameter.h"
 #include "ParameterNum.h"
 #include "ParameterEnum.h"
-#include "ParameterString.h"
-#include "ParameterSerializable.h"
 #include "Stream.h"
 #include "Controller.h"
 
@@ -88,7 +86,7 @@ typedef ControllerParameterT<ParameterDouble> ControllerDouble;
 typedef ControllerParameterT<ParameterFloat> ControllerFloat;
 typedef ControllerParameterT<ParameterBool> ControllerBool;
 typedef ControllerParameterT<ParameterString> ControllerString;
-typedef ControllerParameterT<ParameterSerializable> ControllerSerializable;
+// typedef ControllerParameterT<ParameterSerializable> ControllerSerializable;
 typedef ControllerParameterT<ParameterEnum> ControllerEnum;
 
 

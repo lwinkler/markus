@@ -24,7 +24,6 @@
 #include "ModuleClassifyEvents.h"
 #include "StreamEvent.h"
 #include "StreamImage.h"
-#include "StreamDebug.h"
 #include "ControllerEvent.h"
 
 
@@ -51,7 +50,7 @@ ModuleClassifyEvents::ModuleClassifyEvents(ParameterStructure& xr_params) :
 #endif
 }
 
-ModuleClassifyEvents::~ModuleClassifyEvents(void )
+ModuleClassifyEvents::~ModuleClassifyEvents()
 {
 }
 

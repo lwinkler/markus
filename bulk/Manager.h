@@ -30,7 +30,6 @@
 #include "Processable.h"
 #include "InterruptionManager.h"
 #include "Factories.h"
-#include "ParameterString.h"
 #include "Module.h"
 #include "Input.h"
 #include "ConfigReader.h"

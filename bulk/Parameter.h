@@ -26,9 +26,7 @@
 
 #include "define.h"
 #include "MkException.h"
-#include "ConfigReader.h"
 #include <log4cxx/logger.h>
-#include <algorithm>
 
 enum ParameterType
 {
@@ -38,7 +36,7 @@ enum ParameterType
 	PARAM_DOUBLE,
 	PARAM_BOOL,
 	PARAM_STR,
-	PARAM_SERIALIZABLE,
+	// PARAM_SERIALIZABLE,
 	// PARAM_OBJECT_HEIGHT,
 	PARAM_ENUM,
 	PARAM_STREAM_OBJECTS,
@@ -75,9 +73,9 @@ public:
 	{}
 	virtual ~Parameter() {}
 
-	virtual void SetValue(const ConfigReader& x_value, ParameterConfigType x_confType) = 0;
-	virtual void SetDefault(const ConfigReader& x_value) = 0;
-	inline void SetDefaultAndValue(const ConfigReader& x_value){SetDefault(x_value); SetValueToDefault();}
+	virtual void SetValue(const mkjson& x_value, ParameterConfigType x_confType) = 0;
+	virtual void SetDefault(const mkjson& x_value) = 0;
+	inline void SetDefaultAndValue(const mkjson& x_value){SetDefault(x_value); SetValueToDefault();}
 	inline const std::string& GetName() const {return m_name;}
 	virtual const ParameterType& GetParameterType() const = 0;
 	virtual const std::string& GetType() const = 0;
@@ -99,9 +97,9 @@ public:
 	inline bool IsHidden() const {return m_isHidden;}
 
 	// For controllers and actions
-	virtual ConfigReader GetValue() const = 0;
-	virtual ConfigReader GetDefault() const = 0;
-	inline ConfigReader GetRange() const{return m_range;}
+	virtual mkjson GetValue() const = 0;
+	virtual mkjson GetDefault() const = 0;
+	inline mkjson GetRange() const{return m_range;}
 	void SetRange(const mkjson& x_range);
 
 protected:

@@ -79,7 +79,7 @@ void Factories::RegisterAll()
 	factParamCtr.Register<ControllerEnum>(PARAM_ENUM);
 	factParamCtr.Register<ControllerInt>(PARAM_INT);
 	factParamCtr.Register<ControllerUInt>(PARAM_UINT);
-	factParamCtr.Register<ControllerSerializable>(PARAM_SERIALIZABLE);
+	// factParamCtr.Register<ControllerSerializable>(PARAM_SERIALIZABLE);
 	// factParamCtr.Register<ControllerCalibrationByHeight>(PARAM_OBJECT_HEIGHT);
 	factParamCtr.Register<ControllerString>(PARAM_STR);
 	factParamCtr.Register<ControllerParameterT<Stream>>(PARAM_STREAM_OBJECTS);

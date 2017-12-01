@@ -41,10 +41,10 @@ public:
 	
 	MKPARAMTYPE(PARAM_ENUM)
 
-	void SetValue(const ConfigReader& rx_value, ParameterConfigType x_confType) override;
-	void SetDefault(const ConfigReader& rx_value) override;
-	inline ConfigReader GetValue() const override {return GetReverseEnum().at(mr_value);}
-	inline ConfigReader GetDefault() const override {return GetReverseEnum().at(m_default);}
+	void SetValue(const mkjson& rx_value, ParameterConfigType x_confType) override;
+	void SetDefault(const mkjson& rx_value) override;
+	inline mkjson GetValue() const override {return GetReverseEnum().at(mr_value);}
+	inline mkjson GetDefault() const override {return GetReverseEnum().at(m_default);}
 	bool CheckRange() const override;
 	mkjson GenerateValues(int x_nbSamples, const mkjson& x_range) const override;
 	void Print(std::ostream& os) const override;

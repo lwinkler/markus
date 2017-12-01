@@ -38,15 +38,6 @@ using namespace std;
 #include "QParameterSlider.h"
 #endif
 
-typedef ControllerParameterT<ParameterInt> ControllerInt;
-typedef ControllerParameterT<ParameterUInt> ControllerUInt;
-typedef ControllerParameterT<ParameterDouble> ControllerDouble;
-typedef ControllerParameterT<ParameterFloat> ControllerFloat;
-typedef ControllerParameterT<ParameterBool> ControllerBool;
-typedef ControllerParameterT<ParameterString> ControllerString;
-typedef ControllerParameterT<ParameterSerializable> ControllerSerializable;
-typedef ControllerParameterT<ParameterEnum> ControllerEnum;
-
 // Explicit template instanciation
 template class ControllerParameterT<ParameterInt>;
 template class ControllerParameterT<ParameterUInt>;
@@ -54,7 +45,7 @@ template class ControllerParameterT<ParameterDouble>;
 template class ControllerParameterT<ParameterFloat>;
 template class ControllerParameterT<ParameterBool>;
 template class ControllerParameterT<ParameterString>;
-template class ControllerParameterT<ParameterSerializable>;
+// template class ControllerParameterT<ParameterSerializable>;
 template class ControllerParameterT<ParameterEnum>;
 template class ControllerParameterT<Stream>;
 
@@ -354,7 +345,7 @@ template<> mkjson ControllerString::GetValueFromWidget()
 }
 
 /*------------------------------------------------------------------------------------------------*/
-
+/*
 template<> QWidget* ControllerSerializable::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
@@ -388,6 +379,7 @@ template<> mkjson ControllerSerializable::GetValueFromWidget()
 	return "";
 #endif
 }
+*/
 /*------------------------------------------------------------------------------------------------*/
 
 template<> QWidget* ControllerParameterT<Stream>::CreateWidget()

@@ -57,95 +57,56 @@ public:
 			m_range["max"] = x_max;
 		}
 	}
-	inline ConfigReader GetValue() const override {return mr_value;}
-	inline ConfigReader GetDefault() const override {return m_default;}
+	ParameterNum(const std::string& x_name, T x_default, const mkjson& x_range, T * xp_value, const std::string& x_description) :
+		Parameter(x_name, x_description),
+		m_default(x_default),
+		mr_value(*xp_value)
+	{
+		SetRange(x_range);
+	}
+	ParameterNum(const std::string& x_name, T x_default, T * xp_value, const std::string& x_description) :
+		Parameter(x_name, x_description),
+		m_default(x_default),
+		mr_value(*xp_value)
+	{
+	}
+	inline mkjson GetValue() const override {return mr_value;}
+	inline mkjson GetDefault() const override {return m_default;}
 	inline const ParameterType& GetParameterType() const override {return m_type;}
 	inline const std::string& GetType() const override {return m_typeStr;}
 
-	void SetValue(const ConfigReader& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/) override
+	void SetValue(const mkjson& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/) override
 	{
 		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
 		mr_value = rx_value.get<T>();
 		m_confSource = x_confType;
 	}
-	// inline void SetValue(T x_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/)
-	// {
-		// if(IsLocked())
-			// throw MkException("You tried to set the value of a locked parameter.", LOC);
-		// mr_value = x_value;
-		// m_confSource = x_confType;
-	// }
-	void SetDefault(const ConfigReader& rx_value) override
+	void SetDefault(const mkjson& rx_value) override
 	{
 		m_default = rx_value.get<T>();
 		m_confSource = PARAMCONF_DEF;
 	}
 	bool CheckRange() const override
 	{
-		T value = GetValue().template get<T>();
-		// std::cout << "min" << m_min << " " << m_max << std::endl;
-		if(m_range.find("max") != m_range.end() && value > m_range.at("max").template get<T>())
-			return false;
-		if(m_range.find("min") != m_range.end() && value < m_range.at("min").template get<T>())
-			return false;
+		// T value = GetValue().template get<T>();
+		// // std::cout << "min" << m_min << " " << m_max << std::endl;
+		// if(m_range.find("max") != m_range.end() && value > m_range.at("max").template get<T>())
+			// return false;
+		// if(m_range.find("min") != m_range.end() && value < m_range.at("min").template get<T>())
+			// return false;
 		return true;
 	}
 
 	// TODO improve: template
 	mkjson GenerateValues(int x_nbSamples, const mkjson& x_range) const override
 	{
-		const mkjson range = x_range.is_null() ? GetRange() : x_range;
-		const ParameterType& type = GetParameterType();
-		if(range.find("allowed") != range.end())
-			return range.at("allowed");
-		T min = range.find("min") != range.end() ? range.at("min").get<T>() : std::numeric_limits<T>::min();
-		T max = range.find("max") != range.end() ? range.at("max").get<T>() : std::numeric_limits<T>::max();
-		if(min == max && x_nbSamples > 1)
-			x_nbSamples = 1;
-		mkjson values = mkjson::array();
-
-		if((type == PARAM_UINT || type == PARAM_INT || type == PARAM_BOOL) && static_cast<int>(max - min + 1) <= x_nbSamples)
-		{
-			for(int i = static_cast<int>(min) ; i <= static_cast<int>(max) ; i++)
-			{
-				values.push_back(i);
-				// values.append(static_cast<int>(min + static_cast<int>(i/x_nbSamples) % static_cast<int>(max - min + 1)));
-			}
-		}
-		else if(type == PARAM_UINT || type == PARAM_INT || type == PARAM_BOOL)
-		{
-			double incr = x_nbSamples <= 1 ? 0 : (max - min) / (x_nbSamples - 1);
-			for(int i = 0 ; i < x_nbSamples ; i++)
-			{
-				values.push_back(static_cast<int>(min + i * incr));
-			}
-		}
-		else
-		{
-			// x_nbSamples values in range
-			double incr = static_cast<double>(max - min) / (x_nbSamples - 1);
-			// std::cout << x_nbSamples << std::endl;
-			for(int i = 0 ; i < x_nbSamples ; i++)
-			{
-				double val = min + i * incr;
-				if(val <= max) // handle infinite case
-					values.push_back(val);
-			}
-		}
-		if(values.empty())
-			throw MkException("Value array is empty, range= " + oneLine(range), LOC);
-		return values;
+		return mkjson::array();
 	}
 	void Print(std::ostream& os) const override
 	{
-		os<<GetName()<<"="<< GetValue().template get<T>() << " [";
-		if(m_range.find("min") != m_range.end())
-			os << m_range["min"].template get<T>();
-		os << ":";
-		if(m_range.find("max") != m_range.end())
-			os << m_range["max"].template get<T>();
-		os << "] (" << configType[m_confSource] << "); ";
+		os<<GetName()<<"="<< oneLine(GetValue()) << " " << m_range;
+		os << configType[m_confSource] << "); ";
 	}
 	void SetValueToDefault() override
 	{
@@ -163,6 +124,17 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 };
 
+template<> mkjson ParameterNum<int>::GenerateValues(int x_nbSamples, const mkjson& x_range) const;
+template<> mkjson ParameterNum<unsigned int>::GenerateValues(int x_nbSamples, const mkjson& x_range) const;
+template<> mkjson ParameterNum<double>::GenerateValues(int x_nbSamples, const mkjson& x_range) const;
+template<> mkjson ParameterNum<float>::GenerateValues(int x_nbSamples, const mkjson& x_range) const;
+template<> mkjson ParameterNum<bool>::GenerateValues(int x_nbSamples, const mkjson& x_range) const;
+
+template<> bool ParameterNum<int>::CheckRange() const;
+template<> bool ParameterNum<unsigned int>::CheckRange() const;
+template<> bool ParameterNum<double>::CheckRange() const;
+template<> bool ParameterNum<float>::CheckRange() const;
+template<> bool ParameterNum<bool>::CheckRange() const;
 
 
 /// Define types
@@ -171,5 +143,6 @@ typedef ParameterNum<unsigned int> ParameterUInt;
 typedef ParameterNum<double> 	ParameterDouble;
 typedef ParameterNum<float> 	ParameterFloat;
 typedef ParameterNum<bool> 	ParameterBool;
+typedef ParameterNum<std::string> ParameterString;
 
 #endif

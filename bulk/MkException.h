@@ -28,7 +28,7 @@ enum MkExceptionCode
 	MK_FATAL_PROCESS_FREEZE       = 1020,
 
 	// last code since unix can only return codes from 0 to 126
-	MK_EXCEPTION_LAST        = 1126
+	// MK_EXCEPTION_LAST        = 1126
 };
 
 void fatal(const std::string& x_description, MkExceptionCode x_code, const std::string& x_position, const std::string& x_function);
@@ -44,8 +44,8 @@ public:
 
 	MkException(const std::string& x_description, const std::string& x_position, const std::string& x_function);
 	MkException(MkExceptionCode x_code, const std::string& x_name, const std::string& x_description, const std::string& x_position, const std::string& x_function);
-	virtual ~MkException() throw();
-	const char* what() const throw();
+	// virtual ~MkException() throw();
+	const char* what() const noexcept;
 	inline MkExceptionCode GetCode() const {return m_code;}
 	inline const std::string& GetName() const {return m_name;}
 	inline bool IsFatal() const {return m_fatal;}

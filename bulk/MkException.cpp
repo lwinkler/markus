@@ -1,6 +1,4 @@
 #include "MkException.h"
-#include "Parameter.h"
-#include <cstring>
 
 using namespace std;
 
@@ -16,7 +14,7 @@ using namespace std;
 string writeDescription(const string& x_description, const string& x_position, const string& x_function)
 {
 	string description;
-	if (x_position == "")
+	if (x_position.empty())
 	{
 		description = x_description + " [position unknown]";
 	}
@@ -28,7 +26,7 @@ string writeDescription(const string& x_description, const string& x_position, c
 		else
 			description = x_description + " [" + (basename + 1);
 	}
-	if (x_function == "")
+	if (x_function.empty())
 	{
 		description += "]";
 	}
@@ -65,10 +63,6 @@ MkException::MkException(MkExceptionCode x_code, const string& x_name, const str
 	: m_description(writeDescription(x_description, x_position, x_function)),
 	  m_name(x_name),
 	  m_code(x_code)
-{
-}
-
-MkException::~MkException() throw()
 {
 }
 

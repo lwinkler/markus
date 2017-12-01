@@ -36,7 +36,7 @@ log4cxx::LoggerPtr ParameterEnum::m_logger(log4cxx::Logger::getLogger("Parameter
 * @param rx_value   String containing the value
 * @param x_confType Source of the configuration (default, json, GUI, ...)
 */
-void ParameterEnum::SetValue(const ConfigReader& rx_value, ParameterConfigType x_confType)
+void ParameterEnum::SetValue(const mkjson& rx_value, ParameterConfigType x_confType)
 {
 	if(IsLocked())
 		throw ParameterException("You tried to set the value of a locked parameter.", LOC);
@@ -49,7 +49,7 @@ void ParameterEnum::SetValue(const ConfigReader& rx_value, ParameterConfigType x
 *
 * @param rx_value Value to set
 */
-void ParameterEnum::SetDefault(const ConfigReader& rx_value)
+void ParameterEnum::SetDefault(const mkjson& rx_value)
 {
 	m_default = GetEnum().at(rx_value.get<string>());
 }

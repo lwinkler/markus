@@ -25,7 +25,6 @@
 #define MODULE_H
 
 #include "ParameterNum.h"
-#include "ParameterString.h"
 #include "Controller.h"
 #include "Processable.h"
 #include "Timer.h"
@@ -36,7 +35,6 @@
 
 #define MAX_WIDTH  6400
 #define MAX_HEIGHT 4800
-#define MIN_DEBUG_STREAM_ID 1000
 
 class Stream;
 

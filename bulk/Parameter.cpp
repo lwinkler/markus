@@ -64,18 +64,12 @@ void Parameter::Print(std::ostream& os) const
 	os<<m_name<<"="<< oneLine(GetValue()) << " ("<<configType[m_confSource]<<"); ";
 }
 
-void Parameter::SetValue(const ConfigReader& x_value, ParameterConfigType x_confType){
-	std::stringstream ss;
-	ss << x_value;
-	SetValue(ss.str(), x_confType);
-}
-
-
 void Parameter::SetRange(const mkjson& x_range)
 {
 	if(x_range.is_string())
 	{
 		// For legacy and convenience, we accept [min:max] and [1,2,3] syntaxes
+		// TODO simplify
 		mkjson root;
 		double min, max;
 		const string& range(x_range.get<string>());
