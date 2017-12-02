@@ -22,6 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ParameterNum.h"
+#include "Polygon.h"
 
 using namespace std;
 
@@ -32,6 +33,7 @@ template<> log4cxx::LoggerPtr ParameterNum<unsigned int>::m_logger(log4cxx::Logg
 template<> log4cxx::LoggerPtr ParameterNum<float>::m_logger(log4cxx::Logger::getLogger("ParameterNum<float>"));
 template<> log4cxx::LoggerPtr ParameterNum<double>::m_logger(log4cxx::Logger::getLogger("ParameterNum<double>"));
 template<> log4cxx::LoggerPtr ParameterNum<string>::m_logger(log4cxx::Logger::getLogger("ParameterNum<string>"));
+template<> log4cxx::LoggerPtr ParameterNum<Polygon>::m_logger(log4cxx::Logger::getLogger("ParameterNum<Polygon>"));
 
 // Static variables
 template<> const ParameterType ParameterNum<bool>::m_type         = PARAM_BOOL;
@@ -40,6 +42,7 @@ template<> const ParameterType ParameterNum<unsigned int>::m_type = PARAM_UINT;
 template<> const ParameterType ParameterNum<float>::m_type        = PARAM_FLOAT;
 template<> const ParameterType ParameterNum<double>::m_type       = PARAM_DOUBLE;
 template<> const ParameterType ParameterNum<string>::m_type       = PARAM_STR;
+template<> const ParameterType ParameterNum<Polygon>::m_type      = PARAM_POLYGON;
 
 template<> const string ParameterNum<bool>::m_typeStr         = "bool";
 template<> const string ParameterNum<unsigned int>::m_typeStr = "unsigned int";
@@ -47,6 +50,7 @@ template<> const string ParameterNum<int>::m_typeStr          = "int";
 template<> const string ParameterNum<float>::m_typeStr        = "float";
 template<> const string ParameterNum<double>::m_typeStr       = "double";
 template<> const string ParameterNum<string>::m_typeStr       = "string";
+template<> const string ParameterNum<Polygon>::m_typeStr      = "Polygon";
 
 template<class T> inline bool checkRangeNum(const T& x_value, const mkjson& x_range)
 {

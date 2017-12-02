@@ -22,6 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ControllerParameterT.h"
+#include "Polygon.h"
 #include "Processable.h"
 #include <boost/lexical_cast.hpp>
 
@@ -38,143 +39,10 @@ using namespace std;
 #include "QParameterSlider.h"
 #endif
 
-// Explicit template instanciation
-template class ControllerParameterT<ParameterInt>;
-template class ControllerParameterT<ParameterUInt>;
-template class ControllerParameterT<ParameterDouble>;
-template class ControllerParameterT<ParameterFloat>;
-template class ControllerParameterT<ParameterBool>;
-template class ControllerParameterT<ParameterString>;
-// template class ControllerParameterT<ParameterSerializable>;
-template class ControllerParameterT<ParameterEnum>;
-template class ControllerParameterT<Stream>;
 
 #define PRECISION_DOUBLE 2
 
-/**
-* @brief Command: Display the type of the parameter
-*
-* @param xp_value Output type
-*/
-template<class T> void ControllerParameterT<T>::GetType(string* xp_value)
-{
-	Processable::ReadLock lock(m_module.RefLock());
-	if(xp_value != nullptr)
-	{
-		*xp_value = m_param.GetType();
-		return;
-	}
-#ifdef MARKUS_NO_GUI
-	assert(false);
-#else
-	LOG_INFO(m_logger, "Parameter type is \"" + m_param.GetType() + "\"");
-#endif
-}
 
-/**
-* @brief Command: Display the range string of the parameter
-*
-* @param xp_value Output range
-*/
-template<class T> void ControllerParameterT<T>::GetRange(string* xp_value)
-{
-	Processable::ReadLock lock(m_module.RefLock());
-	if(xp_value != nullptr)
-	{
-		*xp_value = oneLine(m_param.GetRange());
-		return;
-	}
-#ifdef MARKUS_NO_GUI
-	assert(false);
-#else
-	LOG_INFO(m_logger, "Parameter range is \"" + oneLine(m_param.GetRange()) + "\"");
-#endif
-}
-
-/**
-* @brief Command: Set the controlled value (e.g. parameter) to the value on control
-*
-* @param xp_value Output value if the pointer is not null
-*/
-template<class T> void ControllerParameterT<T>::SetControlledValue(string* xp_value)
-{
-	Processable::WriteLock lock(m_module.RefLock());
-	const auto oldValue = m_param.GetValue();
-	ParameterConfigType configType = m_param.GetConfigurationSource();
-
-	if(xp_value != nullptr)
-	{
-		m_param.SetValue(mkjson(*xp_value), PARAMCONF_CMD);
-	}
-	else
-	{
-#ifdef MARKUS_NO_GUI
-		assert(false);
-#else
-		try
-		{
-			m_param.SetValue(GetValueFromWidget(), PARAMCONF_GUI);
-		}
-		catch(exception& e)
-		{
-			LOG_ERROR(m_logger, "Error setting value of parameter from widget: " + string(e.what()));
-		}
-#endif
-	}
-	if(!m_param.CheckRange())
-	{
-		m_param.SetValue(oldValue, configType);
-		throw MkException("Parameter " + m_param.GetName() + "=" + *xp_value + " is out of range " + oneLine(m_param.GetRange()), LOC);
-	}
-}
-
-/**
-* @brief Command: Display the current value of the controlled object
-*
-* @param xp_value Output value if the pointer is not null
-*/
-template<class T> void ControllerParameterT<T>::GetCurrent(string* xp_value)
-{
-	Processable::ReadLock lock(m_module.RefLock());
-	stringstream ss;
-	ss << m_param.GetValue();
-	if(xp_value != nullptr)
-	{
-		*xp_value = ss.str();
-		return;
-	}
-#ifdef MARKUS_NO_GUI
-	assert(false);
-#else
-	SetWidgetValue(ss.str());
-#endif
-}
-
-/**
-* @brief Command: Display the default value of the controlled object
-*
-* @param xp_value Output value if the pointer is not null
-*/
-template<class T> void ControllerParameterT<T>::GetDefault(string* xp_value)
-{
-	Processable::ReadLock lock(m_module.RefLock());
-	stringstream ss;
-	ss<<m_param.GetDefault();
-	if(xp_value != nullptr)
-	{
-		*xp_value = ss.str();
-		return;
-	}
-#ifdef MARKUS_NO_GUI
-	assert(false);
-#else
-	SetWidgetValue(ss.str());
-#endif
-}
-
-
-
-/*------------------------------------------------------------------------------------------------*/
 
 template<> QWidget* ControllerInt::CreateWidget()
 {
@@ -345,14 +213,13 @@ template<> mkjson ControllerString::GetValueFromWidget()
 }
 
 /*------------------------------------------------------------------------------------------------*/
-/*
-template<> QWidget* ControllerSerializable::CreateWidget()
+QWidget* defaultCreateWidget(Parameter& rx_param, QWidget*& rpx_widget)
 {
 #ifndef MARKUS_NO_GUI
 	QLineEdit* lineEdit = new QLineEdit();
 	lineEdit->setStyleSheet("color: black; background-color: white");
-	lineEdit->setText(oneLine(m_param.GetValue()).c_str());
-	mp_widget = lineEdit;
+	lineEdit->setText(oneLine(rx_param.GetValue()).c_str());
+	rpx_widget = lineEdit;
 	return lineEdit;
 #else
 	return nullptr;
@@ -360,26 +227,25 @@ template<> QWidget* ControllerSerializable::CreateWidget()
 }
 
 
-template<> void ControllerSerializable::SetWidgetValue(const string& x_value)
+void defaultSetWidgetValue(const string& x_value, QWidget*& rpx_widget)
 {
 #ifndef MARKUS_NO_GUI
-	dynamic_cast<QLineEdit*>(mp_widget)->setText(x_value.c_str());
+	dynamic_cast<QLineEdit*>(rpx_widget)->setText(x_value.c_str());
 #else
 	assert(false);
 	return;
 #endif
 }
 
-template<> mkjson ControllerSerializable::GetValueFromWidget()
+mkjson defaultGetValueFromWidget(QWidget*& rpx_widget)
 {
 #ifndef MARKUS_NO_GUI
-	return mkjson(dynamic_cast<QLineEdit*>(mp_widget)->text().toStdString());
+	return mkjson(dynamic_cast<QLineEdit*>(rpx_widget)->text().toStdString());
 #else
 	assert(false);
 	return "";
 #endif
 }
-*/
 /*------------------------------------------------------------------------------------------------*/
 
 template<> QWidget* ControllerParameterT<Stream>::CreateWidget()
