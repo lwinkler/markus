@@ -39,8 +39,6 @@ public:
 		mr_value(*xp_value)
 	{}
 	
-	MKPARAMTYPE(PARAM_ENUM)
-
 	void SetValue(const mkjson& rx_value, ParameterConfigType x_confType) override;
 	void SetDefault(const mkjson& rx_value) override;
 	inline mkjson GetValue() const override {return GetReverseEnum().at(mr_value);}

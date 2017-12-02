@@ -74,19 +74,20 @@ void Factories::RegisterAll()
 
 	// All controllers
 	FactoryParameterController& factParamCtr(Factories::parameterControllerFactory());
-	factParamCtr.Register<ControllerBool>(PARAM_BOOL);
-	factParamCtr.Register<ControllerDouble>(PARAM_DOUBLE);
-	factParamCtr.Register<ControllerFloat>(PARAM_FLOAT);
-	factParamCtr.Register<ControllerEnum>(PARAM_ENUM);
-	factParamCtr.Register<ControllerInt>(PARAM_INT);
-	factParamCtr.Register<ControllerUInt>(PARAM_UINT);
-	// factParamCtr.Register<ControllerSerializable>(PARAM_SERIALIZABLE);
-	// factParamCtr.Register<ControllerCalibrationByHeight>(PARAM_OBJECT_HEIGHT);
-	factParamCtr.Register<ControllerString>(PARAM_STR);
-	factParamCtr.Register<ControllerParameterT<ParameterNum<Polygon>>>(PARAM_POLYGON);
-	factParamCtr.Register<ControllerParameterT<Stream>>(PARAM_STREAM_OBJECTS);
-	factParamCtr.Register<ControllerParameterT<Stream>>(PARAM_STREAM_IMAGE);
-	factParamCtr.Register<ControllerParameterT<Stream>>(PARAM_STREAM_EVENT);
-	factParamCtr.Register<ControllerParameterT<Stream>>(PARAM_STREAM_STATE);
+	factParamCtr.Register<ControllerBool>("ParameterBool");
+	factParamCtr.Register<ControllerDouble>("ParameterDouble");
+	// TODO LW
+	// factParamCtr.Register<ControllerFloat>(PARAM_FLOAT);
+	// factParamCtr.Register<ControllerEnum>(PARAM_ENUM);
+	// factParamCtr.Register<ControllerInt>(PARAM_INT);
+	// factParamCtr.Register<ControllerUInt>(PARAM_UINT);
+	// // factParamCtr.Register<ControllerSerializable>(PARAM_SERIALIZABLE);
+	// // factParamCtr.Register<ControllerCalibrationByHeight>(PARAM_OBJECT_HEIGHT);
+	// factParamCtr.Register<ControllerString>(PARAM_STR);
+	// factParamCtr.Register<ControllerParameterT<ParameterNum<Polygon>>>(PARAM_POLYGON);
+	// factParamCtr.Register<ControllerParameterT<Stream>>(PARAM_STREAM_OBJECTS);
+	// factParamCtr.Register<ControllerParameterT<Stream>>(PARAM_STREAM_IMAGE);
+	// factParamCtr.Register<ControllerParameterT<Stream>>(PARAM_STREAM_EVENT);
+	// factParamCtr.Register<ControllerParameterT<Stream>>(PARAM_STREAM_STATE);
 }
 

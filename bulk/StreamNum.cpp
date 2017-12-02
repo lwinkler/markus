@@ -44,8 +44,3 @@ template<> const string StreamNum<uint>::m_type   = "NumUInt";
 template<> const string StreamNum<float>::m_type  = "NumFloat";
 template<> const string StreamNum<double>::m_type = "NumDouble";
 
-template<> const ParameterType StreamNum<bool>::m_parameterType   = PARAM_BOOL;
-template<> const ParameterType StreamNum<int>::m_parameterType    = PARAM_INT;
-template<> const ParameterType StreamNum<uint>::m_parameterType   = PARAM_UINT;
-template<> const ParameterType StreamNum<float>::m_parameterType  = PARAM_FLOAT;
-template<> const ParameterType StreamNum<double>::m_parameterType = PARAM_DOUBLE;

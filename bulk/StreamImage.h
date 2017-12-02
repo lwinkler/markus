@@ -48,7 +48,6 @@ public:
 	StreamT(const std::string& x_name, cv::Mat& x_image, Module& rx_module, const std::string& x_description, const std::string& x_requirements = "");
 	MKCLASS("StreamImage")
 	MKTYPE("Image")
-	MKPARAMTYPE(PARAM_STREAM_IMAGE)
 
 	void ConvertInput() override;
 	void RenderTo(cv::Mat& x_output) const override;

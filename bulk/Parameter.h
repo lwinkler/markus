@@ -28,25 +28,8 @@
 #include "MkException.h"
 #include <log4cxx/logger.h>
 
-enum ParameterType
-{
-	PARAM_INT,
-	PARAM_UINT,
-	PARAM_FLOAT,
-	PARAM_DOUBLE,
-	PARAM_BOOL,
-	PARAM_STR,
-	PARAM_POLYGON,
-	// PARAM_SERIALIZABLE,
-	// PARAM_OBJECT_HEIGHT,
-	PARAM_ENUM,
-	PARAM_STREAM_OBJECTS,
-	PARAM_STREAM_IMAGE,
-	PARAM_STREAM_EVENT,
-	PARAM_STREAM_STATE,
-	PARAM_UNKNOWN,
-	PARAM_SIZE
-};
+/// return the name of a class
+template<class T> std::string className(){return std::string(typeid(T).name());}
 
 enum ParameterConfigType
 {
@@ -78,7 +61,6 @@ public:
 	virtual void SetDefault(const mkjson& x_value) = 0;
 	inline void SetDefaultAndValue(const mkjson& x_value){SetDefault(x_value); SetValueToDefault();}
 	inline const std::string& GetName() const {return m_name;}
-	virtual const ParameterType& GetParameterType() const = 0;
 	virtual const std::string& GetType() const = 0;
 	inline const std::string& GetDescription() const {return m_description;}
 	inline const ParameterConfigType& GetConfigurationSource() const {return m_confSource;}
@@ -101,7 +83,7 @@ public:
 	virtual mkjson GetValue() const = 0;
 	virtual mkjson GetDefault() const = 0;
 	inline mkjson GetRange() const{return m_range;}
-	void SetRange(const mkjson& x_range);
+	inline void SetRange(const mkjson& x_range){m_range = x_range;}
 
 protected:
 	ParameterConfigType m_confSource = PARAMCONF_UNSET;

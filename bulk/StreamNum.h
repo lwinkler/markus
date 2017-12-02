@@ -47,7 +47,6 @@ public:
 		m_content(rx_scalar) {}
 	virtual const std::string& GetClass() const {return m_class;}
 	virtual const std::string& GetType() const {return m_type;}
-	virtual const ParameterType& GetParameterType() const {return m_parameterType;}
 
 	virtual void ConvertInput()
 	{
@@ -116,7 +115,6 @@ protected:
 	boost::circular_buffer<float> m_scalars;
 	static const std::string m_class;
 	static const std::string m_type;
-	static const ParameterType m_parameterType;
 
 private:
 	static log4cxx::LoggerPtr m_logger;

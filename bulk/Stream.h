@@ -58,7 +58,6 @@ public:
 
 	virtual const std::string& GetClass() const = 0;
 	const std::string& GetType() const override = 0;
-	const ParameterType& GetParameterType() const override = 0;
 	
 	inline const cv::Size GetSize() const {return mr_module.GetSize();}
 	virtual void RenderTo(cv::Mat& x_output) const = 0;

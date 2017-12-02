@@ -72,7 +72,6 @@ public:
 	}
 	inline mkjson GetValue() const override {return mr_value;}
 	inline mkjson GetDefault() const override {return m_default;}
-	inline const ParameterType& GetParameterType() const override {return m_type;}
 	inline const std::string& GetType() const override {return m_typeStr;}
 
 	void SetValue(const mkjson& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/) override
@@ -119,7 +118,6 @@ public:
 	T m_default;
 private:
 	T& mr_value;
-	static const ParameterType m_type;
 	static const std::string m_typeStr;
 	static log4cxx::LoggerPtr m_logger;
 };

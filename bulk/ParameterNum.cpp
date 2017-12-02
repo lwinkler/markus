@@ -36,14 +36,6 @@ template<> log4cxx::LoggerPtr ParameterNum<string>::m_logger(log4cxx::Logger::ge
 template<> log4cxx::LoggerPtr ParameterNum<Polygon>::m_logger(log4cxx::Logger::getLogger("ParameterNum<Polygon>"));
 
 // Static variables
-template<> const ParameterType ParameterNum<bool>::m_type         = PARAM_BOOL;
-template<> const ParameterType ParameterNum<int>::m_type          = PARAM_INT;
-template<> const ParameterType ParameterNum<unsigned int>::m_type = PARAM_UINT;
-template<> const ParameterType ParameterNum<float>::m_type        = PARAM_FLOAT;
-template<> const ParameterType ParameterNum<double>::m_type       = PARAM_DOUBLE;
-template<> const ParameterType ParameterNum<string>::m_type       = PARAM_STR;
-template<> const ParameterType ParameterNum<Polygon>::m_type      = PARAM_POLYGON;
-
 template<> const string ParameterNum<bool>::m_typeStr         = "bool";
 template<> const string ParameterNum<unsigned int>::m_typeStr = "unsigned int";
 template<> const string ParameterNum<int>::m_typeStr          = "int";
