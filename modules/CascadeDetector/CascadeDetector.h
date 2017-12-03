@@ -60,8 +60,8 @@ public:
 			// Limit size to accelerate unit tests
 			RefParameterByName("width").SetDefaultAndValue(160);
 			RefParameterByName("height").SetDefaultAndValue(120);
-			RefParameterByName("width").SetRange("[1:1280]");
-			RefParameterByName("height").SetRange("[1:960]");
+			RefParameterByName("width").SetRange(R"({"min":1, "max":1280})"_json);
+			RefParameterByName("height").SetRange(R"({"min":1, "max":960})"_json);
 			RefParameterByName("filterFile").SetRange(R"({"advised":[
 					"modules/CascadeDetector/haarcascade_eye_tree_eyeglasses.xml",
 					"modules/CascadeDetector/haarcascade_eye.xml",
@@ -83,7 +83,7 @@ public:
 					"modules/CascadeDetector/haarcascade_righteye_2splits.xml",
 					"modules/CascadeDetector/haarcascade_upperbody.xml",
 					"modules/CascadeDetector/lbpcascade_frontalface.xml"
-					]})");
+					]})"_json);
 			LockParameterByName("filterFile");
 		}
 

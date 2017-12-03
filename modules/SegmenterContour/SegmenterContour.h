@@ -51,7 +51,7 @@ public:
 									"moment_00,moment_11,moment_02,moment_20",
 									"hu_moment_1,hu_moment_2,hu_moment_3,hu_moment_4,hu_moment_5,hu_moment_6,hu_moment_7",
 									"solidity"
-								"]})");
+								]})"_json);
 		};
 		std::string objectLabel;
 		int minWidth;

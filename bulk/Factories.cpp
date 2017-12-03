@@ -77,16 +77,18 @@ void Factories::RegisterAll()
 	factParamCtr.Register<ControllerBool>("ParameterBool");
 	factParamCtr.Register<ControllerDouble>("ParameterDouble");
 	factParamCtr.Register<ControllerFloat>("ParameterFloat");
-	factParamCtr.Register<ControllerEnum>("ParameterEnum");
+	// factParamCtr.Register<ControllerEnum>("ParameterEnum");
+	factParamCtr.Register<ControllerEnum>("ParameterCachedState");
+	factParamCtr.Register<ControllerEnum>("ParameterImageType");
 	factParamCtr.Register<ControllerInt>("ParameterInt");
 	factParamCtr.Register<ControllerUInt>("ParameterUInt");
 	// factParamCtr.Register<ControllerSerializable>(PARAM_SERIALIZABLE);
 	// factParamCtr.Register<ControllerCalibrationByHeight>(PARAM_OBJECT_HEIGHT);
 	factParamCtr.Register<ControllerString>("ParameterString");
 	factParamCtr.Register<ControllerParameterT<ParameterT<Polygon>>>("ParameterPolygon");
-	factParamCtr.Register<ControllerParameterT<Stream>>("ParameterStreamObjects");
-	factParamCtr.Register<ControllerParameterT<Stream>>("ParameterStreamImage");
-	factParamCtr.Register<ControllerParameterT<Stream>>("ParameterStreamEvent");
-	factParamCtr.Register<ControllerParameterT<Stream>>("ParameterStreamState");
+	factParamCtr.Register<ControllerParameterT<Stream>>("StreamObjects");
+	factParamCtr.Register<ControllerParameterT<Stream>>("StreamImage");
+	factParamCtr.Register<ControllerParameterT<Stream>>("StreamEvent");
+	factParamCtr.Register<ControllerParameterT<Stream>>("StreamState");
 }
 

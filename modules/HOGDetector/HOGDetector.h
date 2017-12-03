@@ -51,8 +51,8 @@ public:
 			// Limit size to accelerate unit tests
 			RefParameterByName("width").SetDefaultAndValue(320);
 			RefParameterByName("height").SetDefaultAndValue(240);
-			RefParameterByName("width").SetRange("[320:1280]");
-			RefParameterByName("height").SetRange("[240:960]");
+			RefParameterByName("width").SetRange(R"({"min":320, "max":1280})"_json);
+			RefParameterByName("height").SetRange(R"({"min":240, "max":960})"_json);
 			RefParameterByName("type").SetRange(R"({"allowed":["CV_8UC1"]})"_json);
 		};
 

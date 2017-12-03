@@ -48,8 +48,8 @@ public:
 			AddParameter(new ParameterInt("wtaK"          , 2   , 0 , 100  , &wta_k         , ""));
 
 			// Limit size to accelerate unit tests
-			RefParameterByName("width").SetRange("[64:1280]");
-			RefParameterByName("height").SetRange("[48:960]");
+			RefParameterByName("width").SetRange(R"({"min":64, "max":1280})"_json);
+			RefParameterByName("height").SetRange(R"({"min":48, "max":960})"_json);
 		};
 		int nbFeatures;
 		float scaleFactor;

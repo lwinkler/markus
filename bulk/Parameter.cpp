@@ -60,8 +60,6 @@ void Parameter::Export(ostream& rx_os) const
 */
 void Parameter::Print(std::ostream& os) const
 {
-	// note: remove line return to shorten json objects
-	cout << "config source :" << " ("<<configType[m_confSource]<<"); " << endl;
 	os<<m_name<<"="<< oneLine(GetValue()) << " ("<<configType[m_confSource]<<"); ";
 }
 

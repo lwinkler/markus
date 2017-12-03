@@ -45,9 +45,9 @@ public:
 			AddParameter(new ParameterFloat("patternScale" , 1  , 0 , 10  , &patternScale , ""));
 
 			// Limit size to accelerate unit tests
-			RefParameterByName("width").SetRange("[64:1280]");
-			RefParameterByName("height").SetRange("[48:960]");
-			RefParameterByName("octaves").SetRange("[1:3]");
+			RefParameterByName("width").SetRange(R"({"min":64, "max":1280})"_json);
+			RefParameterByName("height").SetRange(R"({"min":48, "max":960})"_json);
+			RefParameterByName("octaves").SetRange(R"({"min":1, "max":3})"_json);
 		};
 		int threshold;
 		int octaves;

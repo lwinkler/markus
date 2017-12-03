@@ -44,8 +44,8 @@ public:
 			AddParameter(new ParameterFloat("motionThres" , 0.1 , 0 , 1 , &motionThres , "Threshold for motion analysis"));
 			AddParameter(new ParameterBool("propagate"     , 1   , 0 , 1 , &propagate   , "Threshold for motion analysis"));
 
-			RefParameterByName("width").SetRange("[32:6400]");
-			RefParameterByName("height").SetRange("[24:4800]");
+			RefParameterByName("width").SetRange(R"({"min":32, "max":6400})"_json);
+			RefParameterByName("height").SetRange(R"({"min":24, "max":4800})"_json);
 		}
 
 		float motionThres;

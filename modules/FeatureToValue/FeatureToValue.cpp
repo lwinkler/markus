@@ -23,7 +23,6 @@
 
 #include "FeatureToValue.h"
 #include "StreamObject.h"
-#include "StreamImage.h"
 
 using namespace std;
 using namespace cv;
@@ -35,9 +34,8 @@ FeatureToValue::FeatureToValue(ParameterStructure& xr_params) :
 	m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_value(0)
 {
-	AddInputStream(0, new StreamObject("image", m_objectInput, *this, "Incoming objects",
-									   "{\"features\":{"
-									   "\"" + m_param.feature + "\":{\"type\":\"FeatureFloat\"}}}"));
+	string req = "{\"features\":{\"" + m_param.feature + "\":{\"type\":\"FeatureFloat\"}}}";
+	AddInputStream(0, new StreamObject("image", m_objectInput, *this, "Incoming objects", mkjson(req)));
 
 	mp_streamValues = new StreamNum<double>("value", m_value,  *this, "Scalar representing the motion level");
 	AddOutputStream(0, mp_streamValues);

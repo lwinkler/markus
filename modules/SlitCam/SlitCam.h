@@ -42,8 +42,8 @@ public:
 		{
 			AddParameter(new ParameterInt("aperture", 1, 1, 10, &aperture,	"Size of the aperture of the camera"));
 
-			RefParameterByName("width").SetRange("[20:6400]");
-			RefParameterByName("height").SetRange("[20:4800]");
+			RefParameterByName("width").SetRange(R"({"min":20, "max":6400})"_json);
+			RefParameterByName("height").SetRange(R"({"min":20, "max":4800})"_json);
 			RefParameterByName("type").SetDefaultAndValue("CV_8UC3");
 		}
 

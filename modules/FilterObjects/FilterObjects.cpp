@@ -36,11 +36,11 @@ FilterObjects::FilterObjects(ParameterStructure& xr_params) :
 	m_param(dynamic_cast<Parameters&>(xr_params))
 {
 	AddInputStream(0, new StreamObject("image", 	m_objectsIn, *this,	"Incoming objects",
-									   "{\"features\":{"
-									   "\"x\":{\"type\":\"FeatureFloatInTime\"},"
-									   "\"y\":{\"type\":\"FeatureFloatInTime\"},"
-									   "\"width\":{\"type\":\"FeatureFloat\"},"
-									   "\"height\":{\"type\":\"FeatureFloat\"}}}"));
+									   R"({"features":{
+									   "x":{"type":"FeatureFloatInTime"},
+									   "y":{"type":"FeatureFloatInTime"},
+									   "width":{"type":"FeatureFloat"},
+									   "height":{"type":"FeatureFloat"}}})"_json));
 
 	AddOutputStream(0, new StreamObject("filtered",  m_objectsOut, *this,	"Filtered objects objects"));
 #ifdef MARKUS_DEBUG_STREAMS

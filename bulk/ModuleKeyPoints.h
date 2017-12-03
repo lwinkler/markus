@@ -43,9 +43,9 @@ public:
 		{
 			AddParameter(new ParameterString("descriptor", "", &descriptor, "The keypoint descriptor: ORB, BRIEF or Opponent. Leave empty for none.")); // TODO: It seems that only the original descriptor works
 
-			RefParameterByName("type").SetRange(R"({"allowed":["CV_8UC1"]})");
-			RefParameterByName("width").SetRange("[64:6400]");
-			RefParameterByName("height").SetRange("[48:4800]");
+			RefParameterByName("type").SetRange(R"({"allowed":["CV_8UC1"]})"_json);
+			RefParameterByName("width").SetRange(R"({"min":64, "max":6400})"_json);
+			RefParameterByName("height").SetRange(R"({"min":48, "max":4800})"_json);
 		};
 		std::string descriptor;
 	};
