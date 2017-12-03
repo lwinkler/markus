@@ -245,21 +245,21 @@ void QModuleViewer::CreateInputStream(int x_outputWidth, int x_outputHeight)
 
 	const string type = mr_manager.GetModuleByName(m_param.module).GetOutputStreamByName(m_param.stream).GetType();
 
-	if(type == "Image")
+	if(type == "StreamImage")
 		mp_viewerModule = new ViewerT<Mat>(*mp_viewerParams, *this, m_param.module);
-	else if(type == "Objects")
+	else if(type == "StreamObjects")
 		mp_viewerModule = new ViewerT<vector<Object>>(*mp_viewerParams, *this, m_param.module);
-	else if(type == "Event")
+	else if(type == "StreamEvent")
 		mp_viewerModule = new ViewerT<Event>(*mp_viewerParams, *this, m_param.module);
-	else if(type == "NumBool")
+	else if(type == "ParameterBool")
 		mp_viewerModule = new ViewerT<bool>(*mp_viewerParams, *this, m_param.module);
-	else if(type == "NumInt")
+	else if(type == "ParameterInt")
 		mp_viewerModule = new ViewerT<uint>(*mp_viewerParams, *this, m_param.module);
-	else if(type == "NumUIt")
+	else if(type == "ParameterUIt")
 		mp_viewerModule = new ViewerT<int>(*mp_viewerParams, *this, m_param.module);
-	else if(type == "NumFloat")
+	else if(type == "ParameterFloat")
 		mp_viewerModule = new ViewerT<float>(*mp_viewerParams, *this, m_param.module);
-	else if(type == "NumDouble")
+	else if(type == "ParameterDouble")
 		mp_viewerModule = new ViewerT<double>(*mp_viewerParams, *this, m_param.module);
 	else throw MkException("Unknown stream type " + type, LOC);
 

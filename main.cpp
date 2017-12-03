@@ -296,8 +296,11 @@ void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, 
 			ConfigReader& conf(path[0] == "manager" ? appConfig : findFirstInArray(appConfig["modules"], "name", path[0]));
 			if(path[1] == "class")
 				conf["class"] = mkjson(value);
-			else
-				replaceOrAppendInArray(conf["inputs"], "name", path[1])["value"] = mkjson(value);
+			else if(value.front() == '"' && value.back() == '"') {
+				replaceOrAppendInArray(conf["inputs"], "name", path[1])["value"] = mkjson(value.substr(1, value.size() - 2));
+			} else {
+				replaceOrAppendInArray(conf["inputs"], "name", path[1])["value"] = mkjson::parse(value);
+			}
 		}
 		catch(std::exception& e)
 		{

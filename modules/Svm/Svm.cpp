@@ -106,7 +106,7 @@ void Svm::ProcessFrame()
 	{
 		if(m_dataLength == 0)
 		{
-			// prepare sample matrice
+			// prepare sample matrix
 			m_dataLength = m_featureNames.size();
 			if(m_dataLength == 0)
 				throw MkException("Data has size zero", LOC);
@@ -135,8 +135,11 @@ void Svm::ProcessFrame()
 			// float res = 2; // TODO dynamic_cast<const FeatureFloat&>(obj.GetFeature(m_param.response)).value;
 			// obj.AddFeature("label", res);
 		// }
-		if(!m_param.train)
-			cout << "predict " << mp_statModel->predict(m_row) << " resp="<< response << endl;
+		if(!m_param.train) {
+			Mat est;
+			cout << "predict " << mp_statModel->predict(m_row, est) << " resp=" << response;
+			cout << " est " << est << endl;
+		}
 	}
 }
 

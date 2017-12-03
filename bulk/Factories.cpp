@@ -78,8 +78,13 @@ void Factories::RegisterAll()
 	factParamCtr.Register<ControllerDouble>("ParameterDouble");
 	factParamCtr.Register<ControllerFloat>("ParameterFloat");
 	// factParamCtr.Register<ControllerEnum>("ParameterEnum");
+
+	// enums
 	factParamCtr.Register<ControllerEnum>("ParameterCachedState");
 	factParamCtr.Register<ControllerEnum>("ParameterImageType");
+	factParamCtr.Register<ControllerEnum>("ParameterKernelTypes");
+	factParamCtr.Register<ControllerEnum>("ParameterSvmTypes");
+
 	factParamCtr.Register<ControllerInt>("ParameterInt");
 	factParamCtr.Register<ControllerUInt>("ParameterUInt");
 	// factParamCtr.Register<ControllerSerializable>(PARAM_SERIALIZABLE);

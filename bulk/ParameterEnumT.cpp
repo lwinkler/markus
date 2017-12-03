@@ -89,5 +89,5 @@ template<> const map<string, int>  ParameterEnumT<cv::ml::SVM::Types>::Enum =
 	{"NU_SVR", 104}
 };
 template<> const map<int, string> ParameterEnumT<cv::ml::SVM::Types>::ReverseEnum = ParameterEnum::CreateReverseMap(ParameterEnumT<cv::ml::SVM::Types>::Enum);
-template<> const string ParameterEnumT<cv::ml::SVM::Types>::m_type = "ParameterTypes";
+template<> const string ParameterEnumT<cv::ml::SVM::Types>::m_type = "ParameterSvmTypes";
 

@@ -30,7 +30,7 @@ using namespace std;
 using namespace cv;
 
 template<>log4cxx::LoggerPtr StreamObject::m_logger(log4cxx::Logger::getLogger("StreamObject"));
-template<> const string StreamObject::m_type         = "Objects";
+template<> const string StreamObject::m_type         = "StreamObjects";
 template<> const string StreamObject::m_class        = "StreamObjects";
 
 template<> StreamObject::StreamT(const std::string& rx_name, vector<Object>& rx_object, Module& rx_module, const std::string& rx_description, const mkjson& rx_requirement) :
