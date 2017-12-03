@@ -39,7 +39,7 @@ delete pfeat;\
 
 #include "ControllerParameterT.h"
 #include "Polygon.h"
-
+// TODO: Remove classnames map
 
 // Factories: The RegisterAll method will register all necessary creators
 
@@ -76,18 +76,17 @@ void Factories::RegisterAll()
 	FactoryParameterController& factParamCtr(Factories::parameterControllerFactory());
 	factParamCtr.Register<ControllerBool>("ParameterBool");
 	factParamCtr.Register<ControllerDouble>("ParameterDouble");
-	// TODO LW
-	// factParamCtr.Register<ControllerFloat>(PARAM_FLOAT);
-	// factParamCtr.Register<ControllerEnum>(PARAM_ENUM);
-	// factParamCtr.Register<ControllerInt>(PARAM_INT);
-	// factParamCtr.Register<ControllerUInt>(PARAM_UINT);
-	// // factParamCtr.Register<ControllerSerializable>(PARAM_SERIALIZABLE);
-	// // factParamCtr.Register<ControllerCalibrationByHeight>(PARAM_OBJECT_HEIGHT);
-	// factParamCtr.Register<ControllerString>(PARAM_STR);
-	// factParamCtr.Register<ControllerParameterT<ParameterNum<Polygon>>>(PARAM_POLYGON);
-	// factParamCtr.Register<ControllerParameterT<Stream>>(PARAM_STREAM_OBJECTS);
-	// factParamCtr.Register<ControllerParameterT<Stream>>(PARAM_STREAM_IMAGE);
-	// factParamCtr.Register<ControllerParameterT<Stream>>(PARAM_STREAM_EVENT);
-	// factParamCtr.Register<ControllerParameterT<Stream>>(PARAM_STREAM_STATE);
+	factParamCtr.Register<ControllerFloat>("ParameterFloat");
+	factParamCtr.Register<ControllerEnum>("ParameterEnum");
+	factParamCtr.Register<ControllerInt>("ParameterInt");
+	factParamCtr.Register<ControllerUInt>("ParameterUInt");
+	// factParamCtr.Register<ControllerSerializable>(PARAM_SERIALIZABLE);
+	// factParamCtr.Register<ControllerCalibrationByHeight>(PARAM_OBJECT_HEIGHT);
+	factParamCtr.Register<ControllerString>("ParameterString");
+	factParamCtr.Register<ControllerParameterT<ParameterT<Polygon>>>("ParameterPolygon");
+	factParamCtr.Register<ControllerParameterT<Stream>>("ParameterStreamObjects");
+	factParamCtr.Register<ControllerParameterT<Stream>>("ParameterStreamImage");
+	factParamCtr.Register<ControllerParameterT<Stream>>("ParameterStreamEvent");
+	factParamCtr.Register<ControllerParameterT<Stream>>("ParameterStreamState");
 }
 

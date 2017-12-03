@@ -13,7 +13,7 @@ BackgroundSubtraction.cpp
 Parameter.cpp
 ParameterEnum.cpp
 ParameterStructure.cpp
-ParameterNum.cpp
+ParameterT.cpp
 Polygon.cpp
 Stream.cpp
 StreamImage.cpp

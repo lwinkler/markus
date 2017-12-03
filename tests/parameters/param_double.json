@@ -1,11 +1,10 @@
 {
-	"default" : 1.0000000000000001e+44,
-	"description" : "Parameter of type double",
-	"name" : "param_double",
-	"range" : 
-	{
-		"max" : 9.9999999999999997e+98,
-		"min" : 9.9999999999999995e+32
+	"default": 1e+44,
+	"description": "Parameter of type double",
+	"name": "param_double",
+	"range": {
+		"max": 1e+99,
+		"min": 1e+33
 	},
-	"type" : "double"
+	"type": "ParameterDouble"
 }

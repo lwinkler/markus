@@ -1,7 +1,7 @@
 {
-	"default" : "legal",
-	"description" : "Parameter of type string",
-	"name" : "param_string",
-	"range" : {},
-	"type" : "string"
+	"default": "legal",
+	"description": "Parameter of type string",
+	"name": "param_string",
+	"range": {},
+	"type": "ParameterString"
 }

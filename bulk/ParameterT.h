@@ -27,7 +27,6 @@
 #include "define.h"
 #include "MkException.h"
 #include "Parameter.h"
-#include <log4cxx/logger.h>
 #include <limits>
 #include <boost/lexical_cast.hpp>
 
@@ -36,35 +35,25 @@
 std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems);
 
 /// Template for all parameters with numerical values
-template<class T> class ParameterNum : public Parameter
+template<class T> class ParameterT : public Parameter
 {
 public:
-	ParameterNum(const std::string& x_name, T x_default, T x_min, T x_max, T * xp_value, const std::string& x_description) :
+	ParameterT(const std::string& x_name, T x_default, T x_min, T x_max, T * xp_value, const std::string& x_description) :
 		Parameter(x_name, x_description),
 		m_default(x_default),
 		mr_value(*xp_value)
 	{
-		if(GetType() == "bool")
-		{
-			if(x_min == 1)
-				m_range["min"] = true;
-			if(x_max == 0)
-				m_range["max"] = false;
-		}
-		else
-		{
-			m_range["min"] = x_min;
-			m_range["max"] = x_max;
-		}
+		m_range["min"] = x_min;
+		m_range["max"] = x_max;
 	}
-	ParameterNum(const std::string& x_name, T x_default, const mkjson& x_range, T * xp_value, const std::string& x_description) :
+	ParameterT(const std::string& x_name, T x_default, const mkjson& x_range, T * xp_value, const std::string& x_description) :
 		Parameter(x_name, x_description),
 		m_default(x_default),
 		mr_value(*xp_value)
 	{
 		SetRange(x_range);
 	}
-	ParameterNum(const std::string& x_name, T x_default, T * xp_value, const std::string& x_description) :
+	ParameterT(const std::string& x_name, T x_default, T * xp_value, const std::string& x_description) :
 		Parameter(x_name, x_description),
 		m_default(x_default),
 		mr_value(*xp_value)
@@ -119,28 +108,27 @@ public:
 private:
 	T& mr_value;
 	static const std::string m_typeStr;
-	static log4cxx::LoggerPtr m_logger;
 };
 
-template<> mkjson ParameterNum<int>::GenerateValues(int x_nbSamples, const mkjson& x_range) const;
-template<> mkjson ParameterNum<unsigned int>::GenerateValues(int x_nbSamples, const mkjson& x_range) const;
-template<> mkjson ParameterNum<double>::GenerateValues(int x_nbSamples, const mkjson& x_range) const;
-template<> mkjson ParameterNum<float>::GenerateValues(int x_nbSamples, const mkjson& x_range) const;
-template<> mkjson ParameterNum<bool>::GenerateValues(int x_nbSamples, const mkjson& x_range) const;
+template<> mkjson ParameterT<int>::GenerateValues(int x_nbSamples, const mkjson& x_range) const;
+template<> mkjson ParameterT<unsigned int>::GenerateValues(int x_nbSamples, const mkjson& x_range) const;
+template<> mkjson ParameterT<double>::GenerateValues(int x_nbSamples, const mkjson& x_range) const;
+template<> mkjson ParameterT<float>::GenerateValues(int x_nbSamples, const mkjson& x_range) const;
+template<> mkjson ParameterT<bool>::GenerateValues(int x_nbSamples, const mkjson& x_range) const;
 
-template<> bool ParameterNum<int>::CheckRange() const;
-template<> bool ParameterNum<unsigned int>::CheckRange() const;
-template<> bool ParameterNum<double>::CheckRange() const;
-template<> bool ParameterNum<float>::CheckRange() const;
-template<> bool ParameterNum<bool>::CheckRange() const;
+template<> bool ParameterT<int>::CheckRange() const;
+template<> bool ParameterT<unsigned int>::CheckRange() const;
+template<> bool ParameterT<double>::CheckRange() const;
+template<> bool ParameterT<float>::CheckRange() const;
+template<> bool ParameterT<bool>::CheckRange() const;
 
 
 /// Define types
-typedef ParameterNum<int> 	ParameterInt;
-typedef ParameterNum<unsigned int> ParameterUInt;
-typedef ParameterNum<double> 	ParameterDouble;
-typedef ParameterNum<float> 	ParameterFloat;
-typedef ParameterNum<bool> 	ParameterBool;
-typedef ParameterNum<std::string> ParameterString;
+typedef ParameterT<int> 	ParameterInt;
+typedef ParameterT<unsigned int> ParameterUInt;
+typedef ParameterT<double> 	ParameterDouble;
+typedef ParameterT<float> 	ParameterFloat;
+typedef ParameterT<bool> 	ParameterBool;
+typedef ParameterT<std::string> ParameterString;
 
 #endif

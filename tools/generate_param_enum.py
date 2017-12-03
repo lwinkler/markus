@@ -53,7 +53,7 @@ template<> const map<string, int>  ParameterEnumT<%s>::Enum =
 {%s
 };
 template<> const map<int, string> ParameterEnumT<%s>::ReverseEnum = ParameterEnum::CreateReverseMap(ParameterEnumT<%s>::Enum);
-template<> const string ParameterEnumT<%s>::m_type = "%s";
+template<> const string ParameterEnumT<%s>::m_type = "Parameter%s";
 
 """ % (header_file, full_name, enum_map[:-1], full_name, full_name, full_name, node.spelling))
 

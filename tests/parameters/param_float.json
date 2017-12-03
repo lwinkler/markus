@@ -6,5 +6,5 @@
 		"max": 4.45000001839095e+24,
 		"min": -10.0
 	},
-	"type": "float"
+	"type": "ParameterFloat"
 }

@@ -25,7 +25,7 @@
 #define STREAM_NUM_H
 
 #include "Stream.h"
-#include "ParameterNum.h"
+#include "ParameterT.h"
 #include "feature_util.h"
 #include "cvplot.h"
 #include <sstream>

@@ -26,7 +26,7 @@
 
 #include "Configurable.h"
 #include "ParameterStructure.h"
-#include "ParameterNum.h"
+#include "ParameterT.h"
 #include "Context.h"
 #include "Timer.h"
 #include <log4cxx/logger.h>

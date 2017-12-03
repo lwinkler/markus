@@ -28,7 +28,7 @@
 
 #include "Parameter.h"
 #include "ParameterEnumT.h"
-#include "ParameterNum.h"
+#include "ParameterT.h"
 #include "util.h"
 #include "enums.h"
 #include "MkException.h"
@@ -125,7 +125,7 @@ public:
 	{
 		TS_TRACE("Test ParameterBool");
 		bool myBool = true;
-		ParameterBool paramBool("param_bool", false, 0, 1, &myBool, "Parameter of type bool");
+		ParameterBool paramBool("param_bool", false, &myBool, "Parameter of type bool");
 		testParameter(paramBool, false, nullptr);
 		testRange(paramBool, true, "[0:0]");
 		testLock(paramBool);
@@ -186,7 +186,7 @@ public:
 		TS_TRACE("Test ParameterImageType");
 		int myImageType = CV_8UC3;
 		ParameterEnumT<mk::ImageType> paramImageType("param_imageType", CV_8UC1, &myImageType, "Parameter of type imageType");
-		paramImageType.SetRange("[CV_8UC1,CV_8UC2,CV_8UC3]");
+		paramImageType.SetRange(R"({"allowed":["CV_8UC1","CV_8UC2","CV_8UC3"]})"_json);
 		testParameter(paramImageType, "CV_8UC2", "CV_32SC1");
 		testRange(paramImageType, "CV_8UC2", "[CV_32FC4]");
 		testLock(paramImageType);
@@ -196,9 +196,8 @@ public:
 	{
 		TS_TRACE("Test Parameter - Polygon");
 		Polygon myPolygon;
-		// ParameterNum<Polygon> paramPolygon("param_polygon",  R"({"height":0.6,"points":[{"x":5.0,"y":0.50},{"x":6.0,"y":5.50}],"width":0.8}")"_json, &myPolygon, "Parameter of type Polygon");
-		ParameterNum<Polygon> paramPolygon("param_polygon",  mkjson("{\"height\":0.6,\"points\":[{\"x\":5.0,\"y\":0.50},{\"x\":6.0,\"y\":5.50}],\"width\":0.8}"), &myPolygon, "Parameter of type Polygon");
-		testParameter(paramPolygon, mkjson("{\"height\":0.660,\"points\":[{\"x\":54.0,\"y\":53.50},{\"x\":3454.0,\"y\":53.50},{\"x\":54.0,\"y\":53.50},{\"x\":5.0,\"y\":0.50}],\"width\":0.860}"), nullptr) ;
+		ParameterT<Polygon> paramPolygon("param_polygon",  R"({"height":0.6,"points":[{"x":5.0,"y":0.50},{"x":6.0,"y":5.50}],"width":0.8})"_json, &myPolygon, "Parameter of type Polygon");
+		testParameter(paramPolygon, R"({"height":0.660,"points":[{"x":54.0,"y":53.50},{"x":3454.0,"y":53.50},{"x":54.0,"y":53.50},{"x":5.0,"y":0.50}],"width":0.860})"_json, nullptr) ;
 		testLock(paramPolygon);
 	}
 

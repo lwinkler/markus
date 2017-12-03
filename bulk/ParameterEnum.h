@@ -63,8 +63,6 @@ protected:
 
 	int m_default;
 	int& mr_value;
-private:
-	static log4cxx::LoggerPtr m_logger;
 };
 
 #endif

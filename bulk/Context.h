@@ -28,7 +28,7 @@
 #include "MkException.h"
 #include "Configurable.h"
 #include "ParameterStructure.h"
-#include "ParameterNum.h"
+#include "ParameterT.h"
 #include "MkDirectory.h"
 
 /**

@@ -32,7 +32,7 @@
 #include "QControlBoard.h"
 #include "Module.h"
 #include "ParameterStructure.h"
-#include "ParameterNum.h"
+#include "ParameterT.h"
 
 class Manager;
 class Stream;

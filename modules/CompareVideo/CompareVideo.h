@@ -25,7 +25,7 @@
 #define COMPAREVIDEO_H
 
 #include "Module.h"
-#include "ParameterNum.h"
+#include "ParameterT.h"
 
 /**
  * @brief Compare the two input videos and compute the dissimilarity of them for each image.

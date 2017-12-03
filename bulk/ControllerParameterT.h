@@ -25,7 +25,7 @@
 #define CONTROLLER_PARAMETER_T_H
 
 #include "Parameter.h"
-#include "ParameterNum.h"
+#include "ParameterT.h"
 #include "ParameterEnum.h"
 #include "Stream.h"
 #include "Controller.h"

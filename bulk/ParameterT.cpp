@@ -21,28 +21,20 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "ParameterNum.h"
+#include "ParameterT.h"
 #include "Polygon.h"
 
 using namespace std;
 
-// Static variables
-template<> log4cxx::LoggerPtr ParameterNum<bool>::m_logger(log4cxx::Logger::getLogger("ParameterNum<bool>"));
-template<> log4cxx::LoggerPtr ParameterNum<int>::m_logger(log4cxx::Logger::getLogger("ParameterNum<int>"));
-template<> log4cxx::LoggerPtr ParameterNum<unsigned int>::m_logger(log4cxx::Logger::getLogger("ParameterNum<unsigned int>"));
-template<> log4cxx::LoggerPtr ParameterNum<float>::m_logger(log4cxx::Logger::getLogger("ParameterNum<float>"));
-template<> log4cxx::LoggerPtr ParameterNum<double>::m_logger(log4cxx::Logger::getLogger("ParameterNum<double>"));
-template<> log4cxx::LoggerPtr ParameterNum<string>::m_logger(log4cxx::Logger::getLogger("ParameterNum<string>"));
-template<> log4cxx::LoggerPtr ParameterNum<Polygon>::m_logger(log4cxx::Logger::getLogger("ParameterNum<Polygon>"));
 
 // Static variables
-template<> const string ParameterNum<bool>::m_typeStr         = "bool";
-template<> const string ParameterNum<unsigned int>::m_typeStr = "unsigned int";
-template<> const string ParameterNum<int>::m_typeStr          = "int";
-template<> const string ParameterNum<float>::m_typeStr        = "float";
-template<> const string ParameterNum<double>::m_typeStr       = "double";
-template<> const string ParameterNum<string>::m_typeStr       = "string";
-template<> const string ParameterNum<Polygon>::m_typeStr      = "Polygon";
+template<> const string ParameterT<bool>::m_typeStr         = "ParameterBool";
+template<> const string ParameterT<unsigned int>::m_typeStr = "ParameterUInt";
+template<> const string ParameterT<int>::m_typeStr          = "ParameterInt";
+template<> const string ParameterT<float>::m_typeStr        = "ParameterFloat";
+template<> const string ParameterT<double>::m_typeStr       = "ParameterDouble";
+template<> const string ParameterT<string>::m_typeStr       = "ParameterString";
+template<> const string ParameterT<Polygon>::m_typeStr      = "ParameterPolygon";
 
 template<class T> inline bool checkRangeNum(const T& x_value, const mkjson& x_range)
 {
@@ -54,27 +46,27 @@ template<class T> inline bool checkRangeNum(const T& x_value, const mkjson& x_ra
 	return true;
 }
 
-template<> bool ParameterNum<int>::CheckRange() const
+template<> bool ParameterT<int>::CheckRange() const
 {
 	return checkRangeNum(GetValue().template get<int>(), m_range);
 }
 
-template<> bool ParameterNum<unsigned int>::CheckRange() const
+template<> bool ParameterT<unsigned int>::CheckRange() const
 {
 	return checkRangeNum(GetValue().template get<unsigned int>(), m_range);
 }
 
-template<> bool ParameterNum<bool>::CheckRange() const
+template<> bool ParameterT<bool>::CheckRange() const
 {
 	return checkRangeNum(GetValue().template get<bool>(), m_range);
 }
 
-template<> bool ParameterNum<double>::CheckRange() const
+template<> bool ParameterT<double>::CheckRange() const
 {
 	return checkRangeNum(GetValue().template get<double>(), m_range);
 }
 
-template<> bool ParameterNum<float>::CheckRange() const
+template<> bool ParameterT<float>::CheckRange() const
 {
 	return checkRangeNum(GetValue().template get<float>(), m_range);
 }
@@ -135,27 +127,27 @@ template<class T> mkjson generateValuesInt(int x_nbSamples, const mkjson& x_rang
 	return values;
 }
 
-template<> mkjson ParameterNum<int>::GenerateValues(int x_nbSamples, const mkjson& x_range) const
+template<> mkjson ParameterT<int>::GenerateValues(int x_nbSamples, const mkjson& x_range) const
 {
 	return generateValuesInt<int>(x_nbSamples, x_range.is_null() ? GetRange() : x_range);
 }
 
-template<> mkjson ParameterNum<unsigned int>::GenerateValues(int x_nbSamples, const mkjson& x_range) const
+template<> mkjson ParameterT<unsigned int>::GenerateValues(int x_nbSamples, const mkjson& x_range) const
 {
 	return generateValuesInt<unsigned int>(x_nbSamples, x_range.is_null() ? GetRange() : x_range);
 }
 
-template<> mkjson ParameterNum<bool>::GenerateValues(int x_nbSamples, const mkjson& x_range) const
+template<> mkjson ParameterT<bool>::GenerateValues(int x_nbSamples, const mkjson& x_range) const
 {
 	return generateValuesInt<bool>(x_nbSamples, x_range.is_null() ? GetRange() : x_range);
 }
 
-template<> mkjson ParameterNum<double>::GenerateValues(int x_nbSamples, const mkjson& x_range) const
+template<> mkjson ParameterT<double>::GenerateValues(int x_nbSamples, const mkjson& x_range) const
 {
 	return generateValuesFloat<double>(x_nbSamples, x_range.is_null() ? GetRange() : x_range);
 }
 
-template<> mkjson ParameterNum<float>::GenerateValues(int x_nbSamples, const mkjson& x_range) const
+template<> mkjson ParameterT<float>::GenerateValues(int x_nbSamples, const mkjson& x_range) const
 {
 	return generateValuesFloat<float>(x_nbSamples, x_range.is_null() ? GetRange() : x_range);
 }

@@ -24,7 +24,7 @@
 #ifndef MODULE_H
 #define MODULE_H
 
-#include "ParameterNum.h"
+#include "ParameterT.h"
 #include "Controller.h"
 #include "Processable.h"
 #include "Timer.h"

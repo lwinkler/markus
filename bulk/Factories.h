@@ -49,6 +49,7 @@ public:
 	inline static FactoryFeatures&   featuresFactory()                     {static FactoryFeatures   factoryFeatures;   return factoryFeatures;}
 	inline static FactoryFeatures&   featuresFactoryBySignature()          {static FactoryFeatures   factoryFeatures;   return factoryFeatures;}
 	inline static FactoryParameterController& parameterControllerFactory() {static FactoryParameterController factoryControllers; return factoryControllers;}
+	inline static auto& classNames()                                       {static std::map<std::string, std::string> cn; return cn;}
 
 	static void RegisterAll();
 };

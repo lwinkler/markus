@@ -1,7 +1,7 @@
 {
-	"default" : false,
-	"description" : "Parameter of type bool",
-	"name" : "param_bool",
-	"range" : {},
-	"type" : "bool"
+	"default": false,
+	"description": "Parameter of type bool",
+	"name": "param_bool",
+	"range": {},
+	"type": "ParameterBool"
 }

@@ -24,6 +24,7 @@
 #include "ModuleClassifyEvents.h"
 #include "StreamEvent.h"
 #include "StreamImage.h"
+#include "StreamDebug.h"
 #include "ControllerEvent.h"
 
 

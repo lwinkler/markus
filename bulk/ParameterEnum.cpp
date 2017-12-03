@@ -27,8 +27,6 @@
 
 using namespace std;
 
-// Static variables
-log4cxx::LoggerPtr ParameterEnum::m_logger(log4cxx::Logger::getLogger("ParameterEnum"));
 
 /**
 * @brief Set the value of the parameter

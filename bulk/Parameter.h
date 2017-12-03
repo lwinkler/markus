@@ -83,11 +83,17 @@ public:
 	virtual mkjson GetValue() const = 0;
 	virtual mkjson GetDefault() const = 0;
 	inline mkjson GetRange() const{return m_range;}
-	inline void SetRange(const mkjson& x_range){m_range = x_range;}
+	inline void SetRange(const mkjson& x_range)
+	{
+		if(x_range.is_array())
+			throw MkException("Range must be a JSON object, not an array. Use \"allowed\":[...] instead" , LOC);
+		m_range = x_range;
+	}
 
 protected:
 	ParameterConfigType m_confSource = PARAMCONF_UNSET;
 	mkjson m_range;
+	static log4cxx::LoggerPtr m_logger;
 
 private:
 	bool m_isLocked       = false;
@@ -95,8 +101,6 @@ private:
 	const std::string m_description;
 	bool m_requiresLock   = false;
 	bool m_isHidden       = false;
-
-	static log4cxx::LoggerPtr m_logger;
 };
 
 #endif

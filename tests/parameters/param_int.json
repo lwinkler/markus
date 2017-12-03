@@ -1,11 +1,10 @@
 {
-	"default" : 635,
-	"description" : "Parameter of type int",
-	"name" : "param_int",
-	"range" : 
-	{
-		"max" : 66000,
-		"min" : 32
+	"default": 635,
+	"description": "Parameter of type int",
+	"name": "param_int",
+	"range": {
+		"max": 66000,
+		"min": 32
 	},
-	"type" : "int"
+	"type": "ParameterInt"
 }
