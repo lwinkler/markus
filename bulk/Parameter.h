@@ -85,7 +85,7 @@ public:
 	inline mkjson GetRange() const{return m_range;}
 	inline void SetRange(const mkjson& x_range)
 	{
-		if(x_range.is_array())
+		if(x_range.is_array() || x_range.is_string())
 			throw MkException("Range must be a JSON object, not an array. Use \"allowed\":[...] instead" , LOC);
 		m_range = x_range;
 	}

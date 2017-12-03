@@ -50,7 +50,7 @@ public:
 			AddParameter(new ParameterBool("keepAllRecordings"    , 0, 0, 1,        &keepAllRecordings  , "Keep all recordings, event if no event is associated with it."));
 
 			RefParameterByName("type").SetDefaultAndValue("CV_8UC3");
-			RefParameterByName("type").SetRange("[CV_8UC3]");
+			RefParameterByName("type").SetRange(R"({"allowed":["CV_8UC3"]})"_json);
 		};
 		int    bufferFramesBefore;
 		double bufferDurationAfter;

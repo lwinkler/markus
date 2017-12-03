@@ -50,7 +50,7 @@ public:
 			AddParameter(new ParameterDouble("minCustom"     , 0.0, 0, FLT_MAX    , &minCustom       , "Min value for the custom feature"));
 			AddParameter(new ParameterDouble("maxCustom"     , FLT_MAX, 0, FLT_MAX, &maxCustom       , "Max value for the custom feature"));
 
-			RefParameterByName("customFeature").SetRange("[x,y,width,height]");
+			RefParameterByName("customFeature").SetRange(R"({"allowed":["x","y","width","height"]})"_json);
 		}
 		double minTravelDist;
 		double minBorderDist;

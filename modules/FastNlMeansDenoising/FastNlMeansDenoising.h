@@ -43,7 +43,7 @@ public:
 			AddParameter(new ParameterInt  ("searchWinSize"   , 7 , 1 ,  33 , &searchWindowSize   , "Size in pixels of the window that is used to compute weighted average for given pixel. Should be odd. "));
 			AddParameter(new ParameterBool ("cielab"   , 0 , 0, 1 , &cielab, "Convert image to CIELAB colorspace and then separately denoise L and AB"));
 
-			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC2,CV_8UC3]");
+			RefParameterByName("type").SetRange(R"({"allowed":["CV_8UC1","CV_8UC2","CV_8UC3"]})"_json);
 			RefParameterByName("width").SetDefaultAndValue(160);
 			RefParameterByName("height").SetDefaultAndValue(120);
 		};

@@ -38,7 +38,6 @@ template<> const string ParameterT<Polygon>::m_typeStr      = "ParameterPolygon"
 
 template<class T> inline bool checkRangeNum(const T& x_value, const mkjson& x_range)
 {
-	// std::cout << "min" << m_min << " " << m_max << std::endl;
 	if(x_range.find("max") != x_range.end() && x_value > x_range.at("max").template get<T>())
 		return false;
 	if(x_range.find("min") != x_range.end() && x_value < x_range.at("min").template get<T>())

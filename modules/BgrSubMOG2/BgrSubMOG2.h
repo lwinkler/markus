@@ -59,7 +59,7 @@ public:
 			AddParameter(new ParameterDouble("learningRate",	-1, 	-1, 1, &learningRate,	"Learning rate of the model"));
 
 			RefParameterByName("type").SetDefaultAndValue("CV_8UC3");
-			RefParameterByName("type").SetRange("[CV_8UC3]");
+			RefParameterByName("type").SetRange(R"({"allowed":["CV_8UC3"]})"_json);
 		};
 		int history;
 		float varThres;

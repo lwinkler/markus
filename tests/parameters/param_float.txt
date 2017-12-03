@@ -1,1 +1,1 @@
-param_float=-0.5 [-10:4.45e+24] (def); 
+param_float=-0.5 {"max":4.45000001839095e+24,"min":-10.0} (def); 

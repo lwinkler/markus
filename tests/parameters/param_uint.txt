@@ -1,1 +1,1 @@
-param_uint=633 [32:66000] (def); 
+param_uint=633 {"max":66000,"min":32} (def); 

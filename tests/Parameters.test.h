@@ -88,7 +88,7 @@ public:
 		TS_ASSERT(xr_param.IsLocked());
 	}
 	
-	static void testRange(Parameter& xr_param, const mkjson& x_illegalValue, const string& x_testRange)
+	static void testRange(Parameter& xr_param, const mkjson& x_illegalValue, const mkjson& x_testRange)
 	{
 		// test that the test range stays identical
 		xr_param.SetRange(x_testRange);
@@ -127,7 +127,7 @@ public:
 		bool myBool = true;
 		ParameterBool paramBool("param_bool", false, &myBool, "Parameter of type bool");
 		testParameter(paramBool, false, nullptr);
-		testRange(paramBool, true, "[0:0]");
+		testRange(paramBool, true, R"({"max":false})"_json);
 		testLock(paramBool);
 	}
 
@@ -137,7 +137,7 @@ public:
 		int myInt = 3456;
 		ParameterInt paramInt("param_int", 12345, 32, 66000, &myInt, "Parameter of type int");
 		testParameter(paramInt, 635, -1234);
-		testRange(paramInt, 4, "[555:789]");
+		testRange(paramInt, 4, R"({"min":555, "max":789})"_json);
 		testLock(paramInt);
 	}
 
@@ -147,7 +147,7 @@ public:
 		unsigned int myInt = 3456;
 		ParameterUInt paramUInt("param_uint", 12345, 32, 66000, &myInt, "Parameter of type unsigned int");
 		testParameter(paramUInt, 633, 3);
-		testRange(paramUInt, 10000, "[555:789]");
+		testRange(paramUInt, 10000, R"({"min": 555, "max":789})"_json);
 		testLock(paramUInt);
 	}
 
@@ -157,7 +157,7 @@ public:
 		float myFloat = 2.133e44;
 		ParameterFloat paramFloat("param_float", 234, - 10, 4.45e24, &myFloat, "Parameter of type float");
 		testParameter(paramFloat, -0.5, -400);
-		testRange(paramFloat, -0.5, "[666:60000]");
+		testRange(paramFloat, -0.5, R"({"min":666, "max":60000})"_json);
 		testLock(paramFloat);
 	}
 
@@ -167,7 +167,7 @@ public:
 		double myDouble = 2.133e54;
 		ParameterDouble paramDouble("param_double", 120e33, 1e33, 1e99, &myDouble, "Parameter of type double");
 		testParameter(paramDouble, 1e+44, -0);
-		testRange(paramDouble, 1e+43, "[1e+44:1e+90]");
+		testRange(paramDouble, 1e+43, R"({"min":1e+44, "max":1e+90})"_json);
 		testLock(paramDouble);
 	}
 
@@ -177,7 +177,7 @@ public:
 		string myString = "value_current";
 		ParameterString paramString("param_string", "default_value", &myString, "Parameter of type string");
 		testParameter(paramString, "legal", nullptr);
-		testRange(paramString, nullptr, "[]");
+		testRange(paramString, nullptr, "{}"_json);
 		testLock(paramString);
 	}
 
@@ -188,7 +188,7 @@ public:
 		ParameterEnumT<mk::ImageType> paramImageType("param_imageType", CV_8UC1, &myImageType, "Parameter of type imageType");
 		paramImageType.SetRange(R"({"allowed":["CV_8UC1","CV_8UC2","CV_8UC3"]})"_json);
 		testParameter(paramImageType, "CV_8UC2", "CV_32SC1");
-		testRange(paramImageType, "CV_8UC2", "[CV_32FC4]");
+		testRange(paramImageType, "CV_8UC2", R"({"allowed":["CV_32FC4"]})"_json);
 		testLock(paramImageType);
 	}
 

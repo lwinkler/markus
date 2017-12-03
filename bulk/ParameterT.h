@@ -93,8 +93,7 @@ public:
 	}
 	void Print(std::ostream& os) const override
 	{
-		os<<GetName()<<"="<< oneLine(GetValue()) << " " << m_range << " ";
-		os << configType[m_confSource] << "); ";
+		os<<GetName()<<"="<< oneLine(GetValue()) << " " << m_range << " (" << configType[m_confSource] << "); ";
 	}
 	void SetValueToDefault() override
 	{

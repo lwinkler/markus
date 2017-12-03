@@ -55,35 +55,35 @@ public:
 			// AddParameter(new ParameterString("color", "(255,255,255)",		&color,	"Color to draw the output"));
 			AddParameter(new ParameterString("objectLabel", "casc", 			&objectLabel,	"Label to be applied to the objects detected by the cascade filter (e.g. face)"));
 
-			RefParameterByName("type").SetRange("[CV_8UC1]");
+			RefParameterByName("type").SetRange(R"({"allowed":["CV_8UC1"]})"_json);
 			RefParameterByName("type").SetDefaultAndValue("CV_8UC1");
 			// Limit size to accelerate unit tests
 			RefParameterByName("width").SetDefaultAndValue(160);
 			RefParameterByName("height").SetDefaultAndValue(120);
 			RefParameterByName("width").SetRange("[1:1280]");
 			RefParameterByName("height").SetRange("[1:960]");
-			RefParameterByName("filterFile").SetRange("["
-					"modules/CascadeDetector/haarcascade_eye_tree_eyeglasses.xml,"
-					"modules/CascadeDetector/haarcascade_eye.xml,"
-					"modules/CascadeDetector/haarcascade_frontalface_alt2.xml,"
-					"modules/CascadeDetector/haarcascade_frontalface_alt_tree.xml,"
-					"modules/CascadeDetector/haarcascade_frontalface_alt.xml,"
-					"modules/CascadeDetector/haarcascade_frontalface_default.xml,"
-					"modules/CascadeDetector/haarcascade_fullbody.xml,"
-					"modules/CascadeDetector/haarcascade_lefteye_2splits.xml,"
-					"modules/CascadeDetector/haarcascade_lowerbody.xml,"
-					"modules/CascadeDetector/haarcascade_mcs_eyepair_big.xml,"
-					"modules/CascadeDetector/haarcascade_mcs_eyepair_small.xml,"
-					"modules/CascadeDetector/haarcascade_mcs_lefteye.xml,"
-					"modules/CascadeDetector/haarcascade_mcs_mouth.xml,"
-					"modules/CascadeDetector/haarcascade_mcs_nose.xml,"
-					"modules/CascadeDetector/haarcascade_mcs_righteye.xml,"
-					"modules/CascadeDetector/haarcascade_mcs_upperbody.xml,"
-					"modules/CascadeDetector/haarcascade_profileface.xml,"
-					"modules/CascadeDetector/haarcascade_righteye_2splits.xml,"
-					"modules/CascadeDetector/haarcascade_upperbody.xml,"
+			RefParameterByName("filterFile").SetRange(R"({"advised":[
+					"modules/CascadeDetector/haarcascade_eye_tree_eyeglasses.xml",
+					"modules/CascadeDetector/haarcascade_eye.xml",
+					"modules/CascadeDetector/haarcascade_frontalface_alt2.xml",
+					"modules/CascadeDetector/haarcascade_frontalface_alt_tree.xml",
+					"modules/CascadeDetector/haarcascade_frontalface_alt.xml",
+					"modules/CascadeDetector/haarcascade_frontalface_default.xml",
+					"modules/CascadeDetector/haarcascade_fullbody.xml",
+					"modules/CascadeDetector/haarcascade_lefteye_2splits.xml",
+					"modules/CascadeDetector/haarcascade_lowerbody.xml",
+					"modules/CascadeDetector/haarcascade_mcs_eyepair_big.xml",
+					"modules/CascadeDetector/haarcascade_mcs_eyepair_small.xml",
+					"modules/CascadeDetector/haarcascade_mcs_lefteye.xml",
+					"modules/CascadeDetector/haarcascade_mcs_mouth.xml",
+					"modules/CascadeDetector/haarcascade_mcs_nose.xml",
+					"modules/CascadeDetector/haarcascade_mcs_righteye.xml",
+					"modules/CascadeDetector/haarcascade_mcs_upperbody.xml",
+					"modules/CascadeDetector/haarcascade_profileface.xml",
+					"modules/CascadeDetector/haarcascade_righteye_2splits.xml",
+					"modules/CascadeDetector/haarcascade_upperbody.xml",
 					"modules/CascadeDetector/lbpcascade_frontalface.xml"
-					"]");
+					]})");
 			LockParameterByName("filterFile");
 		}
 

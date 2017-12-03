@@ -56,8 +56,8 @@ public:
 			AddParameter(new ParameterString("gtVideo"    , ""           , &gtVideo   ,  "Video file to use to create the ground truth."));
 
 			RefParameterByName("type").SetDefaultAndValue("CV_8UC3");
-			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3]");
-			RefParameterByName("extension").SetRange("[jpg,png]");
+			RefParameterByName("type").SetRange(R"({"allowed":["CV_8UC1","CV_8UC3"]})"_json);
+			RefParameterByName("extension").SetRange(R"({"allowed":["jpg","png"]})"_json);
 		}
 		std::string file;
 		double duration;

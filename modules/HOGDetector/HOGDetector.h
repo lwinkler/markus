@@ -53,7 +53,7 @@ public:
 			RefParameterByName("height").SetDefaultAndValue(240);
 			RefParameterByName("width").SetRange("[320:1280]");
 			RefParameterByName("height").SetRange("[240:960]");
-			RefParameterByName("type").SetRange("[CV_8UC1]");
+			RefParameterByName("type").SetRange(R"({"allowed":["CV_8UC1"]})"_json);
 		};
 
 		// int minNeighbors;

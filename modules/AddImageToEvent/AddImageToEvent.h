@@ -44,8 +44,8 @@ public:
 			AddParameter(new ParameterString("folder"    ,  "eventsImg", &folder    ,  "Name of the folder to create for images"));
 			AddParameter(new ParameterString("extension" , "jpg"        , &extension , "Extension of the thumbnails. Determines the output format."));
 
-			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3,CV_32FC1,CV_32FC3]");
-			RefParameterByName("extension").SetRange("[jpg,png]");
+			RefParameterByName("type").SetRange(R"({"allowed":["CV_8UC1","CV_8UC3","CV_32FC1","CV_32FC3"]})"_json);
+			RefParameterByName("extension").SetRange(R"({"allowed":["jpg","png"]})"_json);
 		};
 		std::string folder;
 		std::string extension;

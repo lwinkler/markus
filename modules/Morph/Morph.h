@@ -43,7 +43,7 @@ public:
 			AddParameter(new ParameterInt("kernelSize", 5,   3, 30,   &kernelSize, "Size of the element"));
 			AddParameter(new ParameterInt("iterations",  1,   1, 10,   &iterations, "Number of times the operation is applied to the image"));
 
-			RefParameterByName("type").SetRange("[CV_8UC1,CV_8UC3]");
+			RefParameterByName("type").SetRange(R"({"allowed":["CV_8UC1","CV_8UC3"]})"_json);
 		};
 		int oper;
 		int element;
