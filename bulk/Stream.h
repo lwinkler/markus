@@ -125,9 +125,6 @@ protected:
 	int m_cptConnected   = 0;
 	bool m_blocking      = true;
 	bool m_synchronized  = true;
-
-private:
-	static log4cxx::LoggerPtr m_logger;
 };
 
 #endif

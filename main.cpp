@@ -294,10 +294,10 @@ void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, 
 			if(path.size() != 2)
 				throw MkException("Parameter set in command line must be in format 'module.parameter'", LOC);
 			ConfigReader& conf(path[0] == "manager" ? appConfig : findFirstInArray(appConfig["modules"], "name", path[0]));
-			if(path[1] == "class")
+			if(path[1] == "class") {
 				conf["class"] = mkjson(value);
-			else if(value.front() == '"' && value.back() == '"') {
-				replaceOrAppendInArray(conf["inputs"], "name", path[1])["value"] = mkjson(value.substr(1, value.size() - 2));
+			// else if(value.front() == '"' && value.back() == '"') {
+				// replaceOrAppendInArray(conf["inputs"], "name", path[1])["value"] = mkjson(value.substr(1, value.size() - 2));
 			} else {
 				replaceOrAppendInArray(conf["inputs"], "name", path[1])["value"] = mkjson::parse(value);
 			}

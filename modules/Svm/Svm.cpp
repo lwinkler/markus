@@ -66,6 +66,7 @@ void Svm::Reset()
 	if(m_param.train) {
 		Ptr<SVM> model = SVM::create();
 		// model->setType(m_param.type);
+		/*
 		model->setType(SVM::EPS_SVR);
 		model->setKernel(m_param.kernelType);
 		model->setDegree(m_param.degree);
@@ -75,6 +76,7 @@ void Svm::Reset()
 		model->setNu(m_param.nu);
 		model->setP(m_param.p);
 		model->setTermCriteria(TermCriteria( CV_TERMCRIT_ITER + CV_TERMCRIT_EPS, 1000, 1e-3 ));
+		*/
 		/*
 		model->setCoef0( 0.0 );
 		model->setDegree( 3 );
@@ -113,6 +115,7 @@ void Svm::ProcessFrame()
 			m_samples   = Mat(0, m_dataLength, CV_32FC1);
 			m_responses = Mat(0, 1, CV_32SC1);
 			m_row = Mat(1, m_dataLength, CV_32FC1);
+			m_row.setTo(0);
 		}
 
 		// append data
@@ -120,16 +123,20 @@ void Svm::ProcessFrame()
 		assert(static_cast<int>(m_featureNames.size()) == m_row.cols);
 		for(const auto& name : m_featureNames)
 		{
-			m_row.at<float>(i, 1) = dynamic_cast<const FeatureFloat&>(obj.GetFeature(name)).value;
+			float dat = dynamic_cast<const FeatureFloat&>(obj.GetFeature(name)).value;
+			// cout << "res feat " << res << endl;
+			m_row.at<float>(0, i) = dat;
 			i++;
 		}
-
 		// if(m_param.train) {
 			m_samples.push_back(m_row);
 			// int response = dynamic_cast<const FeatureFloat&>(obj.GetFeature("x")).value + dynamic_cast<const FeatureFloat&>(obj.GetFeature("y")).value > 0.5;
-			int response = dynamic_cast<const FeatureFloat&>(obj.GetFeature("x")).value + dynamic_cast<const FeatureFloat&>(obj.GetFeature("x")).value > 0.5;
-			// m_responses.push_back(dynamic_cast<const FeatureFloat&>(obj.GetFeature(m_param.response)).value);
-			m_responses.push_back(response);
+			// int response = dynamic_cast<const FeatureFloat&>(obj.GetFeature("x")).value + dynamic_cast<const FeatureFloat&>(obj.GetFeature("x")).value > 0.5;
+		float res = dynamic_cast<const FeatureFloat&>(obj.GetFeature(m_param.response)).value;
+        m_responses.push_back(static_cast<int32_t>(res > 0.4));
+// cout << "row " << m_row<< " res " << m_responses<< endl;
+			                        
+			// m_responses.push_back(response);
 			// m_responses.push_back(dynamic_cast<const FeatureFloat&>(obj.GetFeature("x")).value > 0.1 ? 1 : 0);
 		// } else {
 			// float res = 2; // TODO dynamic_cast<const FeatureFloat&>(obj.GetFeature(m_param.response)).value;
@@ -137,8 +144,8 @@ void Svm::ProcessFrame()
 		// }
 		if(!m_param.train) {
 			Mat est;
-			cout << "predict " << mp_statModel->predict(m_row, est) << " resp=" << response;
-			cout << " est " << est << endl;
+			cout << "predict " << mp_statModel->predict(m_row, est/*, StatModel::RAW_OUTPUT*/) << " ";
+			cout << est  << endl;
 		}
 	}
 }
@@ -149,10 +156,10 @@ void Svm::TrainModel()
 	if(m_samples.empty())
 		return;
 
-	cout << "Samples" << m_samples.size() << endl;
-	cout << "Responses" << m_responses.size() << endl;
-	Ptr<TrainData> data = TrainData::create(m_samples, ROW_SAMPLE, m_responses); //, InputArray varIdx=noArray(), InputArray sampleIdx=noArray(), InputArray sampleWeights=noArray(), InputArray varType=noArray());
-	bool is_trained = mp_statModel->train(data, 0);
+	cout << "Samples" << m_samples << endl;
+	cout << "Responses" << m_responses << endl;
+	Ptr<TrainData> data = TrainData::create(m_samples, ml::ROW_SAMPLE, m_responses); //, InputArray varIdx=noArray(), InputArray sampleIdx=noArray(), InputArray sampleWeights=noArray(), InputArray varType=noArray());
+	bool is_trained = mp_statModel.dynamicCast<SVM>()->train(data, 10);
 
 	cout << "trained" << is_trained << endl;
 
@@ -173,8 +180,8 @@ void Svm::TestModel()
 	if(m_samples.empty())
 		return;
 
-	cout << "Samples" << m_samples.size() << endl;
-	cout << "Responses" << m_responses.size() << endl;
+	cout << "Samples" << m_samples << endl;
+	cout << "Responses" << m_responses << endl;
 	Ptr<TrainData> data = TrainData::create(m_samples, ROW_SAMPLE, m_responses); //, InputArray varIdx=noArray(), InputArray sampleIdx=noArray(), InputArray sampleWeights=noArray(), InputArray varType=noArray());
 	
 	float err = mp_statModel->calcError(data, true, m_responses);

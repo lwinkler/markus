@@ -93,7 +93,7 @@ private:
 
 protected:
 	// state
-	cv::Ptr<cv::ml::StatModel> mp_statModel;
+	cv::Ptr<cv::ml::SVM> mp_statModel;
 	cv::Mat m_samples;
 	cv::Mat m_responses;
 	size_t m_dataLength = 0;

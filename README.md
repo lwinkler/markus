@@ -39,6 +39,7 @@ To install from sources:
 	cd opencv
 	mkdir build
 	cd build
+	ccmake .. # enable LIBV4L ? TODO
 	cmake ..
 	make -j4
 	sudo make install
