@@ -1,8 +1,8 @@
 {
-	"default" : 0,
-	"description" : "Test stream",
-	"name" : "stream_int4",
-	"range" : {},
-	"stream" : true,
-	"type" : "NumInt"
+	"class": "StreamNum<int>",
+	"default": 0,
+	"description": "Test stream",
+	"name": "stream_int4",
+	"range": {},
+	"stream": true
 }

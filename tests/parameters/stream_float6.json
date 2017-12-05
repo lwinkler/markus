@@ -1,8 +1,8 @@
 {
-	"default" : 0,
-	"description" : "Test stream",
-	"name" : "stream_float6",
-	"range" : {},
-	"stream" : true,
-	"type" : "NumFloat"
+	"class": "StreamNum<float>",
+	"default": 0.0,
+	"description": "Test stream",
+	"name": "stream_float6",
+	"range": {},
+	"stream": true
 }

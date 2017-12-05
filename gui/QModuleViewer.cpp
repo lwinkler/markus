@@ -243,7 +243,7 @@ void QModuleViewer::CreateInputStream(int x_outputWidth, int x_outputHeight)
 	mp_viewerParams->type        = CV_8UC3;
 	mp_viewerParams->autoProcess = false;
 
-	const string type = mr_manager.GetModuleByName(m_param.module).GetOutputStreamByName(m_param.stream).GetType();
+	const string type = mr_manager.GetModuleByName(m_param.module).GetOutputStreamByName(m_param.stream).GetClass();
 
 	if(type == "StreamImage")
 		mp_viewerModule = new ViewerT<Mat>(*mp_viewerParams, *this, m_param.module);

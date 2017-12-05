@@ -1,12 +1,11 @@
 {
-	"default" : 
-	{
-		"height" : 240,
-		"width" : 320
+	"class": "StreamImage",
+	"default": {
+		"height": 240,
+		"width": 320
 	},
-	"description" : "Test stream",
-	"name" : "stream_image2",
-	"range" : {},
-	"stream" : true,
-	"type" : "Image"
+	"description": "Test stream",
+	"name": "stream_image2",
+	"range": {},
+	"stream": true
 }

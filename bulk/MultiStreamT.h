@@ -109,9 +109,6 @@ protected:
 	std::vector<T>& m_objects;
 	const size_t    m_maxSize;
 	size_t          m_nextObj = 0;
-
-private:
-	static log4cxx::LoggerPtr m_logger;
 };
 
 #endif

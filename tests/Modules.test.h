@@ -294,7 +294,7 @@ public:
 						assert(actions.size() == 5); // If not you need to write one more test
 
 						type = "0";
-						elemCtr.second->CallAction("GetType", &type);
+						elemCtr.second->CallAction("GetClass", &type);
 						TS_TRACE("###  " + elemCtr.first + ".GetType returned " + type);
 
 						range = "0";
@@ -400,12 +400,12 @@ public:
 					if(!elem->IsLocked())
 						continue;
 
-					TS_TRACE("## on parameter " + elem->GetName() + " of type " + elem->GetType() + " on range " + oneLine(elem->GetRange()));
+					TS_TRACE("## on parameter " + elem->GetName() + " of clsee " + elem->GetClass() + " on range " + oneLine(elem->GetRange()));
 
 					// Generate a new module with each value for locked parameter
 					mkjson values;
 
-					TS_TRACE("Generate values for param of type " + elem->GetType() + " in range " + oneLine(elem->GetRange()));
+					TS_TRACE("Generate values for param of clsee " + elem->GetClass() + " in range " + oneLine(elem->GetRange()));
 					elem->GenerateValues(10, values);
 					allValues.push_back(values);
 					allDefault.push_back(elem->GetDefault());

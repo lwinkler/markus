@@ -1,8 +1,8 @@
 {
+	"class": "StreamNum<uint>",
 	"default": 0,
 	"description": "Test stream",
 	"name": "stream_uint5",
 	"range": {},
-	"stream": true,
-	"type": "NumUInt"
+	"stream": true
 }

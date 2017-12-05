@@ -4,5 +4,5 @@
 	"name": "streamState",
 	"state": true,
 	"timeStamp": 23423422234234,
-	"type": "State"
+	"class": "StreamState"
 }

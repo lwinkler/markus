@@ -56,9 +56,6 @@ public:
 
 	inline void Reset() {m_timeStamp = TIME_STAMP_MIN;SetValueToDefault();}
 
-	virtual const std::string& GetClass() const = 0;
-	const std::string& GetType() const override = 0;
-	
 	inline const cv::Size GetSize() const {return mr_module.GetSize();}
 	virtual void RenderTo(cv::Mat& x_output) const = 0;
 	virtual void Query(std::ostream& xr_out, const cv::Point& x_pt) const = 0;

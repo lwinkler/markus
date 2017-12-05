@@ -1,4 +1,5 @@
 {
+	"class": "StreamObjects",
 	"default": [
 		{
 			"features": {},
@@ -14,6 +15,5 @@
 	"multi": 10,
 	"name": "stream_object8",
 	"range": {},
-	"stream": true,
-	"type": "Objects"
+	"stream": true
 }

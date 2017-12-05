@@ -52,7 +52,7 @@ public:
 		m_param(dynamic_cast<T&>(x_param)),
 		m_module(x_module)
 	{
-		m_actions.insert(make_pair("GetType",    &ControllerParameterT::GetType));
+		m_actions.insert(make_pair("GetClass",    &ControllerParameterT::GetClass2));
 		m_actions.insert(make_pair("GetRange",   &ControllerParameterT::GetRange));
 		m_actions.insert(make_pair("Set",        &ControllerParameterT::SetControlledValue));
 		m_actions.insert(make_pair("Get",        &ControllerParameterT::GetCurrent));
@@ -72,15 +72,15 @@ public:
 	}
 
 	// Controllers
-	void GetType(std::string* xp_value)
+	void GetClass2(std::string* xp_value)
 	{
 		Processable::ReadLock lock(m_module.RefLock());
 		if(xp_value != nullptr)
 		{
-			*xp_value = m_param.GetType();
+			*xp_value = m_param.GetClass();
 			return;
 		}
-		LOG_INFO(m_logger, "Parameter type is \"" + m_param.GetType() + "\"");
+		LOG_INFO(m_logger, "Parameter class is \"" + m_param.GetClass() + "\"");
 	}
 	void GetRange(std::string* xp_value)
 	{

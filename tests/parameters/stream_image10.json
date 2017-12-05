@@ -7,5 +7,5 @@
 	"description" : "Test stream",
 	"id" : 10,
 	"multi" : 9,
-	"type" : "Image"
+	"class" : "StreamImage"
 }

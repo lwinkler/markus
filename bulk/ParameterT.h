@@ -61,7 +61,7 @@ public:
 	}
 	inline mkjson GetValue() const override {return mr_value;}
 	inline mkjson GetDefault() const override {return m_default;}
-	inline const std::string& GetType() const override {return m_typeStr;}
+	inline const std::string& GetClass() const override {return m_typeStr;}
 
 	void SetValue(const mkjson& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/) override
 	{

@@ -50,7 +50,7 @@ void Stream::Export(ostream& rx_os) const
 {
 	mkjson root;
 	// root["id"] = id;
-	root["type"] = GetType();
+	root["class"] = GetClass();
 	root["name"] = GetName();
 	root["default"] = GetDefault();
 	root["description"] = GetDescription();
@@ -86,7 +86,7 @@ void Stream::Serialize(mkjson& rx_json, MkDirectory* xp_dir) const
 {
 	rx_json = mkjson{
 		{"name", GetName()}, 
-		{"type", GetType()}, 
+		{"class", GetClass()}, 
 		{"description", GetDescription()}, 
 		{"timeStamp", m_timeStamp.load()}, 
 		{"connected", IsConnected()}
@@ -98,8 +98,8 @@ void Stream::Deserialize(const mkjson& x_json, MkDirectory* xp_dir)
 {
 	// if(GetName() != root["name"].asString())
 		// throw MkException("Stream must have the same name before serializing: " + GetName(), LOC);
-	if(x_json.at("type").get<string>() != GetType())
-		throw MkException("Stream must have the right type before serializing: " + GetType(), LOC);
+	if(x_json.at("class").get<string>() != GetClass())
+		throw MkException("Stream must have the right class before serializing: " + GetClass(), LOC);
 	if(GetDescription() != x_json.at("description").get<string>())
 		LOG_WARN(m_logger, "Stream does not have the same description");
 	m_timeStamp = x_json.at("timeStamp").get<uint64_t>();

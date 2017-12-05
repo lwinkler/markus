@@ -17,7 +17,7 @@ template<> const map<string, int>  ParameterEnumT<mk::CachedState>::Enum =
 	{"DISABLED", 3}
 };
 template<> const map<int, string> ParameterEnumT<mk::CachedState>::ReverseEnum = ParameterEnum::CreateReverseMap(ParameterEnumT<mk::CachedState>::Enum);
-template<> const string ParameterEnumT<mk::CachedState>::m_type = "ParameterCachedState";
+template<> const string ParameterEnumT<mk::CachedState>::m_class = "ParameterCachedState";
 
 
 
@@ -55,7 +55,7 @@ template<> const map<string, int>  ParameterEnumT<mk::ImageType>::Enum =
 	{"CV_64FC4", 30}
 };
 template<> const map<int, string> ParameterEnumT<mk::ImageType>::ReverseEnum = ParameterEnum::CreateReverseMap(ParameterEnumT<mk::ImageType>::Enum);
-template<> const string ParameterEnumT<mk::ImageType>::m_type = "ParameterImageType";
+template<> const string ParameterEnumT<mk::ImageType>::m_class = "ParameterImageType";
 
 
 
@@ -73,7 +73,7 @@ template<> const map<string, int>  ParameterEnumT<cv::ml::SVM::KernelTypes>::Enu
 	{"INTER", 5}
 };
 template<> const map<int, string> ParameterEnumT<cv::ml::SVM::KernelTypes>::ReverseEnum = ParameterEnum::CreateReverseMap(ParameterEnumT<cv::ml::SVM::KernelTypes>::Enum);
-template<> const string ParameterEnumT<cv::ml::SVM::KernelTypes>::m_type = "ParameterKernelTypes";
+template<> const string ParameterEnumT<cv::ml::SVM::KernelTypes>::m_class = "ParameterKernelTypes";
 
 
 
@@ -89,5 +89,5 @@ template<> const map<string, int>  ParameterEnumT<cv::ml::SVM::Types>::Enum =
 	{"NU_SVR", 104}
 };
 template<> const map<int, string> ParameterEnumT<cv::ml::SVM::Types>::ReverseEnum = ParameterEnum::CreateReverseMap(ParameterEnumT<cv::ml::SVM::Types>::Enum);
-template<> const string ParameterEnumT<cv::ml::SVM::Types>::m_type = "ParameterSvmTypes";
+template<> const string ParameterEnumT<cv::ml::SVM::Types>::m_class = "ParameterSvmTypes";
 

@@ -1,10 +1,10 @@
 {
+	"class": "ParameterDouble",
 	"default": 1e+44,
 	"description": "Parameter of type double",
 	"name": "param_double",
 	"range": {
 		"max": 1e+99,
 		"min": 1e+33
-	},
-	"type": "ParameterDouble"
+	}
 }

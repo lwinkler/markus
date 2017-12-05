@@ -1,4 +1,5 @@
 {
+	"class": "ParameterPolygon",
 	"default": {
 		"height": 0.66,
 		"points": [
@@ -23,6 +24,5 @@
 	},
 	"description": "Parameter of type Polygon",
 	"name": "param_polygon",
-	"range": {},
-	"type": "ParameterPolygon"
+	"range": {}
 }

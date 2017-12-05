@@ -8,7 +8,7 @@
 			"description": "Video stream",
 			"name": "image",
 			"timeStamp": 23422423424234,
-			"type": "Image"
+			"class": "StreamImage"
 		}
 	]
 }

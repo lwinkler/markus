@@ -1,7 +1,7 @@
 {
+	"class": "ParameterString",
 	"default": "legal",
 	"description": "Parameter of type string",
 	"name": "param_string",
-	"range": {},
-	"type": "ParameterString"
+	"range": {}
 }

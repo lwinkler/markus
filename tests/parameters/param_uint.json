@@ -1,10 +1,10 @@
 {
+	"class": "ParameterUInt",
 	"default": 633,
 	"description": "Parameter of type unsigned int",
 	"name": "param_uint",
 	"range": {
 		"max": 66000,
 		"min": 32
-	},
-	"type": "ParameterUInt"
+	}
 }

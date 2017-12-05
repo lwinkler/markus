@@ -1,11 +1,10 @@
 {
-	"default" : 
-	{
-		"raised" : false
+	"class": "StreamEvent",
+	"default": {
+		"raised": false
 	},
-	"description" : "Test stream",
-	"name" : "stream_event1",
-	"range" : {},
-	"stream" : true,
-	"type" : "Event"
+	"description": "Test stream",
+	"name": "stream_event1",
+	"range": {},
+	"stream": true
 }

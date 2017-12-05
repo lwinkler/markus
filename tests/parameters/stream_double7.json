@@ -1,8 +1,8 @@
 {
-	"default" : 0,
-	"description" : "Test stream",
-	"name" : "stream_double7",
-	"range" : {},
-	"stream" : true,
-	"type" : "NumDouble"
+	"class": "StreamNum<double>",
+	"default": 0.0,
+	"description": "Test stream",
+	"name": "stream_double7",
+	"range": {},
+	"stream": true
 }

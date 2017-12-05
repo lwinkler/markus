@@ -54,7 +54,7 @@ public:
 		m_confSource = PARAMCONF_DEF;
 	}
 	void Export(std::ostream& rx_os) const override;
-	const std::string& GetType() const override = 0;
+	const std::string& GetClass() const override = 0;
 	virtual const std::map<std::string, int>& GetEnum() const = 0;
 	virtual const std::map<int, std::string>& GetReverseEnum() const = 0;
 

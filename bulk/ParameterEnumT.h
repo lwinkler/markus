@@ -38,14 +38,14 @@ public:
 	
 	const std::map<std::string, int>& GetEnum() const override {return Enum;}
 	const std::map<int, std::string>& GetReverseEnum() const override {return ReverseEnum;}
-	const std::string& GetType() const override {return m_type;};
+	const std::string& GetClass() const override {return m_class;};
 
 protected:
 	static const std::map<std::string, int> Enum;
 	static const std::map<int, std::string>  ReverseEnum;
 
 private:
-	static const std::string m_type;
+	static const std::string m_class;
 };
 
 #endif

@@ -61,7 +61,7 @@ public:
 	virtual void SetDefault(const mkjson& x_value) = 0;
 	inline void SetDefaultAndValue(const mkjson& x_value){SetDefault(x_value); SetValueToDefault();}
 	inline const std::string& GetName() const {return m_name;}
-	virtual const std::string& GetType() const = 0;
+	virtual const std::string& GetClass() const = 0;
 	inline const std::string& GetDescription() const {return m_description;}
 	inline const ParameterConfigType& GetConfigurationSource() const {return m_confSource;}
 	virtual void SetValueToDefault() = 0;

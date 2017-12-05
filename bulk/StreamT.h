@@ -42,7 +42,6 @@ public:
 	{}
 	virtual ~StreamT() {}
 	virtual const std::string& GetClass() const {return m_class;}
-	virtual const std::string& GetType() const {return m_type;}
 
 	inline const T& GetContent() const {return m_content;}
 	inline       T& RefContent() const {return m_content;}
@@ -77,8 +76,6 @@ protected:
 	T  m_default;
 
 private:
-	static log4cxx::LoggerPtr m_logger;
-	static const std::string m_type;
 	static const std::string m_class;
 };
 

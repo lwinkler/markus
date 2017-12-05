@@ -64,14 +64,14 @@ public:
 		if (it == m_register.end())
 		{
 			std::stringstream ss;
-			ss << "Cannot find a constructor for object of type "<<x_type;
+			ss << "Cannot find a constructor for object with class or signature  "<<x_type;
 			throw MkException(ss.str(), LOC);
 		}
 
 		CreateObjectFunc func = it->second;
 		T1* pmod = func(args...);
-		// if(pmod->GetClass() != x_type)
-		// throw MkException("Module \"" + x_type + "\" must have the same name as its class \"" + pmod->GetClass() + "\"", LOC);
+		// if(pmod->GetClass() != x_class)
+		// throw MkException("Module \"" + x_class + "\" must have the same name as its class \"" + pmod->GetClass() + "\"", LOC);
 		return pmod;
 	}
 

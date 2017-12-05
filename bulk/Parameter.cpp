@@ -44,7 +44,7 @@ log4cxx::LoggerPtr Parameter::m_logger(log4cxx::Logger::getLogger("Parameter"));
 void Parameter::Export(ostream& rx_os) const
 {
 	mkjson json;
-	json["type"] = GetType();
+	json["class"] = GetClass();
 	json["name"] = GetName();
 	json["description"] = GetDescription();
 	json["default"] = GetDefault();

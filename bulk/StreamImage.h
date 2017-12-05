@@ -47,7 +47,6 @@ public:
 
 	StreamT(const std::string& x_name, cv::Mat& x_image, Module& rx_module, const std::string& x_description, const std::string& x_requirements = "");
 	MKCLASS("StreamImage")
-	MKTYPE("StreamImage")
 
 	void ConvertInput() override;
 	void RenderTo(cv::Mat& x_output) const override;
@@ -94,9 +93,6 @@ protected:
 	StreamImage* mp_connectedImage = nullptr;
 	std::map<std::string, BufferImage> m_buffers;
 	cv::Mat& m_content;
-
-private:
-	static log4cxx::LoggerPtr m_logger;
 };
 
 #endif
