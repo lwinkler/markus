@@ -41,8 +41,8 @@ public:
 	
 	void SetValue(const mkjson& rx_value, ParameterConfigType x_confType) override;
 	void SetDefault(const mkjson& rx_value) override;
-	inline mkjson GetValue() const override {return GetReverseEnum().at(mr_value);}
-	inline mkjson GetDefault() const override {return GetReverseEnum().at(m_default);}
+	inline mkjson GetValue() const override {return mkjson(GetReverseEnum().at(mr_value));}
+	inline mkjson GetDefault() const override {return mkjson(GetReverseEnum().at(m_default));}
 	bool CheckRange() const override;
 	mkjson GenerateValues(int x_nbSamples, const mkjson& x_range) const override;
 	void Print(std::ostream& os) const override;
@@ -53,7 +53,7 @@ public:
 		mr_value = m_default;
 		m_confSource = PARAMCONF_DEF;
 	}
-	void Export(std::ostream& rx_os) const override;
+	mkjson Export() const override;
 	const std::string& GetClass() const override = 0;
 	virtual const std::map<std::string, int>& GetEnum() const = 0;
 	virtual const std::map<int, std::string>& GetReverseEnum() const = 0;

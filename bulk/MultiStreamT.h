@@ -95,14 +95,11 @@ public:
 		m_objects.clear();
 	}
 
-	void Export(std::ostream& rx_os) const override
+	mkjson Export() const override
 	{
-		mkjson json;
-		std::stringstream ss;
-		StreamT<T>::Export(ss);
-		ss >> json;
+		mkjson json = StreamT<T>::Export();
 		json["multi"] = m_maxSize;
-		rx_os << multiLine(json);
+		return json;
 	}
 
 protected:

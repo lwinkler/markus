@@ -304,9 +304,8 @@ void Module::Process()
 /**
 * @brief Describe the module with name, parameters, inputs, outputs to an output stream (in json)
 *
-* @param rx_os         Output stream
 */
-void Module::Export(ostream& rx_os) const
+mkjson Module::Export() const
 {
 	mkjson json;
 	json["class"]       = GetClass();
@@ -320,25 +319,8 @@ void Module::Export(ostream& rx_os) const
 		// TODO restore this: problem with generated modules that contain _ in parameter names
 		// if(elem->GetName().find('_') != string::npos)
 			// throw MkException("Forbidden character _ in " + elem->GetName(), LOC);
-		stringstream ss;
-		mkjson val;
-		elem->Export(ss);
-		ss >> val;
-		json["inputs"].push_back(val);
+		json["inputs"].push_back(elem->Export());
 	}
-	/* Already in parameters
-	for(const auto& elem : m_inputStreams)
-	{
-		if(elem.second->GetName().find('_') != string::npos)
-			throw MkException("Forbidden character _ in " + elem.second->GetName(), LOC);
-		// note: parameters are now inputs
-		stringstream ss;
-		mkjson val;
-		elem.second->Export(ss);
-		ss >> val;
-		json["inputs"].append(val);
-	}
-	*/
 	for(const auto& elem : m_outputStreams)
 	{
 		// TODO restore this: problem with generated modules that contain _ in parameter names
@@ -346,14 +328,10 @@ void Module::Export(ostream& rx_os) const
 			// throw MkException("Forbidden character _ in " + elem.second->GetName(), LOC);
 		if(!elem.second->debug)
 		{
-			stringstream ss;
-			elem.second->Export(ss);
-			mkjson val;
-			ss >> val;
-			json["outputs"].push_back(val);
+			json["outputs"].push_back(elem.second->Export());
 		}
 	}
-	rx_os << multiLine(json);
+	return json;
 }
 
 const Stream& Module::GetInputStreamByName(const string& x_name) const

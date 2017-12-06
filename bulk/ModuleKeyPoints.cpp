@@ -46,7 +46,7 @@ ModuleKeyPoints::ModuleKeyPoints(ParameterStructure& xr_params) :
 	mp_descriptor = nullptr;
 
 	AddInputStream(0, new StreamImage("image",  m_input, *this,   "Video input"));
-	AddInputStream(1, new StreamObject("objects", m_objectsIn, *this,	"Incoming objects", "{\"width\":{\"min\":8}, \"height\":{\"min\":8}}"));
+	AddInputStream(1, new StreamObject("objects", m_objectsIn, *this,	"Incoming objects", R"({"width":{"min":8}, "height":{"min":8}})"_json));
 
 	AddOutputStream(0, new StreamObject("output", m_objectsOut, *this,	"List of tracked object with KeyPoint and features"));
 

@@ -116,7 +116,7 @@ public:
 	void Deserialize(const mkjson& x_json, MkDirectory* xp_dir = nullptr);
 
 	virtual inline bool IsInput() const {return false;}
-	void Export(std::ostream& rx_os) const;
+	mkjson Export() const;
 	const Stream& GetInputStreamByName(const std::string& x_name) const;
 	const Stream& GetOutputStreamByName(const std::string& x_name) const;
 	Stream& RefInputStreamByName(const std::string& x_name);

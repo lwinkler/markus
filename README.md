@@ -44,6 +44,11 @@ To install from sources:
 	make -j4
 	sudo make install
 
+Try this before compiling: TODO probably remove
+
+	sudo apt-get install libtbb-dev libgtk2.0-dev libavcodec-extra libavcodec-dev libavformat-dev libswscale-dev libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
+	sudo apt-get install libav-tools
+
 ### Qt5 dependencies
 
 Markus is also compiled with Qt5. The packages required for qt webkit are a bit more complicated in this case:
@@ -74,7 +79,7 @@ These libraries and utilities can be installed to create advanced modules:
 	- *Avtools*: Video manipulation tools to use the benchmark of test
 
 	sudo apt-get install cmake-qt-gui cmake-curses-gui qtcreator python-dev python-opencv python-bs4 libav-tools
-	sudo pip install xmltodict nagiosplugin
+	sudo pip install xmltodict 
 
 Since modules can be stored on different repositories please check the separate README.md of each directory for dependencies.
 

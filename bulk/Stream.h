@@ -65,7 +65,7 @@ public:
 	virtual void Randomize(unsigned int& xr_seed) = 0;
 	void Serialize(mkjson& rx_json, MkDirectory* xp_dir = nullptr) const;
 	void Deserialize(const mkjson& x_json, MkDirectory* xp_dir = nullptr);
-	void Export(std::ostream& rx_os) const override;
+	mkjson Export() const override;
 	inline bool IsConnected() const {return m_cptConnected > 0;}
 	inline void SetAsConnected(bool x_val)
 	{

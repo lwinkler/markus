@@ -233,6 +233,7 @@ public:
 	/// Run the modules with different inputs generated randomly
 	void testInputs()
 	{
+		mkjson asdf(""); // TODO remove
 		// TS_TRACE("\n# Test different inputs");
 		unsigned int seed = 324234566;
 
@@ -457,7 +458,8 @@ public:
 	{
 		string fileName = "tests/tmp/" + xr_module.GetName() + ".json";
 		ofstream of(fileName.c_str());
-		xr_module.Export(of);
+		mkjson js = xr_module.Export();
+		of << multiLine(js);
 		of.close();
 		if(!compareJsonFiles(fileName, "tests/modules/" + xr_module.GetName() + ".json"))
 		{

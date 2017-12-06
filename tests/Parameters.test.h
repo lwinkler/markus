@@ -64,7 +64,8 @@ public:
 
 		string fileName = "tests/tmp/" + xr_param.GetName() + ".json";
 		ofstream of(fileName.c_str());
-		xr_param.Export(of);
+		mkjson js = xr_param.Export();
+		of << multiLine(js);
 		of.close();
 		TS_ASSERT(compareJsonFiles(fileName, "tests/parameters/" + xr_param.GetName() + ".json"));
 

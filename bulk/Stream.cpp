@@ -43,10 +43,8 @@ Stream::~Stream()
 /**
 * @brief Write description as JSON of stream for module description
 *
-* @param rx_os         Output stream
-* @param x_id          Id of stream
 */
-void Stream::Export(ostream& rx_os) const
+mkjson Stream::Export() const
 {
 	mkjson root;
 	// root["id"] = id;
@@ -56,7 +54,7 @@ void Stream::Export(ostream& rx_os) const
 	root["description"] = GetDescription();
 	root["stream"] = true;
 	root["range"] = GetRange();
-	rx_os << multiLine(root);
+	return root;
 }
 
 

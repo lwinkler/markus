@@ -38,10 +38,8 @@ log4cxx::LoggerPtr Parameter::m_logger(log4cxx::Logger::getLogger("Parameter"));
 /**
 * @brief Export the parameter for module description
 *
-* @param rx_os         Output stream
-* @param x_indentation Number of tabs for indentation
 */
-void Parameter::Export(ostream& rx_os) const
+mkjson Parameter::Export() const
 {
 	mkjson json;
 	json["class"] = GetClass();
@@ -49,7 +47,7 @@ void Parameter::Export(ostream& rx_os) const
 	json["description"] = GetDescription();
 	json["default"] = GetDefault();
 	json["range"] = GetRange();
-	rx_os << multiLine(json);
+	return json;
 }
 
 

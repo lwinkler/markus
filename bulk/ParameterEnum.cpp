@@ -116,9 +116,9 @@ map<int,string> ParameterEnum::CreateReverseMap(const map<string, int>& x_map)
  */
 mkjson ParameterEnum::GenerateValues(int x_nbSamples, const mkjson& x_range) const
 {
-	if(x_range.find("allowed") == x_range.end())
+	if(x_range.find("allowed") != x_range.end())
 		return x_range.at("allowed");
-	if(x_range.find("advised") == x_range.end())
+	if(x_range.find("advised") != x_range.end())
 		return x_range.at("advised");
 	mkjson root = mkjson::array();
 	for(const auto& elem : GetEnum())
@@ -129,20 +129,14 @@ mkjson ParameterEnum::GenerateValues(int x_nbSamples, const mkjson& x_range) con
 /**
 * @brief Export the parameter for module description
 *
-* @param rx_os         Output stream
-* @param x_indentation Number of tabs for indentation
 */
-void ParameterEnum::Export(ostream& rx_os) const
+mkjson ParameterEnum::Export() const
 {
-	mkjson root;
-	std::stringstream ss;
-	Parameter::Export(ss);
-	ss >> root;
-	
+	mkjson root = Parameter::Export();
 	root["enum"] = mkjson::array();
 	for(const auto& elem : GetEnum())
 	{
 		root["enum"].push_back(elem.first);
 	}
-	rx_os << multiLine(root);
+	return root;
 }

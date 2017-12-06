@@ -68,7 +68,7 @@ public:
 	virtual void Print(std::ostream& os) const;
 	virtual bool CheckRange() const = 0;
 	virtual mkjson GenerateValues(int x_nbSamples, const mkjson& x_range) const = 0;
-	virtual void Export(std::ostream& rx_os) const;
+	virtual mkjson Export() const;
 
 	/// Use this method to mark parameters that must not change value after initialization
 	inline void Lock() {m_requiresLock = true;}

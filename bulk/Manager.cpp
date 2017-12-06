@@ -488,12 +488,7 @@ void Manager::CreateEditorFiles(const string& x_fileName)
 			moduleCategories["all"].push_back(moduleType);
 
 			// JSON file containing all module descriptions
-			// TODO Improve
-			stringstream os;
-			module->Export(os);
-			mkjson json;
-			os >> json;
-			moduleDescriptionsJson.push_back(json);
+			moduleDescriptionsJson.push_back(module->Export());
 		}
 		mkjson moduleCategoriesJson = mkjson::array();
 		for(const auto& elem : moduleCategories) {
