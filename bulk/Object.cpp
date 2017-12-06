@@ -231,20 +231,17 @@ void Object::Randomize(unsigned int& xr_seed, const mkjson& x_requirement, const
 	
 	// Add features
 	m_feats.clear();
-	if(!x_requirement.empty())
+	if(!x_requirement.empty() && x_requirement.find("features") != x_requirement.end())
 	{
 		const mkjson& req = x_requirement.at("features");
-		if(!req.is_null())
+		// Get an instance of the feature factory
+		const FactoryFeatures& factory(Factories::featuresFactory());
+		for(auto it = req.begin() ; it != req.end() ; ++it)
 		{
-			// Get an instance of the feature factory
-			const FactoryFeatures& factory(Factories::featuresFactory());
-			for(auto it = req.begin() ; it != req.end() ; ++it)
-			{
-				// create features according to the requirement
-				Feature* feat = factory.Create(it.value()["type"].get<string>());
-				feat->Randomize(xr_seed, it.value());
-				AddFeature(it.key(), feat);
-			}
+			// create features according to the requirement
+			Feature* feat = factory.Create(it.value().at("type").get<string>());
+			feat->Randomize(xr_seed, it.value());
+			AddFeature(it.key(), feat);
 		}
 	}
 

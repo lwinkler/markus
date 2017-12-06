@@ -61,7 +61,7 @@ public:
 	}
 	inline mkjson GetValue() const override {return mr_value;}
 	inline mkjson GetDefault() const override {return m_default;}
-	inline const std::string& GetClass() const override {return m_typeStr;}
+	inline const std::string& GetClass() const override {return m_type;}
 
 	void SetValue(const mkjson& rx_value, ParameterConfigType x_confType/* = PARAMCONF_UNKNOWN*/) override
 	{
@@ -106,7 +106,7 @@ public:
 	T m_default;
 private:
 	T& mr_value;
-	static const std::string m_typeStr;
+	static const std::string m_type;
 };
 
 template<> mkjson ParameterT<int>::GenerateValues(int x_nbSamples, const mkjson& x_range) const;

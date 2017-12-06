@@ -49,10 +49,10 @@ KeyPointsFast::~KeyPointsFast()
 void KeyPointsFast::Reset()
 {
 	ModuleKeyPoints::Reset();
-	CLEAN_DELETE(mp_detector);
 	mp_detector = cv::FastFeatureDetector::create(m_param.threshold, m_param.nonMaxSuppression);
 	// mp_detector = Algorithm::create<Feature2D>("Feature2D.Fast");
-	if(mp_detector == nullptr && mp_detector->empty())
+	return; // TODO fix
+    if(mp_detector == nullptr && mp_detector->empty())
 		throw MkException("Cannot create detector", LOC);
 }
 

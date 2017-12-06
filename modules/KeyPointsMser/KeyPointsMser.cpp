@@ -49,7 +49,6 @@ KeyPointsMser::~KeyPointsMser()
 void KeyPointsMser::Reset()
 {
 	ModuleKeyPoints::Reset();
-	CLEAN_DELETE(mp_detector);
 	mp_detector = cv::MSER::create(
 		m_param.delta,
 		m_param.minArea,

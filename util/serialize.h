@@ -46,7 +46,7 @@ template<class T> inline void from_mkjson(const mkjson& x_js, T& rx_obj)
 
 inline auto oneLine(const mkjson& x_json)
 {
-	return x_json.dump();
+	return x_json.dump(0, ' ');
 }
 
 inline auto multiLine(const mkjson& x_json)

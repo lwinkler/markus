@@ -28,13 +28,13 @@ using namespace std;
 
 
 // Static variables
-template<> const string ParameterT<bool>::m_typeStr         = "ParameterBool";
-template<> const string ParameterT<unsigned int>::m_typeStr = "ParameterUInt";
-template<> const string ParameterT<int>::m_typeStr          = "ParameterInt";
-template<> const string ParameterT<float>::m_typeStr        = "ParameterFloat";
-template<> const string ParameterT<double>::m_typeStr       = "ParameterDouble";
-template<> const string ParameterT<string>::m_typeStr       = "ParameterString";
-template<> const string ParameterT<Polygon>::m_typeStr      = "ParameterPolygon";
+template<> const string ParameterT<bool>::m_type         = "ParameterBool";
+template<> const string ParameterT<unsigned int>::m_type = "ParameterUInt";
+template<> const string ParameterT<int>::m_type          = "ParameterInt";
+template<> const string ParameterT<float>::m_type        = "ParameterFloat";
+template<> const string ParameterT<double>::m_type       = "ParameterDouble";
+template<> const string ParameterT<string>::m_type       = "ParameterString";
+template<> const string ParameterT<Polygon>::m_type      = "ParameterPolygon";
 
 template<class T> inline bool checkRangeNum(const T& x_value, const mkjson& x_range)
 {
@@ -62,7 +62,8 @@ template<> bool ParameterT<bool>::CheckRange() const
 
 template<> bool ParameterT<double>::CheckRange() const
 {
-	return checkRangeNum(GetValue().template get<double>(), m_range);
+    // note: json.hpp seems to convert double to float TODO check this
+	return checkRangeNum(GetValue().template get<float>(), m_range);
 }
 
 template<> bool ParameterT<float>::CheckRange() const
@@ -108,7 +109,7 @@ template<class T> mkjson generateValuesInt(int x_nbSamples, const mkjson& x_rang
 	{
 		for(int i = static_cast<int>(min) ; i <= static_cast<int>(max) ; i++)
 		{
-			values.push_back(i);
+			values.push_back(static_cast<T>(i));
 			// values.append(static_cast<int>(min + static_cast<int>(i/x_nbSamples) % static_cast<int>(max - min + 1)));
 		}
 	}
@@ -117,7 +118,7 @@ template<class T> mkjson generateValuesInt(int x_nbSamples, const mkjson& x_rang
 		double incr = x_nbSamples <= 1 ? 0 : (max - min) / (x_nbSamples - 1);
 		for(int i = 0 ; i < x_nbSamples ; i++)
 		{
-			values.push_back(static_cast<int>(min + i * incr));
+			values.push_back(static_cast<T>(min + i * incr));
 		}
 	}
 

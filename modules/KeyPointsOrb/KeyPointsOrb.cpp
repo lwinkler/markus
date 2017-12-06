@@ -49,7 +49,6 @@ KeyPointsOrb::~KeyPointsOrb()
 void KeyPointsOrb::Reset()
 {
 	ModuleKeyPoints::Reset();
-	CLEAN_DELETE(mp_detector);
 	mp_detector = ORB::create(
 		m_param.nbFeatures,
 		m_param.scaleFactor,

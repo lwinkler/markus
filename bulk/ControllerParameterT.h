@@ -120,7 +120,7 @@ public:
 		if(!m_param.CheckRange())
 		{
 			m_param.SetValue(oldValue, configType);
-			throw MkException("Parameter " + m_param.GetName() + "=" + *xp_value + " is out of range " + oneLine(m_param.GetRange()), LOC);
+			throw MkException("Parameter " + m_param.GetName() + "=" + (xp_value ? *xp_value : "(null)") + " is out of range " + oneLine(m_param.GetRange()), LOC);
 		}
 	}
 

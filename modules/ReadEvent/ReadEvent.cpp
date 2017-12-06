@@ -69,8 +69,7 @@ void ReadEvent::Capture()
 		throw EndOfStreamException("Cannot read next annotation", LOC);
 	}
 	m_currentTimeStamp = mp_annotationReader->GetCurrentTimeStamp();
-	mkjson json(text);
-	m_event = json.get<Event>();
+	m_event = mkjson::parse(text).get<Event>();
 	assert(m_event.IsRaised());
 }
 

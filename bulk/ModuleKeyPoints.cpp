@@ -23,12 +23,8 @@
 #include "ModuleKeyPoints.h"
 #include "StreamImage.h"
 #include "StreamDebug.h"
-#include "StreamObject.h"
 #include "FeatureOpenCv.h"
 #include "FeatureVector.h"
-
-//for debug
-#include "util.h"
 
 using namespace cv;
 using namespace std;
@@ -42,9 +38,6 @@ ModuleKeyPoints::ModuleKeyPoints(ParameterStructure& xr_params) :
 	m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_input(Size(m_param.width, m_param.height), m_param.type)
 {
-	mp_detector  = nullptr;
-	mp_descriptor = nullptr;
-
 	AddInputStream(0, new StreamImage("image",  m_input, *this,   "Video input"));
 	AddInputStream(1, new StreamObject("objects", m_objectsIn, *this,	"Incoming objects", R"({"width":{"min":8}, "height":{"min":8}})"_json));
 
@@ -59,8 +52,6 @@ ModuleKeyPoints::ModuleKeyPoints(ParameterStructure& xr_params) :
 
 ModuleKeyPoints::~ModuleKeyPoints()
 {
-	CLEAN_DELETE(mp_detector);
-	CLEAN_DELETE(mp_descriptor);
 }
 
 void ModuleKeyPoints::Reset()
@@ -72,11 +63,11 @@ void ModuleKeyPoints::Reset()
 
 	Module::Reset();
 
-	CLEAN_DELETE(mp_descriptor);
-	if(m_param.descriptor != "")
+	mp_descriptor.release();
+	if(m_param.descriptor.empty())
 	{
 		mp_descriptor = /*DescriptorExtractor::create(m_param.descriptor); */ cv::ORB::create(); // TODO: Should probably be in the child module
-		if(mp_descriptor == nullptr || mp_descriptor->empty())
+		if(mp_descriptor == nullptr) // || mp_descriptor->empty())
 			throw(MkException("Cannot create key points descriptor extractor", LOC));
 	}
 }
@@ -107,7 +98,7 @@ void ModuleKeyPoints::ProcessFrame()
 
 		mp_detector->detect(subImage, pointsOfInterest);
 		Mat descriptors;
-		if(mp_descriptor != nullptr)
+		if(mp_descriptor != nullptr && false) // TODO fix
 		{
 			mp_descriptor->compute(m_input, pointsOfInterest, descriptors);
 			assert(descriptors.rows == static_cast<int>(pointsOfInterest.size()));
@@ -131,7 +122,7 @@ void ModuleKeyPoints::ProcessFrame()
 			obj.AddFeature("keypoint", new FeatureKeyPoint(kp));
 			obj.AddFeature("parent", new FeatureInt(obj1.GetId()));
 
-			if(mp_descriptor != nullptr)
+			if(mp_descriptor != nullptr && false) // TODO fix
 			{
 				// Add descriptor
 				if(descriptors.type() != CV_32FC1)

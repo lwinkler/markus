@@ -49,7 +49,6 @@ KeyPointsGoodFeaturesToTrack::~KeyPointsGoodFeaturesToTrack()
 void KeyPointsGoodFeaturesToTrack::Reset()
 {
 	ModuleKeyPoints::Reset();
-	CLEAN_DELETE(mp_detector);
 	mp_detector = cv::GFTTDetector::create(
 		m_param.maxCorners,
 		m_param.qualityLevel,

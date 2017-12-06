@@ -71,8 +71,8 @@ protected:
 	std::vector <Object> m_objectsOut;
 
 	// state variables
-	cv::FeatureDetector     * mp_detector;
-	cv::DescriptorExtractor * mp_descriptor;
+	cv::Ptr<cv::FeatureDetector>     mp_detector;
+	cv::Ptr<cv::DescriptorExtractor> mp_descriptor;
 
 #ifdef MARKUS_DEBUG_STREAMS
 	cv::Mat m_debug;

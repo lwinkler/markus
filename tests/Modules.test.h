@@ -233,7 +233,6 @@ public:
 	/// Run the modules with different inputs generated randomly
 	void testInputs()
 	{
-		mkjson asdf(""); // TODO remove
 		// TS_TRACE("\n# Test different inputs");
 		unsigned int seed = 324234566;
 
@@ -342,7 +341,7 @@ public:
 							for(int i = 0 ; i < 3 ; i++)
 								tester.module->ProcessRandomInput(seed);
 							TS_TRACE("###  " + elemCtr.first + ".Set returned " + tmps);
-							TS_TRACE("###  " + elemCtr.first + ".Get returned " + oneLine(newValue));
+							TS_TRACE("###  " + elemCtr.first + ".Get returned " + newValue);
 						}
 						elemCtr.second->CallAction("Set", &defval);
 					}
