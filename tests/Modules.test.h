@@ -307,7 +307,7 @@ public:
 						TS_TRACE("###  " + elemCtr.first + ".GetDefault returned " + defval);
 
 						TS_TRACE("Generate values for param of type " + type + " in range " + range);
-						mkjson values = tester.module->GetParameters().GetParameterByName(elemCtr.first).GenerateValues(10, mkjson(range));
+						mkjson values = tester.module->GetParameters().GetParameterByName(elemCtr.first).GenerateValues(10, mkjson::parse(range));
 
 						for(auto& elemVal : values)
 						{
@@ -331,9 +331,10 @@ public:
 							newValue = "0";
 							elemCtr.second->CallAction("Get", &newValue);
 
-							if(elemVal != mkjson(newValue))
+							if(elemVal != mkjson::parse(newValue))
 							{
-								if(!elemVal.is_number() || elemVal.get<float>() != mkjson(newValue).get<float>())
+								mkjson j;
+								if(!elemVal.is_number_float() || abs(elemVal.get<float>() - mkjson::parse(newValue).get<float>()) > 0.001)
 									TS_FAIL("Value set must be returned by get: " + tmps + "!=" + newValue);
 							}
 

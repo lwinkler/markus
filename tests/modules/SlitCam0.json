@@ -1,60 +1,56 @@
 {
-	"class" : "SlitCam",
-	"description" : "A simple example module that mimics a slit camera (or linear camera). The camera input is a range of pixels in the middle of the image.",
-	"inputs" : 
-	[
+	"class": "SlitCam",
+	"description": "A simple example module that mimics a slit camera (or linear camera). The camera input is a range of pixels in the middle of the image.",
+	"inputs": [
 		{
-			"default" : false,
-			"description" : "If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream",
-			"name" : "autoProcess",
-			"range" : {},
-			"type" : "bool"
+			"class": "ParameterBool",
+			"default": false,
+			"description": "If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream",
+			"name": "autoProcess",
+			"range": {}
 		},
 		{
-			"default" : 0,
-			"description" : "Frames per seconds (processing speed)",
-			"name" : "fps",
-			"range" : 
-			{
-				"max" : 1000,
-				"min" : 0
-			},
-			"type" : "double"
+			"class": "ParameterDouble",
+			"default": 0.0,
+			"description": "Frames per seconds (processing speed)",
+			"name": "fps",
+			"range": {
+				"max": 1000.0,
+				"min": 0.0
+			}
 		},
 		{
-			"default" : "",
-			"description" : "Master module on which this module's processing is dependent. If empty, use all preceeding modules",
-			"name" : "master",
-			"range" : {},
-			"type" : "string"
+			"class": "ParameterString",
+			"default": "",
+			"description": "Master module on which this module's processing is dependent. If empty, use all preceeding modules",
+			"name": "master",
+			"range": {}
 		},
 		{
-			"default" : 640,
-			"description" : "Width of the input",
-			"name" : "width",
-			"range" : 
-			{
-				"max" : 6400,
-				"min" : 20
-			},
-			"type" : "int"
+			"class": "ParameterInt",
+			"default": 640,
+			"description": "Width of the input",
+			"name": "width",
+			"range": {
+				"max": 6400,
+				"min": 20
+			}
 		},
 		{
-			"default" : 480,
-			"description" : "Height of the input",
-			"name" : "height",
-			"range" : 
-			{
-				"max" : 4800,
-				"min" : 20
-			},
-			"type" : "int"
+			"class": "ParameterInt",
+			"default": 480,
+			"description": "Height of the input",
+			"name": "height",
+			"range": {
+				"max": 4800,
+				"min": 20
+			}
 		},
 		{
-			"default" : "CV_8UC3",
-			"description" : "Format of the input image",
-			"enum" : 
-			[
+			"class": "ParameterImageType",
+			"default": "CV_8UC3",
+			"description": "Format of the input image",
+			"enum": [
 				"CV_16SC1",
 				"CV_16SC2",
 				"CV_16SC3",
@@ -83,61 +79,55 @@
 				"CV_8UC2",
 				"CV_8UC3"
 			],
-			"name" : "type",
-			"range" : {},
-			"type" : "ImageType"
+			"name": "type",
+			"range": {}
 		},
 		{
-			"default" : "NO_CACHE",
-			"description" : "Format of the input image",
-			"enum" : 
-			[
+			"class": "ParameterCachedState",
+			"default": "NO_CACHE",
+			"description": "Format of the input image",
+			"enum": [
 				"DISABLED",
 				"NO_CACHE",
 				"READ_CACHE",
 				"WRITE_CACHE"
 			],
-			"name" : "cached",
-			"range" : {},
-			"type" : "CachedState"
+			"name": "cached",
+			"range": {}
 		},
 		{
-			"default" : 1,
-			"description" : "Size of the aperture of the camera",
-			"name" : "aperture",
-			"range" : 
-			{
-				"max" : 10,
-				"min" : 1
-			},
-			"type" : "int"
+			"class": "ParameterInt",
+			"default": 1,
+			"description": "Size of the aperture of the camera",
+			"name": "aperture",
+			"range": {
+				"max": 10,
+				"min": 1
+			}
 		},
 		{
-			"default" : 
-			{
-				"height" : 480,
-				"width" : 640
+			"class": "StreamImage",
+			"default": {
+				"height": 480,
+				"width": 640
 			},
-			"description" : "Video input",
-			"name" : "image",
-			"range" : {},
-			"stream" : true,
-			"type" : "Image"
+			"description": "Video input",
+			"name": "image",
+			"range": {},
+			"stream": true
 		}
 	],
-	"outputs" : 
-	[
+	"outputs": [
 		{
-			"default" : 
-			{
-				"height" : 480,
-				"width" : 640
+			"class": "StreamImage",
+			"default": {
+				"height": 480,
+				"width": 640
 			},
-			"description" : "Slit camera stream",
-			"name" : "slit",
-			"range" : {},
-			"stream" : true,
-			"type" : "Image"
+			"description": "Slit camera stream",
+			"name": "slit",
+			"range": {},
+			"stream": true
 		}
 	]
 }

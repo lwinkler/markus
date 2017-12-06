@@ -44,7 +44,7 @@ public:
 			AddParameter(new ParameterString("host"     ,  "mongodb://localhost:27017/", &host    ,  "Host for MongoDB"));
 			AddParameter(new ParameterString("database" ,  "test"         , &database,  "MongoDB database"));
 			AddParameter(new ParameterString("collection", "objects"       , &collection, "MongoDB collection"));
-			AddParameter(new ParameterBool("cleanFiles", 1, 0, 1         , &cleanFiles, "Erase image and other files after insertion in database"));
+			AddParameter(new ParameterBool("cleanFiles", true            , &cleanFiles, "Erase image and other files after insertion in database"));
 			AddParameter(new ParameterString("extension"  , "jpg"        , &extension , "Extension of the thumbnails. Determines the output format."));
 
 			RefParameterByName("type").SetDefaultAndValue("CV_8UC3");

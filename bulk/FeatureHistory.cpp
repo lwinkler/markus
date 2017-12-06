@@ -97,7 +97,7 @@ void FeatureHistory::Deserialize(const mkjson& x_json)
 	FactoryFeatures& factory(Factories::featuresFactoryBySignature());
 	for(const auto& elem : hist)
 	{
-		string sign= signature(elem.at("feature")); // TODO rename function signature
+		string sign = signatureOfFeature(elem.at("feature"));
 		Feature* feat = factory.Create(sign);
 		feat->Deserialize(elem.at("feature"));
 		features.insert(std::make_pair(elem.at("time").get<TIME_STAMP>(), FeaturePtr(feat)));

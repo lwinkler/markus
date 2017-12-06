@@ -1,60 +1,56 @@
 {
-	"class" : "BgrSubMOG2",
-	"description" : "Perform background subtraction via Mixtures Of Gaussians (OpenCV MOG2)",
-	"inputs" : 
-	[
+	"class": "BgrSubMOG2",
+	"description": "Perform background subtraction via Mixtures Of Gaussians (OpenCV MOG2)",
+	"inputs": [
 		{
-			"default" : false,
-			"description" : "If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream",
-			"name" : "autoProcess",
-			"range" : {},
-			"type" : "bool"
+			"class": "ParameterBool",
+			"default": false,
+			"description": "If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream",
+			"name": "autoProcess",
+			"range": {}
 		},
 		{
-			"default" : 0,
-			"description" : "Frames per seconds (processing speed)",
-			"name" : "fps",
-			"range" : 
-			{
-				"max" : 1000,
-				"min" : 0
-			},
-			"type" : "double"
+			"class": "ParameterDouble",
+			"default": 0.0,
+			"description": "Frames per seconds (processing speed)",
+			"name": "fps",
+			"range": {
+				"max": 1000.0,
+				"min": 0.0
+			}
 		},
 		{
-			"default" : "",
-			"description" : "Master module on which this module's processing is dependent. If empty, use all preceeding modules",
-			"name" : "master",
-			"range" : {},
-			"type" : "string"
+			"class": "ParameterString",
+			"default": "",
+			"description": "Master module on which this module's processing is dependent. If empty, use all preceeding modules",
+			"name": "master",
+			"range": {}
 		},
 		{
-			"default" : 640,
-			"description" : "Width of the input",
-			"name" : "width",
-			"range" : 
-			{
-				"max" : 6400,
-				"min" : 1
-			},
-			"type" : "int"
+			"class": "ParameterInt",
+			"default": 640,
+			"description": "Width of the input",
+			"name": "width",
+			"range": {
+				"max": 6400,
+				"min": 1
+			}
 		},
 		{
-			"default" : 480,
-			"description" : "Height of the input",
-			"name" : "height",
-			"range" : 
-			{
-				"max" : 4800,
-				"min" : 1
-			},
-			"type" : "int"
+			"class": "ParameterInt",
+			"default": 480,
+			"description": "Height of the input",
+			"name": "height",
+			"range": {
+				"max": 4800,
+				"min": 1
+			}
 		},
 		{
-			"default" : "CV_8UC3",
-			"description" : "Format of the input image",
-			"enum" : 
-			[
+			"class": "ParameterImageType",
+			"default": "CV_8UC3",
+			"description": "Format of the input image",
+			"enum": [
 				"CV_16SC1",
 				"CV_16SC2",
 				"CV_16SC3",
@@ -83,108 +79,100 @@
 				"CV_8UC2",
 				"CV_8UC3"
 			],
-			"name" : "type",
-			"range" : 
-			{
-				"allowed" : 
-				[
+			"name": "type",
+			"range": {
+				"allowed": [
 					"CV_8UC3"
 				]
-			},
-			"type" : "ImageType"
+			}
 		},
 		{
-			"default" : "NO_CACHE",
-			"description" : "Format of the input image",
-			"enum" : 
-			[
+			"class": "ParameterCachedState",
+			"default": "NO_CACHE",
+			"description": "Format of the input image",
+			"enum": [
 				"DISABLED",
 				"NO_CACHE",
 				"READ_CACHE",
 				"WRITE_CACHE"
 			],
-			"name" : "cached",
-			"range" : {},
-			"type" : "CachedState"
+			"name": "cached",
+			"range": {}
 		},
 		{
-			"default" : 500,
-			"description" : "Length of the history",
-			"name" : "history",
-			"range" : 
-			{
-				"max" : 10000,
-				"min" : 1
+			"class": "ParameterInt",
+			"default": 500,
+			"description": "Length of the history",
+			"name": "history",
+			"range": {
+				"max": 10000,
+				"min": 1
+			}
+		},
+		{
+			"class": "ParameterFloat",
+			"default": 16.0,
+			"description": "Threshold on the squared Mahalanobis distance to decide whether it is well described by the background model (selectivity of background) ",
+			"name": "varThres",
+			"range": {
+				"max": 255.0,
+				"min": 1.0
+			}
+		},
+		{
+			"class": "ParameterBool",
+			"default": false,
+			"description": "Enable shadow detection",
+			"name": "bShadowDetection",
+			"range": {
+				"max": true,
+				"min": false
+			}
+		},
+		{
+			"class": "ParameterDouble",
+			"default": -1.0,
+			"description": "Learning rate of the model",
+			"name": "learningRate",
+			"range": {
+				"max": 1.0,
+				"min": -1.0
+			}
+		},
+		{
+			"class": "StreamImage",
+			"default": {
+				"height": 480,
+				"width": 640
 			},
-			"type" : "int"
-		},
-		{
-			"default" : 16,
-			"description" : "Threshold on the squared Mahalanobis distance to decide whether it is well described by the background model (selectivity of background) ",
-			"name" : "varThres",
-			"range" : 
-			{
-				"max" : 255,
-				"min" : 1
-			},
-			"type" : "float"
-		},
-		{
-			"default" : false,
-			"description" : "Enable shadow detection",
-			"name" : "bShadowDetection",
-			"range" : {},
-			"type" : "bool"
-		},
-		{
-			"default" : -1,
-			"description" : "Learning rate of the model",
-			"name" : "learningRate",
-			"range" : 
-			{
-				"max" : 1,
-				"min" : -1
-			},
-			"type" : "double"
-		},
-		{
-			"default" : 
-			{
-				"height" : 480,
-				"width" : 640
-			},
-			"description" : "Video input",
-			"name" : "image",
-			"range" : {},
-			"stream" : true,
-			"type" : "Image"
+			"description": "Video input",
+			"name": "image",
+			"range": {},
+			"stream": true
 		}
 	],
-	"outputs" : 
-	[
+	"outputs": [
 		{
-			"default" : 
-			{
-				"height" : 480,
-				"width" : 640
+			"class": "StreamImage",
+			"default": {
+				"height": 480,
+				"width": 640
 			},
-			"description" : "Background",
-			"name" : "background",
-			"range" : {},
-			"stream" : true,
-			"type" : "Image"
+			"description": "Background",
+			"name": "background",
+			"range": {},
+			"stream": true
 		},
 		{
-			"default" : 
-			{
-				"height" : 480,
-				"width" : 640
+			"class": "StreamImage",
+			"default": {
+				"height": 480,
+				"width": 640
 			},
-			"description" : "Foreground",
-			"name" : "foreground",
-			"range" : {},
-			"stream" : true,
-			"type" : "Image"
+			"description": "Foreground",
+			"name": "foreground",
+			"range": {},
+			"stream": true
 		}
 	]
 }

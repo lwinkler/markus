@@ -51,8 +51,8 @@ public:
 	public:
 		explicit Parameters(const std::string& x_name) : ParameterStructure(x_name)
 		{
-			AddParameter(new ParameterBool("autoProcess"       , 0 , 0 , 1    , &autoProcess      , "If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream"));
-			AddParameter(new ParameterDouble("fps"              , 0 , 0 , 1000 , &fps              , "Frames per seconds (processing speed)"));
+			AddParameter(new ParameterBool("autoProcess"       , false        , &autoProcess      , "If yes the module processes with a timer at fixed fps, if no the module processes based on the time stamp of the input stream"));
+			AddParameter(new ParameterDouble("fps"             , 0 , 0 , 1000 , &fps              , "Frames per seconds (processing speed)"));
 		}
 
 		bool autoProcess;

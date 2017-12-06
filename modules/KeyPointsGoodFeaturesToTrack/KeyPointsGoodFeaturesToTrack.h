@@ -44,7 +44,7 @@ public:
 			AddParameter(new ParameterDouble("qualityLevel", 0.01, 0.01, 1, &qualityLevel,"Parameter characterizing the minimal accepted quality of image corners."));
 			AddParameter(new ParameterDouble("minDist", 1, 1, MAX_WIDTH, &minDistance,"Minimum possible Euclidean distance between the returned corners"));
 			AddParameter(new ParameterInt("blockSize", 3, 1, MAX_WIDTH, &blockSize,"Size of an average block for computing a derivative covariation matrix over each pixel neighborhood"));
-			AddParameter(new ParameterBool("useHarrisDetector", 0, 0, 1, &useHarrisDetector,"Parameter indicating whether to use a Harris detector"));
+			AddParameter(new ParameterBool("useHarrisDetector", false, &useHarrisDetector,"Parameter indicating whether to use a Harris detector"));
 			AddParameter(new ParameterDouble("k", 0.04, 0, 1, &k,"Free parameter of the Harris detector"));
 		};
 		int maxCorners;

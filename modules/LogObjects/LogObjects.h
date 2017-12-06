@@ -43,7 +43,7 @@ public:
 		explicit Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("file"   , "objects.%d.srt" , &file , "Name of the .srt file without extension"));
-			AddParameter(new ParameterBool("compress" , 0 , 0     , 1    , &compress , "Compress the result as a tar.gz"));
+			AddParameter(new ParameterBool("compress" , false            , &compress , "Compress the result as a tar.gz"));
 		}
 		std::string file;
 		bool compress;

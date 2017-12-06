@@ -100,7 +100,7 @@ public:
 
 		if(xp_value != nullptr)
 		{
-			m_param.SetValue(mkjson(*xp_value), PARAMCONF_CMD);
+			m_param.SetValue(mkjson::parse(*xp_value), PARAMCONF_CMD);
 		}
 		else
 		{

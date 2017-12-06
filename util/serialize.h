@@ -55,7 +55,7 @@ inline auto multiLine(const mkjson& x_json)
 }
 
 std::string signatureJsonTree(const mkjson &x_root, int x_depth);
-inline std::string signature(const mkjson& x_json)
+inline std::string signatureOfFeature(const mkjson& x_json)
 {
 	return signatureJsonTree(x_json, 0);
 }

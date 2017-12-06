@@ -107,7 +107,7 @@ void from_json(const mkjson& x_json, Object& rx_obj) {
 		// Extract the signature of the feature:
 		//     this allows us to recognize the type of feature
 		mkjson json(it.value());
-		string sign = signature(json);
+		string sign = signatureOfFeature(json);
 		Feature* feat = factory.Create(sign);
 		feat->Deserialize(json);
 		rx_obj.AddFeature(it.key(), feat);

@@ -47,7 +47,7 @@ public:
 		explicit Parameters(const std::string& x_name) :
 			Module::Parameters(x_name)
 		{
-			AddParameter(new ParameterBool("train", 1, 0, 1, &train, "True if in training mode"));
+			AddParameter(new ParameterBool("train", true   , &train, "True if in training mode"));
 			AddParameter(new ParameterString("modelFile", "model.data", &modelFile, "Path to the model file for testing"));
 			AddParameter(new ParameterString("features", "x", &features, "List of features to use from the object. Separated by a comma."));
 			AddParameter(new ParameterString("response", "y", &response, "Name of the response feature to train with."));

@@ -183,7 +183,7 @@ protected:
 		string fileName1 = "tests/tmp/serialize1_" + name + ".json";
 		string fileName2 = "tests/tmp/" + name + ".json";
 		string fileName3 = "tests/serialize/" + name + ".json";
-		TS_TRACE("Test serialization of " + name + " = " + oneLine(obj) + " with signature = " + signature(obj));
+		TS_TRACE("Test serialization of " + name + " = " + oneLine(obj) + " with signature = " + signatureOfFeature(obj));
 		ofstream of1(fileName1.c_str());
 		of1 << multiLine(obj);
 		of1.close();

@@ -47,7 +47,7 @@ public:
 		{
 			AddParameter(new ParameterInt   ("bufferFramesBefore" , 1200, 0, 10000, &bufferFramesBefore,  "Length of video buffer before activity [frames]"));
 			AddParameter(new ParameterDouble("bufferDurationAfter", 120, 0, 600,    &bufferDurationAfter, "Length of video buffer after activity [s]. If possible this should be longer than the duration before next event."));
-			AddParameter(new ParameterBool("keepAllRecordings"    , 0, 0, 1,        &keepAllRecordings  , "Keep all recordings, event if no event is associated with it."));
+			AddParameter(new ParameterBool("keepAllRecordings"    , false,          &keepAllRecordings  , "Keep all recordings, event if no event is associated with it."));
 
 			RefParameterByName("type").SetDefaultAndValue("CV_8UC3");
 			RefParameterByName("type").SetRange(R"({"allowed":["CV_8UC3"]})"_json);

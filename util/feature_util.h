@@ -38,31 +38,6 @@
  If a function is commented this probably means that the default operator for the class is used
 */
 
-template<class T> inline std::ostream& serialize(std::ostream& x_out, const T& x_val) {
-	mkjson root(x_val);
-	x_out << root.dump();
-}
-
-template<class T> inline std::istream& deserialize(std::istream& x_in,  T& xr_val) {
-	mkjson json = mkjson::parse(x_in);
-	from_mkjson(json, xr_val);
-}
-
-
-
-/* -------------------------------------------------------------------------------- */
-// Acquire a char from stream and verify
-template <char Expect>
-inline std::istream& get_char(std::istream& x_in)
-{
-	char c;
-	if (x_in >> c && c != Expect)
-	{
-		throw MkException("Error in format", LOC);
-	}
-	return x_in;
-}
-
 /* -------------------------------------------------------------------------------- */
 // Template specialization for features of type Point2f
 

@@ -45,7 +45,7 @@ public:
 			Input::Parameters(x_name)
 		{
 			AddParameter(new ParameterString("file",  "in/input.mp4", &file, "Name of the video file to read, with path"));
-			AddParameter(new ParameterBool("loop",    0, 0, 1,        &loop, "Loop on file"));
+			AddParameter(new ParameterBool("loop",    false,          &loop, "Loop on file"));
 		}
 
 	public:

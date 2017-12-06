@@ -104,7 +104,7 @@ template<class T> mkjson generateValuesInt(int x_nbSamples, const mkjson& x_rang
 	if(min == max && x_nbSamples > 1)
 		x_nbSamples = 1;
 	mkjson values = mkjson::array();
-	if(static_cast<int>(max - min + 1) <= x_nbSamples)
+	if(static_cast<int>(max - min + 1) <= x_nbSamples && max != numeric_limits<T>::max())
 	{
 		for(int i = static_cast<int>(min) ; i <= static_cast<int>(max) ; i++)
 		{

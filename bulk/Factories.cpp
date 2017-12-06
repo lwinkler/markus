@@ -32,10 +32,10 @@
 {\
 fact1.Register<child>(type);\
 Feature* pfeat = new child();\
-fact2.Register<child>(signature(*pfeat));\
+fact2.Register<child>(signatureOfFeature(*pfeat));\
 delete pfeat;\
 }}
-// cout << type << ":"  << signature(*pfeat) << endl;\
+// cout << type << ":"  << signatureOfFeature(*pfeat) << endl;\
 
 #include "ControllerParameterT.h"
 #include "Polygon.h"

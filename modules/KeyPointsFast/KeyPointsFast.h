@@ -41,7 +41,7 @@ public:
 		explicit Parameters(const std::string& x_name) : ModuleKeyPoints::Parameters(x_name)
 		{
 			AddParameter(new ParameterInt("threshold", 10, 0, 255, &threshold,"Threshold"));
-			AddParameter(new ParameterBool("nonMaxSuppression", 0, 0, 1, &nonMaxSuppression,"if true, non-maximum suppression is applied to detected corners"));
+			AddParameter(new ParameterBool("nonMaxSuppression", false, &nonMaxSuppression,"if true, non-maximum suppression is applied to detected corners"));
 		};
 		int threshold;
 		bool nonMaxSuppression;
