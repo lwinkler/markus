@@ -247,7 +247,7 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 		stringstream ss;
 		ss<<"Input.file=\"" << argv[argc - 1] << "\"";
 		args.parameters.push_back(ss.str());
-		args.parameters.push_back("Input.class=\"VideoFileReader\"");
+		args.parameters.push_back("Input.class=VideoFileReader");
 	}
 	else if (optind == argc - 1)
 	{
