@@ -39,6 +39,8 @@ WriteObjectMongo::WriteObjectMongo(ParameterStructure& xr_params)
 	: Module(xr_params), m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_image(Size(m_param.width, m_param.height), m_param.type)
 {
+	m_isUnitTestingEnabled = false;
+
 	// Init input images
 	AddInputStream(new StreamObject("objects", m_objects, *this, "Input objects to be written"));
 	AddInputStream(new StreamImage("image", m_image, *this, "Image stream"));
@@ -47,9 +49,12 @@ WriteObjectMongo::WriteObjectMongo(ParameterStructure& xr_params)
 
 WriteObjectMongo::~WriteObjectMongo()
 {
-	mongoc_gridfs_destroy(mp_gridfs);
-	mongoc_collection_destroy(mp_collection);
-	mongoc_client_destroy(mp_client);
+	if(mp_gridfs)
+		mongoc_gridfs_destroy(mp_gridfs);
+	if(mp_collection)
+		mongoc_collection_destroy(mp_collection);
+	if(mp_client)
+		mongoc_client_destroy(mp_client);
 	mongoc_cleanup();
 }
 

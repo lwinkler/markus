@@ -59,6 +59,7 @@ TrackerByFeatures::TrackerByFeatures(ParameterStructure& xr_params) :
 	Module(xr_params),
 	m_param(dynamic_cast<Parameters&>(xr_params))
 {
+	m_isUnitTestingEnabled = false; // TODO
 	// Features required in input
 	vector<string> feats;
 	split(m_param.features, ',', feats);

@@ -62,8 +62,8 @@ template<> bool ParameterT<bool>::CheckRange() const
 
 template<> bool ParameterT<double>::CheckRange() const
 {
-    // note: json.hpp seems to convert double to float TODO check this
-	return checkRangeNum(GetValue().template get<float>(), m_range);
+	// note: json.hpp seems to convert double to float TODO check this
+	return checkRangeNum(GetValue().template get<double>(), m_range);
 }
 
 template<> bool ParameterT<float>::CheckRange() const

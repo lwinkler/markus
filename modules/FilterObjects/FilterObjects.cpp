@@ -50,7 +50,7 @@ FilterObjects::FilterObjects(ParameterStructure& xr_params) :
 #endif
 }
 
-FilterObjects::~FilterObjects(void )
+FilterObjects::~FilterObjects()
 {
 }
 

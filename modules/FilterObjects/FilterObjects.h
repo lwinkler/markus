@@ -46,9 +46,9 @@ public:
 			AddParameter(new ParameterDouble("minObjHeight" , 0.0, 0, 1,    &minObjectHeight, "Minimum height to accept an object"));
 			AddParameter(new ParameterDouble("maxObjWidth"  , 1.0, 0, 1,    &maxObjectWidth , "Maximum width to accept an object"));
 			AddParameter(new ParameterDouble("maxObjHeight" , 1.0, 0, 1,    &maxObjectHeight, "Maximum height to accept an object"));
-			AddParameter(new ParameterString("customFeature" , ""       ,    &customFeature  , "Name of a custom feature to test. Must be of type float"));
-			AddParameter(new ParameterDouble("minCustom"     , 0.0, 0, FLT_MAX    , &minCustom       , "Min value for the custom feature"));
-			AddParameter(new ParameterDouble("maxCustom"     , FLT_MAX, 0, FLT_MAX, &maxCustom       , "Max value for the custom feature"));
+			AddParameter(new ParameterString("customFeature" , ""      ,    &customFeature  , "Name of a custom feature to test. Must be of type float"));
+			AddParameter(new ParameterDouble("minCustom"     , 0.0     ,    &minCustom       , "Min value for the custom feature"));
+			AddParameter(new ParameterDouble("maxCustom"     , DBL_MAX,     &maxCustom       , "Max value for the custom feature"));
 
 			RefParameterByName("customFeature").SetRange(R"({"allowed":["x","y","width","height"]})"_json);
 		}

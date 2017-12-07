@@ -22,9 +22,9 @@ In all cases you will need the following packages to compile Markus:
 
 On Ubuntu the apt-get install command is:
 
-**CAUTION**: On old Ubuntu versions (14.04 and maybe 16.04). Be careful if you install libopencv-dev as this installs nvidia packages along. This might harm your computer http://askubuntu.com/questions/243043/after-logging-in-theres-a-black-screen-and-my-cursor-nothing-else-in-ubuntu
-
 	sudo apt-get install cmake libtinyxml-dev liblog4cxx10-dev libboost-all-dev jq libmongoc-dev cxxtest libbson-dev
+
+**CAUTION**: On old Ubuntu versions (14.04 and maybe 16.04). Be careful if you install libopencv-dev as this installs nvidia packages along. This might harm your computer http://askubuntu.com/questions/243043/after-logging-in-theres-a-black-screen-and-my-cursor-nothing-else-in-ubuntu
 
 ### Installing OpenCV
 Markus works with OpenCV3. We recommend to install it from sources since the version of apt-get and other package managers may not have all contributions enabled.
@@ -39,18 +39,12 @@ To install from sources:
 	cd opencv
 	mkdir build
 	cd build
-	ccmake .. # enable LIBV4L ? TODO
+	ccmake .. # you probably need to enable gstreamer and LIBV4L
 	cmake ..
 	make -j4
 	sudo make install
 
-Try this before compiling: TODO probably remove
-
-	sudo apt-get install libtbb-dev libgtk2.0-dev libavcodec-extra libavcodec-dev libavformat-dev libswscale-dev libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
-	sudo apt-get install libav-tools
-
 ### Qt5 dependencies
-
 Markus is also compiled with Qt5. The packages required for qt webkit are a bit more complicated in this case:
 	
 	sudo apt-get install qt5-default libqt5webkit5-dev qtquick1-5-dev qtlocation5-dev qtsensors5-dev qtdeclarative5-dev npm
