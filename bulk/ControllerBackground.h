@@ -41,9 +41,9 @@ public:
 	QWidget* CreateWidget() override;
 
 	// Controls
-	void StartOnlineLearning(std::string* xp_value);
+	void StartOnlineLearning(mkjson& rx_value);
 
-	typedef void (ControllerBackground::*action)(std::string*);
+	typedef void (ControllerBackground::*action)(mkjson&);
 	DECLARE_CALL_ACTION(action);
 	DECLARE_LIST_ACTION(action);
 

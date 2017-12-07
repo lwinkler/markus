@@ -89,7 +89,7 @@ void *send_commands(void *x_void_ptr)
 	assert(pManager != nullptr);
 	string input;
 	vector<string> elems;
-	string value;
+	mkjson value;
 	while(true)
 	{
 		try
@@ -102,9 +102,9 @@ void *send_commands(void *x_void_ptr)
 				if(elems.size() == 1)
 					value = "";
 				else if(elems.size() == 2)
-					value = elems.at(1);
+					value = mkjson::parse(elems.at(1));
 				else throw MkException("Command must have one or two elements", LOC);
-				LOG_INFO(logger, "Send command: "<<elems.at(0)<<" \""<<value<<"\"");
+				LOG_INFO(logger, "Send command: "<<elems.at(0)<<" \""<<oneLine(value)<<"\"");
 				pManager->SendCommand(elems.at(0), value);
 			}
 			// else cout<<"Getline failed"<<endl;

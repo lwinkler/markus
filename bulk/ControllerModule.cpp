@@ -33,9 +33,9 @@ using namespace std;
 /**
 * @brief Command: Reset the module
 *
-* @param xp_value unused
+* @param rx_value unused
 */
-void ControllerModule::Reset(string* xp_value)
+void ControllerModule::Reset(mkjson& rx_value)
 {
 	Processable::WriteLock lock(module.RefLock());
 	module.Reset();
@@ -45,9 +45,9 @@ void ControllerModule::Reset(string* xp_value)
 /**
 * @brief Start the module
 *
-* @param xp_value unused
+* @param rx_value unused
 */
-void ControllerModule::Start(string* xp_value)
+void ControllerModule::Start(mkjson& rx_value)
 {
 	module.Start();
 }
@@ -55,9 +55,9 @@ void ControllerModule::Start(string* xp_value)
 /**
 * @brief Stop the module
 *
-* @param xp_value unused
+* @param rx_value unused
 */
-void ControllerModule::Stop(string* xp_value)
+void ControllerModule::Stop(mkjson& rx_value)
 {
 	module.Stop();
 }
@@ -65,9 +65,9 @@ void ControllerModule::Stop(string* xp_value)
 /**
 * @brief Print the statistics related to processing time
 *
-* @param xp_value unused
+* @param rx_value unused
 */
-void ControllerModule::PrintStatistics(string* xp_value)
+void ControllerModule::PrintStatistics(mkjson& rx_value)
 {
 	Processable::ReadLock lock(module.RefLock());
 	if(module.RefContext().RefOutputDir().FileExists(module.GetName() + ".benchmark.json"))

@@ -33,12 +33,12 @@ using namespace std;
 /**
 * @brief Command: Consider the last event as invalid
 *
-* @param xp_value
+* @param rx_value
 */
-void ControllerBackground::StartOnlineLearning(string* xp_value)
+void ControllerBackground::StartOnlineLearning(mkjson& rx_value)
 {
 	Processable::WriteLock lock(m_module.RefLock());
-	m_module.StartOnlineLearning(xp_value == nullptr ? false : boolValue(*xp_value));
+	m_module.StartOnlineLearning(rx_value.is_null() ? false : rx_value.get<bool>());
 }
 
 ControllerBackground::ControllerBackground(BackgroundSubtraction& rx_module) :

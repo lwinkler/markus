@@ -52,7 +52,7 @@ public:
 		m_param(dynamic_cast<T&>(x_param)),
 		m_module(x_module)
 	{
-		m_actions.insert(make_pair("GetClass",    &ControllerParameterT::GetClass2));
+		m_actions.insert(make_pair("GetClass",   &ControllerParameterT::GetClass2));
 		m_actions.insert(make_pair("GetRange",   &ControllerParameterT::GetRange));
 		m_actions.insert(make_pair("Set",        &ControllerParameterT::SetControlledValue));
 		m_actions.insert(make_pair("Get",        &ControllerParameterT::GetCurrent));
@@ -72,35 +72,27 @@ public:
 	}
 
 	// Controllers
-	void GetClass2(std::string* xp_value)
+	void GetClass2(mkjson& rx_value)
 	{
 		Processable::ReadLock lock(m_module.RefLock());
-		if(xp_value != nullptr)
-		{
-			*xp_value = m_param.GetClass();
-			return;
-		}
+		rx_value = m_param.GetClass();
 		LOG_INFO(m_logger, "Parameter class is \"" + m_param.GetClass() + "\"");
 	}
-	void GetRange(std::string* xp_value)
+	void GetRange(mkjson& rx_value)
 	{
 		Processable::ReadLock lock(m_module.RefLock());
-		if(xp_value != nullptr)
-		{
-			*xp_value = oneLine(m_param.GetRange());
-			return;
-		}
+		rx_value = m_param.GetRange();
 		LOG_INFO(m_logger, "Parameter range is \"" + oneLine(m_param.GetRange()) + "\"");
 	}
-	void SetControlledValue(std::string* xp_value)
+	void SetControlledValue(mkjson& rx_value)
 	{
 		Processable::WriteLock lock(m_module.RefLock());
 		const auto oldValue = m_param.GetValue();
 		ParameterConfigType configType = m_param.GetConfigurationSource();
 
-		if(xp_value != nullptr)
+		if(!rx_value.is_null())
 		{
-			m_param.SetValue(mkjson::parse(*xp_value), PARAMCONF_CMD);
+			m_param.SetValue(rx_value, PARAMCONF_CMD);
 		}
 		else
 		{
@@ -120,45 +112,45 @@ public:
 		if(!m_param.CheckRange())
 		{
 			m_param.SetValue(oldValue, configType);
-			throw MkException("Parameter " + m_param.GetName() + "=" + (xp_value ? *xp_value : "(null)") + " is out of range " + oneLine(m_param.GetRange()), LOC);
+			throw MkException("Parameter " + m_param.GetName() + "=" + oneLine(rx_value) + " is out of range " + oneLine(m_param.GetRange()), LOC);
 		}
 	}
 
-	void GetCurrent(std::string* xp_value)
+	void GetCurrent(mkjson& rx_value)
 	{
 		Processable::ReadLock lock(m_module.RefLock());
+		if(!rx_value.is_null())
+		{
+			rx_value = m_param.GetValue();
+			return;
+		}
+#ifdef MARKUS_NO_GUI
+		assert(false);
+#else
 		std::stringstream ss;
 		ss << m_param.GetValue();
-		if(xp_value != nullptr)
-		{
-			*xp_value = ss.str();
-			return;
-		}
-#ifdef MARKUS_NO_GUI
-		assert(false);
-#else
 		SetWidgetValue(ss.str());
 #endif
 	}
 
-	void GetDefault(std::string* xp_value)
+	void GetDefault(mkjson& rx_value)
 	{
 		Processable::ReadLock lock(m_module.RefLock());
-		std::stringstream ss;
-		ss<<m_param.GetDefault();
-		if(xp_value != nullptr)
+		if(!rx_value.is_null())
 		{
-			*xp_value = ss.str();
+			rx_value = m_param.GetDefault();
 			return;
 		}
 #ifdef MARKUS_NO_GUI
 		assert(false);
 #else
+		std::stringstream ss;
+		ss<<m_param.GetDefault();
 		SetWidgetValue(ss.str());
 #endif
 	}
 
-	typedef void (ControllerParameterT::*action)(std::string*);
+	typedef void (ControllerParameterT::*action)(mkjson&);
 	DECLARE_CALL_ACTION(action);
 	DECLARE_LIST_ACTION(action);
 

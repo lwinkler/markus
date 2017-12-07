@@ -105,12 +105,15 @@ template<class T> mkjson generateValuesInt(int x_nbSamples, const mkjson& x_rang
 	if(min == max && x_nbSamples > 1)
 		x_nbSamples = 1;
 	mkjson values = mkjson::array();
-	if(static_cast<int>(max - min + 1) <= x_nbSamples && max != numeric_limits<T>::max())
+	assert(max >= min);
+	if(min + 1 + static_cast<T>(x_nbSamples) >= max) //  && max != numeric_limits<T>::max())
 	{
-		for(int i = static_cast<int>(min) ; i <= static_cast<int>(max) ; i++)
+		for(T i = min ; ; i++)
 		{
-			values.push_back(static_cast<T>(i));
-			// values.append(static_cast<int>(min + static_cast<int>(i/x_nbSamples) % static_cast<int>(max - min + 1)));
+			values.push_back(i);
+			// note: this avoids overflows
+			if(i == max)
+				break;
 		}
 	}
 	else

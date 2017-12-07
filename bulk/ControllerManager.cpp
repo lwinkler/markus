@@ -34,9 +34,9 @@ using namespace std;
 /**
 * @brief Command: Reset the manager
 *
-* @param xp_value unused
+* @param rx_value unused
 */
-void ControllerManager::Reset(string* xp_value)
+void ControllerManager::Reset(mkjson& rx_value)
 {
 	Processable::WriteLock lock(manager.RefLock());
 	manager.Reset();
@@ -45,9 +45,9 @@ void ControllerManager::Reset(string* xp_value)
 /**
 * @brief Command: Reset all the modules except inputs
 *
-* @param xp_value unused
+* @param rx_value unused
 */
-void ControllerManager::ResetExceptInputs(string* xp_value)
+void ControllerManager::ResetExceptInputs(mkjson& rx_value)
 {
 	Processable::WriteLock lock(manager.RefLock());
 	manager.Reset(false);
@@ -56,9 +56,9 @@ void ControllerManager::ResetExceptInputs(string* xp_value)
 /**
 * @brief Command: Start all the modules
 *
-* @param xp_value unused
+* @param rx_value unused
 */
-void ControllerManager::Start(string* xp_value)
+void ControllerManager::Start(mkjson& rx_value)
 {
 	manager.Start();
 }
@@ -66,9 +66,9 @@ void ControllerManager::Start(string* xp_value)
 /**
 * @brief Command: Stop all processing and quit (only working if centralized)
 *
-* @param xp_value unused
+* @param rx_value unused
 */
-void ControllerManager::Quit(string* xp_value)
+void ControllerManager::Quit(mkjson& rx_value)
 {
 	manager.Quit();
 }
@@ -77,9 +77,9 @@ void ControllerManager::Quit(string* xp_value)
 /**
 * @brief Command: Stop all the modules
 *
-* @param xp_value
+* @param rx_value
 */
-void ControllerManager::Stop(string* xp_value)
+void ControllerManager::Stop(mkjson& rx_value)
 {
 	manager.Stop();
 }
@@ -87,9 +87,9 @@ void ControllerManager::Stop(string* xp_value)
 /**
 * @brief Command: Destroy and rebuild all modules
 *
-* @param xp_value
+* @param rx_value
 */
-void ControllerManager::Rebuild(string* xp_value)
+void ControllerManager::Rebuild(mkjson& rx_value)
 {
 	Processable::WriteLock lock(manager.RefLock());
 	manager.Rebuild();
@@ -98,20 +98,20 @@ void ControllerManager::Rebuild(string* xp_value)
 /**
 * @brief Command: The manager will sleep before next processing (centralized mode only)
 *
-* @param xp_value
+* @param rx_value
 */
-void ControllerManager::SetSleep(string* xp_value)
+void ControllerManager::SetSleep(mkjson& rx_value)
 {
-	manager.SetSleep(boost::lexical_cast<int>(*xp_value));
+	manager.SetSleep(rx_value.get<int>());
 }
 
 
 /**
 * @brief Command: Process one frame
 *
-* @param xp_value
+* @param rx_value
 */
-void ControllerManager::ProcessOne(string* xp_value)
+void ControllerManager::ProcessOne(mkjson& rx_value)
 {
 	manager.Stop();
 	manager.ProcessAndCatch();
@@ -120,9 +120,9 @@ void ControllerManager::ProcessOne(string* xp_value)
 /**
 * @brief Commands: Print statistics related to the modules processing
 *
-* @param xp_value unused
+* @param rx_value unused
 */
-void ControllerManager::PrintStatistics(string* xp_value)
+void ControllerManager::PrintStatistics(mkjson& rx_value)
 {
 	Processable::ReadLock lock(manager.RefLock());
 	manager.PrintStatistics();
@@ -131,9 +131,9 @@ void ControllerManager::PrintStatistics(string* xp_value)
 /**
 * @brief Command: Outputs the status (last exceptions)
 *
-* @param xp_value unused
+* @param rx_value unused
 */
-void ControllerManager::Status(string* xp_value)
+void ControllerManager::Status(mkjson& rx_value)
 {
 	Processable::ReadLock lock(manager.RefLock());
 	manager.Status();
@@ -142,9 +142,9 @@ void ControllerManager::Status(string* xp_value)
 /**
 * @brief Command: Write the state of all the modules to the output directory
 *
-* @param xp_value unused
+* @param rx_value unused
 */
-void ControllerManager::WriteStateToDirectory(string* xp_value)
+void ControllerManager::WriteStateToDirectory(mkjson& rx_value)
 {
 	Processable::ReadLock lock(manager.RefLock());
 	manager.WriteStateToDirectory("state_" + timeStamp());

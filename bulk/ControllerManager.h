@@ -40,22 +40,22 @@ public:
 
 	QWidget* CreateWidget() override;
 
-	typedef void (ControllerManager::*action)(std::string*);
+	typedef void (ControllerManager::*action)(mkjson&);
 	DECLARE_CALL_ACTION(action);
 	DECLARE_LIST_ACTION(action);
 
 	// Controls
-	void Reset(std::string* xp_value);
-	void ResetExceptInputs(std::string* xp_value);
-	void Quit(std::string* xp_value);
-	void Start(std::string* xp_value);
-	void Stop(std::string* xp_value);
-	void Rebuild(std::string* xp_value);
-	void SetSleep(std::string* xp_value);
-	void ProcessOne(std::string* xp_value);
-	void PrintStatistics(std::string* xp_value);
-	void Status(std::string* xp_value);
-	void WriteStateToDirectory(std::string* xp_value);
+	void Reset(mkjson& rx_value);
+	void ResetExceptInputs(mkjson& rx_value);
+	void Quit(mkjson& rx_value);
+	void Start(mkjson& rx_value);
+	void Stop(mkjson& rx_value);
+	void Rebuild(mkjson& rx_value);
+	void SetSleep(mkjson& rx_value);
+	void ProcessOne(mkjson& rx_value);
+	void PrintStatistics(mkjson& rx_value);
+	void Status(mkjson& rx_value);
+	void WriteStateToDirectory(mkjson& rx_value);
 
 protected:
 	std::map<std::string, const action> m_actions;

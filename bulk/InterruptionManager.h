@@ -35,7 +35,7 @@ struct Command
 		name(x_name),
 		value(x_value) {}
 	std::string name;
-	std::string value;
+	mkjson value;
 };
 
 struct Interruption

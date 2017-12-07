@@ -41,13 +41,13 @@ public:
 
 	QWidget* CreateWidget() override;
 
-	typedef void (ControllerInputStream::*action)(std::string*);
+	typedef void (ControllerInputStream::*action)(mkjson&);
 	DECLARE_CALL_ACTION(action);
 	DECLARE_LIST_ACTION(action);
 
 	// Controllers
-	void SetCursor(std::string* xp_value);
-	void GetCursor(std::string* xp_value);
+	void SetCursor(mkjson& rx_value);
+	void GetCursor(mkjson& rx_value);
 
 protected:
 	std::map<std::string, const action> m_actions;

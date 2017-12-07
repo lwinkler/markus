@@ -32,9 +32,9 @@ using namespace std;
 /**
 * @brief Command: Consider the last event as valid
 *
-* @param xp_value
+* @param rx_value
 */
-void ControllerEvent::Validate(string* xp_value)
+void ControllerEvent::Validate(mkjson& rx_value)
 {
 	Processable::WriteLock lock(m_module.RefLock());
 	m_module.ValidateLastEvent();
@@ -44,9 +44,9 @@ void ControllerEvent::Validate(string* xp_value)
 /**
 * @brief Command: Consider the last event as invalid
 *
-* @param xp_value
+* @param rx_value
 */
-void ControllerEvent::Invalidate(string* xp_value)
+void ControllerEvent::Invalidate(mkjson& rx_value)
 {
 	Processable::WriteLock lock(m_module.RefLock());
 	m_module.InvalidateLastEvent();

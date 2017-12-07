@@ -65,7 +65,7 @@ MarkusWindow::MarkusWindow(ParameterStructure& rx_param, Manager& rx_manager)
 
 MarkusWindow::~MarkusWindow()
 {
-	mr_manager.SendCommand("manager.manager.Stop", "");
+	mr_manager.SendCommand("manager.manager.Stop");
 }
 
 void MarkusWindow::WriteConfig(ConfigReader& xr_config) const
@@ -287,7 +287,7 @@ void MarkusWindow::callManagerCommand()
 	QAction* action = dynamic_cast<QAction*>(sender());
 	assert(action != nullptr);
 
-	mr_manager.SendCommand("manager.manager." + string(action->text().toStdString()), "");
+	mr_manager.SendCommand("manager.manager." + string(action->text().toStdString()));
 }
 
 void MarkusWindow::resizeEvent(QResizeEvent* event)

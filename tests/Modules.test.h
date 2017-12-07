@@ -290,31 +290,31 @@ public:
 							continue;
 
 						// Test specific for controllers of type parameter
-						string type, range, defval, newValue;
+						mkjson type, range, defval, newValue;
 						assert(actions.size() == 5); // If not you need to write one more test
 
-						type = "0";
-						elemCtr.second->CallAction("GetClass", &type);
-						TS_TRACE("###  " + elemCtr.first + ".GetType returned " + type);
+						type = "nothing";
+						elemCtr.second->CallAction("GetClass", type);
+						TS_TRACE("###  " + elemCtr.first + ".GetType returned " + oneLine(type));
 
-						range = "0";
-						elemCtr.second->CallAction("GetRange", &range);
-						TS_TRACE("###  " + elemCtr.first + ".GetRange returned " + range);
+						range = "nothing";
+						elemCtr.second->CallAction("GetRange", range);
+						TS_TRACE("###  " + elemCtr.first + ".GetRange returned " + oneLine(range));
 
-						defval = "0";
-						elemCtr.second->CallAction("GetDefault", &defval);
-						TS_TRACE("###  " + elemCtr.first + ".GetDefault returned " + defval);
+						defval = "nothing";
+						elemCtr.second->CallAction("GetDefault", defval);
+						TS_TRACE("###  " + elemCtr.first + ".GetDefault returned " + oneLine(defval));
 
-						TS_TRACE("Generate values for param of type " + type + " in range " + range);
-						mkjson values = tester.module->GetParameters().GetParameterByName(elemCtr.first).GenerateValues(10, mkjson::parse(range));
+						TS_TRACE("Generate values for param of type " + oneLine(type) + " in range " + oneLine(range));
+						mkjson values = tester.module->GetParameters().GetParameterByName(elemCtr.first).GenerateValues(10, range);
 
 						for(auto& elemVal : values)
 						{
 							// For string type we cannot set random values
 							// cout<<"set "<<value<<endl;
-							string tmps = oneLine(elemVal);
+							mkjson tmps = elemVal;
 							// cout << "translated to string " << tmps << endl;
-							elemCtr.second->CallAction("Set", &tmps);
+							elemCtr.second->CallAction("Set", tmps);
 
 							// Test if the config is globally still valid
 							try
@@ -327,31 +327,31 @@ public:
 								continue;
 							}
 
-							newValue = "0";
-							elemCtr.second->CallAction("Get", &newValue);
+							newValue = "nothing";
+							elemCtr.second->CallAction("Get", newValue);
 
-							if(elemVal != mkjson::parse(newValue))
+							if(elemVal != newValue)
 							{
 								mkjson j;
-								if(!elemVal.is_number_float() || abs(elemVal.get<float>() - mkjson::parse(newValue).get<float>()) > 0.001)
-									TS_FAIL("Value set must be returned by get: " + tmps + "!=" + newValue);
+								if(!elemVal.is_number_float() || abs(elemVal.get<float>() - newValue.get<float>()) > 0.001)
+									TS_FAIL("Value set must be returned by get: " + oneLine(tmps) + "!=" + oneLine(newValue));
 							}
 
 							tester.module->Reset();
 							for(int i = 0 ; i < 3 ; i++)
 								tester.module->ProcessRandomInput(seed);
-							TS_TRACE("###  " + elemCtr.first + ".Set returned " + tmps);
-							TS_TRACE("###  " + elemCtr.first + ".Get returned " + newValue);
+							TS_TRACE("###  " + elemCtr.first + ".Set returned " + oneLine(tmps));
+							TS_TRACE("###  " + elemCtr.first + ".Get returned " + oneLine(newValue));
 						}
-						elemCtr.second->CallAction("Set", &defval);
+						elemCtr.second->CallAction("Set", defval);
 					}
 					else
 					{
 						for(const auto& elemAction : actions)
 						{
-							string value = "0";
-							elemCtr.second->CallAction(elemAction, &value);
-							TS_TRACE("###  " + elemCtr.first + "." + elemAction + " returned " + value);
+							mkjson value = 0;
+							elemCtr.second->CallAction(elemAction, value);
+							TS_TRACE("###  " + elemCtr.first + "." + elemAction + " returned " + oneLine(value));
 
 							for(int i = 0 ; i < 3 ; i++)
 								tester.module->ProcessRandomInput(seed);

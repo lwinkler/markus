@@ -41,10 +41,10 @@ public:
 	QWidget* CreateWidget() override;
 
 	// Controls
-	void Validate(std::string* xp_value);
-	void Invalidate(std::string* xp_value);
+	void Validate(mkjson& rx_value);
+	void Invalidate(mkjson& rx_value);
 
-	typedef void (ControllerEvent::*action)(std::string*);
+	typedef void (ControllerEvent::*action)(mkjson&);
 	DECLARE_CALL_ACTION(action);
 	DECLARE_LIST_ACTION(action);
 

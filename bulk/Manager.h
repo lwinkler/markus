@@ -66,7 +66,7 @@ public:
 	void Stop() override;
 
 	// Interface for interaction with external objects
-	void SendCommand(const std::string& x_command, std::string x_value);
+	void SendCommand(const std::string& x_command, mkjson x_value);
 	void SendCommand(const std::string& x_command);
 	void ConnectExternalInput(Stream& xr_input, const std::string& x_moduleName, const std::string& x_outputStreamName);
 	inline void CallModuleMethod(const std::string& x_moduleName, std::function<void(Module*)> x_method)

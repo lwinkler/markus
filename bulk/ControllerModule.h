@@ -40,12 +40,12 @@ public:
 	QWidget* CreateWidget() override;
 
 	// Controls
-	void Reset(std::string* xp_value);
-	void Start(std::string* xp_value);
-	void Stop(std::string* xp_value);
-	void PrintStatistics(std::string* xp_value);
+	void Reset(mkjson& rx_value);
+	void Start(mkjson& rx_value);
+	void Stop(mkjson& rx_value);
+	void PrintStatistics(mkjson& rx_value);
 
-	typedef void (ControllerModule::*action)(std::string*);
+	typedef void (ControllerModule::*action)(mkjson&);
 	DECLARE_CALL_ACTION(action);
 	DECLARE_LIST_ACTION(action);
 

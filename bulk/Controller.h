@@ -37,12 +37,12 @@ class QWidget;
 // Use macros to declare members of Controller childs, not the cleanest thing but you are free to try to
 // improve on this
 #define DECLARE_CALL_ACTION(action) \
-void CallAction(const std::string& x_name, std::string* xp_value) override\
+void CallAction(const std::string& x_name, mkjson& rx_value) override\
 {\
 	auto it = m_actions.find(x_name);\
 	if(it == m_actions.end())\
 		throw MkException("Cannot find action " + x_name + " in controller", LOC);\
-	(this->*(it->second))(xp_value);\
+	(this->*(it->second))(rx_value);\
 }
 #define DECLARE_LIST_ACTION(action) \
 void ListActions(std::vector<std::string>& xr_actions) const override\
@@ -78,7 +78,7 @@ public:
 	* @param x_name   Action
 	* @param xp_value Input/Output of the action (Ignored if null)
 	*/
-	virtual void CallAction(const std::string& x_name, std::string* xp_value) = 0;
+	virtual void CallAction(const std::string& x_name, mkjson& rx_value) = 0;
 
 protected:
 	static log4cxx::LoggerPtr m_logger;

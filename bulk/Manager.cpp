@@ -364,7 +364,7 @@ void Manager::Process()
 * @param x_command Command in format "module.controller.Command"
 * @param x_value   Value used as input/output
 */
-void Manager::SendCommand(const string& x_command, string x_value)
+void Manager::SendCommand(const string& x_command, mkjson x_value)
 {
 	vector<string> elems;
 	split(x_command, '.', elems);
@@ -373,9 +373,9 @@ void Manager::SendCommand(const string& x_command, string x_value)
 
 	// Note: We cast module/manager twice since we need functions from both parents
 	Controllable& contr  (elems.at(0) == "manager" ? dynamic_cast<Controllable&>(*this) : RefModuleByName(elems.at(0)));
-	contr.FindController(elems.at(1)).CallAction(elems.at(2), &x_value);
+	contr.FindController(elems.at(1)).CallAction(elems.at(2), x_value);
 
-	LOG_INFO(m_logger, "Command " << x_command << " returned value '" << TRUNCATE_STRING(x_value) << "'");
+	LOG_INFO(m_logger, "Command " << x_command << " returned value '" << oneLine(x_value) << "'");
 }
 
 /**
@@ -392,7 +392,8 @@ void Manager::SendCommand(const string& x_command)
 
 	// Note: We cast module/manager twice since we need functions from both parents
 	Controllable& contr  (elems.at(0) == "manager" ? dynamic_cast<Controllable&>(*this) : RefModuleByName(elems.at(0)));
-	contr.FindController(elems.at(1)).CallAction(elems.at(2), nullptr);
+	mkjson value = nullptr;
+	contr.FindController(elems.at(1)).CallAction(elems.at(2), value);
 }
 
 /**

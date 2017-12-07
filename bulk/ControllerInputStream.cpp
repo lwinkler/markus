@@ -33,13 +33,13 @@ using namespace std;
 /**
 * @brief Command: Set the value of the cursor to the given position in ms
 *
-* @param xp_value
+* @param rx_value
 */
-void ControllerInputStream::SetCursor(string* xp_value)
+void ControllerInputStream::SetCursor(mkjson& rx_value)
 {
 	Processable::WriteLock lock(m_module.RefLock());
-	if(xp_value != nullptr)
-		m_module.SetMsec(boost::lexical_cast<double>(*xp_value));
+	if(! rx_value.is_null())
+		m_module.SetMsec(rx_value.get<double>());
 #ifndef MARKUS_NO_GUI
 	else m_module.SetMsec(m_parameterSlider->GetValue());
 #else
@@ -50,14 +50,14 @@ void ControllerInputStream::SetCursor(string* xp_value)
 /**
 * @brief Command: Get the position of the cursor in ms
 *
-* @param xp_value
+* @param rx_value
 */
-void ControllerInputStream::GetCursor(string* xp_value)
+void ControllerInputStream::GetCursor(mkjson& rx_value)
 {
 	Processable::ReadLock lock(m_module.RefLock());
-	if(xp_value != nullptr)
+	if(! rx_value.is_null())
 	{
-		*xp_value = boost::lexical_cast<string>(m_module.GetMsec());
+		rx_value = m_module.GetMsec();
 	}
 #ifndef MARKUS_NO_GUI
 	else m_parameterSlider->SetValue(m_module.GetMsec());
