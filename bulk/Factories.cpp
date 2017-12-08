@@ -28,6 +28,17 @@
 #include "FeatureVector.h"
 #include "FeatureOpenCv.h"
 #include "FeatureHistory.h"
+
+#include "ControllerParameterT.h"
+#include "Polygon.h"
+#include "StreamT.h"
+#include "StreamImage.h"
+#include "enums.h"
+#include "Event.h"
+#include "Object.h"
+
+#include "opencv/modules/ml/include/opencv2/ml.hpp"
+
 #define REGISTER_FEATURE(child, type){\
 {\
 fact1.Register<child>(type);\
@@ -37,13 +48,11 @@ delete pfeat;\
 }}
 // cout << type << ":"  << signatureOfFeature(*pfeat) << endl;\
 
-#include "ControllerParameterT.h"
-#include "Polygon.h"
 // TODO: Remove classnames map
 
 // Factories: The RegisterAll method will register all necessary creators
 
-
+using namespace mk;
 using namespace std;
 
 // log4cxx::LoggerPtr Processable::m_logger(log4cxx::Logger::getLogger("Processable"));
@@ -74,26 +83,26 @@ void Factories::RegisterAll()
 
 	// All controllers
 	FactoryParameterController& factParamCtr(Factories::parameterControllerFactory());
-	factParamCtr.Register<ControllerBool>("ParameterBool");
-	factParamCtr.Register<ControllerDouble>("ParameterDouble");
-	factParamCtr.Register<ControllerFloat>("ParameterFloat");
-	// factParamCtr.Register<ControllerEnum>("ParameterEnum");
+	factParamCtr.Register<ControllerBool>(ParameterBool::className);
+	factParamCtr.Register<ControllerDouble>(ParameterDouble::className);
+	factParamCtr.Register<ControllerFloat>(ParameterFloat::className);
+	// factParamCtr.Register<ControllerEnum>(ParameterEnum::className);
 
 	// enums
-	factParamCtr.Register<ControllerEnum>("ParameterCachedState");
-	factParamCtr.Register<ControllerEnum>("ParameterImageType");
-	factParamCtr.Register<ControllerEnum>("ParameterKernelTypes");
-	factParamCtr.Register<ControllerEnum>("ParameterSvmTypes");
+	factParamCtr.Register<ControllerEnum>(ParameterEnumT<CachedState>::className);
+	factParamCtr.Register<ControllerEnum>(ParameterEnumT<ImageType>::className);
+	factParamCtr.Register<ControllerEnum>(ParameterEnumT<cv::ml::SVM::KernelTypes>::className);
+	factParamCtr.Register<ControllerEnum>(ParameterEnumT<cv::ml::SVM::Types>::className);
 
-	factParamCtr.Register<ControllerInt>("ParameterInt");
-	factParamCtr.Register<ControllerUInt>("ParameterUInt");
+	factParamCtr.Register<ControllerInt>(ParameterInt::className);
+	factParamCtr.Register<ControllerUInt>(ParameterUInt::className);
 	// factParamCtr.Register<ControllerSerializable>(PARAM_SERIALIZABLE);
 	// factParamCtr.Register<ControllerCalibrationByHeight>(PARAM_OBJECT_HEIGHT);
-	factParamCtr.Register<ControllerString>("ParameterString");
-	factParamCtr.Register<ControllerParameterT<ParameterT<Polygon>>>("ParameterPolygon");
-	factParamCtr.Register<ControllerParameterT<Stream>>("StreamObjects");
-	factParamCtr.Register<ControllerParameterT<Stream>>("StreamImage");
-	factParamCtr.Register<ControllerParameterT<Stream>>("StreamEvent");
-	factParamCtr.Register<ControllerParameterT<Stream>>("StreamState");
+	factParamCtr.Register<ControllerString>(ParameterString::className);
+	factParamCtr.Register<ControllerParameterT<ParameterT<Polygon>>>(ParameterT<Polygon>::className);
+	factParamCtr.Register<ControllerParameterT<Stream>>(StreamT<vector<Object>>::className);
+	factParamCtr.Register<ControllerParameterT<Stream>>(StreamT<cv::Mat>::className);
+	factParamCtr.Register<ControllerParameterT<Stream>>(StreamT<Event>::className);
+	factParamCtr.Register<ControllerParameterT<Stream>>(StreamT<bool>::className);
 }
 

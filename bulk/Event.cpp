@@ -221,7 +221,7 @@ void Event::Notify(const Context& x_context, bool x_isProcessEvent)
 
 	LOG_WARN(m_logger, "@notif@ " << level << " " << tmp);
 	*/
-	LOG_WARN(m_logger, oneLine(*this));
+	LOG_INFO(m_logger, oneLine(*this));
 }
 
 /// Return the external files

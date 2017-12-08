@@ -89,7 +89,6 @@ void *send_commands(void *x_void_ptr)
 	assert(pManager != nullptr);
 	string input;
 	vector<string> elems;
-	mkjson value;
 	while(true)
 	{
 		try
@@ -99,8 +98,9 @@ void *send_commands(void *x_void_ptr)
 				if(input.empty())
 					continue;
 				split(input, ' ', elems);
+				mkjson value;
 				if(elems.size() == 1)
-					value = "";
+					value = mkjson::object();
 				else if(elems.size() == 2)
 					value = mkjson::parse(elems.at(1));
 				else throw MkException("Command must have one or two elements", LOC);

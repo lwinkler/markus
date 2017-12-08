@@ -27,7 +27,7 @@
 using namespace std;
 using namespace cv;
 
-template<> const string StreamState::m_class        = "StreamState";
+template<> const string StreamState::className        = "StreamState";
 
 // Transmit the state to the connected module
 

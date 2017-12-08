@@ -28,7 +28,7 @@
 using namespace std;
 using namespace cv;
 
-template<> const string StreamEvent::m_class        = "StreamEvent";
+template<> const string StreamEvent::className        = "StreamEvent";
 
 // Transmit the event to the connected module
 

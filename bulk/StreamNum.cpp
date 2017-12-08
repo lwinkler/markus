@@ -26,9 +26,9 @@
 using namespace std;
 
 // Static variables
-template<> const string StreamNum<bool>::m_class   = "StreamNum<bool>";
-template<> const string StreamNum<int>::m_class    = "StreamNum<int>";
-template<> const string StreamNum<uint>::m_class   = "StreamNum<uint>";
-template<> const string StreamNum<float>::m_class  = "StreamNum<float>";
-template<> const string StreamNum<double>::m_class = "StreamNum<double>";
+template<> const string StreamNum<bool>::className   = "StreamNum<bool>";
+template<> const string StreamNum<int>::className    = "StreamNum<int>";
+template<> const string StreamNum<uint>::className   = "StreamNum<uint>";
+template<> const string StreamNum<float>::className  = "StreamNum<float>";
+template<> const string StreamNum<double>::className = "StreamNum<double>";
 

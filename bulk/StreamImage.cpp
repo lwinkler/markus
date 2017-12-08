@@ -28,6 +28,8 @@
 using namespace std;
 using namespace cv;
 
+const string StreamT<Mat>::className = "StreamImage";
+
 StreamT<Mat>::StreamT(const string& x_name, Mat& x_image, Module& rx_module, const string& rx_description, const string& x_requirements) :
 	Stream(x_name, rx_module, rx_description),
 	m_content(x_image)
@@ -52,7 +54,7 @@ void StreamImage::ConvertInput()
 }
 
 // Convert to an output (from the input) to take advantage of the buffer
-void StreamImage::ConvertToOutput(TIME_STAMP x_ts, cv::Mat& xr_output)
+void StreamT<Mat>::ConvertToOutput(TIME_STAMP x_ts, cv::Mat& xr_output)
 {
 	const Mat* corrected = &m_content;
 
@@ -126,13 +128,13 @@ void StreamImage::ConvertToOutput(TIME_STAMP x_ts, cv::Mat& xr_output)
 }
 
 
-void StreamImage::RenderTo(cv::Mat& x_output) const
+void StreamT<Mat>::RenderTo(cv::Mat& x_output) const
 {
 	m_content.copyTo(x_output);
 }
 
 /// Query : give info about cursor position
-void StreamImage::Query(std::ostream& xr_out, const cv::Point& x_pt) const
+void StreamT<Mat>::Query(std::ostream& xr_out, const cv::Point& x_pt) const
 {
 	// check if out of bounds
 	if(!Rect(Point(0, 0), GetSize()).contains(x_pt))
@@ -144,7 +146,7 @@ void StreamImage::Query(std::ostream& xr_out, const cv::Point& x_pt) const
 }
 
 /// Randomize the content of the stream
-void StreamImage::Randomize(unsigned int& xr_seed)
+void StreamT<Mat>::Randomize(unsigned int& xr_seed)
 {
 	// random image
 	m_content = Mat(m_content.size(), m_content.type());
@@ -173,7 +175,7 @@ void StreamImage::Randomize(unsigned int& xr_seed)
 	}
 }
 
-void StreamImage::Serialize(mkjson& rx_json, MkDirectory* xp_dir) const
+void StreamT<Mat>::Serialize(mkjson& rx_json, MkDirectory* xp_dir) const
 {
 	Stream::Serialize(rx_json, xp_dir);
 	stringstream fileName;
@@ -185,7 +187,7 @@ void StreamImage::Serialize(mkjson& rx_json, MkDirectory* xp_dir) const
 	imwrite(rx_json.at("image").get<string>(), m_content);
 }
 
-void StreamImage::Deserialize(const mkjson& x_json, MkDirectory* xp_dir)
+void StreamT<Mat>::Deserialize(const mkjson& x_json, MkDirectory* xp_dir)
 {
 	Stream::Deserialize(x_json, xp_dir);
 
@@ -195,12 +197,12 @@ void StreamImage::Deserialize(const mkjson& x_json, MkDirectory* xp_dir)
 		throw MkException("Cannot open serialized image from file " + fileName, LOC);
 }
 
-void StreamImage::Connect(Stream& xr_stream)
+void StreamT<Mat>::Connect(Stream& xr_stream)
 {
 	// This method was rewritten to avoid a dynamic cast at each ConvertInput
 	m_connected = &xr_stream;
 
-	mp_connectedImage = dynamic_cast<StreamImage*>(m_connected);
+	mp_connectedImage = dynamic_cast<StreamT<Mat>*>(m_connected);
 	if(mp_connectedImage == nullptr)
 	{
 		m_connected = nullptr;
@@ -217,7 +219,7 @@ void StreamImage::Connect(Stream& xr_stream)
 	SetAsConnected(true);
 }
 
-void StreamImage::Disconnect()
+void StreamT<Mat>::Disconnect()
 {
 	Stream::Disconnect();
 

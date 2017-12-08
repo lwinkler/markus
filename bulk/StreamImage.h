@@ -46,7 +46,7 @@ public:
 	friend inline void from_json(const mkjson& _json, StreamT& _ser){_ser.Deserialize(_json);}
 
 	StreamT(const std::string& x_name, cv::Mat& x_image, Module& rx_module, const std::string& x_description, const std::string& x_requirements = "");
-	MKCLASS("StreamImage")
+	const std::string& GetClass() const override {return className;}
 
 	void ConvertInput() override;
 	void RenderTo(cv::Mat& x_output) const override;
@@ -81,6 +81,8 @@ public:
 		root["height"] = m_content.rows;
 		return root;
 	}
+
+	static const std::string className;
 
 protected:
 	static std::string createResolutionString(const cv::Size x_size, int x_depth, int x_channels)

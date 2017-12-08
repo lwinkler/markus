@@ -41,7 +41,7 @@ public:
 		m_default(T{})
 	{}
 	virtual ~StreamT() {}
-	virtual const std::string& GetClass() const {return m_class;}
+	const std::string& GetClass() const override {return className;}
 
 	inline const T& GetContent() const {return m_content;}
 	inline       T& RefContent() const {return m_content;}
@@ -71,12 +71,11 @@ public:
 		return m_default;
 	}
 
+	static const std::string className;
+
 protected:
 	T& m_content;
 	T  m_default;
-
-private:
-	static const std::string m_class;
 };
 
 #endif

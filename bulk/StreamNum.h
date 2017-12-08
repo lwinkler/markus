@@ -45,7 +45,7 @@ public:
 		Stream(x_name, rx_module, x_description, rx_requirement),
 		m_scalars(PLOT_LENGTH),
 		m_content(rx_scalar) {}
-	virtual const std::string& GetClass() const {return m_class;}
+	virtual const std::string& GetClass() const {return className;}
 
 	virtual void ConvertInput()
 	{
@@ -107,12 +107,13 @@ public:
 	virtual ConfigReader GetValue() const{return m_content;}
 	virtual ConfigReader GetDefault() const {return m_default;}
 
+	static const std::string className;
+
 protected:
 	T& m_content;
 	T  m_default = T{};
 	// circular buffer for plot rendering
 	boost::circular_buffer<float> m_scalars;
-	static const std::string m_class;
 };
 
 #endif

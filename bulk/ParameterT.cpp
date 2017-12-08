@@ -28,13 +28,13 @@ using namespace std;
 
 
 // Static variables
-template<> const string ParameterT<bool>::m_type         = "ParameterBool";
-template<> const string ParameterT<unsigned int>::m_type = "ParameterUInt";
-template<> const string ParameterT<int>::m_type          = "ParameterInt";
-template<> const string ParameterT<float>::m_type        = "ParameterFloat";
-template<> const string ParameterT<double>::m_type       = "ParameterDouble";
-template<> const string ParameterT<string>::m_type       = "ParameterString";
-template<> const string ParameterT<Polygon>::m_type      = "ParameterPolygon";
+template<> const string ParameterT<bool>::className         = "ParameterBool";
+template<> const string ParameterT<unsigned int>::className = "ParameterUInt";
+template<> const string ParameterT<int>::className          = "ParameterInt";
+template<> const string ParameterT<float>::className        = "ParameterFloat";
+template<> const string ParameterT<double>::className       = "ParameterDouble";
+template<> const string ParameterT<string>::className       = "ParameterString";
+template<> const string ParameterT<Polygon>::className      = "ParameterPolygon";
 
 template<class T> inline bool checkRangeNum(const T& x_value, const mkjson& x_range)
 {

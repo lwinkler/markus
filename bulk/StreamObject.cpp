@@ -29,7 +29,7 @@
 using namespace std;
 using namespace cv;
 
-template<> const string StreamObject::m_class        = "StreamObjects";
+template<> const string StreamObject::className        = "StreamObjects";
 
 template<> StreamObject::StreamT(const std::string& rx_name, vector<Object>& rx_object, Module& rx_module, const std::string& rx_description, const mkjson& rx_requirement) :
 	Stream(rx_name, rx_module, rx_description, rx_requirement),
