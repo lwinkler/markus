@@ -39,7 +39,7 @@ KeyPointsMser::KeyPointsMser(ParameterStructure& xr_params) :
 	ModuleKeyPoints(xr_params),
 	m_param(dynamic_cast<Parameters&>(xr_params))
 {
-	m_isUnitTestingEnabled = false; // TODO
+	m_isUnitTestingEnabled = false; // TODO: OpenCV will try to call fitEllipse with insufficient nb of points
 };
 
 

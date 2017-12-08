@@ -43,32 +43,6 @@
 			}
 		},
 		{
-			"class" : "KeyPointsDense",
-			"inputs" : 
-			[
-				{
-					"connected" : 
-					{
-						"module" : "Input",
-						"output" : "image"
-					},
-					"name" : "image"
-				},
-				{
-					"name" : "initXyStep",
-					"value" : 30
-				}
-			],
-			"name" : "KeyPointsDense6",
-			"uiobject" : 
-			{
-				"height" : 0,
-				"width" : 0,
-				"x" : 916,
-				"y" : 373
-			}
-		},
-		{
 			"class" : "KeyPointsFast",
 			"inputs" : 
 			[
@@ -165,28 +139,6 @@
 			}
 		},
 		{
-			"class" : "KeyPointsStar",
-			"inputs" : 
-			[
-				{
-					"connected" : 
-					{
-						"module" : "Input",
-						"output" : "image"
-					},
-					"name" : "image"
-				}
-			],
-			"name" : "KeyPointsStar7",
-			"uiobject" : 
-			{
-				"height" : 0,
-				"width" : 0,
-				"x" : 915,
-				"y" : 481
-			}
-		},
-		{
 			"class" : "OpticalFlowKeyPoints",
 			"inputs" : 
 			[
@@ -222,36 +174,6 @@
 				"width" : 0,
 				"x" : 1312,
 				"y" : 368
-			}
-		},
-		{
-			"class" : "OpticalFlowKeyPoints",
-			"inputs" : 
-			[
-				{
-					"connected" : 
-					{
-						"module" : "Input",
-						"output" : "image"
-					},
-					"name" : "image"
-				},
-				{
-					"connected" : 
-					{
-						"module" : "KeyPointsDense6",
-						"output" : "output"
-					},
-					"name" : "keypoints"
-				}
-			],
-			"name" : "OpticalFlowKeyPoints12",
-			"uiobject" : 
-			{
-				"height" : 0,
-				"width" : 0,
-				"x" : 1310,
-				"y" : 476
 			}
 		}
 	],
