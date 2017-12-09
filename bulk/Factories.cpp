@@ -48,8 +48,6 @@ delete pfeat;\
 }}
 // cout << type << ":"  << signatureOfFeature(*pfeat) << endl;\
 
-// TODO: Remove classnames map
-
 // Factories: The RegisterAll method will register all necessary creators
 
 namespace mk {

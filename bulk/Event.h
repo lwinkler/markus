@@ -40,7 +40,7 @@ public:
 	friend void from_json(const mkjson& _json, Event& _ser);
 
 	Event();
-	virtual ~Event();
+	virtual ~Event() = default;
 	void Clean();
 	void Raise(const std::string& x_eventName, TIME_STAMP x_absTimeNotif, TIME_STAMP x_absTimeEvent);
 	void Raise(const std::string& x_eventName, const Object& m_object, TIME_STAMP x_absTimeNotif, TIME_STAMP x_absTimeEvent);

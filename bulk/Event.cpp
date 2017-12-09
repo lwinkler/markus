@@ -45,8 +45,6 @@ Event::Event() :
 	m_externalInfo.clear();
 }
 
-Event::~Event() {}
-
 /// Randomize the content of the event
 void Event::Randomize(unsigned int& xr_seed, const mkjson& x_requirement, const Size& x_size)
 {

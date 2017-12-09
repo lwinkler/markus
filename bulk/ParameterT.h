@@ -87,7 +87,6 @@ public:
 		return true;
 	}
 
-	// TODO improve: template
 	mkjson GenerateValues(int x_nbSamples, const mkjson& x_range) const override
 	{
 		return mkjson::array();

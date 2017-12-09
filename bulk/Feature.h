@@ -40,7 +40,7 @@ public:
 	friend inline void from_json(const mkjson& _json, Feature& _ser) {_ser.Deserialize(_json);}
 
 	Feature() {}
-	virtual ~Feature() {}
+	virtual ~Feature() = default;
 	virtual Feature* CreateCopy() const = 0;
 	virtual double CompareSquared(const Feature& x_feature) const = 0;
 	virtual void Randomize(unsigned int& xr_seed, const mkjson& x_param) = 0;
