@@ -29,6 +29,7 @@
 #include "MkException.h"
 #include <log4cxx/logger.h>
 
+namespace mk {
 /// Parameter of type enum
 class ParameterEnum : public Parameter
 {
@@ -65,4 +66,5 @@ protected:
 	int& mr_value;
 };
 
+} // namespace mk
 #endif

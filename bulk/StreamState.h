@@ -26,6 +26,7 @@
 
 #include "StreamT.h"
 
+namespace mk {
 typedef StreamT<bool> StreamState;
 
 // partial specialization
@@ -36,4 +37,5 @@ template<> void StreamT<bool>::Randomize(unsigned int& xr_seed);
 template<> void StreamT<bool>::Serialize(mkjson& rx_json, MkDirectory* xp_dir) const;
 template<> void StreamT<bool>::Deserialize(const mkjson& x_json, MkDirectory* xp_dir);
 
+} // namespace mk
 #endif

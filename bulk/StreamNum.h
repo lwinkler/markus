@@ -33,6 +33,7 @@
 
 #define PLOT_LENGTH 50
 
+namespace mk {
 /// Class for a stream of images (or video) used for input and output
 template<typename T>
 class StreamNum : public Stream
@@ -116,4 +117,5 @@ protected:
 	boost::circular_buffer<float> m_scalars;
 };
 
+} // namespace mk
 #endif

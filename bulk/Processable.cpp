@@ -26,6 +26,7 @@
 #include "InterruptionManager.h"
 #include "Event.h"
 
+namespace mk {
 using namespace std;
 
 log4cxx::LoggerPtr Processable::m_logger(log4cxx::Logger::getLogger("Processable"));
@@ -274,3 +275,4 @@ void Processable::Status() const
 	evt.Notify(GetContext(), true);
 }
 
+}

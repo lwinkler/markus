@@ -27,6 +27,7 @@
 #include <opencv2/core/core.hpp>
 #include "define.h"
 
+namespace mk {
 class Event;
 class AnnotationFileReader;
 class FeaturePtr;
@@ -87,4 +88,5 @@ inline cv::Point_<double> ratio(const cv::Size& x_size1, const cv::Size& x_size2
 	);
 }
 
+} // namespace mk
 #endif

@@ -24,6 +24,7 @@
 #include "FeatureVector.h"
 #include "FeatureStd.h"
 
+namespace mk {
 using namespace cv;
 using namespace std;
 using namespace boost::python;
@@ -158,3 +159,4 @@ void ModulePython::Reset()
 }
 
 
+}

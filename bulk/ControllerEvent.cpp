@@ -24,6 +24,7 @@
 #include "ControllerEvent.h"
 #include "ModuleClassifyEvents.h"
 
+namespace mk {
 using namespace std;
 
 
@@ -64,4 +65,5 @@ ControllerEvent::ControllerEvent(ModuleClassifyEvents& rx_module) :
 QWidget* ControllerEvent::CreateWidget()
 {
 	return nullptr;
+}
 }

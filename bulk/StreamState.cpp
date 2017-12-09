@@ -24,6 +24,7 @@
 #include "StreamState.h"
 #include "util.h"
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -85,4 +86,5 @@ template<> void StreamState::Deserialize(const mkjson& x_json, MkDirectory* xp_d
 {
 	Stream::Deserialize(x_json, xp_dir);
 	from_mkjson(x_json.at("state"), m_content);
+}
 }

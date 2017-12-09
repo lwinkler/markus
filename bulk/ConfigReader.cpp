@@ -27,6 +27,7 @@
 #include "MkException.h"
 #include "util.h"
 
+namespace mk {
 using namespace std;
 
 
@@ -152,4 +153,5 @@ const mkjson& findFirstInArrayConst(const ConfigReader& x_conf, const std::strin
 			return elem;
 	}
 	throw MkException("No occurence of " + x_name + "=" + x_value + " in config", LOC);
+}
 }

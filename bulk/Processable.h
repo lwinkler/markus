@@ -32,6 +32,7 @@
 #include <log4cxx/logger.h>
 #include <boost/thread/shared_mutex.hpp>
 
+namespace mk {
 class ModuleTimer;
 class InterruptionManager;
 
@@ -117,4 +118,5 @@ private:
 	TIME_STAMP m_sleepTime = 0;        // Time to sleep, used with certain exceptions
 };
 
+} // namespace mk
 #endif

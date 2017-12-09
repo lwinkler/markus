@@ -28,6 +28,7 @@
 #include "MkException.h"
 #include <log4cxx/logger.h>
 
+namespace mk {
 /// return the name of a class
 template<class T> std::string className(){return std::string(typeid(T).name());}
 
@@ -103,4 +104,5 @@ private:
 	bool m_isHidden       = false;
 };
 
+} // namespace mk
 #endif

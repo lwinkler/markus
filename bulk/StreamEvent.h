@@ -27,6 +27,7 @@
 #include "StreamT.h"
 #include "Event.h"
 
+namespace mk {
 /// Stream in the form of events
 typedef StreamT<Event> StreamEvent;
 
@@ -39,4 +40,5 @@ template<> void StreamEvent::Query(std::ostream& xr_out, const cv::Point& x_pt) 
 template<> void StreamEvent::Serialize(mkjson& x_out, MkDirectory* xp_dir) const;
 template<> void StreamEvent::Deserialize(const mkjson& x_in, MkDirectory* xp_dir);
 
+} // namespace mk
 #endif

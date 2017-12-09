@@ -31,6 +31,7 @@
 #include <cstdio>
 
 
+namespace mk {
 using namespace std;
 
 QParameterSlider::QParameterSlider(double x_value, double x_min, double x_max, int x_precision, QWidget *parent):
@@ -104,3 +105,4 @@ void QParameterSlider::SetValue(double x_value)
 
 
 // #include "QParameterSlider.moc"
+}

@@ -34,15 +34,18 @@
 #include "ParameterStructure.h"
 #include "ParameterT.h"
 
-class Manager;
-class Stream;
-class ControlBoard;
 class QComboBox;
 class QPainter;
 class QGroupBox;
 class QBoxLayout;
 class QLabel;
 class QListWidget;
+
+namespace mk {
+
+class Manager;
+class Stream;
+class ControlBoard;
 class Viewer;
 
 /// Class used to display one module in a widget
@@ -132,4 +135,5 @@ public slots:
 	void showDisplayOptions(bool x_isChecked);
 };
 
+}
 #endif

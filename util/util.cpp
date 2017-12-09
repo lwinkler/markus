@@ -35,6 +35,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/rational.hpp>
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -680,3 +681,4 @@ std::string convertAspectRatio(const cv::Size& x_size)
 	return to_string(r.numerator()) + ":" + to_string(r.denominator());
 }
 
+}

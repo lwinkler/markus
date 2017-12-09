@@ -27,6 +27,7 @@
 #include "StreamT.h"
 #include "Object.h"
 
+namespace mk {
 typedef StreamT<std::vector<Object>> StreamObject;
 
 // partial specialization
@@ -38,4 +39,5 @@ template<>void StreamObject::Randomize(unsigned int& xr_seed);
 template<>void StreamObject::Serialize(mkjson& rx_json, MkDirectory* xp_dir) const;
 template<>void StreamObject::Deserialize(const mkjson& x_json, MkDirectory* xp_dir);
 
+} // namespace mk
 #endif

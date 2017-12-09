@@ -28,6 +28,7 @@
 #include "ParameterEnum.h"
 #include "MkException.h"
 
+namespace mk {
 /// Parameter of type enum
 template<class T> class ParameterEnumT : public ParameterEnum
 {
@@ -46,4 +47,5 @@ protected:
 	static const std::map<int, std::string>  ReverseEnum;
 };
 
+} // namespace mk
 #endif

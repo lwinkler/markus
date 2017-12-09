@@ -27,6 +27,7 @@
 #include "StreamDebug.h"
 #include "util.h"
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -75,4 +76,5 @@ void AnnotationFileWriter::WriteAnnotation(TIME_STAMP x_start, TIME_STAMP x_end,
 	m_file<<x_in.str()<<endl;
 	m_file<<endl;
 	m_subId++;
+}
 }

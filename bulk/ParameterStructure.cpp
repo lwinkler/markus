@@ -25,6 +25,7 @@
 #include "ConfigReader.h"
 #include "assert.h"
 
+namespace mk {
 using namespace std;
 
 // Static variables
@@ -249,3 +250,4 @@ void ParameterStructure::PrintParameters() const
 		LOG_INFO(m_logger, ss.str());
 }
 
+}

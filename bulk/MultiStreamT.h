@@ -26,6 +26,7 @@
 
 #include "StreamT.h"
 
+namespace mk {
 /// Stream in the form of located objects
 
 template<typename T>class MultiStreamT : public StreamT<T>
@@ -108,4 +109,5 @@ protected:
 	size_t          m_nextObj = 0;
 };
 
+} // namespace mk
 #endif

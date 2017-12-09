@@ -3,6 +3,7 @@
 #include "ParameterEnumT.h"
 
 using namespace std;
+using namespace mk;
 
 
 
@@ -89,5 +90,5 @@ template<> const map<string, int>  ParameterEnumT<cv::ml::SVM::Types>::Enum =
 	{"NU_SVR", 104}
 };
 template<> const map<int, string> ParameterEnumT<cv::ml::SVM::Types>::ReverseEnum = ParameterEnum::CreateReverseMap(ParameterEnumT<cv::ml::SVM::Types>::Enum);
-template<> const string ParameterEnumT<cv::ml::SVM::Types>::className = "ParameterSvmTypes";
+template<> const string ParameterEnumT<cv::ml::SVM::Types>::className = "ParameterTypes";
 

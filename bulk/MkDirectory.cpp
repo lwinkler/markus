@@ -26,6 +26,7 @@
 
 #include <boost/format.hpp>
 
+namespace mk {
 using namespace std;
 
 log4cxx::LoggerPtr MkDirectory::m_logger(log4cxx::Logger::getLogger("MkDirectory"));
@@ -289,4 +290,5 @@ void MkDirectory::ArchiveAndClean(bool x_clean, const string& x_archiveDir, cons
 			}
 		}
 	}
+}
 }

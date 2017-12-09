@@ -26,6 +26,7 @@
 
 #include "Controller.h"
 
+namespace mk {
 class BackgroundSubtraction;
 
 /**
@@ -51,4 +52,5 @@ protected:
 	std::map<std::string, const action> m_actions;
 	BackgroundSubtraction  & m_module;
 };
+} // namespace mk
 #endif

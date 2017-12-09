@@ -28,6 +28,7 @@
 #include "ControllerEvent.h"
 
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -115,4 +116,5 @@ void ModuleClassifyEvents::PopEvent()
 		}
 	}
 	else LOG_WARN(m_logger, "Cannot call PopEvent, event list is empty");
+}
 }

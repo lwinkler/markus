@@ -27,9 +27,9 @@
 #include "Input.h"
 #include "Event.h"
 
-class AnnotationFileReader;
 
 namespace mk {
+class AnnotationFileReader;
 
 /**
 * @brief Read an event from an annotation file

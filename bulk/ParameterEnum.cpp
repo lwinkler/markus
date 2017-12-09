@@ -25,6 +25,7 @@
 #include "util.h"
 #include "json.hpp"
 
+namespace mk {
 using namespace std;
 
 
@@ -139,4 +140,5 @@ mkjson ParameterEnum::Export() const
 		root["enum"].push_back(elem.first);
 	}
 	return root;
+}
 }

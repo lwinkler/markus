@@ -26,6 +26,7 @@
 #include "feature_util.h"
 
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -106,4 +107,5 @@ void from_json(const mkjson& _json, Polygon& _ser)
 
 	if((_ser.m_width == 0 || _ser.m_height == 0) && ! _ser.m_points.empty())
 		throw MkException("Polygon was serialized without specifying width or height", LOC);
+}
 }

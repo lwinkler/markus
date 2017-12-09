@@ -26,6 +26,7 @@
 #include "util.h"
 
 
+namespace mk {
 using namespace std;
 
 log4cxx::LoggerPtr ModuleTimer::m_logger(log4cxx::Logger::getLogger("ModuleTimer"));
@@ -93,3 +94,4 @@ void ModuleTimer::Start(double x_fps)
 	});
 }
 
+}

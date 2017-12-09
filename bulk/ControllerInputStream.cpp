@@ -28,6 +28,7 @@
 #include "QParameterSlider.h"
 #endif
 
+namespace mk {
 using namespace std;
 
 /**
@@ -86,4 +87,5 @@ QWidget* ControllerInputStream::CreateWidget()
 #else
 	return nullptr;
 #endif
+}
 }

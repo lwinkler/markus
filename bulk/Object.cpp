@@ -27,6 +27,7 @@
 #include <boost/lexical_cast.hpp>
 #include "Factories.h"
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -256,4 +257,5 @@ void Object::Randomize(unsigned int& xr_seed, const mkjson& x_requirement, const
 	// LOG_DEBUG(m_logger, "Generate random object with requirements:\""<<x_requirement<<"\" --> "<<this->SerializeToString());
 
 	m_id = rand_r(&xr_seed);
+}
 }

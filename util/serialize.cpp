@@ -26,6 +26,7 @@
 #include "MkException.h"
 
 
+namespace mk {
 using namespace std;
 
 string signatureJsonValue(const mkjson &x_val)
@@ -100,3 +101,4 @@ string signatureJsonTree(const mkjson &x_json, int x_depth)
 	return result;
 }
 
+}

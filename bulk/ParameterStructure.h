@@ -31,6 +31,7 @@
 #include <log4cxx/logger.h>
 #include <boost/noncopyable.hpp>
 
+namespace mk {
 /// Represents a set of parameters for a configurable objects
 // Note: Disable copies of parameters as a safety
 class ParameterStructure : boost::noncopyable
@@ -65,4 +66,5 @@ private:
 };
 
 
+} // namespace mk
 #endif

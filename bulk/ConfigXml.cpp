@@ -26,6 +26,7 @@
 #include "util.h"
 #include <tinyxml.h>
 
+namespace mk {
 using namespace std;
 
 log4cxx::LoggerPtr ConfigXml::m_logger(log4cxx::Logger::getLogger("ConfigXml"));
@@ -490,4 +491,5 @@ vector<ConfigXml> ConfigXml::FindAll(const string& x_searchString) const
 		return GetSubConfig(tagName).FindAll(searchString2);
 	else
 		return GetSubConfig(tagName, attrName, attrValue).FindAll(searchString2);
+}
 }

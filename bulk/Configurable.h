@@ -27,6 +27,7 @@
 #include <boost/noncopyable.hpp>
 #include "ConfigReader.h"
 
+namespace mk {
 class ParameterStructure;
 
 /**
@@ -44,4 +45,5 @@ private:
 	ParameterStructure& m_param;
 };
 
+} // namespace mk
 #endif

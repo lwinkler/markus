@@ -32,6 +32,7 @@
 
 #define EPSILON 1e-5
 
+namespace mk {
 std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems);
 
 /// Template for all parameters with numerical values
@@ -130,4 +131,5 @@ typedef ParameterT<float> 	ParameterFloat;
 typedef ParameterT<bool> 	ParameterBool;
 typedef ParameterT<std::string> ParameterString;
 
+} // namespace mk
 #endif

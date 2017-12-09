@@ -28,9 +28,9 @@
 #include "StreamObject.h"
 #include <fstream>
 
-class AnnotationFileReader;
 
 namespace mk {
+class AnnotationFileReader;
 
 /**
 * @brief Read a stream of objects and log data to a text file

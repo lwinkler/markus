@@ -24,6 +24,7 @@
 #include "ParameterT.h"
 #include "Polygon.h"
 
+namespace mk {
 using namespace std;
 
 
@@ -153,4 +154,5 @@ template<> mkjson ParameterT<double>::GenerateValues(int x_nbSamples, const mkjs
 template<> mkjson ParameterT<float>::GenerateValues(int x_nbSamples, const mkjson& x_range) const
 {
 	return generateValuesFloat<float>(x_nbSamples, x_range.is_null() ? GetRange() : x_range);
+}
 }

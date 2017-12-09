@@ -26,6 +26,7 @@
 #include "Feature.h"
 #include "feature_util.h"
 
+namespace mk {
 /**
 * @brief Class representing a feature template. This can be used to create new templates
 */
@@ -61,4 +62,5 @@ public:
 // Special case for int to change the signature
 template<> inline void FeatureT<int>::Serialize(mkjson& rx_json) const {rx_json["valueInt"] = value;}
 template<> inline void FeatureT<int>::Deserialize(const mkjson& rx_json) {value = rx_json.at("valueInt").get<int>();}
+} // namespace mk
 #endif

@@ -24,6 +24,7 @@
 #include "MkException.h"
 #include "util.h"
 
+namespace mk {
 using namespace std;
 
 template<class T>std::ostream& serializeSimple(std::ostream& x_out, const std::vector<T>& x_val)
@@ -75,4 +76,5 @@ template<>void FeatureVectorT<int>::Deserialize(const mkjson& x_json)
 	if(x_json.at("type").get<string>() != "int")
 		throw MkException("Wrong feature vector type " + x_json.at("type").get<string>(), LOC);
 	values = x_json.at("values").get<vector<int>>();
+}
 }

@@ -26,6 +26,7 @@
 
 #include "Controller.h"
 
+namespace mk {
 class Manager;
 
 /**
@@ -61,4 +62,5 @@ protected:
 	std::map<std::string, const action> m_actions;
 	Manager  & manager;
 };
+} // namespace mk
 #endif

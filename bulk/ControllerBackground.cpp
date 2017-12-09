@@ -25,6 +25,7 @@
 #include "BackgroundSubtraction.h"
 #include "util.h"
 
+namespace mk {
 using namespace std;
 
 
@@ -51,4 +52,5 @@ ControllerBackground::ControllerBackground(BackgroundSubtraction& rx_module) :
 QWidget* ControllerBackground::CreateWidget()
 {
 	return nullptr;
+}
 }

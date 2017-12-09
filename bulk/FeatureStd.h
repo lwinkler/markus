@@ -27,10 +27,12 @@
 #include "feature_util.h"
 
 
+namespace mk {
 // Definitions
 typedef FeatureT<float>       FeatureFloat;
 typedef FeatureT<int>	      FeatureInt;
 typedef FeatureT<std::string> FeatureString;
 
 
+} // namespace mk
 #endif

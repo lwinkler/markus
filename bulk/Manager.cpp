@@ -42,6 +42,7 @@
 
 #define PROCESS_TIMEOUT 60 // 1 min timeout
 
+namespace mk {
 using namespace std;
 
 log4cxx::LoggerPtr Manager::m_logger(log4cxx::Logger::getLogger("Manager"));
@@ -682,3 +683,4 @@ int Manager::ReturnCode() const
 		return LastException().GetCode() - MK_EXCEPTION_FIRST;
 }
 
+}

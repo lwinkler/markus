@@ -35,6 +35,7 @@
 
 #define MARKUS_TIMER_S 0.01 // Interval for the main timer
 
+namespace mk {
 class Manager;
 
 
@@ -100,4 +101,5 @@ private slots:
 };
 
 
+} // namespace mk
 #endif // Markus_H

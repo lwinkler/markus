@@ -50,6 +50,7 @@
 #include <QApplication>
 // #include <QStatusBar>
 
+namespace mk {
 using namespace std;
 
 Editor::Editor(Manager* xp_manager, const string& x_project, QWidget *parent) :
@@ -276,3 +277,4 @@ void QManager::CreateModule(QString x_jsonString) // TODO
 	// Start();
 }
 */
+}

@@ -35,6 +35,7 @@
 #include "ConfigReader.h"
 
 
+namespace mk {
 /**
 * @brief The manager handles all modules
 */
@@ -156,4 +157,5 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 	const Parameters& m_param;
 };
+} // namespace mk
 #endif

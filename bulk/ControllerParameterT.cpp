@@ -26,7 +26,6 @@
 #include "Processable.h"
 #include <boost/lexical_cast.hpp>
 
-using namespace std;
 
 #ifndef MARKUS_NO_GUI
 #include <QWidget>
@@ -39,6 +38,8 @@ using namespace std;
 #include "QParameterSlider.h"
 #endif
 
+namespace mk {
+using namespace std;
 
 #define PRECISION_DOUBLE 2
 
@@ -304,3 +305,4 @@ template<> mkjson ControllerEnum::GetValueFromWidget()
 #endif
 }
 
+}

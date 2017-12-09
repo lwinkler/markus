@@ -30,6 +30,7 @@
 #include "FeatureStd.h"
 #include "MkException.h"
 
+namespace mk {
 /*! \class Object
  *  \brief Class representing an extracted object (or blob)
  *
@@ -121,4 +122,5 @@ public:
 	double width;
 	double height;
 };
+} // namespace mk
 #endif

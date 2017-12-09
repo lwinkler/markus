@@ -34,10 +34,10 @@
 #include "define.h"
 #include <log4cxx/xml/domconfigurator.h>
 
-
 class TiXmlNode;
 class TiXmlDocument;
 
+namespace mk {
 
 /**
 * @brief       Class used to manipulate configuration files
@@ -113,4 +113,5 @@ private:
 };
 
 
+} // namespace mk
 #endif

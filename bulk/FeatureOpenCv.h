@@ -27,6 +27,7 @@
 #include "feature_util.h"
 #include "FeatureT.h"
 
+namespace mk {
 /**
 * @brief This file contains all features (templates) that come from OpenCV classes
 */
@@ -37,4 +38,5 @@ typedef FeatureT<cv::KeyPoint>	  FeatureKeyPoint;
 typedef FeatureT<cv::Point2f>	  FeaturePoint2f;
 typedef FeatureT<cv::Point3f>	  FeaturePoint3f;
 // typedef FeatureT<cv::Mat>	  FeatureMat;
+} // namespace mk
 #endif

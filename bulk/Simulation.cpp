@@ -30,6 +30,7 @@
 #include <fstream>
 #include <boost/filesystem.hpp>
 
+namespace mk {
 using namespace std;
 // using namespace boost::filesystem;
 using boost::filesystem::create_directory;
@@ -270,4 +271,5 @@ void Simulation::Generate()
 
 	LOG_INFO(m_logger, m_cpt << " simulations generated in directory " << m_outputDir);
 	LOG_INFO(m_logger, "Launch with: make -f " << makefile << " -j4");
+}
 }

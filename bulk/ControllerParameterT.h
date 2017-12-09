@@ -30,13 +30,14 @@
 #include "Stream.h"
 #include "Controller.h"
 
-
-class QParameterSlider;
 class QCheckBox;
 class QLineEdit;
 class QTextEdit;
 class QComboBox;
 class QLabel;
+
+namespace mk {
+class QParameterSlider;
 class Processable;
 
 QWidget* defaultCreateWidget(Parameter& rx_param, QWidget*& rpx_widget);
@@ -191,4 +192,5 @@ typedef ControllerParameterT<ParameterString> ControllerString;
 typedef ControllerParameterT<ParameterEnum> ControllerEnum;
 
 
+} // namespace mk
 #endif

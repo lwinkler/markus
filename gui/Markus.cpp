@@ -38,6 +38,7 @@
 #include "Module.h"
 #include "ModuleTimer.h"
 
+namespace mk {
 
 using namespace std;
 
@@ -335,4 +336,5 @@ void MarkusWindow::resizeEvent(QResizeEvent* event)
 			//m_moduleViewer.at(ind)->toggleDisplayOptions(1);
 		}
 	}
+}
 }

@@ -30,6 +30,7 @@
 #include <string>
 #include <map>
 
+namespace mk {
 /// Timer class used for benchmarking
 class Timer
 {
@@ -67,4 +68,5 @@ private:
 };
 
 
+} // namespace mk
 #endif

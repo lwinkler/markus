@@ -31,9 +31,9 @@
 
 #include <memory>
 
-class MkDirectory;
-
 namespace mk {
+
+class MkDirectory;
 
 /**
 * @brief Read an event and log it to .srt file

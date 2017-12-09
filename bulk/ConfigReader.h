@@ -30,6 +30,7 @@
 #include <json.hpp>
 
 
+namespace mk {
 class Module;
 class ParameterStructure;
 
@@ -43,4 +44,5 @@ ConfigReader& findFirstInArray(ConfigReader& x_conf, const std::string& x_name, 
 ConfigReader& replaceOrAppendInArray(ConfigReader& x_conf, const std::string& x_name, const std::string& x_value);
 const ConfigReader& findFirstInArrayConst(const ConfigReader& x_conf, const std::string& x_name, const std::string& x_value);
 
+} // namespace mk
 #endif

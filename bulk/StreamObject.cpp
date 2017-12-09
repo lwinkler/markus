@@ -26,6 +26,7 @@
 
 #define DEFAULT_STREAM_COLOR cv::Scalar(255, 255, 255)
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -132,4 +133,5 @@ template<>void StreamObject::Deserialize(const mkjson& x_json, MkDirectory* xp_d
 {
 	Stream::Deserialize(x_json, xp_dir);
 	from_mkjson(x_json.at("objects"), m_content);
+}
 }

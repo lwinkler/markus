@@ -25,6 +25,7 @@
 #include "util.h"
 #include <opencv2/opencv.hpp>
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -225,4 +226,5 @@ void StreamT<Mat>::Disconnect()
 
 	mp_connectedImage = nullptr;
 	m_content = Mat();
+}
 }

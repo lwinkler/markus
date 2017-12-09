@@ -27,6 +27,7 @@
 #include "Object.h"
 
 
+namespace mk {
 class FeatureFloatInTime : public FeatureFloat
 {
 public:
@@ -49,4 +50,5 @@ public:
 	int   nbSamples;
 };
 
+} // namespace mk
 #endif

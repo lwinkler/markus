@@ -26,6 +26,7 @@
 
 #include "Controller.h"
 
+namespace mk {
 class ModuleClassifyEvents;
 
 /**
@@ -52,4 +53,5 @@ protected:
 	std::map<std::string, const action> m_actions;
 	ModuleClassifyEvents  & m_module;
 };
+} // namespace mk
 #endif

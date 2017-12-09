@@ -35,6 +35,7 @@
 #include "Polygon.h"
 
 using namespace std;
+using namespace mk;
 
 /// Unit testing class for ConfigReader class
 

@@ -27,6 +27,7 @@
 #include "Stream.h"
 #include "feature_util.h"
 
+namespace mk {
 /// Stream in the form of located objects
 
 template<typename T>class StreamT : public Stream
@@ -78,4 +79,5 @@ protected:
 	T  m_default;
 };
 
+} // namespace mk
 #endif

@@ -28,9 +28,10 @@
 #include "StreamObject.h"
 #include "Event.h"
 
-class AnnotationFileReader;
 
 namespace mk {
+
+class AnnotationFileReader;
 
 /**
 * @brief Read a ground truth file

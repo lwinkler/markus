@@ -30,6 +30,7 @@
 #include "Module.h"
 
 
+namespace mk {
 /**
 * @brief Read an annotation file
 */
@@ -60,4 +61,5 @@ protected:
 	std::string m_srtEnd;
 };
 
+} // namespace mk
 #endif

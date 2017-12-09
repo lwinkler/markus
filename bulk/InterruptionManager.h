@@ -28,6 +28,7 @@
 #include "ParameterStructure.h"
 #include <log4cxx/logger.h>
 
+namespace mk {
 /// Class to represent a command
 struct Command
 {
@@ -78,4 +79,5 @@ protected:
 private:
 	static log4cxx::LoggerPtr m_logger;
 };
+} // namespace mk
 #endif

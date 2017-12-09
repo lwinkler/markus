@@ -43,9 +43,7 @@
 #include <thread>
 
 using namespace std;
-
-
-
+using namespace mk;
 
 void usage()
 {

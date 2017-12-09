@@ -26,6 +26,7 @@
 #include "util.h"
 #include <boost/lexical_cast.hpp>
 
+namespace mk {
 using namespace std;
 
 
@@ -170,4 +171,5 @@ ControllerManager::ControllerManager(Manager& rx_manager) :
 QWidget* ControllerManager::CreateWidget()
 {
 	return nullptr;
+}
 }

@@ -52,6 +52,7 @@ delete pfeat;\
 
 // Factories: The RegisterAll method will register all necessary creators
 
+namespace mk {
 using namespace mk;
 using namespace std;
 
@@ -104,3 +105,4 @@ void Factories::RegisterAll()
 	factParamCtr.Register<ControllerParameterT<Stream>>(StreamT<bool>::className);
 }
 
+}

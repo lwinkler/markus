@@ -28,11 +28,13 @@
 #include <QWidget>
 #include <QScrollArea>
 
+class QGroupBox;
+class QHBoxLayout;
+
+namespace mk {
 
 /// Class to control a module (settings ...)
 class Controller;
-class QGroupBox;
-class QHBoxLayout;
 class Manager;
 
 /// QT widget to display one controller
@@ -58,4 +60,5 @@ protected:
 public slots:
 	void callAction();
 };
+}
 #endif

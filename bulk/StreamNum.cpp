@@ -23,6 +23,7 @@
 
 #include "StreamNum.h"
 
+namespace mk {
 using namespace std;
 
 // Static variables
@@ -32,3 +33,4 @@ template<> const string StreamNum<uint>::className   = "StreamNum<uint>";
 template<> const string StreamNum<float>::className  = "StreamNum<float>";
 template<> const string StreamNum<double>::className = "StreamNum<double>";
 
+}

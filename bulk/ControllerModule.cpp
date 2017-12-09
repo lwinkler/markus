@@ -25,6 +25,7 @@
 #include "Module.h"
 #include "util.h"
 
+namespace mk {
 using namespace std;
 
 
@@ -94,4 +95,5 @@ ControllerModule::ControllerModule(Module& rx_module) :
 QWidget* ControllerModule::CreateWidget()
 {
 	return nullptr;
+}
 }

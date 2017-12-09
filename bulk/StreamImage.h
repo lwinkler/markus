@@ -27,6 +27,7 @@
 #include "StreamT.h"
 #include <map>
 
+namespace mk {
 /// Structure used to keep the time stamp along with a buffer image (to speed up conversion)
 struct BufferImage
 {
@@ -97,4 +98,5 @@ protected:
 	cv::Mat& m_content;
 };
 
+} // namespace mk
 #endif

@@ -25,6 +25,7 @@
 #include "Module.h"
 #include "json.hpp"
 
+namespace mk {
 using namespace std;
 
 Stream::Stream(const string& x_name, Module& rx_module, const string& rx_description, const mkjson& rx_requirement) :
@@ -105,3 +106,4 @@ void Stream::Deserialize(const mkjson& x_json, MkDirectory* xp_dir)
 		throw MkException("Stream must have the same connection state before deserializing", LOC);
 }
 
+}

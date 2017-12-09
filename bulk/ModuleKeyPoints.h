@@ -29,6 +29,7 @@
 
 
 
+namespace mk {
 /**
 * @brief This class is a parent class for all module of keypoint extraction
 * http://docs.opencv.org/modules/features2d/doc/common_interfaces_of_feature_detectors.html
@@ -80,4 +81,5 @@ protected:
 };
 
 
+} // namespace mk
 #endif

@@ -23,6 +23,7 @@
 
 #include "Controller.h"
 
+namespace mk {
 using namespace std;
 
 log4cxx::LoggerPtr Controller::m_logger(log4cxx::Logger::getLogger("Controller"));
@@ -50,4 +51,5 @@ Controller& Controllable::FindController(const string& x_name) const
 	if(it == m_controls.end())
 		throw MkException("Cannot find controller " + x_name + " in controls list", LOC);
 	return *(it->second);
+}
 }

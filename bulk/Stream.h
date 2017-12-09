@@ -29,6 +29,7 @@
 #include "Module.h"
 
 
+namespace mk {
 /// This is the parent class for all streams (input and output of data)
 
 class Stream : public Parameter, boost::noncopyable
@@ -124,4 +125,5 @@ protected:
 	bool m_synchronized  = true;
 };
 
+} // namespace mk
 #endif

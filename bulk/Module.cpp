@@ -34,6 +34,7 @@
 #include "Factories.h"
 #include <fstream>
 
+namespace mk {
 using namespace std;
 using namespace mk;
 
@@ -569,3 +570,4 @@ void Module::RemoveDependingModule(const Module & x_module)
 	}
 }
 
+}

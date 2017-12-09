@@ -25,6 +25,7 @@
 #include "MarkusApplication.h"
 #include "Manager.h"
 #include <opencv2/opencv.hpp>
+namespace mk {
 
 log4cxx::LoggerPtr MarkusApplication::m_logger(log4cxx::Logger::getLogger("MarkusApplication"));
 
@@ -63,4 +64,5 @@ bool MarkusApplication::notify(QObject *receiver_, QEvent *event_)
 	}
 
 	return false;
+}
 }

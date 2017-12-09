@@ -27,6 +27,7 @@
 #include "StreamDebug.h"
 #include "util.h"
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -105,3 +106,4 @@ bool AnnotationSrtFileReader::ReadNextAnnotation(string& rx_subText)
 }
 
 
+}

@@ -27,6 +27,7 @@
 #include "Parameter.h"
 #include "Module.h"
 
+namespace mk {
 /// Class representing an module used for input (camera, video file, network stream, ...)
 class BackgroundSubtraction : public Module
 {
@@ -58,4 +59,5 @@ private:
 	Parameters& m_param;
 };
 
+} // namespace mk
 #endif

@@ -29,6 +29,7 @@
 #include "define.h"
 
 
+namespace mk {
 /**
 * @brief Read an annotation file (in .srt format)
 */
@@ -49,4 +50,5 @@ protected:
 	std::ofstream m_file;
 };
 
+} // namespace mk
 #endif

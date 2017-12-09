@@ -42,10 +42,10 @@
 // Template specialization for features of type Point2f
 
 namespace cv {
-	template<class T> inline void to_json(mkjson& _json, const Point_<T>& _pt) {
-		_json = mkjson{{"x", _pt.x}, {"y", _pt.y}};
+	template<class T> inline void to_json(mk::mkjson& _json, const Point_<T>& _pt) {
+		_json = mk::mkjson{{"x", _pt.x}, {"y", _pt.y}};
 	}
-	template<class T> inline void from_json(const mkjson& _json, Point_<T>& _pt) {
+	template<class T> inline void from_json(const mk::mkjson& _json, Point_<T>& _pt) {
 		_pt.x = _json.at("x").get<T>();
 		_pt.y = _json.at("y").get<T>();
 	}
@@ -64,14 +64,14 @@ void randomize(cv::Point2d& xr_val, unsigned int& xr_seed);
 // Template specialization for features of type Point3f
 
 namespace cv {
-	template<class T> inline void to_json(mkjson& _json, const Point3_<T>& _pt) {
-		_json = mkjson{
+	template<class T> inline void to_json(mk::mkjson& _json, const Point3_<T>& _pt) {
+		_json = mk::mkjson{
 			{"x", _pt.x},
 			{"y", _pt.y},
 			{"z", _pt.z}
 		};
 	}
-	template<class T> inline void from_json(const mkjson& _json, Point3_<T>& _pt) {
+	template<class T> inline void from_json(const mk::mkjson& _json, Point3_<T>& _pt) {
 		_pt.x = _json.at("x").get<T>();
 		_pt.y = _json.at("y").get<T>();
 		_pt.z = _json.at("z").get<T>();
@@ -85,8 +85,8 @@ void randomize(cv::Point3f& xr_val, unsigned int& xr_seed);
 // Template specialization for features of type KeyPoint
 
 namespace cv {
-	inline void to_json(mkjson& _json, const KeyPoint& _kp) {
-		_json = mkjson{
+	inline void to_json(mk::mkjson& _json, const KeyPoint& _kp) {
+		_json = mk::mkjson{
 			{"angle", _kp.angle}, 
 			{"classId", _kp.class_id}, 
 			{"octave", _kp.octave}, 
@@ -95,7 +95,7 @@ namespace cv {
 			{"size", _kp.size}
 		};
 	}
-	inline void from_json(const mkjson& _json, KeyPoint& _kp) {
+	inline void from_json(const mk::mkjson& _json, KeyPoint& _kp) {
 		_kp.angle = _json.at("angle").get<float>();
 		_kp.class_id = _json.at("classId").get<int>();
 		_kp.octave = _json.at("octave").get<int>();

@@ -26,6 +26,7 @@
 
 #include "util.h"
 
+namespace mk {
 using namespace std;
 
 
@@ -39,3 +40,4 @@ Input::~Input()
 {
 }
 
+}

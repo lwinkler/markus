@@ -28,6 +28,7 @@
 #include "Parameter.h"
 #include "Module.h"
 
+namespace mk {
 /// Class representing an module used for input (camera, video file, network stream, ...)
 class Input : public Module
 {
@@ -54,4 +55,5 @@ protected:
 	bool m_endOfStream;
 };
 
+} // namespace mk
 #endif

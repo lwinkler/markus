@@ -24,6 +24,7 @@
 #include "Configurable.h"
 #include "ParameterStructure.h"
 
+namespace mk {
 using namespace std;
 
 
@@ -35,4 +36,5 @@ Configurable::Configurable(ParameterStructure& x_param) : m_param(x_param)
 void Configurable::WriteConfig(ConfigReader& xr_config) const
 {
 	m_param.Write(xr_config);
+}
 }

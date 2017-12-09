@@ -27,6 +27,7 @@
 #include "Manager.h"
 #include <sstream>
 
+namespace mk {
 /**
 * @brief This file contains all the functions needed to prepare an optimization and variate parameters of the config
 */
@@ -65,4 +66,5 @@ private:
 	int m_cpt;
 
 };
+} // namespace mk
 #endif

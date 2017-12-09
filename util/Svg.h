@@ -29,6 +29,7 @@
 #include "Polygon.h"
 
 
+namespace mk {
 /**
 * @brief A helper class to easely write SVG files
 */
@@ -94,4 +95,5 @@ protected:
 	const double  m_heightRatio;
 };
 
+} // namespace mk
 #endif

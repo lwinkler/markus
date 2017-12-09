@@ -26,6 +26,7 @@
 #include "FeatureOpenCv.h"
 #include "FeatureVector.h"
 
+namespace mk {
 using namespace cv;
 using namespace std;
 
@@ -157,3 +158,4 @@ void ModuleKeyPoints::ProcessFrame()
 
 }
 
+}

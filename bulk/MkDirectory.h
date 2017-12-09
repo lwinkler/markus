@@ -34,6 +34,7 @@
 #include <boost/thread/shared_mutex.hpp>
 #include "MkException.h"
 
+namespace mk {
 /**
 * @brief A directory class to control accesses to the system file
 */
@@ -107,4 +108,5 @@ private:
 	const std::string m_path;
 	MkDirectory* mp_parent = nullptr;
 };
+} // namespace mk
 #endif

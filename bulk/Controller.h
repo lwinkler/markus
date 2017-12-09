@@ -31,8 +31,10 @@
 
 #include "Parameter.h"
 
-class Module;
 class QWidget;
+
+namespace mk {
+class Module;
 
 // Use macros to declare members of Controller childs, not the cleanest thing but you are free to try to
 // improve on this
@@ -125,4 +127,5 @@ private:
 	std::map<std::string, Controller*> m_controls;
 };
 
+} // namespace mk
 #endif

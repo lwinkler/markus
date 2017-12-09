@@ -28,6 +28,7 @@
 #include "feature_util.h"
 #include <vector>
 
+namespace mk {
 /**
 * @brief Class representing a feature in the form of a vector of primitive type
 */
@@ -72,4 +73,5 @@ typedef FeatureVectorT<float>   FeatureVectorFloat;
 typedef FeatureVectorT<int>   FeatureVectorInt;
 
 
+} // namespace mk
 #endif

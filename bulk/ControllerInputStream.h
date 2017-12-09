@@ -28,7 +28,6 @@
 
 namespace mk {
 class VideoFileReader;
-} // namespace mk
 class QParameterSlider;
 
 /**
@@ -57,4 +56,5 @@ protected:
 	QParameterSlider * m_parameterSlider;
 	mk::VideoFileReader  & m_module;
 };
+} // namespace mk
 #endif

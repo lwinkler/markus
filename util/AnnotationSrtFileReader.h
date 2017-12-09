@@ -30,6 +30,7 @@
 #include "AnnotationFileReader.h"
 
 
+namespace mk {
 /**
 * @brief Read an annotation file (in .srt format)
 */
@@ -48,4 +49,5 @@ private:
 
 };
 
+} // namespace mk
 #endif

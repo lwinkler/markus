@@ -31,6 +31,7 @@
 #include "ParameterT.h"
 #include "MkDirectory.h"
 
+namespace mk {
 /**
 * @brief All informations that must be known by modules concerning application run-time. Including access to file system.
 */
@@ -111,4 +112,5 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 	static bool m_unique;
 };
+} // namespace mk
 #endif

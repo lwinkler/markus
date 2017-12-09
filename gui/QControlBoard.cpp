@@ -29,6 +29,7 @@
 #include <QGroupBox>
 #include <QPushButton>
 
+namespace mk {
 using namespace std;
 
 
@@ -104,3 +105,4 @@ void QControlBoard::callAction()
 	// LOG_DEBUG(Manager::Logger(), "Call control on module "<<m_currentModule.GetName());
 	mr_manager.SendCommand(m_moduleName + "." + m_controllerName + "." + button->text().toStdString());
 }
+} // namespace mk

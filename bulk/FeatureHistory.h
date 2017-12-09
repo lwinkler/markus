@@ -27,6 +27,7 @@
 #include "Feature.h"
 
 
+namespace mk {
 class FeatureHistory : public Feature
 {
 public:
@@ -46,4 +47,5 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 };
 
+} // namespace mk
 #endif

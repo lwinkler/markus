@@ -31,6 +31,7 @@
 #include <log4cxx/logger.h>
 
 
+namespace mk {
 /// Class representing a event (e.g. Ponctual moment in time where an intrusion occurs)
 class Event
 {
@@ -95,4 +96,5 @@ protected:
 private:
 	static log4cxx::LoggerPtr m_logger;
 };
+} // namespace mk
 #endif

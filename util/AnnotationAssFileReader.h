@@ -29,6 +29,7 @@
 #include "define.h"
 #include "AnnotationFileReader.h"
 
+namespace mk {
 /**
 * @brief Read an annotation file (in .ass format)
 */
@@ -65,4 +66,5 @@ private:
 	std::string m_srt;
 };
 
+} // namespace mk
 #endif

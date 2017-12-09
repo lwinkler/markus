@@ -29,6 +29,7 @@
 #include "feature_util.h"
 #include "serialize.h"
 
+namespace mk {
 /**
 * @brief Class representing a feature of a template/object. (e.g. area, perimeter, length, ...)
 */
@@ -79,4 +80,5 @@ protected:
 	Feature* mp_feat;
 };
 
+} // namespace mk
 #endif

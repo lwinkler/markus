@@ -34,6 +34,7 @@
 
 
 
+namespace mk {
 /// This class is a template class for factories: a factory creates an instance of an object, the type of the object is specified as a string
 template<class T0, class T1, typename... Args> class FactoryT : boost::noncopyable
 {
@@ -86,4 +87,5 @@ public:
 private:
 	Registry m_register;
 };
+} // namespace mk
 #endif

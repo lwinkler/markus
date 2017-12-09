@@ -27,6 +27,7 @@
 #include <iostream>
 #include "json.hpp"
 
+namespace mk {
 /// Class for all serializable objects
 using mkjson = nlohmann::json;
 template<class T> inline void to_mkjson(mkjson& rx_js, const T& x_obj) 
@@ -61,4 +62,5 @@ inline std::string signatureOfFeature(const mkjson& x_json)
 }
 
 
+} // namespace mk
 #endif

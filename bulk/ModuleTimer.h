@@ -29,6 +29,7 @@
 #include <assert.h>
 #include <log4cxx/logger.h>
 
+namespace mk {
 class Processable;
 
 /// A timer associated with a module (for auto processing, mostly used in input modules)
@@ -55,4 +56,5 @@ private:
 };
 
 
+} // namespace mk
 #endif

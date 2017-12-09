@@ -30,6 +30,7 @@
 
 #include <list>
 
+namespace mk {
 /**
 * @brief A virtual module to filter events based on user feedback
 */
@@ -78,4 +79,5 @@ private:
 };
 
 
+} // namespace mk
 #endif

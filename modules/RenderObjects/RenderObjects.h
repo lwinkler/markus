@@ -26,9 +26,9 @@
 
 #include "Module.h"
 
-class Object;
 
 namespace mk {
+class Object;
 
 /**
 * @brief Output video stream with additional object streams

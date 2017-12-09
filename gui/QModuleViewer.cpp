@@ -50,6 +50,7 @@
 #include "Object.h"
 #include "util.h"
 
+namespace mk {
 using namespace cv;
 using namespace std;
 
@@ -540,3 +541,4 @@ void QModuleViewer::mouseDoubleClickEvent(QMouseEvent * event)
 	QMessageBox::about(this, QString(ss1.str().c_str()), QString(ss2.str().c_str()));
 }
 
+}

@@ -28,9 +28,11 @@
 
 #include "StreamImage.h"
 
+namespace mk {
 /// This class represents a debug stream, a stream that is only used to help the user
 /// it can typically be used to show what is happening inside a detection module
 typedef StreamImage StreamDebug;
 
+} // namespace mk
 #endif
 #endif

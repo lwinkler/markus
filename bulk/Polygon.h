@@ -30,6 +30,7 @@
 #include <vector>
 
 
+namespace mk {
 class Polygon
 {
 public:
@@ -71,4 +72,5 @@ protected:
 template<> void Polygon::GetPoints<cv::Point>(std::vector<cv::Point>& xr_points, const cv::Size& x_size) const;
 
 
+} // namespace mk
 #endif

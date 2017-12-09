@@ -27,6 +27,7 @@
 #include "StreamDebug.h"
 #include "util.h"
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -241,4 +242,5 @@ void AnnotationAssFileReader::ReadResolution()
 
 	m_widthProportion  = static_cast<double>(m_inputWidth)  / width;
 	m_heightProportion = static_cast<double>(m_inputHeight) / height;
+}
 }

@@ -31,6 +31,7 @@ class QScrollBar;
 class QLineEdit;
 class QBoxLayout;
 
+namespace mk {
 /// Visual Qt object. This class is used to set a parameter value using a visual slider. It is used for parameter of integer and double type
 
 class QParameterSlider : public QWidget
@@ -55,4 +56,5 @@ public slots:
 	void SetValueFromText();
 };
 
+} // namespace mk
 #endif

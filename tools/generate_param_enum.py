@@ -78,6 +78,7 @@ def main():
 #include "ParameterEnumT.h"
 
 using namespace std;
+using namespace mk;
 
 """)
 

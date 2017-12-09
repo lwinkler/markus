@@ -25,6 +25,7 @@
 
 #include <iostream>
 
+namespace mk {
 using namespace std;
 
 std::map<std::string, Timer> QuickTimer::ms_timers;
@@ -65,4 +66,5 @@ void QuickTimer::PrintTimers()
 		cout<<"QuickTimer "<<elem.first;
 		elem.second.Print();
 	}
+}
 }

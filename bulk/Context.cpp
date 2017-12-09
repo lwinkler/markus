@@ -27,6 +27,7 @@
 
 #include <boost/format.hpp>
 
+namespace mk {
 using namespace std;
 
 log4cxx::LoggerPtr Context::m_logger(log4cxx::Logger::getLogger("Context"));
@@ -156,3 +157,4 @@ string Context::Version(bool x_full)
 	return ss.str();
 }
 
+}

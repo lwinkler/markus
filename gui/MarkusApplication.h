@@ -27,6 +27,7 @@
 #include <QApplication>
 #include <log4cxx/logger.h>
 
+namespace mk {
 /// Redefinition of the QT application class. Redefines notification of exceptions.
 class MarkusApplication : public QApplication
 {
@@ -39,4 +40,5 @@ private:
 };
 
 
+} // namespace mk
 #endif

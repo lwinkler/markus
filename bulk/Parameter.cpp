@@ -25,6 +25,7 @@
 #include "util.h"
 #include "json.hpp"
 
+namespace mk {
 using namespace std;
 
 const char Parameter::configType[PARAMCONF_SIZE][16] = {"unset", "def", "json", "gui", "cmd", "unk"};
@@ -61,3 +62,4 @@ void Parameter::Print(std::ostream& os) const
 	os<<m_name<<"="<< oneLine(GetValue()) << " ("<<configType[m_confSource]<<"); ";
 }
 
+}

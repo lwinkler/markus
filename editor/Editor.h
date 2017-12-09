@@ -10,6 +10,7 @@
 #include <QObject>
 #include <iostream>
 
+namespace mk {
 class Manager;
 
 /*
@@ -61,4 +62,5 @@ public slots:
 	bool maybeSave();
 };
 
+}
 #endif

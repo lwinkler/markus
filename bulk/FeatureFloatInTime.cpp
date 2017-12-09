@@ -26,6 +26,7 @@
 #define INI_VARIANCE 0.01
 #define MIN_VARIANCE 0.0001
 
+namespace mk {
 using namespace std;
 
 FeatureFloatInTime::FeatureFloatInTime(const FeatureFloat& x_feat)
@@ -105,4 +106,5 @@ void FeatureFloatInTime::Deserialize(const mkjson& x_json)
 	min = x_json.at("min").get<float>();
 	max = x_json.at("max").get<float>();
 	nbSamples = x_json.at("nbSamples").get<int>();
+}
 }

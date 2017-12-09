@@ -27,6 +27,7 @@
 #include <boost/python.hpp>
 #include "Module.h"
 
+namespace mk {
 class FeaturePtr;
 
 /**
@@ -112,4 +113,5 @@ protected:
 };
 
 
+} // namespace mk
 #endif

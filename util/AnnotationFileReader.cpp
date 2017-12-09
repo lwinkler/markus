@@ -27,6 +27,7 @@
 #include "StreamDebug.h"
 #include "util.h"
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -137,4 +138,5 @@ string AnnotationFileReader::ReadAnnotationForTimeStamp(TIME_STAMP x_current)
 	if(current >= m_srtStart && current <= m_srtEnd)
 		return m_text;
 	else return "";
+}
 }

@@ -36,6 +36,7 @@
 #define MAX_WIDTH  6400
 #define MAX_HEIGHT 4800
 
+namespace mk {
 class Stream;
 
 /**
@@ -161,4 +162,5 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 };
 
+} // namespace mk
 #endif

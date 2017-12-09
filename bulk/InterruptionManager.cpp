@@ -28,6 +28,7 @@
 #include "InterruptionManager.h"
 #include "Manager.h"
 
+namespace mk {
 using namespace std;
 
 log4cxx::LoggerPtr InterruptionManager::m_logger(log4cxx::Logger::getLogger("InterruptionManager"));
@@ -83,4 +84,5 @@ vector<Command> InterruptionManager::ReturnCommandsToSend()
 	m_events.clear();
 	m_commands.clear();
 	return commands;
+}
 }

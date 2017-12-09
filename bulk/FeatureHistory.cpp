@@ -27,6 +27,7 @@
 #define INI_VARIANCE 0.01
 #define MIN_VARIANCE 0.0001
 
+namespace mk {
 using namespace std;
 
 log4cxx::LoggerPtr FeatureHistory::m_logger(log4cxx::Logger::getLogger("FeatureHistory"));
@@ -102,4 +103,5 @@ void FeatureHistory::Deserialize(const mkjson& x_json)
 		feat->Deserialize(elem.at("feature"));
 		features.insert(std::make_pair(elem.at("time").get<TIME_STAMP>(), FeaturePtr(feat)));
 	}
+}
 }

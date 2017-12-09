@@ -7,6 +7,7 @@
 #include "serialize.h"
 
 
+namespace mk {
 /**
 * @brief Exception codes: correspond with return values (+1000)
 */
@@ -148,4 +149,5 @@ public:
 };
 
 
+} // namespace mk
 #endif
