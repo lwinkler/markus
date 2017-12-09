@@ -29,6 +29,7 @@
 #include "ControllerInputStream.h"
 #endif
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -193,3 +194,4 @@ double VideoFileReader::GetRecordingFps() const
 		return m_recordingFps;
 	return MIN(m_param.fps, m_recordingFps);
 }
+} // namespace mk

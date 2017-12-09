@@ -151,7 +151,7 @@ Add a NewModule directory in modules/. You can use other modules as example. The
 Troubleshooting
 ===============
 
-AllModules.cpp is missing or a module is unknown
+allModules.cpp is missing or a module is unknown
 ------------------------------------------------
 Possible error messages:
 

@@ -31,6 +31,7 @@
 // #include "util.h"
 #define MAX_NB_TEMPLATES 256
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -435,3 +436,4 @@ void TrackerByFeatures::CheckMergeSplit()
 		}
 	}
 }
+} // namespace mk

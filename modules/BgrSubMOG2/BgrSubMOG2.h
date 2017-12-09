@@ -27,6 +27,7 @@
 #include "Module.h"
 #include "opencv2/video/background_segm.hpp"
 
+namespace mk {
 
 // default parameters of gaussian background detection algorithm from opencv
 /*static const int defaultHistory2 = 500; // Learning rate; alpha = 1/defaultHistory2
@@ -96,4 +97,5 @@ protected:
 };
 
 
+} // namespace mk
 #endif

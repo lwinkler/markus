@@ -26,6 +26,7 @@
 
 #include "Module.h"
 
+namespace mk {
 
 /**
 * @brief Perform a background subtraction using a running average
@@ -78,4 +79,5 @@ protected:
 };
 
 
+} // namespace mk
 #endif

@@ -25,6 +25,7 @@
 #include "StreamObject.h"
 
 #include <unistd.h>
+namespace mk {
 
 using namespace std;
 using namespace cv;
@@ -114,3 +115,4 @@ void RandomObjectsGenerator::Capture()
 	LOG_DEBUG(m_logger, "RandomObjectsGenerator: Capture time: "<<m_currentTimeStamp);
 }
 
+} // namespace mk

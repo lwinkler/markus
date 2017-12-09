@@ -25,6 +25,7 @@
 #include "StreamObject.h"
 #include "StreamState.h"
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -60,3 +61,4 @@ void ObjectsToEvent::ProcessFrame()
 	}
 }
 
+} // namespace mk

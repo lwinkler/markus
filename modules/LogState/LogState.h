@@ -31,6 +31,7 @@
 
 
 
+namespace mk {
 /**
 * @brief Read a state stream and log it to .srt file
 */
@@ -76,5 +77,6 @@ protected:
 	std::ofstream m_file;
 };
 
+} // namespace mk
 #endif
 

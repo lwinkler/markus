@@ -29,6 +29,7 @@
 #include "StreamObject.h"
 #include "ParameterEnumT.h"
 
+namespace mk {
 /*! \class Svm
  *  \brief Classification using Svm
  *
@@ -112,5 +113,6 @@ protected:
 #endif
 };
 
+} // namespace mk
 #endif
 

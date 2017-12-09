@@ -27,6 +27,7 @@
 #include "util.h"
 #include "Manager.h"
 #include <thread>
+namespace mk {
 
 using namespace std;
 using namespace cv;
@@ -217,3 +218,4 @@ void VideoFileBufferWriter::ProcessFrame()
 	}
 }
 
+} // namespace mk

@@ -34,6 +34,7 @@
  */
 
 
+namespace mk {
 
 /**
 * @brief Detect objects from a video stream using a cascade filter (c.f. Haar patterns)
@@ -123,5 +124,6 @@ protected:
 #endif
 };
 
+} // namespace mk
 #endif
 

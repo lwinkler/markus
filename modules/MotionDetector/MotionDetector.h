@@ -29,6 +29,7 @@
 #include "Event.h"
 #include "StreamNum.h"
 
+namespace mk {
 /**
 * @brief Detect motion from an image where pixel value represents motion
 */
@@ -88,5 +89,6 @@ protected:
 	static const cv::Scalar m_colorPlotThres;
 };
 
+} // namespace mk
 #endif
 

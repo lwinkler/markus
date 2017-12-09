@@ -31,6 +31,7 @@
 #include "util.h"
 #include "AnnotationFileReader.h"
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -197,3 +198,4 @@ void GroundTruthReader::ProcessFrame()
 	}
 
 }
+} // namespace mk

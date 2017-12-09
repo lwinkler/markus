@@ -25,6 +25,7 @@
 #include "StreamImage.h"
 #include <opencv2/opencv.hpp>
 
+namespace mk {
 using namespace cv;
 
 log4cxx::LoggerPtr Morph::m_logger(log4cxx::Logger::getLogger("Morph"));
@@ -55,3 +56,4 @@ void Morph::ProcessFrame()
 {
 	morphologyEx(m_input, m_output, m_param.oper, m_element, Point(-1,-1), m_param.iterations);
 };
+} // namespace mk

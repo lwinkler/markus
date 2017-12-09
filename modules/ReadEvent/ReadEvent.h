@@ -29,6 +29,8 @@
 
 class AnnotationFileReader;
 
+namespace mk {
+
 /**
 * @brief Read an event from an annotation file
 */
@@ -75,5 +77,6 @@ protected:
 	std::unique_ptr<MkDirectory> mp_inputDir;
 };
 
+} // namespace mk
 #endif
 

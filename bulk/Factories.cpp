@@ -55,9 +55,7 @@ delete pfeat;\
 using namespace mk;
 using namespace std;
 
-// log4cxx::LoggerPtr Processable::m_logger(log4cxx::Logger::getLogger("Processable"));
-
-// This method is implemented in AllModules.cpp (generated automatically)
+// This method is implemented in allModules.cpp (generated automatically)
 void registerAllModules(FactoryModules& x_fact1, FactoryParameters& x_fact2);
 
 void Factories::RegisterAll()

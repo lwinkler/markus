@@ -28,6 +28,7 @@
 #include "StreamObject.h"
 
 
+namespace mk {
 /**
 * @brief Filter the input objects based on different criterion
 */
@@ -92,4 +93,5 @@ protected:
 };
 
 
+} // namespace mk
 #endif

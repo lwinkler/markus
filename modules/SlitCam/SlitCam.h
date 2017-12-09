@@ -27,6 +27,7 @@
 #include "Module.h"
 #include "Parameter.h"
 
+namespace mk {
 
 /**
 * @brief A simple example module that mimics a slit camera (or linear camera). The camera input is a range of pixels in the middle of the image.
@@ -73,6 +74,8 @@ protected:
 	// state
 	int m_position;
 };
+
+} // namespace mk
 
 #endif
 

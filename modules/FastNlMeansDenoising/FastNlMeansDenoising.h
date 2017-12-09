@@ -30,6 +30,7 @@
 // based on: http://docs.opencv.org/modules/photo/doc/denoising.html
 
 
+namespace mk {
 class FastNlMeansDenoising : public Module
 {
 public:
@@ -83,5 +84,6 @@ protected:
 	cv::Mat m_output;
 };
 
+} // namespace mk
 
 #endif

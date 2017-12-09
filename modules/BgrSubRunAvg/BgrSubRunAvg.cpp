@@ -27,6 +27,7 @@
 
 // for debug
 #include "util.h"
+namespace mk {
 using namespace cv;
 using namespace std;
 
@@ -78,3 +79,4 @@ void BgrSubRunAvg::ProcessFrame()
 	threshold(m_foreground_tmp, m_foreground, m_param.foregroundThres * 255, 255, cv::THRESH_BINARY);
 };
 
+} // namespace mk

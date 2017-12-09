@@ -27,6 +27,7 @@
 #include "feature_util.h"
 #include "Manager.h"
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -80,3 +81,4 @@ void LogObjects::ProcessFrame()
 	mp_annotationWriter->WriteAnnotation(m_currentTimeStamp, m_currentTimeStamp, ss);
 }
 
+} // namespace mk

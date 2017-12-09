@@ -25,6 +25,7 @@
 #include "StreamImage.h"
 #include "util.h"
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -120,3 +121,4 @@ double UsbCam::GetRecordingFps() const
 	// cout << "FPS" << m_capture.get(CV_CAP_PROP_FPS) << endl;
 	return m_param.fps;
 }
+} // namespace mk

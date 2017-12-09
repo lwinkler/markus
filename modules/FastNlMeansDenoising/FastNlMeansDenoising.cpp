@@ -26,6 +26,7 @@
 // #include "StreamDebug.h"
 #include <opencv2/opencv.hpp>
 
+namespace mk {
 using namespace cv;
 using namespace std;
 
@@ -60,3 +61,4 @@ void FastNlMeansDenoising::ProcessFrame()
 		fastNlMeansDenoising(m_input, m_output, m_param.h, m_param.templateWindowSize, m_param.searchWindowSize);
 }
 
+} // namespace mk

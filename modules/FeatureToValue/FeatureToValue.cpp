@@ -24,6 +24,7 @@
 #include "FeatureToValue.h"
 #include "StreamObject.h"
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -79,3 +80,4 @@ void FeatureToValue::ProcessFrame()
 	mp_streamValues->Store();
 #endif
 }
+} // namespace mk

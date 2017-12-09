@@ -28,6 +28,7 @@
 #include "Parameter.h"
 #include "Event.h"
 
+namespace mk {
 /**
 * @brief Detect motion from an image where pixel value represents motion
 */
@@ -75,5 +76,6 @@ protected:
 #endif
 };
 
+} // namespace mk
 #endif
 

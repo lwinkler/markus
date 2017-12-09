@@ -28,6 +28,7 @@
 #include "StreamObject.h"
 
 
+namespace mk {
 
 /**
 * @brief Extract different types of keypoints
@@ -64,4 +65,5 @@ protected:
 };
 
 
+} // namespace mk
 #endif

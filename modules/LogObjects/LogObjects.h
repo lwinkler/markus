@@ -30,6 +30,7 @@
 #include "AnnotationFileWriter.h"
 
 
+namespace mk {
 /**
 * @brief Read a stream of objects and log data to a text file
 */
@@ -72,5 +73,6 @@ protected:
 	AnnotationFileWriter* mp_annotationWriter;
 };
 
+} // namespace mk
 #endif
 

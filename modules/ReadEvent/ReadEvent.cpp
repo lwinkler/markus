@@ -29,6 +29,7 @@
 #include "Manager.h"
 
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -73,3 +74,4 @@ void ReadEvent::Capture()
 	assert(m_event.IsRaised());
 }
 
+} // namespace mk

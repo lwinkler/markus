@@ -26,6 +26,7 @@
 #include "StreamDebug.h"
 #include <opencv2/opencv.hpp>
 
+namespace mk {
 using namespace cv;
 using namespace std;
 
@@ -70,3 +71,4 @@ void BgrSubMOG2::ProcessFrame()
 	threshold(m_foregroundWithShadows, m_foreground, 254, 255, cv::THRESH_BINARY);
 }
 
+} // namespace mk

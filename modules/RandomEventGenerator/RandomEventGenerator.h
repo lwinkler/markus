@@ -27,6 +27,7 @@
 #include "Input.h"
 #include "Event.h"
 
+namespace mk {
 /**
 * @brief Generate an event with random features at each step
 */
@@ -74,4 +75,5 @@ protected:
 	TIME_STAMP   m_timeNextEvent;
 };
 
+} // namespace mk
 #endif

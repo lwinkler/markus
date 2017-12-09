@@ -28,8 +28,9 @@
 #include "StreamObject.h"
 #include "Event.h"
 
-
 class AnnotationFileReader;
+
+namespace mk {
 
 /**
 * @brief Read a ground truth file
@@ -90,4 +91,5 @@ protected:
 	AnnotationFileReader* mp_annotationReader = nullptr;
 };
 
+} // namespace mk
 #endif

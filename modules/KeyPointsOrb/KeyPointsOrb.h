@@ -29,6 +29,7 @@
 
 
 
+namespace mk {
 /**
 * @brief Extract different types of keypoints
 */
@@ -76,5 +77,6 @@ private:
 protected:
 };
 
+} // namespace mk
 
 #endif

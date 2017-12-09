@@ -27,6 +27,7 @@
 #include "MkException.h"
 #include <opencv2/opencv.hpp>
 
+namespace mk {
 using namespace cv;
 using namespace std;
 
@@ -105,3 +106,4 @@ void CompareObjects::ProcessFrame()
 }
 
 
+} // namespace mk

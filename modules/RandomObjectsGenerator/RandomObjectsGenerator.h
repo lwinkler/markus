@@ -27,6 +27,7 @@
 #include "Input.h"
 #include "Object.h"
 
+namespace mk {
 /**
 * @brief Generate an object with random features at each step
 */
@@ -74,4 +75,5 @@ protected:
 	int m_cpt;
 };
 
+} // namespace mk
 #endif

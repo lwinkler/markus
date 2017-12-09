@@ -28,6 +28,7 @@
 #include "Manager.h"
 #include <opencv2/highgui/highgui.hpp>
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -79,3 +80,4 @@ void AddImageToEvent::ProcessFrame()
 		}
 	}
 }
+} // namespace mk

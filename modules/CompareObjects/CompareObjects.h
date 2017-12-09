@@ -27,6 +27,7 @@
 #include "Module.h"
 #include "Object.h"
 
+namespace mk {
 /**
  * @brief Compare the two input videos and compute the dissimilarity of them for all the sequence.
  * When processing, the module throws an exception as soon as the dissimilarity of all already processed frames exceeds the given threshold.
@@ -79,4 +80,5 @@ protected:
 	// long m_frameCount;
 };
 
+} // namespace mk
 #endif

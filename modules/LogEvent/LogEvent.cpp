@@ -27,6 +27,7 @@
 #include "util.h"
 #include "Manager.h"
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -178,3 +179,4 @@ bool LogEvent::IsInputProcessed() const
 	assert(pStream != nullptr);
 	return m_event.IsRaised() || pStream->GetContent().IsRaised();
 }
+} // namespace mk

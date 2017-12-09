@@ -26,6 +26,7 @@
 #include "util.h"
 #include "Manager.h"
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -91,3 +92,4 @@ void LogState::WriteState()
 	m_startTime = m_endTime;
 	m_oldState = m_state;
 }
+} // namespace mk

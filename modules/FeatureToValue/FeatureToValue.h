@@ -27,11 +27,13 @@
 #include "Module.h"
 #include "StreamNum.h"
 
+class Object;
+
+namespace mk {
 /**
 * @brief Output video stream with additional object streams
 */
 
-class Object;
 
 class FeatureToValue : public Module
 {
@@ -71,4 +73,5 @@ protected:
 };
 
 
+} // namespace mk
 #endif

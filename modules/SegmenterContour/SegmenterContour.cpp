@@ -29,6 +29,7 @@
 // for debug
 #include "util.h"
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -252,3 +253,4 @@ void SegmenterContour::ProcessFrame()
 
 
 
+} // namespace mk

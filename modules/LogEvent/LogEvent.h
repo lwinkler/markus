@@ -33,6 +33,8 @@
 
 class MkDirectory;
 
+namespace mk {
+
 /**
 * @brief Read an event and log it to .srt file
 */
@@ -99,5 +101,6 @@ protected:
 	std::unique_ptr<MkDirectory> mp_outputDir;
 };
 
+} // namespace mk
 #endif
 

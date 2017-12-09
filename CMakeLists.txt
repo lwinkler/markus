@@ -101,7 +101,7 @@ endif()
 include_directories(${PYTHON_INCLUDE_DIRS})
 include_directories(util bulk ${Markus_MODULE_DIRS})
 
-set(markus_SRCS main.cpp modules/AllModules.cpp)
+set(markus_SRCS main.cpp modules/allModules.cpp)
 
 #-------------------------------------------------------------------------------- 
 if(Markus_NO_GUI)
@@ -144,8 +144,8 @@ if(NOT Markus_NO_GUI)
 	add_subdirectory(gui)
 	add_subdirectory(editor)
 endif()
-# Auto generate AllModules.cpp
-execute_process(COMMAND ./modules/AllModules.cpp.sh . OUTPUT_FILE modules/AllModules.cpp)
+# Auto generate allModules.cpp
+execute_process(COMMAND ./modules/allModules.cpp.sh . OUTPUT_FILE modules/allModules.cpp)
 
 add_subdirectory(tests)
 

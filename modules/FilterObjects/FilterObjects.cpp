@@ -26,6 +26,7 @@
 #include "StreamDebug.h"
 #include "FeatureFloatInTime.h"
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -155,3 +156,4 @@ void FilterObjects::ProcessFrame()
 
 }
 
+} // namespace mk

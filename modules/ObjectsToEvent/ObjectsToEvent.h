@@ -29,6 +29,7 @@
 #include "StreamEvent.h"
 
 
+namespace mk {
 /**
 * @brief Count the input objects
 */
@@ -74,4 +75,5 @@ protected:
 };
 
 
+} // namespace mk
 #endif

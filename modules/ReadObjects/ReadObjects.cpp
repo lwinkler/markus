@@ -28,6 +28,7 @@
 #include "feature_util.h"
 #include "Manager.h"
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -81,3 +82,4 @@ void ReadObjects::Capture()
 	//m_ObjectOut.push_back(obj);
 }
 
+} // namespace mk

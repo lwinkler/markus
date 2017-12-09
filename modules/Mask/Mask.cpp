@@ -27,6 +27,7 @@
 
 // for debug
 // #include "util.h"
+namespace mk {
 
 using namespace cv;
 using namespace std;
@@ -63,3 +64,4 @@ void Mask::ProcessFrame()
 	// cvAnd(m_input, m_mask, m_output);
 };
 
+} // namespace mk

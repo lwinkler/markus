@@ -30,6 +30,7 @@
 #include "Template.h"
 
 
+namespace mk {
 /**
 * @brief Track objects by matching a set of features (typically x,y,width andci height)
 */
@@ -95,4 +96,5 @@ protected:
 };
 
 
+} // namespace mk
 #endif

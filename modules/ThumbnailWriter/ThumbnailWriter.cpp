@@ -27,6 +27,7 @@
 #include "Manager.h"
 #include <fstream>
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -133,3 +134,4 @@ void ThumbnailWriter::ProcessFrame()
 }
 
 
+} // namespace mk

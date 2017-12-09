@@ -30,6 +30,7 @@
 
 
 
+namespace mk {
 /**
 * @brief Read video stream from a video file
 *
@@ -90,4 +91,5 @@ protected:
 	double m_recordingFps = 0;
 };
 
+} // namespace mk
 #endif

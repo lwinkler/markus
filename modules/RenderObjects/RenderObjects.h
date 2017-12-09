@@ -28,6 +28,8 @@
 
 class Object;
 
+namespace mk {
+
 /**
 * @brief Output video stream with additional object streams
 */
@@ -65,4 +67,5 @@ protected:
 };
 
 
+} // namespace mk
 #endif

@@ -26,6 +26,7 @@
 
 #include "Module.h"
 #include "ParameterT.h"
+namespace mk {
 
 /**
  * @brief Compare the two input videos and compute the dissimilarity of them for each image.
@@ -83,4 +84,5 @@ protected:
 	int64_t m_frameCount;
 };
 
+} // namespace mk
 #endif

@@ -29,6 +29,7 @@
 //for debug
 #include "util.h"
 
+namespace mk {
 using namespace cv;
 using namespace std;
 
@@ -125,3 +126,4 @@ void OpticalFlowKeyPoints::ProcessFrame()
 	m_input.copyTo(m_lastImg);
 	m_lastPoints = pointsIn;
 }
+} // namespace mk

@@ -26,6 +26,7 @@
 #include "StreamImage.h"
 #include "Manager.h"
 #include "util.h"
+namespace mk {
 
 using namespace std;
 using namespace cv;
@@ -187,3 +188,4 @@ bool WriteObjectMongo::IsInputProcessed() const
 	return !m_objects.empty() || !stream.GetContent().empty();
 }
 
+} // namespace mk

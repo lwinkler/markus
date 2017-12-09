@@ -28,6 +28,7 @@
 #include <cstdio>
 #include <opencv2/highgui/highgui.hpp>
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -70,3 +71,4 @@ void SlitCam::ProcessFrame()
 			m_output.col(m_position + i) = m_input.col(x/* + i*/) * 1;
 }
 
+} // namespace mk

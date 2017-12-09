@@ -26,6 +26,7 @@
 #include "util.h"
 #include "Manager.h"
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -116,3 +117,4 @@ const string VideoFileWriter::ExtensionFromFourcc(const string& x_fourcc)
 
 	return "avi";
 }
+} // namespace mk

@@ -29,6 +29,7 @@
 #include "Parameter.h"
 #include "StreamObject.h"
 
+namespace mk {
 /*! \class HOGDetector
  *  \brief Module class for detection based on HOG models
  *
@@ -92,5 +93,6 @@ protected:
 #endif
 };
 
+} // namespace mk
 #endif
 

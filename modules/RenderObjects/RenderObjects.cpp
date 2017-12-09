@@ -26,6 +26,7 @@
 #include "StreamObject.h"
 #include "StreamImage.h"
 
+namespace mk {
 using namespace cv;
 using namespace std;
 
@@ -70,3 +71,4 @@ void RenderObjects::ProcessFrame()
 	}
 	*/
 }
+} // namespace mk

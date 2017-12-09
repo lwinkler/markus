@@ -27,6 +27,7 @@
 
 #include <unistd.h>
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -108,3 +109,4 @@ void RandomEventGenerator::Capture()
 	LOG_DEBUG(m_logger, "RandomObjectsGenerator: Capture time: "<<m_currentTimeStamp);
 }
 
+} // namespace mk

@@ -30,6 +30,7 @@
 
 
 
+namespace mk {
 /**
 * @brief Write all objects as a collection of images (thumbnails)
 */
@@ -71,4 +72,5 @@ protected:
 	std::vector <Object> m_objectsIn;
 };
 
+} // namespace mk
 #endif

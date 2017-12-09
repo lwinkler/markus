@@ -29,6 +29,7 @@
 #include "Object.h"
 
 
+namespace mk {
 /**
 * @brief Read an event and log it to .srt file
 */
@@ -66,5 +67,6 @@ protected:
 	std::vector<Object> m_objects;
 };
 
+} // namespace mk
 #endif
 

@@ -28,6 +28,7 @@
 #include "util.h"
 // #include <opencv2/highgui/highgui.hpp>
 
+namespace mk {
 using namespace cv;
 
 log4cxx::LoggerPtr TempDiff::m_logger(log4cxx::Logger::getLogger("TempDiff"));
@@ -69,3 +70,4 @@ void TempDiff::ProcessFrame()
 	}
 };
 
+} // namespace mk

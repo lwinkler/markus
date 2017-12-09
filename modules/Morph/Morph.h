@@ -27,6 +27,7 @@
 #include "Module.h"
 
 
+namespace mk {
 /**
 * @brief Apply a morphological operator to an image
 */
@@ -76,4 +77,5 @@ protected:
 };
 
 
+} // namespace mk
 #endif

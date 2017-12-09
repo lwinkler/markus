@@ -66,7 +66,7 @@ void ControllerInputStream::GetCursor(mkjson& rx_value)
 #endif
 }
 
-ControllerInputStream::ControllerInputStream(VideoFileReader& rx_module) :
+ControllerInputStream::ControllerInputStream(mk::VideoFileReader& rx_module) :
 	Controller("reader"),
 	m_module(rx_module)
 {

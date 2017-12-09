@@ -28,6 +28,7 @@
 #include "Object.h"
 #include <mongoc.h>
 
+namespace mk {
 /**
 * @brief Write a set of objects to Mongo DB
 */
@@ -92,5 +93,6 @@ protected:
 	std::unique_ptr<MkDirectory> mp_outputDir;
 };
 
+} // namespace mk
 #endif
 

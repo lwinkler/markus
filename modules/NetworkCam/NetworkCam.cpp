@@ -32,6 +32,7 @@
 
 #define TIMEOUT 3 // 3 sec timeout
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -174,3 +175,4 @@ double NetworkCam::GetRecordingFps() const
 		return m_recordingFps;
 	return MIN(m_param.fps, m_recordingFps);
 }
+} // namespace mk

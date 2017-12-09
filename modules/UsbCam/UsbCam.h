@@ -30,6 +30,7 @@
 #include "Timer.h"
 
 
+namespace mk {
 /**
 * @brief Read video stream from an enbedded or USB camera
 */
@@ -73,4 +74,5 @@ protected:
 	cv::VideoCapture m_capture;
 };
 
+} // namespace mk
 #endif

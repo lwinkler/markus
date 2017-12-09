@@ -30,6 +30,7 @@
 //for debug
 #include "util.h"
 
+namespace mk {
 using namespace cv;
 using namespace std;
 
@@ -65,3 +66,4 @@ void KeyPointsMser::Reset()
 		throw MkException("Cannot create detector", LOC);
 }
 
+} // namespace mk

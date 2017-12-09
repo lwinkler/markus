@@ -30,6 +30,7 @@
 // #include <opencv2/highgui/highgui.hpp>
 // #include "util.h"
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -93,3 +94,4 @@ void HOGDetector::ProcessFrame()
 #endif
 }
 
+} // namespace mk

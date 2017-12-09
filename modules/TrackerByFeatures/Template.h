@@ -26,6 +26,7 @@
 #include "FeatureFloatInTime.h"
 
 
+namespace mk {
 /*! \class Template
  *  \brief Class representing an object template
  *
@@ -67,3 +68,4 @@ private:
 	static int m_counter; // Counter to attribute ids
 	std::map <std::string, FeatureFloatInTime> m_feats;
 };
+} // namespace mk

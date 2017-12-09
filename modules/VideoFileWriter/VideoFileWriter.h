@@ -30,6 +30,7 @@
 
 
 
+namespace mk {
 /**
 * @brief Write output to a video file
 */
@@ -82,4 +83,5 @@ protected:
 	cv::VideoWriter m_writer;
 };
 
+} // namespace mk
 #endif

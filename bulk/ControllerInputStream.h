@@ -26,7 +26,9 @@
 
 #include "Controller.h"
 
+namespace mk {
 class VideoFileReader;
+} // namespace mk
 class QParameterSlider;
 
 /**
@@ -35,7 +37,7 @@ class QParameterSlider;
 class ControllerInputStream : public Controller
 {
 public:
-	explicit ControllerInputStream(VideoFileReader& rx_module);
+	explicit ControllerInputStream(mk::VideoFileReader& rx_module);
 	virtual ~ControllerInputStream();
 	MKCLASS("ControllerInputStream")
 
@@ -53,6 +55,6 @@ protected:
 	std::map<std::string, const action> m_actions;
 	// cppcheck-suppress unsafeClassCanLeak // we must return this pointer to Qt
 	QParameterSlider * m_parameterSlider;
-	VideoFileReader  & m_module;
+	mk::VideoFileReader  & m_module;
 };
 #endif

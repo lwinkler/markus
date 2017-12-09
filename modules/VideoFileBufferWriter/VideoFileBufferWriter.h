@@ -33,6 +33,7 @@
 #include <atomic>
 
 
+namespace mk {
 /**
 * @brief Write output to a buffer and exports it if an evenement occurs
 */
@@ -94,4 +95,5 @@ protected:
 	std::atomic<bool> m_threadIsWorking;
 };
 
+} // namespace mk
 #endif

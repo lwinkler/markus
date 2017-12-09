@@ -32,6 +32,7 @@
 
 
 
+namespace mk {
 /**
 * @brief Read video stream from a network camera
 
@@ -85,4 +86,5 @@ protected:
 	double m_recordingFps;
 };
 
+} // namespace mk
 #endif

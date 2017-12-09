@@ -34,6 +34,7 @@
 
 #include "util.h"
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -99,3 +100,4 @@ void CascadeDetector::ProcessFrame()
 	}
 #endif
 }
+} // namespace mk

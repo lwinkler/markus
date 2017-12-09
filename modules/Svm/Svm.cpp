@@ -31,6 +31,7 @@
 
 #include <opencv2/ml.hpp>
 
+namespace mk {
 using namespace std;
 using namespace cv;
 using namespace cv::ml;
@@ -191,3 +192,4 @@ void Svm::TestModel()
 	LOG_INFO(m_logger, "Error of model on test data: " << err << "%");
 }
 
+} // namespace mk

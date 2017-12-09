@@ -22,6 +22,7 @@
 -------------------------------------------------------------------------------------*/
 #include "Template.h"
 
+namespace mk {
 using namespace std;
 
 #define POW2(x) (x) * (x)
@@ -154,3 +155,4 @@ bool Template::NeedCleaning(TIME_STAMP x_cleaningTimeStamp)
 	int tmp = m_lastSeen - x_cleaningTimeStamp; // note: this condition would not resist an overflow
 	return tmp < 0;
 }
+} // namespace mk

@@ -27,6 +27,7 @@
 #include "Module.h"
 
 
+namespace mk {
 /**
 * @brief Perform temporal differencing: compare frame with previous frame by subtraction
 */
@@ -70,4 +71,5 @@ protected:
 };
 
 
+} // namespace mk
 #endif

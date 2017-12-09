@@ -26,6 +26,7 @@
 #include "StreamObject.h"
 #include "util.h"
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -67,3 +68,4 @@ bool EventToObjects::IsInputProcessed() const
 	assert(pStream != nullptr);
 	return m_event.IsRaised() || pStream->GetContent().IsRaised();
 }
+} // namespace mk

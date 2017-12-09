@@ -28,6 +28,7 @@
 #include "opencv2/video/background_segm.hpp"
 
 
+namespace mk {
 /**
 * @brief Apply a binary mask to an image input
 */
@@ -67,4 +68,5 @@ protected:
 };
 
 
+} // namespace mk
 #endif

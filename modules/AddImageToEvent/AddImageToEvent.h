@@ -29,6 +29,7 @@
 
 
 
+namespace mk {
 
 /**
 * @brief Add an attached image to an event (after saving it as a file)
@@ -75,4 +76,5 @@ protected:
 	std::unique_ptr<MkDirectory> mp_outputDir;
 };
 
+} // namespace mk
 #endif

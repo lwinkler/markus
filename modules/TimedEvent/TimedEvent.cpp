@@ -25,6 +25,7 @@
 #include "StreamImage.h"
 #include "StreamEvent.h"
 
+namespace mk {
 using namespace std;
 using namespace cv;
 
@@ -76,3 +77,4 @@ bool TimedEvent::IsInputProcessed() const
 {
 	return false;
 }
+} // namespace mk
