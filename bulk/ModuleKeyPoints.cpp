@@ -99,7 +99,7 @@ void ModuleKeyPoints::ProcessFrame()
 
 		mp_detector->detect(subImage, pointsOfInterest);
 		Mat descriptors;
-		if(mp_descriptor != nullptr && false) // TODO fix
+		if(!mp_descriptor.empty())
 		{
 			mp_descriptor->compute(m_input, pointsOfInterest, descriptors);
 			assert(descriptors.rows == static_cast<int>(pointsOfInterest.size()));
@@ -123,7 +123,7 @@ void ModuleKeyPoints::ProcessFrame()
 			obj.AddFeature("keypoint", new FeatureKeyPoint(kp));
 			obj.AddFeature("parent", new FeatureInt(obj1.GetId()));
 
-			if(mp_descriptor != nullptr && false) // TODO fix
+			if(!mp_descriptor.empty()) // TODO fix
 			{
 				// Add descriptor
 				if(descriptors.type() != CV_32FC1)
