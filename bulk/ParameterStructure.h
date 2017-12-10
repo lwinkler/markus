@@ -27,7 +27,7 @@
 #include "define.h"
 #include "Parameter.h"
 #include "MkException.h"
-#include "ConfigReader.h"
+#include "config.h"
 #include <log4cxx/logger.h>
 #include <boost/noncopyable.hpp>
 
@@ -39,11 +39,11 @@ class ParameterStructure : boost::noncopyable
 public:
 	explicit ParameterStructure(const std::string& x_name);
 	virtual ~ParameterStructure();
-	void Read(const ConfigReader& x_config);
-	void Write(ConfigReader& xr_config) const;
+	void Read(const mkconf& x_config);
+	void Write(mkconf& xr_config) const;
 	void SetValueToDefault();
 	virtual void CheckRange() const;
-	void CheckRange(const ConfigReader& x_config) const;
+	void CheckRange(const mkconf& x_config) const;
 	void PrintParameters() const;
 	//void SetValueByName(const std::string& x_name, const std::string& x_value, ParameterConfigType x_configType = PARAMCONF_UNKNOWN);
 	const Parameter & GetParameterByName(const std::string& x_name) const;

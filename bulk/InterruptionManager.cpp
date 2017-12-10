@@ -39,7 +39,7 @@ InterruptionManager::InterruptionManager()
 }
 
 /// Configure interruptions from config
-void InterruptionManager::Configure(const ConfigReader& x_config)
+void InterruptionManager::Configure(const mkconf& x_config)
 {
 	m_interruptions.clear();
 	if(x_config.find("interruptions") != x_config.end()) {

@@ -24,23 +24,24 @@
 #define TEST_CONFIGREADER_H
 
 #include <cxxtest/TestSuite.h>
-#include "ConfigReader.h"
+#include "config.h"
 #include "util.h"
 #include "MkException.h"
 
 using namespace std;
+using namespace mk;
 
-class ConfigReaderTestSuite : public CxxTest::TestSuite
+class mkconfTestSuite : public CxxTest::TestSuite
 {
 public:
 	/// Test new syntax
 	void testSyntax()
 	{
 		TS_TRACE("\n# Test on the syntax of configurations");
-		ConfigReader conf;
+		mkconf conf;
 		conf["t1"]["t2"]["t3"]["bla"] = 333;
 		writeToFile(conf, "tests/tmp/test3.json");
-		ConfigReader conf2;
+		mkconf conf2;
 		readFromFile(conf2, "tests/tmp/test3.json");
 
 		TS_ASSERT(!conf2["t1"].is_null());
@@ -54,25 +55,24 @@ public:
 	{
 		TS_TRACE("\n# Test the loading of configurations");
 
-		ConfigReader appConf;
+		mkconf appConf;
 		readFromFile(appConf, "tests/config/config1.json");
-		ConfigReader& module0conf(findFirstInArray(appConf.at("modules"), "name", "Module0"));
-		ConfigReader& module1conf = findFirstInArray(appConf["modules"], "name", "Module1");
+		mkconf& module0conf(findFirstInArray(appConf.at("modules"), "name", "Module0"));
+		mkconf& module1conf = findFirstInArray(appConf["modules"], "name", "Module1");
 
 		TS_ASSERT(! module0conf["inputs"].is_null());
 		TS_ASSERT(! module1conf["inputs"].is_null());
 
-		ConfigReader& param1 = findFirstInArray(module0conf["inputs"], "name", "param_text");
+		mkconf& param1 = findFirstInArray(module0conf["inputs"], "name", "param_text");
 		TS_ASSERT(param1["value"].get<string>() == "SomeText");
-		ConfigReader& param2 = findFirstInArray(module0conf["inputs"], "name", "param_int");
+		mkconf& param2 = findFirstInArray(module0conf["inputs"], "name", "param_int");
 		TS_ASSERT(param2["value"].get<int>() == 21);
-		ConfigReader& param3 = findFirstInArray(module0conf["inputs"], "name", "param_float");
+		mkconf& param3 = findFirstInArray(module0conf["inputs"], "name", "param_float");
 		TS_ASSERT(param3["value"].get<double>() == 3.1415);
 
-		ConfigReader conf1;
+		mkconf conf1;
 		readFromFile(conf1, "tests/config/config1.json");
 		writeToFile(conf1, "tests/tmp/config1_copy.json");
-		validate(conf1);
 
 		// Compare with the initial config
 		TS_ASSERT(compareJsonFiles("tests/config/config1.json", "tests/tmp/config1_copy.json"));
@@ -82,13 +82,13 @@ public:
 	void testGenerate()
 	{
 		TS_TRACE("\n# Test the generation of configurations");
-		ConfigReader appConf;
+		mkconf appConf;
 		appConf["aaa"]["nameX"]
 		["bbb"]["nameY"]
 		["ccc"]["nameZ"] = "someValue";
 		writeToFile(appConf, "tests/tmp/config_generated.json");
 
-		ConfigReader generatedConf;
+		mkconf generatedConf;
 		readFromFile(generatedConf, "tests/tmp/config_generated.json");
 		TS_ASSERT(generatedConf
 				  ["aaa"]["nameX"]
@@ -101,11 +101,11 @@ public:
 	void testOverride()
 	{
 		TS_TRACE("\n# Test the override of the original configuration");
-		ConfigReader conf1;
+		mkconf conf1;
 		readFromFile(conf1, "tests/config/config1.json");
-		ConfigReader& conf2(conf1["modules"][0]);
+		mkconf& conf2(conf1["modules"][0]);
 
-		ConfigReader conf5;
+		mkconf conf5;
 		readFromFile(conf5, "tests/config/config_part.json");
 
 		TS_ASSERT(findFirstInArray(conf2["inputs"], "name", "param_text")["value"].get<string>() == "SomeText");

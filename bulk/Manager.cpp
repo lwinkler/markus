@@ -85,7 +85,7 @@ void Manager::Build()
 	}
 }
 
-void Manager::BuildModule(const string& x_name, const ConfigReader& x_moduleConfig)
+void Manager::BuildModule(const string& x_name, const mkconf& x_moduleConfig)
 {
 	// Read parameters
 	string moduleType = x_moduleConfig["class"].get<string>();
@@ -428,12 +428,12 @@ void Manager::PrintStatistics()
 		RefContext().RefOutputDir().Rm("benchmark.json");
 	string benchFileName = notEmpty ? RefContext().RefOutputDir().ReserveFile("benchmark.json") : "/tmp/benchmark" + timeStamp() +  ".json";
 
-	ConfigReader benchSummary;
+	mkconf benchSummary;
 	readFromFile(benchSummary, benchFileName, true);
-	ConfigReader& conf(benchSummary["benchmark"]);
+	mkconf& conf(benchSummary["benchmark"]);
 
 	// Write perf to output XML
-	ConfigReader& perfModule(conf["manager"]);
+	mkconf& perfModule(conf["manager"]);
 	perfModule["nb_frames"]             = m_frameCount;
 	perfModule["timers"]["processable"] = m_timerProcessable.GetMsLong();
 	// perfModule["timers"]["processing"]  = Json::UInt64(m_timerProcessFrame.GetMsLong());
@@ -528,7 +528,7 @@ Module& Manager::RefModuleByName(const string& x_name) const
 /**
 * @brief Save the configuration of manager and modules to file
 */
-void Manager::WriteConfig(ConfigReader& xr_config) const
+void Manager::WriteConfig(mkconf& xr_config) const
 {
 	// Set all config ready to be saved
 	for(auto & elem : m_modules)
@@ -563,7 +563,7 @@ void Manager::WriteStateToDirectory(const string& x_directory)
 * @param xr_module     Module to connect
 * @param x_inputName   Name of input
 */
-void Manager::ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module, const string& x_inputName) const
+void Manager::ConnectInput(const mkconf& x_inputConfig, Module& xr_module, const string& x_inputName) const
 {
 	// Check if connected to our previous module
 	try

@@ -40,7 +40,7 @@ using boost::filesystem::create_symlink;
 log4cxx::LoggerPtr Simulation::m_logger(log4cxx::Logger::getLogger("Simulation"));
 
 /// Function to return either a module or the manager from a config
-inline ConfigReader& manOrMod(ConfigReader& xr_mainConfig, const string& x_name)
+inline mkconf& manOrMod(mkconf& xr_mainConfig, const string& x_name)
 {
 	return x_name == "manager" ? xr_mainConfig : xr_mainConfig["modules"][x_name];
 }
@@ -58,7 +58,7 @@ Simulation::Simulation(Parameters& xr_params, Context& x_context) :
 
 
 /// Add targets lines for inclusion in Makefile
-void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, const ConfigReader& x_mainConfig)
+void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, const mkconf& x_mainConfig)
 {
 	// Generate entries for makefile
 	stringstream sd;
@@ -113,7 +113,7 @@ const mkjson createArray(const string& x_names, const string& x_name, const mkjs
 }
 
 /// Add variation to simulation
-void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigReader& x_varConf, ConfigReader& xr_mainConfig)
+void Simulation::AddVariations(vector<string>& xr_variationNames, const mkconf& x_varConf, mkconf& xr_mainConfig)
 {
 	if(x_varConf.is_null())
 		throw MkException("Variation config is null. Please check that a 'variations' property is present in simulation file", LOC);
@@ -135,7 +135,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const ConfigRe
 			try
 			{
 				LOG_DEBUG(m_logger, "Param:" << itmod->get<string>() << ":" << itpar.get<string>());
-				ConfigReader& target = manOrMod(xr_mainConfig, itmod->get<string>()).at("inputs").at(itpar.get<string>());
+				mkconf& target = manOrMod(xr_mainConfig, itmod->get<string>()).at("inputs").at(itpar.get<string>());
 				targets.push_back(&target);
 				originalValues.push_back(target.get<string>());
 				if(moduleNames.size() > 1)
@@ -248,7 +248,7 @@ void Simulation::Generate()
 	m_cpt = 0;
 
 	vector<string> variationNames;
-	ConfigReader copyConfig = m_param.config;
+	mkconf copyConfig = m_param.config;
 	AddVariations(variationNames, m_param.config["variations"], copyConfig);
 
 	// Generate a MakeFile for the simulation

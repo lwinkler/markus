@@ -1,7 +1,7 @@
 #include <iostream>
 #include <map>
 #include <boost/lexical_cast.hpp>
-#include "ConfigReader.h"
+#include "config.h"
 #include "ConfigXml.h"
 #include "util.h"
 #include <jsoncpp/json/reader.h>
@@ -33,7 +33,7 @@ string camelCase(const string& str)
 
 string getInputNameFromExport(const string& module, int id, bool isInput)
 {
-	ConfigReader json;
+	mkconf json;
 	readFromFile(json, "editor/modules/" + module + ".json");
 	auto inp = json[isInput ? "inputs" : "outputs"];
 	if(!inp.is_object())
@@ -65,7 +65,7 @@ string getModuleType(const ConfigXml& conf, const string& moduleName)
 
 // json serialize float as double and test
 
-void translateElement(const ConfigXml x_xml, ConfigReader& xr_json)
+void translateElement(const ConfigXml x_xml, mkconf& xr_json)
 {
 	string field = x_xml.GetAttribute("id", "");
 	// if(!field.empty())
@@ -94,7 +94,7 @@ void translateElement(const ConfigXml x_xml, ConfigReader& xr_json)
 	}
 }
 
-void translateModule(const ConfigXml x_xml, ConfigReader& xr_json)
+void translateModule(const ConfigXml x_xml, mkconf& xr_json)
 {
 	string modName  = x_xml.GetAttribute("name");
 	string modClass = moduleTypes[modName];
@@ -156,7 +156,7 @@ void translateModule(const ConfigXml x_xml, ConfigReader& xr_json)
 	}
 }
 
-void translateArray(const string& x_string, ConfigReader& xr_json, bool x_translateCamelCase)
+void translateArray(const string& x_string, mkconf& xr_json, bool x_translateCamelCase)
 {
 	vector<string> res;
 	split(x_string, ',', res);
@@ -165,7 +165,7 @@ void translateArray(const string& x_string, ConfigReader& xr_json, bool x_transl
 		xr_json.append(x_translateCamelCase ? camelCase(elem) : elem);
 }
 
-void translateRange(const string& x_string, ConfigReader& xr_json)
+void translateRange(const string& x_string, mkconf& xr_json)
 {
 	double min, max;
 	if(2 == sscanf(x_string.c_str(), "[%16lf:%16lf]", &min, &max))
@@ -193,12 +193,12 @@ void translateRange(const string& x_string, ConfigReader& xr_json)
 }
 
 // for simulations
-void translateVariations(const ConfigXml x_xml, ConfigReader& xr_json)
+void translateVariations(const ConfigXml x_xml, mkconf& xr_json)
 {
 	xr_json = mkjson::array();
 	for(const auto& xml : x_xml.FindAll("var"))
 	{
-		ConfigReader jsonVar;
+		mkconf jsonVar;
 		if(!xml.GetAttribute("module", "").empty())
 		{
 			jsonVar["module"] = xml.GetAttribute("module");
@@ -248,7 +248,7 @@ int main(int argc, char** argv)
 	cout << "Translate " << filename_old << " to " << filename_new << endl;
 	ConfigFileXml file_old(filename_old);
 	ConfigXml     conf(file_old.GetSubConfig("application"));
-	ConfigReader json;
+	mkconf json;
 
 	json["name"]        = conf.GetAttribute("name", "(unk)");
 	json["description"] = conf.GetAttribute("description", "(unk)");

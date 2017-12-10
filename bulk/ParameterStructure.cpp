@@ -22,7 +22,7 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ParameterStructure.h"
-#include "ConfigReader.h"
+#include "config.h"
 #include "assert.h"
 
 namespace mk {
@@ -77,7 +77,7 @@ void ParameterStructure::LockIfRequired()
 /**
 * @brief Set the value from json configuration
 */
-void ParameterStructure::Read(const ConfigReader& x_config)
+void ParameterStructure::Read(const mkconf& x_config)
 {
 	if(x_config.find("inputs") != x_config.end())
 	{
@@ -106,7 +106,7 @@ void ParameterStructure::Read(const ConfigReader& x_config)
 /**
 * @brief Save all values and prepare json configuration for writing
 */
-void ParameterStructure::Write(ConfigReader& xr_config) const
+void ParameterStructure::Write(mkconf& xr_config) const
 {
 	for(const auto & elem : m_list)
 	{
@@ -196,7 +196,7 @@ void ParameterStructure::SetValueToDefault()
 *
 * @param x_config Config to check
 */
-void ParameterStructure::CheckRange(const ConfigReader& x_config) const
+void ParameterStructure::CheckRange(const mkconf& x_config) const
 {
 	// Check that all parameters in config are related to the module
 	for(const auto& inputConf : x_config["inputs"])

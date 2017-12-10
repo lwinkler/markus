@@ -23,7 +23,7 @@
 
 #include <fstream>
 #include <boost/filesystem.hpp>
-#include "ConfigReader.h"
+#include "config.h"
 #include "MkException.h"
 #include "util.h"
 
@@ -38,7 +38,7 @@ using namespace std;
 * @param x_fileName File name
 * @param x_allowCreation Allow to create the file
 */
-void readFromFile(ConfigReader& rx_config, const std::string& x_fileName, bool x_allowCreation)
+void readFromFile(mkconf& rx_config, const std::string& x_fileName, bool x_allowCreation)
 {
 	if(!boost::filesystem::exists(x_fileName))
 	{
@@ -55,21 +55,13 @@ void readFromFile(ConfigReader& rx_config, const std::string& x_fileName, bool x
 *
 * @param x_file Name of the file with relative path
 */
-void writeToFile(const ConfigReader& xr_config, const string& x_fileName)
+void writeToFile(const mkconf& xr_config, const string& x_fileName)
 {
 	ofstream of(x_fileName);
 	of << xr_config;
 }
 
-/**
-* @brief Validate the configuration
-*/
-void validate(const ConfigReader& xr_config)
-{
-	// note: nothing to check yet
-}
-
-void overrideInputs(ConfigReader& xr_oldConfig, const ConfigReader& x_newConfig)
+void overrideInputs(mkconf& xr_oldConfig, const mkconf& x_newConfig)
 {
 	for(const auto& elem : x_newConfig)
 	{
@@ -86,7 +78,7 @@ void overrideInputs(ConfigReader& xr_oldConfig, const ConfigReader& x_newConfig)
 * @return
 */
 
-void overrideWith(ConfigReader& xr_config, const ConfigReader& x_extraConfig)
+void overrideWith(mkconf& xr_config, const mkconf& x_extraConfig)
 {
 	for(const auto& elem : x_extraConfig.at("modules"))
 	{
@@ -104,7 +96,7 @@ void overrideWith(ConfigReader& xr_config, const ConfigReader& x_extraConfig)
 *
 * @return reference
 */
-mkjson& replaceOrAppendInArray(ConfigReader& x_conf, const std::string& x_name, const std::string& x_value)
+mkjson& replaceOrAppendInArray(mkconf& x_conf, const std::string& x_name, const std::string& x_value)
 {
 	for(auto& elem : x_conf)
 	{
@@ -126,7 +118,7 @@ mkjson& replaceOrAppendInArray(ConfigReader& x_conf, const std::string& x_name, 
 *
 * @return reference
 */
-mkjson& findFirstInArray(ConfigReader& x_conf, const std::string& x_name, const std::string& x_value)
+mkjson& findFirstInArray(mkconf& x_conf, const std::string& x_name, const std::string& x_value)
 {
 	for(auto& elem : x_conf)
 	{
@@ -145,7 +137,7 @@ mkjson& findFirstInArray(ConfigReader& x_conf, const std::string& x_name, const 
 *
 * @return reference
 */
-const mkjson& findFirstInArrayConst(const ConfigReader& x_conf, const std::string& x_name, const std::string& x_value)
+const mkjson& findFirstInArrayConst(const mkconf& x_conf, const std::string& x_name, const std::string& x_value)
 {
 	for(const auto& elem : x_conf)
 	{

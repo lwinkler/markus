@@ -57,9 +57,8 @@ protected:
 	void runConfig(const string& x_configFile, const string& x_aspectRatio)
 	{
 		TS_TRACE("## Unit test with configuration " + x_configFile);
-		ConfigReader appConfig;
+		mkconf appConfig;
 		readFromFile(appConfig, x_configFile);
-		validate(appConfig);
 		// Note: Added this to avoid deleting the output directory
 		TS_ASSERT(!appConfig.is_null());
 		Manager::Parameters params(appConfig);

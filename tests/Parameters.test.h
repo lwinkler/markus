@@ -37,7 +37,7 @@
 using namespace std;
 using namespace mk;
 
-/// Unit testing class for ConfigReader class
+/// Unit testing class for mkconf class
 
 class ParametersTestSuite : public CxxTest::TestSuite
 {

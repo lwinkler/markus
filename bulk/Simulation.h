@@ -37,10 +37,10 @@ public:
 	class Parameters : public ParameterStructure
 	{
 	public:
-		explicit Parameters(const ConfigReader& x_confReader) : ParameterStructure("simulation"), config(x_confReader)
+		explicit Parameters(const mkconf& x_confReader) : ParameterStructure("simulation"), config(x_confReader)
 		{
 		}
-		const ConfigReader& config;
+		const mkconf& config;
 	};
 
 	Simulation(Parameters& xr_params, Context& x_context);
@@ -48,10 +48,10 @@ public:
 
 private:
 	/// Add an entry in the Makefile
-	void AddSimulationEntry(const std::vector<std::string>& x_variationNames, const ConfigReader& x_mainConfig);
+	void AddSimulationEntry(const std::vector<std::string>& x_variationNames, const mkconf& x_mainConfig);
 
 	/// Add variation to simulation
-	void AddVariations(std::vector<std::string>& x_variationNames, const ConfigReader& x_varConf, ConfigReader& xr_mainConfig);
+	void AddVariations(std::vector<std::string>& x_variationNames, const mkconf& x_varConf, mkconf& xr_mainConfig);
 
 	static log4cxx::LoggerPtr m_logger;
 	Parameters& m_param; // note: to save time

@@ -109,7 +109,7 @@ protected:
 	const FactoryFeatures& m_factoryFeatures;
 	Module* mp_fakeInput              = nullptr;
 	ParameterStructure* mp_fakeParams = nullptr;
-	ConfigReader* mp_config             = nullptr;
+	mkconf* mp_config             = nullptr;
 
 	// Values for testing
 	cv::KeyPoint  m_kp;
@@ -125,7 +125,7 @@ public:
 	void setUp()
 	{
 		createEmptyConfigFile("/tmp/config_empty.json");
-		mp_config = new ConfigReader;
+		mp_config = new mkconf;
 		readFromFile(*mp_config, "tests/serialize/module.json");
 		mp_fakeParams = m_factoryParameters.Create("VideoFileReader", "Module0");
 		mp_fakeParams->Read((*mp_config)["module"]);

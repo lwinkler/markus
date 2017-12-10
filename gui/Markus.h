@@ -49,7 +49,7 @@ public:
 	class Parameters : public ParameterStructure
 	{
 	public:
-		explicit Parameters(ConfigReader& x_configReader) : ParameterStructure("window"), config(x_configReader)
+		explicit Parameters(mkconf& x_configReader) : ParameterStructure("window"), config(x_configReader)
 		{
 			// AddParameter(new ParameterString("module", "", &module, "Module to display"));
 			AddParameter(new ParameterInt("nbCols", 1, 1, 4, &nbCols, "Number of columns for display"));
@@ -64,9 +64,9 @@ public:
 
 	MarkusWindow(ParameterStructure& rx_param, Manager& rx_manager);
 	virtual ~MarkusWindow();
-	void WriteConfig(ConfigReader& xr_config) const override;
+	void WriteConfig(mkconf& xr_config) const override;
 private:
-	// ConfigReader& m_configReader;
+	// mkconf& m_configReader;
 	Parameters& m_param;
 
 	Manager& mr_manager;

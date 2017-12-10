@@ -75,7 +75,7 @@ void ControllerModule::PrintStatistics(mkjson& rx_value)
 		module.RefContext().RefOutputDir().Rm(module.GetName() + ".benchmark.json");
 	string benchFileName = module.RefContext().RefOutputDir().ReserveFile(module.GetName() + ".benchmark.json");
 
-	ConfigReader summary;
+	mkconf summary;
 	readFromFile(summary, benchFileName, true);
 	module.PrintStatistics(summary);
 	writeToFile(summary, benchFileName);

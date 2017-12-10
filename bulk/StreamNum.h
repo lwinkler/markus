@@ -96,17 +96,17 @@ public:
 	virtual void Randomize(unsigned int& xr_seed) {randomize(m_content, xr_seed);}
 	const T& GetScalar() const {return m_content;}
 
-	virtual void SetValue(const ConfigReader& x_value, ParameterConfigType x_confType)
+	virtual void SetValue(const mkconf& x_value, ParameterConfigType x_confType)
 	{
 		m_content = x_value.get<T>();
 		m_confSource = x_confType;
 	}
-	virtual void SetDefault(const ConfigReader& x_value){
+	virtual void SetDefault(const mkconf& x_value){
 		m_default = x_value.template get<T>();
 	}
 	virtual void SetValueToDefault(){m_content = m_default; m_confSource = PARAMCONF_DEF;}
-	virtual ConfigReader GetValue() const{return m_content;}
-	virtual ConfigReader GetDefault() const {return m_default;}
+	virtual mkconf GetValue() const{return m_content;}
+	virtual mkconf GetDefault() const {return m_default;}
 
 	static const std::string className;
 

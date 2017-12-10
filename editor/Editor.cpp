@@ -29,7 +29,7 @@
 #include <QWebElement>
 #include <QWebFrame>
 #include <QAction>
-#include "ConfigReader.h"
+#include "config.h"
 #include "Editor.h"
 #include "Manager.h"
 #include "QWebPage2.h"

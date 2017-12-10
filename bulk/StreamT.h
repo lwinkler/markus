@@ -54,20 +54,20 @@ public:
 	virtual void Serialize(mkjson& rx_json, MkDirectory* xp_dir = nullptr) const;
 	virtual void Deserialize(const mkjson& x_json, MkDirectory* xp_dir = nullptr);
 
-	virtual void SetValue(const ConfigReader& x_value, ParameterConfigType x_confType)
+	virtual void SetValue(const mkconf& x_value, ParameterConfigType x_confType)
 	{
 		from_mkjson(x_value, m_content);
 		m_confSource = x_confType;
 	}
-	virtual void SetDefault(const ConfigReader& x_value){
+	virtual void SetDefault(const mkconf& x_value){
 		from_mkjson(x_value, m_default);
 	}
 	virtual void SetValueToDefault(){m_content = m_default; m_confSource = PARAMCONF_DEF;}
-	virtual ConfigReader GetValue() const
+	virtual mkconf GetValue() const
 	{
 		return m_content;
 	}
-	virtual ConfigReader GetDefault() const
+	virtual mkconf GetDefault() const
 	{
 		return m_default;
 	}

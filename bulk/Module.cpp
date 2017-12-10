@@ -390,7 +390,7 @@ Stream& Module::RefOutputStreamByName(const string& x_name)
 /**
 * @brief Print all statistics related to the module
 */
-void Module::PrintStatistics(ConfigReader& xr_result) const
+void Module::PrintStatistics(mkconf& xr_result) const
 {
 	double fps = (m_countProcessedFrames / (m_timerProcessFrame.GetSecDouble() + m_timerConversion.GetSecDouble() + m_timerWaiting.GetSecDouble()));
 	LOG_INFO(m_logger, "Module "<<GetName()<<": "<<m_countProcessedFrames<<" frames processed (tproc="<<
@@ -400,7 +400,7 @@ void Module::PrintStatistics(ConfigReader& xr_result) const
 		LOG_INFO(m_logger, "Module "<<GetName()<<": Time spent in current and depending module: " << m_timerProcessable.GetMsLong() << " ms");
 
 	// Write perf to output JSON
-	ConfigReader& perfModule(xr_result["module"][GetName()]);
+	mkconf& perfModule(xr_result["module"][GetName()]);
 	perfModule["nb_frames"]             = m_countProcessedFrames;
 	perfModule["timers"]["processable"] = m_timerProcessable.GetMsLong();
 	perfModule["timers"]["processing"]  = m_timerProcessFrame.GetMsLong();

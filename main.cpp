@@ -265,13 +265,13 @@ int processArguments(int argc, char** argv, struct arguments& args, log4cxx::Log
 }
 
 /// Override the initial config with extra config files and argument set parameters
-void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, const vector<string>& parameters, log4cxx::LoggerPtr& logger)
+void overrideConfig(mkconf& appConfig, const vector<string>& extraConfig, const vector<string>& parameters, log4cxx::LoggerPtr& logger)
 {
 	// Override values of parameters if an extra config is used
 	for(const auto& elem1 : extraConfig)
 	{
 		// open the config and override the initial config
-		ConfigReader extra;
+		mkconf extra;
 		readFromFile(extra, elem1);
 		overrideWith(appConfig, extra);
 	}
@@ -291,7 +291,7 @@ void overrideConfig(ConfigReader& appConfig, const vector<string>& extraConfig, 
 			split(param, '.', path);
 			if(path.size() != 2)
 				throw MkException("Parameter set in command line must be in format 'module.parameter'", LOC);
-			ConfigReader& conf(path[0] == "manager" ? appConfig : findFirstInArray(appConfig["modules"], "name", path[0]));
+			mkconf& conf(path[0] == "manager" ? appConfig : findFirstInArray(appConfig["modules"], "name", path[0]));
 			if(path[1] == "class") {
 				conf["class"] = mkjson(value);
 			// else if(value.front() == '"' && value.back() == '"') {
@@ -353,10 +353,9 @@ int main(int argc, char** argv)
 		Factories::RegisterAll();
 
 		LOG_INFO(logger, Context::Version(true));
-		ConfigReader appConfig;
+		mkconf appConfig;
 		readFromFile(appConfig, args.configFile);
 		overrideConfig(appConfig, args.extraConfig, args.parameters, logger);
-		validate(appConfig);
 		assert(!appConfig.is_null());
 
 		// Init global variables and objects
@@ -449,9 +448,9 @@ int main(int argc, char** argv)
 #ifndef MARKUS_NO_GUI
 			assert(managerParameters.autoProcess);
 			manager.Start();
-			ConfigReader mainGuiConfig;
+			mkconf mainGuiConfig;
 			readFromFile(mainGuiConfig, "gui.json", true);
-			ConfigReader& guiConfig(mainGuiConfig[args.configFile]);
+			mkconf& guiConfig(mainGuiConfig[args.configFile]);
 
 			MarkusWindow::Parameters windowParameters(guiConfig);
 			windowParameters.Read(guiConfig);

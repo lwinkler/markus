@@ -112,7 +112,7 @@ public:
 
 	inline void AddDependingModule(Module & rx_module) {m_modulesDepending.push_back(&rx_module);} /// Add a module to the list: depending modules are called when processing is complete
 	void RemoveDependingModule(const Module & x_module);
-	virtual void PrintStatistics(ConfigReader& xr_result) const;
+	virtual void PrintStatistics(mkconf& xr_result) const;
 	void Serialize(mkjson& rx_json, MkDirectory* xp_dir = nullptr) const;
 	void Deserialize(const mkjson& x_json, MkDirectory* xp_dir = nullptr);
 

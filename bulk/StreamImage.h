@@ -59,15 +59,15 @@ public:
 	void Connect(Stream& xr_stream) override;
 	void Disconnect() override;
 
-	void SetValue(const ConfigReader& x_value, ParameterConfigType x_confType) override
+	void SetValue(const mkconf& x_value, ParameterConfigType x_confType) override
 	{
 		LOG_WARN(m_logger, "Impossible to set the value of a stream of type image as a parameter");
 		// m_confSource = x_confType;
 	}
-	void SetDefault(const ConfigReader& x_value) override {LOG_WARN(m_logger, "Impossible to set the default value of a stream of type image as a parameter");}
+	void SetDefault(const mkconf& x_value) override {LOG_WARN(m_logger, "Impossible to set the default value of a stream of type image as a parameter");}
 	void SetValueToDefault() override {m_content.setTo(0); m_confSource = PARAMCONF_DEF;};
 	// note: This will not work with images
-	ConfigReader GetValue() const override
+	mkconf GetValue() const override
 	{
 		// note: for simplicity, we only serialize the size
 		mkjson root;
@@ -75,7 +75,7 @@ public:
 		root["height"] = m_content.rows;
 		return root;
 	}
-	ConfigReader GetDefault() const override
+	mkconf GetDefault() const override
 	{
 		mkjson root;
 		root["width"] = m_content.cols;

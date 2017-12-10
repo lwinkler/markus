@@ -1,7 +1,7 @@
 #include <iostream>
 #include <map>
 #include <boost/lexical_cast.hpp>
-#include "ConfigReader.h"
+#include "config.h"
 #include "ConfigXml.h"
 #include "util.h"
 

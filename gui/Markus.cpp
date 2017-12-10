@@ -69,7 +69,7 @@ MarkusWindow::~MarkusWindow()
 	mr_manager.SendCommand("manager.manager.Stop");
 }
 
-void MarkusWindow::WriteConfig(ConfigReader& xr_config) const
+void MarkusWindow::WriteConfig(mkconf& xr_config) const
 {
 	xr_config["modules"] = mkjson::array();
 	for(auto & elem : m_moduleViewer)
@@ -307,7 +307,7 @@ void MarkusWindow::resizeEvent(QResizeEvent* event)
 		m_param.config["modules"] = mkjson::array();
 	for(int ind = size ; ind < m_param.nbRows * m_param.nbCols ; ind++)
 	{
-		ConfigReader& conf(m_param.config["modules"][ind]);
+		mkconf& conf(m_param.config["modules"][ind]);
 		m_paramsViewer.push_back(new QModuleViewer::Parameters("viewer" + to_string(ind)));
 		if(!conf.is_null())
 			m_paramsViewer.back()->Read(conf);

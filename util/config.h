@@ -34,15 +34,14 @@ namespace mk {
 class Module;
 class ParameterStructure;
 
-typedef nlohmann::json ConfigReader;
+typedef nlohmann::json mkconf;
 
-void readFromFile(ConfigReader& rx_config, const std::string& x_fileName, bool x_allowCreation = false);
-void overrideWith(ConfigReader& rx_config, const ConfigReader& xr_extraConfig);
-void writeToFile(const ConfigReader& rx_config, const std::string& x_file);
-void validate(const ConfigReader& rx_config);
-ConfigReader& findFirstInArray(ConfigReader& x_conf, const std::string& x_name, const std::string& x_value);
-ConfigReader& replaceOrAppendInArray(ConfigReader& x_conf, const std::string& x_name, const std::string& x_value);
-const ConfigReader& findFirstInArrayConst(const ConfigReader& x_conf, const std::string& x_name, const std::string& x_value);
+void readFromFile(mkconf& rx_config, const std::string& x_fileName, bool x_allowCreation = false);
+void overrideWith(mkconf& rx_config, const mkconf& xr_extraConfig);
+void writeToFile(const mkconf& rx_config, const std::string& x_file);
+mkconf& findFirstInArray(mkconf& x_conf, const std::string& x_name, const std::string& x_value);
+mkconf& replaceOrAppendInArray(mkconf& x_conf, const std::string& x_name, const std::string& x_value);
+const mkconf& findFirstInArrayConst(const mkconf& x_conf, const std::string& x_name, const std::string& x_value);
 
 } // namespace mk
 #endif

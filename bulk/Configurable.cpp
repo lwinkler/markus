@@ -33,7 +33,7 @@ Configurable::Configurable(ParameterStructure& x_param) : m_param(x_param)
 	m_param.CheckRange();
 }
 
-void Configurable::WriteConfig(ConfigReader& xr_config) const
+void Configurable::WriteConfig(mkconf& xr_config) const
 {
 	m_param.Write(xr_config);
 }

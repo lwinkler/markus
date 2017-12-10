@@ -63,7 +63,7 @@ public:
 	inline void AddCommand(const Command& x_command) {m_commands.push_back(x_command);}
 	inline void Reset()                      {m_events.clear(); m_commands.clear();}
 
-	void Configure(const ConfigReader& x_config);
+	void Configure(const mkconf& x_config);
 	std::vector<Command> ReturnCommandsToSend();
 
 

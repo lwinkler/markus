@@ -55,7 +55,7 @@ struct ModuleTester
 	Module* module                 = nullptr;
 	ParameterStructure* parameters = nullptr;
 	vector<Stream*> outputStreams;
-	ConfigReader configFile;
+	mkconf configFile;
 
 	ModuleTester()
 	{
@@ -73,11 +73,11 @@ struct ModuleTester
 		delete parameters;
 	}
 
-	static ConfigReader& addModuleToConfig(const string& rx_type, ConfigReader& xr_config)
+	static mkconf& addModuleToConfig(const string& rx_type, mkconf& xr_config)
 	{
-		ConfigReader& moduleConfig = replaceOrAppendInArray(xr_config["modules"], "name", rx_type + "0");
+		mkconf& moduleConfig = replaceOrAppendInArray(xr_config["modules"], "name", rx_type + "0");
 		moduleConfig["class"] = rx_type;
-		ConfigReader& paramConfig  = moduleConfig["inputs"];
+		mkconf& paramConfig  = moduleConfig["inputs"];
 
 		replaceOrAppendInArray(paramConfig, "name", "fps")["value"] = 123;
 
@@ -90,7 +90,7 @@ struct ModuleTester
 };
 
 
-/// Unit testing class for ConfigReader class
+/// Unit testing class for mkconf class
 class ModulesTestSuite : public CxxTest::TestSuite
 {
 public:
@@ -161,7 +161,7 @@ public:
 	void CreateAndConnectModule(ModuleTester& tester, const string& x_type, const map<string, mkjson>* xp_parameters = nullptr)
 	{
 		TS_TRACE("Create and connect module of class " + x_type);
-		ConfigReader& moduleConfig = ModuleTester::addModuleToConfig(x_type, tester.configFile);
+		mkconf& moduleConfig = ModuleTester::addModuleToConfig(x_type, tester.configFile);
 
 		// Add parameters to override to the config
 		moduleConfig["inputs"] = mkjson::array();

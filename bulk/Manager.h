@@ -32,7 +32,7 @@
 #include "Factories.h"
 #include "Module.h"
 #include "Input.h"
-#include "ConfigReader.h"
+#include "config.h"
 
 
 namespace mk {
@@ -45,7 +45,7 @@ public:
 	class Parameters : public Processable::Parameters
 	{
 	public:
-		explicit Parameters(const ConfigReader& x_confReader) : Processable::Parameters("manager"), config(x_confReader)
+		explicit Parameters(const mkconf& x_confReader) : Processable::Parameters("manager"), config(x_confReader)
 		{
 			AddParameter(new ParameterInt("nbFrames", 0, 0, INT_MAX, &nbFrames, "Number of frames to process. 0 for infinite. Only works in centralized mode"));
 			AddParameter(new ParameterString("arguments", "",         &arguments, "Command-line arguments, for storage only"));
@@ -54,7 +54,7 @@ public:
 		int nbFrames;
 		std::string arguments; // note: This is used in simulations, see what to do in normal case
 		std::string aspectRatio;
-		ConfigReader config;
+		mkconf config;
 	};
 
 	Manager(ParameterStructure& xr_params, Context& xr_context);
@@ -119,7 +119,7 @@ public:
 		}
 	}
 	void WriteStateToDirectory(const std::string& x_directory);
-	void WriteConfig(ConfigReader& xr_config) const override;
+	void WriteConfig(mkconf& xr_config) const override;
 	void SetContext(Context& x_context) override
 	{
 		Processable::SetContext(x_context);
@@ -132,7 +132,7 @@ public:
 		assert(!m_inputs.empty());
 		return m_inputs.front()->GetRecordingFps();
 	}
-	void BuildModule(const std::string& x_name, const ConfigReader& x_moduleConfig);
+	void BuildModule(const std::string& x_name, const mkconf& x_moduleConfig);
 
 private:
 	void Build();
@@ -140,7 +140,7 @@ private:
 	int Process2(MkException& xr_lastException);
 
 	Module& RefModuleByName(const std::string& x_name) const;
-	void ConnectInput(const ConfigReader& x_inputConfig, Module& xr_module, const std::string& x_input) const;
+	void ConnectInput(const mkconf& x_inputConfig, Module& xr_module, const std::string& x_input) const;
 
 	int64_t m_frameCount = 0;
 	bool m_isConnected   = false;

@@ -144,7 +144,7 @@ public:
 	}
 
 protected:
-	ConfigReader        m_config;
+	mkconf        m_config;
 	Module::Parameters* mp_fakeParams1 = nullptr;
 	Module::Parameters* mp_fakeParams2 = nullptr;
 	Module::Parameters* mp_fakeParams3 = nullptr;

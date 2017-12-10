@@ -104,13 +104,13 @@ public:
 	inline void SetSynchronized(bool x_sync) {m_synchronized = x_sync;}
 
 	// Methods inherited from Parameter class
-	void SetValue(const ConfigReader& x_value, ParameterConfigType x_confType) override = 0;
-	void SetDefault(const ConfigReader& x_value) override = 0;
+	void SetValue(const mkconf& x_value, ParameterConfigType x_confType) override = 0;
+	void SetDefault(const mkconf& x_value) override = 0;
 	void SetValueToDefault() override = 0;
 	bool CheckRange() const override {return true;}
 	mkjson GenerateValues(int x_nbSamples, const mkjson& x_range) const override {return nullptr;}
-	ConfigReader GetValue() const override = 0;
-	ConfigReader GetDefault() const override = 0;
+	mkconf GetValue() const override = 0;
+	mkconf GetDefault() const override = 0;
 
 	int id     = -1;
 	bool debug = false;
