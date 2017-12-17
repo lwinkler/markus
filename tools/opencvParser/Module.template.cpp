@@ -26,8 +26,8 @@
 #include "StreamImage.h"
 $includes
 
+namespace mk {
 using namespace std;
-// using namespace cv;
 
 log4cxx::LoggerPtr $moduleName::m_logger(log4cxx::Logger::getLogger("$moduleName"));
 
@@ -39,10 +39,6 @@ $moduleName::$moduleName(ParameterStructure& xr_params):
 	$streams
 }
 
-$moduleName::~$moduleName()
-{
-}
-
 void $moduleName::Reset()
 {
 	Module::Reset();
@@ -52,4 +48,6 @@ void $moduleName::ProcessFrame()
 {
 	$function
 }
+
+} // namespace mk
 

@@ -30,6 +30,7 @@
 /**
 * @brief A template for modules generated automatically
 */
+namespace mk {
 class $moduleName : public Module
 {
 public:
@@ -57,6 +58,8 @@ private:
 protected:
 	$members
 };
+
+} // namespace mk
 
 #endif
 

@@ -84,9 +84,9 @@ def create_file(file_name, template_file_name, substitutions):
 	with open(file_name, 'w') as fout:
 		fout.write(src.substitute(substitutions))
 
-def create_markus_module(hname, modules_dir, decl):
+def create_markus_module_for_function(hname, modules_dir, decl):
 
-	module_name = decl[0].replace('.', '_')
+	module_name = decl[0].replace('cv.', '').replace('.', '_')
 	module_dir  = modules_dir + "/" + module_name
 
 	d = create_substitutions(hname, module_name, decl)
@@ -150,7 +150,7 @@ if __name__ == '__main__':
 				continue
 
 			try:
-				create_markus_module(hname, modules_dir, decl)
+				create_markus_module_for_function(hname, modules_dir, decl)
 				print "Create module '%s' (from %s)" % (decl[0], hname)
 				nbOk += 1
 			except Exception as e:
