@@ -2,7 +2,6 @@
 add_library(bulk
 Factories.cpp
 Module.cpp
-ModuleKeyPoints.cpp
 ModuleClassifyEvents.cpp
 ModulePython.cpp
 Manager.cpp
@@ -40,7 +39,7 @@ ControllerBackground.cpp
 Processable.cpp
 Simulation.cpp
 InterruptionManager.cpp
-ParameterEnumT.cpp
+ParameterEnumT.gen.cpp
 )
 
 # Work in progress to add precompiled headers for Module.h

@@ -6,16 +6,27 @@
 ##
 ## Copyright (c) 2017 Laurent Winkler lwinkler888 at gmail dot com
 ## 
+## This file is part of Markus source files
 
-""" Usage: call with <header> <enum with namespace>
+""" Usage: call to generate enum source file ParameterEnumT.gen.cpp
 """
 
 import sys
 import clang.cindex as cindex
+from pprint import pprint
 
 cindex.Config.set_library_path("/usr/lib/llvm-4.0/lib")
 
-def find_class(node, ns_path):
+def find_node(node, full_name):
+	""" Find class by namespaces
+	"""
+	classes = find_nodes(node, full_name.split('::'))
+	if len(classes) != 1:
+		raise Exception('Expecting to find one node for %s, found %d' % (full_name, len(classes)))
+	
+	return classes[0]
+
+def find_nodes(node, ns_path):
 	""" Find all classes by namespaces
 	"""
 
@@ -28,9 +39,18 @@ def find_class(node, ns_path):
 			if len(ns_path) == 1:
 				found += [c]
 			else:
-				found += find_class(c, ns_path[1:])
+				found += find_nodes(c, ns_path[1:])
 	
 	return found
+
+def find_node(node, full_name):
+	""" Find class by namespaces
+	"""
+	classes = find_nodes(node, full_name.split('::'))
+	if len(classes) != 1:
+		raise Exception('Expecting to find one node for %s, found %d' % (full_name, len(classes)))
+	
+	return classes[0]
 
 def generate_param_enum(header_file, node, full_name):
 
@@ -58,7 +78,7 @@ template<> const string ParameterEnumT<%s>::className = "Parameter%s";
 """ % (header_file, full_name, enum_map[:-1], full_name, full_name, full_name, node.spelling))
 
 
-def main():
+def generate_enums():
 	# if len(sys.argv) < 1:
 		# print 'usage: %s <header> <enum with namespace>' % sys.argv[0]
 		# exit(1)
@@ -66,11 +86,21 @@ def main():
 
 	# add here all the enums to generate
 	header_and_enums = [
-		['util/enums.h', 'mk::CachedState'],
-		['util/enums.h', 'mk::ImageType'],
-		['opencv/modules/ml/include/opencv2/ml.hpp', 'cv::ml::SVM::KernelTypes'],
-		['opencv/modules/ml/include/opencv2/ml.hpp', 'cv::ml::SVM::Types']
-	]
+			{
+				'header': 'util/enums.h', 
+				'classes': [
+					'mk::CachedState',
+					'mk::ImageType'
+					],
+			},
+			{
+				'header': 'opencv/modules/ml/include/opencv2/ml.hpp', 
+				'classes': [
+					'cv::ml::SVM::KernelTypes',
+					'cv::ml::SVM::Types'
+					]
+				}
+			]
 
 	# Generate file
 	fout.write("""/* This file was generated automatically the generate_param_enum.py parser */
@@ -84,20 +114,17 @@ using namespace mk;
 
 	for header_and_enum in header_and_enums:
 		# parse the code starting at the given header
-		header_file = header_and_enum[0]
+		header_file = header_and_enum['header']
 		index = cindex.Index.create()
 		src = header_file
 		tu = index.parse(src, args=['-x', 'c++'])
 
-		enum_full_name = header_and_enum[1]
-		enum_classes = find_class(tu.cursor, enum_full_name.split('::'))
+		for enum_full_name in header_and_enum['classes']:
+			enum_class = find_node(tu.cursor, enum_full_name)
 
-		# print 'found %d node(s):' % len(all_classes)
-		if len(enum_classes) != 1:
-			raise Exception('Expecting to find one node for %s, found %d' % (enum_full_name, len(enum_classes)))
-
-		generate_param_enum(header_file, enum_classes[0], enum_full_name)
-
+			generate_param_enum(header_file, enum_class, enum_full_name)
+	
 # Start main
-with open("bulk/ParameterEnumT.cpp", "w") as fout:
-	main()
+with open('bulk/ParameterEnumT.gen.cpp', 'w') as fout:
+	generate_enums()
+

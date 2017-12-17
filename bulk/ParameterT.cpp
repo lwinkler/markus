@@ -36,6 +36,7 @@ template<> const string ParameterT<float>::className        = "ParameterFloat";
 template<> const string ParameterT<double>::className       = "ParameterDouble";
 template<> const string ParameterT<string>::className       = "ParameterString";
 template<> const string ParameterT<Polygon>::className      = "ParameterPolygon";
+template<> const string ParameterT<mkjson>::className       = "ParameterJson";
 
 template<class T> inline bool checkRangeNum(const T& x_value, const mkjson& x_range)
 {

@@ -60,16 +60,12 @@ def create_substitutions(hname, module_name, decl):
 	fct = "%s(%s);" % (decl[0].replace('.', '::'), ', '.join(["m_%s" % translateName(param) for param in decl[3]]))
 
 	streams  = ""
-	inputNb  = 0
-	outputNb = 0
 
 	for param in decl[3]:
 		if '/O' not in param[3]:
-			streams += "\n\tAddInputStream(%d, %s);" % (inputNb, translateTypeToStream(param))
-			inputNb += 1
+			streams += "\n\tAddInputStream(%s);" % (translateTypeToStream(param))
 		if '/O' in param[3] or '/IO' in param[3]:
-			streams += "\n\tAddOutputStream(%d, %s);" % (outputNb, translateTypeToStream(param))
-			outputNb += 1
+			streams += "\n\tAddOutputStream(%s);" % (translateTypeToStream(param))
 
 	return {
 		'includes':   "#include<%s>" % hname,

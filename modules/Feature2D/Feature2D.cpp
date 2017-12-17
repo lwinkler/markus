@@ -20,7 +20,7 @@
  *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
  -------------------------------------------------------------------------------------*/
 
-#include "ModuleKeyPoints.h"
+#include "Feature2D.h"
 #include "StreamImage.h"
 #include "StreamDebug.h"
 #include "FeatureOpenCv.h"
@@ -32,9 +32,9 @@ using namespace std;
 
 //NOTE : a param could be used to decide if we compute descriptor to avoid useless computation
 
-log4cxx::LoggerPtr ModuleKeyPoints::m_logger(log4cxx::Logger::getLogger("ModuleKeyPoints"));
+log4cxx::LoggerPtr Feature2D::m_logger(log4cxx::Logger::getLogger("Feature2D"));
 
-ModuleKeyPoints::ModuleKeyPoints(ParameterStructure& xr_params) :
+Feature2D::Feature2D(ParameterStructure& xr_params) :
 	Module(xr_params),
 	m_param(dynamic_cast<Parameters&>(xr_params)),
 	m_input(Size(m_param.width, m_param.height), m_param.type)
@@ -51,11 +51,11 @@ ModuleKeyPoints::ModuleKeyPoints(ParameterStructure& xr_params) :
 };
 
 
-ModuleKeyPoints::~ModuleKeyPoints()
+Feature2D::~Feature2D()
 {
 }
 
-void ModuleKeyPoints::Reset()
+void Feature2D::Reset()
 {
 	// vector<string> algos;
 	// Algorithm::getList(algos);
@@ -63,19 +63,23 @@ void ModuleKeyPoints::Reset()
 	//	cout<<*it<<endl;
 
 	Module::Reset();
+	mp_detector.release();
+	mp_detector = create(m_param.create);
 
+	/*
 	mp_descriptor.release();
 	if(m_param.descriptor.empty())
 	{
-		mp_descriptor = /*DescriptorExtractor::create(m_param.descriptor); */ cv::ORB::create(); // TODO: Should probably be in the child module
+		mp_descriptor = DescriptorExtractor::create(m_param.descriptor);  // TODO: Should probably be in the child module
 		if(mp_descriptor == nullptr) // || mp_descriptor->empty())
 			throw(MkException("Cannot create key points descriptor extractor", LOC));
 	}
+	*/
 }
 
 /**
  */
-void ModuleKeyPoints::ProcessFrame()
+void Feature2D::ProcessFrame()
 {
 #ifdef MARKUS_DEBUG_STREAMS
 	cvtColor(m_input, m_debug, CV_GRAY2RGB);
@@ -99,11 +103,13 @@ void ModuleKeyPoints::ProcessFrame()
 
 		mp_detector->detect(subImage, pointsOfInterest);
 		Mat descriptors;
+		/*
 		if(!mp_descriptor.empty())
 		{
 			mp_descriptor->compute(m_input, pointsOfInterest, descriptors);
 			assert(descriptors.rows == static_cast<int>(pointsOfInterest.size()));
 		}
+		*/
 
 		//Mat subImage(m_input,obj1.GetRect());
 		//mp_detector->detect(subImage, pointsOfInterest);
@@ -123,6 +129,7 @@ void ModuleKeyPoints::ProcessFrame()
 			obj.AddFeature("keypoint", new FeatureKeyPoint(kp));
 			obj.AddFeature("parent", new FeatureInt(obj1.GetId()));
 
+			/*
 			if(!mp_descriptor.empty()) // TODO fix
 			{
 				// Add descriptor
@@ -134,6 +141,7 @@ void ModuleKeyPoints::ProcessFrame()
 				descriptors.row(i).copyTo(vect);
 				obj.AddFeature("descriptor", new FeatureVectorFloat(vect));
 			}
+			*/
 
 			m_objectsOut.push_back(obj);
 			i++;
