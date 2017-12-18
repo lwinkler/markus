@@ -11,6 +11,8 @@
 """ Usage: call with <header> <enum with namespace>
 """
 
+# TODO: clean this and maybe use it in markus
+
 import sys
 import clang.cindex as cindex
 from pprint import pprint
