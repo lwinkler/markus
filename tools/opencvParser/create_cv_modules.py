@@ -8,8 +8,7 @@ from hdr_parser import *
 std_types = ['bool', 'float', 'double', 'int', 'long'] # , 'std::string']
 forbidden = ['param', 'width', 'height', 'type', 'class', 'cached', 'master', 'fps', ]
 
-
-def translateType(decl):
+def translate_type(decl):
 	""" Translate types to internal types of Markus """
 	# if decl[0] == 'string':
 		# return 'std::string'
@@ -19,27 +18,27 @@ def translateType(decl):
 		return 'cv::Mat'
 	raise ValueError("Cannot translate type '%s'" % decl[0])
 
-def translateName(decl):
+def translate_name(decl):
 	""" Translate variable names by avoiding reserved names """
 	if decl[1] in forbidden:
 		return "_%s" % decl[1]
 	else:
 		return decl[1]
 
-def translateTypeToInit(decl):
+def translate_type_to_init(decl):
 	""" Generate the initialization of the member """
-	type1 = translateType(decl)
-	name1 = translateName(decl)
+	type1 = translate_type(decl)
+	name1 = translate_name(decl)
 	if type1 in std_types:
 		return ''
 	if type1 == "cv::Mat":
 		return "m_%s(cv::Size(m_param.width, m_param.height), m_param.type)" % name1
 	raise ValueError("Cannot translate type '%s' to init" % type1)
 
-def translateTypeToStream(decl):
+def translate_type_to_stream(decl):
 	""" Generate the stream of the member """
-	type1 = translateType(decl)
-	name1 = translateName(decl)
+	type1 = translate_type(decl)
+	name1 = translate_name(decl)
 	if type1 in std_types:
 		return "new StreamNum<%s>(\"%s\", m_%s, *this, \"\")" % (type1, name1, name1)
 	if type1 == "cv::Mat":
@@ -52,20 +51,20 @@ def create_substitutions(hname, module_name, decl):
 
 	init = ""
 	for param in decl[3]:
-		s = translateTypeToInit(param)
+		s = translate_type_to_init(param)
 		if len(s) > 0:
 			init += '\n\t, ' + s
 
-	members = "\n\t".join(["%s m_%s;" % (translateType(param), translateName(param)) for  param in decl[3]])
-	fct = "%s(%s);" % (decl[0].replace('.', '::'), ', '.join(["m_%s" % translateName(param) for param in decl[3]]))
+	members = "\n\t".join(["%s m_%s;" % (translate_type(param), translate_name(param)) for  param in decl[3]])
+	fct = "%s(%s);" % (decl[0].replace('.', '::'), ', '.join(["m_%s" % translate_name(param) for param in decl[3]]))
 
 	streams  = ""
 
 	for param in decl[3]:
 		if '/O' not in param[3]:
-			streams += "\n\tAddInputStream(%s);" % (translateTypeToStream(param))
+			streams += "\n\tAddInputStream(%s);" % (translate_type_to_stream(param))
 		if '/O' in param[3] or '/IO' in param[3]:
-			streams += "\n\tAddOutputStream(%s);" % (translateTypeToStream(param))
+			streams += "\n\tAddOutputStream(%s);" % (translate_type_to_stream(param))
 
 	return {
 		'includes':   "#include<%s>" % hname,
@@ -94,11 +93,26 @@ def create_markus_module_for_function(hname, modules_dir, decl):
 	create_file(module_dir + '/' + module_name + '.h',   'tools/opencvParser/Module.template.h'  , d)
 	create_file(module_dir + '/' + module_name + '.cpp', 'tools/opencvParser/Module.template.cpp', d)
 
+def has_parent(class_name, parent_name, cv_classes):
+	cl = cv_classes[class_name]
+	if not cl[1]:
+		return False
+	if not cl[1].startswith(': '):
+		raise Exception('Expected semicolon at the begining of ' + cl[0])
+	
+	for par in cl[1][2:].split(' '):
+		pn = par.replace('::', '.')
+		if pn == parent_name:
+			return True
+		if has_parent(pn, parent_name, cv_classes):
+			return True
+	return False
+
 if __name__ == '__main__':
 
-	cv_constants  = []
-	cv_classes    = []
-	cv_structures = []
+	cv_constants  = {}
+	cv_classes    = {}
+	cv_structures = {}
 
 	parser = CppHeaderParser()
 	decls = []
@@ -132,20 +146,24 @@ if __name__ == '__main__':
 			if len(decl) == 0:
 				continue
 
-			sp = decl[0].split(' ')
-			if sp[0] == 'const':
-				cv_constants.append(sp[1])
+			vname = decl[0].split(' ')[-1]
+			if decl[0].startswith('const '):
+				cv_constants[vname] = decl[0]
 				continue
-			elif sp[0] == 'class':
-				cv_classes.append(sp[1])
+			elif decl[0].startswith('class '):
+				print decl
+				last_class = vname
+				cv_classes[vname] = decl
 				continue
-			elif sp[0] == 'struct':
-				cv_structures.append(sp[1])
+			elif decl[0].startswith('struct '):
+				last_struct = vname
+				cv_structures[vname] = decl
 				continue
-			elif len(cv_classes) > 0 and decl[0].startswith(cv_classes[-1]):
+			elif len(cv_classes) > 0 and decl[0].startswith(last_class):
+				print "VIRT %s %s %s" % (decl, decl[2], '/V' in decl[2])
 				# skip methods of classes
 				continue
-			elif len(cv_structures) > 0 and decl[0].startswith(cv_structures[-1]):
+			elif len(cv_structures) > 0 and decl[0].startswith(last_struct):
 				# skip methods of classes
 				continue
 
@@ -156,6 +174,16 @@ if __name__ == '__main__':
 			except Exception as e:
 				print "Cannot create module '%s' (from %s): %s" % (decl[0], hname, e)
 			tot += 1
+	
+	# search all methods
+	method_name = 'create'
+	parent = 'cv.Feature2D'
+	for hname in opencv_hdr_list:
+		for decl in parser.parse(hname):
+			vname = decl[0].split(' ')[-1]
+			if vname.endswith('.' + method_name) and vname[:-len('.' + method_name)]:
+				print decl
+
 
 	print "Could create %d modules out of %d" % (nbOk, tot)
 
