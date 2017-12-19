@@ -103,13 +103,11 @@ void Feature2D::ProcessFrame()
 
 		mp_detector->detect(subImage, pointsOfInterest);
 		Mat descriptors;
-		/*
-		if(!mp_descriptor.empty())
+		if(m_param.computeFeatures)
 		{
-			mp_descriptor->compute(m_input, pointsOfInterest, descriptors);
+			mp_detector->compute(m_input, pointsOfInterest, descriptors);
 			assert(descriptors.rows == static_cast<int>(pointsOfInterest.size()));
 		}
-		*/
 
 		//Mat subImage(m_input,obj1.GetRect());
 		//mp_detector->detect(subImage, pointsOfInterest);
@@ -129,8 +127,7 @@ void Feature2D::ProcessFrame()
 			obj.AddFeature("keypoint", new FeatureKeyPoint(kp));
 			obj.AddFeature("parent", new FeatureInt(obj1.GetId()));
 
-			/*
-			if(!mp_descriptor.empty()) // TODO fix
+			if(m_param.computeFeatures)
 			{
 				// Add descriptor
 				if(descriptors.type() != CV_32FC1)
@@ -141,7 +138,6 @@ void Feature2D::ProcessFrame()
 				descriptors.row(i).copyTo(vect);
 				obj.AddFeature("descriptor", new FeatureVectorFloat(vect));
 			}
-			*/
 
 			m_objectsOut.push_back(obj);
 			i++;

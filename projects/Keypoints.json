@@ -33,6 +33,10 @@
 					}
 				},
 				{
+					"name" : "computeFeatures",
+					"value" : true
+				},
+				{
 					"connected" : 
 					{
 						"module" : "Input",
@@ -61,6 +65,10 @@
 						"number": 0,
 						"parameters": {}
 					}
+				},
+				{
+					"name" : "computeFeatures",
+					"value" : true
 				},
 				{
 					"connected" : 
@@ -93,6 +101,10 @@
 					}
 				},
 				{
+					"name" : "computeFeatures",
+					"value" : false
+				},
+				{
 					"connected" : 
 					{
 						"module" : "Input",
@@ -123,6 +135,10 @@
 					}
 				},
 				{
+					"name" : "computeFeatures",
+					"value" : false
+				},
+				{
 					"connected" : 
 					{
 						"module" : "Input",
@@ -151,6 +167,10 @@
 						"number": 0,
 						"parameters": {}
 					}
+				},
+				{
+					"name" : "computeFeatures",
+					"value" : true
 				},
 				{
 					"connected" : 
