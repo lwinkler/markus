@@ -21,9 +21,17 @@
 			}
 		},
 		{
-			"class" : "KeyPointsBrisk",
+			"class" : "Feature2D",
 			"inputs" : 
 			[
+				{
+					"name" : "create",
+					"value" : {
+						"name": "BRISK",
+						"number": 0,
+						"parameters": {}
+					}
+				},
 				{
 					"connected" : 
 					{
@@ -43,9 +51,17 @@
 			}
 		},
 		{
-			"class" : "KeyPointsFast",
+			"class" : "Feature2D",
 			"inputs" : 
 			[
+				{
+					"name" : "create",
+					"value" : {
+						"name": "KAZE",
+						"number": 0,
+						"parameters": {}
+					}
+				},
 				{
 					"connected" : 
 					{
@@ -55,7 +71,7 @@
 					"name" : "image"
 				}
 			],
-			"name" : "KeyPointsFast3",
+			"name" : "KeyPointsKaze",
 			"uiobject" : 
 			{
 				"height" : 0,
@@ -65,9 +81,17 @@
 			}
 		},
 		{
-			"class" : "KeyPointsGoodFeaturesToTrack",
+			"class" : "Feature2D",
 			"inputs" : 
 			[
+				{
+					"name" : "create",
+					"value" : {
+						"name": "GFTTDetector",
+						"number": 0,
+						"parameters": {}
+					}
+				},
 				{
 					"connected" : 
 					{
@@ -87,9 +111,17 @@
 			}
 		},
 		{
-			"class" : "KeyPointsMser",
+			"class" : "Feature2D",
 			"inputs" : 
 			[
+				{
+					"name" : "create",
+					"value" : {
+						"name": "MSER",
+						"number": 0,
+						"parameters": {}
+					}
+				},
 				{
 					"connected" : 
 					{
@@ -109,12 +141,16 @@
 			}
 		},
 		{
-			"class" : "KeyPointsOrb",
+			"class" : "Feature2D",
 			"inputs" : 
 			[
 				{
-					"name" : "descriptor",
-					"value" : "orb"
+					"name" : "create",
+					"value" : {
+						"name": "ORB",
+						"number": 0,
+						"parameters": {}
+					}
 				},
 				{
 					"connected" : 
@@ -123,10 +159,6 @@
 						"output" : "image"
 					},
 					"name" : "image"
-				},
-				{
-					"name" : "nbFeatures",
-					"value" : 100
 				}
 			],
 			"name" : "KeyPointsOrb10",

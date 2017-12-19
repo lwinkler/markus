@@ -65,7 +65,7 @@ public:
 		if (it == m_register.end())
 		{
 			std::stringstream ss;
-			ss << "Cannot find a constructor for object with class or signature  "<<x_type;
+			ss << "Cannot find a constructor for object with class or signature "<<x_type;
 			throw MkException(ss.str(), LOC);
 		}
 

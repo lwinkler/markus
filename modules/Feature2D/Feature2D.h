@@ -89,7 +89,7 @@ public:
 	public:
 		explicit Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
-			AddParameter(new ParameterT<mkjson>("create", R"({"name": "ORB", "num": 0, "parameters":{}})"_json, &create, "The parameters to pass to the create method method of ORB, BRIEF, ..."));
+			AddParameter(new ParameterT<mkjson>("create", R"({"name": "ORB", "number": 0, "parameters":{}})"_json, &create, "The parameters to pass to the create method method of ORB, BRIEF, ..."));
 
 			RefParameterByName("type").SetRange(R"({"allowed":["CV_8UC1"]})"_json);
 			RefParameterByName("width").SetRange(R"({"min":64, "max":6400})"_json);

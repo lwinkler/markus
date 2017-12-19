@@ -62,7 +62,7 @@ cv::Ptr<cv::Feature2D> Feature2D::create(const mkjson& x_config) {
 		fout.write("""
 	if(name == "%s" && num == %d)
 		return %s::create(%s);
-""" % (class_name, fct_num, class_name, '' if (len(myargs) <= 2) else myargs[:-2]))
+		""" % (class_name[4:], fct_num, class_name, '' if (len(myargs) <= 2) else myargs[:-2]))
 		last_class_name = class_name
 					# print parent_class
 	# print parent_class.type.get_declaration()

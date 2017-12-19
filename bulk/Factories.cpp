@@ -83,6 +83,7 @@ void Factories::RegisterAll()
 	factParamCtr.Register<ControllerBool>(ParameterBool::className);
 	factParamCtr.Register<ControllerDouble>(ParameterDouble::className);
 	factParamCtr.Register<ControllerFloat>(ParameterFloat::className);
+	factParamCtr.Register<ControllerParameterT<ParameterT<mkjson>>>(ParameterT<mkjson>::className);
 	// factParamCtr.Register<ControllerEnum>(ParameterEnum::className);
 
 	// enums
