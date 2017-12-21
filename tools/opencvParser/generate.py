@@ -94,7 +94,7 @@ if __name__ == '__main__':
 
 	print "Could create %d modules out of %d" % (nbOk, tot)
 	
-	# search all methods
+	# search all create methods for Feature2D
 	method_name = 'create'
 	parent = 'cv.Feature2D'
 	methods = []
@@ -102,10 +102,41 @@ if __name__ == '__main__':
 		for decl in parser.parse(hname):
 			vname = decl[0].split(' ')[-1]
 			if vname.endswith('.' + method_name):
-				if has_parent(vname[:-len('.' + method_name)], 'cv.Feature2D', cv_classes):
+				if has_parent(vname[:-len('.' + method_name)], parent, cv_classes):
 					methods += [decl]
 	
-	creation_methods.generate_methods(methods)
+	creation_methods.generate_create_method_feature2d(methods)
+
+	# search all create methods for StatModel
+	method_name = 'create'
+	parent = 'cv.ml.StatModel'
+	methods = []
+	for hname in opencv_hdr_list:
+		for decl in parser.parse(hname):
+			vname = decl[0].split(' ')[-1]
+			if vname.endswith('.' + method_name):
+				if has_parent(vname[:-len('.' + method_name)], parent, cv_classes):
+					methods += [decl]
+
+	creation_methods.generate_create_method_stat_model(methods)
+
+	# search all create methods for BackgroundSubtraction
+	method_name = 'create'
+	parent = 'cv.BackgroundSubtractor'
+	methods = []
+	for hname in opencv_hdr_list:
+		for decl in parser.parse(hname):
+			vname = decl[0].split(' ')[-1]
+			mn = vname.split('.')[-1]
+			print mn
+			if mn.startswith(method_name):
+				cn = vname[:-len('.' + mn)]
+				if cn != 'cv' and has_parent(cn, parent, cv_classes):
+					print 'Found'
+					methods += [decl]
+
+	creation_methods.generate_create_method_stat_model(methods)
+
 
 
 
