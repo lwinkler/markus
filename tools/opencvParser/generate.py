@@ -128,16 +128,11 @@ if __name__ == '__main__':
 		for decl in parser.parse(hname):
 			vname = decl[0].split(' ')[-1]
 			mn = vname.split('.')[-1]
-			print mn
 			if mn.startswith(method_name):
 				cn = vname[:-len('.' + mn)]
-				if cn != 'cv' and has_parent(cn, parent, cv_classes):
-					print 'Found'
+				ret = '' if not decl[4].startswith('Ptr<') else decl[4][4:-1]
+				if 'cv.' + ret in cv_classes and has_parent('cv.' + ret, parent, cv_classes):
 					methods += [decl]
 
-	creation_methods.generate_create_method_stat_model(methods)
-
-
-
-
+	creation_methods.generate_create_method_background_subtractor(methods)
 

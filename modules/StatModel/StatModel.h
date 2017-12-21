@@ -50,6 +50,7 @@ public:
 		explicit Parameters(const std::string& x_name) :
 			Module::Parameters(x_name)
 		{
+			AddParameter(new ParameterT<CreationFunction>("create", R"({"name": "SVM", "number": 0, "parameters":{}})"_json, &create, "The parameters to pass to the create method method of ORB, BRIEF, ..."));
 			AddParameter(new ParameterBool("train", true   , &train, "True if in training mode"));
 			AddParameter(new ParameterString("modelFile", "model.data", &modelFile, "Path to the model file for testing"));
 			AddParameter(new ParameterString("features", "x", &features, "List of features to use from the object. Separated by a comma."));
@@ -71,13 +72,7 @@ public:
 		std::string response;
 		int kernelType;
 
-		// svm
-		double gamma;
-		double coef0;
-		double degree;
-		double c;
-		double nu;
-		double p;
+		CreationFunction create;
 	};
 
 	explicit StatModel(ParameterStructure& xr_params);

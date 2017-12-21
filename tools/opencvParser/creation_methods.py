@@ -20,6 +20,7 @@ def generate(fout, header, footer, methods):
 		method_name = meth[0].split('.')[-1]
 		class_name = meth[0][:-len(method_name) - 1].replace('.', '::')
 		fct_num = 0 if last_class_name != class_name else fct_num + 1
+		ret = 'Error' if not meth[4].startswith('Ptr<') else meth[4][4:-1]
 		print 'Create ' + method_name + " method for child class " + class_name
 
 		# Create the list of arguments
@@ -44,8 +45,8 @@ def generate(fout, header, footer, methods):
 					myargs += 'params.at("%s").get<%s>(), ' % (arg_name, arg_type)
 		fout.write("""
 	if(name == "%s" && num == %d)
-		return %s::create(%s);
-		""" % (class_name[4:], fct_num, class_name, '' if (len(myargs) <= 2) else myargs[:-2]))
+		return %s::%s(%s);
+		""" % (ret, fct_num, class_name, method_name, '' if (len(myargs) <= 2) else myargs[:-2]))
 		last_class_name = class_name
 					# print parent_class
 	# print parent_class.type.get_declaration()

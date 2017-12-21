@@ -42,9 +42,6 @@ StatModel::StatModel(ParameterStructure& xr_params)
 	: Module(xr_params),
 	  m_param(dynamic_cast<Parameters&>(xr_params))
 {
-	m_isUnitTestingEnabled = false; // TODO
-
-
 	// Init output images
 	AddInputStream(0, new StreamObject("input", m_objects, *this,	"Objects input"));
 
