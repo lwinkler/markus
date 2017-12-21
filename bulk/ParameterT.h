@@ -78,18 +78,17 @@ public:
 	}
 	bool CheckRange() const override
 	{
-		// T value = GetValue().template get<T>();
-		// // std::cout << "min" << m_min << " " << m_max << std::endl;
-		// if(m_range.find("max") != m_range.end() && value > m_range.at("max").template get<T>())
-			// return false;
-		// if(m_range.find("min") != m_range.end() && value < m_range.at("min").template get<T>())
-			// return false;
 		return true;
 	}
 
 	mkjson GenerateValues(int x_nbSamples, const mkjson& x_range) const override
 	{
-		return mkjson::array();
+		if(x_range.find("allowed") != x_range.end())
+			return x_range.at("allowed");
+		if(x_range.find("recommended") != x_range.end())
+			return x_range.at("recommended");
+		mkjson arr = mkjson::array();
+		arr.push_back(GetDefault());
 	}
 	void Print(std::ostream& os) const override
 	{

@@ -27,6 +27,7 @@
 #include "define.h"
 #include "MkException.h"
 #include <log4cxx/logger.h>
+#include <boost/noncopyable.hpp>
 
 namespace mk {
 /// return the name of a class
@@ -44,7 +45,7 @@ enum ParameterConfigType
 };
 
 /// Class representing a generic parameter for use in a module
-class Parameter
+class Parameter : boost::noncopyable
 {
 public:
 	static const char configType[PARAMCONF_SIZE][16];

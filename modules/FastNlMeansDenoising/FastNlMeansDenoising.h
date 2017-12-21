@@ -53,10 +53,10 @@ public:
 		int searchWindowSize;
 		bool cielab;
 
-		// Redefine CheckRange: we want to add new conditions
-		virtual void CheckRange() const
+		// Redefine CheckRangeAndThrow: we want to add new conditions
+		virtual void CheckRangeAndThrow() const
 		{
-			Module::Parameters::CheckRange();
+			Module::Parameters::CheckRangeAndThrow();
 			cv::Mat m(1,1, this->type);
 			if(cielab && m.channels() != 3)
 				throw ParameterException("Cielab color space is only for images with 3 channels", LOC);

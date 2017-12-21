@@ -50,7 +50,7 @@ Processable::~Processable()
 void Processable::Reset()
 {
 	m_param.PrintParameters();
-	m_param.CheckRange();
+	m_param.CheckRangeAndThrow();
 
 	// Lock all parameters if needed
 	// note: maybe there is another place to do this: explicitely call after reading parameters

@@ -30,7 +30,7 @@ using namespace std;
 
 Configurable::Configurable(ParameterStructure& x_param) : m_param(x_param)
 {
-	m_param.CheckRange();
+	m_param.CheckRangeAndThrow();
 }
 
 void Configurable::WriteConfig(mkconf& xr_config) const

@@ -311,7 +311,7 @@ public:
 						for(auto& elemVal : values)
 						{
 							// For string type we cannot set random values
-							// cout<<"set "<<value<<endl;
+							cout<<"set "<<oneLine(elemVal)<<endl;
 							mkjson tmps = elemVal;
 							// cout << "translated to string " << tmps << endl;
 							elemCtr.second->CallAction("Set", tmps);
@@ -319,7 +319,7 @@ public:
 							// Test if the config is globally still valid
 							try
 							{
-								tester.module->CheckParameterRange();
+								tester.module->CheckRangeAndThrow();
 							}
 							catch(ParameterException& e)
 							{
@@ -407,7 +407,7 @@ public:
 					mkjson values;
 
 					TS_TRACE("Generate values for param of clsee " + elem->GetClass() + " in range " + oneLine(elem->GetRange()));
-					elem->GenerateValues(10, values);
+					values = elem->GenerateValues(10, nullptr);
 					allValues.push_back(values);
 					allDefault.push_back(elem->GetDefault());
 					allNames.push_back(elem->GetName());

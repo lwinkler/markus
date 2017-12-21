@@ -122,7 +122,7 @@ public:
 	const Stream& GetOutputStreamByName(const std::string& x_name) const;
 	Stream& RefInputStreamByName(const std::string& x_name);
 	Stream& RefOutputStreamByName(const std::string& x_name);
-	inline void CheckParameterRange() {m_param.CheckRange();}
+	inline void CheckRangeAndThrow() {m_param.CheckRangeAndThrow();}
 	inline bool IsUnitTestingEnabled() const {return m_isUnitTestingEnabled;}
 	inline TIME_STAMP GetCurrentTimeStamp() const {return m_currentTimeStamp;}
 	inline TIME_STAMP GetLastTimeStamp()    const {return m_lastTimeStamp;}

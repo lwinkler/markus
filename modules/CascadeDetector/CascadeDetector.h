@@ -63,7 +63,7 @@ public:
 			RefParameterByName("height").SetDefaultAndValue(120);
 			RefParameterByName("width").SetRange(R"({"min":1, "max":1280})"_json);
 			RefParameterByName("height").SetRange(R"({"min":1, "max":960})"_json);
-			RefParameterByName("filterFile").SetRange(R"({"advised":[
+			RefParameterByName("filterFile").SetRange(R"({"recommended":[
 					"modules/CascadeDetector/haarcascade_eye_tree_eyeglasses.xml",
 					"modules/CascadeDetector/haarcascade_eye.xml",
 					"modules/CascadeDetector/haarcascade_frontalface_alt2.xml",

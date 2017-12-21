@@ -32,7 +32,7 @@
 namespace mk {
 /// This is the parent class for all streams (input and output of data)
 
-class Stream : public Parameter, boost::noncopyable
+class Stream : public Parameter
 {
 public:
 	friend inline void to_json(mkjson& _json, const Stream& _ser){_ser.Serialize(_json);}

@@ -29,12 +29,11 @@
 #include "MkException.h"
 #include "config.h"
 #include <log4cxx/logger.h>
-#include <boost/noncopyable.hpp>
 
 namespace mk {
 /// Represents a set of parameters for a configurable objects
 // Note: Disable copies of parameters as a safety
-class ParameterStructure : boost::noncopyable
+class ParameterStructure : public Parameter
 {
 public:
 	explicit ParameterStructure(const std::string& x_name);
@@ -42,8 +41,8 @@ public:
 	void Read(const mkconf& x_config);
 	void Write(mkconf& xr_config) const;
 	void SetValueToDefault();
-	virtual void CheckRange() const;
-	void CheckRange(const mkconf& x_config) const;
+	virtual void CheckRangeAndThrow() const;
+	void CheckRangeAndThrow(const mkconf& x_config) const;
 	void PrintParameters() const;
 	//void SetValueByName(const std::string& x_name, const std::string& x_value, ParameterConfigType x_configType = PARAMCONF_UNKNOWN);
 	const Parameter & GetParameterByName(const std::string& x_name) const;
@@ -52,7 +51,17 @@ public:
 	void LockIfRequired();
 	bool ParameterExists(const std::string& x_name) const;
 	void AddParameter(Parameter* xr_param);
-	inline const std::string& GetName() const {return m_name;}
+
+	// inherited from parameter
+	void SetValue(const mkjson& x_value, ParameterConfigType x_confType) override;
+	void SetDefault(const mkjson& x_value) override;
+	inline const std::string& GetClass() const override {return className;}
+	bool CheckRange() const override;
+	mkjson GenerateValues(int x_nbSamples, const mkjson& x_range) const override;
+	mkjson GetValue() const override;
+	mkjson GetDefault() const override;
+
+	static const std::string className;
 
 protected:
 	Parameter & RefParameterByName(const std::string& x_name);
@@ -60,7 +69,6 @@ protected:
 
 private:
 	std::vector<Parameter*> m_list;
-	std::string m_name;
 
 	static log4cxx::LoggerPtr m_logger;
 };

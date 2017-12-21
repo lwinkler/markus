@@ -25,17 +25,19 @@
 #include "config.h"
 #include "assert.h"
 
+// TODO: This class has a range attr that is not used
+
 namespace mk {
 using namespace std;
 
 // Static variables
 log4cxx::LoggerPtr ParameterStructure::m_logger(log4cxx::Logger::getLogger("ParameterStructure"));
-
+const string ParameterStructure::className = "ParameterStructure";
 
 
 
 ParameterStructure::ParameterStructure(const std::string& x_name):
-	m_name(x_name)
+	Parameter(x_name, "")
 {
 	m_writeAllParamsToConfig = false;
 }
@@ -55,7 +57,7 @@ void ParameterStructure::AddParameter(Parameter* xr_param)
 	for(const auto elem : m_list)
 	{
 		if(elem->GetName() == xr_param->GetName())
-			throw MkException("Try to add a parameter (or input/output) with an existing name \"" + xr_param->GetName() + "\" in module " + m_name,  LOC);
+			throw MkException("Try to add a parameter (or input/output) with an existing name \"" + xr_param->GetName() + "\" in module " + GetName(),  LOC);
 	}
 	m_list.push_back(xr_param);
 
@@ -100,7 +102,7 @@ void ParameterStructure::Read(const mkconf& x_config)
 			}
 		}
 	}
-	CheckRange();
+	CheckRangeAndThrow();
 }
 
 /**
@@ -135,7 +137,7 @@ const Parameter& ParameterStructure::GetParameterByName(const string& x_name) co
 		}
 	}
 
-	throw ParameterException("Parameter not found in module " + m_name + ": " + x_name, LOC);
+	throw ParameterException("Parameter not found in module " + GetName() + ": " + x_name, LOC);
 }
 
 /**
@@ -174,7 +176,7 @@ Parameter& ParameterStructure::RefParameterByName(const string& x_name)
 		}
 	}
 
-	throw ParameterException("Parameter not found in module " + m_name + ": " + x_name, LOC);
+	throw ParameterException("Parameter not found in module " + GetName() + ": " + x_name, LOC);
 }
 
 
@@ -196,10 +198,10 @@ void ParameterStructure::SetValueToDefault()
 *
 * @param x_config Config to check
 */
-void ParameterStructure::CheckRange(const mkconf& x_config) const
+void ParameterStructure::CheckRangeAndThrow(const mkconf& x_config) const
 {
 	// Check that all parameters in config are related to the module
-	for(const auto& inputConf : x_config["inputs"])
+	for(const auto& inputConf : x_config.at("inputs"))
 	{
 		try
 		{
@@ -209,17 +211,17 @@ void ParameterStructure::CheckRange(const mkconf& x_config) const
 		{
 			// note: This logs every time we override camera_id or job_id
 			//       since the parameters are shared between Manager and Context
-			LOG_WARN(m_logger, "Exception in CheckRange: " << e.what());
+			LOG_WARN(m_logger, "Exception in CheckRangeAndThrow: " << e.what());
 		}
 	}
-	CheckRange();
+	CheckRangeAndThrow();
 }
 
 
 /**
 * @brief  Check that the parameter values are in range [min;max] and throw an exception if not
 */
-void ParameterStructure::CheckRange() const
+void ParameterStructure::CheckRangeAndThrow() const
 {
 	// Check that each parameter's value is within range
 	for(const auto & elem : m_list)
@@ -250,4 +252,69 @@ void ParameterStructure::PrintParameters() const
 		LOG_INFO(m_logger, ss.str());
 }
 
+void ParameterStructure::SetValue(const mkjson& x_value, ParameterConfigType x_confType)
+{
+	for(auto& elem : m_list)
+	{
+		elem->SetValue(x_value.at(elem->GetName()), x_confType);
+	}
 }
+
+void ParameterStructure::SetDefault(const mkjson& x_value)
+{
+	for(auto& elem : m_list)
+	{
+		elem->SetDefault(x_value.at(elem->GetName()));
+	}
+}
+
+bool ParameterStructure::CheckRange() const
+{
+	for(const auto& elem : m_list)
+	{
+		if(!elem->CheckRange())
+			return false;
+	}
+	return true;
+}
+
+mkjson ParameterStructure::GenerateValues(int x_nbSamples, const mkjson& x_range) const
+{
+	mkjson values;
+	for(const auto& elem1 : m_list)
+	{
+		mkjson allValues = elem1->GenerateValues(x_nbSamples, nullptr); // TODO no need to pass range to this method
+		mkjson value;
+		for(const auto& av : allValues)
+		{
+			for(const auto& elem2 : m_list)
+			{
+				value[elem2->GetName()] = elem2->GetName() == elem1->GetName() ? av : elem2->GetDefault();
+			}
+		}
+		values.push_back(value);
+	}
+	return values;
+}
+
+mkjson ParameterStructure::GetValue() const
+{
+	mkjson js;
+	for(const auto& elem : m_list)
+	{
+		js[elem->GetName()] = elem->GetValue();
+	}
+	return js;
+}
+
+mkjson ParameterStructure::GetDefault() const
+{
+	mkjson js;
+	for(const auto& elem : m_list)
+	{
+		js[elem->GetName()] = elem->GetDefault();
+	}
+	return js;
+}
+
+} // namespace mk

@@ -119,8 +119,8 @@ mkjson ParameterEnum::GenerateValues(int x_nbSamples, const mkjson& x_range) con
 {
 	if(x_range.find("allowed") != x_range.end())
 		return x_range.at("allowed");
-	if(x_range.find("advised") != x_range.end())
-		return x_range.at("advised");
+	if(x_range.find("recommended") != x_range.end())
+		return x_range.at("recommended");
 	mkjson root = mkjson::array();
 	for(const auto& elem : GetEnum())
 		root.push_back(elem.first);

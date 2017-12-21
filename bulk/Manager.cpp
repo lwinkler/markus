@@ -93,7 +93,7 @@ void Manager::BuildModule(const string& x_name, const mkconf& x_moduleConfig)
 	tmp2->Read(x_moduleConfig);
 
 	// note: Commented for now: TODO: initialize the inputs as real parameters
-	// tmp2->CheckRange(x_moduleConfig);
+	// tmp2->CheckRangeAndThrow(x_moduleConfig);
 
 	if(!m_param.aspectRatio.empty())
 	{
@@ -162,7 +162,7 @@ void Manager::Rebuild()
 	Reset();
 	Check();
 	for(const auto& elem : m_modules)
-		elem.second->CheckParameterRange();
+		elem.second->CheckRangeAndThrow();
 	Start();
 }
 
