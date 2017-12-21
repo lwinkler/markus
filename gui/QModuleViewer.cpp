@@ -541,4 +541,4 @@ void QModuleViewer::mouseDoubleClickEvent(QMouseEvent * event)
 	QMessageBox::about(this, QString(ss1.str().c_str()), QString(ss2.str().c_str()));
 }
 
-}
+} // namespace mk

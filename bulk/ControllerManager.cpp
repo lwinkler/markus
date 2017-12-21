@@ -172,4 +172,4 @@ QWidget* ControllerManager::CreateWidget()
 {
 	return nullptr;
 }
-}
+} // namespace mk

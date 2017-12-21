@@ -157,4 +157,4 @@ string Context::Version(bool x_full)
 	return ss.str();
 }
 
-}
+} // namespace mk

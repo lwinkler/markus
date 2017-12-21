@@ -53,4 +53,4 @@ QWidget* ControllerBackground::CreateWidget()
 {
 	return nullptr;
 }
-}
+} // namespace mk

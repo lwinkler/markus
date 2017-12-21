@@ -141,4 +141,4 @@ mkjson ParameterEnum::Export() const
 	}
 	return root;
 }
-}
+} // namespace mk

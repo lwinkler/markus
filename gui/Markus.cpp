@@ -337,4 +337,4 @@ void MarkusWindow::resizeEvent(QResizeEvent* event)
 		}
 	}
 }
-}
+} // namespace mk

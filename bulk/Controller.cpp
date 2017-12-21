@@ -52,4 +52,4 @@ Controller& Controllable::FindController(const string& x_name) const
 		throw MkException("Cannot find controller " + x_name + " in controls list", LOC);
 	return *(it->second);
 }
-}
+} // namespace mk

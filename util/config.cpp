@@ -146,4 +146,4 @@ const mkjson& findFirstInArrayConst(const mkconf& x_conf, const std::string& x_n
 	}
 	throw MkException("No occurence of " + x_name + "=" + x_value + " in config", LOC);
 }
-}
+} // namespace mk

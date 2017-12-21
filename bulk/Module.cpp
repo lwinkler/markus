@@ -570,4 +570,4 @@ void Module::RemoveDependingModule(const Module & x_module)
 	}
 }
 
-}
+} // namespace mk

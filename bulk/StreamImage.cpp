@@ -227,4 +227,4 @@ void StreamT<Mat>::Disconnect()
 	mp_connectedImage = nullptr;
 	m_content = Mat();
 }
-}
+} // namespace mk

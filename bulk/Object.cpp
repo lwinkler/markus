@@ -258,4 +258,4 @@ void Object::Randomize(unsigned int& xr_seed, const mkjson& x_requirement, const
 
 	m_id = rand_r(&xr_seed);
 }
-}
+} // namespace mk

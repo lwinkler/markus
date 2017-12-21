@@ -275,4 +275,4 @@ void Processable::Status() const
 	evt.Notify(GetContext(), true);
 }
 
-}
+} // namespace mk

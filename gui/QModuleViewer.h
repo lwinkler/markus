@@ -135,5 +135,5 @@ public slots:
 	void showDisplayOptions(bool x_isChecked);
 };
 
-}
+} // namespace mk
 #endif

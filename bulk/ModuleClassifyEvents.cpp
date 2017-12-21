@@ -117,4 +117,4 @@ void ModuleClassifyEvents::PopEvent()
 	}
 	else LOG_WARN(m_logger, "Cannot call PopEvent, event list is empty");
 }
-}
+} // namespace mk

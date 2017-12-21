@@ -26,6 +26,7 @@
 
 #include "Module.h"
 #include "StreamObject.h"
+#include "CreationFunction.h"
 
 namespace cv {
 	inline void to_json(mk::mkjson& _json, const SimpleBlobDetector::Params& _obj) {
@@ -74,8 +75,8 @@ namespace cv {
 	}
 } // namespace cv
 
-
 namespace mk {
+
 /**
 * @brief This class is a parent class for all module of keypoint extraction
 * http://docs.opencv.org/modules/features2d/doc/common_interfaces_of_feature_detectors.html
@@ -83,20 +84,20 @@ namespace mk {
 class Feature2D : public Module
 {
 public:
-	static cv::Ptr<cv::Feature2D> create(const mkjson& x_config);
+	static cv::Ptr<cv::Feature2D> create(const CreationFunction& x_funct);
 	class Parameters : public Module::Parameters
 	{
 	public:
 		explicit Parameters(const std::string& x_name) : Module::Parameters(x_name)
 		{
-			AddParameter(new ParameterT<mkjson>("create", R"({"name": "ORB", "number": 0, "parameters":{}})"_json, &create, "The parameters to pass to the create method method of ORB, BRIEF, ..."));
+			AddParameter(new ParameterT<CreationFunction>("create", R"({"name": "ORB", "number": 0, "parameters":{}})"_json, &create, "The parameters to pass to the create method method of ORB, BRIEF, ..."));
 			AddParameter(new ParameterT<bool>("computeFeatures", false, &computeFeatures, "Compute the features associated with the keypoints."));
 
 			RefParameterByName("type").SetRange(R"({"allowed":["CV_8UC1"]})"_json);
 			RefParameterByName("width").SetRange(R"({"min":64, "max":6400})"_json);
 			RefParameterByName("height").SetRange(R"({"min":48, "max":4800})"_json);
 		};
-		mkjson create;
+		CreationFunction create;
 		bool computeFeatures;
 	};
 	MKCLASS("Feature2D")

@@ -492,4 +492,4 @@ vector<ConfigXml> ConfigXml::FindAll(const string& x_searchString) const
 	else
 		return GetSubConfig(tagName, attrName, attrValue).FindAll(searchString2);
 }
-}
+} // namespace mk

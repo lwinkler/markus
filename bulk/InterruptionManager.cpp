@@ -85,4 +85,4 @@ vector<Command> InterruptionManager::ReturnCommandsToSend()
 	m_commands.clear();
 	return commands;
 }
-}
+} // namespace mk

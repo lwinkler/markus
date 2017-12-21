@@ -87,4 +87,4 @@ template<> void StreamState::Deserialize(const mkjson& x_json, MkDirectory* xp_d
 	Stream::Deserialize(x_json, xp_dir);
 	from_mkjson(x_json.at("state"), m_content);
 }
-}
+} // namespace mk

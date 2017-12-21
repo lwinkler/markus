@@ -23,6 +23,7 @@
 
 #include "ParameterT.h"
 #include "Polygon.h"
+#include "CreationFunction.h"
 
 namespace mk {
 using namespace std;
@@ -36,7 +37,8 @@ template<> const string ParameterT<float>::className        = "ParameterFloat";
 template<> const string ParameterT<double>::className       = "ParameterDouble";
 template<> const string ParameterT<string>::className       = "ParameterString";
 template<> const string ParameterT<Polygon>::className      = "ParameterPolygon";
-template<> const string ParameterT<mkjson>::className       = "ParameterJson";
+template<> const string ParameterT<CreationFunction>::className = "CreationFunction";
+// not working yet because of serialization: template<> const string ParameterT<mkjson>::className       = "ParameterJson";
 
 template<class T> inline bool checkRangeNum(const T& x_value, const mkjson& x_range)
 {
@@ -155,4 +157,4 @@ template<> mkjson ParameterT<float>::GenerateValues(int x_nbSamples, const mkjso
 {
 	return generateValuesFloat<float>(x_nbSamples, x_range.is_null() ? GetRange() : x_range);
 }
-}
+} // namespace mk

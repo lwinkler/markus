@@ -232,4 +232,4 @@ void Event::GetExternalFiles(map<std::string, string>& xr_output) const
 		xr_output[it.key()] = it.value().get<string>();
 	}
 }
-}
+} // namespace mk

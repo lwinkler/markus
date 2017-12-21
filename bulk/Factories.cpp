@@ -31,6 +31,7 @@
 
 #include "ControllerParameterT.h"
 #include "Polygon.h"
+#include "CreationFunction.h"
 #include "StreamT.h"
 #include "StreamImage.h"
 #include "enums.h"
@@ -83,7 +84,7 @@ void Factories::RegisterAll()
 	factParamCtr.Register<ControllerBool>(ParameterBool::className);
 	factParamCtr.Register<ControllerDouble>(ParameterDouble::className);
 	factParamCtr.Register<ControllerFloat>(ParameterFloat::className);
-	factParamCtr.Register<ControllerParameterT<ParameterT<mkjson>>>(ParameterT<mkjson>::className);
+	// factParamCtr.Register<ControllerParameterT<ParameterT<mkjson>>>(ParameterT<mkjson>::className);
 	// factParamCtr.Register<ControllerEnum>(ParameterEnum::className);
 
 	// enums
@@ -98,10 +99,11 @@ void Factories::RegisterAll()
 	// factParamCtr.Register<ControllerCalibrationByHeight>(PARAM_OBJECT_HEIGHT);
 	factParamCtr.Register<ControllerString>(ParameterString::className);
 	factParamCtr.Register<ControllerParameterT<ParameterT<Polygon>>>(ParameterT<Polygon>::className);
+	factParamCtr.Register<ControllerParameterT<ParameterT<CreationFunction>>>(ParameterT<CreationFunction>::className);
 	factParamCtr.Register<ControllerParameterT<Stream>>(StreamT<vector<Object>>::className);
 	factParamCtr.Register<ControllerParameterT<Stream>>(StreamT<cv::Mat>::className);
 	factParamCtr.Register<ControllerParameterT<Stream>>(StreamT<Event>::className);
 	factParamCtr.Register<ControllerParameterT<Stream>>(StreamT<bool>::className);
 }
 
-}
+} // namespace mk

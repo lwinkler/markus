@@ -272,4 +272,4 @@ void Simulation::Generate()
 	LOG_INFO(m_logger, m_cpt << " simulations generated in directory " << m_outputDir);
 	LOG_INFO(m_logger, "Launch with: make -f " << makefile << " -j4");
 }
-}
+} // namespace mk

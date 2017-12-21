@@ -681,4 +681,4 @@ std::string convertAspectRatio(const cv::Size& x_size)
 	return to_string(r.numerator()) + ":" + to_string(r.denominator());
 }
 
-}
+} // namespace mk

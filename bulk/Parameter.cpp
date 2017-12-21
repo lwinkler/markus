@@ -62,4 +62,4 @@ void Parameter::Print(std::ostream& os) const
 	os<<m_name<<"="<< oneLine(GetValue()) << " ("<<configType[m_confSource]<<"); ";
 }
 
-}
+} // namespace mk

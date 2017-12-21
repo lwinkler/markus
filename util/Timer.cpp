@@ -67,4 +67,4 @@ void QuickTimer::PrintTimers()
 		elem.second.Print();
 	}
 }
-}
+} // namespace mk

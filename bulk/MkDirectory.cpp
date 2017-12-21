@@ -291,4 +291,4 @@ void MkDirectory::ArchiveAndClean(bool x_clean, const string& x_archiveDir, cons
 		}
 	}
 }
-}
+} // namespace mk

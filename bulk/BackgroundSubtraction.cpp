@@ -57,4 +57,4 @@ void BackgroundSubtraction::StartOnlineLearning(bool x_cutOutput)
 	m_cutOutput = x_cutOutput;
 	m_onlineLearnTimeMs = m_param.onlineLearnTime * 1000;
 }
-}
+} // namespace mk

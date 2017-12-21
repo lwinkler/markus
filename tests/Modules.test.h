@@ -311,7 +311,6 @@ public:
 						for(auto& elemVal : values)
 						{
 							// For string type we cannot set random values
-							cout<<"set "<<oneLine(elemVal)<<endl;
 							mkjson tmps = elemVal;
 							// cout << "translated to string " << tmps << endl;
 							elemCtr.second->CallAction("Set", tmps);
@@ -406,7 +405,7 @@ public:
 					// Generate a new module with each value for locked parameter
 					mkjson values;
 
-					TS_TRACE("Generate values for param of clsee " + elem->GetClass() + " in range " + oneLine(elem->GetRange()));
+					TS_TRACE("Generate values for param of class " + elem->GetClass() + " in range " + oneLine(elem->GetRange()));
 					values = elem->GenerateValues(10, nullptr);
 					allValues.push_back(values);
 					allDefault.push_back(elem->GetDefault());

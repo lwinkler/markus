@@ -106,4 +106,4 @@ bool AnnotationSrtFileReader::ReadNextAnnotation(string& rx_subText)
 }
 
 
-}
+} // namespace mk

@@ -90,4 +90,4 @@ template<> void StreamEvent::Deserialize(const mkjson& x_json, MkDirectory* xp_d
 	Stream::Deserialize(x_json, xp_dir);
 	from_mkjson(x_json.at("event"), m_content);
 }
-}
+} // namespace mk

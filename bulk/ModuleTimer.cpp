@@ -94,4 +94,4 @@ void ModuleTimer::Start(double x_fps)
 	});
 }
 
-}
+} // namespace mk

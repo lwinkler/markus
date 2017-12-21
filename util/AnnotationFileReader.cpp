@@ -139,4 +139,4 @@ string AnnotationFileReader::ReadAnnotationForTimeStamp(TIME_STAMP x_current)
 		return m_text;
 	else return "";
 }
-}
+} // namespace mk

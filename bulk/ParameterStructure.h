@@ -69,8 +69,6 @@ protected:
 
 private:
 	std::vector<Parameter*> m_list;
-
-	static log4cxx::LoggerPtr m_logger;
 };
 
 

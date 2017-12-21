@@ -39,6 +39,7 @@ ControllerBackground.cpp
 Processable.cpp
 Simulation.cpp
 InterruptionManager.cpp
+CreationFunction.cpp
 ParameterEnumT.gen.cpp
 )
 

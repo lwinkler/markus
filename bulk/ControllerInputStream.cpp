@@ -88,4 +88,4 @@ QWidget* ControllerInputStream::CreateWidget()
 	return nullptr;
 #endif
 }
-}
+} // namespace mk

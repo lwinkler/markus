@@ -162,4 +162,4 @@ void Feature2D::ProcessFrame()
 
 }
 
-}
+} // namespace mk

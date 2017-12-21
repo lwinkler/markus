@@ -37,4 +37,4 @@ void Configurable::WriteConfig(mkconf& xr_config) const
 {
 	m_param.Write(xr_config);
 }
-}
+} // namespace mk

@@ -21,44 +21,22 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef CONTROL_BOARD_H
-#define CONTROL_BOARD_H
-
-
-#include <QWidget>
-#include <QScrollArea>
-
-class QGroupBox;
-class QHBoxLayout;
+#include "CreationFunction.h"
 
 namespace mk {
-
-/// Class to control a module (settings ...)
-class Controller;
-class Manager;
-
-/// QT widget to display one controller
-class QControlBoard : public QWidget
+void to_json(mkjson& rx_json, const CreationFunction& x_ser)
 {
-	Q_OBJECT
-public:
-	QControlBoard(Manager& rx_manager, const std::string& x_moduleName, const std::string& x_controllerName, QWidget *xp_parent);
-	virtual ~QControlBoard();
-	virtual void Destroy() {}
+	rx_json = mkjson{
+		{"name", x_ser.name},
+		{"number", x_ser.number},
+		{"parameters", x_ser.parameters}
+	};
+}
 
-protected:
-	void paintEvent(QPaintEvent *event);
-	virtual void resizeEvent(QResizeEvent * e);
-
-	QScrollArea * mp_gbControls;
-	QGroupBox   * mp_gbButtons;
-	QHBoxLayout * mp_buttonLayout;
-	Manager&      mr_manager;
-	std::string   m_moduleName;
-	std::string   m_controllerName;
-
-public slots:
-	void callAction();
-};
+void from_json(const mkjson& x_json, CreationFunction& rx_ser)
+{
+	rx_ser.name       = x_json.at("name").get<std::string>();
+	rx_ser.number     = x_json.at("number").get<uint>();
+	rx_ser.parameters = x_json.at("parameters");
+}
 } // namespace mk
-#endif

@@ -33,4 +33,4 @@ template<> const string StreamNum<uint>::className   = "StreamNum<uint>";
 template<> const string StreamNum<float>::className  = "StreamNum<float>";
 template<> const string StreamNum<double>::className = "StreamNum<double>";
 
-}
+} // namespace mk

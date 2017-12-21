@@ -243,4 +243,4 @@ void AnnotationAssFileReader::ReadResolution()
 	m_widthProportion  = static_cast<double>(m_inputWidth)  / width;
 	m_heightProportion = static_cast<double>(m_inputHeight) / height;
 }
-}
+} // namespace mk

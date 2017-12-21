@@ -88,4 +88,4 @@ void Svg::LinkImage(const std::string& x_file, const Rect& x_rect)
 	image.SetAttribute("width", x_rect.width);
 	image.SetAttribute("height", x_rect.height);
 }
-}
+} // namespace mk

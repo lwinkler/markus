@@ -154,4 +154,4 @@ void from_json(const mkjson& x_json, MkException& rx_ser)
 	rx_ser.m_name        = x_json.at("name").get<string>();
 }
 
-}
+} // namespace mk

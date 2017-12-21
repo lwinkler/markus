@@ -683,4 +683,4 @@ int Manager::ReturnCode() const
 		return LastException().GetCode() - MK_EXCEPTION_FIRST;
 }
 
-}
+} // namespace mk

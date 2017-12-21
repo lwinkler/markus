@@ -40,4 +40,4 @@ Input::~Input()
 {
 }
 
-}
+} // namespace mk

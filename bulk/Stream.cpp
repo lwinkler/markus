@@ -106,4 +106,4 @@ void Stream::Deserialize(const mkjson& x_json, MkDirectory* xp_dir)
 		throw MkException("Stream must have the same connection state before deserializing", LOC);
 }
 
-}
+} // namespace mk

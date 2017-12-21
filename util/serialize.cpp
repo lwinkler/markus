@@ -101,4 +101,4 @@ string signatureJsonTree(const mkjson &x_json, int x_depth)
 	return result;
 }
 
-}
+} // namespace mk

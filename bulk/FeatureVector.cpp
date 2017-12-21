@@ -77,4 +77,4 @@ template<>void FeatureVectorT<int>::Deserialize(const mkjson& x_json)
 		throw MkException("Wrong feature vector type " + x_json.at("type").get<string>(), LOC);
 	values = x_json.at("values").get<vector<int>>();
 }
-}
+} // namespace mk

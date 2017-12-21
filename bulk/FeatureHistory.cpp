@@ -104,4 +104,4 @@ void FeatureHistory::Deserialize(const mkjson& x_json)
 		features.insert(std::make_pair(elem.at("time").get<TIME_STAMP>(), FeaturePtr(feat)));
 	}
 }
-}
+} // namespace mk

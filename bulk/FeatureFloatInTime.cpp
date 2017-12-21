@@ -107,4 +107,4 @@ void FeatureFloatInTime::Deserialize(const mkjson& x_json)
 	max = x_json.at("max").get<float>();
 	nbSamples = x_json.at("nbSamples").get<int>();
 }
-}
+} // namespace mk

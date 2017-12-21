@@ -23,10 +23,10 @@ using vector_int = vector<int>;
 using SimpleBlobDetector_Params = SimpleBlobDetector::Params;
 
 namespace mk {
-cv::Ptr<cv::Feature2D> Feature2D::create(const mkjson& x_config) {
-	const mkjson& params(x_config.at("parameters"));
-	const string name = x_config.at("name");
-	const int num = x_config.at("number");
+cv::Ptr<cv::Feature2D> Feature2D::create(const CreationFunction& x_funct) {
+	const mkjson& params(x_funct.parameters);
+	const string name = x_funct.name;
+	const int num = x_funct.number;
 
 """)
 

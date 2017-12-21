@@ -305,4 +305,4 @@ template<> mkjson ControllerEnum::GetValueFromWidget()
 #endif
 }
 
-}
+} // namespace mk

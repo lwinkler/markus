@@ -65,4 +65,4 @@ bool MarkusApplication::notify(QObject *receiver_, QEvent *event_)
 
 	return false;
 }
-}
+} // namespace mk

@@ -89,6 +89,7 @@ public:
 			return x_range.at("recommended");
 		mkjson arr = mkjson::array();
 		arr.push_back(GetDefault());
+		return arr;
 	}
 	void Print(std::ostream& os) const override
 	{

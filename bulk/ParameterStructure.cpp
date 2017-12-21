@@ -31,9 +31,7 @@ namespace mk {
 using namespace std;
 
 // Static variables
-log4cxx::LoggerPtr ParameterStructure::m_logger(log4cxx::Logger::getLogger("ParameterStructure"));
 const string ParameterStructure::className = "ParameterStructure";
-
 
 
 ParameterStructure::ParameterStructure(const std::string& x_name):

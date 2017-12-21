@@ -77,4 +77,4 @@ void AnnotationFileWriter::WriteAnnotation(TIME_STAMP x_start, TIME_STAMP x_end,
 	m_file<<endl;
 	m_subId++;
 }
-}
+} // namespace mk

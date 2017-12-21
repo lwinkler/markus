@@ -21,44 +21,26 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#ifndef CONTROL_BOARD_H
-#define CONTROL_BOARD_H
+#ifndef CREATION_FUNCTION_H
+#define CREATION_FUNCTION_H
 
-
-#include <QWidget>
-#include <QScrollArea>
-
-class QGroupBox;
-class QHBoxLayout;
+#include "serialize.h"
 
 namespace mk {
-
-/// Class to control a module (settings ...)
-class Controller;
-class Manager;
-
-/// QT widget to display one controller
-class QControlBoard : public QWidget
+/**
+* @brief An object to define a creation function for an OpenCV class
+*/
+class CreationFunction
 {
-	Q_OBJECT
-public:
-	QControlBoard(Manager& rx_manager, const std::string& x_moduleName, const std::string& x_controllerName, QWidget *xp_parent);
-	virtual ~QControlBoard();
-	virtual void Destroy() {}
-
-protected:
-	void paintEvent(QPaintEvent *event);
-	virtual void resizeEvent(QResizeEvent * e);
-
-	QScrollArea * mp_gbControls;
-	QGroupBox   * mp_gbButtons;
-	QHBoxLayout * mp_buttonLayout;
-	Manager&      mr_manager;
-	std::string   m_moduleName;
-	std::string   m_controllerName;
-
-public slots:
-	void callAction();
+	public:
+		std::string name;
+		uint number;
+		mkjson parameters;
 };
+
+void to_json(mkjson& rx_json, const CreationFunction& x_ser);
+void from_json(const mkjson& x_json, CreationFunction& rx_ser);
+
 } // namespace mk
+
 #endif
