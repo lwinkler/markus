@@ -13,13 +13,13 @@ import {ModuleInput}  from './moduleInput';
 	<option *ngFor='let val of (description.range.allowed||description.enum)' [value]='val'>{{val}}</option>
 </select>
 
-<div [ngSwitch]='description.type' *ngIf='input!==undefined&&input.value!==undefined&&!description.enum'>
-	<input *ngSwitchCase='"float"'        type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='0.01' [(ngModel)]='input.value' (ngModelChange)='castFloat()' size='10'/>
-	<input *ngSwitchCase='"double"'       type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='0.01' [(ngModel)]='input.value' (ngModelChange)='castFloat()' size='10'/>
-	<input *ngSwitchCase='"int"'          type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='1'    [(ngModel)]='input.value' (ngModelChange)='castInt()' size='10'/>
-	<input *ngSwitchCase='"unsigned int"' type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='1'    [(ngModel)]='input.value' (ngModelChange)='castInt()' size='10'/>
-	<input *ngSwitchCase='"bool"' type='checkbox' [(ngModel)]='input.value'/>
-	<input *ngSwitchCase='"string"' type='string' [(ngModel)]='input.value' size='10'/>
+<div [ngSwitch]='description.class' *ngIf='input!==undefined&&input.value!==undefined&&!description.enum'>
+	<input *ngSwitchCase='"ParameterFloat"'        type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='0.01' [(ngModel)]='input.value' (ngModelChange)='castFloat()' size='10'/>
+	<input *ngSwitchCase='"ParameterDouble"'       type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='0.01' [(ngModel)]='input.value' (ngModelChange)='castFloat()' size='10'/>
+	<input *ngSwitchCase='"ParameterInt"'          type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='1'    [(ngModel)]='input.value' (ngModelChange)='castInt()' size='10'/>
+	<input *ngSwitchCase='"ParameterUInt"' type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='1'    [(ngModel)]='input.value' (ngModelChange)='castInt()' size='10'/>
+	<input *ngSwitchCase='"ParameterBool"' type='checkbox' [(ngModel)]='input.value'/>
+	<input *ngSwitchCase='"ParameterString"' type='string' [(ngModel)]='input.value' size='10'/>
 	<span *ngSwitchDefault>unknown type</span>
 </div>
 `,

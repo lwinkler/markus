@@ -504,10 +504,10 @@ void Manager::CreateEditorFiles(const string& x_fileName)
 
 		// Generate the js files containing
 		ofstream os1("editor/modules/moduleDescriptions.json"); // all module descriptions
-		os1 << moduleDescriptionsJson << endl;
+		os1 << multiLine(moduleDescriptionsJson) << endl;
 		os1.close();
 		ofstream os2("editor/modules/moduleCategories.json");
-		os2 << moduleCategoriesJson << endl;
+		os2 << multiLine(moduleCategoriesJson) << endl;
 		os2.close();
 	}
 	catch(MkException& e)
