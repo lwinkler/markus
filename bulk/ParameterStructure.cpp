@@ -276,12 +276,12 @@ bool ParameterStructure::CheckRange() const
 	return true;
 }
 
-mkjson ParameterStructure::GenerateValues(int x_nbSamples, const mkjson& x_range) const
+mkjson ParameterStructure::GenerateValues(int x_nbSamples) const
 {
 	mkjson values;
 	for(const auto& elem1 : m_list)
 	{
-		mkjson allValues = elem1->GenerateValues(x_nbSamples, nullptr); // TODO no need to pass range to this method
+		mkjson allValues = elem1->GenerateValues(x_nbSamples);
 		mkjson value;
 		for(const auto& av : allValues)
 		{

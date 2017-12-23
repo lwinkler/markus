@@ -306,7 +306,7 @@ public:
 						TS_TRACE("###  " + elemCtr.first + ".GetDefault returned " + oneLine(defval));
 
 						TS_TRACE("Generate values for param of type " + oneLine(type) + " in range " + oneLine(range));
-						mkjson values = tester.module->GetParameters().GetParameterByName(elemCtr.first).GenerateValues(10, range);
+						mkjson values = tester.module->GetParameters().GetParameterByName(elemCtr.first).GenerateValues(10);
 
 						for(auto& elemVal : values)
 						{
@@ -406,7 +406,7 @@ public:
 					mkjson values;
 
 					TS_TRACE("Generate values for param of class " + elem->GetClass() + " in range " + oneLine(elem->GetRange()));
-					values = elem->GenerateValues(10, nullptr);
+					values = elem->GenerateValues(10);
 					allValues.push_back(values);
 					allDefault.push_back(elem->GetDefault());
 					allNames.push_back(elem->GetName());

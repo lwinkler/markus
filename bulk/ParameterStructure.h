@@ -57,7 +57,7 @@ public:
 	void SetDefault(const mkjson& x_value) override;
 	inline const std::string& GetClass() const override {return className;}
 	bool CheckRange() const override;
-	mkjson GenerateValues(int x_nbSamples, const mkjson& x_range) const override;
+	mkjson GenerateValues(int x_nbSamples) const override;
 	mkjson GetValue() const override;
 	mkjson GetDefault() const override;
 

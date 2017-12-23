@@ -69,7 +69,7 @@ public:
 	virtual void SetValueToDefault() = 0;
 	virtual void Print(std::ostream& os) const;
 	virtual bool CheckRange() const = 0;
-	virtual mkjson GenerateValues(int x_nbSamples, const mkjson& x_range) const = 0;
+	virtual mkjson GenerateValues(int x_nbSamples) const = 0;
 	virtual mkjson Export() const;
 
 	/// Use this method to mark parameters that must not change value after initialization

@@ -112,15 +112,14 @@ map<int,string> ParameterEnum::CreateReverseMap(const map<string, int>& x_map)
  * @brief Generate values in range
  *
  * @param x_nbSamples Number of valuew to generate
- * @param x_range      Range (if empty take parameter range)
  *
  */
-mkjson ParameterEnum::GenerateValues(int x_nbSamples, const mkjson& x_range) const
+mkjson ParameterEnum::GenerateValues(int x_nbSamples) const
 {
-	if(x_range.find("allowed") != x_range.end())
-		return x_range.at("allowed");
-	if(x_range.find("recommended") != x_range.end())
-		return x_range.at("recommended");
+	if(GetRange().find("allowed") != GetRange().end())
+		return GetRange().at("allowed");
+	if(GetRange().find("recommended") != GetRange().end())
+		return GetRange().at("recommended");
 	mkjson root = mkjson::array();
 	for(const auto& elem : GetEnum())
 		root.push_back(elem.first);

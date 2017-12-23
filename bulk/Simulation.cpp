@@ -201,7 +201,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const mkconf& 
 
 			LOG_DEBUG(m_logger, "Variations for module " << moduleNames.at(0).get<string>());
 			const Parameter& param = m_manager.GetModuleByName(moduleNames.at(0).get<string>()).GetParameters().GetParameterByName(paramNames.at(0).get<string>());
-			mkjson values = param.GenerateValues(nb, range);
+			mkjson values = param.GenerateValues(nb);
 
 			// Generate a config for each variation
 			for(auto& elem : values)

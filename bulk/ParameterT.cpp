@@ -133,28 +133,28 @@ template<class T> mkjson generateValuesInt(int x_nbSamples, const mkjson& x_rang
 	return values;
 }
 
-template<> mkjson ParameterT<int>::GenerateValues(int x_nbSamples, const mkjson& x_range) const
+template<> mkjson ParameterT<int>::GenerateValues(int x_nbSamples) const
 {
-	return generateValuesInt<int>(x_nbSamples, x_range.is_null() ? GetRange() : x_range);
+	return generateValuesInt<int>(x_nbSamples, GetRange());
 }
 
-template<> mkjson ParameterT<unsigned int>::GenerateValues(int x_nbSamples, const mkjson& x_range) const
+template<> mkjson ParameterT<unsigned int>::GenerateValues(int x_nbSamples) const
 {
-	return generateValuesInt<unsigned int>(x_nbSamples, x_range.is_null() ? GetRange() : x_range);
+	return generateValuesInt<unsigned int>(x_nbSamples, GetRange());
 }
 
-template<> mkjson ParameterT<bool>::GenerateValues(int x_nbSamples, const mkjson& x_range) const
+template<> mkjson ParameterT<bool>::GenerateValues(int x_nbSamples) const
 {
-	return generateValuesInt<bool>(x_nbSamples, x_range.is_null() ? GetRange() : x_range);
+	return generateValuesInt<bool>(x_nbSamples, GetRange());
 }
 
-template<> mkjson ParameterT<double>::GenerateValues(int x_nbSamples, const mkjson& x_range) const
+template<> mkjson ParameterT<double>::GenerateValues(int x_nbSamples) const
 {
-	return generateValuesFloat<double>(x_nbSamples, x_range.is_null() ? GetRange() : x_range);
+	return generateValuesFloat<double>(x_nbSamples, GetRange());
 }
 
-template<> mkjson ParameterT<float>::GenerateValues(int x_nbSamples, const mkjson& x_range) const
+template<> mkjson ParameterT<float>::GenerateValues(int x_nbSamples) const
 {
-	return generateValuesFloat<float>(x_nbSamples, x_range.is_null() ? GetRange() : x_range);
+	return generateValuesFloat<float>(x_nbSamples, GetRange());
 }
 } // namespace mk

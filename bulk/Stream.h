@@ -108,7 +108,7 @@ public:
 	void SetDefault(const mkconf& x_value) override = 0;
 	void SetValueToDefault() override = 0;
 	bool CheckRange() const override {return true;}
-	mkjson GenerateValues(int x_nbSamples, const mkjson& x_range) const override {return nullptr;}
+	mkjson GenerateValues(int x_nbSamples) const override {return nullptr;}
 	mkconf GetValue() const override = 0;
 	mkconf GetDefault() const override = 0;
 

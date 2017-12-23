@@ -45,7 +45,7 @@ public:
 	inline mkjson GetValue() const override {return mkjson(GetReverseEnum().at(mr_value));}
 	inline mkjson GetDefault() const override {return mkjson(GetReverseEnum().at(m_default));}
 	bool CheckRange() const override;
-	mkjson GenerateValues(int x_nbSamples, const mkjson& x_range) const override;
+	mkjson GenerateValues(int x_nbSamples) const override;
 	void Print(std::ostream& os) const override;
 	void SetValueToDefault() override
 	{

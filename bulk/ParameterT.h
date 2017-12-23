@@ -81,12 +81,12 @@ public:
 		return true;
 	}
 
-	mkjson GenerateValues(int x_nbSamples, const mkjson& x_range) const override
+	mkjson GenerateValues(int x_nbSamples) const override
 	{
-		if(x_range.find("allowed") != x_range.end())
-			return x_range.at("allowed");
-		if(x_range.find("recommended") != x_range.end())
-			return x_range.at("recommended");
+		if(GetRange().find("allowed") != GetRange().end())
+			return GetRange().at("allowed");
+		if(GetRange().find("recommended") != GetRange().end())
+			return GetRange().at("recommended");
 		mkjson arr = mkjson::array();
 		arr.push_back(GetDefault());
 		return arr;
@@ -109,11 +109,11 @@ private:
 	T& mr_value;
 };
 
-template<> mkjson ParameterT<int>::GenerateValues(int x_nbSamples, const mkjson& x_range) const;
-template<> mkjson ParameterT<unsigned int>::GenerateValues(int x_nbSamples, const mkjson& x_range) const;
-template<> mkjson ParameterT<double>::GenerateValues(int x_nbSamples, const mkjson& x_range) const;
-template<> mkjson ParameterT<float>::GenerateValues(int x_nbSamples, const mkjson& x_range) const;
-template<> mkjson ParameterT<bool>::GenerateValues(int x_nbSamples, const mkjson& x_range) const;
+template<> mkjson ParameterT<int>::GenerateValues(int x_nbSamples) const;
+template<> mkjson ParameterT<unsigned int>::GenerateValues(int x_nbSamples) const;
+template<> mkjson ParameterT<double>::GenerateValues(int x_nbSamples) const;
+template<> mkjson ParameterT<float>::GenerateValues(int x_nbSamples) const;
+template<> mkjson ParameterT<bool>::GenerateValues(int x_nbSamples) const;
 
 template<> bool ParameterT<int>::CheckRange() const;
 template<> bool ParameterT<unsigned int>::CheckRange() const;
