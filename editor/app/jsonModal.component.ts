@@ -15,7 +15,8 @@ import {
 	<!-- Modal content -->
 	<div class='modal-content' (click)='onNop($event)'>
 		<span class='close' (click)='onOpen(false)'>&times;</span>
-		<p>{{object|json}}</p>
+		<textarea class='jsontextarea' [ngModel]='object|json'></textarea>
+		<button  (click)='onSave()'>Save</button>
 	</div>
 </div>
 `,
@@ -52,6 +53,7 @@ button {
 	padding: 20px;
 	border: 1px solid #888;
 	width: 80%;
+	height: 80%;
 }
 
 /* The Close Button */
@@ -68,6 +70,11 @@ button {
 	text-decoration: none;
 	cursor: pointer;
 }
+
+.jsontextarea {
+	width: 90%;
+	height: 90%;
+}
 `
 	],
 	encapsulation: ViewEncapsulation.Emulated
@@ -78,8 +85,15 @@ export class JsonModal {
 
 	onOpen(value: boolean): void {
 		this.closed = !value;
+		// this.json = JSON.stringify(this.object);
 	}
 	onNop(event: any) {
 		event.stopPropagation();
+	}
+	onSave(json): void {
+		// TODO this.object = JSON.parse(json);
+		// console.log(this.json);
+		this.onOpen(false);
+		// this.object = {};
 	}
 }

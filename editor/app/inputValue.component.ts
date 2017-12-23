@@ -20,7 +20,7 @@ import {ModuleInput}  from './moduleInput';
 	<input *ngSwitchCase='"ParameterUInt"' type='number' min='{{description.range.min}}' max='{{description.range.max}}' step='1'    [(ngModel)]='input.value' (ngModelChange)='castInt()' size='10'/>
 	<input *ngSwitchCase='"ParameterBool"' type='checkbox' [(ngModel)]='input.value'/>
 	<input *ngSwitchCase='"ParameterString"' type='string' [(ngModel)]='input.value' size='10'/>
-	<span *ngSwitchDefault>unknown type</span>
+	<json-modal *ngSwitchDefault [(object)]='input.value'></json-modal>
 </div>
 `,
 	host: {
