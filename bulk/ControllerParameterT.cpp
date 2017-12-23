@@ -241,7 +241,7 @@ void defaultSetWidgetValue(const string& x_value, QWidget*& rpx_widget)
 mkjson defaultGetValueFromWidget(QWidget*& rpx_widget)
 {
 #ifndef MARKUS_NO_GUI
-	return mkjson(dynamic_cast<QLineEdit*>(rpx_widget)->text().toStdString());
+	return mkjson::parse(dynamic_cast<QLineEdit*>(rpx_widget)->text().toStdString());
 #else
 	assert(false);
 	return "";

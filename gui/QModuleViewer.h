@@ -122,7 +122,7 @@ protected:
 	std::vector<std::string> m_controllerNames;
 
 	Module::Parameters* mp_viewerParams = nullptr;
-	Viewer*             mp_viewerModule = nullptr;
+	Viewer*             mp_viewer       = nullptr;
 
 private:
 	Parameters& m_param;

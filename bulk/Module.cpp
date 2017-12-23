@@ -259,21 +259,7 @@ void Module::Process()
 		// Call depending modules (modules with fps = 0)
 		if(PropagateCondition())
 		{
-			/*
-			vector<thread> threads;
-			for(auto & elem : m_modulesDepending)
-			{
-				threads.emplace_back([&elem]{
-					elem->Process();
-				});
-			}
-			for(auto& thread : threads)
-				thread.join();
-			*/
-			for(auto & elem : m_modulesDepending)
-			{
-				elem->Process();
-			}
+			m_dependingModules.Process();
 		}
 		else LOG_DEBUG(m_logger, "No propagation of processing to depending modules");
 
@@ -556,17 +542,42 @@ void Module::ProcessRandomInput(unsigned int& xr_seed)
 *
 * @param x_module Pointer to module
 */
-void Module::RemoveDependingModule(const Module & x_module)
+void Module::DependingModules::RemoveDependingModule(const Module & x_module)
 {
+	WriteLock lock(m_lock);
 	auto it = find(m_modulesDepending.begin(), m_modulesDepending.end(), &x_module);
 	if(it == m_modulesDepending.end())
 	{
-		throw MkException("Module " + x_module.GetName() + " not found in depending modules of " + GetName(), LOC);
+		throw MkException("Module " + x_module.GetName() + " not found in depending modules", LOC);
 	}
 	else
 	{
-		LOG_DEBUG(m_logger, "Remove depending module " << &x_module << " from " << GetName());
+		// LOG_DEBUG(m_logger, "Remove depending module " << &x_module << " from " << GetName());
 		m_modulesDepending.erase(it);
+	}
+}
+
+/**
+* @brief Process all depending modules
+*
+*/
+void Module::DependingModules::Process()
+{
+	ReadLock lock(m_lock);
+	/*
+	vector<thread> threads;
+	for(auto & elem : m_modulesDepending)
+	{
+		threads.emplace_back([&elem]{
+			elem->Process();
+		});
+	}
+	for(auto& thread : threads)
+		thread.join();
+	*/
+	for(auto & elem : m_modulesDepending)
+	{
+		elem->Process();
 	}
 }
 

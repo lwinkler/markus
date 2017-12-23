@@ -65,7 +65,8 @@ void BackgroundSubtractor::Reset()
 void BackgroundSubtractor::ProcessFrame()
 {
 	mp_bsub->apply(m_input, m_foregroundWithShadows, m_param.learningRate);
-	mp_bsub->getBackgroundImage(m_background);
+	// TODO crashes on Reset. Find out why.
+	// mp_bsub->getBackgroundImage(m_background);
 
 	// Threshold shadows (value=128) to 0
 	threshold(m_foregroundWithShadows, m_foreground, 254, 255, cv::THRESH_BINARY);

@@ -68,7 +68,7 @@ public:
 	{
 		if(IsLocked())
 			throw MkException("You tried to set the value of a locked parameter.", LOC);
-		mr_value = rx_value.get<T>();
+		from_mkjson(rx_value, mr_value);
 		m_confSource = x_confType;
 	}
 	void SetDefault(const mkjson& rx_value) override

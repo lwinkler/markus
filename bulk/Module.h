@@ -75,6 +75,24 @@ public:
 		int cached;
 	};
 
+	class DependingModules : boost::noncopyable
+	{
+		/// A class to protect the list of depending modules
+		public:
+			/// Add a module to the list: depending modules are called when processing is complete
+			inline void AddDependingModule(Module & rx_module)
+			{
+				WriteLock lock(m_lock);
+				m_modulesDepending.push_back(&rx_module);
+			}
+			void RemoveDependingModule(const Module & x_module);
+			void Process();
+
+		protected:
+			Lock m_lock;
+			std::vector<Module *> m_modulesDepending;
+	};
+
 	explicit Module(ParameterStructure& x_param);
 	virtual ~Module();
 
@@ -110,8 +128,9 @@ public:
 	inline bool IsAutoProcessed() const  {return m_param.autoProcess;}
 	double GetRecordingFps() const override;
 
-	inline void AddDependingModule(Module & rx_module) {m_modulesDepending.push_back(&rx_module);} /// Add a module to the list: depending modules are called when processing is complete
-	void RemoveDependingModule(const Module & x_module);
+	/// Add a module to the list: depending modules are called when processing is complete
+	inline void AddDependingModule(Module & rx_module) {m_dependingModules.AddDependingModule(rx_module);}
+	inline void RemoveDependingModule(const Module & x_module) {m_dependingModules.RemoveDependingModule(x_module);}
 	virtual void PrintStatistics(mkconf& xr_result) const;
 	void Serialize(mkjson& rx_json, MkDirectory* xp_dir = nullptr) const;
 	void Deserialize(const mkjson& x_json, MkDirectory* xp_dir = nullptr);
@@ -155,7 +174,7 @@ protected:
 	std::map<std::string, Stream *> m_outputStreams;
 	std::map<std::string, Stream *> m_debugStreams;
 
-	std::vector<Module *> m_modulesDepending;
+	DependingModules m_dependingModules;
 
 private:
 	Parameters& m_param;

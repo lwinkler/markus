@@ -111,7 +111,7 @@ public:
 	}
 	void Reset() override
 	{
-		Processable::WriteLock lock(RefLock());
+		// Processable::WriteLock lock(RefLock());
 		Module::Reset();
 	}
 	inline const string& GetParentModuleName() const {return m_parentModuleName;}
@@ -203,13 +203,13 @@ QModuleViewer::~QModuleViewer()
 {
 	try
 	{
-		mr_manager.CallModuleMethod(m_param.module, [=] (Module* pmod) {pmod->RemoveDependingModule(*mp_viewerModule);});
+		mr_manager.CallModuleMethod(m_param.module, [=] (Module* pmod) {pmod->RemoveDependingModule(*mp_viewer);});
 	}
 	catch(MkException &e)
 	{
 		LOG_WARN(m_logger, "Exception while removing module from depending: " << e.what());
 	}
-	delete mp_viewerModule;
+	delete mp_viewer;
 	delete mp_viewerParams;
 	delete mp_controlBoard;
 	delete mp_comboModules;
@@ -221,19 +221,19 @@ QModuleViewer::~QModuleViewer()
 
 void QModuleViewer::CreateInputStream(int x_outputWidth, int x_outputHeight)
 {
-	Processable::WriteLock lock1(mr_manager.LockModuleByName(m_param.module));
-	if(mp_viewerModule != nullptr)
+	// Processable::WriteLock lock1(mr_manager.LockModuleByName(m_param.module));
+	if(mp_viewer != nullptr)
 	{
 		try
 		{
-			mr_manager.CallModuleMethod(mp_viewerModule->GetParentModuleName(), [=] (Module* pmod) {pmod->RemoveDependingModule(*mp_viewerModule);});
+			mr_manager.CallModuleMethod(mp_viewer->GetParentModuleName(), [=] (Module* pmod) {pmod->RemoveDependingModule(*mp_viewer);});
 		}
 		catch(MkException &e)
 		{
 			LOG_WARN(m_logger, "Exception while removing module from depending: " << e.what());
 		}
-		LOG_DEBUG(m_logger, "Delete " << mp_viewerModule);
-		CLEAN_DELETE(mp_viewerModule);
+		LOG_DEBUG(m_logger, "Delete " << mp_viewer);
+		CLEAN_DELETE(mp_viewer);
 	}
 	CLEAN_DELETE(mp_viewerParams);
 	if(x_outputWidth == 0 || x_outputHeight == 0)
@@ -247,25 +247,25 @@ void QModuleViewer::CreateInputStream(int x_outputWidth, int x_outputHeight)
 	const string type = mr_manager.GetModuleByName(m_param.module).GetOutputStreamByName(m_param.stream).GetClass();
 
 	if(type == "StreamImage")
-		mp_viewerModule = new ViewerT<Mat>(*mp_viewerParams, *this, m_param.module);
+		mp_viewer = new ViewerT<Mat>(*mp_viewerParams, *this, m_param.module);
 	else if(type == "StreamObjects")
-		mp_viewerModule = new ViewerT<vector<Object>>(*mp_viewerParams, *this, m_param.module);
+		mp_viewer = new ViewerT<vector<Object>>(*mp_viewerParams, *this, m_param.module);
 	else if(type == "StreamEvent")
-		mp_viewerModule = new ViewerT<Event>(*mp_viewerParams, *this, m_param.module);
+		mp_viewer = new ViewerT<Event>(*mp_viewerParams, *this, m_param.module);
 	else if(type == "ParameterBool")
-		mp_viewerModule = new ViewerT<bool>(*mp_viewerParams, *this, m_param.module);
+		mp_viewer = new ViewerT<bool>(*mp_viewerParams, *this, m_param.module);
 	else if(type == "ParameterInt")
-		mp_viewerModule = new ViewerT<uint>(*mp_viewerParams, *this, m_param.module);
+		mp_viewer = new ViewerT<uint>(*mp_viewerParams, *this, m_param.module);
 	else if(type == "ParameterUIt")
-		mp_viewerModule = new ViewerT<int>(*mp_viewerParams, *this, m_param.module);
+		mp_viewer = new ViewerT<int>(*mp_viewerParams, *this, m_param.module);
 	else if(type == "ParameterFloat")
-		mp_viewerModule = new ViewerT<float>(*mp_viewerParams, *this, m_param.module);
+		mp_viewer = new ViewerT<float>(*mp_viewerParams, *this, m_param.module);
 	else if(type == "ParameterDouble")
-		mp_viewerModule = new ViewerT<double>(*mp_viewerParams, *this, m_param.module);
+		mp_viewer = new ViewerT<double>(*mp_viewerParams, *this, m_param.module);
 	else throw MkException("Unknown stream type " + type, LOC);
 
-	LOG_DEBUG(m_logger, "Add " << mp_viewerModule << " to depending of " << m_param.module);
-	mr_manager.CallModuleMethod(m_param.module, [=] (Module* pmod) {pmod->AddDependingModule(*mp_viewerModule);});
+	LOG_DEBUG(m_logger, "Add " << mp_viewer << " to depending of " << m_param.module);
+	mr_manager.CallModuleMethod(m_param.module, [=] (Module* pmod) {pmod->AddDependingModule(*mp_viewer);});
 
 	m_qimage = QImage(x_outputWidth, x_outputHeight, QImage::Format_RGB32);
 	Reconnect();
@@ -273,12 +273,12 @@ void QModuleViewer::CreateInputStream(int x_outputWidth, int x_outputHeight)
 
 void QModuleViewer::Reconnect()
 {
-	if(mp_viewerModule == nullptr)
+	if(mp_viewer == nullptr)
 		return;
-	mp_viewerModule->Reconnect(mr_manager, m_param.module, m_param.stream);
-	mp_viewerModule->Reset();
+	mp_viewer->Reconnect(mr_manager, m_param.module, m_param.stream);
+	mp_viewer->Reset();
 	// process once to display the current frame
-	mp_viewerModule->Process();
+	mp_viewer->Process();
 }
 
 void QModuleViewer::resizeEvent(QResizeEvent * e)
@@ -308,21 +308,21 @@ void QModuleViewer::resizeEvent(QResizeEvent * e)
 
 void QModuleViewer::paintEvent(QPaintEvent * e)
 {
-	if(mp_viewerModule == nullptr)
+	if(mp_viewer == nullptr)
 	{
 		return;
 	}
 	{
 		try
 		{
-			// mp_viewerModule->Process();
+			// mp_viewer->Process();
 		}
 		catch(MkException &e)
 		{
 			LOG_ERROR(m_logger, "Error while processing in viewer " << e.what());
 		}
 	}
-	mp_viewerModule->RenderTo(m_qimage);
+	mp_viewer->RenderTo(m_qimage);
 	QPainter painter(this);
 	painter.drawImage(QRect(m_offsetX, m_offsetY, m_qimage.width(), m_qimage.height()), m_qimage);
 }
@@ -527,16 +527,16 @@ void QModuleViewer::ConvertMat2QImage(const Mat& x_mat, QImage& xr_qimg)
 // Display some info on stream (and position of cursor)
 void QModuleViewer::mouseDoubleClickEvent(QMouseEvent * event)
 {
-	if(mp_viewerModule == nullptr)
+	if(mp_viewer == nullptr)
 		return;
 	QPoint cursor = event->pos();
-	assert(mp_viewerModule->GetWidth() == m_qimage.width());
-	assert(mp_viewerModule->GetHeight() == m_qimage.height());
-	Point pt(cursor.x() - m_offsetX, cursor.y() - m_offsetY); // * mp_viewerModule->GetWidth() / m_qimage.width();
+	assert(mp_viewer->GetWidth() == m_qimage.width());
+	assert(mp_viewer->GetHeight() == m_qimage.height());
+	Point pt(cursor.x() - m_offsetX, cursor.y() - m_offsetY); // * mp_viewer->GetWidth() / m_qimage.width();
 	stringstream ss1;
 	stringstream ss2;
 	ss1 << "Query stream at " << pt;
-	mp_viewerModule->Query(ss2, pt);
+	mp_viewer->Query(ss2, pt);
 
 	QMessageBox::about(this, QString(ss1.str().c_str()), QString(ss2.str().c_str()));
 }

@@ -69,7 +69,7 @@ public:
 		defaultSetWidgetValue(x_value, mp_widget);
 	}
 	virtual mkjson GetValueFromWidget(){
-		defaultGetValueFromWidget(mp_widget);
+		return defaultGetValueFromWidget(mp_widget);
 	}
 
 	// Controllers
