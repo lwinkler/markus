@@ -19,7 +19,7 @@ cv::Ptr<cv::BackgroundSubtractor> BackgroundSubtractor::create(const CreationFun
 	if(name == "BackgroundSubtractorMOG2" && num == 0)
 		return cv::createBackgroundSubtractorMOG2(params.value<int>("history", 500), params.value<double>("varThreshold", 16), params.value<bool>("detectShadows", true));
 		
-	if(name == "BackgroundSubtractorKNN" && num == 1)
+	if(name == "BackgroundSubtractorKNN" && num == 0)
 		return cv::createBackgroundSubtractorKNN(params.value<int>("history", 500), params.value<double>("dist2Threshold", 400.0), params.value<bool>("detectShadows", true));
 		
 	throw MkException("Unknown name and function number for creation of descriptor: " + name + string("/") + to_string(num), LOC);

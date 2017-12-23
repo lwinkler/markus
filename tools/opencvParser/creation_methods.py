@@ -13,14 +13,14 @@
 def generate(fout, header, footer, methods):
 	fout.write(header)
 
-	last_class_name = ''
+	last_ret = ''
 
 	# Iterate the list of methods
 	for meth in methods:
 		method_name = meth[0].split('.')[-1]
 		class_name = meth[0][:-len(method_name) - 1].replace('.', '::')
-		fct_num = 0 if last_class_name != class_name else fct_num + 1
 		ret = 'Error' if not meth[4].startswith('Ptr<') else meth[4][4:-1]
+		fct_num = 0 if last_ret != ret else fct_num + 1
 		print 'Create ' + method_name + " method for child class " + class_name
 
 		# Create the list of arguments
@@ -47,7 +47,7 @@ def generate(fout, header, footer, methods):
 	if(name == "%s" && num == %d)
 		return %s::%s(%s);
 		""" % (ret, fct_num, class_name, method_name, '' if (len(myargs) <= 2) else myargs[:-2]))
-		last_class_name = class_name
+		last_ret = ret
 					# print parent_class
 	# print parent_class.type.get_declaration()
 	# print parent_class.type.get_declaration().get_children()
