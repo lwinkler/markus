@@ -1,7 +1,9 @@
 import {
 	Component,
 	Input,
-	ViewEncapsulation
+	Output,
+	ViewEncapsulation,
+	EventEmitter
 } from '@angular/core';
 
 @Component({
@@ -15,7 +17,7 @@ import {
 	<!-- Modal content -->
 	<div class='modal-content' (click)='onNop($event)'>
 		<span class='close' (click)='onOpen(false)'>&times;</span>
-		<textarea class='jsontextarea' [ngModel]='object|json'></textarea>
+		<textarea class='jsontextarea' [(ngModel)]='jsonValue'></textarea>
 		<button  (click)='onSave()'>Save</button>
 	</div>
 </div>
@@ -34,7 +36,7 @@ button {
 .modal {
 	display: block; /* Hidden by default */
 	position: fixed; /* Stay in place */
-	z-index: 2; /* Sit on top */
+	z-index: 100; /* Sit on top */
 	padding-top: 100px; /* Location of the box */
 	left: 0;
 	top: 0;
@@ -81,19 +83,19 @@ button {
 })
 export class JsonModal {
 	@Input() public object: Object;
+	@Output() public objectChange = new EventEmitter<string>();
+	private jsonValue: string = '';
 	private closed: boolean = true;
 
 	onOpen(value: boolean): void {
 		this.closed = !value;
-		// this.json = JSON.stringify(this.object);
+		this.jsonValue = JSON.stringify(this.object, null, '\t');
 	}
 	onNop(event: any) {
 		event.stopPropagation();
 	}
-	onSave(json): void {
-		// TODO this.object = JSON.parse(json);
-		// console.log(this.json);
+	onSave(): void {
+		this.objectChange.emit(JSON.parse(this.jsonValue));
 		this.onOpen(false);
-		// this.object = {};
 	}
 }
