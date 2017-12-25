@@ -84,7 +84,7 @@ public:
 	// For controllers and actions
 	virtual mkjson GetValue() const = 0;
 	virtual mkjson GetDefault() const = 0;
-	inline mkjson GetRange() const{return m_range;}
+	inline const mkjson& GetRange() const {return m_range;}
 	inline void SetRange(const mkjson& x_range)
 	{
 		if(x_range.is_array() || x_range.is_string())

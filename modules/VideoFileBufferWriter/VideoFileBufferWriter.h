@@ -29,6 +29,7 @@
 
 #include <opencv2/highgui/highgui.hpp>
 #include <boost/circular_buffer.hpp>
+#include <mutex>
 #include <atomic>
 
 

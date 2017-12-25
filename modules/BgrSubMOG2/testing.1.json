@@ -148,7 +148,7 @@
 			[
 				{
 					"name" : "file",
-					"value" : "modules/BgrSubMOG2/in.foreground.MP42.avi"
+					"value" : "modules/BackgroundSubtractor/in.foreground.MP42.avi"
 				},
 				{
 					"name" : "height",
@@ -174,7 +174,7 @@
 			[
 				{
 					"name" : "file",
-					"value" : "modules/BgrSubMOG2/in.background.MP42.avi"
+					"value" : "modules/BackgroundSubtractor/in.background.MP42.avi"
 				},
 				{
 					"name" : "height",
