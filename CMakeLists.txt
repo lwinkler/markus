@@ -164,6 +164,11 @@ add_custom_target(lint
 	COMMAND tools/list_source_dirs.sh | xargs -I{} find -L {} ! -name \"moc*\" -name \"*.h\" -print -o -name \"*.cpp\" ! -name \"moc*\" -print | xargs tools/cpplint.py --filter=-whitespace,-legal,-build,-runtime/references,-runtime/explicit,-readability/todo,-readability/streams,-readability/function,-runtime/string
 )
 
+add_custom_target(tidy
+	COMMENT "Check with clang-tidy. Experimental."
+	COMMAND clang-tidy-4.0 -checks=-clang-diagnostic-undefined-var-template bulk/*.cpp util/*.cpp modules/*.cpp -- -std=c++14 -I. -Ibulk -Iutil -Ieditor -Igui -Imodules -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets/ -I/usr/include/x86_64-linux-gnu/qt5/QtWebKitWidgets/ -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/x86_64-linux-gnu/qt5/ -I/usr/include/x86_64-linux-gnu/qt5/QtGui -fPIC
+)
+
 add_custom_target(check
 	COMMENT "Check C++ code statically with cppcheck"
 	COMMAND tools/list_source_dirs.sh | xargs cppcheck --force --enable=all -q --template "{file}:{line}: {severity} {id}: {message}" --inline-suppr

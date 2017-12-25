@@ -44,7 +44,7 @@ Module::Module(ParameterStructure& xr_params) :
 	Processable(xr_params),
 	m_param(dynamic_cast<Parameters&>(xr_params))
 {
-	LOG_INFO(m_logger, "Create module " << GetName());
+	LOG_INFO(m_logger, "Create module " << Module::GetName());
 }
 
 Module::~Module()

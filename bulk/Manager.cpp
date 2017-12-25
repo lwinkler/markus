@@ -55,7 +55,7 @@ Manager::Manager(ParameterStructure& xr_params, Context& xr_context) :
 	mr_moduleFactory(Factories::modulesFactory())
 {
 	LOG_INFO(m_logger, "Create manager");
-	SetContext(xr_context);
+	Manager::SetContext(xr_context);
 	Build();
 	m_interruptionManager.Configure(m_param.config);
 }

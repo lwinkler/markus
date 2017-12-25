@@ -47,14 +47,14 @@ public:
 	inline const T& GetContent() const {return m_content;}
 	inline       T& RefContent() const {return m_content;}
 
-	virtual void ConvertInput();
-	virtual void RenderTo(cv::Mat& x_output) const;
-	virtual void Query(std::ostream& xr_out, const cv::Point& x_pt) const;
-	virtual void Randomize(unsigned int& rx_seed);
+	void ConvertInput() override;
+	void RenderTo(cv::Mat& x_output) const override;
+	void Query(std::ostream& xr_out, const cv::Point& x_pt) const override;
+	void Randomize(unsigned int& rx_seed) override;
 	virtual void Serialize(mkjson& rx_json, MkDirectory* xp_dir = nullptr) const;
 	virtual void Deserialize(const mkjson& x_json, MkDirectory* xp_dir = nullptr);
 
-	virtual void SetValue(const mkconf& x_value, ParameterConfigType x_confType)
+	void SetValue(const mkconf& x_value, ParameterConfigType x_confType) override
 	{
 		from_mkjson(x_value, m_content);
 		m_confSource = x_confType;
@@ -62,12 +62,12 @@ public:
 	virtual void SetDefault(const mkconf& x_value){
 		from_mkjson(x_value, m_default);
 	}
-	virtual void SetValueToDefault(){m_content = m_default; m_confSource = PARAMCONF_DEF;}
-	virtual mkconf GetValue() const
+	void SetValueToDefault() override {m_content = m_default; m_confSource = PARAMCONF_DEF;}
+	mkconf GetValue() const override
 	{
 		return m_content;
 	}
-	virtual mkconf GetDefault() const
+	mkconf GetDefault() const override
 	{
 		return m_default;
 	}

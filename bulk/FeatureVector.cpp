@@ -27,42 +27,6 @@
 namespace mk {
 using namespace std;
 
-template<class T>std::ostream& serializeSimple(std::ostream& x_out, const std::vector<T>& x_val)
-{
-	if(x_val.size() == 0)
-	{
-		x_out<<"[]";
-		return x_out;
-	}
-
-	x_out << "[";
-	auto it = x_val.begin();
-	while(it != x_val.end() - 1)
-	{
-		x_out << *it << ",";
-		++it;
-	}
-	x_out << *it;
-	x_out << "]";
-	return x_out;
-}
-
-template<class T>std::istream& deserializeSimple(std::istream& x_in,  std::vector<T>& xr_val)
-{
-	mkjson root;
-	root << x_in;  // note: copy first for local use
-	assert(root.is_array());
-
-	xr_val.clear();
-	xr_val.resize(root.size());
-	for(unsigned int i = 0 ; i < root.size() ; i++)
-	{
-		xr_val[i] = root[i].get<float>();
-	}
-
-	return x_in;
-}
-
 template<>void FeatureVectorT<int>::Serialize(mkjson& rx_json) const
 {
 	rx_json = mkjson{

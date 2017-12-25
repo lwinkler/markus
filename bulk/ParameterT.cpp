@@ -145,7 +145,16 @@ template<> mkjson ParameterT<unsigned int>::GenerateValues(int x_nbSamples) cons
 
 template<> mkjson ParameterT<bool>::GenerateValues(int x_nbSamples) const
 {
-	return generateValuesInt<bool>(x_nbSamples, GetRange());
+	if(GetRange().find("allowed") != GetRange().end())
+		return GetRange().at("allowed");
+	bool min = GetRange().find("min") != GetRange().end() ? GetRange().at("min").template get<bool>() : std::numeric_limits<bool>::min();
+	bool max = GetRange().find("max") != GetRange().end() ? GetRange().at("max").template get<bool>() : std::numeric_limits<bool>::max();
+	mkjson values = mkjson::array();
+	if(min != true)
+		values.push_back(false);
+	if(max != false)
+		values.push_back(true);
+	return values;
 }
 
 template<> mkjson ParameterT<double>::GenerateValues(int x_nbSamples) const

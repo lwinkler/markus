@@ -39,19 +39,19 @@ public:
 	FeatureT() : value(T {} /*initialize to 0 or other*/) {}
 	explicit FeatureT(T x_value) : value(x_value) {}
 	Feature* CreateCopy() const override {return new FeatureT(*this);}
-	inline virtual double CompareSquared(const Feature& x_feature) const
+	inline double CompareSquared(const Feature& x_feature) const override
 	{
 		const FeatureT<T>& feat(dynamic_cast<const FeatureT<T>&>(x_feature));
 		return compareSquared(value, feat.value);
 	}
-	inline void Randomize(unsigned int& xr_seed, const mkjson& x_param)
+	inline void Randomize(unsigned int& xr_seed, const mkjson& x_param) override
 	{
 		randomize(value, xr_seed);
 	}
-	inline virtual void Serialize(mkjson& rx_json) const {
+	inline void Serialize(mkjson& rx_json) const override {
 		to_mkjson(rx_json, value);
 	}
-	inline virtual void Deserialize(const mkjson& x_json) {
+	inline void Deserialize(const mkjson& x_json) override {
 		from_mkjson(x_json, value);
 	}
 
