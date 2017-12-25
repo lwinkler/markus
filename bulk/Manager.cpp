@@ -36,7 +36,6 @@
 
 #include <fstream>
 #include <future>
-#include <thread>
 #include <chrono>
 #include <boost/lexical_cast.hpp>
 

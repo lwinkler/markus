@@ -26,7 +26,6 @@
 #include "StreamEvent.h"
 #include "util.h"
 #include "Manager.h"
-#include <thread>
 namespace mk {
 
 using namespace std;

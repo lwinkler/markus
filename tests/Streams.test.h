@@ -52,7 +52,7 @@ class StreamsTestSuite : public CxxTest::TestSuite
 	{
 	public:
 		MKCATEG("Fake")
-		FakeModule(ParameterStructure& xr_params) :
+		explicit FakeModule(ParameterStructure& xr_params) :
 			Module(xr_params),
 			m_param(dynamic_cast<Parameters&>(xr_params)),
 			m_image(cv::Size(m_param.width, m_param.height), m_param.type)

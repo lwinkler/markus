@@ -161,7 +161,7 @@ add_custom_target(doc
 
 add_custom_target(lint
 	COMMENT "Check C++ lint rules with the lint tool provided by Google"
-	COMMAND tools/list_source_dirs.sh | xargs -I{} find -L {} ! -name \"moc*\" -name \"*.h\" -print -o -name \"*.cpp\" ! -name \"moc*\" -print | xargs tools/cpplint.py --filter=-whitespace,-legal,-build,-runtime/references,-runtime/explicit,-readability/todo,-readability/streams,-readability/function,-runtime/string
+	COMMAND tools/list_source_dirs.sh | xargs -I{} find -L {} ! -name \"moc*\" -name \"*.h\" -print -o -name \"*.cpp\" ! -name \"moc*\" -print | xargs tools/cpplint.py --filter=-whitespace,-legal,-build,-runtime/references,-readability/todo,-runtime/string,+build/storage_class
 )
 
 add_custom_target(tidy

@@ -32,11 +32,11 @@
 #define CLEAN_DELETE(x) if((x) != nullptr){delete((x));(x) = nullptr;}
 
 /// Macro to define the Class of an object (for method GetClass)
-#define MKCLASS(cl) inline const std::string& GetClass() const override {const static std::string s = cl; return s;}
+#define MKCLASS(cl) inline const std::string& GetClass() const override {static const std::string s = cl; return s;}
 /// Macro to define the Category of an object (for method GetCategory)
-#define MKCATEG(cl) inline const std::string& GetCategory() const override {const static std::string s = cl; return s;}
+#define MKCATEG(cl) inline const std::string& GetCategory() const override {static const std::string s = cl; return s;}
 /// Macro to define the Description of an object (for method GetDescription)
-#define MKDESCR(cl) inline const std::string& GetDescription() const override {const static std::string s = cl; return s;}
+#define MKDESCR(cl) inline const std::string& GetDescription() const override {static const std::string s = cl; return s;}
 
 // time stamp: use for all time stamps on frames in [ms]
 #define TIME_STAMP uint64_t

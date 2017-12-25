@@ -104,7 +104,7 @@ private:
 class ConfigFileXml : public ConfigXml, boost::noncopyable
 {
 public:
-	ConfigFileXml(const std::string& x_fileName, bool x_allowCreation = false, bool x_header = true);
+	explicit ConfigFileXml(const std::string& x_fileName, bool x_allowCreation = false, bool x_header = true);
 	virtual ~ConfigFileXml();
 	void SaveToFile(const std::string& x_file) const;
 
