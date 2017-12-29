@@ -45,6 +45,7 @@ private:
 
 	void CreateActions();
 	void CreateMenus();
+	void LoadProject(const QString& x_fileName);
 
 public:
 	Editor(Manager* xp_manager = nullptr, const std::string& x_project = "", QWidget *parent = 0);

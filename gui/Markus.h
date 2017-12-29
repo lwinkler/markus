@@ -76,8 +76,6 @@ private:
 
 	void createActionsAndMenus();
 
-	QLabel *createLabel(const QString &text);
-
 	QWidget m_mainWidget;
 	QGridLayout m_mainLayout;
 	std::vector<QModuleViewer *> m_moduleViewer;

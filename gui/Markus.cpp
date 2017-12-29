@@ -80,15 +80,6 @@ void MarkusWindow::WriteConfig(mkconf& xr_config) const
 	m_param.Write(xr_config);
 }
 
-QLabel *MarkusWindow::createLabel(const QString &text)
-{
-	auto label = new QLabel(text);
-	label->setAlignment(Qt::AlignCenter);
-	label->setMargin(2);
-	label->setFrameStyle(QFrame::Box | QFrame::Sunken);
-	return label;
-}
-
 
 //----------------------------------------------------------------------------------------------------
 // Print about text

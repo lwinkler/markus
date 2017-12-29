@@ -97,6 +97,31 @@ Editor::~Editor()
 	delete helpMenu;
 }
 
+void Editor::LoadProject(const QString& x_fileName)
+{
+	if (!x_fileName.isEmpty())
+	{
+		cout<<"Open "<<x_fileName.toStdString()<<endl;
+		ifstream ifs(x_fileName.toStdString().c_str());
+		stringstream ss;
+		if(!ifs.is_open())
+		{
+			throw MkException("Impossible to open project file " + x_fileName.toStdString(), LOC);
+			return;
+		}
+		string line;
+		ss << "setTimeout(function(){window.markusEditor.zone.run(function(){window.markusEditor.component.loadProject('";
+		while(getline(ifs, line))
+		{
+			ss << line;
+		}
+		ifs.close();
+		ss << "');})}, 1000);"; // set a timeout here. No better way for now.
+		m_view.page()->mainFrame()->evaluateJavaScript(QString(ss.str().c_str()));
+		m_currentProject = x_fileName;
+	}
+}
+
 /// Adapt the DOM to the Qt environment
 void Editor::adaptDom(bool x_loadOk)
 {
@@ -111,13 +136,7 @@ void Editor::adaptDom(bool x_loadOk)
 		element.setAttribute("disabled", "disabled");
 
 	// if a project is select load it
-	QString fileName(m_projectToLoad.c_str());
-	if (!fileName.isEmpty())
-	{
-		cout<<"Open "<<m_projectToLoad<<endl;
-		m_view.page()->mainFrame()->evaluateJavaScript("window.markusEditor.loadProjectFile(\"" + fileName + "\"); null");
-		m_currentProject = fileName;
-	}
+	LoadProject(QString(m_projectToLoad.c_str()));
 }
 
 /// Load an JSON project file
@@ -126,11 +145,7 @@ void Editor::loadProject()
 	if(maybeSave())
 	{
 		QString fileName = QFileDialog::getOpenFileName(this);
-		if (!fileName.isEmpty())
-		{
-			m_view.page()->mainFrame()->evaluateJavaScript("window.markusEditor.loadProjectFile(\"" + fileName + "\"); null");
-			m_currentProject = fileName;
-		}
+		LoadProject(fileName);
 	}
 }
 
@@ -198,7 +213,7 @@ bool Editor::saveProject(const QString& x_fileName)
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 #endif
 	ofstream fout(x_fileName.toStdString().c_str());
-	fout<<m_view.page()->mainFrame()->evaluateJavaScript("window.markusEditor.saveProject();").toString().toStdString()<<endl;
+	fout<<m_view.page()->mainFrame()->evaluateJavaScript("window.markusEditor.dumpProject();").toString().toStdString()<<endl;
 	fout.close();
 	m_currentProject = x_fileName;
 #ifndef QT_NO_CURSOR

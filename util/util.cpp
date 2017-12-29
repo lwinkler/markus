@@ -580,7 +580,7 @@ void execute(const string& x_cmd, vector<string>& xr_result)
 *
 * @return boolean value
 */
-bool boolValue(const std::string& x_value)
+bool boolValue(const std::string& x_value) // TODO remove
 {
 	if(x_value.empty())
 		return false;

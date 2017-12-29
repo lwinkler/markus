@@ -5,8 +5,11 @@ import {
 	ViewEncapsulation,
 	AfterViewInit,
 	AfterViewChecked,
-	EventEmitter
+	EventEmitter,
+	NgZone,
+	OnDestroy
 } from '@angular/core';
+import {Http, Response} from '@angular/http';
 import {Project}  from './project';
 import {Module}  from './module';
 import {Utils} from './utils';
@@ -50,8 +53,38 @@ export class ProjectWindowComponent implements AfterViewInit, AfterViewChecked {
 	@Input()  private hasChanges: boolean;
 	@Input()  private moduleDescriptions: Array<Module>;
 	@Output() private selectModule: EventEmitter<string> = new EventEmitter<string>();
+	// @Output() private loadProject: EventEmitter<string> = new EventEmitter<string>();
+	@Output() private saveProject: EventEmitter<string> = new EventEmitter<string>();
 	private jsPlumbInstance: any;
 	private reconnect: boolean = false;
+	private http: any;
+
+	constructor(private _http: Http, private _ngZone: NgZone) {
+		// set a global reference to handle from outside
+		this.http = _http;
+		window.markusEditor = {
+			component: this, 
+			zone: _ngZone,
+			loadProject: (json: string) => this.loadProject(json),
+			dumpProject: () => this.dumpProject(),
+			hasChanged: () => this.hasChanged()
+		};
+	}
+
+	// External methods
+	loadProject(json: string):  void {
+		this.project = JSON.parse(json);
+		this.reconnect = true;
+		this.hasChanges = false;
+	}
+
+	dumpProject():  string {
+		return JSON.stringify(this.project);
+	}
+
+	hasChanged():  boolean {
+		return this.hasChanges;
+	}
 
 	findClassDescription(className: string): any {
 		return Utils.findByClass(this.moduleDescriptions, className);
@@ -205,5 +238,8 @@ export class ProjectWindowComponent implements AfterViewInit, AfterViewChecked {
 				return true;
 			});
 		});
+	}
+	ngOnDestroy() {
+		window.markusEditor = null;
 	}
 }
