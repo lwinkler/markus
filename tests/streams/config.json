@@ -1,8 +1,11 @@
 {
 	"modules": {
 		"FakeModule":{
-			"parameters":{},
 			"inputs": [
+				{
+					"name": "autoProcess",
+					"value": true
+				},
 				{
 					"name": "input0"
 				}
