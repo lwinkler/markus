@@ -46,8 +46,8 @@ void readFromFile(mkconf& rx_config, const std::string& x_fileName, bool x_allow
 			createEmptyConfigFile(x_fileName);
 		else throw MkException("File " + x_fileName + " does not exist", LOC);
 	}
-	ifstream ifs(x_fileName);
-	ifs >> rx_config;
+	ifstream ifs(x_fileName); // TODO: Check if empty
+	rx_config = mkjson::parse(ifs);
 }
 
 /**

@@ -50,14 +50,14 @@ public:
 	MKCLASS("RenderObjects")
 	MKDESCR("Output video stream with additional object streams")
 
-	void Reset() override;
-	void ProcessFrame() override;
-
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void Reset() override;
+	void ProcessFrame() override;
+
 	// input
 	cv::Mat m_imageInput;
 	std::vector<std::vector<Object>> m_objectInputs;

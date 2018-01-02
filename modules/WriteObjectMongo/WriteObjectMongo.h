@@ -62,8 +62,6 @@ public:
 		std::string collection;
 	};
 
-	void ProcessFrame() override;
-	void Reset() override;
 	static const char* contentType(const std::string& x_fileName);
 
 	explicit WriteObjectMongo(ParameterStructure& xr_params);
@@ -77,6 +75,8 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void ProcessFrame() override;
+	void Reset() override;
 	bool IsInputProcessed() const override;
 
 	// input

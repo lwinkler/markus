@@ -59,14 +59,14 @@ public:
 	MKCATEG("KeyPoints")
 	MKDESCR("Calculate optical flow for all key points")
 
-	void Reset() override;
-	void ProcessFrame() override;
-
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void Reset() override;
+	void ProcessFrame() override;
+
 	// input
 	cv::Mat m_input;
 	std::vector <Object> m_keyPointsIn;

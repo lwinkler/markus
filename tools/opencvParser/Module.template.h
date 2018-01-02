@@ -48,14 +48,15 @@ public:
 	MKCLASS("$moduleName")
 	MKCATEG("$category")
 	MKDESCR("$description")
-	virtual void ProcessFrame() override;
-	virtual void Reset() override;
 
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	virtual void ProcessFrame() override;
+	virtual void Reset() override;
+
 	$members
 };
 

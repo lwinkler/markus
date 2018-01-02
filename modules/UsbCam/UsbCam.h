@@ -56,8 +56,6 @@ public:
 	MKCATEG("Input")
 	MKDESCR("Read video stream from an enbedded or USB camera")
 
-	void Capture() override;
-	void Reset() override;
 	double GetRecordingFps() const override;
 
 private:
@@ -65,6 +63,8 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void Capture() override;
+	void Reset() override;
 	void GetProperties();
 
 	// output

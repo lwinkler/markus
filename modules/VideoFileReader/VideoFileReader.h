@@ -60,8 +60,6 @@ public:
 	MKCATEG("Input")
 	MKDESCR("Read video stream from a video file")
 
-	void Capture() override;
-	void Reset() override;
 	// const cv::Mat * GetImage() const {return m_output;}
 
 	// Specific to file reader
@@ -78,6 +76,8 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void Capture() override;
+	void Reset() override;
 	void GetProperties();
 
 	// state

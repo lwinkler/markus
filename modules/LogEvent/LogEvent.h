@@ -76,14 +76,13 @@ public:
 	MKCATEG("Output")
 	MKDESCR("Read an event and log it to .srt file")
 
-	void ProcessFrame() override;
-	void Reset() override;
-
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void ProcessFrame() override;
+	void Reset() override;
 	void SaveImage(Event& xr_event) const;
 	bool IsInputProcessed() const override;
 	void WriteEvent();

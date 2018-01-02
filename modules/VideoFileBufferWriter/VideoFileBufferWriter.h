@@ -64,8 +64,6 @@ public:
 	MKCATEG("Output")
 	MKDESCR("Write output to a buffer and export it if an evenement occurs")
 
-	void ProcessFrame() override;
-	void Reset() override;
 	void AddImageToBuffer();
 	void OpenNewFile();
 	void CloseFile();
@@ -76,6 +74,9 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void ProcessFrame() override;
+	void Reset() override;
+
 	// input
 	bool m_trigger;
 

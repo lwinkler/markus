@@ -101,14 +101,14 @@ public:
 	MKDESCR("Detect objects from a video stream using a cascade filter (c.f. Haar patterns)")
 	MKCATEG("Other")
 
-	void Reset() override;
-	void ProcessFrame() override;
-
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void Reset() override;
+	void ProcessFrame() override;
+
 	// state
 	cv::CascadeClassifier m_cascade;
 

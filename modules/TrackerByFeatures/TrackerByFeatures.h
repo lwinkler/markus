@@ -62,13 +62,13 @@ public:
 	MKCLASS("TrackerByFeatures")
 	MKDESCR("Track objects by matching a set of features (typically x,y,width and height)")
 
-	void ProcessFrame() override;
-	void Reset() override;
-
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
+
 protected:
+	void ProcessFrame() override;
+	void Reset() override;
 	void MatchTemplates();
 	void CleanTemplates();
 	void DetectNewTemplates();

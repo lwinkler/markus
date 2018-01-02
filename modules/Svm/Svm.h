@@ -82,9 +82,6 @@ public:
 	MKDESCR("Classify objects by using a SVM on its features")
 	MKCATEG("Classifier")
 
-	void Reset() override;
-	void ProcessFrame() override;
-
 private:
 	void TrainModel();
 	void TestModel();
@@ -93,6 +90,9 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void Reset() override;
+	void ProcessFrame() override;
+
 	// state
 	cv::Ptr<cv::ml::SVM> mp_statModel;
 	cv::Mat m_samples;

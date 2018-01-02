@@ -59,8 +59,6 @@ public:
 	MKCATEG("EventDetector")
 	MKDESCR("Detect motion from an image where pixel value represents motion")
 
-	void Reset() override;
-	void ProcessFrame() override;
 	bool PropagateCondition() const override {return m_param.propagate || m_state;}
 
 private:
@@ -68,6 +66,9 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void Reset() override;
+	void ProcessFrame() override;
+
 	// input
 	cv::Mat m_input;
 

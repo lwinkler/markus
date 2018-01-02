@@ -70,14 +70,14 @@ public:
 	MKCATEG("BackgroundSubtraction")
 	MKDESCR("Perform background subtraction")
 
-	void ProcessFrame() override;
-	void Reset() override;
-
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void ProcessFrame() override;
+	void Reset() override;
+
 	// input
 	cv::Mat m_input;
 

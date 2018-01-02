@@ -93,15 +93,15 @@ public:
 	explicit ModulePython(ParameterStructure& xr_params);
 	virtual ~ModulePython();
 
-	void ProcessFrame() override = 0;
-	void Reset() override;
-
 private:
 	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 	static OncePython oncePython;
 
 protected:
+	void ProcessFrame() override = 0;
+	void Reset() override;
+
 	// input
 
 	// output

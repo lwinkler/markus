@@ -56,14 +56,14 @@ public:
 	MKCLASS("SlitCam")
 	MKCATEG("Input")
 	MKDESCR("A simple example module that mimics a slit camera (or linear camera). The camera input is a range of pixels in the middle of the image.")
-	void ProcessFrame() override;
-	void Reset() override;
 
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void ProcessFrame() override;
+	void Reset() override;
 
 	// input
 	cv::Mat m_input;

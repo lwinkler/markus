@@ -69,15 +69,15 @@ MarkusWindow::~MarkusWindow()
 	mr_manager.SendCommand("manager.manager.Stop");
 }
 
-void MarkusWindow::WriteConfig(mkconf& xr_config) const
+void MarkusWindow::WriteConfig(mkconf& xr_config, bool x_nonDefaultOnly) const
 {
 	xr_config["modules"] = mkjson::array();
 	for(auto & elem : m_moduleViewer)
 	{
 		xr_config["modules"].emplace_back();
-		elem->WriteConfig(xr_config["modules"].back());
+		elem->WriteConfig(xr_config["modules"].back(), x_nonDefaultOnly);
 	}
-	m_param.Write(xr_config);
+	m_param.Write(xr_config, x_nonDefaultOnly);
 }
 
 

@@ -33,8 +33,8 @@ Configurable::Configurable(ParameterStructure& x_param) : m_param(x_param)
 	m_param.CheckRangeAndThrow();
 }
 
-void Configurable::WriteConfig(mkconf& xr_config) const
+void Configurable::WriteConfig(mkconf& xr_config, bool x_nonDefaultOnly) const
 {
-	m_param.Write(xr_config);
+	m_param.Write(xr_config, x_nonDefaultOnly);
 }
 } // namespace mk

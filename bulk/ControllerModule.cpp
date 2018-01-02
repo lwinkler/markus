@@ -38,8 +38,7 @@ using namespace std;
 */
 void ControllerModule::Reset(mkjson& rx_value)
 {
-	Processable::WriteLock lock(module.RefLock());
-	module.Reset();
+	module.LockAndReset();
 }
 
 

@@ -64,8 +64,6 @@ public:
 	MKCATEG("Output")
 	MKDESCR("Write output to a video file")
 
-	void ProcessFrame() override;
-	void Reset() override;
 	static const std::string ExtensionFromFourcc(const std::string& x_fourcc);
 
 private:
@@ -73,6 +71,9 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void ProcessFrame() override;
+	void Reset() override;
+
 	// input
 	cv::Mat m_input;
 

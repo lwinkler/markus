@@ -54,14 +54,14 @@ public:
 	MKCATEG("Conversion")
 	MKDESCR("Convert an object feature to a value stream (if several objects are present, use the largest)")
 
-	void Reset() override;
-	void ProcessFrame() override;
-
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void Reset() override;
+	void ProcessFrame() override;
+
 	// input
 	std::vector<Object> m_objectInput;
 

@@ -56,8 +56,6 @@ public:
 	MKCATEG("Output")
 	MKDESCR("Read a stream of objects and log data to a text file")
 
-	void ProcessFrame() override;
-	void Reset() override;
 	void Compress();
 
 private:
@@ -65,6 +63,9 @@ private:
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void ProcessFrame() override;
+	void Reset() override;
+
 	// input
 	std::vector <Object> m_objectsIn;
 

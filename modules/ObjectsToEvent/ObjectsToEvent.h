@@ -57,14 +57,13 @@ public:
 	MKCATEG("Conversion")
 	MKDESCR("Count objects and raise an event and state if a condition is reached")
 
-	void ProcessFrame() override;
-	void Reset() override;
-
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void ProcessFrame() override;
+	void Reset() override;
 
 	// input
 	std::vector <Object> m_objectsIn;

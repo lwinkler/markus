@@ -147,7 +147,7 @@ public:
 		mp_fakeInput  = m_factoryModules.Create("VideoFileReader", *mp_fakeConfig);
 		mp_fakeInput->SetContext(*mp_context);
 		// note: we need a fake module to create the input streams
-		mp_fakeInput->Reset();
+		mp_fakeInput->LockAndReset();
 	}
 	void tearDown()
 	{
@@ -222,7 +222,7 @@ public:
 			TS_ASSERT(inputStream.IsConnected());
 		}
 		if(module->IsUnitTestingEnabled())
-			module->Reset();
+			module->LockAndReset();
 
 		tester.module = module;
 		tester.parameters = parameters;
@@ -336,7 +336,7 @@ public:
 									TS_FAIL("Value set must be returned by get: " + oneLine(tmps) + "!=" + oneLine(newValue));
 							}
 
-							tester.module->Reset();
+							tester.module->LockAndReset();
 							for(int i = 0 ; i < 3 ; i++)
 								tester.module->ProcessRandomInput(seed);
 							TS_TRACE("###  " + elemCtr.first + ".Set returned " + oneLine(tmps));
@@ -501,8 +501,8 @@ public:
 				Manager manager(mparams, *mp_context);
 				manager.Connect();
 				Module* module = manager.RefModules().back();
-				manager.Reset();
-				module->Reset();
+				manager.LockAndReset();
+				module->LockAndReset();
 
 				for(int i = 0 ; i < 3 ; i++) 
 				{

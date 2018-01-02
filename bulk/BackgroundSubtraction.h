@@ -47,11 +47,11 @@ public:
 	explicit BackgroundSubtraction(ParameterStructure& xr_params);
 	virtual ~BackgroundSubtraction();
 
-	void Reset() override;
-
 	virtual void StartOnlineLearning(bool x_cutOutput);
 
 protected:
+	void Reset() override;
+
 	int  m_onlineLearnTimeMs;
 	bool m_cutOutput;
 

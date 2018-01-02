@@ -77,7 +77,7 @@ protected:
 		{
 			Manager manager(params, context);
 			manager.Connect();
-			manager.Reset();
+			manager.LockAndReset();
 
 			for(auto& module : manager.RefModules())
 			{

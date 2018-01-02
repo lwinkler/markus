@@ -409,7 +409,7 @@ int main(int argc, char** argv)
 		}
 
 		manager.Connect();
-		manager.Reset();
+		manager.LockAndReset();
 
 
 		/// Create a separate thread to read the commands from stdin
@@ -462,7 +462,7 @@ int main(int argc, char** argv)
 				LOG_ERROR(logger, "Qt Application returned error code");
 
 			// write the modified params in config and save
-			gui.WriteConfig(guiConfig);
+			gui.WriteConfig(guiConfig, false);
 			writeToFile(mainGuiConfig, "gui.json");
 #else
 			LOG_ERROR(logger, "Markus was compiled without GUI. It can only be launched with option -nc");
@@ -472,7 +472,7 @@ int main(int argc, char** argv)
 		returnValue = manager.ReturnCode();
 
 		// Write the modified params in config and save
-		manager.WriteConfig(appConfig);
+		manager.WriteConfig(appConfig, false);
 		// Save the last config with modifs to the output file
 		writeToFile(appConfig, context.RefOutputDir().ReserveFile("overridden.json"));
 	}

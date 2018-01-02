@@ -38,7 +38,7 @@ class Configurable : boost::noncopyable
 public:
 	explicit Configurable(ParameterStructure& x_param);
 	virtual ~Configurable() {}
-	virtual void WriteConfig(mkconf& xr_config) const;
+	virtual void WriteConfig(mkconf& xr_config, bool x_nonDefaultOnly = false) const;
 	virtual const ParameterStructure& GetParameters() const {return m_param;}
 
 private:

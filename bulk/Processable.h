@@ -62,13 +62,12 @@ public:
 	explicit Processable(ParameterStructure& xr_params);
 	virtual ~Processable();
 
-	virtual void Reset();
-	virtual void Process() = 0;
 	virtual bool AbortCondition() const = 0;
 	virtual const std::string& GetName() const = 0;
 	virtual double GetRecordingFps() const = 0;
 	bool ProcessAndCatch();
 	inline virtual bool ManageInterruptions(bool x_continueFlag){return x_continueFlag;}
+	inline void LockAndReset(){WriteLock lock(m_lock); Reset();}
 	virtual void Start();
 	virtual void Stop();
 	void Status() const;
@@ -99,6 +98,8 @@ public:
 	inline bool HasRecovered() const {return m_hasRecovered;}
 
 protected:
+	virtual void Reset();
+	virtual void Process() = 0;
 	void NotifyException(const MkException& x_exeption);
 
 	InterruptionManager& m_interruptionManager;

@@ -47,11 +47,12 @@ public:
 	explicit Input(ParameterStructure& x_param);
 	virtual ~Input();
 
-	virtual void Capture() = 0;
-	inline void ProcessFrame() override {Capture();}
 	inline bool IsInput() const override {return true;}
 
 protected:
+	virtual void Capture() = 0;
+	inline void ProcessFrame() override {Capture();}
+
 	bool m_endOfStream;
 };
 

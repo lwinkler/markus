@@ -52,15 +52,15 @@ public:
 	MKCATEG("EventDetector")
 	MKDESCR("Trigger an event periodically (at a specified interval of time)")
 
-	void ProcessFrame() override;
 	bool IsInputProcessed() const override;
-	void Reset() override;
-
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void ProcessFrame() override;
+	void Reset() override;
+
 	// input
 	cv::Mat m_input;
 

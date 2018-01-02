@@ -58,14 +58,14 @@ public:
 	MKCATEG("Output")
 	MKDESCR("Add an attached image to an event (after saving it as a file)")
 
-	void ProcessFrame() override;
-	void Reset() override;
-
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void ProcessFrame() override;
+	void Reset() override;
+
 	// input
 	cv::Mat m_inputIm1;
 	// cv::Mat m_inputIm2;

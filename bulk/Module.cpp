@@ -563,7 +563,7 @@ void Module::DependingModules::RemoveDependingModule(const Module & x_module)
 */
 void Module::DependingModules::Process()
 {
-	ReadLock lock(m_lock);
+	WriteLock lock(m_lock); //TODO: probably superfluous
 	/*
 	vector<thread> threads;
 	for(auto & elem : m_modulesDepending)
@@ -577,7 +577,7 @@ void Module::DependingModules::Process()
 	*/
 	for(auto & elem : m_modulesDepending)
 	{
-		elem->Process();
+		elem->ProcessAndCatch();
 	}
 }
 

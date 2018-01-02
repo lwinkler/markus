@@ -71,13 +71,14 @@ public:
 	MKDESCR("Filter the input objects based on different criterion")
 	MKCATEG("Other")
 
-	void ProcessFrame() override;
-	void Reset() override;
-
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
+
 protected:
+	void ProcessFrame() override;
+	void Reset() override;
+
 
 	// input
 	std::vector <Object> m_objectsIn;

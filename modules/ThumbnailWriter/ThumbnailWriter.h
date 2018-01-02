@@ -58,14 +58,14 @@ public:
 	MKCATEG("Output")
 	MKDESCR("Write all objects as a collection of images (thumbnails)")
 
-	void ProcessFrame() override;
-	void Reset() override;
-
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void ProcessFrame() override;
+	void Reset() override;
+
 	// input
 	cv::Mat m_input;
 	cv::Mat m_input2;

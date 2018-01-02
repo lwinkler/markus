@@ -69,14 +69,13 @@ public:
 	MKDESCR("Detect objects from a video stream using a HOG descriptor")
 	MKCATEG("Other")
 
-	void Reset() override;
-	void ProcessFrame() override;
-
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void Reset() override;
+	void ProcessFrame() override;
 
 	// state
 	cv::HOGDescriptor m_hog;

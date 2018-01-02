@@ -62,9 +62,6 @@ public:
 	MKCATEG("Input")
 	MKDESCR("Read a ground truth file")
 
-	void ProcessFrame() override;
-	void Reset() override;
-
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
@@ -74,6 +71,9 @@ private:
 	int distanceRefObject;
 
 protected:
+	void ProcessFrame() override;
+	void Reset() override;
+
 
 	// input (and output)
 	cv::Mat m_input;

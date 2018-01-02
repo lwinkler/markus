@@ -55,14 +55,13 @@ public:
 	MKCATEG("Output")
 	MKDESCR("Read a state stream and log it to .srt file")
 
-	void Reset() override;
-	void ProcessFrame() override;
-
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void Reset() override;
+	void ProcessFrame() override;
 	void WriteState();
 
 	// input

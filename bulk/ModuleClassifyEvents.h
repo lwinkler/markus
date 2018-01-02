@@ -50,8 +50,6 @@ public:
 	explicit ModuleClassifyEvents(ParameterStructure& xr_params);
 	virtual ~ModuleClassifyEvents();
 
-	void ProcessFrame() override;
-	void Reset() override;
 	virtual void InvalidateLastEvent() = 0;
 	virtual void ValidateLastEvent() = 0;
 	virtual float PredictEventValidity(const Event& x_event) = 0;
@@ -59,6 +57,8 @@ public:
 	void PopEvent();
 
 protected:
+	void ProcessFrame() override;
+	void Reset() override;
 
 	// input
 	Event   m_eventIn;

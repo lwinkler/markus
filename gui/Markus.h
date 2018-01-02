@@ -64,7 +64,7 @@ public:
 
 	MarkusWindow(ParameterStructure& rx_param, Manager& rx_manager);
 	virtual ~MarkusWindow();
-	void WriteConfig(mkconf& xr_config) const override;
+	void WriteConfig(mkconf& xr_config, bool x_nonDefaultOnly = false) const override;
 private:
 	// mkconf& m_configReader;
 	Parameters& m_param;

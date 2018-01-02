@@ -107,6 +107,8 @@ class StreamsTestSuite : public CxxTest::TestSuite
 		~FakeModule() {}
 		MKCLASS("FakeModule")
 		MKDESCR("Output video stream with additional object streams")
+	
+	protected:
 		void Reset() override {}
 		void ProcessFrame() override
 		{
@@ -180,9 +182,9 @@ public:
 			mp_fakeModule3->RefInputStreamByName(name).Connect(mp_fakeModule2->RefOutputStreamByName(name));
 		}
 
-		mp_fakeModule1->Reset();
-		mp_fakeModule2->Reset();
-		mp_fakeModule3->Reset();
+		mp_fakeModule1->LockAndReset();
+		mp_fakeModule2->LockAndReset();
+		mp_fakeModule3->LockAndReset();
 	}
 	void tearDown()
 	{
@@ -201,7 +203,7 @@ public:
 
 		for(int i = 0 ; i < 100 ; i++)
 		{
-			mp_fakeModule1->ProcessFrame();
+			mp_fakeModule1->ProcessAndCatch();
 			for(auto input : mp_fakeModule1->GetInputStreamList())
 			{
 				string name = input.first;
@@ -213,7 +215,7 @@ public:
 
 	void testStreamAsParameters()
 	{
-		mp_fakeModule1->Reset();
+		mp_fakeModule1->LockAndReset();
 		for(auto input : mp_fakeModule1->GetInputStreamList())
 		{
 			ParametersTestSuite::testParameter(*input.second, input.second->GetDefault(), nullptr);

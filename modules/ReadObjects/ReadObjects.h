@@ -58,14 +58,13 @@ public:
 	MKCATEG("Input")
 	MKDESCR("Read an object from an annotation file")
 
-	void Reset() override;
 
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
-
+	void Reset() override;
 	void Capture() override;
 
 	// ouput

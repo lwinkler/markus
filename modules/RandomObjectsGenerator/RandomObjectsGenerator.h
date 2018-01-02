@@ -59,14 +59,14 @@ public:
 	MKCATEG("Input")
 	MKDESCR("Generate an object with varying features at each step")
 
-	void Capture() override;
-	void Reset() override;
-
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void Capture() override;
+	void Reset() override;
+
 	// output
 	std::vector<Object> m_objects;
 

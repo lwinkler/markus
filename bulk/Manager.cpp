@@ -267,8 +267,7 @@ void Manager::Reset(bool x_resetInputs)
 		if(x_resetInputs || !elem.second->IsInput())
 		{
 			// If manager is in autoprocess, modules must not be
-			Processable::WriteLock lock(elem.second->RefLock());
-			elem.second->Reset();
+			elem.second->LockAndReset();
 		}
 	}
 	if(!HasController("manager"))
@@ -527,13 +526,13 @@ Module& Manager::RefModuleByName(const string& x_name) const
 /**
 * @brief Save the configuration of manager and modules to file
 */
-void Manager::WriteConfig(mkconf& xr_config) const
+void Manager::WriteConfig(mkconf& xr_config, bool x_nonDefaultOnly) const
 {
 	// Set all config ready to be saved
 	for(auto & elem : m_modules)
-		elem.second->WriteConfig(findFirstInArray(xr_config["modules"], "name", elem.second->GetName()));
+		elem.second->WriteConfig(findFirstInArray(xr_config["modules"], "name", elem.second->GetName()), x_nonDefaultOnly);
 	m_param.Write(xr_config);
-	GetContext().WriteConfig(xr_config);
+	GetContext().WriteConfig(xr_config, x_nonDefaultOnly);
 }
 
 /**

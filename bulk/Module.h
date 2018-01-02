@@ -96,8 +96,6 @@ public:
 	explicit Module(ParameterStructure& x_param);
 	virtual ~Module();
 
-	void Reset() override;
-	void Process() override;
 	bool ProcessingCondition() const;                                      /// Return true if the current frame must be processed
 	inline virtual bool PropagateCondition() const {return true;}          /// Return true if the depending modules must be called. To be overridden
 	inline bool AbortCondition() const override {return false;}             /// Return true if the processing should be aborted
@@ -151,6 +149,9 @@ public:
 	void ReadFromCache();
 
 protected:
+	void Reset() override;
+	void Process() override;
+
 	// for benchmarking
 	Timer m_timerConversion;
 	Timer m_timerProcessFrame;

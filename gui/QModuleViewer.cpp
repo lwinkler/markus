@@ -105,6 +105,9 @@ public:
 		assert(m_image.cols == rx_qimage.width() && m_image.rows == rx_qimage.height());
 		QModuleViewer::ConvertMat2QImage(m_image, rx_qimage);
 	}
+	inline const string& GetParentModuleName() const {return m_parentModuleName;}
+	inline void Query(std::ostream& xr_out, const cv::Point& x_pt) const {mp_stream->Query(xr_out, x_pt);}
+protected:
 	void ProcessFrame() override 
 	{
 		mr_gui.update();
@@ -114,9 +117,6 @@ public:
 		// Processable::WriteLock lock(RefLock());
 		Module::Reset();
 	}
-	inline const string& GetParentModuleName() const {return m_parentModuleName;}
-	inline void Query(std::ostream& xr_out, const cv::Point& x_pt) const {mp_stream->Query(xr_out, x_pt);}
-protected:
 	const Module::Parameters& m_param;
 	Stream* mp_stream = nullptr;
 	Mat m_image;
@@ -276,9 +276,9 @@ void QModuleViewer::Reconnect()
 	if(mp_viewer == nullptr)
 		return;
 	mp_viewer->Reconnect(mr_manager, m_param.module, m_param.stream);
-	mp_viewer->Reset();
+	mp_viewer->LockAndReset();
 	// process once to display the current frame
-	mp_viewer->Process();
+	mp_viewer->ProcessAndCatch();
 }
 
 void QModuleViewer::resizeEvent(QResizeEvent * e)

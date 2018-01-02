@@ -56,20 +56,18 @@ public:
 	/* Destructor */
 	virtual ~CompareVideo();
 
-	/* Reset current state of this module */
-	void Reset() override;
-
 	MKCLASS("CompareVideo");
 	MKDESCR("Compare the two input videos and compute the dissimilarity of them for all the sequence");
 	MKCATEG("Test")
-
-	void ProcessFrame() override;
 
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void Reset() override;
+	void ProcessFrame() override;
+
 	// input
 	cv::Mat m_video1;
 	cv::Mat m_video2;

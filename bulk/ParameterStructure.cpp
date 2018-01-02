@@ -106,7 +106,7 @@ void ParameterStructure::Read(const mkconf& x_config)
 /**
 * @brief Save all values and prepare json configuration for writing
 */
-void ParameterStructure::Write(mkconf& xr_config) const
+void ParameterStructure::Write(mkconf& xr_config, bool x_nonDefaultOnly) const
 {
 	for(const auto & elem : m_list)
 	{

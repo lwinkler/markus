@@ -39,8 +39,7 @@ using namespace std;
 */
 void ControllerManager::Reset(mkjson& rx_value)
 {
-	Processable::WriteLock lock(manager.RefLock());
-	manager.Reset();
+	manager.LockAndReset();
 }
 
 /**
@@ -50,8 +49,7 @@ void ControllerManager::Reset(mkjson& rx_value)
 */
 void ControllerManager::ResetExceptInputs(mkjson& rx_value)
 {
-	Processable::WriteLock lock(manager.RefLock());
-	manager.Reset(false);
+	manager.LockAndReset(false);
 }
 
 /**

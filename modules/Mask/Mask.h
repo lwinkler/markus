@@ -50,14 +50,13 @@ public:
 	MKCATEG("Image")
 	MKDESCR("Apply a binary mask to an image input")
 
-	void ProcessFrame() override;
-	void Reset() override;
-
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void ProcessFrame() override;
+	void Reset() override;
 
 	// input
 	cv::Mat m_input;

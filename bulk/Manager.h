@@ -59,8 +59,6 @@ public:
 
 	Manager(ParameterStructure& xr_params, Context& xr_context);
 	virtual ~Manager();
-	virtual void Reset(bool x_resetInputs = true);
-	void Process() override;
 	bool AbortCondition() const override;
 	int ReturnCode() const;
 	void Start() override;
@@ -119,7 +117,7 @@ public:
 		}
 	}
 	void WriteStateToDirectory(const std::string& x_directory);
-	void WriteConfig(mkconf& xr_config) const override;
+	void WriteConfig(mkconf& xr_config, bool x_nonDefaultOnly = false) const override;
 	void SetContext(Context& x_context) override
 	{
 		Processable::SetContext(x_context);
@@ -133,6 +131,11 @@ public:
 		return m_inputs.front()->GetRecordingFps();
 	}
 	void BuildModule(const std::string& x_name, const mkconf& x_moduleConfig);
+	inline void LockAndReset(bool x_resetInputs = true) {Processable::WriteLock lock(RefLock()); Reset(x_resetInputs);}
+
+protected:
+	virtual void Reset(bool x_resetInputs = true);
+	void Process() override;
 
 private:
 	void Build();

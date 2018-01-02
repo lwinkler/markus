@@ -69,14 +69,14 @@ public:
 	MKCATEG("Image")
 	MKDESCR("Perform image denoising using Non-local Means Denoising algorithm, for gaussian noise")
 
-	void ProcessFrame() override;
-	void Reset() override;
-
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void ProcessFrame() override;
+	void Reset() override;
+
 	// input
 	cv::Mat m_input;
 

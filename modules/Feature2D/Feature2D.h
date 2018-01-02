@@ -109,14 +109,14 @@ public:
 	// MKCLASS("Feature2D")
 	// MKDESCR("Extract different types of keyPoints from image")
 
-	void ProcessFrame() override;
-	void Reset() override;
-
 private:
 	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void ProcessFrame() override;
+	void Reset() override;
+
 	// input
 	cv::Mat m_input;
 	std::vector <Object> m_objectsIn;

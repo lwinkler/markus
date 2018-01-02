@@ -58,14 +58,14 @@ public:
 	MKCATEG("Input")
 	MKDESCR("Generate an event with random features at each step")
 
-	void Capture() override;
-	void Reset() override;
-
 private:
 	const Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
 
 protected:
+	void Capture() override;
+	void Reset() override;
+
 	// output
 	Event m_event;
 	cv::Mat m_output;

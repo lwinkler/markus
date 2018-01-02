@@ -39,7 +39,7 @@ public:
 	explicit ParameterStructure(const std::string& x_name);
 	virtual ~ParameterStructure();
 	void Read(const mkconf& x_config);
-	void Write(mkconf& xr_config) const;
+	void Write(mkconf& xr_config, bool x_nonDefaultOnly = false) const;
 	void SetValueToDefault();
 	virtual void CheckRangeAndThrow() const;
 	void CheckRangeAndThrow(const mkconf& x_config) const;
