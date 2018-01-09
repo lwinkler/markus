@@ -1,12 +1,9 @@
 {
-	"description" : "",
-	"modules" : 
-	[
+	"description": "",
+	"modules": [
 		{
-			"name": "Input",
-			"class" : "UsbCam",
-			"inputs" : 
-			[
+			"class": "UsbCam",
+			"inputs": [
 				{
 					"name": "fps",
 					"value": 100
@@ -20,46 +17,45 @@
 					"value": "CV_8UC3"
 				}
 			],
-			"uiobject" : 
-			{
-				"height" : 0,
-				"width" : 0,
-				"x" : 460,
-				"y" : 447
+			"name": "Input",
+			"uiobject": {
+				"height": 0,
+				"width": 0,
+				"x": 460,
+				"y": 447
 			}
 		},
 		{
-			"name" : "SlitCamera1",
-			"class" : "SlitCam",
-			"inputs" : 
-			[
+			"class": "SlitCam",
+			"inputs": [
 				{
 					"name": "aperture",
 					"value": 1
-				},{
+				},
+				{
 					"name": "height",
 					"value": 480
-				},{
-					"name": "image" ,
-					"connected" : 
-					{
-						"module" : "Input",
-						"output" : "image"
-					}
-				},{
+				},
+				{
+					"connected": {
+						"module": "Input",
+						"output": "image"
+					},
+					"name": "image"
+				},
+				{
 					"name": "width",
 					"value": 640
 				}
 			],
-			"uiobject" : 
-			{
-				"height" : 0,
-				"width" : 0,
-				"x" : 681,
-				"y" : 431
+			"name": "SlitCamera1",
+			"uiobject": {
+				"height": 0,
+				"width": 0,
+				"x": 681,
+				"y": 431
 			}
 		}
 	],
-	"name" : "Default project",
-	"inputs":[]
+	"name": "Default project"
 }
