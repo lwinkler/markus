@@ -221,11 +221,12 @@ export class ProjectWindowComponent implements AfterViewInit, AfterViewChecked {
 
 				return true;
 			});
+			var self = this;
 			this.jsPlumbInstance.bind('beforeDetach', function(params: any, originalEvent: any) {
 				// Check if this was done by the user
 				if(originalEvent === undefined)
 					return;
-				this.disconnectInput({
+				self.disconnectInput({
 					inputModule:  params.targetId,
 					inputStream:  params.suspendedEndpoint.getParameter('name'),
 					outputModule: params.sourceId,

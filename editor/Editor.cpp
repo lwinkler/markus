@@ -116,7 +116,7 @@ void Editor::LoadProject(const QString& x_fileName)
 			ss << line;
 		}
 		ifs.close();
-		ss << "');})}, 1000);"; // set a timeout here. No better way for now.
+		ss << "');})}, 2000);"; // set a timeout here. No better way for now.
 		m_view.page()->mainFrame()->evaluateJavaScript(QString(ss.str().c_str()));
 		m_currentProject = x_fileName;
 	}
