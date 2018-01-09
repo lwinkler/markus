@@ -14,18 +14,18 @@ let colorDefault = '#316b31';
 function getPointColor(type: string) {
 
 	switch(type) {
-		case 'Image':      return '#316b31';
-		case 'Objects':    return '#00f';
-		case 'State':      return '#cd7f32';
-		case 'Event':      return '#df0101';
-		case 'NumBool':    return '#09098e';
-		case 'NumDouble':  return '#09098e';
-		case 'NumInt':     return '#09098e';
-		case 'NumUInt':    return '#09098e';
-		case 'NumFloat':   return '#09098e';
+		case 'StreamImage':      return '#316b31';
+		case 'StreamObjects':    return '#00f';
+		case 'StreamState':      return '#cd7f32';
+		case 'StreamEvent':      return '#df0101';
+		case 'ParameterBool':    return '#09098e';
+		case 'ParameterDouble':  return '#09098e';
+		case 'ParameterInt':     return '#09098e';
+		case 'ParameterUInt':    return '#09098e';
+		case 'ParameterFloat':   return '#09098e';
 		default:
 			console.log('Warning: No color for stream of type ' + type);
-		return '#316b31';
+		return '#000000';
 	}
 }
 
@@ -142,7 +142,7 @@ export class ModuleComponent implements AfterViewInit {
 			// Create anchor point for GUI
 			if(!input.stream)
 				continue;
-			let color = getPointColor(input.type);
+			let color = getPointColor(input.class);
 			if(input.multi === undefined) {
 				// note: we need labels to store the input name !!
 				this.jsPlumbInstance.addEndpoint(
@@ -180,7 +180,7 @@ export class ModuleComponent implements AfterViewInit {
 		y = offset;
 		for(let output of this.moduleDescription.outputs) {
 			// Create anchor point for GUI
-			let color = getPointColor(output.type);
+			let color = getPointColor(output.class);
 			this.jsPlumbInstance.addEndpoint(
 				this.module.name,
 				{

@@ -56,7 +56,6 @@ export class TopBarComponent {
 		if(this.moduleCategorie.modules.length > 0) {
 			this.moduleToAdd = this.moduleCategorie.modules[0];
 		}
-		window.markusEditor.zone.run(() => {window.markusEditor.component.loadProject('AAAAAAAAAAAAAAAAAA');}); null
 	}
 	onDownload(event: any) {
 		// alert('Project: ' + JSON.stringify(this.project));

@@ -9,7 +9,6 @@ import {
 	NgZone,
 	OnDestroy
 } from '@angular/core';
-import {Http, Response} from '@angular/http';
 import {Project}  from './project';
 import {Module}  from './module';
 import {Utils} from './utils';
@@ -57,11 +56,9 @@ export class ProjectWindowComponent implements AfterViewInit, AfterViewChecked {
 	@Output() private saveProject: EventEmitter<string> = new EventEmitter<string>();
 	private jsPlumbInstance: any;
 	private reconnect: boolean = false;
-	private http: any;
 
-	constructor(private _http: Http, private _ngZone: NgZone) {
+	constructor(private _ngZone: NgZone) {
 		// set a global reference to handle from outside
-		this.http = _http;
 		window.markusEditor = {
 			component: this, 
 			zone: _ngZone,
