@@ -88,6 +88,7 @@ private slots:
 	void viewDisplayOptions(bool x_isChecked);
 	void refresh();
 	void editor();
+	void save();
 	void view1x1();
 	void view1x2();
 	void view2x2();

@@ -58,7 +58,7 @@ void readFromFile(mkconf& rx_config, const std::string& x_fileName, bool x_allow
 void writeToFile(const mkconf& xr_config, const string& x_fileName)
 {
 	ofstream of(x_fileName);
-	of << xr_config;
+	of << multiLine(xr_config) << endl;
 }
 
 void overrideInputs(mkconf& xr_oldConfig, const mkconf& x_newConfig)

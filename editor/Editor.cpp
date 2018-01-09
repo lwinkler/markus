@@ -213,7 +213,8 @@ bool Editor::saveProject(const QString& x_fileName)
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 #endif
 	ofstream fout(x_fileName.toStdString().c_str());
-	fout<<m_view.page()->mainFrame()->evaluateJavaScript("window.markusEditor.dumpProject();").toString().toStdString()<<endl;
+	mkjson conf = mkjson::parse(m_view.page()->mainFrame()->evaluateJavaScript("window.markusEditor.dumpProject();").toString().toStdString());
+	fout << multiLine(conf) << endl;
 	fout.close();
 	m_currentProject = x_fileName;
 #ifndef QT_NO_CURSOR

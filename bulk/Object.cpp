@@ -161,7 +161,7 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 			//try
 			{
 				ostringstream text;
-				text << elem.first << "=" << multiLine(*elem.second);
+				text << elem.first << "=" << multiLine(*elem.second) << endl;
 				pText.y += 7;
 				putText(x_output, text.str(), pText,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
 				i++;

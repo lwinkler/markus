@@ -83,7 +83,7 @@ void LogEvent::WriteEvent()
 {
 	LOG_DEBUG(m_logger, "Write event to log file");
 	stringstream ss;
-	ss << multiLine(m_event);
+	ss << multiLine(m_event) << endl;
 	mp_annotationWriter->WriteAnnotation(m_currentTimeStamp, m_currentTimeStamp + 1000 * m_param.duration, ss);
 }
 

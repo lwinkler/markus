@@ -458,7 +458,7 @@ public:
 		string fileName = "tests/tmp/" + xr_module.GetName() + ".json";
 		ofstream of(fileName.c_str());
 		mkjson js = xr_module.Export();
-		of << multiLine(js);
+		of << multiLine(js) << endl;
 		of.close();
 		if(!compareJsonFiles(fileName, "tests/modules/" + xr_module.GetName() + ".json"))
 		{

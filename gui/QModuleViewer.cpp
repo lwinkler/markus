@@ -365,7 +365,7 @@ void QModuleViewer::updateModule(const Module& x_module)
 	actionShowDisplayMenu->setCheckable(true);
 	connect(actionShowDisplayMenu, SIGNAL(triggered(bool)), this, SLOT(showDisplayOptions(bool)));
 	actionShowDisplayMenu->setChecked(m_param.displayOptions);
-	actionShowDisplayMenu->setShortcut(tr("Ctrl+S"));
+	actionShowDisplayMenu->setShortcut(tr("Alt+S"));
 	this->addAction(actionShowDisplayMenu);
 
 	// Show control board for parameters

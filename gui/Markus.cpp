@@ -105,6 +105,10 @@ void MarkusWindow::createActionsAndMenus()
 	exitAct->setShortcut(tr("Ctrl+Q"));
 	connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
+	QAction* saveAct = new QAction(tr("Save"), this);
+	saveAct->setShortcut(tr("Ctrl+S"));
+	connect(saveAct, SIGNAL(triggered()), this, SLOT(save()));
+
 	// Actions for view menu
 	QAction* viewDisplayOptionsAct = new QAction(tr("Show display options"), this);
 	viewDisplayOptionsAct->setCheckable(true);
@@ -153,6 +157,7 @@ void MarkusWindow::createActionsAndMenus()
 	// File Menu
 	QMenu* fileMenu = new QMenu(tr("&File"), this);
 	fileMenu->addSeparator();
+	fileMenu->addAction(saveAct);
 	fileMenu->addAction(exitAct);
 
 	// View menu
@@ -223,6 +228,19 @@ void MarkusWindow::editor()
 {
 	QWidget* ed = new Editor(&mr_manager, mr_manager.GetContext().GetParameters().configFile);
 	ed->show();
+}
+
+void MarkusWindow::save()
+{
+	string configFile = dynamic_cast<const Context::Parameters&>(mr_manager.GetContext().GetParameters()).configFile;
+	ifstream ifs(configFile);
+	mkjson conf = mkjson::parse(ifs);
+	ifs.close();
+	mr_manager.WriteConfig(conf, true);
+
+	ofstream of(configFile);
+	of << multiLine(conf) << endl;
+	of.close();
 }
 
 void MarkusWindow::view1x1()

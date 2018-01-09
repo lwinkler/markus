@@ -528,7 +528,6 @@ Module& Manager::RefModuleByName(const string& x_name) const
 */
 void Manager::WriteConfig(mkconf& xr_config, bool x_nonDefaultOnly) const
 {
-	// Set all config ready to be saved
 	for(auto & elem : m_modules)
 		elem.second->WriteConfig(findFirstInArray(xr_config["modules"], "name", elem.second->GetName()), x_nonDefaultOnly);
 	m_param.Write(xr_config);
