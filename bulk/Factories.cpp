@@ -92,6 +92,8 @@ void Factories::RegisterAll()
 	factParamCtr.Register<ControllerEnum>(ParameterEnumT<ImageType>::className);
 	factParamCtr.Register<ControllerEnum>(ParameterEnumT<cv::ml::SVM::KernelTypes>::className);
 	factParamCtr.Register<ControllerEnum>(ParameterEnumT<cv::ml::SVM::Types>::className);
+	factParamCtr.Register<ControllerEnum>(ParameterEnumT<cv::MorphTypes>::className);
+	factParamCtr.Register<ControllerEnum>(ParameterEnumT<cv::MorphShapes>::className);
 
 	factParamCtr.Register<ControllerInt>(ParameterInt::className);
 	factParamCtr.Register<ControllerUInt>(ParameterUInt::className);

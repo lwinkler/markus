@@ -92,3 +92,36 @@ template<> const map<string, int>  ParameterEnumT<cv::ml::SVM::Types>::Enum =
 template<> const map<int, string> ParameterEnumT<cv::ml::SVM::Types>::ReverseEnum = ParameterEnum::CreateReverseMap(ParameterEnumT<cv::ml::SVM::Types>::Enum);
 template<> const string ParameterEnumT<cv::ml::SVM::Types>::className = "ParameterTypes";
 
+
+
+#include "opencv/modules/imgproc/include/opencv2/imgproc.hpp"
+
+// Static variables
+template<> const map<string, int>  ParameterEnumT<cv::MorphShapes>::Enum =
+{
+	{"MORPH_RECT", 0},
+	{"MORPH_CROSS", 1},
+	{"MORPH_ELLIPSE", 2}
+};
+template<> const map<int, string> ParameterEnumT<cv::MorphShapes>::ReverseEnum = ParameterEnum::CreateReverseMap(ParameterEnumT<cv::MorphShapes>::Enum);
+template<> const string ParameterEnumT<cv::MorphShapes>::className = "ParameterMorphShapes";
+
+
+
+#include "opencv/modules/imgproc/include/opencv2/imgproc.hpp"
+
+// Static variables
+template<> const map<string, int>  ParameterEnumT<cv::MorphTypes>::Enum =
+{
+	{"MORPH_ERODE", 0},
+	{"MORPH_DILATE", 1},
+	{"MORPH_OPEN", 2},
+	{"MORPH_CLOSE", 3},
+	{"MORPH_GRADIENT", 4},
+	{"MORPH_TOPHAT", 5},
+	{"MORPH_BLACKHAT", 6},
+	{"MORPH_HITMISS", 7}
+};
+template<> const map<int, string> ParameterEnumT<cv::MorphTypes>::ReverseEnum = ParameterEnum::CreateReverseMap(ParameterEnumT<cv::MorphTypes>::Enum);
+template<> const string ParameterEnumT<cv::MorphTypes>::className = "ParameterMorphTypes";
+

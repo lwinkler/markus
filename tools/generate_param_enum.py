@@ -98,9 +98,16 @@ def generate_enums():
 				'classes': [
 					'cv::ml::SVM::KernelTypes',
 					'cv::ml::SVM::Types'
-					]
-				}
-			]
+				]
+			},
+			{
+				'header': 'opencv/modules/imgproc/include/opencv2/imgproc.hpp', 
+				'classes': [
+					'cv::MorphShapes',
+					'cv::MorphTypes'
+				]
+			}
+		]
 
 	# Generate file
 	fout.write("""/* This file was generated automatically the generate_param_enum.py parser */
