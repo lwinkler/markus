@@ -110,13 +110,13 @@ void Editor::LoadProject(const QString& x_fileName)
 			return;
 		}
 		string line;
-		ss << "setTimeout(function(){window.markusEditor.zone.run(function(){window.markusEditor.component.loadProject('";
+		ss << "setTimeout(function(){window.markusEditor.loadProjectJson('";
 		while(getline(ifs, line))
 		{
 			ss << line;
 		}
 		ifs.close();
-		ss << "');})}, 2000);"; // set a timeout here. No better way for now.
+		ss << "');}, 2000);"; // set a timeout here. No better way for now.
 		m_view.page()->mainFrame()->evaluateJavaScript(QString(ss.str().c_str()));
 		m_currentProject = x_fileName;
 	}
