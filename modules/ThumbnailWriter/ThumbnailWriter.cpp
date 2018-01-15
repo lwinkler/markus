@@ -104,7 +104,7 @@ void ThumbnailWriter::ProcessFrame()
 		}
 		LOG_DEBUG(m_logger, "Write object to " << ss2.str());
 		mkjson json(elem);
-		of << json;
+		of << multiLine(json);
 		of.close();
 
 
