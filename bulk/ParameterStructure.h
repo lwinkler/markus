@@ -24,11 +24,11 @@
 #ifndef PARAMETER_STRUCTURE_H
 #define PARAMETER_STRUCTURE_H
 
+#include <log4cxx/logger.h>
 #include "define.h"
 #include "Parameter.h"
 #include "MkException.h"
 #include "config.h"
-#include <log4cxx/logger.h>
 
 namespace mk {
 /// Represents a set of parameters for a configurable objects

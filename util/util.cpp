@@ -22,18 +22,18 @@
 -------------------------------------------------------------------------------------*/
 
 #include "util.h"
+#include <execinfo.h>
+#include <sys/time.h>
+#include <fstream>
+#include <cstdio>
+#include <boost/lexical_cast.hpp>
+#include <boost/rational.hpp>
+#include <opencv2/opencv.hpp>
 #include "Manager.h"
 #include "Event.h"
 #include "MkException.h"
 #include "AnnotationSrtFileReader.h"
 #include "AnnotationAssFileReader.h"
-#include <fstream>
-#include <cstdio>
-#include <opencv2/opencv.hpp>
-#include <execinfo.h>
-#include <sys/time.h>
-#include <boost/lexical_cast.hpp>
-#include <boost/rational.hpp>
 
 namespace mk {
 using namespace std;

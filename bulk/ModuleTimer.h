@@ -24,10 +24,10 @@
 #ifndef QMODULE_TIMER_H
 #define QMODULE_TIMER_H
 
-#include <thread>
-#include <atomic>
 #include <assert.h>
 #include <log4cxx/logger.h>
+#include <thread>
+#include <atomic>
 
 namespace mk {
 class Processable;

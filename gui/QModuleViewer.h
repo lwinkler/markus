@@ -24,11 +24,11 @@
 #ifndef QMODULEVIEWER_H
 #define QMODULEVIEWER_H
 
-#include <opencv2/opencv.hpp>
 #include <QPixmap>
 #include <QWidget>
 #include <QImage>
 #include <QPainter>
+#include <opencv2/opencv.hpp>
 #include "QControlBoard.h"
 #include "Module.h"
 #include "ParameterStructure.h"

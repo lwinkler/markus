@@ -22,6 +22,10 @@
 -------------------------------------------------------------------------------------*/
 
 #include "Manager.h"
+#include <fstream>
+#include <future>
+#include <chrono>
+#include <boost/lexical_cast.hpp>
 #include "Module.h"
 #include "Input.h"
 #include "Stream.h"
@@ -30,14 +34,8 @@
 #include "ControllerManager.h"
 #include "Factories.h"
 #include "Controller.h"
-
 #include "util.h"
 #include "json.hpp"
-
-#include <fstream>
-#include <future>
-#include <chrono>
-#include <boost/lexical_cast.hpp>
 
 #define PROCESS_TIMEOUT 60 // 1 min timeout
 

@@ -24,8 +24,8 @@
 #ifndef ANNOTATION_ASS_FILE_READER_H
 #define ANNOTATION_ASS_FILE_READER_H
 
-#include <fstream>
 #include <log4cxx/logger.h>
+#include <fstream>
 #include "define.h"
 #include "AnnotationFileReader.h"
 

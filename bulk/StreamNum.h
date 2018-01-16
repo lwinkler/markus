@@ -24,12 +24,12 @@
 #ifndef STREAM_NUM_H
 #define STREAM_NUM_H
 
+#include <sstream>
+#include <boost/circular_buffer.hpp>
 #include "Stream.h"
 #include "ParameterT.h"
 #include "feature_util.h"
 #include "cvplot.h"
-#include <sstream>
-#include <boost/circular_buffer.hpp>
 
 #define PLOT_LENGTH 50
 

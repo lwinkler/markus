@@ -23,8 +23,8 @@
 #ifndef TEST_GLOBAL_H
 #define TEST_GLOBAL_H
 #include <cxxtest/GlobalFixture.h>
-#include <boost/filesystem.hpp>
 #include <log4cxx/xml/domconfigurator.h>
+#include <boost/filesystem.hpp>
 
 #include "Factories.h"
 #include "util.h"

@@ -21,9 +21,8 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 #include "Timer.h"
-#include "util.h"
-
 #include <iostream>
+#include "util.h"
 
 namespace mk {
 using namespace std;

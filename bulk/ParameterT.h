@@ -24,11 +24,11 @@
 #ifndef PARAMETER_NUM_H
 #define PARAMETER_NUM_H
 
+#include <limits>
+#include <boost/lexical_cast.hpp>
 #include "define.h"
 #include "MkException.h"
 #include "Parameter.h"
-#include <limits>
-#include <boost/lexical_cast.hpp>
 
 #define EPSILON 1e-5
 

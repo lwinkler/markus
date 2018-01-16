@@ -24,10 +24,10 @@
 #ifndef PARAMETER_H
 #define PARAMETER_H
 
-#include "define.h"
-#include "MkException.h"
 #include <log4cxx/logger.h>
 #include <boost/noncopyable.hpp>
+#include "define.h"
+#include "MkException.h"
 
 namespace mk {
 /// return the name of a class

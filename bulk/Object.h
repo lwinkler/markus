@@ -24,8 +24,8 @@
 #ifndef MKOBJECT_H
 #define MKOBJECT_H
 
-#include <opencv2/opencv.hpp>
 #include <log4cxx/logger.h>
+#include <opencv2/opencv.hpp>
 #include "define.h"
 #include "FeatureStd.h"
 #include "MkException.h"

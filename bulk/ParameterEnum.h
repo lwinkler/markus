@@ -24,10 +24,10 @@
 #ifndef PARAMETER_ENUM_H
 #define PARAMETER_ENUM_H
 
+#include <log4cxx/logger.h>
 #include "define.h"
 #include "Parameter.h"
 #include "MkException.h"
-#include <log4cxx/logger.h>
 
 namespace mk {
 /// Parameter of type enum

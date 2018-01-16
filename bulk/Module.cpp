@@ -22,17 +22,14 @@
 -------------------------------------------------------------------------------------*/
 
 #include "Module.h"
+#include <fstream>
 #include "util.h"
 #include "json.hpp"
-
 #include "Stream.h"
 #include "Timer.h"
 #include "ModuleTimer.h"
-
-
 #include "ControllerModule.h"
 #include "Factories.h"
-#include <fstream>
 
 namespace mk {
 using namespace std;

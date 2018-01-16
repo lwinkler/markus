@@ -24,14 +24,14 @@
 #ifndef MODULE_H
 #define MODULE_H
 
+#include <log4cxx/logger.h>
+#include <opencv2/core/core.hpp>
 #include "ParameterT.h"
 #include "Controller.h"
 #include "Processable.h"
 #include "Timer.h"
 #include "enums.h"
 #include "ParameterEnumT.h"
-#include <log4cxx/logger.h>
-#include <opencv2/core/core.hpp>
 
 #define MAX_WIDTH  6400
 #define MAX_HEIGHT 4800

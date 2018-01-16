@@ -22,16 +22,18 @@ foreach(mod IN LISTS tmp)
 	if(IS_DIRECTORY ${mod})
 		get_filename_component(name1 ${mod} NAME_WE)
 		if(name1 STREQUAL "CMakeFiles")
+		elseif(name1 STREQUAL ".git")
+		elseif(name1 STREQUAL "")
 		else()
-			list(FIND Markus_MODULE_BLACKLIST ${name1} index)
-			if(index STREQUAL "-1")
+			# list(FIND Markus_MODULE_BLACKLIST ${name1} index)
+			# if(index STREQUAL "-1")
 				# Include this module
 				file(APPEND "${PROJECT_SOURCE_DIR}/modules.txt" "${mod}\n")
 				file(GLOB modules_tmp "${mod}/*.cpp")
 				list(APPEND modules_src2 ${modules_tmp})
-			else()
-				message("Blacklisted module ${name1}")
-			endif()
+			# else()
+				# message("Blacklisted module ${name1}")
+			# endif()
 		endif()
 	endif()
 endforeach(mod)
@@ -161,7 +163,7 @@ add_custom_target(doc
 
 add_custom_target(lint
 	COMMENT "Check C++ lint rules with the lint tool provided by Google"
-	COMMAND tools/list_source_dirs.sh | xargs -I{} find -L {} ! -name \"moc*\" -name \"*.h\" -print -o -name \"*.cpp\" ! -name \"moc*\" -print | xargs tools/cpplint.py --filter=-whitespace,-legal,-build,-runtime/references,-readability/todo,-runtime/string,+build/storage_class
+	COMMAND tools/list_source_dirs.sh | xargs -I{} find -L {} ! -name \"moc*\" -name \"*.h\" -print -o -name \"*.cpp\" ! -name \"moc*\" -print | xargs tools/cpplint.py --filter=-whitespace,-legal,-build,-runtime/references,-readability/todo,-runtime/string,+build/storage_class,+build/include_order
 )
 
 add_custom_target(tidy

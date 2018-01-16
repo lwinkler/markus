@@ -24,11 +24,11 @@
 #ifndef MKEVENT_H
 #define MKEVENT_H
 
+#include <log4cxx/logger.h>
 #include "define.h"
 #include "Object.h"
 #include "Context.h"
 #include "json.hpp"
-#include <log4cxx/logger.h>
 
 
 namespace mk {

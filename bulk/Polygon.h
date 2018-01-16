@@ -24,11 +24,10 @@
 #ifndef POLYGON_H
 #define POLYGON_H
 
+#include <vector>
+#include <opencv2/opencv.hpp>
 #include "serialize.h"
 #include "MkException.h"
-#include <opencv2/opencv.hpp>
-#include <vector>
-
 
 namespace mk {
 class Polygon

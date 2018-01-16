@@ -24,8 +24,8 @@
 #ifndef ANNOTATION_FILE_WRITER_H
 #define ANNOTATION_FILE_WRITER_H
 
-#include <fstream>
 #include <log4cxx/logger.h>
+#include <fstream>
 #include "define.h"
 
 

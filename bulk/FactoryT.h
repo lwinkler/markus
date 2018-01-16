@@ -24,15 +24,12 @@
 #ifndef FACTORY_T_H
 #define FACTORY_T_H
 
-#include "MkException.h"
-#include "define.h"
-
 #include <map>
 #include <vector>
 #include <sstream>
 #include <boost/noncopyable.hpp>
-
-
+#include "MkException.h"
+#include "define.h"
 
 namespace mk {
 /// This class is a template class for factories: a factory creates an instance of an object, the type of the object is specified as a string

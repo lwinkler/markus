@@ -23,10 +23,10 @@
 #ifndef MK_FEATURE_HOF_H
 #define MK_FEATURE_HOF_H
 
+#include <vector>
 #include "Feature.h"
 #include "MkException.h"
 #include "feature_util.h"
-#include <vector>
 
 namespace mk {
 /**

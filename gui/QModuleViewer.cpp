@@ -22,8 +22,6 @@
 -------------------------------------------------------------------------------------*/
 
 #include "QModuleViewer.h"
-#include <cstdio>
-
 #include <QComboBox>
 #include <QGroupBox>
 #include <QGridLayout>
@@ -32,12 +30,10 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <qevent.h>
-
 #include <QPixmap>
 #include <QPainter>
 #include <QListWidget>
 #include <QSignalMapper>
-
 #include "Manager.h"
 #include "StreamImage.h"
 #include "StreamObject.h"

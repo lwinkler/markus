@@ -26,9 +26,6 @@
 #include "util.h"
 #include "InterruptionManager.h"
 
-#include <cstdio>
-
-
 namespace mk {
 using namespace cv;
 using namespace std;

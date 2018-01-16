@@ -22,25 +22,23 @@
 -------------------------------------------------------------------------------------*/
 
 
-#include "Manager.h"
-#include "MkException.h"
-#include "Event.h"
-#include "util.h"
-#include "Simulation.h"
-
+#include <signal.h>
+#include <log4cxx/xml/domconfigurator.h>
+#include <getopt.h>    /* for getopt_long; standard getopt is in unistd.h */
+#include <iostream>
+#include <cstdio>
+#include <thread>
 #ifndef MARKUS_NO_GUI
 #include <QApplication>
 #include "Editor.h"
 #include "Markus.h"
 #include "MarkusApplication.h"
 #endif
-
-#include <signal.h>
-#include <iostream>
-#include <cstdio>
-#include <log4cxx/xml/domconfigurator.h>
-#include <getopt.h>    /* for getopt_long; standard getopt is in unistd.h */
-#include <thread>
+#include "Manager.h"
+#include "MkException.h"
+#include "Event.h"
+#include "util.h"
+#include "Simulation.h"
 
 using namespace std;
 using namespace mk;

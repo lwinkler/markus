@@ -22,10 +22,10 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ThumbnailWriter.h"
+#include <fstream>
 #include "StreamImage.h"
 #include "util.h"
 #include "Manager.h"
-#include <fstream>
 
 namespace mk {
 using namespace std;

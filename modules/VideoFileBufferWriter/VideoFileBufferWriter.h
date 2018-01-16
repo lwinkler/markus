@@ -24,14 +24,12 @@
 #ifndef INPUT_VIDEOFILEBUFFERWRITER_H
 #define INPUT_VIDEOFILEBUFFERWRITER_H
 
-#include "modules/VideoFileWriter/VideoFileWriter.h"
-#include "Event.h"
-
-#include <opencv2/highgui/highgui.hpp>
-#include <boost/circular_buffer.hpp>
 #include <mutex>
 #include <atomic>
-
+#include <boost/circular_buffer.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include "modules/VideoFileWriter/VideoFileWriter.h"
+#include "Event.h"
 
 namespace mk {
 /**

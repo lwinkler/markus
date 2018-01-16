@@ -24,14 +24,13 @@
 #ifndef MKDIRECTORY_H
 #define MKDIRECTORY_H
 
+#include <log4cxx/logger.h>
+#include <map>
+#include <boost/thread/shared_mutex.hpp>
 // Workaround: should be unnecessary in time: http://stackoverflow.com/questions/35007134/c-boost-undefined-reference-to-boostfilesystemdetailcopy-file
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
-
-#include <map>
-#include <log4cxx/logger.h>
-#include <boost/thread/shared_mutex.hpp>
 #include "MkException.h"
 
 namespace mk {

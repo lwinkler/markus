@@ -24,9 +24,8 @@
 #ifndef INPUT_NETWORKCAM_H
 #define INPUT_NETWORKCAM_H
 
-#include <opencv2/highgui/highgui.hpp>
 #include <semaphore.h>
-
+#include <opencv2/highgui/highgui.hpp>
 #include "Input.h"
 #include "Timer.h"
 

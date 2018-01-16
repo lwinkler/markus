@@ -24,6 +24,9 @@
 #define MODULES_TEST_H
 
 #include <cxxtest/TestSuite.h>
+#include <string>
+#include <tuple>
+#include <iostream>
 #include "Module.h"
 #include "Controller.h"
 #include "util.h"
@@ -43,10 +46,6 @@ using namespace std;
 
 // #define BLACKLIST(x) m_moduleTypes.erase(remove(m_moduleTypes.begin(), m_moduleTypes.end(), (x)), m_moduleTypes.end());
 
-#include <string>
-#include <tuple>
-#include <iostream>
-#include <stdio.h>
 
 
 /// Class used to test a module and destroy automatically its allocations

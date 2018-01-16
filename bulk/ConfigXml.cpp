@@ -22,9 +22,9 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ConfigXml.h"
+#include <tinyxml.h>
 #include "ParameterStructure.h"
 #include "util.h"
-#include <tinyxml.h>
 
 namespace mk {
 using namespace std;

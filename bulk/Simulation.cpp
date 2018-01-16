@@ -21,14 +21,13 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
-#include "MkException.h"
-#include "util.h"
 #include "Simulation.h"
-
 #include <iostream>
 #include <iomanip>
 #include <fstream>
 #include <boost/filesystem.hpp>
+#include "MkException.h"
+#include "util.h"
 
 namespace mk {
 using namespace std;

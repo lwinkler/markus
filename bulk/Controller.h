@@ -24,11 +24,10 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include <string>
-#include <vector>
 #include <assert.h>
 #include <log4cxx/logger.h>
-
+#include <string>
+#include <vector>
 #include "Parameter.h"
 
 class QWidget;

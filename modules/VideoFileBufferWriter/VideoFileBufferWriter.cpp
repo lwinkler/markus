@@ -22,11 +22,11 @@
 -------------------------------------------------------------------------------------*/
 
 #include "VideoFileBufferWriter.h"
+#include <thread>
 #include "StreamState.h"
 #include "StreamEvent.h"
 #include "util.h"
 #include "Manager.h"
-#include <thread>
 
 namespace mk {
 

@@ -26,13 +26,12 @@
 
 // note: this class is kept to draw SVG and also for legacy reasons
 
+#include <log4cxx/xml/domconfigurator.h>
 #include <string>
 #include <vector>
 #include <sstream>
 #include <boost/noncopyable.hpp>
-
 #include "define.h"
-#include <log4cxx/xml/domconfigurator.h>
 
 class TiXmlNode;
 class TiXmlDocument;
