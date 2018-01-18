@@ -12,7 +12,7 @@ import os, sys, re, string
 
 # Global variables
 std_types = ['bool', 'float', 'double', 'int', 'long'] # , 'std::string']
-forbidden = ['param', 'width', 'height', 'type', 'class', 'cached', 'master', 'fps', ]
+forbidden = ['param', 'width', 'height', 'type', 'class', 'cached', 'master', 'fps']
 
 def translate_type(decl):
 	""" Translate types to internal types of Markus """

@@ -185,7 +185,7 @@ std::string MkDirectory::ReserveFile(const std::string& x_filePath, int x_unique
 		ss << x_filePath; 
 	else
 		ss << boost::format(x_filePath) % x_uniqueIndex; 
-	LOG_INFO(m_logger, "Reserve output file " << ss.str() << " in " << m_path);
+	LOG_DEBUG(m_logger, "Reserve output file " << ss.str() << " in " << m_path);
 	if(m_reservedFiles.find(ss.str()) != m_reservedFiles.end())
 		LOG_WARN(m_logger, "File " << ss.str() << " already exists in " << m_path);
 	auto ret = m_reservedFiles.insert(std::pair<string, bool>(ss.str(), true));

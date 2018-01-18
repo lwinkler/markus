@@ -130,10 +130,8 @@ void Editor::adaptDom(bool x_loadOk)
 	QWebElement document = frame->documentElement();
 
 	// Deactivate the download button // TODO: not working
-	QWebElementCollection elements = document.findAll("#downloadProject");
-
-	foreach (QWebElement element, elements)
-		element.setAttribute("disabled", "disabled");
+	QWebElement element = document.findFirst("#downloadProject");
+	element.setAttribute("disabled", "disabled");
 
 	// if a project is select load it
 	LoadProject(QString(m_projectToLoad.c_str()));
