@@ -205,5 +205,22 @@
 			}
 		}
 	],
-	"name" : "ObjectTracker"
+	"name" : "ObjectTracker",
+	"variations": [
+		{
+			"module": "TrackerByFeatures",
+			"parameter":"maxMatchingDistance",
+			"nb":2,
+			"range": {
+				"min": 0,
+				"max": 100
+			}
+		},
+		{
+			"modules": ["TrackerByFeatures", "TrackerByFeatures"],
+			"parameters": ["width", "height"],
+			"references": ["width", "height"],
+			"file": "tools/evaluation/ranges/resolutions.json"
+		}
+	]
 }

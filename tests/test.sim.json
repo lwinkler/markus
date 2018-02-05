@@ -1,9 +1,9 @@
 {
 	"description" : "",
 	"modules" : 
-	{
-		"Input" : 
+	[
 		{
+			"name": "Input" ,
 			"class" : "VideoFileReader",
 			"uiobject" : 
 			{
@@ -13,8 +13,8 @@
 				"y" : 231
 			}
 		},
-		"LogEvent" : 
 		{
+			"name": "LogEvent",
 			"class" : "LogEvent",
 			"inputs" : 
 			{
@@ -51,8 +51,8 @@
 				"y" : 496
 			}
 		},
-		"LogState" : 
 		{
+			"name": "LogState",
 			"class" : "LogState",
 			"inputs" : 
 			{
@@ -73,8 +73,8 @@
 				"y" : 191
 			}
 		},
-		"MotionDetector" : 
 		{
+			"name": "MotionDetector",
 			"class" : "MotionDetector",
 			"inputs" : 
 			{
@@ -95,8 +95,8 @@
 				"y" : 249
 			}
 		},
-		"TempDiff" : 
 		{
+			"name": "TempDiff",
 			"class" : "TempDiff",
 			"inputs" : 
 			{
@@ -117,7 +117,7 @@
 				"y" : 274
 			}
 		}
-	},
+	],
 	"name" : "MOG",
 	"variations" : 
 	[
@@ -128,12 +128,12 @@
 				"Input",
 				"LogEvent"
 			],
-			"references": ["video", "annotation"],
 			"parameters" : 
 			[
 				"file",
 				"gtFile"
 			],
+			"references": ["video", "annotation"],
 			"variations" : 
 			[
 				{

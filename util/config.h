@@ -40,8 +40,8 @@ void readFromFile(mkconf& rx_config, const std::string& x_fileName, bool x_allow
 void overrideWith(mkconf& rx_config, const mkconf& xr_extraConfig);
 void writeToFile(const mkconf& rx_config, const std::string& x_file);
 mkconf& findFirstInArray(mkconf& x_conf, const std::string& x_name, const std::string& x_value);
-mkconf& replaceOrAppendInArray(mkconf& x_conf, const std::string& x_name, const std::string& x_value);
 const mkconf& findFirstInArrayConst(const mkconf& x_conf, const std::string& x_name, const std::string& x_value);
+mkconf& replaceOrAppendInArray(mkconf& x_conf, const std::string& x_name, const std::string& x_value);
 
 } // namespace mk
 #endif

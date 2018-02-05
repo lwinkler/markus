@@ -61,6 +61,8 @@ inline std::string signatureOfFeature(const mkjson& x_json)
 	return signatureJsonTree(x_json, 0);
 }
 
+inline bool exist(const mkjson x_arr, const std::string& x_element){return x_arr.find(x_element) != x_arr.end();}
+
 
 } // namespace mk
 #endif

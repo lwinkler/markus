@@ -74,18 +74,18 @@ Manager::~Manager()
 */
 void Manager::Build()
 {
-	if(m_param.config["modules"].is_null())
+	if(m_param.config.at("modules").is_null())
 		throw MkException("Config is null", LOC);
-	for(const auto& elem : m_param.config["modules"])
+	for(const auto& elem : m_param.config.at("modules"))
 	{
-		BuildModule(elem["name"].get<string>(), elem);
+		BuildModule(elem.at("name").get<string>(), elem);
 	}
 }
 
 void Manager::BuildModule(const string& x_name, const mkconf& x_moduleConfig)
 {
 	// Read parameters
-	string moduleType = x_moduleConfig["class"].get<string>();
+	string moduleType = x_moduleConfig.at("class").get<string>();
 	ParameterStructure * tmp2 = mr_parametersFactory.Create(moduleType, x_name);
 	tmp2->Read(x_moduleConfig);
 
@@ -191,7 +191,7 @@ void Manager::Connect()
 		throw MkException("Manager can only connect modules once", LOC);
 
 	// Connect input and output streams (re-read the config once since we need all modules to be connected)
-	for(const auto& conf : m_param.config["modules"])
+	for(const auto& conf : m_param.config.at("modules"))
 	{
 		Module& module = RefModuleByName(conf.at("name").get<string>());
 
@@ -482,8 +482,8 @@ void Manager::CreateEditorFiles(const string& x_fileName)
 			ParameterStructure* parameters = mr_parametersFactory.Create(moduleType, moduleType);
 			Module* module = mr_moduleFactory.Create(moduleType, *parameters);
 
-			moduleCategories[module->GetCategory()].push_back(moduleType);
-			moduleCategories["all"].push_back(moduleType);
+			moduleCategories.at(module->GetCategory()).push_back(moduleType);
+			moduleCategories.at("all").push_back(moduleType);
 
 			// JSON file containing all module descriptions
 			moduleDescriptionsJson.push_back(module->Export());
@@ -494,7 +494,7 @@ void Manager::CreateEditorFiles(const string& x_fileName)
 			json["name"]    = elem.first;
 			json["modules"] = mkjson::array();
 			for(const auto& mod : elem.second)
-				json["modules"].push_back(mod);
+				json.at("modules").push_back(mod);
 			moduleCategoriesJson.push_back(json);
 		}
 
@@ -527,7 +527,7 @@ Module& Manager::RefModuleByName(const string& x_name) const
 void Manager::WriteConfig(mkconf& xr_config, bool x_nonDefaultOnly) const
 {
 	for(auto & elem : m_modules)
-		elem.second->WriteConfig(findFirstInArray(xr_config["modules"], "name", elem.second->GetName()), x_nonDefaultOnly);
+		elem.second->WriteConfig(findFirstInArray(xr_config.at("modules"), "name", elem.second->GetName()), x_nonDefaultOnly);
 	m_param.Write(xr_config);
 	GetContext().WriteConfig(xr_config, x_nonDefaultOnly);
 }

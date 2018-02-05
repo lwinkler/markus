@@ -41,7 +41,7 @@ log4cxx::LoggerPtr Simulation::m_logger(log4cxx::Logger::getLogger("Simulation")
 /// Function to return either a module or the manager from a config
 inline mkconf& manOrMod(mkconf& xr_mainConfig, const string& x_name)
 {
-	return x_name == "manager" ? xr_mainConfig : xr_mainConfig["modules"][x_name];
+	return x_name == "manager" ? xr_mainConfig : findFirstInArray(xr_mainConfig.at("modules"), "name", x_name);
 }
 
 
@@ -66,11 +66,9 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 	LOG_DEBUG(m_logger, "Add entry for variation " << name);
 	sd << name;
 	string arguments;
-	try
-	{
+	if(exist(x_mainConfig, "inputs") && exist(x_mainConfig.at("inputs"), "arguments"))
 		arguments = x_mainConfig.at("inputs").at("arguments").get<string>();
-	}
-	catch(MkException &e) {}
+
 	m_allTargets << "$(OUTDIR)/results/" <<  sd.str() << " ";
 	m_targets << "$(OUTDIR)/results/" << sd.str() << ":" << endl;
 	// xr_targets << "\t" << "mkdir -p $(OUTDIR)/results/"  << sd.str() << endl;
@@ -102,13 +100,15 @@ void Simulation::AddSimulationEntry(const vector<string>& x_variationNames, cons
 	m_cpt++;
 }
 
-const mkjson createArray(const string& x_names, const string& x_name, const mkjson& varConf)
+const mkjson createArray(const string& x_namePlural, const string& x_nameSingular, const mkjson& varConf)
 {
-	if(varConf.find(x_names) != varConf.end())
-		return varConf[x_names];
+	if(exist(varConf, x_namePlural))
+		return varConf.at(x_namePlural);
 	mkjson val(mkjson::array());
-	val.push_back(varConf[x_name]);
+	if(exist(varConf, x_nameSingular))
+		val.push_back(varConf.at(x_nameSingular));
 	return val;
+	// throw MkException("Expected to find object with name " + x_namePlural + " or " + x_nameSingular, LOC);
 }
 
 /// Add variation to simulation
@@ -119,7 +119,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const mkconf& 
 	for(const auto& varConf : x_varConf)
 	{
 		// Read module and parameter attribute
-		assert(varConf.at("param").is_null());  // note: no longer supported
+		// assert(varConf.at("param").is_null());  // note: no longer supported
 		const auto paramNames(createArray("parameters", "parameter", varConf));
 		const auto moduleNames(createArray("modules", "module", varConf));
 		if(moduleNames.size() != 1 && moduleNames.size() != paramNames.size())
@@ -134,9 +134,12 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const mkconf& 
 			try
 			{
 				LOG_DEBUG(m_logger, "Param:" << itmod->get<string>() << ":" << itpar.get<string>());
-				mkconf& target = manOrMod(xr_mainConfig, itmod->get<string>()).at("inputs").at(itpar.get<string>());
+				mkconf& target = findFirstInArray(manOrMod(xr_mainConfig, itmod->get<string>())["inputs"], "name", itpar.get<string>());
 				targets.push_back(&target);
-				originalValues.push_back(target.get<string>());
+				if(target.is_null())
+					originalValues.push_back(""); //TODO: Use default value instead
+				else
+					originalValues.push_back(target.get<string>());
 				if(moduleNames.size() > 1)
 					itmod++;
 			}
@@ -147,12 +150,12 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const mkconf& 
 		}
 
 
-		string file = varConf.at("file").get<string>();
 
-		if(!file.empty())
+		if(exist(varConf, "file"))
 		{
+			string file = varConf.at("file").get<string>();
 			// Reference to the value to use (in json file)
-			const auto& refNames = varConf["references"];
+			const auto& refNames = varConf.at("references");
 			if(refNames.size() != paramNames.size())
 				throw MkException("References must have the same sizes as parameters", LOC);
 
@@ -172,7 +175,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const mkconf& 
 					if(it.value().at(ref.get<string>()).is_null())
 						throw MkException("No tag " + ref.get<string>() + " for " + it.key(), LOC);
 
-					*(targets[i]) = it.value().at(ref.get<string>());
+					*(targets.at(i)) = it.value().at(ref.get<string>());
 					i++;
 				}
 
@@ -182,7 +185,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const mkconf& 
 
 				// Change value of param
 				if(varConf.find("variations") != varConf.end())
-					AddVariations(xr_variationNames, varConf["variations"], xr_mainConfig);
+					AddVariations(xr_variationNames, varConf.at("variations"), xr_mainConfig);
 				else
 					AddSimulationEntry(xr_variationNames, xr_mainConfig);
 				xr_variationNames.pop_back();
@@ -195,7 +198,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const mkconf& 
 			if(paramNames.size() > 1)
 				throw MkException("To set more than one parameter variation, use an external file with option file=...", LOC);
 			// default values. Empty range means that the prog uses the default range of the param
-			const mkjson& range = varConf.at("range");
+			// const mkjson& range = varConf.at("range");
 			int nb = varConf.value<int>("nb", 10);
 
 			LOG_DEBUG(m_logger, "Variations for module " << moduleNames.at(0).get<string>());
@@ -209,7 +212,7 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const mkconf& 
 				xr_variationNames.push_back(paramNames.at(0).get<string>() + "-" + oneLine(elem));
 
 				// Change value of param
-				*(targets[0]) = elem;
+				*(targets.at(0)) = elem;
 				if(varConf.find("variations") != varConf.end())
 					AddVariations(xr_variationNames, varConf.at("variations"), xr_mainConfig);
 				else
@@ -248,7 +251,7 @@ void Simulation::Generate()
 
 	vector<string> variationNames;
 	mkconf copyConfig = m_param.config;
-	AddVariations(variationNames, m_param.config["variations"], copyConfig);
+	AddVariations(variationNames, m_param.config.at("variations"), copyConfig);
 
 	// Generate a MakeFile for the simulation
 	string makefile = m_outputDir + "/simulation.make";

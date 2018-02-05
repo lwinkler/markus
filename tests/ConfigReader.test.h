@@ -58,16 +58,16 @@ public:
 		mkconf appConf;
 		readFromFile(appConf, "tests/config/config1.json");
 		mkconf& module0conf(findFirstInArray(appConf.at("modules"), "name", "Module0"));
-		mkconf& module1conf = findFirstInArray(appConf["modules"], "name", "Module1");
+		mkconf& module1conf = findFirstInArray(appConf.at("modules"), "name", "Module1");
 
 		TS_ASSERT(! module0conf["inputs"].is_null());
 		TS_ASSERT(! module1conf["inputs"].is_null());
 
-		mkconf& param1 = findFirstInArray(module0conf["inputs"], "name", "param_text");
+		mkconf& param1 = findFirstInArray(module0conf.at("inputs"), "name", "param_text");
 		TS_ASSERT(param1["value"].get<string>() == "SomeText");
-		mkconf& param2 = findFirstInArray(module0conf["inputs"], "name", "param_int");
+		mkconf& param2 = findFirstInArray(module0conf.at("inputs"), "name", "param_int");
 		TS_ASSERT(param2["value"].get<int>() == 21);
-		mkconf& param3 = findFirstInArray(module0conf["inputs"], "name", "param_float");
+		mkconf& param3 = findFirstInArray(module0conf.at("inputs"), "name", "param_float");
 		TS_ASSERT(param3["value"].get<double>() == 3.1415);
 
 		mkconf conf1;
@@ -108,9 +108,9 @@ public:
 		mkconf conf5;
 		readFromFile(conf5, "tests/config/config_part.json");
 
-		TS_ASSERT(findFirstInArray(conf2["inputs"], "name", "param_text")["value"].get<string>() == "SomeText");
-		TS_ASSERT(findFirstInArray(conf2["inputs"], "name", "param_int")["value"].get<int>() == 21);
-		TS_ASSERT(findFirstInArray(conf2["inputs"], "name", "param_float")["value"].get<double>() == 3.1415000000000002);
+		TS_ASSERT(findFirstInArray(conf2.at("inputs"), "name", "param_text").at("value").get<string>() == "SomeText");
+		TS_ASSERT(findFirstInArray(conf2.at("inputs"), "name", "param_int").at("value").get<int>() == 21);
+		TS_ASSERT(findFirstInArray(conf2.at("inputs"), "name", "param_float").at("value").get<double>() == 3.1415000000000002);
 
 		overrideWith(conf1, conf5);
 

@@ -289,7 +289,7 @@ void overrideConfig(mkconf& appConfig, const vector<string>& extraConfig, const 
 			split(param, '.', path);
 			if(path.size() != 2)
 				throw MkException("Parameter set in command line must be in format 'module.parameter'", LOC);
-			mkconf& conf(path[0] == "manager" ? appConfig : findFirstInArray(appConfig["modules"], "name", path[0]));
+			mkconf& conf(path[0] == "manager" ? appConfig : findFirstInArray(appConfig.at("modules"), "name", path[0]));
 			if(path[1] == "class") {
 				conf["class"] = mkjson(value);
 			// else if(value.front() == '"' && value.back() == '"') {

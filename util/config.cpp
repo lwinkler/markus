@@ -82,7 +82,7 @@ void overrideWith(mkconf& xr_config, const mkconf& x_extraConfig)
 {
 	for(const auto& elem : x_extraConfig.at("modules"))
 	{
-		overrideInputs(findFirstInArray(xr_config.at("modules"), "name", elem.at("name").get<string>())["inputs"], elem["inputs"]);
+		overrideInputs(findFirstInArray(xr_config.at("modules"), "name", elem.at("name").get<string>()).at("inputs"), elem.at("inputs"));
 	}
 }
 
