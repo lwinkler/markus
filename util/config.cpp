@@ -146,4 +146,23 @@ const mkjson& findFirstInArrayConst(const mkconf& x_conf, const std::string& x_n
 	}
 	throw MkException("No occurence of " + x_name + "=" + x_value + " in config", LOC);
 }
+
+/**
+* @brief Check if first occurence of name=value in array exists
+*
+* @param xconf   Config to search
+* @param x_name  Name of the field
+* @param x_value Value of the field
+*
+* @return reference
+*/
+bool existInArray(const mkconf& x_conf, const std::string& x_name, const std::string& x_value)
+{
+	for(auto& elem : x_conf)
+	{
+		if(elem.at(x_name).get<string>() == x_value)
+			return true;
+	}
+	return false;
+}
 } // namespace mk

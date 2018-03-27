@@ -134,12 +134,14 @@ void Simulation::AddVariations(vector<string>& xr_variationNames, const mkconf& 
 			try
 			{
 				LOG_DEBUG(m_logger, "Param:" << itmod->get<string>() << ":" << itpar.get<string>());
-				mkconf& target = findFirstInArray(manOrMod(xr_mainConfig, itmod->get<string>())["inputs"], "name", itpar.get<string>());
-				targets.push_back(&target);
-				if(target.is_null())
-					originalValues.push_back(""); //TODO: Use default value instead
-				else
+				mkconf mod = manOrMod(xr_mainConfig, itmod->get<string>())["inputs"];
+				if(existInArray(mod, "name", itpar.get<string>()))
+				{
+					mkconf& target = findFirstInArray(mod, "name", itpar.get<string>());
+					targets.push_back(&target);
 					originalValues.push_back(target.get<string>());
+				}
+				else originalValues.push_back(""); //TODO: Use default value instead
 				if(moduleNames.size() > 1)
 					itmod++;
 			}
