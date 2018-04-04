@@ -46,6 +46,8 @@ StatModel::StatModel(ParameterStructure& xr_params)
 	AddInputStream(0, new StreamObject("input", m_objects, *this,	"Objects input"));
 
 	AddOutputStream(0, new StreamObject("output", m_objects, *this, "Classified objects output"));
+
+	m_isUnitTestingEnabled = false; // TODO
 }
 
 StatModel::~StatModel()

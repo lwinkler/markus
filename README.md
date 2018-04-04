@@ -44,13 +44,15 @@ To install from sources:
 	make -j4
 	sudo make install
 
+The markus directory must contain either the 'opencv' directory or a symbolic link to it.
+
 ### Qt5 dependencies
 Markus is also compiled with Qt5. The packages required for qt webkit are a bit more complicated in this case:
 	
 	sudo apt-get install qt5-default libqt5webkit5-dev qtquick1-5-dev qtlocation5-dev qtsensors5-dev qtdeclarative5-dev npm
 	ccmake .
 
-Old. Dependencies for Qt4. To compile with Qt4 enable the Qt4 compilation (with command `ccmake .`)
+Alternatively here are the dependencies for Qt4. To compile with Qt4 enable the Qt4 compilation (with command `ccmake .`)
 	
 	sudo apt-get install libqt4-core  libqt4-dev
 

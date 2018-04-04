@@ -45,7 +45,7 @@ class Stream;
 class Module : public Processable, public Controllable
 {
 public:
-	/// Parameter enum class. Determines if the module is cached (its output is stored to avoid computation costs)
+	// utilities for serialization
 	inline friend void to_json(mkjson& _json, const Module& _ser) {_ser.Serialize(_json);}
 	inline friend void from_json(const mkjson& _json, Module& _ser) {_ser.Deserialize(_json);}
 
@@ -54,6 +54,7 @@ public:
 	public:
 		explicit Parameters(const std::string& x_name) : Processable::Parameters(x_name)
 		{
+			// list here the different parameters of the module (the list gets inherited)
 			AddParameter(new ParameterString("master"      , ""      , &master   , "Master module on which this module's processing is dependent. If empty, use all preceeding modules"));
 			AddParameter(new ParameterInt("width"          , 640     , 1         , MAX_WIDTH , &width  , "Width of the input"));
 			AddParameter(new ParameterInt("height"         , 480     , 1         , MAX_HEIGHT, &height , "Height of the input"));

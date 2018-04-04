@@ -46,7 +46,7 @@ public:
 	MkException(const std::string& x_description, const std::string& x_position, const std::string& x_function);
 	MkException(MkExceptionCode x_code, const std::string& x_name, const std::string& x_description, const std::string& x_position, const std::string& x_function);
 	// virtual ~MkException() throw();
-	const char* what() const noexcept;
+	const char* what() const noexcept override;
 	inline MkExceptionCode GetCode() const {return m_code;}
 	inline const std::string& GetName() const {return m_name;}
 	inline bool IsFatal() const {return m_fatal;}

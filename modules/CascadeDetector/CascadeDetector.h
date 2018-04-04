@@ -49,6 +49,7 @@ public:
 		explicit Parameters(const std::string& x_name) :
 			Module::Parameters(x_name)
 		{
+			// list here the different parameters of the module (the list gets inherited)
 			AddParameter(new ParameterInt("minNeighbors", 2, 1, 100, 	&minNeighbors,	"Minimum numbers of neighbors (higher: less sensitive)")); // Note : Seems to be a bug with minNeighbors = 1 with most filters
 			AddParameter(new ParameterInt("minSide", 0, 0, 200, 		&minSide,	"Minimum size of the detected object"));
 			AddParameter(new ParameterDouble("scaleFactor", 1.2, 1.01, 2, 	&scaleFactor,	"Scale factor for scanning (higher: less sensitive)"));
