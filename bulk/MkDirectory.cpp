@@ -99,7 +99,7 @@ bool MkDirectory::IsEmpty()
 
 void MkDirectory::UnregisterSubDir(MkDirectory* xp_subdir)
 {
-	WriteLock(m_lock);
+	WriteLock lock(m_lock);
 	for(auto it = mp_subDirectories.begin() ; it != mp_subDirectories.end() ; ++it)
 	{
 		if(it->second == xp_subdir)

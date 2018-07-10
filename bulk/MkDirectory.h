@@ -52,8 +52,13 @@ public:
 	void UnreserveFile(const std::string& x_file);
 	void Cp(const std::string& x_fileName1, const std::string& x_fileName2 = "");
 	void Rm(const std::string& x_fileName);
-	inline bool FileExists(const std::string& x_fileName) {ReadLock(m_lock); return m_reservedFiles.find(x_fileName) != m_reservedFiles.end();}
-	inline bool DirExists(const std::string& x_dirName) {ReadLock lock(m_lock); return FindSubDir(x_dirName) != nullptr;}
+	inline bool FileExists(const std::string& x_fileName) {
+		ReadLock lock(m_lock);
+		return m_reservedFiles.find(x_fileName) != m_reservedFiles.end();
+	}
+	inline bool DirExists(const std::string& x_dirName) {
+		ReadLock lock(m_lock); return FindSubDir(x_dirName) != nullptr;
+	}
 	inline const std::string& GetPath() const {return m_path;}
 
 	// For context
@@ -92,7 +97,10 @@ protected:
 	}
 
 	MkDirectory* FindSubDir(const std::string& x_dirName);
-	inline void RegisterSubDir(const std::string& x_dirName, MkDirectory* xp_subdir){WriteLock(m_lock); mp_subDirectories.insert(std::make_pair(x_dirName, xp_subdir));}
+	inline void RegisterSubDir(const std::string& x_dirName, MkDirectory* xp_subdir) {
+		WriteLock lock(m_lock);
+		mp_subDirectories.insert(std::make_pair(x_dirName, xp_subdir));
+	}
 	void UnregisterSubDir(MkDirectory* xp_subdir);
 
 	typedef boost::shared_mutex Lock;
