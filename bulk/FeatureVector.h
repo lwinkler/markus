@@ -39,13 +39,13 @@ public:
 	inline friend void from_json(const mkjson& _json, FeatureVectorT<T>& _ser) {_ser.Deserialize(_json);}
 
 	explicit FeatureVectorT(const std::vector<T>& x_values = std::vector<T>(0)) : values(x_values) {}
-	Feature* CreateCopy() const {return new FeatureVectorT<T>(*this);}
-	inline virtual double CompareSquared(const Feature& x_feature) const
+	Feature* CreateCopy() const override {return new FeatureVectorT<T>(*this);}
+	inline double CompareSquared(const Feature& x_feature) const override
 	{
 		const FeatureVectorT<T>& feat(dynamic_cast<const FeatureVectorT<T>&>(x_feature));
 		return compareSquared(values, feat.values);
 	}
-	inline virtual void Randomize(unsigned int& xr_seed, const mkjson& x_param)
+	inline void Randomize(unsigned int& xr_seed, const mkjson& x_param) override
 	{
 		if(x_param.empty())
 		{
@@ -57,8 +57,8 @@ public:
 			randomize(values, xr_seed, size);
 		}
 	}
-	inline virtual void Serialize(mkjson& _json) const {to_mkjson(_json, values);}
-	inline virtual void Deserialize(const mkjson& _json) {from_mkjson(_json, values);}
+	inline void Serialize(mkjson& _json) const override {to_mkjson(_json, values);}
+	inline void Deserialize(const mkjson& _json) override {from_mkjson(_json, values);}
 
 	// The value of the feature
 	std::vector<T> values;

@@ -51,7 +51,7 @@ public:
 	};
 
 	explicit UsbCam(ParameterStructure& xr_params);
-	virtual ~UsbCam();
+	~UsbCam() override;
 	MKCLASS("UsbCam")
 	MKCATEG("Input")
 	MKDESCR("Read video stream from an enbedded or USB camera")

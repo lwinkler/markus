@@ -50,7 +50,7 @@ public:
 	};
 
 	explicit BgrSubRunAvg(ParameterStructure& xr_params);
-	virtual ~BgrSubRunAvg();
+	~BgrSubRunAvg() override;
 	MKCLASS("BgrSubRunAvg")
 	MKCATEG("BackgroundSubtraction")
 	MKDESCR("Perform a background subtraction using a running average")

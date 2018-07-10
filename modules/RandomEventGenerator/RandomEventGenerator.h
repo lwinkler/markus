@@ -53,7 +53,7 @@ public:
 	};
 
 	explicit RandomEventGenerator(ParameterStructure& xr_params);
-	virtual ~RandomEventGenerator();
+	~RandomEventGenerator() override;
 	MKCLASS("RandomEventGenerator")
 	MKCATEG("Input")
 	MKDESCR("Generate an event with random features at each step")

@@ -43,12 +43,12 @@ class QControlBoard : public QWidget
 	Q_OBJECT
 public:
 	QControlBoard(Manager& rx_manager, const std::string& x_moduleName, const std::string& x_controllerName, QWidget *xp_parent);
-	virtual ~QControlBoard();
+	~QControlBoard() override;
 	virtual void Destroy() {}
 
 protected:
-	void paintEvent(QPaintEvent *event);
-	virtual void resizeEvent(QResizeEvent * e);
+	void paintEvent(QPaintEvent *event) override;
+	void resizeEvent(QResizeEvent * e) override;
 
 	QScrollArea * mp_gbControls;
 	QGroupBox   * mp_gbButtons;

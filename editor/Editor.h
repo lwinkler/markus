@@ -49,7 +49,7 @@ private:
 
 public:
 	Editor(Manager* xp_manager = nullptr, const std::string& x_project = "", QWidget *parent = 0);
-	~Editor();
+	~Editor() override;
 	void setUrl(const QUrl &url);
 
 public slots:

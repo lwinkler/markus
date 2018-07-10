@@ -73,10 +73,10 @@ public:
 	};
 
 	QModuleViewer(Manager& x_manager, ParameterStructure& xr_params, QWidget *parent = 0);
-	virtual ~QModuleViewer();
+	~QModuleViewer() override;
 
 	static void  ConvertMat2QImage(const cv::Mat& x_mat, QImage& xr_qim);
-	void mouseDoubleClickEvent(QMouseEvent * event);
+	void mouseDoubleClickEvent(QMouseEvent * event) override;
 
 protected:
 	void CreateInputStream(int x_outputWidth, int x_outputHeight);
@@ -107,8 +107,8 @@ protected:
 	int m_offsetX = 0;
 	int m_offsetY = 0;
 
-	void paintEvent(QPaintEvent *event);
-	virtual void resizeEvent(QResizeEvent * e);
+	void paintEvent(QPaintEvent *event) override;
+	void resizeEvent(QResizeEvent * e) override;
 
 	QGroupBox     * mp_gbCombos     = nullptr;
 	QComboBox     * mp_comboModules = nullptr;

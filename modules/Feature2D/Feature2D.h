@@ -105,7 +105,7 @@ public:
 	MKDESCR("Extract key points of all types")
 
 	explicit Feature2D(ParameterStructure& xr_params);
-	virtual ~Feature2D();
+	~Feature2D() override;
 	// MKCLASS("Feature2D")
 	// MKDESCR("Extract different types of keyPoints from image")
 

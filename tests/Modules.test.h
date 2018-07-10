@@ -120,7 +120,7 @@ protected:
 	int m_cpt = 0;
 
 public:
-	void setUp()
+	void setUp() override
 	{
 		m_cpt = 0;
 		char* tmp = getenv("MODULE_TO_TEST");
@@ -148,7 +148,7 @@ public:
 		// note: we need a fake module to create the input streams
 		mp_fakeInput->LockAndReset();
 	}
-	void tearDown()
+	void tearDown() override
 	{
 		CLEAN_DELETE(mp_fakeConfig);
 		CLEAN_DELETE(mp_fakeInput);

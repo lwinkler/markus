@@ -66,7 +66,7 @@ public:
 	};
 
 	explicit FilterObjects(ParameterStructure& xr_params);
-	virtual ~FilterObjects();
+	~FilterObjects() override;
 	MKCLASS("FilterObjects")
 	MKDESCR("Filter the input objects based on different criterion")
 	MKCATEG("Other")

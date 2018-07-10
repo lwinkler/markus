@@ -77,7 +77,7 @@ public:
 	};
 
 	explicit Svm(ParameterStructure& xr_params);
-	virtual ~Svm();
+	~Svm() override;
 	MKCLASS("Svm")
 	MKDESCR("Classify objects by using a SVM on its features")
 	MKCATEG("Classifier")

@@ -33,9 +33,9 @@ class MarkusApplication : public QApplication
 {
 public:
 	MarkusApplication(int &argc, char ** argv);
-	virtual ~MarkusApplication(){}
+	~MarkusApplication() override{}
 private:
-	bool notify(QObject *receiver_, QEvent *event_);
+	bool notify(QObject *receiver_, QEvent *event_) override;
 	static log4cxx::LoggerPtr m_logger;
 };
 

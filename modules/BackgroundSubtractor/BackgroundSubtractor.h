@@ -65,7 +65,7 @@ public:
 	};
 
 	explicit BackgroundSubtractor(ParameterStructure& xr_params);
-	virtual ~BackgroundSubtractor();
+	~BackgroundSubtractor() override;
 	MKCLASS("BackgroundSubtractor")
 	MKCATEG("BackgroundSubtraction")
 	MKDESCR("Perform background subtraction")

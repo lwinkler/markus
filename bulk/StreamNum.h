@@ -46,9 +46,9 @@ public:
 		Stream(x_name, rx_module, x_description, rx_requirement),
 		m_scalars(PLOT_LENGTH),
 		m_content(rx_scalar) {}
-	virtual const std::string& GetClass() const {return className;}
+	const std::string& GetClass() const override {return className;}
 
-	virtual void ConvertInput()
+	void ConvertInput() override
 	{
 		if(m_connected == nullptr)
 		{
@@ -63,7 +63,7 @@ public:
 	}
 	/// Method to be called at the end of each step to store the last point for the plot
 	inline void Store() {m_scalars.push_back(m_content);}
-	virtual void RenderTo(cv::Mat& x_output) const
+	void RenderTo(cv::Mat& x_output) const override
 	{
 		std::vector<float> pts;
 		for(auto elem : m_scalars)
@@ -78,7 +78,7 @@ public:
 		fig.DrawPlots(x_output);
 		fig.DrawLabels(x_output, x_output.cols - 100, 10);
 	}
-	virtual void Query(std::ostream& xr_out, const cv::Point& x_pt) const
+	void Query(std::ostream& xr_out, const cv::Point& x_pt) const override
 	{
 		xr_out << m_content << std::endl;
 		LOG_INFO(m_logger, "value = " << m_content);
@@ -93,20 +93,20 @@ public:
 		Stream::Deserialize(x_json, xp_dir);
 		from_mkjson(x_json.at("value"), m_content);
 	}
-	virtual void Randomize(unsigned int& xr_seed) {randomize(m_content, xr_seed);}
+	void Randomize(unsigned int& xr_seed) override {randomize(m_content, xr_seed);}
 	const T& GetScalar() const {return m_content;}
 
-	virtual void SetValue(const mkconf& x_value, ParameterConfigType x_confType)
+	void SetValue(const mkconf& x_value, ParameterConfigType x_confType) override
 	{
 		m_content = x_value.get<T>();
 		m_confSource = x_confType;
 	}
-	virtual void SetDefault(const mkconf& x_value){
+	void SetDefault(const mkconf& x_value) override{
 		m_default = x_value.template get<T>();
 	}
-	virtual void SetValueToDefault(){m_content = m_default; m_confSource = PARAMCONF_DEF;}
-	virtual mkconf GetValue() const{return m_content;}
-	virtual mkconf GetDefault() const {return m_default;}
+	void SetValueToDefault() override{m_content = m_default; m_confSource = PARAMCONF_DEF;}
+	mkconf GetValue() const override{return m_content;}
+	mkconf GetDefault() const override {return m_default;}
 
 	static const std::string className;
 

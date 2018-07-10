@@ -54,7 +54,7 @@ public:
 	};
 
 	explicit Morph(ParameterStructure& xr_params);
-	virtual ~Morph();
+	~Morph() override;
 	MKCLASS("Morph")
 	MKCATEG("Image")
 	MKDESCR("Apply a morphological operator to an image")

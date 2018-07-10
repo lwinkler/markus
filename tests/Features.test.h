@@ -66,10 +66,10 @@ protected:
 	}
 
 public:
-	void setUp()
+	void setUp() override
 	{
 	}
-	void tearDown()
+	void tearDown() override
 	{
 	}
 

@@ -52,7 +52,7 @@ public:
 	explicit CompareObjects(ParameterStructure& xr_params);
 
 	/* Destructor */
-	virtual ~CompareObjects();
+	~CompareObjects() override;
 
 	/* Compare the two images and return the amount of pixels that are different */
 	int64_t ComputeDissimilarity(const cv::Mat& A, const cv::Mat& B);

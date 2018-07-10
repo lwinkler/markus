@@ -59,7 +59,7 @@ public:
 	};
 
 	explicit NetworkCam(ParameterStructure& xr_params);
-	virtual ~NetworkCam();
+	~NetworkCam() override;
 	MKCLASS("NetworkCam")
 	MKCATEG("Input")
 	MKDESCR("Read video stream from a network camera")

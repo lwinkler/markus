@@ -41,7 +41,7 @@ public:
 		m_content(rx_object),
 		m_default(T{})
 	{}
-	virtual ~StreamT() {}
+	~StreamT() override {}
 	const std::string& GetClass() const override {return className;}
 
 	inline const T& GetContent() const {return m_content;}
@@ -59,7 +59,7 @@ public:
 		from_mkjson(x_value, m_content);
 		m_confSource = x_confType;
 	}
-	virtual void SetDefault(const mkconf& x_value){
+	void SetDefault(const mkconf& x_value) override{
 		from_mkjson(x_value, m_default);
 	}
 	void SetValueToDefault() override {m_content = m_default; m_confSource = PARAMCONF_DEF;}

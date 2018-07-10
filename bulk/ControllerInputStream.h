@@ -37,7 +37,7 @@ class ControllerInputStream : public Controller
 {
 public:
 	explicit ControllerInputStream(mk::VideoFileReader& rx_module);
-	virtual ~ControllerInputStream();
+	~ControllerInputStream() override;
 	MKCLASS("ControllerInputStream")
 
 	QWidget* CreateWidget() override;

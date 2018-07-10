@@ -35,7 +35,7 @@ public:
 	friend void from_json(const mkjson& _json, FeatureHistory& _ser){_ser.Deserialize(_json);}
 
 	FeatureHistory() {}
-	Feature* CreateCopy() const {return new FeatureHistory(*this);}
+	Feature* CreateCopy() const override {return new FeatureHistory(*this);}
 	void Update(const TIME_STAMP& x_timeStamp, const Feature& x_feat);
 	double CompareSquared(const Feature& x_feature) const override;
 	void Randomize(unsigned int& xr_seed, const mkjson& x_param) override;

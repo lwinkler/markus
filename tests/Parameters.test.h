@@ -105,10 +105,10 @@ public:
 		TS_ASSERT(!xr_param.CheckRange());
 	}
 
-	void setUp()
+	void setUp() override
 	{
 	}
-	void tearDown()
+	void tearDown() override
 	{
 	}
 

@@ -52,7 +52,7 @@ public:
 	};
 
 	explicit SlitCam(ParameterStructure& xr_params);
-	virtual ~SlitCam();
+	~SlitCam() override;
 	MKCLASS("SlitCam")
 	MKCATEG("Input")
 	MKDESCR("A simple example module that mimics a slit camera (or linear camera). The camera input is a range of pixels in the middle of the image.")

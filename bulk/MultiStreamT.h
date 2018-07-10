@@ -45,9 +45,9 @@ public:
 		if(rx_objects.empty())
 			throw MkException("Multiple inputs must contain a reference to a vector of size 1 or more. Please resize vector before initializing the stream. Please note that this size is the max size of the vector", LOC);
 	}
-	virtual ~MultiStreamT() {}
+	~MultiStreamT() override {}
 
-	void Serialize(mkjson& rx_json, MkDirectory* xp_dir = nullptr) const
+	void Serialize(mkjson& rx_json, MkDirectory* xp_dir = nullptr) const override
 	{
 		StreamT<T>::Serialize(rx_json, xp_dir);
 
@@ -56,7 +56,7 @@ public:
 		rx_json["content"] = m_objects;
 	}
 
-	void Deserialize(const mkjson& x_json, MkDirectory* xp_dir = nullptr)
+	void Deserialize(const mkjson& x_json, MkDirectory* xp_dir = nullptr) override
 	{
 		StreamT<T>::Deserialize(x_json, xp_dir);
 

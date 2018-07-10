@@ -45,7 +45,7 @@ public:
 	};
 
 	explicit EventToObjects(ParameterStructure& xr_params);
-	virtual ~EventToObjects();
+	~EventToObjects() override;
 	MKCLASS("EventToObjects")
 	MKCATEG("Conversion")
 	MKDESCR("Transform a stream of events into a stream of objects")

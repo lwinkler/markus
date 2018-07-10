@@ -60,7 +60,7 @@ public:
 		double fps;
 	};
 	explicit Processable(ParameterStructure& xr_params);
-	virtual ~Processable();
+	~Processable() override;
 
 	virtual bool AbortCondition() const = 0;
 	virtual const std::string& GetName() const = 0;

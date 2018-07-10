@@ -65,7 +65,7 @@ public:
 	static const char* contentType(const std::string& x_fileName);
 
 	explicit WriteObjectMongo(ParameterStructure& xr_params);
-	virtual ~WriteObjectMongo();
+	~WriteObjectMongo() override;
 	MKCLASS("WriteObjectMongo")
 	MKCATEG("Output")
 	MKDESCR("Outputs objects to MongoDB")

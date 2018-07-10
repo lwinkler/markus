@@ -48,7 +48,7 @@ public:
 	};
 
 	explicit ModuleClassifyEvents(ParameterStructure& xr_params);
-	virtual ~ModuleClassifyEvents();
+	~ModuleClassifyEvents() override;
 
 	virtual void InvalidateLastEvent() = 0;
 	virtual void ValidateLastEvent() = 0;

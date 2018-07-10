@@ -45,7 +45,7 @@ public:
 	};
 
 	explicit BackgroundSubtraction(ParameterStructure& xr_params);
-	virtual ~BackgroundSubtraction();
+	~BackgroundSubtraction() override;
 
 	virtual void StartOnlineLearning(bool x_cutOutput);
 

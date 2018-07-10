@@ -61,7 +61,7 @@ public:
 	};
 
 	explicit SegmenterContour(ParameterStructure& xr_params);
-	virtual ~SegmenterContour();
+	~SegmenterContour() override;
 	MKCLASS("SegmenterContour")
 	MKDESCR("Segments a binary image and outputs a stream of objects (with OpenCV contour) and extracts their features (position, width and height)")
 

@@ -45,7 +45,7 @@ public:
 	};
 
 	explicit Input(ParameterStructure& x_param);
-	virtual ~Input();
+	~Input() override;
 
 	inline bool IsInput() const override {return true;}
 

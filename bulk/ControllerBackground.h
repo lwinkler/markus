@@ -36,7 +36,7 @@ class ControllerBackground : public Controller
 {
 public:
 	explicit ControllerBackground(BackgroundSubtraction& rx_module);
-	virtual ~ControllerBackground() {}
+	~ControllerBackground() override {}
 	MKCLASS("ControllerBackground")
 
 	QWidget* CreateWidget() override;

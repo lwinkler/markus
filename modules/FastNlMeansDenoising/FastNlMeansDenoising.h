@@ -54,7 +54,7 @@ public:
 		bool cielab;
 
 		// Redefine CheckRangeAndThrow: we want to add new conditions
-		virtual void CheckRangeAndThrow() const
+		void CheckRangeAndThrow() const override
 		{
 			Module::Parameters::CheckRangeAndThrow();
 			cv::Mat m(1,1, this->type);
@@ -64,7 +64,7 @@ public:
 	};
 
 	explicit FastNlMeansDenoising(ParameterStructure& xr_params);
-	virtual ~FastNlMeansDenoising();
+	~FastNlMeansDenoising() override;
 	MKCLASS("FastNlMeansDenoising")
 	MKCATEG("Image")
 	MKDESCR("Perform image denoising using Non-local Means Denoising algorithm, for gaussian noise")

@@ -53,7 +53,7 @@ public:
 	bool AbortCondition() const override {return m_endOfStream;}
 
 	explicit ReadObjects(ParameterStructure& xr_params);
-	virtual ~ReadObjects();
+	~ReadObjects() override;
 	MKCLASS("ReadObjects")
 	MKCATEG("Input")
 	MKDESCR("Read an object from an annotation file")

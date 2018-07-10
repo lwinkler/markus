@@ -31,6 +31,6 @@ class QWebPage2 : public QWebPage
 public:
 	QWebPage2(QObject * parent = 0 );
 protected:
-	void javaScriptConsoleMessage(const QString& message, int lineNumber, const QString& sourceID);
+	void javaScriptConsoleMessage(const QString& message, int lineNumber, const QString& sourceID) override;
 };
 #endif

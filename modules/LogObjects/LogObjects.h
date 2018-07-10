@@ -51,7 +51,7 @@ public:
 	};
 
 	explicit LogObjects(ParameterStructure& xr_params);
-	virtual ~LogObjects();
+	~LogObjects() override;
 	MKCLASS("LogObjects")
 	MKCATEG("Output")
 	MKDESCR("Read a stream of objects and log data to a text file")

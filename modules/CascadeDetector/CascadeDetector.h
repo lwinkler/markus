@@ -97,7 +97,7 @@ public:
 	};
 
 	explicit CascadeDetector(ParameterStructure& xr_params);
-	virtual ~CascadeDetector();
+	~CascadeDetector() override;
 	MKCLASS("CascadeDetector")
 	MKDESCR("Detect objects from a video stream using a cascade filter (c.f. Haar patterns)")
 	MKCATEG("Other")

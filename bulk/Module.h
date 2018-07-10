@@ -95,7 +95,7 @@ public:
 	};
 
 	explicit Module(ParameterStructure& x_param);
-	virtual ~Module();
+	~Module() override;
 
 	bool ProcessingCondition() const;                                      /// Return true if the current frame must be processed
 	inline virtual bool PropagateCondition() const {return true;}          /// Return true if the depending modules must be called. To be overridden

@@ -80,7 +80,7 @@ public:
 		m_parentModuleName(x_parentModuleName)
 	{
 	}
-	virtual ~Viewer()
+	~Viewer() override
 	{
 		Processable::WriteLock lock(RefLock());
 		if(mp_stream != nullptr)
@@ -131,7 +131,7 @@ public:
 		mp_stream->SetSynchronized(true);
 		AddInputStream(0, mp_stream);
 	}
-	virtual ~ViewerT(){}
+	~ViewerT() override{}
 
 protected:
 	T content;

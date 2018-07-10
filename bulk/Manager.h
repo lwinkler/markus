@@ -58,7 +58,7 @@ public:
 	};
 
 	Manager(ParameterStructure& xr_params, Context& xr_context);
-	virtual ~Manager();
+	~Manager() override;
 	bool AbortCondition() const override;
 	int ReturnCode() const;
 	void Start() override;

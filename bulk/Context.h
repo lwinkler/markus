@@ -70,7 +70,7 @@ public:
 		std::string cacheOut;
 	};
 
-	virtual ~Context();
+	~Context() override;
 	explicit Context(ParameterStructure& xr_params);
 
 	// note: All public methods must be thread-safe
@@ -98,7 +98,7 @@ public:
 	}
 	inline bool IsCentralized() const {return m_param.centralized;}
 	inline bool IsRealTime() const {return m_param.realTime;}
-	const Parameters& GetParameters() const {return m_param;}
+	const Parameters& GetParameters() const override {return m_param;}
 
 protected:
 	void CreateOutputDir(const std::string& x_outputDir, const std::string& x_timeStamp);

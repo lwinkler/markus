@@ -104,7 +104,7 @@ class StreamsTestSuite : public CxxTest::TestSuite
 			// AddOutputStream(15, new MultiStreamT<double>("stream_double15", m_doubles, *this, "Test stream"));
 		}
 
-		~FakeModule() {}
+		~FakeModule() override {}
 		MKCLASS("FakeModule")
 		MKDESCR("Output video stream with additional object streams")
 	
@@ -154,7 +154,7 @@ protected:
 	FakeModule*         mp_fakeModule3 = nullptr;
 
 public:
-	void setUp()
+	void setUp() override
 	{
 		mp_fakeParams1 = new Module::Parameters("FakeModule");
 		mp_fakeParams2 = new Module::Parameters("FakeModule");
@@ -185,7 +185,7 @@ public:
 		mp_fakeModule2->Reset();
 		mp_fakeModule3->Reset();
 	}
-	void tearDown()
+	void tearDown() override
 	{
 		delete(mp_fakeModule1);
 		delete(mp_fakeModule2);

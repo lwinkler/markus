@@ -122,7 +122,7 @@ protected:
 	Event m_evt2;
 
 public:
-	void setUp()
+	void setUp() override
 	{
 		createEmptyConfigFile("/tmp/config_empty.json");
 		mp_config = new mkconf;
@@ -169,7 +169,7 @@ public:
 		m_evt2.Clean();
 		m_evt2.Raise("name2", m_obj2, 123, 6345);
 	}
-	void tearDown()
+	void tearDown() override
 	{
 		CLEAN_DELETE(mp_fakeInput);
 		CLEAN_DELETE(mp_config);

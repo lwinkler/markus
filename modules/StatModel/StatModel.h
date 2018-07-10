@@ -76,7 +76,7 @@ public:
 	};
 
 	explicit StatModel(ParameterStructure& xr_params);
-	virtual ~StatModel();
+	~StatModel() override;
 	MKCLASS("StatModel")
 	MKDESCR("Classify objects by using a StatModel on its features")
 	MKCATEG("Classifier")

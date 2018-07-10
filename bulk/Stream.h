@@ -53,7 +53,7 @@ public:
 	}
 
 	Stream(const std::string& x_name, Module& rx_module, const std::string& rx_description, const mkjson& rx_requirement = nullptr);
-	virtual ~Stream();
+	~Stream() override;
 
 	inline void Reset() {m_timeStamp = TIME_STAMP_MIN;SetValueToDefault();}
 

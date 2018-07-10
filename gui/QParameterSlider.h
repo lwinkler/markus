@@ -39,7 +39,7 @@ class QParameterSlider : public QWidget
 	Q_OBJECT
 public:
 	QParameterSlider(double x_value, double x_min, double x_max, int x_precision, QWidget *parent = 0);
-	virtual ~QParameterSlider();
+	~QParameterSlider() override;
 	inline double GetValue() const {return m_value;}
 	void SetValue(double x_value);
 

@@ -54,7 +54,7 @@ public:
 	explicit CompareVideo(ParameterStructure& xr_params);
 
 	/* Destructor */
-	virtual ~CompareVideo();
+	~CompareVideo() override;
 
 	MKCLASS("CompareVideo");
 	MKDESCR("Compare the two input videos and compute the dissimilarity of them for all the sequence");

@@ -54,7 +54,7 @@ public:
 	};
 
 	explicit RandomObjectsGenerator(ParameterStructure& xr_params);
-	virtual ~RandomObjectsGenerator();
+	~RandomObjectsGenerator() override;
 	MKCLASS("RandomObjectsGenerator")
 	MKCATEG("Input")
 	MKDESCR("Generate an object with varying features at each step")

@@ -37,10 +37,10 @@ using namespace std;
 class ProjectsTestSuite : public CxxTest::TestSuite
 {
 public:
-	void setUp()
+	void setUp() override
 	{
 	}
-	void tearDown()
+	void tearDown() override
 	{
 	}
 

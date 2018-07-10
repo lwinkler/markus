@@ -37,10 +37,10 @@ class ParameterStructure : public Parameter
 {
 public:
 	explicit ParameterStructure(const std::string& x_name);
-	virtual ~ParameterStructure();
+	~ParameterStructure() override;
 	void Read(const mkconf& x_config);
 	void Write(mkconf& xr_config, bool x_nonDefaultOnly = false) const;
-	void SetValueToDefault();
+	void SetValueToDefault() override;
 	virtual void CheckRangeAndThrow() const;
 	void CheckRangeAndThrow(const mkconf& x_config) const;
 	void PrintParameters() const;

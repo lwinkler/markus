@@ -91,7 +91,7 @@ public:
 	};
 
 	explicit ModulePython(ParameterStructure& xr_params);
-	virtual ~ModulePython();
+	~ModulePython() override;
 
 private:
 	Parameters& m_param;

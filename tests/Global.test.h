@@ -37,8 +37,8 @@ using namespace std;
 class MarkusFixture : public CxxTest::GlobalFixture
 {
 public:
-	bool setUp() {return true;}
-	bool tearDown()
+	bool setUp() override {return true;}
+	bool tearDown() override
 	{
 		static int lastNWarn = 0;
 		static int lastNErr  = 0;
@@ -65,7 +65,7 @@ public:
 		}
 		return nErr == 0;
 	}
-	bool setUpWorld()
+	bool setUpWorld() override
 	{
 		log4cxx::xml::DOMConfigurator::configure("tests/log4cxx.xml");
 		Factories::RegisterAll();
@@ -75,7 +75,7 @@ public:
 		boost::filesystem::create_directory("tests/tmp");
 		return true;
 	}
-	bool tearDownWorld(){return true;}
+	bool tearDownWorld() override{return true;}
 };
 static MarkusFixture g_globalFixture;
 #endif

@@ -53,7 +53,7 @@ public:
 	};
 
 	explicit ThumbnailWriter(ParameterStructure& xr_params);
-	virtual ~ThumbnailWriter();
+	~ThumbnailWriter() override;
 	MKCLASS("ThumbnailWriter")
 	MKCATEG("Output")
 	MKDESCR("Write all objects as a collection of images (thumbnails)")

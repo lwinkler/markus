@@ -59,7 +59,7 @@ public:
 	};
 
 	explicit VideoFileWriter(ParameterStructure& xr_params);
-	virtual ~VideoFileWriter();
+	~VideoFileWriter() override;
 	MKCLASS("VideoFileWriter")
 	MKCATEG("Output")
 	MKDESCR("Write output to a video file")

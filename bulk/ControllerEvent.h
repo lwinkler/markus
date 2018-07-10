@@ -36,7 +36,7 @@ class ControllerEvent : public Controller
 {
 public:
 	explicit ControllerEvent(ModuleClassifyEvents& rx_module);
-	virtual ~ControllerEvent() {}
+	~ControllerEvent() override {}
 	MKCLASS("ControllerEvent")
 
 	QWidget* CreateWidget() override;
