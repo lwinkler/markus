@@ -42,7 +42,7 @@ Morph::Morph(ParameterStructure& xr_params) :
 	// AddOutputStream(1, new StreamImage("image", m_input, *this,	"Input"));
 }
 
-Morph::~Morph(void )
+Morph::~Morph( )
 {
 }
 

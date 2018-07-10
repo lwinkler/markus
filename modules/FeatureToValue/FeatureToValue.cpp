@@ -43,7 +43,7 @@ FeatureToValue::FeatureToValue(ParameterStructure& xr_params) :
 	AddOutputStream(0, mp_streamValues);
 }
 
-FeatureToValue::~FeatureToValue(void )
+FeatureToValue::~FeatureToValue( )
 {
 }
 

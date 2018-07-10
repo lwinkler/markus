@@ -663,7 +663,7 @@ double convertAspectRatio(const std::string& x_string)
 	resol = split(x_string, ':', resol);
 	if(resol.size() != 2)
 	{
-		throw MkException("Wrong format for aspect ratio \"" + x_string + "\". Should be in format \"4:3\"", LOC);
+		throw MkException("Wrong format for aspect ratio \"" + x_string + R"(". Should be in format "4:3")", LOC);
 	}
 	return boost::lexical_cast<double>(resol.at(0)) / boost::lexical_cast<double>(resol.at(1));
 }

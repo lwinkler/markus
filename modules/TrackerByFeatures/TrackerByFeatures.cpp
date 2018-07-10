@@ -65,7 +65,7 @@ TrackerByFeatures::TrackerByFeatures(ParameterStructure& xr_params) :
 	vector<string> feats;
 	split(m_param.features, ',', feats);
 	stringstream ss;
-	ss << "{\"features\":{" << join(feats, ',', "\"%s\":{\"type\":\"FeatureFloat\"}") << "}}";
+	ss << "{\"features\":{" << join(feats, ',', R"("%s":{"type":"FeatureFloat"})") << "}}";
 	AddInputStream(0, new StreamObject("image",      m_objects, *this, "Input objects",  mkjson::parse(ss.str())));
 
 	AddOutputStream(0, new StreamObject("tracker",   m_objects, *this, "Tracked objects"));
@@ -76,7 +76,7 @@ TrackerByFeatures::TrackerByFeatures(ParameterStructure& xr_params) :
 #endif
 }
 
-TrackerByFeatures::~TrackerByFeatures(void )
+TrackerByFeatures::~TrackerByFeatures( )
 {
 }
 

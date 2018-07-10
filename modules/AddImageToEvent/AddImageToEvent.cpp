@@ -26,6 +26,7 @@
 #include "StreamEvent.h"
 #include "util.h"
 #include "Manager.h"
+#include <memory>
 #include <opencv2/highgui/highgui.hpp>
 
 namespace mk {
@@ -55,7 +56,7 @@ void AddImageToEvent::Reset()
 {
 	Module::Reset();
 
-	mp_outputDir.reset(new MkDirectory(m_param.folder, RefContext().RefOutputDir(), false));
+	mp_outputDir = std::make_unique<MkDirectory>(m_param.folder, RefContext().RefOutputDir(), false);
 	m_saveImage1 = m_inputStreams.at("image")->IsConnected();
 }
 

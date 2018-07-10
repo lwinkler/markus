@@ -22,6 +22,8 @@
 -------------------------------------------------------------------------------------*/
 
 #include "LogEvent.h"
+
+#include <memory>
 #include "StreamEvent.h"
 #include "StreamImage.h"
 #include "util.h"
@@ -63,7 +65,7 @@ void LogEvent::Reset()
 	m_saveImage1 = m_inputStreams.at("image")->IsConnected();
 	m_saveImage2 = m_inputStreams.at("mask")->IsConnected();
 
-	mp_outputDir.reset(new MkDirectory(m_param.folder, RefContext().RefOutputDir(), false));
+	mp_outputDir = std::make_unique<MkDirectory>(m_param.folder, RefContext().RefOutputDir(), false);
 }
 
 void LogEvent::ProcessFrame()

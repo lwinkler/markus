@@ -22,6 +22,8 @@
 -------------------------------------------------------------------------------------*/
 
 #include "ReadEvent.h"
+
+#include <memory>
 #include "StreamEvent.h"
 #include "StreamImage.h"
 #include "util.h"
@@ -57,7 +59,7 @@ void ReadEvent::Reset()
 	m_event.Clean();
 
 	CLEAN_DELETE(mp_annotationReader);
-	mp_inputDir.reset(new MkDirectory(m_param.folder, true));
+	mp_inputDir = std::make_unique<MkDirectory>(m_param.folder, true);
 	mp_annotationReader = createAnnotationFileReader(m_param.file, m_param.width, m_param.height);
 }
 

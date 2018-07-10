@@ -22,6 +22,8 @@
 -------------------------------------------------------------------------------------*/
 
 #include "WriteObjectMongo.h"
+
+#include <memory>
 #include "StreamObject.h"
 #include "StreamImage.h"
 #include "Manager.h"
@@ -65,7 +67,7 @@ void WriteObjectMongo::Reset()
 
 	m_jobId = GetContext().GetJobId();
 
-	mp_outputDir.reset(new MkDirectory(m_param.folder, RefContext().RefOutputDir(), false));
+	mp_outputDir = std::make_unique<MkDirectory>(m_param.folder, RefContext().RefOutputDir(), false);
 
 	// initialize connections to the DB
 	if(mp_client)
