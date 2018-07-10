@@ -45,12 +45,12 @@ template<class T> inline void from_mkjson(const mkjson& x_js, T& rx_obj)
 	nlohmann::from_json(x_js, rx_obj);
 }
 
-inline auto oneLine(const mkjson& x_json)
+inline std::string oneLine(const mkjson& x_json)
 {
 	return x_json.dump(-1, '\t');
 }
 
-inline auto multiLine(const mkjson& x_json)
+inline std::string multiLine(const mkjson& x_json)
 {
 	return x_json.dump(1, '\t');
 }
