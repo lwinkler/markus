@@ -35,7 +35,7 @@ namespace mk {
 class Timer
 {
 public:
-	Timer() : m_increments(0) {}
+	Timer() {}
 	int64_t GetMsLong() const;
 	double GetSecDouble() const;
 	inline void Reset() {m_timer.reset(); m_increments=0;}
@@ -46,7 +46,7 @@ public:
 
 protected:
 	cvflann::StartStopTimer m_timer;
-	uint64_t m_increments;
+	uint64_t m_increments{0};
 };
 
 

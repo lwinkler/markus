@@ -111,16 +111,16 @@ public:
 
 protected:
 	std::string m_name;
-	int m_id;
+	int m_id{-1};
 	std::map <std::string, FeaturePtr> m_feats;
 private:
 	static log4cxx::LoggerPtr m_logger;
 
 public:
-	double posX;
-	double posY;
-	double width;
-	double height;
+	double posX{0};
+	double posY{0};
+	double width{0};
+	double height{0};
 };
 } // namespace mk
 #endif

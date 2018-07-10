@@ -44,7 +44,7 @@ MkDirectory::MkDirectory(const std::string& x_dirName, MkDirectory& xr_parent, b
 		mkDir(m_path);
 }
 
-MkDirectory::MkDirectory(const std::string& x_dirName, bool x_exist) : m_path(x_dirName), mp_parent(nullptr)
+MkDirectory::MkDirectory(const std::string& x_dirName, bool x_exist) : m_path(x_dirName)
 {
 	if(m_path == "." || m_path == ".." || m_path.empty())
 	{

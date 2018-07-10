@@ -34,12 +34,7 @@ using namespace cv;
 log4cxx::LoggerPtr Object::m_logger(log4cxx::Logger::getLogger("Object"));
 
 Object::Object(const string& x_name) :
-	m_name(x_name),
-	m_id(-1),
-	posX(0),
-	posY(0),
-	width(0),
-	height(0)
+	m_name(x_name)
 {
 };
 
