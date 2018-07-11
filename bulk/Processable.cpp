@@ -20,7 +20,6 @@
 *    You should have received a copy of the GNU Lesser General Public License
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
-
 #include "Manager.h"
 #include "ModuleTimer.h"
 #include "InterruptionManager.h"
@@ -39,10 +38,7 @@ Processable::Processable(ParameterStructure& xr_params) :
 {
 }
 
-Processable::~Processable()
-{
-	CLEAN_DELETE(mp_moduleTimer);
-}
+Processable::~Processable() = default;
 
 /**
 * @brief Reset the module. Parameters value are set to default
@@ -58,19 +54,18 @@ void Processable::Reset()
 
 	// Add the module timer
 	// Autoprocess is on for modules if decentralized and for manager if centralized
-	if(m_param.autoProcess && (GetName() == "manager" ^ ! GetContext().IsCentralized()))
+	if(m_param.autoProcess && ((GetName() == "manager") ^ (! GetContext().IsCentralized())))
 	{
 		// note LW: Since Reset can be called while processing, we do not allow to re-create a timer
 		//          fixing this would be tricky. See module VideoFileReader
-		if(mp_moduleTimer == nullptr)
-			mp_moduleTimer = new ModuleTimer(*this);
+		if(!mp_moduleTimer)
+			mp_moduleTimer.reset(new ModuleTimer(*this));
 
 		LOG_DEBUG(m_logger, "Reseting auto-processed " << GetName() << " with real-time="<<GetContext().IsRealTime()<<" and fps="<<m_param.fps);
 	}
 	else
 	{
-		CLEAN_DELETE(mp_moduleTimer);
-		mp_moduleTimer = nullptr;
+		mp_moduleTimer.reset();
 	}
 
 	m_timerProcessable.Reset();
@@ -88,7 +83,7 @@ void Processable::Start()
 	// all other are called as "slaves" of other modules
 	// If not real-time, a module will try to acquire frames as fast as possible
 	// this is usefull for a VideoFileReader input when we work offline
-	if(mp_moduleTimer == nullptr)
+	if(!mp_moduleTimer)
 		return;
 
 	if(GetContext().IsRealTime())
@@ -106,7 +101,7 @@ void Processable::Start()
 */
 void Processable::Stop()
 {
-	if(mp_moduleTimer != nullptr)
+	if(mp_moduleTimer)
 		mp_moduleTimer->Stop();
 };
 

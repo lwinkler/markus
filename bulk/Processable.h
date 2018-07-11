@@ -112,7 +112,7 @@ private:
 
 	Parameters& m_param;
 	static log4cxx::LoggerPtr m_logger;
-	ModuleTimer * mp_moduleTimer = nullptr;
+	std::unique_ptr<ModuleTimer> mp_moduleTimer;
 	Context* mp_context = nullptr; /// context given by Manager (output directory, ...)
 
 	// To handle disconnection

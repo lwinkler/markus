@@ -38,7 +38,6 @@ void adjustSizeAndChannels(const cv::Mat& im_in, cv::Mat& im_out, cv::Mat*& tmp1
 void adjustSize(const cv::Mat& im_in, cv::Mat& im_out);
 void adjustChannels(const cv::Mat& im_in, cv::Mat& im_out);
 
-cv::Scalar colorFromStr(std::string x_str);
 cv::Scalar colorFromId(int x_id);
 
 std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems);
@@ -58,7 +57,6 @@ std::string basename(const std::string& x_pathName);
 void printStack(int sig);
 void execute(const std::string& x_cmd, std::ostream& xr_stdout);
 void execute(const std::string& x_cmd, std::vector<std::string>& xr_result);
-bool boolValue(const std::string& x_value);
 void addExternalImage(const cv::Mat& x_image, const std::string& x_name, const std::string& x_fileWithPath, Event& xr_event);
 
 template<class T> void mergeVector(std::vector<T>& vdest, const std::vector<T>& vori)

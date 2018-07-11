@@ -20,14 +20,14 @@
 *    You should have received a copy of the GNU Lesser General Public License
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
+#include <memory>
+#include <opencv2/highgui/highgui.hpp>
 
 #include "AddImageToEvent.h"
 #include "StreamImage.h"
 #include "StreamEvent.h"
 #include "util.h"
 #include "Manager.h"
-#include <memory>
-#include <opencv2/highgui/highgui.hpp>
 
 namespace mk {
 using namespace std;

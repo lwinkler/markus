@@ -168,7 +168,7 @@ add_custom_target(lint
 
 add_custom_target(tidy
 	COMMENT "Check with clang-tidy. Experimental."
-	COMMAND clang-tidy-4.0 -checks=-clang-diagnostic-undefined-var-template bulk/*.cpp util/*.cpp modules/*.cpp -- -std=c++14 -I. -Ibulk -Iutil -Ieditor -Igui -Imodules -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets/ -I/usr/include/x86_64-linux-gnu/qt5/QtWebKitWidgets/ -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/x86_64-linux-gnu/qt5/ -I/usr/include/x86_64-linux-gnu/qt5/QtGui -fPIC
+	COMMAND clang-tidy-6.0 -checks=-clang-diagnostic-undefined-var-template bulk/*.cpp util/*.cpp modules/*.cpp -- -std=c++14 -I. -Ibulk -Iutil -Ieditor -Igui -Imodules -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets/ -I/usr/include/x86_64-linux-gnu/qt5/QtWebKitWidgets/ -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/x86_64-linux-gnu/qt5/ -I/usr/include/x86_64-linux-gnu/qt5/QtGui -fPIC
 )
 
 add_custom_target(check

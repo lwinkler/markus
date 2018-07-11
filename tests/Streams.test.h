@@ -51,6 +51,7 @@ class StreamsTestSuite : public CxxTest::TestSuite
 	class FakeModule : public Module
 	{
 	public:
+		FakeModule() = default;
 		MKCATEG("Fake")
 		explicit FakeModule(ParameterStructure& xr_params) :
 			Module(xr_params),

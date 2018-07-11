@@ -21,12 +21,12 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
+#include <memory>
+#include <boost/format.hpp>
+
 #include "Context.h"
 #include "util.h"
 #include "version.h"
-
-#include <boost/format.hpp>
-#include <memory>
 
 namespace mk {
 using namespace std;

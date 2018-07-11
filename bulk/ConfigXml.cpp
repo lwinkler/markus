@@ -75,8 +75,8 @@ TiXmlDocument* createDoc(const std::string& x_fileName, bool x_allowCreation, bo
 {
 	try
 	{
-		TiXmlDocument* doc = nullptr; // Initialize to null as there can be an error in construction
-		doc = new TiXmlDocument(x_fileName);
+		// TiXmlDocument* doc = nullptr; // Initialize to null as there can be an error in construction
+		TiXmlDocument* doc = new TiXmlDocument(x_fileName);
 		if (!doc->LoadFile())
 		{
 			CLEAN_DELETE(doc);

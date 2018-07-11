@@ -84,6 +84,7 @@ namespace mk {
 class Feature2D : public Module
 {
 public:
+	Feature2D() = default;
 	static cv::Ptr<cv::Feature2D> create(const CreationFunction& x_funct);
 	class Parameters : public Module::Parameters
 	{

@@ -150,7 +150,6 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 	if(m_logger->isDebugEnabled())
 	{
 		pText.x += 2;
-		int i = 0;
 		for(const auto & elem : m_feats)
 		{
 			//try
@@ -159,7 +158,6 @@ void Object::RenderTo(Mat& x_output, const Scalar& x_color) const
 				text << elem.first << "=" << multiLine(*elem.second) << endl;
 				pText.y += 7;
 				putText(x_output, text.str(), pText,  FONT_HERSHEY_COMPLEX_SMALL, 0.4, color);
-				i++;
 			}
 			//catch(...){}
 		}

@@ -242,24 +242,6 @@ void adjustChannels(const Mat& im_in, Mat& im_out)
 	else throw MkException("Error in adjustChannels", LOC);
 }
 
-/* Return an OpenCV color from a "(b,g,r)" string */
-Scalar colorFromStr(string x_str)
-{
-	if(x_str[0] == '(')
-	{
-		int pos1  = x_str.find(',', 1);
-		int pos2  = x_str.find(',', pos1 + 1);
-		int pos3  = x_str.find(')', pos2 + 1);
-		if(!(pos1 && pos2 && pos3))
-			throw MkException("Error in colorFromStr", LOC);
-
-		return Scalar(boost::lexical_cast<int>(x_str.substr(1, pos1 - 1)),
-					  boost::lexical_cast<int>(x_str.substr(pos1 + 1, pos2 - pos1 - 1)),
-					  boost::lexical_cast<int>(x_str.substr(pos2 + 1, pos3 - pos2 - 1)));
-	}
-	else return Scalar(0, 0, 0);
-}
-
 Scalar colorFromId(int x_id)
 {
 	return g_colorArray[x_id % g_colorArraySize];
@@ -571,25 +553,6 @@ void execute(const string& x_cmd, vector<string>& xr_result)
 		}
 	}
 	pclose(pipe);
-}
-
-/**
-* @brief Convert a string to a boolean value
-*
-* @param x_value     String value representing the boolean
-*
-* @return boolean value
-*/
-bool boolValue(const std::string& x_value) // TODO remove
-{
-	if(x_value.empty())
-		return false;
-	if(x_value == "true" || x_value == "True" || x_value == "TRUE" || x_value == "1")
-		return true;
-	if(x_value == "false" || x_value == "False" || x_value == "FALSE" || x_value == "0")
-		return false;
-
-	throw MkException("Ambiguous value cannot be converted to bool: " + x_value, LOC);
 }
 
 /**
