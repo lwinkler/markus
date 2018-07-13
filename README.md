@@ -73,8 +73,9 @@ These libraries and utilities can be installed to create advanced modules:
 		- *Nagios plugin*: for monitoring: nagiosplugin
 	- *CxxTests** : To run the unit test
 	- *Avtools*: Video manipulation tools to use the benchmark of test
+	- *Doxygen* and *GraphViz*: To generate documentation
 
-	sudo apt-get install cmake-qt-gui cmake-curses-gui qtcreator python-dev python-opencv python-bs4 libav-tools
+	sudo apt-get install cmake-qt-gui cmake-curses-gui qtcreator python-dev python-opencv python-bs4 libav-tools doxygen graphviz
 	sudo pip install xmltodict 
 
 Since modules can be stored on different repositories please check the separate README.md of each directory for dependencies.
@@ -196,6 +197,7 @@ Classes
 - **Templates:** Templates are primarily used in trackers they differ slighly from objects as they have a unique id and are persistent in time.
 
 --------------------------------------------------------------------------------
+
 Developer documentation
 =======================
 This section contains documentation that is meant for developers or people who need an advanced knowledge of the functionalities.
