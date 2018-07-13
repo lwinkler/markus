@@ -482,8 +482,8 @@ void Manager::CreateEditorFiles(const string& x_fileName)
 			ParameterStructure* parameters = mr_parametersFactory.Create(moduleType, moduleType);
 			Module* module = mr_moduleFactory.Create(moduleType, *parameters);
 
-			moduleCategories.at(module->GetCategory()).push_back(moduleType);
-			moduleCategories.at("all").push_back(moduleType);
+			moduleCategories[module->GetCategory()].push_back(moduleType);
+			moduleCategories["all"].push_back(moduleType);
 
 			// JSON file containing all module descriptions
 			moduleDescriptionsJson.push_back(module->Export());
