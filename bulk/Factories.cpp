@@ -38,7 +38,7 @@
 #include "Event.h"
 #include "Object.h"
 
-#include "opencv/modules/ml/include/opencv2/ml.hpp"
+#include "opencv2/ml.hpp"
 
 #define REGISTER_FEATURE(child, type){\
 {\

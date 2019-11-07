@@ -22,7 +22,7 @@ In all cases you will need the following packages to compile Markus:
 
 On Ubuntu the apt-get install command is:
 
-	sudo apt-get install cmake libtinyxml-dev liblog4cxx10-dev libboost-all-dev jq libmongoc-dev cxxtest libbson-dev
+	sudo apt-get install cmake libtinyxml-dev liblog4cxx-dev libboost-all-dev jq libmongoc-dev cxxtest libbson-dev
 
 **CAUTION**: On old Ubuntu versions (14.04 and maybe 16.04). Be careful if you install libopencv-dev as this installs nvidia packages along. This might harm your computer http://askubuntu.com/questions/243043/after-logging-in-theres-a-black-screen-and-my-cursor-nothing-else-in-ubuntu
 
@@ -49,7 +49,7 @@ The markus directory must contain either the 'opencv' directory or a symbolic li
 ### Qt5 dependencies
 Markus is also compiled with Qt5. The packages required for qt webkit are a bit more complicated in this case:
 	
-	sudo apt-get install qt5-default libqt5webkit5-dev qtquick1-5-dev qtlocation5-dev qtsensors5-dev qtdeclarative5-dev npm
+	sudo apt-get install qt5-default libqt5webkit5-dev qtlocation5-dev qtsensors5-dev qtdeclarative5-dev npm
 	ccmake .
 
 Alternatively here are the dependencies for Qt4. To compile with Qt4 enable the Qt4 compilation (with command `ccmake .`)

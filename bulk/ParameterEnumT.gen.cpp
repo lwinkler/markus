@@ -60,7 +60,7 @@ template<> const string ParameterEnumT<mk::ImageType>::className = "ParameterIma
 
 
 
-#include "opencv/modules/ml/include/opencv2/ml.hpp"
+#include "opencv2/ml.hpp"
 
 // Static variables
 template<> const map<string, int>  ParameterEnumT<cv::ml::SVM::KernelTypes>::Enum =
@@ -78,7 +78,7 @@ template<> const string ParameterEnumT<cv::ml::SVM::KernelTypes>::className = "P
 
 
 
-#include "opencv/modules/ml/include/opencv2/ml.hpp"
+#include "opencv2/ml.hpp"
 
 // Static variables
 template<> const map<string, int>  ParameterEnumT<cv::ml::SVM::Types>::Enum =
@@ -94,7 +94,7 @@ template<> const string ParameterEnumT<cv::ml::SVM::Types>::className = "Paramet
 
 
 
-#include "opencv/modules/imgproc/include/opencv2/imgproc.hpp"
+#include "opencv2/imgproc.hpp"
 
 // Static variables
 template<> const map<string, int>  ParameterEnumT<cv::MorphShapes>::Enum =
@@ -108,7 +108,7 @@ template<> const string ParameterEnumT<cv::MorphShapes>::className = "ParameterM
 
 
 
-#include "opencv/modules/imgproc/include/opencv2/imgproc.hpp"
+#include "opencv2/imgproc.hpp"
 
 // Static variables
 template<> const map<string, int>  ParameterEnumT<cv::MorphTypes>::Enum =
