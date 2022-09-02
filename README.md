@@ -20,18 +20,18 @@ In all cases you will need the following packages to compile Markus:
 	- *awk*: used at compile time
 	- *jq*: JSON file comparison. Used for tests
 
-On Ubuntu the apt-get install command is:
+On Ubuntu the apt install command is:
 
-	sudo apt-get install cmake libtinyxml-dev liblog4cxx-dev libboost-all-dev jq libmongoc-dev cxxtest libbson-dev
+	sudo apt install cmake libtinyxml-dev liblog4cxx-dev libboost-all-dev jq libmongoc-dev cxxtest libbson-dev
 
 **CAUTION**: On old Ubuntu versions (14.04 and maybe 16.04). Be careful if you install libopencv-dev as this installs nvidia packages along. This might harm your computer http://askubuntu.com/questions/243043/after-logging-in-theres-a-black-screen-and-my-cursor-nothing-else-in-ubuntu
 
 ### Installing OpenCV
-Markus works with OpenCV3. We recommend to install it from sources since the version of apt-get and other package managers may not have all contributions enabled.
+Markus works with OpenCV3. We recommend to install it from sources since the version of apt and other package managers may not have all contributions enabled.
 
-To install it from apt-get on Ubuntu:
+To install it from apt on Ubuntu:
 
-	sudo apt-get install libopencv-dev
+	sudo apt install libopencv-dev
 
 To install from sources:
 
@@ -49,12 +49,12 @@ The markus directory must contain either the 'opencv' directory or a symbolic li
 ### Qt5 dependencies
 Markus is also compiled with Qt5. The packages required for qt webkit are a bit more complicated in this case:
 	
-	sudo apt-get install qt5-default libqt5webkit5-dev qtlocation5-dev qtsensors5-dev qtdeclarative5-dev npm
+	sudo apt install qt5-default libqt5webkit5-dev qtlocation5-dev qtsensors5-dev qtdeclarative5-dev npm
 	ccmake .
 
 Alternatively here are the dependencies for Qt4. To compile with Qt4 enable the Qt4 compilation (with command `ccmake .`)
 	
-	sudo apt-get install libqt4-core  libqt4-dev
+	sudo apt install libqt4-core  libqt4-dev
 
 ### Editor
 To install the new editor based on Angular2 type:
@@ -75,7 +75,7 @@ These libraries and utilities can be installed to create advanced modules:
 	- *Avtools*: Video manipulation tools to use the benchmark of test
 	- *Doxygen* and *GraphViz*: To generate documentation
 
-	sudo apt-get install cmake-qt-gui cmake-curses-gui qtcreator python-dev python-opencv python-bs4 libav-tools doxygen graphviz
+	sudo apt install cmake-qt-gui cmake-curses-gui qtcreator python-dev python-opencv python-bs4 libav-tools doxygen graphviz
 	sudo pip install xmltodict 
 
 Since modules can be stored on different repositories please check the separate README.md of each directory for dependencies.

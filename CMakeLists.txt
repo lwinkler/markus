@@ -1,5 +1,5 @@
 project(markus)
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.2.1)
 
 # Options to be set with ccmake or cmake-gui
 set(Markus_MODULE_DIRS          "modules"   CACHE STRING "List of directories containing modules")
@@ -41,13 +41,13 @@ set(modules_src ${modules_src2} PARENT_SCOPE)
 endfunction(appendModules)
 
 
-add_definitions(-std=c++14 -Wextra -Wno-unused-parameter -Wno-deprecated-register)
+add_definitions(-std=c++17 -Wextra -Wno-unused-parameter -Wno-deprecated-register)
 if (CMAKE_BUILD_TYPE MATCHES Debug)
 	add_definitions(-DMARKUS_DEBUG_STREAMS)
 endif()
 
 find_package( Boost 1.40 COMPONENTS system thread python filesystem REQUIRED )
-include_directories(${Boost_INCLUDE_DIR})
+include_directories(${Boost_INCLUDE_DIRS})
 
 # Required packages
 find_package(OpenCV REQUIRED)
