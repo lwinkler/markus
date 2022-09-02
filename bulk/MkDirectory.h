@@ -26,6 +26,7 @@
 
 #include <log4cxx/logger.h>
 #include <map>
+#include <boost/noncopyable.hpp>
 #include <boost/thread/shared_mutex.hpp>
 // Workaround: should be unnecessary in time: http://stackoverflow.com/questions/35007134/c-boost-undefined-reference-to-boostfilesystemdetailcopy-file
 #define BOOST_NO_CXX11_SCOPED_ENUMS

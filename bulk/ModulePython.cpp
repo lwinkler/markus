@@ -20,6 +20,7 @@
  *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
  -------------------------------------------------------------------------------------*/
 
+#if 0
 #include "ModulePython.h"
 #include "FeatureVector.h"
 #include "FeatureStd.h"
@@ -160,3 +161,4 @@ void ModulePython::Reset()
 
 
 } // namespace mk
+#endif
