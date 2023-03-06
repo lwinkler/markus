@@ -26,7 +26,7 @@
 
 #include <log4cxx/logger.h>
 #include <map>
-#include <boost/thread/shared_mutex.hpp>
+#include <shared_mutex>
 // Workaround: should be unnecessary in time: http://stackoverflow.com/questions/35007134/c-boost-undefined-reference-to-boostfilesystemdetailcopy-file
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
@@ -103,9 +103,9 @@ protected:
 	}
 	void UnregisterSubDir(MkDirectory* xp_subdir);
 
-	typedef boost::shared_mutex Lock;
-	typedef boost::unique_lock<Lock> WriteLock;
-	typedef boost::shared_lock<Lock> ReadLock;
+	typedef std::shared_mutex Lock;
+	typedef std::unique_lock<Lock> WriteLock;
+	typedef std::shared_lock<Lock> ReadLock;
 	Lock m_lock;
 	std::map<std::string, bool> m_reservedFiles;
 	std::map<std::string, MkDirectory*> mp_subDirectories;

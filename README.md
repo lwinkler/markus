@@ -8,6 +8,25 @@ Markus is a program to create video detection applications. Its base philosophy 
 
 Each module implements a simple function (pattern detection, object tracking, background subtraction ...). Each module can have input an output streams of different types. 
 
+Compilation on Windows
+----------------------
+Work in progress.
+
+```
+# conan install . --build missing
+
+conan profile new mynewprofile --detect
+# change compiler version tfrom 17 to 16
+
+mv /d/.conan/profiles/mynewprofile /d/.conan/profiles/old_compiler
+
+mkdir build
+cd build
+conan install .. -pr old_compiler
+cmake .. -DCONAN_DISABLE_CHECK_COMPILER=ON
+```
+
+
 Compilation for Linux
 ---------------------
 

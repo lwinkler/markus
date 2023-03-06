@@ -1,5 +1,5 @@
-project(markus)
-cmake_minimum_required(VERSION 2.6)
+project(Markus)
+cmake_minimum_required(VERSION 3.23)
 
 # Options to be set with ccmake or cmake-gui
 set(Markus_MODULE_DIRS          "modules"   CACHE STRING "List of directories containing modules")
@@ -14,6 +14,10 @@ file(REMOVE modules.txt)
 foreach(iter IN LISTS Markus_MODULE_DIRS)
 	file(APPEND dirs.txt "${iter}\n")
 endforeach()
+
+# include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+# conan_basic_setup()
+include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
 
 # Function used by module directories: create a list of all module directories and add all *.cpp files to modules_src
 function(appendModules modules_src)
@@ -41,42 +45,37 @@ set(modules_src ${modules_src2} PARENT_SCOPE)
 endfunction(appendModules)
 
 
-add_definitions(-std=c++14 -Wextra -Wno-unused-parameter -Wno-deprecated-register)
+# add_definitions(-std=c++14 -Wextra -Wno-unused-parameter -Wno-deprecated-register)
+add_definitions(-std=c++14)
 if (CMAKE_BUILD_TYPE MATCHES Debug)
 	add_definitions(-DMARKUS_DEBUG_STREAMS)
 endif()
 
-find_package( Boost 1.40 COMPONENTS system thread python filesystem REQUIRED )
-include_directories(${Boost_INCLUDE_DIR})
+# find_package( Boost 1.40 COMPONENTS system thread python filesystem REQUIRED )
+# include_directories(${Boost_INCLUDE_DIR})
 
 # Required packages
 find_package(OpenCV REQUIRED)
-find_package(Threads REQUIRED)
-find_package(PythonLibs 2 QUIET)
-find_package(MONGOC QUIET)
+# find_package(Threads REQUIRED)
+# find_package(PythonLibs 2 QUIET)
+# find_package(MONGOC QUIET)
 
 find_library(LOG4CXX_LIBS log4cxx)
 find_library(TINYXML_LIBS tinyxml)
 
-if("${LOG4CXX_LIBS}" STREQUAL "")
-	message(FATAL_ERROR "Log4CXX library not found on your system")
-endif()
-if("${TINYXML_LIBS}" STREQUAL "")
-	message(FATAL_ERROR "TinyXML library not found on your system")
-endif()
-if("${PYTHON_LIBRARIES}" STREQUAL "")
-	message(FATAL_ERROR "Python library not found on your system")
-endif()
+include_directories(${CONAN_BOOST_ROOT}/include)
+include_directories(${CONAN_OPENCV_ROOT}/include)
+include_directories(${CONAN_LOG4CXX_ROOT}/include)
 
-
-set(MK_EXT_DEPS ${MK_EXT_DEPS} ${LOG4CXX_LIBS})
-set(MK_EXT_DEPS ${MK_EXT_DEPS} ${TINYXML_LIBS})
-set(MK_EXT_DEPS ${MK_EXT_DEPS} ${OpenCV_LIBS})
-set(MK_EXT_DEPS ${MK_EXT_DEPS} ${CMAKE_THREAD_LIBS_INIT})
-set(MK_EXT_DEPS ${MK_EXT_DEPS} ${Boost_LIBRARIES})
-set(MK_EXT_DEPS ${MK_EXT_DEPS} "bson-1.0")
-set(MK_EXT_DEPS ${MK_EXT_DEPS} "mongoc-1.0")
+set(MK_EXT_DEPS ${MK_EXT_DEPS} CONAN_PKG:log4cxx)
+set(MK_EXT_DEPS ${MK_EXT_DEPS} CONAN_PKG:tinyxml2)
+set(MK_EXT_DEPS ${MK_EXT_DEPS} CONAN_PKG:opencv)
+# set(MK_EXT_DEPS ${MK_EXT_DEPS} ${CMAKE_THREAD_LIBS_INIT})
+set(MK_EXT_DEPS ${MK_EXT_DEPS} CONAN_PKG:boost)
+# set(MK_EXT_DEPS ${MK_EXT_DEPS} "bson-1.0")
+# set(MK_EXT_DEPS ${MK_EXT_DEPS} "mongoc-1.0")
 set(EXT_DEPS ${EXT_DEPS} ${PYTHON_LIBRARIES})
+
 
 if(NOT Markus_NO_GUI)
 	if(Markus_USE_QT5)
@@ -100,7 +99,7 @@ endif()
 # endforeach(iter)
 # message("Looking for modules in ${modules_dirs}")
 
-include_directories(${PYTHON_INCLUDE_DIRS})
+# include_directories(${PYTHON_INCLUDE_DIRS})
 include_directories(util bulk ${Markus_MODULE_DIRS})
 
 set(markus_SRCS main.cpp modules/allModules.cpp)
@@ -129,8 +128,8 @@ if(NOT Markus_NO_GUI)
 endif()
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR})
-include_directories(/usr/include/libbson-1.0)
-include_directories(/usr/include/libmongoc-1.0)
+# include_directories(/usr/include/libbson-1.0)
+# include_directories(/usr/include/libmongoc-1.0)
 
 
 
@@ -235,4 +234,4 @@ set( vstring "//version.h - written by cmake. changes will be lost!\n"
 file(WRITE version.h.txt ${vstring} )
 # copy the file to the final header only if the version changes
 # reduces needless rebuilds
-execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different version.h.txt ${CMAKE_CURRENT_BINARY_DIR}/util/version.h)
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/version.h.txt ${CMAKE_CURRENT_BINARY_DIR}/util/version.h)
