@@ -26,7 +26,7 @@
 
 #include "Context.h"
 #include "util.h"
-#include "version.h"
+#include "util/version.h"
 
 namespace mk {
 using namespace std;

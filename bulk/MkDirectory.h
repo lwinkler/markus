@@ -84,7 +84,7 @@ protected:
 		{
 			LOG_WARN(m_logger, "File " << x_filePath2 << " overwritten");
 		}
-		boost::filesystem::copy_file(x_filePath1, x_filePath2, boost::filesystem::copy_option::overwrite_if_exists);
+		boost::filesystem::copy_file(x_filePath1, x_filePath2, boost::filesystem::copy_options::overwrite_existing);
 	}
 	inline static void rmDir(const std::string& x_directory)
 	{

@@ -30,7 +30,7 @@
 #include "Context.h"
 #include "Timer.h"
 #include <log4cxx/logger.h>
-#include <boost/thread/shared_mutex.hpp>
+#include <shared_mutex>
 
 namespace mk {
 class ModuleTimer;
@@ -43,9 +43,9 @@ class Processable : public Configurable
 {
 public:
 	// Create a lock (for outside use)
-	typedef boost::shared_mutex Lock;
-	typedef boost::unique_lock<Lock> WriteLock;
-	typedef boost::shared_lock<Lock> ReadLock;
+	typedef std::shared_mutex Lock;
+	typedef std::unique_lock<Lock> WriteLock;
+	typedef std::shared_lock<Lock> ReadLock;
 
 	class Parameters : public ParameterStructure
 	{
