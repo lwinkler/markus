@@ -18,7 +18,7 @@ string camelCase(const string& str)
 {
 	string s = str;
 	string res;
-	for(uint i = 0 ; i < s.size() ; i++)
+	for(unsigned int i = 0 ; i < s.size() ; i++)
 	{
 		if(s[i] == '_')
 		{

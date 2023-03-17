@@ -34,7 +34,7 @@ class CreationFunction
 {
 	public:
 		std::string name;
-		uint number;
+		unsigned int number;
 		mkjson parameters;
 };
 

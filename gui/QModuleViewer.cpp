@@ -63,7 +63,7 @@ template<typename T>Stream* createStream(T& content, Module& module)
 template<> Stream* createStream<float>(float& content, Module& module){return new StreamNum<float>("viewer", content, module, "QModuleViewer stream");}
 template<> Stream* createStream<double>(double& content, Module& module){return new StreamNum<double>("viewer", content, module, "QModuleViewer stream");}
 template<> Stream* createStream<int>(int& content, Module& module){return new StreamNum<int>("viewer", content, module, "QModuleViewer stream");}
-template<> Stream* createStream<uint>(uint& content, Module& module){return new StreamNum<uint>("viewer", content, module, "QModuleViewer stream");}
+template<> Stream* createStream<unsigned int>(unsigned int& content, Module& module){return new StreamNum<unsigned int>("viewer", content, module, "QModuleViewer stream");}
 template<> Stream* createStream<bool>(bool& content, Module& module){return new StreamNum<bool>("viewer", content, module, "QModuleViewer stream");}
 template<> Stream* createStream<vector<Object>>(vector<Object>& content, Module& module){return new StreamObject("viewer", content, module, "QModuleViewer stream");}
 
@@ -251,7 +251,7 @@ void QModuleViewer::CreateInputStream(int x_outputWidth, int x_outputHeight)
 	else if(type == "ParameterBool")
 		mp_viewer = new ViewerT<bool>(*mp_viewerParams, *this, m_param.module);
 	else if(type == "ParameterInt")
-		mp_viewer = new ViewerT<uint>(*mp_viewerParams, *this, m_param.module);
+		mp_viewer = new ViewerT<unsigned int>(*mp_viewerParams, *this, m_param.module);
 	else if(type == "ParameterUIt")
 		mp_viewer = new ViewerT<int>(*mp_viewerParams, *this, m_param.module);
 	else if(type == "ParameterFloat")

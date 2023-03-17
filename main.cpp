@@ -24,7 +24,7 @@
 
 #include <signal.h>
 #include <log4cxx/xml/domconfigurator.h>
-#include <getopt.h>    /* for getopt_long; standard getopt is in unistd.h */
+// #include <getopt.h>    /* for getopt_long; standard getopt is in unistd.h */
 #include <iostream>
 #include <cstdio>
 #include <thread>

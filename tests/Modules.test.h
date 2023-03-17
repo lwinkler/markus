@@ -114,7 +114,7 @@ protected:
 	float  m_float   = 0;
 	double m_double  = 0;
 	int    m_int     = 0;
-	uint   m_uint    = 0;
+	unsigned int   m_uint    = 0;
 	bool   m_bool    = false;
 	vector<Object> m_objects;
 	int m_cpt = 0;
@@ -208,7 +208,7 @@ public:
 			else if(elem.second->GetClass() == "StreamNum<int>")
 				outputStream = new StreamNum<int>("test", m_int, *mp_fakeInput, "Test input");
 			// else if(elem.second->GetClass() == "StreamNum<unsigned int>")
-			// outputStream = new StreamNum<uint>("test", m_uint, *mp_fakeInput, "Test input");
+			// outputStream = new StreamNum<unsigned int>("test", m_uint, *mp_fakeInput, "Test input");
 			else if(elem.second->GetClass() == "StreamNum<bool>")
 				outputStream = new StreamNum<bool>("test", m_bool, *mp_fakeInput, "Test input");
 			else

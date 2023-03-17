@@ -6,8 +6,8 @@ tinyxml2/9.0.0
 libiconv/1.17
 
 [options]
-opencv:contrib=True
-opencv:with_cuda=True
+opencv:contrib=False
+opencv:with_cuda=False
 opencv:dnn_cuda=False
 opencv:cuda_arch_bin=8.6
 

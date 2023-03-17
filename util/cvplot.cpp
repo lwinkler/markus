@@ -199,7 +199,7 @@ void Figure::DrawPlots(Mat &output)
 			plot.SetColor(GetAutoColor());
 
 		Point prev_point;
-		for (uint i=0; i<plot.data.size(); i++)
+		for (unsigned int i=0; i<plot.data.size(); i++)
 		{
 			int y = cvRound(( plot.data.at(i) - y_min) * y_scale);
 			int x = cvRound((   i  - x_min) * x_scale);

@@ -168,9 +168,9 @@ protected:
 template<> QWidget* ControllerParameterT<int>::CreateWidget();
 template<> void ControllerParameterT<int>::SetWidgetValue(const std::string& x_value);
 template<> mkjson ControllerParameterT<int>::GetValueFromWidget();
-template<> QWidget* ControllerParameterT<uint>::CreateWidget();
-template<> void ControllerParameterT<uint>::SetWidgetValue(const std::string& x_value);
-template<> mkjson ControllerParameterT<uint>::GetValueFromWidget();
+template<> QWidget* ControllerParameterT<unsigned int>::CreateWidget();
+template<> void ControllerParameterT<unsigned int>::SetWidgetValue(const std::string& x_value);
+template<> mkjson ControllerParameterT<unsigned int>::GetValueFromWidget();
 template<> QWidget* ControllerParameterT<double>::CreateWidget();
 template<> void ControllerParameterT<double>::SetWidgetValue(const std::string& x_value);
 template<> mkjson ControllerParameterT<double>::GetValueFromWidget();

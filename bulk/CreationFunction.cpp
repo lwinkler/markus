@@ -36,7 +36,7 @@ void to_json(mkjson& rx_json, const CreationFunction& x_ser)
 void from_json(const mkjson& x_json, CreationFunction& rx_ser)
 {
 	rx_ser.name       = x_json.at("name").get<std::string>();
-	rx_ser.number     = x_json.at("number").get<uint>();
+	rx_ser.number     = x_json.at("number").get<unsigned int>();
 	rx_ser.parameters = x_json.at("parameters");
 }
 } // namespace mk

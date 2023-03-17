@@ -73,7 +73,7 @@ class StreamsTestSuite : public CxxTest::TestSuite
 			AddInputStream( 2, new StreamImage("stream_image2", m_image, *this, "Test stream"));
 			AddInputStream( 3, new StreamNum<bool>("stream_bool3", m_bool, *this, "Test stream"));
 			AddInputStream( 4, new StreamNum<int>("stream_int4", m_int, *this, "Test stream"));
-			AddInputStream( 5, new StreamNum<uint>("stream_uint5", m_uint, *this, "Test stream"));
+			AddInputStream( 5, new StreamNum<unsigned int>("stream_uint5", m_uint, *this, "Test stream"));
 			AddInputStream( 6, new StreamNum<float>("stream_float6", m_float, *this, "Test stream"));
 			AddInputStream( 7, new StreamNum<double>("stream_double7", m_double, *this, "Test stream"));
 
@@ -82,7 +82,7 @@ class StreamsTestSuite : public CxxTest::TestSuite
 			// AddInputStream(10, new MultiStreamT<cv::Mat>("stream_image10", m_images, *this, "Test stream"));
 			// AddInputStream(11, new MultiStreamT<bool>("stream_bool11", m_bools, *this, "Test stream"));
 			// AddInputStream(12, new MultiStreamT<int>("stream_int12", m_ints, *this, "Test stream"));
-			// AddInputStream(13, new MultiStreamT<uint>("stream_uint13", m_uints, *this, "Test stream"));
+			// AddInputStream(13, new MultiStreamT<unsigned int>("stream_uint13", m_uints, *this, "Test stream"));
 			// AddInputStream(14, new MultiStreamT<float>("stream_float14", m_floats, *this, "Test stream"));
 			// AddInputStream(15, new MultiStreamT<double>("stream_double15", m_doubles, *this, "Test stream"));
 
@@ -91,7 +91,7 @@ class StreamsTestSuite : public CxxTest::TestSuite
 			AddOutputStream( 2, new StreamImage("stream_image2", m_image, *this, "Test stream"));
 			AddOutputStream( 3, new StreamNum<bool>("stream_bool3", m_bool, *this, "Test stream"));
 			AddOutputStream( 4, new StreamNum<int>("stream_int4", m_int, *this, "Test stream"));
-			AddOutputStream( 5, new StreamNum<uint>("stream_uint5", m_uint, *this, "Test stream"));
+			AddOutputStream( 5, new StreamNum<unsigned int>("stream_uint5", m_uint, *this, "Test stream"));
 			AddOutputStream( 6, new StreamNum<float>("stream_float6", m_float, *this, "Test stream"));
 			AddOutputStream( 7, new StreamNum<double>("stream_double7", m_double, *this, "Test stream"));
 
@@ -100,7 +100,7 @@ class StreamsTestSuite : public CxxTest::TestSuite
 			// AddOutputStream(10, new MultiStreamT<cv::Mat>("stream_image10", m_images, *this, "Test stream"));
 			// AddOutputStream(11, new MultiStreamT<bool>("stream_bool11", m_bools, *this, "Test stream"));
 			// AddOutputStream(12, new MultiStreamT<int>("stream_int12", m_ints, *this, "Test stream"));
-			// AddOutputStream(13, new MultiStreamT<uint>("stream_uint13", m_uints, *this, "Test stream"));
+			// AddOutputStream(13, new MultiStreamT<unsigned int>("stream_uint13", m_uints, *this, "Test stream"));
 			// AddOutputStream(14, new MultiStreamT<float>("stream_float14", m_floats, *this, "Test stream"));
 			// AddOutputStream(15, new MultiStreamT<double>("stream_double15", m_doubles, *this, "Test stream"));
 		}
@@ -118,14 +118,14 @@ class StreamsTestSuite : public CxxTest::TestSuite
 
 	private:
 		const Module::Parameters& m_param;
-		uint seed = 6345345;
+		unsigned int seed = 6345345;
 
 		vector<Object>m_obj;
 		Event         m_evt;
 		cv::Mat       m_image;
 		bool          m_bool;
 		int           m_int;
-		uint          m_uint;
+		unsigned int          m_uint;
 		float         m_float;
 		double        m_double;
 
@@ -134,7 +134,7 @@ class StreamsTestSuite : public CxxTest::TestSuite
 		vector<cv::Mat>      m_images;
 		vector<bool>         m_bools;
 		vector<int>          m_ints;
-		vector<uint>         m_uints;
+		vector<unsigned int>         m_uints;
 		vector<float>        m_floats;
 		vector<double>       m_doubles;
 	};
@@ -199,7 +199,7 @@ public:
 public:
 	void testConvertInput()
 	{
-		uint seed = 556345;
+		unsigned int seed = 556345;
 
 		for(int i = 0 ; i < 100 ; i++)
 		{

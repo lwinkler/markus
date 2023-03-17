@@ -21,6 +21,7 @@
 *    along with Markus.  If not, see <http://www.gnu.org/licenses/>.
 -------------------------------------------------------------------------------------*/
 
+#ifdef COMMENTED
 #ifndef MODULE_PYTHON_H
 #define MODULE_PYTHON_H
 
@@ -114,4 +115,5 @@ protected:
 
 
 } // namespace mk
+#endif
 #endif

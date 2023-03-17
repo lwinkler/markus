@@ -60,7 +60,7 @@ public:
 	{
 		StreamT<T>::Deserialize(x_json, xp_dir);
 
-		if(m_maxSize != x_json.at("maxSize").get<uint>())
+		if(m_maxSize != x_json.at("maxSize").get<unsigned int>())
 			throw MkException("Deserializing to a MultiStream of wrong size", LOC);
 		from_mkjson(x_json.at("nextObj"), m_nextObj);
 		from_mkjson(x_json.at("content"), m_objects);

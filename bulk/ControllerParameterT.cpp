@@ -77,7 +77,7 @@ template<> mkjson ControllerInt::GetValueFromWidget()
 template<> QWidget* ControllerUInt::CreateWidget()
 {
 #ifndef MARKUS_NO_GUI
-	return mp_widget = new QParameterSlider(m_param.GetValue().get<uint>(), m_param.GetRange().at("min").get<double>(), m_param.GetRange().at("max").get<double>(), 0);
+	return mp_widget = new QParameterSlider(m_param.GetValue().get<unsigned int>(), m_param.GetRange().at("min").get<double>(), m_param.GetRange().at("max").get<double>(), 0);
 #else
 	return nullptr;
 #endif

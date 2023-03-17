@@ -72,7 +72,7 @@ template<> void StreamState::Query(std::ostream& xr_out, const cv::Point& x_pt) 
 template<> void StreamState::Randomize(unsigned int& xr_seed)
 {
 	// random state
-	if(rand_r(&xr_seed) < RAND_MAX / 10)
+	// TODO if(rand_r(&xr_seed) < RAND_MAX / 10)
 		m_content = !m_content;
 }
 

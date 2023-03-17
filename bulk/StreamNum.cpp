@@ -29,7 +29,7 @@ using namespace std;
 // Static variables
 template<> const string StreamNum<bool>::className   = "StreamNum<bool>";
 template<> const string StreamNum<int>::className    = "StreamNum<int>";
-template<> const string StreamNum<uint>::className   = "StreamNum<uint>";
+template<> const string StreamNum<unsigned int>::className   = "StreamNum<unsigned int>";
 template<> const string StreamNum<float>::className  = "StreamNum<float>";
 template<> const string StreamNum<double>::className = "StreamNum<double>";
 

@@ -141,7 +141,7 @@ void MkDirectory::CheckOutputDir()
 		if(m_reservedFiles.find(elem) == m_reservedFiles.end())
 			LOG_WARN(m_logger, "File " << elem << " is present in output directory " << m_path << " but was not reserved");
 	}
-	LOG_DEBUG(m_logger, "Reserved files " << m_reservedFiles.size() << " line:" << __LINE__)
+	LOG_DEBUG(m_logger, "Reserved files " << m_reservedFiles.size() << " line:" << __LINE__);
 }
 
 
@@ -166,7 +166,7 @@ void MkDirectory::CleanDir()
 		Rm(elem.first);
 	}
 	m_reservedFiles.clear();
-	LOG_DEBUG(m_logger, "Reserved files " << m_reservedFiles.size() << " line:" << __LINE__)
+	LOG_DEBUG(m_logger, "Reserved files " << m_reservedFiles.size() << " line:" << __LINE__);
 }
 
 /**
@@ -189,7 +189,7 @@ std::string MkDirectory::ReserveFile(const std::string& x_filePath, int x_unique
 	if(m_reservedFiles.find(ss.str()) != m_reservedFiles.end())
 		LOG_WARN(m_logger, "File " << ss.str() << " already exists in " << m_path);
 	auto ret = m_reservedFiles.insert(std::pair<string, bool>(ss.str(), true));
-	LOG_DEBUG(m_logger, "Reserved files " << m_reservedFiles.size() << " line:" << __LINE__)
+	LOG_DEBUG(m_logger, "Reserved files " << m_reservedFiles.size() << " line:" << __LINE__);
 	if(ret.second == false)
 	{
 		LOG_WARN(m_logger, "File is overridden in output directory: " << ss.str());
@@ -215,7 +215,7 @@ void MkDirectory::UnreserveFile(const std::string& x_filePath)
 	{
 		m_reservedFiles.erase(it);
 	}
-	LOG_DEBUG(m_logger, "Unreserved files " << m_reservedFiles.size() << " line:" << __LINE__)
+	LOG_DEBUG(m_logger, "Unreserved files " << m_reservedFiles.size() << " line:" << __LINE__);
 }
 
 /**

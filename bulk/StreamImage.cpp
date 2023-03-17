@@ -70,14 +70,14 @@ void StreamT<Mat>::ConvertToOutput(TIME_STAMP x_ts, cv::Mat& xr_output)
 			//       This method is more CPU intensive and has not shown better results so far
 			if(corrected->cols >= xr_output.cols)
 			{
-				resize(*corrected, buf_out->image, xr_output.size(), 0, 0, CV_INTER_AREA);
+				resize(*corrected, buf_out->image, xr_output.size(), 0, 0, cv::INTER_LINEAR);
 			}
 			else
 			{
-				resize(*corrected, buf_out->image, xr_output.size(), 0, 0, CV_INTER_LINEAR);
+				resize(*corrected, buf_out->image, xr_output.size(), 0, 0, cv::INTER_LINEAR);
 			}
 #else
-			resize(*corrected, buf_out->image, xr_output.size(), 0, 0, CV_INTER_LINEAR);
+			resize(*corrected, buf_out->image, xr_output.size(), 0, 0, cv::INTER_LINEAR);
 #endif
 			buf_out->timeStamp = x_ts;
 		}
@@ -92,11 +92,11 @@ void StreamT<Mat>::ConvertToOutput(TIME_STAMP x_ts, cv::Mat& xr_output)
 		{
 			if(corrected->channels() == 1 && xr_output.channels() == 3)
 			{
-				cvtColor(*corrected, buf_out->image, CV_GRAY2BGR);
+				cvtColor(*corrected, buf_out->image, cv::GRAY2BGR);
 			}
 			else if(corrected->channels() == 3 && xr_output.channels() == 1)
 			{
-				cvtColor(*corrected, buf_out->image, CV_BGR2GRAY);
+				cvtColor(*corrected, buf_out->image, cv::BGR2GRAY);
 			}
 			else throw MkException("Cannot convert channels", LOC);
 			buf_out->timeStamp = x_ts;
@@ -157,19 +157,19 @@ void StreamT<Mat>::Randomize(unsigned int& xr_seed)
 		LOG_WARN(m_logger, "StreamInput should not be empty");
 		return;
 	}
-	int nb = rand_r(&xr_seed) % 100;
+	int nb = 0;// TODO rand_r(&xr_seed) % 100;
 	for ( int i = 0; i < nb; i++ )
 	{
 		Point center;
-		center.x = rand_r(&xr_seed) % m_content.cols;
-		center.y = rand_r(&xr_seed) % m_content.rows;
+		center.x = 0;// TODO rand_r(&xr_seed) % m_content.cols;
+		center.y = 0; // TODO rand_r(&xr_seed) % m_content.rows;
 
 		Size axes;
-		axes.width  = rand_r(&xr_seed) % 200;
-		axes.height = rand_r(&xr_seed) % 200;
+		axes.width = 0;// TODO rand_r(&xr_seed) % 200;
+		axes.height = 0;// TODOrand_r(&xr_seed) % 200;
 
-		double angle = rand_r(&xr_seed) % 180;
-		Scalar randomColor(rand_r(&xr_seed) % 255, rand_r(&xr_seed) % 255, rand_r(&xr_seed) % 255);
+		double angle = 0;// TODOrand_r(&xr_seed) % 180;
+		Scalar randomColor(0, 0, 0); // TODO rand_r(&xr_seed) % 255, rand_r(&xr_seed) % 255, rand_r(&xr_seed) % 255);
 
 		ellipse(m_content, center, axes, angle, angle - 100, angle + 200,
 				randomColor, (rand_r(&xr_seed) % 10) - 1);

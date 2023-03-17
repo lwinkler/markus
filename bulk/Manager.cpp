@@ -603,7 +603,7 @@ bool Manager::ManageInterruptions(bool x_continueFlag)
 		InterruptionManager::GetInst().AddEvent("event.stopped");
 
 	//if(m_frameCount % 20 == 0)
-	usleep(0); // This keeps the manager unlocked to allow the sending of commands
+	sleep(0); // This keeps the manager unlocked to allow the sending of commands
 	vector<Command> commands = m_interruptionManager.ReturnCommandsToSend();
 	for(const auto& command : commands)
 	{

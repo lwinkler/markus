@@ -30,6 +30,8 @@
 // Workaround: should be unnecessary in time: http://stackoverflow.com/questions/35007134/c-boost-undefined-reference-to-boostfilesystemdetailcopy-file
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
+#include <boost/noncopyable.hpp>
+
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
 #include "MkException.h"
 
