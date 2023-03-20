@@ -92,11 +92,11 @@ void StreamT<Mat>::ConvertToOutput(TIME_STAMP x_ts, cv::Mat& xr_output)
 		{
 			if(corrected->channels() == 1 && xr_output.channels() == 3)
 			{
-				cvtColor(*corrected, buf_out->image, cv::GRAY2BGR);
+				cvtColor(*corrected, buf_out->image, cv::COLOR_GRAY2BGR);
 			}
 			else if(corrected->channels() == 3 && xr_output.channels() == 1)
 			{
-				cvtColor(*corrected, buf_out->image, cv::BGR2GRAY);
+				cvtColor(*corrected, buf_out->image, cv::COLOR_BGR2GRAY);
 			}
 			else throw MkException("Cannot convert channels", LOC);
 			buf_out->timeStamp = x_ts;
