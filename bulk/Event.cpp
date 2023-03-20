@@ -47,7 +47,7 @@ void Event::Randomize(unsigned int& xr_seed, const mkjson& x_requirement, const 
 {
 	// random event
 	Clean();
-	if(!x_requirement.is_null()) // TODO || rand_r(&xr_seed) < RAND_MAX /10)
+	if(!x_requirement.is_null() || rand_r(&xr_seed) < RAND_MAX /10)
 	{
 		if(x_requirement.is_null() && rand_r(&xr_seed) < RAND_MAX /10)
 		{

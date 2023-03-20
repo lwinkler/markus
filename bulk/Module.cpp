@@ -530,7 +530,7 @@ void Module::ProcessRandomInput(unsigned int& xr_seed)
 	}
 	if (m_currentTimeStamp == TIME_STAMP_MIN)
 		m_currentTimeStamp = 0;
-	else m_currentTimeStamp += 1 + 0; // TODO static_cast<float>(rand_r(&xr_seed)) / RAND_MAX;
+	else m_currentTimeStamp += 1 + static_cast<float>(rand_r(&xr_seed)) / RAND_MAX;
 	ProcessFrame();
 };
 

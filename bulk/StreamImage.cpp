@@ -157,19 +157,19 @@ void StreamT<Mat>::Randomize(unsigned int& xr_seed)
 		LOG_WARN(m_logger, "StreamInput should not be empty");
 		return;
 	}
-	int nb = 0;// TODO rand_r(&xr_seed) % 100;
+	int nb = rand_r(&xr_seed) % 100;
 	for ( int i = 0; i < nb; i++ )
 	{
 		Point center;
-		center.x = 0;// TODO rand_r(&xr_seed) % m_content.cols;
-		center.y = 0; // TODO rand_r(&xr_seed) % m_content.rows;
+		center.x = rand_r(&xr_seed) % m_content.cols;
+		center.y = rand_r(&xr_seed) % m_content.rows;
 
 		Size axes;
-		axes.width = 0;// TODO rand_r(&xr_seed) % 200;
-		axes.height = 0;// TODOrand_r(&xr_seed) % 200;
+		axes.width = rand_r(&xr_seed) % 200;
+		axes.height = rand_r(&xr_seed) % 200;
 
-		double angle = 0;// TODOrand_r(&xr_seed) % 180;
-		Scalar randomColor(0, 0, 0); // TODO rand_r(&xr_seed) % 255, rand_r(&xr_seed) % 255, rand_r(&xr_seed) % 255);
+		double angle = rand_r(&xr_seed) % 180;
+		Scalar randomColor(rand_r(&xr_seed) % 255, rand_r(&xr_seed) % 255, rand_r(&xr_seed) % 255);
 
 		ellipse(m_content, center, axes, angle, angle - 100, angle + 200,
 				randomColor, (rand_r(&xr_seed) % 10) - 1);

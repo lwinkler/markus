@@ -30,7 +30,7 @@
 #include "MkException.h"
 #include <boost/circular_buffer.hpp>
 
-
+#include "util.h"
 
 /** @brief This file contains some usefull functions for features and serialization. These are used by the FeatureT template.
  comparedSquared is used in feature comparison
@@ -127,7 +127,7 @@ inline double compareSquared(float x_1, float x_2)
 
 inline void randomize(float& xr_val, unsigned int& xr_seed)
 {
-	xr_val = 0; // TODO: static_cast<float>(rand_r(&xr_seed)) / RAND_MAX;
+	xr_val = static_cast<float>(rand_r(&xr_seed)) / RAND_MAX;
 }
 
 /* -------------------------------------------------------------------------------- */
@@ -140,7 +140,7 @@ inline double compareSquared(double x_1, double x_2)
 
 inline void randomize(double& xr_val, unsigned int& xr_seed)
 {
-	xr_val = 0; // TODO static_cast<double>(rand_r(&xr_seed)) / RAND_MAX;
+	xr_val = static_cast<double>(rand_r(&xr_seed)) / RAND_MAX;
 }
 
 
@@ -155,7 +155,7 @@ inline double compareSquared(int x_1, int x_2)
 
 inline void randomize(int& xr_val, unsigned int& xr_seed)
 {
-	xr_val = 0; // TODO  rand_r(&xr_seed) % 1000;
+	xr_val = rand_r(&xr_seed) % 1000;
 }
 
 /* -------------------------------------------------------------------------------- */
@@ -169,7 +169,7 @@ inline double compareSquared(unsigned int x_1, unsigned int x_2)
 
 inline void randomize(unsigned int& xr_val, unsigned int& xr_seed)
 {
-	xr_val = 0; // TODO rand_r(&xr_seed) % 1000;
+	xr_val = rand_r(&xr_seed) % 1000;
 }
 
 /* -------------------------------------------------------------------------------- */
@@ -183,7 +183,7 @@ inline double compareSquared(bool x_1, bool x_2)
 
 inline void randomize(bool& xr_val, unsigned int& xr_seed)
 {
-	xr_val = 0; // TODO rand_r(&xr_seed) % 2;
+	xr_val = rand_r(&xr_seed) % 2;
 }
 
 
@@ -201,11 +201,11 @@ inline void randomize(std::string& xr_val, unsigned int& xr_seed)
 		"0123456789"
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 		"abcdefghijklmnopqrstuvwxyz";
-	int len = 10; // TODO rand_r(&xr_seed) % 100;
+	int len = rand_r(&xr_seed) % 100;
 
 	xr_val = "";
 	for (int i = 0; i < len; ++i)
-		xr_val.push_back('a'); // TODO alphanum[rand_r(&xr_seed) % (alphanum.size() - 1)]);
+		xr_val.push_back(alphanum[rand_r(&xr_seed) % (alphanum.size() - 1)]);
 }
 
 /* -------------------------------------------------------------------------------- */

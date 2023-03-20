@@ -201,8 +201,8 @@ void Object::Intersect(const Mat& x_image)
 void Object::Randomize(unsigned int& xr_seed, const mkjson& x_requirement, const Size& x_size)
 {
 	SetRect(cv::Rect_<double>(
-		Point2d(0,0), // TODO rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height),
-		Point2d(0, 0), // TODO (rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height))
+		Point2d(rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height),
+		Point2d(rand_r(&xr_seed) % x_size.width, rand_r(&xr_seed) % x_size.height))
 	);
 	if(rand_r(&xr_seed) % 20 == 0)
 	{
@@ -239,16 +239,16 @@ void Object::Randomize(unsigned int& xr_seed, const mkjson& x_requirement, const
 		}
 	}
 
-	int nb = 0; // TODO rand_r(&xr_seed) % 100;
+	int nb = rand_r(&xr_seed) % 100;
 	// note: notify event does not accept empty features, so we add 1
 	for(int i = 0 ; i < nb + 1 ; i++)
 	{
 		stringstream name;
 		name<<"rand"<<i;
-		AddFeature(name.str(), new FeatureFloat(0)); // TODO static_cast<float>(rand_r(&xr_seed)) / RAND_MAX));
+		AddFeature(name.str(), new FeatureFloat(static_cast<float>(rand_r(&xr_seed)) / RAND_MAX));
 	}
 	// LOG_DEBUG(m_logger, "Generate random object with requirements:\""<<x_requirement<<"\" --> "<<this->SerializeToString());
 
-	m_id = 0; // TODO rand_r(&xr_seed);
+	m_id = rand_r(&xr_seed);
 }
 } // namespace mk

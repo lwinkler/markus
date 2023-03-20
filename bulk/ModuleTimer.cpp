@@ -69,13 +69,13 @@ void ModuleTimer::Start(double x_fps)
 			if(ts < waitMs)
 			{
 				LOG_DEBUG(m_logger, "Sleep ms " << (waitMs - ts));
-				usleep((waitMs - ts) * 1000);
+				std::this_thread::sleep_for(std::chrono::milliseconds((waitMs - ts));
 			}
 			else
 			{
 				// note: we must allow the other modules to run, e.g. for the GUI so we need to yield
 				//       unfortunately std::this_thread::yield() does not seem to work, therefore we use usleep
-				usleep(0);
+				std::this_thread::sleep_for(std::chrono::milliseconds(0));
 				static bool once = true;
 				if(waitMs > 0 && once)
 				{

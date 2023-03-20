@@ -27,6 +27,11 @@
 #include <opencv2/core/core.hpp>
 #include "define.h"
 
+unsigned int rand_r(unsigned int* seed)
+{
+	return rand(); // TODO LW: Fix, not thread safe
+}
+
 namespace mk {
 class Event;
 class AnnotationFileReader;

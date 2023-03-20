@@ -126,7 +126,7 @@ bool Processable::DoSleep()
 		// If the manager is in a waiting state, wait 500 ms and return
 		TIME_STAMP wait = MIN(m_sleepTime, 500);
 		LOG_DEBUG(m_logger, "Sleep " << wait << " ms out of " << m_sleepTime);
-		usleep(wait * 1000);
+		std::this_thread::sleep_for(std::chrono::milliseconds(wait));
 		m_sleepTime -= wait;
 		return true;
 	}
